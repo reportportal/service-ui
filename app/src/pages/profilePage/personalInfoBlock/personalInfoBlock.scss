@@ -54,7 +54,6 @@
   line-height: 20px;
   white-space: nowrap;
   text-transform: uppercase;
-  -ms-text-overflow: ellipsis;
   text-overflow: ellipsis;
 
   @media (max-width: $SCREEN_XS_MAX) {
@@ -79,7 +78,6 @@
   color: $COLOR--charcoal-grey;
   white-space: nowrap;
   line-height: 20px;
-  -ms-text-overflow: ellipsis;
   text-overflow: ellipsis;
 
   @media (max-width: $SCREEN_XS_MAX) {
@@ -119,7 +117,6 @@
   color: $COLOR--gray-47;
   word-break: break-all;
   line-height: 20px;
-  -ms-text-overflow: ellipsis;
   text-overflow: ellipsis;
 
   &:hover{

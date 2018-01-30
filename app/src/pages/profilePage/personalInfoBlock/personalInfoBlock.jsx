@@ -31,13 +31,24 @@ import PencilIcon from './img/pencil-icon-inline.svg';
 const cx = classNames.bind(styles);
 
 class PersonalInfoBlock extends Component {
-  constructor() {
-    super();
-    this.state = {
-      avatarSource: '',
-      photoLoaded: false,
-    };
-  }
+  static propTypes = {
+    login: PropTypes.string,
+    name: PropTypes.string,
+    email: PropTypes.string,
+    photoSrc: PropTypes.string,
+  };
+  static defaultProps = {
+    login: '',
+    name: '',
+    email: '',
+    photoSrc: '',
+  };
+
+  state = {
+    avatarSource: '',
+    photoLoaded: false,
+  };
+
   componentWillMount() {
     this.setState({ avatarSource: this.props.photoSrc });
   }
@@ -149,21 +160,6 @@ class PersonalInfoBlock extends Component {
       </div>
     );
   }
-
 }
-
-PersonalInfoBlock.propTypes = {
-  login: PropTypes.string,
-  name: PropTypes.string,
-  email: PropTypes.string,
-  photoSrc: PropTypes.string,
-};
-
-PersonalInfoBlock.defaultProps = {
-  login: '',
-  name: '',
-  email: '',
-  photoSrc: '',
-};
 
 export default PersonalInfoBlock;

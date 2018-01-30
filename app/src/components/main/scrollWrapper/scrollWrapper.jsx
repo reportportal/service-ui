@@ -28,6 +28,37 @@ import styles from './scrollWrapper.scss';
 const cx = classNames.bind(styles);
 
 class ScrollWrapper extends Component {
+  static propTypes = {
+    children: PropTypes.node,
+    autoHide: PropTypes.bool,
+    autoHeight: PropTypes.bool,
+    autoHeightMin: PropTypes.number,
+    autoHideTimeout: PropTypes.number,
+    autoHeightMax: PropTypes.number,
+    renderTrackHorizontal: PropTypes.func,
+    renderTrackVertical: PropTypes.func,
+    renderThumbHorizontal: PropTypes.func,
+    renderThumbVertical: PropTypes.func,
+    renderView: PropTypes.func,
+    hideTracksWhenNotNeeded: PropTypes.bool,
+    thumbMinSize: PropTypes.number,
+  };
+  static defaultProps = {
+    children: {},
+    autoHide: false,
+    autoHeight: false,
+    autoHeightMin: 0,
+    autoHeightMax: 200,
+    autoHideTimeout: 500,
+    renderTrackHorizontal: props => <div {...props} className={cx('track-horizontal')} />,
+    renderTrackVertical: props => <div {...props} className={cx('track-vertical')} />,
+    renderThumbHorizontal: props => <div {...props} className={cx('thumb-horizontal')} />,
+    renderThumbVertical: props => <div {...props} className={cx('thumb-vertical')} />,
+    renderView: props => <div {...props} className={cx('scrolling-content')} />,
+    hideTracksWhenNotNeeded: false,
+    thumbMinSize: 30,
+  };
+
   handleScrollFrame = (values) => {
     if (values.scrollTop !== this.scrollbars.lastViewScrollTop) {
       this.scrollbars.thumbVertical.style.opacity = 1;
@@ -67,36 +98,5 @@ class ScrollWrapper extends Component {
     );
   }
 }
-
-ScrollWrapper.propTypes = {
-  children: PropTypes.node,
-  autoHide: PropTypes.bool,
-  autoHeight: PropTypes.bool,
-  autoHeightMin: PropTypes.number,
-  autoHideTimeout: PropTypes.number,
-  autoHeightMax: PropTypes.number,
-  renderTrackHorizontal: PropTypes.func,
-  renderTrackVertical: PropTypes.func,
-  renderThumbHorizontal: PropTypes.func,
-  renderThumbVertical: PropTypes.func,
-  renderView: PropTypes.func,
-  hideTracksWhenNotNeeded: PropTypes.bool,
-  thumbMinSize: PropTypes.number,
-};
-ScrollWrapper.defaultProps = {
-  children: {},
-  autoHide: false,
-  autoHeight: false,
-  autoHeightMin: 0,
-  autoHeightMax: 200,
-  autoHideTimeout: 500,
-  renderTrackHorizontal: props => <div {...props} className={cx('track-horizontal')} />,
-  renderTrackVertical: props => <div {...props} className={cx('track-vertical')} />,
-  renderThumbHorizontal: props => <div {...props} className={cx('thumb-horizontal')} />,
-  renderThumbVertical: props => <div {...props} className={cx('thumb-vertical')} />,
-  renderView: props => <div {...props} className={cx('scrolling-content')} />,
-  hideTracksWhenNotNeeded: false,
-  thumbMinSize: 30,
-};
 
 export default ScrollWrapper;

@@ -27,17 +27,24 @@ import styles from './containerWithTabs.scss';
 const cx = classNames.bind(styles);
 
 class ContainerWithTabs extends Component {
+  static propTypes = {
+    data: PropTypes.arrayOf(PropTypes.object),
+  };
+  static defaultProps = {
+    data: [],
+  };
 
-  constructor() {
-    super();
-    this.state = { active: 0 };
-  }
+  state = {
+    active: 0,
+  };
+
   tabClickHandler = (e) => {
     const id = +e.currentTarget.dataset.id;
     if (this.state.active !== id) {
       this.setState({ active: id });
     }
   };
+
   render() {
     return (
       <div className={cx('container-with-tabs')}>
@@ -65,13 +72,5 @@ class ContainerWithTabs extends Component {
     );
   }
 }
-
-ContainerWithTabs.propTypes = {
-  data: PropTypes.arrayOf(PropTypes.object),
-};
-
-ContainerWithTabs.defaultProps = {
-  data: [],
-};
 
 export default ContainerWithTabs;

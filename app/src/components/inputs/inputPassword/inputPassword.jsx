@@ -29,11 +29,33 @@ import styles from './inputPassword.scss';
 const cx = classNames.bind(styles);
 
 class InputPassword extends Component {
+  static propTypes = {
+    formPath: PropTypes.string,
+    fieldName: PropTypes.string,
+    value: PropTypes.string,
+    placeholder: PropTypes.string,
+    maxLength: PropTypes.string,
+    disabled: PropTypes.bool,
+    onChange: PropTypes.func,
+    onFocus: PropTypes.func,
+    onBlur: PropTypes.func,
+  };
 
-  constructor() {
-    super();
-    this.state = { passwordShown: false };
-  }
+  static defaultProps = {
+    formPath: '',
+    fieldName: '',
+    value: '',
+    placeholder: '',
+    maxLength: '254',
+    disabled: false,
+    onChange: () => {},
+    onFocus: () => {},
+    onBlur: () => {},
+  };
+
+  state = {
+    passwordShown: false,
+  };
 
   showPass = (e) => {
     e.preventDefault();
