@@ -595,6 +595,7 @@ define(['util'], function () {
             '<p>Client versions from 2.2.3 support <b>rp.*</b> and <b>com.epam.ta.reportportal.ws.*</b> parameters name formats.</p>' +
             '<p>Please use new names format, because old ones will be deprecated.</p></div>',
             language: 'Language',
+            belarussian: 'Беларуская',
             english: 'English (United States)',
             russian: 'Russian',
             reloadPage: 'You have to <a href="">Reload</a> the page to implement language change.<br>' +
