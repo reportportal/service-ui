@@ -13,5 +13,3 @@ Has 30px height & width adjusted by content.
 
 ### Events:
 * **onClick**
-
-
