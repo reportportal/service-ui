@@ -32,13 +32,13 @@ class ProjectSelector extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      activeProject: props.activeProject,
       opened: false,
     };
   }
 
   onClickProjectItem = (e) => {
-    this.setState({ activeProject: e.currentTarget.dataset.project, opened: false });
+    this.setState({ opened: false });
+    this.props.onChange({ selectedProject: e.currentTarget.dataset.project });
   };
   toggleShowList = () => {
     this.setState({ opened: !this.state.opened });
@@ -49,7 +49,7 @@ class ProjectSelector extends Component {
       <div className={cx('project-selector')}>
         <div className={cx('current-project-block')} onClick={this.toggleShowList}>
           <div className={cx('current-project-name')}>
-            { this.state.activeProject }
+            { this.props.activeProject }
           </div>
           <div className={cx({ 'show-list-icon': true, 'turned-over': this.state.opened })} />
         </div>
@@ -57,7 +57,7 @@ class ProjectSelector extends Component {
           <ScrollWrapper autoHeight autoHeightMax={600}>
             {
             Array.map(this.props.projects, project => (
-              <div key={project} data-project={project} className={cx({ 'project-list-item': true, active: project === this.state.activeProject })} onClick={this.onClickProjectItem}>
+              <div key={project} data-project={project} className={cx({ 'project-list-item': true, active: project === this.props.activeProject })} onClick={this.onClickProjectItem}>
                 {project}
               </div>
               ))
@@ -72,11 +72,13 @@ class ProjectSelector extends Component {
 ProjectSelector.propTypes = {
   projects: PropTypes.arrayOf(PropTypes.string),
   activeProject: PropTypes.string,
+  onChange: PropTypes.func,
 };
 
 ProjectSelector.defaultProps = {
   projects: [],
   activeProject: '',
+  onChange: () => {},
 };
 
 export default ProjectSelector;

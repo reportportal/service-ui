@@ -22,6 +22,7 @@
 import { storiesOf } from '@storybook/react';
 import { host } from 'storybook-host';
 import { withReadme } from 'storybook-readme';
+import { action } from '@storybook/addon-actions';
 import ProjectSelector from './projectSelector';
 import README from './README.md';
 
@@ -72,5 +73,8 @@ storiesOf('Components/Main/projectSelector', module)
   ))
   .add('with many projects', () => (
     <ProjectSelector projects={mockProjectsListLong} activeProject="Project-10" />
+  ))
+  .add('with actions', () => (
+    <ProjectSelector projects={mockProjectsList} activeProject="Default_active" onChange={action('project changed')} />
   ))
 ;
