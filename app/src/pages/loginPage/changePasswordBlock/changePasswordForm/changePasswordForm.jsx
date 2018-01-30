@@ -23,8 +23,6 @@ import classNames from 'classnames/bind';
 import FieldWithIcon from 'components/fields/fieldWithIcon/fieldWithIcon';
 import FieldErrorHint from 'components/fields/fieldErrorHint/fieldErrorHint';
 import FieldBottomConstraints from 'components/fields/fieldBottomConstraints/fieldBottomConstraints';
-import { signal } from 'cerebral/tags';
-import { form } from '@cerebral/forms';
 import { FormattedMessage, injectIntl, intlShape, defineMessages } from 'react-intl';
 import InputPassword from 'components/inputs/inputPassword/inputPassword';
 import BigButton from 'components/buttons/bigButton/bigButton';
@@ -86,6 +84,4 @@ ChangePasswordForm.defaultProps = {
   submitForm: () => {},
 };
 
-export default Utils.connectToState({
-  submitForm: signal`user.changePass`,
-}, injectIntl(ChangePasswordForm));
+export default injectIntl(ChangePasswordForm);

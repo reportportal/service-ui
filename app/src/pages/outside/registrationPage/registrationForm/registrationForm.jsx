@@ -21,8 +21,6 @@
 
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
-import { signal } from 'cerebral/tags';
-import { form } from '@cerebral/forms';
 import { FormattedMessage, injectIntl, intlShape, defineMessages } from 'react-intl';
 import FieldBottomConstraints from 'components/fields/fieldBottomConstraints/fieldBottomConstraints';
 import FieldErrorHint from 'components/fields/fieldErrorHint/fieldErrorHint';
@@ -136,7 +134,4 @@ RegistrationForm.defaultProps = {
   resetForm: () => {},
 };
 
-export default Utils.connectToState({
-  submitForm: signal`user.register`,
-  resetForm: signal`user.registrationForm.resetForm`,
-}, injectIntl(RegistrationForm));
+export default injectIntl(RegistrationForm);

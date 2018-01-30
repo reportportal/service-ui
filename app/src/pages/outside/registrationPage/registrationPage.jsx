@@ -21,7 +21,6 @@
 
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
-import { state } from 'cerebral/tags';
 import { referenceDictionary } from 'common/utils';
 import { FormattedMessage } from 'react-intl';
 import RegistrationPageSection from './registrationPageSection/registrationPageSection';
@@ -102,7 +101,4 @@ RegistrationPage.defaultProps = {
   isTokenProvided: false,
 };
 
-export default Utils.connectToState({
-  isTokenActive: state`user.registrationTokenData.isTokenActive`,
-  isTokenProvided: state`user.registrationTokenData.isTokenProvided`,
-}, RegistrationPage);
+export default RegistrationPage;

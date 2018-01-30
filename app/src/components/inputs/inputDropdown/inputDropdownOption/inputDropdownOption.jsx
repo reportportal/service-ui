@@ -19,15 +19,13 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 import InputCheckbox from 'components/inputs/inputChekbox/inputCheckbox';
-import { connect } from '@cerebral/react';
-import { state, props } from 'cerebral/tags';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import styles from './inputDropdownOption.scss';
 
 const cx = classNames.bind(styles);
 
-const DropdownOption = ({ multiple, text, disabled, active }) => {
+export const DropdownOption = ({ multiple, text, disabled, active }) => {
   const dropdownOptionClasses = cx({
     'dropdown-option': true,
     active: !multiple && active,
@@ -63,9 +61,3 @@ DropdownOption.defaultProps = {
   disabled: false,
   active: false,
 };
-
-export default connect({
-  text: state`${props`formPath`}.${props`fieldName`}.optionsById.${props`id`}.text`,
-  disabled: state`${props`formPath`}.${props`fieldName`}.optionsById.${props`id`}.disabled`,
-  active: state`${props`formPath`}.${props`fieldName`}.optionsById.${props`id`}.active`,
-}, DropdownOption);

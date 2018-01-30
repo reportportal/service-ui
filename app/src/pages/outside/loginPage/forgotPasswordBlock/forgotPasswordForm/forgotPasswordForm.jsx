@@ -23,8 +23,6 @@ import classNames from 'classnames/bind';
 import FieldWithIcon from 'components/fields/fieldWithIcon/fieldWithIcon';
 import FieldErrorHint from 'components/fields/fieldErrorHint/fieldErrorHint';
 import { FormattedMessage, injectIntl, intlShape, defineMessages } from 'react-intl';
-import { signal } from 'cerebral/tags';
-import { form } from '@cerebral/forms';
 import Input from 'components/inputs/input/input';
 import BigButton from 'components/buttons/bigButton/bigButton';
 import PropTypes from 'prop-types';
@@ -81,7 +79,4 @@ ForgotPasswordForm.defaultProps = {
   cancel: () => {},
 };
 
-export default Utils.connectToState({
-  submitForm: signal`user.forgotPass`,
-  cancel: signal`user.loginRoute`,
-}, injectIntl(ForgotPasswordForm));
+export default injectIntl(ForgotPasswordForm);
