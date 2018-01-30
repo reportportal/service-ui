@@ -25,7 +25,7 @@ import { FormattedMessage, injectIntl, intlShape, defineMessages } from 'react-i
 import FieldBottomConstraints from 'components/fields/fieldBottomConstraints/fieldBottomConstraints';
 import FieldErrorHint from 'components/fields/fieldErrorHint/fieldErrorHint';
 import FieldWithIcon from 'components/fields/fieldWithIcon/fieldWithIcon';
-import Input from 'components/inputs/input/input';
+import { Input } from 'components/inputs/input/input';
 import InputPassword from 'components/inputs/inputPassword/inputPassword';
 import BigButton from 'components/buttons/bigButton/bigButton';
 import LoginIcon from './img/login-icon.svg';

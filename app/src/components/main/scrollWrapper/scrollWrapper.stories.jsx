@@ -45,7 +45,7 @@ const longText = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit.' +
   'Amet aspernatur commodi dicta, eos possimus quidem saepe vitae?' +
   'Ad, aliquam commodi consequatur cumque earum, eius expedita harum maiores quod rerum saepe.';
 
-storiesOf('Components/common/scrollWrapper', module)
+storiesOf('Components/Main/scrollWrapper', module)
   .addDecorator(host({
     title: 'Big button component',
     align: 'center middle',

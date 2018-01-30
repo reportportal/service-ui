@@ -22,19 +22,24 @@
 import { storiesOf } from '@storybook/react';
 import { host } from 'storybook-host';
 import { withReadme } from 'storybook-readme';
-import AdminHeader from './header';
+import UuidBlock from './uuidBlock';
 import README from './README.md';
 
-storiesOf('Components/Admin/Header', module)
+
+storiesOf('Pages/ProfilePage/uuidBlock', module)
   .addDecorator(host({
-    title: 'AdminHeader component',
+    title: 'Universally Unique Identifier form on profile page',
     align: 'center middle',
     backdrop: 'rgba(70, 69, 71, 0.2)',
-    background: '#ffffff',
-    height: 100,
-    width: '100%',
+    background: '#f5f5f5',
+    height: 'auto',
+    width: '70%',
   }))
   .addDecorator(withReadme(README))
-  .add('default state', () => (
-    <AdminHeader adminHeaderCrumb=" / All users" />
-  ));
+  .add('default state (no provided info)', () => (
+    <UuidBlock />
+  ))
+  .add('with value', () => (
+    <UuidBlock uuid={'35668002-be4f-44a2-9a27-6cafcbd024b5'} />
+  ))
+;

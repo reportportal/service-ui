@@ -28,6 +28,29 @@ const cx = classNames.bind(styles);
 
 // eslint-disable-next-line react/prefer-stateless-function
 export class Dropdown extends Component {
+  static propTypes = {
+    displayedValue: PropTypes.string,
+    options: PropTypes.array,
+    multiple: PropTypes.bool,
+    selectAll: PropTypes.bool,
+    disabled: PropTypes.bool,
+    active: PropTypes.bool,
+    onChange: PropTypes.func,
+    onFocus: PropTypes.func,
+    onBlur: PropTypes.func,
+  };
+
+  static defaultProps = {
+    displayedValue: '',
+    options: [],
+    multiple: false,
+    selectAll: false,
+    disabled: false,
+    active: false,
+    onChange: () => {},
+    onFocus: () => {},
+    onBlur: () => {},
+  };
   componentDidMount() {
     document.addEventListener('click', this.handleClickOutside);
   }
@@ -58,6 +81,7 @@ export class Dropdown extends Component {
       />
     ));
   }
+
   render() {
     const classes = cx({
       dropdown: true,
@@ -81,27 +105,3 @@ export class Dropdown extends Component {
     );
   }
 }
-
-Dropdown.propTypes = {
-  displayedValue: PropTypes.string,
-  options: PropTypes.array,
-  multiple: PropTypes.bool,
-  selectAll: PropTypes.bool,
-  disabled: PropTypes.bool,
-  active: PropTypes.bool,
-  onChange: PropTypes.func,
-  onFocus: PropTypes.func,
-  onBlur: PropTypes.func,
-};
-
-Dropdown.defaultProps = {
-  displayedValue: '',
-  options: [],
-  multiple: false,
-  selectAll: false,
-  disabled: false,
-  active: false,
-  onChange: () => {},
-  onFocus: () => {},
-  onBlur: () => {},
-};

@@ -19,7 +19,6 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 import PropTypes from 'prop-types';
 import { FormattedMessage } from 'react-intl';
 import classNames from 'classnames/bind';

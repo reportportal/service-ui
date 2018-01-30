@@ -25,7 +25,7 @@ import styles from './input.scss';
 
 const cx = classNames.bind(styles);
 
-export const Input = ({ type, value,
+export const Input = ({ type, value, readonly,
                  placeholder, maxLength, disabled, hasRightIcon,
                  onChange, onFocus, onBlur }) => {
   const classes = cx({
@@ -42,6 +42,7 @@ export const Input = ({ type, value,
       placeholder={placeholder}
       maxLength={maxLength}
       disabled={disabled}
+      readOnly={readonly}
       onChange={onChange}
       onFocus={onFocus}
       onBlur={onBlur}
@@ -55,6 +56,7 @@ Input.propTypes = {
   placeholder: PropTypes.string,
   maxLength: PropTypes.string,
   disabled: PropTypes.bool,
+  readonly: PropTypes.bool,
   hasRightIcon: PropTypes.bool,
   onChange: PropTypes.func,
   onFocus: PropTypes.func,
@@ -67,6 +69,7 @@ Input.defaultProps = {
   placeholder: '',
   maxLength: '254',
   disabled: false,
+  readonly: false,
   hasRightIcon: false,
   onChange: () => {},
   onFocus: () => {},
