@@ -57,6 +57,7 @@ build-statics:
 	npm --prefix $(UI_BUILD_REACT) run eslint
 	npm --prefix $(UI_BUILD_REACT) run test
 	npm --prefix $(UI_BUILD_REACT) run storybook:bild
+	npm --prefix $(UI_BUILD_REACT) run build
 
 build-react:
 	npm --prefix $(UI_BUILD_REACT) install
