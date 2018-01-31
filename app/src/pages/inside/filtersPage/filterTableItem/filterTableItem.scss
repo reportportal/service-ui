@@ -1,0 +1,188 @@
+.filter-table-item {
+  width: 100%;
+  height: auto;
+  padding: 15px;
+  overflow: hidden;
+  background-color: $COLOR--white-two;
+  transition: background-color 0.2s ease 0s;
+  box-sizing: border-box;
+  font-family: $FONT-REGULAR;
+  color: $COLOR--charcoal-grey;
+
+  &:hover {
+    background-color: $COLOR--tealish-hover;
+  }
+}
+.block {
+  float: left;
+  padding-right: 25px;
+  box-sizing: border-box;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    float: none;
+    padding-right: 0;
+    margin-bottom: 10px;
+  }
+}
+.mobile-label {
+  display: none;
+  margin-right: 10px;
+  font-family: $FONT-BOLD;
+  font-size: 12px;
+  color: $COLOR--gray-47;
+  line-height: 20px;
+  text-transform: uppercase;
+  vertical-align: top;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    display: inline-block;
+  }
+}
+.name-block {
+  width: 30%;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    width: 100%;
+    padding-right: 35px;
+    font-family: $FONT-BOLD;
+  }
+}
+.name-wrapper {
+  display: inline-block;
+  width: 100%;
+}
+.name {
+  font-size: 14px;
+  color: $COLOR--windows-blue;
+  line-height: 20px;
+  word-break: break-all;
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    font-size: 16px;
+  }
+}
+.pencil-icon {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  margin-left: 10px;
+  background-image: url(./img/pencil-icon.svg);
+  vertical-align: top;
+  cursor: pointer;
+
+  &:hover {
+    background-image: url(./img/pencil-icon-hover.svg);
+  }
+}
+.description {
+  width: 100%;
+  font-family: monospace;
+  font-size: 12px;
+  word-break: break-all;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    margin-top: 5px;
+    font-size: 13px;
+  }
+}
+.options-block {
+  width: 30%;
+  font-size: 13px;
+  line-height: 20px;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    width: 100%;
+    font-size: 14px;
+  }
+}
+.owner-block {
+  width: 13%;
+  font-size: 13px;
+  line-height: 20px;
+  word-break: break-all;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    width: 100%;
+  }
+}
+.owner-label {
+  vertical-align: unset;
+}
+.shared-block {
+  width: 8%;
+  text-align: center;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    width: 100%;
+    text-align: left;
+  }
+}
+.shared-icon {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  vertical-align: top;
+  background-image: url(./img/checkmark-icon.svg);
+  cursor: pointer;
+
+  &:hover {
+    background-image: url(./img/checkmark-icon-hover.svg);
+  }
+}
+.display-block {
+  position: relative;
+  width: 11%;
+  height: 20px;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    width: 100%;
+    margin-bottom: 0;
+  }
+}
+.switcher-wrapper {
+  display: inline-block;
+  width: 100%;
+  height: 20px;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    width: 20px;
+  }
+}
+.switcher-label {
+  font-family: $FONT-BOLD;
+  font-size: 12px;
+  color: $COLOR--gray-47;
+  text-transform: uppercase;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    display: none;
+  }
+}
+.delete-block {
+  width: 8%;
+  padding-right: 10px;
+  text-align: center;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    position: absolute;
+    top: 20px;
+    right: 10px;
+    padding-right: 0;
+  }
+}
+.bin-icon {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  background-image: url(./img/bin-icon.svg);
+  cursor: pointer;
+
+  &:hover {
+    background-image: url(./img/bin-icon-hover.svg);
+  }
+}
