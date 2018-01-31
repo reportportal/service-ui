@@ -38,7 +38,7 @@ class ProjectSelector extends Component {
 
   onClickProjectItem = (e) => {
     this.setState({ opened: false });
-    this.props.onChange({ selectedProject: e.currentTarget.dataset.project });
+    this.props.onChange({ value: e.target.dataset.project });
   };
   toggleShowList = () => {
     this.setState({ opened: !this.state.opened });
