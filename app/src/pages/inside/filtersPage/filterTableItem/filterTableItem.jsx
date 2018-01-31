@@ -75,6 +75,7 @@ const FilterTableItem = (
           </span>
         </InputSwitcher>
       </div>
+      <div className={cx('separator')} />
     </div>
     <div className={cx('block', 'delete-block')}>
       <div className={cx('bin-icon')} onClick={onDelete} />
