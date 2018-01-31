@@ -1,9 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { state } from 'cerebral/tags';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
-import { connectToState } from 'common/utils';
 import { injectIntl, intlShape, defineMessages } from 'react-intl';
 import styles from './notification.scss';
 
@@ -53,8 +51,4 @@ Notification.defaultProps = {
   type: '',
 };
 
-export default connectToState({
-  message: state`app.notification.currentMessage`,
-  messageId: state`app.notification.currentMessageId`,
-  type: state`app.notification.currentType`,
-}, injectIntl(Notification));
+export default injectIntl(Notification);

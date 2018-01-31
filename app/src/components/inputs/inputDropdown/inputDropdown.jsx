@@ -19,45 +19,38 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 import React, { Component } from 'react';
-import { connect } from '@cerebral/react';
-import { state, props } from 'cerebral/tags';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import styles from './inputDropdown.scss';
-import DropdownOption from './inputDropdownOption/inputDropdownOption';
+import { DropdownOption } from './inputDropdownOption/inputDropdownOption';
 
 const cx = classNames.bind(styles);
 
 // eslint-disable-next-line react/prefer-stateless-function
-class Dropdown extends Component {
+export class Dropdown extends Component {
   static propTypes = {
-    formPath: PropTypes.string,
-    fieldName: PropTypes.string,
     displayedValue: PropTypes.string,
     options: PropTypes.array,
     multiple: PropTypes.bool,
     selectAll: PropTypes.bool,
     disabled: PropTypes.bool,
-    isFocus: PropTypes.bool,
+    active: PropTypes.bool,
     onChange: PropTypes.func,
     onFocus: PropTypes.func,
     onBlur: PropTypes.func,
   };
 
   static defaultProps = {
-    formPath: '',
-    fieldName: '',
     displayedValue: '',
     options: [],
     multiple: false,
     selectAll: false,
     disabled: false,
-    isFocus: false,
+    active: false,
     onChange: () => {},
     onFocus: () => {},
     onBlur: () => {},
   };
-
   componentDidMount() {
     document.addEventListener('click', this.handleClickOutside);
   }
@@ -66,7 +59,7 @@ class Dropdown extends Component {
   }
   onClickSelectBlock = (e) => {
     e.stopPropagation();
-    this.props.isFocus
+    this.props.active
       ? (() => this.props.multiple && this.props.onBlur())()
       : this.props.onFocus();
   };
@@ -77,12 +70,13 @@ class Dropdown extends Component {
     this.props.onBlur();
   };
   renderOptions() {
-    return this.props.options.map(id => (
+    return this.props.options.map(option => (
       <DropdownOption
-        key={id}
-        formPath={this.props.formPath}
-        fieldName={this.props.fieldName}
-        id={id}
+        key={option.id}
+        id={option.id}
+        disabled={option.disabled}
+        active={option.active}
+        text={option.text}
         multiple={this.props.multiple}
       />
     ));
@@ -91,7 +85,7 @@ class Dropdown extends Component {
   render() {
     const classes = cx({
       dropdown: true,
-      opened: this.props.isFocus,
+      opened: this.props.active,
     });
     return (
       <div ref={(node) => { this.node = node; }} className={classes}>
@@ -111,12 +105,3 @@ class Dropdown extends Component {
     );
   }
 }
-
-export default connect({
-  multiple: state`${props`formPath`}.${props`fieldName`}.multiple`,
-  selectAll: state`${props`formPath`}.${props`fieldName`}.selectAll`,
-  disabled: state`${props`formPath`}.${props`fieldName`}.disabled`,
-  isFocus: state`${props`formPath`}.${props`fieldName`}.isFocus`,
-  displayedValue: state`${props`formPath`}.${props`fieldName`}.displayedValue`,
-  options: state`${props`formPath`}.${props`fieldName`}.options`,
-}, Dropdown);

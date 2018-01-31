@@ -21,7 +21,7 @@
 
 import { storiesOf } from '@storybook/react';
 import { host } from 'storybook-host';
-import FieldErrorHint from './fieldErrorHint';
+import { FieldErrorHint } from './fieldErrorHint';
 
 storiesOf('Components/Fields/InputErrorHint', module)
   .addDecorator(host({
@@ -36,8 +36,8 @@ storiesOf('Components/Fields/InputErrorHint', module)
     <FieldErrorHint />
   ))
   .add('width error message without focus', () => (
-    <FieldErrorHint errorMessage={'test error message'} />
+    <FieldErrorHint error={'test error message'} />
   ))
   .add('width error message with focus', () => (
-    <FieldErrorHint errorMessage={'test error message'} isFocus />
+    <FieldErrorHint error={'test error message'} active />
   ));

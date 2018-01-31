@@ -1,7 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { connect } from '@cerebral/react';
-import { state } from 'cerebral/tags';
 import { IntlProvider, addLocaleData } from 'react-intl';
 import en from 'react-intl/locale-data/en';
 import ru from 'react-intl/locale-data/ru';
@@ -54,6 +52,4 @@ LocalizationContainer.defaultProps = {
   children: null,
 };
 
-export default connect({
-  lang: state`lang`,
-}, LocalizationContainer);
+export default LocalizationContainer;

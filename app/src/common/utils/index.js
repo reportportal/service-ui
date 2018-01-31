@@ -21,14 +21,12 @@
 
 import getObjWithoutKeys from './getObjWithoutKeys';
 import checkInvalidField from './checkInvalidField';
-import connectToState from './connectToState';
 import isEmptyObject from './isEmptyObject';
 import referenceDictionary from './referenceDictionary';
 
 export {
   getObjWithoutKeys,
   checkInvalidField,
-  connectToState,
   isEmptyObject,
   referenceDictionary,
 };

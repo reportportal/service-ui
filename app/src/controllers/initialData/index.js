@@ -1,0 +1,1 @@
+export { InitialData } from './initialData';

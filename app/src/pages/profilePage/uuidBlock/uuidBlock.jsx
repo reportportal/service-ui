@@ -22,7 +22,7 @@
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { FormattedMessage } from 'react-intl';
-import Input from 'components/inputs/input/input';
+import { Input } from 'components/inputs/input/input';
 import GhostButton from 'components/buttons/ghostButton/ghostButton';
 import styles from './uuidBlock.scss';
 import BlockContainer from '../blockContainer/blockContainer';

@@ -21,48 +21,37 @@
 
 import { cloneElement } from 'react';
 import PropTypes from 'prop-types';
-import { field } from '@cerebral/forms';
-import { state, props } from 'cerebral/tags';
 import classNames from 'classnames/bind';
-import { checkInvalidField } from 'common/utils';
 
 import styles from './fieldWithIcon.scss';
 
 const cx = classNames.bind(styles);
 
-const FieldWithIcon = ({ formPath, fieldName, formField, formShowErrors, icon, children }) => {
+export const FieldWithIcon = ({ icon, children, ...rest }) => {
+  const { error, active, touched } = rest;
   const classes = cx({
     'field-width-icon': true,
-    invalid: checkInvalidField(formField, formShowErrors),
+    invalid: error && (active || touched),
   });
   return (
     <div className={classes}>
       <div className={cx('field-icon')} style={{ backgroundImage: `url(${icon})` }} />
       <div className={cx('container')}>
-        {children && cloneElement(children, { formPath, fieldName })}
+        {children && cloneElement(children, rest)}
       </div>
     </div>
   );
 };
 
 FieldWithIcon.propTypes = {
-  formPath: PropTypes.string,
-  fieldName: PropTypes.string,
   formField: PropTypes.object,
   formShowErrors: PropTypes.bool,
   icon: PropTypes.string,
   children: PropTypes.node,
 };
 FieldWithIcon.defaultProps = {
-  formPath: '',
-  fieldName: '',
   formField: {},
   formShowErrors: false,
   icon: '',
   children: null,
 };
-
-export default Utils.connectToState({
-  formField: field(state`${props`formPath`}.${props`fieldName`}`),
-  formShowErrors: state`${props`formPath`}.showErrors`,
-}, FieldWithIcon);
