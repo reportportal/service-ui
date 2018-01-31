@@ -49,57 +49,56 @@ h3{
   @media(min-width: $SCREEN_SM_MIN) {
     display: inline-block;
   }
-  button{
-    position: relative;
-    font-family: $FONT-CONDBOLD, sans-serif;
-    letter-spacing: 1px;
-    font-size: 13px;
-    line-height: 30px;
-    text-decoration: none;
-    text-shadow: 1px 2px 2px rgba(39, 39, 40, 0.4);
-    color: $COLOR--gray-91;
-    background: inherit;
-    border: none;
-    outline: none;
-    &:hover{
-      cursor: pointer;
+}
+button{
+  position: relative;
+  font-family: $FONT-CONDBOLD, sans-serif;
+  letter-spacing: 1px;
+  font-size: 13px;
+  line-height: 30px;
+  text-decoration: none;
+  text-shadow: 1px 2px 2px rgba(39, 39, 40, 0.4);
+  color: $COLOR--gray-91;
+  background: inherit;
+  border: none;
+  outline: none;
+  &:hover{
+    cursor: pointer;
+  }
+  &.logout{
+    padding-left: 20px;
+    &::after{
+      content: url('./img/logout.svg');
+      margin-left: 10px;
+      vertical-align: sub;
     }
-    &.logout{
-      padding-left: 20px;
-      &::after{
-        content: url('./img/logout.svg');
-        margin-left: 10px;
-        vertical-align: sub;
-      }
+  }
+  &.backToProject{
+    margin-right: 5px;
+    padding-right: 20px;
+    padding-left: 15px;
+    text-transform: uppercase;
+    &::after{
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      display: block;
+      width: 1px;
+      height: 29px;
+      background-color: #575658;
     }
-    &.backToProject{
-      margin-right: 5px;
-      padding-right: 20px;
-      padding-left: 15px;
-      text-transform: uppercase;
-      &::after{
-        content: '';
-        position: absolute;
-        top: 0;
-        right: 0;
-        display: block;
-        width: 1px;
-        height: 29px;
-        background-color: #575658;
-      }
-      &::before{
-        content: '';
-        display: inline-block;
-        width: 5px;
-        height: 5px;
-        border-top: 1.5px solid $COLOR--gray-91;
-        border-left: 1.5px solid $COLOR--gray-91;
-        transform: rotate(-45deg);
-        vertical-align: middle;
-        margin-bottom: 3px;
-        margin-right: 4px;
-      }
+    &::before{
+      content: '';
+      display: inline-block;
+      width: 5px;
+      height: 5px;
+      border-top: 1.5px solid $COLOR--gray-91;
+      border-left: 1.5px solid $COLOR--gray-91;
+      transform: rotate(-45deg);
+      vertical-align: middle;
+      margin-bottom: 3px;
+      margin-right: 4px;
     }
   }
 }
-
