@@ -25,7 +25,7 @@ import { withReadme } from 'storybook-readme';
 import ConfigExamplesBlock from './configExamplesBlock';
 import README from './README.md';
 
-storiesOf('Pages/ProfilePage/configExamplesBlock', module)
+storiesOf('Pages/inside/profilePage/configExamplesBlock', module)
   .addDecorator(host({
     title: 'Assigned projects table on profile page',
     align: 'center middle',
