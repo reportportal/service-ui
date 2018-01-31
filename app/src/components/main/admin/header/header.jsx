@@ -27,23 +27,23 @@ import styles from './header.scss';
 const cx = classNames.bind(styles);
 
 const AdminHeader = ({ onClickBackToProject, onClickLogout, adminHeaderCrumb }) => (
-  <div className={cx('adminHeader')} >
+  <div className={cx('admin-header')} >
     <div className={cx('container')}>
-      <h3>
+      <h3 className={cx('header-name')}>
         <FormattedMessage
           id={'AdminHeader.header'}
           defaultMessage={'Management board'}
         />
         <span className={cx('header-crumb')}>{adminHeaderCrumb}</span>
       </h3>
-      <div className={cx('adminHeaderControls')}>
-        <button className={cx('backToProject')} onClick={onClickBackToProject}>
+      <div className={cx('admin-header-controls')}>
+        <button className={cx({ 'back-to-project': true, btn: true })} onClick={onClickBackToProject}>
           <FormattedMessage
             id={'AdminHeader.btnToProject'}
             defaultMessage={'Back to project'}
           />
         </button>
-        <button className={cx('logout')} onClick={onClickLogout}>
+        <button className={cx('logout', 'btn')} onClick={onClickLogout}>
           <FormattedMessage
             id={'AdminHeader.btnLogout'}
             defaultMessage={'Logout'}

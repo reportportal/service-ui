@@ -1,4 +1,4 @@
-import AdminButton from 'components/main/admin/sidebarButton/sidebarButton';
+import SidebarButton from 'components/main/admin/sidebarButton/sidebarButton';
 import PropTypes from 'prop-types';
 import { FormattedMessage } from 'react-intl';
 import classNames from 'classnames/bind';
@@ -24,43 +24,43 @@ onClickBackToProject, onClickLogout, onClickProfile, onClickMenu }) => (
       <i className={cx('mobile-logo')} />
     </div>
     <div className={cx('sidebar')}>
-      <AdminButton clickHandler={onClickProjects} icon={ProjectsIcon} >
+      <SidebarButton clickHandler={onClickProjects} icon={ProjectsIcon} >
         <FormattedMessage
           id={'AdminSidebar.allProjects'}
           defaultMessage={'Projects'}
         />
-      </AdminButton >
-      <AdminButton clickHandler={onClickUsers} icon={UsersIcon} >
+      </SidebarButton >
+      <SidebarButton clickHandler={onClickUsers} icon={UsersIcon} >
         <FormattedMessage
           id={'AdminSidebar.allUsers'}
           defaultMessage={'All Users'}
         />
-      </AdminButton>
-      <AdminButton clickHandler={onClickServerSettings} icon={SettingsIcon} >
+      </SidebarButton>
+      <SidebarButton clickHandler={onClickServerSettings} icon={SettingsIcon} >
         <FormattedMessage
           id={'AdminSidebar.settings'}
           defaultMessage={'Server settings'}
         />
-      </AdminButton>
+      </SidebarButton>
       <div className={cx('bottom-section')}>
-        <AdminButton clickHandler={onClickBackToProject} icon={BackIcon} btnBottom>
+        <SidebarButton clickHandler={onClickBackToProject} icon={BackIcon} btnBottom>
           <FormattedMessage
             id={'AdminSidebar.btnToProject'}
             defaultMessage={'Back to project'}
           />
-        </AdminButton>
-        <AdminButton clickHandler={onClickProfile} icon={ProfileIcon} btnBottom>
+        </SidebarButton>
+        <SidebarButton clickHandler={onClickProfile} icon={ProfileIcon} btnBottom>
           <FormattedMessage
             id={'AdminSidebar.btnProfile'}
             defaultMessage={'Profile'}
           />
-        </AdminButton>
-        <AdminButton clickHandler={onClickLogout} icon={LogoutIcon} btnBottom>
+        </SidebarButton>
+        <SidebarButton clickHandler={onClickLogout} icon={LogoutIcon} btnBottom>
           <FormattedMessage
             id={'AdminSidebar.btnLogout'}
             defaultMessage={'Logout'}
           />
-        </AdminButton>
+        </SidebarButton>
       </div>
     </div>
   </div>

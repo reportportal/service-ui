@@ -20,6 +20,7 @@
  */
 
 import { storiesOf } from '@storybook/react';
+import { action } from '@storybook/addon-actions';
 import { host } from 'storybook-host';
 import { withReadme } from 'storybook-readme';
 import AdminHeader from './header';
@@ -35,6 +36,9 @@ storiesOf('Components/Main/Admin/Header', module)
     width: '100%',
   }))
   .addDecorator(withReadme(README))
-  .add('default state', () => (
-    <AdminHeader adminHeaderCrumb=" / All users" />
+  .add('with crumb (mobile view)', () => (
+    <AdminHeader adminHeaderCrumb=" / Test crumb" />
+  ))
+  .add('with actions', () => (
+    <AdminHeader onClickBackToProject={action('Back to project clicked ')} onClickLogout={action('Logout clicked ')} />
   ));
