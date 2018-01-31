@@ -22,14 +22,12 @@
 import { storiesOf } from '@storybook/react';
 import { host } from 'storybook-host';
 import { withReadme } from 'storybook-readme';
-import PersonalInfoBlock from './personalInfoBlock';
+import UuidBlock from './uuidBlock';
 import README from './README.md';
-import bigAvatar from './storiesImg/big.jpg';
-import smallAvatar from './storiesImg/small.jpg';
 
-storiesOf('Pages/ProfilePage/personalInfoBlock', module)
+storiesOf('Pages/inside/profilePage/uuidBlock', module)
   .addDecorator(host({
-    title: 'Personal info form on profile page',
+    title: 'Universally Unique Identifier form on profile page',
     align: 'center middle',
     backdrop: 'rgba(70, 69, 71, 0.2)',
     background: '#f5f5f5',
@@ -38,17 +36,9 @@ storiesOf('Pages/ProfilePage/personalInfoBlock', module)
   }))
   .addDecorator(withReadme(README))
   .add('default state (no provided info)', () => (
-    <PersonalInfoBlock />
+    <UuidBlock />
   ))
-  .add('with info', () => (
-    <PersonalInfoBlock login="superadmin" name="RP Admin" email="superadmin@email.com" photoSrc={bigAvatar} />
-  ))
-  .add('with extreme info', () => (
-    <PersonalInfoBlock
-      login="superadminsuperadminsuperadminsuperadmin"
-      name="RP Admin RP Admin RP Admin RP Admin RP Admin RP Admin RP Admin RP Admin"
-      email="superadminsuperadminsuperadminsuperadminsuperadminsuperadminsuperadminsuperadmin@email.com"
-      photoSrc={smallAvatar}
-    />
+  .add('with value', () => (
+    <UuidBlock uuid={'35668002-be4f-44a2-9a27-6cafcbd024b5'} />
   ))
 ;
