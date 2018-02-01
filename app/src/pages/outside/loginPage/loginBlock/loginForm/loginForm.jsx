@@ -26,6 +26,7 @@ import { reduxForm } from 'redux-form';
 import { FieldWithIcon } from 'components/fields/fieldWithIcon/fieldWithIcon';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint/fieldErrorHint';
 import { FormattedMessage, injectIntl, intlShape, defineMessages } from 'react-intl';
+import { Link } from 'react-router-dom';
 import { Input } from 'components/inputs/input/input';
 import { InputPassword } from 'components/inputs/inputPassword/inputPassword';
 import BigButton from 'components/buttons/bigButton/bigButton';
@@ -63,7 +64,6 @@ const placeholders = defineMessages({
 export class LoginForm extends React.Component {
   static propTypes = {
     submitForm: PropTypes.func,
-    forgotPass: PropTypes.func,
     externalAuth: PropTypes.object,
     intl: intlShape.isRequired,
     handleSubmit: PropTypes.func.isRequired,
@@ -72,13 +72,11 @@ export class LoginForm extends React.Component {
   static defaultProps = {
     submitForm: () => {
     },
-    forgotPass: () => {
-    },
     externalAuth: {},
   };
 
   render() {
-    const { handleSubmit, submitForm, forgotPass, externalAuth, intl } = this.props;
+    const { handleSubmit, submitForm, externalAuth, intl } = this.props;
     const { formatMessage } = intl;
     return (
       <form className={cx('login-form')} onSubmit={handleSubmit(submitForm)}>
@@ -115,9 +113,9 @@ export class LoginForm extends React.Component {
             </FieldErrorHint>
           </FieldProvider>
         </div>
-        <div className={cx('forgot-pass')} onClick={() => forgotPass()}>
+        <Link className={cx('forgot-pass')} to="/login?forgotPass=true">
           <FormattedMessage id={'LoginForm.forgotPass'} defaultMessage={'Forgot password?'} />
-        </div>
+        </Link>
         <div className={cx('login-button-container')}>
           <BigButton type={'submit'} color={'organish'}>
             <FormattedMessage id={'LoginForm.login'} defaultMessage={'Login'} />

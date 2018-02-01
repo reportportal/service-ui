@@ -1,6 +1,10 @@
 import React from 'react';
 import { render } from 'react-dom';
-import { HashRouter } from 'react-router-dom';
+import { Router } from 'react-router-dom';
+import { createHashHistory } from 'history';
+import qhistory from 'qhistory';
+
+import { stringify, parse } from 'qs';
 
 import 'reset-css';
 import 'common/css/fonts/fonts.scss';
@@ -8,11 +12,18 @@ import 'common/css/common.scss';
 
 import App from './components/main/app/app';
 
+
+const myHistiry = qhistory(
+  createHashHistory({ hashType: 'noslash' }),
+  stringify,
+  parse,
+);
+
 const rerenderApp = (AppContainer) => {
   render((
-    <HashRouter>
+    <Router history={myHistiry}>
       <AppContainer />
-    </HashRouter>
+    </Router>
   ), document.querySelector('#app'));
 };
 

@@ -19,64 +19,77 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { Component } from 'react';
 import classNames from 'classnames/bind';
-import FieldWithIcon from 'components/fields/fieldWithIcon/fieldWithIcon';
-import FieldErrorHint from 'components/fields/fieldErrorHint/fieldErrorHint';
+import { reduxForm } from 'redux-form';
+import { FieldProvider } from 'components/fields/fieldProvider';
+import { FieldWithIcon } from 'components/fields/fieldWithIcon/fieldWithIcon';
+import { FieldErrorHint } from 'components/fields/fieldErrorHint/fieldErrorHint';
 import { FormattedMessage, injectIntl, intlShape, defineMessages } from 'react-intl';
-import Input from 'components/inputs/input/input';
+import { Link } from 'react-router-dom';
+import { Input } from 'components/inputs/input/input';
 import BigButton from 'components/buttons/bigButton/bigButton';
 import PropTypes from 'prop-types';
+import { validate } from 'common/utils';
 import EmailIcon from './img/email-icon.svg';
 import styles from './forgotPasswordForm.scss';
 
 const cx = classNames.bind(styles);
 
-const ForgotPasswordForm = ({ submitForm, cancel, intl }) => {
-  const { formatMessage } = intl;
-  const placeholders = defineMessages({
-    email: {
-      id: 'ForgotPasswordForm.emailPlaceholder',
-      defaultMessage: 'Enter email',
-    },
-  });
-  const submitHandler = (e) => {
-    e.preventDefault();
-    submitForm();
+const placeholders = defineMessages({
+  email: {
+    id: 'ForgotPasswordForm.emailPlaceholder',
+    defaultMessage: 'Enter email',
+  },
+});
+
+@reduxForm({
+  form: 'forgotPassword',
+  validate: ({ email }) => ({
+    email: !validate.email(email) && 'emailHint',
+  }),
+})
+@injectIntl
+export class ForgotPasswordForm extends Component {
+  static propTypes = {
+    intl: intlShape.isRequired,
+    handleSubmit: PropTypes.func.isRequired,
+    submitForm: PropTypes.func,
   };
-
-  return (
-    <form className={cx('forgot-password-form')} onSubmit={submitHandler}>
-      <div className={cx('email-field')}>
-        <FieldErrorHint formPath={'user.forgotPassForm'} fieldName={'email'} >
-          <FieldWithIcon icon={EmailIcon}>
-            <Input placeholder={formatMessage(placeholders.email)} />
-          </FieldWithIcon>
-        </FieldErrorHint>
-      </div>
-      <div className={cx('forgot-password-buttons-container')}>
-        <div className={cx('forgot-password-button')}>
-          <BigButton type={'button'} color={'gray-60'} onClick={() => cancel()}>
-            <FormattedMessage id={'ForgotPasswordForm.cancel'} defaultMessage={'Cancel'} />
-          </BigButton>
+  static defaultProps = {
+    submitForm: () => {},
+    intl: {},
+  };
+  render() {
+    const { intl, handleSubmit, submitForm } = this.props;
+    const { formatMessage } = intl;
+    return (
+      <form className={cx('forgot-password-form')} onSubmit={handleSubmit(submitForm)}>
+        <div className={cx('email-field')}>
+          <FieldProvider name="email">
+            <FieldErrorHint>
+              <FieldWithIcon icon={EmailIcon}>
+                <Input placeholder={formatMessage(placeholders.email)} />
+              </FieldWithIcon>
+            </FieldErrorHint>
+          </FieldProvider>
         </div>
-        <div className={cx('forgot-password-button')}>
-          <BigButton type={'submit'} color={'organish'}>
-            <FormattedMessage id={'ForgotPasswordForm.sendEmail'} defaultMessage={'Send email'} />
-          </BigButton>
+        <div className={cx('forgot-password-buttons-container')}>
+          <div className={cx('forgot-password-button')}>
+            <Link to="/login" className={cx('button-link')}>
+              <BigButton type={'button'} color={'gray-60'}>
+                <FormattedMessage id={'ForgotPasswordForm.cancel'} defaultMessage={'Cancel'} />
+              </BigButton>
+            </Link>
+
+          </div>
+          <div className={cx('forgot-password-button')}>
+            <BigButton type={'submit'} color={'organish'}>
+              <FormattedMessage id={'ForgotPasswordForm.sendEmail'} defaultMessage={'Send email'} />
+            </BigButton>
+          </div>
         </div>
-      </div>
-    </form>
-  );
-};
-
-ForgotPasswordForm.propTypes = {
-  submitForm: PropTypes.func,
-  cancel: PropTypes.func,
-  intl: intlShape.isRequired,
-};
-ForgotPasswordForm.defaultProps = {
-  submitForm: () => {},
-  cancel: () => {},
-};
-
-export default injectIntl(ForgotPasswordForm);
+      </form>
+    );
+  }
+}
