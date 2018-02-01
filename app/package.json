@@ -121,6 +121,6 @@
       "^routes[/](.+)": "<rootDir>/src/routes/$1",
       "^layouts[/](.+)": "<rootDir>/src/layouts/$1"
     },
-    "notify": true
+    "notify": false
   }
 }
