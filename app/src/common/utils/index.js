@@ -19,14 +19,12 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import getObjWithoutKeys from './getObjWithoutKeys';
-import checkInvalidField from './checkInvalidField';
 import isEmptyObject from './isEmptyObject';
 import referenceDictionary from './referenceDictionary';
+import * as validation from './validation';
 
 export {
-  getObjWithoutKeys,
-  checkInvalidField,
   isEmptyObject,
   referenceDictionary,
 };
+export const validate = validation;

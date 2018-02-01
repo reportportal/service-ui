@@ -21,13 +21,13 @@
 
 import classNames from 'classnames/bind';
 import { FormattedMessage } from 'react-intl';
-import ForgotPasswordForm from './forgotPasswordForm/forgotPasswordForm';
+import { ForgotPasswordForm } from './forgotPasswordForm/forgotPasswordForm';
 import styles from './forgotPasswordBlock.scss';
 
 
 const cx = classNames.bind(styles);
 
-const ForgotPasswordBlock = () => (
+export const ForgotPasswordBlock = () => (
   <div className={cx('forgot-password-block')}>
     <span className={cx('forgot-password-msg')}>
       <span className={cx('big')}>
@@ -39,5 +39,3 @@ const ForgotPasswordBlock = () => (
     <ForgotPasswordForm />
   </div>
 );
-
-export default ForgotPasswordBlock;

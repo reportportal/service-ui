@@ -19,40 +19,52 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { PureComponent } from 'react';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { referenceDictionary } from 'common/utils';
+import { withRouter } from 'react-router-dom';
 import styles from './loginPage.scss';
 import { LoginPageSection } from './loginPageSection/loginPageSection';
 import { SocialSection } from './socialSection/socialSection';
 import { LoginBlock } from './loginBlock/loginBlock';
-// import ForgotPasswordBlock from './forgotPasswordBlock/forgotPasswordBlock';
+import { ForgotPasswordBlock } from './forgotPasswordBlock/forgotPasswordBlock';
 // import ChangePasswordBlock from './changePasswordBlock/changePasswordBlock';
 import { ServiceVersionsBlock } from './serviceVersionsBlock';
 
 const cx = classNames.bind(styles);
 
-export const LoginPage = () => (
-  <div className={cx('login-page')}>
-    <div className={cx('login-page-content')}>
-      <div className={cx('background')} />
-      <a href={referenceDictionary.rpLanding} target="_blank">
-        <div className={cx('logo')} />
-      </a>
-      <LoginPageSection left>
-        <SocialSection />
-      </LoginPageSection>
-      <LoginPageSection>
-        <LoginBlock />
-        <ServiceVersionsBlock />
-      </LoginPageSection>
-    </div>
-  </div>
-);
-
-LoginPage.propTypes = {
-  routeParams: PropTypes.object,
-};
-LoginPage.defaultProps = {
-  routeParams: {},
-};
+@withRouter
+export class LoginPage extends PureComponent {
+  static propTypes = {
+    location: PropTypes.shape({
+      hash: PropTypes.string,
+      pathname: PropTypes.string,
+      query: PropTypes.object,
+      search: PropTypes.string,
+    }).isRequired,
+  };
+  render() {
+    let currentBlock = <LoginBlock />;
+    if (this.props.location.query.forgotPass) {
+      currentBlock = <ForgotPasswordBlock />;
+    }
+    return (
+      <div className={cx('login-page')}>
+        <div className={cx('login-page-content')}>
+          <div className={cx('background')} />
+          <a href={referenceDictionary.rpLanding} target="_blank">
+            <div className={cx('logo')} />
+          </a>
+          <LoginPageSection left>
+            <SocialSection />
+          </LoginPageSection>
+          <LoginPageSection>
+            {currentBlock}
+            <ServiceVersionsBlock />
+          </LoginPageSection>
+        </div>
+      </div>
+    );
+  }
+}
