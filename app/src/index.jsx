@@ -13,7 +13,7 @@ import 'common/css/common.scss';
 import App from './components/main/app/app';
 
 
-const myHistiry = qhistory(
+const myHistory = qhistory(
   createHashHistory({ hashType: 'noslash' }),
   stringify,
   parse,
@@ -21,7 +21,7 @@ const myHistiry = qhistory(
 
 const rerenderApp = (AppContainer) => {
   render((
-    <Router history={myHistiry}>
+    <Router history={myHistory}>
       <AppContainer />
     </Router>
   ), document.querySelector('#app'));
