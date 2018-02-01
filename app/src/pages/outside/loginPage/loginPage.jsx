@@ -25,10 +25,10 @@ import PropTypes from 'prop-types';
 import { referenceDictionary } from 'common/utils';
 import { withRouter } from 'react-router-dom';
 import styles from './loginPage.scss';
-import { LoginPageSection } from './loginPageSection/loginPageSection';
-import { SocialSection } from './socialSection/socialSection';
-import { LoginBlock } from './loginBlock/loginBlock';
-import { ForgotPasswordBlock } from './forgotPasswordBlock/forgotPasswordBlock';
+import { LoginPageSection } from './loginPageSection';
+import { SocialSection } from './socialSection';
+import { LoginBlock } from './loginBlock';
+import { ForgotPasswordBlock } from './forgotPasswordBlock';
 // import ChangePasswordBlock from './changePasswordBlock/changePasswordBlock';
 import { ServiceVersionsBlock } from './serviceVersionsBlock';
 

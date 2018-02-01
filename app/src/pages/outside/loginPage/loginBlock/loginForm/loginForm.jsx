@@ -35,7 +35,7 @@ import { getAuthExtensions } from 'controllers/appInfo';
 import LoginIcon from './img/login-field-icon.svg';
 import PasswordIcon from './img/password-field-icon.svg';
 import styles from './loginForm.scss';
-import { ExternalLoginBlock } from './externalLoginBlock/externalLoginBlock';
+import { ExternalLoginBlock } from './externalLoginBlock';
 
 const cx = classNames.bind(styles);
 

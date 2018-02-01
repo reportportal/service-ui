@@ -21,7 +21,7 @@
 
 import classNames from 'classnames/bind';
 import { FormattedMessage } from 'react-intl';
-import { ForgotPasswordForm } from './forgotPasswordForm/forgotPasswordForm';
+import { ForgotPasswordForm } from './forgotPasswordForm';
 import styles from './forgotPasswordBlock.scss';
 
 

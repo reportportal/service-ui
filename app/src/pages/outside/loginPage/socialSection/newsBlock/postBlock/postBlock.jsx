@@ -76,7 +76,7 @@ const getPostContent = (text, entities) => {
   return result.replace(/\n/g, '<br>');
 };
 
-const PostBlock = ({ tweetData }) => (
+export const PostBlock = ({ tweetData }) => (
   <div className={cx('post-block')}>
     {Parser(getPostContent(tweetData.text, tweetData.entities))}
   </div>
@@ -89,5 +89,3 @@ PostBlock.propTypes = {
 PostBlock.defaultProps = {
   tweetData: {},
 };
-
-export default PostBlock;
