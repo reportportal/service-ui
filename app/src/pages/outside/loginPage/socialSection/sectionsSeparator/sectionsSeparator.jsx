@@ -24,8 +24,6 @@ import styles from './sectionsSeparator.scss';
 
 const cx = classNames.bind(styles);
 
-const SectionsSeparator = () => (
+export const SectionsSeparator = () => (
   <div className={cx('sections-separator')} />
 );
-
-export default SectionsSeparator;

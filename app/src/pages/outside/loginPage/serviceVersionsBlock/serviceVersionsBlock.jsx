@@ -23,7 +23,7 @@ import classNames from 'classnames/bind';
 import { FormattedMessage } from 'react-intl';
 import PropTypes from 'prop-types';
 import styles from './serviceVersionsBlock.scss';
-import ServiceVersionItem from './serviceVersionItem/serviceVersionItem';
+import { ServiceVersionItem } from './serviceVersionItem';
 
 const cx = classNames.bind(styles);
 

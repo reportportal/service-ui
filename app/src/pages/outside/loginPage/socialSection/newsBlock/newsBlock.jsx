@@ -25,7 +25,7 @@ import PropTypes from 'prop-types';
 import { FormattedMessage } from 'react-intl';
 import ScrollWrapper from 'components/main/scrollWrapper/scrollWrapper';
 import styles from './newsBlock.scss';
-import PostBlock from './postBlock/postBlock';
+import { PostBlock } from './postBlock';
 
 const cx = classNames.bind(styles);
 

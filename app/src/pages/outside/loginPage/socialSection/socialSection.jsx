@@ -22,8 +22,8 @@
 import classNames from 'classnames/bind';
 import styles from './socialSection.scss';
 import { NewsBlock } from './newsBlock';
-import SectionsSeparator from './sectionsSeparator/sectionsSeparator';
-import SocialsBlock from './socialsBlock/socialsBlock';
+import { SectionsSeparator } from './sectionsSeparator';
+import { SocialsBlock } from './socialsBlock';
 
 const cx = classNames.bind(styles);
 
