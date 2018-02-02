@@ -26,10 +26,10 @@ import styles from './fieldBottomConstraints.scss';
 
 const cx = classNames.bind(styles);
 
-const FieldBottomConstraints = ({ formPath, fieldName, text, children }) => (
+export const FieldBottomConstraints = ({ text, children, ...rest }) => (
   <div className={cx('field-bottom-constraints')}>
     <div className={cx('container')}>
-      {children && cloneElement(children, { formPath, fieldName })}
+      {children && cloneElement(children, rest)}
     </div>
     <div className={cx('text')}>
       {text}
@@ -49,5 +49,3 @@ FieldBottomConstraints.defaultProps = {
   text: '',
   children: null,
 };
-
-export default FieldBottomConstraints;

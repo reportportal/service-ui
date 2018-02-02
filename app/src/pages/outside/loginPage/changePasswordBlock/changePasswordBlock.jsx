@@ -21,12 +21,12 @@
 
 import classNames from 'classnames/bind';
 import { FormattedMessage } from 'react-intl';
-import ChangePasswordForm from './changePasswordForm/changePasswordForm';
+import { ChangePasswordForm } from './changePasswordForm';
 import styles from './changePasswordBlock.scss';
 
 const cx = classNames.bind(styles);
 
-const ChangePasswordBlock = () => (
+export const ChangePasswordBlock = () => (
   <div className={cx('change-password-block')}>
     <span className={cx('change-password-msg')}>
       <span className={cx('big')}>
@@ -38,5 +38,3 @@ const ChangePasswordBlock = () => (
     <ChangePasswordForm />
   </div>
 );
-
-export default ChangePasswordBlock;
