@@ -10,7 +10,7 @@ import 'reset-css';
 import 'common/css/fonts/fonts.scss';
 import 'common/css/common.scss';
 
-import App from './components/main/app/app';
+import App from './app';
 
 
 const queryParseHistory = qhistory(
@@ -28,8 +28,8 @@ const rerenderApp = (AppContainer) => {
 };
 
 if (module.hot) {
-  module.hot.accept('./components/main/app/app', () => {
-    const app = require('./components/main/app/app').default;
+  module.hot.accept('./app', () => {
+    const app = require('./app').default;
     rerenderApp(app);
   });
 }

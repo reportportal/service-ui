@@ -8,14 +8,17 @@ import 'common/css/common.scss';
 import { addLocaleData } from 'react-intl';
 import en from 'react-intl/locale-data/en';
 import ru from 'react-intl/locale-data/ru';
+import be from 'react-intl/locale-data/be';
 
 import localeRU from '../localization/translated/ru.json';
+import localeBE from '../localization/translated/be.json';
 const messages = {
   ru: localeRU,
+  be: localeBE,
 };
-addLocaleData([...en, ...ru]);
+addLocaleData([...en, ...ru, ...be]);
 setIntlConfig({
-  locales: ['en', 'ru'],
+  locales: ['en', 'ru', 'be'],
   defaultLocale: 'en',
   getMessages: (lang) => {
     return messages[lang];
