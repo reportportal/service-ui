@@ -1,0 +1,20 @@
+.container {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  opacity: 0.7;
+}
+.item {
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+  line-height: 40px;
+  text-align: center;
+  background: $COLOR--gray-91;
+  border: 1px solid $COLOR--gray-47;
+  cursor: pointer;
+  &.active {
+    cursor: auto;
+    background: $COLOR--gray-47;
+  }
+}
