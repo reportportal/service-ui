@@ -29,7 +29,7 @@ import { LoginPageSection } from './loginPageSection';
 import { SocialSection } from './socialSection';
 import { LoginBlock } from './loginBlock';
 import { ForgotPasswordBlock } from './forgotPasswordBlock';
-// import ChangePasswordBlock from './changePasswordBlock/changePasswordBlock';
+import { ChangePasswordBlock } from './changePasswordBlock';
 import { ServiceVersionsBlock } from './serviceVersionsBlock';
 
 const cx = classNames.bind(styles);
@@ -48,6 +48,9 @@ export class LoginPage extends PureComponent {
     let currentBlock = <LoginBlock />;
     if (this.props.location.query.forgotPass) {
       currentBlock = <ForgotPasswordBlock />;
+    }
+    if (this.props.location.query.reset) {
+      currentBlock = <ChangePasswordBlock />;
     }
     return (
       <div className={cx('login-page')}>

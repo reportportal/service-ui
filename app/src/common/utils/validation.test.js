@@ -1,4 +1,4 @@
-import { email } from './validation';
+import { email, password } from './validation';
 
 describe('Email', () => {
   test(' validation should be correct', () => {
@@ -25,6 +25,21 @@ describe('Email', () => {
     expect(email('email@example.com (Joe Smith)')).toBe(false);
     expect(email('email@example')).toBe(false);
     expect(email('あいうえお@example.com')).toBe(false);
+  });
+});
+
+describe('Password', () => {
+  test('validation should be correct', () => {
+    expect(password('1234')).toBe(true);
+    expect(password('1234567890123456789012345')).toBe(true);
+    expect(password('Aa1@3@.?n&()*^HFU')).toBe(true);
+    expect(password('firstname+lastname@ex')).toBe(true);
+  });
+  test('validation should be not correct', () => {
+    expect(password('1')).toBe(false);
+    expect(password('12')).toBe(false);
+    expect(password('123')).toBe(false);
+    expect(password('12345678901234567890123456')).toBe(false);
   });
 });
 

@@ -25,6 +25,7 @@ import { connect } from 'react-redux';
 import { reduxForm } from 'redux-form';
 import { FormattedMessage, injectIntl, intlShape, defineMessages } from 'react-intl';
 import { Link } from 'react-router-dom';
+import { validate } from 'common/utils';
 import { FieldWithIcon } from 'components/fields/fieldWithIcon/fieldWithIcon';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint/fieldErrorHint';
 import { Input } from 'components/inputs/input/input';
@@ -57,7 +58,7 @@ const placeholders = defineMessages({
   form: 'loginPage',
   validate: ({ login, password }) => ({
     login: (!login || !/^[0-9a-zA-Z-_.]{1,128}$/.exec(login)) && 'loginHint',
-    password: (!password || !/^(.){4,25}$/.exec(password)) && 'passwordHint',
+    password: (!password || !validate.password(password)) && 'passwordHint',
   }),
 })
 @injectIntl
