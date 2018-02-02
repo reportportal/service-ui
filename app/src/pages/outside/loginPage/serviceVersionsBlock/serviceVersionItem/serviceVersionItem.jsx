@@ -53,7 +53,7 @@ export class ServiceVersionItem extends Component {
     const { serviceName, serviceVersion, serviceNewVersion, isDeprecated, intl } = this.props;
     const classes = {
       'service-version-item': true,
-      depricated: isDeprecated,
+      deprecated: isDeprecated,
     };
     return (
       <span
