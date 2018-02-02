@@ -23,7 +23,7 @@ import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import { host } from 'storybook-host';
 import { withReadme } from 'storybook-readme';
-import AdminHeader from './header';
+import { AdminHeader } from './header';
 import README from './README.md';
 
 storiesOf('Components/Main/Admin/Header', module)
@@ -36,6 +36,9 @@ storiesOf('Components/Main/Admin/Header', module)
     width: '100%',
   }))
   .addDecorator(withReadme(README))
+  .add('default state', () => (
+    <AdminHeader />
+  ))
   .add('with crumb (mobile view)', () => (
     <AdminHeader adminHeaderCrumb=" / Test crumb" />
   ))

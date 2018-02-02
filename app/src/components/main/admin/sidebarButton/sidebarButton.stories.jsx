@@ -20,10 +20,11 @@
  */
 
 import { storiesOf } from '@storybook/react';
+import { action } from '@storybook/addon-actions';
 import { host } from 'storybook-host';
 import { FormattedMessage } from 'react-intl';
 import { withReadme } from 'storybook-readme';
-import SidebarButton from './sidebarButton';
+import { SidebarButton } from './sidebarButton';
 import README from './README.md';
 import TestIcon from './img/test-icon.svg';
 
@@ -38,7 +39,18 @@ storiesOf('Components/Main/Admin/sidebarButton', module)
   }))
   .addDecorator(withReadme(README))
   .add('default state', () => (
+    <SidebarButton />
+  ))
+  .add('with icon and name', () => (
     <SidebarButton icon={TestIcon}>
+      <FormattedMessage
+        id={'AdminSidebar.allProjects'}
+        defaultMessage={'Projects'}
+      />
+    </SidebarButton>
+  ))
+  .add('with icon,name and action', () => (
+    <SidebarButton icon={TestIcon} clickHandler={action('clicked')}>
       <FormattedMessage
         id={'AdminSidebar.allProjects'}
         defaultMessage={'Projects'}

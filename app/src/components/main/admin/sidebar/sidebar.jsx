@@ -1,7 +1,7 @@
-import SidebarButton from 'components/main/admin/sidebarButton/sidebarButton';
 import PropTypes from 'prop-types';
 import { FormattedMessage } from 'react-intl';
 import classNames from 'classnames/bind';
+import { SidebarButton } from 'components/main/admin/sidebarButton/sidebarButton';
 import ProjectsIcon from './img/projects.svg';
 import UsersIcon from './img/users.svg';
 import SettingsIcon from './img/settings.svg';
@@ -12,7 +12,7 @@ import styles from './sidebar.scss';
 
 const cx = classNames.bind(styles);
 
-const Sidebar = ({ isMenuOpen, onClickProjects, onClickUsers, onClickServerSettings,
+export const Sidebar = ({ isMenuOpen, onClickProjects, onClickUsers, onClickServerSettings,
 onClickBackToProject, onClickLogout, onClickProfile, onClickMenu }) => (
   <div className={cx({ adminSidebar: true, open: isMenuOpen })}>
     <div className={cx('mobile-header')}>
@@ -88,4 +88,3 @@ Sidebar.defaultProps = {
   onClickMenu: () => {},
 };
 
-export default Sidebar;

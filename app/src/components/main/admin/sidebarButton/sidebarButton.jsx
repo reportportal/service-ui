@@ -4,14 +4,18 @@ import styles from './sidebarButton.scss';
 
 const cx = classNames.bind(styles);
 
-const SidebarButton = ({ clickHandler, icon, children, btnBottom }) => {
+export const SidebarButton = ({ clickHandler, icon, children, btnBottom }) => {
   const btnClasses = cx({
     btn: true,
     'btn-bottom': btnBottom,
   });
+  let img;
+  if (icon) {
+    img = <img src={icon} className={cx('icon')} alt="menu icon" />;
+  }
   return (
     <button onClick={clickHandler} className={btnClasses} >
-      <img src={icon} className={cx('icon')} alt="menu icon" />
+      {img}
       <span className={cx('btn-title')}>
         {children}
       </span>
@@ -33,4 +37,3 @@ SidebarButton.defaultProps = {
   children: '',
 };
 
-export default SidebarButton;

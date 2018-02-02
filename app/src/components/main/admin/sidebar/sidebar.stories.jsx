@@ -23,7 +23,7 @@ import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import { host } from 'storybook-host';
 import { withReadme } from 'storybook-readme';
-import Sidebar from './sidebar';
+import { Sidebar } from './sidebar';
 import README from './README.md';
 
 storiesOf('Components/Main/Admin/Sidebar', module)

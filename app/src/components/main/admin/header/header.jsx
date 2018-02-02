@@ -26,7 +26,7 @@ import styles from './header.scss';
 
 const cx = classNames.bind(styles);
 
-const AdminHeader = ({ onClickBackToProject, onClickLogout, adminHeaderCrumb }) => (
+export const AdminHeader = ({ onClickBackToProject, onClickLogout, adminHeaderCrumb }) => (
   <div className={cx('admin-header')} >
     <div className={cx('container')}>
       <h3 className={cx('header-name')}>
@@ -65,6 +65,4 @@ AdminHeader.defaultProps = {
   onClickBackToProject: () => {},
   onClickLogout: () => {},
 };
-
-export default AdminHeader;
 
