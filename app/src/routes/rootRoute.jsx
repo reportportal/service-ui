@@ -17,13 +17,17 @@ import SettingsPage from 'pages/inside/settingsPage/settingsPage';
 
 import { LoginPage } from 'pages/outside/loginPage';
 
+import { LocalizationSwitcher } from 'components/main/localizationSwitcher';
+
 const LoginRoute = () => (
   <EmptyLayout>
+    <LocalizationSwitcher />
     <LoginPage />
   </EmptyLayout>
 );
 const AppRoute = () => (
   <AppLayout>
+    <LocalizationSwitcher />
     <Switch>
       <Route path="/user-profile" component={ProfilePage} />
       <Route path="/api" component={ApiPage} />

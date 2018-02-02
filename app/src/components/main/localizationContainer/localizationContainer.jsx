@@ -5,6 +5,7 @@ import { IntlProvider, addLocaleData } from 'react-intl';
 import en from 'react-intl/locale-data/en';
 import ru from 'react-intl/locale-data/ru';
 import be from 'react-intl/locale-data/be';
+import { langSelector } from 'controllers/lang';
 
 import localeRU from '../../../../localization/translated/ru.json';
 import localeBE from '../../../../localization/translated/be.json';
@@ -12,7 +13,7 @@ import localeBE from '../../../../localization/translated/be.json';
 addLocaleData([...en, ...ru, ...be]);
 
 @connect(state => ({
-  lang: state.lang.lang,
+  lang: langSelector(state),
 }))
 export class LocalizationContainer extends React.Component {
   static propTypes = {
@@ -54,7 +55,7 @@ export class LocalizationContainer extends React.Component {
     }
     return (
       <IntlProvider locale={this.props.lang} messages={this.messages[this.props.lang]}>
-        {this.props.children}
+        {React.cloneElement(this.props.children, { key: this.props.lang })}
       </IntlProvider>
     );
   }

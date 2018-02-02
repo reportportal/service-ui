@@ -7,11 +7,11 @@ import { LocalizationContainer } from 'components/main/localizationContainer';
 
 const App = () => (
   <Provider store={store}>
-    <LocalizationContainer>
-      <InitialData>
+    <InitialData>
+      <LocalizationContainer>
         <RootRoute />
-      </InitialData>
-    </LocalizationContainer>
+      </LocalizationContainer>
+    </InitialData>
   </Provider>
 );
 
