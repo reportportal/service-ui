@@ -22,14 +22,14 @@
 import { Component } from 'react';
 import classNames from 'classnames/bind';
 import { reduxForm } from 'redux-form';
+import { FormattedMessage, injectIntl, intlShape, defineMessages } from 'react-intl';
+import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldWithIcon } from 'components/fields/fieldWithIcon/fieldWithIcon';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint/fieldErrorHint';
-import { FormattedMessage, injectIntl, intlShape, defineMessages } from 'react-intl';
-import { Link } from 'react-router-dom';
 import { Input } from 'components/inputs/input/input';
 import BigButton from 'components/buttons/bigButton/bigButton';
-import PropTypes from 'prop-types';
 import { validate } from 'common/utils';
 import EmailIcon from './img/email-icon.svg';
 import styles from './forgotPasswordForm.scss';
