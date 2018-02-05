@@ -32,7 +32,8 @@ import { Input } from 'components/inputs/input/input';
 import { InputPassword } from 'components/inputs/inputPassword/inputPassword';
 import BigButton from 'components/buttons/bigButton/bigButton';
 import { FieldProvider } from 'components/fields/fieldProvider';
-import { getAuthExtensions } from 'controllers/appInfo';
+import { authExtensionsSelector } from 'controllers/appInfo';
+import { doAuthAction } from 'controllers/auth';
 import LoginIcon from './img/login-field-icon.svg';
 import PasswordIcon from './img/password-field-icon.svg';
 import styles from './loginForm.scss';
@@ -52,8 +53,10 @@ const placeholders = defineMessages({
 });
 
 @connect(state => ({
-  externalAuth: getAuthExtensions(state),
-}))
+  externalAuth: authExtensionsSelector(state),
+}), {
+  authorize: doAuthAction,
+})
 @reduxForm({
   form: 'loginPage',
   validate: ({ login, password }) => ({
@@ -64,23 +67,23 @@ const placeholders = defineMessages({
 @injectIntl
 export class LoginForm extends React.Component {
   static propTypes = {
-    submitForm: PropTypes.func,
     externalAuth: PropTypes.object,
     intl: intlShape.isRequired,
     handleSubmit: PropTypes.func.isRequired,
+    authorize: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
-    submitForm: () => {
+    authorize: () => {
     },
     externalAuth: {},
   };
 
   render() {
-    const { handleSubmit, submitForm, externalAuth, intl } = this.props;
+    const { handleSubmit, externalAuth, intl, authorize } = this.props;
     const { formatMessage } = intl;
     return (
-      <form className={cx('login-form')} onSubmit={handleSubmit(submitForm)}>
+      <form className={cx('login-form')} onSubmit={handleSubmit(authorize)}>
         {
           !Utils.isEmptyObject(externalAuth)
             ?

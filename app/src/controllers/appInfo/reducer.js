@@ -1,4 +1,4 @@
-import { FETCH_INFO_SUCCESS } from './actions';
+import { FETCH_INFO_SUCCESS } from './constants';
 
 export const appInfoReducer = (state = {}, { type, payload }) => {
   switch (type) {

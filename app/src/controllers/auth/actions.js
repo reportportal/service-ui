@@ -1,13 +1,5 @@
-import { TOKEN_KEY, DEFAULT_TOKEN } from './constants';
-
-export const CHANGE_TOKEN = 'changeToken';
-export const AUTH_SUCCESS = 'authSuccess';
-export const FETCH_USER_SUCCESS = 'fetchUserSuccess';
-
-const changeToken = token => ({
-  type: CHANGE_TOKEN,
-  payload: token,
-});
+import { fetch } from 'common/utils';
+import { FETCH_USER_SUCCESS, AUTH_SUCCESS, TOKEN_KEY } from './constants';
 
 export const authSuccess = () => ({
   type: AUTH_SUCCESS,
@@ -18,23 +10,20 @@ const fetchUserSuccess = user => ({
   payload: user,
 });
 
-export const setToken = token => (dispatch) => {
-  localStorage.setItem(TOKEN_KEY, token);
-  dispatch(changeToken(token));
-};
-export const clearToken = () => (dispatch) => {
-  localStorage.removeItem(TOKEN_KEY);
-  dispatch(changeToken(DEFAULT_TOKEN));
-};
+export const fetchUserAction = () => dispatch =>
+  fetch('/api/v1/user')
+    .then(user => dispatch(fetchUserSuccess(user)))
+    .then(() => dispatch(authSuccess()));
 
-export const fetchUser = token => dispatch => fetch('/api/v1/user', {
-  headers: {
-    Authorization: token || DEFAULT_TOKEN,
-  },
-}).then((res) => {
-  if (res.status === 401) {
-    throw new Error('Unauthorized');
-  }
-  return res.json();
-}).then(user => dispatch(fetchUserSuccess(user)));
-
+export const doAuthAction = ({ login, password }) => dispatch =>
+  fetch('/uat/sso/oauth/token', {
+    params: {
+      grant_type: 'password',
+      username: login,
+      password,
+    },
+    method: 'POST',
+  }).then((result) => {
+    localStorage.setItem(TOKEN_KEY, `${result.token_type} ${result.access_token}`);
+    dispatch(fetchUserAction());
+  });

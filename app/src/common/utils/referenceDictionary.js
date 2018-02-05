@@ -19,7 +19,7 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export default {
+export const referenceDictionary = {
   rpLanding: 'http://reportportal.io/',
   rpDoc: 'http://reportportal.io/docs',
   rpGitHub: 'https://github.com/reportportal',

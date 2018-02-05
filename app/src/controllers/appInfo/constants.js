@@ -1,1 +1,1 @@
-export const APP_INFO_STORE_KEY = 'appInfo';
+export const FETCH_INFO_SUCCESS = 'fetchInfoSuccess';

@@ -19,12 +19,9 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import isEmptyObject from './isEmptyObject';
-import referenceDictionary from './referenceDictionary';
 import * as validation from './validation';
 
-export {
-  isEmptyObject,
-  referenceDictionary,
-};
 export const validate = validation;
+export { isEmptyObject } from './isEmptyObject';
+export { referenceDictionary } from './referenceDictionary';
+export { fetch, ERROR_CANCELED, ERROR_UNAUTHORIZED } from './fetch';
