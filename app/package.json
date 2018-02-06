@@ -37,7 +37,8 @@
     "redux-form": "^7.2.1",
     "redux-thunk": "^2.2.0",
     "reset-css": "^2.2.1",
-    "semver-diff": "^2.1.0"
+    "semver-diff": "^2.1.0",
+    "simplemde": "^1.11.2"
   },
   "devDependencies": {
     "@storybook/addon-actions": "^3.2.16",

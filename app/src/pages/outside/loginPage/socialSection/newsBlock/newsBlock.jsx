@@ -37,13 +37,11 @@ export class NewsBlock extends Component {
   static defaultProps = {
     tweets: [],
   };
-
-  constructor() {
-    super();
-    this.state = { twitterBlockHeight: window.innerWidth < 992 ? 160 : 500 };
+  constructor(props) {
+    super(props);
     window.addEventListener('resize', this.windowResizeHandler, false);
   }
-
+  state = { twitterBlockHeight: window.innerWidth < 992 ? 160 : 500 };
   componentWillUnmount = () => {
     window.removeEventListener('resize', this.windowResizeHandler, false);
   };
