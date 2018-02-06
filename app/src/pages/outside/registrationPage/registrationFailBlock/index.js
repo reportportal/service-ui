@@ -1,0 +1,1 @@
+export { RegistrationFailBlock } from './registrationFailBlock';

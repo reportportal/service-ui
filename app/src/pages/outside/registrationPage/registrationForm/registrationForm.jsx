@@ -19,15 +19,19 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { Component } from 'react';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { FormattedMessage, injectIntl, intlShape, defineMessages } from 'react-intl';
+import { reduxForm } from 'redux-form';
+import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldBottomConstraints } from 'components/fields/fieldBottomConstraints';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { FieldWithIcon } from 'components/fields/fieldWithIcon';
 import { Input } from 'components/inputs/input';
 import { InputPassword } from 'components/inputs/inputPassword';
 import { BigButton } from 'components/buttons/bigButton';
+import { validate } from 'common/utils';
 import LoginIcon from './img/login-icon.svg';
 import NameIcon from './img/name-icon.svg';
 import EmailIcon from './img/email-icon.svg';
@@ -37,101 +41,144 @@ import styles from './registrationForm.scss';
 
 const cx = classNames.bind(styles);
 
-const RegistrationForm = ({ submitForm, resetForm, intl }) => {
-  const submitHandler = (e) => {
-    e.preventDefault();
-    submitForm();
+const messages = defineMessages({
+  login: {
+    id: 'RegistrationForm.loginPlaceholder',
+    defaultMessage: 'Login',
+  },
+  name: {
+    id: 'RegistrationForm.namePlaceholder',
+    defaultMessage: 'Full name',
+  },
+  password: {
+    id: 'RegistrationForm.passwordPlaceholder',
+    defaultMessage: 'Password',
+  },
+  confirmPassword: {
+    id: 'RegistrationForm.passwordConfirmPlaceholder',
+    defaultMessage: 'Confirm password',
+  },
+  loginConstraint: {
+    id: 'RegistrationForm.loginConstraints',
+    defaultMessage: '1-128 symbols, latin, numeric characters, symbols: hyphen, underscore, dot',
+  },
+  nameConstraint: {
+    id: 'RegistrationForm.nameConstraints',
+    defaultMessage: '3-256 symbols, latin, cyrillic, numeric characters, symbols: hyphen, underscore, dot, space',
+  },
+  passwordConstraint: {
+    id: 'RegistrationForm.passwordConstraints',
+    defaultMessage: '4-25 symbols',
+  },
+});
+
+@reduxForm({
+  form: 'registration',
+  validate: ({ login, name, password, confirmPassword }) => ({
+    password: (!password || !validate.password(password)) && 'passwordHint',
+    confirmPassword: (!confirmPassword || confirmPassword !== password) && 'confirmPasswordHint',
+    login: (!login || !/^[0-9a-zA-Z-_.]{1,128}$/.exec(login)) && 'loginHint',
+    name: (!name || !/^[a-z0-9._-\s\u0400-\u04FF]{3,256}$/i.exec(name)) && 'nameHint',
+  }),
+})
+@injectIntl
+export class RegistrationForm extends Component {
+  static propTypes = {
+    submitForm: PropTypes.func,
+    reset: PropTypes.func.isRequired,
+    intl: intlShape.isRequired,
+    handleSubmit: PropTypes.func.isRequired,
+    autofill: PropTypes.func.isRequired,
+    invalid: PropTypes.bool.isRequired,
+    email: PropTypes.string,
   };
-  const resetHandler = (e) => {
-    e.preventDefault();
-    resetForm();
+
+  static defaultProps = {
+    submitForm: () => {
+    },
+    email: '',
   };
-  const { formatMessage } = intl;
-  const placeholders = defineMessages({
-    login: {
-      id: 'RegistrationForm.loginPlaceholder',
-      defaultMessage: 'Login',
-    },
-    name: {
-      id: 'RegistrationForm.namePlaceholder',
-      defaultMessage: 'Full name',
-    },
-    password: {
-      id: 'RegistrationForm.passwordPlaceholder',
-      defaultMessage: 'Password',
-    },
-    confirmPassword: {
-      id: 'RegistrationForm.passwordConfirmPlaceholder',
-      defaultMessage: 'Confirm password',
-    },
-  });
 
-  return (
-    <form className={cx('registration-form')} onSubmit={submitHandler}>
-      <div className={cx('login-field')}>
-        <FieldBottomConstraints formPath={'user.registrationForm'} fieldName={'login'} text={<FormattedMessage id={'RegistrationForm.loginConstraints'} defaultMessage={'1-128 symbols, latin, numeric characters, symbols: hyphen, underscore, dot'} />}>
-          <FieldErrorHint>
-            <FieldWithIcon icon={LoginIcon}>
-              <Input maxLength={'128'} placeholder={formatMessage(placeholders.login)} />
-            </FieldWithIcon>
-          </FieldErrorHint>
-        </FieldBottomConstraints>
-      </div>
-      <div className={cx('name-field')}>
-        <FieldBottomConstraints formPath={'user.registrationForm'} fieldName={'name'} text={<FormattedMessage id={'RegistrationForm.nameConstraints'} defaultMessage={'3-256 symbols, latin, cyrillic, numeric characters, symbols: hyphen, underscore, dot, space'} />}>
-          <FieldErrorHint>
-            <FieldWithIcon icon={NameIcon}>
-              <Input maxLength={'256'} placeholder={formatMessage(placeholders.name)} />
-            </FieldWithIcon>
-          </FieldErrorHint>
-        </FieldBottomConstraints>
-      </div>
-      <div className={cx('email-field')}>
-        <FieldWithIcon formPath={'user.registrationForm'} fieldName={'email'} icon={EmailIcon}>
-          <Input />
-        </FieldWithIcon>
-      </div>
-      <div className={cx('password-field')}>
-        <FieldBottomConstraints formPath={'user.registrationForm'} fieldName={'password'} text={<FormattedMessage id={'RegistrationForm.passwordConstraints'} defaultMessage={'4-25 symbols'} />}>
-          <FieldErrorHint>
-            <FieldWithIcon icon={PasswordIcon}>
-              <InputPassword maxLength={'25'} placeholder={formatMessage(placeholders.password)} />
-            </FieldWithIcon>
-          </FieldErrorHint>
-        </FieldBottomConstraints>
-      </div>
-      <div className={cx('confirm-password-field')}>
-        <FieldErrorHint formPath={'user.registrationForm'} fieldName={'confirmPassword'} >
-          <FieldWithIcon icon={PasswordIcon}>
-            <InputPassword maxLength={'25'} placeholder={formatMessage(placeholders.confirmPassword)} />
-          </FieldWithIcon>
-        </FieldErrorHint>
-      </div>
+  componentDidMount = () => {
+    this.autofillEmail();
+  };
 
-      <div className={cx('buttons-container')}>
-        <div className={cx('button-reset')}>
-          <BigButton color={'gray-60'} onClick={resetHandler} >
-            <FormattedMessage id={'RegistrationForm.reset'} defaultMessage={'Reset'} />
-          </BigButton>
+  autofillEmail = () => this.props.autofill('email', this.props.email);
+
+  resetForm = () => {
+    this.props.reset();
+    this.autofillEmail();
+  };
+
+  render() {
+    const { handleSubmit, submitForm, intl, invalid } = this.props;
+    const { formatMessage } = intl;
+
+    return (
+      <form className={cx('registration-form')} onSubmit={handleSubmit(submitForm)}>
+        <div className={cx('login-field')}>
+          <FieldProvider name="login">
+            <FieldBottomConstraints text={formatMessage(messages.loginConstraint)}>
+              <FieldErrorHint>
+                <FieldWithIcon icon={LoginIcon}>
+                  <Input maxLength="128" placeholder={formatMessage(messages.login)} />
+                </FieldWithIcon>
+              </FieldErrorHint>
+            </FieldBottomConstraints>
+          </FieldProvider>
         </div>
-        <div className={cx('button-register')}>
-          <BigButton type={'submit'} color={'organish'}>
-            <FormattedMessage id={'RegistrationForm.register'} defaultMessage={'Register'} />
-          </BigButton>
+        <div className={cx('name-field')}>
+          <FieldProvider name="name">
+            <FieldBottomConstraints text={formatMessage(messages.nameConstraint)}>
+              <FieldErrorHint>
+                <FieldWithIcon icon={NameIcon}>
+                  <Input maxLength={'256'} placeholder={formatMessage(messages.name)} />
+                </FieldWithIcon>
+              </FieldErrorHint>
+            </FieldBottomConstraints>
+          </FieldProvider>
         </div>
-      </div>
-    </form>
-  );
-};
+        <div className={cx('email-field')}>
+          <FieldProvider name="email">
+            <FieldWithIcon icon={EmailIcon}>
+              <Input disabled />
+            </FieldWithIcon>
+          </FieldProvider>
+        </div>
+        <div className={cx('password-field')}>
+          <FieldProvider name="password">
+            <FieldBottomConstraints text={formatMessage(messages.passwordConstraint)}>
+              <FieldErrorHint>
+                <FieldWithIcon icon={PasswordIcon}>
+                  <InputPassword maxLength={'25'} placeholder={formatMessage(messages.password)} />
+                </FieldWithIcon>
+              </FieldErrorHint>
+            </FieldBottomConstraints>
+          </FieldProvider>
+        </div>
+        <div className={cx('confirm-password-field')}>
+          <FieldProvider name="confirmPassword">
+            <FieldErrorHint formPath={'user.registrationForm'} fieldName={'confirmPassword'}>
+              <FieldWithIcon icon={PasswordIcon}>
+                <InputPassword maxLength={'25'} placeholder={formatMessage(messages.confirmPassword)} />
+              </FieldWithIcon>
+            </FieldErrorHint>
+          </FieldProvider>
+        </div>
 
-RegistrationForm.propTypes = {
-  submitForm: PropTypes.func,
-  resetForm: PropTypes.func,
-  intl: intlShape.isRequired,
-};
-RegistrationForm.defaultProps = {
-  submitForm: () => {},
-  resetForm: () => {},
-};
-
-export default injectIntl(RegistrationForm);
+        <div className={cx('buttons-container')}>
+          <div className={cx('button-reset')}>
+            <BigButton color={'gray-60'} onClick={this.resetForm}>
+              <FormattedMessage id={'RegistrationForm.reset'} defaultMessage={'Reset'} />
+            </BigButton>
+          </div>
+          <div className={cx('button-register')}>
+            <BigButton type={'submit'} color={'organish'} disabled={invalid}>
+              <FormattedMessage id={'RegistrationForm.register'} defaultMessage={'Register'} />
+            </BigButton>
+          </div>
+        </div>
+      </form>
+    );
+  }
+}
