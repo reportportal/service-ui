@@ -20,6 +20,8 @@
     "html-react-parser": "^0.4.1",
     "intl": "^1.2.5",
     "prop-types": "^15.6.0",
+    "qhistory": "^1.0.0",
+    "qs": "^6.5.1",
     "react": "^16.0.0",
     "react-addons-css-transition-group": "^15.6.2",
     "react-autosuggest": "^9.3.2",
@@ -119,6 +121,6 @@
       "^routes[/](.+)": "<rootDir>/src/routes/$1",
       "^layouts[/](.+)": "<rootDir>/src/layouts/$1"
     },
-    "notify": true
+    "notify": false
   }
 }

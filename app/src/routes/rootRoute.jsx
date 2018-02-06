@@ -15,7 +15,7 @@ import DebugPage from 'pages/inside/debugPage/debugPage';
 import MembersPage from 'pages/inside/membersPage/membersPage';
 import SettingsPage from 'pages/inside/settingsPage/settingsPage';
 
-import { LoginPage } from 'pages/outside/loginPage/loginPage';
+import { LoginPage } from 'pages/outside/loginPage';
 
 const LoginRoute = () => (
   <EmptyLayout>

@@ -25,7 +25,7 @@ import styles from './socialsBlock.scss';
 
 const cx = classNames.bind(styles);
 
-const SocialsBlock = () => (
+export const SocialsBlock = () => (
   <div className={cx('socials-block')}>
     <a href={referenceDictionary.rpGitHub} target="_blank" className={cx({ 'social-link': true, 'gh-icon': true })}>{}</a>
     <a href={referenceDictionary.rpGitHub} target="_blank" className={cx({ 'social-link': true, 'fb-icon': true })}>{}</a>
@@ -36,5 +36,3 @@ const SocialsBlock = () => (
     <a href={referenceDictionary.rpGitHub} className={cx({ 'social-link': true, 'mail-icon': true })}>{}</a>
   </div>
 );
-
-export default SocialsBlock;

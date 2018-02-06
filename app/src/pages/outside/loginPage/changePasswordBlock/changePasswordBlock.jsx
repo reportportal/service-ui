@@ -19,23 +19,22 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { storiesOf } from '@storybook/react';
-import { host } from 'storybook-host';
-import { withReadme } from 'storybook-readme';
-import ConfigExamplesBlock from './configExamplesBlock';
-import README from './README.md';
+import classNames from 'classnames/bind';
+import { FormattedMessage } from 'react-intl';
+import { ChangePasswordForm } from './changePasswordForm';
+import styles from './changePasswordBlock.scss';
 
-storiesOf('Pages/ProfilePage/configExamplesBlock', module)
-  .addDecorator(host({
-    title: 'Assigned projects table on profile page',
-    align: 'center middle',
-    backdrop: 'rgba(70, 69, 71, 0.2)',
-    background: '#f5f5f5',
-    height: 'auto',
-    width: '70%',
-  }))
-  .addDecorator(withReadme(README))
-  .add('default state', () => (
-    <ConfigExamplesBlock />
-  ))
-;
+const cx = classNames.bind(styles);
+
+export const ChangePasswordBlock = () => (
+  <div className={cx('change-password-block')}>
+    <span className={cx('change-password-msg')}>
+      <span className={cx('big')}>
+        <FormattedMessage id={'ChangePasswordBlock.changePass'} defaultMessage={'Change password'} />
+      </span>
+      <br />
+      <FormattedMessage id={'ChangePasswordBlock.enterEmail'} defaultMessage={'enter new password and confirm it'} />
+    </span>
+    <ChangePasswordForm />
+  </div>
+);

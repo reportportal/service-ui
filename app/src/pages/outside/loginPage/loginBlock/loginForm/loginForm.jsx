@@ -23,9 +23,11 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
 import { reduxForm } from 'redux-form';
+import { FormattedMessage, injectIntl, intlShape, defineMessages } from 'react-intl';
+import { Link } from 'react-router-dom';
+import { validate } from 'common/utils';
 import { FieldWithIcon } from 'components/fields/fieldWithIcon/fieldWithIcon';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint/fieldErrorHint';
-import { FormattedMessage, injectIntl, intlShape, defineMessages } from 'react-intl';
 import { Input } from 'components/inputs/input/input';
 import { InputPassword } from 'components/inputs/inputPassword/inputPassword';
 import BigButton from 'components/buttons/bigButton/bigButton';
@@ -34,7 +36,7 @@ import { getAuthExtensions } from 'controllers/appInfo';
 import LoginIcon from './img/login-field-icon.svg';
 import PasswordIcon from './img/password-field-icon.svg';
 import styles from './loginForm.scss';
-import { ExternalLoginBlock } from './externalLoginBlock/externalLoginBlock';
+import { ExternalLoginBlock } from './externalLoginBlock';
 
 const cx = classNames.bind(styles);
 
@@ -56,14 +58,13 @@ const placeholders = defineMessages({
   form: 'loginPage',
   validate: ({ login, password }) => ({
     login: (!login || !/^[0-9a-zA-Z-_.]{1,128}$/.exec(login)) && 'loginHint',
-    password: (!password || !/^(.){4,25}$/.exec(password)) && 'passwordHint',
+    password: (!password || !validate.password(password)) && 'passwordHint',
   }),
 })
 @injectIntl
 export class LoginForm extends React.Component {
   static propTypes = {
     submitForm: PropTypes.func,
-    forgotPass: PropTypes.func,
     externalAuth: PropTypes.object,
     intl: intlShape.isRequired,
     handleSubmit: PropTypes.func.isRequired,
@@ -72,13 +73,11 @@ export class LoginForm extends React.Component {
   static defaultProps = {
     submitForm: () => {
     },
-    forgotPass: () => {
-    },
     externalAuth: {},
   };
 
   render() {
-    const { handleSubmit, submitForm, forgotPass, externalAuth, intl } = this.props;
+    const { handleSubmit, submitForm, externalAuth, intl } = this.props;
     const { formatMessage } = intl;
     return (
       <form className={cx('login-form')} onSubmit={handleSubmit(submitForm)}>
@@ -115,9 +114,9 @@ export class LoginForm extends React.Component {
             </FieldErrorHint>
           </FieldProvider>
         </div>
-        <div className={cx('forgot-pass')} onClick={() => forgotPass()}>
+        <Link className={cx('forgot-pass')} to="/login?forgotPass=true">
           <FormattedMessage id={'LoginForm.forgotPass'} defaultMessage={'Forgot password?'} />
-        </div>
+        </Link>
         <div className={cx('login-button-container')}>
           <BigButton type={'submit'} color={'organish'}>
             <FormattedMessage id={'LoginForm.login'} defaultMessage={'Login'} />

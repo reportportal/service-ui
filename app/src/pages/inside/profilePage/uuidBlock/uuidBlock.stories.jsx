@@ -19,24 +19,26 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import classNames from 'classnames/bind';
-import { FormattedMessage } from 'react-intl';
-import ChangePasswordForm from './changePasswordForm/changePasswordForm';
-import styles from './changePasswordBlock.scss';
+import { storiesOf } from '@storybook/react';
+import { host } from 'storybook-host';
+import { withReadme } from 'storybook-readme';
+import UuidBlock from './uuidBlock';
+import README from './README.md';
 
-const cx = classNames.bind(styles);
-
-const ChangePasswordBlock = () => (
-  <div className={cx('change-password-block')}>
-    <span className={cx('change-password-msg')}>
-      <span className={cx('big')}>
-        <FormattedMessage id={'ChangePasswordBlock.changePass'} defaultMessage={'Change password'} />
-      </span>
-      <br />
-      <FormattedMessage id={'ChangePasswordBlock.enterEmail'} defaultMessage={'enter new password and confirm it'} />
-    </span>
-    <ChangePasswordForm />
-  </div>
-);
-
-export default ChangePasswordBlock;
+storiesOf('Pages/inside/profilePage/uuidBlock', module)
+  .addDecorator(host({
+    title: 'Universally Unique Identifier form on profile page',
+    align: 'center middle',
+    backdrop: 'rgba(70, 69, 71, 0.2)',
+    background: '#f5f5f5',
+    height: 'auto',
+    width: '70%',
+  }))
+  .addDecorator(withReadme(README))
+  .add('default state (no provided info)', () => (
+    <UuidBlock />
+  ))
+  .add('with value', () => (
+    <UuidBlock uuid={'35668002-be4f-44a2-9a27-6cafcbd024b5'} />
+  ))
+;

@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="20" height="20" viewBox="0 0 20 20">
+    <defs>
+        <path id="b" d="M0 0h1200v71H0z"/>
+        <filter id="c" width="200%" height="200%" x="-50%" y="-50%" filterUnits="objectBoundingBox">
+            <feOffset dy="-1" in="SourceAlpha" result="shadowOffsetInner1"/>
+            <feComposite in="shadowOffsetInner1" in2="SourceAlpha" k2="-1" k3="1" operator="arithmetic" result="shadowInnerInner1"/>
+            <feColorMatrix in="shadowInnerInner1" values="0 0 0 0 0.91372549 0 0 0 0 0.91372549 0 0 0 0 0.91372549 0 0 0 1 0"/>
+        </filter>
+        <path id="a" d="M1156 34h8c1.1 0 2-.9 2-2V20h-12v12c0 1.1.9 2 2 2zm7.5-17l-1-1h-5l-1 1h-3.5v2h14v-2h-3.5z"/>
+        <mask id="d" width="14" height="18" x="0" y="0" fill="#fff">
+            <use xlink:href="#a"/>
+        </mask>
+    </defs>
+    <g fill="none" fill-rule="evenodd" transform="translate(-1150 -15)">
+        <use fill="none" xlink:href="#b"/>
+        <use fill="#000" filter="url(#c)" xlink:href="#b"/>
+        <use stroke="#999" stroke-width="4" mask="url(#d)" xlink:href="#a"/>
+        <path fill="#999" d="M1158 24h1v6h-1zM1161 24h1v6h-1z"/>
+    </g>
+</svg>

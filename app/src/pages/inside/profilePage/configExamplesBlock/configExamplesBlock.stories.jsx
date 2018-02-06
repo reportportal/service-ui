@@ -19,12 +19,23 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export default function getPropsWithoutChildren(props, unnecessaryKey) {
-  const newProps = {};
-  Object.keys(props).forEach((key) => {
-    if (!unnecessaryKey.some(item => (item === key))) {
-      newProps[key] = props[key];
-    }
-  });
-  return newProps;
-}
+import { storiesOf } from '@storybook/react';
+import { host } from 'storybook-host';
+import { withReadme } from 'storybook-readme';
+import ConfigExamplesBlock from './configExamplesBlock';
+import README from './README.md';
+
+storiesOf('Pages/inside/profilePage/configExamplesBlock', module)
+  .addDecorator(host({
+    title: 'Assigned projects table on profile page',
+    align: 'center middle',
+    backdrop: 'rgba(70, 69, 71, 0.2)',
+    background: '#f5f5f5',
+    height: 'auto',
+    width: '70%',
+  }))
+  .addDecorator(withReadme(README))
+  .add('default state', () => (
+    <ConfigExamplesBlock />
+  ))
+;

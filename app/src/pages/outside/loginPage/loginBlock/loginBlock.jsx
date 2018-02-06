@@ -22,7 +22,7 @@
 import classNames from 'classnames/bind';
 import { FormattedMessage } from 'react-intl';
 import styles from './loginBlock.scss';
-import { LoginForm } from './loginForm/loginForm';
+import { LoginForm } from './loginForm';
 
 const cx = classNames.bind(styles);
 

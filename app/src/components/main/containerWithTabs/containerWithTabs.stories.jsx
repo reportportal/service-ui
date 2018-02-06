@@ -22,7 +22,7 @@
 import { storiesOf } from '@storybook/react';
 import { host } from 'storybook-host';
 import { withReadme } from 'storybook-readme';
-import UuidBlock from 'pages/profilePage/uuidBlock/uuidBlock';
+import UuidBlock from 'pages/inside/profilePage/uuidBlock/uuidBlock';
 import ContainerWithTabs from './containerWithTabs';
 import README from './README.md';
 
