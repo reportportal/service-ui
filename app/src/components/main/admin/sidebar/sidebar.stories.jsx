@@ -50,7 +50,6 @@ storiesOf('Components/Main/Admin/Sidebar', module)
       onClickBackToProject={action('Back to project clicked ')}
       onClickLogout={action('Logout clicked ')}
       onClickProfile={action('Profile clicked ')}
-      onClickMenu={action('Menu clicked ')}
       isMenuOpen
     />
   ));

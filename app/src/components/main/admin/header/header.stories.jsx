@@ -44,4 +44,10 @@ storiesOf('Components/Main/Admin/Header', module)
   ))
   .add('with actions', () => (
     <AdminHeader onClickBackToProject={action('Back to project clicked ')} onClickLogout={action('Logout clicked ')} />
+  ))
+  .add('with mobile action', () => (
+    <AdminHeader onClickMenu={action('Menu clicked ')} />
+  ))
+  .add('menu open', () => (
+    <AdminHeader isMenuOpen />
   ));
