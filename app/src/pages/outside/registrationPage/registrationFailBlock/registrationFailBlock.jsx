@@ -25,15 +25,13 @@ import styles from './registrationFailBlock.scss';
 
 const cx = classNames.bind(styles);
 
-const RegistrationPage = ({ children }) => (
+export const RegistrationFailBlock = ({ children }) => (
   <div className={cx('registration-fail-block')}>{children}</div>
 );
 
-RegistrationPage.propTypes = {
+RegistrationFailBlock.propTypes = {
   children: PropTypes.node,
 };
-RegistrationPage.defaultProps = {
+RegistrationFailBlock.defaultProps = {
   children: null,
 };
-
-export default RegistrationPage;

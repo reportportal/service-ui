@@ -38,14 +38,10 @@ export const FieldBottomConstraints = ({ text, children, ...rest }) => (
   );
 
 FieldBottomConstraints.propTypes = {
-  formPath: PropTypes.string,
-  fieldName: PropTypes.string,
   text: PropTypes.node,
   children: PropTypes.node,
 };
 FieldBottomConstraints.defaultProps = {
-  formPath: '',
-  fieldName: '',
   text: '',
   children: null,
 };

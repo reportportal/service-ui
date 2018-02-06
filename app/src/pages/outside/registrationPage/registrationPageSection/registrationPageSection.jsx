@@ -25,7 +25,7 @@ import styles from './registrationPageSection.scss';
 
 const cx = classNames.bind(styles);
 
-const RegistrationPageSection = ({ left, children, failed }) => (
+export const RegistrationPageSection = ({ left, children, failed }) => (
   <div className={cx({ 'registration-page-section': true, left, failed })}>
     { children }
   </div>
@@ -42,5 +42,3 @@ RegistrationPageSection.defaultProps = {
   left: false,
   failed: false,
 };
-
-export default RegistrationPageSection;

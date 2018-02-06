@@ -19,18 +19,21 @@ import { LocalizationSwitcher } from 'components/main/localizationSwitcher';
 import { authorizedRoute } from './authorizedRoute';
 import { anonymousRoute } from './anonymousRoute';
 
+
 const LoginRoute = anonymousRoute(() => (
   <EmptyLayout>
     <LocalizationSwitcher />
     <LoginPage />
   </EmptyLayout>
 ));
+
 const RegistrationRoute = anonymousRoute(() => (
   <EmptyLayout>
     <LocalizationSwitcher />
     <RegistrationPage />
   </EmptyLayout>
 ));
+
 const AppRoute = authorizedRoute(() => (
   <AppLayout>
     <LocalizationSwitcher />
@@ -47,6 +50,7 @@ const AppRoute = authorizedRoute(() => (
     </Switch>
   </AppLayout>
 ));
+
 const AdminRoute = authorizedRoute(() => (
   <AdminLayout>
     <LocalizationSwitcher />

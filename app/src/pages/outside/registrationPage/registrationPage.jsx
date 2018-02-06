@@ -23,17 +23,17 @@ import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { referenceDictionary } from 'common/utils';
 import { FormattedMessage } from 'react-intl';
-import RegistrationPageSection from './registrationPageSection/registrationPageSection';
-import RegistrationFailBlock from './registrationFailBlock/registrationFailBlock';
-import RegistrationForm from './registrationForm/registrationForm';
+import { RegistrationPageSection } from './registrationPageSection';
+import { RegistrationFailBlock } from './registrationFailBlock';
+import { RegistrationForm } from './registrationForm';
 import styles from './registrationPage.scss';
 
 const cx = classNames.bind(styles);
 
-export const RegistrationPage = ({ isTokenActive, isTokenProvided }) => {
+export const RegistrationPage = ({ tokenActive, tokenProvided, email, onRegistrationSubmit }) => {
   const backgroundClasses = {
     background: true,
-    failed: !isTokenProvided || !isTokenActive,
+    failed: !tokenProvided || !tokenActive,
   };
 
   return (
@@ -45,15 +45,18 @@ export const RegistrationPage = ({ isTokenActive, isTokenProvided }) => {
         </a>
         <RegistrationPageSection left>
           {
-            isTokenProvided && isTokenActive &&
+            tokenProvided && tokenActive &&
             <div className={cx('couple-minutes')}>
-              <FormattedMessage id={'RegistrationPage.coupleMinutes'} defaultMessage={'It should only take a couple of minutes to get started'} />
+              <FormattedMessage
+                id={'RegistrationPage.coupleMinutes'}
+                defaultMessage={'It should only take a couple of minutes to get started'}
+              />
             </div>
           }
         </RegistrationPageSection>
-        <RegistrationPageSection failed={!isTokenActive || !isTokenProvided}>
+        <RegistrationPageSection failed={!tokenActive || !tokenProvided}>
           {
-            isTokenProvided && isTokenActive
+            tokenProvided && tokenActive
               ?
                 <div>
                   <span className={cx('welcome-msg')}>
@@ -61,30 +64,14 @@ export const RegistrationPage = ({ isTokenActive, isTokenProvided }) => {
                       <FormattedMessage id={'RegistrationPage.welcome'} defaultMessage={'Welcome,'} />
                     </span>
                     <br />
-                    <FormattedMessage id={'RegistrationPage.registration'} defaultMessage={'complete the registration form'} />
+                    <FormattedMessage
+                      id={'RegistrationPage.registration'}
+                      defaultMessage={'complete the registration form'}
+                    />
                   </span>
-                  <RegistrationForm />
+                  <RegistrationForm email={email} submitForm={onRegistrationSubmit} />
                 </div>
-              :
-                <RegistrationFailBlock>
-                  <span className={cx('fail-msg')}>
-                    <span className={cx('big')}>
-                      <FormattedMessage id={'RegistrationPage.oops'} defaultMessage={'Oops,'} />
-                    </span>
-                    <br />
-                    {
-                      isTokenProvided
-                      ?
-                        <FormattedMessage id={'RegistrationPage.tokenExpired'} defaultMessage={'this invitation has expired or already used'} />
-                      :
-                        <FormattedMessage id={'RegistrationPage.tokenNotProvided'} defaultMessage={'invitation token was not provided in URL parameters'} />
-                    }
-                  </span>
-                  <div className={cx('visit-rp')}>
-                    <FormattedMessage id={'RegistrationPage.visit'} defaultMessage={'Visit '} />
-                    <a className={cx('backlink')} href={referenceDictionary.rpLanding}>ReportPortal.io</a>
-                  </div>
-                </RegistrationFailBlock>
+              : <TokenErrorSection tokenProvided={tokenProvided} />
           }
         </RegistrationPageSection>
       </div>
@@ -93,10 +80,48 @@ export const RegistrationPage = ({ isTokenActive, isTokenProvided }) => {
 };
 
 RegistrationPage.propTypes = {
-  isTokenActive: PropTypes.bool,
-  isTokenProvided: PropTypes.bool,
+  tokenActive: PropTypes.bool,
+  tokenProvided: PropTypes.bool,
+  email: PropTypes.string,
+  onRegistrationSubmit: PropTypes.func,
 };
 RegistrationPage.defaultProps = {
-  isTokenActive: false,
-  isTokenProvided: false,
+  tokenActive: false,
+  tokenProvided: false,
+  email: '',
+  onRegistrationSubmit: () => {
+  },
+};
+
+const TokenErrorSection = ({ tokenProvided }) => (
+  <RegistrationFailBlock>
+    <span className={cx('fail-msg')}>
+      <span className={cx('big')}>
+        <FormattedMessage id={'RegistrationPage.oops'} defaultMessage={'Oops,'} />
+      </span>
+      <br />
+      {
+        tokenProvided
+          ? <FormattedMessage
+            id={'RegistrationPage.tokenExpired'}
+            defaultMessage={'this invitation has expired or already used'}
+          />
+          : <FormattedMessage
+            id={'RegistrationPage.tokenNotProvided'}
+            defaultMessage={'invitation token was not provided in URL parameters'}
+          />
+      }
+    </span>
+    <div className={cx('visit-rp')}>
+      <FormattedMessage id={'RegistrationPage.visit'} defaultMessage={'Visit '} />
+      <a className={cx('backlink')} href={referenceDictionary.rpLanding}>ReportPortal.io</a>
+    </div>
+  </RegistrationFailBlock>
+);
+
+TokenErrorSection.propTypes = {
+  tokenProvided: PropTypes.bool,
+};
+TokenErrorSection.defaultProps = {
+  tokenProvided: false,
 };
