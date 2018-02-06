@@ -43,6 +43,7 @@ const AppRoute = () => (
 );
 const AdminRoute = () => (
   <AdminLayout>
+    <LocalizationSwitcher />
     <h1>Admin</h1>
     <Link to="/default_project/dashboard">Back</Link>
   </AdminLayout>

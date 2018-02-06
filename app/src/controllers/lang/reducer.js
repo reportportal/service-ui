@@ -1,9 +1,9 @@
 import { CHANGE_LANG_ACTION } from './constants';
 
-export const langReducer = (state = { lang: 'be' }, { type, payload }) => {
+export const langReducer = (state = 'be', { type, payload }) => {
   switch (type) {
     case CHANGE_LANG_ACTION:
-      return Object.assign({}, payload);
+      return payload;
     default:
       return state;
   }
