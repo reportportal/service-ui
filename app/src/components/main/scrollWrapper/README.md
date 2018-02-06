@@ -11,7 +11,7 @@ Has no own size. Width and Height = 100% of it's parent.
 * **hideTracksWhenNotNeeded**: _bool_, optional, default = false
 * **children**: _node_, optional, default= ""
 
-If you have provided autoHeightMax prop, you also should define autoHeightMax prop to limit content block height.
+If you have provided autoHeight prop, you also should define autoHeightMax prop to limit content block height.
 
 For more info see https://github.com/malte-wessel/react-custom-scrollbars/blob/master/docs/API.md
 

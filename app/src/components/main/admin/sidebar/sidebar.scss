@@ -1,0 +1,59 @@
+.open{
+  @media(max-width: $SCREEN_XS_MAX) {
+    .sidebar{
+      left:0;
+      transform: translate(0, 0);
+      transition: transform 0.5s cubic-bezier(0, 0, 0.2, 1);
+    }
+  }
+}
+.scroll-container{
+  height: 100%;
+  position: relative;
+  padding-top: 60px;
+  box-sizing: border-box;
+}
+@media (max-height: 440px){
+  .scroll-container{
+    min-height: 440px;
+  }
+}
+.sidebar{overflow: hidden;
+  width: 90px;
+  left:0;
+  position: absolute;
+  box-shadow: none;
+  top: 0;
+  bottom: 0;
+  background: $COLOR--charcoal-grey;
+  color: $COLOR--gray-80;
+  z-index: 100;
+  transition: transform 0.5s cubic-bezier(0, 0, 0.2, 1);
+  &::before{
+    content: url('./img/rp_logo.png');
+    display: block;
+    width: 100%;
+    height:44px;
+    padding-top: 16px;
+    text-align: center;
+    position: absolute;
+    @media(max-width: $SCREEN_XS_MAX) {
+      content: '';
+    }
+  }
+  @media(max-width: $SCREEN_SM_MAX) {
+    width: 60px;
+  }
+  @media(max-width: $SCREEN_XS_MAX) {
+    width: 200px;
+    left: -200px;
+   }
+}
+.bottom-section{
+  position: absolute;
+  bottom: 0;
+  display: none;
+  @media(max-width: $SCREEN_XS_MAX) {
+    display: block;
+  }
+}
