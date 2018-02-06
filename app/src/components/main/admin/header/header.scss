@@ -1,3 +1,47 @@
+.mobile-header{
+  height: 60px;
+  background: $COLOR--charcoal-grey;
+  width: 100%;
+  display: none;
+  @media(max-width: $SCREEN_XS_MAX) {
+    display: block;
+  }
+}
+.button-menu-open{
+  position: relative;
+  width: 50px;
+  height: 60px;
+  padding: 20px 10px 20px 10px;
+  background: $COLOR--charcoal-grey;
+  border: none;
+  outline: none;
+  cursor: pointer;
+}
+.open {
+  @media(max-width: $SCREEN_XS_MAX) {
+    &.admin-header {
+      transform: translate(200px, 0);
+      transition: transform 0.5s cubic-bezier(0, 0, 0.2, 1);
+    }
+  }
+}
+.menu-icon-part{
+  width: 100%;
+  height: 3px;
+  background: $COLOR--white-two;
+  margin-bottom: 5px;
+  display: block;
+}
+.mobile-logo{
+  background-image: url('./img/logo_small.svg');
+  width: 150px;
+  height: 60px;
+  left: 50%;
+  position: absolute;
+  margin-left: -65px;
+  background-position: center;
+  background-repeat: no-repeat;
+}
 .admin-header{
   position: absolute;
   width: 100%;
@@ -9,7 +53,7 @@
   background: $COLOR--charcoal-grey;
   padding: 0 10px 0 15px;
   @media(max-width: $SCREEN_XS_MAX) {
-    padding: 0 10px 0 10px;
+    padding: 0;
   }
 }
 .container{
@@ -17,7 +61,8 @@
   margin: 0 auto;
   padding: 16px 5px 11px 15px;
   @media(max-width: $SCREEN_XS_MAX) {
-    padding: 9px 5px 9px 0;
+    padding: 9px 10px 9px 10px;
+    background: lighten($COLOR--charcoal-grey,5%);
   }
 }
 .header-name{
