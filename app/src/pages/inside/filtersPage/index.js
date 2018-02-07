@@ -1,0 +1,1 @@
+export { FiltersPage } from './filtersPage';

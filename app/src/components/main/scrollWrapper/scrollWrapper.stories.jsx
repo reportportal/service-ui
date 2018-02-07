@@ -22,7 +22,7 @@
 import { storiesOf } from '@storybook/react';
 import { host } from 'storybook-host';
 import { withReadme } from 'storybook-readme';
-import ScrollWrapper from './scrollWrapper';
+import { ScrollWrapper } from './scrollWrapper';
 import README from './README.md';
 
 const shortText = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit.';

@@ -12,7 +12,8 @@
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "build:lang:en": "webpack --display none --env.dev && babel localization/translator.js | node",
-    "manage:translations": "webpack --display none --env.dev && babel ./localization/translatorRunner.js | node"
+    "manage:translations": "webpack --display none --env.dev && babel-node ./localization/translatorRunner.js",
+    "manage:translations:test": "webpack --display none --env.dev && babel-node ./localization/translatorRunnerCheck.js"
   },
   "dependencies": {
     "axios": "^0.17.1",

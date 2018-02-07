@@ -25,7 +25,7 @@ import styles from './blockContainer.scss';
 
 const cx = classNames.bind(styles);
 
-const BlockContainerHeader = ({ children }) => (
+export const BlockContainerHeader = ({ children }) => (
   <div className={cx('block-header')}>
     { children }
   </div>
@@ -38,7 +38,7 @@ BlockContainerHeader.defaultProps = {
   children: null,
 };
 
-const BlockContainerBody = ({ children }) => (
+export const BlockContainerBody = ({ children }) => (
   <div className={cx('block-content')}>
     { children }
   </div>
@@ -49,10 +49,4 @@ BlockContainerBody.propTypes = {
 
 BlockContainerBody.defaultProps = {
   children: null,
-};
-
-
-export default {
-  Header: BlockContainerHeader,
-  Body: BlockContainerBody,
 };

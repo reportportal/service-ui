@@ -5,7 +5,7 @@ import styles from './emptyLayout.scss';
 
 const cx = classNames.bind(styles);
 
-const EmptyLayout = ({ children }) => (
+export const EmptyLayout = ({ children }) => (
   <div className={cx('empty-layout')}>
     {children}
   </div>
@@ -17,5 +17,3 @@ EmptyLayout.propTypes = {
 EmptyLayout.defaultProps = {
   children: null,
 };
-
-export default EmptyLayout;

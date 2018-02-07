@@ -30,7 +30,7 @@ import styles from './registrationPage.scss';
 
 const cx = classNames.bind(styles);
 
-const RegistrationPage = ({ isTokenActive, isTokenProvided }) => {
+export const RegistrationPage = ({ isTokenActive, isTokenProvided }) => {
   const backgroundClasses = {
     background: true,
     failed: !isTokenProvided || !isTokenActive,
@@ -100,5 +100,3 @@ RegistrationPage.defaultProps = {
   isTokenActive: false,
   isTokenProvided: false,
 };
-
-export default RegistrationPage;

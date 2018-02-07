@@ -25,12 +25,12 @@ import { FormattedMessage } from 'react-intl';
 import classNames from 'classnames/bind';
 import GhostButton from 'components/buttons/ghostButton/ghostButton';
 import styles from './personalInfoBlock.scss';
-import BlockContainer from '../blockContainer/blockContainer';
+import { BlockContainerBody, BlockContainerHeader } from '../blockContainer';
 import PencilIcon from './img/pencil-icon-inline.svg';
 
 const cx = classNames.bind(styles);
 
-class PersonalInfoBlock extends Component {
+export class PersonalInfoBlock extends Component {
   static propTypes = {
     login: PropTypes.string,
     name: PropTypes.string,
@@ -110,10 +110,10 @@ class PersonalInfoBlock extends Component {
 
     return (
       <div className={cx('personal-info-block')}>
-        <BlockContainer.Header>
+        <BlockContainerHeader>
           <FormattedMessage id={'PersonalInfoBlock.header'} defaultMessage={'Personal information'} />
-        </BlockContainer.Header>
-        <BlockContainer.Body>
+        </BlockContainerHeader>
+        <BlockContainerBody>
           <div className={cx('block-content')}>
             <div className={cx('avatar-wrapper')}>
               <img className={cx('avatar')} src={this.state.avatarSource} alt="Profile avatar" />
@@ -156,10 +156,8 @@ class PersonalInfoBlock extends Component {
             </div>
 
           </div>
-        </BlockContainer.Body>
+        </BlockContainerBody>
       </div>
     );
   }
 }
-
-export default PersonalInfoBlock;

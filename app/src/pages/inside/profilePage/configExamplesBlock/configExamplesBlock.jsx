@@ -23,7 +23,7 @@ import classNames from 'classnames/bind';
 import { FormattedMessage } from 'react-intl';
 import ContainerWithTabs from 'components/main/containerWithTabs/containerWithTabs';
 import styles from './configExamplesBlock.scss';
-import BlockContainer from '../blockContainer/blockContainer';
+import { BlockContainerHeader, BlockContainerBody } from '../blockContainer';
 
 const cx = classNames.bind(styles);
 
@@ -108,21 +108,19 @@ const nodejsConfig = {
   </div>,
 };
 
-const ConfigExamplesBlock = () => (
+export const ConfigExamplesBlock = () => (
   <div className={cx('config-example-block')}>
-    <BlockContainer.Header>
+    <BlockContainerHeader>
       <span className={cx('header')}>
         <FormattedMessage id={'ConfigExamplesBlock.header'} defaultMessage={'Configuration examples'} />
       </span>
-    </BlockContainer.Header>
-    <BlockContainer.Body>
+    </BlockContainerHeader>
+    <BlockContainerBody>
       <div className={cx('content-container')}>
         <ContainerWithTabs
           data={[javaConfig, rubyConfig, soapUiConfig, dotNettConfig, nodejsConfig]}
         />
       </div>
-    </BlockContainer.Body>
+    </BlockContainerBody>
   </div>
 );
-
-export default ConfigExamplesBlock;

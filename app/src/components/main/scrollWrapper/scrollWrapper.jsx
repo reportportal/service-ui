@@ -27,7 +27,7 @@ import styles from './scrollWrapper.scss';
 
 const cx = classNames.bind(styles);
 
-class ScrollWrapper extends Component {
+export class ScrollWrapper extends Component {
   static propTypes = {
     children: PropTypes.node,
     autoHide: PropTypes.bool,
@@ -98,5 +98,3 @@ class ScrollWrapper extends Component {
     );
   }
 }
-
-export default ScrollWrapper;

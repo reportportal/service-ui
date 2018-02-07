@@ -1,19 +1,20 @@
 import React from 'react';
 import { Switch, Route, Link } from 'react-router-dom';
 
-import EmptyLayout from 'layouts/emptyLayout/emptyLayout';
-import AppLayout from 'layouts/appLayout/appLayout';
-import AdminLayout from 'layouts/adminLayout/adminLayout';
+import { EmptyLayout } from 'layouts/emptyLayout';
+import { AppLayout } from 'layouts/appLayout';
+import { AdminLayout } from 'layouts/adminLayout';
 
-import ProfilePage from 'pages/inside/profilePage/profilePage';
-import ApiPage from 'pages/inside/apiPage/apiPage';
-import DashboardPage from 'pages/inside/dashboardPage/dashboardPage';
-import LaunchesPage from 'pages/inside/launchesPage/launchesPage';
-import FiltersPage from 'pages/inside/filtersPage/filtersPage';
-import DebugPage from 'pages/inside/debugPage/debugPage';
-import MembersPage from 'pages/inside/membersPage/membersPage';
-import SettingsPage from 'pages/inside/settingsPage/settingsPage';
+import { ProfilePage } from 'pages/inside/profilePage';
+import { ApiPage } from 'pages/inside/apiPage';
+import { DashboardPage } from 'pages/inside/dashboardPage';
+import { LaunchesPage } from 'pages/inside/launchesPage';
+import { FiltersPage } from 'pages/inside/filtersPage';
+import { DebugPage } from 'pages/inside/debugPage';
+import { MembersPage } from 'pages/inside/membersPage';
+import { SettingsPage } from 'pages/inside/settingsPage';
 import { LoginPage } from 'pages/outside/loginPage';
+import { RegistrationPage } from 'pages/outside/registrationPage';
 import { LocalizationSwitcher } from 'components/main/localizationSwitcher';
 import { authorizedRoute } from './authorizedRoute';
 import { anonymousRoute } from './anonymousRoute';
@@ -22,6 +23,12 @@ const LoginRoute = anonymousRoute(() => (
   <EmptyLayout>
     <LocalizationSwitcher />
     <LoginPage />
+  </EmptyLayout>
+));
+const RegistrationRoute = anonymousRoute(() => (
+  <EmptyLayout>
+    <LocalizationSwitcher />
+    <RegistrationPage />
   </EmptyLayout>
 ));
 const AppRoute = authorizedRoute(() => (
@@ -52,6 +59,7 @@ const RootRoute = () => (
   <Switch>
     <Route exact path="/" component={LoginRoute} />
     <Route path="/login" component={LoginRoute} />
+    <Route path="/registration" component={RegistrationRoute} />
     <Route path="/administrate" component={AdminRoute} />
     <AppRoute />
   </Switch>

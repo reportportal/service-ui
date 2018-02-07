@@ -5,7 +5,7 @@ import styles from './header.scss';
 
 const cx = classNames.bind(styles);
 
-const Header = () => (
+export const Header = () => (
   <div className={cx('header')}>
     <Link to="/default_project/members">Members</Link>
     <Link to="/default_project/settings">Settings</Link>
@@ -15,5 +15,3 @@ const Header = () => (
     <Link to="/login">Logout</Link>
   </div>
 );
-
-export default Header;

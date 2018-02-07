@@ -1,14 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import ScrollWrapper from 'components/main/scrollWrapper/scrollWrapper';
-import Sidebar from '../../components/main/sidebar/sidebar';
-import Header from '../../components/main/header/header';
+import { ScrollWrapper } from 'components/main/scrollWrapper';
+import { Sidebar } from './sidebar';
+import { Header } from './header';
 import styles from './appLayout.scss';
 
 const cx = classNames.bind(styles);
 
-const AppLayout = ({ children }) => (
+export const AppLayout = ({ children }) => (
   <ScrollWrapper>
     <div className={cx('app-container')}>
       <div className={cx('sidebar-container')}>
@@ -36,5 +36,3 @@ AppLayout.propTypes = {
 AppLayout.defaultProps = {
   children: null,
 };
-
-export default AppLayout;

@@ -14,7 +14,7 @@ SidebarItem.propTypes = {
   name: PropTypes.string.isRequired,
 };
 
-const Sidebar = () => (
+export const Sidebar = () => (
   <div className={cx('sidebar')}>
     <SidebarItem link="/default_project/dashboard" name="Dashboards" />
     <SidebarItem link="/default_project/launches" name="Launches" />
@@ -22,5 +22,3 @@ const Sidebar = () => (
     <SidebarItem link="/default_project/userdebug" name="Debug" />
   </div>
   );
-
-export default Sidebar;

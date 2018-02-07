@@ -1,8 +1,8 @@
 import PropTypes from 'prop-types';
 import { FormattedMessage } from 'react-intl';
 import classNames from 'classnames/bind';
-import { SidebarButton } from 'components/main/admin/sidebarButton/sidebarButton';
-import ScrollWrapper from 'components/main/scrollWrapper/scrollWrapper';
+import { ScrollWrapper } from 'components/main/scrollWrapper';
+import { SidebarButton } from './sidebarButton';
 import ProjectsIcon from './img/projects.svg';
 import UsersIcon from './img/users.svg';
 import SettingsIcon from './img/settings.svg';

@@ -23,13 +23,13 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { FormattedMessage } from 'react-intl';
 import styles from './assignedProjectsBlock.scss';
-import BlockContainer from '../blockContainer/blockContainer';
+import { BlockContainerBody, BlockContainerHeader } from '../blockContainer';
 
 const cx = classNames.bind(styles);
 
-const AssignedProjectsBlock = ({ projects }) => (
+export const AssignedProjectsBlock = ({ projects }) => (
   <div className={cx('assigned-projects-block')}>
-    <BlockContainer.Header>
+    <BlockContainerHeader>
       <div className={cx('name-col')}>
         <FormattedMessage id={'AssignedProjectsBlock.headerNameCol'} defaultMessage={'Assigned on projects'} />
         {` (${projects.length})`}
@@ -37,8 +37,8 @@ const AssignedProjectsBlock = ({ projects }) => (
       <div className={cx('role-col')}>
         <FormattedMessage id={'AssignedProjectsBlock.headerRoleCol'} defaultMessage={'Project role'} />
       </div>
-    </BlockContainer.Header>
-    <BlockContainer.Body>
+    </BlockContainerHeader>
+    <BlockContainerBody>
       {
           projects.map(project => (
             <div key={project.name} className={cx('project-item')}>
@@ -51,7 +51,7 @@ const AssignedProjectsBlock = ({ projects }) => (
             </div>
             ))
         }
-    </BlockContainer.Body>
+    </BlockContainerBody>
   </div>
   );
 
@@ -62,5 +62,3 @@ AssignedProjectsBlock.propTypes = {
 AssignedProjectsBlock.defaultProps = {
   projects: [],
 };
-
-export default AssignedProjectsBlock;

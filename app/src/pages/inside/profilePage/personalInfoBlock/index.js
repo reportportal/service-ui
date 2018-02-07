@@ -1,0 +1,1 @@
+export { PersonalInfoBlock } from './personalInfoBlock';

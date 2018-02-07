@@ -1,7 +1,4 @@
 import manageTranslations from 'react-intl-translations-manager';
+import { config } from './config';
 
-manageTranslations({
-  messagesDirectory: 'localization/messages',
-  translationsDirectory: 'localization/translated/',
-  languages: ['ru', 'be'], // any language you need
-});
+manageTranslations(Object.assign({}, config));

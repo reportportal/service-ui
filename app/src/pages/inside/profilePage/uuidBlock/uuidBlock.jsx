@@ -25,18 +25,18 @@ import { FormattedMessage } from 'react-intl';
 import { Input } from 'components/inputs/input/input';
 import GhostButton from 'components/buttons/ghostButton/ghostButton';
 import styles from './uuidBlock.scss';
-import BlockContainer from '../blockContainer/blockContainer';
+import { BlockContainerHeader, BlockContainerBody } from '../blockContainer';
 
 const cx = classNames.bind(styles);
 
-const UuidBlock = ({ uuid }) => (
+export const UuidBlock = ({ uuid }) => (
   <div className={cx('uuid-block')}>
-    <BlockContainer.Header>
+    <BlockContainerHeader>
       <span className={cx('header-label')}>
         <FormattedMessage id={'UuidBlock.headerNameCol'} class="a" defaultMessage={'Universally unique identifier'} />
       </span>
-    </BlockContainer.Header>
-    <BlockContainer.Body>
+    </BlockContainerHeader>
+    <BlockContainerBody>
       <div className={cx('body-wrapper')}>
         <div className={cx('field-wrapper')}>
           <span className={cx('label')}>UUID</span>
@@ -54,7 +54,7 @@ const UuidBlock = ({ uuid }) => (
           <FormattedMessage id={'UuidBlock.tip'} defaultMessage={'In order to provide security for your own domain password, you can use a user token, named UUID - to verify your account to be able to log with agent.'} />
         </p>
       </div>
-    </BlockContainer.Body>
+    </BlockContainerBody>
   </div>
 );
 
@@ -65,5 +65,3 @@ UuidBlock.propTypes = {
 UuidBlock.defaultProps = {
   uuid: '',
 };
-
-export default UuidBlock;

@@ -39,6 +39,7 @@ export default (env = defaultEnv) => ({
     },
   },
   plugins: [
+    new CleanWebpackPlugin([path.resolve(__dirname, 'localization/messages')]),
     new WebpackNotifierPlugin({ skipFirstNotification: true }),
     new webpack.DefinePlugin({
       JEST: false,
