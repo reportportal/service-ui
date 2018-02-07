@@ -27,7 +27,7 @@ import { DropdownOption } from './inputDropdownOption/inputDropdownOption';
 const cx = classNames.bind(styles);
 
 // eslint-disable-next-line react/prefer-stateless-function
-export class Dropdown extends Component {
+export class InputDropdown extends Component {
   static propTypes = {
     displayedValue: PropTypes.string,
     options: PropTypes.array,

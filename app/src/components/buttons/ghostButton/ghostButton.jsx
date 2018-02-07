@@ -25,7 +25,7 @@ import styles from './ghostButton.scss';
 
 const cx = classNames.bind(styles);
 
-const GhostButton = ({ type, children, disabled, color, icon, onClick }) => {
+export const GhostButton = ({ type, children, disabled, color, icon, onClick }) => {
   const classes = cx({
     'ghost-button': true,
     disabled,
@@ -57,5 +57,3 @@ GhostButton.defaultProps = {
   type: 'button',
   onClick: () => {},
 };
-
-export default GhostButton;

@@ -25,7 +25,7 @@ import styles from './inputCheckbox.scss';
 
 const cx = classNames.bind(styles);
 
-const InputCheckbox = ({ children, value, disabled, onChange, onFocus, onBlur }) => {
+export const InputCheckbox = ({ children, value, disabled, onChange, onFocus, onBlur }) => {
   const squareClasses = cx({
     square: true,
     centered: !children,
@@ -71,5 +71,3 @@ InputCheckbox.defaultProps = {
   onFocus: () => {},
   onBlur: () => {},
 };
-
-export default InputCheckbox;

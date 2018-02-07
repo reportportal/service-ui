@@ -26,7 +26,7 @@ import styles from './containerWithTabs.scss';
 
 const cx = classNames.bind(styles);
 
-class ContainerWithTabs extends Component {
+export class ContainerWithTabs extends Component {
   static propTypes = {
     data: PropTypes.arrayOf(PropTypes.object),
   };
@@ -72,5 +72,3 @@ class ContainerWithTabs extends Component {
     );
   }
 }
-
-export default ContainerWithTabs;

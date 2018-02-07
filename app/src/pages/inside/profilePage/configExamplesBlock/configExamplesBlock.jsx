@@ -21,7 +21,7 @@
 
 import classNames from 'classnames/bind';
 import { FormattedMessage } from 'react-intl';
-import ContainerWithTabs from 'components/main/containerWithTabs/containerWithTabs';
+import { ContainerWithTabs } from 'components/main/containerWithTabs';
 import styles from './configExamplesBlock.scss';
 import { BlockContainerHeader, BlockContainerBody } from '../blockContainer';
 

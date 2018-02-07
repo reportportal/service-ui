@@ -22,7 +22,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { Input } from 'components/inputs/input/input';
+import { Input } from 'components/inputs/input';
 import styles from './inputPassword.scss';
 
 const cx = classNames.bind(styles);

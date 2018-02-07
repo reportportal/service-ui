@@ -23,7 +23,7 @@ import { storiesOf } from '@storybook/react';
 import { host } from 'storybook-host';
 import { withReadme } from 'storybook-readme';
 import { action } from '@storybook/addon-actions';
-import ProjectSelector from './projectSelector';
+import { ProjectSelector } from './projectSelector';
 import README from './README.md';
 
 const mockProjectsList = [

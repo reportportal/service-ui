@@ -22,7 +22,7 @@
 import { storiesOf } from '@storybook/react';
 import { host } from 'storybook-host';
 import { withReadme } from 'storybook-readme';
-import FieldBottomConstraints from './fieldBottomConstraints';
+import { FieldBottomConstraints } from './fieldBottomConstraints';
 import README from './README.md';
 
 storiesOf('Components/Fields/fieldBottomConstraints', module)

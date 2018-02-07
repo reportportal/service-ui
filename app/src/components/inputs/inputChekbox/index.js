@@ -1,0 +1,1 @@
+export { InputCheckbox } from './inputCheckbox';

@@ -22,7 +22,7 @@ import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import { host } from 'storybook-host';
 import { withReadme } from 'storybook-readme';
-import { Dropdown } from './inputDropdown';
+import { InputDropdown } from './inputDropdown';
 import README from './README.md';
 
 const getOptions = multiple => [
@@ -66,40 +66,40 @@ storiesOf('Components/Inputs/InputDropdown', module)
   .addDecorator(withReadme(README))
   // Single dropdown
   .add('Single, default state', () => (
-    <Dropdown options={getOptions()} />
+    <InputDropdown options={getOptions()} />
   ))
   .add('Single, disabled', () => (
-    <Dropdown options={getOptions()} disabled />
+    <InputDropdown options={getOptions()} disabled />
   ))
   .add('Single, with actions', () => (
-    <Dropdown options={getOptions()} onFocus={action('focused')} />
+    <InputDropdown options={getOptions()} onFocus={action('focused')} />
   ))
   .add('Single, focused', () => (
-    <Dropdown options={getOptions()} active />
+    <InputDropdown options={getOptions()} active />
   ))
   .add('Single, focused, with actions', () => (
-    <Dropdown options={getOptions()} onBlur={action('blured')} active />
+    <InputDropdown options={getOptions()} onBlur={action('blured')} active />
   ))
 
   // Multiple dropdown
   .add('Multiple, default state', () => (
-    <Dropdown options={getOptions(true)} multiple />
+    <InputDropdown options={getOptions(true)} multiple />
   ))
   .add('Multiple, disabled', () => (
-    <Dropdown options={getOptions(true)} multiple disabled />
+    <InputDropdown options={getOptions(true)} multiple disabled />
   ))
   .add('Multiple, with actions', () => (
-    <Dropdown options={getOptions(true)} onFocus={action('focused')} multiple />
+    <InputDropdown options={getOptions(true)} onFocus={action('focused')} multiple />
   ))
   .add('Multiple, focused', () => (
-    <Dropdown options={getOptions(true)} multiple active />
+    <InputDropdown options={getOptions(true)} multiple active />
   ))
   .add('Multiple, select all, focused', () => (
-    <Dropdown options={getOptions(true)} multiple selectAll active />
+    <InputDropdown options={getOptions(true)} multiple selectAll active />
   ))
   .add('Multiple, focused, with actions', () => (
-    <Dropdown options={getOptions(true)} onBlur={action('blured')} multiple active />
+    <InputDropdown options={getOptions(true)} onBlur={action('blured')} multiple active />
   ))
   .add('Multiple, focused, select all, with actions', () => (
-    <Dropdown options={getOptions(true)} onBlur={action('blured')} multiple selectAll active />
+    <InputDropdown options={getOptions(true)} onBlur={action('blured')} multiple selectAll active />
   ));

@@ -22,7 +22,7 @@
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import Parser from 'html-react-parser';
-import BigButton from 'components/buttons/bigButton/bigButton';
+import { BigButton } from 'components/buttons/bigButton';
 import styles from './externalLoginBlock.scss';
 
 const cx = classNames.bind(styles);

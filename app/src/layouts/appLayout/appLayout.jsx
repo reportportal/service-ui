@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
+import { Notification } from 'components/main/notification';
 import { Sidebar } from './sidebar';
 import { Header } from './header';
 import styles from './appLayout.scss';
@@ -26,6 +27,7 @@ export const AppLayout = ({ children }) => (
         </ScrollWrapper>
       </div>
     </div>
+    <Notification />
   </ScrollWrapper>
 );
 

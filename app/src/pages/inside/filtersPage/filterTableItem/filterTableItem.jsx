@@ -22,7 +22,7 @@
 import classNames from 'classnames/bind';
 import { FormattedMessage } from 'react-intl';
 import PropTypes from 'prop-types';
-import InputSwitcher from 'components/inputs/inputSwitcher/inputSwitcher';
+import { InputSwitcher } from 'components/inputs/inputSwitcher';
 import styles from './filterTableItem.scss';
 
 const cx = classNames.bind(styles);

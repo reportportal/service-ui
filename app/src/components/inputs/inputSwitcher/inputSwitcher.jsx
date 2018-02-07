@@ -25,7 +25,7 @@ import styles from './inputSwitcher.scss';
 
 const cx = classNames.bind(styles);
 
-const InputSwitcher = ({ children, value, onChange, onFocus, onBlur }) => {
+export const InputSwitcher = ({ children, value, onChange, onFocus, onBlur }) => {
   const sliderClasses = cx({
     'switcher-slider': true,
     centered: !children,
@@ -58,5 +58,3 @@ InputSwitcher.defaultProps = {
   onFocus: () => {},
   onBlur: () => {},
 };
-
-export default InputSwitcher;

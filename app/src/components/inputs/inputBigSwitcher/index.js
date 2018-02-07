@@ -1,0 +1,1 @@
+export { InputBigSwitcher } from './inputBigSwitcher';

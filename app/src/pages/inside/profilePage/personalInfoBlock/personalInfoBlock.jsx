@@ -23,7 +23,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { FormattedMessage } from 'react-intl';
 import classNames from 'classnames/bind';
-import GhostButton from 'components/buttons/ghostButton/ghostButton';
+import { GhostButton } from 'components/buttons/ghostButton';
 import styles from './personalInfoBlock.scss';
 import { BlockContainerBody, BlockContainerHeader } from '../blockContainer';
 import PencilIcon from './img/pencil-icon-inline.svg';

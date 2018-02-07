@@ -24,7 +24,7 @@ import { action } from '@storybook/addon-actions';
 import { host } from 'storybook-host';
 import { withReadme } from 'storybook-readme';
 import TestIcon from './img/test-icon-inline.svg';
-import GhostButton from './ghostButton';
+import { GhostButton } from './ghostButton';
 import README from './README.md';
 
 storiesOf('Components/Buttons/ghostButton', module)

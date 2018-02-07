@@ -23,7 +23,7 @@ import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import { host } from 'storybook-host';
 import { withReadme } from 'storybook-readme';
-import InputSwitcher from './inputSwitcher';
+import { InputSwitcher } from './inputSwitcher';
 import README from './README.md';
 
 storiesOf('Components/Inputs/InputSwitcher', module)

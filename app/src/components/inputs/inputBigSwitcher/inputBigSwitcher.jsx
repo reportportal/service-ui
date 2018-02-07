@@ -26,7 +26,7 @@ import styles from './inputBigSwitcher.scss';
 
 const cx = classNames.bind(styles);
 
-const InputSwitcher = ({ children, disabled, value, onChange, onFocus, onBlur }) => {
+export const InputBigSwitcher = ({ children, disabled, value, onChange, onFocus, onBlur }) => {
   const classes = cx({
     'switcher-wrapper': true,
     centered: !children,
@@ -57,7 +57,7 @@ const InputSwitcher = ({ children, disabled, value, onChange, onFocus, onBlur })
   );
 };
 
-InputSwitcher.propTypes = {
+InputBigSwitcher.propTypes = {
   children: PropTypes.node,
   value: PropTypes.bool,
   disabled: PropTypes.bool,
@@ -66,7 +66,7 @@ InputSwitcher.propTypes = {
   onBlur: PropTypes.func,
 };
 
-InputSwitcher.defaultProps = {
+InputBigSwitcher.defaultProps = {
   children: '',
   value: false,
   disabled: false,
@@ -74,5 +74,3 @@ InputSwitcher.defaultProps = {
   onFocus: () => {},
   onBlur: () => {},
 };
-
-export default InputSwitcher;

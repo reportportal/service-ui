@@ -22,12 +22,12 @@
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { FormattedMessage, injectIntl, intlShape, defineMessages } from 'react-intl';
-import FieldBottomConstraints from 'components/fields/fieldBottomConstraints/fieldBottomConstraints';
-import FieldErrorHint from 'components/fields/fieldErrorHint/fieldErrorHint';
-import FieldWithIcon from 'components/fields/fieldWithIcon/fieldWithIcon';
-import { Input } from 'components/inputs/input/input';
-import InputPassword from 'components/inputs/inputPassword/inputPassword';
-import BigButton from 'components/buttons/bigButton/bigButton';
+import { FieldBottomConstraints } from 'components/fields/fieldBottomConstraints';
+import { FieldErrorHint } from 'components/fields/fieldErrorHint';
+import { FieldWithIcon } from 'components/fields/fieldWithIcon';
+import { Input } from 'components/inputs/input';
+import { InputPassword } from 'components/inputs/inputPassword';
+import { BigButton } from 'components/buttons/bigButton';
 import LoginIcon from './img/login-icon.svg';
 import NameIcon from './img/name-icon.svg';
 import EmailIcon from './img/email-icon.svg';

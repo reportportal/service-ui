@@ -26,10 +26,10 @@ import { FormattedMessage, injectIntl, intlShape, defineMessages } from 'react-i
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { FieldProvider } from 'components/fields/fieldProvider';
-import { FieldWithIcon } from 'components/fields/fieldWithIcon/fieldWithIcon';
-import { FieldErrorHint } from 'components/fields/fieldErrorHint/fieldErrorHint';
-import { Input } from 'components/inputs/input/input';
-import BigButton from 'components/buttons/bigButton/bigButton';
+import { FieldWithIcon } from 'components/fields/fieldWithIcon';
+import { FieldErrorHint } from 'components/fields/fieldErrorHint';
+import { Input } from 'components/inputs/input';
+import { BigButton } from 'components/buttons/bigButton';
 import { validate } from 'common/utils';
 import EmailIcon from './img/email-icon.svg';
 import styles from './forgotPasswordForm.scss';

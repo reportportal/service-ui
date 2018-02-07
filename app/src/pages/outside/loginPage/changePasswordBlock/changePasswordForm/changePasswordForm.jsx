@@ -26,11 +26,11 @@ import classNames from 'classnames/bind';
 import { FormattedMessage, injectIntl, intlShape, defineMessages } from 'react-intl';
 import { validate } from 'common/utils';
 import { FieldProvider } from 'components/fields/fieldProvider';
-import { FieldWithIcon } from 'components/fields/fieldWithIcon/fieldWithIcon';
-import { FieldErrorHint } from 'components/fields/fieldErrorHint/fieldErrorHint';
-import { FieldBottomConstraints } from 'components/fields/fieldBottomConstraints/fieldBottomConstraints';
-import { InputPassword } from 'components/inputs/inputPassword/inputPassword';
-import BigButton from 'components/buttons/bigButton/bigButton';
+import { FieldWithIcon } from 'components/fields/fieldWithIcon';
+import { FieldErrorHint } from 'components/fields/fieldErrorHint';
+import { FieldBottomConstraints } from 'components/fields/fieldBottomConstraints';
+import { InputPassword } from 'components/inputs/inputPassword';
+import { BigButton } from 'components/buttons/bigButton';
 import PasswordIcon from './img/password-icon.svg';
 import styles from './changePasswordForm.scss';
 

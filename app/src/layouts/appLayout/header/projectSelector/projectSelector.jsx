@@ -27,7 +27,7 @@ import styles from './projectSelector.scss';
 
 const cx = classNames.bind(styles);
 
-class ProjectSelector extends Component {
+export class ProjectSelector extends Component {
 
   constructor(props) {
     super(props);
@@ -80,5 +80,3 @@ ProjectSelector.defaultProps = {
   activeProject: '',
   onChange: () => {},
 };
-
-export default ProjectSelector;
