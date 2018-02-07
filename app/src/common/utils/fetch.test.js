@@ -1,11 +1,11 @@
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
-import { DEFAULT_TOKEN } from 'controllers/auth';
 import { fetch, ERROR_CANCELED, ERROR_UNAUTHORIZED } from './fetch';
 
 const axiosMock = new MockAdapter(axios);
 
 const MOCK_TOKEN = 'mock token';
+const DEFAULT_TOKEN = 'Basic dWk6dWltYW4=';
 
 describe('fetch', () => {
   beforeAll(() => {
