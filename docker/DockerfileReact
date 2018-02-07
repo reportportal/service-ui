@@ -3,7 +3,7 @@ FROM alpine:latest
 MAINTAINER Andrei Varabyeu <andrei_varabyeu@epam.com>
 
 ADD ./bin/service-ui /
-ADD ./app/ /public
+ADD ./app/build/ /public
 
 ENV RP_STATICS_PATH=/public
 
