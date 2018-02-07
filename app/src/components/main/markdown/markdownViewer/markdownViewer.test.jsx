@@ -15,25 +15,25 @@ const quoteMock = '> This is a quote.';
 const codeMock = '`var example = "hello!";`';
 
 describe('<MarkdownViewer />', () => {
-  it('bold elements are rendering correctly', () => {
+  test('bold elements are rendering correctly', () => {
     const wrapper = mount(
       <MarkdownViewer text={boldMock} />,
     );
     expect(wrapper.contains(<strong>bold</strong>)).toBeTruthy();
   });
-  it('italic elements are rendering correctly', () => {
+  test('italic elements are rendering correctly', () => {
     const wrapper = mount(
       <MarkdownViewer text={italicMock} />,
     );
     expect(wrapper.contains(<em>italic</em>)).toBeTruthy();
   });
-  it('strikethrough elements are rendering correctly', () => {
+  test('strikethrough elements are rendering correctly', () => {
     const wrapper = mount(
       <MarkdownViewer text={strikethroughMock} />,
     );
     expect(wrapper.contains(<del>strikethrough</del>)).toBeTruthy();
   });
-  it('unordered lists are rendering correctly', () => {
+  test('unordered lists are rendering correctly', () => {
     const wrapper = mount(
       <MarkdownViewer text={unorderedListMock} />,
     );
@@ -43,7 +43,7 @@ describe('<MarkdownViewer />', () => {
     expect(wrapper.find('.markdown-viewer ul').childAt(0).type()).toEqual('li');
     expect(wrapper.find('.markdown-viewer ul').childAt(0).html()).toEqual('<li>Generic list item</li>');
   });
-  it('ordered lists are rendering correctly', () => {
+  test('ordered lists are rendering correctly', () => {
     const wrapper = mount(
       <MarkdownViewer text={orderedListMock} />,
     );
@@ -53,21 +53,21 @@ describe('<MarkdownViewer />', () => {
     expect(wrapper.find('.markdown-viewer ol').childAt(0).type()).toEqual('li');
     expect(wrapper.find('.markdown-viewer ol').childAt(0).html()).toEqual('<li>Numbered list item</li>');
   });
-  it('links are rendering correctly', () => {
+  test('links are rendering correctly', () => {
     const wrapper = mount(
       <MarkdownViewer text={linkMock} />,
     );
     expect(wrapper.find('.markdown-viewer a')).toHaveLength(1);
     expect(wrapper.find('.markdown-viewer a').prop('href')).toEqual('http://reportportal.io/');
   });
-  it('quote elements are rendering correctly', () => {
+  test('quote elements are rendering correctly', () => {
     const wrapper = mount(
       <MarkdownViewer text={quoteMock} />,
     );
     expect(wrapper.find('.markdown-viewer blockquote')).toHaveLength(1);
     expect(wrapper.find('.markdown-viewer blockquote').childAt(0).html()).toEqual('<p>This is a quote.</p>');
   });
-  it('codeMock elements are rendering correctly', () => {
+  test('codeMock elements are rendering correctly', () => {
     const wrapper = mount(
       <MarkdownViewer text={codeMock} />,
     );
