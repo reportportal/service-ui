@@ -1,6 +1,5 @@
 import React from 'react';
 import { Switch, Route, Link } from 'react-router-dom';
-import { AuthorizedArea } from 'controllers/authorizedArea';
 
 import EmptyLayout from 'layouts/emptyLayout/emptyLayout';
 import AppLayout from 'layouts/appLayout/appLayout';
@@ -14,18 +13,18 @@ import FiltersPage from 'pages/inside/filtersPage/filtersPage';
 import DebugPage from 'pages/inside/debugPage/debugPage';
 import MembersPage from 'pages/inside/membersPage/membersPage';
 import SettingsPage from 'pages/inside/settingsPage/settingsPage';
-
 import { LoginPage } from 'pages/outside/loginPage';
-
 import { LocalizationSwitcher } from 'components/main/localizationSwitcher';
+import { authorizedRoute } from './authorizedRoute';
+import { anonymousRoute } from './anonymousRoute';
 
-const LoginRoute = () => (
+const LoginRoute = anonymousRoute(() => (
   <EmptyLayout>
     <LocalizationSwitcher />
     <LoginPage />
   </EmptyLayout>
-);
-const AppRoute = () => (
+));
+const AppRoute = authorizedRoute(() => (
   <AppLayout>
     <LocalizationSwitcher />
     <Switch>
@@ -40,23 +39,21 @@ const AppRoute = () => (
       <Route path="/:projectId/settings" component={SettingsPage} />
     </Switch>
   </AppLayout>
-);
-const AdminRoute = () => (
+));
+const AdminRoute = authorizedRoute(() => (
   <AdminLayout>
     <LocalizationSwitcher />
     <h1>Admin</h1>
     <Link to="/default_project/dashboard">Back</Link>
   </AdminLayout>
-);
+));
 
 const RootRoute = () => (
   <Switch>
     <Route exact path="/" component={LoginRoute} />
     <Route path="/login" component={LoginRoute} />
-    <AuthorizedArea>
-      <Route path="/administrate" component={AdminRoute} />
-      <AppRoute />
-    </AuthorizedArea>
+    <Route path="/administrate" component={AdminRoute} />
+    <AppRoute />
   </Switch>
 );
 

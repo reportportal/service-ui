@@ -1,5 +1,5 @@
-const getAuth = state => state.auth || {};
+const authSelector = state => state.auth || {};
 
-export const getToken = state => getAuth(state).token;
-export const isAuthorized = state => !!getAuth(state).authorized;
-export const getUser = state => getAuth(state).user;
+export const isAuthorizedSelector = state => !!authSelector(state).authorized;
+export const userSelector = state => authSelector(state).user || {};
+export const defaultProjectSelector = state => userSelector(state).default_project;

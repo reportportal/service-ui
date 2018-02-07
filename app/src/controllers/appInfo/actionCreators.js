@@ -1,11 +1,11 @@
-export const FETCH_INFO_SUCCESS = 'fetchInfoSuccess';
+import { fetch } from 'common/utils';
+import { FETCH_INFO_SUCCESS } from './constants';
 
 export const fetchInfoSuccess = info => ({
   type: FETCH_INFO_SUCCESS,
   payload: info,
 });
 
-export const fetchInfo = () => dispatch =>
+export const fetchInfoAction = () => dispatch =>
   fetch('/composite/info')
-    .then(res => res.json())
     .then(info => dispatch(fetchInfoSuccess(info)));

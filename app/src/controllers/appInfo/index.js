@@ -1,4 +1,3 @@
 export { appInfoReducer } from './reducer';
-export { APP_INFO_STORE_KEY } from './constants';
-export { fetchInfo } from './actions';
-export { getAuthExtensions } from './selectors';
+export { fetchInfoAction } from './actionCreators';
+export { authExtensionsSelector } from './selectors';

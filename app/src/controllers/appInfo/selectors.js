@@ -1,4 +1,4 @@
-export const getAppInfo = state => state.appInfo || {};
+export const appInfoSelector = state => state.appInfo || {};
 
-const getUATInfo = state => getAppInfo(state).UAT || {};
-export const getAuthExtensions = state => getUATInfo(state).auth_extensions;
+const UATInfoSelector = state => appInfoSelector(state).UAT || {};
+export const authExtensionsSelector = state => UATInfoSelector(state).auth_extensions;

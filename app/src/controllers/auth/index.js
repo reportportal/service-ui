@@ -1,5 +1,4 @@
-export { TOKEN_KEY, AUTH_STORE_KEY, DEFAULT_TOKEN } from './constants';
-export { setToken, clearToken, authSuccess } from './actions';
+export { TOKEN_KEY, DEFAULT_TOKEN } from './constants';
+export { fetchUserAction, loginAction, authSuccessAction } from './actionCreators';
 export { authReducer } from './reducer';
-export { isAuthorized, getToken, getUser } from './selectors';
-export { fetchUser } from './actions';
+export { isAuthorizedSelector, userSelector, defaultProjectSelector } from './selectors';

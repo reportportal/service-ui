@@ -1,1 +1,0 @@
-export { InitialData } from './initialData';
