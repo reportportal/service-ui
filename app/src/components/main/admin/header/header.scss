@@ -1,6 +1,6 @@
 .mobile-header{
   height: 60px;
-  background: $COLOR--charcoal-grey;
+  background: $COLOR--black-2;
   width: 100%;
   display: none;
   @media(max-width: $SCREEN_XS_MAX) {
@@ -12,7 +12,7 @@
   width: 50px;
   height: 60px;
   padding: 20px 10px 20px 10px;
-  background: $COLOR--charcoal-grey;
+  background: $COLOR--black-2;
   border: none;
   outline: none;
   cursor: pointer;
@@ -50,7 +50,7 @@
   letter-spacing: .5px;
   box-sizing: border-box;
   color: $COLOR--white-two;
-  background: $COLOR--charcoal-grey;
+  background: $COLOR--black-2;
   padding: 0 10px 0 15px;
   @media(max-width: $SCREEN_XS_MAX) {
     padding: 0;
@@ -62,7 +62,7 @@
   padding: 16px 5px 11px 15px;
   @media(max-width: $SCREEN_XS_MAX) {
     padding: 9px 10px 9px 10px;
-    background: lighten($COLOR--charcoal-grey,5%);
+    background: $COLOR--charcoal-grey;
   }
 }
 .header-name{
