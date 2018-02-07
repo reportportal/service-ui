@@ -20,21 +20,36 @@
  */
 
 import { storiesOf } from '@storybook/react';
+import { action } from '@storybook/addon-actions';
 import { host } from 'storybook-host';
 import { withReadme } from 'storybook-readme';
-import AdminHeader from './header';
+import { Sidebar } from './sidebar';
 import README from './README.md';
 
-storiesOf('Components/Pages/Admin/Header', module)
+storiesOf('Components/Main/Admin/Sidebar', module)
   .addDecorator(host({
-    title: 'AdminHeader component',
+    title: 'AdminSidebar component',
     align: 'center middle',
     backdrop: 'rgba(70, 69, 71, 0.2)',
     background: '#ffffff',
-    height: 100,
+    height: 1000,
     width: '100%',
   }))
   .addDecorator(withReadme(README))
   .add('default state', () => (
-    <AdminHeader adminHeaderCrumb=" / All users" />
+    <Sidebar />
+  ))
+  .add('open menu (max-width:768)', () => (
+    <Sidebar isMenuOpen />
+  ))
+  .add('with all action', () => (
+    <Sidebar
+      onClickProjects={action('Projects clicked ')}
+      onClickUsers={action('Users clicked ')}
+      onClickServerSettings={action('Settings clicked ')}
+      onClickBackToProject={action('Back to project clicked ')}
+      onClickLogout={action('Logout clicked ')}
+      onClickProfile={action('Profile clicked ')}
+      isMenuOpen
+    />
   ));

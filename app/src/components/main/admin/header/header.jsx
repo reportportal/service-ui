@@ -26,24 +26,33 @@ import styles from './header.scss';
 
 const cx = classNames.bind(styles);
 
-const AdminHeader = ({ onClickBackToProject, onClickLogout, adminHeaderCrumb }) => (
-  <div className={cx('adminHeader')} >
+export const AdminHeader = ({ onClickBackToProject, onClickLogout,
+adminHeaderCrumb, onClickMenu, isMenuOpen }) => (
+  <div className={cx({ 'admin-header': true, open: isMenuOpen })} >
+    <div className={cx('mobile-header')}>
+      <button onClick={onClickMenu} className={cx('button-menu-open')}>
+        <i className={cx('menu-icon-part')} />
+        <i className={cx('menu-icon-part')} />
+        <i className={cx('menu-icon-part')} />
+      </button>
+      <i className={cx('mobile-logo')} />
+    </div>
     <div className={cx('container')}>
-      <h3>
+      <h3 className={cx('header-name')}>
         <FormattedMessage
           id={'AdminHeader.header'}
           defaultMessage={'Management board'}
         />
         <span className={cx('header-crumb')}>{adminHeaderCrumb}</span>
       </h3>
-      <div className={cx('adminHeaderControls')}>
-        <button className={cx('backToProject')} onClick={onClickBackToProject}>
+      <div className={cx('admin-header-controls')}>
+        <button className={cx({ 'back-to-project': true, btn: true })} onClick={onClickBackToProject}>
           <FormattedMessage
             id={'AdminHeader.btnToProject'}
             defaultMessage={'Back to project'}
           />
         </button>
-        <button className={cx('logout')} onClick={onClickLogout}>
+        <button className={cx('logout', 'btn')} onClick={onClickLogout}>
           <FormattedMessage
             id={'AdminHeader.btnLogout'}
             defaultMessage={'Logout'}
@@ -58,13 +67,15 @@ AdminHeader.propTypes = {
   adminHeaderCrumb: PropTypes.string,
   onClickBackToProject: PropTypes.func,
   onClickLogout: PropTypes.func,
+  onClickMenu: PropTypes.func,
+  isMenuOpen: PropTypes.bool,
 };
 
 AdminHeader.defaultProps = {
   adminHeaderCrumb: '',
   onClickBackToProject: () => {},
   onClickLogout: () => {},
+  onClickMenu: () => {},
+  isMenuOpen: false,
 };
-
-export default AdminHeader;
 

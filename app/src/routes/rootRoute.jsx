@@ -13,19 +13,20 @@ import FiltersPage from 'pages/inside/filtersPage/filtersPage';
 import DebugPage from 'pages/inside/debugPage/debugPage';
 import MembersPage from 'pages/inside/membersPage/membersPage';
 import SettingsPage from 'pages/inside/settingsPage/settingsPage';
-
 import { LoginPage } from 'pages/outside/loginPage';
-
+import { LocalizationSwitcher } from 'components/main/localizationSwitcher';
 import { authorizedRoute } from './authorizedRoute';
 import { anonymousRoute } from './anonymousRoute';
 
 const LoginRoute = anonymousRoute(() => (
   <EmptyLayout>
+    <LocalizationSwitcher />
     <LoginPage />
   </EmptyLayout>
 ));
 const AppRoute = authorizedRoute(() => (
   <AppLayout>
+    <LocalizationSwitcher />
     <Switch>
       <Route path="/user-profile" component={ProfilePage} />
       <Route path="/api" component={ApiPage} />
@@ -41,6 +42,7 @@ const AppRoute = authorizedRoute(() => (
 ));
 const AdminRoute = authorizedRoute(() => (
   <AdminLayout>
+    <LocalizationSwitcher />
     <h1>Admin</h1>
     <Link to="/default_project/dashboard">Back</Link>
   </AdminLayout>
