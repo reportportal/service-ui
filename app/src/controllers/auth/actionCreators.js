@@ -1,21 +1,20 @@
 import { fetch } from 'common/utils';
 import { FETCH_USER_SUCCESS, AUTH_SUCCESS, TOKEN_KEY } from './constants';
 
-export const authSuccess = () => ({
+export const authSuccessAction = () => ({
   type: AUTH_SUCCESS,
 });
 
-const fetchUserSuccess = user => ({
+const fetchUserSuccessAction = user => ({
   type: FETCH_USER_SUCCESS,
   payload: user,
 });
 
 export const fetchUserAction = () => dispatch =>
   fetch('/api/v1/user')
-    .then(user => dispatch(fetchUserSuccess(user)))
-    .then(() => dispatch(authSuccess()));
+    .then(user => dispatch(fetchUserSuccessAction(user)));
 
-export const doAuthAction = ({ login, password }) => dispatch =>
+export const loginAction = ({ login, password }) => dispatch =>
   fetch('/uat/sso/oauth/token', {
     params: {
       grant_type: 'password',
@@ -25,5 +24,5 @@ export const doAuthAction = ({ login, password }) => dispatch =>
     method: 'POST',
   }).then((result) => {
     localStorage.setItem(TOKEN_KEY, `${result.token_type} ${result.access_token}`);
-    dispatch(fetchUserAction());
+    dispatch(fetchUserAction()).then(() => dispatch(authSuccessAction()));
   });

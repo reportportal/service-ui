@@ -33,7 +33,7 @@ import { InputPassword } from 'components/inputs/inputPassword/inputPassword';
 import BigButton from 'components/buttons/bigButton/bigButton';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { authExtensionsSelector } from 'controllers/appInfo';
-import { doAuthAction } from 'controllers/auth';
+import { loginAction } from 'controllers/auth';
 import LoginIcon from './img/login-field-icon.svg';
 import PasswordIcon from './img/password-field-icon.svg';
 import styles from './loginForm.scss';
@@ -55,7 +55,7 @@ const placeholders = defineMessages({
 @connect(state => ({
   externalAuth: authExtensionsSelector(state),
 }), {
-  authorize: doAuthAction,
+  authorize: loginAction,
 })
 @reduxForm({
   form: 'loginPage',

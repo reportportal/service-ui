@@ -6,16 +6,19 @@ import {
   TOKEN_KEY,
   DEFAULT_TOKEN,
   fetchUserAction,
+  authSuccessAction,
 } from 'controllers/auth';
 
 @connect(null, {
   fetchInfoAction,
   fetchUserAction,
+  authSuccessAction,
 })
 export class InitialDataContainer extends Component {
   static propTypes = {
     fetchInfoAction: PropTypes.func.isRequired,
     fetchUserAction: PropTypes.func.isRequired,
+    authSuccessAction: PropTypes.func.isRequired,
     children: PropTypes.node,
   };
 
@@ -34,6 +37,7 @@ export class InitialDataContainer extends Component {
       localStorage.setItem(TOKEN_KEY, DEFAULT_TOKEN);
     }
     const userPromise = this.props.fetchUserAction()
+      .then(() => this.props.authSuccessAction())
       .catch(() => {
         localStorage.setItem(TOKEN_KEY, DEFAULT_TOKEN);
       });
