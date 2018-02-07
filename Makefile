@@ -88,7 +88,7 @@ build-image:
 
 # Builds the image
 build-image-react:
-	docker build -t "$(IMAGE_NAME)" -f docker/Dockerfile .
+	docker build -t "$(IMAGE_NAME_REACT)" -f docker/DockerfileReact .
 
 release: build-release
 	releaser release --bintray.token ${BINTRAY_TOKEN}
