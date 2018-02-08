@@ -1,4 +1,4 @@
-import { email, password } from './validation';
+import { email, password, login, name } from './validation';
 
 describe('Email', () => {
   test(' validation should be correct', () => {
@@ -43,3 +43,30 @@ describe('Password', () => {
   });
 });
 
+describe('Login', () => {
+  test('validation should be correct', () => {
+    expect(login('login')).toBe(true);
+    expect(login('login-test_123.foo')).toBe(true);
+  });
+  test('validation should not be correct', () => {
+    expect(login('')).toBe(false);
+    expect(login('login^test')).toBe(false);
+    expect(login('логин')).toBe(false);
+  });
+});
+
+describe('Name', () => {
+  test('validation should be correct', () => {
+    expect(name('abc')).toBe(true);
+    expect(name('full name')).toBe(true);
+    expect(name('полное имя')).toBe(true);
+    expect(name('full name with.some_symbols-123')).toBe(true);
+  });
+  test('Validation should not be correct', () => {
+    expect(name('')).toBe(false);
+    expect(name('a')).toBe(false);
+    expect(name('ab')).toBe(false);
+    expect(name('name#')).toBe(false);
+    expect(name('Hello 世界')).toBe(false);
+  });
+});
