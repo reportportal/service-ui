@@ -24,7 +24,7 @@ export default (env = defaultEnv) => ({
   output: {
     path: path.resolve('build'),
     filename: 'app.[hash:6].js',
-    publicPath: '/',
+    publicPath: '',
   },
   resolve: {
     extensions: ['.js', '.jsx'],
