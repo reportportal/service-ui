@@ -77,8 +77,8 @@ const messages = defineMessages({
   validate: ({ login, name, password, confirmPassword }) => ({
     password: (!password || !validate.password(password)) && 'passwordHint',
     confirmPassword: (!confirmPassword || confirmPassword !== password) && 'confirmPasswordHint',
-    login: (!login || !/^[0-9a-zA-Z-_.]{1,128}$/.exec(login)) && 'loginHint',
-    name: (!name || !/^[a-z0-9._-\s\u0400-\u04FF]{3,256}$/i.exec(name)) && 'nameHint',
+    login: (!login || !validate.login(login)) && 'loginHint',
+    name: (!name || !validate.name(name)) && 'nameHint',
   }),
 })
 @injectIntl

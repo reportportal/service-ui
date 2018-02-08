@@ -60,7 +60,7 @@ const placeholders = defineMessages({
 @reduxForm({
   form: 'loginPage',
   validate: ({ login, password }) => ({
-    login: (!login || !/^[0-9a-zA-Z-_.]{1,128}$/.exec(login)) && 'loginHint',
+    login: (!login || !validate.login(login)) && 'loginHint',
     password: (!password || !validate.password(password)) && 'passwordHint',
   }),
 })
