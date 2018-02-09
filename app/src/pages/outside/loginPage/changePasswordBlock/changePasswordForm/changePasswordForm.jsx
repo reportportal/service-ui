@@ -67,7 +67,6 @@ export class ChangePasswordForm extends PureComponent {
       query: PropTypes.object,
       search: PropTypes.string,
     }).isRequired,
-    invalid: PropTypes.bool.isRequired,
   };
 
   changePassword = ({ password }) => {
@@ -82,7 +81,7 @@ export class ChangePasswordForm extends PureComponent {
   };
 
   render() {
-    const { intl, handleSubmit, invalid } = this.props;
+    const { intl, handleSubmit } = this.props;
     const { formatMessage } = intl;
     return (
       <form className={cx('change-password-form')} onSubmit={handleSubmit(this.changePassword)}>
@@ -107,7 +106,7 @@ export class ChangePasswordForm extends PureComponent {
           </FieldProvider>
         </div>
         <div className={cx('change-password-button')}>
-          <BigButton type={'submit'} color={'organish'} disabled={invalid}>
+          <BigButton type={'submit'} color={'organish'}>
             <FormattedMessage id={'ChangePasswordForm.changePassword'} defaultMessage={'Change password'} />
           </BigButton>
         </div>
