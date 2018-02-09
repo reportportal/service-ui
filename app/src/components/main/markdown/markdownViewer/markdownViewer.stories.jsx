@@ -61,7 +61,7 @@ const combinationMock = '# Intro\n' +
 
 storiesOf('Components/Main/markdown/markdownViewer', module)
   .addDecorator(host({
-    title: 'Ghost button component',
+    title: 'Markdown viewer component',
     align: 'center middle',
     backdrop: 'rgba(70, 69, 71, 0.2)',
     background: '#fff',

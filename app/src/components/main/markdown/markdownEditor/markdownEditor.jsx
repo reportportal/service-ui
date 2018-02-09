@@ -29,7 +29,6 @@ import 'simplemde/dist/simplemde.min.css';
 import { MarkdownViewer } from '../markdownViewer/markdownViewer';
 import styles from './markdownEditor.scss';
 
-
 const cx = classNames.bind(styles);
 const toolbarTitles = defineMessages({
   heading1: {
@@ -209,12 +208,9 @@ export class MarkdownEditor extends React.Component {
         italic: '*',
         code: '`',
       },
-      previewRender: plainText => ReactDOMServer.renderToString(
+      previewRender: plainText => ReactDOMServer.renderToStaticMarkup(
         <MarkdownViewer text={plainText} />,
       ),
-      // insertTexts: {
-      //     link: ['[](', ')']
-      // }
     });
     this.simpleMDE.codemirror.on('change', this.onChangeHandler);
   }
@@ -222,7 +218,7 @@ export class MarkdownEditor extends React.Component {
     this.simpleMDE.codemirror.off('change', this.onChangeHandler);
   }
   onChangeHandler = () => {
-    this.props.onChange({ value: this.simpleMDE.value() });
+    this.props.onChange(this.simpleMDE.value());
   };
 
 

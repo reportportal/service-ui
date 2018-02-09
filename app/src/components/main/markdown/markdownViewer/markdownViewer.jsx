@@ -24,7 +24,7 @@ import Parser from 'html-react-parser';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import styles from './markdownViewer.scss';
-import SingletonMarkdownObject from '../singletonMarkdownObject';
+import { SingletonMarkdownObject } from '../singletonMarkdownObject';
 
 const cx = classNames.bind(styles);
 
@@ -39,7 +39,7 @@ export class MarkdownViewer extends Component {
   };
   constructor(props) {
     super(props);
-    this.simpleMDE = new SingletonMarkdownObject();
+    this.simpleMDE = SingletonMarkdownObject.getInstance();
   }
   componentDidMount() {
     this.updateElements();
@@ -64,11 +64,7 @@ export class MarkdownViewer extends Component {
   };
   escapeHtml = string => string
     .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    // .replace(/>/g, '&gt;')
-    // .replace(/"/g, '&quot;')
-    // .replace(/'/g, '&#039;')
-    ;
+    .replace(/</g, '&lt;');
   indentSpaces = string => string.replace(/^ +/gm, str => str.replace(/ /g, '&nbsp;'));
 
   render() {
