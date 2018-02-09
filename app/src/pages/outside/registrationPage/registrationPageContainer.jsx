@@ -31,6 +31,9 @@ export class RegistrationPageContainer extends PureComponent {
 
   componentDidMount() {
     const uuid = this.props.location.query.uuid;
+    if (!uuid) {
+      return;
+    }
     fetch(REGISTRATION_URL, { params: { uuid } })
       .then(data => this.setState({
         isTokenActive: data.isActive,
@@ -52,10 +55,11 @@ export class RegistrationPageContainer extends PureComponent {
   };
 
   render() {
+    const { uuid } = this.props.location.query.uuid;
     return (
-      this.state.isLoadingFinished
+      !uuid || this.state.isLoadingFinished
         ? <RegistrationPage
-          tokenProvided={Boolean(this.props.location.query.uuid)}
+          tokenProvided={Boolean(uuid)}
           tokenActive={this.state.isTokenActive}
           email={this.state.email}
           onRegistrationSubmit={this.registrationHandler}

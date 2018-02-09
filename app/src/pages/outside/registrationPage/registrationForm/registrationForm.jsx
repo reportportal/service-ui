@@ -89,7 +89,6 @@ export class RegistrationForm extends Component {
     intl: intlShape.isRequired,
     handleSubmit: PropTypes.func.isRequired,
     autofill: PropTypes.func.isRequired,
-    invalid: PropTypes.bool.isRequired,
     email: PropTypes.string,
   };
 
@@ -111,7 +110,7 @@ export class RegistrationForm extends Component {
   };
 
   render() {
-    const { handleSubmit, submitForm, intl, invalid } = this.props;
+    const { handleSubmit, submitForm, intl } = this.props;
     const { formatMessage } = intl;
 
     return (
@@ -173,7 +172,7 @@ export class RegistrationForm extends Component {
             </BigButton>
           </div>
           <div className={cx('button-register')}>
-            <BigButton type={'submit'} color={'organish'} disabled={invalid}>
+            <BigButton type={'submit'} color={'organish'}>
               <FormattedMessage id={'RegistrationForm.register'} defaultMessage={'Register'} />
             </BigButton>
           </div>
