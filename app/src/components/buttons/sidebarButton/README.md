@@ -3,8 +3,11 @@
 Has width of it's parent and height adjusted by content.
 
 ### Props:
+* **icon**: _string(imported inline svg icon)_, optional, default = ""
+* **link**: _string_, optional, default = "/"
 * **btnBottom**: _bool_, optional, default = false
-* **icon**: _string(imported icon)_, optional, default = ""
+* **children**: _node_, optional, default = null
+
 
 ### Events:
 * **onClick**

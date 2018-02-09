@@ -19,10 +19,22 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import * as validation from './validation';
+import { TOKEN_KEY } from 'controllers/auth';
 
-export const validate = validation;
-export { isEmptyObject } from './isEmptyObject';
-export { referenceDictionary } from './referenceDictionary';
-export { fetch, ERROR_CANCELED, ERROR_UNAUTHORIZED } from './fetch';
-export { authorizeImagePath } from './authorizeImagePath';
+export function authorizeImagePath(path) {
+  const token = localStorage.getItem(TOKEN_KEY);
+  let newPath = path;
+  if (!token) {
+    return path;
+  }
+  const partToken = token.split(' ')[1];
+  if (!partToken) {
+    return path;
+  }
+  if (path.indexOf('?') !== -1) {
+    newPath += '&';
+  } else {
+    newPath += '?';
+  }
+  return `${newPath}access_token=${partToken}`;
+}
