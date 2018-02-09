@@ -38,4 +38,4 @@ const getInstance = () => {
   return instance;
 };
 
-export default getInstance;
+export const SingletonMarkdownObject = { getInstance };
