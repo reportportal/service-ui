@@ -22,9 +22,10 @@
 import { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { reduxForm } from 'redux-form';
+import { withRouter } from 'react-router-dom';
 import classNames from 'classnames/bind';
 import { FormattedMessage, injectIntl, intlShape, defineMessages } from 'react-intl';
-import { validate } from 'common/utils';
+import { validate, fetch } from 'common/utils';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldWithIcon } from 'components/fields/fieldWithIcon';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
@@ -47,6 +48,7 @@ const placeholders = defineMessages({
   },
 });
 
+@withRouter
 @reduxForm({
   form: 'changePassword',
   validate: ({ password, passwordRepeat }) => ({
@@ -59,16 +61,31 @@ export class ChangePasswordForm extends PureComponent {
   static propTypes = {
     intl: intlShape.isRequired,
     handleSubmit: PropTypes.func.isRequired,
-    submitForm: PropTypes.func,
+    location: PropTypes.shape({
+      hash: PropTypes.string,
+      pathname: PropTypes.string,
+      query: PropTypes.object,
+      search: PropTypes.string,
+    }).isRequired,
+    invalid: PropTypes.bool.isRequired,
   };
-  static defaultProps = {
-    submitForm: () => {},
+
+  changePassword = ({ password }) => {
+    const uuid = this.props.location.query.reset;
+    fetch('api/v1/user/password/reset', {
+      method: 'post',
+      data: {
+        password,
+        uuid,
+      },
+    });
   };
+
   render() {
-    const { intl, handleSubmit, submitForm } = this.props;
+    const { intl, handleSubmit, invalid } = this.props;
     const { formatMessage } = intl;
     return (
-      <form className={cx('change-password-form')} onSubmit={handleSubmit(submitForm)}>
+      <form className={cx('change-password-form')} onSubmit={handleSubmit(this.changePassword)}>
         <div className={cx('new-password-field')}>
           <FieldProvider name="password">
             <FieldBottomConstraints text={<FormattedMessage id={'ChangePasswordForm.passwordConstraints'} defaultMessage={'4-25 symbols'} />}>
@@ -90,7 +107,7 @@ export class ChangePasswordForm extends PureComponent {
           </FieldProvider>
         </div>
         <div className={cx('change-password-button')}>
-          <BigButton type={'submit'} color={'organish'}>
+          <BigButton type={'submit'} color={'organish'} disabled={invalid}>
             <FormattedMessage id={'ChangePasswordForm.changePassword'} defaultMessage={'Change password'} />
           </BigButton>
         </div>
