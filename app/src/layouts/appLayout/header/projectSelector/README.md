@@ -8,3 +8,5 @@ Has no own size. Width and Height = 100% of it's parent.
 ### Props:
 * **projects**: _arrayOfStrings_, optional, default = []
 * **activeProject**: _string_, optional, default = ""
+* **onChange**: _function_, optional, default = () => {}
+

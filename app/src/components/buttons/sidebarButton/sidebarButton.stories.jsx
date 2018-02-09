@@ -22,38 +22,36 @@
 import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import { host } from 'storybook-host';
-import { FormattedMessage } from 'react-intl';
 import { withReadme } from 'storybook-readme';
+import { MemoryRouter } from 'react-router';
 import { SidebarButton } from './sidebarButton';
 import README from './README.md';
-import TestIcon from './img/test-icon.svg';
+import TestIcon from './img/test-icon-inline.svg';
 
-storiesOf('Components/Main/Admin/sidebarButton', module)
+storiesOf('Components/Buttons/sidebarButton', module)
   .addDecorator(host({
     title: 'sidebarButton component',
     align: 'center middle',
     backdrop: 'rgba(70, 69, 71, 0.2)',
     background: '#ffffff',
-    height: 100,
-    width: 200,
+    height: 50,
+    width: 150,
   }))
   .addDecorator(withReadme(README))
+  .addDecorator(story => (
+    <MemoryRouter initialEntries={['/']}>{story()}</MemoryRouter>
+  ))
   .add('default state', () => (
     <SidebarButton />
   ))
-  .add('with icon and name', () => (
-    <SidebarButton icon={TestIcon}>
-      <FormattedMessage
-        id={'AdminSidebar.allProjects'}
-        defaultMessage={'Projects'}
-      />
+  .add('with props', () => (
+    <SidebarButton icon={TestIcon} link="/some_route">
+      Nav Button
     </SidebarButton>
   ))
-  .add('with icon,name and action', () => (
-    <SidebarButton icon={TestIcon} clickHandler={action('clicked')}>
-      <FormattedMessage
-        id={'AdminSidebar.allProjects'}
-        defaultMessage={'Projects'}
-      />
+  .add('with actions', () => (
+    <SidebarButton icon={TestIcon} link="/some_route" onClick={action('clicked')}>
+      Nav Button
     </SidebarButton>
-  ));
+  ))
+;

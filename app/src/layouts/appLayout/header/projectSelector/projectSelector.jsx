@@ -21,6 +21,7 @@
 
 import classNames from 'classnames/bind';
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import styles from './projectSelector.scss';
@@ -28,17 +29,33 @@ import styles from './projectSelector.scss';
 const cx = classNames.bind(styles);
 
 export class ProjectSelector extends Component {
-
-  constructor(props) {
-    super(props);
-    this.state = {
-      opened: false,
-    };
+  static propTypes = {
+    projects: PropTypes.arrayOf(PropTypes.string),
+    activeProject: PropTypes.string,
+    onChange: PropTypes.func,
+  };
+  static defaultProps = {
+    projects: [],
+    activeProject: '',
+    onChange: () => {},
+  };
+  state = {
+    opened: false,
+  };
+  componentDidMount() {
+    document.addEventListener('click', this.handleOutsideClick, false);
   }
-
-  onClickProjectItem = (e) => {
+  componentWillUnmount() {
+    document.removeEventListener('click', this.handleOutsideClick, false);
+  }
+  onClickProjectItem = () => {
     this.setState({ opened: false });
-    this.props.onChange({ value: e.target.dataset.project });
+    this.props.onChange();
+  };
+  handleOutsideClick = (e) => {
+    if (!this.node.contains(e.target) && this.state.opened) {
+      this.setState({ opened: false });
+    }
   };
   toggleShowList = () => {
     this.setState({ opened: !this.state.opened });
@@ -46,7 +63,7 @@ export class ProjectSelector extends Component {
 
   render() {
     return (
-      <div className={cx('project-selector')}>
+      <div ref={(node) => { this.node = node; }} className={cx('project-selector')}>
         <div className={cx('current-project-block')} onClick={this.toggleShowList}>
           <div className={cx('current-project-name')}>
             { this.props.activeProject }
@@ -57,8 +74,13 @@ export class ProjectSelector extends Component {
           <ScrollWrapper autoHeight autoHeightMax={600}>
             {
             Array.map(this.props.projects, project => (
-              <div key={project} data-project={project} className={cx({ 'project-list-item': true, active: project === this.props.activeProject })} onClick={this.onClickProjectItem}>
-                {project}
+              <div
+                key={project}
+                data-project={project}
+                className={cx({ 'project-list-item': true, active: project === this.props.activeProject })}
+                onClick={this.onClickProjectItem}
+              >
+                <Link to={`/${project}`}>{project}</Link>
               </div>
               ))
             }
@@ -68,15 +90,3 @@ export class ProjectSelector extends Component {
     );
   }
 }
-
-ProjectSelector.propTypes = {
-  projects: PropTypes.arrayOf(PropTypes.string),
-  activeProject: PropTypes.string,
-  onChange: PropTypes.func,
-};
-
-ProjectSelector.defaultProps = {
-  projects: [],
-  activeProject: '',
-  onChange: () => {},
-};
