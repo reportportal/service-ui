@@ -55,7 +55,7 @@ export class RegistrationPageContainer extends PureComponent {
   };
 
   render() {
-    const { uuid } = this.props.location.query.uuid;
+    const uuid = this.props.location.query.uuid;
     return (
       !uuid || this.state.isLoadingFinished
         ? <RegistrationPage
