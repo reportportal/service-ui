@@ -5,10 +5,10 @@ import { Field } from 'redux-form';
 const InnerComponent = ({
     children,
     input: { onChange, onBlur, onFocus, value },
-    meta: { error, active },
+    meta: { error, active, touched },
     ...rest
   }) => (
-  cloneElement(children, { onChange, onBlur, onFocus, value, error, active, ...rest })
+  cloneElement(children, { onChange, onBlur, onFocus, value, error, active, touched, ...rest })
 );
 
 export const FieldProvider = ({ children, ...rest }) => (
