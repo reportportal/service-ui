@@ -28,10 +28,10 @@ import styles from './sidebarButton.scss';
 
 const cx = classNames.bind(styles);
 
-export const SidebarButton = ({ onClick, icon, children, link, bottomBtn }) => {
+export const SidebarButton = ({ onClick, icon, children, link, bottom }) => {
   const classes = cx({
     'sidebar-nav-btn': true,
-    'at-bottom': bottomBtn,
+    'at-bottom': bottom,
   });
   return (
     <div className={classes}>
@@ -52,7 +52,7 @@ export const SidebarButton = ({ onClick, icon, children, link, bottomBtn }) => {
 SidebarButton.propTypes = {
   link: PropTypes.string,
   icon: PropTypes.string,
-  bottomBtn: PropTypes.bool,
+  bottom: PropTypes.bool,
   children: PropTypes.node,
   onClick: PropTypes.func,
 };
@@ -60,7 +60,7 @@ SidebarButton.propTypes = {
 SidebarButton.defaultProps = {
   link: '/',
   icon: '',
-  bottomBtn: false,
+  bottom: false,
   children: null,
   onClick: () => {},
 };

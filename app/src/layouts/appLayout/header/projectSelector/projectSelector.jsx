@@ -21,7 +21,7 @@
 
 import classNames from 'classnames/bind';
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import styles from './projectSelector.scss';
@@ -32,12 +32,10 @@ export class ProjectSelector extends Component {
   static propTypes = {
     projects: PropTypes.arrayOf(PropTypes.string),
     activeProject: PropTypes.string,
-    onChange: PropTypes.func,
   };
   static defaultProps = {
     projects: [],
     activeProject: '',
-    onChange: () => {},
   };
   state = {
     opened: false,
@@ -48,10 +46,6 @@ export class ProjectSelector extends Component {
   componentWillUnmount() {
     document.removeEventListener('click', this.handleOutsideClick, false);
   }
-  onClickProjectItem = () => {
-    this.setState({ opened: false });
-    this.props.onChange();
-  };
   handleOutsideClick = (e) => {
     if (!this.node.contains(e.target) && this.state.opened) {
       this.setState({ opened: false });
@@ -63,26 +57,21 @@ export class ProjectSelector extends Component {
 
   render() {
     return (
-      <div ref={(node) => { this.node = node; }} className={cx('project-selector')}>
-        <div className={cx('current-project-block')} onClick={this.toggleShowList}>
+      <div ref={(node) => { this.node = node; }} className={cx('project-selector')} onClick={this.toggleShowList} >
+        <div className={cx('current-project-block')}>
           <div className={cx('current-project-name')}>
             { this.props.activeProject }
           </div>
           <div className={cx({ 'show-list-icon': true, 'turned-over': this.state.opened })} />
         </div>
-        <div className={cx({ 'projects-list': true, shown: this.state.opened })}>
+        <div className={cx({ 'projects-list': true, shown: this.state.opened })} >
           <ScrollWrapper autoHeight autoHeightMax={600}>
             {
             Array.map(this.props.projects, project => (
-              <div
-                key={project}
-                data-project={project}
-                className={cx({ 'project-list-item': true, active: project === this.props.activeProject })}
-                onClick={this.onClickProjectItem}
-              >
-                <Link to={`/${project}`}>{project}</Link>
-              </div>
-              ))
+              <NavLink key={project} className={cx('project-list-item')} activeClassName={cx('active')} to={`/${project}`}>
+                {project}
+              </NavLink>
+            ))
             }
           </ScrollWrapper>
         </div>
