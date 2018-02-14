@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { fetchInfoAction } from 'controllers/appInfo';
+import { fetchUserAction } from 'controllers/user';
 import {
   TOKEN_KEY,
   DEFAULT_TOKEN,
-  fetchUserAction,
   authSuccessAction,
 } from 'controllers/auth';
 

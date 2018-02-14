@@ -1,11 +1,9 @@
-import { AUTH_SUCCESS, FETCH_USER_SUCCESS } from './constants';
+import { AUTH_SUCCESS } from './constants';
 
-export const authReducer = (state = {}, { type, payload }) => {
+export const authReducer = (state = {}, { type }) => {
   switch (type) {
     case AUTH_SUCCESS:
       return Object.assign({}, state, { authorized: true });
-    case FETCH_USER_SUCCESS:
-      return Object.assign({}, state, { user: payload });
     default:
       return state;
   }
