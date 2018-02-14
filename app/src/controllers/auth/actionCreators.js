@@ -1,18 +1,10 @@
 import { fetch } from 'common/utils';
-import { FETCH_USER_SUCCESS, AUTH_SUCCESS, TOKEN_KEY } from './constants';
+import { fetchUserAction } from 'controllers/user';
+import { AUTH_SUCCESS, TOKEN_KEY } from './constants';
 
 export const authSuccessAction = () => ({
   type: AUTH_SUCCESS,
 });
-
-const fetchUserSuccessAction = user => ({
-  type: FETCH_USER_SUCCESS,
-  payload: user,
-});
-
-export const fetchUserAction = () => dispatch =>
-  fetch('/api/v1/user')
-    .then(user => dispatch(fetchUserSuccessAction(user)));
 
 export const loginAction = ({ login, password }) => dispatch =>
   fetch('/uat/sso/oauth/token', {
