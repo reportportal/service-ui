@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
 import classNames from 'classnames/bind';
+import { addTokenToImagePath } from 'common/utils';
 import { FormattedMessage } from 'react-intl';
 import { userSelector } from 'controllers/auth';
 import { connect } from 'react-redux';
@@ -50,7 +51,7 @@ export class UserBlock extends PureComponent {
         <div className={cx('user-wrapper')}>
           {
             (this.props.user.userRole === 'ADMINISTRATOR')
-              ? <div className={cx('admin-badge')}><FormattedMessage id={'UserBlock.adminBeige'} defaultMessage={'admin'} /></div>
+              ? <div className={cx('admin-badge')}><FormattedMessage id={'UserBlock.adminBadge'} defaultMessage={'admin'} /></div>
               : null
           }
           <div className={cx('username')}>
@@ -58,7 +59,7 @@ export class UserBlock extends PureComponent {
           </div>
         </div>
         <div className={cx('avatar-wrapper')}>
-          <img className={cx('avatar')} src={Utils.addTokenToImagePath(`api/v1/data/photo?${this.props.user.userId}?at=${Date.now()}`)} alt="avatar" />
+          <img className={cx('avatar')} src={addTokenToImagePath(`api/v1/data/photo?${this.props.user.userId}&at=${Date.now()}`)} alt="avatar" />
         </div>
         <div className={cx({ 'menu-icon': true, flipped: this.state.menuOpened })} />
         <div className={cx({ menu: true, opened: this.state.menuOpened })}>
