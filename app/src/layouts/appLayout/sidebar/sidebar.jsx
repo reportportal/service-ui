@@ -19,7 +19,6 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { Component } from 'react';
 import classNames from 'classnames/bind';
 import { FormattedMessage } from 'react-intl';
 import { SidebarButton } from 'components/buttons/sidebarButton/sidebarButton';
@@ -35,61 +34,53 @@ import LogoutIcon from './img/logout-icon-inline.svg';
 
 const cx = classNames.bind(styles);
 
-export class Sidebar extends Component {
-
-  static propTypes = {
-    onClickNavBtn: PropTypes.func,
-  };
-  static defaultProps = {
-    onClickNavBtn: () => {},
-  };
-  clickMenuItemHandler = (e) => {
-    this.node.contains(e.target) && this.props.onClickNavBtn();
-  };
-
-  render() {
-    return (
-      <div ref={(node) => { this.node = node; }} className={cx('sidebar')} onClick={this.clickMenuItemHandler}>
-        <div className={cx('top-block')}>
-          <div className={cx('sidebar-btn')}>
-            <SidebarButton icon={DashboardIcon} link="/default_project/dashboard">
-              <FormattedMessage id={'Sidebar.dashboardsBtn'} defaultMessage={'Dashboard'} />
-            </SidebarButton>
-          </div>
-          <div className={cx('sidebar-btn')}>
-            <SidebarButton icon={LaunchesIcon} link="/default_project/launches">
-              <FormattedMessage id={'Sidebar.launchesBtn'} defaultMessage={'Launches'} />
-            </SidebarButton>
-          </div>
-          <div className={cx('sidebar-btn')}>
-            <SidebarButton icon={FiltersIcon} link="/default_project/filters">
-              <FormattedMessage id={'Sidebar.filtersBtn'} defaultMessage={'Filters'} />
-            </SidebarButton>
-          </div>
-          <div className={cx('sidebar-btn')}>
-            <SidebarButton icon={DebugIcon} link="/default_project/debug">
-              <FormattedMessage id={'Sidebar.debugBtn'} defaultMessage={'Debug'} />
-            </SidebarButton>
-          </div>
-        </div>
-        <div className={cx('bottom-block')}>
-          <div className={cx('sidebar-btn')}>
-            <SidebarButton icon={ProfileIcon} link="/user-profile" bottomBtn>
-              <FormattedMessage id={'Sidebar.profileBtn'} defaultMessage={'Profile'} />
-            </SidebarButton>
-          </div>
-          <div className={cx('sidebar-btn')}>
-            <SidebarButton icon={AdministrateIcon} link="/administrate" bottomBtn>
-              <FormattedMessage id={'Sidebar.administrateBtn'} defaultMessage={'Administrate'} />
-            </SidebarButton>
-          </div>
-          <div className={cx('sidebar-btn')}>
-            <SidebarButton icon={LogoutIcon} link="/logout" bottomBtn>
-              <FormattedMessage id={'Sidebar.logoutBtn'} defaultMessage={'Logout'} />
-            </SidebarButton>
-          </div>
-        </div>
+export const Sidebar = ({ onClickNavBtn }) => (
+  <div className={cx('sidebar')} >
+    <div className={cx('top-block')}>
+      <div className={cx('sidebar-btn')} onClick={onClickNavBtn}>
+        <SidebarButton icon={DashboardIcon} link="/default_project/dashboard">
+          <FormattedMessage id={'Sidebar.dashboardsBtn'} defaultMessage={'Dashboard'} />
+        </SidebarButton>
       </div>
-    );
-  }
-}
+      <div className={cx('sidebar-btn')} onClick={onClickNavBtn}>
+        <SidebarButton icon={LaunchesIcon} link="/default_project/launches">
+          <FormattedMessage id={'Sidebar.launchesBtn'} defaultMessage={'Launches'} />
+        </SidebarButton>
+      </div>
+      <div className={cx('sidebar-btn')} onClick={onClickNavBtn}>
+        <SidebarButton icon={FiltersIcon} link="/default_project/filters">
+          <FormattedMessage id={'Sidebar.filtersBtn'} defaultMessage={'Filters'} />
+        </SidebarButton>
+      </div>
+      <div className={cx('sidebar-btn')} onClick={onClickNavBtn}>
+        <SidebarButton icon={DebugIcon} link="/default_project/debug">
+          <FormattedMessage id={'Sidebar.debugBtn'} defaultMessage={'Debug'} />
+        </SidebarButton>
+      </div>
+    </div>
+    <div className={cx('bottom-block')}>
+      <div className={cx('sidebar-btn')} onClick={onClickNavBtn}>
+        <SidebarButton icon={ProfileIcon} link="/user-profile" bottom>
+          <FormattedMessage id={'Sidebar.profileBtn'} defaultMessage={'Profile'} />
+        </SidebarButton>
+      </div>
+      <div className={cx('sidebar-btn')} onClick={onClickNavBtn}>
+        <SidebarButton icon={AdministrateIcon} link="/administrate" bottom>
+          <FormattedMessage id={'Sidebar.administrateBtn'} defaultMessage={'Administrate'} />
+        </SidebarButton>
+      </div>
+      <div className={cx('sidebar-btn')} onClick={onClickNavBtn}>
+        <SidebarButton icon={LogoutIcon} link="/logout" bottom>
+          <FormattedMessage id={'Sidebar.logoutBtn'} defaultMessage={'Logout'} />
+        </SidebarButton>
+      </div>
+    </div>
+  </div>
+  );
+
+Sidebar.propTypes = {
+  onClickNavBtn: PropTypes.func,
+};
+Sidebar.defaultProps = {
+  onClickNavBtn: () => {},
+};

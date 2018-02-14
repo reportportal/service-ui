@@ -48,9 +48,9 @@ export class AppLayout extends PureComponent {
     window.removeEventListener('resize', this.windowResizeHandler, false);
   }
   windowResizeHandler = () => {
-    this.state.sideMenuOpened
-      && (window.innerWidth > 767)
-      && this.setState({ sideMenuOpened: false });
+    if (this.state.sideMenuOpened && (window.innerWidth > 767)) {
+      this.setState({ sideMenuOpened: false });
+    }
   };
   toggleSideMenu = () => {
     this.setState({ sideMenuOpened: !this.state.sideMenuOpened });

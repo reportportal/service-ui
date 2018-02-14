@@ -21,7 +21,7 @@
 
 import { TOKEN_KEY } from 'controllers/auth';
 
-export function authorizeImagePath(path) {
+export function addTokenToImagePath(path) {
   const token = localStorage.getItem(TOKEN_KEY);
   let newPath = path;
   if (!token) {

@@ -25,4 +25,4 @@ export const validate = validation;
 export { isEmptyObject } from './isEmptyObject';
 export { referenceDictionary } from './referenceDictionary';
 export { fetch, ERROR_CANCELED, ERROR_UNAUTHORIZED } from './fetch';
-export { authorizeImagePath } from './authorizeImagePath';
+export { addTokenToImagePath } from './addTokenToImagePath';
