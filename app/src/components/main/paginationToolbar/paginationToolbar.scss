@@ -1,0 +1,9 @@
+.pagination-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: $COLOR--gray-60;
+  font-family: $FONT-REGULAR;
+  font-size: 13px;
+  min-height: 60px;
+}
