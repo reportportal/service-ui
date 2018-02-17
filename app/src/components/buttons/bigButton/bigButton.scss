@@ -58,4 +58,17 @@
       border-color: darken( $COLOR--gray-60, 30% );
     }
   }
+  &.color-tomato {
+    background-color: $COLOR--tomato;
+    border-color: $COLOR--tomato;
+
+    &:hover:not(.disabled) {
+      background-color: darken( $COLOR--tomato, 15% );
+      border-color: darken( $COLOR--tomato, 15% );
+    }
+    &:active:not(.disabled) {
+      background-color: darken( $COLOR--tomato, 30% );
+      border-color: darken( $COLOR--tomato, 30% );
+    }
+  }
 }

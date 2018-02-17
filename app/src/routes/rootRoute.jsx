@@ -1,6 +1,6 @@
 import React from 'react';
 import { Switch, Route, Link } from 'react-router-dom';
-
+import { ModalContainer } from 'components/main/modal';
 import { EmptyLayout } from 'layouts/emptyLayout';
 import { AppLayout } from 'layouts/appLayout';
 import { AdminLayout } from 'layouts/adminLayout';
@@ -59,13 +59,16 @@ const AdminRoute = authorizedRoute(() => (
 ));
 
 const RootRoute = () => (
-  <Switch>
-    <Route exact path="/" component={LoginRoute} />
-    <Route path="/login" component={LoginRoute} />
-    <Route path="/registration" component={RegistrationRoute} />
-    <Route path="/administrate" component={AdminRoute} />
-    <AppRoute />
-  </Switch>
+  <div style={{ width: '100%', height: '100%' }}>
+    <Switch>
+      <Route exact path="/" component={LoginRoute} />
+      <Route path="/login" component={LoginRoute} />
+      <Route path="/registration" component={RegistrationRoute} />
+      <Route path="/administrate" component={AdminRoute} />
+      <AppRoute />
+    </Switch>
+    <ModalContainer />
+  </div>
 );
 
 export default RootRoute;
