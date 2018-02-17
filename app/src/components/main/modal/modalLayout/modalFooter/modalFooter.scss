@@ -1,0 +1,54 @@
+.modal-footer {
+  position: relative;
+  display: table;
+  width: 100%;
+  min-height: 30px;
+}
+.warning-block {
+  display: table-cell;
+  padding-right: 20px;
+  box-sizing: border-box;
+  vertical-align: middle;
+
+  .warning-icon {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    margin-top: -8px;
+    background-image: url(./img/warning-icon.svg);
+    background-repeat: no-repeat;
+    background-size: 100%;
+    background-position: center;
+  }
+  .warning-message {
+    display: inline-block;
+    padding-left: 25px;
+    box-sizing: border-box;
+    word-break: break-all;
+    font-family: $FONT-REGULAR;
+    font-size: 10px;
+    line-height: 1.4;
+    color: $COLOR--failed;
+  }
+}
+.buttons-block {
+  float: right;
+  white-space: nowrap;
+}
+.button-container {
+  display: inline-block;
+  height: 30px;
+  min-width: 70px;
+  margin-right: 10px;
+
+  &:last-child {
+    margin-right: 0;
+  }
+
+  button {
+    font-size: 13px;
+  }
+}

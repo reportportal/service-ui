@@ -3,6 +3,7 @@ import { reducer as formReducer } from 'redux-form';
 import { appInfoReducer } from 'controllers/appInfo';
 import { authReducer } from 'controllers/auth';
 import { langReducer } from 'controllers/lang';
+import { modalReducer } from 'controllers/modal';
 import { userReducer } from 'controllers/user';
 
 export const rootReducer = combineReducers({
@@ -10,5 +11,6 @@ export const rootReducer = combineReducers({
   auth: authReducer,
   lang: langReducer,
   form: formReducer,
+  modal: modalReducer,
   user: userReducer,
 });

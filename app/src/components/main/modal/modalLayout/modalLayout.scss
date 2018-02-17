@@ -1,0 +1,131 @@
+.modal-layout {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+}
+.scrolling-content {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+}
+.backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  background-color: #000000;
+  opacity: 0.3;
+  transition: opacity 300ms ease-in;
+  z-index: 1;
+}
+:global {
+  .modal-backdrop-animation-enter {
+    opacity: 0;
+  }
+  .modal-backdrop-animation-enter-active {
+    opacity: 0.3;
+  }
+  .modal-backdrop-animation-exit {
+    opacity: 0.3;
+  }
+  .modal-backdrop-animation-exit-active {
+    opacity: 0;
+  }
+}
+.modal-window {
+  position: absolute;
+  display: inline-block;
+  width: 600px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  padding: 20px;
+  box-sizing: border-box;
+  margin-left: -300px;
+  background-color: $COLOR--white-two;
+  text-align: left;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+  opacity: 1;
+  transition: margin-top 300ms ease-in, opacity 300ms ease-in;
+  
+  @media (max-width: $SCREEN_XS_MAX) {
+    right: 10px;
+    left: 10px;
+    width: auto;
+    margin-left: 0;
+  }
+}
+:global {
+  .modal-window-animation-enter {
+    opacity: 0;
+    margin-top: -100px;
+  }
+  .modal-window-animation-enter-active {
+    opacity: 1;
+    margin-top: 10px;
+  }
+  .modal-window-animation-exit {
+    opacity: 1;
+    margin-top: 10px;
+  }
+  .modal-window-animation-exit-active {
+    opacity: 0;
+    margin-top: -100px;
+  }
+}
+.modal-header {
+  position: relative;
+  font-family: $FONT-CONDBOLD;
+  font-size: 15px;
+  color: $COLOR--topaz;
+  line-height: 25px;
+  text-transform: uppercase;
+}
+.modal-title {
+  display: inline-block;
+  width: 100%;
+  padding-right: 30px;
+  box-sizing: border-box;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 25px;
+  vertical-align: middle;
+}
+.close-modal-icon {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: block;
+  width: 13px;
+  height: 13px;
+  vertical-align: middle;
+  transition: transform 200ms ease-in-out;
+  cursor: pointer;
+
+  svg {
+    fill: $COLOR--gray-60;
+  }
+  &:hover {
+    transform: scale(1.2);
+
+    svg {
+      fill: $COLOR--gray-47;
+    }
+  }
+}
+.separator {
+  display: inline-block;
+  width: 100%;
+  height: 2px;
+  position: relative;
+  left: -10px;
+  padding: 0 10px;
+  background-color: $COLOR--gray-91;
+}
+
