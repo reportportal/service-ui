@@ -31,7 +31,7 @@ storiesOf('Components/Main/PaginationToolbar', module)
     backdrop: 'rgba(70, 69, 71, 0.2)',
     background: '#fff',
     height: 60,
-    width: 1000,
+    width: '100%',
   }))
   .add('with pages', () => (
     <PaginationToolbar

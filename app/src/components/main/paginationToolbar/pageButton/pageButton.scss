@@ -4,6 +4,20 @@
   padding-left: 6px;
   cursor: pointer;
   position: relative;
+  line-height: 19px;
+
+  svg {
+    width: 19px;
+    height: 19px;
+    vertical-align: bottom;
+    fill: $COLOR--gray-60;
+  }
+
+  &.hideOnMobile {
+    @media(max-width: $SCREEN_SM_MAX) {
+      display: none;
+    }
+  }
 
   &.active {
     color: $COLOR--topaz;
@@ -37,12 +51,24 @@
     cursor: default;
     color: $COLOR--gray-80;
 
+    svg {
+      fill: $COLOR--gray-80;
+    }
+
     &:hover {
       color: $COLOR--gray-80;
+
+      svg {
+        fill: $COLOR--gray-80;
+      }
     }
   }
 
   &:hover {
     color: $COLOR--tealish;
+
+    svg {
+      fill: $COLOR--tealish;
+    }
   }
 }
