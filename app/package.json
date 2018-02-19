@@ -25,6 +25,7 @@
     "qhistory": "^1.0.0",
     "qs": "^6.5.1",
     "react": "^16.0.0",
+    "react-addons-css-transition-group": "^15.6.2",
     "react-autosuggest": "^9.3.2",
     "react-custom-scrollbars": "^4.2.1",
     "react-dom": "^16.0.0",
