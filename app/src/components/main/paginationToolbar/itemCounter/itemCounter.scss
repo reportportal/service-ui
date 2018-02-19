@@ -1,0 +1,5 @@
+.item-counter {
+  @media(max-width: $SCREEN_SM_MAX) {
+    display: none;
+  }
+}
