@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { NavLink, withRouter } from 'react-router-dom';
-import { userSelector } from 'controllers/auth';
+import { userInfoSelector } from 'controllers/user';
 import { connect } from 'react-redux';
 import { ProjectSelector } from './projectSelector';
 import { UserBlock } from './userBlock';
@@ -12,7 +12,7 @@ const cx = classNames.bind(styles);
 
 @withRouter
 @connect(state => ({
-  user: userSelector(state),
+  user: userInfoSelector(state),
 }))
 export class Header extends PureComponent {
   static propTypes = {
