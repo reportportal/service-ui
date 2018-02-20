@@ -1,0 +1,85 @@
+:global{
+  .select2-search-users{
+    background-color: $COLOR--white-two;
+    .Select-control, .Select-menu-outer{
+      position: relative;
+    }
+    .Select-placeholder{
+      display: none;
+    }
+    .Select-noresults{
+      background: lighten($COLOR--gray-91, 5%);
+      position: absolute;
+      bottom: -28px;
+      width: 100%;
+      box-sizing: border-box;
+      padding: 5px;
+      font-size: 12px;
+      line-height: 17px;
+      font-family: $FONT-REGULAR, sans-serif;
+      color: $COLOR--charcoal-grey;
+    }
+    .Select-input{
+      padding: 8px;
+      width: 100%;
+      box-sizing: border-box;
+      input{
+        line-height: 18px;
+        font-family: $FONT-REGULAR, sans-serif;
+        width: 100%  !important;;
+        height: auto;
+        min-height: 26px;
+        padding: 4px 20px 4px 5px;
+        margin: 0;
+        outline: 0;
+        font-size: 13px;
+        border: 1px solid $COLOR--gray-60;
+        border-radius: 0;
+        box-sizing: border-box !important;
+        background: url('./img/select2.png') no-repeat 100% -22px, linear-gradient(to bottom, #fff 85%, #eee 99%) 0 0;
+      }
+    }
+  }
+}
+.invite-new-user{
+  padding: 12px 20px 12px 15px;
+  overflow: hidden;
+  white-space: normal;
+  &:hover{
+    cursor: pointer;
+    background: rgba(57, 194, 215, 0.2);
+  }
+}
+.msg-icon{
+  width: 24px;
+  height: 34px;
+  display: block;
+  float: left;
+  background-size: contain;
+  background: url('./img/ic_mail.svg');
+  background-repeat: no-repeat;
+  background-position: center;
+}
+.invite-info{
+  display: inline-block;
+}
+.action-info{
+  margin: -1px 0 0 20px;
+  font-size: 13px;
+  padding-right: 20px;
+  position: relative;
+  color: $COLOR--charcoal-grey;
+  line-height: 20px;
+}
+.user-info{
+  margin: -1px 0 0 20px;
+  font-size: 13px;
+  padding-right: 20px;
+  position: relative;
+  color: $COLOR--charcoal-grey;
+  font-weight: 600;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 20px;
+}
