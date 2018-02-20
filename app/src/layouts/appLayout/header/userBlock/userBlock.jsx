@@ -2,7 +2,8 @@ import React, { PureComponent } from 'react';
 import classNames from 'classnames/bind';
 import { addTokenToImagePath } from 'common/utils';
 import { FormattedMessage } from 'react-intl';
-import { userSelector } from 'controllers/auth';
+import { userInfoSelector } from 'controllers/user';
+import { logoutAction } from 'controllers/auth';
 import { connect } from 'react-redux';
 import { NavLink, withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
@@ -11,9 +12,14 @@ import styles from './userBlock.scss';
 const cx = classNames.bind(styles);
 
 @withRouter
-@connect(state => ({
-  user: userSelector(state),
-}))
+@connect(
+  state => ({
+    user: userInfoSelector(state),
+  }),
+  {
+    logout: logoutAction,
+  },
+)
 export class UserBlock extends PureComponent {
   static propTypes = {
     location: PropTypes.shape({
@@ -22,6 +28,7 @@ export class UserBlock extends PureComponent {
       query: PropTypes.object,
       search: PropTypes.string,
     }).isRequired,
+    logout: PropTypes.func.isRequired,
     user: PropTypes.object,
   };
   static defaultProps = {
@@ -72,9 +79,9 @@ export class UserBlock extends PureComponent {
           <NavLink className={cx('menu-item')} activeClassName={cx('active')} to="/user-profile">
             <FormattedMessage id={'UserBlock.profile'} defaultMessage={'Profile'} />
           </NavLink>
-          <NavLink className={cx('menu-item')} to="/login">
+          <div className={cx('menu-item')} onClick={this.props.logout}>
             <FormattedMessage id={'UserBlock.logout'} defaultMessage={'Logout'} />
-          </NavLink>
+          </div>
         </div>
       </div>
     );

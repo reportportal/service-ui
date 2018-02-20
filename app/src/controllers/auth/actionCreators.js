@@ -1,6 +1,6 @@
 import { fetch } from 'common/utils';
 import { fetchUserAction } from 'controllers/user';
-import { AUTH_SUCCESS, TOKEN_KEY } from './constants';
+import { AUTH_SUCCESS, TOKEN_KEY, DEFAULT_TOKEN, LOGOUT } from './constants';
 
 export const authSuccessAction = () => ({
   type: AUTH_SUCCESS,
@@ -18,3 +18,11 @@ export const loginAction = ({ login, password }) => dispatch =>
     localStorage.setItem(TOKEN_KEY, `${result.token_type} ${result.access_token}`);
     dispatch(fetchUserAction()).then(() => dispatch(authSuccessAction()));
   });
+
+export const logoutAction = () => (dispatch) => {
+  localStorage.setItem(TOKEN_KEY, DEFAULT_TOKEN);
+  dispatch({
+    type: LOGOUT,
+  });
+};
+
