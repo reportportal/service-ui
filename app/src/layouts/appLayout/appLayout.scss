@@ -89,4 +89,10 @@
 }
 .page-container {
   width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+
+  @media (min-width: 1600px) {
+    width: 1370px;
+  }
 }

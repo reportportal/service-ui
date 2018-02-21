@@ -54,7 +54,7 @@ export class Header extends PureComponent {
           <NavLink to={`/${activeProject}/members`} className={cx('nav-btn', 'members-btn')} activeClassName={cx('active')} />
           <NavLink to={`/${activeProject}/settings`} className={cx('nav-btn', 'settings-btn')} activeClassName={cx('active')} />
         </div>
-        <UserBlock />
+        <UserBlock user={user} />
       </div>
     );
   }

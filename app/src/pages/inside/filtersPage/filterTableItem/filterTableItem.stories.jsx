@@ -23,7 +23,7 @@ import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import { host } from 'storybook-host';
 import { withReadme } from 'storybook-readme';
-import FilterTableItem from './filterTableItem';
+import { FilterTableItem } from './filterTableItem';
 import README from './README.md';
 
 storiesOf('Pages/inside/filtersPage/filterTableItem', module)
@@ -47,6 +47,7 @@ storiesOf('Pages/inside/filtersPage/filterTableItem', module)
       owner="Superadmin"
       showOnLaunches
       shared
+      editable
     />
   ))
   .add('with extreme data', () => (
@@ -57,6 +58,7 @@ storiesOf('Pages/inside/filtersPage/filterTableItem', module)
       owner="UserWithVeryLongName_UserWithVeryLongName_UserWithVeryLongName"
       showOnLaunches
       shared
+      editable
     />
   ))
   .add('with actions', () => (
@@ -67,6 +69,7 @@ storiesOf('Pages/inside/filtersPage/filterTableItem', module)
       owner="Superadmin"
       showOnLaunches
       shared
+      editable
       onClickName={action('Clicked filter name')}
       onEdit={action('Edit filter clicked')}
       onChangeDisplay={action('Changed displaying on launches')}

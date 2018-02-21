@@ -8,19 +8,28 @@
   box-sizing: border-box;
   font-family: $FONT-REGULAR;
   color: $COLOR--charcoal-grey;
+  display: table-row;
+  border-bottom: 1px solid $COLOR--gray-91;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    display: block;
+    position: relative;
+  }
 
   &:hover {
     background-color: $COLOR--tealish-hover;
   }
 }
 .block {
-  float: left;
-  padding-right: 25px;
+  display: table-cell;
+  padding: 15px;
   box-sizing: border-box;
+  position: relative;
 
   @media (max-width: $SCREEN_SM_MAX) {
+    display: block;
     float: none;
-    padding-right: 0;
+    padding: 0;
     margin-bottom: 10px;
   }
 }
@@ -53,13 +62,16 @@
 }
 .name {
   font-size: 14px;
-  color: $COLOR--windows-blue;
   line-height: 20px;
   word-break: break-all;
-  cursor: pointer;
 
-  &:hover {
-    text-decoration: underline;
+  &.link {
+    color: $COLOR--windows-blue;
+    cursor: pointer;
+
+    &:hover {
+      text-decoration: underline;
+    }
   }
 
   @media (max-width: $SCREEN_SM_MAX) {
@@ -166,7 +178,7 @@
   position: absolute;
   top: 10px;
   bottom: 10px;
-  margin-left: 8%;
+  right: 0;
   border-right: 1px solid $COLOR--gray-91;
 
   @media (max-width: $SCREEN_SM_MAX) {
