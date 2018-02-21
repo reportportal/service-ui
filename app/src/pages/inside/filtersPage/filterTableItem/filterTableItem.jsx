@@ -27,18 +27,19 @@ import styles from './filterTableItem.scss';
 
 const cx = classNames.bind(styles);
 
-const FilterTableItem = (
+export const FilterTableItem = (
   { name, description, options, owner, showOnLaunches,
     shared, onClickName, onEdit, onChangeDisplay, onDelete,
+    editable,
   },
 ) => (
   <div className={cx('filter-table-item')}>
     <div className={cx('block', 'name-block')}>
       <span className={cx('name-wrapper')}>
-        <span className={cx('name')} onClick={onClickName}>
+        <span className={cx('name', { 'link': showOnLaunches })} onClick={onClickName}>
           {name}
         </span>
-        <div className={cx('pencil-icon')} onClick={onEdit} />
+        {editable ? <div className={cx('pencil-icon')} onClick={onEdit} /> : null}
       </span>
       <div className={cx('description')}>
         {/* TODO replace to markdown viewer */}
@@ -90,6 +91,7 @@ FilterTableItem.propTypes = {
   owner: PropTypes.string,
   showOnLaunches: PropTypes.bool,
   shared: PropTypes.bool,
+  editable: PropTypes.bool,
   onClickName: PropTypes.func,
   onChangeDisplay: PropTypes.func,
   onEdit: PropTypes.func,
@@ -102,10 +104,9 @@ FilterTableItem.defaultProps = {
   owner: '',
   showOnLaunches: false,
   shared: false,
+  editable: false,
   onClickName: () => {},
   onChangeDisplay: () => {},
   onEdit: () => {},
   onDelete: () => {},
 };
-
-export default FilterTableItem;
