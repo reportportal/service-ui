@@ -1,5 +1,7 @@
 .page-size {
+  display: inline-block;
   position: relative;
+  float: right;
 
   @media(max-width: $SCREEN_SM_MAX) {
     display: none;

@@ -26,14 +26,25 @@ import { PaginationToolbar } from './paginationToolbar';
 
 storiesOf('Components/Main/PaginationToolbar', module)
   .addDecorator(host({
-    title: 'Big button component',
+    title: 'Pagination toolbar component',
     align: 'center middle',
     backdrop: 'rgba(70, 69, 71, 0.2)',
     background: '#fff',
     height: 60,
     width: '100%',
   }))
+  .add('default state', () => (
+    <PaginationToolbar />
+  ))
   .add('with pages', () => (
+    <PaginationToolbar
+      itemCount={470}
+      activePage={1}
+      pageCount={10}
+      pageSize={50}
+    />
+  ))
+  .add('with actions', () => (
     <PaginationToolbar
       itemCount={470}
       activePage={1}
