@@ -20,6 +20,7 @@
     "jsx-a11y/no-static-element-interactions": 0,
     "global-require": 0,
     "linebreak-style": 0,
+    "no-bitwise": 0,
     "no-unused-expressions": ["error", { "allowTernary": true, "allowShortCircuit": true }],
     "prefer-arrow-callback": 0,
     "jsx-a11y/label-has-for": 0,
