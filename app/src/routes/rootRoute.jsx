@@ -19,7 +19,6 @@ import { LocalizationSwitcher } from 'components/main/localizationSwitcher';
 import { authorizedRoute } from './authorizedRoute';
 import { anonymousRoute } from './anonymousRoute';
 
-
 const LoginRoute = anonymousRoute(() => (
   <EmptyLayout>
     <LocalizationSwitcher />

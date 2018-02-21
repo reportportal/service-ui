@@ -19,11 +19,6 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import * as validation from './validation';
-
-export const validate = validation;
-export { isEmptyObject } from './isEmptyObject';
-export { referenceDictionary } from './referenceDictionary';
-export { fetch, ERROR_CANCELED, ERROR_UNAUTHORIZED } from './fetch';
-export { addTokenToImagePath } from './addTokenToImagePath';
-export { getStorageDataByKey } from './getStorageDataByKey';
+export function getStorageDataByKey(key) {
+  return localStorage.getItem(key) ? JSON.parse(localStorage.getItem(key)) : null;
+}
