@@ -36,7 +36,7 @@ export const FilterTableItem = (
   <div className={cx('filter-table-item')}>
     <div className={cx('block', 'name-block')}>
       <span className={cx('name-wrapper')}>
-        <span className={cx('name', { 'link': showOnLaunches })} onClick={onClickName}>
+        <span className={cx('name', { link: showOnLaunches })} onClick={onClickName}>
           {name}
         </span>
         {editable ? <div className={cx('pencil-icon')} onClick={onEdit} /> : null}

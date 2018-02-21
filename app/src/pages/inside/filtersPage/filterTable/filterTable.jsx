@@ -1,10 +1,10 @@
 import { PureComponent, Fragment } from 'react';
 import PropTypes from 'prop-types';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
 import { withPagination } from 'components/containers/pagination';
-import {userIdSelector} from 'controllers/user';
+import { userIdSelector } from 'controllers/user';
 import { FilterTableItem } from '../filterTableItem';
 import { FilterTableHeader } from './filterTableHeader';
 import styles from './filterTable.scss';
