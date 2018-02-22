@@ -29,7 +29,7 @@ export class Header extends PureComponent {
   };
 
   render() {
-    const { sideMenuOpened, user, toggleSideMenu } = this.props;
+    const { sideMenuOpened, user, toggleSideMenu, activeProject } = this.props;
 
     return (
       <div className={cx('header')}>
@@ -47,13 +47,13 @@ export class Header extends PureComponent {
         <div className={cx('projects-block')}>
           <ProjectSelector
             projects={Object.keys(user.assigned_projects).sort()}
-            activeProject={this.props.activeProject}
+            activeProject={activeProject}
           />
         </div>
         <div className={cx('separator')} />
         <div className={cx('nav-btns-block')}>
-          <NavLink to={`/${this.props.activeProject}/members`} className={cx('nav-btn', 'members-btn')} activeClassName={cx('active')} />
-          <NavLink to={`/${this.props.activeProject}/settings`} className={cx('nav-btn', 'settings-btn')} activeClassName={cx('active')} />
+          <NavLink to={`/${activeProject}/members`} className={cx('nav-btn', 'members-btn')} activeClassName={cx('active')} />
+          <NavLink to={`/${activeProject}/settings`} className={cx('nav-btn', 'settings-btn')} activeClassName={cx('active')} />
         </div>
         <UserBlock />
       </div>
