@@ -26,7 +26,7 @@ export class FilterTable extends PureComponent {
     pageSize: PropTypes.number,
     onChangePage: PropTypes.func,
     onChangePageSize: PropTypes.func,
-    userId: PropTypes.bool,
+    userId: PropTypes.string,
   };
 
   static defaultProps = {
