@@ -96,6 +96,7 @@ define(function (require) {
             this.setupAnchors();
             this.bindValidators();
             this.applyBindings();
+            this.setupLdapProtocol();
         },
         setupAnchors: function () {
             this.$url = $('[data-js-ldap-url]', this.$el);
@@ -139,8 +140,18 @@ define(function (require) {
                 }.bind(this));
         },
         updateModel: function (settings) {
+            var ldapProtocol;
+            if (settings.url) {
+                ldapProtocol = settings.url.indexOf('ldaps://') == 0;
+                if (ldapProtocol) {
+                    ldapProtocol = 'ldaps://';
+                } else {
+                    ldapProtocol = 'ldap://';
+                }
+            }
             this.model.set({
-                url: (settings.url) ? settings.url.split('ldap://')[1] : '',
+                url: (settings.url) ? settings.url.split(ldapProtocol)[1] : '',
+                ldapProtocol: ldapProtocol,
                 baseDn: settings.baseDn,
                 userDnPattern: (settings.userDnPattern) ? settings.userDnPattern : '',
                 userSearchFilter: (settings.userSearchFilter) ? settings.userSearchFilter : '',
@@ -153,6 +164,21 @@ define(function (require) {
                 email: (settings.synchronizationAttributes && settings.synchronizationAttributes.email) ? settings.synchronizationAttributes.email : '',
                 fullName: (settings.synchronizationAttributes && settings.synchronizationAttributes.fullName) ? settings.synchronizationAttributes.fullName : '',
                 photo: (settings.synchronizationAttributes && settings.synchronizationAttributes.photo) ? settings.synchronizationAttributes.photo : ''
+            });
+        },
+        setupLdapProtocol: function () {
+            this.ldapProtocol = new DropDownComponent({
+                data: [
+                    { name: 'ldap://', value: 'ldap://' },
+                    { name: 'ldaps://', value: 'ldaps://' }
+                ],
+                multiple: false,
+                defaultValue: this.model.get('ldapProtocol') ? this.model.get('ldapProtocol') : 'ldap://'
+            });
+            $('[data-js-ldap-protocol]', this.$el).html(this.ldapProtocol.$el);
+            this.listenTo(this.ldapProtocol, 'change', function (val) {
+                this.model.set('ldapProtocol', val);
+                this.enableSubmit();
             });
         },
         setupEncTypeDropDown: function () {
@@ -223,7 +249,7 @@ define(function (require) {
                 // required fields
                 enabled: this.model.get('ldapAuthEnabled'),
                 baseDn: this.model.get('baseDn'),
-                url: 'ldap://' + this.model.get('url'),
+                url: this.model.get('ldapProtocol') + this.model.get('url'),
                 synchronizationAttributes: {
                     email: this.model.get('email')
                 }
