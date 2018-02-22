@@ -1,1 +1,1 @@
-export { withPagination } from './pagination';
+export { withPagination } from './withPagination';
