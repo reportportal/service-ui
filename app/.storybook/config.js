@@ -1,7 +1,7 @@
 import * as storybook from '@storybook/react';
 import { setOptions } from '@storybook/addon-options';
 import { setIntlConfig, withIntl } from 'storybook-addon-intl';
-import 'reset-css';
+import 'reset-css/reset.css';
 import 'common/css/fonts/fonts.scss';
 import 'common/css/common.scss';
 

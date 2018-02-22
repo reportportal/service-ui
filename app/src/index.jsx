@@ -6,7 +6,7 @@ import qhistory from 'qhistory';
 
 import { stringify, parse } from 'qs';
 
-import 'reset-css';
+import 'reset-css/reset.css';
 import 'common/css/fonts/fonts.scss';
 import 'common/css/common.scss';
 
