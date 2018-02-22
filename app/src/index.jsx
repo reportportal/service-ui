@@ -24,8 +24,8 @@ const queryParseHistory = qhistory(
 queryParseHistory.listen((location) => {
   const match = matchPath(location.pathname, '/:projectId');
   const hashProject = match.params.projectId;
-  const userProjects = Object.keys(userInfoSelector(store.getState()));
-  if (!~userProjects.indexOf(hashProject)) {
+  const userProjects = Object.keys(userInfoSelector(store.getState()).assigned_projects);
+  if (userProjects.indexOf(hashProject) !== -1) {
     store.dispatch(setActiveProjectAction(hashProject));
   }
 });
