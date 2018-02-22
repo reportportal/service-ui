@@ -88,8 +88,8 @@ export const withPagination = ({ url }) => WrappedComponent => withRouter(
       };
 
       parseQuery = query => ({
-        page: Number(query[PAGE_KEY]),
-        size: Number(query[SIZE_KEY]),
+        page: Number(query[PAGE_KEY]) || this.state.activePage,
+        size: Number(query[SIZE_KEY]) || this.state.pageSize,
       });
 
       render() {
