@@ -2,7 +2,7 @@ import React from 'react';
 import { render } from 'react-dom';
 import { Router, matchPath } from 'react-router-dom';
 import { createHashHistory } from 'history';
-import { userInfoSelector, setActiveProjectAction } from 'controllers/user';
+import { userInfoSelector, activeProjectSelector, setActiveProjectAction } from 'controllers/user';
 import qhistory from 'qhistory';
 
 import { stringify, parse } from 'qs';
@@ -24,8 +24,9 @@ const queryParseHistory = qhistory(
 queryParseHistory.listen((location) => {
   const match = matchPath(location.pathname, '/:projectId');
   const hashProject = match.params.projectId;
-  const userProjects = Object.keys(userInfoSelector(store.getState()).assigned_projects);
-  if (userProjects.indexOf(hashProject) !== -1) {
+  const userProjects = userInfoSelector(store.getState()).assigned_projects;
+  if (Object.prototype.hasOwnProperty.call(userProjects, hashProject)
+    && hashProject !== activeProjectSelector(store.getState())) {
     store.dispatch(setActiveProjectAction(hashProject));
   }
 });
