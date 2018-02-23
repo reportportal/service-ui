@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
-import { NavLink } from 'react-router-dom';
+import { NavLink, withRouter } from 'react-router-dom';
 import { userInfoSelector, activeProjectSelector } from 'controllers/user';
 import { connect } from 'react-redux';
 import { ProjectSelector } from './projectSelector';
@@ -10,7 +10,7 @@ import styles from './header.scss';
 
 const cx = classNames.bind(styles);
 
-
+@withRouter
 @connect(state => ({
   user: userInfoSelector(state),
   activeProject: activeProjectSelector(state),
@@ -30,7 +30,6 @@ export class Header extends PureComponent {
 
   render() {
     const { sideMenuOpened, user, toggleSideMenu, activeProject } = this.props;
-
     return (
       <div className={cx('header')}>
         <div className={cx('mobile-header-block')}>
