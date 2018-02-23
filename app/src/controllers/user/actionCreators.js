@@ -23,8 +23,13 @@ export const fetchUserAction = () => dispatch =>
   fetch('/api/v1/user')
     .then((user) => {
       const userSettings = getStorageItem(`${user.userId}_settings`) || {};
+      const activeProject = userSettings.activeProject;
+
       dispatch(fetchUserSuccessAction(user));
       dispatch(setActiveProjectAction(
-         userSettings.activeProject ? userSettings.activeProject : user.default_project,
+        activeProject && Object.prototype.hasOwnProperty.call(user.assigned_projects, activeProject)
+           ? activeProject
+           : user.default_project,
       ));
     });
+
