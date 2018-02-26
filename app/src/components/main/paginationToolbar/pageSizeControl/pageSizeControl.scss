@@ -3,6 +3,10 @@
   position: relative;
   float: right;
 
+  &.input-visible {
+    padding-left: 18px;
+  }
+
   @media(max-width: $SCREEN_SM_MAX) {
     display: none;
   }
@@ -24,5 +28,6 @@
   vertical-align: top;
   color: $COLOR--topaz;
   position: absolute;
-  left: -50px;
+  left: -30px;
+  top: 20px;
 }

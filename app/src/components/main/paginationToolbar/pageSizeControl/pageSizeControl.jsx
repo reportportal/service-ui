@@ -39,7 +39,7 @@ export class PageSizeControl extends Component {
 
   render() {
     return (
-      <div className={cx('page-size')}>
+      <div className={cx('page-size', { 'input-visible': this.state.inputVisible })}>
         {this.state.inputVisible
           ? <SizeInput
             inputRef={(node) => { this.inputNode = node; }}
