@@ -15,7 +15,7 @@ export class DashboardPage extends Component {
   };
   render() {
     return (
-      <button onClick={() => this.props.showModalAction({ modalId: 'dashboardModal', modalData: { param1: '123', param2: 312 } })}>
+      <button onClick={() => this.props.showModalAction({ id: 'dashboardModal', data: { param1: '123', param2: 312 } })}>
         click here to show modal
       </button>
     );
