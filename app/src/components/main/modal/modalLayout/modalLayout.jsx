@@ -17,37 +17,31 @@ const cx = classNames.bind(styles);
 })
 export class ModalLayout extends Component {
   static propTypes = {
-    hideModalAction: PropTypes.func, // this props
-    onSuccessClose: PropTypes.func,
+    hideModalAction: PropTypes.func.isRequired, // this props
 
     title: PropTypes.string, // header props
 
     children: PropTypes.node, // content props
-    validateContent: PropTypes.func, // validation function witch should return bool.
 
     warningMessage: PropTypes.string, // footer props
-    hasCancel: PropTypes.bool,
-    hasOk: PropTypes.bool,
-    dangerButton: PropTypes.bool,
-    cancelText: PropTypes.string,
-    okText: PropTypes.string,
+    okButton: PropTypes.shape({
+      text: PropTypes.string.isRequired,
+      danger: PropTypes.bool,
+      onClick: PropTypes.func,
+    }),
+    cancelButton: PropTypes.shape({
+      text: PropTypes.string.isRequired,
+    }),
     customButton: PropTypes.node,
   };
   static defaultProps = {
-    hideModalAction: () => {},
-    onSuccessClose: () => {},
-
     title: '',
 
     children: null,
-    validateContent: () => true,
 
     warningMessage: '',
-    hasCancel: false,
-    hasOk: false,
-    dangerButton: false,
-    cancelText: 'Cancel',
-    okText: 'Save',
+    okButton: null,
+    cancelButton: null,
     customButton: null,
   };
   state = {
@@ -68,17 +62,14 @@ export class ModalLayout extends Component {
       this.closeModal();
     }
     if ((e.ctrlKey && e.keyCode === 13) || (e.metaKey && e.keyCode === 13)) {
-      this.successCloseModal();
+      this.onClickOk();
     }
   };
-  onClick = (e) => {
+  onClickModal = (e) => {
     !this.modal.contains(e.target) && this.closeModal();
   };
-  successCloseModal = () => {
-    if (this.props.validateContent()) {
-      this.props.onSuccessClose();
-      this.closeModal();
-    }
+  onClickOk = () => {
+    this.props.okButton.onClick(this.closeModal);
   };
   closeModal = () => {
     this.setState({ shown: false });
@@ -86,17 +77,17 @@ export class ModalLayout extends Component {
   };
   render() {
     const {
-      title, warningMessage, hasCancel, hasOk, dangerButton, cancelText, okText, customButton,
+      title, warningMessage, okButton, cancelButton, customButton,
       children,
     } = this.props;
     const footerProps = {
-      warningMessage, hasCancel, hasOk, dangerButton, cancelText, okText, customButton,
+      warningMessage, okButton, cancelButton, customButton,
     };
 
     return (
       <div className={cx('modal-layout')}>
-        <div className={cx('scrolling-content')}>
-          <Scrollbars onClick={this.onClick}>
+        <div className={cx('scrolling-content')} onClick={this.onClickModal}>
+          <Scrollbars>
             <CSSTransition timeout={300} in={this.state.shown} classNames={cx('modal-window-animation')}>
               {status => (
                 <div ref={(modal) => { this.modal = modal; }} className={cx('modal-window')}>
@@ -116,11 +107,11 @@ export class ModalLayout extends Component {
 
                   <ModalFooter
                     {...footerProps}
-                    onClickOk={this.successCloseModal}
+                    onClickOk={this.onClickOk}
                     onClickCancel={this.closeModal}
                   />
                 </div>
-                )}
+              )}
 
             </CSSTransition>
           </Scrollbars>
