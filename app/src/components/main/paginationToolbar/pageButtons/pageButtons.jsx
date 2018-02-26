@@ -50,7 +50,7 @@ export const PageButtons = ({ activePage, pageCount, onChangePage }) => (
         </PageButton>
       ))
     }
-    {pageCount <= MAX_PAGES ? '...' : null}
+    {pageCount > MAX_PAGES ? '...' : null}
     <PageButton
       disabled={activePage === pageCount}
       onClick={() => onChangePage(activePage + 1)}
