@@ -2,34 +2,40 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { hideModalAction } from 'controllers/modal';
 import { MarkdownEditor } from 'components/main/markdown';
-import { connect } from 'react-redux';
 import { withModal, ModalLayout } from 'components/main/modal';
 
 @withModal('dashboardModal')
-@connect(null, {
-  hideModalAction,
-})
 export class DashboardModal extends Component {
   static propTypes = {
-    hideModalAction: PropTypes.func.isRequired,
+    data: PropTypes.object,
   };
   static defaultProps = {
-    hideModalAction: () => {},
+    data: null,
+  };
+  okClickHandler = (closeModal) => {
+    setTimeout(() => closeModal(), 1000);
   };
   render() {
     return (
       <ModalLayout
         title={'dashboard-modal'}
-        hasCancel
-        hasOk
-        dangerButton
-        cancelText="Nope"
-        okText="Launch"
+        okButton={{
+          text: 'Launch',
+          danger: true,
+          onClick: this.okClickHandler,
+        }}
+        cancelButton={{
+          text: 'Nope',
+        }}
         warningMessage={'After pushing \'launch\' button nuclear rockets will be launched'}
       >
         <MarkdownEditor />
+        <div>
+          param1: { this.props.data.param1 }
+          <br />
+          param2: { this.props.data.param2 }
+        </div>
       </ModalLayout>
     );
   }

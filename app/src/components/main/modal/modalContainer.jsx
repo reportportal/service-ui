@@ -11,15 +11,15 @@ const ModalRoot = document.getElementById('modal-root');
 }))
 export class ModalContainer extends Component {
   static propTypes = {
-    activeModal: PropTypes.string,
+    activeModal: PropTypes.object,
   };
   static defaultProps = {
-    activeModal: '',
+    activeModal: null,
   };
   render() {
     const ActiveModal = getModal(this.props.activeModal);
     return ReactDOM.createPortal(
-      ActiveModal ? <ActiveModal /> : null,
+      ActiveModal ? <ActiveModal data={this.props.activeModal.data} /> : null,
       ModalRoot,
     );
   }

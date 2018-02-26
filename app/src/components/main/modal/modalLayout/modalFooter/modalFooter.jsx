@@ -7,8 +7,7 @@ import styles from './modalFooter.scss';
 const cx = classNames.bind(styles);
 
 export const ModalFooter = ({
-  warningMessage, hasCancel, hasOk, dangerButton, cancelText, okText,
-  onClickOk, onClickCancel, customButton,
+  warningMessage, okButton, cancelButton, customButton, onClickCancel, onClickOk,
 }) => (
   <div className={cx('modal-footer')}>
     { warningMessage ?
@@ -22,16 +21,16 @@ export const ModalFooter = ({
     }
     <div className={cx('buttons-block')}>
       {
-        hasCancel ?
+        cancelButton ?
           <div className={cx('button-container')}>
-            <BigButton color={'gray-60'} onClick={onClickCancel}>{cancelText}</BigButton>
+            <BigButton color={'gray-60'} onClick={onClickCancel}>{cancelButton.text}</BigButton>
           </div>
           : null
       }
       {
-        hasOk ?
+        okButton ?
           <div className={cx('button-container')}>
-            <BigButton color={dangerButton ? 'tomato' : 'booger'} onClick={onClickOk}>{okText}</BigButton>
+            <BigButton color={okButton.danger ? 'tomato' : 'booger'} onClick={onClickOk}>{okButton.text}</BigButton>
           </div>
           : null
       }
@@ -47,23 +46,22 @@ export const ModalFooter = ({
   );
 ModalFooter.propTypes = {
   warningMessage: PropTypes.string,
-  hasCancel: PropTypes.bool,
-  hasOk: PropTypes.bool,
-  dangerButton: PropTypes.bool,
-  cancelText: PropTypes.string,
-  okText: PropTypes.string,
+  okButton: PropTypes.shape({
+    text: PropTypes.string.isRequired,
+    danger: PropTypes.bool,
+  }),
+  cancelButton: PropTypes.shape({
+    text: PropTypes.string.isRequired,
+  }),
+  customButton: PropTypes.node,
   onClickOk: PropTypes.func,
   onClickCancel: PropTypes.func,
-  customButton: PropTypes.node, // custom buttons
 };
 ModalFooter.defaultProps = {
   warningMessage: '',
-  hasCancel: false,
-  hasOk: false,
-  dangerButton: false,
-  cancelText: 'Cancel',
-  okText: 'Save',
+  okButton: null,
+  cancelButton: null,
+  customButton: null,
   onClickOk: () => {},
   onClickCancel: () => {},
-  customButton: null,
 };

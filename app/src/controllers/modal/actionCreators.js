@@ -1,10 +1,10 @@
 import { SHOW_MODAL, HIDE_MODAL } from './constants';
 
 
-export const showModalAction = ({ modalType }) => ({
+export const showModalAction = ({ modalId, modalData }) => ({
   type: SHOW_MODAL,
   payload: {
-    activeModal: modalType,
+    activeModal: { id: modalId, data: modalData },
   },
 });
 export const hideModalAction = () => ({
