@@ -1,6 +1,6 @@
 import React from 'react';
 import { injectIntl, defineMessages } from 'react-intl';
-import { Page } from 'components/main/page';
+import { PageLayout } from 'layouts/pageLayout';
 import { FilterTable } from './filterTable';
 
 const messages = defineMessages({
@@ -11,7 +11,7 @@ const messages = defineMessages({
 });
 
 export const FiltersPage = injectIntl(({ intl }) => (
-  <Page title={intl.formatMessage(messages.filtersPageTitle)}>
+  <PageLayout title={intl.formatMessage(messages.filtersPageTitle)}>
     <FilterTable />
-  </Page>
+  </PageLayout>
 ));

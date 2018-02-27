@@ -1,4 +1,4 @@
-.page {
+.page-layout {
   border: none;
   border-radius: 0;
   box-shadow: none;
@@ -11,8 +11,10 @@
   padding-left: 15px;
   min-height: 30px;
   margin-bottom: 15px;
-  font-family: $FONT-BOLD;
+  font-family: $FONT-CONDBOLD;
   font-size: 16px;
+  letter-spacing: 1px;
+  line-height: 30px;
   color: $COLOR--charcoal-grey;
   text-transform: uppercase;
 }
