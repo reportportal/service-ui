@@ -73,7 +73,6 @@ export class ModalLayout extends Component {
   };
   closeModal = () => {
     this.setState({ shown: false });
-    setTimeout(() => this.props.hideModalAction(), 300);
   };
   render() {
     const {
@@ -88,7 +87,12 @@ export class ModalLayout extends Component {
       <div className={cx('modal-layout')}>
         <div className={cx('scrolling-content')} onClick={this.onClickModal}>
           <Scrollbars>
-            <CSSTransition timeout={300} in={this.state.shown} classNames={cx('modal-window-animation')}>
+            <CSSTransition
+              timeout={300}
+              in={this.state.shown}
+              classNames={cx('modal-window-animation')}
+              onExited={this.props.hideModalAction}
+            >
               {status => (
                 <div ref={(modal) => { this.modal = modal; }} className={cx('modal-window')}>
                   <div className={cx('modal-header')}>
