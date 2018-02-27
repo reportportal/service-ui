@@ -44,6 +44,30 @@ storiesOf('Components/Main/PaginationToolbar', module)
       pageSize={50}
     />
   ))
+  .add('with many pages at start', () => (
+    <PaginationToolbar
+      itemCount={470}
+      activePage={1}
+      pageCount={20}
+      pageSize={50}
+    />
+  ))
+  .add('with many pages at the middle', () => (
+    <PaginationToolbar
+      itemCount={470}
+      activePage={7}
+      pageCount={20}
+      pageSize={50}
+    />
+  ))
+  .add('with many pages at the end', () => (
+    <PaginationToolbar
+      itemCount={470}
+      activePage={20}
+      pageCount={20}
+      pageSize={50}
+    />
+  ))
   .add('with actions', () => (
     <PaginationToolbar
       itemCount={470}
