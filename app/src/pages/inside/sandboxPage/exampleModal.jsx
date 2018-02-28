@@ -5,8 +5,8 @@ import PropTypes from 'prop-types';
 import { MarkdownEditor } from 'components/main/markdown';
 import { withModal, ModalLayout } from 'components/main/modal';
 
-@withModal('dashboardModal')
-export class DashboardModal extends Component {
+@withModal('exampleModal')
+export class ExampleModal extends Component {
   static propTypes = {
     data: PropTypes.object,
   };
@@ -19,7 +19,7 @@ export class DashboardModal extends Component {
   render() {
     return (
       <ModalLayout
-        title={'dashboard-modal'}
+        title={'example-modal'}
         okButton={{
           text: 'Launch',
           danger: true,

@@ -1,2 +1,2 @@
 export { DashboardPage } from './dashboardPage';
-export { DashboardModal } from './dashboardModal';
+export { DashboardModal } from '../sandboxPage/exampleModal';
