@@ -23,11 +23,11 @@ import { FormattedMessage } from 'react-intl';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { UserItem } from 'components/inputs/inputUserSearch/userItem';
 import classNames from 'classnames/bind';
-import styles from './optionsRender.scss';
+import styles from './usersList.scss';
 
 const cx = classNames.bind(styles);
 
-export const OptionsRender = ({ options, selectValue }) => {
+export const UsersList = ({ options, selectValue }) => {
   if (options[0] && options[0].externalUser) {
     return (
       <div className={'select-menu-outer'}>
@@ -74,11 +74,11 @@ export const OptionsRender = ({ options, selectValue }) => {
   );
 };
 
-OptionsRender.propTypes = {
+UsersList.propTypes = {
   options: PropTypes.array,
   selectValue: PropTypes.func,
 };
-OptionsRender.defaultProps = {
+UsersList.defaultProps = {
   options: [],
   selectValue: () => {},
 };
