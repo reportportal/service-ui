@@ -13,6 +13,7 @@ import { FiltersPage } from 'pages/inside/filtersPage';
 import { DebugPage } from 'pages/inside/debugPage';
 import { MembersPage } from 'pages/inside/membersPage';
 import { SettingsPage } from 'pages/inside/settingsPage';
+import { SandboxPage } from 'pages/inside/sandboxPage';
 import { LoginPage } from 'pages/outside/loginPage';
 import { RegistrationPage } from 'pages/outside/registrationPage';
 import { LocalizationSwitcher } from 'components/main/localizationSwitcher';
@@ -46,6 +47,7 @@ const AppRoute = authorizedRoute(() => (
       <Route path="/:projectId/userdebug" component={DebugPage} />
       <Route path="/:projectId/members" component={MembersPage} />
       <Route path="/:projectId/settings" component={SettingsPage} />
+      <Route path="/:projectId/sandbox" component={SandboxPage} />
     </Switch>
   </AppLayout>
 ));
