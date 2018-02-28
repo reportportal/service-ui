@@ -58,10 +58,15 @@
   }
 }
 .disabled-item{
+  .assign-btn{
+    cursor: default;
+  }
   &:hover{
     background: transparent;
+    cursor: default;
   }
   *{
+    cursor: default;
     color: $COLOR--gray-60;
   }
 }

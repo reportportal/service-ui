@@ -33,7 +33,8 @@ export const UserItem = ({ userName, userLogin, userAvatar, isAssigned }) => (
       <p className={cx('user-search-login')}>{userLogin}</p>
     </div>
     <button className={cx({ 'assign-btn': true, 'assigned-user': isAssigned })} />
-  </div>);
+  </div>
+);
 
 UserItem.propTypes = {
   userName: PropTypes.string,

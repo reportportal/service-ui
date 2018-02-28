@@ -1,1 +1,0 @@
-export { OptionsRender } from './optionsRender';

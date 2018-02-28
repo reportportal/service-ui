@@ -24,7 +24,7 @@ import classNames from 'classnames/bind';
 import { FormattedMessage } from 'react-intl';
 import { fetch, addTokenToImagePath, validate } from 'common/utils';
 import styles from './inputUserSearch.scss';
-import { OptionsRender } from './optionsRender';
+import { UsersList } from './usersList';
 
 const cx = classNames.bind(styles);
 const getPhoto = (userId) => {
@@ -34,10 +34,6 @@ const getPhoto = (userId) => {
 const isValidNewOption = ({ label }) => validate.email(label);
 const newOptionCreator = option => ({ externalUser: true, label: option.label });
 const promptTextCreator = label => (label);
-const filterOption = (option, filter) =>
-option.userName.toLowerCase().indexOf(filter.toLowerCase()) >= 0 ||
-option.userLogin.toLowerCase().indexOf(filter.toLowerCase()) >= 0 ||
-(option.email && option.email.toLowerCase().indexOf(filter.toLowerCase()) >= 0);
 const makeURL = (input, isAdmin, projectId) => {
   const apiVersion = '../api/v1/';
   const page = 1;
@@ -62,7 +58,7 @@ const makeURL = (input, isAdmin, projectId) => {
 const makeOptions = (options, projectId) => options.map(option => ({
   userName: option.full_name || '',
   userLogin: option.userId,
-  email: option.email,
+  email: option.email || '',
   disabled: Object.prototype.hasOwnProperty.call(option.assigned_projects, projectId),
   isAssigned: Object.prototype.hasOwnProperty.call(option.assigned_projects, projectId),
   userAvatar: getPhoto(option.userId),
@@ -84,13 +80,13 @@ export const InputUserSearch = ({ isAdmin, onChange, projectId }) => (
     cache={false}
     className={cx('select2-search-users')}
     loadOptions={input => (getUsers(input, isAdmin, projectId))}
-    filterOption={filterOption}
+    filterOption={() => (true)}
     loadingPlaceholder={<FormattedMessage id={'InputUserSearch.searching'} defaultMessage={'Searching...'} />}
     noResultsText={<FormattedMessage id={'InputUserSearch.noResults'} defaultMessage={'No matches found'} />}
     searchPromptText={<FormattedMessage id={'InputUserSearch.placeholder'} defaultMessage={'Please enter 1 or more character'} />}
     onChange={onChange}
     menuRenderer={({ focusOption, options, selectValue }) =>
-      (OptionsRender({ focusOption, options, selectValue }))}
+      (UsersList({ focusOption, options, selectValue }))}
     isValidNewOption={isValidNewOption}
     newOptionCreator={newOptionCreator}
     promptTextCreator={promptTextCreator}
