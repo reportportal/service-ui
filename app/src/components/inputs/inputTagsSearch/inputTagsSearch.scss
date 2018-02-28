@@ -1,0 +1,119 @@
+.select-container{
+  :global{
+    .Select.is-focused{
+      .Select-control{
+        box-shadow: 0 0 2px 0 $COLOR--topaz;
+        border: 1px solid $COLOR--topaz;
+      }
+    }
+    .Select.is-loading{
+      .Select-input::after{
+        content: '';
+        background-image: url('./img/spinner.gif');
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        background-repeat: no-repeat;
+        background-position: center;
+        vertical-align: middle;
+        margin-left: -5px;
+      }
+    }
+    .new{
+      float: right;
+    }
+    .select2-search-tags{
+      background-color: $COLOR--white-two;
+      .Select-control, .Select-menu-outer{
+        position: relative;
+        margin-top: -1px;
+        background: white;
+      }
+      .Select-value{
+        padding: 3px 5px 3px 5px;
+        margin: 3px 0 3px 5px;
+        position: relative;
+        line-height: 13px;
+        color: $COLOR--charcoal-grey;
+        cursor: default;
+        border: 1px solid $COLOR--gray-60;
+        box-shadow: 0 0 2px $COLOR--white-two inset, 0 1px 0 rgba(0,0,0,.05);
+        background-clip: padding-box;
+        user-select: none;
+        background-color: $COLOR--gray-91;
+        background-image: linear-gradient(to top,lighten($COLOR--gray-91, 5%) 20%,lighten($COLOR--gray-91,3%) 50%,darken($COLOR--gray-91,2%) 52%,$COLOR--gray-91 100%);
+      }
+      .Select-value-label{
+        max-width: 100%;
+        white-space: pre-wrap;
+        word-break: break-all;
+        word-wrap: break-word;
+        font-size: 13px;
+        font-family: $FONT-REGULAR;
+      }
+      .Select-control{
+        box-sizing: border-box;
+        border: 1px solid $COLOR--gray-60;
+      }
+      .Select-menu-outer{
+        border: 1px solid $COLOR--topaz;
+        border-top: none;
+      }
+      .Select-placeholder, .Select-clear-zone, .Select-aria-only{
+        display: none;
+      }
+      .Select-value{
+        display: inline-block;
+      }
+      .Select-value-icon{
+        margin-right: 5px;
+        font-weight: bold;
+        color: $COLOR--gray-47;
+      }
+      .Select-noresults{
+        background: lighten($COLOR--gray-91, 5%);
+        position: absolute;
+        bottom: -28px;
+        width: 100%;
+        box-sizing: border-box;
+        padding: 5px;
+        font-size: 12px;
+        line-height: 17px;
+        font-family: $FONT-REGULAR, sans-serif;
+        color: $COLOR--charcoal-grey;
+      }
+      .Select-option.is-focused{
+        background: $COLOR--system-issue;
+        color: $COLOR--white;
+      }
+      .Select-input{
+        input{
+          margin: 4px 5px;
+          line-height: 13px;
+          font-family: $FONT-REGULAR, sans-serif;
+          height: auto;
+          outline: 0;
+          font-size: 13px;
+          border: none;
+          border-radius: 0;
+          box-sizing: border-box !important;
+        }
+      }
+      .select2-item{
+        cursor: pointer;
+        font-size: 13px;
+        font-family: $FONT-REGULAR;
+        padding: 3px 7px 4px;
+        max-width: 100%;
+        white-space: pre-wrap;
+        word-break: break-all;
+        word-wrap: break-word;
+        line-height: 18.5px;
+      }
+    }
+  }
+}
+
+
+
+

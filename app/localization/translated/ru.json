@@ -54,6 +54,8 @@
   "Hamburger.toAllLaunches": "Переместить во все запуски",
   "Hamburger.toDebug": "Переместить в отладку",
   "LaunchesPage.title": "Запуски",
+  "InputTagsSearch.dynamicSearchPromptText": "Пожалуйста введите{length} или более символов",
+  "InputTagsSearch.new": "Новый",
   "InputUserSearch.inviteNewUser": "Пригласить {userEmail}",
   "InputUserSearch.inviteNewUserInfo": "Отправить приглашение на этот адрес",
   "InputUserSearch.noResults": "Ничего не найдено",
