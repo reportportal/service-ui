@@ -29,6 +29,8 @@
   "FilterTableItem.shared": "Shared:",
   "FilterTableItem.showOnLaunchesSwitcherOff": "OFF",
   "FilterTableItem.showOnLaunchesSwitcherOn": "ON",
+  "FiltersPage.filterNameLength": "Filter name length should have size from 3 to 128 characters.",
+  "FiltersPage.searchByName": "Search by name",
   "FiltersPage.title": "Filters",
   "ForgotPasswordBlock.enterEmail": "Увядзіце адрас вашай электроннай скрыні, каб аднавіць яго",
   "ForgotPasswordBlock.forgotPass": "Забылі пароль?",
