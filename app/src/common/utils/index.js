@@ -27,3 +27,4 @@ export { referenceDictionary } from './referenceDictionary';
 export { fetch, ERROR_CANCELED, ERROR_UNAUTHORIZED } from './fetch';
 export { addTokenToImagePath } from './addTokenToImagePath';
 export { getStorageItem, setStorageItem } from './storageUtils';
+export { connectRouter } from './connectRouter';
