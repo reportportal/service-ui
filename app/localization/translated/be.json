@@ -47,6 +47,8 @@
   "ForgotPasswordForm.cancel": "Адмяніць",
   "ForgotPasswordForm.emailPlaceholder": "Увядзіце электронны адрас",
   "ForgotPasswordForm.sendEmail": "Адаслаць ліст",
+  "InputTagsSearch.dynamicSearchPromptText": "Калі ласка увядзіце {length} або больш сімвалаў",
+  "InputTagsSearch.new": "Новы",
   "InputUserSearch.inviteNewUser": "Запрасіць {userEmail}",
   "InputUserSearch.inviteNewUserInfo": "Адправіць запрашэнне на гэты адрас",
   "InputUserSearch.noResults": "Нічога не знойдзена",
