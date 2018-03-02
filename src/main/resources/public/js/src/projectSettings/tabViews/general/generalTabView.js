@@ -161,6 +161,10 @@ define(function (require) {
             var generalSettings = this.model.getProjectSettings();
             config.trackingDispatcher.trackEventNumber(385);
             this.clearFormErrors();
+            if (!generalSettings.configuration.isAutoAnalyzerEnabled) {
+                generalSettings.configuration.analyzer_mode = 'LAUNCH_NAME';
+                $('[value="LAUNCH_NAME"]', this.$el).attr('checked', 'checked');
+            }
             Service.updateProject(generalSettings)
                 .done(function () {
                     var newConfig = appModel.get('configuration');
