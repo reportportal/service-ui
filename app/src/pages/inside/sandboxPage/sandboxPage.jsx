@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { showModalAction } from 'controllers/modal';
 import PropTypes from 'prop-types';
-import { BlockWithTooltipExample } from './blockWithTooltipExample';
+import { BlockWithTooltip, BlockWithHoverableTooltip } from './testBlocks';
 
 @connect(null, {
   showModalAction,
@@ -24,7 +24,14 @@ export class SandboxPage extends Component {
         </button>
         <br />
         <div style={{ width: 300, height: 50, marginLeft: 50, marginTop: 50 }}>
-          <BlockWithTooltipExample />
+          <BlockWithTooltip>
+            Hover me!
+          </BlockWithTooltip>
+        </div>
+        <div style={{ width: 300, height: 50, marginLeft: 50, marginTop: 50 }}>
+          <BlockWithHoverableTooltip>
+            Hover me or my tooltip!
+          </BlockWithHoverableTooltip>
         </div>
       </div>
     );
