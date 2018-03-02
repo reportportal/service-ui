@@ -2,12 +2,14 @@ import { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { injectIntl, defineMessages } from 'react-intl';
 import { reduxForm } from 'redux-form';
+import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
 import { Input } from 'components/inputs/input';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import AddFilterIcon from './img/ic-add-filter-inline.svg';
+import SearchIcon from './img/ic-search-inline.svg';
 import styles from './filterSearch.scss';
 
 const cx = classNames.bind(styles);
@@ -98,7 +100,7 @@ const SearchInputWithIcon = props => (
       {...props}
     />
     <div className={cx('search-icon')}>
-      {/* TODO: add icon */}
+      {Parser(SearchIcon)}
     </div>
   </Fragment>
 );
