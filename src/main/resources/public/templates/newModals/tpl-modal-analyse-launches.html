@@ -1,0 +1,26 @@
+<%= data.includeTemplate('_tpl-modal-header', {headerText: data.text.dialogHeader.analyseLaunches}) %>
+<div class="modal-body">
+    <span class="strategy-title">
+        <%= data.text.dialog.analyseLaunchesLabel %>
+    </span>
+    <div  class="strategy-options">
+        <label class="strategy-option">
+            <input class="rp-input-radio" type="radio" name="aa-strategy" value="ALL">
+            <span>
+                <%= data.text.project.autoAnalysisBaseFirstOpt %>
+            </span>
+        </label>
+
+        <label class="strategy-option">
+            <input class="rp-input-radio" type="radio" name="aa-strategy" value="LAUNCH_NAME">
+            <span>
+                <%= data.text.project.autoAnalysisBaseSecondOpt %>
+            </span>
+        </label>
+    </div>
+    <div class="note-block">
+        <span><%= data.text.ui.note %></span>
+        <%= data.text.dialog.analyseLaunchesNote %>
+    </div>
+</div>
+<%= data.includeTemplate('_tpl-modal-footer', data.footerButtons)  %>

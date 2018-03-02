@@ -41,10 +41,12 @@ define(function (require) {
         tpl: 'tpl-project-settings-general',
 
         events: {
-            'click #submit-settings': 'submitSettings'
+            'click #submit-settings': 'submitSettings',
+            'change input[type="radio"]': 'onChangeAABase'
         },
         bindings: {
             '[data-js-is-auto-analize]': 'checked: isAutoAnalyzerEnabled',
+            '[data-js-aa-base-block]': 'classes: {hide: not(isAutoAnalyzerEnabled)}',
             '[data-js-analize-on-the-fly]': 'checked: analyzeOnTheFly, attr: {disabled: not(isAutoAnalyzerEnabled)}'
         },
 
@@ -69,6 +71,7 @@ define(function (require) {
                 config.trackingDispatcher.trackEventNumber(384);
             });
             this.render();
+            $('[value="' + (this.model.get('analyzer_mode') || 'LAUNCH_NAME') + '"]', this.$el).attr('checked', 'checked');
         },
 
         render: function () {
@@ -81,7 +84,6 @@ define(function (require) {
             return this;
         },
         setupDropdowns: function () {
-            var self = this;
             var isEpamInstance = this.registryInfoModel.get('isEpamInstance');
 
             var interruptedJob = new DropDownComponent({
@@ -151,14 +153,18 @@ define(function (require) {
             $('div.error-block', cont).empty().hide();
         },
 
+        onChangeAABase: function (e) {
+            this.model.set('analyzer_mode', e.target.value);
+        },
+
         submitSettings: function () {
-            var externalSystemData = this.model.getProjectSettings();
+            var generalSettings = this.model.getProjectSettings();
             config.trackingDispatcher.trackEventNumber(385);
             this.clearFormErrors();
-            Service.updateProject(externalSystemData)
+            Service.updateProject(generalSettings)
                 .done(function () {
                     var newConfig = appModel.get('configuration');
-                    _.merge(newConfig, externalSystemData.configuration);
+                    _.merge(newConfig, generalSettings.configuration);
                     appModel.set({ configuration: newConfig });
                     Util.ajaxSuccessMessenger('updateProjectSettings');
                 })
