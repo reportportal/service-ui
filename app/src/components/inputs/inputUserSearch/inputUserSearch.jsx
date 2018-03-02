@@ -21,6 +21,7 @@
 import Select from 'react-select';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
+import { stringify } from 'qs';
 import { FormattedMessage } from 'react-intl';
 import { fetch, addTokenToImagePath, validate } from 'common/utils';
 import styles from './inputUserSearch.scss';
@@ -29,17 +30,22 @@ import { UsersList } from './usersList';
 const cx = classNames.bind(styles);
 const getPhoto = (userId) => {
   const d = new Date();
-  return addTokenToImagePath(`../api/v1/data/userphoto?v=${d.getTime()}&id=${userId}`);
+  const qsParams = {
+    v: d.getTime(),
+    id: userId,
+  };
+  return addTokenToImagePath(`/api/v1/data/userphoto?${stringify(qsParams, { encode: false })}`);
 };
 const isValidNewOption = ({ label }) => validate.email(label);
 const newOptionCreator = option => ({ externalUser: true, label: option.label });
 const promptTextCreator = label => (label);
 const makeURL = (input, isAdmin, projectId) => {
-  const apiVersion = '../api/v1/';
-  const page = 1;
-  const size = 10;
-  const sort = '&page.sort=login,ASC';
-  let search = '';
+  const qsParams = {
+    'page.page': 1,
+    'page.size': 10,
+    'page.sort': 'login,ASC',
+  };
+  const apiVersion = '/api/v1/';
   let startUrl;
   if (!isAdmin) {
     startUrl = `${apiVersion}project/${projectId}/usernames/`;
@@ -48,11 +54,11 @@ const makeURL = (input, isAdmin, projectId) => {
   }
   if (input) {
     startUrl += 'search/';
-    search = `&term=${input}`;
+    qsParams.term = input;
   } else {
     startUrl += 'all';
   }
-  startUrl += `?page.page=${page}&page.size=${size}${sort}${search}`;
+  startUrl += `?${stringify(qsParams, { encode: false })}`;
   return startUrl;
 };
 const makeOptions = (options, projectId) => options.map(option => ({
@@ -84,7 +90,7 @@ export const InputUserSearch = ({ isAdmin, onChange, projectId }) => (
     loadingPlaceholder={<FormattedMessage id={'InputUserSearch.searching'} defaultMessage={'Searching...'} />}
     noResultsText={<FormattedMessage id={'InputUserSearch.noResults'} defaultMessage={'No matches found'} />}
     searchPromptText={<FormattedMessage id={'InputUserSearch.placeholder'} defaultMessage={'Please enter 1 or more character'} />}
-    onChange={onChange}
+    onChange={(option) => { onChange(option); }}
     menuRenderer={({ focusOption, options, selectValue }) =>
       (UsersList({ focusOption, options, selectValue }))}
     isValidNewOption={isValidNewOption}
