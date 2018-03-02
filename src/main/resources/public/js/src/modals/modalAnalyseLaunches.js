@@ -49,7 +49,7 @@ define(function (require) {
             this.$el.html(Util.templates(this.template, { footerButtons: footerButtons }));
         },
         onKeySuccess: function () {
-            $('[data-js-analyse]', this.$el).focus().trigger('click');
+            $('[data-js-analyze]', this.$el).focus().trigger('click');
         },
 
         onAnalyze: function () {
