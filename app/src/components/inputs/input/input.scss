@@ -29,4 +29,9 @@
 }
 .has-right-icon {
   padding-right: 35px;
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    padding-left: 35px;
+    padding-right: 10px;
+  }
 }

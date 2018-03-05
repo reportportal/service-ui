@@ -64,11 +64,9 @@ export class FilterSearch extends React.Component {
         <div className={cx('label')}>
           Filters are issue searches that have been saved for re-use.
         </div>
-        <div>
-          <GhostButton icon={AddFilterIcon}>
-            Add filter
-          </GhostButton>
-        </div>
+        <GhostButton icon={AddFilterIcon}>
+          Add filter
+        </GhostButton>
       </div>
     );
   }

@@ -25,7 +25,7 @@ queryParseHistory.listen((location) => {
   const match = matchPath(location.pathname, '/:projectId');
   const hashProject = match.params.projectId;
   const userProjects = userInfoSelector(store.getState()).assigned_projects;
-  if (Object.prototype.hasOwnProperty.call(userProjects, hashProject)
+  if (userProjects && Object.prototype.hasOwnProperty.call(userProjects, hashProject)
     && hashProject !== activeProjectSelector(store.getState())) {
     store.dispatch(setActiveProjectAction(hashProject));
   }
