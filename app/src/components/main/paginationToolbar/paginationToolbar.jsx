@@ -21,7 +21,7 @@ export const PaginationToolbar = ({
       ? <ItemCounter activePage={activePage} pageSize={pageSize} itemCount={itemCount} />
       : null
     }
-    {pageCount
+    {pageCount && pageCount > 1
       ? <PageButtons activePage={activePage} pageCount={pageCount} onChangePage={onChangePage} />
       : null
     }

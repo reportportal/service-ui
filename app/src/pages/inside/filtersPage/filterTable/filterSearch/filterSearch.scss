@@ -57,6 +57,11 @@
   width: 25px;
   text-align: center;
 
+  @media (max-width: $SCREEN_XS_MAX) {
+    left: 0;
+    right: auto;
+  }
+
   svg {
     width: 13px;
   }
