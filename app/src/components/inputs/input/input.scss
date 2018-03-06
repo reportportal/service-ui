@@ -35,3 +35,27 @@
     padding-right: 10px;
   }
 }
+
+.with-border {
+  position: relative;
+  height: 30px;
+  border-radius: 0;
+  box-shadow: none;
+  border: 1px solid $COLOR--gray-80;
+  flex-grow: 1;
+  transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+
+  &:focus {
+    background-color: inherit;
+    border-color: $COLOR--topaz;
+    box-shadow: 0 0 2px 0 rgba($COLOR--topaz, .7);
+  }
+
+  &:hover {
+    border-color: $COLOR--gray-47;
+  }
+
+  &.error {
+    border-color: $COLOR--orange-red;
+  }
+}

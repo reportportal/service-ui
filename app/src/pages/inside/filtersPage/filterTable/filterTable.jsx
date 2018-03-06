@@ -19,6 +19,8 @@ export class FilterTable extends PureComponent {
     onChangePage: PropTypes.func,
     onChangePageSize: PropTypes.func,
     userId: PropTypes.string,
+    onDelete: PropTypes.func,
+    onEdit: PropTypes.func,
   };
 
   static defaultProps = {
@@ -31,6 +33,10 @@ export class FilterTable extends PureComponent {
     onChangePage: () => {
     },
     onChangePageSize: () => {
+    },
+    onDelete: () => {
+    },
+    onEdit: () => {
     },
   };
 
@@ -50,6 +56,8 @@ export class FilterTable extends PureComponent {
                 shared={item.share}
                 showOnLaunches={item.showOnLaunches}
                 editable={item.owner === this.props.userId}
+                onDelete={() => this.props.onDelete(item)}
+                onEdit={() => this.props.onEdit(item)}
               />
             ))
           }

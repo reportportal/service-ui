@@ -25,13 +25,15 @@ import styles from './input.scss';
 
 const cx = classNames.bind(styles);
 
-export const Input = ({ type, value, readonly,
+export const Input = ({ type, value, readonly, withBorder, error,
                  placeholder, maxLength, disabled, hasRightIcon, refFunction,
                  onChange, onFocus, onBlur, onKeyUp }) => {
   const classes = cx({
     input: true,
     disabled,
     'has-right-icon': hasRightIcon,
+    'with-border': withBorder,
+    error,
   });
 
   return (
@@ -60,6 +62,8 @@ Input.propTypes = {
   disabled: PropTypes.bool,
   readonly: PropTypes.bool,
   hasRightIcon: PropTypes.bool,
+  withBorder: PropTypes.bool,
+  error: PropTypes.string,
   onChange: PropTypes.func,
   onFocus: PropTypes.func,
   onBlur: PropTypes.func,
@@ -75,6 +79,8 @@ Input.defaultProps = {
   disabled: false,
   readonly: false,
   hasRightIcon: false,
+  withBorder: false,
+  error: '',
   onChange: () => {},
   onFocus: () => {},
   onBlur: () => {},

@@ -1,0 +1,18 @@
+.modal-field {
+  display: flex;
+  align-items: center;
+  padding-bottom: 20px;
+}
+
+.modal-field-label {
+  color: $COLOR--charcoal-grey;
+  padding-right: 30px;
+  text-align: right;
+  font-family: $FONT-REGULAR;
+  font-size: 13px;
+}
+
+.modal-field-content {
+  flex-grow: 1;
+  width: 100%;
+}

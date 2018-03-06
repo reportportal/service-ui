@@ -91,6 +91,7 @@ export const withPagination = ({ url: staticURL } = {}) => (WrappedComponent) =>
           pageSize={this.props.size}
           onChangePage={this.changePageHandler}
           onChangePageSize={this.changeSizeHandler}
+          fetchData={this.fetchData}
           {...restProps}
         />
       );
