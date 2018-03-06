@@ -30,11 +30,11 @@ const cx = classNames.bind(styles);
 
 export class MarkdownViewer extends Component {
   static propTypes = {
-    text: PropTypes.string,
+    value: PropTypes.string,
     onResize: PropTypes.func,
   };
   static defaultProps = {
-    text: '',
+    value: '',
     onResize: () => {},
   };
   constructor(props) {
@@ -70,7 +70,7 @@ export class MarkdownViewer extends Component {
   render() {
     return (
       <div ref={(container) => { this.container = container; }} className={cx('markdown-viewer')}>
-        { Parser(this.simpleMDE.markdown(this.indentSpaces(this.escapeHtml(this.props.text)).replace('_', '&#95;'))) }
+        { Parser(this.simpleMDE.markdown(this.indentSpaces(this.escapeHtml(this.props.value)).replace('_', '&#95;'))) }
       </div>
     );
   }

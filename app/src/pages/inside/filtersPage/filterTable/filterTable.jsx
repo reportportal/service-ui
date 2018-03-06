@@ -1,25 +1,13 @@
 import { PureComponent, Fragment } from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
-import { withPagination } from 'components/containers/pagination';
-import { withFilter } from 'controllers/filter';
-import { userIdSelector } from 'controllers/user';
-import { FilterTableItem } from '../filterTableItem';
+import { FilterTableItem } from './filterTableItem';
 import { FilterTableHeader } from './filterTableHeader';
-import { FilterSearch } from './filterSearch';
 import styles from './filterTable.scss';
 
 const cx = classNames.bind(styles);
 
-@withFilter
-@withPagination({
-  url: activeProject => `/api/v1/${activeProject}/filter`,
-})
-@connect(state => ({
-  userId: userIdSelector(state),
-}))
 export class FilterTable extends PureComponent {
   static propTypes = {
     data: PropTypes.arrayOf(PropTypes.object),
@@ -30,8 +18,6 @@ export class FilterTable extends PureComponent {
     onChangePage: PropTypes.func,
     onChangePageSize: PropTypes.func,
     userId: PropTypes.string,
-    filter: PropTypes.string,
-    onFilterChange: PropTypes.func,
   };
 
   static defaultProps = {
@@ -41,9 +27,6 @@ export class FilterTable extends PureComponent {
     pageCount: 0,
     pageSize: 20,
     userId: '',
-    filter: '',
-    onFilterChange: () => {
-    },
     onChangePage: () => {
     },
     onChangePageSize: () => {
@@ -53,10 +36,6 @@ export class FilterTable extends PureComponent {
   render() {
     return (
       <Fragment>
-        <FilterSearch
-          filter={this.props.filter}
-          onFilterChange={this.props.onFilterChange}
-        />
         <div className={cx('filter-table')}>
           <FilterTableHeader />
           {

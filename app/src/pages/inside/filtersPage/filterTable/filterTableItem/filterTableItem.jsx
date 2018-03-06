@@ -23,6 +23,7 @@ import classNames from 'classnames/bind';
 import { FormattedMessage } from 'react-intl';
 import PropTypes from 'prop-types';
 import { InputSwitcher } from 'components/inputs/inputSwitcher';
+import { MarkdownViewer } from 'components/main/markdown';
 import styles from './filterTableItem.scss';
 
 const cx = classNames.bind(styles);
@@ -43,7 +44,7 @@ export const FilterTableItem = (
       </span>
       <div className={cx('description')}>
         {/* TODO replace to markdown viewer */}
-        {description}
+        <MarkdownViewer value={description} />
       </div>
     </div>
     <div className={cx('block', 'options-block')}>
