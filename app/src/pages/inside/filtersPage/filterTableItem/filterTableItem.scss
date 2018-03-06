@@ -18,6 +18,10 @@
 
   &:hover {
     background-color: $COLOR--tealish-hover;
+
+    .pencil-icon {
+      display: inline-block;
+    }
   }
 }
 .block {
@@ -78,7 +82,7 @@
   }
 }
 .pencil-icon {
-  display: inline-block;
+  display: none;
   width: 20px;
   height: 20px;
   margin-left: 10px;
