@@ -37,7 +37,7 @@ export const InputBigSwitcher = ({ children, disabled, value, onChange, onFocus,
     'turned-on': !!value,
   });
   const handlerOnChange = (e) => {
-    onChange({ value: e.target.checked });
+    onChange(e.target.checked);
   };
   return (
     <label className={cx('input-big-switcher')} onFocus={onFocus} onBlur={onBlur} tabIndex="1">

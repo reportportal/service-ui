@@ -67,6 +67,6 @@ storiesOf('Components/Main/markdown/markdownEditor', module)
     <MarkdownEditor placeholder="Some placeholder for markdown editor..." />
   ))
   .add('with provided markdown text', () => (
-    <MarkdownEditor text={testMarkdown} onChange={action('changed')} />
+    <MarkdownEditor value={testMarkdown} onChange={action('changed')} />
   ))
 ;

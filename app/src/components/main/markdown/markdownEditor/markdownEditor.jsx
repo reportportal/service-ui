@@ -92,20 +92,20 @@ const toolbarTitles = defineMessages({
 @injectIntl
 export class MarkdownEditor extends React.Component {
   static propTypes = {
-    text: PropTypes.string,
+    value: PropTypes.string,
     placeholder: PropTypes.string,
     onChange: PropTypes.func,
     intl: intlShape.isRequired,
   };
   static defaultProps = {
-    text: '',
+    value: '',
     placeholder: '',
     onChange: () => {},
   };
 
   componentDidMount() {
     const { formatMessage } = this.props.intl;
-    this.holder.value = this.props.text;
+    this.holder.value = this.props.value;
     this.simpleMDE = new SimpleMDE({
       element: this.holder,
       status: false,
@@ -221,11 +221,14 @@ export class MarkdownEditor extends React.Component {
     this.props.onChange(this.simpleMDE.value());
   };
 
-
   render() {
     return (
       <div className={cx('markdown-editor')}>
-        <textarea ref={(holder) => { this.holder = holder; }} defaultValue={this.props.text} />
+        <textarea
+          ref={(holder) => { this.holder = holder; }}
+          value={this.props.value}
+          onChange={this.props.onChange}
+        />
       </div>
     );
   }
