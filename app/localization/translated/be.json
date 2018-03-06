@@ -18,6 +18,7 @@
   "ChangePasswordForm.passwordConstraints": "4-25 сімвалаў",
   "Common.validation.email": "Электронны адрас няслушны. Калі ласка, увядзіце слушны электронны адрас.",
   "ConfigExamplesBlock.header": "Прыклады наладаў",
+  "FilterPage.msgFavoriteFilters": "Фільтры - пошукавыя запыты, якія былі ўпадабаны для паўторнага выкарыстання.",
   "FilterTableItem.display": "Паказаць на запусках:",
   "FilterTableItem.header.delete": "Выдаліць",
   "FilterTableItem.header.displayOnLaunches": "Паказаць на запусках",
