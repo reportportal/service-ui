@@ -27,4 +27,5 @@ export { referenceDictionary } from './referenceDictionary';
 export { fetch, ERROR_CANCELED, ERROR_UNAUTHORIZED } from './fetch';
 export { addTokenToImagePath } from './addTokenToImagePath';
 export { getStorageItem, setStorageItem } from './storageUtils';
+export { getDuration, approximateTimeFormat, dateFormat, fromNowFormat, daysFromNow, daysBetween } from './timeDateUtils';
 export { connectRouter } from './connectRouter';
