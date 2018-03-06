@@ -12,8 +12,12 @@ const cx = classNames.bind(styles);
 
 const messages = defineMessages({
   favoriteFilters: {
-    id: 'FilterPage.msgFavoriteFilters',
+    id: 'FiltersPage.msgFavoriteFilters',
     defaultMessage: 'Filters are issue searches that have been saved for re-use.',
+  },
+  addFilter: {
+    id: 'FiltersPage.addFilter',
+    defaultMessage: 'Add filter',
   },
 });
 
@@ -64,7 +68,7 @@ export class FilterPageToolbar extends React.Component {
           {this.props.intl.formatMessage(messages.favoriteFilters)}
         </div>
         <GhostButton icon={AddFilterIcon}>
-          Add filter
+          {this.props.intl.formatMessage(messages.addFilter)}
         </GhostButton>
       </div>
     );
