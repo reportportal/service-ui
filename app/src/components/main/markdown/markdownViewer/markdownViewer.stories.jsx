@@ -73,33 +73,33 @@ storiesOf('Components/Main/markdown/markdownViewer', module)
     <MarkdownViewer />
   ))
   .add('with bold markdown text', () => (
-    <MarkdownViewer text={boldMock} />
+    <MarkdownViewer value={boldMock} />
   ))
   .add('with italic markdown text', () => (
-    <MarkdownViewer text={italicMock} />
+    <MarkdownViewer value={italicMock} />
   ))
   .add('with strikethrough text', () => (
-    <MarkdownViewer text={strikethroughMock} />
+    <MarkdownViewer value={strikethroughMock} />
   ))
   .add('with unordered list', () => (
-    <MarkdownViewer text={unorderedListMock} />
+    <MarkdownViewer value={unorderedListMock} />
   ))
   .add('with ordered list', () => (
-    <MarkdownViewer text={orderedListMock} />
+    <MarkdownViewer value={orderedListMock} />
   ))
   .add('with link', () => (
-    <MarkdownViewer text={linkMock} />
+    <MarkdownViewer value={linkMock} />
   ))
   .add('with quote block', () => (
-    <MarkdownViewer text={quoteMock} />
+    <MarkdownViewer value={quoteMock} />
   ))
   .add('with code block', () => (
-    <MarkdownViewer text={codeMock} />
+    <MarkdownViewer value={codeMock} />
   ))
   .add('with image', () => (
-    <MarkdownViewer text={imageMock} onResize={action('block resized!')} />
+    <MarkdownViewer value={imageMock} onResize={action('block resized!')} />
   ))
   .add('different types of markdown', () => (
-    <MarkdownViewer text={combinationMock} onResize={action('block resized!')} />
+    <MarkdownViewer value={combinationMock} onResize={action('block resized!')} />
   ))
 ;
