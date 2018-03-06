@@ -30,21 +30,18 @@ export const UsersList = ({ options, selectValue }) => {
   return (
     <ScrollWrapper autoHeight autoHeightMax={200}>
       {options.map(option => (
-        <div
+        <UserItem
           key={option.userLogin}
           onClick={() => {
             if (!option.disabled) {
               selectValue(option);
             }
           }}
-        >
-          <UserItem
-            userName={option.userName}
-            userLogin={option.userLogin}
-            isAssigned={option.isAssigned}
-            userAvatar={option.userAvatar}
-          />
-        </div>
+          userName={option.userName}
+          userLogin={option.userLogin}
+          isAssigned={option.isAssigned}
+          userAvatar={option.userAvatar}
+        />
       ))}
     </ScrollWrapper>
   );

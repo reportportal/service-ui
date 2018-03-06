@@ -25,8 +25,8 @@ import styles from './userItem.scss';
 
 const cx = classNames.bind(styles);
 
-export const UserItem = ({ userName, userLogin, userAvatar, isAssigned }) => (
-  <div className={cx({ 'user-search-result-wrap': true, 'disabled-item': isAssigned })}>
+export const UserItem = ({ userName, userLogin, userAvatar, isAssigned, onClick }) => (
+  <div className={cx({ 'user-search-result-wrap': true, 'disabled-item': isAssigned })} onClick={onClick}>
     <div className={cx('user-avatar')} style={{ backgroundImage: `url(${userAvatar})` }} />
     <div className={cx('user-search-info')}>
       <p className={cx('user-search-name')}>{userName}</p>
@@ -41,6 +41,7 @@ UserItem.propTypes = {
   userLogin: PropTypes.string,
   userAvatar: PropTypes.string,
   isAssigned: PropTypes.bool,
+  onClick: PropTypes.func,
 };
 
 UserItem.defaultProps = {
@@ -48,4 +49,5 @@ UserItem.defaultProps = {
   userLogin: '',
   userAvatar: '',
   isAssigned: false,
+  onClick: () => {},
 };
