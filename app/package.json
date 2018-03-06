@@ -21,6 +21,7 @@
     "fetch-jsonp": "^1.1.3",
     "html-react-parser": "^0.4.1",
     "intl": "^1.2.5",
+    "moment": "^2.21.0",
     "prop-types": "^15.6.0",
     "qhistory": "^1.0.0",
     "qs": "^6.5.1",

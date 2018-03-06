@@ -1,0 +1,1 @@
+export { TagsBlock } from './tagsBlock';

@@ -49,7 +49,7 @@ export const InputCheckbox = ({ children, value, disabled, onChange, onFocus, on
           <polygon fill={disabled ? '#999' : '#fff'} fillRule="evenodd" points="0 3.111 3 6.222 8 1.037 7 0 3 4.148 1 2.074" />
         </svg>
       </div>
-      <span className={cx({ 'children-container': true, disabled })}>{children}</span>
+      { children ? <span className={cx({ 'children-container': true, disabled })}>{children}</span> : null }
     </label>
   );
 };

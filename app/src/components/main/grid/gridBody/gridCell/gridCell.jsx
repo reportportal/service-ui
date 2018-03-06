@@ -1,8 +1,12 @@
-import {Component} from 'react';
+// import {Component} from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import {columnPropTypes} from '../../propTypes';
-import { ALIGN_CENTER, ALIGN_LEFT, ALIGN_RIGHT } from '../../constants';
+import { columnPropTypes } from '../../propTypes';
+import {
+  // ALIGN_CENTER,
+  ALIGN_LEFT,
+  // ALIGN_RIGHT
+} from '../../constants';
 import styles from './gridCell.scss';
 
 const cx = classNames.bind(styles);
@@ -48,28 +52,38 @@ TextCell.defaultProps = {
 //     }
 //   }
 //
-//   updateWidth = (media) => this.setState({width: media.matches ? this.props.mobileWidth : this.props.width});
+//   updateWidth = (media) =>
+//     this.setState({width: media.matches ? this.props.mobileWidth : this.props.width});
 //
 //   render() {
 //     const { selectors, component, item, align } = this.props;
 //     const formatter = this.props.formatter || (v => v);
 //     const CellComponent = component;
-//     // return (
-//     //   <div className={cx('grid-cell', { [`align-${align}`]: align })} style={{ width: this.state.width }}>
-//     //     <CellComponent value={item} selectors={selectors} />
-//     //   </div>
-//     // );
 //     return (
-//       <CellComponent className={cx('grid-cell', { [`align-${align}`]: align })} value={formatter(item)} selectors={selectors} width={this.state.width} />
+//       <div
+//         className={cx('grid-cell', { [`align-${align}`]: align })}
+//         style={{ width: this.state.width }}
+//       >
+//         <CellComponent value={item} selectors={selectors} />
+//      </div>
+//     );
+//     return (
+//       <CellComponent
+//        className={cx('grid-cell', { [`align-${align}`]: align })}
+//        value={formatter(item)}
+//        selectors={selectors}
+//        width={this.state.width}
+//       />
 //     );
 //   }
 // }
 
-export const GridCell = ({ component, value, align, formatter, title }) => {
+export const GridCell = ({ component, refFunction, value, align, formatter, title }) => {
   const CellComponent = component;
   return (
     <CellComponent
       className={cx('grid-cell', { [`align-${align}`]: align })}
+      refFunction={refFunction}
       title={title}
       value={formatter(value)}
     />

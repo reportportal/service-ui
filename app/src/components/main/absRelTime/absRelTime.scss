@@ -1,0 +1,43 @@
+.abs-rel-time {
+  display: inline-block;
+  cursor: pointer;
+  font-family: $FONT-REGULAR;
+  font-size: 13px;
+  color: $COLOR--charcoal-grey;
+  line-height: 1.5;
+  vertical-align: top;
+
+  &:hover {
+    .relative-time {
+      display: inline;
+    }
+    .absolute-time {
+      display: none;
+    }
+  }
+
+  &.relative {
+    .relative-time {
+      display: inline;
+    }
+    .absolute-time {
+      display: none;
+    }
+
+    &:hover {
+      .relative-time {
+        display: none;
+      }
+      .absolute-time {
+        display: inline;
+      }
+    }
+  }
+}
+.relative-time {
+  display: none;
+}
+.absolute-time {
+  display: inline;
+}
+

@@ -1,0 +1,63 @@
+.hamburger-col {
+  width: 2%;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    display: none;
+  }
+}
+.name-col {
+  width: 30%;
+  padding-top: 20px;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    width: 100%;
+  }
+}
+.start-time-col {
+  width: 10%;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    display: none;
+  }
+}
+.total-col,
+.passed-col,
+.failed-col,
+.skipped-col {
+  width: 6.5%;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    width: 25%;
+    height: 60px;
+    border: 1px solid $COLOR--gray-91;
+    z-index: 2;
+  }
+}
+
+.pb-col,
+.ab-col,
+.si-col {
+  width: 8%;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    width: 25%;
+    height: 60px;
+    border: 1px solid $COLOR--gray-91;
+  }
+}
+.ti-col {
+  width: 6%;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    width: 25%;
+    height: 60px;
+    border: 1px solid $COLOR--gray-91;
+  }
+}
+.select-col {
+  width: 2%;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    display: none;
+  }
+}

@@ -11,9 +11,9 @@ export const GridHeader = ({ columns }) => (
       columns.map((column, i) =>
         (
           <HeaderCell
+            // eslint-disable-next-line react/no-array-index-key
             key={i}
             title={column.title}
-            width={column.width}
             align={column.align}
           />
         ))
@@ -23,7 +23,6 @@ export const GridHeader = ({ columns }) => (
 GridHeader.propTypes = {
   columns: PropTypes.arrayOf(PropTypes.shape({
     title: PropTypes.node,
-    width: PropTypes.string,
     align: PropTypes.oneOf([ALIGN_LEFT, ALIGN_CENTER, ALIGN_RIGHT]),
   })),
 };
@@ -31,18 +30,16 @@ GridHeader.defaultProps = {
   columns: [],
 };
 
-const HeaderCell = ({ title, width, align }) => (
-  <div className={cx('grid-header-cell', { [`align-${align}`]: align })} style={{ width }}>
+const HeaderCell = ({ title, align }) => (
+  <div className={cx('grid-header-cell', { [`align-${align}`]: align })}>
     {title}
   </div>
 );
 HeaderCell.propTypes = {
   title: PropTypes.node,
-  width: PropTypes.string,
   align: PropTypes.oneOf([ALIGN_LEFT, ALIGN_CENTER, ALIGN_RIGHT]),
 };
 HeaderCell.defaultProps = {
   title: '',
-  width: 'auto',
   align: ALIGN_LEFT,
 };

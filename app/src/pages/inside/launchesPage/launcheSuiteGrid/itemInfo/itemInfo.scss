@@ -1,0 +1,66 @@
+.item-info {
+  overflow: hidden;
+}
+.main-info {
+  display: inline-block;
+  min-height: 20px;
+  box-sizing: border-box;
+  margin-bottom: 10px;
+}
+.name-link {
+  font-family: $FONT-BOLD;
+  font-size: 14px;
+  color: $COLOR--windows-blue;
+  text-decoration: none;
+  word-break: break-all;
+}
+.name, .number {
+  margin-right: 5px;
+}
+.analysis-badge {
+  display: inline-block;
+  width: 55px;
+  height: 15px;
+  border-radius: 100px;
+  background-color: $COLOR--orange-red;
+  font-family: $FONT-BOLD;
+  font-size: 10px;
+  color: $COLOR--white-two;
+  line-height: 15px;
+  text-align: center;
+  vertical-align: middle;
+  animation: auto-analyze-blink 1s linear reverse infinite;
+}
+.edit-icon {
+  display: none;
+  width: 20px;
+  height: 20px;
+  margin-left: 10px;
+  vertical-align: top;
+  fill: $COLOR--gray-60;
+  cursor: pointer;
+
+  &:hover {
+    fill: $COLOR--black-2;
+  }
+}
+
+.additional-info {
+  display: inline-block;
+  width: 100%;
+  box-sizing: border-box;
+}
+.item-description {
+  width: 100%;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+@keyframes auto-analyze-blink {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
