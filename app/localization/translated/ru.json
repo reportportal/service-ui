@@ -18,6 +18,7 @@
   "ChangePasswordForm.passwordConstraints": "4-25 символов",
   "Common.validation.email": "Неправильный адрес электронной почтыю Введите правильный адрес электронной почты",
   "ConfigExamplesBlock.header": "Примеры конфигураций",
+  "FilterPage.msgFavoriteFilters": "Фильтры - это поисковые запросы, которые были сохранены для повторного использования.",
   "FilterTableItem.display": "Отобразить на запусках:",
   "FilterTableItem.header.delete": "Удалить",
   "FilterTableItem.header.displayOnLaunches": "Отобразить на запусках",
