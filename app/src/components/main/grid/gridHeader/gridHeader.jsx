@@ -16,27 +16,24 @@ export const GridHeader = ({
   onChangeSorting,
   onFilterClick,
   onToggleSelectAll,
+  hideHeaderForMobile,
 }) => (
-  <div className={cx('grid-header')}>
-    {
-      columns.map((column, i) =>
-        (
-          <HeaderCell
-            key={column.id || i}
-            title={column.title}
-            align={column.align}
-            sortable={column.sortable}
-            id={column.id}
-            withFilter={column.withFilter}
-            sortingDirection={sortingDirection}
-            sortingActive={sortingColumn === column.id}
-            onChangeSorting={onChangeSorting}
-            onFilterClick={onFilterClick}
-          />
-        ))
-    }
+  <div className={cx('grid-header', { 'mobile-hide': hideHeaderForMobile })}>
+    {columns.map((column, i) => (
+      <HeaderCell
+        key={column.id || i}
+        title={column.title}
+        align={column.align}
+        sortable={column.sortable}
+        id={column.id}
+        withFilter={column.withFilter}
+        sortingDirection={sortingDirection}
+        sortingActive={sortingColumn === column.id}
+        onChangeSorting={onChangeSorting}
+        onFilterClick={onFilterClick}
+      />
+    ))}
     {selectable && <CheckboxHeaderCell value={allSelected} onChange={onToggleSelectAll} />}
-
   </div>
 );
 GridHeader.propTypes = {
@@ -45,6 +42,7 @@ GridHeader.propTypes = {
   sortingDirection: PropTypes.string,
   selectable: PropTypes.bool,
   allSelected: PropTypes.bool,
+  hideHeaderForMobile: PropTypes.bool,
   onChangeSorting: PropTypes.func,
   onFilterClick: PropTypes.func,
   onToggleSelectAll: PropTypes.func,
@@ -55,10 +53,8 @@ GridHeader.defaultProps = {
   sortingDirection: null,
   selectable: false,
   allSelected: false,
-  onChangeSorting: () => {
-  },
-  onFilterClick: () => {
-  },
-  onToggleSelectAll: () => {
-  },
+  hideHeaderForMobile: false,
+  onChangeSorting: () => {},
+  onFilterClick: () => {},
+  onToggleSelectAll: () => {},
 };

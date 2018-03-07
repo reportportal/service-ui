@@ -1,0 +1,13 @@
+.mobile-title {
+  margin-right: 6px;
+  text-transform: uppercase;
+  color: $COLOR--gray-47;
+  font-family: $FONT-SEMIBOLD;
+  font-size: 12px;
+}
+.mobile-show {
+  display: none;
+  @media (max-width: $SCREEN_XS_MAX) {
+    display: inline-block;
+  }
+}

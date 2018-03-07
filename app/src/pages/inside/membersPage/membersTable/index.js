@@ -1,1 +1,0 @@
-export { MembersTable } from './membersTable';

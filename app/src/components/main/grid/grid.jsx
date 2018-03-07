@@ -22,6 +22,7 @@ export const Grid = ({
   onToggleSelectAll,
   onToggleSelection,
   className,
+  changeOnlyMobileLayout,
 }) => (
   <div className={cx('grid', className)}>
     <GridHeader
@@ -33,6 +34,7 @@ export const Grid = ({
       selectable={selectable}
       allSelected={!!selectedItems.length && isAllItemsSelected(data, selectedItems)}
       onToggleSelectAll={onToggleSelectAll}
+      hideHeaderForMobile={changeOnlyMobileLayout}
     />
     <GridBody
       columns={columns}
@@ -40,6 +42,7 @@ export const Grid = ({
       selectable={selectable}
       selectedItems={selectedItems}
       onToggleSelection={onToggleSelection}
+      changeOnlyMobileLayout={changeOnlyMobileLayout}
     />
   </div>
 );
@@ -55,6 +58,7 @@ Grid.propTypes = {
   onToggleSelection: PropTypes.func,
   onToggleSelectAll: PropTypes.func,
   className: PropTypes.string,
+  changeOnlyMobileLayout: PropTypes.bool,
 };
 Grid.defaultProps = {
   columns: [],
@@ -68,4 +72,5 @@ Grid.defaultProps = {
   onToggleSelectAll: () => {},
   onToggleSelection: () => {},
   className: '',
+  changeOnlyMobileLayout: false,
 };
