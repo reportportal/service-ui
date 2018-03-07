@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { withFilter } from 'controllers/filter';
-import { userIdSelector } from 'controllers/user';
+import { userIdSelector, activeProjectSelector } from 'controllers/user';
 import { withPagination } from 'components/containers/pagination';
 import { PageLayout } from 'layouts/pageLayout';
 import { FilterTable } from './filterTable';
@@ -16,13 +16,12 @@ const messages = defineMessages({
   },
 });
 
-@withFilter
-@withPagination({
-  url: activeProject => `/api/v1/${activeProject}/filter`,
-})
 @connect(state => ({
   userId: userIdSelector(state),
+  url: `/api/v1/${activeProjectSelector(state)}/filter`,
 }))
+@withFilter
+@withPagination()
 @injectIntl
 export class FiltersPage extends PureComponent {
   static propTypes = {

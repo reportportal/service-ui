@@ -1,34 +1,29 @@
 import { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { activeProjectSelector } from 'controllers/user';
 import { fetch, connectRouter } from 'common/utils';
 
 const PAGE_KEY = 'page.page';
 const SIZE_KEY = 'page.size';
 const FILTER_KEY = 'filter.cnt.name';
 
-export const withPagination = ({ url }) => (WrappedComponent) => {
+export const withPagination = ({ url: staticURL } = {}) => (WrappedComponent) => {
   @connectRouter(query => ({
     page: query[PAGE_KEY] && Number(query[PAGE_KEY]),
     size: query[SIZE_KEY] && Number(query[SIZE_KEY]),
   }), {
     updatePagination: (page, size) => ({ [PAGE_KEY]: page, [SIZE_KEY]: size }),
   })
-  @connect(state => ({
-    activeProject: activeProjectSelector(state),
-  }))
   class PaginationWrapper extends PureComponent {
     static propTypes = {
-      activeProject: PropTypes.string,
       filter: PropTypes.string,
       page: PropTypes.number,
       size: PropTypes.number,
+      url: PropTypes.string,
       updatePagination: PropTypes.func,
     };
 
     static defaultProps = {
-      activeProject: '',
+      url: staticURL,
       filter: '',
       page: 1,
       size: 20,
@@ -43,23 +38,21 @@ export const withPagination = ({ url }) => (WrappedComponent) => {
     };
 
     componentDidMount() {
-      const { page, size } = this.props;
-      this.fetchData(
-        { page, size },
-        this.props.activeProject,
-      );
+      const { page, size, url } = this.props;
+      this.fetchData(url, { page, size });
     }
 
-    componentWillReceiveProps({ page, size, activeProject, filter }) {
-      if (page !== this.props.page
+    componentWillReceiveProps({ url, page, size, filter }) {
+      if (url !== this.props.url
+        || page !== this.props.page
         || size !== this.props.size
         || filter !== this.props.filter
       ) {
-        this.fetchData({ page, size, filter }, activeProject);
+        this.fetchData(url, { page, size, filter });
       }
     }
 
-    fetchData = (queryParams, activeProject) => fetch(url(activeProject), {
+    fetchData = (url, queryParams) => fetch(url || this.props.url, {
       params: {
         [PAGE_KEY]: queryParams.page,
         [SIZE_KEY]: queryParams.size,
@@ -85,7 +78,6 @@ export const withPagination = ({ url }) => (WrappedComponent) => {
 
     render() {
       const {
-        activeProject,
         page,
         size,
         ...restProps

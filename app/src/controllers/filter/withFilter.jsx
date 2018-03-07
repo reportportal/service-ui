@@ -39,8 +39,17 @@ export const withFilter = WrappedComponent => connectRouter(query => ({
     }, 300);
 
     render() {
+      const {
+        filter,
+        updateFilter,
+        ...rest
+      } = this.props;
       return (
-        <WrappedComponent filter={this.props.filter} onFilterChange={this.handleFilterChange} />
+        <WrappedComponent
+          filter={filter}
+          onFilterChange={this.handleFilterChange}
+          {...rest}
+        />
       );
     }
   });
