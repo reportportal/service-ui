@@ -31,6 +31,7 @@ define(function (require) {
     var DropDownComponent = require('components/DropDownComponent');
     var SingletonAppModel = require('model/SingletonAppModel');
     var SingletonRegistryInfoModel = require('model/SingletonRegistryInfoModel');
+    var UserModel = require('model/UserModel');
 
     var config = App.getInstance();
     var appModel = new SingletonAppModel();
@@ -52,6 +53,7 @@ define(function (require) {
 
         initialize: function () {
             var self = this;
+            this.userModel = new UserModel();
             this.registryInfoModel = new SingletonRegistryInfoModel();
             this.model = new ProjectSettingsModel(appModel.get('configuration'));
             this.dropdownComponents = [];
@@ -71,7 +73,7 @@ define(function (require) {
                 config.trackingDispatcher.trackEventNumber(384);
             });
             this.render();
-            $('[value="' + (this.model.get('analyzer_mode') || 'LAUNCH_NAME') + '"]', this.$el).attr('checked', 'checked');
+            this.setupAnalyzerSetting();
         },
 
         render: function () {
@@ -82,6 +84,14 @@ define(function (require) {
             this.$el.html(Util.templates(this.tpl, params));
             this.setupDropdowns();
             return this;
+        },
+        setupAnalyzerSetting: function () {
+            var userRole = this.userModel.get('projects')[appModel.get('projectId')].projectRole;
+            $('[value="' + (this.model.get('analyzer_mode') || 'LAUNCH_NAME') + '"]', this.$el).attr('checked', 'checked');
+            if (userRole !== 'PROJECT_MANAGER' && this.userModel.get('userRole') !== 'ADMINISTRATOR') {
+                $('[data-js-is-auto-analize]', this.$el).attr('disabled', 'disabled').parent().addClass('disabled');
+                $('[data-js-aa-base-block] input', this.$el).attr('disabled', 'disabled');
+            }
         },
         setupDropdowns: function () {
             var isEpamInstance = this.registryInfoModel.get('isEpamInstance');

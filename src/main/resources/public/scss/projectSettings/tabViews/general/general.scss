@@ -77,6 +77,19 @@
 }
 
 .general-project-settings {
+  .rp-switcher-big {
+    @media (max-width: $SCREEN_SM_MAX) {
+      .turn-on {
+        background-color: #bed379;
+      }
+      .turn-off {
+        background-color: $COLOR--gray-80;
+      }
+      input {
+        pointer-events: none;
+      }
+    }
+  }
   .aa-strategy-label {
     width: 25%;
     padding: 0 15px;
@@ -118,7 +131,11 @@
         }
         @media (max-width: $SCREEN_XS_MAX) {
           span:after {
-            background-color: $COLOR--gray-47;
+            background-color: $COLOR--gray-60;
+          }
+          span:before {
+            background-color: $COLOR--reseted;
+            border-color: $COLOR--gray-91;
           }
         }
       }
