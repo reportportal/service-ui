@@ -2,9 +2,16 @@
   display: table-row;
   background-color: $COLOR--white;
   border-bottom: solid 1px $COLOR--gray-91;
-
   @media (max-width: $SCREEN_SM_MAX) {
     display: none;
+  }
+  &.mobile-hide {
+    @media (max-width: $SCREEN_SM_MAX) {
+      display: table-row;
+    }
+    @media (max-width: $SCREEN_XS_MAX) {
+      display: none;
+    }
   }
 }
 

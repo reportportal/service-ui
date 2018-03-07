@@ -1,0 +1,44 @@
+.mobile-title {
+  margin-right: 6px;
+  font-size: 12px;
+  text-transform: uppercase;
+  color: $COLOR--gray-47;
+  font-family: $FONT-SEMIBOLD;
+}
+.mobile-show {
+  display: none;
+  @media (max-width: $SCREEN_XS_MAX) {
+    display: inline-block;
+  }
+}
+.roles-list {
+  height: 30px;
+  max-width: 250px;
+}
+.mobile-hide {
+  @media (max-width: $SCREEN_XS_MAX) {
+    display: none;
+  }
+}
+.current-role {
+  font-size: 13px;
+  font-family: $FONT-REGULAR;
+  color: $COLOR--charcoal-grey;
+}
+.hide {
+  display: none;
+}
+.all-permissions {
+  max-width: 325px;
+  font-size: 13px;
+  color: $COLOR--charcoal-grey;
+  line-height: 18px;
+  &.hide {
+    display: none;
+  }
+  &.mobile-hide {
+    @media (max-width: $SCREEN_XS_MAX) {
+      display: none;
+    }
+  }
+}

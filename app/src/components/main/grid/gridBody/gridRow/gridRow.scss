@@ -33,10 +33,18 @@
 .grid-row {
   position: relative;
   display: table-row;
-
   @media (max-width: $SCREEN_SM_MAX) {
     display: flex;
     flex-wrap: wrap;
+  }
+  &.change-mobile {
+    @media (max-width: $SCREEN_SM_MAX) {
+      display: table-row;
+    }
+    @media (max-width: $SCREEN_XS_MAX) {
+      display: flex;
+      flex-wrap: wrap;
+    }
   }
 }
 .accordion-wrapper {

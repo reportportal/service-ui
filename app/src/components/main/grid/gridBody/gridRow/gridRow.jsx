@@ -15,6 +15,7 @@ export class GridRow extends Component {
     selectable: PropTypes.bool,
     selectedItems: PropTypes.arrayOf(PropTypes.object),
     onToggleSelection: PropTypes.func,
+    changeOnlyMobileLayout: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -23,6 +24,7 @@ export class GridRow extends Component {
     selectable: false,
     selectedItems: [],
     onToggleSelection: () => {},
+    changeOnlyMobileLayout: false,
   };
 
   state = {
@@ -67,7 +69,7 @@ export class GridRow extends Component {
   isItemSelected = () => this.props.selectedItems.some((item) => item.id === this.props.value.id);
 
   render() {
-    const { columns, value, selectable } = this.props;
+    const { columns, value, selectable, changeOnlyMobileLayout } = this.props;
     return (
       <div className={cx('grid-row-wrapper', { selected: this.isItemSelected() })}>
         {this.state.withAccordion && (
@@ -78,7 +80,7 @@ export class GridRow extends Component {
             />
           </div>
         )}
-        <div className={cx('grid-row')}>
+        <div className={cx('grid-row', { 'change-mobile': changeOnlyMobileLayout })}>
           {columns.map((column, i) => {
             if (column.maxHeight) {
               this.overflowCellMaxHeight = column.maxHeight;
