@@ -86,11 +86,14 @@ define(function (require) {
             return this;
         },
         setupAnalyzerSetting: function () {
-            var userRole = this.userModel.get('projects')[appModel.get('projectId')].projectRole;
+            var userRole;
             $('[value="' + (this.model.get('analyzer_mode') || 'LAUNCH_NAME') + '"]', this.$el).attr('checked', 'checked');
-            if (userRole !== 'PROJECT_MANAGER' && this.userModel.get('userRole') !== 'ADMINISTRATOR') {
-                $('[data-js-is-auto-analize]', this.$el).attr('disabled', 'disabled').parent().addClass('disabled');
-                $('[data-js-aa-base-block] input', this.$el).attr('disabled', 'disabled');
+            if (this.userModel.get('userRole') !== 'ADMINISTRATOR') {
+                userRole = this.userModel.get('projects')[appModel.get('projectId')].projectRole;
+                if (userRole !== 'PROJECT_MANAGER') {
+                    $('[data-js-is-auto-analize]', this.$el).attr('disabled', 'disabled').parent().addClass('disabled');
+                    $('[data-js-aa-base-block] input', this.$el).attr('disabled', 'disabled');
+                }
             }
         },
         setupDropdowns: function () {
