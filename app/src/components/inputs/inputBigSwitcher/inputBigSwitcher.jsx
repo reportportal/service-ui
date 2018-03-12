@@ -44,11 +44,16 @@ export const InputBigSwitcher = ({ children, disabled, value, onChange, onFocus,
       <div className={classes}>
         <div className={cx('on')}>
           <FormattedMessage
-            id={'Input.switcher'}
+            id={'Common.on'}
             defaultMessage={'ON'}
           />
         </div>
-        <div className={cx('off')}>OFF</div>
+        <div className={cx('off')}>
+          <FormattedMessage
+            id={'Common.off'}
+            defaultMessage={'OFF'}
+          />
+        </div>
         <input className={cx('input')} type="checkbox" disabled={disabled} onChange={handlerOnChange} />
         <div className={sliderClasses} />
       </div>
