@@ -29,7 +29,7 @@ export class SandboxPage extends Component {
           </BlockWithTooltip>
         </div>
         <div style={{ width: 300, height: 50, marginLeft: 50, marginTop: 50 }}>
-          <BlockWithHoverableTooltip>
+          <BlockWithHoverableTooltip testProp="hello!">
             Hover me or my tooltip!
           </BlockWithHoverableTooltip>
         </div>
