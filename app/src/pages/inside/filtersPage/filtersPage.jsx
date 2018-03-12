@@ -21,6 +21,7 @@ const messages = defineMessages({
 @connect(state => ({
   userId: userIdSelector(state),
   url: `/api/v1/${activeProjectSelector(state)}/filter`,
+  activeProject: activeProjectSelector(state),
 }), {
   showModalAction,
 })
