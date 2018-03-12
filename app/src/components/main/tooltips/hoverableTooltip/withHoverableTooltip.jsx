@@ -22,12 +22,12 @@ export const withHoverableTooltip = ({ TooltipComponent, data }) => WrappedCompo
     render() {
       return (
         <div className={cx('hover-rect')} ref={(hoverRect) => { this.hoverRect = hoverRect; }} >
-          <WrappedComponent>
+          <WrappedComponent {...this.props}>
             { this.props.children }
           </WrappedComponent>
           <div ref={(tooltip) => { this.tooltip = tooltip; }} className={cx('hoverable-tooltip')}>
             <div className={cx('hoverable-tooltip-content')}>
-              <TooltipComponent />
+              <TooltipComponent {...this.props} />
             </div>
           </div>
         </div>
