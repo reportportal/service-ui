@@ -52,11 +52,11 @@ export const withPagination = ({ url: staticURL } = {}) => (WrappedComponent) =>
       }
     }
 
-    fetchData = (url, queryParams) => fetch(url || this.props.url, {
+    fetchData = (url, queryParams = {}) => fetch(url || this.props.url, {
       params: {
-        [PAGE_KEY]: queryParams.page,
-        [SIZE_KEY]: queryParams.size,
-        [FILTER_KEY]: queryParams.filter,
+        [PAGE_KEY]: queryParams.page || this.props.page,
+        [SIZE_KEY]: queryParams.size || this.props.size,
+        [FILTER_KEY]: queryParams.filter || this.props.filter,
       },
     }).then((result) => {
       const { totalElements, totalPages } = result.page;
@@ -66,6 +66,8 @@ export const withPagination = ({ url: staticURL } = {}) => (WrappedComponent) =>
         data: result.content,
       });
     });
+
+    fetchDataWithCurrentProps = () => this.fetchData();
 
     changePageHandler = page => this.changePaginationOptions({ page });
 
@@ -91,7 +93,7 @@ export const withPagination = ({ url: staticURL } = {}) => (WrappedComponent) =>
           pageSize={this.props.size}
           onChangePage={this.changePageHandler}
           onChangePageSize={this.changeSizeHandler}
-          fetchData={this.fetchData}
+          fetchData={this.fetchDataWithCurrentProps}
           {...restProps}
         />
       );

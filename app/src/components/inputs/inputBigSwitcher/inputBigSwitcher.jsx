@@ -40,7 +40,7 @@ export const InputBigSwitcher = ({ children, disabled, value, onChange, onFocus,
     onChange(e.target.checked);
   };
   return (
-    <label className={cx('input-big-switcher')} onFocus={onFocus} onBlur={onBlur} tabIndex="1">
+    <label className={cx('input-big-switcher')} tabIndex="1">
       <div className={classes}>
         <div className={cx('on')}>
           <FormattedMessage
@@ -54,7 +54,14 @@ export const InputBigSwitcher = ({ children, disabled, value, onChange, onFocus,
             defaultMessage={'OFF'}
           />
         </div>
-        <input className={cx('input')} type="checkbox" disabled={disabled} onChange={handlerOnChange} />
+        <input
+          className={cx('input')}
+          type="checkbox"
+          disabled={disabled}
+          onFocus={onFocus}
+          onChange={handlerOnChange}
+          onBlur={onBlur}
+        />
         <div className={sliderClasses} />
       </div>
       <span className={cx('children-container')}>{children}</span>
