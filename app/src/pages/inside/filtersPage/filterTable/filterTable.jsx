@@ -4,7 +4,6 @@ import classNames from 'classnames/bind';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
 import { FilterTableItem } from './filterTableItem';
 import { FilterTableHeader } from './filterTableHeader';
-import { FilterSearch } from './filterSearch';
 import styles from './filterTable.scss';
 
 const cx = classNames.bind(styles);
