@@ -1,0 +1,31 @@
+.grid-header {
+  display: table-row;
+  background-color: $COLOR--white;
+  border-bottom: solid 1px $COLOR--gray-91;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    display: none;
+  }
+}
+
+.grid-header-cell {
+  display: table-cell;
+  color: $COLOR--gray-47;
+  font-family: $FONT-BOLD;
+  font-size: 12px;
+  height: 50px;
+  padding-right: 10px;
+  padding-left: 15px;
+  text-transform: uppercase;
+  vertical-align: middle;
+
+  &.align-left {
+    text-align: left;
+  }
+  &.align-center {
+    text-align: center;
+  }
+  &.align-right {
+    text-align: right;
+  }
+}

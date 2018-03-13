@@ -1,0 +1,26 @@
+.grid-cell {
+  display: table-cell;
+  color: $COLOR--charcoal-grey;
+  font-family: $FONT-REGULAR;
+  padding-right: 10px;
+  padding-left: 15px;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    padding-left: 10px;
+  }
+
+  &.align-left {
+    text-align: left;
+  }
+  &.align-center {
+    text-align: center;
+  }
+  &.align-right {
+    text-align: right;
+  }
+}
+
+.text-cell {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}

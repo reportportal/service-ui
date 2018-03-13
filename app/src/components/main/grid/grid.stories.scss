@@ -1,0 +1,46 @@
+.name-cell {
+  width: 30%;
+  padding-top: 10px;
+  padding-bottom: 10px;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    width: 100%;
+  }
+
+  .name {
+    display: block;
+    font-family: $FONT-BOLD;
+  }
+
+  .description {
+    font-family: $FONT-LIGHT;
+  }
+}
+
+.count-cell {
+  padding-top: 10px;
+  padding-bottom: 10px;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    box-sizing: border-box;
+    display: inline-block;
+    border: 1px solid $COLOR--gray-91;
+    width: 25%;
+    padding: 5px;
+    text-align: center;
+    border-left: none;
+    border-bottom: none;
+
+    &:nth-child(5) {
+      border-right: none;
+    }
+  }
+
+  .title {
+    display: none;
+
+    @media (max-width: $SCREEN_SM_MAX) {
+      display: block;
+    }
+  }
+}
