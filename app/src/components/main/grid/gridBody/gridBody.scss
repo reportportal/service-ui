@@ -1,0 +1,9 @@
+.grid-row {
+  display: table-row;
+  border-bottom: 1px solid $COLOR--gray-91;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    display: flex;
+    flex-wrap: wrap;
+  }
+}
