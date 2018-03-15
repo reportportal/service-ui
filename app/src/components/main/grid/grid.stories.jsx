@@ -44,32 +44,36 @@ const NameCell = ({ className, value }) => (
 const CountCell = ({ className, title, value }) => (
   <div className={cx(className, 'count-cell')}>
     <div className={cx('title')}>
-      {title}
+      {title.full}
     </div>
     {value}
   </div>
 );
 
 const COLUMNS = [{
-  title: 'name',
+  title: { full: 'name' },
   component: NameCell,
 }, {
-  title: 'total',
+  title: { full: 'total' },
   align: ALIGN_CENTER,
   formatter: ({ total }) => total,
   component: CountCell,
+  sortable: true,
+  name: 'total',
 }, {
-  title: 'passed',
+  title: { full: 'passed' },
   align: ALIGN_CENTER,
   formatter: ({ passed }) => passed,
   component: CountCell,
+  sortable: true,
+  name: 'passed',
 }, {
-  title: 'failed',
+  title: { full: 'failed' },
   align: ALIGN_CENTER,
   formatter: ({ failed }) => failed,
   component: CountCell,
 }, {
-  title: 'skipped',
+  title: { full: 'skipped' },
   align: ALIGN_CENTER,
   formatter: ({ skipped }) => skipped,
   component: CountCell,
@@ -78,10 +82,6 @@ const COLUMNS = [{
 const DATA = [{
   name: 'foo 1',
   description: 'some description',
-  date: 'Yesterday',
-  options: 'options 1',
-  owner: 'owner 1',
-  shared: 'Yes',
   total: 100,
   passed: 70,
   failed: 25,
@@ -89,10 +89,6 @@ const DATA = [{
 }, {
   name: 'foo 2',
   description: 'another description',
-  date: 'Today',
-  options: 'options 2',
-  owner: 'owner 2',
-  shared: 'No',
   total: 10,
   passed: 7,
   failed: 2,
@@ -112,5 +108,8 @@ storiesOf('Components/Main/Grid', module)
     <Grid
       columns={COLUMNS}
       data={DATA}
+      sortingColumn="total"
+      sortingDirection="asc"
+      onChangeSorting={action('changeSorting')}
     />
   ));
