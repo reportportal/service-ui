@@ -12,6 +12,12 @@
   background-size: 100%;
   background-repeat: no-repeat;
   vertical-align: middle;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    width: 18px;
+    height: 18px;
+    vertical-align: top;
+  }
 }
 .tag {
   display: inline-block;
@@ -23,5 +29,9 @@
 
   &:hover {
     color: $COLOR--charcoal-grey;
+  }
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    font-size: 14px;
   }
 }

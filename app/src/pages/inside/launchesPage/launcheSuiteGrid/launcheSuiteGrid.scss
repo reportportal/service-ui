@@ -25,35 +25,32 @@
 .failed-col,
 .skipped-col {
   width: 6.5%;
-
-  @media (max-width: $SCREEN_SM_MAX) {
-    width: 25%;
-    height: 60px;
-    border: 1px solid $COLOR--gray-91;
-    z-index: 2;
-  }
 }
-
 .pb-col,
 .ab-col,
 .si-col {
   width: 8%;
-
-  @media (max-width: $SCREEN_SM_MAX) {
-    width: 25%;
-    height: 60px;
-    border: 1px solid $COLOR--gray-91;
-  }
 }
 .ti-col {
   width: 6%;
-
-  @media (max-width: $SCREEN_SM_MAX) {
+}
+@media (max-width: $SCREEN_SM_MAX) {
+  .total-col,
+  .passed-col,
+  .failed-col,
+  .skipped-col,
+  .pb-col,
+  .ab-col,
+  .si-col,
+  .ti-col {
+    display: flex;
     width: 25%;
     height: 60px;
     border: 1px solid $COLOR--gray-91;
+    padding: 0;
   }
 }
+
 .select-col {
   width: 2%;
 

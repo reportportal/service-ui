@@ -78,7 +78,9 @@ TextCell.defaultProps = {
 //   }
 // }
 
-export const GridCell = ({ component, refFunction, value, align, formatter, title }) => {
+export const GridCell = ({
+  component, refFunction, value, align, formatter, title, customProps,
+}) => {
   const CellComponent = component;
   return (
     <CellComponent
@@ -86,6 +88,7 @@ export const GridCell = ({ component, refFunction, value, align, formatter, titl
       refFunction={refFunction}
       title={title}
       value={formatter(value)}
+      customProps={customProps}
     />
   );
   // return (

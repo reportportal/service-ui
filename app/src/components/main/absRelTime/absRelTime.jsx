@@ -1,9 +1,14 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { connect } from 'react-redux';
-import { userInfoSelector } from 'controllers/user';
-import { dateFormat, fromNowFormat, getStorageItem, setStorageItem } from 'common/utils';
+// import { connect } from 'react-redux';
+// import { userInfoSelector } from 'controllers/user';
+import {
+  dateFormat,
+  fromNowFormat,
+  getStorageItem,
+  setStorageItem,
+} from 'common/utils';
 import styles from './absRelTime.scss';
 
 const cx = classNames.bind(styles);

@@ -1,4 +1,4 @@
-.defect-statistics {
+.to-investigate-statistics {
   line-height: 20px;
 
   @media (max-width: $SCREEN_SM_MAX) {
@@ -15,6 +15,7 @@
 
   @media (max-width: $SCREEN_SM_MAX) {
     display: inline-block;
+    margin-bottom: 2px;
   }
 }
 .circle {
@@ -25,22 +26,18 @@
   width: 12px;
   height: 12px;
   border-radius: 100%;
-
-  &.type-pb {
-    background-color: $COLOR--product-bug;
-  }
-  &.type-ab {
-    background-color: $COLOR--automation-bug;
-  }
-  &.type-si {
-    background-color: $COLOR--system-issue;
-  }
+  background-color: $COLOR--to-investigate;
 }
 .value {
   display: inline-block;
+  height: 20px;
+  padding: 0 10px;
+  border-radius: 100px;
+  box-sizing: border-box;
+  background-color: $COLOR--to-investigate;
   font-family: $FONT-REGULAR;
-  color: $COLOR--windows-blue;
   font-size: 15px;
   line-height: 20px;
+  color: $COLOR--white-two;
   text-decoration: none;
 }

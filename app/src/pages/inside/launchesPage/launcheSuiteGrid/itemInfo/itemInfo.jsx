@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
+import { fromNowFormat } from 'common/utils';
 import { MarkdownViewer } from 'components/main/markdown';
 import { TagsBlock } from './tagsBlock';
 import { OwnerBlock } from './ownerBlock';
@@ -18,9 +19,7 @@ export const ItemInfo = ({ value, refFunction, analyzing }) => (
         <span className={cx('number')}>#{value.number}</span>
       </a>
       {
-        analyzing
-          ? <div className={cx('analysis-badge')}>Analysis</div>
-          : null
+        analyzing && <div className={cx('analysis-badge')}>Analysis</div>
       }
       <div className={cx('edit-icon')}>
         { Parser(PencilIcon) }
@@ -38,19 +37,18 @@ export const ItemInfo = ({ value, refFunction, analyzing }) => (
           approxTime: value.approximateDuration,
         }}
       />
+      <div className={cx('mobile-start-time')}>
+        { fromNowFormat(value.start_time) }
+      </div>
       <OwnerBlock owner={value.owner} />
       {
-        value.tags && value.tags.length
-          ? <TagsBlock tags={value.tags} />
-          : null
+        value.tags && value.tags.length && <TagsBlock tags={value.tags} />
       }
       {
-        value.description
-          ?
-            <div className={cx('item-description')}>
-              <MarkdownViewer value={value.description} />
-            </div>
-          : null
+        value.description &&
+          <div className={cx('item-description')}>
+            <MarkdownViewer value={value.description} />
+          </div>
       }
     </div>
   </div>

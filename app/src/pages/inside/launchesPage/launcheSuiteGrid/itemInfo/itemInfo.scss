@@ -8,11 +8,15 @@
   margin-bottom: 10px;
 }
 .name-link {
-  font-family: $FONT-BOLD;
+  font-family: $FONT-SEMIBOLD;
   font-size: 14px;
   color: $COLOR--windows-blue;
   text-decoration: none;
   word-break: break-all;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    font-size: 16px;
+  }
 }
 .name, .number {
   margin-right: 5px;
@@ -23,7 +27,7 @@
   height: 15px;
   border-radius: 100px;
   background-color: $COLOR--orange-red;
-  font-family: $FONT-BOLD;
+  font-family: $FONT-SEMIBOLD;
   font-size: 10px;
   color: $COLOR--white-two;
   line-height: 15px;
@@ -44,7 +48,23 @@
     fill: $COLOR--black-2;
   }
 }
+.mobile-start-time {
+  display: none;
+  margin-right: 15px;
+  font-family: $FONT-REGULAR;
+  font-size: 15px;
+  color: $COLOR--charcoal-grey;
 
+  @media (max-width: $SCREEN_SM_MAX) {
+    display: inline;
+  }
+
+  &::before {
+    content: '|';
+    margin-right: 15px;
+    vertical-align: top;
+  }
+}
 .additional-info {
   display: inline-block;
   width: 100%;

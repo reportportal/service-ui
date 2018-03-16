@@ -4,13 +4,19 @@ import styles from './executionStatistics.scss';
 
 const cx = classNames.bind(styles);
 
-export const ExecutionStatistics = ({ value, bold }) => (
-  <a href="/" className={cx({ 'execution-statistics': true, bold })}>{ value }</a>
-);
+export const ExecutionStatistics = ({ value, title, bold }) => (
+  <div className={cx('execution-statistics')}>
+    <span className={cx('title')}>{ title.full }</span>
+    <a href="/" className={cx({ value: true, bold })}>{ value }</a>
+  </div>
+  );
+
 ExecutionStatistics.propTypes = {
   value: PropTypes.string.isRequired,
+  title: PropTypes.object,
   bold: PropTypes.bool,
 };
 ExecutionStatistics.defaultProps = {
   bold: false,
+  title: {},
 };
