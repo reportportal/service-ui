@@ -1,6 +1,6 @@
 import { storiesOf } from '@storybook/react';
 import { host } from 'storybook-host';
-import { LaunchSuiteGrid } from './launcheSuiteGrid';
+import { LaunchSuiteGrid } from './launchSuiteGrid';
 
 const dataMock = [
   {
@@ -112,7 +112,7 @@ const dataMock = [
 ];
 
 
-storiesOf('Components/Launches/grid', module)
+storiesOf('Components/Launches/lunchSuiteGrid', module)
   .addDecorator(host({
     title: 'Ghost button component',
     align: 'center middle',
