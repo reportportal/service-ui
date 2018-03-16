@@ -34,7 +34,6 @@ export class InputDropdown extends Component {
     multiple: PropTypes.bool,
     selectAll: PropTypes.bool,
     disabled: PropTypes.bool,
-    active: PropTypes.bool,
     onChange: PropTypes.func,
     onFocus: PropTypes.func,
     onBlur: PropTypes.func,
@@ -46,10 +45,12 @@ export class InputDropdown extends Component {
     multiple: false,
     selectAll: false,
     disabled: false,
-    active: false,
     onChange: () => {},
     onFocus: () => {},
     onBlur: () => {},
+  };
+  state = {
+    opened: false,
   };
   componentDidMount() {
     document.addEventListener('click', this.handleClickOutside);
@@ -58,8 +59,9 @@ export class InputDropdown extends Component {
     document.removeEventListener('click', this.handleClickOutside);
   }
   onClickSelectBlock = (e) => {
+    this.setState({ opened: !this.state.opened });
     e.stopPropagation();
-    this.props.active
+    this.state.opened
       ? (() => this.props.multiple && this.props.onBlur())()
       : this.props.onFocus();
   };
@@ -78,6 +80,7 @@ export class InputDropdown extends Component {
         active={option.active}
         text={option.text}
         multiple={this.props.multiple}
+        onChange={this.props.onChange}
       />
     ));
   }
@@ -85,7 +88,7 @@ export class InputDropdown extends Component {
   render() {
     const classes = cx({
       dropdown: true,
-      opened: this.props.active,
+      opened: this.state.opened,
     });
     return (
       <div ref={(node) => { this.node = node; }} className={classes}>
