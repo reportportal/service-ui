@@ -8,7 +8,7 @@ import { Hamburger } from './hamburger';
 import { ExecutionStatistics } from './executionStatistics';
 import { DefectStatistics } from './defectStatistics';
 import { ToInvestigteStatistics } from './toInvestigteStatistics';
-import styles from './launcheSuiteGrid.scss';
+import styles from './launchSuiteGrid.scss';
 
 const cx = classNames.bind(styles);
 
