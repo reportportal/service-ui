@@ -243,9 +243,9 @@ define(function (require) {
                 this.stopListening(this.selectIssueType);
                 this.selectIssueType.destroy();
             }
-            /*$('[data-js-issue-type-loader]', self.$el).show();*/
+            $('[data-js-issue-type-loader]', self.$el).show();
             this.fieldsView && this.fieldsView.destroy();
-            /*Service.getBtsTypes(this.model.get('id')).done(function (types) {
+            Service.getBtsTypes(this.model.get('id')).done(function (types) {
                 var defaultValue = types[0];
                 var selectItem = _.find(self.model.get('fields'), {
                     id: 'issuetype'
@@ -265,18 +265,8 @@ define(function (require) {
                 self.loadDefaultBtsFields();
             }).always(function () {
                 $('[data-js-issue-type-loader]', self.$el).hide();
-            });*/
-            this.selectIssueType = new DropDownComponent({
-                data: [{
-                    name: 'BUG', value: 'BUG'
-                }],
-                defaultValue: 'BUG'
             });
-            $('[data-js-issue-type-select]', self.$el).html(self.selectIssueType.$el);
-            self.loadDefaultBtsFields();
-
-
-            /*$('[data-js-bts-fields-wrapper]', this.$el).addClass('edit-mode');*/
+            $('[data-js-bts-fields-wrapper]', this.$el).addClass('edit-mode');
         },
 
         setupAnchors: function () {
@@ -378,8 +368,7 @@ define(function (require) {
         loadDefaultBtsFields: function () {
             var self = this;
             config.trackingDispatcher.trackEventNumber(409);
-            // this.$fieldsLoader.show();
-            $('[data-js-issue-type-loader]', self.$el).show();
+            this.$fieldsLoader.show();
             this.fieldsView && this.fieldsView.destroy();
             this.fieldsView = new BtsFieldsView({
                 holder: this.$dynamicFieldsWrapper,
@@ -407,7 +396,6 @@ define(function (require) {
                     self.fieldsView.update(data);
 
                     self.$updateFieldsBtn.hide();
-                    $('[data-js-issue-type-loader]', self.$el).hide();
                     self.model.fieldsWereSelected() && self.$cancelFieldsBtn.show();
 
                     self.$fieldsWrapper.show();
