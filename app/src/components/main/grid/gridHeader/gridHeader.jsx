@@ -6,7 +6,13 @@ import styles from './gridHeader.scss';
 
 const cx = classNames.bind(styles);
 
-export const GridHeader = ({ columns, sortingColumn, sortingDirection, onChangeSorting }) => (
+export const GridHeader = ({
+  columns,
+  sortingColumn,
+  sortingDirection,
+  onChangeSorting,
+  onFilterClick,
+}) => (
   <div className={cx('grid-header')}>
     {
       columns.map((column, i) =>
@@ -17,24 +23,29 @@ export const GridHeader = ({ columns, sortingColumn, sortingDirection, onChangeS
             align={column.align}
             sortable={column.sortable}
             name={column.name}
+            withFilter={column.withFilter}
             sortingDirection={sortingDirection}
             sortingActive={sortingColumn === column.name}
             onChangeSorting={onChangeSorting}
+            onFilterClick={onFilterClick}
           />
         ))
     }
   </div>
 );
 GridHeader.propTypes = {
-  columns: columnPropTypes,
+  columns: PropTypes.arrayOf(PropTypes.shape(columnPropTypes)),
   sortingColumn: PropTypes.string,
   sortingDirection: PropTypes.string,
   onChangeSorting: PropTypes.func,
+  onFilterClick: PropTypes.func,
 };
 GridHeader.defaultProps = {
   columns: [],
   sortingColumn: '',
   sortingDirection: null,
   onChangeSorting: () => {
+  },
+  onFilterClick: () => {
   },
 };

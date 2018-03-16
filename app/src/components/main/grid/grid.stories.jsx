@@ -60,6 +60,7 @@ const COLUMNS = [{
   component: CountCell,
   sortable: true,
   name: 'total',
+  withFilter: true,
 }, {
   title: { full: 'passed' },
   align: ALIGN_CENTER,
@@ -67,6 +68,7 @@ const COLUMNS = [{
   component: CountCell,
   sortable: true,
   name: 'passed',
+  withFilter: true,
 }, {
   title: { full: 'failed' },
   align: ALIGN_CENTER,
@@ -111,5 +113,6 @@ storiesOf('Components/Main/Grid', module)
       sortingColumn="total"
       sortingDirection="asc"
       onChangeSorting={action('changeSorting')}
+      onFilterClick={action('filterClick')}
     />
   ));

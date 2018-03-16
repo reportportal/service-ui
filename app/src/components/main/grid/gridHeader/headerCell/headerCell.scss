@@ -33,11 +33,17 @@
     }
   }
 
+  .title-container {
+    position: relative;
+    display: inline-block;
+  }
+
   .arrow {
     display: none;
     position: absolute;
     width: 7px;
-    top: 35%;
+    /*top: 35%;*/
+    top: -2px;
 
     svg {
       fill: $COLOR--gray-47;
@@ -66,6 +72,30 @@
   &.sorting-active {
     .arrow {
       display: inline-block;
+    }
+  }
+
+  .filter {
+    position: absolute;
+    display: none;
+    width: 10px;
+    height: 10px;
+    left: -18px;
+
+    svg {
+      fill: rgba($COLOR--gray-47, .5);
+    }
+
+    &:hover {
+      svg {
+        fill: $COLOR--topaz;
+      }
+    }
+  }
+
+  &.with-filter:hover {
+    .filter {
+      display: block;
     }
   }
 }

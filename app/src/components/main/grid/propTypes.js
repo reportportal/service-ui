@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { ALIGN_CENTER, ALIGN_LEFT, ALIGN_RIGHT } from './constants';
 
-export const columnPropTypes = PropTypes.shape({
+export const columnPropTypes = {
   title: PropTypes.shape({
     full: PropTypes.string,
     short: PropTypes.string,
@@ -12,4 +12,4 @@ export const columnPropTypes = PropTypes.shape({
   formatter: PropTypes.func,
   sortable: PropTypes.bool,
   name: PropTypes.string,
-});
+};

@@ -13,6 +13,7 @@ export const Grid = ({
   sortingColumn,
   sortingDirection,
   onChangeSorting,
+  onFilterClick,
 }) => (
   <div className={cx('grid')}>
     <GridHeader
@@ -20,16 +21,18 @@ export const Grid = ({
       sortingColumn={sortingColumn}
       sortingDirection={sortingDirection}
       onChangeSorting={onChangeSorting}
+      onFilterClick={onFilterClick}
     />
     <GridBody columns={columns} data={data} />
   </div>
 );
 Grid.propTypes = {
-  columns: PropTypes.arrayOf(columnPropTypes),
+  columns: PropTypes.arrayOf(PropTypes.shape(columnPropTypes)),
   data: PropTypes.arrayOf(PropTypes.object),
   sortingDirection: PropTypes.string,
   sortingColumn: PropTypes.string,
   onChangeSorting: PropTypes.func,
+  onFilterClick: PropTypes.func,
 };
 Grid.defaultProps = {
   columns: [],
@@ -38,4 +41,5 @@ Grid.defaultProps = {
   sortingColumn: null,
   onChangeSorting: () => {
   },
+  onFilterClick: () => {},
 };
