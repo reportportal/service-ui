@@ -7,6 +7,7 @@ import { ItemInfo } from './itemInfo';
 import { Hamburger } from './hamburger';
 import { ExecutionStatistics } from './executionStatistics';
 import { DefectStatistics } from './defectStatistics';
+import { ToInvestigteStatistics } from './toInvestigteStatistics';
 import styles from './launcheSuiteGrid.scss';
 
 const cx = classNames.bind(styles);
@@ -40,7 +41,7 @@ StartTimeColumn.propTypes = {
 
 const TotalColumn = ({ className, ...rest }) => (
   <div className={cx('total-col', className)}>
-    <ExecutionStatistics value={rest.value.statistics.executions.total} bold />
+    <ExecutionStatistics title={rest.title} value={rest.value.statistics.executions.total} bold />
   </div>
 );
 TotalColumn.propTypes = {
@@ -49,7 +50,7 @@ TotalColumn.propTypes = {
 
 const PassedColumn = ({ className, ...rest }) => (
   <div className={cx('passed-col', className)}>
-    <ExecutionStatistics value={rest.value.statistics.executions.passed} />
+    <ExecutionStatistics title={rest.title} value={rest.value.statistics.executions.passed} />
   </div>
 );
 PassedColumn.propTypes = {
@@ -58,7 +59,7 @@ PassedColumn.propTypes = {
 
 const FailedColumn = ({ className, ...rest }) => (
   <div className={cx('failed-col', className)}>
-    <ExecutionStatistics value={rest.value.statistics.executions.failed} />
+    <ExecutionStatistics title={rest.title} value={rest.value.statistics.executions.failed} />
   </div>
 );
 FailedColumn.propTypes = {
@@ -67,7 +68,7 @@ FailedColumn.propTypes = {
 
 const SkippedColumn = ({ className, ...rest }) => (
   <div className={cx('skipped-col', className)}>
-    <ExecutionStatistics value={rest.value.statistics.executions.skipped} />
+    <ExecutionStatistics title={rest.title} value={rest.value.statistics.executions.skipped} />
   </div>
 );
 SkippedColumn.propTypes = {
@@ -76,7 +77,11 @@ SkippedColumn.propTypes = {
 
 const PbColumn = ({ className, ...rest }) => (
   <div className={cx('pb-col', className)}>
-    <DefectStatistics value={rest.value.statistics.defects.product_bug} />
+    <DefectStatistics
+      type={'pb'}
+      customProps={rest.customProps}
+      value={rest.value.statistics.defects.product_bug}
+    />
   </div>
 );
 PbColumn.propTypes = {
@@ -85,7 +90,11 @@ PbColumn.propTypes = {
 
 const AbColumn = ({ className, ...rest }) => (
   <div className={cx('ab-col', className)}>
-    <DefectStatistics value={rest.value.statistics.defects.automation_bug} />
+    <DefectStatistics
+      type={'ab'}
+      customProps={rest.customProps}
+      value={rest.value.statistics.defects.automation_bug}
+    />
   </div>
 );
 AbColumn.propTypes = {
@@ -94,7 +103,11 @@ AbColumn.propTypes = {
 
 const SiColumn = ({ className, ...rest }) => (
   <div className={cx('si-col', className)}>
-    <DefectStatistics value={rest.value.statistics.defects.system_issue} />
+    <DefectStatistics
+      type={'si'}
+      customProps={rest.customProps}
+      value={rest.value.statistics.defects.system_issue}
+    />
   </div>
 );
 SiColumn.propTypes = {
@@ -103,7 +116,10 @@ SiColumn.propTypes = {
 
 const TiColumn = ({ className, ...rest }) => (
   <div className={cx('ti-col', className)}>
-    <DefectStatistics value={rest.value.statistics.defects.to_investigate} />
+    <ToInvestigteStatistics
+      customProps={rest.customProps}
+      value={rest.value.statistics.defects.to_investigate}
+    />
   </div>
 );
 TiColumn.propTypes = {
@@ -119,55 +135,94 @@ SelectColumn.propTypes = {
   className: PropTypes.string.isRequired,
 };
 
-
 const COLUMNS = [
   {
-    title: '',
     component: HamburgerColumn,
   },
   {
-    title: 'name',
+    title: {
+      full: 'name',
+      short: 'name',
+    },
     maxHeight: 170,
     component: NameColumn,
   },
   {
-    title: 'start time',
+    title: {
+      full: 'start time',
+      short: 'start',
+    },
     component: StartTimeColumn,
   },
   {
-    title: 'total',
+    title: {
+      full: 'total',
+      short: 'ttl',
+    },
     component: TotalColumn,
   },
   {
-    title: 'passed',
+    title: {
+      full: 'passed',
+      short: 'ps',
+    },
     component: PassedColumn,
   },
   {
-    title: 'failed',
+    title: {
+      full: 'failed',
+      short: 'fl',
+    },
     component: FailedColumn,
   },
   {
-    title: 'skipped',
+    title: {
+      full: 'skipped',
+      short: 'skp',
+    },
     component: SkippedColumn,
   },
   {
-    title: 'product bug',
+    title: {
+      full: 'product bug',
+      short: 'product bug',
+    },
     component: PbColumn,
+    customProps: {
+      abbreviation: 'pb',
+    },
   },
   {
-    title: 'auto bug',
+    title: {
+      full: 'auto bug',
+      short: 'auto bug',
+    },
     component: AbColumn,
+    customProps: {
+      abbreviation: 'ab',
+    },
   },
   {
-    title: 'system issue',
+    title: {
+      full: 'system issue',
+      short: 'system issue',
+    },
     component: SiColumn,
+    customProps: {
+      abbreviation: 'si',
+    },
   },
   {
-    title: 'to invest',
+    title: {
+      full: 'to investigate',
+      short: 'to invest',
+    },
     component: TiColumn,
+    customProps: {
+      abbreviation: 'ti',
+    },
   },
   {
-    title: '',
     component: SelectColumn,
   },
 ];

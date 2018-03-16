@@ -1,6 +1,10 @@
 .duration-block {
   display: inline;
   margin-right: 20px;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    margin-right: 15px;
+  }
 }
 .error {
   .icon {
@@ -17,6 +21,12 @@
   height: 15px;
   fill: $COLOR--gray-60;
   vertical-align: middle;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    height: 18px;
+    width: 18px;
+    vertical-align: top;
+  }
 }
 .in-progress {
   display: inline-block;
@@ -34,6 +44,10 @@
   color: $COLOR--gray-60;
   line-height: 15px;
   margin-left: 5px;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    font-size: 15px;
+  }
 }
 
 

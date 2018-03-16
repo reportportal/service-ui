@@ -57,13 +57,10 @@ export class Hamburger extends Component {
               <FormattedMessage id={'Hamburger.forceFinish'} defaultMessage={'Force Finish'} />
             </div>
             {
-              (this.props.mode === 'DEFAULT')
-                ?
-                  <div className={cx('hamburger-menu-action')} onClick={() => { this.props.onAction('analysis'); }}>
-                    <FormattedMessage id={'Hamburger.analysis'} defaultMessage={'Analysis'} />
-                  </div>
-                :
-                null
+              (this.props.mode === 'DEFAULT') &&
+                <div className={cx('hamburger-menu-action')} onClick={() => { this.props.onAction('analysis'); }}>
+                  <FormattedMessage id={'Hamburger.analysis'} defaultMessage={'Analysis'} />
+                </div>
             }
             <div className={cx('hamburger-menu-action')} onClick={() => { this.props.onAction('delete'); }}>
               <FormattedMessage id={'Hamburger.delete'} defaultMessage={'Delete'} />

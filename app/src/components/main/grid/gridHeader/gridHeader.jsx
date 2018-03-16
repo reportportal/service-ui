@@ -22,7 +22,7 @@ export const GridHeader = ({ columns }) => (
 );
 GridHeader.propTypes = {
   columns: PropTypes.arrayOf(PropTypes.shape({
-    title: PropTypes.node,
+    title: PropTypes.object,
     align: PropTypes.oneOf([ALIGN_LEFT, ALIGN_CENTER, ALIGN_RIGHT]),
   })),
 };
@@ -32,14 +32,14 @@ GridHeader.defaultProps = {
 
 const HeaderCell = ({ title, align }) => (
   <div className={cx('grid-header-cell', { [`align-${align}`]: align })}>
-    {title}
+    {title ? title.full : null}
   </div>
 );
 HeaderCell.propTypes = {
-  title: PropTypes.node,
+  title: PropTypes.object,
   align: PropTypes.oneOf([ALIGN_LEFT, ALIGN_CENTER, ALIGN_RIGHT]),
 };
 HeaderCell.defaultProps = {
-  title: '',
+  title: {},
   align: ALIGN_LEFT,
 };

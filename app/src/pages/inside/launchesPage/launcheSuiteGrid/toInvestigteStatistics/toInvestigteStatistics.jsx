@@ -1,24 +1,22 @@
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
-import styles from './defectStatistics.scss';
+import styles from './toInvestigteStatistics.scss';
 
 const cx = classNames.bind(styles);
 
-export const DefectStatistics = ({ value, customProps, type }) => (
-  <div className={cx('defect-statistics')}>
+export const ToInvestigteStatistics = ({ value, customProps }) => (
+  <div className={cx('to-investigate-statistics')}>
     <span className={cx('title')}>
-      <span className={cx({ circle: true, [`type-${type}`]: type })} />
+      <span className={cx('circle')} />
       { customProps.abbreviation }
     </span>
     <a href="/" className={cx('value')}>{ value.total }</a>
   </div>
-  );
-DefectStatistics.propTypes = {
-  type: PropTypes.string,
+);
+ToInvestigteStatistics.propTypes = {
   value: PropTypes.object.isRequired,
   customProps: PropTypes.object,
 };
-DefectStatistics.defaultProps = {
-  type: '',
+ToInvestigteStatistics.defaultProps = {
   customProps: {},
 };
