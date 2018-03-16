@@ -25,39 +25,43 @@ import styles from './inputDropdownOption.scss';
 
 const cx = classNames.bind(styles);
 
-export const DropdownOption = ({ multiple, text, disabled, active }) => {
+
+export const DropdownOption = ({ multiple, text, disabled, active, onChange, id }) => {
   const dropdownOptionClasses = cx({
     'dropdown-option': true,
     active: !multiple && active,
     disabled,
   });
+  const onChangeHandler = (checkedObj) => {
+    onChange(Object.assign(checkedObj, { value: id }));
+  };
   return (
     <div className={dropdownOptionClasses}>
       {
         multiple
-          ? <InputCheckbox value={active} disabled={disabled} >{text}</InputCheckbox>
-          : <div className={cx('single-option')}>{text}</div>
+          ? <InputCheckbox value={active} disabled={disabled} onChange={onChangeHandler}>
+            {text}
+          </InputCheckbox>
+          : <div className={cx('single-option')} onClick={() => onChange(id)}>{text}</div>
       }
     </div>
   );
 };
 
 DropdownOption.propTypes = {
-  formPath: PropTypes.string,
-  fieldName: PropTypes.string,
   id: PropTypes.string,
   multiple: PropTypes.bool,
   text: PropTypes.string,
   disabled: PropTypes.bool,
   active: PropTypes.bool,
+  onChange: PropTypes.func,
 };
 
 DropdownOption.defaultProps = {
-  formPath: '',
-  fieldName: '',
   id: '',
   multiple: false,
   text: '',
   disabled: false,
   active: false,
+  onChange: () => {},
 };
