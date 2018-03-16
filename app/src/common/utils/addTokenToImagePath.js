@@ -22,19 +22,12 @@
 import { TOKEN_KEY } from 'controllers/auth';
 
 export function addTokenToImagePath(path) {
-  const token = localStorage.getItem(TOKEN_KEY);
-  let newPath = path;
-  if (!token) {
-    return path;
+  const [, token] = (localStorage.getItem(TOKEN_KEY) || '').split(' ');
+
+  if (token) {
+    const sep = (path.indexOf('?') !== -1) ? '&' : '?';
+    return `${path}${sep}access_token=${token}`;
   }
-  const partToken = token.split(' ')[1];
-  if (!partToken) {
-    return path;
-  }
-  if (path.indexOf('?') !== -1) {
-    newPath += '&';
-  } else {
-    newPath += '?';
-  }
-  return `${newPath}access_token=${partToken}`;
+
+  return path;
 }
