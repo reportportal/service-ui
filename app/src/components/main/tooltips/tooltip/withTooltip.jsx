@@ -36,7 +36,7 @@ export const withTooltip = ({ TooltipComponent, data }) => WrappedComponent => (
             ReactDOM.createPortal(
               this.state.shown
                 ? <Tooltip data={data} hoverRect={this.hoverRect} hideTooltip={this.hideTooltip}>
-                  <TooltipComponent />
+                  <TooltipComponent {...this.props} />
                 </Tooltip>
                 : null
               ,
@@ -44,7 +44,7 @@ export const withTooltip = ({ TooltipComponent, data }) => WrappedComponent => (
             )
           }
           <div style={{ width: '100%', height: '100%' }} ref={(hoverRect) => { this.hoverRect = hoverRect; }} >
-            <WrappedComponent>
+            <WrappedComponent {...this.props}>
               { this.props.children }
             </WrappedComponent>
           </div>

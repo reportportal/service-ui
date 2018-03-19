@@ -1,0 +1,14 @@
+.bar-chart-tooltip {
+  position: relative;
+  font-family: $FONT-SEMIBOLD;
+  font-size: 13px;
+  color: $COLOR--gray-47;
+  text-transform: capitalize;
+}
+.stats-item {
+  display: flex;
+  width: 100%;
+  height: 25px;
+  line-height: 25px;
+  justify-content: space-between;
+}

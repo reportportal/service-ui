@@ -3,6 +3,7 @@ import { render } from 'react-dom';
 import { Router, matchPath } from 'react-router-dom';
 import { createHashHistory } from 'history';
 import { userInfoSelector, activeProjectSelector, setActiveProjectAction } from 'controllers/user';
+import { fetchProjectAction } from 'controllers/project';
 import qhistory from 'qhistory';
 
 import { stringify, parse } from 'qs';
@@ -28,6 +29,7 @@ queryParseHistory.listen((location) => {
   if (userProjects && Object.prototype.hasOwnProperty.call(userProjects, hashProject)
     && hashProject !== activeProjectSelector(store.getState())) {
     store.dispatch(setActiveProjectAction(hashProject));
+    store.dispatch(fetchProjectAction(hashProject));
   }
 });
 

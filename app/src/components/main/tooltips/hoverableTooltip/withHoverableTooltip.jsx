@@ -16,8 +16,22 @@ export const withHoverableTooltip = ({ TooltipComponent, data }) => WrappedCompo
     };
     componentDidMount() {
       const tooltipWidth = data.width || DEFAULT_TOOLTIP_WIDTH;
+      let left = 0;
       this.tooltip.style.width = `${tooltipWidth}px`;
-      this.tooltip.style.left = `${(this.hoverRect.offsetWidth / 2) - (tooltipWidth / 2)}px`;
+      switch (data.align) {
+        case 'left':
+          left = 0;
+          break;
+        case 'right':
+          left = this.hoverRect.offsetWidth - tooltipWidth;
+          break;
+        default:
+          left = `${(this.hoverRect.offsetWidth / 2) - (tooltipWidth / 2)}`;
+      }
+      data.leftOffset && (left += data.leftOffset);
+
+
+      this.tooltip.style.left = `${left}px`;
     }
     render() {
       return (
@@ -25,7 +39,15 @@ export const withHoverableTooltip = ({ TooltipComponent, data }) => WrappedCompo
           <WrappedComponent {...this.props}>
             { this.props.children }
           </WrappedComponent>
-          <div ref={(tooltip) => { this.tooltip = tooltip; }} className={cx('hoverable-tooltip')}>
+          <div
+            ref={(tooltip) => { this.tooltip = tooltip; }}
+            className={cx({
+              'hoverable-tooltip': true,
+              noArrow: data.noArrow,
+              noMobile: data.noMobile,
+              desktopOnly: data.desktopOnly,
+            })}
+          >
             <div className={cx('hoverable-tooltip-content')}>
               <TooltipComponent {...this.props} />
             </div>

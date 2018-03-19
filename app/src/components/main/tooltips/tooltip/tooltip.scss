@@ -2,7 +2,7 @@
   position: absolute;
   padding-top: 5px;
 
-  &:before {
+  &::before {
     content: '';
     position: absolute;
     top: -2px;
@@ -14,7 +14,7 @@
     border-right: 8px solid transparent;
     border-bottom: 8px solid $COLOR--gray-80;
   }
-  :after {
+  &::after {
     content: '';
     position: absolute;
     top: 0;
@@ -23,6 +23,12 @@
     border-bottom: 6px solid $COLOR--white-two;
     border-left: 6px solid transparent;
     border-right: 6px solid transparent;
+  }
+
+  &.noArrow {
+    &::before, &::after  {
+      display: none;
+    }
   }
 }
 :global {
