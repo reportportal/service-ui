@@ -1,0 +1,42 @@
+.search-input {
+  position: relative;
+  height: 30px;
+  border-radius: 0;
+  box-shadow: none;
+  border: 1px solid $COLOR--gray-80;
+  flex-grow: 1;
+  max-width: 310px;
+  transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+  &:focus{
+    border: 1px solid red;
+    outline: none;
+  }
+  @media (max-width: $SCREEN_XS_MAX) {
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    margin-right: 40px;
+  }
+
+  &:hover {
+    border-color: $COLOR--gray-47;
+  }
+
+}
+
+.search-icon {
+  position: absolute;
+  right: 0;
+  line-height: 30px;
+  width: 25px;
+  text-align: center;
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    left: 0;
+    right: auto;
+  }
+
+  svg {
+    width: 13px;
+  }
+}
