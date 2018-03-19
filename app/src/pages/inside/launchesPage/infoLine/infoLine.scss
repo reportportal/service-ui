@@ -1,0 +1,67 @@
+.info-line {
+  position: relative;
+  margin-top: 50px;
+  width: 100%;
+  min-height: 30px;
+  box-sizing: border-box;
+  border-top: 1px solid $COLOR--gray-91;
+  border-bottom: 1px solid $COLOR--gray-91;
+  background-color: $COLOR--white-two;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+}
+.bar-chart-holder {
+  display: inline-block;
+  position: relative;
+  width: 100px;
+  height: 28px;
+  margin: 0 15px;
+  vertical-align: top;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    display: none;
+  }
+}
+.passed, .total, .duration {
+  display: inline-block;
+  margin-right: 15px;
+  font-family: $FONT-REGULAR;
+  font-size: 12px;
+  text-transform: capitalize;
+  color: $COLOR--charcoal-grey;
+  vertical-align: top;
+  line-height: 28px;
+}
+.passed, .total {
+  @media (max-width: $SCREEN_SM_MAX) {
+    &::after {
+      content: '';
+      margin-left: 15px;
+      box-sizing: border-box;
+      border-right: 1px solid $COLOR--gray-91;
+    }
+  }
+}
+.duration-value {
+  display: inline-block;
+  margin-left: 5px;
+}
+
+.defect-types {
+  display: inline-block;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    display: block;
+  }
+}
+.defect-type {
+  display: inline-block;
+  margin-right: 15px;
+
+  &:last-child {
+    margin-right: 0;
+  }
+}

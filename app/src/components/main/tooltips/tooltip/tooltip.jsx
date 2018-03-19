@@ -37,9 +37,21 @@ export class Tooltip extends Component {
   setTooltipPosition = () => {
     const hoverRect = this.getBox(this.props.hoverRect);
     const tooltipWidth = this.props.data.width || DEFAULT_TOOLTIP_WIDTH;
+    let left = 0;
     this.tooltip.style.width = `${tooltipWidth}px`;
     this.tooltip.style.top = `${hoverRect.top + hoverRect.height}px`;
-    this.tooltip.style.left = `${hoverRect.left + ((hoverRect.width / 2) - (tooltipWidth / 2))}px`;
+    switch (this.props.data.align) {
+      case 'left':
+        left = hoverRect.left;
+        break;
+      case 'right':
+        left = hoverRect.right - tooltipWidth;
+        break;
+      default:
+        left = hoverRect.left + ((hoverRect.width / 2) - (tooltipWidth / 2));
+    }
+    this.props.data.leftOffset && (left += this.props.data.leftOffset);
+    this.tooltip.style.left = `${left}px`;
   };
   getBox = (elem) => {
     const box = elem.getBoundingClientRect();
@@ -48,6 +60,7 @@ export class Tooltip extends Component {
       height: box.height,
       top: box.top + window.pageYOffset,
       left: box.left + window.pageXOffset,
+      right: box.right,
     };
   };
   mouseLeaveHandler = () => {
@@ -56,7 +69,10 @@ export class Tooltip extends Component {
   render() {
     return (
       <CSSTransition in={this.state.shown} timeout={300} classNames={cx('tooltip-fade')} onExited={this.props.hideTooltip}>
-        <div ref={(tooltip) => { this.tooltip = tooltip; }} className={cx('tooltip')}>
+        <div
+          ref={(tooltip) => { this.tooltip = tooltip; }}
+          className={cx({ tooltip: true, noArrow: this.props.data.noArrow })}
+        >
           <div className={cx('tooltip-content')}>
             { this.props.children }
           </div>

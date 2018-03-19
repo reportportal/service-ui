@@ -5,6 +5,7 @@ import { authReducer } from 'controllers/auth';
 import { langReducer } from 'controllers/lang';
 import { modalReducer } from 'controllers/modal';
 import { userReducer } from 'controllers/user';
+import { projectReducer } from 'controllers/project';
 
 export const rootReducer = combineReducers({
   appInfo: appInfoReducer,
@@ -13,4 +14,5 @@ export const rootReducer = combineReducers({
   form: formReducer,
   modal: modalReducer,
   user: userReducer,
+  project: projectReducer,
 });
