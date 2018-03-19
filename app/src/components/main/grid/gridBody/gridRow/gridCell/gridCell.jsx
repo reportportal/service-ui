@@ -20,7 +20,15 @@ TextCell.defaultProps = {
   value: '',
 };
 
-export const GridCell = ({ component, refFunction, value, align, formatter, title, customProps }) => {
+export const GridCell = ({
+  component,
+  refFunction,
+  value,
+  align,
+  formatter,
+  title,
+  customProps,
+}) => {
   const CellComponent = component;
   return (
     <CellComponent
@@ -36,6 +44,7 @@ GridCell.propTypes = {
   ...columnPropTypes,
   component: PropTypes.oneOfType([PropTypes.node, PropTypes.func]),
   value: PropTypes.object,
+  refFunction: PropTypes.func,
 };
 GridCell.defaultProps = {
   component: TextCell,
@@ -43,4 +52,6 @@ GridCell.defaultProps = {
   align: ALIGN_LEFT,
   formatter: value => value,
   title: {},
+  refFunction: () => {
+  },
 };
