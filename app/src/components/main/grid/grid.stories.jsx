@@ -22,42 +22,16 @@
 import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import { host } from 'storybook-host';
-import classNames from 'classnames/bind';
 import { Grid } from './grid';
 import { ALIGN_CENTER } from './constants';
 
-import styles from './grid.stories.scss';
-
-const cx = classNames.bind(styles);
-
-const NameCell = ({ className, value }) => (
-  <div className={cx(className, 'name-cell')}>
-    <span className={cx('name')}>
-      {value.name}
-    </span>
-    <span className={cx('description')}>
-      {value.description}
-    </span>
-  </div>
-);
-
-const CountCell = ({ className, title, value }) => (
-  <div className={cx(className, 'count-cell')}>
-    <div className={cx('title')}>
-      {title.full}
-    </div>
-    {value}
-  </div>
-);
-
 const COLUMNS = [{
   title: { full: 'name' },
-  component: NameCell,
+  formatter: ({ name }) => name,
 }, {
   title: { full: 'total' },
   align: ALIGN_CENTER,
   formatter: ({ total }) => total,
-  component: CountCell,
   sortable: true,
   name: 'total',
   withFilter: true,
@@ -65,7 +39,6 @@ const COLUMNS = [{
   title: { full: 'passed' },
   align: ALIGN_CENTER,
   formatter: ({ passed }) => passed,
-  component: CountCell,
   sortable: true,
   name: 'passed',
   withFilter: true,
@@ -73,12 +46,10 @@ const COLUMNS = [{
   title: { full: 'failed' },
   align: ALIGN_CENTER,
   formatter: ({ failed }) => failed,
-  component: CountCell,
 }, {
   title: { full: 'skipped' },
   align: ALIGN_CENTER,
   formatter: ({ skipped }) => skipped,
-  component: CountCell,
 }];
 
 const DATA = [{
@@ -106,7 +77,16 @@ storiesOf('Components/Main/Grid', module)
     height: 600,
     width: '100%',
   }))
-  .add('simple grid with data', () => (
+  .add('default state', () => (
+    <Grid />
+  ))
+  .add('with data', () => (
+    <Grid
+      columns={COLUMNS}
+      data={DATA}
+    />
+  ))
+  .add('with actions', () => (
     <Grid
       columns={COLUMNS}
       data={DATA}

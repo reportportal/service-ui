@@ -112,9 +112,9 @@ const dataMock = [
 ];
 
 
-storiesOf('Components/Launches/lunchSuiteGrid', module)
+storiesOf('Components/Launches/launchSuiteGrid', module)
   .addDecorator(host({
-    title: 'Ghost button component',
+    title: 'Launch Suite Grid component',
     align: 'center middle',
     backdrop: 'rgba(70, 69, 71, 0.2)',
     background: '#fff',
