@@ -250,7 +250,7 @@ define(function (require) {
                 var selectItem = _.find(self.model.get('fields'), {
                     id: 'issuetype'
                 });
-                if (selectItem) {
+                if (selectItem && ~types.indexOf(selectItem.value[0])) {
                     defaultValue = selectItem.value[0];
                 }
                 self.$fieldsWrapper.show();
