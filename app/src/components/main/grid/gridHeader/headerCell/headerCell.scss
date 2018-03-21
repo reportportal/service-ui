@@ -10,6 +10,14 @@
   text-transform: uppercase;
   vertical-align: middle;
 
+  &:first-child {
+    padding-left: 15px;
+  }
+
+  &:last-child {
+    padding-right: 15px;
+  }
+
   &.align-left {
     text-align: left;
   }
@@ -78,8 +86,8 @@
   .filter {
     position: absolute;
     display: none;
-    width: 10px;
-    height: 10px;
+    width: 12px;
+    height: 12px;
     left: -18px;
 
     svg {
