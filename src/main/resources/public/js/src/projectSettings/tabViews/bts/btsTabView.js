@@ -245,27 +245,33 @@ define(function (require) {
             }
             $('[data-js-issue-type-loader]', self.$el).show();
             this.fieldsView && this.fieldsView.destroy();
-            Service.getBtsTypes(this.model.get('id')).done(function (types) {
-                var defaultValue = types[0];
-                var selectItem = _.find(self.model.get('fields'), {
-                    id: 'issuetype'
+            Service.getBtsTypes(this.model.get('id'))
+                .done(function (types) {
+                    var defaultValue = types[0];
+                    var selectItem = _.find(self.model.get('fields'), {
+                        id: 'issuetype'
+                    });
+                    if (selectItem && ~types.indexOf(selectItem.value[0])) {
+                        defaultValue = selectItem.value[0];
+                    }
+                    self.$fieldsWrapper.show();
+                    self.selectIssueType = new DropDownComponent({
+                        data: _.map(types, function (type) {
+                            return { name: type, value: type };
+                        }),
+                        defaultValue: defaultValue
+                    });
+                    $('[data-js-issue-type-select]', self.$el).html(self.selectIssueType.$el);
+                    self.listenTo(self.selectIssueType, 'change', self.loadDefaultBtsFields);
+                    self.loadDefaultBtsFields();
+                })
+                .fail(function (error) {
+                    var msg = JSON.parse(error.responseText).message;
+                    self.$externalSystemWarning.text(msg).show();
+                })
+                .always(function () {
+                    $('[data-js-issue-type-loader]', self.$el).hide();
                 });
-                if (selectItem && ~types.indexOf(selectItem.value[0])) {
-                    defaultValue = selectItem.value[0];
-                }
-                self.$fieldsWrapper.show();
-                self.selectIssueType = new DropDownComponent({
-                    data: _.map(types, function (type) {
-                        return { name: type, value: type };
-                    }),
-                    defaultValue: defaultValue
-                });
-                $('[data-js-issue-type-select]', self.$el).html(self.selectIssueType.$el);
-                self.listenTo(self.selectIssueType, 'change', self.loadDefaultBtsFields);
-                self.loadDefaultBtsFields();
-            }).always(function () {
-                $('[data-js-issue-type-loader]', self.$el).hide();
-            });
             $('[data-js-bts-fields-wrapper]', this.$el).addClass('edit-mode');
         },
 
