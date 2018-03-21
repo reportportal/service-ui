@@ -9,30 +9,64 @@ const cx = classNames.bind(styles);
 
 export class Hamburger extends Component {
   static propTypes = {
-    mode: PropTypes.string.isRequired,
     onAction: PropTypes.func,
+    launch: PropTypes.object.isRequired,
+    onMoveToDebug: PropTypes.func,
+    onMoveToLaunches: PropTypes.func,
+    onForceFinish: PropTypes.func,
+    onAnalysis: PropTypes.func,
+    onDelete: PropTypes.func,
+    onExportPDF: PropTypes.func,
+    onExportXLS: PropTypes.func,
+    onExportHTML: PropTypes.func,
   };
+
   static defaultProps = {
     onAction: () => {},
+    onMoveToDebug: () => {},
+    onMoveToLaunches: () => {},
+    onForceFinish: () => {},
+    onAnalysis: () => {},
+    onDelete: () => {},
+    onExportPDF: () => {},
+    onExportXLS: () => {},
+    onExportHTML: () => {},
   };
+
   state = {
     menuShown: false,
   };
+
   componentDidMount() {
     document.addEventListener('click', this.handleOutsideClick, false);
   }
+
   componentWillUnmount() {
     document.removeEventListener('click', this.handleOutsideClick, false);
   }
+
   handleOutsideClick = (e) => {
     if (!this.icon.contains(e.target) && this.state.menuShown) {
       this.setState({ menuShown: false });
     }
   };
+
   toggleMenu = () => {
     this.setState({ menuShown: !this.state.menuShown });
   };
+
   render() {
+    const {
+      launch,
+      onMoveToDebug,
+      onMoveToLaunches,
+      onForceFinish,
+      onAnalysis,
+      onDelete,
+      onExportPDF,
+      onExportXLS,
+      onExportHTML,
+    } = this.props;
     return (
       <div className={cx('hamburger')}>
         <div ref={(icon) => { this.icon = icon; }} className={cx('hamburger-icon')} onClick={this.toggleMenu}>
@@ -40,29 +74,29 @@ export class Hamburger extends Component {
           <div className={cx('hamburger-icon-part')} />
           <div className={cx('hamburger-icon-part')} />
         </div>
-        <div className={cx({ 'hamburger-menu': true, shown: this.state.menuShown })}>
+        <div className={cx('hamburger-menu', { shown: this.state.menuShown })}>
           <div className={cx('hamburger-menu-actions')}>
             {
-              (this.props.mode === 'DEFAULT')
+              (launch.mode === 'DEFAULT')
                 ?
-                  <div className={cx('hamburger-menu-action')} onClick={() => { this.props.onAction('move-to-debug'); }}>
+                  <div className={cx('hamburger-menu-action')} onClick={() => { onMoveToDebug(launch); }}>
                     <FormattedMessage id={'Hamburger.toDebug'} defaultMessage={'Move to debug'} />
                   </div>
                 :
-                  <div className={cx('hamburger-menu-action')} onClick={() => { this.props.onAction('move-to-launches'); }}>
+                  <div className={cx('hamburger-menu-action')} onClick={() => { onMoveToLaunches(launch); }}>
                     <FormattedMessage id={'Hamburger.toAllLaunches'} defaultMessage={'Move to all launches'} />
                   </div>
             }
-            <div className={cx('hamburger-menu-action')} onClick={() => { this.props.onAction('force-finish'); }}>
+            <div className={cx('hamburger-menu-action')} onClick={() => { onForceFinish(launch); }}>
               <FormattedMessage id={'Hamburger.forceFinish'} defaultMessage={'Force Finish'} />
             </div>
             {
-              (this.props.mode === 'DEFAULT') &&
-                <div className={cx('hamburger-menu-action')} onClick={() => { this.props.onAction('analysis'); }}>
+              (launch.mode === 'DEFAULT') &&
+                <div className={cx('hamburger-menu-action')} onClick={() => { onAnalysis(launch); }}>
                   <FormattedMessage id={'Hamburger.analysis'} defaultMessage={'Analysis'} />
                 </div>
             }
-            <div className={cx('hamburger-menu-action')} onClick={() => { this.props.onAction('delete'); }}>
+            <div className={cx('hamburger-menu-action')} onClick={() => { onDelete(launch); }}>
               <FormattedMessage id={'Hamburger.delete'} defaultMessage={'Delete'} />
             </div>
           </div>
@@ -73,13 +107,13 @@ export class Hamburger extends Component {
             </div>
             <div className={cx('export-buttons')}>
               <div className={cx('export-button')}>
-                <GhostButton tiny onClick={() => { this.props.onAction('export-PDF'); }}>PDF</GhostButton>
+                <GhostButton tiny onClick={() => { onExportPDF(launch); }}>PDF</GhostButton>
               </div>
               <div className={cx('export-button')}>
-                <GhostButton tiny onClick={() => { this.props.onAction('export-XLS'); }}>XLS</GhostButton>
+                <GhostButton tiny onClick={() => { onExportXLS(launch); }}>XLS</GhostButton>
               </div>
               <div className={cx('export-button')}>
-                <GhostButton tiny onClick={() => { this.props.onAction('export-HTML'); }}>HTML</GhostButton>
+                <GhostButton tiny onClick={() => { onExportHTML(launch); }}>HTML</GhostButton>
               </div>
             </div>
           </div>

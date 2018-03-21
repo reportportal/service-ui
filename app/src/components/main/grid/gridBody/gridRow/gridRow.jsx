@@ -12,14 +12,17 @@ export class GridRow extends Component {
     columns: PropTypes.arrayOf(PropTypes.shape(columnPropTypes)),
     value: PropTypes.object,
   };
+
   static defaultProps = {
     columns: [],
     value: {},
   };
+
   state = {
     withAccordion: false,
     expanded: false,
   };
+
   setupAccordion = (overflowCell) => {
     this.overflowCell = overflowCell;
     if (this.overflowCell && this.overflowCell.offsetHeight > this.overflowCellMaxHeight) {
@@ -27,24 +30,25 @@ export class GridRow extends Component {
       this.overflowCell.style.maxHeight = `${this.overflowCellMaxHeight}px`;
     }
   };
+
   toggleAccordion = () => {
     this.setState({ expanded: !this.state.expanded });
     this.overflowCell.style.maxHeight = this.state.expanded ? `${this.overflowCellMaxHeight}px` : null;
   };
+
   render() {
     const { columns, value } = this.props;
     return (
       <div className={cx('grid-row-wrapper')}>
         {
           this.state.withAccordion
-            ?
+            &&
               <div className={cx('accordion-wrapper-mobile')}>
                 <div
                   className={cx({ 'accordion-toggler-mobile': true, rotated: this.state.expanded })}
                   onClick={this.toggleAccordion}
                 />
               </div>
-            : null
         }
         <div className={cx('grid-row')}>
           {
@@ -54,8 +58,7 @@ export class GridRow extends Component {
               }
               return (
                 <GridCell
-                  // eslint-disable-next-line react/no-array-index-key
-                  key={i}
+                  key={column.name || i}
                   refFunction={column.maxHeight ? this.setupAccordion : null}
                   mobileWidth={column.mobileWidth}
                   selectors={column.selectors}
@@ -72,7 +75,7 @@ export class GridRow extends Component {
         </div>
         {
           this.state.withAccordion
-            ?
+            &&
               <div className={cx('grid-row')}>
                 <div className={cx('accordion-wrapper')}>
                   <div className={cx('accordion-block')}>
@@ -83,7 +86,6 @@ export class GridRow extends Component {
                   </div>
                 </div>
               </div>
-            : null
         }
       </div>
     );
