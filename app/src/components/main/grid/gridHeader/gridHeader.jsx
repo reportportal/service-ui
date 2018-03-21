@@ -18,7 +18,7 @@ export const GridHeader = ({
       columns.map((column, i) =>
         (
           <HeaderCell
-            key={name || i}
+            key={column.name || i}
             title={column.title}
             align={column.align}
             sortable={column.sortable}

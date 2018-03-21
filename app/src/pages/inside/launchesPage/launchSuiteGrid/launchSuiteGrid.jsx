@@ -14,7 +14,7 @@ const cx = classNames.bind(styles);
 
 const HamburgerColumn = ({ className, ...rest }) => (
   <div className={cx('hamburger-col', className)}>
-    <Hamburger mode={rest.value.mode} />
+    <Hamburger launch={rest.value} />
   </div>
 );
 HamburgerColumn.propTypes = {
@@ -32,7 +32,7 @@ NameColumn.propTypes = {
 
 const StartTimeColumn = ({ className, ...rest }) => (
   <div className={cx('start-time-col', className)}>
-    <AbsRelTime startTime={rest.value.start_time} user={{ userId: 'artem' }} />
+    <AbsRelTime startTime={rest.value.start_time} />
   </div>
 );
 StartTimeColumn.propTypes = {
