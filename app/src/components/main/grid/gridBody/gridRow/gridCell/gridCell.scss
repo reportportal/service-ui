@@ -5,6 +5,14 @@
   box-sizing: border-box;
   padding: 15px 10px;
 
+  &:first-child {
+    padding-left: 15px;
+  }
+
+  &:last-child {
+    padding-right: 15px;
+  }
+
   &.align-left {
     text-align: left;
   }
