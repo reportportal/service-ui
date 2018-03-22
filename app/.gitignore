@@ -6,5 +6,4 @@ build
 .storybook_app
 localization/messages
 localization/translated/en.json
-config-proxy.js
-
+.env

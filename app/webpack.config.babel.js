@@ -5,12 +5,13 @@ import ExtractTextPlugin from 'extract-text-webpack-plugin';
 import WebpackNotifierPlugin from 'webpack-notifier';
 import CleanWebpackPlugin from 'clean-webpack-plugin';
 import CompressionPlugin from 'compression-webpack-plugin';
+import dotenv from 'dotenv';
 
-import proxyConfig from './config-proxy';
-
-if (proxyConfig.path === '') {
-  console.log('========== Specify the path for the proxy in the config-proxy.js file =========');
+dotenv.config();
+if (!process.env.PROXY_PATH) {
+  console.log('========== Specify the PROXY_PATH variable in the .env file =========');
 }
+
 const defaultEnv = {
   dev: true,
   production: false,
@@ -161,7 +162,7 @@ export default (env = defaultEnv) => ({
       {
         context: ['/composite', '/api/', '/uat/'],
         // path: /^\/(composite|api|uat|ui).*/,
-        target: proxyConfig.path,
+        target: process.env.PROXY_PATH,
         bypass(req) {
           console.log(`proxy url: ${req.url}`);
         },
@@ -169,3 +170,4 @@ export default (env = defaultEnv) => ({
     ],
   },
 });
+

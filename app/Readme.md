@@ -9,14 +9,13 @@ To launch the development environment, follow these steps:
 1. open console from the project root
 2. run the command `cd app`
 3. run the command `npm install`
-4. to proxy requests to the server, create file `config-proxy.js` in `app` folder
+4. to proxy requests to the server, create file `.env` in `app` folder
 
-   ```javascript
-   export default {
-     path: '',  //     http://you_server:port/
-   }
    ```
-5. run the command `npm run dev`, enjoy the development.
+   PROXY_PATH=http:http://you_server:port/
+   ```
+5. run the command `npm run dev`
+6. enjoy the development.
 
 ## All npm commands
 
@@ -39,7 +38,7 @@ To launch the development environment, follow these steps:
 All the components for which the stories are described are automatically collected when the develop branch. To look at this assembly it is possible [here](http://reportportal.io/service-ui/index.html)
 
 ## Technology
-Used technology stack: [React](https://reactjs.org/), [Cerebral](https://cerebraljs.com/)
+Used technology stack: [React](https://reactjs.org/), [Redux](https://redux.js.org/)
 
 ## Localization
 
