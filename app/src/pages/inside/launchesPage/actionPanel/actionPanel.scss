@@ -1,0 +1,30 @@
+.action-panel {
+  background-color: $COLOR--white-two;
+  border-bottom: 1px solid $COLOR--gray-91;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 50px;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+.action-buttons {
+  display: flex;
+}
+
+.action-button {
+  padding-left: 10px;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    display: none;
+  }
+
+  &.mobile-only {
+    display: none;
+
+    @media (max-width: $SCREEN_SM_MAX) {
+      display: block;
+    }
+  }
+}

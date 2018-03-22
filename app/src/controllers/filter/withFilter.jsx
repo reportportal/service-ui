@@ -29,7 +29,7 @@ export const withFilter = WrappedComponent => connectRouter(query => ({
     };
 
     static defaultProps = {
-      filter: '',
+      filter: null,
       updateFilter: () => {
       },
     };

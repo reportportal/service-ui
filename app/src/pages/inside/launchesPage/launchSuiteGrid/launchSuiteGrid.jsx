@@ -140,49 +140,62 @@ const COLUMNS = [
     component: HamburgerColumn,
   },
   {
+    name: 'name',
     title: {
       full: 'name',
       short: 'name',
     },
     maxHeight: 170,
     component: NameColumn,
+    sortable: true,
   },
   {
+    name: 'start_time',
     title: {
       full: 'start time',
       short: 'start',
     },
     component: StartTimeColumn,
+    sortable: true,
   },
   {
+    name: 'statistics$executions$total',
     title: {
       full: 'total',
       short: 'ttl',
     },
     component: TotalColumn,
+    sortable: true,
   },
   {
+    name: 'statistics$executions$passed',
     title: {
       full: 'passed',
       short: 'ps',
     },
     component: PassedColumn,
+    sortable: true,
   },
   {
+    name: 'statistics$executions$failed',
     title: {
       full: 'failed',
       short: 'fl',
     },
     component: FailedColumn,
+    sortable: true,
   },
   {
+    name: 'statistics$executions$skipped',
     title: {
       full: 'skipped',
       short: 'skp',
     },
     component: SkippedColumn,
+    sortable: true,
   },
   {
+    name: 'statistics$defects$product_bug$total',
     title: {
       full: 'product bug',
       short: 'product bug',
@@ -191,8 +204,10 @@ const COLUMNS = [
     customProps: {
       abbreviation: 'pb',
     },
+    sortable: true,
   },
   {
+    name: 'statistics$defects$automation_bug$total',
     title: {
       full: 'auto bug',
       short: 'auto bug',
@@ -201,8 +216,10 @@ const COLUMNS = [
     customProps: {
       abbreviation: 'ab',
     },
+    sortable: true,
   },
   {
+    name: 'statistics$defects$system_issue$total',
     title: {
       full: 'system issue',
       short: 'system issue',
@@ -211,8 +228,10 @@ const COLUMNS = [
     customProps: {
       abbreviation: 'si',
     },
+    sortable: true,
   },
   {
+    name: 'statistics$defects$to_investigate$total',
     title: {
       full: 'to investigate',
       short: 'to invest',
@@ -221,21 +240,32 @@ const COLUMNS = [
     customProps: {
       abbreviation: 'ti',
     },
+    sortable: true,
   },
   {
     component: SelectColumn,
   },
 ];
 
-export const LaunchSuiteGrid = ({ data }) => (
+export const LaunchSuiteGrid = ({ data, onChangeSorting, sortingColumn, sortingDirection }) => (
   <Grid
     columns={COLUMNS}
     data={data}
+    sortingColumn={sortingColumn}
+    sortingDirection={sortingDirection}
+    onChangeSorting={onChangeSorting}
   />
-  );
+);
 LaunchSuiteGrid.propTypes = {
   data: PropTypes.array,
+  sortingColumn: PropTypes.string,
+  sortingDirection: PropTypes.string,
+  onChangeSorting: PropTypes.func,
 };
 LaunchSuiteGrid.defaultProps = {
   data: {},
+  sortingColumn: null,
+  sortingDirection: null,
+  onChangeSorting: () => {
+  },
 };

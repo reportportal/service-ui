@@ -5,6 +5,7 @@ import { fetch, connectRouter } from 'common/utils';
 const PAGE_KEY = 'page.page';
 const SIZE_KEY = 'page.size';
 const FILTER_KEY = 'filter.cnt.name';
+const SORTING_KEY = 'page.sort';
 
 export const withPagination = ({ url: staticURL } = {}) => (WrappedComponent) => {
   @connectRouter(query => ({
@@ -20,13 +21,15 @@ export const withPagination = ({ url: staticURL } = {}) => (WrappedComponent) =>
       size: PropTypes.number,
       url: PropTypes.string,
       updatePagination: PropTypes.func,
+      sortingString: PropTypes.string,
     };
 
     static defaultProps = {
       url: staticURL,
-      filter: '',
+      filter: null,
       page: 1,
       size: 20,
+      sortingString: null,
       updatePagination: () => {
       },
     };
@@ -38,17 +41,18 @@ export const withPagination = ({ url: staticURL } = {}) => (WrappedComponent) =>
     };
 
     componentDidMount() {
-      const { page, size, url } = this.props;
-      this.fetchData(url, { page, size });
+      const { page, size, url, sortingString } = this.props;
+      this.fetchData(url, { page, size, sortingString });
     }
 
-    componentWillReceiveProps({ url, page, size, filter }) {
+    componentWillReceiveProps({ url, page, size, filter, sortingString }) {
       if (url !== this.props.url
         || page !== this.props.page
         || size !== this.props.size
         || filter !== this.props.filter
+        || sortingString !== this.props.sortingString
       ) {
-        this.fetchData(url, { page, size, filter });
+        this.fetchData(url, { page, size, filter, sortingString });
       }
     }
 
@@ -57,6 +61,7 @@ export const withPagination = ({ url: staticURL } = {}) => (WrappedComponent) =>
         [PAGE_KEY]: queryParams.page || this.props.page,
         [SIZE_KEY]: queryParams.size || this.props.size,
         [FILTER_KEY]: queryParams.filter || this.props.filter,
+        [SORTING_KEY]: queryParams.sortingString,
       },
     }).then((result) => {
       const { totalElements, totalPages } = result.page;
