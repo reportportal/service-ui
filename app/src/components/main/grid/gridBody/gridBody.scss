@@ -1,0 +1,87 @@
+.grid-row-wrapper {
+  display: table-row-group;
+  border-bottom: 1px solid $COLOR--gray-91;
+  background-color: $COLOR--white-two;
+  transition: background-color 0.2s ease 0s;
+
+  &:hover {
+    background-color: $COLOR--tealish-hover;
+
+    .accordion-block {
+      background-color: $COLOR--tealish-hover;
+      box-shadow: 0 -15px 20px 0px $COLOR--tealish-hover;
+    }
+  }
+}
+.grid-row {
+  position: relative;
+  display: table-row;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    display: flex;
+    flex-wrap: wrap;
+  }
+}
+.accordion-wrapper {
+  position: absolute;
+  right: 0;
+  left: 0;
+}
+.accordion-block {
+  position: absolute;
+  display: flex;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 20px;
+  background-color: $COLOR--white-two;
+  box-shadow: 0 -15px 20px 0px $COLOR--white-two;
+  transition: background-color 0.2s ease 0s, box-shadow 0.2s ease 0s;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    bottom: 120px;
+  }
+}
+.accordion-toggler {
+  width: 130px;
+  height: 7px;
+  margin: 0 auto;
+  background-image: url(./img/accordion-toggle.svg);
+  cursor: pointer;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    display: none;
+  }
+
+  &:hover {
+    background-image: url(./img/accordion-toggle-hover.svg);
+  }
+
+  &.rotated {
+    transform: rotate(180deg);
+  }
+}
+.accordion-wrapper-mobile {
+  display: none;
+  position: absolute;
+  right: 0;
+  z-index: 1;
+  cursor: pointer;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    display: block;
+  }
+}
+.accordion-toggler-mobile {
+  width: 20px;
+  height: 20px;
+  background-image: url(./img/accordion-toggle-mobile.svg);
+  position: absolute;
+  top: 20px;
+  right: 10px;
+  transition: transform 500ms ease;
+
+  &.rotated {
+    transform: scaleY(-1);
+  }
+}

@@ -1,0 +1,86 @@
+.item-info {
+  overflow: hidden;
+}
+.main-info {
+  display: inline-block;
+  min-height: 20px;
+  box-sizing: border-box;
+  margin-bottom: 10px;
+}
+.name-link {
+  font-family: $FONT-SEMIBOLD;
+  font-size: 14px;
+  color: $COLOR--windows-blue;
+  text-decoration: none;
+  word-break: break-all;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    font-size: 16px;
+  }
+}
+.name, .number {
+  margin-right: 5px;
+}
+.analysis-badge {
+  display: inline-block;
+  width: 55px;
+  height: 15px;
+  border-radius: 100px;
+  background-color: $COLOR--orange-red;
+  font-family: $FONT-SEMIBOLD;
+  font-size: 10px;
+  color: $COLOR--white-two;
+  line-height: 15px;
+  text-align: center;
+  vertical-align: middle;
+  animation: auto-analyze-blink 1s linear reverse infinite;
+}
+.edit-icon {
+  display: none;
+  width: 20px;
+  height: 20px;
+  margin-left: 10px;
+  vertical-align: top;
+  fill: $COLOR--gray-60;
+  cursor: pointer;
+
+  &:hover {
+    fill: $COLOR--black-2;
+  }
+}
+.mobile-start-time {
+  display: none;
+  margin-right: 15px;
+  font-family: $FONT-REGULAR;
+  font-size: 15px;
+  color: $COLOR--charcoal-grey;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    display: inline;
+  }
+
+  &::before {
+    content: '|';
+    margin-right: 15px;
+    vertical-align: top;
+  }
+}
+.additional-info {
+  display: inline-block;
+  width: 100%;
+  box-sizing: border-box;
+}
+.item-description {
+  width: 100%;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+@keyframes auto-analyze-blink {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

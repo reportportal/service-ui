@@ -1,0 +1,91 @@
+.hamburger {
+  position: relative;
+  display: inline-block;
+  margin: 0 auto;
+}
+.hamburger-icon {
+  width: 15px;
+  height: 10px;
+  cursor: pointer;
+
+  &:hover {
+    .hamburger-icon-part {
+      background-color: $COLOR--black-2;
+    }
+  }
+}
+.hamburger-icon-part {
+  width: 100%;
+  height: 2px;
+  margin-bottom: 2px;
+  background-color: $COLOR--gray-60;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+.hamburger-menu {
+  display: none;
+  position: absolute;
+  left: 0;
+  top: 20px;
+  box-sizing: border-box;
+  width: 200px;
+  padding: 10px 0;
+  border: 1px solid $COLOR--gray-80;
+  background-color: $COLOR--white-two;
+  box-shadow: 0 1px 3px 0 rgba(0,0,0,.2);
+  font-family: $FONT-REGULAR;
+  font-size: 14px;
+  color: $COLOR--charcoal-grey;
+  z-index: 1;
+
+  &.shown {
+    display: block;
+  }
+}
+.hamburger-menu-actions {
+  width: 100%;
+  position: relative;
+
+  &:after {
+    content: '';
+    display: block;
+    width: 180px;
+    height: 1px;
+    margin: 10px auto;
+    background-color: $COLOR--gray-91;
+  }
+}
+.hamburger-menu-action {
+  width: 100%;
+  height: 30px;
+  line-height: 30px;
+  box-sizing: border-box;
+  padding: 0 15px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: $COLOR--tealish-hover;
+  }
+}
+.export-block {
+  padding: 0 15px;
+  font-family: $FONT-SEMIBOLD;
+}
+.export-label {
+  text-transform: uppercase;
+  font-size: 12px;
+  color: $COLOR--gray-47;
+}
+.export-buttons {
+  margin-top: 10px;
+}
+.export-button {
+  display: inline-block;
+  margin-right: 10px;
+
+  &:last-child {
+    margin-right: 0;
+  }
+}

@@ -25,10 +25,11 @@ import styles from './ghostButton.scss';
 
 const cx = classNames.bind(styles);
 
-export const GhostButton = ({ type, children, disabled, color, icon, onClick }) => {
+export const GhostButton = ({ type, children, disabled, color, icon, onClick, tiny }) => {
   const classes = cx({
     'ghost-button': true,
     disabled,
+    tiny,
     [`color-${color}`]: color,
     'with-icon': icon,
   });
@@ -43,6 +44,7 @@ export const GhostButton = ({ type, children, disabled, color, icon, onClick }) 
 GhostButton.propTypes = {
   children: PropTypes.node,
   disabled: PropTypes.bool,
+  tiny: PropTypes.bool,
   color: PropTypes.string,
   icon: PropTypes.string,
   type: PropTypes.string,
@@ -52,6 +54,7 @@ GhostButton.propTypes = {
 GhostButton.defaultProps = {
   children: null,
   disabled: false,
+  tiny: false,
   color: 'topaz',
   icon: '',
   type: 'button',

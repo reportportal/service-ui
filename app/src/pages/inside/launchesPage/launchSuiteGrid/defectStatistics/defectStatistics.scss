@@ -1,0 +1,46 @@
+.defect-statistics {
+  line-height: 20px;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    margin: auto;
+    text-align: center;
+  }
+}
+.title {
+  display: none;
+  width: 100%;
+  font-family: $FONT-SEMIBOLD;
+  font-size: 13px;
+  text-transform: uppercase;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    display: inline-block;
+  }
+}
+.circle {
+  position: relative;
+  top: 1px;
+  display: inline-block;
+  margin-right: 5px;
+  width: 12px;
+  height: 12px;
+  border-radius: 100%;
+
+  &.type-pb {
+    background-color: $COLOR--product-bug;
+  }
+  &.type-ab {
+    background-color: $COLOR--automation-bug;
+  }
+  &.type-si {
+    background-color: $COLOR--system-issue;
+  }
+}
+.value {
+  display: inline-block;
+  font-family: $FONT-REGULAR;
+  color: $COLOR--windows-blue;
+  font-size: 15px;
+  line-height: 20px;
+  text-decoration: none;
+}
