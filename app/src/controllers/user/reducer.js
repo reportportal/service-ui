@@ -1,12 +1,40 @@
-import { INITIAL_STATE, FETCH_USER_SUCCESS, SET_ACTIVE_PROJECT } from './constants';
+import { combineReducers } from 'redux';
+import {
+  FETCH_USER_SUCCESS,
+  SET_ACTIVE_PROJECT,
+  SET_START_TIME_FORMAT,
+  START_TIME_FORMAT_RELATIVE,
+} from './constants';
 
-export const userReducer = (state = INITIAL_STATE, { type, payload }) => {
+const settingsReducer = (state = {}, { type, payload }) => {
   switch (type) {
-    case FETCH_USER_SUCCESS:
-      return Object.assign({}, state, { info: payload });
-    case SET_ACTIVE_PROJECT:
-      return Object.assign({}, state, { activeProject: payload });
+    case SET_START_TIME_FORMAT:
+      return { ...state, startTimeFormat: payload };
     default:
       return state;
   }
 };
+
+const userInfoReducer = (state = {}, { type, payload }) => {
+  switch (type) {
+    case FETCH_USER_SUCCESS:
+      return payload;
+    default:
+      return state;
+  }
+};
+
+const activeProjectReducer = (state = START_TIME_FORMAT_RELATIVE, { type, payload }) => {
+  switch (type) {
+    case SET_ACTIVE_PROJECT:
+      return payload;
+    default:
+      return state;
+  }
+};
+
+export const userReducer = combineReducers({
+  info: userInfoReducer,
+  activeProject: activeProjectReducer,
+  settings: settingsReducer,
+});

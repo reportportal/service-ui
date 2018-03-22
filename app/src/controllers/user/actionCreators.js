@@ -1,5 +1,9 @@
 import { fetch, getStorageItem, setStorageItem } from 'common/utils';
-import { FETCH_USER_SUCCESS, SET_ACTIVE_PROJECT } from './constants';
+import {
+  FETCH_USER_SUCCESS,
+  SET_ACTIVE_PROJECT,
+  SET_START_TIME_FORMAT,
+} from './constants';
 import { userInfoSelector } from './selectors';
 
 const fetchUserSuccessAction = user => ({
@@ -33,3 +37,7 @@ export const fetchUserAction = () => dispatch =>
       ));
     });
 
+export const setStartTimeFormatAction = format => ({
+  type: SET_START_TIME_FORMAT,
+  payload: format,
+});
