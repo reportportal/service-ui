@@ -27,10 +27,9 @@ import classNames from 'classnames/bind';
 import { FormattedMessage, injectIntl, intlShape, defineMessages } from 'react-intl';
 import { validate, fetch } from 'common/utils';
 import { FieldProvider } from 'components/fields/fieldProvider';
-import { FieldWithIcon } from 'components/fields/fieldWithIcon';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { FieldBottomConstraints } from 'components/fields/fieldBottomConstraints';
-import { InputPassword } from 'components/inputs/inputPassword';
+import { OutsideInput } from 'components/inputs/outsideInput';
 import { BigButton } from 'components/buttons/bigButton';
 import PasswordIcon from './img/password-icon.svg';
 import styles from './changePasswordForm.scss';
@@ -89,9 +88,7 @@ export class ChangePasswordForm extends PureComponent {
           <FieldProvider name="password">
             <FieldBottomConstraints text={<FormattedMessage id={'ChangePasswordForm.passwordConstraints'} defaultMessage={'4-25 symbols'} />}>
               <FieldErrorHint>
-                <FieldWithIcon icon={PasswordIcon}>
-                  <InputPassword maxLength={'25'} placeholder={formatMessage(placeholders.newPassword)} />
-                </FieldWithIcon>
+                <OutsideInput icon={PasswordIcon} maxLength={'25'} placeholder={formatMessage(placeholders.newPassword)} />
               </FieldErrorHint>
             </FieldBottomConstraints>
           </FieldProvider>
@@ -99,9 +96,7 @@ export class ChangePasswordForm extends PureComponent {
         <div className={cx('confirm-new-password-field')}>
           <FieldProvider name="passwordRepeat">
             <FieldErrorHint>
-              <FieldWithIcon icon={PasswordIcon}>
-                <InputPassword maxLength={'25'} placeholder={formatMessage(placeholders.confirmNewPassword)} />
-              </FieldWithIcon>
+              <OutsideInput icon={PasswordIcon} maxLength={'25'} placeholder={formatMessage(placeholders.confirmNewPassword)} />
             </FieldErrorHint>
           </FieldProvider>
         </div>
