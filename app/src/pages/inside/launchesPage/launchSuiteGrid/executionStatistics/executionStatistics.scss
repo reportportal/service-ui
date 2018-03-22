@@ -1,8 +1,7 @@
 .execution-statistics {
-  text-align: center;
-
   @media (max-width: $SCREEN_SM_MAX) {
     margin: auto;
+    text-align: center;
   }
 }
 .title {

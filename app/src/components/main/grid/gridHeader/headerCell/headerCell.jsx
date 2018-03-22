@@ -22,7 +22,7 @@ export const HeaderCell = ({
 }) => {
   const computedClassName = {
     [`align-${align}`]: align,
-    [`sorting-${sortingDirection}`]: sortingDirection,
+    [`sorting-${sortingDirection.toLowerCase()}`]: sortingDirection,
     sortable,
     'sorting-active': sortingActive,
     'with-filter': withFilter,
@@ -60,7 +60,7 @@ HeaderCell.defaultProps = {
   sortable: false,
   name: '',
   withFilter: false,
-  sortingDirection: 'desc',
+  sortingDirection: 'DESC',
   sortingActive: false,
   onChangeSorting: () => {
   },
