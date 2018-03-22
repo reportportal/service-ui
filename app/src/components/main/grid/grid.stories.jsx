@@ -53,6 +53,7 @@ const COLUMNS = [{
 }];
 
 const DATA = [{
+  id: 'id1',
   name: 'foo 1',
   description: 'some description',
   total: 100,
@@ -60,6 +61,7 @@ const DATA = [{
   failed: 25,
   skipped: 5,
 }, {
+  id: 'id2',
   name: 'foo 2',
   description: 'another description',
   total: 10,
@@ -86,13 +88,25 @@ storiesOf('Components/Main/Grid', module)
       data={DATA}
     />
   ))
+  .add('with selection', () => (
+    <Grid
+      columns={COLUMNS}
+      data={DATA}
+      selectable
+      selectedItems={[DATA[0]]}
+    />
+  ))
   .add('with actions', () => (
     <Grid
       columns={COLUMNS}
       data={DATA}
+      selectedItems={[DATA[0]]}
       sortingColumn="total"
       sortingDirection="asc"
+      selectable
       onChangeSorting={action('changeSorting')}
       onFilterClick={action('filterClick')}
+      onToggleSelectAll={action('toggleSelectAll')}
+      onToggleSelection={action('toggleSelection')}
     />
   ));
