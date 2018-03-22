@@ -26,10 +26,8 @@ import { reduxForm } from 'redux-form';
 import { FormattedMessage, injectIntl, intlShape, defineMessages } from 'react-intl';
 import { Link } from 'react-router-dom';
 import { validate } from 'common/utils';
-import { FieldWithIcon } from 'components/fields/fieldWithIcon';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
-import { Input } from 'components/inputs/input';
-import { InputPassword } from 'components/inputs/inputPassword';
+import { OutsideInput } from 'components/inputs/outsideInput';
 import { BigButton } from 'components/buttons/bigButton';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { authExtensionsSelector } from 'controllers/appInfo';
@@ -98,22 +96,17 @@ export class LoginForm extends React.Component {
               </div>
             : null
         }
-
         <div className={cx('login-field')}>
           <FieldProvider name="login">
             <FieldErrorHint>
-              <FieldWithIcon icon={LoginIcon}>
-                <Input placeholder={formatMessage(placeholders.login)} />
-              </FieldWithIcon>
+              <OutsideInput icon={LoginIcon} placeholder={formatMessage(placeholders.login)} />
             </FieldErrorHint>
           </FieldProvider>
         </div>
         <div className={cx('password-field')}>
           <FieldProvider name="password">
             <FieldErrorHint>
-              <FieldWithIcon icon={PasswordIcon}>
-                <InputPassword placeholder={formatMessage(placeholders.password)} />
-              </FieldWithIcon>
+              <OutsideInput icon={PasswordIcon} placeholder={formatMessage(placeholders.password)} type={'password'} />
             </FieldErrorHint>
           </FieldProvider>
         </div>
