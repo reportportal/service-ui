@@ -62,7 +62,7 @@ export class InputDropdown extends Component {
     this.setState({ opened: !this.state.opened });
     e.stopPropagation();
     this.state.opened
-      ? (() => this.props.multiple && this.props.onBlur())()
+      ? this.props.onBlur()
       : this.props.onFocus();
   };
   handleClickOutside = (e) => {
