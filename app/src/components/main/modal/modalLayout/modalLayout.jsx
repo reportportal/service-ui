@@ -18,7 +18,7 @@ const cx = classNames.bind(styles);
 export class ModalLayout extends Component {
   static propTypes = {
     hideModalAction: PropTypes.func.isRequired, // this props
-
+    permissionMap: PropTypes.bool,
     title: PropTypes.string, // header props
 
     children: PropTypes.node, // content props
@@ -35,6 +35,7 @@ export class ModalLayout extends Component {
     customButton: PropTypes.node,
   };
   static defaultProps = {
+    permissionMap: false,
     title: '',
 
     children: null,
@@ -94,7 +95,7 @@ export class ModalLayout extends Component {
               onExited={this.props.hideModalAction}
             >
               {status => (
-                <div ref={(modal) => { this.modal = modal; }} className={cx('modal-window')}>
+                <div ref={(modal) => { this.modal = modal; }} className={cx('modal-window', { 'permission-map': this.props.permissionMap })}>
                   <div className={cx('modal-header')}>
                     <span className={cx('modal-title')}>
                       {title}
@@ -105,7 +106,7 @@ export class ModalLayout extends Component {
                     <div className={cx('separator')} />
                   </div>
 
-                  <ModalContent>
+                  <ModalContent permissionMap={this.props.permissionMap}>
                     {status !== 'exited' ? children : null }
                   </ModalContent>
 
@@ -113,6 +114,7 @@ export class ModalLayout extends Component {
                     {...footerProps}
                     onClickOk={this.onClickOk}
                     onClickCancel={this.closeModal}
+                    permissionMap={this.props.permissionMap}
                   />
                 </div>
               )}

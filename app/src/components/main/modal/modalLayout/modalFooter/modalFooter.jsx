@@ -7,9 +7,9 @@ import styles from './modalFooter.scss';
 const cx = classNames.bind(styles);
 
 export const ModalFooter = ({
-  warningMessage, okButton, cancelButton, customButton, onClickCancel, onClickOk,
+  warningMessage, okButton, cancelButton, customButton, onClickCancel, onClickOk, permissionMap,
 }) => (
-  <div className={cx('modal-footer')}>
+  <div className={cx('modal-footer', { 'permission-footer': permissionMap })}>
     { warningMessage ?
       <div className={cx('warning-block')}>
         <i className={cx('warning-icon')} />
@@ -56,6 +56,7 @@ ModalFooter.propTypes = {
   customButton: PropTypes.node,
   onClickOk: PropTypes.func,
   onClickCancel: PropTypes.func,
+  permissionMap: PropTypes.bool,
 };
 ModalFooter.defaultProps = {
   warningMessage: '',
@@ -64,4 +65,5 @@ ModalFooter.defaultProps = {
   customButton: null,
   onClickOk: () => {},
   onClickCancel: () => {},
+  permissionMap: false,
 };
