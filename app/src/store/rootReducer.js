@@ -6,6 +6,7 @@ import { langReducer } from 'controllers/lang';
 import { modalReducer } from 'controllers/modal';
 import { userReducer } from 'controllers/user';
 import { projectReducer } from 'controllers/project';
+import { dashboardReducer } from 'controllers/dashboard';
 
 export const rootReducer = combineReducers({
   appInfo: appInfoReducer,
@@ -15,4 +16,5 @@ export const rootReducer = combineReducers({
   modal: modalReducer,
   user: userReducer,
   project: projectReducer,
+  dashboard: dashboardReducer,
 });

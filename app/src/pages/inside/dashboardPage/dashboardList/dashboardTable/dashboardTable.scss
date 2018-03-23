@@ -1,0 +1,39 @@
+.cell {
+  height: 50px;
+  position: relative;
+  display: table-cell;
+ padding: 0 10px;
+  vertical-align: middle;
+  color: #464547;
+  font-size: 13px;
+
+  @media(max-width: $SCREEN_SM_MAX) {
+    width: 100%;
+    height: auto;
+    padding: 10px;
+
+    &:empty {
+      display: none;
+    }
+  }
+}
+
+.name {
+  line-height: 18px;
+  font-size: 16px;
+  font-family: $FONT-CONDBOLD;
+  letter-spacing: 1px;
+  color: $COLOR--topaz;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.with-button {
+  cursor: pointer;
+  @media(max-width: $SCREEN_SM_MAX) {
+    width: 100%;
+    height: auto;
+    padding: 10px;
+    display: none;
+  }
+}

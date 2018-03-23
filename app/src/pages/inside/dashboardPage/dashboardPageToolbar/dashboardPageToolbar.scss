@@ -1,0 +1,40 @@
+.input {
+  width: 310px;
+  @media(max-width: $SCREEN_SM_MAX) {
+    width: 100%;
+  }
+}
+
+.tool-bar {
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+
+  padding: 10px;
+  background-color: #ffffff;
+
+  @media(max-width: $SCREEN_SM_MAX) {
+    flex-wrap: wrap;
+  }
+}
+
+.buttons {
+  button {
+    margin: 0 5px;
+  }
+
+  @media(max-width: $SCREEN_SM_MAX) {
+    padding: 10px;
+  }
+}
+
+.active-grid {
+  button:nth-of-type(1) {
+    background-color: $COLOR--topaz;
+  }
+}
+.active-table {
+  button:nth-of-type(2) {
+    background-color: $COLOR--topaz;
+  }
+}

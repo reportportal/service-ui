@@ -1,0 +1,104 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="250" height="125" viewBox="0 0 250 125">
+  <defs>
+    <rect id="wdgt-investigated-percentage-of-launches-a" width="32" height="110" x="30"/>
+    <filter id="wdgt-investigated-percentage-of-launches-b" width="106.2%" height="101.8%" x="-3.1%" y="-.9%" filterUnits="objectBoundingBox">
+      <feOffset dx="2" in="SourceAlpha" result="shadowOffsetInner1"/>
+      <feComposite in="shadowOffsetInner1" in2="SourceAlpha" k2="-1" k3="1" operator="arithmetic" result="shadowInnerInner1"/>
+      <feColorMatrix in="shadowInnerInner1" values="0 0 0 0 1   0 0 0 0 1   0 0 0 0 1  0 0 0 0.3 0"/>
+    </filter>
+    <rect id="wdgt-investigated-percentage-of-launches-c" width="32" height="110" x="62"/>
+    <filter id="wdgt-investigated-percentage-of-launches-d" width="106.2%" height="101.8%" x="-3.1%" y="-.9%" filterUnits="objectBoundingBox">
+      <feOffset dx="2" in="SourceAlpha" result="shadowOffsetInner1"/>
+      <feComposite in="shadowOffsetInner1" in2="SourceAlpha" k2="-1" k3="1" operator="arithmetic" result="shadowInnerInner1"/>
+      <feColorMatrix in="shadowInnerInner1" values="0 0 0 0 1   0 0 0 0 1   0 0 0 0 1  0 0 0 0.3 0"/>
+    </filter>
+    <rect id="wdgt-investigated-percentage-of-launches-e" width="32" height="110" x="94"/>
+    <filter id="wdgt-investigated-percentage-of-launches-f" width="106.2%" height="101.8%" x="-3.1%" y="-.9%" filterUnits="objectBoundingBox">
+      <feOffset dx="2" in="SourceAlpha" result="shadowOffsetInner1"/>
+      <feComposite in="shadowOffsetInner1" in2="SourceAlpha" k2="-1" k3="1" operator="arithmetic" result="shadowInnerInner1"/>
+      <feColorMatrix in="shadowInnerInner1" values="0 0 0 0 1   0 0 0 0 1   0 0 0 0 1  0 0 0 0.3 0"/>
+    </filter>
+    <rect id="wdgt-investigated-percentage-of-launches-g" width="32" height="110" x="126"/>
+    <filter id="wdgt-investigated-percentage-of-launches-h" width="106.2%" height="101.8%" x="-3.1%" y="-.9%" filterUnits="objectBoundingBox">
+      <feOffset dx="2" in="SourceAlpha" result="shadowOffsetInner1"/>
+      <feComposite in="shadowOffsetInner1" in2="SourceAlpha" k2="-1" k3="1" operator="arithmetic" result="shadowInnerInner1"/>
+      <feColorMatrix in="shadowInnerInner1" values="0 0 0 0 1   0 0 0 0 1   0 0 0 0 1  0 0 0 0.3 0"/>
+    </filter>
+    <rect id="wdgt-investigated-percentage-of-launches-i" width="32" height="110" x="158"/>
+    <filter id="wdgt-investigated-percentage-of-launches-j" width="106.2%" height="101.8%" x="-3.1%" y="-.9%" filterUnits="objectBoundingBox">
+      <feOffset dx="2" in="SourceAlpha" result="shadowOffsetInner1"/>
+      <feComposite in="shadowOffsetInner1" in2="SourceAlpha" k2="-1" k3="1" operator="arithmetic" result="shadowInnerInner1"/>
+      <feColorMatrix in="shadowInnerInner1" values="0 0 0 0 1   0 0 0 0 1   0 0 0 0 1  0 0 0 0.3 0"/>
+    </filter>
+    <rect id="wdgt-investigated-percentage-of-launches-k" width="32" height="65" x="30" y="45"/>
+    <filter id="wdgt-investigated-percentage-of-launches-l" width="106.2%" height="103.1%" x="-3.1%" y="-1.5%" filterUnits="objectBoundingBox">
+      <feOffset dx="2" in="SourceAlpha" result="shadowOffsetInner1"/>
+      <feComposite in="shadowOffsetInner1" in2="SourceAlpha" k2="-1" k3="1" operator="arithmetic" result="shadowInnerInner1"/>
+      <feColorMatrix in="shadowInnerInner1" values="0 0 0 0 1   0 0 0 0 1   0 0 0 0 1  0 0 0 0.3 0"/>
+    </filter>
+    <rect id="wdgt-investigated-percentage-of-launches-m" width="32" height="46" x="62" y="64"/>
+    <filter id="wdgt-investigated-percentage-of-launches-n" width="106.2%" height="104.3%" x="-3.1%" y="-2.2%" filterUnits="objectBoundingBox">
+      <feOffset dx="2" in="SourceAlpha" result="shadowOffsetInner1"/>
+      <feComposite in="shadowOffsetInner1" in2="SourceAlpha" k2="-1" k3="1" operator="arithmetic" result="shadowInnerInner1"/>
+      <feColorMatrix in="shadowInnerInner1" values="0 0 0 0 1   0 0 0 0 1   0 0 0 0 1  0 0 0 0.3 0"/>
+    </filter>
+    <rect id="wdgt-investigated-percentage-of-launches-o" width="32" height="25" x="94" y="85"/>
+    <filter id="wdgt-investigated-percentage-of-launches-p" width="106.2%" height="108%" x="-3.1%" y="-4%" filterUnits="objectBoundingBox">
+      <feOffset dx="2" in="SourceAlpha" result="shadowOffsetInner1"/>
+      <feComposite in="shadowOffsetInner1" in2="SourceAlpha" k2="-1" k3="1" operator="arithmetic" result="shadowInnerInner1"/>
+      <feColorMatrix in="shadowInnerInner1" values="0 0 0 0 1   0 0 0 0 1   0 0 0 0 1  0 0 0 0.3 0"/>
+    </filter>
+    <rect id="wdgt-investigated-percentage-of-launches-q" width="32" height="12.5" x="126" y="97.5"/>
+    <filter id="wdgt-investigated-percentage-of-launches-r" width="106.2%" height="116%" x="-3.1%" y="-8%" filterUnits="objectBoundingBox">
+      <feOffset dx="2" in="SourceAlpha" result="shadowOffsetInner1"/>
+      <feComposite in="shadowOffsetInner1" in2="SourceAlpha" k2="-1" k3="1" operator="arithmetic" result="shadowInnerInner1"/>
+      <feColorMatrix in="shadowInnerInner1" values="0 0 0 0 1   0 0 0 0 1   0 0 0 0 1  0 0 0 0.3 0"/>
+    </filter>
+    <rect id="wdgt-investigated-percentage-of-launches-s" width="32" height="35" x="158" y="75"/>
+    <filter id="wdgt-investigated-percentage-of-launches-t" width="106.2%" height="105.7%" x="-3.1%" y="-2.9%" filterUnits="objectBoundingBox">
+      <feOffset dx="2" in="SourceAlpha" result="shadowOffsetInner1"/>
+      <feComposite in="shadowOffsetInner1" in2="SourceAlpha" k2="-1" k3="1" operator="arithmetic" result="shadowInnerInner1"/>
+      <feColorMatrix in="shadowInnerInner1" values="0 0 0 0 1   0 0 0 0 1   0 0 0 0 1  0 0 0 0.3 0"/>
+    </filter>
+  </defs>
+  <g fill="none" fill-rule="evenodd">
+    <rect width="250" height="125"/>
+    <g stroke="#F5F5F5" transform="translate(1 16)">
+      <path d="M-2.84217094e-14 87.5L248 87.5M-2.84217094e-14 65.5L248 65.5M-2.84217094e-14 44.5L248 44.5M-2.84217094e-14 22.5L248 22.5M-2.84217094e-14.5L248 .5"/>
+    </g>
+    <g transform="translate(30 15)">
+      <rect width="190" height="110" fill="#D6E4AA"/>
+      <use fill="#D6E4AA" xlink:href="#wdgt-investigated-percentage-of-launches-a"/>
+      <use fill="#000" filter="url(#wdgt-investigated-percentage-of-launches-b)" xlink:href="#wdgt-investigated-percentage-of-launches-a"/>
+      <use fill="#D6E4AA" xlink:href="#wdgt-investigated-percentage-of-launches-c"/>
+      <use fill="#000" filter="url(#wdgt-investigated-percentage-of-launches-d)" xlink:href="#wdgt-investigated-percentage-of-launches-c"/>
+      <use fill="#D6E4AA" xlink:href="#wdgt-investigated-percentage-of-launches-e"/>
+      <use fill="#000" filter="url(#wdgt-investigated-percentage-of-launches-f)" xlink:href="#wdgt-investigated-percentage-of-launches-e"/>
+      <use fill="#D6E4AA" xlink:href="#wdgt-investigated-percentage-of-launches-g"/>
+      <use fill="#000" filter="url(#wdgt-investigated-percentage-of-launches-h)" xlink:href="#wdgt-investigated-percentage-of-launches-g"/>
+      <use fill="#D6E4AA" xlink:href="#wdgt-investigated-percentage-of-launches-i"/>
+      <use fill="#000" filter="url(#wdgt-investigated-percentage-of-launches-j)" xlink:href="#wdgt-investigated-percentage-of-launches-i"/>
+      <rect width="30" height="85" y="25" fill="#F6CC90"/>
+      <g>
+        <use fill="#F6CC90" xlink:href="#wdgt-investigated-percentage-of-launches-k"/>
+        <use fill="#000" filter="url(#wdgt-investigated-percentage-of-launches-l)" xlink:href="#wdgt-investigated-percentage-of-launches-k"/>
+      </g>
+      <g>
+        <use fill="#F6CC90" xlink:href="#wdgt-investigated-percentage-of-launches-m"/>
+        <use fill="#000" filter="url(#wdgt-investigated-percentage-of-launches-n)" xlink:href="#wdgt-investigated-percentage-of-launches-m"/>
+      </g>
+      <g>
+        <use fill="#F6CC90" xlink:href="#wdgt-investigated-percentage-of-launches-o"/>
+        <use fill="#000" filter="url(#wdgt-investigated-percentage-of-launches-p)" xlink:href="#wdgt-investigated-percentage-of-launches-o"/>
+      </g>
+      <g>
+        <use fill="#F6CC90" xlink:href="#wdgt-investigated-percentage-of-launches-q"/>
+        <use fill="#000" filter="url(#wdgt-investigated-percentage-of-launches-r)" xlink:href="#wdgt-investigated-percentage-of-launches-q"/>
+      </g>
+      <g>
+        <use fill="#F6CC90" xlink:href="#wdgt-investigated-percentage-of-launches-s"/>
+        <use fill="#000" filter="url(#wdgt-investigated-percentage-of-launches-t)" xlink:href="#wdgt-investigated-percentage-of-launches-s"/>
+      </g>
+    </g>
+  </g>
+</svg>

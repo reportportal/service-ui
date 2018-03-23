@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="250" height="126" viewBox="0 0 250 126">
+  <defs>
+    <circle id="wdgt-launch-statistics-line-chart-a" cx="80" cy="46" r="6"/>
+    <circle id="wdgt-launch-statistics-line-chart-b" cx="80" cy="68" r="6"/>
+    <circle id="wdgt-launch-statistics-line-chart-c" cx="80" cy="87" r="6"/>
+    <circle id="wdgt-launch-statistics-line-chart-d" cx="80" cy="104" r="6"/>
+  </defs>
+  <g fill="none" fill-rule="evenodd">
+    <rect width="250" height="125"/>
+    <g stroke="#F5F5F5" transform="translate(1 16)">
+      <path d="M-2.84217094e-14 87.5L248 87.5M-2.84217094e-14 65.5L248 65.5M-2.84217094e-14 44.5L248 44.5M-2.84217094e-14 22.5L248 22.5M-2.84217094e-14.5L248 .5"/>
+    </g>
+    <polyline fill="#B2E4E3" points="0 125 80 45.332 110.397 75.869 170 7.675 250 125"/>
+    <polyline fill="#B2E4E3" points="0 125 80 45.332 110.397 75.869 170 7.675 250 125"/>
+    <polyline fill="#F9CC90" points="0 125 80 65.98 110 86.541 170 28.082 250 125"/>
+    <polyline fill="#F9CC90" points="0 125 80 65.98 110 86.541 170 28.082 250 125"/>
+    <polyline fill="#F09583" points="0 125 80 86.777 110 96.943 170 48.083 250 125"/>
+    <polyline fill="#D6E4AA" points="0 125 80.093 103.958 109.937 109.039 170 68.388 250 125"/>
+    <path stroke="#FFF" stroke-linecap="square" stroke-width="2" d="M80,44 L80,124.568945" opacity=".4"/>
+    <use fill="#ADDBDB" xlink:href="#wdgt-launch-statistics-line-chart-a"/>
+    <circle cx="80" cy="46" r="5" stroke="#FFF" stroke-opacity=".6" stroke-width="2"/>
+    <use fill="#F7CC90" xlink:href="#wdgt-launch-statistics-line-chart-b"/>
+    <circle cx="80" cy="68" r="5" stroke="#FFF" stroke-opacity=".602" stroke-width="2"/>
+    <g>
+      <use fill="#EE9583" xlink:href="#wdgt-launch-statistics-line-chart-c"/>
+      <circle cx="80" cy="87" r="5" stroke="#FFF" stroke-opacity=".6" stroke-width="2"/>
+    </g>
+    <g>
+      <use fill="#D6E4AA" xlink:href="#wdgt-launch-statistics-line-chart-d"/>
+      <circle cx="80" cy="104" r="5" stroke="#FFF" stroke-opacity=".454" stroke-width="2"/>
+    </g>
+  </g>
+</svg>
