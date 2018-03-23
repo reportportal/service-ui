@@ -23,7 +23,7 @@
   "Common.on": "УКЛ",
   "Common.validation.email": "Электронны адрас няслушны. Калі ласка, увядзіце слушны электронны адрас.",
   "ConfigExamplesBlock.header": "Прыклады наладаў",
-  "DeleteFilterDialog.deleteFilter": "Вы ўпэўнены, што хочаце выдаліць фільтр '{name}'? Ён больш не будзе існаваць.",
+  "DeleteFilterDialog.deleteFilter": "Вы ўпэўнены, што хочаце выдаліць фільтр '<b>{name}</b>'? Ён больш не будзе існаваць.",
   "DeleteFilterDialog.deleteFilterHeader": "ВЫДАЛІЦЬ ФІЛЬТР",
   "Filter.description": "Апісанне",
   "Filter.descriptionPlaceholder": "Увядзіце апісанне фільтра",

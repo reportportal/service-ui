@@ -31,7 +31,7 @@
   "DurationBlock.overApproximate": "Среднее время выполнения - {end}, текущая задержка - {over}",
   "DurationBlock.skipped": "ПРОПУЩЕНО. Длительность: {durationTime}",
   "DurationBlock.stopped": "Прогон ОСТАНОВЛЕН после: {durationTime}. Остановлен в: {endTime}",
-  "DeleteFilterDialog.deleteFilter": "Вы уверены, что хотите удалить фильтр '{name}'?",
+  "DeleteFilterDialog.deleteFilter": "Вы уверены, что хотите удалить фильтр '<b>{name}</b>'?",
   "DeleteFilterDialog.deleteFilterHeader": "Удалить фильтр",
   "Filter.description": "Описание",
   "Filter.descriptionPlaceholder": "Введите описание фильтра",

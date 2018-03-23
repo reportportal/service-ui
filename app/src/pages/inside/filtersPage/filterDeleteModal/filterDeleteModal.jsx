@@ -1,8 +1,13 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
+import Parser from 'html-react-parser';
+import classNames from 'classnames/bind';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { withModal, ModalLayout } from 'components/main/modal';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import styles from './filterDeleteModal.scss';
+
+const cx = classNames.bind(styles);
 
 const messages = defineMessages({
   deleteFilterHeader: {
@@ -11,7 +16,7 @@ const messages = defineMessages({
   },
   deleteFilterText: {
     id: 'DeleteFilterDialog.deleteFilter',
-    defaultMessage: 'Are you sure to delete filter \'{name}\'? It will no longer exist.',
+    defaultMessage: 'Are you sure to delete filter \'<b>{name}</b>\'? It will no longer exist.',
   },
 });
 
@@ -55,8 +60,8 @@ export class FilterDeleteModal extends Component {
         okButton={okButton}
         cancelButton={cancelButton}
       >
-        <p>
-          {intl.formatMessage(messages.deleteFilterText, { name: filter.name })}
+        <p className={cx('message')}>
+          {Parser(intl.formatMessage(messages.deleteFilterText, { name: filter.name }))}
         </p>
       </ModalLayout>
     );
