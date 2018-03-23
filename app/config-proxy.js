@@ -1,3 +1,1 @@
-export default {
-  path: 'http://evbyminsd6293.minsk.epam.com:8080/',
-}
+export default { path: 'http://dev.epm-rpp.projects.epam.com:8080/' }
