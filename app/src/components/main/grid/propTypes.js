@@ -11,5 +11,5 @@ export const columnPropTypes = {
   align: PropTypes.oneOf([ALIGN_LEFT, ALIGN_CENTER, ALIGN_RIGHT]),
   formatter: PropTypes.func,
   sortable: PropTypes.bool,
-  name: PropTypes.string,
+  id: PropTypes.string,
 };

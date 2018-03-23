@@ -18,14 +18,14 @@ export const GridHeader = ({
       columns.map((column, i) =>
         (
           <HeaderCell
-            key={column.name || i}
+            key={column.id || i}
             title={column.title}
             align={column.align}
             sortable={column.sortable}
-            name={column.name}
+            id={column.id}
             withFilter={column.withFilter}
             sortingDirection={sortingDirection}
-            sortingActive={sortingColumn === column.name}
+            sortingActive={sortingColumn === column.id}
             onChangeSorting={onChangeSorting}
             onFilterClick={onFilterClick}
           />

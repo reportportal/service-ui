@@ -13,7 +13,7 @@ export const HeaderCell = ({
   title,
   align,
   sortable,
-  name,
+  id,
   sortingActive,
   sortingDirection,
   onChangeSorting,
@@ -29,12 +29,12 @@ export const HeaderCell = ({
   };
   const filterClickHandler = (e) => {
     e.stopPropagation();
-    onFilterClick(name);
+    onFilterClick(id);
   };
   return (
     <div
       className={cx('header-cell', computedClassName)}
-      onClick={() => onChangeSorting(name)}
+      onClick={() => onChangeSorting(id)}
     >
       <div className={cx('title-container')}>
         <div className={cx('filter')} onClick={filterClickHandler}>{Parser(FilterIcon)}</div>
@@ -58,7 +58,7 @@ HeaderCell.defaultProps = {
   },
   align: ALIGN_LEFT,
   sortable: false,
-  name: '',
+  id: '',
   withFilter: false,
   sortingDirection: 'DESC',
   sortingActive: false,
