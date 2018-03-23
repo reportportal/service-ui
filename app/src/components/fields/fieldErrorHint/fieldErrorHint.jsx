@@ -13,6 +13,8 @@ const messages = defineMessages({
   emailHint: { id: 'Common.validation.email', defaultMessage: 'Email is incorrect. Please enter correct email' },
   confirmPasswordHint: { id: 'RegistrationForm.confirmPasswordHint', defaultMessage: 'Passwords do not match' },
   filterNameError: { id: 'FiltersPage.filterNameLength', defaultMessage: 'Filter name length should have size from 3 to 128 characters.' },
+  dashboardNameHint: { id: 'addEditDashboard.dashboardNameHint', defaultMessage: 'Dashboard name should have size  from 3 to 128.' },
+  dashboardNameSearchHint: { id: 'searchDashboardForm.dashboardNameSearchHint', defaultMessage: 'Dashboard name should have size from 3 to 128' },
 });
 
 @injectIntl

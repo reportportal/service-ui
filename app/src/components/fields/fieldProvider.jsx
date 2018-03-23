@@ -12,8 +12,7 @@ const InnerComponent = ({
 export const FieldProvider = ({ children, ...rest }) => (
   <Field {...rest} component={InnerComponent}>
     {children}
-  </Field>
-);
+  </Field>);
 
 FieldProvider.propTypes = {
   children: PropTypes.node,
