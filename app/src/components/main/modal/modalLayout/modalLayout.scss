@@ -61,6 +61,25 @@
     margin-left: 0;
   }
 }
+.permission-map{
+  width: 900px;
+  margin-left: -450px;
+  transition: margin-top 450ms ease-in, opacity 450ms ease-in;
+  @media (max-width: $SCREEN-MD_MAX) {
+    width: 800px;
+    margin-left: -400px;
+  }
+  @media (max-width: $SCREEN-SM_MAX) {
+    width: 600px;
+    margin-left: -300px;
+  }
+  @media (max-width: $SCREEN-XS_MAX) {
+    width: 100%;
+    margin-left: 0;
+    right: 0;
+    left: 0;
+  }
+}
 :global {
   .modal-window-animation-enter {
     opacity: 0;

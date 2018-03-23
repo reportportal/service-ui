@@ -5,14 +5,16 @@ import styles from './modalContent.scss';
 
 const cx = classNames.bind(styles);
 
-export const ModalContent = ({ children }) => (
-  <div className={cx('modal-content')}>
+export const ModalContent = ({ children, permissionMap }) => (
+  <div className={cx('modal-content', { 'permission-content': permissionMap })}>
     { children }
   </div>
   );
 ModalContent.propTypes = {
   children: PropTypes.node,
+  permissionMap: PropTypes.bool,
 };
 ModalContent.defaultProps = {
   children: null,
+  permissionMap: false,
 };
