@@ -6,10 +6,7 @@ const cx = classname.bind(styles);
 
 export const ModalField = ({ label, children }) => (
   <div className={cx('modal-field')}>
-    {label
-      ? <Label label={label} />
-      : null
-    }
+    {label && <Label label={label} />}
     <Content>
       {children}
     </Content>
