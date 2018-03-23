@@ -58,7 +58,7 @@ export class GridRow extends Component {
               }
               return (
                 <GridCell
-                  key={column.name || i}
+                  key={column.id || i}
                   refFunction={column.maxHeight ? this.setupAccordion : null}
                   mobileWidth={column.mobileWidth}
                   selectors={column.selectors}
