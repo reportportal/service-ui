@@ -29,9 +29,9 @@ import { validate, fetch } from 'common/utils';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { FieldBottomConstraints } from 'components/fields/fieldBottomConstraints';
-import { OutsideInput } from 'components/inputs/outsideInput';
+import { InputOutside } from 'components/inputs/inputOutside';
 import { BigButton } from 'components/buttons/bigButton';
-import PasswordIcon from './img/password-icon.svg';
+import PasswordIcon from './img/password-icon-inline.svg';
 import styles from './changePasswordForm.scss';
 
 const cx = classNames.bind(styles);
@@ -88,7 +88,7 @@ export class ChangePasswordForm extends PureComponent {
           <FieldProvider name="password">
             <FieldBottomConstraints text={<FormattedMessage id={'ChangePasswordForm.passwordConstraints'} defaultMessage={'4-25 symbols'} />}>
               <FieldErrorHint>
-                <OutsideInput icon={PasswordIcon} maxLength={'25'} placeholder={formatMessage(placeholders.newPassword)} />
+                <InputOutside icon={PasswordIcon} maxLength={'25'} placeholder={formatMessage(placeholders.newPassword)} />
               </FieldErrorHint>
             </FieldBottomConstraints>
           </FieldProvider>
@@ -96,7 +96,7 @@ export class ChangePasswordForm extends PureComponent {
         <div className={cx('confirm-new-password-field')}>
           <FieldProvider name="passwordRepeat">
             <FieldErrorHint>
-              <OutsideInput icon={PasswordIcon} maxLength={'25'} placeholder={formatMessage(placeholders.confirmNewPassword)} />
+              <InputOutside icon={PasswordIcon} maxLength={'25'} placeholder={formatMessage(placeholders.confirmNewPassword)} />
             </FieldErrorHint>
           </FieldProvider>
         </div>

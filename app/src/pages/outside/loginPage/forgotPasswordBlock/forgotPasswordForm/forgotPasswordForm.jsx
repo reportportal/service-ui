@@ -27,10 +27,10 @@ import { Link, withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
-import { OutsideInput } from 'components/inputs/outsideInput';
+import { InputOutside } from 'components/inputs/inputOutside';
 import { BigButton } from 'components/buttons/bigButton';
 import { validate, fetch } from 'common/utils';
-import EmailIcon from './img/email-icon.svg';
+import EmailIcon from './img/email-icon-inline.svg';
 import styles from './forgotPasswordForm.scss';
 
 const cx = classNames.bind(styles);
@@ -78,7 +78,7 @@ export class ForgotPasswordForm extends PureComponent {
         <div className={cx('email-field')}>
           <FieldProvider name="email">
             <FieldErrorHint>
-              <OutsideInput icon={EmailIcon} placeholder={formatMessage(placeholders.email)} />
+              <InputOutside icon={EmailIcon} placeholder={formatMessage(placeholders.email)} />
             </FieldErrorHint>
           </FieldProvider>
         </div>

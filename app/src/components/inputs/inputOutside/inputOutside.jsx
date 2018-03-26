@@ -20,13 +20,14 @@
  */
 
 import React, { Component } from 'react';
+import Parser from 'html-react-parser';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import styles from './outsideInput.scss';
+import styles from './inputOutside.scss';
 
 const cx = classNames.bind(styles);
 
-export class OutsideInput extends Component {
+export class InputOutside extends Component {
   static propTypes = {
     type: PropTypes.string,
     value: PropTypes.string,
@@ -63,21 +64,21 @@ export class OutsideInput extends Component {
   };
 
   state = {
-    passwordShown: false,
+    passwordVisible: false,
   };
   getInputType = () => {
     if (this.props.type !== 'password') {
       return this.props.type;
     }
-    return this.state.passwordShown ? 'text' : 'password';
+    return this.state.passwordVisible ? 'text' : 'password';
   };
-  showPass = (e) => {
+  showPassword = (e) => {
     e.preventDefault();
-    !this.state.passwordShown && this.setState({ passwordShown: true });
+    !this.state.passwordVisible && this.setState({ passwordVisible: true });
   };
-  hidePass = (e) => {
+  hidePassword = (e) => {
     e.preventDefault();
-    this.state.passwordShown && this.setState({ passwordShown: false });
+    this.state.passwordVisible && this.setState({ passwordVisible: false });
   };
   render() {
     const {
@@ -87,7 +88,7 @@ export class OutsideInput extends Component {
     return (
       <div
         className={cx(
-          'outside-input',
+          'input-outside',
           {
             disabled,
             password: type === 'password',
@@ -95,7 +96,9 @@ export class OutsideInput extends Component {
           })
         }
       >
-        <div className={cx('icon')} style={{ backgroundImage: `url(${icon})` }} />
+        <div className={cx('icon')}>
+          { Parser(icon) }
+        </div>
         <input
           ref={refFunction}
           className={cx('input')}
@@ -113,13 +116,13 @@ export class OutsideInput extends Component {
         {
           type === 'password' &&
           <div
-            className={cx('eye-icon', { opened: this.state.passwordShown })}
-            onMouseDown={this.showPass}
-            onMouseLeave={this.hidePass}
-            onMouseUp={this.hidePass}
-            onTouchStart={this.showPass}
-            onTouchEnd={this.hidePass}
-            onTouchCancel={this.hidePass}
+            className={cx('eye-icon', { opened: this.state.passwordVisible })}
+            onMouseDown={this.showPassword}
+            onMouseLeave={this.hidePassword}
+            onMouseUp={this.hidePassword}
+            onTouchStart={this.showPassword}
+            onTouchEnd={this.hidePassword}
+            onTouchCancel={this.hidePassword}
           />
         }
       </div>

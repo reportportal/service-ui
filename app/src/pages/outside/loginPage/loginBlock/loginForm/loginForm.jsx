@@ -27,13 +27,13 @@ import { FormattedMessage, injectIntl, intlShape, defineMessages } from 'react-i
 import { Link } from 'react-router-dom';
 import { validate } from 'common/utils';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
-import { OutsideInput } from 'components/inputs/outsideInput';
+import { InputOutside } from 'components/inputs/inputOutside';
 import { BigButton } from 'components/buttons/bigButton';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { authExtensionsSelector } from 'controllers/appInfo';
 import { loginAction } from 'controllers/auth';
-import LoginIcon from './img/login-field-icon.svg';
-import PasswordIcon from './img/password-field-icon.svg';
+import LoginIcon from './img/login-field-icon-inline.svg';
+import PasswordIcon from './img/password-field-icon-inline.svg';
 import styles from './loginForm.scss';
 import { ExternalLoginBlock } from './externalLoginBlock';
 
@@ -99,14 +99,14 @@ export class LoginForm extends React.Component {
         <div className={cx('login-field')}>
           <FieldProvider name="login">
             <FieldErrorHint>
-              <OutsideInput icon={LoginIcon} placeholder={formatMessage(placeholders.login)} />
+              <InputOutside icon={LoginIcon} placeholder={formatMessage(placeholders.login)} />
             </FieldErrorHint>
           </FieldProvider>
         </div>
         <div className={cx('password-field')}>
           <FieldProvider name="password">
             <FieldErrorHint>
-              <OutsideInput icon={PasswordIcon} placeholder={formatMessage(placeholders.password)} type={'password'} />
+              <InputOutside icon={PasswordIcon} placeholder={formatMessage(placeholders.password)} type={'password'} />
             </FieldErrorHint>
           </FieldProvider>
         </div>
