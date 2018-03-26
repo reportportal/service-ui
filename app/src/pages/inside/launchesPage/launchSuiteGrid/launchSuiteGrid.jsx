@@ -140,7 +140,7 @@ const COLUMNS = [
     component: HamburgerColumn,
   },
   {
-    name: 'name',
+    id: 'name',
     title: {
       full: 'name',
       short: 'name',
@@ -150,7 +150,7 @@ const COLUMNS = [
     sortable: true,
   },
   {
-    name: 'start_time',
+    id: 'start_time',
     title: {
       full: 'start time',
       short: 'start',
@@ -159,7 +159,7 @@ const COLUMNS = [
     sortable: true,
   },
   {
-    name: 'statistics$executions$total',
+    id: 'statistics$executions$total',
     title: {
       full: 'total',
       short: 'ttl',
@@ -168,7 +168,7 @@ const COLUMNS = [
     sortable: true,
   },
   {
-    name: 'statistics$executions$passed',
+    id: 'statistics$executions$passed',
     title: {
       full: 'passed',
       short: 'ps',
@@ -177,7 +177,7 @@ const COLUMNS = [
     sortable: true,
   },
   {
-    name: 'statistics$executions$failed',
+    id: 'statistics$executions$failed',
     title: {
       full: 'failed',
       short: 'fl',
@@ -186,7 +186,7 @@ const COLUMNS = [
     sortable: true,
   },
   {
-    name: 'statistics$executions$skipped',
+    id: 'statistics$executions$skipped',
     title: {
       full: 'skipped',
       short: 'skp',
@@ -195,7 +195,7 @@ const COLUMNS = [
     sortable: true,
   },
   {
-    name: 'statistics$defects$product_bug$total',
+    id: 'statistics$defects$product_bug$total',
     title: {
       full: 'product bug',
       short: 'product bug',
@@ -207,7 +207,7 @@ const COLUMNS = [
     sortable: true,
   },
   {
-    name: 'statistics$defects$automation_bug$total',
+    id: 'statistics$defects$automation_bug$total',
     title: {
       full: 'auto bug',
       short: 'auto bug',
@@ -219,7 +219,7 @@ const COLUMNS = [
     sortable: true,
   },
   {
-    name: 'statistics$defects$system_issue$total',
+    id: 'statistics$defects$system_issue$total',
     title: {
       full: 'system issue',
       short: 'system issue',
@@ -231,7 +231,7 @@ const COLUMNS = [
     sortable: true,
   },
   {
-    name: 'statistics$defects$to_investigate$total',
+    id: 'statistics$defects$to_investigate$total',
     title: {
       full: 'to investigate',
       short: 'to invest',
