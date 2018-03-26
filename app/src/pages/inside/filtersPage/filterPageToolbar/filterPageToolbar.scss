@@ -11,7 +11,14 @@
     justify-content: space-between;
   }
 }
+.filter-search {
+  flex-grow: 1;
+  max-width: 310px;
 
+  @media (max-width: $SCREEN_XS_MAX) {
+    margin-right: 20px;
+  }
+}
 .label {
   font-family: $FONT-REGULAR;
   font-size: 13px;

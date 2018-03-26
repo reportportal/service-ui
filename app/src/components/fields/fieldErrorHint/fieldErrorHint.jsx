@@ -12,10 +12,7 @@ const messages = defineMessages({
   passwordHint: { id: 'RegistrationForm.passwordHint', defaultMessage: 'Password should have size from \'4\' to \'25\' symbols' },
   emailHint: { id: 'Common.validation.email', defaultMessage: 'Email is incorrect. Please enter correct email' },
   confirmPasswordHint: { id: 'RegistrationForm.confirmPasswordHint', defaultMessage: 'Passwords do not match' },
-  filterNameError: {
-    id: 'FiltersPage.filterNameLength',
-    defaultMessage: 'Filter name length should have size from 3 to 128 characters.',
-  },
+  filterNameError: { id: 'FiltersPage.filterNameLength', defaultMessage: 'Filter name length should have size from 3 to 128 characters.' },
 });
 
 @injectIntl
