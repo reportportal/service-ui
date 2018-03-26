@@ -4,7 +4,8 @@ import classNames from 'classnames/bind';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { FieldProvider } from 'components/fields/fieldProvider';
-import { FilterSearchInput } from './filterSearchInput';
+import { InputSearch } from 'components/inputs/inputSearch';
+import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import AddFilterIcon from './img/ic-add-filter-inline.svg';
 import styles from './filterPageToolbar.scss';
 
@@ -19,11 +20,11 @@ const messages = defineMessages({
     id: 'FiltersPage.addFilter',
     defaultMessage: 'Add filter',
   },
+  searchInputPlaceholder: { id: 'FiltersPage.searchByName', defaultMessage: 'Search by name' },
 });
-
 @reduxForm({
   form: 'filterSearch',
-  validate: ({ filter }) => ({ filter: filter && filter.length < 3 ? 'searchInputError' : undefined }),
+  validate: ({ filter }) => ({ filter: filter && filter.length < 3 ? 'filterNameError' : undefined }),
   onChange: (vals, dispatch, props) => {
     if (vals.filter && vals.filter.length < 3) {
       return;
@@ -61,9 +62,16 @@ export class FilterPageToolbar extends React.Component {
   render() {
     return (
       <div className={cx('filter-page-toolbar')}>
-        <FieldProvider name="filter">
-          <FilterSearchInput />
-        </FieldProvider>
+        <div className={cx('filter-search')}>
+          <FieldProvider name="filter">
+            <FieldErrorHint>
+              <InputSearch
+                maxLength="128"
+                placeholder={this.props.intl.formatMessage(messages.searchInputPlaceholder)}
+              />
+            </FieldErrorHint>
+          </FieldProvider>
+        </div>
         <div className={cx('label')}>
           {this.props.intl.formatMessage(messages.favoriteFilters)}
         </div>

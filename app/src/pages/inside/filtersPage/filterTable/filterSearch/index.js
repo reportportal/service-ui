@@ -1,1 +1,0 @@
-export { FilterSearch } from './filterSearch';

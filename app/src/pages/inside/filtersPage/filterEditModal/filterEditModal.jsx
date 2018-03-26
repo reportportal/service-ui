@@ -85,7 +85,7 @@ export class FilterEditModal extends Component {
           <ModalField label={intl.formatMessage(messages.name)}>
             <FieldProvider name="name">
               <FieldErrorHint>
-                <Input withBorder placeholder={intl.formatMessage(messages.namePlaceholder)} />
+                <Input placeholder={intl.formatMessage(messages.namePlaceholder)} />
               </FieldErrorHint>
             </FieldProvider>
           </ModalField>
