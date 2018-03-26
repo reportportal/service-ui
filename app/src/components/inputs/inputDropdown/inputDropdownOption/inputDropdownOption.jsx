@@ -32,8 +32,8 @@ export const DropdownOption = ({ multiple, text, disabled, active, onChange, id 
     active: !multiple && active,
     disabled,
   });
-  const onChangeHandler = (checkedObj) => {
-    onChange(Object.assign(checkedObj, { value: id }));
+  const onChangeHandler = () => {
+    onChange(id);
   };
   return (
     <div className={dropdownOptionClasses}>
