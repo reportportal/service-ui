@@ -88,6 +88,9 @@
   }
   @media (max-width: $SCREEN_MAX_WIDTH_LAUNCHES) {
     .chart-overflow {
+      .chart-container{
+        display: none;
+      }
       .total-overflow {
         padding: 0;
         min-width: 0;
