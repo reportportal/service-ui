@@ -15,16 +15,10 @@
 
 .action-button {
   padding-left: 10px;
+}
 
-  @media (max-width: $SCREEN_SM_MAX) {
+.mobile-hidden {
+  @media (max-width: $SCREEN_XS_MAX) {
     display: none;
-  }
-
-  &.mobile-only {
-    display: none;
-
-    @media (max-width: $SCREEN_SM_MAX) {
-      display: block;
-    }
   }
 }

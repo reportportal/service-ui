@@ -21,6 +21,7 @@
 
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
+import Parser from 'html-react-parser';
 import styles from './ghostButton.scss';
 
 const cx = classNames.bind(styles);
@@ -32,11 +33,19 @@ export const GhostButton = ({ type, children, disabled, color, icon, onClick, ti
     tiny,
     [`color-${color}`]: color,
     'with-icon': icon,
+    'mobile-minified': icon && children,
   });
   return (
     <button type={type} disabled={disabled} className={classes} onClick={onClick} >
-      { icon ? <i className={cx({ icon: true, 'only-icon': !children })} dangerouslySetInnerHTML={{ __html: icon }} /> : null }
-      { children }
+      {
+        icon &&
+        <i className={cx({ icon: true, 'only-icon': !children })} >
+          {Parser(icon)}
+        </i>
+      }
+      <span className={cx('text')}>
+        { children }
+      </span>
     </button>
   );
 };
