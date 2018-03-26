@@ -1,4 +1,4 @@
-.outside-input {
+.input-outside{
   position: relative;
   display: flex;
   width: 100%;
@@ -26,13 +26,13 @@
       right: 5px;
       height: 38px;
       width: 30px;
-      background-image: url(./img/pass-hided.svg);
+      background-image: url(./img/password-hidden.svg);
       background-repeat: no-repeat;
       background-size: 60%;
       background-position: center;
 
       &.opened {
-        background-image: url(./img/pass-shown.svg);
+        background-image: url(./img/password-visible.svg);
       }
     }
   }
@@ -61,9 +61,13 @@
   }
 }
 .icon {
-  display: inline-block;
+  display: flex;
   width: 40px;
   height: 100%;
-  background-position: center;
-  background-repeat: no-repeat;
+
+  svg {
+    margin: auto;
+    width: 18px;
+    height: 18px;
+  }
 }

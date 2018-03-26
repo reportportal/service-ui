@@ -27,13 +27,13 @@ import { reduxForm } from 'redux-form';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldBottomConstraints } from 'components/fields/fieldBottomConstraints';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
-import { OutsideInput } from 'components/inputs/outsideInput';
+import { InputOutside } from 'components/inputs/inputOutside';
 import { BigButton } from 'components/buttons/bigButton';
 import { validate } from 'common/utils';
-import LoginIcon from './img/login-icon.svg';
-import NameIcon from './img/name-icon.svg';
-import EmailIcon from './img/email-icon.svg';
-import PasswordIcon from './img/password-icon.svg';
+import LoginIcon from './img/login-icon-inline.svg';
+import NameIcon from './img/name-icon-inline.svg';
+import EmailIcon from './img/email-icon-inline.svg';
+import PasswordIcon from './img/password-icon-inline.svg';
 import styles from './registrationForm.scss';
 
 const cx = classNames.bind(styles);
@@ -116,7 +116,7 @@ export class RegistrationForm extends Component {
           <FieldProvider name="login">
             <FieldBottomConstraints text={formatMessage(messages.loginConstraint)}>
               <FieldErrorHint>
-                <OutsideInput icon={LoginIcon} maxLength={'128'} placeholder={formatMessage(messages.login)} />
+                <InputOutside icon={LoginIcon} maxLength={'128'} placeholder={formatMessage(messages.login)} />
               </FieldErrorHint>
             </FieldBottomConstraints>
           </FieldProvider>
@@ -125,21 +125,21 @@ export class RegistrationForm extends Component {
           <FieldProvider name="name">
             <FieldBottomConstraints text={formatMessage(messages.nameConstraint)}>
               <FieldErrorHint>
-                <OutsideInput icon={NameIcon} maxLength={'256'} placeholder={formatMessage(messages.name)} />
+                <InputOutside icon={NameIcon} maxLength={'256'} placeholder={formatMessage(messages.name)} />
               </FieldErrorHint>
             </FieldBottomConstraints>
           </FieldProvider>
         </div>
         <div className={cx('email-field')}>
           <FieldProvider name="email">
-            <OutsideInput icon={EmailIcon} disabled />
+            <InputOutside icon={EmailIcon} disabled />
           </FieldProvider>
         </div>
         <div className={cx('password-field')}>
           <FieldProvider name="password">
             <FieldBottomConstraints text={formatMessage(messages.passwordConstraint)}>
               <FieldErrorHint>
-                <OutsideInput type={'password'} icon={PasswordIcon} maxLength={'25'} placeholder={formatMessage(messages.password)} />
+                <InputOutside type={'password'} icon={PasswordIcon} maxLength={'25'} placeholder={formatMessage(messages.password)} />
               </FieldErrorHint>
             </FieldBottomConstraints>
           </FieldProvider>
@@ -147,7 +147,7 @@ export class RegistrationForm extends Component {
         <div className={cx('confirm-password-field')}>
           <FieldProvider name="confirmPassword">
             <FieldErrorHint formPath={'user.registrationForm'} fieldName={'confirmPassword'}>
-              <OutsideInput type={'password'} icon={PasswordIcon} maxLength={'25'} placeholder={formatMessage(messages.confirmPassword)} />
+              <InputOutside type={'password'} icon={PasswordIcon} maxLength={'25'} placeholder={formatMessage(messages.confirmPassword)} />
             </FieldErrorHint>
           </FieldProvider>
         </div>
