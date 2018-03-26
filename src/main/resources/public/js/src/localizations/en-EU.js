@@ -60,7 +60,7 @@ define(['util'], function () {
             escToCancel: '<strong>Esc</strong> to cancel',
             ctrlEnterToSubmit: '<strong>Ctrl + Enter</strong> to submit',
             loading: 'Loading',
-            load: 'Load',
+            link: 'Link',
             post: 'Post',
             gallery: 'Gallery',
             build: 'Build',
@@ -311,10 +311,10 @@ define(['util'], function () {
         itemEvents: {
             updateItemIssue: 'updated item issue',
             updateItem: 'updated item',
-            attachIssue: 'attached issue',
+            attachIssue: 'linked issue',
             postIssue: 'posted issue',
             changedByAnalyzer: 'AA changed defect type',
-            issueAttachByAnalyzer: 'AA attached issue'
+            issueAttachByAnalyzer: 'AA linked issue'
         },
 
         widgets: {
@@ -437,7 +437,7 @@ define(['util'], function () {
             update_bts: 'updated',
             delete_bts: 'removed',
             create_bts: 'configured',
-            attach_issue: 'added isssue',
+            attach_issue: 'linked isssue',
             post_issue: 'posted issue',
             delete_issue: 'removed issue',
             testItem: 'test item',
@@ -796,7 +796,7 @@ define(['util'], function () {
             postIssue: 'Post issue',
             postBug: 'Post issue',
             postBugTo: 'Post bug to',
-            loadBug: 'Load issue',
+            linkIssue: 'Link issue',
             addIssueId: 'Add issue ID',
             copyDefect: 'Copy defect',
             sendDefect: 'Send defect',
@@ -1079,7 +1079,7 @@ define(['util'], function () {
                 delete_launch: 'Delete launch',
                 update_project: 'Update project',
                 post_issue: 'Post issue',
-                attach_issue: 'Attach issue',
+                attach_issue: 'Link issue',
                 update_item: 'Update item',
                 create_user: 'Create user',
                 start_import: 'Start import',

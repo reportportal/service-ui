@@ -115,7 +115,7 @@ define(function (require) {
                     if (validateLoadBug) {
                         return validateLoadBug;
                     }
-                    return Localization.launches.loadBug;
+                    return Localization.launches.linkIssue;
                 }
             }
         },
