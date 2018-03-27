@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import styles from './hoverableTooltip.scss';
+import { ALIGN_LEFT, ALIGN_RIGHT } from '../constants';
 
 const cx = classNames.bind(styles);
 const DEFAULT_TOOLTIP_WIDTH = 200;
@@ -19,10 +20,10 @@ export const withHoverableTooltip = ({ TooltipComponent, data }) => WrappedCompo
       let left = 0;
       this.tooltip.style.width = `${tooltipWidth}px`;
       switch (data.align) {
-        case 'left':
+        case ALIGN_LEFT:
           left = 0;
           break;
-        case 'right':
+        case ALIGN_RIGHT:
           left = this.hoverRect.offsetWidth - tooltipWidth;
           break;
         default:
@@ -41,12 +42,14 @@ export const withHoverableTooltip = ({ TooltipComponent, data }) => WrappedCompo
           </WrappedComponent>
           <div
             ref={(tooltip) => { this.tooltip = tooltip; }}
-            className={cx({
-              'hoverable-tooltip': true,
-              noArrow: data.noArrow,
-              noMobile: data.noMobile,
-              desktopOnly: data.desktopOnly,
-            })}
+            className={cx(
+              'hoverable-tooltip',
+              {
+                'no-arrow': data.noArrow,
+                'no-mobile': data.noMobile,
+                'desktop-only': data.desktopOnly,
+              },
+            )}
           >
             <div className={cx('hoverable-tooltip-content')}>
               <TooltipComponent {...this.props} />
