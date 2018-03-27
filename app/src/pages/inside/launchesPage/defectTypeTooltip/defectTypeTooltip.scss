@@ -7,6 +7,17 @@
   padding-bottom: 15px;
   margin-bottom: 10px;
   border-bottom: 1px solid $COLOR--gray-91;
+  text-decoration: none;
+
+  .name, .value {
+    font-family: $FONT-SEMIBOLD;
+  }
+
+  &:hover {
+    .name {
+      color: $COLOR--charcoal-grey;
+    }
+  }
 }
 .item {
   display: flex;
@@ -14,13 +25,20 @@
   align-items: center;
   justify-content: space-between;
   box-sizing: border-box;
+  text-decoration: none;
+
+  &:hover {
+    .name {
+      color: $COLOR--charcoal-grey;
+    }
+  }
 }
 .name {
   display: inline-block;
   max-width: 175px;
   text-overflow: ellipsis;
   overflow: hidden;
-  font-family: $FONT-SEMIBOLD;
+  font-family: $FONT-REGULAR;
   font-size: 13px;
   color: $COLOR--gray-47;
   line-height: 18px;
@@ -38,9 +56,8 @@
 }
 .value {
   display: inline-block;
-  font-family: $FONT-SEMIBOLD;
+  font-family: $FONT-REGULAR;
   font-size: 13px;
   color: $COLOR--windows-blue;
   line-height: 18px;
-  text-decoration: none;
 }

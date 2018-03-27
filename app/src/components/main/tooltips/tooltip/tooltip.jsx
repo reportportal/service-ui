@@ -3,6 +3,7 @@ import { CSSTransition } from 'react-transition-group';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import styles from './tooltip.scss';
+import { ALIGN_LEFT, ALIGN_RIGHT } from '../constants';
 
 const cx = classNames.bind(styles);
 const DEFAULT_TOOLTIP_WIDTH = 200;
@@ -41,10 +42,10 @@ export class Tooltip extends Component {
     this.tooltip.style.width = `${tooltipWidth}px`;
     this.tooltip.style.top = `${hoverRect.top + hoverRect.height}px`;
     switch (this.props.data.align) {
-      case 'left':
+      case ALIGN_LEFT:
         left = hoverRect.left;
         break;
-      case 'right':
+      case ALIGN_RIGHT:
         left = hoverRect.right - tooltipWidth;
         break;
       default:
@@ -71,7 +72,7 @@ export class Tooltip extends Component {
       <CSSTransition in={this.state.shown} timeout={300} classNames={cx('tooltip-fade')} onExited={this.props.hideTooltip}>
         <div
           ref={(tooltip) => { this.tooltip = tooltip; }}
-          className={cx({ tooltip: true, noArrow: this.props.data.noArrow })}
+          className={cx('tooltip', { 'no-arrow': this.props.data.noArrow })}
         >
           <div className={cx('tooltip-content')}>
             { this.props.children }

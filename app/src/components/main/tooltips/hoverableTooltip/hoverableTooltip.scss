@@ -42,17 +42,17 @@
     border-right: 6px solid transparent;
   }
 
-  &.noArrow {
+  &.no-arrow {
     &::before, &::after  {
       display: none;
     }
   }
-  &.noMobile {
+  &.no-mobile {
     @media (max-width: $SCREEN_XS_MAX) {
       display: none;
     }
   }
-  &.desktopOnly {
+  &.desktop-only {
     @media (max-width: $SCREEN_SM_MAX) {
       display: none;
     }

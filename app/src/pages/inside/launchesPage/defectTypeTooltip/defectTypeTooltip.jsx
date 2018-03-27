@@ -33,27 +33,27 @@ export class DefectTypeTooltip extends Component {
       <div className={cx('defect-type-tooltip')}>
         {
           (this.props.type !== 'to_investigate') &&
-          <div className={cx('total-item')}>
+          <a href="/" className={cx('total-item')}>
             <div className={cx('name')}>
               <div className={cx('circle')} style={{ backgroundColor: defectConfig[0].color }} />
               { formatMessage(messages[`${this.props.type}_total`]) }
             </div>
-            <a href="/" className={cx('value')}>
+            <span className={cx('value')}>
               { this.props.data.total }
-            </a>
-          </div>
+            </span>
+          </a>
         }
         {
           defectConfig.map(item => (
-            <div key={item.locator} className={cx('item')}>
+            <a key={item.locator} href="/"className={cx('item')}>
               <div className={cx('name')}>
                 <div className={cx('circle')} style={{ backgroundColor: item.color }} />
                 { item.longName }
               </div>
-              <a href="/" className={cx('value')}>
+              <span className={cx('value')}>
                 { this.props.data[item.locator] }
-              </a>
-            </div>
+              </span>
+            </a>
             ))
         }
       </div>

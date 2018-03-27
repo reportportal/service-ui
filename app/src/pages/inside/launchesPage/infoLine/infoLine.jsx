@@ -58,16 +58,11 @@ export class InfoLine extends Component {
         </div>
         <div className={cx('defect-types')}>
           {
-            Object.keys(defects).map(
-              key => (
-                <div key={key} className={cx('defect-type')}>
-                  <DefectTypeBlock
-                    type={key}
-                    data={defects[key]}
-                  />
-                </div>
-              ),
-            )
+            Object.keys(defects).map(key => (
+              <div key={key} className={cx('defect-type')}>
+                <DefectTypeBlock type={key} data={defects[key]} />
+              </div>
+            ))
           }
         </div>
       </div>
