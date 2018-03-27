@@ -40,12 +40,15 @@ export const GhostButton = ({ type, children, disabled, color, icon, onClick, ti
       {
         icon &&
         <i className={cx({ icon: true, 'only-icon': !children })} >
-          {Parser(icon)}
+          { Parser(icon) }
         </i>
       }
-      <span className={cx('text')}>
-        { children }
-      </span>
+      {
+        icon &&
+        <span className={cx('text')}>
+          { children }
+        </span>
+      }
     </button>
   );
 };
