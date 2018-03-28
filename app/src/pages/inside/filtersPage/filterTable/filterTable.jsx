@@ -20,6 +20,8 @@ export class FilterTable extends PureComponent {
     userId: PropTypes.string,
     onDelete: PropTypes.func,
     onEdit: PropTypes.func,
+    userFilters: PropTypes.arrayOf(PropTypes.string),
+    toggleDisplayFilterOnLaunches: PropTypes.func,
   };
 
   static defaultProps = {
@@ -37,6 +39,9 @@ export class FilterTable extends PureComponent {
     },
     onEdit: () => {
     },
+    userFilters: [],
+    toggleDisplayFilterOnLaunches: () => {
+    },
   };
 
   render() {
@@ -53,10 +58,11 @@ export class FilterTable extends PureComponent {
                 owner={item.owner}
                 options="(TBD)"
                 shared={item.share}
-                showOnLaunches={item.showOnLaunches}
+                showOnLaunches={this.props.userFilters.indexOf(item.id) !== -1}
                 editable={item.owner === this.props.userId}
                 onDelete={() => this.props.onDelete(item)}
                 onEdit={() => this.props.onEdit(item)}
+                onChangeDisplay={() => this.props.toggleDisplayFilterOnLaunches(item.id)}
               />
             ))
           }
