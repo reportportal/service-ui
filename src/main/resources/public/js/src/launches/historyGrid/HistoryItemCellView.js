@@ -123,8 +123,47 @@ define(function (require) {
                 }
             }
         },
+        getUrl: function () {
+            var hash;
+            var urlParts;
+            var link;
+            if (this.itemInLaunch && this.itemInLaunch.length === 1) {
+                hash = window.location.hash;
+                urlParts = hash.split('/');
+                link = urlParts.slice(0, 3).join('/');
+                link += '/' + this.model.get('launchId');
+                switch (this.itemInLaunch[0].type) {
+                case 'SUITE':
+                    if (this.itemInLaunch[0].has_childs) {
+                        link += '/' + this.model.get('id');
+                    } else {
+                        link += '?log.item=' + this.model.get('id');
+                    }
+                    break;
+                case 'TEST':
+                    _.each(Object.keys(this.itemInLaunch[0].path_names), function (key) {
+                        link += '/' + key;
+                    });
+                    if (this.itemInLaunch[0].has_childs) {
+                        link += '/' + this.model.get('id');
+                    } else {
+                        link += '?log.item=' + this.model.get('id');
+                    }
+                    break;
+                default:
+                    _.each(Object.keys(this.itemInLaunch[0].path_names), function (key) {
+                        link += '/' + key;
+                    });
+                    link += '?log.item=' + this.model.get('id');
+                    break;
+                }
+                return link;
+            }
+            return undefined;
+        },
         initialize: function (options) {
             this.cellWidth = options.cellWidth;
+            this.itemInLaunch = options.itemInLaunch;
             this.$container = options.container;
             this.defectsCollection = new SingletonDefectTypeCollection();
             this.defectsCollection.ready.done(function () {
@@ -136,6 +175,7 @@ define(function (require) {
         },
         render: function () {
             this.$container.append(this.$el.addClass().html(Util.templates(this.template, {})));
+            $('[data-js-cell-link]', this.$el).attr('href', this.getUrl());
         },
         getCellWidth: function () {
             return this.cellWidth;
