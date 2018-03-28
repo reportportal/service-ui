@@ -10,7 +10,12 @@ export const ToInvestigteStatistics = ({ value, customProps }) => (
       <span className={cx('circle')} />
       { customProps.abbreviation }
     </span>
-    <a href="/" className={cx('value')}>{ value.total }</a>
+    {
+      !!value.total &&
+      <a href="/" className={cx('value')}>
+        { value.total }
+      </a>
+    }
   </div>
 );
 ToInvestigteStatistics.propTypes = {

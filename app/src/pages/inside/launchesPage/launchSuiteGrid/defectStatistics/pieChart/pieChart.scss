@@ -1,0 +1,35 @@
+.total {
+  position: absolute;
+  top: 0;
+  left: 25px;
+  display: inline-block;
+  height: 20px;
+  box-sizing: border-box;
+  padding: 0 8px;
+  border: 1px solid;
+  border-radius: 100px;
+  background-color: $COLOR--white-two;
+  font-family: $FONT-SEMIBOLD;
+  font-size: 13px;
+  color: $COLOR--windows-blue;
+  line-height: 18px;
+}
+.chart-container {
+  height: 56px;
+  width: 56px;
+  transform: rotate(-90deg);
+
+  svg {
+    :global {
+      .c3-chart {
+        .c3-chart-arcs {
+          .c3-chart-arc {
+            path {
+              stroke-width: 0;
+            }
+          }
+        }
+      }
+    }
+  }
+}
