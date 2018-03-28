@@ -30,9 +30,11 @@ export const withHoverableTooltip = ({ TooltipComponent, data }) => WrappedCompo
           left = `${(this.hoverRect.offsetWidth / 2) - (tooltipWidth / 2)}`;
       }
       data.leftOffset && (left += data.leftOffset);
-
-
       this.tooltip.style.left = `${left}px`;
+
+      if (data.verticalOffset) {
+        this.tooltip.style.top = `${this.hoverRect.offsetHeight + data.verticalOffset}px`;
+      }
     }
     render() {
       return (

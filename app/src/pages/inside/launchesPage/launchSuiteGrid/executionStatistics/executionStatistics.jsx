@@ -7,9 +7,14 @@ const cx = classNames.bind(styles);
 export const ExecutionStatistics = ({ value, title, bold }) => (
   <div className={cx('execution-statistics')}>
     <span className={cx('title')}>{ title.full }</span>
-    <a href="/" className={cx('value', { bold })}>{ value }</a>
+    {
+      !!+value &&
+      <a href="/" className={cx('value', { bold })}>
+        { value }
+      </a>
+    }
   </div>
-  );
+);
 
 ExecutionStatistics.propTypes = {
   value: PropTypes.string.isRequired,
