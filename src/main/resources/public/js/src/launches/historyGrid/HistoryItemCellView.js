@@ -124,38 +124,19 @@ define(function (require) {
             }
         },
         getUrl: function () {
-            var hash;
-            var urlParts;
             var link;
             if (this.itemInLaunch && this.itemInLaunch.length === 1) {
-                hash = window.location.hash;
-                urlParts = hash.split('/');
-                link = urlParts.slice(0, 3).join('/');
-                link += '/' + this.model.get('launchId');
-                switch (this.itemInLaunch[0].type) {
-                case 'SUITE':
-                    if (this.itemInLaunch[0].has_childs) {
-                        link += '/' + this.model.get('id');
-                    } else {
-                        link += '?log.item=' + this.model.get('id');
-                    }
-                    break;
-                case 'TEST':
+                link = '#' + this.model.appModel.get('projectId') + '/launches/all/';
+                link += this.model.get('launchId');
+                if (this.itemInLaunch[0].path_names) {
                     _.each(Object.keys(this.itemInLaunch[0].path_names), function (key) {
                         link += '/' + key;
                     });
-                    if (this.itemInLaunch[0].has_childs) {
-                        link += '/' + this.model.get('id');
-                    } else {
-                        link += '?log.item=' + this.model.get('id');
-                    }
-                    break;
-                default:
-                    _.each(Object.keys(this.itemInLaunch[0].path_names), function (key) {
-                        link += '/' + key;
-                    });
+                }
+                if (this.itemInLaunch[0].has_childs) {
+                    link += '/' + this.model.get('id');
+                } else {
                     link += '?log.item=' + this.model.get('id');
-                    break;
                 }
                 return link;
             }
@@ -174,8 +155,13 @@ define(function (require) {
             'mouseenter [data-tooltip-type]': 'showTooltip'
         },
         render: function () {
-            this.$container.append(this.$el.addClass().html(Util.templates(this.template, {})));
-            $('[data-js-cell-link]', this.$el).attr('href', this.getUrl());
+            var link = this.getUrl();
+            this.$container.append(this.$el.addClass()
+                .html(Util.templates(this.template, {
+                    link: link,
+                    class: link ? 'cell-link available' : 'cell-link'
+                }))
+            );
         },
         getCellWidth: function () {
             return this.cellWidth;
