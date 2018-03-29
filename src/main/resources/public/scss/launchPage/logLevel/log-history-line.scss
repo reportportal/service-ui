@@ -44,6 +44,9 @@
         span:first-child {
           display: none;
         }
+        .active-link{
+          color: #337ab7;
+        }
       }
       .history-item-container {
         position:relative;
