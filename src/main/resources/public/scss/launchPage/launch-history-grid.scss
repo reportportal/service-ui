@@ -271,9 +271,10 @@ $borderRadius100: 100px;
       display: flex;
       align-items: center;
       justify-content: center;
-    }
-    .cell-link [href]{
-      cursor: pointer;
+      cursor: default;
+      &.available{
+        cursor: pointer;
+      }
     }
   }
 }
