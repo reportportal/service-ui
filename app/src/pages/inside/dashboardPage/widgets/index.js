@@ -1,5 +1,5 @@
-import { MostFailedTests } from './mostFailedTests';
+import { FlakyTests } from './flakyTests';
 
 export {
-  MostFailedTests,
+  FlakyTests,
 };
