@@ -1,13 +1,14 @@
 {
-  "name": "webpackbin-project",
-  "version": "1.0.0",
-  "description": "Project boilerplate",
+  "name": "@report-portal/service-ui",
+  "private": true,
+  "version": "0.0.0",
+  "license": "GPL-3.0-only",
   "scripts": {
     "eslint": "eslint -f node_modules/eslint-friendly-formatter \"src/**/*.jsx\" \"src/**/*.js\"",
     "dev": "webpack-dev-server --port 3000",
     "build": "webpack -p --env.production",
     "storybook": "start-storybook -p 9001 -c .storybook",
-    "storybook:bild": "build-storybook -c .storybook -o .storybook_app",
+    "storybook:build": "build-storybook -c .storybook -o .storybook_app",
     "test": "jest --notify",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
@@ -101,8 +102,6 @@
     "webpack-hot-middleware": "^2.20.0",
     "webpack-notifier": "^1.5.0"
   },
-  "author": "WebpackBin",
-  "license": "ISC",
   "eslintConfig": {
     "extends": [
       "react-app",
