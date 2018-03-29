@@ -25,32 +25,27 @@ import { withReadme } from 'storybook-readme';
 import { InputDropdown } from './inputDropdown';
 import README from './README.md';
 
-const getOptions = multiple => [
+const getOptions = [
   {
-    id: 'AI',
-    text: 'Auto Bug',
+    value: 'AI',
+    label: 'Auto Bug',
     disabled: false,
-    active: true,
   }, {
-    id: 'PB',
-    text: 'Product Bug',
+    value: 'PB',
+    label: 'Product Bug',
     disabled: true,
-    active: multiple,
   }, {
-    id: 'SI',
-    text: 'System Issue',
+    value: 'SI',
+    label: 'System Issue',
     disabled: true,
-    active: false,
   }, {
-    id: 'ND',
-    text: 'No Defect',
+    value: 'ND',
+    label: 'No Defect',
     disabled: false,
-    active: multiple,
   }, {
-    id: 'TI',
-    text: 'To invest',
+    value: 'TI',
+    label: 'To invest',
     disabled: false,
-    active: false,
   },
 ];
 
@@ -66,40 +61,31 @@ storiesOf('Components/Inputs/InputDropdown', module)
   .addDecorator(withReadme(README))
   // Single dropdown
   .add('Single, default state', () => (
-    <InputDropdown options={getOptions()} />
+    <InputDropdown options={getOptions} />
   ))
   .add('Single, disabled', () => (
-    <InputDropdown options={getOptions()} disabled />
+    <InputDropdown options={getOptions} disabled />
   ))
   .add('Single, with actions', () => (
-    <InputDropdown options={getOptions()} onFocus={action('focused')} />
+    <InputDropdown options={getOptions} onFocus={action('focused')} />
   ))
-  .add('Single, focused', () => (
-    <InputDropdown options={getOptions()} active />
-  ))
-  .add('Single, focused, with actions', () => (
-    <InputDropdown options={getOptions()} onBlur={action('blured')} active />
+  .add('Single, with actions, value', () => (
+    <InputDropdown options={getOptions} onBlur={action('blured')} value="ND" />
   ))
 
   // Multiple dropdown
   .add('Multiple, default state', () => (
-    <InputDropdown options={getOptions(true)} multiple />
+    <InputDropdown options={getOptions} multiple value={[]} />
   ))
   .add('Multiple, disabled', () => (
-    <InputDropdown options={getOptions(true)} multiple disabled />
+    <InputDropdown options={getOptions} multiple disabled />
+  ))
+  .add('Multiple, select all, value', () => (
+    <InputDropdown options={getOptions} multiple selectAll value={['ND', 'AI']} />
   ))
   .add('Multiple, with actions', () => (
-    <InputDropdown options={getOptions(true)} onFocus={action('focused')} multiple />
+    <InputDropdown options={getOptions} onBlur={action('blured')} onFocus={action('focused')} multiple value={[]} />
   ))
-  .add('Multiple, focused', () => (
-    <InputDropdown options={getOptions(true)} multiple active />
-  ))
-  .add('Multiple, select all, focused', () => (
-    <InputDropdown options={getOptions(true)} multiple selectAll active />
-  ))
-  .add('Multiple, focused, with actions', () => (
-    <InputDropdown options={getOptions(true)} onBlur={action('blured')} multiple active />
-  ))
-  .add('Multiple, focused, select all, with actions', () => (
-    <InputDropdown options={getOptions(true)} onBlur={action('blured')} multiple selectAll active />
+  .add('Multiple, select all, with actions', () => (
+    <InputDropdown options={getOptions} onBlur={action('blured')} multiple selectAll value={[]} />
   ));

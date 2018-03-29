@@ -30,6 +30,7 @@ const cx = classNames.bind(styles);
 export class InputDropdown extends Component {
   static propTypes = {
     displayedValue: PropTypes.string,
+    value: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
     options: PropTypes.array,
     multiple: PropTypes.bool,
     selectAll: PropTypes.bool,
@@ -41,6 +42,7 @@ export class InputDropdown extends Component {
 
   static defaultProps = {
     displayedValue: '',
+    value: '',
     options: [],
     multiple: false,
     selectAll: false,
@@ -59,11 +61,13 @@ export class InputDropdown extends Component {
     document.removeEventListener('click', this.handleClickOutside);
   }
   onClickSelectBlock = (e) => {
-    this.setState({ opened: !this.state.opened });
-    e.stopPropagation();
-    this.state.opened
-      ? this.props.onBlur()
-      : this.props.onFocus();
+    if (!this.props.disabled) {
+      this.setState({ opened: !this.state.opened });
+      e.stopPropagation();
+      this.state.opened
+        ? this.props.onBlur()
+        : this.props.onFocus();
+    }
   };
   handleClickOutside = (e) => {
     if (this.node.contains(e.target) && this.props.multiple) {
@@ -71,36 +75,52 @@ export class InputDropdown extends Component {
     }
     this.props.onBlur();
   };
+
+  handleChange = (value) => {
+    if (this.props.multiple) {
+      const idx = this.props.value.indexOf(value);
+      if (this.props.value.indexOf(value) > -1) {
+        this.props.onChange(this.props.value.splice(idx, 1));
+      } else {
+        this.props.onChange(this.props.value.push(value));
+      }
+    } else {
+      this.props.onChange(value);
+    }
+    this.setState({ opened: !this.state.opened });
+  };
+  handleAllClick = () => {
+    if (this.props.value.length !== this.props.options.length) {
+      this.props.onChange(this.props.options.map(item => item.value));
+    } else {
+      this.props.onChange([]);
+    }
+  };
+
   renderOptions() {
     return this.props.options.map(option => (
       <DropdownOption
-        key={option.id}
-        id={option.id}
+        key={option.value}
+        value={option.value}
         disabled={option.disabled}
-        active={option.active}
-        text={option.text}
+        selected={this.props.value.indexOf(option.value) > -1}
+        label={option.label}
         multiple={this.props.multiple}
-        onChange={this.props.onChange}
+        onChange={option.disabled ? () => {} : this.handleChange}
       />
     ));
   }
 
   render() {
-    const classes = cx({
-      dropdown: true,
-      opened: this.state.opened,
-    });
     return (
-      <div ref={(node) => { this.node = node; }} className={classes}>
+      <div ref={(node) => { this.node = node; }} className={cx('dropdown', { opened: this.state.opened })}>
         <div className={cx({ 'select-block': true, disabled: this.props.disabled })} onClick={this.onClickSelectBlock}>
           <span className={cx('value')}>{ this.props.displayedValue }</span>
           <span className={cx('arrow')} />
         </div>
         <div className={cx('select-list')}>
           {
-            (this.props.multiple && this.props.selectAll)
-              ? <div className={cx('select-all-block')}><span className={cx('select-all')}>All</span></div>
-              : null
+            (this.props.multiple && this.props.selectAll) && <div className={cx('select-all-block')} onClick={this.handleAllClick}><span className={cx('select-all')} >All</span></div>
           }
           { this.renderOptions() }
         </div>
