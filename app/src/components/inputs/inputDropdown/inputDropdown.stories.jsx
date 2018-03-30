@@ -67,15 +67,15 @@ storiesOf('Components/Inputs/InputDropdown', module)
     <InputDropdown options={options} disabled />
   ))
   .add('Single, with actions', () => (
-    <InputDropdown options={options} onFocus={action('focused')} />
+    <InputDropdown options={options} onChange={action('changed')} onBlur={action('blured')} onFocus={action('focused')} />
   ))
   .add('Single, with actions, value', () => (
-    <InputDropdown options={options} onBlur={action('blured')} value="ND" />
+    <InputDropdown options={options} onChange={action('changed')} onBlur={action('blured')} onFocus={action('focused')} value="ND" />
   ))
 
   // Multiple dropdown
   .add('Multiple, default state', () => (
-    <InputDropdown options={options} multiple value={[]} />
+    <InputDropdown options={options} multiple />
   ))
   .add('Multiple, disabled', () => (
     <InputDropdown options={options} multiple disabled />
@@ -84,8 +84,8 @@ storiesOf('Components/Inputs/InputDropdown', module)
     <InputDropdown options={options} multiple selectAll value={['ND', 'AI']} />
   ))
   .add('Multiple, with actions', () => (
-    <InputDropdown options={options} onBlur={action('blured')} onFocus={action('focused')} multiple value={[]} />
+    <InputDropdown options={options} onChange={action('changed')} onBlur={action('blured')} onFocus={action('focused')} multiple />
   ))
   .add('Multiple, select all, with actions', () => (
-    <InputDropdown options={options} onBlur={action('blured')} multiple selectAll value={[]} />
+    <InputDropdown options={options} onChange={action('changed')} onBlur={action('blured')} onFocus={action('focused')}multiple selectAll />
   ));

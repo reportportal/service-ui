@@ -29,7 +29,6 @@ const cx = classNames.bind(styles);
 // eslint-disable-next-line react/prefer-stateless-function
 export class InputDropdown extends Component {
   static propTypes = {
-    displayedValue: PropTypes.string,
     value: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
     options: PropTypes.array,
     multiple: PropTypes.bool,
@@ -41,7 +40,6 @@ export class InputDropdown extends Component {
   };
 
   static defaultProps = {
-    displayedValue: '',
     value: '',
     options: [],
     multiple: false,
@@ -75,17 +73,33 @@ export class InputDropdown extends Component {
     }
     this.props.onBlur();
   };
-
-  handleChange = (selectValue) => {
+  displayedValue() {
+    const { multiple, value, options } = this.props;
+    let displayedValue;
+    if (multiple) {
+      displayedValue = [];
+      options.forEach((option) => {
+        (value.indexOf(option.value) > -1) && displayedValue.push(option.label);
+      });
+      return displayedValue.join(', ');
+    }
+    options.forEach((option) => {
+      if (option.value === value) {
+        displayedValue = option.label;
+      }
+    });
+    return displayedValue;
+  }
+  handleChange = (selectedValue) => {
     const { multiple, value, onChange } = this.props;
     if (multiple) {
-      if (value.indexOf(selectValue) > -1) {
-        onChange(value.filter(item => item !== selectValue));
+      if (value.indexOf(selectedValue) > -1) {
+        onChange(value.filter(item => item !== selectedValue));
       } else {
-        onChange([...value, selectValue]);
+        onChange([...value, selectedValue]);
       }
     } else {
-      onChange(selectValue);
+      onChange(selectedValue);
     }
     this.setState({ opened: !this.state.opened });
   };
@@ -98,24 +112,30 @@ export class InputDropdown extends Component {
   };
 
   renderOptions() {
-    return this.props.options.map(option => (
-      <DropdownOption
-        key={option.value}
-        value={option.value}
-        disabled={option.disabled}
-        selected={this.props.value.indexOf(option.value) > -1}
-        label={option.label}
-        multiple={this.props.multiple}
-        onChange={option.disabled ? () => {} : this.handleChange}
-      />
-    ));
+    return this.props.options.map((option) => {
+      let selected;
+      this.props.multiple ?
+        selected = this.props.value.indexOf(option.value) > -1 :
+        selected = option.value === this.props.value;
+      return (
+        <DropdownOption
+          key={option.value}
+          value={option.value}
+          disabled={option.disabled}
+          selected={selected}
+          label={option.label}
+          multiple={this.props.multiple}
+          onChange={option.disabled ? () => {} : this.handleChange}
+        />
+      );
+    });
   }
 
   render() {
     return (
       <div ref={(node) => { this.node = node; }} className={cx('dropdown', { opened: this.state.opened })}>
         <div className={cx({ 'select-block': true, disabled: this.props.disabled })} onClick={this.onClickSelectBlock}>
-          <span className={cx('value')}>{ this.props.displayedValue }</span>
+          <span className={cx('value')}>{ this.displayedValue() }</span>
           <span className={cx('arrow')} />
         </div>
         <div className={cx('select-list')}>
