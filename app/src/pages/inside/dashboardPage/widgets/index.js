@@ -1,5 +1,5 @@
-import { FlakyTests } from './flakyTests';
+import { FailedTests } from './failedTests';
 
 export {
-  FlakyTests,
+  FailedTests,
 };
