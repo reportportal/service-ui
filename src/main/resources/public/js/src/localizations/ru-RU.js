@@ -1375,6 +1375,7 @@ define(['util'], function () {
             autoAnalysisBase: 'Стратегия авто Анализа',
             autoAnalysisBaseFirstOpt: 'Все запуски',
             autoAnalysisBaseSecondOpt: 'Запуски с одинаковыми именами',
+            autoAnalysisBaseThirdOpt: 'Только текущий запуск',
             autoAnalysisBaseFirstTip: 'Тестовые элементы будут проанализированы на основе ранее проанализированных данных во всех запусках',
             autoAnalysisBaseSecondTip: 'Тестовые элементы будут проанализированы на основе ранее проанализированных данных в запусках с одинаковыми именами',
             emailNotifications: 'Оповещения по электронной почте',

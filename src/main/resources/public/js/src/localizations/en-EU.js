@@ -1317,6 +1317,7 @@ define(['util'], function () {
             autoAnalysisBase: 'Base for Auto Analysis',
             autoAnalysisBaseFirstOpt: 'All launches',
             autoAnalysisBaseSecondOpt: 'Launches with the same name',
+            autoAnalysisBaseThirdOpt: 'Only current launch',
             autoAnalysisBaseFirstTip: 'The test items are analyzed on base of previously investigated data in all launches',
             autoAnalysisBaseSecondTip: 'The test items are analyzed on base of previously investigated data in launches with the same name',
             emailNotifications: 'E-mail notifications',
