@@ -5,7 +5,7 @@ export const failedTests = {
     "number": "7",
     "id": "59f0717108813b00012d1645"
   },
-  "failed": [
+  "tests": [
     {
       "uniqueId": "auto:81a880da009dfb202bf3514cc1821e88",
       "total": 3,

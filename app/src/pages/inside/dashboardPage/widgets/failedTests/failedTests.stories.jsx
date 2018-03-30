@@ -1,10 +1,9 @@
 import { storiesOf } from '@storybook/react';
-import { action } from '@storybook/addon-actions';
 import { host } from 'storybook-host';
-import FlakyTests from './flakyTests';
+import FailedTests from './failedTests';
 import { failedTests } from './data';
 
-storiesOf('Pages/inside/dashboardPage/flakyTests', module)
+storiesOf('Pages/inside/dashboardPage/failedTests', module)
   .addDecorator(host({
     title: 'Flaky tests',
     align: 'center middle',
@@ -14,8 +13,8 @@ storiesOf('Pages/inside/dashboardPage/flakyTests', module)
     width: '100%',
   }))
   .add('default state', () => (
-    <FlakyTests
+    <FailedTests
       launch={failedTests.launch}
-      failed={failedTests.failed}
+      tests={failedTests.tests}
     />
   ));
