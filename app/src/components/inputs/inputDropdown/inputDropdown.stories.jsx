@@ -25,7 +25,7 @@ import { withReadme } from 'storybook-readme';
 import { InputDropdown } from './inputDropdown';
 import README from './README.md';
 
-const getOptions = [
+const options = [
   {
     value: 'AI',
     label: 'Auto Bug',
@@ -61,31 +61,31 @@ storiesOf('Components/Inputs/InputDropdown', module)
   .addDecorator(withReadme(README))
   // Single dropdown
   .add('Single, default state', () => (
-    <InputDropdown options={getOptions} />
+    <InputDropdown options={options} />
   ))
   .add('Single, disabled', () => (
-    <InputDropdown options={getOptions} disabled />
+    <InputDropdown options={options} disabled />
   ))
   .add('Single, with actions', () => (
-    <InputDropdown options={getOptions} onFocus={action('focused')} />
+    <InputDropdown options={options} onFocus={action('focused')} />
   ))
   .add('Single, with actions, value', () => (
-    <InputDropdown options={getOptions} onBlur={action('blured')} value="ND" />
+    <InputDropdown options={options} onBlur={action('blured')} value="ND" />
   ))
 
   // Multiple dropdown
   .add('Multiple, default state', () => (
-    <InputDropdown options={getOptions} multiple value={[]} />
+    <InputDropdown options={options} multiple value={[]} />
   ))
   .add('Multiple, disabled', () => (
-    <InputDropdown options={getOptions} multiple disabled />
+    <InputDropdown options={options} multiple disabled />
   ))
   .add('Multiple, select all, value', () => (
-    <InputDropdown options={getOptions} multiple selectAll value={['ND', 'AI']} />
+    <InputDropdown options={options} multiple selectAll value={['ND', 'AI']} />
   ))
   .add('Multiple, with actions', () => (
-    <InputDropdown options={getOptions} onBlur={action('blured')} onFocus={action('focused')} multiple value={[]} />
+    <InputDropdown options={options} onBlur={action('blured')} onFocus={action('focused')} multiple value={[]} />
   ))
   .add('Multiple, select all, with actions', () => (
-    <InputDropdown options={getOptions} onBlur={action('blured')} multiple selectAll value={[]} />
+    <InputDropdown options={options} onBlur={action('blured')} multiple selectAll value={[]} />
   ));

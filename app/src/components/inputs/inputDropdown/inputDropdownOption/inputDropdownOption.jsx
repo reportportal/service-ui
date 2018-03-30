@@ -37,7 +37,7 @@ export const DropdownOption = ({ multiple, label, disabled, selected, onChange, 
           ? <InputCheckbox value={selected} disabled={disabled} onChange={onChangeHandler}>
             {label}
           </InputCheckbox>
-          : <div className={cx('single-option')} onClick={() => onChange(value)}>{label}</div>
+          : <div className={cx('single-option')} onClick={onChangeHandler}>{label}</div>
       }
     </div>
   );
