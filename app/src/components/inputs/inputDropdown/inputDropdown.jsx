@@ -76,16 +76,16 @@ export class InputDropdown extends Component {
     this.props.onBlur();
   };
 
-  handleChange = (value) => {
-    if (this.props.multiple) {
-      const idx = this.props.value.indexOf(value);
-      if (this.props.value.indexOf(value) > -1) {
-        this.props.onChange(this.props.value.splice(idx, 1));
+  handleChange = (selectValue) => {
+    const { multiple, value, onChange } = this.props;
+    if (multiple) {
+      if (value.indexOf(selectValue) > -1) {
+        onChange(value.filter(item => item !== selectValue));
       } else {
-        this.props.onChange(this.props.value.push(value));
+        onChange([...value, selectValue]);
       }
     } else {
-      this.props.onChange(value);
+      onChange(selectValue);
     }
     this.setState({ opened: !this.state.opened });
   };
