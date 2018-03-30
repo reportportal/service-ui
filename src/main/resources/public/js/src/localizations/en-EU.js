@@ -477,7 +477,7 @@ define(['util'], function () {
             failedTestCasesTableDescription: 'shows the TOP-20 most failing test cases within the specified previous launches.',
 
             uniqueBugsTable: 'Unique bugs table',
-            uniqueBugsTableDescription: 'shows real identified bugs, posted to the bug tracking system, and existing in the BTS bugs, loaded on the project.',
+            uniqueBugsTableDescription: 'shows real identified bugs, posted to the bug tracking system, and existing in the BTS bugs, linked on the project.',
 
             launchesTable: 'Launches table',
             launchesTableDescription: 'shows the configurable table of launches.',
@@ -803,9 +803,9 @@ define(['util'], function () {
             sendDefect: 'Send defect',
             key: 'Issue key (for multiple options - type issue ID and press Enter)',
             configureTBS: 'Configure bug tracking system to post issue',
-            configureTBSLoad: 'Configure bug tracking system to load issue',
+            configureTBSLoad: 'Configure bug tracking system to link issue',
             noIssues: 'You can\'t post bug if item has no issues',
-            noIssuesLoad: 'You can\'t Load bug if item has no issues',
+            noIssuesLoad: 'You can\'t Link bug if item has no issues',
             historyView: 'History',
             skippedDuration: 'SKIPPED. Duration: ',
             stoppedDuration: 'Run STOPPED after:',
@@ -2177,7 +2177,7 @@ define(['util'], function () {
 
         modalDefectEditor: {
             saveAndPost: 'Save and post issue',
-            saveAndLoad: 'Save and load issue'
+            saveAndLoad: 'Save and link issue'
         }
     };
 });
