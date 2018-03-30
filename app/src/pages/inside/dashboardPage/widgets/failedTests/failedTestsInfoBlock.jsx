@@ -2,11 +2,11 @@ import * as React from 'react';
 import { string } from 'prop-types';
 import { FormattedMessage } from 'react-intl';
 import classNames from 'classnames/bind';
-import styles from './flakyTests.scss';
+import styles from './failedTests.scss';
 
 const cx = classNames.bind(styles);
 
-function FlakyTestsInfoBlock({ launchName }) {
+function FailedTestsInfoBlock({ launchName }) {
   return (
     <div className={cx('info-block')}>
       <p>
@@ -18,8 +18,8 @@ function FlakyTestsInfoBlock({ launchName }) {
   );
 }
 
-FlakyTestsInfoBlock.propTypes = {
+FailedTestsInfoBlock.propTypes = {
   launchName: string.isRequired,
 };
 
-export default FlakyTestsInfoBlock;
+export default FailedTestsInfoBlock;
