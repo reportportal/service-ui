@@ -62,6 +62,7 @@ define(['util'], function () {
             loading: 'Loading',
             link: 'Link',
             post: 'Post',
+            analyse: 'Analyse',
             gallery: 'Gallery',
             build: 'Build',
             error: 'Error',
@@ -1313,6 +1314,11 @@ define(['util'], function () {
             defaultPriority: 'Default priority',
             autoAnalysis: 'Auto analysis',
             autoAnalysisOnOff: '<p>If ON - analysis starts as soon as any launch finished.</p> <p>If OFF - not automatic, but can be invoked manually</p>',
+            autoAnalysisBase: 'Base for Auto Analysis',
+            autoAnalysisBaseFirstOpt: 'All launches',
+            autoAnalysisBaseSecondOpt: 'Launches with the same name',
+            autoAnalysisBaseFirstTip: 'The test items are analyzed on base of previously investigated data in all launches',
+            autoAnalysisBaseSecondTip: 'The test items are analyzed on base of previously investigated data in launches with the same name',
             emailNotifications: 'E-mail notifications',
             emailRecipients: 'Recipients',
             duplicateEmailCase: 'Such notification rule already exists. You can\'t create duplicate.',
@@ -2027,6 +2033,7 @@ define(['util'], function () {
             includeAA: 'Include %%% into Auto-Analysis',
             receiveIssue: 'Receive previous result',
             sendIssue: 'Send result to the last item',
+            analyseLaunches: 'Analyse launches',
             testItemsDetails: 'Test item details'
         },
 
@@ -2078,6 +2085,9 @@ define(['util'], function () {
             moveLaunch: 'Are you sure you want to move %%% to %%%?',
 
             filterOptions: 'Filter options',
+
+            analyseLaunchesLabel: 'Choose the base on which the Auto Analysis will be performed:',
+            analyseLaunchesNote: 'Only items with defect type "To investigate" will come through an auto-analysis procedure.',
 
             msgDeleteItems: 'Are you sure to delete %%%? %%% will no longer exist.',
             msgDeleteDefectType: 'I am sure I want to remove custom defect type',

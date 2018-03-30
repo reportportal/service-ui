@@ -34,7 +34,8 @@ define(function (require) {
             analyzeOnTheFly: false,
             keepLogs: config.forSettings.keepLogs[0].value,
             keepScreenshots: config.forSettings.keepScreenshots[0].value,
-            projectSpecific: config.forSettings.projectSpecific[0].value
+            projectSpecific: config.forSettings.projectSpecific[0].value,
+            analyzer_mode: config.forSettings.analyzerMode
         },
 
         getProjectSettings: function () {
@@ -44,6 +45,7 @@ define(function (require) {
                 keepLogs: this.get('keepLogs'),
                 keepScreenshots: this.get('keepScreenshots'),
                 projectSpecific: this.get('projectSpecific'),
+                analyzer_mode: this.get('analyzer_mode')
                 // analyzeOnTheFly: this.get('analyzeOnTheFly')
             };
             return {

@@ -247,8 +247,8 @@ define([
         return call('PUT', urls.updateTestItemUrl(id), data);
     };
 
-    var startLaunchAnalyze = function (id) {
-        return call('POST', urls.launchAnalyzeUrl(id), null, null, true);
+    var startLaunchAnalyze = function (id, mode) {
+        return call('POST', urls.launchAnalyzeUrl(id, mode), null, null, true);
     };
 
     var mergeLaunches = function (data) {
