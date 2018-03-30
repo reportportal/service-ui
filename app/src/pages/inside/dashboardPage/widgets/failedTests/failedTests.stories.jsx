@@ -1,5 +1,4 @@
 import { storiesOf } from '@storybook/react';
-import { action } from '@storybook/addon-actions';
 import { host } from 'storybook-host';
 import { createStore, combineReducers } from 'redux';
 import { Provider } from 'react-redux';
