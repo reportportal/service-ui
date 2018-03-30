@@ -31,7 +31,7 @@ export const DropdownOption = ({ multiple, label, disabled, selected, onChange, 
     onChange(value);
   };
   return (
-    <div className={cx('dropdown-option', { active: !multiple && selected, disabled })}>
+    <div className={cx('dropdown-option', { selected: !multiple && selected, disabled })}>
       {
         multiple
           ? <InputCheckbox value={selected} disabled={disabled} onChange={onChangeHandler}>
