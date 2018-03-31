@@ -43,7 +43,7 @@ const rerenderApp = (AppContainer) => {
 
 if (module.hot) {
   module.hot.accept('./app', () => {
-    const app = require('./app').default;
+    const app = require('./app').default; // eslint-disable-line global-require
     rerenderApp(app);
   });
 }
