@@ -8,7 +8,7 @@ export const ExecutionStatistics = ({ value, title, bold }) => (
   <div className={cx('execution-statistics')}>
     <span className={cx('title')}>{ title.full }</span>
     {
-      !!+value &&
+      !!Number(value) &&
       <a href="/" className={cx('value', { bold })}>
         { value }
       </a>

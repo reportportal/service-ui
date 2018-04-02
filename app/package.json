@@ -17,6 +17,7 @@
     "manage:translations:test": "webpack --display none --env.dev && babel-node ./localization/translatorRunnerCheck.js"
   },
   "dependencies": {
+    "array.find": "^1.0.7",
     "axios": "^0.17.1",
     "classnames": "^2.2.5",
     "dotenv": "^5.0.1",
