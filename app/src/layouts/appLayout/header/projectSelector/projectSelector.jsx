@@ -21,7 +21,7 @@
 
 import classNames from 'classnames/bind';
 import React, { Component } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink } from 'redux-first-router-link'
 import PropTypes from 'prop-types';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import styles from './projectSelector.scss';
@@ -68,7 +68,11 @@ export class ProjectSelector extends Component {
           <ScrollWrapper autoHeight autoHeightMax={600}>
             {
             Array.map(this.props.projects, project => (
-              <NavLink key={project} className={cx('project-list-item')} activeClassName={cx('active')} to={`/${project}`}>
+              <NavLink
+				to={{type:PROJECT_PAGE, payload: {projectId: project}}}
+				key={project}
+				className={cx('project-list-item')}
+				activeClassName={cx('active')}>
                 {project}
               </NavLink>
             ))

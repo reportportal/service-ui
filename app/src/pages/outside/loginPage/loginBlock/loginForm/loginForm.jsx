@@ -24,7 +24,7 @@ import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
 import { reduxForm } from 'redux-form';
 import { FormattedMessage, injectIntl, intlShape, defineMessages } from 'react-intl';
-import { Link } from 'react-router-dom';
+import { Link } from 'redux-first-router-link';
 import { validate } from 'common/utils';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { InputOutside } from 'components/inputs/inputOutside';
@@ -110,7 +110,7 @@ export class LoginForm extends React.Component {
             </FieldErrorHint>
           </FieldProvider>
         </div>
-        <Link className={cx('forgot-pass')} to="/login?forgotPass=true">
+        <Link to={{type:LOGIN_PAGE, payload:{forgotPass: true}}} className={cx('forgot-pass')}>
           <FormattedMessage id={'LoginForm.forgotPass'} defaultMessage={'Forgot password?'} />
         </Link>
         <div className={cx('login-button-container')}>

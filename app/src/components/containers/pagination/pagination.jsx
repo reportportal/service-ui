@@ -1,24 +1,33 @@
 import { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
 import { activeProjectSelector } from 'controllers/user';
 import { fetch } from 'common/utils';
+import { pagePropertiesSelector, updatePagePropertiesAction } from 'controllers/page';
 
 const PAGE_KEY = 'page.page';
 const SIZE_KEY = 'page.size';
 
-export const withPagination = ({ url }) => WrappedComponent => withRouter(
+export const withPagination = ({ url }) => WrappedComponent =>
   connect(state => ({
+	pageProperties: pagePropertiesSelector(state),
     activeProject: activeProjectSelector(state),
-  }))(
+  }), (dispatch, ownProps) => {
+	  const update = options =>
+		dispatch(
+			updatePagePropertiesAction(options));
+	  return {
+	    onChangePage: page => update({[PAGE_KEY]: options.page || ownProps.page}),
+	    onChangePageSize: size => update({[SIZE_KEY]: options.size || ownProps.size})
+	  };
+  })(
     class PaginationWrapper extends PureComponent {
       static propTypes = {
-        location: PropTypes.object.isRequired,
-        history: PropTypes.object.isRequired,
-        match: PropTypes.object.isRequired,
+        pageProperties: PropTypes.object.isRequired,
         activeProject: PropTypes.string,
         requestParams: PropTypes.object,
+
+		updatePageProperties: PropTypes.func.isRequired
       };
 
       static defaultProps = {
@@ -35,7 +44,7 @@ export const withPagination = ({ url }) => WrappedComponent => withRouter(
       };
 
       componentDidMount() {
-        const query = this.props.location.query;
+        const query = this.props.pageProperties;
         const { page, size } = this.parseQuery(query);
         this.fetchData(
           { page, size, ...this.props.requestParams },
@@ -43,8 +52,8 @@ export const withPagination = ({ url }) => WrappedComponent => withRouter(
         );
       }
 
-      componentWillReceiveProps({ location: { query }, activeProject, requestParams }) {
-        const { page, size } = this.parseQuery(query);
+      componentWillReceiveProps({ pageProperties, activeProject, requestParams }) {
+        const { page, size } = this.parseQuery(pageProperties);
         if (page !== this.state.activePage
           || size !== this.state.pageSize
           || requestParams !== this.props.requestParams
@@ -74,18 +83,12 @@ export const withPagination = ({ url }) => WrappedComponent => withRouter(
 
       changeSizeHandler = size => this.changePaginationOptions({ size });
 
-      changePaginationOptions = (options) => {
-        const query = this.props.location.query;
-        const { page, size } = this.parseQuery(query);
-        this.props.history.push({
-          pathname: this.props.location.pathname,
-          query: {
-            ...this.props.location.query,
-            [SIZE_KEY]: options.size || size,
-            [PAGE_KEY]: options.page || page,
-          },
-        });
-      };
+      changePaginationOptions = options =>
+		dispatch(
+			updatePagePropertiesAction({
+				[SIZE_KEY]: options.size || size,
+				[PAGE_KEY]: options.page || page,
+			}));
 
       parseQuery = query => ({
         page: Number(query[PAGE_KEY]) || this.state.activePage,
@@ -94,11 +97,8 @@ export const withPagination = ({ url }) => WrappedComponent => withRouter(
 
       render() {
         const {
-          location,
-          history,
-          activeProject,
-          requestParams,
-          match,
+		  onChangePage,
+		  onChangePageSize,
           ...restProps
         } = this.props;
         return (
@@ -108,10 +108,10 @@ export const withPagination = ({ url }) => WrappedComponent => withRouter(
             itemCount={this.state.totalElements}
             pageCount={this.state.totalPages}
             pageSize={this.state.pageSize}
-            onChangePage={this.changePageHandler}
-            onChangePageSize={this.changeSizeHandler}
+            onChangePage={onChangePage}
+            onChangePageSize={onChangePageSize}
             {...restProps}
           />
         );
       }
-    }));
+    });

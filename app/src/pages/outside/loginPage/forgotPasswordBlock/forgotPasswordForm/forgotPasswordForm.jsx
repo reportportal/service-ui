@@ -23,7 +23,8 @@ import { PureComponent } from 'react';
 import classNames from 'classnames/bind';
 import { reduxForm } from 'redux-form';
 import { FormattedMessage, injectIntl, intlShape, defineMessages } from 'react-intl';
-import { Link, withRouter } from 'react-router-dom';
+import { Link } from 'redux-first-router-link';
+import { redirect } from 'redux-first-router';
 import PropTypes from 'prop-types';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
@@ -32,6 +33,7 @@ import { BigButton } from 'components/buttons/bigButton';
 import { validate, fetch } from 'common/utils';
 import EmailIcon from './img/email-icon-inline.svg';
 import styles from './forgotPasswordForm.scss';
+import { LOGIN_PAGE } from 'controllers/pages';
 
 const cx = classNames.bind(styles);
 
@@ -42,7 +44,9 @@ const placeholders = defineMessages({
   },
 });
 
-@withRouter
+@connect(null, (dispatch, ownProps) => ({
+	redirectToLoginPage: () => dispatch(redirect({type:LOGIN_PAGE}))
+}))
 @reduxForm({
   form: 'forgotPassword',
   validate: ({ email }) => ({
@@ -54,7 +58,7 @@ export class ForgotPasswordForm extends PureComponent {
   static propTypes = {
     intl: intlShape.isRequired,
     handleSubmit: PropTypes.func.isRequired,
-    history: PropTypes.object.isRequired,
+	redirectToLoginPage: PropTypes.func.isRequired
   };
 
   static defaultProps = {
@@ -66,8 +70,8 @@ export class ForgotPasswordForm extends PureComponent {
       method: 'post',
       data: {
         email,
-      },
-    }).then(() => this.props.history.push('/login'));
+      }
+    }).then(() => this.props.redirectToLoginPage());
   };
 
   render() {
@@ -84,7 +88,7 @@ export class ForgotPasswordForm extends PureComponent {
         </div>
         <div className={cx('forgot-password-buttons-container')}>
           <div className={cx('forgot-password-button')}>
-            <Link to="/login" className={cx('button-link')}>
+            <Link to={{type: LOGIN_PAGE}} className={cx('button-link')}>
               <BigButton type={'button'} color={'gray-60'}>
                 <FormattedMessage id={'ForgotPasswordForm.cancel'} defaultMessage={'Cancel'} />
               </BigButton>

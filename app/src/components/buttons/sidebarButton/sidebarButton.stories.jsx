@@ -23,7 +23,7 @@ import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import { host } from 'storybook-host';
 import { withReadme } from 'storybook-readme';
-import { MemoryRouter } from 'react-router';
+//import { MemoryRouter } from 'react-router';
 import { SidebarButton } from './sidebarButton';
 import README from './README.md';
 import TestIcon from './img/test-icon-inline.svg';
@@ -38,9 +38,11 @@ storiesOf('Components/Buttons/sidebarButton', module)
     width: 150,
   }))
   .addDecorator(withReadme(README))
+  /* TODO
   .addDecorator(story => (
     <MemoryRouter initialEntries={['/']}>{story()}</MemoryRouter>
   ))
+  */
   .add('default state', () => (
     <SidebarButton />
   ))

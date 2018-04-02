@@ -1,0 +1,1 @@
+import { AdministratePage } from './administratePage';

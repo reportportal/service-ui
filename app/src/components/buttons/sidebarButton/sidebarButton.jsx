@@ -22,7 +22,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import classNames from 'classnames/bind';
-import { NavLink } from 'react-router-dom';
+import { NavLink } from 'redux-first-router-link'
 import Parser from 'html-react-parser';
 import styles from './sidebarButton.scss';
 

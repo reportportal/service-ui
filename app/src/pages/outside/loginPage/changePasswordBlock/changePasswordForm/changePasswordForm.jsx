@@ -22,7 +22,6 @@
 import { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { reduxForm } from 'redux-form';
-import { withRouter } from 'react-router-dom';
 import classNames from 'classnames/bind';
 import { FormattedMessage, injectIntl, intlShape, defineMessages } from 'react-intl';
 import { validate, fetch } from 'common/utils';
@@ -47,7 +46,7 @@ const placeholders = defineMessages({
   },
 });
 
-@withRouter
+@connectRouter(({reset}) => ({reset}))
 @reduxForm({
   form: 'changePassword',
   validate: ({ password, passwordRepeat }) => ({
@@ -60,16 +59,11 @@ export class ChangePasswordForm extends PureComponent {
   static propTypes = {
     intl: intlShape.isRequired,
     handleSubmit: PropTypes.func.isRequired,
-    location: PropTypes.shape({
-      hash: PropTypes.string,
-      pathname: PropTypes.string,
-      query: PropTypes.object,
-      search: PropTypes.string,
-    }).isRequired,
+	reset: PropTypes.object
   };
 
   changePassword = ({ password }) => {
-    const uuid = this.props.location.query.reset;
+    const uuid = this.props.reset;
     fetch('api/v1/user/password/reset', {
       method: 'post',
       data: {

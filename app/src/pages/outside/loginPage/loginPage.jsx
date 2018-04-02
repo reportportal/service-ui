@@ -23,7 +23,6 @@ import { PureComponent } from 'react';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { referenceDictionary } from 'common/utils';
-import { withRouter } from 'react-router-dom';
 import styles from './loginPage.scss';
 import { LoginPageSection } from './loginPageSection';
 import { SocialSection } from './socialSection';
@@ -31,25 +30,22 @@ import { LoginBlock } from './loginBlock';
 import { ForgotPasswordBlock } from './forgotPasswordBlock';
 import { ChangePasswordBlock } from './changePasswordBlock';
 import { ServiceVersionsBlock } from './serviceVersionsBlock';
+import { connectRouter } from 'common/utils';
 
 const cx = classNames.bind(styles);
 
-@withRouter
+@connectRouter(({forgotPass, reset}) => ({ forgotPass, reset }))
 export class LoginPage extends PureComponent {
   static propTypes = {
-    location: PropTypes.shape({
-      hash: PropTypes.string,
-      pathname: PropTypes.string,
-      query: PropTypes.object,
-      search: PropTypes.string,
-    }).isRequired,
+	forgotPass: PropTypes.bool,
+	reset: PropTypes.object
   };
   render() {
     let currentBlock = <LoginBlock />;
-    if (this.props.location.query.forgotPass) {
+    if (this.props.forgotPass) {
       currentBlock = <ForgotPasswordBlock />;
     }
-    if (this.props.location.query.reset) {
+    if (this.props.reset) {
       currentBlock = <ChangePasswordBlock />;
     }
     return (

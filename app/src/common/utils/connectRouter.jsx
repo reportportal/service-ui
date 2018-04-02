@@ -1,32 +1,24 @@
-import { withRouter } from 'react-router';
+import { connect } from 'react-redux';
+import { pagePropertiesSelector, updatePagePropertiesAction } from 'controllers/pages';
 
-const noop = () => {
-};
+const takeAll = x => ({ ...x });
 
-export const connectRouter = (mapURLParamsToProps = noop, queryUpdaters = {}) =>
+export const connectRouter = (mapURLParamsToProps = takeAll, queryUpdaters = {}) =>
   WrappedComponent =>
-    withRouter(
-      ({ location: { query, pathname }, match: { params }, history, ...rest }) => {
-        const mappedProps = mapURLParamsToProps(query, params);
-        const mergeLocation = newQuery => ({
-          pathname,
-          query: {
-            ...query,
-            ...newQuery,
-          },
-        });
+    connect(
+      state => {
+		  const pageProperties = pagePropertiesSelector(state);
+		  return {
+			  ...mapURLParamsToProps(pageProperties)
+		  };
+	  }, 
+	  dispatch => {
         const mappedUpdaters = {};
         Object.keys(queryUpdaters).forEach((key) => {
           mappedUpdaters[key] =
-            (...args) => history.replace(mergeLocation(queryUpdaters[key](...args)));
+            (...args) => dispatch(
+				updatePagePropertiesAction(
+					queryUpdaters[key](...args)));
         });
-
-        return (
-          <WrappedComponent
-            {...mappedProps}
-            {...mappedUpdaters}
-            {...rest}
-          />
-        );
-      },
-    );
+		return mappedUpdaters;
+    })(WrappedComponent);

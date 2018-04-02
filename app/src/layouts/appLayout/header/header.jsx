@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
-import { NavLink, withRouter } from 'react-router-dom';
+import { NavLink } from 'redux-first-router-link';
 import { userInfoSelector, activeProjectSelector } from 'controllers/user';
 import { connect } from 'react-redux';
 import { ProjectSelector } from './projectSelector';
@@ -10,7 +10,6 @@ import styles from './header.scss';
 
 const cx = classNames.bind(styles);
 
-@withRouter
 @connect(state => ({
   user: userInfoSelector(state),
   activeProject: activeProjectSelector(state),
@@ -51,8 +50,8 @@ export class Header extends PureComponent {
         </div>
         <div className={cx('separator')} />
         <div className={cx('nav-btns-block')}>
-          <NavLink to={`/${activeProject}/members`} className={cx('nav-btn', 'members-btn')} activeClassName={cx('active')} />
-          <NavLink to={`/${activeProject}/settings`} className={cx('nav-btn', 'settings-btn')} activeClassName={cx('active')} />
+          <NavLink to={{type: PROJECT_MEMBERS_PAGE, payload: {projectId:activeProject}}} className={cx('nav-btn', 'members-btn')} activeClassName={cx('active')} />
+          <NavLink to={{type: PROJECT_SETTINGS_PAGE, payload: {projectId:activeProject}}} className={cx('nav-btn', 'settings-btn')} activeClassName={cx('active')} />
         </div>
         <UserBlock user={user} />
       </div>

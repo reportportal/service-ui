@@ -1,10 +1,19 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Redirect } from 'react-router-dom';
+import { Link } from 'redux-first-router-link';
 import { isAuthorizedSelector } from 'controllers/auth';
+import {LOGIN_PAGE} from 'controllers/pages';
 
-export const authorizedRoute = Component => connect(state => ({
-  authorized: isAuthorizedSelector(state),
-}))(({ authorized, ...otherProps }) => (
-  authorized ? <Component {...otherProps} /> : <Redirect to="/login" />
-));
+export const authorizedRoute = Component =>
+  connect(
+	state => ({ authorized: isAuthorizedSelector(state) }) 
+	, (dispatch, ownProps) => {
+		return {
+			redirect: () => dispatch({ type:LOGIN_PAGE })
+		};
+	})(({ authorized, redirect, ...otherProps }) => {
+	if (authorized)
+  		return <Component {...otherProps} />
+	else
+		redirect();
+});
