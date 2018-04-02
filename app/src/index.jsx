@@ -5,8 +5,8 @@ import { createHashHistory } from 'history';
 import { userInfoSelector, activeProjectSelector, setActiveProjectAction } from 'controllers/user';
 import { fetchProjectAction } from 'controllers/project';
 import qhistory from 'qhistory';
-
 import { stringify, parse } from 'qs';
+import 'common/polyfills';
 
 import 'reset-css/reset.css';
 import 'common/css/fonts/fonts.scss';

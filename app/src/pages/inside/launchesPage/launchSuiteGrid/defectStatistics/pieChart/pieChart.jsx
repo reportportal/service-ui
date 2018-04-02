@@ -1,4 +1,4 @@
-import { PureComponent } from 'react';
+import { Component } from 'react';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -9,7 +9,24 @@ import { projectConfigSelector } from 'controllers/project';
 import styles from './pieChart.scss';
 
 const cx = classNames.bind(styles);
-
+const chartConfig = {
+  size: {
+    width: 56,
+    height: 56,
+  },
+  donut: {
+    width: 12,
+    label: {
+      show: false,
+    },
+  },
+  interaction: {
+    enabled: false,
+  },
+  legend: {
+    show: false,
+  },
+};
 @withHoverableTooltip({
   TooltipComponent: DefectTypeTooltip,
   data: {
@@ -23,7 +40,7 @@ const cx = classNames.bind(styles);
 @connect(state => ({
   projectConfig: projectConfigSelector(state),
 }))
-export class PieChart extends PureComponent {
+export class PieChart extends Component {
   static propTypes = {
     type: PropTypes.string,
     data: PropTypes.object.isRequired,
@@ -49,24 +66,6 @@ export class PieChart extends PureComponent {
       });
     return data;
   };
-  chartConfig = {
-    size: {
-      width: 56,
-      height: 56,
-    },
-    donut: {
-      width: 12,
-      label: {
-        show: false,
-      },
-    },
-    interaction: {
-      enabled: false,
-    },
-    legend: {
-      show: false,
-    },
-  };
 
   render() {
     const { data, type, projectConfig } = this.props;
@@ -74,7 +73,7 @@ export class PieChart extends PureComponent {
     return (
       <a href="/">
         <div className={cx('chart-container')}>
-          <C3Chart {...this.chartConfig} data={this.getChartData()} />
+          <C3Chart {...chartConfig} data={this.getChartData()} />
         </div>
         <div className={cx('total')} style={{ borderColor: color }}>
           { data.total }
