@@ -1,1 +1,0 @@
-export { MemberSearchInput } from './memberSearchInput';
