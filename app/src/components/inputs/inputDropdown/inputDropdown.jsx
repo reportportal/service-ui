@@ -103,7 +103,8 @@ export class InputDropdown extends Component {
   };
   handleAllClick = () => {
     if (this.props.value.length !== this.props.options.length) {
-      this.props.onChange(this.props.options.map(item => item.value));
+      this.props.onChange(this.props.options.filter(item => !item.disabled)
+        .map(item => item.value));
     } else {
       this.props.onChange([]);
     }
