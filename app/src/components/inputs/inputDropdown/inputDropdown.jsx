@@ -77,11 +77,9 @@ export class InputDropdown extends Component {
     const { multiple, value, options } = this.props;
     let displayedValue;
     if (multiple) {
-      displayedValue = [];
-      options.forEach((option) => {
-        (value.indexOf(option.value) > -1) && displayedValue.push(option.label);
-      });
-      return displayedValue.join(', ');
+      return options.filter(option => value.indexOf(option.value) > -1)
+        .map(option => option.label)
+        .join(', ');
     }
     options.forEach((option) => {
       if (option.value === value) {
