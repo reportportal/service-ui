@@ -5,6 +5,9 @@
   background-color: transparent;
   margin: 0;
   padding: 20px 0 0;
+  @media (max-width: $SCREEN_XS_MAX) {
+    padding: 0;
+  }
 }
 
 .page-title {
@@ -17,19 +20,12 @@
   line-height: 30px;
   color: $COLOR--charcoal-grey;
   text-transform: uppercase;
+  @media (max-width: $SCREEN_XS_MAX) {
+    display: none;
+  }
 }
 
 .page-content {
   background-color: $COLOR--white-two;
   box-shadow: 0 1px 3px 0 rgba(0,0,0,.1);
-}
-.mobile-hide{
-  @media (max-width: $SCREEN_XS_MAX) {
-    display: none;
-  }
-}
-.full-mobile-layout{
-  @media (max-width: $SCREEN_XS_MAX) {
-    padding: 0;
-  }
 }

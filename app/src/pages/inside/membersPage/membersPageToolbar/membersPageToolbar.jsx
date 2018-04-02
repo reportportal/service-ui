@@ -6,19 +6,25 @@ import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { reduxForm } from 'redux-form';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { FieldProvider } from 'components/fields/fieldProvider';
-import { MemberSearchInput } from './memberSearchInput';
+import { InputSearch } from 'components/inputs/inputSearch';
+import PermissionMapIcon from './img/ic_premission-inline.svg';
+import InviteUserIcon from './img/ic_invite-inline.svg';
 import styles from './membersPageToolbar.scss';
 
 const cx = classNames.bind(styles);
 
 const messages = defineMessages({
   permissionMap: {
-    id: 'MembersPage.permissionMap',
+    id: 'MembersPageToolbar.permissionMap',
     defaultMessage: 'Permission map',
   },
   inviteUser: {
-    id: 'MembersPage.inviteUser',
+    id: 'MembersPageToolbar.inviteUser',
     defaultMessage: 'Invite user',
+  },
+  searchInputPlaceholder: {
+    id: 'MembersPageToolbar.searchByName',
+    defaultMessage: 'Search by name',
   },
 });
 @connect(null, {
@@ -59,14 +65,19 @@ export class MembersPageToolbar extends React.Component {
   render() {
     return (
       <div className={cx('members-page-toolbar')}>
-        <FieldProvider name="filter">
-          <MemberSearchInput />
-        </FieldProvider>
+        <div className={cx('search-input')}>
+          <FieldProvider name="filter">
+            <InputSearch
+              maxLength="128"
+              placeholder={this.props.intl.formatMessage(messages.searchInputPlaceholder)}
+            />
+          </FieldProvider>
+        </div>
         <div className={cx('members-page-controls')}>
-          <GhostButton >
+          <GhostButton icon={PermissionMapIcon}>
             {this.props.intl.formatMessage(messages.permissionMap)}
           </GhostButton>
-          <GhostButton >
+          <GhostButton icon={InviteUserIcon}>
             {this.props.intl.formatMessage(messages.inviteUser)}
           </GhostButton>
         </div>

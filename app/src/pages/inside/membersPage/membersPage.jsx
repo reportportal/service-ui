@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { withFilter } from 'controllers/filter';
 import { activeProjectSelector } from 'controllers/user';
-import { withPagination } from 'components/containers/pagination';
+import { withPagination } from 'controllers/pagination';
 import { PageLayout } from 'layouts/pageLayout';
 import { MembersPageToolbar } from './membersPageToolbar';
 import { MembersTable } from './membersTable';
@@ -18,7 +18,6 @@ const messages = defineMessages({
 @connect(state => ({
   url: `/api/v1/project/${activeProjectSelector(state)}/users`,
 }))
-
 @withFilter
 @withPagination()
 @injectIntl

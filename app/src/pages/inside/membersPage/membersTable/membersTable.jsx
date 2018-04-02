@@ -24,7 +24,6 @@ export class MembersTable extends PureComponent {
     itemCount: 0,
     pageCount: 0,
     pageSize: 20,
-    userId: '',
     onChangePage: () => {
     },
     onChangePageSize: () => {
