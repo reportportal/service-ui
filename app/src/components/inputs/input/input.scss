@@ -44,3 +44,10 @@
     margin: 0;
   }
 }
+.disabled,
+.readonly {
+  background-color: $COLOR--gray-91;
+  &:focus {
+    background-color: $COLOR--gray-91;
+  }
+}

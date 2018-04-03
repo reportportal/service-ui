@@ -1,13 +1,61 @@
-.select2-search-users{
-  :global{
+.select2-search-users {
+  :global {
     background-color: $COLOR--white-two;
-    .Select-control, .Select-menu-outer{
+    width: inherit;
+    .error {
+      .Select-input {
+        input {
+          border-color: $COLOR--orange-red;
+        }
+      }
+      &:hover {
+        .Select-input {
+          input {
+            border-color: $COLOR--orange-red;
+          }
+        }
+      }
+    }
+    .Select {
+      width: inherit;
+      &:hover {
+        input {
+          border-color: $COLOR--gray-47;
+        }
+      }
+    }
+    .Select-control {
       position: relative;
     }
-    .Select-placeholder{
-      display: none;
+    .Select-menu-outer {
+      position: absolute;
+      width: inherit;
+      z-index: 100;
     }
-    .Select-noresults{
+    .Select-multi-value-wrapper {
+      position: relative;
+    }
+    .Select-placeholder {
+      line-height: 15px;
+      position: absolute;
+      top: 3px;
+      left: 10px;
+      font-size: 13px;
+      font-family: $FONT-REGULAR;
+      color: $COLOR--gray-60;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      width: 94%;
+    }
+    .Select-value {
+      line-height: 30px;
+      position: absolute;
+      left: 12px;
+      font-size: 13px;
+      z-index: 10;
+    }
+    .Select-noresults {
       background: lighten($COLOR--gray-91, 5%);
       position: absolute;
       bottom: -28px;
@@ -19,26 +67,38 @@
       font-family: $FONT-REGULAR, sans-serif;
       color: $COLOR--charcoal-grey;
     }
-    .Select-input{
-      padding: 8px;
+    .Select-clear-zone {
+      line-height: 30px;
+      position: absolute;
+      right: 12px;
+      font-size: 13px;
+    }
+    .Select-input {
       width: 100%;
-      box-sizing: border-box;
-      input{
+      input {
         line-height: 18px;
         font-family: $FONT-REGULAR, sans-serif;
-        width: 100%  !important;
+        width: 100% !important;
         height: auto;
         min-height: 26px;
-        padding: 4px 20px 4px 5px;
+        padding: 5px 20px 5px 10px;
         margin: 0;
         outline: 0;
         font-size: 13px;
-        border: 1px solid $COLOR--gray-60;
+        border: 1px solid $COLOR--gray-80;
         border-radius: 0;
         box-sizing: border-box !important;
-        background: url('./img/select2.png') no-repeat 100% -22px, linear-gradient(to bottom, #fff 85%, #eee 99%) 0 0;
+      }
+    }
+    .is-focused {
+      input {
+        border: solid 1px $COLOR--topaz;
+      }
+      &:hover {
+        input {
+          border-color: $COLOR--topaz;
+        }
       }
     }
   }
 }
-

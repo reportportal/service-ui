@@ -18,24 +18,13 @@
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
+import { getRolesMap } from './getRolesMap';
+import { canSelectRole } from './canSelectRole';
 
-import * as validation from './validation';
-
-export const validate = validation;
-export { isEmptyObject } from './isEmptyObject';
-export { referenceDictionary } from './referenceDictionary';
-export { fetch, ERROR_CANCELED, ERROR_UNAUTHORIZED } from './fetch';
-export { addTokenToImagePath } from './addTokenToImagePath';
-export { getStorageItem, setStorageItem } from './storageUtils';
-export {
-  getDuration,
-  approximateTimeFormat,
-  dateFormat,
-  fromNowFormat,
-  daysFromNow,
-  daysBetween,
-} from './timeDateUtils';
-export { connectRouter } from './connectRouter';
-export { getRolesMap } from './getRolesMap';
-export { getProjectRolesOptions } from './getProjectRolesOptions';
-export { canSelectRole } from './canSelectRole';
+export function getProjectRolesOptions(currentRole, hasPermissions, isAdmin) {
+  return getRolesMap().map((role) => {
+    const option = role;
+    option.disabled = !canSelectRole(role.value, currentRole, hasPermissions, isAdmin);
+    return option;
+  });
+}

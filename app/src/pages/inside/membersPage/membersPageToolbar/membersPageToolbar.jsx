@@ -43,6 +43,7 @@ export class MembersPageToolbar extends React.Component {
     intl: intlShape,
     filter: PropTypes.string,
     showModalAction: PropTypes.func.isRequired,
+    onInvite: PropTypes.func,
   };
 
   static defaultProps = {
@@ -50,6 +51,7 @@ export class MembersPageToolbar extends React.Component {
     filter: PropTypes.string,
     change: () => {},
     showModalAction: () => {},
+    onInvite: () => {},
   };
 
   componentDidMount() {
@@ -62,6 +64,7 @@ export class MembersPageToolbar extends React.Component {
     }
   }
 
+  showInviteUserModal = () => this.props.showModalAction({ id: 'inviteUserModal', data: { onInvite: this.props.onInvite } });
   showPermissionMapModal = () => this.props.showModalAction({ id: 'permissionMapModal' });
 
   render() {
@@ -78,7 +81,7 @@ export class MembersPageToolbar extends React.Component {
           <GhostButton icon={PermissionMapIcon} onClick={this.showPermissionMapModal}>
             {this.props.intl.formatMessage(messages.permissionMap)}
           </GhostButton>
-          <GhostButton icon={InviteUserIcon}>
+          <GhostButton icon={InviteUserIcon} onClick={this.showInviteUserModal}>
             {this.props.intl.formatMessage(messages.inviteUser)}
           </GhostButton>
         </div>

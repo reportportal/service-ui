@@ -1,4 +1,5 @@
-const userSelector = (state) => state.user || {};
+import { PROJECT_ROLES } from 'common/constants/projectRoles';
+import { ADMINISTRATOR } from 'common/constants/accountRoles';
 
 export const userInfoSelector = (state) => userSelector(state).info || {};
 export const defaultProjectSelector = (state) => userInfoSelector(state).default_project || '';
@@ -14,4 +15,4 @@ export const activeProjectRoleSelector = (state) => {
   const assignedProject = assignedProjectsSelector(state)[activeProject];
   return assignedProject && assignedProject.projectRole;
 };
-export const isAdminSelector = (state) => userInfoSelector(state).userRole === 'ADMINISTRATOR';
+export const isAdminSelector = (state) => userInfoSelector(state).userRole === ADMINISTRATOR;

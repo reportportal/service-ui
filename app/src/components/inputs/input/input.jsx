@@ -44,7 +44,7 @@ export const Input = ({
   <input
     ref={refFunction}
     type={type}
-    className={cx('input', { disabled, error, touched })}
+    className={cx('input', { disabled, error, touched, readonly })}
     value={value}
     placeholder={placeholder}
     maxLength={maxLength}
