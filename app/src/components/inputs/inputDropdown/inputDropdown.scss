@@ -2,15 +2,23 @@
   position: relative;
   display: block;
   width: 100%;
-  height: 100%;
-
+  height: 30px;
+  border: solid 1px $COLOR--gray-80;
+  box-sizing: border-box;
   &.opened {
+    border: solid 1px $COLOR--topaz;
+    &:hover {
+      border-color: $COLOR--topaz;
+    }
     .arrow {
       transform: rotate(180deg);
     }
     .select-list {
       display: block;
     }
+  }
+  &:hover {
+    border-color: $COLOR--gray-47;
   }
 }
 .select-block {
@@ -36,6 +44,7 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   color: $COLOR--charcoal-grey;
+  line-height: 18px;
 }
 .arrow {
   position: absolute;
@@ -52,6 +61,7 @@
   color: $COLOR--charcoal-grey;
 }
 .select-list {
+  z-index: 10;
   position: absolute;
   top: 100%;
   margin-top: 5px;
@@ -62,6 +72,8 @@
   background-color: $COLOR--white-two;
   box-sizing: border-box;
   cursor: pointer;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2);
+  border: solid 1px $COLOR--gray-80;
 }
 .select-all-block {
   width: 100%;

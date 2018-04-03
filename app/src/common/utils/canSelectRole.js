@@ -18,24 +18,10 @@
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
+import { PROJECT_ROLES } from 'common/constants/projectRoles';
 
-import * as validation from './validation';
-
-export const validate = validation;
-export { isEmptyObject } from './isEmptyObject';
-export { referenceDictionary } from './referenceDictionary';
-export { fetch, ERROR_CANCELED, ERROR_UNAUTHORIZED } from './fetch';
-export { addTokenToImagePath } from './addTokenToImagePath';
-export { getStorageItem, setStorageItem } from './storageUtils';
-export {
-  getDuration,
-  approximateTimeFormat,
-  dateFormat,
-  fromNowFormat,
-  daysFromNow,
-  daysBetween,
-} from './timeDateUtils';
-export { connectRouter } from './connectRouter';
-export { getRolesMap } from './getRolesMap';
-export { getProjectRolesOptions } from './getProjectRolesOptions';
-export { canSelectRole } from './canSelectRole';
+export function canSelectRole(role, currentRole, hasPermissions, isAdmin) {
+  const userRoleIndex = PROJECT_ROLES.indexOf(currentRole);
+  const roleIndex = PROJECT_ROLES.indexOf(role);
+  return isAdmin || (hasPermissions && userRoleIndex >= roleIndex);
+}

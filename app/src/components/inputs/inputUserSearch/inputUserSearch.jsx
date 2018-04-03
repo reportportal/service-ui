@@ -31,7 +31,11 @@ import { UsersList } from './usersList';
 const cx = classNames.bind(styles);
 const getPhoto = (userId) => URLS.dataUserPhoto(new Date().getTime(), userId);
 const isValidNewOption = ({ label }) => validate.email(label);
-const newOptionCreator = (option) => ({ externalUser: true, label: option.label });
+const newOptionCreator = (option) => ({
+  externalUser: true,
+  label: option.label,
+  userLogin: option.label,
+});
 const promptTextCreator = (label) => label;
 const makeURL = (input, isAdmin, projectId) => {
   // TODO for YANA. Define URLS in common/urls.js
@@ -76,43 +80,61 @@ const getUsers = (input, isAdmin, projectId) => {
   return Promise.resolve({ options: [] });
 };
 
-export const InputUserSearch = ({ isAdmin, onChange, projectId }) => (
-  <Select.AsyncCreatable
-    cache={false}
-    className={cx('select2-search-users')}
-    loadOptions={(input) => getUsers(input, isAdmin, projectId)}
-    filterOption={() => true}
-    loadingPlaceholder={
-      <FormattedMessage id={'InputUserSearch.searching'} defaultMessage={'Searching...'} />
-    }
-    noResultsText={
-      <FormattedMessage id={'InputUserSearch.noResults'} defaultMessage={'No matches found'} />
-    }
-    searchPromptText={
-      <FormattedMessage
-        id={'InputUserSearch.placeholder'}
-        defaultMessage={'Please enter 1 or more character'}
-      />
-    }
-    onChange={(option) => {
-      onChange(option);
-    }}
-    menuRenderer={({ focusOption, options, selectValue }) =>
-      UsersList({ focusOption, options, selectValue })
-    }
-    isValidNewOption={isValidNewOption}
-    newOptionCreator={newOptionCreator}
-    promptTextCreator={promptTextCreator}
-  />
+export const InputUserSearch = ({
+  isAdmin,
+  onChange,
+  projectId,
+  placeholder,
+  value,
+  error,
+  touched,
+}) => (
+  <div className={cx('select2-search-users')}>
+    <Select.AsyncCreatable
+      className={cx({ error: error && touched })}
+      value={value}
+      cache={false}
+      loadOptions={(input) => getUsers(input, isAdmin, projectId)}
+      filterOption={() => true}
+      loadingPlaceholder={
+        <FormattedMessage id={'InputUserSearch.searching'} defaultMessage={'Searching...'} />
+      }
+      noResultsText={
+        <FormattedMessage id={'InputUserSearch.noResults'} defaultMessage={'No matches found'} />
+      }
+      searchPromptText={
+        <FormattedMessage
+          id={'InputUserSearch.placeholder'}
+          defaultMessage={'Please enter 1 or more character'}
+        />
+      }
+      onChange={(option) => {
+        onChange(option);
+      }}
+      menuRenderer={({ options, selectValue }) => UsersList({ options, selectValue })}
+      isValidNewOption={isValidNewOption}
+      newOptionCreator={newOptionCreator}
+      promptTextCreator={promptTextCreator}
+      placeholder={placeholder}
+    />
+  </div>
 );
 
 InputUserSearch.propTypes = {
   isAdmin: PropTypes.bool,
   projectId: PropTypes.string,
   onChange: PropTypes.func,
+  placeholder: PropTypes.string,
+  value: PropTypes.object,
+  error: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
+  touched: PropTypes.bool,
 };
 InputUserSearch.defaultProps = {
   isAdmin: false,
   projectId: '',
   onChange: () => {},
+  placeholder: '',
+  value: {},
+  error: false,
+  touched: false,
 };

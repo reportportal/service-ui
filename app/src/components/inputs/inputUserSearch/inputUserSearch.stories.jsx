@@ -50,6 +50,7 @@ storiesOf('Components/Inputs/InputUserSearch', module)
         isAdmin
         projectId="superadmin_personal"
         onChange={action('Select user')}
+        placeholder="Enter Login or Email"
       />
     );
   });
