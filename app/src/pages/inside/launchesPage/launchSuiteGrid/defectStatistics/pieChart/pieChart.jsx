@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import C3Chart from 'react-c3js';
 import { DefectTypeTooltip } from 'pages/inside/launchesPage/defectTypeTooltip';
 import { withHoverableTooltip } from 'components/main/tooltips/hoverableTooltip';
-import { projectConfigSelector } from 'controllers/project';
+import { projectConfigSelector, defectColorsSelector } from 'controllers/project';
 import styles from './pieChart.scss';
 
 const cx = classNames.bind(styles);
@@ -39,12 +39,14 @@ const chartConfig = {
 })
 @connect(state => ({
   projectConfig: projectConfigSelector(state),
+  defectColors: defectColorsSelector(state),
 }))
 export class PieChart extends Component {
   static propTypes = {
     type: PropTypes.string,
     data: PropTypes.object.isRequired,
     projectConfig: PropTypes.object.isRequired,
+    defectColors: PropTypes.object.isRequired,
   };
   static defaultProps = {
     type: '',
@@ -54,28 +56,25 @@ export class PieChart extends Component {
       columns: [],
       type: 'donut',
       order: null,
-      colors: {},
+      colors: this.props.defectColors,
     };
     Object.keys(this.props.data)
       .forEach((key) => {
         if (key !== 'total') {
-          const defectType = this.props.projectConfig.subTypes[this.props.type.toUpperCase()];
           data.columns.push([key, this.props.data[key]]);
-          data.colors[key] = defectType.find(item => item.locator === key).color;
         }
       });
     return data;
   };
 
   render() {
-    const { data, type, projectConfig } = this.props;
-    const color = projectConfig.subTypes[type.toUpperCase()][0].color;
+    const { data, type } = this.props;
     return (
       <a href="/">
         <div className={cx('chart-container')}>
           <C3Chart {...chartConfig} data={this.getChartData()} />
         </div>
-        <div className={cx('total')} style={{ borderColor: color }}>
+        <div className={cx('total')} style={{ borderColor: this.props.defectColors[type] }}>
           { data.total }
         </div>
       </a>

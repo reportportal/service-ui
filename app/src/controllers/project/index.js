@@ -9,4 +9,5 @@ export {
   projectMembersSelector,
   projectCreationDateSelector,
   userFiltersSelector,
+  defectColorsSelector,
 } from './selectors';
