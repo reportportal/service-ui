@@ -4,12 +4,16 @@ import { MarkdownViewer } from './markdownViewer';
 const boldMock = '**bold**';
 const italicMock = '*italic*';
 const strikethroughMock = '~~strikethrough~~';
-const unorderedListMock = '* Generic list item\n' +
-  '* Generic list item\n' +
-  '* Generic list item';
-const orderedListMock = '1. Numbered list item\n' +
-  '2. Numbered list item\n' +
-  '3. Numbered list item';
+const unorderedListMock = [
+  '* Generic list item',
+  '* Generic list item',
+  '* Generic list item',
+].join('\n');
+const orderedListMock = [
+  '1. Numbered list item',
+  '2. Numbered list item',
+  '3. Numbered list item',
+].join('\n');
 const linkMock = '[Report portal](http://reportportal.io/)';
 const quoteMock = '> This is a quote.';
 const codeMock = '`var example = "hello!";`';

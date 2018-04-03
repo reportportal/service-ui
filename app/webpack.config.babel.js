@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import path from 'path';
 import webpack from 'webpack';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
@@ -19,9 +20,7 @@ const defaultEnv = {
 };
 
 export default (env = defaultEnv) => ({
-  entry: [
-    path.resolve('src', 'index.jsx'),
-  ],
+  entry: [path.resolve('src', 'index.jsx')],
   output: {
     path: path.resolve('build'),
     filename: 'app.[hash:6].js',
@@ -61,15 +60,17 @@ export default (env = defaultEnv) => ({
       template: path.resolve('src', 'index.tpl.html'),
       filename: 'index.html',
     }),
-    ...env.production ? [
-      new CleanWebpackPlugin([path.resolve(__dirname, 'build')]),
-      new CompressionPlugin({
-        asset: '[path].gz[query]',
-        algorithm: 'gzip',
-        threshold: 10240,
-        minRatio: 0.8,
-      }),
-    ] : [],
+    ...(env.production
+      ? [
+          new CleanWebpackPlugin([path.resolve(__dirname, 'build')]),
+          new CompressionPlugin({
+            asset: '[path].gz[query]',
+            algorithm: 'gzip',
+            threshold: 10240,
+            minRatio: 0.8,
+          }),
+        ]
+      : []),
   ],
   module: {
     loaders: [
@@ -87,10 +88,7 @@ export default (env = defaultEnv) => ({
         loader: 'babel-loader',
         exclude: /(node_modules|bower_components)/,
         query: {
-          presets: [
-            'babel-preset-env',
-            'babel-preset-react',
-          ],
+          presets: ['babel-preset-env', 'babel-preset-react'],
           plugins: [
             'react-hot-loader/babel',
             'transform-decorators-legacy',
@@ -170,4 +168,3 @@ export default (env = defaultEnv) => ({
     ],
   },
 });
-

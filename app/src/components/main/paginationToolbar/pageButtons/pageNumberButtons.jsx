@@ -7,7 +7,8 @@ const MOBILE_MAX_VISIBLE_PAGES = 4;
 
 const createPageRange = (start, end) => {
   const res = [];
-  for (let i = start; i <= end; i++) { // eslint-disable-line no-plusplus
+  // eslint-disable-next-line no-plusplus
+  for (let i = start; i <= end; i++) {
     res.push(i);
   }
   return res;
