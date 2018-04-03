@@ -5,6 +5,7 @@ import pageNames from 'controllers/pages/constants';
 import { pageSelector } from 'controllers/pages';
 import { authorizedRoute } from './authorizedRoute';
 import { anonymousRoute } from './anonymousRoute';
+import { LocalizationSwitcher } from 'components/main/localizationSwitcher';
 
 import styles from './pageSwitcher.css';
 
@@ -33,6 +34,9 @@ for (const page in pageNames) {
 }
 
 const PageSwitcher = ({ page }) => {
+	if (!page)
+		return null;
+
 	const { module, name, layout, anonymousAccess } = pageRendering[page];
 	if (!module)
 		throw new Error(`Page $page does not exist`);
@@ -40,7 +44,7 @@ const PageSwitcher = ({ page }) => {
 	if (!layout)
 		throw new Error(`Page $page is missing layout`);
 
-	let PageComponent = require('./' + module)[name];
+	let PageComponent = require('../' + module)[name];
 	if (anonymousAccess) {
 		PageComponent = anonymousRoute(PageComponent);
 	} else {
@@ -49,7 +53,7 @@ const PageSwitcher = ({ page }) => {
 
 	const layoutName = layout + 'Layout';
 	const layoutDir = layout.toLowerCase() + 'Layout';
-	const Layout = require(`layouts/${layoutDir}`)[layoutName];
+	const Layout = require(`../layouts/${layoutDir}`)[layoutName];
 
 	return <div className={styles.pageSwitcher}>
 		<Layout>

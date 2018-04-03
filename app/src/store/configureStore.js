@@ -1,12 +1,14 @@
-import { createStore, applyMiddleware, compose, combineReducers } from 'redux'
-import { composeWithDevTools } from 'redux-devtools-extension/logOnlyInProduction'
-import { connectRoutes } from 'redux-first-router'
+import { createStore, applyMiddleware, compose, combineReducers } from 'redux';
+import { composeWithDevTools } from 'redux-devtools-extension/logOnlyInProduction';
+import { connectRoutes } from 'redux-first-router';
 import queryString from 'qs';
+import reduxThunk from 'redux-thunk';
 
 import routesMap from 'routes/routesMap';
 import reducers from './reducers';
 
-export const configureStore = async (history, preloadedState) => {
+
+export const configureStore = (history, preloadedState) => {
   const { reducer, middleware, enhancer, thunk } = connectRoutes(
     history,
     routesMap,
@@ -16,7 +18,7 @@ export const configureStore = async (history, preloadedState) => {
   const reduxLogger = window.__REDUX_DEVTOOLS_EXTENSION__ ? window.__REDUX_DEVTOOLS_EXTENSION__({ maxAge: 30 }) : f => f;
 
   const rootReducer = combineReducers({ ...reducers, location: reducer })
-  const middlewares = applyMiddleware(middleware)
+  const middlewares = applyMiddleware(middleware, reduxThunk)
   const enhancers = composeEnhancers(enhancer, middlewares, reduxLogger)
   const store = createStore(rootReducer, preloadedState, enhancers)
 
@@ -28,7 +30,7 @@ export const configureStore = async (history, preloadedState) => {
     })
   }
 
-  await thunk(store)
+  //await thunk(store)
 
   return { store };
 };

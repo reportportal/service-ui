@@ -24,7 +24,7 @@ import PropTypes from 'prop-types';
 import { reduxForm } from 'redux-form';
 import classNames from 'classnames/bind';
 import { FormattedMessage, injectIntl, intlShape, defineMessages } from 'react-intl';
-import { validate, fetch } from 'common/utils';
+import { validate, fetch, connectRouter } from 'common/utils';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { FieldBottomConstraints } from 'components/fields/fieldBottomConstraints';

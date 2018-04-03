@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { activeProjectSelector } from 'controllers/user';
 import { fetch } from 'common/utils';
-import { pagePropertiesSelector, updatePagePropertiesAction } from 'controllers/page';
+import { pagePropertiesSelector, updatePagePropertiesAction } from 'controllers/pages';
 
 const PAGE_KEY = 'page.page';
 const SIZE_KEY = 'page.size';

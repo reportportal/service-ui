@@ -26,6 +26,7 @@ import { FormattedMessage, injectIntl, intlShape, defineMessages } from 'react-i
 import { Link } from 'redux-first-router-link';
 import { redirect } from 'redux-first-router';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux'
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { InputOutside } from 'components/inputs/inputOutside';

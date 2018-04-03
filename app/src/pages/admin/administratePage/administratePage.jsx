@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'redux-first-router-link';
 
 export const AdministratePage = () => (
     <h1>Admin</h1>

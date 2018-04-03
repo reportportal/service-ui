@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { redirect } from 'redux-first-router';
 import { Link } from 'redux-first-router-link';
 import { isAuthorizedSelector } from 'controllers/auth';
 import { activeProjectSelector } from 'controllers/user';
@@ -12,13 +13,16 @@ export const anonymousRoute =
 	  activeProject: activeProjectSelector(state),
 	}), (dispatch, ownProps) => {
 		return {
-			redirect: () => dispatch({
+			redirect: () => dispatch(redirect({
 				type:PROJECT_PAGE,
-				payload: {projectId: ownProps.activeProject}})
+				payload: {projectId: ownProps.activeProject}
+			}))
 		};
     }) (({ authorized, activeProject, redirect, ...otherProps }) => {
-	  if (authorized)
+	  if (authorized) {
 		redirect();
-	  else
+		return null;
+	  } else {
 		return <Component {...otherProps} />
+	  }
 	});

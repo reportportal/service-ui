@@ -15,7 +15,6 @@ import 'common/css/common.scss';
 
 import App from './app';
 import { configureStore } from './store';
-import AppContainer from 'react-hot-loader/lib/AppContainer';
 
 
 const queryParseHistory = qhistory(
@@ -24,23 +23,21 @@ const queryParseHistory = qhistory(
   parse,
 );
 
-configureStore(queryParseHistory, window.REDUX_STATE)
-.then(({ store }) => {
-	const rerenderApp = (TheApp) => {
-	  render((
-		<AppContainer>
-			<Provider store={store}>
-			  <TheApp />
-			</Provider>
-		</AppContainer>),
-		document.querySelector('#app'));
-	};
+const { store } = configureStore(queryParseHistory, window.REDUX_STATE);
 
-	if (module.hot) {
-	  module.hot.accept('./app', () => {
-		const app = require('./app').default;
-		rerenderApp(app);
-	  });
-	}
-	rerenderApp(App);
-});
+const rerenderApp = (TheApp) => {
+  render((
+		<Provider store={store}>
+		  <TheApp />
+		</Provider>
+  ),
+	document.querySelector('#app'));
+};
+
+if (module.hot) {
+  module.hot.accept('./app', () => {
+	const app = require('./app').default;
+	rerenderApp(app);
+  });
+}
+rerenderApp(App);

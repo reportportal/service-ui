@@ -1,6 +1,7 @@
 import { redirect } from 'redux-first-router'
 import { userInfoSelector, activeProjectSelector, setActiveProjectAction } from 'controllers/user';
 import { fetchProjectAction } from 'controllers/project';
+import { LOGIN_PAGE } from 'controllers/pages'
 
 const routeThunk = (dispatch, getState) => {
 	const { type, payload } = getState().location;
@@ -14,7 +15,7 @@ const routeThunk = (dispatch, getState) => {
 		dispatch(setActiveProjectAction(hashProject));
 		dispatch(fetchProjectAction(hashProject));
 	}
-	//TODO: is it needed ?: dispatch({ type, payload });
+	dispatch({ type, payload });
 };
 
 const route = options => {
@@ -38,7 +39,12 @@ const redirectRoute = (path, createNewAction) => {
 };
 
 export default {
-	HOME_PAGE: '/',
+	HOME_PAGE: {
+		path: '/',
+		thunk: dispatch => {
+			dispatch(redirect({type:LOGIN_PAGE}));
+		}
+	},
 	LOGIN_PAGE: '/login',
 	REGISTRATION_PAGE: '/registration',
 	ADMINISTRATE_PAGE: '/administrate',
