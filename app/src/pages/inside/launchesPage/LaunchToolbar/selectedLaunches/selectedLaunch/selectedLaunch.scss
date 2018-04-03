@@ -1,0 +1,25 @@
+.selected-launch {
+  height: 20px;
+  background-color: $COLOR--white;
+  border: 1px solid $COLOR--gray-80;
+  font-size: 12px;
+  line-height: 17px;
+  padding-left: 6px;
+  padding-right: 6px;
+}
+
+.name {
+  color: $COLOR--gray-47;
+  padding-right: 4px;
+}
+
+.cross-icon {
+  display: inline-block;
+  cursor: pointer;
+  width: 8px;
+  height: 8px;
+
+  svg {
+    fill: $COLOR--gray-60;
+  }
+}
