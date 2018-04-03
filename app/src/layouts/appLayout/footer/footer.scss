@@ -1,0 +1,85 @@
+.footer {
+  position: absolute;
+  bottom: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 35px;
+  width: 100%;
+  padding: 0 15px;
+  box-sizing: border-box;
+  font-family: $FONT-REGULAR, sans-serif;
+  font-size: 11px;
+  color: $COLOR--gray-47;
+
+  @media (max-width: $SCREEN_MD_MAX) {
+    justify-content: center;
+    min-height: 45px;
+    line-height: 1.6;
+  }
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    width: 100%;
+    min-height: 100px;
+    padding: 0 10px;
+  }
+}
+
+.footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  order: 2;
+
+  @media (max-width: $SCREEN_MD_MAX) {
+    justify-content: center;
+    order: 1;
+    width: 100%;
+  }
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    width: 100%;
+    padding-bottom: 15px;
+    font-size: 13px;
+    line-height: 2.7;
+  }
+
+  a {
+    text-decoration: none;
+    color: inherit;
+
+    &:after {
+      content: " | ";
+      display: inline-block;
+      margin: 0 6px;
+      color: $COLOR--gray-80;
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    &:last-child::after {
+      content: "";
+    }
+  }
+}
+
+.text-wrapper {
+  display: flex;
+  order: 1;
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    flex-wrap: wrap;
+    width: 100%;
+  }
+}
+
+.footer-text {
+  margin-right: 10px;
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    display: inline-block;
+    width: 100%;
+    text-align: left;
+    padding-bottom: 5px;
+  }
+}

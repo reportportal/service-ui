@@ -26,6 +26,7 @@ import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { Notification } from 'components/main/notification';
 import { Sidebar } from './sidebar';
 import { Header } from './header';
+import { Footer } from './footer';
 import styles from './appLayout.scss';
 
 const cx = classNames.bind(styles);
@@ -71,14 +72,17 @@ export class AppLayout extends PureComponent {
             </div>
             <div className={cx('content')}>
               <ScrollWrapper>
-                <div className={cx('header-container')}>
-                  <Header
-                    isSideMenuOpened={this.state.sideMenuOpened}
-                    toggleSideMenu={this.toggleSideMenu}
-                  />
-                </div>
-                <div className={cx('page-container')}>
-                  {this.props.children}
+                <div className={cx('scrolling-content')}>
+                  <div className={cx('header-container')}>
+                    <Header
+                      isSideMenuOpened={this.state.sideMenuOpened}
+                      toggleSideMenu={this.toggleSideMenu}
+                    />
+                  </div>
+                  <div className={cx('page-container')}>
+                    {this.props.children}
+                  </div>
+                  <Footer />
                 </div>
               </ScrollWrapper>
               <div className={cx({ 'sidebar-close-area': true, visible: this.state.sideMenuOpened })} onClick={this.toggleSideMenu} />
