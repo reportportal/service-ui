@@ -4,7 +4,9 @@
   "version": "0.0.0",
   "license": "GPL-3.0-only",
   "scripts": {
-    "eslint": "eslint -f node_modules/eslint-friendly-formatter \"src/**/*.jsx\" \"src/**/*.js\"",
+    "lint": "eslint \"./**/*.jsx\" \"./**/*.js\"",
+    "format:js": "npm run lint -- --fix",
+    "format": "npm run format:js && prettier --write */**/*.scss */**/*.md",
     "dev": "webpack-dev-server --port 3000",
     "build": "webpack -p --env.production",
     "storybook": "start-storybook -p 9001 -c .storybook",
@@ -14,7 +16,8 @@
     "test:coverage": "jest --coverage",
     "build:lang:en": "webpack --display none --env.dev && babel localization/translator.js | node",
     "manage:translations": "webpack --display none --env.dev && babel-node ./localization/translatorRunner.js",
-    "manage:translations:test": "webpack --display none --env.dev && babel-node ./localization/translatorRunnerCheck.js"
+    "manage:translations:test": "webpack --display none --env.dev && babel-node ./localization/translatorRunnerCheck.js",
+    "precommit": "lint-staged"
   },
   "dependencies": {
     "array.find": "^1.0.7",
@@ -75,19 +78,23 @@
     "enzyme-to-json": "^3.3.0",
     "eslint": "^3.19.0",
     "eslint-config-airbnb": "^15.0.1",
-    "eslint-friendly-formatter": "^3.0.0",
+    "eslint-config-prettier": "^2.9.0",
     "eslint-import-resolver-webpack": "^0.8.3",
     "eslint-loader": "^1.9.0",
     "eslint-plugin-import": "^2.3.0",
     "eslint-plugin-jsx-a11y": "^5.0.3",
+    "eslint-plugin-prettier": "^2.6.0",
     "eslint-plugin-react": "^7.0.1",
     "extract-text-webpack-plugin": "^3.0.1",
     "file-loader": "^1.1.5",
     "html-webpack-plugin": "2.22.0",
+    "husky": "^0.14.3",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^21.2.1",
+    "lint-staged": "^7.0.1",
     "node-sass": "^4.5.3",
     "postcss-loader": "^2.0.8",
+    "prettier": "^1.11.1",
     "raw-loader": "^0.5.1",
     "react-addons-test-utils": "^15.6.2",
     "react-intl-translations-manager": "^5.0.1",
@@ -103,15 +110,6 @@
     "webpack-dev-server": "2.9.7",
     "webpack-hot-middleware": "^2.20.0",
     "webpack-notifier": "^1.5.0"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "plugin:jsx-a11y/recommended"
-    ],
-    "plugins": [
-      "jsx-a11y"
-    ]
   },
   "jest": {
     "setupFiles": [
@@ -131,5 +129,15 @@
       "^layouts[/](.+)": "<rootDir>/src/layouts/$1"
     },
     "notify": false
+  },
+  "lint-staged": {
+    "*.{js, jsx}": [
+      "eslint --fix",
+      "git add"
+    ],
+    "*.{scss, md}": [
+      "prettier --write",
+      "git add"
+    ]
   }
 }

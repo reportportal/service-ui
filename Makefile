@@ -55,14 +55,14 @@ build-statics:
 	npm --prefix $(UI_BUILD_ROOT) run build
 	npm --prefix $(UI_BUILD_ROOT) run test
 	npm --prefix $(UI_BUILD_REACT) install
-	npm --prefix $(UI_BUILD_REACT) run eslint
+	npm --prefix $(UI_BUILD_REACT) run lint
 	npm --prefix $(UI_BUILD_REACT) run test
 	npm --prefix $(UI_BUILD_REACT) run storybook:build
 	npm --prefix $(UI_BUILD_REACT) run build
 
 build-react:
 	npm --prefix $(UI_BUILD_REACT) install
-	npm --prefix $(UI_BUILD_REACT) run eslint
+	npm --prefix $(UI_BUILD_REACT) run lint
 	npm --prefix $(UI_BUILD_REACT) run test
 	npm --prefix $(UI_BUILD_REACT) run build
 
