@@ -608,6 +608,9 @@ define(function (require, exports, module) {
             }
             if (minutes > 0) {
                 time = time + minutes + 'm';
+                if (!days && !hours && seconds) {
+                    time += ' ' + seconds + 's';
+                }
             }
             // time = time + ' ' + seconds + 's';
             // if (time === '0s' && seconds === 0) {
