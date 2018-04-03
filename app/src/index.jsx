@@ -24,22 +24,23 @@ const queryParseHistory = qhistory(
   parse,
 );
 
-const { store } = configureStore(queryParseHistory, window.REDUX_STATE)
+configureStore(queryParseHistory, window.REDUX_STATE)
+.then(({ store }) => {
+	const rerenderApp = (TheApp) => {
+	  render((
+		<AppContainer>
+			<Provider store={store}>
+			  <TheApp />
+			</Provider>
+		</AppContainer>),
+		document.querySelector('#app'));
+	};
 
-const rerenderApp = (TheApp) => {
-  render((
-	<AppContainer>
-		<Provider store={store}>
-		  <TheApp />
-		</Provider>
-	</AppContainer>),
-	document.querySelector('#app'));
-};
-
-if (module.hot) {
-  module.hot.accept('./app', () => {
-    const app = require('./app').default;
-    rerenderApp(app);
-  });
-}
-rerenderApp(App);
+	if (module.hot) {
+	  module.hot.accept('./app', () => {
+		const app = require('./app').default;
+		rerenderApp(app);
+	  });
+	}
+	rerenderApp(App);
+});
