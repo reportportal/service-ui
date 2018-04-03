@@ -48,7 +48,7 @@ export class GridRow extends Component {
   render() {
     const { columns, value, selectable } = this.props;
     return (
-      <div className={cx('grid-row-wrapper')}>
+      <div className={cx('grid-row-wrapper', { selected: this.isItemSelected() })}>
         {
           this.state.withAccordion
             &&
@@ -70,7 +70,6 @@ export class GridRow extends Component {
                   key={column.id || i}
                   refFunction={column.maxHeight ? this.setupAccordion : null}
                   mobileWidth={column.mobileWidth}
-                  selectors={column.selectors}
                   value={value}
                   align={column.align}
                   component={column.component}

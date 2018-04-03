@@ -30,7 +30,7 @@ export const Grid = ({
       onChangeSorting={onChangeSorting}
       onFilterClick={onFilterClick}
       selectable={selectable}
-      allSelected={isAllItemsSelected(data, selectedItems)}
+      allSelected={!!selectedItems.length && isAllItemsSelected(data, selectedItems)}
       onToggleSelectAll={onToggleSelectAll}
     />
     <GridBody
