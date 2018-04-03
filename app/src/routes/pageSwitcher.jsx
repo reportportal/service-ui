@@ -41,20 +41,15 @@ const PageSwitcher = ({ page }) => {
 		throw new Error(`Page $page is missing layout`);
 
 	let PageComponent = require('./' + module)[name];
-	console.log('**DEBUG '+PageComponent);
 	if (anonymousAccess) {
 		PageComponent = anonymousRoute(PageComponent);
 	} else {
 		PageComponent = authorizedRoute(PageComponent);
 	}
 
-	/*
 	const layoutName = layout + 'Layout';
 	const layoutDir = layout.toLowerCase() + 'Layout';
-	const Layout = require(`./layouts/${layoutDir}`)[layoutName];
-	*/
-
-	const Layout = require('layouts/emptyLayout/emptyLayout').EmptyLayout;
+	const Layout = require(`layouts/${layoutDir}`)[layoutName];
 
 	return <div className={styles.pageSwitcher}>
 		<Layout>
