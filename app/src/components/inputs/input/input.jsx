@@ -25,34 +25,25 @@ import styles from './input.scss';
 
 const cx = classNames.bind(styles);
 
-export const Input = ({ type, value, readonly, withBorder, error,
-                 placeholder, maxLength, disabled, hasRightIcon, refFunction,
-                 onChange, onFocus, onBlur, onKeyUp }) => {
-  const classes = cx({
-    input: true,
-    disabled,
-    'has-right-icon': hasRightIcon,
-    'with-border': withBorder,
-    error,
-  });
-
-  return (
-    <input
-      ref={refFunction}
-      type={type}
-      className={classes}
-      value={value}
-      placeholder={placeholder}
-      maxLength={maxLength}
-      disabled={disabled}
-      readOnly={readonly}
-      onChange={onChange}
-      onFocus={onFocus}
-      onBlur={onBlur}
-      onKeyUp={onKeyUp}
-    />
-  );
-};
+export const Input = ({
+  type, value, readonly, error, placeholder, maxLength,
+  disabled, refFunction, onChange, onFocus, onBlur, onKeyUp,
+}) => (
+  <input
+    ref={refFunction}
+    type={type}
+    className={cx('input', { disabled, error })}
+    value={value}
+    placeholder={placeholder}
+    maxLength={maxLength}
+    disabled={disabled}
+    readOnly={readonly}
+    onChange={onChange}
+    onFocus={onFocus}
+    onBlur={onBlur}
+    onKeyUp={onKeyUp}
+  />
+);
 
 Input.propTypes = {
   type: PropTypes.string,
@@ -61,8 +52,6 @@ Input.propTypes = {
   maxLength: PropTypes.string,
   disabled: PropTypes.bool,
   readonly: PropTypes.bool,
-  hasRightIcon: PropTypes.bool,
-  withBorder: PropTypes.bool,
   error: PropTypes.string,
   onChange: PropTypes.func,
   onFocus: PropTypes.func,
@@ -78,8 +67,6 @@ Input.defaultProps = {
   maxLength: '254',
   disabled: false,
   readonly: false,
-  hasRightIcon: false,
-  withBorder: false,
   error: '',
   onChange: () => {},
   onFocus: () => {},

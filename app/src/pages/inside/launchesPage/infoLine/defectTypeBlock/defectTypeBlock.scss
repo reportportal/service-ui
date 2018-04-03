@@ -1,0 +1,39 @@
+.defect-type-block {
+  position: relative;
+  display: inline-block;
+  height: 20px;
+  margin: 4px 0;
+  box-sizing: border-box;
+  border: 1px solid $COLOR--gray-80;
+  border-radius: 100px;
+  background-color: $COLOR--white;
+  font-family: $FONT-SEMIBOLD;
+  font-size: 13px;
+  line-height: 18px;
+}
+.circle {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  margin: 0 5px 0 7px;
+  border-radius: 100%;
+}
+.title {
+  display: inline-block;
+  color: $COLOR--charcoal-grey;
+  text-transform: uppercase;
+  vertical-align: top;
+}
+.value {
+  display: inline-block;
+  position: relative;
+  top: -1px;
+  height: 20px;
+  box-sizing: border-box;
+  margin-left: 7px;
+  padding: 0 10px;
+  border: 1px solid;
+  border-radius: 100px;
+  background-color: $COLOR--white-two;
+  color: $COLOR--windows-blue;
+}

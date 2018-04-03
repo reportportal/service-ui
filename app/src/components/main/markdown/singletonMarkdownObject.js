@@ -28,6 +28,7 @@ const getInstance = () => {
     instance = new SimpleMDE({
       autoDownloadFontAwesome: false,
       element: el.getElementsByTagName('textarea')[0],
+      spellChecker: false,
       blockStyles: {
         bold: '**',
         italic: '*',

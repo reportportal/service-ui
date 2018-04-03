@@ -60,8 +60,9 @@ define(['util'], function () {
             escToCancel: '<strong>Esc</strong> to cancel',
             ctrlEnterToSubmit: '<strong>Ctrl + Enter</strong> to submit',
             loading: 'Loading',
-            load: 'Load',
+            link: 'Link',
             post: 'Post',
+            analyse: 'Analyse',
             gallery: 'Gallery',
             build: 'Build',
             error: 'Error',
@@ -311,10 +312,10 @@ define(['util'], function () {
         itemEvents: {
             updateItemIssue: 'updated item issue',
             updateItem: 'updated item',
-            attachIssue: 'attached issue',
+            attachIssue: 'linked issue',
             postIssue: 'posted issue',
             changedByAnalyzer: 'AA changed defect type',
-            issueAttachByAnalyzer: 'AA attached issue'
+            issueAttachByAnalyzer: 'AA linked issue'
         },
 
         widgets: {
@@ -437,7 +438,7 @@ define(['util'], function () {
             update_bts: 'updated',
             delete_bts: 'removed',
             create_bts: 'configured',
-            attach_issue: 'added isssue',
+            attach_issue: 'linked isssue',
             post_issue: 'posted issue',
             delete_issue: 'removed issue',
             testItem: 'test item',
@@ -476,7 +477,7 @@ define(['util'], function () {
             failedTestCasesTableDescription: 'shows the TOP-20 most failing test cases within the specified previous launches.',
 
             uniqueBugsTable: 'Unique bugs table',
-            uniqueBugsTableDescription: 'shows real identified bugs, posted to the bug tracking system, and existing in the BTS bugs, loaded on the project.',
+            uniqueBugsTableDescription: 'shows real identified bugs, posted to the bug tracking system, and existing in the BTS bugs, linked on the project.',
 
             launchesTable: 'Launches table',
             launchesTableDescription: 'shows the configurable table of launches.',
@@ -796,15 +797,15 @@ define(['util'], function () {
             postIssue: 'Post issue',
             postBug: 'Post issue',
             postBugTo: 'Post bug to',
-            loadBug: 'Load issue',
+            linkIssue: 'Link issue',
             addIssueId: 'Add issue ID',
             copyDefect: 'Copy defect',
             sendDefect: 'Send defect',
             key: 'Issue key (for multiple options - type issue ID and press Enter)',
             configureTBS: 'Configure bug tracking system to post issue',
-            configureTBSLoad: 'Configure bug tracking system to load issue',
+            configureTBSLoad: 'Configure bug tracking system to link issue',
             noIssues: 'You can\'t post bug if item has no issues',
-            noIssuesLoad: 'You can\'t Load bug if item has no issues',
+            noIssuesLoad: 'You can\'t Link bug if item has no issues',
             historyView: 'History',
             skippedDuration: 'SKIPPED. Duration: ',
             stoppedDuration: 'Run STOPPED after:',
@@ -1079,7 +1080,7 @@ define(['util'], function () {
                 delete_launch: 'Delete launch',
                 update_project: 'Update project',
                 post_issue: 'Post issue',
-                attach_issue: 'Attach issue',
+                attach_issue: 'Link issue',
                 update_item: 'Update item',
                 create_user: 'Create user',
                 start_import: 'Start import',
@@ -1313,6 +1314,12 @@ define(['util'], function () {
             defaultPriority: 'Default priority',
             autoAnalysis: 'Auto analysis',
             autoAnalysisOnOff: '<p>If ON - analysis starts as soon as any launch finished.</p> <p>If OFF - not automatic, but can be invoked manually</p>',
+            autoAnalysisBase: 'Base for Auto Analysis',
+            autoAnalysisBaseFirstOpt: 'All launches',
+            autoAnalysisBaseSecondOpt: 'Launches with the same name',
+            autoAnalysisBaseThirdOpt: 'Only current launch',
+            autoAnalysisBaseFirstTip: 'The test items are analyzed on base of previously investigated data in all launches',
+            autoAnalysisBaseSecondTip: 'The test items are analyzed on base of previously investigated data in launches with the same name',
             emailNotifications: 'E-mail notifications',
             emailRecipients: 'Recipients',
             duplicateEmailCase: 'Such notification rule already exists. You can\'t create duplicate.',
@@ -2027,6 +2034,7 @@ define(['util'], function () {
             includeAA: 'Include %%% into Auto-Analysis',
             receiveIssue: 'Receive previous result',
             sendIssue: 'Send result to the last item',
+            analyseLaunches: 'Analyse launches',
             testItemsDetails: 'Test item details'
         },
 
@@ -2078,6 +2086,9 @@ define(['util'], function () {
             moveLaunch: 'Are you sure you want to move %%% to %%%?',
 
             filterOptions: 'Filter options',
+
+            analyseLaunchesLabel: 'Choose the base on which the Auto Analysis will be performed:',
+            analyseLaunchesNote: 'Only items with defect type "To investigate" will come through an auto-analysis procedure.',
 
             msgDeleteItems: 'Are you sure to delete %%%? %%% will no longer exist.',
             msgDeleteDefectType: 'I am sure I want to remove custom defect type',
@@ -2166,7 +2177,7 @@ define(['util'], function () {
 
         modalDefectEditor: {
             saveAndPost: 'Save and post issue',
-            saveAndLoad: 'Save and load issue'
+            saveAndLoad: 'Save and link issue'
         }
     };
 });

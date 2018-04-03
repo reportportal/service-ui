@@ -5,7 +5,7 @@ import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { PageLayout } from 'layouts/pageLayout';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
 import { activeProjectSelector, userIdSelector } from 'controllers/user';
-import { withPagination } from 'components/containers/pagination';
+import { withPagination } from 'controllers/pagination';
 import { withSorting, SORTING_DESC } from 'controllers/sorting';
 import { LaunchSuiteGrid } from './launchSuiteGrid';
 import { ActionPanel } from './actionPanel';

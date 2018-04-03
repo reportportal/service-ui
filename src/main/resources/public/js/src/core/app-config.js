@@ -186,6 +186,7 @@ define(function (require) {
             forSettings: {
                 defaultPassword: '11111111',
                 projectNotFoundPattern: 'No project could be found',
+                analyzerMode: 'LAUNCH_NAME',
                 projectSpecific: [
                     { name: 'DEFAULT', value: 'DEFAULT' },
                     { name: 'BDD', value: 'BDD' }

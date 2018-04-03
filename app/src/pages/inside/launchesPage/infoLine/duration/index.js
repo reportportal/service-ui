@@ -1,0 +1,1 @@
+export { Duration } from './duration';

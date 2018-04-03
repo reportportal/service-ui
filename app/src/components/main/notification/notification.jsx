@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
+// import { TransitionGroup } from 'react-transition-group';
 import { injectIntl, intlShape, defineMessages } from 'react-intl';
 import styles from './notification.scss';
 
@@ -42,13 +42,9 @@ export class Notification extends PureComponent {
     }
     return (
       <div className={cx('notification-container')}>
-        <ReactCSSTransitionGroup
-          transitionName="notification-opacity"
-          transitionEnterTimeout={200}
-          transitionLeaveTimeout={700}
-        >
-          {getNotification(message, type)}
-        </ReactCSSTransitionGroup>
+        {/* <TransitionGroup> */}
+        {getNotification(message, type)}
+        {/* </TransitionGroup> */}
       </div>
     );
   }

@@ -9,10 +9,10 @@ To launch the development environment, follow these steps:
 1. open console from the project root
 2. run the command `cd app`
 3. run the command `npm install`
-4. to proxy requests to the server, create file `.env` in `app` folder
+4. to proxy requests to the server, create `.env` file in `app` folder
 
    ```
-   PROXY_PATH=http:http://you_server:port/
+   PROXY_PATH=http://your_server:port/
    ```
 5. run the command `npm run dev`
 6. enjoy the development.

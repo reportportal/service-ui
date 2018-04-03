@@ -1,1 +1,0 @@
-export { InputPassword } from './inputPassword';

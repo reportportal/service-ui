@@ -4,9 +4,10 @@ import { connect } from 'react-redux';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { withFilter } from 'controllers/filter';
 import { userIdSelector, activeProjectSelector } from 'controllers/user';
-import { withPagination } from 'components/containers/pagination';
+import { withPagination } from 'controllers/pagination';
 import { PageLayout } from 'layouts/pageLayout';
 import { showModalAction } from 'controllers/modal';
+import { userFiltersSelector, toggleDisplayFilterOnLaunchesAction } from 'controllers/project';
 import { fetch } from 'common/utils';
 import { FilterTable } from './filterTable';
 import { FilterPageToolbar } from './filterPageToolbar';
@@ -22,8 +23,10 @@ const messages = defineMessages({
   userId: userIdSelector(state),
   url: `/api/v1/${activeProjectSelector(state)}/filter`,
   activeProject: activeProjectSelector(state),
+  userFilters: userFiltersSelector(state),
 }), {
   showModalAction,
+  toggleDisplayFilterOnLaunches: toggleDisplayFilterOnLaunchesAction,
 })
 @withFilter
 @withPagination()

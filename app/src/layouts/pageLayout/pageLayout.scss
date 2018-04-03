@@ -5,6 +5,9 @@
   background-color: transparent;
   margin: 0;
   padding: 20px 0 0;
+  @media (max-width: $SCREEN_XS_MAX) {
+    padding: 0;
+  }
 }
 
 .page-title {
@@ -17,6 +20,9 @@
   line-height: 30px;
   color: $COLOR--charcoal-grey;
   text-transform: uppercase;
+  @media (max-width: $SCREEN_XS_MAX) {
+    display: none;
+  }
 }
 
 .page-content {

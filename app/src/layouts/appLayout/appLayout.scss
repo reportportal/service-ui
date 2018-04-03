@@ -84,8 +84,13 @@
   position: relative;
   width: 100%;
   height: 60px;
+  background-color: $COLOR--black-2;
+  padding: 0 15px;
+  box-sizing: border-box;
+
   @media (max-width: $SCREEN_XS_MAX) {
     height: 110px;
+    padding: 0;
   }
 }
 .page-container {

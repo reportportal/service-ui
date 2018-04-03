@@ -21,60 +21,135 @@
 /*---------------------------------*/
 /* STYLE FOR GENERAL SETTINGS PAGE */
 
-  .general-project-settings {
-    padding: 10px 0 20px;
-    position: relative;
-    .rp-form-group{
-      label{
-        vertical-align: middle;
-        padding-top: 0;
-      }
-    }
-    @media (max-width: $SCREEN_XS_MAX) {
+.general-project-settings {
+  padding: 10px 0 20px;
+  position: relative;
+  .rp-form-group{
+    label{
+      vertical-align: middle;
       padding-top: 0;
     }
+  }
+  @media (max-width: $SCREEN_XS_MAX) {
+    padding-top: 0;
+  }
 
-    .mobile-disabling-cover {
-      @extend %MOBILE_DISABLING_COVER;
-    }
+  .mobile-disabling-cover {
+    @extend %MOBILE_DISABLING_COVER;
+  }
+  @media (max-width: $SCREEN_XS_MAX) {
+    margin: 0 -15px;
+  }
+  .rp-form-group {
     @media (max-width: $SCREEN_XS_MAX) {
-      margin: 0 -15px;
+      margin-bottom: 0;
     }
-    .rp-form-group {
+    label {
+      &.obligatory-field {
+        &:after {
+          position: absolute;
+          margin-left: 2px;
+        }
+      }
+    }
+    .rp-btn-submit {
       @media (max-width: $SCREEN_XS_MAX) {
-        margin-bottom: 0;
+        display: none;
       }
-      label {
-        &.obligatory-field {
-          &:after {
-            position: absolute;
-            margin-left: 2px;
-          }
-        }
+    }
+    .rp-btn, .rp-input {
+      @media (max-width: $SCREEN_XS_MAX) {
+        pointer-events: none;
+        tab-index: -1;
+        background-color: $COLOR--gray-91;
       }
-      .rp-btn-submit {
+    }
+    .rp-help-block {
+      p {
+        margin: 0;
+        display: inline-block;
         @media (max-width: $SCREEN_XS_MAX) {
-          display: none;
-        }
-      }
-      .rp-btn, .rp-input {
-        @media (max-width: $SCREEN_XS_MAX) {
-          pointer-events: none;
-          tab-index: -1;
-          background-color: $COLOR--gray-91;
-        }
-      }
-      .rp-help-block {
-        p {
-          margin: 0;
-          display: inline-block;
-          @media (max-width: $SCREEN_XS_MAX) {
-            display: block;
-          }
+          display: block;
         }
       }
     }
   }
+}
+
+.general-project-settings {
+  .rp-switcher-big {
+    @media (max-width: $SCREEN_SM_MAX) {
+      .turn-on {
+        background-color: #bed379;
+      }
+      .turn-off {
+        background-color: $COLOR--gray-80;
+      }
+      input {
+        pointer-events: none;
+      }
+    }
+  }
+  .aa-strategy-label {
+    width: 25%;
+    padding: 0 15px;
+    vertical-align: top !important;
+
+    @media (max-width: $SCREEN_SM_MAX) {
+      width: 33.33333%;
+    }
+    @media (max-width: $SCREEN_XS_MAX) {
+      width: 100%;
+    }
+  }
+  .aa-strategy-selector {
+    padding: 0 15px;
+
+
+    @media (max-width: $SCREEN_SM_MAX) {
+      display: inline-block;
+      width: 66.66666%;
+    }
+    @media (max-width: $SCREEN_XS_MAX) {
+      width: 100%;
+    }
+
+    .aa-strategy-option {
+      width: 100%;
+
+      @media (max-width: $SCREEN_SM_MAX) {
+        margin-bottom: 10px;
+      }
+
+      label {
+        display: inline-block;
+        float: left;
+        width: 46%;
+
+        @media (max-width: $SCREEN_SM_MAX) {
+          width: 100%;
+        }
+        @media (max-width: $SCREEN_XS_MAX) {
+          span:after {
+            background-color: $COLOR--gray-60;
+          }
+          span:before {
+            background-color: $COLOR--reseted;
+            border-color: $COLOR--gray-91;
+          }
+        }
+      }
+      .tip {
+        display: inline-block;
+        width: 54%;
+
+        @media (max-width: $SCREEN_SM_MAX) {
+          width: 100%;
+        }
+      }
+    }
+  }
+}
 
 /*-----------------------------------*/
 /* STYLES OF DYNAMIC WIDTH OF SCREEN */

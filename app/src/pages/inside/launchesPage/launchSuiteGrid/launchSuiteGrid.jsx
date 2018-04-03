@@ -1,5 +1,6 @@
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
+import { PRODUCT_BUG, AUTOMATION_BUG, SYSTEM_ISSUE } from 'common/constants/defectTypes';
 import { Grid } from 'components/main/grid';
 import { AbsRelTime } from 'components/main/absRelTime';
 import { InputCheckbox } from 'components/inputs/inputCheckbox';
@@ -78,9 +79,9 @@ SkippedColumn.propTypes = {
 const PbColumn = ({ className, ...rest }) => (
   <div className={cx('pb-col', className)}>
     <DefectStatistics
-      type={'pb'}
+      type={PRODUCT_BUG}
       customProps={rest.customProps}
-      value={rest.value.statistics.defects.product_bug}
+      data={rest.value.statistics.defects.product_bug}
     />
   </div>
 );
@@ -91,9 +92,9 @@ PbColumn.propTypes = {
 const AbColumn = ({ className, ...rest }) => (
   <div className={cx('ab-col', className)}>
     <DefectStatistics
-      type={'ab'}
+      type={AUTOMATION_BUG}
       customProps={rest.customProps}
-      value={rest.value.statistics.defects.automation_bug}
+      data={rest.value.statistics.defects.automation_bug}
     />
   </div>
 );
@@ -104,9 +105,9 @@ AbColumn.propTypes = {
 const SiColumn = ({ className, ...rest }) => (
   <div className={cx('si-col', className)}>
     <DefectStatistics
-      type={'si'}
+      type={SYSTEM_ISSUE}
       customProps={rest.customProps}
-      value={rest.value.statistics.defects.system_issue}
+      data={rest.value.statistics.defects.system_issue}
     />
   </div>
 );

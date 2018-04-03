@@ -262,7 +262,7 @@ define(function (require) {
                     label: 'data-js-cancel'
                 },
                 {
-                    btnText: Localization.ui.load,
+                    btnText: Localization.ui.link,
                     btnClass: 'rp-btn-submit',
                     label: 'data-js-load'
                 }

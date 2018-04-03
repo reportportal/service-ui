@@ -26,13 +26,13 @@
   height: 12px;
   border-radius: 100%;
 
-  &.type-pb {
+  &.type-product_bug {
     background-color: $COLOR--product-bug;
   }
-  &.type-ab {
+  &.type-automation_bug {
     background-color: $COLOR--automation-bug;
   }
-  &.type-si {
+  &.type-system_issue {
     background-color: $COLOR--system-issue;
   }
 }
@@ -43,4 +43,29 @@
   font-size: 15px;
   line-height: 20px;
   text-decoration: none;
+  vertical-align: top;
+}
+.desktop-visible {
+  position: relative;
+  display: inline-block;
+  width: 56px;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    display: none;
+  }
+}
+.desktop-hidden {
+  display: none;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    display: inline-block;
+  }
+
+  a {
+    font-family: $FONT-REGULAR;
+    font-size: 16px;
+    line-height: 20px;
+    color: $COLOR--windows-blue;
+    text-decoration: none;
+  }
 }

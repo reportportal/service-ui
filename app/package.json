@@ -1,13 +1,14 @@
 {
-  "name": "webpackbin-project",
-  "version": "1.0.0",
-  "description": "Project boilerplate",
+  "name": "@report-portal/service-ui",
+  "private": true,
+  "version": "0.0.0",
+  "license": "GPL-3.0-only",
   "scripts": {
     "eslint": "eslint -f node_modules/eslint-friendly-formatter \"src/**/*.jsx\" \"src/**/*.js\"",
     "dev": "webpack-dev-server --port 3000",
     "build": "webpack -p --env.production",
     "storybook": "start-storybook -p 9001 -c .storybook",
-    "storybook:bild": "build-storybook -c .storybook -o .storybook_app",
+    "storybook:build": "build-storybook -c .storybook -o .storybook_app",
     "test": "jest --notify",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
@@ -16,6 +17,7 @@
     "manage:translations:test": "webpack --display none --env.dev && babel-node ./localization/translatorRunnerCheck.js"
   },
   "dependencies": {
+    "array.find": "^1.0.7",
     "axios": "^0.17.1",
     "classnames": "^2.2.5",
     "dotenv": "^5.0.1",
@@ -27,8 +29,8 @@
     "qhistory": "^1.0.0",
     "qs": "^6.5.1",
     "react": "^16.0.0",
-    "react-addons-css-transition-group": "^15.6.2",
     "react-autosuggest": "^9.3.2",
+    "react-c3js": "^0.1.20",
     "react-custom-scrollbars": "^4.2.1",
     "react-dom": "^16.0.0",
     "react-hot-loader": "^3.1.1",
@@ -36,10 +38,11 @@
     "react-redux": "^5.0.6",
     "react-router-dom": "^4.2.2",
     "react-select": "^1.2.1",
-    "react-transition-group": "^2.2.1",
+    "react-transition-group": "^2.3.0",
     "redux": "^3.7.2",
     "redux-form": "^7.2.1",
     "redux-thunk": "^2.2.0",
+    "reselect": "^3.0.1",
     "reset-css": "^2.2.1",
     "semver-diff": "^2.1.0",
     "simplemde": "^1.11.2"
@@ -101,8 +104,6 @@
     "webpack-hot-middleware": "^2.20.0",
     "webpack-notifier": "^1.5.0"
   },
-  "author": "WebpackBin",
-  "license": "ISC",
   "eslintConfig": {
     "extends": [
       "react-app",

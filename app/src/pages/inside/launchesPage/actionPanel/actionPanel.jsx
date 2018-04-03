@@ -11,12 +11,12 @@ export const ActionPanel = () => (
   <div className={cx('action-panel')}>
     <div className={cx('breadcrumb')} />
     <div className={cx('action-buttons')}>
-      <div className={cx('action-button')}>
+      <div className={cx('action-button', 'mobile-hidden')}>
         <GhostButton icon={ImportIcon} disabled>
           <FormattedMessage id="LaunchesPage.import" defaultMessage="Import" />
         </GhostButton>
       </div>
-      <div className={cx('action-button')}>
+      <div className={cx('action-button', 'mobile-hidden')}>
         <GhostButton disabled>
           <FormattedMessage id="LaunchesPage.actions" defaultMessage="Actions" />
         </GhostButton>
@@ -25,9 +25,6 @@ export const ActionPanel = () => (
         <GhostButton icon={RefreshIcon} disabled>
           <FormattedMessage id="LaunchesPage.refresh" defaultMessage="Refresh" />
         </GhostButton>
-      </div>
-      <div className={cx('action-button', 'mobile-only')}>
-        <GhostButton icon={RefreshIcon} disabled />
       </div>
     </div>
   </div>

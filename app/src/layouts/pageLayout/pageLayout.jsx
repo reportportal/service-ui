@@ -6,7 +6,7 @@ const cx = classNames.bind(styles);
 
 export const PageLayout = ({ title, children }) => (
   <div className={cx('page-layout')}>
-    {title ? <PageTitle title={title} /> : null}
+    {title && <PageTitle title={title} /> }
     <div className={cx('page-content')}>
       {children}
     </div>

@@ -78,7 +78,7 @@ define(function (require, exports, module) {
 
                 $('[data-js-name-block]', name.$el).height(height);
                 $('[data-js-history-cell]', cells.$el).height(height);
-
+                $('[data-js-history-cell] .cell-link', cells.$el).css('min-height', height);
                 this.renderedItems.push(name);
                 this.renderedItems.push(cells);
             }, this);

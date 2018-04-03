@@ -26,16 +26,14 @@ import { reduxForm } from 'redux-form';
 import { FormattedMessage, injectIntl, intlShape, defineMessages } from 'react-intl';
 import { Link } from 'react-router-dom';
 import { validate } from 'common/utils';
-import { FieldWithIcon } from 'components/fields/fieldWithIcon';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
-import { Input } from 'components/inputs/input';
-import { InputPassword } from 'components/inputs/inputPassword';
+import { InputOutside } from 'components/inputs/inputOutside';
 import { BigButton } from 'components/buttons/bigButton';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { authExtensionsSelector } from 'controllers/appInfo';
 import { loginAction } from 'controllers/auth';
-import LoginIcon from './img/login-field-icon.svg';
-import PasswordIcon from './img/password-field-icon.svg';
+import LoginIcon from './img/login-field-icon-inline.svg';
+import PasswordIcon from './img/password-field-icon-inline.svg';
 import styles from './loginForm.scss';
 import { ExternalLoginBlock } from './externalLoginBlock';
 
@@ -98,22 +96,17 @@ export class LoginForm extends React.Component {
               </div>
             : null
         }
-
         <div className={cx('login-field')}>
           <FieldProvider name="login">
             <FieldErrorHint>
-              <FieldWithIcon icon={LoginIcon}>
-                <Input placeholder={formatMessage(placeholders.login)} />
-              </FieldWithIcon>
+              <InputOutside icon={LoginIcon} placeholder={formatMessage(placeholders.login)} />
             </FieldErrorHint>
           </FieldProvider>
         </div>
         <div className={cx('password-field')}>
           <FieldProvider name="password">
             <FieldErrorHint>
-              <FieldWithIcon icon={PasswordIcon}>
-                <InputPassword placeholder={formatMessage(placeholders.password)} />
-              </FieldWithIcon>
+              <InputOutside icon={PasswordIcon} placeholder={formatMessage(placeholders.password)} type={'password'} />
             </FieldErrorHint>
           </FieldProvider>
         </div>
