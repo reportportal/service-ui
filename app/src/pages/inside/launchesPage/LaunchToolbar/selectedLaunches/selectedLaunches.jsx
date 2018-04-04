@@ -18,7 +18,7 @@ export const SelectedLaunches = ({ selectedLaunches, onClose, onUnselect }) => (
     </div>
     <ScrollWrapper autoHeight autoHeightMax={120} hideTracksWhenNotNeeded>
       <div className={cx('list')}>
-        {selectedLaunches.map(launch => (
+        {selectedLaunches.map((launch) => (
           <SelectedLaunch
             className={cx('launch')}
             key={launch.id}
@@ -37,8 +37,6 @@ SelectedLaunches.propTypes = {
 };
 SelectedLaunches.defaultProps = {
   selectedLaunches: [],
-  onClose: () => {
-  },
-  onUnselect: () => {
-  },
+  onClose: () => {},
+  onUnselect: () => {},
 };

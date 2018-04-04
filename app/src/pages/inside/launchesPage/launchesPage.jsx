@@ -17,7 +17,7 @@ const messages = defineMessages({
   },
 });
 
-@connect(state => ({
+@connect((state) => ({
   userId: userIdSelector(state),
   url: `/api/v1/${activeProjectSelector(state)}/launch`,
 }))
@@ -50,12 +50,9 @@ export class LaunchesPage extends Component {
     pageSize: null,
     sortingColumn: null,
     sortingDirection: null,
-    onChangePage: () => {
-    },
-    onChangePageSize: () => {
-    },
-    onChangeSorting: () => {
-    },
+    onChangePage: () => {},
+    onChangePageSize: () => {},
+    onChangeSorting: () => {},
   };
 
   state = {
@@ -65,14 +62,13 @@ export class LaunchesPage extends Component {
   getTitle = () =>
     !this.state.selectedLaunches.length && this.props.intl.formatMessage(messages.filtersPageTitle);
 
-
   handleLaunchSelection = (launch) => {
     const { selectedLaunches } = this.state;
-    if (!selectedLaunches.find(item => item.id === launch.id)) {
+    if (!selectedLaunches.find((item) => item.id === launch.id)) {
       this.setState({ selectedLaunches: [...selectedLaunches, launch] });
       return;
     }
-    this.setState({ selectedLaunches: selectedLaunches.filter(item => item.id !== launch.id) });
+    this.setState({ selectedLaunches: selectedLaunches.filter((item) => item.id !== launch.id) });
   };
 
   handleAllLaunchesSelection = () => {
@@ -85,9 +81,9 @@ export class LaunchesPage extends Component {
     this.setState({ selectedLaunches: this.props.data });
   };
 
-  unselectLaunch = launch =>
+  unselectLaunch = (launch) =>
     this.setState({
-      selectedLaunches: this.state.selectedLaunches.filter(item => item.id !== launch.id),
+      selectedLaunches: this.state.selectedLaunches.filter((item) => item.id !== launch.id),
     });
 
   resetSelection = () => this.setState({ selectedLaunches: [] });

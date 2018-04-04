@@ -21,6 +21,5 @@ SelectedLaunch.propTypes = {
 };
 SelectedLaunch.defaultProps = {
   className: '',
-  onUnselect: () => {
-  },
+  onUnselect: () => {},
 };
