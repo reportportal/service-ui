@@ -8,13 +8,13 @@ const cx = classNames.bind(styles);
 
 export const LaunchToolbar = ({ selectedLaunches, onUnselect, onUnselectAll }) => (
   <div className={cx('launch-toolbar')}>
-    {
-      !!selectedLaunches.length && <SelectedLaunches
+    {!!selectedLaunches.length && (
+      <SelectedLaunches
         selectedLaunches={selectedLaunches}
         onUnselect={onUnselect}
         onClose={onUnselectAll}
       />
-    }
+    )}
     <ActionPanel />
   </div>
 );
@@ -25,8 +25,6 @@ LaunchToolbar.propTypes = {
 };
 LaunchToolbar.defaultProps = {
   selectedLaunches: [],
-  onUnselect: () => {
-  },
-  onUnselectAll: () => {
-  },
+  onUnselect: () => {},
+  onUnselectAll: () => {},
 };
