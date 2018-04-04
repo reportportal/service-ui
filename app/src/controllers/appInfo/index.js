@@ -1,3 +1,3 @@
 export { appInfoReducer } from './reducer';
 export { fetchInfoAction } from './actionCreators';
-export { authExtensionsSelector } from './selectors';
+export { authExtensionsSelector, buildVersionSelector } from './selectors';
