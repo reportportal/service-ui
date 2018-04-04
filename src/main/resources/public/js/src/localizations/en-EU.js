@@ -61,6 +61,7 @@ define(['util'], function () {
             ctrlEnterToSubmit: '<strong>Ctrl + Enter</strong> to submit',
             loading: 'Loading',
             link: 'Link',
+            unlink: 'Unlink',
             post: 'Post',
             analyse: 'Analyse',
             gallery: 'Gallery',
@@ -798,6 +799,7 @@ define(['util'], function () {
             postBug: 'Post issue',
             postBugTo: 'Post bug to',
             linkIssue: 'Link issue',
+            unlinkIssue: 'Unlink issue',
             addIssueId: 'Add issue ID',
             copyDefect: 'Copy defect',
             sendDefect: 'Send defect',
@@ -806,6 +808,7 @@ define(['util'], function () {
             configureTBSLoad: 'Configure bug tracking system to link issue',
             noIssues: 'You can\'t post bug if item has no issues',
             noIssuesLoad: 'You can\'t Link bug if item has no issues',
+            noIssueTicket: 'Item doesn\'t have a linked issue',
             historyView: 'History',
             skippedDuration: 'SKIPPED. Duration: ',
             stoppedDuration: 'Run STOPPED after:',
@@ -2034,6 +2037,7 @@ define(['util'], function () {
             includeAA: 'Include %%% into Auto-Analysis',
             receiveIssue: 'Receive previous result',
             sendIssue: 'Send result to the last item',
+            unlinkIssue: 'Unlink issue',
             analyseLaunches: 'Analyse launches',
             testItemsDetails: 'Test item details'
         },
@@ -2103,6 +2107,7 @@ define(['util'], function () {
             msgIncludeAA: 'Are you sure to include %%% into Auto-Analysis?',
             msgReceiveIssue: 'Are you sure to receive defect data from previous failed item?',
             msgSendIssue: 'Are you sure to send defect data to the last item?',
+            msgUnlinkIssue: 'Are you sure to unlink issue/s for test item?',
             invalidFileType: 'Incorrect file format',
             invalidFileSize: 'File size is more than 32 Mb',
             testUID: 'Unique test case ID:',
@@ -2177,7 +2182,8 @@ define(['util'], function () {
 
         modalDefectEditor: {
             saveAndPost: 'Save and post issue',
-            saveAndLoad: 'Save and link issue'
+            saveAndLoad: 'Save and link issue',
+            saveAndUnlink: 'Save and unlink issue'
         }
     };
 });

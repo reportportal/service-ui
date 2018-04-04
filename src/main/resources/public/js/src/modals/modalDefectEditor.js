@@ -43,6 +43,7 @@ define(function (require) {
             '[data-js-save-load-wrapper]': 'classes: {disabled: not(isBtsAdded)}',
             '[data-js-save-post]': 'attr: {disabled: not(isBtsConfigure)}',
             '[data-js-save-load]': 'attr: {disabled: not(isBtsAdded)}',
+            '[data-js-save-unlink]': 'attr: {disabled: not(isCanUnlink)}',
             '[data-js-replace-comment]': 'checked: replaceComment'
         },
         events: {
@@ -52,6 +53,7 @@ define(function (require) {
             'click [data-js-cancel]': 'onClickCancel',
             'click [data-js-save-post]': 'onClickSavePost',
             'click [data-js-save-load]': 'onClickSaveLoad',
+            'click [data-js-save-unlink]': 'onClickSaveUnlink',
             'click [data-js-dropdown]': 'onClickDropdown'
         },
         computeds: {
@@ -60,6 +62,14 @@ define(function (require) {
             },
             isBtsConfigure: function () {
                 return this.appModel.get('isBtsConfigure');
+            },
+            isCanUnlink: function () {
+                var issue;
+                if (this.items && this.items.length > 1) {
+                    return true;
+                }
+                issue = this.items[0].getIssue();
+                return issue && issue.externalSystemIssues && issue.externalSystemIssues.length;
             }
         },
         onClickDropdown: function () {
@@ -81,6 +91,13 @@ define(function (require) {
             config.trackingDispatcher.trackEventNumber(526);
             this.onClickAction(function () {
                 self.successClose({ action: 'loadBug' });
+            });
+        },
+        onClickSaveUnlink: function () {
+            var self = this;
+            config.trackingDispatcher.trackEventNumber(526);
+            this.onClickAction(function () {
+                self.successClose({ action: 'unlinkIssue' });
             });
         },
         initialize: function (option) {
