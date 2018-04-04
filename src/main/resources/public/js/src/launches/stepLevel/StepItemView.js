@@ -175,6 +175,9 @@ define(function (require) {
                 context: this.context
             });
             this.listenTo(this.issueView, 'load:comment', this.activateAccordion);
+            this.listenTo(this.issueView, 'issue:unlink', function () {
+                this.collection.load();
+            });
             this.listenTo(this.issueView, 'quickFilter:AA', function () {
                 this.filterModel.trigger('add_entity', 'issue$auto_analyzed', 'TRUE');
             });
@@ -190,10 +193,10 @@ define(function (require) {
             this.filterModel.trigger('add_entity', filterId, value);
         },
         onClickEdit: function () {
-            config.trackingDispatcher.trackEventNumber(149);
             var modal = new ModalLaunchItemEdit({
                 item: this.model
             });
+            config.trackingDispatcher.trackEventNumber(149);
             modal.show();
         },
         onClickDetails: function () {

@@ -34,6 +34,7 @@ define(function (require) {
     var IgnoreAAAction = require('launches/multipleActions/ignoreAAAction');
     var IncludeAAAction = require('launches/multipleActions/includeAAAction');
     var LoadBugAction = require('launches/multipleActions/loadBugAction');
+    var UnlinkIssueAction = require('launches/multipleActions/unlinkIssueAction');
     var Localization = require('localization');
 
     var config = App.getInstance();
@@ -139,6 +140,11 @@ define(function (require) {
                     model.set({ invalidMessage: model.validate.loadbug() });
                 });
             },
+            unlinkIssue: function () {
+                _.each(this.collection.models, function (model) {
+                    model.set({ invalidMessage: model.validate.unlinkIssue() });
+                });
+            },
             includeaa: function () {
                 _.each(this.collection.models, function (model) {
                     model.set({ invalidMessage: model.validate.includeaa() });
@@ -182,6 +188,8 @@ define(function (require) {
                         self.actionCall.postbug.call(self);
                     } else if (actionType && actionType.action === 'loadBug') {
                         self.actionCall.loadbug.call(self);
+                    } else if (actionType && actionType.action === 'unlinkIssue') {
+                        self.setAction('unlinkIssue');
                     } else {
                         self.collectionItems.load();
                         self.reset();
@@ -228,6 +236,16 @@ define(function (require) {
             loadbug: function () {
                 var self = this;
                 LoadBugAction({ items: this.collection.models }).done(function () {
+                    self.reset();
+                });
+            },
+            unlinkIssue: function () {
+                var self = this;
+                this.unlinkIssueAction = new UnlinkIssueAction({
+                    items: this.collection.models
+                });
+                this.unlinkIssueAction.getAsync().done(function () {
+                    self.collectionItems.load();
                     self.reset();
                 });
             },
@@ -366,6 +384,7 @@ define(function (require) {
             this.checkInvalidStatus();
         },
         onClickProceed: function () {
+            var self = this;
             var invalidItems = _.filter(this.collection.models, function (model) {
                 return model.get('invalidMessage') !== '';
             });
@@ -385,6 +404,9 @@ define(function (require) {
                 });
             _.each(invalidItems, function (model) {
                 model.set({ select: false });
+                if (self.currentAction === 'unlinkIssue') {
+                    self.collectionItems.get(model.id).set('select', false);
+                }
             });
             this.setAction(this.currentAction);
         },

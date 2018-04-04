@@ -61,6 +61,7 @@ define(['util'], function () {
             ctrlEnterToSubmit: '<strong>Ctrl + Enter</strong> для подтверждения',
             loading: 'Загружается',
             link: 'Прикрепить',
+            unlink: 'Открепить',
             post: 'Отправить',
             analyse: 'Анализировать',
             gallery: 'Галерея',
@@ -858,6 +859,7 @@ define(['util'], function () {
             postBug: 'Отправить ошибку',
             postBugTo: 'Отправить ошибку в',
             linkIssue: 'Прикрепить ошибку',
+            unlinkIssue: 'Открепить ошибку',
             addIssueId: 'Добавить ID ошибки',
             copyDefect: 'Копировать дефект',
             sendDefect: 'Отправить дефект',
@@ -866,6 +868,7 @@ define(['util'], function () {
             configureTBSLoad: 'Настройте Систему oтслеживания oшибок на загрузку ошибок',
             noIssues: 'Вы не можете отправить ошибку, если элемент не имеет ошибок',
             noIssuesLoad: 'Вы не можете прикрепить ошибку, если элемент не имеет ошибок',
+            noIssueTicket: 'У элемента нет прикрепленной ошибки',
             historyView: 'История',
             skippedDuration: 'ПРОПУЩЕНО. Длительность: ',
             stoppedDuration: 'Прогон ОСТАНОВЛЕН после:',
@@ -2091,6 +2094,7 @@ define(['util'], function () {
             ignoreAA: 'Игнорировать %%% при Авто-Анализе',
             includeAA: 'Включить %%% в Авто-Анализ',
             analyseLaunches: 'Анализировать запуски',
+            unlinkIssue: 'Открепить ошибку',
             testItemsDetails: 'Детали тестового элемента',
             receiveIssue: 'Получить предыдущий результат',
             sendIssue: 'Отправить результат в последний элемент'
@@ -2161,6 +2165,7 @@ define(['util'], function () {
             msgIncludeAA: 'Вы уверены, что хотите включить %%% в Авто-Анализ?',
             msgReceiveIssue: 'Вы уверены, что хотите получить данные о дефекте из предыдущего неудачного элемента?',
             msgSendIssue: 'Вы уверены, что хотите отправить данные о дефекте в последний элемент?',
+            msgUnlinkIssue: 'Вы уверены, что хотите открепить ошибку в СОД?',
             invalidFileType: 'Неверный формат файла',
             invalidFileSize: 'Размер файла больше 32 Mb',
             testUID: 'UID элемента:',
@@ -2234,7 +2239,8 @@ define(['util'], function () {
         },
         modalDefectEditor: {
             saveAndPost: 'Сохранить и отправить ошибку',
-            saveAndLoad: 'Сохранить и прикрепить ошибку'
+            saveAndLoad: 'Сохранить и прикрепить ошибку',
+            saveAndUnlink: 'Сохранить и открепить ошибку'
         },
         date: {
             days: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
