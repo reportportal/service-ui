@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
 import { defineMessages, injectIntl, intlShape } from 'react-intl';
+import classNames from 'classnames/bind';
 import { withModal, ModalLayout } from 'components/main/modal';
 import { PermissionMap } from './permissionMap';
+import styles from './permissionMapModal.scss';
 
+const cx = classNames.bind(styles);
 const messages = defineMessages({
   permissionMapHeader: {
     id: 'PermissionMapModal.headerPermissionMapModal',
@@ -19,14 +22,12 @@ export class PermissionMapModal extends Component {
   static defaultProps = {
     intl: {},
   };
-  okClickHandler = (closeModal) => {
-    setTimeout(() => closeModal(), 1000);
-  };
   render() {
     return (
       <ModalLayout
         title={this.props.intl.formatMessage(messages.permissionMapHeader)}
-        permissionMap
+        className={cx('permission-map')}
+        fullWidthContent
       >
         <PermissionMap />
       </ModalLayout>

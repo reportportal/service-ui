@@ -1,6 +1,6 @@
 import { defineMessages } from 'react-intl';
 
-export const Permissions = defineMessages({
+export const PermissionsName = defineMessages({
   role: {
     id: 'PermissionMap.role',
     defaultMessage: 'Action/Project role',
