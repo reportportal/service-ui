@@ -13,8 +13,7 @@ export class PageSizeControl extends Component {
   };
 
   static defaultProps = {
-    onChangePageSize: () => {
-    },
+    onChangePageSize: () => {},
   };
 
   state = {
@@ -22,12 +21,16 @@ export class PageSizeControl extends Component {
     inputValue: '',
   };
 
+  inputRef = (node) => {
+    this.inputNode = node;
+  };
+
   showInput = () =>
     this.setState({ inputVisible: true }, () => {
       this.inputNode.focus();
     });
 
-  handleChange = e => this.setState({ inputValue: e.target.value });
+  handleChange = (e) => this.setState({ inputValue: e.target.value });
 
   handleEnterKey = (e) => {
     const value = this.state.inputValue;
@@ -40,24 +43,29 @@ export class PageSizeControl extends Component {
   render() {
     return (
       <div className={cx('page-size', { 'input-visible': this.state.inputVisible })}>
-        {this.state.inputVisible
-          ? <SizeInput
-            inputRef={(node) => { this.inputNode = node; }}
+        {this.state.inputVisible ? (
+          <SizeInput
+            refFunction={this.inputRef}
             value={this.state.inputValue}
             onChange={this.handleChange}
             onKeyUp={this.handleEnterKey}
+            type="number"
           />
-          : <span className={cx('size-text')} onClick={this.showInput}>{this.props.pageSize}</span>
-        } per page
+        ) : (
+          <span className={cx('size-text')} onClick={this.showInput}>
+            {this.props.pageSize}
+          </span>
+        )}{' '}
+        per page
       </div>
     );
   }
 }
 
-const SizeInput = ({ value, onChange, onKeyUp, inputRef }) => (
+const SizeInput = ({ value, onChange, onKeyUp, refFunction }) => (
   <div className={cx('size-input')}>
     <Input
-      refFunction={inputRef}
+      refFunction={refFunction}
       value={value}
       onChange={onChange}
       onKeyUp={onKeyUp}
@@ -70,7 +78,7 @@ SizeInput.propTypes = {
   value: PropTypes.string,
   onChange: PropTypes.func,
   onKeyUp: PropTypes.func,
-  inputRef: PropTypes.func.isRequired,
+  refFunction: PropTypes.func.isRequired,
 };
 SizeInput.defaultProps = {
   value: '',
