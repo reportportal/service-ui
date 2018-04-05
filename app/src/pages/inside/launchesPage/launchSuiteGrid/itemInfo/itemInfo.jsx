@@ -18,12 +18,8 @@ export const ItemInfo = ({ value, refFunction, analyzing }) => (
         <span className={cx('name')}>{value.name}</span>
         <span className={cx('number')}>#{value.number}</span>
       </a>
-      {
-        analyzing && <div className={cx('analysis-badge')}>Analysis</div>
-      }
-      <div className={cx('edit-icon')}>
-        { Parser(PencilIcon) }
-      </div>
+      {analyzing && <div className={cx('analysis-badge')}>Analysis</div>}
+      <div className={cx('edit-icon')}>{Parser(PencilIcon)}</div>
     </div>
 
     <div className={cx('additional-info')}>
@@ -37,19 +33,14 @@ export const ItemInfo = ({ value, refFunction, analyzing }) => (
           approxTime: value.approximateDuration,
         }}
       />
-      <div className={cx('mobile-start-time')}>
-        { fromNowFormat(value.start_time) }
-      </div>
+      <div className={cx('mobile-start-time')}>{fromNowFormat(value.start_time)}</div>
       <OwnerBlock owner={value.owner} />
-      {
-        value.tags && value.tags.length && <TagsBlock tags={value.tags} />
-      }
-      {
-        value.description &&
-          <div className={cx('item-description')}>
-            <MarkdownViewer value={value.description} />
-          </div>
-      }
+      {value.tags && value.tags.length && <TagsBlock tags={value.tags} />}
+      {value.description && (
+        <div className={cx('item-description')}>
+          <MarkdownViewer value={value.description} />
+        </div>
+      )}
     </div>
   </div>
 );

@@ -3,10 +3,12 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { PageLayout } from 'layouts/pageLayout';
+import { fetch } from 'common/utils';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
 import { activeProjectSelector, userIdSelector } from 'controllers/user';
 import { withPagination } from 'controllers/pagination';
 import { withSorting, SORTING_DESC } from 'controllers/sorting';
+import { showModalAction } from 'controllers/modal';
 import { LaunchSuiteGrid } from './launchSuiteGrid';
 import { LaunchToolbar } from './LaunchToolbar';
 
@@ -20,7 +22,10 @@ const messages = defineMessages({
 @connect((state) => ({
   userId: userIdSelector(state),
   url: `/api/v1/${activeProjectSelector(state)}/launch`,
-}))
+}),
+  {
+    showModalAction,
+  },)
 @withSorting({
   defaultSortingColumn: 'start_time',
   defaultSortingDirection: SORTING_DESC,
@@ -37,9 +42,12 @@ export class LaunchesPage extends Component {
     pageSize: PropTypes.number,
     sortingColumn: PropTypes.string,
     sortingDirection: PropTypes.string,
+    fetchData: PropTypes.func,
+    showModalAction: PropTypes.func,
     onChangePage: PropTypes.func,
     onChangePageSize: PropTypes.func,
     onChangeSorting: PropTypes.func,
+    url: PropTypes.string.isRequired,
   };
 
   static defaultProps = {
@@ -50,6 +58,8 @@ export class LaunchesPage extends Component {
     pageSize: null,
     sortingColumn: null,
     sortingDirection: null,
+    showModalAction: () => {},
+    fetchData: () => {},
     onChangePage: () => {},
     onChangePageSize: () => {},
     onChangeSorting: () => {},
@@ -57,6 +67,18 @@ export class LaunchesPage extends Component {
 
   state = {
     selectedLaunches: [],
+  };
+
+  deleteItem = (id) => {
+    fetch(`${this.props.url}?ids=${id}`, {
+      method: 'delete',
+    }).then(this.props.fetchData);
+  };
+  confirmDeleteItem = (item) => {
+    this.props.showModalAction({
+      id: 'launchDeleteModal',
+      data: { item, onConfirm: () => this.deleteItem(item.id) },
+    });
   };
 
   getTitle = () =>
@@ -113,6 +135,7 @@ export class LaunchesPage extends Component {
           sortingColumn={sortingColumn}
           sortingDirection={sortingDirection}
           onChangeSorting={onChangeSorting}
+          onDeleteItem={this.confirmDeleteItem}
           selectedLaunches={this.state.selectedLaunches}
           onLaunchSelect={this.handleLaunchSelection}
           onAllLaunchesSelect={this.handleAllLaunchesSelection}
