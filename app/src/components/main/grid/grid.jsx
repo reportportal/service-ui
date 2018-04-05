@@ -59,14 +59,10 @@ Grid.defaultProps = {
   data: [],
   sortingDirection: 'DESC',
   sortingColumn: null,
-  onChangeSorting: () => {
-  },
-  onFilterClick: () => {
-  },
+  onChangeSorting: () => {},
+  onFilterClick: () => {},
   selectable: false,
   selectedItems: [],
-  onToggleSelectAll: () => {
-  },
-  onToggleSelection: () => {
-  },
+  onToggleSelectAll: () => {},
+  onToggleSelection: () => {},
 };

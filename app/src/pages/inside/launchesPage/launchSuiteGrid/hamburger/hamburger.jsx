@@ -69,34 +69,65 @@ export class Hamburger extends Component {
     } = this.props;
     return (
       <div className={cx('hamburger')}>
-        <div ref={(icon) => { this.icon = icon; }} className={cx('hamburger-icon')} onClick={this.toggleMenu}>
+        <div
+          ref={(icon) => {
+            this.icon = icon;
+          }}
+          className={cx('hamburger-icon')}
+          onClick={this.toggleMenu}
+        >
           <div className={cx('hamburger-icon-part')} />
           <div className={cx('hamburger-icon-part')} />
           <div className={cx('hamburger-icon-part')} />
         </div>
         <div className={cx('hamburger-menu', { shown: this.state.menuShown })}>
           <div className={cx('hamburger-menu-actions')}>
-            {
-              (launch.mode === 'DEFAULT')
-                ?
-                  <div className={cx('hamburger-menu-action')} onClick={() => { onMoveToDebug(launch); }}>
-                    <FormattedMessage id={'Hamburger.toDebug'} defaultMessage={'Move to debug'} />
-                  </div>
-                :
-                  <div className={cx('hamburger-menu-action')} onClick={() => { onMoveToLaunches(launch); }}>
-                    <FormattedMessage id={'Hamburger.toAllLaunches'} defaultMessage={'Move to all launches'} />
-                  </div>
-            }
-            <div className={cx('hamburger-menu-action')} onClick={() => { onForceFinish(launch); }}>
+            {launch.mode === 'DEFAULT' ? (
+              <div
+                className={cx('hamburger-menu-action')}
+                onClick={() => {
+                  onMoveToDebug(launch);
+                }}
+              >
+                <FormattedMessage id={'Hamburger.toDebug'} defaultMessage={'Move to debug'} />
+              </div>
+            ) : (
+              <div
+                className={cx('hamburger-menu-action')}
+                onClick={() => {
+                  onMoveToLaunches(launch);
+                }}
+              >
+                <FormattedMessage
+                  id={'Hamburger.toAllLaunches'}
+                  defaultMessage={'Move to all launches'}
+                />
+              </div>
+            )}
+            <div
+              className={cx('hamburger-menu-action')}
+              onClick={() => {
+                onForceFinish(launch);
+              }}
+            >
               <FormattedMessage id={'Hamburger.forceFinish'} defaultMessage={'Force Finish'} />
             </div>
-            {
-              (launch.mode === 'DEFAULT') &&
-                <div className={cx('hamburger-menu-action')} onClick={() => { onAnalysis(launch); }}>
-                  <FormattedMessage id={'Hamburger.analysis'} defaultMessage={'Analysis'} />
-                </div>
-            }
-            <div className={cx('hamburger-menu-action')} onClick={() => { onDelete(launch); }}>
+            {launch.mode === 'DEFAULT' && (
+              <div
+                className={cx('hamburger-menu-action')}
+                onClick={() => {
+                  onAnalysis(launch);
+                }}
+              >
+                <FormattedMessage id={'Hamburger.analysis'} defaultMessage={'Analysis'} />
+              </div>
+            )}
+            <div
+              className={cx('hamburger-menu-action')}
+              onClick={() => {
+                onDelete(launch);
+              }}
+            >
               <FormattedMessage id={'Hamburger.delete'} defaultMessage={'Delete'} />
             </div>
           </div>
@@ -107,13 +138,34 @@ export class Hamburger extends Component {
             </div>
             <div className={cx('export-buttons')}>
               <div className={cx('export-button')}>
-                <GhostButton tiny onClick={() => { onExportPDF(launch); }}>PDF</GhostButton>
+                <GhostButton
+                  tiny
+                  onClick={() => {
+                    onExportPDF(launch);
+                  }}
+                >
+                  PDF
+                </GhostButton>
               </div>
               <div className={cx('export-button')}>
-                <GhostButton tiny onClick={() => { onExportXLS(launch); }}>XLS</GhostButton>
+                <GhostButton
+                  tiny
+                  onClick={() => {
+                    onExportXLS(launch);
+                  }}
+                >
+                  XLS
+                </GhostButton>
               </div>
               <div className={cx('export-button')}>
-                <GhostButton tiny onClick={() => { onExportHTML(launch); }}>HTML</GhostButton>
+                <GhostButton
+                  tiny
+                  onClick={() => {
+                    onExportHTML(launch);
+                  }}
+                >
+                  HTML
+                </GhostButton>
               </div>
             </div>
           </div>

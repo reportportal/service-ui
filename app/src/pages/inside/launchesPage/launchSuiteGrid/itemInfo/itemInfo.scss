@@ -1,5 +1,11 @@
 .item-info {
   overflow: hidden;
+
+  &:hover {
+    .edit-icon {
+      display: inline-block;
+    }
+  }
 }
 .main-info {
   display: inline-block;
@@ -18,7 +24,8 @@
     font-size: 16px;
   }
 }
-.name, .number {
+.name,
+.number {
   margin-right: 5px;
 }
 .analysis-badge {
