@@ -748,7 +748,7 @@ define(['util'], function () {
             relatedIssue: 'Related issue:',
             includeLogs: 'Logs',
             includeComments: 'Comment',
-            includeScreenshots: 'Screenshots',
+            includeAttachments: 'Attachments',
             fillAllRequired: 'Fill in all required fields',
             credentialsSoft: 'In case of empty fields Report Portal credentials will be used',
             credentialsSoftTfs: 'In case of empty fields Windows credentials will be used',
@@ -2129,7 +2129,7 @@ define(['util'], function () {
         activity: {
             email: 'E-mail notifications',
             keepLogs: 'Keep logs',
-            keepScreenshots: 'Keep screenshots',
+            keepScreenshots: 'Keep attachments',
             auto_analyze: 'Auto analysis',
             launchInactivity: 'Launch inactivity timeout',
             statisticsCalculationStrategy: 'Select strategy'

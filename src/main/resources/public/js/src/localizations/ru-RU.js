@@ -809,7 +809,7 @@ define(['util'], function () {
             relatedIssue: 'Связанная ошибка:',
             includeLogs: 'Лог',
             includeComments: 'Комментарий',
-            includeScreenshots: 'Скриншоты',
+            includeAttachments: 'Скриншоты',
             fillAllRequired: 'Заполните все необходимые поля',
             credentialsSoft: 'В случае незаполнения полей будут использованы учетные данные Report Portal',
             credentialsSoftTfs: 'В случае незаполнения полей будут использованы учетные данные Windows',
