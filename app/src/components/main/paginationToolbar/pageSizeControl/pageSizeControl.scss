@@ -7,7 +7,7 @@
     padding-left: 18px;
   }
 
-  @media(max-width: $SCREEN_SM_MAX) {
+  @media (max-width: $SCREEN_SM_MAX) {
     display: none;
   }
 }
@@ -19,15 +19,7 @@
 
 .size-input {
   display: inline-block;
-  border: 1px solid $COLOR--topaz;;
   text-align: right;
   padding-right: 5px;
   width: 40px;
-  margin-top: -3px;
-  height: 25px;
-  vertical-align: top;
-  color: $COLOR--topaz;
-  position: absolute;
-  left: -30px;
-  top: 20px;
 }
