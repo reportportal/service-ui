@@ -17,7 +17,8 @@
     "build:lang:en": "webpack --display none --env.dev && babel localization/translator.js | node",
     "manage:translations": "webpack --display none --env.dev && babel-node ./localization/translatorRunner.js",
     "manage:translations:test": "webpack --display none --env.dev && babel-node ./localization/translatorRunnerCheck.js",
-    "precommit": "lint-staged"
+    "precommit": "lint-staged",
+    "postcommit": "git update-index --again"
   },
   "dependencies": {
     "array.find": "^1.0.7",
@@ -131,11 +132,11 @@
     "notify": false
   },
   "lint-staged": {
-    "*.{js, jsx}": [
+    "*.{js,jsx}": [
       "eslint --fix",
       "git add"
     ],
-    "*.{scss, md}": [
+    "*.{scss,md}": [
       "prettier --write",
       "git add"
     ]
