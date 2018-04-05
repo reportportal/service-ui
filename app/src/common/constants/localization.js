@@ -13,4 +13,8 @@ export const COMMON_LOCALE_KEYS = defineMessages({
     id: 'Common.confirm',
     defaultMessage: 'Confirm',
   },
+  MOVE: {
+    id: 'Common.move',
+    defaultMessage: 'Move',
+  },
 });

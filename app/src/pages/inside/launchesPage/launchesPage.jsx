@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { PageLayout } from 'layouts/pageLayout';
 import { fetch } from 'common/utils';
+import { DEBUG } from 'common/constants/common';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
 import { activeProjectSelector, userIdSelector } from 'controllers/user';
 import { withPagination } from 'controllers/pagination';
@@ -70,14 +71,35 @@ export class LaunchesPage extends Component {
   };
 
   deleteItem = (id) => {
-    fetch(`${this.props.url}?ids=${id}`, {
+    fetch(this.props.url, {
       method: 'delete',
+      params: {
+        ids: id,
+      },
+    }).then(this.props.fetchData);
+  };
+  moveToDebug = (id) => {
+    fetch(`${this.props.url}/update`, {
+      method: 'put',
+      data: {
+        entities: {
+          [id]: {
+            mode: DEBUG.toUpperCase(),
+          },
+        },
+      },
     }).then(this.props.fetchData);
   };
   confirmDeleteItem = (item) => {
     this.props.showModalAction({
       id: 'launchDeleteModal',
       data: { item, onConfirm: () => this.deleteItem(item.id) },
+    });
+  };
+  confirmMoveToDebug = (item) => {
+    this.props.showModalAction({
+      id: 'moveToDebugModal',
+      data: { onConfirm: () => this.moveToDebug(item.id) },
     });
   };
 
@@ -136,6 +158,7 @@ export class LaunchesPage extends Component {
           sortingDirection={sortingDirection}
           onChangeSorting={onChangeSorting}
           onDeleteItem={this.confirmDeleteItem}
+          onMoveToDebug={this.confirmMoveToDebug}
           selectedLaunches={this.state.selectedLaunches}
           onLaunchSelect={this.handleLaunchSelection}
           onAllLaunchesSelect={this.handleAllLaunchesSelection}
