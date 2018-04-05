@@ -14,7 +14,11 @@ const cx = classNames.bind(styles);
 
 const HamburgerColumn = ({ className, ...rest }) => (
   <div className={cx('hamburger-col', className)}>
-    <Hamburger launch={rest.value} onDelete={rest.onDeleteItem} />
+    <Hamburger
+      launch={rest.value}
+      onDelete={rest.onDeleteItem}
+      onMoveToDebug={rest.onMoveToDebug}
+    />
   </div>
 );
 HamburgerColumn.propTypes = {
@@ -244,6 +248,7 @@ export const LaunchSuiteGrid = ({
   onLaunchSelect,
   onAllLaunchesSelect,
   onDeleteItem,
+  onMoveToDebug,
 }) => (
   <Grid
     columns={COLUMNS}
@@ -252,6 +257,7 @@ export const LaunchSuiteGrid = ({
     sortingDirection={sortingDirection}
     onChangeSorting={onChangeSorting}
     onDeleteItem={onDeleteItem}
+    onMoveToDebug={onMoveToDebug}
     selectedItems={selectedLaunches}
     selectable
     onToggleSelection={onLaunchSelect}
@@ -264,6 +270,7 @@ LaunchSuiteGrid.propTypes = {
   sortingDirection: PropTypes.string,
   onChangeSorting: PropTypes.func,
   onDeleteItem: PropTypes.func,
+  onMoveToDebug: PropTypes.func,
   selectedLaunches: PropTypes.arrayOf(PropTypes.object),
   onLaunchSelect: PropTypes.func,
   onAllLaunchesSelect: PropTypes.func,
@@ -274,6 +281,7 @@ LaunchSuiteGrid.defaultProps = {
   sortingDirection: null,
   onChangeSorting: () => {},
   onDeleteItem: () => {},
+  onMoveToDebug: () => {},
   selectedLaunches: [],
   onLaunchSelect: () => {
   },

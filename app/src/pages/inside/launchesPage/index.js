@@ -1,2 +1,2 @@
 export { LaunchesPage } from './launchesPage';
-export { LaunchDeleteModal } from './modals';
+export { LaunchDeleteModal, MoveToDebugModal } from './modals';
