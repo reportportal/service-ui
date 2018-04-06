@@ -7,7 +7,7 @@ const cx = classNames.bind(styles);
 
 function FlakyTestsTableHeader() {
   return (
-    <div className={cx('most-failed-table-header')}>
+    <div className={cx('failed-tests-table-header')}>
       <div className={cx('col', 'col-name')}>
         <FormattedMessage
           id="FlakyTests.table.header.testCase"
