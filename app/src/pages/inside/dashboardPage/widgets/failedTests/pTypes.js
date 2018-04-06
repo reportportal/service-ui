@@ -4,6 +4,7 @@ export const PTLaunch = shape({
   id: string.isRequired,
   name: string.isRequired,
   number: string.isRequired,
+  issueType: string,
 });
 
 export const PTTest = shape({
