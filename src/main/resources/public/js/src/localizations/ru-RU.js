@@ -60,7 +60,7 @@ define(['util'], function () {
             escToCancel: '<strong>Esc</strong> для отмены',
             ctrlEnterToSubmit: '<strong>Ctrl + Enter</strong> для подтверждения',
             loading: 'Загружается',
-            link: 'Загрузка',
+            link: 'Прикрепить',
             post: 'Отправить',
             analyse: 'Анализировать',
             gallery: 'Галерея',
@@ -497,7 +497,7 @@ define(['util'], function () {
             update_bts: 'обновлено',
             delete_bts: 'удалено',
             create_bts: 'сконфигурировано',
-            attach_issue: 'добавленная ошибка',
+            attach_issue: 'прикрепленная ошибка',
             post_issue: 'опубликованная ошибка',
             delete_issue: 'удаленная ошибка',
             testItem: 'элемент тестирования',
@@ -857,7 +857,7 @@ define(['util'], function () {
             postIssue: 'Отправить ошибку',
             postBug: 'Отправить ошибку',
             postBugTo: 'Отправить ошибку в',
-            linkIssue: 'Загрузить ошибку',
+            linkIssue: 'Прикрепить ошибку',
             addIssueId: 'Добавить ID ошибки',
             copyDefect: 'Копировать дефект',
             sendDefect: 'Отправить дефект',
@@ -865,7 +865,7 @@ define(['util'], function () {
             configureTBS: 'Настройте Систему oтслеживания oшибок на отправку ошибок',
             configureTBSLoad: 'Настройте Систему oтслеживания oшибок на загрузку ошибок',
             noIssues: 'Вы не можете отправить ошибку, если элемент не имеет ошибок',
-            noIssuesLoad: 'Вы не можете загрузить ошибку, если элемент не имеет ошибок',
+            noIssuesLoad: 'Вы не можете прикрепить ошибку, если элемент не имеет ошибок',
             historyView: 'История',
             skippedDuration: 'ПРОПУЩЕНО. Длительность: ',
             stoppedDuration: 'Прогон ОСТАНОВЛЕН после:',
@@ -2234,7 +2234,7 @@ define(['util'], function () {
         },
         modalDefectEditor: {
             saveAndPost: 'Сохранить и отправить ошибку',
-            saveAndLoad: 'Сохранить и привязать ошибку'
+            saveAndLoad: 'Сохранить и прикрепить ошибку'
         },
         date: {
             days: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
