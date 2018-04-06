@@ -25,7 +25,7 @@ class FailedTestsTableBody extends React.PureComponent {
     const { tests = [] } = this.props;
 
     return (
-      <div className={cx('most-failed-table-body')}>
+      <div className={cx('failed-tests-table-body')}>
         {tests.map(this.renderRow)}
       </div>
     );
