@@ -1,4 +1,5 @@
 import { storiesOf } from '@storybook/react';
+import { action } from '@storybook/addon-actions';
 import { host } from 'storybook-host';
 import { createStore, combineReducers } from 'redux';
 import { Provider } from 'react-redux';
@@ -39,5 +40,6 @@ storiesOf('Pages/inside/dashboardPage/failedTests', module)
     <FailedTests
       launch={failedTests.launch}
       tests={failedTests.tests}
+      nameClickHandler={action('Test id: ')}
     />
   ));
