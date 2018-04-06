@@ -6,7 +6,7 @@ export const PTLaunch = shape({
   number: string.isRequired,
 });
 
-const PTTest = shape({
+export const PTTest = shape({
   name: string.isRequired,
   uniqueId: string.isRequired,
   percentage: string.isRequired,
