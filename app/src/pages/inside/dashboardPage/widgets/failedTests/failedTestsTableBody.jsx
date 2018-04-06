@@ -1,5 +1,6 @@
 import * as React from 'react';
 import classNames from 'classnames/bind';
+import { AbsRelTime } from 'components/main/absRelTime';
 import { PTTests } from './pTypes';
 import styles from './failedTests.scss';
 
@@ -16,8 +17,7 @@ class FailedTestsTableBody extends React.PureComponent {
   renderRow = (test) => {
     const {
       name, total, isFailed, percentage,
-      lastTime, dateFrom = new Date(),
-      uniqueId,
+      lastTime, uniqueId,
     } = test;
 
     return (
@@ -37,8 +37,9 @@ class FailedTestsTableBody extends React.PureComponent {
         </div>
         <div className={cx('col', 'col-percents')}>{percentage}</div>
         <div className={cx('col', 'col-date')} data-js-date>
-          <span className={cx('absolute')}>{lastTime}</span>
-          <span className={cx('relative')}>{dateFrom.toString()}</span>
+          <AbsRelTime
+            startTime={lastTime}
+          />
         </div>
       </div>
     );
@@ -46,6 +47,7 @@ class FailedTestsTableBody extends React.PureComponent {
 
   render() {
     const { tests = [] } = this.props;
+
     return (
       <div className={cx('most-failed-table-body')}>
         {tests.map(this.renderRow)}
