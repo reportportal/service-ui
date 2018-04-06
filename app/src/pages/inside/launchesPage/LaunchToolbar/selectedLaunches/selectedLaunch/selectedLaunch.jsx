@@ -6,9 +6,9 @@ import styles from './selectedLaunch.scss';
 
 const cx = classNames.bind(styles);
 
-export const SelectedLaunch = ({ className, name, onUnselect }) => (
+export const SelectedLaunch = ({ className, name, number, onUnselect }) => (
   <div className={cx('selected-launch', className)}>
-    <span className={cx('name')}>{name}</span>
+    <span className={cx('name')}>{`${name} ${number}`}</span>
     <div className={cx('cross-icon')} onClick={onUnselect}>
       {Parser(CrossIcon)}
     </div>
@@ -18,6 +18,7 @@ SelectedLaunch.propTypes = {
   className: PropTypes.string,
   name: PropTypes.string.isRequired,
   onUnselect: PropTypes.func,
+  number: PropTypes.number.isRequired,
 };
 SelectedLaunch.defaultProps = {
   className: '',

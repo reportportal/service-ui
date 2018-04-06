@@ -23,6 +23,7 @@ export const SelectedLaunches = ({ selectedLaunches, onClose, onUnselect }) => (
             className={cx('launch')}
             key={launch.id}
             name={launch.name}
+            number={launch.number}
             onUnselect={() => onUnselect(launch)}
           />
         ))}
