@@ -6,7 +6,7 @@ import styles from './failedTests.scss';
 
 const cx = classNames.bind(styles);
 
-function FailedTestsInfoBlock({ launchName, type }) {
+function FailedTestsInfoBlock({ launchName, issueType }) {
   return (
     <div className={cx('info-block')}>
       <p>
@@ -16,12 +16,12 @@ function FailedTestsInfoBlock({ launchName, type }) {
         />: <span className={cx('info-block-launch-name')}>{launchName}</span>
       </p>
       {
-        type &&
+        issueType &&
         <p>
           <FormattedMessage
             id="FlakyTests.header.basedOn"
             defaultMessage="Based on"
-          />: <span className={cx('info-block-launch-name')}>{type}</span>
+          />: <span className={cx('info-block-launch-name')}>{issueType}</span>
         </p>
       }
     </div>
@@ -30,11 +30,11 @@ function FailedTestsInfoBlock({ launchName, type }) {
 
 FailedTestsInfoBlock.propTypes = {
   launchName: string.isRequired,
-  type: string,
+  issueType: string,
 };
 
 FailedTestsInfoBlock.defaultProps = {
-  type: null,
+  issueType: null,
 };
 
 export default FailedTestsInfoBlock;
