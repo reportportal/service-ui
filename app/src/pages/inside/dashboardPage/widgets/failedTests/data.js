@@ -3,7 +3,8 @@ export const failedTests = {
   "launch": {
     "name": "Demo Api Tests_test1",
     "number": "7",
-    "id": "59f0717108813b00012d1645"
+    "id": "59f0717108813b00012d1645",
+    type: 'Failed',
   },
   "tests": [
     {

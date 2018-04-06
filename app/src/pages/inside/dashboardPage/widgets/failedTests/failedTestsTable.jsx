@@ -11,7 +11,7 @@ const cx = classNames.bind(styles);
 
 function FailedTestsTable({ tests, nameClickHandler }) {
   return (
-    <div className={cx('most-failed-table')}>
+    <div className={cx('failed-tests-table')}>
       <ScrollWrapper>
         <FailedTestsTableHeader />
         <FailedTestsTableBody
