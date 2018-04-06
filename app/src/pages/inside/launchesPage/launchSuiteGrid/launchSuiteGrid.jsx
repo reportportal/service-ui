@@ -249,6 +249,7 @@ export const LaunchSuiteGrid = ({
   onAllLaunchesSelect,
   onDeleteItem,
   onMoveToDebug,
+  onEditLaunch,
 }) => (
   <Grid
     columns={COLUMNS}
@@ -262,6 +263,7 @@ export const LaunchSuiteGrid = ({
     selectable
     onToggleSelection={onLaunchSelect}
     onToggleSelectAll={onAllLaunchesSelect}
+    onEditItem={onEditLaunch}
   />
 );
 LaunchSuiteGrid.propTypes = {
@@ -271,6 +273,7 @@ LaunchSuiteGrid.propTypes = {
   onChangeSorting: PropTypes.func,
   onDeleteItem: PropTypes.func,
   onMoveToDebug: PropTypes.func,
+  onEditLaunch: PropTypes.func,
   selectedLaunches: PropTypes.arrayOf(PropTypes.object),
   onLaunchSelect: PropTypes.func,
   onAllLaunchesSelect: PropTypes.func,
@@ -282,6 +285,7 @@ LaunchSuiteGrid.defaultProps = {
   onChangeSorting: () => {},
   onDeleteItem: () => {},
   onMoveToDebug: () => {},
+  onEditLaunch: () => {},
   selectedLaunches: [],
   onLaunchSelect: () => {
   },

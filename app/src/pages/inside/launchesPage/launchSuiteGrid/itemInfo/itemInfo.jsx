@@ -11,7 +11,7 @@ import styles from './itemInfo.scss';
 
 const cx = classNames.bind(styles);
 
-export const ItemInfo = ({ value, refFunction, analyzing }) => (
+export const ItemInfo = ({ value, refFunction, analyzing, onEditItem }) => (
   <div ref={refFunction} className={cx('item-info')}>
     <div className={cx('main-info')}>
       <a href="/" className={cx('name-link')}>
@@ -19,7 +19,9 @@ export const ItemInfo = ({ value, refFunction, analyzing }) => (
         <span className={cx('number')}>#{value.number}</span>
       </a>
       {analyzing && <div className={cx('analysis-badge')}>Analysis</div>}
-      <div className={cx('edit-icon')}>{Parser(PencilIcon)}</div>
+      <div className={cx('edit-icon')} onClick={() => onEditItem(value)}>
+        {Parser(PencilIcon)}
+      </div>
     </div>
 
     <div className={cx('additional-info')}>
@@ -49,8 +51,10 @@ ItemInfo.propTypes = {
   value: PropTypes.object,
   refFunction: PropTypes.func.isRequired,
   analyzing: PropTypes.bool,
+  onEditItem: PropTypes.func,
 };
 ItemInfo.defaultProps = {
   value: {},
   analyzing: false,
+  onEditItem: () => {},
 };
