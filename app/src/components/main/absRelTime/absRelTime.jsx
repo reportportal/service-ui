@@ -1,10 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { connect } from 'react-redux';
 import {
-  setStartTimeFormatAction,
-  startTimeFormatSelector,
   START_TIME_FORMAT_RELATIVE,
   START_TIME_FORMAT_ABSOLUTE,
 } from 'controllers/user';
@@ -16,12 +13,7 @@ import styles from './absRelTime.scss';
 
 const cx = classNames.bind(styles);
 
-@connect(state => ({
-  startTimeFormat: startTimeFormatSelector(state),
-}), {
-  setStartTimeFormatAction,
-})
-export class AbsRelTime extends Component {
+class AbsRelTime extends Component {
   static propTypes = {
     startTime: PropTypes.number,
     startTimeFormat: PropTypes.oneOf([
@@ -57,3 +49,5 @@ export class AbsRelTime extends Component {
     );
   }
 }
+
+export default AbsRelTime;
