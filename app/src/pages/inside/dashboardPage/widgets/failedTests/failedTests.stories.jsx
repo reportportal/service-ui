@@ -1,7 +1,29 @@
 import { storiesOf } from '@storybook/react';
 import { host } from 'storybook-host';
+import { createStore, combineReducers } from 'redux';
+import { Provider } from 'react-redux';
+import {
+  START_TIME_FORMAT_RELATIVE,
+} from 'controllers/user';
 import FailedTests from './failedTests';
 import { failedTests } from './data';
+
+const withRedux = (getStory) => {
+  const initialState = {
+    settings: {
+      startTimeFormat: START_TIME_FORMAT_RELATIVE,
+    },
+  };
+  const rootReducer = combineReducers({
+    user: (state = initialState) => state,
+  });
+  const store = createStore(rootReducer);
+  return (
+    <Provider store={store}>
+      {getStory()}
+    </Provider>
+  );
+};
 
 storiesOf('Pages/inside/dashboardPage/failedTests', module)
   .addDecorator(host({
@@ -12,6 +34,7 @@ storiesOf('Pages/inside/dashboardPage/failedTests', module)
     height: 300,
     width: '100%',
   }))
+  .addDecorator(withRedux)
   .add('default state', () => (
     <FailedTests
       launch={failedTests.launch}
