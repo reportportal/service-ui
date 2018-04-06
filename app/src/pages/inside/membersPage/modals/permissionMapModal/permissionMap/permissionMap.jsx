@@ -15,29 +15,28 @@ export class PermissionMap extends Component {
   static defaultProps = {
     intl: {},
   };
-  generateTableCells = (criteria) =>
-    criteria.permissions.map((item) => {
-      if (item) {
+  generateTableCells = (permissions) =>
+    Object.keys(permissions).map((key) => {
+      if (permissions[key]) {
         return (
-          <td key={Math.random()} className={cx('td', 'has-permission')}>
+          <td key={key} className={cx('col', 'has-permission')}>
             <i className={cx('rp-icons', 'rp-icons-check')} />
           </td>
         );
       }
-      return <td key={Math.random()} className={cx('td')} />;
+      return <td key={key} className={cx('col')} />;
     });
   generateTableRows = () => {
     const keys = Object.keys(PermissionsConfig);
-    return keys.map((key, i) => {
+    return keys.map((key) => {
       const criteria = PermissionsConfig[key];
-      const even = i % 2 === 0;
       return (
-        <tr key={key} className={cx('tr', { even })}>
-          <td className={cx('td', 'horizontal-header')}>
+        <tr key={key} className={cx('row')}>
+          <td className={cx('col', 'horizontal-header')}>
             {this.props.intl.formatMessage(PermissionsName[key])}
             {criteria.attention && <span className={cx('attention')}>*</span>}
           </td>
-          {this.generateTableCells(criteria)}
+          {this.generateTableCells(criteria.permissions)}
         </tr>
       );
     });
@@ -49,30 +48,34 @@ export class PermissionMap extends Component {
         <table className={cx('table-permissions')}>
           <thead>
             <tr>
-              <th rowSpan="2" className={cx('th', 'roles-th')}>
+              <th rowSpan="2" className={cx('header', 'roles-header')}>
                 {intl.formatMessage(PermissionsName.role)}
               </th>
-              <th rowSpan="2" className={cx('th', 'roles-th')}>
+              <th rowSpan="2" className={cx('header', 'roles-header')}>
                 {intl.formatMessage(PermissionsName.admin)}
               </th>
-              <th rowSpan="2" className={cx('th', 'roles-th')}>
+              <th rowSpan="2" className={cx('header', 'roles-header')}>
                 {intl.formatMessage(PermissionsName.manager)}
               </th>
-              <th colSpan="2" className={cx('th', 'roles-th')}>
+              <th colSpan="2" className={cx('header', 'roles-header')}>
                 {intl.formatMessage(PermissionsName.member)}
               </th>
-              <th rowSpan="2" className={cx('th', 'roles-th')}>
+              <th rowSpan="2" className={cx('header', 'roles-header')}>
                 {intl.formatMessage(PermissionsName.operator)}
               </th>
-              <th colSpan="2" className={cx('th', 'roles-th')}>
+              <th colSpan="2" className={cx('header', 'roles-header')}>
                 {intl.formatMessage(PermissionsName.customer)}
               </th>
             </tr>
             <tr>
-              <th className={cx('th', 'roles-th')}>{intl.formatMessage(PermissionsName.owner)}</th>
-              <th className={cx('th', 'roles-th')}>{intl.formatMessage(PermissionsName.notOwner)}</th>
-              <th className={cx('th', 'roles-th')}>{intl.formatMessage(PermissionsName.owner)}</th>
-              <th className={cx('th', 'roles-th')}>{intl.formatMessage(PermissionsName.notOwner)}</th>
+              <th className={cx('header', 'roles-header')}>{intl.formatMessage(PermissionsName.owner)}</th>
+              <th className={cx('header', 'roles-header')}>
+                {intl.formatMessage(PermissionsName.notOwner)}
+              </th>
+              <th className={cx('header', 'roles-header')}>{intl.formatMessage(PermissionsName.owner)}</th>
+              <th className={cx('header', 'roles-header')}>
+                {intl.formatMessage(PermissionsName.notOwner)}
+              </th>
             </tr>
           </thead>
           <tbody>{this.generateTableRows()}</tbody>
