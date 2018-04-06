@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { func } from 'prop-types';
 import classNames from 'classnames/bind';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import FailedTestsTableHeader from './failedTestsTableHeader';
@@ -8,12 +9,15 @@ import styles from './failedTests.scss';
 
 const cx = classNames.bind(styles);
 
-function FailedTestsTable({ tests }) {
+function FailedTestsTable({ tests, nameClickHandler }) {
   return (
     <div className={cx('most-failed-table')}>
       <ScrollWrapper>
         <FailedTestsTableHeader />
-        <FailedTestsTableBody tests={tests} />
+        <FailedTestsTableBody
+          tests={tests}
+          nameClickHandler={nameClickHandler}
+        />
       </ScrollWrapper>
     </div>
   );
@@ -21,6 +25,7 @@ function FailedTestsTable({ tests }) {
 
 FailedTestsTable.propTypes = {
   tests: PTTests.isRequired,
+  nameClickHandler: func.isRequired,
 };
 
 export default FailedTestsTable;
