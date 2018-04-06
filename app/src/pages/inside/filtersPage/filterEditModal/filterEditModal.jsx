@@ -20,10 +20,6 @@ const messages = defineMessages({
     id: 'Filter.namePlaceholder',
     defaultMessage: 'Enter filter name',
   },
-  description: {
-    id: 'Filter.description',
-    defaultMessage: 'Description',
-  },
   descriptionPlaceholder: {
     id: 'Filter.descriptionPlaceholder',
     defaultMessage: 'Enter filter description',
@@ -59,7 +55,7 @@ export class FilterEditModal extends Component {
     this.props.initialize(this.props.data.filter);
   }
 
-  saveFilterAndCloseModal = closeModal => (values) => {
+  saveFilterAndCloseModal = (closeModal) => (values) => {
     this.props.data.onEdit(values);
     closeModal();
   };
@@ -67,7 +63,7 @@ export class FilterEditModal extends Component {
   render() {
     const { intl, handleSubmit } = this.props;
     const okButton = {
-      text: intl.formatMessage(COMMON_LOCALE_KEYS.CONFIRM),
+      text: intl.formatMessage(COMMON_LOCALE_KEYS.UPDATE),
       onClick: (closeModal) => {
         handleSubmit(this.saveFilterAndCloseModal(closeModal))();
       },

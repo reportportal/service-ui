@@ -70,6 +70,12 @@ export class LaunchesPage extends Component {
     selectedLaunches: [],
   };
 
+  updateLaunch = (launch) => {
+    fetch(`${this.props.url}/${launch.id}/update`, {
+      method: 'put',
+      data: launch,
+    }).then(this.props.fetchData);
+  };
   deleteItem = (id) => {
     fetch(this.props.url, {
       method: 'delete',
@@ -100,6 +106,12 @@ export class LaunchesPage extends Component {
     this.props.showModalAction({
       id: 'moveToDebugModal',
       data: { onConfirm: () => this.moveToDebug(item.id) },
+    });
+  };
+  openEditModal = (launch) => {
+    this.props.showModalAction({
+      id: 'launchEditModal',
+      data: { launch, onEdit: this.updateLaunch },
     });
   };
 
@@ -159,6 +171,7 @@ export class LaunchesPage extends Component {
           onChangeSorting={onChangeSorting}
           onDeleteItem={this.confirmDeleteItem}
           onMoveToDebug={this.confirmMoveToDebug}
+          onEditLaunch={this.openEditModal}
           selectedLaunches={this.state.selectedLaunches}
           onLaunchSelect={this.handleLaunchSelection}
           onAllLaunchesSelect={this.handleAllLaunchesSelection}

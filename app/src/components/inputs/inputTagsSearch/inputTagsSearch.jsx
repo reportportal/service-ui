@@ -8,7 +8,7 @@ import { fetch } from 'common/utils';
 import styles from './inputTagsSearch.scss';
 
 const cx = classNames.bind(styles);
-const renderItems = params => (
+const renderItems = (params) => (
   <ScrollWrapper autoHeight autoHeightMax={200}>
     {Select.defaultProps.menuRenderer(params)}
   </ScrollWrapper>
@@ -31,6 +31,7 @@ export class InputTagsSearch extends Component {
     uri: PropTypes.string,
     options: PropTypes.array,
     value: PropTypes.array,
+    placeholder: PropTypes.string,
     focusPlaceholder: PropTypes.string,
     loadingPlaceholder: PropTypes.string,
     nothingFound: PropTypes.string,
@@ -41,7 +42,6 @@ export class InputTagsSearch extends Component {
     onChange: PropTypes.func,
     makeOptions: PropTypes.func,
     isValidNewOption: PropTypes.func,
-    validation: PropTypes.func,
     minLength: PropTypes.number,
     showNewLabel: PropTypes.bool,
     dynamicSearchPromptText: PropTypes.bool,
@@ -50,6 +50,7 @@ export class InputTagsSearch extends Component {
     uri: '',
     options: [],
     value: [],
+    placeholder: '',
     focusPlaceholder: '',
     loadingPlaceholder: '',
     nothingFound: '',
@@ -59,7 +60,6 @@ export class InputTagsSearch extends Component {
     removeSelected: false,
     makeOptions: () => {},
     isValidNewOption: () => {},
-    validation: () => {},
     onChange: () => {},
     minLength: 1,
     showNewLabel: false,
@@ -86,19 +86,21 @@ export class InputTagsSearch extends Component {
   };
   getItems = (input) => {
     if (input.length >= this.props.minLength) {
-      return fetch(`${this.props.uri}${input}`)
-        .then((response) => {
-          const options = this.props.makeOptions(response);
-          return ({ options });
-        });
+      return fetch(`${this.props.uri}${input}`).then((response) => {
+        const options = this.props.makeOptions(response);
+        return { options };
+      });
     }
     return Promise.resolve({ options: [] });
   };
-  isValidNewOption = ({ label }) => (
-    this.props.isValidNewOption(label, this.props.minLength, this.props.validation)
-  );
-  renderOption = option => (
-    <div className={cx('select2-item')} key={option.value} onClick={() => { this.props.onChange(option.value); }}>
+  renderOption = (option) => (
+    <div
+      className={cx('select2-item')}
+      key={option.value}
+      onClick={() => {
+        this.props.onChange(option.value);
+      }}
+    >
       <span>{option.label}</span>
     </div>
   );
@@ -107,20 +109,33 @@ export class InputTagsSearch extends Component {
       return (
         <div>
           <span>{label}</span>
-          <span className={cx('new')}><FormattedMessage id="InputTagsSearch.new" defaultMessage="New" /></span>
+          <span className={cx('new')}>
+            <FormattedMessage id="InputTagsSearch.new" defaultMessage="New" />
+          </span>
         </div>
       );
     }
     return label;
   };
   render() {
-    const { async, creatable, loadingPlaceholder, focusPlaceholder,
-      value, options, onChange, multi, removeSelected } = this.props;
+    const {
+      async,
+      creatable,
+      loadingPlaceholder,
+      focusPlaceholder,
+      value,
+      options,
+      onChange,
+      multi,
+      removeSelected,
+      placeholder,
+    } = this.props;
     const SelectComponent = selectType(async, creatable);
     return (
       <div className={cx('select-container')}>
         <SelectComponent
           loadOptions={this.getItems}
+          placeholder={placeholder}
           autoload={false}
           cache={false}
           className={cx('select2-search-tags')}
@@ -142,4 +157,3 @@ export class InputTagsSearch extends Component {
     );
   }
 }
-
