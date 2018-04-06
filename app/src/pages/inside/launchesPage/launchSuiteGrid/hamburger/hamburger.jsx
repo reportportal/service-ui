@@ -11,26 +11,24 @@ export class Hamburger extends Component {
   static propTypes = {
     onAction: PropTypes.func,
     launch: PropTypes.object.isRequired,
-    onMoveToDebug: PropTypes.func,
     onMoveToLaunches: PropTypes.func,
     onForceFinish: PropTypes.func,
     onAnalysis: PropTypes.func,
-    onDelete: PropTypes.func,
     onExportPDF: PropTypes.func,
     onExportXLS: PropTypes.func,
     onExportHTML: PropTypes.func,
+    customProps: PropTypes.object,
   };
 
   static defaultProps = {
     onAction: () => {},
-    onMoveToDebug: () => {},
     onMoveToLaunches: () => {},
     onForceFinish: () => {},
     onAnalysis: () => {},
-    onDelete: () => {},
     onExportPDF: () => {},
     onExportXLS: () => {},
     onExportHTML: () => {},
+    customProps: {},
   };
 
   state = {
@@ -58,14 +56,13 @@ export class Hamburger extends Component {
   render() {
     const {
       launch,
-      onMoveToDebug,
       onMoveToLaunches,
       onForceFinish,
       onAnalysis,
-      onDelete,
       onExportPDF,
       onExportXLS,
       onExportHTML,
+      customProps,
     } = this.props;
     return (
       <div className={cx('hamburger')}>
@@ -86,7 +83,7 @@ export class Hamburger extends Component {
               <div
                 className={cx('hamburger-menu-action')}
                 onClick={() => {
-                  onMoveToDebug(launch);
+                  customProps.onMoveToDebug(launch);
                 }}
               >
                 <FormattedMessage id={'Hamburger.toDebug'} defaultMessage={'Move to debug'} />
@@ -125,7 +122,7 @@ export class Hamburger extends Component {
             <div
               className={cx('hamburger-menu-action')}
               onClick={() => {
-                onDelete(launch);
+                customProps.onDeleteItem(launch);
               }}
             >
               <FormattedMessage id={'Hamburger.delete'} defaultMessage={'Delete'} />

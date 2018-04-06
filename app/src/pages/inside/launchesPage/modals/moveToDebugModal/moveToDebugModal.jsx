@@ -35,17 +35,16 @@ export class MoveToDebugModal extends Component {
       onConfirm: () => {},
     },
   };
+  confirmAndClose = (closeModal) => {
+    this.props.data.onConfirm();
+    closeModal();
+  };
 
   render() {
     const { intl } = this.props;
-    const { onConfirm } = this.props.data;
-    const confirmAndClose = (closeModal) => {
-      onConfirm();
-      closeModal();
-    };
     const okButton = {
       text: intl.formatMessage(COMMON_LOCALE_KEYS.MOVE),
-      onClick: confirmAndClose,
+      onClick: this.confirmAndClose,
     };
     const cancelButton = {
       text: intl.formatMessage(COMMON_LOCALE_KEYS.CANCEL),
