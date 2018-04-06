@@ -12,11 +12,11 @@ function FlakyTests(props) {
   const { launch, tests, nameClickHandler } = props;
 
   return (
-    <div className={cx('failed-test-cases', { 'most-failed': launch.type })}>
+    <div className={cx('failed-test-cases', { 'most-failed': launch.issueType })}>
       <div className={cx('widget-wrapper')}>
         <FailedTestsInfoBlock
           launchName={launch.name}
-          type={launch.type}
+          issueType={launch.issueType}
         />
         <FailedTestsTable
           tests={tests}
