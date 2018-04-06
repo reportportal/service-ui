@@ -16,7 +16,8 @@ const messages = defineMessages({
   },
   deleteLaunchText: {
     id: 'DeleteLaunchDialog.deleteLaunch',
-    defaultMessage: "Are you sure to delete launch '<b>{name} #{number}</b>'? It will no longer exist.",
+    defaultMessage:
+      "Are you sure to delete launch '<b>{name} #{number}</b>'? It will no longer exist.",
   },
 });
 
@@ -37,18 +38,18 @@ export class LaunchDeleteModal extends Component {
       onConfirm: () => {},
     },
   };
+  confirmAndClose = (closeModal) => {
+    this.props.data.onConfirm();
+    closeModal();
+  };
 
   render() {
     const { intl } = this.props;
-    const { item, onConfirm } = this.props.data;
-    const confirmAndClose = (closeModal) => {
-      onConfirm();
-      closeModal();
-    };
+    const { item } = this.props.data;
     const okButton = {
       text: intl.formatMessage(COMMON_LOCALE_KEYS.DELETE),
       danger: true,
-      onClick: confirmAndClose,
+      onClick: this.confirmAndClose,
     };
     const cancelButton = {
       text: intl.formatMessage(COMMON_LOCALE_KEYS.CANCEL),
@@ -60,7 +61,9 @@ export class LaunchDeleteModal extends Component {
         cancelButton={cancelButton}
       >
         <p className={cx('message')}>
-          {Parser(intl.formatMessage(messages.deleteLaunchText, { name: item.name, number: item.number }))}
+          {Parser(
+            intl.formatMessage(messages.deleteLaunchText, { name: item.name, number: item.number }),
+          )}
         </p>
       </ModalLayout>
     );

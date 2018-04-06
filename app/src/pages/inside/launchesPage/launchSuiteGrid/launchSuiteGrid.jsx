@@ -1,3 +1,4 @@
+import React, { PureComponent } from 'react';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { PRODUCT_BUG, AUTOMATION_BUG, SYSTEM_ISSUE } from 'common/constants/defectTypes';
@@ -14,11 +15,7 @@ const cx = classNames.bind(styles);
 
 const HamburgerColumn = ({ className, ...rest }) => (
   <div className={cx('hamburger-col', className)}>
-    <Hamburger
-      launch={rest.value}
-      onDelete={rest.onDeleteItem}
-      onMoveToDebug={rest.onMoveToDebug}
-    />
+    <Hamburger launch={rest.value} customProps={rest.customProps} />
   </div>
 );
 HamburgerColumn.propTypes = {
@@ -130,10 +127,41 @@ TiColumn.propTypes = {
   className: PropTypes.string.isRequired,
 };
 
-const COLUMNS = [
+export class LaunchSuiteGrid extends PureComponent {
+  static propTypes = {
+    data: PropTypes.array,
+    sortingColumn: PropTypes.string,
+    sortingDirection: PropTypes.string,
+    onChangeSorting: PropTypes.func,
+    onDeleteItem: PropTypes.func,
+    onMoveToDebug: PropTypes.func,
+    onEditLaunch: PropTypes.func,
+    selectedLaunches: PropTypes.arrayOf(PropTypes.object),
+    onLaunchSelect: PropTypes.func,
+    onAllLaunchesSelect: PropTypes.func,
+  };
+  static defaultProps = {
+    data: {},
+    sortingColumn: null,
+    sortingDirection: null,
+    onChangeSorting: () => {},
+    onDeleteItem: () => {},
+    onMoveToDebug: () => {},
+    onEditLaunch: () => {},
+    selectedLaunches: [],
+    onLaunchSelect: () => {
+    },
+    onAllLaunchesSelect: () => {
+    },
+  };
+  getColumns() {
+    return [
   {
     component: HamburgerColumn,
-  },
+  customProps: {
+          onDeleteItem: this.props.onDeleteItem,
+          onMoveToDebug: this.props.onMoveToDebug,
+        },},
   {
     id: 'name',
     title: {
@@ -143,7 +171,9 @@ const COLUMNS = [
     maxHeight: 170,
     component: NameColumn,
     sortable: true,
-  },
+  customProps: {
+          onEditLaunch: this.props.onEditLaunch,
+        },},
   {
     id: 'start_time',
     title: {
@@ -237,58 +267,28 @@ const COLUMNS = [
     },
     sortable: true,
   },
-];
 
-export const LaunchSuiteGrid = ({
-  data,
-  onChangeSorting,
-  sortingColumn,
-  sortingDirection,
-  selectedLaunches,
-  onLaunchSelect,
-  onAllLaunchesSelect,
-  onDeleteItem,
-  onMoveToDebug,
-  onEditLaunch,
-}) => (
-  <Grid
-    columns={COLUMNS}
-    data={data}
-    sortingColumn={sortingColumn}
-    sortingDirection={sortingDirection}
-    onChangeSorting={onChangeSorting}
-    onDeleteItem={onDeleteItem}
-    onMoveToDebug={onMoveToDebug}
-    selectedItems={selectedLaunches}
-    selectable
-    onToggleSelection={onLaunchSelect}
-    onToggleSelectAll={onAllLaunchesSelect}
-    onEditItem={onEditLaunch}
-  />
-);
-LaunchSuiteGrid.propTypes = {
-  data: PropTypes.array,
-  sortingColumn: PropTypes.string,
-  sortingDirection: PropTypes.string,
-  onChangeSorting: PropTypes.func,
-  onDeleteItem: PropTypes.func,
-  onMoveToDebug: PropTypes.func,
-  onEditLaunch: PropTypes.func,
-  selectedLaunches: PropTypes.arrayOf(PropTypes.object),
-  onLaunchSelect: PropTypes.func,
-  onAllLaunchesSelect: PropTypes.func,
-};
-LaunchSuiteGrid.defaultProps = {
-  data: {},
-  sortingColumn: null,
-  sortingDirection: null,
-  onChangeSorting: () => {},
-  onDeleteItem: () => {},
-  onMoveToDebug: () => {},
-  onEditLaunch: () => {},
-  selectedLaunches: [],
-  onLaunchSelect: () => {
-  },
-  onAllLaunchesSelect: () => {
-  },
-};
+];}
+
+  COLUMNS = this.getColumns();
+
+  render() {
+    const { data, onChangeSorting, sortingColumn, sortingDirection, selectedLaunches,
+      onLaunchSelect,
+      onAllLaunchesSelect, } = this.props;
+
+    return (
+      <Grid
+        columns={this.COLUMNS}
+        data={data}
+        sortingColumn={sortingColumn}
+        sortingDirection={sortingDirection}
+        onChangeSorting={onChangeSorting}
+        selectedItems={selectedLaunches}
+        selectable
+        onToggleSelection={onLaunchSelect}
+        onToggleSelectAll={onAllLaunchesSelect}
+      />
+    );
+  }
+}

@@ -24,6 +24,10 @@ const messages = defineMessages({
     id: 'EditLaunchDialog.tagPlaceholder',
     defaultMessage: 'Enter tag name',
   },
+  tagsHint: {
+    id: 'EditLaunchDialog.tagsHint',
+    defaultMessage: 'Please enter 1 or more characters',
+  },
   descriptionPlaceholder: {
     id: 'EditLaunchDialog.descriptionPlaceholder',
     defaultMessage: 'Enter launch description',
@@ -34,7 +38,12 @@ const messages = defineMessages({
   },
   contentTitle: {
     id: 'EditLaunchDialog.contentTitle',
-    defaultMessage: 'LAUNCH DETAILS',
+    defaultMessage: 'Launch details',
+  },
+  warningMessage: {
+    id: 'EditLaunchDialog.warningMessage',
+    defaultMessage:
+      'Change of description and tags can affect your filtering results, widgets, trends',
   },
 });
 
@@ -64,8 +73,8 @@ export class FilterEditModal extends Component {
     this.props.data.onEdit(launch);
     closeModal();
   };
-  formatToTagOptions = (tags) => tags.map((tag) => ({ value: tag, label: tag }));
-  formatToTagArray = (options) => options.map((option) => option.value);
+  formatTags = (tags) => tags.map((tag) => ({ value: tag, label: tag }));
+  parseTags = (options) => options.map((option) => option.value);
 
   render() {
     const { intl, handleSubmit, tagsSearchUrl, data } = this.props;
@@ -84,9 +93,7 @@ export class FilterEditModal extends Component {
         title={intl.formatMessage(messages.editLaunchHeader)}
         okButton={okButton}
         cancelButton={cancelButton}
-        warningMessage={
-          'Change of description and tags can affect your filtering results, widgets, trends'
-        }
+        warningMessage={intl.formatMessage(messages.warningMessage)}
       >
         <form>
           <ModalField>
@@ -96,19 +103,15 @@ export class FilterEditModal extends Component {
             <div className={cx('launch-name')}>{`${data.launch.name} #${data.launch.number}`}</div>
           </ModalField>
           <ModalField label={intl.formatMessage(messages.tags)}>
-            <FieldProvider
-              name="tags"
-              format={this.formatToTagOptions}
-              parse={this.formatToTagArray}
-            >
+            <FieldProvider name="tags" format={this.formatTags} parse={this.parseTags}>
               <FieldErrorHint>
                 <InputTagsSearch
                   placeholder={intl.formatMessage(messages.tagsPlaceholder)}
-                  focusPlaceholder={'Please enter 1 or more characters'}
+                  focusPlaceholder={intl.formatMessage(messages.tagsHint)}
                   minLength={1}
                   async
                   uri={tagsSearchUrl}
-                  makeOptions={this.formatToTagOptions}
+                  makeOptions={this.formatTags}
                   creatable
                   showNewLabel
                   multi
