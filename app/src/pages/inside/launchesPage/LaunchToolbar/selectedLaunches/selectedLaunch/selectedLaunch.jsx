@@ -8,7 +8,7 @@ const cx = classNames.bind(styles);
 
 export const SelectedLaunch = ({ className, name, number, onUnselect }) => (
   <div className={cx('selected-launch', className)}>
-    <span className={cx('name')}>{`${name} ${number}`}</span>
+    <span className={cx('name')}>{`${name} #${number}`}</span>
     <div className={cx('cross-icon')} onClick={onUnselect}>
       {Parser(CrossIcon)}
     </div>
