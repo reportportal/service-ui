@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { TO_INVESTIGATE } from 'common/constants/defectTypes';
 import { projectConfigSelector } from 'controllers/project';
 import { injectIntl, intlShape, defineMessages } from 'react-intl';
 import styles from './defectTypeTooltip.scss';
@@ -32,7 +33,7 @@ export class DefectTypeTooltip extends Component {
     return (
       <div className={cx('defect-type-tooltip')}>
         {
-          (this.props.type !== 'to_investigate') &&
+          (this.props.type !== TO_INVESTIGATE) &&
           <a href="/" className={cx('total-item')}>
             <div className={cx('name')}>
               <div className={cx('circle')} style={{ backgroundColor: defectConfig[0].color }} />
@@ -44,17 +45,21 @@ export class DefectTypeTooltip extends Component {
           </a>
         }
         {
-          defectConfig.map(item => (
-            <a key={item.locator} href="/"className={cx('item')}>
-              <div className={cx('name')}>
-                <div className={cx('circle')} style={{ backgroundColor: item.color }} />
-                { item.longName }
-              </div>
-              <span className={cx('value')}>
-                { this.props.data[item.locator] }
-              </span>
-            </a>
-            ))
+          Object.keys(this.props.data).map((key) => {
+            const defectType = defectConfig.find(item => item.locator === key);
+            return (
+              defectType &&
+              <a key={key} href="/" className={cx('item')}>
+                <div className={cx('name')}>
+                  <div className={cx('circle')} style={{ backgroundColor: defectType.color }} />
+                  { defectType.longName }
+                </div>
+                <span className={cx('value')}>
+                  { this.props.data[defectType.locator] }
+                </span>
+              </a>
+            );
+          })
         }
       </div>
     );

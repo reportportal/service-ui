@@ -1,0 +1,26 @@
+.members-page-toolbar {
+  display: flex;
+  height: 70px;
+  background-color: $COLOR--white-two;
+  align-items: center;
+  padding-left: 15px;
+  padding-right: 15px;
+  justify-content: space-between;
+  @media (max-width: $SCREEN_XS_MAX) {
+    display: none;
+  }
+}
+.members-page-controls{
+  button:first-child{
+    margin-right: 10px
+  }
+}
+.search-input {
+  position: relative;
+  height: 30px;
+  border-radius: 0;
+  box-shadow: none;
+  flex-grow: 1;
+  max-width: 310px;
+  transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+}

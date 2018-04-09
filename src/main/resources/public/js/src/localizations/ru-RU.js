@@ -62,6 +62,7 @@ define(['util'], function () {
             loading: 'Загружается',
             link: 'Загрузка',
             post: 'Отправить',
+            analyse: 'Анализировать',
             gallery: 'Галерея',
             build: 'Build',
             error: 'Ошибка',
@@ -1371,6 +1372,12 @@ define(['util'], function () {
             defaultPriority: 'Приоритет по умолчанию',
             autoAnalysis: 'Автоматический анализ',
             autoAnalysisOnOff: '<p>При ВКЛ анализ начинается, как только заканчивается любой запуск.</p> <p>При ВЫКЛ не начнется автоматически, но можно вызвать вручную</p>',
+            autoAnalysisBase: 'Стратегия авто Анализа',
+            autoAnalysisBaseFirstOpt: 'Все запуски',
+            autoAnalysisBaseSecondOpt: 'Запуски с одинаковыми именами',
+            autoAnalysisBaseThirdOpt: 'Только текущий запуск',
+            autoAnalysisBaseFirstTip: 'Тестовые элементы будут проанализированы на основе ранее проанализированных данных во всех запусках',
+            autoAnalysisBaseSecondTip: 'Тестовые элементы будут проанализированы на основе ранее проанализированных данных в запусках с одинаковыми именами',
             emailNotifications: 'Оповещения по электронной почте',
             emailRecipients: 'Получатели',
             duplicateEmailCase: 'Такое правило опощещений уже существует. Нельзя создать такое же.',
@@ -2083,6 +2090,7 @@ define(['util'], function () {
             importLaunch: 'Импортировать запуск',
             ignoreAA: 'Игнорировать %%% при Авто-Анализе',
             includeAA: 'Включить %%% в Авто-Анализ',
+            analyseLaunches: 'Анализировать запуски',
             testItemsDetails: 'Детали тестового элемента',
             receiveIssue: 'Получить предыдущий результат',
             sendIssue: 'Отправить результат в последний элемент'
@@ -2136,6 +2144,9 @@ define(['util'], function () {
             moveLaunch: 'Вы хотите переместить %%% в %%%?',
 
             filterOptions: 'Варианты Фильтров',
+
+            analyseLaunchesLabel: 'Выберите стратегию Авто Анализа:',
+            analyseLaunchesNote: 'Процедурой Авто Анализа будут обработаны только тестовые элементы имеющие тип дефекта  "Требует Анализа" ',
 
             msgDeleteItems: 'Вы уверены, что хотите удалить %%%? Вы потеряете доступ к %%%. Это действие нельзя отменить.',
             msgDeleteDefectType: 'Я уверен, что хочу удалить I am sure I want to remove custom defect type',

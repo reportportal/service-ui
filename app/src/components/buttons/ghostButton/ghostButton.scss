@@ -62,6 +62,18 @@
     margin-right: 5px;
   }
 }
+.mobile-minified {
+  @media (max-width: $SCREEN_XS_MAX) {
+    padding: 0 8px;
+
+    .icon {
+      margin-right: 0;
+    }
+    .text {
+      display: none;
+    }
+  }
+}
 .tiny {
   height: 25px;
   padding: 0 8px;

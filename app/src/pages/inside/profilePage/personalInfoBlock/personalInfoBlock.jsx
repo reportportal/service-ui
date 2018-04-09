@@ -18,6 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
+/* eslint-disable react/no-danger */
 // TODO when state access will be available add avatar's show/load logic
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';

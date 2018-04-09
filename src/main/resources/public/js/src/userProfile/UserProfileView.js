@@ -331,7 +331,7 @@ define(function (require, exports, module) {
                                 // '<p>username: ' + this.user.get('name') + '</p>' +
                             '<p>password: ' + this.apiTokenModel.get('apiToken') + '</p>' +
                             '<p>endpoint: ' + document.location.origin + '/api/v1' + '</p>' +
-                            '<p>project: ' + this.model.get('defaultProject') + '</p>' +
+                            '<p>project: ' + this.model.appModel.get('projectId') + '</p>' +
                             '<p>launch: ' + this.model.get('name') + '_TEST_EXAMPLE</p>' +
                             '<p>tags:  [tag1, tag2]</p>' +
                             '</div>';
@@ -346,7 +346,7 @@ define(function (require, exports, module) {
                             '<p>rp.endpoint = ' + document.location.origin + '</p>' +
                             '<br>' +
                             '<p>rp.launch = ' + this.model.get('name') + '_TEST_EXAMPLE</p>' +
-                            '<p>rp.project = ' + this.model.get('defaultProject') + '</p>' +
+                            '<p>rp.project = ' + this.model.appModel.get('projectId') + '</p>' +
                             '<p>rp.tags = TAG1;TAG2</p>' +
                             '<p>rp.description = My awesome launch</p>' +
                             '</div>';
@@ -365,7 +365,7 @@ define(function (require, exports, module) {
                         '<p>token: ' + this.apiTokenModel.get('apiToken') + '</p>' +
                         '<p>endpoint: ' + document.location.origin + '/api/v1</p>' +
                         '<p>launch: ' + this.model.get('name') + '_TEST_EXAMPLE</p>' +
-                        '<p>project: ' + this.model.get('defaultProject') + '</p>' +
+                        '<p>project: ' + this.model.appModel.get('projectId') + '</p>' +
                         '</div>';
                     break;
                 default:
@@ -377,7 +377,7 @@ define(function (require, exports, module) {
                                 // '<p>rp.username = ' + this.model.get('name') + '</p>' +
                             '<p>rp.uuid = ' + this.apiTokenModel.get('apiToken') + '</p>' +
                             '<p>rp.launch = ' + this.model.get('name') + '_TEST_EXAMPLE</p>' +
-                            '<p>rp.project = ' + this.model.get('defaultProject') + '</p>' +
+                            '<p>rp.project = ' + this.model.appModel.get('projectId') + '</p>' +
                             '</div>' +
                             '<h1>' + Localization.userProfile.notRequired + '</h1>' +
                             '<div class="options">' +

@@ -123,8 +123,28 @@ define(function (require) {
                 }
             }
         },
+        getUrl: function () {
+            var link;
+            if (this.itemInLaunch && this.itemInLaunch.length === 1) {
+                link = '#' + this.model.appModel.get('projectId') + '/launches/all/';
+                link += this.model.get('launchId');
+                if (this.itemInLaunch[0].path_names) {
+                    _.each(Object.keys(this.itemInLaunch[0].path_names), function (key) {
+                        link += '/' + key;
+                    });
+                }
+                if (this.itemInLaunch[0].has_childs) {
+                    link += '/' + this.model.get('id');
+                } else {
+                    link += '?log.item=' + this.model.get('id');
+                }
+                return link;
+            }
+            return undefined;
+        },
         initialize: function (options) {
             this.cellWidth = options.cellWidth;
+            this.itemInLaunch = options.itemInLaunch;
             this.$container = options.container;
             this.defectsCollection = new SingletonDefectTypeCollection();
             this.defectsCollection.ready.done(function () {
@@ -135,7 +155,13 @@ define(function (require) {
             'mouseenter [data-tooltip-type]': 'showTooltip'
         },
         render: function () {
-            this.$container.append(this.$el.addClass().html(Util.templates(this.template, {})));
+            var link = this.getUrl();
+            this.$container.append(this.$el.addClass()
+                .html(Util.templates(this.template, {
+                    link: link,
+                    class: link ? 'cell-link available' : 'cell-link'
+                }))
+            );
         },
         getCellWidth: function () {
             return this.cellWidth;

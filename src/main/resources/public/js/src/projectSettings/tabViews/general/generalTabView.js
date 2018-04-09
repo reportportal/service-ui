@@ -31,6 +31,7 @@ define(function (require) {
     var DropDownComponent = require('components/DropDownComponent');
     var SingletonAppModel = require('model/SingletonAppModel');
     var SingletonRegistryInfoModel = require('model/SingletonRegistryInfoModel');
+    var UserModel = require('model/UserModel');
 
     var config = App.getInstance();
     var appModel = new SingletonAppModel();
@@ -41,15 +42,18 @@ define(function (require) {
         tpl: 'tpl-project-settings-general',
 
         events: {
-            'click #submit-settings': 'submitSettings'
+            'click #submit-settings': 'submitSettings',
+            'change input[type="radio"]': 'onChangeAABase'
         },
         bindings: {
             '[data-js-is-auto-analize]': 'checked: isAutoAnalyzerEnabled',
+            '[data-js-aa-base-block]': 'classes: {hide: not(isAutoAnalyzerEnabled)}',
             '[data-js-analize-on-the-fly]': 'checked: analyzeOnTheFly, attr: {disabled: not(isAutoAnalyzerEnabled)}'
         },
 
         initialize: function () {
             var self = this;
+            this.userModel = new UserModel();
             this.registryInfoModel = new SingletonRegistryInfoModel();
             this.model = new ProjectSettingsModel(appModel.get('configuration'));
             this.dropdownComponents = [];
@@ -69,6 +73,7 @@ define(function (require) {
                 config.trackingDispatcher.trackEventNumber(384);
             });
             this.render();
+            this.setupAnalyzerSetting();
         },
 
         render: function () {
@@ -80,8 +85,18 @@ define(function (require) {
             this.setupDropdowns();
             return this;
         },
+        setupAnalyzerSetting: function () {
+            var userRole;
+            $('[value="' + (this.model.get('analyzer_mode') || 'LAUNCH_NAME') + '"]', this.$el).attr('checked', 'checked');
+            if (this.userModel.get('userRole') !== 'ADMINISTRATOR') {
+                userRole = this.userModel.get('projects')[appModel.get('projectId')].projectRole;
+                if (userRole !== 'PROJECT_MANAGER') {
+                    $('[data-js-is-auto-analize]', this.$el).attr('disabled', 'disabled').parent().addClass('disabled');
+                    $('[data-js-aa-base-block] input', this.$el).attr('disabled', 'disabled');
+                }
+            }
+        },
         setupDropdowns: function () {
-            var self = this;
             var isEpamInstance = this.registryInfoModel.get('isEpamInstance');
 
             var interruptedJob = new DropDownComponent({
@@ -151,14 +166,22 @@ define(function (require) {
             $('div.error-block', cont).empty().hide();
         },
 
+        onChangeAABase: function (e) {
+            this.model.set('analyzer_mode', e.target.value);
+        },
+
         submitSettings: function () {
-            var externalSystemData = this.model.getProjectSettings();
+            var generalSettings = this.model.getProjectSettings();
             config.trackingDispatcher.trackEventNumber(385);
             this.clearFormErrors();
-            Service.updateProject(externalSystemData)
+            if (!generalSettings.configuration.isAutoAnalyzerEnabled) {
+                generalSettings.configuration.analyzer_mode = 'LAUNCH_NAME';
+                $('[value="LAUNCH_NAME"]', this.$el).attr('checked', 'checked');
+            }
+            Service.updateProject(generalSettings)
                 .done(function () {
                     var newConfig = appModel.get('configuration');
-                    _.merge(newConfig, externalSystemData.configuration);
+                    _.merge(newConfig, generalSettings.configuration);
                     appModel.set({ configuration: newConfig });
                     Util.ajaxSuccessMessenger('updateProjectSettings');
                 })

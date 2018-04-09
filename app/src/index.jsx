@@ -7,11 +7,12 @@ import { Provider } from 'react-redux'
 import { createHashHistory } from 'history';
 import qhistory from 'qhistory';
 import { stringify, parse } from 'qs';
+import 'common/polyfills';
 
 import 'reset-css/reset.css';
 import 'common/css/fonts/fonts.scss';
 import 'common/css/common.scss';
-
+import 'c3/c3.css';
 
 import App from './app';
 import { configureStore } from './store';

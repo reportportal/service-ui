@@ -28,6 +28,7 @@ define(function (require) {
     var AdminService = require('adminService');
     var AdServerSettingsModel = require('adminServerSettings/authServerSettings/AdAuthServerSettingsModel');
     var config = App.getInstance();
+    var DropDownComponent = require('components/DropDownComponent');
 
     var AdAuthServerSettingsView = Epoxy.View.extend({
 
@@ -84,6 +85,7 @@ define(function (require) {
             this.setupAnchors();
             this.bindValidators();
             this.applyBindings();
+            this.setupLdapProtocol();
         },
         getAuthSettings: function () {
             AdminService.getAuthSettings(this.authType)
@@ -99,13 +101,39 @@ define(function (require) {
                 }.bind(this));
         },
         updateModel: function (settings) {
+            var isLdapProtocol;
+            var ldapProtocol;
+            if (settings.url) {
+                isLdapProtocol = settings.url.indexOf('ldaps://') === 0;
+                if (isLdapProtocol) {
+                    ldapProtocol = 'ldaps://';
+                } else {
+                    ldapProtocol = 'ldap://';
+                }
+            }
             this.model.set({
                 domain: settings.domain,
-                url: (settings.url) ? settings.url.split('ldap://')[1] : '',
+                url: (settings.url) ? settings.url.split(ldapProtocol)[1] : '',
+                ldapProtocol: ldapProtocol,
                 baseDn: settings.baseDn,
                 email: (settings.synchronizationAttributes && settings.synchronizationAttributes.email) ? settings.synchronizationAttributes.email : '',
                 fullName: (settings.synchronizationAttributes && settings.synchronizationAttributes.fullName) ? settings.synchronizationAttributes.fullName : '',
                 photo: (settings.synchronizationAttributes && settings.synchronizationAttributes.photo) ? settings.synchronizationAttributes.photo : ''
+            });
+        },
+        setupLdapProtocol: function () {
+            this.ldapProtocolSelector = new DropDownComponent({
+                data: [
+                    { name: 'ldap://', value: 'ldap://' },
+                    { name: 'ldaps://', value: 'ldaps://' }
+                ],
+                multiple: false,
+                defaultValue: this.model.get('ldapProtocol') ? this.model.get('ldapProtocol') : 'ldap://'
+            });
+            $('[data-js-ldap-protocol]', this.$el).html(this.ldapProtocolSelector.$el);
+            this.listenTo(this.ldapProtocolSelector, 'change', function (val) {
+                this.model.set('ldapProtocol', val);
+                this.enableSubmit();
             });
         },
         setupAnchors: function () {
@@ -181,12 +209,13 @@ define(function (require) {
                 });
         },
         updateAuthSettings: function () {
+            var ldapProtocol = this.model.get('ldapProtocol') ? this.model.get('ldapProtocol') : this.ldapProtocolSelector.getValue();
             var authData = {
                 // required fields
                 enabled: this.model.get('adAuthEnabled'),
                 domain: this.model.get('domain'),
                 baseDn: this.model.get('baseDn'),
-                url: 'ldap://' + this.model.get('url'),
+                url: ldapProtocol + this.model.get('url'),
                 synchronizationAttributes: {
                     email: this.model.get('email')
                 }

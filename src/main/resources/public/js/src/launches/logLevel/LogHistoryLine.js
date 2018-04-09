@@ -108,7 +108,8 @@ define(function (require, exports, module) {
         bindings: {
             '[data-js-launch-number]': 'text: launchNumber',
             ':el': 'classes: {active: active}',
-            '[data-js-tooltip-item]': 'attr: {title: statusTitle}'
+            '[data-js-tooltip-item]': 'attr: {title: statusTitle}',
+            '[data-js-launch-link]': 'attr: {href: getUrl, class: getLinkClass}'
         },
 
         computeds: {
@@ -117,12 +118,38 @@ define(function (require, exports, module) {
                 get: function (status) {
                     return Localization.historyLine.tooltips[status];
                 }
+            },
+            getLinkClass: {
+                deps: ['id'],
+                get: function (id) {
+                    var className = '';
+                    if (id && id !== this.currentItemId) {
+                        className = 'active-link';
+                    }
+                    return className;
+                }
+            },
+            getUrl: {
+                deps: ['id', 'launchId', 'path_names'],
+                get: function (id, launchId, pathNames) {
+                    var link;
+                    if (id && id !== this.currentItemId) {
+                        link = '#' + this.model.appModel.get('projectId') + '/launches/all/';
+                        link += this.model.get('launchId');
+                        _.each(Object.keys(pathNames), function (key) {
+                            link += '/' + key;
+                        });
+                        link += '?log.item=' + id;
+                    }
+                    return link;
+                }
             }
         },
         isAction: function () {
             return this.model.get('status') !== 'MANY' && this.model.get('status') !== 'NOT_FOUND';
         },
-        initialize: function () {
+        initialize: function (options) {
+            this.currentItemId = options.currentItemId;
             this.render();
             this.$el.addClass('status-' + this.model.get('status'));
             this.defectTypeCollection = new SingletonDefectTypeCollection();
@@ -211,10 +238,11 @@ define(function (require, exports, module) {
             this.$el.html(Util.templates(this.template, {}));
         },
         onResetHistoryItems: function () {
+            var itemId = this.collectionItems.getInfoLog().item;
             var $itemsContainer = $('[data-js-history-container]', this.$el);
             var self = this;
             _.each(this.collection.models, function (model) {
-                var item = new LogHistoryLineItemView({ model: model });
+                var item = new LogHistoryLineItemView({ model: model, currentItemId: itemId });
                 $itemsContainer.append(item.$el);
                 self.renderedItems.push(item);
             });

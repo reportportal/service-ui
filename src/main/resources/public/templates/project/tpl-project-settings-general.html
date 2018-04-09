@@ -57,6 +57,28 @@
         <div class="rp-help-block"><%= data.text.project.autoAnalysisOnOff %></div>
     </div>
 </div>
+
+<div class="rp-form-group" data-js-aa-base-block>
+    <label class="aa-strategy-label rp-control-label rp-custom-col">
+        <%= data.text.project.autoAnalysisBase %>
+    </label>
+    <div class="aa-strategy-selector">
+        <div class="aa-strategy-option">
+            <label>
+                <input class="rp-input-radio" type="radio" name="aa-strategy" value="ALL">
+                <span><%= data.text.project.autoAnalysisBaseFirstOpt %></span>
+            </label>
+            <span class="tip rp-help-block"><%= data.text.project.autoAnalysisBaseFirstTip %></span>
+        </div>
+        <div class="aa-strategy-option">
+            <label>
+                <input class="rp-input-radio" type="radio" name="aa-strategy" value="LAUNCH_NAME">
+                <span><%= data.text.project.autoAnalysisBaseSecondOpt %></span>
+            </label>
+            <span class="tip rp-help-block"><%= data.text.project.autoAnalysisBaseSecondTip %></span>
+        </div>
+    </div>
+</div>
 <!--<div class="rp-form-group">-->
     <!--<label class="col-md-3 col-sm-4 col-xs-12 rp-control-label rp-custom-col">-->
     <!--</label>-->
