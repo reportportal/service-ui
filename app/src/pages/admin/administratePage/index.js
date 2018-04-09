@@ -1,1 +1,1 @@
-import { AdministratePage } from './administratePage';
+export { AdministratePage } from './administratePage';

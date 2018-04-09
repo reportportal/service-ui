@@ -21,7 +21,7 @@ export const configureStore = (history, preloadedState) => {
   const reduxLogger = window.__REDUX_DEVTOOLS_EXTENSION__ ? window.__REDUX_DEVTOOLS_EXTENSION__({ maxAge: 30 }) : f => f;
 
   const rootReducer = combineReducers({ ...reducers, location: reducer })
-  const middlewares = applyMiddleware(middleware, reduxThunk)
+  const middlewares = applyMiddleware(reduxThunk, middleware)
   const enhancers = composeEnhancers(enhancer, middlewares, reduxLogger)
   const store = createStore(rootReducer, preloadedState, enhancers)
 

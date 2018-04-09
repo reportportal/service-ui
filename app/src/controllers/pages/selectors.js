@@ -5,22 +5,22 @@ export const pageSelector = state => {
 }
 
 export const pagePropertiesSelector = (
-	{ location: { meta } },
+	{ location: { query } },
 	mapping = undefined) => {
 
-	if (!meta || !meta.query) {
+	if (!query) {
 		return {};
 	}
 
 	if (!mapping) {
-		return meta.query;
+		return query;
 	}
 
 	const result = {};
 	for (const key of mapping) {
-		if (Object.hasOwnProperty(meta.query, key)) {
+		if (Object.hasOwnProperty(query, key)) {
 			const propertyName = mapping[key];
-			result[propertyName] = meta.query[key];
+			result[propertyName] = query[key];
 		}
 	}
 	return result;
