@@ -7,9 +7,7 @@ const cx = classNames.bind(styles);
 
 export const CheckboxCell = ({ className, value, customProps: { selected, onChange } }) => (
   <div className={cx('checkbox-cell', className)}>
-    <div className={cx('checkbox-wrapper')}>
-      <InputCheckbox value={selected} onChange={() => onChange(value)} />
-    </div>
+    <InputCheckbox value={selected} onChange={() => onChange(value)} />
   </div>
 );
 CheckboxCell.propTypes = {
