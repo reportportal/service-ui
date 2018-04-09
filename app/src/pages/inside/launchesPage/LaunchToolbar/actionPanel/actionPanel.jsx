@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import { FormattedMessage } from 'react-intl';
 import classNames from 'classnames/bind';
 import { GhostButton } from 'components/buttons/ghostButton';
@@ -7,9 +8,13 @@ import styles from './actionPanel.scss';
 
 const cx = classNames.bind(styles);
 
-export const ActionPanel = () => (
+export const ActionPanel = ({ hasErrors }) => (
   <div className={cx('action-panel')}>
-    <div className={cx('breadcrumb')} />
+    {hasErrors ? (
+      <GhostButton>Proceed Valid Items</GhostButton>
+    ) : (
+      <div className={cx('breadcrumb')} />
+    )}
     <div className={cx('action-buttons')}>
       <div className={cx('action-button', 'mobile-hidden')}>
         <GhostButton icon={ImportIcon} disabled>
@@ -29,3 +34,9 @@ export const ActionPanel = () => (
     </div>
   </div>
 );
+ActionPanel.propTypes = {
+  hasErrors: PropTypes.bool,
+};
+ActionPanel.defaultProps = {
+  hasErrors: false,
+};

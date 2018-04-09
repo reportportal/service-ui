@@ -103,6 +103,7 @@
   "InputUserSearch.searching": "Поиск...",
   "LaunchesPage.actions": "Действия",
   "LaunchesPage.import": "Импорт",
+  "LaunchesPage.multiSelectError": "Вы не можете выполнить операцию с недействительными элементами",
   "LaunchesPage.multipleSelectHeader": "Вы можете выполнять действия с выбранными элементами:",
   "LaunchesPage.refresh": "Обновить",
   "LaunchesPage.title": "Запуски",
