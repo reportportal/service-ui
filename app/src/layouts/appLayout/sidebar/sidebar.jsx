@@ -35,6 +35,15 @@ import DebugIcon from './img/debug-icon-inline.svg';
 import ProfileIcon from './img/profile-icon-inline.svg';
 import AdministrateIcon from './img/administrate-icon-inline.svg';
 import LogoutIcon from './img/logout-icon-inline.svg';
+import {
+	PROJECT_DASHBOARD_PAGE,
+	PROJECT_LAUNCHES_PAGE,
+	PROJECT_FILTERS_PAGE,
+	PROJECT_USERDEBUG_PAGE,
+	USER_PROFILE_PAGE,
+	ADMINISTRATE_PAGE,
+	LOGIN_PAGE
+} from 'controllers/pages/constants';
 
 const cx = classNames.bind(styles);
 

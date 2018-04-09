@@ -4,6 +4,7 @@ import { addTokenToImagePath } from 'common/utils';
 import { FormattedMessage } from 'react-intl';
 import { userInfoSelector } from 'controllers/user';
 import { logoutAction } from 'controllers/auth';
+import { API_PAGE, ADMINISTRATE_PAGE, USER_PROFILE_PAGE } from 'controllers/pages/constants';
 import { connect } from 'react-redux';
 import { NavLink } from 'redux-first-router-link'
 import PropTypes from 'prop-types';

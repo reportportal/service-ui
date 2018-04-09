@@ -6,10 +6,13 @@ import { pageSelector } from 'controllers/pages';
 import { authorizedRoute } from './authorizedRoute';
 import { anonymousRoute } from './anonymousRoute';
 import { LocalizationSwitcher } from 'components/main/localizationSwitcher';
+import { NOT_FOUND } from 'redux-first-router';
 
 import styles from './pageSwitcher.css';
 
 const pageRendering = {
+	[NOT_FOUND]: { module: 'pages/outside/notFoundPage', name: 'NotFoundPage', layout: 'Empty' },
+
 	LOGIN_PAGE: { module: 'pages/outside/loginPage', name: 'LoginPage', layout: 'Empty', anonymousAccess: true },
 	REGISTRATION_PAGE: { module: 'pages/outside/registrationPage', name: 'RegistrationPage', layout: 'Empty', anonymousAccess: true},
 
@@ -45,10 +48,14 @@ const PageSwitcher = ({ page }) => {
 		throw new Error(`Page $page is missing layout`);
 
 	let PageComponent = require('../' + module)[name];
-	if (anonymousAccess) {
-		PageComponent = anonymousRoute(PageComponent);
-	} else {
-		PageComponent = authorizedRoute(PageComponent);
+	switch (anonymousAccess)
+	{
+		case true:
+			PageComponent = anonymousRoute(PageComponent);
+			break;
+		case false:
+			PageComponent = authorizedRoute(PageComponent);
+			break;
 	}
 
 	const layoutName = layout + 'Layout';

@@ -3,6 +3,7 @@ import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { NavLink } from 'redux-first-router-link';
 import { userInfoSelector, activeProjectSelector } from 'controllers/user';
+import { PROJECT_MEMBERS_PAGE, PROJECT_SETTINGS_PAGE } from 'controllers/pages/constants';
 import { connect } from 'react-redux';
 import { ProjectSelector } from './projectSelector';
 import { UserBlock } from './userBlock';

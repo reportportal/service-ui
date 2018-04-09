@@ -4,7 +4,7 @@ import { connectRoutes } from 'redux-first-router';
 import queryString from 'qs';
 import reduxThunk from 'redux-thunk';
 
-import routesMap from 'routes/routesMap';
+import routesMap, { onBeforeRouteChange } from 'routes/routesMap';
 import reducers from './reducers';
 
 
@@ -12,7 +12,10 @@ export const configureStore = (history, preloadedState) => {
   const { reducer, middleware, enhancer, thunk } = connectRoutes(
     history,
     routesMap,
-	{ querySerializer: queryString }
+	{ 
+		querySerializer: queryString,
+		onBeforeChange: onBeforeRouteChange
+	}
   )
 
   const reduxLogger = window.__REDUX_DEVTOOLS_EXTENSION__ ? window.__REDUX_DEVTOOLS_EXTENSION__({ maxAge: 30 }) : f => f;

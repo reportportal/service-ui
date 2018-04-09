@@ -24,7 +24,9 @@ import React, { Component } from 'react';
 import { NavLink } from 'redux-first-router-link'
 import PropTypes from 'prop-types';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
+import { PROJECT_PAGE } from 'controllers/pages/constants';
 import styles from './projectSelector.scss';
+
 
 const cx = classNames.bind(styles);
 

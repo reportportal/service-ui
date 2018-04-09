@@ -1,3 +1,5 @@
+import { NOT_FOUND } from 'redux-first-router';
+
 // undefined page
 export const NO_PAGE = undefined;
 // admin
@@ -19,6 +21,7 @@ export const LOGIN_PAGE = 'LOGIN_PAGE';
 export const REGISTRATION_PAGE = 'REGISTRATION_PAGE';
 
 export const pageNames = {
+	[NOT_FOUND]: NOT_FOUND,
 	ADMINISTRATE_PAGE,
 	PROJECTS_PAGE,
 	API_PAGE,
