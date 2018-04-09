@@ -14,7 +14,7 @@ export const SelectedLaunches = ({ selectedLaunches, onClose, onUnselect }) => (
     <div className={cx('header')}>
       <FormattedMessage
         id="LaunchesPage.multipleSelectHeader"
-        defaultMessage="YOU CAN PERFORM ACTIONS WITH SELECTED ITEMS:"
+        defaultMessage="You can perform actions with selected items:"
       />
       <div className={cx('close-icon')} onClick={onClose}>
         {Parser(CrossIcon)}
