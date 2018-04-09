@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
+import { FormattedMessage } from 'react-intl';
 import Parser from 'html-react-parser';
 import CrossIcon from 'common/img/icon-cross-inline.svg';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
@@ -11,7 +12,10 @@ const cx = classNames.bind(styles);
 export const SelectedLaunches = ({ selectedLaunches, onClose, onUnselect }) => (
   <div className={cx('selected-launches')}>
     <div className={cx('header')}>
-      YOU CAN PERFORM ACTIONS WITH SELECTED ITEMS:
+      <FormattedMessage
+        id="LaunchesPage.multipleSelectHeader"
+        defaultMessage="YOU CAN PERFORM ACTIONS WITH SELECTED ITEMS:"
+      />
       <div className={cx('close-icon')} onClick={onClose}>
         {Parser(CrossIcon)}
       </div>
