@@ -67,10 +67,11 @@ define(function (require) {
                         var $valueView;
                         var oldLinks = [];
                         var newLinks = [];
+                        var actionType = this.view.model.get('actionType');
                         if (
-                            this.view.model.get('actionType') === 'post_issue'
-                            || this.view.model.get('actionType') === 'load_issue'
-                            || this.view.model.get('actionType') === 'unload_issue'
+                            actionType === 'post_issue'
+                            || actionType === 'load_issue'
+                            || actionType === 'unload_issue'
                         ) {
                             _.each(value, function (val, key) {
                                 var linkParts;

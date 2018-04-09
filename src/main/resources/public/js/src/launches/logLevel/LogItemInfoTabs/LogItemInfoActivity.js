@@ -136,7 +136,7 @@ define(function (require) {
             isHideNameCell: {
                 deps: ['actionType'],
                 get: function (actionType) {
-                    return actionType === 'analyze_item' || actionType === 'attach_load_aa';
+                    return actionType === 'analyze_item' || actionType === 'load_issue_aa';
                 }
             }
         },

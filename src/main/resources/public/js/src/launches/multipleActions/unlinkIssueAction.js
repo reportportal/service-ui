@@ -41,7 +41,6 @@ define(function (require) {
                 cancelButtonText: Localization.ui.cancel,
                 okButtonText: Localization.ui.unlink,
                 confirmFunction: function () {
-                    var message;
                     var data = {
                         issues: []
                     };
@@ -55,9 +54,9 @@ define(function (require) {
                     }, this);
 
                     return CoreService.updateDefect(data).done(function () {
-                        Util.ajaxSuccessMessenger(message);
+                        Util.ajaxSuccessMessenger();
                     }).fail(function (err) {
-                        Util.ajaxFailMessenger(err, message);
+                        Util.ajaxFailMessenger(err);
                     });
                 }
             });
