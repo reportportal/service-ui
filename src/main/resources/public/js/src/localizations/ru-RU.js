@@ -369,10 +369,11 @@ define(['util'], function () {
         itemEvents: {
             updateItemIssue: 'обновил данные элемента',
             updateItem: 'обновил элемент',
-            attachIssue: 'привязал ошибку',
+            loadIssue: 'привязал ошибку',
+            unloadIssue: 'отвязал ошибку',
             postIssue: 'отправил ошибку',
             changedByAnalyzer: 'АА изменил тип дефекта',
-            issueAttachByAnalyzer: 'AA привязал ошибку'
+            issueLoadByAnalyzer: 'AA привязал ошибку'
         },
 
         widgets: {
@@ -499,7 +500,9 @@ define(['util'], function () {
             delete_bts: 'удалено',
             create_bts: 'сконфигурировано',
             attach_issue: 'прикрепленная ошибка',
-            post_issue: 'опубликованная ошибка',
+            load_issue: 'добавил ошибку',
+            post_issue: 'опубликовал ошибку',
+            unload_issue: 'открепил ошибку',
             delete_issue: 'удаленная ошибка',
             testItem: 'элемент тестирования',
             update_project: 'обновлено',
@@ -1141,11 +1144,14 @@ define(['util'], function () {
                 delete_launch: 'Удаление запуска',
                 update_project: 'Обновление проекта',
                 post_issue: 'Публикация ошибки',
-                attach_issue: 'Добавление ошибки',
+                load_issue: 'Добавление ошибки',
+                load_issue_aa: 'Добавление ошибки АА',
+                unload_issue: 'Открепление ошибки',
                 update_item: 'Обновление элемента',
                 create_user: 'Создание пользователя',
                 start_import: 'Начало импорта',
-                finish_import: 'Окончание импорта'
+                finish_import: 'Окончание импорта',
+                analyze_item: 'АА изменил тип дефекта'
             },
             objectTypes: {
                 all: 'Все',
@@ -1978,8 +1984,8 @@ define(['util'], function () {
             deleteLaunch: 'Удалить запуск',
             shareWidgetDashboard: 'Поделиться виджетом, панелью управления',
             unShareWidgetDashboard: 'Ограничить доступ к виджету, панели управления',
-            postIssue: 'Отправить ошибку в СОД',
-            attachIssue: 'Приложить ошибку к СОД',
+            updateIssue: 'Действия с ошибками',
+            loadIssue: 'Приложить ошибку к СОД',
             history: 'История',
             project: 'Проект',
             login: 'Логин',
