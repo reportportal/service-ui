@@ -23,7 +23,7 @@ import { PureComponent } from 'react';
 import classNames from 'classnames/bind';
 import { reduxForm } from 'redux-form';
 import { FormattedMessage, injectIntl, intlShape, defineMessages } from 'react-intl';
-import { Link } from 'redux-first-router-link';
+import Link from 'redux-first-router-link';
 import { redirect } from 'redux-first-router';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux'
