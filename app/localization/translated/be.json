@@ -92,6 +92,7 @@
   "InputUserSearch.searching": "Пошук...",
   "LaunchesPage.actions": "Дзеянні",
   "LaunchesPage.import": "Імпарт",
+  "LaunchesPage.multiSelectError": "Вы не можаце выканаць аперацыю з няправільнымі элементамі",
   "LaunchesPage.multipleSelectHeader": "Вы можаце выконваць дзеянні з абранымі элементамі:",
   "LaunchesPage.refresh": "Абнавіць",
   "LaunchesPage.title": "Запускі",
