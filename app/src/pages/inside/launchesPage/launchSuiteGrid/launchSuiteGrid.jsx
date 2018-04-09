@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { PRODUCT_BUG, AUTOMATION_BUG, SYSTEM_ISSUE } from 'common/constants/defectTypes';
 import { Grid } from 'components/main/grid';
 import { AbsRelTime } from 'components/main/absRelTime';
-import { InputCheckbox } from 'components/inputs/inputCheckbox';
 import { ItemInfo } from './itemInfo';
 import { Hamburger } from './hamburger';
 import { ExecutionStatistics } from './executionStatistics';
@@ -127,15 +126,6 @@ TiColumn.propTypes = {
   className: PropTypes.string.isRequired,
 };
 
-const SelectColumn = ({ className }) => (
-  <div className={cx('select-col', className)}>
-    <InputCheckbox />
-  </div>
-);
-SelectColumn.propTypes = {
-  className: PropTypes.string.isRequired,
-};
-
 const COLUMNS = [
   {
     component: HamburgerColumn,
@@ -243,18 +233,27 @@ const COLUMNS = [
     },
     sortable: true,
   },
-  {
-    component: SelectColumn,
-  },
 ];
 
-export const LaunchSuiteGrid = ({ data, onChangeSorting, sortingColumn, sortingDirection }) => (
+export const LaunchSuiteGrid = ({
+  data,
+  onChangeSorting,
+  sortingColumn,
+  sortingDirection,
+  selectedLaunches,
+  onLaunchSelect,
+  onAllLaunchesSelect,
+}) => (
   <Grid
     columns={COLUMNS}
     data={data}
     sortingColumn={sortingColumn}
     sortingDirection={sortingDirection}
     onChangeSorting={onChangeSorting}
+    selectedItems={selectedLaunches}
+    selectable
+    onToggleSelection={onLaunchSelect}
+    onToggleSelectAll={onAllLaunchesSelect}
   />
 );
 LaunchSuiteGrid.propTypes = {
@@ -262,11 +261,19 @@ LaunchSuiteGrid.propTypes = {
   sortingColumn: PropTypes.string,
   sortingDirection: PropTypes.string,
   onChangeSorting: PropTypes.func,
+  selectedLaunches: PropTypes.arrayOf(PropTypes.object),
+  onLaunchSelect: PropTypes.func,
+  onAllLaunchesSelect: PropTypes.func,
 };
 LaunchSuiteGrid.defaultProps = {
   data: {},
   sortingColumn: null,
   sortingDirection: null,
   onChangeSorting: () => {
+  },
+  selectedLaunches: [],
+  onLaunchSelect: () => {
+  },
+  onAllLaunchesSelect: () => {
   },
 };

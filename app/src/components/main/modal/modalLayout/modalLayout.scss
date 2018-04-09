@@ -53,7 +53,7 @@
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
   opacity: 1;
   transition: margin-top 300ms ease-in, opacity 300ms ease-in;
-  
+
   @media (max-width: $SCREEN_XS_MAX) {
     right: 10px;
     left: 10px;
@@ -128,4 +128,3 @@
   padding: 0 10px;
   background-color: $COLOR--gray-91;
 }
-

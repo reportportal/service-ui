@@ -60,9 +60,10 @@ define(function (require) {
                         Localization.itemEvents.updateItem;
             }
             case 'post_issue': return Localization.itemEvents.postIssue;
-            case 'attach_issue': return Localization.itemEvents.attachIssue;
+            case 'load_issue': return Localization.itemEvents.loadIssue;
+            case 'unload_issue': return Localization.itemEvents.unloadIssue;
             case 'analyze_item': return Localization.itemEvents.changedByAnalyzer;
-            case 'attach_issue_aa': return Localization.itemEvents.issueAttachByAnalyzer;
+            case 'load_issue_aa': return Localization.itemEvents.issueLoadByAnalyzer;
             default: break;
             }
         },

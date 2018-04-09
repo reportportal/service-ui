@@ -29,4 +29,5 @@ export const referenceDictionary = {
   rpVk: 'https://vk.com/reportportal_io',
   rpSlack: 'https://reportportal-slack-auto.herokuapp.com/',
   rpEmail: 'mailto:support@reportportal.io',
+  rpEpam: 'https://www.epam.com/',
 };

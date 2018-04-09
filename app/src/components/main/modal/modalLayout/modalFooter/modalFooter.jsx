@@ -7,43 +7,39 @@ import styles from './modalFooter.scss';
 const cx = classNames.bind(styles);
 
 export const ModalFooter = ({
-  warningMessage, okButton, cancelButton, customButton, onClickCancel, onClickOk,
+  warningMessage,
+  okButton,
+  cancelButton,
+  customButton,
+  onClickCancel,
+  onClickOk,
 }) => (
   <div className={cx('modal-footer')}>
-    { warningMessage ?
+    {warningMessage ? (
       <div className={cx('warning-block')}>
         <i className={cx('warning-icon')} />
-        <span className={cx('warning-message')}>
-          { warningMessage }
-        </span>
+        <span className={cx('warning-message')}>{warningMessage}</span>
       </div>
-      : null
-    }
+    ) : null}
     <div className={cx('buttons-block')}>
-      {
-        cancelButton ?
-          <div className={cx('button-container')}>
-            <BigButton color={'gray-60'} onClick={onClickCancel}>{cancelButton.text}</BigButton>
-          </div>
-          : null
-      }
-      {
-        okButton ?
-          <div className={cx('button-container')}>
-            <BigButton color={okButton.danger ? 'tomato' : 'booger'} onClick={onClickOk}>{okButton.text}</BigButton>
-          </div>
-          : null
-      }
-      {
-        customButton ?
-          <div className={cx('button-container')}>
-            { customButton }
-          </div>
-          : null
-      }
+      {cancelButton ? (
+        <div className={cx('button-container')}>
+          <BigButton color={'gray-60'} onClick={onClickCancel}>
+            {cancelButton.text}
+          </BigButton>
+        </div>
+      ) : null}
+      {okButton ? (
+        <div className={cx('button-container')}>
+          <BigButton color={okButton.danger ? 'tomato' : 'booger'} onClick={onClickOk}>
+            {okButton.text}
+          </BigButton>
+        </div>
+      ) : null}
+      {customButton ? <div className={cx('button-container')}>{customButton}</div> : null}
     </div>
   </div>
-  );
+);
 ModalFooter.propTypes = {
   warningMessage: PropTypes.string,
   okButton: PropTypes.shape({

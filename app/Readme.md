@@ -19,7 +19,9 @@ To launch the development environment, follow these steps:
 
 ## All npm commands
 
-`npm run eslint` - syntax check javascript
+`npm run lint` - syntax and formatting check with eslint
+
+`npm run format` - reformat js, scss and md using eslint and prettier
 
 `npm run dev` - launch the development environment
 

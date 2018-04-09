@@ -61,6 +61,7 @@ define(['util'], function () {
             ctrlEnterToSubmit: '<strong>Ctrl + Enter</strong> to submit',
             loading: 'Loading',
             link: 'Link',
+            unlink: 'Unlink',
             post: 'Post',
             analyse: 'Analyse',
             gallery: 'Gallery',
@@ -312,10 +313,11 @@ define(['util'], function () {
         itemEvents: {
             updateItemIssue: 'updated item issue',
             updateItem: 'updated item',
-            attachIssue: 'linked issue',
+            loadIssue: 'linked issue',
+            unloadIssue: 'unlinked issue',
             postIssue: 'posted issue',
             changedByAnalyzer: 'AA changed defect type',
-            issueAttachByAnalyzer: 'AA linked issue'
+            issueLoadByAnalyzer: 'AA linked issue'
         },
 
         widgets: {
@@ -438,8 +440,9 @@ define(['util'], function () {
             update_bts: 'updated',
             delete_bts: 'removed',
             create_bts: 'configured',
-            attach_issue: 'linked isssue',
+            load_issue: 'linked issue',
             post_issue: 'posted issue',
+            unload_issue: 'unlinked issue',
             delete_issue: 'removed issue',
             testItem: 'test item',
             update_project: 'updated',
@@ -748,7 +751,7 @@ define(['util'], function () {
             relatedIssue: 'Related issue:',
             includeLogs: 'Logs',
             includeComments: 'Comment',
-            includeScreenshots: 'Screenshots',
+            includeAttachments: 'Attachments',
             fillAllRequired: 'Fill in all required fields',
             credentialsSoft: 'In case of empty fields Report Portal credentials will be used',
             credentialsSoftTfs: 'In case of empty fields Windows credentials will be used',
@@ -798,6 +801,7 @@ define(['util'], function () {
             postBug: 'Post issue',
             postBugTo: 'Post bug to',
             linkIssue: 'Link issue',
+            unlinkIssue: 'Unlink issue',
             addIssueId: 'Add issue ID',
             copyDefect: 'Copy defect',
             sendDefect: 'Send defect',
@@ -806,6 +810,7 @@ define(['util'], function () {
             configureTBSLoad: 'Configure bug tracking system to link issue',
             noIssues: 'You can\'t post bug if item has no issues',
             noIssuesLoad: 'You can\'t Link bug if item has no issues',
+            noIssueTicket: 'Item doesn\'t have a linked issue',
             historyView: 'History',
             skippedDuration: 'SKIPPED. Duration: ',
             stoppedDuration: 'Run STOPPED after:',
@@ -1080,11 +1085,14 @@ define(['util'], function () {
                 delete_launch: 'Delete launch',
                 update_project: 'Update project',
                 post_issue: 'Post issue',
-                attach_issue: 'Link issue',
+                load_issue: 'Link issue',
+                load_issue_aa: 'AA linked issue',
+                unload_issue: 'Unlink issue',
                 update_item: 'Update item',
                 create_user: 'Create user',
                 start_import: 'Start import',
-                finish_import: 'Finish import'
+                finish_import: 'Finish import',
+                analyze_item: 'AA changed defect type'
             },
             objectTypes: {
                 all: 'all',
@@ -1917,8 +1925,8 @@ define(['util'], function () {
             deleteLaunch: 'Delete launch',
             shareWidgetDashboard: 'Share widget, dashboard',
             unShareWidgetDashboard: 'Unshare widget, dashboard',
-            postIssue: 'Post issue to BTS',
-            attachIssue: 'Attach issue to BTS',
+            updateIssue: 'Actions with issues',
+            loadIssue: 'Attach issue to BTS',
             history: 'History',
             project: 'Project',
             login: 'Login',
@@ -2034,6 +2042,7 @@ define(['util'], function () {
             includeAA: 'Include %%% into Auto-Analysis',
             receiveIssue: 'Receive previous result',
             sendIssue: 'Send result to the last item',
+            unlinkIssue: 'Unlink issue',
             analyseLaunches: 'Analyse launches',
             testItemsDetails: 'Test item details'
         },
@@ -2103,6 +2112,7 @@ define(['util'], function () {
             msgIncludeAA: 'Are you sure to include %%% into Auto-Analysis?',
             msgReceiveIssue: 'Are you sure to receive defect data from previous failed item?',
             msgSendIssue: 'Are you sure to send defect data to the last item?',
+            msgUnlinkIssue: 'Are you sure to unlink issue/s for test item?',
             invalidFileType: 'Incorrect file format',
             invalidFileSize: 'File size is more than 32 Mb',
             testUID: 'Unique test case ID:',
@@ -2129,7 +2139,7 @@ define(['util'], function () {
         activity: {
             email: 'E-mail notifications',
             keepLogs: 'Keep logs',
-            keepScreenshots: 'Keep screenshots',
+            keepScreenshots: 'Keep attachments',
             auto_analyze: 'Auto analysis',
             launchInactivity: 'Launch inactivity timeout',
             statisticsCalculationStrategy: 'Select strategy'
@@ -2177,7 +2187,8 @@ define(['util'], function () {
 
         modalDefectEditor: {
             saveAndPost: 'Save and post issue',
-            saveAndLoad: 'Save and link issue'
+            saveAndLoad: 'Save and link issue',
+            saveAndUnlink: 'Save and unlink issue'
         }
     };
 });

@@ -60,7 +60,8 @@ define(['util'], function () {
             escToCancel: '<strong>Esc</strong> для отмены',
             ctrlEnterToSubmit: '<strong>Ctrl + Enter</strong> для подтверждения',
             loading: 'Загружается',
-            link: 'Загрузка',
+            link: 'Прикрепить',
+            unlink: 'Открепить',
             post: 'Отправить',
             analyse: 'Анализировать',
             gallery: 'Галерея',
@@ -368,10 +369,11 @@ define(['util'], function () {
         itemEvents: {
             updateItemIssue: 'обновил данные элемента',
             updateItem: 'обновил элемент',
-            attachIssue: 'привязал ошибку',
+            loadIssue: 'привязал ошибку',
+            unloadIssue: 'отвязал ошибку',
             postIssue: 'отправил ошибку',
             changedByAnalyzer: 'АА изменил тип дефекта',
-            issueAttachByAnalyzer: 'AA привязал ошибку'
+            issueLoadByAnalyzer: 'AA привязал ошибку'
         },
 
         widgets: {
@@ -497,8 +499,10 @@ define(['util'], function () {
             update_bts: 'обновлено',
             delete_bts: 'удалено',
             create_bts: 'сконфигурировано',
-            attach_issue: 'добавленная ошибка',
-            post_issue: 'опубликованная ошибка',
+            attach_issue: 'прикрепленная ошибка',
+            load_issue: 'добавил ошибку',
+            post_issue: 'опубликовал ошибку',
+            unload_issue: 'открепил ошибку',
             delete_issue: 'удаленная ошибка',
             testItem: 'элемент тестирования',
             update_project: 'обновлено',
@@ -809,7 +813,7 @@ define(['util'], function () {
             relatedIssue: 'Связанная ошибка:',
             includeLogs: 'Лог',
             includeComments: 'Комментарий',
-            includeScreenshots: 'Скриншоты',
+            includeAttachments: 'Скриншоты',
             fillAllRequired: 'Заполните все необходимые поля',
             credentialsSoft: 'В случае незаполнения полей будут использованы учетные данные Report Portal',
             credentialsSoftTfs: 'В случае незаполнения полей будут использованы учетные данные Windows',
@@ -857,7 +861,8 @@ define(['util'], function () {
             postIssue: 'Отправить ошибку',
             postBug: 'Отправить ошибку',
             postBugTo: 'Отправить ошибку в',
-            linkIssue: 'Загрузить ошибку',
+            linkIssue: 'Прикрепить ошибку',
+            unlinkIssue: 'Открепить ошибку',
             addIssueId: 'Добавить ID ошибки',
             copyDefect: 'Копировать дефект',
             sendDefect: 'Отправить дефект',
@@ -865,7 +870,8 @@ define(['util'], function () {
             configureTBS: 'Настройте Систему oтслеживания oшибок на отправку ошибок',
             configureTBSLoad: 'Настройте Систему oтслеживания oшибок на загрузку ошибок',
             noIssues: 'Вы не можете отправить ошибку, если элемент не имеет ошибок',
-            noIssuesLoad: 'Вы не можете загрузить ошибку, если элемент не имеет ошибок',
+            noIssuesLoad: 'Вы не можете прикрепить ошибку, если элемент не имеет ошибок',
+            noIssueTicket: 'У элемента нет прикрепленной ошибки',
             historyView: 'История',
             skippedDuration: 'ПРОПУЩЕНО. Длительность: ',
             stoppedDuration: 'Прогон ОСТАНОВЛЕН после:',
@@ -1138,11 +1144,14 @@ define(['util'], function () {
                 delete_launch: 'Удаление запуска',
                 update_project: 'Обновление проекта',
                 post_issue: 'Публикация ошибки',
-                attach_issue: 'Добавление ошибки',
+                load_issue: 'Добавление ошибки',
+                load_issue_aa: 'Добавление ошибки АА',
+                unload_issue: 'Открепление ошибки',
                 update_item: 'Обновление элемента',
                 create_user: 'Создание пользователя',
                 start_import: 'Начало импорта',
-                finish_import: 'Окончание импорта'
+                finish_import: 'Окончание импорта',
+                analyze_item: 'АА изменил тип дефекта'
             },
             objectTypes: {
                 all: 'Все',
@@ -1975,8 +1984,8 @@ define(['util'], function () {
             deleteLaunch: 'Удалить запуск',
             shareWidgetDashboard: 'Поделиться виджетом, панелью управления',
             unShareWidgetDashboard: 'Ограничить доступ к виджету, панели управления',
-            postIssue: 'Отправить ошибку в СОД',
-            attachIssue: 'Приложить ошибку к СОД',
+            updateIssue: 'Действия с ошибками',
+            loadIssue: 'Приложить ошибку к СОД',
             history: 'История',
             project: 'Проект',
             login: 'Логин',
@@ -2091,6 +2100,7 @@ define(['util'], function () {
             ignoreAA: 'Игнорировать %%% при Авто-Анализе',
             includeAA: 'Включить %%% в Авто-Анализ',
             analyseLaunches: 'Анализировать запуски',
+            unlinkIssue: 'Открепить ошибку',
             testItemsDetails: 'Детали тестового элемента',
             receiveIssue: 'Получить предыдущий результат',
             sendIssue: 'Отправить результат в последний элемент'
@@ -2161,6 +2171,7 @@ define(['util'], function () {
             msgIncludeAA: 'Вы уверены, что хотите включить %%% в Авто-Анализ?',
             msgReceiveIssue: 'Вы уверены, что хотите получить данные о дефекте из предыдущего неудачного элемента?',
             msgSendIssue: 'Вы уверены, что хотите отправить данные о дефекте в последний элемент?',
+            msgUnlinkIssue: 'Вы уверены, что хотите открепить ошибку в СОД?',
             invalidFileType: 'Неверный формат файла',
             invalidFileSize: 'Размер файла больше 32 Mb',
             testUID: 'UID элемента:',
@@ -2234,7 +2245,8 @@ define(['util'], function () {
         },
         modalDefectEditor: {
             saveAndPost: 'Сохранить и отправить ошибку',
-            saveAndLoad: 'Сохранить и привязать ошибку'
+            saveAndLoad: 'Сохранить и прикрепить ошибку',
+            saveAndUnlink: 'Сохранить и открепить ошибку'
         },
         date: {
             days: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],

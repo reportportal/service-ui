@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { columnPropTypes } from '../../propTypes';
 import { GridCell } from './gridCell';
+import { CheckboxCell } from './checkboxCell';
 import styles from './gridRow.scss';
 
 const cx = classNames.bind(styles);
@@ -11,11 +12,17 @@ export class GridRow extends Component {
   static propTypes = {
     columns: PropTypes.arrayOf(PropTypes.shape(columnPropTypes)),
     value: PropTypes.object,
+    selectable: PropTypes.bool,
+    selectedItems: PropTypes.arrayOf(PropTypes.object),
+    onToggleSelection: PropTypes.func,
   };
 
   static defaultProps = {
     columns: [],
     value: {},
+    selectable: false,
+    selectedItems: [],
+    onToggleSelection: () => {},
   };
 
   state = {
@@ -36,10 +43,12 @@ export class GridRow extends Component {
     this.overflowCell.style.maxHeight = this.state.expanded ? `${this.overflowCellMaxHeight}px` : null;
   };
 
+  isItemSelected = () => this.props.selectedItems.some(item => item.id === this.props.value.id);
+
   render() {
-    const { columns, value } = this.props;
+    const { columns, value, selectable } = this.props;
     return (
-      <div className={cx('grid-row-wrapper')}>
+      <div className={cx('grid-row-wrapper', { selected: this.isItemSelected() })}>
         {
           this.state.withAccordion
             &&
@@ -61,7 +70,6 @@ export class GridRow extends Component {
                   key={column.id || i}
                   refFunction={column.maxHeight ? this.setupAccordion : null}
                   mobileWidth={column.mobileWidth}
-                  selectors={column.selectors}
                   value={value}
                   align={column.align}
                   component={column.component}
@@ -71,6 +79,18 @@ export class GridRow extends Component {
                 />
               );
             })
+          }
+          {
+            selectable
+              && <GridCell
+                align={'right'}
+                component={CheckboxCell}
+                value={value}
+                customProps={{
+                  selected: this.isItemSelected(),
+                  onChange: this.props.onToggleSelection,
+                }}
+              />
           }
         </div>
         {

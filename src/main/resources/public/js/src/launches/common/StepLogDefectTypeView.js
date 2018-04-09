@@ -36,6 +36,7 @@ define(function (require) {
     var LaunchStepTicketTooltipView = require('tooltips/LaunchStepTicketTooltipView');
     var PostBugAction = require('launches/multipleActions/postBugAction');
     var LoadBugAction = require('launches/multipleActions/loadBugAction');
+    var UnlinkIssueAction = require('launches/multipleActions/unlinkIssueAction');
 
     var config = App.getInstance();
 
@@ -281,12 +282,25 @@ define(function (require) {
             }
             defectEditor.show()
                 .done(function (actionType) {
+                    var unlinkModal;
                     if (actionType && actionType.action === 'postBug') {
                         PostBugAction({ items: defectEditor.items });
+                        self.trigger('update:issue');
                     } else if (actionType && actionType.action === 'loadBug') {
                         LoadBugAction({ items: defectEditor.items });
+                        self.trigger('update:issue');
+                    } else if (actionType && actionType.action === 'unlinkIssue') {
+                        unlinkModal = new UnlinkIssueAction({
+                            items: [self.model]
+                        });
+                        unlinkModal.getAsync()
+                            .done(function () {
+                                self.trigger('issue:unlink');
+                            })
+                            .always(function () {
+                                self.trigger('update:issue');
+                            });
                     }
-                    self.trigger('update:issue');
                 });
         },
 

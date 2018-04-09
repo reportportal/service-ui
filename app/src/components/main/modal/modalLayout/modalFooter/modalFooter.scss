@@ -2,7 +2,6 @@
   position: relative;
   display: table;
   width: 100%;
-  min-height: 30px;
 }
 .warning-block {
   display: table-cell;
@@ -51,4 +50,7 @@
   button {
     font-size: 13px;
   }
+}
+.permission-footer {
+  display: none;
 }

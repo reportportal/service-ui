@@ -17,8 +17,9 @@ const cx = classNames.bind(styles);
 })
 export class ModalLayout extends Component {
   static propTypes = {
+    className: PropTypes.string,
+    fullWidthContent: PropTypes.bool,
     hideModalAction: PropTypes.func.isRequired, // this props
-
     title: PropTypes.string, // header props
 
     children: PropTypes.node, // content props
@@ -35,6 +36,8 @@ export class ModalLayout extends Component {
     customButton: PropTypes.node,
   };
   static defaultProps = {
+    className: '',
+    fullWidthContent: false,
     title: '',
 
     children: null,
@@ -75,12 +78,12 @@ export class ModalLayout extends Component {
     this.setState({ shown: false });
   };
   render() {
-    const {
-      title, warningMessage, okButton, cancelButton, customButton,
-      children,
-    } = this.props;
+    const { title, warningMessage, okButton, cancelButton, customButton, children } = this.props;
     const footerProps = {
-      warningMessage, okButton, cancelButton, customButton,
+      warningMessage,
+      okButton,
+      cancelButton,
+      customButton,
     };
 
     return (
@@ -93,34 +96,42 @@ export class ModalLayout extends Component {
               classNames={cx('modal-window-animation')}
               onExited={this.props.hideModalAction}
             >
-              {status => (
-                <div ref={(modal) => { this.modal = modal; }} className={cx('modal-window')}>
+              {(status) => (
+                <div
+                  ref={(modal) => {
+                    this.modal = modal;
+                  }}
+                  className={cx('modal-window', this.props.className)}
+                >
                   <div className={cx('modal-header')}>
-                    <span className={cx('modal-title')}>
-                      {title}
-                    </span>
+                    <span className={cx('modal-title')}>{title}</span>
                     <div className={cx('close-modal-icon')} onClick={this.closeModal}>
                       {Parser(CloseIcon)}
                     </div>
                     <div className={cx('separator')} />
                   </div>
 
-                  <ModalContent>
-                    {status !== 'exited' ? children : null }
+                  <ModalContent fullWidthContent={this.props.fullWidthContent}>
+                    {status !== 'exited' ? children : null}
                   </ModalContent>
+
 
                   <ModalFooter
                     {...footerProps}
                     onClickOk={this.onClickOk}
                     onClickCancel={this.closeModal}
+                    className={this.props.className}
                   />
                 </div>
               )}
-
             </CSSTransition>
           </Scrollbars>
         </div>
-        <CSSTransition timeout={300} in={this.state.shown} classNames={cx('modal-backdrop-animation')}>
+        <CSSTransition
+          timeout={300}
+          in={this.state.shown}
+          classNames={cx('modal-backdrop-animation')}
+        >
           <div className={cx('backdrop')} />
         </CSSTransition>
       </div>
