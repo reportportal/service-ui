@@ -313,10 +313,11 @@ define(['util'], function () {
         itemEvents: {
             updateItemIssue: 'updated item issue',
             updateItem: 'updated item',
-            attachIssue: 'linked issue',
+            loadIssue: 'linked issue',
+            unloadIssue: 'unlinked issue',
             postIssue: 'posted issue',
             changedByAnalyzer: 'AA changed defect type',
-            issueAttachByAnalyzer: 'AA linked issue'
+            issueLoadByAnalyzer: 'AA linked issue'
         },
 
         widgets: {
@@ -439,8 +440,9 @@ define(['util'], function () {
             update_bts: 'updated',
             delete_bts: 'removed',
             create_bts: 'configured',
-            attach_issue: 'linked isssue',
+            load_issue: 'linked issue',
             post_issue: 'posted issue',
+            unload_issue: 'unlinked issue',
             delete_issue: 'removed issue',
             testItem: 'test item',
             update_project: 'updated',
@@ -1083,11 +1085,14 @@ define(['util'], function () {
                 delete_launch: 'Delete launch',
                 update_project: 'Update project',
                 post_issue: 'Post issue',
-                attach_issue: 'Link issue',
+                load_issue: 'Link issue',
+                load_issue_aa: 'AA linked issue',
+                unload_issue: 'Unlink issue',
                 update_item: 'Update item',
                 create_user: 'Create user',
                 start_import: 'Start import',
-                finish_import: 'Finish import'
+                finish_import: 'Finish import',
+                analyze_item: 'AA changed defect type'
             },
             objectTypes: {
                 all: 'all',
@@ -1920,8 +1925,8 @@ define(['util'], function () {
             deleteLaunch: 'Delete launch',
             shareWidgetDashboard: 'Share widget, dashboard',
             unShareWidgetDashboard: 'Unshare widget, dashboard',
-            postIssue: 'Post issue to BTS',
-            attachIssue: 'Attach issue to BTS',
+            updateIssue: 'Actions with issues',
+            loadIssue: 'Attach issue to BTS',
             history: 'History',
             project: 'Project',
             login: 'Login',
