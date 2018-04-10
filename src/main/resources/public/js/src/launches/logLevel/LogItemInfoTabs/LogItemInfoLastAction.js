@@ -63,7 +63,7 @@ define(function (require) {
             case 'load_issue': return Localization.itemEvents.loadIssue;
             case 'unload_issue': return Localization.itemEvents.unloadIssue;
             case 'analyze_item': return Localization.itemEvents.changedByAnalyzer;
-            case 'load_issue_aa': return Localization.itemEvents.issueLoadByAnalyzer;
+            case 'link_issue_aa': return Localization.itemEvents.issueLoadByAnalyzer;
             default: break;
             }
         },

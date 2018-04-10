@@ -1145,7 +1145,7 @@ define(['util'], function () {
                 update_project: 'Обновление проекта',
                 post_issue: 'Публикация ошибки',
                 load_issue: 'Добавление ошибки',
-                load_issue_aa: 'Добавление ошибки АА',
+                link_issue_aa: 'Добавление ошибки АА',
                 unload_issue: 'Открепление ошибки',
                 update_item: 'Обновление элемента',
                 create_user: 'Создание пользователя',
