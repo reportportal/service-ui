@@ -28,6 +28,7 @@ define(function (require) {
     var Localization = require('localization');
     var Service = require('coreService');
     var HistoryTableView = require('launches/historyGrid/HistoryTableView');
+    var SingletonUserStorage = require('storage/SingletonUserStorage');
     var Filters = require('filterEntities/FilterEntities');
     var _ = require('underscore');
     var App = require('app');
@@ -41,10 +42,12 @@ define(function (require) {
             'click [data-js-load-more]': 'onLoadMore'
         },
         initialize: function (options) {
+            this.storage = new SingletonUserStorage();
             this.filterModel = options.filterModel;
             this.collectionItems = options.collectionItems;
             this.conrol = options.control;
-            this.depth = '10';
+            !this.storage.get('historyDepth') && this.storage.set('historyDepth', '10');
+            this.depth = this.storage.get('historyDepth');
             this.qty = config.historyItemsToLoad;
             this.ids = _.map(this.collectionItems.models, function (i) { return i.get('id'); });
             this.resetGrid();
@@ -147,6 +150,7 @@ define(function (require) {
         onChangeDepth: function () {
             var info = this.depthFilterModel.getInfo();
             this.depth = info.value;
+            this.storage.set('historyDepth', info.value);
             config.trackingDispatcher.trackEventNumber(132);
             this.onRefreshGrid();
         },
