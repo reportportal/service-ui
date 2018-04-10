@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import classNames from 'classnames/bind';
-import styles from './failedTests.scss';
+import styles from '../mostFailedTests.scss';
 
 const cx = classNames.bind(styles);
 

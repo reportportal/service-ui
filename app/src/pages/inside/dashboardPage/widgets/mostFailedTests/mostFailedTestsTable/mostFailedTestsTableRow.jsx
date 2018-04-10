@@ -2,8 +2,8 @@ import * as React from 'react';
 import { func } from 'prop-types';
 import classNames from 'classnames/bind';
 import { AbsRelTime } from 'components/main/absRelTime';
-import { PTTest } from './pTypes';
-import styles from './failedTests.scss';
+import { PTTest } from '../pTypes';
+import styles from '../mostFailedTests.scss';
 
 const cx = classNames.bind(styles);
 

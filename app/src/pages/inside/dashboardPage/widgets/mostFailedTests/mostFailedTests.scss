@@ -1,6 +1,6 @@
 $info-block-height: 45px;
 $info-block-with-type-height: 70px;
-.failed-test-cases {
+.most-failed-test-cases {
     height: 100%;
     overflow: hidden;
     .widget-wrapper {
@@ -205,7 +205,7 @@ $info-block-with-type-height: 70px;
     }
 }
 
-.failed-test-cases {
+.most-failed-test-cases {
     &.most-failed {
         .widget-wrapper {
             .info-block {

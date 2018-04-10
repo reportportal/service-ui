@@ -2,39 +2,36 @@ import * as React from 'react';
 import { string } from 'prop-types';
 import { FormattedMessage } from 'react-intl';
 import classNames from 'classnames/bind';
-import styles from './failedTests.scss';
+import styles from './mostFailedTests.scss';
 
 const cx = classNames.bind(styles);
 
-function FailedTestsInfoBlock({ launchName, issueType }) {
+function MostFailedTestsInfoBlock({ launchName, issueType }) {
   return (
     <div className={cx('info-block')}>
       <p>
         <FormattedMessage
-          id="FlakyTests.header.launchName"
+          id="MostFailedTests.header.launchName"
           defaultMessage="Launch name"
         />: <span className={cx('info-block-launch-name')}>{launchName}</span>
       </p>
-      {
-        issueType &&
-        <p>
-          <FormattedMessage
-            id="FlakyTests.header.basedOn"
-            defaultMessage="Based on"
-          />: <span className={cx('info-block-launch-name')}>{issueType}</span>
-        </p>
-      }
+      <p>
+        <FormattedMessage
+          id="MostFailedTests.header.basedOn"
+          defaultMessage="Based on"
+        />: <span className={cx('info-block-launch-name')}>{issueType}</span>
+      </p>
     </div>
   );
 }
 
-FailedTestsInfoBlock.propTypes = {
+MostFailedTestsInfoBlock.propTypes = {
   launchName: string.isRequired,
   issueType: string,
 };
 
-FailedTestsInfoBlock.defaultProps = {
+MostFailedTestsInfoBlock.defaultProps = {
   issueType: null,
 };
 
-export default FailedTestsInfoBlock;
+export default MostFailedTestsInfoBlock;
