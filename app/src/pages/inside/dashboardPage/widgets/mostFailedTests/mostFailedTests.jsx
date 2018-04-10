@@ -14,19 +14,12 @@ function MostFailedTests(props) {
   return (
     <div className={cx('most-failed-test-cases', { 'most-failed': launch.issueType })}>
       <div className={cx('widget-wrapper')}>
-        <MostFailedTestsInfoBlock
-          launchName={launch.name}
-          issueType={launch.issueType}
-        />
-        <MostFailedTestsTable
-          tests={tests}
-          nameClickHandler={nameClickHandler}
-        />
+        <MostFailedTestsInfoBlock launchName={launch.name} issueType={launch.issueType} />
+        <MostFailedTestsTable tests={tests} nameClickHandler={nameClickHandler} />
       </div>
     </div>
   );
 }
-
 
 MostFailedTests.propTypes = {
   launch: PTLaunch.isRequired,
