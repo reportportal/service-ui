@@ -67,8 +67,8 @@ define(function (require) {
                                 Localization.itemEvents.updateItem;
                         }
                         case 'post_issue': return Localization.itemEvents.postIssue;
-                        case 'load_issue': return Localization.itemEvents.loadIssue;
-                        case 'unload_issue': return Localization.itemEvents.unloadIssue;
+                        case 'link_issue': return Localization.itemEvents.linkIssue;
+                        case 'unlink_issue': return Localization.itemEvents.unlinkIssue;
                         case 'analyze_item': return userRef + ' ' + Localization.itemEvents.changedByAnalyzer;
                         case 'link_issue_aa': return userRef + ' ' + Localization.itemEvents.issueLoadByAnalyzer;
                         default: break;
