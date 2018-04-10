@@ -284,11 +284,13 @@ define(function (require) {
                 .done(function (actionType) {
                     var unlinkModal;
                     if (actionType && actionType.action === 'postBug') {
-                        PostBugAction({ items: defectEditor.items });
-                        self.trigger('update:issue');
+                        PostBugAction({ items: defectEditor.items }).always(function () {
+                            self.trigger('update:issue');
+                        });
                     } else if (actionType && actionType.action === 'loadBug') {
-                        LoadBugAction({ items: defectEditor.items });
-                        self.trigger('update:issue');
+                        LoadBugAction({ items: defectEditor.items }).always(function () {
+                            self.trigger('update:issue');
+                        });
                     } else if (actionType && actionType.action === 'unlinkIssue') {
                         unlinkModal = new UnlinkIssueAction({
                             items: [self.model]

@@ -23,7 +23,7 @@ define(function (require, exports, module) {
 
     var ModalLoadBug = require('modals/modalLoadBug');
 
-    var PostBugAction = function(options) {
+    var LoadBugAction = function(options) {
         var items = options.items;
         var modal = (new ModalLoadBug({
             items: items,
@@ -32,5 +32,5 @@ define(function (require, exports, module) {
         return modal.show();
     };
 
-    return PostBugAction;
+    return LoadBugAction;
 });
