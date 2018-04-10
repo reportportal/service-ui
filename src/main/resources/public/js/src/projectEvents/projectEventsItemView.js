@@ -70,8 +70,8 @@ define(function (require) {
                         var actionType = this.view.model.get('actionType');
                         if (
                             actionType === 'post_issue'
-                            || actionType === 'load_issue'
-                            || actionType === 'unload_issue'
+                            || actionType === 'link_issue'
+                            || actionType === 'unlink_issue'
                         ) {
                             _.each(value, function (val, key) {
                                 var linkParts;

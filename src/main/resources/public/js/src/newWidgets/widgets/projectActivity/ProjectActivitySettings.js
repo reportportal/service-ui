@@ -46,7 +46,7 @@ define(function (require) {
         update_filter: ['create_filter', 'update_filter', 'delete_filter'],
         update_bts: ['create_bts', 'update_bts', 'delete_bts'],
         update_defects: ['update_defect', 'delete_defect'],
-        update_issue: ['post_issue', 'load_issue', 'unload_issue'],
+        update_issue: ['post_issue', 'link_issue', 'unlink_issue'],
         import: ['start_import', 'finish_import']
     };
 
