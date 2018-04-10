@@ -1326,6 +1326,9 @@ define(['util'], function () {
             autoAnalysisBaseFirstOpt: 'All launches',
             autoAnalysisBaseSecondOpt: 'Launches with the same name',
             autoAnalysisBaseThirdOpt: 'Only current launch',
+            autoAnalysisBaseFourthOpt: 'To investigated items',
+            autoAnalysisBaseFifthOpt: 'Auto-analyzed items',
+            autoAnalysisBaseSixthOpt: 'Items analyzed manually',
             autoAnalysisBaseFirstTip: 'The test items are analyzed on base of previously investigated data in all launches',
             autoAnalysisBaseSecondTip: 'The test items are analyzed on base of previously investigated data in launches with the same name',
             emailNotifications: 'E-mail notifications',
@@ -2097,7 +2100,10 @@ define(['util'], function () {
             filterOptions: 'Filter options',
 
             analyseLaunchesLabel: 'Choose the base on which the Auto Analysis will be performed:',
+            analyseLaunchesLabel1: 'Choose the test items that should be analyzed:',
             analyseLaunchesNote: 'Only items with defect type "To investigate" will come through an auto-analysis procedure.',
+            analyseWarning1: 'You can not perform this operation unless at least one item is not chosen.',
+            analyseWarning2: 'You can not perform this operation for Auto-analyzed and Manually analyzed items simultaneously. Please choose one of them.',
 
             msgDeleteItems: 'Are you sure to delete %%%? %%% will no longer exist.',
             msgDeleteDefectType: 'I am sure I want to remove custom defect type',

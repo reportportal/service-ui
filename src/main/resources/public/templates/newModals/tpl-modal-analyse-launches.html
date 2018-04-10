@@ -3,7 +3,7 @@
     <span class="strategy-title">
         <%= data.text.dialog.analyseLaunchesLabel %>
     </span>
-    <div  class="strategy-options">
+    <div class="strategy-options" data-js-strategy-options>
         <label class="strategy-option">
             <input class="rp-input-radio" type="radio" name="aa-strategy" value="ALL">
             <span>
@@ -21,6 +21,23 @@
             <span>
                 <%= data.text.project.autoAnalysisBaseThirdOpt %>
             </span>
+        </label>
+    </div>
+    <span class="strategy-title">
+        <%= data.text.dialog.analyseLaunchesLabel1 %>
+    </span>
+    <div class="strategy-options" data-js-extended-strategy-options>
+        <label class="rp-checkbox-wrap strategy-option">
+            <input class="rp-input-checkbox" type="checkbox" value="TO_INVESTIGATE">
+            <span><%= data.text.project.autoAnalysisBaseFourthOpt %></span>
+        </label>
+        <label class="rp-checkbox-wrap strategy-option">
+            <input class="rp-input-checkbox" type="checkbox" value="AUTO_ANALYZED">
+            <span><%= data.text.project.autoAnalysisBaseFifthOpt %></span>
+        </label>
+        <label class="rp-checkbox-wrap strategy-option">
+            <input class="rp-input-checkbox" type="checkbox" value="MANUALLY_ANALYZED">
+            <span><%= data.text.project.autoAnalysisBaseSixthOpt %></span>
         </label>
     </div>
     <div class="note-block">
