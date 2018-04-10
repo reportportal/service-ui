@@ -2112,7 +2112,7 @@ define(['util'], function () {
             msgIncludeAA: 'Are you sure to include %%% into Auto-Analysis?',
             msgReceiveIssue: 'Are you sure to receive defect data from previous failed item?',
             msgSendIssue: 'Are you sure to send defect data to the last item?',
-            msgUnlinkIssue: 'Are you sure to unlink issue/s for test item?',
+            msgUnlinkIssue: 'Are you sure to unlink issue/s for test items?',
             invalidFileType: 'Incorrect file format',
             invalidFileSize: 'File size is more than 32 Mb',
             testUID: 'Unique test case ID:',
