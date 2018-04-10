@@ -10,20 +10,20 @@ function FlakyTestsTableHeader() {
     <div className={cx('failed-tests-table-header')}>
       <div className={cx('col', 'col-name')}>
         <FormattedMessage
-          id="FlakyTests.table.header.testCase"
+          id="MostFailedTests.table.header.testCase"
           defaultMessage="Test case"
         />
       </div>
       <div className={cx('col', 'col-count')}>
         <span className={cx('full')}>
           <FormattedMessage
-            id="FlakyTests.table.header.issuesInExec"
+            id="MostFailedTests.table.header.issuesInExec"
             defaultMessage="Issues in execution"
           />
         </span>
         <span className={cx('short')}>
           <FormattedMessage
-            id="FlakyTests.table.header.issuesInExecShort"
+            id="MostFailedTests.table.header.issuesInExecShort"
             defaultMessage="Issues"
           />
         </span>
@@ -31,20 +31,20 @@ function FlakyTestsTableHeader() {
       <div className={cx('col', 'col-percents')}>
         <span className={cx('full')}>
           <FormattedMessage
-            id="FlakyTests.table.header.ofIssues"
+            id="MostFailedTests.table.header.ofIssues"
             defaultMessage="% of issues"
           />
         </span>
         <span className={cx('short')}>
           <FormattedMessage
-            id="FlakyTests.table.header.ofIssuesShort"
+            id="MostFailedTests.table.header.ofIssuesShort"
             defaultMessage="% issues"
           />
         </span>
       </div>
       <div className={cx('col', 'col-date')}>
         <FormattedMessage
-          id="FlakyTests.table.header.lastIssue"
+          id="MostFailedTests.table.header.lastIssue"
           defaultMessage="Last issue"
         />
       </div>
