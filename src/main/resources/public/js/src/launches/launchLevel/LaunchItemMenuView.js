@@ -134,7 +134,7 @@ define(function (require) {
                 config.trackingDispatcher.trackEventNumber(isLaunchAnalyze ? 28 : 27);
                 modal.show()
                     .done(function (data) {
-                        Service.startLaunchAnalyze(id, data.analyzerMode)
+                        Service.startLaunchAnalyze(id, data.analyzerMode, data.analyzeItemsMode )
                             .done(function () {
                                 self.model.set('isProcessing', true);
                                 Util.ajaxSuccessMessenger('startAnalyzeAction');
