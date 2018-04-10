@@ -1086,7 +1086,7 @@ define(['util'], function () {
                 update_project: 'Update project',
                 post_issue: 'Post issue',
                 load_issue: 'Link issue',
-                load_issue_aa: 'AA linked issue',
+                link_issue_aa: 'AA linked issue',
                 unload_issue: 'Unlink issue',
                 update_item: 'Update item',
                 create_user: 'Create user',

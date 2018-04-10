@@ -70,7 +70,7 @@ define(function (require) {
                         case 'load_issue': return Localization.itemEvents.loadIssue;
                         case 'unload_issue': return Localization.itemEvents.unloadIssue;
                         case 'analyze_item': return userRef + ' ' + Localization.itemEvents.changedByAnalyzer;
-                        case 'load_issue_aa': return userRef + ' ' + Localization.itemEvents.issueLoadByAnalyzer;
+                        case 'link_issue_aa': return userRef + ' ' + Localization.itemEvents.issueLoadByAnalyzer;
                         default: break;
                     }
                 }
@@ -136,7 +136,7 @@ define(function (require) {
             isHideNameCell: {
                 deps: ['actionType'],
                 get: function (actionType) {
-                    return actionType === 'analyze_item' || actionType === 'load_issue_aa';
+                    return actionType === 'analyze_item' || actionType === 'link_issue_aa';
                 }
             }
         },
