@@ -3,9 +3,7 @@ import { action } from '@storybook/addon-actions';
 import { host } from 'storybook-host';
 import { createStore, combineReducers } from 'redux';
 import { Provider } from 'react-redux';
-import {
-  START_TIME_FORMAT_RELATIVE,
-} from 'controllers/user';
+import { START_TIME_FORMAT_RELATIVE } from 'controllers/user';
 import MostFailedTests from './mostFailedTests';
 import { failedTests } from './data';
 
@@ -22,10 +20,10 @@ const withRedux = (getStory) => {
   return <Provider store={store}>{getStory()}</Provider>;
 };
 
-storiesOf('Pages/inside/dashboardPage/flakyTests', module)
+storiesOf('Pages/inside/dashboardPage/mostFailedTests', module)
   .addDecorator(
     host({
-      title: 'Flaky Tests',
+      title: 'Most Failed test-cases',
       align: 'center middle',
       backdrop: 'rgba(70, 69, 71, 0.2)',
       background: '#fff',
@@ -37,6 +35,7 @@ storiesOf('Pages/inside/dashboardPage/flakyTests', module)
   .add('default state', () => (
     <MostFailedTests
       launch={failedTests.launch}
+      issueType={failedTests.issueType}
       tests={failedTests.tests}
       nameClickHandler={action('Test id: ')}
     />
