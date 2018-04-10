@@ -1,4 +1,4 @@
-import { string, shape, arrayOf, bool, number } from 'prop-types';
+import { string, shape, arrayOf, bool, number, oneOf } from 'prop-types';
 
 export const PTLaunch = shape({
   id: string.isRequired,
@@ -15,5 +15,14 @@ export const PTTest = shape({
   total: number.isRequired,
   failedCount: number.isRequired,
 });
+
+export const PTIssueType = oneOf([
+  'statistics$executions$failed',
+  'statistics$executions$skipped',
+  'statistics$defects$product_bug$total',
+  'statistics$defects$automation_bug$total',
+  'statistics$defects$system_issue$total',
+  'statistics$defects$no_defect$total',
+]);
 
 export const PTTests = arrayOf(PTTest);
