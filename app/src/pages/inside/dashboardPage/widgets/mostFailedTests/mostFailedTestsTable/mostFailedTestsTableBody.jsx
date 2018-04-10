@@ -1,10 +1,9 @@
 import * as React from 'react';
 import { func } from 'prop-types';
 import classNames from 'classnames/bind';
-import { AbsRelTime } from 'components/main/absRelTime';
-import { PTTests } from './pTypes';
-import FailedTestsTableRow from './failedTestsTableRow';
-import styles from './failedTests.scss';
+import { PTTests } from '../pTypes';
+import styles from '../mostFailedTests.scss';
+import FailedTestsTableRow from './mostFailedTestsTableRow';
 
 const cx = classNames.bind(styles);
 

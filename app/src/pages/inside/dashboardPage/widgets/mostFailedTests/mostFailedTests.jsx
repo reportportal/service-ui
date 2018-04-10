@@ -1,24 +1,24 @@
 import * as React from 'react';
 import { func } from 'prop-types';
 import classNames from 'classnames/bind';
-import FailedTestsInfoBlock from './failedTestsInfoBlock';
-import FailedTestsTable from './failedTestsTable';
+import MostFailedTestsInfoBlock from './mostFailedTestsInfoBlock';
+import MostFailedTestsTable from './mostFailedTestsTable';
 import { PTLaunch, PTTests } from './pTypes';
-import styles from './failedTests.scss';
+import styles from './mostFailedTests.scss';
 
 const cx = classNames.bind(styles);
 
-function FlakyTests(props) {
+function MostFailedTests(props) {
   const { launch, tests, nameClickHandler } = props;
 
   return (
-    <div className={cx('failed-test-cases', { 'most-failed': launch.issueType })}>
+    <div className={cx('most-failed-test-cases', { 'most-failed': launch.issueType })}>
       <div className={cx('widget-wrapper')}>
-        <FailedTestsInfoBlock
+        <MostFailedTestsInfoBlock
           launchName={launch.name}
           issueType={launch.issueType}
         />
-        <FailedTestsTable
+        <MostFailedTestsTable
           tests={tests}
           nameClickHandler={nameClickHandler}
         />
@@ -28,10 +28,10 @@ function FlakyTests(props) {
 }
 
 
-FlakyTests.propTypes = {
+MostFailedTests.propTypes = {
   launch: PTLaunch.isRequired,
   tests: PTTests.isRequired,
   nameClickHandler: func.isRequired,
 };
 
-export default FlakyTests;
+export default MostFailedTests;

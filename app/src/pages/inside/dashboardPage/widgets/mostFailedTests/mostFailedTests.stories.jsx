@@ -6,7 +6,7 @@ import { Provider } from 'react-redux';
 import {
   START_TIME_FORMAT_RELATIVE,
 } from 'controllers/user';
-import FailedTests from './failedTests';
+import MostFailedTests from './mostFailedTests';
 import { failedTests } from './data';
 
 const withRedux = (getStory) => {
@@ -37,7 +37,7 @@ storiesOf('Pages/inside/dashboardPage/failedTests', module)
   }))
   .addDecorator(withRedux)
   .add('default state', () => (
-    <FailedTests
+    <MostFailedTests
       launch={failedTests.launch}
       tests={failedTests.tests}
       nameClickHandler={action('Test id: ')}
