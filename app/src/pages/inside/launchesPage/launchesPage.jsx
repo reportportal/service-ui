@@ -20,13 +20,15 @@ const messages = defineMessages({
   },
 });
 
-@connect((state) => ({
-  userId: userIdSelector(state),
-  url: `/api/v1/${activeProjectSelector(state)}/launch`,
-}),
+@connect(
+  (state) => ({
+    userId: userIdSelector(state),
+    url: `/api/v1/${activeProjectSelector(state)}/launch`,
+  }),
   {
     showModalAction,
-  },)
+  },
+)
 @withSorting({
   defaultSortingColumn: 'start_time',
   defaultSortingDirection: SORTING_DESC,
@@ -70,6 +72,8 @@ export class LaunchesPage extends Component {
     selectedLaunches: [],
   };
 
+  getTitle = () =>
+    !this.state.selectedLaunches.length && this.props.intl.formatMessage(messages.filtersPageTitle);
   updateLaunch = (launch) => {
     fetch(`${this.props.url}/${launch.id}/update`, {
       method: 'put',
@@ -114,9 +118,6 @@ export class LaunchesPage extends Component {
       data: { launch, onEdit: this.updateLaunch },
     });
   };
-
-  getTitle = () =>
-    !this.state.selectedLaunches.length && this.props.intl.formatMessage(messages.filtersPageTitle);
 
   handleLaunchSelection = (launch) => {
     const { selectedLaunches } = this.state;
