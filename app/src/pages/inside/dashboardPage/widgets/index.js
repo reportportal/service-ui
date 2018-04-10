@@ -1,5 +1,5 @@
-import { FailedTests } from './failedTests';
+import { MostFailedTests } from './mostFailedTests';
 
 export {
-  FailedTests,
+  MostFailedTests,
 };
