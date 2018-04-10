@@ -7,27 +7,24 @@ import FailedTestsTableRow from './mostFailedTestsTableRow';
 
 const cx = classNames.bind(styles);
 
-// TODO: add links, extract count column into component
-
 class FailedTestsTableBody extends React.PureComponent {
-
   static propTypes = {
     tests: PTTests.isRequired,
     nameClickHandler: func.isRequired,
-  }
+  };
 
-  renderRow = test => (
-    <FailedTestsTableRow data={test} nameClickHandler={this.props.nameClickHandler} />
+  renderRow = (test) => (
+    <FailedTestsTableRow
+      key={`row-${test.uniqueId}`}
+      data={test}
+      nameClickHandler={this.props.nameClickHandler}
+    />
   );
 
   render() {
     const { tests = [] } = this.props;
 
-    return (
-      <div className={cx('failed-tests-table-body')}>
-        {tests.map(this.renderRow)}
-      </div>
-    );
+    return <div className={cx('failed-tests-table-body')}>{tests.map(this.renderRow)}</div>;
   }
 }
 
