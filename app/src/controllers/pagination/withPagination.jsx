@@ -8,12 +8,15 @@ const FILTER_KEY = 'filter.cnt.name';
 const SORTING_KEY = 'page.sort';
 
 export const withPagination = ({ url: staticURL } = {}) => (WrappedComponent) => {
-  @connectRouter(query => ({
-    page: query[PAGE_KEY] && Number(query[PAGE_KEY]),
-    size: query[SIZE_KEY] && Number(query[SIZE_KEY]),
-  }), {
-    updatePagination: (page, size) => ({ [PAGE_KEY]: page, [SIZE_KEY]: size }),
-  })
+  @connectRouter(
+    (query) => ({
+      page: query[PAGE_KEY] && Number(query[PAGE_KEY]),
+      size: query[SIZE_KEY] && Number(query[SIZE_KEY]),
+    }),
+    {
+      updatePagination: (page, size) => ({ [PAGE_KEY]: page, [SIZE_KEY]: size }),
+    },
+  )
   class PaginationWrapper extends PureComponent {
     static propTypes = {
       filter: PropTypes.string,
@@ -30,8 +33,7 @@ export const withPagination = ({ url: staticURL } = {}) => (WrappedComponent) =>
       page: 1,
       size: 20,
       sortingString: null,
-      updatePagination: () => {
-      },
+      updatePagination: () => {},
     };
 
     state = {
@@ -46,46 +48,42 @@ export const withPagination = ({ url: staticURL } = {}) => (WrappedComponent) =>
     }
 
     componentWillReceiveProps({ url, page, size, filter, sortingString }) {
-      if (url !== this.props.url
-        || page !== this.props.page
-        || size !== this.props.size
-        || filter !== this.props.filter
-        || sortingString !== this.props.sortingString
+      if (
+        url !== this.props.url ||
+        page !== this.props.page ||
+        size !== this.props.size ||
+        filter !== this.props.filter ||
+        sortingString !== this.props.sortingString
       ) {
         this.fetchData(url, { page, size, filter, sortingString });
       }
     }
 
-    fetchData = (url, queryParams = {}) => fetch(url || this.props.url, {
-      params: {
-        [PAGE_KEY]: queryParams.page,
-        [SIZE_KEY]: queryParams.size,
-        [FILTER_KEY]: queryParams.filter,
-        [SORTING_KEY]: queryParams.sortingString,
-      },
-    }).then((result) => {
-      const { totalElements, totalPages } = result.page;
-      this.setState({
-        totalElements,
-        totalPages,
-        data: result.content,
+    fetchData = (url, queryParams = {}) =>
+      fetch(url || this.props.url, {
+        params: {
+          [PAGE_KEY]: queryParams.page,
+          [SIZE_KEY]: queryParams.size,
+          [FILTER_KEY]: queryParams.filter,
+          [SORTING_KEY]: queryParams.sortingString,
+        },
+      }).then((result) => {
+        const { totalElements, totalPages } = result.page;
+        this.setState({
+          totalElements,
+          totalPages,
+          data: result.content,
+        });
       });
-    });
 
     fetchDataWithCurrentProps = () => {
-      const {
-        url,
-        page,
-        size,
-        filter,
-        sortingString,
-      } = this.props;
+      const { url, page, size, filter, sortingString } = this.props;
       return this.fetchData(url, { page, size, filter, sortingString });
     };
 
-    changePageHandler = page => this.changePaginationOptions({ page });
+    changePageHandler = (page) => this.changePaginationOptions({ page });
 
-    changeSizeHandler = size => this.changePaginationOptions({ size });
+    changeSizeHandler = (size) => this.changePaginationOptions({ size, page: 1 });
 
     changePaginationOptions = (options) => {
       const { page, size } = this.props;
@@ -93,11 +91,7 @@ export const withPagination = ({ url: staticURL } = {}) => (WrappedComponent) =>
     };
 
     render() {
-      const {
-        page,
-        size,
-        ...restProps
-      } = this.props;
+      const { page, size, ...restProps } = this.props;
       return (
         <WrappedComponent
           data={this.state.data}

@@ -7,6 +7,7 @@ import { userIdSelector, activeProjectSelector } from 'controllers/user';
 import { withPagination } from 'controllers/pagination';
 import { PageLayout } from 'layouts/pageLayout';
 import { showModalAction } from 'controllers/modal';
+import { withSorting, SORTING_ASC } from 'controllers/sorting';
 import { userFiltersSelector, toggleDisplayFilterOnLaunchesAction } from 'controllers/project';
 import { fetch } from 'common/utils';
 import { FilterTable } from './filterTable';
@@ -31,6 +32,10 @@ const messages = defineMessages({
     toggleDisplayFilterOnLaunches: toggleDisplayFilterOnLaunchesAction,
   },
 )
+@withSorting({
+  defaultSortingColumn: 'name',
+  defaultSortingDirection: SORTING_ASC,
+})
 @withFilter
 @withPagination()
 @injectIntl
