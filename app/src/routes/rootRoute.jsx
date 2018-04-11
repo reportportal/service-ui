@@ -41,7 +41,7 @@ const AppRoute = authorizedRoute(() => (
       <Route path="/user-profile" component={ProfilePage} />
       <Route path="/api" component={ApiPage} />
       <Route exact path="/:projectId" component={DashboardPage} />
-      <Route path="/:projectId/dashboard" component={DashboardPage} />
+      <Route exact path="/:projectId/dashboard" component={DashboardPage} />
       <Route path="/:projectId/launches" component={LaunchesPage} />
       <Route path="/:projectId/filters" component={FiltersPage} />
       <Route path="/:projectId/userdebug" component={DebugPage} />

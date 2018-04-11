@@ -1,6 +1,6 @@
 .input {
   width: 310px;
-  @media(max-width: $SCREEN_SM_MAX) {
+  @media (max-width: $SCREEN_SM_MAX) {
     width: 100%;
   }
 }
@@ -10,11 +10,11 @@
   justify-content: space-between;
   position: relative;
 
-  padding: 10px;
-  background-color: #ffffff;
+  padding: 20px;
+  background-color: $COLOR--white-two;
 
-  @media(max-width: $SCREEN_SM_MAX) {
-    flex-wrap: wrap;
+  @media (max-width: $SCREEN_SM_MAX) {
+    display: none;
   }
 }
 
@@ -23,7 +23,7 @@
     margin: 0 5px;
   }
 
-  @media(max-width: $SCREEN_SM_MAX) {
+  @media (max-width: $SCREEN_SM_MAX) {
     padding: 10px;
   }
 }

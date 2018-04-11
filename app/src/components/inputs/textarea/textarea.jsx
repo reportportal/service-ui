@@ -20,25 +20,41 @@
  */
 
 import PropTypes from 'prop-types';
+import classNames from 'classnames/bind';
+import styles from './textarea.scss';
 
-export const Textarea = ({ readonly,
-                        placeholder, maxLength, disabled, refFunction,
-                        onChange, onFocus, onBlur, onKeyUp, defaultValue, cols, rows }) => (
-                          <textarea
-                            defaultValue={defaultValue}
-                            ref={refFunction}
-                            placeholder={placeholder}
-                            maxLength={maxLength}
-                            disabled={disabled}
-                            readOnly={readonly}
-                            onChange={onChange}
-                            onFocus={onFocus}
-                            onBlur={onBlur}
-                            onKeyUp={onKeyUp}
-                            cols={cols}
-                            rows={rows}
-                          />
-  );
+const cx = classNames.bind(styles);
+
+export const Textarea = ({
+  readonly,
+  placeholder,
+  maxLength,
+  disabled,
+  refFunction,
+  onChange,
+  onFocus,
+  onBlur,
+  onKeyUp,
+  defaultValue,
+  cols,
+  rows,
+}) => (
+  <textarea
+    defaultValue={defaultValue}
+    className={cx('textarea')}
+    ref={refFunction}
+    placeholder={placeholder}
+    maxLength={maxLength}
+    disabled={disabled}
+    readOnly={readonly}
+    onChange={onChange}
+    onFocus={onFocus}
+    onBlur={onBlur}
+    onKeyUp={onKeyUp}
+    cols={cols}
+    rows={rows}
+  />
+);
 
 Textarea.propTypes = {
   defaultValue: PropTypes.string,
@@ -46,7 +62,6 @@ Textarea.propTypes = {
   maxLength: PropTypes.number,
   disabled: PropTypes.bool,
   readonly: PropTypes.bool,
-  hasRightIcon: PropTypes.bool,
   onChange: PropTypes.func,
   onFocus: PropTypes.func,
   onBlur: PropTypes.func,
@@ -58,12 +73,10 @@ Textarea.propTypes = {
 
 Textarea.defaultProps = {
   defaultValue: '',
-  children: '',
   value: '',
   placeholder: '',
   disabled: false,
   readonly: false,
-  hasRightIcon: false,
   maxLength: 1000,
   cols: '30',
   rows: '10',

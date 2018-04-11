@@ -5,10 +5,13 @@ import styles from './icon.scss';
 
 const cx = classNames.bind(styles);
 
-export const Icon = ({ type }) => (
-  <i className={cx('icon', type)} />
-);
+export const Icon = ({ type, onClick }) => <i className={cx('icon', type)} onClick={onClick} />;
 
 Icon.propTypes = {
   type: PropTypes.string.isRequired,
+  onClick: PropTypes.func,
+};
+
+Icon.defaultProps = {
+  onClick: () => {},
 };

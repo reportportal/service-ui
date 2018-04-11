@@ -13,12 +13,13 @@ import {
   addDashboardAction,
   dashboardItemsSelector,
   dashboardGridTypeSelector,
+  DASHBOARDS_TABLE_VIEW,
+  DASHBOARDS_GRID_VIEW,
 } from 'controllers/dashboard';
-import {
-  userInfoSelector,
-} from 'controllers/user';
+import { userInfoSelector } from 'controllers/user';
 import { showModalAction } from 'controllers/modal';
 import { withFilter } from 'controllers/filter';
+import AddDashboardIcon from './img/ic-add-dash-inline.svg';
 import { DashboardList } from './dashboardList';
 import { DashboardPageToolbar } from './dashboardPageToolbar';
 import styles from './dashboardPage.scss';
@@ -36,7 +37,8 @@ const messages = defineMessages({
   },
   deleteModalWarningMessage: {
     id: 'DashboardPage.modal.deleteModalWarningMessage',
-    defaultMessage: 'You are going to delete not your own dashboard. This may affect other users information on the project.',
+    defaultMessage:
+      'You are going to delete not your own dashboard. This may affect other users information on the project.',
   },
   deleteModalTitle: {
     id: 'DashboardPage.modal.deleteModalTitle',
@@ -68,18 +70,21 @@ const messages = defineMessages({
   },
 });
 
-@connect(state => ({
-  gridType: dashboardGridTypeSelector(state),
-  dashboardItems: dashboardItemsSelector(state),
-  userInfo: userInfoSelector(state),
-}), {
-  fetchDashboard: fetchDashboardAction,
-  changeVisibilityType: changeVisibilityTypeAction,
-  showModal: showModalAction,
-  deleteDashboard: deleteDashboardAction,
-  editDashboard: editDashboardAction,
-  addDashboard: addDashboardAction,
-})
+@connect(
+  (state) => ({
+    gridType: dashboardGridTypeSelector(state),
+    dashboardItems: dashboardItemsSelector(state),
+    userInfo: userInfoSelector(state),
+  }),
+  {
+    fetchDashboard: fetchDashboardAction,
+    changeVisibilityType: changeVisibilityTypeAction,
+    showModal: showModalAction,
+    deleteDashboard: deleteDashboardAction,
+    editDashboard: editDashboardAction,
+    addDashboard: addDashboardAction,
+  },
+)
 @withFilter
 @injectIntl
 export class DashboardPage extends Component {
@@ -113,9 +118,10 @@ export class DashboardPage extends Component {
   };
 
   componentDidMount() {
-    const { fetchDashboard } = this.props;
+    const { fetchDashboard, changeVisibilityType } = this.props;
 
     fetchDashboard();
+    changeVisibilityType();
   }
 
   onDeleteDashboardItem = (item) => {
@@ -134,8 +140,7 @@ export class DashboardPage extends Component {
         warningMessage: intl.formatMessage(messages.deleteModalWarningMessage),
         cancelText: intl.formatMessage(messages.modalCancelButtonText),
       },
-    },
-    );
+    });
   };
 
   onEditDashboardItem = (item) => {
@@ -163,7 +168,7 @@ export class DashboardPage extends Component {
         type: 'add',
         onSubmit: addDashboard,
         title: intl.formatMessage(messages.addModalSubmitButtonText),
-        submitText: intl.formatMessage(messages.addModalTitle),
+        submitText: intl.formatMessage(messages.addModalSubmitButtonText),
         cancelText: intl.formatMessage(messages.modalCancelButtonText),
       },
     });
@@ -178,15 +183,15 @@ export class DashboardPage extends Component {
 
     const filterRule = new RegExp(filter.toLowerCase());
 
-    return dashboardItems.filter(item => filterRule.test(item.name.toLowerCase()));
+    return dashboardItems.filter((item) => filterRule.test(item.name.toLowerCase()));
   };
 
   toggleGridView = () => {
-    this.props.changeVisibilityType('grid');
+    this.props.changeVisibilityType(DASHBOARDS_GRID_VIEW);
   };
 
   toggleTableView = () => {
-    this.props.changeVisibilityType('table');
+    this.props.changeVisibilityType(DASHBOARDS_TABLE_VIEW);
   };
 
   render() {
@@ -194,28 +199,30 @@ export class DashboardPage extends Component {
     const dashboardItems = this.getFilteredDashboardItems();
 
     return (
-      <PageLayout title={intl.formatMessage(messages.pageTitle)}>
-        <div className={cx('add-dashboard-btn')}>
-          <GhostButton onClick={this.onAddDashboardItem}>
-            {intl.formatMessage(messages.addModalTitle)}
-          </GhostButton>
-        </div>
-        <DashboardPageToolbar
-          onGridViewToggle={this.toggleGridView}
-          onTableViewToggle={this.toggleTableView}
-          gridType={gridType}
-          filter={filter}
-          onFilterChange={onFilterChange}
-        />
-        <DashboardList
-          dashboardItems={dashboardItems}
-          gridType={gridType}
-          userInfo={userInfo}
-          onDeleteItem={this.onDeleteDashboardItem}
-          onEditItem={this.onEditDashboardItem}
-          onAddItem={this.onAddDashboardItem}
-        />
-      </PageLayout>
+      <div className={cx('dashboard-container')}>
+        <PageLayout title={intl.formatMessage(messages.pageTitle)}>
+          <div className={cx('add-dashboard-btn')}>
+            <GhostButton onClick={this.onAddDashboardItem} icon={AddDashboardIcon}>
+              {intl.formatMessage(messages.addModalTitle)}
+            </GhostButton>
+          </div>
+          <DashboardPageToolbar
+            onGridViewToggle={this.toggleGridView}
+            onTableViewToggle={this.toggleTableView}
+            gridType={gridType}
+            filter={filter}
+            onFilterChange={onFilterChange}
+          />
+          <DashboardList
+            dashboardItems={dashboardItems}
+            gridType={gridType}
+            userInfo={userInfo}
+            onDeleteItem={this.onDeleteDashboardItem}
+            onEditItem={this.onEditDashboardItem}
+            onAddItem={this.onAddDashboardItem}
+          />
+        </PageLayout>
+      </div>
     );
   }
 }

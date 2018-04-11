@@ -1,38 +1,20 @@
 .grid-view {
-  $grid-hover-shadow: 0 0 20px 0 #e9e9e9;
-
   width: 25%;
   box-sizing: border-box;
   padding: 10px;
 
   text-decoration: none;
 
-  @media(max-width: $SCREEN_MD_MAX_DASHBOARD) {
+  @media (max-width: $SCREEN_MD_MAX_DASHBOARD) {
     width: 33.3%;
   }
 
-  @media(max-width: $SCREEN_SM_MAX_DASHBOARD) {
+  @media (max-width: $SCREEN_SM_MAX_DASHBOARD) {
     width: 50%;
   }
 
-  @media(max-width: $SCREEN_XS_MAX_DASHBOARD) {
+  @media (max-width: $SCREEN_XS_MAX_DASHBOARD) {
     width: 100%;
-  }
-
-  &__inner {
-    border: 1px solid $COLOR--gray-91;
-    background: $COLOR--white-four;
-    position: relative;
-    cursor: pointer;
-
-    &:hover {
-      box-shadow: $grid-hover-shadow;
-
-      .edit,
-      .delete {
-        display: block;
-      }
-    }
   }
 
   .name {
@@ -40,6 +22,7 @@
       letter-spacing: 1px;
       line-height: 47px;
       padding: 0 70px 0 13px;
+      font-size: 15px;
       border-bottom: 1px solid $COLOR--gray-91;
       background: $COLOR--white;
       overflow: hidden;
@@ -61,18 +44,25 @@
       right: 15px;
       white-space: pre-wrap;
       word-wrap: break-word;
-      z-index: 1;
       color: $COLOR--gray-47;
       font-size: 13px;
+      line-height: 1.5;
     }
+  }
+
+  .icon-holder {
+    position: absolute;
+    top: 50%;
+    transform: translate(0, -50%);
   }
 
   .shared {
     height: 40px;
+    position: relative;
     border-top: 1px solid $COLOR--gray-91;
     background: $COLOR--white;
     color: $COLOR--charcoal-grey;
-    padding: 11px 15px;
+    padding: 0 15px;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -99,6 +89,24 @@
   }
 }
 
+.grid-view__inner {
+  $grid-hover-shadow: 0 0 20px 0 $COLOR--gray-91;
+
+  border: 1px solid $COLOR--gray-91;
+  background: $COLOR--white-four;
+  position: relative;
+  cursor: pointer;
+
+  &:hover {
+    box-shadow: $grid-hover-shadow;
+
+    .edit,
+    .delete {
+      display: block;
+    }
+  }
+}
+
 .dashboard-name,
 .dashboard-link {
   line-height: 18px;
@@ -113,7 +121,8 @@
 
 .shared-text {
   font-size: 13px;
-  vertical-align: text-top;
+  line-height: 40px;
+  margin-left: 22px;
 }
 
 .preview {
@@ -122,9 +131,9 @@
     -webkit-background-size: 100%;
     background-size: contain;
     background-repeat: no-repeat;
-    content: "";
+    content: '';
     opacity: 0.3;
-    -webkit-box-shadow: inset 0px -30px 100px 3px #f5f5f5;
+    -webkit-box-shadow: inset 0px -30px 100px 3px $COLOR--white;
     position: absolute;
     top: 0;
     left: 0;

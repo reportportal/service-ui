@@ -3,6 +3,7 @@ import { reduxForm } from 'redux-form';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { ModalField } from 'components/main/modal';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { Input } from 'components/inputs/input';
@@ -18,9 +19,21 @@ const messages = defineMessages({
     id: 'DashboardForm.dashboardNamePlaceholder',
     defaultMessage: 'Enter Dashboard Name',
   },
+  dashboardNameLabel: {
+    id: 'DashboardForm.dashboardNameLabel',
+    defaultMessage: 'Name',
+  },
   dashboardDescriptionPlaceholder: {
     id: 'DashboardModal.dashboardDescriptionPlaceholder',
     defaultMessage: 'Enter Dashboard Description',
+  },
+  dashboardDescriptionLabel: {
+    id: 'DashboardForm.dashboardDescriptionLabel',
+    defaultMessage: 'Description',
+  },
+  dashboardShareLabel: {
+    id: 'DashboardForm.dashboardShareLabel',
+    defaultMessage: 'Share',
   },
 });
 @reduxForm({
@@ -39,7 +52,11 @@ export class DashboardForm extends Component {
 
   static defaultProps = {
     initialize: () => {},
-    dashboardItem: {},
+    dashboardItem: {
+      name: '',
+      description: '',
+      share: false,
+    },
   };
 
   componentDidMount() {
@@ -48,37 +65,38 @@ export class DashboardForm extends Component {
 
   render() {
     const { intl } = this.props;
+    const labelWidth = '65px';
+
     return (
       <form className={cx('add-dashboard-form')}>
-        <label className={cx('form-field')}>
-          <span className={cx('form-label')}>Name</span>
-          <div className={cx('input-wrap', 'text-input')}>
-            <FieldProvider name="name" type="text">
-              <FieldErrorHint>
-                <Input placeholder={intl.formatMessage(messages.dashboardNamePlaceholder)} />
-              </FieldErrorHint>
-            </FieldProvider>
-          </div>
-        </label>
-        <label className={cx('form-field')}>
-          <span className={cx('form-label')}>Description</span>
-          <div className={cx('input-wrap', 'textarea-input')}>
-            <FieldProvider name="description" type="text">
-              <Textarea
-                placeholder={intl.formatMessage(messages.dashboardDescriptionPlaceholder)}
-                defaultValue={this.props.dashboardItem.description}
-              />
-            </FieldProvider>
-          </div>
-        </label>
-        <label className={cx('form-field')}>
-          <span className={cx('form-label')}>Share</span>
-          <div className={cx('input-wrap')}>
-            <FieldProvider name="share" type="text">
-              <InputBigSwitcher />
-            </FieldProvider>
-          </div>
-        </label>
+        <ModalField label={intl.formatMessage(messages.dashboardNameLabel)} labelWidth={labelWidth}>
+          <FieldProvider name="name" type="text">
+            <FieldErrorHint>
+              <Input placeholder={intl.formatMessage(messages.dashboardNamePlaceholder)} />
+            </FieldErrorHint>
+          </FieldProvider>
+        </ModalField>
+        <ModalField
+          label={intl.formatMessage(messages.dashboardDescriptionLabel)}
+          labelWidth={labelWidth}
+        >
+          <FieldProvider name="description" type="text">
+            <Textarea
+              placeholder={intl.formatMessage(messages.dashboardDescriptionPlaceholder)}
+              defaultValue={this.props.dashboardItem.description}
+              cols="42"
+              rows="3"
+            />
+          </FieldProvider>
+        </ModalField>
+        <ModalField
+          label={intl.formatMessage(messages.dashboardShareLabel)}
+          labelWidth={labelWidth}
+        >
+          <FieldProvider name="share" format={Boolean} parse={Boolean}>
+            <InputBigSwitcher />
+          </FieldProvider>
+        </ModalField>
       </form>
     );
   }

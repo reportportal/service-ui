@@ -1,5 +1,6 @@
 import { submit } from 'redux-form';
-import { fetch } from 'common/utils';
+import { fetch, getStorageItem, setStorageItem } from 'common/utils';
+import { activeProjectSelector, userIdSelector } from 'controllers/user';
 import {
   FETCH_DASHBOARD_SUCCESS,
   CHANGE_VISIBILITY_TYPE,
@@ -8,30 +9,34 @@ import {
   UPDATE_DASHBOARD_ITEM_SUCCESS,
 } from './constants';
 
-
 export const fetchDashboardAction = () => (dispatch, getState) => {
-  const { activeProject, info: { userId } } = getState().user;
-  Promise.all(
-    [
-      fetch(`/api/v1/${activeProject}/dashboard`),
-      fetch(`api/v1/${activeProject}/dashboard/shared?page.page=1&page.size=300`),
-    ],
-  ).then(([dashboards, sharedDashboards]) => {
+  const userId = userIdSelector(getState());
+  const activeProject = activeProjectSelector(getState());
+
+  Promise.all([
+    fetch(`/api/v1/${activeProject}/dashboard`),
+    fetch(`api/v1/${activeProject}/dashboard/shared?page.page=1&page.size=300`),
+  ]).then(([dashboards, sharedDashboards]) => {
     const { content } = sharedDashboards;
 
-    dispatch(
-      {
-        type: FETCH_DASHBOARD_SUCCESS,
-        payload: [...dashboards, ...content.filter(item => item.owner !== userId)] },
-        );
+    dispatch({
+      type: FETCH_DASHBOARD_SUCCESS,
+      payload: [...dashboards, ...content.filter((item) => item.owner !== userId)],
+    });
   });
 };
 
-export const changeVisibilityTypeAction = type => dispatch =>
-  dispatch({ type: CHANGE_VISIBILITY_TYPE, payload: type });
+export const changeVisibilityTypeAction = (type) => (dispatch) => {
+  const storedVisibilityType = getStorageItem('dashboard_type') || 'table';
+  const visibilityType = type || storedVisibilityType;
+
+  setStorageItem('dashboard_type', visibilityType);
+
+  dispatch({ type: CHANGE_VISIBILITY_TYPE, payload: visibilityType });
+};
 
 export const deleteDashboardAction = ({ id }) => (dispatch, getState) => {
-  const { activeProject } = getState().user;
+  const activeProject = activeProjectSelector(getState());
 
   fetch(`/api/v1/${activeProject}/dashboard/${id}`, {
     method: 'DELETE',
@@ -43,8 +48,8 @@ export const deleteDashboardAction = ({ id }) => (dispatch, getState) => {
   });
 };
 
-export const editDashboardAction = item => (dispatch, getState) => {
-  const { activeProject } = getState().user;
+export const editDashboardAction = (item) => (dispatch, getState) => {
+  const activeProject = activeProjectSelector(getState());
 
   const { name, description, share, id } = item;
 
@@ -61,8 +66,9 @@ export const editDashboardAction = item => (dispatch, getState) => {
   });
 };
 
-export const addDashboardAction = item => (dispatch, getState) => {
-  const { activeProject, info: { userId } } = getState().user;
+export const addDashboardAction = (item) => (dispatch, getState) => {
+  const activeProject = activeProjectSelector(getState());
+  const userId = userIdSelector(getState());
 
   fetch(`/api/v1/${activeProject}/dashboard`, {
     method: 'POST',

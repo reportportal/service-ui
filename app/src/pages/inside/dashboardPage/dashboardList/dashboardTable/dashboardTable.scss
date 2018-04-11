@@ -1,13 +1,12 @@
 .cell {
-  height: 50px;
   position: relative;
   display: table-cell;
- padding: 0 10px;
+  padding: 15px;
   vertical-align: middle;
-  color: #464547;
+  color: $COLOR--charcoal-grey;
   font-size: 13px;
 
-  @media(max-width: $SCREEN_SM_MAX) {
+  @media (max-width: $SCREEN_SM_MAX) {
     width: 100%;
     height: auto;
     padding: 10px;
@@ -20,17 +19,62 @@
 
 .name {
   line-height: 18px;
-  font-size: 16px;
+  font-size: 14px;
   font-family: $FONT-CONDBOLD;
   letter-spacing: 1px;
   color: $COLOR--topaz;
   cursor: pointer;
   text-decoration: none;
+  width: 30%;
+  padding: 0 15px;
+  word-break: break-all;
+  @media (max-width: $SCREEN_SM_MAX) {
+    padding-top: 15px;
+  }
+}
+
+.description {
+  width: 36%;
+  line-height: 1.5;
+  word-break: break-all;
+}
+
+.owner {
+  width: 13%;
+  word-break: break-all;
+}
+
+.shared {
+  width: 8%;
+}
+
+.edit,
+.delete {
+  width: 6.5%;
+  padding: 0;
+  i {
+    display: block;
+  }
+}
+
+.icon-holder {
+  border-left: 1px solid $COLOR--gray-91;
+}
+
+@media (max-width: $SCREEN_SM_MAX) {
+  .name,
+  .description,
+  .owner,
+  .shared,
+  .edit,
+  .delete {
+    width: 100%;
+  }
 }
 
 .with-button {
   cursor: pointer;
-  @media(max-width: $SCREEN_SM_MAX) {
+  @media (max-width: $SCREEN_SM_MAX) {
     width: 100%;
     height: auto;
     padding: 10px;
