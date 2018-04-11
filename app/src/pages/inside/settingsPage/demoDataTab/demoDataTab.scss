@@ -1,0 +1,127 @@
+// MOBILE styling:
+.demoDataTabContainer {
+  padding: 20px 10px;
+  display: flex;
+  flex-direction: column;
+
+  .youCanGenerateDat {
+    font-size: 14px;
+    line-height: 1.57;
+    text-align: left;
+    color: $COLOR--charcoal-grey;
+  }
+
+  .theSystemWillGene {
+    margin-top: 15px;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.33;
+    text-align: left;
+    color: $COLOR--gray-47;
+  }
+
+  ul {
+    margin: 5px 0 15px 0;
+    li {
+      font-size: 13px;
+      line-height: 1.69;
+      text-align: left;
+      color: $COLOR--charcoal-grey;
+    }
+    .dot {
+      box-sizing: border-box;
+      margin: 0 0 3px 10px;
+      height: 3px;
+      width: 3px;
+      background-color: $COLOR--windows-blue;
+      border-radius: 50%;
+      display: inline-block;
+      margin-right: 10px;
+    }
+  }
+
+  .postfixWillBeAdd {
+    display: none;
+    font-size: 13px;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1.85;
+    letter-spacing: normal;
+    color: $COLOR--charcoal-grey;
+    margin-bottom: 5px;
+  }
+
+  .inputEnterPostfix {
+    display: none;
+    width: 310px;
+    height: 30px;
+    margin-bottom: 20px;
+  }
+
+  .button {
+    margin: 0 auto;
+    display: block;
+    width: 153px;
+    height: 30px;
+    background-color: $COLOR--booger;
+    border: none;
+    color: white;
+    cursor: pointer;
+  }
+
+  .generateDemoData {
+    width: 129px;
+    height: 18px;
+    font-size: 13px;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    text-align: $COLOR--charcoal-grey;
+  }
+
+  .warningMessage {
+    display: none;
+    margin-bottom: 5px;
+
+    .warningSign {
+      margin-right: 5px;
+    }
+    .warningText {
+      font-size: 13px;
+      font-weight: 600;
+      color: $COLOR--failed;
+    }
+  }
+
+  .youWillHaveToRemove {
+    display: none;
+    font-size: 12px;
+    line-height: 1.17;
+    color: $COLOR--charcoal-grey;
+    margin-bottom: 35px;
+  }
+} // end of MOBILE styling
+
+// DESKTOP styling:
+@media (min-width: $SCREEN_XS_MAX) {
+  .demoDataTabContainer {
+    .youCanGenerateDat {
+      display: none;
+    }
+    .inputEnterPostfix,
+    .postfixWillBeAdd,
+    .youWillHaveToRemove {
+      display: inline-block;
+    }
+    .button {
+      margin: 0 0 35px 0;
+    }
+    .warningMessage {
+      display: flex;
+      align-items: flex-end;
+    }
+  }
+} // end of DESKTOP styling
