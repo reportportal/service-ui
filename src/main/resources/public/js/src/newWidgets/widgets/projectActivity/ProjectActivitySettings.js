@@ -99,7 +99,7 @@ define(function (require) {
                                     result.push(activityType);
                                 }
                             });
-                            widgetOptions.actionType = result;
+                            widgetOptions.actionType = _.uniq(result);
                             model.setWidgetOptions(widgetOptions);
                         }
                     }
