@@ -1,15 +1,15 @@
-$info-block-height: 70px;
 .tests-table-widget {
   height: 100%;
   overflow: hidden;
   .widget-wrapper {
     height: 100%;
     padding: 0 20px 20px 20px;
+    display: flex;
+    flex-direction: column;
     .info-block {
       font-family: $FONT-SEMIBOLD;
       font-size: 12px;
-      line-height: $info-block-height;
-      height: $info-block-height;
+      padding-bottom: 10px;
       color: $COLOR--gray-47;
       text-transform: uppercase;
       white-space: nowrap;
@@ -26,11 +26,8 @@ $info-block-height: 70px;
       }
     }
     .tests-table {
-      position: absolute;
-      top: $info-block-height;
-      bottom: 20px;
-      left: 20px;
-      right: 20px;
+      flex: 1;
+      padding-bottom: 20px;
       .tests-table-header {
         height: 45px;
         border-bottom: 1px solid $COLOR--gray-91;
@@ -148,8 +145,17 @@ $info-block-height: 70px;
                     margin-right: 1px;
                     margin-bottom: 1px;
                     background-color: $COLOR--booger;
-                    &.failed {
+                    &.most-failed {
                       background-color: $COLOR--tealish;
+                    }
+                    &.passed {
+                      background-color: $COLOR--passed;
+                    }
+                    &.failed {
+                      background-color: $COLOR--failed;
+                    }
+                    &.skipped {
+                      background-color: $COLOR--skipped;
                     }
                   }
                 }
