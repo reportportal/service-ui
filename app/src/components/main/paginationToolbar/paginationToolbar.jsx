@@ -17,13 +17,11 @@ export const PaginationToolbar = ({
   onChangePageSize,
 }) => (
   <div className={cx('pagination-toolbar')}>
-    {itemCount ? (
-      <ItemCounter activePage={activePage} pageSize={pageSize} itemCount={itemCount} />
-    ) : null}
-    {pageCount && pageCount > 1 ? (
+    {itemCount && <ItemCounter activePage={activePage} pageSize={pageSize} itemCount={itemCount} />}
+    {pageCount > 1 && (
       <PageButtons activePage={activePage} pageCount={pageCount} onChangePage={onChangePage} />
-    ) : null}
-    {pageSize ? <PageSizeControl pageSize={pageSize} onChangePageSize={onChangePageSize} /> : null}
+    )}
+    {pageSize && <PageSizeControl pageSize={pageSize} onChangePageSize={onChangePageSize} />}
   </div>
 );
 PaginationToolbar.propTypes = {
