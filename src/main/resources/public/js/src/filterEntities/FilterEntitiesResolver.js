@@ -394,8 +394,10 @@ define(function (require, exports, module) {
 
     var filterTagsOptions = function () {
         return [
-            { id: 'has', shortCut: 'and' },
-            { id: 'in', shortCut: 'or' }
+            { id: 'has', shortCut: 'all' },
+            { id: '!in', shortCut: '!all' },
+            { id: 'in', shortCut: 'any' },
+            { id: '!has', shortCut: '!any' }
         ];
     };
 
