@@ -1,18 +1,20 @@
 import * as React from 'react';
-import { func } from 'prop-types';
+import { func, string } from 'prop-types';
 import classNames from 'classnames/bind';
 import { AbsRelTime } from 'components/main/absRelTime';
 import { PTTest } from '../pTypes';
 import Count from './count';
 import Matrix from './matrix';
-import styles from '../mostFailedTests.scss';
+import styles from '../testsTableWidget.scss';
 
 const cx = classNames.bind(styles);
 
-class FailedTestsTableRow extends React.PureComponent {
+class TestsTableRow extends React.PureComponent {
   static propTypes = {
     data: PTTest.isRequired,
     nameClickHandler: func.isRequired,
+    countKey: string.isRequired,
+    matrixDataKey: string.isRequired,
   };
 
   nameClickHandler = () => {
@@ -21,8 +23,8 @@ class FailedTestsTableRow extends React.PureComponent {
   };
 
   render() {
-    const { data } = this.props;
-    const { name, total, isFailed, percentage, lastTime, uniqueId, failedCount } = data;
+    const { data, countKey, matrixDataKey } = this.props;
+    const { name, total, percentage, lastTime, uniqueId } = data;
 
     return (
       <div key={uniqueId} className={cx('row')}>
@@ -30,8 +32,8 @@ class FailedTestsTableRow extends React.PureComponent {
           <span>{name}</span>
         </div>
         <div className={cx('col', 'col-count')}>
-          <Count count={failedCount} total={total} />
-          <Matrix tests={isFailed} id={uniqueId} />
+          <Count count={data[countKey]} total={total} />
+          <Matrix tests={data[matrixDataKey]} id={uniqueId} />
         </div>
         <div className={cx('col', 'col-percents')}>{percentage}</div>
         <div className={cx('col', 'col-date')}>
@@ -42,4 +44,4 @@ class FailedTestsTableRow extends React.PureComponent {
   }
 }
 
-export default FailedTestsTableRow;
+export default TestsTableRow;

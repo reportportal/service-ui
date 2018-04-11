@@ -2,7 +2,7 @@ import * as React from 'react';
 import { number } from 'prop-types';
 import { FormattedMessage } from 'react-intl';
 import classNames from 'classnames/bind';
-import styles from '../mostFailedTests.scss';
+import styles from '../testsTableWidget.scss';
 
 const cx = classNames.bind(styles);
 
