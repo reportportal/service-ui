@@ -1,31 +1,34 @@
 import * as React from 'react';
 import { func } from 'prop-types';
-import classNames from 'classnames/bind';
-import MostFailedTestsInfoBlock from './mostFailedTestsInfoBlock';
-import MostFailedTestsTable from './mostFailedTestsTable';
-import { PTLaunch, PTTests, PTIssueType } from './pTypes';
-import styles from './mostFailedTests.scss';
+import { TestsTableWidget, PTypes } from '../components/testsTableWidget';
+import * as cfg from './mostFailedTestsCfg';
 
-const cx = classNames.bind(styles);
+class MostFailedTests extends React.PureComponent {
+  static propTypes = {
+    tests: PTypes.PTTests.isRequired,
+    launch: PTypes.PTLaunch.isRequired,
+    nameClickHandler: func.isRequired,
+    issueType: PTypes.PTIssueType.isRequired,
+  };
 
-function MostFailedTests(props) {
-  const { launch, tests, nameClickHandler, issueType } = props;
+  getIssueTypeMessage = (issueType) => {
+    const type = issueType.split('$')[2];
+    return cfg.issueTypes[type];
+  };
 
-  return (
-    <div className={cx('most-failed-test-cases')}>
-      <div className={cx('widget-wrapper')}>
-        <MostFailedTestsInfoBlock launchName={launch.name} issueType={issueType} />
-        <MostFailedTestsTable tests={tests} nameClickHandler={nameClickHandler} />
-      </div>
-    </div>
-  );
+  render() {
+    const { tests, launch, nameClickHandler, issueType } = this.props;
+
+    return (
+      <TestsTableWidget
+        tests={tests}
+        launchName={launch.name}
+        nameClickHandler={nameClickHandler}
+        issueType={this.getIssueTypeMessage(issueType)}
+        columns={cfg.columns}
+      />
+    );
+  }
 }
-
-MostFailedTests.propTypes = {
-  launch: PTLaunch.isRequired,
-  tests: PTTests.isRequired,
-  nameClickHandler: func.isRequired,
-  issueType: PTIssueType.isRequired,
-};
 
 export default MostFailedTests;

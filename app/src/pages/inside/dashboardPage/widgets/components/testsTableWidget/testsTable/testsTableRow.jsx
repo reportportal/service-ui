@@ -4,6 +4,7 @@ import classNames from 'classnames/bind';
 import { AbsRelTime } from 'components/main/absRelTime';
 import { PTTest } from '../pTypes';
 import Count from './count';
+import Matrix from './matrix';
 import styles from '../testsTableWidget.scss';
 
 const cx = classNames.bind(styles);
@@ -14,7 +15,6 @@ class TestsTableRow extends React.PureComponent {
     nameClickHandler: func.isRequired,
     countKey: string.isRequired,
     matrixDataKey: string.isRequired,
-    matrixComponent: func.isRequired,
   };
 
   nameClickHandler = () => {
@@ -23,9 +23,8 @@ class TestsTableRow extends React.PureComponent {
   };
 
   render() {
-    const { data, countKey, matrixDataKey, matrixComponent } = this.props;
+    const { data, countKey, matrixDataKey } = this.props;
     const { name, total, percentage, lastTime, uniqueId } = data;
-    const Matrix = matrixComponent;
 
     return (
       <div key={uniqueId} className={cx('row')}>

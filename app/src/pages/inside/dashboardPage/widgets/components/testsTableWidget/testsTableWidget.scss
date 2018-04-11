@@ -1,15 +1,15 @@
+$info-block-height: 70px;
 .tests-table-widget {
   height: 100%;
   overflow: hidden;
   .widget-wrapper {
     height: 100%;
     padding: 0 20px 20px 20px;
-    display: flex;
-    flex-direction: column;
     .info-block {
       font-family: $FONT-SEMIBOLD;
       font-size: 12px;
-      padding-bottom: 10px;
+      line-height: $info-block-height;
+      height: $info-block-height;
       color: $COLOR--gray-47;
       text-transform: uppercase;
       white-space: nowrap;
@@ -26,8 +26,11 @@
       }
     }
     .tests-table {
-      flex: 1;
-      padding-bottom: 20px;
+      position: absolute;
+      top: $info-block-height;
+      bottom: 20px;
+      left: 20px;
+      right: 20px;
       .tests-table-header {
         height: 45px;
         border-bottom: 1px solid $COLOR--gray-91;
@@ -145,17 +148,8 @@
                     margin-right: 1px;
                     margin-bottom: 1px;
                     background-color: $COLOR--booger;
-                    &.most-failed {
-                      background-color: $COLOR--tealish;
-                    }
-                    &.passed {
-                      background-color: $COLOR--passed;
-                    }
                     &.failed {
-                      background-color: $COLOR--failed;
-                    }
-                    &.skipped {
-                      background-color: $COLOR--skipped;
+                      background-color: $COLOR--tealish;
                     }
                   }
                 }
