@@ -149,133 +149,139 @@ export class LaunchSuiteGrid extends PureComponent {
     onMoveToDebug: () => {},
     onEditLaunch: () => {},
     selectedLaunches: [],
-    onLaunchSelect: () => {
-    },
-    onAllLaunchesSelect: () => {
-    },
+    onLaunchSelect: () => {},
+    onAllLaunchesSelect: () => {},
   };
   getColumns() {
     return [
-  {
-    component: HamburgerColumn,
-  customProps: {
+      {
+        component: HamburgerColumn,
+        customProps: {
           onDeleteItem: this.props.onDeleteItem,
           onMoveToDebug: this.props.onMoveToDebug,
-        },},
-  {
-    id: 'name',
-    title: {
-      full: 'name',
-      short: 'name',
-    },
-    maxHeight: 170,
-    component: NameColumn,
-    sortable: true,
-  customProps: {
+        },
+      },
+      {
+        id: 'name',
+        title: {
+          full: 'name',
+          short: 'name',
+        },
+        maxHeight: 170,
+        component: NameColumn,
+        sortable: true,
+        customProps: {
           onEditLaunch: this.props.onEditLaunch,
-        },},
-  {
-    id: 'start_time',
-    title: {
-      full: 'start time',
-      short: 'start',
-    },
-    component: StartTimeColumn,
-    sortable: true,
-  },
-  {
-    id: 'statistics$executions$total',
-    title: {
-      full: 'total',
-      short: 'ttl',
-    },
-    component: TotalColumn,
-    sortable: true,
-  },
-  {
-    id: 'statistics$executions$passed',
-    title: {
-      full: 'passed',
-      short: 'ps',
-    },
-    component: PassedColumn,
-    sortable: true,
-  },
-  {
-    id: 'statistics$executions$failed',
-    title: {
-      full: 'failed',
-      short: 'fl',
-    },
-    component: FailedColumn,
-    sortable: true,
-  },
-  {
-    id: 'statistics$executions$skipped',
-    title: {
-      full: 'skipped',
-      short: 'skp',
-    },
-    component: SkippedColumn,
-    sortable: true,
-  },
-  {
-    id: 'statistics$defects$product_bug$total',
-    title: {
-      full: 'product bug',
-      short: 'product bug',
-    },
-    component: PbColumn,
-    customProps: {
-      abbreviation: 'pb',
-    },
-    sortable: true,
-  },
-  {
-    id: 'statistics$defects$automation_bug$total',
-    title: {
-      full: 'auto bug',
-      short: 'auto bug',
-    },
-    component: AbColumn,
-    customProps: {
-      abbreviation: 'ab',
-    },
-    sortable: true,
-  },
-  {
-    id: 'statistics$defects$system_issue$total',
-    title: {
-      full: 'system issue',
-      short: 'system issue',
-    },
-    component: SiColumn,
-    customProps: {
-      abbreviation: 'si',
-    },
-    sortable: true,
-  },
-  {
-    id: 'statistics$defects$to_investigate$total',
-    title: {
-      full: 'to investigate',
-      short: 'to invest',
-    },
-    component: TiColumn,
-    customProps: {
-      abbreviation: 'ti',
-    },
-    sortable: true,
-  },
-
-];}
+        },
+      },
+      {
+        id: 'start_time',
+        title: {
+          full: 'start time',
+          short: 'start',
+        },
+        component: StartTimeColumn,
+        sortable: true,
+      },
+      {
+        id: 'statistics$executions$total',
+        title: {
+          full: 'total',
+          short: 'ttl',
+        },
+        component: TotalColumn,
+        sortable: true,
+      },
+      {
+        id: 'statistics$executions$passed',
+        title: {
+          full: 'passed',
+          short: 'ps',
+        },
+        component: PassedColumn,
+        sortable: true,
+      },
+      {
+        id: 'statistics$executions$failed',
+        title: {
+          full: 'failed',
+          short: 'fl',
+        },
+        component: FailedColumn,
+        sortable: true,
+      },
+      {
+        id: 'statistics$executions$skipped',
+        title: {
+          full: 'skipped',
+          short: 'skp',
+        },
+        component: SkippedColumn,
+        sortable: true,
+      },
+      {
+        id: 'statistics$defects$product_bug$total',
+        title: {
+          full: 'product bug',
+          short: 'product bug',
+        },
+        component: PbColumn,
+        customProps: {
+          abbreviation: 'pb',
+        },
+        sortable: true,
+      },
+      {
+        id: 'statistics$defects$automation_bug$total',
+        title: {
+          full: 'auto bug',
+          short: 'auto bug',
+        },
+        component: AbColumn,
+        customProps: {
+          abbreviation: 'ab',
+        },
+        sortable: true,
+      },
+      {
+        id: 'statistics$defects$system_issue$total',
+        title: {
+          full: 'system issue',
+          short: 'system issue',
+        },
+        component: SiColumn,
+        customProps: {
+          abbreviation: 'si',
+        },
+        sortable: true,
+      },
+      {
+        id: 'statistics$defects$to_investigate$total',
+        title: {
+          full: 'to investigate',
+          short: 'to invest',
+        },
+        component: TiColumn,
+        customProps: {
+          abbreviation: 'ti',
+        },
+        sortable: true,
+      },
+    ];
+  }
 
   COLUMNS = this.getColumns();
 
   render() {
-    const { data, onChangeSorting, sortingColumn, sortingDirection, selectedLaunches,
+    const {
+      data,
+      onChangeSorting,
+      sortingColumn,
+      sortingDirection,
+      selectedLaunches,
       onLaunchSelect,
-      onAllLaunchesSelect, } = this.props;
+      onAllLaunchesSelect,
+    } = this.props;
 
     return (
       <Grid
