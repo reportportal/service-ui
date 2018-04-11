@@ -4,7 +4,7 @@ import classNames from 'classnames/bind';
 import { AbsRelTime } from 'components/main/absRelTime';
 import { PTTest } from '../pTypes';
 import Count from './count';
-import Matrix from './matrix';
+import matrixFactory from './matrix';
 import styles from '../testsTableWidget.scss';
 
 const cx = classNames.bind(styles);
@@ -17,6 +17,16 @@ class TestsTableRow extends React.PureComponent {
     matrixDataKey: string.isRequired,
   };
 
+  getMatrixComponent = () => {
+    if (!this.matrixComponent) {
+      const { data, matrixDataKey } = this.props;
+      const renderBool = typeof data[matrixDataKey].reduce((acc, val) => acc && val) === 'boolean';
+      this.matrixComponent = matrixFactory(renderBool);
+    }
+
+    return this.matrixComponent;
+  };
+
   nameClickHandler = () => {
     const { nameClickHandler, data } = this.props;
     nameClickHandler(data.uniqueId);
@@ -25,6 +35,7 @@ class TestsTableRow extends React.PureComponent {
   render() {
     const { data, countKey, matrixDataKey } = this.props;
     const { name, total, percentage, lastTime, uniqueId } = data;
+    const Matrix = this.getMatrixComponent();
 
     return (
       <div key={uniqueId} className={cx('row')}>

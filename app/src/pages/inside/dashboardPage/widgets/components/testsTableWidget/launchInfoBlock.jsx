@@ -16,10 +16,12 @@ class LaunchInfoBlock extends React.PureComponent {
           <FormattedMessage id="TestsTableWidget.header.launchName" defaultMessage="Launch name" />:{' '}
           <span className={cx('info-block-launch-name')}>{launchName}</span>
         </p>
-        <p>
-          <FormattedMessage id="TestsTableWidget.header.basedOn" defaultMessage="Based on" />:{' '}
-          <span className={cx('info-block-launch-name')}>{issueType}</span>
-        </p>
+        {issueType && (
+          <p>
+            <FormattedMessage id="TestsTableWidget.header.basedOn" defaultMessage="Based on" />:{' '}
+            <span className={cx('info-block-launch-name')}>{issueType}</span>
+          </p>
+        )}
       </div>
     );
   }
@@ -27,7 +29,11 @@ class LaunchInfoBlock extends React.PureComponent {
 
 LaunchInfoBlock.propTypes = {
   launchName: string.isRequired,
-  issueType: string.isRequired,
+  issueType: string,
+};
+
+LaunchInfoBlock.defaultProps = {
+  issueType: null,
 };
 
 export default LaunchInfoBlock;
