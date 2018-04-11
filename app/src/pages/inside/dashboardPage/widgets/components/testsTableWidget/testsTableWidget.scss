@@ -1,5 +1,5 @@
 $info-block-height: 70px;
-.most-failed-test-cases {
+.tests-table-widget {
   height: 100%;
   overflow: hidden;
   .widget-wrapper {
@@ -25,13 +25,13 @@ $info-block-height: 70px;
         }
       }
     }
-    .failed-tests-table {
+    .tests-table {
       position: absolute;
       top: $info-block-height;
       bottom: 20px;
       left: 20px;
       right: 20px;
-      .failed-tests-table-header {
+      .tests-table-header {
         height: 45px;
         border-bottom: 1px solid $COLOR--gray-91;
         background-color: $COLOR--white-two;
@@ -86,7 +86,7 @@ $info-block-height: 70px;
           }
         }
       }
-      .failed-tests-table-body {
+      .tests-table-body {
         width: 100%;
         overflow: hidden;
         .row {

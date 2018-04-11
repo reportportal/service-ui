@@ -211,7 +211,7 @@
   "MostFailedTests.header.issueType.product_bug": "Хіба прадукту",
   "MostFailedTests.header.issueType.skipped": "Прапушчана",
   "MostFailedTests.header.issueType.system_issue": "Сістэмная праблема",
-  "MostFailedTests.header.launchName": "Імя запуску",
+  "TestsTableWidget.header.launchName": "Імя запуску",
   "MostFailedTests.table.header.testCase": "Тэставы сцэнар",
   "NewsBlock.twitterTitle": "Азнаёміцца з нашымі апошнімі твітамі",
   "NoFiltersBlock.Button": "Дадаць фільтр",

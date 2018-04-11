@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { arrayOf, bool, string } from 'prop-types';
 import classNames from 'classnames/bind';
-import styles from '../mostFailedTests.scss';
+import styles from '../testsTableWidget.scss';
 
 const cx = classNames.bind(styles);
 
