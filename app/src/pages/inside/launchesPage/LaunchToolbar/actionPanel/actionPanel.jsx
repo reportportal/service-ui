@@ -8,13 +8,10 @@ import styles from './actionPanel.scss';
 
 const cx = classNames.bind(styles);
 
-export const ActionPanel = ({ hasErrors }) => (
+export const ActionPanel = ({ showBreadcrumb, hasErrors }) => (
   <div className={cx('action-panel')}>
-    {hasErrors ? (
-      <GhostButton>Proceed Valid Items</GhostButton>
-    ) : (
-      <div className={cx('breadcrumb')} />
-    )}
+    {showBreadcrumb ? <div className={cx('breadcrumb')} /> : <div />}
+    {hasErrors && <GhostButton>Proceed Valid Items</GhostButton>}
     <div className={cx('action-buttons')}>
       <div className={cx('action-button', 'mobile-hidden')}>
         <GhostButton icon={ImportIcon} disabled>
@@ -36,7 +33,9 @@ export const ActionPanel = ({ hasErrors }) => (
 );
 ActionPanel.propTypes = {
   hasErrors: PropTypes.bool,
+  showBreadcrumb: PropTypes.bool,
 };
 ActionPanel.defaultProps = {
   hasErrors: false,
+  showBreadcrumb: false,
 };
