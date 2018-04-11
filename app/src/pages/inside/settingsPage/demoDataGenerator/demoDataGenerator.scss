@@ -1,0 +1,111 @@
+.demo-data-generator-container {
+  padding: 20px 10px;
+  display: flex;
+  flex-direction: column;
+
+  .description-header {
+    margin-top: 15px;
+    font-size: 12px;
+    font-family: $FONT-SEMIBOLD;
+    line-height: 1.33;
+    text-align: left;
+    color: $COLOR--gray-47;
+    text-transform: uppercase;
+  }
+
+  .mobile-hint {
+    font-size: 14px;
+    line-height: 1.57;
+    text-align: left;
+    color: $COLOR--charcoal-grey;
+    display: none;
+    @media (max-width: $SCREEN_XS_MAX) {
+      display: inline-block;
+    }
+  }
+
+  .description-list {
+    list-style-type: disc;
+    margin: 5px 0 20px 23px;
+    li {
+      font-size: 13px;
+      line-height: 1.69;
+      text-align: left;
+      color: $COLOR--charcoal-grey;
+      margin: 0 0 3px 0;
+    }
+  }
+
+  .postfix-hint {
+    font-size: 13px;
+    line-height: 1.85;
+    color: $COLOR--charcoal-grey;
+    margin-bottom: 5px;
+    @media (max-width: $SCREEN_XS_MAX) {
+      display: none;
+    }
+  }
+
+  .input-wrapper {
+    width: 310px;
+    height: 30px;
+    margin-bottom: 20px;
+    @media (max-width: $SCREEN_XS_MAX) {
+      display: none;
+    }
+  }
+
+  .button-generate {
+    margin-bottom: 20px;
+    width: 160px;
+    height: 30px;
+    .generate-demo-data {
+      width: 129px;
+      height: 18px;
+      font-size: 13px;
+      text-align: $COLOR--charcoal-grey;
+    }
+    @media (max-width: $SCREEN_XS_MAX) {
+      margin: 0 auto 20px auto;
+    }
+  }
+
+  .spinning-preloader-wrapper {
+    margin-bottom: 35px;
+    display: flex;
+    .spinning-preloader-icon {
+      width: 50px;
+      margin-right: 20px;
+    }
+    .spinning-preloader-info {
+      font-size: 13px;
+      color: $COLOR--charcoal-grey;
+      line-height: 1.85;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+  }
+
+  .warning-block {
+    .warning-sign {
+      display: inline-block;
+      margin-right: 5px;
+    }
+    .warning-text {
+      display: inline-block;
+      font-size: 13px;
+      font-family: $FONT-SEMIBOLD;
+      color: $COLOR--failed;
+    }
+    .warning-info {
+      font-size: 12px;
+      line-height: 1.17;
+      color: $COLOR--charcoal-grey;
+      margin: 5px 0 35px 0;
+    }
+    @media (max-width: $SCREEN_XS_MAX) {
+      display: none;
+    }
+  }
+}

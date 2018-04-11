@@ -611,4 +611,25 @@
   "WidgetHeader.widgetType.statistic_trend": "Диаграмма статистики запуска",
   "WidgetHeader.widgetType.unique_bug_table": "Таблица уникальных ошибок",
   "WidgetsGrid.notification.deleteWidgetSuccess": "Виджет успешно удалён"
+  "UuidBlock.tip": "Чтобы обеспечить надежность вашего доменного пароля, вы можете использовать пользовательский опознавательный номер, называемый UUID, чтобы подтвердить, что ваша учетная запись может загружаться агентом.",
+  "DemoDataGenerator.mobileHint": "You can generate data only on desktop view",
+  "DemoDataGenerator.descriptionHeader": "THE SYSTEM WILL GENERATE THE FOLLOWING DEMO DATA:",
+  "DemoDataGenerator.descriptionListFirstItem": "10 launches",
+  "DemoDataGenerator.descriptionListSecItem": "1 dashboard with 9 widgets",
+  "DemoDataGenerator.descriptionListThirdItem": "1 filter",
+  "DemoDataGenerator.postfixHint": "Postfix will be added to the demo dashboard, widgets, filter name.",
+  "DemoDataGenerator.warningText": "Warning",
+  "DemoDataGenerator.warningInfo": "You will have to remove the demo data manually.",
+  "DemoDataGeneratorForm.buttonGenerate": "Generate Demo Data"
+  "UuidBlock.tip": "Чтобы обеспечить надежность вашего доменного пароля, вы можете использовать пользовательский опознавательный номер, называемый UUID, чтобы подтвердить, что ваша учетная запись может загружаться агентом.",
+  "DemoDataGenerator.mobileHint": "You can generate data only on desktop view",
+  "DemoDataGenerator.descriptionHeader": "THE SYSTEM WILL GENERATE THE FOLLOWING DEMO DATA:",
+  "DemoDataGenerator.descriptionListFirstItem": "10 launches",
+  "DemoDataGenerator.descriptionListSecItem": "1 dashboard with 9 widgets",
+  "DemoDataGenerator.descriptionListThirdItem": "1 filter",
+  "DemoDataGenerator.postfixHint": "Postfix will be added to the demo dashboard, widgets, filter name.",
+  "DemoDataGenerator.warningText": "Warning",
+  "DemoDataGenerator.warningInfo": "You will have to remove the demo data manually.",
+  "DemoDataGeneratorForm.buttonGenerate": "Generate Demo Data",
+  "SuccessMessages.generateDemoData": "Демонстрационные данные сгенерированы"
 }

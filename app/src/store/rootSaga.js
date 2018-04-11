@@ -8,6 +8,7 @@ import { suiteSagas } from 'controllers/suite';
 import { filterSagas } from 'controllers/filter';
 import { testSagas } from 'controllers/test';
 import { membersSagas } from 'controllers/members';
+import { projectSettingsSagas } from 'controllers/projectSettings/sagas';
 import { testItemsSaga } from 'controllers/testItem';
 
 export function* rootSagas() {
@@ -21,6 +22,7 @@ export function* rootSagas() {
     filterSagas(),
     testSagas(),
     membersSagas(),
+    projectSettingsSagas(),
     testItemsSaga(),
   ]);
 }
