@@ -1,0 +1,1 @@
+export { GeneralTab } from './generalTab';

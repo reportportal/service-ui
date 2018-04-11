@@ -1,0 +1,111 @@
+$border-color: #cccccc;
+$font-size-label: 13px;
+$font-size-tips: 12px;
+
+.formField {
+  display: flex;
+  margin-bottom: 15px;
+}
+
+.gridCell {
+  &:nth-of-type(1) {
+    height: 30px;
+    display: flex;
+    flex: 3;
+    justify-content: flex-end;
+    margin: 0 15px;
+    font-size: $font-size-label;
+    color: $COLOR--charcoal-grey;
+  }
+  &:nth-of-type(2) {
+    height: 30px;
+    display: flex;
+    flex: 4;
+    margin: 0 15px;
+    font-size: $font-size-label;
+    color: $COLOR--charcoal-grey;
+  }
+  &:nth-of-type(3) {
+    height: 30px;
+    display: flex;
+    flex: 5;
+    justify-content: flex-start;
+    margin: 0 15px;
+    font-size: $font-size-tips;
+    color: $COLOR--gray-60;
+  }
+  &.centered {
+    align-items: center;
+  }
+
+  &.right-aligned {
+    justify-content: flex-end;
+  }
+
+  &.left-aligned {
+    justify-content: flex-start;
+  }
+
+  &.formField {
+    border: solid 1px $border-color;
+  }
+
+  &.column {
+    flex-direction: column;
+    align-items: end;
+  }
+  &.submitButton {
+    justify-content: flex-end;
+  }
+}
+
+@media (max-width: 600px) {
+  .formField {
+    flex-direction: column;
+  }
+  .gridCell {
+    &:nth-of-type(1) {
+      margin: 10px 15px 0 15px;
+      flex: 1;
+      justify-content: flex-start;
+    }
+    &:nth-of-type(2) {
+      margin: 10px 15px 0 15px;
+      flex: 1;
+      justify-content: flex-start;
+    }
+    &:nth-of-type(3) {
+      margin: 10px 15px 0 15px;
+      flex: 1;
+      justify-content: flex-start;
+    }
+    &.empty {
+      display: none;
+    }
+    &.submitButton {
+      justify-content: flex-start;
+    }
+  }
+}
+
+.buttonWrapper {
+  width: 68px;
+  height: 30px;
+}
+
+.bigButton {
+  display: block;
+}
+
+.generalTabLabel {
+  font-size: $font-size-label;
+}
+
+.generalTabTip {
+  font-size: $font-size-tips;
+  color: $COLOR--gray-60;
+}
+
+.radioCheckbox {
+  display: flex;
+}
