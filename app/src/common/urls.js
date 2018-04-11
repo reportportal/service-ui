@@ -87,4 +87,5 @@ export const URLS = {
   userUnasign: (activeProject) => `${urlBase}project/${activeProject}/unassign`,
 
   widget: (activeProject, widgetId) => `${urlBase}${activeProject}/widget/${widgetId}`,
+  generateDemoData: (projectId) => `${urlBase}demo/${projectId}`,
 };

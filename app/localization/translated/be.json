@@ -525,4 +525,25 @@
   "WidgetHeader.widgetType.statistic_trend": "Дыяграма статыстыкі запускаў",
   "WidgetHeader.widgetType.unique_bug_table": "Табліца ўнікальных хібаў",
   "WidgetsGrid.notification.deleteWidgetSuccess": "Віджэт паспяхова выдылены"
+  "UuidBlock.tip": "Каб забяспечыць надзейнасць вашага даменнага пароля, вы можаце выкарыстоўваць маркер карыстальніка, які называецца UUID, каб падцвердзіць, што ваш уліковы запіс можа занатоўвацца агентам.",
+  "DemoDataGenerator.mobileHint": "You can generate data only on desktop view",
+  "DemoDataGenerator.descriptionHeader": "THE SYSTEM WILL GENERATE THE FOLLOWING DEMO DATA:",
+  "DemoDataGenerator.descriptionListFirstItem": "10 launches",
+  "DemoDataGenerator.descriptionListSecItem": "1 dashboard with 9 widgets",
+  "DemoDataGenerator.descriptionListThirdItem": "1 filter",
+  "DemoDataGenerator.postfixHint": "Postfix will be added to the demo dashboard, widgets, filter name.",
+  "DemoDataGenerator.warningText": "Warning",
+  "DemoDataGenerator.warningInfo": "You will have to remove the demo data manually.",
+  "DemoDataGeneratorForm.buttonGenerate": "Generate Demo Data"
+  "UuidBlock.tip": "Каб забяспечыць надзейнасць вашага даменнага пароля, вы можаце выкарыстоўваць маркер карыстальніка, які называецца UUID, каб падцвердзіць, што ваш уліковы запіс можа занатоўвацца агентам.",
+  "DemoDataGenerator.mobileHint": "You can generate data only on desktop view",
+  "DemoDataGenerator.descriptionHeader": "THE SYSTEM WILL GENERATE THE FOLLOWING DEMO DATA:",
+  "DemoDataGenerator.descriptionListFirstItem": "10 launches",
+  "DemoDataGenerator.descriptionListSecItem": "1 dashboard with 9 widgets",
+  "DemoDataGenerator.descriptionListThirdItem": "1 filter",
+  "DemoDataGenerator.postfixHint": "Postfix will be added to the demo dashboard, widgets, filter name.",
+  "DemoDataGenerator.warningText": "Warning",
+  "DemoDataGenerator.warningInfo": "You will have to remove the demo data manually.",
+  "DemoDataGeneratorForm.buttonGenerate": "Generate Demo Data",
+  "SuccessMessages.generateDemoData": "Дэма-звесткі згенераваны"
 }
