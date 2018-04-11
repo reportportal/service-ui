@@ -2,5 +2,13 @@
   position: absolute;
   top: 20px;
   right: 0;
-  background-color: white;
+  background-color: $COLOR--white-two;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    display: none;
+  }
+}
+
+.dashboard-container {
+  padding-bottom: 20px;
 }

@@ -2,12 +2,13 @@
   display: flex;
   justify-content: flex-start;
   flex-wrap: wrap;
-  background-color: #ffffff;
+  background-color: $COLOR--white-two;
+  padding: 5px;
 }
 
 .headline {
   background-color: $COLOR--white;
-  padding: 12px 15px;
+  padding: 9px 15px;
   font-family: $FONT-SEMIBOLD;
   color: $COLOR--gray-47;
   text-transform: uppercase;

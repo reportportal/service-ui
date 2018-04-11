@@ -8,6 +8,7 @@ import { Icon } from 'components/main/icon';
 import { InputSearch } from 'components/inputs/inputSearch';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
+import { DASHBOARDS_TABLE_VIEW, DASHBOARDS_GRID_VIEW } from 'controllers/dashboard';
 import styles from './dashboardPageToolbar.scss';
 
 const cx = classNames.bind(styles);
@@ -20,15 +21,16 @@ const messages = defineMessages({
 
 @reduxForm({
   form: 'searchDashboardForm',
-  validate: ({ dashboardName }) => ({ dashboardName: dashboardName && dashboardName.length < 3 && 'dashboardNameSearchHint' }),
+  validate: ({ dashboardName }) => ({
+    dashboardName: dashboardName && dashboardName.length < 3 && 'dashboardNameSearchHint',
+  }),
   onChange: (vals, dispatch, props) => {
     if (vals.dashboardName && vals.dashboardName.length < 3) {
       return;
     }
     props.onFilterChange(vals.dashboardName || undefined);
   },
-},
-)
+})
 @injectIntl
 export class DashboardPageToolbar extends Component {
   static propTypes = {
@@ -39,7 +41,6 @@ export class DashboardPageToolbar extends Component {
     onTableViewToggle: PropTypes.func,
     gridType: PropTypes.string,
     invalid: PropTypes.bool,
-
   };
   static defaultProps = {
     change: () => {},
@@ -77,10 +78,10 @@ export class DashboardPageToolbar extends Component {
         </div>
         <div className={cx('buttons', `active-${gridType}`)}>
           <GhostButton onClick={onGridViewToggle}>
-            <Icon type={gridType === 'grid' ? 'icon-grid-active' : 'icon-grid'} />
+            <Icon type={gridType === DASHBOARDS_GRID_VIEW ? 'icon-grid-active' : 'icon-grid'} />
           </GhostButton>
           <GhostButton onClick={onTableViewToggle}>
-            <Icon type={gridType === 'table' ? 'icon-table-active' : 'icon-table'} />
+            <Icon type={gridType === DASHBOARDS_TABLE_VIEW ? 'icon-table-active' : 'icon-table'} />
           </GhostButton>
         </div>
       </div>

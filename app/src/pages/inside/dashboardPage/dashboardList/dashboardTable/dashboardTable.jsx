@@ -5,8 +5,9 @@ import PropTypes from 'prop-types';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { Grid } from 'components/main/grid';
 import { Icon } from 'components/main/icon';
+import { EmptyDashboards } from 'pages/inside/dashboardPage/dashboardList/EmptyDashboards';
+import { hasPrevilegesForDashboardDeletion } from 'common/utils/validation';
 import styles from './dashboardTable.scss';
-import { DashboardEmptyResults } from '../dashboardEmptyResults';
 
 const cx = classNames.bind(styles);
 const messages = defineMessages({
@@ -36,11 +37,11 @@ const messages = defineMessages({
   },
 });
 
-const DashboardNameColumn = props => (
+const DashboardNameColumn = (props) => (
   <NavLink className={cx('name', 'cell')} to={`dashboard/${props.value.id}`}>
     {props.value.name}
   </NavLink>
-  );
+);
 DashboardNameColumn.propTypes = {
   value: PropTypes.object,
 };
@@ -48,24 +49,26 @@ DashboardNameColumn.defaultProps = {
   value: {},
 };
 
-const DashboardSimpleTextColumn = ({ value }) => (
-  <div className={cx('cell')}>{value}</div>
-  );
-DashboardSimpleTextColumn.propTypes = {
+const DescriptionColumn = ({ value }) => <div className={cx('description', 'cell')}>{value}</div>;
+DescriptionColumn.propTypes = {
   value: PropTypes.string,
 };
-DashboardSimpleTextColumn.defaultProps = {
+DescriptionColumn.defaultProps = {
   value: '',
 };
 
-const SharedColumn = ({ value: { share, owner }, customProps: { currentUser } }) => {
-  const isShared = share || currentUser !== owner;
+const OwnerColumn = ({ value }) => <div className={cx('owner', 'cell')}>{value}</div>;
+OwnerColumn.propTypes = {
+  value: PropTypes.string,
+};
+OwnerColumn.defaultProps = {
+  value: '',
+};
 
-  return (
-    <div className={cx('cell')}>
-      {isShared && (<Icon type="icon-check" />)}
-    </div>
-  );
+const SharedColumn = ({ value: { share, owner }, customProps: { currentUser: { userId } } }) => {
+  const isShared = share || userId !== owner;
+
+  return <div className={cx('shared', 'cell')}>{isShared && <Icon type="icon-check" />}</div>;
 };
 SharedColumn.propTypes = {
   value: PropTypes.object,
@@ -77,7 +80,7 @@ SharedColumn.defaultProps = {
 };
 
 const EditColumn = ({ value, customProps }) => {
-  const { onEdit, currentUser } = customProps;
+  const { onEdit, currentUser: { userId } } = customProps;
   const { owner } = value;
 
   const editItemHandler = () => {
@@ -85,16 +88,13 @@ const EditColumn = ({ value, customProps }) => {
   };
 
   return (
-    <Fragment>
-      <div className={cx('cell', 'with-button')}>
-        {
-          currentUser === owner &&
-          (<div onClick={editItemHandler}>
-            <Icon type="icon-pencil" />
-          </div>)
-        }
-      </div>
-    </Fragment>
+    <div className={cx('cell', 'with-button', 'edit')}>
+      {userId === owner && (
+        <div className={cx('icon-holder')}>
+          <Icon type="icon-pencil" onClick={editItemHandler} />
+        </div>
+      )}
+    </div>
   );
 };
 EditColumn.propTypes = {
@@ -107,15 +107,20 @@ EditColumn.defaultProps = {
 };
 
 const DeleteColumn = ({ value, customProps }) => {
-  const { onDelete } = customProps;
+  const { onDelete, currentUser: { userId, userRole } } = customProps;
+  const { owner } = value;
   const deleteItemHandler = () => {
     onDelete(value);
   };
 
   return (
-    <div className={cx('cell', 'with-button')} onClick={deleteItemHandler}>
-      <Icon type="icon-delete" />
-    </div>
+    (userId === owner || hasPrevilegesForDashboardDeletion(userRole)) && (
+      <div className={cx('cell', 'with-button', 'delete')}>
+        <div className={cx('icon-holder')}>
+          <Icon type="icon-delete" onClick={deleteItemHandler} />
+        </div>
+      </div>
+    )
   );
 };
 DeleteColumn.propTypes = {
@@ -136,7 +141,6 @@ export class DashboardTable extends Component {
     onAddItem: PropTypes.func,
     userInfo: PropTypes.object,
     dashboardItems: PropTypes.array,
-
   };
 
   static defaultProps = {
@@ -148,7 +152,7 @@ export class DashboardTable extends Component {
   };
 
   getTableColumns() {
-    const { onDeleteItem, onEditItem, userInfo: { userId }, intl } = this.props;
+    const { onDeleteItem, onEditItem, userInfo, intl } = this.props;
 
     return [
       {
@@ -163,16 +167,16 @@ export class DashboardTable extends Component {
           full: intl.formatMessage(messages.description),
           short: intl.formatMessage(messages.description),
         },
-        component: DashboardSimpleTextColumn,
-        formatter: value => value.description,
+        component: DescriptionColumn,
+        formatter: (value) => value.description,
       },
       {
         title: {
           full: intl.formatMessage(messages.owner),
           short: intl.formatMessage(messages.owner),
         },
-        formatter: value => value.owner,
-        component: DashboardSimpleTextColumn,
+        formatter: (value) => value.owner,
+        component: OwnerColumn,
       },
       {
         title: {
@@ -181,7 +185,7 @@ export class DashboardTable extends Component {
         },
         component: SharedColumn,
         customProps: {
-          currentUser: userId,
+          currentUser: userInfo,
         },
       },
       {
@@ -192,7 +196,7 @@ export class DashboardTable extends Component {
         component: EditColumn,
         customProps: {
           onEdit: onEditItem,
-          currentUser: userId,
+          currentUser: userInfo,
         },
       },
       {
@@ -203,34 +207,21 @@ export class DashboardTable extends Component {
         component: DeleteColumn,
         customProps: {
           onDelete: onDeleteItem,
+          currentUser: userInfo,
         },
       },
     ];
   }
 
-
   COLUMNS = this.getTableColumns();
 
   render() {
-    const {
-      dashboardItems,
-      onAddItem,
-    } = this.props;
+    const { dashboardItems, onAddItem } = this.props;
 
     return (
       <Fragment>
-        <Grid
-          columns={this.COLUMNS}
-          data={dashboardItems}
-          sortingDirection=""
-        />
-        {
-          dashboardItems.length === 0 &&
-          (<DashboardEmptyResults
-            userDashboards
-            action={onAddItem}
-          />)
-        }
+        <Grid columns={this.COLUMNS} data={dashboardItems} sortingDirection="" />
+        {dashboardItems.length === 0 && <EmptyDashboards userDashboards action={onAddItem} />}
       </Fragment>
     );
   }
