@@ -211,7 +211,6 @@
   "MergeLaunchDialog.mergeTypeLinear": "Линейное объединение",
   "MoveToDebugDialog.moveToDebug": "Вы хотите переместить запуск в отладку?",
   "MoveToDebugDialog.moveToDebugHeader": "Переместить в отладку",
-  "MostFailedTests.header.basedOn": "На основе",
   "MostFailedTests.header.issueType.automation_bug": "Ошибка теста",
   "MostFailedTests.header.issueType.failed": "Неудачно",
   "MostFailedTests.header.issueType.no_defect": "Без Дефектов",

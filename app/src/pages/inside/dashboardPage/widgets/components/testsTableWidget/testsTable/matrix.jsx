@@ -1,34 +1,26 @@
 import * as React from 'react';
-import { arrayOf, bool, string, oneOfType } from 'prop-types';
+import { arrayOf, bool, string } from 'prop-types';
 import classNames from 'classnames/bind';
-import { PTStatus } from '../pTypes';
 import styles from '../testsTableWidget.scss';
 
 const cx = classNames.bind(styles);
 
-const renderForBool = (id) => (failed, idx) => (
-  <div key={`${id}-square-${idx}`} className={cx('square', { 'most-failed': failed })} />
-);
-
-const renderForString = (id) => (status, idx) => (
-  <div key={`${id}-square-${idx}`} className={cx('square', status.toLowerCase())} />
-);
-
-function matrixFactory(renderBool) {
-  const renderFn = renderBool ? renderForBool : renderForString;
-
-  const Matrix = ({ tests, id }) => (
-    <div className={cx('matrix')}>
-      <div className={cx('squares-wrapper')}>{tests.map(renderFn(id))}</div>
+const Matrix = ({ tests, id }) => (
+  <div className={cx('matrix')}>
+    <div className={cx('squares-wrapper')}>
+      {/* eslint-disable */
+      tests.map((failed, idx) => (
+        <div key={`${id}-square-${idx}`} className={cx('square', { failed })} />
+      ))
+      /* eslint-disable */
+      }
     </div>
-  );
+  </div>
+);
 
-  Matrix.propTypes = {
-    tests: arrayOf(oneOfType([bool, PTStatus])).isRequired,
-    id: string.isRequired,
-  };
+Matrix.propTypes = {
+  tests: arrayOf(bool).isRequired,
+  id: string.isRequired,
+};
 
-  return Matrix;
-}
-
-export default matrixFactory;
+export default Matrix;
