@@ -164,7 +164,6 @@ define(['util'], function () {
             name: 'Name',
             description: 'Description',
             import: 'Import',
-            note: 'Note:',
             searchName: 'Search by name',
             perPage: 'per page',
             of: 'of',
@@ -2105,7 +2104,6 @@ define(['util'], function () {
 
             analyseLaunchesLabel: 'Choose the base on which the Auto Analysis will be performed:',
             analyseLaunchesLabel1: 'Choose the test items that should be analyzed:',
-            analyseLaunchesNote: 'Only items with defect type "To investigate" will come through an auto-analysis procedure.',
             analyseWarning1: 'You can not perform this operation unless at least one item is not chosen.',
             analyseWarning2: 'You can not perform this operation for Auto-analyzed and Manually analyzed items simultaneously. Please choose one of them.',
 
