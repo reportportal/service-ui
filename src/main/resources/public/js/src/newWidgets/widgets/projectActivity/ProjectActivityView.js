@@ -193,7 +193,7 @@ define(function (require) {
         getTickets: function (item) {
             var newTickets = item.ticketId$newValue ? item.ticketId$newValue.split(',') : [];
             var oldTickets = item.ticketId$oldValue ? item.ticketId$oldValue.split(',') : [];
-            return _.difference(newTickets, oldTickets);
+            return item.actionType === 'unlink_issue' ? _.difference(oldTickets, newTickets) : _.difference(newTickets, oldTickets);
         },
         getItemsInfo: function (items) {
             var self = this;
