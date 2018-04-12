@@ -32,7 +32,8 @@ define(function (require) {
         },
         initialize: function (options) {
             this.render();
-            $('[value="' + options.analyzerMode + '"]', this.$el).attr('checked', 'checked');
+            $('input[value="' + options.analyzerMode + '"]', this.$el).attr('checked', 'checked');
+            $('input[value="TO_INVESTIGATE"]', this.$el).attr('checked', 'checked');
         },
         render: function () {
             var footerButtons = [
