@@ -41,23 +41,29 @@ export class GhostMenuButton extends Component {
     disabled: false,
     color: 'topaz',
   };
+
   state = {
     opened: false,
   };
+
   componentDidMount() {
     document.addEventListener('click', this.handleOutsideClick, false);
   }
+
   componentWillUnmount() {
     document.removeEventListener('click', this.handleOutsideClick, false);
   }
+
   handleOutsideClick = (e) => {
     if (!this.node.contains(e.target) && this.state.opened) {
       this.setState({ opened: false });
     }
   };
+
   toggleMenu = () => {
     this.setState({ opened: !this.state.opened });
   };
+
   render() {
     const { title, items, disabled, color } = this.props;
     return (
@@ -70,7 +76,7 @@ export class GhostMenuButton extends Component {
         ref={(node) => {
           this.node = node;
         }}
-        onClick={this.toggleMenu}
+        onClick={!disabled ? this.toggleMenu : null}
       >
         <i className={cx('hamburger-icon')}>
           <div className={cx('hamburger-icon-part')} />
@@ -84,9 +90,7 @@ export class GhostMenuButton extends Component {
             <div
               key={item.value}
               className={cx('menu-item', { disabled: item.disabled })}
-              onClick={() => {
-                !item.disabled && item.onClick();
-              }}
+              onClick={!item.disabled ? item.onClick : null}
             >
               <span>{item.label}</span>
             </div>

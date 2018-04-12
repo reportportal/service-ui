@@ -17,8 +17,11 @@
     border-color: $COLOR--gray-91;
     cursor: default;
 
-    path {
-      fill: $COLOR--gray-60 !important;
+    .hamburger-icon-part {
+      background-color: $COLOR--gray-60;
+    }
+    polygon {
+      fill: $COLOR--gray-60;
     }
   }
   &.opened {
@@ -37,7 +40,7 @@
       background-color: $COLOR--topaz;
     }
     polygon {
-      fill: $COLOR--topaz !important;
+      fill: $COLOR--topaz;
     }
 
     &:hover {
@@ -49,7 +52,7 @@
         background-color: $COLOR--white-two;
       }
       polygon {
-        fill: $COLOR--white-two !important;
+        fill: $COLOR--white-two;
       }
     }
     &:active {
