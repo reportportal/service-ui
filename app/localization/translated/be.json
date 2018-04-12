@@ -1,4 +1,10 @@
 {
+  "ActionPanel.actionCompare": "Параўнаць",
+  "ActionPanel.actionDelete": "Выдаліць",
+  "ActionPanel.actionForceFinish": "Прымусовы стоп",
+  "ActionPanel.actionMerge": "Аб'яднаць",
+  "ActionPanel.actionMoveToDebug": "Aдправіць ў адладку",
+  "ActionPanel.actionsBtn": "Дзеянні",
   "AdminHeader.btnLogout": "Выйсці",
   "AdminHeader.btnToProject": "Вярнуцца да праекта",
   "AdminHeader.header": "Кіраванне",
