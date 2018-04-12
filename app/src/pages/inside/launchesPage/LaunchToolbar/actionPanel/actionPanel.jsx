@@ -58,7 +58,7 @@ export class ActionPanel extends Component {
 
   onDelete = () => {};
 
-  getMultipleActions = () => [
+  multipleActions = [
     {
       label: this.props.intl.formatMessage(messages.actionMerge),
       value: 'action-merge',
@@ -101,7 +101,7 @@ export class ActionPanel extends Component {
           <div className={cx('action-button', 'mobile-hidden')}>
             <GhostMenuButton
               title={intl.formatMessage(messages.actionsBtn)}
-              items={this.getMultipleActions()}
+              items={this.multipleActions}
             />
           </div>
           <div className={cx('action-button')}>
