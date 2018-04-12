@@ -1,6 +1,7 @@
 import * as React from 'react';
-import { arrayOf, bool, string } from 'prop-types';
+import { arrayOf, bool, string, oneOfType } from 'prop-types';
 import classNames from 'classnames/bind';
+import { PTStatus } from '../pTypes';
 import styles from '../testsTableWidget.scss';
 
 const cx = classNames.bind(styles);
@@ -15,20 +16,15 @@ const renderForString = (id) => (status, idx) => (
 
 function matrixFactory(renderBool) {
   const renderFn = renderBool ? renderForBool : renderForString;
-  console.log('RENDER BOOL: ', renderBool);
+
   const Matrix = ({ tests, id }) => (
     <div className={cx('matrix')}>
-      <div className={cx('squares-wrapper')}>
-        {/* eslint-disable */
-        tests.map(renderFn(id))
-        /* eslint-disable */
-        }
-      </div>
+      <div className={cx('squares-wrapper')}>{tests.map(renderFn(id))}</div>
     </div>
   );
 
   Matrix.propTypes = {
-    tests: arrayOf(bool).isRequired,
+    tests: arrayOf(oneOfType([bool, PTStatus])).isRequired,
     id: string.isRequired,
   };
 
