@@ -1,4 +1,10 @@
 {
+  "ActionPanel.actionCompare": "Сравнить",
+  "ActionPanel.actionDelete": "Удалить",
+  "ActionPanel.actionForceFinish": "Принудительно завершить",
+  "ActionPanel.actionMerge": "Объединить",
+  "ActionPanel.actionMoveToDebug": "Переместить в отладку",
+  "ActionPanel.actionsBtn": "Действия",
   "AdminHeader.btnLogout": "Выйти",
   "AdminHeader.btnToProject": "Назад к проекту",
   "AdminHeader.header": "Управление",
