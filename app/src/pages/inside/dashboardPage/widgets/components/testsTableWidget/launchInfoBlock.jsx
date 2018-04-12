@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { string } from 'prop-types';
+import { string, element } from 'prop-types';
 import { FormattedMessage } from 'react-intl';
 import classNames from 'classnames/bind';
 import styles from './testsTableWidget.scss';
@@ -29,7 +29,7 @@ class LaunchInfoBlock extends React.PureComponent {
 
 LaunchInfoBlock.propTypes = {
   launchName: string.isRequired,
-  issueType: string,
+  issueType: element,
 };
 
 LaunchInfoBlock.defaultProps = {
