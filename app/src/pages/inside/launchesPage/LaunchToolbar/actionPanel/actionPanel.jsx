@@ -47,11 +47,44 @@ export class ActionPanel extends Component {
     hasErrors: false,
     showBreadcrumb: false,
   };
+
   onMerge = () => {};
+
   onCompare = () => {};
+
   onMoveToDebug = () => {};
+
   onForceFinish = () => {};
+
   onDelete = () => {};
+
+  getMultipleActions = () => [
+    {
+      label: this.props.intl.formatMessage(messages.actionMerge),
+      value: 'action-merge',
+      onClick: this.onMerge,
+    },
+    {
+      label: this.props.intl.formatMessage(messages.actionCompare),
+      value: 'action-compare',
+      onClick: this.onCompare,
+    },
+    {
+      label: this.props.intl.formatMessage(messages.actionMoveToDebug),
+      value: 'action-move-to-debug',
+      onClick: this.onMoveToDebug,
+    },
+    {
+      label: this.props.intl.formatMessage(messages.actionForceFinish),
+      value: 'action-force-finish',
+      onClick: this.onForceFinish,
+    },
+    {
+      label: this.props.intl.formatMessage(messages.actionDelete),
+      value: 'action-delete',
+      onClick: this.onDelete,
+    },
+  ];
 
   render() {
     const { intl, showBreadcrumb, hasErrors } = this.props;
@@ -68,33 +101,7 @@ export class ActionPanel extends Component {
           <div className={cx('action-button', 'mobile-hidden')}>
             <GhostMenuButton
               title={intl.formatMessage(messages.actionsBtn)}
-              items={[
-                {
-                  label: intl.formatMessage(messages.actionMerge),
-                  value: 'action-merge',
-                  onClick: this.onMerge,
-                },
-                {
-                  label: intl.formatMessage(messages.actionCompare),
-                  value: 'action-compare',
-                  onClick: this.onCompare,
-                },
-                {
-                  label: intl.formatMessage(messages.actionMoveToDebug),
-                  value: 'action-move-to-debug',
-                  onClick: this.onMoveToDebug,
-                },
-                {
-                  label: intl.formatMessage(messages.actionForceFinish),
-                  value: 'action-force-finish',
-                  onClick: this.onForceFinish,
-                },
-                {
-                  label: intl.formatMessage(messages.actionDelete),
-                  value: 'action-delete',
-                  onClick: this.onDelete,
-                },
-              ]}
+              items={this.getMultipleActions()}
             />
           </div>
           <div className={cx('action-button')}>
