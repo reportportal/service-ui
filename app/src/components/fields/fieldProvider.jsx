@@ -3,13 +3,11 @@ import PropTypes from 'prop-types';
 import { Field } from 'redux-form';
 
 const InnerComponent = ({
-    children,
-    input: { onChange, onBlur, onFocus, value },
-    meta: { error, active, touched },
-    ...rest
-  }) => (
-  cloneElement(children, { onChange, onBlur, onFocus, value, error, active, touched, ...rest })
-);
+  children,
+  input: { onChange, onBlur, onFocus, value },
+  meta: { error, active, touched },
+  ...rest
+}) => cloneElement(children, { onChange, onBlur, onFocus, value, error, active, touched, ...rest });
 
 export const FieldProvider = ({ children, ...rest }) => (
   <Field {...rest} component={InnerComponent}>

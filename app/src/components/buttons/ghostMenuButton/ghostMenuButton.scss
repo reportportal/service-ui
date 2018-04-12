@@ -1,0 +1,131 @@
+.ghost-menu-button {
+  display: flex;
+  align-items: center;
+  position: relative;
+  height: 30px;
+  box-sizing: border-box;
+  padding: 0 10px;
+  border: 1px solid;
+  font-size: 13px;
+  letter-spacing: normal;
+  line-height: 0;
+  cursor: pointer;
+
+  &.disabled {
+    color: $COLOR--gray-60;
+    background-color: $COLOR--white;
+    border-color: $COLOR--gray-91;
+    cursor: default;
+
+    .hamburger-icon-part {
+      background-color: $COLOR--gray-60;
+    }
+    polygon {
+      fill: $COLOR--gray-60;
+    }
+  }
+  &.opened {
+    .toggle-icon {
+      transform: rotate(180deg);
+    }
+    .menu {
+      display: block;
+    }
+  }
+  &.color-topaz:not(.disabled) {
+    border-color: $COLOR--topaz;
+    color: $COLOR--topaz;
+
+    .hamburger-icon-part {
+      background-color: $COLOR--topaz;
+    }
+    polygon {
+      fill: $COLOR--topaz;
+    }
+
+    &:hover {
+      background-color: lighten($COLOR--topaz, 10%);
+      border-color: lighten($COLOR--topaz, 10%);
+      color: $COLOR--white-two;
+
+      .hamburger-icon-part {
+        background-color: $COLOR--white-two;
+      }
+      polygon {
+        fill: $COLOR--white-two;
+      }
+    }
+    &:active {
+      background-color: $COLOR--topaz;
+      border-color: $COLOR--topaz;
+      color: $COLOR--white-two;
+    }
+  }
+}
+
+.hamburger-icon {
+  width: 15px;
+  height: 10px;
+  cursor: pointer;
+  margin-right: 5px;
+}
+.hamburger-icon-part {
+  width: 100%;
+  height: 2px;
+  margin-bottom: 2px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+.title {
+  @media (max-width: $SCREEN_XS_MAX) {
+    display: none;
+  }
+}
+.toggle-icon {
+  width: 20px;
+  height: 20px;
+  box-sizing: border-box;
+  margin-left: 5px;
+  padding: 7px 4px;
+  transition: transform 200ms ease;
+}
+.menu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 3px;
+  border: 1px solid $COLOR--gray-80;
+  background-color: $COLOR--white-two;
+  box-sizing: border-box;
+  box-shadow: 0 6px 12px $COLOR--gray-80;
+  z-index: 1;
+}
+.menu-item {
+  display: block;
+  width: 100%;
+  height: 30px;
+  padding: 0 15px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  background-color: $COLOR--white-two;
+  font-family: $FONT-REGULAR;
+  font-size: 13px;
+  color: $COLOR--charcoal-grey;
+  line-height: 30px;
+  box-sizing: border-box;
+  text-decoration: none;
+  cursor: pointer;
+
+  &.disabled {
+    cursor: default;
+    color: $COLOR--gray-60;
+  }
+
+  &:hover:not(.disabled) {
+    background-color: $COLOR--tealish-hover;
+  }
+}

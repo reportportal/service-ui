@@ -28,49 +28,88 @@ import { InputTagsSearch } from './inputTagsSearch';
 import README from './README.md';
 
 storiesOf('Components/Inputs/InputTagsSearch', module)
-  .addDecorator(host({
-    title: 'Input tags search',
-    align: 'center middle',
-    background: 'white',
-    backdrop: 'rgba(70, 69, 71, 0.2)',
-    height: 400,
-    width: 400,
-  }))
-  .addDecorator(withReadme(README))
-  .add('default state', () =>
-    <InputTagsSearch />,
+  .addDecorator(
+    host({
+      title: 'Input tags search',
+      align: 'center middle',
+      background: 'white',
+      backdrop: 'rgba(70, 69, 71, 0.2)',
+      height: 400,
+      width: 400,
+    }),
   )
+  .addDecorator(withReadme(README))
+  .add('default state', () => <InputTagsSearch />)
   .add('with options', () => {
-    const options = [{ value: '68014', label: 'R3 v2.2' }, { value: '69373', label: 'TA Report Portal R3' }, { value: '78887', label: 'R3 2.5' }, { value: '80710', label: 'R3 2.1 Beta1' }, { value: '80711', label: 'R3 2.1 Beta2' }, { value: '81819', label: 'R3 2.6' }, { value: '82629', label: 'R3 2.7' }, { value: '82630', label: 'R3 3.0' }, { value: '82813', label: 'R3 3.1' }, { value: '84412', label: '3.0.2' }, { value: '84451', label: '3.0.3' }, { value: '86571', label: '3.1' }, { value: '86584', label: '3.2' }, { value: '87361', label: '3.3' }, { value: '87566', label: '3.4' }, { value: '89279', label: '4.0' }, { value: '93491', label: '4.0.1' }, { value: '93492', label: '4.0.2' }, { value: '93493', label: '4.0.3' }, { value: '93494', label: '4.1' }, { value: '93495', label: '4.1.1' }, { value: '93496', label: '4.1.2' }, { value: '93497', label: '4.2' }];
-    return (
-      <InputTagsSearch
-        options={options}
-        nothingFound="No mathes found"
-      />
-    );
+    const options = [
+      { value: '68014', label: 'R3 v2.2' },
+      { value: '69373', label: 'TA Report Portal R3' },
+      { value: '78887', label: 'R3 2.5' },
+      { value: '80710', label: 'R3 2.1 Beta1' },
+      { value: '80711', label: 'R3 2.1 Beta2' },
+      { value: '81819', label: 'R3 2.6' },
+      { value: '82629', label: 'R3 2.7' },
+      { value: '82630', label: 'R3 3.0' },
+      { value: '82813', label: 'R3 3.1' },
+      { value: '84412', label: '3.0.2' },
+      { value: '84451', label: '3.0.3' },
+      { value: '86571', label: '3.1' },
+      { value: '86584', label: '3.2' },
+      { value: '87361', label: '3.3' },
+      { value: '87566', label: '3.4' },
+      { value: '89279', label: '4.0' },
+      { value: '93491', label: '4.0.1' },
+      { value: '93492', label: '4.0.2' },
+      { value: '93493', label: '4.0.3' },
+      { value: '93494', label: '4.1' },
+      { value: '93495', label: '4.1.1' },
+      { value: '93496', label: '4.1.2' },
+      { value: '93497', label: '4.2' },
+    ];
+    return <InputTagsSearch options={options} nothingFound="No mathes found" />;
   })
   .add('with nothingFound label', () => {
-    const options = [{ value: '68014', label: 'R3 v2.2' }, { value: '69373', label: 'TA Report Portal R3' }, { value: '78887', label: 'R3 2.5' }, { value: '80710', label: 'R3 2.1 Beta1' }, { value: '80711', label: 'R3 2.1 Beta2' }, { value: '81819', label: 'R3 2.6' }, { value: '82629', label: 'R3 2.7' }, { value: '82630', label: 'R3 3.0' }, { value: '82813', label: 'R3 3.1' }, { value: '84412', label: '3.0.2' }, { value: '84451', label: '3.0.3' }, { value: '86571', label: '3.1' }, { value: '86584', label: '3.2' }, { value: '87361', label: '3.3' }, { value: '87566', label: '3.4' }, { value: '89279', label: '4.0' }, { value: '93491', label: '4.0.1' }, { value: '93492', label: '4.0.2' }, { value: '93493', label: '4.0.3' }, { value: '93494', label: '4.1' }, { value: '93495', label: '4.1.1' }, { value: '93496', label: '4.1.2' }, { value: '93497', label: '4.2' }];
-    return (
-      <InputTagsSearch
-        options={options}
-        nothingFound="No mathes found"
-      />
-    );
+    const options = [
+      { value: '68014', label: 'R3 v2.2' },
+      { value: '69373', label: 'TA Report Portal R3' },
+      { value: '78887', label: 'R3 2.5' },
+      { value: '80710', label: 'R3 2.1 Beta1' },
+      { value: '80711', label: 'R3 2.1 Beta2' },
+      { value: '81819', label: 'R3 2.6' },
+      { value: '82629', label: 'R3 2.7' },
+      { value: '82630', label: 'R3 3.0' },
+      { value: '82813', label: 'R3 3.1' },
+      { value: '84412', label: '3.0.2' },
+      { value: '84451', label: '3.0.3' },
+      { value: '86571', label: '3.1' },
+      { value: '86584', label: '3.2' },
+      { value: '87361', label: '3.3' },
+      { value: '87566', label: '3.4' },
+      { value: '89279', label: '4.0' },
+      { value: '93491', label: '4.0.1' },
+      { value: '93492', label: '4.0.2' },
+      { value: '93493', label: '4.0.3' },
+      { value: '93494', label: '4.1' },
+      { value: '93495', label: '4.1.1' },
+      { value: '93496', label: '4.1.2' },
+      { value: '93497', label: '4.2' },
+    ];
+    return <InputTagsSearch options={options} nothingFound="No mathes found" />;
   })
   .add('with value ', () => (
     <InputTagsSearch
-      value={[{ value: '68014', label: 'R3 v2.2' }, { value: '69373', label: 'TA Report Portal R3' }]}
+      value={[
+        { value: '68014', label: 'R3 v2.2' },
+        { value: '69373', label: 'TA Report Portal R3' },
+      ]}
     />
   ))
   .add('with onChange action', () => {
-    const options = [{ value: '68014', label: 'R3 v2.2' }, { value: '69373', label: 'TA Report Portal R3' }];
-    return (
-      <InputTagsSearch
-        options={options}
-        onChange={action('Select Item')}
-      />
-    );
+    const options = [
+      { value: '68014', label: 'R3 v2.2' },
+      { value: '69373', label: 'TA Report Portal R3' },
+    ];
+    return <InputTagsSearch options={options} onChange={action('Select Item')} />;
   })
   .add('creatable with validation', () => {
     const isValidNewOption = (label, minLength, validation) => {
@@ -90,9 +129,6 @@ storiesOf('Components/Inputs/InputTagsSearch', module)
       />
     );
   })
-  .add('Dynamic search label and minLength', () =>
-    (<InputTagsSearch
-      minLength={3}
-      dynamicSearchPromptText
-    />),
-  );
+  .add('Dynamic search label and minLength', () => (
+    <InputTagsSearch minLength={3} dynamicSearchPromptText />
+  ));

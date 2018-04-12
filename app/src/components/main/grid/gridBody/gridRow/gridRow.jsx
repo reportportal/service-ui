@@ -40,7 +40,9 @@ export class GridRow extends Component {
 
   toggleAccordion = () => {
     this.setState({ expanded: !this.state.expanded });
-    this.overflowCell.style.maxHeight = this.state.expanded ? `${this.overflowCellMaxHeight}px` : null;
+    this.overflowCell.style.maxHeight = this.state.expanded
+      ? `${this.overflowCellMaxHeight}px`
+      : null;
   };
 
   isItemSelected = () => this.props.selectedItems.some(item => item.id === this.props.value.id);

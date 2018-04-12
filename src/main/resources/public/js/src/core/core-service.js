@@ -247,8 +247,12 @@ define([
         return call('PUT', urls.updateTestItemUrl(id), data);
     };
 
-    var startLaunchAnalyze = function (id, mode) {
-        return call('POST', urls.launchAnalyzeUrl(id, mode), null, null, true);
+    var startLaunchAnalyze = function (id, mode, itemsMode) {
+        return call('POST', urls.launchAnalyzeUrl(), {
+            analyze_items_mode: itemsMode,
+            analyzer_mode: mode,
+            launch_id: id
+        }, null, true);
     };
 
     var mergeLaunches = function (data) {

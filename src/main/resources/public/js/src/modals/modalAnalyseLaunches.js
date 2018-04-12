@@ -27,11 +27,13 @@ define(function (require) {
         template: 'tpl-modal-analyse-launches',
         className: 'modal-analyse-launches',
         events: {
-            'click [data-js-analyze]': 'onAnalyze'
+            'click [data-js-analyze]': 'onAnalyze',
+            'change input': 'onChange'
         },
         initialize: function (options) {
             this.render();
-            $('[value="' + options.analyzerMode + '"]', this.$el).attr('checked', 'checked');
+            $('input[value="' + options.analyzerMode + '"]', this.$el).attr('checked', 'checked');
+            $('input[value="TO_INVESTIGATE"]', this.$el).attr('checked', 'checked');
         },
         render: function () {
             var footerButtons = [
@@ -48,13 +50,29 @@ define(function (require) {
             ];
             this.$el.html(Util.templates(this.template, { footerButtons: footerButtons }));
         },
+        onChange: function() {
+            this.hideWarningBlock();
+        },
         onKeySuccess: function () {
             $('[data-js-analyze]', this.$el).focus().trigger('click');
         },
-
         onAnalyze: function () {
+            var strategy = $('[data-js-strategy-options] input:checked', this.$el).val();
+            var extendedOptions = [];
+            $('[data-js-extended-strategy-options] input:checked', this.$el).each(function(){
+                extendedOptions.push($(this).val());
+            });
+            if (!extendedOptions.length) {
+                this.showWarningBlock(Localization.dialog.analyseWarning1);
+                return;
+            }
+            if (strategy === 'CURRENT_LAUNCH' && ~extendedOptions.indexOf('AUTO_ANALYZED') && ~extendedOptions.indexOf('MANUALLY_ANALYZED')) {
+                this.showWarningBlock(Localization.dialog.analyseWarning2);
+                return;
+            }
             this.successClose({
-                analyzerMode: $('input:checked', this.$el).val()
+                analyzerMode: $('[data-js-strategy-options] input:checked', this.$el).val(),
+                analyzeItemsMode: extendedOptions,
             });
         }
     });

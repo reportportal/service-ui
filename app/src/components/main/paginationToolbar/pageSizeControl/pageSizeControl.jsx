@@ -30,7 +30,9 @@ export class PageSizeControl extends Component {
       this.inputNode.focus();
     });
 
-  handleChange = (e) => this.setState({ inputValue: e.target.value });
+  handleChange = (e) => this.setState({ inputValue: this.normalizeInput(e.target.value) });
+
+  normalizeInput = (value) => (Number(value) < 0 || isNaN(Number(value)) ? '0' : value);
 
   handleEnterKey = (e) => {
     const value = this.state.inputValue;

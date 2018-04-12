@@ -7,6 +7,7 @@ import { userIdSelector, activeProjectSelector } from 'controllers/user';
 import { withPagination } from 'controllers/pagination';
 import { PageLayout } from 'layouts/pageLayout';
 import { showModalAction } from 'controllers/modal';
+import { withSorting, SORTING_ASC } from 'controllers/sorting';
 import { userFiltersSelector, toggleDisplayFilterOnLaunchesAction } from 'controllers/project';
 import { fetch } from 'common/utils';
 import { FilterTable } from './filterTable';
@@ -19,14 +20,21 @@ const messages = defineMessages({
   },
 });
 
-@connect(state => ({
-  userId: userIdSelector(state),
-  url: `/api/v1/${activeProjectSelector(state)}/filter`,
-  activeProject: activeProjectSelector(state),
-  userFilters: userFiltersSelector(state),
-}), {
-  showModalAction,
-  toggleDisplayFilterOnLaunches: toggleDisplayFilterOnLaunchesAction,
+@connect(
+  (state) => ({
+    userId: userIdSelector(state),
+    url: `/api/v1/${activeProjectSelector(state)}/filter`,
+    activeProject: activeProjectSelector(state),
+    userFilters: userFiltersSelector(state),
+  }),
+  {
+    showModalAction,
+    toggleDisplayFilterOnLaunches: toggleDisplayFilterOnLaunchesAction,
+  },
+)
+@withSorting({
+  defaultSortingColumn: 'name',
+  defaultSortingDirection: SORTING_ASC,
 })
 @withFilter
 @withPagination()
@@ -58,29 +66,26 @@ export class FiltersPage extends PureComponent {
     userId: '',
     filter: '',
     activeProject: '',
-    onFilterChange: () => {
-    },
-    onChangePage: () => {
-    },
-    onChangePageSize: () => {
-    },
-    fetchData: () => {
-    },
-    showModalAction: () => {
-    },
+    onFilterChange: () => {},
+    onChangePage: () => {},
+    onChangePageSize: () => {},
+    fetchData: () => {},
+    showModalAction: () => {},
   };
 
-  confirmDelete = filter => this.props.showModalAction({
-    id: 'filterDeleteModal',
-    data: { filter, onConfirm: () => this.deleteFilter(filter.id) },
-  });
+  confirmDelete = (filter) =>
+    this.props.showModalAction({
+      id: 'filterDeleteModal',
+      data: { filter, onConfirm: () => this.deleteFilter(filter.id) },
+    });
 
-  openEditModal = filter => this.props.showModalAction({
-    id: 'filterEditModal',
-    data: { filter, onEdit: this.updateFilter },
-  });
+  openEditModal = (filter) =>
+    this.props.showModalAction({
+      id: 'filterEditModal',
+      data: { filter, onEdit: this.updateFilter },
+    });
 
-  updateFilter = filter =>
+  updateFilter = (filter) =>
     fetch(`/api/v1/${this.props.activeProject}/filter/${filter.id}`, {
       method: 'put',
       data: filter,
@@ -96,15 +101,8 @@ export class FiltersPage extends PureComponent {
     const { filter, intl, onFilterChange, ...rest } = this.props;
     return (
       <PageLayout title={intl.formatMessage(messages.filtersPageTitle)}>
-        <FilterPageToolbar
-          filter={filter}
-          onFilterChange={onFilterChange}
-        />
-        <FilterTable
-          onDelete={this.confirmDelete}
-          onEdit={this.openEditModal}
-          {...rest}
-        />
+        <FilterPageToolbar filter={filter} onFilterChange={onFilterChange} />
+        <FilterTable onDelete={this.confirmDelete} onEdit={this.openEditModal} {...rest} />
       </PageLayout>
     );
   }

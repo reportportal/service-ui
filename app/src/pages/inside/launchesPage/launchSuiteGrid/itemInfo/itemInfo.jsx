@@ -11,18 +11,16 @@ import styles from './itemInfo.scss';
 
 const cx = classNames.bind(styles);
 
-export const ItemInfo = ({ value, refFunction, analyzing }) => (
+export const ItemInfo = ({ value, refFunction, analyzing, customProps }) => (
   <div ref={refFunction} className={cx('item-info')}>
     <div className={cx('main-info')}>
       <a href="/" className={cx('name-link')}>
         <span className={cx('name')}>{value.name}</span>
         <span className={cx('number')}>#{value.number}</span>
       </a>
-      {
-        analyzing && <div className={cx('analysis-badge')}>Analysis</div>
-      }
-      <div className={cx('edit-icon')}>
-        { Parser(PencilIcon) }
+      {analyzing && <div className={cx('analysis-badge')}>Analysis</div>}
+      <div className={cx('edit-icon')} onClick={() => customProps.onEditLaunch(value)}>
+        {Parser(PencilIcon)}
       </div>
     </div>
 
@@ -37,19 +35,14 @@ export const ItemInfo = ({ value, refFunction, analyzing }) => (
           approxTime: value.approximateDuration,
         }}
       />
-      <div className={cx('mobile-start-time')}>
-        { fromNowFormat(value.start_time) }
-      </div>
+      <div className={cx('mobile-start-time')}>{fromNowFormat(value.start_time)}</div>
       <OwnerBlock owner={value.owner} />
-      {
-        value.tags && value.tags.length && <TagsBlock tags={value.tags} />
-      }
-      {
-        value.description &&
-          <div className={cx('item-description')}>
-            <MarkdownViewer value={value.description} />
-          </div>
-      }
+      {value.tags && value.tags.length && <TagsBlock tags={value.tags} />}
+      {value.description && (
+        <div className={cx('item-description')}>
+          <MarkdownViewer value={value.description} />
+        </div>
+      )}
     </div>
   </div>
 );
@@ -58,8 +51,10 @@ ItemInfo.propTypes = {
   value: PropTypes.object,
   refFunction: PropTypes.func.isRequired,
   analyzing: PropTypes.bool,
+  customProps: PropTypes.object,
 };
 ItemInfo.defaultProps = {
   value: {},
   analyzing: false,
+  customProps: {},
 };

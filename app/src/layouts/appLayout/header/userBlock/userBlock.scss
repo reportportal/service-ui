@@ -39,6 +39,7 @@
   width: 100%;
   overflow: hidden;
   font-size: 11px;
+  line-height: 15px;
   text-transform: uppercase;
   text-overflow: ellipsis;
 }
@@ -51,7 +52,7 @@
   overflow: hidden;
   background-color: transparent;
 }
-.avatar{
+.avatar {
   position: absolute;
   max-width: 100%;
   max-height: 100%;

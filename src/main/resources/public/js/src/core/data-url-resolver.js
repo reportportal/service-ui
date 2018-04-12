@@ -149,8 +149,8 @@ define(['app'], function (App) {
     var deleteTestItemUrl = function (id) {
         return getProjectBase() + '/item/' + id;
     };
-    var launchAnalyzeUrl = function (id, mode) {
-        return getProjectBase() + '/launch/' + id + '/analyze?analyze_mode=' + mode;
+    var launchAnalyzeUrl = function () {
+        return getProjectBase() + '/launch/analyze';
     };
     var launchFinishUrl = function (id) {
         return getProjectBase() + '/launch/' + id + '/stop';
