@@ -50,6 +50,7 @@ const columns = {
     ),
     countKey: 'failedCount',
     matrixKey: 'isFailed',
+    renderAsBool: true,
   },
   percents: {
     header: (

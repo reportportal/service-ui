@@ -3,16 +3,27 @@ import { func } from 'prop-types';
 import classNames from 'classnames/bind';
 import { PTTests, PTColumns } from '../pTypes';
 import TestsTableRow from './testsTableRow';
+import matrixFactory from './matrix';
 import styles from '../testsTableWidget.scss';
 
 const cx = classNames.bind(styles);
 
 class TestsTableBody extends React.PureComponent {
   static propTypes = {
-    tests: PTTests.isRequired,
+    tests: PTTests,
     nameClickHandler: func.isRequired,
     columns: PTColumns.isRequired,
   };
+
+  static defaultProps = {
+    tests: [],
+  };
+
+  constructor(props) {
+    super(props);
+
+    this.matrixComponent = matrixFactory(this.props.columns.count.renderAsBool);
+  }
 
   renderRow = (test) => {
     const { columns, nameClickHandler } = this.props;
@@ -25,14 +36,13 @@ class TestsTableBody extends React.PureComponent {
         nameClickHandler={nameClickHandler}
         countKey={count.countKey}
         matrixDataKey={count.matrixKey}
+        matrixComponent={this.matrixComponent}
       />
     );
   };
 
   render() {
-    const { tests = [] } = this.props;
-
-    return <div className={cx('tests-table-body')}>{tests.map(this.renderRow)}</div>;
+    return <div className={cx('tests-table-body')}>{this.props.tests.map(this.renderRow)}</div>;
   }
 }
 

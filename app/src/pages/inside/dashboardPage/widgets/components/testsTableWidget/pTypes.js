@@ -7,7 +7,7 @@ export const PTLaunch = shape({
   issueType: string,
 });
 
-const PTStatus = oneOf(['FAILED', 'PASSED', 'SKIPPED']);
+export const PTStatus = oneOf(['FAILED', 'PASSED', 'SKIPPED']);
 
 export const PTTest = shape({
   name: string.isRequired,
@@ -38,6 +38,7 @@ export const PTColumns = shape({
     headerShort: node.isRequired,
     countKey: string.isRequired,
     matrixKey: string.isRequired,
+    renderAsBool: bool,
   }).isRequired,
   percents: shape({
     header: node.isRequired,
