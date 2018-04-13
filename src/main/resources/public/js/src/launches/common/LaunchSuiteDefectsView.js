@@ -29,6 +29,7 @@ define(function (require) {
     var c3 = require('c3');
     var SingletonDefectTypeCollection = require('defectType/SingletonDefectTypeCollection');
     var LaunchSuiteDefectsHoverView = require('launches/common/LaunchSuiteDefectsHoverView');
+    var DonutChartComponent = require('components/DonutChartComponent');
     var config = App.getInstance();
 
     var LaunchSuiteDefectsView = Epoxy.View.extend({
@@ -127,52 +128,34 @@ define(function (require) {
             return statistics.defects[this.type];
         },
         getDefectChartData: function () {
-            var data = {
-                columns: [],
-                colors: {}
-            };
+            var self = this;
+            var data = [];
             var defects = this.getDefectByType();
-            _.each(defects, function (val, key) {
-                if (key !== 'total') {
-                    data.columns.push([key]);
-                    data.colors[key] = this.defectsCollection.getDefectType(key).color;
+            var offset = 75;
+            Object.keys(defects).forEach(function(defect) {
+                if (defect !== 'total') {
+                    var val = defects[defect];
+                    var percents = val / defects.total * 100;
+
+                    data.push({
+                        value: percents,
+                        color: self.defectsCollection.getDefectType(defect).color,
+                        offset: 100 - offset,
+                    });
+                    offset = offset + percents;
                 }
-            }, this);
-            _.each(defects, function (val, key) {
-                if (key !== 'total') {
-                    _.find(data.columns, function (column) { return column[0] === key; }).push(val);
-                }
-            }, this);
+            });
             return data;
         },
         drawDonutChart: function () {
             var data = this.getDefectChartData();
             var $el = $('[data-js-chart]', this.$el);
-            this.chart = c3.generate({
-                bindto: $el[0],
-                data: {
-                    columns: data.columns,
-                    type: 'donut',
-                    order: null,
-                    colors: data.colors
-                },
-                size: {
-                    width: 56,
-                    height: 56
-                },
-                donut: {
-                    width: 12,
-                    label: {
-                        show: false
-                    }
-                },
-                interaction: {
-                    enabled: false
-                },
-                legend: {
-                    show: false
-                }
+            var chart = new DonutChartComponent({
+                diameter: 56,
+                strokeWidth: 13,
+                items: data,
             });
+            $el.html(chart.el);
         },
         onDestroy: function () {
             this.hoverView && this.hoverView.destroy();
