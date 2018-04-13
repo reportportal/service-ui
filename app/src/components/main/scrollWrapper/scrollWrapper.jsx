@@ -42,6 +42,7 @@ export class ScrollWrapper extends Component {
     renderView: PropTypes.func,
     hideTracksWhenNotNeeded: PropTypes.bool,
     thumbMinSize: PropTypes.number,
+    className: PropTypes.string,
   };
   static defaultProps = {
     children: {},
@@ -50,13 +51,14 @@ export class ScrollWrapper extends Component {
     autoHeightMin: 0,
     autoHeightMax: 200,
     autoHideTimeout: 500,
-    renderTrackHorizontal: props => <div {...props} className={cx('track-horizontal')} />,
-    renderTrackVertical: props => <div {...props} className={cx('track-vertical')} />,
-    renderThumbHorizontal: props => <div {...props} className={cx('thumb-horizontal')} />,
-    renderThumbVertical: props => <div {...props} className={cx('thumb-vertical')} />,
-    renderView: props => <div {...props} className={cx('scrolling-content')} />,
+    renderTrackHorizontal: (props) => <div {...props} className={cx('track-horizontal')} />,
+    renderTrackVertical: (props) => <div {...props} className={cx('track-vertical')} />,
+    renderThumbHorizontal: (props) => <div {...props} className={cx('thumb-horizontal')} />,
+    renderThumbVertical: (props) => <div {...props} className={cx('thumb-vertical')} />,
+    renderView: (props) => <div {...props} className={cx('scrolling-content')} />,
     hideTracksWhenNotNeeded: false,
     thumbMinSize: 30,
+    className: '',
   };
 
   handleScrollFrame = (values) => {
@@ -73,10 +75,14 @@ export class ScrollWrapper extends Component {
   };
 
   render() {
-    return ( // base props are defined. For more info see https://github.com/malte-wessel/react-custom-scrollbars/blob/master/docs/API.md
+    const className = `${cx('scroll-component')} ${cx(this.props.className)}`;
+    return (
+      // base props are defined. For more info see https://github.com/malte-wessel/react-custom-scrollbars/blob/master/docs/API.md
       <Scrollbars
-        ref={(scrollbars) => { this.scrollbars = scrollbars; }}
-        className={cx('scroll-component')}
+        ref={(scrollbars) => {
+          this.scrollbars = scrollbars;
+        }}
+        className={className}
         autoHide={this.props.autoHide}
         autoHeight={this.props.autoHeight}
         autoHeightMin={this.props.autoHeightMin}
@@ -89,11 +95,10 @@ export class ScrollWrapper extends Component {
         renderView={this.props.renderView}
         hideTracksWhenNotNeeded={this.props.hideTracksWhenNotNeeded}
         thumbMinSize={this.props.thumbMinSize}
-
         onScrollFrame={this.handleScrollFrame}
         onScrollStop={this.handleScrollStop}
       >
-        { this.props.children }
+        {this.props.children}
       </Scrollbars>
     );
   }
