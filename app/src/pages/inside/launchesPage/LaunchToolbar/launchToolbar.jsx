@@ -19,6 +19,7 @@ export const LaunchToolbar = ({ selectedLaunches, errors, onUnselect, onUnselect
     <ActionPanel
       showBreadcrumb={selectedLaunches.length === 0}
       hasErrors={selectedLaunches.some((launch) => !!errors[launch.id])}
+      selectedLaunches={selectedLaunches}
     />
   </div>
 );
