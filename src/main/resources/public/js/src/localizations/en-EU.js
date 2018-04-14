@@ -1643,7 +1643,11 @@ define(['util'], function () {
             btw: 'between',
             not: ' not ',
             and: ' and ',
-            andb: ' AND '
+            andb: ' AND ',
+            has: 'has',
+            '!has': 'without',
+            in: 'has any of',
+            '!in': 'without any of',
         },
 
         successMessages: {
