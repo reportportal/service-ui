@@ -18,18 +18,4 @@
   height: 56px;
   width: 56px;
   transform: rotate(-90deg);
-
-  svg {
-    :global {
-      .c3-chart {
-        .c3-chart-arcs {
-          .c3-chart-arc {
-            path {
-              stroke-width: 0;
-            }
-          }
-        }
-      }
-    }
-  }
 }

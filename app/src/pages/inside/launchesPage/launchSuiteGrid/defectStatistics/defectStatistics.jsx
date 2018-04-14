@@ -1,7 +1,7 @@
 import { Fragment } from 'react';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
-import { PieChart } from './pieChart';
+import { DonutChart } from './donutChart';
 import styles from './defectStatistics.scss';
 
 const cx = classNames.bind(styles);
@@ -10,21 +10,18 @@ export const DefectStatistics = ({ type, data, customProps }) => (
   <div className={cx('defect-statistics')}>
     <span className={cx('title')}>
       <span className={cx('circle', { [`type-${type}`]: type })} />
-      { customProps.abbreviation }
+      {customProps.abbreviation}
     </span>
-    {
-      !!data.total &&
+    {!!data.total && (
       <Fragment>
         <div className={cx('desktop-visible')}>
-          <PieChart data={data} type={type} />
+          <DonutChart data={data} type={type} diameter={56} strokeWidth={13} />
         </div>
         <div className={cx('desktop-hidden')}>
-          <a href="/">
-            { data.total }
-          </a>
+          <a href="/">{data.total}</a>
         </div>
       </Fragment>
-    }
+    )}
   </div>
 );
 DefectStatistics.propTypes = {
