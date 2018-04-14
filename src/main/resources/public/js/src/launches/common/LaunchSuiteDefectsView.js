@@ -25,8 +25,6 @@ define(function (require) {
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
     var App = require('app');
-    var d3 = require('d3');
-    var c3 = require('c3');
     var SingletonDefectTypeCollection = require('defectType/SingletonDefectTypeCollection');
     var LaunchSuiteDefectsHoverView = require('launches/common/LaunchSuiteDefectsHoverView');
     var DonutChartComponent = require('components/DonutChartComponent');
