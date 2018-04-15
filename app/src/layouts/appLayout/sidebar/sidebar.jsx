@@ -26,6 +26,15 @@ import { logoutAction } from 'controllers/auth';
 import classNames from 'classnames/bind';
 import { FormattedMessage } from 'react-intl';
 import { SidebarButton } from 'components/buttons/sidebarButton/sidebarButton';
+import {
+  PROJECT_DASHBOARD_PAGE,
+  PROJECT_LAUNCHES_PAGE,
+  PROJECT_FILTERS_PAGE,
+  PROJECT_USERDEBUG_PAGE,
+  USER_PROFILE_PAGE,
+  ADMINISTRATE_PAGE,
+  LOGIN_PAGE,
+} from 'controllers/pages/constants';
 import PropTypes from 'prop-types';
 import styles from './sidebar.scss';
 import DashboardIcon from './img/dashboard-icon-inline.svg';
@@ -35,20 +44,11 @@ import DebugIcon from './img/debug-icon-inline.svg';
 import ProfileIcon from './img/profile-icon-inline.svg';
 import AdministrateIcon from './img/administrate-icon-inline.svg';
 import LogoutIcon from './img/logout-icon-inline.svg';
-import {
-	PROJECT_DASHBOARD_PAGE,
-	PROJECT_LAUNCHES_PAGE,
-	PROJECT_FILTERS_PAGE,
-	PROJECT_USERDEBUG_PAGE,
-	USER_PROFILE_PAGE,
-	ADMINISTRATE_PAGE,
-	LOGIN_PAGE
-} from 'controllers/pages/constants';
 
 const cx = classNames.bind(styles);
 
 @connect(
-  state => ({
+  (state) => ({
     activeProject: activeProjectSelector(state),
   }),
   {
@@ -66,62 +66,56 @@ export class Sidebar extends Component {
     logout: () => {},
   };
   render() {
-	const { activeProject } = this.props;
+    const { activeProject } = this.props;
     return (
-      <div className={cx('sidebar')} >
+      <div className={cx('sidebar')}>
         <div className={cx('top-block')}>
           <div className={cx('sidebar-btn')} onClick={this.props.onClickNavBtn}>
-            <SidebarButton 
-				link={{type:PROJECT_DASHBOARD_PAGE, payload: {projectId: activeProject}}}
-				icon={DashboardIcon}>
+            <SidebarButton
+              link={{ type: PROJECT_DASHBOARD_PAGE, payload: { projectId: activeProject } }}
+              icon={DashboardIcon}
+            >
               <FormattedMessage id={'Sidebar.dashboardsBtn'} defaultMessage={'Dashboard'} />
             </SidebarButton>
           </div>
           <div className={cx('sidebar-btn')} onClick={this.props.onClickNavBtn}>
-
-            <SidebarButton 
-				link={{type:PROJECT_LAUNCHES_PAGE, payload: {projectId: activeProject}}}
-				icon={LaunchesIcon}>
+            <SidebarButton
+              link={{ type: PROJECT_LAUNCHES_PAGE, payload: { projectId: activeProject } }}
+              icon={LaunchesIcon}
+            >
               <FormattedMessage id={'Sidebar.launchesBtn'} defaultMessage={'Launches'} />
             </SidebarButton>
           </div>
           <div className={cx('sidebar-btn')} onClick={this.props.onClickNavBtn}>
-            <SidebarButton 
-				link={{type:PROJECT_FILTERS_PAGE, payload: {projectId: activeProject}}}
-				icon={FiltersIcon}>
+            <SidebarButton
+              link={{ type: PROJECT_FILTERS_PAGE, payload: { projectId: activeProject } }}
+              icon={FiltersIcon}
+            >
               <FormattedMessage id={'Sidebar.filtersBtn'} defaultMessage={'Filters'} />
             </SidebarButton>
           </div>
           <div className={cx('sidebar-btn')} onClick={this.props.onClickNavBtn}>
             <SidebarButton
-				link={{type:PROJECT_USERDEBUG_PAGE, payload: {projectId: activeProject}}}
-				icon={DebugIcon}>
+              link={{ type: PROJECT_USERDEBUG_PAGE, payload: { projectId: activeProject } }}
+              icon={DebugIcon}
+            >
               <FormattedMessage id={'Sidebar.debugBtn'} defaultMessage={'Debug'} />
             </SidebarButton>
           </div>
         </div>
         <div className={cx('bottom-block')}>
           <div className={cx('sidebar-btn')} onClick={this.props.onClickNavBtn}>
-            <SidebarButton
-				link={{type:USER_PROFILE_PAGE}}
-				icon={ProfileIcon}
-				bottom>
+            <SidebarButton link={{ type: USER_PROFILE_PAGE }} icon={ProfileIcon} bottom>
               <FormattedMessage id={'Sidebar.profileBtn'} defaultMessage={'Profile'} />
             </SidebarButton>
           </div>
           <div className={cx('sidebar-btn')} onClick={this.props.onClickNavBtn}>
-            <SidebarButton
-				link={{type:ADMINISTRATE_PAGE}}
-				icon={AdministrateIcon}
-				bottom>
+            <SidebarButton link={{ type: ADMINISTRATE_PAGE }} icon={AdministrateIcon} bottom>
               <FormattedMessage id={'Sidebar.administrateBtn'} defaultMessage={'Administrate'} />
             </SidebarButton>
           </div>
           <div className={cx('sidebar-btn')} onClick={this.props.logout}>
-            <SidebarButton
-				link={{type:LOGIN_PAGE}}
-				icon={LogoutIcon}
-		        bottom>
+            <SidebarButton link={{ type: LOGIN_PAGE }} icon={LogoutIcon} bottom>
               <FormattedMessage id={'Sidebar.logoutBtn'} defaultMessage={'Logout'} />
             </SidebarButton>
           </div>

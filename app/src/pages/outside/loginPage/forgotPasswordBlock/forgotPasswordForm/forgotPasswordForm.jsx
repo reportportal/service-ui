@@ -26,15 +26,15 @@ import { FormattedMessage, injectIntl, intlShape, defineMessages } from 'react-i
 import Link from 'redux-first-router-link';
 import { redirect } from 'redux-first-router';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux'
+import { connect } from 'react-redux';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { InputOutside } from 'components/inputs/inputOutside';
 import { BigButton } from 'components/buttons/bigButton';
 import { validate, fetch } from 'common/utils';
+import { LOGIN_PAGE } from 'controllers/pages';
 import EmailIcon from './img/email-icon-inline.svg';
 import styles from './forgotPasswordForm.scss';
-import { LOGIN_PAGE } from 'controllers/pages';
 
 const cx = classNames.bind(styles);
 
@@ -45,8 +45,8 @@ const placeholders = defineMessages({
   },
 });
 
-@connect(null, (dispatch, ownProps) => ({
-	redirectToLoginPage: () => dispatch(redirect({type:LOGIN_PAGE}))
+@connect(null, (dispatch) => ({
+  redirectToLoginPage: () => dispatch(redirect({ type: LOGIN_PAGE })),
 }))
 @reduxForm({
   form: 'forgotPassword',
@@ -59,7 +59,7 @@ export class ForgotPasswordForm extends PureComponent {
   static propTypes = {
     intl: intlShape.isRequired,
     handleSubmit: PropTypes.func.isRequired,
-	redirectToLoginPage: PropTypes.func.isRequired
+    redirectToLoginPage: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
@@ -71,7 +71,7 @@ export class ForgotPasswordForm extends PureComponent {
       method: 'post',
       data: {
         email,
-      }
+      },
     }).then(() => this.props.redirectToLoginPage());
   };
 
@@ -89,12 +89,11 @@ export class ForgotPasswordForm extends PureComponent {
         </div>
         <div className={cx('forgot-password-buttons-container')}>
           <div className={cx('forgot-password-button')}>
-            <Link to={{type: LOGIN_PAGE}} className={cx('button-link')}>
+            <Link to={{ type: LOGIN_PAGE }} className={cx('button-link')}>
               <BigButton type={'button'} color={'gray-60'}>
                 <FormattedMessage id={'ForgotPasswordForm.cancel'} defaultMessage={'Cancel'} />
               </BigButton>
             </Link>
-
           </div>
           <div className={cx('forgot-password-button')}>
             <BigButton type={'submit'} color={'organish'}>

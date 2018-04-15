@@ -46,7 +46,7 @@ const placeholders = defineMessages({
   },
 });
 
-@connectRouter(({reset}) => ({reset}))
+@connectRouter(({ reset }) => ({ reset }))
 @reduxForm({
   form: 'changePassword',
   validate: ({ password, passwordRepeat }) => ({
@@ -59,7 +59,11 @@ export class ChangePasswordForm extends PureComponent {
   static propTypes = {
     intl: intlShape.isRequired,
     handleSubmit: PropTypes.func.isRequired,
-	reset: PropTypes.object
+    reset: PropTypes.object,
+  };
+
+  static defaultProps = {
+    reset: undefined,
   };
 
   changePassword = ({ password }) => {
@@ -80,9 +84,20 @@ export class ChangePasswordForm extends PureComponent {
       <form className={cx('change-password-form')} onSubmit={handleSubmit(this.changePassword)}>
         <div className={cx('new-password-field')}>
           <FieldProvider name="password">
-            <FieldBottomConstraints text={<FormattedMessage id={'ChangePasswordForm.passwordConstraints'} defaultMessage={'4-25 symbols'} />}>
+            <FieldBottomConstraints
+              text={
+                <FormattedMessage
+                  id={'ChangePasswordForm.passwordConstraints'}
+                  defaultMessage={'4-25 symbols'}
+                />
+              }
+            >
               <FieldErrorHint>
-                <InputOutside icon={PasswordIcon} maxLength={'25'} placeholder={formatMessage(placeholders.newPassword)} />
+                <InputOutside
+                  icon={PasswordIcon}
+                  maxLength={'25'}
+                  placeholder={formatMessage(placeholders.newPassword)}
+                />
               </FieldErrorHint>
             </FieldBottomConstraints>
           </FieldProvider>
@@ -90,13 +105,20 @@ export class ChangePasswordForm extends PureComponent {
         <div className={cx('confirm-new-password-field')}>
           <FieldProvider name="passwordRepeat">
             <FieldErrorHint>
-              <InputOutside icon={PasswordIcon} maxLength={'25'} placeholder={formatMessage(placeholders.confirmNewPassword)} />
+              <InputOutside
+                icon={PasswordIcon}
+                maxLength={'25'}
+                placeholder={formatMessage(placeholders.confirmNewPassword)}
+              />
             </FieldErrorHint>
           </FieldProvider>
         </div>
         <div className={cx('change-password-button')}>
           <BigButton type={'submit'} color={'organish'}>
-            <FormattedMessage id={'ChangePasswordForm.changePassword'} defaultMessage={'Change password'} />
+            <FormattedMessage
+              id={'ChangePasswordForm.changePassword'}
+              defaultMessage={'Change password'}
+            />
           </BigButton>
         </div>
       </form>

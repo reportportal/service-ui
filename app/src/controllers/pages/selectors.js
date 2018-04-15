@@ -1,27 +1,22 @@
 import { pageNames, NO_PAGE } from './constants';
 
-export const pageSelector = state => {
-	return pageNames[state.location.type] || NO_PAGE;
-}
+export const pageSelector = (state) => pageNames[state.location.type] || NO_PAGE;
 
-export const pagePropertiesSelector = (
-	{ location: { query } },
-	mapping = undefined) => {
+export const pagePropertiesSelector = ({ location: { query } }, mapping = undefined) => {
+  if (!query) {
+    return {};
+  }
 
-	if (!query) {
-		return {};
-	}
+  if (!mapping) {
+    return query;
+  }
 
-	if (!mapping) {
-		return query;
-	}
-
-	const result = {};
-	for (const key of mapping) {
-		if (Object.hasOwnProperty(query, key)) {
-			const propertyName = mapping[key];
-			result[propertyName] = query[key];
-		}
-	}
-	return result;
-}
+  const result = {};
+  Object.keys(mapping).forEach((key) => {
+    if (Object.prototype.hasOwnProperty.call(query, key)) {
+      const propertyName = mapping[key];
+      result[propertyName] = query[key];
+    }
+  });
+  return result;
+};
