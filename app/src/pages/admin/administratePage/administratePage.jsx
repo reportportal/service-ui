@@ -5,13 +5,6 @@ import { PROJECT_DASHBOARD_PAGE } from 'controllers/pages/constants';
 export const AdministratePage = () => (
   <div>
     <h1>Admin</h1>
-    <Link
-      to={{
-        type: PROJECT_DASHBOARD_PAGE,
-        payload: { projectId: 'default_project' },
-      }}
-    >
-      Back
-    </Link>
+    <Link to={{ type: PROJECT_DASHBOARD_PAGE }}>Back</Link>
   </div>
 );

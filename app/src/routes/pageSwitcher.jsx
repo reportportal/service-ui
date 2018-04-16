@@ -63,6 +63,13 @@ Object.keys(pageNames).forEach((page) => {
   }
 });
 
+const withAccess = (Inner, anonymousAccess) => {
+  if (anonymousAccess) {
+    return anonymousRoute(Inner);
+  }
+  return authorizedRoute(Inner);
+};
+
 class PageSwitcher extends React.PureComponent {
   static propTypes = { page: PropTypes.string };
   static defaultProps = { page: undefined };
@@ -77,31 +84,26 @@ class PageSwitcher extends React.PureComponent {
 
     if (!layout) throw new Error(`Page $page is missing layout`);
 
-    let PageComponent = require(`../${module}`)[name]; // eslint-disable-line import/no-dynamic-require, global-require
-    switch (anonymousAccess) {
-      case true:
-        PageComponent = anonymousRoute(PageComponent);
-        break;
-      case false:
-        PageComponent = authorizedRoute(PageComponent);
-        break;
-      default:
-        break;
-    }
+    const PageComponent = require(`../${module}`)[name]; // eslint-disable-line import/no-dynamic-require, global-require
 
     const layoutName = `${layout}Layout`;
     const layoutDir = `${layout.toLowerCase()}Layout`;
     const Layout = require(`../layouts/${layoutDir}`)[layoutName]; // eslint-disable-line import/no-dynamic-require, global-require
 
-    return (
-      <div className={styles.pageSwitcher}>
-        <Layout>
-          <LocalizationSwitcher />
-          <PageComponent />
-        </Layout>
-        <ModalContainer />
-      </div>
+    const FullPage = withAccess(
+      () => (
+        <div className={styles.pageSwitcher}>
+          <Layout>
+            <LocalizationSwitcher />
+            <PageComponent />
+          </Layout>
+          <ModalContainer />
+        </div>
+      ),
+      anonymousAccess,
     );
+
+    return <FullPage />;
   }
 }
 
