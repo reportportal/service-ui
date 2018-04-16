@@ -13,3 +13,4 @@ export const activeProjectRoleSelector = (state) => {
   const assignedProject = assignedProjectsSelector(state)[activeProject];
   return assignedProject && assignedProject.projectRole;
 };
+export const isAdminSelector = (state) => userInfoSelector(state).userRole === 'ADMINISTRATOR';

@@ -5,7 +5,7 @@ import { Tooltip } from './tooltip';
 
 const TooltipRoot = document.getElementById('tooltip-root');
 
-export const withTooltip = ({ TooltipComponent, data }) => WrappedComponent => (
+export const withTooltip = ({ TooltipComponent, data }) => (WrappedComponent) =>
   class Wrapper extends Component {
     static propTypes = {
       children: PropTypes.node,
@@ -32,24 +32,24 @@ export const withTooltip = ({ TooltipComponent, data }) => WrappedComponent => (
     render() {
       return (
         <Fragment>
-          {
+          {this.state.shown &&
             ReactDOM.createPortal(
-              this.state.shown
-                ? <Tooltip data={data} hoverRect={this.hoverRect} hideTooltip={this.hideTooltip}>
-                  <TooltipComponent {...this.props} />
-                </Tooltip>
-                : null
-              ,
+              <Tooltip data={data} hoverRect={this.hoverRect} hideTooltip={this.hideTooltip}>
+                <TooltipComponent {...this.props} />
+              </Tooltip>,
               TooltipRoot,
-            )
+            )}
+          {
+            <div
+              style={{ width: '100%', height: '100%' }}
+              ref={(hoverRect) => {
+                this.hoverRect = hoverRect;
+              }}
+            >
+              <WrappedComponent {...this.props}>{this.props.children}</WrappedComponent>
+            </div>
           }
-          <div style={{ width: '100%', height: '100%' }} ref={(hoverRect) => { this.hoverRect = hoverRect; }} >
-            <WrappedComponent {...this.props}>
-              { this.props.children }
-            </WrappedComponent>
-          </div>
         </Fragment>
-
       );
     }
-});
+  };

@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import { injectIntl, defineMessages } from 'react-intl';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
 import CrossIcon from 'common/img/icon-cross-inline.svg';
@@ -7,7 +8,28 @@ import styles from './selectedLaunch.scss';
 
 const cx = classNames.bind(styles);
 
-const TooltipComponent = ({ error }) => <div>{error}</div>;
+const messages = defineMessages({
+  selectMoreItems: {
+    id: 'LaunchesPage.selectMoreItems',
+    defaultMessage: 'You must select more than one item',
+  },
+  notYourOwnLaunch: {
+    id: 'LaunchesPage.notYourOwnLaunch',
+    defaultMessage: 'You are not a launch owner',
+  },
+  launchNotInProgress: {
+    id: 'LaunchesPage.launchNotInProgress',
+    defaultMessage: 'Launch should not be in the status In progress!',
+  },
+  launchIsProcessing: {
+    id: 'LaunchesPage.launchIsProcessing',
+    defaultMessage: 'Launch should not be processing by Auto analysis!',
+  },
+});
+
+const TooltipComponent = injectIntl(({ intl, error }) => (
+  <div>{intl.formatMessage(messages[error])}</div>
+));
 TooltipComponent.propTypes = {
   error: PropTypes.string,
 };
