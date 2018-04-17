@@ -18,6 +18,7 @@ import { SandboxPage } from 'pages/inside/sandboxPage';
 import { LoginPage } from 'pages/outside/loginPage';
 import { RegistrationPage } from 'pages/outside/registrationPage';
 import { LocalizationSwitcher } from 'components/main/localizationSwitcher';
+import { Notifications } from 'components/main/notification';
 import { authorizedRoute } from './authorizedRoute';
 import { anonymousRoute } from './anonymousRoute';
 
@@ -75,6 +76,7 @@ const RootRoute = () => (
       <AppRoute />
     </Switch>
     <ModalContainer />
+    <Notifications />
     <ScreenLock />
   </div>
 );
