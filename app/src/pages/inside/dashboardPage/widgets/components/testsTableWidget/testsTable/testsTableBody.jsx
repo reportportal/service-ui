@@ -8,7 +8,7 @@ import styles from '../testsTableWidget.scss';
 
 const cx = classNames.bind(styles);
 
-class TestsTableBody extends React.PureComponent {
+class TestsTableBody extends React.Component {
   static propTypes = {
     tests: PTTests,
     nameClickHandler: func.isRequired,

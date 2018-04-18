@@ -3,25 +3,19 @@ import { func } from 'prop-types';
 import { TestsTableWidget, PTypes } from '../components/testsTableWidget';
 import * as cfg from './flakyTestsCfg';
 
-class MostFailedTests extends React.PureComponent {
-  static propTypes = {
-    tests: PTypes.PTTests.isRequired,
-    launch: PTypes.PTLaunch.isRequired,
-    nameClickHandler: func.isRequired,
-  };
+const FlakyTests = ({ tests, launch, nameClickHandler }) => (
+  <TestsTableWidget
+    tests={tests}
+    launchName={launch.name}
+    nameClickHandler={nameClickHandler}
+    columns={cfg.columns}
+  />
+);
 
-  render() {
-    const { tests, launch, nameClickHandler } = this.props;
+FlakyTests.propTypes = {
+  tests: PTypes.PTTests.isRequired,
+  launch: PTypes.PTLaunch.isRequired,
+  nameClickHandler: func.isRequired,
+};
 
-    return (
-      <TestsTableWidget
-        tests={tests}
-        launchName={launch.name}
-        nameClickHandler={nameClickHandler}
-        columns={cfg.columns}
-      />
-    );
-  }
-}
-
-export default MostFailedTests;
+export default FlakyTests;
