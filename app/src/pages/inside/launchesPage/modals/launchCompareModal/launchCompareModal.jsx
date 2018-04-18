@@ -76,7 +76,7 @@ const messages = defineMessages({
     defaultMessage: 'To investigate',
   },
 });
-const chartConfig = {
+const getInitialChartConfig = () => ({
   data: {
     type: 'bar',
     order: null,
@@ -122,7 +122,7 @@ const chartConfig = {
   tooltip: {
     grouped: false,
   },
-};
+});
 
 @withModal('launchCompareModal')
 @injectIntl
@@ -139,9 +139,14 @@ export class LaunchCompareModal extends Component {
       ids: PropTypes.array,
     }).isRequired,
   };
-  state = {
-    loaded: false,
-  };
+
+  constructor(props) {
+    super(props);
+    this.chartConfig = getInitialChartConfig();
+    this.state = {
+      loaded: false,
+    };
+  }
 
   componentDidMount() {
     fetch(`api/v1/${this.props.activeProject}/launch/compare`, {
@@ -154,8 +159,12 @@ export class LaunchCompareModal extends Component {
     });
   }
 
+  setChartContainerRef = (chartContainer) => {
+    this.chartContainer = chartContainer;
+  };
+
   setupChartConfig = ({ columns, itemsData }) => {
-    chartConfig.data.columns = [
+    this.chartConfig.data.columns = [
       columns[STATS_PASSED],
       columns[STATS_FAILED],
       columns[STATS_SKIPPED],
@@ -165,16 +174,16 @@ export class LaunchCompareModal extends Component {
       columns[STATS_ND_TOTAL],
       columns[STATS_TI_TOTAL],
     ];
-    chartConfig.data.colors = this.props.defectColors;
-    chartConfig.data.colors[PASSED] = COLOR_PASSED;
-    chartConfig.data.colors[FAILED] = COLOR_FAILED;
-    chartConfig.data.colors[SKIPPED] = COLOR_SKIPPED;
-    chartConfig.axis.x.categories = itemsData.map((item) => `#${item.number}`);
-    chartConfig.axis.y.label.text = this.props.intl.formatMessage(messages.yAxisTitle);
-    chartConfig.size = {
+    this.chartConfig.data.colors = this.props.defectColors;
+    this.chartConfig.data.colors[PASSED] = COLOR_PASSED;
+    this.chartConfig.data.colors[FAILED] = COLOR_FAILED;
+    this.chartConfig.data.colors[SKIPPED] = COLOR_SKIPPED;
+    this.chartConfig.axis.x.categories = itemsData.map((item) => `#${item.number}`);
+    this.chartConfig.axis.y.label.text = this.props.intl.formatMessage(messages.yAxisTitle);
+    this.chartConfig.size = {
       height: this.chartContainer.offsetHeight,
     };
-    chartConfig.onrendered = () => {
+    this.chartConfig.onrendered = () => {
       const barPaths = d3.select(this.chartContainer).selectAll('.c3-chart-bar path');
       barPaths.each((d, i) => {
         const elem = d3.select(barPaths[0][i]);
@@ -183,7 +192,7 @@ export class LaunchCompareModal extends Component {
         }
       });
     };
-    chartConfig.tooltip.position = (d, width, height) => {
+    this.chartConfig.tooltip.position = (d, width, height) => {
       const left = d3.mouse(this.chartContainer)[0] - width / 2;
       const top = d3.mouse(this.chartContainer)[1] - height;
       return {
@@ -191,13 +200,15 @@ export class LaunchCompareModal extends Component {
         left,
       };
     };
-    chartConfig.tooltip.contents = (d, defaultTitleFormat, defaultValueFormat, color) => {
+    this.chartConfig.tooltip.contents = (d, defaultTitleFormat, defaultValueFormat, color) => {
       const launchData = itemsData[d[0].index];
       const id = d[0].id;
       return ReactDOMServer.renderToStaticMarkup(
         <div className={cx('tooltip')}>
           <div className={cx('launch-name')}>{`${launchData.name} #${launchData.number}`}</div>
-          <div className={cx('start-time')}>{dateFormat(new Date(+launchData.startTime))}</div>
+          <div className={cx('start-time')}>
+            {dateFormat(new Date(Number(launchData.startTime)))}
+          </div>
           <div className={cx('stats')}>
             <div className={cx('color-mark')} style={{ backgroundColor: color(id) }} />
             <div className={cx('item-name')}>{this.props.intl.formatMessage(messages[id])}:</div>
@@ -247,14 +258,9 @@ export class LaunchCompareModal extends Component {
         title={intl.formatMessage(messages.compareLaunchHeader)}
         cancelButton={cancelButton}
       >
-        <div
-          ref={(chartContainer) => {
-            this.chartContainer = chartContainer;
-          }}
-          className={cx('chart-container')}
-        >
+        <div ref={this.setChartContainerRef} className={cx('chart-container')}>
           <SpinningPreloader shown={!this.state.loaded} />
-          {this.state.loaded && <C3Chart {...chartConfig} />}
+          {this.state.loaded && <C3Chart {...this.chartConfig} />}
         </div>
       </ModalLayout>
     );
