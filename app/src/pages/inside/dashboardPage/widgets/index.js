@@ -1,5 +1,4 @@
+import { FlakyTests } from './flakyTests';
 import { MostFailedTests } from './mostFailedTests';
 
-export {
-  MostFailedTests,
-};
+export { FlakyTests, MostFailedTests };

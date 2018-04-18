@@ -9,16 +9,14 @@ import styles from '../testsTableWidget.scss';
 
 const cx = classNames.bind(styles);
 
-function TestsTable({ tests, nameClickHandler, columns }) {
-  return (
-    <div className={cx('tests-table')}>
-      <ScrollWrapper>
-        <TestsTableHeader columns={columns} />
-        <TestsTableBody columns={columns} tests={tests} nameClickHandler={nameClickHandler} />
-      </ScrollWrapper>
-    </div>
-  );
-}
+const TestsTable = ({ tests, nameClickHandler, columns }) => (
+  <div className={cx('tests-table')}>
+    <ScrollWrapper>
+      <TestsTableHeader columns={columns} />
+      <TestsTableBody columns={columns} tests={tests} nameClickHandler={nameClickHandler} />
+    </ScrollWrapper>
+  </div>
+);
 
 TestsTable.propTypes = {
   tests: PTTests.isRequired,
