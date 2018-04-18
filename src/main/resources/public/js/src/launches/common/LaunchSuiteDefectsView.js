@@ -160,7 +160,7 @@ define(function (require) {
             var data = this.getDefectChartData();
             var $el = $('[data-js-chart]', this.$el);
             var chart = new DonutChartComponent({
-                diameter: 56,
+                diameter: 64,
                 strokeWidth: 13,
                 items: data,
             });
