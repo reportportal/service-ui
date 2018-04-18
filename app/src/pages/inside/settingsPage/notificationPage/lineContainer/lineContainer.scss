@@ -1,0 +1,100 @@
+.container {
+  display: flex;
+  position: relative;
+  align-items: flex-start;
+  padding-bottom: 20px;
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    display: block;
+  }
+}
+
+.container--preset {
+  padding-bottom: 2px;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    position: relative;
+  }
+}
+
+.input-part {
+  display: flex;
+  flex: 0 0 74%;
+
+  & > label {
+    margin-top: 5px;
+  }
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    flex-direction: column;
+  }
+}
+
+.input-part--left {
+  flex: 0 0 44%;
+  padding: 0 3%;
+
+  & > [class*='dropdown'] {
+    height: 28px;
+    border: 1px solid #999;
+  }
+
+  & > [class*='checkbox'] {
+    margin-top: 5px;
+    height: auto;
+  }
+}
+
+.input-part__notification {
+  font-size: 12px;
+  color: #999;
+  flex: 0 0 50%;
+  line-height: 28px;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    padding: 0 3%;
+  }
+}
+
+.container__label {
+  flex: 0 0 26%;
+  text-align: right;
+  font-size: 13px;
+  line-height: 28px;
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    display: block;
+    padding: 0 3%;
+    text-align: left;
+  }
+}
+
+.container__label--required:after {
+  content: '*';
+  color: #ec3900;
+}
+
+.label--border {
+  border: 1px solid #999999;
+}
+
+.preset {
+  font-size: 13px;
+  text-transform: uppercase;
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    text-align: right;
+    position: absolute;
+    top: 10px;
+    right: 0;
+  }
+}
+
+.input-part--rigth-aligment {
+  display: flex;
+  justify-content: flex-end;
+
+  button {
+    width: auto;
+  }
+}
