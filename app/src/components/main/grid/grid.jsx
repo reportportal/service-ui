@@ -8,7 +8,7 @@ import styles from './grid.scss';
 const cx = classNames.bind(styles);
 
 const isAllItemsSelected = (items, selectedItems) =>
-  items.every(item => selectedItems.some(selectedItem => selectedItem.id === item.id));
+  items.every((item) => selectedItems.some((selectedItem) => selectedItem.id === item.id));
 
 export const Grid = ({
   columns,
@@ -21,8 +21,9 @@ export const Grid = ({
   selectedItems,
   onToggleSelectAll,
   onToggleSelection,
+  className,
 }) => (
-  <div className={cx('grid')}>
+  <div className={cx('grid', className)}>
     <GridHeader
       columns={columns}
       sortingColumn={sortingColumn}
@@ -53,6 +54,7 @@ Grid.propTypes = {
   selectedItems: PropTypes.arrayOf(PropTypes.object),
   onToggleSelection: PropTypes.func,
   onToggleSelectAll: PropTypes.func,
+  className: PropTypes.string,
 };
 Grid.defaultProps = {
   columns: [],
@@ -65,4 +67,5 @@ Grid.defaultProps = {
   selectedItems: [],
   onToggleSelectAll: () => {},
   onToggleSelection: () => {},
+  className: '',
 };

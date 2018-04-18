@@ -251,6 +251,6 @@
   "UuidBlock.headerNameCol": "Универсальный уникальный идентификатор",
   "UuidBlock.regenerate": "Создать новый",
   "UuidBlock.tip": "Чтобы обеспечить надежность вашего доменного пароля, вы можете использовать пользовательский опознавательный номер, называемый UUID, чтобы подтвердить, что ваша учетная запись может загружаться агентом.",
-  "addEditDashboard.dashboardNameHint": "Dashboard name should have size  from 3 to 128.",
-  "searchDashboardForm.dashboardNameSearchHint": "Dashboard name should have size from 3 to 128"
+  "addEditDashboard.dashboardNameHint": "Имя панели управления должно быть длиной от 3 до 128.",
+  "searchDashboardForm.dashboardNameSearchHint": "Имя панели управления должно быть длиной от 3 до 128."
 }

@@ -1,58 +1,48 @@
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { ModalLayout } from 'components/main/modal';
+import { ModalLayout, withModal } from 'components/main/modal';
 
-export const DeleteModal = ({
-  message,
-  dashboardItem,
-  onSubmit,
-  isCurrentUser,
-  title,
-  submitText,
-  warningMessage,
-  cancelText,
-}) => {
-  const warning = isCurrentUser ? '' : warningMessage;
+@withModal('dashboardDeleteModal')
+export class DeleteModal extends Component {
+  static propTypes = {
+    data: PropTypes.object,
+  };
 
-  return (
-    <ModalLayout
-      title={title}
-      okButton={{
-        text: submitText,
-        danger: true,
-        onClick: (closeModal) => {
-          closeModal();
-          onSubmit(dashboardItem);
-        },
-      }}
-      cancelButton={{
-        text: cancelText,
-      }}
-      warningMessage={warning}
-    >
-      <div>{message}</div>
-    </ModalLayout>
-  );
-};
+  static defaultProps = {
+    data: {},
+  };
 
-DeleteModal.propTypes = {
-  message: PropTypes.string,
-  dashboardItem: PropTypes.object,
-  onSubmit: PropTypes.func,
-  isCurrentUser: PropTypes.bool,
-  title: PropTypes.string,
-  submitText: PropTypes.string,
-  warningMessage: PropTypes.string,
-  cancelText: PropTypes.string,
-};
+  render() {
+    const {
+      message,
+      dashboardItem,
+      onSubmit,
+      isCurrentUser,
+      title,
+      submitText,
+      warningMessage,
+      cancelText,
+    } = this.props.data;
+    const warning = isCurrentUser ? '' : warningMessage;
 
-DeleteModal.defaultProps = {
-  message: '',
-  dashboardItem: {},
-  onSubmit: () => {},
-  isCurrentUser: false,
-  title: '',
-  submitText: '',
-  warningMessage: '',
-  cancelText: '',
-};
+    return (
+      <ModalLayout
+        title={title}
+        okButton={{
+          text: submitText,
+          danger: true,
+          onClick: (closeModal) => {
+            closeModal();
+            onSubmit(dashboardItem);
+          },
+        }}
+        cancelButton={{
+          text: cancelText,
+        }}
+        warningMessage={warning}
+      >
+        <div>{message}</div>
+      </ModalLayout>
+    );
+  }
+}

@@ -1,52 +1,45 @@
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { ModalLayout } from 'components/main/modal';
+import { ModalLayout, withModal } from 'components/main/modal';
 import { DashboardForm } from 'pages/inside/dashboardPage/dashboardModal/dashboardForm';
+import { connect } from 'react-redux';
+import { submitAddEditDashboardFormAction } from 'controllers/dashboard';
 
-export const AddEditModal = ({
-  dashboardItem,
-  submitText,
-  title,
-  onSubmit,
-  cancelText,
-  submitAddEditDashboardForm,
-}) => (
-  <ModalLayout
-    title={title}
-    okButton={{
-      text: submitText,
-      onClick: (closeModal) => {
-        closeModal();
-        submitAddEditDashboardForm();
-      },
-    }}
-    cancelButton={{
-      text: cancelText,
-    }}
-  >
-    <DashboardForm
-      dashboardItem={dashboardItem}
-      onSubmit={(e) => {
-        onSubmit(e);
-      }}
-    />
-  </ModalLayout>
-);
+@withModal('dashboardAddEditModal')
+@connect(null, {
+  submitAddEditDashboardForm: submitAddEditDashboardFormAction,
+})
+export class AddEditModal extends Component {
+  static propTypes = {
+    data: PropTypes.object,
+    submitAddEditDashboardForm: PropTypes.func,
+  };
 
-AddEditModal.propTypes = {
-  dashboardItem: PropTypes.object,
-  onSubmit: PropTypes.func,
-  title: PropTypes.string,
-  submitText: PropTypes.string,
-  cancelText: PropTypes.string,
-  submitAddEditDashboardForm: PropTypes.func,
-};
+  static defaultProps = {
+    data: {},
+    submitAddEditDashboardForm: () => {},
+  };
 
-AddEditModal.defaultProps = {
-  dashboardItem: {},
-  onSubmit: () => {},
-  title: '',
-  submitText: '',
-  cancelText: '',
-  submitAddEditDashboardForm: () => {},
-};
+  render() {
+    const { dashboardItem, submitText, title, onSubmit, cancelText } = this.props.data;
+    const { submitAddEditDashboardForm } = this.props;
+
+    return (
+      <ModalLayout
+        title={title}
+        okButton={{
+          text: submitText,
+          onClick: (closeModal) => {
+            closeModal();
+            submitAddEditDashboardForm();
+          },
+        }}
+        cancelButton={{
+          text: cancelText,
+        }}
+      >
+        <DashboardForm dashboardItem={dashboardItem} onSubmit={onSubmit} />
+      </ModalLayout>
+    );
+  }
+}
