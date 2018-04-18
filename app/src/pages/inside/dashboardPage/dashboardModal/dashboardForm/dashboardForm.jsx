@@ -65,7 +65,7 @@ export class DashboardForm extends Component {
 
   render() {
     const { intl } = this.props;
-    const labelWidth = '65px';
+    const labelWidth = '70px';
 
     return (
       <form className={cx('add-dashboard-form')}>
@@ -84,8 +84,8 @@ export class DashboardForm extends Component {
             <Textarea
               placeholder={intl.formatMessage(messages.dashboardDescriptionPlaceholder)}
               defaultValue={this.props.dashboardItem.description}
-              cols="42"
-              rows="3"
+              cols={42}
+              rows={3}
             />
           </FieldProvider>
         </ModalField>

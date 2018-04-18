@@ -7,6 +7,7 @@ import {
   ADD_DASHBOARD_ITEM_SUCCESS,
   DELETE_DASHBOARD_ITEM_SUCCESS,
   UPDATE_DASHBOARD_ITEM_SUCCESS,
+  DASHBOARDS_TABLE_VIEW,
 } from './constants';
 
 export const fetchDashboardAction = () => (dispatch, getState) => {
@@ -27,7 +28,7 @@ export const fetchDashboardAction = () => (dispatch, getState) => {
 };
 
 export const changeVisibilityTypeAction = (type) => (dispatch) => {
-  const storedVisibilityType = getStorageItem('dashboard_type') || 'table';
+  const storedVisibilityType = getStorageItem('dashboard_type') || DASHBOARDS_TABLE_VIEW;
   const visibilityType = type || storedVisibilityType;
 
   setStorageItem('dashboard_type', visibilityType);

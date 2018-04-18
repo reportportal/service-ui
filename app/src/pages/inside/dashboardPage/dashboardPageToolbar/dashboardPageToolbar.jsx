@@ -4,12 +4,12 @@ import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import PropTypes from 'prop-types';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { reduxForm } from 'redux-form';
-import { Icon } from 'components/main/icon';
 import { InputSearch } from 'components/inputs/inputSearch';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
-import { DASHBOARDS_TABLE_VIEW, DASHBOARDS_GRID_VIEW } from 'controllers/dashboard';
 import styles from './dashboardPageToolbar.scss';
+import GridViewDashboardIcon from './img/grid-inline.svg';
+import TableViewDashboardIcon from './img/table-inline.svg';
 
 const cx = classNames.bind(styles);
 const messages = defineMessages({
@@ -77,12 +77,8 @@ export class DashboardPageToolbar extends Component {
           </FieldProvider>
         </div>
         <div className={cx('buttons', `active-${gridType}`)}>
-          <GhostButton onClick={onGridViewToggle}>
-            <Icon type={gridType === DASHBOARDS_GRID_VIEW ? 'icon-grid-active' : 'icon-grid'} />
-          </GhostButton>
-          <GhostButton onClick={onTableViewToggle}>
-            <Icon type={gridType === DASHBOARDS_TABLE_VIEW ? 'icon-table-active' : 'icon-table'} />
-          </GhostButton>
+          <GhostButton onClick={onGridViewToggle} icon={GridViewDashboardIcon} />
+          <GhostButton onClick={onTableViewToggle} icon={TableViewDashboardIcon} />
         </div>
       </div>
     );

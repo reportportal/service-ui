@@ -89,11 +89,9 @@ const EditColumn = ({ value, customProps }) => {
 
   return (
     <div className={cx('cell', 'with-button', 'edit')}>
-      {userId === owner && (
-        <div className={cx('icon-holder')}>
-          <Icon type="icon-pencil" onClick={editItemHandler} />
-        </div>
-      )}
+      <div className={cx('icon-holder')}>
+        {userId === owner && <Icon type="icon-pencil" onClick={editItemHandler} />}
+      </div>
     </div>
   );
 };
@@ -114,13 +112,13 @@ const DeleteColumn = ({ value, customProps }) => {
   };
 
   return (
-    (userId === owner || hasPrevilegesForDashboardDeletion(userRole)) && (
-      <div className={cx('cell', 'with-button', 'delete')}>
-        <div className={cx('icon-holder')}>
+    <div className={cx('cell', 'with-button', 'delete')}>
+      <div className={cx('icon-holder')}>
+        {(userId === owner || hasPrevilegesForDashboardDeletion(userRole)) && (
           <Icon type="icon-delete" onClick={deleteItemHandler} />
-        </div>
+        )}
       </div>
-    )
+    </div>
   );
 };
 DeleteColumn.propTypes = {
@@ -220,7 +218,12 @@ export class DashboardTable extends Component {
 
     return (
       <Fragment>
-        <Grid columns={this.COLUMNS} data={dashboardItems} sortingDirection="" />
+        <Grid
+          className={cx('dashboard-table')}
+          columns={this.COLUMNS}
+          data={dashboardItems}
+          sortingDirection=""
+        />
         {dashboardItems.length === 0 && <EmptyDashboards userDashboards action={onAddItem} />}
       </Fragment>
     );

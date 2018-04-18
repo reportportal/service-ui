@@ -23,7 +23,7 @@
     cursor: default;
 
     path {
-      fill: $COLOR--gray-60 !important;
+      fill: $COLOR--gray-60;
     }
   }
   &.color-topaz:not(.disabled) {
@@ -31,16 +31,17 @@
     color: $COLOR--topaz;
 
     path {
-      fill: $COLOR--topaz !important;
+      fill: $COLOR--topaz;
     }
 
-    &:hover{
-      background-color: lighten( $COLOR--topaz, 10% );
-      border-color: lighten( $COLOR--topaz, 10% );
+    .active,
+    &:hover {
+      background-color: lighten($COLOR--topaz, 10%);
+      border-color: lighten($COLOR--topaz, 10%);
       color: $COLOR--white-two;
 
       path {
-        fill: $COLOR--white-two !important;
+        fill: $COLOR--white-two;
       }
     }
     &:active {

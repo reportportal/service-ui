@@ -31,10 +31,18 @@
 .active-grid {
   button:nth-of-type(1) {
     background-color: $COLOR--topaz;
+
+    path {
+      fill: $COLOR--white-two !important;
+    }
   }
 }
+
 .active-table {
   button:nth-of-type(2) {
     background-color: $COLOR--topaz;
+    path {
+      fill: $COLOR--white-two !important;
+    }
   }
 }

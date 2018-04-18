@@ -1,1 +1,2 @@
-export { DashboardModal } from './dashboardModal';
+export { DeleteModal } from './deleteModal';
+export { AddEditModal } from './addEditModal';

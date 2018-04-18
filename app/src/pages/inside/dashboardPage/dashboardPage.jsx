@@ -23,7 +23,7 @@ import AddDashboardIcon from './img/ic-add-dash-inline.svg';
 import { DashboardList } from './dashboardList';
 import { DashboardPageToolbar } from './dashboardPageToolbar';
 import styles from './dashboardPage.scss';
-import DashboardModal from './dashboardModal'; // eslint-disable-line no-unused-vars
+import { DeleteModal } from './dashboardModal'; // eslint-disable-line no-unused-vars
 
 const cx = classNames.bind(styles);
 const messages = defineMessages({
@@ -128,9 +128,8 @@ export class DashboardPage extends Component {
     const { showModal, deleteDashboard, userInfo: { userId }, intl } = this.props;
 
     showModal({
-      id: 'dashboardModal',
+      id: 'dashboardDeleteModal',
       data: {
-        type: 'delete',
         message: intl.formatMessage(messages.deleteModalConfirmationText, { name: item.name }),
         dashboardItem: item,
         onSubmit: deleteDashboard,
@@ -147,9 +146,8 @@ export class DashboardPage extends Component {
     const { showModal, editDashboard, intl } = this.props;
 
     showModal({
-      id: 'dashboardModal',
+      id: 'dashboardAddEditModal',
       data: {
-        type: 'edit',
         dashboardItem: item,
         onSubmit: editDashboard,
         title: intl.formatMessage(messages.editModalTitle),
@@ -163,9 +161,8 @@ export class DashboardPage extends Component {
     const { showModal, addDashboard, intl } = this.props;
 
     showModal({
-      id: 'dashboardModal',
+      id: 'dashboardAddEditModal',
       data: {
-        type: 'add',
         onSubmit: addDashboard,
         title: intl.formatMessage(messages.addModalSubmitButtonText),
         submitText: intl.formatMessage(messages.addModalSubmitButtonText),
@@ -199,30 +196,28 @@ export class DashboardPage extends Component {
     const dashboardItems = this.getFilteredDashboardItems();
 
     return (
-      <div className={cx('dashboard-container')}>
-        <PageLayout title={intl.formatMessage(messages.pageTitle)}>
-          <div className={cx('add-dashboard-btn')}>
-            <GhostButton onClick={this.onAddDashboardItem} icon={AddDashboardIcon}>
-              {intl.formatMessage(messages.addModalTitle)}
-            </GhostButton>
-          </div>
-          <DashboardPageToolbar
-            onGridViewToggle={this.toggleGridView}
-            onTableViewToggle={this.toggleTableView}
-            gridType={gridType}
-            filter={filter}
-            onFilterChange={onFilterChange}
-          />
-          <DashboardList
-            dashboardItems={dashboardItems}
-            gridType={gridType}
-            userInfo={userInfo}
-            onDeleteItem={this.onDeleteDashboardItem}
-            onEditItem={this.onEditDashboardItem}
-            onAddItem={this.onAddDashboardItem}
-          />
-        </PageLayout>
-      </div>
+      <PageLayout title={intl.formatMessage(messages.pageTitle)}>
+        <div className={cx('add-dashboard-btn')}>
+          <GhostButton onClick={this.onAddDashboardItem} icon={AddDashboardIcon}>
+            {intl.formatMessage(messages.addModalTitle)}
+          </GhostButton>
+        </div>
+        <DashboardPageToolbar
+          onGridViewToggle={this.toggleGridView}
+          onTableViewToggle={this.toggleTableView}
+          gridType={gridType}
+          filter={filter}
+          onFilterChange={onFilterChange}
+        />
+        <DashboardList
+          dashboardItems={dashboardItems}
+          gridType={gridType}
+          userInfo={userInfo}
+          onDeleteItem={this.onDeleteDashboardItem}
+          onEditItem={this.onEditDashboardItem}
+          onAddItem={this.onAddDashboardItem}
+        />
+      </PageLayout>
     );
   }
 }

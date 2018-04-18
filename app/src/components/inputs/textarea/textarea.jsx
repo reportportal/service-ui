@@ -67,8 +67,8 @@ Textarea.propTypes = {
   onBlur: PropTypes.func,
   onKeyUp: PropTypes.func,
   refFunction: PropTypes.func,
-  cols: PropTypes.string,
-  rows: PropTypes.string,
+  cols: PropTypes.number,
+  rows: PropTypes.number,
 };
 
 Textarea.defaultProps = {
@@ -78,8 +78,8 @@ Textarea.defaultProps = {
   disabled: false,
   readonly: false,
   maxLength: 1000,
-  cols: '30',
-  rows: '10',
+  cols: 30,
+  rows: 10,
   onChange: () => {},
   onFocus: () => {},
   onBlur: () => {},

@@ -39,11 +39,12 @@ export const Input = ({
   onBlur,
   onKeyUp,
   onKeyPress,
+  touched,
 }) => (
   <input
     ref={refFunction}
     type={type}
-    className={cx('input', { disabled, error })}
+    className={cx('input', { disabled, error, touched })}
     value={value}
     placeholder={placeholder}
     maxLength={maxLength}
@@ -71,6 +72,7 @@ Input.propTypes = {
   onKeyUp: PropTypes.func,
   onKeyPress: PropTypes.func,
   refFunction: PropTypes.func,
+  touched: PropTypes.bool,
 };
 
 Input.defaultProps = {
@@ -81,6 +83,7 @@ Input.defaultProps = {
   disabled: false,
   readonly: false,
   error: '',
+  touched: false,
   onChange: () => {},
   onFocus: () => {},
   onBlur: () => {},
