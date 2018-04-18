@@ -1645,9 +1645,9 @@ define(['util'], function () {
             and: ' and ',
             andb: ' AND ',
             has: 'has',
-            '!has': 'without',
+            '!has': 'without any of',
             in: 'has any of',
-            '!in': 'without any of',
+            '!in': 'without',
         },
 
         successMessages: {
@@ -2108,7 +2108,7 @@ define(['util'], function () {
 
             analyseLaunchesLabel: 'Choose the base on which the Auto Analysis will be performed:',
             analyseLaunchesLabel1: 'Choose the test items that should be analyzed:',
-            analyseWarning1: 'You can not perform this operation unless at least one item is not chosen.',
+            analyseWarning1: 'You can not perform this operation unless at least one item is chosen.',
             analyseWarning2: 'You can not perform this operation for Auto-analyzed and Manually analyzed items simultaneously. Please choose one of them.',
 
             msgDeleteItems: 'Are you sure to delete %%%? %%% will no longer exist.',
