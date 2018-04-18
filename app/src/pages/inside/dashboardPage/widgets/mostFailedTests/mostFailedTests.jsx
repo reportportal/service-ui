@@ -3,7 +3,7 @@ import { func } from 'prop-types';
 import { TestsTableWidget, PTypes } from '../components/testsTableWidget';
 import * as cfg from './mostFailedTestsCfg';
 
-class MostFailedTests extends React.PureComponent {
+class MostFailedTests extends React.Component {
   static propTypes = {
     tests: PTypes.PTTests.isRequired,
     launch: PTypes.PTLaunch.isRequired,
