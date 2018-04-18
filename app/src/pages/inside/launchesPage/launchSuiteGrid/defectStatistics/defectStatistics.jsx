@@ -15,7 +15,7 @@ export const DefectStatistics = ({ type, data, customProps }) => (
     {!!data.total && (
       <Fragment>
         <div className={cx('desktop-visible')}>
-          <DonutChart data={data} type={type} diameter={64} strokeWidth={13} />
+          <DonutChart data={data} type={type} viewBox={64} strokeWidth={13} />
         </div>
         <div className={cx('desktop-hidden')}>
           <a href="/">{data.total}</a>
