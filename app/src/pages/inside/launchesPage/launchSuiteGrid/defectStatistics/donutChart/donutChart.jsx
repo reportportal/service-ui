@@ -34,25 +34,31 @@ export class DonutChart extends Component {
   static defaultProps = {
     type: '',
   };
-  componentWillMount() {
-    const defects = this.props.data;
+
+  constructor(props) {
+    super(props);
+    const defects = props.data;
+    const chartData = [];
     let offset = 75;
-    Object.keys(this.props.data).forEach((defect) => {
+
+    Object.keys(props.data).forEach((defect) => {
       if (defect !== 'total') {
         const val = defects[defect];
         const percents = val / defects.total * 100;
 
-        this.chartData.push({
+        chartData.push({
           id: defect,
           value: percents,
-          color: this.props.defectColors[defect],
+          color: props.defectColors[defect],
           offset: 100 - offset,
         });
         offset += percents;
       }
     });
+    this.state = {
+      chartData,
+    };
   }
-  chartData = [];
 
   render() {
     const { data, type, diameter, strokeWidth } = this.props;
@@ -72,7 +78,7 @@ export class DonutChart extends Component {
               stroke="#d2d3d4"
               strokeWidth={strokeWidth}
             />
-            {this.chartData.map((item) => (
+            {this.state.chartData.map((item) => (
               <circle
                 key={item.id}
                 cx={radius}
