@@ -259,8 +259,7 @@ export class LaunchCompareModal extends Component {
         cancelButton={cancelButton}
       >
         <div ref={this.setChartContainerRef} className={cx('chart-container')}>
-          <SpinningPreloader shown={!this.state.loaded} />
-          {this.state.loaded && <C3Chart {...this.chartConfig} />}
+          {this.state.loaded ? <C3Chart {...this.chartConfig} /> : <SpinningPreloader />}
         </div>
       </ModalLayout>
     );
