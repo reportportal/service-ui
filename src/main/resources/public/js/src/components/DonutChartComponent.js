@@ -35,7 +35,7 @@ define(function (require) {
         },
         render: function () {
             this.$el.html(Util.templates(this.template, {
-                diameter: this.options.diameter,
+                viewBox: this.options.viewBox,
                 strokeWidth: this.options.strokeWidth,
                 items: this.options.items,
             }));
