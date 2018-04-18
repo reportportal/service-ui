@@ -1,12 +1,8 @@
 .spinning-preloader {
-  display: none;
+  display: flex;
   position: relative;
   width: 100%;
   height: 100%;
-
-  &.shown {
-    display: flex;
-  }
 }
 .preloader {
   display: block;
