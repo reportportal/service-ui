@@ -26,7 +26,7 @@ export class DonutChart extends Component {
   static propTypes = {
     type: PropTypes.string,
     data: PropTypes.object.isRequired,
-    diameter: PropTypes.number.isRequired,
+    viewBox: PropTypes.number.isRequired,
     strokeWidth: PropTypes.number.isRequired,
     projectConfig: PropTypes.object.isRequired,
     defectColors: PropTypes.object.isRequired,
@@ -61,18 +61,18 @@ export class DonutChart extends Component {
   }
 
   render() {
-    const { data, type, diameter, strokeWidth } = this.props;
-    const radius = diameter / 2;
+    const { data, type, viewBox, strokeWidth } = this.props;
+    const diameter = viewBox / 2;
     const r = 100 / (2 * Math.PI);
 
     return (
       <a href="/">
         <div className={cx('chart-container')}>
-          <svg width="100%" height="100%" viewBox={`0 0 ${diameter} ${diameter}`} className="donut">
-            <circle cx={radius} cy={radius} r={r} fill="transparent" />
+          <svg width="100%" height="100%" viewBox={`0 0 ${viewBox} ${viewBox}`} className="donut">
+            <circle cx={diameter} cy={diameter} r={r} fill="transparent" />
             <circle
-              cx={radius}
-              cy={radius}
+              cx={diameter}
+              cy={diameter}
               r={r}
               fill="transparent"
               stroke="#d2d3d4"
@@ -81,8 +81,8 @@ export class DonutChart extends Component {
             {this.state.chartData.map((item) => (
               <circle
                 key={item.id}
-                cx={radius}
-                cy={radius}
+                cx={diameter}
+                cy={diameter}
                 r={r}
                 fill="transparent"
                 stroke={item.color}
