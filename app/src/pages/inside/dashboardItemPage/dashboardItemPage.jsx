@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Fullscreen from 'react-full-screen';
 import { connect } from 'react-redux';
@@ -44,7 +44,7 @@ const messages = defineMessages({
   url: `/api/v1/${activeProjectSelector(state)}/dashboard`,
 }))
 @injectIntl
-export class DashboardItemPage extends PureComponent {
+export class DashboardItemPage extends Component {
   static propTypes = {
     url: PropTypes.string,
     intl: intlShape,
@@ -99,11 +99,11 @@ export class DashboardItemPage extends PureComponent {
             dashboardId={this.props.match.params.dashboardId}
             isFullscreen={this.state.isFull}
           />
-          {this.state.isFull ? (
-            <i className={`${cx('icon-close')}`} onClick={this.closeFullscreen}>
+          {this.state.isFull && (
+            <i className={cx('icon-close')} onClick={this.closeFullscreen}>
               {Parser(CancelIcon)}
             </i>
-          ) : null}
+          )}
         </Fullscreen>
       </div>
     );

@@ -95,20 +95,22 @@ export class WidgetsGrid extends PureComponent {
       });
     }
 
+    const breakpoints = { lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 };
+    const cols = { lg: 12, md: 12, sm: 1, xs: 1, xxs: 1 };
+
     return (
       <ScrollWrapper
         autoHeight
         autoHeightMax={this.props.isFullscreen ? window.screen.height : height}
         hideTracksWhenNotNeeded
-        className={this.props.isFullscreen ? '' : 'no-scroll'}
       >
         <ResponsiveGridLayout
           rowHeight={rowHeight}
-          breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
+          breakpoints={breakpoints}
           onBreakpointChange={this.onBreakpointChange}
           onDragStop={this.onGridChange}
           onResizeStop={this.onGridChange}
-          cols={{ lg: 12, md: 12, sm: 1, xs: 1, xxs: 1 }}
+          cols={cols}
         >
           {Items}
         </ResponsiveGridLayout>
