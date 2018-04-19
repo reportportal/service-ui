@@ -203,6 +203,9 @@ define(function (require) {
         render: function () {
             this.$el.html(Util.templates(this.template, this.model.toJSON()));
         },
+        hideMenu: function() {
+            this.$el.removeClass('open');
+        },
         changeOptions: function (e) {
             e.preventDefault();
             this.model.set('condition', $(e.currentTarget).data('value'));
@@ -213,6 +216,9 @@ define(function (require) {
         template: 'tpl-entity-tag',
         bindings: {
             '[data-js-tag-input]': 'value: value'
+        },
+        events: {
+            'focus .select2-search-field input': 'onFocus',
         },
         initialize: function (options) {
             this.type = options.type;
@@ -233,7 +239,10 @@ define(function (require) {
         },
         onChangeValue: function (model, value) {
             this.select2el.val(value).trigger('change');
-        }
+        },
+        onFocus: function () {
+            this.trigger('tags-in-focus')
+        },
     });
     var TimeRangeEntityView = Epoxy.View.extend({
         className: 'filter-option-input',
@@ -599,15 +608,20 @@ define(function (require) {
     });
     var EntityConditionTagView = EntityBaseView.extend({
         onRender: function () {
-            this.$content.append((new ConditionEntityView({
+            var conditionView = new ConditionEntityView({
                 model: this.model
-            })).$el);
-            this.$content.append((new TagEntityView({
+            });
+            var tagsEntityView = new TagEntityView({
                 model: this.model,
                 noResizeSearch: true,
                 startSearch: 1,
                 warning: Localization.ui.enterChars
-            })).$el);
+            });
+            this.listenTo(tagsEntityView, 'tags-in-focus', function () {
+                conditionView.hideMenu();
+            });
+            this.$content.append(conditionView.$el);
+            this.$content.append(tagsEntityView.$el);
         }
     });
     var EntityTimeRangeView = EntityBaseView.extend({
