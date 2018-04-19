@@ -79,6 +79,7 @@ export class ScrollWrapper extends Component {
         ref={(scrollbars) => {
           this.scrollbars = scrollbars;
         }}
+        className={cx('scroll-component')}
         autoHide={this.props.autoHide}
         autoHeight={this.props.autoHeight}
         autoHeightMin={this.props.autoHeightMin}
