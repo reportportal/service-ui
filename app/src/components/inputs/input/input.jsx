@@ -26,8 +26,19 @@ import styles from './input.scss';
 const cx = classNames.bind(styles);
 
 export const Input = ({
-  type, value, readonly, error, placeholder, maxLength,
-  disabled, refFunction, onChange, onFocus, onBlur, onKeyUp,
+  type,
+  value,
+  readonly,
+  error,
+  placeholder,
+  maxLength,
+  disabled,
+  refFunction,
+  onChange,
+  onFocus,
+  onBlur,
+  onKeyUp,
+  onKeyPress,
 }) => (
   <input
     ref={refFunction}
@@ -42,6 +53,7 @@ export const Input = ({
     onFocus={onFocus}
     onBlur={onBlur}
     onKeyUp={onKeyUp}
+    onKeyPress={onKeyPress}
   />
 );
 
@@ -57,6 +69,7 @@ Input.propTypes = {
   onFocus: PropTypes.func,
   onBlur: PropTypes.func,
   onKeyUp: PropTypes.func,
+  onKeyPress: PropTypes.func,
   refFunction: PropTypes.func,
 };
 
@@ -72,5 +85,6 @@ Input.defaultProps = {
   onFocus: () => {},
   onBlur: () => {},
   onKeyUp: () => {},
+  onKeyPress: () => {},
   refFunction: () => {},
 };
