@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { withFilter } from 'controllers/filter';
-import { userIdSelector, activeProjectSelector } from 'controllers/user';
+import { userIdSelector, activeProjectSelector, activeProjectRoleSelector } from 'controllers/user';
 import { withPagination } from 'controllers/pagination';
 import { PageLayout } from 'layouts/pageLayout';
 import { showModalAction } from 'controllers/modal';
@@ -26,6 +26,7 @@ const messages = defineMessages({
     url: `/api/v1/${activeProjectSelector(state)}/filter`,
     activeProject: activeProjectSelector(state),
     userFilters: userFiltersSelector(state),
+    projectRole: activeProjectRoleSelector(state),
   }),
   {
     showModalAction,
@@ -55,6 +56,7 @@ export class FiltersPage extends PureComponent {
     onFilterChange: PropTypes.func,
     fetchData: PropTypes.func,
     showModalAction: PropTypes.func,
+    projectRole: PropTypes.string,
   };
 
   static defaultProps = {
@@ -71,6 +73,7 @@ export class FiltersPage extends PureComponent {
     onChangePageSize: () => {},
     fetchData: () => {},
     showModalAction: () => {},
+    projectRole: '',
   };
 
   confirmDelete = (filter) =>
