@@ -204,10 +204,19 @@
   display: inline-block;
   width: 20px;
   height: 20px;
-  background-image: url(./img/bin-icon.svg);
   cursor: pointer;
+  fill: $COLOR--gray-60;
 
   &:hover {
-    background-image: url(./img/bin-icon-hover.svg);
+    fill: $COLOR--gray-47;
+  }
+
+  &.disabled {
+    cursor: default;
+    fill: rgba($COLOR--gray-60, 0.5);
+
+    .hover {
+      fill: $COLOR--gray-47;
+    }
   }
 }

@@ -24,16 +24,26 @@ import { FormattedMessage } from 'react-intl';
 import PropTypes from 'prop-types';
 import { InputSwitcher } from 'components/inputs/inputSwitcher';
 import { MarkdownViewer } from 'components/main/markdown';
+import BinIcon from 'common/img/bin-icon-inline.svg';
+import Parser from 'html-react-parser';
 import styles from './filterTableItem.scss';
 
 const cx = classNames.bind(styles);
 
-export const FilterTableItem = (
-  { name, description, options, owner, showOnLaunches,
-    shared, onClickName, onEdit, onChangeDisplay, onDelete,
-    editable,
-  },
-) => (
+export const FilterTableItem = ({
+  name,
+  description,
+  options,
+  owner,
+  showOnLaunches,
+  shared,
+  onClickName,
+  onEdit,
+  onChangeDisplay,
+  onDelete,
+  editable,
+  canBeDeleted,
+}) => (
   <div className={cx('filter-table-item')}>
     <div className={cx('block', 'name-block')}>
       <span className={cx('name-wrapper')}>
@@ -47,20 +57,18 @@ export const FilterTableItem = (
         <MarkdownViewer value={description} />
       </div>
     </div>
-    <div className={cx('block', 'options-block')}>
-      { options }
-    </div>
+    <div className={cx('block', 'options-block')}>{options}</div>
     <div className={cx('block', 'owner-block')}>
       <div className={cx('mobile-label', 'owner-label')}>
         <FormattedMessage id={'FilterTableItem.owner'} defaultMessage={'Owner:'} />
       </div>
-      { owner }
+      {owner}
     </div>
     <div className={cx('block', 'shared-block')}>
       <div className={cx('mobile-label', 'shared-label')}>
         <FormattedMessage id={'FilterTableItem.shared'} defaultMessage={'Shared:'} />
       </div>
-      { shared ? <div className={cx('shared-icon')} onClick={onEdit} /> : null }
+      {shared ? <div className={cx('shared-icon')} onClick={onEdit} /> : null}
     </div>
     <div className={cx('block', 'display-block')}>
       <div className={cx('mobile-label', 'display-label')}>
@@ -69,18 +77,26 @@ export const FilterTableItem = (
       <div className={cx('switcher-wrapper')}>
         <InputSwitcher value={showOnLaunches} onChange={onChangeDisplay}>
           <span className={cx('switcher-label')}>
-            {
-              showOnLaunches
-                ? <FormattedMessage id={'FilterTableItem.showOnLaunchesSwitcherOn'} defaultMessage={'ON'} />
-                : <FormattedMessage id={'FilterTableItem.showOnLaunchesSwitcherOff'} defaultMessage={'OFF'} />
-            }
+            {showOnLaunches ? (
+              <FormattedMessage
+                id={'FilterTableItem.showOnLaunchesSwitcherOn'}
+                defaultMessage={'ON'}
+              />
+            ) : (
+              <FormattedMessage
+                id={'FilterTableItem.showOnLaunchesSwitcherOff'}
+                defaultMessage={'OFF'}
+              />
+            )}
           </span>
         </InputSwitcher>
       </div>
       <div className={cx('separator')} />
     </div>
     <div className={cx('block', 'delete-block')}>
-      <div className={cx('bin-icon')} onClick={onDelete} />
+      <div className={cx('bin-icon', { disabled: !canBeDeleted })} onClick={onDelete}>
+        {Parser(BinIcon)}
+      </div>
     </div>
   </div>
 );
@@ -93,6 +109,7 @@ FilterTableItem.propTypes = {
   showOnLaunches: PropTypes.bool,
   shared: PropTypes.bool,
   editable: PropTypes.bool,
+  canBeDeleted: PropTypes.bool,
   onClickName: PropTypes.func,
   onChangeDisplay: PropTypes.func,
   onEdit: PropTypes.func,
@@ -106,6 +123,7 @@ FilterTableItem.defaultProps = {
   showOnLaunches: false,
   shared: false,
   editable: false,
+  canBeDeleted: false,
   onClickName: () => {},
   onChangeDisplay: () => {},
   onEdit: () => {},
