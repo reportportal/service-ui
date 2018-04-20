@@ -35,7 +35,7 @@ const messages = defineMessages({
   },
   launchNameHint: {
     id: '  LaunchMergeModal.launchNameHint',
-    defaultMessage: 'Field name should have size from 3 to 256.',
+    defaultMessage: 'Launch name should have size from 3 to 256.',
   },
   launchDescriptionHint: {
     id: '  LaunchMergeModal.launchDescriptionHint',
