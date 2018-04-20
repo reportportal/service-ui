@@ -1,7 +1,7 @@
-.input {
+.input-text-area {
   position: relative;
   display: inline-block;
-  height: 30px;
+  height: 60px;
   width: 100%;
   padding: 6px 10px;
   margin: 0;
@@ -11,10 +11,11 @@
   background-color: $COLOR--white-two;
   font-family: $FONT-REGULAR;
   font-size: 13px;
-  line-height: 13px;
+  line-height: 18px;
   color: $COLOR--charcoal-grey;
   box-shadow: none;
   flex-grow: 1;
+  resize: vertical;
   transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
 
   &:hover {
@@ -26,21 +27,12 @@
     box-shadow: 0 0 2px 0 rgba($COLOR--topaz, 0.7);
   }
 
-  &.error.touched {
+  &.error {
     border-color: $COLOR--orange-red;
     box-shadow: 0 0 2px 0 rgba($COLOR--orange-red, 0.7);
   }
   &.disabled {
     background-color: $COLOR--gray-91;
     border-color: $COLOR--gray-80;
-  }
-
-  &:-webkit-autofill {
-    -webkit-box-shadow: 0 0 0 1000px #fdffeb inset;
-  }
-  &[type='number']::-webkit-inner-spin-button,
-  &[type='number']::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
   }
 }

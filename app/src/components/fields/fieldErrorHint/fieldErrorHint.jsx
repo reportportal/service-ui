@@ -19,19 +19,27 @@ const messages = defineMessages({
   },
   passwordHint: {
     id: 'RegistrationForm.passwordHint',
-    defaultMessage: "Password should have size from '4' to '25' symbols",
+    defaultMessage: "Password should have size from '4' to '25' symbols.",
   },
   emailHint: {
     id: 'Common.validation.email',
-    defaultMessage: 'Email is incorrect. Please enter correct email',
+    defaultMessage: 'Email is incorrect. Please enter correct email.',
   },
   confirmPasswordHint: {
     id: 'RegistrationForm.confirmPasswordHint',
-    defaultMessage: 'Passwords do not match',
+    defaultMessage: 'Passwords do not match.',
   },
   filterNameError: {
     id: 'FiltersPage.filterNameLength',
     defaultMessage: 'Filter name length should have size from 3 to 128 characters.',
+  },
+  launchNameHint: {
+    id: '  LaunchMergeModal.launchNameHint',
+    defaultMessage: 'Field name should have size from 3 to 256.',
+  },
+  launchDescriptionHint: {
+    id: '  LaunchMergeModal.launchDescriptionHint',
+    defaultMessage: 'Description should have size not more than 1024 symbols.',
   },
   dashboardNameHint: {
     id: 'AddEditDashboard.dashboardNameHint',

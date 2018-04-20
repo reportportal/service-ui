@@ -115,7 +115,6 @@ export class ModalLayout extends Component {
                     {status !== 'exited' ? children : null}
                   </ModalContent>
 
-
                   <ModalFooter
                     {...footerProps}
                     onClickOk={this.onClickOk}
