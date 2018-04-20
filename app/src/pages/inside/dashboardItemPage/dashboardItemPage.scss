@@ -1,0 +1,45 @@
+.dashboard-item {
+  background: white;
+
+  .gadget-view {
+    border: 1px solid grey;
+    cursor: all-scroll;
+  }
+
+  &:hover .icon-close {
+    opacity: 1;
+  }
+}
+
+.buttons-container {
+  height: 30px;
+  margin: 0;
+  padding: 20px 10px;
+  border-bottom: 1px solid $COLOR--gray-91;
+}
+
+.icon-close {
+  position: fixed;
+  top: 15px;
+  right: 15px;
+  width: 24px;
+  height: 24px;
+  opacity: 0;
+  fill: $COLOR--gray-60;
+  cursor: pointer;
+  transition: opacity 0.5s ease;
+}
+
+.rp-nav-left {
+  float: left;
+  button {
+    margin-right: 10px;
+  }
+}
+
+.rp-nav-right {
+  float: right;
+  button {
+    margin-left: 10px;
+  }
+}
