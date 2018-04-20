@@ -12,27 +12,27 @@ export const ModalField = ({ label, labelWidth, children }) => (
 );
 ModalField.propTypes = {
   label: PropTypes.string,
+  labelWidth: PropTypes.number,
   children: PropTypes.node,
-  labelWidth: PropTypes.string,
 };
 ModalField.defaultProps = {
   label: '',
   children: null,
-  labelWidth: 'auto',
+  labelWidth: null,
 };
 
-const Label = ({ label, labelWidth: width }) => (
-  <div className={cx('modal-field-label')} style={{ width }}>
+const Label = ({ label, labelWidth }) => (
+  <div className={cx('modal-field-label')} style={{ width: labelWidth || 'unset' }}>
     {label}
   </div>
 );
 Label.propTypes = {
   label: PropTypes.string,
-  labelWidth: PropTypes.string,
+  labelWidth: PropTypes.number,
 };
 Label.defaultProps = {
   label: '',
-  labelWidth: 'auto',
+  labelWidth: null,
 };
 
 const Content = ({ children }) => <div className={cx('modal-field-content')}>{children}</div>;
