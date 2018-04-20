@@ -186,7 +186,7 @@
   "MembersPageToolbar.permissionMap": "Карта прав",
   "MembersPageToolbar.searchByName": "Искать по имени",
   "MergeLaunchDialog.MergeLaunchHeader": "Объединить запуски",
-  "MergeLaunchDialog.extendSuitesDescriptionText": "Дополнить описание дочерних наборов названием оригинального запуска (напр. @запуск \'Запуск №1\')",
+  "MergeLaunchDialog.extendSuitesDescriptionText": "Дополнить описание дочерних наборов названием оригинального запуска (напр. @запуск 'Запуск №1')",
   "MergeLaunchDialog.launchDescriptionLabel": "Описание",
   "MergeLaunchDialog.launchInfoHeading": "Все выбранные запуски будут объединены в один",
   "MergeLaunchDialog.launchNameLabel": "Имя запуска",
