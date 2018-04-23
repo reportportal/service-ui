@@ -9,7 +9,7 @@ export const MergeTypeScheme = ({ type }) => (
 );
 
 MergeTypeScheme.propTypes = {
-  type: PropTypes.node,
+  type: PropTypes.string,
 };
 MergeTypeScheme.defaultProps = {
   type: '',

@@ -3,12 +3,12 @@ import { SHOW_SCREEN_LOCK, HIDE_SCREEN_LOCK } from './constants';
 export const showScreenLockAction = () => ({
   type: SHOW_SCREEN_LOCK,
   payload: {
-    shown: true,
+    visible: true,
   },
 });
 export const hideScreenLockAction = () => ({
   type: HIDE_SCREEN_LOCK,
   payload: {
-    shown: false,
+    visible: false,
   },
 });
