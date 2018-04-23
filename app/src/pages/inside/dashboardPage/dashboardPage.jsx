@@ -23,7 +23,6 @@ import AddDashboardIcon from './img/ic-add-dash-inline.svg';
 import { DashboardList } from './dashboardList';
 import { DashboardPageToolbar } from './dashboardPageToolbar';
 import styles from './dashboardPage.scss';
-import { DeleteModal } from './dashboardModal'; // eslint-disable-line no-unused-vars
 
 const cx = classNames.bind(styles);
 const messages = defineMessages({

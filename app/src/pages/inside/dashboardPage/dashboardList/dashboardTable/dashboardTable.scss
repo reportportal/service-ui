@@ -5,12 +5,13 @@
   vertical-align: top;
   color: $COLOR--charcoal-grey;
   font-size: 13px;
+  border-bottom: 1px solid $COLOR--gray-91;
 
   @media (max-width: $SCREEN_SM_MAX) {
     width: 100%;
     height: auto;
     padding: 10px;
-
+    border: 0;
     &:empty {
       display: none;
     }
@@ -75,10 +76,17 @@
   .delete {
     width: 100%;
   }
+
+  .shared {
+    border-bottom: 1px solid $COLOR--gray-91;
+  }
 }
 
 .with-button {
-  cursor: pointer;
+  i {
+    cursor: pointer;
+  }
+
   @media (max-width: $SCREEN_SM_MAX) {
     width: 100%;
     height: auto;
