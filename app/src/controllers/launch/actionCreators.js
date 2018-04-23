@@ -84,8 +84,9 @@ export const proceedWithValidItemsAction = (fetchFunc) => (dispatch, getState) =
   const launches = selectedLaunchesSelector(getState());
   const { action, validator } = groupOperationMap[actionName];
   const validItems = launches.filter((launch) => !validator(launch, launches, getState()));
-  if (validItems.length === 0) {
-    const errors = validateLaunches(launches, validator, getState());
+  const launchesToValidate = validItems.length > 0 ? validItems : launches;
+  const errors = validateLaunches(launchesToValidate, validator, getState());
+  if (Object.keys(errors).length > 0) {
     dispatch(setValidationErrorsAction(errors));
     return;
   }
