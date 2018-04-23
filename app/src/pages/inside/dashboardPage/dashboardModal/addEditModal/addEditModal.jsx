@@ -1,28 +1,75 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { ModalLayout, withModal } from 'components/main/modal';
-import { DashboardForm } from 'pages/inside/dashboardPage/dashboardModal/dashboardForm';
-import { connect } from 'react-redux';
-import { submitAddEditDashboardFormAction } from 'controllers/dashboard';
+import { ModalLayout, withModal, ModalField } from 'components/main/modal';
+import { reduxForm } from 'redux-form';
+import classNames from 'classnames/bind';
+import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { FieldErrorHint } from 'components/fields/fieldErrorHint';
+import { FieldProvider } from 'components/fields/fieldProvider';
+import { Input } from 'components/inputs/input';
+import { Textarea } from 'components/inputs/textarea';
+import { InputBigSwitcher } from 'components/inputs/inputBigSwitcher';
+import { validate } from 'common/utils';
+import styles from './addEditModal.scss';
 
+const cx = classNames.bind(styles);
+const messages = defineMessages({
+  dashboardNamePlaceholder: {
+    id: 'DashboardForm.dashboardNamePlaceholder',
+    defaultMessage: 'Enter Dashboard Name',
+  },
+  dashboardNameLabel: {
+    id: 'DashboardForm.dashboardNameLabel',
+    defaultMessage: 'Name',
+  },
+  dashboardDescriptionPlaceholder: {
+    id: 'DashboardModal.dashboardDescriptionPlaceholder',
+    defaultMessage: 'Enter Dashboard Description',
+  },
+  dashboardDescriptionLabel: {
+    id: 'DashboardForm.dashboardDescriptionLabel',
+    defaultMessage: 'Description',
+  },
+  dashboardShareLabel: {
+    id: 'DashboardForm.dashboardShareLabel',
+    defaultMessage: 'Share',
+  },
+});
 @withModal('dashboardAddEditModal')
-@connect(null, {
-  submitAddEditDashboardForm: submitAddEditDashboardFormAction,
+@injectIntl
+@reduxForm({
+  form: 'addEditDashboard',
+  validate: ({ name }) => ({
+    name: (!name || !validate.dashboardName(name)) && 'dashboardNameHint',
+  }),
 })
 export class AddEditModal extends Component {
   static propTypes = {
     data: PropTypes.object,
-    submitAddEditDashboardForm: PropTypes.func,
+    intl: intlShape.isRequired,
+    initialize: PropTypes.func,
+    handleSubmit: PropTypes.func,
   };
 
   static defaultProps = {
     data: {},
-    submitAddEditDashboardForm: () => {},
+    initialize: () => {},
+    handleSubmit: () => {},
+  };
+
+  componentDidMount() {
+    this.props.initialize(this.props.data.dashboardItem);
+  }
+
+  submitFormAndCloseModal = (closeModal) => (dashboardItem) => {
+    this.props.data.onSubmit(dashboardItem);
+    closeModal();
   };
 
   render() {
-    const { dashboardItem, submitText, title, onSubmit, cancelText } = this.props.data;
-    const { submitAddEditDashboardForm } = this.props;
+    const { dashboardItem = {}, submitText, title, cancelText } = this.props.data;
+    const { intl, handleSubmit } = this.props;
+    const labelWidth = '70px';
 
     return (
       <ModalLayout
@@ -30,15 +77,46 @@ export class AddEditModal extends Component {
         okButton={{
           text: submitText,
           onClick: (closeModal) => {
-            closeModal();
-            submitAddEditDashboardForm();
+            handleSubmit(this.submitFormAndCloseModal(closeModal))();
           },
         }}
         cancelButton={{
           text: cancelText,
         }}
       >
-        <DashboardForm dashboardItem={dashboardItem} onSubmit={onSubmit} />
+        <form className={cx('add-dashboard-form')}>
+          <ModalField
+            label={intl.formatMessage(messages.dashboardNameLabel)}
+            labelWidth={labelWidth}
+          >
+            <FieldProvider name="name" type="text">
+              <FieldErrorHint>
+                <Input placeholder={intl.formatMessage(messages.dashboardNamePlaceholder)} />
+              </FieldErrorHint>
+            </FieldProvider>
+          </ModalField>
+          <ModalField
+            label={intl.formatMessage(messages.dashboardDescriptionLabel)}
+            labelWidth={labelWidth}
+          >
+            <FieldProvider name="description">
+              <Textarea
+                placeholder={intl.formatMessage(messages.dashboardDescriptionPlaceholder)}
+                defaultValue={dashboardItem.description}
+                cols={42}
+                rows={3}
+              />
+            </FieldProvider>
+          </ModalField>
+          <ModalField
+            label={intl.formatMessage(messages.dashboardShareLabel)}
+            labelWidth={labelWidth}
+          >
+            <FieldProvider name="share" format={Boolean} parse={Boolean}>
+              <InputBigSwitcher />
+            </FieldProvider>
+          </ModalField>
+        </form>
       </ModalLayout>
     );
   }

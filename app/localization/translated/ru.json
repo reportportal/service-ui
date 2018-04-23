@@ -137,6 +137,8 @@
   "InfoLine.duration": "Длительность",
   "InfoLine.passed": "Успешно {value}%",
   "InfoLine.total": "Всего {value}",
+  "InputTagsSearch.dynamicSearchPromptText": "Пожалуйста введите{length} или более символов",
+  "InputTagsSearch.new": "Новый",
   "InputUserSearch.inviteNewUser": "Пригласить {userEmail}",
   "InputUserSearch.inviteNewUserInfo": "Отправить приглашение на этот адрес",
   "InputUserSearch.noResults": "Ничего не найдено",
@@ -251,6 +253,6 @@
   "UuidBlock.headerNameCol": "Универсальный уникальный идентификатор",
   "UuidBlock.regenerate": "Создать новый",
   "UuidBlock.tip": "Чтобы обеспечить надежность вашего доменного пароля, вы можете использовать пользовательский опознавательный номер, называемый UUID, чтобы подтвердить, что ваша учетная запись может загружаться агентом.",
-  "addEditDashboard.dashboardNameHint": "Имя панели управления должно быть длиной от 3 до 128.",
-  "searchDashboardForm.dashboardNameSearchHint": "Имя панели управления должно быть длиной от 3 до 128."
+  "AddEditDashboard.dashboardNameHint": "Имя панели управления должно быть длиной от 3 до 128.",
+  "SearchDashboardForm.dashboardNameSearchHint": "Имя панели управления должно быть длиной от 3 до 128."
 }

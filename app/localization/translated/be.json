@@ -253,6 +253,6 @@
   "UuidBlock.headerNameCol": "Універсальны ўнікальны ідэнтыфікатар",
   "UuidBlock.regenerate": "Стварыць новы",
   "UuidBlock.tip": "Каб забяспечыць надзейнасць вашага даменнага пароля, вы можаце выкарыстоўваць маркер карыстальніка, які называецца UUID, каб падцвердзіць, што ваш уліковы запіс можа занатоўвацца агентам.",
-  "addEditDashboard.dashboardNameHint": "Назва панэлі кіравання павінна мець памер ад 3 да 128.",
-  "searchDashboardForm.dashboardNameSearchHint": "Назва панэлі кіравання павінна мець памер ад 3 да 128."
+  "AddEditDashboard.dashboardNameHint": "Назва панэлі кіравання павінна мець памер ад 3 да 128.",
+  "SearchDashboardForm.dashboardNameSearchHint": "Назва панэлі кіравання павінна мець памер ад 3 да 128."
 }

@@ -1,4 +1,3 @@
-import { submit } from 'redux-form';
 import { fetch, getStorageItem, setStorageItem } from 'common/utils';
 import { activeProjectSelector, userIdSelector } from 'controllers/user';
 import {
@@ -82,8 +81,4 @@ export const addDashboardAction = (item) => (dispatch, getState) => {
       payload,
     });
   });
-};
-
-export const submitAddEditDashboardFormAction = () => (dispatch) => {
-  dispatch(submit('addEditDashboard'));
 };

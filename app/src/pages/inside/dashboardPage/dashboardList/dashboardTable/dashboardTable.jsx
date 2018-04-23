@@ -218,12 +218,7 @@ export class DashboardTable extends Component {
 
     return (
       <Fragment>
-        <Grid
-          className={cx('dashboard-table')}
-          columns={this.COLUMNS}
-          data={dashboardItems}
-          sortingDirection=""
-        />
+        <Grid className={cx('dashboard-table')} columns={this.COLUMNS} data={dashboardItems} />
         {dashboardItems.length === 0 && <EmptyDashboards userDashboards action={onAddItem} />}
       </Fragment>
     );
