@@ -11,25 +11,24 @@ const ScreenLockRoot = document.getElementById('screen-lock-root');
 const cx = classNames.bind(styles);
 
 @connect((state) => ({
-  shown: screenLockVisibilitySelector(state),
+  visible: screenLockVisibilitySelector(state),
 }))
 export class ScreenLock extends Component {
   static propTypes = {
-    shown: PropTypes.bool.isRequired,
+    visible: PropTypes.bool.isRequired,
   };
 
   render() {
     return (
       <Fragment>
-        {ReactDOM.createPortal(
-          this.props.shown && (
+        {this.props.visible &&
+          ReactDOM.createPortal(
             <div className={cx('screen-lock')}>
               <div className={cx('backdrop')} />
               <SpinningPreloader />
-            </div>
-          ),
-          ScreenLockRoot,
-        )}
+            </div>,
+            ScreenLockRoot,
+          )}
       </Fragment>
     );
   }

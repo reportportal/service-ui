@@ -20,6 +20,7 @@ import { MergeTypeScheme } from './mergeTypeScheme';
 import { StartEndTime } from './startEndTime';
 import styles from './launchMergeModal.scss';
 
+const MERGE_FORM = 'launchMergeForm';
 const MERGE_TYPE_DEEP = 'DEEP';
 const MERGE_TYPE_BASIC = 'BASIC';
 const FIELD_LABEL_WIDTH = 130;
@@ -88,7 +89,7 @@ const messages = defineMessages({
 @withModal('launchMergeModal')
 @injectIntl
 @reduxForm({
-  form: 'launchMergeForm',
+  form: MERGE_FORM,
   validate: ({ name, description, merge_type }) => ({
     merge_type: !merge_type, // eslint-disable-line camelcase
     name: (!name || !validate.launchName(name)) && 'launchNameHint',
@@ -100,9 +101,9 @@ const messages = defineMessages({
   (state) => ({
     user: userInfoSelector(state),
     activeProject: activeProjectSelector(state),
-    mergeType: formValueSelector('launchMergeForm')(state, 'merge_type'),
-    startTime: formValueSelector('launchMergeForm')(state, 'start_time'),
-    endTime: formValueSelector('launchMergeForm')(state, 'end_time'),
+    mergeType: formValueSelector(MERGE_FORM)(state, 'merge_type'),
+    startTime: formValueSelector(MERGE_FORM)(state, 'start_time'),
+    endTime: formValueSelector(MERGE_FORM)(state, 'end_time'),
     tagsSearchUrl: `/api/v1/${activeProjectSelector(state)}/launch/tags?filter.cnt.tags=`,
   }),
   {
