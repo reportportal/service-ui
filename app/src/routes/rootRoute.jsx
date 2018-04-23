@@ -1,6 +1,7 @@
 import React from 'react';
 import { Switch, Route, Link, Redirect } from 'react-router-dom';
 import { ModalContainer } from 'components/main/modal';
+import { ScreenLock } from 'components/main/screenLock';
 import { EmptyLayout } from 'layouts/emptyLayout';
 import { AppLayout } from 'layouts/appLayout';
 import { AdminLayout } from 'layouts/adminLayout';
@@ -74,6 +75,7 @@ const RootRoute = () => (
       <AppRoute />
     </Switch>
     <ModalContainer />
+    <ScreenLock />
   </div>
 );
 

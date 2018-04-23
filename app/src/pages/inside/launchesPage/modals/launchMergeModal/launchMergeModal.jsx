@@ -5,6 +5,7 @@ import { fetch, validate } from 'common/utils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { reduxForm, formValueSelector } from 'redux-form';
 import { connect } from 'react-redux';
+import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLock';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { ModalLayout, withModal, ModalField, ModalContentHeading } from 'components/main/modal';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
@@ -95,17 +96,25 @@ const messages = defineMessages({
       (!description || !validate.launchDescription(description)) && 'launchDescriptionHint',
   }),
 })
-@connect((state) => ({
-  user: userInfoSelector(state),
-  activeProject: activeProjectSelector(state),
-  mergeType: formValueSelector('launchMergeForm')(state, 'merge_type'),
-  startTime: formValueSelector('launchMergeForm')(state, 'start_time'),
-  endTime: formValueSelector('launchMergeForm')(state, 'end_time'),
-  tagsSearchUrl: `/api/v1/${activeProjectSelector(state)}/launch/tags?filter.cnt.tags=`,
-}))
+@connect(
+  (state) => ({
+    user: userInfoSelector(state),
+    activeProject: activeProjectSelector(state),
+    mergeType: formValueSelector('launchMergeForm')(state, 'merge_type'),
+    startTime: formValueSelector('launchMergeForm')(state, 'start_time'),
+    endTime: formValueSelector('launchMergeForm')(state, 'end_time'),
+    tagsSearchUrl: `/api/v1/${activeProjectSelector(state)}/launch/tags?filter.cnt.tags=`,
+  }),
+  {
+    showScreenLockAction,
+    hideScreenLockAction,
+  },
+)
 export class LaunchMergeModal extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
+    showScreenLockAction: PropTypes.func.isRequired,
+    hideScreenLockAction: PropTypes.func.isRequired,
     handleSubmit: PropTypes.func.isRequired,
     activeProject: PropTypes.string.isRequired,
     tagsSearchUrl: PropTypes.string.isRequired,
@@ -164,11 +173,13 @@ export class LaunchMergeModal extends Component {
   parseTags = (options) => options.map((option) => option.value);
 
   MergeAndCloseModal = (closeModal) => (values) => {
+    this.props.showScreenLockAction();
     fetch(`/api/v1/${this.props.activeProject}/launch/merge`, {
       method: 'post',
       data: values,
     }).then(() => {
       this.props.data.onMerge(closeModal);
+      this.props.hideScreenLockAction();
     });
   };
 
