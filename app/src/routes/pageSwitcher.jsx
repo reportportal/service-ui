@@ -6,55 +6,47 @@ import { pageNames } from 'controllers/pages/constants';
 import { pageSelector } from 'controllers/pages';
 import { LocalizationSwitcher } from 'components/main/localizationSwitcher';
 import { NOT_FOUND } from 'redux-first-router';
+
+import { AdminLayout } from 'layouts/adminLayout';
+import { AppLayout } from 'layouts/appLayout';
+import { EmptyLayout } from 'layouts/emptyLayout';
+
+import { AdministratePage } from 'pages/admin/administratePage';
+import { ProjectsPage } from 'pages/admin/projectsPage';
+import { ApiPage } from 'pages/inside/apiPage';
+import { DashboardPage } from 'pages/inside/dashboardPage';
+import { DebugPage } from 'pages/inside/debugPage';
+import { FiltersPage } from 'pages/inside/filtersPage';
+import { LaunchesPage } from 'pages/inside/launchesPage';
+import { MembersPage } from 'pages/inside/membersPage';
+import { ProfilePage } from 'pages/inside/profilePage';
+import { SandboxPage } from 'pages/inside/sandboxPage';
+import { SettingsPage } from 'pages/inside/settingsPage';
+import { LoginPage } from 'pages/outside/loginPage';
+import { NotFoundPage } from 'pages/outside/notFoundPage';
+import { RegistrationPage } from 'pages/outside/registrationPage';
+
 import { authorizedRoute } from './authorizedRoute';
 import { anonymousRoute } from './anonymousRoute';
 
 import styles from './pageSwitcher.css';
 
 const pageRendering = {
-  [NOT_FOUND]: { module: 'pages/outside/notFoundPage', name: 'NotFoundPage', layout: 'Empty' },
+  [NOT_FOUND]: { component: NotFoundPage, layout: EmptyLayout },
 
-  LOGIN_PAGE: {
-    module: 'pages/outside/loginPage',
-    name: 'LoginPage',
-    layout: 'Empty',
-    anonymousAccess: true,
-  },
-  REGISTRATION_PAGE: {
-    module: 'pages/outside/registrationPage',
-    name: 'RegistrationPage',
-    layout: 'Empty',
-    anonymousAccess: true,
-  },
-
-  USER_PROFILE_PAGE: { module: 'pages/inside/profilePage', name: 'ProfilePage', layout: 'App' },
-  API_PAGE: { module: 'pages/inside/apiPage', name: 'ApiPage', layout: 'App' },
-  PROJECT_DASHBOARD_PAGE: {
-    module: 'pages/inside/dashboardPage',
-    name: 'DashboardPage',
-    layout: 'App',
-  },
-  PROJECT_FILTERS_PAGE: { module: 'pages/inside/filtersPage', name: 'FiltersPage', layout: 'App' },
-  PROJECT_LAUNCHES_PAGE: {
-    module: 'pages/inside/launchesPage',
-    name: 'LaunchesPage',
-    layout: 'App',
-  },
-  PROJECT_MEMBERS_PAGE: { module: 'pages/inside/membersPage', name: 'MembersPage', layout: 'App' },
-  PROJECT_SANDBOX_PAGE: { module: 'pages/inside/sandboxPage', name: 'SandboxPage', layout: 'App' },
-  PROJECT_SETTINGS_PAGE: {
-    module: 'pages/inside/settingsPage',
-    name: 'SettingsPage',
-    layout: 'App',
-  },
-  PROJECT_USERDEBUG_PAGE: { module: 'pages/inside/debugPage', name: 'DebugPage', layout: 'App' },
-
-  ADMINISTRATE_PAGE: {
-    module: 'pages/admin/administratePage',
-    name: 'AdministratePage',
-    layout: 'Empty',
-  },
-  PROJECTS_PAGE: { module: 'pages/admin/projectsPage', name: 'ProjectsPage', layout: 'Admin' },
+  LOGIN_PAGE: { component: LoginPage, layout: EmptyLayout, anonymousAccess: true },
+  REGISTRATION_PAGE: { component: RegistrationPage, layout: EmptyLayout, anonymousAccess: true },
+  USER_PROFILE_PAGE: { component: ProfilePage, layout: AppLayout },
+  API_PAGE: { component: ApiPage, layout: AppLayout },
+  PROJECT_DASHBOARD_PAGE: { component: DashboardPage, layout: AppLayout },
+  PROJECT_FILTERS_PAGE: { component: FiltersPage, layout: AppLayout },
+  PROJECT_LAUNCHES_PAGE: { component: LaunchesPage, layout: AppLayout },
+  PROJECT_MEMBERS_PAGE: { component: MembersPage, layout: AppLayout },
+  PROJECT_SANDBOX_PAGE: { component: SandboxPage, layout: AppLayout },
+  PROJECT_SETTINGS_PAGE: { component: SettingsPage, layout: AppLayout },
+  PROJECT_USERDEBUG_PAGE: { component: DebugPage, layout: AppLayout },
+  ADMINISTRATE_PAGE: { component: AdministratePage, layout: EmptyLayout },
+  PROJECTS_PAGE: { component: ProjectsPage, layout: AdminLayout },
 };
 
 Object.keys(pageNames).forEach((page) => {
@@ -79,16 +71,10 @@ class PageSwitcher extends React.PureComponent {
 
     if (!page) return null;
 
-    const { module, name, layout, anonymousAccess } = pageRendering[page];
-    if (!module) throw new Error(`Page $page does not exist`);
+    const { component: PageComponent, layout: Layout, anonymousAccess } = pageRendering[page];
 
-    if (!layout) throw new Error(`Page $page is missing layout`);
-
-    const PageComponent = require(`../${module}`)[name]; // eslint-disable-line import/no-dynamic-require, global-require
-
-    const layoutName = `${layout}Layout`;
-    const layoutDir = `${layout.toLowerCase()}Layout`;
-    const Layout = require(`../layouts/${layoutDir}`)[layoutName]; // eslint-disable-line import/no-dynamic-require, global-require
+    if (!PageComponent) throw new Error(`Page $page does not exist`);
+    if (!Layout) throw new Error(`Page $page is missing layout`);
 
     const FullPage = withAccess(
       () => (
