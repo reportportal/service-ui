@@ -24,9 +24,9 @@ import moment from 'moment';
 export const getDuration = (start, end) => {
   const secDuration = parseInt((end - start) / 1000, 10);
   const days = Math.floor(secDuration / 86400);
-  const hours = Math.floor((secDuration - (days * 86400)) / 3600);
-  const minutes = Math.floor((secDuration - (days * 86400) - (hours * 3600)) / 60);
-  const seconds = secDuration - (days * 86400) - (hours * 3600) - (minutes * 60);
+  const hours = Math.floor((secDuration - days * 86400) / 3600);
+  const minutes = Math.floor((secDuration - days * 86400 - hours * 3600) / 60);
+  const seconds = secDuration - days * 86400 - hours * 3600 - minutes * 60;
 
   let result = '';
   if (days > 0) {
@@ -37,20 +37,23 @@ export const getDuration = (start, end) => {
   }
   if (minutes > 0) {
     result = `${result + minutes}m`;
+    if (!days && !hours && seconds) {
+      result += ` ${seconds}s`;
+    }
   }
   if (result === '' && seconds > 0) {
     result = `${seconds}s`;
   } else if (result === '' && seconds === 0) {
-    result = `${(Math.round((end - start) / 10)) / 100}s`;
+    result = `${Math.round((end - start) / 10) / 100}s`;
   }
   return result;
 };
 
 export const approximateTimeFormat = (time) => {
   const days = Math.floor(time / 86400);
-  const hours = Math.floor((time - (days * 86400)) / 3600);
-  const minutes = Math.floor((time - (days * 86400) - (hours * 3600)) / 60);
-  const seconds = time - (days * 86400) - (hours * 3600) - (minutes * 60);
+  const hours = Math.floor((time - days * 86400) / 3600);
+  const minutes = Math.floor((time - days * 86400 - hours * 3600) / 60);
+  const seconds = time - days * 86400 - hours * 3600 - minutes * 60;
 
   let result = '';
 
@@ -66,7 +69,7 @@ export const approximateTimeFormat = (time) => {
   if (result === '' && seconds > 0) {
     result = `${seconds}s`;
   } else if (result === '' && seconds === 0) {
-    result = `${(Math.round((time) / 10)) / 100}s`;
+    result = `${Math.round(time / 10) / 100}s`;
   }
   return result;
 };
@@ -78,7 +81,7 @@ export const dateFormat = (val, withUtc) => {
   const hour = date.getHours();
   const minute = date.getMinutes();
   const second = date.getSeconds();
-  let utc = (date.getTimezoneOffset() / 60) * -1;
+  let utc = date.getTimezoneOffset() / 60 * -1;
 
   if (utc.toString().indexOf('-') === -1) {
     utc = `UTC+${utc}`;
@@ -96,12 +99,14 @@ export const dateFormat = (val, withUtc) => {
     return input;
   };
 
-  return `${date.getFullYear()}-${normalize(month)}-${normalize(day)} ${normalize(hour)}:${normalize(minute)}:${normalize(second)}${withUtc ? ` ${utc}` : ''}`;
+  return `${date.getFullYear()}-${normalize(month)}-${normalize(day)} ${normalize(
+    hour,
+  )}:${normalize(minute)}:${normalize(second)}${withUtc ? ` ${utc}` : ''}`;
 };
 
-export const fromNowFormat = date => moment(date).fromNow();
+export const fromNowFormat = (date) => moment(date).fromNow();
 
-export const daysFromNow = stamp => fromNowFormat(dateFormat(stamp));
+export const daysFromNow = (stamp) => fromNowFormat(dateFormat(stamp));
 
 export const daysBetween = (date1, date2) => {
   // The number of milliseconds in one day
