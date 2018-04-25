@@ -1,10 +1,15 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+
+import classNames from 'classnames/bind';
+
 import { Input } from 'components/inputs/input';
 import styles from './demoDataTab.scss';
 import warningSign from './img/ic-warning.svg';
 
-export class DemoDataTab extends Component {
+const cx = classNames.bind(styles);
+
+export class DemoDataGenerator extends Component {
   static propTypes = {
     postfix: PropTypes.string.isRequired,
     postfixChanged: PropTypes.func.isRequired,
@@ -21,40 +26,40 @@ export class DemoDataTab extends Component {
 
   render() {
     return (
-      <div className={styles.demoDataTabContainer}>
-        <p className={styles.youCanGenerateDat}>You can generate data only on desktop view.</p>
-        <h5 className={styles.theSystemWillGene}>
+      <div className={cx('demo-data-generator-container')}>
+        <p className={cx('you-can-generate-dat')}>You can generate data only on desktop view.</p>
+        <h5 className={cx('the-system-will-gene')}>
           THE SYSTEM WILL GENERATE THE FOLLOWING DEMO DATA:
         </h5>
         <ul>
           <li>
-            <span className={styles.dot} />10 launches
+            <span className={cx('dot')} />10 launches
           </li>
           <li>
-            <span className={styles.dot} />1 dashboard with 9 widgets
+            <span className={cx('dot')} />1 dashboard with 9 widgets
           </li>
           <li>
-            <span className={styles.dot} />1 filter
+            <span className={cx('dot')} />1 filter
           </li>
         </ul>
-        <p className={styles.postfixWillBeAdd}>
+        <p className={cx('post-fix-will-be-add')}>
           Postfix will be added to the demo dashboard, widgets, filter name
         </p>
-        <div className={styles.inputEnterPostfix}>
+        <div className={cx('input-enter-postfix')}>
           <Input
             placeholder="Enter Postfix"
             value={this.props.postfix}
             onChange={this.handleOnChange}
           />
         </div>
-        <button className={styles.button} onClick={this.handleClick}>
-          <span className={styles.generateDemoData}>Generate Demo Data</span>
+        <button className={cx('button')} onClick={this.handleClick}>
+          <span className={cx('generate-demo-data')}>Generate Demo Data</span>
         </button>
-        <div className={styles.warningMessage}>
-          <img src={warningSign} className={styles.warningSign} alt="red exclamation sign" />
-          <p className={styles.warningText}>Warning</p>
+        <div className={cx('warning-message')}>
+          <img src={warningSign} className={cx('warning-sign')} alt="red exclamation sign" />
+          <p className={cx('warning-text')}>Warning</p>
         </div>
-        <p className={styles.youWillHaveToRemove}>
+        <p className={cx('you-will-have-to-remove')}>
           You will have to remove the demo data manually.
         </p>
       </div>

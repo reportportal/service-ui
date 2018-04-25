@@ -1,17 +1,16 @@
-// MOBILE styling:
-.demoDataTabContainer {
+.demo-data-generator-container {
   padding: 20px 10px;
   display: flex;
   flex-direction: column;
 
-  .youCanGenerateDat {
+  .you-can-generate-dat {
     font-size: 14px;
     line-height: 1.57;
     text-align: left;
     color: $COLOR--charcoal-grey;
   }
 
-  .theSystemWillGene {
+  .the-system-will-gene {
     margin-top: 15px;
     font-size: 12px;
     font-weight: 600;
@@ -40,7 +39,7 @@
     }
   }
 
-  .postfixWillBeAdd {
+  .post-fix-will-be-add {
     display: none;
     font-size: 13px;
     font-weight: normal;
@@ -52,7 +51,7 @@
     margin-bottom: 5px;
   }
 
-  .inputEnterPostfix {
+  .input-enter-postfix {
     display: none;
     width: 310px;
     height: 30px;
@@ -70,58 +69,52 @@
     cursor: pointer;
   }
 
-  .generateDemoData {
+  .generate-demo-data {
     width: 129px;
     height: 18px;
     font-size: 13px;
-    font-weight: normal;
-    font-style: normal;
-    font-stretch: normal;
-    line-height: normal;
-    letter-spacing: normal;
     text-align: $COLOR--charcoal-grey;
   }
 
-  .warningMessage {
+  .warning-message {
     display: none;
     margin-bottom: 5px;
 
-    .warningSign {
+    .warning-sign {
       margin-right: 5px;
     }
-    .warningText {
+    .warning-text {
       font-size: 13px;
       font-weight: 600;
       color: $COLOR--failed;
     }
   }
 
-  .youWillHaveToRemove {
+  .you-will-have-to-remove {
     display: none;
     font-size: 12px;
     line-height: 1.17;
     color: $COLOR--charcoal-grey;
     margin-bottom: 35px;
   }
-} // end of MOBILE styling
+}
 
-// DESKTOP styling:
 @media (min-width: $SCREEN_XS_MAX) {
-  .demoDataTabContainer {
-    .youCanGenerateDat {
+  .demo-data-generator-container {
+    .you-can-generate-dat {
       display: none;
     }
-    .inputEnterPostfix,
-    .postfixWillBeAdd,
-    .youWillHaveToRemove {
+    .input-enter-postfix,
+    .post-fix-will-be-add,
+    .you-will-have-to-remove {
       display: inline-block;
     }
     .button {
       margin: 0 0 35px 0;
     }
-    .warningMessage {
+    .warning-message {
       display: flex;
       align-items: flex-end;
     }
   }
-} // end of DESKTOP styling
+}

@@ -1,1 +1,1 @@
-export { DemoDataTab } from './demoDataTab';
+export { DemoDataGenerator } from './demoDataGenerator';
