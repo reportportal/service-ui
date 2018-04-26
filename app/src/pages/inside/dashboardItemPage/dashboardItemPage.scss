@@ -1,10 +1,5 @@
 .dashboard-item {
-  background: white;
-
-  .gadget-view {
-    border: 1px solid grey;
-    cursor: all-scroll;
-  }
+  background: $COLOR--white-two;
 
   &:hover .icon-close {
     opacity: 1;
@@ -30,14 +25,14 @@
   transition: opacity 0.5s ease;
 }
 
-.rp-nav-left {
+.nav-left {
   float: left;
   button {
     margin-right: 10px;
   }
 }
 
-.rp-nav-right {
+.nav-right {
   float: right;
   button {
     margin-left: 10px;

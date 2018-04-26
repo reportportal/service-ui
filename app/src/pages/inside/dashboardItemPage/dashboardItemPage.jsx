@@ -7,8 +7,8 @@ import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import classNames from 'classnames/bind';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { activeProjectSelector } from 'controllers/user';
-import AddWidgetIcon from './img/add-solid-inline.svg';
-import AddSharedWidgetIcon from './img/add-outline-inline.svg';
+import AddWidgetIcon from './img/add-inline.svg';
+import AddSharedWidgetIcon from './img/add-shared-inline.svg';
 import EditIcon from './img/edit-inline.svg';
 import CancelIcon from './img/cancel-inline.svg';
 import FullscreenIcon from './img/full-screen-inline.svg';
@@ -46,32 +46,21 @@ const messages = defineMessages({
 @injectIntl
 export class DashboardItemPage extends Component {
   static propTypes = {
-    url: PropTypes.string,
-    intl: intlShape,
-    match: PropTypes.object,
-  };
-
-  static defaultProps = {
-    url: '',
-    intl: {},
-    match: {},
+    url: PropTypes.string.isRequired,
+    intl: intlShape.isRequired,
+    match: PropTypes.object.isRequired,
   };
 
   state = {
-    isFull: false,
+    isFullscreen: false
   };
 
-  onChangeFullscreen = (isFull) => {
-    this.setState({ isFull });
+  onChangeFullscreen = (isFullscreen) => {
+    this.setState({ isFullscreen });
   };
 
-  openFullscreen = (e) => {
-    e.preventDefault();
-    this.setState({ isFull: true });
-  };
-
-  closeFullscreen = () => {
-    this.setState({ isFull: false });
+  toggleFullscreen = () => {
+    this.setState({ isFullscreen: !this.state.isFullscreen });
   };
 
   render() {
@@ -79,28 +68,28 @@ export class DashboardItemPage extends Component {
     return (
       <div className={`${cx('dashboard-item')}`}>
         <div className={cx('buttons-container')}>
-          <div className={cx('rp-nav-left')}>
+          <div className={cx('nav-left')}>
             <GhostButton icon={AddWidgetIcon}>{formatMessage(messages.addNewWidget)}</GhostButton>
             <GhostButton icon={AddSharedWidgetIcon}>
               {formatMessage(messages.addSharedWidget)}
             </GhostButton>
           </div>
-          <div className={cx('rp-nav-right')}>
+          <div className={cx('nav-right')}>
             <GhostButton icon={EditIcon}>{formatMessage(messages.refreshWidget)}</GhostButton>
-            <GhostButton icon={FullscreenIcon} onClick={this.openFullscreen}>
+            <GhostButton icon={FullscreenIcon} onClick={this.toggleFullscreen}>
               {formatMessage(messages.fullscreen)}
             </GhostButton>
             <GhostButton icon={CancelIcon}>{formatMessage(messages.deleteWidget)}</GhostButton>
           </div>
         </div>
 
-        <Fullscreen enabled={this.state.isFull} onChange={this.onChangeFullscreen}>
+        <Fullscreen enabled={this.state.isFullscreen} onChange={this.onChangeFullscreen}>
           <WidgetsGrid
             dashboardId={this.props.match.params.dashboardId}
-            isFullscreen={this.state.isFull}
+            isFullscreen={this.state.isFullscreen}
           />
-          {this.state.isFull && (
-            <i className={cx('icon-close')} onClick={this.closeFullscreen}>
+          {this.state.isFullscreen && (
+            <i className={cx('icon-close')} onClick={this.toggleFullscreen}>
               {Parser(CancelIcon)}
             </i>
           )}

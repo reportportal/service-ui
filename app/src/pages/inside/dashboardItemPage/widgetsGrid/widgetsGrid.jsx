@@ -8,6 +8,7 @@ import { activeProjectSelector } from 'controllers/user';
 import { fetch } from 'common/utils';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import PropTypes from 'prop-types';
+import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import styles from './widgetsGrid.scss';
 
 const cx = classNames.bind(styles);
@@ -31,6 +32,7 @@ export class WidgetsGrid extends PureComponent {
 
   state = {
     widgets: [],
+    isFetching: false,
   };
 
   componentDidMount() {
@@ -76,10 +78,14 @@ export class WidgetsGrid extends PureComponent {
   }
 
   fetchWidgets() {
+    this.setState({ isFetching: true });
+
     return fetch(this.props.url).then((result) => {
       const currentDashboard = result.find((item) => item.id === this.props.dashboardId);
-
-      this.setState({ widgets: currentDashboard.widgets });
+      this.setState({
+        widgets: currentDashboard.widgets,
+        isFetching: false,
+      });
     });
   }
 
@@ -99,22 +105,25 @@ export class WidgetsGrid extends PureComponent {
     const cols = { lg: 12, md: 12, sm: 1, xs: 1, xxs: 1 };
 
     return (
-      <ScrollWrapper
-        autoHeight
-        autoHeightMax={this.props.isFullscreen ? window.screen.height : height}
-        hideTracksWhenNotNeeded
-      >
-        <ResponsiveGridLayout
-          rowHeight={rowHeight}
-          breakpoints={breakpoints}
-          onBreakpointChange={this.onBreakpointChange}
-          onDragStop={this.onGridChange}
-          onResizeStop={this.onGridChange}
-          cols={cols}
+      <div>
+        {this.state.isFetching && <SpinningPreloader />}
+        <ScrollWrapper
+          autoHeight
+          autoHeightMax={this.props.isFullscreen ? window.screen.height : height}
+          hideTracksWhenNotNeeded
         >
-          {Items}
-        </ResponsiveGridLayout>
-      </ScrollWrapper>
+          <ResponsiveGridLayout
+            rowHeight={rowHeight}
+            breakpoints={breakpoints}
+            onBreakpointChange={this.onBreakpointChange}
+            onDragStop={this.onGridChange}
+            onResizeStop={this.onGridChange}
+            cols={cols}
+          >
+            {Items}
+          </ResponsiveGridLayout>
+        </ScrollWrapper>
+      </div>
     );
   }
 }
