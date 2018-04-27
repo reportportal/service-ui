@@ -7,12 +7,40 @@ import styles from './fieldErrorHint.scss';
 const cx = classNames.bind(styles);
 
 const messages = defineMessages({
-  loginHint: { id: 'RegistrationForm.loginHint', defaultMessage: 'Login should have size from \'1\' to \'128\' symbols, latin, numeric characters, hyphen, underscore, dot.' },
-  nameHint: { id: 'RegistrationForm.nameHint', defaultMessage: 'Full name should have size from \'3\' to \'256\' symbols, latin, cyrillic, numeric characters, hyphen, underscore, dot, space.' },
-  passwordHint: { id: 'RegistrationForm.passwordHint', defaultMessage: 'Password should have size from \'4\' to \'25\' symbols' },
-  emailHint: { id: 'Common.validation.email', defaultMessage: 'Email is incorrect. Please enter correct email' },
-  confirmPasswordHint: { id: 'RegistrationForm.confirmPasswordHint', defaultMessage: 'Passwords do not match' },
-  filterNameError: { id: 'FiltersPage.filterNameLength', defaultMessage: 'Filter name length should have size from 3 to 128 characters.' },
+  loginHint: {
+    id: 'RegistrationForm.loginHint',
+    defaultMessage:
+      "Login should have size from '1' to '128' symbols, latin, numeric characters, hyphen, underscore, dot.",
+  },
+  nameHint: {
+    id: 'RegistrationForm.nameHint',
+    defaultMessage:
+      "Full name should have size from '3' to '256' symbols, latin, cyrillic, numeric characters, hyphen, underscore, dot, space.",
+  },
+  passwordHint: {
+    id: 'RegistrationForm.passwordHint',
+    defaultMessage: "Password should have size from '4' to '25' symbols",
+  },
+  emailHint: {
+    id: 'Common.validation.email',
+    defaultMessage: 'Email is incorrect. Please enter correct email',
+  },
+  confirmPasswordHint: {
+    id: 'RegistrationForm.confirmPasswordHint',
+    defaultMessage: 'Passwords do not match',
+  },
+  filterNameError: {
+    id: 'FiltersPage.filterNameLength',
+    defaultMessage: 'Filter name length should have size from 3 to 128 characters.',
+  },
+  dashboardNameHint: {
+    id: 'AddEditDashboard.dashboardNameHint',
+    defaultMessage: 'Dashboard name should have size  from 3 to 128.',
+  },
+  dashboardNameSearchHint: {
+    id: 'SearchDashboardForm.dashboardNameSearchHint',
+    defaultMessage: 'Dashboard name should have size from 3 to 128',
+  },
 });
 
 @injectIntl

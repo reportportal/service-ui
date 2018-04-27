@@ -1,0 +1,199 @@
+.grid-view {
+  width: 25%;
+  box-sizing: border-box;
+  padding: 10px;
+
+  text-decoration: none;
+
+  @media (max-width: $SCREEN_MD_MAX_DASHBOARD) {
+    width: 33.3%;
+  }
+
+  @media (max-width: $SCREEN_SM_MAX_DASHBOARD) {
+    width: 50%;
+  }
+
+  @media (max-width: $SCREEN_XS_MAX_DASHBOARD) {
+    width: 100%;
+  }
+
+  .name {
+    h3 {
+      letter-spacing: 1px;
+      line-height: 47px;
+      padding: 0 70px 0 13px;
+      font-size: 15px;
+      border-bottom: 1px solid $COLOR--gray-91;
+      background: $COLOR--white;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+  }
+
+  .description {
+    height: 145px;
+    overflow: hidden;
+    position: relative;
+
+    p {
+      position: absolute;
+      bottom: 15px;
+      margin: 0;
+      left: 15px;
+      right: 15px;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      color: $COLOR--gray-47;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+  }
+
+  .icon-holder {
+    position: absolute;
+    top: 50%;
+    transform: translate(0, -50%);
+  }
+
+  .shared {
+    height: 40px;
+    position: relative;
+    border-top: 1px solid $COLOR--gray-91;
+    background: $COLOR--white;
+    color: $COLOR--charcoal-grey;
+    padding: 0 15px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    box-sizing: border-box;
+  }
+
+  .owner {
+    display: none;
+  }
+
+  .edit,
+  .delete {
+    position: absolute;
+    top: 10px;
+    display: none;
+  }
+
+  .delete {
+    right: 5px;
+  }
+
+  .edit {
+    right: 30px;
+  }
+}
+
+.grid-view__inner {
+  $grid-hover-shadow: 0 0 20px 0 $COLOR--gray-91;
+
+  border: 1px solid $COLOR--gray-91;
+  background: $COLOR--white-four;
+  position: relative;
+  cursor: pointer;
+
+  &:hover {
+    box-shadow: $grid-hover-shadow;
+
+    .edit,
+    .delete {
+      display: block;
+    }
+  }
+}
+
+.dashboard-name,
+.dashboard-link {
+  line-height: 18px;
+  font-size: 16px;
+  letter-spacing: 1px;
+  color: $COLOR--topaz;
+  cursor: pointer;
+  text-decoration: none;
+  font-weight: bold;
+  font-family: $FONT-CONDBOLD, sans-serif;
+}
+
+.shared-text {
+  font-size: 13px;
+  line-height: 40px;
+  margin-left: 22px;
+}
+
+.preview {
+  &:after {
+    background-position: center;
+    -webkit-background-size: 100%;
+    background-size: contain;
+    background-repeat: no-repeat;
+    content: '';
+    opacity: 0.3;
+    -webkit-box-shadow: inset 0px -30px 100px 3px $COLOR--white;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }
+}
+
+.preview-0:after {
+  background-image: url(./img/different-launches-comparison-chart.svg);
+}
+
+.preview-1:after {
+  background-image: url(./img/failed-cases-trend-chart.svg);
+}
+
+.preview-2:after {
+  background-image: url(./img/investigated-percentage-of-launches.svg);
+}
+
+.preview-3:after {
+  background-image: url(./img/launch-execution-and-issue-statistic.svg);
+}
+
+.preview-4:after {
+  background-image: url(./img/launch-statistics-line-chart.svg);
+}
+
+.preview-5:after {
+  background-image: url(./img/launch-statistics-trend-chart.svg);
+}
+
+.preview-6:after {
+  background-image: url(./img/launch-table.svg);
+}
+
+.preview-7:after {
+  background-image: url(./img/launches-duration-chart.svg);
+}
+
+.preview-8:after {
+  background-image: url(./img/most-failure-test-cases-table.svg);
+}
+
+.preview-9:after {
+  background-image: url(./img/non-passed-test-cases-trend.svg);
+}
+
+.preview-10:after {
+  background-image: url(./img/overall-statistics-panel.svg);
+}
+
+.preview-11:after {
+  background-image: url(./img/passing-rate-launch.svg);
+}
+
+.preview-12:after {
+  background-image: url(./img/passing-rate-summery.svg);
+}
+
+.preview-13:after {
+  background-image: url(./img/product-status.svg);
+}

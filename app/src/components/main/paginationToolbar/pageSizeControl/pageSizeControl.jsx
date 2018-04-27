@@ -6,6 +6,8 @@ import styles from './pageSizeControl.scss';
 
 const cx = classNames.bind(styles);
 
+const MAX_SIZE = 300;
+
 export class PageSizeControl extends Component {
   static propTypes = {
     pageSize: PropTypes.number.isRequired,
@@ -30,15 +32,30 @@ export class PageSizeControl extends Component {
       this.inputNode.focus();
     });
 
-  handleChange = (e) => this.setState({ inputValue: this.normalizeInput(e.target.value) });
+  handleChange = (e) => this.setState({ inputValue: e.target.value });
 
-  normalizeInput = (value) => (Number(value) < 0 || isNaN(Number(value)) ? '0' : value);
+  normalizeInput = (value) => {
+    if (Number(value) < 0 || isNaN(Number(value))) {
+      return '0';
+    } else if (Number(value) > MAX_SIZE) {
+      return String(MAX_SIZE);
+    }
+    return value;
+  };
+
+  handleKeyPress = (e) => {
+    const keyCode = e.keyCode || e.which;
+    const keyValue = String.fromCharCode(keyCode);
+    if (/([+-.e]|\D)/.test(keyValue)) {
+      e.preventDefault();
+    }
+  };
 
   handleEnterKey = (e) => {
     const value = this.state.inputValue;
-    if (e.keyCode === 13 && value !== '') {
+    if (e.keyCode === 13) {
       this.setState({ inputVisible: false, inputValue: '' });
-      this.props.onChangePageSize(Number(value));
+      this.props.onChangePageSize(Number(this.normalizeInput(value)));
     }
   };
 
@@ -51,7 +68,7 @@ export class PageSizeControl extends Component {
             value={this.state.inputValue}
             onChange={this.handleChange}
             onKeyUp={this.handleEnterKey}
-            type="number"
+            onKeyPress={this.handleKeyPress}
           />
         ) : (
           <span className={cx('size-text')} onClick={this.showInput}>
@@ -64,26 +81,8 @@ export class PageSizeControl extends Component {
   }
 }
 
-const SizeInput = ({ value, onChange, onKeyUp, refFunction }) => (
+const SizeInput = ({ ...props }) => (
   <div className={cx('size-input')}>
-    <Input
-      refFunction={refFunction}
-      value={value}
-      onChange={onChange}
-      onKeyUp={onKeyUp}
-      type="number"
-      maxLength="3"
-    />
+    <Input {...props} type="text" maxLength="3" />
   </div>
 );
-SizeInput.propTypes = {
-  value: PropTypes.string,
-  onChange: PropTypes.func,
-  onKeyUp: PropTypes.func,
-  refFunction: PropTypes.func.isRequired,
-};
-SizeInput.defaultProps = {
-  value: '',
-  onChange: () => {},
-  onKeyUp: () => {},
-};

@@ -101,6 +101,8 @@
       font-family: $OpenSansSemibold;
       margin-left: 10px;
       width: 60px;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
     .item-time {
       margin-left: 10px;

@@ -29,7 +29,6 @@ const cx = classNames.bind(styles);
 export const InputBigSwitcher = ({ children, disabled, value, onChange, onFocus, onBlur }) => {
   const classes = cx({
     'switcher-wrapper': true,
-    centered: !children,
     disabled,
   });
   const sliderClasses = cx({

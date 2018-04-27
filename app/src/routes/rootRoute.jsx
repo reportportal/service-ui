@@ -1,5 +1,5 @@
 import React from 'react';
-import { Switch, Route, Link } from 'react-router-dom';
+import { Switch, Route, Link, Redirect } from 'react-router-dom';
 import { ModalContainer } from 'components/main/modal';
 import { EmptyLayout } from 'layouts/emptyLayout';
 import { AppLayout } from 'layouts/appLayout';
@@ -42,8 +42,12 @@ const AppRoute = authorizedRoute(() => (
       <Route path="/user-profile" component={ProfilePage} />
       <Route path="/api" component={ApiPage} />
       <Route path="/:projectId/dashboard/:dashboardId" component={DashboardItemPage} />
-      <Route exact path="/:projectId" component={DashboardPage} />
-      <Route path="/:projectId/dashboard" component={DashboardPage} />
+      <Route
+        exact
+        path="/:projectId"
+        render={({ match }) => <Redirect to={`${match.url}/dashboard`} />}
+      />
+      <Route exact path="/:projectId/dashboard" component={DashboardPage} />
       <Route path="/:projectId/launches" component={LaunchesPage} />
       <Route path="/:projectId/filters" component={FiltersPage} />
       <Route path="/:projectId/userdebug" component={DebugPage} />

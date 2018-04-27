@@ -1,0 +1,16 @@
+.dashboard-grid-body {
+  display: flex;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  background-color: $COLOR--white-two;
+  padding: 5px;
+}
+
+.headline {
+  background-color: $COLOR--white;
+  padding: 9px 15px;
+  font-family: $FONT-SEMIBOLD;
+  color: $COLOR--gray-47;
+  text-transform: uppercase;
+  font-size: 12px;
+}

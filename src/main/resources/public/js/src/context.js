@@ -132,8 +132,8 @@ define(function (require) {
             }
             config.trackingDispatcher.pageView(contextName);
             this.prepareInsideView();
-            this.currentContext = contextName;
             this.checkForContextChange(contextName);
+            this.currentContext = contextName;
             this.validateMainViewForAdmin();
             this.container = $('#mainContainer');
             // TODO config.project deprecated
