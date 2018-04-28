@@ -39,7 +39,7 @@ func main() {
 		log.Fatalf("Cannot log app config")
 	}
 
-	rpConf.Cfg.AppName = "ui"
+	rpConf.Cfg.AppName = "ui-react"
 
 	info := commons.GetBuildInfo()
 	info.Name = "Service UI"
