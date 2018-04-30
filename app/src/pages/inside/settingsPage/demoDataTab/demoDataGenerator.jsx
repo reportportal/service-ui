@@ -1,67 +1,71 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-
+import { FormattedMessage } from 'react-intl';
 import classNames from 'classnames/bind';
 
-import { Input } from 'components/inputs/input';
-import styles from './demoDataTab.scss';
+import styles from './demoDataGenerator.scss';
 import warningSign from './img/ic-warning.svg';
+import DemoDataGeneratorForm from './demoDataGeneratorForm';
 
 const cx = classNames.bind(styles);
 
 export class DemoDataGenerator extends Component {
-  static propTypes = {
-    postfix: PropTypes.string.isRequired,
-    postfixChanged: PropTypes.func.isRequired,
-    generateDemo: PropTypes.func.isRequired,
+  generateDemoData = (values) => {
+    console.log('values: ', values);
   };
-
-  handleOnChange = (event) => {
-    this.props.postfixChanged(event.target.value);
-  };
-
-  handleClick = () => {
-    this.props.generateDemo();
-  };
-
   render() {
     return (
       <div className={cx('demo-data-generator-container')}>
-        <p className={cx('you-can-generate-dat')}>You can generate data only on desktop view.</p>
-        <h5 className={cx('the-system-will-gene')}>
-          THE SYSTEM WILL GENERATE THE FOLLOWING DEMO DATA:
+        <p className={cx('mobile-hint')}>
+          <FormattedMessage
+            id={'DemoDataGenerator.mobileHint'}
+            defaultMessage={'You can generate data only on desktop view.'}
+          />
+        </p>
+        <h5 className={cx('description-header')}>
+          <FormattedMessage
+            id={'DemoDataGenerator.descriptionHeader'}
+            defaultMessage={'THE SYSTEM WILL GENERATE THE FOLLOWING DEMO DATA:'}
+          />
         </h5>
-        <ul>
+        <ul className={cx('description-list')}>
           <li>
-            <span className={cx('dot')} />10 launches
+            <FormattedMessage
+              id={'DemoDataGenerator.descriptionListFirstItem'}
+              defaultMessage={'10 launches'}
+            />
           </li>
           <li>
-            <span className={cx('dot')} />1 dashboard with 9 widgets
+            <FormattedMessage
+              id={'DemoDataGenerator.descriptionListSecItem'}
+              defaultMessage={'1 dashboard with 9 widgets'}
+            />
           </li>
           <li>
-            <span className={cx('dot')} />1 filter
+            <FormattedMessage
+              id={'DemoDataGenerator.descriptionListThirdItem'}
+              defaultMessage={'1 filter'}
+            />
           </li>
         </ul>
-        <p className={cx('post-fix-will-be-add')}>
-          Postfix will be added to the demo dashboard, widgets, filter name
-        </p>
-        <div className={cx('input-enter-postfix')}>
-          <Input
-            placeholder="Enter Postfix"
-            value={this.props.postfix}
-            onChange={this.handleOnChange}
+        <p className={cx('postfix-hint')}>
+          <FormattedMessage
+            id={'DemoDataGenerator.postfixHint'}
+            defaultMessage={'Postfix will be added to the demo dashboard, widgets, filter name'}
           />
-        </div>
-        <button className={cx('button')} onClick={this.handleClick}>
-          <span className={cx('generate-demo-data')}>Generate Demo Data</span>
-        </button>
-        <div className={cx('warning-message')}>
-          <img src={warningSign} className={cx('warning-sign')} alt="red exclamation sign" />
-          <p className={cx('warning-text')}>Warning</p>
-        </div>
-        <p className={cx('you-will-have-to-remove')}>
-          You will have to remove the demo data manually.
         </p>
+        <DemoDataGeneratorForm onSubmit={this.generateDemoData} />
+        <div className={cx('warning-block')}>
+          <img src={warningSign} className={cx('warning-sign')} alt="red exclamation sign" />
+          <p className={cx('warning-text')}>
+            <FormattedMessage id={'DemoDataGenerator.warningText'} defaultMessage={'Warning'} />
+          </p>
+          <p className={cx('warning-info')}>
+            <FormattedMessage
+              id={'DemoDataGenerator.warningInfo'}
+              defaultMessage={'You will have to remove the demo data manually.'}
+            />
+          </p>
+        </div>
       </div>
     );
   }

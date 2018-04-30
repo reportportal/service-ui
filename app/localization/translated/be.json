@@ -207,5 +207,14 @@
   "UserBlock.profile": "Профіль",
   "UuidBlock.headerNameCol": "Універсальны ўнікальны ідэнтыфікатар",
   "UuidBlock.regenerate": "Стварыць новы",
-  "UuidBlock.tip": "Каб забяспечыць надзейнасць вашага даменнага пароля, вы можаце выкарыстоўваць маркер карыстальніка, які называецца UUID, каб падцвердзіць, што ваш уліковы запіс можа занатоўвацца агентам."
+  "UuidBlock.tip": "Каб забяспечыць надзейнасць вашага даменнага пароля, вы можаце выкарыстоўваць маркер карыстальніка, які называецца UUID, каб падцвердзіць, што ваш уліковы запіс можа занатоўвацца агентам.",
+  "DemoDataGenerator.mobileHint": "You can generate data only on desktop view",
+  "DemoDataGenerator.descriptionHeader": "THE SYSTEM WILL GENERATE THE FOLLOWING DEMO DATA:",
+  "DemoDataGenerator.descriptionListFirstItem": "10 launches",
+  "DemoDataGenerator.descriptionListSecItem": "1 dashboard with 9 widgets",
+  "DemoDataGenerator.descriptionListThirdItem": "1 filter",
+  "DemoDataGenerator.postfixHint": "Postfix will be added to the demo dashboard, widgets, filter name.",
+  "DemoDataGenerator.warningText": "Warning",
+  "DemoDataGenerator.warningInfo": "You will have to remove the demo data manually.",
+  "DemoDataGeneratorForm.buttonGenerate": "Generate Demo Data"
 }
