@@ -404,7 +404,7 @@ define(function (require) {
                 });
             _.each(invalidItems, function (model) {
                 model.set({ select: false });
-                if (self.currentAction === 'unlinkIssue') {
+                if (self.currentAction === 'unlinkIssue' && self.collectionItems.length) {
                     self.collectionItems.get(model.id).set('select', false);
                 }
             });
