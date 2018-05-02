@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="20" height="20" viewBox="0 0 20 20">
+  <defs>
+    <path id="ic_add-wdgt-a" d="M8,0 C3.584,0 0,3.584 0,8 C0,12.416 3.584,16 8,16 C12.416,16 16,12.416 16,8 C16,3.584 12.416,0 8,0 L8,0 Z M12,8.8 L8.8,8.8 L8.8,12 L7.2,12 L7.2,8.8 L4,8.8 L4,7.2 L7.2,7.2 L7.2,4 L8.8,4 L8.8,7.2 L12,7.2 L12,8.8 L12,8.8 Z"/>
+  </defs>
+  <g fill="none" fill-rule="evenodd">
+    <rect width="20" height="20"/>
+    <g transform="translate(2 2)">
+      <mask id="ic_add-wdgt-b" fill="#fff">
+        <use xlink:href="#ic_add-wdgt-a"/>
+      </mask>
+      <use fill="#000" xlink:href="#ic_add-wdgt-a"/>
+    </g>
+  </g>
+</svg>
