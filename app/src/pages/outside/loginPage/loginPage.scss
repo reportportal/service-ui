@@ -1,0 +1,79 @@
+.login-page {
+  position: relative;
+  width: 1000px;
+  height: 764px;
+  margin: 0 auto;
+  padding-top: 20px;
+  box-sizing: border-box;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    width: 768px;
+    height: 1044px;
+    padding-bottom: 20px;
+  }
+  @media (max-width: $SCREEN_XS_MAX) {
+    width: 320px;
+    height: auto;
+    padding-bottom: 0;
+  }
+}
+.login-page-content {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 2px;
+  box-shadow: 0 1px 3px 0 $COLOR--skipped;
+  background-color: $COLOR--white-two;
+  box-sizing: border-box;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    padding: 80px 50px 0;
+  }
+  @media (max-width: $SCREEN_XS_MAX) {
+    padding: 0;
+    overflow: hidden;
+  }
+}
+.background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50%;
+  height: 100%;
+  background-image: url(./img/login-page-bgc.svg);
+  background-color: $COLOR--light-blue;
+  background-repeat: no-repeat;
+  background-size: 100%;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    width: 100%;
+    background-image: url(./img/login-page-tablet-bgc.svg);
+  }
+  @media (max-width: $SCREEN_XS_MAX) {
+    width: 100%;
+    height: 145px;
+    background-image: url(./img/login-page-mobile-bgc.svg);
+  }
+}
+.logo {
+  position: absolute;
+  top: 30px;
+  left: 60px;
+  width: 140px;
+  height: 23px;
+  background-image: url(./img/rp-logo.svg);
+  background-repeat: no-repeat;
+  background-size: 100%;
+  cursor: pointer;
+  z-index: 1;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    left: 50px;
+  }
+  @media (max-width: $SCREEN_XS_MAX) {
+    top: 15px;
+    left: 20px;
+    width: 100px;
+    height: 16px;
+  }
+}

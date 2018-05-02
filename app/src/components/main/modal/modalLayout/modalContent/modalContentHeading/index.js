@@ -1,0 +1,1 @@
+export { ModalContentHeading } from './modalContentHeading';

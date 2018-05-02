@@ -1,0 +1,1 @@
+export { RegistrationPageSection } from './registrationPageSection';

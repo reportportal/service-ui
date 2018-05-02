@@ -60,7 +60,8 @@ define(['util'], function () {
             escToCancel: '<strong>Esc</strong> для отмены',
             ctrlEnterToSubmit: '<strong>Ctrl + Enter</strong> для подтверждения',
             loading: 'Загружается',
-            load: 'Загрузка',
+            link: 'Прикрепить',
+            unlink: 'Открепить',
             post: 'Отправить',
             analyse: 'Анализировать',
             gallery: 'Галерея',
@@ -368,10 +369,11 @@ define(['util'], function () {
         itemEvents: {
             updateItemIssue: 'обновил данные элемента',
             updateItem: 'обновил элемент',
-            attachIssue: 'привязал ошибку',
+            loadIssue: 'привязал ошибку',
+            unloadIssue: 'отвязал ошибку',
             postIssue: 'отправил ошибку',
             changedByAnalyzer: 'АА изменил тип дефекта',
-            issueAttachByAnalyzer: 'AA привязал ошибку'
+            issueLoadByAnalyzer: 'AA привязал ошибку'
         },
 
         widgets: {
@@ -497,8 +499,10 @@ define(['util'], function () {
             update_bts: 'обновлено',
             delete_bts: 'удалено',
             create_bts: 'сконфигурировано',
-            attach_issue: 'добавленная ошибка',
-            post_issue: 'опубликованная ошибка',
+            attach_issue: 'прикрепленная ошибка',
+            load_issue: 'добавил ошибку',
+            post_issue: 'опубликовал ошибку',
+            unload_issue: 'открепил ошибку',
             delete_issue: 'удаленная ошибка',
             testItem: 'элемент тестирования',
             update_project: 'обновлено',
@@ -809,7 +813,7 @@ define(['util'], function () {
             relatedIssue: 'Связанная ошибка:',
             includeLogs: 'Лог',
             includeComments: 'Комментарий',
-            includeScreenshots: 'Скриншоты',
+            includeAttachments: 'Скриншоты',
             fillAllRequired: 'Заполните все необходимые поля',
             credentialsSoft: 'В случае незаполнения полей будут использованы учетные данные Report Portal',
             credentialsSoftTfs: 'В случае незаполнения полей будут использованы учетные данные Windows',
@@ -857,15 +861,17 @@ define(['util'], function () {
             postIssue: 'Отправить ошибку',
             postBug: 'Отправить ошибку',
             postBugTo: 'Отправить ошибку в',
-            loadBug: 'Загрузить ошибку',
+            linkIssue: 'Прикрепить ошибку',
+            unlinkIssue: 'Открепить ошибку',
             addIssueId: 'Добавить ID ошибки',
             copyDefect: 'Копировать дефект',
             sendDefect: 'Отправить дефект',
             key: 'Кнопка Ошибки (для множественных вариантов - наберите ID ошибки и нажмите Ввод)',
             configureTBS: 'Настройте Систему oтслеживания oшибок на отправку ошибок',
             configureTBSLoad: 'Настройте Систему oтслеживания oшибок на загрузку ошибок',
-            noIssues: 'Вы не можете отправить ошибку, если элемент не имеет ошибок',
-            noIssuesLoad: 'Вы не можете загрузить ошибку, если элемент не имеет ошибок',
+            noIssues: 'Вы не можете отправить ошибку, если элемент не имеет дефекта',
+            noIssuesLoad: 'Вы не можете прикрепить ошибку, если элемент не имеет дефекта',
+            noIssueTicket: 'У элемента нет прикрепленной ошибки',
             historyView: 'История',
             skippedDuration: 'ПРОПУЩЕНО. Длительность: ',
             stoppedDuration: 'Прогон ОСТАНОВЛЕН после:',
@@ -938,6 +944,7 @@ define(['util'], function () {
             issueId: 'Введите ID ошибки',
 
             retries: 'попыток',
+            rtr: 'попыток',
 
             aaBadgeTooltip: 'Проанализировано Авто-Анализом',
             withAA: 'C "AA" меткой',
@@ -951,7 +958,7 @@ define(['util'], function () {
             noAnalyzer: 'Нет включенных анализаторов',
             alreadyIgnoredAA: 'Элемент уже игнорируется Авто-Анализом',
             alreadyIncludedAA: 'Элемент уже включен в Авто-Анализ',
-            withoutDefect: 'Элемент не имеет деффекта',
+            withoutDefect: 'Элемент не имеет дефекта',
             linkedBug: 'Ошибка в СОД',
             noLinkedBug: 'Нет ошибки в СОД'
         },
@@ -1137,11 +1144,14 @@ define(['util'], function () {
                 delete_launch: 'Удаление запуска',
                 update_project: 'Обновление проекта',
                 post_issue: 'Публикация ошибки',
-                attach_issue: 'Добавление ошибки',
+                load_issue: 'Добавление ошибки',
+                link_issue_aa: 'Добавление ошибки АА',
+                unload_issue: 'Открепление ошибки',
                 update_item: 'Обновление элемента',
                 create_user: 'Создание пользователя',
                 start_import: 'Начало импорта',
-                finish_import: 'Окончание импорта'
+                finish_import: 'Окончание импорта',
+                analyze_item: 'АА изменил тип дефекта'
             },
             objectTypes: {
                 all: 'Все',
@@ -1237,7 +1247,8 @@ define(['util'], function () {
             notFoundStackTrace: 'Нет трассировки стека для отображения',
             goToLog: 'Перейдите к трассировке стека в записи журнала',
             nextError: 'Следующая ошибка',
-            consoleView: 'Консольный вид'
+            consoleView: 'Консольный вид',
+            harFileError: 'Ваш браузер не поддерживает плагин для отображения файлов с расширением .har. Вы можете скачать файл по <a target="_blank" href="%%%">ссылке</a>.'
         },
 
         defectNameById: {
@@ -1373,6 +1384,7 @@ define(['util'], function () {
             autoAnalysisBase: 'Стратегия авто Анализа',
             autoAnalysisBaseFirstOpt: 'Все запуски',
             autoAnalysisBaseSecondOpt: 'Запуски с одинаковыми именами',
+            autoAnalysisBaseThirdOpt: 'Только текущий запуск',
             autoAnalysisBaseFirstTip: 'Тестовые элементы будут проанализированы на основе ранее проанализированных данных во всех запусках',
             autoAnalysisBaseSecondTip: 'Тестовые элементы будут проанализированы на основе ранее проанализированных данных в запусках с одинаковыми именами',
             emailNotifications: 'Оповещения по электронной почте',
@@ -1972,8 +1984,8 @@ define(['util'], function () {
             deleteLaunch: 'Удалить запуск',
             shareWidgetDashboard: 'Поделиться виджетом, панелью управления',
             unShareWidgetDashboard: 'Ограничить доступ к виджету, панели управления',
-            postIssue: 'Отправить ошибку в СОД',
-            attachIssue: 'Приложить ошибку к СОД',
+            updateIssue: 'Действия с ошибками',
+            loadIssue: 'Приложить ошибку к СОД',
             history: 'История',
             project: 'Проект',
             login: 'Логин',
@@ -2088,6 +2100,7 @@ define(['util'], function () {
             ignoreAA: 'Игнорировать %%% при Авто-Анализе',
             includeAA: 'Включить %%% в Авто-Анализ',
             analyseLaunches: 'Анализировать запуски',
+            unlinkIssue: 'Открепить ошибку',
             testItemsDetails: 'Детали тестового элемента',
             receiveIssue: 'Получить предыдущий результат',
             sendIssue: 'Отправить результат в последний элемент'
@@ -2158,6 +2171,7 @@ define(['util'], function () {
             msgIncludeAA: 'Вы уверены, что хотите включить %%% в Авто-Анализ?',
             msgReceiveIssue: 'Вы уверены, что хотите получить данные о дефекте из предыдущего неудачного элемента?',
             msgSendIssue: 'Вы уверены, что хотите отправить данные о дефекте в последний элемент?',
+            msgUnlinkIssue: 'Вы уверены, что хотите открепить ошибки в СОД?',
             invalidFileType: 'Неверный формат файла',
             invalidFileSize: 'Размер файла больше 32 Mb',
             testUID: 'UID элемента:',
@@ -2231,7 +2245,8 @@ define(['util'], function () {
         },
         modalDefectEditor: {
             saveAndPost: 'Сохранить и отправить ошибку',
-            saveAndLoad: 'Сохранить и привязать ошибку'
+            saveAndLoad: 'Сохранить и прикрепить ошибку',
+            saveAndUnlink: 'Сохранить и открепить ошибку'
         },
         date: {
             days: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],

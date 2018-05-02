@@ -1,0 +1,33 @@
+.execution-statistics {
+  @media (max-width: $SCREEN_SM_MAX) {
+    margin: auto;
+    text-align: center;
+  }
+}
+.title {
+  display: none;
+  width: 100%;
+  font-family: $FONT-SEMIBOLD;
+  font-size: 12px;
+  line-height: 20px;
+  color: $COLOR--gray-47;
+  text-transform: uppercase;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    display: inline-block;
+  }
+}
+.value {
+  font-family: $FONT-REGULAR;
+  font-size: 13px;
+  color: $COLOR--windows-blue;
+  text-decoration: none;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    font-size: 16px;
+    line-height: 20px;
+  }
+}
+.bold {
+  font-family: $FONT-SEMIBOLD;
+}

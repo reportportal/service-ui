@@ -1,0 +1,42 @@
+.invite-new-user{
+  padding: 12px 20px 12px 15px;
+  overflow: hidden;
+  white-space: normal;
+  &:hover{
+    cursor: pointer;
+    background: rgba(57, 194, 215, 0.2);
+  }
+}
+.msg-icon{
+  width: 24px;
+  height: 34px;
+  display: block;
+  float: left;
+  background-size: contain;
+  background: url('./img/ic_mail.svg');
+  background-repeat: no-repeat;
+  background-position: center;
+}
+.invite-info{
+  display: inline-block;
+}
+.action-info{
+  margin: -1px 0 0 20px;
+  font-size: 13px;
+  padding-right: 20px;
+  position: relative;
+  color: $COLOR--charcoal-grey;
+  line-height: 20px;
+}
+.user-info{
+  margin: -1px 0 0 20px;
+  font-size: 13px;
+  padding-right: 20px;
+  position: relative;
+  color: $COLOR--charcoal-grey;
+  font-weight: 600;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 20px;
+}

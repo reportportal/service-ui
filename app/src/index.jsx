@@ -1,26 +1,50 @@
 import React from 'react';
 import { render } from 'react-dom';
-import { Container } from '@cerebral/react';
-import 'reset-css';
+import { Router, matchPath } from 'react-router-dom';
+import { createHashHistory } from 'history';
+import { userInfoSelector, activeProjectSelector, setActiveProjectAction } from 'controllers/user';
+import { fetchProjectAction } from 'controllers/project';
+import qhistory from 'qhistory';
+import { stringify, parse } from 'qs';
+import 'common/polyfills';
+
+import 'reset-css/reset.css';
 import 'common/css/fonts/fonts.scss';
 import 'common/css/common.scss';
+import 'c3/c3.css';
 
-import controller from './controller/controller';
-import App from './app/app';
+import App from './app';
+import store from './store';
+
+
+const queryParseHistory = qhistory(
+  createHashHistory({ hashType: 'noslash' }),
+  stringify,
+  parse,
+);
+queryParseHistory.listen((location) => {
+  const match = matchPath(location.pathname, '/:projectId');
+  const hashProject = match.params.projectId;
+  const userProjects = userInfoSelector(store.getState()).assigned_projects;
+  if (userProjects && Object.prototype.hasOwnProperty.call(userProjects, hashProject)
+    && hashProject !== activeProjectSelector(store.getState())) {
+    store.dispatch(setActiveProjectAction(hashProject));
+    store.dispatch(fetchProjectAction(hashProject));
+  }
+});
 
 const rerenderApp = (AppContainer) => {
   render((
-    <Container controller={controller} >
+    <Router history={queryParseHistory}>
       <AppContainer />
-    </Container>
+    </Router>
   ), document.querySelector('#app'));
 };
 
-rerenderApp(App);
-
 if (module.hot) {
-  module.hot.accept('./app/app', () => {
-    const app = require('./app/app').default;
+  module.hot.accept('./app', () => {
+    const app = require('./app').default; // eslint-disable-line global-require
     rerenderApp(app);
   });
 }
+rerenderApp(App);

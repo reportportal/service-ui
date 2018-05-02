@@ -19,6 +19,6 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export default function isEmptyObject(obj) {
+export function isEmptyObject(obj) {
   return Object.keys(obj).length === 0;
 }

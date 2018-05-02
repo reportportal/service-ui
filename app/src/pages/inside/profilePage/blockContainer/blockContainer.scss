@@ -1,0 +1,17 @@
+.block-header {
+  height: 26px;
+  width: 100%;
+  padding: 0 15px;
+  box-sizing: border-box;
+  background-color: $COLOR--white;
+  font-family: $FONT-SEMIBOLD;
+  font-size: 12px;
+  color: $COLOR--gray-47;
+  line-height: 26px;
+  text-transform: uppercase;
+
+}
+.block-content {
+  width: 100%;
+  background-color: $COLOR--white-two;
+}

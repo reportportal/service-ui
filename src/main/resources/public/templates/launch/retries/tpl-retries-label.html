@@ -3,6 +3,7 @@
         <li class="status-<%= retry.status %>"></li>
     <% }); %>
 </ul>
-<span data-js-retries-link class="<%- data.isLogLevel ? 'not-a-link' : null %>"><%= data.retries.length + ' ' +
+<span class="hidden-md hidden-lg mobile" ><%= '#' + data.retries.length + ' ' + data.text.launches.rtr %></span>
+<span data-js-retries-link class="hidden-xs hidden-sm <%- data.isLogLevel ? 'not-a-link' : null %>"><%= data.retries.length + ' ' +
     data.text.launches.retries
     %></span>

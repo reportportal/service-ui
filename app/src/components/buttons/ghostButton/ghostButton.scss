@@ -1,0 +1,80 @@
+.ghost-button {
+  position: relative;
+  display: inline-block;
+  height: 30px;
+  padding: 0 10px;
+  border: 1px solid;
+  outline: none;
+  box-sizing: border-box;
+  font-family: $FONT-REGULAR;
+  font-size: 13px;
+  letter-spacing: normal;
+  line-height: 0;
+  white-space: nowrap;
+  text-shadow: none;
+  vertical-align: middle;
+  background-color: transparent;
+  cursor: pointer;
+
+  &.disabled {
+    color: $COLOR--gray-60;
+    background-color: $COLOR--white;
+    border-color: $COLOR--gray-91;
+    cursor: default;
+
+    path {
+      fill: $COLOR--gray-60 !important;
+    }
+  }
+  &.color-topaz:not(.disabled) {
+    border-color: $COLOR--topaz;
+    color: $COLOR--topaz;
+
+    path {
+      fill: $COLOR--topaz !important;
+    }
+
+    &:hover{
+      background-color: lighten( $COLOR--topaz, 10% );
+      border-color: lighten( $COLOR--topaz, 10% );
+      color: $COLOR--white-two;
+
+      path {
+        fill: $COLOR--white-two !important;
+      }
+    }
+    &:active {
+      background-color: $COLOR--topaz;
+      border-color: $COLOR--topaz;
+      color: $COLOR--white-two;
+    }
+  }
+}
+.icon {
+  display: inline-block;
+  position: relative;
+  width: 20px;
+  height: 20px;
+  top: 5px;
+  margin-top: -10px;
+
+  &:not(.only-icon) {
+    margin-right: 5px;
+  }
+}
+.mobile-minified {
+  @media (max-width: $SCREEN_XS_MAX) {
+    padding: 0 8px;
+
+    .icon {
+      margin-right: 0;
+    }
+    .text {
+      display: none;
+    }
+  }
+}
+.tiny {
+  height: 25px;
+  padding: 0 8px;
+}

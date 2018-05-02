@@ -1,0 +1,75 @@
+.hover-rect {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  height: 100%;
+  vertical-align: top;
+
+  &:hover {
+    .hoverable-tooltip {
+      visibility: visible;
+      opacity: 1;
+    }
+  }
+}
+
+.hoverable-tooltip {
+  position: absolute;
+  visibility: hidden;
+  padding-top: 5px;
+  opacity: 0;
+  transition: visibility 0ms, opacity 300ms ease;
+  z-index: 1;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: 50%;
+    margin-left: -7px;
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-bottom: 8px solid $COLOR--gray-80;
+  }
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    margin-left: -5px;
+    border-bottom: 6px solid $COLOR--white-two;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+  }
+
+  &.no-arrow {
+    &::before, &::after  {
+      display: none;
+    }
+  }
+  &.no-mobile {
+    @media (max-width: $SCREEN_XS_MAX) {
+      display: none;
+    }
+  }
+  &.desktop-only {
+    @media (max-width: $SCREEN_SM_MAX) {
+      display: none;
+    }
+  }
+}
+.hoverable-tooltip-content {
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  padding: 15px;
+  border: 1px solid $COLOR--gray-80;
+  background-color: $COLOR--white-two;
+  box-shadow: 0 1px 3px 0 rgba(0,0,0,.2);
+  font-family: $FONT-REGULAR;
+  font-size: 13px;
+  color: $COLOR--charcoal-grey;
+  word-wrap: break-word;
+}

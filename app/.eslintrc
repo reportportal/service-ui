@@ -1,6 +1,16 @@
 {
   "parser": "babel-eslint",
-  "extends": "airbnb",
+  "extends": [
+    "airbnb",
+    // "plugin:jsx-a11y/recommended",
+    "plugin:prettier/recommended",
+    "prettier/react"
+  ],
+  "plugins": [
+    "react",
+    "jsx-a11y",
+    "prettier"
+  ],
   "settings": {
     "import/resolver": {
       "webpack": {
@@ -17,11 +27,10 @@
     "Utils": true
   },
   "rules": {
+    "prettier/prettier": 1, // TODO: remove this line once all codebase is reformatted
     "jsx-a11y/no-static-element-interactions": 0,
-    "global-require": 0,
-    "no-unused-expressions": ["error", { "allowTernary": true }],
-    "prefer-arrow-callback": 0,
-    "jsx-a11y/label-has-for": 0,
+    "no-unused-expressions": ["error", { "allowTernary": true, "allowShortCircuit": true }],
+    "jsx-a11y/label-has-for": ["error", {"required": {"some": ["nesting", "id"]}}],
     "jsx-a11y/tabindex-no-positive": 0,
     "jsx-a11y/no-noninteractive-tabindex": 0,
     "import/prefer-default-export": 0,

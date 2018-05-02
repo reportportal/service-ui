@@ -1,0 +1,10 @@
+.social-section {
+  width: 100%;
+  height: 100%;
+  padding: 30px 60px;
+  box-sizing: border-box;
+
+  @media  (max-width: $SCREEN_SM_MAX) {
+    padding: 0;
+  }
+}

@@ -1,0 +1,71 @@
+.defect-statistics {
+  line-height: 20px;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    margin: auto;
+    text-align: center;
+  }
+}
+.title {
+  display: none;
+  width: 100%;
+  font-family: $FONT-SEMIBOLD;
+  font-size: 13px;
+  text-transform: uppercase;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    display: inline-block;
+  }
+}
+.circle {
+  position: relative;
+  top: 1px;
+  display: inline-block;
+  margin-right: 5px;
+  width: 12px;
+  height: 12px;
+  border-radius: 100%;
+
+  &.type-product_bug {
+    background-color: $COLOR--product-bug;
+  }
+  &.type-automation_bug {
+    background-color: $COLOR--automation-bug;
+  }
+  &.type-system_issue {
+    background-color: $COLOR--system-issue;
+  }
+}
+.value {
+  display: inline-block;
+  font-family: $FONT-REGULAR;
+  color: $COLOR--windows-blue;
+  font-size: 15px;
+  line-height: 20px;
+  text-decoration: none;
+  vertical-align: top;
+}
+.desktop-visible {
+  position: relative;
+  display: inline-block;
+  width: 56px;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    display: none;
+  }
+}
+.desktop-hidden {
+  display: none;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    display: inline-block;
+  }
+
+  a {
+    font-family: $FONT-REGULAR;
+    font-size: 16px;
+    line-height: 20px;
+    color: $COLOR--windows-blue;
+    text-decoration: none;
+  }
+}

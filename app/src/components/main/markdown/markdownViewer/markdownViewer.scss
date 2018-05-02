@@ -1,0 +1,157 @@
+/*
+ * Copyright 2016 EPAM Systems
+ *
+ *
+ * This file is part of EPAM Report Portal.
+ * https://github.com/epam/ReportPortal
+ *
+ * Report Portal is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Report Portal is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+.markdown-viewer {
+  width: 100%;
+  height: auto;
+  font-family: monospace;
+  color: $COLOR--charcoal-grey;
+  font-size: 12px;
+  overflow: hidden;
+  word-wrap: break-word;
+
+  .CodeMirror {
+    .CodeMirror-lines {
+      padding: 0;
+    }
+  }
+  .cm-header-1, h1 {
+    font-size: 18px;
+    line-height: normal;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin: 0;
+    font-weight: normal;
+  }
+  .cm-header-2, h2 {
+    font-size: 16px;
+    line-height: normal;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin: 0;
+    font-weight: normal;
+  }
+  .cm-header-3, h3 {
+    font-size: 14px;
+    line-height: normal;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin: 0;
+    font-weight: normal;
+  }
+  .cm-header {
+    display: inline-block;
+  }
+  pre {
+    padding: 0;
+    margin: 0;
+    border: none;
+    background: none;
+
+    & > code {
+      word-wrap: break-word;
+      white-space: pre-wrap;
+      word-break: normal;
+      background: $COLOR--gray-91;
+      margin-bottom: 10px;
+      border: none;
+      border-radius: 0;
+      padding: 10px;
+      display: block;
+    }
+  }
+  img, iframe {
+    width: 100%;
+    max-width: 300px;
+    max-height: 300px;
+  }
+  p {
+    line-height: 17px;
+  }
+  a {
+    color: $COLOR--windows-blue;
+    text-decoration: none;
+  }
+  ul, ol {
+    display: block;
+    padding-left: 15px;
+    margin-bottom: 10px;
+    line-height: 20px;
+
+    li {
+      list-style: inherit;
+    }
+  }
+  ol {
+    margin-left: 20px;
+    list-style-type: decimal;
+  }
+  ul {
+    margin-left: 15px;
+    list-style-type: disc;
+  }
+  table {
+    border-collapse: collapse;
+    margin-bottom: 10px;
+
+    th, td {
+      border: 1px solid $COLOR--gray-80;
+      padding: 5px;
+    }
+  }
+  em {
+    font-style: italic;
+  }
+  code {
+    padding: 2px 4px;
+    font-family: monospace;
+    font-size: 90%;
+    color: $COLOR--black-2;
+    background-color: $COLOR--light-blue;
+    border-radius: 0.3rem;
+  }
+  code.lang-error {
+    position: relative;
+    padding-left: 15px;
+    background: transparent;
+
+    &::before {
+      content: '';
+      position: absolute;
+      width: 3px;
+      top: 10px;
+      bottom: 10px;
+      left: 0;
+      background: $COLOR--orange-red;
+    }
+  }
+  blockquote {
+    display: block;
+    margin-top: 1em;
+    margin-bottom: 1em;
+    margin-right: 40px;
+    padding-left: 10px;
+    font-family: $FONT-REGULAR;
+    font-size: 14px;
+    color: $COLOR--charcoal-grey;
+    border-left: 3px solid $COLOR--booger;
+  }
+}

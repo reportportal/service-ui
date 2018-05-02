@@ -1,0 +1,75 @@
+.page-button {
+  display: inline-block;
+  padding-right: 6px;
+  padding-left: 6px;
+  cursor: pointer;
+  position: relative;
+  line-height: 19px;
+  font-family: $FONT-SEMIBOLD;
+
+  svg {
+    width: 19px;
+    height: 19px;
+    vertical-align: bottom;
+    fill: $COLOR--gray-47;
+  }
+
+  &.hideOnMobile {
+    @media(max-width: $SCREEN_SM_MAX) {
+      display: none;
+    }
+  }
+
+  &.active {
+    color: $COLOR--topaz;
+    border-bottom: 2px solid $COLOR--topaz;
+    cursor: default;
+  }
+
+  &:first-child::after {
+    content: ' ';
+    position: absolute;
+    width: 1px;
+    top: 1px;
+    bottom: 5px;
+    right: 0;
+    background: $COLOR--gray-80;
+    height: 100%;
+  }
+
+  &:last-child::before {
+    content: ' ';
+    position: absolute;
+    width: 1px;
+    top: 1px;
+    bottom: 5px;
+    left: 0;
+    background: $COLOR--gray-80;
+    height: 100%;
+  }
+
+  &.disabled {
+    cursor: default;
+    color: $COLOR--gray-80;
+
+    svg {
+      fill: $COLOR--gray-80;
+    }
+
+    &:hover {
+      color: $COLOR--gray-80;
+
+      svg {
+        fill: $COLOR--gray-80;
+      }
+    }
+  }
+
+  &:hover {
+    color: $COLOR--tealish;
+
+    svg {
+      fill: $COLOR--tealish;
+    }
+  }
+}

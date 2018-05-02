@@ -1,0 +1,90 @@
+.login-form {
+  width: 380px;
+  margin: auto;
+  font-family: $FONT-REGULAR;
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    width: 100%;
+  }
+}
+.separator {
+  position: relative;
+  height: 20px;
+  margin-bottom: 30px;
+  margin-top: 20px;
+  text-align: center;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    left: -115px;
+    width: 610px;
+  }
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    left: 0;
+    width: 100%;
+    margin-bottom: 25px;
+    margin-top: 37px;
+  }
+}
+.line {
+  position: absolute;
+  left: 0;
+  top: 10px;
+  border-top: 1px solid $COLOR--steel-grey;
+  opacity: 0.2;
+  width: 100%;
+}
+.or {
+  position: relative;
+  padding: 0 14px;
+  background: $COLOR--white-two;
+  display: inline-block;
+  border: none;
+  font-size: 15px;
+  text-align: center;
+  color: $COLOR--steel-grey;
+  box-sizing: border-box;
+}
+.login-field {
+  width: 380px;
+  height: 40px;
+  margin-bottom: 30px;
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    width: 280px;
+  }
+}
+.password-field {
+  width: 380px;
+  height: 40px;
+  margin-bottom: 10px;
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    width: 280px;
+  }
+}
+.forgot-pass {
+  display: block;
+  margin-bottom: 30px;
+  font-size: 13px;
+  color: $COLOR--tealish;
+  text-align: left;
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+.login-button-container {
+  width: 160px;
+  height: 40px;
+  margin: 0 auto 50px auto;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    margin-bottom: 0;
+  }
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    margin-bottom: 30px;
+  }
+}

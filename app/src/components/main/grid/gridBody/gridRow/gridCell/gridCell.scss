@@ -1,0 +1,30 @@
+.grid-cell {
+  display: table-cell;
+  color: $COLOR--charcoal-grey;
+  font-family: $FONT-REGULAR;
+  box-sizing: border-box;
+  padding: 15px 10px;
+
+  &:first-child {
+    padding-left: 15px;
+  }
+
+  &:last-child {
+    padding-right: 15px;
+  }
+
+  &.align-left {
+    text-align: left;
+  }
+  &.align-center {
+    text-align: center;
+  }
+  &.align-right {
+    text-align: right;
+  }
+}
+
+.text-cell {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}

@@ -67,9 +67,10 @@ define(function (require) {
                                 Localization.itemEvents.updateItem;
                         }
                         case 'post_issue': return Localization.itemEvents.postIssue;
-                        case 'attach_issue': return Localization.itemEvents.attachIssue;
+                        case 'load_issue': return Localization.itemEvents.loadIssue;
+                        case 'unload_issue': return Localization.itemEvents.unloadIssue;
                         case 'analyze_item': return userRef + ' ' + Localization.itemEvents.changedByAnalyzer;
-                        case 'attach_issue_aa': return userRef + ' ' + Localization.itemEvents.issueAttachByAnalyzer;
+                        case 'link_issue_aa': return userRef + ' ' + Localization.itemEvents.issueLoadByAnalyzer;
                         default: break;
                     }
                 }
@@ -135,7 +136,7 @@ define(function (require) {
             isHideNameCell: {
                 deps: ['actionType'],
                 get: function (actionType) {
-                    return actionType === 'analyze_item' || actionType === 'attach_issue_aa';
+                    return actionType === 'analyze_item' || actionType === 'link_issue_aa';
                 }
             }
         },

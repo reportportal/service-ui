@@ -1,0 +1,37 @@
+.container-with-tabs {
+  width: 100%;
+  background-color: $COLOR--white-two;
+}
+.tabs-wrapper {
+  width: 100%;
+  text-align: center;
+  border-bottom: 1px solid $COLOR--gray-91;
+  box-sizing: border-box;
+}
+.tab {
+  position: relative;
+  top: 3px;
+  display: inline-block;
+  max-width: 200px;
+  height: 30px;
+  padding: 0 15px;
+  box-sizing: border-box;
+  font-family: $FONT-SEMIBOLD;
+  font-size: 14px;
+  color: $COLOR--gray-47;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  line-height: 30px;
+  cursor: pointer;
+}
+.active {
+  border-bottom: 1px solid $COLOR--topaz;
+  color: $COLOR--topaz;
+}
+.content-wrapper {
+  width: 100%;
+  padding-top: 10px;
+  box-sizing: border-box;
+}

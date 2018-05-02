@@ -1,8 +1,30 @@
 import * as storybook from '@storybook/react';
 import { setOptions } from '@storybook/addon-options';
-import 'reset-css';
+import { setIntlConfig, withIntl } from 'storybook-addon-intl';
+import 'reset-css/reset.css';
 import 'common/css/fonts/fonts.scss';
 import 'common/css/common.scss';
+
+import { addLocaleData } from 'react-intl';
+import en from 'react-intl/locale-data/en';
+import ru from 'react-intl/locale-data/ru';
+import be from 'react-intl/locale-data/be';
+
+import localeRU from '../localization/translated/ru.json';
+import localeBE from '../localization/translated/be.json';
+const messages = {
+  ru: localeRU,
+  be: localeBE,
+};
+addLocaleData([...en, ...ru, ...be]);
+setIntlConfig({
+  locales: ['en', 'ru', 'be'],
+  defaultLocale: 'en',
+  getMessages: (lang) => {
+    return messages[lang];
+  }
+});
+
 
 const req = require.context('../src', true, /\.stories\.jsx?$/);
 
@@ -75,4 +97,5 @@ setOptions({
   selectedAddonPanel: undefined, // The order of addons in the "Addons Panel" is the same as you import them in 'addons.js'. The first panel will be opened by default as you run Storybook
 });
 
+storybook.addDecorator(withIntl);
 storybook.configure(loadStories, module);

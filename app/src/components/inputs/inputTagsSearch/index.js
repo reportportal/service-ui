@@ -1,0 +1,1 @@
+export { InputTagsSearch } from './inputTagsSearch';

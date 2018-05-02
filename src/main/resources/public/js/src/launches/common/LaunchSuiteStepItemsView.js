@@ -151,7 +151,7 @@ define(function (require) {
                         $itemsContainer.append(prentItem.$el);
                         self.renderedItems.push(prentItem);
                     }
-                    var item = new self.itemView({ model: model, filterModel: self.filterModel, context: self.context });
+                    var item = new self.itemView({ model: model, filterModel: self.filterModel, context: self.context, collection: self.collection });
                     $itemsContainer.append(item.$el);
                     self.renderedItems.push(item);
                 });

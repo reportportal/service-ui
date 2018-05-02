@@ -1,0 +1,7 @@
+.service-version-item {
+  margin-right: 13px;
+
+  &.deprecated {
+    color: $COLOR--tomato;
+  }
+}

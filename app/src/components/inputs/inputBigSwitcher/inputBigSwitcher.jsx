@@ -20,12 +20,13 @@
  */
 
 import PropTypes from 'prop-types';
+import { FormattedMessage } from 'react-intl';
 import classNames from 'classnames/bind';
 import styles from './inputBigSwitcher.scss';
 
 const cx = classNames.bind(styles);
 
-const InputSwitcher = ({ children, disabled, value, onChange, onFocus, onBlur }) => {
+export const InputBigSwitcher = ({ children, disabled, value, onChange, onFocus, onBlur }) => {
   const classes = cx({
     'switcher-wrapper': true,
     centered: !children,
@@ -36,14 +37,31 @@ const InputSwitcher = ({ children, disabled, value, onChange, onFocus, onBlur })
     'turned-on': !!value,
   });
   const handlerOnChange = (e) => {
-    onChange({ value: e.target.checked });
+    onChange(e.target.checked);
   };
   return (
-    <label className={cx('input-big-switcher')} onFocus={onFocus} onBlur={onBlur} tabIndex="1">
+    <label className={cx('input-big-switcher')} tabIndex="1">
       <div className={classes}>
-        <div className={cx('on')}>ON</div>
-        <div className={cx('off')}>OFF</div>
-        <input className={cx('input')} type="checkbox" disabled={disabled} onChange={handlerOnChange} />
+        <div className={cx('on')}>
+          <FormattedMessage
+            id={'Common.on'}
+            defaultMessage={'ON'}
+          />
+        </div>
+        <div className={cx('off')}>
+          <FormattedMessage
+            id={'Common.off'}
+            defaultMessage={'OFF'}
+          />
+        </div>
+        <input
+          className={cx('input')}
+          type="checkbox"
+          disabled={disabled}
+          onFocus={onFocus}
+          onChange={handlerOnChange}
+          onBlur={onBlur}
+        />
         <div className={sliderClasses} />
       </div>
       <span className={cx('children-container')}>{children}</span>
@@ -51,7 +69,7 @@ const InputSwitcher = ({ children, disabled, value, onChange, onFocus, onBlur })
   );
 };
 
-InputSwitcher.propTypes = {
+InputBigSwitcher.propTypes = {
   children: PropTypes.node,
   value: PropTypes.bool,
   disabled: PropTypes.bool,
@@ -60,7 +78,7 @@ InputSwitcher.propTypes = {
   onBlur: PropTypes.func,
 };
 
-InputSwitcher.defaultProps = {
+InputBigSwitcher.defaultProps = {
   children: '',
   value: false,
   disabled: false,
@@ -68,5 +86,3 @@ InputSwitcher.defaultProps = {
   onFocus: () => {},
   onBlur: () => {},
 };
-
-export default InputSwitcher;

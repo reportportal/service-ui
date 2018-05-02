@@ -71,7 +71,8 @@ define(function (require) {
                     launchesSize: this.launches.length,
                     container: this.$el,
                     cellWidth: 100 / (this.launches.length || 1),
-                    model: new LaunchSuiteStepItemModel(oneItem)
+                    model: new LaunchSuiteStepItemModel(oneItem),
+                    itemInLaunch: itemsInLaunch
                 });
                 this.renderedItems.push(item);
             }, this);

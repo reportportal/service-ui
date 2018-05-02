@@ -1,0 +1,18 @@
+.page {
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  background-color: transparent;
+  margin: 0;
+  padding: 20px 0 0;
+}
+
+.page-title {
+  padding-left: 15px;
+  min-height: 30px;
+  margin-bottom: 15px;
+  font-family: $FONT-SEMIBOLD;
+  font-size: 16px;
+  color: $COLOR--charcoal-grey;
+  text-transform: uppercase;
+}

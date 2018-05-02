@@ -1,0 +1,44 @@
+.select2-search-users{
+  :global{
+    background-color: $COLOR--white-two;
+    .Select-control, .Select-menu-outer{
+      position: relative;
+    }
+    .Select-placeholder{
+      display: none;
+    }
+    .Select-noresults{
+      background: lighten($COLOR--gray-91, 5%);
+      position: absolute;
+      bottom: -28px;
+      width: 100%;
+      box-sizing: border-box;
+      padding: 5px;
+      font-size: 12px;
+      line-height: 17px;
+      font-family: $FONT-REGULAR, sans-serif;
+      color: $COLOR--charcoal-grey;
+    }
+    .Select-input{
+      padding: 8px;
+      width: 100%;
+      box-sizing: border-box;
+      input{
+        line-height: 18px;
+        font-family: $FONT-REGULAR, sans-serif;
+        width: 100%  !important;
+        height: auto;
+        min-height: 26px;
+        padding: 4px 20px 4px 5px;
+        margin: 0;
+        outline: 0;
+        font-size: 13px;
+        border: 1px solid $COLOR--gray-60;
+        border-radius: 0;
+        box-sizing: border-box !important;
+        background: url('./img/select2.png') no-repeat 100% -22px, linear-gradient(to bottom, #fff 85%, #eee 99%) 0 0;
+      }
+    }
+  }
+}
+

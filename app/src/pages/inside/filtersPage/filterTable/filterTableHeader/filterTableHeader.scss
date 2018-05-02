@@ -1,0 +1,47 @@
+.table-header {
+  display: table-row;
+  background-color: $COLOR--white;
+  border-bottom: solid 1px $COLOR--gray-91;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    display: none;
+  }
+}
+
+.header-cell {
+  display: table-cell;
+  color: $COLOR--gray-47;
+  font-family: $FONT-SEMIBOLD;
+  font-size: 12px;
+  height: 50px;
+  padding-right: 10px;
+  padding-left: 15px;
+  text-transform: uppercase;
+  vertical-align: middle;
+}
+
+.name-cell {
+  width: 30%;
+}
+
+.options-cell {
+  width: 30%;
+}
+
+.owner-cell {
+  width: 13%;
+}
+
+.shared-cell {
+  width: 8%;
+  text-align: center;
+}
+
+.display-on-launches-cell {
+  width: 11%;
+}
+
+.delete-cell {
+  width: 8%;
+  text-align: center;
+}

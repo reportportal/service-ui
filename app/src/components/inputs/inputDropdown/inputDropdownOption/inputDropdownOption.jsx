@@ -18,54 +18,45 @@
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
-import InputCheckbox from 'components/inputs/inputChekbox/inputCheckbox';
-import { connect } from '@cerebral/react';
-import { state, props } from 'cerebral/tags';
+import { InputCheckbox } from 'components/inputs/inputCheckbox';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import styles from './inputDropdownOption.scss';
 
 const cx = classNames.bind(styles);
 
-const DropdownOption = ({ multiple, text, disabled, active }) => {
-  const dropdownOptionClasses = cx({
-    'dropdown-option': true,
-    active: !multiple && active,
-    disabled,
-  });
+
+export const DropdownOption = ({ multiple, label, disabled, selected, onChange, value }) => {
+  const onChangeHandler = () => {
+    onChange(value);
+  };
   return (
-    <div className={dropdownOptionClasses}>
+    <div className={cx('dropdown-option', { selected: !multiple && selected, disabled })}>
       {
         multiple
-          ? <InputCheckbox value={active} disabled={disabled} >{text}</InputCheckbox>
-          : <div className={cx('single-option')}>{text}</div>
+          ? <InputCheckbox value={selected} disabled={disabled} onChange={onChangeHandler}>
+            {label}
+          </InputCheckbox>
+          : <div className={cx('single-option')} onClick={onChangeHandler}>{label}</div>
       }
     </div>
   );
 };
 
 DropdownOption.propTypes = {
-  formPath: PropTypes.string,
-  fieldName: PropTypes.string,
-  id: PropTypes.string,
+  value: PropTypes.string,
   multiple: PropTypes.bool,
-  text: PropTypes.string,
+  label: PropTypes.string,
   disabled: PropTypes.bool,
-  active: PropTypes.bool,
+  selected: PropTypes.bool,
+  onChange: PropTypes.func,
 };
 
 DropdownOption.defaultProps = {
-  formPath: '',
-  fieldName: '',
-  id: '',
+  value: '',
   multiple: false,
-  text: '',
+  label: '',
   disabled: false,
-  active: false,
+  selected: false,
+  onChange: () => {},
 };
-
-export default connect({
-  text: state`${props`formPath`}.${props`fieldName`}.optionsById.${props`id`}.text`,
-  disabled: state`${props`formPath`}.${props`fieldName`}.optionsById.${props`id`}.disabled`,
-  active: state`${props`formPath`}.${props`fieldName`}.optionsById.${props`id`}.active`,
-}, DropdownOption);

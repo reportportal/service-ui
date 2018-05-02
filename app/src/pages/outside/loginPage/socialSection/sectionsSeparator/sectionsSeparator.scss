@@ -1,0 +1,11 @@
+.sections-separator {
+  display: inline-block;
+  width: 100%;
+  margin-bottom: 30px;
+  border-top: 1px solid $COLOR--steel-grey;
+  opacity: .2;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    margin-bottom: 5px;
+  }
+}

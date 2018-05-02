@@ -67,7 +67,12 @@ define(function (require) {
                         var $valueView;
                         var oldLinks = [];
                         var newLinks = [];
-                        if (this.view.model.get('actionType') === 'post_issue' || this.view.model.get('actionType') === 'attach_issue') {
+                        var actionType = this.view.model.get('actionType');
+                        if (
+                            actionType === 'post_issue'
+                            || actionType === 'load_issue'
+                            || actionType === 'unload_issue'
+                        ) {
                             _.each(value, function (val, key) {
                                 var linkParts;
                                 if (key === 'newValue' || key === 'oldValue') {

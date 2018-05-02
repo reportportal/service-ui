@@ -60,7 +60,8 @@ define(['util'], function () {
             escToCancel: '<strong>Esc</strong> to cancel',
             ctrlEnterToSubmit: '<strong>Ctrl + Enter</strong> to submit',
             loading: 'Loading',
-            load: 'Load',
+            link: 'Link',
+            unlink: 'Unlink',
             post: 'Post',
             analyse: 'Analyse',
             gallery: 'Gallery',
@@ -312,10 +313,11 @@ define(['util'], function () {
         itemEvents: {
             updateItemIssue: 'updated item issue',
             updateItem: 'updated item',
-            attachIssue: 'attached issue',
+            loadIssue: 'linked issue',
+            unloadIssue: 'unlinked issue',
             postIssue: 'posted issue',
             changedByAnalyzer: 'AA changed defect type',
-            issueAttachByAnalyzer: 'AA attached issue'
+            issueLoadByAnalyzer: 'AA linked issue'
         },
 
         widgets: {
@@ -438,8 +440,9 @@ define(['util'], function () {
             update_bts: 'updated',
             delete_bts: 'removed',
             create_bts: 'configured',
-            attach_issue: 'added isssue',
+            load_issue: 'linked issue',
             post_issue: 'posted issue',
+            unload_issue: 'unlinked issue',
             delete_issue: 'removed issue',
             testItem: 'test item',
             update_project: 'updated',
@@ -477,7 +480,7 @@ define(['util'], function () {
             failedTestCasesTableDescription: 'shows the TOP-20 most failing test cases within the specified previous launches.',
 
             uniqueBugsTable: 'Unique bugs table',
-            uniqueBugsTableDescription: 'shows real identified bugs, posted to the bug tracking system, and existing in the BTS bugs, loaded on the project.',
+            uniqueBugsTableDescription: 'shows real identified bugs, posted to the bug tracking system, and existing in the BTS bugs, linked on the project.',
 
             launchesTable: 'Launches table',
             launchesTableDescription: 'shows the configurable table of launches.',
@@ -748,7 +751,7 @@ define(['util'], function () {
             relatedIssue: 'Related issue:',
             includeLogs: 'Logs',
             includeComments: 'Comment',
-            includeScreenshots: 'Screenshots',
+            includeAttachments: 'Attachments',
             fillAllRequired: 'Fill in all required fields',
             credentialsSoft: 'In case of empty fields Report Portal credentials will be used',
             credentialsSoftTfs: 'In case of empty fields Windows credentials will be used',
@@ -797,15 +800,17 @@ define(['util'], function () {
             postIssue: 'Post issue',
             postBug: 'Post issue',
             postBugTo: 'Post bug to',
-            loadBug: 'Load issue',
+            linkIssue: 'Link issue',
+            unlinkIssue: 'Unlink issue',
             addIssueId: 'Add issue ID',
             copyDefect: 'Copy defect',
             sendDefect: 'Send defect',
             key: 'Issue key (for multiple options - type issue ID and press Enter)',
             configureTBS: 'Configure bug tracking system to post issue',
-            configureTBSLoad: 'Configure bug tracking system to load issue',
-            noIssues: 'You can\'t post bug if item has no issues',
-            noIssuesLoad: 'You can\'t Load bug if item has no issues',
+            configureTBSLoad: 'Configure bug tracking system to link issue',
+            noIssues: 'You can\'t post bug if item has no defect type',
+            noIssuesLoad: 'You can\'t link issue if item has no defect type',
+            noIssueTicket: 'Item doesn\'t have a linked issue',
             historyView: 'History',
             skippedDuration: 'SKIPPED. Duration: ',
             stoppedDuration: 'Run STOPPED after:',
@@ -878,6 +883,7 @@ define(['util'], function () {
             issueId: 'Issue ID',
 
             retries: 'retries',
+            rtr: 'rtr',
             stackTrace: 'STACK TRACE',
             openInLog: 'Open in Log view',
 
@@ -1079,11 +1085,14 @@ define(['util'], function () {
                 delete_launch: 'Delete launch',
                 update_project: 'Update project',
                 post_issue: 'Post issue',
-                attach_issue: 'Attach issue',
+                load_issue: 'Link issue',
+                link_issue_aa: 'AA linked issue',
+                unload_issue: 'Unlink issue',
                 update_item: 'Update item',
                 create_user: 'Create user',
                 start_import: 'Start import',
-                finish_import: 'Finish import'
+                finish_import: 'Finish import',
+                analyze_item: 'AA changed defect type'
             },
             objectTypes: {
                 all: 'all',
@@ -1179,7 +1188,8 @@ define(['util'], function () {
             notFoundStackTrace: 'No stack trace to display',
             goToLog: 'Go to stack trace in log message',
             nextError: 'Next error',
-            consoleView: 'Console view'
+            consoleView: 'Console view',
+            harFileError: 'Your browser doesn\'t support viewer for .har files. You can download file using <a href="%%%" target="_blank" >link</a>.'
         },
 
         defectNameById: {
@@ -1295,8 +1305,8 @@ define(['util'], function () {
             scheduleForInterupt: 'Schedule time for Job to interrupt inactive launches',
             keepLogs: 'Keep logs',
             howKeepLogs: 'How long to keep old logs in launches. Related launches structure will be saved, in order to keep statistics',
-            keepScreen: 'Keep screenshots',
-            howKeepScreen: 'How long to keep screenshots in system',
+            keepScreen: 'Keep attachments',
+            howKeepScreen: 'How long to keep attachments in system',
             strategyRegular: 'Regular',
             strategyBdd: 'BDD',
             bts: 'Bug tracking system',
@@ -1315,6 +1325,7 @@ define(['util'], function () {
             autoAnalysisBase: 'Base for Auto Analysis',
             autoAnalysisBaseFirstOpt: 'All launches',
             autoAnalysisBaseSecondOpt: 'Launches with the same name',
+            autoAnalysisBaseThirdOpt: 'Only current launch',
             autoAnalysisBaseFirstTip: 'The test items are analyzed on base of previously investigated data in all launches',
             autoAnalysisBaseSecondTip: 'The test items are analyzed on base of previously investigated data in launches with the same name',
             emailNotifications: 'E-mail notifications',
@@ -1914,8 +1925,8 @@ define(['util'], function () {
             deleteLaunch: 'Delete launch',
             shareWidgetDashboard: 'Share widget, dashboard',
             unShareWidgetDashboard: 'Unshare widget, dashboard',
-            postIssue: 'Post issue to BTS',
-            attachIssue: 'Attach issue to BTS',
+            updateIssue: 'Actions with issues',
+            loadIssue: 'Attach issue to BTS',
             history: 'History',
             project: 'Project',
             login: 'Login',
@@ -2031,6 +2042,7 @@ define(['util'], function () {
             includeAA: 'Include %%% into Auto-Analysis',
             receiveIssue: 'Receive previous result',
             sendIssue: 'Send result to the last item',
+            unlinkIssue: 'Unlink issue',
             analyseLaunches: 'Analyse launches',
             testItemsDetails: 'Test item details'
         },
@@ -2100,6 +2112,7 @@ define(['util'], function () {
             msgIncludeAA: 'Are you sure to include %%% into Auto-Analysis?',
             msgReceiveIssue: 'Are you sure to receive defect data from previous failed item?',
             msgSendIssue: 'Are you sure to send defect data to the last item?',
+            msgUnlinkIssue: 'Are you sure to unlink issue/s for test items?',
             invalidFileType: 'Incorrect file format',
             invalidFileSize: 'File size is more than 32 Mb',
             testUID: 'Unique test case ID:',
@@ -2126,7 +2139,7 @@ define(['util'], function () {
         activity: {
             email: 'E-mail notifications',
             keepLogs: 'Keep logs',
-            keepScreenshots: 'Keep screenshots',
+            keepScreenshots: 'Keep attachments',
             auto_analyze: 'Auto analysis',
             launchInactivity: 'Launch inactivity timeout',
             statisticsCalculationStrategy: 'Select strategy'
@@ -2174,7 +2187,8 @@ define(['util'], function () {
 
         modalDefectEditor: {
             saveAndPost: 'Save and post issue',
-            saveAndLoad: 'Save and load issue'
+            saveAndLoad: 'Save and link issue',
+            saveAndUnlink: 'Save and unlink issue'
         }
     };
 });

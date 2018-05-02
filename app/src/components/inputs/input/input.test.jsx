@@ -1,5 +1,5 @@
 import { shallow } from 'enzyme';
-import Input from './input';
+import { Input } from './input';
 
 it('should respond to the change event', () => {
   const value = '2';
@@ -14,5 +14,5 @@ it('should respond to the change event', () => {
     target: { value },
   });
 
-  expect(onChange).toBeCalledWith({ formPath, fieldName, value });
+  expect(onChange).toBeCalledWith({ target: { value } });
 });

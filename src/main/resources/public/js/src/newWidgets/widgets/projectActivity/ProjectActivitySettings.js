@@ -29,7 +29,7 @@ define(function (require) {
         { value: 'start_launch', name: Localization.forms.startLaunch },
         { value: 'finish_launch', name: Localization.forms.finishLaunch },
         { value: 'delete_launch', name: Localization.forms.deleteLaunch },
-        { value: 'post_issue', name: Localization.forms.postIssue },
+        { value: 'update_issue', name: Localization.forms.updateIssue },
         { value: 'create_user', name: Localization.forms.createUser },
         { value: 'update_dashboard', name: Localization.forms.updateDashboard },
         { value: 'update_widget', name: Localization.forms.updateWidget },
@@ -46,7 +46,7 @@ define(function (require) {
         update_filter: ['create_filter', 'update_filter', 'delete_filter'],
         update_bts: ['create_bts', 'update_bts', 'delete_bts'],
         update_defects: ['update_defect', 'delete_defect'],
-        post_issue: ['post_issue', 'attach_issue'],
+        update_issue: ['post_issue', 'load_issue', 'unload_issue'],
         import: ['start_import', 'finish_import']
     };
 

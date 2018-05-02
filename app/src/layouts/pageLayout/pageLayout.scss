@@ -1,0 +1,31 @@
+.page-layout {
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  background-color: transparent;
+  margin: 0;
+  padding: 20px 0 0;
+  @media (max-width: $SCREEN_XS_MAX) {
+    padding: 0;
+  }
+}
+
+.page-title {
+  padding-left: 15px;
+  min-height: 30px;
+  margin-bottom: 15px;
+  font-family: $FONT-CONDBOLD;
+  font-size: 16px;
+  letter-spacing: 1px;
+  line-height: 30px;
+  color: $COLOR--charcoal-grey;
+  text-transform: uppercase;
+  @media (max-width: $SCREEN_XS_MAX) {
+    display: none;
+  }
+}
+
+.page-content {
+  background-color: $COLOR--white-two;
+  box-shadow: 0 1px 3px 0 rgba(0,0,0,.1);
+}

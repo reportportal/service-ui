@@ -1,0 +1,20 @@
+.action-panel {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 15px;
+}
+
+.action-buttons {
+  display: flex;
+}
+
+.action-button {
+  padding-left: 10px;
+}
+
+.mobile-hidden {
+  @media (max-width: $SCREEN_XS_MAX) {
+    display: none;
+  }
+}

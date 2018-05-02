@@ -1,0 +1,1 @@
+export { AssignedProjectsBlock } from './assignedProjectsBlock';

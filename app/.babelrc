@@ -1,8 +1,25 @@
 {
   "presets": [
-    "env", "react"
+    "env",
+    "react"
   ],
   "plugins": [
-    "react-hot-loader/babel"
-  ]
+    "react-hot-loader/babel",
+    "transform-runtime",
+    "transform-decorators-legacy",
+    "transform-class-properties",
+    "transform-object-rest-spread",
+    [
+      "react-intl",
+      {
+        "messagesDir": "./localization/messages",
+        "enforceDescriptions": false
+      }
+    ]
+  ],
+  "env": {
+    "development": {
+      "presets": ["react-hmre"]
+    }
+  }
 }

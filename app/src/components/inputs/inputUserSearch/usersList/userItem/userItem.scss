@@ -1,0 +1,72 @@
+.user-search-result-wrap{
+  padding: 8px 20px 8px 15px;
+  overflow: hidden;
+  white-space: normal;
+  &:hover{
+    cursor: pointer;
+    background: rgba(57, 194, 215, 0.2);
+  }
+}
+.user-avatar{
+  width: 24px;
+  height: 34px;
+  display: block;
+  float: left;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+.user-search-info{
+  display: inline-block;
+}
+.user-search-name{
+  margin: -1px 0 0 20px;
+  font-size: 13px;
+  padding-right: 20px;
+  position: relative;
+  color: $COLOR--charcoal-grey;
+  text-transform: capitalize;
+  line-height: 1.42857143;
+}
+.user-search-login{
+  margin: -1px 0 0 20px;
+  font-size: 13px;
+  padding-right: 20px;
+  position: relative;
+  color: $COLOR--charcoal-grey;
+  font-weight: 600;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.42857143;
+}
+.assign-btn{
+  outline: none;
+  width: 20px;
+  height: 20px;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: transparent;
+  float: right;
+  margin-top: 8px;
+  border: none;
+  background-image: url('./img/ic-invite.svg');
+  &:hover {
+    cursor: pointer;
+  }
+  &.assigned-user{
+    background-image: url('./img/ic-check-copy.svg');
+  }
+}
+.disabled-item{
+  .assign-btn{
+    cursor: default;
+  }
+  &:hover{
+    background: transparent;
+    cursor: default;
+  }
+  *{
+    cursor: default;
+    color: $COLOR--gray-60;
+  }
+}

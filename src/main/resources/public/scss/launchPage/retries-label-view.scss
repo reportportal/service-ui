@@ -38,7 +38,10 @@
   span {
     cursor: pointer;
     color: $COLOR--windows-blue;
-
+    &.mobile{
+      color: $COLOR--charcoal-grey;
+      cursor: default;
+    }
     &.not-a-link {
       color: $COLOR--black;
       cursor: default;

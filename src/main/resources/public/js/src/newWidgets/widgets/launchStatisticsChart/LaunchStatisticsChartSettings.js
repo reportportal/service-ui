@@ -93,96 +93,97 @@ define(function (require) {
         },
         getSettings: function () {
             var async = $.Deferred();
-            async.resolve([
-                {
-                    control: 'filters',
-                    options: {
-                    }
-                },
-                {
-                    control: 'dropDown',
-                    options: {
-                        label: Localization.widgets.widgetCriteria,
-                        items: getItems(),
-                        placeholder: Localization.wizard.criteriaSelectTitle,
-                        multiple: true,
-                        getValue: function (model, self) {
-                            var contentFields = model.getContentFields();
-                            if (contentFields[0]) {
-                                return contentFields;
+            (new SingletonDefectTypeCollection()).ready.done(function () {
+                async.resolve([
+                    {
+                        control: 'filters',
+                        options: {
+                        }
+                    },
+                    {
+                        control: 'dropDown',
+                        options: {
+                            label: Localization.widgets.widgetCriteria,
+                            items: getItems(),
+                            placeholder: Localization.wizard.criteriaSelectTitle,
+                            multiple: true,
+                            getValue: function (model, self) {
+                                var contentFields = model.getContentFields();
+                                if (contentFields[0]) {
+                                    return contentFields;
+                                }
+                                return _.map(self.model.get('items'), function (item) {
+                                    return item.value;
+                                });
+                            },
+                            setValue: function (value, model) {
+                                model.setContentFields(value);
                             }
-                            return _.map(self.model.get('items'), function (item) {
-                                return item.value;
-                            });
-                        },
-                        setValue: function (value, model) {
-                            model.setContentFields(value);
+                        }
+                    },
+                    {
+                        control: 'input',
+                        options: {
+                            name: Localization.widgets.items,
+                            min: 1,
+                            max: 150,
+                            def: 50,
+                            numOnly: true,
+                            action: 'limit'
+                        }
+                    },
+                    {
+                        control: 'switcher',
+                        options: {
+                            items: [
+                                { name: Localization.widgets.launchMode, value: 'launch' },
+                                { name: Localization.widgets.timelineMode, value: 'timeline' }
+                            ],
+                            action: 'switch_timeline_mode'
+                        }
+                    },
+                    {
+                        control: 'switcher',
+                        options: {
+                            items: [
+                                { name: Localization.widgets.areaChartMode, value: 'areaChartMode' },
+                                { name: Localization.widgets.barMode, value: 'barMode' }
+                            ],
+                            action: 'switch_view_mode'
+                        }
+                    },
+                    {
+                        control: 'checkbox',
+                        options: {
+                            label: Localization.widgets.zoomWidgetArea,
+                            getValue: function (model, self) {
+                                var widgetOptions = model.getWidgetOptions();
+                                if (widgetOptions.zoom) {
+                                    return true;
+                                }
+                                return false;
+                            },
+                            setValue: function (value, model) {
+                                var widgetOptions = model.getWidgetOptions();
+                                if (value) {
+                                    widgetOptions.zoom = [];
+                                } else {
+                                    delete widgetOptions.zoom;
+                                }
+                                model.setWidgetOptions(widgetOptions);
+                            },
+                            beta: true
+                        }
+                    },
+                    {
+                        control: 'static',
+                        options: {
+                            action: 'metadata_fields',
+                            fields: ['name', 'number', 'start_time']
                         }
                     }
-                },
-                {
-                    control: 'input',
-                    options: {
-                        name: Localization.widgets.items,
-                        min: 1,
-                        max: 150,
-                        def: 50,
-                        numOnly: true,
-                        action: 'limit'
-                    }
-                },
-                {
-                    control: 'switcher',
-                    options: {
-                        items: [
-                            { name: Localization.widgets.launchMode, value: 'launch' },
-                            { name: Localization.widgets.timelineMode, value: 'timeline' }
-                        ],
-                        action: 'switch_timeline_mode'
-                    }
-                },
-                {
-                    control: 'switcher',
-                    options: {
-                        items: [
-                            { name: Localization.widgets.areaChartMode, value: 'areaChartMode' },
-                            { name: Localization.widgets.barMode, value: 'barMode' }
-                        ],
-                        action: 'switch_view_mode'
-                    }
-                },
-                {
-                    control: 'checkbox',
-                    options: {
-                        label: Localization.widgets.zoomWidgetArea,
-                        getValue: function (model, self) {
-                            var widgetOptions = model.getWidgetOptions();
-                            if (widgetOptions.zoom) {
-                                return true;
-                            }
-                            return false;
-                        },
-                        setValue: function (value, model) {
-                            var widgetOptions = model.getWidgetOptions();
-                            if (value) {
-                                widgetOptions.zoom = [];
-                            } else {
-                                delete widgetOptions.zoom;
-                            }
-                            model.setWidgetOptions(widgetOptions);
-                        },
-                        beta: true
-                    }
-                },
-                {
-                    control: 'static',
-                    options: {
-                        action: 'metadata_fields',
-                        fields: ['name', 'number', 'start_time']
-                    }
-                }
-            ]);
-
+                ]);
+            });
             return async.promise();
         }
     };

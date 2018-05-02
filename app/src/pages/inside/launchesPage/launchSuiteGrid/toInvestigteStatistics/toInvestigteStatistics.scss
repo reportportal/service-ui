@@ -1,0 +1,44 @@
+.to-investigate-statistics {
+  line-height: 20px;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    margin: auto;
+    text-align: center;
+  }
+}
+.title {
+  display: none;
+  width: 100%;
+  font-family: $FONT-SEMIBOLD;
+  font-size: 13px;
+  text-transform: uppercase;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    display: inline-block;
+    margin-bottom: 2px;
+  }
+}
+.circle {
+  position: relative;
+  top: 1px;
+  display: inline-block;
+  margin-right: 5px;
+  width: 12px;
+  height: 12px;
+  border-radius: 100%;
+  background-color: $COLOR--to-investigate;
+}
+.value {
+  display: inline-block;
+  height: 20px;
+  padding: 0 10px;
+  border-radius: 100px;
+  box-sizing: border-box;
+  background-color: $COLOR--to-investigate;
+  font-family: $FONT-SEMIBOLD;
+  font-size: 13px;
+  line-height: 20px;
+  color: $COLOR--white-two;
+  text-decoration: none;
+  vertical-align: top;
+}

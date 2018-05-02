@@ -1,0 +1,60 @@
+.assigned-projects-block {
+  width: 100%;
+  height: 100%;
+}
+.name-col {
+  display: inline-block;
+  width: 66%;
+  box-sizing: border-box;
+  vertical-align: top;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    width: 100%;
+  }
+}
+.role-col {
+  display: inline-block;
+  width: 33%;
+  box-sizing: border-box;
+  vertical-align: top;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    display: none;
+  }
+}
+.project-item {
+  width: 100%;
+  height: 35px;
+  padding: 0 15px;
+  border-bottom: 1px solid $COLOR--gray-91;
+  box-sizing: border-box;
+  font-size: 13px;
+  color: $COLOR--charcoal-grey;
+  line-height: 35px;
+  text-transform: uppercase;
+  white-space: nowrap;
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    height: 55px;
+    line-height: 20px;
+    padding-top: 6px;
+  }
+
+  .name-col {
+    font-family: $FONT-SEMIBOLD;
+    padding-right: 15px;
+  }
+  .role-col {
+    font-family: $FONT-REGULAR;
+
+    @media (max-width: $SCREEN_XS_MAX) {
+      display: block;
+      width: 100%;
+    }
+  }
+}

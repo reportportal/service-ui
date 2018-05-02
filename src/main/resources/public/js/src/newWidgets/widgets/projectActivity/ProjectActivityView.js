@@ -213,7 +213,7 @@ define(function (require) {
             });
         },
         checkForIssues: function (type) {
-            return type === 'post_issue' || type === 'attach_issue';
+            return type === 'post_issue' || type === 'load_issue' || type === 'unload_issue';
         }
     });
 

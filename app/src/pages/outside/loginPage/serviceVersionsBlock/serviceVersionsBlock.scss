@@ -1,0 +1,29 @@
+.service-versions-block {
+  position: absolute;
+  left: 60px;
+  bottom: 0;
+  width: 380px;
+  padding-bottom: 60px;
+  font-family: $FONT-REGULAR;
+  line-height: 1em;
+  box-sizing: border-box;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    position: static;
+    width: 100%;
+    padding: 30px 30px 50px;
+  }
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    padding: 20px;
+  }
+}
+.current-version {
+  margin-right: 13px;
+  font-size: 12px;
+  color: $COLOR--gray-47;
+}
+.versions-list {
+  font-size: 11px;
+  color: $COLOR--charcoal-grey;
+}

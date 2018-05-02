@@ -1,0 +1,37 @@
+.login-block {
+  width: 100%;
+  padding: 60px;
+  box-sizing: border-box;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    height: auto;
+    width: 100%;
+    margin: 0;
+    padding: 50px 30px 0;
+  }
+  @media (max-width: $SCREEN_XS_MAX) {
+    padding: 60px 20px 0 20px;
+  }
+}
+.welcome-msg {
+  display: block;
+  width: 100%;
+  margin-bottom: 50px;
+  font-family: $FONT-REGULAR;
+  font-size: 24px;
+  color: $COLOR--steel-grey;
+  text-align: center;
+  line-height: 1.4;
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    font-size: 16px;
+    margin-bottom: 60px;
+  }
+}
+.big {
+  font-size: 32px;
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    font-size: 24px;
+  }
+}

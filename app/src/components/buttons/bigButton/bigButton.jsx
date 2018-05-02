@@ -25,7 +25,7 @@ import styles from './bigButton.scss';
 
 const cx = classNames.bind(styles);
 
-const BigButton = ({ type, children, disabled, color, onClick }) => {
+export const BigButton = ({ type, children, disabled, color, onClick }) => {
   const classes = cx({
     'big-button': true,
     disabled,
@@ -33,7 +33,7 @@ const BigButton = ({ type, children, disabled, color, onClick }) => {
   });
 
   return (
-    <button type={type} className={classes} onClick={onClick} >
+    <button type={type} disabled={disabled} className={classes} onClick={onClick} >
       { children }
     </button>
   );
@@ -54,5 +54,3 @@ BigButton.defaultProps = {
   type: 'button',
   onClick: () => {},
 };
-
-export default BigButton;

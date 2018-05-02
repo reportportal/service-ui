@@ -1,0 +1,35 @@
+.toggle-button {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+.button-item {
+  display: table;
+  table-layout: fixed;
+  float: left;
+  height: 100%;
+  padding: 0 5px;
+  box-sizing: border-box;
+  border: 1px solid $COLOR--gray-80;
+  background-color: $COLOR--white-two;
+  text-align: center;
+  font-family: $FONT-REGULAR;
+  font-size: 13px;
+  color: $COLOR--charcoal-grey;
+  cursor: pointer;
+
+  &.active {
+    cursor: default;
+    background-color: $COLOR--gray-91;
+    border-color: $COLOR--gray-91;
+    pointer-events: none;
+  }
+
+  span {
+    display: table-cell;
+    vertical-align: middle;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+

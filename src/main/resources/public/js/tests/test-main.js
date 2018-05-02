@@ -59,7 +59,7 @@ require.config({
         log: 'log/logs',
         DemoDataSettingsView: 'project/DemoDataSettingsView',
         dropzone: '../lib/dropzone-amd-module',
-
+        PerfCascade: '../lib/perf-cascade/perf-cascade',
         dataUrlResolver: 'core/data-url-resolver',
         projectinfo: 'project/projectinfo',
         validators: 'core/validators',

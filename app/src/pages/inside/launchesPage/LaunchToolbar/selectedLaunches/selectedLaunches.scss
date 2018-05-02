@@ -1,0 +1,42 @@
+.selected-launches {
+  border-bottom: 1px solid $COLOR--white;
+  padding-top: 15px;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  color: $COLOR--gray-60;
+  font-size: 12px;
+  padding-bottom: 10px;
+  text-transform: uppercase;
+}
+
+.list {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.launch {
+  margin-right: 10px;
+  margin-bottom: 10px;
+}
+
+.close-icon {
+  display: inline-block;
+  cursor: pointer;
+  width: 13px;
+  height: 13px;
+
+  svg {
+    fill: $COLOR--gray-60;
+  }
+}
+
+.error-message {
+  font-size: 12px;
+  color: $COLOR--orange-red;
+  padding-bottom: 15px;
+}

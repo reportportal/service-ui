@@ -19,17 +19,39 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 import React, { Component } from 'react';
-import { connect } from '@cerebral/react';
-import { state, props } from 'cerebral/tags';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import styles from './inputDropdown.scss';
-import DropdownOption from './inputDropdownOption/inputDropdownOption';
+import { DropdownOption } from './inputDropdownOption/inputDropdownOption';
 
 const cx = classNames.bind(styles);
 
 // eslint-disable-next-line react/prefer-stateless-function
-class Dropdown extends Component {
+export class InputDropdown extends Component {
+  static propTypes = {
+    value: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
+    options: PropTypes.array,
+    multiple: PropTypes.bool,
+    selectAll: PropTypes.bool,
+    disabled: PropTypes.bool,
+    onChange: PropTypes.func,
+    onFocus: PropTypes.func,
+    onBlur: PropTypes.func,
+  };
+
+  static defaultProps = {
+    value: '',
+    options: [],
+    multiple: false,
+    selectAll: false,
+    disabled: false,
+    onChange: () => {},
+    onFocus: () => {},
+    onBlur: () => {},
+  };
+  state = {
+    opened: false,
+  };
   componentDidMount() {
     document.addEventListener('click', this.handleClickOutside);
   }
@@ -37,10 +59,13 @@ class Dropdown extends Component {
     document.removeEventListener('click', this.handleClickOutside);
   }
   onClickSelectBlock = (e) => {
-    e.stopPropagation();
-    this.props.isFocus
-      ? (() => this.props.multiple && this.props.onBlur())()
-      : this.props.onFocus();
+    if (!this.props.disabled) {
+      this.setState({ opened: !this.state.opened });
+      e.stopPropagation();
+      this.state.opened
+        ? this.props.onBlur()
+        : this.props.onFocus();
+    }
   };
   handleClickOutside = (e) => {
     if (this.node.contains(e.target) && this.props.multiple) {
@@ -48,33 +73,73 @@ class Dropdown extends Component {
     }
     this.props.onBlur();
   };
-  renderOptions() {
-    return this.props.options.map(id => (
-      <DropdownOption
-        key={id}
-        formPath={this.props.formPath}
-        fieldName={this.props.fieldName}
-        id={id}
-        multiple={this.props.multiple}
-      />
-    ));
-  }
-  render() {
-    const classes = cx({
-      dropdown: true,
-      opened: this.props.isFocus,
+  displayedValue() {
+    const { multiple, value, options } = this.props;
+    let displayedValue;
+    if (multiple) {
+      return options.filter(option => value.indexOf(option.value) > -1)
+        .map(option => option.label)
+        .join(', ');
+    }
+    options.forEach((option) => {
+      if (option.value === value) {
+        displayedValue = option.label;
+      }
     });
+    return displayedValue;
+  }
+  handleChange = (selectedValue) => {
+    const { multiple, value, onChange } = this.props;
+    if (multiple) {
+      if (value.indexOf(selectedValue) > -1) {
+        onChange(value.filter(item => item !== selectedValue));
+      } else {
+        onChange([...value, selectedValue]);
+      }
+    } else {
+      onChange(selectedValue);
+    }
+    this.setState({ opened: !this.state.opened });
+  };
+  handleAllClick = () => {
+    if (this.props.value.length !== this.props.options.length) {
+      this.props.onChange(this.props.options.filter(item => !item.disabled)
+        .map(item => item.value));
+    } else {
+      this.props.onChange([]);
+    }
+  };
+
+  renderOptions() {
+    return this.props.options.map((option) => {
+      let selected;
+      this.props.multiple ?
+        selected = this.props.value.indexOf(option.value) > -1 :
+        selected = option.value === this.props.value;
+      return (
+        <DropdownOption
+          key={option.value}
+          value={option.value}
+          disabled={option.disabled}
+          selected={selected}
+          label={option.label}
+          multiple={this.props.multiple}
+          onChange={option.disabled ? () => {} : this.handleChange}
+        />
+      );
+    });
+  }
+
+  render() {
     return (
-      <div ref={(node) => { this.node = node; }} className={classes}>
+      <div ref={(node) => { this.node = node; }} className={cx('dropdown', { opened: this.state.opened })}>
         <div className={cx({ 'select-block': true, disabled: this.props.disabled })} onClick={this.onClickSelectBlock}>
-          <span className={cx('value')}>{ this.props.displayedValue }</span>
+          <span className={cx('value')}>{ this.displayedValue() }</span>
           <span className={cx('arrow')} />
         </div>
         <div className={cx('select-list')}>
           {
-            (this.props.multiple && this.props.selectAll)
-              ? <div className={cx('select-all-block')}><span className={cx('select-all')}>All</span></div>
-              : null
+            (this.props.multiple && this.props.selectAll) && <div className={cx('select-all-block')} onClick={this.handleAllClick}><span className={cx('select-all')} >All</span></div>
           }
           { this.renderOptions() }
         </div>
@@ -82,40 +147,3 @@ class Dropdown extends Component {
     );
   }
 }
-
-Dropdown.propTypes = {
-  formPath: PropTypes.string,
-  fieldName: PropTypes.string,
-  displayedValue: PropTypes.string,
-  options: PropTypes.array,
-  multiple: PropTypes.bool,
-  selectAll: PropTypes.bool,
-  disabled: PropTypes.bool,
-  isFocus: PropTypes.bool,
-  onChange: PropTypes.func,
-  onFocus: PropTypes.func,
-  onBlur: PropTypes.func,
-};
-
-Dropdown.defaultProps = {
-  formPath: '',
-  fieldName: '',
-  displayedValue: '',
-  options: [],
-  multiple: false,
-  selectAll: false,
-  disabled: false,
-  isFocus: false,
-  onChange: () => {},
-  onFocus: () => {},
-  onBlur: () => {},
-};
-
-export default connect({
-  multiple: state`${props`formPath`}.${props`fieldName`}.multiple`,
-  selectAll: state`${props`formPath`}.${props`fieldName`}.selectAll`,
-  disabled: state`${props`formPath`}.${props`fieldName`}.disabled`,
-  isFocus: state`${props`formPath`}.${props`fieldName`}.isFocus`,
-  displayedValue: state`${props`formPath`}.${props`fieldName`}.displayedValue`,
-  options: state`${props`formPath`}.${props`fieldName`}.options`,
-}, Dropdown);

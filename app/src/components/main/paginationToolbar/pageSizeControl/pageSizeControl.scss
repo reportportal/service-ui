@@ -1,0 +1,25 @@
+.page-size {
+  display: inline-block;
+  position: relative;
+  float: right;
+
+  &.input-visible {
+    padding-left: 18px;
+  }
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    display: none;
+  }
+}
+
+.size-text {
+  color: $COLOR--topaz;
+  cursor: pointer;
+}
+
+.size-input {
+  display: inline-block;
+  text-align: right;
+  padding-right: 5px;
+  width: 40px;
+}

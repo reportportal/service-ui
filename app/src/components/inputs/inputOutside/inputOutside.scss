@@ -1,0 +1,73 @@
+.input-outside{
+  position: relative;
+  display: flex;
+  width: 100%;
+  height: 40px;
+  box-sizing: border-box;
+  border: 1px solid $COLOR--silver;
+  border-radius: 3px;
+  background-color: $COLOR--white;
+
+  &.disabled {
+    .input {
+      background-color: $COLOR--gray-91
+    }
+  }
+  &.invalid {
+    border-color: $COLOR--orange-red;
+  }
+  &.password {
+    .input {
+      padding-right: 35px;
+    }
+    .eye-icon {
+      position: absolute;
+      top: 0;
+      right: 5px;
+      height: 38px;
+      width: 30px;
+      background-image: url(./img/password-hidden.svg);
+      background-repeat: no-repeat;
+      background-size: 60%;
+      background-position: center;
+
+      &.opened {
+        background-image: url(./img/password-visible.svg);
+      }
+    }
+  }
+}
+.input {
+  display: inline-block;
+  flex-grow: 1;
+  height: 100%;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0 10px;
+  outline: none;
+  border: none;
+  font-family: $FONT-REGULAR;
+  font-size: 13px;
+  color: $COLOR--charcoal-grey;
+  line-height: 13px;
+
+  &:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0 1000px #fdffeb inset;
+  }
+  &[type=number]::-webkit-inner-spin-button,
+  &[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+}
+.icon {
+  display: flex;
+  width: 40px;
+  height: 100%;
+
+  svg {
+    margin: auto;
+    width: 18px;
+    height: 18px;
+  }
+}

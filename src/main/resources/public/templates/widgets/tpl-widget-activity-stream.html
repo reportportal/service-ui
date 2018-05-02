@@ -100,7 +100,7 @@
                         <%= coma %>
                     <% } %>
                 <% }); %>
-                <%= data.text.ui.to %>
+                <%= item.actionType !== 'unload_issue' ? data.text.ui.to : data.text.ui.from %>
                 <%= data.text.widgets.testItem %>
                 <span data-js-item-id="<%= item.loggedObjectRef %>">
                     <span class="loading-indicator"></span>

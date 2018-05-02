@@ -1,0 +1,32 @@
+.filter-page-toolbar {
+  display: flex;
+  height: 70px;
+  background-color: $COLOR--white-two;
+  align-items: center;
+  padding-left: 15px;
+  padding-right: 15px;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    border-bottom: 1px solid $COLOR--gray-91;
+    justify-content: space-between;
+  }
+}
+.filter-search {
+  flex-grow: 1;
+  max-width: 310px;
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    margin-right: 20px;
+  }
+}
+.label {
+  font-family: $FONT-REGULAR;
+  font-size: 13px;
+  color: $COLOR--gray-47;
+  flex-grow: 1;
+  padding-left: 30px;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    display: none;
+  }
+}

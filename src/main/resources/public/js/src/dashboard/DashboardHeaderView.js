@@ -24,6 +24,7 @@ define(function (require, exports, module) {
     var DashboardHeaderListItemView = require('dashboard/DashboardHeaderListItemView');
     var App = require('app');
     var Localization = require('localization');
+    var SingletonAppStorage = require('storage/SingletonAppStorage');
 
     var config = App.getInstance();
 
@@ -36,6 +37,7 @@ define(function (require, exports, module) {
         },
 
         initialize: function(options) {
+            this.appStorage = new SingletonAppStorage();
             this.render();
             this.listenModel = null;
             this.mainBreadcrumbs = new MainBreadcrumbsComponent({
@@ -88,8 +90,14 @@ define(function (require, exports, module) {
                 this.listenTo(this.listenModel, 'change:name', function(model, name) {
                     self.mainBreadcrumbs.collection.models[1].set({name: name});
                     $('[data-js-active-dashboard]', self.$el).text(name);
-                })
+                });
+                if(this.appStorage.get('dashboardView') == 'list'){
+                    this.$el.removeClass('hide-header');
+                }
             } else {
+                if(this.appStorage.get('dashboardView') == 'list'){
+                    this.$el.addClass('hide-header');
+                }
                 $('[data-js-active-dashboard]', this.$el).text(Localization.dashboard.allDashboards);
             }
             this.mainBreadcrumbs.collection.reset(breadcrumbsData);

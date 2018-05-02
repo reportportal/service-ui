@@ -1,0 +1,60 @@
+.hamburger-col {
+  width: 2%;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    display: none;
+  }
+}
+.name-col {
+  width: 30%;
+  padding-top: 20px;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    width: 100%;
+  }
+}
+.start-time-col {
+  width: 10%;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    display: none;
+  }
+}
+.total-col,
+.passed-col,
+.failed-col,
+.skipped-col {
+  width: 6.5%;
+}
+.pb-col,
+.ab-col,
+.si-col {
+  width: 8%;
+}
+.ti-col {
+  width: 6%;
+}
+@media (max-width: $SCREEN_SM_MAX) {
+  .total-col,
+  .passed-col,
+  .failed-col,
+  .skipped-col,
+  .pb-col,
+  .ab-col,
+  .si-col,
+  .ti-col {
+    display: flex;
+    width: 25%;
+    height: 60px;
+    border: 1px solid $COLOR--gray-91;
+    padding: 0;
+  }
+}
+
+.select-col {
+  width: 2%;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    display: none;
+  }
+}

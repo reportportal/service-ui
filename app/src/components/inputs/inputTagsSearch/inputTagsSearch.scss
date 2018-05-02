@@ -1,0 +1,164 @@
+.select-container {
+  :global {
+    .Select.is-focused {
+      .Select-control {
+        box-shadow: 0 0 2px 0 $COLOR--topaz;
+        border: 1px solid $COLOR--topaz;
+
+        .Select-multi-value-wrapper {
+          display: flex;
+          flex-wrap: wrap;
+          align-items: stretch;
+
+          .Select-input {
+            position: relative;
+            flex-grow: 1;
+            min-width: 0;
+            padding-right: 25px;
+            box-sizing: border-box;
+          }
+        }
+      }
+    }
+    .Select.is-loading {
+      .Select-input::after {
+        position: absolute;
+        top: 0;
+        right: 0;
+        content: '';
+        background-image: url('./img/spinner.gif');
+        display: inline-block;
+        width: 20px;
+        height: 100%;
+        background-repeat: no-repeat;
+        background-position: center;
+        vertical-align: middle;
+        margin-left: -5px;
+      }
+    }
+    .Select:not(.is-focused):hover {
+      .Select-control {
+        border-color: $COLOR--gray-47;
+      }
+    }
+    .new {
+      float: right;
+    }
+    .select2-search-tags {
+      background-color: $COLOR--white-two;
+
+      .Select-control,
+      .Select-menu-outer {
+        position: relative;
+        margin-top: -1px;
+        background: white;
+      }
+      .Select-value {
+        padding: 3px 5px 3px 5px;
+        margin: 3px;
+        position: relative;
+        line-height: 13px;
+        color: $COLOR--charcoal-grey;
+        cursor: default;
+        border: 1px solid $COLOR--gray-60;
+        box-shadow: 0 0 2px $COLOR--white-two inset, 0 1px 0 rgba(0, 0, 0, 0.05);
+        background-clip: padding-box;
+        user-select: none;
+        background-color: $COLOR--gray-91;
+        background-image: linear-gradient(
+          to top,
+          lighten($COLOR--gray-91, 5%) 20%,
+          lighten($COLOR--gray-91, 3%) 50%,
+          darken($COLOR--gray-91, 2%) 52%,
+          $COLOR--gray-91 100%
+        );
+      }
+      .Select-value-label {
+        max-width: 100%;
+        white-space: pre-wrap;
+        word-break: break-all;
+        word-wrap: break-word;
+        font-size: 13px;
+        font-family: $FONT-REGULAR;
+      }
+      .Select-control {
+        box-sizing: border-box;
+        border: 1px solid $COLOR--gray-60;
+      }
+      .Select-menu-outer {
+        position: absolute;
+        left: 0;
+        right: 0;
+        z-index: 10;
+        border: 1px solid $COLOR--topaz;
+        border-top: none;
+      }
+      .Select-clear-zone,
+      .Select-aria-only {
+        display: none;
+      }
+      .Select-placeholder {
+        position: absolute;
+        display: inline-block;
+        height: 100%;
+        line-height: 28px;
+        margin-left: 10px;
+        color: $COLOR--gray-60;
+      }
+
+      .Select-value {
+        display: inline-block;
+      }
+      .Select-value-icon {
+        margin-right: 5px;
+        font-weight: bold;
+        color: $COLOR--gray-47;
+      }
+      .Select-noresults {
+        background: lighten($COLOR--gray-91, 5%);
+        position: absolute;
+        z-index: 1;
+        bottom: -28px;
+        left: -1px;
+        right: -1px;
+        box-sizing: border-box;
+        border: 1px solid $COLOR--topaz;
+        border-top: none;
+        padding: 5px;
+        font-size: 12px;
+        line-height: 17px;
+        font-family: $FONT-REGULAR, sans-serif;
+        color: $COLOR--charcoal-grey;
+      }
+      .Select-option.is-focused {
+        background: $COLOR--system-issue;
+        color: $COLOR--white;
+      }
+      .Select-input {
+        input {
+          width: 100% !important;
+          margin: 4px 5px;
+          line-height: 13px;
+          font-family: $FONT-REGULAR, sans-serif;
+          height: auto;
+          outline: 0;
+          font-size: 13px;
+          border: none;
+          border-radius: 0;
+          box-sizing: border-box !important;
+        }
+      }
+      .select2-item {
+        cursor: pointer;
+        font-size: 13px;
+        font-family: $FONT-REGULAR;
+        padding: 3px 7px 4px;
+        max-width: 100%;
+        white-space: pre-wrap;
+        word-break: break-all;
+        word-wrap: break-word;
+        line-height: 18.5px;
+      }
+    }
+  }
+}

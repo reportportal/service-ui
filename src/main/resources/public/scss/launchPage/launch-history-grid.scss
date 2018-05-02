@@ -106,7 +106,6 @@ $borderRadius100: 100px;
   }
   .history-grid-row {
     display: table-row;
-
     .history-col {
       .rp-grid-name {
         margin: 5px 0;
@@ -268,6 +267,15 @@ $borderRadius100: 100px;
     border-top: none;
     vertical-align: middle;
     padding: 4px;
+    .cell-link{
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: default;
+      &.available{
+        cursor: pointer;
+      }
+    }
   }
 }
 

@@ -38,7 +38,7 @@ define(function (require) {
         },
         bindings: {
             '[data-js-defects-total]': 'text: totalDefects, attr: {style: defectBorderColor}',
-            '[data-js-link]': 'attr: {href: allCasesUrl}'
+            '[data-js-link]': 'attr: {href: executionLink}'
         },
         computeds: {
             totalDefects: {
@@ -51,14 +51,14 @@ define(function (require) {
                     return 0;
                 }
             },
-            allCasesUrl: function () {
-                var url = this.model.get('url');
-                var statusFilter = '&filter.in.issue$issue_type=';
-                var subDefects = this.defectsCollection.toJSON();
-                var defects = Util.getSubDefectsLocators(this.type, subDefects).join('%2C');
-
-                var appendFilter = 'filter.eq.has_childs=false' + statusFilter + defects;
-                return url + '?' + appendFilter;
+            executionLink: {
+                deps: ['url', 'has_childs'],
+                get: function (url, hasChilds) {
+                    if (hasChilds) {
+                        return this.allCasesUrl();
+                    }
+                    return undefined;
+                }
             },
             defectBorderColor: function () {
                 return 'border-color: ' + this.defectsCollection.getMainColorByType(this.type);
@@ -88,6 +88,15 @@ define(function (require) {
                 });
                 this.applyBindings();
             }
+        },
+        allCasesUrl: function () {
+            var url = this.model.get('url');
+            var statusFilter = '&filter.in.issue$issue_type=';
+            var subDefects = this.defectsCollection.toJSON();
+            var defects = Util.getSubDefectsLocators(this.type, subDefects).join('%2C');
+
+            var appendFilter = 'filter.eq.has_childs=false' + statusFilter + defects;
+            return url + '?' + appendFilter;
         },
         onClickDefectType: function () {
             this.model.trigger('drill:item', this.model);

@@ -1,0 +1,42 @@
+.news-block {
+  position: relative;
+  width: 100%;
+  height: 545px;
+  margin-top: 25px;
+  margin-bottom: 20px;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    height: 205px;
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+}
+.twitter-block {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+.twitter-icon {
+  display: inline-block;
+  width: 22px;
+  height: 20px;
+  margin-bottom: -5px;
+  margin-right: 5px;
+  background-image: url(./img/twitter-gray.svg);
+  background-repeat: no-repeat;
+  -webkit-background-size: 100%;
+  background-size: 100%;
+}
+.twitter-title {
+  text-align: center;
+  margin-bottom: 20px;
+  padding-left: 30px;
+  font-family: $FONT-REGULAR;
+  font-size: 16px;
+  color: $COLOR--steel-grey;
+  box-sizing: border-box;
+}
+.twitter-news {
+
+}

@@ -1,0 +1,41 @@
+.input-checkbox {
+  display: table;
+  position: relative;
+  height: 100%;
+  outline: none;
+  box-sizing: border-box;
+
+  &:hover {
+    .square {
+      border-color: $COLOR--charcoal-grey;
+
+      &.checked {
+        border-color: $COLOR--topaz;
+      }
+      &.disabled {
+        border-color: $COLOR--gray-91;
+      }
+    }
+  }
+}
+.input {
+  display: none;
+}
+.children-container {
+  position: relative;
+  display: table-cell;
+  max-width: 100%;
+  vertical-align: middle;
+  padding-left: 23px;
+  margin: 0;
+  font-family: $FONT-REGULAR;
+  font-size: 13px;
+  color: $COLOR--charcoal-grey;
+  cursor: pointer;
+  box-sizing: border-box;
+
+  &.disabled {
+    color: $COLOR--gray-60;
+    cursor: default;
+  }
+}
