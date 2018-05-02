@@ -21,12 +21,22 @@
 
 import moment from 'moment';
 
+const getTimeUnits = (time) => {
+  const days = Math.floor(time / 86400);
+  const hours = Math.floor((time - days * 86400) / 3600);
+  const minutes = Math.floor((time - days * 86400 - hours * 3600) / 60);
+  const seconds = time - days * 86400 - hours * 3600 - minutes * 60;
+  return {
+    days,
+    hours,
+    minutes,
+    seconds,
+  };
+};
+
 export const getDuration = (start, end) => {
   const secDuration = parseInt((end - start) / 1000, 10);
-  const days = Math.floor(secDuration / 86400);
-  const hours = Math.floor((secDuration - days * 86400) / 3600);
-  const minutes = Math.floor((secDuration - days * 86400 - hours * 3600) / 60);
-  const seconds = secDuration - days * 86400 - hours * 3600 - minutes * 60;
+  const { days, hours, minutes, seconds } = getTimeUnits(secDuration);
 
   let result = '';
   if (days > 0) {
@@ -50,11 +60,7 @@ export const getDuration = (start, end) => {
 };
 
 export const approximateTimeFormat = (time) => {
-  const days = Math.floor(time / 86400);
-  const hours = Math.floor((time - days * 86400) / 3600);
-  const minutes = Math.floor((time - days * 86400 - hours * 3600) / 60);
-  const seconds = time - days * 86400 - hours * 3600 - minutes * 60;
-
+  const { days, hours, minutes, seconds } = getTimeUnits(time);
   let result = '';
 
   if (days > 0) {
