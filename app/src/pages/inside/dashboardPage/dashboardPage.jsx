@@ -163,7 +163,7 @@ export class DashboardPage extends Component {
       id: 'dashboardAddEditModal',
       data: {
         onSubmit: addDashboard,
-        title: intl.formatMessage(messages.addModalSubmitButtonText),
+        title: intl.formatMessage(messages.addModalTitle),
         submitText: intl.formatMessage(messages.addModalSubmitButtonText),
         cancelText: intl.formatMessage(messages.modalCancelButtonText),
       },
