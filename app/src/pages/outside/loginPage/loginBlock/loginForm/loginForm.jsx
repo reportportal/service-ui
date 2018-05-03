@@ -50,11 +50,14 @@ const placeholders = defineMessages({
   },
 });
 
-@connect(state => ({
-  externalAuth: authExtensionsSelector(state),
-}), {
-  authorize: loginAction,
-})
+@connect(
+  (state) => ({
+    externalAuth: authExtensionsSelector(state),
+  }),
+  {
+    authorize: loginAction,
+  },
+)
 @reduxForm({
   form: 'loginPage',
   validate: ({ login, password }) => ({
@@ -72,8 +75,7 @@ export class LoginForm extends React.Component {
   };
 
   static defaultProps = {
-    authorize: () => {
-    },
+    authorize: () => {},
     externalAuth: {},
   };
 
@@ -82,20 +84,17 @@ export class LoginForm extends React.Component {
     const { formatMessage } = intl;
     return (
       <form className={cx('login-form')} onSubmit={handleSubmit(authorize)}>
-        {
-          !Utils.isEmptyObject(externalAuth)
-            ?
-              <div>
-                <ExternalLoginBlock externalAuth={externalAuth} />
-                <div className={cx('separator')}>
-                  <div className={cx('line')} />
-                  <div className={cx('or')}>
-                    <FormattedMessage id={'LoginForm.or'} defaultMessage={'or'} />
-                  </div>
-                </div>
+        {!Utils.isEmptyObject(externalAuth) ? (
+          <div>
+            <ExternalLoginBlock externalAuth={externalAuth} />
+            <div className={cx('separator')}>
+              <div className={cx('line')} />
+              <div className={cx('or')}>
+                <FormattedMessage id={'LoginForm.or'} defaultMessage={'or'} />
               </div>
-            : null
-        }
+            </div>
+          </div>
+        ) : null}
         <div className={cx('login-field')}>
           <FieldProvider name="login">
             <FieldErrorHint>
@@ -106,7 +105,11 @@ export class LoginForm extends React.Component {
         <div className={cx('password-field')}>
           <FieldProvider name="password">
             <FieldErrorHint>
-              <InputOutside icon={PasswordIcon} placeholder={formatMessage(placeholders.password)} type={'password'} />
+              <InputOutside
+                icon={PasswordIcon}
+                placeholder={formatMessage(placeholders.password)}
+                type={'password'}
+              />
             </FieldErrorHint>
           </FieldProvider>
         </div>
@@ -114,7 +117,7 @@ export class LoginForm extends React.Component {
           <FormattedMessage id={'LoginForm.forgotPass'} defaultMessage={'Forgot password?'} />
         </Link>
         <div className={cx('login-button-container')}>
-          <BigButton type={'submit'} color={'organish'}>
+          <BigButton roundedCorners type={'submit'} color={'organish'}>
             <FormattedMessage id={'LoginForm.login'} defaultMessage={'Login'} />
           </BigButton>
         </div>

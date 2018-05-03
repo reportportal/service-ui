@@ -25,16 +25,16 @@ import styles from './bigButton.scss';
 
 const cx = classNames.bind(styles);
 
-export const BigButton = ({ type, children, disabled, color, onClick }) => {
-  const classes = cx({
-    'big-button': true,
+export const BigButton = ({ type, children, disabled, color, roundedCorners, onClick }) => {
+  const classes = cx('big-button', {
+    'rounded-corners': roundedCorners,
     disabled,
     [`color-${color}`]: color,
   });
 
   return (
-    <button type={type} disabled={disabled} className={classes} onClick={onClick} >
-      { children }
+    <button type={type} disabled={disabled} className={classes} onClick={onClick}>
+      {children}
     </button>
   );
 };
@@ -44,6 +44,7 @@ BigButton.propTypes = {
   disabled: PropTypes.bool,
   color: PropTypes.string,
   type: PropTypes.string,
+  roundedCorners: PropTypes.bool,
   onClick: PropTypes.func,
 };
 
@@ -52,5 +53,6 @@ BigButton.defaultProps = {
   disabled: false,
   color: 'booger',
   type: 'button',
+  roundedCorners: false,
   onClick: () => {},
 };

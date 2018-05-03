@@ -7,7 +7,7 @@ import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { Input } from 'components/inputs/input';
-import { Textarea } from 'components/inputs/textarea';
+import { InputTextArea } from 'components/inputs/inputTextArea';
 import { InputBigSwitcher } from 'components/inputs/inputBigSwitcher';
 import { validate } from 'common/utils';
 import styles from './addEditModal.scss';
@@ -67,9 +67,9 @@ export class AddEditModal extends Component {
   };
 
   render() {
-    const { dashboardItem = {}, submitText, title, cancelText } = this.props.data;
+    const { submitText, title, cancelText } = this.props.data;
     const { intl, handleSubmit } = this.props;
-    const labelWidth = '70px';
+    const labelWidth = 70;
 
     return (
       <ModalLayout
@@ -99,13 +99,11 @@ export class AddEditModal extends Component {
             label={intl.formatMessage(messages.dashboardDescriptionLabel)}
             labelWidth={labelWidth}
           >
-            <FieldProvider name="description">
-              <Textarea
-                placeholder={intl.formatMessage(messages.dashboardDescriptionPlaceholder)}
-                defaultValue={dashboardItem.description}
-                cols={42}
-                rows={3}
-              />
+            <FieldProvider
+              name="description"
+              placeholder={intl.formatMessage(messages.dashboardDescriptionPlaceholder)}
+            >
+              <InputTextArea />
             </FieldProvider>
           </ModalField>
           <ModalField
