@@ -22,6 +22,7 @@
 define(['util'], function () {
     return {
         ui: {
+            all: 'All',
             actions: 'Actions',
             on: 'ON',
             off: 'OFF',
@@ -51,6 +52,7 @@ define(['util'], function () {
             update: 'Update',
             del: 'Delete',
             remove: 'Remove',
+            generate: 'Generate',
             submit: 'Submit',
             confirm: 'Confirm',
             create: 'Create',
@@ -217,7 +219,8 @@ define(['util'], function () {
                 'October',
                 'November',
                 'December'
-            ]
+            ],
+            note: 'Note'
         },
 
         uiCommonElements: {
@@ -1332,8 +1335,8 @@ define(['util'], function () {
             autoAnalysisBaseFourthOpt: 'To investigated items',
             autoAnalysisBaseFifthOpt: 'Items analyzed automatically (by AA)',
             autoAnalysisBaseSixthOpt: 'Items analyzed manually',
-            autoAnalysisBaseFirstTip: 'The test items are analyzed on base of previously investigated data in all launches',
-            autoAnalysisBaseSecondTip: 'The test items are analyzed on base of previously investigated data in launches with the same name',
+            autoAnalysisBaseFirstTip: 'The test items are analyzed on base of previously investigated data in launches with the same name',
+            autoAnalysisBaseSecondTip: 'The test items are analyzed on base of previously investigated data in all launches',
             emailNotifications: 'E-mail notifications',
             emailRecipients: 'Recipients',
             duplicateEmailCase: 'Such notification rule already exists. You can\'t create duplicate.',
@@ -1408,7 +1411,29 @@ define(['util'], function () {
 
             ruleDeleted: 'Rule will be deleted after submit',
             noCustomDefectsWereAdded: 'No custom defects were added',
-            noCustomColors: 'No colors to update'
+            noCustomColors: 'No colors to update',
+            autoAnalysisSettings: 'Auto-Analysis',
+            autoAnalysisMode: 'Mode of Auto-Analyse Accuracy',
+            autoAnalysisMinDocFreq: 'Minimum document frequency',
+            autoAnalysisMinTermFreq: 'Minimum term frequency',
+            autoAnalysisMinShouldMatch: 'Minimum should match',
+            autoAnalysisNumberOfLog: 'Number of log lines',
+            strictMode: 'Strict',
+            moderateMode: 'Moderate',
+            lightMode: 'Light',
+            matchDescription: 'The parameter controls the number of terms (words) that must match in analyzed log and particular log from the index.',
+            docFreqDescription: 'Set the min frequency of word in the analyzed log below which this word will be ignored for AA. The more often the word appears in the analyzed log - the higher its weight.',
+            termFreqDescription: 'Set the min frequency of the word in ElasticSearch base (index) below which this words will be ignored for AA in the analyzed log. The more often the word appears in index - the lower its weight.',
+            strNumberDescription: 'The parameter controls the number of terms (words) that must match in analyzed log and particular log from the index',
+            indexActions: 'Actions with index',
+            removeIndex: 'Remove index',
+            removeIndexDescription: 'All data will be deleted from the ElasticSearch. For creating a new one you could start to investigate test results manually or generate data based on previous results on the project once again',
+            removeIndexConfirm: 'Are you sure to remove all data from the ElasticSearch?',
+            generateIndex: 'Generate index',
+            generateIndexDescription: 'All data is removed from ElasticSearch and new one is generated based on all previous investigations on the project. You can start auto-analyse test results after receiving an e-mail about the end of the generation process',
+            generateIndexConfirm: 'Are you sure to generate index in the ElasticSearch?',
+            noteText: 'You will receive an e-mail after the end of the process.',
+            indexInProgress: 'In progress...'
         },
 
         bts: {
@@ -1725,7 +1750,8 @@ define(['util'], function () {
             changedColorDefectTypes: 'Defect types have been updated.',
             updateDefect: 'Defects have been updated',
             updateServerSettings: 'Server settings were successfully updated',
-            addUserWithoutEmail: 'User has been created, but impossible to send message due to email server configuration is broken or switched-off'
+            addUserWithoutEmail: 'User has been created, but impossible to send message due to email server configuration is broken or switched-off',
+            removeIndex: 'Index was removed successfully'
         },
 
         failMessages: {
@@ -1829,6 +1855,7 @@ define(['util'], function () {
             issueTitleLength: 'Title should have size from \'4\' to \'512\'',
             componentsLength: 'Components should not contains only white spaces and shouldn\'t be empty',
             logMessageLength: 'Message length should have size from %%% to %%%.',
+            aaValueOutOfRange: 'The parameter should have value from %%% to %%%.',
             filtersNameLength: 'Filter name length should have size from %%% to %%%',
             filterNameLength: 'Filter name length should have size from %%% to %%% characters.',
             filterDescriptionLength: 'Filter description length should have size from %%% to %%%.',

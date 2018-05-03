@@ -41,57 +41,6 @@
     </div>
 </div>
 
-<div class="rp-form-group">
-    <label class="col-md-3 col-sm-4 col-xs-12 rp-control-label rp-custom-col">
-        <%= data.text.project.autoAnalysis %>
-    </label>
-    <div class="col-md-4 col-sm-8 col-xs-12 rp-custom-col">
-        <label class="rp-switcher-big">
-            <span class="turn-on"><%= data.text.ui.on %></span>
-            <span class="turn-off"><%= data.text.ui.off %></span>
-            <input type="checkbox" data-js-is-auto-analize>
-            <div class="slider"></div>
-        </label>
-    </div>
-    <div class="col-md-5 col-sm-12 col-xs-12 rp-custom-col rp-text-description">
-        <div class="rp-help-block"><%= data.text.project.autoAnalysisOnOff %></div>
-    </div>
-</div>
-
-<div class="rp-form-group" data-js-aa-base-block>
-    <label class="aa-strategy-label rp-control-label rp-custom-col">
-        <%= data.text.project.autoAnalysisBase %>
-    </label>
-    <div class="aa-strategy-selector">
-        <div class="aa-strategy-option">
-            <label>
-                <input class="rp-input-radio" type="radio" name="aa-strategy" value="ALL">
-                <span><%= data.text.project.autoAnalysisBaseFirstOpt %></span>
-            </label>
-            <span class="tip rp-help-block"><%= data.text.project.autoAnalysisBaseFirstTip %></span>
-        </div>
-        <div class="aa-strategy-option">
-            <label>
-                <input class="rp-input-radio" type="radio" name="aa-strategy" value="LAUNCH_NAME">
-                <span><%= data.text.project.autoAnalysisBaseSecondOpt %></span>
-            </label>
-            <span class="tip rp-help-block"><%= data.text.project.autoAnalysisBaseSecondTip %></span>
-        </div>
-    </div>
-</div>
-<!--<div class="rp-form-group">-->
-    <!--<label class="col-md-3 col-sm-4 col-xs-12 rp-control-label rp-custom-col">-->
-    <!--</label>-->
-    <!--<div class="col-md-4 col-sm-8 col-xs-12 rp-custom-col">-->
-        <!--<label class="rp-checkbox-wrap">-->
-            <!--<input class="rp-input-checkbox" type="checkbox" data-js-analize-on-the-fly>-->
-            <!--<span><%= data.text.project.onTheFly %></span>-->
-        <!--</label>-->
-    <!--</div>-->
-    <!--<div class="col-md-5 col-sm-12 col-xs-12 rp-custom-col rp-text-description">-->
-        <!--<div class="rp-help-block"><%= data.text.project.onTheFlyDescription %></div>-->
-    <!--</div>-->
-<!--</div>-->
 <div class="rp-form-group rp-wrap-button">
     <div class="col-md-7 col-sm-12 col-xs-12 rp-custom-col">
         <button type="submit" class="rp-btn rp-btn-submit rp-btn-right" id="submit-settings" <%= notAllowed %>><%= data.text.ui.submit %></button>

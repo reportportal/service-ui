@@ -26,27 +26,33 @@ define(function (require) {
     var App = require('app');
     var config = App.getInstance();
 
-    var GeneralSettingsModel = Backbone.Model.extend({
+    var AutoAnalysisSettingsModel = Backbone.Model.extend({
 
         defaults: {
-            interruptedJob: config.forSettings.interruptedJob[0].value,
-            keepLogs: config.forSettings.keepLogs[0].value,
-            keepScreenshots: config.forSettings.keepScreenshots[0].value,
-            projectSpecific: config.forSettings.projectSpecific[0].value,
+            isAutoAnalyzerEnabled: true,
+            analyzer_mode: config.forSettings.analyzerMode,
+            minDocFreq: config.autoAnalysisAccuracy.MODERATE.minDocFreq,
+            minShouldMatch: config.autoAnalysisAccuracy.MODERATE.minShouldMatch,
+            minTermFreq: config.autoAnalysisAccuracy.MODERATE.minTermFreq,
+            numberOfLogLines: config.autoAnalysisAccuracy.MODERATE.numberOfLogLines
         },
 
-        getProjectSettings: function () {
+        getAutoAnalysisSettings: function () {
             var data = {
-                interruptedJob: this.get('interruptedJob'),
-                keepLogs: this.get('keepLogs'),
-                keepScreenshots: this.get('keepScreenshots'),
-                projectSpecific: this.get('projectSpecific'),
+                isAutoAnalyzerEnabled: this.get('isAutoAnalyzerEnabled'),
+                analyzer_mode: this.get('analyzer_mode'),
+                minDocFreq: this.get('minDocFreq'),
+                minShouldMatch: this.get('minShouldMatch'),
+                minTermFreq: this.get('minTermFreq'),
+                numberOfLogLines: this.get('numberOfLogLines')
             };
             return {
-                configuration: data
+                configuration: {
+                    analyzerConfiguration: data
+                }
             };
         }
     });
 
-    return GeneralSettingsModel;
+    return AutoAnalysisSettingsModel;
 });

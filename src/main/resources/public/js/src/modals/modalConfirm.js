@@ -61,7 +61,8 @@ define(function (require) {
                         options.okButtonText === Localization.ui.update ||
                         options.okButtonText === Localization.dialog.changeRoleBtn ||
                         options.okButtonText === Localization.ui.include ||
-                        options.okButtonText === Localization.ui.unlink
+                        options.okButtonText === Localization.ui.unlink ||
+                        options.okButtonText === Localization.ui.generate
                     ) ? 'rp-btn-submit' : 'rp-btn-danger',
                     label: 'data-js-ok'
                 }
