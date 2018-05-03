@@ -177,6 +177,7 @@ export class LaunchesPage extends Component {
       onChangeSorting,
       selectedLaunches,
     } = this.props;
+
     return (
       <PageLayout title={this.getTitle()}>
         <LaunchToolbar

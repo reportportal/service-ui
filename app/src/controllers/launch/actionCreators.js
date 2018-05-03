@@ -96,11 +96,15 @@ export const proceedWithValidItemsAction = (fetchFunc) => (dispatch, getState) =
   dispatch(resetValidationErrorsAction());
 };
 
-const MODAL_WIDTH = 900;
+const MODAL_COMPARE_WIDTH = 900;
 
 export const mergeLaunchesAction = defineGroupOperation(
   'mergeLaunches',
-  () => ({ type: 'mergeLaunchesStubAction' }), // TODO implement
+  (launches, fetchFunc) =>
+    showModalAction({
+      id: 'launchMergeModal',
+      data: { launches, fetchFunc },
+    }),
   validateMergeLaunch,
 );
 export const compareLaunchesAction = defineGroupOperation(
@@ -108,7 +112,7 @@ export const compareLaunchesAction = defineGroupOperation(
   (launches) =>
     showModalAction({
       id: 'launchCompareModal',
-      width: MODAL_WIDTH,
+      width: MODAL_COMPARE_WIDTH,
       data: { ids: launches.map((launch) => launch.id) },
     }),
   () => null,
