@@ -24,6 +24,11 @@
             <%= data.text.project.defectTypes %>
         </a>
     </li>
+    <li class="<%= data.tab === 'autoAnalysis' ? 'active' : '' %>">
+        <a href="#" class="tab settings" data-js-tab-action="autoAnalysis">
+            <%= data.text.project.autoAnalysisSettings %>
+        </a>
+    </li>
     <% if(data.generateDemoDataAccess){ %>
     <li class="<%= data.tab === 'demoData' ? 'active' : '' %>">
         <a href="#" class="tab settings" data-js-tab-action="demoData">
