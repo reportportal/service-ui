@@ -96,6 +96,7 @@ export class ChangePasswordForm extends PureComponent {
             >
               <FieldErrorHint>
                 <InputOutside
+                  type={'password'}
                   icon={PasswordIcon}
                   maxLength={'25'}
                   placeholder={formatMessage(placeholders.newPassword)}
@@ -108,6 +109,7 @@ export class ChangePasswordForm extends PureComponent {
           <FieldProvider name="passwordRepeat">
             <FieldErrorHint>
               <InputOutside
+                type={'password'}
                 icon={PasswordIcon}
                 maxLength={'25'}
                 placeholder={formatMessage(placeholders.confirmNewPassword)}
@@ -116,7 +118,7 @@ export class ChangePasswordForm extends PureComponent {
           </FieldProvider>
         </div>
         <div className={cx('change-password-button')}>
-          <BigButton type={'submit'} roundedCorners color={'organish'}>
+          <BigButton type={'submit'} color={'organish'}>
             <FormattedMessage
               id={'ChangePasswordForm.changePassword'}
               defaultMessage={'Change password'}
