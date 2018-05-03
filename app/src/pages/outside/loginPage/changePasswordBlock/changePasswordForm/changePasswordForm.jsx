@@ -60,6 +60,7 @@ export class ChangePasswordForm extends PureComponent {
   static propTypes = {
     intl: intlShape.isRequired,
     handleSubmit: PropTypes.func.isRequired,
+    history: PropTypes.object.isRequired,
     location: PropTypes.shape({
       hash: PropTypes.string,
       pathname: PropTypes.string,
@@ -67,8 +68,11 @@ export class ChangePasswordForm extends PureComponent {
       search: PropTypes.string,
     }).isRequired,
   };
-
+  state = {
+    loading: false,
+  };
   changePassword = ({ password }) => {
+    this.setState({ loading: true });
     const uuid = this.props.location.query.reset;
     fetch('/api/v1/user/password/reset', {
       method: 'post',
@@ -76,6 +80,9 @@ export class ChangePasswordForm extends PureComponent {
         password,
         uuid,
       },
+    }).then(() => {
+      this.setState({ loading: false });
+      this.props.history.push('/login');
     });
   };
 
@@ -118,7 +125,7 @@ export class ChangePasswordForm extends PureComponent {
           </FieldProvider>
         </div>
         <div className={cx('change-password-button')}>
-          <BigButton type={'submit'} color={'organish'}>
+          <BigButton type={'submit'} color={'organish'} disabled={this.state.loading}>
             <FormattedMessage
               id={'ChangePasswordForm.changePassword'}
               defaultMessage={'Change password'}
