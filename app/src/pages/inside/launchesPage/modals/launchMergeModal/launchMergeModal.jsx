@@ -126,7 +126,7 @@ export class LaunchMergeModal extends Component {
     endTime: PropTypes.number,
     data: PropTypes.shape({
       launches: PropTypes.array,
-      onMerge: PropTypes.func,
+      fetchFunc: PropTypes.func,
     }).isRequired,
   };
   static defaultProps = {
@@ -179,7 +179,8 @@ export class LaunchMergeModal extends Component {
       method: 'post',
       data: values,
     }).then(() => {
-      this.props.data.onMerge(closeModal);
+      this.props.data.fetchFunc();
+      closeModal();
       this.props.hideScreenLockAction();
     });
   };
