@@ -21,6 +21,14 @@
       box-shadow: 0 -15px 20px 0px $COLOR--tealish-hover;
     }
   }
+  &::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background-color: $COLOR--gray-91;
+  }
 }
 .grid-row {
   position: relative;
