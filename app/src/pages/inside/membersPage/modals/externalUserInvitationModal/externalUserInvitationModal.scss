@@ -1,6 +1,14 @@
+.modal-description {
+  font-size: 12px;
+  font-family: $FONT-SEMIBOLD;
+  text-transform: uppercase;
+  color: $COLOR--gray-47;
+  background-color: $COLOR--white-four;
+  padding: 10px;
+}
 .link {
   color: $COLOR--charcoal-grey;
-  font-weight: 600;
+  font-family: $FONT-SEMIBOLD;
   line-height: 17px;
 }
 .external-user-content {
@@ -16,4 +24,8 @@
   position: relative;
   margin-left: 135px;
   display: inline-block;
+  cursor: pointer;
+}
+.external-user-content {
+  margin-right: 80px;
 }

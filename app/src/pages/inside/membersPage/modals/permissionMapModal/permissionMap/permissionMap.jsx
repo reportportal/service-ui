@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import classNames from 'classnames/bind';
 import { injectIntl, intlShape } from 'react-intl';
 import styles from './permissionMap.scss';
-import { PermissionsName } from './permissionsName';
-import { PermissionsConfig } from './permissionsConfig';
+import { PermissionsName, RolesName } from './permissionsName';
+import { PERMISSION_ROLES, PERMISSIONS_MAP, ALL } from './permissionsConfig';
 
 const cx = classNames.bind(styles);
 
@@ -15,28 +15,58 @@ export class PermissionMap extends Component {
   static defaultProps = {
     intl: {},
   };
-  generateTableCells = (permissions) =>
-    Object.keys(permissions).map((key) => {
-      if (permissions[key]) {
+  generateTableCells = (permission) =>
+    PERMISSION_ROLES.map((role) => {
+      if (role === 'MEMBER' || role === 'CUSTOMER') {
+        if (PERMISSIONS_MAP[role][permission]) {
+          if (PERMISSIONS_MAP[role][permission] === ALL) {
+            return (
+              <Fragment key={role}>
+                <td className={cx('col', 'has-permission')}>
+                  <i className={cx('rp-icons', 'rp-icons-check')} />
+                </td>
+                <td className={cx('col', 'has-permission')}>
+                  <i className={cx('rp-icons', 'rp-icons-check')} />
+                </td>
+              </Fragment>
+            );
+          }
+          return (
+            <Fragment key={role}>
+              <td className={cx('col', 'has-permission')}>
+                <i className={cx('rp-icons', 'rp-icons-check')} />
+              </td>
+              <td className={cx('col')} />
+            </Fragment>
+          );
+        }
         return (
-          <td key={key} className={cx('col', 'has-permission')}>
+          <Fragment key={role}>
+            <td className={cx('col')} />
+            <td className={cx('col')} />
+          </Fragment>
+        );
+      }
+      if (PERMISSIONS_MAP[role][permission]) {
+        return (
+          <td className={cx('col', 'has-permission')}>
             <i className={cx('rp-icons', 'rp-icons-check')} />
           </td>
         );
       }
-      return <td key={key} className={cx('col')} />;
+      return <td key={role} className={cx('col')} />;
     });
   generateTableRows = () => {
-    const keys = Object.keys(PermissionsConfig);
+    const keys = Object.keys(PermissionsName);
     return keys.map((key) => {
-      const criteria = PermissionsConfig[key];
+      const isAttention = PermissionsName[key].attention;
       return (
         <tr key={key} className={cx('row')}>
           <td className={cx('col', 'horizontal-header')}>
             {this.props.intl.formatMessage(PermissionsName[key])}
-            {criteria.attention && <span className={cx('attention')}>*</span>}
+            {isAttention && <span className={cx('attention')}>*</span>}
           </td>
-          {this.generateTableCells(criteria.permissions)}
+          {this.generateTableCells(key)}
         </tr>
       );
     });
@@ -49,32 +79,36 @@ export class PermissionMap extends Component {
           <thead>
             <tr>
               <th rowSpan="2" className={cx('header', 'roles-header')}>
-                {intl.formatMessage(PermissionsName.role)}
+                {intl.formatMessage(RolesName.role)}
               </th>
               <th rowSpan="2" className={cx('header', 'roles-header')}>
-                {intl.formatMessage(PermissionsName.admin)}
+                {intl.formatMessage(RolesName.admin)}
               </th>
               <th rowSpan="2" className={cx('header', 'roles-header')}>
-                {intl.formatMessage(PermissionsName.manager)}
+                {intl.formatMessage(RolesName.manager)}
               </th>
               <th colSpan="2" className={cx('header', 'roles-header')}>
-                {intl.formatMessage(PermissionsName.member)}
+                {intl.formatMessage(RolesName.member)}
               </th>
               <th rowSpan="2" className={cx('header', 'roles-header')}>
-                {intl.formatMessage(PermissionsName.operator)}
+                {intl.formatMessage(RolesName.operator)}
               </th>
               <th colSpan="2" className={cx('header', 'roles-header')}>
-                {intl.formatMessage(PermissionsName.customer)}
+                {intl.formatMessage(RolesName.customer)}
               </th>
             </tr>
             <tr>
-              <th className={cx('header', 'roles-header')}>{intl.formatMessage(PermissionsName.owner)}</th>
               <th className={cx('header', 'roles-header')}>
-                {intl.formatMessage(PermissionsName.notOwner)}
+                {intl.formatMessage(RolesName.owner)}
               </th>
-              <th className={cx('header', 'roles-header')}>{intl.formatMessage(PermissionsName.owner)}</th>
               <th className={cx('header', 'roles-header')}>
-                {intl.formatMessage(PermissionsName.notOwner)}
+                {intl.formatMessage(RolesName.notOwner)}
+              </th>
+              <th className={cx('header', 'roles-header')}>
+                {intl.formatMessage(RolesName.owner)}
+              </th>
+              <th className={cx('header', 'roles-header')}>
+                {intl.formatMessage(RolesName.notOwner)}
               </th>
             </tr>
           </thead>
@@ -82,7 +116,7 @@ export class PermissionMap extends Component {
         </table>
         <div className={cx('permission-attention')}>
           <span className={cx('attention')}>*</span>
-          <span>{intl.formatMessage(PermissionsName.oneAttention)}</span>
+          <span>{intl.formatMessage(RolesName.oneAttention)}</span>
         </div>
       </div>
     );

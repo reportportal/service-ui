@@ -1,0 +1,2 @@
+export const ACCOUNT_ROLES_USER = 'USER';
+export const ACCOUNT_ROLES_ADMIN = 'ADMINISTRATOR';

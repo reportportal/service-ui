@@ -65,8 +65,8 @@ const makeOptions = (options, projectId) =>
     userName: option.full_name || '',
     userLogin: option.userId,
     email: option.email || '',
-    disabled: Object.prototype.hasOwnProperty.call(option.assigned_projects, projectId),
-    isAssigned: Object.prototype.hasOwnProperty.call(option.assigned_projects, projectId),
+    disabled: option.assigned_projects[projectId] && true,
+    isAssigned: option.assigned_projects[projectId] && true,
     userAvatar: getPhoto(option.userId),
   }));
 const getUsers = (input, isAdmin, projectId) => {
@@ -97,20 +97,18 @@ export const InputUserSearch = ({
       loadOptions={(input) => getUsers(input, isAdmin, projectId)}
       filterOption={() => true}
       loadingPlaceholder={
-        <FormattedMessage id={'InputUserSearch.searching'} defaultMessage={'Searching...'} />
+        <FormattedMessage id="InputUserSearch.searching" defaultMessage="Searching..." />
       }
       noResultsText={
-        <FormattedMessage id={'InputUserSearch.noResults'} defaultMessage={'No matches found'} />
+        <FormattedMessage id="InputUserSearch.noResults" defaultMessage="No matches found" />
       }
       searchPromptText={
         <FormattedMessage
-          id={'InputUserSearch.placeholder'}
-          defaultMessage={'Please enter 1 or more character'}
+          id="InputUserSearch.placeholder"
+          defaultMessage="Please enter 1 or more character"
         />
       }
-      onChange={(option) => {
-        onChange(option);
-      }}
+      onChange={onChange}
       menuRenderer={({ options, selectValue }) => UsersList({ options, selectValue })}
       isValidNewOption={isValidNewOption}
       newOptionCreator={newOptionCreator}

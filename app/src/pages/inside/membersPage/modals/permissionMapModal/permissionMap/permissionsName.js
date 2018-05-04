@@ -1,6 +1,6 @@
 import { defineMessages } from 'react-intl';
 
-export const PermissionsName = defineMessages({
+export const RolesName = defineMessages({
   role: {
     id: 'PermissionMap.role',
     defaultMessage: 'Action/Project role',
@@ -33,6 +33,13 @@ export const PermissionsName = defineMessages({
     id: 'PermissionMap.customer',
     defaultMessage: 'Customer',
   },
+  oneAttention: {
+    id: 'PermissionMap.oneAttention',
+    defaultMessage: 'Action can be done for a internal user.',
+  },
+});
+
+export const PermissionsName = defineMessages({
   accessToManagementSystem: {
     id: 'PermissionMap.accessToManagementSystem',
     defaultMessage: 'Have access to management system',
@@ -80,6 +87,7 @@ export const PermissionsName = defineMessages({
   editOwnAccount1: {
     id: 'PermissionMap.editOwnAccount1',
     defaultMessage: 'Edit own account',
+    attention: true,
   },
   deleteLaunch: {
     id: 'PermissionMap.deleteLaunch',
@@ -112,9 +120,5 @@ export const PermissionsName = defineMessages({
   readData: {
     id: 'PermissionMap.readData',
     defaultMessage: 'Read data',
-  },
-  oneAttention: {
-    id: 'PermissionMap.oneAttention',
-    defaultMessage: 'Action can be done for a internal user.',
   },
 });
