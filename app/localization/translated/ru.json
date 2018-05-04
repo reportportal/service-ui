@@ -83,6 +83,7 @@
   "DeleteFilterDialog.deleteFilterHeader": "Удалить фильтр",
   "DeleteLaunchDialog.deleteLaunch": "Вы уверены, что хотите удалить запуск '<b>{name} #{number}</b>'? Это действие нельзя отменить.",
   "DeleteLaunchDialog.deleteLaunchHeader": "Удалить запуск",
+  "DeleteLaunchDialog.deleteLaunchWarning": "Вы собираетесь удалить запуск другого пользователя. Это может повлиять на информацию других пользователей на проекте.",
   "DurationBlock.finished": "Длительность: {durationTime}. Время окончания: {endTime}",
   "DurationBlock.inProgress": "В процессе",
   "DurationBlock.inProgressWithEnd": "Неправильный статус: 'В процессе' со временем окончания",

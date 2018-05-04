@@ -1,9 +1,11 @@
 import { Component } from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { withModal, ModalLayout } from 'components/main/modal';
+import { userIdSelector } from 'controllers/user';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import styles from './launchDeleteModal.scss';
 
@@ -19,10 +21,18 @@ const messages = defineMessages({
     defaultMessage:
       "Are you sure to delete launch '<b>{name} #{number}</b>'? It will no longer exist.",
   },
+  deleteLaunchWarning: {
+    id: 'DeleteLaunchDialog.deleteLaunchWarning',
+    defaultMessage:
+      'You are going to delete not your own launch. This may affect other users information on the project.',
+  },
 });
 
 @withModal('launchDeleteModal')
 @injectIntl
+@connect((state) => ({
+  userId: userIdSelector(state),
+}))
 export class LaunchDeleteModal extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
@@ -30,6 +40,7 @@ export class LaunchDeleteModal extends Component {
       item: PropTypes.object,
       onConfirm: PropTypes.func,
     }),
+    userId: PropTypes.string.isRequired,
   };
 
   static defaultProps = {
@@ -59,6 +70,9 @@ export class LaunchDeleteModal extends Component {
         title={intl.formatMessage(messages.deleteLaunchHeader)}
         okButton={okButton}
         cancelButton={cancelButton}
+        warningMessage={
+          item.owner !== this.props.userId ? intl.formatMessage(messages.deleteLaunchWarning) : null
+        }
       >
         <p className={cx('message')}>
           {Parser(
