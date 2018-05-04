@@ -16,12 +16,9 @@ export const configureStore = (history, preloadedState) => {
     onBeforeChange: onBeforeRouteChange,
   });
 
-  const reduxDevToolsExtension = window.__REDUX_DEVTOOLS_EXTENSION__; // eslint-disable-line no-underscore-dangle
-  const reduxLogger = reduxDevToolsExtension ? reduxDevToolsExtension({ maxAge: 30 }) : (f) => f;
-
   const rootReducer = combineReducers({ ...reducers, location: reducer });
   const middlewares = applyMiddleware(reduxThunk, middleware);
-  const enhancers = composeEnhancers(enhancer, middlewares, reduxLogger);
+  const enhancers = composeEnhancers(enhancer, middlewares);
   const store = createStore(rootReducer, preloadedState, enhancers);
 
   if (module.hot && process.env.NODE_ENV === 'development') {
