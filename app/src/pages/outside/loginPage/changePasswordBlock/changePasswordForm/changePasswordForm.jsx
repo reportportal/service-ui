@@ -59,11 +59,11 @@ export class ChangePasswordForm extends PureComponent {
   static propTypes = {
     intl: intlShape.isRequired,
     handleSubmit: PropTypes.func.isRequired,
-    reset: PropTypes.object,
+    reset: PropTypes.string,
   };
 
   static defaultProps = {
-    reset: undefined,
+    reset: '',
   };
 
   changePassword = ({ password }) => {

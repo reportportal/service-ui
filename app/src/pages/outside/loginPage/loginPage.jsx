@@ -37,11 +37,11 @@ const cx = classNames.bind(styles);
 export class LoginPage extends PureComponent {
   static propTypes = {
     forgotPass: PropTypes.bool,
-    reset: PropTypes.object,
+    reset: PropTypes.string,
   };
   static defaultProps = {
     forgotPass: undefined,
-    reset: undefined,
+    reset: '',
   };
   render() {
     let currentBlock = <LoginBlock />;
