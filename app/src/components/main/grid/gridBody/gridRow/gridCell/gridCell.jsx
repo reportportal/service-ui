@@ -33,22 +33,13 @@ export class GridCell extends PureComponent {
     component: TextCell,
     value: {},
     align: ALIGN_LEFT,
-    formatter: value => value,
+    formatter: (value) => value,
     title: {},
-    refFunction: () => {
-    },
+    refFunction: () => {},
   };
 
   render() {
-    const {
-      component,
-      refFunction,
-      value,
-      align,
-      formatter,
-      title,
-      customProps,
-    } = this.props;
+    const { component, refFunction, value, align, formatter, title, customProps } = this.props;
     const CellComponent = component;
     return (
       <CellComponent
