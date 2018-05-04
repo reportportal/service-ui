@@ -83,6 +83,7 @@
   "DeleteFilterDialog.deleteFilterHeader": "ВЫДАЛІЦЬ ФІЛЬТР",
   "DeleteLaunchDialog.deleteLaunch": "Вы ўпэўнены, што хочаце выдаліць запуск '<b>{name} #{number}</b>'? Ён больш не будзе існаваць..",
   "DeleteLaunchDialog.deleteLaunchHeader": "Выдаліць запуск",
+  "DeleteLaunchDialog.deleteLaunchWarning": "Вы збіраецеся выдаліць не свой уласны запуск. Гэта можа паўплываць на інфармацыю іншых карыстальнікаў на праекце.",
   "DurationBlock.finished": "Працягласць: {durationTime}. Час заканчэння: {endTime}",
   "DurationBlock.inProgress": "У працэсе",
   "DurationBlock.inProgressWithEnd": "Няправільны статус: 'У працэсе' мае час заканчэння",
