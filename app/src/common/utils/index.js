@@ -36,6 +36,3 @@ export {
   daysBetween,
 } from './timeDateUtils';
 export { connectRouter } from './connectRouter';
-export { getRolesMap } from './getRolesMap';
-export { getProjectRolesOptions } from './getProjectRolesOptions';
-export { canSelectRole } from './canSelectRole';

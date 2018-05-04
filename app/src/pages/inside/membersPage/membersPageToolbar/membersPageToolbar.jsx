@@ -4,6 +4,8 @@ import { connect } from 'react-redux';
 import { showModalAction } from 'controllers/modal';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { reduxForm } from 'redux-form';
+import { getRoleForCurrentProjectSelector, userInfoSelector } from 'controllers/user';
+import { ADMINISTRATOR, PROJECT_MANAGER } from 'common/constants/projectRoles';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { InputSearch } from 'components/inputs/inputSearch';
@@ -12,6 +14,9 @@ import InviteUserIcon from './img/ic_invite-inline.svg';
 import styles from './membersPageToolbar.scss';
 
 const cx = classNames.bind(styles);
+
+const canInviteUser = (currentRole, userRole) =>
+  userRole === ADMINISTRATOR || currentRole === PROJECT_MANAGER;
 
 const messages = defineMessages({
   permissionMap: {
@@ -27,9 +32,15 @@ const messages = defineMessages({
     defaultMessage: 'Search by name',
   },
 });
-@connect(null, {
-  showModalAction,
-})
+@connect(
+  (state) => ({
+    currentRole: getRoleForCurrentProjectSelector(state),
+    userRole: userInfoSelector(state).userRole,
+  }),
+  {
+    showModalAction,
+  },
+)
 @reduxForm({
   form: 'filterSearch',
   onChange: (vals, dispatch, props) => {
@@ -44,6 +55,8 @@ export class MembersPageToolbar extends React.Component {
     filter: PropTypes.string,
     showModalAction: PropTypes.func.isRequired,
     onInvite: PropTypes.func,
+    currentRole: PropTypes.string,
+    userRole: PropTypes.string,
   };
 
   static defaultProps = {
@@ -52,6 +65,8 @@ export class MembersPageToolbar extends React.Component {
     change: () => {},
     showModalAction: () => {},
     onInvite: () => {},
+    currentRole: '',
+    userRole: '',
   };
 
   componentDidMount() {
@@ -64,7 +79,8 @@ export class MembersPageToolbar extends React.Component {
     }
   }
 
-  showInviteUserModal = () => this.props.showModalAction({ id: 'inviteUserModal', data: { onInvite: this.props.onInvite } });
+  showInviteUserModal = () =>
+    this.props.showModalAction({ id: 'inviteUserModal', data: { onInvite: this.props.onInvite } });
   showPermissionMapModal = () => this.props.showModalAction({ id: 'permissionMapModal' });
 
   render() {
@@ -81,7 +97,11 @@ export class MembersPageToolbar extends React.Component {
           <GhostButton icon={PermissionMapIcon} onClick={this.showPermissionMapModal}>
             {this.props.intl.formatMessage(messages.permissionMap)}
           </GhostButton>
-          <GhostButton icon={InviteUserIcon} onClick={this.showInviteUserModal}>
+          <GhostButton
+            icon={InviteUserIcon}
+            onClick={this.showInviteUserModal}
+            disabled={!canInviteUser(this.props.currentRole, this.props.userRole)}
+          >
             {this.props.intl.formatMessage(messages.inviteUser)}
           </GhostButton>
         </div>
