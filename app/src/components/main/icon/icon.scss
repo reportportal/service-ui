@@ -1,0 +1,61 @@
+.icon {
+  margin: 0 auto;
+  height: 20px;
+  width: 20px;
+  display: inline-block;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.icon-check {
+  background-image: url(./img/checkmark-icon-hover.svg);
+}
+
+.icon-pencil {
+  background-image: url(./img/pencil-icon.svg);
+  &:hover {
+    background-image: url(./img/pencil-icon-hover.svg);
+  }
+}
+
+.icon-delete {
+  background-image: url(./img/bin-icon.svg);
+  &:hover {
+    background-image: url(./img/bin-icon-hover.svg);
+  }
+}
+
+.icon-close {
+  background-image: url(./img/ic-close.svg);
+  &:hover {
+    background-image: url(./img/ic-close-hover.svg);
+  }
+}
+
+.icon-tables {
+  background-image: url(./img/draft-style-guide-tables-copy.svg);
+  &:hover {
+    background-image: url(./img/draft-style-guide-tables-copy-hover.svg);
+  }
+}
+
+.icon-planet {
+  background-image: url(./img/planet.svg);
+  &:hover {
+    background-image: url(./img/planet-hover.svg);
+  }
+}
+
+.icon-grid {
+  background-image: url(./img/grid.svg);
+  &-active {
+    background-image: url(./img/grid-active.svg);
+  }
+}
+
+.icon-table {
+  background-image: url(./img/table.svg);
+  &-active {
+    background-image: url(./img/table-active.svg);
+  }
+}

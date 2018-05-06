@@ -323,6 +323,7 @@ define(function (require) {
         },
         onDestroy: function () {
             this.stickyHeader && this.stickyHeader.destroy();
+            this.collectionItems.destroy();
             this.multipleSelected.destroy();
             this.control && this.control.destroy();
             this.body && this.body.destroy();

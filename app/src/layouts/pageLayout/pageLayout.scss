@@ -5,6 +5,7 @@
   background-color: transparent;
   margin: 0;
   padding: 20px 0 0;
+  position: relative;
   @media (max-width: $SCREEN_XS_MAX) {
     padding: 0;
   }
@@ -27,5 +28,5 @@
 
 .page-content {
   background-color: $COLOR--white-two;
-  box-shadow: 0 1px 3px 0 rgba(0,0,0,.1);
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
 }

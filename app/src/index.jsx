@@ -15,6 +15,20 @@ import 'c3/c3.css';
 import App from './app';
 import { configureStore } from './store';
 
+if (!process.env.production) {
+  const query = parse(location.search, { ignoreQueryPrefix: true });
+  const whyDidYouUpdateComponent =
+    'whyDidYouUpdateComponent' in query && (query.whyDidYouUpdateComponent || '.*');
+
+  if (whyDidYouUpdateComponent) {
+    const { whyDidYouUpdate } = require('why-did-you-update'); // eslint-disable-line global-require
+    whyDidYouUpdate(React, { include: new RegExp(whyDidYouUpdateComponent) });
+    console.log(
+      'Use http://localhost:3000/?whyDidYouUpdateComponent=^Component$# (with regex as query value) to check why certain component rerender.',
+    );
+  }
+}
+
 const queryParseHistory = qhistory(createHashHistory({ hashType: 'noslash' }), stringify, parse);
 
 const { store } = configureStore(queryParseHistory, window.REDUX_STATE);

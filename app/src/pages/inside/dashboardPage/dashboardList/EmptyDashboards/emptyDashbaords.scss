@@ -1,0 +1,36 @@
+.empty-dashboards {
+  padding: 25px 0 60px 0;
+  width: 100%;
+  background-color: $COLOR--white-two;
+}
+
+.empty-dashboard-headline {
+  text-align: center;
+  color: $COLOR--gray-47;
+}
+
+.empty-dashboard-text {
+  margin-top: 15px;
+  font-size: 13px;
+  text-align: center;
+  color: $COLOR--gray-47;
+}
+
+.empty-dashboard--shared {
+  width: 130px;
+  height: 80px;
+  margin: 0 auto 20px auto;
+  background-image: url(./img/empty-shared-dashboard.svg);
+}
+
+.empty-dashboard--current-user {
+  background-image: url(./img/empty-dashboard.png);
+  width: 182px;
+  height: 118px;
+  margin: 0 auto;
+}
+
+.empty-dashboard-content {
+  text-align: center;
+  padding: 15px 0;
+}

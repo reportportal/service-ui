@@ -29,7 +29,6 @@ const cx = classNames.bind(styles);
 export const InputBigSwitcher = ({ children, disabled, value, onChange, onFocus, onBlur }) => {
   const classes = cx({
     'switcher-wrapper': true,
-    centered: !children,
     disabled,
   });
   const sliderClasses = cx({
@@ -43,16 +42,10 @@ export const InputBigSwitcher = ({ children, disabled, value, onChange, onFocus,
     <label className={cx('input-big-switcher')} tabIndex="1">
       <div className={classes}>
         <div className={cx('on')}>
-          <FormattedMessage
-            id={'Common.on'}
-            defaultMessage={'ON'}
-          />
+          <FormattedMessage id={'Common.on'} defaultMessage={'ON'} />
         </div>
         <div className={cx('off')}>
-          <FormattedMessage
-            id={'Common.off'}
-            defaultMessage={'OFF'}
-          />
+          <FormattedMessage id={'Common.off'} defaultMessage={'OFF'} />
         </div>
         <input
           className={cx('input')}

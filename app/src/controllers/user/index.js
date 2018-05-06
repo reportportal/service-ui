@@ -1,7 +1,4 @@
-export {
-  START_TIME_FORMAT_ABSOLUTE,
-  START_TIME_FORMAT_RELATIVE,
-} from './constants';
+export { START_TIME_FORMAT_ABSOLUTE, START_TIME_FORMAT_RELATIVE } from './constants';
 export {
   fetchUserSuccessAction,
   fetchUserAction,
@@ -15,4 +12,6 @@ export {
   activeProjectSelector,
   userIdSelector,
   startTimeFormatSelector,
+  isAdminSelector,
+  activeProjectRoleSelector,
 } from './selectors';

@@ -208,9 +208,8 @@ export class MarkdownEditor extends React.Component {
         italic: '*',
         code: '`',
       },
-      previewRender: plainText => ReactDOMServer.renderToStaticMarkup(
-        <MarkdownViewer text={plainText} />,
-      ),
+      previewRender: (plainText) =>
+        ReactDOMServer.renderToStaticMarkup(<MarkdownViewer value={plainText} />),
     });
     this.simpleMDE.codemirror.on('change', this.onChangeHandler);
   }
@@ -225,7 +224,9 @@ export class MarkdownEditor extends React.Component {
     return (
       <div className={cx('markdown-editor')}>
         <textarea
-          ref={(holder) => { this.holder = holder; }}
+          ref={(holder) => {
+            this.holder = holder;
+          }}
           value={this.props.value}
           onChange={this.props.onChange}
         />

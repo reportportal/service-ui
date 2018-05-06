@@ -34,64 +34,91 @@ const messages = defineMessages({
     id: 'ActionPanel.actionDelete',
     defaultMessage: 'Delete',
   },
+  proceedButton: {
+    id: 'ActionPanel.proceedButton',
+    defaultMessage: 'Proceed Valid Items',
+  },
 });
 
 @injectIntl
 export class ActionPanel extends Component {
   static propTypes = {
+    selectedLaunches: PropTypes.array,
     hasErrors: PropTypes.bool,
     showBreadcrumb: PropTypes.bool,
     intl: intlShape.isRequired,
+    hasValidItems: PropTypes.bool,
+    onProceedValidItems: PropTypes.func,
+    onMerge: PropTypes.func,
+    onCompare: PropTypes.func,
+    onMoveToDebug: PropTypes.func,
+    onForceFinish: PropTypes.func,
+    onDelete: PropTypes.func,
   };
+
   static defaultProps = {
+    selectedLaunches: [],
     hasErrors: false,
     showBreadcrumb: false,
+    hasValidItems: false,
+    onProceedValidItems: () => {},
+    onMerge: () => {},
+    onCompare: () => {},
+    onMoveToDebug: () => {},
+    onForceFinish: () => {},
+    onDelete: () => {},
   };
 
-  onMerge = () => {};
+  constructor(props) {
+    super(props);
+    this.actionDescriptors = this.createActionDescriptors();
+  }
 
-  onCompare = () => {};
-
-  onMoveToDebug = () => {};
-
-  onForceFinish = () => {};
-
-  onDelete = () => {};
-
-  multipleActions = [
+  createActionDescriptors = () => [
     {
       label: this.props.intl.formatMessage(messages.actionMerge),
       value: 'action-merge',
-      onClick: this.onMerge,
+      onClick: this.props.onMerge,
     },
     {
       label: this.props.intl.formatMessage(messages.actionCompare),
       value: 'action-compare',
-      onClick: this.onCompare,
+      onClick: this.props.onCompare,
     },
     {
       label: this.props.intl.formatMessage(messages.actionMoveToDebug),
       value: 'action-move-to-debug',
-      onClick: this.onMoveToDebug,
+      onClick: this.props.onMoveToDebug,
     },
     {
       label: this.props.intl.formatMessage(messages.actionForceFinish),
       value: 'action-force-finish',
-      onClick: this.onForceFinish,
+      onClick: this.props.onForceFinish,
     },
     {
       label: this.props.intl.formatMessage(messages.actionDelete),
       value: 'action-delete',
-      onClick: this.onDelete,
+      onClick: this.props.onDelete,
     },
   ];
 
   render() {
-    const { intl, showBreadcrumb, hasErrors } = this.props;
+    const {
+      intl,
+      showBreadcrumb,
+      hasErrors,
+      selectedLaunches,
+      hasValidItems,
+      onProceedValidItems,
+    } = this.props;
     return (
-      <div className={cx('action-panel')}>
-        {showBreadcrumb ? <div className={cx('breadcrumb')} /> : <div />}
-        {hasErrors && <GhostButton>Proceed Valid Items</GhostButton>}
+      <div className={cx('action-panel', { 'right-buttons-only': !showBreadcrumb && !hasErrors })}>
+        {showBreadcrumb && <div className={cx('breadcrumb')} />}
+        {hasErrors && (
+          <GhostButton disabled={!hasValidItems} onClick={onProceedValidItems}>
+            {intl.formatMessage(messages.proceedButton)}
+          </GhostButton>
+        )}
         <div className={cx('action-buttons')}>
           <div className={cx('action-button', 'mobile-hidden')}>
             <GhostButton icon={ImportIcon} disabled>
@@ -101,7 +128,8 @@ export class ActionPanel extends Component {
           <div className={cx('action-button', 'mobile-hidden')}>
             <GhostMenuButton
               title={intl.formatMessage(messages.actionsBtn)}
-              items={this.multipleActions}
+              items={this.actionDescriptors}
+              disabled={!selectedLaunches.length}
             />
           </div>
           <div className={cx('action-button')}>

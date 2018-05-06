@@ -5,6 +5,8 @@ import { langReducer } from 'controllers/lang';
 import { modalReducer } from 'controllers/modal';
 import { userReducer } from 'controllers/user';
 import { projectReducer } from 'controllers/project';
+import { dashboardReducer } from 'controllers/dashboard';
+import { launchReducer } from 'controllers/launch';
 
 export default {
   appInfo: appInfoReducer,
@@ -13,5 +15,7 @@ export default {
   form: formReducer,
   modal: modalReducer,
   user: userReducer,
-  project: projectReducer
+  project: projectReducer,
+  dashboard: dashboardReducer,
+  launches: launchReducer,
 };

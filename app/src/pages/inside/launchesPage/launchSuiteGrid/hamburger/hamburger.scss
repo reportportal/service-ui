@@ -34,7 +34,7 @@
   padding: 10px 0;
   border: 1px solid $COLOR--gray-80;
   background-color: $COLOR--white-two;
-  box-shadow: 0 1px 3px 0 rgba(0,0,0,.2);
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2);
   font-family: $FONT-REGULAR;
   font-size: 14px;
   color: $COLOR--charcoal-grey;
@@ -63,6 +63,9 @@
   line-height: 30px;
   box-sizing: border-box;
   padding: 0 15px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   cursor: pointer;
 
   &:hover {

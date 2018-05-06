@@ -49,7 +49,7 @@ export class AppLayout extends PureComponent {
     window.removeEventListener('resize', this.windowResizeHandler, false);
   }
   windowResizeHandler = () => {
-    if (this.state.sideMenuOpened && (window.innerWidth > 767)) {
+    if (this.state.sideMenuOpened && window.innerWidth > 767) {
       this.setState({ sideMenuOpened: false });
     }
   };
@@ -59,38 +59,39 @@ export class AppLayout extends PureComponent {
 
   render() {
     return (
-      <ScrollWrapper>
-        <div className={cx('app-container')}>
-          <div className={cx({ 'slide-container': true, 'side-menu-opened': this.state.sideMenuOpened })}>
-            <div className={cx('sidebar-container')}>
-              <div className={cx('corner-area')} />
-              <Sidebar
-                onClickNavBtn={() => {
-                  this.state.sideMenuOpened && this.setState({ sideMenuOpened: false });
-                }}
-              />
-            </div>
-            <div className={cx('content')}>
-              <ScrollWrapper>
-                <div className={cx('scrolling-content')}>
-                  <div className={cx('header-container')}>
-                    <Header
-                      isSideMenuOpened={this.state.sideMenuOpened}
-                      toggleSideMenu={this.toggleSideMenu}
-                    />
-                  </div>
-                  <div className={cx('page-container')}>
-                    {this.props.children}
-                  </div>
-                  <Footer />
-                </div>
-              </ScrollWrapper>
-              <div className={cx({ 'sidebar-close-area': true, visible: this.state.sideMenuOpened })} onClick={this.toggleSideMenu} />
-            </div>
+      <div className={cx('app-container')}>
+        <div
+          className={cx({ 'slide-container': true, 'side-menu-opened': this.state.sideMenuOpened })}
+        >
+          <div className={cx('sidebar-container')}>
+            <div className={cx('corner-area')} />
+            <Sidebar
+              onClickNavBtn={() => {
+                this.state.sideMenuOpened && this.setState({ sideMenuOpened: false });
+              }}
+            />
           </div>
-          <Notification />
+          <div className={cx('content')}>
+            <ScrollWrapper>
+              <div className={cx('scrolling-content')}>
+                <div className={cx('header-container')}>
+                  <Header
+                    isSideMenuOpened={this.state.sideMenuOpened}
+                    toggleSideMenu={this.toggleSideMenu}
+                  />
+                </div>
+                <div className={cx('page-container')}>{this.props.children}</div>
+                <Footer />
+              </div>
+            </ScrollWrapper>
+            <div
+              className={cx({ 'sidebar-close-area': true, visible: this.state.sideMenuOpened })}
+              onClick={this.toggleSideMenu}
+            />
+          </div>
         </div>
-      </ScrollWrapper>
+        <Notification />
+      </div>
     );
   }
 }

@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="250" height="125" viewBox="0 0 250 125">
+  <g fill="none" fill-rule="evenodd" transform="translate(0 -25)">
+    <rect width="250" height="125" y="25"/>
+    <g stroke="#F5F5F5" transform="translate(1 41)">
+      <path d="M-2.84217094e-14 87.5L248 87.5M-2.84217094e-14 65.5L248 65.5M-2.84217094e-14 44.5L248 44.5M-2.84217094e-14 22.5L248 22.5M-2.84217094e-14.5L248 .5"/>
+    </g>
+    <g fill="#CCC" transform="translate(20 81)">
+      <path d="M47 6L47 0 36 0 36 6 47 6zM83 6L83 0 72 0 72 6 83 6zM59 6L59 0 48 0 48 6 59 6zM71 6L71 0 60 0 60 6 71 6zM11 6L11 0 0 0 0 6 11 6zM23 6L23 0 12 0 12 6 23 6zM35 6L35 0 24 0 24 6 35 6zM11 16L11 10 0 10 0 16 11 16zM23 16L23 10 12 10 12 16 23 16zM198 6L198 0 187 0 187 6 198 6zM210 6L210 0 199 0 199 6 210 6z"/>
+    </g>
+    <g transform="translate(20 50)">
+      <g fill="#CCC">
+        <path d="M47 6L47 0 36 0 36 6 47 6zM83 6L83 0 72 0 72 6 83 6zM59 6L59 0 48 0 48 6 59 6zM71 6L71 0 60 0 60 6 71 6zM11 6L11 0 0 0 0 6 11 6zM23 6L23 0 12 0 12 6 23 6zM35 6L35 0 24 0 24 6 35 6zM11 16L11 10 0 10 0 16 11 16zM23 16L23 10 12 10 12 16 23 16zM198 6L198 0 187 0 187 6 198 6zM210 6L210 0 199 0 199 6 210 6z"/>
+      </g>
+      <g transform="translate(123 62)">
+        <rect width="4" height="4" fill="#A3C644"/>
+        <rect width="4" height="4" y="5" fill="#39C2D7"/>
+        <rect width="4" height="4" x="10" y="5" fill="#39C2D7"/>
+        <rect width="4" height="4" x="5" y="5" fill="#A3C644"/>
+        <rect width="4" height="4" x="5" fill="#39C2D7"/>
+        <rect width="4" height="4" x="10" fill="#A3C644"/>
+        <rect width="4" height="4" x="15" fill="#39C2D7"/>
+        <rect width="4" height="4" x="20" fill="#A3C644"/>
+      </g>
+      <g transform="translate(123 31)">
+        <rect width="4" height="4" fill="#A3C644"/>
+        <rect width="4" height="4" y="5" fill="#39C2D7"/>
+        <rect width="4" height="4" x="10" y="5" fill="#39C2D7"/>
+        <rect width="4" height="4" x="5" y="5" fill="#A3C644"/>
+        <rect width="4" height="4" x="5" fill="#39C2D7"/>
+        <rect width="4" height="4" x="10" fill="#A3C644"/>
+        <rect width="4" height="4" x="15" fill="#39C2D7"/>
+        <rect width="4" height="4" x="20" fill="#A3C644"/>
+      </g>
+      <g transform="translate(123)">
+        <rect width="4" height="4" fill="#A3C644"/>
+        <rect width="4" height="4" y="5" fill="#39C2D7"/>
+        <rect width="4" height="4" x="10" y="5" fill="#39C2D7"/>
+        <rect width="4" height="4" x="5" y="5" fill="#A3C644"/>
+        <rect width="4" height="4" x="5" fill="#39C2D7"/>
+        <rect width="4" height="4" x="10" fill="#A3C644"/>
+        <rect width="4" height="4" x="15" fill="#39C2D7"/>
+        <rect width="4" height="4" x="20" fill="#A3C644"/>
+      </g>
+    </g>
+    <g fill="#CCC" transform="translate(20 112)">
+      <path d="M47 6L47 0 36 0 36 6 47 6zM83 6L83 0 72 0 72 6 83 6zM59 6L59 0 48 0 48 6 59 6zM71 6L71 0 60 0 60 6 71 6zM11 6L11 0 0 0 0 6 11 6zM23 6L23 0 12 0 12 6 23 6zM35 6L35 0 24 0 24 6 35 6zM11 16L11 10 0 10 0 16 11 16zM23 16L23 10 12 10 12 16 23 16zM198 6L198 0 187 0 187 6 198 6zM210 6L210 0 199 0 199 6 210 6z"/>
+    </g>
+  </g>
+</svg>

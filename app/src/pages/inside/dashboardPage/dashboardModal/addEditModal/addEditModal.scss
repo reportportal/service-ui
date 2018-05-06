@@ -1,0 +1,49 @@
+.form-row {
+  display: flex;
+  position: relative;
+  height: 30px;
+  width: 100%;
+  padding: 0 45px;
+  box-sizing: border-box;
+  margin: 10px 0;
+  justify-content: flex-start;
+
+  input {
+    border: 1px solid black;
+  }
+}
+
+.add-dashboard-form {
+  width: 415px;
+}
+
+.form-field {
+  width: 100%;
+  display: flex;
+  margin-bottom: 15px;
+}
+
+.form-label {
+  width: 25%;
+  text-align: right;
+  padding-right: 15px;
+  font-size: 13px;
+  font-family: $FONT-REGULAR;
+  color: #333;
+}
+
+.input-wrap {
+  position: relative;
+
+  textarea {
+    border: 1px solid $COLOR--gray-80;
+    height: 60px;
+    width: 100%;
+    padding: 5px;
+    box-sizing: border-box;
+
+    &:focus {
+      outline: none;
+    }
+  }
+}

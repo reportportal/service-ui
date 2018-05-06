@@ -1,0 +1,14 @@
+<svg width="100%" height="100%" viewBox="0 0 <%= data.viewBox %> <%= data.viewBox %>" class="donut">
+    <circle cx="<%= data.viewBox / 2 %>" cy="<%= data.viewBox / 2 %>" r="15.91549430918954"
+            fill="transparent"
+    ></circle>
+    <circle cx="<%= data.viewBox / 2 %>" cy="<%= data.viewBox / 2 %>" r="15.91549430918954"
+            fill="transparent" stroke="#d2d3d4"
+            stroke-width="<%= data.strokeWidth %>"></circle>
+    <% _.each(data.items, function(item) { %>
+    <circle cx="<%= data.viewBox / 2 %>" cy="<%= data.viewBox / 2 %>" r="15.91549430918954"
+            fill="transparent" stroke="<%= item.color %>" stroke-width="<%= data.strokeWidth %>"
+            stroke-dasharray="<%= item.value %> <%= 100 - item.value %>"
+            stroke-dashoffset="<%= item.offset %>"></circle>
+    <% }); %>
+</svg>

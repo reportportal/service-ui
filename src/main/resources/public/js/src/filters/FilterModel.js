@@ -158,7 +158,7 @@ define(function (require) {
                     return [filterName, ' ',
                         item.is_negative ? text.not : '',
                         text[item.condition] || '', ' ',
-                        self.clearValue(item.value)].join('');
+                        (item.filtering_field === 'tags') ? item.value : self.clearValue(item.value)].join('');
                 }, {});
                 return mapped.join(text.andb);
             }

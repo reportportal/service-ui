@@ -10,6 +10,16 @@ import { activeProjectSelector, userIdSelector } from 'controllers/user';
 import { withPagination } from 'controllers/pagination';
 import { withSorting, SORTING_DESC } from 'controllers/sorting';
 import { showModalAction } from 'controllers/modal';
+import {
+  selectedLaunchesSelector,
+  toggleLaunchSelectionAction,
+  selectLaunchesAction,
+  unselectAllLaunchesAction,
+  validationErrorsSelector,
+  proceedWithValidItemsAction,
+  mergeLaunchesAction,
+  compareLaunchesAction,
+} from 'controllers/launch';
 import { LaunchSuiteGrid } from './launchSuiteGrid';
 import { LaunchToolbar } from './LaunchToolbar';
 
@@ -24,9 +34,17 @@ const messages = defineMessages({
   (state) => ({
     userId: userIdSelector(state),
     url: `/api/v1/${activeProjectSelector(state)}/launch`,
+    selectedLaunches: selectedLaunchesSelector(state),
+    validationErrors: validationErrorsSelector(state),
   }),
   {
     showModalAction,
+    toggleLaunchSelectionAction,
+    selectAllLaunchesAction: selectLaunchesAction,
+    unselectAllLaunchesAction,
+    proceedWithValidItemsAction,
+    mergeLaunchesAction,
+    compareLaunchesAction,
   },
 )
 @withSorting({
@@ -51,6 +69,14 @@ export class LaunchesPage extends Component {
     onChangePageSize: PropTypes.func,
     onChangeSorting: PropTypes.func,
     url: PropTypes.string.isRequired,
+    selectedLaunches: PropTypes.arrayOf(PropTypes.object),
+    validationErrors: PropTypes.object,
+    selectAllLaunchesAction: PropTypes.func,
+    unselectAllLaunchesAction: PropTypes.func,
+    proceedWithValidItemsAction: PropTypes.func,
+    toggleLaunchSelectionAction: PropTypes.func,
+    mergeLaunchesAction: PropTypes.func,
+    compareLaunchesAction: PropTypes.func,
   };
 
   static defaultProps = {
@@ -66,14 +92,19 @@ export class LaunchesPage extends Component {
     onChangePage: () => {},
     onChangePageSize: () => {},
     onChangeSorting: () => {},
-  };
-
-  state = {
     selectedLaunches: [],
+    validationErrors: {},
+    selectAllLaunchesAction: () => {},
+    unselectAllLaunchesAction: () => {},
+    proceedWithValidItemsAction: () => {},
+    toggleLaunchSelectionAction: () => {},
+    mergeLaunchesAction: () => {},
+    compareLaunchesAction: () => {},
   };
 
   getTitle = () =>
-    !this.state.selectedLaunches.length && this.props.intl.formatMessage(messages.filtersPageTitle);
+    !this.props.selectedLaunches.length && this.props.intl.formatMessage(messages.filtersPageTitle);
+
   updateLaunch = (launch) => {
     fetch(`${this.props.url}/${launch.id}/update`, {
       method: 'put',
@@ -119,31 +150,18 @@ export class LaunchesPage extends Component {
     });
   };
 
-  handleLaunchSelection = (launch) => {
-    const { selectedLaunches } = this.state;
-    if (!selectedLaunches.find((item) => item.id === launch.id)) {
-      this.setState({ selectedLaunches: [...selectedLaunches, launch] });
-      return;
-    }
-    this.setState({ selectedLaunches: selectedLaunches.filter((item) => item.id !== launch.id) });
-  };
-
   handleAllLaunchesSelection = () => {
-    const { selectedLaunches } = this.state;
-    const launches = this.props.data;
+    const { selectedLaunches, data: launches } = this.props;
     if (launches.length === selectedLaunches.length) {
-      this.setState({ selectedLaunches: [] });
+      this.props.unselectAllLaunchesAction();
       return;
     }
-    this.setState({ selectedLaunches: this.props.data });
+    this.props.selectAllLaunchesAction(launches);
   };
 
-  unselectLaunch = (launch) =>
-    this.setState({
-      selectedLaunches: this.state.selectedLaunches.filter((item) => item.id !== launch.id),
-    });
+  proceedWithValidItems = () => this.props.proceedWithValidItemsAction(this.props.fetchData);
 
-  resetSelection = () => this.setState({ selectedLaunches: [] });
+  mergeLaunches = () => this.props.mergeLaunchesAction(this.props.fetchData);
 
   render() {
     const {
@@ -157,13 +175,18 @@ export class LaunchesPage extends Component {
       sortingColumn,
       sortingDirection,
       onChangeSorting,
+      selectedLaunches,
     } = this.props;
     return (
       <PageLayout title={this.getTitle()}>
         <LaunchToolbar
-          selectedLaunches={this.state.selectedLaunches}
-          onUnselect={this.unselectLaunch}
-          onUnselectAll={this.resetSelection}
+          errors={this.props.validationErrors}
+          selectedLaunches={selectedLaunches}
+          onUnselect={this.props.toggleLaunchSelectionAction}
+          onUnselectAll={this.props.unselectAllLaunchesAction}
+          onProceedValidItems={this.proceedWithValidItems}
+          onMerge={this.mergeLaunches}
+          onCompare={this.props.compareLaunchesAction}
         />
         <LaunchSuiteGrid
           data={data}
@@ -173,8 +196,8 @@ export class LaunchesPage extends Component {
           onDeleteItem={this.confirmDeleteItem}
           onMoveToDebug={this.confirmMoveToDebug}
           onEditLaunch={this.openEditModal}
-          selectedLaunches={this.state.selectedLaunches}
-          onLaunchSelect={this.handleLaunchSelection}
+          selectedLaunches={selectedLaunches}
+          onLaunchSelect={this.props.toggleLaunchSelectionAction}
           onAllLaunchesSelect={this.handleAllLaunchesSelection}
         />
         <PaginationToolbar

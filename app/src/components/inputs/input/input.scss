@@ -15,7 +15,7 @@
   color: $COLOR--charcoal-grey;
   box-shadow: none;
   flex-grow: 1;
-  transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+  transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
 
   &:hover {
     border-color: $COLOR--gray-47;
@@ -23,18 +23,18 @@
   &:focus {
     background-color: inherit;
     border-color: $COLOR--topaz;
-    box-shadow: 0 0 2px 0 rgba($COLOR--topaz, .7);
+    box-shadow: 0 0 2px 0 rgba($COLOR--topaz, 0.7);
   }
 
-  &.error {
+  &.error.touched {
     border-color: $COLOR--orange-red;
   }
 
   &:-webkit-autofill {
     -webkit-box-shadow: 0 0 0 1000px #fdffeb inset;
   }
-  &[type=number]::-webkit-inner-spin-button,
-  &[type=number]::-webkit-outer-spin-button {
+  &[type='number']::-webkit-inner-spin-button,
+  &[type='number']::-webkit-outer-spin-button {
     -webkit-appearance: none;
     margin: 0;
   }

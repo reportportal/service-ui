@@ -1,0 +1,48 @@
+.input {
+  width: 310px;
+  @media (max-width: $SCREEN_SM_MAX) {
+    width: 100%;
+  }
+}
+
+.tool-bar {
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+
+  padding: 20px;
+  background-color: $COLOR--white-two;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    display: none;
+  }
+}
+
+.buttons {
+  button {
+    margin: 0 5px;
+  }
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    padding: 10px;
+  }
+}
+
+.active-grid {
+  button:nth-of-type(1) {
+    background-color: $COLOR--topaz;
+
+    path {
+      fill: $COLOR--white-two !important;
+    }
+  }
+}
+
+.active-table {
+  button:nth-of-type(2) {
+    background-color: $COLOR--topaz;
+    path {
+      fill: $COLOR--white-two !important;
+    }
+  }
+}

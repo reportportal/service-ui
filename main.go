@@ -39,7 +39,9 @@ func main() {
 		log.Fatalf("Cannot log app config")
 	}
 
-	rpConf.Cfg.AppName = "ui"
+	if "goRP" == rpConf.Cfg.AppName {
+		rpConf.Cfg.AppName = "ui"
+	}
 
 	info := commons.GetBuildInfo()
 	info.Name = "Service UI"
