@@ -70,7 +70,7 @@ export class ChangePasswordForm extends PureComponent {
 
   changePassword = ({ password }) => {
     const uuid = this.props.location.query.reset;
-    fetch('api/v1/user/password/reset', {
+    fetch('/api/v1/user/password/reset', {
       method: 'post',
       data: {
         password,

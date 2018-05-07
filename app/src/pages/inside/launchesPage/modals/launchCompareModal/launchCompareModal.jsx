@@ -149,7 +149,7 @@ export class LaunchCompareModal extends Component {
   }
 
   componentDidMount() {
-    fetch(`api/v1/${this.props.activeProject}/launch/compare`, {
+    fetch(`/api/v1/${this.props.activeProject}/launch/compare`, {
       method: 'get',
       params: {
         ids: this.props.data.ids.join(','),
