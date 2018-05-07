@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { InfoLine } from 'pages/inside/launchesPage/infoLine';
+import { InfoLine } from 'pages/inside/common/infoLine';
 import { showModalAction } from 'controllers/modal';
 import PropTypes from 'prop-types';
 import { BlockWithTooltip, BlockWithHoverableTooltip } from './testBlocks';
@@ -8,7 +8,8 @@ import { BlockWithTooltip, BlockWithHoverableTooltip } from './testBlocks';
 const infolineMockData = {
   owner: 'superadmin',
   share: false,
-  description: '### **Demonstration launch.**\nA typical *Launch structure* comprises the following elements: Suite > Test > Step > Log.\nLaunch contains *randomly* generated `suites`, `tests`, `steps` with:\n* random issues and statuses,\n* logs,\n* attachments with different formats.',
+  description:
+    '### **Demonstration launch.**\nA typical *Launch structure* comprises the following elements: Suite > Test > Step > Log.\nLaunch contains *randomly* generated `suites`, `tests`, `steps` with:\n* random issues and statuses,\n* logs,\n* attachments with different formats.',
   id: '5a705e1797a1c0000117c506',
   name: 'Demo Api Tests_123',
   number: 10,
@@ -75,14 +76,16 @@ export class SandboxPage extends Component {
         <br />
         <InfoLine data={infolineMockData} />
         <br />
-        <button onClick={() => this.props.showModalAction({ id: 'exampleModal', data: { param1: '123', param2: 312 } })}>
+        <button
+          onClick={() =>
+            this.props.showModalAction({ id: 'exampleModal', data: { param1: '123', param2: 312 } })
+          }
+        >
           click here to show modal
         </button>
         <br />
         <div style={{ width: 300, height: 50, marginLeft: 50, marginTop: 50 }}>
-          <BlockWithTooltip>
-            Hover me!
-          </BlockWithTooltip>
+          <BlockWithTooltip>Hover me!</BlockWithTooltip>
         </div>
         <div style={{ width: 300, height: 50, marginLeft: 50, marginTop: 50 }}>
           <BlockWithHoverableTooltip testProp="hello!">

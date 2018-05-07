@@ -1,1 +1,0 @@
-export { ToInvestigteStatistics } from './toInvestigteStatistics';

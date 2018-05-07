@@ -1,0 +1,1 @@
+export { SuitesPage } from './suitesPage';
