@@ -21,7 +21,7 @@ import {
   mergeLaunchesAction,
   compareLaunchesAction,
 } from 'controllers/launch';
-import { LaunchSuiteGrid } from './launchSuiteGrid';
+import { LaunchSuiteGrid } from 'pages/inside/common/launchSuiteGrid';
 import { LaunchToolbar } from './LaunchToolbar';
 
 const messages = defineMessages({
@@ -208,6 +208,7 @@ export class LaunchesPage extends Component {
           selectedLaunches={selectedLaunches}
           onLaunchSelect={this.props.toggleLaunchSelectionAction}
           onAllLaunchesSelect={this.handleAllLaunchesSelection}
+          withHamburger
         />
         <PaginationToolbar
           activePage={activePage}
