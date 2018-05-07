@@ -15,7 +15,7 @@ export const fetchDashboardAction = () => (dispatch, getState) => {
 
   Promise.all([
     fetch(`/api/v1/${activeProject}/dashboard`),
-    fetch(`api/v1/${activeProject}/dashboard/shared?page.page=1&page.size=300`),
+    fetch(`/api/v1/${activeProject}/dashboard/shared?page.page=1&page.size=300`),
   ]).then(([dashboards, sharedDashboards]) => {
     const { content } = sharedDashboards;
 
