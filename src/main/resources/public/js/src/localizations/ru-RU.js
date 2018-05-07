@@ -507,6 +507,8 @@ define(['util'], function () {
             unlink_issue: 'открепил ошибку',
             delete_issue: 'удаленная ошибка',
             testItem: 'элемент тестирования',
+            delete_index: 'обновлено',
+            generate_index: 'обновлено',
             update_project: 'обновлено',
             update_defect: 'обновлено',
             delete_defect: 'удалено',
@@ -632,7 +634,9 @@ define(['util'], function () {
             launchesOnFilter: 'Количество запусков в фильтре - ',
             selectWidget: 'Выберите тип виджета из списка',
             launchInterrupted: 'Прогон прерван',
-            zoomWidgetArea: 'Масштабирование виджета'
+            zoomWidgetArea: 'Масштабирование виджета',
+            aaConfig: 'конфигурация Авто-Анализа',
+            aaProperties: 'параметры Авто-Анализа'
         },
 
         userProfile: {
@@ -1153,7 +1157,9 @@ define(['util'], function () {
                 create_user: 'Создание пользователя',
                 start_import: 'Начало импорта',
                 finish_import: 'Окончание импорта',
-                analyze_item: 'АА изменил тип дефекта'
+                analyze_item: 'АА изменил тип дефекта',
+                generate_index: 'Генерация индекса',
+                delete_index: 'Удаление индекса'
             },
             objectTypes: {
                 all: 'Все',
@@ -2051,7 +2057,9 @@ define(['util'], function () {
             updateFilter: 'Обновить фильтр',
             import: 'Импорт',
             projectNameIn: 'Имя проекта в СОД',
-            copyLink: 'Копировать ссылку'
+            copyLink: 'Копировать ссылку',
+            generateIndex: 'Генерация индекса',
+            deleteIndex: 'Удаление индекса'
         },
 
         wizard: {
@@ -2240,7 +2248,9 @@ define(['util'], function () {
             keepScreenshots: 'Сохранять скриншоты',
             auto_analyze: 'Автоанализатор',
             launchInactivity: 'Время бездействия запуска',
-            statisticsCalculationStrategy: 'Выбрать стратегию'
+            statisticsCalculationStrategy: 'Выбрать стратегию',
+            delete_index: 'индекс был удален',
+            generate_index: 'индекс был сгенерирован'
         },
 
         permissionMap: {
