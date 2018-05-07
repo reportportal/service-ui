@@ -1,14 +1,21 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
+import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
 import { GhostButton } from 'components/buttons/ghostButton';
+import { CUSTOMER } from 'common/constants/projectRoles';
 import { FormattedMessage } from 'react-intl';
 import PropTypes from 'prop-types';
+import { activeProjectRoleSelector } from 'controllers/user';
 import styles from './hamburger.scss';
 
 const cx = classNames.bind(styles);
 
+@connect((state) => ({
+  projectRole: activeProjectRoleSelector(state),
+}))
 export class Hamburger extends Component {
   static propTypes = {
+    projectRole: PropTypes.string.isRequired,
     onAction: PropTypes.func,
     launch: PropTypes.object.isRequired,
     onMoveToLaunches: PropTypes.func,
@@ -55,6 +62,7 @@ export class Hamburger extends Component {
 
   render() {
     const {
+      projectRole,
       launch,
       onMoveToLaunches,
       onForceFinish,
@@ -79,27 +87,31 @@ export class Hamburger extends Component {
         </div>
         <div className={cx('hamburger-menu', { shown: this.state.menuShown })}>
           <div className={cx('hamburger-menu-actions')}>
-            {launch.mode === 'DEFAULT' ? (
-              <div
-                className={cx('hamburger-menu-action')}
-                onClick={() => {
-                  customProps.onMoveToDebug(launch);
-                }}
-              >
-                <FormattedMessage id={'Hamburger.toDebug'} defaultMessage={'Move to debug'} />
-              </div>
-            ) : (
-              <div
-                className={cx('hamburger-menu-action')}
-                onClick={() => {
-                  onMoveToLaunches(launch);
-                }}
-              >
-                <FormattedMessage
-                  id={'Hamburger.toAllLaunches'}
-                  defaultMessage={'Move to all launches'}
-                />
-              </div>
+            {projectRole !== CUSTOMER && (
+              <Fragment>
+                {launch.mode === 'DEFAULT' ? (
+                  <div
+                    className={cx('hamburger-menu-action')}
+                    onClick={() => {
+                      customProps.onMoveToDebug(launch);
+                    }}
+                  >
+                    <FormattedMessage id={'Hamburger.toDebug'} defaultMessage={'Move to debug'} />
+                  </div>
+                ) : (
+                  <div
+                    className={cx('hamburger-menu-action')}
+                    onClick={() => {
+                      onMoveToLaunches(launch);
+                    }}
+                  >
+                    <FormattedMessage
+                      id={'Hamburger.toAllLaunches'}
+                      defaultMessage={'Move to all launches'}
+                    />
+                  </div>
+                )}
+              </Fragment>
             )}
             <div
               className={cx('hamburger-menu-action')}
