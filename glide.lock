@@ -1,16 +1,10 @@
 hash: 73ae3d1e98f412f028ecd80976093f8b811f293aa2ff9c82d10a03c43f24df73
-updated: 2017-10-20T13:00:51.675722+03:00
+updated: 2018-05-07T15:49:24.172195+03:00
 imports:
-- name: github.com/avarabyeu/env
-  version: 4946e6742a05770376d9415afcaf28f67fd7b0e4
-- name: github.com/cenkalti/backoff
-  version: 4dc77674aceaabba2c7e3da25d4c823edfb73f99
-- name: github.com/clbanning/x2j
-  version: 5ee34bb343f10ecfc125261107681de62f985cf6
-- name: github.com/franela/goreq
-  version: 9df54ca75ad62b6295f33ca96e16a2ca10bc137a
+- name: github.com/caarlos0/env
+  version: 1cddc31c48c56ecd700d873edb9fd5b6f5df922a
 - name: github.com/go-chi/chi
-  version: f7c66f685bcab06bcce78ac212c5f3553c063d19
+  version: e83ac2304db3c50cf03d96a2fcd39009d458bc35
   subpackages:
   - middleware
 - name: github.com/go-playground/locales
@@ -20,9 +14,9 @@ imports:
 - name: github.com/go-playground/universal-translator
   version: 71201497bace774495daed26a3874fd339e0b538
 - name: github.com/gorilla/handlers
-  version: a4043c62cc2329bacda331d33fc908ab11ef0ec3
+  version: 90663712d74cb411cbef281bc1e08c19d1a76145
 - name: github.com/hashicorp/consul
-  version: 112c0603d3d6fb23ab5f15e8fdb1a761da8eaf9a
+  version: fb848fc48818f58690db09d14640513aa6bf3c02
   subpackages:
   - api
 - name: github.com/hashicorp/go-cleanhttp
@@ -33,18 +27,12 @@ imports:
   version: 555c6fa2a11d1f8e08ac9964015e864a3f61e7c3
   subpackages:
   - coordinate
-- name: github.com/hudl/fargo
-  version: 14ced469f7dc175f6fbf9f55d799f9f12e302965
-- name: github.com/miekg/dns
-  version: f01e44c2fdbf755201344b5b7917f974a4badd13
 - name: github.com/mitchellh/go-homedir
   version: b8bc1bf767474819792c23f32d8286a45736f1c6
-- name: github.com/op/go-logging
-  version: d2e44aa77b7195c0ef782189985dd8550e22e4de
 - name: github.com/pkg/errors
   version: 645ef00459ed84a119197bfb8d8205042c6df63d
 - name: github.com/sirupsen/logrus
-  version: f006c2ac4710855cf0f916dd6b77acf6b048dc6e
+  version: d682213848ed68c0a260ca37d6dd5ace8423f5ba
 - name: github.com/unrolled/secure
   version: 19a872c81779b0456e9ee495a8162fb60c57b0c0
 - name: golang.org/x/crypto
@@ -60,16 +48,10 @@ imports:
   subpackages:
   - unix
   - windows
-- name: gopkg.in/gcfg.v1
-  version: 0ef1a8547f99b94fac9af5377dd72febba18f37c
-  subpackages:
-  - scanner
-  - token
-  - types
 - name: gopkg.in/go-playground/validator.v9
-  version: a021b2ec9a8a8bb970f3f15bc42617cb520e8a64
+  version: ee0bbdea519c2c66777c6bfc943838291734ba6c
 - name: gopkg.in/reportportal/commons-go.v1
-  version: 46bb64cec9fb0c257d7a6ddfddf1df3617ae4cef
+  version: 8941600c4b44fc35763116ec9158b93dfd9359df
   subpackages:
   - commons
   - conf

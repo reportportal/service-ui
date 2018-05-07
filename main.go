@@ -2,7 +2,6 @@ package main
 
 import (
 	"github.com/go-chi/chi"
-	"github.com/gorilla/handlers"
 	"github.com/unrolled/secure"
 	"gopkg.in/reportportal/commons-go.v1/commons"
 	"gopkg.in/reportportal/commons-go.v1/conf"
@@ -12,6 +11,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"github.com/go-chi/chi/middleware"
 )
 
 func main() {
@@ -50,7 +50,8 @@ func main() {
 	srv.WithRouter(func(router *chi.Mux) {
 
 		//apply compression
-		router.Use(handlers.CompressHandler)
+		router.Use(middleware.DefaultCompress)
+		router.Use(middleware.Logger)
 
 		//content security policy
 		csp := map[string][]string{
@@ -113,7 +114,7 @@ func trimQuery(s string, sep string) string {
 }
 
 func buildCSP(csp map[string][]string) string {
-	instr := make([]string, len(csp))
+	var instr []string
 	for k, v := range csp {
 		instr = append(instr, k+" "+strings.Join(v, " "))
 	}
