@@ -13,7 +13,7 @@ const cx = classNames.bind(styles);
 
 @withRouter
 @connect(
-  state => ({
+  (state) => ({
     user: userInfoSelector(state),
   }),
   {
@@ -54,19 +54,29 @@ export class UserBlock extends PureComponent {
 
   render() {
     return (
-      <div ref={(node) => { this.node = node; }} className={cx('user-block')} onClick={this.toggleMenu}>
+      <div
+        ref={(node) => {
+          this.node = node;
+        }}
+        className={cx('user-block')}
+        onClick={this.toggleMenu}
+      >
         <div className={cx('user-wrapper')}>
-          {
-            (this.props.user.userRole === 'ADMINISTRATOR')
-              ? <div className={cx('admin-badge')}><FormattedMessage id={'UserBlock.adminBadge'} defaultMessage={'admin'} /></div>
-              : null
-          }
-          <div className={cx('username')}>
-            { this.props.user.userId }
-          </div>
+          {this.props.user.userRole === 'ADMINISTRATOR' ? (
+            <div className={cx('admin-badge')}>
+              <FormattedMessage id={'UserBlock.adminBadge'} defaultMessage={'admin'} />
+            </div>
+          ) : null}
+          <div className={cx('username')}>{this.props.user.userId}</div>
         </div>
         <div className={cx('avatar-wrapper')}>
-          <img className={cx('avatar')} src={addTokenToImagePath(`api/v1/data/photo?${this.props.user.userId}&at=${Date.now()}`)} alt="avatar" />
+          <img
+            className={cx('avatar')}
+            src={addTokenToImagePath(
+              `/api/v1/data/photo?${this.props.user.userId}&at=${Date.now()}`,
+            )}
+            alt="avatar"
+          />
         </div>
         <div className={cx({ 'menu-icon': true, flipped: this.state.menuOpened })} />
         <div className={cx({ menu: true, opened: this.state.menuOpened })}>
@@ -87,4 +97,3 @@ export class UserBlock extends PureComponent {
     );
   }
 }
-

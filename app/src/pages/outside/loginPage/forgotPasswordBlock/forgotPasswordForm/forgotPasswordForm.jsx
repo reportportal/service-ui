@@ -62,7 +62,7 @@ export class ForgotPasswordForm extends PureComponent {
   };
 
   submitForm = ({ email }) => {
-    fetch('api/v1/user/password/restore', {
+    fetch('/api/v1/user/password/restore', {
       method: 'post',
       data: {
         email,
