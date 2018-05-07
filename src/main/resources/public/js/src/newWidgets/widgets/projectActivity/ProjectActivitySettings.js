@@ -36,6 +36,8 @@ define(function (require) {
         { value: 'update_filter', name: Localization.forms.updateFilter },
         { value: 'update_bts', name: Localization.forms.updateBts },
         { value: 'update_project', name: Localization.forms.updateProject },
+        { value: 'generate_index', name: Localization.forms.generateIndex },
+        { value: 'delete_index', name: Localization.forms.deleteIndex },
         { value: 'update_defects', name: Localization.forms.updateDefects },
         { value: 'import', name: Localization.forms.import }
 
@@ -47,7 +49,7 @@ define(function (require) {
         update_bts: ['create_bts', 'update_bts', 'delete_bts'],
         update_defects: ['update_defect', 'delete_defect'],
         update_issue: ['post_issue', 'link_issue', 'unlink_issue'],
-        import: ['start_import', 'finish_import']
+        import: ['start_import', 'finish_import'],
     };
 
     return {

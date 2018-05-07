@@ -450,6 +450,8 @@ define(['util'], function () {
             update_project: 'updated',
             update_defect: 'updated',
             delete_defect: 'deleted',
+            delete_index: 'updated',
+            generate_index: 'updated',
             defectTypes: 'defect types',
             defectType: 'defect type',
             casesLabel: 'cases',
@@ -571,7 +573,9 @@ define(['util'], function () {
             launchesOnFilter: 'Number of launches in the filter is ',
             selectWidget: 'Choose widget type from the list below',
             launchInterrupted: 'Run interrupted',
-            zoomWidgetArea: 'Zoom widget area'
+            zoomWidgetArea: 'Zoom widget area',
+            aaProperties: 'Auto-Analysis properties',
+            aaConfig: 'Auto-Analysis configurations'
         },
 
         userProfile: {
@@ -1094,7 +1098,9 @@ define(['util'], function () {
                 create_user: 'Create user',
                 start_import: 'Start import',
                 finish_import: 'Finish import',
-                analyze_item: 'AA changed defect type'
+                analyze_item: 'AA changed defect type',
+                generate_index: 'Generate index',
+                delete_index: 'Remove index'
             },
             objectTypes: {
                 all: 'all',
@@ -1672,7 +1678,7 @@ define(['util'], function () {
             has: 'has',
             '!has': 'without any of',
             in: 'has any of',
-            '!in': 'without',
+            '!in': 'without'
         },
 
         successMessages: {
@@ -1992,7 +1998,9 @@ define(['util'], function () {
             updateFilter: 'Update filter',
             import: 'Import',
             projectNameIn: 'Project name in BTS',
-            copyLink: 'Copy link'
+            copyLink: 'Copy link',
+            generateIndex: 'Generate index',
+            deleteIndex: 'Remove index'
         },
 
         wizard: {
@@ -2181,7 +2189,9 @@ define(['util'], function () {
             keepScreenshots: 'Keep attachments',
             auto_analyze: 'Auto analysis',
             launchInactivity: 'Launch inactivity timeout',
-            statisticsCalculationStrategy: 'Select strategy'
+            statisticsCalculationStrategy: 'Select strategy',
+            delete_index: 'removed index',
+            generate_index: 'generated index'
         },
 
         permissionMap: {

@@ -65,6 +65,7 @@ define(function (require) {
                         var dateKey;
                         var isEmail = null;
                         var emailAction = null;
+                        var isAutoAnalysis = null;
                         var values;
                         var contains;
                         var now;
@@ -94,6 +95,14 @@ define(function (require) {
                                             isEmail = 'email';
                                             emailAction = 'update_email';
                                         } else {
+                                            if (k === 'auto_analyze$newValue' ||
+                                                k === 'analyze_mode$newValue' ||
+                                                k === 'min_doc_freq$newValue' ||
+                                                k === 'min_should_match$newValue' ||
+                                                k === 'number_of_log_lines$newValue' ||
+                                                k === 'min_term_freq$newValue') {
+                                                isAutoAnalysis = 'a-analysis';
+                                            }
                                             a = k.split('$');
                                             name = a[0];
                                             type = a[1];
@@ -110,6 +119,14 @@ define(function (require) {
                                 }, this);
                             } else {
                                 _.extend(values, val.values);
+                            }
+
+                            if (val.values.actionType === 'delete_index' || val.values.actionType === 'generate_index') {
+                                values.objectType = 'index';
+                            }
+
+                            if (isAutoAnalysis) {
+                                values.objectType = isAutoAnalysis;
                             }
 
                             if (isEmail) {
