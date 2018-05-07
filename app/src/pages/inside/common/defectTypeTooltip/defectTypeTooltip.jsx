@@ -3,7 +3,7 @@ import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { TO_INVESTIGATE } from 'common/constants/defectTypes';
-import { projectConfigSelector } from 'controllers/project';
+import { projectConfigSelector } from 'controllers/project/index';
 import { injectIntl, intlShape, defineMessages } from 'react-intl';
 import styles from './defectTypeTooltip.scss';
 
