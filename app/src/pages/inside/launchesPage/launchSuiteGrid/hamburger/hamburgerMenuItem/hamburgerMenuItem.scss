@@ -7,6 +7,9 @@
   line-height: 30px;
   box-sizing: border-box;
   padding: 0 15px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   cursor: pointer;
 
   &.disabled {
