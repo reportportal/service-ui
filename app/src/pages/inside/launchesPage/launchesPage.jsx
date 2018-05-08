@@ -20,6 +20,9 @@ import {
   proceedWithValidItemsAction,
   mergeLaunchesAction,
   compareLaunchesAction,
+  launchesSelector,
+  launchPaginationSelector,
+  fetchLaunches,
 } from 'controllers/launch';
 import { LaunchSuiteGrid } from 'pages/inside/common/launchSuiteGrid';
 import { LaunchToolbar } from './LaunchToolbar';
@@ -38,11 +41,12 @@ const messages = defineMessages({
     url: URLS.launch(activeProjectSelector(state)),
     selectedLaunches: selectedLaunchesSelector(state),
     validationErrors: validationErrorsSelector(state),
+    launches: launchesSelector(state),
   }),
   {
     showModalAction,
     toggleLaunchSelectionAction,
-    selectAllLaunchesAction: selectLaunchesAction,
+    selectLaunchesAction,
     unselectAllLaunchesAction,
     proceedWithValidItemsAction,
     mergeLaunchesAction,
@@ -53,12 +57,15 @@ const messages = defineMessages({
   defaultSortingColumn: 'start_time',
   defaultSortingDirection: SORTING_DESC,
 })
-@withPagination()
+@withPagination({
+  paginationSelector: launchPaginationSelector,
+  fetchAction: fetchLaunches,
+})
 @injectIntl
 export class LaunchesPage extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
-    data: PropTypes.arrayOf(PropTypes.object),
+    launches: PropTypes.arrayOf(PropTypes.object),
     activePage: PropTypes.number,
     itemCount: PropTypes.number,
     pageCount: PropTypes.number,
@@ -73,7 +80,7 @@ export class LaunchesPage extends Component {
     activeProject: PropTypes.string.isRequired,
     selectedLaunches: PropTypes.arrayOf(PropTypes.object),
     validationErrors: PropTypes.object,
-    selectAllLaunchesAction: PropTypes.func,
+    selectLaunchesAction: PropTypes.func,
     unselectAllLaunchesAction: PropTypes.func,
     proceedWithValidItemsAction: PropTypes.func,
     toggleLaunchSelectionAction: PropTypes.func,
@@ -82,7 +89,7 @@ export class LaunchesPage extends Component {
   };
 
   static defaultProps = {
-    data: [],
+    launches: [],
     activePage: 1,
     itemCount: null,
     pageCount: null,
@@ -96,7 +103,7 @@ export class LaunchesPage extends Component {
     onChangeSorting: () => {},
     selectedLaunches: [],
     validationErrors: {},
-    selectAllLaunchesAction: () => {},
+    selectLaunchesAction: () => {},
     unselectAllLaunchesAction: () => {},
     proceedWithValidItemsAction: () => {},
     toggleLaunchSelectionAction: () => {},
@@ -158,12 +165,12 @@ export class LaunchesPage extends Component {
   };
 
   handleAllLaunchesSelection = () => {
-    const { selectedLaunches, data: launches } = this.props;
+    const { selectedLaunches, launches } = this.props;
     if (launches.length === selectedLaunches.length) {
       this.props.unselectAllLaunchesAction();
       return;
     }
-    this.props.selectAllLaunchesAction(launches);
+    this.props.selectLaunchesAction(launches);
   };
 
   proceedWithValidItems = () => this.props.proceedWithValidItemsAction(this.props.fetchData);
@@ -172,7 +179,6 @@ export class LaunchesPage extends Component {
 
   render() {
     const {
-      data,
       activePage,
       itemCount,
       pageCount,
@@ -183,6 +189,7 @@ export class LaunchesPage extends Component {
       sortingDirection,
       onChangeSorting,
       selectedLaunches,
+      launches,
     } = this.props;
 
     return (
@@ -198,7 +205,7 @@ export class LaunchesPage extends Component {
           onImportLaunch={this.openImportModal}
         />
         <LaunchSuiteGrid
-          data={data}
+          data={launches}
           sortingColumn={sortingColumn}
           sortingDirection={sortingDirection}
           onChangeSorting={onChangeSorting}

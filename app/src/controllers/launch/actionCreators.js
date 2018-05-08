@@ -6,6 +6,7 @@ import {
   SET_VALIDATION_ERRORS,
   REMOVE_VALIDATION_ERROR,
   SET_LAST_OPERATION_NAME,
+  FETCH_LAUNCHES,
 } from './constants';
 import { lastOperationSelector, selectedLaunchesSelector } from './selectors';
 import { validateMergeLaunch } from './actionValidators';
@@ -117,3 +118,8 @@ export const compareLaunchesAction = defineGroupOperation(
     }),
   () => null,
 );
+
+export const fetchLaunches = (params) => ({
+  type: FETCH_LAUNCHES,
+  payload: params,
+});
