@@ -29,7 +29,7 @@ define(function (require) {
     var SettingInputItemsView = require('modals/addWidget/widgetSettings/SettingInputItemsView');
     var SettingDropDownView = require('modals/addWidget/widgetSettings/SettingDropDownView');
     var SettingCheckBoxView = require('modals/addWidget/widgetSettings/SettingCheckBoxView');
-    var SettingSwitcherView = require('modals/addWidget/widgetSettings/SettingSwitcherView');
+    var SettingSwitcherView = require('components/SettingSwitcherView');
     var SettingCustomColumnsView = require('modals/addWidget/widgetSettings/SettingCustomColumn/SettingCustomColumnsView');
     var SettingFiltersView = require('modals/addWidget/widgetSettings/SettingFilters/SettingFiltersView');
     var SettingInputView = require('modals/addWidget/widgetSettings/SettingInputView');

@@ -31,7 +31,6 @@
         margin-bottom: 0px;
       }
       .confirm-block {
-        font-family: OpenSansSemibold;
         margin-top: 12px;
       }
       .warning-block{
@@ -47,22 +46,11 @@
         margin-top: 20px;
         .note-title{
           font-size: 13px;
-          font-weight: 600;
-          font-style: normal;
-          font-stretch: normal;
-          line-height: normal;
-          letter-spacing: normal;
-          text-align: left;
           color: $COLOR--tealish;
         }
         .note-text{
           font-size: 12px;
-          font-weight: normal;
-          font-style: normal;
-          font-stretch: normal;
           line-height: 1.5;
-          letter-spacing: normal;
-          text-align: left;
           color: $COLOR--charcoal-grey;
         }
       }

@@ -118,22 +118,8 @@
     .rp-control-label{
       vertical-align: middle;
     }
-    table{
-      td{
-        border: 1px solid $COLOR--gray-80;
-        button{
-          width: 122px;
-          height: 30px;
-          border: none;
-          background: $COLOR--white-default;
-          color: $COLOR--charcoal-grey;
-          font-size: 13px;
-          outline: none;
-          &.active{
-            background: $COLOR--gray-80;
-          }
-        }
-      }
+    .setting-switcher{
+      padding: 0;
     }
     &:before{
       content: '';
@@ -152,11 +138,6 @@
       color: $COLOR--gray-47;
       font-size: 12px;
       text-transform: uppercase;
-      font-weight: 600;
-      font-style: normal;
-      font-stretch: normal;
-      line-height: normal;
-      letter-spacing: normal;
       margin-bottom: 20px;
       padding: 0 15px;
     }
@@ -173,11 +154,7 @@
   .index-action-description{
     width: 710px;
     font-size: 13px;
-    font-weight: normal;
-    font-style: normal;
-    font-stretch: normal;
     line-height: 1.54;
-    letter-spacing: normal;
     text-align: left;
     color: $COLOR--charcoal-grey;
     p{
@@ -185,7 +162,10 @@
     }
   }
   .submit-col{
-    width: 45%;
+    text-align: center;
+    button{
+      margin-right: 65px;
+    }
   }
 }
 
@@ -204,6 +184,14 @@
       color: $COLOR--gray-60;
       background-color: $COLOR--white;
       border-color: $COLOR--gray-91;
+    }
+    .setting-switcher{
+      span{
+        background: $COLOR--gray-91;
+        &.active{
+          background: darken($COLOR--gray-91, 5);
+        }
+      }
     }
     .rp-input{
       color: $COLOR--charcoal-grey;
@@ -236,13 +224,6 @@
         color: $COLOR--charcoal-grey;
         background-color: $COLOR--gray-91;
         border-color: $COLOR--gray-80;
-      }
-      table{
-        td{
-          button{
-            background-color: $COLOR--gray-91;
-          }
-        }
       }
     }
     .aa-base{
