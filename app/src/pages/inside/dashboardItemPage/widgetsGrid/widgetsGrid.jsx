@@ -1,5 +1,3 @@
-import 'react-grid-layout/css/styles.css';
-import 'react-resizable/css/styles.css';
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import { Responsive, WidthProvider } from 'react-grid-layout';
@@ -10,6 +8,7 @@ import { ScrollWrapper } from 'components/main/scrollWrapper';
 import PropTypes from 'prop-types';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import styles from './widgetsGrid.scss';
+import { Widget } from './widget';
 
 const cx = classNames.bind(styles);
 const ResponsiveGridLayout = WidthProvider(Responsive);
@@ -33,6 +32,7 @@ export class WidgetsGrid extends PureComponent {
   state = {
     widgets: [],
     isFetching: false,
+    isDraggable: false,
   };
 
   componentDidMount() {
@@ -77,6 +77,28 @@ export class WidgetsGrid extends PureComponent {
     });
   }
 
+  switchDraggable = (isDraggable) => {
+    if(!this.state.isResizing) {
+      this.setState({
+        isDraggable
+      });
+    }
+  }
+
+  onResizeStart = () => {
+    this.setState({
+      isResizing: true
+    });
+  }
+
+  onResizeStop = (newLayout) => {
+    this.setState({
+      isResizing: false
+    });
+
+    this.onGridChange(newLayout);
+  }
+
   fetchWidgets() {
     this.setState({ isFetching: true });
 
@@ -97,7 +119,11 @@ export class WidgetsGrid extends PureComponent {
     if (widgets.length) {
       Items = widgets.map(({ widgetPosition: [x, y], widgetSize: [w, h], widgetId }) => {
         height += h * (rowHeight + 20);
-        return <div key={widgetId} className={cx('gadget-view')} data-grid={{ x, y, w, h }} />;
+        return (
+          <div key={widgetId} className={cx('widget-view')} data-grid={{ x, y, w, h, minW: 4, minH: 4 }}>
+            <Widget switchDraggable={this.switchDraggable}/>
+          </div>
+        );
       });
     }
 
@@ -117,8 +143,10 @@ export class WidgetsGrid extends PureComponent {
             breakpoints={breakpoints}
             onBreakpointChange={this.onBreakpointChange}
             onDragStop={this.onGridChange}
-            onResizeStop={this.onGridChange}
+            onResizeStop={this.onResizeStop}
+            onResizeStart={this.onResizeStart}
             cols={cols}
+            isDraggable={this.state.isDraggable}
           >
             {Items}
           </ResponsiveGridLayout>
@@ -127,3 +155,4 @@ export class WidgetsGrid extends PureComponent {
     );
   }
 }
+
