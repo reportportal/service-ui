@@ -1,4 +1,6 @@
 import { combineReducers } from 'redux';
+import { fetchReducer } from 'controllers/fetch';
+import { paginationReducer } from 'controllers/pagination';
 import {
   SELECT_LAUNCHES,
   UNSELECT_ALL_LAUNCHES,
@@ -6,6 +8,7 @@ import {
   SET_VALIDATION_ERRORS,
   REMOVE_VALIDATION_ERROR,
   SET_LAST_OPERATION_NAME,
+  NAMESPACE,
 } from './constants';
 
 const selectedLaunchesReducer = (state = [], { type, payload }) => {
@@ -50,4 +53,6 @@ export const launchReducer = combineReducers({
   selected: selectedLaunchesReducer,
   errors: validationErrorsReducer,
   lastOperation: lastOperationReducer,
+  launches: fetchReducer(NAMESPACE, { contentPath: 'content' }),
+  pagination: paginationReducer(NAMESPACE),
 });
