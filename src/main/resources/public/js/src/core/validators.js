@@ -68,13 +68,6 @@ define(function (require) {
         return null;
     };
 
-    var valueOutOfRange = function (val, options, Util) {
-        if (!isInt(val) || val === '' || val > options.max || val < options.min) {
-            return Util.replaceTemplate(Localization.validation[options.type + 'ValueOutOfRange'], options.min, options.max);
-        }
-        return null;
-    };
-
     var maxRequired = function (val, options, Util) {
         var length = val.length;
         if (validateForMax(length, options)) {
@@ -149,6 +142,5 @@ define(function (require) {
         minMaxNotRequired: minMaxNotRequired,
         remoteEmail: remoteEmail,
         remoteLogin: remoteLogin,
-        valueOutOfRange: valueOutOfRange
     };
 });

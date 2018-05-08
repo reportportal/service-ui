@@ -43,15 +43,7 @@
         <label class="rp-control-label rp-custom-col">
             <%= data.text.project.autoAnalysisMode %>
         </label>
-        <div class="rp-custom-col">
-            <table>
-                <tr>
-                    <td><button data-js-mode value="STRICT"><%= data.text.project.strictMode %></button></td>
-                    <td><button data-js-mode value="MODERATE"><%= data.text.project.moderateMode %></button></td>
-                    <td><button data-js-mode value="LIGHT"><%= data.text.project.lightMode %></button></td>
-                </tr>
-            </table>
-        </div>
+        <div class="rp-custom-col" data-js-mode-switcher></div>
     </div>
     <div class="rp-form-group">
         <label class="rp-control-label rp-custom-col">
@@ -102,9 +94,8 @@
 </div>
 <div class="rp-form-group rp-wrap-button">
     <div class="submit-col rp-custom-col">
-        <button type="submit" class="rp-btn rp-btn-submit rp-btn-right" id="submit-settings" <%= notAllowed %>><%= data.text.ui.submit %></button>
+        <button type="submit" class="rp-btn rp-btn-submit" id="submit-settings" <%= notAllowed %>><%= data.text.ui.submit %></button>
     </div>
-    <div class="col-md-5 rp-custom-col hidden-xs hidden-sm"></div>
 </div>
 <div class="index-actions">
     <div class="index-actions-title">

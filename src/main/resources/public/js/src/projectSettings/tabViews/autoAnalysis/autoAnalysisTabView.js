@@ -36,6 +36,7 @@ define(function (require) {
     var appModel = new SingletonAppModel();
     var Localization = require('localization');
     var AutoAnalysisSettingsModel = require('projectSettings/tabViews/autoAnalysis/autoAnalysisSettingsModel');
+    var SettingSwitcherView = require('components/SettingSwitcherView');
 
     var AutoAnalysisTabView = Epoxy.View.extend({
         className: 'auto-analysis-project-settings',
@@ -44,7 +45,6 @@ define(function (require) {
         events: {
             'click #submit-settings': 'submitSettings',
             'change input[type="radio"]': 'onChangeAABase',
-            'click [data-js-mode]': 'onChangeMode',
             'change [data-js-mode-param]': 'isMatchPreset',
             'click [data-js-remove-index]': 'onRemoveIndex',
             'click [data-js-generate-index]': 'onGenerateIndex',
@@ -84,9 +84,31 @@ define(function (require) {
                 this.model.set('numberOfLogLines', val);
                 this.isMatchPreset();
             });
+            this.modeSwitcher = new SettingSwitcherView({ options: {
+                isShortForm: false,
+                items: [{ name: Localization.project.strictMode, value: 'STRICT' },
+                    { name: Localization.project.moderateMode, value: 'MODERATE' },
+                    { name: Localization.project.lightMode, value: 'LIGHT' }],
+                value: -1
+            } });
+            this.modeSwitcher.activate();
+            $('[data-js-mode-switcher]', this.$el).html(this.modeSwitcher.$el);
+            this.listenTo(this.modeSwitcher.model, 'change:value', function () {
+                this.setAccuracySettings(this.getModeValue());
+            });
             this.setupAnalyzerSetting();
             this.isMatchPreset();
             this.addValidators();
+        },
+        getModeValue: function () {
+            var self = this;
+            var option;
+            _.each(this.modeSwitcher.model.get('items'), function (item, i) {
+                if (i === self.modeSwitcher.model.get('value')) {
+                    option = item;
+                }
+            });
+            return option && option.value;
         },
         setupAnalyzerSetting: function () {
             var userRole;
@@ -98,7 +120,7 @@ define(function (require) {
                     $('[data-js-aa-base-block] input', this.$el).attr('disabled', 'disabled');
                     $('[data-js-mode-param]', this.$el).attr('disabled', 'disabled');
                     $('[data-js-dropdown]', this.$el).addClass('disabled');
-                    $('[data-js-mode]', this.$el).attr('disabled', 'disabled');
+                    $('[data-js-switch-item]', this.$el).addClass('disabled');
                     $('[data-js-remove-index]', this.$el).attr('disabled', 'disabled');
                     $('[data-js-generate-index]', this.$el).attr('disabled', 'disabled');
                 }
@@ -107,32 +129,38 @@ define(function (require) {
         isMatchPreset: function () {
             var keys = Object.keys(config.autoAnalysisAccuracy);
             var self = this;
-            $('[data-js-mode]', this.$el).removeClass('active');
+            this.modeSwitcher.model.set('value', -1);
             keys.forEach(function (key) {
                 var preset = config.autoAnalysisAccuracy[key];
                 var isPreset = preset.minDocFreq === self.model.get('minDocFreq').toString() &&
                     preset.minShouldMatch === self.model.get('minShouldMatch').toString() &&
                     preset.minTermFreq === self.model.get('minTermFreq').toString() &&
                     preset.numberOfLogLines === self.model.get('numberOfLogLines').toString();
-                isPreset && $('[value="' + key + '"]', self.$el).addClass('active');
+                if (isPreset) {
+                    _.each(self.modeSwitcher.model.get('items'), function (item, i) {
+                        if (item.value === key) {
+                            self.modeSwitcher.model.set('value', i);
+                        }
+                    });
+                }
             });
         },
         addValidators: function () {
             Util.hintValidator($('[data-js-match-input]', this.$el), [{
-                validator: 'valueOutOfRange',
-                type: 'aa',
+                validator: 'minMaxNumberRequired',
+                type: 'autoAnalys',
                 min: 50,
                 max: 100
             }]);
             Util.hintValidator($('[data-js-doc-freq-input]', this.$el), [{
-                validator: 'valueOutOfRange',
-                type: 'aa',
+                validator: 'minMaxNumberRequired',
+                type: 'autoAnalys',
                 min: 1,
                 max: 10
             }]);
             Util.hintValidator($('[data-js-term-freq-input]', this.$el), [{
-                validator: 'valueOutOfRange',
-                type: 'aa',
+                validator: 'minMaxNumberRequired',
+                type: 'autoAnalys',
                 min: 1,
                 max: 10
             }]);
@@ -185,21 +213,16 @@ define(function (require) {
             });
             modal.show();
         },
-        onChangeMode: function (e) {
-            var mode = $(e.target).attr('value');
-            $('[data-js-mode]', this.$el).removeClass('active');
-            $('[value="' + mode + '"]', this.$el).addClass('active');
-            this.setAccuracySettings(mode);
-            this.validate();
-        },
         onChangeAABase: function (e) {
             this.model.set('analyzer_mode', e.target.value);
         },
         setAccuracySettings: function (mode) {
-            this.model.set('minDocFreq', config.autoAnalysisAccuracy[mode].minDocFreq);
-            this.model.set('minShouldMatch', config.autoAnalysisAccuracy[mode].minShouldMatch);
-            this.model.set('minTermFreq', config.autoAnalysisAccuracy[mode].minTermFreq);
-            this.model.set('numberOfLogLines', config.autoAnalysisAccuracy[mode].numberOfLogLines);
+            if (mode) {
+                this.model.set('minDocFreq', config.autoAnalysisAccuracy[mode].minDocFreq);
+                this.model.set('minShouldMatch', config.autoAnalysisAccuracy[mode].minShouldMatch);
+                this.model.set('minTermFreq', config.autoAnalysisAccuracy[mode].minTermFreq);
+                this.model.set('numberOfLogLines', config.autoAnalysisAccuracy[mode].numberOfLogLines);
+            }
         },
         validate: function () {
             return !($('[data-js-match-input]', this.$el).trigger('validate').data('validate-error') ||
@@ -211,10 +234,6 @@ define(function (require) {
             if (!this.validate()) return;
             generalSettings = this.model.getAutoAnalysisSettings();
             config.trackingDispatcher.trackEventNumber(385);
-            if (!generalSettings.configuration.analyzerConfiguration.isAutoAnalyzerEnabled) {
-                generalSettings.configuration.analyzerConfiguration.analyzer_mode = 'LAUNCH_NAME';
-                $('[value="LAUNCH_NAME"]', this.$el).attr('checked', 'checked');
-            }
             Service.updateProject(generalSettings)
                 .done(function () {
                     var newConfig = appModel.get('configuration');
