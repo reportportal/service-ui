@@ -1,12 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Fullscreen from 'react-full-screen';
-import { connect } from 'react-redux';
 import Parser from 'html-react-parser';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import classNames from 'classnames/bind';
 import { GhostButton } from 'components/buttons/ghostButton';
-import { activeProjectSelector } from 'controllers/user';
 import AddWidgetIcon from './img/add-inline.svg';
 import AddSharedWidgetIcon from './img/add-shared-inline.svg';
 import EditIcon from './img/edit-inline.svg';
@@ -40,13 +38,9 @@ const messages = defineMessages({
   },
 });
 
-@connect((state) => ({
-  url: `/api/v1/${activeProjectSelector(state)}/dashboard`,
-}))
 @injectIntl
 export class DashboardItemPage extends Component {
   static propTypes = {
-    url: PropTypes.string.isRequired,
     intl: intlShape.isRequired,
     match: PropTypes.object.isRequired,
   };
@@ -66,7 +60,7 @@ export class DashboardItemPage extends Component {
   render() {
     const { formatMessage } = this.props.intl;
     return (
-      <div className={`${cx('dashboard-item')}`}>
+      <div className={cx('dashboard-item')}>
         <div className={cx('buttons-container')}>
           <div className={cx('nav-left')}>
             <GhostButton icon={AddWidgetIcon}>{formatMessage(messages.addNewWidget)}</GhostButton>

@@ -1,28 +1,38 @@
 import React, { PureComponent } from 'react';
 import classNames from 'classnames/bind';
+import PropTypes from 'prop-types';
 import styles from './widget.scss';
 
 const cx = classNames.bind(styles);
 
 export class Widget extends PureComponent {
-  state = {
-    isDragging: false
+  static propTypes = {
+    switchDraggable: PropTypes.func
   };
+
+  static defaultProps = {
+    switchDraggable: () => {},
+  };
+
+  constructor(props) {
+    super(props);
+    this.isDragging = false;
+  }
 
   onHeaderMouseOver = () => {
     this.props.switchDraggable(true);
   }
 
   onHeaderMouseDown = () => {
-    this.setState({ isDragging: true });
+    this.isDragging = true;
   }
 
   onHeaderMouseUp = () => {
-    this.setState({ isDragging: false });
+    this.isDragging = false;
   }
 
   onWidgetMouseOver = () => {
-    if (!this.state.isDragging) {
+    if (!this.isDragging) {
       this.props.switchDraggable(false);
     }
   }

@@ -12,6 +12,7 @@ import { Widget } from './widget';
 
 const cx = classNames.bind(styles);
 const ResponsiveGridLayout = WidthProvider(Responsive);
+const rowHeight = 63;
 
 @connect((state) => ({
   url: `/api/v1/${activeProjectSelector(state)}/dashboard`,
@@ -34,6 +35,12 @@ export class WidgetsGrid extends PureComponent {
     isFetching: false,
     isDraggable: false,
   };
+
+  constructor(props) {
+    super(props);
+    this.url = `${this.props.url}/${this.props.dashboardId}`;
+    this.isResizing = false;
+  }
 
   componentDidMount() {
     this.fetchWidgets();
@@ -67,9 +74,7 @@ export class WidgetsGrid extends PureComponent {
   };
 
   updateWidgets(widgets) {
-    const { dashboardId } = this.props;
-
-    fetch(`${this.props.url}/${dashboardId}`, {
+    fetch(this.url, {
       method: 'PUT',
       data: {
         updateWidgets: widgets,
@@ -78,7 +83,7 @@ export class WidgetsGrid extends PureComponent {
   }
 
   switchDraggable = (isDraggable) => {
-    if(!this.state.isResizing) {
+    if(!this.isResizing) {
       this.setState({
         isDraggable
       });
@@ -86,26 +91,20 @@ export class WidgetsGrid extends PureComponent {
   }
 
   onResizeStart = () => {
-    this.setState({
-      isResizing: true
-    });
+    this.isResizing = true;
   }
 
   onResizeStop = (newLayout) => {
-    this.setState({
-      isResizing: false
-    });
-
+    this.isResizing = false;
     this.onGridChange(newLayout);
   }
 
   fetchWidgets() {
     this.setState({ isFetching: true });
 
-    return fetch(this.props.url).then((result) => {
-      const currentDashboard = result.find((item) => item.id === this.props.dashboardId);
+    return fetch(this.url).then(({widgets}) => {
       this.setState({
-        widgets: currentDashboard.widgets,
+        widgets,
         isFetching: false,
       });
     });
@@ -113,7 +112,6 @@ export class WidgetsGrid extends PureComponent {
 
   render() {
     const { widgets } = this.state;
-    const rowHeight = 63;
     let Items = null;
     let height = 0; // we need to set large height to avoid double scroll
     if (widgets.length) {
