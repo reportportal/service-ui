@@ -134,19 +134,24 @@
     background-color: $COLOR--light-blue;
     border-radius: 0.3rem;
   }
-  code.lang-error {
-    position: relative;
-    padding-left: 15px;
-    background: transparent;
+  :global {
+    code.lang-error {
+      position: relative;
+      padding: 10px 15px;
+      background: transparent;
+      font-size: 13px;
+      line-height: 18px;
+      box-sizing: border-box;
 
-    &::before {
-      content: '';
-      position: absolute;
-      width: 3px;
-      top: 10px;
-      bottom: 10px;
-      left: 0;
-      background: $COLOR--orange-red;
+      &::before {
+        content: '';
+        position: absolute;
+        width: 3px;
+        top: 10px;
+        bottom: 10px;
+        left: 0;
+        background: $COLOR--orange-red;
+      }
     }
   }
   blockquote {
