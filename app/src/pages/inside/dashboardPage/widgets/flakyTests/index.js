@@ -1,1 +1,3 @@
-export { default as FlakyTests } from './flakyTests';
+import { FlakyTests } from './flakyTests';
+
+export { FlakyTests };

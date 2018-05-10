@@ -18,4 +18,4 @@ FlakyTests.propTypes = {
   nameClickHandler: func.isRequired,
 };
 
-export default FlakyTests;
+export { FlakyTests };

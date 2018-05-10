@@ -31,4 +31,4 @@ function matrixFactory(renderBool) {
   return Matrix;
 }
 
-export default matrixFactory;
+export { matrixFactory };

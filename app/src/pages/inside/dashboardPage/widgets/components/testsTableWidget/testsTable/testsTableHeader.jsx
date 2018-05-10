@@ -27,4 +27,4 @@ TestsTableHeader.propTypes = {
   columns: PTColumns.isRequired,
 };
 
-export default TestsTableHeader;
+export { TestsTableHeader };

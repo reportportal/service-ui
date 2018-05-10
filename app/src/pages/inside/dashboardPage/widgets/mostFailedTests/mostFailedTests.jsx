@@ -31,4 +31,4 @@ class MostFailedTests extends React.Component {
   }
 }
 
-export default MostFailedTests;
+export { MostFailedTests };

@@ -2,8 +2,8 @@ import * as React from 'react';
 import { func } from 'prop-types';
 import classNames from 'classnames/bind';
 import { PTTests, PTColumns } from '../pTypes';
-import TestsTableRow from './testsTableRow';
-import matrixFactory from './matrix';
+import { TestsTableRow } from './testsTableRow';
+import { matrixFactory } from './matrix';
 import styles from '../testsTableWidget.scss';
 
 const cx = classNames.bind(styles);
@@ -46,4 +46,4 @@ class TestsTableBody extends React.Component {
   }
 }
 
-export default TestsTableBody;
+export { TestsTableBody };
