@@ -7,6 +7,7 @@ import { logoutAction } from 'controllers/auth';
 import { connect } from 'react-redux';
 import { NavLink, withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { ADMINISTRATOR } from 'common/constants/projectRoles';
 import styles from './userBlock.scss';
 
 const cx = classNames.bind(styles);
@@ -62,7 +63,7 @@ export class UserBlock extends PureComponent {
         onClick={this.toggleMenu}
       >
         <div className={cx('user-wrapper')}>
-          {this.props.user.userRole === 'ADMINISTRATOR' ? (
+          {this.props.user.userRole === ADMINISTRATOR ? (
             <div className={cx('admin-badge')}>
               <FormattedMessage id={'UserBlock.adminBadge'} defaultMessage={'admin'} />
             </div>
