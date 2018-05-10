@@ -7,7 +7,7 @@ const cx = classNames.bind(styles);
 
 export class Widget extends PureComponent {
   static propTypes = {
-    switchDraggable: PropTypes.func
+    switchDraggable: PropTypes.func,
   };
 
   static defaultProps = {
@@ -21,21 +21,21 @@ export class Widget extends PureComponent {
 
   onHeaderMouseOver = () => {
     this.props.switchDraggable(true);
-  }
+  };
 
   onHeaderMouseDown = () => {
     this.isDragging = true;
-  }
+  };
 
   onHeaderMouseUp = () => {
     this.isDragging = false;
-  }
+  };
 
   onWidgetMouseOver = () => {
     if (!this.isDragging) {
       this.props.switchDraggable(false);
     }
-  }
+  };
 
   render() {
     return (
@@ -45,13 +45,8 @@ export class Widget extends PureComponent {
           onMouseOver={this.onHeaderMouseOver}
           onMouseUp={this.onHeaderMouseUp}
           onMouseDown={this.onHeaderMouseDown}
-        >
-        </div>
-        <div
-          className={cx('widget')}
-          onMouseOver={this.onWidgetMouseOver}
-        >
-        </div>
+        />
+        <div className={cx('widget')} onMouseOver={this.onWidgetMouseOver} />
       </div>
     );
   }

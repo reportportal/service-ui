@@ -83,26 +83,26 @@ export class WidgetsGrid extends PureComponent {
   }
 
   switchDraggable = (isDraggable) => {
-    if(!this.isResizing) {
+    if (!this.isResizing) {
       this.setState({
-        isDraggable
+        isDraggable,
       });
     }
-  }
+  };
 
   onResizeStart = () => {
     this.isResizing = true;
-  }
+  };
 
   onResizeStop = (newLayout) => {
     this.isResizing = false;
     this.onGridChange(newLayout);
-  }
+  };
 
   fetchWidgets() {
     this.setState({ isFetching: true });
 
-    return fetch(this.url).then(({widgets}) => {
+    return fetch(this.url).then(({ widgets }) => {
       this.setState({
         widgets,
         isFetching: false,
@@ -118,8 +118,12 @@ export class WidgetsGrid extends PureComponent {
       Items = widgets.map(({ widgetPosition: [x, y], widgetSize: [w, h], widgetId }) => {
         height += h * (rowHeight + 20);
         return (
-          <div key={widgetId} className={cx('widget-view')} data-grid={{ x, y, w, h, minW: 4, minH: 4 }}>
-            <Widget switchDraggable={this.switchDraggable}/>
+          <div
+            key={widgetId}
+            className={cx('widget-view')}
+            data-grid={{ x, y, w, h, minW: 4, minH: 4 }}
+          >
+            <Widget switchDraggable={this.switchDraggable} />
           </div>
         );
       });
@@ -153,4 +157,3 @@ export class WidgetsGrid extends PureComponent {
     );
   }
 }
-

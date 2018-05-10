@@ -46,7 +46,7 @@ export class DashboardItemPage extends Component {
   };
 
   state = {
-    isFullscreen: false
+    isFullscreen: false,
   };
 
   onChangeFullscreen = (isFullscreen) => {
