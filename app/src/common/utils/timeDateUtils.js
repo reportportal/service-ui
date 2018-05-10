@@ -56,7 +56,7 @@ export const getDuration = (start, end) => {
   } else if (result === '' && seconds === 0) {
     result = `${Math.round((end - start) / 10) / 100}s`;
   }
-  return result;
+  return result.trim();
 };
 
 export const approximateTimeFormat = (time) => {
@@ -77,7 +77,7 @@ export const approximateTimeFormat = (time) => {
   } else if (result === '' && seconds === 0) {
     result = `${Math.round(time / 10) / 100}s`;
   }
-  return result;
+  return result.trim();
 };
 
 export const dateFormat = (val, withUtc) => {
