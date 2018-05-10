@@ -1,6 +1,7 @@
 import React from 'react';
 import { Switch, Route, Link, Redirect } from 'react-router-dom';
 import { ModalContainer } from 'components/main/modal';
+import { ScreenLock } from 'components/main/screenLock';
 import { EmptyLayout } from 'layouts/emptyLayout';
 import { AppLayout } from 'layouts/appLayout';
 import { AdminLayout } from 'layouts/adminLayout';
@@ -18,6 +19,7 @@ import { SandboxPage } from 'pages/inside/sandboxPage';
 import { LoginPage } from 'pages/outside/loginPage';
 import { RegistrationPage } from 'pages/outside/registrationPage';
 import { LocalizationSwitcher } from 'components/main/localizationSwitcher';
+import { Notifications } from 'components/main/notification';
 import { authorizedRoute } from './authorizedRoute';
 import { anonymousRoute } from './anonymousRoute';
 
@@ -76,6 +78,8 @@ const RootRoute = () => (
       <AppRoute />
     </Switch>
     <ModalContainer />
+    <Notifications />
+    <ScreenLock />
   </div>
 );
 

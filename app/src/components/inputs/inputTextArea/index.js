@@ -1,0 +1,1 @@
+export { InputTextArea } from './inputTextArea';

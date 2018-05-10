@@ -6,8 +6,10 @@ import { langReducer } from 'controllers/lang';
 import { modalReducer } from 'controllers/modal';
 import { userReducer } from 'controllers/user';
 import { projectReducer } from 'controllers/project';
+import { screenLockReducer } from 'controllers/screenLock';
 import { dashboardReducer } from 'controllers/dashboard';
 import { launchReducer } from 'controllers/launch';
+import { notificationReducer } from 'controllers/notification';
 
 export const rootReducer = combineReducers({
   appInfo: appInfoReducer,
@@ -17,6 +19,8 @@ export const rootReducer = combineReducers({
   modal: modalReducer,
   user: userReducer,
   project: projectReducer,
+  notifications: notificationReducer,
+  screenLock: screenLockReducer,
   dashboard: dashboardReducer,
   launches: launchReducer,
 });

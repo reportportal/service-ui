@@ -1,0 +1,50 @@
+.no-filters-block {
+  display: table-row;
+  position: relative;
+  width: 100%;
+  height: 300px;
+}
+.flex-wrapper {
+  position: absolute;
+  left: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.icon {
+  margin: 5px auto;
+  width: 215px;
+  height: 135px;
+  background: url(./img/no-filters.png) center no-repeat;
+}
+.title {
+  margin: auto;
+  font-family: $FONT-SEMIBOLD;
+  font-size: 16px;
+  line-height: 1.5;
+  color: $COLOR--gray-47;
+}
+.message {
+  margin: auto;
+  font-family: $FONT-REGULAR;
+  font-size: 13px;
+  line-height: 25px;
+  color: $COLOR--gray-47;
+}
+.link {
+  color: $COLOR--windows-blue;
+  text-decoration: none;
+  text-transform: capitalize;
+}
+.or {
+  margin: auto;
+  font-family: $FONT-REGULAR;
+  font-size: 13px;
+  line-height: 30px;
+  color: $COLOR--gray-47;
+  text-transform: lowercase;
+}
+.button {
+  margin: 5px auto;
+}

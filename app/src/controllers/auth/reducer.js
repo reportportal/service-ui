@@ -1,6 +1,6 @@
-import { AUTH_SUCCESS, LOGOUT } from './constants';
+import { AUTH_SUCCESS, LOGOUT, INITIAL_STATE } from './constants';
 
-export const authReducer = (state = {}, { type }) => {
+export const authReducer = (state = INITIAL_STATE, { type }) => {
   switch (type) {
     case AUTH_SUCCESS:
       return Object.assign({}, state, { authorized: true });

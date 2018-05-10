@@ -30,17 +30,17 @@ export class WidgetsGrid extends PureComponent {
     dashboardId: '',
   };
 
-  state = {
-    widgets: [],
-    isFetching: false,
-    isDraggable: false,
-  };
-
   constructor(props) {
     super(props);
     this.url = `${this.props.url}/${this.props.dashboardId}`;
     this.isResizing = false;
   }
+
+  state = {
+    widgets: [],
+    isFetching: false,
+    isDraggable: false,
+  };
 
   componentDidMount() {
     this.fetchWidgets();
@@ -73,14 +73,14 @@ export class WidgetsGrid extends PureComponent {
     this.updateWidgets(newWidgets);
   };
 
-  updateWidgets(widgets) {
-    fetch(this.url, {
-      method: 'PUT',
-      data: {
-        updateWidgets: widgets,
-      },
-    });
-  }
+  onResizeStart = () => {
+    this.isResizing = true;
+  };
+
+  onResizeStop = (newLayout) => {
+    this.isResizing = false;
+    this.onGridChange(newLayout);
+  };
 
   switchDraggable = (isDraggable) => {
     if (!this.isResizing) {
@@ -90,14 +90,14 @@ export class WidgetsGrid extends PureComponent {
     }
   };
 
-  onResizeStart = () => {
-    this.isResizing = true;
-  };
-
-  onResizeStop = (newLayout) => {
-    this.isResizing = false;
-    this.onGridChange(newLayout);
-  };
+  updateWidgets(widgets) {
+    fetch(this.url, {
+      method: 'PUT',
+      data: {
+        updateWidgets: widgets,
+      },
+    });
+  }
 
   fetchWidgets() {
     this.setState({ isFetching: true });

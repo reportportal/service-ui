@@ -1389,7 +1389,7 @@ define(['util'], function () {
             autoAnalysisBaseSecondOpt: 'Запуски с одинаковыми именами',
             autoAnalysisBaseThirdOpt: 'Только текущий запуск',
             autoAnalysisBaseFourthOpt: 'Элементы требующие анализа',
-            autoAnalysisBaseFifthOpt: 'Автоанализированные элементы',
+            autoAnalysisBaseFifthOpt: 'Элементы проанализированные автоматически (АА)',
             autoAnalysisBaseSixthOpt: 'Элементы проанализированные вручную',
             autoAnalysisBaseFirstTip: 'Тестовые элементы будут проанализированы на основе ранее проанализированных данных во всех запусках',
             autoAnalysisBaseSecondTip: 'Тестовые элементы будут проанализированы на основе ранее проанализированных данных в запусках с одинаковыми именами',

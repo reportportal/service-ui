@@ -5,6 +5,7 @@ import { PaginationToolbar } from 'components/main/paginationToolbar';
 import { ADMINISTRATOR, PROJECT_MANAGER } from 'common/constants/projectRoles';
 import { FilterTableItem } from './filterTableItem';
 import { FilterTableHeader } from './filterTableHeader';
+import { NoFiltersBlock } from './noFiltersBlock';
 import styles from './filterTable.scss';
 
 const cx = classNames.bind(styles);
@@ -46,35 +47,54 @@ export class FilterTable extends PureComponent {
   };
 
   render() {
+    const {
+      data,
+      userFilters,
+      userId,
+      onDelete,
+      onEdit,
+      toggleDisplayFilterOnLaunches,
+      projectRole,
+      activePage,
+      itemCount,
+      pageCount,
+      pageSize,
+      onChangePage,
+      onChangePageSize,
+    } = this.props;
     return (
       <Fragment>
         <div className={cx('filter-table')}>
           <FilterTableHeader />
-          {this.props.data.map((item) => (
-            <FilterTableItem
-              key={item.id}
-              name={item.name}
-              description={item.description}
-              owner={item.owner}
-              options="(TBD)"
-              shared={item.share}
-              showOnLaunches={this.props.userFilters.indexOf(item.id) !== -1}
-              editable={item.owner === this.props.userId}
-              onDelete={() => this.props.onDelete(item)}
-              onEdit={() => this.props.onEdit(item)}
-              onChangeDisplay={() => this.props.toggleDisplayFilterOnLaunches(item.id)}
-              canBeDeleted={canDeleteFilter(item, this.props.projectRole, this.props.userId)}
-            />
-          ))}
+          {data && !!data.length ? (
+            data.map((item) => (
+              <FilterTableItem
+                key={item.id}
+                name={item.name}
+                description={item.description}
+                owner={item.owner}
+                options="(TBD)"
+                shared={item.share}
+                showOnLaunches={userFilters.indexOf(item.id) !== -1}
+                editable={item.owner === userId}
+                onDelete={() => onDelete(item)}
+                onEdit={() => onEdit(item)}
+                onChangeDisplay={() => toggleDisplayFilterOnLaunches(item.id)}
+                canBeDeleted={canDeleteFilter(item, projectRole, userId)}
+              />
+            ))
+          ) : (
+            <NoFiltersBlock />
+          )}
         </div>
         <div className={cx('filter-table-pagination')}>
           <PaginationToolbar
-            activePage={this.props.activePage}
-            itemCount={this.props.itemCount}
-            pageCount={this.props.pageCount}
-            pageSize={this.props.pageSize}
-            onChangePage={this.props.onChangePage}
-            onChangePageSize={this.props.onChangePageSize}
+            activePage={activePage}
+            itemCount={itemCount}
+            pageCount={pageCount}
+            pageSize={pageSize}
+            onChangePage={onChangePage}
+            onChangePageSize={onChangePageSize}
           />
         </div>
       </Fragment>

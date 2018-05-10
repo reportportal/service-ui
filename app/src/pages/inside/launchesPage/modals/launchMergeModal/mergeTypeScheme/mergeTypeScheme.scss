@@ -1,0 +1,15 @@
+.merge-type-scheme {
+  width: 165px;
+  height: 80px;
+  box-sizing: border-box;
+  border: 1px solid $COLOR--gray-80;
+  background-color: $COLOR--white-two;
+  background-image: url(./img/launch-merge.svg);
+
+  &.deep {
+    background-image: url(./img/launch-linear-merge.svg);
+  }
+  &.basic {
+    background-image: url(./img/launch-deep-merge.svg);
+  }
+}
