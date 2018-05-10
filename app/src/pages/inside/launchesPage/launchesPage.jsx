@@ -22,7 +22,8 @@ import {
   compareLaunchesAction,
   launchesSelector,
   launchPaginationSelector,
-  fetchLaunches,
+  fetchLaunchesAction,
+  lastOperationSelector,
 } from 'controllers/launch';
 import { LaunchSuiteGrid } from 'pages/inside/common/launchSuiteGrid';
 import { LaunchToolbar } from './LaunchToolbar';
@@ -42,6 +43,7 @@ const messages = defineMessages({
     selectedLaunches: selectedLaunchesSelector(state),
     validationErrors: validationErrorsSelector(state),
     launches: launchesSelector(state),
+    lastOperation: lastOperationSelector(state),
   }),
   {
     showModalAction,
@@ -59,7 +61,7 @@ const messages = defineMessages({
 })
 @withPagination({
   paginationSelector: launchPaginationSelector,
-  fetchAction: fetchLaunches,
+  fetchAction: fetchLaunchesAction,
 })
 @injectIntl
 export class LaunchesPage extends Component {
@@ -86,6 +88,7 @@ export class LaunchesPage extends Component {
     toggleLaunchSelectionAction: PropTypes.func,
     mergeLaunchesAction: PropTypes.func,
     compareLaunchesAction: PropTypes.func,
+    lastOperation: PropTypes.string,
   };
 
   static defaultProps = {
@@ -109,6 +112,7 @@ export class LaunchesPage extends Component {
     toggleLaunchSelectionAction: () => {},
     mergeLaunchesAction: () => {},
     compareLaunchesAction: () => {},
+    lastOperation: '',
   };
 
   getTitle = () =>
@@ -173,9 +177,15 @@ export class LaunchesPage extends Component {
     this.props.selectLaunchesAction(launches);
   };
 
-  proceedWithValidItems = () => this.props.proceedWithValidItemsAction(this.props.fetchData);
+  proceedWithValidItems = () =>
+    this.props.proceedWithValidItemsAction(this.props.lastOperation, this.props.selectedLaunches);
 
-  mergeLaunches = () => this.props.mergeLaunchesAction(this.props.fetchData);
+  mergeLaunches = () =>
+    this.props.mergeLaunchesAction(this.props.selectedLaunches, {
+      fetchFunc: this.props.fetchData,
+    });
+
+  compareLaunches = () => this.props.compareLaunchesAction(this.props.selectedLaunches);
 
   render() {
     const {
@@ -201,7 +211,7 @@ export class LaunchesPage extends Component {
           onUnselectAll={this.props.unselectAllLaunchesAction}
           onProceedValidItems={this.proceedWithValidItems}
           onMerge={this.mergeLaunches}
-          onCompare={this.props.compareLaunchesAction}
+          onCompare={this.compareLaunches}
           onImportLaunch={this.openImportModal}
         />
         <LaunchSuiteGrid

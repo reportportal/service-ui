@@ -5,7 +5,7 @@ export {
   proceedWithValidItemsAction,
   mergeLaunchesAction,
   compareLaunchesAction,
-  fetchLaunches,
+  fetchLaunchesAction,
 } from './actionCreators';
 export {
   selectedLaunchesSelector,

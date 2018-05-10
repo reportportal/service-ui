@@ -178,7 +178,7 @@ export class LaunchMergeModal extends Component {
 
   parseTags = (options) => options.map((option) => option.value);
 
-  MergeAndCloseModal = (closeModal) => (values) => {
+  mergeAndCloseModal = (closeModal) => (values) => {
     this.props.showScreenLockAction();
     fetch(URLS.launchesMerge(this.props.activeProject), {
       method: 'post',
@@ -206,7 +206,7 @@ export class LaunchMergeModal extends Component {
     const okButton = {
       text: intl.formatMessage(COMMON_LOCALE_KEYS.MERGE),
       onClick: (closeModal) => {
-        handleSubmit(this.MergeAndCloseModal(closeModal))();
+        handleSubmit(this.mergeAndCloseModal(closeModal))();
       },
     };
     const cancelButton = {
