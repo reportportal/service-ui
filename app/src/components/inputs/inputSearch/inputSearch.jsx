@@ -28,13 +28,21 @@ import SearchIcon from './img/search-icon-inline.svg';
 const cx = classNames.bind(styles);
 
 export const InputSearch = ({
-  type, value, error, placeholder, maxLength, disabled,
-  refFunction, onChange, onFocus, onBlur, onKeyUp, active,
+  type,
+  value,
+  error,
+  placeholder,
+  maxLength,
+  disabled,
+  refFunction,
+  onChange,
+  onFocus,
+  onBlur,
+  onKeyUp,
+  active,
 }) => (
   <div className={cx('input-search', { error, active, disabled })}>
-    <div className={cx('icon')}>
-      { Parser(SearchIcon) }
-    </div>
+    <div className={cx('icon')}>{Parser(SearchIcon)}</div>
     <input
       ref={refFunction}
       type={type}

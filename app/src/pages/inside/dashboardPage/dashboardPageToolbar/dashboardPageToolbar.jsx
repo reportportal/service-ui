@@ -35,6 +35,7 @@ const messages = defineMessages({
 export class DashboardPageToolbar extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
+    dashboardItems: PropTypes.array,
     change: PropTypes.func,
     filter: PropTypes.string,
     onGridViewToggle: PropTypes.func,
@@ -43,6 +44,7 @@ export class DashboardPageToolbar extends Component {
     invalid: PropTypes.bool,
   };
   static defaultProps = {
+    dashboardItems: [],
     change: () => {},
     filter: '',
     onGridViewToggle: () => {},
@@ -62,7 +64,7 @@ export class DashboardPageToolbar extends Component {
   }
 
   render() {
-    const { onGridViewToggle, onTableViewToggle, gridType, intl } = this.props;
+    const { onGridViewToggle, onTableViewToggle, gridType, intl, dashboardItems } = this.props;
 
     return (
       <div className={cx('tool-bar')}>
@@ -70,6 +72,7 @@ export class DashboardPageToolbar extends Component {
           <FieldProvider name="dashboardName">
             <FieldErrorHint>
               <InputSearch
+                disabled={!dashboardItems.length}
                 maxLength="128"
                 placeholder={intl.formatMessage(messages.searchPlaceholder)}
               />

@@ -104,7 +104,7 @@ export class FiltersPage extends PureComponent {
     const { filter, intl, onFilterChange, ...rest } = this.props;
     return (
       <PageLayout title={intl.formatMessage(messages.filtersPageTitle)}>
-        <FilterPageToolbar filter={filter} onFilterChange={onFilterChange} />
+        <FilterPageToolbar filter={filter} filters={rest.data} onFilterChange={onFilterChange} />
         <FilterTable onDelete={this.confirmDelete} onEdit={this.openEditModal} {...rest} />
       </PageLayout>
     );
