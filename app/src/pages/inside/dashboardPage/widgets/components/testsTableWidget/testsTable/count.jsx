@@ -17,4 +17,4 @@ Count.propTypes = {
   total: number.isRequired,
 };
 
-export default Count;
+export { Count };

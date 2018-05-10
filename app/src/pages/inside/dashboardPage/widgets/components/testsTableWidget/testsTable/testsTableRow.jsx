@@ -3,7 +3,7 @@ import { func, string } from 'prop-types';
 import classNames from 'classnames/bind';
 import { AbsRelTime } from 'components/main/absRelTime';
 import { PTTest } from '../pTypes';
-import Count from './count';
+import { Count } from './count';
 import styles from '../testsTableWidget.scss';
 
 const cx = classNames.bind(styles);
@@ -45,4 +45,4 @@ class TestsTableRow extends React.Component {
   }
 }
 
-export default TestsTableRow;
+export { TestsTableRow };

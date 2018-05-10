@@ -1,11 +1,8 @@
 import { connect } from 'react-redux';
-import {
-  setStartTimeFormatAction,
-  startTimeFormatSelector,
-} from 'controllers/user';
-import AbsRelTime from './absRelTime';
+import { setStartTimeFormatAction, startTimeFormatSelector } from 'controllers/user';
+import { AbsRelTime } from './absRelTime';
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   startTimeFormat: startTimeFormatSelector(state),
 });
 const actions = {

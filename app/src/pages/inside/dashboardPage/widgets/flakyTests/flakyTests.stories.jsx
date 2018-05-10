@@ -4,7 +4,7 @@ import { host } from 'storybook-host';
 import { createStore, combineReducers } from 'redux';
 import { Provider } from 'react-redux';
 import { START_TIME_FORMAT_RELATIVE } from 'controllers/user';
-import FlakyTests from './flakyTests';
+import { FlakyTests } from './flakyTests';
 import { flakyTests } from './data';
 
 const withRedux = (getStory) => {

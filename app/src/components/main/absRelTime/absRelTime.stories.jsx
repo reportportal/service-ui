@@ -22,26 +22,21 @@
 import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import { host } from 'storybook-host';
-import {
-  START_TIME_FORMAT_RELATIVE,
-  START_TIME_FORMAT_ABSOLUTE,
-} from 'controllers/user';
-import AbsRelTime from './absRelTime';
+import { START_TIME_FORMAT_RELATIVE, START_TIME_FORMAT_ABSOLUTE } from 'controllers/user';
+import { AbsRelTime } from './absRelTime';
 
 storiesOf('Components/Main/AbsRelTime', module)
-  .addDecorator(host({
-    title: 'InputBigSwitcher component',
-    align: 'center middle',
-    backdrop: 'rgba(70, 69, 71, 0.2)',
-    background: '#ffffff',
-    height: 60,
-    width: 300,
-  }))
-  .add('default state', () => (
-    <AbsRelTime
-      setStartTimeFormatAction={action('Toggle format')}
-    />
-  ))
+  .addDecorator(
+    host({
+      title: 'InputBigSwitcher component',
+      align: 'center middle',
+      backdrop: 'rgba(70, 69, 71, 0.2)',
+      background: '#ffffff',
+      height: 60,
+      width: 300,
+    }),
+  )
+  .add('default state', () => <AbsRelTime setStartTimeFormatAction={action('Toggle format')} />)
   .add('relative time', () => (
     <AbsRelTime
       setStartTimeFormatAction={action('Toggle format')}

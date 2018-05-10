@@ -30,4 +30,4 @@ LaunchInfoBlock.defaultProps = {
   issueType: null,
 };
 
-export default LaunchInfoBlock;
+export { LaunchInfoBlock };

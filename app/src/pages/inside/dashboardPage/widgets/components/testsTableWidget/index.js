@@ -1,4 +1,4 @@
 import * as PTypes from './pTypes';
+import { TestsTableWidget } from './testsTableWidget';
 
-export { default as TestsTableWidget } from './testsTableWidget';
-export { PTypes };
+export { TestsTableWidget, PTypes };

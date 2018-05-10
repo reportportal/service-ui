@@ -2,8 +2,8 @@ import * as React from 'react';
 import { func } from 'prop-types';
 import classNames from 'classnames/bind';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
-import TestsTableHeader from './testsTableHeader';
-import TestsTableBody from './testsTableBody';
+import { TestsTableHeader } from './testsTableHeader';
+import { TestsTableBody } from './testsTableBody';
 import { PTTests, PTColumns } from '../pTypes';
 import styles from '../testsTableWidget.scss';
 
@@ -24,4 +24,4 @@ TestsTable.propTypes = {
   columns: PTColumns.isRequired,
 };
 
-export default TestsTable;
+export { TestsTable };

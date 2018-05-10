@@ -43,4 +43,4 @@ class AbsRelTime extends Component {
   }
 }
 
-export default AbsRelTime;
+export { AbsRelTime };

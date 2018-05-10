@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { func, string, element } from 'prop-types';
 import classNames from 'classnames/bind';
-import LaunchInfoBlock from './launchInfoBlock';
-import TestsTable from './testsTable';
+import { LaunchInfoBlock } from './launchInfoBlock';
+import { TestsTable } from './testsTable';
 import { PTTests, PTColumns } from './pTypes';
 import styles from './testsTableWidget.scss';
 
@@ -33,4 +33,4 @@ TestsTableWidget.defaultProps = {
   issueType: null,
 };
 
-export default TestsTableWidget;
+export { TestsTableWidget };
