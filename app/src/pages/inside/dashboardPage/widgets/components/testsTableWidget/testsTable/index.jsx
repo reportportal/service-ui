@@ -5,7 +5,7 @@ import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { TestsTableHeader } from './testsTableHeader';
 import { TestsTableBody } from './testsTableBody';
 import { PTTests, PTColumns } from '../pTypes';
-import styles from '../testsTableWidget.scss';
+import styles from './testsTable.scss';
 
 const cx = classNames.bind(styles);
 

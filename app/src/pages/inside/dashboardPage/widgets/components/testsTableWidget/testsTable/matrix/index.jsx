@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { arrayOf, bool, string, oneOfType } from 'prop-types';
 import classNames from 'classnames/bind';
-import { PTStatus } from '../pTypes';
-import styles from '../testsTableWidget.scss';
+import { PTStatus } from '../../pTypes';
+import styles from './matrix.scss';
 
 const cx = classNames.bind(styles);
 
