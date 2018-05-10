@@ -2,16 +2,16 @@ import { takeEvery, call, all, put } from 'redux-saga/effects';
 import { fetch } from 'common/utils';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { FETCH_DATA, FETCH_ERROR } from './constants';
-import { fetchSuccess, fetchStart, fetchError } from './actionCreators';
+import { fetchSuccessAction, fetchStartAction, fetchErrorAction } from './actionCreators';
 
 function* fetchData({ payload, meta }) {
   const namespace = meta.namespace;
   try {
-    yield put(fetchStart(namespace, payload));
+    yield put(fetchStartAction(namespace, payload));
     const response = yield call(fetch, payload.url, payload.options);
-    yield put(fetchSuccess(namespace, response));
+    yield put(fetchSuccessAction(namespace, response));
   } catch (err) {
-    yield put(fetchError(namespace, err));
+    yield put(fetchErrorAction(namespace, err));
   }
 }
 

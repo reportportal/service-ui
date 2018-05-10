@@ -1,3 +1,3 @@
 export { fetchSagas } from './sagas';
-export { fetchData, fetchError, fetchSuccess } from './actionCreators';
+export { fetchDataAction, fetchErrorAction, fetchSuccessAction } from './actionCreators';
 export { fetchReducer } from './reducer';

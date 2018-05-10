@@ -6,7 +6,7 @@ const isAdminOrProjectManager = (state) => {
   const activeProject = activeProjectSelector(state);
   return (
     isAdminSelector(state) ||
-    user.assigned_projects[activeProject].projectRole !== 'PROJECT_MANAGER'
+    user.assigned_projects[activeProject].projectRole === 'PROJECT_MANAGER'
   );
 };
 
@@ -15,7 +15,7 @@ export const validateMergeLaunch = (launch, launches, state) => {
     return 'selectMoreItems';
   }
   const user = userInfoSelector(state);
-  if (launch.owner !== user.userId && isAdminOrProjectManager(state)) {
+  if (launch.owner !== user.userId && !isAdminOrProjectManager(state)) {
     return 'notYourOwnLaunch';
   }
   if (launch.status && launch.status.toLowerCase() === IN_PROGRESS) {
