@@ -1,8 +1,7 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-// import { TransitionGroup } from 'react-transition-group';
-import { injectIntl, intlShape, defineMessages } from 'react-intl';
+import { intlShape, defineMessages } from 'react-intl';
 import styles from './notification.scss';
 
 const cx = classNames.bind(styles);
@@ -12,7 +11,6 @@ const messages = defineMessages({
   infoLogout: { id: 'Notification.infoLogout', defaultMessage: 'You have been logged out' },
 });
 
-@injectIntl
 export class Notification extends PureComponent {
   static propTypes = {
     message: PropTypes.string,
@@ -25,26 +23,18 @@ export class Notification extends PureComponent {
     messageId: '',
     type: '',
   };
+
   render() {
     const { message, type, messageId, intl } = this.props;
-    function getNotification() {
-      if (message === '' && messageId === '') {
-        return null;
-      }
-      const level = type || 'info';
-      return (
-        <div key={message}>
-          <div className={cx('message-container', level)}>
-            <p>{ messageId ? intl.formatMessage(messages[messageId]) : message}</p>
-          </div>
-        </div>
-      );
+    if (message === '' && messageId === '') {
+      return null;
     }
+    const level = type || 'info';
     return (
-      <div className={cx('notification-container')}>
-        {/* <TransitionGroup> */}
-        {getNotification(message, type)}
-        {/* </TransitionGroup> */}
+      <div key={message}>
+        <div className={cx('message-container', level)}>
+          <p>{messageId ? intl.formatMessage(messages[messageId]) : message}</p>
+        </div>
       </div>
     );
   }

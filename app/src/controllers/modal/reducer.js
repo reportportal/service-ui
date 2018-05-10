@@ -1,11 +1,11 @@
-import { SHOW_MODAL, HIDE_MODAL } from './constants';
+import { SHOW_MODAL, HIDE_MODAL, INITIAL_STATE } from './constants';
 
-export const modalReducer = (state = { activeModal: null }, { type, payload }) => {
+export const modalReducer = (state = INITIAL_STATE, { type, payload }) => {
   switch (type) {
     case SHOW_MODAL:
-      return Object.assign({}, state, { activeModal: payload.activeModal });
+      return { ...state, activeModal: payload.activeModal };
     case HIDE_MODAL:
-      return Object.assign({}, state, { activeModal: null });
+      return { ...state, activeModal: null };
     default:
       return state;
   }

@@ -1330,7 +1330,7 @@ define(['util'], function () {
             autoAnalysisBaseSecondOpt: 'Launches with the same name',
             autoAnalysisBaseThirdOpt: 'Only current launch',
             autoAnalysisBaseFourthOpt: 'To investigated items',
-            autoAnalysisBaseFifthOpt: 'Auto-analyzed items',
+            autoAnalysisBaseFifthOpt: 'Items analyzed automatically (by AA)',
             autoAnalysisBaseSixthOpt: 'Items analyzed manually',
             autoAnalysisBaseFirstTip: 'The test items are analyzed on base of previously investigated data in all launches',
             autoAnalysisBaseSecondTip: 'The test items are analyzed on base of previously investigated data in launches with the same name',

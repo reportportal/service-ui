@@ -73,7 +73,8 @@ export class FilterEditModal extends Component {
     this.props.data.onEdit(launch);
     closeModal();
   };
-  formatTags = (tags) => tags.map((tag) => ({ value: tag, label: tag }));
+  formatTags = (tags) =>
+    tags && !!tags.length ? tags.map((tag) => ({ value: tag, label: tag })) : [];
   parseTags = (options) => options.map((option) => option.value);
 
   render() {

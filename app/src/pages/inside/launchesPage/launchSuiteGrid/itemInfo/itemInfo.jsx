@@ -37,7 +37,7 @@ export const ItemInfo = ({ value, refFunction, analyzing, customProps }) => (
       />
       <div className={cx('mobile-start-time')}>{fromNowFormat(value.start_time)}</div>
       <OwnerBlock owner={value.owner} />
-      {value.tags && value.tags.length && <TagsBlock tags={value.tags} />}
+      {value.tags && !!value.tags.length && <TagsBlock tags={value.tags} />}
       {value.description && (
         <div className={cx('item-description')}>
           <MarkdownViewer value={value.description} />

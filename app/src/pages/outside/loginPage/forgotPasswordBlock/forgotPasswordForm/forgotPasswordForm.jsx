@@ -62,7 +62,7 @@ export class ForgotPasswordForm extends PureComponent {
   };
 
   submitForm = ({ email }) => {
-    fetch('api/v1/user/password/restore', {
+    fetch('/api/v1/user/password/restore', {
       method: 'post',
       data: {
         email,
@@ -85,14 +85,13 @@ export class ForgotPasswordForm extends PureComponent {
         <div className={cx('forgot-password-buttons-container')}>
           <div className={cx('forgot-password-button')}>
             <Link to="/login" className={cx('button-link')}>
-              <BigButton type={'button'} color={'gray-60'}>
+              <BigButton type={'button'} roundedCorners color={'gray-60'}>
                 <FormattedMessage id={'ForgotPasswordForm.cancel'} defaultMessage={'Cancel'} />
               </BigButton>
             </Link>
-
           </div>
           <div className={cx('forgot-password-button')}>
-            <BigButton type={'submit'} color={'organish'}>
+            <BigButton type={'submit'} roundedCorners color={'organish'}>
               <FormattedMessage id={'ForgotPasswordForm.sendEmail'} defaultMessage={'Send email'} />
             </BigButton>
           </div>

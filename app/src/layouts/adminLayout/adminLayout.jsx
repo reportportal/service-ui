@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { Notification } from 'components/main/notification';
 import styles from './adminLayout.scss';
 import { AdminHeader } from './header';
 import { Sidebar } from './sidebar';
@@ -14,14 +13,11 @@ export const AdminLayout = ({ children }) => (
       <Sidebar />
     </div>
     <div className={cx('content')}>
-      <div className={cx('header-container')} >
+      <div className={cx('header-container')}>
         <AdminHeader />
       </div>
-      <div className={cx('page-container')}>
-        {children}
-      </div>
+      <div className={cx('page-container')}>{children}</div>
     </div>
-    <Notification />
   </div>
 );
 

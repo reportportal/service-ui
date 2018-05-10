@@ -70,7 +70,7 @@ export class ChangePasswordForm extends PureComponent {
 
   changePassword = ({ password }) => {
     const uuid = this.props.location.query.reset;
-    fetch('api/v1/user/password/reset', {
+    fetch('/api/v1/user/password/reset', {
       method: 'post',
       data: {
         password,
@@ -86,9 +86,20 @@ export class ChangePasswordForm extends PureComponent {
       <form className={cx('change-password-form')} onSubmit={handleSubmit(this.changePassword)}>
         <div className={cx('new-password-field')}>
           <FieldProvider name="password">
-            <FieldBottomConstraints text={<FormattedMessage id={'ChangePasswordForm.passwordConstraints'} defaultMessage={'4-25 symbols'} />}>
+            <FieldBottomConstraints
+              text={
+                <FormattedMessage
+                  id={'ChangePasswordForm.passwordConstraints'}
+                  defaultMessage={'4-25 symbols'}
+                />
+              }
+            >
               <FieldErrorHint>
-                <InputOutside icon={PasswordIcon} maxLength={'25'} placeholder={formatMessage(placeholders.newPassword)} />
+                <InputOutside
+                  icon={PasswordIcon}
+                  maxLength={'25'}
+                  placeholder={formatMessage(placeholders.newPassword)}
+                />
               </FieldErrorHint>
             </FieldBottomConstraints>
           </FieldProvider>
@@ -96,13 +107,20 @@ export class ChangePasswordForm extends PureComponent {
         <div className={cx('confirm-new-password-field')}>
           <FieldProvider name="passwordRepeat">
             <FieldErrorHint>
-              <InputOutside icon={PasswordIcon} maxLength={'25'} placeholder={formatMessage(placeholders.confirmNewPassword)} />
+              <InputOutside
+                icon={PasswordIcon}
+                maxLength={'25'}
+                placeholder={formatMessage(placeholders.confirmNewPassword)}
+              />
             </FieldErrorHint>
           </FieldProvider>
         </div>
         <div className={cx('change-password-button')}>
-          <BigButton type={'submit'} color={'organish'}>
-            <FormattedMessage id={'ChangePasswordForm.changePassword'} defaultMessage={'Change password'} />
+          <BigButton type={'submit'} roundedCorners color={'organish'}>
+            <FormattedMessage
+              id={'ChangePasswordForm.changePassword'}
+              defaultMessage={'Change password'}
+            />
           </BigButton>
         </div>
       </form>

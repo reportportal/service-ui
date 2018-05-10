@@ -1,0 +1,38 @@
+.input-text-area {
+  position: relative;
+  display: inline-block;
+  height: 60px;
+  width: 100%;
+  padding: 6px 10px;
+  margin: 0;
+  box-sizing: border-box;
+  border: 1px solid $COLOR--gray-80;
+  outline: none;
+  background-color: $COLOR--white-two;
+  font-family: $FONT-REGULAR;
+  font-size: 13px;
+  line-height: 18px;
+  color: $COLOR--charcoal-grey;
+  box-shadow: none;
+  flex-grow: 1;
+  resize: vertical;
+  transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+
+  &:hover {
+    border-color: $COLOR--gray-47;
+  }
+  &:focus {
+    background-color: inherit;
+    border-color: $COLOR--topaz;
+    box-shadow: 0 0 2px 0 rgba($COLOR--topaz, 0.7);
+  }
+
+  &.error {
+    border-color: $COLOR--orange-red;
+    box-shadow: 0 0 2px 0 rgba($COLOR--orange-red, 0.7);
+  }
+  &.disabled {
+    background-color: $COLOR--gray-91;
+    border-color: $COLOR--gray-80;
+  }
+}

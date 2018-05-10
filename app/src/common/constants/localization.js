@@ -25,4 +25,8 @@ export const COMMON_LOCALE_KEYS = defineMessages({
     id: 'Common.move',
     defaultMessage: 'Move',
   },
+  MERGE: {
+    id: 'Common.merge',
+    defaultMessage: 'Merge',
+  },
 });
