@@ -2,9 +2,9 @@ import * as React from 'react';
 import { func, string } from 'prop-types';
 import classNames from 'classnames/bind';
 import { AbsRelTime } from 'components/main/absRelTime';
-import { PTTest } from '../pTypes';
-import { Count } from './count';
-import styles from '../testsTableWidget.scss';
+import { PTTest } from '../../pTypes';
+import { Count } from '../count';
+import styles from './testsTableRow.scss';
 
 const cx = classNames.bind(styles);
 

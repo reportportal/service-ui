@@ -1,7 +1,7 @@
 import * as React from 'react';
 import classNames from 'classnames/bind';
-import { PTColumns } from '../pTypes';
-import styles from '../testsTableWidget.scss';
+import { PTColumns } from '../../pTypes';
+import styles from './testsTableHeader.scss';
 
 const cx = classNames.bind(styles);
 

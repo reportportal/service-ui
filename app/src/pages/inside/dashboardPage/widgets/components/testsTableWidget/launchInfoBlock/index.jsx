@@ -2,7 +2,7 @@ import * as React from 'react';
 import { string, element } from 'prop-types';
 import { FormattedMessage } from 'react-intl';
 import classNames from 'classnames/bind';
-import styles from './testsTableWidget.scss';
+import styles from './launchInfoBlock.scss';
 
 const cx = classNames.bind(styles);
 
