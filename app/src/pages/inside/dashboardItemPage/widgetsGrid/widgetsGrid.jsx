@@ -73,14 +73,6 @@ export class WidgetsGrid extends PureComponent {
     this.updateWidgets(newWidgets);
   };
 
-  switchDraggable = (isDraggable) => {
-    if (!this.isResizing) {
-      this.setState({
-        isDraggable,
-      });
-    }
-  };
-
   onResizeStart = () => {
     this.isResizing = true;
   };
@@ -88,6 +80,14 @@ export class WidgetsGrid extends PureComponent {
   onResizeStop = (newLayout) => {
     this.isResizing = false;
     this.onGridChange(newLayout);
+  };
+
+  switchDraggable = (isDraggable) => {
+    if (!this.isResizing) {
+      this.setState({
+        isDraggable,
+      });
+    }
   };
 
   updateWidgets(widgets) {
