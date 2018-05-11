@@ -26,6 +26,7 @@ import { withRouter } from 'react-router-dom';
 import classNames from 'classnames/bind';
 import { FormattedMessage, injectIntl, intlShape, defineMessages } from 'react-intl';
 import { validate, fetch } from 'common/utils';
+import { URLS } from 'common/urls';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { FieldBottomConstraints } from 'components/fields/fieldBottomConstraints';
@@ -74,7 +75,7 @@ export class ChangePasswordForm extends PureComponent {
   changePassword = ({ password }) => {
     this.setState({ loading: true });
     const uuid = this.props.location.query.reset;
-    fetch('/api/v1/user/password/reset', {
+    fetch(URLS.userPasswordReset(), {
       method: 'post',
       data: {
         password,

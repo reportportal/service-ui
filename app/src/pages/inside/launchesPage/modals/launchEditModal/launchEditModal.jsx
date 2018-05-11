@@ -11,6 +11,7 @@ import { MarkdownEditor } from 'components/main/markdown';
 import { InputTagsSearch } from 'components/inputs/inputTagsSearch';
 import { activeProjectSelector } from 'controllers/user';
 import { connect } from 'react-redux';
+import { URLS } from 'common/urls';
 import styles from './launchEditModal.scss';
 
 const cx = classNames.bind(styles);
@@ -53,7 +54,7 @@ const messages = defineMessages({
   form: 'launchEditForm',
 })
 @connect((state) => ({
-  tagsSearchUrl: `/api/v1/${activeProjectSelector(state)}/launch/tags?filter.cnt.tags=`,
+  tagsSearchUrl: URLS.launchTagsSearch(activeProjectSelector(state)),
 }))
 export class FilterEditModal extends Component {
   static propTypes = {
