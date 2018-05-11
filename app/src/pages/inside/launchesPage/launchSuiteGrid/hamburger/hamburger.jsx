@@ -90,8 +90,8 @@ export class Hamburger extends Component {
   };
 
   isNoPermissions = () =>
-    !this.props.isAdmin ||
-    this.props.projectRole !== PROJECT_MANAGER ||
+    !this.props.isAdmin &&
+    this.props.projectRole !== PROJECT_MANAGER &&
     this.props.userId !== this.props.launch.owner;
 
   render() {
