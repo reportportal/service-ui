@@ -43,7 +43,7 @@ define(function (require) {
         tpl: 'tpl-project-settings-auto-analysis',
 
         events: {
-            'click #submit-settings': 'submitSettings',
+            'click [data-js-submit-settings]': 'submitSettings',
             'change input[type="radio"]': 'onChangeAABase',
             'change [data-js-mode-param]': 'isMatchPreset',
             'click [data-js-remove-index]': 'onRemoveIndex',
@@ -51,7 +51,7 @@ define(function (require) {
             'keypress [data-js-mode-param]': 'allowNumber'
         },
         bindings: {
-            '[data-js-is-auto-analize]': 'checked: isAutoAnalyzerEnabled',
+            '[data-js-is-auto-analyze]': 'checked: isAutoAnalyzerEnabled',
             '[data-js-match-input]': 'value: minShouldMatch',
             '[data-js-doc-freq-input]': 'value: minDocFreq',
             '[data-js-term-freq-input]': 'value: minTermFreq',
@@ -69,13 +69,7 @@ define(function (require) {
         render: function () {
             this.$el.html(Util.templates(this.tpl, { access: config.userModel.hasPermissions() }));
             this.logStrNumberSelector = new DropDownComponent({
-                data: [
-                    { name: 'All', value: '-1' },
-                    { name: '2', value: '2' },
-                    { name: '3', value: '3' },
-                    { name: '4', value: '4' },
-                    { name: '5', value: '5' }
-                ],
+                data: config.logStrNumberAutoAnalyze,
                 multiple: false,
                 defaultValue: this.model.get('numberOfLogLines') || config.autoAnalysisAccuracy.MODERATE.numberOfLogLines
             });
@@ -116,7 +110,7 @@ define(function (require) {
             if (this.userModel.get('userRole') !== 'ADMINISTRATOR') {
                 userRole = this.userModel.get('projects')[appModel.get('projectId')].projectRole;
                 if (userRole !== 'PROJECT_MANAGER') {
-                    $('[data-js-is-auto-analize]', this.$el).attr('disabled', 'disabled').parent().addClass('disabled');
+                    $('[data-js-is-auto-analyze]', this.$el).attr('disabled', 'disabled').parent().addClass('disabled');
                     $('[data-js-aa-base-block] input', this.$el).attr('disabled', 'disabled');
                     $('[data-js-mode-param]', this.$el).attr('disabled', 'disabled');
                     $('[data-js-dropdown]', this.$el).addClass('disabled');
@@ -148,27 +142,26 @@ define(function (require) {
         addValidators: function () {
             Util.hintValidator($('[data-js-match-input]', this.$el), [{
                 validator: 'minMaxNumberRequired',
-                type: 'autoAnalys',
+                type: 'autoAnalysis',
                 min: 50,
                 max: 100
             }]);
             Util.hintValidator($('[data-js-doc-freq-input]', this.$el), [{
                 validator: 'minMaxNumberRequired',
-                type: 'autoAnalys',
+                type: 'autoAnalysis',
                 min: 1,
                 max: 10
             }]);
             Util.hintValidator($('[data-js-term-freq-input]', this.$el), [{
                 validator: 'minMaxNumberRequired',
-                type: 'autoAnalys',
+                type: 'autoAnalysis',
                 min: 1,
                 max: 10
             }]);
         },
         allowNumber: function (e) {
             var charCode = (e.which) ? e.which : event.keyCode;
-            if (charCode > 31 && (charCode < 48 || charCode > 57)) { return false; }
-            return true;
+            return !(charCode > 31 && (charCode < 48 || charCode > 57));
         },
         onRemoveIndex: function () {
             var modal;

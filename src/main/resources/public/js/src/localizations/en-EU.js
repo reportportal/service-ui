@@ -1855,7 +1855,7 @@ define(['util'], function () {
             issueTitleLength: 'Title should have size from \'4\' to \'512\'',
             componentsLength: 'Components should not contains only white spaces and shouldn\'t be empty',
             logMessageLength: 'Message length should have size from %%% to %%%.',
-            autoAnalysLength: 'The parameter should have value from %%% to %%%.',
+            autoAnalysisLength: 'The parameter should have value from %%% to %%%.',
             filtersNameLength: 'Filter name length should have size from %%% to %%%',
             filterNameLength: 'Filter name length should have size from %%% to %%% characters.',
             filterDescriptionLength: 'Filter description length should have size from %%% to %%%.',

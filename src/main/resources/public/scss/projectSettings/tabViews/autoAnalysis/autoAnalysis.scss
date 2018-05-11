@@ -13,15 +13,6 @@
     color:  $COLOR--tealish;
     font-size: 13px;
   }
-  .aa-base{
-    height: 50px;
-    flex-direction: column;
-    display: flex;
-    justify-content: space-between;
-    @media (max-width: $SCREEN_MD_MAX) {
-      height: 60px;
-    }
-  }
   .rp-form-group{
     margin-bottom: 30px;
     label.rp-control-label{
@@ -33,11 +24,6 @@
     }
     .aa-switcher-label{
       vertical-align: middle;
-    }
-    .aa-strategy-option{
-      display: flex;
-      flex-direction: row;
-      align-items: center;
     }
     .rp-custom-col{
       padding: 0 15px;
@@ -52,14 +38,20 @@
       }
     }
     .rp-help-block{
+      display: table-cell;
+      vertical-align: middle;
       p{
         margin: 0;
       }
+    }
+    .aa-strategy-option:first-child{
+      margin-bottom: 13px;
     }
     .aa-strategy-selector{
       margin: 0;
       min-width: 240px;
       padding-right: 30px;
+      display: table-cell;
       label{
         margin: 0;
       }
@@ -133,6 +125,9 @@
       }
     }
   }
+  .note-title{
+    font-family: $OpenSansSemibold;
+  }
   .index-actions-title{
     p{
       color: $COLOR--gray-47;
@@ -140,6 +135,7 @@
       text-transform: uppercase;
       margin-bottom: 20px;
       padding: 0 15px;
+      font-family: $OpenSansSemibold;
     }
   }
   .index-actions{
@@ -205,6 +201,7 @@
       }
     }
     .aa-strategy-selector{
+      display: block;
       input[type="radio"].rp-input-radio + span:before{
         background-color: $COLOR--white;
         border-color: $COLOR--gray-91;
@@ -226,9 +223,6 @@
         border-color: $COLOR--gray-80;
       }
     }
-    .aa-base{
-      height: auto;
-    }
     .rp-wrap-button{
       @media (max-width: $SCREEN_XS_MAX) {
         display: none;
@@ -239,10 +233,6 @@
       label.rp-control-label{
         width: 100%
       }
-      .aa-strategy-option{
-        flex-direction: column;
-        align-items: start;
-      }
       .rp-custom-col{
         padding: 0px;
       }
@@ -250,7 +240,8 @@
         margin-bottom: 0;
       }
       .rp-help-block{
-        margin-bottom: 8px;
+        margin-top: 8px;
+        display: block;
       }
       .aa-strategy-selector{
         margin-bottom: 8px;

@@ -8,7 +8,7 @@
         <label class="rp-switcher-big">
             <span class="turn-on"><%= data.text.ui.on %></span>
             <span class="turn-off"><%= data.text.ui.off %></span>
-            <input type="checkbox" data-js-is-auto-analize>
+            <input type="checkbox" data-js-is-auto-analyze>
             <div class="slider"></div>
         </label>
     </div>
@@ -20,7 +20,7 @@
     <label class="rp-control-label rp-custom-col">
         <%= data.text.project.autoAnalysisBase %>
     </label>
-    <div class="rp-custom-col aa-base">
+    <div class="rp-custom-col">
         <div class="aa-strategy-option">
             <label class="aa-strategy-selector">
                 <input class="rp-input-radio" type="radio" name="aa-strategy" value="LAUNCH_NAME">
@@ -94,7 +94,7 @@
 </div>
 <div class="rp-form-group rp-wrap-button">
     <div class="submit-col rp-custom-col">
-        <button type="submit" class="rp-btn rp-btn-submit" id="submit-settings" <%= notAllowed %>><%= data.text.ui.submit %></button>
+        <button type="submit" class="rp-btn rp-btn-submit" data-js-submit-settings <%= notAllowed %>><%= data.text.ui.submit %></button>
     </div>
 </div>
 <div class="index-actions">
