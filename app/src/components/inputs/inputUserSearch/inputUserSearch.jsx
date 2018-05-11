@@ -23,23 +23,18 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { stringify } from 'qs';
 import { FormattedMessage } from 'react-intl';
-import { fetch, addTokenToImagePath, validate } from 'common/utils';
+import { fetch, validate } from 'common/utils';
+import { URLS } from 'common/urls';
 import styles from './inputUserSearch.scss';
 import { UsersList } from './usersList';
 
 const cx = classNames.bind(styles);
-const getPhoto = (userId) => {
-  const d = new Date();
-  const qsParams = {
-    v: d.getTime(),
-    id: userId,
-  };
-  return addTokenToImagePath(`/api/v1/data/userphoto?${stringify(qsParams, { encode: false })}`);
-};
+const getPhoto = (userId) => URLS.dataUserPhoto(new Date().getTime(), userId);
 const isValidNewOption = ({ label }) => validate.email(label);
-const newOptionCreator = option => ({ externalUser: true, label: option.label });
-const promptTextCreator = label => (label);
+const newOptionCreator = (option) => ({ externalUser: true, label: option.label });
+const promptTextCreator = (label) => label;
 const makeURL = (input, isAdmin, projectId) => {
+  // TODO for YANA. Define URLS in common/urls.js
   const qsParams = {
     'page.page': 1,
     'page.size': 10,
@@ -61,22 +56,22 @@ const makeURL = (input, isAdmin, projectId) => {
   startUrl += `?${stringify(qsParams, { encode: false })}`;
   return startUrl;
 };
-const makeOptions = (options, projectId) => options.map(option => ({
-  userName: option.full_name || '',
-  userLogin: option.userId,
-  email: option.email || '',
-  disabled: Object.prototype.hasOwnProperty.call(option.assigned_projects, projectId),
-  isAssigned: Object.prototype.hasOwnProperty.call(option.assigned_projects, projectId),
-  userAvatar: getPhoto(option.userId),
-}));
+const makeOptions = (options, projectId) =>
+  options.map((option) => ({
+    userName: option.full_name || '',
+    userLogin: option.userId,
+    email: option.email || '',
+    disabled: Object.prototype.hasOwnProperty.call(option.assigned_projects, projectId),
+    isAssigned: Object.prototype.hasOwnProperty.call(option.assigned_projects, projectId),
+    userAvatar: getPhoto(option.userId),
+  }));
 const getUsers = (input, isAdmin, projectId) => {
   if (input) {
     const url = makeURL(input, isAdmin, projectId);
-    return fetch(url)
-      .then((response) => {
-        const arr = makeOptions(response.content, projectId);
-        return ({ options: arr });
-      });
+    return fetch(url).then((response) => {
+      const arr = makeOptions(response.content, projectId);
+      return { options: arr };
+    });
   }
   return Promise.resolve({ options: [] });
 };
@@ -85,14 +80,26 @@ export const InputUserSearch = ({ isAdmin, onChange, projectId }) => (
   <Select.AsyncCreatable
     cache={false}
     className={cx('select2-search-users')}
-    loadOptions={input => (getUsers(input, isAdmin, projectId))}
-    filterOption={() => (true)}
-    loadingPlaceholder={<FormattedMessage id={'InputUserSearch.searching'} defaultMessage={'Searching...'} />}
-    noResultsText={<FormattedMessage id={'InputUserSearch.noResults'} defaultMessage={'No matches found'} />}
-    searchPromptText={<FormattedMessage id={'InputUserSearch.placeholder'} defaultMessage={'Please enter 1 or more character'} />}
-    onChange={(option) => { onChange(option); }}
+    loadOptions={(input) => getUsers(input, isAdmin, projectId)}
+    filterOption={() => true}
+    loadingPlaceholder={
+      <FormattedMessage id={'InputUserSearch.searching'} defaultMessage={'Searching...'} />
+    }
+    noResultsText={
+      <FormattedMessage id={'InputUserSearch.noResults'} defaultMessage={'No matches found'} />
+    }
+    searchPromptText={
+      <FormattedMessage
+        id={'InputUserSearch.placeholder'}
+        defaultMessage={'Please enter 1 or more character'}
+      />
+    }
+    onChange={(option) => {
+      onChange(option);
+    }}
     menuRenderer={({ focusOption, options, selectValue }) =>
-      (UsersList({ focusOption, options, selectValue }))}
+      UsersList({ focusOption, options, selectValue })
+    }
     isValidNewOption={isValidNewOption}
     newOptionCreator={newOptionCreator}
     promptTextCreator={promptTextCreator}

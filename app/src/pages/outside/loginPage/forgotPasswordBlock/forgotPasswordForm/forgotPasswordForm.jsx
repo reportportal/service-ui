@@ -30,6 +30,7 @@ import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { InputOutside } from 'components/inputs/inputOutside';
 import { BigButton } from 'components/buttons/bigButton';
 import { validate, fetch } from 'common/utils';
+import { URLS } from 'common/urls';
 import EmailIcon from './img/email-icon-inline.svg';
 import styles from './forgotPasswordForm.scss';
 
@@ -66,7 +67,7 @@ export class ForgotPasswordForm extends PureComponent {
 
   submitForm = ({ email }) => {
     this.setState({ loading: true });
-    fetch('/api/v1/user/password/restore', {
+    fetch(URLS.userPasswordRestore(), {
       method: 'post',
       data: {
         email,

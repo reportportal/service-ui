@@ -10,6 +10,7 @@ import { showModalAction } from 'controllers/modal';
 import { withSorting, SORTING_ASC } from 'controllers/sorting';
 import { userFiltersSelector, toggleDisplayFilterOnLaunchesAction } from 'controllers/project';
 import { fetch } from 'common/utils';
+import { URLS } from 'common/urls';
 import { FilterTable } from './filterTable';
 import { FilterPageToolbar } from './filterPageToolbar';
 
@@ -23,7 +24,7 @@ const messages = defineMessages({
 @connect(
   (state) => ({
     userId: userIdSelector(state),
-    url: `/api/v1/${activeProjectSelector(state)}/filter`,
+    url: URLS.filters(activeProjectSelector(state)),
     activeProject: activeProjectSelector(state),
     userFilters: userFiltersSelector(state),
     projectRole: activeProjectRoleSelector(state),
@@ -89,13 +90,13 @@ export class FiltersPage extends PureComponent {
     });
 
   updateFilter = (filter) =>
-    fetch(`/api/v1/${this.props.activeProject}/filter/${filter.id}`, {
+    fetch(URLS.filter(this.props.activeProject, filter.id), {
       method: 'put',
       data: filter,
     }).then(this.props.fetchData);
 
   deleteFilter = (id) => {
-    fetch(`/api/v1/${this.props.activeProject}/filter/${id}`, {
+    fetch(URLS.filter(this.props.activeProject, id), {
       method: 'delete',
     }).then(this.props.fetchData);
   };

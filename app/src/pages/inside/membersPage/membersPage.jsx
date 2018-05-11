@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { URLS } from 'common/urls';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { withFilter } from 'controllers/filter';
 import { activeProjectSelector } from 'controllers/user';
@@ -15,8 +16,8 @@ const messages = defineMessages({
     defaultMessage: 'Project members',
   },
 });
-@connect(state => ({
-  url: `/api/v1/project/${activeProjectSelector(state)}/users`,
+@connect((state) => ({
+  url: URLS.projectUsers(activeProjectSelector(state)),
 }))
 @withFilter
 @withPagination()
@@ -43,26 +44,18 @@ export class MembersPage extends PureComponent {
     itemCount: 0,
     pageCount: 0,
     pageSize: 20,
-    onChangePage: () => {
-    },
-    onChangePageSize: () => {
-    },
+    onChangePage: () => {},
+    onChangePageSize: () => {},
     filter: '',
-    onFilterChange: () => {
-    },
+    onFilterChange: () => {},
   };
 
   render() {
     const { filter, intl, onFilterChange, ...rest } = this.props;
     return (
       <PageLayout title={intl.formatMessage(messages.membersPageTitle)} fullMobileLayout>
-        <MembersPageToolbar
-          filter={filter}
-          onFilterChange={onFilterChange}
-        />
-        <MembersTable
-          {...rest}
-        />
+        <MembersPageToolbar filter={filter} onFilterChange={onFilterChange} />
+        <MembersTable {...rest} />
       </PageLayout>
     );
   }
