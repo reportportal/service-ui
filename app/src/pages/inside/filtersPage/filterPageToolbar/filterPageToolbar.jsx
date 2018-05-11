@@ -69,7 +69,7 @@ export class FilterPageToolbar extends React.Component {
           <FieldProvider name="filter">
             <FieldErrorHint>
               <InputSearch
-                disabled={!this.props.filters.length}
+                disabled={!this.props.filters.length && !this.props.filter}
                 maxLength="128"
                 placeholder={this.props.intl.formatMessage(messages.searchInputPlaceholder)}
               />
