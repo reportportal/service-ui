@@ -8,6 +8,7 @@ const cx = classNames.bind(styles);
 
 const messages = defineMessages({
   successLogin: { id: 'Notification.successLogin', defaultMessage: 'Signed in successfully' },
+  failureLogin: { id: 'Notification.failureLogin', defaultMessage: 'Wrong username or password' },
   infoLogout: { id: 'Notification.infoLogout', defaultMessage: 'You have been logged out' },
 });
 
@@ -15,13 +16,19 @@ export class Notification extends PureComponent {
   static propTypes = {
     message: PropTypes.string,
     messageId: PropTypes.string,
+    uid: PropTypes.number.isRequired,
     type: PropTypes.oneOf(['', 'error', 'info', 'success']),
+    onMessageClick: PropTypes.func.isRequired,
     intl: intlShape.isRequired,
   };
   static defaultProps = {
     message: '',
     messageId: '',
-    type: '',
+    type: 'info',
+  };
+
+  messageClick = () => {
+    this.props.onMessageClick(this.props.uid);
   };
 
   render() {
@@ -29,11 +36,10 @@ export class Notification extends PureComponent {
     if (message === '' && messageId === '') {
       return null;
     }
-    const level = type || 'info';
     return (
-      <div key={message}>
-        <div className={cx('message-container', level)}>
-          <p>{messageId ? intl.formatMessage(messages[messageId]) : message}</p>
+      <div key={message} onClick={this.messageClick}>
+        <div className={cx('message-container', type)}>
+          <p> {messageId ? intl.formatMessage(messages[messageId]) : message}</p>
         </div>
       </div>
     );

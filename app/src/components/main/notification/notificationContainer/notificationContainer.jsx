@@ -10,17 +10,18 @@ const cx = classNames.bind(styles);
 export class NotificationContainer extends PureComponent {
   static propTypes = {
     notifications: PropTypes.arrayOf(PropTypes.object).isRequired,
+    hideNotification: PropTypes.func.isRequired,
   };
 
   render() {
-    const { notifications } = this.props;
+    const { notifications, hideNotification } = this.props;
 
     return (
       <div className={cx('notification-container')}>
         <TransitionGroup>
           {notifications.map((m) => (
             <CSSTransition key={m.uid} timeout={500} classNames="notification-transition">
-              <Notification {...m} />
+              <Notification {...m} onMessageClick={hideNotification} />
             </CSSTransition>
           ))}
         </TransitionGroup>
