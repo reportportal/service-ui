@@ -64,7 +64,14 @@ export class DashboardPageToolbar extends Component {
   }
 
   render() {
-    const { onGridViewToggle, onTableViewToggle, gridType, intl, dashboardItems } = this.props;
+    const {
+      onGridViewToggle,
+      onTableViewToggle,
+      gridType,
+      intl,
+      dashboardItems,
+      filter,
+    } = this.props;
 
     return (
       <div className={cx('tool-bar')}>
@@ -72,7 +79,7 @@ export class DashboardPageToolbar extends Component {
           <FieldProvider name="dashboardName">
             <FieldErrorHint>
               <InputSearch
-                disabled={!dashboardItems.length}
+                disabled={!dashboardItems.length && !filter}
                 maxLength="128"
                 placeholder={intl.formatMessage(messages.searchPlaceholder)}
               />
