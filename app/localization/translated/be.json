@@ -211,6 +211,7 @@
   "NoFiltersBlock.title": "Y Вас няма фільтраў",
   "Notification.infoLogout": "Вы выйшлі",
   "Notification.successLogin": "Паспяховы ўваход",
+  "Notification.failureDefault": "Адбылася памылка пры падключэнні да сервера: {error}",
   "OwnerBlock.ownerTitle": "Уласник",
   "PermissionMap.accessToManagementSystem": "Мець доступ да сістэме кіравання",
   "PermissionMap.admin": "Адміністратар",
