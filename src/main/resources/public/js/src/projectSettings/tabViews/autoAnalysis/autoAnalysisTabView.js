@@ -89,6 +89,7 @@ define(function (require) {
             $('[data-js-mode-switcher]', this.$el).html(this.modeSwitcher.$el);
             this.listenTo(this.modeSwitcher.model, 'change:value', function () {
                 this.setAccuracySettings(this.getModeValue());
+                this.validate();
             });
             this.setupAnalyzerSetting();
             this.isMatchPreset();
@@ -143,6 +144,7 @@ define(function (require) {
             Util.hintValidator($('[data-js-match-input]', this.$el), [{
                 validator: 'minMaxNumberRequired',
                 type: 'autoAnalysis',
+                maxLength: '3',
                 min: 50,
                 max: 100
             }]);
@@ -184,6 +186,7 @@ define(function (require) {
         },
         onGenerateIndex: function () {
             var modal;
+            var self = this;
             modal = new ModalConfirm({
                 headerText: Localization.project.generateIndex,
                 bodyText: Localization.project.generateIndexConfirm,
@@ -193,11 +196,9 @@ define(function (require) {
                 noteText: Localization.project.noteText,
                 confirmFunction: function () {
                     return Service.generateIndex().done(function () {
-                        $('[data-js-in-progress]', this.$el).toggleClass('hide');
-                        $('[data-js-remove-index]', this.$el).addClass('disabled');
-                        $('[data-js-generate-index]', this.$el).addClass('disabled');
                         Service.getProject().done(function (res) {
                             appModel.set(res);
+                            self.model.set('indexing_running', true);
                         });
                     }).fail(function (err) {
                         Util.ajaxFailMessenger(err);
@@ -211,10 +212,12 @@ define(function (require) {
         },
         setAccuracySettings: function (mode) {
             if (mode) {
-                this.model.set('minDocFreq', config.autoAnalysisAccuracy[mode].minDocFreq);
-                this.model.set('minShouldMatch', config.autoAnalysisAccuracy[mode].minShouldMatch);
-                this.model.set('minTermFreq', config.autoAnalysisAccuracy[mode].minTermFreq);
-                this.model.set('numberOfLogLines', config.autoAnalysisAccuracy[mode].numberOfLogLines);
+                this.model.set({
+                    minDocFreq: config.autoAnalysisAccuracy[mode].minDocFreq,
+                    minShouldMatch: config.autoAnalysisAccuracy[mode].minShouldMatch,
+                    minTermFreq: config.autoAnalysisAccuracy[mode].minTermFreq,
+                    numberOfLogLines: config.autoAnalysisAccuracy[mode].numberOfLogLines
+                });
             }
         },
         validate: function () {
