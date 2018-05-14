@@ -210,6 +210,7 @@
   "NoFiltersBlock.title": "У Вас нет фильтров",
   "Notification.infoLogout": "Вы вышли",
   "Notification.successLogin": "Успешный вход",
+  "Notification.failureDefault": "Во время соединения с сервером возникла ошибка: {error}",
   "OwnerBlock.ownerTitle": "Владелец",
   "PermissionMap.accessToManagementSystem": "Иметь доступ к системе управления",
   "PermissionMap.admin": "Администратор",

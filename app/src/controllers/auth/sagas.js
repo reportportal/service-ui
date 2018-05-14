@@ -1,10 +1,11 @@
 import { fetch } from 'common/utils';
-import { all, takeEvery, call, put, select } from 'redux-saga/effects';
+import { all, call, put, select, takeEvery } from 'redux-saga/effects';
 import { showNotification } from 'controllers/notification';
+import { NOTIFICATION_TYPES } from 'controllers/notification/constants';
 import { activeProjectSelector, fetchUserAction } from 'controllers/user';
 import { fetchProjectAction } from 'controllers/project';
 import { authSuccessAction } from 'controllers/auth/actionCreators';
-import { LOGIN, LOGOUT, TOKEN_KEY, DEFAULT_TOKEN } from './constants';
+import { DEFAULT_TOKEN, LOGIN, LOGOUT, TOKEN_KEY } from './constants';
 
 function setDefaultToken() {
   localStorage.setItem(TOKEN_KEY, DEFAULT_TOKEN);
@@ -30,15 +31,22 @@ function* handleLogin({ payload }) {
       method: 'POST',
     });
   } catch (e) {
-    yield put(showNotification({ messageId: 'failureLogin', type: 'error' }));
+    const error = (e.response && e.response.data && e.response.data.message) || e.message;
+    yield put(
+      showNotification({
+        messageId: 'failureDefault',
+        type: NOTIFICATION_TYPES.ERROR,
+        values: { error },
+      }),
+    );
     return;
   }
 
   localStorage.setItem(TOKEN_KEY, `${result.token_type} ${result.access_token}`);
   // TODO: Change those calls after project & users actions will be refactored with sagas
   yield put(fetchUserAction());
-  const state = yield select();
-  yield put(fetchProjectAction(activeProjectSelector(state)));
+  const projectId = yield select(activeProjectSelector);
+  yield put(fetchProjectAction(projectId));
   yield put(authSuccessAction());
 }
 
