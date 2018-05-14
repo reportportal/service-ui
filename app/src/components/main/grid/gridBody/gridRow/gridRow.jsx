@@ -47,6 +47,9 @@ export class GridRow extends Component {
     this.overflowCell.style.maxHeight = null;
   };
   handleAccordion = () => {
+    if (!this.overflowCell) {
+      return;
+    }
     if (this.overflowCell.offsetHeight > this.overflowCellMaxHeight) {
       !this.state.withAccordion && this.setupAccordion();
     } else if (this.overflowCell.offsetHeight < this.overflowCellMaxHeight) {
