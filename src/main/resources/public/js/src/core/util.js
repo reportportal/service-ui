@@ -1063,8 +1063,8 @@ define(function (require, exports, module) {
             var options = _.isArray(initOptions) ? initOptions : [initOptions];
             _.each(options, function (option) {
                 if (option.max) {
-                    if (option.validator === 'minMaxNumberRequired' && option.maxLength) {
-                        $el.attr('maxlength', option.maxLength);
+                    if (option.validator === 'minMaxNumberRequired') {
+                        $el.attr('maxlength', option.max.toString().length);
                     } else {
                         $el.attr('maxlength', option.max);
                     }

@@ -144,7 +144,6 @@ define(function (require) {
             Util.hintValidator($('[data-js-match-input]', this.$el), [{
                 validator: 'minMaxNumberRequired',
                 type: 'autoAnalysis',
-                maxLength: '3',
                 min: 50,
                 max: 100
             }]);
