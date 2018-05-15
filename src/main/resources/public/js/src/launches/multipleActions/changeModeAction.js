@@ -35,7 +35,7 @@ define(function (require, exports, module) {
     var ChangeModeAction = function(options) {
         var items = options.items;
         var mode = items[0].get('mode') == 'DEBUG' ? 'DEFAULT' : 'DEBUG';
-        var itemsText = (items.length > 1) ? Localization.ui.selectedItems : Localization.ui.launch;
+        var itemsText = (items.length > 1) ? Localization.ui.selectedLaunches : Localization.ui.launch;
         var modeText = (mode == 'DEBUG') ? Localization.ui.debug : Localization.ui.allLaunches;
         var modal = new ModalConfirm({
             headerText: (mode == 'DEBUG') ? Localization.dialogHeader.moveToDebug: Localization.dialogHeader.moveToAllLaunches,
