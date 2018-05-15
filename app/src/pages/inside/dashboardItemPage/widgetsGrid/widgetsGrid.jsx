@@ -130,7 +130,7 @@ export class WidgetsGrid extends PureComponent {
     }
 
     const breakpoints = { lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 };
-    const cols = { lg: 12, md: 12, sm: 1, xs: 1, xxs: 1 };
+    const cols = { lg: 12, md: 12, sm: 4, xs: 4, xxs: 4 };
 
     return (
       <div>
