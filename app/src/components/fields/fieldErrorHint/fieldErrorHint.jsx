@@ -49,6 +49,18 @@ const messages = defineMessages({
     id: 'SearchDashboardForm.dashboardNameSearchHint',
     defaultMessage: 'Dashboard name should have size from 3 to 128',
   },
+  itemNameEntityHint: {
+    id: 'LaunchLevelEntities.itemNameEntityHint',
+    defaultMessage: 'At least 3 symbols required',
+  },
+  launchNumericEntityHint: {
+    id: 'LaunchLevelEntities.launchNumberEntityHint',
+    defaultMessage: 'This filter accepts only digits',
+  },
+  launchDescriptionEntityHint: {
+    id: 'LaunchLevelEntities.launchDescriptionEntityHint',
+    defaultMessage: 'At least 3 symbols required',
+  },
 });
 
 @injectIntl
@@ -73,7 +85,6 @@ export class FieldErrorHint extends PureComponent {
       show: error && active,
       'bottom-type': hintType === 'bottom',
     });
-
     return (
       <div className={classes}>
         {children && cloneElement(children, { error, active, ...rest })}

@@ -23,6 +23,12 @@
       cursor: default;
     }
   }
+  &.sub-option {
+    padding-left: 40px;
+  }
+}
+.option-label {
+  white-space: nowrap;
 }
 .single-option {
   display: block;

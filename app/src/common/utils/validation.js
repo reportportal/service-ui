@@ -9,3 +9,8 @@ export const launchDescription = (value) => value.length >= 0 && value.length <=
 export const dashboardName = (value) => value.length >= 3 && value.length <= 128;
 export const hasPrevilegesForDashboardDeletion = (value) =>
   value === 'ADMINISTRATOR' || value === 'PROJECT_MANAGER';
+
+export const itemNameEntity = (value) => value.length >= 3 && value.length <= 256;
+export const launchNumericEntity = (value) =>
+  value.length >= 1 && value.length <= 18 && !!value.match(/^[0-9]+$/);
+export const launchDescriptionEntity = (value) => value.length >= 3 && value.length <= 18;

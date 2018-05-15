@@ -1,33 +1,35 @@
 .dropdown {
   position: relative;
-  display: block;
+  display: inline-block;
   width: 100%;
   height: 30px;
-  border: solid 1px $COLOR--gray-80;
-  box-sizing: border-box;
+
   &.opened {
-    border: solid 1px $COLOR--topaz;
-    &:hover {
-      border-color: $COLOR--topaz;
-    }
     .arrow {
       transform: rotate(180deg);
+    }
+    .select-block {
+      border-color: $COLOR--topaz;
+      box-shadow: 0 0 2px 0 rgba($COLOR--topaz, 0.7);
     }
     .select-list {
       display: block;
     }
   }
+}
+.select-block {
+  display: inline-block;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  padding: 0 25px 0 10px;
+  border: 1px solid $COLOR--gray-80;
+  background-color: $COLOR--white-two;
+  cursor: pointer;
+
   &:hover {
     border-color: $COLOR--gray-47;
   }
-}
-.select-block {
-  width: 100%;
-  height: 100%;
-  display: table;
-  box-sizing: border-box;
-  padding: 0 25px 0 10px;
-  cursor: pointer;
 
   &.disabled {
     background-color: $COLOR--gray-91;
@@ -35,16 +37,16 @@
   }
 }
 .value {
-  display: table-cell;
+  display: inline-block;
+  height: 100%;
   width: 100%;
   overflow: hidden;
-  vertical-align: middle;
   font-family: $FONT-REGULAR;
   font-size: 13px;
+  line-height: 28px;
   text-overflow: ellipsis;
   white-space: nowrap;
   color: $COLOR--charcoal-grey;
-  line-height: 18px;
 }
 .arrow {
   position: absolute;
@@ -59,21 +61,22 @@
   border-left: 4px solid transparent;
   box-sizing: border-box;
   color: $COLOR--charcoal-grey;
+  transition: transform 200ms linear;
 }
 .select-list {
-  z-index: 10;
   position: absolute;
   top: 100%;
   margin-top: 5px;
   display: none;
   width: 100%;
   min-height: 10px;
+  border: 1px solid $COLOR--gray-80;
   padding: 5px 0;
   background-color: $COLOR--white-two;
   box-sizing: border-box;
+  box-shadow: 0 6px 12px $COLOR--gray-80;
+  z-index: 1;
   cursor: pointer;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2);
-  border: solid 1px $COLOR--gray-80;
 }
 .select-all-block {
   width: 100%;

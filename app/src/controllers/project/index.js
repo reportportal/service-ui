@@ -1,8 +1,5 @@
 export { FETCH_PROJECT_SUCCESS } from './constants';
-export {
-  fetchProjectAction,
-  toggleDisplayFilterOnLaunchesAction,
-} from './actionCreators';
+export { fetchProjectAction, toggleDisplayFilterOnLaunchesAction } from './actionCreators';
 export { projectReducer } from './reducer';
 export {
   projectConfigSelector,
@@ -10,4 +7,5 @@ export {
   projectCreationDateSelector,
   userFiltersSelector,
   defectColorsSelector,
+  defectTypesSelector,
 } from './selectors';

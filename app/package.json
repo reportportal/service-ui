@@ -39,6 +39,7 @@
     "react-c3js": "^0.1.20",
     "react-copy-to-clipboard": "^5.0.1",
     "react-custom-scrollbars": "^4.2.1",
+    "react-datepicker": "^1.4.1",
     "react-dom": "^16.3.2",
     "react-dropzone": "^4.2.9",
     "react-full-screen": "^0.2.2",

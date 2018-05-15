@@ -1,0 +1,12 @@
+export const BEFORE_SUITE = 'BEFORE_SUITE';
+export const BEFORE_GROUPS = 'BEFORE_GROUPS';
+export const BEFORE_CLASS = 'BEFORE_CLASS';
+export const BEFORE_TEST = 'BEFORE_TEST';
+export const TEST = 'TEST';
+export const BEFORE_METHOD = 'BEFORE_METHOD';
+export const STEP = 'STEP';
+export const AFTER_METHOD = 'AFTER_METHOD';
+export const AFTER_TEST = 'AFTER_TEST';
+export const AFTER_CLASS = 'AFTER_CLASS';
+export const AFTER_GROUPS = 'AFTER_GROUPS';
+export const AFTER_SUITE = 'AFTER_SUITE';
