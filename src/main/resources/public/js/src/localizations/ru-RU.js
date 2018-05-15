@@ -153,7 +153,7 @@ define(['util'], function () {
             from: 'от',
             to: 'до',
             launch: 'запуск',
-            selectedLaunches: 'избранные запуски',
+            selectedItems: 'избранные запуски',
             debug: 'Отладку',
             allLaunches: 'Все запуски',
             smof: 'выкл',
