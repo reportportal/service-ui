@@ -25,6 +25,7 @@ import classNames from 'classnames/bind';
 import { FormattedMessage } from 'react-intl';
 import { withRouter, Redirect } from 'react-router-dom';
 import { fetch } from 'common/utils';
+import { URLS } from 'common/urls';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { ChangePasswordForm } from './changePasswordForm';
 import styles from './changePasswordBlock.scss';
@@ -46,7 +47,7 @@ export class ChangePasswordBlock extends PureComponent {
     valid: true,
   };
   componentDidMount() {
-    fetch(`api/v1/user/password/reset/${this.props.location.query.reset}`, {
+    fetch(URLS.userPasswordResetToken(this.props.location.query.reset), {
       method: 'get',
     }).then((response) => {
       this.setState({ valid: response.is, loading: false });

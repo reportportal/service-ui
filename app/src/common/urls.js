@@ -46,6 +46,7 @@ export const URLS = {
   user: () => `${urlBase}user`,
   userRegistration: () => `${urlBase}user/registration`,
   userPasswordReset: () => `${urlBase}user/password/reset`,
+  userPasswordResetToken: (token) => `${urlBase}user/password/reset/${token}`,
   userPasswordRestore: () => `${urlBase}user/password/restore`,
   userSearch: () => {}, // TODO for YANA
   userSearchGlobal: () => {}, // TODO for YANA
