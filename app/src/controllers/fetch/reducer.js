@@ -1,7 +1,14 @@
 import { FETCH_SUCCESS, DEFAULT_OPTIONS } from './constants';
 
+const computeInitialState = (options) => {
+  if (!Object.prototype.hasOwnProperty.call(options, 'initialState')) {
+    return DEFAULT_OPTIONS.initialState;
+  }
+  return options.initialState;
+};
+
 export const fetchReducer = (namespace, options = DEFAULT_OPTIONS) => (
-  state = options.initialState || DEFAULT_OPTIONS.initialState,
+  state = computeInitialState(options),
   { type, payload, meta },
 ) => {
   if (meta && meta.namespace && meta.namespace !== namespace) {

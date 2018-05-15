@@ -3,8 +3,8 @@ import { injectIntl, defineMessages } from 'react-intl';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
 import CrossIcon from 'common/img/icon-cross-inline.svg';
-import { withTooltip } from 'components/main/tooltips/tooltip';
-import styles from './selectedLaunch.scss';
+import { withTooltip } from 'components/main/tooltips/tooltip/index';
+import styles from './selectedItem.scss';
 
 const cx = classNames.bind(styles);
 
@@ -37,48 +37,52 @@ TooltipComponent.defaultProps = {
   error: '',
 };
 
-const SelectedLaunchBody = ({ name, number, error, onUnselect }) => (
-  <div className={cx('selected-launch', { error: !!error })}>
-    <span className={cx('name')}>{`${name} #${number}`}</span>
+const formatItem = (name, number) => (number ? `${name} #${number}` : name);
+
+const SelectedItemBody = ({ name, number, error, onUnselect }) => (
+  <div className={cx('selected-item', { error: !!error })}>
+    <span className={cx('name')}>{formatItem(name, number)}</span>
     <div className={cx('cross-icon')} onClick={onUnselect}>
       {Parser(CrossIcon)}
     </div>
   </div>
 );
-SelectedLaunchBody.propTypes = {
+SelectedItemBody.propTypes = {
   className: PropTypes.string,
   name: PropTypes.string.isRequired,
   onUnselect: PropTypes.func,
   error: PropTypes.string,
-  number: PropTypes.number.isRequired,
+  number: PropTypes.number,
 };
-SelectedLaunchBody.defaultProps = {
+SelectedItemBody.defaultProps = {
   className: '',
   onUnselect: () => {},
   error: null,
+  number: null,
 };
 
-const SelectedLaunchWithTooltip = withTooltip({
+const SelectedItemWithTooltip = withTooltip({
   TooltipComponent,
   data: {
     width: 200,
     leftOffset: 10,
     noArrow: true,
   },
-})(SelectedLaunchBody);
+})(SelectedItemBody);
 
-export const SelectedLaunch = ({ error, ...rest }) =>
-  error ? <SelectedLaunchWithTooltip error={error} {...rest} /> : <SelectedLaunchBody {...rest} />;
+export const SelectedItem = ({ error, ...rest }) =>
+  error ? <SelectedItemWithTooltip error={error} {...rest} /> : <SelectedItemBody {...rest} />;
 
-SelectedLaunch.propTypes = {
+SelectedItem.propTypes = {
   className: PropTypes.string,
   name: PropTypes.string.isRequired,
   onUnselect: PropTypes.func,
   error: PropTypes.string,
-  number: PropTypes.number.isRequired,
+  number: PropTypes.number,
 };
-SelectedLaunch.defaultProps = {
+SelectedItem.defaultProps = {
   className: '',
   onUnselect: () => {},
   error: null,
+  number: null,
 };

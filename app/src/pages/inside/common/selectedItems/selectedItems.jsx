@@ -3,14 +3,14 @@ import classNames from 'classnames/bind';
 import { FormattedMessage } from 'react-intl';
 import Parser from 'html-react-parser';
 import CrossIcon from 'common/img/icon-cross-inline.svg';
-import { ScrollWrapper } from 'components/main/scrollWrapper';
-import { SelectedLaunch } from './selectedLaunch';
-import styles from './selectedLaunches.scss';
+import { ScrollWrapper } from 'components/main/scrollWrapper/index';
+import { SelectedItem } from './selectedItem/index';
+import styles from './selectedItems.scss';
 
 const cx = classNames.bind(styles);
 
-export const SelectedLaunches = ({ selectedLaunches, errors, onClose, onUnselect }) => (
-  <div className={cx('selected-launches')}>
+export const SelectedItems = ({ selectedItems, errors, onClose, onUnselect }) => (
+  <div className={cx('selected-items')}>
     <div className={cx('header')}>
       <FormattedMessage
         id="LaunchesPage.multipleSelectHeader"
@@ -22,19 +22,19 @@ export const SelectedLaunches = ({ selectedLaunches, errors, onClose, onUnselect
     </div>
     <ScrollWrapper autoHeight autoHeightMax={120} hideTracksWhenNotNeeded>
       <div className={cx('list')}>
-        {selectedLaunches.map((launch) => (
-          <div className={cx('launch')} key={launch.id}>
-            <SelectedLaunch
-              name={launch.name}
-              number={launch.number}
-              error={errors[launch.id]}
-              onUnselect={() => onUnselect(launch)}
+        {selectedItems.map((item) => (
+          <div className={cx('item')} key={item.id}>
+            <SelectedItem
+              name={item.name}
+              number={item.number}
+              error={errors[item.id]}
+              onUnselect={() => onUnselect(item)}
             />
           </div>
         ))}
       </div>
     </ScrollWrapper>
-    {selectedLaunches.some((launch) => !!errors[launch.id]) && (
+    {selectedItems.some((item) => !!errors[item.id]) && (
       <div className={cx('error-message')}>
         <FormattedMessage
           id="LaunchesPage.multiSelectError"
@@ -44,14 +44,14 @@ export const SelectedLaunches = ({ selectedLaunches, errors, onClose, onUnselect
     )}
   </div>
 );
-SelectedLaunches.propTypes = {
-  selectedLaunches: PropTypes.arrayOf(PropTypes.object),
+SelectedItems.propTypes = {
+  selectedItems: PropTypes.arrayOf(PropTypes.object),
   onClose: PropTypes.func,
   onUnselect: PropTypes.func,
   errors: PropTypes.object,
 };
-SelectedLaunches.defaultProps = {
-  selectedLaunches: [],
+SelectedItems.defaultProps = {
+  selectedItems: [],
   errors: {},
   onClose: () => {},
   onUnselect: () => {},

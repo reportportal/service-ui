@@ -136,9 +136,9 @@ export class LaunchSuiteGrid extends PureComponent {
     onDeleteItem: PropTypes.func,
     onMoveToDebug: PropTypes.func,
     onEditLaunch: PropTypes.func,
-    selectedLaunches: PropTypes.arrayOf(PropTypes.object),
-    onLaunchSelect: PropTypes.func,
-    onAllLaunchesSelect: PropTypes.func,
+    selectedItems: PropTypes.arrayOf(PropTypes.object),
+    onItemSelect: PropTypes.func,
+    onAllItemsSelect: PropTypes.func,
     withHamburger: PropTypes.bool,
   };
   static defaultProps = {
@@ -149,9 +149,9 @@ export class LaunchSuiteGrid extends PureComponent {
     onDeleteItem: () => {},
     onMoveToDebug: () => {},
     onEditLaunch: () => {},
-    selectedLaunches: [],
-    onLaunchSelect: () => {},
-    onAllLaunchesSelect: () => {},
+    selectedItems: [],
+    onItemSelect: () => {},
+    onAllItemsSelect: () => {},
     withHamburger: false,
   };
   getColumns() {
@@ -284,9 +284,9 @@ export class LaunchSuiteGrid extends PureComponent {
       onChangeSorting,
       sortingColumn,
       sortingDirection,
-      selectedLaunches,
-      onLaunchSelect,
-      onAllLaunchesSelect,
+      selectedItems,
+      onItemSelect,
+      onAllItemsSelect,
     } = this.props;
 
     return (
@@ -296,10 +296,10 @@ export class LaunchSuiteGrid extends PureComponent {
         sortingColumn={sortingColumn}
         sortingDirection={sortingDirection}
         onChangeSorting={onChangeSorting}
-        selectedItems={selectedLaunches}
+        selectedItems={selectedItems}
         selectable
-        onToggleSelection={onLaunchSelect}
-        onToggleSelectAll={onAllLaunchesSelect}
+        onToggleSelection={onItemSelect}
+        onToggleSelectAll={onAllItemsSelect}
       />
     );
   }
