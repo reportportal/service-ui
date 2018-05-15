@@ -18,7 +18,7 @@ import {
   selectSuitesAction,
 } from 'controllers/suite';
 import { currentLaunchSelector, fetchLaunchAction } from 'controllers/launch';
-import { Toolbar } from './toolbar/toolbar';
+import { Toolbar } from './toolbar';
 
 @connect(
   (state) => ({
