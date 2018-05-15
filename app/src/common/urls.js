@@ -24,6 +24,8 @@ export const URLS = {
 
   launch: (activeProject, id) => `${urlBase}${activeProject}/launch/${id}`,
   launchTagsSearch: (activeProject) => `${urlBase}${activeProject}/launch/tags?filter.cnt.tags=`,
+  launchOwnersSearch: (activeProject) =>
+    `${urlBase}${activeProject}/launch/owners?filter.cnt.user=`,
   launches: (activeProject, ids) => `${urlBase}${activeProject}/launch${getQueryParams({ ids })}`,
   launchUpdate: (activeProject) => `${urlBase}${activeProject}/launch/update`,
   launchesUpdate: (activeProject, id) => `${urlBase}${activeProject}/launch/${id}/update`,

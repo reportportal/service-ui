@@ -103,7 +103,9 @@
         height: 100%;
         line-height: 28px;
         margin-left: 10px;
-        color: $COLOR--gray-60;
+        font-family: $FONT-REGULAR;
+        font-size: 13px;
+        color: $COLOR--gray-47;
       }
 
       .Select-value {
@@ -136,7 +138,7 @@
       }
       .Select-input {
         input {
-          width: 100% !important;
+          width: 100%;
           margin: 4px 5px;
           line-height: 13px;
           font-family: $FONT-REGULAR, sans-serif;

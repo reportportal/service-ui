@@ -25,20 +25,35 @@ import styles from './inputDropdownOption.scss';
 
 const cx = classNames.bind(styles);
 
-
-export const DropdownOption = ({ multiple, label, disabled, selected, onChange, value }) => {
+export const DropdownOption = ({
+  multiple,
+  label,
+  disabled,
+  selected,
+  subOption,
+  onChange,
+  value,
+}) => {
   const onChangeHandler = () => {
     onChange(value);
   };
   return (
-    <div className={cx('dropdown-option', { selected: !multiple && selected, disabled })}>
-      {
-        multiple
-          ? <InputCheckbox value={selected} disabled={disabled} onChange={onChangeHandler}>
-            {label}
-          </InputCheckbox>
-          : <div className={cx('single-option')} onClick={onChangeHandler}>{label}</div>
-      }
+    <div
+      className={cx('dropdown-option', {
+        selected: !multiple && selected,
+        disabled,
+        'sub-option': subOption,
+      })}
+    >
+      {multiple ? (
+        <InputCheckbox value={selected} disabled={disabled} onChange={onChangeHandler}>
+          <span className={cx('option-label')}>{label}</span>
+        </InputCheckbox>
+      ) : (
+        <div className={cx('single-option')} onClick={onChangeHandler}>
+          {label}
+        </div>
+      )}
     </div>
   );
 };
@@ -48,6 +63,7 @@ DropdownOption.propTypes = {
   multiple: PropTypes.bool,
   label: PropTypes.string,
   disabled: PropTypes.bool,
+  subOption: PropTypes.bool,
   selected: PropTypes.bool,
   onChange: PropTypes.func,
 };
@@ -57,6 +73,7 @@ DropdownOption.defaultProps = {
   multiple: false,
   label: '',
   disabled: false,
+  subOption: false,
   selected: false,
   onChange: () => {},
 };

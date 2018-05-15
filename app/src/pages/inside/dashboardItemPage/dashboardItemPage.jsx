@@ -31,8 +31,8 @@ const messages = defineMessages({
     id: 'DashboardItemPage.addSharedWidget',
     defaultMessage: 'Add shared widget',
   },
-  refreshWidget: {
-    id: 'DashboardItemPage.refreshWidget',
+  editDashboard: {
+    id: 'DashboardItemPage.editDashboard',
     defaultMessage: 'Edit',
   },
   deleteWidget: {
@@ -82,7 +82,7 @@ export class DashboardItemPage extends Component {
               </GhostButton>
             </div>
             <div className={cx('nav-right')}>
-              <GhostButton icon={EditIcon}>{formatMessage(messages.refreshWidget)}</GhostButton>
+              <GhostButton icon={EditIcon}>{formatMessage(messages.editDashboard)}</GhostButton>
               <GhostButton icon={FullscreenIcon} onClick={this.toggleFullscreen}>
                 {formatMessage(messages.fullscreen)}
               </GhostButton>

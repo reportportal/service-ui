@@ -34,14 +34,10 @@ export const InputCheckbox = ({ children, value, disabled, onChange, onFocus, on
       disabled={disabled}
       onChange={onChange}
     />
-    <CheckIcon
-      disabled={disabled}
-      centered={!children}
-      checked={value}
-    />
-    { children && <span className={cx({ 'children-container': true, disabled })}>{children}</span> }
+    <CheckIcon disabled={disabled} centered={!children} checked={value} />
+    {children && <span className={cx({ 'children-container': true, disabled })}>{children}</span>}
   </label>
-  );
+);
 InputCheckbox.propTypes = {
   children: PropTypes.node,
   value: PropTypes.bool,
@@ -58,4 +54,3 @@ InputCheckbox.defaultProps = {
   onFocus: () => {},
   onBlur: () => {},
 };
-

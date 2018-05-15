@@ -1,5 +1,5 @@
 .input-checkbox {
-  display: table;
+  display: flex;
   position: relative;
   height: 100%;
   outline: none;
@@ -24,16 +24,18 @@
 }
 .children-container {
   position: relative;
-  display: table-cell;
+  display: inline-block;
   max-width: 100%;
-  vertical-align: middle;
+  box-sizing: border-box;
   padding-left: 23px;
-  margin: 0;
+  margin: auto 0;
+  overflow: hidden;
   font-family: $FONT-REGULAR;
   font-size: 13px;
+  line-height: 20px;
   color: $COLOR--charcoal-grey;
+  text-overflow: ellipsis;
   cursor: pointer;
-  box-sizing: border-box;
 
   &.disabled {
     color: $COLOR--gray-60;

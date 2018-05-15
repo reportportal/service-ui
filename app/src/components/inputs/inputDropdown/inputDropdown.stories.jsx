@@ -30,19 +30,23 @@ const options = [
     value: 'AI',
     label: 'Auto Bug',
     disabled: false,
-  }, {
+  },
+  {
     value: 'PB',
     label: 'Product Bug',
     disabled: true,
-  }, {
+  },
+  {
     value: 'SI',
     label: 'System Issue',
     disabled: true,
-  }, {
+  },
+  {
     value: 'ND',
     label: 'No Defect',
     disabled: false,
-  }, {
+  },
+  {
     value: 'TI',
     label: 'To invest',
     disabled: false,
@@ -50,42 +54,60 @@ const options = [
 ];
 
 storiesOf('Components/Inputs/InputDropdown', module)
-  .addDecorator(host({
-    title: 'InputDropdown component',
-    align: 'center top',
-    backdrop: 'rgba(70, 69, 71, 0.2)',
-    background: '#ffffff',
-    height: 32,
-    width: 300,
-  }))
+  .addDecorator(
+    host({
+      title: 'InputDropdown component',
+      align: 'center top',
+      backdrop: 'rgba(70, 69, 71, 0.2)',
+      background: '#ffffff',
+      height: 32,
+      width: 300,
+    }),
+  )
   .addDecorator(withReadme(README))
   // Single dropdown
-  .add('Single, default state', () => (
-    <InputDropdown options={options} />
-  ))
-  .add('Single, disabled', () => (
-    <InputDropdown options={options} disabled />
-  ))
+  .add('Single, default state', () => <InputDropdown options={options} />)
+  .add('Single, disabled', () => <InputDropdown options={options} disabled />)
   .add('Single, with actions', () => (
-    <InputDropdown options={options} onChange={action('changed')} onBlur={action('blured')} onFocus={action('focused')} />
+    <InputDropdown
+      options={options}
+      onChange={action('changed')}
+      onBlur={action('blured')}
+      onFocus={action('focused')}
+    />
   ))
   .add('Single, with actions, value', () => (
-    <InputDropdown options={options} onChange={action('changed')} onBlur={action('blured')} onFocus={action('focused')} value="ND" />
+    <InputDropdown
+      options={options}
+      onChange={action('changed')}
+      onBlur={action('blured')}
+      onFocus={action('focused')}
+      value="ND"
+    />
   ))
 
   // Multiple dropdown
-  .add('Multiple, default state', () => (
-    <InputDropdown options={options} multiple />
-  ))
-  .add('Multiple, disabled', () => (
-    <InputDropdown options={options} multiple disabled />
-  ))
+  .add('Multiple, default state', () => <InputDropdown options={options} multiple />)
+  .add('Multiple, disabled', () => <InputDropdown options={options} multiple disabled />)
   .add('Multiple, select all, value', () => (
     <InputDropdown options={options} multiple selectAll value={['ND', 'AI']} />
   ))
   .add('Multiple, with actions', () => (
-    <InputDropdown options={options} onChange={action('changed')} onBlur={action('blured')} onFocus={action('focused')} multiple />
+    <InputDropdown
+      options={options}
+      onChange={action('changed')}
+      onBlur={action('blured')}
+      onFocus={action('focused')}
+      multiple
+    />
   ))
   .add('Multiple, select all, with actions', () => (
-    <InputDropdown options={options} onChange={action('changed')} onBlur={action('blured')} onFocus={action('focused')}multiple selectAll />
+    <InputDropdown
+      options={options}
+      onChange={action('changed')}
+      onBlur={action('blured')}
+      onFocus={action('focused')}
+      multiple
+      selectAll
+    />
   ));
