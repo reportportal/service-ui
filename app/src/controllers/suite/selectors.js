@@ -4,14 +4,12 @@ import {
   createLastOperationSelector,
 } from 'controllers/groupOperations';
 
-const domainSelector = (state) => state.launches || {};
+const domainSelector = (state) => state.suites || {};
 const groupOperationsSelector = (state) => domainSelector(state).groupOperations;
 
-export const selectedLaunchesSelector = createSelectedItemsSelector(groupOperationsSelector);
+export const selectedSuitesSelector = createSelectedItemsSelector(groupOperationsSelector);
 export const validationErrorsSelector = createValidationErrorsSelector(groupOperationsSelector);
 export const lastOperationSelector = createLastOperationSelector(groupOperationsSelector);
 
-export const launchesSelector = (state) => domainSelector(state).launches;
-export const launchPaginationSelector = (state) => domainSelector(state).pagination;
-
-export const currentLaunchSelector = (state) => domainSelector(state).currentLaunch;
+export const suitesSelector = (state) => domainSelector(state).suites;
+export const suitePaginationSelector = (state) => domainSelector(state).pagination;

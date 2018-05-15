@@ -222,9 +222,9 @@ export class LaunchesPage extends Component {
           onDeleteItem={this.confirmDeleteItem}
           onMoveToDebug={this.confirmMoveToDebug}
           onEditLaunch={this.openEditModal}
-          selectedLaunches={selectedLaunches}
-          onLaunchSelect={this.props.toggleLaunchSelectionAction}
-          onAllLaunchesSelect={this.handleAllLaunchesSelection}
+          selectedItems={selectedLaunches}
+          onItemSelect={this.props.toggleLaunchSelectionAction}
+          onAllItemsSelect={this.handleAllLaunchesSelection}
           withHamburger
         />
         <PaginationToolbar

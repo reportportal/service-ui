@@ -5,25 +5,49 @@ import { injectIntl, intlShape } from 'react-intl';
 import { PageLayout } from 'layouts/pageLayout';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
 import { SORTING_ASC, withSorting } from 'controllers/sorting';
-import { activeProjectSelector, userIdSelector } from 'controllers/user';
+import { userIdSelector } from 'controllers/user';
 import { withPagination } from 'controllers/pagination';
 import { LaunchSuiteGrid } from 'pages/inside/common/launchSuiteGrid';
+import {
+  fetchSuitesAction,
+  suitePaginationSelector,
+  suitesSelector,
+  selectedSuitesSelector,
+  toggleSuiteSelectionAction,
+  unselectAllSuitesAction,
+  selectSuitesAction,
+} from 'controllers/suite';
+import { currentLaunchSelector, fetchLaunchAction } from 'controllers/launch';
 import { Toolbar } from './toolbar/toolbar';
 
-@connect((state) => ({
-  userId: userIdSelector(state),
-  url: `/api/v1/${activeProjectSelector(state)}/item?filter.eq.launch=5a65e6a997a1c00001aaee95`, // TODO remove stub data
-}))
+@connect(
+  (state) => ({
+    userId: userIdSelector(state),
+    suites: suitesSelector(state),
+    selectedSuites: selectedSuitesSelector(state),
+    currentLaunch: currentLaunchSelector(state),
+  }),
+  {
+    toggleSuiteSelectionAction,
+    unselectAllSuitesAction,
+    selectSuitesAction,
+    fetchLaunchAction,
+  },
+)
 @withSorting({
   defaultSortingColumn: 'start_time',
   defaultSortingDirection: SORTING_ASC,
 })
-@withPagination()
+@withPagination({
+  fetchAction: fetchSuitesAction,
+  paginationSelector: suitePaginationSelector,
+})
 @injectIntl
 export class SuitesPage extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
-    data: PropTypes.arrayOf(PropTypes.object),
+    suites: PropTypes.arrayOf(PropTypes.object),
+    selectedSuites: PropTypes.arrayOf(PropTypes.object),
     activePage: PropTypes.number,
     itemCount: PropTypes.number,
     pageCount: PropTypes.number,
@@ -34,11 +58,16 @@ export class SuitesPage extends Component {
     onChangePage: PropTypes.func,
     onChangePageSize: PropTypes.func,
     onChangeSorting: PropTypes.func,
-    url: PropTypes.string.isRequired,
+    toggleSuiteSelectionAction: PropTypes.func,
+    unselectAllSuitesAction: PropTypes.func,
+    selectSuitesAction: PropTypes.func,
+    currentLaunch: PropTypes.object,
+    fetchLaunchAction: PropTypes.func,
   };
 
   static defaultProps = {
-    data: [],
+    suites: [],
+    selectedSuites: [],
     activePage: 1,
     itemCount: null,
     pageCount: null,
@@ -49,11 +78,36 @@ export class SuitesPage extends Component {
     onChangePage: () => {},
     onChangePageSize: () => {},
     onChangeSorting: () => {},
+    toggleSuiteSelectionAction: () => {},
+    unselectAllSuitesAction: () => {},
+    selectSuitesAction: () => {},
+    currentLaunch: {},
+    fetchLaunchAction: () => {},
+  };
+
+  componentDidMount() {
+    this.fetchCurrentLaunch();
+  }
+
+  handleAllSuitesSelection = () => {
+    const { selectedSuites, suites } = this.props;
+    if (suites.length === selectedSuites.length) {
+      this.props.unselectAllSuitesAction();
+      return;
+    }
+    this.props.selectSuitesAction(suites);
+  };
+
+  fetchCurrentLaunch = () => this.props.fetchLaunchAction('5af4598e20b5430001bee8a1'); // TODO remove hardcoded id after routing implementation
+
+  handleRefresh = () => {
+    this.fetchCurrentLaunch();
+    this.props.fetchData();
   };
 
   render() {
     const {
-      data,
+      suites,
       activePage,
       itemCount,
       pageCount,
@@ -63,15 +117,26 @@ export class SuitesPage extends Component {
       sortingColumn,
       sortingDirection,
       onChangeSorting,
+      selectedSuites,
+      currentLaunch,
     } = this.props;
     return (
       <PageLayout>
-        <Toolbar />
+        <Toolbar
+          selectedItems={selectedSuites}
+          onUnselect={this.props.toggleSuiteSelectionAction}
+          onUnselectAll={this.props.unselectAllSuitesAction}
+          currentLaunch={currentLaunch}
+          onRefresh={this.handleRefresh}
+        />
         <LaunchSuiteGrid
-          data={data}
+          data={suites}
           sortingColumn={sortingColumn}
           sortingDirection={sortingDirection}
           onChangeSorting={onChangeSorting}
+          selectedItems={selectedSuites}
+          onItemSelect={this.props.toggleSuiteSelectionAction}
+          onAllItemsSelect={this.handleAllSuitesSelection}
         />
         <PaginationToolbar
           activePage={activePage}

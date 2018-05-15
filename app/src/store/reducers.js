@@ -9,6 +9,7 @@ import { screenLockReducer } from 'controllers/screenLock';
 import { dashboardReducer } from 'controllers/dashboard';
 import { launchReducer } from 'controllers/launch';
 import { notificationReducer } from 'controllers/notification';
+import { suiteReducer } from 'controllers/suite/reducer';
 
 export default {
   appInfo: appInfoReducer,
@@ -22,4 +23,5 @@ export default {
   screenLock: screenLockReducer,
   dashboard: dashboardReducer,
   launches: launchReducer,
+  suites: suiteReducer,
 };

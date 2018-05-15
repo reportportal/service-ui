@@ -6,6 +6,7 @@ export {
   mergeLaunchesAction,
   compareLaunchesAction,
   fetchLaunchesAction,
+  fetchLaunchAction,
 } from './actionCreators';
 export {
   selectedLaunchesSelector,
@@ -13,6 +14,7 @@ export {
   lastOperationSelector,
   launchesSelector,
   launchPaginationSelector,
+  currentLaunchSelector,
 } from './selectors';
 export { launchReducer } from './reducer';
 export { launchSagas } from './sagas';
