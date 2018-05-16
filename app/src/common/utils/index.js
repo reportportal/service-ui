@@ -36,3 +36,5 @@ export {
   daysBetween,
 } from './timeDateUtils';
 export { connectRouter } from './connectRouter';
+export { uniqueId } from './uniqueId';
+export { fileSizeConverter } from './fileSizeConverter';

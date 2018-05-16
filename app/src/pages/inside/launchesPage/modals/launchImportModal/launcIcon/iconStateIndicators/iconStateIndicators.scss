@@ -1,0 +1,19 @@
+.indicator-icon {
+  height: 16px;
+  width: 16px;
+  margin: 0 auto;
+}
+
+.indicator-default {
+  text-transform: uppercase;
+  font-size: 15px;
+  font-family: $FONT-REGULAR, sans-serif;
+  color: $COLOR--gray-91;
+  font-weight: bold;
+  transform: rotate(-6deg);
+}
+
+.invalid-tooltip {
+  color: $COLOR--failed;
+  margin: -5px;
+}
