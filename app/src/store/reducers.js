@@ -11,6 +11,7 @@ import { launchReducer } from 'controllers/launch';
 import { notificationReducer } from 'controllers/notification';
 import { suiteReducer } from 'controllers/suite/reducer';
 import { filterReducer } from 'controllers/filter';
+import { testReducer } from 'controllers/test';
 
 export default {
   appInfo: appInfoReducer,
@@ -26,4 +27,5 @@ export default {
   launches: launchReducer,
   suites: suiteReducer,
   filters: filterReducer,
+  tests: testReducer,
 };

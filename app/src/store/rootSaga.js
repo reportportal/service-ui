@@ -6,6 +6,7 @@ import { launchSagas } from 'controllers/launch';
 import { groupOperationsSagas } from 'controllers/groupOperations';
 import { suiteSagas } from 'controllers/suite';
 import { filterSagas } from 'controllers/filter';
+import { testSagas } from 'controllers/test';
 
 export function* rootSagas() {
   yield all([
@@ -16,5 +17,6 @@ export function* rootSagas() {
     groupOperationsSagas(),
     suiteSagas(),
     filterSagas(),
+    testSagas(),
   ]);
 }
