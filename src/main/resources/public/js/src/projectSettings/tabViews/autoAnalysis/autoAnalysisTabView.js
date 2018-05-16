@@ -56,11 +56,21 @@ define(function (require) {
             '[data-js-doc-freq-input]': 'value: minDocFreq',
             '[data-js-term-freq-input]': 'value: minTermFreq',
             '[data-js-numder-str-input]': 'value: numberOfLogLines',
-            '[data-js-in-progress]': 'classes: {hide: not(indexing_running)}',
             '[data-js-remove-index]': 'classes: {disabled: indexing_running}',
-            '[data-js-generate-index]': 'classes: {disabled: indexing_running}'
-        },
+            '[data-js-generate-index]': 'classes: {disabled: indexing_running}, text:inProgressText'
 
+        },
+        computeds: {
+            inProgressText: {
+                deps: ['indexing_running'],
+                get: function (indexing_running) {
+                    if (indexing_running) {
+                        return Localization.project.indexInProgress;
+                    }
+                    return Localization.project.generateIndex;
+                }
+            }
+        },
         initialize: function () {
             this.userModel = new UserModel();
             this.model = new AutoAnalysisSettingsModel(appModel.get('configuration').analyzerConfiguration);
@@ -197,7 +207,7 @@ define(function (require) {
                     return Service.generateIndex().done(function () {
                         Service.getProject().done(function (res) {
                             appModel.set(res);
-                            self.model.set('indexing_running', true);
+                            self.model.set('indexing_running', res.configuration.analyzerConfiguration.indexing_running);
                         });
                     }).fail(function (err) {
                         Util.ajaxFailMessenger(err);
@@ -210,13 +220,16 @@ define(function (require) {
             this.model.set('analyzer_mode', e.target.value);
         },
         setAccuracySettings: function (mode) {
+            var modeSettings;
             if (mode) {
+                modeSettings = config.autoAnalysisAccuracy[mode];
                 this.model.set({
-                    minDocFreq: config.autoAnalysisAccuracy[mode].minDocFreq,
-                    minShouldMatch: config.autoAnalysisAccuracy[mode].minShouldMatch,
-                    minTermFreq: config.autoAnalysisAccuracy[mode].minTermFreq,
-                    numberOfLogLines: config.autoAnalysisAccuracy[mode].numberOfLogLines
+                    minDocFreq: modeSettings.minDocFreq,
+                    minShouldMatch: modeSettings.minShouldMatch,
+                    minTermFreq: modeSettings.minTermFreq,
+                    numberOfLogLines: modeSettings.numberOfLogLines
                 });
+                this.logStrNumberSelector.activateItem(modeSettings.numberOfLogLines);
             }
         },
         validate: function () {
