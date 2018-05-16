@@ -1,4 +1,5 @@
 import { fetch } from 'common/utils';
+import { URLS } from 'common/urls';
 import { userIdSelector, activeProjectSelector } from 'controllers/user';
 import {
   FETCH_PROJECT_SUCCESS,
@@ -18,13 +19,10 @@ const fetchProjectPreferencesSuccessAction = (projectId) => ({
 });
 
 const updateProjectPreferencesAction = (settings) => (dispatch, getState) =>
-  fetch(
-    `/api/v1/project/${activeProjectSelector(getState())}/preference/${userIdSelector(getState())}`,
-    {
-      method: 'PUT',
-      data: settings,
-    },
-  );
+  fetch(URLS.projectPreferences(activeProjectSelector(getState()), userIdSelector(getState())), {
+    method: 'PUT',
+    data: settings,
+  });
 
 export const toggleDisplayFilterOnLaunchesAction = (filter) => (dispatch, getState) => {
   dispatch({
@@ -35,12 +33,12 @@ export const toggleDisplayFilterOnLaunchesAction = (filter) => (dispatch, getSta
 };
 
 const fetchProjectPreferencesAction = (projectId) => (dispatch, getState) =>
-  fetch(`/api/v1/project/${projectId}/preference/${userIdSelector(getState())}`).then((project) => {
+  fetch(URLS.projectPreferences(projectId, userIdSelector(getState()))).then((project) => {
     dispatch(fetchProjectPreferencesSuccessAction(project));
   });
 
 export const fetchProjectAction = (projectId) => (dispatch) =>
-  fetch(`/api/v1/project/${projectId}`).then((project) => {
+  fetch(URLS.project(projectId)).then((project) => {
     dispatch(fetchProjectSuccessAction(project));
     dispatch(fetchProjectPreferencesAction(projectId));
   });

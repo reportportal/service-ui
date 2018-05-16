@@ -7,3 +7,6 @@ export const LOGIN = 'loginAction';
 export const INITIAL_STATE = {
   authorized: false,
 };
+export const GRANT_TYPES = {
+  PASSWORD: 'password',
+};

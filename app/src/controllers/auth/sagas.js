@@ -1,11 +1,12 @@
 import { fetch } from 'common/utils';
+import { URLS } from 'common/urls';
 import { all, call, put, select, takeEvery } from 'redux-saga/effects';
 import { showNotification } from 'controllers/notification';
 import { NOTIFICATION_TYPES } from 'controllers/notification/constants';
 import { activeProjectSelector, fetchUserAction } from 'controllers/user';
 import { fetchProjectAction } from 'controllers/project';
 import { authSuccessAction } from 'controllers/auth/actionCreators';
-import { DEFAULT_TOKEN, LOGIN, LOGOUT, TOKEN_KEY } from './constants';
+import { DEFAULT_TOKEN, LOGIN, LOGOUT, TOKEN_KEY, GRANT_TYPES } from './constants';
 
 function setDefaultToken() {
   localStorage.setItem(TOKEN_KEY, DEFAULT_TOKEN);
@@ -22,12 +23,7 @@ function* watchLogout() {
 function* handleLogin({ payload }) {
   let result;
   try {
-    result = yield call(fetch, '/uat/sso/oauth/token', {
-      params: {
-        grant_type: 'password',
-        username: payload.login,
-        password: payload.password,
-      },
+    result = yield call(fetch, URLS.login(GRANT_TYPES.PASSWORD, payload.login, payload.password), {
       method: 'POST',
     });
   } catch (e) {

@@ -2,6 +2,7 @@ import { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { fetch, validate } from 'common/utils';
+import { URLS } from 'common/urls';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { reduxForm, formValueSelector } from 'redux-form';
 import { connect } from 'react-redux';
@@ -104,7 +105,7 @@ const messages = defineMessages({
     mergeType: formValueSelector(MERGE_FORM)(state, 'merge_type'),
     startTime: formValueSelector(MERGE_FORM)(state, 'start_time'),
     endTime: formValueSelector(MERGE_FORM)(state, 'end_time'),
-    tagsSearchUrl: `/api/v1/${activeProjectSelector(state)}/launch/tags?filter.cnt.tags=`,
+    tagsSearchUrl: URLS.launchTagsSearch(activeProjectSelector(state)),
   }),
   {
     showScreenLockAction,
@@ -175,7 +176,7 @@ export class LaunchMergeModal extends Component {
 
   MergeAndCloseModal = (closeModal) => (values) => {
     this.props.showScreenLockAction();
-    fetch(`/api/v1/${this.props.activeProject}/launch/merge`, {
+    fetch(URLS.launchesMerge(this.props.activeProject), {
       method: 'post',
       data: values,
     }).then(() => {
