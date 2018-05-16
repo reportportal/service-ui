@@ -3,7 +3,13 @@ import { SelectedItems } from 'pages/inside/common/selectedItems';
 import PropTypes from 'prop-types';
 import { ActionPanel } from './actionPanel';
 
-export const Toolbar = ({ currentLaunch, selectedItems, onUnselect, onUnselectAll, onRefresh }) => (
+export const SuiteTestToolbar = ({
+  parentItem,
+  selectedItems,
+  onUnselect,
+  onUnselectAll,
+  onRefresh,
+}) => (
   <div>
     {!!selectedItems.length && (
       <SelectedItems
@@ -13,21 +19,21 @@ export const Toolbar = ({ currentLaunch, selectedItems, onUnselect, onUnselectAl
       />
     )}
     <ActionPanel onRefresh={onRefresh} />
-    {currentLaunch && <InfoLine data={currentLaunch} />}
+    {parentItem && <InfoLine data={parentItem} />}
     <div />
   </div>
 );
-Toolbar.propTypes = {
+SuiteTestToolbar.propTypes = {
   selectedItems: PropTypes.arrayOf(PropTypes.object),
   onUnselect: PropTypes.func,
   onUnselectAll: PropTypes.func,
-  currentLaunch: PropTypes.object,
+  parentItem: PropTypes.object,
   onRefresh: PropTypes.func,
 };
-Toolbar.defaultProps = {
+SuiteTestToolbar.defaultProps = {
   selectedItems: [],
   onUnselect: () => {},
   onUnselectAll: () => {},
-  currentLaunch: {},
+  parentItem: null,
   onRefresh: () => {},
 };
