@@ -1159,7 +1159,8 @@ define(['util'], function () {
                 finish_import: 'Окончание импорта',
                 analyze_item: 'АА изменил тип дефекта',
                 generate_index: 'Генерация индекса',
-                delete_index: 'Удаление индекса'
+                delete_index: 'Удаление индекса',
+                update_analyzer: 'Обновление Авто-Анализа'
             },
             objectTypes: {
                 all: 'Все',
@@ -1480,22 +1481,22 @@ define(['util'], function () {
             autoAnalysisSettings: 'Авто-анализ',
             autoAnalysisMode: 'Точность Авто-Анализа',
             autoAnalysisMinDocFreq: 'Minimum document frequency',
-            autoAnalysisMinTermFreq: 'Minimum termin frequency',
+            autoAnalysisMinTermFreq: 'Minimum term frequency',
             autoAnalysisMinShouldMatch: 'Minimum should match',
             autoAnalysisNumberOfLog: 'Количество строк журнала',
             strictMode: 'Жесткий',
             moderateMode: 'Средний',
             lightMode: 'Мягкий',
             matchDescription: 'Процент совпадения слов между анализируемым логом и логом, сохраненным в ElasticSearch. Логи из ElasticSearch c процентом ниже установленного будут игнорировать в Авто-Анализе.',
-            docFreqDescription: 'Установите минимальную частоту слова во всех сохраненных логах в ElasticSearch (Индекс). Если количество слов ниже указанного значения, это слово будет игнорироваться в Авто-Анализе. Чем чаще оно употребляется в Индексе, тем меньше значения оказывает на результаты Авто-Анализа.',
+            docFreqDescription: 'Установите минимальную частоту сохраненных логов в ElasticSearch (Индекс), в которых должно употребляться слово из анализируемого лога. Если количество логов ниже указанного значения, данное слово будет игнорироваться в Авто-Анализе. Чем чаще оно употребляется в Индексе, тем меньше значения оказывает на результаты Авто-Анализа.',
             termFreqDescription: 'Установите минимальную частоту слова в анализируемом логе. Если количество слов ниже указанного значения, это слово будет игнорироваться в Авто-Анализе. Чем чаще оно употребляется в анализируемом логе, тем больше значение оказывает на результаты Авто-Анализа.',
             strNumberDescription: 'Количество первых строк лога, которые будут учитываться при Авто-Анализе.',
-            indexActions: 'Действия с Индексом',
-            removeIndex: 'Удалить Индекс',
+            indexActions: 'Действия с индексом',
+            removeIndex: 'Удалить индекс',
             removeIndexDescription: 'Вся информация будет удалена из ElasticSearch. Для генерации данных заново Вы можете начать анализировать тестовые результаты вручную или сгенерировать данные автоматически',
             removeIndexConfirm: 'Вы уверены, что хотите удалить всю информацию из ElasticSearch?',
             generateIndex: 'Сгенерировать индекс',
-            generateIndexDescription: 'Вся информация будет удалена из ElasticSearch и сгенерирована заново, на основании проанализированных данных на Вашем проекте с учетом действующих настроек Авто-Анализа. Вы сможете запустить Авто-Анализ после окончания процесса, о котором будете уведомлены письмом по электронной почте.',
+            generateIndexDescription: 'Вся информация будет удалена из ElasticSearch и сгенерирована заново, на основании проанализированных данных на Вашем проекте с учетом действующих настроек Авто-Анализа. Вы сможете запустить Авто-Анализ после окончания процесса, о котором будете уведомлены письмом по электронной почте',
             generateIndexConfirm: 'Вы уверены, что хотите заново сгенерировать индекс в ElasticSearch? ',
             noteText: 'По окончанию процесса Вы получите письмо по электронной почте.',
             indexInProgress: 'В прогрессе...'
@@ -2059,7 +2060,8 @@ define(['util'], function () {
             projectNameIn: 'Имя проекта в СОД',
             copyLink: 'Копировать ссылку',
             generateIndex: 'Генерация индекса',
-            deleteIndex: 'Удаление индекса'
+            deleteIndex: 'Удаление индекса',
+            updateAutoAnalysis: 'Обновить Авто-Анализ'
         },
 
         wizard: {
@@ -2246,11 +2248,16 @@ define(['util'], function () {
             email: 'Уведомления по электронной почте',
             keepLogs: 'Сохранять журнал',
             keepScreenshots: 'Сохранять скриншоты',
-            auto_analyze: 'Автоанализатор',
+            auto_analyze: 'переключение Автоанализатора',
             launchInactivity: 'Время бездействия запуска',
             statisticsCalculationStrategy: 'Выбрать стратегию',
             delete_index: 'индекс был удален',
-            generate_index: 'индекс был сгенерирован'
+            generate_index: 'индекс был сгенерирован',
+            number_of_log_lines: 'Количество строк лога',
+            min_doc_freq: 'Minimum document frequency',
+            min_should_match: 'Minimum should match',
+            min_term_freq: 'Minimum term frequency',
+            analyze_mode: 'Стратегия Авто-Анализа'
         },
 
         permissionMap: {

@@ -1100,7 +1100,8 @@ define(['util'], function () {
                 finish_import: 'Finish import',
                 analyze_item: 'AA changed defect type',
                 generate_index: 'Generate index',
-                delete_index: 'Remove index'
+                delete_index: 'Remove index',
+                update_analyzer: 'Update Auto-Analysis'
             },
             objectTypes: {
                 all: 'all',
@@ -1427,16 +1428,16 @@ define(['util'], function () {
             strictMode: 'Strict',
             moderateMode: 'Moderate',
             lightMode: 'Light',
-            matchDescription: 'The parameter controls the number of terms (words) that must match in analyzed log and particular log from the index.',
-            docFreqDescription: 'Set the min frequency of word in the analyzed log below which this word will be ignored for AA. The more often the word appears in the analyzed log - the higher its weight.',
-            termFreqDescription: 'Set the min frequency of the word in ElasticSearch base (index) below which this words will be ignored for AA in the analyzed log. The more often the word appears in index - the lower its weight.',
-            strNumberDescription: 'The parameter controls the number of terms (words) that must match in analyzed log and particular log from the index',
+            matchDescription: 'Percent of words equality between analyzed log and particular log from the ElasticSearch. If a log from ElasticSearch has the value less then set, this log will be ignored for AA.',
+            docFreqDescription: 'Set the minimum frequency of the saved logs in ElasticSearch (index) in which word from analyzed log should be used. If the log count is below the specified value, that word will be ignored for AA in the analyzed log. The more often the word appears in index, the lower it weights.',
+            termFreqDescription: 'Set the minimum frequency of the word in the analyzed log. If the word count is below the specified value, this word will be ignored for AA. The more often the word appears in the analyzed log, the higher it weights.',
+            strNumberDescription: 'The number of first lines of log message that should be considered in ElasticSearch.',
             indexActions: 'Actions with index',
             removeIndex: 'Remove index',
-            removeIndexDescription: 'All data will be deleted from the ElasticSearch. For creating a new one you could start to investigate test results manually or generate data based on previous results on the project once again',
+            removeIndexDescription: 'All data with your investigations will be deleted from the ElasticSearch. For creating a new one you could start to investigate test results manually or generate data based on previous results on the project once again',
             removeIndexConfirm: 'Are you sure to remove all data from the ElasticSearch?',
             generateIndex: 'Generate index',
-            generateIndexDescription: 'All data is removed from ElasticSearch and new one is generated based on all previous investigations on the project. You can start auto-analyse test results after receiving an e-mail about the end of the generation process',
+            generateIndexDescription: 'All data is removed from ElasticSearch and new one is generated based on all previous investigations on the project in accordence with current analysis settings. You can start auto-analyse test results after receiving a e-mail about the end of the generation process',
             generateIndexConfirm: 'Are you sure to generate index in the ElasticSearch?',
             noteText: 'You will receive an e-mail after the end of the process.',
             indexInProgress: 'In progress...'
@@ -2000,7 +2001,8 @@ define(['util'], function () {
             projectNameIn: 'Project name in BTS',
             copyLink: 'Copy link',
             generateIndex: 'Generate index',
-            deleteIndex: 'Remove index'
+            deleteIndex: 'Remove index',
+            updateAutoAnalysis: 'Update Auto-Analysis settings'
         },
 
         wizard: {
@@ -2187,11 +2189,16 @@ define(['util'], function () {
             email: 'E-mail notifications',
             keepLogs: 'Keep logs',
             keepScreenshots: 'Keep attachments',
-            auto_analyze: 'Auto analysis',
+            auto_analyze: 'switch Auto Analysis',
             launchInactivity: 'Launch inactivity timeout',
             statisticsCalculationStrategy: 'Select strategy',
-            delete_index: 'removed index',
-            generate_index: 'generated index'
+            delete_index: 'remove index',
+            generate_index: 'generate index',
+            number_of_log_lines: 'Number of log lines',
+            min_doc_freq: 'Minimum document frequency',
+            min_should_match: 'Minimum should match',
+            min_term_freq: 'Minimum term frequency',
+            analyze_mode: 'Base for Auto Analysis'
         },
 
         permissionMap: {

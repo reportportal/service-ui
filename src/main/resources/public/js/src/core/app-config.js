@@ -183,11 +183,11 @@ define(function (require) {
             restorationStamp: '?reset=',
             commentsSeparator: '\n&#8801;&#8801;&#8801;&#8801;&#8801;&#8801;&#8801;&#8801;&#8801;&#8801;&#8801;&#8801;&#8801;&#8801;&#8801;&#8801;&#8801;&#8801;&#8801;&#8801;&#8801;&#8801;&#8801;&#8801;&#8801;&#8801;&#8801;&#8801;&#8801;&#8801;\n',
             logStrNumberAutoAnalyze: [
-                { name: 'All', value: '-1' },
                 { name: '2', value: '2' },
                 { name: '3', value: '3' },
                 { name: '4', value: '4' },
-                { name: '5', value: '5' }
+                { name: '5', value: '5' },
+                { name: Localization.ui.all, value: '-1' }
             ],
             autoAnalysisAccuracy: {
                 STRICT: {

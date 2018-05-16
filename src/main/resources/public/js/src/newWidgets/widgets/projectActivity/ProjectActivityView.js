@@ -46,6 +46,8 @@ define(function (require) {
                 return Localization.project.strategyRegular;
             case 'TEST_BASED':
                 return Localization.project.strategyBdd;
+            case '-1':
+                return Localization.ui.all;
             default:
                 return val;
             }
@@ -113,6 +115,28 @@ define(function (require) {
                                             } else {
                                                 values.history[name] = obj;
                                             }
+                                        }
+                                    }
+                                    values[k] = v;
+                                }, this);
+                            } else if (val.values.actionType === 'update_analyzer') {
+                                values.history = {};
+                                _.each(val.values, function (v, k) {
+                                    var a = k.split('$');
+                                    var name = a[0];
+                                    var type = a[1];
+                                    obj = {};
+                                    if (k.indexOf('Value') > 0) {
+                                        isAutoAnalysis = 'a-analysis';
+                                        a = k.split('$');
+                                        name = a[0];
+                                        type = a[1];
+                                        obj = {};
+                                        obj[type] = v;
+                                        if (values.history[name]) {
+                                            _.extend(values.history[name], obj);
+                                        } else {
+                                            values.history[name] = obj;
                                         }
                                     }
                                     values[k] = v;
