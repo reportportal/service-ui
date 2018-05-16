@@ -14,6 +14,7 @@ export const LaunchToolbar = ({
   onMerge,
   onCompare,
   onProceedValidItems,
+  onImportLaunch
 }) => (
   <div className={cx('launch-toolbar')}>
     {!!selectedLaunches.length && (
@@ -32,6 +33,7 @@ export const LaunchToolbar = ({
       onMerge={onMerge}
       onCompare={onCompare}
       selectedLaunches={selectedLaunches}
+      onImportLaunch={onImportLaunch}
     />
   </div>
 );
@@ -46,6 +48,7 @@ LaunchToolbar.propTypes = {
   onMoveToDebug: PropTypes.func,
   onForceFinish: PropTypes.func,
   onDelete: PropTypes.func,
+  onImportLaunch: PropTypes.func,
 };
 LaunchToolbar.defaultProps = {
   selectedLaunches: [],
@@ -58,4 +61,5 @@ LaunchToolbar.defaultProps = {
   onMoveToDebug: () => {},
   onForceFinish: () => {},
   onDelete: () => {},
+  onImportLaunch: () => {},
 };

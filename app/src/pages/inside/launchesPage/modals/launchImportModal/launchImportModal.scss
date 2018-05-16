@@ -1,0 +1,50 @@
+.dropzone {
+  padding: 20px 20px 25px 20px;
+  text-align: center;
+}
+
+.dropzone-wrapper {
+  background-color: #f9f9f9;
+  height: auto;
+  width: 100%;
+}
+
+.dropzone-wrapper-active {
+  opacity: 0.7;
+}
+
+.blue {
+  color: $COLOR--topaz;
+}
+
+.icon {
+  width: 20px;
+  height: 24px;
+  margin: 0 auto 15px auto;
+}
+
+.message {
+  color: $COLOR--gray-60;
+  font-size: 12px;
+  font-family: $FONT-REGULAR, sans-serif;
+}
+
+.files-list {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 20px;
+}
+
+.note-label {
+  margin-top: 20px;
+  color: $COLOR--tealish;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: $FONT-REGULAR, sans-serif;
+}
+
+.note-message {
+  font-family: $FONT-REGULAR, sans-serif;
+  font-size: 12px;
+  line-height: 1.5;
+}

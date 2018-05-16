@@ -130,6 +130,10 @@ export class LaunchesPage extends Component {
       },
     }).then(this.props.fetchData);
   };
+  importLaunch = () => {
+    this.props.fetchData();
+  };
+
   confirmDeleteItem = (item) => {
     this.props.showModalAction({
       id: 'launchDeleteModal',
@@ -146,6 +150,14 @@ export class LaunchesPage extends Component {
     this.props.showModalAction({
       id: 'launchEditModal',
       data: { launch, onEdit: this.updateLaunch },
+    });
+  };
+  openImportModal = () => {
+    this.props.showModalAction({
+      id: 'launchImportModal',
+      data: {
+        onImport: this.importLaunch,
+      },
     });
   };
 
@@ -187,6 +199,7 @@ export class LaunchesPage extends Component {
           onProceedValidItems={this.proceedWithValidItems}
           onMerge={this.mergeLaunches}
           onCompare={this.props.compareLaunchesAction}
+          onImportLaunch={this.openImportModal}
         />
         <LaunchSuiteGrid
           data={data}

@@ -47,6 +47,7 @@ export class ActionPanel extends Component {
     hasErrors: PropTypes.bool,
     showBreadcrumb: PropTypes.bool,
     intl: intlShape.isRequired,
+    onImportLaunch: PropTypes.func,
     hasValidItems: PropTypes.bool,
     onProceedValidItems: PropTypes.func,
     onMerge: PropTypes.func,
@@ -60,6 +61,7 @@ export class ActionPanel extends Component {
     selectedLaunches: [],
     hasErrors: false,
     showBreadcrumb: false,
+    onImportLaunch: () => {},
     hasValidItems: false,
     onProceedValidItems: () => {},
     onMerge: () => {},
@@ -110,6 +112,7 @@ export class ActionPanel extends Component {
       selectedLaunches,
       hasValidItems,
       onProceedValidItems,
+      onImportLaunch
     } = this.props;
     return (
       <div className={cx('action-panel', { 'right-buttons-only': !showBreadcrumb && !hasErrors })}>
@@ -121,7 +124,7 @@ export class ActionPanel extends Component {
         )}
         <div className={cx('action-buttons')}>
           <div className={cx('action-button', 'mobile-hidden')}>
-            <GhostButton icon={ImportIcon} disabled>
+            <GhostButton icon={ImportIcon} onClick={onImportLaunch}>
               <FormattedMessage id="LaunchesPage.import" defaultMessage="Import" />
             </GhostButton>
           </div>

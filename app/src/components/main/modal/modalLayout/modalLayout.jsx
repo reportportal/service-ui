@@ -34,6 +34,9 @@ export class ModalLayout extends Component {
       text: PropTypes.string.isRequired,
     }),
     customButton: PropTypes.node,
+    closeConfirmation: PropTypes.object,
+    confirmationMessage: PropTypes.string,
+    confirmationWarning: PropTypes.string,
   };
   static defaultProps = {
     className: '',
@@ -46,9 +49,14 @@ export class ModalLayout extends Component {
     okButton: null,
     cancelButton: null,
     customButton: null,
+    closeConfirmation: null,
+    confirmationMessage: '',
+    confirmationWarning: '',
   };
   state = {
     shown: false,
+    closeConfirmed: false,
+    showConfirmation: false,
   };
   componentDidMount() {
     document.addEventListener('keydown', this.onKeydown, false);
@@ -74,16 +82,60 @@ export class ModalLayout extends Component {
   onClickOk = () => {
     this.props.okButton.onClick(this.closeModal);
   };
+  onCloseConfirm = (closeConfirmed) => {
+    this.setState({
+      closeConfirmed,
+    });
+  };
   closeModal = () => {
-    this.setState({ shown: false });
+    const { closeConfirmation } = this.props;
+
+    if (closeConfirmation) {
+      this.closeModalWithConfirmation();
+    } else {
+      this.setState({ shown: false });
+    }
+  };
+  showCloseConfirmation = () => {
+    const { closeConfirmed } = this.state;
+
+    if (closeConfirmed) {
+      this.setState({ shown: false });
+    }
+
+    this.setState({ showConfirmation: true });
+  };
+  closeModalWithConfirmation = () => {
+    const {
+      closeConfirmation: { isAbleToClose },
+    } = this.props;
+
+    if (isAbleToClose) {
+      this.setState({ shown: false });
+    } else {
+      this.showCloseConfirmation();
+    }
   };
   render() {
-    const { title, warningMessage, okButton, cancelButton, customButton, children } = this.props;
+    const {
+      title,
+      warningMessage,
+      okButton,
+      cancelButton,
+      customButton,
+      children,
+      confirmationMessage,
+      confirmationWarning,
+    } = this.props;
     const footerProps = {
       warningMessage,
       okButton,
       cancelButton,
       customButton,
+      confirmationMessage,
+      confirmationWarning,
+      showConfirmation: this.state.showConfirmation,
+      onCloseConfirm: this.onCloseConfirm,
     };
 
     return (
