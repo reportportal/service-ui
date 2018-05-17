@@ -16,25 +16,22 @@ const rowHeight = 63;
 const breakpoints = { lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 };
 const cols = { lg: 12, md: 12, sm: 4, xs: 4, xxs: 4 };
 
-@connect((state) => ({
-  url: `/api/v1/${activeProjectSelector(state)}/dashboard`,
+@connect((state, ownProps) => ({
+  url: `/api/v1/${activeProjectSelector(state)}/dashboard/${ownProps.dashboardId}`
 }))
 export class WidgetsGrid extends PureComponent {
   static propTypes = {
     url: PropTypes.string,
     isFullscreen: PropTypes.bool,
-    dashboardId: PropTypes.string,
   };
 
   static defaultProps = {
     url: '',
     isFullscreen: false,
-    dashboardId: '',
   };
 
   constructor(props) {
     super(props);
-    this.url = `${this.props.url}/${this.props.dashboardId}`;
     this.isResizing = false;
   }
 
@@ -93,7 +90,7 @@ export class WidgetsGrid extends PureComponent {
   };
 
   updateWidgets(widgets) {
-    fetch(this.url, {
+    fetch(this.props.url, {
       method: 'PUT',
       data: {
         updateWidgets: widgets,
@@ -104,7 +101,7 @@ export class WidgetsGrid extends PureComponent {
   fetchWidgets() {
     this.setState({ isFetching: true });
 
-    return fetch(this.url).then(({ widgets }) => {
+    return fetch(this.props.url).then(({ widgets }) => {
       this.setState({
         widgets,
         isFetching: false,
