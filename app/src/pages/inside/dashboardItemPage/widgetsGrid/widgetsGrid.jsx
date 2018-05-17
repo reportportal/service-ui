@@ -45,6 +45,12 @@ export class WidgetsGrid extends PureComponent {
     this.fetchWidgets();
   }
 
+  componentDidUpdate({ url }) {
+    if (this.props.url !== url) {
+      this.fetchWidgets();
+    }
+  }
+
   onBreakpointChange = (newBreakpoint) => {
     this.isMobile = /sm|xs/.test(newBreakpoint);
   };
