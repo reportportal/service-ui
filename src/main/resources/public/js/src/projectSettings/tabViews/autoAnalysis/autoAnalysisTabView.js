@@ -205,6 +205,7 @@ define(function (require) {
                 noteText: Localization.project.noteText,
                 confirmFunction: function () {
                     return Service.generateIndex().done(function () {
+                        Util.ajaxSuccessMessenger('generateIndex');
                         Service.getProject().done(function (res) {
                             appModel.set(res);
                             self.model.set('indexing_running', res.configuration.analyzerConfiguration.indexing_running);

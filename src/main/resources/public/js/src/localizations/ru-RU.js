@@ -636,7 +636,8 @@ define(['util'], function () {
             launchInterrupted: 'Прогон прерван',
             zoomWidgetArea: 'Масштабирование виджета',
             aaConfig: 'конфигурация Авто-Анализа',
-            aaProperties: 'параметры Авто-Анализа'
+            aaProperties: 'параметры Авто-Анализа',
+            update_analyzer: 'обновлено'
         },
 
         userProfile: {
@@ -1817,7 +1818,8 @@ define(['util'], function () {
             updateDefect: 'Дефекты обновлены',
             updateServerSettings: 'Настройки сервера успешно обновлены',
             addUserWithoutEmail: 'Пользователь создан, но отправить сообщение невозможно, поскольку почтовый сервер сломался или выключен',
-            removeIndex: 'Индекс был успешно удален'
+            removeIndex: 'Индекс был успешно удален',
+            generateIndex: 'Генерация индекса началась'
         },
 
         failMessages: {
