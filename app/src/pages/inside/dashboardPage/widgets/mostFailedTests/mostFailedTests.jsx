@@ -1,14 +1,31 @@
 import * as React from 'react';
-import { func } from 'prop-types';
+import { func, oneOf } from 'prop-types';
+import {
+  STATS_FAILED,
+  STATS_SKIPPED,
+  STATS_PB_TOTAL,
+  STATS_AB_TOTAL,
+  STATS_SI_TOTAL,
+  STATS_ND_TOTAL,
+} from '../../../../../common/constants/statistics';
 import { TestsTableWidget, PTypes } from '../components/testsTableWidget';
 import * as cfg from './mostFailedTestsCfg';
+
+const PTIssueType = oneOf([
+  STATS_FAILED,
+  STATS_SKIPPED,
+  STATS_PB_TOTAL,
+  STATS_AB_TOTAL,
+  STATS_SI_TOTAL,
+  STATS_ND_TOTAL,
+]);
 
 class MostFailedTests extends React.Component {
   static propTypes = {
     tests: PTypes.PTTests.isRequired,
     launch: PTypes.PTLaunch.isRequired,
     nameClickHandler: func.isRequired,
-    issueType: PTypes.PTIssueType.isRequired,
+    issueType: PTIssueType.isRequired,
   };
 
   getIssueTypeMessage = (issueType) => {
