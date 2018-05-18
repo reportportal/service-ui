@@ -3,9 +3,8 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { connectRouter, fetch } from 'common/utils';
 import { loginAction } from 'controllers/auth';
+import { URLS } from 'common/urls';
 import { RegistrationPage } from './registrationPage';
-
-const REGISTRATION_URL = '/api/v1/user/registration';
 
 @connect(null, { loginAction })
 @connectRouter(({ uuid }) => ({ uuid }))
@@ -29,7 +28,7 @@ export class RegistrationPageContainer extends PureComponent {
     if (!uuid) {
       return;
     }
-    fetch(REGISTRATION_URL, { params: { uuid } }).then((data) =>
+    fetch(URLS.userRegistration(), { params: { uuid } }).then((data) =>
       this.setState({
         isTokenActive: data.isActive,
         email: data.email,
@@ -46,7 +45,7 @@ export class RegistrationPageContainer extends PureComponent {
       password,
       email,
     };
-    fetch(REGISTRATION_URL, { method: 'post', data, params: { uuid } }).then(() =>
+    fetch(URLS.userRegistration(), { method: 'post', data, params: { uuid } }).then(() =>
       this.props.loginAction({ login, password }),
     );
   };

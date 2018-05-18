@@ -36,6 +36,7 @@ define(function (require) {
         { value: 'update_filter', name: Localization.forms.updateFilter },
         { value: 'update_bts', name: Localization.forms.updateBts },
         { value: 'update_project', name: Localization.forms.updateProject },
+        { value: 'update_analyzer', name: Localization.forms.updateAutoAnalysis },
         { value: 'update_defects', name: Localization.forms.updateDefects },
         { value: 'import', name: Localization.forms.import }
 
@@ -47,7 +48,8 @@ define(function (require) {
         update_bts: ['create_bts', 'update_bts', 'delete_bts'],
         update_defects: ['update_defect', 'delete_defect'],
         update_issue: ['post_issue', 'link_issue', 'unlink_issue'],
-        import: ['start_import', 'finish_import']
+        import: ['start_import', 'finish_import'],
+        update_analyzer: ['update_analyzer', 'generate_index', 'delete_index']
     };
 
     return {

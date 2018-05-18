@@ -46,6 +46,8 @@ define(function (require) {
                 return Localization.project.strategyRegular;
             case 'TEST_BASED':
                 return Localization.project.strategyBdd;
+            case '-1':
+                return Localization.ui.all;
             default:
                 return val;
             }
@@ -65,6 +67,7 @@ define(function (require) {
                         var dateKey;
                         var isEmail = null;
                         var emailAction = null;
+                        var isAutoAnalysis = null;
                         var values;
                         var contains;
                         var now;
@@ -94,6 +97,14 @@ define(function (require) {
                                             isEmail = 'email';
                                             emailAction = 'update_email';
                                         } else {
+                                            if (k === 'auto_analyze$newValue' ||
+                                                k === 'analyze_mode$newValue' ||
+                                                k === 'min_doc_freq$newValue' ||
+                                                k === 'min_should_match$newValue' ||
+                                                k === 'number_of_log_lines$newValue' ||
+                                                k === 'min_term_freq$newValue') {
+                                                isAutoAnalysis = 'a-analysis';
+                                            }
                                             a = k.split('$');
                                             name = a[0];
                                             type = a[1];
@@ -108,8 +119,38 @@ define(function (require) {
                                     }
                                     values[k] = v;
                                 }, this);
+                            } else if (val.values.actionType === 'update_analyzer') {
+                                values.history = {};
+                                _.each(val.values, function (v, k) {
+                                    var a = k.split('$');
+                                    var name = a[0];
+                                    var type = a[1];
+                                    obj = {};
+                                    if (k.indexOf('Value') > 0) {
+                                        isAutoAnalysis = 'a-analysis';
+                                        a = k.split('$');
+                                        name = a[0];
+                                        type = a[1];
+                                        obj = {};
+                                        obj[type] = v;
+                                        if (values.history[name]) {
+                                            _.extend(values.history[name], obj);
+                                        } else {
+                                            values.history[name] = obj;
+                                        }
+                                    }
+                                    values[k] = v;
+                                }, this);
                             } else {
                                 _.extend(values, val.values);
+                            }
+
+                            if (val.values.actionType === 'delete_index' || val.values.actionType === 'generate_index') {
+                                values.objectType = 'index';
+                            }
+
+                            if (isAutoAnalysis) {
+                                values.objectType = isAutoAnalysis;
                             }
 
                             if (isEmail) {

@@ -1,4 +1,5 @@
 import { fetch, getStorageItem, setStorageItem } from 'common/utils';
+import { URLS } from 'common/urls';
 import { activeProjectSelector, userIdSelector } from 'controllers/user';
 import {
   FETCH_DASHBOARD_SUCCESS,
@@ -14,8 +15,8 @@ export const fetchDashboardAction = () => (dispatch, getState) => {
   const activeProject = activeProjectSelector(getState());
 
   Promise.all([
-    fetch(`/api/v1/${activeProject}/dashboard`),
-    fetch(`api/v1/${activeProject}/dashboard/shared?page.page=1&page.size=300`),
+    fetch(URLS.dashboards(activeProject)),
+    fetch(URLS.dashboardsShared(activeProject)),
   ]).then(([dashboards, sharedDashboards]) => {
     const { content } = sharedDashboards;
 
@@ -38,7 +39,7 @@ export const changeVisibilityTypeAction = (type) => (dispatch) => {
 export const deleteDashboardAction = ({ id }) => (dispatch, getState) => {
   const activeProject = activeProjectSelector(getState());
 
-  fetch(`/api/v1/${activeProject}/dashboard/${id}`, {
+  fetch(URLS.dashboard(activeProject, id), {
     method: 'DELETE',
   }).then(() => {
     dispatch({
@@ -53,7 +54,7 @@ export const editDashboardAction = (item) => (dispatch, getState) => {
 
   const { name, description, share, id } = item;
 
-  fetch(`/api/v1/${activeProject}/dashboard/${id}`, {
+  fetch(URLS.dashboard(activeProject, id), {
     method: 'PUT',
     data: { name, description, share },
   }).then((response) => {
@@ -67,14 +68,11 @@ export const editDashboardAction = (item) => (dispatch, getState) => {
 };
 
 export const addDashboardAction = (item) => (dispatch, getState) => {
-  const activeProject = activeProjectSelector(getState());
-  const userId = userIdSelector(getState());
-
-  fetch(`/api/v1/${activeProject}/dashboard`, {
+  fetch(URLS.dashboards(activeProjectSelector(getState())), {
     method: 'POST',
     data: item,
   }).then((response) => {
-    const payload = { ...item, ...response, ...{ owner: userId } };
+    const payload = { ...item, ...response, ...{ owner: userIdSelector(getState()) } };
 
     dispatch({
       type: ADD_DASHBOARD_ITEM_SUCCESS,

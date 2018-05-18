@@ -22,6 +22,7 @@
 define(['util'], function () {
     return {
         ui: {
+            all: 'Все',
             actions: 'Действия',
             on: 'Вкл',
             off: 'Выкл',
@@ -51,6 +52,7 @@ define(['util'], function () {
             update: 'Обновить',
             del: 'Удалить',
             remove: 'Убрать',
+            generate: 'Сгенерировать',
             submit: 'Отправить',
             confirm: 'Подтвердить',
             create: 'Создать',
@@ -217,7 +219,8 @@ define(['util'], function () {
                 'Октябрь',
                 'Ноябрь',
                 'Декабрь'
-            ]
+            ],
+            note: 'К сведению'
         },
 
         uiCommonElements: {
@@ -504,6 +507,8 @@ define(['util'], function () {
             unlink_issue: 'открепил ошибку',
             delete_issue: 'удаленная ошибка',
             testItem: 'элемент тестирования',
+            delete_index: 'обновлено',
+            generate_index: 'обновлено',
             update_project: 'обновлено',
             update_defect: 'обновлено',
             delete_defect: 'удалено',
@@ -629,7 +634,9 @@ define(['util'], function () {
             launchesOnFilter: 'Количество запусков в фильтре - ',
             selectWidget: 'Выберите тип виджета из списка',
             launchInterrupted: 'Прогон прерван',
-            zoomWidgetArea: 'Масштабирование виджета'
+            zoomWidgetArea: 'Масштабирование виджета',
+            aaConfig: 'конфигурация Авто-Анализа',
+            aaProperties: 'параметры Авто-Анализа'
         },
 
         userProfile: {
@@ -1150,7 +1157,10 @@ define(['util'], function () {
                 create_user: 'Создание пользователя',
                 start_import: 'Начало импорта',
                 finish_import: 'Окончание импорта',
-                analyze_item: 'АА изменил тип дефекта'
+                analyze_item: 'АА изменил тип дефекта',
+                generate_index: 'Генерация индекса',
+                delete_index: 'Удаление индекса',
+                update_analyzer: 'Обновление Авто-Анализа'
             },
             objectTypes: {
                 all: 'Все',
@@ -1391,8 +1401,8 @@ define(['util'], function () {
             autoAnalysisBaseFourthOpt: 'Элементы требующие анализа',
             autoAnalysisBaseFifthOpt: 'Элементы проанализированные автоматически (АА)',
             autoAnalysisBaseSixthOpt: 'Элементы проанализированные вручную',
-            autoAnalysisBaseFirstTip: 'Тестовые элементы будут проанализированы на основе ранее проанализированных данных во всех запусках',
-            autoAnalysisBaseSecondTip: 'Тестовые элементы будут проанализированы на основе ранее проанализированных данных в запусках с одинаковыми именами',
+            autoAnalysisBaseFirstTip: 'Тестовые элементы будут проанализированы на основе ранее проанализированных данных в запусках с одинаковыми именами',
+            autoAnalysisBaseSecondTip: 'Тестовые элементы будут проанализированы на основе ранее проанализированных данных во всех запусках',
             emailNotifications: 'Оповещения по электронной почте',
             emailRecipients: 'Получатели',
             duplicateEmailCase: 'Такое правило опощещений уже существует. Нельзя создать такое же.',
@@ -1467,7 +1477,29 @@ define(['util'], function () {
 
             ruleDeleted: 'Правило будет удалено после отправки',
             noCustomDefectsWereAdded: 'Не было добавлено пользовательских дефектов',
-            noCustomColors: 'Нет цветов для обновления'
+            noCustomColors: 'Нет цветов для обновления',
+            autoAnalysisSettings: 'Авто-анализ',
+            autoAnalysisMode: 'Точность Авто-Анализа',
+            autoAnalysisMinDocFreq: 'Minimum document frequency',
+            autoAnalysisMinTermFreq: 'Minimum term frequency',
+            autoAnalysisMinShouldMatch: 'Minimum should match',
+            autoAnalysisNumberOfLog: 'Количество строк журнала',
+            strictMode: 'Жесткий',
+            moderateMode: 'Средний',
+            lightMode: 'Мягкий',
+            matchDescription: 'Процент совпадения слов между анализируемым логом и логом, сохраненным в ElasticSearch. Логи из ElasticSearch c процентом ниже установленного будут игнорировать в Авто-Анализе.',
+            docFreqDescription: 'Установите минимальную частоту сохраненных логов в ElasticSearch (Индекс), в которых должно употребляться слово из анализируемого лога. Если количество логов ниже указанного значения, данное слово будет игнорироваться в Авто-Анализе. Чем чаще оно употребляется в Индексе, тем меньше значения оказывает на результаты Авто-Анализа.',
+            termFreqDescription: 'Установите минимальную частоту слова в анализируемом логе. Если количество слов ниже указанного значения, это слово будет игнорироваться в Авто-Анализе. Чем чаще оно употребляется в анализируемом логе, тем больше значение оказывает на результаты Авто-Анализа.',
+            strNumberDescription: 'Количество первых строк лога, которые будут учитываться при Авто-Анализе.',
+            indexActions: 'Действия с индексом',
+            removeIndex: 'Удалить индекс',
+            removeIndexDescription: 'Вся информация будет удалена из ElasticSearch. Для генерации данных заново Вы можете начать анализировать тестовые результаты вручную или сгенерировать данные автоматически',
+            removeIndexConfirm: 'Вы уверены, что хотите удалить всю информацию из ElasticSearch?',
+            generateIndex: 'Сгенерировать индекс',
+            generateIndexDescription: 'Вся информация будет удалена из ElasticSearch и сгенерирована заново, на основании проанализированных данных на Вашем проекте с учетом действующих настроек Авто-Анализа. Вы сможете запустить Авто-Анализ после окончания процесса, о котором будете уведомлены письмом по электронной почте',
+            generateIndexConfirm: 'Вы уверены, что хотите заново сгенерировать индекс в ElasticSearch? ',
+            noteText: 'По окончанию процесса Вы получите письмо по электронной почте.',
+            indexInProgress: 'В прогрессе...'
         },
 
         bts: {
@@ -1784,7 +1816,8 @@ define(['util'], function () {
             changedColorDefectTypes: 'Типы дефектов обновлены.',
             updateDefect: 'Дефекты обновлены',
             updateServerSettings: 'Настройки сервера успешно обновлены',
-            addUserWithoutEmail: 'Пользователь создан, но отправить сообщение невозможно, поскольку почтовый сервер сломался или выключен'
+            addUserWithoutEmail: 'Пользователь создан, но отправить сообщение невозможно, поскольку почтовый сервер сломался или выключен',
+            removeIndex: 'Индекс был успешно удален'
         },
 
         failMessages: {
@@ -1888,6 +1921,7 @@ define(['util'], function () {
             issueTitleLength: 'Имя должно иметь размер от \'4\' до \'512\'',
             componentsLength: 'Компоненты не должны состоять из одних пробелов и быть пустыми',
             logMessageLength: 'Длина сообщения должна быть от %%% до %%%.',
+            autoAnalysisLength: 'Параметр принимает значения от %%% до %%%.',
             filtersNameLength: 'Имя фильтров должно быть длиной от %%% до %%%',
             filterNameLength: 'Имя фильтра должно быть длиной от %%% до %%% знаков.',
             filterDescriptionLength: 'Описание фильтра должно быть длиной от %%% до %%%.',
@@ -2024,7 +2058,10 @@ define(['util'], function () {
             updateFilter: 'Обновить фильтр',
             import: 'Импорт',
             projectNameIn: 'Имя проекта в СОД',
-            copyLink: 'Копировать ссылку'
+            copyLink: 'Копировать ссылку',
+            generateIndex: 'Генерация индекса',
+            deleteIndex: 'Удаление индекса',
+            updateAutoAnalysis: 'Обновить Авто-Анализ'
         },
 
         wizard: {
@@ -2211,9 +2248,16 @@ define(['util'], function () {
             email: 'Уведомления по электронной почте',
             keepLogs: 'Сохранять журнал',
             keepScreenshots: 'Сохранять скриншоты',
-            auto_analyze: 'Автоанализатор',
+            auto_analyze: 'переключение Автоанализатора',
             launchInactivity: 'Время бездействия запуска',
-            statisticsCalculationStrategy: 'Выбрать стратегию'
+            statisticsCalculationStrategy: 'Выбрать стратегию',
+            delete_index: 'индекс был удален',
+            generate_index: 'индекс был сгенерирован',
+            number_of_log_lines: 'Количество строк лога',
+            min_doc_freq: 'Minimum document frequency',
+            min_should_match: 'Minimum should match',
+            min_term_freq: 'Minimum term frequency',
+            analyze_mode: 'Стратегия Авто-Анализа'
         },
 
         permissionMap: {

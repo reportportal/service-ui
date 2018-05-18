@@ -25,6 +25,7 @@ import { reduxForm } from 'redux-form';
 import classNames from 'classnames/bind';
 import { FormattedMessage, injectIntl, intlShape, defineMessages } from 'react-intl';
 import { validate, fetch, connectRouter } from 'common/utils';
+import { URLS } from 'common/urls';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { FieldBottomConstraints } from 'components/fields/fieldBottomConstraints';
@@ -60,20 +61,32 @@ export class ChangePasswordForm extends PureComponent {
     intl: intlShape.isRequired,
     handleSubmit: PropTypes.func.isRequired,
     reset: PropTypes.string,
+    history: PropTypes.object.isRequired,
+    location: PropTypes.shape({
+      hash: PropTypes.string,
+      pathname: PropTypes.string,
+      query: PropTypes.object,
+      search: PropTypes.string,
+    }).isRequired,
   };
-
   static defaultProps = {
     reset: '',
   };
-
+  state = {
+    loading: false,
+  };
   changePassword = ({ password }) => {
     const uuid = this.props.reset;
-    fetch('api/v1/user/password/reset', {
+    this.setState({ loading: true });
+    fetch(URLS.userPasswordReset(), {
       method: 'post',
       data: {
         password,
         uuid,
       },
+    }).then(() => {
+      this.setState({ loading: false });
+      this.props.history.push('/login');
     });
   };
 
@@ -94,6 +107,7 @@ export class ChangePasswordForm extends PureComponent {
             >
               <FieldErrorHint>
                 <InputOutside
+                  type={'password'}
                   icon={PasswordIcon}
                   maxLength={'25'}
                   placeholder={formatMessage(placeholders.newPassword)}
@@ -106,6 +120,7 @@ export class ChangePasswordForm extends PureComponent {
           <FieldProvider name="passwordRepeat">
             <FieldErrorHint>
               <InputOutside
+                type={'password'}
                 icon={PasswordIcon}
                 maxLength={'25'}
                 placeholder={formatMessage(placeholders.confirmNewPassword)}
@@ -114,7 +129,7 @@ export class ChangePasswordForm extends PureComponent {
           </FieldProvider>
         </div>
         <div className={cx('change-password-button')}>
-          <BigButton type={'submit'} color={'organish'}>
+          <BigButton type={'submit'} color={'organish'} disabled={this.state.loading}>
             <FormattedMessage
               id={'ChangePasswordForm.changePassword'}
               defaultMessage={'Change password'}

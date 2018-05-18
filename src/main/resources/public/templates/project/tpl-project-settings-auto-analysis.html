@@ -1,0 +1,126 @@
+<% var notAllowed = (!data.access) ? 'disabled="disabled"' : '' %>
+
+<div class="rp-form-group">
+    <label class="aa-switcher-label rp-control-label rp-custom-col">
+        <%= data.text.project.autoAnalysis %>
+    </label>
+    <div class="aa-switcher rp-custom-col">
+        <label class="rp-switcher-big">
+            <span class="turn-on"><%= data.text.ui.on %></span>
+            <span class="turn-off"><%= data.text.ui.off %></span>
+            <input type="checkbox" data-js-is-auto-analyze>
+            <div class="slider"></div>
+        </label>
+    </div>
+    <div class=" rp-custom-col rp-text-description">
+        <div class="rp-help-block"><%= data.text.project.autoAnalysisOnOff %></div>
+    </div>
+</div>
+<div class="rp-form-group" data-js-aa-base-block>
+    <label class="rp-control-label rp-custom-col">
+        <%= data.text.project.autoAnalysisBase %>
+    </label>
+    <div class="rp-custom-col">
+        <div class="aa-strategy-option">
+            <label class="aa-strategy-selector">
+                <input class="rp-input-radio" type="radio" name="aa-strategy" value="LAUNCH_NAME">
+                <span><%= data.text.project.autoAnalysisBaseSecondOpt %></span>
+            </label>
+            <span class="rp-help-block"><%= data.text.project.autoAnalysisBaseFirstTip %></span>
+        </div>
+        <div class="aa-strategy-option">
+            <label class="aa-strategy-selector">
+                <input class="rp-input-radio" type="radio" name="aa-strategy" value="ALL">
+                <span><%= data.text.project.autoAnalysisBaseFirstOpt %></span>
+            </label>
+            <span class="rp-help-block"><%= data.text.project.autoAnalysisBaseSecondTip %></span>
+        </div>
+    </div>
+</div>
+
+<div class="aa-mode-togler">
+    <div class="rp-form-group">
+        <label class="rp-control-label rp-custom-col">
+            <%= data.text.project.autoAnalysisMode %>
+        </label>
+        <div class="rp-custom-col" data-js-mode-switcher></div>
+    </div>
+    <div class="rp-form-group">
+        <label class="rp-control-label rp-custom-col">
+            <%= data.text.project.autoAnalysisMinShouldMatch %>
+        </label>
+        <div class="rp-custom-col rp-field">
+            <i class="percent-ic">%</i>
+            <input class="rp-input form-control"  type="text" data-js-match-input data-js-mode-param>
+            <span class="validate-hint"></span>
+        </div>
+        <div class="rp-custom-col rp-text-description">
+            <span class=" rp-help-block"><%= data.text.project.matchDescription %></span>
+        </div>
+    </div>
+    <div class="rp-form-group">
+        <label class="rp-control-label rp-custom-col">
+            <%= data.text.project.autoAnalysisMinDocFreq %>
+        </label>
+        <div class="rp-custom-col rp-field">
+            <input class="rp-input form-control"  type="text" data-js-doc-freq-input data-js-mode-param>
+            <span class="validate-hint"></span>
+        </div>
+        <div class="rp-custom-col rp-text-description">
+            <span class="rp-help-block"><%= data.text.project.docFreqDescription %></span>
+        </div>
+    </div>
+    <div class="rp-form-group">
+        <label class="rp-control-label rp-custom-col">
+            <%= data.text.project.autoAnalysisMinTermFreq %>
+        </label>
+        <div class="rp-custom-col rp-field">
+            <input class="rp-input form-control"  type="text" data-js-term-freq-input data-js-mode-param>
+            <span class="validate-hint"></span>
+        </div>
+        <div class="rp-custom-col rp-text-description">
+            <span class="rp-help-block"><%= data.text.project.termFreqDescription %></span>
+        </div>
+    </div>
+    <div class="rp-form-group">
+        <label class="rp-control-label rp-custom-col">
+            <%= data.text.project.autoAnalysisNumberOfLog %>
+        </label>
+        <div class="rp-custom-col rp-field " data-js-numder-str-input></div>
+        <div class="rp-custom-col rp-text-description">
+            <span class="rp-help-block"><%= data.text.project.strNumberDescription %></span>
+        </div>
+    </div>
+</div>
+<div class="rp-form-group rp-wrap-button">
+    <div class="submit-col rp-custom-col">
+        <button type="submit" class="rp-btn rp-btn-submit" data-js-submit-settings <%= notAllowed %>><%= data.text.ui.submit %></button>
+    </div>
+</div>
+<div class="index-actions">
+    <div class="index-actions-title">
+        <p><%= data.text.project.indexActions %></p>
+    </div>
+    <div class="rp-form-group">
+        <div class="rp-custom-col index-action-description">
+            <p><%= data.text.project.removeIndexDescription %></p>
+        </div>
+        <div class="rp-custom-col">
+            <div class="rp-btn rp-btn-default" data-js-remove-index>
+                <span class="rp-btn-val"><%= data.text.project.removeIndex %></span>
+            </div>
+        </div>
+    </div>
+    <div class="rp-form-group">
+        <div class="rp-custom-col index-action-description">
+            <p><%= data.text.project.generateIndexDescription %></p>
+        </div>
+        <div class="rp-custom-col">
+            <div class="rp-btn rp-btn-default" data-js-generate-index>
+                <span class="rp-btn-val"><%= data.text.project.generateIndex %></span>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="mobile-disabling-cover"></div>
+

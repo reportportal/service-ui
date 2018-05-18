@@ -61,7 +61,8 @@ const messages = defineMessages({
   },
   nameConstraint: {
     id: 'RegistrationForm.nameConstraints',
-    defaultMessage: '3-256 symbols, latin, cyrillic, numeric characters, symbols: hyphen, underscore, dot, space',
+    defaultMessage:
+      '3-256 symbols, latin, cyrillic, numeric characters, symbols: hyphen, underscore, dot, space',
   },
   passwordConstraint: {
     id: 'RegistrationForm.passwordConstraints',
@@ -90,8 +91,7 @@ export class RegistrationForm extends Component {
   };
 
   static defaultProps = {
-    submitForm: () => {
-    },
+    submitForm: () => {},
     email: '',
   };
 
@@ -116,7 +116,11 @@ export class RegistrationForm extends Component {
           <FieldProvider name="login">
             <FieldBottomConstraints text={formatMessage(messages.loginConstraint)}>
               <FieldErrorHint>
-                <InputOutside icon={LoginIcon} maxLength={'128'} placeholder={formatMessage(messages.login)} />
+                <InputOutside
+                  icon={LoginIcon}
+                  maxLength={'128'}
+                  placeholder={formatMessage(messages.login)}
+                />
               </FieldErrorHint>
             </FieldBottomConstraints>
           </FieldProvider>
@@ -125,7 +129,11 @@ export class RegistrationForm extends Component {
           <FieldProvider name="name">
             <FieldBottomConstraints text={formatMessage(messages.nameConstraint)}>
               <FieldErrorHint>
-                <InputOutside icon={NameIcon} maxLength={'256'} placeholder={formatMessage(messages.name)} />
+                <InputOutside
+                  icon={NameIcon}
+                  maxLength={'256'}
+                  placeholder={formatMessage(messages.name)}
+                />
               </FieldErrorHint>
             </FieldBottomConstraints>
           </FieldProvider>
@@ -139,7 +147,12 @@ export class RegistrationForm extends Component {
           <FieldProvider name="password">
             <FieldBottomConstraints text={formatMessage(messages.passwordConstraint)}>
               <FieldErrorHint>
-                <InputOutside type={'password'} icon={PasswordIcon} maxLength={'25'} placeholder={formatMessage(messages.password)} />
+                <InputOutside
+                  type={'password'}
+                  icon={PasswordIcon}
+                  maxLength={'25'}
+                  placeholder={formatMessage(messages.password)}
+                />
               </FieldErrorHint>
             </FieldBottomConstraints>
           </FieldProvider>
@@ -147,19 +160,24 @@ export class RegistrationForm extends Component {
         <div className={cx('confirm-password-field')}>
           <FieldProvider name="confirmPassword">
             <FieldErrorHint formPath={'user.registrationForm'} fieldName={'confirmPassword'}>
-              <InputOutside type={'password'} icon={PasswordIcon} maxLength={'25'} placeholder={formatMessage(messages.confirmPassword)} />
+              <InputOutside
+                type={'password'}
+                icon={PasswordIcon}
+                maxLength={'25'}
+                placeholder={formatMessage(messages.confirmPassword)}
+              />
             </FieldErrorHint>
           </FieldProvider>
         </div>
 
         <div className={cx('buttons-container')}>
           <div className={cx('button-reset')}>
-            <BigButton color={'gray-60'} onClick={this.resetForm}>
+            <BigButton color={'gray-60'} roundedCorners onClick={this.resetForm}>
               <FormattedMessage id={'RegistrationForm.reset'} defaultMessage={'Reset'} />
             </BigButton>
           </div>
           <div className={cx('button-register')}>
-            <BigButton type={'submit'} color={'organish'}>
+            <BigButton type={'submit'} roundedCorners color={'organish'}>
               <FormattedMessage id={'RegistrationForm.register'} defaultMessage={'Register'} />
             </BigButton>
           </div>

@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { PageLayout } from 'layouts/pageLayout';
 import { fetch } from 'common/utils';
+import { URLS } from 'common/urls';
 import { DEBUG } from 'common/constants/common';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
 import { activeProjectSelector, userIdSelector } from 'controllers/user';
@@ -33,7 +34,8 @@ const messages = defineMessages({
 @connect(
   (state) => ({
     userId: userIdSelector(state),
-    url: `/api/v1/${activeProjectSelector(state)}/launch`,
+    activeProject: activeProjectSelector(state),
+    url: URLS.launch(activeProjectSelector(state)),
     selectedLaunches: selectedLaunchesSelector(state),
     validationErrors: validationErrorsSelector(state),
   }),
@@ -68,7 +70,7 @@ export class LaunchesPage extends Component {
     onChangePage: PropTypes.func,
     onChangePageSize: PropTypes.func,
     onChangeSorting: PropTypes.func,
-    url: PropTypes.string.isRequired,
+    activeProject: PropTypes.string.isRequired,
     selectedLaunches: PropTypes.arrayOf(PropTypes.object),
     validationErrors: PropTypes.object,
     selectAllLaunchesAction: PropTypes.func,
@@ -106,21 +108,18 @@ export class LaunchesPage extends Component {
     !this.props.selectedLaunches.length && this.props.intl.formatMessage(messages.filtersPageTitle);
 
   updateLaunch = (launch) => {
-    fetch(`${this.props.url}/${launch.id}/update`, {
+    fetch(URLS.launchesUpdate(this.props.activeProject, launch.id), {
       method: 'put',
       data: launch,
     }).then(this.props.fetchData);
   };
   deleteItem = (id) => {
-    fetch(this.props.url, {
+    fetch(URLS.launches(this.props.activeProject, id), {
       method: 'delete',
-      params: {
-        ids: id,
-      },
     }).then(this.props.fetchData);
   };
   moveToDebug = (id) => {
-    fetch(`${this.props.url}/update`, {
+    fetch(URLS.launchUpdate(this.props.activeProject), {
       method: 'put',
       data: {
         entities: {
@@ -177,6 +176,7 @@ export class LaunchesPage extends Component {
       onChangeSorting,
       selectedLaunches,
     } = this.props;
+
     return (
       <PageLayout title={this.getTitle()}>
         <LaunchToolbar

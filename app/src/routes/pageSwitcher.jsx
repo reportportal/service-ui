@@ -1,11 +1,13 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { PropTypes } from 'prop-types';
+import { NOT_FOUND } from 'redux-first-router';
 import { ModalContainer } from 'components/main/modal';
 import { pageNames } from 'controllers/pages/constants';
 import { pageSelector } from 'controllers/pages';
 import { LocalizationSwitcher } from 'components/main/localizationSwitcher';
-import { NOT_FOUND } from 'redux-first-router';
+import { ScreenLock } from 'components/main/screenLock';
+import { Notifications } from 'components/main/notification';
 
 import { AdminLayout } from 'layouts/adminLayout';
 import { AppLayout } from 'layouts/appLayout';
@@ -84,6 +86,8 @@ class PageSwitcher extends React.PureComponent {
             <PageComponent />
           </Layout>
           <ModalContainer />
+          <Notifications />
+          <ScreenLock />
         </div>
       ),
       anonymousAccess,

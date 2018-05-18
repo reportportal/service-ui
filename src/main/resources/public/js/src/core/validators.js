@@ -67,6 +67,7 @@ define(function (require) {
         }
         return null;
     };
+
     var maxRequired = function (val, options, Util) {
         var length = val.length;
         if (validateForMax(length, options)) {
@@ -140,6 +141,6 @@ define(function (require) {
         minMaxRequired: minMaxRequired,
         minMaxNotRequired: minMaxNotRequired,
         remoteEmail: remoteEmail,
-        remoteLogin: remoteLogin
+        remoteLogin: remoteLogin,
     };
 });

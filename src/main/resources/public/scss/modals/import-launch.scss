@@ -138,15 +138,16 @@
             }
           }
           .dz-error-message {
+            width: 160px;
             top: 70px;
             left: -48px;
+            border: solid 1px $COLOR--gray-80;
             border-radius: 0;
+            background: $COLOR--white-default;
             font-family: $OpenSansRegular;
             font-size: 12px;
+            word-break: break-word;
             color: $COLOR--failed;
-            background: $COLOR--white-default;
-            border: solid 1px $COLOR--gray-80;
-            width: 160px;
 
             &:after {
               border-bottom-color: $COLOR--white-default;

@@ -164,6 +164,10 @@ define(['app'], function (App) {
         return config.apiVersion + 'project/' + id + '/emailconfig';
     };
 
+    var indexAction = function () {
+        return config.apiVersion + 'project/' + config.project.projectId + '/index';
+    };
+
     var createExternalSystem = function () {
         return getProjectBase() + '/external-system';
     };
@@ -525,6 +529,7 @@ define(['app'], function (App) {
         tagsLaunchAutoCompleteUrl: tagsLaunchAutoCompleteUrl,
         updateProject: updateProject,
         updateEmailProjectSettings: updateEmailProjectSettings,
+        indexAction: indexAction,
         createExternalSystem: createExternalSystem,
         updateExternalSystem: updateExternalSystem,
         clearExternalSystem: clearExternalSystem,

@@ -1,14 +1,50 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
+import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
 import { GhostButton } from 'components/buttons/ghostButton';
-import { FormattedMessage } from 'react-intl';
+import { CUSTOMER, PROJECT_MANAGER } from 'common/constants/projectRoles';
+import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-intl';
 import PropTypes from 'prop-types';
+import { activeProjectRoleSelector, isAdminSelector, userIdSelector } from 'controllers/user';
+import { HamburgerMenuItem } from './hamburgerMenuItem';
 import styles from './hamburger.scss';
 
 const cx = classNames.bind(styles);
+const messages = defineMessages({
+  toDebug: {
+    id: 'Hamburger.toDebug',
+    defaultMessage: 'Move to debug',
+  },
+  toAllLaunches: {
+    id: 'Hamburger.toAllLaunches',
+    defaultMessage: 'Move to all launches',
+  },
+  forceFinish: {
+    id: 'Hamburger.forceFinish',
+    defaultMessage: 'Force Finish',
+  },
+  analysis: {
+    id: 'Hamburger.analysis',
+    defaultMessage: 'Analysis',
+  },
+  delete: {
+    id: 'Hamburger.delete',
+    defaultMessage: 'Delete',
+  },
+});
 
+@injectIntl
+@connect((state) => ({
+  projectRole: activeProjectRoleSelector(state),
+  isAdmin: isAdminSelector(state),
+  userId: userIdSelector(state),
+}))
 export class Hamburger extends Component {
   static propTypes = {
+    intl: intlShape.isRequired,
+    userId: PropTypes.string.isRequired,
+    projectRole: PropTypes.string.isRequired,
+    isAdmin: PropTypes.bool.isRequired,
     onAction: PropTypes.func,
     launch: PropTypes.object.isRequired,
     onMoveToLaunches: PropTypes.func,
@@ -53,8 +89,15 @@ export class Hamburger extends Component {
     this.setState({ menuShown: !this.state.menuShown });
   };
 
+  isNoPermissions = () =>
+    !this.props.isAdmin &&
+    this.props.projectRole !== PROJECT_MANAGER &&
+    this.props.userId !== this.props.launch.owner;
+
   render() {
     const {
+      intl,
+      projectRole,
       launch,
       onMoveToLaunches,
       onForceFinish,
@@ -79,54 +122,49 @@ export class Hamburger extends Component {
         </div>
         <div className={cx('hamburger-menu', { shown: this.state.menuShown })}>
           <div className={cx('hamburger-menu-actions')}>
-            {launch.mode === 'DEFAULT' ? (
-              <div
-                className={cx('hamburger-menu-action')}
-                onClick={() => {
-                  customProps.onMoveToDebug(launch);
-                }}
-              >
-                <FormattedMessage id={'Hamburger.toDebug'} defaultMessage={'Move to debug'} />
-              </div>
-            ) : (
-              <div
-                className={cx('hamburger-menu-action')}
-                onClick={() => {
-                  onMoveToLaunches(launch);
-                }}
-              >
-                <FormattedMessage
-                  id={'Hamburger.toAllLaunches'}
-                  defaultMessage={'Move to all launches'}
-                />
-              </div>
+            {projectRole !== CUSTOMER && (
+              <Fragment>
+                {launch.mode === 'DEFAULT' ? (
+                  <HamburgerMenuItem
+                    text={intl.formatMessage(messages.toDebug)}
+                    disabled={this.isNoPermissions()}
+                    onClick={() => {
+                      customProps.onMoveToDebug(launch);
+                    }}
+                  />
+                ) : (
+                  <HamburgerMenuItem
+                    text={intl.formatMessage(messages.toAllLaunches)}
+                    disabled={this.isNoPermissions()}
+                    onClick={() => {
+                      onMoveToLaunches(launch);
+                    }}
+                  />
+                )}
+              </Fragment>
             )}
-            <div
-              className={cx('hamburger-menu-action')}
+            <HamburgerMenuItem
+              text={intl.formatMessage(messages.forceFinish)}
+              disabled={this.isNoPermissions()}
               onClick={() => {
                 onForceFinish(launch);
               }}
-            >
-              <FormattedMessage id={'Hamburger.forceFinish'} defaultMessage={'Force Finish'} />
-            </div>
+            />
             {launch.mode === 'DEFAULT' && (
-              <div
-                className={cx('hamburger-menu-action')}
+              <HamburgerMenuItem
+                text={intl.formatMessage(messages.analysis)}
                 onClick={() => {
                   onAnalysis(launch);
                 }}
-              >
-                <FormattedMessage id={'Hamburger.analysis'} defaultMessage={'Analysis'} />
-              </div>
+              />
             )}
-            <div
-              className={cx('hamburger-menu-action')}
+            <HamburgerMenuItem
+              text={intl.formatMessage(messages.delete)}
+              disabled={this.isNoPermissions()}
               onClick={() => {
                 customProps.onDeleteItem(launch);
               }}
-            >
-              <FormattedMessage id={'Hamburger.delete'} defaultMessage={'Delete'} />
-            </div>
+            />
           </div>
 
           <div className={cx('export-block')}>

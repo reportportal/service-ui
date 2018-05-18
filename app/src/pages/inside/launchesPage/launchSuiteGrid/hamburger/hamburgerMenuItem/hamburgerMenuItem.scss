@@ -1,0 +1,23 @@
+.hamburger-menu-item {
+  width: 100%;
+  height: 30px;
+  font-family: $FONT-REGULAR;
+  font-size: 14px;
+  color: $COLOR--charcoal-grey;
+  line-height: 30px;
+  box-sizing: border-box;
+  padding: 0 15px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: pointer;
+
+  &.disabled {
+    color: $COLOR--gray-60;
+    cursor: default;
+  }
+
+  &:hover:not(.disabled) {
+    background-color: $COLOR--tealish-hover;
+  }
+}

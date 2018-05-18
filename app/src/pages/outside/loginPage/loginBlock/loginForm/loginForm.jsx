@@ -121,7 +121,7 @@ export class LoginForm extends React.Component {
           <FormattedMessage id={'LoginForm.forgotPass'} defaultMessage={'Forgot password?'} />
         </Link>
         <div className={cx('login-button-container')}>
-          <BigButton type={'submit'} color={'organish'}>
+          <BigButton roundedCorners type={'submit'} color={'organish'}>
             <FormattedMessage id={'LoginForm.login'} defaultMessage={'Login'} />
           </BigButton>
         </div>

@@ -1,6 +1,5 @@
 import { SHOW_MODAL, HIDE_MODAL } from './constants';
 
-
 export const showModalAction = ({ id, data }) => ({
   type: SHOW_MODAL,
   payload: {
@@ -9,8 +8,4 @@ export const showModalAction = ({ id, data }) => ({
 });
 export const hideModalAction = () => ({
   type: HIDE_MODAL,
-  payload: {
-    activeModal: null,
-  },
 });
-

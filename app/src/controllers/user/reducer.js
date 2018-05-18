@@ -3,10 +3,10 @@ import {
   FETCH_USER_SUCCESS,
   SET_ACTIVE_PROJECT,
   SET_START_TIME_FORMAT,
-  START_TIME_FORMAT_RELATIVE,
+  SETTINGS_INITIAL_STATE,
 } from './constants';
 
-const settingsReducer = (state = {}, { type, payload }) => {
+export const settingsReducer = (state = SETTINGS_INITIAL_STATE, { type, payload }) => {
   switch (type) {
     case SET_START_TIME_FORMAT:
       return { ...state, startTimeFormat: payload };
@@ -15,7 +15,7 @@ const settingsReducer = (state = {}, { type, payload }) => {
   }
 };
 
-const userInfoReducer = (state = {}, { type, payload }) => {
+export const userInfoReducer = (state = {}, { type, payload }) => {
   switch (type) {
     case FETCH_USER_SUCCESS:
       return payload;
@@ -24,7 +24,7 @@ const userInfoReducer = (state = {}, { type, payload }) => {
   }
 };
 
-const activeProjectReducer = (state = START_TIME_FORMAT_RELATIVE, { type, payload }) => {
+export const activeProjectReducer = (state = '', { type, payload }) => {
   switch (type) {
     case SET_ACTIVE_PROJECT:
       return payload;
