@@ -1,5 +1,5 @@
 import { string, node, shape, arrayOf, bool, number, oneOf } from 'prop-types';
-import { FAILED, PASSED, SKIPPED } from '../../../../../../common/constants/launchStatuses';
+import { FAILED, PASSED, SKIPPED } from 'common/constants/launchStatuses';
 
 export const PTLaunch = shape({
   id: string.isRequired,

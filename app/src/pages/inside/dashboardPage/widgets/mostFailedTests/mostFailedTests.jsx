@@ -7,7 +7,7 @@ import {
   STATS_AB_TOTAL,
   STATS_SI_TOTAL,
   STATS_ND_TOTAL,
-} from '../../../../../common/constants/statistics';
+} from 'common/constants/statistics';
 import { TestsTableWidget, PTypes } from '../components/testsTableWidget';
 import * as cfg from './mostFailedTestsCfg';
 
