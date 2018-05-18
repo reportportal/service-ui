@@ -6,7 +6,7 @@ import styles from './launchInfoBlock.scss';
 
 const cx = classNames.bind(styles);
 
-const LaunchInfoBlock = ({ launchName, issueType }) => (
+export const LaunchInfoBlock = ({ launchName, issueType }) => (
   <div className={cx('info-block')}>
     <p>
       <FormattedMessage id="TestsTableWidget.header.launchName" defaultMessage="Launch name" />:{' '}
@@ -29,5 +29,3 @@ LaunchInfoBlock.propTypes = {
 LaunchInfoBlock.defaultProps = {
   issueType: null,
 };
-
-export { LaunchInfoBlock };

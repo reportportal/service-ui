@@ -1,4 +1,5 @@
 import { string, node, shape, arrayOf, bool, number, oneOf } from 'prop-types';
+import { FAILED, PASSED, SKIPPED } from '../../../../../../common/constants/launchStatuses';
 
 export const PTLaunch = shape({
   id: string.isRequired,
@@ -7,7 +8,7 @@ export const PTLaunch = shape({
   issueType: string,
 });
 
-export const PTStatus = oneOf(['FAILED', 'PASSED', 'SKIPPED']);
+export const PTStatus = oneOf([FAILED.toUpperCase(), PASSED.toUpperCase(), SKIPPED.toUpperCase()]);
 
 export const PTTest = shape({
   name: string.isRequired,
@@ -19,15 +20,6 @@ export const PTTest = shape({
   switchCounter: number,
   statuses: arrayOf(PTStatus),
 });
-
-export const PTIssueType = oneOf([
-  'statistics$executions$failed',
-  'statistics$executions$skipped',
-  'statistics$defects$product_bug$total',
-  'statistics$defects$automation_bug$total',
-  'statistics$defects$system_issue$total',
-  'statistics$defects$no_defect$total',
-]);
 
 export const PTColumns = shape({
   name: shape({

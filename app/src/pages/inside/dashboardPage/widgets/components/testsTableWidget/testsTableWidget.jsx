@@ -8,18 +8,14 @@ import styles from './testsTableWidget.scss';
 
 const cx = classNames.bind(styles);
 
-function TestsTableWidget(props) {
-  const { launchName, tests, nameClickHandler, issueType, columns } = props;
-
-  return (
-    <div className={cx('tests-table-widget')}>
-      <div className={cx('widget-wrapper')}>
-        <LaunchInfoBlock launchName={launchName} issueType={issueType} />
-        <TestsTable columns={columns} tests={tests} nameClickHandler={nameClickHandler} />
-      </div>
+export const TestsTableWidget = ({ launchName, tests, nameClickHandler, issueType, columns }) => (
+  <div className={cx('tests-table-widget')}>
+    <div className={cx('widget-wrapper')}>
+      <LaunchInfoBlock launchName={launchName} issueType={issueType} />
+      <TestsTable columns={columns} tests={tests} nameClickHandler={nameClickHandler} />
     </div>
-  );
-}
+  </div>
+);
 
 TestsTableWidget.propTypes = {
   launchName: string.isRequired,
@@ -32,5 +28,3 @@ TestsTableWidget.propTypes = {
 TestsTableWidget.defaultProps = {
   issueType: null,
 };
-
-export { TestsTableWidget };
