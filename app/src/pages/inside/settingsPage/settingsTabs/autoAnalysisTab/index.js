@@ -1,0 +1,1 @@
+export { AutoAnalysisTab } from './autoAnalysisTab';
