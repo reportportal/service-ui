@@ -30,23 +30,17 @@ define(function (require) {
 
         defaults: {
             interruptedJob: config.forSettings.interruptedJob[0].value,
-            isAutoAnalyzerEnabled: true,
-            analyzeOnTheFly: false,
             keepLogs: config.forSettings.keepLogs[0].value,
             keepScreenshots: config.forSettings.keepScreenshots[0].value,
             projectSpecific: config.forSettings.projectSpecific[0].value,
-            analyzer_mode: config.forSettings.analyzerMode
         },
 
         getProjectSettings: function () {
             var data = {
                 interruptedJob: this.get('interruptedJob'),
-                isAutoAnalyzerEnabled: this.get('isAutoAnalyzerEnabled'),
                 keepLogs: this.get('keepLogs'),
                 keepScreenshots: this.get('keepScreenshots'),
                 projectSpecific: this.get('projectSpecific'),
-                analyzer_mode: this.get('analyzer_mode')
-                // analyzeOnTheFly: this.get('analyzeOnTheFly')
             };
             return {
                 configuration: data

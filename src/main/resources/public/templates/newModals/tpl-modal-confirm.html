@@ -1,6 +1,11 @@
 <%= data.includeTemplate('_tpl-modal-header', {headerText: data.headerText})  %>
 <div class="modal-body">
     <p><%= data.bodyText %></p>
-
+    <% if(data.noteText) { %>
+        <div class="note-block">
+            <p class="note-title"><%= data.text.ui.note %>:</p>
+            <p class="note-text"><%= data.noteText %></p>
+        </div>
+    <% } %>
 </div>
 <%= data.includeTemplate('_tpl-modal-footer',data.footerButtons)  %>

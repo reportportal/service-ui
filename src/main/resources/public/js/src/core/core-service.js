@@ -201,6 +201,14 @@ define([
         return call('PUT', urls.updateProject(), data);
     };
 
+    var generateIndex = function () {
+        return call('PUT', urls.indexAction());
+    };
+
+    var removeIndex = function () {
+        return call('DELETE', urls.indexAction());
+    };
+
     var updateEmailProjectSettings = function (data) {
         return call('PUT', urls.updateEmailProjectSettings(), data);
     };
@@ -436,6 +444,8 @@ define([
 
         updateProject: updateProject,
         updateEmailProjectSettings: updateEmailProjectSettings,
+        generateIndex: generateIndex,
+        removeIndex: removeIndex,
         updateDefaultProject: updateDefaultProject,
         getUserInfo: getUserInfo,
         getCurrentUser: getCurrentUser,

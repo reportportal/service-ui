@@ -1,13 +1,13 @@
 import React, { PureComponent } from 'react';
 import classNames from 'classnames/bind';
-import { addTokenToImagePath } from 'common/utils';
+import PropTypes from 'prop-types';
 import { FormattedMessage } from 'react-intl';
 import { userInfoSelector } from 'controllers/user';
 import { logoutAction } from 'controllers/auth';
 import { connect } from 'react-redux';
 import { NavLink, withRouter } from 'react-router-dom';
-import PropTypes from 'prop-types';
 import { ADMINISTRATOR } from 'common/constants/projectRoles';
+import { URLS } from 'common/urls';
 import styles from './userBlock.scss';
 
 const cx = classNames.bind(styles);
@@ -54,6 +54,7 @@ export class UserBlock extends PureComponent {
   };
 
   render() {
+    const avatarUrl = URLS.dataPhoto(this.props.user.userId, Date.now());
     return (
       <div
         ref={(node) => {
@@ -71,13 +72,7 @@ export class UserBlock extends PureComponent {
           <div className={cx('username')}>{this.props.user.userId}</div>
         </div>
         <div className={cx('avatar-wrapper')}>
-          <img
-            className={cx('avatar')}
-            src={addTokenToImagePath(
-              `/api/v1/data/photo?${this.props.user.userId}&at=${Date.now()}`,
-            )}
-            alt="avatar"
-          />
+          <img className={cx('avatar')} src={avatarUrl} alt="avatar" />
         </div>
         <div className={cx({ 'menu-icon': true, flipped: this.state.menuOpened })} />
         <div className={cx({ menu: true, opened: this.state.menuOpened })}>

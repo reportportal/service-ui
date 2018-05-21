@@ -1,0 +1,55 @@
+.tests-table-header {
+  height: 45px;
+  border-bottom: 1px solid $COLOR--gray-91;
+  background-color: $COLOR--white-two;
+  font-family: $FONT-SEMIBOLD;
+  font-size: 12px;
+  color: $COLOR--gray-47;
+  text-transform: uppercase;
+  .col {
+    float: left;
+    line-height: 45px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    &.col-name {
+      width: 40%;
+    }
+    &.col-count {
+      width: 20%;
+      .short {
+        display: none;
+      }
+      @media (max-width: $SCREEN_XS_MAX) {
+        width: 40%;
+        .full {
+          display: none;
+        }
+        .short {
+          display: inline;
+        }
+      }
+    }
+    &.col-percents {
+      width: 20%;
+      .short {
+        display: none;
+      }
+      @media (max-width: $SCREEN_XS_MAX) {
+        width: 20%;
+        .full {
+          display: none;
+        }
+        .short {
+          display: inline;
+        }
+      }
+    }
+    &.col-date {
+      width: 20%;
+      @media (max-width: $SCREEN_XS_MAX) {
+        display: none;
+      }
+    }
+  }
+}

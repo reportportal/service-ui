@@ -34,6 +34,7 @@ define(function (require) {
     var BtsTabView = require('projectSettings/tabViews/bts/btsTabView');
     var DefectTabView = require('projectSettings/tabViews/defectTypes/defectTypesTabView');
     var DemoDataTabView = require('projectSettings/tabViews/demoData/demoDataTabView');
+    var AutoAnalysisTabView = require('projectSettings/tabViews/autoAnalysis/autoAnalysisTabView');
 
     var config = App.getInstance();
 
@@ -107,6 +108,7 @@ define(function (require) {
                     { name: 'NOTIFICATIONS', value: 'notifications' },
                     { name: 'BUG TRACKING SYSTEM', value: 'bts' },
                     { name: 'DEFECT TYPES', value: 'defect' },
+                    { name: 'AUTO-ANALYSIS', value: 'autoAnalysis' },
                     { name: 'DEMO DATA', value: 'demoData' }
                 ],
                 multiple: false,
@@ -134,6 +136,8 @@ define(function (require) {
             case 'defect':
                 config.trackingDispatcher.trackEventNumber(426);
                 return DefectTabView;
+            case 'autoAnalysis':
+                return AutoAnalysisTabView;
             case 'demoData':
                 config.trackingDispatcher.trackEventNumber(427);
                 return DemoDataTabView;

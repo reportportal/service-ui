@@ -124,7 +124,12 @@ export class DashboardPage extends Component {
   }
 
   onDeleteDashboardItem = (item) => {
-    const { showModal, deleteDashboard, userInfo: { userId }, intl } = this.props;
+    const {
+      showModal,
+      deleteDashboard,
+      userInfo: { userId },
+      intl,
+    } = this.props;
 
     showModal({
       id: 'dashboardDeleteModal',
@@ -202,6 +207,7 @@ export class DashboardPage extends Component {
           </GhostButton>
         </div>
         <DashboardPageToolbar
+          dashboardItems={dashboardItems}
           onGridViewToggle={this.toggleGridView}
           onTableViewToggle={this.toggleTableView}
           gridType={gridType}

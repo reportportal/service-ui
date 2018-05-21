@@ -42,17 +42,10 @@ define(function (require) {
         tpl: 'tpl-project-settings-general',
 
         events: {
-            'click #submit-settings': 'submitSettings',
-            'change input[type="radio"]': 'onChangeAABase'
-        },
-        bindings: {
-            '[data-js-is-auto-analize]': 'checked: isAutoAnalyzerEnabled',
-            '[data-js-aa-base-block]': 'classes: {hide: not(isAutoAnalyzerEnabled)}',
-            '[data-js-analize-on-the-fly]': 'checked: analyzeOnTheFly, attr: {disabled: not(isAutoAnalyzerEnabled)}'
+            'click #submit-settings': 'submitSettings'
         },
 
         initialize: function () {
-            var self = this;
             this.userModel = new UserModel();
             this.registryInfoModel = new SingletonRegistryInfoModel();
             this.model = new ProjectSettingsModel(appModel.get('configuration'));
@@ -66,14 +59,7 @@ define(function (require) {
             this.listenTo(this.model, 'change:keepScreenshots', function () {
                 config.trackingDispatcher.trackEventNumber(383);
             });
-            this.listenTo(this.model, 'change:isAutoAnalyzerEnabled', function (model, value) {
-                if (!value) {
-                    self.model.set({ analyzeOnTheFly: false });
-                }
-                config.trackingDispatcher.trackEventNumber(384);
-            });
             this.render();
-            this.setupAnalyzerSetting();
         },
 
         render: function () {
@@ -85,17 +71,7 @@ define(function (require) {
             this.setupDropdowns();
             return this;
         },
-        setupAnalyzerSetting: function () {
-            var userRole;
-            $('[value="' + (this.model.get('analyzer_mode') || 'LAUNCH_NAME') + '"]', this.$el).attr('checked', 'checked');
-            if (this.userModel.get('userRole') !== 'ADMINISTRATOR') {
-                userRole = this.userModel.get('projects')[appModel.get('projectId')].projectRole;
-                if (userRole !== 'PROJECT_MANAGER') {
-                    $('[data-js-is-auto-analize]', this.$el).attr('disabled', 'disabled').parent().addClass('disabled');
-                    $('[data-js-aa-base-block] input', this.$el).attr('disabled', 'disabled');
-                }
-            }
-        },
+
         setupDropdowns: function () {
             var isEpamInstance = this.registryInfoModel.get('isEpamInstance');
 
@@ -147,33 +123,9 @@ define(function (require) {
             this.model.set(property, val);
         },
 
-        clearFormErrors: function () {
-            if ($('div.error-block', this.$el).is(':visible')) {
-                $('.rp-form-group', this.$el).removeClass('has-error');
-                $('div.error-block', this.$el).empty().hide();
-            }
-        },
-
-        showFormErrors: function (el, message) {
-            var cont = el.closest('.rp-form-group');
-            cont.addClass('has-error');
-            $('div.error-block', cont).empty().html(message).show();
-        },
-
-        hideFormsErrors: function (el) {
-            var cont = el.closest('.rp-form-group');
-            cont.removeClass('has-error');
-            $('div.error-block', cont).empty().hide();
-        },
-
-        onChangeAABase: function (e) {
-            this.model.set('analyzer_mode', e.target.value);
-        },
-
         submitSettings: function () {
             var generalSettings = this.model.getProjectSettings();
             config.trackingDispatcher.trackEventNumber(385);
-            this.clearFormErrors();
             if (!generalSettings.configuration.isAutoAnalyzerEnabled) {
                 generalSettings.configuration.analyzer_mode = 'LAUNCH_NAME';
                 $('[value="LAUNCH_NAME"]', this.$el).attr('checked', 'checked');

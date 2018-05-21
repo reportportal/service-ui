@@ -30,6 +30,7 @@ import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { InputOutside } from 'components/inputs/inputOutside';
 import { BigButton } from 'components/buttons/bigButton';
 import { validate, fetch } from 'common/utils';
+import { URLS } from 'common/urls';
 import EmailIcon from './img/email-icon-inline.svg';
 import styles from './forgotPasswordForm.scss';
 
@@ -60,14 +61,21 @@ export class ForgotPasswordForm extends PureComponent {
   static defaultProps = {
     intl: {},
   };
+  state = {
+    loading: false,
+  };
 
   submitForm = ({ email }) => {
-    fetch('/api/v1/user/password/restore', {
+    this.setState({ loading: true });
+    fetch(URLS.userPasswordRestore(), {
       method: 'post',
       data: {
         email,
       },
-    }).then(() => this.props.history.push('/login'));
+    }).then(() => {
+      this.setState({ loading: false });
+      this.props.history.push('/login');
+    });
   };
 
   render() {
@@ -91,7 +99,7 @@ export class ForgotPasswordForm extends PureComponent {
             </Link>
           </div>
           <div className={cx('forgot-password-button')}>
-            <BigButton type={'submit'} roundedCorners color={'organish'}>
+            <BigButton type={'submit'} roundedCorners color={'organish'}  disabled={this.state.loading}>
               <FormattedMessage id={'ForgotPasswordForm.sendEmail'} defaultMessage={'Send email'} />
             </BigButton>
           </div>

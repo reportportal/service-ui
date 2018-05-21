@@ -1,0 +1,29 @@
+.matrix {
+  display: table;
+  max-width: 50px;
+  min-height: 35px;
+  .squares-wrapper {
+    display: table-cell;
+    vertical-align: middle;
+    .square {
+      float: left;
+      width: 4px;
+      height: 4px;
+      margin-right: 1px;
+      margin-bottom: 1px;
+      background-color: $COLOR--booger;
+      &.most-failed {
+        background-color: $COLOR--tealish;
+      }
+      &.passed {
+        background-color: $COLOR--passed;
+      }
+      &.failed {
+        background-color: $COLOR--failed;
+      }
+      &.skipped {
+        background-color: $COLOR--skipped;
+      }
+    }
+  }
+}

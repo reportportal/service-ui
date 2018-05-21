@@ -1,0 +1,262 @@
+.auto-analysis-project-settings{
+  padding: 10px 0 20px;
+  position: relative;
+  .mobile-disabling-cover {
+    @extend %MOBILE_DISABLING_COVER;
+  }
+  .mode-input{
+    max-width: 130px;
+  }
+  .in-progress{
+    display: block;
+    margin-left: 30px;
+    color:  $COLOR--tealish;
+    font-size: 13px;
+  }
+  .rp-form-group{
+    margin-bottom: 30px;
+    label.rp-control-label{
+      width: 210px;
+      padding: 0 15px 0 0;
+      @media (max-width: $SCREEN_SM_MAX) {
+        width: 150px
+      }
+    }
+    .aa-switcher-label{
+      vertical-align: middle;
+    }
+    .rp-custom-col{
+      padding: 0 15px;
+    }
+    .aa-switcher{
+      width: 100px;
+      @media (max-width: $SCREEN_XS_MAX) {
+        width: 100%
+      }
+      label{
+        margin: 0;
+      }
+    }
+    .rp-help-block{
+      display: table-cell;
+      vertical-align: middle;
+      p{
+        margin: 0;
+      }
+    }
+    .aa-strategy-option:first-child{
+      margin-bottom: 13px;
+    }
+    .aa-strategy-selector{
+      margin: 0;
+      min-width: 240px;
+      padding-right: 30px;
+      display: table-cell;
+      label{
+        margin: 0;
+      }
+    }
+    .aa-strategy-description{
+      span{
+        &:first-child{
+          margin-bottom: 15px;
+        }
+      }
+    }
+  }
+  .aa-mode-togler{
+    .rp-field{
+      width: 130px;
+    }
+    .validate-hint {
+      display: none;
+      width: 180px;
+      position: absolute;
+      top: 100%;
+      right: auto;
+      left: 15px;
+      z-index: 100;
+      padding: 10px 11px;
+      font-size: 12px;
+      background-color: $COLOR--white-default;
+      border: 1px solid rgba(0, 0, 0, 0.2);
+      box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+    }
+    .validate-error{
+      input{
+        border: 1px solid $COLOR--orange-red;
+      }
+      .validate-hint{
+        &.show-hint{
+          display: block;
+        }
+      }
+    }
+    .rp-form-group{
+      margin-bottom: 20px;
+      @media (max-width: $SCREEN_XS_MAX) {
+        margin-bottom: 0;
+      }
+    }
+    .percent-ic{
+      position: absolute;
+      top: 6px;
+      right: 25px;
+    }
+    .rp-input{
+      width: 100px;
+      padding-right: 20px;
+    }
+    .rp-control-label{
+      vertical-align: middle;
+    }
+    .setting-switcher{
+      padding: 0;
+    }
+    &:before{
+      content: '';
+      width: 1010px;
+      display: block;
+      border: solid 1px $COLOR--gray-91;
+      margin: 0 auto;
+      margin-bottom: 30px;
+      @media (max-width: $SCREEN_MD_MAX) {
+        width: 100%;
+      }
+    }
+  }
+  .note-title{
+    font-family: $OpenSansSemibold;
+  }
+  .index-actions-title{
+    p{
+      color: $COLOR--gray-47;
+      font-size: 12px;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      padding: 0 15px;
+      font-family: $OpenSansSemibold;
+    }
+  }
+  .index-actions{
+    .rp-form-group{
+      margin-bottom: 20px;
+    }
+    .rp-btn{
+      min-width: 130px;
+      text-align: center;
+    }
+  }
+  .index-action-description{
+    width: 710px;
+    font-size: 13px;
+    line-height: 1.54;
+    text-align: left;
+    color: $COLOR--charcoal-grey;
+    p{
+      margin: 0;
+    }
+  }
+  .submit-col{
+    text-align: center;
+    button{
+      margin-right: 65px;
+    }
+  }
+}
+
+/* lg - 1200px */
+@media (min-width: $SCREEN_LG_MIN) {
+  .auto-analysis-project-settings {
+    width: 1040px;
+    max-width: 1040px;
+    margin: 0 auto;
+  }
+}
+@media (max-width: $SCREEN_XS_MAX) {
+  .auto-analysis-project-settings{
+    padding-top: 0px;
+    .rp-btn-default{
+      color: $COLOR--gray-60;
+      background-color: $COLOR--white;
+      border-color: $COLOR--gray-91;
+    }
+    .setting-switcher{
+      span{
+        background: $COLOR--gray-91;
+        &.active{
+          background: darken($COLOR--gray-91, 5);
+        }
+      }
+    }
+    .rp-input{
+      color: $COLOR--charcoal-grey;
+      background-color: $COLOR--gray-91;
+      border-color: $COLOR--gray-80;
+      box-shadow: none;
+    }
+    .rp-switcher-big{
+      .turn-on{
+        background: $COLOR--greenish-beige;
+      }
+    }
+    .aa-strategy-selector{
+      display: block;
+      input[type="radio"].rp-input-radio + span:before{
+        background-color: $COLOR--white;
+        border-color: $COLOR--gray-91;
+      }
+      input[type="radio"].rp-input-radio + span:after{
+        background: $COLOR--gray-60;
+      }
+    }
+    .aa-mode-togler {
+      .rp-field {
+        width: 100px;
+      }
+      .percent-ic{
+        right: 10px;
+      }
+      .rp-btn-with-dropdown{
+        color: $COLOR--charcoal-grey;
+        background-color: $COLOR--gray-91;
+        border-color: $COLOR--gray-80;
+      }
+    }
+    .rp-wrap-button{
+      @media (max-width: $SCREEN_XS_MAX) {
+        display: none;
+      }
+    }
+    .rp-form-group{
+      margin-bottom: 0px;
+      label.rp-control-label{
+        width: 100%
+      }
+      .rp-custom-col{
+        padding: 0px;
+      }
+      .rp-text-description{
+        margin-bottom: 0;
+      }
+      .rp-help-block{
+        margin-top: 8px;
+        display: block;
+      }
+      .aa-strategy-selector{
+        margin-bottom: 8px;
+      }
+    }
+    .index-actions-title{
+      p{
+        padding: 0;
+        margin-bottom: 8px;
+      }
+    }
+    .index-actions{
+      .rp-form-group{
+        margin-bottom: 0;
+      }
+    }
+  }
+}

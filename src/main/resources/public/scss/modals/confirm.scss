@@ -31,7 +31,6 @@
         margin-bottom: 0px;
       }
       .confirm-block {
-        font-family: OpenSansSemibold;
         margin-top: 12px;
       }
       .warning-block{
@@ -41,6 +40,18 @@
           font-family: "OpenSansSemibold", sans-serif;
           color: #f36c4a;
           font-size: 13px;
+        }
+      }
+      .note-block{
+        margin-top: 20px;
+        .note-title{
+          font-size: 13px;
+          color: $COLOR--tealish;
+        }
+        .note-text{
+          font-size: 12px;
+          line-height: 1.5;
+          color: $COLOR--charcoal-grey;
         }
       }
     }

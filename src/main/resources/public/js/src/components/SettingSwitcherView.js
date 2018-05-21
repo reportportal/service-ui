@@ -82,8 +82,8 @@ define(function (require) {
     };
 
     var SettingSwitcherView = SettingView.extend({
-        className: 'modal-add-widget-setting-switcher',
-        template: 'tpl-modal-add-widget-setting-switcher',
+        className: 'setting-switcher',
+        template: 'tpl-setting-switcher',
         events: {
             'click [data-js-switch-item]': 'onClickItem'
         },
@@ -122,8 +122,11 @@ define(function (require) {
             this.activated = true;
         },
         onChangeValue: function () {
-            $('[data-js-switch-item]', this.$el).removeClass('active').eq(this.model.get('value')).addClass('active');
-            this.setValue(this.model.get('items')[this.model.get('value')].value, this.gadgetModel, this);
+            $('[data-js-switch-item]', this.$el).removeClass('active');
+            if(this.model.get('value') >= 0){
+                this.setValue(this.model.get('items')[this.model.get('value')].value, this.gadgetModel, this);
+                $('[data-js-switch-item]', this.$el).eq(this.model.get('value')).addClass('active');
+            }
         },
         onClickItem: function (e) {
             var curNum = $(e.currentTarget).data('num');

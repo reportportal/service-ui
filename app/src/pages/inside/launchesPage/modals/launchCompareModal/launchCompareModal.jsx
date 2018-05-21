@@ -1,4 +1,5 @@
 import { Component } from 'react';
+import { URLS } from 'common/urls';
 import ReactDOMServer from 'react-dom/server';
 import PropTypes from 'prop-types';
 import C3Chart from 'react-c3js';
@@ -149,11 +150,8 @@ export class LaunchCompareModal extends Component {
   }
 
   componentDidMount() {
-    fetch(`/api/v1/${this.props.activeProject}/launch/compare`, {
+    fetch(URLS.launchesCompare(this.props.activeProject, this.props.data.ids.join(',')), {
       method: 'get',
-      params: {
-        ids: this.props.data.ids.join(','),
-      },
     }).then((response) => {
       this.prepareDataForConfig(response.result);
     });
