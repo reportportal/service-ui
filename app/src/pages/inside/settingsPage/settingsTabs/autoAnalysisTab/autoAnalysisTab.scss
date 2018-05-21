@@ -1,0 +1,97 @@
+.settings-tab-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 15px;
+}
+
+.form-group-container {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 30px;
+  @media (max-width: $SCREEN_XS_MAX) {
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 8px;
+  }
+}
+
+div.switcher-wrapper {
+  @media (max-width: $SCREEN_XS_MAX) {
+    height: 30px;
+    margin-top: 8px;
+    margin-bottom: 4px;
+  }
+}
+
+span.switch-auto-analysis-label {
+  min-width: 210px;
+  padding: 0 15px 0 0;
+  vertical-align: middle;
+  text-align: right;
+  display: block;
+  font-size: 13px;
+  line-height: 13px;
+  color: #464547;
+  box-sizing: border-box;
+  @media (max-width: $SCREEN_SM_MAX) {
+    min-width: 150px;
+  }
+  @media (max-width: $SCREEN_XS_MAX) {
+    width: 100%;
+    text-align: left;
+  }
+}
+
+.form-group-column {
+  padding: 0 15px;
+  @media (max-width: $SCREEN_XS_MAX) {
+    padding: 0px;
+    margin-bottom: 8px;
+    display: inline-block;
+  }
+}
+
+.form-group-description {
+  vertical-align: middle;
+  max-width: 100%;
+  @media (max-width: $SCREEN_XS_MAX) {
+    margin-bottom: 0;
+  }
+}
+
+.form-group-help-block {
+  font-size: 12px;
+  line-height: 14px;
+  color: #999999;
+  vertical-align: middle;
+  margin: 0;
+  @media (max-width: $SCREEN_XS_MAX) {
+    margin-top: 8px;
+  }
+}
+
+.aa-strategy-label {
+  align-self: flex-start;
+}
+
+.aa-strategy-option {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  box-sizing: border-box;
+  @media (max-width: $SCREEN_XS_MAX) {
+    flex-direction: column;
+  }
+}
+.aa-strategy-option:first-child {
+  margin-bottom: 13px;
+}
+
+.aa-strategy-option-selector {
+  padding-right: 30px;
+  min-width: 240px;
+}
