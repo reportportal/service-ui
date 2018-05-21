@@ -1,0 +1,77 @@
+.widget-view {
+  display: flex;
+  flex-direction: column;
+}
+
+:global {
+  .react-grid-layout {
+    position: relative;
+    transition: height 200ms ease;
+  }
+  
+  .react-grid-item {
+    transition: all 200ms ease;
+    transition-property: left, top;
+    background-color: $COLOR--white-two;
+  }
+  .react-grid-item.cssTransforms {
+    transition-property: transform;
+  }
+  .react-grid-item.resizing {
+    z-index: 2;
+    will-change: width, height;
+  }
+  
+  .react-grid-item.react-draggable-dragging {
+    transition: none;
+    z-index: 3;
+    will-change: transform;
+  }
+  
+  .react-grid-item.react-grid-placeholder {
+    background: $COLOR--white;
+    border: 1px dashed $COLOR--gray-80;
+    transition-duration: 100ms;
+    z-index: 1;
+    user-select: none;
+  }
+  
+  .react-grid-item > .react-resizable-handle {
+    position: absolute;
+    width: 10px;
+    height: 20px;
+    cursor: se-resize;
+  }
+  
+  .react-grid-item > .react-resizable-handle::after {
+    content: "";
+    position: absolute;
+    right: 3px;
+    bottom: 3px;
+    width: 5px;
+    height: 5px;
+  }
+
+  .react-resizable {
+    position: relative;
+  }
+  .react-resizable-handle {
+    opacity: 0;
+    position: absolute;
+    width: 10px;
+    height: 20px;
+    bottom: 1px;
+    right: 6px;
+    background-repeat: no-repeat;
+    background-origin: content-box;
+    box-sizing: border-box;
+    background-size: contain;
+    cursor: se-resize;
+    transform: rotate(-45deg);
+    background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4IiBoZWlnaHQ9IjIwIiB2aWV3Qm94PSIwIDAgOCAyMCI+ICA8cGF0aCBmaWxsPSIjOTk5OTk5IiBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0xNiw5IEwxMiw5IEwxMiwxMSBMMTYsMTEgTDE2LDE0IEwyMCwxMCBMMTYsNiBMMTYsOSBaIE00LDE0IEw0LDExIEwxMiwxMSBMMTIsOSBMNCw5IEw0LDYgTDAsMTAgTDQsMTQgWiIgdHJhbnNmb3JtPSJyb3RhdGUoOTAgNyA3KSIvPjwvc3ZnPg==);
+  }
+
+  .react-grid-item:hover .react-resizable-handle {
+    opacity: 1;
+  }
+}

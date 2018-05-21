@@ -1,0 +1,17 @@
+.widget {
+  flex: 1;
+}
+
+.widget-container {
+  height: 100%;
+  border: 1px solid $COLOR--gray-91;
+  display: flex;
+  flex-direction: column;
+}
+
+.widget-header {
+  background-color: $COLOR--white;
+  height: 60px;
+  border-bottom: 1px solid $COLOR--gray-91;
+  cursor: all-scroll;
+}

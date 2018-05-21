@@ -37,6 +37,8 @@
     "react-c3js": "^0.1.20",
     "react-custom-scrollbars": "^4.2.1",
     "react-dom": "^16.3.2",
+    "react-full-screen": "^0.2.2",
+    "react-grid-layout": "^0.16.6",
     "react-hot-loader": "^3.1.1",
     "react-intl": "^2.4.0",
     "react-redux": "^5.0.7",

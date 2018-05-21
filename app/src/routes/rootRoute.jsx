@@ -9,6 +9,7 @@ import { AdminLayout } from 'layouts/adminLayout';
 import { ProfilePage } from 'pages/inside/profilePage';
 import { ApiPage } from 'pages/inside/apiPage';
 import { DashboardPage } from 'pages/inside/dashboardPage';
+import { DashboardItemPage } from 'pages/inside/dashboardItemPage';
 import { LaunchesPage } from 'pages/inside/launchesPage';
 import { FiltersPage } from 'pages/inside/filtersPage';
 import { DebugPage } from 'pages/inside/debugPage';
@@ -42,6 +43,7 @@ const AppRoute = authorizedRoute(() => (
     <Switch>
       <Route path="/user-profile" component={ProfilePage} />
       <Route path="/api" component={ApiPage} />
+      <Route path="/:projectId/dashboard/:dashboardId" component={DashboardItemPage} />
       <Route
         exact
         path="/:projectId"
