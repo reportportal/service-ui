@@ -1,0 +1,1 @@
+export { RemoveIndexModal } from './removeIndexModal';

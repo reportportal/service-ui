@@ -1,0 +1,46 @@
+@import '../autoAnalysisTab';
+
+.index-actions-title-wrapper {
+  margin-bottom: 20px;
+  width: 100%;
+  @media (max-width: $SCREEN_XS_MAX) {
+    margin-bottom: 8px;
+  }
+}
+
+.index-actions-title {
+  color: $COLOR--gray-47;
+  font-size: 12px;
+  text-transform: uppercase;
+  padding: 0 15px;
+  font-family: $FONT-SEMIBOLD;
+  @media (max-width: $SCREEN_XS_MAX) {
+    padding: 0;
+  }
+}
+
+.index-actions-group-container {
+  margin-bottom: 20px;
+  @media (max-width: $SCREEN_XS_MAX) {
+    margin-bottom: 0;
+  }
+}
+
+.index-action-description {
+  max-width: 710px;
+  font-size: 13px;
+  line-height: 1.54;
+  text-align: left;
+  color: $COLOR--charcoal-grey;
+  box-sizing: border-box;
+}
+
+.index-action-caption {
+  // Rewrite it
+  position: relative;
+  display: inline-block;
+  font-size: 13px;
+  font-family: $FONT-REGULAR;
+  margin: 0;
+  min-width: 110px;
+}

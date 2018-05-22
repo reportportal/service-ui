@@ -66,6 +66,7 @@ export const URLS = {
       'page.sort': 'login,ASC',
       term: input,
     })}`,
+  projectIndex: (activeProject) => `${urlBase}project/${activeProject}/index`,
 
   suite: (activeProject, suiteId) => `${urlBase}${activeProject}/item/${suiteId}`,
 

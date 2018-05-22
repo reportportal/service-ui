@@ -4,6 +4,11 @@
   justify-content: center;
   align-items: flex-start;
   padding: 15px;
+  @media (min-width: $SCREEN_MD_MAX_DASHBOARD) {
+    width: 1040px;
+    max-width: 1040px;
+    margin: 0 auto;
+  }
 }
 
 .form-group-container {
@@ -35,7 +40,7 @@ span.switch-auto-analysis-label {
   display: block;
   font-size: 13px;
   line-height: 13px;
-  color: #464547;
+  color: $COLOR--charcoal-grey;
   box-sizing: border-box;
   @media (max-width: $SCREEN_SM_MAX) {
     min-width: 150px;
@@ -49,7 +54,7 @@ span.switch-auto-analysis-label {
 .form-group-column {
   padding: 0 15px;
   @media (max-width: $SCREEN_XS_MAX) {
-    padding: 0px;
+    padding: 0;
     margin-bottom: 8px;
     display: inline-block;
   }
@@ -66,7 +71,7 @@ span.switch-auto-analysis-label {
 .form-group-help-block {
   font-size: 12px;
   line-height: 14px;
-  color: #999999;
+  color: $COLOR--gray-60;
   vertical-align: middle;
   margin: 0;
   @media (max-width: $SCREEN_XS_MAX) {
