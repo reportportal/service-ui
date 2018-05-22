@@ -29,6 +29,7 @@ define(function (require) {
     var App = require('app');
     var Service = require('coreService');
     var SingletonAppModel = require('model/SingletonAppModel');
+    var SingletonRegistryInfoModel = require('model/SingletonRegistryInfoModel');
     var DropDownComponent = require('components/DropDownComponent');
     var UserModel = require('model/UserModel');
     var ModalConfirm = require('modals/modalConfirm');
@@ -56,8 +57,8 @@ define(function (require) {
             '[data-js-doc-freq-input]': 'value: minDocFreq',
             '[data-js-term-freq-input]': 'value: minTermFreq',
             '[data-js-numder-str-input]': 'value: numberOfLogLines',
-            '[data-js-remove-index]': 'classes: {disabled: indexing_running}',
-            '[data-js-generate-index]': 'classes: {disabled: indexing_running}, text:inProgressText'
+            '[data-js-remove-index]': 'classes: {disabled: isIndexBtnDisabled}, attr:{title: indexBtnTitle}',
+            '[data-js-generate-index]': 'classes: {disabled: isIndexBtnDisabled}, attr:{title: indexBtnTitle}, text:inProgressText'
 
         },
         computeds: {
@@ -69,11 +70,31 @@ define(function (require) {
                     }
                     return Localization.project.generateIndex;
                 }
+            },
+            isIndexBtnDisabled: {
+                deps: ['indexing_running'],
+                get: function (indexing_running) {
+                    if (!this.registryModel.get('services').ANALYZER) {
+                        return true;
+                    } else if (indexing_running) {
+                        return true;
+                    }
+                    return false;
+                }
+            },
+            indexBtnTitle: {
+                get: function () {
+                    if (!this.registryModel.get('services').ANALYZER) {
+                        return Localization.project.noAutoAnalysisService;
+                    }
+                    return '';
+                }
             }
         },
         initialize: function () {
             this.userModel = new UserModel();
             this.model = new AutoAnalysisSettingsModel(appModel.get('configuration').analyzerConfiguration);
+            this.registryModel = new SingletonRegistryInfoModel();
             this.render();
         },
         render: function () {

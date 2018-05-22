@@ -1441,7 +1441,8 @@ define(['util'], function () {
             generateIndexDescription: 'All data is removed from ElasticSearch and new one is generated based on all previous investigations on the project in accordance with current analysis settings. You can start auto-analyse test results after receiving an e-mail about the end of the generation process',
             generateIndexConfirm: 'Are you sure to generate index in the ElasticSearch?',
             noteText: 'You will receive an e-mail after the end of the process.',
-            indexInProgress: 'In progress...'
+            indexInProgress: 'In progress...',
+            noAutoAnalysisService: 'Service ANALYZER is not running'
         },
 
         bts: {
