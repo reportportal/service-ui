@@ -65,29 +65,20 @@ define(function (require) {
             inProgressText: {
                 deps: ['indexing_running'],
                 get: function (indexing_running) {
-                    if (indexing_running) {
-                        return Localization.project.indexInProgress;
-                    }
-                    return Localization.project.generateIndex;
+                    return indexing_running? Localization.project.indexInProgress :
+                        Localization.project.generateIndex;
                 }
             },
             isIndexBtnDisabled: {
                 deps: ['indexing_running'],
                 get: function (indexing_running) {
-                    if (!this.registryModel.get('services').ANALYZER) {
-                        return true;
-                    } else if (indexing_running) {
-                        return true;
-                    }
-                    return false;
+                    return !this.registryModel.get('services').ANALYZER || indexing_running;
                 }
             },
             indexBtnTitle: {
                 get: function () {
-                    if (!this.registryModel.get('services').ANALYZER) {
-                        return Localization.project.noAutoAnalysisService;
-                    }
-                    return '';
+                    return !this.registryModel.get('services').ANALYZER ?
+                        Localization.project.noAutoAnalysisService : '';
                 }
             }
         },
