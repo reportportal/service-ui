@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="20" height="20" viewBox="0 0 20 20">
+  <defs>
+    <path id="ic_edit-a" d="M0,12.0812384 L0,14.9975 L2.91626163,14.9975 L11.5172893,6.39647236 L8.60102764,3.48021073 L0,12.0812384 L0,12.0812384 Z M13.7725316,4.14123004 C14.0758228,3.83793883 14.0758228,3.34800687 13.7725316,3.04471566 L11.9527843,1.22496841 C11.6494931,0.921677198 11.1595612,0.921677198 10.85627,1.22496841 L9.43313429,2.64810408 L12.3493959,5.56436571 L13.7725316,4.14123004 L13.7725316,4.14123004 Z"/>
+  </defs>
+  <g fill="none" fill-rule="evenodd">
+    <rect width="20" height="20"/>
+    <g transform="translate(3 2)">
+      <mask id="ic_edit-b" fill="#fff">
+        <use xlink:href="#ic_edit-a"/>
+      </mask>
+      <use fill="#000" xlink:href="#ic_edit-a"/>
+    </g>
+  </g>
+</svg>

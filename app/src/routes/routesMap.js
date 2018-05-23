@@ -6,6 +6,7 @@ import {
   REGISTRATION_PAGE,
   PROJECT_DASHBOARD_PAGE,
   PROJECT_PAGE,
+  PROJECT_DASHBOARD_ITEM_PAGE,
 } from 'controllers/pages';
 import { isAuthorizedSelector } from 'controllers/auth';
 
@@ -59,6 +60,7 @@ export default {
     payload: { projectId: payload.projectId || 'default_project' },
   })),
   [PROJECT_DASHBOARD_PAGE]: '/:projectId/dashboard',
+  [PROJECT_DASHBOARD_ITEM_PAGE]: '/:projectId/dashboard/:dashboardId',
   PROJECT_LAUNCHES_PAGE: '/:projectId/launches',
   PROJECT_FILTERS_PAGE: '/:projectId/filters',
   PROJECT_USERDEBUG_PAGE: '/:projectId/userdebug',

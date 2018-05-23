@@ -17,6 +17,7 @@ import { AdministratePage } from 'pages/admin/administratePage';
 import { ProjectsPage } from 'pages/admin/projectsPage';
 import { ApiPage } from 'pages/inside/apiPage';
 import { DashboardPage } from 'pages/inside/dashboardPage';
+import { DashboardItemPage } from 'pages/inside/dashboardItemPage';
 import { DebugPage } from 'pages/inside/debugPage';
 import { FiltersPage } from 'pages/inside/filtersPage';
 import { LaunchesPage } from 'pages/inside/launchesPage';
@@ -41,6 +42,7 @@ const pageRendering = {
   USER_PROFILE_PAGE: { component: ProfilePage, layout: AppLayout },
   API_PAGE: { component: ApiPage, layout: AppLayout },
   PROJECT_DASHBOARD_PAGE: { component: DashboardPage, layout: AppLayout },
+  PROJECT_DASHBOARD_ITEM_PAGE: { component: DashboardItemPage, layout: AppLayout },
   PROJECT_FILTERS_PAGE: { component: FiltersPage, layout: AppLayout },
   PROJECT_LAUNCHES_PAGE: { component: LaunchesPage, layout: AppLayout },
   PROJECT_MEMBERS_PAGE: { component: MembersPage, layout: AppLayout },

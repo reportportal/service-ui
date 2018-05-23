@@ -1,0 +1,19 @@
+.info-block {
+  font-family: $FONT-SEMIBOLD;
+  font-size: 12px;
+  padding-bottom: 10px;
+  color: $COLOR--gray-47;
+  text-transform: uppercase;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  p {
+    margin: 12px 0 0 0;
+    line-height: 17px;
+    .info-block-launch-name {
+      font-size: 13px;
+      color: $COLOR--charcoal-grey;
+      text-transform: none;
+    }
+  }
+}

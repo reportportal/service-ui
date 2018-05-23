@@ -1,4 +1,4 @@
-export { pageSelector, pagePropertiesSelector } from './selectors';
+export { pageSelector, pagePropertiesSelector, activeDashboardIdSelector } from './selectors';
 export { updatePagePropertiesAction } from './actionCreators';
 
 export {
@@ -8,6 +8,7 @@ export {
   API_PAGE,
   PROJECT_PAGE,
   PROJECT_DASHBOARD_PAGE,
+  PROJECT_DASHBOARD_ITEM_PAGE,
   PROJECT_FILTERS_PAGE,
   PROJECT_LAUNCHES_PAGE,
   PROJECT_MEMBERS_PAGE,

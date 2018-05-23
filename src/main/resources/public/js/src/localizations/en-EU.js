@@ -575,7 +575,8 @@ define(['util'], function () {
             launchInterrupted: 'Run interrupted',
             zoomWidgetArea: 'Zoom widget area',
             aaProperties: 'Auto-Analysis properties',
-            aaConfig: 'Auto-Analysis configurations'
+            aaConfig: 'Auto-Analysis configurations',
+            update_analyzer: 'updated'
         },
 
         userProfile: {
@@ -1437,7 +1438,7 @@ define(['util'], function () {
             removeIndexDescription: 'All data with your investigations will be deleted from the ElasticSearch. For creating a new one you could start to investigate test results manually or generate data based on previous results on the project once again',
             removeIndexConfirm: 'Are you sure to remove all data from the ElasticSearch?',
             generateIndex: 'Generate index',
-            generateIndexDescription: 'All data is removed from ElasticSearch and new one is generated based on all previous investigations on the project in accordence with current analysis settings. You can start auto-analyse test results after receiving a e-mail about the end of the generation process',
+            generateIndexDescription: 'All data is removed from ElasticSearch and new one is generated based on all previous investigations on the project in accordance with current analysis settings. You can start auto-analyse test results after receiving an e-mail about the end of the generation process',
             generateIndexConfirm: 'Are you sure to generate index in the ElasticSearch?',
             noteText: 'You will receive an e-mail after the end of the process.',
             indexInProgress: 'In progress...'
@@ -1758,7 +1759,8 @@ define(['util'], function () {
             updateDefect: 'Defects have been updated',
             updateServerSettings: 'Server settings were successfully updated',
             addUserWithoutEmail: 'User has been created, but impossible to send message due to email server configuration is broken or switched-off',
-            removeIndex: 'Index was removed successfully'
+            removeIndex: 'Index was removed successfully',
+            generateIndex: 'Index generation is in progress'
         },
 
         failMessages: {
