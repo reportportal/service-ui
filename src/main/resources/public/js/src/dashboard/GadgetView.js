@@ -123,7 +123,6 @@ define(function (require) {
         updateWidget: function () {
             var hiddenItems;
             var widget;
-
             if (this.isInitialWidgetUpdate ||
                 (!_.isEqual(this.widgetView.model.getContent(), this.model.get('widgetData').content)) ||
                 (!_.isEqual(this.widgetView.model.getParameters(), this.model.get('widgetData').content_parameters))
@@ -153,8 +152,8 @@ define(function (require) {
                 });
                 $('[data-js-widget-container]', this.$el).html(this.widgetView.$el);
                 this.widgetView.onShow();
-                this.appendTooltip();
             }
+            this.appendTooltip();
         },
         onLoadDataError: function (error) {
             var message = '';
