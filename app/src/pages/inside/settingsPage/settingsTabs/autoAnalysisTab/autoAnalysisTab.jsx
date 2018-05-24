@@ -7,6 +7,7 @@ import { projectAnalyzerConfigSelector, fetchProjectAction } from 'controllers/p
 import { activeProjectSelector } from 'controllers/user';
 import { StrategyBlock } from './strategyBlock';
 import { IndexActionsBlock } from './indexActionsBlock';
+import { AccuracyFormBlock } from './accuracyFormBlock';
 import styles from './autoAnalysisTab.scss';
 
 const cx = classNames.bind(styles);
@@ -45,6 +46,12 @@ export class AutoAnalysisTab extends PureComponent {
         <StrategyBlock
           analyzer_mode={analyzerConfiguration.analyzer_mode}
           isAutoAnalyzerEnabled={analyzerConfiguration.isAutoAnalyzerEnabled}
+        />
+        <AccuracyFormBlock
+          minDocFreq={analyzerConfiguration.minDocFreq}
+          minShouldMatch={analyzerConfiguration.minShouldMatch}
+          minTermFreq={analyzerConfiguration.minTermFreq}
+          numberOfLogLines={analyzerConfiguration.numberOfLogLines}
         />
         <IndexActionsBlock indexing_running={analyzerConfiguration.indexing_running} />
       </div>
