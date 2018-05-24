@@ -358,7 +358,7 @@ define(function (require, exports, module) {
                 case 'nodeJS':
                     value =
                         '<h1>' + Localization.userProfile.nodeJSConfigTitle +
-                        ' <a href="https://github.com/lexecon/client-javascript">' + Localization.userProfile.nodeJSConfigLink + '</a></h1>' +
+                        ' <a href="https://github.com/reportportal/client-javascript">' + Localization.userProfile.nodeJSConfigLink + '</a></h1>' +
                         '<h1>' + Localization.userProfile.nodeJSConfigExample + '</h1>' +
                         '<br>' +
                         '<div class="options">' +
