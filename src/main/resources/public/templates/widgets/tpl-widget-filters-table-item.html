@@ -9,11 +9,11 @@
                         data-js-launch-number></span></a>
                 </h5>
                 <ul class="rp-grid-tags">
-                    <% if(data.item.userRef){ %>
+                    <% if(data.item.user){ %>
                     <li title="Owner" class="rp-launch-owner owner">
                         <i class="material-icons">person</i>
-                        <a href="#<%- projectUrl %>/launches/all?page.page=1&amp;page.sort=start_time,DESC&amp;page.size=50&filter.in.user=<%- data.item.userRef %>"
-                           data-js-user-tag data-tag="<%- data.item.userRef %>"><%- data.item.userRef %></a>
+                        <a href="#<%- projectUrl %>/launches/all?page.page=1&amp;page.sort=start_time,DESC&amp;page.size=50&filter.in.user=<%- data.item.user %>"
+                           data-js-user-tag data-tag="<%- data.item.user %>"><%- data.item.user %></a>
                     </li>
                     <% } %>
                     <% var tags = data.item.tags %>
