@@ -1,93 +1,171 @@
 import React, { PureComponent } from 'react';
-import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { Input } from 'components/inputs/input';
+import { InputDropdown } from 'components/inputs/inputDropdown';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
-import styles from '../autoAnalysisTab.scss';
+import { BigButton } from 'components/buttons/bigButton';
+import { FieldProvider } from 'components/fields/fieldProvider';
+import styles from './accuracyFormBlock.scss';
 
 const cx = classNames.bind(styles);
-
-const DEFAULT_ANALYSIS_CONFIGURATION = {
-  minDocFreq: 7,
-  minShouldMatch: 80,
-  minTermFreq: 1,
-  numberOfLogLines: 2,
-};
 
 const messages = defineMessages({
   minimumShouldMatchTitle: {
     id: 'AccuracyFormBlock.minimumShouldMatchTitle',
     defaultMessage: 'Minimum should match',
   },
+  minimumDocFreqTitle: {
+    id: 'AccuracyFormBlock.minimumDocFreqTitle',
+    defaultMessage: 'Minimum document frequency',
+  },
+  minimumTermFreqTitle: {
+    id: 'AccuracyFormBlock.minimumTermFreqTitle',
+    defaultMessage: 'Minimum term frequency',
+  },
+  numberOfLogLinesTitle: {
+    id: 'AccuracyFormBlock.numberOfLogLinesTitle',
+    defaultMessage: 'Number of log lines',
+  },
+  minimumShouldMatchDescription: {
+    id: 'AccuracyFormBlock.minimumShouldMatchDescription',
+    defaultMessage:
+      'Percent of words equality between analyzed log and particular log from the ElasticSearch. If a log from ElasticSearch has the value less then set, this log will be ignored for AA.',
+  },
+  minimumDocFreqDescription: {
+    id: 'AccuracyFormBlock.minimumDocFreqDescription',
+    defaultMessage:
+      'Set the minimum frequency of the saved logs in ElasticSearch (index) in which word from analyzed log should be used. If the log count is below the specified value, that word will be ignored for AA in the analyzed log. The more often the word appears in index, the lower it weights.',
+  },
+  minimumTermFreqDescription: {
+    id: 'AccuracyFormBlock.minimumTermFreqDescription',
+    defaultMessage:
+      'Set the minimum frequency of the word in the analyzed log. If the word count is below the specified value, this word will be ignored for AA. The more often the word appears in the analyzed log, the higher it weights.',
+  },
+  numberOfLogLinesDescription: {
+    id: 'AccuracyFormBlock.numberOfLogLinesDescription',
+    defaultMessage:
+      'The number of first lines of log message that should be considered in ElasticSearch.',
+  },
+  numberOfLogLinesAllOption: {
+    id: 'AccuracyFormBlock.numberOfLogLinesAllOption',
+    defaultMessage: 'All',
+  },
+  submitButtonText: {
+    id: 'AccuracyFormBlock.submitButtonText',
+    defaultMessage: 'Submit',
+  },
 });
+
 @injectIntl
 export class AccuracyFormBlock extends PureComponent {
   static propTypes = {
     intl: intlShape.isRequired,
-    minDocFreq: PropTypes.number,
-    minShouldMatch: PropTypes.number,
-    minTermFreq: PropTypes.number,
-    numberOfLogLines: PropTypes.number,
   };
 
-  static defaultProps = {
-    minDocFreq: DEFAULT_ANALYSIS_CONFIGURATION.minDocFreq,
-    minShouldMatch: DEFAULT_ANALYSIS_CONFIGURATION.minShouldMatch,
-    minTermFreq: DEFAULT_ANALYSIS_CONFIGURATION.minTermFreq,
-    numberOfLogLines: DEFAULT_ANALYSIS_CONFIGURATION.numberOfLogLines,
-  };
+  formatNumberOfLogLines = (value) => value && value.toString();
 
-  state = {
-    minDocFreq: this.props.minDocFreq,
-    minShouldMatch: this.props.minShouldMatch,
-    minTermFreq: this.props.minTermFreq,
-    numberOfLogLines: this.props.numberOfLogLines,
-    isMinTermFreqInvalid: false,
-  };
-
-  validateMinTermFreq = (event) => {
-    const newValue = event.target.value.replace(/\D+/g, '');
-    if (newValue.match(/^([5-9][0-9])$|100$/)) {
-      this.setState({
-        minShouldMatch: newValue,
-        isMinTermFreqInvalid: false,
-      });
-    } else {
-      this.setState({
-        minShouldMatch: newValue,
-        isMinTermFreqInvalid: true,
-      });
-    }
-  };
+  parseNumberOfLogLines = (value) => value && value.toString();
 
   render() {
     const { intl } = this.props;
     return (
       <React.Fragment>
-        <div className={cx('form-group-container')}>
+        <div className={cx('form-break-line')} />
+        <div className={cx('form-group-container', 'accuracy-form-group')}>
           <span className={cx('form-group-column', 'switch-auto-analysis-label')}>
             {intl.formatMessage(messages.minimumShouldMatchTitle)}
           </span>
-          <FieldErrorHint
-            error={'The parameter should have value from 50 to 100'}
-            active={this.state.isMinTermFreqInvalid}
-          >
-            <Input
-              value={`${this.state.minShouldMatch}`}
-              maxLength={'3'}
-              touched={this.state.isMinTermFreqInvalid}
-              onChange={this.validateMinTermFreq}
-            />
-          </FieldErrorHint>
+          <div className={cx('form-group-column', 'accuracy-form-input-wrapper')}>
+            <FieldProvider name="minShouldMatch" format={String} parse={String}>
+              <FieldErrorHint>
+                <Input maxLength={'3'} />
+              </FieldErrorHint>
+            </FieldProvider>
+          </div>
           <div className={cx('form-group-column', 'form-group-description')}>
             <div className={cx('form-group-help-block')}>
-              <p>
-                Percent of words equality between analyzed log and particular log from the
-                ElasticSearch. If a log from ElasticSearch has the value less then set, this log
-                will be ignored for AA.
-              </p>
+              <p>{intl.formatMessage(messages.minimumShouldMatchDescription)}</p>
             </div>
+          </div>
+        </div>
+
+        <div className={cx('form-group-container', 'accuracy-form-group')}>
+          <span className={cx('form-group-column', 'switch-auto-analysis-label')}>
+            {intl.formatMessage(messages.minimumDocFreqTitle)}
+          </span>
+          <div className={cx('form-group-column', 'accuracy-form-input-wrapper')}>
+            <FieldProvider name="minDocFreq" format={String} parse={String}>
+              <FieldErrorHint>
+                <Input maxLength={'2'} />
+              </FieldErrorHint>
+            </FieldProvider>
+          </div>
+          <div className={cx('form-group-column', 'form-group-description')}>
+            <div className={cx('form-group-help-block')}>
+              <p>{intl.formatMessage(messages.minimumDocFreqDescription)}</p>
+            </div>
+          </div>
+        </div>
+
+        <div className={cx('form-group-container', 'accuracy-form-group')}>
+          <span className={cx('form-group-column', 'switch-auto-analysis-label')}>
+            {intl.formatMessage(messages.minimumTermFreqTitle)}
+          </span>
+          <div className={cx('form-group-column', 'accuracy-form-input-wrapper')}>
+            <FieldProvider name="minTermFreq" format={String} parse={String}>
+              <FieldErrorHint>
+                <Input maxLength={'2'} />
+              </FieldErrorHint>
+            </FieldProvider>
+          </div>
+          <div className={cx('form-group-column', 'form-group-description')}>
+            <div className={cx('form-group-help-block')}>
+              <p>{intl.formatMessage(messages.minimumTermFreqDescription)}</p>
+            </div>
+          </div>
+        </div>
+
+        <div className={cx('form-group-container', 'accuracy-form-group')}>
+          <span className={cx('form-group-column', 'switch-auto-analysis-label')}>
+            {intl.formatMessage(messages.numberOfLogLinesTitle)}
+          </span>
+          <div className={cx('form-group-column', 'accuracy-form-input-wrapper')}>
+            <div className={cx('drop-down-block')}>
+              <FieldProvider
+                name="numberOfLogLines"
+                format={this.formatNumberOfLogLines}
+                parse={this.parseNumberOfLogLines}
+              >
+                <InputDropdown
+                  options={[
+                    { value: '2', label: '2' },
+                    { value: '3', label: '3' },
+                    { value: '4', label: '4' },
+                    { value: '5', label: '5' },
+                    {
+                      value: intl.formatMessage(messages.numberOfLogLinesAllOption),
+                      label: intl.formatMessage(messages.numberOfLogLinesAllOption),
+                    },
+                  ]}
+                />
+              </FieldProvider>
+            </div>
+          </div>
+          <div className={cx('form-group-column', 'form-group-description')}>
+            <div className={cx('form-group-help-block')}>
+              <p>{intl.formatMessage(messages.numberOfLogLinesDescription)}</p>
+            </div>
+          </div>
+        </div>
+
+        <div className={cx('form-group-container', 'submit-button-container')}>
+          <div className={cx('form-group-column', 'submit-button-wrapper')}>
+            <BigButton>
+              <span className={cx('submit-button-text')}>
+                {intl.formatMessage(messages.submitButtonText)}
+              </span>
+            </BigButton>
           </div>
         </div>
       </React.Fragment>

@@ -1,0 +1,50 @@
+@import '../autoAnalysisTab';
+
+.accuracy-form-input-wrapper {
+  min-width: 100px;
+  width: 100px;
+  height: 30px;
+}
+
+.form-break-line {
+  width: 1010px;
+  display: block;
+  border: 1px solid $COLOR--gray-91;
+  margin: 0 auto 30px auto;
+  @media (max-width: $SCREEN_MD_MAX) {
+    width: 100%;
+  }
+}
+
+.drop-down-block {
+  position: relative;
+  display: inline-block;
+  min-width: 100px;
+  width: 100px;
+  height: 30px;
+  font-family: $FONT-REGULAR;
+  font-size: 13px;
+  line-height: 13px;
+  color: $COLOR--charcoal-grey;
+}
+
+.submit-button-container {
+  justify-content: center;
+  align-items: center;
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    display: none;
+  }
+}
+
+.submit-button-wrapper {
+  height: 30px;
+  margin-right: 65px;
+}
+
+.submit-button-text {
+  position: relative;
+  font-size: 13px;
+  font-family: $FONT-REGULAR;
+  margin: 0;
+}

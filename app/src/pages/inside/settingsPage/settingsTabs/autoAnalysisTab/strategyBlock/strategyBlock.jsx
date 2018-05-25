@@ -1,17 +1,12 @@
 import React, { PureComponent } from 'react';
-import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
+import { FieldProvider } from 'components/fields/fieldProvider';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { InputBigSwitcher } from 'components/inputs/inputBigSwitcher';
 import { InputRadio } from 'components/inputs/inputRadio';
 import styles from '../autoAnalysisTab.scss';
 
 const cx = classNames.bind(styles);
-
-const DEFAULT_ANALYSIS_CONFIGURATION = {
-  analyzerMode: 'LAUNCH_NAME',
-  isAutoAnalyzerEnabled: false,
-};
 
 const messages = defineMessages({
   autoAnalysisSwitcherTitle: {
@@ -49,34 +44,11 @@ const messages = defineMessages({
       'The test items are analyzed on base of previously investigated data in all launches',
   },
 });
+
 @injectIntl
 export class StrategyBlock extends PureComponent {
   static propTypes = {
     intl: intlShape.isRequired,
-    isAutoAnalyzerEnabled: PropTypes.bool,
-    analyzer_mode: PropTypes.string,
-  };
-
-  static defaultProps = {
-    analyzer_mode: DEFAULT_ANALYSIS_CONFIGURATION.analyzerMode,
-    isAutoAnalyzerEnabled: DEFAULT_ANALYSIS_CONFIGURATION.isAutoAnalyzerEnabled,
-  };
-
-  state = {
-    isSwitcherEnable: this.props.isAutoAnalyzerEnabled,
-    analyzerValue: this.props.analyzer_mode,
-  };
-
-  handleSwitcherChange = (newValue) => {
-    this.setState({
-      isSwitcherEnable: newValue,
-    });
-  };
-
-  handleRadioChange = (event) => {
-    this.setState({
-      analyzerValue: event.target.value,
-    });
   };
 
   render() {
@@ -88,10 +60,9 @@ export class StrategyBlock extends PureComponent {
             {intl.formatMessage(messages.autoAnalysisSwitcherTitle)}
           </span>
           <div className={cx('form-group-column', 'switcher-wrapper')}>
-            <InputBigSwitcher
-              value={this.state.isSwitcherEnable}
-              onChange={this.handleSwitcherChange}
-            />
+            <FieldProvider name="analysisSwitcher" format={Boolean} parse={Boolean}>
+              <InputBigSwitcher />
+            </FieldProvider>
           </div>
           <div className={cx('form-group-column', 'form-group-description')}>
             <div className={cx('form-group-help-block')}>
@@ -110,14 +81,11 @@ export class StrategyBlock extends PureComponent {
           <div className={cx('form-group-column', 'form-group-description')}>
             <div className={cx('aa-strategy-option')}>
               <div className={cx('aa-strategy-option-selector')}>
-                <InputRadio
-                  ownValue={'LAUNCH_NAME'}
-                  value={this.state.analyzerValue}
-                  onChange={this.handleRadioChange}
-                  name={'aa-strategy'}
-                >
-                  {intl.formatMessage(messages.sameNameLaunchesCaption)}
-                </InputRadio>
+                <FieldProvider name="strategyRadio">
+                  <InputRadio ownValue={'LAUNCH_NAME'} name={'aa-strategy'}>
+                    {intl.formatMessage(messages.sameNameLaunchesCaption)}
+                  </InputRadio>
+                </FieldProvider>
               </div>
               <span className={cx('form-group-help-block')}>
                 {intl.formatMessage(messages.sameNameLaunchesInfo)}
@@ -125,14 +93,11 @@ export class StrategyBlock extends PureComponent {
             </div>
             <div className={cx('aa-strategy-option')}>
               <div className={cx('aa-strategy-option-selector')}>
-                <InputRadio
-                  ownValue={'ALL'}
-                  value={this.state.analyzerValue}
-                  onChange={this.handleRadioChange}
-                  name={'aa-strategy'}
-                >
-                  {intl.formatMessage(messages.allLaunchesCaption)}
-                </InputRadio>
+                <FieldProvider name="strategyRadio">
+                  <InputRadio ownValue={'ALL'} name={'aa-strategy'}>
+                    {intl.formatMessage(messages.allLaunchesCaption)}
+                  </InputRadio>
+                </FieldProvider>
               </div>
               <span className={cx('form-group-help-block')}>
                 {intl.formatMessage(messages.allLaunchesInfo)}

@@ -49,6 +49,18 @@ const messages = defineMessages({
     id: 'SearchDashboardForm.dashboardNameSearchHint',
     defaultMessage: 'Dashboard name should have size from 3 to 128',
   },
+  minShouldMatchHint: {
+    id: 'AccuracyFormBlock.minShouldMatchHint',
+    defaultMessage: 'The parameter should have value from 50 to 100',
+  },
+  minDocFreqHint: {
+    id: 'AccuracyFormBlock.minDocFreqHint',
+    defaultMessage: 'The parameter should have value from 1 to 10',
+  },
+  minTermFreqHint: {
+    id: 'AccuracyFormBlock.minTermFreqHint',
+    defaultMessage: 'The parameter should have value from 1 to 10',
+  },
   widgetNameHint: {
     id: 'SearchDashboardForm.widgetNameHint',
     defaultMessage: 'Widget name should have size from 3 to 128',

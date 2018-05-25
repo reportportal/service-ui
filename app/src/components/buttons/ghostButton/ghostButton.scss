@@ -1,5 +1,6 @@
 .ghost-button {
   position: relative;
+  //display: inline-block;
   display: inline-flex;
   height: 30px;
   padding: 0 10px;
@@ -9,11 +10,12 @@
   font-family: $FONT-REGULAR;
   font-size: 13px;
   letter-spacing: normal;
+  //line-height: 0;
   line-height: 28px;
   white-space: nowrap;
   text-shadow: none;
-  background-color: transparent;
   vertical-align: top;
+  background-color: transparent;
   cursor: pointer;
   background: $COLOR--white-two;
 
