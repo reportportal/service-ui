@@ -8,7 +8,7 @@ import classNames from 'classnames/bind';
 import { withModal, ModalLayout } from 'components/main/modal';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
-import styles from '../modals.scss';
+import styles from './removeIndexModal.scss';
 
 const cx = classNames.bind(styles);
 const messages = defineMessages({

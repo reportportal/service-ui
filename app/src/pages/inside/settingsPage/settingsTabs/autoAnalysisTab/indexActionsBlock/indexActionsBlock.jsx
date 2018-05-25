@@ -6,6 +6,7 @@ import { showModalAction } from 'controllers/modal';
 import { appInfoSelector } from 'controllers/appInfo/selectors';
 import classNames from 'classnames/bind';
 import { GhostButton } from 'components/buttons/ghostButton';
+import { projectAnalyzerConfigSelector } from 'controllers/project';
 import styles from './indexActionsBlock.scss';
 
 const cx = classNames.bind(styles);
@@ -41,6 +42,7 @@ const messages = defineMessages({
 
 @connect(
   (state) => ({
+    indexing_running: projectAnalyzerConfigSelector(state).indexing_running,
     appInfo: appInfoSelector(state),
   }),
   { showModalAction },
@@ -73,6 +75,7 @@ export class IndexActionsBlock extends Component {
             {intl.formatMessage(messages.indexActionsBlockTitle)}
           </p>
         </div>
+
         <div className={cx('form-group-container', 'index-actions-group-container')}>
           <div className={cx('form-group-column', 'index-action-description')}>
             {intl.formatMessage(messages.removeIndexDescription)}
@@ -88,6 +91,7 @@ export class IndexActionsBlock extends Component {
             </GhostButton>
           </div>
         </div>
+
         <div className={cx('form-group-container', 'index-actions-group-container')}>
           <div className={cx('form-group-column', 'index-action-description')}>
             {intl.formatMessage(messages.generateIndexDescription)}
