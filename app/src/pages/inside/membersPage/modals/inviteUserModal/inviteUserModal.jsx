@@ -51,7 +51,7 @@ const messages = defineMessages({
 )
 @reduxForm({
   form: 'inviteUserForm',
-  validate: ({ user }) => ({ user: !user }),
+  validate: ({ user }) => ({ user: !user && 'inviteUser' }),
   initialValues: {
     role: DEFAULT_PROJECT_ROLE,
   },

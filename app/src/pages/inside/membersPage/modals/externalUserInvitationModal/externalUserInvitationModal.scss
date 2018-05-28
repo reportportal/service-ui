@@ -1,10 +1,10 @@
 .modal-description {
+  padding: 10px;
   font-size: 12px;
   font-family: $FONT-SEMIBOLD;
   text-transform: uppercase;
   color: $COLOR--gray-47;
   background-color: $COLOR--white-four;
-  padding: 10px;
 }
 .link {
   color: $COLOR--charcoal-grey;
@@ -16,14 +16,14 @@
   margin-left: 20px;
 }
 .copy {
+  position: relative;
+  top: -15px;
+  margin-left: 135px;
+  display: inline-block;
   font-family: $FONT-REGULAR;
   font-size: 13px;
   color: $COLOR--windows-blue;
   line-height: 18px;
-  top: -15px;
-  position: relative;
-  margin-left: 135px;
-  display: inline-block;
   cursor: pointer;
 }
 .external-user-content {

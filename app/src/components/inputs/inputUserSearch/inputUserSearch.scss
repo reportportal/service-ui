@@ -1,7 +1,7 @@
 .select2-search-users {
   :global {
-    background-color: $COLOR--white-two;
     width: inherit;
+    background-color: $COLOR--white-two;
     .error {
       .Select-input {
         input {
@@ -29,65 +29,65 @@
     }
     .Select-menu-outer {
       position: absolute;
-      width: inherit;
       z-index: 100;
+      width: inherit;
     }
     .Select-multi-value-wrapper {
       position: relative;
     }
     .Select-placeholder {
-      line-height: 15px;
       position: absolute;
       top: 3px;
       left: 10px;
+      width: 94%;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
       font-size: 13px;
       font-family: $FONT-REGULAR;
       color: $COLOR--gray-60;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      width: 94%;
+      line-height: 15px;
     }
     .Select-value {
-      line-height: 30px;
       position: absolute;
       left: 12px;
-      font-size: 13px;
       z-index: 10;
+      font-size: 13px;
+      line-height: 30px;
     }
     .Select-noresults {
-      background: lighten($COLOR--gray-91, 5%);
       position: absolute;
       bottom: -28px;
       width: 100%;
-      box-sizing: border-box;
       padding: 5px;
+      box-sizing: border-box;
       font-size: 12px;
       line-height: 17px;
       font-family: $FONT-REGULAR, sans-serif;
       color: $COLOR--charcoal-grey;
+      background: lighten($COLOR--gray-91, 5%);
     }
     .Select-clear-zone {
-      line-height: 30px;
       position: absolute;
       right: 12px;
+      line-height: 30px;
       font-size: 13px;
     }
     .Select-input {
       width: 100%;
       input {
-        line-height: 18px;
-        font-family: $FONT-REGULAR, sans-serif;
         width: 100% !important;
         height: auto;
         min-height: 26px;
         padding: 5px 20px 5px 10px;
         margin: 0;
-        outline: 0;
-        font-size: 13px;
         border: 1px solid $COLOR--gray-80;
         border-radius: 0;
+        outline: 0;
+        font-size: 13px;
         box-sizing: border-box !important;
+        line-height: 18px;
+        font-family: $FONT-REGULAR, sans-serif;
       }
     }
     .is-focused {

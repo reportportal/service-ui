@@ -6,8 +6,8 @@ import styles from './inviteNewUserItem.scss';
 const cx = classNames.bind(styles);
 
 export const InviteNewUserItem = ({ option, onClick }) => (
-  <div className={'select-menu-outer'}>
-    <div className={'select-menu'} role="listbox">
+  <div className={cx('select-menu-outer')}>
+    <div className={cx('select-menu')} role="listbox">
       <div onClick={onClick}>
         <div className={cx('invite-new-user')}>
           <div className={cx('msg-icon')} />
