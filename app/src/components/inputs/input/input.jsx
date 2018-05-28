@@ -29,6 +29,7 @@ export const Input = ({
   type,
   value,
   readonly,
+  customClass,
   error,
   placeholder,
   maxLength,
@@ -44,7 +45,7 @@ export const Input = ({
   <input
     ref={refFunction}
     type={type}
-    className={cx('input', { disabled, error, touched, readonly })}
+    className={cx('input', customClass, { disabled, error, touched, readonly })}
     value={value}
     placeholder={placeholder}
     maxLength={maxLength}
@@ -65,6 +66,7 @@ Input.propTypes = {
   maxLength: PropTypes.string,
   disabled: PropTypes.bool,
   readonly: PropTypes.bool,
+  customClass: PropTypes.string,
   error: PropTypes.string,
   onChange: PropTypes.func,
   onFocus: PropTypes.func,
@@ -82,6 +84,7 @@ Input.defaultProps = {
   maxLength: '254',
   disabled: false,
   readonly: false,
+  customClass: '',
   error: '',
   touched: false,
   onChange: () => {},

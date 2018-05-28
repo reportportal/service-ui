@@ -41,7 +41,7 @@ const messages = defineMessages({
 @withModal('removeIndexModal')
 @connect(
   (state) => ({
-    projectInfo: activeProjectSelector(state),
+    currentProject: activeProjectSelector(state),
   }),
   { showNotification },
 )
@@ -49,17 +49,17 @@ const messages = defineMessages({
 export class RemoveIndexModal extends Component {
   static propTypes = {
     intl: intlShape,
-    projectInfo: PropTypes.string,
+    currentProject: PropTypes.string,
     showNotification: PropTypes.func,
   };
   static defaultProps = {
     intl: {},
-    projectInfo: '',
+    currentProject: '',
     showNotification: () => {},
   };
 
   onRemoveClick = (closeModal) => {
-    fetch(URLS.projectIndex(this.props.projectInfo), { method: 'delete' })
+    fetch(URLS.projectIndex(this.props.currentProject), { method: 'delete' })
       .then(() => {
         this.props.showNotification({
           message: this.props.intl.formatMessage(messages.removeSuccessNotification),

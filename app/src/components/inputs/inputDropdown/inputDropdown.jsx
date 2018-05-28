@@ -29,6 +29,7 @@ const cx = classNames.bind(styles);
 export class InputDropdown extends Component {
   static propTypes = {
     value: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
+    customClass: PropTypes.string,
     options: PropTypes.array,
     multiple: PropTypes.bool,
     selectAll: PropTypes.bool,
@@ -41,6 +42,7 @@ export class InputDropdown extends Component {
 
   static defaultProps = {
     value: '',
+    customClass: '',
     options: [],
     multiple: false,
     selectAll: false,
@@ -170,7 +172,7 @@ export class InputDropdown extends Component {
 
   render() {
     return (
-      <div ref={this.setRef} className={cx('dropdown', { opened: this.state.opened })}>
+      <div ref={this.setRef} className={cx('dropdown', this.props.customClass, { opened: this.state.opened })}>
         <div
           className={cx('select-block', {
             disabled: this.props.disabled,

@@ -15,6 +15,19 @@
       }
     }
   }
+
+  &.mobile-disabled {
+    @media (max-width: $SCREEN_XS_MAX) {
+      .toggler {
+        background-color: $COLOR--white;
+        border-color: $COLOR--gray-91;
+
+        &::after {
+          background-color: $COLOR--gray-60;
+        }
+      }
+    }
+  }
 }
 .input {
   display: none;
@@ -61,5 +74,5 @@
   font-size: 13px;
   color: $COLOR--charcoal-grey;
   line-height: 18px;
-  word-break: break-all;
+  word-break: keep-all;
 }

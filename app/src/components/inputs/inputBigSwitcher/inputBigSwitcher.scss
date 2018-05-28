@@ -34,6 +34,16 @@
       background-color: $COLOR--gray-80;
     }
   }
+  &.mobile-disabled {
+    @media (max-width: $SCREEN_XS_MAX) {
+      .on {
+        background-color: $COLOR--greenish-beige;
+      }
+      .off {
+        background-color: $COLOR--gray-80;
+      }
+    }
+  }
 }
 .on {
   float: left;

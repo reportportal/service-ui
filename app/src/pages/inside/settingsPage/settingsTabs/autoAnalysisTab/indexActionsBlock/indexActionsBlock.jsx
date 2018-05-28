@@ -84,6 +84,7 @@ export class IndexActionsBlock extends Component {
             <GhostButton
               disabled={this.props.indexing_running || !this.props.appInfo.ANALYZER}
               onClick={this.showRemoveIndexModal}
+              mobileDisabled
             >
               <span className={cx('index-action-caption')}>
                 {intl.formatMessage(messages.removeIndexButtonCaption)}
@@ -100,6 +101,7 @@ export class IndexActionsBlock extends Component {
             <GhostButton
               disabled={this.props.indexing_running || !this.props.appInfo.ANALYZER}
               onClick={this.showGenerateIndexModal}
+              mobileDisabled
             >
               <span className={cx('index-action-caption')}>
                 {this.props.indexing_running || !this.props.appInfo.ANALYZER

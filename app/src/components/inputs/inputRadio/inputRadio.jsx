@@ -14,8 +14,14 @@ export const InputRadio = ({
   onChange,
   onFocus,
   onBlur,
+  mobileDisabled,
 }) => (
-  <label className={cx('input-radio', { disabled })} onFocus={onFocus} onBlur={onBlur} tabIndex="1">
+  <label
+    className={cx('input-radio', { disabled, 'mobile-disabled': mobileDisabled })}
+    onFocus={onFocus}
+    onBlur={onBlur}
+    tabIndex="1"
+  >
     <input
       type="radio"
       className={cx('input')}
@@ -35,6 +41,7 @@ InputRadio.propTypes = {
   ownValue: PropTypes.string,
   name: PropTypes.string,
   disabled: PropTypes.bool,
+  mobileDisabled: PropTypes.bool,
   circleAtTop: PropTypes.bool,
   onChange: PropTypes.func,
   onFocus: PropTypes.func,
@@ -46,6 +53,7 @@ InputRadio.defaultProps = {
   ownValue: '',
   name: '',
   disabled: false,
+  mobileDisabled: false,
   circleAtTop: false,
   onChange: () => {},
   onFocus: () => {},
