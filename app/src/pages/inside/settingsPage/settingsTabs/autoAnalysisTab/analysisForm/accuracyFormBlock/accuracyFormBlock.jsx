@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
 import classNames from 'classnames/bind';
+import PropTypes from 'prop-types';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { Input } from 'components/inputs/input';
 import { InputDropdown } from 'components/inputs/inputDropdown';
@@ -61,25 +62,39 @@ const messages = defineMessages({
 export class AccuracyFormBlock extends PureComponent {
   static propTypes = {
     intl: intlShape.isRequired,
+    onInputChange: PropTypes.func,
+    setAnalysisMode: PropTypes.func,
   };
 
-  formatNumberOfLogLines = (value) => value && value.toString();
+  static defaultProps = {
+    onInputChange: () => {},
+    setAnalysisMode: () => {},
+  };
 
-  parseNumberOfLogLines = (value) => value && value.toString();
+  formatInputField = (value) => value && `${value}`.replace(/\D+/g, '');
+
+  parseInputField = (value) => value && `${value}`;
+
+  fomatNumberOfLogLines = (value) => value && `${value}`;
 
   render() {
     const { intl } = this.props;
     return (
       <React.Fragment>
-        <div className={cx('form-break-line')} />
         <div className={cx('form-group-container', 'accuracy-form-group')}>
           <span className={cx('form-group-column', 'switch-auto-analysis-label')}>
             {intl.formatMessage(messages.minimumShouldMatchTitle)}
           </span>
           <div className={cx('form-group-column', 'accuracy-form-input-wrapper')}>
-            <FieldProvider name="minShouldMatch" format={String} parse={String}>
+            <span className={cx('percent-icon')}>%</span>
+            <FieldProvider
+              name="minShouldMatch"
+              format={this.formatInputField}
+              parse={this.parseInputField}
+              onChange={this.props.onInputChange}
+            >
               <FieldErrorHint>
-                <Input maxLength={'3'} />
+                <Input maxLength={'3'} customClass={cx('mobile-input-disabled')} />
               </FieldErrorHint>
             </FieldProvider>
           </div>
@@ -95,9 +110,14 @@ export class AccuracyFormBlock extends PureComponent {
             {intl.formatMessage(messages.minimumDocFreqTitle)}
           </span>
           <div className={cx('form-group-column', 'accuracy-form-input-wrapper')}>
-            <FieldProvider name="minDocFreq" format={String} parse={String}>
+            <FieldProvider
+              name="minDocFreq"
+              format={this.formatInputField}
+              parse={this.parseInputField}
+              onChange={this.props.onInputChange}
+            >
               <FieldErrorHint>
-                <Input maxLength={'2'} />
+                <Input maxLength={'2'} customClass={cx('mobile-input-disabled')} />
               </FieldErrorHint>
             </FieldProvider>
           </div>
@@ -113,9 +133,14 @@ export class AccuracyFormBlock extends PureComponent {
             {intl.formatMessage(messages.minimumTermFreqTitle)}
           </span>
           <div className={cx('form-group-column', 'accuracy-form-input-wrapper')}>
-            <FieldProvider name="minTermFreq" format={String} parse={String}>
+            <FieldProvider
+              name="minTermFreq"
+              format={this.formatInputField}
+              parse={this.parseInputField}
+              onChange={this.props.onInputChange}
+            >
               <FieldErrorHint>
-                <Input maxLength={'2'} />
+                <Input maxLength={'2'} customClass={cx('mobile-input-disabled')} />
               </FieldErrorHint>
             </FieldProvider>
           </div>
@@ -134,8 +159,9 @@ export class AccuracyFormBlock extends PureComponent {
             <div className={cx('drop-down-block')}>
               <FieldProvider
                 name="numberOfLogLines"
-                format={this.formatNumberOfLogLines}
-                parse={this.parseNumberOfLogLines}
+                format={this.fomatNumberOfLogLines}
+                parse={this.parseInputField}
+                onChange={this.props.onInputChange}
               >
                 <InputDropdown
                   options={[
@@ -144,10 +170,11 @@ export class AccuracyFormBlock extends PureComponent {
                     { value: '4', label: '4' },
                     { value: '5', label: '5' },
                     {
-                      value: intl.formatMessage(messages.numberOfLogLinesAllOption),
+                      value: '-1',
                       label: intl.formatMessage(messages.numberOfLogLinesAllOption),
                     },
                   ]}
+                  customClass={cx('mobile-input-disabled')}
                 />
               </FieldProvider>
             </div>
@@ -161,7 +188,7 @@ export class AccuracyFormBlock extends PureComponent {
 
         <div className={cx('form-group-container', 'submit-button-container')}>
           <div className={cx('form-group-column', 'submit-button-wrapper')}>
-            <BigButton>
+            <BigButton type="submit">
               <span className={cx('submit-button-text')}>
                 {intl.formatMessage(messages.submitButtonText)}
               </span>

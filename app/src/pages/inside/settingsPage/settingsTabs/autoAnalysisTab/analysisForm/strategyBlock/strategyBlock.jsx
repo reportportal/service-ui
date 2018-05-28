@@ -4,7 +4,7 @@ import { FieldProvider } from 'components/fields/fieldProvider';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { InputBigSwitcher } from 'components/inputs/inputBigSwitcher';
 import { InputRadio } from 'components/inputs/inputRadio';
-import styles from '../autoAnalysisTab.scss';
+import styles from './strategyBlock.scss';
 
 const cx = classNames.bind(styles);
 
@@ -60,8 +60,8 @@ export class StrategyBlock extends PureComponent {
             {intl.formatMessage(messages.autoAnalysisSwitcherTitle)}
           </span>
           <div className={cx('form-group-column', 'switcher-wrapper')}>
-            <FieldProvider name="analysisSwitcher" format={Boolean} parse={Boolean}>
-              <InputBigSwitcher />
+            <FieldProvider name="isAutoAnalyzerEnabled" format={Boolean} parse={Boolean}>
+              <InputBigSwitcher mobileDisabled />
             </FieldProvider>
           </div>
           <div className={cx('form-group-column', 'form-group-description')}>
@@ -81,8 +81,8 @@ export class StrategyBlock extends PureComponent {
           <div className={cx('form-group-column', 'form-group-description')}>
             <div className={cx('aa-strategy-option')}>
               <div className={cx('aa-strategy-option-selector')}>
-                <FieldProvider name="strategyRadio">
-                  <InputRadio ownValue={'LAUNCH_NAME'} name={'aa-strategy'}>
+                <FieldProvider name="analyzer_mode">
+                  <InputRadio ownValue={'LAUNCH_NAME'} name={'aa-strategy'} mobileDisabled>
                     {intl.formatMessage(messages.sameNameLaunchesCaption)}
                   </InputRadio>
                 </FieldProvider>
@@ -93,8 +93,8 @@ export class StrategyBlock extends PureComponent {
             </div>
             <div className={cx('aa-strategy-option')}>
               <div className={cx('aa-strategy-option-selector')}>
-                <FieldProvider name="strategyRadio">
-                  <InputRadio ownValue={'ALL'} name={'aa-strategy'}>
+                <FieldProvider name="analyzer_mode">
+                  <InputRadio ownValue={'ALL'} name={'aa-strategy'} mobileDisabled>
                     {intl.formatMessage(messages.allLaunchesCaption)}
                   </InputRadio>
                 </FieldProvider>
@@ -105,6 +105,7 @@ export class StrategyBlock extends PureComponent {
             </div>
           </div>
         </div>
+        <div className={cx('form-break-line')} />
       </React.Fragment>
     );
   }

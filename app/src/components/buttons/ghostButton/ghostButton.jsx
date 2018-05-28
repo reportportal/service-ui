@@ -35,6 +35,7 @@ export const GhostButton = ({
   iconAtRight,
   onClick,
   tiny,
+  mobileDisabled,
   title,
 }) => {
   const classes = cx({
@@ -44,6 +45,7 @@ export const GhostButton = ({
     [`color-${color}`]: color,
     'with-icon': icon,
     'mobile-minified': icon && children,
+    'mobile-disabled': mobileDisabled,
   });
   return (
     <button type={type} disabled={disabled} className={classes} onClick={onClick} title={title}>
@@ -61,6 +63,7 @@ GhostButton.propTypes = {
   children: PropTypes.node,
   disabled: PropTypes.bool,
   tiny: PropTypes.bool,
+  mobileDisabled: PropTypes.bool,
   iconAtRight: PropTypes.bool,
   title: PropTypes.string,
   color: PropTypes.string,
@@ -73,6 +76,7 @@ GhostButton.defaultProps = {
   children: null,
   disabled: false,
   tiny: false,
+  mobileDisabled: false,
   iconAtRight: false,
   title: '',
   color: 'topaz',

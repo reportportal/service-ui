@@ -26,9 +26,18 @@ import styles from './inputBigSwitcher.scss';
 
 const cx = classNames.bind(styles);
 
-export const InputBigSwitcher = ({ children, disabled, value, onChange, onFocus, onBlur }) => {
+export const InputBigSwitcher = ({
+  children,
+  disabled,
+  value,
+  onChange,
+  onFocus,
+  onBlur,
+  mobileDisabled,
+}) => {
   const classes = cx({
     'switcher-wrapper': true,
+    'mobile-disabled': mobileDisabled,
     disabled,
   });
   const sliderClasses = cx({
@@ -65,6 +74,7 @@ export const InputBigSwitcher = ({ children, disabled, value, onChange, onFocus,
 InputBigSwitcher.propTypes = {
   children: PropTypes.node,
   value: PropTypes.bool,
+  mobileDisabled: PropTypes.bool,
   disabled: PropTypes.bool,
   onChange: PropTypes.func,
   onFocus: PropTypes.func,
@@ -74,6 +84,7 @@ InputBigSwitcher.propTypes = {
 InputBigSwitcher.defaultProps = {
   children: '',
   value: false,
+  mobileDisabled: false,
   disabled: false,
   onChange: () => {},
   onFocus: () => {},

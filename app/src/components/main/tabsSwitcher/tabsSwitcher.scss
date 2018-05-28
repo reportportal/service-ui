@@ -1,0 +1,40 @@
+.tabs-switcher {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  padding: 0;
+}
+
+.tab {
+  width: 122px;
+  height: 30px;
+  display: block;
+  float: left;
+  line-height: 30px;
+  text-align: center;
+  position: relative;
+  background: $COLOR--white-two;
+  text-decoration: none !important;
+  color: $COLOR--charcoal-grey !important;
+  cursor: pointer;
+  &:not(.active):after {
+    content: ' ';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border: 1px solid $COLOR--gray-80;
+  }
+  @media (max-width: $SCREEN_XS_MAX) {
+    background: $COLOR--gray-91;
+  }
+}
+
+.active {
+  background: $COLOR--gray-91;
+  cursor: default;
+  @media (max-width: $SCREEN_XS_MAX) {
+    background: darken($COLOR--gray-91, 5);
+  }
+}

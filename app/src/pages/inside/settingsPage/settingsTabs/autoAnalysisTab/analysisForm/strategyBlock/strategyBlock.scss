@@ -1,0 +1,37 @@
+@import '../../autoAnalysisTab';
+
+.aa-strategy-label {
+  align-self: flex-start;
+}
+
+.aa-strategy-option {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  box-sizing: border-box;
+  @media (max-width: $SCREEN_XS_MAX) {
+    flex-direction: column;
+  }
+}
+.aa-strategy-option:first-child {
+  margin-bottom: 13px;
+}
+
+.aa-strategy-option-selector {
+  box-sizing: border-box;
+  padding-right: 30px;
+  min-width: 240px;
+  width: 240px;
+  @media (max-width: $SCREEN_XS_MAX) {
+    width: auto;
+  }
+}
+
+.form-break-line {
+  width: 1010px;
+  border: 1px solid $COLOR--gray-91;
+  margin-bottom: 30px;
+  @media (max-width: $SCREEN_MD_MAX) {
+    width: 100%;
+  }
+}

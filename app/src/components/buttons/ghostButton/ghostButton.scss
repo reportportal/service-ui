@@ -30,6 +30,7 @@
       fill: $COLOR--gray-60;
     }
   }
+
   &.color-topaz:not(.disabled) {
     border-color: $COLOR--topaz;
     color: $COLOR--topaz;
@@ -37,6 +38,14 @@
     path,
     polygon {
       fill: $COLOR--topaz;
+    }
+
+    &.mobile-disabled {
+      @media (max-width: $SCREEN_XS_MAX) {
+        color: $COLOR--gray-60;
+        background-color: $COLOR--white;
+        border-color: $COLOR--gray-91;
+      }
     }
 
     .active,
