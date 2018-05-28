@@ -18,11 +18,23 @@ const messages = defineMessages({
     id: 'MembersPage.title',
     defaultMessage: 'Project members',
   },
+  memberWasInvited: {
+    id: 'MembersPage.memberWasInvited',
+    defaultMessage: 'Member {name} was assigned to the project',
+  },
+  inviteExternalMember: {
+    id: 'MembersPage.inviteExternalMember',
+    defaultMessage:
+      'Invite for member is successfully registered. Confirmation info will be send on provided email. Expiration: 1 day.',
+  },
 });
-@connect((state) => ({
-  url: URLS.projectUsers(activeProjectSelector(state)),
-  activeProject: activeProjectSelector(state),
-}), { showScreenLockAction, hideScreenLockAction, showNotification },)
+@connect(
+  (state) => ({
+    url: URLS.projectUsers(activeProjectSelector(state)),
+    activeProject: activeProjectSelector(state),
+  }),
+  { showScreenLockAction, hideScreenLockAction, showNotification },
+)
 @withFilter
 @withPagination()
 @injectIntl
@@ -76,16 +88,19 @@ export class MembersPage extends PureComponent {
         data,
       })
         .then((res) => {
+          this.props.showNotification({
+            message: this.props.intl.formatMessage(messages.inviteExternalMember),
+            type: 'success',
+          });
           this.props.fetchData();
           this.props.hideScreenLockAction();
-          this.props.showNotification(res.msg, 'success');
           data.backLink = res.backLink;
           return data;
         })
         .catch((err) => {
+          this.props.showNotification({ message: err.msg, type: 'error' });
           this.props.fetchData();
           this.props.hideScreenLockAction();
-          this.props.showNotification(err.msg, 'error');
           return err;
         });
     }
@@ -95,20 +110,25 @@ export class MembersPage extends PureComponent {
       method: 'put',
       data,
     })
-      .then((res) => {
+      .then(() => {
+        this.props.showNotification({
+          message: this.props.intl.formatMessage(messages.memberWasInvited, {
+            name: userData.user.userLogin,
+          }),
+          type: 'success',
+        });
         this.props.fetchData();
-        this.props.showNotification(res.msg, 'success');
       })
       .catch((err) => {
+        this.props.showNotification({ message: err.msg, type: 'error' });
         this.props.fetchData();
-        this.props.showNotification(err.msg, 'error');
       });
   };
 
   render() {
     const { filter, intl, onFilterChange, ...rest } = this.props;
     return (
-      <PageLayout title={intl.formatMessage(messages.membersPageTitle)} fullMobileLayout>
+      <PageLayout title={intl.formatMessage(messages.membersPageTitle)}>
         <MembersPageToolbar
           filter={filter}
           onFilterChange={onFilterChange}

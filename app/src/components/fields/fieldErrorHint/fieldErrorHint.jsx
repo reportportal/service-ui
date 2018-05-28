@@ -57,7 +57,7 @@ export class FieldErrorHint extends PureComponent {
     hintType: PropTypes.string,
     children: PropTypes.node,
     intl: intlShape.isRequired,
-    error: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
+    error: PropTypes.string,
     active: PropTypes.bool,
   };
   static defaultProps = {

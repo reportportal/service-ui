@@ -211,6 +211,8 @@
   "MarkdownEditor.quote": "Цытата",
   "MarkdownEditor.strikethrough": "Закрэслены",
   "MarkdownEditor.unorderedList": "Маркіраваны спіс",
+  "MembersPage.inviteExternalMember": "Запрашэнне ўдзельніка было паспяхова зарэгістравана. Якая пацвярджае інфармацыя будзе адпраўлена на прадстаўлены электронны адрас. Тэрмін дзеяння: 1 дзень.",
+  "MembersPage.memberWasInvited": "Удзельнік {name} прызначаны на праект",
   "MembersPage.title": "Удзельнікі праекта",
   "MembersPageToolbar.inviteUser": "Запрасіць карыстальніка",
   "MembersPageToolbar.permissionMap": "Карта правоў",
