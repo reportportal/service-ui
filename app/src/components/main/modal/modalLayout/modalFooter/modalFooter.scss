@@ -3,6 +3,13 @@
   display: table;
   width: 100%;
 }
+.warning-block-wrap {
+  position: relative;
+
+  .warning-block {
+    padding-right: 10px;
+  }
+}
 .warning-block {
   display: table-cell;
   padding-right: 20px;
@@ -52,4 +59,12 @@
 }
 .permission-footer {
   display: none;
+}
+.confirmation-block {
+  display: flex;
+  float: left;
+}
+.confirmation-label {
+  font-size: 10px;
+  line-height: 13px;
 }
