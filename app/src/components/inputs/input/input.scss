@@ -44,8 +44,7 @@
     margin: 0;
   }
 }
-.disabled,
-.readonly {
+.disabled {
   background-color: $COLOR--gray-91;
   &:focus {
     background-color: $COLOR--gray-91;
