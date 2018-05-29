@@ -36,4 +36,7 @@ describe('permissions', () => {
   it('should return true if owner has permission "OWNER"', () => {
     expect(canCreateUser('USER', 'MEMBER', true)).toBeTruthy();
   });
+  it('should return false if user has permission "OWNER"', () => {
+    expect(canCreateUser('USER', 'MEMBER', false)).toBeFalsy();
+  });
 });
