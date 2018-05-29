@@ -98,17 +98,17 @@ export class ModalLayout extends Component {
   };
   showCloseConfirmation = () => {
     const { closeConfirmed } = this.state;
+    const { closeConfirmedCallback } = this.props.closeConfirmation;
 
     if (closeConfirmed) {
+      closeConfirmedCallback && closeConfirmedCallback();
       this.setState({ shown: false });
     }
 
     this.setState({ showConfirmation: true });
   };
   closeModalWithConfirmation = () => {
-    const {
-      closeConfirmation: { isAbleToClose },
-    } = this.props;
+    const { isAbleToClose } = this.props.closeConfirmation;
 
     if (isAbleToClose) {
       this.setState({ shown: false });

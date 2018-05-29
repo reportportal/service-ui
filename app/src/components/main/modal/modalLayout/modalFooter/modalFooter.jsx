@@ -67,9 +67,9 @@ export class ModalFooter extends Component {
     return (
       <div className={cx('modal-footer')}>
         {showConfirmation && (
-          <div style={{ display: 'flex' }}>
+          <div className={cx('confirmation-block')}>
             {confirmationWarning && (
-              <div style={{ position: 'relative' }}>
+              <div className={cx('warning-block-wrap')}>
                 <div className={cx('warning-block')}>
                   <i className={cx('warning-icon')} />
                   <span className={cx('warning-message')}>{confirmationWarning}</span>
@@ -81,7 +81,7 @@ export class ModalFooter extends Component {
                 value={this.state.closeConfirmed}
                 onChange={this.closeConfirmChangeHandler}
               >
-                {confirmationMessage}
+                <span className={cx('confirmation-label')}>{confirmationMessage}</span>
               </InputCheckbox>
             </div>
           </div>

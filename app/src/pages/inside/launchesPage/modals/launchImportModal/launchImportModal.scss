@@ -4,17 +4,13 @@
 }
 
 .dropzone-wrapper {
-  background-color: #f9f9f9;
   height: auto;
   width: 100%;
+  background-color: $COLOR--white-four;
 }
 
 .dropzone-wrapper-active {
   opacity: 0.7;
-}
-
-.blue {
-  color: $COLOR--topaz;
 }
 
 .icon {
@@ -27,6 +23,14 @@
   color: $COLOR--gray-60;
   font-size: 12px;
   font-family: $FONT-REGULAR, sans-serif;
+
+  b {
+    font-family: $FONT-SEMIBOLD, sans-serif;
+  }
+
+  span {
+    color: $COLOR--topaz;
+  }
 }
 
 .files-list {
@@ -39,8 +43,7 @@
   margin-top: 20px;
   color: $COLOR--tealish;
   font-size: 13px;
-  font-weight: 600;
-  font-family: $FONT-REGULAR, sans-serif;
+  font-family: $FONT-SEMIBOLD, sans-serif;
 }
 
 .note-message {

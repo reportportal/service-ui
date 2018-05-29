@@ -2,8 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
-import { ProgressLoader } from 'components/preloaders/progressLoader';
 import { fileSizeConverter } from 'common/utils';
+import { ProgressLoader } from './progressLoader';
 import { InvalidIcon, UploadIndicator } from './iconStateIndicators';
 import SheetIcon from './img/launch-icon-inline.svg';
 import DeleteIcon from './img/icon-delete-inline.svg';
@@ -23,7 +23,9 @@ export const LaunchIcon = ({
   uploadedFailed,
   uploadedFailedReason,
 }) => {
-  const deleteHandler = () => {
+  const deleteHandler = (e) => {
+    e.stopPropagation();
+
     onDelete(id);
   };
   const uploadedProps = {

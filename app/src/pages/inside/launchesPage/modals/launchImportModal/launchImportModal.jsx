@@ -11,6 +11,7 @@ import { addTokenToImagePath, uniqueId, fetch } from 'common/utils';
 import { LaunchIcon } from './launcIcon';
 import styles from './launchImportModal.scss';
 import DropZoneIcon from './img/shape-inline.svg';
+import { ACCEPT_FILE_MIME_TYPES, MAX_FILE_SIZE } from './constants';
 
 const cx = classNames.bind(styles);
 
@@ -34,7 +35,7 @@ const messages = defineMessages({
   importTip: {
     id: 'LaunchImportModal.tip',
     defaultMessage:
-      'Drop only <b>.zip</b> file under 32 MB to upload or <span class="blue">click</span> to add it',
+      'Drop only <b>.zip</b> file under 32 MB to upload or <span>click</span> to add it',
   },
   note: {
     id: 'LaunchImportModal.note',
@@ -51,7 +52,7 @@ const messages = defineMessages({
   },
   importConfirmation: {
     id: 'LaunchImportModal.importConfirmation',
-    defaultMessage: 'Confirm cancel import',
+    defaultMessage: 'Confirm cancelation',
   },
   incorrectFileFormat: {
     id: 'LaunchImportModal.incorrectFileFormat',
@@ -59,7 +60,7 @@ const messages = defineMessages({
   },
   incorrectFileSize: {
     id: 'LaunchImportModal.incorrectFileSize',
-    defaultMessage: 'File size is more then 32 Mb',
+    defaultMessage: 'File size is more than 32 Mb',
   },
 });
 
@@ -141,18 +142,11 @@ export class LaunchImportModal extends Component {
       },
     };
   };
-
-  ACCEPT_FILE_MIME_TYPES = [
-    'application/zip',
-    'application/x-zip-compressed',
-    'application/zip-compressed',
-  ];
-
-  MAX_FILE_SIZE = 33554432;
+  cancelRequests = [];
 
   validateFile = (file) => ({
-    incorrectFileFormat: !this.ACCEPT_FILE_MIME_TYPES.includes(file.type),
-    incorrectFileSize: file.size > this.MAX_FILE_SIZE,
+    incorrectFileFormat: !ACCEPT_FILE_MIME_TYPES.includes(file.type),
+    incorrectFileSize: file.size > MAX_FILE_SIZE,
   });
 
   formValidationMessage = (validationProperties) => {
@@ -258,6 +252,12 @@ export class LaunchImportModal extends Component {
     return data.map((item) => ({ promise: this.configureRequestsForEachFile(item), id: item.id }));
   }
 
+  closeConfirmedCallback = () => {
+    if (this.cancelRequests.length) {
+      this.cancelRequests.forEach((cancelRequest) => cancelRequest());
+    }
+  };
+
   configureRequestsForEachFile = (file) => {
     const { activeProject } = this.props;
     const { id } = file;
@@ -266,9 +266,12 @@ export class LaunchImportModal extends Component {
       method: 'POST',
       headers: { 'Content-Type': 'multipart/form-data;' },
       data: file.data,
+      abort: (cancelRequest) => {
+        this.cancelRequests.push(cancelRequest);
+      },
       onUploadProgress: (progressEvent) => {
         const { files } = this.state;
-        const percentCompleted = Math.round(progressEvent.loaded * 100 / progressEvent.total);
+        const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
 
         this.setState({
           files: files.map((item) => {
@@ -286,11 +289,10 @@ export class LaunchImportModal extends Component {
   render() {
     const { intl } = this.props;
     const { files } = this.state;
-    const isAbleToClose = files.length ? files.some(({ isLoading }) => !isLoading) : true;
-    const loading = files.filter(({ valid }) => valid).some(({ isLoading }) => isLoading);
-    const uploadFinished = files.length
-      ? files.filter(({ valid }) => valid).every(({ uploaded }) => uploaded)
-      : false;
+    const validFiles = files.filter(({ valid }) => valid);
+    const isAbleToClose = validFiles.length ? validFiles.some(({ isLoading }) => !isLoading) : true;
+    const loading = validFiles.some(({ isLoading }) => isLoading);
+    const uploadFinished = validFiles.length ? validFiles.every(({ uploaded }) => uploaded) : false;
 
     return (
       <ModalLayout
@@ -299,17 +301,16 @@ export class LaunchImportModal extends Component {
         cancelButton={{
           text: intl.formatMessage(messages.cancelButton),
         }}
-        closeConfirmation={{ isAbleToClose }}
+        closeConfirmation={{ isAbleToClose, closeConfirmedCallback: this.closeConfirmedCallback }}
         confirmationMessage={intl.formatMessage(messages.importConfirmation)}
         confirmationWarning={intl.formatMessage(messages.importConfirmationWarning)}
       >
         <Dropzone
-          disableClick={!!files.length}
           className={cx('dropzone-wrapper')}
           activeClassName={cx('dropzone-wrapper-active')}
-          accept={this.ACCEPT_FILE_MIME_TYPES.join(',')}
+          accept={ACCEPT_FILE_MIME_TYPES.join(',')}
           onDrop={this.onDrop}
-          maxSize={this.MAX_FILE_SIZE}
+          maxSize={MAX_FILE_SIZE}
         >
           {files.length === 0 && (
             <div className={cx('dropzone')}>
