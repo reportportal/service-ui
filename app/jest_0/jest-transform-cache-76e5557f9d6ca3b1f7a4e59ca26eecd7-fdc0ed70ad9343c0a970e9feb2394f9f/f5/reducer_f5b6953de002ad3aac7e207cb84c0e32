@@ -1,0 +1,41 @@
+db1c4155b15e727f179280cc22884aa5
+'use strict';Object.defineProperty(exports, "__esModule", { value: true });exports.userReducer = exports.activeProjectReducer = exports.userInfoReducer = exports.settingsReducer = undefined;var _extends2 = require('babel-runtime/helpers/extends');var _extends3 = _interopRequireDefault(_extends2);var _redux = require('redux');
+var _constants = require('./constants');function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}
+
+
+
+
+
+
+var settingsReducer = exports.settingsReducer = function settingsReducer() {var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : _constants.SETTINGS_INITIAL_STATE;var _ref = arguments[1];var type = _ref.type,payload = _ref.payload;
+  switch (type) {
+    case _constants.SET_START_TIME_FORMAT:
+      return (0, _extends3.default)({}, state, { startTimeFormat: payload });
+    default:
+      return state;}
+
+};
+
+var userInfoReducer = exports.userInfoReducer = function userInfoReducer() {var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};var _ref2 = arguments[1];var type = _ref2.type,payload = _ref2.payload;
+  switch (type) {
+    case _constants.FETCH_USER_SUCCESS:
+      return payload;
+    default:
+      return state;}
+
+};
+
+var activeProjectReducer = exports.activeProjectReducer = function activeProjectReducer() {var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';var _ref3 = arguments[1];var type = _ref3.type,payload = _ref3.payload;
+  switch (type) {
+    case _constants.SET_ACTIVE_PROJECT:
+      return payload;
+    default:
+      return state;}
+
+};
+
+var userReducer = exports.userReducer = (0, _redux.combineReducers)({
+  info: userInfoReducer,
+  activeProject: activeProjectReducer,
+  settings: settingsReducer });;var _temp = function () {if (typeof __REACT_HOT_LOADER__ === 'undefined') {return;}__REACT_HOT_LOADER__.register(settingsReducer, 'settingsReducer', '/volumeC/workspace/service-ui - RELEASE/src/github.com/reportportal/service-ui/app/src/controllers/user/reducer.js');__REACT_HOT_LOADER__.register(userInfoReducer, 'userInfoReducer', '/volumeC/workspace/service-ui - RELEASE/src/github.com/reportportal/service-ui/app/src/controllers/user/reducer.js');__REACT_HOT_LOADER__.register(activeProjectReducer, 'activeProjectReducer', '/volumeC/workspace/service-ui - RELEASE/src/github.com/reportportal/service-ui/app/src/controllers/user/reducer.js');__REACT_HOT_LOADER__.register(userReducer, 'userReducer', '/volumeC/workspace/service-ui - RELEASE/src/github.com/reportportal/service-ui/app/src/controllers/user/reducer.js');}();;
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInJlZHVjZXIuanMiXSwibmFtZXMiOlsic2V0dGluZ3NSZWR1Y2VyIiwic3RhdGUiLCJTRVRUSU5HU19JTklUSUFMX1NUQVRFIiwidHlwZSIsInBheWxvYWQiLCJTRVRfU1RBUlRfVElNRV9GT1JNQVQiLCJzdGFydFRpbWVGb3JtYXQiLCJ1c2VySW5mb1JlZHVjZXIiLCJGRVRDSF9VU0VSX1NVQ0NFU1MiLCJhY3RpdmVQcm9qZWN0UmVkdWNlciIsIlNFVF9BQ1RJVkVfUFJPSkVDVCIsInVzZXJSZWR1Y2VyIiwiaW5mbyIsImFjdGl2ZVByb2plY3QiLCJzZXR0aW5ncyJdLCJtYXBwaW5ncyI6InlTQUFBO0FBQ0Esd0M7Ozs7Ozs7QUFPTyxJQUFNQSw0Q0FBa0IsU0FBbEJBLGVBQWtCLEdBQXVELEtBQXREQyxLQUFzRCx1RUFBOUNDLGlDQUE4Qyw2QkFBcEJDLElBQW9CLFFBQXBCQSxJQUFvQixDQUFkQyxPQUFjLFFBQWRBLE9BQWM7QUFDcEYsVUFBUUQsSUFBUjtBQUNFLFNBQUtFLGdDQUFMO0FBQ0Usd0NBQVlKLEtBQVosSUFBbUJLLGlCQUFpQkYsT0FBcEM7QUFDRjtBQUNFLGFBQU9ILEtBQVAsQ0FKSjs7QUFNRCxDQVBNOztBQVNBLElBQU1NLDRDQUFrQixTQUFsQkEsZUFBa0IsR0FBbUMsS0FBbENOLEtBQWtDLHVFQUExQixFQUEwQiw4QkFBcEJFLElBQW9CLFNBQXBCQSxJQUFvQixDQUFkQyxPQUFjLFNBQWRBLE9BQWM7QUFDaEUsVUFBUUQsSUFBUjtBQUNFLFNBQUtLLDZCQUFMO0FBQ0UsYUFBT0osT0FBUDtBQUNGO0FBQ0UsYUFBT0gsS0FBUCxDQUpKOztBQU1ELENBUE07O0FBU0EsSUFBTVEsc0RBQXVCLFNBQXZCQSxvQkFBdUIsR0FBbUMsS0FBbENSLEtBQWtDLHVFQUExQixFQUEwQiw4QkFBcEJFLElBQW9CLFNBQXBCQSxJQUFvQixDQUFkQyxPQUFjLFNBQWRBLE9BQWM7QUFDckUsVUFBUUQsSUFBUjtBQUNFLFNBQUtPLDZCQUFMO0FBQ0UsYUFBT04sT0FBUDtBQUNGO0FBQ0UsYUFBT0gsS0FBUCxDQUpKOztBQU1ELENBUE07O0FBU0EsSUFBTVUsb0NBQWMsNEJBQWdCO0FBQ3pDQyxRQUFNTCxlQURtQztBQUV6Q00saUJBQWVKLG9CQUYwQjtBQUd6Q0ssWUFBVWQsZUFIK0IsRUFBaEIsQ0FBcEIsQyxrSEEzQk1BLGUseUtBU0FPLGUseUtBU0FFLG9CLDhLQVNBRSxXIiwiZmlsZSI6InJlZHVjZXIuanMiLCJzb3VyY2VzQ29udGVudCI6WyJpbXBvcnQgeyBjb21iaW5lUmVkdWNlcnMgfSBmcm9tICdyZWR1eCc7XG5pbXBvcnQge1xuICBGRVRDSF9VU0VSX1NVQ0NFU1MsXG4gIFNFVF9BQ1RJVkVfUFJPSkVDVCxcbiAgU0VUX1NUQVJUX1RJTUVfRk9STUFULFxuICBTRVRUSU5HU19JTklUSUFMX1NUQVRFLFxufSBmcm9tICcuL2NvbnN0YW50cyc7XG5cbmV4cG9ydCBjb25zdCBzZXR0aW5nc1JlZHVjZXIgPSAoc3RhdGUgPSBTRVRUSU5HU19JTklUSUFMX1NUQVRFLCB7IHR5cGUsIHBheWxvYWQgfSkgPT4ge1xuICBzd2l0Y2ggKHR5cGUpIHtcbiAgICBjYXNlIFNFVF9TVEFSVF9USU1FX0ZPUk1BVDpcbiAgICAgIHJldHVybiB7IC4uLnN0YXRlLCBzdGFydFRpbWVGb3JtYXQ6IHBheWxvYWQgfTtcbiAgICBkZWZhdWx0OlxuICAgICAgcmV0dXJuIHN0YXRlO1xuICB9XG59O1xuXG5leHBvcnQgY29uc3QgdXNlckluZm9SZWR1Y2VyID0gKHN0YXRlID0ge30sIHsgdHlwZSwgcGF5bG9hZCB9KSA9PiB7XG4gIHN3aXRjaCAodHlwZSkge1xuICAgIGNhc2UgRkVUQ0hfVVNFUl9TVUNDRVNTOlxuICAgICAgcmV0dXJuIHBheWxvYWQ7XG4gICAgZGVmYXVsdDpcbiAgICAgIHJldHVybiBzdGF0ZTtcbiAgfVxufTtcblxuZXhwb3J0IGNvbnN0IGFjdGl2ZVByb2plY3RSZWR1Y2VyID0gKHN0YXRlID0gJycsIHsgdHlwZSwgcGF5bG9hZCB9KSA9PiB7XG4gIHN3aXRjaCAodHlwZSkge1xuICAgIGNhc2UgU0VUX0FDVElWRV9QUk9KRUNUOlxuICAgICAgcmV0dXJuIHBheWxvYWQ7XG4gICAgZGVmYXVsdDpcbiAgICAgIHJldHVybiBzdGF0ZTtcbiAgfVxufTtcblxuZXhwb3J0IGNvbnN0IHVzZXJSZWR1Y2VyID0gY29tYmluZVJlZHVjZXJzKHtcbiAgaW5mbzogdXNlckluZm9SZWR1Y2VyLFxuICBhY3RpdmVQcm9qZWN0OiBhY3RpdmVQcm9qZWN0UmVkdWNlcixcbiAgc2V0dGluZ3M6IHNldHRpbmdzUmVkdWNlcixcbn0pO1xuIl19

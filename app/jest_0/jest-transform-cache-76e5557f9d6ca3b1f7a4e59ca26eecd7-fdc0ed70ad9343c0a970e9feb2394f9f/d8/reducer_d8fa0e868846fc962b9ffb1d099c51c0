@@ -1,0 +1,40 @@
+4385fbb005343e94d733f28b2f8cb84f
+'use strict';Object.defineProperty(exports, "__esModule", { value: true });exports.dashboardReducer = undefined;var _toConsumableArray2 = require('babel-runtime/helpers/toConsumableArray');var _toConsumableArray3 = _interopRequireDefault(_toConsumableArray2);var _extends2 = require('babel-runtime/helpers/extends');var _extends3 = _interopRequireDefault(_extends2);var _constants = require('./constants');function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}
+
+
+
+
+
+
+
+
+var dashboardReducer = exports.dashboardReducer = function dashboardReducer() {var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : _constants.INITIAL_STATE;var _ref = arguments[1];var type = _ref.type,payload = _ref.payload;
+  switch (type) {
+    case _constants.FETCH_DASHBOARD_SUCCESS:
+      return (0, _extends3.default)({}, state, { dashboardItems: payload });
+    case _constants.CHANGE_VISIBILITY_TYPE:
+      return (0, _extends3.default)({}, state, { gridType: payload });
+    case _constants.ADD_DASHBOARD_ITEM_SUCCESS:
+      return (0, _extends3.default)({}, state, { dashboardItems: [].concat((0, _toConsumableArray3.default)(state.dashboardItems), [payload]) });
+    case _constants.DELETE_DASHBOARD_ITEM_SUCCESS:
+      return (0, _extends3.default)({},
+      state,
+      { dashboardItems: state.dashboardItems.filter(function (item) {return item.id !== payload;}) });
+
+    case _constants.UPDATE_DASHBOARD_ITEM_SUCCESS:
+      return (0, _extends3.default)({},
+      state,
+      {
+        dashboardItems: state.dashboardItems.map(function (item) {
+          if (item.id === payload.id) {
+            return payload;
+          }
+          return item;
+        }) });
+
+
+    default:
+      return state;}
+
+};;var _temp = function () {if (typeof __REACT_HOT_LOADER__ === 'undefined') {return;}__REACT_HOT_LOADER__.register(dashboardReducer, 'dashboardReducer', '/volumeC/workspace/service-ui - RELEASE/src/github.com/reportportal/service-ui/app/src/controllers/dashboard/reducer.js');}();;
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInJlZHVjZXIuanMiXSwibmFtZXMiOlsiZGFzaGJvYXJkUmVkdWNlciIsInN0YXRlIiwiSU5JVElBTF9TVEFURSIsInR5cGUiLCJwYXlsb2FkIiwiRkVUQ0hfREFTSEJPQVJEX1NVQ0NFU1MiLCJkYXNoYm9hcmRJdGVtcyIsIkNIQU5HRV9WSVNJQklMSVRZX1RZUEUiLCJncmlkVHlwZSIsIkFERF9EQVNIQk9BUkRfSVRFTV9TVUNDRVNTIiwiREVMRVRFX0RBU0hCT0FSRF9JVEVNX1NVQ0NFU1MiLCJmaWx0ZXIiLCJpdGVtIiwiaWQiLCJVUERBVEVfREFTSEJPQVJEX0lURU1fU1VDQ0VTUyIsIm1hcCJdLCJtYXBwaW5ncyI6IjhXQUFBLHdDOzs7Ozs7Ozs7QUFTTyxJQUFNQSw4Q0FBbUIsU0FBbkJBLGdCQUFtQixHQUE4QyxLQUE3Q0MsS0FBNkMsdUVBQXJDQyx3QkFBcUMsNkJBQXBCQyxJQUFvQixRQUFwQkEsSUFBb0IsQ0FBZEMsT0FBYyxRQUFkQSxPQUFjO0FBQzVFLFVBQVFELElBQVI7QUFDRSxTQUFLRSxrQ0FBTDtBQUNFLHdDQUFZSixLQUFaLEVBQXNCLEVBQUVLLGdCQUFnQkYsT0FBbEIsRUFBdEI7QUFDRixTQUFLRyxpQ0FBTDtBQUNFLHdDQUFZTixLQUFaLEVBQXNCLEVBQUVPLFVBQVVKLE9BQVosRUFBdEI7QUFDRixTQUFLSyxxQ0FBTDtBQUNFLHdDQUFZUixLQUFaLEVBQXNCLEVBQUVLLDJEQUFvQkwsTUFBTUssY0FBMUIsSUFBMENGLE9BQTFDLEVBQUYsRUFBdEI7QUFDRixTQUFLTSx3Q0FBTDtBQUNFO0FBQ0tULFdBREw7QUFFSyxRQUFFSyxnQkFBZ0JMLE1BQU1LLGNBQU4sQ0FBcUJLLE1BQXJCLENBQTRCLFVBQUNDLElBQUQsVUFBVUEsS0FBS0MsRUFBTCxLQUFZVCxPQUF0QixFQUE1QixDQUFsQixFQUZMOztBQUlGLFNBQUtVLHdDQUFMO0FBQ0U7QUFDS2IsV0FETDtBQUVLO0FBQ0RLLHdCQUFnQkwsTUFBTUssY0FBTixDQUFxQlMsR0FBckIsQ0FBeUIsVUFBQ0gsSUFBRCxFQUFVO0FBQ2pELGNBQUlBLEtBQUtDLEVBQUwsS0FBWVQsUUFBUVMsRUFBeEIsRUFBNEI7QUFDMUIsbUJBQU9ULE9BQVA7QUFDRDtBQUNELGlCQUFPUSxJQUFQO0FBQ0QsU0FMZSxDQURmLEVBRkw7OztBQVdGO0FBQ0UsYUFBT1gsS0FBUCxDQXpCSjs7QUEyQkQsQ0E1Qk0sQyxrSEFBTUQsZ0IiLCJmaWxlIjoicmVkdWNlci5qcyIsInNvdXJjZXNDb250ZW50IjpbImltcG9ydCB7XG4gIElOSVRJQUxfU1RBVEUsXG4gIEZFVENIX0RBU0hCT0FSRF9TVUNDRVNTLFxuICBDSEFOR0VfVklTSUJJTElUWV9UWVBFLFxuICBBRERfREFTSEJPQVJEX0lURU1fU1VDQ0VTUyxcbiAgREVMRVRFX0RBU0hCT0FSRF9JVEVNX1NVQ0NFU1MsXG4gIFVQREFURV9EQVNIQk9BUkRfSVRFTV9TVUNDRVNTLFxufSBmcm9tICcuL2NvbnN0YW50cyc7XG5cbmV4cG9ydCBjb25zdCBkYXNoYm9hcmRSZWR1Y2VyID0gKHN0YXRlID0gSU5JVElBTF9TVEFURSwgeyB0eXBlLCBwYXlsb2FkIH0pID0+IHtcbiAgc3dpdGNoICh0eXBlKSB7XG4gICAgY2FzZSBGRVRDSF9EQVNIQk9BUkRfU1VDQ0VTUzpcbiAgICAgIHJldHVybiB7IC4uLnN0YXRlLCAuLi57IGRhc2hib2FyZEl0ZW1zOiBwYXlsb2FkIH0gfTtcbiAgICBjYXNlIENIQU5HRV9WSVNJQklMSVRZX1RZUEU6XG4gICAgICByZXR1cm4geyAuLi5zdGF0ZSwgLi4ueyBncmlkVHlwZTogcGF5bG9hZCB9IH07XG4gICAgY2FzZSBBRERfREFTSEJPQVJEX0lURU1fU1VDQ0VTUzpcbiAgICAgIHJldHVybiB7IC4uLnN0YXRlLCAuLi57IGRhc2hib2FyZEl0ZW1zOiBbLi4uc3RhdGUuZGFzaGJvYXJkSXRlbXMsIHBheWxvYWRdIH0gfTtcbiAgICBjYXNlIERFTEVURV9EQVNIQk9BUkRfSVRFTV9TVUNDRVNTOlxuICAgICAgcmV0dXJuIHtcbiAgICAgICAgLi4uc3RhdGUsXG4gICAgICAgIC4uLnsgZGFzaGJvYXJkSXRlbXM6IHN0YXRlLmRhc2hib2FyZEl0ZW1zLmZpbHRlcigoaXRlbSkgPT4gaXRlbS5pZCAhPT0gcGF5bG9hZCkgfSxcbiAgICAgIH07XG4gICAgY2FzZSBVUERBVEVfREFTSEJPQVJEX0lURU1fU1VDQ0VTUzpcbiAgICAgIHJldHVybiB7XG4gICAgICAgIC4uLnN0YXRlLFxuICAgICAgICAuLi57XG4gICAgICAgICAgZGFzaGJvYXJkSXRlbXM6IHN0YXRlLmRhc2hib2FyZEl0ZW1zLm1hcCgoaXRlbSkgPT4ge1xuICAgICAgICAgICAgaWYgKGl0ZW0uaWQgPT09IHBheWxvYWQuaWQpIHtcbiAgICAgICAgICAgICAgcmV0dXJuIHBheWxvYWQ7XG4gICAgICAgICAgICB9XG4gICAgICAgICAgICByZXR1cm4gaXRlbTtcbiAgICAgICAgICB9KSxcbiAgICAgICAgfSxcbiAgICAgIH07XG4gICAgZGVmYXVsdDpcbiAgICAgIHJldHVybiBzdGF0ZTtcbiAgfVxufTtcbiJdfQ==

@@ -1,0 +1,12 @@
+60fd9e42f8f262429068efbd4d3104d1
+'use strict';Object.defineProperty(exports, "__esModule", { value: true });exports.appInfoReducer = undefined;var _assign = require('babel-runtime/core-js/object/assign');var _assign2 = _interopRequireDefault(_assign);var _constants = require('./constants');function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}
+
+var appInfoReducer = exports.appInfoReducer = function appInfoReducer() {var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};var _ref = arguments[1];var type = _ref.type,payload = _ref.payload;
+  switch (type) {
+    case _constants.FETCH_INFO_SUCCESS:
+      return (0, _assign2.default)({}, payload);
+    default:
+      return state;}
+
+};;var _temp = function () {if (typeof __REACT_HOT_LOADER__ === 'undefined') {return;}__REACT_HOT_LOADER__.register(appInfoReducer, 'appInfoReducer', '/volumeC/workspace/service-ui - RELEASE/src/github.com/reportportal/service-ui/app/src/controllers/appInfo/reducer.js');}();;
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInJlZHVjZXIuanMiXSwibmFtZXMiOlsiYXBwSW5mb1JlZHVjZXIiLCJzdGF0ZSIsInR5cGUiLCJwYXlsb2FkIiwiRkVUQ0hfSU5GT19TVUNDRVNTIl0sIm1hcHBpbmdzIjoiME5BQUEsd0M7O0FBRU8sSUFBTUEsMENBQWlCLFNBQWpCQSxjQUFpQixHQUFtQyxLQUFsQ0MsS0FBa0MsdUVBQTFCLEVBQTBCLDZCQUFwQkMsSUFBb0IsUUFBcEJBLElBQW9CLENBQWRDLE9BQWMsUUFBZEEsT0FBYztBQUMvRCxVQUFRRCxJQUFSO0FBQ0UsU0FBS0UsNkJBQUw7QUFDRSxhQUFPLHNCQUFjLEVBQWQsRUFBa0JELE9BQWxCLENBQVA7QUFDRjtBQUNFLGFBQU9GLEtBQVAsQ0FKSjs7QUFNRCxDQVBNLEMsa0hBQU1ELGMiLCJmaWxlIjoicmVkdWNlci5qcyIsInNvdXJjZXNDb250ZW50IjpbImltcG9ydCB7IEZFVENIX0lORk9fU1VDQ0VTUyB9IGZyb20gJy4vY29uc3RhbnRzJztcblxuZXhwb3J0IGNvbnN0IGFwcEluZm9SZWR1Y2VyID0gKHN0YXRlID0ge30sIHsgdHlwZSwgcGF5bG9hZCB9KSA9PiB7XG4gIHN3aXRjaCAodHlwZSkge1xuICAgIGNhc2UgRkVUQ0hfSU5GT19TVUNDRVNTOlxuICAgICAgcmV0dXJuIE9iamVjdC5hc3NpZ24oe30sIHBheWxvYWQpO1xuICAgIGRlZmF1bHQ6XG4gICAgICByZXR1cm4gc3RhdGU7XG4gIH1cbn07XG4iXX0=

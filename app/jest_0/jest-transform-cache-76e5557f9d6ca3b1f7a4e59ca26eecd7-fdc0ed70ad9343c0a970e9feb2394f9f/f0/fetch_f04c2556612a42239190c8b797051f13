@@ -1,0 +1,33 @@
+cc6f9ff8f203d9de58e9868e1c1752d9
+'use strict';Object.defineProperty(exports, "__esModule", { value: true });exports.fetch = exports.ERROR_UNAUTHORIZED = exports.ERROR_CANCELED = undefined;var _extends2 = require('babel-runtime/helpers/extends');var _extends3 = _interopRequireDefault(_extends2);var _assign = require('babel-runtime/core-js/object/assign');var _assign2 = _interopRequireDefault(_assign);var _axios = require('axios');var _axios2 = _interopRequireDefault(_axios);
+var _auth = require('controllers/auth');function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}
+
+var ERROR_CANCELED = exports.ERROR_CANCELED = 'REQUEST_CANCELED';
+var ERROR_UNAUTHORIZED = exports.ERROR_UNAUTHORIZED = 'UNAUTHORIZED';
+
+var handleError = function handleError(error) {
+  if (_axios2.default.isCancel(error)) {
+    throw new Error(ERROR_CANCELED);
+  }
+  if (error.response && error.response.status === 401) {
+    throw new Error(ERROR_UNAUTHORIZED);
+  }
+  throw error;
+};
+
+var handleResponse = function handleResponse(res) {return res.data;};
+
+var fetch = exports.fetch = function fetch(url) {var params = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+  var cancelToken = params && params.abort ? new _axios.CancelToken(params.abort) : null;
+  var token = localStorage.getItem(_auth.TOKEN_KEY) || _auth.DEFAULT_TOKEN;
+  var headersFromParams = params && params.headers;
+  var headers = (0, _assign2.default)({}, headersFromParams || {}, { Authorization: token });
+  var requestParams = (0, _extends3.default)({},
+  params, {
+    cancelToken: cancelToken,
+    url: url,
+    headers: headers });
+
+  return (0, _axios2.default)(requestParams).catch(handleError).then(handleResponse);
+};;var _temp = function () {if (typeof __REACT_HOT_LOADER__ === 'undefined') {return;}__REACT_HOT_LOADER__.register(ERROR_CANCELED, 'ERROR_CANCELED', '/volumeC/workspace/service-ui - RELEASE/src/github.com/reportportal/service-ui/app/src/common/utils/fetch.js');__REACT_HOT_LOADER__.register(ERROR_UNAUTHORIZED, 'ERROR_UNAUTHORIZED', '/volumeC/workspace/service-ui - RELEASE/src/github.com/reportportal/service-ui/app/src/common/utils/fetch.js');__REACT_HOT_LOADER__.register(handleError, 'handleError', '/volumeC/workspace/service-ui - RELEASE/src/github.com/reportportal/service-ui/app/src/common/utils/fetch.js');__REACT_HOT_LOADER__.register(handleResponse, 'handleResponse', '/volumeC/workspace/service-ui - RELEASE/src/github.com/reportportal/service-ui/app/src/common/utils/fetch.js');__REACT_HOT_LOADER__.register(fetch, 'fetch', '/volumeC/workspace/service-ui - RELEASE/src/github.com/reportportal/service-ui/app/src/common/utils/fetch.js');}();;
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImZldGNoLmpzIl0sIm5hbWVzIjpbIkVSUk9SX0NBTkNFTEVEIiwiRVJST1JfVU5BVVRIT1JJWkVEIiwiaGFuZGxlRXJyb3IiLCJlcnJvciIsImF4aW9zIiwiaXNDYW5jZWwiLCJFcnJvciIsInJlc3BvbnNlIiwic3RhdHVzIiwiaGFuZGxlUmVzcG9uc2UiLCJyZXMiLCJkYXRhIiwiZmV0Y2giLCJ1cmwiLCJwYXJhbXMiLCJjYW5jZWxUb2tlbiIsImFib3J0IiwiQ2FuY2VsVG9rZW4iLCJ0b2tlbiIsImxvY2FsU3RvcmFnZSIsImdldEl0ZW0iLCJUT0tFTl9LRVkiLCJERUZBVUxUX1RPS0VOIiwiaGVhZGVyc0Zyb21QYXJhbXMiLCJoZWFkZXJzIiwiQXV0aG9yaXphdGlvbiIsInJlcXVlc3RQYXJhbXMiLCJjYXRjaCIsInRoZW4iXSwibWFwcGluZ3MiOiJrWEFBQSw4QjtBQUNBLHdDOztBQUVPLElBQU1BLDBDQUFpQixrQkFBdkI7QUFDQSxJQUFNQyxrREFBcUIsY0FBM0I7O0FBRVAsSUFBTUMsY0FBYyxTQUFkQSxXQUFjLENBQUNDLEtBQUQsRUFBVztBQUM3QixNQUFJQyxnQkFBTUMsUUFBTixDQUFlRixLQUFmLENBQUosRUFBMkI7QUFDekIsVUFBTSxJQUFJRyxLQUFKLENBQVVOLGNBQVYsQ0FBTjtBQUNEO0FBQ0QsTUFBSUcsTUFBTUksUUFBTixJQUFrQkosTUFBTUksUUFBTixDQUFlQyxNQUFmLEtBQTBCLEdBQWhELEVBQXFEO0FBQ25ELFVBQU0sSUFBSUYsS0FBSixDQUFVTCxrQkFBVixDQUFOO0FBQ0Q7QUFDRCxRQUFNRSxLQUFOO0FBQ0QsQ0FSRDs7QUFVQSxJQUFNTSxpQkFBaUIsU0FBakJBLGNBQWlCLGNBQU9DLElBQUlDLElBQVgsRUFBdkI7O0FBRU8sSUFBTUMsd0JBQVEsU0FBUkEsS0FBUSxDQUFDQyxHQUFELEVBQXNCLEtBQWhCQyxNQUFnQix1RUFBUCxFQUFPO0FBQ3pDLE1BQU1DLGNBQWVELFVBQVVBLE9BQU9FLEtBQWxCLEdBQTJCLElBQUlDLGtCQUFKLENBQWdCSCxPQUFPRSxLQUF2QixDQUEzQixHQUEyRCxJQUEvRTtBQUNBLE1BQU1FLFFBQVFDLGFBQWFDLE9BQWIsQ0FBcUJDLGVBQXJCLEtBQW1DQyxtQkFBakQ7QUFDQSxNQUFNQyxvQkFBb0JULFVBQVVBLE9BQU9VLE9BQTNDO0FBQ0EsTUFBTUEsVUFBVSxzQkFBYyxFQUFkLEVBQWtCRCxxQkFBcUIsRUFBdkMsRUFBMkMsRUFBRUUsZUFBZVAsS0FBakIsRUFBM0MsQ0FBaEI7QUFDQSxNQUFNUTtBQUNEWixRQURDO0FBRUpDLDRCQUZJO0FBR0pGLFlBSEk7QUFJSlcsb0JBSkksR0FBTjs7QUFNQSxTQUFPLHFCQUFNRSxhQUFOLEVBQXFCQyxLQUFyQixDQUEyQnpCLFdBQTNCLEVBQXdDMEIsSUFBeEMsQ0FBNkNuQixjQUE3QyxDQUFQO0FBQ0QsQ0FaTSxDLGtIQWZNVCxjLGtLQUNBQyxrQixzS0FFUEMsVywrSkFVQU8sYyxrS0FFT0csSyIsImZpbGUiOiJmZXRjaC5qcyIsInNvdXJjZXNDb250ZW50IjpbImltcG9ydCBheGlvcywgeyBDYW5jZWxUb2tlbiB9IGZyb20gJ2F4aW9zJztcbmltcG9ydCB7IERFRkFVTFRfVE9LRU4sIFRPS0VOX0tFWSB9IGZyb20gJ2NvbnRyb2xsZXJzL2F1dGgnO1xuXG5leHBvcnQgY29uc3QgRVJST1JfQ0FOQ0VMRUQgPSAnUkVRVUVTVF9DQU5DRUxFRCc7XG5leHBvcnQgY29uc3QgRVJST1JfVU5BVVRIT1JJWkVEID0gJ1VOQVVUSE9SSVpFRCc7XG5cbmNvbnN0IGhhbmRsZUVycm9yID0gKGVycm9yKSA9PiB7XG4gIGlmIChheGlvcy5pc0NhbmNlbChlcnJvcikpIHtcbiAgICB0aHJvdyBuZXcgRXJyb3IoRVJST1JfQ0FOQ0VMRUQpO1xuICB9XG4gIGlmIChlcnJvci5yZXNwb25zZSAmJiBlcnJvci5yZXNwb25zZS5zdGF0dXMgPT09IDQwMSkge1xuICAgIHRocm93IG5ldyBFcnJvcihFUlJPUl9VTkFVVEhPUklaRUQpO1xuICB9XG4gIHRocm93IGVycm9yO1xufTtcblxuY29uc3QgaGFuZGxlUmVzcG9uc2UgPSByZXMgPT4gcmVzLmRhdGE7XG5cbmV4cG9ydCBjb25zdCBmZXRjaCA9ICh1cmwsIHBhcmFtcyA9IHt9KSA9PiB7XG4gIGNvbnN0IGNhbmNlbFRva2VuID0gKHBhcmFtcyAmJiBwYXJhbXMuYWJvcnQpID8gbmV3IENhbmNlbFRva2VuKHBhcmFtcy5hYm9ydCkgOiBudWxsO1xuICBjb25zdCB0b2tlbiA9IGxvY2FsU3RvcmFnZS5nZXRJdGVtKFRPS0VOX0tFWSkgfHwgREVGQVVMVF9UT0tFTjtcbiAgY29uc3QgaGVhZGVyc0Zyb21QYXJhbXMgPSBwYXJhbXMgJiYgcGFyYW1zLmhlYWRlcnM7XG4gIGNvbnN0IGhlYWRlcnMgPSBPYmplY3QuYXNzaWduKHt9LCBoZWFkZXJzRnJvbVBhcmFtcyB8fCB7fSwgeyBBdXRob3JpemF0aW9uOiB0b2tlbiB9KTtcbiAgY29uc3QgcmVxdWVzdFBhcmFtcyA9IHtcbiAgICAuLi5wYXJhbXMsXG4gICAgY2FuY2VsVG9rZW4sXG4gICAgdXJsLFxuICAgIGhlYWRlcnMsXG4gIH07XG4gIHJldHVybiBheGlvcyhyZXF1ZXN0UGFyYW1zKS5jYXRjaChoYW5kbGVFcnJvcikudGhlbihoYW5kbGVSZXNwb25zZSk7XG59O1xuIl19

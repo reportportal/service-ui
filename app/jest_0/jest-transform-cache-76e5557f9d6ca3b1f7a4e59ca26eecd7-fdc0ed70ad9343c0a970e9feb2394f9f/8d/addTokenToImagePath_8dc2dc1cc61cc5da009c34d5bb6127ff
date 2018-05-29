@@ -1,0 +1,54 @@
+b7d4e6a165741644d283defdb314e60e
+'use strict';Object.defineProperty(exports, "__esModule", { value: true });var _slicedToArray2 = require('babel-runtime/helpers/slicedToArray');var _slicedToArray3 = _interopRequireDefault(_slicedToArray2);exports.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+addTokenToImagePath = addTokenToImagePath;var _auth = require('controllers/auth');function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}function addTokenToImagePath(path) {var _split =
+  (localStorage.getItem(_auth.TOKEN_KEY) || '').split(' '),_split2 = (0, _slicedToArray3.default)(_split, 2),token = _split2[1];
+
+  if (token) {
+    var sep = path.indexOf('?') !== -1 ? '&' : '?';
+    return '' + path + sep + 'access_token=' + token;
+  }
+
+  return path;
+} /*
+   * Copyright 2017 EPAM Systems
+   *
+   *
+   * This file is part of EPAM Report Portal.
+   * https://github.com/reportportal/service-ui
+   *
+   * Report Portal is free software: you can redistribute it and/or modify
+   * it under the terms of the GNU General Public License as published by
+   * the Free Software Foundation, either version 3 of the License, or
+   * (at your option) any later version.
+   *
+   * Report Portal is distributed in the hope that it will be useful,
+   * but WITHOUT ANY WARRANTY; without even the implied warranty of
+   * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   * GNU General Public License for more details.
+   *
+   * You should have received a copy of the GNU General Public License
+   * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
+   */;var _temp = function () {if (typeof __REACT_HOT_LOADER__ === 'undefined') {return;}__REACT_HOT_LOADER__.register(addTokenToImagePath, 'addTokenToImagePath', '/volumeC/workspace/service-ui - RELEASE/src/github.com/reportportal/service-ui/app/src/common/utils/addTokenToImagePath.js');}();;
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImFkZFRva2VuVG9JbWFnZVBhdGguanMiXSwibmFtZXMiOlsiYWRkVG9rZW5Ub0ltYWdlUGF0aCIsInBhdGgiLCJsb2NhbFN0b3JhZ2UiLCJnZXRJdGVtIiwiVE9LRU5fS0VZIiwic3BsaXQiLCJ0b2tlbiIsInNlcCIsImluZGV4T2YiXSwibWFwcGluZ3MiOiI7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7O0FBdUJnQkEsbUIsR0FBQUEsbUIsQ0FGaEIsd0MsNkZBRU8sU0FBU0EsbUJBQVQsQ0FBNkJDLElBQTdCLEVBQW1DO0FBQ3RCLEdBQUNDLGFBQWFDLE9BQWIsQ0FBcUJDLGVBQXJCLEtBQW1DLEVBQXBDLEVBQXdDQyxLQUF4QyxDQUE4QyxHQUE5QyxDQURzQixtREFDL0JDLEtBRCtCOztBQUd4QyxNQUFJQSxLQUFKLEVBQVc7QUFDVCxRQUFNQyxNQUFPTixLQUFLTyxPQUFMLENBQWEsR0FBYixNQUFzQixDQUFDLENBQXhCLEdBQTZCLEdBQTdCLEdBQW1DLEdBQS9DO0FBQ0EsZ0JBQVVQLElBQVYsR0FBaUJNLEdBQWpCLHFCQUFvQ0QsS0FBcEM7QUFDRDs7QUFFRCxTQUFPTCxJQUFQO0FBQ0QsQyxDQWhDRDs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozt1SEF1QmdCRCxtQiIsImZpbGUiOiJhZGRUb2tlblRvSW1hZ2VQYXRoLmpzIiwic291cmNlc0NvbnRlbnQiOlsiLypcbiAqIENvcHlyaWdodCAyMDE3IEVQQU0gU3lzdGVtc1xuICpcbiAqXG4gKiBUaGlzIGZpbGUgaXMgcGFydCBvZiBFUEFNIFJlcG9ydCBQb3J0YWwuXG4gKiBodHRwczovL2dpdGh1Yi5jb20vcmVwb3J0cG9ydGFsL3NlcnZpY2UtdWlcbiAqXG4gKiBSZXBvcnQgUG9ydGFsIGlzIGZyZWUgc29mdHdhcmU6IHlvdSBjYW4gcmVkaXN0cmlidXRlIGl0IGFuZC9vciBtb2RpZnlcbiAqIGl0IHVuZGVyIHRoZSB0ZXJtcyBvZiB0aGUgR05VIEdlbmVyYWwgUHVibGljIExpY2Vuc2UgYXMgcHVibGlzaGVkIGJ5XG4gKiB0aGUgRnJlZSBTb2Z0d2FyZSBGb3VuZGF0aW9uLCBlaXRoZXIgdmVyc2lvbiAzIG9mIHRoZSBMaWNlbnNlLCBvclxuICogKGF0IHlvdXIgb3B0aW9uKSBhbnkgbGF0ZXIgdmVyc2lvbi5cbiAqXG4gKiBSZXBvcnQgUG9ydGFsIGlzIGRpc3RyaWJ1dGVkIGluIHRoZSBob3BlIHRoYXQgaXQgd2lsbCBiZSB1c2VmdWwsXG4gKiBidXQgV0lUSE9VVCBBTlkgV0FSUkFOVFk7IHdpdGhvdXQgZXZlbiB0aGUgaW1wbGllZCB3YXJyYW50eSBvZlxuICogTUVSQ0hBTlRBQklMSVRZIG9yIEZJVE5FU1MgRk9SIEEgUEFSVElDVUxBUiBQVVJQT1NFLiAgU2VlIHRoZVxuICogR05VIEdlbmVyYWwgUHVibGljIExpY2Vuc2UgZm9yIG1vcmUgZGV0YWlscy5cbiAqXG4gKiBZb3Ugc2hvdWxkIGhhdmUgcmVjZWl2ZWQgYSBjb3B5IG9mIHRoZSBHTlUgR2VuZXJhbCBQdWJsaWMgTGljZW5zZVxuICogYWxvbmcgd2l0aCBSZXBvcnQgUG9ydGFsLiAgSWYgbm90LCBzZWUgPGh0dHA6Ly93d3cuZ251Lm9yZy9saWNlbnNlcy8+LlxuICovXG5cbmltcG9ydCB7IFRPS0VOX0tFWSB9IGZyb20gJ2NvbnRyb2xsZXJzL2F1dGgnO1xuXG5leHBvcnQgZnVuY3Rpb24gYWRkVG9rZW5Ub0ltYWdlUGF0aChwYXRoKSB7XG4gIGNvbnN0IFssIHRva2VuXSA9IChsb2NhbFN0b3JhZ2UuZ2V0SXRlbShUT0tFTl9LRVkpIHx8ICcnKS5zcGxpdCgnICcpO1xuXG4gIGlmICh0b2tlbikge1xuICAgIGNvbnN0IHNlcCA9IChwYXRoLmluZGV4T2YoJz8nKSAhPT0gLTEpID8gJyYnIDogJz8nO1xuICAgIHJldHVybiBgJHtwYXRofSR7c2VwfWFjY2Vzc190b2tlbj0ke3Rva2VufWA7XG4gIH1cblxuICByZXR1cm4gcGF0aDtcbn1cbiJdfQ==

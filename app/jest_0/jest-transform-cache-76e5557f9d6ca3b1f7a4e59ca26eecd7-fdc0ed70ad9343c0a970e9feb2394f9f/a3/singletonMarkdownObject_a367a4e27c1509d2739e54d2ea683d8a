@@ -1,0 +1,44 @@
+d82d116d6eaaa5deeb0a2d60a30224a6
+'use strict';Object.defineProperty(exports, "__esModule", { value: true });exports.SingletonMarkdownObject = undefined;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+var _simplemde = require('simplemde');var _simplemde2 = _interopRequireDefault(_simplemde);function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}
+
+var instance = null; /*
+                      * Copyright 2017 EPAM Systems
+                      *
+                      *
+                      * This file is part of EPAM Report Portal.
+                      * https://github.com/reportportal/service-ui
+                      *
+                      * Report Portal is free software: you can redistribute it and/or modify
+                      * it under the terms of the GNU General Public License as published by
+                      * the Free Software Foundation, either version 3 of the License, or
+                      * (at your option) any later version.
+                      *
+                      * Report Portal is distributed in the hope that it will be useful,
+                      * but WITHOUT ANY WARRANTY; without even the implied warranty of
+                      * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+                      * GNU General Public License for more details.
+                      *
+                      * You should have received a copy of the GNU General Public License
+                      * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
+                      */var el = document.createElement('div');el.innerHTML = '<textarea></textarea>';var getInstance = function getInstance() {if (!instance) {instance = new _simplemde2.default({ autoDownloadFontAwesome: false, element: el.getElementsByTagName('textarea')[0], spellChecker: false, blockStyles: { bold: '**', italic: '*', code: '`' } });}return instance;};var SingletonMarkdownObject = exports.SingletonMarkdownObject = { getInstance: getInstance };;var _temp = function () {if (typeof __REACT_HOT_LOADER__ === 'undefined') {return;}__REACT_HOT_LOADER__.register(instance, 'instance', '/volumeC/workspace/service-ui - RELEASE/src/github.com/reportportal/service-ui/app/src/components/main/markdown/singletonMarkdownObject.js');__REACT_HOT_LOADER__.register(el, 'el', '/volumeC/workspace/service-ui - RELEASE/src/github.com/reportportal/service-ui/app/src/components/main/markdown/singletonMarkdownObject.js');__REACT_HOT_LOADER__.register(getInstance, 'getInstance', '/volumeC/workspace/service-ui - RELEASE/src/github.com/reportportal/service-ui/app/src/components/main/markdown/singletonMarkdownObject.js');__REACT_HOT_LOADER__.register(SingletonMarkdownObject, 'SingletonMarkdownObject', '/volumeC/workspace/service-ui - RELEASE/src/github.com/reportportal/service-ui/app/src/components/main/markdown/singletonMarkdownObject.js');}();;
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNpbmdsZXRvbk1hcmtkb3duT2JqZWN0LmpzIl0sIm5hbWVzIjpbImluc3RhbmNlIiwiZWwiLCJkb2N1bWVudCIsImNyZWF0ZUVsZW1lbnQiLCJpbm5lckhUTUwiLCJnZXRJbnN0YW5jZSIsIlNpbXBsZU1ERSIsImF1dG9Eb3dubG9hZEZvbnRBd2Vzb21lIiwiZWxlbWVudCIsImdldEVsZW1lbnRzQnlUYWdOYW1lIiwic3BlbGxDaGVja2VyIiwiYmxvY2tTdHlsZXMiLCJib2xkIiwiaXRhbGljIiwiY29kZSIsIlNpbmdsZXRvbk1hcmtkb3duT2JqZWN0Il0sIm1hcHBpbmdzIjoiOzs7Ozs7Ozs7Ozs7Ozs7Ozs7OztBQW9CQSxzQzs7QUFFQSxJQUFJQSxXQUFXLElBQWYsQyxDQXRCQTs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozt3QkF1QkEsSUFBTUMsS0FBS0MsU0FBU0MsYUFBVCxDQUF1QixLQUF2QixDQUFYLENBQ0FGLEdBQUdHLFNBQUgsR0FBZSx1QkFBZixDQUNBLElBQU1DLGNBQWMsU0FBZEEsV0FBYyxHQUFNLENBQ3hCLElBQUksQ0FBQ0wsUUFBTCxFQUFlLENBQ2JBLFdBQVcsSUFBSU0sbUJBQUosQ0FBYyxFQUN2QkMseUJBQXlCLEtBREYsRUFFdkJDLFNBQVNQLEdBQUdRLG9CQUFILENBQXdCLFVBQXhCLEVBQW9DLENBQXBDLENBRmMsRUFHdkJDLGNBQWMsS0FIUyxFQUl2QkMsYUFBYSxFQUNYQyxNQUFNLElBREssRUFFWEMsUUFBUSxHQUZHLEVBR1hDLE1BQU0sR0FISyxFQUpVLEVBQWQsQ0FBWCxDQVVELENBQ0QsT0FBT2QsUUFBUCxDQUNELENBZEQsQ0FnQk8sSUFBTWUsNERBQTBCLEVBQUVWLHdCQUFGLEVBQWhDLEMsa0hBbkJITCxRLDBMQUNFQyxFLG9MQUVBSSxXLDZMQWdCT1UsdUIiLCJmaWxlIjoic2luZ2xldG9uTWFya2Rvd25PYmplY3QuanMiLCJzb3VyY2VzQ29udGVudCI6WyIvKlxuICogQ29weXJpZ2h0IDIwMTcgRVBBTSBTeXN0ZW1zXG4gKlxuICpcbiAqIFRoaXMgZmlsZSBpcyBwYXJ0IG9mIEVQQU0gUmVwb3J0IFBvcnRhbC5cbiAqIGh0dHBzOi8vZ2l0aHViLmNvbS9yZXBvcnRwb3J0YWwvc2VydmljZS11aVxuICpcbiAqIFJlcG9ydCBQb3J0YWwgaXMgZnJlZSBzb2Z0d2FyZTogeW91IGNhbiByZWRpc3RyaWJ1dGUgaXQgYW5kL29yIG1vZGlmeVxuICogaXQgdW5kZXIgdGhlIHRlcm1zIG9mIHRoZSBHTlUgR2VuZXJhbCBQdWJsaWMgTGljZW5zZSBhcyBwdWJsaXNoZWQgYnlcbiAqIHRoZSBGcmVlIFNvZnR3YXJlIEZvdW5kYXRpb24sIGVpdGhlciB2ZXJzaW9uIDMgb2YgdGhlIExpY2Vuc2UsIG9yXG4gKiAoYXQgeW91ciBvcHRpb24pIGFueSBsYXRlciB2ZXJzaW9uLlxuICpcbiAqIFJlcG9ydCBQb3J0YWwgaXMgZGlzdHJpYnV0ZWQgaW4gdGhlIGhvcGUgdGhhdCBpdCB3aWxsIGJlIHVzZWZ1bCxcbiAqIGJ1dCBXSVRIT1VUIEFOWSBXQVJSQU5UWTsgd2l0aG91dCBldmVuIHRoZSBpbXBsaWVkIHdhcnJhbnR5IG9mXG4gKiBNRVJDSEFOVEFCSUxJVFkgb3IgRklUTkVTUyBGT1IgQSBQQVJUSUNVTEFSIFBVUlBPU0UuICBTZWUgdGhlXG4gKiBHTlUgR2VuZXJhbCBQdWJsaWMgTGljZW5zZSBmb3IgbW9yZSBkZXRhaWxzLlxuICpcbiAqIFlvdSBzaG91bGQgaGF2ZSByZWNlaXZlZCBhIGNvcHkgb2YgdGhlIEdOVSBHZW5lcmFsIFB1YmxpYyBMaWNlbnNlXG4gKiBhbG9uZyB3aXRoIFJlcG9ydCBQb3J0YWwuICBJZiBub3QsIHNlZSA8aHR0cDovL3d3dy5nbnUub3JnL2xpY2Vuc2VzLz4uXG4gKi9cbmltcG9ydCBTaW1wbGVNREUgZnJvbSAnc2ltcGxlbWRlJztcblxubGV0IGluc3RhbmNlID0gbnVsbDtcbmNvbnN0IGVsID0gZG9jdW1lbnQuY3JlYXRlRWxlbWVudCgnZGl2Jyk7XG5lbC5pbm5lckhUTUwgPSAnPHRleHRhcmVhPjwvdGV4dGFyZWE+JztcbmNvbnN0IGdldEluc3RhbmNlID0gKCkgPT4ge1xuICBpZiAoIWluc3RhbmNlKSB7XG4gICAgaW5zdGFuY2UgPSBuZXcgU2ltcGxlTURFKHtcbiAgICAgIGF1dG9Eb3dubG9hZEZvbnRBd2Vzb21lOiBmYWxzZSxcbiAgICAgIGVsZW1lbnQ6IGVsLmdldEVsZW1lbnRzQnlUYWdOYW1lKCd0ZXh0YXJlYScpWzBdLFxuICAgICAgc3BlbGxDaGVja2VyOiBmYWxzZSxcbiAgICAgIGJsb2NrU3R5bGVzOiB7XG4gICAgICAgIGJvbGQ6ICcqKicsXG4gICAgICAgIGl0YWxpYzogJyonLFxuICAgICAgICBjb2RlOiAnYCcsXG4gICAgICB9LFxuICAgIH0pO1xuICB9XG4gIHJldHVybiBpbnN0YW5jZTtcbn07XG5cbmV4cG9ydCBjb25zdCBTaW5nbGV0b25NYXJrZG93bk9iamVjdCA9IHsgZ2V0SW5zdGFuY2UgfTtcbiJdfQ==

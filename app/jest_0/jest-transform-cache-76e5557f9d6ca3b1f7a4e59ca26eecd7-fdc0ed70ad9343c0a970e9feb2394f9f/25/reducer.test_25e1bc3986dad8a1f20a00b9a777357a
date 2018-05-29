@@ -1,0 +1,38 @@
+3e43c398b4a18c4e1e10842c8df49463
+'use strict';var _constants = require('./constants');
+var _reducer = require('./reducer');
+
+describe('modal reducer', function () {
+  test('should return initial state', function () {
+    expect((0, _reducer.modalReducer)(undefined, {})).toBe(_constants.INITIAL_STATE);
+  });
+
+  test('should return old state on unknown action', function () {
+    var oldState = { foo: 1 };
+    expect((0, _reducer.modalReducer)(oldState, { type: 'foo' })).toBe(oldState);
+  });
+
+  test('should handle SHOW_MODAL', function () {
+    var payload = {
+      activeModal: { id: 'test', data: { foo: 'bar' } } };
+
+    var newState = (0, _reducer.modalReducer)(undefined, {
+      type: _constants.SHOW_MODAL,
+      payload: payload });
+
+    expect(newState).toEqual(payload);
+  });
+
+  test('should handle HIDE_MODAL', function () {
+    var oldState = {
+      activeModal: { id: 'test', data: { foo: 'bar' } } };
+
+    var newState = (0, _reducer.modalReducer)(oldState, {
+      type: _constants.HIDE_MODAL });
+
+    expect(newState).toEqual({
+      activeModal: null });
+
+  });
+});;var _temp = function () {if (typeof __REACT_HOT_LOADER__ === 'undefined') {return;}}();;
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInJlZHVjZXIudGVzdC5qcyJdLCJuYW1lcyI6WyJkZXNjcmliZSIsInRlc3QiLCJleHBlY3QiLCJ1bmRlZmluZWQiLCJ0b0JlIiwiSU5JVElBTF9TVEFURSIsIm9sZFN0YXRlIiwiZm9vIiwidHlwZSIsInBheWxvYWQiLCJhY3RpdmVNb2RhbCIsImlkIiwiZGF0YSIsIm5ld1N0YXRlIiwiU0hPV19NT0RBTCIsInRvRXF1YWwiLCJISURFX01PREFMIl0sIm1hcHBpbmdzIjoiYUFBQTtBQUNBOztBQUVBQSxTQUFTLGVBQVQsRUFBMEIsWUFBTTtBQUM5QkMsT0FBSyw2QkFBTCxFQUFvQyxZQUFNO0FBQ3hDQyxXQUFPLDJCQUFhQyxTQUFiLEVBQXdCLEVBQXhCLENBQVAsRUFBb0NDLElBQXBDLENBQXlDQyx3QkFBekM7QUFDRCxHQUZEOztBQUlBSixPQUFLLDJDQUFMLEVBQWtELFlBQU07QUFDdEQsUUFBTUssV0FBVyxFQUFFQyxLQUFLLENBQVAsRUFBakI7QUFDQUwsV0FBTywyQkFBYUksUUFBYixFQUF1QixFQUFFRSxNQUFNLEtBQVIsRUFBdkIsQ0FBUCxFQUFnREosSUFBaEQsQ0FBcURFLFFBQXJEO0FBQ0QsR0FIRDs7QUFLQUwsT0FBSywwQkFBTCxFQUFpQyxZQUFNO0FBQ3JDLFFBQU1RLFVBQVU7QUFDZEMsbUJBQWEsRUFBRUMsSUFBSSxNQUFOLEVBQWNDLE1BQU0sRUFBRUwsS0FBSyxLQUFQLEVBQXBCLEVBREMsRUFBaEI7O0FBR0EsUUFBTU0sV0FBVywyQkFBYVYsU0FBYixFQUF3QjtBQUN2Q0ssWUFBTU0scUJBRGlDO0FBRXZDTCxzQkFGdUMsRUFBeEIsQ0FBakI7O0FBSUFQLFdBQU9XLFFBQVAsRUFBaUJFLE9BQWpCLENBQXlCTixPQUF6QjtBQUNELEdBVEQ7O0FBV0FSLE9BQUssMEJBQUwsRUFBaUMsWUFBTTtBQUNyQyxRQUFNSyxXQUFXO0FBQ2ZJLG1CQUFhLEVBQUVDLElBQUksTUFBTixFQUFjQyxNQUFNLEVBQUVMLEtBQUssS0FBUCxFQUFwQixFQURFLEVBQWpCOztBQUdBLFFBQU1NLFdBQVcsMkJBQWFQLFFBQWIsRUFBdUI7QUFDdENFLFlBQU1RLHFCQURnQyxFQUF2QixDQUFqQjs7QUFHQWQsV0FBT1csUUFBUCxFQUFpQkUsT0FBakIsQ0FBeUI7QUFDdkJMLG1CQUFhLElBRFUsRUFBekI7O0FBR0QsR0FWRDtBQVdELENBaENELEUiLCJmaWxlIjoicmVkdWNlci50ZXN0LmpzIiwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IHsgU0hPV19NT0RBTCwgSElERV9NT0RBTCwgSU5JVElBTF9TVEFURSB9IGZyb20gJy4vY29uc3RhbnRzJztcbmltcG9ydCB7IG1vZGFsUmVkdWNlciB9IGZyb20gJy4vcmVkdWNlcic7XG5cbmRlc2NyaWJlKCdtb2RhbCByZWR1Y2VyJywgKCkgPT4ge1xuICB0ZXN0KCdzaG91bGQgcmV0dXJuIGluaXRpYWwgc3RhdGUnLCAoKSA9PiB7XG4gICAgZXhwZWN0KG1vZGFsUmVkdWNlcih1bmRlZmluZWQsIHt9KSkudG9CZShJTklUSUFMX1NUQVRFKTtcbiAgfSk7XG5cbiAgdGVzdCgnc2hvdWxkIHJldHVybiBvbGQgc3RhdGUgb24gdW5rbm93biBhY3Rpb24nLCAoKSA9PiB7XG4gICAgY29uc3Qgb2xkU3RhdGUgPSB7IGZvbzogMSB9O1xuICAgIGV4cGVjdChtb2RhbFJlZHVjZXIob2xkU3RhdGUsIHsgdHlwZTogJ2ZvbycgfSkpLnRvQmUob2xkU3RhdGUpO1xuICB9KTtcblxuICB0ZXN0KCdzaG91bGQgaGFuZGxlIFNIT1dfTU9EQUwnLCAoKSA9PiB7XG4gICAgY29uc3QgcGF5bG9hZCA9IHtcbiAgICAgIGFjdGl2ZU1vZGFsOiB7IGlkOiAndGVzdCcsIGRhdGE6IHsgZm9vOiAnYmFyJyB9IH0sXG4gICAgfTtcbiAgICBjb25zdCBuZXdTdGF0ZSA9IG1vZGFsUmVkdWNlcih1bmRlZmluZWQsIHtcbiAgICAgIHR5cGU6IFNIT1dfTU9EQUwsXG4gICAgICBwYXlsb2FkLFxuICAgIH0pO1xuICAgIGV4cGVjdChuZXdTdGF0ZSkudG9FcXVhbChwYXlsb2FkKTtcbiAgfSk7XG5cbiAgdGVzdCgnc2hvdWxkIGhhbmRsZSBISURFX01PREFMJywgKCkgPT4ge1xuICAgIGNvbnN0IG9sZFN0YXRlID0ge1xuICAgICAgYWN0aXZlTW9kYWw6IHsgaWQ6ICd0ZXN0JywgZGF0YTogeyBmb286ICdiYXInIH0gfSxcbiAgICB9O1xuICAgIGNvbnN0IG5ld1N0YXRlID0gbW9kYWxSZWR1Y2VyKG9sZFN0YXRlLCB7XG4gICAgICB0eXBlOiBISURFX01PREFMLFxuICAgIH0pO1xuICAgIGV4cGVjdChuZXdTdGF0ZSkudG9FcXVhbCh7XG4gICAgICBhY3RpdmVNb2RhbDogbnVsbCxcbiAgICB9KTtcbiAgfSk7XG59KTtcbiJdfQ==
