@@ -1,5 +1,5 @@
 hash: 73ae3d1e98f412f028ecd80976093f8b811f293aa2ff9c82d10a03c43f24df73
-updated: 2018-05-07T15:49:24.172195+03:00
+updated: 2018-05-29T12:01:03.308099+03:00
 imports:
 - name: github.com/caarlos0/env
   version: 1cddc31c48c56ecd700d873edb9fd5b6f5df922a
@@ -16,7 +16,7 @@ imports:
 - name: github.com/gorilla/handlers
   version: 90663712d74cb411cbef281bc1e08c19d1a76145
 - name: github.com/hashicorp/consul
-  version: fb848fc48818f58690db09d14640513aa6bf3c02
+  version: 5174058f0d2bda63fa5198ab96c33d9a909c58ed
   subpackages:
   - api
 - name: github.com/hashicorp/go-cleanhttp
@@ -49,7 +49,7 @@ imports:
   - unix
   - windows
 - name: gopkg.in/go-playground/validator.v9
-  version: ee0bbdea519c2c66777c6bfc943838291734ba6c
+  version: f28cb45dc0f0f406ba2015cdb59a5203ad220bc2
 - name: gopkg.in/reportportal/commons-go.v1
   version: 8941600c4b44fc35763116ec9158b93dfd9359df
   subpackages:
