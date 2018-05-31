@@ -21,12 +21,14 @@
 
 import { PureComponent } from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import { reduxForm } from 'redux-form';
 import { withRouter } from 'react-router-dom';
 import classNames from 'classnames/bind';
 import { FormattedMessage, injectIntl, intlShape, defineMessages } from 'react-intl';
 import { validate, fetch } from 'common/utils';
 import { URLS } from 'common/urls';
+import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLock';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { FieldBottomConstraints } from 'components/fields/fieldBottomConstraints';
@@ -49,6 +51,10 @@ const placeholders = defineMessages({
 });
 
 @withRouter
+@connect(null, {
+  showScreenLockAction,
+  hideScreenLockAction,
+})
 @reduxForm({
   form: 'changePassword',
   validate: ({ password, passwordRepeat }) => ({
@@ -60,6 +66,8 @@ const placeholders = defineMessages({
 export class ChangePasswordForm extends PureComponent {
   static propTypes = {
     intl: intlShape.isRequired,
+    showScreenLockAction: PropTypes.func.isRequired,
+    hideScreenLockAction: PropTypes.func.isRequired,
     handleSubmit: PropTypes.func.isRequired,
     history: PropTypes.object.isRequired,
     location: PropTypes.shape({
@@ -69,11 +77,9 @@ export class ChangePasswordForm extends PureComponent {
       search: PropTypes.string,
     }).isRequired,
   };
-  state = {
-    loading: false,
-  };
+
   changePassword = ({ password }) => {
-    this.setState({ loading: true });
+    this.props.showScreenLockAction();
     const uuid = this.props.location.query.reset;
     fetch(URLS.userPasswordReset(), {
       method: 'post',
@@ -82,7 +88,7 @@ export class ChangePasswordForm extends PureComponent {
         uuid,
       },
     }).then(() => {
-      this.setState({ loading: false });
+      this.props.hideScreenLockAction();
       this.props.history.push('/login');
     });
   };
@@ -126,7 +132,7 @@ export class ChangePasswordForm extends PureComponent {
           </FieldProvider>
         </div>
         <div className={cx('change-password-button')}>
-          <BigButton type={'submit'} color={'organish'} disabled={this.state.loading}>
+          <BigButton type={'submit'} color={'organish'}>
             <FormattedMessage
               id={'ChangePasswordForm.changePassword'}
               defaultMessage={'Change password'}
