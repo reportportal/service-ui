@@ -1,0 +1,98 @@
+.history-item-wrapper {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  min-width: 62px;
+  min-height: 50px;
+  padding: 4px;
+  font-size: 12px;
+  text-align: center;
+  font-family: $FONT-REGULAR;
+  line-height: 1;
+}
+
+.history-item-status-FAILED {
+  background-color: lighten($COLOR--failed, 10%);
+}
+
+.history-item-status-SKIPPED {
+  background-color: lighten($COLOR--skipped, 10%);
+}
+
+.history-item-status-MANY {
+  background: $COLOR--light-yellow;
+  color: $COLOR--gray-47;
+}
+
+.history-item-status-PASSED {
+  background-color: lighten($COLOR--passed, 10%);
+}
+
+.history-item-status-RESETED {
+  color: $COLOR--gray-80;
+  background: $COLOR--white;
+}
+
+.history-item-status-NOT_FOUND {
+  color: $COLOR--gray-80;
+  background: $COLOR--white;
+}
+
+.history-item-status-IN_PROGRESS {
+  background-color: #c5cae9;
+  background-image: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.15) 25%,
+    transparent 25%,
+    transparent 50%,
+    rgba(255, 255, 255, 0.15) 50%,
+    rgba(255, 255, 255, 0.15) 75%,
+    transparent 75%,
+    transparent
+  );
+  background-size: 60px 60px;
+  animation: progress-stripes-large 2s linear 0s reverse none infinite;
+}
+
+@keyframes progress-stripes-large {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: -60px 0;
+  }
+}
+
+.item-text-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.icon {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  margin: 0 10px;
+  padding-bottom: 4px;
+  vertical-align: middle;
+
+  svg {
+    fill: $COLOR--white-two;
+  }
+}
+
+.no-item-icon {
+  width: 17px;
+  height: 17px;
+  padding-bottom: 3px;
+}
+
+.same-names-icon {
+  width: 22px;
+  height: 22px;
+  padding-bottom: 0;
+}

@@ -1,0 +1,42 @@
+.title-block {
+  margin-bottom: 10px;
+  font-size: 14px;
+  font-family: $FONT-SEMIBOLD;
+  font-weight: 500;
+}
+
+.info-block {
+  margin-bottom: 10px;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  font-size: 12px;
+  font-family: $FONT-REGULAR;
+  color: $COLOR--gray-60;
+}
+
+.separator {
+  border-right: 1px solid $COLOR--gray-60;
+  height: 11px;
+}
+
+.date-info {
+  margin-left: 10px;
+}
+
+.tags-info {
+  margin-left: 20px;
+}
+
+.icon {
+  display: inline-block;
+  width: 15px;
+  height: 15px;
+  vertical-align: middle;
+  fill: $COLOR--gray-60;
+}
+
+.tag-item {
+  margin-left: 5px;
+}

@@ -1,0 +1,14 @@
+.tooltip-content {
+  text-align: start;
+}
+
+.icon {
+  display: inline-block;
+  width: 22px;
+  height: 22px;
+  vertical-align: middle;
+
+  svg {
+    fill: $COLOR--white-two;
+  }
+}

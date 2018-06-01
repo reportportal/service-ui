@@ -1,0 +1,19 @@
+.history-grid-record-name {
+  margin: 7px 0;
+  padding-left: 15px;
+  font-size: 14px;
+  font-family: $FONT-SEMIBOLD;
+  font-weight: 500;
+  line-height: 1.1;
+  cursor: pointer;
+  color: $COLOR--windows-blue;
+  & span {
+    display: inline-block;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 2px 2px 2px 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}

@@ -29,6 +29,7 @@ import {
 } from 'controllers/launch';
 import { LaunchSuiteGrid } from 'pages/inside/common/launchSuiteGrid';
 import { LaunchToolbar } from './LaunchToolbar';
+import { HistoryView } from './historyView';
 
 const messages = defineMessages({
   filtersPageTitle: {
@@ -231,6 +232,7 @@ export class LaunchesPage extends Component {
           onCompare={this.compareLaunches}
           onImportLaunch={this.openImportModal}
         />
+        <HistoryView activePage={activePage} pageSize={pageSize} sortingColumn={sortingColumn} />
         <LaunchSuiteGrid
           data={launches}
           sortingColumn={sortingColumn}

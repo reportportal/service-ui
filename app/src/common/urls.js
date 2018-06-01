@@ -33,6 +33,8 @@ export const URLS = {
   launchesMerge: (activeProject) => `${urlBase}${activeProject}/launch/merge`,
   launchesCompare: (activeProject, ids) =>
     `${urlBase}${activeProject}/launch/compare${getQueryParams({ ids })}`,
+  launchItem: (activeProject) => `${urlBase}${activeProject}/item`,
+
   launchImport: (activeProject) => `${urlBase}${activeProject}/launch/import`,
   exportLaunch: (projectId, launchId, exportType) =>
     `${urlBase}${projectId}/launch/${launchId}/report${getQueryParams({

@@ -1,0 +1,156 @@
+.history-table-wrapper {
+  padding: 0;
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+.history-table-grid {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.history-grid-row {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}
+
+.history-grid-column {
+  display: block;
+  width: 100%;
+  min-height: 50px;
+  text-align: left;
+  border-bottom: solid 1px $COLOR--gray-91;
+  border-right: 1px solid $COLOR--gray-91;
+}
+
+.history-grid-header {
+  display: flex;
+  align-items: center;
+  min-width: 62px;
+  width: 100%;
+  height: 50px;
+  text-transform: uppercase;
+  font-size: 12px;
+  color: $COLOR--gray-47;
+}
+
+.history-grid-head {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+
+  .history-grid-column {
+    display: flex;
+    align-items: center;
+    background: $COLOR--white;
+  }
+}
+
+.history-names-grid {
+  width: 35%;
+  min-width: 112px;
+
+  &.many-items {
+    width: 15%;
+  }
+
+  .history-grid-header {
+    padding-left: 15px;
+  }
+
+  .history-grid-row .history-grid-column {
+    min-width: 0;
+    padding: 4px 4px 4px 0;
+  }
+}
+
+.history-content-wrapper {
+  width: 65%;
+  &.many-items {
+    width: 85%;
+    overflow: hidden;
+  }
+}
+
+.history-items-grid {
+  .history-grid-column {
+    min-width: 140px;
+  }
+
+  .history-grid-head .history-grid-column {
+    justify-content: center;
+    border-right: 1px solid transparent;
+  }
+
+  .history-grid-header {
+    justify-content: center;
+    text-align: center;
+    vertical-align: middle;
+  }
+}
+
+.launch-status-IN_PROGRESS {
+  background-image: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.9) 25%,
+    transparent 25%,
+    transparent 50%,
+    rgba(255, 255, 255, 0.9) 50%,
+    rgba(255, 255, 255, 0.9) 75%,
+    transparent 75%,
+    transparent
+  );
+  background-size: 60px 60px;
+  animation: progress-stripes-large 2s linear 0s reverse none infinite;
+}
+
+@keyframes progress-stripes-large {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: -60px 0;
+  }
+}
+
+.load-more-container {
+  display: none;
+  margin-top: 15px;
+  padding: 0 15px;
+}
+
+.load-more {
+  width: 100%;
+  padding: 6px 12px;
+  border: 2px dashed lighten($COLOR--gray-80, 1);
+  outline: none;
+  cursor: pointer;
+  background: inherit;
+  color: lighten($COLOR--gray-80, 1);
+  &:hover,
+  &:focus,
+  &:active {
+    background-color: inherit;
+    border: 2px dashed darken($COLOR--gray-80, 11);
+    color: darken($COLOR--gray-80, 11);
+  }
+}
+
+.load-more-title {
+  margin: 5px 0;
+  font-size: 24px;
+  font-family: $FONT-REGULAR;
+}
+
+.not-all-items-loaded {
+  display: block;
+}
+
+.spinner-wrapper {
+  width: 100%;
+  margin-top: 20px;
+}

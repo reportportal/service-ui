@@ -1,0 +1,20 @@
+.duration-block {
+  display: inline;
+  margin-right: 10px;
+}
+
+.icon {
+  display: inline-block;
+  width: 15px;
+  height: 15px;
+  fill: $COLOR--gray-60;
+  vertical-align: middle;
+}
+
+.duration {
+  font-family: $FONT-REGULAR;
+  font-size: 12px;
+  color: $COLOR--gray-60;
+  line-height: 15px;
+  margin-left: 5px;
+}
