@@ -2,6 +2,7 @@ import { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
+import { redirect } from 'redux-first-router';
 import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
 import {
   breadcrumbsSelector,
@@ -10,6 +11,7 @@ import {
   isListViewSelector,
   namespaceSelector,
 } from 'controllers/testItem';
+import { HISTORY_PAGE, payloadSelector } from 'controllers/pages';
 import { externalSystemSelector } from 'controllers/project';
 import { Breadcrumbs, breadcrumbDescriptorShape } from 'components/main/breadcrumbs';
 import { GhostButton } from 'components/buttons/ghostButton';
@@ -79,15 +81,18 @@ const messages = defineMessages({
     breadcrumbs: breadcrumbsSelector(state),
     level: levelSelector(state),
     listView: isListViewSelector(state, namespaceSelector(state)),
+    payload: payloadSelector(state),
     externalSystems: externalSystemSelector(state),
   }),
   {
     restorePath: restorePathAction,
+    redirect,
   },
 )
 @injectIntl
 export class ActionPanel extends Component {
   static propTypes = {
+    payload: PropTypes.object.isRequired,
     debugMode: PropTypes.bool,
     onRefresh: PropTypes.func,
     breadcrumbs: PropTypes.arrayOf(breadcrumbDescriptorShape),
@@ -109,6 +114,7 @@ export class ActionPanel extends Component {
     listView: PropTypes.bool,
     externalSystems: PropTypes.array,
     deleteDisabled: PropTypes.bool,
+    redirect: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
@@ -141,6 +147,10 @@ export class ActionPanel extends Component {
     super(props);
     this.actionDescriptors = this.createActionDescriptors();
   }
+
+  onClickHistory = () => {
+    this.props.redirect({ type: HISTORY_PAGE, payload: this.props.payload });
+  };
 
   checkVisibility = (levels) => levels.some((level) => this.props.level === level);
 
@@ -252,7 +262,7 @@ export class ActionPanel extends Component {
           {!listView &&
             !debugMode && (
               <div className={cx('action-button')}>
-                <GhostButton icon={HistoryIcon} disabled>
+                <GhostButton icon={HistoryIcon} onClick={this.onClickHistory}>
                   <FormattedMessage id="ActionPanel.history" defaultMessage="History" />
                 </GhostButton>
               </div>

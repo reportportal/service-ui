@@ -9,6 +9,7 @@ import {
   TEST_ITEM_PAGE,
   PROJECT_LOG_PAGE,
   PROJECT_USERDEBUG_LOG_PAGE,
+  HISTORY_PAGE,
 } from 'controllers/pages';
 import { LocalizationSwitcher } from 'components/main/localizationSwitcher';
 import { ScreenLock } from 'components/main/screenLock';
@@ -29,6 +30,7 @@ import { MembersPage } from 'pages/inside/membersPage';
 import { ProfilePage } from 'pages/inside/profilePage';
 import { SandboxPage } from 'pages/inside/sandboxPage';
 import { SettingsPage } from 'pages/inside/settingsPage';
+import { HistoryPage } from 'pages/inside/historyPage';
 import { LoginPage } from 'pages/outside/loginPage';
 import { NotFoundPage } from 'pages/outside/notFoundPage';
 import { RegistrationPage } from 'pages/outside/registrationPage';
@@ -62,6 +64,7 @@ const pageRendering = {
   [TEST_ITEM_PAGE]: { component: TestItemPage, layout: AppLayout },
   [PROJECT_LOG_PAGE]: { component: LogsPage, layout: AppLayout },
   [PROJECT_USERDEBUG_LOG_PAGE]: { component: LogsPage, layout: AppLayout },
+  [HISTORY_PAGE]: { component: HistoryPage, layout: AppLayout },
 };
 
 Object.keys(pageNames).forEach((page) => {

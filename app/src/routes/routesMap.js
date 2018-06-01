@@ -10,6 +10,7 @@ import {
   PROJECT_SETTINGS_TAB_PAGE,
   PROJECT_LOG_PAGE,
   PROJECT_USERDEBUG_LOG_PAGE,
+  HISTORY_PAGE,
   projectIdSelector,
 } from 'controllers/pages';
 import { GENERAL } from 'common/constants/settingTabs';
@@ -25,6 +26,7 @@ import { fetchTestItemsAction, setLevelAction } from 'controllers/testItem';
 import { fetchFiltersAction } from 'controllers/filter';
 import { fetchMembersAction } from 'controllers/members';
 import { fetchLogPageData } from 'controllers/log';
+import { fetchHistoryPageInfo } from 'controllers/itemsHistory';
 
 const redirectRoute = (path, createNewAction) => ({
   path,
@@ -115,6 +117,12 @@ export default {
       dispatch(setDebugMode(false));
       dispatch(setLevelAction(''));
       dispatch(fetchLaunchesAction());
+    },
+  },
+  [HISTORY_PAGE]: {
+    path: '/:projectId/launches/:filterId/:testItemIds+/history',
+    thunk: (dispatch) => {
+      dispatch(fetchHistoryPageInfo());
     },
   },
   PROJECT_FILTERS_PAGE: {
