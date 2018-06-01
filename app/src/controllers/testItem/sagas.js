@@ -88,14 +88,14 @@ function* fetchTestItems() {
 
   const noChildFilter = 'filter.eq.has_childs' in query;
 
-  const sizePath = !parentId && !noChildFilter ? 0 : undefined;
+  const sizePath = !parentId && !noChildFilter ? 1 : undefined;
 
   yield put(
     fetchDataAction(NAMESPACE)(URLS.testItems(project), {
       params: {
         'filter.eq.launch': launchId,
         'filter.eq.parent': !noChildFilter ? parentId : undefined,
-        'filter.size.path': sizePath,
+        'filter.level.path': sizePath,
         'filter.in.path': noChildFilter ? parentId : undefined,
         ...query,
       },
