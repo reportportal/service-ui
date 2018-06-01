@@ -24,7 +24,7 @@ export const logPaginationSelector = (state) => logSelector(state).pagination;
 export const loadingSelector = (state) => logSelector(state).loading || false;
 export const querySelector = createQueryParametersSelector({
   defaultPagination: DEFAULT_PAGINATION,
-  defaultSorting: 'time,ASC',
+  defaultSorting: 'log_time,ASC',
 });
 
 export const historyItemsSelector = createSelector(
