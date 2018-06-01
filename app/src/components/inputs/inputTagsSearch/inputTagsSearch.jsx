@@ -50,6 +50,10 @@ export class InputTagsSearch extends Component {
     showNewLabel: PropTypes.bool,
     dynamicSearchPromptText: PropTypes.bool,
     isClearable: PropTypes.bool,
+    disabled: PropTypes.bool,
+    error: PropTypes.string,
+    onFocus: PropTypes.func,
+    onBlur: PropTypes.func,
   };
   static defaultProps = {
     uri: '',
@@ -74,9 +78,17 @@ export class InputTagsSearch extends Component {
     showNewLabel: false,
     dynamicSearchPromptText: false,
     isClearable: false,
+    disabled: false,
+    error: '',
+    onFocus: () => {},
+    onBlur: () => {},
   };
   state = {
     searchPromptText: this.props.nothingFound,
+  };
+  onBlur = () => {
+    const { onBlur, value } = this.props;
+    onBlur(value);
   };
   onInputChange = (input) => {
     const diff = this.props.minLength - input.length;
@@ -146,6 +158,10 @@ export class InputTagsSearch extends Component {
       removeSelected,
       placeholder,
       isClearable,
+      disabled,
+      error,
+      onFocus,
+      isValidNewOption,
     } = this.props;
     const SelectComponent = selectType(async, creatable);
     return (
@@ -157,21 +173,23 @@ export class InputTagsSearch extends Component {
           cache={false}
           className={cx('select2-search-tags')}
           noResultsText={this.state.searchPromptText}
+          onInputChange={this.onInputChange}
+          optionRenderer={this.renderOption}
+          menuRenderer={renderItems}
+          promptTextCreator={this.renderNewItemLabel}
+          onBlur={this.onBlur}
           loadingPlaceholder={loadingPlaceholder}
           searchPromptText={focusPlaceholder}
           value={value}
           options={options}
-          onInputChange={this.onInputChange}
           onChange={onChange}
           onFocus={onFocus}
           onBlur={this.onBlur}
           multi={multi}
-          optionRenderer={this.renderOption}
-          isValidNewOption={this.isValidNewOption}
-          menuRenderer={renderItems}
-          promptTextCreator={this.renderNewItemLabel}
+          isValidNewOption={isValidNewOption}
           removeSelected={removeSelected}
           isClearable={isClearable}
+          disabled={disabled}
         />
       </div>
     );

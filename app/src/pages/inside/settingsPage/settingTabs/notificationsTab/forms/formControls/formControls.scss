@@ -1,0 +1,33 @@
+.control-panel {
+  position: relative;
+  background-color: $COLOR--white-four;
+  padding: 7px 15px;
+  width: 750px;
+  margin: 20px 15px 20px 0;
+}
+
+.control-panel-name {
+  font-size: 12px;
+  font-family: $FONT-SEMIBOLD;
+  color: $COLOR--gray-47;
+  text-transform: uppercase;
+}
+
+.control-panel-buttons {
+  position: absolute;
+  top: 6px;
+  right: 15px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.control-panel-button {
+  height: 20px;
+  width: 20px;
+  padding: 0;
+  margin-left: 15px;
+  background: none;
+  outline: none;
+  border: 0;
+  cursor: pointer;
+}

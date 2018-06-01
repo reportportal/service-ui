@@ -4,6 +4,7 @@ export {
   toggleDisplayFilterOnLaunchesAction,
   fetchAutoAnalysisConfigurationAction,
   updateAutoAnalysisConfigurationAction,
+  updateProjectEmailConfig,
 } from './actionCreators';
 export { projectReducer } from './reducer';
 export {
@@ -14,4 +15,5 @@ export {
   defectColorsSelector,
   defectTypesSelector,
   projectAnalyzerConfigSelector,
+  projectEmailConfigurationSelector,
 } from './selectors';
