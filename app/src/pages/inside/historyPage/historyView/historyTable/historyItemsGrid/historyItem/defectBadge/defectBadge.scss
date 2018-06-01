@@ -1,0 +1,39 @@
+.defect-badge {
+  display: inline-block;
+  padding: 0 10px;
+  margin: 2px;
+  border-radius: 100px;
+  line-height: 17px;
+  text-transform: uppercase;
+  font-family: $FONT-SEMIBOLD;
+  color: $COLOR--black-2;
+}
+
+.pb {
+  background: $COLOR--product-bug;
+  & span {
+    color: $COLOR--white-two;
+  }
+}
+
+.ab {
+  background: $COLOR--automation-bug;
+}
+
+.si {
+  background: $COLOR--system-issue;
+  & span {
+    color: $COLOR--white-two;
+  }
+}
+
+.ti {
+  background: $COLOR--to-investigate;
+}
+
+.nd {
+  background: $COLOR--gray-47;
+  & span {
+    color: $COLOR--white-two;
+  }
+}

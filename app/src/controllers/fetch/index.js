@@ -6,4 +6,4 @@ export {
   bulkFetchDataAction,
 } from './actionCreators';
 export { fetchReducer } from './reducer';
-export { FETCH_SUCCESS, FETCH_START } from './constants';
+export { FETCH_SUCCESS, FETCH_START, FETCH_ERROR } from './constants';

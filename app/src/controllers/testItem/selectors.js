@@ -17,7 +17,10 @@ import {
   extractNamespacedQuery,
   createNamespacedQuery,
 } from 'common/utils/routingUtils';
-import { LEVEL_STEP } from 'common/constants/launchLevels';
+import { LEVEL_SUITE, LEVEL_TEST, LEVEL_STEP } from 'common/constants/launchLevels';
+import { suitesSelector } from 'controllers/suite';
+import { testsSelector } from 'controllers/test';
+import { stepsSelector } from 'controllers/step';
 import { NAMESPACE as LAUNCH_NAMESPACE, debugModeSelector } from 'controllers/launch';
 import { DEFAULT_SORTING } from './constants';
 import { createLink, getQueryNamespace, getDefectsString, getNextPage } from './utils';
@@ -44,6 +47,31 @@ export const isLostLaunchSelector = (state) =>
 const isListView = (query, namespace) => {
   const namespacedQuery = extractNamespacedQuery(query, namespace);
   return namespacedQuery && 'filter.eq.has_childs' in namespacedQuery;
+};
+
+export const itemsSelector = (state) => {
+  switch (levelSelector(state)) {
+    case LEVEL_SUITE:
+      return suitesSelector(state);
+    case LEVEL_TEST:
+      return testsSelector(state);
+    case LEVEL_STEP:
+      return stepsSelector(state);
+    default:
+      return [];
+  }
+};
+
+export const historyItemsSelector = (state) => {
+  const launchesToRender = [];
+
+  itemsSelector(state).forEach((item) => {
+    const sameName = launchesToRender.filter((obj) => obj.uniqueId === item.uniqueId);
+    if (!sameName.length) {
+      launchesToRender.push(item);
+    }
+  });
+  return launchesToRender;
 };
 
 export const isListViewSelector = (state, namespace) =>

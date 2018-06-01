@@ -10,11 +10,13 @@ import {
   isListViewSelector,
   namespaceSelector,
 } from 'controllers/testItem';
+import { SUITE_HISTORY_PAGE, payloadSelector } from 'controllers/pages';
 import { externalSystemSelector } from 'controllers/project';
 import { Breadcrumbs, breadcrumbDescriptorShape } from 'components/main/breadcrumbs';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { GhostMenuButton } from 'components/buttons/ghostMenuButton';
 import { LEVEL_STEP, LEVEL_SUITE, LEVEL_TEST } from 'common/constants/launchLevels';
+import { NavLink } from 'redux-first-router-link';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import RefreshIcon from 'common/img/refresh-inline.svg';
 import HistoryIcon from 'common/img/history-inline.svg';
@@ -79,6 +81,7 @@ const messages = defineMessages({
     breadcrumbs: breadcrumbsSelector(state),
     level: levelSelector(state),
     listView: isListViewSelector(state, namespaceSelector(state)),
+    payload: payloadSelector(state),
     externalSystems: externalSystemSelector(state),
   }),
   {
@@ -88,6 +91,7 @@ const messages = defineMessages({
 @injectIntl
 export class ActionPanel extends Component {
   static propTypes = {
+    payload: PropTypes.object.isRequired,
     debugMode: PropTypes.bool,
     onRefresh: PropTypes.func,
     breadcrumbs: PropTypes.arrayOf(breadcrumbDescriptorShape),
@@ -210,6 +214,7 @@ export class ActionPanel extends Component {
       selectedItems,
       listView,
       debugMode,
+      payload,
     } = this.props;
     return (
       <div className={cx('action-panel', { 'right-buttons-only': !showBreadcrumbs && !hasErrors })}>
@@ -248,8 +253,13 @@ export class ActionPanel extends Component {
           {!listView &&
             !debugMode && (
               <div className={cx('action-button')}>
-                <GhostButton icon={HistoryIcon} disabled>
-                  <FormattedMessage id="ActionPanel.history" defaultMessage="History" />
+                <GhostButton icon={HistoryIcon}>
+                  <NavLink
+                    to={{ type: SUITE_HISTORY_PAGE, payload }}
+                    className={cx('history-link')}
+                  >
+                    <FormattedMessage id="ActionPanel.history" defaultMessage="History" />
+                  </NavLink>
                 </GhostButton>
               </div>
             )}
