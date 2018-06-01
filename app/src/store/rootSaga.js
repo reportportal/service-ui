@@ -9,6 +9,7 @@ import { filterSagas } from 'controllers/filter';
 import { testSagas } from 'controllers/test';
 import { membersSagas } from 'controllers/members';
 import { testItemsSaga } from 'controllers/testItem';
+import { historySagas } from 'controllers/itemsHistory';
 import { logSagas } from 'controllers/log';
 
 export function* rootSagas() {
@@ -24,5 +25,6 @@ export function* rootSagas() {
     membersSagas(),
     testItemsSaga(),
     logSagas(),
+    historySagas(),
   ]);
 }

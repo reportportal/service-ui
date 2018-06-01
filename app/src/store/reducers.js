@@ -15,6 +15,7 @@ import { testReducer } from 'controllers/test';
 import { membersReducer } from 'controllers/members';
 import { testItemReducer } from 'controllers/testItem';
 import { stepReducer } from 'controllers/step';
+import { itemsHistoryReducer } from 'controllers/itemsHistory';
 import { logReducer } from 'controllers/log';
 
 export default {
@@ -36,4 +37,5 @@ export default {
   testItem: testItemReducer,
   step: stepReducer,
   log: logReducer,
+  itemsHistory: itemsHistoryReducer,
 };
