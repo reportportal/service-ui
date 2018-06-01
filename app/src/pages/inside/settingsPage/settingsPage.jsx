@@ -1,5 +1,10 @@
 import React from 'react';
 
+import { NotificationPage } from './notificationPage';
+
 export const SettingsPage = () => (
-  <h1>Settings Page</h1>
+  <div>
+    <h1>Settings Page</h1>
+    <NotificationPage />
+  </div>
 );

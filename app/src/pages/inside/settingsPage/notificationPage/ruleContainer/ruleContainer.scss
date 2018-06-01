@@ -1,0 +1,29 @@
+.rule {
+  margin-top: 10px;
+  padding-top: 15px;
+  border-top: 1px solid #999;
+
+  &__checkbox-container {
+    padding-bottom: 15px;
+
+    @media (max-width: $SCREEN_XS_MAX) {
+      background-color: #f9f9f9;
+      margin: 0 3%;
+      padding: 0;
+      height: 30px;
+      line-height: 30px;
+
+      [class*='checkIcon__square'] {
+        display: none;
+      }
+
+      [class*='inputCheckbox__children-container'] {
+        padding-left: 0;
+      }
+    }
+  }
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    border-top: none;
+  }
+}
