@@ -79,6 +79,8 @@ export const URLS = {
     `${urlBase}project/${activeProject}/usernames?filter.cnt.users=`,
   projectIndex: (activeProject) => `${urlBase}project/${activeProject}/index`,
 
+  projectPreferencesEmailConfiguration: (activeProject) =>
+    `${urlBase}project/${activeProject}/emailconfig`,
   suite: (activeProject, suiteId) => `${urlBase}${activeProject}/item/${suiteId}`,
 
   testItems: (activeProject, ids) => `${urlBase}${activeProject}/item${getQueryParams({ ids })}`,
@@ -117,6 +119,10 @@ export const URLS = {
   userInfo: (userId) => `${urlBase}user/${userId}`,
   userInviteInternal: (activeProject) => `${urlBase}project/${activeProject}/assign`,
   userInviteExternal: () => `${urlBase}user/bid`,
+  userSearch: () => {}, // TODO for YANA
+  userSearchGlobal: () => {}, // TODO for YANA
+  teamMembersSearchUrl: (activeProject) =>
+    `${urlBase}project/${activeProject}/usernames?filter.cnt.users=`,
   userUnasign: (activeProject) => `${urlBase}project/${activeProject}/unassign`,
 
   widget: (activeProject, widgetId) => `${urlBase}${activeProject}/widget/${widgetId}`,

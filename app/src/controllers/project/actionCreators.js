@@ -6,6 +6,7 @@ import {
   FETCH_PROJECT_PREFERENCES_SUCCESS,
   TOGGLE_DISPLAY_FILTER_ON_LAUNCHES,
   UPDATE_AUTO_ANALYSIS_CONFIGURATION,
+  UPDATE_EMAIL_CONFIG_SUCCESS,
 } from './constants';
 import { projectPreferencesSelector } from './selectors';
 
@@ -29,7 +30,16 @@ const updateProjectPreferencesAction = (settings) => (dispatch, getState) =>
     method: 'PUT',
     data: settings,
   });
-
+export const updateProjectEmailConfig = (emailConfig) => (dispatch, getState) =>
+  fetch(URLS.projectPreferencesEmailConfiguration(activeProjectSelector(getState())), {
+    method: 'PUT',
+    data: emailConfig,
+  }).then(() => {
+    dispatch({
+      type: UPDATE_EMAIL_CONFIG_SUCCESS,
+      payload: emailConfig,
+    });
+  });
 export const toggleDisplayFilterOnLaunchesAction = (filter) => (dispatch, getState) => {
   dispatch({
     type: TOGGLE_DISPLAY_FILTER_ON_LAUNCHES,

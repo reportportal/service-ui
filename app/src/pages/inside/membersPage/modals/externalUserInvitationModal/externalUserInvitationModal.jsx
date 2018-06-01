@@ -35,7 +35,7 @@ const messages = defineMessages({
 
 @withModal('externalUserInvitationModal')
 @injectIntl
-export class externalUserInvitationModal extends Component {
+export class ExternalUserInvitationModal extends Component {
   static propTypes = {
     intl: intlShape,
     data: PropTypes.shape({

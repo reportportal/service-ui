@@ -19,6 +19,9 @@ export const defectTypesSelector = (state) => projectConfigSelector(state).subTy
 export const projectAnalyzerConfigSelector = (state) =>
   projectConfigSelector(state).analyzerConfiguration || {};
 
+export const projectEmailConfigurationSelector = (state) =>
+  projectConfigSelector(state).emailConfiguration || {};
+
 export const defectColorsSelector = createSelector(projectConfigSelector, (config) => {
   const colors = {};
   Object.keys(config.subTypes).forEach((key) => {

@@ -42,5 +42,6 @@ export { connectRouter } from './connectRouter';
 export { uniqueId } from './uniqueId';
 export { fileSizeConverter } from './fileSizeConverter';
 export { debounce } from './debounce';
+export { compareObjectsByKeys } from './compareObjectsByKeys';
 export { arrayRemoveDoubles } from './arrayRemoveDoubles';
 export { parseDateTimeRange } from './parseDateTimeRange';
