@@ -42,12 +42,16 @@ export const URLS = {
   projectPreferences: (activeProject, userId) =>
     `${urlBase}project/${activeProject}/preference/${userId}`,
   projectUsers: (activeProject) => `${urlBase}project/${activeProject}/users`,
+  projectAdminSearchUser: () => `${urlBase}user/search`,
+  projectUserSearchUser: (activeProject) => `${urlBase}project/${activeProject}/usernames/search`,
 
   user: () => `${urlBase}user`,
   userRegistration: () => `${urlBase}user/registration`,
   userPasswordReset: () => `${urlBase}user/password/reset`,
   userPasswordResetToken: (token) => `${urlBase}user/password/reset/${token}`,
   userPasswordRestore: () => `${urlBase}user/password/restore`,
+  userInviteInternal: (activeProject) => `${urlBase}project/${activeProject}/assign`,
+  userInviteExternal: () => `${urlBase}user/bid`,
   userSearch: () => {}, // TODO for YANA
   userSearchGlobal: () => {}, // TODO for YANA
 };

@@ -5,7 +5,7 @@ import { showModalAction } from 'controllers/modal';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { reduxForm } from 'redux-form';
 import { getRoleForCurrentProjectSelector, userInfoSelector } from 'controllers/user';
-import { ADMINISTRATOR, PROJECT_MANAGER } from 'common/constants/projectRoles';
+import { canInviteInternalUser } from 'common/utils/permissions';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { InputSearch } from 'components/inputs/inputSearch';
@@ -14,9 +14,6 @@ import InviteUserIcon from './img/ic_invite-inline.svg';
 import styles from './membersPageToolbar.scss';
 
 const cx = classNames.bind(styles);
-
-const canInviteUser = (currentRole, userRole) =>
-  userRole === ADMINISTRATOR || currentRole === PROJECT_MANAGER;
 
 const messages = defineMessages({
   permissionMap: {
@@ -100,7 +97,7 @@ export class MembersPageToolbar extends React.Component {
           <GhostButton
             icon={InviteUserIcon}
             onClick={this.showInviteUserModal}
-            disabled={!canInviteUser(this.props.currentRole, this.props.userRole)}
+            disabled={!canInviteInternalUser(this.props.userRole, this.props.currentRole)}
           >
             {this.props.intl.formatMessage(messages.inviteUser)}
           </GhostButton>
