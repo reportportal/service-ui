@@ -38,27 +38,22 @@ const newOptionCreator = (option) => ({
 });
 const promptTextCreator = (label) => label;
 const makeURL = (input, isAdmin, projectId) => {
-  // TODO for YANA. Define URLS in common/urls.js
-  const qsParams = {
+  const params = {
     'page.page': 1,
     'page.size': 10,
     'page.sort': 'login,ASC',
   };
-  const apiVersion = '/api/v1/';
-  let startUrl;
+  let url;
   if (!isAdmin) {
-    startUrl = `${apiVersion}project/${projectId}/usernames/`;
+    url = URLS.projectUserSearchUser(projectId);
   } else {
-    startUrl = `${apiVersion}user/`;
+    url = URLS.projectAdminSearchUser();
   }
   if (input) {
-    startUrl += 'search/';
-    qsParams.term = input;
-  } else {
-    startUrl += 'all';
+    params.term = input;
   }
-  startUrl += `?${stringify(qsParams, { encode: false })}`;
-  return startUrl;
+  url += `?${stringify(params, { encode: false })}`;
+  return url;
 };
 const makeOptions = (options, projectId) =>
   options.map((option) => ({

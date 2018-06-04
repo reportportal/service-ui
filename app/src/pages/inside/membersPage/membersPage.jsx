@@ -83,7 +83,7 @@ export class MembersPage extends PureComponent {
       data.default_project = this.props.activeProject;
       data.email = userData.user.userLogin;
       data.role = userData.role;
-      return fetch(`/api/v1/user/bid`, {
+      return fetch(URLS.userInviteExternal(), {
         method: 'post',
         data,
       })
@@ -106,7 +106,7 @@ export class MembersPage extends PureComponent {
     }
     data.userNames = {};
     data.userNames[userData.user.userLogin] = userData.role;
-    return fetch(`/api/v1/project/${this.props.activeProject}/assign`, {
+    return fetch(URLS.userInviteInternal(this.props.activeProject), {
       method: 'put',
       data,
     })
