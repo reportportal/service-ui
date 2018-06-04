@@ -9,11 +9,11 @@
 }
 
 .index-actions-title {
-  color: $COLOR--gray-47;
-  font-size: 12px;
-  text-transform: uppercase;
   padding: 0 15px;
+  font-size: 12px;
   font-family: $FONT-SEMIBOLD;
+  text-transform: uppercase;
+  color: $COLOR--gray-47;
   @media (max-width: $SCREEN_XS_MAX) {
     padding: 0;
   }

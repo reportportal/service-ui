@@ -29,8 +29,8 @@
 
 .form-break-line {
   width: 1010px;
-  border: 1px solid $COLOR--gray-91;
   margin-bottom: 30px;
+  border: 1px solid $COLOR--gray-91;
   @media (max-width: $SCREEN_MD_MAX) {
     width: 100%;
   }

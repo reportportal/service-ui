@@ -38,6 +38,10 @@ const messages = defineMessages({
     id: 'IndexActionsBlock.generateIndexButtonProgressCaption',
     defaultMessage: 'In progress...',
   },
+  analyzerDisabledButtonTitle: {
+    id: 'IndexActionsBlock.analyzerDisabledButtonTitle',
+    defaultMessage: 'Service ANALYZER is not running',
+  },
 });
 
 @connect(
@@ -101,10 +105,15 @@ export class IndexActionsBlock extends Component {
             <GhostButton
               disabled={this.props.indexing_running || !this.props.appInfo.ANALYZER}
               onClick={this.showGenerateIndexModal}
+              title={
+                !this.props.appInfo.ANALYZER
+                  ? intl.formatMessage(messages.analyzerDisabledButtonTitle)
+                  : ''
+              }
               mobileDisabled
             >
               <span className={cx('index-action-caption')}>
-                {this.props.indexing_running || !this.props.appInfo.ANALYZER
+                {this.props.indexing_running
                   ? intl.formatMessage(messages.generateIndexButtonProgressCaption)
                   : intl.formatMessage(messages.generateIndexButtonCaption)}
               </span>
