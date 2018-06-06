@@ -1,64 +1,58 @@
-/*
- * Copyright 2017 EPAM Systems
- *
- *
- * This file is part of EPAM Report Portal.
- * https://github.com/reportportal/service-ui
- *
- * Report Portal is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * Report Portal is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
- */
-
+import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { FormattedMessage } from 'react-intl';
+import { connect } from 'react-redux';
+import { defineMessages, injectIntl, intlShape } from 'react-intl';
+import { assignedProjectsSelector } from 'controllers/user';
 import styles from './assignedProjectsBlock.scss';
 import { BlockContainerBody, BlockContainerHeader } from '../blockContainer';
 
 const cx = classNames.bind(styles);
+const messages = defineMessages({
+  headerNameCol: {
+    id: 'AssignedProjectsBlock.headerNameCol',
+    defaultMessage: 'Assigned on projects',
+  },
+  headerRoleCol: {
+    id: 'AssignedProjectsBlock.headerRoleCol',
+    defaultMessage: 'Project role',
+  },
+});
 
-export const AssignedProjectsBlock = ({ projects }) => (
-  <div className={cx('assigned-projects-block')}>
-    <BlockContainerHeader>
-      <div className={cx('name-col')}>
-        <FormattedMessage id={'AssignedProjectsBlock.headerNameCol'} defaultMessage={'Assigned on projects'} />
-        {` (${projects.length})`}
-      </div>
-      <div className={cx('role-col')}>
-        <FormattedMessage id={'AssignedProjectsBlock.headerRoleCol'} defaultMessage={'Project role'} />
-      </div>
-    </BlockContainerHeader>
-    <BlockContainerBody>
-      {
-          projects.map(project => (
-            <div key={project.name} className={cx('project-item')}>
-              <div className={cx('name-col')}>
-                { project.name }
-              </div>
-              <div className={cx('role-col')}>
-                { project.role }
-              </div>
+@connect((state) => ({
+  projects: assignedProjectsSelector(state),
+}))
+@injectIntl
+export class AssignedProjectsBlock extends PureComponent {
+  static propTypes = {
+    projects: PropTypes.object,
+    intl: intlShape.isRequired,
+  };
+  static defaultProps = {
+    projects: [],
+  };
+
+  render = () => {
+    const { intl, projects } = this.props;
+    const keys = Object.keys(projects);
+    return (
+      <div className={cx('assigned-projects-block')}>
+        <BlockContainerHeader>
+          <div className={cx('name-col')}>
+            {intl.formatMessage(messages.headerNameCol)}
+            {` (${projects.length})`}
+          </div>
+          <div className={cx('role-col')}>{intl.formatMessage(messages.headerRoleCol)}</div>
+        </BlockContainerHeader>
+        <BlockContainerBody>
+          {keys.map((project) => (
+            <div key={project} className={cx('project-item')}>
+              <div className={cx('name-col')}>{project}</div>
+              <div className={cx('role-col')}>{projects[project].projectRole}</div>
             </div>
-            ))
-        }
-    </BlockContainerBody>
-  </div>
-  );
-
-AssignedProjectsBlock.propTypes = {
-  projects: PropTypes.arrayOf(PropTypes.object),
-};
-
-AssignedProjectsBlock.defaultProps = {
-  projects: [],
-};
+          ))}
+        </BlockContainerBody>
+      </div>
+    );
+  };
+}

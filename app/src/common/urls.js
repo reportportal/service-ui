@@ -45,6 +45,7 @@ export const URLS = {
       username,
       password,
     })}`,
+  getUUID: () => `uat/sso/me/apitoken`,
 
   project: (activeProject) => `${urlBase}project/${activeProject}`,
   projectPreferences: (activeProject, userId) =>
@@ -83,6 +84,10 @@ export const URLS = {
   userPasswordReset: () => `${urlBase}user/password/reset`,
   userPasswordResetToken: (token) => `${urlBase}user/password/reset/${token}`,
   userPasswordRestore: () => `${urlBase}user/password/restore`,
+  userChangePassword: () => `${urlBase}user/password/change`,
+  userSynchronize: (type) => `${urlBase}uat/sso/me/${type}/synchronize`,
+  userEditInfo: (userId) => `${urlBase}user/${userId}`,
+  deleteUUID: () => `${urlBase}uat/sso/me`,
   userInviteInternal: (activeProject) => `${urlBase}project/${activeProject}/assign`,
   userInviteExternal: () => `${urlBase}user/bid`,
   userUnasign: (activeProject) => `${urlBase}project/${activeProject}/unassign`,

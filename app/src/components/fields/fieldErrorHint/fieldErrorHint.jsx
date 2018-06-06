@@ -49,6 +49,23 @@ const messages = defineMessages({
     id: 'SearchDashboardForm.dashboardNameSearchHint',
     defaultMessage: 'Dashboard name should have size from 3 to 128',
   },
+  profilePassword: {
+    id: 'ChangePasswordModal.profilePassword',
+    defaultMessage: "Password should have size from '4' to '25' symbols",
+  },
+  profileConfirmPassword: {
+    id: 'ChangePasswordModal.profileConfirmPassword',
+    defaultMessage: 'Passwords do not match',
+  },
+  profileUserName: {
+    id: 'ChangePasswordModal.profileUserName',
+    defaultMessage:
+      "Full name should have size from '3' to '256' symbols, latin, cyrillic, numeric characters, hyphen, underscore, dot, space.",
+  },
+  profileEmail: {
+    id: 'ChangePasswordModal.profileEmail',
+    defaultMessage: 'Email is incorrect.',
+  },
   itemNameEntityHint: {
     id: 'LaunchLevelEntities.itemNameEntityHint',
     defaultMessage: 'At least 3 symbols required',
@@ -85,6 +102,7 @@ export class FieldErrorHint extends PureComponent {
       show: error && active,
       'bottom-type': hintType === 'bottom',
     });
+
     return (
       <div className={classes}>
         {children && cloneElement(children, { error, active, ...rest })}

@@ -1,0 +1,11 @@
+.text {
+  font-size: 12px;
+  font-family: $FONT-SEMIBOLD;
+  color: $COLOR--gray-47;
+}
+.warning {
+  margin: 5px 0;
+  color: red;
+  text-transform: uppercase;
+  font-family: $FONT-SEMIBOLD;
+}
