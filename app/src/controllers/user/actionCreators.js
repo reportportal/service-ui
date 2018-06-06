@@ -1,6 +1,11 @@
 import { fetch, getStorageItem, setStorageItem } from 'common/utils';
 import { URLS } from 'common/urls';
-import { FETCH_USER_SUCCESS, SET_ACTIVE_PROJECT, SET_START_TIME_FORMAT } from './constants';
+import {
+  FETCH_USER_SUCCESS,
+  SET_ACTIVE_PROJECT,
+  SET_START_TIME_FORMAT,
+  SET_USER_TOKEN,
+} from './constants';
 import { userInfoSelector } from './selectors';
 
 const fetchUserSuccessAction = (user) => ({
@@ -17,6 +22,19 @@ export const setActiveProjectAction = (project) => (dispatch, getState) => {
     payload: project,
   });
 };
+
+export const fetchNewUserTokenAction = () => (dispatch) =>
+  fetch(URLS.getUUID(), { method: 'post' }).then((res) => {
+    dispatch({ type: SET_USER_TOKEN, payload: res.access_token });
+  });
+
+export const fetchUserTokenAction = () => (dispatch) =>
+  fetch(URLS.getUUID(), { method: 'get' })
+    .then((res) => {
+      dispatch({ type: SET_USER_TOKEN, payload: res.access_token });
+    })
+    .catch(() => dispatch(fetchNewUserTokenAction()));
+
 export const fetchUserAction = () => (dispatch) =>
   fetch(URLS.user()).then((user) => {
     const userSettings = getStorageItem(`${user.userId}_settings`) || {};
@@ -26,7 +44,7 @@ export const fetchUserAction = () => (dispatch) =>
       Object.prototype.hasOwnProperty.call(user.assigned_projects, savedActiveProject)
         ? savedActiveProject
         : user.default_project;
-
+    dispatch(fetchUserTokenAction());
     dispatch(fetchUserSuccessAction(user));
     dispatch(setActiveProjectAction(activeProject));
     return { user, activeProject };

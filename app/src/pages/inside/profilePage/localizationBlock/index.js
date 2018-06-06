@@ -1,0 +1,1 @@
+export { LocalizationBlock } from './localizationBlock';

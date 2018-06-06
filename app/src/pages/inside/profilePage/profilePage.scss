@@ -1,0 +1,14 @@
+.container {
+  display: flex;
+  @media (max-width: $SCREEN_SM_MAX) {
+    flex-direction: column;
+  }
+}
+.column {
+  padding: 15px;
+  width: 50%;
+  box-sizing: border-box;
+  @media (max-width: $SCREEN_SM_MAX) {
+    width: 100%;
+  }
+}

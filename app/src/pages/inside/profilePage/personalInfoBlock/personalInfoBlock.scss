@@ -6,6 +6,7 @@
   width: 100%;
   min-height: 160px;
   padding: 15px;
+  margin-bottom: 15px;
   box-sizing: border-box;
 
   @media (max-width: $SCREEN_XS_MAX) {
@@ -17,24 +18,18 @@
   width: 110px;
   height: 120px;
   overflow: hidden;
-  background-color: $COLOR--white;
 
   @media (max-width: $SCREEN_XS_MAX) {
     width: 40px;
-    height: 55px
+    height: 55px;
   }
 }
-.avatar{
-  position: absolute;
-  max-width: 100%;
-  max-height: 100%;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+.avatar {
+  width: 100%;
 }
 .info {
   width: 100%;
-  padding-left: 125px;
+  padding-left: 128px;
   box-sizing: border-box;
   display: inline-block;
 
@@ -46,46 +41,40 @@
   height: 20px;
   max-width: 100%;
   margin-right: 140px;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
   overflow: hidden;
-  font-family: $FONT-SEMIBOLD;
-  font-size: 16px;
-  color: $COLOR--charcoal-grey;
-  line-height: 20px;
   white-space: nowrap;
   text-transform: uppercase;
   text-overflow: ellipsis;
+  line-height: 20px;
+  font-family: $FONT-SEMIBOLD;
+  font-size: 16px;
+  color: $COLOR--charcoal-grey;
 
   @media (max-width: $SCREEN_XS_MAX) {
     margin-right: 0;
   }
 }
-.name-field {
-  height: 20px;
-  width: 100%;
-  margin-bottom: 10px;
-  overflow: hidden;
-}
 .name {
-  display: inline-block;
   position: relative;
   max-width: 100%;
-  padding-right: 30px;
-  box-sizing: border-box;
+  margin-bottom: 10px;
+  padding-right: 25px;
   overflow: hidden;
+  box-sizing: border-box;
+  text-overflow: ellipsis;
   font-family: $FONT-REGULAR;
   font-size: 14px;
   color: $COLOR--charcoal-grey;
   white-space: nowrap;
   line-height: 20px;
-  text-overflow: ellipsis;
 
   @media (max-width: $SCREEN_XS_MAX) {
     padding-right: 0;
   }
 
-  &:hover{
-    .name-pencil-icon {
+  &:hover {
+    .pencil-icon {
       display: inline;
 
       @media (max-width: $SCREEN_XS_MAX) {
@@ -94,50 +83,55 @@
     }
   }
 }
-.name-pencil-icon {
+.pencil-icon {
   display: none;
-  position: absolute;
-  top: 0;
-  right: 0;
-
+  margin-left: 5px;
+  cursor: pointer;
   svg {
-    display: inline-block;
     width: 20px;
     height: 20px;
+    display: inline-block;
     vertical-align: top;
   }
 }
+.invalid-image {
+  margin: 10px 0 0;
+  line-height: 17px;
+  font-size: 12px;
+  color: $COLOR--orange-red;
+  font-family: $FONT-REGULAR;
+}
+.remove {
+  padding: 0;
+  border: none;
+  background: none;
+  color: $COLOR--windows-blue;
+  font-size: 13px;
+  font-family: $FONT-REGULAR;
+  cursor: pointer;
+  outline: none;
+}
 .email {
+  position: relative;
   max-width: 100%;
   min-height: 20px;
   margin-bottom: 10px;
   overflow: hidden;
-  font-family: $FONT-REGULAR;
-  font-size: 14px;
-  color: $COLOR--gray-47;
+  text-overflow: ellipsis;
   word-break: break-all;
   line-height: 20px;
-  text-overflow: ellipsis;
+  font-family: $FONT-SEMIBOLD;
+  font-size: 14px;
+  color: $COLOR--charcoal-grey;
 
-  &:hover{
-    .email-pencil-icon {
+  &:hover {
+    .pencil-icon {
       display: inline;
 
       @media (max-width: $SCREEN_XS_MAX) {
         display: none;
       }
     }
-  }
-}
-.email-pencil-icon {
-  display: none;
-  margin-left: 5px;
-
-  svg {
-    display: inline-block;
-    width: 20px;
-    height: 20px;
-    vertical-align: top;
   }
 }
 
@@ -159,7 +153,7 @@
     margin-right: 0;
   }
 }
-.change-pass-btn {
+.top-btn {
   position: absolute;
   top: 15px;
   right: 15px;
