@@ -26,9 +26,18 @@ import styles from './inputBigSwitcher.scss';
 
 const cx = classNames.bind(styles);
 
-export const InputBigSwitcher = ({ children, disabled, value, onChange, onFocus, onBlur }) => {
+export const InputBigSwitcher = ({
+  children,
+  disabled,
+  value,
+  leftAligned,
+  onChange,
+  onFocus,
+  onBlur,
+}) => {
   const classes = cx({
     'switcher-wrapper': true,
+    centered: !children && !leftAligned,
     disabled,
   });
   const sliderClasses = cx({
@@ -42,16 +51,10 @@ export const InputBigSwitcher = ({ children, disabled, value, onChange, onFocus,
     <label className={cx('input-big-switcher')} tabIndex="1">
       <div className={classes}>
         <div className={cx('on')}>
-          <FormattedMessage
-            id={'Common.on'}
-            defaultMessage={'ON'}
-          />
+          <FormattedMessage id={'Common.on'} defaultMessage={'ON'} />
         </div>
         <div className={cx('off')}>
-          <FormattedMessage
-            id={'Common.off'}
-            defaultMessage={'OFF'}
-          />
+          <FormattedMessage id={'Common.off'} defaultMessage={'OFF'} />
         </div>
         <input
           className={cx('input')}
@@ -70,6 +73,7 @@ export const InputBigSwitcher = ({ children, disabled, value, onChange, onFocus,
 
 InputBigSwitcher.propTypes = {
   children: PropTypes.node,
+  leftAligned: PropTypes.bool,
   value: PropTypes.bool,
   disabled: PropTypes.bool,
   onChange: PropTypes.func,
@@ -79,6 +83,7 @@ InputBigSwitcher.propTypes = {
 
 InputBigSwitcher.defaultProps = {
   children: '',
+  leftAligned: false,
   value: false,
   disabled: false,
   onChange: () => {},
