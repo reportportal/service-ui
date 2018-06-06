@@ -1,9 +1,16 @@
 import React, { Component, Fragment } from 'react';
 import classNames from 'classnames/bind';
 import { injectIntl, intlShape } from 'react-intl';
+import {
+  PROJECT_MANAGER,
+  OPERATOR,
+  CUSTOMER,
+  MEMBER,
+  ADMINISTRATOR,
+} from 'common/constants/projectRoles';
+import { ACTIONS, PERMISSIONS_MAP, ALL } from 'common/constants/permissions';
 import styles from './permissionMap.scss';
 import { PermissionsName, RolesName } from './permissionsName';
-import { PERMISSION_ROLES, PERMISSIONS_MAP, ALL } from './permissionsConfig';
 
 const cx = classNames.bind(styles);
 
@@ -15,49 +22,51 @@ export class PermissionMap extends Component {
   static defaultProps = {
     intl: {},
   };
-  generateTableCells = (permission) =>
-    PERMISSION_ROLES.map((role) => {
-      if (role === 'MEMBER' || role === 'CUSTOMER') {
+  generateTableCells = (permission) => {
+    const roles = [ADMINISTRATOR, PROJECT_MANAGER, MEMBER, OPERATOR, CUSTOMER];
+    const hasPermission = (
+      <td className={cx('col', 'has-permission')}>
+        <i className={cx('rp-icons', 'rp-icons-check')} />
+      </td>
+    );
+    const noPermission = <td className={cx('col')} />;
+    return roles.map((role) => {
+      if (role === ADMINISTRATOR) {
+        return <Fragment key={role}>{hasPermission}</Fragment>;
+      }
+      if (role === MEMBER || role === CUSTOMER) {
         if (PERMISSIONS_MAP[role][permission]) {
           if (PERMISSIONS_MAP[role][permission] === ALL) {
             return (
               <Fragment key={role}>
-                <td className={cx('col', 'has-permission')}>
-                  <i className={cx('rp-icons', 'rp-icons-check')} />
-                </td>
-                <td className={cx('col', 'has-permission')}>
-                  <i className={cx('rp-icons', 'rp-icons-check')} />
-                </td>
+                {hasPermission}
+                {hasPermission}
               </Fragment>
             );
           }
           return (
             <Fragment key={role}>
-              <td className={cx('col', 'has-permission')}>
-                <i className={cx('rp-icons', 'rp-icons-check')} />
-              </td>
-              <td className={cx('col')} />
+              {hasPermission}
+              {noPermission}
             </Fragment>
           );
         }
         return (
           <Fragment key={role}>
-            <td className={cx('col')} />
-            <td className={cx('col')} />
+            {noPermission}
+            {noPermission}
           </Fragment>
         );
       }
       if (PERMISSIONS_MAP[role][permission]) {
-        return (
-          <td className={cx('col', 'has-permission')}>
-            <i className={cx('rp-icons', 'rp-icons-check')} />
-          </td>
-        );
+        return <Fragment key={role}>{hasPermission}</Fragment>;
       }
-      return <td key={role} className={cx('col')} />;
+      return <Fragment key={role}>{noPermission}</Fragment>;
     });
+  };
+
   generateTableRows = () => {
-    const keys = Object.keys(PermissionsName);
+    const keys = Object.keys(ACTIONS);
     return keys.map((key) => {
       const isAttention = PermissionsName[key].attention;
       return (

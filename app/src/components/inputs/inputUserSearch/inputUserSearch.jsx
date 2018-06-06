@@ -21,7 +21,6 @@
 import Select from 'react-select';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { stringify } from 'qs';
 import { FormattedMessage } from 'react-intl';
 import { fetch, validate } from 'common/utils';
 import { URLS } from 'common/urls';
@@ -38,21 +37,12 @@ const newOptionCreator = (option) => ({
 });
 const promptTextCreator = (label) => label;
 const makeURL = (input, isAdmin, projectId) => {
-  const params = {
-    'page.page': 1,
-    'page.size': 10,
-    'page.sort': 'login,ASC',
-  };
   let url;
   if (!isAdmin) {
-    url = URLS.projectUserSearchUser(projectId);
+    url = URLS.projectUserSearchUser(projectId, input);
   } else {
-    url = URLS.projectAdminSearchUser();
+    url = URLS.projectAdminSearchUser(input);
   }
-  if (input) {
-    params.term = input;
-  }
-  url += `?${stringify(params, { encode: false })}`;
   return url;
 };
 const makeOptions = (options, projectId) =>
@@ -60,8 +50,8 @@ const makeOptions = (options, projectId) =>
     userName: option.full_name || '',
     userLogin: option.userId,
     email: option.email || '',
-    disabled: option.assigned_projects[projectId] && true,
-    isAssigned: option.assigned_projects[projectId] && true,
+    disabled: !!option.assigned_projects[projectId],
+    isAssigned: !!option.assigned_projects[projectId],
     userAvatar: getPhoto(option.userId),
   }));
 const getUsers = (input, isAdmin, projectId) => {
