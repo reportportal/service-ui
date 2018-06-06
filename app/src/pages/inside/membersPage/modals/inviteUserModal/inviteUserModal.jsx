@@ -117,7 +117,7 @@ export class InviteUserModal extends Component {
           </ModalField>
           <ModalField label={intl.formatMessage(messages.role)} labelWidth={LABEL_WIDTH}>
             <FieldProvider name="role">
-              <InputDropdown options={ROLES_MAP} onChange={this.selectRole} />
+              <InputDropdown options={ROLES_MAP} />
             </FieldProvider>
           </ModalField>
         </form>

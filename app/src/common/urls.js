@@ -42,8 +42,20 @@ export const URLS = {
   projectPreferences: (activeProject, userId) =>
     `${urlBase}project/${activeProject}/preference/${userId}`,
   projectUsers: (activeProject) => `${urlBase}project/${activeProject}/users`,
-  projectAdminSearchUser: () => `${urlBase}user/search`,
-  projectUserSearchUser: (activeProject) => `${urlBase}project/${activeProject}/usernames/search`,
+  projectAdminSearchUser: (input) =>
+    `${urlBase}user/search${getQueryParams({
+      'page.page': 1,
+      'page.size': 10,
+      'page.sort': 'login,ASC',
+      term: input,
+    })}`,
+  projectUserSearchUser: (activeProject, input) =>
+    `${urlBase}project/${activeProject}/usernames/search${getQueryParams({
+      'page.page': 1,
+      'page.size': 10,
+      'page.sort': 'login,ASC',
+      term: input,
+    })}`,
 
   user: () => `${urlBase}user`,
   userRegistration: () => `${urlBase}user/registration`,
@@ -52,6 +64,4 @@ export const URLS = {
   userPasswordRestore: () => `${urlBase}user/password/restore`,
   userInviteInternal: (activeProject) => `${urlBase}project/${activeProject}/assign`,
   userInviteExternal: () => `${urlBase}user/bid`,
-  userSearch: () => {}, // TODO for YANA
-  userSearchGlobal: () => {}, // TODO for YANA
 };

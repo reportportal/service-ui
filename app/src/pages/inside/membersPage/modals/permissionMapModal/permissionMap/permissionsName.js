@@ -1,4 +1,5 @@
 import { defineMessages } from 'react-intl';
+import { ACTIONS } from 'common/constants/permissions';
 
 export const RolesName = defineMessages({
   role: {
@@ -40,84 +41,84 @@ export const RolesName = defineMessages({
 });
 
 export const PermissionsName = defineMessages({
-  accessToManagementSystem: {
+  [ACTIONS.ACCESS_TO_MANAGEMENT_SYSTEM]: {
     id: 'PermissionMap.accessToManagementSystem',
     defaultMessage: 'Have access to management system',
   },
-  createProject: {
+  [ACTIONS.CREATE_PROJECT]: {
     id: 'PermissionMap.createProject',
     defaultMessage: 'Create project',
   },
-  deleteProject: {
+  [ACTIONS.DELETE_PROJECT]: {
     id: 'PermissionMap.deleteProject',
     defaultMessage: 'Delete project',
   },
-  updateSettings: {
+  [ACTIONS.UPDATE_SETTINGS]: {
     id: 'PermissionMap.updateSettings',
     defaultMessage: 'Update project settings',
   },
-  seeSettings: {
+  [ACTIONS.SEE_SETTINGS]: {
     id: 'PermissionMap.seeSettings',
     defaultMessage: 'See project settings',
   },
-  createInternalUser: {
+  [ACTIONS.CREATE_INTERNAL_USER]: {
     id: 'PermissionMap.createInternalUser',
     defaultMessage: 'Create internal user',
   },
-  inviteInternalUser: {
+  [ACTIONS.INVITE_INTERNAL_USER]: {
     id: 'PermissionMap.inviteInternalUser',
     defaultMessage: 'Invite internal user',
   },
-  unSlashAssignInternalUser: {
+  [ACTIONS.ASSIGN_UNASSIGN_INTERNAL_USER]: {
     id: 'PermissionMap.unSlashAssignInternalUser',
     defaultMessage: 'Un/Assign internal user to/from the project',
   },
-  changeUserRole: {
+  [ACTIONS.CHANGE_USER_ROLE]: {
     id: 'PermissionMap.changeUserRole',
     defaultMessage: 'Change users role on a project\t',
   },
-  delUser: {
+  [ACTIONS.DELETE_USER]: {
     id: 'PermissionMap.delUser',
     defaultMessage: 'Delete internal user',
   },
-  seeMembers: {
+  [ACTIONS.SEE_MEMBERS]: {
     id: 'PermissionMap.seeMembers',
     defaultMessage: 'See list of project members',
   },
-  editOwnAccount1: {
+  [ACTIONS.EDIT_OWN_ACCOUNT]: {
     id: 'PermissionMap.editOwnAccount1',
     defaultMessage: 'Edit own account',
     attention: true,
   },
-  deleteLaunch: {
+  [ACTIONS.DELETE_LAUNCH]: {
     id: 'PermissionMap.deleteLaunch',
     defaultMessage: 'Delete launch',
   },
-  forceFinishLaunch: {
+  [ACTIONS.FORCE_FINISH_LAUNCH]: {
     id: 'PermissionMap.forceFinishLaunch',
     defaultMessage: 'Force finish launch',
   },
-  startAnalysis: {
+  [ACTIONS.START_ANALYSIS]: {
     id: 'PermissionMap.startAnalysis',
     defaultMessage: 'Start analysis manually\t',
   },
-  deleteTestItem: {
+  [ACTIONS.DELETE_TEST_ITEM]: {
     id: 'PermissionMap.deleteTestItem',
     defaultMessage: 'Delete test item and log',
   },
-  moveToDebug: {
+  [ACTIONS.MOVE_TO_DEBUG]: {
     id: 'PermissionMap.moveToDebug',
     defaultMessage: 'Move launch to debug/default mode',
   },
-  mergeLaunches: {
+  [ACTIONS.MERGE_LAUNCHES]: {
     id: 'PermissionMap.mergeLaunches',
     defaultMessage: 'Merge launches',
   },
-  workWithFiltersEtc: {
+  [ACTIONS.WORK_WITH_FILTERS]: {
     id: 'PermissionMap.workWithFiltersEtc',
     defaultMessage: 'Work with filters, widgets, dashboards (create, edit, delete, share)\t',
   },
-  readData: {
+  [ACTIONS.READ_DATA]: {
     id: 'PermissionMap.readData',
     defaultMessage: 'Read data',
   },
