@@ -329,7 +329,7 @@ define(function (require, exports, module) {
                             '<br>' +
                             '<div class="options">' +
                                 // '<p>username: ' + this.user.get('name') + '</p>' +
-                            '<p>password: ' + this.apiTokenModel.get('apiToken') + '</p>' +
+                            '<p>uuid: ' + this.apiTokenModel.get('apiToken') + '</p>' +
                             '<p>endpoint: ' + document.location.origin + '/api/v1' + '</p>' +
                             '<p>project: ' + this.model.appModel.get('projectId') + '</p>' +
                             '<p>launch: ' + this.model.get('name') + '_TEST_EXAMPLE</p>' +
@@ -362,7 +362,7 @@ define(function (require, exports, module) {
                         '<h1>' + Localization.userProfile.nodeJSConfigExample + '</h1>' +
                         '<br>' +
                         '<div class="options">' +
-                        '<p>token: ' + this.apiTokenModel.get('apiToken') + '</p>' +
+                        '<p>uuid: ' + this.apiTokenModel.get('apiToken') + '</p>' +
                         '<p>endpoint: ' + document.location.origin + '/api/v1</p>' +
                         '<p>launch: ' + this.model.get('name') + '_TEST_EXAMPLE</p>' +
                         '<p>project: ' + this.model.appModel.get('projectId') + '</p>' +
