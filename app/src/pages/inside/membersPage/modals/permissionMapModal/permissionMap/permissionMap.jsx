@@ -10,7 +10,7 @@ import {
 } from 'common/constants/projectRoles';
 import { ACTIONS, PERMISSIONS_MAP, ALL } from 'common/constants/permissions';
 import styles from './permissionMap.scss';
-import { PermissionsName, RolesName } from './permissionsName';
+import { PERMISSION_NAMES, ROLE_NAMES } from './permissionsName';
 
 const cx = classNames.bind(styles);
 
@@ -68,11 +68,11 @@ export class PermissionMap extends Component {
   generateTableRows = () => {
     const keys = Object.keys(ACTIONS);
     return keys.map((key) => {
-      const isAttention = PermissionsName[key].attention;
+      const isAttention = PERMISSION_NAMES[key].attention;
       return (
         <tr key={key} className={cx('row')}>
           <td className={cx('col', 'horizontal-header')}>
-            {this.props.intl.formatMessage(PermissionsName[key])}
+            {this.props.intl.formatMessage(PERMISSION_NAMES[key])}
             {isAttention && <span className={cx('attention')}>*</span>}
           </td>
           {this.generateTableCells(key)}
@@ -88,36 +88,36 @@ export class PermissionMap extends Component {
           <thead>
             <tr>
               <th rowSpan="2" className={cx('header', 'roles-header')}>
-                {intl.formatMessage(RolesName.role)}
+                {intl.formatMessage(ROLE_NAMES.role)}
               </th>
               <th rowSpan="2" className={cx('header', 'roles-header')}>
-                {intl.formatMessage(RolesName.admin)}
+                {intl.formatMessage(ROLE_NAMES.admin)}
               </th>
               <th rowSpan="2" className={cx('header', 'roles-header')}>
-                {intl.formatMessage(RolesName.manager)}
+                {intl.formatMessage(ROLE_NAMES.manager)}
               </th>
               <th colSpan="2" className={cx('header', 'roles-header')}>
-                {intl.formatMessage(RolesName.member)}
+                {intl.formatMessage(ROLE_NAMES.member)}
               </th>
               <th rowSpan="2" className={cx('header', 'roles-header')}>
-                {intl.formatMessage(RolesName.operator)}
+                {intl.formatMessage(ROLE_NAMES.operator)}
               </th>
               <th colSpan="2" className={cx('header', 'roles-header')}>
-                {intl.formatMessage(RolesName.customer)}
+                {intl.formatMessage(ROLE_NAMES.customer)}
               </th>
             </tr>
             <tr>
               <th className={cx('header', 'roles-header')}>
-                {intl.formatMessage(RolesName.owner)}
+                {intl.formatMessage(ROLE_NAMES.owner)}
               </th>
               <th className={cx('header', 'roles-header')}>
-                {intl.formatMessage(RolesName.notOwner)}
+                {intl.formatMessage(ROLE_NAMES.notOwner)}
               </th>
               <th className={cx('header', 'roles-header')}>
-                {intl.formatMessage(RolesName.owner)}
+                {intl.formatMessage(ROLE_NAMES.owner)}
               </th>
               <th className={cx('header', 'roles-header')}>
-                {intl.formatMessage(RolesName.notOwner)}
+                {intl.formatMessage(ROLE_NAMES.notOwner)}
               </th>
             </tr>
           </thead>
@@ -125,7 +125,7 @@ export class PermissionMap extends Component {
         </table>
         <div className={cx('permission-attention')}>
           <span className={cx('attention')}>*</span>
-          <span>{intl.formatMessage(RolesName.oneAttention)}</span>
+          <span>{intl.formatMessage(ROLE_NAMES.oneAttention)}</span>
         </div>
       </div>
     );

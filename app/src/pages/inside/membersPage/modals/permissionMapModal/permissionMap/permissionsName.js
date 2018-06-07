@@ -1,7 +1,7 @@
 import { defineMessages } from 'react-intl';
 import { ACTIONS } from 'common/constants/permissions';
 
-export const RolesName = defineMessages({
+export const ROLE_NAMES = defineMessages({
   role: {
     id: 'PermissionMap.role',
     defaultMessage: 'Action/Project role',
@@ -40,7 +40,7 @@ export const RolesName = defineMessages({
   },
 });
 
-export const PermissionsName = defineMessages({
+export const PERMISSION_NAMES = defineMessages({
   [ACTIONS.ACCESS_TO_MANAGEMENT_SYSTEM]: {
     id: 'PermissionMap.accessToManagementSystem',
     defaultMessage: 'Have access to management system',
