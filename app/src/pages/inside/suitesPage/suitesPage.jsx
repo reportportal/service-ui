@@ -98,7 +98,7 @@ export class SuitesPage extends Component {
     this.props.selectSuitesAction(suites);
   };
 
-  fetchCurrentLaunch = () => this.props.fetchLaunchAction('5af4598e20b5430001bee8a1'); // TODO remove hardcoded id after routing implementation
+  fetchCurrentLaunch = () => this.props.fetchLaunchAction('5a65e6a997a1c00001aaee95'); // TODO remove hardcoded id after routing implementation
 
   handleRefresh = () => {
     this.fetchCurrentLaunch();

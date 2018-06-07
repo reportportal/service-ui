@@ -39,7 +39,7 @@ const messages = defineMessages({
   (state) => ({
     userId: userIdSelector(state),
     activeProject: activeProjectSelector(state),
-    url: URLS.launch(activeProjectSelector(state)),
+    url: URLS.launches(activeProjectSelector(state)),
     selectedLaunches: selectedLaunchesSelector(state),
     validationErrors: validationErrorsSelector(state),
     launches: launchesSelector(state),

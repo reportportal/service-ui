@@ -1,5 +1,4 @@
 export {
-  createCheckPermission,
   hasAccessToManagementSystem,
   canCreateProject,
   canDeleteProject,

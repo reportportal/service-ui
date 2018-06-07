@@ -1,21 +1,15 @@
-import { activeProjectSelector, userInfoSelector, isAdminSelector } from 'controllers/user';
+import { userInfoSelector, userRoleSelector, activeProjectRoleSelector } from 'controllers/user';
 import { IN_PROGRESS } from 'common/constants/launchStatuses';
-
-const isAdminOrProjectManager = (state) => {
-  const user = userInfoSelector(state);
-  const activeProject = activeProjectSelector(state);
-  return (
-    isAdminSelector(state) ||
-    user.assigned_projects[activeProject].projectRole === 'PROJECT_MANAGER'
-  );
-};
+import { canMergeLaunches } from 'common/utils/permissions';
 
 export const validateMergeLaunch = (launch, launches, state) => {
   if (launches.length < 2) {
     return 'selectMoreItems';
   }
   const user = userInfoSelector(state);
-  if (launch.owner !== user.userId && !isAdminOrProjectManager(state)) {
+  const userRole = userRoleSelector(state);
+  const projectRole = activeProjectRoleSelector(state);
+  if (canMergeLaunches(userRole, projectRole, launch.owner !== user.userId)) {
     return 'notYourOwnLaunch';
   }
   if (launch.status && launch.status.toLowerCase() === IN_PROGRESS) {
