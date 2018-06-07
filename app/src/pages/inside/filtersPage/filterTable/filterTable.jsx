@@ -16,7 +16,7 @@ const canDeleteFilter = (item, role, userId) =>
 
 export class FilterTable extends PureComponent {
   static propTypes = {
-    data: PropTypes.arrayOf(PropTypes.object),
+    filters: PropTypes.arrayOf(PropTypes.object),
     activePage: PropTypes.number,
     itemCount: PropTypes.number,
     pageCount: PropTypes.number,
@@ -32,7 +32,7 @@ export class FilterTable extends PureComponent {
   };
 
   static defaultProps = {
-    data: [],
+    filters: [],
     activePage: 1,
     itemCount: 0,
     pageCount: 0,
@@ -49,7 +49,7 @@ export class FilterTable extends PureComponent {
 
   render() {
     const {
-      data,
+      filters,
       userFilters,
       userId,
       onDelete,
@@ -67,8 +67,8 @@ export class FilterTable extends PureComponent {
       <Fragment>
         <div className={cx('filter-table')}>
           <FilterTableHeader />
-          {data && !!data.length ? (
-            data.map((item) => (
+          {filters && !!filters.length ? (
+            filters.map((item) => (
               <FilterTableItem
                 key={item.id}
                 name={item.name}

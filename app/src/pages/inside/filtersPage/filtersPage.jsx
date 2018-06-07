@@ -2,7 +2,12 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
-import { withFilter } from 'controllers/filter';
+import {
+  withFilter,
+  filtersPaginationSelector,
+  fetchFiltersAction,
+  filtersSelector,
+} from 'controllers/filter';
 import { userIdSelector, activeProjectSelector, activeProjectRoleSelector } from 'controllers/user';
 import { withPagination } from 'controllers/pagination';
 import { PageLayout } from 'layouts/pageLayout';
@@ -28,6 +33,7 @@ const messages = defineMessages({
     activeProject: activeProjectSelector(state),
     userFilters: userFiltersSelector(state),
     projectRole: activeProjectRoleSelector(state),
+    filters: filtersSelector(state),
   }),
   {
     showModalAction,
@@ -39,12 +45,15 @@ const messages = defineMessages({
   defaultSortingDirection: SORTING_ASC,
 })
 @withFilter
-@withPagination()
+@withPagination({
+  paginationSelector: filtersPaginationSelector,
+  fetchAction: fetchFiltersAction,
+})
 @injectIntl
 export class FiltersPage extends PureComponent {
   static propTypes = {
     intl: intlShape.isRequired,
-    data: PropTypes.arrayOf(PropTypes.object),
+    filters: PropTypes.arrayOf(PropTypes.object),
     activePage: PropTypes.number,
     itemCount: PropTypes.number,
     pageCount: PropTypes.number,
@@ -61,7 +70,7 @@ export class FiltersPage extends PureComponent {
   };
 
   static defaultProps = {
-    data: [],
+    filters: [],
     activePage: 1,
     itemCount: 0,
     pageCount: 0,
@@ -105,7 +114,7 @@ export class FiltersPage extends PureComponent {
     const { filter, intl, onFilterChange, ...rest } = this.props;
     return (
       <PageLayout title={intl.formatMessage(messages.filtersPageTitle)}>
-        <FilterPageToolbar filter={filter} filters={rest.data} onFilterChange={onFilterChange} />
+        <FilterPageToolbar filter={filter} filters={rest.filters} onFilterChange={onFilterChange} />
         <FilterTable onDelete={this.confirmDelete} onEdit={this.openEditModal} {...rest} />
       </PageLayout>
     );
