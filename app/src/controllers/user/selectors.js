@@ -8,7 +8,7 @@ export const userIdSelector = (state) => userInfoSelector(state).userId;
 export const settingsSelector = (state) => userSelector(state).settings;
 export const startTimeFormatSelector = (state) => settingsSelector(state).startTimeFormat;
 export const assignedProjectsSelector = (state) => userInfoSelector(state).assigned_projects || {};
-export const userAccountSelector = (state) => userInfoSelector(state).userRole || '';
+export const userAccountRoleSelector = (state) => userInfoSelector(state).userRole || '';
 export const activeProjectRoleSelector = (state) => {
   const activeProject = activeProjectSelector(state);
   const assignedProject = assignedProjectsSelector(state)[activeProject];

@@ -6,7 +6,11 @@ import Parser from 'html-react-parser';
 import { fromNowFormat } from 'common/utils';
 import { canEditLaunch } from 'common/utils/permissions';
 import { MarkdownViewer } from 'components/main/markdown';
-import { activeProjectRoleSelector, userAccountSelector, userIdSelector } from 'controllers/user';
+import {
+  activeProjectRoleSelector,
+  userAccountRoleSelector,
+  userIdSelector,
+} from 'controllers/user';
 import { TagsBlock } from './tagsBlock';
 import { OwnerBlock } from './ownerBlock';
 import { DurationBlock } from './durationBlock';
@@ -16,7 +20,7 @@ import styles from './itemInfo.scss';
 const cx = classNames.bind(styles);
 
 @connect((state) => ({
-  userAccountRole: userAccountSelector(state),
+  userAccountRole: userAccountRoleSelector(state),
   userProjectRole: activeProjectRoleSelector(state),
   userId: userIdSelector(state),
 }))
