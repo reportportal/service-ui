@@ -36,6 +36,7 @@ export const canDeleteUser = checkPermission(ACTIONS.DELETE_USER);
 export const canSeeMembers = checkPermission(ACTIONS.SEE_MEMBERS);
 export const canEditOwnAccount = checkPermission(ACTIONS.EDIT_OWN_ACCOUNT);
 export const canDeleteLaunch = checkPermission(ACTIONS.DELETE_LAUNCH);
+export const canEditLaunch = checkPermission(ACTIONS.EDIT_LAUNCH); // requires userRole, projectRole, isOwner.
 export const canForceFinishLaunch = checkPermission(ACTIONS.FORCE_FINISH_LAUNCH);
 export const canStartAnalysis = checkPermission(ACTIONS.START_ANALYSIS);
 export const canDeleteTestItem = checkPermission(ACTIONS.DELETE_TEST_ITEM);
