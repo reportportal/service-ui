@@ -20,4 +20,5 @@ export {
   canMergeLaunches,
   canWorkWithFilters,
   canReadData,
+  canResizeAndDragWidgets,
 } from './permissions';
