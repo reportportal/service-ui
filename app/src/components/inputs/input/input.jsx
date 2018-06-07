@@ -19,6 +19,7 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import styles from './input.scss';
@@ -34,6 +35,8 @@ export const Input = ({
   placeholder,
   maxLength,
   disabled,
+  valueSymbol,
+  valueSymbolClass,
   refFunction,
   onChange,
   onFocus,
@@ -42,21 +45,24 @@ export const Input = ({
   onKeyPress,
   touched,
 }) => (
-  <input
-    ref={refFunction}
-    type={type}
-    className={cx('input', customClass, { disabled, error, touched, readonly })}
-    value={value}
-    placeholder={placeholder}
-    maxLength={maxLength}
-    disabled={disabled}
-    readOnly={readonly}
-    onChange={onChange}
-    onFocus={onFocus}
-    onBlur={onBlur}
-    onKeyUp={onKeyUp}
-    onKeyPress={onKeyPress}
-  />
+  <React.Fragment>
+    <input
+      ref={refFunction}
+      type={type}
+      className={cx('input', customClass, { disabled, error, touched })}
+      value={value}
+      placeholder={placeholder}
+      maxLength={maxLength}
+      disabled={disabled}
+      readOnly={readonly}
+      onChange={onChange}
+      onFocus={onFocus}
+      onBlur={onBlur}
+      onKeyUp={onKeyUp}
+      onKeyPress={onKeyPress}
+    />
+    {valueSymbol && <span className={cx('symbol', `${valueSymbolClass}`)}>{valueSymbol}</span>}
+  </React.Fragment>
 );
 
 Input.propTypes = {
@@ -67,6 +73,8 @@ Input.propTypes = {
   disabled: PropTypes.bool,
   readonly: PropTypes.bool,
   customClass: PropTypes.string,
+  valueSymbol: PropTypes.string,
+  valueSymbolClass: PropTypes.string,
   error: PropTypes.string,
   onChange: PropTypes.func,
   onFocus: PropTypes.func,
@@ -85,6 +93,8 @@ Input.defaultProps = {
   disabled: false,
   readonly: false,
   customClass: '',
+  valueSymbol: '',
+  valueSymbolClass: '',
   error: '',
   touched: false,
   onChange: () => {},

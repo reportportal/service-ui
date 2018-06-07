@@ -1,7 +1,15 @@
-@import '../../autoAnalysisTab';
+.switcher-wrapper {
+  @media (max-width: $SCREEN_XS_MAX) {
+    height: 30px;
+    margin-top: 8px;
+    margin-bottom: 0;
+  }
+}
 
-.aa-strategy-label {
-  align-self: flex-start;
+.no-label {
+  @media (max-width: $SCREEN_XS_MAX) {
+    display: none;
+  }
 }
 
 .aa-strategy-option {
@@ -13,18 +21,28 @@
     flex-direction: column;
   }
 }
-.aa-strategy-option:first-child {
-  margin-bottom: 13px;
-}
 
 .aa-strategy-option-selector {
   box-sizing: border-box;
-  padding-right: 30px;
+  padding-right: 0;
+  margin-right: 15px;
   min-width: 240px;
-  width: 240px;
+  width: 225px;
+
   @media (max-width: $SCREEN_XS_MAX) {
     width: auto;
+    margin-bottom: 0;
   }
+}
+
+.radio-container {
+  align-items: flex-start;
+  margin-bottom: 15px;
+}
+
+.radio-description {
+  display: inline-block;
+  padding: 0 15px 0 0;
 }
 
 .form-break-line {
@@ -33,5 +51,10 @@
   border: 1px solid $COLOR--gray-91;
   @media (max-width: $SCREEN_MD_MAX) {
     width: 100%;
+    box-sizing: border-box;
   }
+}
+
+.radio-children {
+  word-break: normal;
 }

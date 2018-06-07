@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { defineMessages, injectIntl, intlShape } from 'react-intl';
 import { fetchProjectAction } from 'controllers/project';
 import { activeProjectSelector } from 'controllers/user';
-import { showNotification } from 'controllers/notification';
+import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import classNames from 'classnames/bind';
 import { withModal, ModalLayout } from 'components/main/modal';
 import { URLS } from 'common/urls';
@@ -77,7 +77,7 @@ export class GenerateIndexModal extends Component {
       .then(() => {
         this.props.showNotification({
           message: this.props.intl.formatMessage(messages.generateSuccessNotification),
-          type: 'success',
+          type: NOTIFICATION_TYPES.SUCCESS,
         });
         this.props.fetchProjectAction(this.props.projectId);
         closeModal();
@@ -85,7 +85,7 @@ export class GenerateIndexModal extends Component {
       .catch(() => {
         this.props.showNotification({
           message: this.props.intl.formatMessage(messages.generateErrorNotification),
-          type: 'error',
+          type: NOTIFICATION_TYPES.ERROR,
         });
       });
   };

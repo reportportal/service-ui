@@ -5,6 +5,7 @@ import {
   FETCH_PROJECT_SUCCESS,
   FETCH_PROJECT_PREFERENCES_SUCCESS,
   TOGGLE_DISPLAY_FILTER_ON_LAUNCHES,
+  UPDATE_AUTO_ANALYSIS_CONFIGURATION_SUCCESS,
 } from './constants';
 import { projectPreferencesSelector } from './selectors';
 
@@ -16,6 +17,11 @@ const fetchProjectSuccessAction = (project) => ({
 const fetchProjectPreferencesSuccessAction = (projectId) => ({
   type: FETCH_PROJECT_PREFERENCES_SUCCESS,
   payload: projectId,
+});
+
+const updateAutoAnalysisConfigurationSuccessAction = (project) => ({
+  type: UPDATE_AUTO_ANALYSIS_CONFIGURATION_SUCCESS,
+  payload: project.configuration.analyzerConfiguration,
 });
 
 const updateProjectPreferencesAction = (settings) => (dispatch, getState) =>
@@ -42,3 +48,12 @@ export const fetchProjectAction = (projectId) => (dispatch) =>
     dispatch(fetchProjectSuccessAction(project));
     dispatch(fetchProjectPreferencesAction(projectId));
   });
+
+export const fetchAutoAnalysisConfigurationAction = (projectId) => (dispatch) => {
+  fetch(URLS.project(projectId)).then((project) => {
+    dispatch(updateAutoAnalysisConfigurationSuccessAction(project));
+  });
+};
+export const updateAutoAnalysisConfigurationAction = (project) => (dispatch) => {
+  dispatch(updateAutoAnalysisConfigurationSuccessAction(project));
+};

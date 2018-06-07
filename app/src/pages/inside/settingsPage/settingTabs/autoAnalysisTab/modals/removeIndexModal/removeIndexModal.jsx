@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { defineMessages, injectIntl, intlShape } from 'react-intl';
 import { connect } from 'react-redux';
 import { activeProjectSelector } from 'controllers/user';
-import { showNotification } from 'controllers/notification';
+import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import classNames from 'classnames/bind';
 import { withModal, ModalLayout } from 'components/main/modal';
 import { URLS } from 'common/urls';
@@ -63,14 +63,14 @@ export class RemoveIndexModal extends Component {
       .then(() => {
         this.props.showNotification({
           message: this.props.intl.formatMessage(messages.removeSuccessNotification),
-          type: 'success',
+          type: NOTIFICATION_TYPES.SUCCESS,
         });
         closeModal();
       })
       .catch(() => {
         this.props.showNotification({
           message: this.props.intl.formatMessage(messages.removeErrorNotification),
-          type: 'error',
+          type: NOTIFICATION_TYPES.ERROR,
         });
       });
   };

@@ -1,0 +1,61 @@
+.form-group-container {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 30px;
+  @media (max-width: $SCREEN_XS_MAX) {
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 15px;
+  }
+}
+
+.form-group-column {
+  padding: 0 15px;
+  @media (max-width: $SCREEN_XS_MAX) {
+    padding: 0;
+    margin-bottom: 8px;
+    display: inline-block;
+  }
+}
+
+.form-group-description {
+  vertical-align: middle;
+  max-width: 100%;
+  @media (max-width: $SCREEN_XS_MAX) {
+    margin-bottom: 0;
+  }
+}
+
+.form-group-help-block {
+  display: inline-block;
+  font-size: 12px;
+  line-height: 14px;
+  color: $COLOR--gray-60;
+  vertical-align: middle;
+  margin: 0;
+  @media (max-width: $SCREEN_XS_MAX) {
+    margin-top: 8px;
+  }
+}
+
+.form-group-label {
+  min-width: 210px;
+  padding: 0 15px 0 0;
+  vertical-align: middle;
+  text-align: right;
+  display: block;
+  font-size: 13px;
+  line-height: 13px;
+  color: $COLOR--charcoal-grey;
+  box-sizing: border-box;
+  @media (max-width: $SCREEN_SM_MAX) {
+    min-width: 150px;
+    width: 150px;
+  }
+  @media (max-width: $SCREEN_XS_MAX) {
+    width: 100%;
+    text-align: left;
+  }
+}
