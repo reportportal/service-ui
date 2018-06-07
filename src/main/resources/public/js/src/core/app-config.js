@@ -45,6 +45,7 @@ define(function (require) {
             userUrl: '../api/v1/user/',
             user: null,
             fullUser: null,
+            fullscreenMode: false,
             loginView: null,
             router: null,
             deletingLaunches: [],

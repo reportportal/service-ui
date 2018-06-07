@@ -56,7 +56,8 @@ define(function (require, exports, module) {
             image: null,
             photo_loaded: false,
             lastInsideHash: null,
-            token: 'Basic dWk6dWltYW4='
+            token: 'Basic dWk6dWltYW4=',
+            apiToken: null,
         },
         computeds: {
             isAdmin: {
@@ -144,11 +145,19 @@ define(function (require, exports, module) {
 
             return (/^[\],:{}\s]*$/.test(filtered));
         },
+        getApiToken: function () {
+            var self = this;
+            Service.getApiToken()
+                .done(function (data) {
+                    self.set({ apiToken: 'bearer ' + data.access_token });
+                })
+        },
         load: function () {
             var self = this;
             this.updateInfo()
                 .done(function (response, textStatus, jqXHR) {
                     if (self.isValidNotEmptyJSON(jqXHR.responseText)) {
+                        self.getApiToken();
                         self.updateProjects()
                             .done(function () {
                                 self.set({
@@ -193,7 +202,6 @@ define(function (require, exports, module) {
         },
         updateInfo: function () {
             var self = this;
-
             return Service.getCurrentUser()
                 .done(function (response) {
                     self.set(self.parse(response));

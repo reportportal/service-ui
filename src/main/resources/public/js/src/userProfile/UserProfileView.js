@@ -66,15 +66,6 @@ define(function (require, exports, module) {
                 apiToken: null
             });
             this.listenTo(this.apiTokenModel, 'change:apiToken', this.setEditorValue);
-            var self = this;
-            Service.getApiToken()
-                .done(function (data) {
-                    self.apiTokenModel.set({ apiToken: data.access_token });
-                    self.$apiToken.val(data.access_token);
-                })
-                .fail(function () {
-                    self.generateApiToken();
-                });
             this.render();
             this.appStorage = new SingletonAppStorage();
             this.dropDown = new DropDownComponent({
@@ -93,10 +84,29 @@ define(function (require, exports, module) {
                 var params = this.getParams();
                 this.$el.html(Util.templates(this.tpl, params));
                 this.setupAnchors();
+                this.setApiToken();
                 this.initEditor();
                 this.loadRegenerateUUIDTooltip();
             }.bind(this));
             return this;
+        },
+        setApiToken: function () {
+            var self = this;
+            var apiToken = this.model.get('apiToken');
+            if (apiToken) {
+                self.apiTokenModel.set({ apiToken: apiToken });
+                self.$apiToken.val(apiToken);
+            } else {
+                Service.getApiToken()
+                    .done(function (data) {
+                        self.model.set('apiToken', 'bearer ' + data.access_token);
+                        self.apiTokenModel.set({ apiToken: data.access_token });
+                        self.$apiToken.val(data.access_token);
+                    })
+                    .fail(function () {
+                        self.generateApiToken();
+                    });
+            }
         },
         onChangeLanguage: function (lang) {
             config.trackingDispatcher.trackEventNumber(575);
@@ -182,6 +192,7 @@ define(function (require, exports, module) {
             var self = this;
             Service.generateApiToken()
                 .done(function (data) {
+                    self.model.set('apiToken', 'bearer ' + data.access_token);
                     self.apiTokenModel.set({ apiToken: data.access_token });
                     self.$apiToken.val(data.access_token);
                     Util.ajaxSuccessMessenger('updateUuid');

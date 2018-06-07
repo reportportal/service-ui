@@ -268,7 +268,7 @@ define(function (require, exports, module) {
             }
         },
         ajaxBeforeSend: function (req) {
-            req.setRequestHeader('Authorization', config.userModel.get('token'));
+            req.setRequestHeader('Authorization', config.fullscreenMode ? config.userModel.get('apiToken') : config.userModel.get('token'));
             req.setRequestHeader('X-XSRF-TOKEN', $.cookie('XSRF-TOKEN'));
             req.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
             this.addXhrToPool(req);
