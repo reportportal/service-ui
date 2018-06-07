@@ -62,6 +62,9 @@ export const URLS = {
   suites: (activeProject, launchId) =>
     `${urlBase}${activeProject}/item${getQueryParams({ 'filter.eq.launch': launchId })}`,
 
+  suites: (activeProject, launchId) =>
+    `${urlBase}${activeProject}/item${getQueryParams({ 'filter.eq.launch': launchId })}`,
+
   user: () => `${urlBase}user`,
   userRegistration: () => `${urlBase}user/registration`,
   userPasswordReset: () => `${urlBase}user/password/reset`,
