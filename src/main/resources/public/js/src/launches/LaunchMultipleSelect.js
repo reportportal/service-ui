@@ -406,7 +406,7 @@ define(function (require) {
                 var commonModel = self.collectionItems.get(model.id);
                 model.set({ select: false });
                 if (self.currentAction === 'unlinkIssue' && commonModel && self.collectionItems.length) {
-                    commonModel.get(model.id).set('select', false);
+                    commonModel.set('select', false);
                 }
             });
             this.setAction(this.currentAction);
