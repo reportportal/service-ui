@@ -1,9 +1,9 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
 import { injectIntl } from 'react-intl';
-import { fetchProjectAction } from 'controllers/project';
+import { fetchProjectAction, fetchAutoAnalysisConfigurationAction } from 'controllers/project';
 import { activeProjectSelector } from 'controllers/user';
 import { AnalysisForm } from './analysisForm/analysisForm';
 import { IndexActionsBlock } from './indexActionsBlock';
@@ -17,22 +17,23 @@ const cx = classNames.bind(styles);
   }),
   {
     fetchProjectAction,
+    fetchAutoAnalysisConfigurationAction,
   },
 )
 @injectIntl
-export class AutoAnalysisTab extends PureComponent {
+export class AutoAnalysisTab extends Component {
   static propTypes = {
     projectId: PropTypes.string,
-    fetchProjectAction: PropTypes.func.isRequired,
+    fetchAutoAnalysisConfigurationAction: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
     projectId: '',
-    fetchProjectAction: () => {},
+    fetchAutoAnalysisConfigurationAction: () => {},
   };
 
   componentDidMount() {
-    this.props.fetchProjectAction(this.props.projectId);
+    this.props.fetchAutoAnalysisConfigurationAction(this.props.projectId);
   }
 
   render() {

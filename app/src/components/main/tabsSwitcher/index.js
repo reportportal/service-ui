@@ -1,1 +1,0 @@
-export { TabsSwitcher } from './tabsSwitcher';

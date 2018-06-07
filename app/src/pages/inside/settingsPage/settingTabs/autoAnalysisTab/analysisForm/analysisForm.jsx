@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { reduxForm, formValueSelector } from 'redux-form';
@@ -6,12 +6,15 @@ import { connect } from 'react-redux';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { validate, fetch } from 'common/utils';
 import { URLS } from 'common/urls';
-import { projectAnalyzerConfigSelector } from 'controllers/project';
+import {
+  projectAnalyzerConfigSelector,
+  updateAutoAnalysisConfigurationAction,
+} from 'controllers/project';
 import { activeProjectSelector } from 'controllers/user';
-import { showNotification } from 'controllers/notification';
-import { TabsSwitcher } from 'components/main/tabsSwitcher';
-import { StrategyBlock } from './strategyBlock/index';
-import { AccuracyFormBlock } from './accuracyFormBlock/index';
+import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
+import { ToggleButton } from 'components/buttons/toggleButton';
+import { StrategyBlock } from './strategyBlock';
+import { AccuracyFormBlock } from './accuracyFormBlock';
 import styles from './analysisForm.scss';
 
 const cx = classNames.bind(styles);
@@ -45,35 +48,28 @@ const messages = defineMessages({
 
 const selector = formValueSelector('analysisForm');
 
-const analysisModeConfig = [
-  {
-    name: 'Strict', // format messages here
-    options: {
-      minShouldMatch: 95,
-      minDocFreq: 5,
-      minTermFreq: 7,
-      numberOfLogLines: 2,
-    },
+const analysisModeConfig = {
+  Strict: {
+    minShouldMatch: 95,
+    minDocFreq: 5,
+    minTermFreq: 7,
+    numberOfLogLines: 2,
   },
-  {
-    name: 'Moderate',
-    options: {
-      minShouldMatch: 80,
-      minDocFreq: 7,
-      minTermFreq: 1,
-      numberOfLogLines: 2,
-    },
+  Moderate: {
+    minShouldMatch: 80,
+    minDocFreq: 7,
+    minTermFreq: 1,
+    numberOfLogLines: 2,
   },
-  {
-    name: 'Light',
-    options: {
-      minShouldMatch: 60,
-      minDocFreq: 7,
-      minTermFreq: 1,
-      numberOfLogLines: 2,
-    },
+  Light: {
+    minShouldMatch: 60,
+    minDocFreq: 7,
+    minTermFreq: 1,
+    numberOfLogLines: 2,
   },
-];
+};
+
+const DEFAULT_ANALYSIS_MODE = 'Moderate';
 
 @injectIntl
 @reduxForm({
@@ -97,9 +93,12 @@ const analysisModeConfig = [
       'numberOfLogLines',
     ),
   }),
-  { showNotification },
+  {
+    showNotification,
+    updateAutoAnalysisConfigurationAction,
+  },
 )
-export class AnalysisForm extends PureComponent {
+export class AnalysisForm extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
     analyzerConfiguration: PropTypes.object,
@@ -108,6 +107,7 @@ export class AnalysisForm extends PureComponent {
     change: PropTypes.func,
     handleSubmit: PropTypes.func,
     showNotification: PropTypes.func,
+    updateAutoAnalysisConfigurationAction: PropTypes.func,
     formInputsValues: PropTypes.object,
   };
 
@@ -118,11 +118,12 @@ export class AnalysisForm extends PureComponent {
     change: () => {},
     handleSubmit: () => {},
     showNotification: () => {},
+    updateAutoAnalysisConfigurationAction: () => {},
     formInputsValues: {},
   };
 
   state = {
-    currentTabsValue: analysisModeConfig[1].name,
+    autoAnalysisMode: DEFAULT_ANALYSIS_MODE,
   };
 
   componentDidMount() {
@@ -135,9 +136,8 @@ export class AnalysisForm extends PureComponent {
   }
 
   onInputChange = (event, newValue, previousValue, name) => {
-    const formattedValue = newValue.toString().replace(/\D+/g, '');
     const formInputsValues = this.props.formInputsValues;
-    formInputsValues[name] = +formattedValue;
+    formInputsValues[name] = newValue;
     this.setAnalysisMode(formInputsValues);
   };
 
@@ -153,74 +153,73 @@ export class AnalysisForm extends PureComponent {
       .then(() => {
         this.props.showNotification({
           message: this.props.intl.formatMessage(messages.updateSuccessNotification),
-          type: 'success',
+          type: NOTIFICATION_TYPES.SUCCESS,
         });
+        this.props.updateAutoAnalysisConfigurationAction(dataToSend);
       })
       .catch(() => {
         this.props.showNotification({
           message: this.props.intl.formatMessage(messages.updateErrorNotification),
-          type: 'error',
+          type: NOTIFICATION_TYPES.ERROR,
         });
       });
   };
 
   setAnalysisMode = (modeConfig) => {
-    let isModeChosen = false;
-    analysisModeConfig.forEach((item) => {
-      if (
-        item.options.minShouldMatch === +modeConfig.minShouldMatch &&
-        item.options.minDocFreq === +modeConfig.minDocFreq &&
-        item.options.minTermFreq === +modeConfig.minTermFreq &&
-        item.options.numberOfLogLines === +modeConfig.numberOfLogLines
-      ) {
-        isModeChosen = true;
-        this.setState({
-          currentTabsValue: item.name,
-        });
-      }
+    const analysisModeKeys = Object.keys(analysisModeConfig);
+    const existedMode = analysisModeKeys.find(
+      (key) =>
+        analysisModeConfig[key].minShouldMatch === Number(modeConfig.minShouldMatch) &&
+        analysisModeConfig[key].minDocFreq === Number(modeConfig.minDocFreq) &&
+        analysisModeConfig[key].minTermFreq === Number(modeConfig.minTermFreq) &&
+        analysisModeConfig[key].numberOfLogLines === Number(modeConfig.numberOfLogLines),
+    );
+    this.setState({
+      autoAnalysisMode: existedMode || '',
     });
-
-    if (!isModeChosen) {
-      this.setState({
-        currentTabsValue: false,
-      });
-    }
   };
 
-  tabChangeHandle = (id) => {
-    this.props.change('minShouldMatch', analysisModeConfig[id].options.minShouldMatch);
-    this.props.change('minDocFreq', analysisModeConfig[id].options.minDocFreq);
-    this.props.change('minTermFreq', analysisModeConfig[id].options.minTermFreq);
-    this.props.change('numberOfLogLines', analysisModeConfig[id].options.numberOfLogLines);
+  tabChangeHandle = (newValue) => {
+    this.props.change('minShouldMatch', analysisModeConfig[newValue].minShouldMatch);
+    this.props.change('minDocFreq', analysisModeConfig[newValue].minDocFreq);
+    this.props.change('minTermFreq', analysisModeConfig[newValue].minTermFreq);
+    this.props.change('numberOfLogLines', analysisModeConfig[newValue].numberOfLogLines);
 
     this.setState({
-      currentTabsValue: analysisModeConfig[id].name,
+      autoAnalysisMode: newValue,
     });
   };
 
   render() {
     const { intl, handleSubmit } = this.props;
 
-    const localization = {
-      Strict: intl.formatMessage(messages.analysisStrictModeTitle),
-      Moderate: intl.formatMessage(messages.analysisModerateModeTitle),
-      Light: intl.formatMessage(messages.analysisLightModeTitle),
-    };
+    const tabItems = [
+      {
+        value: 'Strict',
+        label: intl.formatMessage(messages.analysisStrictModeTitle),
+      },
+      {
+        value: 'Moderate',
+        label: intl.formatMessage(messages.analysisModerateModeTitle),
+      },
+      {
+        value: 'Light',
+        label: intl.formatMessage(messages.analysisLightModeTitle),
+      },
+    ];
+
     return (
       <form className={cx('analysis-form-content')} onSubmit={handleSubmit(this.onFormSubmit)}>
         <StrategyBlock />
-        <div className={cx('form-group-container', 'accuracy-form-group')}>
-          <span
-            className={cx('form-group-column', 'switch-auto-analysis-label', 'mode-tabs-label')}
-          >
+        <div className={cx('accuracy-form-group')}>
+          <span className={cx('tabs-container-label', 'mode-tabs-label')}>
             {intl.formatMessage(messages.analysisModeTitle)}
           </span>
-          <div className={cx('form-group-column', 'tabs-switcher-wrapper')}>
-            <TabsSwitcher
-              data={analysisModeConfig}
-              localization={localization}
-              value={this.state.currentTabsValue}
-              onChange={this.tabChangeHandle}
+          <div className={cx('form-group-column', 'toggle-button-wrapper')}>
+            <ToggleButton
+              items={tabItems}
+              value={this.state.autoAnalysisMode}
+              onClickItem={this.tabChangeHandle}
             />
           </div>
         </div>

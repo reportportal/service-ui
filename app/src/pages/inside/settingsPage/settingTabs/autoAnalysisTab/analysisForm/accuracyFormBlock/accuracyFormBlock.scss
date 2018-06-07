@@ -1,5 +1,3 @@
-@import '../../autoAnalysisTab';
-
 .accuracy-form-input-wrapper {
   min-width: 100px;
   width: 100px;
@@ -20,8 +18,11 @@
 }
 
 .submit-button-container {
+  display: flex;
   justify-content: center;
   align-items: center;
+  width: 100%;
+  margin-bottom: 30px;
   @media (max-width: $SCREEN_XS_MAX) {
     display: none;
   }
@@ -30,6 +31,7 @@
 .submit-button-wrapper {
   height: 30px;
   margin-right: 65px;
+  padding: 0 15px;
 }
 
 .submit-button-text {
@@ -39,20 +41,13 @@
   margin: 0;
 }
 
-.percent-icon {
-  position: absolute;
-  z-index: 1;
-  top: 9px;
-  right: 25px;
-  font-style: italic;
-  font-size: 13px;
-  @media (max-width: $SCREEN_XS_MAX) {
-    right: 10px;
-  }
-}
-
 .mobile-input-disabled {
   @media (max-width: $SCREEN_XS_MAX) {
     background-color: $COLOR--gray-91;
   }
+}
+
+.percent-icon {
+  font-style: italic;
+  font-size: 13px;
 }

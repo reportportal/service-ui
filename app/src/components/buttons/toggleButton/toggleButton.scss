@@ -23,6 +23,10 @@
     background-color: $COLOR--gray-91;
     border-color: $COLOR--gray-91;
     pointer-events: none;
+    @media (max-width: $SCREEN_XS_MAX) {
+      border-color: darken($COLOR--gray-91, 5);
+      background: darken($COLOR--gray-91, 5);
+    }
   }
 
   span {
@@ -31,5 +35,8 @@
     overflow: hidden;
     text-overflow: ellipsis;
   }
-}
 
+  @media (max-width: $SCREEN_XS_MAX) {
+    background: $COLOR--gray-91;
+  }
+}

@@ -1,4 +1,43 @@
-@import '../autoAnalysisTab';
+.form-group-container {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 30px;
+  @media (max-width: $SCREEN_XS_MAX) {
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 15px;
+  }
+}
+
+.form-group-column {
+  padding: 0 15px;
+  @media (max-width: $SCREEN_XS_MAX) {
+    display: inline-block;
+    margin-bottom: 8px;
+    padding: 0;
+  }
+}
+
+.form-group-description {
+  vertical-align: middle;
+  max-width: 100%;
+  @media (max-width: $SCREEN_XS_MAX) {
+    margin-bottom: 0;
+  }
+}
+
+.form-group-help-block {
+  margin: 0;
+  font-size: 12px;
+  line-height: 14px;
+  vertical-align: middle;
+  color: $COLOR--gray-60;
+  @media (max-width: $SCREEN_XS_MAX) {
+    margin-top: 8px;
+  }
+}
 
 .index-actions-title-wrapper {
   margin-bottom: 20px;

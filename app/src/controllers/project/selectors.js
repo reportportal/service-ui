@@ -16,6 +16,9 @@ export const userFiltersSelector = (state) => projectPreferencesSelector(state).
 
 export const defectTypesSelector = (state) => projectConfigSelector(state).subTypes || {};
 
+export const projectAnalyzerConfigSelector = (state) =>
+  projectConfigSelector(state).analyzerConfiguration || {};
+
 export const defectColorsSelector = createSelector(projectConfigSelector, (config) => {
   const colors = {};
   Object.keys(config.subTypes).forEach((key) => {

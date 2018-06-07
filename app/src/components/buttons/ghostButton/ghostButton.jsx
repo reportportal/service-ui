@@ -37,7 +37,6 @@ export const GhostButton = ({
   onClick,
   tiny,
   mobileDisabled,
-  title,
 }) => {
   const classes = cx({
     'ghost-button': true,
@@ -63,7 +62,6 @@ export const GhostButton = ({
 GhostButton.propTypes = {
   children: PropTypes.node,
   disabled: PropTypes.bool,
-  title: PropTypes.string,
   tiny: PropTypes.bool,
   mobileDisabled: PropTypes.bool,
   iconAtRight: PropTypes.bool,
@@ -77,7 +75,6 @@ GhostButton.propTypes = {
 GhostButton.defaultProps = {
   children: null,
   disabled: false,
-  title: '',
   tiny: false,
   mobileDisabled: false,
   iconAtRight: false,

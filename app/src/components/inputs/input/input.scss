@@ -50,3 +50,10 @@
     background-color: $COLOR--gray-91;
   }
 }
+
+.symbol {
+  position: absolute;
+  z-index: 1;
+  top: 9px;
+  right: 10px;
+}
