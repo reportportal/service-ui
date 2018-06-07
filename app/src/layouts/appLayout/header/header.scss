@@ -85,7 +85,7 @@
   top: 15px;
   height: 30px;
   width: 1px;
-  background-color: $COLOR--gray-80;
+  background-color: $COLOR--brownish-grey;
 
   @media (max-width: $SCREEN_XS_MAX) {
     display: none;
@@ -117,7 +117,7 @@
     height: 50px;
     width: 50px;
   }
-  
+
   a {
     display: inline-block;
     width: 100%;
@@ -152,5 +152,3 @@
     background-image: url(./img/gear-icon-active.svg);
   }
 }
-
-
