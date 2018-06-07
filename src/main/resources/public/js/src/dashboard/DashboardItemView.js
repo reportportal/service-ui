@@ -87,11 +87,16 @@ define(function (require, exports, module) {
             this.updateGadgetsTimer(TIME_UPDATE);
         },
         render: function () {
+            var self = this;
             this.$el.html(Util.templates(this.template, {
                 isMyDashboard: this.isMyDashboard(),
                 dashboardName: this.model.get('name'),
                 projectName: config.project.projectId
             }));
+            $(document).on('fscreenchange', function (e, inFullscreen) {
+                config.fullscreenMode = inFullscreen;
+                !inFullscreen && self.updateGadgetsTimer(TIME_UPDATE);
+            })
         },
         isMyDashboard: function () {
             return this.model.get('owner') === config.userModel.get('name');
@@ -297,6 +302,7 @@ define(function (require, exports, module) {
             })).show();
         },
         destroy: function () {
+            $(document).off('fscreenchange');
             clearTimeout(this.updateTimer);
             $.fullscreen.exit();
             _.each(this.gadgetViews, function (view) {
