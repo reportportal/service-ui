@@ -1,5 +1,5 @@
 import { PERMISSIONS_MAP, ACTIONS, ALL, OWNER } from 'common/constants/permissions';
-import { ADMINISTRATOR } from 'common/constants/projectRoles';
+import { ADMINISTRATOR } from 'common/constants/accountRoles';
 
 export const createCheckPermission = (permissionMap) => (permission) => (
   userRole,

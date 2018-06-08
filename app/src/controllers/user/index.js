@@ -14,7 +14,6 @@ export {
   startTimeFormatSelector,
   isAdminSelector,
   getAssignedProjectsSelector,
-  getRoleForCurrentProjectSelector,
   activeProjectRoleSelector,
   userAccountRoleSelector,
 } from './selectors';
