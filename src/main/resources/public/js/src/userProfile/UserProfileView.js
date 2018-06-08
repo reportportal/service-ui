@@ -94,8 +94,8 @@ define(function (require, exports, module) {
             var self = this;
             var apiToken = this.model.get('apiToken');
             if (apiToken) {
-                self.apiTokenModel.set({ apiToken: apiToken });
-                self.$apiToken.val(apiToken);
+                self.apiTokenModel.set({ apiToken: apiToken.split('bearer ')[1] });
+                self.$apiToken.val(apiToken.split('bearer ')[1]);
             } else {
                 Service.getApiToken()
                     .done(function (data) {
