@@ -1,2 +1,2 @@
-export const ACCOUNT_ROLES_USER = 'USER';
-export const ACCOUNT_ROLES_ADMIN = 'ADMINISTRATOR';
+export const USER = 'USER';
+export const ADMINISTRATOR = 'ADMINISTRATOR';

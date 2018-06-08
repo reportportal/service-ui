@@ -6,7 +6,7 @@ import { userInfoSelector } from 'controllers/user';
 import { logoutAction } from 'controllers/auth';
 import { connect } from 'react-redux';
 import { NavLink, withRouter } from 'react-router-dom';
-import { ADMINISTRATOR } from 'common/constants/projectRoles';
+import { ADMINISTRATOR } from 'common/constants/accountRoles';
 import { URLS } from 'common/urls';
 import styles from './userBlock.scss';
 

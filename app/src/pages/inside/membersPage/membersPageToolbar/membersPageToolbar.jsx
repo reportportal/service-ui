@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { showModalAction } from 'controllers/modal';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { reduxForm } from 'redux-form';
-import { getRoleForCurrentProjectSelector, userInfoSelector } from 'controllers/user';
+import { activeProjectRoleSelector, userInfoSelector } from 'controllers/user';
 import { canInviteInternalUser } from 'common/utils/permissions';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { FieldProvider } from 'components/fields/fieldProvider';
@@ -31,7 +31,7 @@ const messages = defineMessages({
 });
 @connect(
   (state) => ({
-    currentRole: getRoleForCurrentProjectSelector(state),
+    currentRole: activeProjectRoleSelector(state),
     userRole: userInfoSelector(state).userRole,
   }),
   {
