@@ -3,6 +3,10 @@
   flex-direction: column;
 }
 
+.preloader-container {
+  padding: 30px 0;
+}
+
 :global {
   .react-grid-layout {
     position: relative;

@@ -144,7 +144,11 @@ export class WidgetsGrid extends PureComponent {
 
     return (
       <div className={this.state.isMobile ? 'mobile ' : ''}>
-        {this.state.isFetching && <SpinningPreloader />}
+        {this.state.isFetching && (
+          <div className={cx('preloader-container')}>
+            <SpinningPreloader />
+          </div>
+        )}
         {!!widgets.length && (
           <ScrollWrapper
             autoHeight
