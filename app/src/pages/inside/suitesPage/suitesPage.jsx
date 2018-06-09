@@ -16,6 +16,7 @@ import {
   toggleSuiteSelectionAction,
   unselectAllSuitesAction,
   selectSuitesAction,
+  NAMESPACE,
 } from 'controllers/suite';
 import { currentLaunchSelector, fetchLaunchAction } from 'controllers/launch';
 import { SuiteTestToolbar } from 'pages/inside/common/suiteTestToolbar';
@@ -43,6 +44,7 @@ import { launchIdSelector } from 'controllers/pages';
 @withPagination({
   fetchAction: fetchSuitesAction,
   paginationSelector: suitePaginationSelector,
+  namespace: NAMESPACE,
 })
 @injectIntl
 export class SuitesPage extends Component {

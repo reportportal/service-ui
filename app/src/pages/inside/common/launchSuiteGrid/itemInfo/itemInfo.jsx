@@ -11,6 +11,7 @@ import {
   userAccountRoleSelector,
   userIdSelector,
 } from 'controllers/user';
+import { NameLink } from './NameLink';
 import { TagsBlock } from './tagsBlock';
 import { OwnerBlock } from './ownerBlock';
 import { DurationBlock } from './durationBlock';
@@ -54,10 +55,10 @@ export class ItemInfo extends Component {
     return (
       <div ref={refFunction} className={cx('item-info')}>
         <div className={cx('main-info')}>
-          <a href="/" className={cx('name-link')}>
+          <NameLink itemId={value.id} className={cx('name-link')}>
             <span className={cx('name')}>{value.name}</span>
             {value.number && <span className={cx('number')}>#{value.number}</span>}
-          </a>
+          </NameLink>
           {analyzing && <div className={cx('analysis-badge')}>Analysis</div>}
           {canEditLaunch(userAccountRole, userProjectRole, userId === value.owner) && (
             <div className={cx('edit-icon')} onClick={() => customProps.onEditLaunch(value)}>

@@ -20,7 +20,7 @@ function* watchFetchData() {
 }
 
 function* handleError({ payload }) {
-  yield put(showNotification(payload.message, NOTIFICATION_TYPES.ERROR));
+  yield put(showNotification({ message: payload.message, type: NOTIFICATION_TYPES.ERROR }));
 }
 
 function* watchFetchError() {

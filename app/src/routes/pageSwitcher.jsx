@@ -4,7 +4,12 @@ import { PropTypes } from 'prop-types';
 import { NOT_FOUND } from 'redux-first-router';
 import { ModalContainer } from 'components/main/modal';
 import { pageNames } from 'controllers/pages/constants';
-import { pageSelector, PROJECT_SUITES_PAGE, PROJECT_TESTS_PAGE } from 'controllers/pages';
+import {
+  pageSelector,
+  PROJECT_SUITES_PAGE,
+  PROJECT_TESTS_PAGE,
+  TEST_ITEM_PAGE,
+} from 'controllers/pages';
 import { LocalizationSwitcher } from 'components/main/localizationSwitcher';
 import { ScreenLock } from 'components/main/screenLock';
 import { Notifications } from 'components/main/notification';
@@ -30,6 +35,7 @@ import { SettingsPage } from 'pages/inside/settingsPage';
 import { LoginPage } from 'pages/outside/loginPage';
 import { NotFoundPage } from 'pages/outside/notFoundPage';
 import { RegistrationPage } from 'pages/outside/registrationPage';
+import { TestItemPage } from 'pages/inside/testItemPage';
 
 import { authorizedRoute } from './authorizedRoute';
 import { anonymousRoute } from './anonymousRoute';
@@ -55,11 +61,12 @@ const pageRendering = {
   PROJECT_USERDEBUG_PAGE: { component: DebugPage, layout: AppLayout },
   ADMINISTRATE_PAGE: { component: AdministratePage, layout: EmptyLayout },
   PROJECTS_PAGE: { component: ProjectsPage, layout: AdminLayout },
+  [TEST_ITEM_PAGE]: { component: TestItemPage, layout: AppLayout },
 };
 
 Object.keys(pageNames).forEach((page) => {
   if (!pageRendering[page]) {
-    throw new Error(`Rendering for '$page' was not defined.`);
+    throw new Error(`Rendering for ${page} was not defined.`);
   }
 });
 
@@ -81,8 +88,8 @@ class PageSwitcher extends React.PureComponent {
 
     const { component: PageComponent, layout: Layout, anonymousAccess } = pageRendering[page];
 
-    if (!PageComponent) throw new Error(`Page $page does not exist`);
-    if (!Layout) throw new Error(`Page $page is missing layout`);
+    if (!PageComponent) throw new Error(`Page ${page} does not exist`);
+    if (!Layout) throw new Error(`Page ${page} is missing layout`);
 
     const FullPage = withAccess(
       () => (

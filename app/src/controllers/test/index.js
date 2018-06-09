@@ -14,3 +14,4 @@ export {
   testsSelector,
 } from './selectors';
 export { testSagas } from './sagas';
+export { NAMESPACE } from './constants';
