@@ -21,3 +21,4 @@ export {
 } from './selectors';
 export { launchReducer } from './reducer';
 export { launchSagas } from './sagas';
+export { NAMESPACE } from './constants';

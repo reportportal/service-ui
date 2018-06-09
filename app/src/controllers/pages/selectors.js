@@ -25,3 +25,9 @@ export const pagePropertiesSelector = ({ location: { query } }, mapping = undefi
   });
   return result;
 };
+
+export const payloadSelector = (state) => state.location.payload;
+export const testItemIdsSelector = (state) =>
+  state.location.payload.testItemIds && String(state.location.payload.testItemIds);
+export const testItemIdsArraySelector = (state) =>
+  state.location.payload.testItemIds && String(state.location.payload.testItemIds).split('/');

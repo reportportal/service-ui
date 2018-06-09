@@ -17,6 +17,8 @@ import { isAuthorizedSelector } from 'controllers/auth';
 import { fetchDashboardAction, changeVisibilityTypeAction } from 'controllers/dashboard';
 import { fetchLaunchAction } from 'controllers/launch';
 import { fetchSuiteAction } from 'controllers/suite';
+import { TEST_ITEM_PAGE } from 'controllers/pages/constants';
+import { fetchTestItemsAction } from 'controllers/testItem';
 
 const redirectRoute = (path, createNewAction) => ({
   path,
@@ -110,4 +112,8 @@ export default {
   PROJECT_MEMBERS_PAGE: '/:projectId/members',
   PROJECT_SETTINGS_PAGE: '/:projectId/settings',
   PROJECT_SANDBOX_PAGE: '/:projectId/sandbox',
+  [TEST_ITEM_PAGE]: {
+    path: '/:projectId/launches/:filterId/:testItemIds+',
+    thunk: (dispatch) => dispatch(fetchTestItemsAction()),
+  },
 };

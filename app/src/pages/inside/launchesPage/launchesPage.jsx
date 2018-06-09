@@ -26,6 +26,7 @@ import {
   fetchLaunchesAction,
   lastOperationSelector,
   loadingSelector,
+  NAMESPACE,
 } from 'controllers/launch';
 import { LaunchSuiteGrid } from 'pages/inside/common/launchSuiteGrid';
 import { LaunchToolbar } from './LaunchToolbar';
@@ -67,6 +68,7 @@ const messages = defineMessages({
 @withPagination({
   paginationSelector: launchPaginationSelector,
   fetchAction: fetchLaunchesAction,
+  namespace: NAMESPACE,
 })
 @injectIntl
 export class LaunchesPage extends Component {

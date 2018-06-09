@@ -23,6 +23,8 @@ export const USER_PROFILE_PAGE = 'USER_PROFILE_PAGE';
 export const LOGIN_PAGE = 'LOGIN_PAGE';
 export const REGISTRATION_PAGE = 'REGISTRATION_PAGE';
 
+export const TEST_ITEM_PAGE = 'TEST_ITEM_PAGE';
+
 export const pageNames = {
   [NOT_FOUND]: NOT_FOUND,
   ADMINISTRATE_PAGE,
@@ -41,4 +43,5 @@ export const pageNames = {
   USER_PROFILE_PAGE,
   LOGIN_PAGE,
   REGISTRATION_PAGE,
+  TEST_ITEM_PAGE,
 };

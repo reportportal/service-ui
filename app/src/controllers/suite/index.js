@@ -16,3 +16,4 @@ export {
   suitesSelector,
   currentSuiteSelector,
 } from './selectors';
+export { NAMESPACE } from './constants';

@@ -67,6 +67,7 @@ export const URLS = {
       term: input,
     })}`,
 
+  // TODO delete
   suites: (activeProject, launchId) =>
     `${urlBase}${activeProject}/item${getQueryParams({
       'filter.eq.launch': launchId,
@@ -74,10 +75,18 @@ export const URLS = {
     })}`,
   suite: (activeProject, suiteId) => `${urlBase}${activeProject}/item/${suiteId}`,
 
+  // TODO delete
   tests: (activeProject, launchId, suiteId) =>
     `${urlBase}${activeProject}/item${getQueryParams({
       'filter.eq.launch': launchId,
       'filter.eq.parent': suiteId,
+    })}`,
+
+  testItem: (activeProject, launchId, parentId) =>
+    `${urlBase}${activeProject}/item${getQueryParams({
+      'filter.eq.launch': launchId,
+      'filter.eq.parent': parentId,
+      'filter.size.path': !parentId ? 0 : undefined,
     })}`,
 
   user: () => `${urlBase}user`,

@@ -14,6 +14,7 @@ import {
   unselectAllTestsAction,
   selectTestsAction,
   testPaginationSelector,
+  NAMESPACE,
 } from 'controllers/test';
 import { currentSuiteSelector, fetchSuiteAction } from 'controllers/suite';
 import { withPagination } from 'controllers/pagination';
@@ -45,6 +46,7 @@ import { fetchLaunchAction } from 'controllers/launch';
 @withPagination({
   fetchAction: fetchTestsAction,
   paginationSelector: testPaginationSelector,
+  namespace: NAMESPACE,
 })
 @injectIntl
 export class TestsPage extends Component {

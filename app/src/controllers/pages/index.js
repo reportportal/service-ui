@@ -5,6 +5,9 @@ export {
   projectIdSelector,
   launchIdSelector,
   suiteIdSelector,
+  payloadSelector,
+  testItemIdsSelector,
+  testItemIdsArraySelector,
 } from './selectors';
 export { updatePagePropertiesAction } from './actionCreators';
 
@@ -27,5 +30,6 @@ export {
   USER_PROFILE_PAGE,
   LOGIN_PAGE,
   REGISTRATION_PAGE,
+  TEST_ITEM_PAGE,
   pageNames,
 } from './constants';

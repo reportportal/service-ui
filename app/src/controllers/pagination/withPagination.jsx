@@ -13,6 +13,7 @@ export const withPagination = ({
   url: staticURL,
   paginationSelector = defaultPaginationSelector,
   fetchAction = () => {},
+  namespace,
 } = {}) => (WrappedComponent) => {
   const getTotalElements = totalElementsSelector(paginationSelector);
   const getTotalPages = totalPagesSelector(paginationSelector);
@@ -25,6 +26,7 @@ export const withPagination = ({
     {
       updatePagination: (page, size) => ({ [PAGE_KEY]: page, [SIZE_KEY]: size }),
     },
+    { namespace },
   )
   @connect(
     (state) => ({
