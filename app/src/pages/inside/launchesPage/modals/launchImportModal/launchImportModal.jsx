@@ -8,7 +8,8 @@ import { injectIntl, intlShape, defineMessages } from 'react-intl';
 import { ModalLayout, withModal } from 'components/main/modal';
 import { activeProjectSelector } from 'controllers/user';
 import { addTokenToImagePath, uniqueId, fetch } from 'common/utils';
-import { LaunchIcon } from './launcIcon';
+import { URLS } from 'common/urls';
+import { LaunchIcon } from './launchIcon';
 import styles from './launchImportModal.scss';
 import DropZoneIcon from './img/shape-inline.svg';
 import { ACCEPT_FILE_MIME_TYPES, MAX_FILE_SIZE } from './constants';
@@ -78,12 +79,6 @@ export class LaunchImportModal extends Component {
     activeProject: '',
     data: {},
   };
-
-  static async uploadFileToServer(arr, fn) {
-    arr.forEach(async (item) => {
-      await fn(item.promise, item.id);
-    });
-  }
 
   state = {
     files: [],
@@ -180,13 +175,15 @@ export class LaunchImportModal extends Component {
     this.setState({
       files: files.map((item) => {
         if (item.valid) {
-          return { ...item, ...{ isLoading: true } };
+          return { ...item, isLoading: true };
         }
         return item;
       }),
     });
 
-    LaunchImportModal.uploadFileToServer(data, this.uploadFilesHandler);
+    data.forEach(({ promise, id }) => {
+      this.uploadFilesHandler(promise, id);
+    });
   };
 
   uploadFilesHandler = (promise, id) => {
@@ -202,7 +199,7 @@ export class LaunchImportModal extends Component {
     this.setState({
       files: files.map((item) => {
         if (item.id === id) {
-          return { ...item, ...{ uploaded: true, isLoading: false, uploadedFailed: false } };
+          return { ...item, uploaded: true, isLoading: false, uploadFailed: false };
         }
 
         return item;
@@ -214,19 +211,16 @@ export class LaunchImportModal extends Component {
     const { files } = this.state;
     this.setState({
       files: files.map((item) => {
-        if (item.id === id) {
-          return {
-            ...item,
-            ...{
-              uploaded: true,
-              isLoading: false,
-              uploadedFailed: true,
-              uploadedFailedReason: err,
-            },
-          };
+        if (item.id !== id) {
+          return item;
         }
-
-        return item;
+        return {
+          ...item,
+          uploaded: true,
+          isLoading: false,
+          uploadFailed: true,
+          uploadFailReason: err,
+        };
       }),
     });
   };
@@ -249,7 +243,7 @@ export class LaunchImportModal extends Component {
   prepareDataForServerUploading() {
     const data = this.formDataForServerUploading();
 
-    return data.map((item) => ({ promise: this.configureRequestsForEachFile(item), id: item.id }));
+    return data.map((item) => ({ promise: this.uploadFile(item), id: item.id }));
   }
 
   closeConfirmedCallback = () => {
@@ -258,11 +252,11 @@ export class LaunchImportModal extends Component {
     }
   };
 
-  configureRequestsForEachFile = (file) => {
+  uploadFile = (file) => {
     const { activeProject } = this.props;
     const { id } = file;
 
-    return fetch(addTokenToImagePath(`/api/v1/${activeProject}/launch/import`), {
+    return fetch(addTokenToImagePath(URLS.launchImport(activeProject)), {
       method: 'POST',
       headers: { 'Content-Type': 'multipart/form-data;' },
       data: file.data,
@@ -276,7 +270,7 @@ export class LaunchImportModal extends Component {
         this.setState({
           files: files.map((item) => {
             if (item.id === id) {
-              return { ...item, ...{ uploadingProgress: percentCompleted } };
+              return { ...item, uploadingProgress: percentCompleted };
             }
 
             return item;

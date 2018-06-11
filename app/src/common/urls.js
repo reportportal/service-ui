@@ -30,7 +30,7 @@ export const URLS = {
   launchesMerge: (activeProject) => `${urlBase}${activeProject}/launch/merge`,
   launchesCompare: (activeProject, ids) =>
     `${urlBase}${activeProject}/launch/compare${getQueryParams({ ids })}`,
-
+  launchImport: (activeProject) => `${urlBase}${activeProject}/launch/import`,
   login: (grantType, username, password) =>
     `/uat/sso/oauth/token${getQueryParams({
       grant_type: grantType,

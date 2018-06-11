@@ -20,8 +20,8 @@ export const LaunchIcon = ({
   onDelete,
   uploadingProgress,
   rejectMessage,
-  uploadedFailed,
-  uploadedFailedReason,
+  uploadFailed,
+  uploadFailReason,
 }) => {
   const deleteHandler = (e) => {
     e.stopPropagation();
@@ -30,8 +30,8 @@ export const LaunchIcon = ({
   };
   const uploadedProps = {
     uploaded,
-    uploadedFailed,
-    uploadedFailedReason,
+    uploadFailed,
+    uploadFailReason,
   };
 
   return (
@@ -72,8 +72,8 @@ LaunchIcon.propTypes = {
   onDelete: PropTypes.func,
   uploadingProgress: PropTypes.number,
   rejectMessage: PropTypes.string,
-  uploadedFailed: PropTypes.bool,
-  uploadedFailedReason: PropTypes.object,
+  uploadFailed: PropTypes.bool,
+  uploadFailReason: PropTypes.object,
 };
 
 LaunchIcon.defaultProps = {
@@ -85,6 +85,6 @@ LaunchIcon.defaultProps = {
   rejectMessage: '',
   onDelete: () => {},
   uploadingProgress: 0,
-  uploadedFailed: false,
-  uploadedFailedReason: {},
+  uploadFailed: false,
+  uploadFailReason: {},
 };

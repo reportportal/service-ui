@@ -130,10 +130,6 @@ export class LaunchesPage extends Component {
       },
     }).then(this.props.fetchData);
   };
-  importLaunch = () => {
-    this.props.fetchData();
-  };
-
   confirmDeleteItem = (item) => {
     this.props.showModalAction({
       id: 'launchDeleteModal',
@@ -156,7 +152,7 @@ export class LaunchesPage extends Component {
     this.props.showModalAction({
       id: 'launchImportModal',
       data: {
-        onImport: this.importLaunch,
+        onImport: this.props.fetchData,
       },
     });
   };
