@@ -1,1 +1,0 @@
-export { LaunchIcon } from './launcIcon';

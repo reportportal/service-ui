@@ -22,6 +22,7 @@ export class ModalFooter extends Component {
     onClickCancel: PropTypes.func,
     onCloseConfirm: PropTypes.func,
     showConfirmation: PropTypes.bool,
+    closeConfirmed: PropTypes.bool,
     confirmationMessage: PropTypes.string,
     confirmationWarning: PropTypes.string,
   };
@@ -34,20 +35,12 @@ export class ModalFooter extends Component {
     onClickCancel: () => {},
     onCloseConfirm: () => {},
     showConfirmation: false,
+    closeConfirmed: false,
     confirmationMessage: '',
     confirmationWarning: '',
   };
-
-  state = {
-    showCloseConfirmation: false,
-    closeConfirmed: false,
-  };
   closeConfirmChangeHandler = () => {
-    const { closeConfirmed } = this.state;
-
-    this.setState({
-      closeConfirmed: !closeConfirmed,
-    });
+    const { closeConfirmed } = this.props;
     this.props.onCloseConfirm(!closeConfirmed);
   };
 
@@ -62,6 +55,7 @@ export class ModalFooter extends Component {
       showConfirmation,
       confirmationMessage,
       confirmationWarning,
+      closeConfirmed,
     } = this.props;
 
     return (
@@ -77,10 +71,7 @@ export class ModalFooter extends Component {
               </div>
             )}
             <div>
-              <InputCheckbox
-                value={this.state.closeConfirmed}
-                onChange={this.closeConfirmChangeHandler}
-              >
+              <InputCheckbox value={closeConfirmed} onChange={this.closeConfirmChangeHandler}>
                 <span className={cx('confirmation-label')}>{confirmationMessage}</span>
               </InputCheckbox>
             </div>

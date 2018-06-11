@@ -9,6 +9,10 @@ const FILE_SIZE_UNITS_DICT = {
 const FILE_SIZE_BASE = 1000;
 
 export const fileSizeConverter = (size) => {
+  const isPositiveInteger = !isNaN(parseFloat(size)) && isFinite(size) && size >= 0;
+  if (!isPositiveInteger) {
+    throw new Error('You should provide positive integer or zero for this function');
+  }
   let cutoff;
   let j = 0;
   let units = ['tb', 'gb', 'mb', 'kb', 'b'];
