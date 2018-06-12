@@ -69,4 +69,6 @@ export const URLS = {
   userPasswordRestore: () => `${urlBase}user/password/restore`,
   userInviteInternal: (activeProject) => `${urlBase}project/${activeProject}/assign`,
   userInviteExternal: () => `${urlBase}user/bid`,
+
+  widget: (activeProject, widgetId) => `${urlBase}${activeProject}/widget/${widgetId}`,
 };

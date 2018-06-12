@@ -10,10 +10,12 @@
 }
 
 .widget-header {
-  background-color: $COLOR--white;
+  position: relative;
   height: 60px;
   border-bottom: 1px solid $COLOR--gray-91;
-  
+  box-sizing: border-box;
+  background-color: $COLOR--white;
+
   &.modifiable {
     cursor: all-scroll;
   }

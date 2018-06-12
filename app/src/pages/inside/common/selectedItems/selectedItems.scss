@@ -27,8 +27,9 @@
 .close-icon {
   display: inline-block;
   cursor: pointer;
-  width: 13px;
-  height: 13px;
+  width: 20px;
+  height: 20px;
+  vertical-align: top;
 
   svg {
     fill: $COLOR--gray-60;

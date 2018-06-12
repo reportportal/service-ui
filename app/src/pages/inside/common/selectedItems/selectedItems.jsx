@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { FormattedMessage } from 'react-intl';
 import Parser from 'html-react-parser';
-import CrossIcon from 'common/img/icon-cross-inline.svg';
+import CrossIcon from 'common/img/cross-icon-inline.svg';
 import { ScrollWrapper } from 'components/main/scrollWrapper/index';
 import { SelectedItem } from './selectedItem/index';
 import styles from './selectedItems.scss';
