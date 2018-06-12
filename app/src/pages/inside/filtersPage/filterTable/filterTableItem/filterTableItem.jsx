@@ -94,7 +94,10 @@ export const FilterTableItem = ({
       <div className={cx('separator')} />
     </div>
     <div className={cx('block', 'delete-block')}>
-      <div className={cx('bin-icon', { disabled: !canBeDeleted })} onClick={onDelete}>
+      <div
+        className={cx('bin-icon', { disabled: !canBeDeleted })}
+        onClick={canBeDeleted ? onDelete : () => {}}
+      >
         {Parser(BinIcon)}
       </div>
     </div>
