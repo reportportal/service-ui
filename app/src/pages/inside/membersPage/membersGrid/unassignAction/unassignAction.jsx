@@ -10,9 +10,10 @@ import { canAssignUnassignInternalUser } from 'common/utils/permissions';
 import {
   activeProjectSelector,
   activeProjectRoleSelector,
-  accountRoleSelector,
+  userAccountRoleSelector,
+  userIdSelector,
 } from 'controllers/user';
-import { showNotification } from 'controllers/notification';
+import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import UnassignIcon from './img/unassign-inline.svg';
 
 const messages = defineMessages({
@@ -29,9 +30,10 @@ const messages = defineMessages({
 @injectIntl
 @connect(
   (state) => ({
+    currentUser: userIdSelector(state),
     projectId: activeProjectSelector(state),
     projectRole: activeProjectRoleSelector(state),
-    accountRole: accountRoleSelector(state),
+    accountRole: userAccountRoleSelector(state),
   }),
   { showNotification, showModalAction },
 )
@@ -43,6 +45,7 @@ export class UnassignAction extends PureComponent {
     projectId: PropTypes.string,
     accountRole: PropTypes.string,
     projectRole: PropTypes.string,
+    currentUser: PropTypes.string,
     showNotification: PropTypes.func,
     fetchUserAction: PropTypes.func,
     fetchData: PropTypes.func,
@@ -52,6 +55,7 @@ export class UnassignAction extends PureComponent {
     projectId: '',
     accountRole: '',
     projectRole: '',
+    currentUser: '',
     showNotification: () => {},
     fetchUserAction: () => {},
     fetchData: () => {},
@@ -66,14 +70,14 @@ export class UnassignAction extends PureComponent {
       .then(() => {
         this.props.showNotification({
           message: intl.formatMessage(messages.anassignUser),
-          type: 'success',
+          type: NOTIFICATION_TYPES.SUCCESS,
         });
         this.props.fetchData();
       })
       .catch((err) => {
         this.props.showNotification({
           message: err.msg,
-          type: 'error',
+          type: NOTIFICATION_TYPES.ERROR,
         });
       });
   };
@@ -92,7 +96,10 @@ export class UnassignAction extends PureComponent {
       <GhostButton
         icon={UnassignIcon}
         onClick={this.showUnassignModal}
-        disabled={!canAssignUnassignInternalUser(this.props.accountRole, this.props.projectRole)}
+        disabled={
+          !canAssignUnassignInternalUser(this.props.accountRole, this.props.projectRole) ||
+          this.props.currentUser === this.props.userId
+        }
       >
         {this.props.intl.formatMessage(messages.btnTitle)}
       </GhostButton>

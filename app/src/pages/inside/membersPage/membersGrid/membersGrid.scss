@@ -3,32 +3,42 @@
 }
 .name-col {
   width: 35%;
+  vertical-align: top;
   @media (max-width: $SCREEN_SM_MAX) {
     width: 25%;
   }
   @media (max-width: $SCREEN_XS_MAX) {
     width: 100%;
-    padding: 22px 15px 12px 15px !important;
   }
 }
 .last-login-col {
   width: 20%;
+  vertical-align: top;
   @media (max-width: $SCREEN_XS_MAX) {
     width: 100%;
-    padding: 6px 15px !important;
   }
 }
 .roles-col {
   width: 35%;
+  vertical-align: top;
   @media (max-width: $SCREEN_XS_MAX) {
     width: 100%;
-    padding: 6px 15px 22px 15px !important;
   }
 }
 .unassign-col {
   width: 10%;
-  text-align: right !important;
+  vertical-align: top;
   @media (max-width: $SCREEN_XS_MAX) {
     display: none;
+  }
+}
+.mobile-login-cell {
+  @media (max-width: $SCREEN_XS_MAX) {
+    padding: 6px 15px;
+  }
+}
+.mobile-role-cell {
+  @media (max-width: $SCREEN_XS_MAX) {
+    padding: 6px 15px 22px 15px;
   }
 }

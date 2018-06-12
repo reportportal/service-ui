@@ -4,13 +4,13 @@ import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
 import { FormattedMessage } from 'react-intl';
 import { URLS } from 'common/urls';
-import { ADMINISTRATOR } from 'common/constants/projectRoles';
+import { ADMINISTRATOR } from 'common/constants/accountRoles';
 import { userIdSelector } from 'controllers/user';
 
 import styles from './personalInfo.scss';
 
 const cx = classNames.bind(styles);
-const getPhoto = (userId) => URLS.dataUserPhoto(new Date().getTime(), userId);
+const getPhotoURL = (userId) => URLS.dataUserPhoto(new Date().getTime(), userId);
 
 @connect((state) => ({
   currentUser: userIdSelector(state),
@@ -35,17 +35,21 @@ export class PersonalInfo extends PureComponent {
       <Fragment>
         <div
           className={cx('member-avatar')}
-          style={{ backgroundImage: `url(${getPhoto(login)})` }}
+          style={{ backgroundImage: `url(${getPhotoURL(login)})` }}
         />
         <div className={cx('member-info')}>
           <p className={cx('member-name')}>
             {name}
-            <span className={cx({ 'member-you': true, hide: currentUser !== login })}>
-              <FormattedMessage id={'PersonalInfo.memberYou'} defaultMessage={'You'} />
-            </span>
-            <span className={cx({ 'member-admin': true, hide: userRole !== ADMINISTRATOR })}>
-              <FormattedMessage id={'PersonalInfo.memberAdmin'} defaultMessage={'Admin'} />
-            </span>
+            {currentUser === login && (
+              <span className={cx('member-you')}>
+                <FormattedMessage id={'PersonalInfo.memberYou'} defaultMessage={'You'} />
+              </span>
+            )}
+            {userRole === ADMINISTRATOR && (
+              <span className={cx('member-admin')}>
+                <FormattedMessage id={'PersonalInfo.memberAdmin'} defaultMessage={'Admin'} />
+              </span>
+            )}
           </p>
           <p className={cx('member-login')}>{login}</p>
         </div>

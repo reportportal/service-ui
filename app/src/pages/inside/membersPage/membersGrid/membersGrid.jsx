@@ -17,48 +17,62 @@ const messages = defineMessages({
   actionCol: { id: 'MembersGrid.actionCol', defaultMessage: 'Action' },
 });
 
-const NameColumn = ({ className, ...rest }) => (
+const NameColumn = ({ className, value }) => (
   <div className={cx('name-col', className)}>
-    <PersonalInfo
-      name={rest.value.full_name}
-      login={rest.value.userId}
-      userRole={rest.value.userRole}
-    />
+    <PersonalInfo name={value.full_name} login={value.userId} userRole={value.userRole} />
   </div>
 );
 NameColumn.propTypes = {
   className: PropTypes.string.isRequired,
+  value: PropTypes.object,
+};
+NameColumn.defaultProps = {
+  value: {},
 };
 
-const LastLoginColumn = ({ className, ...rest }) => (
+const LastLoginColumn = ({ className, value }) => (
   <div className={cx('last-login-col', className)}>
-    <LastLogin time={rest.value.last_login} />
+    <LastLogin time={value.last_login} />
   </div>
 );
 LastLoginColumn.propTypes = {
   className: PropTypes.string.isRequired,
+  value: PropTypes.object,
+};
+LastLoginColumn.defaultProps = {
+  value: {},
 };
 
-const RolesColumn = ({ className, ...rest }) => (
+const RolesColumn = ({ className, value }) => (
   <div className={cx('roles-col', className)}>
     <ProjectRole
-      assignedProjects={rest.value.assigned_projects}
-      accountRole={rest.value.userRole}
-      userId={rest.value.userId}
+      assignedProjects={value.assigned_projects}
+      accountRole={value.userRole}
+      userId={value.userId}
     />
   </div>
 );
 RolesColumn.propTypes = {
   className: PropTypes.string.isRequired,
+  value: PropTypes.object,
+};
+RolesColumn.defaultProps = {
+  value: {},
 };
 
-const UnassignColumn = ({ className, ...rest }) => (
+const UnassignColumn = ({ className, value, customProps }) => (
   <div className={cx('unassign-col', className)}>
-    <UnassignAction userId={rest.value.userId} fetchData={rest.customProps.fetchData} />
+    <UnassignAction userId={value.userId} fetchData={customProps.fetchData} />
   </div>
 );
 UnassignColumn.propTypes = {
   className: PropTypes.string.isRequired,
+  value: PropTypes.object,
+  customProps: PropTypes.object,
+};
+UnassignColumn.defaultProps = {
+  value: {},
+  customProps: {},
 };
 
 @injectIntl
@@ -89,6 +103,7 @@ export class MembersGrid extends PureComponent {
         full: this.props.intl.formatMessage(messages.lastLoginCol),
       },
       component: LastLoginColumn,
+      customClass: cx('mobile-login-cell'),
     },
     {
       id: 'roles',
@@ -96,6 +111,7 @@ export class MembersGrid extends PureComponent {
         full: this.props.intl.formatMessage(messages.roleCol),
       },
       component: RolesColumn,
+      customClass: cx('mobile-role-cell'),
     },
     {
       id: 'unassign',
