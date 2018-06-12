@@ -4,10 +4,16 @@
   height: 50px;
   background-size: 100%;
   background-repeat: no-repeat;
+  @media (max-width: $SCREEN_XS_MAX) {
+    margin-top: 7px;
+  }
 }
 .member-info {
   margin: 0 0 0 55px;
   font-size: 13px;
+  @media (max-width: $SCREEN_XS_MAX) {
+    margin-top: 7px;
+  }
 }
 .member-name,
 .member-login {

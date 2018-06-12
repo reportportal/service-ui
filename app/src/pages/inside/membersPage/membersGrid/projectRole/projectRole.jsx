@@ -10,11 +10,13 @@ import { canChangeUserRole } from 'common/utils/permissions';
 import {
   activeProjectSelector,
   activeProjectRoleSelector,
-  accountRoleSelector,
+  userAccountRoleSelector,
   isAdminSelector,
+  userIdSelector,
 } from 'controllers/user';
-import { ROLES_MAP, ADMINISTRATOR } from 'common/constants/projectRoles';
-import { showNotification } from 'controllers/notification';
+import { ROLES_MAP } from 'common/constants/projectRoles';
+import { ADMINISTRATOR } from 'common/constants/accountRoles';
+import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 
 import styles from './projectRole.scss';
 
@@ -34,22 +36,26 @@ const messages = defineMessages({
 @injectIntl
 @connect(
   (state) => ({
+    currentUser: userIdSelector(state),
     projectId: activeProjectSelector(state),
     isAdmin: isAdminSelector(state),
-    canChangeRole: () =>
-      canChangeUserRole(accountRoleSelector(state), activeProjectRoleSelector(state)),
+    canChangeRole: canChangeUserRole(
+      userAccountRoleSelector(state),
+      activeProjectRoleSelector(state),
+    ),
   }),
   { showNotification },
 )
 export class ProjectRole extends PureComponent {
   static propTypes = {
+    intl: intlShape.isRequired,
     assignedProjects: PropTypes.object,
+    showNotification: PropTypes.func,
     accountRole: PropTypes.string,
     projectId: PropTypes.string,
-    intl: intlShape.isRequired,
     userId: PropTypes.string,
-    showNotification: PropTypes.func,
-    canChangeRole: PropTypes.func,
+    currentUser: PropTypes.string,
+    canChangeRole: PropTypes.bool,
     isAdmin: PropTypes.bool,
   };
   static defaultProps = {
@@ -57,8 +63,9 @@ export class ProjectRole extends PureComponent {
     accountRole: '',
     projectId: '',
     userId: '',
+    currentUser: '',
     showNotification: () => {},
-    canChangeRole: () => {},
+    canChangeRole: false,
     isAdmin: false,
   };
   state = {
@@ -79,13 +86,13 @@ export class ProjectRole extends PureComponent {
       .then(() => {
         this.props.showNotification({
           message: intl.formatMessage(messages.updateMember, { name: userId }),
-          type: 'success',
+          type: NOTIFICATION_TYPES.SUCCESS,
         });
       })
       .catch((err) => {
         this.props.showNotification({
           message: err.msg,
-          type: 'error',
+          type: NOTIFICATION_TYPES.ERROR,
         });
       });
   };
@@ -106,19 +113,21 @@ export class ProjectRole extends PureComponent {
             ? intl.formatMessage(messages.allPermissions)
             : this.state.currentRole}
         </span>
-        <div className={cx('roles-list', 'mobile-hide', { hide: accountRole === ADMINISTRATOR })}>
-          <InputDropdown
-            value={this.state.currentRole}
-            options={ROLES_MAP}
-            onChange={this.onChangeRole}
-            disabled={!this.props.canChangeRole()}
-          />
-        </div>
-        <div
-          className={cx('mobile-hide', 'all-permissions', { hide: accountRole !== ADMINISTRATOR })}
-        >
-          {intl.formatMessage(messages.allPermissions)}
-        </div>
+        {accountRole !== ADMINISTRATOR && (
+          <div className={cx('roles-list', 'mobile-hide')}>
+            <InputDropdown
+              value={this.state.currentRole}
+              options={ROLES_MAP}
+              onChange={this.onChangeRole}
+              disabled={!this.props.canChangeRole || this.props.userId === this.props.currentUser}
+            />
+          </div>
+        )}
+        {accountRole === ADMINISTRATOR && (
+          <div className={cx('mobile-hide', 'all-permissions')}>
+            {intl.formatMessage(messages.allPermissions)}
+          </div>
+        )}
       </Fragment>
     );
   }
