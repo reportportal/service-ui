@@ -16,8 +16,10 @@
 .cross-icon {
   display: inline-block;
   cursor: pointer;
-  width: 8px;
-  height: 8px;
+  width: 11px;
+  height: 11px;
+  margin-top: 2px;
+  vertical-align: top;
 
   svg {
     fill: $COLOR--gray-60;

@@ -93,7 +93,10 @@ export class WidgetsGrid extends Component {
   onResizeStop = (newLayout) => {
     this.onGridChange(newLayout);
   };
-
+  onDeleteWidget = (id) => {
+    // TODO implement when Pawels PR will be mergerd.
+    console.log(id);
+  };
   updateWidgets(widgets) {
     fetch(this.props.url, {
       method: 'PUT',
@@ -141,7 +144,13 @@ export class WidgetsGrid extends Component {
             className={cx('widget-view')}
             data-grid={{ x, y, w, h, minW: 4, minH: 4, i: widgetId }}
           >
-            <Widget isModifiable={this.state.isModifiable} />
+            <Widget
+              widgetId={widgetId}
+              isModifiable={this.state.isModifiable}
+              onDelete={() => {
+                this.onDeleteWidget(widgetId);
+              }}
+            />
           </div>
         );
       });
