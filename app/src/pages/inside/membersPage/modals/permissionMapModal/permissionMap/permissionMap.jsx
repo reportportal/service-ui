@@ -32,42 +32,43 @@ export class PermissionMap extends Component {
     const noPermission = <td className={cx('col')} />;
     return roles.map((role) => {
       if (role === ADMINISTRATOR) {
-        return <Fragment key={role}>{hasPermission}</Fragment>;
+        return <Fragment key={`${role}_${permission}`}>{hasPermission}</Fragment>;
       }
       if (role === MEMBER || role === CUSTOMER) {
         if (PERMISSIONS_MAP[role][permission]) {
           if (PERMISSIONS_MAP[role][permission] === ALL) {
             return (
-              <Fragment key={role}>
+              <Fragment key={`${role}_${permission}`}>
                 {hasPermission}
                 {hasPermission}
               </Fragment>
             );
           }
           return (
-            <Fragment key={role}>
+            <Fragment key={`${role}_${permission}`}>
               {hasPermission}
               {noPermission}
             </Fragment>
           );
         }
         return (
-          <Fragment key={role}>
+          <Fragment key={`${role}_${permission}`}>
             {noPermission}
             {noPermission}
           </Fragment>
         );
       }
       if (PERMISSIONS_MAP[role][permission]) {
-        return <Fragment key={role}>{hasPermission}</Fragment>;
+        return <Fragment key={`${role}_${permission}`}>{hasPermission}</Fragment>;
       }
-      return <Fragment key={role}>{noPermission}</Fragment>;
+      return <Fragment key={`${role}_${permission}`}>{noPermission}</Fragment>;
     });
   };
 
   generateTableRows = () => {
     const keys = Object.keys(ACTIONS);
-    return keys.map((key) => {
+    const actions = keys.filter((key) => PERMISSION_NAMES[key]);
+    return actions.map((key) => {
       const isAttention = PERMISSION_NAMES[key].attention;
       return (
         <tr key={key} className={cx('row')}>
