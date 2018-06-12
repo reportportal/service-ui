@@ -152,14 +152,17 @@ export class FiltersPage extends Component {
           {...rest}
         />
         {!filters.length && !loading && <NoFiltersBlock />}
-        <PaginationToolbar
-          activePage={activePage}
-          itemCount={itemCount}
-          pageCount={pageCount}
-          pageSize={pageSize}
-          onChangePage={onChangePage}
-          onChangePageSize={onChangePageSize}
-        />
+        {filters &&
+          !!filters.length && (
+            <PaginationToolbar
+              activePage={activePage}
+              itemCount={itemCount}
+              pageCount={pageCount}
+              pageSize={pageSize}
+              onChangePage={onChangePage}
+              onChangePageSize={onChangePageSize}
+            />
+          )}
       </PageLayout>
     );
   }
