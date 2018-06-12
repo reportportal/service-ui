@@ -12,7 +12,7 @@ export const DeleteFilterButton = ({ canDelete, onDelete, filter }) => (
     className={cx('bin-icon', {
       disabled: !canDelete,
     })}
-    onClick={() => onDelete(filter)}
+    onClick={() => (canDelete ? onDelete(filter) : null)}
   >
     {Parser(BinIcon)}
   </div>
