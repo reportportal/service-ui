@@ -103,7 +103,6 @@ export class MembersGrid extends PureComponent {
         full: this.props.intl.formatMessage(messages.lastLoginCol),
       },
       component: LastLoginColumn,
-      customClass: cx('mobile-login-cell'),
     },
     {
       id: 'roles',
@@ -111,7 +110,6 @@ export class MembersGrid extends PureComponent {
         full: this.props.intl.formatMessage(messages.roleCol),
       },
       component: RolesColumn,
-      customClass: cx('mobile-role-cell'),
     },
     {
       id: 'unassign',

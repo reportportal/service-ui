@@ -96,7 +96,6 @@ export class GridRow extends Component {
                 formatter={column.formatter}
                 title={column.title}
                 customProps={column.customProps}
-                customClass={column.customClass}
               />
             );
           })}
