@@ -27,7 +27,6 @@ export class GridCell extends PureComponent {
     component: PropTypes.oneOfType([PropTypes.node, PropTypes.func]),
     value: PropTypes.object,
     refFunction: PropTypes.func,
-    customClass: PropTypes.string,
   };
 
   static defaultProps = {
@@ -37,24 +36,14 @@ export class GridCell extends PureComponent {
     formatter: (value) => value,
     title: {},
     refFunction: () => {},
-    customClass: '',
   };
 
   render() {
-    const {
-      component,
-      refFunction,
-      value,
-      align,
-      formatter,
-      title,
-      customProps,
-      customClass,
-    } = this.props;
+    const { component, refFunction, value, align, formatter, title, customProps } = this.props;
     const CellComponent = component;
     return (
       <CellComponent
-        className={cx('grid-cell', { [`align-${align}`]: align }, customClass)}
+        className={cx('grid-cell', { [`align-${align}`]: align })}
         refFunction={refFunction}
         title={title}
         value={formatter(value)}

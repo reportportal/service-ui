@@ -16,6 +16,7 @@
   vertical-align: top;
   @media (max-width: $SCREEN_XS_MAX) {
     width: 100%;
+    padding: 6px 15px;
   }
 }
 .roles-col {
@@ -23,6 +24,7 @@
   vertical-align: top;
   @media (max-width: $SCREEN_XS_MAX) {
     width: 100%;
+    padding: 6px 15px 22px 15px;
   }
 }
 .unassign-col {
@@ -30,15 +32,5 @@
   vertical-align: top;
   @media (max-width: $SCREEN_XS_MAX) {
     display: none;
-  }
-}
-.mobile-login-cell {
-  @media (max-width: $SCREEN_XS_MAX) {
-    padding: 6px 15px;
-  }
-}
-.mobile-role-cell {
-  @media (max-width: $SCREEN_XS_MAX) {
-    padding: 6px 15px 22px 15px;
   }
 }
