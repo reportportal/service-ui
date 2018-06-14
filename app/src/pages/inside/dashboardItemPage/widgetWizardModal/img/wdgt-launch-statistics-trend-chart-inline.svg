@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="250" height="125" viewBox="0 0 250 125">
+    <g fill="none" fill-rule="evenodd">
+        <path d="M0 0h250v125H0z"/>
+        <g stroke="#F5F5F5">
+            <path d="M1 103.5h248M1 81.5h248M1 60.5h248M1 38.5h248M1 16.5h248"/>
+        </g>
+        <path fill="#B4E4E3" d="M70 15h30v110H70z"/>
+        <path fill="#64969E" d="M110 60h30v65h-30zM150 80h30v45h-30z"/>
+        <path fill="#B4E4E3" d="M190 95h30v30h-30z"/>
+        <path fill="#F5CC90" d="M190 100h30v25h-30z"/>
+        <path fill="#E89583" d="M190 105h30v20h-30z"/>
+        <path fill="#D6E4AA" d="M190 110h30v15h-30z"/>
+        <path fill="#B4E4E3" d="M150 80h30v30h-30z"/>
+        <path fill="#F5CC90" d="M150 85h30v25h-30z"/>
+        <path fill="#E89583" d="M150 90h30v20h-30z"/>
+        <path fill="#D6E4AA" d="M150 95h30v30h-30z"/>
+        <g>
+            <path fill="#B4E4E3" d="M110 60h30v30h-30z"/>
+            <path fill="#F5CC90" d="M110 65h30v25h-30z"/>
+            <path fill="#E89583" d="M110 70h30v20h-30z"/>
+            <path fill="#D6E4AA" d="M110 75h30v50h-30z"/>
+        </g>
+        <g>
+            <path fill="#B4E4E3" d="M70 15h30v85H70z"/>
+            <path fill="#F6CC90" d="M70 27h30v75H70z"/>
+            <path fill="#EA9583" d="M70 39h30v70H70z"/>
+            <path fill="#D6E4AA" d="M70 51h30v74H70z"/>
+        </g>
+        <g>
+            <path fill="#B4E4E3" d="M30 33h30v85H30z"/>
+            <path fill="#F6CC90" d="M30 45h30v75H30z"/>
+            <path fill="#EA9583" d="M30 57h30v68H30z"/>
+            <path fill="#D6E4AA" d="M30 69h30v56H30z"/>
+        </g>
+        <g>
+            <path fill="#B4E4E3" d="M70 15h30v110H70z"/>
+            <path fill="#F5CC90" d="M70 20h30v25H70z"/>
+            <path fill="#E89583" d="M70 25h30v20H70z"/>
+            <path fill="#D6E4AA" d="M70 30h30v95H70z"/>
+        </g>
+        <g>
+            <path fill="#B4E4E3" d="M30 33h30v92H30z"/>
+            <path fill="#F5CC90" d="M30 38h30v25H30z"/>
+            <path fill="#E89583" d="M30 43h30v20H30z"/>
+            <path fill="#D6E4AA" d="M30 48h30v77H30z"/>
+        </g>
+    </g>
+</svg>

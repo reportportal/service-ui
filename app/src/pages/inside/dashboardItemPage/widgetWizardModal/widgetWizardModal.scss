@@ -1,4 +1,4 @@
-.modal-layout {
+.widget-wizard {
   position: absolute;
   top: 0;
   left: 0;
@@ -6,12 +6,6 @@
   width: 100%;
   height: 100%;
   text-align: center;
-}
-.scrolling-content {
-  position: fixed;
-  width: 100%;
-  height: 100%;
-  z-index: 2;
 }
 .backdrop {
   position: fixed;
@@ -23,7 +17,6 @@
   background-color: #000000;
   opacity: 0.3;
   transition: opacity 300ms ease-in;
-  z-index: 1;
 }
 :global {
   .modal-backdrop-animation-enter {
@@ -40,26 +33,19 @@
   }
 }
 .modal-window {
-  position: absolute;
-  display: inline-block;
-  width: 600px;
-  margin-top: 10px;
-  margin-bottom: 10px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 800px;
+  min-height: 685px;
+  margin: 10px auto;
   padding: 20px;
   box-sizing: border-box;
-  margin-left: -300px;
   background-color: $COLOR--white-two;
   text-align: left;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
   opacity: 1;
   transition: margin-top 300ms ease-in, opacity 300ms ease-in;
-
-  @media (max-width: $SCREEN_XS_MAX) {
-    right: 10px;
-    left: 10px;
-    width: auto;
-    margin-left: 0;
-  }
 }
 :global {
   .modal-window-animation-enter {

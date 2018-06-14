@@ -1,0 +1,21 @@
+.wizard-controls-section {
+  width: 420px;
+}
+.controls-wrapper {
+  box-sizing: border-box;
+  padding-bottom: 40px;
+}
+.buttons-block {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+}
+.button {
+  display: inline-block;
+  height: 30px;
+  margin-left: 10px;
+
+  button {
+    font-size: 13px;
+  }
+}
