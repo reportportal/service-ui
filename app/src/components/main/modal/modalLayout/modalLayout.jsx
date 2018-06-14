@@ -3,12 +3,10 @@ import { Scrollbars } from 'react-custom-scrollbars';
 import { CSSTransition } from 'react-transition-group';
 import { connect } from 'react-redux';
 import { hideModalAction } from 'controllers/modal';
-import Parser from 'html-react-parser';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { ModalContent, ModalFooter } from '../';
+import { ModalContent, ModalFooter, ModalHeader } from '../';
 import styles from './modalLayout.scss';
-import CloseIcon from './img/icon-close-inline.svg';
 
 const cx = classNames.bind(styles);
 
@@ -156,14 +154,7 @@ export class ModalLayout extends Component {
                   }}
                   className={cx('modal-window', this.props.className)}
                 >
-                  <div className={cx('modal-header')}>
-                    <span className={cx('modal-title')}>{title}</span>
-                    <div className={cx('close-modal-icon')} onClick={this.closeModal}>
-                      {Parser(CloseIcon)}
-                    </div>
-                    <div className={cx('separator')} />
-                  </div>
-
+                  <ModalHeader text={title} onClose={this.closeModal} />
                   <ModalContent fullWidthContent={this.props.fullWidthContent}>
                     {status !== 'exited' ? children : null}
                   </ModalContent>

@@ -6,6 +6,7 @@ import Parser from 'html-react-parser';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { activeDashboardIdSelector } from 'controllers/pages';
 import classNames from 'classnames/bind';
+import { showModalAction } from 'controllers/modal';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { PageLayout } from 'layouts/pageLayout';
 import AddWidgetIcon from './img/add-inline.svg';
@@ -46,10 +47,16 @@ const messages = defineMessages({
 });
 
 @injectIntl
-@connect((state) => ({ dashboardId: activeDashboardIdSelector(state) }))
+@connect(
+  (state) => ({ dashboardId: activeDashboardIdSelector(state) }),
+  {
+    showModalAction,
+  },
+)
 export class DashboardItemPage extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
+    showModalAction: PropTypes.func.isRequired,
     dashboardId: PropTypes.string,
   };
 
@@ -68,6 +75,12 @@ export class DashboardItemPage extends Component {
   toggleFullscreen = () => {
     this.setState({ isFullscreen: !this.state.isFullscreen });
   };
+  showWidgetWizard = () => {
+    this.props.showModalAction({
+      id: 'widgetWizardModal',
+      data: { onConfirm: () => {} },
+    });
+  };
 
   render() {
     const { formatMessage } = this.props.intl;
@@ -76,7 +89,9 @@ export class DashboardItemPage extends Component {
         <div className={cx('dashboard-item')}>
           <div className={cx('buttons-container')}>
             <div className={cx('nav-left')}>
-              <GhostButton icon={AddWidgetIcon}>{formatMessage(messages.addNewWidget)}</GhostButton>
+              <GhostButton icon={AddWidgetIcon} onClick={this.showWidgetWizard}>
+              {formatMessage(messages.addNewWidget)}
+            </GhostButton>
               <GhostButton icon={AddSharedWidgetIcon}>
                 {formatMessage(messages.addSharedWidget)}
               </GhostButton>
