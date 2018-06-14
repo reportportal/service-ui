@@ -7,7 +7,7 @@ import { logoutAction } from 'controllers/auth';
 import { API_PAGE, ADMINISTRATE_PAGE, USER_PROFILE_PAGE } from 'controllers/pages/constants';
 import { connect } from 'react-redux';
 import { NavLink } from 'redux-first-router-link';
-import { ADMINISTRATOR } from 'common/constants/projectRoles';
+import { ADMINISTRATOR } from 'common/constants/accountRoles';
 import { URLS } from 'common/urls';
 import styles from './userBlock.scss';
 

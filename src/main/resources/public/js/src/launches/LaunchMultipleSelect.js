@@ -403,9 +403,10 @@ define(function (require) {
                     }
                 });
             _.each(invalidItems, function (model) {
+                var commonModel = self.collectionItems.get(model.id);
                 model.set({ select: false });
-                if (self.currentAction === 'unlinkIssue' && self.collectionItems.length) {
-                    self.collectionItems.get(model.id).set('select', false);
+                if (self.currentAction === 'unlinkIssue' && commonModel && self.collectionItems.length) {
+                    commonModel.set('select', false);
                 }
             });
             this.setAction(this.currentAction);

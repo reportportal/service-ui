@@ -44,3 +44,9 @@
     margin: 0;
   }
 }
+.disabled {
+  background-color: $COLOR--gray-91;
+  &:focus {
+    background-color: $COLOR--gray-91;
+  }
+}

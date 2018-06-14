@@ -2,7 +2,7 @@
   overflow: hidden;
 
   &:hover {
-    .edit-icon:not(.hidden) {
+    .edit-icon {
       display: inline-block;
     }
   }

@@ -21,11 +21,13 @@
 
 import { PureComponent } from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import { reduxForm } from 'redux-form';
 import classNames from 'classnames/bind';
 import { FormattedMessage, injectIntl, intlShape, defineMessages } from 'react-intl';
 import { validate, fetch, connectRouter } from 'common/utils';
 import { URLS } from 'common/urls';
+import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLock';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { FieldBottomConstraints } from 'components/fields/fieldBottomConstraints';
@@ -48,6 +50,10 @@ const placeholders = defineMessages({
 });
 
 @connectRouter(({ reset }) => ({ reset }))
+@connect(null, {
+  showScreenLockAction,
+  hideScreenLockAction,
+})
 @reduxForm({
   form: 'changePassword',
   validate: ({ password, passwordRepeat }) => ({
@@ -59,6 +65,8 @@ const placeholders = defineMessages({
 export class ChangePasswordForm extends PureComponent {
   static propTypes = {
     intl: intlShape.isRequired,
+    showScreenLockAction: PropTypes.func.isRequired,
+    hideScreenLockAction: PropTypes.func.isRequired,
     handleSubmit: PropTypes.func.isRequired,
     reset: PropTypes.string,
     history: PropTypes.object.isRequired,
@@ -76,8 +84,8 @@ export class ChangePasswordForm extends PureComponent {
     loading: false,
   };
   changePassword = ({ password }) => {
+    this.props.showScreenLockAction();
     const uuid = this.props.reset;
-    this.setState({ loading: true });
     fetch(URLS.userPasswordReset(), {
       method: 'post',
       data: {
@@ -85,7 +93,7 @@ export class ChangePasswordForm extends PureComponent {
         uuid,
       },
     }).then(() => {
-      this.setState({ loading: false });
+      this.props.hideScreenLockAction();
       this.props.history.push('/login');
     });
   };
@@ -129,7 +137,7 @@ export class ChangePasswordForm extends PureComponent {
           </FieldProvider>
         </div>
         <div className={cx('change-password-button')}>
-          <BigButton type={'submit'} color={'organish'} disabled={this.state.loading}>
+          <BigButton type={'submit'} color={'organish'}>
             <FormattedMessage
               id={'ChangePasswordForm.changePassword'}
               defaultMessage={'Change password'}

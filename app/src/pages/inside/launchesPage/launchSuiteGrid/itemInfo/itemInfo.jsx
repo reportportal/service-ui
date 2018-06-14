@@ -4,8 +4,13 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
 import { fromNowFormat } from 'common/utils';
+import { canEditLaunch } from 'common/utils/permissions';
 import { MarkdownViewer } from 'components/main/markdown';
-import { userIdSelector } from 'controllers/user';
+import {
+  activeProjectRoleSelector,
+  userAccountRoleSelector,
+  userIdSelector,
+} from 'controllers/user';
 import { TagsBlock } from './tagsBlock';
 import { OwnerBlock } from './ownerBlock';
 import { DurationBlock } from './durationBlock';
@@ -15,6 +20,8 @@ import styles from './itemInfo.scss';
 const cx = classNames.bind(styles);
 
 @connect((state) => ({
+  userAccountRole: userAccountRoleSelector(state),
+  userProjectRole: activeProjectRoleSelector(state),
   userId: userIdSelector(state),
 }))
 export class ItemInfo extends Component {
@@ -23,6 +30,8 @@ export class ItemInfo extends Component {
     refFunction: PropTypes.func.isRequired,
     analyzing: PropTypes.bool,
     customProps: PropTypes.object,
+    userAccountRole: PropTypes.string.isRequired,
+    userProjectRole: PropTypes.string.isRequired,
     userId: PropTypes.string.isRequired,
   };
 
@@ -33,7 +42,15 @@ export class ItemInfo extends Component {
   };
 
   render() {
-    const { value, refFunction, analyzing, customProps, userId } = this.props;
+    const {
+      value,
+      refFunction,
+      analyzing,
+      customProps,
+      userProjectRole,
+      userAccountRole,
+      userId,
+    } = this.props;
     return (
       <div ref={refFunction} className={cx('item-info')}>
         <div className={cx('main-info')}>
@@ -42,12 +59,11 @@ export class ItemInfo extends Component {
             <span className={cx('number')}>#{value.number}</span>
           </a>
           {analyzing && <div className={cx('analysis-badge')}>Analysis</div>}
-          <div
-            className={cx('edit-icon', { hidden: value.owner !== userId })}
-            onClick={() => customProps.onEditLaunch(value)}
-          >
-            {Parser(PencilIcon)}
-          </div>
+          {canEditLaunch(userAccountRole, userProjectRole, userId === value.owner) && (
+            <div className={cx('edit-icon')} onClick={() => customProps.onEditLaunch(value)}>
+              {Parser(PencilIcon)}
+            </div>
+          )}
         </div>
 
         <div className={cx('additional-info')}>

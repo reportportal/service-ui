@@ -4,6 +4,8 @@ import { connect } from 'react-redux';
 import { showModalAction } from 'controllers/modal';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { reduxForm } from 'redux-form';
+import { activeProjectRoleSelector, userInfoSelector } from 'controllers/user';
+import { canInviteInternalUser } from 'common/utils/permissions';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { InputSearch } from 'components/inputs/inputSearch';
@@ -27,9 +29,15 @@ const messages = defineMessages({
     defaultMessage: 'Search by name',
   },
 });
-@connect(null, {
-  showModalAction,
-})
+@connect(
+  (state) => ({
+    currentRole: activeProjectRoleSelector(state),
+    userRole: userInfoSelector(state).userRole,
+  }),
+  {
+    showModalAction,
+  },
+)
 @reduxForm({
   form: 'filterSearch',
   onChange: (vals, dispatch, props) => {
@@ -43,6 +51,9 @@ export class MembersPageToolbar extends React.Component {
     intl: intlShape,
     filter: PropTypes.string,
     showModalAction: PropTypes.func.isRequired,
+    onInvite: PropTypes.func,
+    currentRole: PropTypes.string,
+    userRole: PropTypes.string,
   };
 
   static defaultProps = {
@@ -50,6 +61,9 @@ export class MembersPageToolbar extends React.Component {
     filter: PropTypes.string,
     change: () => {},
     showModalAction: () => {},
+    onInvite: () => {},
+    currentRole: '',
+    userRole: '',
   };
 
   componentDidMount() {
@@ -62,6 +76,8 @@ export class MembersPageToolbar extends React.Component {
     }
   }
 
+  showInviteUserModal = () =>
+    this.props.showModalAction({ id: 'inviteUserModal', data: { onInvite: this.props.onInvite } });
   showPermissionMapModal = () => this.props.showModalAction({ id: 'permissionMapModal' });
 
   render() {
@@ -78,7 +94,11 @@ export class MembersPageToolbar extends React.Component {
           <GhostButton icon={PermissionMapIcon} onClick={this.showPermissionMapModal}>
             {this.props.intl.formatMessage(messages.permissionMap)}
           </GhostButton>
-          <GhostButton icon={InviteUserIcon}>
+          <GhostButton
+            icon={InviteUserIcon}
+            onClick={this.showInviteUserModal}
+            disabled={!canInviteInternalUser(this.props.userRole, this.props.currentRole)}
+          >
             {this.props.intl.formatMessage(messages.inviteUser)}
           </GhostButton>
         </div>

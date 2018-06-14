@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { defineMessages, injectIntl, intlShape } from 'react-intl';
 import classNames from 'classnames/bind';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { withModal, ModalLayout } from 'components/main/modal';
 import { PermissionMap } from './permissionMap';
 import styles from './permissionMapModal.scss';
@@ -23,11 +24,18 @@ export class PermissionMapModal extends Component {
     intl: {},
   };
   render() {
+    const okButton = {
+      text: this.props.intl.formatMessage(COMMON_LOCALE_KEYS.OK),
+      onClick: (closeModal) => {
+        closeModal();
+      },
+    };
     return (
       <ModalLayout
         title={this.props.intl.formatMessage(messages.permissionMapHeader)}
         className={cx('permission-map')}
         fullWidthContent
+        okButton={okButton}
       >
         <PermissionMap />
       </ModalLayout>

@@ -28,6 +28,13 @@ const messages = defineMessages({
   projectId: activeProjectSelector(state),
 }))
 export class DashboardGridItem extends Component {
+  static calculateGridPreviewBaseOnWidgetId(id) {
+    const idChars = id.split('');
+    const result = idChars.reduce((memo, char, idx) => memo + id.charCodeAt(idx), 0);
+
+    return result % 14;
+  }
+
   static propTypes = {
     projectId: PropTypes.string.isRequired,
     intl: intlShape.isRequired,
@@ -44,13 +51,6 @@ export class DashboardGridItem extends Component {
     onEdit: () => {},
     onDelete: () => {},
   };
-
-  static calculateGridPreviewBaseOnWidgetId(id) {
-    const idChars = id.split('');
-    const result = idChars.reduce((memo, char, idx) => memo + id.charCodeAt(idx), 0);
-
-    return result % 14;
-  }
 
   editItem = (e) => {
     e.preventDefault();
@@ -69,7 +69,12 @@ export class DashboardGridItem extends Component {
   };
 
   render() {
-    const { item, currentUser: { userId, userRole }, intl, projectId } = this.props;
+    const {
+      item,
+      currentUser: { userId, userRole },
+      intl,
+      projectId,
+    } = this.props;
     const { name, description, owner, share, id } = item;
 
     return (

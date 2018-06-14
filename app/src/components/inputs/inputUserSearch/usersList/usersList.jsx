@@ -19,31 +19,41 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 import PropTypes from 'prop-types';
+import classNames from 'classnames/bind';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { UserItem } from './userItem';
 import { InviteNewUserItem } from './inviteNewUserItem';
+import styles from './usersList.scss';
+
+const cx = classNames.bind(styles);
 
 export const UsersList = ({ options, selectValue }) => {
   if (options[0] && options[0].externalUser) {
-    return <InviteNewUserItem option={options[0]} selectValue={selectValue} />;
+    return (
+      <div className={cx('users-list')}>
+        <InviteNewUserItem option={options[0]} onClick={() => selectValue(options[0])} />
+      </div>
+    );
   }
   return (
-    <ScrollWrapper autoHeight autoHeightMax={200}>
-      {options.map(option => (
-        <UserItem
-          key={option.userLogin}
-          onClick={() => {
-            if (!option.disabled) {
-              selectValue(option);
-            }
-          }}
-          userName={option.userName}
-          userLogin={option.userLogin}
-          isAssigned={option.isAssigned}
-          userAvatar={option.userAvatar}
-        />
-      ))}
-    </ScrollWrapper>
+    <div className={cx('users-list')}>
+      <ScrollWrapper autoHeight autoHeightMax={200}>
+        {options.map((option) => (
+          <UserItem
+            key={option.userLogin}
+            onClick={() => {
+              if (!option.disabled) {
+                selectValue(option);
+              }
+            }}
+            userName={option.userName}
+            userLogin={option.userLogin}
+            isAssigned={option.isAssigned}
+            userAvatar={option.userAvatar}
+          />
+        ))}
+      </ScrollWrapper>
+    </div>
   );
 };
 

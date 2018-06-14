@@ -29,4 +29,12 @@ export const COMMON_LOCALE_KEYS = defineMessages({
     id: 'Common.merge',
     defaultMessage: 'Merge',
   },
+  INVITE: {
+    id: 'Common.invite',
+    defaultMessage: 'Invite',
+  },
+  OK: {
+    id: 'Common.ok',
+    defaultMessage: 'Ok',
+  },
 });

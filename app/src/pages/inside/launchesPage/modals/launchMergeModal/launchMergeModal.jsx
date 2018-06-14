@@ -4,7 +4,7 @@ import classNames from 'classnames/bind';
 import { fetch, validate } from 'common/utils';
 import { URLS } from 'common/urls';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { reduxForm, formValueSelector } from 'redux-form';
+import { reduxForm, formValueSelector, getFormSyncErrors, getFormMeta } from 'redux-form';
 import { connect } from 'react-redux';
 import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLock';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
@@ -101,6 +101,8 @@ const messages = defineMessages({
 @connect(
   (state) => ({
     user: userInfoSelector(state),
+    syncErrors: getFormSyncErrors(MERGE_FORM)(state),
+    fields: getFormMeta(MERGE_FORM)(state),
     activeProject: activeProjectSelector(state),
     mergeType: formValueSelector(MERGE_FORM)(state, 'merge_type'),
     startTime: formValueSelector(MERGE_FORM)(state, 'start_time'),
@@ -122,6 +124,8 @@ export class LaunchMergeModal extends Component {
     tagsSearchUrl: PropTypes.string.isRequired,
     user: PropTypes.object.isRequired,
     initialize: PropTypes.func.isRequired,
+    syncErrors: PropTypes.object.isRequired,
+    fields: PropTypes.object.isRequired,
     mergeType: PropTypes.string,
     startTime: PropTypes.number,
     endTime: PropTypes.number,
@@ -187,7 +191,18 @@ export class LaunchMergeModal extends Component {
   };
 
   render() {
-    const { intl, handleSubmit, mergeType, user, tagsSearchUrl, startTime, endTime } = this.props;
+    const {
+      intl,
+      handleSubmit,
+      mergeType,
+      user,
+      tagsSearchUrl,
+      startTime,
+      endTime,
+      syncErrors,
+      fields,
+    } = this.props;
+
     const okButton = {
       text: intl.formatMessage(COMMON_LOCALE_KEYS.MERGE),
       onClick: (closeModal) => {
@@ -206,7 +221,10 @@ export class LaunchMergeModal extends Component {
       >
         <form>
           <ModalField>
-            <ModalContentHeading text={intl.formatMessage(messages.mergeTypeHeading)} />
+            <ModalContentHeading
+              error={syncErrors.merge_type && fields.merge_type && !fields.merge_type.visited}
+              text={intl.formatMessage(messages.mergeTypeHeading)}
+            />
           </ModalField>
 
           <ModalField>

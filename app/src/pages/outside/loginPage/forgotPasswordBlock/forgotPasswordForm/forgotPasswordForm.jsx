@@ -21,12 +21,13 @@
 
 import { PureComponent } from 'react';
 import classNames from 'classnames/bind';
+import { connect } from 'react-redux';
 import { reduxForm } from 'redux-form';
 import { FormattedMessage, injectIntl, intlShape, defineMessages } from 'react-intl';
+import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLock';
 import Link from 'redux-first-router-link';
 import { redirect } from 'redux-first-router';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { InputOutside } from 'components/inputs/inputOutside';
@@ -49,6 +50,10 @@ const placeholders = defineMessages({
 @connect(null, (dispatch) => ({
   redirectToLoginPage: () => dispatch(redirect({ type: LOGIN_PAGE })),
 }))
+@connect(null, {
+  showScreenLockAction,
+  hideScreenLockAction,
+})
 @reduxForm({
   form: 'forgotPassword',
   validate: ({ email }) => ({
@@ -59,6 +64,8 @@ const placeholders = defineMessages({
 export class ForgotPasswordForm extends PureComponent {
   static propTypes = {
     intl: intlShape.isRequired,
+    showScreenLockAction: PropTypes.func.isRequired,
+    hideScreenLockAction: PropTypes.func.isRequired,
     handleSubmit: PropTypes.func.isRequired,
     redirectToLoginPage: PropTypes.func.isRequired,
   };
@@ -66,19 +73,16 @@ export class ForgotPasswordForm extends PureComponent {
   static defaultProps = {
     intl: {},
   };
-  state = {
-    loading: false,
-  };
 
   submitForm = ({ email }) => {
-    this.setState({ loading: true });
+    this.props.showScreenLockAction();
     fetch(URLS.userPasswordRestore(), {
       method: 'post',
       data: {
         email,
       },
     }).then(() => {
-      this.setState({ loading: false });
+      this.props.hideScreenLockAction();
       this.props.redirectToLoginPage();
     });
   };
@@ -104,12 +108,7 @@ export class ForgotPasswordForm extends PureComponent {
             </Link>
           </div>
           <div className={cx('forgot-password-button')}>
-            <BigButton
-              type={'submit'}
-              roundedCorners
-              color={'organish'}
-              disabled={this.state.loading}
-            >
+            <BigButton type={'submit'} roundedCorners color={'organish'}>
               <FormattedMessage id={'ForgotPasswordForm.sendEmail'} defaultMessage={'Send email'} />
             </BigButton>
           </div>

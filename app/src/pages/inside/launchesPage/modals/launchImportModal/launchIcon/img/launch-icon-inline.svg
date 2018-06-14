@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="66" height="66" viewBox="0 0 66 66">
+    <defs>
+        <rect id="a" width="60" height="60" x="3" y="3" rx="3"/>
+        <rect id="b" width="60" height="60" x="3" y="3" rx="3"/>
+    </defs>
+    <g fill="none" fill-rule="evenodd">
+        <g transform="scale(-1 1) rotate(-6 0 662.678)">
+            <use fill="#F9F9F9" xlink:href="#a"/>
+            <rect width="59" height="59" x="3.5" y="3.5" stroke="#E9E9E9" rx="3"/>
+        </g>
+        <g transform="rotate(-6 33 33)">
+            <use fill="#F9F9F9" xlink:href="#b"/>
+            <rect width="59" height="59" x="3.5" y="3.5" stroke="#E9E9E9" rx="3"/>
+        </g>
+    </g>
+</svg>

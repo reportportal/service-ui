@@ -66,15 +66,6 @@ define(function (require, exports, module) {
                 apiToken: null
             });
             this.listenTo(this.apiTokenModel, 'change:apiToken', this.setEditorValue);
-            var self = this;
-            Service.getApiToken()
-                .done(function (data) {
-                    self.apiTokenModel.set({ apiToken: data.access_token });
-                    self.$apiToken.val(data.access_token);
-                })
-                .fail(function () {
-                    self.generateApiToken();
-                });
             this.render();
             this.appStorage = new SingletonAppStorage();
             this.dropDown = new DropDownComponent({
@@ -93,10 +84,29 @@ define(function (require, exports, module) {
                 var params = this.getParams();
                 this.$el.html(Util.templates(this.tpl, params));
                 this.setupAnchors();
+                this.setApiToken();
                 this.initEditor();
                 this.loadRegenerateUUIDTooltip();
             }.bind(this));
             return this;
+        },
+        setApiToken: function () {
+            var self = this;
+            var apiToken = this.model.get('apiToken');
+            if (apiToken) {
+                self.apiTokenModel.set({ apiToken: apiToken.split('bearer ')[1] });
+                self.$apiToken.val(apiToken.split('bearer ')[1]);
+            } else {
+                Service.getApiToken()
+                    .done(function (data) {
+                        self.model.set('apiToken', 'bearer ' + data.access_token);
+                        self.apiTokenModel.set({ apiToken: data.access_token });
+                        self.$apiToken.val(data.access_token);
+                    })
+                    .fail(function () {
+                        self.generateApiToken();
+                    });
+            }
         },
         onChangeLanguage: function (lang) {
             config.trackingDispatcher.trackEventNumber(575);
@@ -182,6 +192,7 @@ define(function (require, exports, module) {
             var self = this;
             Service.generateApiToken()
                 .done(function (data) {
+                    self.model.set('apiToken', 'bearer ' + data.access_token);
                     self.apiTokenModel.set({ apiToken: data.access_token });
                     self.$apiToken.val(data.access_token);
                     Util.ajaxSuccessMessenger('updateUuid');
@@ -329,7 +340,7 @@ define(function (require, exports, module) {
                             '<br>' +
                             '<div class="options">' +
                                 // '<p>username: ' + this.user.get('name') + '</p>' +
-                            '<p>password: ' + this.apiTokenModel.get('apiToken') + '</p>' +
+                            '<p>uuid: ' + this.apiTokenModel.get('apiToken') + '</p>' +
                             '<p>endpoint: ' + document.location.origin + '/api/v1' + '</p>' +
                             '<p>project: ' + this.model.appModel.get('projectId') + '</p>' +
                             '<p>launch: ' + this.model.get('name') + '_TEST_EXAMPLE</p>' +
@@ -358,11 +369,11 @@ define(function (require, exports, module) {
                 case 'nodeJS':
                     value =
                         '<h1>' + Localization.userProfile.nodeJSConfigTitle +
-                        ' <a href="https://github.com/lexecon/client-javascript">' + Localization.userProfile.nodeJSConfigLink + '</a></h1>' +
+                        ' <a href="https://github.com/reportportal/client-javascript">' + Localization.userProfile.nodeJSConfigLink + '</a></h1>' +
                         '<h1>' + Localization.userProfile.nodeJSConfigExample + '</h1>' +
                         '<br>' +
                         '<div class="options">' +
-                        '<p>token: ' + this.apiTokenModel.get('apiToken') + '</p>' +
+                        '<p>uuid: ' + this.apiTokenModel.get('apiToken') + '</p>' +
                         '<p>endpoint: ' + document.location.origin + '/api/v1</p>' +
                         '<p>launch: ' + this.model.get('name') + '_TEST_EXAMPLE</p>' +
                         '<p>project: ' + this.model.appModel.get('projectId') + '</p>' +

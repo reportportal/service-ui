@@ -21,7 +21,6 @@
 import Select from 'react-select';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { stringify } from 'qs';
 import { FormattedMessage } from 'react-intl';
 import { fetch, validate } from 'common/utils';
 import { URLS } from 'common/urls';
@@ -31,38 +30,28 @@ import { UsersList } from './usersList';
 const cx = classNames.bind(styles);
 const getPhoto = (userId) => URLS.dataUserPhoto(new Date().getTime(), userId);
 const isValidNewOption = ({ label }) => validate.email(label);
-const newOptionCreator = (option) => ({ externalUser: true, label: option.label });
+const newOptionCreator = (option) => ({
+  externalUser: true,
+  label: option.label,
+  userLogin: option.label,
+});
 const promptTextCreator = (label) => label;
 const makeURL = (input, isAdmin, projectId) => {
-  // TODO for YANA. Define URLS in common/urls.js
-  const qsParams = {
-    'page.page': 1,
-    'page.size': 10,
-    'page.sort': 'login,ASC',
-  };
-  const apiVersion = '/api/v1/';
-  let startUrl;
+  let url;
   if (!isAdmin) {
-    startUrl = `${apiVersion}project/${projectId}/usernames/`;
+    url = URLS.projectUserSearchUser(projectId, input);
   } else {
-    startUrl = `${apiVersion}user/`;
+    url = URLS.projectAdminSearchUser(input);
   }
-  if (input) {
-    startUrl += 'search/';
-    qsParams.term = input;
-  } else {
-    startUrl += 'all';
-  }
-  startUrl += `?${stringify(qsParams, { encode: false })}`;
-  return startUrl;
+  return url;
 };
 const makeOptions = (options, projectId) =>
   options.map((option) => ({
     userName: option.full_name || '',
     userLogin: option.userId,
     email: option.email || '',
-    disabled: Object.prototype.hasOwnProperty.call(option.assigned_projects, projectId),
-    isAssigned: Object.prototype.hasOwnProperty.call(option.assigned_projects, projectId),
+    disabled: !!option.assigned_projects[projectId],
+    isAssigned: !!option.assigned_projects[projectId],
     userAvatar: getPhoto(option.userId),
   }));
 const getUsers = (input, isAdmin, projectId) => {
@@ -76,43 +65,59 @@ const getUsers = (input, isAdmin, projectId) => {
   return Promise.resolve({ options: [] });
 };
 
-export const InputUserSearch = ({ isAdmin, onChange, projectId }) => (
-  <Select.AsyncCreatable
-    cache={false}
-    className={cx('select2-search-users')}
-    loadOptions={(input) => getUsers(input, isAdmin, projectId)}
-    filterOption={() => true}
-    loadingPlaceholder={
-      <FormattedMessage id={'InputUserSearch.searching'} defaultMessage={'Searching...'} />
-    }
-    noResultsText={
-      <FormattedMessage id={'InputUserSearch.noResults'} defaultMessage={'No matches found'} />
-    }
-    searchPromptText={
-      <FormattedMessage
-        id={'InputUserSearch.placeholder'}
-        defaultMessage={'Please enter 1 or more character'}
-      />
-    }
-    onChange={(option) => {
-      onChange(option);
-    }}
-    menuRenderer={({ focusOption, options, selectValue }) =>
-      UsersList({ focusOption, options, selectValue })
-    }
-    isValidNewOption={isValidNewOption}
-    newOptionCreator={newOptionCreator}
-    promptTextCreator={promptTextCreator}
-  />
+export const InputUserSearch = ({
+  isAdmin,
+  onChange,
+  projectId,
+  placeholder,
+  value,
+  error,
+  touched,
+}) => (
+  <div className={cx('select2-search-users')}>
+    <Select.AsyncCreatable
+      className={cx({ error: error && touched })}
+      value={value}
+      cache={false}
+      loadOptions={(input) => getUsers(input, isAdmin, projectId)}
+      filterOption={() => true}
+      loadingPlaceholder={
+        <FormattedMessage id="InputUserSearch.searching" defaultMessage="Searching..." />
+      }
+      noResultsText={
+        <FormattedMessage id="InputUserSearch.noResults" defaultMessage="No matches found" />
+      }
+      searchPromptText={
+        <FormattedMessage
+          id="InputUserSearch.placeholder"
+          defaultMessage="Please enter 1 or more character"
+        />
+      }
+      onChange={onChange}
+      menuRenderer={({ options, selectValue }) => UsersList({ options, selectValue })}
+      isValidNewOption={isValidNewOption}
+      newOptionCreator={newOptionCreator}
+      promptTextCreator={promptTextCreator}
+      placeholder={placeholder}
+    />
+  </div>
 );
 
 InputUserSearch.propTypes = {
   isAdmin: PropTypes.bool,
   projectId: PropTypes.string,
   onChange: PropTypes.func,
+  placeholder: PropTypes.string,
+  value: PropTypes.object,
+  error: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
+  touched: PropTypes.bool,
 };
 InputUserSearch.defaultProps = {
   isAdmin: false,
   projectId: '',
   onChange: () => {},
+  placeholder: '',
+  value: {},
+  error: false,
+  touched: false,
 };

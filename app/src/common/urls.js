@@ -30,7 +30,7 @@ export const URLS = {
   launchesMerge: (activeProject) => `${urlBase}${activeProject}/launch/merge`,
   launchesCompare: (activeProject, ids) =>
     `${urlBase}${activeProject}/launch/compare${getQueryParams({ ids })}`,
-
+  launchImport: (activeProject) => `${urlBase}${activeProject}/launch/import`,
   login: (grantType, username, password) =>
     `/uat/sso/oauth/token${getQueryParams({
       grant_type: grantType,
@@ -42,12 +42,26 @@ export const URLS = {
   projectPreferences: (activeProject, userId) =>
     `${urlBase}project/${activeProject}/preference/${userId}`,
   projectUsers: (activeProject) => `${urlBase}project/${activeProject}/users`,
+  projectAdminSearchUser: (input) =>
+    `${urlBase}user/search${getQueryParams({
+      'page.page': 1,
+      'page.size': 10,
+      'page.sort': 'login,ASC',
+      term: input,
+    })}`,
+  projectUserSearchUser: (activeProject, input) =>
+    `${urlBase}project/${activeProject}/usernames/search${getQueryParams({
+      'page.page': 1,
+      'page.size': 10,
+      'page.sort': 'login,ASC',
+      term: input,
+    })}`,
 
   user: () => `${urlBase}user`,
   userRegistration: () => `${urlBase}user/registration`,
   userPasswordReset: () => `${urlBase}user/password/reset`,
   userPasswordResetToken: (token) => `${urlBase}user/password/reset/${token}`,
   userPasswordRestore: () => `${urlBase}user/password/restore`,
-  userSearch: () => {}, // TODO for YANA
-  userSearchGlobal: () => {}, // TODO for YANA
+  userInviteInternal: (activeProject) => `${urlBase}project/${activeProject}/assign`,
+  userInviteExternal: () => `${urlBase}user/bid`,
 };

@@ -1,0 +1,31 @@
+.modal-description {
+  padding: 10px;
+  font-size: 12px;
+  font-family: $FONT-SEMIBOLD;
+  text-transform: uppercase;
+  color: $COLOR--gray-47;
+  background-color: $COLOR--white-four;
+}
+.link {
+  color: $COLOR--charcoal-grey;
+  font-family: $FONT-SEMIBOLD;
+  line-height: 17px;
+}
+.external-user-content {
+  margin-top: 20px;
+  margin-left: 20px;
+}
+.copy {
+  position: relative;
+  top: -15px;
+  margin-left: 135px;
+  display: inline-block;
+  font-family: $FONT-REGULAR;
+  font-size: 13px;
+  color: $COLOR--windows-blue;
+  line-height: 18px;
+  cursor: pointer;
+}
+.external-user-content {
+  margin-right: 80px;
+}

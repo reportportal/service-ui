@@ -148,6 +148,14 @@ export class LaunchesPage extends Component {
       data: { launch, onEdit: this.updateLaunch },
     });
   };
+  openImportModal = () => {
+    this.props.showModalAction({
+      id: 'launchImportModal',
+      data: {
+        onImport: this.props.fetchData,
+      },
+    });
+  };
 
   handleAllLaunchesSelection = () => {
     const { selectedLaunches, data: launches } = this.props;
@@ -187,6 +195,7 @@ export class LaunchesPage extends Component {
           onProceedValidItems={this.proceedWithValidItems}
           onMerge={this.mergeLaunches}
           onCompare={this.props.compareLaunchesAction}
+          onImportLaunch={this.openImportModal}
         />
         <LaunchSuiteGrid
           data={data}

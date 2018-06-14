@@ -4,7 +4,7 @@ import styles from './modalField.scss';
 
 const cx = classname.bind(styles);
 
-export const ModalField = ({ label, labelWidth, children }) => (
+export const ModalField = ({ label, children, labelWidth }) => (
   <div className={cx('modal-field')}>
     {label && <Label label={label} labelWidth={labelWidth} />}
     <Content>{children}</Content>
@@ -12,8 +12,8 @@ export const ModalField = ({ label, labelWidth, children }) => (
 );
 ModalField.propTypes = {
   label: PropTypes.string,
-  labelWidth: PropTypes.number,
   children: PropTypes.node,
+  labelWidth: PropTypes.number,
 };
 ModalField.defaultProps = {
   label: '',
