@@ -321,6 +321,7 @@
   "RegistrationPage.tokenNotProvided": "ключ приглашения не обнаружен в URL параметрах",
   "RegistrationPage.visit": "Посетите",
   "RegistrationPage.welcome": "Добро пожаловать,",
+  "ScrollWrapper.backToTop": "Вверх",
   "SearchDashboardForm.dashboardNameSearchHint": "Имя панели управления должно быть длиной от 3 до 128.",
   "ServiceVersionItem.newVersion": "Доступна новая версия: {newVersion}",
   "ServiceVersionsBlock.currentVersion": "Текущая версия",
