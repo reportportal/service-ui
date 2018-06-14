@@ -26,12 +26,11 @@ export const onBeforeRouteChange = (dispatch, getState, { action }) => {
   }
 
   const { projectId: hashProject } = action.payload;
-  // TODO: move following after if
-  const activeProjectId = activeProjectSelector(getState());
   if (!hashProject) {
     return;
   }
 
+  const activeProjectId = activeProjectSelector(getState());
   const userInfo = userInfoSelector(getState());
   const userProjects = userInfo ? userInfo.assigned_projects : {};
   if (
