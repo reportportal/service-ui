@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="250" height="125" viewBox="0 0 250 125">
+    <g fill="none" fill-rule="evenodd">
+        <path d="M0 0h250v125H0z"/>
+        <g stroke="#F5F5F5">
+            <path d="M1 103.5h248M1 81.5h248M1 60.5h248M1 38.5h248M1 16.5h248"/>
+        </g>
+        <g fill="#CCC">
+            <path d="M67 62v-6H56v6h11zm36 0v-6H92v6h11zm-24 0v-6H68v6h11zm12 0v-6H80v6h11zm-60 0v-6H20v6h11zm12 0v-6H32v6h11zm12 0v-6H44v6h11zM31 72v-6H20v6h11zm12 0v-6H32v6h11zM218 62v-6h-11v6h11zm12 0v-6h-11v6h11z"/>
+        </g>
+        <g fill="#CCC">
+            <path d="M67 31v-6H56v6h11zm36 0v-6H92v6h11zm-24 0v-6H68v6h11zm12 0v-6H80v6h11zm-60 0v-6H20v6h11zm12 0v-6H32v6h11zm12 0v-6H44v6h11zM31 41v-6H20v6h11zm12 0v-6H32v6h11zM218 31v-6h-11v6h11zm12 0v-6h-11v6h11z"/>
+        </g>
+        <path fill="#A3C644" d="M143 87h4v4h-4z"/>
+        <path fill="#39C2D7" d="M143 92h4v4h-4zM153 92h4v4h-4z"/>
+        <path fill="#A3C644" d="M148 92h4v4h-4z"/>
+        <path fill="#39C2D7" d="M148 87h4v4h-4z"/>
+        <path fill="#A3C644" d="M153 87h4v4h-4z"/>
+        <path fill="#39C2D7" d="M158 87h4v4h-4z"/>
+        <path fill="#A3C644" d="M163 87h4v4h-4z"/>
+        <g>
+            <path fill="#A3C644" d="M143 56h4v4h-4z"/>
+            <path fill="#39C2D7" d="M143 61h4v4h-4zM153 61h4v4h-4z"/>
+            <path fill="#A3C644" d="M148 61h4v4h-4z"/>
+            <path fill="#39C2D7" d="M148 56h4v4h-4z"/>
+            <path fill="#A3C644" d="M153 56h4v4h-4z"/>
+            <path fill="#39C2D7" d="M158 56h4v4h-4z"/>
+            <path fill="#A3C644" d="M163 56h4v4h-4z"/>
+        </g>
+        <g>
+            <path fill="#A3C644" d="M143 25h4v4h-4z"/>
+            <path fill="#39C2D7" d="M143 30h4v4h-4zM153 30h4v4h-4z"/>
+            <path fill="#A3C644" d="M148 30h4v4h-4z"/>
+            <path fill="#39C2D7" d="M148 25h4v4h-4z"/>
+            <path fill="#A3C644" d="M153 25h4v4h-4z"/>
+            <path fill="#39C2D7" d="M158 25h4v4h-4z"/>
+            <path fill="#A3C644" d="M163 25h4v4h-4z"/>
+        </g>
+        <g fill="#CCC">
+            <path d="M67 93v-6H56v6h11zm36 0v-6H92v6h11zm-24 0v-6H68v6h11zm12 0v-6H80v6h11zm-60 0v-6H20v6h11zm12 0v-6H32v6h11zm12 0v-6H44v6h11zM31 103v-6H20v6h11zm12 0v-6H32v6h11zM218 93v-6h-11v6h11zm12 0v-6h-11v6h11z"/>
+        </g>
+    </g>
+</svg>
