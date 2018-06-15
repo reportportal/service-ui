@@ -89,6 +89,7 @@ export class LaunchesPage extends Component {
     mergeLaunchesAction: PropTypes.func,
     compareLaunchesAction: PropTypes.func,
     lastOperation: PropTypes.string,
+    loading: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -113,6 +114,7 @@ export class LaunchesPage extends Component {
     mergeLaunchesAction: () => {},
     compareLaunchesAction: () => {},
     lastOperation: '',
+    loading: false,
   };
 
   getTitle = () =>
@@ -200,8 +202,8 @@ export class LaunchesPage extends Component {
       onChangeSorting,
       selectedLaunches,
       launches,
+      loading,
     } = this.props;
-
     return (
       <PageLayout title={this.getTitle()}>
         <LaunchToolbar
@@ -226,6 +228,7 @@ export class LaunchesPage extends Component {
           onItemSelect={this.props.toggleLaunchSelectionAction}
           onAllItemsSelect={this.handleAllLaunchesSelection}
           withHamburger
+          loading={loading}
         />
         <PaginationToolbar
           activePage={activePage}

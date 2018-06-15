@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
+import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { GridHeader } from './gridHeader';
 import { GridBody } from './gridBody';
 import { columnPropTypes } from './propTypes';
@@ -23,6 +24,7 @@ export const Grid = ({
   onToggleSelection,
   className,
   changeOnlyMobileLayout,
+  loading,
 }) => (
   <div className={cx('grid', className)}>
     <GridHeader
@@ -44,6 +46,13 @@ export const Grid = ({
       onToggleSelection={onToggleSelection}
       changeOnlyMobileLayout={changeOnlyMobileLayout}
     />
+    {loading && (
+      <div className={cx('spinner-block')}>
+        <div className={cx('spinner')}>
+          <SpinningPreloader />
+        </div>
+      </div>
+    )}
   </div>
 );
 Grid.propTypes = {
@@ -59,6 +68,7 @@ Grid.propTypes = {
   onToggleSelectAll: PropTypes.func,
   className: PropTypes.string,
   changeOnlyMobileLayout: PropTypes.bool,
+  loading: PropTypes.bool,
 };
 Grid.defaultProps = {
   columns: [],
@@ -73,4 +83,5 @@ Grid.defaultProps = {
   onToggleSelection: () => {},
   className: '',
   changeOnlyMobileLayout: false,
+  loading: false,
 };

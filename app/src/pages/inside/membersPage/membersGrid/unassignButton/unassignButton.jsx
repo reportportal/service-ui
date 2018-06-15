@@ -1,4 +1,4 @@
-import { Fragment, PureComponent } from 'react';
+import { Fragment, Component } from 'react';
 import { connect } from 'react-redux';
 import { injectIntl, intlShape, defineMessages } from 'react-intl';
 import PropTypes from 'prop-types';
@@ -37,7 +37,7 @@ const messages = defineMessages({
   }),
   { showNotification, showModalAction },
 )
-export class UnassignAction extends PureComponent {
+export class UnassignButton extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
     showModalAction: PropTypes.func.isRequired,

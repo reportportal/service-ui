@@ -1,4 +1,4 @@
-import { Fragment, PureComponent } from 'react';
+import { Fragment, Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
@@ -15,7 +15,7 @@ const getPhotoURL = (userId) => URLS.dataUserPhoto(new Date().getTime(), userId)
 @connect((state) => ({
   currentUser: userIdSelector(state),
 }))
-export class PersonalInfo extends PureComponent {
+export class PersonalInfo extends Component {
   static propTypes = {
     name: PropTypes.string,
     login: PropTypes.string,

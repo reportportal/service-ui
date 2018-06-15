@@ -6,7 +6,7 @@ import { Grid } from 'components/main/grid';
 import { PersonalInfo } from './personalInfo';
 import { LastLogin } from './lastLogin';
 import { ProjectRole } from './projectRole';
-import { UnassignAction } from './unassignAction';
+import { UnassignButton } from './unassignButton';
 import styles from './membersGrid.scss';
 
 const cx = classNames.bind(styles);
@@ -62,7 +62,7 @@ RolesColumn.defaultProps = {
 
 const UnassignColumn = ({ className, value, customProps }) => (
   <div className={cx('unassign-col', className)}>
-    <UnassignAction userId={value.userId} fetchData={customProps.fetchData} />
+    <UnassignButton userId={value.userId} fetchData={customProps.fetchData} />
   </div>
 );
 UnassignColumn.propTypes = {
@@ -81,11 +81,13 @@ export class MembersGrid extends PureComponent {
     data: PropTypes.arrayOf(PropTypes.object),
     fetchData: PropTypes.func,
     intl: intlShape.isRequired,
+    loading: PropTypes.bool,
   };
 
   static defaultProps = {
     data: [],
     fetchData: () => {},
+    loading: false,
   };
 
   getColumns = () => [
@@ -126,6 +128,13 @@ export class MembersGrid extends PureComponent {
   COLUMNS = this.getColumns();
 
   render() {
-    return <Grid columns={this.COLUMNS} data={this.props.data} changeOnlyMobileLayout />;
+    return (
+      <Grid
+        columns={this.COLUMNS}
+        data={this.props.data}
+        changeOnlyMobileLayout
+        loading={this.props.loading}
+      />
+    );
   }
 }
