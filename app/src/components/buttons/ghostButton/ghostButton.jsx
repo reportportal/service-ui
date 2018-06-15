@@ -26,7 +26,17 @@ import styles from './ghostButton.scss';
 
 const cx = classNames.bind(styles);
 
-export const GhostButton = ({ type, children, disabled, color, icon, onClick, tiny, title }) => {
+export const GhostButton = ({
+  type,
+  children,
+  disabled,
+  color,
+  icon,
+  iconAtRight,
+  onClick,
+  tiny,
+  title,
+}) => {
   const classes = cx({
     'ghost-button': true,
     disabled,
@@ -37,7 +47,11 @@ export const GhostButton = ({ type, children, disabled, color, icon, onClick, ti
   });
   return (
     <button type={type} disabled={disabled} className={classes} onClick={onClick} title={title}>
-      {icon && <i className={cx({ icon: true, 'only-icon': !children })}>{Parser(icon)}</i>}
+      {icon && (
+        <i className={cx({ icon: true, 'only-icon': !children, 'icon-at-right': iconAtRight })}>
+          {Parser(icon)}
+        </i>
+      )}
       {children && <span className={cx('text')}>{children}</span>}
     </button>
   );
@@ -47,6 +61,7 @@ GhostButton.propTypes = {
   children: PropTypes.node,
   disabled: PropTypes.bool,
   tiny: PropTypes.bool,
+  iconAtRight: PropTypes.bool,
   title: PropTypes.string,
   color: PropTypes.string,
   icon: PropTypes.string,
@@ -58,6 +73,7 @@ GhostButton.defaultProps = {
   children: null,
   disabled: false,
   tiny: false,
+  iconAtRight: false,
   title: '',
   color: 'topaz',
   icon: '',

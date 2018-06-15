@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
+import Parser from 'html-react-parser';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
+import EmptyWidgetPreview from '../../img/wdgt-undefined-inline.svg';
 import { StepLabelItem } from './stepLabelItem';
 import styles from './wizardInfoSection.scss';
 
@@ -27,13 +29,15 @@ export class WizardInfoSection extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
     step: PropTypes.number,
+    activeWidget: PropTypes.object,
   };
   static defaultProps = {
     step: 0,
+    activeWidget: {},
   };
 
   render() {
-    const { intl, step } = this.props;
+    const { intl, step, activeWidget } = this.props;
     return (
       <div className={cx('wizard-info-section')}>
         <div className={cx('steps-block')}>
@@ -46,6 +50,15 @@ export class WizardInfoSection extends Component {
               completed={step > index}
             />
           ))}
+        </div>
+        {activeWidget.id && (
+          <div className={cx('widget-info-block')}>
+            <div className={cx('widget-title')}>{activeWidget.title}</div>
+            <div className={cx('widget-description')}>{activeWidget.description}</div>
+          </div>
+        )}
+        <div className={cx('widget-preview-block')}>
+          {activeWidget.id ? activeWidget.preview : Parser(EmptyWidgetPreview)}
         </div>
       </div>
     );

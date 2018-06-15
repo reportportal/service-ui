@@ -1,4 +1,4 @@
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, FormattedHTMLMessage } from 'react-intl';
 import Parser from 'html-react-parser';
 import {
   LAUNCH_STATISTICS,
@@ -49,7 +49,7 @@ export const WIDGETS = [
       />
     ),
     description: (
-      <FormattedMessage
+      <FormattedHTMLMessage
         id={'Widgets.Description.statistic_trend'}
         defaultMessage={
           '- in "Launch mode" shows the growth trend in the number of test cases with each selected statuses from run to run,<br> - in "Timeline mode" shows sum, distributed by dates.'
@@ -99,7 +99,7 @@ export const WIDGETS = [
       />
     ),
     description: (
-      <FormattedMessage
+      <FormattedHTMLMessage
         id={'Widgets.Description.launch_statistics'}
         defaultMessage={
           'Shows statistics of the last launch divided into 2 sections:</br> - Skipped, Passed, Failed </br> - Product Bug, System Issue, To Investigate, Automation Bugs.'
@@ -133,7 +133,7 @@ export const WIDGETS = [
       />
     ),
     description: (
-      <FormattedMessage
+      <FormattedHTMLMessage
         id={'Widgets.Description.cases_trend'}
         defaultMessage={
           '- in "Launch Mode" shows the increment of test-cases from run to run,<br> - in "Timeline Mode" shows the increment of test-cases distributed by dates (in launches with the largest number of test-cases per day).'
@@ -151,7 +151,7 @@ export const WIDGETS = [
       />
     ),
     description: (
-      <FormattedMessage
+      <FormattedHTMLMessage
         id={'Widgets.Description.investigated_trend'}
         defaultMessage={
           '- in "Launch Mode" shows whether the launches are analyzed or not (the percentage of "Investigated"/"To Investigate") from run to run,<br> - in "Timeline Mode" shows percentage of "Investigated"/"To Investigate" tests in all runs per day distributed by dates.'
@@ -191,9 +191,9 @@ export const WIDGETS = [
   {
     id: MOST_FAILED_TEST_CASES_TABLE,
     title: (
-      <FormattedMessage
+      <FormattedHTMLMessage
         id={'Widgets.Name.most_failed_test_cases'}
-        defaultMessage={'Most failure test-cases table (TOP-20)'}
+        defaultMessage={'Most failure test-cases <span>table&nbsp;(TOP-20)</span>'}
       />
     ),
     description: (

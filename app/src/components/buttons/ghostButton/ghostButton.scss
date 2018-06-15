@@ -1,6 +1,6 @@
 .ghost-button {
   position: relative;
-  display: inline-block;
+  display: inline-flex;
   height: 30px;
   padding: 0 10px;
   border: 1px solid;
@@ -9,11 +9,11 @@
   font-family: $FONT-REGULAR;
   font-size: 13px;
   letter-spacing: normal;
-  line-height: 0;
+  line-height: 28px;
   white-space: nowrap;
   text-shadow: none;
-  vertical-align: middle;
   background-color: transparent;
+  vertical-align: top;
   cursor: pointer;
   background: $COLOR--white-two;
 
@@ -23,7 +23,8 @@
     border-color: $COLOR--gray-91;
     cursor: default;
 
-    path {
+    path,
+    polygon {
       fill: $COLOR--gray-60;
     }
   }
@@ -31,7 +32,8 @@
     border-color: $COLOR--topaz;
     color: $COLOR--topaz;
 
-    path {
+    path,
+    polygon {
       fill: $COLOR--topaz;
     }
 
@@ -41,7 +43,8 @@
       border-color: lighten($COLOR--topaz, 10%);
       color: $COLOR--white-two;
 
-      path {
+      path,
+      polygon {
         fill: $COLOR--white-two;
       }
     }
@@ -57,11 +60,15 @@
   position: relative;
   width: 20px;
   height: 20px;
-  top: 5px;
-  margin-top: -10px;
+  margin: auto 0;
 
   &:not(.only-icon) {
-    margin-right: 5px;
+    margin: auto 5px auto 0;
+
+    &.icon-at-right {
+      order: 1;
+      margin: auto 0 auto 5px;
+    }
   }
 }
 .mobile-minified {
