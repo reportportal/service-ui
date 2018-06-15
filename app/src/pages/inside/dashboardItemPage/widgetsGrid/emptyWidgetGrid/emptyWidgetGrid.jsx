@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { GhostButton } from 'components/buttons/ghostButton';
-import styles from './emptyWidget.scss';
+import styles from './emptyWidgetGrid.scss';
 import AddDashboardIcon from '../../img/add-inline.svg';
 
 const cx = classNames.bind(styles);
@@ -23,7 +23,7 @@ const messages = defineMessages({
 });
 
 @injectIntl
-export class EmptyWidget extends Component {
+export class emptyWidgetGrid extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
     action: PropTypes.func,

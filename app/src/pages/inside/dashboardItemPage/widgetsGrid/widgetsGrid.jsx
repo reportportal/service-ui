@@ -10,7 +10,7 @@ import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { userInfoSelector, activeProjectSelector } from 'controllers/user';
 import { canResizeAndDragWidgets } from 'common/utils/permissions';
 import { URLS } from 'common/urls';
-import { EmptyWidget } from './emptyWidget';
+import { emptyWidgetGrid } from './emptyWidgetGrid';
 import styles from './widgetsGrid.scss';
 import { Widget } from './widget';
 
@@ -171,7 +171,7 @@ export class WidgetsGrid extends PureComponent {
           </ScrollWrapper>
         )}
 
-        {(!this.state.isFetching && !widgets.length) && <EmptyWidget />}
+        {(!this.state.isFetching && !widgets.length) && <emptyWidgetGrid />}
       </div>
     );
   }
