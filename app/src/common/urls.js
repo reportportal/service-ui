@@ -28,6 +28,7 @@ export const URLS = {
     `${urlBase}${activeProject}/launch/owners?filter.cnt.user=`,
   launches: (activeProject, ids) => `${urlBase}${activeProject}/launch${getQueryParams({ ids })}`,
   launchUpdate: (activeProject) => `${urlBase}${activeProject}/launch/update`,
+  launchStop: (activeProject) => `${urlBase}${activeProject}/launch/stop`,
   launchesUpdate: (activeProject, id) => `${urlBase}${activeProject}/launch/${id}/update`,
   launchesMerge: (activeProject) => `${urlBase}${activeProject}/launch/merge`,
   launchesCompare: (activeProject, ids) =>

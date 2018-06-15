@@ -21,6 +21,10 @@ const messages = defineMessages({
     id: 'LaunchesPage.launchNotInProgress',
     defaultMessage: 'Launch should not be in the status In progress!',
   },
+  launchFinished: {
+    id: 'LaunchesPage.launchFinished',
+    defaultMessage: 'Launch is finished',
+  },
   launchIsProcessing: {
     id: 'LaunchesPage.launchIsProcessing',
     defaultMessage: 'Launch should not be processing by Auto analysis!',

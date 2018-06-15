@@ -3,6 +3,7 @@ export {
   selectLaunchesAction,
   unselectAllLaunchesAction,
   proceedWithValidItemsAction,
+  finishForceLaunchesAction,
   mergeLaunchesAction,
   compareLaunchesAction,
   fetchLaunchesAction,

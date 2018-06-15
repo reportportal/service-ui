@@ -7,7 +7,7 @@ import {
   createProceedWithValidItemsAction,
 } from 'controllers/groupOperations';
 import { FETCH_LAUNCHES, NAMESPACE, FETCH_LAUNCH } from './constants';
-import { validateMergeLaunch } from './actionValidators';
+import { validateMergeLaunch, validateFinishForceLaunch } from './actionValidators';
 
 export const fetchLaunchesAction = (params) => ({
   type: FETCH_LAUNCHES,
@@ -27,6 +27,16 @@ export const proceedWithValidItemsAction = createProceedWithValidItemsAction(NAM
 
 const MODAL_COMPARE_WIDTH = 900;
 
+export const finishForceLaunchesAction = defineGroupOperation(
+  NAMESPACE,
+  'finishForceLaunches',
+  (launches, { fetchFunc }) =>
+    showModalAction({
+      id: 'launchFinishForceModal',
+      data: { items: launches, fetchFunc },
+    }),
+  validateFinishForceLaunch,
+);
 export const mergeLaunchesAction = defineGroupOperation(
   NAMESPACE,
   'mergeLaunches',
