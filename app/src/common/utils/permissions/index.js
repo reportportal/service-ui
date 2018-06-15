@@ -20,5 +20,7 @@ export {
   canMergeLaunches,
   canWorkWithFilters,
   canReadData,
+  canDeleteDashboard,
+  canDeleteFilter,
   canResizeAndDragWidgets,
 } from './permissions';

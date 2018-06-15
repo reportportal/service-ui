@@ -1,9 +1,10 @@
-import { PureComponent, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
+import { connect } from 'react-redux';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
-import { PROJECT_MANAGER } from 'common/constants/projectRoles';
-import { ADMINISTRATOR } from 'common/constants/accountRoles';
+import { canDeleteFilter } from 'common/utils/permissions';
+import { userAccountRoleSelector } from 'controllers/user';
 import { FilterTableItem } from './filterTableItem';
 import { FilterTableHeader } from './filterTableHeader';
 import { NoFiltersBlock } from './noFiltersBlock';
@@ -11,10 +12,10 @@ import styles from './filterTable.scss';
 
 const cx = classNames.bind(styles);
 
-const canDeleteFilter = (item, role, userId) =>
-  role === ADMINISTRATOR || role === PROJECT_MANAGER || userId === item.owner;
-
-export class FilterTable extends PureComponent {
+@connect((state) => ({
+  accountRole: userAccountRoleSelector(state),
+}))
+export class FilterTable extends Component {
   static propTypes = {
     filters: PropTypes.arrayOf(PropTypes.object),
     activePage: PropTypes.number,
@@ -29,6 +30,7 @@ export class FilterTable extends PureComponent {
     userFilters: PropTypes.arrayOf(PropTypes.string),
     toggleDisplayFilterOnLaunches: PropTypes.func,
     projectRole: PropTypes.string,
+    accountRole: PropTypes.string,
   };
 
   static defaultProps = {
@@ -45,6 +47,7 @@ export class FilterTable extends PureComponent {
     userFilters: [],
     toggleDisplayFilterOnLaunches: () => {},
     projectRole: '',
+    accountRole: '',
   };
 
   render() {
@@ -62,6 +65,7 @@ export class FilterTable extends PureComponent {
       pageSize,
       onChangePage,
       onChangePageSize,
+      accountRole,
     } = this.props;
     return (
       <Fragment>
@@ -81,7 +85,7 @@ export class FilterTable extends PureComponent {
                 onDelete={() => onDelete(item)}
                 onEdit={() => onEdit(item)}
                 onChangeDisplay={() => toggleDisplayFilterOnLaunches(item.id)}
-                canBeDeleted={canDeleteFilter(item, projectRole, userId)}
+                canBeDeleted={canDeleteFilter(accountRole, projectRole, userId === item.owner)}
               />
             ))
           ) : (
