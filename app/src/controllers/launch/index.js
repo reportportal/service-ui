@@ -5,6 +5,7 @@ export {
   proceedWithValidItemsAction,
   forceFinishLaunchesAction,
   mergeLaunchesAction,
+  moveLaunchesToDebugAction,
   compareLaunchesAction,
   fetchLaunchesAction,
   fetchLaunchAction,
