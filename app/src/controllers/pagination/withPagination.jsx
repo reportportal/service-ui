@@ -60,6 +60,10 @@ export const withPagination = ({
       fetchAction: () => {},
     };
 
+    state = {
+      loading: false,
+    };
+
     componentDidMount() {
       const { page, size, url, sortingString } = this.props;
       this.fetchData(url, { page, size, sortingString });
@@ -77,15 +81,22 @@ export const withPagination = ({
       }
     }
 
-    fetchData = (url, queryParams = {}) =>
-      this.props.fetchAction({
+    fetchData = (url, queryParams = {}) => {
+      this.setState({ loading: true });
+      return this.props.fetchAction({
         params: {
           [PAGE_KEY]: queryParams.page,
           [SIZE_KEY]: queryParams.size,
           [FILTER_KEY]: queryParams.filter,
           [SORTING_KEY]: queryParams.sortingString,
         },
+      }).then((result) => {
+        const { totalElements, totalPages } = result.page;
+        this.setState({
+          loading: false,
+        });
       });
+    };
 
     fetchDataWithCurrentProps = () => {
       const { url, page, size, filter, sortingString } = this.props;
@@ -109,6 +120,7 @@ export const withPagination = ({
           itemCount={totalElements}
           pageCount={totalPages}
           pageSize={size}
+          loading={this.state.loading}
           onChangePage={this.changePageHandler}
           onChangePageSize={this.changeSizeHandler}
           fetchData={this.fetchDataWithCurrentProps}

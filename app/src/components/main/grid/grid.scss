@@ -3,3 +3,13 @@
   width: 100%;
   position: relative;
 }
+.spinner-block {
+  height: 50px;
+  margin-top: 10px;
+}
+.spinner {
+  position: absolute;
+  left: 50%;
+  margin: 0;
+  transform: translateX(-50%);
+}

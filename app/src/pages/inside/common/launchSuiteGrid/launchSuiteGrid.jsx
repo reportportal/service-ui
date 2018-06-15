@@ -140,6 +140,7 @@ export class LaunchSuiteGrid extends PureComponent {
     onItemSelect: PropTypes.func,
     onAllItemsSelect: PropTypes.func,
     withHamburger: PropTypes.bool,
+    loading: PropTypes.bool,
   };
   static defaultProps = {
     data: {},
@@ -153,6 +154,7 @@ export class LaunchSuiteGrid extends PureComponent {
     onItemSelect: () => {},
     onAllItemsSelect: () => {},
     withHamburger: false,
+    loading: false,
   };
   getColumns() {
     const hamburgerColumn = {
@@ -287,6 +289,7 @@ export class LaunchSuiteGrid extends PureComponent {
       selectedItems,
       onItemSelect,
       onAllItemsSelect,
+      loading,
     } = this.props;
 
     return (
@@ -300,6 +303,7 @@ export class LaunchSuiteGrid extends PureComponent {
         selectable
         onToggleSelection={onItemSelect}
         onToggleSelectAll={onAllItemsSelect}
+        loading={loading}
       />
     );
   }

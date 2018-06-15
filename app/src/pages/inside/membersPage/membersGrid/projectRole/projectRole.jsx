@@ -1,4 +1,4 @@
-import { Fragment, PureComponent } from 'react';
+import { Fragment, Component } from 'react';
 import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
 import { injectIntl, intlShape, defineMessages } from 'react-intl';
@@ -46,7 +46,7 @@ const messages = defineMessages({
   }),
   { showNotification },
 )
-export class ProjectRole extends PureComponent {
+export class ProjectRole extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
     assignedProjects: PropTypes.object,

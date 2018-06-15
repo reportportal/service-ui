@@ -37,6 +37,7 @@ export class MembersPage extends PureComponent {
     onChangePageSize: PropTypes.func,
     filter: PropTypes.string,
     data: PropTypes.arrayOf(PropTypes.object),
+    loading: PropTypes.bool,
   };
   static defaultProps = {
     onSearchChange: () => {},
@@ -50,6 +51,7 @@ export class MembersPage extends PureComponent {
     onChangePageSize: () => {},
     filter: '',
     data: [],
+    loading: false,
   };
 
   render() {
@@ -65,11 +67,12 @@ export class MembersPage extends PureComponent {
       onChangePageSize,
       data,
       fetchData,
+      loading,
     } = this.props;
     return (
       <PageLayout title={intl.formatMessage(messages.membersPageTitle)} fullMobileLayout>
         <MembersPageToolbar filter={filter} onFilterChange={onFilterChange} />
-        <MembersGrid data={data} fetchData={fetchData} />
+        <MembersGrid data={data} fetchData={fetchData} loading={loading} />
         <PaginationToolbar
           activePage={activePage}
           itemCount={itemCount}
