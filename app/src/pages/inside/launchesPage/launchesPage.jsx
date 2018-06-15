@@ -5,7 +5,6 @@ import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { PageLayout } from 'layouts/pageLayout';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
-import { DEBUG } from 'common/constants/common';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
 import { activeProjectSelector, userIdSelector } from 'controllers/user';
 import { withPagination } from 'controllers/pagination';
@@ -21,6 +20,7 @@ import {
   forceFinishLaunchesAction,
   mergeLaunchesAction,
   compareLaunchesAction,
+  moveLaunchesToDebugAction,
   launchesSelector,
   launchPaginationSelector,
   fetchLaunchesAction,
@@ -57,6 +57,7 @@ const messages = defineMessages({
     forceFinishLaunchesAction,
     mergeLaunchesAction,
     compareLaunchesAction,
+    moveLaunchesToDebugAction,
   },
 )
 @withSorting({
@@ -93,6 +94,7 @@ export class LaunchesPage extends Component {
     forceFinishLaunchesAction: PropTypes.func,
     mergeLaunchesAction: PropTypes.func,
     compareLaunchesAction: PropTypes.func,
+    moveLaunchesToDebugAction: PropTypes.func,
     lastOperation: PropTypes.string,
     loading: PropTypes.bool,
   };
@@ -119,6 +121,7 @@ export class LaunchesPage extends Component {
     forceFinishLaunchesAction: () => {},
     mergeLaunchesAction: () => {},
     compareLaunchesAction: () => {},
+    moveLaunchesToDebugAction: () => {},
     lastOperation: '',
     loading: false,
   };
@@ -137,28 +140,10 @@ export class LaunchesPage extends Component {
       method: 'delete',
     }).then(this.props.fetchData);
   };
-  moveToDebug = (id) => {
-    fetch(URLS.launchUpdate(this.props.activeProject), {
-      method: 'put',
-      data: {
-        entities: {
-          [id]: {
-            mode: DEBUG.toUpperCase(),
-          },
-        },
-      },
-    }).then(this.props.fetchData);
-  };
   confirmDeleteItem = (item) => {
     this.props.showModalAction({
       id: 'launchDeleteModal',
       data: { item, onConfirm: () => this.deleteItem(item.id) },
-    });
-  };
-  confirmMoveToDebug = (item) => {
-    this.props.showModalAction({
-      id: 'moveToDebugModal',
-      data: { onConfirm: () => this.moveToDebug(item.id) },
     });
   };
 
@@ -201,6 +186,13 @@ export class LaunchesPage extends Component {
       fetchFunc: this.props.fetchData,
     });
 
+  moveLaunchesToDebug = (eventData) => {
+    const launches = eventData && eventData.id ? [eventData] : this.props.selectedLaunches;
+    this.props.moveLaunchesToDebugAction(launches, {
+      fetchFunc: this.props.fetchData,
+    });
+  };
+
   compareLaunches = () => this.props.compareLaunchesAction(this.props.selectedLaunches);
 
   render() {
@@ -226,6 +218,7 @@ export class LaunchesPage extends Component {
           onUnselect={this.props.toggleLaunchSelectionAction}
           onUnselectAll={this.props.unselectAllLaunchesAction}
           onProceedValidItems={this.proceedWithValidItems}
+          onMoveToDebug={this.moveLaunchesToDebug}
           onMerge={this.mergeLaunches}
           onForceFinish={this.finishForceLaunches}
           onCompare={this.compareLaunches}
@@ -237,7 +230,7 @@ export class LaunchesPage extends Component {
           sortingDirection={sortingDirection}
           onChangeSorting={onChangeSorting}
           onDeleteItem={this.confirmDeleteItem}
-          onMoveToDebug={this.confirmMoveToDebug}
+          onMoveToDebug={this.moveLaunchesToDebug}
           onEditLaunch={this.openEditModal}
           onForceFinish={this.finishForceLaunches}
           selectedItems={selectedLaunches}

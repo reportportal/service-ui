@@ -58,3 +58,13 @@ export const compareLaunchesAction = defineGroupOperation(
     }),
   () => null,
 );
+export const moveLaunchesToDebugAction = defineGroupOperation(
+  NAMESPACE,
+  'moveToDebugLaunches',
+  (launches, { fetchFunc }) =>
+    showModalAction({
+      id: 'moveToDebugModal',
+      data: { ids: launches.map((launch) => launch.id), fetchFunc },
+    }),
+  () => null,
+);

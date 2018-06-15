@@ -11,6 +11,7 @@ export const LaunchToolbar = ({
   errors,
   onUnselect,
   onUnselectAll,
+  onMoveToDebug,
   onMerge,
   onCompare,
   onForceFinish,
@@ -31,6 +32,7 @@ export const LaunchToolbar = ({
       hasErrors={selectedLaunches.some((launch) => !!errors[launch.id])}
       hasValidItems={selectedLaunches.length > Object.keys(errors).length}
       onProceedValidItems={onProceedValidItems}
+      onMoveToDebug={onMoveToDebug}
       onMerge={onMerge}
       onCompare={onCompare}
       onForceFinish={onForceFinish}
