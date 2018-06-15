@@ -10,6 +10,7 @@ export const InputRadio = ({
   ownValue,
   name,
   disabled,
+  circleAtTop,
   onChange,
   onFocus,
   onBlur,
@@ -24,7 +25,7 @@ export const InputRadio = ({
       checked={value === ownValue}
       name={name}
     />
-    <span className={cx('toggler', { checked: value === ownValue })} />
+    <span className={cx('toggler', { checked: value === ownValue, 'at-top': circleAtTop })} />
     {children && <span className={cx('children-container')}>{children}</span>}
   </label>
 );
@@ -34,6 +35,7 @@ InputRadio.propTypes = {
   ownValue: PropTypes.string,
   name: PropTypes.string,
   disabled: PropTypes.bool,
+  circleAtTop: PropTypes.bool,
   onChange: PropTypes.func,
   onFocus: PropTypes.func,
   onBlur: PropTypes.func,
@@ -44,6 +46,7 @@ InputRadio.defaultProps = {
   ownValue: '',
   name: '',
   disabled: false,
+  circleAtTop: false,
   onChange: () => {},
   onFocus: () => {},
   onBlur: () => {},

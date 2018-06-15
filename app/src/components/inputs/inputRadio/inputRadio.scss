@@ -31,6 +31,10 @@
   background-color: $COLOR--white-two;
   line-height: 18;
 
+  &.at-top {
+    margin: 2px 10px 0 0;
+  }
+
   &::after {
     content: '';
     display: block;

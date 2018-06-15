@@ -8,4 +8,43 @@
   background-color: $COLOR--white;
 }
 .steps-block {
+  box-sizing: border-box;
+  border-bottom: 1px solid $COLOR--gray-91;
+}
+.widget-info-block {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 20px;
+}
+.widget-title {
+  display: inline-block;
+  width: 100%;
+  margin-bottom: 10px;
+  font-family: $FONT-SEMIBOLD;
+  font-size: 14px;
+  line-height: 26px;
+  color: $COLOR--charcoal-grey;
+  text-align: center;
+  white-space: nowrap;
+}
+.widget-description {
+  display: inline-block;
+  width: 100%;
+  font-family: $FONT-REGULAR;
+  font-size: 13px;
+  line-height: 22px;
+  color: $COLOR--gray-47;
+}
+.widget-preview-block {
+  width: 280px;
+  height: 140px;
+  margin-top: 20px;
+  padding: 7.5px 15px;
+  box-sizing: border-box;
+  background-color: $COLOR--white-four;
+
+  svg {
+    width: 250px;
+    height: 125px;
+  }
 }

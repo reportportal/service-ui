@@ -1,0 +1,21 @@
+.widget-type-selector {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+.widget-type-selector-heading {
+  width: 100%;
+  height: 38px;
+  box-sizing: border-box;
+  padding-left: 10px;
+  background-color: $COLOR--white-four;
+  font-family: $FONT-SEMIBOLD;
+  font-size: 12px;
+  line-height: 38px;
+  color: $COLOR--gray-47;
+  text-transform: uppercase;
+
+  &.has-errors {
+    color: $COLOR--orange-red;
+  }
+}
