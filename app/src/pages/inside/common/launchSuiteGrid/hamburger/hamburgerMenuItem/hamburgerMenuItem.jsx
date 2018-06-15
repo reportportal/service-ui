@@ -4,17 +4,23 @@ import styles from './hamburgerMenuItem.scss';
 
 const cx = classNames.bind(styles);
 
-export const HamburgerMenuItem = ({ onClick, text, disabled }) => (
-  <div className={cx('hamburger-menu-item', { disabled })} onClick={disabled ? null : onClick}>
+export const HamburgerMenuItem = ({ onClick, text, title, disabled }) => (
+  <div
+    className={cx('hamburger-menu-item', { disabled })}
+    title={title}
+    onClick={!disabled ? onClick : undefined}
+  >
     {text}
   </div>
 );
 HamburgerMenuItem.propTypes = {
   onClick: PropTypes.func,
   text: PropTypes.string.isRequired,
+  title: PropTypes.string,
   disabled: PropTypes.bool,
 };
 HamburgerMenuItem.defaultProps = {
   onClick: () => {},
+  title: '',
   disabled: false,
 };

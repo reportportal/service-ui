@@ -13,6 +13,7 @@ export const LaunchToolbar = ({
   onUnselectAll,
   onMerge,
   onCompare,
+  onForceFinish,
   onProceedValidItems,
   onImportLaunch,
 }) => (
@@ -32,6 +33,7 @@ export const LaunchToolbar = ({
       onProceedValidItems={onProceedValidItems}
       onMerge={onMerge}
       onCompare={onCompare}
+      onForceFinish={onForceFinish}
       selectedLaunches={selectedLaunches}
       onImportLaunch={onImportLaunch}
     />

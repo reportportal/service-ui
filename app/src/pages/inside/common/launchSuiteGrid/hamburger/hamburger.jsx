@@ -39,6 +39,14 @@ const messages = defineMessages({
     id: 'Hamburger.delete',
     defaultMessage: 'Delete',
   },
+  launchFinished: {
+    id: 'Hamburger.launchFinished',
+    defaultMessage: 'Launch is finished',
+  },
+  noPermissions: {
+    id: 'Hamburger.noPermissions',
+    defaultMessage: 'You are not a launch owner',
+  },
 });
 
 @injectIntl
@@ -57,7 +65,6 @@ export class Hamburger extends Component {
     launch: PropTypes.object.isRequired,
     projectId: PropTypes.string.isRequired,
     onMoveToLaunches: PropTypes.func,
-    onForceFinish: PropTypes.func,
     onAnalysis: PropTypes.func,
     customProps: PropTypes.object,
     accountRole: PropTypes.string,
@@ -66,7 +73,6 @@ export class Hamburger extends Component {
   static defaultProps = {
     onAction: () => {},
     onMoveToLaunches: () => {},
-    onForceFinish: () => {},
     onAnalysis: () => {},
     customProps: {},
     accountRole: '',
@@ -113,7 +119,6 @@ export class Hamburger extends Component {
       accountRole,
       launch,
       onMoveToLaunches,
-      onForceFinish,
       onAnalysis,
       customProps,
     } = this.props;
@@ -167,15 +172,26 @@ export class Hamburger extends Component {
             )}
             <HamburgerMenuItem
               text={intl.formatMessage(messages.forceFinish)}
+              title={
+                (!canForceFinishLaunch(
+                  accountRole,
+                  projectRole,
+                  this.props.userId === this.props.launch.owner,
+                ) &&
+                  intl.formatMessage(messages.noPermissions)) ||
+                (launch.status.toLowerCase() !== IN_PROGRESS &&
+                  intl.formatMessage(messages.launchFinished)) ||
+                ''
+              }
               disabled={
                 !canForceFinishLaunch(
                   accountRole,
                   projectRole,
                   this.props.userId === this.props.launch.owner,
-                )
+                ) || launch.status.toLowerCase() !== IN_PROGRESS
               }
               onClick={() => {
-                onForceFinish(launch);
+                customProps.onForceFinish(launch);
               }}
             />
             {launch.mode === 'DEFAULT' && (

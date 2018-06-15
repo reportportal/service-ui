@@ -11,6 +11,7 @@ import { activeProjectSelector, userIdSelector } from 'controllers/user';
 import { withPagination } from 'controllers/pagination';
 import { withSorting, SORTING_DESC } from 'controllers/sorting';
 import { showModalAction } from 'controllers/modal';
+import { showNotification } from 'controllers/notification';
 import {
   selectedLaunchesSelector,
   toggleLaunchSelectionAction,
@@ -18,6 +19,7 @@ import {
   unselectAllLaunchesAction,
   validationErrorsSelector,
   proceedWithValidItemsAction,
+  finishForceLaunchesAction,
   mergeLaunchesAction,
   compareLaunchesAction,
   launchesSelector,
@@ -53,8 +55,10 @@ const messages = defineMessages({
     selectLaunchesAction,
     unselectAllLaunchesAction,
     proceedWithValidItemsAction,
+    finishForceLaunchesAction,
     mergeLaunchesAction,
     compareLaunchesAction,
+    showNotification,
   },
 )
 @withSorting({
@@ -78,6 +82,7 @@ export class LaunchesPage extends Component {
     sortingDirection: PropTypes.string,
     fetchData: PropTypes.func,
     showModalAction: PropTypes.func,
+    showNotification: PropTypes.func,
     onChangePage: PropTypes.func,
     onChangePageSize: PropTypes.func,
     onChangeSorting: PropTypes.func,
@@ -88,6 +93,7 @@ export class LaunchesPage extends Component {
     unselectAllLaunchesAction: PropTypes.func,
     proceedWithValidItemsAction: PropTypes.func,
     toggleLaunchSelectionAction: PropTypes.func,
+    finishForceLaunchesAction: PropTypes.func,
     mergeLaunchesAction: PropTypes.func,
     compareLaunchesAction: PropTypes.func,
     lastOperation: PropTypes.string,
@@ -103,6 +109,7 @@ export class LaunchesPage extends Component {
     sortingColumn: null,
     sortingDirection: null,
     showModalAction: () => {},
+    showNotification: () => {},
     fetchData: () => {},
     onChangePage: () => {},
     onChangePageSize: () => {},
@@ -113,6 +120,7 @@ export class LaunchesPage extends Component {
     unselectAllLaunchesAction: () => {},
     proceedWithValidItemsAction: () => {},
     toggleLaunchSelectionAction: () => {},
+    finishForceLaunchesAction: () => {},
     mergeLaunchesAction: () => {},
     compareLaunchesAction: () => {},
     lastOperation: '',
@@ -157,6 +165,15 @@ export class LaunchesPage extends Component {
       data: { onConfirm: () => this.moveToDebug(item.id) },
     });
   };
+
+  finishForceLaunches = (eventData) => {
+    let launches = [];
+    eventData.id ? (launches = [eventData]) : (launches = this.props.selectedLaunches);
+    this.props.finishForceLaunchesAction(launches, {
+      fetchFunc: this.props.fetchData,
+    });
+  };
+
   openEditModal = (launch) => {
     this.props.showModalAction({
       id: 'launchEditModal',
@@ -215,6 +232,7 @@ export class LaunchesPage extends Component {
           onUnselectAll={this.props.unselectAllLaunchesAction}
           onProceedValidItems={this.proceedWithValidItems}
           onMerge={this.mergeLaunches}
+          onForceFinish={this.finishForceLaunches}
           onCompare={this.compareLaunches}
           onImportLaunch={this.openImportModal}
         />
@@ -226,6 +244,7 @@ export class LaunchesPage extends Component {
           onDeleteItem={this.confirmDeleteItem}
           onMoveToDebug={this.confirmMoveToDebug}
           onEditLaunch={this.openEditModal}
+          onForceFinish={this.finishForceLaunches}
           selectedItems={selectedLaunches}
           onItemSelect={this.props.toggleLaunchSelectionAction}
           onAllItemsSelect={this.handleAllLaunchesSelection}

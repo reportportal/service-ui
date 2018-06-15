@@ -136,6 +136,7 @@ export class LaunchSuiteGrid extends PureComponent {
     onDeleteItem: PropTypes.func,
     onMoveToDebug: PropTypes.func,
     onEditLaunch: PropTypes.func,
+    onForceFinish: PropTypes.func,
     selectedItems: PropTypes.arrayOf(PropTypes.object),
     onItemSelect: PropTypes.func,
     onAllItemsSelect: PropTypes.func,
@@ -150,6 +151,7 @@ export class LaunchSuiteGrid extends PureComponent {
     onDeleteItem: () => {},
     onMoveToDebug: () => {},
     onEditLaunch: () => {},
+    onForceFinish: () => {},
     selectedItems: [],
     onItemSelect: () => {},
     onAllItemsSelect: () => {},
@@ -162,6 +164,7 @@ export class LaunchSuiteGrid extends PureComponent {
       customProps: {
         onDeleteItem: this.props.onDeleteItem,
         onMoveToDebug: this.props.onMoveToDebug,
+        onForceFinish: this.props.onForceFinish,
       },
     };
     const columns = [
