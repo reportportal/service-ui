@@ -3,10 +3,15 @@
   flex-direction: column;
 }
 
+.preloader-container {
+  padding: 30px 0;
+}
+
 :global {
   .react-grid-layout {
     position: relative;
     transition: height 200ms ease;
+    overflow: hidden;
   }
   
   .react-grid-item {
@@ -73,5 +78,9 @@
 
   .react-grid-item:hover .react-resizable-handle {
     opacity: 1;
+  }
+
+  .mobile .react-resizable-handle {
+    display: none;
   }
 }
