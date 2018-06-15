@@ -3,12 +3,11 @@ import { injectIntl, intlShape, defineMessages } from 'react-intl';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Icon } from 'components/main/icon';
 import { NavLink } from 'redux-first-router-link';
-import { hasPrevilegesForDashboardDeletion } from 'common/utils/validation';
+import { Icon } from 'components/main/icon';
 import { PROJECT_DASHBOARD_ITEM_PAGE } from 'controllers/pages';
-import { activeProjectSelector } from 'controllers/user';
-
+import { activeProjectSelector, activeProjectRoleSelector} from 'controllers/user';
+import { canDeleteDashboard } from 'common/utils/permissions';
 import styles from './dashboardGridItem.scss';
 
 const cx = classNames.bind(styles);
@@ -26,6 +25,7 @@ const messages = defineMessages({
 @injectIntl
 @connect((state) => ({
   projectId: activeProjectSelector(state),
+  projectRole: activeProjectRoleSelector(state),
 }))
 export class DashboardGridItem extends Component {
   static calculateGridPreviewBaseOnWidgetId(id) {
@@ -42,6 +42,7 @@ export class DashboardGridItem extends Component {
     item: PropTypes.object,
     onEdit: PropTypes.func,
     onDelete: PropTypes.func,
+    projectRole: PropTypes.string,
   };
 
   static defaultProps = {
@@ -50,6 +51,7 @@ export class DashboardGridItem extends Component {
     item: {},
     onEdit: () => {},
     onDelete: () => {},
+    projectRole: '',
   };
 
   editItem = (e) => {
@@ -125,8 +127,7 @@ export class DashboardGridItem extends Component {
               <Icon type="icon-pencil" />
             </div>
           )}
-
-          {(userId === owner || hasPrevilegesForDashboardDeletion(userRole)) && (
+          {canDeleteDashboard(userRole, projectRole, userId === owner) && (
             <div className={cx('grid-cell', 'delete')} onClick={this.deleteItem}>
               <Icon type="icon-close" />
             </div>

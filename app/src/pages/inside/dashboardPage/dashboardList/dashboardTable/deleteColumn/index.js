@@ -1,0 +1,1 @@
+export { DeleteColumn } from './deleteColumn';

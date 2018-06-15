@@ -45,3 +45,5 @@ export const canMergeLaunches = checkPermission(ACTIONS.MERGE_LAUNCHES);
 export const canWorkWithFilters = checkPermission(ACTIONS.WORK_WITH_FILTERS);
 export const canReadData = checkPermission(ACTIONS.READ_DATA);
 export const canResizeAndDragWidgets = checkPermission(ACTIONS.RESIZE_AND_DRAG_WIDGETS);
+export const canDeleteDashboard = checkPermission(ACTIONS.DELETE_DASHBOARD);
+export const canDeleteFilter = checkPermission(ACTIONS.DELETE_FILTER);

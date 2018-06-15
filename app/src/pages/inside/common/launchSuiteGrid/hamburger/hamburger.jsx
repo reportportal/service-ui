@@ -2,10 +2,15 @@ import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
 import { GhostButton } from 'components/buttons/ghostButton';
-import { CUSTOMER, PROJECT_MANAGER } from 'common/constants/projectRoles';
+import { CUSTOMER } from 'common/constants/projectRoles';
 import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-intl';
 import PropTypes from 'prop-types';
-import { activeProjectRoleSelector, isAdminSelector, userIdSelector } from 'controllers/user';
+import { canDeleteLaunch, canForceFinishLaunch, canMoveToDebug } from 'common/utils/permissions';
+import {
+  activeProjectRoleSelector,
+  userIdSelector,
+  userAccountRoleSelector,
+} from 'controllers/user';
 import { HamburgerMenuItem } from './hamburgerMenuItem';
 import styles from './hamburger.scss';
 
@@ -36,15 +41,14 @@ const messages = defineMessages({
 @injectIntl
 @connect((state) => ({
   projectRole: activeProjectRoleSelector(state),
-  isAdmin: isAdminSelector(state),
   userId: userIdSelector(state),
+  accountRole: userAccountRoleSelector(state),
 }))
 export class Hamburger extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
     userId: PropTypes.string.isRequired,
     projectRole: PropTypes.string.isRequired,
-    isAdmin: PropTypes.bool.isRequired,
     onAction: PropTypes.func,
     launch: PropTypes.object.isRequired,
     onMoveToLaunches: PropTypes.func,
@@ -54,6 +58,7 @@ export class Hamburger extends Component {
     onExportXLS: PropTypes.func,
     onExportHTML: PropTypes.func,
     customProps: PropTypes.object,
+    accountRole: PropTypes.string,
   };
 
   static defaultProps = {
@@ -65,6 +70,7 @@ export class Hamburger extends Component {
     onExportXLS: () => {},
     onExportHTML: () => {},
     customProps: {},
+    accountRole: '',
   };
 
   state = {
@@ -89,15 +95,11 @@ export class Hamburger extends Component {
     this.setState({ menuShown: !this.state.menuShown });
   };
 
-  isNoPermissions = () =>
-    !this.props.isAdmin &&
-    this.props.projectRole !== PROJECT_MANAGER &&
-    this.props.userId !== this.props.launch.owner;
-
   render() {
     const {
       intl,
       projectRole,
+      accountRole,
       launch,
       onMoveToLaunches,
       onForceFinish,
@@ -127,7 +129,13 @@ export class Hamburger extends Component {
                 {launch.mode === 'DEFAULT' ? (
                   <HamburgerMenuItem
                     text={intl.formatMessage(messages.toDebug)}
-                    disabled={this.isNoPermissions()}
+                    disabled={
+                      !canMoveToDebug(
+                        accountRole,
+                        projectRole,
+                        this.props.userId === this.props.launch.owner,
+                      )
+                    }
                     onClick={() => {
                       customProps.onMoveToDebug(launch);
                     }}
@@ -135,7 +143,13 @@ export class Hamburger extends Component {
                 ) : (
                   <HamburgerMenuItem
                     text={intl.formatMessage(messages.toAllLaunches)}
-                    disabled={this.isNoPermissions()}
+                    disabled={
+                      !canMoveToDebug(
+                        accountRole,
+                        projectRole,
+                        this.props.userId === this.props.launch.owner,
+                      )
+                    }
                     onClick={() => {
                       onMoveToLaunches(launch);
                     }}
@@ -145,7 +159,13 @@ export class Hamburger extends Component {
             )}
             <HamburgerMenuItem
               text={intl.formatMessage(messages.forceFinish)}
-              disabled={this.isNoPermissions()}
+              disabled={
+                !canForceFinishLaunch(
+                  accountRole,
+                  projectRole,
+                  this.props.userId === this.props.launch.owner,
+                )
+              }
               onClick={() => {
                 onForceFinish(launch);
               }}
@@ -160,7 +180,13 @@ export class Hamburger extends Component {
             )}
             <HamburgerMenuItem
               text={intl.formatMessage(messages.delete)}
-              disabled={this.isNoPermissions()}
+              disabled={
+                !canDeleteLaunch(
+                  accountRole,
+                  projectRole,
+                  this.props.userId === this.props.launch.owner,
+                )
+              }
               onClick={() => {
                 customProps.onDeleteItem(launch);
               }}
