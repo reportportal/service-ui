@@ -161,7 +161,7 @@ define(function (require) {
             },
 
             patterns: {
-                email: /^[a-z0-9._-]+@[a-z0-9_-]+?\.[a-z0-9]{2,}$/i,
+                email: /^[a-z0-9._%+-]+@([a-z0-9_-]+\.)+[a-z0-9]{2,}$/i,
                 emailInternal: '^((?!(@epam.com)).)*$',
                 emailWrong: /wrong email/i,
                 login: /^[0-9a-zA-Z-_.]{1,128}$/,
