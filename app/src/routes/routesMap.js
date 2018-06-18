@@ -10,7 +10,7 @@ import {
   projectIdSelector,
 } from 'controllers/pages';
 import { isAuthorizedSelector } from 'controllers/auth';
-import { fetchDashboardAction } from 'controllers/dashboard';
+import { fetchDashboardAction, changeVisibilityTypeAction } from 'controllers/dashboard';
 
 const redirectRoute = (path, createNewAction) => ({
   path,
@@ -63,8 +63,13 @@ export default {
   [PROJECT_DASHBOARD_PAGE]: {
     path: '/:projectId/dashboard',
     thunk: (dispatch, getState) => {
+      const authorized = isAuthorizedSelector(getState());
+      if (!authorized) {
+        return;
+      }
       const projectId = projectIdSelector(getState());
       dispatch(fetchDashboardAction(projectId));
+      dispatch(changeVisibilityTypeAction());
     },
   },
   [PROJECT_DASHBOARD_ITEM_PAGE]: '/:projectId/dashboard/:dashboardId',
