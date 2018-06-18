@@ -1,4 +1,4 @@
-import { PureComponent } from 'react';
+import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { connectRouter, fetch } from 'common/utils';
@@ -12,7 +12,7 @@ import { RegistrationPage } from './registrationPage';
   showNotification,
 })
 @connectRouter(({ uuid }) => ({ uuid }))
-export class RegistrationPageContainer extends PureComponent {
+export class RegistrationPageContainer extends Component {
   static propTypes = {
     uuid: PropTypes.string,
     loginAction: PropTypes.func.isRequired,

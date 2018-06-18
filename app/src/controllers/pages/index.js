@@ -1,4 +1,9 @@
-export { pageSelector, pagePropertiesSelector, activeDashboardIdSelector } from './selectors';
+export {
+  pageSelector,
+  pagePropertiesSelector,
+  activeDashboardIdSelector,
+  projectIdSelector,
+} from './selectors';
 export { updatePagePropertiesAction } from './actionCreators';
 
 export {

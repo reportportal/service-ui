@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Responsive, WidthProvider } from 'react-grid-layout';
 import classNames from 'classnames/bind';
@@ -31,7 +31,7 @@ const cols = { lg: 12, md: 12, sm: 4, xs: 4, xxs: 4 };
     redirect,
   },
 )
-export class WidgetsGrid extends PureComponent {
+export class WidgetsGrid extends Component {
   static propTypes = {
     url: PropTypes.string.isRequired,
     isFullscreen: PropTypes.bool,

@@ -7,8 +7,10 @@ import {
   PROJECT_DASHBOARD_PAGE,
   PROJECT_PAGE,
   PROJECT_DASHBOARD_ITEM_PAGE,
+  projectIdSelector,
 } from 'controllers/pages';
 import { isAuthorizedSelector } from 'controllers/auth';
+import { fetchDashboardAction } from 'controllers/dashboard';
 
 const redirectRoute = (path, createNewAction) => ({
   path,
@@ -58,7 +60,13 @@ export default {
     type: PROJECT_DASHBOARD_PAGE,
     payload: { projectId: payload.projectId || 'default_project' },
   })),
-  [PROJECT_DASHBOARD_PAGE]: '/:projectId/dashboard',
+  [PROJECT_DASHBOARD_PAGE]: {
+    path: '/:projectId/dashboard',
+    thunk: (dispatch, getState) => {
+      const projectId = projectIdSelector(getState());
+      dispatch(fetchDashboardAction(projectId));
+    },
+  },
   [PROJECT_DASHBOARD_ITEM_PAGE]: '/:projectId/dashboard/:dashboardId',
   PROJECT_LAUNCHES_PAGE: '/:projectId/launches',
   PROJECT_FILTERS_PAGE: '/:projectId/filters',
