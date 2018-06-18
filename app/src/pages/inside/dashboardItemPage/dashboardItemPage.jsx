@@ -7,6 +7,7 @@ import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { activeDashboardIdSelector } from 'controllers/pages';
 import classNames from 'classnames/bind';
 import { GhostButton } from 'components/buttons/ghostButton';
+import { PageLayout } from 'layouts/pageLayout';
 import AddWidgetIcon from './img/add-inline.svg';
 import AddSharedWidgetIcon from './img/add-shared-inline.svg';
 import EditIcon from './img/edit-inline.svg';
@@ -18,6 +19,10 @@ import { WidgetsGrid } from './widgetsGrid';
 const cx = classNames.bind(styles);
 
 const messages = defineMessages({
+  pageTitle: {
+    id: 'DashboardPage.title',
+    defaultMessage: 'All Dashboards',
+  },
   addNewWidget: {
     id: 'DashboardItemPage.addNewWidget',
     defaultMessage: 'Add new widget',
@@ -67,23 +72,23 @@ export class DashboardItemPage extends Component {
   render() {
     const { formatMessage } = this.props.intl;
     return (
-      <div className={cx('dashboard-item')}>
-        <div className={cx('buttons-container')}>
-          <div className={cx('nav-left')}>
-            <GhostButton icon={AddWidgetIcon}>{formatMessage(messages.addNewWidget)}</GhostButton>
-            <GhostButton icon={AddSharedWidgetIcon}>
-              {formatMessage(messages.addSharedWidget)}
-            </GhostButton>
+      <PageLayout title={formatMessage(messages.pageTitle)}>
+        <div className={cx('dashboard-item')}>
+          <div className={cx('buttons-container')}>
+            <div className={cx('nav-left')}>
+              <GhostButton icon={AddWidgetIcon}>{formatMessage(messages.addNewWidget)}</GhostButton>
+              <GhostButton icon={AddSharedWidgetIcon}>
+                {formatMessage(messages.addSharedWidget)}
+              </GhostButton>
+            </div>
+            <div className={cx('nav-right')}>
+              <GhostButton icon={EditIcon}>{formatMessage(messages.refreshWidget)}</GhostButton>
+              <GhostButton icon={FullscreenIcon} onClick={this.toggleFullscreen}>
+                {formatMessage(messages.fullscreen)}
+              </GhostButton>
+              <GhostButton icon={CancelIcon}>{formatMessage(messages.deleteWidget)}</GhostButton>
+            </div>
           </div>
-          <div className={cx('nav-right')}>
-            <GhostButton icon={EditIcon}>{formatMessage(messages.refreshWidget)}</GhostButton>
-            <GhostButton icon={FullscreenIcon} onClick={this.toggleFullscreen}>
-              {formatMessage(messages.fullscreen)}
-            </GhostButton>
-            <GhostButton icon={CancelIcon}>{formatMessage(messages.deleteWidget)}</GhostButton>
-          </div>
-        </div>
-
         <Fullscreen enabled={this.state.isFullscreen} onChange={this.onChangeFullscreen}>
           <WidgetsGrid
             dashboardId={this.props.dashboardId}

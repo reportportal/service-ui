@@ -3,15 +3,21 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { connectRouter, fetch } from 'common/utils';
 import { loginAction } from 'controllers/auth';
+import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
+import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
 import { RegistrationPage } from './registrationPage';
 
-@connect(null, { loginAction })
+@connect(null, {
+  loginAction,
+  showNotification,
+})
 @connectRouter(({ uuid }) => ({ uuid }))
 export class RegistrationPageContainer extends PureComponent {
   static propTypes = {
     uuid: PropTypes.string,
     loginAction: PropTypes.func.isRequired,
+    showNotification: PropTypes.func.isRequired,
   };
   static defaultProps = {
     uuid: undefined,
@@ -45,9 +51,24 @@ export class RegistrationPageContainer extends PureComponent {
       password,
       email,
     };
-    fetch(URLS.userRegistration(), { method: 'post', data, params: { uuid } }).then(() =>
-      this.props.loginAction({ login, password }),
-    );
+    return fetch(URLS.userRegistration(), { method: 'post', data, params: { uuid } })
+      .then(() => this.props.loginAction({ login, password }))
+      .catch((err) => {
+        let message;
+        const responseData = err.response && err.response.data && err.response.data;
+
+        // TODO remove condition after merging PR #773 (message will be always in err.message)
+        if (data && responseData.message) {
+          message = responseData.message;
+        } else {
+          message = err.message;
+        }
+        this.props.showNotification({
+          type: NOTIFICATION_TYPES.ERROR,
+          message,
+        });
+        throw message;
+      });
   };
 
   render() {
