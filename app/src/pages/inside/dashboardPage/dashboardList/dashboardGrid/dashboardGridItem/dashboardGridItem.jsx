@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import { Icon } from 'components/main/icon';
 import { NavLink } from 'redux-first-router-link';
 import { hasPrevilegesForDashboardDeletion } from 'common/utils/validation';
-import { PROJECT_DASHBOARD_PAGE } from 'controllers/pages';
+import { PROJECT_DASHBOARD_ITEM_PAGE } from 'controllers/pages';
 import { activeProjectSelector } from 'controllers/user';
 
 import styles from './dashboardGridItem.scss';
@@ -79,7 +79,7 @@ export class DashboardGridItem extends Component {
 
     return (
       <NavLink
-        to={{ type: PROJECT_DASHBOARD_PAGE, payload: { projectId, itemId: id } }}
+        to={{ type: PROJECT_DASHBOARD_ITEM_PAGE, payload: { projectId, dashboardId: id } }}
         className={cx('grid-view')}
       >
         <div className={cx('grid-view__inner')}>

@@ -1,8 +1,9 @@
 import React, { PureComponent } from 'react';
-import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Responsive, WidthProvider } from 'react-grid-layout';
 import classNames from 'classnames/bind';
+import { redirect } from 'redux-first-router';
+import { PROJECT_DASHBOARD_PAGE, activeDashboardIdSelector } from 'controllers/pages';
 import { fetch } from 'common/utils';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import PropTypes from 'prop-types';
@@ -20,19 +21,23 @@ const rowHeight = 63;
 const breakpoints = { lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 };
 const cols = { lg: 12, md: 12, sm: 4, xs: 4, xxs: 4 };
 
-@withRouter
-@connect((state, ownProps) => ({
-  url: URLS.dashboard(activeProjectSelector(state), ownProps.dashboardId),
-  userInfo: userInfoSelector(state),
-  project: activeProjectSelector(state),
-}))
+@connect(
+  (state) => ({
+    url: URLS.dashboard(activeProjectSelector(state), activeDashboardIdSelector(state)),
+    userInfo: userInfoSelector(state),
+    project: activeProjectSelector(state),
+  }),
+  {
+    redirect,
+  },
+)
 export class WidgetsGrid extends PureComponent {
   static propTypes = {
     url: PropTypes.string.isRequired,
     isFullscreen: PropTypes.bool,
     project: PropTypes.string.isRequired,
     userInfo: PropTypes.object.isRequired,
-    history: PropTypes.object.isRequired,
+    redirect: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
@@ -117,7 +122,7 @@ export class WidgetsGrid extends PureComponent {
       })
       .catch(({ response }) => {
         if (response && response.status === 404) {
-          this.props.history.push(`/#${project}/dashboard`)
+          this.props.redirect({ to: PROJECT_DASHBOARD_PAGE, payload: { projectId: project } });
         }
       });
   }
@@ -171,7 +176,7 @@ export class WidgetsGrid extends PureComponent {
           </ScrollWrapper>
         )}
 
-        {(!this.state.isFetching && !widgets.length) && <EmptyWidgetGrid />}
+        {!this.state.isFetching && !widgets.length && <EmptyWidgetGrid />}
       </div>
     );
   }
