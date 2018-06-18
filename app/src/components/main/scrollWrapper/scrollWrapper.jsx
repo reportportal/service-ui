@@ -24,6 +24,7 @@ import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import Parser from 'html-react-parser';
 import { FormattedMessage } from 'react-intl';
+import { SpringSystem } from 'rebound';
 import { Scrollbars } from 'react-custom-scrollbars';
 import TopIcon from './img/top-inline.svg';
 import styles from './scrollWrapper.scss';
@@ -67,6 +68,41 @@ export class ScrollWrapper extends Component {
     showButton: false,
   };
 
+  componentDidMount = () => {
+    this.springSystem = new SpringSystem();
+    this.spring = this.springSystem.createSpring();
+    this.spring.addListener({ onSpringUpdate: this.handleSpringUpdate });
+  };
+
+  componentWillUnmount = () => {
+    this.springSystem.deregisterSpring(this.spring);
+    this.springSystem.removeAllListeners();
+    this.springSystem = undefined;
+    this.spring.destroy();
+    this.spring = undefined;
+  };
+
+  getScrollTop = () => this.scrollbars.getScrollTop();
+
+  getScrollHeight = () => this.scrollbars.getScrollHeight();
+
+  getHeight = () => this.scrollbars.getHeight();
+
+  setupRef = (scrollbars) => {
+    this.scrollbars = scrollbars;
+  };
+
+  handleSpringUpdate = (spring) => {
+    const val = spring.getCurrentValue();
+    this.scrollbars.scrollTop(val);
+  };
+
+  scrollTop = () => {
+    const scrollTop = this.scrollbars.getScrollTop();
+    this.spring.setCurrentValue(scrollTop).setAtRest();
+    this.spring.setEndValue(0);
+  };
+
   handleScrollFrame = (values) => {
     this.props.withBackToTop && values.scrollTop > 100
       ? this.setState({ showButton: true })
@@ -87,9 +123,7 @@ export class ScrollWrapper extends Component {
     return (
       // base props are defined. For more info see https://github.com/malte-wessel/react-custom-scrollbars/blob/master/docs/API.md
       <Scrollbars
-        ref={(scrollbars) => {
-          this.scrollbars = scrollbars;
-        }}
+        ref={this.setupRef}
         className={cx('scroll-component')}
         autoHide={this.props.autoHide}
         autoHeight={this.props.autoHeight}
@@ -108,12 +142,7 @@ export class ScrollWrapper extends Component {
       >
         {this.props.children}
         {this.state.showButton && (
-          <button
-            className={cx('back-to-top')}
-            onClick={() => {
-              this.scrollbars.scrollToTop();
-            }}
-          >
+          <button className={cx('back-to-top')} onClick={this.scrollTop}>
             <i className={cx('top-icon')}>{Parser(TopIcon)}</i>
             <FormattedMessage id="ScrollWrapper.backToTop" defaultMessage="Back to top" />
           </button>
