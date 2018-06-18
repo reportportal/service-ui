@@ -9,7 +9,7 @@ import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { reduxForm } from 'redux-form';
 import { Input } from 'components/inputs/input';
 import classNames from 'classnames/bind';
-import styles from './editPersonalInfoModl.scss';
+import styles from './editPersonalInfoModal.scss';
 
 const LABEL_WIDTH = 90;
 const cx = classNames.bind(styles);

@@ -1,4 +1,4 @@
-import { PureComponent } from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 import { injectIntl, intlShape, defineMessages } from 'react-intl';
 import { setStorageItem } from 'common/utils';
@@ -10,6 +10,7 @@ import { InputDropdown } from 'components/inputs/inputDropdown';
 import styles from './localizationBlock.scss';
 import EnglishFlagIcon from './img/en-flag-inline.svg';
 import RussianFlagIcon from './img/ru-flag-inline.svg';
+import BelarusFlagIcon from './img/be-flag-inline.svg';
 
 const cx = classNames.bind(styles);
 
@@ -22,6 +23,10 @@ const messages = defineMessages({
     id: 'LocalizationBlock.russian',
     defaultMessage: 'Russian',
   },
+  belarusian: {
+    id: 'LocalizationBlock.belarusian',
+    defaultMessage: 'Belarusian',
+  },
   english: {
     id: 'LocalizationBlock.english',
     defaultMessage: 'English (United States)',
@@ -30,15 +35,26 @@ const messages = defineMessages({
     id: 'LocalizationBlock.note',
     defaultMessage: 'Note',
   },
-  reload: {
-    id: 'LocalizationBlock.reload',
-    defaultMessage: `You have to <a>Reload</a> the page to implement language change.`,
-  },
   contribute: {
     id: 'LocalizationBlock.contribute',
     defaultMessage: `Ru lang in beta. Please help us to translate it, send your PR to this <a target='_blank' href='https://github.com/reportportal/service-ui/blob/develop/src/main/resources/public/js/src/localizations/ru-RU.js' >file.</a>`,
   },
 });
+
+const LanguageOption = ({ icon, label }) => (
+  <div className={cx('icon-block')}>
+    <i className={cx('icon')}>{Parser(icon)}</i>
+    {label}
+  </div>
+);
+LanguageOption.propTypes = {
+  icon: PropTypes.string,
+  label: PropTypes.string,
+};
+LanguageOption.defaultProps = {
+  icon: '',
+  label: '',
+};
 
 @connect(
   (state) => ({
@@ -49,37 +65,37 @@ const messages = defineMessages({
   },
 )
 @injectIntl
-export class LocalizationBlock extends PureComponent {
+export class LocalizationBlock extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
     lang: PropTypes.string.isRequired,
     setLangAction: PropTypes.func.isRequired,
   };
 
-  state = {
-    lang: this.props.lang,
-    showNote: false,
-  };
-
-  onReload = () => {
-    setStorageItem('application_settings', { appLanguage: this.state.lang });
-    this.setState({ showNote: false });
-    this.props.setLangAction(this.state.lang);
-  };
-
-  selectLanguage = (lang) => {
-    this.setState({ lang, showNote: true });
+  onChangeLanguage = (lang) => {
+    setStorageItem('application_settings', { appLanguage: lang });
+    this.props.setLangAction(lang);
   };
 
   render() {
-    const englishIcon = `<div className=${cx('icon-block')}>
-        <i className=${cx('icon')}>${EnglishFlagIcon}</i>
-        ${this.props.intl.formatMessage(messages.english)}
-      </div>`;
-    const russianIcon = `<div className=${cx('icon-block')}>
-        <i className=${cx('icon')}>${RussianFlagIcon}</i>
-        ${this.props.intl.formatMessage(messages.russian)}
-      </div>`;
+    const englishLangOption = (
+      <LanguageOption
+        icon={EnglishFlagIcon}
+        label={this.props.intl.formatMessage(messages.english)}
+      />
+    );
+    const russianLangOption = (
+      <LanguageOption
+        icon={RussianFlagIcon}
+        label={this.props.intl.formatMessage(messages.russian)}
+      />
+    );
+    const belarusLangOption = (
+      <LanguageOption
+        icon={BelarusFlagIcon}
+        label={this.props.intl.formatMessage(messages.belarusian)}
+      />
+    );
     return (
       <div className={cx('localization-block')}>
         <span className={cx('label')}>{this.props.intl.formatMessage(messages.label)}</span>
@@ -88,27 +104,27 @@ export class LocalizationBlock extends PureComponent {
             options={[
               {
                 value: 'en',
-                label: Parser(englishIcon),
+                label: englishLangOption,
               },
               {
                 value: 'ru',
-                label: Parser(russianIcon),
+                label: russianLangOption,
+              },
+              {
+                value: 'be',
+                label: belarusLangOption,
               },
             ]}
-            value={this.state.lang}
-            onChange={this.selectLanguage}
+            value={this.props.lang}
+            onChange={this.onChangeLanguage}
           />
-          {this.state.showNote && (
-            <div className={cx('description')}>
-              <p className={cx('note')}>{this.props.intl.formatMessage(messages.note)}:</p>
-              <a className={cx('text')} onClick={this.onReload}>
-                {Parser(this.props.intl.formatMessage(messages.reload))}
-              </a>
-              <p className={cx('text')}>
-                {Parser(this.props.intl.formatMessage(messages.contribute))}
-              </p>
-            </div>
-          )}
+
+          <div className={cx('description')}>
+            <p className={cx('note')}>{this.props.intl.formatMessage(messages.note)}:</p>
+            <p className={cx('text')}>
+              {Parser(this.props.intl.formatMessage(messages.contribute))}
+            </p>
+          </div>
         </div>
       </div>
     );

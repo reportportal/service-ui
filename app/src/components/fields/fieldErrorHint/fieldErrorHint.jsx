@@ -10,16 +10,16 @@ const messages = defineMessages({
   loginHint: {
     id: 'RegistrationForm.loginHint',
     defaultMessage:
-      "Login should have size from '1' to '128' symbols, latin, numeric characters, hyphen, underscore, dot.",
+      'Login should have size from 1 to 128 symbols, latin, numeric characters, hyphen, underscore, dot.',
   },
   nameHint: {
     id: 'RegistrationForm.nameHint',
     defaultMessage:
-      "Full name should have size from '3' to '256' symbols, latin, cyrillic, numeric characters, hyphen, underscore, dot, space.",
+      'Full name should have size from 3 to 256 symbols, latin, cyrillic, numeric characters, hyphen, underscore, dot, space.',
   },
   passwordHint: {
     id: 'RegistrationForm.passwordHint',
-    defaultMessage: "Password should have size from '4' to '25' symbols.",
+    defaultMessage: 'Password should have size from 4 to 25 symbols.',
   },
   emailHint: {
     id: 'Common.validation.email',
@@ -51,7 +51,7 @@ const messages = defineMessages({
   },
   profilePassword: {
     id: 'ChangePasswordModal.profilePassword',
-    defaultMessage: "Password should have size from '4' to '25' symbols",
+    defaultMessage: 'Password should have size from 4 to 25 symbols',
   },
   profileConfirmPassword: {
     id: 'ChangePasswordModal.profileConfirmPassword',
@@ -60,7 +60,7 @@ const messages = defineMessages({
   profileUserName: {
     id: 'ChangePasswordModal.profileUserName',
     defaultMessage:
-      "Full name should have size from '3' to '256' symbols, latin, cyrillic, numeric characters, hyphen, underscore, dot, space.",
+      'Full name should have size from 3 to 256 symbols, latin, cyrillic, numeric characters, hyphen, underscore, dot, space.',
   },
   profileEmail: {
     id: 'ChangePasswordModal.profileEmail',

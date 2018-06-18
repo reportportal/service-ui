@@ -1,10 +1,10 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { showModalAction } from 'controllers/modal';
 import classNames from 'classnames/bind';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
-import { userTokenSelector, fetchNewUserTokenAction } from 'controllers/user';
+import { userTokenSelector, generateApiTokenAction } from 'controllers/user';
 import { Input } from 'components/inputs/input/input';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { defineMessages, injectIntl, intlShape } from 'react-intl';
@@ -41,31 +41,34 @@ const messages = defineMessages({
   (state) => ({
     token: userTokenSelector(state),
   }),
-  { showNotification, showModalAction, fetchNewUserTokenAction },
+  { showNotification, showModalAction, generateApiTokenAction },
 )
 @injectIntl
-export class UuidBlock extends PureComponent {
+export class UuidBlock extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
     showModalAction: PropTypes.func.isRequired,
-    fetchNewUserTokenAction: PropTypes.func.isRequired,
+    generateApiTokenAction: PropTypes.func.isRequired,
     showNotification: PropTypes.func.isRequired,
     token: PropTypes.string,
   };
-
   static defaultProps = {
     token: '',
   };
-
   onGenerate = () =>
     this.props.showModalAction({
       id: 'regenerateUuidModal',
       data: { onRegenerate: this.regenerateHandler },
     });
-
+  setupRef = (node) => {
+    this.inputLink = node;
+  };
+  selectUuid = () => {
+    this.inputLink.select();
+  };
   regenerateHandler = () => {
     this.props
-      .fetchNewUserTokenAction()
+      .generateApiTokenAction()
       .then(() => {
         this.props.showNotification({
           message: this.props.intl.formatMessage(messages.regenerateSuccess),
@@ -79,11 +82,6 @@ export class UuidBlock extends PureComponent {
         });
       });
   };
-
-  selectUuid = () => {
-    this.inputLink.select();
-  };
-
   render = () => {
     const { intl } = this.props;
     return (
@@ -106,9 +104,7 @@ export class UuidBlock extends PureComponent {
                 <Input
                   readonly
                   value={this.props.token}
-                  refFunction={(node) => {
-                    this.inputLink = node;
-                  }}
+                  refFunction={this.setupRef}
                   onFocus={this.selectUuid}
                 />
               </div>

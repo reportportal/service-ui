@@ -1,10 +1,11 @@
+import React, { Fragment } from 'react';
 import { FormattedMessage } from 'react-intl';
 import classNames from 'classnames/bind';
 import styles from './warningTooltip.scss';
 
 const cx = classNames.bind(styles);
 export const WarningTooltip = () => (
-  <div>
+  <Fragment>
     <p className={cx('text')}>
       <FormattedMessage
         id="WarningTooltip.description"
@@ -20,5 +21,5 @@ export const WarningTooltip = () => (
         defaultMessage="All configured agents with old UUID will not be working after that"
       />
     </p>
-  </div>
+  </Fragment>
 );
