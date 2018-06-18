@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import { connectRouter, fetch } from 'common/utils';
 import { loginAction } from 'controllers/auth';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
-import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
 import { RegistrationPage } from './registrationPage';
 
