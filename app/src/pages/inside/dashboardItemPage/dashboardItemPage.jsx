@@ -89,18 +89,19 @@ export class DashboardItemPage extends Component {
               <GhostButton icon={CancelIcon}>{formatMessage(messages.deleteWidget)}</GhostButton>
             </div>
           </div>
-        <Fullscreen enabled={this.state.isFullscreen} onChange={this.onChangeFullscreen}>
-          <WidgetsGrid
-            dashboardId={this.props.dashboardId}
-            isFullscreen={this.state.isFullscreen}
-          />
-          {this.state.isFullscreen && (
-            <i className={cx('icon-close')} onClick={this.toggleFullscreen}>
-              {Parser(CancelIcon)}
-            </i>
-          )}
-        </Fullscreen>
-      </div>
+          <Fullscreen enabled={this.state.isFullscreen} onChange={this.onChangeFullscreen}>
+            <WidgetsGrid
+              dashboardId={this.props.dashboardId}
+              isFullscreen={this.state.isFullscreen}
+            />
+            {this.state.isFullscreen && (
+              <i className={cx('icon-close')} onClick={this.toggleFullscreen}>
+                {Parser(CancelIcon)}
+              </i>
+            )}
+          </Fullscreen>
+        </div>
+      </PageLayout>
     );
   }
 }
