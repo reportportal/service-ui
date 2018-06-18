@@ -51,15 +51,15 @@ export class WizardInfoSection extends Component {
             />
           ))}
         </div>
+        <div className={cx('widget-preview-block')}>
+          {activeWidget.id ? activeWidget.preview : Parser(EmptyWidgetPreview)}
+        </div>
         {activeWidget.id && (
           <div className={cx('widget-info-block')}>
             <div className={cx('widget-title')}>{activeWidget.title}</div>
             <div className={cx('widget-description')}>{activeWidget.description}</div>
           </div>
         )}
-        <div className={cx('widget-preview-block')}>
-          {activeWidget.id ? activeWidget.preview : Parser(EmptyWidgetPreview)}
-        </div>
       </div>
     );
   }
