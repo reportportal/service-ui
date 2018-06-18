@@ -4,8 +4,8 @@ export {
   fetchUserAction,
   setActiveProjectAction,
   setStartTimeFormatAction,
-  fetchNewUserTokenAction,
-  fetchUserTokenAction,
+  generateApiTokenAction,
+  fetchApiTokenAction,
 } from './actionCreators';
 export { userReducer } from './reducer';
 export {
@@ -18,6 +18,5 @@ export {
   assignedProjectsSelector,
   activeProjectRoleSelector,
   userAccountRoleSelector,
-  assignedProjectsSelector,
   userTokenSelector,
 } from './selectors';

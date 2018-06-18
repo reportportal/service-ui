@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { withTooltip } from 'components/main/tooltips/tooltip';
 import PropTypes from 'prop-types';
 import { WarningTooltip } from './warningTooltip';
@@ -16,6 +16,6 @@ export class ButtonWithTooltip extends Component {
   };
 
   render() {
-    return <div>{this.props.children}</div>;
+    return this.props.children;
   }
 }

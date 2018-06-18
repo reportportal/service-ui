@@ -23,17 +23,17 @@ export const setActiveProjectAction = (project) => (dispatch, getState) => {
   });
 };
 
-export const fetchNewUserTokenAction = () => (dispatch) =>
-  fetch(URLS.getUUID(), { method: 'post' }).then((res) => {
+export const generateApiTokenAction = () => (dispatch) =>
+  fetch(URLS.apiToken(), { method: 'post' }).then((res) => {
     dispatch({ type: SET_USER_TOKEN, payload: res.access_token });
   });
 
-export const fetchUserTokenAction = () => (dispatch) =>
-  fetch(URLS.getUUID(), { method: 'get' })
+export const fetchApiTokenAction = () => (dispatch) =>
+  fetch(URLS.apiToken(), { method: 'get' })
     .then((res) => {
       dispatch({ type: SET_USER_TOKEN, payload: res.access_token });
     })
-    .catch(() => dispatch(fetchNewUserTokenAction()));
+    .catch(() => dispatch(generateApiTokenAction()));
 
 export const fetchUserAction = () => (dispatch) =>
   fetch(URLS.user()).then((user) => {
@@ -44,7 +44,7 @@ export const fetchUserAction = () => (dispatch) =>
       Object.prototype.hasOwnProperty.call(user.assigned_projects, savedActiveProject)
         ? savedActiveProject
         : user.default_project;
-    dispatch(fetchUserTokenAction());
+    dispatch(fetchApiTokenAction());
     dispatch(fetchUserSuccessAction(user));
     dispatch(setActiveProjectAction(activeProject));
     return { user, activeProject };

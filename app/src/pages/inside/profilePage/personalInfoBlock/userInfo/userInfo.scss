@@ -1,0 +1,80 @@
+.login {
+  height: 20px;
+  max-width: 100%;
+  margin-right: 140px;
+  margin-bottom: 10px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-transform: uppercase;
+  text-overflow: ellipsis;
+  line-height: 20px;
+  font-family: $FONT-SEMIBOLD;
+  font-size: 16px;
+  color: $COLOR--charcoal-grey;
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    margin-right: 0;
+  }
+}
+.name {
+  position: relative;
+  max-width: 100%;
+  margin-bottom: 10px;
+  padding-right: 25px;
+  overflow: hidden;
+  box-sizing: border-box;
+  text-overflow: ellipsis;
+  font-family: $FONT-REGULAR;
+  font-size: 14px;
+  color: $COLOR--charcoal-grey;
+  white-space: nowrap;
+  line-height: 20px;
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    padding-right: 0;
+  }
+
+  &:hover {
+    .pencil-icon {
+      display: inline;
+
+      @media (max-width: $SCREEN_XS_MAX) {
+        display: none;
+      }
+    }
+  }
+}
+.pencil-icon {
+  display: none;
+  margin-left: 5px;
+  cursor: pointer;
+  svg {
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+    vertical-align: top;
+  }
+}
+.email {
+  position: relative;
+  max-width: 100%;
+  min-height: 20px;
+  margin-bottom: 10px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-all;
+  line-height: 20px;
+  font-family: $FONT-SEMIBOLD;
+  font-size: 14px;
+  color: $COLOR--charcoal-grey;
+
+  &:hover {
+    .pencil-icon {
+      display: inline;
+
+      @media (max-width: $SCREEN_XS_MAX) {
+        display: none;
+      }
+    }
+  }
+}

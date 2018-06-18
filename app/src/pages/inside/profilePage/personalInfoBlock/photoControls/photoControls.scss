@@ -1,0 +1,35 @@
+.invalid-image {
+  margin: 10px 0 0;
+  line-height: 17px;
+  font-size: 12px;
+  color: $COLOR--orange-red;
+  font-family: $FONT-REGULAR;
+}
+.remove {
+  padding: 0;
+  border: none;
+  background: none;
+  color: $COLOR--windows-blue;
+  font-size: 13px;
+  font-family: $FONT-REGULAR;
+  cursor: pointer;
+  outline: none;
+}
+.photo-controls {
+  position: relative;
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    display: none;
+  }
+}
+.input-file {
+  display: none;
+}
+.photo-btn {
+  display: inline-block;
+  margin-right: 10px;
+
+  &:last-child {
+    margin-right: 0;
+  }
+}

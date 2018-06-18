@@ -1,9 +1,10 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
 import { defineMessages, injectIntl, intlShape } from 'react-intl';
 import { assignedProjectsSelector } from 'controllers/user';
+import { ScrollWrapper } from 'components/main/scrollWrapper/scrollWrapper';
 import styles from './assignedProjectsBlock.scss';
 import { BlockContainerBody, BlockContainerHeader } from '../blockContainer';
 
@@ -23,7 +24,7 @@ const messages = defineMessages({
   projects: assignedProjectsSelector(state),
 }))
 @injectIntl
-export class AssignedProjectsBlock extends PureComponent {
+export class AssignedProjectsBlock extends Component {
   static propTypes = {
     projects: PropTypes.object,
     intl: intlShape.isRequired,
@@ -34,24 +35,26 @@ export class AssignedProjectsBlock extends PureComponent {
 
   render = () => {
     const { intl, projects } = this.props;
-    const keys = Object.keys(projects);
     return (
       <div className={cx('assigned-projects-block')}>
         <BlockContainerHeader>
           <div className={cx('name-col')}>
             {intl.formatMessage(messages.headerNameCol)}
-            {` (${projects.length})`}
+            {` (${Object.keys(projects).length})`}
           </div>
           <div className={cx('role-col')}>{intl.formatMessage(messages.headerRoleCol)}</div>
         </BlockContainerHeader>
-        <BlockContainerBody>
-          {keys.map((project) => (
-            <div key={project} className={cx('project-item')}>
-              <div className={cx('name-col')}>{project}</div>
-              <div className={cx('role-col')}>{projects[project].projectRole}</div>
-            </div>
-          ))}
-        </BlockContainerBody>
+
+        <ScrollWrapper autoHeight autoHeightMax={350}>
+          <BlockContainerBody>
+            {Object.keys(projects).map((project) => (
+              <div key={project} className={cx('project-item')}>
+                <div className={cx('name-col')}>{project}</div>
+                <div className={cx('role-col')}>{projects[project].projectRole}</div>
+              </div>
+            ))}
+          </BlockContainerBody>
+        </ScrollWrapper>
       </div>
     );
   };

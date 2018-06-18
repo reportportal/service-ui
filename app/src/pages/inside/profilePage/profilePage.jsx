@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import { defineMessages, injectIntl, intlShape } from 'react-intl';
 import classNames from 'classnames/bind';
 import { PageLayout } from 'layouts/pageLayout';
@@ -18,7 +18,7 @@ const messages = defineMessages({
   },
 });
 @injectIntl
-export class ProfilePage extends PureComponent {
+export class ProfilePage extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
   };

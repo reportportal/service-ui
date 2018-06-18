@@ -16,35 +16,35 @@ const LABEL_WIDTH = 90;
 const cx = classNames.bind(styles);
 const messages = defineMessages({
   header: {
-    id: 'changePasswordModal.header',
+    id: 'ChangePasswordModal.header',
     defaultMessage: 'Change password',
   },
   oldPasswordPlaceholder: {
-    id: 'changePasswordModal.oldPasswordPlaceholder',
+    id: 'ChangePasswordModal.oldPasswordPlaceholder',
     defaultMessage: 'Enter old password',
   },
   newPasswordPlaceholder: {
-    id: 'changePasswordModal.newPasswordPlaceholder',
+    id: 'ChangePasswordModal.newPasswordPlaceholder',
     defaultMessage: 'Enter new password',
   },
   confirmPlaceholder: {
-    id: 'changePasswordModal.confirmPlaceholder',
+    id: 'ChangePasswordModal.confirmPlaceholder',
     defaultMessage: 'Confirm new password',
   },
   oldPasswordLabel: {
-    id: 'changePasswordModal.oldPasswordLabel',
+    id: 'ChangePasswordModal.oldPasswordLabel',
     defaultMessage: 'Old password',
   },
   newPasswordLabel: {
-    id: 'changePasswordModal.newPasswordLabel',
+    id: 'ChangePasswordModal.newPasswordLabel',
     defaultMessage: 'New password',
   },
   confirmLabel: {
-    id: 'changePasswordModal.confirmLabel',
+    id: 'ChangePasswordModal.confirmLabel',
     defaultMessage: 'Confirm',
   },
   showPassword: {
-    id: 'changePasswordModal.showPassword',
+    id: 'ChangePasswordModal.showPassword',
     defaultMessage: 'Show password',
   },
 });
