@@ -7,4 +7,8 @@
   padding-right: 15px;
   padding-left: 15px;
   text-align: center;
+  @media (max-width: $SCREEN_XS_MAX) {
+    min-height: 70px;
+    padding-top: 25px;
+  }
 }
