@@ -87,7 +87,7 @@ export const dateFormat = (val, withUtc) => {
   const hour = date.getHours();
   const minute = date.getMinutes();
   const second = date.getSeconds();
-  let utc = date.getTimezoneOffset() / 60 * -1;
+  let utc = (date.getTimezoneOffset() / 60) * -1;
 
   if (utc.toString().indexOf('-') === -1) {
     utc = `UTC+${utc}`;
@@ -121,4 +121,20 @@ export const daysBetween = (date1, date2) => {
   const difference = Math.abs(date1.getTime() - date2.getTime());
   // Convert back to days and return
   return Math.round(difference / ONE_DAY);
+};
+
+export const utcOffset = (new Date().getTimezoneOffset() / 60) * -1;
+
+export const getTimestampFromMinutes = (minutes) => {
+  const currentUnix = moment()
+    .startOf('day')
+    .unix();
+  return (parseInt(minutes, 10) * 60 + currentUnix) * 1000;
+};
+
+export const getMinutesFromTimestamp = (timestamp) => {
+  const currentUnix = moment()
+    .startOf('day')
+    .unix();
+  return parseInt((moment(timestamp).unix() - currentUnix) / 60, 10);
 };

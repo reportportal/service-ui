@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import moment from 'moment/moment';
+import { utcOffset, getTimestampFromMinutes, getMinutesFromTimestamp } from 'common/utils';
 import { FieldFilterEntity } from 'components/fields/fieldFilterEntity';
 import { InputTimeDateRange } from 'components/inputs/inputTimeDateRange';
 import { CONDITION_BETWEEN } from 'components/filterEntities/constants';
@@ -61,23 +62,8 @@ const presets = [
     },
   },
 ];
-const utcOffset = (new Date().getTimezoneOffset() / 60) * -1;
 
 const utcString = `${utcOffset > -1 ? `+${utcOffset}` : utcOffset}`;
-
-const getTimestampFromMinutes = (minutes) => {
-  const currentUnix = moment()
-    .startOf('day')
-    .unix();
-  return (parseInt(minutes, 10) * 60 + currentUnix) * 1000;
-};
-
-const getMinutesFromTimestamp = (timestamp) => {
-  const currentUnix = moment()
-    .startOf('day')
-    .unix();
-  return parseInt((moment(timestamp).unix() - currentUnix) / 60, 10);
-};
 
 const formatValue = ({ start, end, dynamic }) => {
   if (!dynamic) {
