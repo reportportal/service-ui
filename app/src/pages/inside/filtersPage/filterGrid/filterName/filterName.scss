@@ -1,0 +1,40 @@
+.name-wrapper {
+  width: 100%;
+  display: inline-block;
+  margin-bottom: 5px;
+}
+.name {
+  line-height: 20px;
+  word-break: break-all;
+  font-size: 14px;
+
+  &.link {
+    color: $COLOR--windows-blue;
+    cursor: pointer;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    font-size: 16px;
+  }
+}
+.pencil-icon {
+  width: 20px;
+  height: 20px;
+  margin-left: 10px;
+  display: none;
+  vertical-align: top;
+  background-image: url(./img/pencil-icon.svg);
+  cursor: pointer;
+
+  &:hover {
+    background-image: url(./img/pencil-icon-hover.svg);
+  }
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    display: inline-block;
+  }
+}

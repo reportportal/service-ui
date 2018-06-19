@@ -1,0 +1,19 @@
+.bin-icon {
+  width: 20px;
+  display: inline-block;
+  cursor: pointer;
+  fill: $COLOR--gray-60;
+
+  &:hover {
+    fill: $COLOR--gray-47;
+  }
+
+  &.disabled {
+    cursor: default;
+    fill: rgba($COLOR--gray-60, 0.5);
+
+    .hover {
+      fill: $COLOR--gray-47;
+    }
+  }
+}

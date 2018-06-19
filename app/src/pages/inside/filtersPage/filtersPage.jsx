@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
@@ -8,16 +8,23 @@ import {
   fetchFiltersAction,
   filtersSelector,
 } from 'controllers/filter';
-import { userIdSelector, activeProjectSelector, activeProjectRoleSelector } from 'controllers/user';
+import {
+  userIdSelector,
+  activeProjectSelector,
+  activeProjectRoleSelector,
+  userAccountRoleSelector,
+} from 'controllers/user';
 import { withPagination } from 'controllers/pagination';
+import { PaginationToolbar } from 'components/main/paginationToolbar';
 import { PageLayout } from 'layouts/pageLayout';
 import { showModalAction } from 'controllers/modal';
 import { withSorting, SORTING_ASC } from 'controllers/sorting';
 import { userFiltersSelector, toggleDisplayFilterOnLaunchesAction } from 'controllers/project';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
-import { FilterTable } from './filterTable';
+import { NoFiltersBlock } from './noFiltersBlock';
 import { FilterPageToolbar } from './filterPageToolbar';
+import { FilterGrid } from './filterGrid';
 
 const messages = defineMessages({
   filtersPageTitle: {
@@ -33,6 +40,7 @@ const messages = defineMessages({
     activeProject: activeProjectSelector(state),
     userFilters: userFiltersSelector(state),
     projectRole: activeProjectRoleSelector(state),
+    accountRole: userAccountRoleSelector(state),
     filters: filtersSelector(state),
   }),
   {
@@ -50,7 +58,7 @@ const messages = defineMessages({
   fetchAction: fetchFiltersAction,
 })
 @injectIntl
-export class FiltersPage extends PureComponent {
+export class FiltersPage extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
     filters: PropTypes.arrayOf(PropTypes.object),
@@ -67,6 +75,8 @@ export class FiltersPage extends PureComponent {
     fetchData: PropTypes.func,
     showModalAction: PropTypes.func,
     projectRole: PropTypes.string,
+    userFilters: PropTypes.arrayOf(PropTypes.string),
+    accountRole: PropTypes.string,
   };
 
   static defaultProps = {
@@ -84,6 +94,8 @@ export class FiltersPage extends PureComponent {
     fetchData: () => {},
     showModalAction: () => {},
     projectRole: '',
+    userFilters: [],
+    accountRole: '',
   };
 
   confirmDelete = (filter) =>
@@ -111,11 +123,37 @@ export class FiltersPage extends PureComponent {
   };
 
   render() {
-    const { filter, intl, onFilterChange, ...rest } = this.props;
+    const {
+      filter,
+      intl,
+      onFilterChange,
+      activePage,
+      itemCount,
+      pageCount,
+      pageSize,
+      onChangePage,
+      onChangePageSize,
+      filters,
+      ...rest
+    } = this.props;
     return (
       <PageLayout title={intl.formatMessage(messages.filtersPageTitle)}>
-        <FilterPageToolbar filter={filter} filters={rest.filters} onFilterChange={onFilterChange} />
-        <FilterTable onDelete={this.confirmDelete} onEdit={this.openEditModal} {...rest} />
+        <FilterPageToolbar filter={filter} filters={filters} onFilterChange={onFilterChange} />
+        <FilterGrid
+          onEdit={this.openEditModal}
+          onDelete={this.confirmDelete}
+          filters={filters}
+          {...rest}
+        />
+        {!filters.length && <NoFiltersBlock />}
+        <PaginationToolbar
+          activePage={activePage}
+          itemCount={itemCount}
+          pageCount={pageCount}
+          pageSize={pageSize}
+          onChangePage={onChangePage}
+          onChangePageSize={onChangePageSize}
+        />
       </PageLayout>
     );
   }

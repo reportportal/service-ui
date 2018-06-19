@@ -1,9 +1,10 @@
 .grid-cell {
+  padding: 15px 10px;
   display: table-cell;
+  box-sizing: border-box;
+  vertical-align: top;
   color: $COLOR--charcoal-grey;
   font-family: $FONT-REGULAR;
-  box-sizing: border-box;
-  padding: 15px 10px;
 
   &:first-child {
     padding-left: 15px;
