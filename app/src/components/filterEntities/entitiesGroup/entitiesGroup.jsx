@@ -49,25 +49,50 @@ export class EntitiesGroup extends Component {
     entities: {},
   };
 
-  state = {
-    activeEntities: [],
-  };
-
-  componentWillMount() {
+  constructor(props) {
+    super(props);
     const initObject = {};
     const activeEntities = [];
-    this.props.entitiesSet.forEach((entity) => {
+    props.entitiesSet.forEach((entity) => {
       entity.active && activeEntities.push(entity.id);
       initObject[entity.id] = entity;
     });
-    this.setState({ activeEntities });
-    this.props.initialize(initObject);
+    this.state = {
+      activeEntities,
+    };
+    props.initialize(initObject);
+  }
+
+  componentDidUpdate() {
+    debouncer(() => {
+      const queryStrings = [];
+      const entitiesObj = {};
+      const { formSyncErrors, entities, onChangeOwn } = this.props;
+      this.state.activeEntities.forEach((entityId) => {
+        const isValid = !formSyncErrors[entityId];
+        const entity = entities[entityId];
+        if (isValid && entity) {
+          queryStrings.push(`filter.${entity.value.condition}.${entityId}=${entity.value.value}`);
+          entitiesObj[entityId] = {
+            filtering_field: entityId,
+            condition: entity.value.condition,
+            value: entity.value.value,
+          };
+        }
+      });
+      onChangeOwn({
+        queryString: queryStrings.join('&'),
+        entitiesObj,
+      });
+    }, 1000);
   }
 
   formatEntity = (valFromState) => valFromState.value;
 
-  parseEntity = (valFromField, fieldId) =>
-    Object.assign({}, this.props.entities[fieldId], { value: valFromField });
+  parseEntity = (valFromField, fieldId) => ({
+    ...this.props.entities[fieldId],
+    value: valFromField,
+  });
 
   handleActiveEntities = (entityId) => {
     const entity = this.props.entities[entityId];
@@ -77,29 +102,7 @@ export class EntitiesGroup extends Component {
           ? this.state.activeEntities.filter((id) => id !== entityId)
           : this.state.activeEntities.concat([entityId]),
     });
-    this.props.change(entityId, Object.assign({}, entity, { active: !entity.active }));
-  };
-
-  handleChange = () => {
-    const queryStrings = [];
-    const entitiesObj = {};
-    const { formSyncErrors, entities, onChangeOwn } = this.props;
-    this.state.activeEntities.forEach((entityId) => {
-      const isValid = !formSyncErrors[entityId];
-      const entity = entities[entityId];
-      if (isValid && entity) {
-        queryStrings.push(`filter.${entity.value.condition}.${entityId}=${entity.value.value}`);
-        entitiesObj[entityId] = {
-          filtering_field: entityId,
-          condition: entity.value.condition,
-          value: entity.value.value,
-        };
-      }
-    });
-    onChangeOwn({
-      queryString: queryStrings.join('&'),
-      entitiesObj,
-    });
+    this.props.change(entityId, { ...entity, active: !entity.active });
   };
 
   render() {
@@ -118,9 +121,6 @@ export class EntitiesGroup extends Component {
                     name={entityId}
                     format={this.formatEntity}
                     parse={this.parseEntity}
-                    onChange={() => {
-                      debouncer(this.handleChange, 1000);
-                    }}
                   >
                     <EntityComponent
                       entityId={entityId}

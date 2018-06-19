@@ -57,6 +57,7 @@ export class InputDropdown extends Component {
   componentWillUnmount() {
     document.removeEventListener('click', this.handleClickOutside);
   }
+
   onClickSelectBlock = (e) => {
     if (!this.props.disabled) {
       this.setState({ opened: !this.state.opened });
@@ -64,12 +65,18 @@ export class InputDropdown extends Component {
       this.state.opened ? this.props.onBlur() : this.props.onFocus();
     }
   };
+
+  setRef = (node) => {
+    this.node = node;
+  };
+
   handleClickOutside = (e) => {
     if (!this.node.contains(e.target)) {
       this.setState({ opened: false });
       this.props.onBlur();
     }
   };
+
   displayedValue() {
     const { multiple, value, options } = this.props;
     let displayedValue;
@@ -86,6 +93,7 @@ export class InputDropdown extends Component {
     });
     return displayedValue;
   }
+
   handleChange = (selectedValue) => {
     const { multiple, value, onChange } = this.props;
     if (multiple) {
@@ -100,16 +108,11 @@ export class InputDropdown extends Component {
     }
   };
 
-  isGroupOptionSelected = (groupId) => {
-    const relatedSubOptions = this.props.options
+  isGroupOptionSelected = (groupId) =>
+    this.props.options
       .filter((item) => item.groupRef === groupId)
-      .map((item) => item.value);
-    const valueMap = {};
-    this.props.value.forEach((val) => {
-      valueMap[val] = true;
-    });
-    return relatedSubOptions.every((item) => Object.prototype.hasOwnProperty.call(valueMap, item));
-  };
+      .map((item) => item.value)
+      .every((item) => this.props.value.indexOf(item) !== -1);
 
   handleGroupChange = (groupId) => {
     const relatedSubOptions = this.props.options
@@ -166,14 +169,9 @@ export class InputDropdown extends Component {
 
   render() {
     return (
-      <div
-        ref={(node) => {
-          this.node = node;
-        }}
-        className={cx('dropdown', { opened: this.state.opened })}
-      >
+      <div ref={this.setRef} className={cx('dropdown', { opened: this.state.opened })}>
         <div
-          className={cx({ 'select-block': true, disabled: this.props.disabled })}
+          className={cx('select-block', { disabled: this.props.disabled })}
           onClick={this.onClickSelectBlock}
         >
           <span className={cx('value')}>{this.displayedValue()}</span>
