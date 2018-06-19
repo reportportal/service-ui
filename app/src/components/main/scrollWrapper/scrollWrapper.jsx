@@ -69,17 +69,22 @@ export class ScrollWrapper extends Component {
   };
 
   componentDidMount = () => {
-    this.springSystem = new SpringSystem();
-    this.spring = this.springSystem.createSpring();
-    this.spring.addListener({ onSpringUpdate: this.handleSpringUpdate });
+    if (this.props.withBackToTop) {
+      this.springSystem = new SpringSystem();
+      this.spring = this.springSystem.createSpring();
+      this.spring.addListener({ onSpringUpdate: this.handleSpringUpdate });
+      this.stopScroll = false;
+    }
   };
 
   componentWillUnmount = () => {
-    this.springSystem.deregisterSpring(this.spring);
-    this.springSystem.removeAllListeners();
-    this.springSystem = undefined;
-    this.spring.destroy();
-    this.spring = undefined;
+    if (this.props.withBackToTop) {
+      this.springSystem.deregisterSpring(this.spring);
+      this.springSystem.removeAllListeners();
+      this.springSystem = undefined;
+      this.spring.destroy();
+      this.spring = undefined;
+    }
   };
 
   getScrollTop = () => this.scrollbars.getScrollTop();
@@ -94,10 +99,18 @@ export class ScrollWrapper extends Component {
 
   handleSpringUpdate = (spring) => {
     const val = spring.getCurrentValue();
+    if (this.stopScroll) {
+      return;
+    } else if (val < 1) {
+      this.scrollbars.scrollTop(0);
+      this.stopScroll = true;
+      return;
+    }
     this.scrollbars.scrollTop(val);
   };
 
   scrollTop = () => {
+    this.stopScroll = false;
     const scrollTop = this.scrollbars.getScrollTop();
     this.spring.setCurrentValue(scrollTop).setAtRest();
     this.spring.setEndValue(0);
