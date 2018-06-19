@@ -12,18 +12,39 @@ import {
   activeProjectRoleSelector,
   userAccountRoleSelector,
   userIdSelector,
+  assignedProjectsSelector,
 } from 'controllers/user';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import UnassignIcon from './img/unassign-inline.svg';
 
 const messages = defineMessages({
   anassignUser: {
-    id: 'AssignAction.anassignUser',
+    id: 'UnassignButton.anassignUser',
     defaultMessage: 'User has been unassigned from project!',
   },
   btnTitle: {
-    id: 'AssignAction.anassignBtn',
+    id: 'UnassignButton.anassignBtn',
     defaultMessage: 'Unassign',
+  },
+  unAssignTitlePersonal: {
+    id: 'UnassignButton.unAssignTitlePersonal',
+    defaultMessage: 'Impossible to unassign user from personal project',
+  },
+  unAssignTitleYou: {
+    id: 'UnassignButton.unAssignTitleYou',
+    defaultMessage: 'Impossible to unassign own account from project',
+  },
+  unAssignTitleNoPermission: {
+    id: 'UnassignButton.unAssignTitleNoPermission',
+    defaultMessage: 'You have no enough permission',
+  },
+  unAssignTitleExternal: {
+    id: 'UnassignButton.unAssignTitleExternal',
+    defaultMessage: 'Impossible to unassign UPSA-user from UPSA-project',
+  },
+  unAssignTitle: {
+    id: 'UnassignButton.unAssignTitle',
+    defaultMessage: 'Unassign user from the project',
   },
 });
 
@@ -34,6 +55,7 @@ const messages = defineMessages({
     projectId: activeProjectSelector(state),
     projectRole: activeProjectRoleSelector(state),
     accountRole: userAccountRoleSelector(state),
+    entryType: assignedProjectsSelector(state)[activeProjectSelector(state)].entryType,
   }),
   { showNotification, showModalAction },
 )
@@ -46,6 +68,7 @@ export class UnassignButton extends Component {
     accountRole: PropTypes.string,
     projectRole: PropTypes.string,
     currentUser: PropTypes.string,
+    entryType: PropTypes.string,
     showNotification: PropTypes.func,
     fetchUserAction: PropTypes.func,
     fetchData: PropTypes.func,
@@ -56,11 +79,33 @@ export class UnassignButton extends Component {
     accountRole: '',
     projectRole: '',
     currentUser: '',
+    entryType: '',
     showNotification: () => {},
     fetchUserAction: () => {},
     fetchData: () => {},
   };
-
+  getUnAssignTitle = () => {
+    if (this.isPersonalProject()) {
+      return this.props.intl.formatMessage(messages.unAssignTitlePersonal);
+    } else if (this.props.currentUser === this.props.userId) {
+      return this.props.intl.formatMessage(messages.unAssignTitleYou);
+    } else if (!canAssignUnassignInternalUser(this.props.accountRole, this.props.projectRole)) {
+      return this.props.intl.formatMessage(messages.unAssignTitleNoPermission);
+    }
+    return this.props.intl.formatMessage(messages.unAssignTitle);
+  };
+  isPersonalProject = () =>
+    this.props.entryType === 'PERSONAL' &&
+    this.props.projectId === `${this.props.userId.replace('.', '_')}_personal`;
+  showUnassignModal = () =>
+    this.props.showModalAction({
+      id: 'unassignModal',
+      data: {
+        unassignAction: this.unassignAction,
+        user: this.props.userId,
+        project: this.props.projectId,
+      },
+    });
   unassignAction = () => {
     const { projectId, userId, intl } = this.props;
     fetch(URLS.userUnasign(projectId), {
@@ -81,24 +126,16 @@ export class UnassignButton extends Component {
         });
       });
   };
-  showUnassignModal = () =>
-    this.props.showModalAction({
-      id: 'unassignModal',
-      data: {
-        unassignAction: this.unassignAction,
-        user: this.props.userId,
-        project: this.props.projectId,
-      },
-    });
-
   render = () => (
     <Fragment>
       <GhostButton
         icon={UnassignIcon}
         onClick={this.showUnassignModal}
+        title={this.getUnAssignTitle()}
         disabled={
           !canAssignUnassignInternalUser(this.props.accountRole, this.props.projectRole) ||
-          this.props.currentUser === this.props.userId
+          this.props.currentUser === this.props.userId ||
+          this.isPersonalProject()
         }
       >
         {this.props.intl.formatMessage(messages.btnTitle)}

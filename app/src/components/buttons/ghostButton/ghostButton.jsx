@@ -26,7 +26,7 @@ import styles from './ghostButton.scss';
 
 const cx = classNames.bind(styles);
 
-export const GhostButton = ({ type, children, disabled, color, icon, onClick, tiny }) => {
+export const GhostButton = ({ type, children, disabled, color, icon, onClick, tiny, title }) => {
   const classes = cx({
     'ghost-button': true,
     disabled,
@@ -36,19 +36,9 @@ export const GhostButton = ({ type, children, disabled, color, icon, onClick, ti
     'mobile-minified': icon && children,
   });
   return (
-    <button type={type} disabled={disabled} className={classes} onClick={onClick} >
-      {
-        icon &&
-        <i className={cx({ icon: true, 'only-icon': !children })} >
-          { Parser(icon) }
-        </i>
-      }
-      {
-        children &&
-        <span className={cx('text')}>
-          { children }
-        </span>
-      }
+    <button type={type} disabled={disabled} className={classes} onClick={onClick} title={title}>
+      {icon && <i className={cx({ icon: true, 'only-icon': !children })}>{Parser(icon)}</i>}
+      {children && <span className={cx('text')}>{children}</span>}
     </button>
   );
 };
@@ -57,6 +47,7 @@ GhostButton.propTypes = {
   children: PropTypes.node,
   disabled: PropTypes.bool,
   tiny: PropTypes.bool,
+  title: PropTypes.string,
   color: PropTypes.string,
   icon: PropTypes.string,
   type: PropTypes.string,
@@ -67,6 +58,7 @@ GhostButton.defaultProps = {
   children: null,
   disabled: false,
   tiny: false,
+  title: '',
   color: 'topaz',
   icon: '',
   type: 'button',
