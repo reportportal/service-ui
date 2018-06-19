@@ -3,22 +3,13 @@ import { connect } from 'react-redux';
 import { reduxForm, getFormValues, getFormSyncErrors } from 'redux-form';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
+import { debounce } from 'common/utils';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { EntitiesSelector } from 'components/filterEntities/entitiesSelector';
 import styles from './entitiesGroup.scss';
 
 const cx = classNames.bind(styles);
-const debounce = (fn, time) => {
-  let timeout;
-  return (...args) => {
-    const functionCall = () => fn.apply(this, args);
-    clearTimeout(timeout);
-    timeout = setTimeout(functionCall, time);
-  };
-};
-const debouncer = debounce((fn) => {
-  fn();
-}, 1000);
+
 const ENTITIES_FORM = 'entities-form';
 
 @connect((state) => ({
@@ -63,30 +54,35 @@ export class EntitiesGroup extends Component {
     props.initialize(initObject);
   }
 
-  componentDidUpdate() {
-    debouncer(() => {
-      const queryStrings = [];
-      const entitiesObj = {};
-      const { formSyncErrors, entities, onChangeOwn } = this.props;
-      this.state.activeEntities.forEach((entityId) => {
-        const isValid = !formSyncErrors[entityId];
-        const entity = entities[entityId];
-        if (isValid && entity) {
-          queryStrings.push(`filter.${entity.value.condition}.${entityId}=${entity.value.value}`);
-          entitiesObj[entityId] = {
-            filtering_field: entityId,
-            condition: entity.value.condition,
-            value: entity.value.value,
-          };
-        }
-      });
-      onChangeOwn({
-        queryString: queryStrings.join('&'),
-        entitiesObj,
-      });
-    }, 1000);
+  componentDidUpdate(prevProps, prevState) {
+    if (
+      this.props.entities !== prevProps.entities ||
+      this.state.acticeEntities !== prevState.activeEntities
+    ) {
+      this.parseEntities();
+    }
   }
-
+  parseEntities = debounce(() => {
+    const queryStrings = [];
+    const entitiesObj = {};
+    const { formSyncErrors, entities, onChangeOwn } = this.props;
+    this.state.activeEntities.forEach((entityId) => {
+      const isValid = !formSyncErrors[entityId];
+      const entity = entities[entityId];
+      if (isValid && entity) {
+        queryStrings.push(`filter.${entity.value.condition}.${entityId}=${entity.value.value}`);
+        entitiesObj[entityId] = {
+          filtering_field: entityId,
+          condition: entity.value.condition,
+          value: entity.value.value,
+        };
+      }
+    });
+    onChangeOwn({
+      queryString: queryStrings.join('&'),
+      entitiesObj,
+    });
+  }, 1000);
   formatEntity = (valFromState) => valFromState.value;
 
   parseEntity = (valFromField, fieldId) => ({
@@ -94,7 +90,7 @@ export class EntitiesGroup extends Component {
     value: valFromField,
   });
 
-  handleActiveEntities = (entityId) => {
+  toggleEntity = (entityId) => {
     const entity = this.props.entities[entityId];
     this.setState({
       activeEntities:
@@ -128,7 +124,7 @@ export class EntitiesGroup extends Component {
                       title={entity.title}
                       meta={entity.meta}
                       onRemove={() => {
-                        this.handleActiveEntities(entityId);
+                        this.toggleEntity(entityId);
                       }}
                     />
                   </FieldProvider>
@@ -136,7 +132,7 @@ export class EntitiesGroup extends Component {
               )
             );
           })}
-          <EntitiesSelector entities={entities} onChange={this.handleActiveEntities} />
+          <EntitiesSelector entities={entities} onChange={this.toggleEntity} />
         </form>
       </div>
     );
