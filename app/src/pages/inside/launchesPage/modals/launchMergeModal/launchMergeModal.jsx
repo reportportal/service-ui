@@ -202,7 +202,6 @@ export class LaunchMergeModal extends Component {
       syncErrors,
       fields,
     } = this.props;
-
     const okButton = {
       text: intl.formatMessage(COMMON_LOCALE_KEYS.MERGE),
       onClick: (closeModal) => {
