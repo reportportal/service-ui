@@ -88,6 +88,10 @@ export class InputTimeDateRange extends Component {
     }
   };
 
+  setRef = (node) => {
+    this.node = node;
+  };
+
   handleClickOutside = (e) => {
     if (!this.node.contains(e.target)) {
       this.setState({ opened: false });
@@ -123,12 +127,7 @@ export class InputTimeDateRange extends Component {
     const { intl, presets, value } = this.props;
 
     return (
-      <div
-        className={cx('input-time-date-range')}
-        ref={(node) => {
-          this.node = node;
-        }}
-      >
+      <div className={cx('input-time-date-range')} ref={this.setRef}>
         <input
           readOnly
           value={`${moment(value.start).format(TIME_DATE_FORMAT)} - ${moment(value.end).format(
