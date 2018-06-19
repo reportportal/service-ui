@@ -7,6 +7,7 @@ import {
   PROJECT_DASHBOARD_PAGE,
   PROJECT_PAGE,
   PROJECT_DASHBOARD_ITEM_PAGE,
+  PROJECT_SUITES_PAGE,
   projectIdSelector,
 } from 'controllers/pages';
 import { isAuthorizedSelector } from 'controllers/auth';
@@ -73,7 +74,8 @@ export default {
     },
   },
   [PROJECT_DASHBOARD_ITEM_PAGE]: '/:projectId/dashboard/:dashboardId',
-  PROJECT_LAUNCHES_PAGE: '/:projectId/launches',
+  PROJECT_LAUNCHES_PAGE: '/:projectId/launches/:filterId?',
+  [PROJECT_SUITES_PAGE]: '/:projectId/launches/:filterId/suites/:suiteId',
   PROJECT_FILTERS_PAGE: '/:projectId/filters',
   PROJECT_USERDEBUG_PAGE: '/:projectId/userdebug',
   PROJECT_MEMBERS_PAGE: '/:projectId/members',
