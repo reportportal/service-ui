@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import { NavLink } from 'redux-first-router-link';
 import { Icon } from 'components/main/icon';
 import { PROJECT_DASHBOARD_ITEM_PAGE } from 'controllers/pages';
-import { activeProjectSelector, activeProjectRoleSelector} from 'controllers/user';
+import { activeProjectSelector, activeProjectRoleSelector } from 'controllers/user';
 import { canDeleteDashboard } from 'common/utils/permissions';
 import styles from './dashboardGridItem.scss';
 
@@ -76,6 +76,7 @@ export class DashboardGridItem extends Component {
       currentUser: { userId, userRole },
       intl,
       projectId,
+      projectRole,
     } = this.props;
     const { name, description, owner, share, id } = item;
 
