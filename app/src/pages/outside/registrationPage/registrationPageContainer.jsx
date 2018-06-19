@@ -1,10 +1,9 @@
-import { PureComponent } from 'react';
+import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+import { connectRouter, fetch } from 'common/utils';
 import { loginAction } from 'controllers/auth';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
-import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
 import { RegistrationPage } from './registrationPage';
 
@@ -12,17 +11,15 @@ import { RegistrationPage } from './registrationPage';
   loginAction,
   showNotification,
 })
-@withRouter
-export class RegistrationPageContainer extends PureComponent {
+@connectRouter(({ uuid }) => ({ uuid }))
+export class RegistrationPageContainer extends Component {
   static propTypes = {
-    location: PropTypes.shape({
-      hash: PropTypes.string,
-      pathname: PropTypes.string,
-      query: PropTypes.object,
-      search: PropTypes.string,
-    }).isRequired,
+    uuid: PropTypes.string,
     loginAction: PropTypes.func.isRequired,
     showNotification: PropTypes.func.isRequired,
+  };
+  static defaultProps = {
+    uuid: undefined,
   };
 
   state = {
@@ -32,7 +29,7 @@ export class RegistrationPageContainer extends PureComponent {
   };
 
   componentDidMount() {
-    const uuid = this.props.location.query.uuid;
+    const uuid = this.props.uuid;
     if (!uuid) {
       return;
     }
@@ -46,7 +43,7 @@ export class RegistrationPageContainer extends PureComponent {
   }
 
   registrationHandler = ({ name, login, password, email }) => {
-    const uuid = this.props.location.query.uuid;
+    const uuid = this.props.uuid;
     const data = {
       full_name: name,
       login,
@@ -74,7 +71,7 @@ export class RegistrationPageContainer extends PureComponent {
   };
 
   render() {
-    const uuid = this.props.location.query.uuid;
+    const uuid = this.props.uuid;
     return !uuid || this.state.isLoadingFinished ? (
       <RegistrationPage
         tokenProvided={Boolean(uuid)}

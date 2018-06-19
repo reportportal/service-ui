@@ -1,9 +1,8 @@
 import React from 'react';
 import { render } from 'react-dom';
-import { Router, matchPath } from 'react-router-dom';
+import { Provider } from 'react-redux';
+
 import { createHashHistory } from 'history';
-import { userInfoSelector, activeProjectSelector, setActiveProjectAction } from 'controllers/user';
-import { fetchProjectAction } from 'controllers/project';
 import qhistory from 'qhistory';
 import { stringify, parse } from 'qs';
 import 'common/polyfills';
@@ -14,7 +13,7 @@ import 'common/css/common.scss';
 import 'c3/c3.css';
 
 import App from './app';
-import store from './store';
+import { configureStore } from './store';
 
 if (!process.env.production) {
   const query = parse(location.search, { ignoreQueryPrefix: true });
@@ -31,25 +30,14 @@ if (!process.env.production) {
 }
 
 const queryParseHistory = qhistory(createHashHistory({ hashType: 'noslash' }), stringify, parse);
-queryParseHistory.listen((location) => {
-  const match = matchPath(location.pathname, '/:projectId');
-  const hashProject = match.params.projectId;
-  const userProjects = userInfoSelector(store.getState()).assigned_projects;
-  if (
-    userProjects &&
-    Object.prototype.hasOwnProperty.call(userProjects, hashProject) &&
-    hashProject !== activeProjectSelector(store.getState())
-  ) {
-    store.dispatch(setActiveProjectAction(hashProject));
-    store.dispatch(fetchProjectAction(hashProject));
-  }
-});
 
-const rerenderApp = (AppContainer) => {
+const { store } = configureStore(queryParseHistory, window.REDUX_STATE);
+
+const rerenderApp = (TheApp) => {
   render(
-    <Router history={queryParseHistory}>
-      <AppContainer />
-    </Router>,
+    <Provider store={store}>
+      <TheApp />
+    </Provider>,
     document.querySelector('#app'),
   );
 };

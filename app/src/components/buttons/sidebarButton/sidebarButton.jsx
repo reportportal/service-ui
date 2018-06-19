@@ -22,7 +22,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import classNames from 'classnames/bind';
-import { NavLink } from 'react-router-dom';
+import { NavLink } from 'redux-first-router-link'
 import Parser from 'html-react-parser';
 import styles from './sidebarButton.scss';
 
@@ -50,7 +50,7 @@ export const SidebarButton = ({ onClick, icon, children, link, bottom }) => {
 };
 
 SidebarButton.propTypes = {
-  link: PropTypes.string,
+  link: PropTypes.object,
   icon: PropTypes.string,
   bottom: PropTypes.bool,
   children: PropTypes.node,

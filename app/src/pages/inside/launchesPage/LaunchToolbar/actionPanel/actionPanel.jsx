@@ -112,7 +112,7 @@ export class ActionPanel extends Component {
       selectedLaunches,
       hasValidItems,
       onProceedValidItems,
-      onImportLaunch
+      onImportLaunch,
     } = this.props;
     return (
       <div className={cx('action-panel', { 'right-buttons-only': !showBreadcrumb && !hasErrors })}>

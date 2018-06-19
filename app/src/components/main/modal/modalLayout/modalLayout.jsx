@@ -12,12 +12,9 @@ import CloseIcon from './img/icon-close-inline.svg';
 
 const cx = classNames.bind(styles);
 
-@connect(
-  null,
-  {
-    hideModalAction,
-  },
-)
+@connect(null, {
+  hideModalAction,
+})
 export class ModalLayout extends Component {
   static propTypes = {
     className: PropTypes.string,

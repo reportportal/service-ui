@@ -25,7 +25,8 @@ import { connect } from 'react-redux';
 import { reduxForm } from 'redux-form';
 import { FormattedMessage, injectIntl, intlShape, defineMessages } from 'react-intl';
 import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLock';
-import { Link, withRouter } from 'react-router-dom';
+import Link from 'redux-first-router-link';
+import { redirect } from 'redux-first-router';
 import PropTypes from 'prop-types';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
@@ -33,6 +34,7 @@ import { InputOutside } from 'components/inputs/inputOutside';
 import { BigButton } from 'components/buttons/bigButton';
 import { validate, fetch } from 'common/utils';
 import { URLS } from 'common/urls';
+import { LOGIN_PAGE } from 'controllers/pages';
 import EmailIcon from './img/email-icon-inline.svg';
 import styles from './forgotPasswordForm.scss';
 
@@ -45,7 +47,9 @@ const placeholders = defineMessages({
   },
 });
 
-@withRouter
+@connect(null, (dispatch) => ({
+  redirectToLoginPage: () => dispatch(redirect({ type: LOGIN_PAGE })),
+}))
 @connect(null, {
   showScreenLockAction,
   hideScreenLockAction,
@@ -63,7 +67,7 @@ export class ForgotPasswordForm extends PureComponent {
     showScreenLockAction: PropTypes.func.isRequired,
     hideScreenLockAction: PropTypes.func.isRequired,
     handleSubmit: PropTypes.func.isRequired,
-    history: PropTypes.object.isRequired,
+    redirectToLoginPage: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
@@ -79,7 +83,7 @@ export class ForgotPasswordForm extends PureComponent {
       },
     }).then(() => {
       this.props.hideScreenLockAction();
-      this.props.history.push('/login');
+      this.props.redirectToLoginPage();
     });
   };
 
@@ -97,7 +101,7 @@ export class ForgotPasswordForm extends PureComponent {
         </div>
         <div className={cx('forgot-password-buttons-container')}>
           <div className={cx('forgot-password-button')}>
-            <Link to="/login" className={cx('button-link')}>
+            <Link to={{ type: LOGIN_PAGE }} className={cx('button-link')}>
               <BigButton type={'button'} roundedCorners color={'gray-60'}>
                 <FormattedMessage id={'ForgotPasswordForm.cancel'} defaultMessage={'Cancel'} />
               </BigButton>

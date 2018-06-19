@@ -1,12 +1,12 @@
 import React, { Component, Fragment } from 'react';
 import classNames from 'classnames/bind';
-import { NavLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { Grid } from 'components/main/grid';
 import { Icon } from 'components/main/icon';
 import { EmptyDashboards } from 'pages/inside/dashboardPage/dashboardList/EmptyDashboards';
 import { hasPrevilegesForDashboardDeletion } from 'common/utils/validation';
+import DashboardNameColumn from './dashboardNameColumn';
 import styles from './dashboardTable.scss';
 
 const cx = classNames.bind(styles);
@@ -36,18 +36,6 @@ const messages = defineMessages({
     defaultMessage: 'Delete',
   },
 });
-
-const DashboardNameColumn = (props) => (
-  <NavLink className={cx('name', 'cell')} to={`dashboard/${props.value.id}`}>
-    {props.value.name}
-  </NavLink>
-);
-DashboardNameColumn.propTypes = {
-  value: PropTypes.object,
-};
-DashboardNameColumn.defaultProps = {
-  value: {},
-};
 
 const DescriptionColumn = ({ value }) => <div className={cx('description', 'cell')}>{value}</div>;
 DescriptionColumn.propTypes = {

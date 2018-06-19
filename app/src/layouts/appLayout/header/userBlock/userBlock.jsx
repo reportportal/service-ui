@@ -4,15 +4,15 @@ import PropTypes from 'prop-types';
 import { FormattedMessage } from 'react-intl';
 import { userInfoSelector } from 'controllers/user';
 import { logoutAction } from 'controllers/auth';
+import { API_PAGE, ADMINISTRATE_PAGE, USER_PROFILE_PAGE } from 'controllers/pages/constants';
 import { connect } from 'react-redux';
-import { NavLink, withRouter } from 'react-router-dom';
+import { NavLink } from 'redux-first-router-link';
 import { ADMINISTRATOR } from 'common/constants/accountRoles';
 import { URLS } from 'common/urls';
 import styles from './userBlock.scss';
 
 const cx = classNames.bind(styles);
 
-@withRouter
 @connect(
   (state) => ({
     user: userInfoSelector(state),
@@ -23,12 +23,6 @@ const cx = classNames.bind(styles);
 )
 export class UserBlock extends PureComponent {
   static propTypes = {
-    location: PropTypes.shape({
-      hash: PropTypes.string,
-      pathname: PropTypes.string,
-      query: PropTypes.object,
-      search: PropTypes.string,
-    }).isRequired,
     logout: PropTypes.func.isRequired,
     user: PropTypes.object,
   };
@@ -76,13 +70,25 @@ export class UserBlock extends PureComponent {
         </div>
         <div className={cx({ 'menu-icon': true, flipped: this.state.menuOpened })} />
         <div className={cx({ menu: true, opened: this.state.menuOpened })}>
-          <NavLink className={cx('menu-item')} activeClassName={cx('active')} to="/api">
+          <NavLink
+            to={{ type: API_PAGE }}
+            className={cx('menu-item')}
+            activeClassName={cx('active')}
+          >
             API
           </NavLink>
-          <NavLink className={cx('menu-item')} activeClassName={cx('active')} to="/administrate">
+          <NavLink
+            to={{ type: ADMINISTRATE_PAGE }}
+            className={cx('menu-item')}
+            activeClassName={cx('active')}
+          >
             <FormattedMessage id={'UserBlock.administrate'} defaultMessage={'Administrate'} />
           </NavLink>
-          <NavLink className={cx('menu-item')} activeClassName={cx('active')} to="/user-profile">
+          <NavLink
+            to={{ type: USER_PROFILE_PAGE }}
+            className={cx('menu-item')}
+            activeClassName={cx('active')}
+          >
             <FormattedMessage id={'UserBlock.profile'} defaultMessage={'Profile'} />
           </NavLink>
           <div className={cx('menu-item')} onClick={this.props.logout}>

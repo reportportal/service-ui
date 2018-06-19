@@ -2,16 +2,17 @@ import { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
-import { Link, withRouter } from 'react-router-dom';
+import Link from 'redux-first-router-link';
 import { FormattedMessage } from 'react-intl';
 import { activeProjectSelector } from 'controllers/user';
 import { GhostButton } from 'components/buttons/ghostButton';
+import { PROJECT_LAUNCHES_PAGE } from 'controllers/pages';
 import AddFilterIcon from './img/ic-add-filter-inline.svg';
+
 import styles from './noFiltersBlock.scss';
 
 const cx = classNames.bind(styles);
 
-@withRouter
 @connect((state) => ({
   activeProject: activeProjectSelector(state),
 }))
@@ -33,7 +34,10 @@ export class NoFiltersBlock extends PureComponent {
               id={'NoFiltersBlock.message'}
               defaultMessage={'You can create your first filter on the '}
             />
-            <Link className={cx('link')} to={`/${this.props.activeProject}/launches`}>
+            <Link
+              className={cx('link')}
+              to={{ type: PROJECT_LAUNCHES_PAGE, payload: { projectId: this.props.activeProject } }}
+            >
               <FormattedMessage id={'NoFiltersBlock.link'} defaultMessage={'Launch Page'} />
             </Link>
           </div>

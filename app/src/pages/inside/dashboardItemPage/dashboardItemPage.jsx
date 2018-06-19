@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import Fullscreen from 'react-full-screen';
 import Parser from 'html-react-parser';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { activeDashboardIdSelector } from 'controllers/pages';
 import classNames from 'classnames/bind';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { PageLayout } from 'layouts/pageLayout';
@@ -44,10 +46,15 @@ const messages = defineMessages({
 });
 
 @injectIntl
+@connect((state) => ({ dashboardId: activeDashboardIdSelector(state) }))
 export class DashboardItemPage extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
-    match: PropTypes.object.isRequired,
+    dashboardId: PropTypes.string,
+  };
+
+  static defaultProps = {
+    dashboardId: undefined,
   };
 
   state = {
@@ -82,10 +89,9 @@ export class DashboardItemPage extends Component {
               <GhostButton icon={CancelIcon}>{formatMessage(messages.deleteWidget)}</GhostButton>
             </div>
           </div>
-
           <Fullscreen enabled={this.state.isFullscreen} onChange={this.onChangeFullscreen}>
             <WidgetsGrid
-              dashboardId={this.props.match.params.dashboardId}
+              dashboardId={this.props.dashboardId}
               isFullscreen={this.state.isFullscreen}
             />
             {this.state.isFullscreen && (

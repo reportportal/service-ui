@@ -6,7 +6,6 @@ import classNames from 'classnames/bind';
 import { PageLayout } from 'layouts/pageLayout';
 import { GhostButton } from 'components/buttons/ghostButton';
 import {
-  fetchDashboardAction,
   changeVisibilityTypeAction,
   deleteDashboardAction,
   editDashboardAction,
@@ -76,7 +75,6 @@ const messages = defineMessages({
     userInfo: userInfoSelector(state),
   }),
   {
-    fetchDashboard: fetchDashboardAction,
     changeVisibilityType: changeVisibilityTypeAction,
     showModal: showModalAction,
     deleteDashboard: deleteDashboardAction,
@@ -93,7 +91,6 @@ export class DashboardPage extends Component {
     deleteDashboard: PropTypes.func,
     editDashboard: PropTypes.func,
     addDashboard: PropTypes.func,
-    fetchDashboard: PropTypes.func,
     userInfo: PropTypes.object,
     filter: PropTypes.string,
     dashboardItems: PropTypes.array,
@@ -107,7 +104,6 @@ export class DashboardPage extends Component {
     deleteDashboard: () => {},
     editDashboard: () => {},
     addDashboard: () => {},
-    fetchDashboard: () => {},
     userInfo: {},
     filter: '',
     dashboardItems: [],
@@ -115,13 +111,6 @@ export class DashboardPage extends Component {
     onFilterChange: () => {},
     changeVisibilityType: () => {},
   };
-
-  componentDidMount() {
-    const { fetchDashboard, changeVisibilityType } = this.props;
-
-    fetchDashboard();
-    changeVisibilityType();
-  }
 
   onDeleteDashboardItem = (item) => {
     const {

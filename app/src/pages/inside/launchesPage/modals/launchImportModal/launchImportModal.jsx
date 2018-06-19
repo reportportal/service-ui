@@ -265,7 +265,7 @@ export class LaunchImportModal extends Component {
       },
       onUploadProgress: (progressEvent) => {
         const { files } = this.state;
-        const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+        const percentCompleted = Math.round(progressEvent.loaded * 100 / progressEvent.total);
 
         this.setState({
           files: files.map((item) => {

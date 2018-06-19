@@ -23,41 +23,56 @@ import { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { FormattedMessage } from 'react-intl';
-import { withRouter, Redirect } from 'react-router-dom';
-import { fetch } from 'common/utils';
+import { connect } from 'react-redux';
+import { redirect as rfrRedirect } from 'redux-first-router';
+import { fetch, connectRouter } from 'common/utils';
 import { URLS } from 'common/urls';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
+import { LOGIN_PAGE } from 'controllers/pages';
+import { isAuthorizedSelector } from 'controllers/auth';
 import { ChangePasswordForm } from './changePasswordForm';
+
 import styles from './changePasswordBlock.scss';
 
 const cx = classNames.bind(styles);
 
-@withRouter
+@connectRouter(({ reset }) => ({ reset }))
+@connect(
+  (state) => ({
+    authorized: isAuthorizedSelector(state),
+  }),
+  (dispatch) => ({
+    redirectToLoginPage: () => dispatch(rfrRedirect({ type: LOGIN_PAGE })),
+  }),
+)
 export class ChangePasswordBlock extends PureComponent {
   static propTypes = {
-    location: PropTypes.shape({
-      hash: PropTypes.string,
-      pathname: PropTypes.string,
-      query: PropTypes.object,
-      search: PropTypes.string,
-    }).isRequired,
+    reset: PropTypes.string,
+    redirectToLoginPage: PropTypes.func.isRequired,
+  };
+  static defaultProps = {
+    reset: '',
   };
   state = {
     loading: true,
     valid: true,
   };
   componentDidMount() {
-    fetch(URLS.userPasswordResetToken(this.props.location.query.reset), {
+    fetch(URLS.userPasswordResetToken(this.props.reset), {
       method: 'get',
     }).then((response) => {
       this.setState({ valid: response.is, loading: false });
     });
   }
   render() {
+    if (!this.state.loading && !this.state.valid) {
+      this.props.redirectToLoginPage();
+    }
+
     // eslint-disable-next-line no-nested-ternary
     return this.state.loading ? (
       <SpinningPreloader />
-    ) : this.state.valid ? (
+    ) : (
       <div className={cx('change-password-block')}>
         <span className={cx('change-password-msg')}>
           <span className={cx('big')}>
@@ -74,8 +89,6 @@ export class ChangePasswordBlock extends PureComponent {
         </span>
         <ChangePasswordForm />
       </div>
-    ) : (
-      <Redirect to={'/login'} />
     );
   }
 }

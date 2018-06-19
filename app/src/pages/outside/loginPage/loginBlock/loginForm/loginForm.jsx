@@ -18,13 +18,13 @@
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
-
+import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
 import { reduxForm } from 'redux-form';
 import { FormattedMessage, injectIntl, intlShape, defineMessages } from 'react-intl';
-import { Link } from 'react-router-dom';
+import Link from 'redux-first-router-link';
 import { validate } from 'common/utils';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { InputOutside } from 'components/inputs/inputOutside';
@@ -32,6 +32,7 @@ import { BigButton } from 'components/buttons/bigButton';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { authExtensionsSelector } from 'controllers/appInfo';
 import { loginAction } from 'controllers/auth';
+import { LOGIN_PAGE } from 'controllers/pages';
 import LoginIcon from './img/login-field-icon-inline.svg';
 import PasswordIcon from './img/password-field-icon-inline.svg';
 import styles from './loginForm.scss';
@@ -113,7 +114,10 @@ export class LoginForm extends React.Component {
             </FieldErrorHint>
           </FieldProvider>
         </div>
-        <Link className={cx('forgot-pass')} to="/login?forgotPass=true">
+        <Link
+          to={{ type: LOGIN_PAGE, payload: { query: { forgotPass: true } } }}
+          className={cx('forgot-pass')}
+        >
           <FormattedMessage id={'LoginForm.forgotPass'} defaultMessage={'Forgot password?'} />
         </Link>
         <div className={cx('login-button-container')}>

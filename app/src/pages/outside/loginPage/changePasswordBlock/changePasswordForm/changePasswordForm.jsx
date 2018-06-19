@@ -23,10 +23,9 @@ import { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { reduxForm } from 'redux-form';
-import { withRouter } from 'react-router-dom';
 import classNames from 'classnames/bind';
 import { FormattedMessage, injectIntl, intlShape, defineMessages } from 'react-intl';
-import { validate, fetch } from 'common/utils';
+import { validate, fetch, connectRouter } from 'common/utils';
 import { URLS } from 'common/urls';
 import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLock';
 import { FieldProvider } from 'components/fields/fieldProvider';
@@ -50,7 +49,7 @@ const placeholders = defineMessages({
   },
 });
 
-@withRouter
+@connectRouter(({ reset }) => ({ reset }))
 @connect(null, {
   showScreenLockAction,
   hideScreenLockAction,
@@ -69,6 +68,7 @@ export class ChangePasswordForm extends PureComponent {
     showScreenLockAction: PropTypes.func.isRequired,
     hideScreenLockAction: PropTypes.func.isRequired,
     handleSubmit: PropTypes.func.isRequired,
+    reset: PropTypes.string,
     history: PropTypes.object.isRequired,
     location: PropTypes.shape({
       hash: PropTypes.string,
@@ -77,10 +77,15 @@ export class ChangePasswordForm extends PureComponent {
       search: PropTypes.string,
     }).isRequired,
   };
-
+  static defaultProps = {
+    reset: '',
+  };
+  state = {
+    loading: false,
+  };
   changePassword = ({ password }) => {
     this.props.showScreenLockAction();
-    const uuid = this.props.location.query.reset;
+    const uuid = this.props.reset;
     fetch(URLS.userPasswordReset(), {
       method: 'post',
       data: {

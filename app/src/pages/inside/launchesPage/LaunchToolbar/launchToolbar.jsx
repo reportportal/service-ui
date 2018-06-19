@@ -14,7 +14,7 @@ export const LaunchToolbar = ({
   onMerge,
   onCompare,
   onProceedValidItems,
-  onImportLaunch
+  onImportLaunch,
 }) => (
   <div className={cx('launch-toolbar')}>
     {!!selectedLaunches.length && (

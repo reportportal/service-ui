@@ -1,4 +1,3 @@
-import { combineReducers } from 'redux';
 import { reducer as formReducer } from 'redux-form';
 import { appInfoReducer } from 'controllers/appInfo';
 import { authReducer } from 'controllers/auth';
@@ -11,7 +10,7 @@ import { dashboardReducer } from 'controllers/dashboard';
 import { launchReducer } from 'controllers/launch';
 import { notificationReducer } from 'controllers/notification';
 
-export const rootReducer = combineReducers({
+export default {
   appInfo: appInfoReducer,
   auth: authReducer,
   lang: langReducer,
@@ -23,4 +22,4 @@ export const rootReducer = combineReducers({
   screenLock: screenLockReducer,
   dashboard: dashboardReducer,
   launches: launchReducer,
-});
+};

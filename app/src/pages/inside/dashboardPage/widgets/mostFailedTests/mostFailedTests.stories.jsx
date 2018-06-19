@@ -30,7 +30,7 @@ storiesOf('Pages/inside/dashboardPage/mostFailedTests', module)
       height: 300,
       width: '100%',
     }),
-)
+  )
   .addDecorator(withRedux)
   .add('default state', () => (
     <MostFailedTests
