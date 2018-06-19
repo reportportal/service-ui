@@ -9,7 +9,7 @@ export class EntityDropdown extends Component {
     meta: PropTypes.object,
     entityId: PropTypes.string,
     title: PropTypes.string,
-    deletable: PropTypes.bool,
+    removable: PropTypes.bool,
     onRemove: PropTypes.func,
     onChange: PropTypes.func,
   };
@@ -18,7 +18,7 @@ export class EntityDropdown extends Component {
     title: '',
     value: {},
     meta: {},
-    deletable: true,
+    removable: true,
     onRemove: () => {},
     onChange: () => {},
   };
@@ -31,9 +31,9 @@ export class EntityDropdown extends Component {
   };
 
   render() {
-    const { value, onRemove, deletable, entityId, title, meta } = this.props;
+    const { value, onRemove, removable, entityId, title, meta } = this.props;
     return (
-      <FieldFilterEntity title={title || entityId} deletable={deletable} onRemove={onRemove}>
+      <FieldFilterEntity title={title || entityId} removable={removable} onRemove={onRemove}>
         <InputDropdown
           options={meta.options}
           value={meta.multiple ? value.value.split(',') : value.value}

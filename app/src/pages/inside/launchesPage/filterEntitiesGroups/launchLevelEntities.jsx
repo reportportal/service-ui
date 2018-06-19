@@ -150,7 +150,7 @@ export class LaunchLevelEntities extends Component {
           'itemNameEntityHint',
         title: intl.formatMessage(messages.NameTitle),
         active: true,
-        deletable: false,
+        removable: false,
         static: true,
       },
       {
@@ -167,7 +167,7 @@ export class LaunchLevelEntities extends Component {
           'launchNumericEntityHint',
         title: intl.formatMessage(messages.NumberTitle),
         active: false,
-        deletable: true,
+        removable: true,
       },
       {
         id: ENTITY_DESCRIPTION,
@@ -183,7 +183,7 @@ export class LaunchLevelEntities extends Component {
             !validate.launchDescriptionEntity(entityObject.value.value)) &&
           'launchDescriptionEntityHint',
         active: false,
-        deletable: true,
+        removable: true,
       },
       {
         id: ENTITY_USER,
@@ -194,7 +194,7 @@ export class LaunchLevelEntities extends Component {
         },
         title: intl.formatMessage(messages.OwnerTitle),
         active: false,
-        deletable: true,
+        removable: true,
       },
       {
         id: ENTITY_START_TIME,
@@ -210,7 +210,7 @@ export class LaunchLevelEntities extends Component {
         },
         title: intl.formatMessage(messages.StartTimeTitle),
         active: false,
-        deletable: true,
+        removable: true,
       },
       {
         id: ENTITY_TAGS,
@@ -221,7 +221,7 @@ export class LaunchLevelEntities extends Component {
         },
         title: intl.formatMessage(messages.TagsTitle),
         active: false,
-        deletable: true,
+        removable: true,
       },
       {
         id: STATS_TOTAL,
@@ -237,7 +237,7 @@ export class LaunchLevelEntities extends Component {
           'launchNumericEntityHint',
         title: intl.formatMessage(messages.TotalTitle),
         active: false,
-        deletable: true,
+        removable: true,
       },
       {
         id: STATS_PASSED,
@@ -253,7 +253,7 @@ export class LaunchLevelEntities extends Component {
           'launchNumericEntityHint',
         title: intl.formatMessage(messages.PassedTitle),
         active: false,
-        deletable: true,
+        removable: true,
       },
       {
         id: STATS_FAILED,
@@ -269,7 +269,7 @@ export class LaunchLevelEntities extends Component {
           'launchNumericEntityHint',
         title: intl.formatMessage(messages.FailedTitle),
         active: false,
-        deletable: true,
+        removable: true,
       },
       {
         id: STATS_SKIPPED,
@@ -285,7 +285,7 @@ export class LaunchLevelEntities extends Component {
           'launchNumericEntityHint',
         title: intl.formatMessage(messages.SkippedTitle),
         active: false,
-        deletable: true,
+        removable: true,
       },
     ];
   };
@@ -312,7 +312,7 @@ export class LaunchLevelEntities extends Component {
           messages[`${defectTypeRef}_${hasSubtypes ? 'totalTitle' : 'title'}`],
         ),
         active: false,
-        deletable: true,
+        removable: true,
       });
       if (hasSubtypes) {
         defectTypeEntities = defectTypeEntities.concat(
@@ -332,7 +332,7 @@ export class LaunchLevelEntities extends Component {
               defectType.shortName
             }`,
             active: false,
-            deletable: true,
+            removable: true,
             meta: {
               longName: defectType.longName,
               subItem: true,
