@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
@@ -23,7 +23,7 @@ const messages = defineMessages({
 @withFilter
 @withPagination()
 @injectIntl
-export class MembersPage extends PureComponent {
+export class MembersPage extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
     onSearchChange: PropTypes.func,

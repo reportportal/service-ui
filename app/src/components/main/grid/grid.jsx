@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import { Fragment } from 'react';
 import classNames from 'classnames/bind';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { GridHeader } from './gridHeader';
@@ -26,34 +27,34 @@ export const Grid = ({
   changeOnlyMobileLayout,
   loading,
 }) => (
-  <div className={cx('grid', className)}>
-    <GridHeader
-      columns={columns}
-      sortingColumn={sortingColumn}
-      sortingDirection={sortingDirection}
-      onChangeSorting={onChangeSorting}
-      onFilterClick={onFilterClick}
-      selectable={selectable}
-      allSelected={!!selectedItems.length && isAllItemsSelected(data, selectedItems)}
-      onToggleSelectAll={onToggleSelectAll}
-      hideHeaderForMobile={changeOnlyMobileLayout}
-    />
-    <GridBody
-      columns={columns}
-      data={data}
-      selectable={selectable}
-      selectedItems={selectedItems}
-      onToggleSelection={onToggleSelection}
-      changeOnlyMobileLayout={changeOnlyMobileLayout}
-    />
+  <Fragment>
+    <div className={cx('grid', className)}>
+      <GridHeader
+        columns={columns}
+        sortingColumn={sortingColumn}
+        sortingDirection={sortingDirection}
+        onChangeSorting={onChangeSorting}
+        onFilterClick={onFilterClick}
+        selectable={selectable}
+        allSelected={!!selectedItems.length && isAllItemsSelected(data, selectedItems)}
+        onToggleSelectAll={onToggleSelectAll}
+        hideHeaderForMobile={changeOnlyMobileLayout}
+      />
+      <GridBody
+        columns={columns}
+        data={data}
+        selectable={selectable}
+        selectedItems={selectedItems}
+        onToggleSelection={onToggleSelection}
+        changeOnlyMobileLayout={changeOnlyMobileLayout}
+      />
+    </div>
     {loading && (
       <div className={cx('spinner-block')}>
-        <div className={cx('spinner')}>
-          <SpinningPreloader />
-        </div>
+        <SpinningPreloader />
       </div>
     )}
-  </div>
+  </Fragment>
 );
 Grid.propTypes = {
   columns: PropTypes.arrayOf(PropTypes.shape(columnPropTypes)),

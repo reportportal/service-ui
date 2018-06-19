@@ -15,6 +15,7 @@
   vertical-align: middle;
   background-color: transparent;
   cursor: pointer;
+  background: $COLOR--white-two;
 
   &.disabled {
     color: $COLOR--gray-60;
