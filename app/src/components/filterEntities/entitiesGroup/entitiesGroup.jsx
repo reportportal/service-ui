@@ -124,7 +124,7 @@ export class EntitiesGroup extends Component {
                   >
                     <EntityComponent
                       entityId={entityId}
-                      deletable={entity.deletable}
+                      removable={entity.removable}
                       title={entity.title}
                       meta={entity.meta}
                       onRemove={() => {

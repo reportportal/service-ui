@@ -137,7 +137,7 @@ export class SuiteLevelEntities extends Component {
           'itemNameEntityHint',
         title: intl.formatMessage(messages.NameTitle),
         active: true,
-        deletable: false,
+        removable: false,
         static: true,
       },
       {
@@ -154,7 +154,7 @@ export class SuiteLevelEntities extends Component {
         },
         title: intl.formatMessage(messages.StartTimeTitle),
         active: false,
-        deletable: true,
+        removable: true,
       },
       {
         id: ENTITY_DESCRIPTION,
@@ -170,7 +170,7 @@ export class SuiteLevelEntities extends Component {
             !validate.launchDescriptionEntity(entityObject.value.value)) &&
           'launchDescriptionEntityHint',
         active: false,
-        deletable: true,
+        removable: true,
       },
       {
         id: ENTITY_TAGS,
@@ -181,7 +181,7 @@ export class SuiteLevelEntities extends Component {
         },
         title: intl.formatMessage(messages.TagsTitle),
         active: false,
-        deletable: true,
+        removable: true,
       },
       {
         id: STATS_TOTAL,
@@ -197,7 +197,7 @@ export class SuiteLevelEntities extends Component {
           'launchNumericEntityHint',
         title: intl.formatMessage(messages.TotalTitle),
         active: false,
-        deletable: true,
+        removable: true,
       },
       {
         id: STATS_PASSED,
@@ -213,7 +213,7 @@ export class SuiteLevelEntities extends Component {
           'launchNumericEntityHint',
         title: intl.formatMessage(messages.PassedTitle),
         active: false,
-        deletable: true,
+        removable: true,
       },
       {
         id: STATS_FAILED,
@@ -229,7 +229,7 @@ export class SuiteLevelEntities extends Component {
           'launchNumericEntityHint',
         title: intl.formatMessage(messages.FailedTitle),
         active: false,
-        deletable: true,
+        removable: true,
       },
       {
         id: STATS_SKIPPED,
@@ -245,7 +245,7 @@ export class SuiteLevelEntities extends Component {
           'launchNumericEntityHint',
         title: intl.formatMessage(messages.SkippedTitle),
         active: false,
-        deletable: true,
+        removable: true,
       },
     ];
   };
@@ -272,7 +272,7 @@ export class SuiteLevelEntities extends Component {
           messages[`${defectTypeRef}_${hasSubtypes ? 'totalTitle' : 'title'}`],
         ),
         active: false,
-        deletable: true,
+        removable: true,
       });
       if (hasSubtypes) {
         defectTypeEntities = defectTypeEntities.concat(
@@ -292,7 +292,7 @@ export class SuiteLevelEntities extends Component {
               defectType.shortName
             }`,
             active: false,
-            deletable: true,
+            removable: true,
             meta: {
               longName: defectType.longName,
               subItem: true,

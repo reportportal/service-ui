@@ -42,22 +42,22 @@ export class EntityItemDescription extends Component {
     value: PropTypes.object.isRequired,
     title: PropTypes.string,
     meta: PropTypes.object,
-    deletable: PropTypes.bool,
+    removable: PropTypes.bool,
     onRemove: PropTypes.func,
   };
   static defaultProps = {
     title: '',
     meta: {},
-    deletable: true,
+    removable: true,
     onRemove: () => {},
   };
 
   render() {
-    const { intl, value, onRemove, deletable, title, meta, ...rest } = this.props;
+    const { intl, value, onRemove, removable, title, meta, ...rest } = this.props;
 
     return (
       <FieldErrorHint {...rest}>
-        <FieldFilterEntity title={title} deletable={deletable} onRemove={onRemove}>
+        <FieldFilterEntity title={title} removable={removable} onRemove={onRemove}>
           <InputConditional
             conditions={conditions}
             value={value}

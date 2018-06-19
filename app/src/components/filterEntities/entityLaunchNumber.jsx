@@ -40,21 +40,21 @@ export class EntityLaunchNumber extends Component {
     intl: intlShape.isRequired,
     value: PropTypes.object.isRequired,
     title: PropTypes.string,
-    deletable: PropTypes.bool,
+    removable: PropTypes.bool,
     onRemove: PropTypes.func,
   };
   static defaultProps = {
     title: '',
-    deletable: true,
+    removable: true,
     onRemove: () => {},
   };
 
   render() {
-    const { intl, value, onRemove, deletable, title, ...rest } = this.props;
+    const { intl, value, onRemove, removable, title, ...rest } = this.props;
 
     return (
       <FieldErrorHint {...rest}>
-        <FieldFilterEntity title={title} deletable={deletable} onRemove={onRemove}>
+        <FieldFilterEntity title={title} removable={removable} onRemove={onRemove}>
           <InputConditional
             conditions={conditions}
             value={value}

@@ -301,7 +301,7 @@ export class StepLevelEntities extends Component {
       },
       title: intl.formatMessage(messages.DefectTypeTitle),
       active: false,
-      deletable: true,
+      removable: true,
       meta: {
         options,
         multiple: true,
@@ -326,7 +326,7 @@ export class StepLevelEntities extends Component {
           'itemNameEntityHint',
         title: intl.formatMessage(messages.NameTitle),
         active: true,
-        deletable: false,
+        removable: false,
         static: true,
       },
       {
@@ -351,7 +351,7 @@ export class StepLevelEntities extends Component {
         },
         title: intl.formatMessage(messages.MethodTypeTitle),
         active: false,
-        deletable: true,
+        removable: true,
         meta: {
           options: [
             {
@@ -421,7 +421,7 @@ export class StepLevelEntities extends Component {
             !validate.launchDescriptionEntity(entityObject.value.value)) &&
           'launchDescriptionEntityHint',
         active: false,
-        deletable: true,
+        removable: true,
         meta: {
           placeholder: intl.formatMessage(messages.DescriptionPlaceholder),
         },
@@ -437,7 +437,7 @@ export class StepLevelEntities extends Component {
         },
         title: intl.formatMessage(messages.StatusTitle),
         active: false,
-        deletable: true,
+        removable: true,
         meta: {
           options: [
             {
@@ -479,7 +479,7 @@ export class StepLevelEntities extends Component {
         },
         title: intl.formatMessage(messages.StartTimeTitle),
         active: false,
-        deletable: true,
+        removable: true,
       },
       this.getDefectTypeEntity(),
       {
@@ -496,7 +496,7 @@ export class StepLevelEntities extends Component {
             !validate.launchDescriptionEntity(entityObject.value.value)) &&
           'launchDescriptionEntityHint',
         active: false,
-        deletable: true,
+        removable: true,
         meta: {
           placeholder: intl.formatMessage(messages.DefectCommentPlaceholder),
         },
@@ -510,7 +510,7 @@ export class StepLevelEntities extends Component {
         },
         title: intl.formatMessage(messages.TagsTitle),
         active: false,
-        deletable: true,
+        removable: true,
       },
       {
         id: ENTITY_AUTOANALYZE,
@@ -521,7 +521,7 @@ export class StepLevelEntities extends Component {
         },
         title: intl.formatMessage(messages.AnalyseTitle),
         active: false,
-        deletable: true,
+        removable: true,
         meta: {
           options: [
             {
@@ -544,7 +544,7 @@ export class StepLevelEntities extends Component {
         },
         title: intl.formatMessage(messages.IgnoreAATitle),
         active: false,
-        deletable: true,
+        removable: true,
         meta: {
           options: [
             {
@@ -567,7 +567,7 @@ export class StepLevelEntities extends Component {
         },
         title: intl.formatMessage(messages.BtsIssueTitle),
         active: false,
-        deletable: true,
+        removable: true,
         meta: {
           options: [
             {

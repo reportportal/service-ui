@@ -61,7 +61,7 @@ const presets = [
     },
   },
 ];
-const utcOffset = new Date().getTimezoneOffset() / 60 * -1;
+const utcOffset = (new Date().getTimezoneOffset() / 60) * -1;
 
 const utcString = `${utcOffset > -1 ? `+${utcOffset}` : utcOffset}`;
 
@@ -107,8 +107,8 @@ const parseValue = (value) => {
   throw new Error('Invalid date string provided');
 };
 
-export const EntityItemStartTime = ({ onRemove, onChange, deletable, title, value }) => (
-  <FieldFilterEntity title={title} deletable={deletable} onRemove={onRemove}>
+export const EntityItemStartTime = ({ onRemove, onChange, removable, title, value }) => (
+  <FieldFilterEntity title={title} removable={removable} onRemove={onRemove}>
     <InputTimeDateRange
       presets={presets}
       onChange={(val) => {
@@ -121,13 +121,13 @@ export const EntityItemStartTime = ({ onRemove, onChange, deletable, title, valu
 EntityItemStartTime.propTypes = {
   value: PropTypes.object,
   title: PropTypes.string,
-  deletable: PropTypes.bool,
+  removable: PropTypes.bool,
   onRemove: PropTypes.func,
   onChange: PropTypes.func,
 };
 EntityItemStartTime.defaultProps = {
   value: {},
-  deletable: true,
+  removable: true,
   title: '',
   onRemove: () => {},
   onChange: () => {},
