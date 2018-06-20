@@ -3,7 +3,9 @@ import { connect } from 'react-redux';
 import { Responsive, WidthProvider } from 'react-grid-layout';
 import classNames from 'classnames/bind';
 import { redirect } from 'redux-first-router';
+import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { PROJECT_DASHBOARD_PAGE, activeDashboardIdSelector } from 'controllers/pages';
+import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { fetch } from 'common/utils';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import PropTypes from 'prop-types';
@@ -20,7 +22,14 @@ const ResponsiveGridLayout = WidthProvider(Responsive);
 const rowHeight = 63;
 const breakpoints = { lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 };
 const cols = { lg: 12, md: 12, sm: 4, xs: 4, xxs: 4 };
+const messages = defineMessages({
+  deleteWidgetSuccess: {
+    id: 'WidgetsGrid.notification.deleteWidgetSuccess',
+    defaultMessage: 'Widget has been deleted',
+  },
+});
 
+@injectIntl
 @connect(
   (state) => ({
     url: URLS.dashboard(activeProjectSelector(state), activeDashboardIdSelector(state)),
@@ -29,15 +38,18 @@ const cols = { lg: 12, md: 12, sm: 4, xs: 4, xxs: 4 };
   }),
   {
     redirect,
+    showNotification,
   },
 )
 export class WidgetsGrid extends Component {
   static propTypes = {
+    intl: intlShape.isRequired,
     url: PropTypes.string.isRequired,
     isFullscreen: PropTypes.bool,
     project: PropTypes.string.isRequired,
     userInfo: PropTypes.object.isRequired,
     redirect: PropTypes.func.isRequired,
+    showNotification: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
@@ -67,46 +79,71 @@ export class WidgetsGrid extends Component {
     });
   };
 
-  onGridChange = (newLayout) => {
+  onGridItemChange = (newLayout, oldWidgetPosition, newWidgetPosition) => {
+    let itemGhanged = false;
     let newWidgets;
 
-    if (this.state.isMobile) {
-      const oldWidgets = this.state.widgets;
+    Object.keys(oldWidgetPosition).forEach((prop) => {
+      if (oldWidgetPosition[prop] !== newWidgetPosition[prop]) {
+        itemGhanged = true;
+      }
+    });
 
-      newWidgets = newLayout.map(({ i, y, h }, index) => ({
-        widgetId: i,
-        widgetPosition: [oldWidgets[index].widgetPosition[0], y],
-        widgetSize: [oldWidgets[index].widgetSize[0], h],
-      }));
-    } else {
-      newWidgets = newLayout.map(({ i, x, y, w, h }) => ({
-        widgetId: i,
-        widgetPosition: [x, y],
-        widgetSize: [w, h],
-      }));
+    if (itemGhanged) {
+      if (this.state.isMobile) {
+        const oldWidgets = this.state.widgets;
+
+        newWidgets = newLayout.map(({ i, y, h }, index) => ({
+          widgetId: i,
+          widgetPosition: [oldWidgets[index].widgetPosition[0], y],
+          widgetSize: [oldWidgets[index].widgetSize[0], h],
+        }));
+      } else {
+        newWidgets = newLayout.map(({ i, x, y, w, h }) => ({
+          widgetId: i,
+          widgetPosition: [x, y],
+          widgetSize: [w, h],
+        }));
+      }
+      this.setState({ widgets: newWidgets });
+      this.updateWidgets(newWidgets);
     }
-
-    this.setState({ widgets: newWidgets });
-    this.updateWidgets(newWidgets);
   };
 
   onResizeStop = (newLayout) => {
-    this.onGridChange(newLayout);
+    this.onGridItemChange(newLayout);
   };
+
   onDeleteWidget = (id) => {
-    // TODO implement when Pawels PR will be mergerd.
-    console.log(id);
+    const newWidgets = this.state.widgets.filter((widget) => widget.widgetId !== id);
+    this.deleteWidget(id).then(() => {
+      this.updateWidgets(newWidgets);
+      this.setState({ widgets: newWidgets });
+      this.props.showNotification({
+        type: NOTIFICATION_TYPES.SUCCESS,
+        message: this.props.intl.formatMessage(messages.deleteWidgetSuccess),
+      });
+    });
   };
-  updateWidgets(widgets) {
+
+  updateWidgets = (widgets) => {
     fetch(this.props.url, {
       method: 'PUT',
       data: {
         updateWidgets: widgets,
       },
     });
-  }
+  };
 
-  fetchWidgets() {
+  deleteWidget = (widget) =>
+    fetch(this.props.url, {
+      method: 'PUT',
+      data: {
+        deleteWidget: widget,
+      },
+    });
+
+  fetchWidgets = () => {
     const { userInfo, project } = this.props;
     const projectRole =
       userInfo.assigned_projects[project] && userInfo.assigned_projects[project].projectRole;
@@ -128,7 +165,7 @@ export class WidgetsGrid extends Component {
           this.props.redirect({ to: PROJECT_DASHBOARD_PAGE, payload: { projectId: project } });
         }
       });
-  }
+  };
 
   render() {
     const { widgets } = this.state;
@@ -173,8 +210,8 @@ export class WidgetsGrid extends Component {
               rowHeight={rowHeight}
               breakpoints={breakpoints}
               onBreakpointChange={this.onBreakpointChange}
-              onDragStop={this.onGridChange}
-              onResizeStop={this.onResizeStop}
+              onDragStop={this.onGridItemChange}
+              onResizeStop={this.onGridItemChange}
               cols={cols}
               isDraggable={this.state.isModifiable}
               isResizable={this.state.isModifiable}

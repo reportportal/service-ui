@@ -7,10 +7,13 @@ import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { URLS } from 'common/urls';
 import { RegistrationPage } from './registrationPage';
 
-@connect(null, {
-  loginAction,
-  showNotification,
-})
+@connect(
+  null,
+  {
+    loginAction,
+    showNotification,
+  },
+)
 @connectRouter(({ uuid }) => ({ uuid }))
 export class RegistrationPageContainer extends Component {
   static propTypes = {
