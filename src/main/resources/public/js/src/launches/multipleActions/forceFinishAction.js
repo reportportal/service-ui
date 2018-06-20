@@ -53,7 +53,7 @@ define(function (require) {
             bodyText: (items.length > 1) ?
                 Util.replaceTemplate(Localization.launches.finishWarning,
                     Localization.ui.launches,
-                    Localization.ui.selectedItems) :
+                    Localization.ui.selectedLaunches) :
                 Util.replaceTemplate(Localization.launches.finishWarning,
                     Localization.ui.launch,
                     Localization.ui.launch),

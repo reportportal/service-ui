@@ -153,7 +153,7 @@ define(['util'], function () {
             from: 'from',
             to: 'to',
             launch: 'launch',
-            selectedItems: 'selected launches',
+            selectedLaunches: 'selected launches',
             debug: 'Debug',
             allLaunches: 'All launches',
             smof: 'of',
