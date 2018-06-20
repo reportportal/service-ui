@@ -23,6 +23,7 @@ const cx = classNames.bind(styles);
 export class Widget extends Component {
   static propTypes = {
     url: PropTypes.string.isRequired,
+    widgetId: PropTypes.string.isRequired,
     showModalAction: PropTypes.func.isRequired,
     switchDraggable: PropTypes.func,
     onDelete: PropTypes.func,
