@@ -33,6 +33,11 @@ export const URLS = {
   launchesCompare: (activeProject, ids) =>
     `${urlBase}${activeProject}/launch/compare${getQueryParams({ ids })}`,
   launchImport: (activeProject) => `${urlBase}${activeProject}/launch/import`,
+  exportLaunch: (projectId, launchId, exportType) =>
+    `${urlBase}${projectId}/launch/${launchId}/report${getQueryParams({
+      view: exportType,
+      access_token: getToken(),
+    })}`,
   login: (grantType, username, password) =>
     `/uat/sso/oauth/token${getQueryParams({
       grant_type: grantType,
