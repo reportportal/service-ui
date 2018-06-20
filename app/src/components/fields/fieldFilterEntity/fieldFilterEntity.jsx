@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
-import CrossIcon from 'common/img/icon-cross-inline.svg';
+import CrossIcon from 'common/img/cross-icon-inline.svg';
 import styles from './fieldFilterEntity.scss';
 
 const cx = classNames.bind(styles);

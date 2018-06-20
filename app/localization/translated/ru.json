@@ -82,8 +82,8 @@
   "DashboardItemPage.editWidget": "Редактировать виджет",
   "DashboardItemPage.dashboardEmptyText": "Добавьте первый виджет, чтобы проанализировать статистику",
   "DashboardItemPage.deleteWidget": "Удалить виджет",
-  "DashboardItemPage.fullscreen": "Полноэкранный режим",
   "DashboardItemPage.editDashboard": "Редактировать",
+  "DashboardItemPage.fullscreen": "Полноэкранный режим",
   "DashboardItemPage.notMyDashboardEmptyHeader": "На этой Панели управления нет виджетов",
   "DashboardModal.dashboardDescriptionPlaceholder": "Введите описание панели управления",
   "DashboardPage.modal.addModalSubmitButtonText": "Добавить",
@@ -493,5 +493,6 @@
   "WidgetHeader.widgetType.passing_rate_summary": "Процент пройденных тестов для выбранных запусков",
   "WidgetHeader.widgetType.product_status": "Статус проекта",
   "WidgetHeader.widgetType.statistic_trend": "Диаграмма статистики запуска",
-  "WidgetHeader.widgetType.unique_bug_table": "Таблица уникальных ошибок"
+  "WidgetHeader.widgetType.unique_bug_table": "Таблица уникальных ошибок",
+  "WidgetsGrid.notification.deleteWidgetSuccess": "Виджет успешно удалён"
 }
