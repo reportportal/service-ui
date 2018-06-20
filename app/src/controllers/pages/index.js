@@ -5,7 +5,7 @@ export {
   projectIdSelector,
   launchIdSelector,
 } from './selectors';
-export { updatePagePropertiesAction } from './actionCreators';
+export { updatePagePropertiesAction, redirectTo } from './actionCreators';
 
 export {
   NO_PAGE,

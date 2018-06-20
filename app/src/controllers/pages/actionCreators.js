@@ -1,7 +1,9 @@
 import { redirect } from 'redux-first-router';
 
 export const updatePagePropertiesAction = (properties) => (dispatch, getState) => {
-  const { location: { type, payload, meta } } = getState();
+  const {
+    location: { type, payload, meta },
+  } = getState();
 
   const query = (meta && meta.query) || {};
 
@@ -12,4 +14,8 @@ export const updatePagePropertiesAction = (properties) => (dispatch, getState) =
   };
 
   dispatch(redirect(updatedAction));
+};
+
+export const redirectTo = (page) => (dispatch) => {
+  dispatch(redirect({ type: page }));
 };

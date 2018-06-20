@@ -25,8 +25,8 @@ import { connect } from 'react-redux';
 import { reduxForm } from 'redux-form';
 import { FormattedMessage, injectIntl, intlShape, defineMessages } from 'react-intl';
 import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLock';
+import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import Link from 'redux-first-router-link';
-import { redirect } from 'redux-first-router';
 import PropTypes from 'prop-types';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
@@ -34,7 +34,7 @@ import { InputOutside } from 'components/inputs/inputOutside';
 import { BigButton } from 'components/buttons/bigButton';
 import { validate, fetch } from 'common/utils';
 import { URLS } from 'common/urls';
-import { LOGIN_PAGE } from 'controllers/pages';
+import { LOGIN_PAGE, redirectTo } from 'controllers/pages';
 import EmailIcon from './img/email-icon-inline.svg';
 import styles from './forgotPasswordForm.scss';
 
@@ -46,14 +46,26 @@ const placeholders = defineMessages({
     defaultMessage: 'Enter email',
   },
 });
+const notifications = defineMessages({
+  successSendEmail: {
+    id: 'ForgotPasswordForm.successSendEmail',
+    defaultMessage: 'Password recovery instructions have been sent to email { email }',
+  },
+  errorSendEmail: {
+    id: 'ForgotPasswordForm.errorSendEmail',
+    defaultMessage: 'User with entered email address is not found',
+  },
+});
 
-@connect(null, (dispatch) => ({
-  redirectToLoginPage: () => dispatch(redirect({ type: LOGIN_PAGE })),
-}))
-@connect(null, {
-  showScreenLockAction,
-  hideScreenLockAction,
-})
+@connect(
+  null,
+  {
+    showScreenLockAction,
+    hideScreenLockAction,
+    showNotification,
+    redirectTo,
+  },
+)
 @reduxForm({
   form: 'forgotPassword',
   validate: ({ email }) => ({
@@ -66,8 +78,9 @@ export class ForgotPasswordForm extends PureComponent {
     intl: intlShape.isRequired,
     showScreenLockAction: PropTypes.func.isRequired,
     hideScreenLockAction: PropTypes.func.isRequired,
+    showNotification: PropTypes.func.isRequired,
     handleSubmit: PropTypes.func.isRequired,
-    redirectToLoginPage: PropTypes.func.isRequired,
+    redirectTo: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
@@ -81,10 +94,23 @@ export class ForgotPasswordForm extends PureComponent {
       data: {
         email,
       },
-    }).then(() => {
-      this.props.hideScreenLockAction();
-      this.props.redirectToLoginPage();
-    });
+    })
+      .then(() => {
+        this.props.showNotification({
+          type: NOTIFICATION_TYPES.SUCCESS,
+          message: this.props.intl.formatMessage(notifications.successSendEmail, { email }),
+        });
+        this.props.redirectTo(LOGIN_PAGE);
+      })
+      .catch(() => {
+        this.props.showNotification({
+          type: NOTIFICATION_TYPES.ERROR,
+          message: this.props.intl.formatMessage(notifications.errorSendEmail),
+        });
+      })
+      .then(() => {
+        this.props.hideScreenLockAction();
+      });
   };
 
   render() {
