@@ -54,9 +54,6 @@ export class Hamburger extends Component {
     onMoveToLaunches: PropTypes.func,
     onForceFinish: PropTypes.func,
     onAnalysis: PropTypes.func,
-    onExportPDF: PropTypes.func,
-    onExportXLS: PropTypes.func,
-    onExportHTML: PropTypes.func,
     customProps: PropTypes.object,
     accountRole: PropTypes.string,
   };
@@ -66,9 +63,6 @@ export class Hamburger extends Component {
     onMoveToLaunches: () => {},
     onForceFinish: () => {},
     onAnalysis: () => {},
-    onExportPDF: () => {},
-    onExportXLS: () => {},
-    onExportHTML: () => {},
     customProps: {},
     accountRole: '',
   };
@@ -104,9 +98,6 @@ export class Hamburger extends Component {
       onMoveToLaunches,
       onForceFinish,
       onAnalysis,
-      onExportPDF,
-      onExportXLS,
-      onExportHTML,
       customProps,
     } = this.props;
     return (
@@ -198,36 +189,24 @@ export class Hamburger extends Component {
               <FormattedMessage id={'Hamburger.export'} defaultMessage={'Export:'} />
             </div>
             <div className={cx('export-buttons')}>
-              <div className={cx('export-button')}>
-                <GhostButton
-                  tiny
-                  onClick={() => {
-                    onExportPDF(launch);
-                  }}
-                >
-                  PDF
-                </GhostButton>
-              </div>
-              <div className={cx('export-button')}>
-                <GhostButton
-                  tiny
-                  onClick={() => {
-                    onExportXLS(launch);
-                  }}
-                >
-                  XLS
-                </GhostButton>
-              </div>
-              <div className={cx('export-button')}>
-                <GhostButton
-                  tiny
-                  onClick={() => {
-                    onExportHTML(launch);
-                  }}
-                >
-                  HTML
-                </GhostButton>
-              </div>
+              <a
+                className={cx('export-button')}
+                href={URLS.exportLaunch(projectId, launch.id, 'pdf')}
+              >
+                PDF
+              </a>
+              <a
+                className={cx('export-button')}
+                href={URLS.exportLaunch(projectId, launch.id, 'xls')}
+              >
+                XLS
+              </a>
+              <a
+                className={cx('export-button')}
+                href={URLS.exportLaunch(projectId, launch.id, 'html')}
+              >
+                HTML
+              </a>
             </div>
           </div>
         </div>
