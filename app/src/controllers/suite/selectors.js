@@ -13,3 +13,5 @@ export const lastOperationSelector = createLastOperationSelector(groupOperations
 
 export const suitesSelector = (state) => domainSelector(state).suites;
 export const suitePaginationSelector = (state) => domainSelector(state).pagination;
+
+export const currentSuiteSelector = (state) => domainSelector(state).currentSuite;

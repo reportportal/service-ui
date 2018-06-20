@@ -4,11 +4,15 @@ import {
   toggleItemSelectionAction,
   unselectAllItemsAction,
 } from 'controllers/groupOperations';
-import { NAMESPACE, FETCH_SUITES } from './constants';
+import { NAMESPACE, FETCH_SUITES, FETCH_SUITE } from './constants';
 
 export const fetchSuitesAction = (params) => ({
   type: FETCH_SUITES,
   payload: params,
+});
+export const fetchSuiteAction = (suiteId) => ({
+  type: FETCH_SUITE,
+  payload: suiteId,
 });
 
 export const toggleSuiteSelectionAction = toggleItemSelectionAction(NAMESPACE);

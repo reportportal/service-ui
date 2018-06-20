@@ -3,6 +3,7 @@ import { pageNames, NO_PAGE } from './constants';
 export const activeDashboardIdSelector = (state) => state.location.payload.dashboardId;
 export const projectIdSelector = (state) => state.location.payload.projectId;
 export const launchIdSelector = (state) => state.location.payload.launchId;
+export const suiteIdSelector = (state) => state.location.payload.suiteId;
 
 export const pageSelector = (state) => pageNames[state.location.type] || NO_PAGE;
 

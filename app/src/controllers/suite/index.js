@@ -2,6 +2,7 @@ export { suiteReducer } from './reducer';
 export { suiteSagas } from './sagas';
 export {
   fetchSuitesAction,
+  fetchSuiteAction,
   selectSuitesAction,
   toggleSuiteSelectionAction,
   proceedWithValidItemsAction,
@@ -13,4 +14,5 @@ export {
   selectedSuitesSelector,
   suitePaginationSelector,
   suitesSelector,
+  currentSuiteSelector,
 } from './selectors';

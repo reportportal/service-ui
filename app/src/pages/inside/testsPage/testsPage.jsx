@@ -15,14 +15,15 @@ import {
   selectTestsAction,
   testPaginationSelector,
 } from 'controllers/test';
+import { currentSuiteSelector } from 'controllers/suite';
 import { withPagination } from 'controllers/pagination';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
-import { CURRENT_SUITE_STUB } from './currentSuiteStub';
 
 @connect(
   (state) => ({
     tests: testsSelector(state),
     selectedTests: selectedTestsSelector(state),
+    currentSuite: currentSuiteSelector(state),
   }),
   {
     fetchTestsAction,
@@ -59,7 +60,6 @@ export class TestsPage extends Component {
     unselectAllTestsAction: PropTypes.func,
     selectTestsAction: PropTypes.func,
     currentSuite: PropTypes.object,
-    fetchSuiteAction: PropTypes.func,
   };
 
   static defaultProps = {
@@ -79,7 +79,6 @@ export class TestsPage extends Component {
     unselectAllTestsAction: () => {},
     selectTestsAction: () => {},
     currentSuite: null,
-    fetchSuiteAction: () => {},
   };
 
   handleAllTestsSelection = () => {
@@ -105,12 +104,13 @@ export class TestsPage extends Component {
       onChangePage,
       onChangePageSize,
       fetchData,
+      currentSuite,
     } = this.props;
     return (
       <PageLayout>
         <SuiteTestToolbar
           selectedItems={selectedTests}
-          parentItem={CURRENT_SUITE_STUB}
+          parentItem={currentSuite}
           onUnselect={this.props.toggleTestSelectionAction}
           onUnselectAll={this.props.unselectAllTestsAction}
           onRefresh={fetchData}

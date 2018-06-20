@@ -61,9 +61,7 @@ export const URLS = {
 
   suites: (activeProject, launchId) =>
     `${urlBase}${activeProject}/item${getQueryParams({ 'filter.eq.launch': launchId })}`,
-
-  suites: (activeProject, launchId) =>
-    `${urlBase}${activeProject}/item${getQueryParams({ 'filter.eq.launch': launchId })}`,
+  suite: (activeProject, suiteId) => `${urlBase}${activeProject}/item/${suiteId}`,
 
   tests: (activeProject, launchId, suiteId) =>
     `${urlBase}${activeProject}/item${getQueryParams({
