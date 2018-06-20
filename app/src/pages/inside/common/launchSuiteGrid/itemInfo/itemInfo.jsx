@@ -56,7 +56,7 @@ export class ItemInfo extends Component {
         <div className={cx('main-info')}>
           <a href="/" className={cx('name-link')}>
             <span className={cx('name')}>{value.name}</span>
-            <span className={cx('number')}>#{value.number}</span>
+            {value.number && <span className={cx('number')}>#{value.number}</span>}
           </a>
           {analyzing && <div className={cx('analysis-badge')}>Analysis</div>}
           {canEditLaunch(userAccountRole, userProjectRole, userId === value.owner) && (
@@ -78,7 +78,7 @@ export class ItemInfo extends Component {
             }}
           />
           <div className={cx('mobile-start-time')}>{fromNowFormat(value.start_time)}</div>
-          {value.owner &&<OwnerBlock owner={value.owner} />}
+          {value.owner && <OwnerBlock owner={value.owner} />}
           {value.tags && !!value.tags.length && <TagsBlock tags={value.tags} />}
           {value.description && (
             <div className={cx('item-description')}>
