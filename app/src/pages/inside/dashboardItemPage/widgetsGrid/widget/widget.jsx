@@ -50,8 +50,13 @@ export class Widget extends Component {
   }
 
   getContentParams = () => this.state.widget.content_parameters || {};
+
   getWidgetOptions = () => this.getContentParams().widgetOptions || {};
+
   fetchWidget = () => {
+    this.setState({
+      loading: true,
+    });
     fetch(this.props.url).then((widget) => {
       this.setState({
         loading: false,
@@ -59,6 +64,7 @@ export class Widget extends Component {
       });
     });
   };
+
   deleteWidget = () => {
     this.props.showModalAction({
       id: 'deleteWidgetModal',
@@ -82,25 +88,23 @@ export class Widget extends Component {
 
     return (
       <div className={cx('widget-container')}>
-        {this.state.loading ? (
-          <SpinningPreloader />
-        ) : (
-          <Fragment>
-            <div
-              className={cx('widget-header', 'draggable-field', { modifiable: this.props.isModifiable })}
-              onMouseOver={this.onHeaderMouseOver}
-              onMouseUp={this.onHeaderMouseUp}
-              onMouseDown={this.onHeaderMouseDown}
-            >
-              <WidgetHeader
-                data={headerData}
-                onRefresh={this.fetchWidget}
-                onDelete={this.deleteWidget}
-              />
-            </div>
-            <div className={cx('widget')} />
-          </Fragment>
-        )}
+        <Fragment>
+          <div
+            className={cx('widget-header', 'draggable-field', {
+              modifiable: this.props.isModifiable,
+            })}
+            onMouseOver={this.onHeaderMouseOver}
+            onMouseUp={this.onHeaderMouseUp}
+            onMouseDown={this.onHeaderMouseDown}
+          >
+            <WidgetHeader
+              data={headerData}
+              onRefresh={this.fetchWidget}
+              onDelete={this.deleteWidget}
+            />
+          </div>
+          <div className={cx('widget')}>{this.state.loading && <SpinningPreloader />}</div>
+        </Fragment>
       </div>
     );
   }
