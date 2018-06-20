@@ -40,7 +40,7 @@ function* handleLogin({ payload }) {
 
   localStorage.setItem(TOKEN_KEY, `${result.token_type} ${result.access_token}`);
   // TODO: Change those calls after project & users actions will be refactored with sagas
-  yield put(fetchUserAction());
+  yield put.resolve(fetchUserAction());
   const projectId = yield select(activeProjectSelector);
   yield put(fetchProjectAction(projectId));
   yield put(authSuccessAction());

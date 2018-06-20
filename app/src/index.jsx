@@ -31,12 +31,12 @@ if (!process.env.production) {
 
 const queryParseHistory = qhistory(createHashHistory({ hashType: 'noslash' }), stringify, parse);
 
-const { store } = configureStore(queryParseHistory, window.REDUX_STATE);
+const { store, initialDispatch } = configureStore(queryParseHistory, window.REDUX_STATE);
 
 const rerenderApp = (TheApp) => {
   render(
     <Provider store={store}>
-      <TheApp />
+      <TheApp initialDispatch={initialDispatch} />
     </Provider>,
     document.querySelector('#app'),
   );

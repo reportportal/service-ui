@@ -13,9 +13,10 @@ const composeEnhancers = (...args) =>
   typeof window !== 'undefined' ? composeWithDevTools({})(...args) : compose(...args);
 
 export const configureStore = (history, preloadedState) => {
-  const { reducer, middleware, enhancer } = connectRoutes(history, routesMap, {
+  const { reducer, middleware, enhancer, initialDispatch } = connectRoutes(history, routesMap, {
     querySerializer: queryString,
     onBeforeChange: onBeforeRouteChange,
+    initialDispatch: false,
   });
 
   const rootReducer = combineReducers({ ...reducers, location: reducer });
@@ -34,5 +35,5 @@ export const configureStore = (history, preloadedState) => {
 
   saga.run(rootSagas);
 
-  return { store };
+  return { store, initialDispatch };
 };

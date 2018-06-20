@@ -3,6 +3,7 @@ export {
   pagePropertiesSelector,
   activeDashboardIdSelector,
   projectIdSelector,
+  launchIdSelector,
 } from './selectors';
 export { updatePagePropertiesAction } from './actionCreators';
 

@@ -20,16 +20,16 @@ export const setActiveProjectAction = (project) => (dispatch, getState) => {
 export const fetchUserAction = () => (dispatch) =>
   fetch(URLS.user()).then((user) => {
     const userSettings = getStorageItem(`${user.userId}_settings`) || {};
-    const activeProject = userSettings.activeProject;
+    const savedActiveProject = userSettings.activeProject;
+    const activeProject =
+      savedActiveProject &&
+      Object.prototype.hasOwnProperty.call(user.assigned_projects, savedActiveProject)
+        ? savedActiveProject
+        : user.default_project;
 
     dispatch(fetchUserSuccessAction(user));
-    dispatch(
-      setActiveProjectAction(
-        activeProject && Object.prototype.hasOwnProperty.call(user.assigned_projects, activeProject)
-          ? activeProject
-          : user.default_project,
-      ),
-    );
+    dispatch(setActiveProjectAction(activeProject));
+    return { user, activeProject };
   });
 
 export const setStartTimeFormatAction = (format) => ({

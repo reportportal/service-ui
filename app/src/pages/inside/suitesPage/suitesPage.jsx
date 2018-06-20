@@ -17,7 +17,7 @@ import {
   unselectAllSuitesAction,
   selectSuitesAction,
 } from 'controllers/suite';
-import { currentLaunchSelector, fetchLaunchAction } from 'controllers/launch';
+import { currentLaunchSelector } from 'controllers/launch';
 import { Toolbar } from './toolbar';
 
 @connect(
@@ -31,7 +31,6 @@ import { Toolbar } from './toolbar';
     toggleSuiteSelectionAction,
     unselectAllSuitesAction,
     selectSuitesAction,
-    fetchLaunchAction,
   },
 )
 @withSorting({
@@ -62,7 +61,6 @@ export class SuitesPage extends Component {
     unselectAllSuitesAction: PropTypes.func,
     selectSuitesAction: PropTypes.func,
     currentLaunch: PropTypes.object,
-    fetchLaunchAction: PropTypes.func,
   };
 
   static defaultProps = {
@@ -82,12 +80,7 @@ export class SuitesPage extends Component {
     unselectAllSuitesAction: () => {},
     selectSuitesAction: () => {},
     currentLaunch: {},
-    fetchLaunchAction: () => {},
   };
-
-  componentDidMount() {
-    this.fetchCurrentLaunch();
-  }
 
   handleAllSuitesSelection = () => {
     const { selectedSuites, suites } = this.props;
@@ -97,8 +90,6 @@ export class SuitesPage extends Component {
     }
     this.props.selectSuitesAction(suites);
   };
-
-  fetchCurrentLaunch = () => this.props.fetchLaunchAction('5a65e6a997a1c00001aaee95'); // TODO remove hardcoded id after routing implementation
 
   handleRefresh = () => {
     this.fetchCurrentLaunch();

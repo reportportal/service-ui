@@ -9,9 +9,11 @@ import {
   PROJECT_DASHBOARD_ITEM_PAGE,
   PROJECT_SUITES_PAGE,
   projectIdSelector,
+  launchIdSelector,
 } from 'controllers/pages';
 import { isAuthorizedSelector } from 'controllers/auth';
 import { fetchDashboardAction, changeVisibilityTypeAction } from 'controllers/dashboard';
+import { fetchLaunchAction } from 'controllers/launch';
 
 const redirectRoute = (path, createNewAction) => ({
   path,
@@ -75,7 +77,13 @@ export default {
   },
   [PROJECT_DASHBOARD_ITEM_PAGE]: '/:projectId/dashboard/:dashboardId',
   PROJECT_LAUNCHES_PAGE: '/:projectId/launches/:filterId?',
-  [PROJECT_SUITES_PAGE]: '/:projectId/launches/:filterId/suites/:suiteId',
+  [PROJECT_SUITES_PAGE]: {
+    path: '/:projectId/launches/:filterId/launch/:launchId',
+    thunk: (dispatch, getState) => {
+      const launchId = launchIdSelector(getState());
+      dispatch(fetchLaunchAction(launchId));
+    },
+  },
   PROJECT_FILTERS_PAGE: '/:projectId/filters',
   PROJECT_USERDEBUG_PAGE: '/:projectId/userdebug',
   PROJECT_MEMBERS_PAGE: '/:projectId/members',
