@@ -36,11 +36,11 @@ const cx = classNames.bind(styles);
 @connectRouter(({ forgotPass, reset }) => ({ forgotPass, reset }))
 export class LoginPage extends PureComponent {
   static propTypes = {
-    forgotPass: PropTypes.bool,
+    forgotPass: PropTypes.string,
     reset: PropTypes.string,
   };
   static defaultProps = {
-    forgotPass: undefined,
+    forgotPass: '',
     reset: '',
   };
   render() {

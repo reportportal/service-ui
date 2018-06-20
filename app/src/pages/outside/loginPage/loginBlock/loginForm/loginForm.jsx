@@ -115,7 +115,7 @@ export class LoginForm extends React.Component {
           </FieldProvider>
         </div>
         <Link
-          to={{ type: LOGIN_PAGE, payload: { query: { forgotPass: true } } }}
+          to={{ type: LOGIN_PAGE, payload: { query: { forgotPass: 'true' } } }}
           className={cx('forgot-pass')}
         >
           <FormattedMessage id={'LoginForm.forgotPass'} defaultMessage={'Forgot password?'} />

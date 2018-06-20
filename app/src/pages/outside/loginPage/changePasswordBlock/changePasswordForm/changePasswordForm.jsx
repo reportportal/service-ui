@@ -19,7 +19,7 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { PureComponent } from 'react';
+import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { reduxForm } from 'redux-form';
@@ -27,7 +27,9 @@ import classNames from 'classnames/bind';
 import { FormattedMessage, injectIntl, intlShape, defineMessages } from 'react-intl';
 import { validate, fetch, connectRouter } from 'common/utils';
 import { URLS } from 'common/urls';
+import { LOGIN_PAGE, redirectTo } from 'controllers/pages';
 import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLock';
+import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { FieldBottomConstraints } from 'components/fields/fieldBottomConstraints';
@@ -48,12 +50,27 @@ const placeholders = defineMessages({
     defaultMessage: 'Confirm new password',
   },
 });
+const notifications = defineMessages({
+  successChange: {
+    id: 'ChangePasswordForm.successChange',
+    defaultMessage: 'Your password has been changed successfully',
+  },
+  failedChange: {
+    id: 'ChangePasswordForm.failedChange',
+    defaultMessage: 'Failed to update password',
+  },
+});
 
-@connectRouter(({ reset }) => ({ reset }))
-@connect(null, {
-  showScreenLockAction,
-  hideScreenLockAction,
-})
+@connectRouter(({ reset: resetQueryParam }) => ({ resetQueryParam }))
+@connect(
+  null,
+  {
+    redirectTo,
+    showScreenLockAction,
+    hideScreenLockAction,
+    showNotification,
+  },
+)
 @reduxForm({
   form: 'changePassword',
   validate: ({ password, passwordRepeat }) => ({
@@ -67,35 +84,43 @@ export class ChangePasswordForm extends PureComponent {
     intl: intlShape.isRequired,
     showScreenLockAction: PropTypes.func.isRequired,
     hideScreenLockAction: PropTypes.func.isRequired,
+    showNotification: PropTypes.func.isRequired,
     handleSubmit: PropTypes.func.isRequired,
-    reset: PropTypes.string,
-    history: PropTypes.object.isRequired,
-    location: PropTypes.shape({
-      hash: PropTypes.string,
-      pathname: PropTypes.string,
-      query: PropTypes.object,
-      search: PropTypes.string,
-    }).isRequired,
+    resetQueryParam: PropTypes.string,
+    redirectTo: PropTypes.func.isRequired,
   };
   static defaultProps = {
-    reset: '',
+    resetQueryParam: '',
   };
   state = {
     loading: false,
   };
   changePassword = ({ password }) => {
     this.props.showScreenLockAction();
-    const uuid = this.props.reset;
+    const uuid = this.props.resetQueryParam;
     fetch(URLS.userPasswordReset(), {
       method: 'post',
       data: {
         password,
         uuid,
       },
-    }).then(() => {
-      this.props.hideScreenLockAction();
-      this.props.history.push('/login');
-    });
+    })
+      .then(() => {
+        this.props.showNotification({
+          type: NOTIFICATION_TYPES.SUCCESS,
+          message: this.props.intl.formatMessage(notifications.successChange),
+        });
+        this.props.redirectTo(LOGIN_PAGE);
+      })
+      .catch(() => {
+        this.props.showNotification({
+          type: NOTIFICATION_TYPES.ERROR,
+          message: this.props.intl.formatMessage(notifications.failedChange),
+        });
+      })
+      .then(() => {
+        this.props.hideScreenLockAction();
+      });
   };
 
   render() {
