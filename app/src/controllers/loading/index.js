@@ -1,0 +1,1 @@
+export { loadingReducer } from './reducer';

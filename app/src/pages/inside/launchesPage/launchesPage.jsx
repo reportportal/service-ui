@@ -44,6 +44,7 @@ const messages = defineMessages({
     validationErrors: validationErrorsSelector(state),
     launches: launchesSelector(state),
     lastOperation: lastOperationSelector(state),
+    loading: state.loading,
   }),
   {
     showModalAction,
