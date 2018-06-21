@@ -1,4 +1,4 @@
-import { FormattedMessage, FormattedHTMLMessage } from 'react-intl';
+import { FormattedMessage, FormattedHTMLMessage, defineMessages } from 'react-intl';
 import Parser from 'html-react-parser';
 import {
   LAUNCH_STATISTICS,
@@ -39,15 +39,84 @@ import FLAKY_TEST_CASES_TABLE_PREVIEW from './img/wdgt-flaky-test-cases-table-in
 import CUMULATIVE_TREND_PREVIEW from './img/wdgt-cumulative-trend-chart-inline.svg';
 import PRODUCT_STATUS_PREVIEW from './img/wdgt-product-satus-inline.svg';
 
-export const WIDGETS = [
+const titles = defineMessages({
+  [LAUNCH_STATISTICS]: {
+    id: 'Widgets.Name.statistic_trend',
+    defaultMessage: 'Launch statistics chart',
+  },
+  [OVERALL_STATISTICS]: {
+    id: 'Widgets.Name.overall_statistics',
+    defaultMessage: 'Overall statistics',
+  },
+  [LAUNCH_DURATION]: {
+    id: 'Widgets.Name.launches_duration_chart',
+    defaultMessage: 'Launches duration chart',
+  },
+  [LAUNCH_EXECUTION_AND_ISSUE_STATISTICS]: {
+    id: 'Widgets.Name.launch_statistics',
+    defaultMessage: 'Launch execution and issue statistic',
+  },
+  [PROJECT_ACTIVITY]: {
+    id: 'Widgets.Name.activity_stream',
+    defaultMessage: 'Project activity panel',
+  },
+  [TEST_CASES_GROWTH_TREND]: {
+    id: 'Widgets.Name.cases_trend',
+    defaultMessage: 'Test-Cases growth trend chart',
+  },
+  [INVESTIGATED_PERCENTAGE_OF_LAUNCHES]: {
+    id: 'Widgets.Name.investigated_trend',
+    defaultMessage: 'Investigated percentage of launches',
+  },
+  [LAUNCHES_TABLE]: {
+    id: 'Widgets.Name.launches_table',
+    defaultMessage: 'Launches table',
+  },
+  [UNIQUE_BUGS_TABLE]: {
+    id: 'Widgets.Name.unique_bug_table',
+    defaultMessage: 'Unique bugs table',
+  },
+  [MOST_FAILED_TEST_CASES_TABLE]: {
+    id: 'Widgets.Name.most_failed_test_cases',
+    defaultMessage: 'Most failure test-cases table (TOP-20)',
+  },
+  [FAILED_CASES_TREND]: {
+    id: 'Widgets.Name.bug_trend',
+    defaultMessage: 'Failed cases trend chart',
+  },
+  [NON_PASSED_TEST_CASES_TREND]: {
+    id: 'Widgets.Name.not_passed',
+    defaultMessage: 'Non-Passed test-cases trend chart',
+  },
+  [DIFFERENT_LAUNCHES_COMPARISON]: {
+    id: 'Widgets.Name.launches_comparison_chart',
+    defaultMessage: 'Different launches comparison chart',
+  },
+  [PASSING_RATE_PER_LAUNCH]: {
+    id: 'Widgets.Name.passing_rate_per_launch',
+    defaultMessage: 'Passing rate per launch',
+  },
+  [PASSING_RATE_SUMMARY]: {
+    id: 'Widgets.Name.passing_rate_summary',
+    defaultMessage: 'Passing rate summary',
+  },
+  [FLAKY_TEST_CASES_TABLE]: {
+    id: 'Widgets.Name.flaky_test_cases',
+    defaultMessage: 'Flaky test cases table (TOP-20)',
+  },
+  [CUMULATIVE_TREND]: {
+    id: 'Widgets.Name.cumulative',
+    defaultMessage: 'Cumulative trend chart',
+  },
+  [PRODUCT_STATUS]: {
+    id: 'Widgets.Name.product_status',
+    defaultMessage: 'Product status',
+  },
+});
+export const getWidgets = (formatMessage) => [
   {
     id: LAUNCH_STATISTICS,
-    title: (
-      <FormattedMessage
-        id={'Widgets.Name.statistic_trend'}
-        defaultMessage={'Launch statistics chart'}
-      />
-    ),
+    title: formatMessage(titles[LAUNCH_STATISTICS]),
     description: (
       <FormattedHTMLMessage
         id={'Widgets.Description.statistic_trend'}
@@ -60,12 +129,7 @@ export const WIDGETS = [
   },
   {
     id: OVERALL_STATISTICS,
-    title: (
-      <FormattedMessage
-        id={'Widgets.Name.overall_statistics'}
-        defaultMessage={'Overall statistics'}
-      />
-    ),
+    title: formatMessage(titles[OVERALL_STATISTICS]),
     description: (
       <FormattedMessage
         id={'Widgets.Description.overall_statistics'}
@@ -76,12 +140,7 @@ export const WIDGETS = [
   },
   {
     id: LAUNCH_DURATION,
-    title: (
-      <FormattedMessage
-        id={'Widgets.Name.launches_duration_chart'}
-        defaultMessage={'Launches duration chart'}
-      />
-    ),
+    title: formatMessage(titles[LAUNCH_DURATION]),
     description: (
       <FormattedMessage
         id={'Widgets.Description.launches_duration_chart'}
@@ -92,12 +151,7 @@ export const WIDGETS = [
   },
   {
     id: LAUNCH_EXECUTION_AND_ISSUE_STATISTICS,
-    title: (
-      <FormattedMessage
-        id={'Widgets.Name.launch_statistics'}
-        defaultMessage={'Launch execution and issue statistic'}
-      />
-    ),
+    title: formatMessage(titles[LAUNCH_EXECUTION_AND_ISSUE_STATISTICS]),
     description: (
       <FormattedHTMLMessage
         id={'Widgets.Description.launch_statistics'}
@@ -110,12 +164,7 @@ export const WIDGETS = [
   },
   {
     id: PROJECT_ACTIVITY,
-    title: (
-      <FormattedMessage
-        id={'Widgets.Name.activity_stream'}
-        defaultMessage={'Project activity panel'}
-      />
-    ),
+    title: formatMessage(titles[PROJECT_ACTIVITY]),
     description: (
       <FormattedMessage
         id={'Widgets.Description.activity_stream'}
@@ -126,12 +175,7 @@ export const WIDGETS = [
   },
   {
     id: TEST_CASES_GROWTH_TREND,
-    title: (
-      <FormattedMessage
-        id={'Widgets.Name.cases_trend'}
-        defaultMessage={'Test-Cases growth trend chart'}
-      />
-    ),
+    title: formatMessage(titles[TEST_CASES_GROWTH_TREND]),
     description: (
       <FormattedHTMLMessage
         id={'Widgets.Description.cases_trend'}
@@ -144,12 +188,7 @@ export const WIDGETS = [
   },
   {
     id: INVESTIGATED_PERCENTAGE_OF_LAUNCHES,
-    title: (
-      <FormattedMessage
-        id={'Widgets.Name.investigated_trend'}
-        defaultMessage={'Investigated percentage of launches'}
-      />
-    ),
+    title: formatMessage(titles[INVESTIGATED_PERCENTAGE_OF_LAUNCHES]),
     description: (
       <FormattedHTMLMessage
         id={'Widgets.Description.investigated_trend'}
@@ -162,9 +201,7 @@ export const WIDGETS = [
   },
   {
     id: LAUNCHES_TABLE,
-    title: (
-      <FormattedMessage id={'Widgets.Name.launches_table'} defaultMessage={'Launches table'} />
-    ),
+    title: formatMessage(titles[LAUNCHES_TABLE]),
     description: (
       <FormattedMessage
         id={'Widgets.Description.launches_table'}
@@ -175,9 +212,7 @@ export const WIDGETS = [
   },
   {
     id: UNIQUE_BUGS_TABLE,
-    title: (
-      <FormattedMessage id={'Widgets.Name.unique_bug_table'} defaultMessage={'Unique bugs table'} />
-    ),
+    title: formatMessage(titles[UNIQUE_BUGS_TABLE]),
     description: (
       <FormattedMessage
         id={'Widgets.Description.unique_bug_table'}
@@ -190,12 +225,7 @@ export const WIDGETS = [
   },
   {
     id: MOST_FAILED_TEST_CASES_TABLE,
-    title: (
-      <FormattedHTMLMessage
-        id={'Widgets.Name.most_failed_test_cases'}
-        defaultMessage={'Most failure test-cases <span>table&nbsp;(TOP-20)</span>'}
-      />
-    ),
+    title: formatMessage(titles[MOST_FAILED_TEST_CASES_TABLE]),
     description: (
       <FormattedMessage
         id={'Widgets.Description.most_failed_test_cases'}
@@ -208,9 +238,7 @@ export const WIDGETS = [
   },
   {
     id: FAILED_CASES_TREND,
-    title: (
-      <FormattedMessage id={'Widgets.Name.bug_trend'} defaultMessage={'Failed cases trend chart'} />
-    ),
+    title: formatMessage(titles[FAILED_CASES_TREND]),
     description: (
       <FormattedMessage
         id={'Widgets.Description.bug_trend'}
@@ -223,12 +251,7 @@ export const WIDGETS = [
   },
   {
     id: NON_PASSED_TEST_CASES_TREND,
-    title: (
-      <FormattedMessage
-        id={'Widgets.Name.not_passed'}
-        defaultMessage={'Non-Passed test-cases trend chart'}
-      />
-    ),
+    title: formatMessage(titles[NON_PASSED_TEST_CASES_TREND]),
     description: (
       <FormattedMessage
         id={'Widgets.Description.not_passed'}
@@ -241,12 +264,7 @@ export const WIDGETS = [
   },
   {
     id: DIFFERENT_LAUNCHES_COMPARISON,
-    title: (
-      <FormattedMessage
-        id={'Widgets.Name.launches_comparison_chart'}
-        defaultMessage={'Different launches comparison chart'}
-      />
-    ),
+    title: formatMessage(titles[DIFFERENT_LAUNCHES_COMPARISON]),
     description: (
       <FormattedMessage
         id={'Widgets.Description.launches_comparison_chart'}
@@ -257,12 +275,7 @@ export const WIDGETS = [
   },
   {
     id: PASSING_RATE_PER_LAUNCH,
-    title: (
-      <FormattedMessage
-        id={'Widgets.Name.passing_rate_per_launch'}
-        defaultMessage={'Passing rate per launch'}
-      />
-    ),
+    title: formatMessage(titles[PASSING_RATE_PER_LAUNCH]),
     description: (
       <FormattedMessage
         id={'Widgets.Description.passing_rate_per_launch'}
@@ -275,12 +288,7 @@ export const WIDGETS = [
   },
   {
     id: PASSING_RATE_SUMMARY,
-    title: (
-      <FormattedMessage
-        id={'Widgets.Name.passing_rate_summary'}
-        defaultMessage={'Passing rate summary'}
-      />
-    ),
+    title: formatMessage(titles[PASSING_RATE_SUMMARY]),
     description: (
       <FormattedMessage
         id={'Widgets.Description.passing_rate_summary'}
@@ -293,12 +301,7 @@ export const WIDGETS = [
   },
   {
     id: FLAKY_TEST_CASES_TABLE,
-    title: (
-      <FormattedMessage
-        id={'Widgets.Name.flaky_test_cases'}
-        defaultMessage={'Flaky test cases table (TOP-20)'}
-      />
-    ),
+    title: formatMessage(titles[FLAKY_TEST_CASES_TABLE]),
     description: (
       <FormattedMessage
         id={'Widgets.Description.flaky_test_cases'}
@@ -311,9 +314,7 @@ export const WIDGETS = [
   },
   {
     id: CUMULATIVE_TREND,
-    title: (
-      <FormattedMessage id={'Widgets.Name.cumulative'} defaultMessage={'Cumulative trend chart'} />
-    ),
+    title: formatMessage(titles[CUMULATIVE_TREND]),
     description: (
       <FormattedMessage
         id={'Widgets.Description.cumulative'}
@@ -326,9 +327,7 @@ export const WIDGETS = [
   },
   {
     id: PRODUCT_STATUS,
-    title: (
-      <FormattedMessage id={'Widgets.Name.product_status'} defaultMessage={'Product status'} />
-    ),
+    title: formatMessage(titles[PRODUCT_STATUS]),
     description: (
       <FormattedMessage
         id={'Widgets.Description.product_status'}

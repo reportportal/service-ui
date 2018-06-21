@@ -49,6 +49,10 @@ const messages = defineMessages({
     id: 'SearchDashboardForm.dashboardNameSearchHint',
     defaultMessage: 'Dashboard name should have size from 3 to 128',
   },
+  widgetNameHint: {
+    id: 'SearchDashboardForm.widgetNameHint',
+    defaultMessage: 'Widget name should have size from 3 to 128',
+  },
   profilePassword: {
     id: 'ChangePasswordModal.profilePassword',
     defaultMessage: 'Password should have size from 4 to 25 symbols',

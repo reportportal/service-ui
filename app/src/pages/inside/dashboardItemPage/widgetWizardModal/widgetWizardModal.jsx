@@ -20,9 +20,12 @@ const messages = defineMessages({
 
 @withModal('widgetWizardModal')
 @injectIntl
-@connect(null, {
-  hideModalAction,
-})
+@connect(
+  null,
+  {
+    hideModalAction,
+  },
+)
 export class WidgetWizardModal extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
