@@ -90,8 +90,8 @@ export class DashboardItemPage extends Component {
           <div className={cx('buttons-container')}>
             <div className={cx('nav-left')}>
               <GhostButton icon={AddWidgetIcon} onClick={this.showWidgetWizard}>
-              {formatMessage(messages.addNewWidget)}
-            </GhostButton>
+                {formatMessage(messages.addNewWidget)}
+              </GhostButton>
               <GhostButton icon={AddSharedWidgetIcon}>
                 {formatMessage(messages.addSharedWidget)}
               </GhostButton>

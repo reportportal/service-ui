@@ -1,0 +1,1 @@
+export { WidgetInfoForm } from './widgetInfoForm';
