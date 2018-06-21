@@ -67,24 +67,11 @@
   color: $COLOR--gray-47;
 }
 .export-buttons {
-  margin-top: 13px;
+  margin-top: 10px;
 }
 .export-button {
-  margin-right: 11px;
-  padding: 0 8px;
-  border: 1px solid $COLOR--topaz;
   display: inline-block;
-  line-height: 24px;
-  font-family: $FONT-REGULAR;
-  font-size: 13px;
-  color: $COLOR--topaz;
-  text-decoration: none;
-
-  &:hover {
-    background-color: lighten($COLOR--topaz, 10%);
-    border-color: lighten($COLOR--topaz, 10%);
-    color: $COLOR--white-two;
-  }
+  margin-right: 10px;
 
   &:last-child {
     margin-right: 0;
