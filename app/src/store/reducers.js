@@ -13,6 +13,7 @@ import { notificationReducer } from 'controllers/notification';
 import { suiteReducer } from 'controllers/suite/reducer';
 import { filterReducer } from 'controllers/filter';
 import { testReducer } from 'controllers/test';
+import { membersReducer } from 'controllers/members';
 
 export default {
   appInfo: appInfoReducer,
@@ -30,4 +31,5 @@ export default {
   suites: suiteReducer,
   filters: filterReducer,
   tests: testReducer,
+  members: membersReducer,
 };
