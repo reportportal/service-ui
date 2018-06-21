@@ -7,6 +7,7 @@ import { groupOperationsSagas } from 'controllers/groupOperations';
 import { suiteSagas } from 'controllers/suite';
 import { filterSagas } from 'controllers/filter';
 import { testSagas } from 'controllers/test';
+import { membersSagas } from 'controllers/members';
 
 export function* rootSagas() {
   yield all([
@@ -18,5 +19,6 @@ export function* rootSagas() {
     suiteSagas(),
     filterSagas(),
     testSagas(),
+    membersSagas(),
   ]);
 }

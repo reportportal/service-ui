@@ -2,6 +2,11 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import {
+  membersPaginationSelector,
+  fetchMembersAction,
+  membersSelector,
+} from 'controllers/members';
 import { URLS } from 'common/urls';
 import { withFilter } from 'controllers/filter';
 import { activeProjectSelector } from 'controllers/user';
@@ -19,9 +24,14 @@ const messages = defineMessages({
 });
 @connect((state) => ({
   url: URLS.projectUsers(activeProjectSelector(state)),
+  members: membersSelector(state),
+  loading: state.loading,
 }))
 @withFilter
-@withPagination()
+@withPagination({
+  paginationSelector: membersPaginationSelector,
+  fetchAction: fetchMembersAction,
+})
 @injectIntl
 export class MembersPage extends Component {
   static propTypes = {
@@ -36,7 +46,7 @@ export class MembersPage extends Component {
     onChangePage: PropTypes.func,
     onChangePageSize: PropTypes.func,
     filter: PropTypes.string,
-    data: PropTypes.arrayOf(PropTypes.object),
+    members: PropTypes.arrayOf(PropTypes.object).isRequired,
     loading: PropTypes.bool,
   };
   static defaultProps = {
@@ -50,7 +60,7 @@ export class MembersPage extends Component {
     onChangePage: () => {},
     onChangePageSize: () => {},
     filter: '',
-    data: [],
+    members: [],
     loading: false,
   };
 
@@ -65,14 +75,14 @@ export class MembersPage extends Component {
       pageSize,
       onChangePage,
       onChangePageSize,
-      data,
+      members,
       fetchData,
       loading,
     } = this.props;
     return (
       <PageLayout title={intl.formatMessage(messages.membersPageTitle)} fullMobileLayout>
         <MembersPageToolbar filter={filter} onFilterChange={onFilterChange} />
-        <MembersGrid data={data} fetchData={fetchData} loading={loading} />
+        <MembersGrid data={members} fetchData={fetchData} loading={loading} />
         <PaginationToolbar
           activePage={activePage}
           itemCount={itemCount}
