@@ -13,7 +13,7 @@ export const validateMergeLaunch = (launch, launches, state) => {
   const user = userInfoSelector(state);
   const userRole = userAccountRoleSelector(state);
   const projectRole = activeProjectRoleSelector(state);
-  if (canMergeLaunches(userRole, projectRole, launch.owner !== user.userId)) {
+  if (!canMergeLaunches(userRole, projectRole, launch.owner === user.userId)) {
     return 'notYourOwnLaunch';
   }
   if (launch.status && launch.status.toLowerCase() === IN_PROGRESS) {
