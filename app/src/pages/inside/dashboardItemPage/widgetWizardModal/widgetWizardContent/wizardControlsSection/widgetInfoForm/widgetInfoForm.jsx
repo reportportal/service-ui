@@ -62,7 +62,7 @@ export class WidgetInfoForm extends Component {
       name: `${props.widgetTitle}_${new Date()
         .valueOf()
         .toString()
-        .slice(-2)}`,
+        .slice(-3)}`,
       description: '',
       share: false,
     });
