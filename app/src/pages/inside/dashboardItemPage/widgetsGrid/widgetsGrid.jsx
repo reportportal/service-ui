@@ -156,10 +156,8 @@ export class WidgetsGrid extends Component {
           isModifiable: canResizeAndDragWidgets(userInfo.userRole, projectRole, isOwner),
         });
       })
-      .catch(({ response }) => {
-        if (response && response.status === 404) {
-          this.props.redirect({ type: PROJECT_DASHBOARD_PAGE, payload: { projectId: project } });
-        }
+      .catch(() => {
+        this.props.redirect({ type: PROJECT_DASHBOARD_PAGE, payload: { projectId: project } });
       });
   };
 
@@ -218,7 +216,8 @@ export class WidgetsGrid extends Component {
           </ScrollWrapper>
         )}
 
-        {!this.state.isFetching && !widgets.length && <EmptyWidgetGrid />}
+        {!this.state.isFetching &&
+          !widgets.length && <EmptyWidgetGrid isFullscreen={this.props.isFullscreen} />}
       </div>
     );
   }

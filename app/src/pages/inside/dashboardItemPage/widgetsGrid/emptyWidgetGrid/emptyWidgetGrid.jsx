@@ -27,32 +27,36 @@ export class EmptyWidgetGrid extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
     action: PropTypes.func,
+    isFullscreen: PropTypes.bool,
   };
 
   static defaultProps = {
     action: () => {},
+    isFullscreen: false,
   };
 
   render() {
-    const { action, intl } = this.props;
+    const { action, intl, isFullscreen } = this.props;
 
     return (
       <div className={cx('empty-widget')}>
-        <Fragment>
-          <div className={cx('empty-widget-img')} />
-          <p className={cx('empty-widget-headline')}>
-            {intl.formatMessage(messages.notMyDashboardEmptyHeader)}
-          </p>
-          <p className={cx('empty-widget-text')}>
-            {intl.formatMessage(messages.dashboardEmptyText)}
-          </p>
-          <div className={cx('empty-widget-content')}>
-            <GhostButton icon={AddDashboardIcon} onClick={action}>
-              {' '}
-              {intl.formatMessage(messages.addNewWidget)}
-            </GhostButton>
-          </div>
-        </Fragment>
+        <div className={cx('empty-widget-img')} />
+        <p className={cx('empty-widget-headline')}>
+          {intl.formatMessage(messages.notMyDashboardEmptyHeader)}
+        </p>
+        {!isFullscreen && (
+          <Fragment>
+            <p className={cx('empty-widget-text')}>
+              {intl.formatMessage(messages.dashboardEmptyText)}
+            </p>
+            <div className={cx('empty-widget-content')}>
+              <GhostButton icon={AddDashboardIcon} onClick={action}>
+                {' '}
+                {intl.formatMessage(messages.addNewWidget)}
+              </GhostButton>
+            </div>
+          </Fragment>
+        )}
       </div>
     );
   }
