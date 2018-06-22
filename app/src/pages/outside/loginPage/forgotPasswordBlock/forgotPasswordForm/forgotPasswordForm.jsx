@@ -23,6 +23,7 @@ import { PureComponent } from 'react';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
 import { reduxForm } from 'redux-form';
+import { redirect } from 'redux-first-router';
 import { FormattedMessage, injectIntl, intlShape, defineMessages } from 'react-intl';
 import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLock';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
@@ -34,7 +35,7 @@ import { InputOutside } from 'components/inputs/inputOutside';
 import { BigButton } from 'components/buttons/bigButton';
 import { validate, fetch } from 'common/utils';
 import { URLS } from 'common/urls';
-import { LOGIN_PAGE, redirectTo } from 'controllers/pages';
+import { LOGIN_PAGE } from 'controllers/pages';
 import EmailIcon from './img/email-icon-inline.svg';
 import styles from './forgotPasswordForm.scss';
 
@@ -63,7 +64,7 @@ const notifications = defineMessages({
     showScreenLockAction,
     hideScreenLockAction,
     showNotification,
-    redirectTo,
+    redirect,
   },
 )
 @reduxForm({
@@ -80,7 +81,7 @@ export class ForgotPasswordForm extends PureComponent {
     hideScreenLockAction: PropTypes.func.isRequired,
     showNotification: PropTypes.func.isRequired,
     handleSubmit: PropTypes.func.isRequired,
-    redirectTo: PropTypes.func.isRequired,
+    redirect: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
@@ -100,7 +101,7 @@ export class ForgotPasswordForm extends PureComponent {
           type: NOTIFICATION_TYPES.SUCCESS,
           message: this.props.intl.formatMessage(notifications.successSendEmail, { email }),
         });
-        this.props.redirectTo(LOGIN_PAGE);
+        this.props.redirect({ type: LOGIN_PAGE });
       })
       .catch(() => {
         this.props.showNotification({

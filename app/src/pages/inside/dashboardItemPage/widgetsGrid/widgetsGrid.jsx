@@ -122,7 +122,7 @@ export class WidgetsGrid extends Component {
       })
       .catch(({ response }) => {
         if (response && response.status === 404) {
-          this.props.redirect({ to: PROJECT_DASHBOARD_PAGE, payload: { projectId: project } });
+          this.props.redirect({ type: PROJECT_DASHBOARD_PAGE, payload: { projectId: project } });
         }
       });
   }

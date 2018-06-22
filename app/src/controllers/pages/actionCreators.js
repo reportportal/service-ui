@@ -15,7 +15,3 @@ export const updatePagePropertiesAction = (properties) => (dispatch, getState) =
 
   dispatch(redirect(updatedAction));
 };
-
-export const redirectTo = (page) => (dispatch) => {
-  dispatch(redirect({ type: page }));
-};

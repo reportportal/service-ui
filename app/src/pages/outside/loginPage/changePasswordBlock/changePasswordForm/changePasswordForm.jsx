@@ -23,11 +23,12 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { reduxForm } from 'redux-form';
+import { redirect } from 'redux-first-router';
 import classNames from 'classnames/bind';
 import { FormattedMessage, injectIntl, intlShape, defineMessages } from 'react-intl';
 import { validate, fetch, connectRouter } from 'common/utils';
 import { URLS } from 'common/urls';
-import { LOGIN_PAGE, redirectTo } from 'controllers/pages';
+import { LOGIN_PAGE } from 'controllers/pages';
 import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLock';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { FieldProvider } from 'components/fields/fieldProvider';
@@ -65,7 +66,7 @@ const notifications = defineMessages({
 @connect(
   null,
   {
-    redirectTo,
+    redirect,
     showScreenLockAction,
     hideScreenLockAction,
     showNotification,
@@ -87,7 +88,7 @@ export class ChangePasswordForm extends PureComponent {
     showNotification: PropTypes.func.isRequired,
     handleSubmit: PropTypes.func.isRequired,
     resetQueryParam: PropTypes.string,
-    redirectTo: PropTypes.func.isRequired,
+    redirect: PropTypes.func.isRequired,
   };
   static defaultProps = {
     resetQueryParam: '',
@@ -110,7 +111,7 @@ export class ChangePasswordForm extends PureComponent {
           type: NOTIFICATION_TYPES.SUCCESS,
           message: this.props.intl.formatMessage(notifications.successChange),
         });
-        this.props.redirectTo(LOGIN_PAGE);
+        this.props.redirect({ type: LOGIN_PAGE });
       })
       .catch(() => {
         this.props.showNotification({
