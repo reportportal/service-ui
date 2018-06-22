@@ -6,19 +6,19 @@ import styles from './shareFilter.scss';
 
 const cx = classNames.bind(styles);
 
-export const ShareFilter = ({ filter, userId, onEdit }) => (
-  <Fragment>
-    <div className={cx('mobile-label', 'shared-label')}>
-      <FormattedMessage id={'ShareFilter.shared'} defaultMessage={'Shared:'} />
-    </div>
-    {filter.share ? (
+export const ShareFilter = ({ filter, userId, onEdit }) =>
+  filter.share && (
+    <Fragment>
+      <div className={cx('mobile-label', 'shared-label')}>
+        <FormattedMessage id={'ShareFilter.shared'} defaultMessage={'Shared:'} />
+      </div>
       <div
         className={cx('shared-icon', { disabled: userId !== filter.owner })}
         onClick={userId === filter.owner ? () => onEdit(filter) : null}
       />
-    ) : null}
-  </Fragment>
-);
+    </Fragment>
+  );
+
 ShareFilter.propTypes = {
   filter: PropTypes.object,
   userId: PropTypes.string,

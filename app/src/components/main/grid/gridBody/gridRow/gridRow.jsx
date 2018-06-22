@@ -91,6 +91,7 @@ export class GridRow extends Component {
                 refFunction={column.maxHeight ? this.setupRef : null}
                 mobileWidth={column.mobileWidth}
                 value={value}
+                align={column.align}
                 component={column.component}
                 formatter={column.formatter}
                 title={column.title}
@@ -100,6 +101,7 @@ export class GridRow extends Component {
           })}
           {selectable && (
             <GridCell
+              align={'right'}
               component={CheckboxCell}
               value={value}
               customProps={{

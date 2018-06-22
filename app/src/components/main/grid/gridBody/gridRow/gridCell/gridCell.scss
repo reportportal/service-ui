@@ -14,14 +14,16 @@
     padding-right: 15px;
   }
 
-  &.align-left {
-    text-align: left;
-  }
-  &.align-center {
-    text-align: center;
-  }
-  &.align-right {
-    text-align: right;
+  @media (min-width: $SCREEN_SM_MAX) {
+    &.align-left {
+      text-align: left;
+    }
+    &.align-center {
+      text-align: center;
+    }
+    &.align-right {
+      text-align: right;
+    }
   }
 }
 
