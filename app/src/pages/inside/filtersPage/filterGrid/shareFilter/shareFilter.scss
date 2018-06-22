@@ -3,18 +3,17 @@
   height: 20px;
   vertical-align: top;
   display: inline-block;
-  background-image: url(./img/checkmark-icon.svg);
   cursor: pointer;
 
-  &:hover {
-    background-image: url(./img/checkmark-icon-hover.svg);
+  &:not(.disabled):hover {
+    svg {
+      fill: $COLOR--charcoal-grey;
+    }
   }
   &.disabled {
-    background-image: url(./img/checkmark-icon-disabled.svg);
     opacity: 0.5;
     cursor: default;
     &:hover {
-      background-image: url(./img/checkmark-icon-disabled.svg);
     }
   }
 }

@@ -1,8 +1,10 @@
 import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
+import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
 import { FormattedMessage } from 'react-intl';
 import styles from './shareFilter.scss';
+import ShareIcon from './img/checkmark-icon-inline.svg';
 
 const cx = classNames.bind(styles);
 
@@ -15,7 +17,9 @@ export const ShareFilter = ({ filter, userId, onEdit }) =>
       <div
         className={cx('shared-icon', { disabled: userId !== filter.owner })}
         onClick={userId === filter.owner ? () => onEdit(filter) : null}
-      />
+      >
+        {Parser(ShareIcon)}
+      </div>
     </Fragment>
   );
 

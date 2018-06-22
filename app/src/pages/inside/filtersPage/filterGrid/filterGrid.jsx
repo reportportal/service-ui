@@ -7,7 +7,7 @@ import { canDeleteFilter } from 'common/utils/permissions';
 import { FilterName } from './filterName';
 import { ShareFilter } from './shareFilter';
 import { DisplayFilter } from './displayFilter';
-import { DeleteFilter } from './deleteFilter';
+import { DeleteFilterButton } from './deleteFilterButton';
 import styles from './filterGrid.scss';
 
 const cx = classNames.bind(styles);
@@ -104,7 +104,7 @@ DisplayOnLaunchColumn.defaultProps = {
 
 const DeleteColumn = ({ className, value, customProps }) => (
   <div className={cx('delete-col', className)}>
-    <DeleteFilter
+    <DeleteFilterButton
       filter={value}
       canDelete={canDeleteFilter(
         customProps.accountRole,
