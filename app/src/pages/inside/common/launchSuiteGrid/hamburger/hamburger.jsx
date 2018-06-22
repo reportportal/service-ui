@@ -11,6 +11,7 @@ import {
   activeProjectRoleSelector,
   userIdSelector,
   userAccountRoleSelector,
+  activeProjectSelector,
 } from 'controllers/user';
 import { HamburgerMenuItem } from './hamburgerMenuItem';
 import styles from './hamburger.scss';
@@ -44,6 +45,7 @@ const messages = defineMessages({
   projectRole: activeProjectRoleSelector(state),
   userId: userIdSelector(state),
   accountRole: userAccountRoleSelector(state),
+  projectId: activeProjectSelector(state),
 }))
 export class Hamburger extends Component {
   static propTypes = {
@@ -52,6 +54,7 @@ export class Hamburger extends Component {
     projectRole: PropTypes.string.isRequired,
     onAction: PropTypes.func,
     launch: PropTypes.object.isRequired,
+    projectId: PropTypes.string.isRequired,
     onMoveToLaunches: PropTypes.func,
     onForceFinish: PropTypes.func,
     onAnalysis: PropTypes.func,
@@ -83,6 +86,12 @@ export class Hamburger extends Component {
   onExportLaunch = (type) => {
     window.location.href = URLS.exportLaunch(this.props.projectId, this.props.launch.id, type);
   };
+
+  exportAsPDF = () => this.onExportLaunch('pdf');
+
+  exportAsXLS = () => this.onExportLaunch('xls');
+
+  exportAsHTML = () => this.onExportLaunch('html');
 
   handleOutsideClick = (e) => {
     if (!this.icon.contains(e.target) && this.state.menuShown) {
@@ -194,17 +203,17 @@ export class Hamburger extends Component {
             </div>
             <div className={cx('export-buttons')}>
               <div className={cx('export-button')}>
-                <GhostButton tiny onClick={() => this.onExportLaunch('pdf')}>
+                <GhostButton tiny onClick={this.exportAsPDF}>
                   PDF
                 </GhostButton>
               </div>
               <div className={cx('export-button')}>
-                <GhostButton tiny onClick={() => this.onExportLaunch('xls')}>
+                <GhostButton tiny onClick={this.exportAsXLS}>
                   XLS
                 </GhostButton>
               </div>
               <div className={cx('export-button')}>
-                <GhostButton tiny onClick={() => this.onExportLaunch('html')}>
+                <GhostButton tiny onClick={this.exportAsHTML}>
                   HTML
                 </GhostButton>
               </div>
