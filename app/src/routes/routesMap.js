@@ -62,10 +62,19 @@ export default {
 
   API_PAGE: '/api',
 
-  [PROJECT_PAGE]: redirectRoute('/:projectId', (payload) => ({
-    type: PROJECT_DASHBOARD_PAGE,
-    payload: { projectId: payload.projectId || 'default_project' },
-  })),
+  [PROJECT_PAGE]: {
+    path: '/:projectId',
+    thunk: (dispatch, getState) => {
+      dispatch(
+        redirect({
+          type: PROJECT_DASHBOARD_PAGE,
+          payload: {
+            projectId: activeProjectSelector(getState()),
+          },
+        }),
+      );
+    },
+  },
   [PROJECT_DASHBOARD_PAGE]: {
     path: '/:projectId/dashboard',
     thunk: (dispatch, getState) => {
