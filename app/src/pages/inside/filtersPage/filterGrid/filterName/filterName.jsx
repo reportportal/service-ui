@@ -15,9 +15,9 @@ export const FilterName = ({ userFilters, filter, onClickName, onEdit, userId })
       >
         {filter.name}
       </span>
-      {userId === filter.owner ? (
+      {userId === filter.owner && (
         <div className={cx('pencil-icon')} onClick={() => onEdit(filter)} />
-      ) : null}
+      )}
     </span>
     <MarkdownViewer value={filter.description} />
   </Fragment>
