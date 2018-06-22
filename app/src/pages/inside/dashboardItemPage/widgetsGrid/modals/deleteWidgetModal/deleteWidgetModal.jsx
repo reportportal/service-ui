@@ -72,7 +72,7 @@ export class DeleteWidgetModal extends Component {
     if (data.widget.share && data.widget.owner === userId) {
       return intl.formatMessage(messages.deleteOwnWidgetWarning);
     }
-    if (data.widget.owner !== userId && isAdmin && userProjectRole === PROJECT_MANAGER) {
+    if (data.widget.owner !== userId && (isAdmin || userProjectRole === PROJECT_MANAGER)) {
       return intl.formatMessage(messages.deleteWidgetAdminWarning);
     }
     return '';

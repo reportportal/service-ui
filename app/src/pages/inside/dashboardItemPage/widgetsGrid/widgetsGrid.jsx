@@ -80,16 +80,12 @@ export class WidgetsGrid extends Component {
   };
 
   onGridItemChange = (newLayout, oldWidgetPosition, newWidgetPosition) => {
-    let itemGhanged = false;
     let newWidgets;
+    const itemChanged = Object.keys(oldWidgetPosition).some(
+      (prop) => oldWidgetPosition[prop] !== newWidgetPosition[prop],
+    );
 
-    Object.keys(oldWidgetPosition).forEach((prop) => {
-      if (oldWidgetPosition[prop] !== newWidgetPosition[prop]) {
-        itemGhanged = true;
-      }
-    });
-
-    if (itemGhanged) {
+    if (itemChanged) {
       if (this.state.isMobile) {
         const oldWidgets = this.state.widgets;
 
