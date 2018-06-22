@@ -45,4 +45,8 @@ export const COMMON_LOCALE_KEYS = defineMessages({
     id: 'Common.ok',
     defaultMessage: 'Ok',
   },
+  SUBMIT: {
+    id: 'Common.submit',
+    defaultMessage: 'Submit',
+  },
 });
