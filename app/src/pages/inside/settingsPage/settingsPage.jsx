@@ -1,5 +1,9 @@
 import React from 'react';
+import { PageLayout } from 'layouts/pageLayout';
+import { GeneralTab } from './settingsTabs/generalTab';
 
 export const SettingsPage = () => (
-  <h1>Settings Page</h1>
+  <PageLayout title="Setings">
+    <GeneralTab />
+  </PageLayout>
 );
