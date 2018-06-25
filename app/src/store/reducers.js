@@ -8,7 +8,6 @@ import { projectReducer } from 'controllers/project';
 import { screenLockReducer } from 'controllers/screenLock';
 import { dashboardReducer } from 'controllers/dashboard';
 import { launchReducer } from 'controllers/launch';
-import { loadingReducer } from 'controllers/loading';
 import { notificationReducer } from 'controllers/notification';
 import { suiteReducer } from 'controllers/suite/reducer';
 import { filterReducer } from 'controllers/filter';
@@ -27,7 +26,6 @@ export default {
   screenLock: screenLockReducer,
   dashboard: dashboardReducer,
   launches: launchReducer,
-  loading: loadingReducer,
   suites: suiteReducer,
   filters: filterReducer,
   tests: testReducer,

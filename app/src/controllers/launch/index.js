@@ -15,6 +15,7 @@ export {
   launchesSelector,
   launchPaginationSelector,
   currentLaunchSelector,
+  loadingSelector,
 } from './selectors';
 export { launchReducer } from './reducer';
 export { launchSagas } from './sagas';

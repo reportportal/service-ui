@@ -6,6 +6,7 @@ import {
   membersPaginationSelector,
   fetchMembersAction,
   membersSelector,
+  loadingSelector,
 } from 'controllers/members';
 import { URLS } from 'common/urls';
 import { withFilter } from 'controllers/filter';
@@ -25,7 +26,7 @@ const messages = defineMessages({
 @connect((state) => ({
   url: URLS.projectUsers(activeProjectSelector(state)),
   members: membersSelector(state),
-  loading: state.loading,
+  loading: loadingSelector(state),
 }))
 @withFilter
 @withPagination({

@@ -24,6 +24,7 @@ import {
   launchPaginationSelector,
   fetchLaunchesAction,
   lastOperationSelector,
+  loadingSelector,
 } from 'controllers/launch';
 import { LaunchSuiteGrid } from 'pages/inside/common/launchSuiteGrid';
 import { LaunchToolbar } from './LaunchToolbar';
@@ -44,7 +45,7 @@ const messages = defineMessages({
     validationErrors: validationErrorsSelector(state),
     launches: launchesSelector(state),
     lastOperation: lastOperationSelector(state),
-    loading: state.loading,
+    loading: loadingSelector(state),
   }),
   {
     showModalAction,
