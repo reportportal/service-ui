@@ -51,7 +51,6 @@ export class EmptyWidgetGrid extends Component {
             </p>
             <div className={cx('empty-widget-content')}>
               <GhostButton icon={AddDashboardIcon} onClick={action}>
-                {' '}
                 {intl.formatMessage(messages.addNewWidget)}
               </GhostButton>
             </div>
