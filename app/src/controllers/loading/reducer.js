@@ -1,16 +1,7 @@
-import { FETCH_START, FETCH_SUCCESS } from 'controllers/fetch/constants';
-import { NAMESPACE as LAUNCH_NAMESPACE } from 'controllers/launch/constants';
-import { NAMESPACE as FILTER_NAMESPACE } from 'controllers/filter/constants';
-import { NAMESPACE as MEMBERS_NAMESPACE } from 'controllers/members/constants';
+import { FETCH_START, FETCH_SUCCESS } from 'controllers/fetch';
 
-export const loadingReducer = (state = false, { type, meta }) => {
-  if (
-    meta &&
-    meta.namespace &&
-    meta.namespace !== LAUNCH_NAMESPACE &&
-    meta.namespace !== FILTER_NAMESPACE &&
-    meta.namespace !== MEMBERS_NAMESPACE
-  ) {
+export const loadingReducer = (namespace) => (state = false, { type, meta }) => {
+  if (meta && meta.namespace && meta.namespace !== namespace) {
     return state;
   }
   switch (type) {
