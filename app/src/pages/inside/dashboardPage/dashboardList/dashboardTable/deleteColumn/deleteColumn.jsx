@@ -23,21 +23,20 @@ export class DeleteColumn extends Component {
     customProps: {},
     projectRole: '',
   };
+  deleteItemHandler = () => {
+    this.props.customProps.onDelete(this.props.value);
+  };
   render = () => {
     const {
-      onDelete,
       currentUser: { userId, userRole },
     } = this.props.customProps;
     const { owner } = this.props.value;
-    const deleteItemHandler = () => {
-      onDelete(this.props.value);
-    };
 
     return (
       <div className={cx('cell', 'with-button', 'delete')}>
         <div className={cx('icon-holder')}>
           {canDeleteDashboard(userRole, this.props.projectRole, userId === owner) && (
-            <Icon type="icon-delete" onClick={deleteItemHandler} />
+            <Icon type="icon-delete" onClick={this.deleteItemHandler} />
           )}
         </div>
       </div>
