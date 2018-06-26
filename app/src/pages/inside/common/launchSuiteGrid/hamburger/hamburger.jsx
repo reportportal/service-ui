@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { CUSTOMER } from 'common/constants/projectRoles';
+import { IN_PROGRESS } from 'common/constants/launchStatuses';
 import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-intl';
 import PropTypes from 'prop-types';
 import { canDeleteLaunch, canForceFinishLaunch, canMoveToDebug } from 'common/utils/permissions';
@@ -87,7 +88,7 @@ export class Hamburger extends Component {
     window.location.href = URLS.exportLaunch(this.props.projectId, this.props.launch.id, type);
   };
 
-  isInProgress = () => this.props.launch.status === 'IN_PROGRESS';
+  isInProgress = () => this.props.launch.status === IN_PROGRESS.toUpperCase();
 
   exportAsPDF = () => this.onExportLaunch('pdf');
 
