@@ -98,7 +98,7 @@ export class ProjectRole extends Component {
   };
   getUserRole() {
     const { assignedProjects, projectId } = this.props;
-    return assignedProjects[projectId].projectRole;
+    return assignedProjects[projectId] && assignedProjects[projectId].projectRole;
   }
   render() {
     this.getUserRole();
