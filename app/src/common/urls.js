@@ -65,7 +65,10 @@ export const URLS = {
     })}`,
 
   suites: (activeProject, launchId) =>
-    `${urlBase}${activeProject}/item${getQueryParams({ 'filter.eq.launch': launchId })}`,
+    `${urlBase}${activeProject}/item${getQueryParams({
+      'filter.eq.launch': launchId,
+      'filter.size.path': 0,
+    })}`,
   suite: (activeProject, suiteId) => `${urlBase}${activeProject}/item/${suiteId}`,
 
   tests: (activeProject, launchId, suiteId) =>
