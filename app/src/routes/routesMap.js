@@ -101,6 +101,7 @@ export default {
     thunk: (dispatch) => dispatch(fetchMembersAction()),
   },
   PROJECT_SETTINGS_PAGE: '/:projectId/settings',
+  PROJECT_SETTINGS_TAB_PAGE: '/:projectId/settings/:settingTab',
   PROJECT_SANDBOX_PAGE: '/:projectId/sandbox',
   [TEST_ITEM_PAGE]: {
     path: '/:projectId/launches/:filterId/:testItemIds+',

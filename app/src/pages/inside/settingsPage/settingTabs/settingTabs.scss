@@ -1,0 +1,22 @@
+.settings {
+  padding: 5px 15px 15px 15px;
+  @media (max-width: $SCREEN_XS_MAX) {
+    padding-top: 0;
+  }
+}
+.beta {
+  position: absolute;
+  top: -13px;
+  right: -0px;
+  padding: 1.8px 5.4px 2.7px 5.4px;
+  border-radius: 12px;
+  background: $COLOR--dark-pastel-green;
+  color: $COLOR--white-two;
+  font-size: 9px;
+  line-height: 9px;
+  text-transform: none;
+  font-family: $FONT-REGULAR;
+  @media (max-width: $SCREEN_XS_MAX) {
+    display: none;
+  }
+}
