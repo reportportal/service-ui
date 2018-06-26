@@ -87,6 +87,8 @@ export class Hamburger extends Component {
     window.location.href = URLS.exportLaunch(this.props.projectId, this.props.launch.id, type);
   };
 
+  isInProgress = () => this.props.launch.status === 'IN_PROGRESS';
+
   exportAsPDF = () => this.onExportLaunch('pdf');
 
   exportAsXLS = () => this.onExportLaunch('xls');
@@ -203,17 +205,17 @@ export class Hamburger extends Component {
             </div>
             <div className={cx('export-buttons')}>
               <div className={cx('export-button')}>
-                <GhostButton tiny onClick={this.exportAsPDF}>
+                <GhostButton tiny onClick={this.exportAsPDF} disabled={this.isInProgress()}>
                   PDF
                 </GhostButton>
               </div>
               <div className={cx('export-button')}>
-                <GhostButton tiny onClick={this.exportAsXLS}>
+                <GhostButton tiny onClick={this.exportAsXLS} disabled={this.isInProgress()}>
                   XLS
                 </GhostButton>
               </div>
               <div className={cx('export-button')}>
-                <GhostButton tiny onClick={this.exportAsHTML}>
+                <GhostButton tiny onClick={this.exportAsHTML} disabled={this.isInProgress()}>
                   HTML
                 </GhostButton>
               </div>
