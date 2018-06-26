@@ -1,0 +1,87 @@
+.container-with-tabs {
+  width: 100%;
+  background-color: $COLOR--white-two;
+  @media (max-width: $SCREEN_XS_MAX) {
+    padding-top: 15px;
+  }
+}
+.tabs-wrapper {
+  box-sizing: border-box;
+  width: 100%;
+  padding-top: 15px;
+  border-bottom: 1px solid $COLOR--gray-91;
+  text-align: center;
+  @media (max-width: $SCREEN_XS_MAX) {
+    display: none;
+  }
+}
+.tab {
+  position: relative;
+  display: inline-block;
+  white-space: nowrap;
+  box-sizing: border-box;
+  max-width: 200px;
+  height: 30px;
+  padding: 0 15px 5px 15px;
+  font-family: $FONT-CONDBOLD;
+  font-size: 16px;
+  line-height: 23px;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  cursor: pointer;
+  a {
+    color: $COLOR--gray-47;
+    text-decoration: none;
+  }
+}
+.active {
+  a {
+    color: $COLOR--topaz;
+  }
+  &:before {
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    right: 0;
+    display: block;
+    height: 2px;
+    background: $COLOR--topaz;
+    content: '';
+  }
+  &:after {
+    position: absolute;
+    bottom: -11px;
+    left: 50%;
+    display: block;
+    border: 5px solid $COLOR--topaz;
+    border-left-color: transparent;
+    border-right-color: transparent;
+    border-bottom-color: transparent;
+    margin-left: -3px;
+    content: '';
+  }
+}
+.content-wrapper {
+  box-sizing: border-box;
+  width: 100%;
+  padding-top: 15px;
+}
+.tabs-mobile {
+  display: none;
+  @media (max-width: $SCREEN_XS_MAX) {
+    display: block;
+    a {
+      color: $COLOR--charcoal-grey;
+      text-decoration: none;
+      text-transform: uppercase;
+      font-size: 13px;
+    }
+    span {
+      a {
+        color: $COLOR--topaz;
+        font-family: $FONT-CONDBOLD;
+        font-size: 16px;
+      }
+    }
+  }
+}

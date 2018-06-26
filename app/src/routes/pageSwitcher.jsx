@@ -58,6 +58,7 @@ const pageRendering = {
   PROJECT_MEMBERS_PAGE: { component: MembersPage, layout: AppLayout },
   PROJECT_SANDBOX_PAGE: { component: SandboxPage, layout: AppLayout },
   PROJECT_SETTINGS_PAGE: { component: SettingsPage, layout: AppLayout },
+  PROJECT_SETTINGS_TAB_PAGE: { component: SettingsPage, layout: AppLayout },
   PROJECT_USERDEBUG_PAGE: { component: DebugPage, layout: AppLayout },
   ADMINISTRATE_PAGE: { component: AdministratePage, layout: EmptyLayout },
   PROJECTS_PAGE: { component: ProjectsPage, layout: AdminLayout },
