@@ -40,14 +40,16 @@ export const Grid = ({
         onToggleSelectAll={onToggleSelectAll}
         hideHeaderForMobile={changeOnlyMobileLayout}
       />
-      <GridBody
-        columns={columns}
-        data={data}
-        selectable={selectable}
-        selectedItems={selectedItems}
-        onToggleSelection={onToggleSelection}
-        changeOnlyMobileLayout={changeOnlyMobileLayout}
-      />
+      {!loading && (
+        <GridBody
+          columns={columns}
+          data={data}
+          selectable={selectable}
+          selectedItems={selectedItems}
+          onToggleSelection={onToggleSelection}
+          changeOnlyMobileLayout={changeOnlyMobileLayout}
+        />
+      )}
     </div>
     {loading && (
       <div className={cx('spinner-block')}>

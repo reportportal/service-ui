@@ -138,6 +138,7 @@ export class FilterGrid extends Component {
     projectRole: PropTypes.string,
     onDelete: PropTypes.func,
     accountRole: PropTypes.string,
+    loading: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -150,6 +151,7 @@ export class FilterGrid extends Component {
     projectRole: '',
     onDelete: () => {},
     accountRole: '',
+    loading: false,
   };
 
   getColumns = () => [
@@ -224,6 +226,13 @@ export class FilterGrid extends Component {
   ];
 
   render() {
-    return <Grid columns={this.getColumns()} data={this.props.filters} changeOnlyMobileLayout />;
+    return (
+      <Grid
+        columns={this.getColumns()}
+        data={this.props.filters}
+        changeOnlyMobileLayout
+        loading={this.props.loading}
+      />
+    );
   }
 }

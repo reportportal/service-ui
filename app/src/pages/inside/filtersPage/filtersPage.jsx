@@ -7,6 +7,7 @@ import {
   filtersPaginationSelector,
   fetchFiltersAction,
   filtersSelector,
+  loadingSelector,
 } from 'controllers/filter';
 import {
   userIdSelector,
@@ -42,6 +43,7 @@ const messages = defineMessages({
     projectRole: activeProjectRoleSelector(state),
     accountRole: userAccountRoleSelector(state),
     filters: filtersSelector(state),
+    loading: loadingSelector(state),
   }),
   {
     showModalAction,
@@ -77,6 +79,7 @@ export class FiltersPage extends Component {
     projectRole: PropTypes.string,
     userFilters: PropTypes.arrayOf(PropTypes.string),
     accountRole: PropTypes.string,
+    loading: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -96,6 +99,7 @@ export class FiltersPage extends Component {
     projectRole: '',
     userFilters: [],
     accountRole: '',
+    loading: false,
   };
 
   confirmDelete = (filter) =>
@@ -134,6 +138,7 @@ export class FiltersPage extends Component {
       onChangePage,
       onChangePageSize,
       filters,
+      loading,
       ...rest
     } = this.props;
     return (
@@ -143,9 +148,10 @@ export class FiltersPage extends Component {
           onEdit={this.openEditModal}
           onDelete={this.confirmDelete}
           filters={filters}
+          loading={loading}
           {...rest}
         />
-        {!filters.length && <NoFiltersBlock />}
+        {!filters.length && !loading && <NoFiltersBlock />}
         <PaginationToolbar
           activePage={activePage}
           itemCount={itemCount}
