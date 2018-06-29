@@ -17,8 +17,9 @@ import {
   unselectAllSuitesAction,
   selectSuitesAction,
 } from 'controllers/suite';
-import { currentLaunchSelector } from 'controllers/launch';
+import { currentLaunchSelector, fetchLaunchAction } from 'controllers/launch';
 import { SuiteTestToolbar } from 'pages/inside/common/suiteTestToolbar';
+import { launchIdSelector } from 'controllers/pages';
 
 @connect(
   (state) => ({
@@ -26,11 +27,13 @@ import { SuiteTestToolbar } from 'pages/inside/common/suiteTestToolbar';
     suites: suitesSelector(state),
     selectedSuites: selectedSuitesSelector(state),
     currentLaunch: currentLaunchSelector(state),
+    launchId: launchIdSelector(state),
   }),
   {
     toggleSuiteSelectionAction,
     unselectAllSuitesAction,
     selectSuitesAction,
+    fetchLaunchAction,
   },
 )
 @withSorting({
@@ -61,6 +64,8 @@ export class SuitesPage extends Component {
     unselectAllSuitesAction: PropTypes.func,
     selectSuitesAction: PropTypes.func,
     currentLaunch: PropTypes.object,
+    launchId: PropTypes.string,
+    fetchLaunchAction: PropTypes.func,
   };
 
   static defaultProps = {
@@ -80,6 +85,8 @@ export class SuitesPage extends Component {
     unselectAllSuitesAction: () => {},
     selectSuitesAction: () => {},
     currentLaunch: null,
+    launchId: null,
+    fetchLaunchAction: () => {},
   };
 
   handleAllSuitesSelection = () => {
@@ -92,7 +99,9 @@ export class SuitesPage extends Component {
   };
 
   handleRefresh = () => {
-    this.fetchCurrentLaunch();
+    if (this.props.launchId) {
+      this.props.fetchLaunchAction(this.props.launchId);
+    }
     this.props.fetchData();
   };
 
