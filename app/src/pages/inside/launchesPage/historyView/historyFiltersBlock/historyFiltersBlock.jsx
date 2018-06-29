@@ -3,14 +3,14 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { InputDropdown } from 'components/inputs/inputDropdown';
-import { historyDepthConfig } from '../constants';
+import { HISTORY_DEPTH_CONFIG } from '../constants';
 import styles from './historyFiltersBlock.scss';
 
 const cx = classNames.bind(styles);
 
 const messages = defineMessages({
-  filterName: {
-    id: 'HistoryFiltersBlock.filterName',
+  depthFilterTitle: {
+    id: 'HistoryFiltersBlock.depthFilterTitle',
     defaultMessage: 'History depth',
   },
 });
@@ -24,7 +24,7 @@ export class HistoryFiltersBlock extends Component {
   };
 
   static defaultProps = {
-    historyDepth: historyDepthConfig.defaultValue,
+    historyDepth: HISTORY_DEPTH_CONFIG.defaultValue,
     historyDepthHandle: () => {},
   };
 
@@ -34,10 +34,10 @@ export class HistoryFiltersBlock extends Component {
     return (
       <div className={cx('filters-block-wrapper')}>
         <div className={cx('filter-wrapper')}>
-          <span className={cx('filter-name')}>{intl.formatMessage(messages.filterName)}</span>
+          <span className={cx('filter-name')}>{intl.formatMessage(messages.depthFilterTitle)}</span>
           <div className={cx('drop-down-container')}>
             <InputDropdown
-              options={historyDepthConfig.options}
+              options={HISTORY_DEPTH_CONFIG.options}
               customClass={cx('mobile-input-disabled')}
               value={this.props.historyDepth}
               onChange={this.props.historyDepthHandle}

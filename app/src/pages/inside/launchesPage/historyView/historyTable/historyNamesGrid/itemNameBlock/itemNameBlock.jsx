@@ -2,13 +2,13 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { withTooltip } from 'components/main/tooltips/tooltip';
-import { BadgeInfoToolTip } from './badgeInfoToolTip';
+import { ItemInfoToolTip } from './itemInfoToolTip';
 import styles from './itemNameBlock.scss';
 
 const cx = classNames.bind(styles);
 
 @withTooltip({
-  TooltipComponent: BadgeInfoToolTip,
+  TooltipComponent: ItemInfoToolTip,
   data: {
     width: 500,
     align: 'left',

@@ -1,0 +1,77 @@
+.history-content-wrapper {
+  width: 65%;
+  overflow: hidden;
+}
+
+.history-items-grid {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.history-grid-head {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}
+
+.history-grid-header-column {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 50px;
+  min-height: 50px;
+  min-width: 140px;
+  border-bottom: solid 1px $COLOR--gray-91;
+  border-right: 1px solid transparent;
+  box-sizing: border-box;
+  font-size: 12px;
+  vertical-align: middle;
+  text-align: left;
+  text-transform: uppercase;
+  background: $COLOR--white;
+  color: $COLOR--gray-47;
+}
+
+.history-grid-row {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}
+
+.history-grid-column {
+  display: block;
+  width: 100%;
+  min-height: 59px;
+  min-width: 140px;
+  box-sizing: border-box;
+  text-align: left;
+  border-bottom: solid 1px $COLOR--gray-91;
+  border-right: 1px solid $COLOR--gray-91;
+}
+
+.launch-status-IN_PROGRESS {
+  background-image: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.9) 25%,
+    transparent 25%,
+    transparent 50%,
+    rgba(255, 255, 255, 0.9) 50%,
+    rgba(255, 255, 255, 0.9) 75%,
+    transparent 75%,
+    transparent
+  );
+  background-size: 60px 60px;
+  animation: progress-stripes-large 2s linear 0s reverse none infinite;
+}
+
+@keyframes progress-stripes-large {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: -60px 0;
+  }
+}

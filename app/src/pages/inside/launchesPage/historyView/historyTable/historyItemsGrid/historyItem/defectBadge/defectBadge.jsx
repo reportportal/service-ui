@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { DefectTypeTooltip } from 'pages/inside/launchesPage/defectTypeTooltip';
+import { DefectTypeTooltip } from 'pages/inside/common/defectTypeTooltip';
 import { withTooltip } from 'components/main/tooltips/tooltip';
 import styles from './defectBadge.scss';
 

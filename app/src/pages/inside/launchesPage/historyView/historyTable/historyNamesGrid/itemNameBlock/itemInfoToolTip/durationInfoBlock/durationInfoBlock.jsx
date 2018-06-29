@@ -28,11 +28,11 @@ export class DurationInfoBlock extends Component {
   };
 
   getStatusTitle = () => {
-    const { formatMessage } = this.props.intl;
-    const durationTime = getDuration(this.props.timing.start, this.props.timing.end);
-    const endTime = dateFormat(this.props.timing.end, true);
+    const { intl, timing } = this.props;
+    const durationTime = getDuration(timing.start, timing.end);
+    const endTime = dateFormat(timing.end, true);
 
-    return formatMessage(messages.finished, { durationTime, endTime });
+    return intl.formatMessage(messages.finished, { durationTime, endTime });
   };
 
   render() {

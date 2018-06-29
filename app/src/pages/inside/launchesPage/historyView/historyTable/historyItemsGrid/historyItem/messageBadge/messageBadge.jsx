@@ -7,25 +7,24 @@ import styles from './messageBadge.scss';
 
 const cx = classNames.bind(styles);
 
-const BadgeInfoToolTip = ({ data }) => (
+const MessageBadgeToolTip = ({ data }) => (
   <div className={cx('tooltip-content')}>
     {data.map((item) => (
-      <div key={item.ticketId.length}>
+      <div className={cx('content-container')} key={item.ticketId.length}>
         <span>{item.ticketId}</span>
-        <br />
       </div>
     ))}
   </div>
 );
-BadgeInfoToolTip.propTypes = {
-  data: PropTypes.object,
+MessageBadgeToolTip.propTypes = {
+  data: PropTypes.array,
 };
-BadgeInfoToolTip.defaultProps = {
-  data: {},
+MessageBadgeToolTip.defaultProps = {
+  data: [],
 };
 
 @withTooltip({
-  TooltipComponent: BadgeInfoToolTip,
+  TooltipComponent: MessageBadgeToolTip,
   data: {
     width: 235,
     align: 'right',

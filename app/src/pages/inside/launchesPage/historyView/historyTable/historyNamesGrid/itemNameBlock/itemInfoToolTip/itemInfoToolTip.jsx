@@ -5,12 +5,12 @@ import { FormattedRelative } from 'react-intl';
 import classNames from 'classnames/bind';
 import { MarkdownViewer } from 'components/main/markdown';
 import { DurationInfoBlock } from './durationInfoBlock';
-import styles from './badgeInfoToolTip.scss';
+import styles from './itemInfoToolTip.scss';
 import TagIcon from './img/tag-inline.svg';
 
 const cx = classNames.bind(styles);
 
-export const BadgeInfoToolTip = ({ data }) => (
+export const ItemInfoToolTip = ({ data }) => (
   <React.Fragment>
     <div className={cx('title-block')}>
       <span>{data.name}</span>
@@ -40,9 +40,9 @@ export const BadgeInfoToolTip = ({ data }) => (
     <MarkdownViewer value={data.description} />
   </React.Fragment>
 );
-BadgeInfoToolTip.propTypes = {
+ItemInfoToolTip.propTypes = {
   data: PropTypes.object,
 };
-BadgeInfoToolTip.defaultProps = {
+ItemInfoToolTip.defaultProps = {
   data: {},
 };

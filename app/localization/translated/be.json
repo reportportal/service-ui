@@ -206,7 +206,7 @@
   "Hamburger.noPermissions": "Вы не з'яўляецеся уладальнікам запуску",
   "Hamburger.toAllLaunches": "Aдправіць ва усе запуск",
   "Hamburger.toDebug": "Aдправіць ў адладку",
-  "HistoryFiltersBlock.filterName": "Глыбіня гісторыі",
+  "HistoryFiltersBlock.depthFilterTitle": "Глыбіня гісторыі",
   "HistoryItem.emptyItemCaption": "Элемент пусты",
   "HistoryItem.noItemCaption": "Няма элементаў<br/>у запуску",
   "HistoryItem.sameItemsCaption": "Існуе некалькі элементаў з аднолькавым значэннем UID.",

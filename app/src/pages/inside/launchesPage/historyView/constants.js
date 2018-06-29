@@ -1,4 +1,4 @@
-export const historyDepthConfig = {
+export const HISTORY_DEPTH_CONFIG = {
   name: 'historyDepth',
   defaultValue: '10',
   options: [
@@ -12,6 +12,6 @@ export const historyDepthConfig = {
   ],
 };
 
-export const stillMinHistoryItems = 5;
+export const STILL_MIN_HISTORY_ITEMS = 5;
 
-export const historyItemsToLoad = 30;
+export const HISTORY_ITEMS_TO_LOAD = 30;

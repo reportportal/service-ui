@@ -1,8 +1,16 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { defineMessages, injectIntl, intlShape } from 'react-intl';
 import Parser from 'html-react-parser';
+import { SKIPPED, RESETED, FAILED, MANY, NOT_FOUND } from 'common/constants/historyItemStatuses';
+import {
+  AUTOMATION_BUG,
+  NO_DEFECT,
+  PRODUCT_BUG,
+  SYSTEM_ISSUE,
+  TO_INVESTIGATE,
+} from 'common/constants/defectTypes';
 import { DefectBadge } from './defectBadge/defectBadge';
 import { MessageBadge } from './messageBadge/messageBadge';
 import styles from './historyItem.scss';
@@ -30,11 +38,11 @@ const messages = defineMessages({
 });
 
 const defectsTitleMap = {
-  automation_bug: 'ab',
-  no_defect: 'nd',
-  product_bug: 'pb',
-  system_issue: 'si',
-  to_investigate: 'ti',
+  [AUTOMATION_BUG]: 'ab',
+  [NO_DEFECT]: 'nd',
+  [PRODUCT_BUG]: 'pb',
+  [SYSTEM_ISSUE]: 'si',
+  [TO_INVESTIGATE]: 'ti',
 };
 
 @injectIntl
@@ -55,8 +63,7 @@ export class HistoryItem extends Component {
   mapDefectsToBadges = () => {
     const { defects } = this.props;
 
-    const keys = Object.keys(defects);
-    return keys.map((key) => {
+    return Object.keys(defects).map((key) => {
       let badge = '';
       if (defects[key].total) {
         badge = (
@@ -72,11 +79,9 @@ export class HistoryItem extends Component {
   render() {
     const { intl, status, issue } = this.props;
 
-    const badges = this.mapDefectsToBadges();
-
     return (
       <div className={cx('history-item-wrapper', `history-item-status-${status}`)}>
-        {status === ('FAILED' || 'SKIPPED') && badges}
+        {status.toLowerCase() === (FAILED || SKIPPED) && this.mapDefectsToBadges()}
         {issue.comment && (
           <div>
             <MessageBadge data={[{ ticketId: issue.comment }]} icon={CommentIcon} />
@@ -88,19 +93,19 @@ export class HistoryItem extends Component {
           </div>
         )}
         <div className={cx('item-text-content')}>
-          {status === 'RESETED' && (
-            <React.Fragment>
+          {status.toLowerCase() === RESETED && (
+            <Fragment>
               <i className={cx('icon')}>{Parser(EmptyItemIcon)}</i>
               <span>{intl.formatMessage(messages.emptyItemCaption)}</span>
-            </React.Fragment>
+            </Fragment>
           )}
-          {status === 'NOT_FOUND' && (
-            <React.Fragment>
+          {status.toLowerCase() === NOT_FOUND && (
+            <Fragment>
               <i className={cx('icon', 'no-item-icon')}>{Parser(NoItemIcon)}</i>
               <span>{Parser(intl.formatMessage(messages.noItemCaption))}</span>
-            </React.Fragment>
+            </Fragment>
           )}
-          {status === 'MANY' && (
+          {status.toLowerCase() === MANY && (
             <div>
               <MessageBadge
                 data={[{ ticketId: intl.formatMessage(messages.sameItemsCaption) }]}

@@ -2,6 +2,12 @@
   text-align: start;
 }
 
+.content-container {
+  display: flex;
+  flex-direction: column;
+  word-break: normal;
+}
+
 .icon {
   display: inline-block;
   width: 22px;

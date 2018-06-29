@@ -1,17 +1,16 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
 import { defineMessages, injectIntl, intlShape } from 'react-intl';
 import { activeProjectSelector } from 'controllers/user';
-import { showNotification } from 'controllers/notification';
-import { ScrollWrapper } from 'components/main/scrollWrapper';
+import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
-import { historyItemsToLoad, stillMinHistoryItems } from '../constants';
-import { ItemNameBlock } from './itemNameBlock/itemNameBlock';
-import { HistoryItem } from './historyItem/historyItem';
+import { HISTORY_ITEMS_TO_LOAD, STILL_MIN_HISTORY_ITEMS } from '../constants';
+import { HistoryNamesGrid } from './historyNamesGrid';
+import { HistoryItemsGrid } from './historyItemsGrid';
 import styles from './historyTable.scss';
 
 const cx = classNames.bind(styles);
@@ -25,23 +24,15 @@ const messages = defineMessages({
     id: 'HistoryTable.loadItemInfoErrorNotification',
     defaultMessage: 'Failed to load info for item',
   },
-  launchNumberTitle: {
-    id: 'HistoryTable.launchNumberTitle',
-    defaultMessage: 'Launch #',
-  },
   loadMoreHistoryItemsTitle: {
     id: 'HistoryTable.loadMoreHistoryItemsTitle',
     defaultMessage: 'Click here to load more items',
-  },
-  itemNamesHeaderTitle: {
-    id: 'HistoryTable.itemNamesHeaderTitle',
-    defaultMessage: 'Name',
   },
 });
 
 @connect(
   (state) => ({
-    baseUrl: URLS.launchItem(activeProjectSelector(state)),
+    projectId: activeProjectSelector(state),
   }),
   {
     showNotification,
@@ -52,13 +43,13 @@ export class HistoryTable extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
     showNotification: PropTypes.func.isRequired,
-    baseUrl: PropTypes.string,
+    projectId: PropTypes.string,
     historyDepth: PropTypes.string.isRequired,
     launchInfoUrlParams: PropTypes.string,
   };
 
   static defaultProps = {
-    baseUrl: '',
+    projectId: '',
     launchInfoUrlParams: '',
   };
 
@@ -82,8 +73,8 @@ export class HistoryTable extends Component {
   getItemsForLoad = () => this.state.launchContent.slice(0, this.state.visibleItemsCount);
 
   getLaunchInfo = () => {
-    const { launchInfoUrlParams } = this.props;
-    const launchInfoUrl = this.props.baseUrl + launchInfoUrlParams;
+    const { projectId, launchInfoUrlParams } = this.props;
+    const launchInfoUrl = URLS.launchItem(projectId) + launchInfoUrlParams;
 
     fetch(launchInfoUrl, {
       method: 'get',
@@ -93,8 +84,9 @@ export class HistoryTable extends Component {
         this.setState({
           launchContent: launchContentToRender,
           visibleItemsCount:
-            (launchContentToRender.length <= historyItemsToLoad && launchContentToRender.length) ||
-            historyItemsToLoad,
+            (launchContentToRender.length <= HISTORY_ITEMS_TO_LOAD &&
+              launchContentToRender.length) ||
+            HISTORY_ITEMS_TO_LOAD,
           isLoading: false,
         });
         this.getLaunchHistoryItems();
@@ -105,7 +97,7 @@ export class HistoryTable extends Component {
         });
         this.props.showNotification({
           message: this.props.intl.formatMessage(messages.loadItemInfoErrorNotification),
-          type: 'error',
+          type: NOTIFICATION_TYPES.ERROR,
         });
       });
   };
@@ -115,22 +107,21 @@ export class HistoryTable extends Component {
     let endSliceIndex = defaultVisibleItems;
     if (isForLoadMore) {
       startSliceIndex = endSliceIndex;
-      endSliceIndex += historyItemsToLoad;
+      endSliceIndex += HISTORY_ITEMS_TO_LOAD;
     }
-    const launchIdsArray = this.state.launchContent
+    const launchIds = this.state.launchContent
       .slice(startSliceIndex, endSliceIndex)
-      .map((item) => item.id);
+      .map((item) => item.id)
+      .join(',');
 
-    const launchesHistoryUrlParams = `/history?ids=${launchIdsArray.join(
-      ',',
-    )}&history_depth=${historyDepth}`;
-    return this.props.baseUrl + launchesHistoryUrlParams;
+    return URLS.launchItemHistory(this.props.projectId, launchIds, historyDepth);
   };
 
   getLaunchHistoryItems = (historyDepth) => {
     const defaultVisibleItems =
-      (this.state.launchContent.length <= historyItemsToLoad && this.state.launchContent.length) ||
-      historyItemsToLoad;
+      (this.state.launchContent.length <= HISTORY_ITEMS_TO_LOAD &&
+        this.state.launchContent.length) ||
+      HISTORY_ITEMS_TO_LOAD;
     const launchesHistoryUrl = this.getLaunchesHistoryUrl(
       historyDepth || this.props.historyDepth,
       defaultVisibleItems,
@@ -149,7 +140,7 @@ export class HistoryTable extends Component {
         });
         this.props.showNotification({
           message: this.props.intl.formatMessage(messages.loadHistoryErrorNotification),
-          type: 'error',
+          type: NOTIFICATION_TYPES.ERROR,
         });
       });
   };
@@ -172,7 +163,7 @@ export class HistoryTable extends Component {
         }));
         this.setState({
           itemsHistory: newItemsHistory,
-          visibleItemsCount: this.state.visibleItemsCount + historyItemsToLoad,
+          visibleItemsCount: this.state.visibleItemsCount + HISTORY_ITEMS_TO_LOAD,
           isLoading: false,
         });
       })
@@ -182,7 +173,7 @@ export class HistoryTable extends Component {
         });
         this.props.showNotification({
           message: this.props.intl.formatMessage(messages.loadHistoryErrorNotification),
-          type: 'error',
+          type: NOTIFICATION_TYPES.ERROR,
         });
       });
   };
@@ -206,110 +197,34 @@ export class HistoryTable extends Component {
     return fetch(launchesHistoryUrl, { method: 'get' });
   };
 
-  isTheBigDepth = () => this.state.itemsHistory.length > stillMinHistoryItems;
+  isTheBigDepth = () => this.state.itemsHistory.length > STILL_MIN_HISTORY_ITEMS;
 
   render() {
     const { intl } = this.props;
 
     return (
-      <React.Fragment>
+      <Fragment>
         <div className={cx('history-table-wrapper')}>
           {this.state.isLoading ? (
             <div className={cx('spinner-wrapper')}>
               <SpinningPreloader />
             </div>
           ) : (
-            <React.Fragment>
+            <Fragment>
               {this.state.itemsHistory && (
-                <React.Fragment>
-                  <div
-                    className={cx('history-table-grid', 'history-names-grid', {
-                      'many-items': this.isTheBigDepth(),
-                    })}
-                  >
-                    <div className={cx('history-grid-head')}>
-                      <div className={cx('history-grid-column')}>
-                        <div className={cx('history-grid-header')}>
-                          <span>{intl.formatMessage(messages.itemNamesHeaderTitle)}</span>
-                        </div>
-                      </div>
-                    </div>
-                    {this.getItemsForLoad().map((item) => (
-                      <div key={item.uniqueId} className={cx('history-grid-row')}>
-                        <div className={cx('history-grid-column')}>
-                          <div>
-                            <ItemNameBlock data={item} />
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                  <div
-                    className={cx('history-content-wrapper', {
-                      'many-items': this.isTheBigDepth(),
-                    })}
-                  >
-                    <ScrollWrapper autoHeight autoHeightMax={'100%'} autoHide>
-                      <div className={cx('history-table-grid', 'history-items-grid')}>
-                        <div className={cx('history-grid-head')}>
-                          {this.state.itemsHistory.map((item) => (
-                            <div key={item.launchNumber} className={cx('history-grid-column')}>
-                              <div
-                                className={cx(
-                                  'history-grid-header',
-                                  `launch-status-${item.launchStatus}`,
-                                )}
-                              >
-                                <span>
-                                  {`${intl.formatMessage(messages.launchNumberTitle)}${
-                                    item.launchNumber
-                                  }`}
-                                </span>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                        {this.getItemsForLoad().map((launch) => (
-                          <div key={launch.uniqueId} className={cx('history-grid-row')}>
-                            {this.state.itemsHistory.map((historyItem) => {
-                              let itemProps = {};
-                              const currentLaunchHistoryItem = historyItem.resources.filter(
-                                (item) => item.uniqueId === launch.uniqueId,
-                              );
-                              if (!currentLaunchHistoryItem.length) {
-                                itemProps = {
-                                  status: 'NOT_FOUND',
-                                  defects: {},
-                                };
-                              } else if (currentLaunchHistoryItem.length > 1) {
-                                itemProps = {
-                                  status: 'MANY',
-                                  defects: {},
-                                };
-                              } else {
-                                itemProps = {
-                                  status: currentLaunchHistoryItem[0].status,
-                                  issue: currentLaunchHistoryItem[0].issue,
-                                  defects: currentLaunchHistoryItem[0].statistics.defects,
-                                };
-                              }
-                              return (
-                                <div
-                                  key={historyItem.startTime}
-                                  className={cx('history-grid-column')}
-                                >
-                                  <HistoryItem {...itemProps} />
-                                </div>
-                              );
-                            })}
-                          </div>
-                        ))}
-                      </div>
-                    </ScrollWrapper>
-                  </div>
-                </React.Fragment>
+                <Fragment>
+                  <HistoryNamesGrid
+                    items={this.getItemsForLoad()}
+                    customClass={this.isTheBigDepth() ? cx('many-items') : ''}
+                  />
+                  <HistoryItemsGrid
+                    items={this.getItemsForLoad()}
+                    itemsHistory={this.state.itemsHistory}
+                    customClass={this.isTheBigDepth() ? cx('large-items-history') : ''}
+                  />
+                </Fragment>
               )}
-            </React.Fragment>
+            </Fragment>
           )}
         </div>
         <div
@@ -323,7 +238,7 @@ export class HistoryTable extends Component {
             </h3>
           </button>
         </div>
-      </React.Fragment>
+      </Fragment>
     );
   }
 }

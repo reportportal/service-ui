@@ -3,14 +3,14 @@ import PropTypes from 'prop-types';
 import { injectIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import { getStorageItem, setStorageItem } from 'common/utils';
-import { historyDepthConfig } from './constants';
+import { HISTORY_DEPTH_CONFIG } from './constants';
 import { HistoryFiltersBlock } from './historyFiltersBlock';
 import { HistoryTable } from './historyTable';
 import styles from './historyView.scss';
 
 const cx = classNames.bind(styles);
 const filterSizePathExample = 0;
-const launchExample = '5b11056b149b3f0001f36f90';
+const launchExample = '5b3e3de61aa8410001223a93';
 
 @injectIntl
 export class HistoryView extends Component {
@@ -27,14 +27,15 @@ export class HistoryView extends Component {
   };
 
   state = {
-    historyDepthValue: getStorageItem(historyDepthConfig.name) || historyDepthConfig.defaultValue,
+    historyDepthValue:
+      getStorageItem(HISTORY_DEPTH_CONFIG.name) || HISTORY_DEPTH_CONFIG.defaultValue,
   };
 
   historyDepthHandle = (newValue) => {
     this.setState({
       historyDepthValue: newValue,
     });
-    setStorageItem(historyDepthConfig.name, newValue);
+    setStorageItem(HISTORY_DEPTH_CONFIG.name, newValue);
   };
 
   render() {

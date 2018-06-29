@@ -6,13 +6,9 @@
 .filter-wrapper {
   display: inline-block;
   height: 60px;
-  width: 200px;
+  width: 202px;
   position: relative;
-  margin-right: 35px;
-  margin-bottom: 14px;
-  margin-top: 7px;
-  padding-right: 0;
-  border-right: 0;
+  margin: 7px 35px 14px 2px;
 }
 
 .filter-name {
@@ -21,7 +17,6 @@
   margin-bottom: 5px;
   box-sizing: border-box;
   font-family: $FONT-REGULAR;
-  font-weight: 400;
   font-size: 13px;
   line-height: 18px;
 }
