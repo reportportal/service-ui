@@ -8,8 +8,9 @@ import { withModal, ModalLayout } from 'components/main/modal';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
 import { activeProjectSelector, userIdSelector } from 'controllers/user';
-import { showNotification } from 'controllers/notification';
+import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { STOPPED } from 'common/constants/launchStatuses';
 import styles from './launchFinishForceModal.scss';
 
 const cx = classNames.bind(styles);
@@ -83,12 +84,16 @@ export class LaunchFinishForceModal extends Component {
 
   finishAndClose = (closeModal) => {
     const { items, fetchFunc } = this.props.data;
-    const entities = {};
-    items.forEach((item) => {
-      entities[item.id] = {};
-      entities[item.id].end_time = Date.now();
-      entities[item.id].status = 'STOPPED';
-    });
+    const entities = items.reduce(
+      (acc, item) => ({
+        ...acc,
+        [item.id]: {
+          end_time: Date.now(),
+          status: STOPPED.toUpperCase(),
+        },
+      }),
+      {},
+    );
     fetch(this.props.url, {
       method: 'put',
       data: {
@@ -101,7 +106,7 @@ export class LaunchFinishForceModal extends Component {
           messages.forceFinishSuccessMessage;
         this.props.showNotification({
           message: this.props.intl.formatMessage(successMessage),
-          type: 'success',
+          type: NOTIFICATION_TYPES.SUCCESS,
         });
         fetchFunc();
       })
@@ -113,7 +118,7 @@ export class LaunchFinishForceModal extends Component {
           message: this.props.intl.formatMessage(errorMessage, {
             message: response.message,
           }),
-          type: 'error',
+          type: NOTIFICATION_TYPES.ERROR,
         });
       });
     closeModal();

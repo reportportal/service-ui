@@ -27,7 +27,7 @@ export const proceedWithValidItemsAction = createProceedWithValidItemsAction(NAM
 
 const MODAL_COMPARE_WIDTH = 900;
 
-export const finishForceLaunchesAction = defineGroupOperation(
+export const forceFinishLaunchesAction = defineGroupOperation(
   NAMESPACE,
   'finishForceLaunches',
   (launches, { fetchFunc }) =>
