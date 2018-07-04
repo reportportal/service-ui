@@ -94,6 +94,21 @@ export class Hamburger extends Component {
     window.location.href = URLS.exportLaunch(this.props.projectId, this.props.launch.id, type);
   };
 
+  getForceFinishTitle = () => {
+    const { intl, projectRole, accountRole } = this.props;
+    let forceFinishTitle = '';
+
+    if (
+      !canForceFinishLaunch(accountRole, projectRole, this.props.userId === this.props.launch.owner)
+    ) {
+      forceFinishTitle = intl.formatMessage(messages.noPermissions);
+    }
+    if (!this.isInProgress()) {
+      forceFinishTitle = intl.formatMessage(messages.launchFinished);
+    }
+    return forceFinishTitle;
+  };
+
   isInProgress = () => this.props.launch.status === IN_PROGRESS.toUpperCase();
 
   exportAsPDF = () => this.onExportLaunch('pdf');
@@ -172,23 +187,13 @@ export class Hamburger extends Component {
             )}
             <HamburgerMenuItem
               text={intl.formatMessage(messages.forceFinish)}
-              title={
-                (!canForceFinishLaunch(
-                  accountRole,
-                  projectRole,
-                  this.props.userId === this.props.launch.owner,
-                ) &&
-                  intl.formatMessage(messages.noPermissions)) ||
-                (launch.status.toLowerCase() !== IN_PROGRESS &&
-                  intl.formatMessage(messages.launchFinished)) ||
-                ''
-              }
+              title={this.getForceFinishTitle()}
               disabled={
                 !canForceFinishLaunch(
                   accountRole,
                   projectRole,
                   this.props.userId === this.props.launch.owner,
-                ) || launch.status.toLowerCase() !== IN_PROGRESS
+                ) || !this.isInProgress()
               }
               onClick={() => {
                 customProps.onForceFinish(launch);
