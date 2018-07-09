@@ -80,7 +80,10 @@ export class Sidebar extends Component {
           </div>
           <div className={cx('sidebar-btn')} onClick={this.props.onClickNavBtn}>
             <SidebarButton
-              link={{ type: PROJECT_LAUNCHES_PAGE, payload: { projectId: activeProject } }}
+              link={{
+                type: PROJECT_LAUNCHES_PAGE,
+                payload: { projectId: activeProject, filterId: 'all' },
+              }}
               icon={LaunchesIcon}
             >
               <FormattedMessage id={'Sidebar.launchesBtn'} defaultMessage={'Launches'} />

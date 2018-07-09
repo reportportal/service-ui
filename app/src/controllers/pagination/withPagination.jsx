@@ -1,11 +1,10 @@
-import { PureComponent } from 'react';
+import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { connectRouter } from 'common/utils';
 import { defaultPaginationSelector, totalElementsSelector, totalPagesSelector } from './selectors';
+import { PAGE_KEY, SIZE_KEY } from './constants';
 
-const PAGE_KEY = 'page.page';
-const SIZE_KEY = 'page.size';
 const FILTER_KEY = 'filter.cnt.name';
 const SORTING_KEY = 'page.sort';
 
@@ -14,6 +13,7 @@ export const withPagination = ({
   paginationSelector = defaultPaginationSelector,
   fetchAction = () => {},
   namespace,
+  namespaceSelector,
 } = {}) => (WrappedComponent) => {
   const getTotalElements = totalElementsSelector(paginationSelector);
   const getTotalPages = totalPagesSelector(paginationSelector);
@@ -26,7 +26,7 @@ export const withPagination = ({
     {
       updatePagination: (page, size) => ({ [PAGE_KEY]: page, [SIZE_KEY]: size }),
     },
-    { namespace },
+    { namespace, namespaceSelector },
   )
   @connect(
     (state) => ({
@@ -37,7 +37,7 @@ export const withPagination = ({
       fetchAction,
     },
   )
-  class PaginationWrapper extends PureComponent {
+  class PaginationWrapper extends Component {
     static propTypes = {
       filter: PropTypes.string,
       page: PropTypes.number,
@@ -61,23 +61,6 @@ export const withPagination = ({
       updatePagination: () => {},
       fetchAction: () => {},
     };
-
-    componentDidMount() {
-      const { page, size, url, sortingString } = this.props;
-      this.fetchData(url, { page, size, sortingString });
-    }
-
-    componentWillReceiveProps({ url, page, size, filter, sortingString }) {
-      if (
-        url !== this.props.url ||
-        page !== this.props.page ||
-        size !== this.props.size ||
-        filter !== this.props.filter ||
-        sortingString !== this.props.sortingString
-      ) {
-        this.fetchData(url, { page, size, filter, sortingString });
-      }
-    }
 
     fetchData = (url, queryParams = {}) =>
       this.props.fetchAction({

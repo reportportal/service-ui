@@ -9,18 +9,17 @@ import { userIdSelector } from 'controllers/user';
 import { withPagination } from 'controllers/pagination';
 import { LaunchSuiteGrid } from 'pages/inside/common/launchSuiteGrid';
 import {
-  fetchSuitesAction,
   suitePaginationSelector,
   suitesSelector,
   selectedSuitesSelector,
   toggleSuiteSelectionAction,
   unselectAllSuitesAction,
   selectSuitesAction,
-  NAMESPACE,
 } from 'controllers/suite';
 import { currentLaunchSelector, fetchLaunchAction } from 'controllers/launch';
 import { SuiteTestToolbar } from 'pages/inside/common/suiteTestToolbar';
 import { launchIdSelector } from 'controllers/pages';
+import { namespaceSelector, fetchTestItemsAction } from 'controllers/testItem';
 
 @connect(
   (state) => ({
@@ -35,6 +34,7 @@ import { launchIdSelector } from 'controllers/pages';
     unselectAllSuitesAction,
     selectSuitesAction,
     fetchLaunchAction,
+    fetchTestItemsAction,
   },
 )
 @withSorting({
@@ -42,9 +42,9 @@ import { launchIdSelector } from 'controllers/pages';
   defaultSortingDirection: SORTING_ASC,
 })
 @withPagination({
-  fetchAction: fetchSuitesAction,
+  fetchAction: fetchTestItemsAction,
   paginationSelector: suitePaginationSelector,
-  namespace: NAMESPACE,
+  namespaceSelector,
 })
 @injectIntl
 export class SuitesPage extends Component {
@@ -58,7 +58,7 @@ export class SuitesPage extends Component {
     pageSize: PropTypes.number,
     sortingColumn: PropTypes.string,
     sortingDirection: PropTypes.string,
-    fetchData: PropTypes.func,
+    fetchTestItemsAction: PropTypes.func,
     onChangePage: PropTypes.func,
     onChangePageSize: PropTypes.func,
     onChangeSorting: PropTypes.func,
@@ -79,7 +79,7 @@ export class SuitesPage extends Component {
     pageSize: null,
     sortingColumn: null,
     sortingDirection: null,
-    fetchData: () => {},
+    fetchTestItemsAction: () => {},
     onChangePage: () => {},
     onChangePageSize: () => {},
     onChangeSorting: () => {},
@@ -104,7 +104,7 @@ export class SuitesPage extends Component {
     if (this.props.launchId) {
       this.props.fetchLaunchAction(this.props.launchId);
     }
-    this.props.fetchData();
+    this.props.fetchTestItemsAction();
   };
 
   render() {

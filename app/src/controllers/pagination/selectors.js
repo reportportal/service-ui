@@ -1,8 +1,8 @@
-import { INITIAL_DATA } from './constants';
+import { DEFAULT_PAGINATION } from './constants';
 
 export const totalElementsSelector = (paginationSelector) => (state) =>
   paginationSelector(state).totalElements;
 export const totalPagesSelector = (paginationSelector) => (state) =>
   paginationSelector(state).totalPages;
 
-export const defaultPaginationSelector = () => INITIAL_DATA;
+export const defaultPaginationSelector = () => DEFAULT_PAGINATION;

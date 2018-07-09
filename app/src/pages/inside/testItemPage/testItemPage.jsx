@@ -5,7 +5,7 @@ import { LEVEL_SUITE, LEVEL_TEST } from 'common/constants/launchLevels';
 import { levelSelector, loadingSelector } from 'controllers/testItem';
 import { SuitesPage } from 'pages/inside/suitesPage';
 import { TestsPage } from 'pages/inside/testsPage';
-import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
+import { PreloaderPage } from './preloaderPage';
 
 const testItemPages = {
   [LEVEL_SUITE]: SuitesPage,
@@ -30,9 +30,9 @@ export class TestItemPage extends Component {
   render() {
     const { level, loading } = this.props;
     if (loading) {
-      return <SpinningPreloader />;
+      return <PreloaderPage />;
     }
-    const PageComponent = testItemPages[level] || SpinningPreloader;
+    const PageComponent = testItemPages[level] || PreloaderPage;
     return <PageComponent />;
   }
 }
