@@ -8,6 +8,9 @@ import {
   membersSelector,
   loadingSelector,
 } from 'controllers/members';
+import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLock';
+import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
+import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
 import { withFilter } from 'controllers/filter';
 import { activeProjectSelector } from 'controllers/user';
@@ -22,12 +25,25 @@ const messages = defineMessages({
     id: 'MembersPage.title',
     defaultMessage: 'Project members',
   },
+  memberWasInvited: {
+    id: 'MembersPage.memberWasInvited',
+    defaultMessage: 'Member {name} was assigned to the project',
+  },
+  inviteExternalMember: {
+    id: 'MembersPage.inviteExternalMember',
+    defaultMessage:
+      'Invite for member is successfully registered. Confirmation info will be send on provided email. Expiration: 1 day.',
+  },
 });
-@connect((state) => ({
-  url: URLS.projectUsers(activeProjectSelector(state)),
-  members: membersSelector(state),
-  loading: loadingSelector(state),
-}))
+@connect(
+  (state) => ({
+    activeProject: activeProjectSelector(state),
+    url: URLS.projectUsers(activeProjectSelector(state)),
+    members: membersSelector(state),
+    loading: loadingSelector(state),
+  }),
+  { showScreenLockAction, hideScreenLockAction, showNotification },
+)
 @withFilter
 @withPagination({
   paginationSelector: membersPaginationSelector,
@@ -36,6 +52,9 @@ const messages = defineMessages({
 @injectIntl
 export class MembersPage extends Component {
   static propTypes = {
+    showScreenLockAction: PropTypes.func.isRequired,
+    hideScreenLockAction: PropTypes.func.isRequired,
+    showNotification: PropTypes.func.isRequired,
     intl: intlShape.isRequired,
     onSearchChange: PropTypes.func,
     onFilterChange: PropTypes.func,
@@ -49,6 +68,7 @@ export class MembersPage extends Component {
     filter: PropTypes.string,
     members: PropTypes.arrayOf(PropTypes.object).isRequired,
     loading: PropTypes.bool,
+    activeProject: PropTypes.string.isRequired,
   };
   static defaultProps = {
     onSearchChange: () => {},
@@ -63,6 +83,55 @@ export class MembersPage extends Component {
     filter: '',
     members: [],
     loading: false,
+  };
+
+  inviteUser = (userData) => {
+    const data = {};
+    if (userData.user.externalUser) {
+      this.props.showScreenLockAction();
+      data.default_project = this.props.activeProject;
+      data.email = userData.user.userLogin;
+      data.role = userData.role;
+      return fetch(URLS.userInviteExternal(), {
+        method: 'post',
+        data,
+      })
+        .then((res) => {
+          this.props.showNotification({
+            message: this.props.intl.formatMessage(messages.inviteExternalMember),
+            type: NOTIFICATION_TYPES.SUCCESS,
+          });
+          this.props.fetchData();
+          this.props.hideScreenLockAction();
+          data.backLink = res.backLink;
+          return data;
+        })
+        .catch((err) => {
+          this.props.showNotification({ message: err.msg, type: NOTIFICATION_TYPES.ERROR });
+          this.props.fetchData();
+          this.props.hideScreenLockAction();
+          return err;
+        });
+    }
+    data.userNames = {};
+    data.userNames[userData.user.userLogin] = userData.role;
+    return fetch(URLS.userInviteInternal(this.props.activeProject), {
+      method: 'put',
+      data,
+    })
+      .then(() => {
+        this.props.showNotification({
+          message: this.props.intl.formatMessage(messages.memberWasInvited, {
+            name: userData.user.userLogin,
+          }),
+          type: 'success',
+        });
+        this.props.fetchData();
+      })
+      .catch((err) => {
+        this.props.showNotification({ message: err.msg, type: 'error' });
+        this.props.fetchData();
+      });
   };
 
   render() {
@@ -82,7 +151,11 @@ export class MembersPage extends Component {
     } = this.props;
     return (
       <PageLayout title={intl.formatMessage(messages.membersPageTitle)} fullMobileLayout>
-        <MembersPageToolbar filter={filter} onFilterChange={onFilterChange} />
+        <MembersPageToolbar
+          filter={filter}
+          onFilterChange={onFilterChange}
+          onInvite={this.inviteUser}
+        />
         <MembersGrid data={members} fetchData={fetchData} loading={loading} />
         <PaginationToolbar
           activePage={activePage}
