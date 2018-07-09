@@ -59,6 +59,7 @@ const messages = defineMessages({
     mergeLaunchesAction,
     compareLaunchesAction,
     moveLaunchesToDebugAction,
+    fetchLaunchesAction,
   },
 )
 @withSorting({
@@ -81,7 +82,6 @@ export class LaunchesPage extends Component {
     pageSize: PropTypes.number,
     sortingColumn: PropTypes.string,
     sortingDirection: PropTypes.string,
-    fetchData: PropTypes.func,
     showModalAction: PropTypes.func,
     onChangePage: PropTypes.func,
     onChangePageSize: PropTypes.func,
@@ -99,6 +99,7 @@ export class LaunchesPage extends Component {
     moveLaunchesToDebugAction: PropTypes.func,
     lastOperation: PropTypes.string,
     loading: PropTypes.bool,
+    fetchLaunchesAction: PropTypes.func,
   };
 
   static defaultProps = {
@@ -110,7 +111,6 @@ export class LaunchesPage extends Component {
     sortingColumn: null,
     sortingDirection: null,
     showModalAction: () => {},
-    fetchData: () => {},
     onChangePage: () => {},
     onChangePageSize: () => {},
     onChangeSorting: () => {},
@@ -126,6 +126,7 @@ export class LaunchesPage extends Component {
     moveLaunchesToDebugAction: () => {},
     lastOperation: '',
     loading: false,
+    fetchLaunchesAction: () => {},
   };
 
   getTitle = () =>
@@ -135,12 +136,12 @@ export class LaunchesPage extends Component {
     fetch(URLS.launchesUpdate(this.props.activeProject, launch.id), {
       method: 'put',
       data: launch,
-    }).then(this.props.fetchData);
+    }).then(this.props.fetchLaunchesAction);
   };
   deleteItem = (id) => {
     fetch(URLS.launches(this.props.activeProject, id), {
       method: 'delete',
-    }).then(this.props.fetchData);
+    }).then(this.props.fetchLaunchesAction);
   };
   confirmDeleteItem = (item) => {
     this.props.showModalAction({
@@ -152,7 +153,7 @@ export class LaunchesPage extends Component {
   finishForceLaunches = (eventData) => {
     const launches = eventData && eventData.id ? [eventData] : this.props.selectedLaunches;
     this.props.forceFinishLaunchesAction(launches, {
-      fetchFunc: this.props.fetchData,
+      fetchFunc: this.props.fetchLaunchesAction,
     });
   };
 
@@ -166,7 +167,7 @@ export class LaunchesPage extends Component {
     this.props.showModalAction({
       id: 'launchImportModal',
       data: {
-        onImport: this.props.fetchData,
+        onImport: this.props.fetchLaunchesAction,
       },
     });
   };
@@ -185,13 +186,13 @@ export class LaunchesPage extends Component {
 
   mergeLaunches = () =>
     this.props.mergeLaunchesAction(this.props.selectedLaunches, {
-      fetchFunc: this.props.fetchData,
+      fetchFunc: this.props.fetchLaunchesAction,
     });
 
   moveLaunchesToDebug = (eventData) => {
     const launches = eventData && eventData.id ? [eventData] : this.props.selectedLaunches;
     this.props.moveLaunchesToDebugAction(launches, {
-      fetchFunc: this.props.fetchData,
+      fetchFunc: this.props.fetchLaunchesAction,
     });
   };
 

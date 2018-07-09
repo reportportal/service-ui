@@ -15,7 +15,7 @@ import {
 } from 'controllers/pages';
 import { isAuthorizedSelector } from 'controllers/auth';
 import { fetchDashboardAction, changeVisibilityTypeAction } from 'controllers/dashboard';
-import { fetchLaunchAction } from 'controllers/launch';
+import { fetchLaunchAction, fetchLaunchesAction } from 'controllers/launch';
 import { fetchSuiteAction } from 'controllers/suite';
 import { TEST_ITEM_PAGE } from 'controllers/pages/constants';
 import { fetchTestItemsAction } from 'controllers/testItem';
@@ -90,7 +90,10 @@ export default {
     },
   },
   [PROJECT_DASHBOARD_ITEM_PAGE]: '/:projectId/dashboard/:dashboardId',
-  PROJECT_LAUNCHES_PAGE: '/:projectId/launches/:filterId?',
+  PROJECT_LAUNCHES_PAGE: {
+    path: '/:projectId/launches/:filterId?',
+    thunk: (dispatch) => dispatch(fetchLaunchesAction()),
+  },
   [PROJECT_SUITES_PAGE]: {
     path: '/:projectId/launches/:filterId/launch/:launchId',
     thunk: (dispatch, getState) => {

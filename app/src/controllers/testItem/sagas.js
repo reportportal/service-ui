@@ -4,11 +4,12 @@ import { testItemIdsArraySelector } from 'controllers/pages';
 import { URLS } from 'common/urls';
 import { activeProjectSelector } from 'controllers/user';
 import { setLevelAction } from './actionCreators';
-import { FETCH_TEST_ITEMS, NAMESPACE as TEST_ITEM_NAMESPACE } from './constants';
+import { FETCH_TEST_ITEMS, NAMESPACE } from './constants';
 import { LEVELS } from './levels';
+import { namespaceSelector, queryParametersSelector } from './selectors';
 
 const testItemActionPredicate = (action) =>
-  action.type === FETCH_SUCCESS && action.meta && action.meta.namespace === TEST_ITEM_NAMESPACE;
+  action.type === FETCH_SUCCESS && action.meta && action.meta.namespace === NAMESPACE;
 
 const calculateLevel = (data) =>
   data.reduce((acc, item) => {
@@ -27,7 +28,15 @@ function* fetchTestItems() {
   }
   const launchId = itemIds[0];
   const project = yield select(activeProjectSelector);
-  yield put(fetchDataAction(TEST_ITEM_NAMESPACE)(URLS.testItem(project, launchId, parentId)));
+
+  const namespace = yield select(namespaceSelector);
+  const query = yield select(queryParametersSelector, namespace);
+
+  yield put(
+    fetchDataAction(NAMESPACE)(URLS.testItem(project, launchId, parentId), {
+      params: { ...query },
+    }),
+  );
   const dataPayload = yield take(testItemActionPredicate);
   const level = calculateLevel(dataPayload.payload.content);
 

@@ -7,20 +7,19 @@ import { PageLayout } from 'layouts/pageLayout';
 import { LaunchSuiteGrid } from 'pages/inside/common/launchSuiteGrid';
 import { SuiteTestToolbar } from 'pages/inside/common/suiteTestToolbar';
 import {
-  fetchTestsAction,
   testsSelector,
   selectedTestsSelector,
   toggleTestSelectionAction,
   unselectAllTestsAction,
   selectTestsAction,
   testPaginationSelector,
-  NAMESPACE,
 } from 'controllers/test';
 import { currentSuiteSelector, fetchSuiteAction } from 'controllers/suite';
 import { withPagination } from 'controllers/pagination';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
 import { launchIdSelector, suiteIdSelector } from 'controllers/pages';
 import { fetchLaunchAction } from 'controllers/launch';
+import { namespaceSelector, fetchTestItemsAction } from 'controllers/testItem';
 
 @connect(
   (state) => ({
@@ -31,12 +30,12 @@ import { fetchLaunchAction } from 'controllers/launch';
     suiteId: suiteIdSelector(state),
   }),
   {
-    fetchTestsAction,
     toggleTestSelectionAction,
     unselectAllTestsAction,
     selectTestsAction,
     fetchSuiteAction,
     fetchLaunchAction,
+    fetchTestItemsAction,
   },
 )
 @withSorting({
@@ -44,9 +43,9 @@ import { fetchLaunchAction } from 'controllers/launch';
   defaultSortingDirection: SORTING_ASC,
 })
 @withPagination({
-  fetchAction: fetchTestsAction,
+  fetchAction: fetchTestItemsAction,
   paginationSelector: testPaginationSelector,
-  namespace: NAMESPACE,
+  namespaceSelector,
 })
 @injectIntl
 export class TestsPage extends Component {
@@ -60,7 +59,7 @@ export class TestsPage extends Component {
     pageSize: PropTypes.number,
     sortingColumn: PropTypes.string,
     sortingDirection: PropTypes.string,
-    fetchData: PropTypes.func,
+    fetchTestItemsAction: PropTypes.func,
     onChangePage: PropTypes.func,
     onChangePageSize: PropTypes.func,
     onChangeSorting: PropTypes.func,
@@ -83,7 +82,7 @@ export class TestsPage extends Component {
     pageSize: null,
     sortingColumn: null,
     sortingDirection: null,
-    fetchData: () => {},
+    fetchTestItemsAction: () => {},
     onChangePage: () => {},
     onChangePageSize: () => {},
     onChangeSorting: () => {},
@@ -107,9 +106,11 @@ export class TestsPage extends Component {
   };
 
   handleRefresh = () => {
-    this.props.fetchSuiteAction(this.props.suiteId);
-    this.props.fetchLaunchAction(this.props.launchId);
-    this.props.fetchData();
+    if (this.props.suiteId && this.props.launchId) {
+      this.props.fetchSuiteAction(this.props.suiteId);
+      this.props.fetchLaunchAction(this.props.launchId);
+    }
+    this.props.fetchTestItemsAction();
   };
 
   render() {

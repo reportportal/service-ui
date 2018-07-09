@@ -8,6 +8,7 @@ export {
   payloadSelector,
   testItemIdsSelector,
   testItemIdsArraySelector,
+  createQueryParametersSelector,
 } from './selectors';
 export { updatePagePropertiesAction } from './actionCreators';
 
