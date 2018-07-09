@@ -3,10 +3,16 @@ import { fetchDataAction } from 'controllers/fetch';
 import { activeProjectSelector } from 'controllers/user';
 import { URLS } from 'common/urls';
 import { NAMESPACE, FETCH_MEMBERS } from './constants';
+import { querySelector } from './selectors';
 
-function* fetchMembers({ payload }) {
+function* fetchMembers() {
   const activeProject = yield select(activeProjectSelector);
-  yield put(fetchDataAction(NAMESPACE)(URLS.projectUsers(activeProject), payload));
+  const query = yield select(querySelector);
+  yield put(
+    fetchDataAction(NAMESPACE)(URLS.projectUsers(activeProject), {
+      params: { ...query },
+    }),
+  );
 }
 
 function* watchFetchMembers() {

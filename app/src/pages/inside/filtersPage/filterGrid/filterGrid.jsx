@@ -129,7 +129,6 @@ DeleteColumn.defaultProps = {
 export class FilterGrid extends Component {
   static propTypes = {
     filters: PropTypes.arrayOf(PropTypes.object),
-    fetchData: PropTypes.func,
     intl: intlShape.isRequired,
     userFilters: PropTypes.arrayOf(PropTypes.string),
     onEdit: PropTypes.func,
@@ -143,7 +142,6 @@ export class FilterGrid extends Component {
 
   static defaultProps = {
     filters: [],
-    fetchData: () => {},
     userFilters: [],
     onEdit: () => {},
     toggleDisplayFilterOnLaunches: () => {},
