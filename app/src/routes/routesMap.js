@@ -19,6 +19,8 @@ import { fetchLaunchAction, fetchLaunchesAction } from 'controllers/launch';
 import { fetchSuiteAction } from 'controllers/suite';
 import { TEST_ITEM_PAGE } from 'controllers/pages/constants';
 import { fetchTestItemsAction } from 'controllers/testItem';
+import { fetchFiltersAction } from '../controllers/filter';
+import { fetchMembersAction } from '../controllers/members';
 
 const redirectRoute = (path, createNewAction) => ({
   path,
@@ -110,9 +112,15 @@ export default {
       dispatch(fetchSuiteAction(suiteId));
     },
   },
-  PROJECT_FILTERS_PAGE: '/:projectId/filters',
+  PROJECT_FILTERS_PAGE: {
+    path: '/:projectId/filters',
+    thunk: (dispatch) => dispatch(fetchFiltersAction()),
+  },
   PROJECT_USERDEBUG_PAGE: '/:projectId/userdebug',
-  PROJECT_MEMBERS_PAGE: '/:projectId/members',
+  PROJECT_MEMBERS_PAGE: {
+    path: '/:projectId/members',
+    thunk: (dispatch) => dispatch(fetchMembersAction()),
+  },
   PROJECT_SETTINGS_PAGE: '/:projectId/settings',
   PROJECT_SANDBOX_PAGE: '/:projectId/sandbox',
   [TEST_ITEM_PAGE]: {

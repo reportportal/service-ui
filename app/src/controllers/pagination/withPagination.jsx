@@ -53,8 +53,8 @@ export const withPagination = ({
     static defaultProps = {
       url: staticURL,
       filter: null,
-      page: 1,
-      size: 20,
+      page: undefined,
+      size: undefined,
       sortingString: null,
       totalElements: 0,
       totalPages: 1,

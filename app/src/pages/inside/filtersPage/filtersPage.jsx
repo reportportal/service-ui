@@ -8,6 +8,7 @@ import {
   fetchFiltersAction,
   filtersSelector,
   loadingSelector,
+  DEFAULT_PAGE_SIZE,
 } from 'controllers/filter';
 import {
   userIdSelector,
@@ -48,6 +49,7 @@ const messages = defineMessages({
   {
     showModalAction,
     toggleDisplayFilterOnLaunches: toggleDisplayFilterOnLaunchesAction,
+    fetchFiltersAction,
   },
 )
 @withSorting({
@@ -74,7 +76,7 @@ export class FiltersPage extends Component {
     filter: PropTypes.string,
     activeProject: PropTypes.string,
     onFilterChange: PropTypes.func,
-    fetchData: PropTypes.func,
+    fetchFiltersAction: PropTypes.func,
     showModalAction: PropTypes.func,
     projectRole: PropTypes.string,
     userFilters: PropTypes.arrayOf(PropTypes.string),
@@ -87,14 +89,14 @@ export class FiltersPage extends Component {
     activePage: 1,
     itemCount: 0,
     pageCount: 0,
-    pageSize: 20,
+    pageSize: DEFAULT_PAGE_SIZE,
     userId: '',
     filter: '',
     activeProject: '',
     onFilterChange: () => {},
     onChangePage: () => {},
     onChangePageSize: () => {},
-    fetchData: () => {},
+    fetchFiltersAction: () => {},
     showModalAction: () => {},
     projectRole: '',
     userFilters: [],
@@ -118,12 +120,12 @@ export class FiltersPage extends Component {
     fetch(URLS.filter(this.props.activeProject, filter.id), {
       method: 'put',
       data: filter,
-    }).then(this.props.fetchData);
+    }).then(this.props.fetchFiltersAction);
 
   deleteFilter = (id) => {
     fetch(URLS.filter(this.props.activeProject, id), {
       method: 'delete',
-    }).then(this.props.fetchData);
+    }).then(this.props.fetchFiltersAction);
   };
 
   render() {

@@ -79,7 +79,7 @@ export class TestsPage extends Component {
     activePage: 1,
     itemCount: null,
     pageCount: null,
-    pageSize: null,
+    pageSize: 20,
     sortingColumn: null,
     sortingDirection: null,
     fetchTestItemsAction: () => {},

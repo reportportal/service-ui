@@ -7,6 +7,7 @@ import {
   fetchMembersAction,
   membersSelector,
   loadingSelector,
+  DEFAULT_PAGE_SIZE,
 } from 'controllers/members';
 import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLock';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
@@ -42,7 +43,12 @@ const messages = defineMessages({
     members: membersSelector(state),
     loading: loadingSelector(state),
   }),
-  { showScreenLockAction, hideScreenLockAction, showNotification },
+  {
+    fetchMembersAction,
+    showScreenLockAction,
+    hideScreenLockAction,
+    showNotification,
+  },
 )
 @withFilter
 @withPagination({
@@ -58,7 +64,7 @@ export class MembersPage extends Component {
     intl: intlShape.isRequired,
     onSearchChange: PropTypes.func,
     onFilterChange: PropTypes.func,
-    fetchData: PropTypes.func,
+    fetchMembersAction: PropTypes.func,
     activePage: PropTypes.number,
     itemCount: PropTypes.number,
     pageCount: PropTypes.number,
@@ -73,11 +79,11 @@ export class MembersPage extends Component {
   static defaultProps = {
     onSearchChange: () => {},
     onFilterChange: () => {},
-    fetchData: () => {},
+    fetchMembersAction: () => {},
     activePage: 1,
     itemCount: 0,
     pageCount: 0,
-    pageSize: 20,
+    pageSize: DEFAULT_PAGE_SIZE,
     onChangePage: () => {},
     onChangePageSize: () => {},
     filter: '',
@@ -101,14 +107,14 @@ export class MembersPage extends Component {
             message: this.props.intl.formatMessage(messages.inviteExternalMember),
             type: NOTIFICATION_TYPES.SUCCESS,
           });
-          this.props.fetchData();
+          this.props.fetchMembersAction();
           this.props.hideScreenLockAction();
           data.backLink = res.backLink;
           return data;
         })
         .catch((err) => {
           this.props.showNotification({ message: err.msg, type: NOTIFICATION_TYPES.ERROR });
-          this.props.fetchData();
+          this.props.fetchMembersAction();
           this.props.hideScreenLockAction();
           return err;
         });
@@ -127,7 +133,7 @@ export class MembersPage extends Component {
           }),
           type: NOTIFICATION_TYPES.SUCCESS,
         });
-        this.props.fetchData();
+        this.props.fetchMembersAction();
       })
       .catch((err) => {
         this.props.showNotification({ message: err.msg, type: NOTIFICATION_TYPES.ERROR });
@@ -147,7 +153,6 @@ export class MembersPage extends Component {
       onChangePage,
       onChangePageSize,
       members,
-      fetchData,
       loading,
     } = this.props;
     return (
@@ -157,7 +162,7 @@ export class MembersPage extends Component {
           onFilterChange={onFilterChange}
           onInvite={this.inviteUser}
         />
-        <MembersGrid data={members} fetchData={fetchData} loading={loading} />
+        <MembersGrid data={members} fetchData={this.props.fetchMembersAction} loading={loading} />
         <PaginationToolbar
           activePage={activePage}
           itemCount={itemCount}
