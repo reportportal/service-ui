@@ -113,8 +113,9 @@ export class MembersPage extends Component {
           return err;
         });
     }
-    data.userNames = {};
-    data.userNames[userData.user.userLogin] = userData.role;
+    data.userNames = {
+      [userData.user.userLogin]: userData.role,
+    };
     return fetch(URLS.userInviteInternal(this.props.activeProject), {
       method: 'put',
       data,
@@ -124,12 +125,12 @@ export class MembersPage extends Component {
           message: this.props.intl.formatMessage(messages.memberWasInvited, {
             name: userData.user.userLogin,
           }),
-          type: 'success',
+          type: NOTIFICATION_TYPES.SUCCESS,
         });
         this.props.fetchData();
       })
       .catch((err) => {
-        this.props.showNotification({ message: err.msg, type: 'error' });
+        this.props.showNotification({ message: err.msg, type: NOTIFICATION_TYPES.ERROR });
         this.props.fetchData();
       });
   };
