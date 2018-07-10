@@ -359,8 +359,8 @@ define(function (require) {
 
                     var result = '';
                     if (!customRange || self.dynamicUpdateRange) {
-                        var utc = (new Date().getTimezoneOffset() / 60) * -1;
-                        var utcString = ';' + (utc > -1 ? '+' + utc : utc);
+                        var timeZone = new Date().toString().match(/([-\+][0-9]+)\s/)[1];
+                        var utcString = ';' + timeZone;
                         var currentUnix = Moment().startOf('day').unix();
                         result = parseInt((start.unix() - currentUnix) / 60) + ';' + parseInt((end.unix() - currentUnix) / 60) + utcString;
                     } else {
