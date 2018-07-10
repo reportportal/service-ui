@@ -1,6 +1,7 @@
 import { combineReducers } from 'redux';
 import { loadingReducer } from 'controllers/loading';
-import { SET_LEVEL, NAMESPACE } from './constants';
+import { fetchReducer } from 'controllers/fetch';
+import { SET_LEVEL, NAMESPACE, PARENT_ITEMS_NAMESPACE } from './constants';
 
 const levelReducer = (state = '', { type, payload }) => {
   switch (type) {
@@ -14,4 +15,5 @@ const levelReducer = (state = '', { type, payload }) => {
 export const testItemReducer = combineReducers({
   level: levelReducer,
   loading: loadingReducer(NAMESPACE),
+  parentItems: fetchReducer(PARENT_ITEMS_NAMESPACE, { initialState: [] }),
 });

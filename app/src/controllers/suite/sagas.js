@@ -8,7 +8,7 @@ import { FETCH_SUITES, NAMESPACE, FETCH_SUITE, CURRENT_SUITE_NAMESPACE } from '.
 function* getSuites({ payload }) {
   const activeProject = yield select(activeProjectSelector);
   const launchId = yield select(launchIdSelector);
-  yield put(fetchDataAction(NAMESPACE)(URLS.testItem(activeProject, launchId), payload));
+  yield put(fetchDataAction(NAMESPACE)(URLS.testItems(activeProject, launchId), payload));
 }
 
 function* watchFetchSuites() {
