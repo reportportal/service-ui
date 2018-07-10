@@ -69,12 +69,13 @@ export const URLS = {
 
   suite: (activeProject, suiteId) => `${urlBase}${activeProject}/item/${suiteId}`,
 
-  testItem: (activeProject, launchId, parentId) =>
+  testItems: (activeProject, launchId, parentId) =>
     `${urlBase}${activeProject}/item${getQueryParams({
       'filter.eq.launch': launchId,
       'filter.eq.parent': parentId,
       'filter.size.path': !parentId ? 0 : undefined,
     })}`,
+  testItem: (activeProject, id) => `${urlBase}${activeProject}/item/${id}`,
 
   user: () => `${urlBase}user`,
   userRegistration: () => `${urlBase}user/registration`,

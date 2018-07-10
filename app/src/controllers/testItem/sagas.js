@@ -1,10 +1,15 @@
-import { FETCH_SUCCESS, fetchDataAction, fetchSuccessAction } from 'controllers/fetch';
-import { put, select, all, takeEvery, take } from 'redux-saga/effects';
-import { testItemIdsArraySelector } from 'controllers/pages';
+import {
+  FETCH_SUCCESS,
+  fetchDataAction,
+  fetchSuccessAction,
+  bulkFetchDataAction,
+} from 'controllers/fetch';
+import { put, select, all, takeEvery, take, call } from 'redux-saga/effects';
+import { testItemIdsArraySelector, launchIdSelector } from 'controllers/pages';
 import { URLS } from 'common/urls';
 import { activeProjectSelector } from 'controllers/user';
 import { setLevelAction } from './actionCreators';
-import { FETCH_TEST_ITEMS, NAMESPACE } from './constants';
+import { FETCH_TEST_ITEMS, NAMESPACE, PARENT_ITEMS_NAMESPACE } from './constants';
 import { LEVELS } from './levels';
 import { namespaceSelector, queryParametersSelector } from './selectors';
 
@@ -20,20 +25,29 @@ const calculateLevel = (data) =>
     return LEVELS[acc] && LEVELS[acc].order > LEVELS[type].order ? type : acc;
   }, '');
 
-function* fetchTestItems() {
+function* fetchParentItems() {
   const itemIds = yield select(testItemIdsArraySelector);
+  const project = yield select(activeProjectSelector);
+  const urls = itemIds.map(
+    (id, i) => (i === 0 ? URLS.launch(project, id) : URLS.testItem(project, id)),
+  );
+  yield put(bulkFetchDataAction(PARENT_ITEMS_NAMESPACE)(urls));
+}
+
+function* fetchTestItems() {
+  yield call(fetchParentItems);
+  const itemIds = yield select(testItemIdsArraySelector);
+  const launchId = yield select(launchIdSelector);
   let parentId;
   if (itemIds.length > 1) {
     parentId = itemIds[itemIds.length - 1];
   }
-  const launchId = itemIds[0];
   const project = yield select(activeProjectSelector);
-
   const namespace = yield select(namespaceSelector);
   const query = yield select(queryParametersSelector, namespace);
 
   yield put(
-    fetchDataAction(NAMESPACE)(URLS.testItem(project, launchId, parentId), {
+    fetchDataAction(NAMESPACE)(URLS.testItems(project, launchId, parentId), {
       params: { ...query },
     }),
   );

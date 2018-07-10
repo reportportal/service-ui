@@ -9,3 +9,8 @@ export const namespaceSelector = (state) => `item${testItemIdsArraySelector(stat
 export const queryParametersSelector = createQueryParametersSelector({
   defaultSorting: DEFAULT_SORTING,
 });
+export const parentItemsSelector = (state) => domainSelector(state).parentItems || [];
+export const parentItemSelector = (state) => {
+  const parentItems = parentItemsSelector(state);
+  return parentItems[parentItems.length - 1];
+};

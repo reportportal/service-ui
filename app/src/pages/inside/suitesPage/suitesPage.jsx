@@ -16,18 +16,16 @@ import {
   unselectAllSuitesAction,
   selectSuitesAction,
 } from 'controllers/suite';
-import { currentLaunchSelector, fetchLaunchAction } from 'controllers/launch';
+import { fetchLaunchAction } from 'controllers/launch';
 import { SuiteTestToolbar } from 'pages/inside/common/suiteTestToolbar';
-import { launchIdSelector } from 'controllers/pages';
-import { namespaceSelector, fetchTestItemsAction } from 'controllers/testItem';
+import { namespaceSelector, fetchTestItemsAction, parentItemSelector } from 'controllers/testItem';
 
 @connect(
   (state) => ({
     userId: userIdSelector(state),
     suites: suitesSelector(state),
     selectedSuites: selectedSuitesSelector(state),
-    currentLaunch: currentLaunchSelector(state),
-    launchId: launchIdSelector(state),
+    parentItem: parentItemSelector(state),
   }),
   {
     toggleSuiteSelectionAction,
@@ -65,8 +63,7 @@ export class SuitesPage extends Component {
     toggleSuiteSelectionAction: PropTypes.func,
     unselectAllSuitesAction: PropTypes.func,
     selectSuitesAction: PropTypes.func,
-    currentLaunch: PropTypes.object,
-    launchId: PropTypes.string,
+    parentItem: PropTypes.object,
     fetchLaunchAction: PropTypes.func,
   };
 
@@ -86,8 +83,7 @@ export class SuitesPage extends Component {
     toggleSuiteSelectionAction: () => {},
     unselectAllSuitesAction: () => {},
     selectSuitesAction: () => {},
-    currentLaunch: null,
-    launchId: null,
+    parentItem: null,
     fetchLaunchAction: () => {},
   };
 
@@ -98,13 +94,6 @@ export class SuitesPage extends Component {
       return;
     }
     this.props.selectSuitesAction(suites);
-  };
-
-  handleRefresh = () => {
-    if (this.props.launchId) {
-      this.props.fetchLaunchAction(this.props.launchId);
-    }
-    this.props.fetchTestItemsAction();
   };
 
   render() {
@@ -120,7 +109,7 @@ export class SuitesPage extends Component {
       sortingDirection,
       onChangeSorting,
       selectedSuites,
-      currentLaunch,
+      parentItem,
     } = this.props;
     return (
       <PageLayout>
@@ -128,8 +117,8 @@ export class SuitesPage extends Component {
           selectedItems={selectedSuites}
           onUnselect={this.props.toggleSuiteSelectionAction}
           onUnselectAll={this.props.unselectAllSuitesAction}
-          parentItem={currentLaunch}
-          onRefresh={this.handleRefresh}
+          parentItem={parentItem}
+          onRefresh={this.props.fetchTestItemsAction}
         />
         <LaunchSuiteGrid
           data={suites}

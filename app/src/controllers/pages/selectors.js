@@ -1,3 +1,4 @@
+import { createSelector } from 'reselect';
 import { extractNamespacedQuery } from 'common/utils/breadcrumbsUtils';
 import { DEFAULT_PAGINATION } from 'controllers/pagination';
 import { SORTING_KEY } from 'controllers/sorting';
@@ -7,12 +8,15 @@ export const payloadSelector = (state) => state.location.payload;
 
 export const activeDashboardIdSelector = (state) => payloadSelector(state).dashboardId;
 export const projectIdSelector = (state) => payloadSelector(state).projectId;
-export const launchIdSelector = (state) => payloadSelector(state).launchId;
 export const suiteIdSelector = (state) => payloadSelector(state).suiteId;
 export const testItemIdsSelector = (state) =>
-  state.location.payload.testItemIds && String(payloadSelector(state).testItemIds);
-export const testItemIdsArraySelector = (state) =>
-  state.location.payload.testItemIds && String(payloadSelector(state).testItemIds).split('/');
+  payloadSelector(state).testItemIds && String(payloadSelector(state).testItemIds);
+// export const testItemIdsArraySelector = (state) =>
+//   state.location.payload.testItemIds && String(payloadSelector(state).testItemIds).split('/');
+export const testItemIdsArraySelector = createSelector(
+  testItemIdsSelector,
+  (itemIdsString) => itemIdsString && itemIdsString.split('/'),
+);
 
 export const pageSelector = (state) => pageNames[state.location.type] || NO_PAGE;
 
@@ -49,3 +53,5 @@ export const createQueryParametersSelector = ({
     ...query,
   };
 };
+
+export const launchIdSelector = (state) => testItemIdsArraySelector(state)[0];

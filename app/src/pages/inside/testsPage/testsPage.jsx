@@ -17,17 +17,15 @@ import {
 import { currentSuiteSelector, fetchSuiteAction } from 'controllers/suite';
 import { withPagination } from 'controllers/pagination';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
-import { launchIdSelector, suiteIdSelector } from 'controllers/pages';
 import { fetchLaunchAction } from 'controllers/launch';
-import { namespaceSelector, fetchTestItemsAction } from 'controllers/testItem';
+import { namespaceSelector, fetchTestItemsAction, parentItemSelector } from 'controllers/testItem';
 
 @connect(
   (state) => ({
     tests: testsSelector(state),
     selectedTests: selectedTestsSelector(state),
     currentSuite: currentSuiteSelector(state),
-    launchId: launchIdSelector(state),
-    suiteId: suiteIdSelector(state),
+    parentItem: parentItemSelector(state),
   }),
   {
     toggleTestSelectionAction,
@@ -66,9 +64,7 @@ export class TestsPage extends Component {
     toggleTestSelectionAction: PropTypes.func,
     unselectAllTestsAction: PropTypes.func,
     selectTestsAction: PropTypes.func,
-    currentSuite: PropTypes.object,
-    launchId: PropTypes.string,
-    suiteId: PropTypes.string,
+    parentItem: PropTypes.object,
     fetchSuiteAction: PropTypes.func,
     fetchLaunchAction: PropTypes.func,
   };
@@ -89,9 +85,7 @@ export class TestsPage extends Component {
     toggleTestSelectionAction: () => {},
     unselectAllTestsAction: () => {},
     selectTestsAction: () => {},
-    currentSuite: null,
-    launchId: null,
-    suiteId: null,
+    parentItem: null,
     fetchSuiteAction: () => {},
     fetchLaunchAction: () => {},
   };
@@ -103,14 +97,6 @@ export class TestsPage extends Component {
       return;
     }
     this.props.selectTestsAction(tests);
-  };
-
-  handleRefresh = () => {
-    if (this.props.suiteId && this.props.launchId) {
-      this.props.fetchSuiteAction(this.props.suiteId);
-      this.props.fetchLaunchAction(this.props.launchId);
-    }
-    this.props.fetchTestItemsAction();
   };
 
   render() {
@@ -126,16 +112,16 @@ export class TestsPage extends Component {
       pageSize,
       onChangePage,
       onChangePageSize,
-      currentSuite,
+      parentItem,
     } = this.props;
     return (
       <PageLayout>
         <SuiteTestToolbar
           selectedItems={selectedTests}
-          parentItem={currentSuite}
+          parentItem={parentItem}
           onUnselect={this.props.toggleTestSelectionAction}
           onUnselectAll={this.props.unselectAllTestsAction}
-          onRefresh={this.handleRefresh}
+          onRefresh={this.props.fetchTestItemsAction}
         />
         <LaunchSuiteGrid
           data={tests}

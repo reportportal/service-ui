@@ -1,4 +1,4 @@
-import { FETCH_DATA, FETCH_START, FETCH_ERROR, FETCH_SUCCESS } from './constants';
+import { FETCH_DATA, FETCH_START, FETCH_ERROR, FETCH_SUCCESS, BULK_FETCH_DATA } from './constants';
 
 export const fetchSuccessAction = (namespace, payload) => ({
   type: FETCH_SUCCESS,
@@ -26,6 +26,16 @@ export const fetchDataAction = (namespace) => (url, options) => ({
   type: FETCH_DATA,
   payload: {
     url,
+    options,
+  },
+  meta: {
+    namespace,
+  },
+});
+export const bulkFetchDataAction = (namespace) => (urls, options) => ({
+  type: BULK_FETCH_DATA,
+  payload: {
+    urls,
     options,
   },
   meta: {

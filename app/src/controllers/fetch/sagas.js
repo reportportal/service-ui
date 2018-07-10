@@ -1,8 +1,20 @@
 import { takeEvery, call, all, put } from 'redux-saga/effects';
 import { fetch } from 'common/utils';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
-import { FETCH_DATA, FETCH_ERROR } from './constants';
+import { FETCH_DATA, FETCH_ERROR, BULK_FETCH_DATA } from './constants';
 import { fetchSuccessAction, fetchStartAction, fetchErrorAction } from './actionCreators';
+
+function* bulkFetchData({ payload, meta }) {
+  const namespace = meta.namespace;
+  const urls = payload.urls;
+  try {
+    yield put(fetchStartAction(namespace, payload));
+    const responses = yield all(urls.map((url) => call(fetch, url, payload.options)));
+    yield put(fetchSuccessAction(namespace, responses));
+  } catch (err) {
+    yield put(fetchErrorAction(namespace, err));
+  }
+}
 
 function* fetchData({ payload, meta }) {
   const namespace = meta.namespace;
@@ -13,6 +25,10 @@ function* fetchData({ payload, meta }) {
   } catch (err) {
     yield put(fetchErrorAction(namespace, err));
   }
+}
+
+function* watchBulkFetchData() {
+  yield takeEvery(BULK_FETCH_DATA, bulkFetchData);
 }
 
 function* watchFetchData() {
@@ -28,5 +44,5 @@ function* watchFetchError() {
 }
 
 export function* fetchSagas() {
-  yield all([watchFetchData(), watchFetchError()]);
+  yield all([watchFetchData(), watchFetchError(), watchBulkFetchData()]);
 }
