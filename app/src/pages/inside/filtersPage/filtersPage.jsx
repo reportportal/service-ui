@@ -59,7 +59,6 @@ const messages = defineMessages({
 @withFilter
 @withPagination({
   paginationSelector: filtersPaginationSelector,
-  fetchAction: fetchFiltersAction,
 })
 @injectIntl
 export class FiltersPage extends Component {

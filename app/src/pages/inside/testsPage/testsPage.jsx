@@ -41,7 +41,6 @@ import { namespaceSelector, fetchTestItemsAction, parentItemSelector } from 'con
   defaultSortingDirection: SORTING_ASC,
 })
 @withPagination({
-  fetchAction: fetchTestItemsAction,
   paginationSelector: testPaginationSelector,
   namespaceSelector,
 })
