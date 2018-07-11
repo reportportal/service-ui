@@ -1,12 +1,15 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import { defineMessages, FormattedMessage, injectIntl, intlShape } from 'react-intl';
 import classNames from 'classnames/bind';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { GhostMenuButton } from 'components/buttons/ghostMenuButton';
+import { Breadcrumbs, breadcrumbDescriptorShape } from 'components/main/breadcrumbs';
 import ImportIcon from './img/import-inline.svg';
 import RefreshIcon from './img/refresh-inline.svg';
 import styles from './actionPanel.scss';
+import { breadcrumbsSelector } from '../../../../../controllers/testItem';
 
 const cx = classNames.bind(styles);
 const messages = defineMessages({
@@ -40,6 +43,9 @@ const messages = defineMessages({
   },
 });
 
+@connect((state) => ({
+  breadcrumbs: breadcrumbsSelector(state),
+}))
 @injectIntl
 export class ActionPanel extends Component {
   static propTypes = {
@@ -55,6 +61,7 @@ export class ActionPanel extends Component {
     onMoveToDebug: PropTypes.func,
     onForceFinish: PropTypes.func,
     onDelete: PropTypes.func,
+    breadcrumbs: PropTypes.arrayOf(breadcrumbDescriptorShape),
   };
 
   static defaultProps = {
@@ -69,6 +76,7 @@ export class ActionPanel extends Component {
     onMoveToDebug: () => {},
     onForceFinish: () => {},
     onDelete: () => {},
+    breadcrumbs: [],
   };
 
   constructor(props) {
@@ -113,10 +121,11 @@ export class ActionPanel extends Component {
       hasValidItems,
       onProceedValidItems,
       onImportLaunch,
+      breadcrumbs,
     } = this.props;
     return (
       <div className={cx('action-panel', { 'right-buttons-only': !showBreadcrumb && !hasErrors })}>
-        {showBreadcrumb && <div className={cx('breadcrumb')} />}
+        {showBreadcrumb && <Breadcrumbs descriptors={breadcrumbs} />}
         {hasErrors && (
           <GhostButton disabled={!hasValidItems} onClick={onProceedValidItems}>
             {intl.formatMessage(messages.proceedButton)}
