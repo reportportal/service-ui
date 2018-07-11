@@ -1,5 +1,4 @@
 import { parse, stringify } from 'qs';
-// import { matchPath } from 'react-router';
 import { pathToAction, NOT_FOUND } from 'redux-first-router';
 
 const LEVEL_PARAMS_SUFFIX = 'Params';
@@ -14,19 +13,16 @@ export const extractNamespacedQuery = (query, namespace) =>
 export const createNamespacedQuery = (query, namespace) =>
   namespace ? { [calculateNamespaceKey(namespace)]: stringify(query) } : query;
 
-// TODO remove after redux-first-router merge and use routesMap instead
-// const PATHS = ['/:projectId/launch/:launchId', '/:projectId/launch/:launchId/suite/:suiteId'];
-//
-// const BREADCRUMBS_MAP = [
-//   {
-//     path: '/:projectId/launch/:launchId',
-//     level: 'launch',
-//   },
-//   {
-//     path: '/:projectId/launch/:launchId/suite/:suiteId',
-//     level: 'suite',
-//   },
-// ];
+export const copyQuery = (query, namespacesToCopy) =>
+  Object.keys(query).reduce((acc, key) => {
+    if (namespacesToCopy.indexOf(getNamespaceFromKey(key)) !== -1) {
+      return {
+        ...acc,
+        [key]: query[key],
+      };
+    }
+    return acc;
+  }, {});
 
 export const createExtractQueryForCurrentLevel = (breadcrumbsDescriptors, namespace) => (
   query,
@@ -46,31 +42,6 @@ export const createExtractQueryForCurrentLevel = (breadcrumbsDescriptors, namesp
     return acc;
   }, {});
 };
-
-// TODO delete?
-// const addQueryParametersToPath = (path, query) => {
-//   if (!query) {
-//     return path;
-//   }
-//   const crumbDescription = BREADCRUMBS_MAP.find((crumb) =>
-//     matchPath(path, { path: crumb.path, exact: true, strict: false }),
-//   );
-//   const extractedQuery = extractQueryForCurrentLevel(query, crumbDescription.level);
-//   return `${path}${stringify(extractedQuery, { addQueryPrefix: true })}`;
-// };
-
-// TODO delete?
-// export const splitURLToCrumbs = (pathname, query) => {
-//   const chunks = [];
-//   pathname.split('/').reduce((prev, curr, index) => {
-//     chunks[index] = `${prev}/${curr}`;
-//     return chunks[index];
-//   });
-//   // TODO reduce?
-//   return chunks
-//     .filter((chunk) => PATHS.find((path) => matchPath(chunk, { path, exact: true, strict: false })))
-//     .map((chunk) => addQueryParametersToPath(chunk, query));
-// };
 
 export const createSplitURLToCrumbs = (routesMap, breadcrumbsDescriptors, namespace) => {
   const extractQueryForCurrentLevel = createExtractQueryForCurrentLevel(

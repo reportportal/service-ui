@@ -9,6 +9,7 @@ export {
   testItemIdsSelector,
   testItemIdsArraySelector,
   createQueryParametersSelector,
+  filterIdSelector,
 } from './selectors';
 export { updatePagePropertiesAction } from './actionCreators';
 
