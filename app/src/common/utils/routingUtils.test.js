@@ -1,10 +1,9 @@
 import {
   createNamespacedQuery,
   extractNamespacedQuery,
-  // splitURLToCrumbs,
   createExtractQueryForCurrentLevel,
   createSplitURLToCrumbs,
-} from './breadcrumbsUtils';
+} from './routingUtils';
 
 const QUERY = {
   launchParams: 'page=1&size=2',
@@ -75,41 +74,6 @@ describe('createNamespacedQuery', () => {
     });
   });
 });
-
-// TODO delete?
-// xdescribe('splitURLToCrumbs', () => {
-//   test('should return an array of urls split by levels', () => {
-//     const url = '/project/launch/1/suite/2';
-//     expect(splitURLToCrumbs(url)).toHaveLength(2);
-//     expect(splitURLToCrumbs(url)).toEqual(['/project/launch/1', '/project/launch/1/suite/2']);
-//   });
-//
-//   test('should preserve query parameters', () => {
-//     const query = {
-//       launchParams: 'page=1&size=2',
-//     };
-//     const url = `/project/launch/1/suite/2`;
-//     expect(splitURLToCrumbs(url, query)).toEqual([
-//       '/project/launch/1?launchParams=page%3D1%26size%3D2',
-//       '/project/launch/1/suite/2?launchParams=page%3D1%26size%3D2',
-//     ]);
-//   });
-//
-//   test('should preserve query parameters only for current and parent levels', () => {
-//     const launchParams = 'launchParams=page%3D1%26size%3D2';
-//     const suiteParams = 'suiteParams=page%3D2%26size%3D3';
-//     const url = `/project/launch/1/suite/2`;
-//     const query = {
-//       launchParams: 'page=1&size=2',
-//       suiteParams: 'page=2&size=3',
-//     };
-//     const crumbs = splitURLToCrumbs(url, query);
-//     expect(crumbs[0]).not.toEqual(expect.stringContaining(`${suiteParams}`));
-//     expect(crumbs[0]).toEqual(expect.stringContaining(`${launchParams}`));
-//     expect(crumbs[1]).toEqual(expect.stringContaining(`${launchParams}`));
-//     expect(crumbs[1]).toEqual(expect.stringContaining(`${suiteParams}`));
-//   });
-// });
 
 describe('splitURLToCrumbsRedux', () => {
   test('should return an array of actions split by levels', () => {

@@ -7,4 +7,5 @@ export {
   namespaceSelector,
   parentItemSelector,
   parentItemsSelector,
+  breadcrumbsSelector,
 } from './selectors';

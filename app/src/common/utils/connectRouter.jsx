@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import { pagePropertiesSelector, updatePagePropertiesAction } from 'controllers/pages';
-import { createNamespacedQuery, extractNamespacedQuery } from 'common/utils/breadcrumbsUtils';
+import { createNamespacedQuery, extractNamespacedQuery } from 'common/utils/routingUtils';
 
 const takeAll = (x) => ({ ...x });
 

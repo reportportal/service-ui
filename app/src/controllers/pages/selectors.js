@@ -1,5 +1,5 @@
 import { createSelector } from 'reselect';
-import { extractNamespacedQuery } from 'common/utils/breadcrumbsUtils';
+import { extractNamespacedQuery } from 'common/utils/routingUtils';
 import { DEFAULT_PAGINATION } from 'controllers/pagination';
 import { SORTING_KEY } from 'controllers/sorting';
 import { pageNames, NO_PAGE } from './constants';
@@ -9,10 +9,9 @@ export const payloadSelector = (state) => state.location.payload;
 export const activeDashboardIdSelector = (state) => payloadSelector(state).dashboardId;
 export const projectIdSelector = (state) => payloadSelector(state).projectId;
 export const suiteIdSelector = (state) => payloadSelector(state).suiteId;
+export const filterIdSelector = (state) => payloadSelector(state).filterId;
 export const testItemIdsSelector = (state) =>
   payloadSelector(state).testItemIds && String(payloadSelector(state).testItemIds);
-// export const testItemIdsArraySelector = (state) =>
-//   state.location.payload.testItemIds && String(payloadSelector(state).testItemIds).split('/');
 export const testItemIdsArraySelector = createSelector(
   testItemIdsSelector,
   (itemIdsString) => itemIdsString && itemIdsString.split('/'),
