@@ -53,7 +53,6 @@ const messages = defineMessages({
 @withFilter
 @withPagination({
   paginationSelector: membersPaginationSelector,
-  fetchAction: fetchMembersAction,
 })
 @injectIntl
 export class MembersPage extends Component {

@@ -68,7 +68,6 @@ const messages = defineMessages({
 })
 @withPagination({
   paginationSelector: launchPaginationSelector,
-  fetchAction: fetchLaunchesAction,
   namespace: NAMESPACE,
 })
 @injectIntl
