@@ -8,7 +8,7 @@ import {
   PROJECT_LAUNCHES_PAGE,
 } from 'controllers/pages';
 import { activeProjectSelector } from 'controllers/user';
-import { copyQuery } from 'common/utils/routingUtils';
+import { copyQuery, extractNamespacedQuery } from 'common/utils/routingUtils';
 import { NAMESPACE as LAUNCH_NAMESPACE } from 'controllers/launch';
 import { DEFAULT_SORTING } from './constants';
 
@@ -29,6 +29,11 @@ export const parentItemSelector = (state) => {
   return parentItems[parentItems.length - 1];
 };
 
+const isListView = (query, namespace) => {
+  const namespacedQuery = extractNamespacedQuery(query, namespace);
+  return namespacedQuery && 'filter.eq.has_childs' in namespacedQuery;
+};
+
 export const breadcrumbsSelector = createSelector(
   activeProjectSelector,
   filterIdSelector,
@@ -37,8 +42,9 @@ export const breadcrumbsSelector = createSelector(
   pagePropertiesSelector,
   (projectId, filterId, parentItems, testItemIds, query) => {
     const queryNamespacesToCopy = [LAUNCH_NAMESPACE];
-    return [
+    const descriptors = [
       {
+        id: filterId,
         title: 'All',
         link: {
           type: PROJECT_LAUNCHES_PAGE,
@@ -50,10 +56,18 @@ export const breadcrumbsSelector = createSelector(
             query: copyQuery(query, queryNamespacesToCopy),
           },
         },
+        active: !testItemIds || testItemIds.length === 0,
       },
+    ];
+    if (!testItemIds || testItemIds.length === 0) {
+      return descriptors;
+    }
+    return [
+      ...descriptors,
       ...parentItems.map((item, i) => {
         queryNamespacesToCopy.push(getQueryNamespace(i));
         return {
+          id: item.id,
           title: item.name,
           link: {
             type: TEST_ITEM_PAGE,
@@ -68,6 +82,8 @@ export const breadcrumbsSelector = createSelector(
               },
             },
           },
+          active: i === parentItems.length - 1,
+          listView: isListView(query, getQueryNamespace(i)),
         };
       }),
     ];
