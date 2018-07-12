@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { PRODUCT_BUG, AUTOMATION_BUG, SYSTEM_ISSUE } from 'common/constants/defectTypes';
+import { FAILED, INTERRUPTED, PASSED, SKIPPED } from 'common/constants/launchStatuses';
 import { Grid } from 'components/main/grid';
 import { AbsRelTime } from 'components/main/absRelTime';
 import { ItemInfo } from './itemInfo';
@@ -10,7 +11,6 @@ import { ExecutionStatistics } from './executionStatistics';
 import { DefectStatistics } from './defectStatistics';
 import { ToInvestigateStatistics } from './toInvestigateStatistics';
 import styles from './launchSuiteGrid.scss';
-import { FAILED, INTERRUPTED, PASSED, SKIPPED } from '../../../../common/constants/launchStatuses';
 
 const cx = classNames.bind(styles);
 

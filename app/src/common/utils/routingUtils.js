@@ -1,5 +1,4 @@
 import { parse, stringify } from 'qs';
-import { pathToAction, NOT_FOUND } from 'redux-first-router';
 
 const LEVEL_PARAMS_SUFFIX = 'Params';
 
@@ -23,47 +22,3 @@ export const copyQuery = (query, namespacesToCopy) =>
     }
     return acc;
   }, {});
-
-export const createExtractQueryForCurrentLevel = (breadcrumbsDescriptors, namespace) => (
-  query,
-  pageName,
-) => {
-  if (!query || !breadcrumbsDescriptors[namespace]) {
-    return null;
-  }
-  const levels = breadcrumbsDescriptors[namespace];
-  const pageLevelIndex = levels.findIndex((v) => v.page === pageName);
-  return Object.keys(query).reduce((acc, key) => {
-    const levelKey = getNamespaceFromKey(key);
-    const levelIndex = levelKey ? levels.findIndex((v) => v.level === levelKey) : -1;
-    if (levelIndex === -1 || levelIndex <= pageLevelIndex) {
-      acc[key] = query[key];
-    }
-    return acc;
-  }, {});
-};
-
-export const createSplitURLToCrumbs = (routesMap, breadcrumbsDescriptors, namespace) => {
-  const extractQueryForCurrentLevel = createExtractQueryForCurrentLevel(
-    breadcrumbsDescriptors,
-    namespace,
-  );
-  return (pathname, query) => {
-    const chunks = [];
-    pathname.split('/').reduce((prev, curr, index) => {
-      chunks[index] = `${prev}/${curr}`;
-      return chunks[index];
-    });
-    return chunks.reduce((crumbs, chunk) => {
-      const routeAction = pathToAction(chunk, routesMap, { parse, stringify });
-      if (routeAction.type === NOT_FOUND) {
-        return crumbs;
-      }
-      const newQuery = extractQueryForCurrentLevel(query, routeAction.type);
-      if (newQuery) {
-        routeAction.meta.query = newQuery;
-      }
-      return [...crumbs, routeAction];
-    }, []);
-  };
-};
