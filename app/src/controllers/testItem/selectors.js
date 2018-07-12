@@ -15,9 +15,9 @@ import {
   extractNamespacedQuery,
   createNamespacedQuery,
 } from 'common/utils/routingUtils';
+import { LEVEL_STEP } from 'common/constants/launchLevels';
 import { NAMESPACE as LAUNCH_NAMESPACE } from 'controllers/launch';
 import { DEFAULT_SORTING } from './constants';
-import { LEVEL_STEP } from '../../common/constants/launchLevels';
 
 const getQueryNamespace = (levelIndex) => `item${levelIndex}`;
 
