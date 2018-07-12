@@ -8,4 +8,6 @@ export {
   parentItemSelector,
   parentItemsSelector,
   breadcrumbsSelector,
+  nameLinkSelector,
+  statisticsLinkSelector,
 } from './selectors';

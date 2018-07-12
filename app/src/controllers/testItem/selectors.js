@@ -6,11 +6,18 @@ import {
   filterIdSelector,
   TEST_ITEM_PAGE,
   PROJECT_LAUNCHES_PAGE,
+  payloadSelector,
+  testItemIdsSelector,
 } from 'controllers/pages';
 import { activeProjectSelector } from 'controllers/user';
-import { copyQuery, extractNamespacedQuery } from 'common/utils/routingUtils';
+import {
+  copyQuery,
+  extractNamespacedQuery,
+  createNamespacedQuery,
+} from 'common/utils/routingUtils';
 import { NAMESPACE as LAUNCH_NAMESPACE } from 'controllers/launch';
 import { DEFAULT_SORTING } from './constants';
+import { LEVEL_STEP } from '../../common/constants/launchLevels';
 
 const getQueryNamespace = (levelIndex) => `item${levelIndex}`;
 
@@ -89,3 +96,49 @@ export const breadcrumbsSelector = createSelector(
     ];
   },
 );
+
+export const nameLinkSelector = (state, ownProps) => {
+  const query = pagePropertiesSelector(state);
+  const payload = payloadSelector(state);
+  const testItemIds = testItemIdsSelector(state);
+  const newTestItemsParam = testItemIds ? `${testItemIds}/${ownProps.itemId}` : ownProps.itemId;
+  return {
+    type: TEST_ITEM_PAGE,
+    payload: {
+      ...payload,
+      testItemIds: newTestItemsParam,
+    },
+    meta: {
+      query: { ...query },
+    },
+  };
+};
+
+export const statisticsLinkSelector = (state, ownProps) => {
+  const query = pagePropertiesSelector(state);
+  const payload = payloadSelector(state);
+  const testItemIds = testItemIdsSelector(state);
+  const newTestItemsParam = testItemIds ? `${testItemIds}/${ownProps.itemId}` : ownProps.itemId;
+  return {
+    type: TEST_ITEM_PAGE,
+    payload: {
+      ...payload,
+      testItemIds: newTestItemsParam,
+    },
+    meta: {
+      query: {
+        ...query,
+        ...createNamespacedQuery(
+          {
+            'filter.eq.has_childs': false,
+            'filter.in.type': LEVEL_STEP,
+            'filter.in.status': ownProps.statuses && ownProps.statuses.join(','),
+          },
+          getQueryNamespace(
+            testItemIdsArraySelector(state) ? testItemIdsArraySelector(state).length : 0,
+          ),
+        ),
+      },
+    },
+  };
+};
