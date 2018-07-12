@@ -8,6 +8,7 @@ import { put, select, all, takeEvery, take, call } from 'redux-saga/effects';
 import { testItemIdsArraySelector, launchIdSelector } from 'controllers/pages';
 import { URLS } from 'common/urls';
 import { activeProjectSelector } from 'controllers/user';
+import { LEVEL_STEP } from 'common/constants/launchLevels';
 import { setLevelAction } from './actionCreators';
 import { FETCH_TEST_ITEMS, NAMESPACE, PARENT_ITEMS_NAMESPACE } from './constants';
 import { LEVELS } from './levels';
@@ -46,8 +47,10 @@ function* fetchTestItems() {
   const namespace = yield select(namespaceSelector);
   const query = yield select(queryParametersSelector, namespace);
 
+  const sizePathQueryParam = !parentId && query['filter.in.type'] !== LEVEL_STEP ? 0 : undefined;
+
   yield put(
-    fetchDataAction(NAMESPACE)(URLS.testItems(project, launchId, parentId), {
+    fetchDataAction(NAMESPACE)(URLS.testItems(project, launchId, parentId, sizePathQueryParam), {
       params: { ...query },
     }),
   );

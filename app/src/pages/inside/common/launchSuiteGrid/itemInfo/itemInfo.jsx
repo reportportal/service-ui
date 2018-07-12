@@ -11,7 +11,7 @@ import {
   userAccountRoleSelector,
   userIdSelector,
 } from 'controllers/user';
-import { NameLink } from './NameLink';
+import { NameLink } from './nameLink';
 import { TagsBlock } from './tagsBlock';
 import { OwnerBlock } from './ownerBlock';
 import { DurationBlock } from './durationBlock';

@@ -10,6 +10,7 @@ import { ExecutionStatistics } from './executionStatistics';
 import { DefectStatistics } from './defectStatistics';
 import { ToInvestigateStatistics } from './toInvestigateStatistics';
 import styles from './launchSuiteGrid.scss';
+import { FAILED, INTERRUPTED, PASSED, SKIPPED } from '../../../../common/constants/launchStatuses';
 
 const cx = classNames.bind(styles);
 
@@ -42,7 +43,18 @@ StartTimeColumn.propTypes = {
 
 const TotalColumn = ({ className, ...rest }) => (
   <div className={cx('total-col', className)}>
-    <ExecutionStatistics title={rest.title} value={rest.value.statistics.executions.total} bold />
+    <ExecutionStatistics
+      itemId={rest.value.id}
+      title={rest.title}
+      value={rest.value.statistics.executions.total}
+      bold
+      statuses={[
+        PASSED.toUpperCase(),
+        FAILED.toUpperCase(),
+        SKIPPED.toUpperCase(),
+        INTERRUPTED.toUpperCase(),
+      ]}
+    />
   </div>
 );
 TotalColumn.propTypes = {
@@ -51,7 +63,12 @@ TotalColumn.propTypes = {
 
 const PassedColumn = ({ className, ...rest }) => (
   <div className={cx('passed-col', className)}>
-    <ExecutionStatistics title={rest.title} value={rest.value.statistics.executions.passed} />
+    <ExecutionStatistics
+      itemId={rest.value.id}
+      title={rest.title}
+      value={rest.value.statistics.executions.passed}
+      statuses={[PASSED.toUpperCase()]}
+    />
   </div>
 );
 PassedColumn.propTypes = {
@@ -60,7 +77,12 @@ PassedColumn.propTypes = {
 
 const FailedColumn = ({ className, ...rest }) => (
   <div className={cx('failed-col', className)}>
-    <ExecutionStatistics title={rest.title} value={rest.value.statistics.executions.failed} />
+    <ExecutionStatistics
+      itemId={rest.value.id}
+      title={rest.title}
+      value={rest.value.statistics.executions.failed}
+      statuses={[FAILED.toUpperCase(), INTERRUPTED.toUpperCase()]}
+    />
   </div>
 );
 FailedColumn.propTypes = {
@@ -69,7 +91,12 @@ FailedColumn.propTypes = {
 
 const SkippedColumn = ({ className, ...rest }) => (
   <div className={cx('skipped-col', className)}>
-    <ExecutionStatistics title={rest.title} value={rest.value.statistics.executions.skipped} />
+    <ExecutionStatistics
+      itemId={rest.value.id}
+      title={rest.title}
+      value={rest.value.statistics.executions.skipped}
+      statuses={[SKIPPED.toUpperCase()]}
+    />
   </div>
 );
 SkippedColumn.propTypes = {
