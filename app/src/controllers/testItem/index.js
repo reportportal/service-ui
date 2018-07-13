@@ -10,4 +10,5 @@ export {
   breadcrumbsSelector,
   nameLinkSelector,
   statisticsLinkSelector,
+  defectLinkSelector,
 } from './selectors';

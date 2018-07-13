@@ -109,6 +109,7 @@ const PbColumn = ({ className, ...rest }) => (
       type={PRODUCT_BUG}
       customProps={rest.customProps}
       data={rest.value.statistics.defects.product_bug}
+      itemId={rest.value.id}
     />
   </div>
 );
@@ -122,6 +123,7 @@ const AbColumn = ({ className, ...rest }) => (
       type={AUTOMATION_BUG}
       customProps={rest.customProps}
       data={rest.value.statistics.defects.automation_bug}
+      itemId={rest.value.id}
     />
   </div>
 );
@@ -135,6 +137,7 @@ const SiColumn = ({ className, ...rest }) => (
       type={SYSTEM_ISSUE}
       customProps={rest.customProps}
       data={rest.value.statistics.defects.system_issue}
+      itemId={rest.value.id}
     />
   </div>
 );
@@ -147,6 +150,7 @@ const TiColumn = ({ className, ...rest }) => (
     <ToInvestigateStatistics
       customProps={rest.customProps}
       value={rest.value.statistics.defects.to_investigate}
+      itemId={rest.value.id}
     />
   </div>
 );

@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { TO_INVESTIGATE } from 'common/constants/defectTypes';
 import { projectConfigSelector } from 'controllers/project';
 import { injectIntl, intlShape, defineMessages } from 'react-intl';
+import { DefectLink } from 'pages/inside/common/defectLink';
 import styles from './defectTypeTooltip.scss';
 
 const cx = classNames.bind(styles);
@@ -28,6 +29,7 @@ export class DefectTypeTooltip extends Component {
     data: PropTypes.object.isRequired,
     projectConfig: PropTypes.object.isRequired,
     intl: intlShape.isRequired,
+    itemId: PropTypes.string.isRequired,
   };
   render() {
     const { formatMessage } = this.props.intl;
@@ -36,25 +38,34 @@ export class DefectTypeTooltip extends Component {
     return (
       <div className={cx('defect-type-tooltip')}>
         {this.props.type !== TO_INVESTIGATE && (
-          <a href="/" className={cx('total-item')}>
+          <DefectLink
+            itemId={this.props.itemId}
+            defects={Object.keys(this.props.data)}
+            className={cx('total-item')}
+          >
             <div className={cx('name')}>
               <div className={cx('circle')} style={{ backgroundColor: defectConfig[0].color }} />
               {formatMessage(messages[`${this.props.type}_total`])}
             </div>
             <span className={cx('value')}>{this.props.data.total}</span>
-          </a>
+          </DefectLink>
         )}
         {Object.keys(this.props.data).map((key) => {
           const defectType = defectConfig.find((item) => item.locator === key);
           return (
             defectType && (
-              <a key={key} href="/" className={cx('item')}>
+              <DefectLink
+                key={key}
+                itemId={this.props.itemId}
+                defects={[key]}
+                className={cx('item')}
+              >
                 <div className={cx('name')}>
                   <div className={cx('circle')} style={{ backgroundColor: defectType.color }} />
                   {defectType.longName}
                 </div>
                 <span className={cx('value')}>{this.props.data[defectType.locator]}</span>
-              </a>
+              </DefectLink>
             )
           );
         })}
