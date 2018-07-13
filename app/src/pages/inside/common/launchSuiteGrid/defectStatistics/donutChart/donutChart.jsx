@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import { DefectTypeTooltip } from 'pages/inside/common/defectTypeTooltip';
 import { withHoverableTooltip } from 'components/main/tooltips/hoverableTooltip';
 import { projectConfigSelector, defectColorsSelector } from 'controllers/project';
+import { DefectLink } from 'pages/inside/common/defectLink';
 import styles from './donutChart.scss';
 
 const cx = classNames.bind(styles);
@@ -30,6 +31,7 @@ export class DonutChart extends Component {
     strokeWidth: PropTypes.number.isRequired,
     projectConfig: PropTypes.object.isRequired,
     defectColors: PropTypes.object.isRequired,
+    itemId: PropTypes.string.isRequired,
   };
   static defaultProps = {
     type: '',
@@ -61,12 +63,12 @@ export class DonutChart extends Component {
   }
 
   render() {
-    const { data, type, viewBox, strokeWidth } = this.props;
+    const { data, type, viewBox, strokeWidth, itemId } = this.props;
     const diameter = viewBox / 2;
     const r = 100 / (2 * Math.PI);
 
     return (
-      <a href="/">
+      <DefectLink defects={Object.keys(data)} itemId={itemId}>
         <div className={cx('chart-container')}>
           <svg width="100%" height="100%" viewBox={`0 0 ${viewBox} ${viewBox}`} className="donut">
             <circle cx={diameter} cy={diameter} r={r} fill="transparent" />
@@ -96,7 +98,7 @@ export class DonutChart extends Component {
         <div className={cx('total')} style={{ borderColor: this.props.defectColors[type] }}>
           {data.total}
         </div>
-      </a>
+      </DefectLink>
     );
   }
 }

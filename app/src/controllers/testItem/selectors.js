@@ -18,8 +18,7 @@ import {
 import { LEVEL_STEP } from 'common/constants/launchLevels';
 import { NAMESPACE as LAUNCH_NAMESPACE } from 'controllers/launch';
 import { DEFAULT_SORTING } from './constants';
-
-const getQueryNamespace = (levelIndex) => `item${levelIndex}`;
+import { createLink, getQueryNamespace, getDefectsString } from './utils';
 
 const domainSelector = (state) => state.testItem || {};
 
@@ -101,44 +100,42 @@ export const nameLinkSelector = (state, ownProps) => {
   const query = pagePropertiesSelector(state);
   const payload = payloadSelector(state);
   const testItemIds = testItemIdsSelector(state);
-  const newTestItemsParam = testItemIds ? `${testItemIds}/${ownProps.itemId}` : ownProps.itemId;
-  return {
-    type: TEST_ITEM_PAGE,
-    payload: {
-      ...payload,
-      testItemIds: newTestItemsParam,
-    },
-    meta: {
-      query: { ...query },
-    },
-  };
+  return createLink(testItemIds, ownProps.itemId, payload, query);
 };
 
 export const statisticsLinkSelector = (state, ownProps) => {
   const query = pagePropertiesSelector(state);
   const payload = payloadSelector(state);
   const testItemIds = testItemIdsSelector(state);
-  const newTestItemsParam = testItemIds ? `${testItemIds}/${ownProps.itemId}` : ownProps.itemId;
-  return {
-    type: TEST_ITEM_PAGE,
-    payload: {
-      ...payload,
-      testItemIds: newTestItemsParam,
-    },
-    meta: {
-      query: {
-        ...query,
-        ...createNamespacedQuery(
-          {
-            'filter.eq.has_childs': false,
-            'filter.in.type': LEVEL_STEP,
-            'filter.in.status': ownProps.statuses && ownProps.statuses.join(','),
-          },
-          getQueryNamespace(
-            testItemIdsArraySelector(state) ? testItemIdsArraySelector(state).length : 0,
-          ),
-        ),
+  return createLink(testItemIds, ownProps.itemId, payload, {
+    ...query,
+    ...createNamespacedQuery(
+      {
+        'filter.eq.has_childs': false,
+        'filter.in.type': LEVEL_STEP,
+        'filter.in.status': ownProps.statuses && ownProps.statuses.join(','),
       },
-    },
-  };
+      getQueryNamespace(
+        testItemIdsArraySelector(state) ? testItemIdsArraySelector(state).length : 0,
+      ),
+    ),
+  });
+};
+
+export const defectLinkSelector = (state, ownProps) => {
+  const query = pagePropertiesSelector(state);
+  const payload = payloadSelector(state);
+  const testItemIds = testItemIdsSelector(state);
+  return createLink(testItemIds, ownProps.itemId, payload, {
+    ...query,
+    ...createNamespacedQuery(
+      {
+        'filter.eq.has_childs': false,
+        'filter.in.issue$issue_type': getDefectsString(ownProps.defects),
+      },
+      getQueryNamespace(
+        testItemIdsArraySelector(state) ? testItemIdsArraySelector(state).length : 0,
+      ),
+    ),
+  });
 };
