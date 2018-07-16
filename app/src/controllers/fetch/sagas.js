@@ -4,12 +4,15 @@ import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { FETCH_DATA, FETCH_ERROR, BULK_FETCH_DATA } from './constants';
 import { fetchSuccessAction, fetchStartAction, fetchErrorAction } from './actionCreators';
 
+const silentFetch = (...args) => fetch(...args).catch(() => null);
+
 function* bulkFetchData({ payload, meta }) {
   const namespace = meta.namespace;
   const urls = payload.urls;
+  const fetchFunc = meta.silent ? silentFetch : fetch;
   try {
     yield put(fetchStartAction(namespace, payload));
-    const responses = yield all(urls.map((url) => call(fetch, url, payload.options)));
+    const responses = yield all(urls.map((url) => call(fetchFunc, url, payload.options)));
     yield put(fetchSuccessAction(namespace, responses));
   } catch (err) {
     yield put(fetchErrorAction(namespace, err));

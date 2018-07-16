@@ -1,3 +1,4 @@
+import { redirect } from 'redux-first-router';
 import {
   FETCH_SUCCESS,
   fetchDataAction,
@@ -5,25 +6,53 @@ import {
   bulkFetchDataAction,
 } from 'controllers/fetch';
 import { put, select, all, takeEvery, take, call } from 'redux-saga/effects';
-import { testItemIdsArraySelector, launchIdSelector } from 'controllers/pages';
+import {
+  testItemIdsArraySelector,
+  launchIdSelector,
+  pagePropertiesSelector,
+  payloadSelector,
+  TEST_ITEM_PAGE,
+  pathnameChangedSelector,
+} from 'controllers/pages';
 import { URLS } from 'common/urls';
 import { activeProjectSelector } from 'controllers/user';
-import { setLevelAction } from './actionCreators';
-import { FETCH_TEST_ITEMS, NAMESPACE, PARENT_ITEMS_NAMESPACE } from './constants';
+import { setLevelAction, setPageLoadingAction } from './actionCreators';
+import { FETCH_TEST_ITEMS, NAMESPACE, PARENT_ITEMS_NAMESPACE, RESTORE_PATH } from './constants';
 import { LEVELS } from './levels';
-import { namespaceSelector, queryParametersSelector } from './selectors';
+import {
+  namespaceSelector,
+  parentItemSelector,
+  queryParametersSelector,
+  isLostLaunchSelector,
+} from './selectors';
+import { calculateLevel } from './utils';
 
-const testItemActionPredicate = (action) =>
-  action.type === FETCH_SUCCESS && action.meta && action.meta.namespace === NAMESPACE;
+const createTestItemActionPredicate = (namespace) => (action) =>
+  action.type === FETCH_SUCCESS && action.meta && action.meta.namespace === namespace;
 
-const calculateLevel = (data) =>
-  data.reduce((acc, item) => {
-    if (!acc) {
-      return item.type;
-    }
-    const type = item.type;
-    return LEVELS[acc] && LEVELS[acc].order > LEVELS[type].order ? type : acc;
-  }, '');
+function* updateLaunchId(launchId) {
+  const payload = yield select(payloadSelector);
+  const query = yield select(pagePropertiesSelector);
+  const testItemIdsArray = yield select(testItemIdsArraySelector);
+  yield put(
+    redirect({
+      type: TEST_ITEM_PAGE,
+      payload: {
+        ...payload,
+        testItemIds: [launchId, ...testItemIdsArray.slice(1)].join('/'),
+      },
+      meta: { query },
+    }),
+  );
+}
+
+function* restorePath() {
+  const parentItem = yield select(parentItemSelector);
+  if (!parentItem) {
+    return;
+  }
+  yield call(updateLaunchId, parentItem.launchId);
+}
 
 function* fetchParentItems() {
   const itemIds = yield select(testItemIdsArraySelector);
@@ -31,14 +60,24 @@ function* fetchParentItems() {
   const urls = itemIds.map(
     (id, i) => (i === 0 ? URLS.launch(project, id) : URLS.testItem(project, id)),
   );
-  yield put(bulkFetchDataAction(PARENT_ITEMS_NAMESPACE)(urls));
+  yield put(bulkFetchDataAction(PARENT_ITEMS_NAMESPACE, true)(urls));
+  yield take(createTestItemActionPredicate(PARENT_ITEMS_NAMESPACE));
 }
 
 function* fetchTestItems() {
-  yield call(fetchParentItems);
+  const isPathNameChanged = yield select(pathnameChangedSelector);
+  if (isPathNameChanged) {
+    yield put(setPageLoadingAction(true));
+    yield call(fetchParentItems);
+  }
   const itemIds = yield select(testItemIdsArraySelector);
-  const launchId = yield select(launchIdSelector);
+  let launchId = yield select(launchIdSelector);
+  const isLostLaunch = yield select(isLostLaunchSelector);
   let parentId;
+  if (!isLostLaunch) {
+    const parentItem = yield select(parentItemSelector);
+    launchId = parentItem ? parentItem.launchId : launchId;
+  }
   if (itemIds.length > 1) {
     parentId = itemIds[itemIds.length - 1];
   }
@@ -61,13 +100,18 @@ function* fetchTestItems() {
       },
     }),
   );
-  const dataPayload = yield take(testItemActionPredicate);
+  const dataPayload = yield take(createTestItemActionPredicate(NAMESPACE));
   const level = calculateLevel(dataPayload.payload.content);
 
   if (LEVELS[level]) {
     yield put(fetchSuccessAction(LEVELS[level].namespace, dataPayload.payload));
   }
   yield put(setLevelAction(level));
+  yield put(setPageLoadingAction(false));
+}
+
+function* watchRestorePath() {
+  yield takeEvery(RESTORE_PATH, restorePath);
 }
 
 function* watchFetchTestItems() {
@@ -75,5 +119,5 @@ function* watchFetchTestItems() {
 }
 
 export function* testItemsSaga() {
-  yield all([watchFetchTestItems()]);
+  yield all([watchFetchTestItems(), watchRestorePath()]);
 }

@@ -1,5 +1,5 @@
 export { testItemReducer } from './reducer';
-export { fetchTestItemsAction } from './actionCreators';
+export { fetchTestItemsAction, restorePathAction } from './actionCreators';
 export { testItemsSaga } from './sagas';
 export {
   levelSelector,
@@ -11,4 +11,5 @@ export {
   nameLinkSelector,
   statisticsLinkSelector,
   defectLinkSelector,
+  pageLoadingSelector,
 } from './selectors';

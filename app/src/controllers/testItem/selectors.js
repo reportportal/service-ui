@@ -24,6 +24,7 @@ const domainSelector = (state) => state.testItem || {};
 
 export const levelSelector = (state) => domainSelector(state).level;
 export const loadingSelector = (state) => domainSelector(state).loading;
+export const pageLoadingSelector = (state) => domainSelector(state).pageLoading;
 export const namespaceSelector = (state) =>
   getQueryNamespace(testItemIdsArraySelector(state).length - 1);
 export const queryParametersSelector = createQueryParametersSelector({
@@ -34,6 +35,8 @@ export const parentItemSelector = (state) => {
   const parentItems = parentItemsSelector(state);
   return parentItems[parentItems.length - 1];
 };
+export const launchSelector = (state) => parentItemsSelector(state)[0];
+export const isLostLaunchSelector = (state) => !!launchSelector(state);
 
 const isListView = (query, namespace) => {
   const namespacedQuery = extractNamespacedQuery(query, namespace);
@@ -71,6 +74,13 @@ export const breadcrumbsSelector = createSelector(
     return [
       ...descriptors,
       ...parentItems.map((item, i) => {
+        if (!item) {
+          return {
+            id: testItemIds[i] || i,
+            error: true,
+            lost: i === 0,
+          };
+        }
         queryNamespacesToCopy.push(getQueryNamespace(i));
         return {
           id: item.id,

@@ -12,3 +12,18 @@
   height: 14px;
   fill: $COLOR--charcoal-grey;
 }
+
+.lost-launch {
+  color: $COLOR--charcoal-grey;
+  font-size: 12px;
+}
+
+.restore-launch-container {
+  display: inline-block;
+  padding-left: 20px;
+}
+
+.restore-launch-button {
+  color: $COLOR--topaz;
+  cursor: pointer;
+}

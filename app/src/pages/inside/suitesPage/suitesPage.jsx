@@ -18,7 +18,12 @@ import {
 } from 'controllers/suite';
 import { fetchLaunchAction } from 'controllers/launch';
 import { SuiteTestToolbar } from 'pages/inside/common/suiteTestToolbar';
-import { namespaceSelector, fetchTestItemsAction, parentItemSelector } from 'controllers/testItem';
+import {
+  namespaceSelector,
+  fetchTestItemsAction,
+  parentItemSelector,
+  loadingSelector,
+} from 'controllers/testItem';
 
 @connect(
   (state) => ({
@@ -26,6 +31,7 @@ import { namespaceSelector, fetchTestItemsAction, parentItemSelector } from 'con
     suites: suitesSelector(state),
     selectedSuites: selectedSuitesSelector(state),
     parentItem: parentItemSelector(state),
+    loading: loadingSelector(state),
   }),
   {
     toggleSuiteSelectionAction,
@@ -64,6 +70,7 @@ export class SuitesPage extends Component {
     selectSuitesAction: PropTypes.func,
     parentItem: PropTypes.object,
     fetchLaunchAction: PropTypes.func,
+    loading: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -84,6 +91,7 @@ export class SuitesPage extends Component {
     selectSuitesAction: () => {},
     parentItem: null,
     fetchLaunchAction: () => {},
+    loading: false,
   };
 
   handleAllSuitesSelection = () => {
@@ -109,6 +117,7 @@ export class SuitesPage extends Component {
       onChangeSorting,
       selectedSuites,
       parentItem,
+      loading,
     } = this.props;
     return (
       <PageLayout>
@@ -127,6 +136,7 @@ export class SuitesPage extends Component {
           selectedItems={selectedSuites}
           onItemSelect={this.props.toggleSuiteSelectionAction}
           onAllItemsSelect={this.handleAllSuitesSelection}
+          loading={loading}
         />
         <PaginationToolbar
           activePage={activePage}
