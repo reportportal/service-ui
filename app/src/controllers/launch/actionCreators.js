@@ -6,17 +6,12 @@ import {
   toggleItemSelectionAction,
   createProceedWithValidItemsAction,
 } from 'controllers/groupOperations';
-import { FETCH_LAUNCHES, NAMESPACE, FETCH_LAUNCH } from './constants';
+import { FETCH_LAUNCHES, NAMESPACE } from './constants';
 import { validateMergeLaunch, validateFinishForceLaunch } from './actionValidators';
 
 export const fetchLaunchesAction = (params) => ({
   type: FETCH_LAUNCHES,
   payload: params,
-});
-
-export const fetchLaunchAction = (launchId) => ({
-  type: FETCH_LAUNCH,
-  payload: launchId,
 });
 
 export const toggleLaunchSelectionAction = toggleItemSelectionAction(NAMESPACE);

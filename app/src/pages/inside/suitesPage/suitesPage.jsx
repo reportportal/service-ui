@@ -16,7 +16,6 @@ import {
   unselectAllSuitesAction,
   selectSuitesAction,
 } from 'controllers/suite';
-import { fetchLaunchAction } from 'controllers/launch';
 import { SuiteTestToolbar } from 'pages/inside/common/suiteTestToolbar';
 import {
   namespaceSelector,
@@ -37,7 +36,6 @@ import {
     toggleSuiteSelectionAction,
     unselectAllSuitesAction,
     selectSuitesAction,
-    fetchLaunchAction,
     fetchTestItemsAction,
   },
 )
@@ -69,7 +67,6 @@ export class SuitesPage extends Component {
     unselectAllSuitesAction: PropTypes.func,
     selectSuitesAction: PropTypes.func,
     parentItem: PropTypes.object,
-    fetchLaunchAction: PropTypes.func,
     loading: PropTypes.bool,
   };
 
@@ -90,7 +87,6 @@ export class SuitesPage extends Component {
     unselectAllSuitesAction: () => {},
     selectSuitesAction: () => {},
     parentItem: null,
-    fetchLaunchAction: () => {},
     loading: false,
   };
 

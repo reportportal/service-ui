@@ -16,8 +16,6 @@ export const lastOperationSelector = createLastOperationSelector(groupOperations
 export const launchesSelector = (state) => domainSelector(state).launches;
 export const launchPaginationSelector = (state) => domainSelector(state).pagination;
 
-export const currentLaunchSelector = (state) => domainSelector(state).currentLaunch;
-
 export const loadingSelector = (state) => domainSelector(state).loading || false;
 
 export const queryParametersSelector = createQueryParametersSelector({

@@ -8,7 +8,6 @@ export {
   moveLaunchesToDebugAction,
   compareLaunchesAction,
   fetchLaunchesAction,
-  fetchLaunchAction,
 } from './actionCreators';
 export {
   selectedLaunchesSelector,
@@ -16,7 +15,6 @@ export {
   lastOperationSelector,
   launchesSelector,
   launchPaginationSelector,
-  currentLaunchSelector,
   loadingSelector,
 } from './selectors';
 export { launchReducer } from './reducer';
