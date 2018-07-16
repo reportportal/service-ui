@@ -7,20 +7,15 @@ import {
   PROJECT_DASHBOARD_PAGE,
   PROJECT_PAGE,
   PROJECT_DASHBOARD_ITEM_PAGE,
-  PROJECT_SUITES_PAGE,
-  PROJECT_TESTS_PAGE,
   projectIdSelector,
-  launchIdSelector,
-  suiteIdSelector,
 } from 'controllers/pages';
 import { isAuthorizedSelector } from 'controllers/auth';
 import { fetchDashboardAction, changeVisibilityTypeAction } from 'controllers/dashboard';
-import { fetchLaunchAction, fetchLaunchesAction } from 'controllers/launch';
-import { fetchSuiteAction } from 'controllers/suite';
+import { fetchLaunchesAction } from 'controllers/launch';
 import { TEST_ITEM_PAGE } from 'controllers/pages/constants';
 import { fetchTestItemsAction } from 'controllers/testItem';
-import { fetchFiltersAction } from '../controllers/filter';
-import { fetchMembersAction } from '../controllers/members';
+import { fetchFiltersAction } from 'controllers/filter';
+import { fetchMembersAction } from 'controllers/members';
 
 const redirectRoute = (path, createNewAction) => ({
   path,
@@ -95,22 +90,6 @@ export default {
   PROJECT_LAUNCHES_PAGE: {
     path: '/:projectId/launches/:filterId?',
     thunk: (dispatch) => dispatch(fetchLaunchesAction()),
-  },
-  [PROJECT_SUITES_PAGE]: {
-    path: '/:projectId/launches/:filterId/launch/:launchId',
-    thunk: (dispatch, getState) => {
-      const launchId = launchIdSelector(getState());
-      dispatch(fetchLaunchAction(launchId));
-    },
-  },
-  [PROJECT_TESTS_PAGE]: {
-    path: '/:projectId/launches/:filterId/launch/:launchId/suite/:suiteId',
-    thunk: (dispatch, getState) => {
-      const launchId = launchIdSelector(getState());
-      const suiteId = suiteIdSelector(getState());
-      dispatch(fetchLaunchAction(launchId));
-      dispatch(fetchSuiteAction(suiteId));
-    },
   },
   PROJECT_FILTERS_PAGE: {
     path: '/:projectId/filters',

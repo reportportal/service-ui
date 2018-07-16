@@ -54,3 +54,9 @@ export const createQueryParametersSelector = ({
 };
 
 export const launchIdSelector = (state) => testItemIdsArraySelector(state)[0];
+
+export const pathnameChangedSelector = (state) => {
+  const pathName = state.location.pathname;
+  const prevPathName = state.location.prev.pathname;
+  return pathName !== prevPathName;
+};

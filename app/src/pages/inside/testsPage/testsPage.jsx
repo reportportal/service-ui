@@ -18,7 +18,12 @@ import { currentSuiteSelector, fetchSuiteAction } from 'controllers/suite';
 import { withPagination } from 'controllers/pagination';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
 import { fetchLaunchAction } from 'controllers/launch';
-import { namespaceSelector, fetchTestItemsAction, parentItemSelector } from 'controllers/testItem';
+import {
+  namespaceSelector,
+  fetchTestItemsAction,
+  parentItemSelector,
+  loadingSelector,
+} from 'controllers/testItem';
 
 @connect(
   (state) => ({
@@ -26,6 +31,7 @@ import { namespaceSelector, fetchTestItemsAction, parentItemSelector } from 'con
     selectedTests: selectedTestsSelector(state),
     currentSuite: currentSuiteSelector(state),
     parentItem: parentItemSelector(state),
+    loading: loadingSelector(state),
   }),
   {
     toggleTestSelectionAction,
@@ -66,6 +72,7 @@ export class TestsPage extends Component {
     parentItem: PropTypes.object,
     fetchSuiteAction: PropTypes.func,
     fetchLaunchAction: PropTypes.func,
+    loading: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -87,6 +94,7 @@ export class TestsPage extends Component {
     parentItem: null,
     fetchSuiteAction: () => {},
     fetchLaunchAction: () => {},
+    loading: false,
   };
 
   handleAllTestsSelection = () => {
@@ -112,6 +120,7 @@ export class TestsPage extends Component {
       onChangePage,
       onChangePageSize,
       parentItem,
+      loading,
     } = this.props;
     return (
       <PageLayout>
@@ -130,6 +139,7 @@ export class TestsPage extends Component {
           selectedItems={selectedTests}
           onItemSelect={this.props.toggleTestSelectionAction}
           onAllItemsSelect={this.handleAllTestsSelection}
+          loading={loading}
         />
         <PaginationToolbar
           activePage={activePage}

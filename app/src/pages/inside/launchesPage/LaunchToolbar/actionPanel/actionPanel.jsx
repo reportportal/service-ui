@@ -6,10 +6,10 @@ import classNames from 'classnames/bind';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { GhostMenuButton } from 'components/buttons/ghostMenuButton';
 import { Breadcrumbs, breadcrumbDescriptorShape } from 'components/main/breadcrumbs';
+import { breadcrumbsSelector, restorePathAction } from 'controllers/testItem';
 import ImportIcon from './img/import-inline.svg';
 import RefreshIcon from './img/refresh-inline.svg';
 import styles from './actionPanel.scss';
-import { breadcrumbsSelector } from '../../../../../controllers/testItem';
 
 const cx = classNames.bind(styles);
 const messages = defineMessages({
@@ -43,9 +43,14 @@ const messages = defineMessages({
   },
 });
 
-@connect((state) => ({
-  breadcrumbs: breadcrumbsSelector(state),
-}))
+@connect(
+  (state) => ({
+    breadcrumbs: breadcrumbsSelector(state),
+  }),
+  {
+    restorePath: restorePathAction,
+  },
+)
 @injectIntl
 export class ActionPanel extends Component {
   static propTypes = {
@@ -62,6 +67,7 @@ export class ActionPanel extends Component {
     onForceFinish: PropTypes.func,
     onDelete: PropTypes.func,
     breadcrumbs: PropTypes.arrayOf(breadcrumbDescriptorShape),
+    restorePath: PropTypes.func,
   };
 
   static defaultProps = {
@@ -77,6 +83,7 @@ export class ActionPanel extends Component {
     onForceFinish: () => {},
     onDelete: () => {},
     breadcrumbs: [],
+    restorePath: () => {},
   };
 
   constructor(props) {
@@ -122,10 +129,11 @@ export class ActionPanel extends Component {
       onProceedValidItems,
       onImportLaunch,
       breadcrumbs,
+      restorePath,
     } = this.props;
     return (
       <div className={cx('action-panel', { 'right-buttons-only': !showBreadcrumb && !hasErrors })}>
-        {showBreadcrumb && <Breadcrumbs descriptors={breadcrumbs} />}
+        {showBreadcrumb && <Breadcrumbs descriptors={breadcrumbs} onRestorePath={restorePath} />}
         {hasErrors && (
           <GhostButton disabled={!hasValidItems} onClick={onProceedValidItems}>
             {intl.formatMessage(messages.proceedButton)}

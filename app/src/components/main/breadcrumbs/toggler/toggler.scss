@@ -4,4 +4,8 @@
   cursor: pointer;
   fill: $COLOR--gray-60;
   line-height: 13px;
+
+  &.disabled {
+    background-color: $COLOR--gray-91;
+  }
 }

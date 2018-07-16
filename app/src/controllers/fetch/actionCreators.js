@@ -32,7 +32,7 @@ export const fetchDataAction = (namespace) => (url, options) => ({
     namespace,
   },
 });
-export const bulkFetchDataAction = (namespace) => (urls, options) => ({
+export const bulkFetchDataAction = (namespace, silent) => (urls, options) => ({
   type: BULK_FETCH_DATA,
   payload: {
     urls,
@@ -40,5 +40,6 @@ export const bulkFetchDataAction = (namespace) => (urls, options) => ({
   },
   meta: {
     namespace,
+    silent,
   },
 });

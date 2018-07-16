@@ -1,4 +1,14 @@
 import { TEST_ITEM_PAGE } from 'controllers/pages';
+import { LEVELS } from './levels';
+
+export const calculateLevel = (data) =>
+  data.reduce((acc, item) => {
+    if (!acc) {
+      return item.type;
+    }
+    const type = item.type;
+    return LEVELS[acc] && LEVELS[acc].order > LEVELS[type].order ? type : acc;
+  }, '');
 
 export const getQueryNamespace = (levelIndex) => `item${levelIndex}`;
 

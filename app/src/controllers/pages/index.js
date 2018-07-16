@@ -10,6 +10,7 @@ export {
   testItemIdsArraySelector,
   createQueryParametersSelector,
   filterIdSelector,
+  pathnameChangedSelector,
 } from './selectors';
 export { updatePagePropertiesAction } from './actionCreators';
 
