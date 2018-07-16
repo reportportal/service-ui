@@ -14,10 +14,8 @@ import {
   selectTestsAction,
   testPaginationSelector,
 } from 'controllers/test';
-import { currentSuiteSelector, fetchSuiteAction } from 'controllers/suite';
 import { withPagination } from 'controllers/pagination';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
-import { fetchLaunchAction } from 'controllers/launch';
 import {
   namespaceSelector,
   fetchTestItemsAction,
@@ -29,7 +27,6 @@ import {
   (state) => ({
     tests: testsSelector(state),
     selectedTests: selectedTestsSelector(state),
-    currentSuite: currentSuiteSelector(state),
     parentItem: parentItemSelector(state),
     loading: loadingSelector(state),
   }),
@@ -37,8 +34,6 @@ import {
     toggleTestSelectionAction,
     unselectAllTestsAction,
     selectTestsAction,
-    fetchSuiteAction,
-    fetchLaunchAction,
     fetchTestItemsAction,
   },
 )
@@ -70,8 +65,6 @@ export class TestsPage extends Component {
     unselectAllTestsAction: PropTypes.func,
     selectTestsAction: PropTypes.func,
     parentItem: PropTypes.object,
-    fetchSuiteAction: PropTypes.func,
-    fetchLaunchAction: PropTypes.func,
     loading: PropTypes.bool,
   };
 
@@ -92,8 +85,6 @@ export class TestsPage extends Component {
     unselectAllTestsAction: () => {},
     selectTestsAction: () => {},
     parentItem: null,
-    fetchSuiteAction: () => {},
-    fetchLaunchAction: () => {},
     loading: false,
   };
 
