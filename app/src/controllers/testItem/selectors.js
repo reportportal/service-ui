@@ -36,7 +36,8 @@ export const parentItemSelector = (state) => {
   return parentItems[parentItems.length - 1];
 };
 export const launchSelector = (state) => parentItemsSelector(state)[0];
-export const isLostLaunchSelector = (state) => !!launchSelector(state);
+export const isLostLaunchSelector = (state) =>
+  parentItemsSelector(state).length > 1 && !!launchSelector(state);
 
 const isListView = (query, namespace) => {
   const namespacedQuery = extractNamespacedQuery(query, namespace);
@@ -78,7 +79,7 @@ export const breadcrumbsSelector = createSelector(
           return {
             id: testItemIds[i] || i,
             error: true,
-            lost: i === 0,
+            lost: i === 0 && parentItems.length > 1,
           };
         }
         queryNamespacesToCopy.push(getQueryNamespace(i));

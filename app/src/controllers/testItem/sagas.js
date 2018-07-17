@@ -74,7 +74,7 @@ function* fetchTestItems() {
   let launchId = yield select(launchIdSelector);
   const isLostLaunch = yield select(isLostLaunchSelector);
   let parentId;
-  if (!isLostLaunch) {
+  if (isLostLaunch) {
     const parentItem = yield select(parentItemSelector);
     launchId = parentItem ? parentItem.launchId : launchId;
   }
