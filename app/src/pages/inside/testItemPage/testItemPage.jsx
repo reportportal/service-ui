@@ -6,7 +6,12 @@ import { PageLayout } from 'layouts/pageLayout';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { Breadcrumbs } from 'components/main/breadcrumbs';
 import { LEVEL_SUITE, LEVEL_TEST } from 'common/constants/launchLevels';
-import { levelSelector, pageLoadingSelector, breadcrumbsSelector } from 'controllers/testItem';
+import {
+  levelSelector,
+  pageLoadingSelector,
+  breadcrumbsSelector,
+  restorePathAction,
+} from 'controllers/testItem';
 import { SuitesPage } from 'pages/inside/suitesPage';
 import { TestsPage } from 'pages/inside/testsPage';
 
@@ -19,26 +24,33 @@ const testItemPages = {
   [LEVEL_TEST]: TestsPage,
 };
 
-@connect((state) => ({
-  level: levelSelector(state),
-  loading: pageLoadingSelector(state),
-  breadcrumbs: breadcrumbsSelector(state),
-}))
+@connect(
+  (state) => ({
+    level: levelSelector(state),
+    loading: pageLoadingSelector(state),
+    breadcrumbs: breadcrumbsSelector(state),
+  }),
+  {
+    restorePath: restorePathAction,
+  },
+)
 export class TestItemPage extends Component {
   static propTypes = {
     level: PropTypes.string,
     loading: PropTypes.bool,
     breadcrumbs: PropTypes.arrayOf(PropTypes.object),
+    restorePath: PropTypes.func,
   };
 
   static defaultProps = {
     level: null,
     loading: false,
     breadcrumbs: [],
+    restorePath: () => {},
   };
 
   render() {
-    const { level, loading, breadcrumbs } = this.props;
+    const { level, loading, breadcrumbs, restorePath } = this.props;
     if (!loading && testItemPages[level]) {
       const PageComponent = testItemPages[level];
       return <PageComponent />;
@@ -46,7 +58,7 @@ export class TestItemPage extends Component {
     return (
       <PageLayout>
         <div className={cx('breadcrumbs-container')}>
-          {!loading && <Breadcrumbs descriptors={breadcrumbs} />}
+          {!loading && <Breadcrumbs descriptors={breadcrumbs} onRestorePath={restorePath} />}
         </div>
         {loading && <SpinningPreloader />}
       </PageLayout>
