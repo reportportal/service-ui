@@ -9,6 +9,7 @@ import classNames from 'classnames/bind';
 import { showModalAction } from 'controllers/modal';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { PageLayout } from 'layouts/pageLayout';
+import { AddDashboardButton } from '../common/addDashboardButton';
 import AddWidgetIcon from './img/add-inline.svg';
 import AddSharedWidgetIcon from './img/add-shared-inline.svg';
 import EditIcon from './img/edit-inline.svg';
@@ -86,6 +87,7 @@ export class DashboardItemPage extends Component {
     const { formatMessage } = this.props.intl;
     return (
       <PageLayout title={formatMessage(messages.pageTitle)}>
+        <AddDashboardButton />
         <div className={cx('dashboard-item')}>
           <div className={cx('buttons-container')}>
             <div className={cx('nav-left')}>
