@@ -1,0 +1,47 @@
+.method-type-col {
+  color: $COLOR--gray-47;
+  font-size: 13px;
+  line-height: 18px;
+  padding-left: 45px;
+  width: 11%;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    display: none;
+  }
+}
+
+.name-col {
+  width: 45%;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    width: 100%;
+  }
+}
+
+.status-col {
+  font-family: $FONT-SEMIBOLD;
+  font-size: 13px;
+  line-height: 18px;
+  text-transform: uppercase;
+  width: 9%;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    display: none;
+  }
+}
+
+.start-time-col {
+  width: 11%;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    display: none;
+  }
+}
+
+.defect-type-col {
+  width: 22%;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    width: 100%;
+  }
+}

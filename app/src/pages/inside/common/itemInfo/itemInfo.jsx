@@ -1,6 +1,7 @@
 import { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { injectIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
 import { fromNowFormat } from 'common/utils';
@@ -11,19 +12,25 @@ import {
   userAccountRoleSelector,
   userIdSelector,
 } from 'controllers/user';
+import { LEVEL_STEP } from 'common/constants/launchLevels';
+import { levelSelector } from 'controllers/testItem';
+import { formatMethodType, formatStatus } from 'common/utils/localizationUtils';
+import TestParamsIcon from 'common/img/test-params-icon-inline.svg';
+import PencilIcon from 'common/img/pencil-icon-inline.svg';
 import { NameLink } from './nameLink';
 import { TagsBlock } from './tagsBlock';
 import { OwnerBlock } from './ownerBlock';
 import { DurationBlock } from './durationBlock';
-import PencilIcon from './img/pencil-icon-inline.svg';
 import styles from './itemInfo.scss';
 
 const cx = classNames.bind(styles);
 
+@injectIntl
 @connect((state) => ({
   userAccountRole: userAccountRoleSelector(state),
   userProjectRole: activeProjectRoleSelector(state),
   userId: userIdSelector(state),
+  isStepLevel: levelSelector(state) === LEVEL_STEP,
 }))
 export class ItemInfo extends Component {
   static propTypes = {
@@ -34,12 +41,18 @@ export class ItemInfo extends Component {
     userAccountRole: PropTypes.string.isRequired,
     userProjectRole: PropTypes.string.isRequired,
     userId: PropTypes.string.isRequired,
+    intl: PropTypes.object.isRequired,
+    isStepLevel: PropTypes.bool,
   };
 
   static defaultProps = {
     value: {},
     analyzing: false,
-    customProps: {},
+    customProps: {
+      onEditLaunch: () => {},
+      onShowTestParams: () => {},
+    },
+    isStepLevel: false,
   };
 
   render() {
@@ -51,6 +64,8 @@ export class ItemInfo extends Component {
       userProjectRole,
       userAccountRole,
       userId,
+      intl,
+      isStepLevel,
     } = this.props;
     return (
       <div ref={refFunction} className={cx('item-info')}>
@@ -60,6 +75,14 @@ export class ItemInfo extends Component {
             {value.number && <span className={cx('number')}>#{value.number}</span>}
           </NameLink>
           {analyzing && <div className={cx('analysis-badge')}>Analysis</div>}
+          {isStepLevel && (
+            <div
+              className={cx('test-params-icon')}
+              onClick={() => customProps.onShowTestParams(value)}
+            >
+              {Parser(TestParamsIcon)}
+            </div>
+          )}
           {canEditLaunch(userAccountRole, userProjectRole, userId === value.owner) && (
             <div className={cx('edit-icon')} onClick={() => customProps.onEditLaunch(value)}>
               {Parser(PencilIcon)}
@@ -81,6 +104,14 @@ export class ItemInfo extends Component {
           <div className={cx('mobile-start-time')}>{fromNowFormat(value.start_time)}</div>
           {value.owner && <OwnerBlock owner={value.owner} />}
           {value.tags && !!value.tags.length && <TagsBlock tags={value.tags} />}
+          {isStepLevel && (
+            <div className={cx('mobile-info')}>
+              @{formatMethodType(intl.formatMessage, value.type)}
+              <span className={cx('mobile-status')}>
+                {formatStatus(intl.formatMessage, value.status)}
+              </span>
+            </div>
+          )}
           {value.description && (
             <div className={cx('item-description')}>
               <MarkdownViewer value={value.description} />

@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { PageLayout } from 'layouts/pageLayout';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { Breadcrumbs } from 'components/main/breadcrumbs';
-import { LEVEL_SUITE, LEVEL_TEST } from 'common/constants/launchLevels';
+import { LEVEL_SUITE, LEVEL_TEST, LEVEL_STEP } from 'common/constants/launchLevels';
 import {
   levelSelector,
   pageLoadingSelector,
@@ -14,6 +14,7 @@ import {
 } from 'controllers/testItem';
 import { SuitesPage } from 'pages/inside/suitesPage';
 import { TestsPage } from 'pages/inside/testsPage';
+import { StepPage } from 'pages/inside/stepPage';
 
 import styles from './testItemPage.scss';
 
@@ -22,6 +23,7 @@ const cx = classNames.bind(styles);
 const testItemPages = {
   [LEVEL_SUITE]: SuitesPage,
   [LEVEL_TEST]: TestsPage,
+  [LEVEL_STEP]: StepPage,
 };
 
 @connect(

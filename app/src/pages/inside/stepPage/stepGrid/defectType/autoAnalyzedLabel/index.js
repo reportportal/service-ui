@@ -1,0 +1,1 @@
+export { AutoAnalyzedLabel } from './autoAnalyzedLabel';

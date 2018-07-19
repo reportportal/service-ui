@@ -1,13 +1,22 @@
 import { TEST_ITEM_PAGE } from 'controllers/pages';
+import * as launchLevels from 'common/constants/launchLevels';
+import * as methodTypes from 'common/constants/methodTypes';
 import { LEVELS } from './levels';
+
+const getItemLevel = (type) => {
+  if (!launchLevels[`LEVEL_${type}`] && methodTypes[type]) {
+    return launchLevels.LEVEL_STEP;
+  }
+  return type;
+};
 
 export const calculateLevel = (data) =>
   data.reduce((acc, item) => {
     if (!acc) {
       return item.type;
     }
-    const type = item.type;
-    return LEVELS[acc] && LEVELS[acc].order > LEVELS[type].order ? type : acc;
+    const itemLevel = getItemLevel(item.type);
+    return LEVELS[acc] && LEVELS[acc].order > LEVELS[itemLevel].order ? itemLevel : acc;
   }, '');
 
 export const getQueryNamespace = (levelIndex) => `item${levelIndex}`;

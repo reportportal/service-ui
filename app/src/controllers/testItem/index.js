@@ -1,5 +1,5 @@
 export { testItemReducer } from './reducer';
-export { fetchTestItemsAction, restorePathAction } from './actionCreators';
+export { fetchTestItemsAction, restorePathAction, setLevelAction } from './actionCreators';
 export { testItemsSaga } from './sagas';
 export {
   levelSelector,
