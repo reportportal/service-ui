@@ -5,7 +5,7 @@ import { PRODUCT_BUG, AUTOMATION_BUG, SYSTEM_ISSUE } from 'common/constants/defe
 import { FAILED, INTERRUPTED, PASSED, SKIPPED } from 'common/constants/launchStatuses';
 import { Grid } from 'components/main/grid';
 import { AbsRelTime } from 'components/main/absRelTime';
-import { ItemInfo } from './itemInfo';
+import { ItemInfo } from 'pages/inside/common/itemInfo';
 import { Hamburger } from './hamburger';
 import { ExecutionStatistics } from './executionStatistics';
 import { DefectStatistics } from './defectStatistics';
@@ -175,7 +175,7 @@ export class LaunchSuiteGrid extends PureComponent {
     loading: PropTypes.bool,
   };
   static defaultProps = {
-    data: {},
+    data: [],
     sortingColumn: null,
     sortingDirection: null,
     onChangeSorting: () => {},

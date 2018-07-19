@@ -14,7 +14,7 @@ export const testItemIdsSelector = (state) =>
   payloadSelector(state).testItemIds && String(payloadSelector(state).testItemIds);
 export const testItemIdsArraySelector = createSelector(
   testItemIdsSelector,
-  (itemIdsString) => itemIdsString && itemIdsString.split('/'),
+  (itemIdsString) => (itemIdsString && itemIdsString.split('/')) || [],
 );
 
 export const pageSelector = (state) => pageNames[state.location.type] || NO_PAGE;

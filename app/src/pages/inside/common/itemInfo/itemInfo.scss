@@ -2,7 +2,8 @@
   overflow: hidden;
 
   &:hover {
-    .edit-icon {
+    .edit-icon,
+    .test-params-icon {
       display: inline-block;
     }
   }
@@ -82,6 +83,40 @@
   margin-top: 10px;
   margin-bottom: 10px;
   word-break: break-word;
+}
+.test-params-icon {
+  display: none;
+  width: 20px;
+  height: 20px;
+  margin-left: 10px;
+  vertical-align: top;
+  fill: $COLOR--gray-60;
+  cursor: pointer;
+
+  &:hover {
+    fill: $COLOR--black-2;
+  }
+}
+.mobile-info {
+  display: none;
+  color: $COLOR--charcoal-grey;
+  font-size: 15px;
+  padding-top: 15px;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    display: block;
+  }
+
+  .mobile-status {
+    text-transform: uppercase;
+
+    &::before {
+      content: '|';
+      margin-right: 15px;
+      margin-left: 15px;
+      vertical-align: top;
+    }
+  }
 }
 
 @keyframes auto-analyze-blink {
