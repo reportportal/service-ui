@@ -6,6 +6,7 @@ import { ActionPanel } from './actionPanel';
 export const SuiteTestToolbar = ({
   parentItem,
   selectedItems,
+  errors,
   onUnselect,
   onUnselectAll,
   onRefresh,
@@ -18,13 +19,18 @@ export const SuiteTestToolbar = ({
         onClose={onUnselectAll}
       />
     )}
-    <ActionPanel onRefresh={onRefresh} />
+    <ActionPanel
+      hasErrors={selectedItems.some((item) => !!errors[item.id])}
+      showBreadcrumbs={selectedItems.length === 0}
+      onRefresh={onRefresh}
+    />
     {parentItem && <InfoLine data={parentItem} />}
     <div />
   </div>
 );
 SuiteTestToolbar.propTypes = {
   selectedItems: PropTypes.arrayOf(PropTypes.object),
+  errors: PropTypes.object,
   onUnselect: PropTypes.func,
   onUnselectAll: PropTypes.func,
   parentItem: PropTypes.object,
@@ -32,6 +38,7 @@ SuiteTestToolbar.propTypes = {
 };
 SuiteTestToolbar.defaultProps = {
   selectedItems: [],
+  errors: {},
   onUnselect: () => {},
   onUnselectAll: () => {},
   parentItem: null,

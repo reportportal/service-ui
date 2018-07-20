@@ -88,10 +88,16 @@ export class StepGrid extends Component {
   static propTypes = {
     data: PropTypes.array,
     intl: PropTypes.object.isRequired,
+    selectedItems: PropTypes.array,
+    onItemSelect: PropTypes.func,
+    onAllItemsSelect: PropTypes.func,
   };
 
   static defaultProps = {
     data: [],
+    selectedItems: [],
+    onItemSelect: () => {},
+    onAllItemsSelect: () => {},
   };
 
   constructor(props) {
@@ -148,7 +154,16 @@ export class StepGrid extends Component {
   }
 
   render() {
-    const { data } = this.props;
-    return <Grid columns={this.columns} data={data} />;
+    const { data, onItemSelect, onAllItemsSelect, selectedItems } = this.props;
+    return (
+      <Grid
+        columns={this.columns}
+        data={data}
+        onToggleSelection={onItemSelect}
+        onToggleSelectAll={onAllItemsSelect}
+        selectedItems={selectedItems}
+        selectable
+      />
+    );
   }
 }
