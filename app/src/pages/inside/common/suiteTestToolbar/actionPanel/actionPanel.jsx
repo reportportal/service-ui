@@ -18,9 +18,9 @@ export const ActionPanel = connect(
   {
     restorePath: restorePathAction,
   },
-)(({ breadcrumbs, onRefresh, restorePath }) => (
-  <div className={cx('action-panel')}>
-    <Breadcrumbs descriptors={breadcrumbs} onRestorePath={restorePath} />
+)(({ breadcrumbs, onRefresh, restorePath, showBreadcrumbs, hasErrors }) => (
+  <div className={cx('action-panel', { 'right-buttons-only': !showBreadcrumbs && !hasErrors })}>
+    {showBreadcrumbs && <Breadcrumbs descriptors={breadcrumbs} onRestorePath={restorePath} />}
     <div className={cx('action-buttons')}>
       <div className={cx('action-button')}>
         <GhostButton icon={DeleteIcon} disabled>
@@ -44,9 +44,14 @@ ActionPanel.propTypes = {
   onRefresh: PropTypes.func,
   breadcrumbs: PropTypes.arrayOf(breadcrumbDescriptorShape),
   restorePath: PropTypes.func,
+  showBreadcrumbs: PropTypes.bool,
+  hasErrors: PropTypes.bool,
 };
 ActionPanel.defaultProps = {
   onRefresh: () => {},
   breadcrumbs: [],
+  errors: {},
   restorePath: () => {},
+  showBreadcrumbs: true,
+  hasErrors: false,
 };

@@ -4,30 +4,94 @@ import { connect } from 'react-redux';
 import { PageLayout } from 'layouts/pageLayout';
 import { SuiteTestToolbar } from 'pages/inside/common/suiteTestToolbar';
 import { parentItemSelector } from 'controllers/testItem';
-import { stepsSelector } from 'controllers/step';
+import {
+  stepsSelector,
+  selectedStepsSelector,
+  validationErrorsSelector,
+  lastOperationSelector,
+  unselectAllStepsAction,
+  toggleStepSelectionAction,
+  proceedWithValidItemsAction,
+  selectStepsAction,
+} from 'controllers/step';
 import { StepGrid } from './stepGrid';
 
-@connect((state) => ({
-  parentItem: parentItemSelector(state),
-  data: stepsSelector(state),
-}))
+@connect(
+  (state) => ({
+    parentItem: parentItemSelector(state),
+    steps: stepsSelector(state),
+    lastOperation: lastOperationSelector(state),
+    selectedItems: selectedStepsSelector(state),
+    validationErrors: validationErrorsSelector(state),
+  }),
+  {
+    unselectAllSteps: unselectAllStepsAction,
+    toggleStepSelection: toggleStepSelectionAction,
+    proceedWithValidItemsAction,
+    selectStepsAction,
+  },
+)
 export class StepPage extends Component {
   static propTypes = {
-    data: PropTypes.arrayOf(PropTypes.object),
+    steps: PropTypes.arrayOf(PropTypes.object),
     parentItem: PropTypes.object,
+    selectedItems: PropTypes.arrayOf(PropTypes.object),
+    validationErrors: PropTypes.object,
+    lastOperation: PropTypes.string,
+    selectStepsAction: PropTypes.func,
+    unselectAllSteps: PropTypes.func,
+    proceedWithValidItemsAction: PropTypes.func,
+    toggleStepSelection: PropTypes.func,
   };
 
   static defaultProps = {
-    data: [],
+    steps: [],
     parentItem: {},
+    selectedItems: [],
+    validationErrors: {},
+    lastOperation: '',
+    selectStepsAction: () => {},
+    unselectAllSteps: () => {},
+    proceedWithValidItemsAction: () => {},
+    toggleStepSelection: () => {},
   };
 
+  handleAllStepsSelection = () => {
+    const { selectedItems, steps } = this.props;
+    if (steps.length === selectedItems.length) {
+      this.props.unselectAllSteps();
+      return;
+    }
+    this.props.selectStepsAction(steps);
+  };
+
+  proceedWithValidItems = () =>
+    this.props.proceedWithValidItemsAction(this.props.lastOperation, this.props.selectedItems);
+
   render() {
-    const { parentItem, data } = this.props;
+    const {
+      parentItem,
+      steps,
+      selectedItems,
+      toggleStepSelection,
+      unselectAllSteps,
+      validationErrors,
+    } = this.props;
     return (
       <PageLayout>
-        <SuiteTestToolbar parentItem={parentItem} />
-        <StepGrid data={data} />
+        <SuiteTestToolbar
+          errors={validationErrors}
+          selectedItems={selectedItems}
+          parentItem={parentItem}
+          onUnselect={toggleStepSelection}
+          onUnselectAll={unselectAllSteps}
+        />
+        <StepGrid
+          data={steps}
+          selectedItems={selectedItems}
+          onAllItemsSelect={this.handleAllStepsSelection}
+          onItemSelect={toggleStepSelection}
+        />
       </PageLayout>
     );
   }
