@@ -9,6 +9,7 @@ import { screenLockReducer } from 'controllers/screenLock';
 import { dashboardReducer } from 'controllers/dashboard';
 import { launchReducer } from 'controllers/launch';
 import { notificationReducer } from 'controllers/notification';
+import { projectSettingsReducer } from 'controllers/projectSettings/reducer';
 import { suiteReducer } from 'controllers/suite/reducer';
 import { filterReducer } from 'controllers/filter';
 import { testReducer } from 'controllers/test';
@@ -30,4 +31,5 @@ export default {
   filters: filterReducer,
   tests: testReducer,
   members: membersReducer,
+  projectSettings: projectSettingsReducer,
 };
