@@ -93,6 +93,8 @@ define(function (require) {
         selectHistoryItem: function (itemModel, firstInit) {
             var curOptions = this.collectionItems.getInfoLog();
             var itemModelFromCollection;
+            var prevModel;
+            var self = this;
             curOptions.history = itemModel.get('id');
             this.collectionItems.setInfoLog(curOptions);
             !firstInit && config.router.navigate(
@@ -104,13 +106,19 @@ define(function (require) {
             }
 
             this.historyItem && this.stopListening(this.historyItem) && this.historyItem.destroy();
+            _.map(this.history.collection.models, function (model, id) {
+                if (model.get('id') === itemModel.get('id')) {
+                    prevModel = self.history.collection.models[id-1];
+                }
+            });
             this.historyItem = new LogItemInfoView({
                 el: $('[data-js-item-info]', this.$el),
                 context: this.context,
                 itemModel: itemModel,
                 launchModel: this.launchModel,
                 supportedLogBinary: this.supportedLogBinary,
-                collectionItems: this.collectionItems
+                collectionItems: this.collectionItems,
+                prevModel: prevModel
             });
             this.listenTo(this.historyItem, 'goToLog', this.goToLog);
             this.listenTo(this.historyItem, 'change:issue', this.onChangeItemIssue);

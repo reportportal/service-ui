@@ -292,6 +292,20 @@
       }
     }
   }
+  .growth-duration{
+    position: relative;
+    display: inline-block;
+    margin-left: 5px;
+    border-radius: 100px;
+    background-color: lighten($COLOR--white, 20%);
+    color: $COLOR--orange-red;
+    white-space: nowrap;
+    font-size: 9px;
+    vertical-align: baseline;
+    @media (max-width: $SCREEN_SM_MAX) {
+      font-size: 14px;
+    }
+  }
   .rp-item-duration {
     vertical-align: top;
     .duration-content {

@@ -109,10 +109,37 @@ define(function (require, exports, module) {
             '[data-js-launch-number]': 'text: launchNumber',
             ':el': 'classes: {active: active}',
             '[data-js-tooltip-item]': 'attr: {title: statusTitle}',
-            '[data-js-launch-link]': 'attr: {href: getUrl, class: getLinkClass}'
+            '[data-js-launch-link]': 'attr: {href: getUrl, class: getLinkClass}',
+            '[data-js-info]': 'classes: {hide: noInfo}',
+            '[data-js-growth-duration]': 'text: durationGrowth, attr: {title: durationGrowth}',
+            '[data-js-growth-class]': 'classes: {hide: not(durationGrowth)}'
         },
 
         computeds: {
+            durationGrowth: {
+                get: function () {
+                    var currentDuration;
+                    var prevDuration;
+                    var growth;
+                    if (this.validForDurationGrowth(this.model) && this.prevModel
+                        && this.validForDurationGrowth(this.prevModel)) {
+                        currentDuration = this.model.get('start_time') - this.model.get('end_time');
+                        prevDuration = this.prevModel.get('start_time') - this.prevModel.get('end_time');
+                        growth = (currentDuration / prevDuration) - 1;
+                        if (growth > 0) {
+                            return '+' + Math.round(growth * 100) + '%';
+                        }
+                        return '';
+                    }
+                    return '';
+                }
+            },
+            noInfo: {
+                get: function () {
+                    var issue = this.model.getIssue();
+                    return !issue.comment && !(issue.externalSystemIssues && issue.externalSystemIssues.length);
+                }
+            },
             statusTitle: {
                 deps: ['status'],
                 get: function (status) {
@@ -148,8 +175,13 @@ define(function (require, exports, module) {
         isAction: function () {
             return this.model.get('status') !== 'MANY' && this.model.get('status') !== 'NOT_FOUND';
         },
+        validForDurationGrowth: function (model) {
+            var status = model.get('status');
+            return status === 'FAILED' || status === 'PASSED';
+        },
         initialize: function (options) {
             this.currentItemId = options.currentItemId;
+            this.prevModel = options.prevModel;
             this.render();
             this.$el.addClass('status-' + this.model.get('status'));
             this.defectTypeCollection = new SingletonDefectTypeCollection();
@@ -162,11 +194,6 @@ define(function (require, exports, module) {
         updateIssue: function () {
             var self = this;
             var issue = this.model.getIssue();
-            if (issue.comment) {
-                $('[data-js-comment]', this.$el).removeClass('hide');
-            } else {
-                $('[data-js-comment]', this.$el).addClass('hide');
-            }
             if (issue.issue_type) {
                 this.defectTypeCollection.ready.done(function () {
                     var defectTypeModel = self.defectTypeCollection.getDefectByLocator(issue.issue_type);
@@ -178,11 +205,6 @@ define(function (require, exports, module) {
                 });
             } else {
                 $('[data-js-issue-type]', self.$el).addClass('hide');
-            }
-            if (issue.externalSystemIssues && issue.externalSystemIssues.length) {
-                $('[data-js-ticket]', this.$el).removeClass('hide');
-            } else {
-                $('[data-js-ticket]', this.$el).addClass('hide');
             }
         },
         onClickItem: function () {
@@ -241,8 +263,12 @@ define(function (require, exports, module) {
             var itemId = this.collectionItems.getInfoLog().item;
             var $itemsContainer = $('[data-js-history-container]', this.$el);
             var self = this;
-            _.each(this.collection.models, function (model) {
-                var item = new LogHistoryLineItemView({ model: model, currentItemId: itemId });
+            _.each(this.collection.models, function (model, idx) {
+                var item = new LogHistoryLineItemView({
+                    model: model,
+                    currentItemId: itemId,
+                    prevModel: self.collection.models[idx - 1]
+                });
                 $itemsContainer.append(item.$el);
                 self.renderedItems.push(item);
             });

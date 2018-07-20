@@ -50,6 +50,9 @@
       }
       .history-item-container {
         position:relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         height: 30px;
         width: 100%;
         text-align: center;
@@ -61,6 +64,39 @@
           top: 0;
           bottom: 0;
           left: 10px;
+        }
+        .item-info{
+          display: inline-block;
+          height: 15px;
+          width: 15px;
+          background-image: url('/img/launch/ic_info.svg');
+          background-size: contain;
+        }
+        .growth-duration{
+          display: inline-block;
+          position: relative;
+          margin-right: 3px;
+          padding: 0 2px;
+          border-radius: 100px;
+          background-color: lighten($COLOR--white, 20%);
+          color: $COLOR--orange-red;
+          max-width: 50px;
+          font-size: 9px;
+          line-height: 13px;
+          vertical-align: middle;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          .time-icon{
+            color: $COLOR--orange-red;
+            font-size: 11px;
+            line-height: 12px;
+            vertical-align: middle;
+            margin-right: 2px;
+          }
+        }
+        .main-info{
+          max-width: 80%;
         }
         i {
           position: relative;
@@ -81,12 +117,13 @@
           display: none;
         }
         .issue-type {
+          font-size: 10px;
           vertical-align: top;
           display: inline-block;
           position: relative;
-          margin-top: 6px;
           padding: 0 8px;
           border-radius: 8px;
+          margin: 0 5px 0 0;
         }
       }
       &:first-child {
@@ -176,12 +213,12 @@
           }
         }
         .history-item-container {
+          .item-info{
+            background-image: url('/img/launch/ic_info_active.svg');
+          }
           &:before {
             top: -3px;
             bottom: -3px;
-          }
-          i {
-            color: $COLOR--charcoal-grey;
           }
         }
       }

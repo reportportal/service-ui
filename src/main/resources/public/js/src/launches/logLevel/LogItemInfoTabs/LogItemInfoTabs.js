@@ -89,6 +89,7 @@ define(function (require) {
             this.context = options.context;
             this.viewModel = options.itemModel;
             this.lastRunItemId = options.lastRunItemId;
+            this.prevModel = options.prevModel;
             this.model = new (Epoxy.Model.extend({
                 defaults: {
                     stackTrace: false,
@@ -116,7 +117,8 @@ define(function (require) {
             this.details = new LogItemInfoDetailsView({
                 el: $('[data-js-item-details]', this.$el),
                 itemModel: this.viewModel,
-                parentModel: this.model
+                parentModel: this.model,
+                prevModel: this.prevModel
             });
             this.activity = new LogItemInfoActivity({
                 el: $('[ data-js-item-activity]', this.$el),

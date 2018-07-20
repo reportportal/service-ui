@@ -114,6 +114,7 @@ define(function (require) {
             this.noIssue = options.noIssue;
             this.filterModel = options.filterModel;
             this.context = options.context;
+            this.prevModel = options.prevModel;
             this.render();
             this.listenTo(this.model, 'scrollToAndHighlight', this.highlightItem);
             this.markdownViewer = new MarkdownViewer({ text: this.model.get('description') });
@@ -133,6 +134,7 @@ define(function (require) {
             this.renderDuration();
             this.renderStartTime();
             this.renderRetries();
+            this.renderGrowthDuration();
             if (this.hasIssue() && !this.noIssue) {
                 this.renderIssue();
             }
@@ -143,6 +145,24 @@ define(function (require) {
             config.mainScrollElement.animate({ scrollTop: this.el.offsetTop }, 500, function () {
                 self.$el.addClass('hide-highlight');
             });
+        },
+        renderGrowthDuration: function () {
+            var currentDuration;
+            var prevDuration;
+            var growth;
+            if (this.validForDurationGrowth(this.model) && this.prevModel
+                && this.validForDurationGrowth(this.prevModel)) {
+                currentDuration = this.model.get('start_time') - this.model.get('end_time');
+                prevDuration = this.prevModel.get('start_time') - this.prevModel.get('end_time');
+                growth = (currentDuration / prevDuration) - 1;
+                if (growth > 0) {
+                    $('[data-js-growth-duration]', this.$el).text('+' + Math.round(growth * 100) + '%');
+                }
+            }
+        },
+        validForDurationGrowth: function (model) {
+            var status = model.get('status');
+            return status === 'FAILED' || status === 'PASSED';
         },
         renderStartTime: function () {
             this.startTime && this.startTime.destroy();
