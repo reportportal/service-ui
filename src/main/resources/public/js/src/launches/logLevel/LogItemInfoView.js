@@ -125,6 +125,7 @@ define(function (require) {
             this.appModel = new SingletonAppModel();
             this.viewModel = options.itemModel;
             (this.context === 'userdebug') && this.viewModel.set('mode', 'DEBUG');
+            this.prevModel = options.prevModel;
             this.launchModel = options.launchModel;
             this.collectionItems = options.collectionItems;
             this.listenTo(this.launchModel, 'change:isProcessing', this.onChangeLaunchProcessing);
@@ -170,7 +171,8 @@ define(function (require) {
                 lastRunItemId: this.viewModel.get('id'),
                 itemModel: model,
                 launchModel: this.launchModel,
-                context: this.context
+                context: this.context,
+                prevModel: this.prevModel
             });
             $('[data-js-tabs-container]', this.$el).html(this.tabsView.$el);
             this.listenTo(this.tabsView, 'goToLog', this.goToLog);
