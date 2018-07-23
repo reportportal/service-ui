@@ -16,6 +16,7 @@ export class GridRow extends Component {
     selectedItems: PropTypes.arrayOf(PropTypes.object),
     onToggleSelection: PropTypes.func,
     changeOnlyMobileLayout: PropTypes.bool,
+    rowClassMapper: PropTypes.func,
   };
 
   static defaultProps = {
@@ -25,6 +26,7 @@ export class GridRow extends Component {
     selectedItems: [],
     onToggleSelection: () => {},
     changeOnlyMobileLayout: false,
+    rowClassMapper: () => {},
   };
 
   state = {
@@ -69,9 +71,12 @@ export class GridRow extends Component {
   isItemSelected = () => this.props.selectedItems.some((item) => item.id === this.props.value.id);
 
   render() {
-    const { columns, value, selectable, changeOnlyMobileLayout } = this.props;
+    const { columns, value, selectable, changeOnlyMobileLayout, rowClassMapper } = this.props;
+    const customClasses = rowClassMapper(value) || {};
     return (
-      <div className={cx('grid-row-wrapper', { selected: this.isItemSelected() })}>
+      <div
+        className={cx('grid-row-wrapper', { selected: this.isItemSelected(), ...customClasses })}
+      >
         {this.state.withAccordion && (
           <div className={cx('accordion-wrapper-mobile')}>
             <div

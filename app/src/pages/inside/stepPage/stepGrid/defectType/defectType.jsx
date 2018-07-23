@@ -17,7 +17,7 @@ const AALabel = () => (
 export const DefectType = ({ issue }) => (
   <div className={cx('defect-type')}>
     <div className={cx('defect-type-labels')}>
-      {!issue.autoAnalyzed && <AALabel />}
+      {issue.autoAnalyzed && <AALabel />}
       {issue.issue_type && <DefectTypeItem type={issue.issue_type} />}
     </div>
     <div className={cx('issues')}>

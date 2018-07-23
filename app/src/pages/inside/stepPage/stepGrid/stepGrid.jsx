@@ -6,6 +6,7 @@ import { Grid } from 'components/main/grid';
 import { ItemInfo } from 'pages/inside/common/itemInfo';
 import { AbsRelTime } from 'components/main/absRelTime';
 import { formatMethodType, formatStatus } from 'common/utils/localizationUtils';
+import { FAILED } from 'common/constants/testStatuses';
 import { DefectType } from './defectType';
 import styles from './stepGrid.scss';
 
@@ -153,6 +154,10 @@ export class StepGrid extends Component {
     ];
   }
 
+  highlightFailedItems = (value) => ({
+    [cx('failed')]: value.status === FAILED,
+  });
+
   render() {
     const { data, onItemSelect, onAllItemsSelect, selectedItems } = this.props;
     return (
@@ -163,6 +168,7 @@ export class StepGrid extends Component {
         onToggleSelectAll={onAllItemsSelect}
         selectedItems={selectedItems}
         selectable
+        rowClassMapper={this.highlightFailedItems}
       />
     );
   }
