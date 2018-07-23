@@ -19,6 +19,9 @@ export const URLS = {
       'page.size': 300,
     })}`,
 
+  externalSystemIssue: (activeProject, systemId, issueId) =>
+    `${urlBase}${activeProject}/external-system/${systemId}/ticket/${issueId}`,
+
   filter: (activeProject, id) => `${urlBase}${activeProject}/filter/${id}`,
   filters: (activeProject) => `${urlBase}${activeProject}/filter`,
 
