@@ -7,6 +7,7 @@ import { ItemInfo } from 'pages/inside/common/itemInfo';
 import { AbsRelTime } from 'components/main/absRelTime';
 import { formatMethodType, formatStatus } from 'common/utils/localizationUtils';
 import { FAILED } from 'common/constants/testStatuses';
+import { PredefinedFilterSwitcher } from './predefinedFilterSwitcher';
 import { DefectType } from './defectType';
 import styles from './stepGrid.scss';
 
@@ -84,6 +85,18 @@ DefectTypeColumn.defaultProps = {
   value: {},
 };
 
+const PredefinedFilterSwitcherCell = ({ className }) => (
+  <div className={cx('filter-switcher-col', className)}>
+    <PredefinedFilterSwitcher />
+  </div>
+);
+PredefinedFilterSwitcherCell.propTypes = {
+  className: PropTypes.string,
+};
+PredefinedFilterSwitcherCell.defaultProps = {
+  className: null,
+};
+
 @injectIntl
 export class StepGrid extends Component {
   static propTypes = {
@@ -92,6 +105,7 @@ export class StepGrid extends Component {
     selectedItems: PropTypes.array,
     onItemSelect: PropTypes.func,
     onAllItemsSelect: PropTypes.func,
+    loading: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -99,11 +113,19 @@ export class StepGrid extends Component {
     selectedItems: [],
     onItemSelect: () => {},
     onAllItemsSelect: () => {},
+    loading: false,
   };
 
   constructor(props) {
     super(props);
     this.columns = [
+      {
+        id: 'predefinedFilterSwitcher',
+        title: {
+          component: PredefinedFilterSwitcherCell,
+        },
+        formatter: () => {},
+      },
       {
         id: 'methodType',
         title: {
@@ -159,7 +181,7 @@ export class StepGrid extends Component {
   });
 
   render() {
-    const { data, onItemSelect, onAllItemsSelect, selectedItems } = this.props;
+    const { data, onItemSelect, onAllItemsSelect, selectedItems, loading } = this.props;
     return (
       <Grid
         columns={this.columns}
@@ -169,6 +191,7 @@ export class StepGrid extends Component {
         selectedItems={selectedItems}
         selectable
         rowClassMapper={this.highlightFailedItems}
+        loading={loading}
       />
     );
   }
