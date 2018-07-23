@@ -26,8 +26,8 @@ import { getDuration, dateFormat, approximateTimeFormat } from 'common/utils';
 import { injectIntl, intlShape, defineMessages } from 'react-intl';
 import moment from 'moment';
 import PropTypes from 'prop-types';
+import InProgressGif from 'common/img/item-in-progress.gif';
 import ClockIcon from './img/clock-icon-inline.svg';
-import InProgressGif from './img/item-in-progress.gif';
 
 import styles from './durationBlock.scss';
 
