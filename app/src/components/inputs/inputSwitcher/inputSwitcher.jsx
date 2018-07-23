@@ -31,10 +31,13 @@ export const InputSwitcher = ({ children, value, onChange, onFocus, onBlur }) =>
     centered: !children,
     enabled: value,
   });
+  const onChangeHandler = (e) => {
+    onChange(e.target.checked);
+  };
 
   return (
     <label className={cx('input-switcher')} onFocus={onFocus} onBlur={onBlur} tabIndex="1">
-      <input type="checkbox" className={cx('input')} checked={value} onChange={onChange} />
+      <input type="checkbox" className={cx('input')} checked={value} onChange={onChangeHandler} />
       <span className={sliderClasses} />
       <span className={cx('children-container')}>{children}</span>
     </label>

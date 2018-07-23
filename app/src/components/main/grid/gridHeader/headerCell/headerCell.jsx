@@ -31,13 +31,15 @@ export const HeaderCell = ({
     e.stopPropagation();
     onFilterClick(id);
   };
-  return (
-    <div
-      className={cx('header-cell', computedClassName)}
-      onClick={() => onChangeSorting(id)}
-    >
+  const TitleComponent = title.component;
+  return title.component ? (
+    <TitleComponent className={cx('header-cell', computedClassName)} />
+  ) : (
+    <div className={cx('header-cell', computedClassName)} onClick={() => onChangeSorting(id)}>
       <div className={cx('title-container')}>
-        <div className={cx('filter')} onClick={filterClickHandler}>{Parser(FilterIcon)}</div>
+        <div className={cx('filter')} onClick={filterClickHandler}>
+          {Parser(FilterIcon)}
+        </div>
         <span className={cx('title-full')}>{title.full}</span>
         <span className={cx('title-short')}>{title.short || title.full}</span>
         <div className={cx('arrow')}>{Parser(ArrowIcon)}</div>
@@ -62,8 +64,6 @@ HeaderCell.defaultProps = {
   withFilter: false,
   sortingDirection: 'DESC',
   sortingActive: false,
-  onChangeSorting: () => {
-  },
-  onFilterClick: () => {
-  },
+  onChangeSorting: () => {},
+  onFilterClick: () => {},
 };

@@ -5,6 +5,7 @@ export const columnPropTypes = {
   title: PropTypes.shape({
     full: PropTypes.string,
     short: PropTypes.string,
+    component: PropTypes.oneOfType([PropTypes.node, PropTypes.func]),
   }),
   customProps: PropTypes.object,
   component: PropTypes.oneOfType([PropTypes.node, PropTypes.func]),

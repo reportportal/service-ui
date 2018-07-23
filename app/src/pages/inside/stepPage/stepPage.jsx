@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { PageLayout } from 'layouts/pageLayout';
 import { SuiteTestToolbar } from 'pages/inside/common/suiteTestToolbar';
-import { parentItemSelector } from 'controllers/testItem';
+import { parentItemSelector, loadingSelector } from 'controllers/testItem';
 import {
   stepsSelector,
   selectedStepsSelector,
@@ -23,6 +23,7 @@ import { StepGrid } from './stepGrid';
     lastOperation: lastOperationSelector(state),
     selectedItems: selectedStepsSelector(state),
     validationErrors: validationErrorsSelector(state),
+    loading: loadingSelector(state),
   }),
   {
     unselectAllSteps: unselectAllStepsAction,
@@ -42,6 +43,7 @@ export class StepPage extends Component {
     unselectAllSteps: PropTypes.func,
     proceedWithValidItemsAction: PropTypes.func,
     toggleStepSelection: PropTypes.func,
+    loading: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -54,6 +56,7 @@ export class StepPage extends Component {
     unselectAllSteps: () => {},
     proceedWithValidItemsAction: () => {},
     toggleStepSelection: () => {},
+    loading: false,
   };
 
   handleAllStepsSelection = () => {
@@ -76,6 +79,7 @@ export class StepPage extends Component {
       toggleStepSelection,
       unselectAllSteps,
       validationErrors,
+      loading,
     } = this.props;
     return (
       <PageLayout>
@@ -91,6 +95,7 @@ export class StepPage extends Component {
           selectedItems={selectedItems}
           onAllItemsSelect={this.handleAllStepsSelection}
           onItemSelect={toggleStepSelection}
+          loading={loading}
         />
       </PageLayout>
     );
