@@ -26,6 +26,7 @@ export const Grid = ({
   className,
   changeOnlyMobileLayout,
   loading,
+  rowClassMapper,
 }) => (
   <Fragment>
     <div className={cx('grid', className)}>
@@ -48,6 +49,7 @@ export const Grid = ({
           selectedItems={selectedItems}
           onToggleSelection={onToggleSelection}
           changeOnlyMobileLayout={changeOnlyMobileLayout}
+          rowClassMapper={rowClassMapper}
         />
       )}
     </div>
@@ -72,6 +74,7 @@ Grid.propTypes = {
   className: PropTypes.string,
   changeOnlyMobileLayout: PropTypes.bool,
   loading: PropTypes.bool,
+  rowClassMapper: PropTypes.func,
 };
 Grid.defaultProps = {
   columns: [],
@@ -87,4 +90,5 @@ Grid.defaultProps = {
   className: '',
   changeOnlyMobileLayout: false,
   loading: false,
+  rowClassMapper: () => {},
 };
