@@ -270,7 +270,7 @@ define(function (require) {
                 contentParameters.type = curWidget.widget_type;
                 contentParameters.gadget = this.model.get('gadget');
                 contentParameters.metadata_fields = this.model.get('metadata_fields');
-                contentParameters.itemsCount = this.model.get('itemsCount');
+                contentParameters.itemsCount = curWidget.itemsCount || this.model.get('itemsCount');
                 if (this.model.getContentFields().length) {
                     contentParameters.content_fields = this.model.getContentFields();
                 }
