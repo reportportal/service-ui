@@ -10,6 +10,7 @@ export const SuiteTestToolbar = ({
   onUnselect,
   onUnselectAll,
   onRefresh,
+  onProceedValidItems,
 }) => (
   <div>
     {!!selectedItems.length && (
@@ -21,8 +22,11 @@ export const SuiteTestToolbar = ({
     )}
     <ActionPanel
       hasErrors={selectedItems.some((item) => !!errors[item.id])}
+      hasValidItems={selectedItems.length > Object.keys(errors).length}
+      onProceedValidItems={onProceedValidItems}
       showBreadcrumbs={selectedItems.length === 0}
       onRefresh={onRefresh}
+      selectedItems={selectedItems}
     />
     {parentItem && <InfoLine data={parentItem} />}
     <div />
@@ -35,6 +39,7 @@ SuiteTestToolbar.propTypes = {
   onUnselectAll: PropTypes.func,
   parentItem: PropTypes.object,
   onRefresh: PropTypes.func,
+  onProceedValidItems: PropTypes.func,
 };
 SuiteTestToolbar.defaultProps = {
   selectedItems: [],
@@ -43,4 +48,5 @@ SuiteTestToolbar.defaultProps = {
   onUnselectAll: () => {},
   parentItem: null,
   onRefresh: () => {},
+  onProceedValidItems: () => {},
 };

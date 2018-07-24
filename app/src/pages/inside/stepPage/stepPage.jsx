@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { PageLayout } from 'layouts/pageLayout';
 import { SuiteTestToolbar } from 'pages/inside/common/suiteTestToolbar';
-import { parentItemSelector, loadingSelector } from 'controllers/testItem';
+import { parentItemSelector, loadingSelector, fetchTestItemsAction } from 'controllers/testItem';
 import {
   stepsSelector,
   selectedStepsSelector,
@@ -30,6 +30,7 @@ import { StepGrid } from './stepGrid';
     toggleStepSelection: toggleStepSelectionAction,
     proceedWithValidItemsAction,
     selectStepsAction,
+    fetchTestItemsAction,
   },
 )
 export class StepPage extends Component {
@@ -44,6 +45,7 @@ export class StepPage extends Component {
     proceedWithValidItemsAction: PropTypes.func,
     toggleStepSelection: PropTypes.func,
     loading: PropTypes.bool,
+    fetchTestItemsAction: PropTypes.func,
   };
 
   static defaultProps = {
@@ -57,6 +59,7 @@ export class StepPage extends Component {
     proceedWithValidItemsAction: () => {},
     toggleStepSelection: () => {},
     loading: false,
+    fetchTestItemsAction: () => {},
   };
 
   handleAllStepsSelection = () => {
@@ -89,6 +92,8 @@ export class StepPage extends Component {
           parentItem={parentItem}
           onUnselect={toggleStepSelection}
           onUnselectAll={unselectAllSteps}
+          onProceedValidItems={this.proceedWithValidItems}
+          onRefresh={this.props.fetchTestItemsAction}
         />
         <StepGrid
           data={steps}
