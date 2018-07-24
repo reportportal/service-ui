@@ -594,12 +594,16 @@ define(['util'], function () {
             flakyTestCasesTable: 'Таблица самых изменчивых тестовых сценариев <nobr>(ТОП-20)</nobr>',
             flakyTestCasesTableDescription: 'показывает ТОП-20 наиболее изменчивых тестовых сценариев в обозначенных предыдущих запусках.',
 
+            mostTimeConsumingTestCases: 'Таблица самых длительных тестовых сценариев  <nobr>(TOP-20)</nobr>',
+            mostTimeConsumingTestCasesDescription: 'Показывает топ-20 наиболее длительных тестовых сценариев',
+
             launchStatisticsChart: 'Статистика запусков',
             trendChart: 'Диаграмма тенденций',
             lineChart: 'Линейная диаграмма',
             panelMode: 'В виде групп',
             chartMode: 'Круговая диаграмма',
             barMode: 'Гистограмма',
+            tableMode: 'Таблица',
             pieChartMode: 'Круговая диаграмма',
             donutChartMode: 'Круговая диаграмма',
             trendChartMode: 'Trend view',
@@ -637,7 +641,10 @@ define(['util'], function () {
             zoomWidgetArea: 'Масштабирование виджета',
             aaConfig: 'конфигурация Авто-Анализа',
             aaProperties: 'параметры Авто-Анализа',
-            update_analyzer: 'обновлено'
+            update_analyzer: 'обновлено',
+            includeMethods: 'Включая Before и After методы',
+            status: 'Статус',
+            startTime: 'Время начала',
         },
 
         userProfile: {

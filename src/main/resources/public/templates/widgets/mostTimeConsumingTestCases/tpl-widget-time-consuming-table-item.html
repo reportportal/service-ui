@@ -1,0 +1,16 @@
+<div class="row">
+    <div class="col col-name"><a data-js-name></a></div>
+    <div class="col col-status" data-js-status></div>
+    <div class="col col-duration" data-js-duration></div>
+    <div class="col col-start" data-js-start-time-container>
+        <div class="hoverFullTime">
+                <span class="timeMoment timeHover">
+                    <%= data.moment(data.dateFormat(data.start_time)).fromNow() %>
+                </span>
+            <div class="time-full timeHover hidden">
+                <span><%= data.dateFormat(data.start_time) %></span>
+            </div>
+            <span class="time-ms hidden"><%= data.start_time %></span>
+        </div>
+    </div>
+</div>
