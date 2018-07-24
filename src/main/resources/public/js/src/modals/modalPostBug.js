@@ -239,6 +239,7 @@ define(function (require) {
                 });
                 $(this).html(fieldWithDropdown.$el);
                 $('[data-js-dropdown]', $(this)).attr('id', $(this).attr('data-js-field-with-dropdown')).addClass('default-value');
+                $('[data-js-dropdown]', $(this)).data('type', field.fieldType);
                 if (!config.userModel.hasPermissions()
                     || (config.forSettings.btsJIRA.disabledForEdit.indexOf(field.id) !== -1)) {
                     $('[data-js-dropdown]', $(this)).attr('disabled', 'disabled');
