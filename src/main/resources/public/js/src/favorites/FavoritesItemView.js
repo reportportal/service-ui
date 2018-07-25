@@ -44,8 +44,7 @@ define(function (require) {
         },
         bindings: {
             ':el': 'classes: {"not-owner": notMyFilter}',
-            '[data-js-filter-link]': 'text: name, attr: {href: url}, classes: {hide: not(isLaunch)}',
-            '[data-js-filter-name]': 'text: name, classes: {hide: isLaunch}',
+            '[data-js-filter-link]': 'text: name, attr: {href: url}',
             '[data-js-filter-options]': 'html: optionsString',
             '[data-js-owner]': 'text: owner',
             '[data-js-filter-shared]': 'classes: {hide: not(share)}, attr: {disabled: notMyFilter}',
