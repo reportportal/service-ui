@@ -496,7 +496,7 @@ define(function (require) {
 
                 required = element.hasClass('required-value');
                 if (element.hasClass('rp-btn')) {
-                    value = element.parent().find('ul.dropdown-menu > li > a.selected').data('value') || $('.select-value', element).text();
+                    value = element.parent().find('ul.dropdown-menu > li > a.selected').text() || $('.select-value', element).text();
                 } else {
                     value = element.val().trim();
                 }
