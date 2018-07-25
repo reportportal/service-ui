@@ -14,7 +14,7 @@ import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { projectConfigSelector } from 'controllers/project';
 import { activeProjectSelector } from 'controllers/user';
 import { authExtensionsSelector } from 'controllers/appInfo';
-import { showNotification } from 'controllers/notification';
+import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import styles from './generalTab.scss';
 
 const cx = classNames.bind(styles);
@@ -160,13 +160,13 @@ export class GeneralTab extends PureComponent {
       .then(() => {
         this.props.showNotification({
           message: this.props.intl.formatMessage(messages.updateSuccessNotification),
-          type: 'success',
+          type: NOTIFICATION_TYPES.SUCCESS,
         });
       })
       .catch(() => {
         this.props.showNotification({
           message: this.props.intl.formatMessage(messages.updateErrorNotification),
-          type: 'error',
+          type: NOTIFICATION_TYPES.ERROR,
         });
       });
   };
@@ -215,10 +215,7 @@ export class GeneralTab extends PureComponent {
             <span className={cx('field-label')}>{intl.formatMessage(messages.interruptedJob)}</span>
             <div className={cx('field-input')}>
               <FieldProvider name="interruptedJob">
-                <InputDropdown
-                  options={this.interruptedJob}
-                  customClass={cx('mobile-input-disabled')}
-                />
+                <InputDropdown options={this.interruptedJob} mobileDisabled />
               </FieldProvider>
             </div>
             <p className={cx('field-description')}>
@@ -229,10 +226,7 @@ export class GeneralTab extends PureComponent {
             <span className={cx('field-label')}>{intl.formatMessage(messages.keepLogs)}</span>
             <div className={cx('field-input')}>
               <FieldProvider name="keepLogs">
-                <InputDropdown
-                  options={this.filterOptions(this.keepLogs)}
-                  customClass={cx('mobile-input-disabled')}
-                />
+                <InputDropdown options={this.filterOptions(this.keepLogs)} mobileDisabled />
               </FieldProvider>
             </div>
             <p className={cx('field-description')}>
@@ -245,10 +239,7 @@ export class GeneralTab extends PureComponent {
             </span>
             <div className={cx('field-input')}>
               <FieldProvider name="keepScreenshots">
-                <InputDropdown
-                  options={this.filterOptions(this.keepScreenshots)}
-                  customClass={cx('mobile-input-disabled')}
-                />
+                <InputDropdown options={this.filterOptions(this.keepScreenshots)} mobileDisabled />
               </FieldProvider>
             </div>
             <p className={cx('field-description')}>
