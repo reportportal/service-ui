@@ -95,8 +95,3 @@
     display: block;
   }
 }
-.mobile-input-disabled {
-  @media (max-width: $SCREEN_XS_MAX) {
-    background-color: $COLOR--gray-91;
-  }
-}

@@ -36,7 +36,7 @@ export class InputDropdown extends Component {
     onChange: PropTypes.func,
     onFocus: PropTypes.func,
     onBlur: PropTypes.func,
-    customClass: PropTypes.string,
+    mobileDisabled: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -48,7 +48,7 @@ export class InputDropdown extends Component {
     onChange: () => {},
     onFocus: () => {},
     onBlur: () => {},
-    customClass: '',
+    mobileDisabled: false,
   };
   state = {
     opened: false,
@@ -172,7 +172,10 @@ export class InputDropdown extends Component {
     return (
       <div ref={this.setRef} className={cx('dropdown', { opened: this.state.opened })}>
         <div
-          className={cx('select-block', this.props.customClass, { disabled: this.props.disabled })}
+          className={cx('select-block', {
+            disabled: this.props.disabled,
+            'mobile-disabled': this.props.mobileDisabled,
+          })}
           onClick={this.onClickSelectBlock}
         >
           <span className={cx('value')}>{this.displayedValue()}</span>
