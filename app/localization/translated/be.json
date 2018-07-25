@@ -493,6 +493,7 @@
   "SearchDashboardForm.dashboardNameSearchHint": "Назва панэлі кіравання павінна мець памер ад 3 да 128.",
   "ServiceVersionItem.newVersion": "Даступны новыя версіі: {newVersion}",
   "ServiceVersionsBlock.currentVersion": "Бягучая версія",
+  "SettingsPage.title": "Налады",
   "ShareFilter.shared": "Апублікаваны:",
   "Sidebar.administrateBtn": "Адміністраваць",
   "Sidebar.dashboardsBtn": "Панэль кіравання",

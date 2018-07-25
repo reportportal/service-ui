@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
-import { defineMessages, injectIntl, intlShape } from 'react-intl';
+import { injectIntl, intlShape } from 'react-intl';
 import { reduxForm } from 'redux-form';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
@@ -16,96 +16,9 @@ import { activeProjectSelector } from 'controllers/user';
 import { authExtensionsSelector } from 'controllers/appInfo';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import styles from './generalTab.scss';
+import { Messages } from './generalTabsMessages';
 
 const cx = classNames.bind(styles);
-
-const messages = defineMessages({
-  projectNameLabel: {
-    id: 'GeneralTab.projectNameLabel',
-    defaultMessage: 'Name',
-  },
-  interruptedJob: {
-    id: 'GeneralTab.interruptedJob',
-    defaultMessage: 'Launch inactivity timeout',
-  },
-  interruptedJobDescription: {
-    id: 'GeneralTab.interruptedJobDescription',
-    defaultMessage: 'Schedule time for Job to interrupt inactive launches',
-  },
-  keepLogs: {
-    id: 'GeneralTab.keepLogs',
-    defaultMessage: 'Keep logs',
-  },
-  keepLogsDescription: {
-    id: 'GeneralTab.keepLogsDescription',
-    defaultMessage:
-      'How long to keep old logs in launches. Related launches structure will be saved, in order to keep statistics',
-  },
-  keepScreenshots: {
-    id: 'GeneralTab.keepScreenshots',
-    defaultMessage: 'Keep attachments',
-  },
-  keepScreenshotsDescription: {
-    id: 'GeneralTab.keepScreenshotsDescription',
-    defaultMessage: 'How long to keep attachments in system',
-  },
-  updateSuccessNotification: {
-    id: 'GeneralTab.updateSuccessNotification',
-    defaultMessage: 'Project settings were successfully updated',
-  },
-  updateErrorNotification: {
-    id: 'GeneralTab.updateErrorNotification',
-    defaultMessage: 'Failed to update project settings',
-  },
-  hour1: {
-    id: 'GeneralTab.hour1',
-    defaultMessage: '1 hour',
-  },
-  hour3: {
-    id: 'GeneralTab.hour3',
-    defaultMessage: '3 hours',
-  },
-  hour6: {
-    id: 'GeneralTab.hour6',
-    defaultMessage: '6 hours',
-  },
-  hour12: {
-    id: 'GeneralTab.hour12',
-    defaultMessage: '12 hours',
-  },
-  day1: {
-    id: 'GeneralTab.day1',
-    defaultMessage: '1 day',
-  },
-  week1: {
-    id: 'GeneralTab.week1',
-    defaultMessage: '1 week',
-  },
-  week2: {
-    id: 'GeneralTab.week2',
-    defaultMessage: '2 weeks',
-  },
-  week3: {
-    id: 'GeneralTab.week3',
-    defaultMessage: '3 weeks',
-  },
-  month1: {
-    id: 'GeneralTab.month1',
-    defaultMessage: '1 month',
-  },
-  month3: {
-    id: 'GeneralTab.month3',
-    defaultMessage: '3 months',
-  },
-  month6: {
-    id: 'GeneralTab.month6',
-    defaultMessage: '6 months',
-  },
-  forever: {
-    id: 'GeneralTab.forever',
-    defaultMessage: 'Forever',
-  },
-});
 
 @reduxForm({
   form: 'generalForm',
@@ -159,13 +72,13 @@ export class GeneralTab extends PureComponent {
     fetch(URLS.project(this.props.projectId), { method: 'put', data: dataToSend })
       .then(() => {
         this.props.showNotification({
-          message: this.props.intl.formatMessage(messages.updateSuccessNotification),
+          message: this.props.intl.formatMessage(Messages.updateSuccessNotification),
           type: NOTIFICATION_TYPES.SUCCESS,
         });
       })
       .catch(() => {
         this.props.showNotification({
-          message: this.props.intl.formatMessage(messages.updateErrorNotification),
+          message: this.props.intl.formatMessage(Messages.updateErrorNotification),
           type: NOTIFICATION_TYPES.ERROR,
         });
       });
@@ -175,27 +88,27 @@ export class GeneralTab extends PureComponent {
     this.props.isEpamInstance ? options.filter((item) => item.value !== 'forever') : options;
 
   interruptedJob = [
-    { label: this.props.intl.formatMessage(messages.hour1), value: '1 hour' },
-    { label: this.props.intl.formatMessage(messages.hour3), value: '3 hours' },
-    { label: this.props.intl.formatMessage(messages.hour6), value: '6 hours' },
-    { label: this.props.intl.formatMessage(messages.hour12), value: '12 hours' },
-    { label: this.props.intl.formatMessage(messages.day1), value: '1 day' },
-    { label: this.props.intl.formatMessage(messages.week1), value: '1 week' },
+    { label: this.props.intl.formatMessage(Messages.hour1), value: '1 hour' },
+    { label: this.props.intl.formatMessage(Messages.hour3), value: '3 hours' },
+    { label: this.props.intl.formatMessage(Messages.hour6), value: '6 hours' },
+    { label: this.props.intl.formatMessage(Messages.hour12), value: '12 hours' },
+    { label: this.props.intl.formatMessage(Messages.day1), value: '1 day' },
+    { label: this.props.intl.formatMessage(Messages.week1), value: '1 week' },
   ];
   keepLogs = [
-    { label: this.props.intl.formatMessage(messages.week2), value: '2 weeks' },
-    { label: this.props.intl.formatMessage(messages.month1), value: '1 month' },
-    { label: this.props.intl.formatMessage(messages.month3), value: '3 months' },
-    { label: this.props.intl.formatMessage(messages.month6), value: '6 months' },
-    { label: this.props.intl.formatMessage(messages.forever), value: 'forever' },
+    { label: this.props.intl.formatMessage(Messages.week2), value: '2 weeks' },
+    { label: this.props.intl.formatMessage(Messages.month1), value: '1 month' },
+    { label: this.props.intl.formatMessage(Messages.month3), value: '3 months' },
+    { label: this.props.intl.formatMessage(Messages.month6), value: '6 months' },
+    { label: this.props.intl.formatMessage(Messages.forever), value: 'forever' },
   ];
   keepScreenshots = [
-    { label: this.props.intl.formatMessage(messages.week1), value: '1 week' },
-    { label: this.props.intl.formatMessage(messages.week2), value: '2 weeks' },
-    { label: this.props.intl.formatMessage(messages.week3), value: '3 weeks' },
-    { label: this.props.intl.formatMessage(messages.month1), value: '1 month' },
-    { label: this.props.intl.formatMessage(messages.month3), value: '3 months' },
-    { label: this.props.intl.formatMessage(messages.forever), value: 'forever' },
+    { label: this.props.intl.formatMessage(Messages.week1), value: '1 week' },
+    { label: this.props.intl.formatMessage(Messages.week2), value: '2 weeks' },
+    { label: this.props.intl.formatMessage(Messages.week3), value: '3 weeks' },
+    { label: this.props.intl.formatMessage(Messages.month1), value: '1 month' },
+    { label: this.props.intl.formatMessage(Messages.month3), value: '3 months' },
+    { label: this.props.intl.formatMessage(Messages.forever), value: 'forever' },
   ];
 
   render() {
@@ -205,37 +118,37 @@ export class GeneralTab extends PureComponent {
         <form onSubmit={this.props.handleSubmit(this.onFormSubmit)}>
           <div className={cx('field-container')}>
             <span className={cx('field-label')}>
-              {intl.formatMessage(messages.projectNameLabel)}
+              {intl.formatMessage(Messages.projectNameLabel)}
             </span>
             <div className={cx('field-input')}>
               <Input disabled value={this.props.projectId} />
             </div>
           </div>
           <div className={cx('field-container')}>
-            <span className={cx('field-label')}>{intl.formatMessage(messages.interruptedJob)}</span>
+            <span className={cx('field-label')}>{intl.formatMessage(Messages.interruptedJob)}</span>
             <div className={cx('field-input')}>
               <FieldProvider name="interruptedJob">
                 <InputDropdown options={this.interruptedJob} mobileDisabled />
               </FieldProvider>
             </div>
             <p className={cx('field-description')}>
-              {intl.formatMessage(messages.interruptedJobDescription)}
+              {intl.formatMessage(Messages.interruptedJobDescription)}
             </p>
           </div>
           <div className={cx('field-container')}>
-            <span className={cx('field-label')}>{intl.formatMessage(messages.keepLogs)}</span>
+            <span className={cx('field-label')}>{intl.formatMessage(Messages.keepLogs)}</span>
             <div className={cx('field-input')}>
               <FieldProvider name="keepLogs">
                 <InputDropdown options={this.filterOptions(this.keepLogs)} mobileDisabled />
               </FieldProvider>
             </div>
             <p className={cx('field-description')}>
-              {intl.formatMessage(messages.keepLogsDescription)}
+              {intl.formatMessage(Messages.keepLogsDescription)}
             </p>
           </div>
           <div className={cx('field-container')}>
             <span className={cx('field-label')}>
-              {intl.formatMessage(messages.keepScreenshots)}
+              {intl.formatMessage(Messages.keepScreenshots)}
             </span>
             <div className={cx('field-input')}>
               <FieldProvider name="keepScreenshots">
@@ -243,7 +156,7 @@ export class GeneralTab extends PureComponent {
               </FieldProvider>
             </div>
             <p className={cx('field-description')}>
-              {intl.formatMessage(messages.keepScreenshotsDescription)}
+              {intl.formatMessage(Messages.keepScreenshotsDescription)}
             </p>
           </div>
           <div className={cx('button-container')}>
