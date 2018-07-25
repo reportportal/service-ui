@@ -1,4 +1,4 @@
-import { PureComponent } from 'react';
+import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connectRouter } from 'common/utils';
 
@@ -24,7 +24,7 @@ export const withFilter = (WrappedComponent) =>
       updateFilter: (filter) => ({ [FILTER_KEY]: filter }),
     },
   )(
-    class FilterWrapper extends PureComponent {
+    class FilterWrapper extends Component {
       static displayName = `withFilter(${WrappedComponent.displayName || WrappedComponent.name})`;
 
       static propTypes = {
