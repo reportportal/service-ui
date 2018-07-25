@@ -136,7 +136,7 @@ export class MembersPage extends Component {
       })
       .catch((err) => {
         this.props.showNotification({ message: err.msg, type: NOTIFICATION_TYPES.ERROR });
-        this.props.fetchData();
+        this.props.fetchMembersAction();
       });
   };
 
