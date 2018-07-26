@@ -2,7 +2,7 @@ import { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
-import { defineMessages, injectIntl } from 'react-intl';
+import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
 import {
   breadcrumbsSelector,
   restorePathAction,
@@ -14,6 +14,7 @@ import { Breadcrumbs, breadcrumbDescriptorShape } from 'components/main/breadcru
 import { GhostButton } from 'components/buttons/ghostButton';
 import { GhostMenuButton } from 'components/buttons/ghostMenuButton';
 import { LEVEL_STEP, LEVEL_SUITE, LEVEL_TEST } from 'common/constants/launchLevels';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import RefreshIcon from 'common/img/refresh-inline.svg';
 import HistoryIcon from 'common/img/history-inline.svg';
 import DeleteIcon from 'common/img/bin-icon-inline.svg';
@@ -49,10 +50,6 @@ const messages = defineMessages({
   actionIncludeIntoAA: {
     id: 'ActionPanel.includeIntoAA',
     defaultMessage: 'Include into Auto Analysis',
-  },
-  actionDelete: {
-    id: 'ActionPanel.delete',
-    defaultMessage: 'Delete',
   },
   proceedButton: {
     id: 'ActionPanel.proceedButton',
@@ -155,7 +152,7 @@ export class ActionPanel extends Component {
       onClick: this.props.onIncludeIntoAA,
     },
     {
-      label: this.props.intl.formatMessage(messages.actionDelete),
+      label: this.props.intl.formatMessage(COMMON_LOCALE_KEYS.DELETE),
       value: 'action-delete',
       onClick: this.props.onDelete,
     },
@@ -195,20 +192,20 @@ export class ActionPanel extends Component {
           {this.checkVisibility([LEVEL_SUITE, LEVEL_TEST]) && (
             <div className={cx('action-button')}>
               <GhostButton icon={DeleteIcon} disabled>
-                Delete
+                <FormattedMessage id="Common.delete" defaultMessage="Delete" />
               </GhostButton>
             </div>
           )}
           {!listView && (
             <div className={cx('action-button')}>
               <GhostButton icon={HistoryIcon} disabled>
-                History
+                <FormattedMessage id="ActionPanel.history" defaultMessage="History" />
               </GhostButton>
             </div>
           )}
           <div className={cx('action-button')}>
             <GhostButton icon={RefreshIcon} onClick={onRefresh}>
-              Refresh
+              <FormattedMessage id="Common.refresh" defaultMessage="Refresh" />
             </GhostButton>
           </div>
         </div>
