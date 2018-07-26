@@ -73,29 +73,33 @@
           background-size: contain;
         }
         .growth-duration{
-          display: inline-block;
+          display: flex;
+          justify-content: center;
+          align-items: center;
           position: relative;
           margin-right: 3px;
           padding: 0 2px;
           border-radius: 100px;
-          background-color: lighten($COLOR--white, 20%);
+          background-color: $COLOR--white;
           color: $COLOR--orange-red;
           max-width: 50px;
           font-size: 9px;
           line-height: 13px;
-          vertical-align: middle;
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
           .time-icon{
             color: $COLOR--orange-red;
             font-size: 11px;
-            line-height: 12px;
-            vertical-align: middle;
+            line-height: 13px;
             margin-right: 2px;
           }
         }
         .main-info{
+          display: flex;
+          flex-wrap: wrap;
+          align-items: center;
+          justify-content: center;
           max-width: 80%;
         }
         i {
@@ -118,7 +122,6 @@
         }
         .issue-type {
           font-size: 10px;
-          vertical-align: top;
           display: inline-block;
           position: relative;
           padding: 0 8px;
