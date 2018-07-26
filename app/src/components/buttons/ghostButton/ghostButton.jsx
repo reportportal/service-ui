@@ -48,7 +48,7 @@ export const GhostButton = ({
   return (
     <button type={type} disabled={disabled} className={classes} onClick={onClick} title={title}>
       {icon && (
-        <i className={cx({ icon: true, 'only-icon': !children, 'icon-at-right': iconAtRight })}>
+        <i className={cx('icon', { 'only-icon': !children, 'icon-at-right': iconAtRight })}>
           {Parser(icon)}
         </i>
       )}

@@ -1,1 +1,1 @@
-export const WIDGET_INFO_FORM = 'widgetInfoForm';
+export const WIDGET_WIZARD_FORM = 'widgetWizardForm';

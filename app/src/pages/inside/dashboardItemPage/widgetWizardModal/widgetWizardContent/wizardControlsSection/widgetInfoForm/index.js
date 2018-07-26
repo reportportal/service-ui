@@ -1,1 +1,0 @@
-export { WidgetInfoForm } from './widgetInfoForm';

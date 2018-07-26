@@ -1,5 +1,5 @@
 import Parser from 'html-react-parser';
-import CloseIcon from 'common/img/icon-cross-inline.svg';
+import CloseIcon from 'common/img/cross-icon-inline.svg';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import styles from './modalHeader.scss';

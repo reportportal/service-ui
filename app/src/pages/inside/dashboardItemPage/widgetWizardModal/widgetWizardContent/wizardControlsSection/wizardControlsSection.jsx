@@ -7,11 +7,12 @@ import { GhostButton } from 'components/buttons/ghostButton';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { submit } from 'redux-form';
-import LeftArrowIcon from 'common/img/arrow-left-inline.svg';
-import RightArrowIcon from 'common/img/arrow-right-inline.svg';
-import { WIDGET_INFO_FORM } from './constants';
-import { WidgetTypeSelector } from './widgetTypeSelector';
-import { WidgetInfoForm } from './widgetInfoForm';
+import LeftArrowIcon from 'common/img/arrow-left-small-inline.svg';
+import RightArrowIcon from 'common/img/arrow-right-small-inline.svg';
+import { WIDGET_WIZARD_FORM } from './constants';
+import { WizardFirstStepForm } from './wizardFirstStepForm';
+import { WizardSecondStepForm } from './wizardSecondStepForm';
+import { WizardThirdStepForm } from './wizardThirdStepForm';
 import styles from './wizardControlsSection.scss';
 
 const cx = classNames.bind(styles);
@@ -33,19 +34,20 @@ const messages = defineMessages({
 @injectIntl
 @connect(
   null,
-  (dispatch) => ({
-    submitWidgetInfoForm: () => dispatch(submit(WIDGET_INFO_FORM)),
-  }),
+  {
+    submitWizardThirdStepForm: () => submit(WIDGET_WIZARD_FORM),
+  },
 )
 export class WizardControlsSection extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
-    submitWidgetInfoForm: PropTypes.func.isRequired,
+    submitWizardThirdStepForm: PropTypes.func.isRequired,
     step: PropTypes.number,
     widgets: PropTypes.array,
     activeWidgetId: PropTypes.string,
-    onPrevStep: PropTypes.func,
-    onNextStep: PropTypes.func,
+    onClickPrevStep: PropTypes.func,
+    onClickNextStep: PropTypes.func,
+    nextStep: PropTypes.func,
     onAddWidget: PropTypes.func,
     onChangeWidgetType: PropTypes.func,
   };
@@ -53,73 +55,50 @@ export class WizardControlsSection extends Component {
     widgets: [],
     activeWidgetId: '',
     step: 0,
-    onPrevStep: () => {},
-    onNextStep: () => {},
+    onClickPrevStep: () => {},
+    onClickNextStep: () => {},
+    nextStep: () => {},
     onAddWidget: () => {},
     onChangeWidgetType: () => {},
-  };
-
-  state = {
-    hasErrors: false,
   };
 
   getControlsByStep = (step) => {
     const { activeWidgetId, widgets } = this.props;
     switch (step) {
       case 1:
-        return '2 step';
+        return <WizardSecondStepForm onSubmit={this.props.nextStep} />;
       case 2:
         return (
-          <WidgetInfoForm
-            widgetTitle={widgets.filter((widget) => widget.id === activeWidgetId)[0].title}
+          <WizardThirdStepForm
+            widgetTitle={widgets.find((widget) => widget.id === activeWidgetId).title}
             onSubmit={this.props.onAddWidget}
           />
         );
       default:
-        return (
-          <WidgetTypeSelector
-            activeWidgetId={activeWidgetId}
-            widgets={widgets}
-            hasErrors={this.state.hasErrors}
-            onChange={this.handleChangeWidgetType}
-          />
-        );
+        return <WizardFirstStepForm widgets={widgets} onSubmit={this.props.nextStep} />;
     }
-  };
-
-  handleChangeWidgetType = (e) => {
-    this.state.hasErrors && this.setState({ hasErrors: false });
-    this.props.onChangeWidgetType(e);
-  };
-
-  handleNextClick = () => {
-    if (this.props.step === 0 && !this.props.activeWidgetId) {
-      this.setState({ hasErrors: true });
-      return;
-    }
-    this.props.onNextStep();
   };
 
   handleAddWidget = () => {
-    this.props.submitWidgetInfoForm();
+    this.props.submitWizardThirdStepForm();
   };
 
   render() {
-    const { intl, step, onPrevStep } = this.props;
+    const { intl, step, onClickPrevStep, onClickNextStep } = this.props;
     return (
       <div className={cx('wizard-controls-section')}>
         <div className={cx('controls-wrapper')}>{this.getControlsByStep(step)}</div>
         <div className={cx('buttons-block')}>
           {step !== 0 && (
             <div className={cx('button')}>
-              <GhostButton icon={LeftArrowIcon} onClick={onPrevStep}>
+              <GhostButton icon={LeftArrowIcon} onClick={onClickPrevStep}>
                 {Parser(intl.formatMessage(messages.prevStepButton))}
               </GhostButton>
             </div>
           )}
           {step !== 2 ? (
             <div className={cx('button')}>
-              <GhostButton icon={RightArrowIcon} onClick={this.handleNextClick} iconAtRight>
+              <GhostButton icon={RightArrowIcon} onClick={onClickNextStep} iconAtRight>
                 {Parser(intl.formatMessage(messages.nextStepButton))}
               </GhostButton>
             </div>

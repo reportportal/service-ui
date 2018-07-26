@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { reduxForm } from 'redux-form';
+import { connect } from 'react-redux';
+import { reduxForm, initialize } from 'redux-form';
 import { injectIntl, intlShape, defineMessages } from 'react-intl';
 import PropTypes from 'prop-types';
 import { ModalField } from 'components/main/modal';
@@ -9,44 +10,52 @@ import { InputBigSwitcher } from 'components/inputs/inputBigSwitcher';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { validate } from 'common/utils';
-import { WIDGET_INFO_FORM } from '../constants';
+import { WIDGET_WIZARD_FORM } from '../constants';
 
 const LABEL_WIDTH = 175;
 
 const messages = defineMessages({
   nameLabel: {
-    id: 'WidgetInfoForm.nameLabel',
+    id: 'WizardThirdStepForm.nameLabel',
     defaultMessage: 'Widget name',
   },
   namePlaceholder: {
-    id: 'WidgetInfoForm.namePlaceholder',
+    id: 'WizardThirdStepForm.namePlaceholder',
     defaultMessage: 'Enter widget name',
   },
   descriptionLabel: {
-    id: 'WidgetInfoForm.descriptionLabel',
+    id: 'WizardThirdStepForm.descriptionLabel',
     defaultMessage: 'Description',
   },
   descriptionPlaceholder: {
-    id: 'WidgetInfoForm.descriptionPlaceholder',
+    id: 'WizardThirdStepForm.descriptionPlaceholder',
     defaultMessage: 'Add some description to widget',
   },
   shareLabel: {
-    id: 'WidgetInfoForm.shareLabel',
+    id: 'WizardThirdStepForm.shareLabel',
     defaultMessage: 'Share',
   },
 });
 
 @injectIntl
 @reduxForm({
-  form: WIDGET_INFO_FORM,
+  form: WIDGET_WIZARD_FORM,
+  destroyOnUnmount: false,
+  forceUnregisterOnUnmount: true,
   validate: ({ name }) => ({
     name: !validate.widgetName(name) && 'widgetNameHint',
   }),
 })
-export class WidgetInfoForm extends Component {
+@connect(
+  null,
+  {
+    initializeWizardThirdStepForm: (data) => initialize(WIDGET_WIZARD_FORM, data, true),
+  },
+)
+export class WizardThirdStepForm extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
-    initialize: PropTypes.func.isRequired,
+    initializeWizardThirdStepForm: PropTypes.func.isRequired,
     handleSubmit: PropTypes.func.isRequired,
     onSubmit: PropTypes.func,
     widgetTitle: PropTypes.string,
@@ -58,15 +67,18 @@ export class WidgetInfoForm extends Component {
 
   constructor(props) {
     super(props);
-    props.initialize({
-      name: `${props.widgetTitle}_${new Date()
-        .valueOf()
-        .toString()
-        .slice(-3)}`,
+    props.initializeWizardThirdStepForm({
+      name: `${props.widgetTitle}_${this.getUniqPostfix()}`,
       description: '',
       share: false,
     });
   }
+
+  getUniqPostfix = () =>
+    new Date()
+      .valueOf()
+      .toString()
+      .slice(-3);
 
   render() {
     const { intl, handleSubmit, onSubmit } = this.props;
@@ -75,7 +87,7 @@ export class WidgetInfoForm extends Component {
         <ModalField label={intl.formatMessage(messages.nameLabel)} labelWidth={LABEL_WIDTH}>
           <FieldProvider name={'name'} placeholder={intl.formatMessage(messages.namePlaceholder)}>
             <FieldErrorHint>
-              <Input maxLength={'128'} />
+              <Input maxLength="128" />
             </FieldErrorHint>
           </FieldProvider>
         </ModalField>
