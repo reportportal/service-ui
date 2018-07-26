@@ -9,6 +9,7 @@ import { formatMethodType, formatStatus } from 'common/utils/localizationUtils';
 import { FAILED } from 'common/constants/testStatuses';
 import { PredefinedFilterSwitcher } from './predefinedFilterSwitcher';
 import { DefectType } from './defectType';
+import { GroupHeader } from './groupHeader';
 import styles from './stepGrid.scss';
 
 const cx = classNames.bind(styles);
@@ -106,6 +107,7 @@ export class StepGrid extends Component {
     onItemSelect: PropTypes.func,
     onAllItemsSelect: PropTypes.func,
     loading: PropTypes.bool,
+    listView: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -114,6 +116,7 @@ export class StepGrid extends Component {
     onItemSelect: () => {},
     onAllItemsSelect: () => {},
     loading: false,
+    listView: false,
   };
 
   constructor(props) {
@@ -180,8 +183,17 @@ export class StepGrid extends Component {
     [cx('failed')]: value.status === FAILED,
   });
 
+  groupStepItems = () =>
+    this.props.data.reduce((groups, step) => {
+      const group = groups[step.parent] || [];
+      return {
+        ...groups,
+        [step.parent]: [...group, step],
+      };
+    }, {});
+
   render() {
-    const { data, onItemSelect, onAllItemsSelect, selectedItems, loading } = this.props;
+    const { data, onItemSelect, onAllItemsSelect, selectedItems, loading, listView } = this.props;
     return (
       <Grid
         columns={this.columns}
@@ -192,6 +204,9 @@ export class StepGrid extends Component {
         selectable
         rowClassMapper={this.highlightFailedItems}
         loading={loading}
+        groupHeader={GroupHeader}
+        groupFunction={this.groupStepItems}
+        grouped={listView}
       />
     );
   }

@@ -3,7 +3,13 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { PageLayout } from 'layouts/pageLayout';
 import { SuiteTestToolbar } from 'pages/inside/common/suiteTestToolbar';
-import { parentItemSelector, loadingSelector, fetchTestItemsAction } from 'controllers/testItem';
+import {
+  parentItemSelector,
+  loadingSelector,
+  fetchTestItemsAction,
+  isListViewSelector,
+  namespaceSelector,
+} from 'controllers/testItem';
 import {
   stepsSelector,
   selectedStepsSelector,
@@ -24,6 +30,7 @@ import { StepGrid } from './stepGrid';
     selectedItems: selectedStepsSelector(state),
     validationErrors: validationErrorsSelector(state),
     loading: loadingSelector(state),
+    listView: isListViewSelector(state, namespaceSelector(state)),
   }),
   {
     unselectAllSteps: unselectAllStepsAction,
@@ -46,6 +53,7 @@ export class StepPage extends Component {
     toggleStepSelection: PropTypes.func,
     loading: PropTypes.bool,
     fetchTestItemsAction: PropTypes.func,
+    listView: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -60,6 +68,7 @@ export class StepPage extends Component {
     toggleStepSelection: () => {},
     loading: false,
     fetchTestItemsAction: () => {},
+    listView: false,
   };
 
   handleAllStepsSelection = () => {
@@ -83,6 +92,7 @@ export class StepPage extends Component {
       unselectAllSteps,
       validationErrors,
       loading,
+      listView,
     } = this.props;
     return (
       <PageLayout>
@@ -101,6 +111,7 @@ export class StepPage extends Component {
           onAllItemsSelect={this.handleAllStepsSelection}
           onItemSelect={toggleStepSelection}
           loading={loading}
+          listView={listView}
         />
       </PageLayout>
     );

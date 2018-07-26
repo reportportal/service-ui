@@ -3,7 +3,13 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
 import { defineMessages, injectIntl } from 'react-intl';
-import { breadcrumbsSelector, restorePathAction, levelSelector } from 'controllers/testItem';
+import {
+  breadcrumbsSelector,
+  restorePathAction,
+  levelSelector,
+  isListViewSelector,
+  namespaceSelector,
+} from 'controllers/testItem';
 import { Breadcrumbs, breadcrumbDescriptorShape } from 'components/main/breadcrumbs';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { GhostMenuButton } from 'components/buttons/ghostMenuButton';
@@ -58,6 +64,7 @@ const messages = defineMessages({
   (state) => ({
     breadcrumbs: breadcrumbsSelector(state),
     level: levelSelector(state),
+    listView: isListViewSelector(state, namespaceSelector(state)),
   }),
   {
     restorePath: restorePathAction,
@@ -83,6 +90,7 @@ export class ActionPanel extends Component {
     onIgnoreInAA: PropTypes.func,
     onIncludeIntoAA: PropTypes.func,
     onDelete: PropTypes.func,
+    listView: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -105,6 +113,7 @@ export class ActionPanel extends Component {
     onIgnoreInAA: () => {},
     onIncludeIntoAA: () => {},
     onDelete: () => {},
+    listView: false,
   };
 
   constructor(props) {
@@ -163,6 +172,7 @@ export class ActionPanel extends Component {
       hasValidItems,
       onProceedValidItems,
       selectedItems,
+      listView,
     } = this.props;
     return (
       <div className={cx('action-panel', { 'right-buttons-only': !showBreadcrumbs && !hasErrors })}>
@@ -189,11 +199,13 @@ export class ActionPanel extends Component {
               </GhostButton>
             </div>
           )}
-          <div className={cx('action-button')}>
-            <GhostButton icon={HistoryIcon} disabled>
-              History
-            </GhostButton>
-          </div>
+          {!listView && (
+            <div className={cx('action-button')}>
+              <GhostButton icon={HistoryIcon} disabled>
+                History
+              </GhostButton>
+            </div>
+          )}
           <div className={cx('action-button')}>
             <GhostButton icon={RefreshIcon} onClick={onRefresh}>
               Refresh
