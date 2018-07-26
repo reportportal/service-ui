@@ -47,9 +47,9 @@ const messages = defineMessages({
     projectId: activeProjectSelector(state),
     activeTab: state.location.payload.settingTab,
   }),
-  (dispatch) => ({
-    changeTab: (link) => dispatch(redirect(link)),
-  }),
+  {
+    changeTab: (link) => redirect(link),
+  },
 )
 @injectIntl
 export class SettingTabs extends Component {
