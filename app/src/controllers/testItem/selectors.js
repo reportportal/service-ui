@@ -44,6 +44,9 @@ const isListView = (query, namespace) => {
   return namespacedQuery && 'filter.eq.has_childs' in namespacedQuery;
 };
 
+export const isListViewSelector = (state, namespace) =>
+  isListView(pagePropertiesSelector(state), namespace);
+
 export const breadcrumbsSelector = createSelector(
   activeProjectSelector,
   filterIdSelector,

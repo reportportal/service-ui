@@ -12,4 +12,5 @@ export {
   statisticsLinkSelector,
   defectLinkSelector,
   pageLoadingSelector,
+  isListViewSelector,
 } from './selectors';
