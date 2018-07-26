@@ -29,15 +29,11 @@
   text-overflow: ellipsis;
   text-transform: uppercase;
   cursor: pointer;
-  a {
-    color: $COLOR--gray-47;
-    text-decoration: none;
-  }
+  color: $COLOR--gray-47;
+  text-decoration: none;
 }
 .active {
-  a {
-    color: $COLOR--topaz;
-  }
+  color: $COLOR--topaz;
   &:before {
     position: absolute;
     bottom: -2px;
