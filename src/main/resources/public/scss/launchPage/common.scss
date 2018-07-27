@@ -297,7 +297,7 @@
     display: inline-block;
     margin-left: 5px;
     border-radius: 100px;
-    background-color: lighten($COLOR--white, 20%);
+    background-color: $COLOR--white;
     color: $COLOR--orange-red;
     white-space: nowrap;
     font-size: 9px;

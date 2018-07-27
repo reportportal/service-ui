@@ -82,12 +82,15 @@
           border-radius: 100px;
           background-color: $COLOR--white;
           color: $COLOR--orange-red;
-          max-width: 50px;
           font-size: 9px;
           line-height: 13px;
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
+          span{
+            display: inline-block;
+            max-width: 50px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
           .time-icon{
             color: $COLOR--orange-red;
             font-size: 11px;
