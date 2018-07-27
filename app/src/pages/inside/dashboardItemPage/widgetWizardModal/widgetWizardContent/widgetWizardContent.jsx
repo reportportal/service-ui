@@ -17,9 +17,9 @@ const cx = classNames.bind(styles);
   (state) => ({
     activeWidgetId: formValueSelector(WIDGET_WIZARD_FORM)(state, 'widgetType'),
   }),
-  (dispatch) => ({
-    submitWidgetWizardForm: () => dispatch(submit(WIDGET_WIZARD_FORM)),
-  }),
+  {
+    submitWidgetWizardForm: () => submit(WIDGET_WIZARD_FORM),
+  },
 )
 export class WidgetWizardContent extends Component {
   static propTypes = {
@@ -71,6 +71,7 @@ export class WidgetWizardContent extends Component {
           nextStep={this.nextStep}
           onAddWidget={this.onAddWidget}
           onChangeWidgetType={this.onChangeWidgetType}
+          submitWidgetWizardForm={this.props.submitWidgetWizardForm}
         />
       </div>
     );
