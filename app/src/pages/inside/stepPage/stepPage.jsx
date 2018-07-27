@@ -19,7 +19,10 @@ import {
   toggleStepSelectionAction,
   proceedWithValidItemsAction,
   selectStepsAction,
+  stepPaginationSelector,
 } from 'controllers/step';
+import { withPagination } from 'controllers/pagination';
+import { PaginationToolbar } from 'components/main/paginationToolbar';
 import { StepGrid } from './stepGrid';
 
 @connect(
@@ -40,6 +43,10 @@ import { StepGrid } from './stepGrid';
     fetchTestItemsAction,
   },
 )
+@withPagination({
+  paginationSelector: stepPaginationSelector,
+  namespaceSelector,
+})
 export class StepPage extends Component {
   static propTypes = {
     steps: PropTypes.arrayOf(PropTypes.object),
@@ -54,6 +61,12 @@ export class StepPage extends Component {
     loading: PropTypes.bool,
     fetchTestItemsAction: PropTypes.func,
     listView: PropTypes.bool,
+    activePage: PropTypes.number,
+    itemCount: PropTypes.number,
+    pageCount: PropTypes.number,
+    pageSize: PropTypes.number,
+    onChangePage: PropTypes.func,
+    onChangePageSize: PropTypes.func,
   };
 
   static defaultProps = {
@@ -69,6 +82,12 @@ export class StepPage extends Component {
     loading: false,
     fetchTestItemsAction: () => {},
     listView: false,
+    activePage: 1,
+    itemCount: null,
+    pageCount: null,
+    pageSize: 20,
+    onChangePage: () => {},
+    onChangePageSize: () => {},
   };
 
   handleAllStepsSelection = () => {
@@ -93,6 +112,12 @@ export class StepPage extends Component {
       validationErrors,
       loading,
       listView,
+      activePage,
+      itemCount,
+      pageCount,
+      pageSize,
+      onChangePage,
+      onChangePageSize,
     } = this.props;
     return (
       <PageLayout>
@@ -112,6 +137,14 @@ export class StepPage extends Component {
           onItemSelect={toggleStepSelection}
           loading={loading}
           listView={listView}
+        />
+        <PaginationToolbar
+          activePage={activePage}
+          itemCount={itemCount}
+          pageCount={pageCount}
+          pageSize={pageSize}
+          onChangePage={onChangePage}
+          onChangePageSize={onChangePageSize}
         />
       </PageLayout>
     );

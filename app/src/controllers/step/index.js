@@ -5,6 +5,7 @@ export {
   lastOperationSelector,
   validationErrorsSelector,
   selectedStepsSelector,
+  stepPaginationSelector,
 } from './selectors';
 export {
   selectStepsAction,

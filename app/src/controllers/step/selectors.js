@@ -13,3 +13,4 @@ export const validationErrorsSelector = createValidationErrorsSelector(groupOper
 export const lastOperationSelector = createLastOperationSelector(groupOperationsSelector);
 
 export const stepsSelector = (state) => domainSelector(state).steps;
+export const stepPaginationSelector = (state) => domainSelector(state).pagination;
