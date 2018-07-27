@@ -1,15 +1,12 @@
 import React, { Component } from 'react';
 import Parser from 'html-react-parser';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
-import { connect } from 'react-redux';
 import { BigButton } from 'components/buttons/bigButton';
 import { GhostButton } from 'components/buttons/ghostButton';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { submit } from 'redux-form';
 import LeftArrowIcon from 'common/img/arrow-left-small-inline.svg';
 import RightArrowIcon from 'common/img/arrow-right-small-inline.svg';
-import { WIDGET_WIZARD_FORM } from './constants';
 import { WizardFirstStepForm } from './wizardFirstStepForm';
 import { WizardSecondStepForm } from './wizardSecondStepForm';
 import { WizardThirdStepForm } from './wizardThirdStepForm';
@@ -32,16 +29,10 @@ const messages = defineMessages({
 });
 
 @injectIntl
-@connect(
-  null,
-  {
-    submitWizardThirdStepForm: () => submit(WIDGET_WIZARD_FORM),
-  },
-)
 export class WizardControlsSection extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
-    submitWizardThirdStepForm: PropTypes.func.isRequired,
+    submitWidgetWizardForm: PropTypes.func.isRequired,
     step: PropTypes.number,
     widgets: PropTypes.array,
     activeWidgetId: PropTypes.string,
@@ -79,10 +70,6 @@ export class WizardControlsSection extends Component {
     }
   };
 
-  handleAddWidget = () => {
-    this.props.submitWizardThirdStepForm();
-  };
-
   render() {
     const { intl, step, onClickPrevStep, onClickNextStep } = this.props;
     return (
@@ -104,7 +91,7 @@ export class WizardControlsSection extends Component {
             </div>
           ) : (
             <div className={cx('button')}>
-              <BigButton color={'booger'} onClick={this.handleAddWidget}>
+              <BigButton color={'booger'} onClick={this.props.submitWidgetWizardForm}>
                 {Parser(intl.formatMessage(messages.addWidgetButton))}
               </BigButton>
             </div>
