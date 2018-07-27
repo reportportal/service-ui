@@ -111,8 +111,8 @@ define(function (require, exports, module) {
             '[data-js-tooltip-item]': 'attr: {title: statusTitle}',
             '[data-js-launch-link]': 'attr: {href: getUrl, class: getLinkClass}',
             '[data-js-info]': 'classes: {hide: noInfo}',
-            '[data-js-growth-duration]': 'text: durationGrowth, attr: {title: durationGrowth}',
-            '[data-js-growth-class]': 'classes: {hide: not(durationGrowth)}'
+            '[data-js-growth-duration]': 'text: durationGrowth',
+            '[data-js-growth-block]': 'classes: {hide: not(durationGrowth)}, attr: {title: durationGrowth}',
         },
 
         computeds: {
