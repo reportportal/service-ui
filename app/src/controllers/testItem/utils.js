@@ -16,7 +16,10 @@ export const calculateLevel = (data) =>
       return item.type;
     }
     const itemLevel = getItemLevel(item.type);
-    return LEVELS[acc] && LEVELS[acc].order > LEVELS[itemLevel].order ? itemLevel : acc;
+    const prevLevel = getItemLevel(acc);
+    return LEVELS[prevLevel] && LEVELS[prevLevel].order > LEVELS[itemLevel].order
+      ? itemLevel
+      : prevLevel;
   }, '');
 
 export const getQueryNamespace = (levelIndex) => `item${levelIndex}`;
