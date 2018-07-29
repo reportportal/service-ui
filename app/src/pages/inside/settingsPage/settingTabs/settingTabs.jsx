@@ -4,11 +4,19 @@ import { connect } from 'react-redux';
 import { redirect } from 'redux-first-router';
 import { defineMessages, injectIntl, intlShape } from 'react-intl';
 import { PROJECT_SETTINGS_TAB_PAGE } from 'controllers/pages';
+import {
+  GENERAL,
+  NOTIFICATIONS,
+  BTS,
+  DEFECT,
+  ANALYSIS,
+  DEMO_DATA,
+} from 'common/constants/settingTabs';
 import { activeProjectSelector } from 'controllers/user';
 import { NavigationTabs } from 'components/main/navigationTabs';
 import classNames from 'classnames/bind';
+import { GeneralTab } from './generalTab';
 import styles from './settingTabs.scss';
-import { GENERAL, NOTIFICATIONS, BTS, DEFECT, ANALYSIS, DEMO_DATA } from './constants';
 
 const cx = classNames.bind(styles);
 const messages = defineMessages({
@@ -60,7 +68,7 @@ export class SettingTabs extends Component {
     activeTab: PropTypes.string,
   };
   static defaultProps = {
-    activeTab: 'general',
+    activeTab: GENERAL,
   };
 
   tabsConfig = {
@@ -70,7 +78,7 @@ export class SettingTabs extends Component {
         type: PROJECT_SETTINGS_TAB_PAGE,
         payload: { projectId: this.props.projectId, settingTab: GENERAL },
       },
-      component: <div>general</div>,
+      component: <GeneralTab />,
     },
     notifications: {
       name: this.props.intl.formatMessage(messages.notifications),
