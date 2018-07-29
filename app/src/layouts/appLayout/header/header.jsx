@@ -7,7 +7,8 @@ import {
   activeProjectSelector,
   assignedProjectsSelector,
 } from 'controllers/user';
-import { PROJECT_MEMBERS_PAGE, PROJECT_SETTINGS_PAGE } from 'controllers/pages/constants';
+import { PROJECT_MEMBERS_PAGE, PROJECT_SETTINGS_TAB_PAGE } from 'controllers/pages/constants';
+import { GENERAL } from 'common/constants/settingTabs';
 import { connect } from 'react-redux';
 import { ProjectSelector } from './projectSelector';
 import { UserBlock } from './userBlock';
@@ -62,7 +63,10 @@ export class Header extends PureComponent {
             activeClassName={cx('active')}
           />
           <NavLink
-            to={{ type: PROJECT_SETTINGS_PAGE, payload: { projectId: activeProject } }}
+            to={{
+              type: PROJECT_SETTINGS_TAB_PAGE,
+              payload: { projectId: activeProject, settingTab: GENERAL },
+            }}
             className={cx('nav-btn', 'settings-btn')}
             activeClassName={cx('active')}
           />

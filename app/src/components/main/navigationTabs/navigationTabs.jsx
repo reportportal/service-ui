@@ -26,8 +26,8 @@ export class NavigationTabs extends Component {
   generateOptions = () =>
     Object.keys(this.props.config).map((item) => ({
       label: (
-        <NavLink to={this.props.config[item].link}>
-          <span>{this.props.config[item].name}</span>
+        <NavLink to={this.props.config[item].link} className={cx('link')}>
+          {this.props.config[item].name}
         </NavLink>
       ),
       value: item,

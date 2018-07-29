@@ -7,6 +7,7 @@ import {
   PROJECT_DASHBOARD_PAGE,
   PROJECT_PAGE,
   PROJECT_DASHBOARD_ITEM_PAGE,
+  PROJECT_SETTINGS_TAB_PAGE,
   projectIdSelector,
 } from 'controllers/pages';
 import { isAuthorizedSelector } from 'controllers/auth';
@@ -100,7 +101,20 @@ export default {
     path: '/:projectId/members',
     thunk: (dispatch) => dispatch(fetchMembersAction()),
   },
-  PROJECT_SETTINGS_PAGE: '/:projectId/settings',
+  PROJECT_SETTINGS_PAGE: {
+    path: '/:projectId/settings',
+    thunk: (dispatch, getState) => {
+      dispatch(
+        redirect({
+          type: PROJECT_SETTINGS_TAB_PAGE,
+          payload: {
+            settingTab: 'general',
+            projectId: activeProjectSelector(getState()),
+          },
+        }),
+      );
+    },
+  },
   PROJECT_SETTINGS_TAB_PAGE: '/:projectId/settings/:settingTab',
   PROJECT_SANDBOX_PAGE: '/:projectId/sandbox',
   [TEST_ITEM_PAGE]: {
