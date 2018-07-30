@@ -3,7 +3,7 @@ import {
   SELECT_ITEMS,
   TOGGLE_ITEM_SELECTION,
   UNSELECT_ALL_ITEMS,
-  REMOVE_VALIDATION_ERROR,
+  REMOVE_VALIDATION_ERRORS,
   SET_LAST_OPERATION_NAME,
   SET_VALIDATION_ERRORS,
   RESET_VALIDATION_ERRORS,
@@ -69,10 +69,14 @@ export const validationErrorsReducer = (namespace) => (
   switch (type) {
     case SET_VALIDATION_ERRORS:
       return { ...payload };
-    case REMOVE_VALIDATION_ERROR: {
-      const newState = { ...state };
-      delete newState[payload];
-      return newState;
+    case REMOVE_VALIDATION_ERRORS: {
+      const errorIds = Object.keys(state);
+      return errorIds
+        .filter((id) => payload.indexOf(id) === -1)
+        .reduce(
+          (result, key) => ({ ...result, [key]: state[key] }),
+          VALIDATION_ERRORS_INITIAL_STATE,
+        );
     }
     case RESET_VALIDATION_ERRORS:
       return VALIDATION_ERRORS_INITIAL_STATE;

@@ -2,7 +2,7 @@ import {
   SELECT_ITEMS,
   TOGGLE_ITEM_SELECTION,
   UNSELECT_ALL_ITEMS,
-  REMOVE_VALIDATION_ERROR,
+  REMOVE_VALIDATION_ERRORS,
   SET_LAST_OPERATION_NAME,
   SET_VALIDATION_ERRORS,
   PROCEED_WITH_VALID_ITEMS,
@@ -24,9 +24,16 @@ export const resetValidationErrorsAction = (namespace) => () => ({
     namespace,
   },
 });
+export const removeValidationErrorsAction = (namespace) => (ids) => ({
+  type: REMOVE_VALIDATION_ERRORS,
+  payload: ids,
+  meta: {
+    namespace,
+  },
+});
 export const removeValidationErrorAction = (namespace) => (id) => ({
-  type: REMOVE_VALIDATION_ERROR,
-  payload: id,
+  type: REMOVE_VALIDATION_ERRORS,
+  payload: [id],
   meta: {
     namespace,
   },
