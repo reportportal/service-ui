@@ -1,7 +1,7 @@
 import {
   SET_LAST_OPERATION_NAME,
   RESET_VALIDATION_ERRORS,
-  REMOVE_VALIDATION_ERROR,
+  REMOVE_VALIDATION_ERRORS,
   SET_VALIDATION_ERRORS,
   SELECTED_ITEMS_INITIAL_STATE,
   VALIDATION_ERRORS_INITIAL_STATE,
@@ -103,11 +103,11 @@ describe('groupOperations reducers', () => {
       expect(newState).toEqual(VALIDATION_ERRORS_INITIAL_STATE);
     });
 
-    test('should handle REMOVE_VALIDATION_ERROR', () => {
+    test('should handle REMOVE_VALIDATION_ERRORS', () => {
       const oldState = { foo: 1, bar: 2 };
       const newState = reducer(oldState, {
-        type: REMOVE_VALIDATION_ERROR,
-        payload: 'foo',
+        type: REMOVE_VALIDATION_ERRORS,
+        payload: ['foo'],
         meta: {
           namespace: TEST_NAMESPACE,
         },

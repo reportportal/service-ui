@@ -5,14 +5,24 @@ import {
   setValidationErrorsAction,
   setLastOperationNameAction,
   selectItemsAction,
+  removeValidationErrorsAction,
 } from './actionCreators';
 import {
   TOGGLE_ITEM_SELECTION,
   UNSELECT_ALL_ITEMS,
   EXECUTE_GROUP_OPERATION,
   PROCEED_WITH_VALID_ITEMS,
+  TOGGLE_ALL_ITEMS,
 } from './constants';
 import { validateItems, getGroupOperationDescriptor } from './utils';
+
+function* removeValidationErrors({ payload, meta: { namespace } }) {
+  yield put(removeValidationErrorsAction(namespace)(payload.map((item) => item.id)));
+}
+
+function* watchToggleAllItems() {
+  yield takeEvery(TOGGLE_ALL_ITEMS, removeValidationErrors);
+}
 
 function* removeValidationError({ payload, meta: { namespace } }) {
   yield put(removeValidationErrorAction(namespace)(payload.id));
@@ -26,7 +36,7 @@ function* resetValidationErrors({ meta: { namespace } }) {
   yield put(resetValidationErrorsAction(namespace)());
 }
 
-function* watchUnselectItems() {
+function* watchUnselectAllItems() {
   yield takeEvery(UNSELECT_ALL_ITEMS, resetValidationErrors);
 }
 
@@ -84,7 +94,8 @@ function* watchProceedWithValidItems() {
 export function* groupOperationsSagas() {
   yield all([
     watchToggleItemSelection(),
-    watchUnselectItems(),
+    watchUnselectAllItems(),
+    watchToggleAllItems(),
     watchExecuteGroupOperation(),
     watchProceedWithValidItems(),
   ]);

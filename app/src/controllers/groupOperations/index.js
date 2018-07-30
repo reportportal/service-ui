@@ -4,6 +4,7 @@ export {
   unselectAllItemsAction,
   createProceedWithValidItemsAction,
   toggleAllItemsAction,
+  removeValidationErrorsAction,
 } from './actionCreators';
 export { groupOperationsReducer } from './reducer';
 export { defineGroupOperation } from './utils';
