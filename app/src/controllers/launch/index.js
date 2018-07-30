@@ -8,6 +8,8 @@ export {
   moveLaunchesToDebugAction,
   compareLaunchesAction,
   fetchLaunchesAction,
+  toggleAllLaunchesAction,
+  unselectLaunchesAction,
 } from './actionCreators';
 export {
   selectedLaunchesSelector,

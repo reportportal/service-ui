@@ -9,6 +9,8 @@ import {
   SELECT_ITEMS,
   TOGGLE_ITEM_SELECTION,
   UNSELECT_ALL_ITEMS,
+  UNSELECT_ITEMS,
+  TOGGLE_ALL_ITEMS,
 } from './constants';
 import { lastOperationReducer, validationErrorsReducer, selectedItemsReducer } from './reducer';
 
@@ -148,7 +150,61 @@ describe('groupOperations reducers', () => {
           namespace: TEST_NAMESPACE,
         },
       });
-      expect(newState).toEqual(payload);
+      expect(newState).toEqual([...oldState, ...payload]);
+    });
+
+    test('should ignore duplicate items on SELECT_ITEMS', () => {
+      const oldState = [{ id: 1 }, { id: 2 }];
+      const payload = [{ id: 2 }, { id: 3 }];
+      const newState = reducer(oldState, {
+        type: SELECT_ITEMS,
+        payload,
+        meta: {
+          namespace: TEST_NAMESPACE,
+        },
+      });
+      expect(newState).toEqual([{ id: 1 }, { id: 2 }, { id: 3 }]);
+    });
+
+    test('should handle UNSELECT_ITEMS', () => {
+      const oldState = [{ id: 1 }, { id: 2 }, { id: 3 }];
+      const payload = [{ id: 2 }, { id: 3 }];
+      const newState = reducer(oldState, {
+        type: UNSELECT_ITEMS,
+        payload,
+        meta: {
+          namespace: TEST_NAMESPACE,
+        },
+      });
+      expect(newState).toEqual([{ id: 1 }]);
+    });
+
+    describe('TOGGLE_ALL_ITEMS', () => {
+      test('should add non-selected items in case there are some', () => {
+        const oldState = [{ id: 1 }];
+        const payload = [{ id: 1 }, { id: 2 }, { id: 3 }];
+        const newState = reducer(oldState, {
+          type: TOGGLE_ALL_ITEMS,
+          payload,
+          meta: {
+            namespace: TEST_NAMESPACE,
+          },
+        });
+        expect(newState).toEqual([{ id: 1 }, { id: 2 }, { id: 3 }]);
+      });
+
+      test('should unselect items in case there are no new items', () => {
+        const oldState = [{ id: 1 }, { id: 2 }];
+        const payload = [{ id: 1 }];
+        const newState = reducer(oldState, {
+          type: TOGGLE_ALL_ITEMS,
+          payload,
+          meta: {
+            namespace: TEST_NAMESPACE,
+          },
+        });
+        expect(newState).toEqual([{ id: 2 }]);
+      });
     });
 
     test('should handle UNSELECT_ALL_ITEMS', () => {
@@ -162,7 +218,7 @@ describe('groupOperations reducers', () => {
       expect(newState).toEqual([]);
     });
 
-    test('shoudl handle TOGGLE_ITEM_SELECTION', () => {
+    test('should handle TOGGLE_ITEM_SELECTION', () => {
       const oldState = [{ id: 1 }];
       const stateWithTwoItems = reducer(oldState, {
         type: TOGGLE_ITEM_SELECTION,

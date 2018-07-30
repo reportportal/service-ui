@@ -6,6 +6,8 @@ import {
   SET_LAST_OPERATION_NAME,
   SET_VALIDATION_ERRORS,
   PROCEED_WITH_VALID_ITEMS,
+  UNSELECT_ITEMS,
+  TOGGLE_ALL_ITEMS,
 } from './constants';
 
 export const setValidationErrorsAction = (namespace) => (errors) => ({
@@ -38,9 +40,24 @@ export const toggleItemSelectionAction = (namespace) => (item) => ({
   },
 });
 
-export const selectItemsAction = (namespace) => (launches) => ({
+export const selectItemsAction = (namespace) => (items) => ({
   type: SELECT_ITEMS,
-  payload: launches,
+  payload: items,
+  meta: {
+    namespace,
+  },
+});
+export const unselectItemsAction = (namespace) => (items) => ({
+  type: UNSELECT_ITEMS,
+  payload: items,
+  meta: {
+    namespace,
+  },
+});
+
+export const toggleAllItemsAction = (namespace) => (items) => ({
+  type: TOGGLE_ALL_ITEMS,
+  payload: items,
   meta: {
     namespace,
   },

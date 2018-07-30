@@ -5,6 +5,7 @@ import {
   unselectAllItemsAction,
   toggleItemSelectionAction,
   createProceedWithValidItemsAction,
+  toggleAllItemsAction,
 } from 'controllers/groupOperations';
 import { FETCH_LAUNCHES, NAMESPACE } from './constants';
 import { validateMergeLaunch, validateFinishForceLaunch } from './actionValidators';
@@ -17,6 +18,7 @@ export const fetchLaunchesAction = (params) => ({
 export const toggleLaunchSelectionAction = toggleItemSelectionAction(NAMESPACE);
 export const selectLaunchesAction = selectItemsAction(NAMESPACE);
 export const unselectAllLaunchesAction = unselectAllItemsAction(NAMESPACE);
+export const toggleAllLaunchesAction = toggleAllItemsAction(NAMESPACE);
 
 export const proceedWithValidItemsAction = createProceedWithValidItemsAction(NAMESPACE);
 

@@ -10,7 +10,31 @@ import {
   SELECTED_ITEMS_INITIAL_STATE,
   VALIDATION_ERRORS_INITIAL_STATE,
   LAST_OPERATION_INITIAL_STATE,
+  UNSELECT_ITEMS,
+  TOGGLE_ALL_ITEMS,
 } from './constants';
+
+const createIdComparator = (id) => (item) => item.id === id;
+
+const toggleItem = (items, item) =>
+  items.find(createIdComparator(item.id))
+    ? items.filter((v) => v.id !== item.id)
+    : [...items, item];
+
+const selectItems = (state, items) => [
+  ...state,
+  ...items.filter((item) => !state.find(createIdComparator(item.id))),
+];
+
+const unselectItems = (state, items) =>
+  state.filter((selectedItem) => !items.find(createIdComparator(selectedItem.id)));
+
+const selectAll = (state, items) => {
+  if (state.length > 0 && items.every((item) => !!state.find(createIdComparator(item.id)))) {
+    return unselectItems(state, items);
+  }
+  return selectItems(state, items);
+};
 
 export const selectedItemsReducer = (namespace) => (
   state = SELECTED_ITEMS_INITIAL_STATE,
@@ -21,11 +45,13 @@ export const selectedItemsReducer = (namespace) => (
   }
   switch (type) {
     case TOGGLE_ITEM_SELECTION:
-      return state.find((item) => item.id === payload.id)
-        ? state.filter((item) => item.id !== payload.id)
-        : [...state, payload];
+      return toggleItem(state, payload);
     case SELECT_ITEMS:
-      return [...payload];
+      return selectItems(state, payload);
+    case UNSELECT_ITEMS:
+      return unselectItems(state, payload);
+    case TOGGLE_ALL_ITEMS:
+      return selectAll(state, payload);
     case UNSELECT_ALL_ITEMS:
       return [];
     default:

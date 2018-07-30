@@ -4,6 +4,7 @@ export {
   selectTestsAction,
   toggleTestSelectionAction,
   unselectAllTestsAction,
+  toggleAllTestsAction,
 } from './actionCreators';
 export { testReducer } from './reducer';
 export {

@@ -6,6 +6,7 @@ export {
   toggleSuiteSelectionAction,
   proceedWithValidItemsAction,
   unselectAllSuitesAction,
+  toggleAllSuitesAction,
 } from './actionCreators';
 export {
   lastOperationSelector,
