@@ -1,5 +1,7 @@
 export const TOGGLE_ITEM_SELECTION = 'toggleItemSelection';
 export const SELECT_ITEMS = 'selectItems';
+export const UNSELECT_ITEMS = 'unselectItems';
+export const TOGGLE_ALL_ITEMS = 'toggleAllItems';
 export const UNSELECT_ALL_ITEMS = 'unselectAllItems';
 export const SET_VALIDATION_ERRORS = 'setValidationErrors';
 export const RESET_VALIDATION_ERRORS = 'resetValidationErrors';

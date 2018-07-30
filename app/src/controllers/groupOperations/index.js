@@ -3,6 +3,7 @@ export {
   selectItemsAction,
   unselectAllItemsAction,
   createProceedWithValidItemsAction,
+  toggleAllItemsAction,
 } from './actionCreators';
 export { groupOperationsReducer } from './reducer';
 export { defineGroupOperation } from './utils';

@@ -13,7 +13,6 @@ import { showModalAction } from 'controllers/modal';
 import {
   selectedLaunchesSelector,
   toggleLaunchSelectionAction,
-  selectLaunchesAction,
   unselectAllLaunchesAction,
   validationErrorsSelector,
   proceedWithValidItemsAction,
@@ -27,6 +26,7 @@ import {
   lastOperationSelector,
   loadingSelector,
   NAMESPACE,
+  toggleAllLaunchesAction,
 } from 'controllers/launch';
 import { LaunchSuiteGrid } from 'pages/inside/common/launchSuiteGrid';
 import { LaunchToolbar } from './LaunchToolbar';
@@ -52,7 +52,6 @@ const messages = defineMessages({
   {
     showModalAction,
     toggleLaunchSelectionAction,
-    selectLaunchesAction,
     unselectAllLaunchesAction,
     proceedWithValidItemsAction,
     forceFinishLaunchesAction,
@@ -60,6 +59,7 @@ const messages = defineMessages({
     compareLaunchesAction,
     moveLaunchesToDebugAction,
     fetchLaunchesAction,
+    toggleAllLaunchesAction,
   },
 )
 @withSorting({
@@ -88,7 +88,7 @@ export class LaunchesPage extends Component {
     activeProject: PropTypes.string.isRequired,
     selectedLaunches: PropTypes.arrayOf(PropTypes.object),
     validationErrors: PropTypes.object,
-    selectLaunchesAction: PropTypes.func,
+    toggleAllLaunchesAction: PropTypes.func,
     unselectAllLaunchesAction: PropTypes.func,
     proceedWithValidItemsAction: PropTypes.func,
     toggleLaunchSelectionAction: PropTypes.func,
@@ -115,7 +115,7 @@ export class LaunchesPage extends Component {
     onChangeSorting: () => {},
     selectedLaunches: [],
     validationErrors: {},
-    selectLaunchesAction: () => {},
+    toggleAllLaunchesAction: () => {},
     unselectAllLaunchesAction: () => {},
     proceedWithValidItemsAction: () => {},
     toggleLaunchSelectionAction: () => {},
@@ -171,14 +171,7 @@ export class LaunchesPage extends Component {
     });
   };
 
-  handleAllLaunchesSelection = () => {
-    const { selectedLaunches, launches } = this.props;
-    if (launches.length === selectedLaunches.length) {
-      this.props.unselectAllLaunchesAction();
-      return;
-    }
-    this.props.selectLaunchesAction(launches);
-  };
+  handleAllLaunchesSelection = () => this.props.toggleAllLaunchesAction(this.props.launches);
 
   proceedWithValidItems = () =>
     this.props.proceedWithValidItemsAction(this.props.lastOperation, this.props.selectedLaunches);

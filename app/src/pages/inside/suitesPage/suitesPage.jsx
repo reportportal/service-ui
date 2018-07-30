@@ -14,7 +14,7 @@ import {
   selectedSuitesSelector,
   toggleSuiteSelectionAction,
   unselectAllSuitesAction,
-  selectSuitesAction,
+  toggleAllSuitesAction,
 } from 'controllers/suite';
 import { SuiteTestToolbar } from 'pages/inside/common/suiteTestToolbar';
 import {
@@ -35,7 +35,7 @@ import {
   {
     toggleSuiteSelectionAction,
     unselectAllSuitesAction,
-    selectSuitesAction,
+    toggleAllSuitesAction,
     fetchTestItemsAction,
   },
 )
@@ -65,7 +65,7 @@ export class SuitesPage extends Component {
     onChangeSorting: PropTypes.func,
     toggleSuiteSelectionAction: PropTypes.func,
     unselectAllSuitesAction: PropTypes.func,
-    selectSuitesAction: PropTypes.func,
+    toggleAllSuitesAction: PropTypes.func,
     parentItem: PropTypes.object,
     loading: PropTypes.bool,
   };
@@ -85,19 +85,12 @@ export class SuitesPage extends Component {
     onChangeSorting: () => {},
     toggleSuiteSelectionAction: () => {},
     unselectAllSuitesAction: () => {},
-    selectSuitesAction: () => {},
+    toggleAllSuitesAction: () => {},
     parentItem: null,
     loading: false,
   };
 
-  handleAllSuitesSelection = () => {
-    const { selectedSuites, suites } = this.props;
-    if (suites.length === selectedSuites.length) {
-      this.props.unselectAllSuitesAction();
-      return;
-    }
-    this.props.selectSuitesAction(suites);
-  };
+  handleAllSuitesSelection = () => this.props.toggleAllSuitesAction(this.props.suites);
 
   render() {
     const {

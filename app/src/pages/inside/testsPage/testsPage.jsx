@@ -11,8 +11,8 @@ import {
   selectedTestsSelector,
   toggleTestSelectionAction,
   unselectAllTestsAction,
-  selectTestsAction,
   testPaginationSelector,
+  toggleAllTestsAction,
 } from 'controllers/test';
 import { withPagination } from 'controllers/pagination';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
@@ -33,7 +33,7 @@ import {
   {
     toggleTestSelectionAction,
     unselectAllTestsAction,
-    selectTestsAction,
+    toggleAllTestsAction,
     fetchTestItemsAction,
   },
 )
@@ -63,7 +63,7 @@ export class TestsPage extends Component {
     onChangeSorting: PropTypes.func,
     toggleTestSelectionAction: PropTypes.func,
     unselectAllTestsAction: PropTypes.func,
-    selectTestsAction: PropTypes.func,
+    toggleAllTestsAction: PropTypes.func,
     parentItem: PropTypes.object,
     loading: PropTypes.bool,
   };
@@ -83,19 +83,12 @@ export class TestsPage extends Component {
     onChangeSorting: () => {},
     toggleTestSelectionAction: () => {},
     unselectAllTestsAction: () => {},
-    selectTestsAction: () => {},
+    toggleAllTestsAction: () => {},
     parentItem: null,
     loading: false,
   };
 
-  handleAllTestsSelection = () => {
-    const { selectedTests, tests } = this.props;
-    if (tests.length === selectedTests.length) {
-      this.props.unselectAllTestsAction();
-      return;
-    }
-    this.props.selectTestsAction(tests);
-  };
+  handleAllTestsSelection = () => this.props.toggleAllTestsAction(this.props.tests);
 
   render() {
     const {
