@@ -13,4 +13,5 @@ export {
   toggleStepSelectionAction,
   unselectAllStepsAction,
   ignoreInAutoAnalysisAction,
+  includeInAutoAnalysisAction,
 } from './actionCreators';

@@ -12,6 +12,7 @@ export const SuiteTestToolbar = ({
   onRefresh,
   onProceedValidItems,
   onIgnoreInAA,
+  onIncludeInAA,
 }) => (
   <div>
     {!!selectedItems.length && (
@@ -30,6 +31,7 @@ export const SuiteTestToolbar = ({
       onRefresh={onRefresh}
       selectedItems={selectedItems}
       onIgnoreInAA={onIgnoreInAA}
+      onIncludeInAA={onIncludeInAA}
     />
     {parentItem && <InfoLine data={parentItem} />}
     <div />
@@ -44,6 +46,7 @@ SuiteTestToolbar.propTypes = {
   onRefresh: PropTypes.func,
   onProceedValidItems: PropTypes.func,
   onIgnoreInAA: PropTypes.func,
+  onIncludeInAA: PropTypes.func,
 };
 SuiteTestToolbar.defaultProps = {
   selectedItems: [],
@@ -54,4 +57,5 @@ SuiteTestToolbar.defaultProps = {
   onRefresh: () => {},
   onProceedValidItems: () => {},
   onIgnoreInAA: () => {},
+  onIncludeInAA: () => {},
 };
