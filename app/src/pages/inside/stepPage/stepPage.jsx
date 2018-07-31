@@ -20,6 +20,7 @@ import {
   proceedWithValidItemsAction,
   selectStepsAction,
   stepPaginationSelector,
+  ignoreInAutoAnalysisAction,
 } from 'controllers/step';
 import { withPagination } from 'controllers/pagination';
 import { showModalAction } from 'controllers/modal';
@@ -43,6 +44,7 @@ import { StepGrid } from './stepGrid';
     selectStepsAction,
     fetchTestItemsAction,
     showTestParamsModal: (item) => showModalAction({ id: 'testItemDetails', data: { item } }),
+    ignoreInAutoAnalysisAction,
   },
 )
 @withPagination({
@@ -70,6 +72,7 @@ export class StepPage extends Component {
     onChangePage: PropTypes.func,
     onChangePageSize: PropTypes.func,
     showTestParamsModal: PropTypes.func,
+    ignoreInAutoAnalysisAction: PropTypes.func,
   };
 
   static defaultProps = {
@@ -92,6 +95,7 @@ export class StepPage extends Component {
     onChangePage: () => {},
     onChangePageSize: () => {},
     showTestParamsModal: () => {},
+    ignoreInAutoAnalysisAction: () => {},
   };
 
   handleAllStepsSelection = () => {
@@ -102,6 +106,11 @@ export class StepPage extends Component {
     }
     this.props.selectStepsAction(steps);
   };
+
+  handleIgnoreInAA = () =>
+    this.props.ignoreInAutoAnalysisAction(this.props.selectedItems, {
+      fetchFunc: this.props.fetchTestItemsAction,
+    });
 
   proceedWithValidItems = () =>
     this.props.proceedWithValidItemsAction(this.props.lastOperation, this.props.selectedItems);
@@ -134,6 +143,7 @@ export class StepPage extends Component {
           onUnselectAll={unselectAllSteps}
           onProceedValidItems={this.proceedWithValidItems}
           onRefresh={this.props.fetchTestItemsAction}
+          onIgnoreInAA={this.handleIgnoreInAA}
         />
         <StepGrid
           data={steps}
