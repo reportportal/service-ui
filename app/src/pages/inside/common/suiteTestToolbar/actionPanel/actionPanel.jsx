@@ -47,8 +47,8 @@ const messages = defineMessages({
     id: 'ActionPanel.ignoreInAA',
     defaultMessage: 'Ignore in Auto Analysis',
   },
-  includeIntoAA: {
-    id: 'ActionPanel.includeIntoAA',
+  includeInAA: {
+    id: 'ActionPanel.includeInAA',
     defaultMessage: 'Include into Auto Analysis',
   },
   proceedButton: {
@@ -85,7 +85,7 @@ export class ActionPanel extends Component {
     onLinkIssue: PropTypes.func,
     onUnlinkIssue: PropTypes.func,
     onIgnoreInAA: PropTypes.func,
-    onIncludeIntoAA: PropTypes.func,
+    onIncludeInAA: PropTypes.func,
     onDelete: PropTypes.func,
     listView: PropTypes.bool,
   };
@@ -108,7 +108,7 @@ export class ActionPanel extends Component {
     onLinkIssue: () => {},
     onUnlinkIssue: () => {},
     onIgnoreInAA: () => {},
-    onIncludeIntoAA: () => {},
+    onIncludeInAA: () => {},
     onDelete: () => {},
     listView: false,
   };
@@ -147,9 +147,9 @@ export class ActionPanel extends Component {
       onClick: this.props.onIgnoreInAA,
     },
     {
-      label: this.props.intl.formatMessage(messages.includeIntoAA),
+      label: this.props.intl.formatMessage(messages.includeInAA),
       value: 'action-include-into-AA',
-      onClick: this.props.onIncludeIntoAA,
+      onClick: this.props.onIncludeInAA,
     },
     {
       label: this.props.intl.formatMessage(COMMON_LOCALE_KEYS.DELETE),

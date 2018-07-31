@@ -1,4 +1,4 @@
-export const validateIgnoreInAA = (item) => {
+export const validateIgnoreIncludeInAA = (item) => {
   if (!item.issue) {
     return 'noDefectType';
   }
