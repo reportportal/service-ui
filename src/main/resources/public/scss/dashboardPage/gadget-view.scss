@@ -131,6 +131,9 @@
         pointer-events: none;
       }
     }
+    .c3-tooltip-container{
+      z-index: 1000;
+    }
   }
   .preloader {
     position: absolute;
