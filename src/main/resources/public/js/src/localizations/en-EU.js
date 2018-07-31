@@ -583,7 +583,7 @@ define(['util'], function () {
             update_analyzer: 'updated',
             includeMethods: 'Include Before and After methods',
             status: 'Status',
-            startTime: 'Start time',
+            startTime: 'Start time'
         },
 
         userProfile: {
