@@ -47,6 +47,7 @@ define(function (require) {
         template: 'tpl-widget-time-consuming-table',
         itemTemplate: 'tpl-widget-time-consuming-table-item',
         render: function () {
+            this.scrollers = [];
             var contentData = this.model.getContent();
             this.$el.html(Util.templates(this.template, contentData));
             _.each(contentData.result, function (item) {
@@ -56,8 +57,13 @@ define(function (require) {
                 });
                 $('[data-js-items-container]', this.$el).append(itemView.$el);
             }, this);
-            this.scroller = Util.setupBaronScroll($('[data-js-scroll]', this.$el));
+            this.scrollers.push(Util.setupBaronScroll($('[data-js-scroll-table]', this.$el)));
             Util.hoverFullTime(this.$el);
+        },
+        onBeforeDestroy: function () {
+            _.each(this.scrollers, function (baronScrollElem) {
+                baronScrollElem.baron && baronScrollElem.baron().dispose();
+            });
         }
     });
     return MostTimeConsumingTestCasesTableView;
