@@ -129,9 +129,9 @@
       }
     }
     .c3-tooltip-container {
-      background-color: #ffffff;
+      background-color: $COLOR--white;
       padding: 5px 10px 5px 10px;
-      border: solid 1px #cccccc;
+      border: solid 1px $COLOR--gray-80;
       border-radius: 2px;
       font-size: 13px;
       white-space: nowrap;
