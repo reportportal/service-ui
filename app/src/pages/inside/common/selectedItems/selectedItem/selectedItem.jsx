@@ -29,6 +29,10 @@ const messages = defineMessages({
     id: 'LaunchesPage.launchIsProcessing',
     defaultMessage: 'Launch should not be processing by Auto analysis!',
   },
+  noDefectType: {
+    id: 'LaunchesPage.noDefectType',
+    defaultMessage: 'Item does not have defect type',
+  },
 });
 
 const TooltipComponent = injectIntl(({ intl, error }) => (

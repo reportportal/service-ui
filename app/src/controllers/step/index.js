@@ -12,4 +12,5 @@ export {
   proceedWithValidItemsAction,
   toggleStepSelectionAction,
   unselectAllStepsAction,
+  ignoreInAutoAnalysisAction,
 } from './actionCreators';
