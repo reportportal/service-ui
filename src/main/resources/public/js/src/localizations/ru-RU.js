@@ -644,7 +644,7 @@ define(['util'], function () {
             update_analyzer: 'обновлено',
             includeMethods: 'Включая Before и After методы',
             status: 'Статус',
-            startTime: 'Время начала',
+            startTime: 'Время начала'
         },
 
         userProfile: {
