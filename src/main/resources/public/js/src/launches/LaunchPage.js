@@ -51,26 +51,28 @@ define(function (require) {
         onChangeLevel: function (level) {
             this.header.setState(level);
         },
+
+        isFilterExist: function (filterId) {
+            return _.find(config.preferences.filters, function (filter) {
+                return filterId === filter;
+            });
+        },
+
         update: function (options) {
             var pathPart;
             var query = options.subContext[3];
             var self = this;
-            var isInPreferences;
+            var isFilterAdded;
             var filterUrl = options.subContext[1];
             pathPart = [filterUrl];
             this.filterId = filterUrl.split('|')[0];
-            isInPreferences = _.find(config.preferences.filters, function (filter) {
-                return self.filterId === filter;
-            });
-            if (!isInPreferences && this.filterId !== 'all' && this.filterId !== 'New_filter') {
+            isFilterAdded = this.isFilterExist(this.filterId);
+            if (!isFilterAdded && this.filterId !== 'all' && this.filterId !== 'New_filter') {
                 Service.putPreferences({ filters: config.preferences.filters.concat([this.filterId]) }).done(function () {
                     Service.getPreferences().done(function (response) {
-                        var isFilterAdded;
                         var newSubContext;
                         config.preferences = response;
-                        isFilterAdded = _.find(config.preferences.filters, function (filterId) {
-                            return filterId === self.filterId;
-                        });
+                        isFilterAdded = self.isFilterExist(self.filterId);
                         if (isFilterAdded) {
                             self.launchFilterCollection.parse(config.preferences.filters)
                                 .done(function () {
