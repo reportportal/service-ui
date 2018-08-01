@@ -1,9 +1,9 @@
-.form-group-container {
+.form-field {
   display: flex;
   justify-content: flex-start;
   align-items: center;
   width: 100%;
-  margin-bottom: 30px;
+  margin-bottom: 25px;
   @media (max-width: $SCREEN_XS_MAX) {
     flex-direction: column;
     align-items: flex-start;
@@ -11,7 +11,7 @@
   }
 }
 
-.form-group-column {
+.input-wrapper {
   padding: 0 15px;
   @media (max-width: $SCREEN_XS_MAX) {
     padding: 0;
@@ -21,22 +21,17 @@
 }
 
 .form-group-description {
-  vertical-align: middle;
-  max-width: 100%;
-  @media (max-width: $SCREEN_XS_MAX) {
-    margin-bottom: 0;
-  }
-}
-
-.form-group-help-block {
   display: inline-block;
+  max-width: 100%;
+  margin: 0;
+  padding: 0 15px;
+  vertical-align: middle;
   font-size: 12px;
   line-height: 14px;
   color: $COLOR--gray-60;
-  vertical-align: middle;
-  margin: 0;
   @media (max-width: $SCREEN_XS_MAX) {
     margin-top: 8px;
+    padding: 0;
   }
 }
 
@@ -55,7 +50,10 @@
     width: 150px;
   }
   @media (max-width: $SCREEN_XS_MAX) {
+    display: inline-block;
     width: 100%;
+    margin-bottom: 8px;
+    padding: 0;
     text-align: left;
   }
 }

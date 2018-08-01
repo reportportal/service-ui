@@ -1,4 +1,4 @@
-.input {
+.inputWithIcon {
   position: relative;
   display: inline-block;
   height: 30px;
@@ -49,4 +49,11 @@
   &:focus {
     background-color: $COLOR--gray-91;
   }
+}
+
+.icon {
+  position: absolute;
+  z-index: 1;
+  top: 9px;
+  right: 10px;
 }

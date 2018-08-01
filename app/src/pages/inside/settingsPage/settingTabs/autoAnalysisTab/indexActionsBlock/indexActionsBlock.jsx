@@ -49,7 +49,10 @@ const messages = defineMessages({
     indexing_running: projectAnalyzerConfigSelector(state).indexing_running,
     appInfo: appInfoSelector(state),
   }),
-  { showModalAction },
+  {
+    showRemoveIndexModal: () => showModalAction({ id: 'removeIndexModal' }),
+    showGenerateIndexModal: () => showModalAction({ id: 'generateIndexModal' }),
+  },
 )
 @injectIntl
 export class IndexActionsBlock extends Component {
@@ -57,18 +60,16 @@ export class IndexActionsBlock extends Component {
     intl: intlShape.isRequired,
     indexing_running: PropTypes.bool,
     appInfo: PropTypes.object,
-    showModalAction: PropTypes.func.isRequired,
+    showRemoveIndexModal: PropTypes.func,
+    showGenerateIndexModal: PropTypes.func,
   };
 
   static defaultProps = {
     indexing_running: false,
     appInfo: {},
-    showModalAction: () => {},
+    showRemoveIndexModal: () => {},
+    showGenerateIndexModal: () => {},
   };
-
-  showRemoveIndexModal = () => this.props.showModalAction({ id: 'removeIndexModal' });
-
-  showGenerateIndexModal = () => this.props.showModalAction({ id: 'generateIndexModal' });
 
   render() {
     const { intl } = this.props;
@@ -87,7 +88,7 @@ export class IndexActionsBlock extends Component {
           <div className={cx('form-group-column')}>
             <GhostButton
               disabled={this.props.indexing_running || !this.props.appInfo.ANALYZER}
-              onClick={this.showRemoveIndexModal}
+              onClick={this.props.showRemoveIndexModal}
               mobileDisabled
             >
               <span className={cx('index-action-caption')}>
@@ -104,18 +105,21 @@ export class IndexActionsBlock extends Component {
           <div className={cx('form-group-column')}>
             <GhostButton
               disabled={this.props.indexing_running || !this.props.appInfo.ANALYZER}
-              onClick={this.showGenerateIndexModal}
+              onClick={this.props.showGenerateIndexModal}
               title={
-                !this.props.appInfo.ANALYZER
-                  ? intl.formatMessage(messages.analyzerDisabledButtonTitle)
-                  : ''
+                !this.props.appInfo.ANALYZER &&
+                intl.formatMessage(messages.analyzerDisabledButtonTitle)
               }
               mobileDisabled
             >
               <span className={cx('index-action-caption')}>
-                {this.props.indexing_running
-                  ? intl.formatMessage(messages.generateIndexButtonProgressCaption)
-                  : intl.formatMessage(messages.generateIndexButtonCaption)}
+                {intl.formatMessage(
+                  messages[
+                    this.props.indexing_running
+                      ? 'generateIndexButtonProgressCaption'
+                      : 'generateIndexButtonCaption'
+                  ],
+                )}
               </span>
             </GhostButton>
           </div>

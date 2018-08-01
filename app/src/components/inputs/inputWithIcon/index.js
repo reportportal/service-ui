@@ -1,0 +1,1 @@
+export { InputWithIcon } from './inputWithIcon';

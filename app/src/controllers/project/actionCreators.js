@@ -19,7 +19,7 @@ const fetchProjectPreferencesSuccessAction = (projectId) => ({
   payload: projectId,
 });
 
-const updateAutoAnalysisConfigurationSuccessAction = (project) => ({
+export const updateAutoAnalysisConfigurationAction = (project) => ({
   type: UPDATE_AUTO_ANALYSIS_CONFIGURATION_SUCCESS,
   payload: project.configuration.analyzerConfiguration,
 });
@@ -51,9 +51,6 @@ export const fetchProjectAction = (projectId) => (dispatch) =>
 
 export const fetchAutoAnalysisConfigurationAction = (projectId) => (dispatch) => {
   fetch(URLS.project(projectId)).then((project) => {
-    dispatch(updateAutoAnalysisConfigurationSuccessAction(project));
+    dispatch(updateAutoAnalysisConfigurationAction(project));
   });
-};
-export const updateAutoAnalysisConfigurationAction = (project) => (dispatch) => {
-  dispatch(updateAutoAnalysisConfigurationSuccessAction(project));
 };
