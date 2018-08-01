@@ -555,6 +555,8 @@
   "Sidebar.logoutBtn": "Выйсці",
   "Sidebar.profileBtn": "Профіль",
   "StepGrid.hidePreconditionMethods": "Разгарніце метады перадумоў",
+  "StepGrid.ignoreAAShort": "Ignore AA",
+  "StepGrid.ignoreAutoanalyzerTooltip": "Ignore item in Auto-Analysis",
   "StepGrid.showPreconditionMethods": "Згарніце метады перадумоў",
   "StepLevelEntities.AUTOMATION_BUG_ALL": "Усе хібы аўтаматызацыі",
   "StepLevelEntities.AnalyseOption1": "З пазнакай \"АА\"",

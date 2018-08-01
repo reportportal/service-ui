@@ -557,6 +557,8 @@
   "Sidebar.logoutBtn": "Выйти",
   "Sidebar.profileBtn": "Профиль",
   "StepGrid.hidePreconditionMethods": "Развернуть прекондиционные методы",
+  "StepGrid.ignoreAAShort": "Игнорировать АА",
+  "StepGrid.ignoreAutoanalyzerTooltip": "Игнорировать элемент при Авто-Анализе",
   "StepGrid.showPreconditionMethods": "Свернуть прекондиционные методы",
   "StepLevelEntities.AUTOMATION_BUG_ALL": "Все ошибки теста",
   "StepLevelEntities.AnalyseOption1": "С \"AA\" меткой",

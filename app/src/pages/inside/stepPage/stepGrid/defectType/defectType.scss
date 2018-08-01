@@ -12,6 +12,22 @@
   padding-bottom: 10px;
 }
 
+.ignore-aa-label {
+  box-sizing: border-box;
+  border-radius: 100px;
+  background-color: $COLOR--white;
+  border: solid 1px $COLOR--gray-60;
+  cursor: pointer;
+  color: $COLOR--gray-60;
+  font-family: $FONT-SEMIBOLD;
+  font-size: 12px;
+  line-height: 18px;
+  text-align: center;
+  margin-right: 5px;
+  height: 20px;
+  width: 70px;
+}
+
 .aa-label {
   margin-right: 5px;
 }
