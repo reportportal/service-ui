@@ -63,13 +63,25 @@ define(function (require) {
                 return self.filterId === filter;
             });
             if (!isInPreferences && this.filterId !== 'all' && this.filterId !== 'New_filter') {
-                call('PUT', Urls.getPreferences(), { filters: config.preferences.filters.concat([this.filterId]) }).done(function () {
+                Service.putPreferences({ filters: config.preferences.filters.concat([this.filterId]) }).done(function () {
                     Service.getPreferences().done(function (response) {
+                        var isFilterAdded;
+                        var newSubContext;
                         config.preferences = response;
-                        self.launchFilterCollection.parse(config.preferences.filters)
-                            .done(function () {
-                                self.update({ subContext: options.subContext });
-                            });
+                        isFilterAdded = _.find(config.preferences.filters, function (filterId) {
+                            return filterId === self.filterId;
+                        });
+                        if (isFilterAdded) {
+                            self.launchFilterCollection.parse(config.preferences.filters)
+                                .done(function () {
+                                    self.update({ subContext: options.subContext });
+                                });
+                        } else {
+                            newSubContext = options.subContext;
+                            newSubContext[1] = 'all';
+                            newSubContext[3] = null;
+                            self.update({ subContext: newSubContext });
+                        }
                     });
                 });
             } else {

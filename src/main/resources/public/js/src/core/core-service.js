@@ -51,6 +51,10 @@ define([
         return call('GET', urls.getPreferences());
     };
 
+    var putPreferences = function (data) {
+        return call('PUT', urls.getPreferences(), data);
+    };
+
     var getProfileImage = function (url) {
         return call('GET', url);
     };
@@ -392,6 +396,7 @@ define([
         getRegistryInfo: getRegistryInfo,
 
         getPreferences: getPreferences,
+        putPreferences: putPreferences,
         getProfileImage: getProfileImage,
         getProject: getProject,
         getProjectUsersById: getProjectUsersById,
