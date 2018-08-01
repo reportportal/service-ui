@@ -90,6 +90,13 @@ define(function (require) {
         *
         * при этом перерендеривать вьюху таблицы логов, передавая ему новую модель ретрая
         * */
+
+        getLastPassedOrFailedItem: function (idx) {
+            var prevItems = this.history.collection.models.slice(0, idx).reverse();
+            return _.find(prevItems, function (item) {
+                return item.get('status') === 'PASSED' || item.get('status') === 'FAILED';
+            });
+        },
         selectHistoryItem: function (itemModel, firstInit) {
             var curOptions = this.collectionItems.getInfoLog();
             var itemModelFromCollection;
@@ -108,7 +115,7 @@ define(function (require) {
             this.historyItem && this.stopListening(this.historyItem) && this.historyItem.destroy();
             _.map(this.history.collection.models, function (model, id) {
                 if (model.get('id') === itemModel.get('id')) {
-                    prevModel = self.history.collection.models[id-1];
+                    prevModel = self.getLastPassedOrFailedItem(id);
                 }
             });
             this.historyItem = new LogItemInfoView({

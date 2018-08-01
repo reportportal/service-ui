@@ -112,7 +112,7 @@ define(function (require, exports, module) {
             '[data-js-launch-link]': 'attr: {href: getUrl, class: getLinkClass}',
             '[data-js-info]': 'classes: {hide: noInfo}',
             '[data-js-growth-duration]': 'text: durationGrowth',
-            '[data-js-growth-block]': 'classes: {hide: not(durationGrowth)}, attr: {title: durationGrowth}',
+            '[data-js-growth-block]': 'classes: {hide: not(durationGrowth)}, attr: {title: durationGrowth}'
         },
 
         computeds: {
@@ -259,15 +259,22 @@ define(function (require, exports, module) {
         render: function () {
             this.$el.html(Util.templates(this.template, {}));
         },
+        getLastPassedOrFailedItem: function (idx) {
+            var prevItems = this.collection.models.slice(0, idx).reverse();
+            return _.find(prevItems, function (item) {
+                return item.get('status') === 'PASSED' || item.get('status') === 'FAILED';
+            });
+        },
         onResetHistoryItems: function () {
             var itemId = this.collectionItems.getInfoLog().item;
             var $itemsContainer = $('[data-js-history-container]', this.$el);
             var self = this;
             _.each(this.collection.models, function (model, idx) {
+                var prevModel = self.getLastPassedOrFailedItem(idx);
                 var item = new LogHistoryLineItemView({
                     model: model,
                     currentItemId: itemId,
-                    prevModel: self.collection.models[idx - 1]
+                    prevModel: prevModel
                 });
                 $itemsContainer.append(item.$el);
                 self.renderedItems.push(item);
