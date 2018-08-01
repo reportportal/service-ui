@@ -102,6 +102,6 @@ storiesOf('Components/Buttons/ToggleButton', module)
         { value: 'third', label: 'third' },
       ]}
       value={'second'}
-      onClickItem={action('itemClicked')}
+      onChange={action('itemClicked')}
     />
   ));

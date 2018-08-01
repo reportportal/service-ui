@@ -117,10 +117,10 @@ export class FieldErrorHint extends PureComponent {
   };
   render() {
     const { hintType, children, intl, error, active, ...rest } = this.props;
-    const classes = cx({
-      'field-error-hint': true,
+    const classes = cx('field-error-hint', {
       show: error && active,
       'bottom-type': hintType === 'bottom',
+      'top-type': hintType === 'top',
     });
 
     return (

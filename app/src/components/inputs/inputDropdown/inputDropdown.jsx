@@ -33,6 +33,8 @@ export class InputDropdown extends Component {
     multiple: PropTypes.bool,
     selectAll: PropTypes.bool,
     disabled: PropTypes.bool,
+    error: PropTypes.string,
+    touched: PropTypes.bool,
     onChange: PropTypes.func,
     onFocus: PropTypes.func,
     onBlur: PropTypes.func,
@@ -45,6 +47,8 @@ export class InputDropdown extends Component {
     multiple: false,
     selectAll: false,
     disabled: false,
+    error: '',
+    touched: false,
     onChange: () => {},
     onFocus: () => {},
     onBlur: () => {},
@@ -170,12 +174,15 @@ export class InputDropdown extends Component {
   }
 
   render() {
+    const { error, touched, disabled, mobileDisabled, multiple, selectAll } = this.props;
     return (
       <div ref={this.setRef} className={cx('dropdown', { opened: this.state.opened })}>
         <div
           className={cx('select-block', {
-            disabled: this.props.disabled,
-            'mobile-disabled': this.props.mobileDisabled,
+            disabled,
+            error,
+            touched,
+            'mobile-disabled': mobileDisabled,
           })}
           onClick={this.onClickSelectBlock}
         >
@@ -183,8 +190,8 @@ export class InputDropdown extends Component {
           <span className={cx('arrow')} />
         </div>
         <div className={cx('select-list')}>
-          {this.props.multiple &&
-            this.props.selectAll && (
+          {multiple &&
+            selectAll && (
               <div className={cx('select-all-block')} onClick={this.handleAllClick}>
                 <span className={cx('select-all')}>All</span>
               </div>

@@ -57,7 +57,12 @@ export class WizardControlsSection extends Component {
     const { activeWidgetId, widgets } = this.props;
     switch (step) {
       case 1:
-        return <WizardSecondStepForm onSubmit={this.props.nextStep} />;
+        return (
+          <WizardSecondStepForm
+            widget={widgets.find((widget) => widget.id === activeWidgetId)}
+            onSubmit={this.props.nextStep}
+          />
+        );
       case 2:
         return (
           <WizardThirdStepForm

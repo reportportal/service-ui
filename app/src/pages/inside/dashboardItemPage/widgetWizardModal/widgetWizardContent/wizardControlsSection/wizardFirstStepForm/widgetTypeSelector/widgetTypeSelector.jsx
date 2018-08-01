@@ -3,7 +3,7 @@ import Parser from 'html-react-parser';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { touch } from 'redux-form';
+import { initialize, touch } from 'redux-form';
 import { injectIntl, intlShape, defineMessages } from 'react-intl';
 import styles from './widgetTypeSelector.scss';
 import { WidgetTypeItem } from './widgetTypeItem';
@@ -21,6 +21,7 @@ const messages = defineMessages({
 @connect(
   null,
   {
+    initializeWizardForm: (data) => initialize(WIDGET_WIZARD_FORM, data),
     touchField: () => touch(WIDGET_WIZARD_FORM, 'widgetType'),
   },
 )
@@ -30,6 +31,7 @@ export class WidgetTypeSelector extends Component {
     value: PropTypes.string,
     widgets: PropTypes.array,
     onChange: PropTypes.func.isRequired,
+    initializeWizardForm: PropTypes.func.isRequired,
     touched: PropTypes.bool.isRequired,
     error: PropTypes.string,
     touchField: PropTypes.func.isRequired,
@@ -43,7 +45,7 @@ export class WidgetTypeSelector extends Component {
 
   handleWidgetSelect = (e) => {
     this.props.touchField();
-    this.props.onChange(e.target.value);
+    this.props.initializeWizardForm({ widgetType: e.target.value });
   };
 
   render() {

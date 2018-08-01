@@ -14,7 +14,7 @@
 .widget-info-block {
   width: 100%;
   box-sizing: border-box;
-  padding: 20px;
+  padding: 20px 0;
 }
 .widget-title {
   display: inline-block;
@@ -22,13 +22,13 @@
   margin-bottom: 10px;
   font-family: $FONT-SEMIBOLD;
   font-size: 14px;
-  line-height: 26px;
+  line-height: 17px;
   color: $COLOR--charcoal-grey;
   text-align: center;
-  white-space: nowrap;
 }
 .widget-description {
   display: inline-block;
+  box-sizing: border-box;
   width: 100%;
   font-family: $FONT-REGULAR;
   font-size: 13px;

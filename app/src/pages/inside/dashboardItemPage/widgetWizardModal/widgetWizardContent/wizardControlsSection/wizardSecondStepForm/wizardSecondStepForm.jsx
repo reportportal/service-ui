@@ -16,15 +16,17 @@ export class WizardSecondStepForm extends Component {
   static propTypes = {
     handleSubmit: PropTypes.func.isRequired,
     onSubmit: PropTypes.func.isRequired,
+    widget: PropTypes.object.isRequired,
   };
 
   static defaultProps = {};
 
   render() {
-    const { onSubmit, handleSubmit } = this.props;
+    const { onSubmit, handleSubmit, widget } = this.props;
+    const ControlsForm = widget.controls;
     return (
       <form onSubmit={handleSubmit(onSubmit)} className={cx('wizard-second-step-form')}>
-        Second step in progress...
+        <ControlsForm widgetType={widget.id} />
       </form>
     );
   }
