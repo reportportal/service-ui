@@ -49,7 +49,8 @@ const messages = defineMessages({
 @connect(
   null,
   {
-    initializeWizardThirdStepForm: (data) => initialize(WIDGET_WIZARD_FORM, data, true),
+    initializeWizardThirdStepForm: (data) =>
+      initialize(WIDGET_WIZARD_FORM, data, true, { keepValues: true }),
   },
 )
 export class WizardThirdStepForm extends Component {

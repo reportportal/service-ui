@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="280" height="141" viewBox="0 0 280 141">
+  <defs>
+    <rect id="wdgt-most-time-consuming-b" width="800" height="685" rx="2"/>
+    <filter id="wdgt-most-time-consuming-a" width="102.1%" height="102.5%" x="-1.1%" y="-.9%" filterUnits="objectBoundingBox">
+      <feOffset dy="2" in="SourceAlpha" result="shadowOffsetOuter1"/>
+      <feGaussianBlur in="shadowOffsetOuter1" result="shadowBlurOuter1" stdDeviation="2.5"/>
+      <feColorMatrix in="shadowBlurOuter1" values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.298375226 0"/>
+    </filter>
+  </defs>
+  <g fill="none" fill-rule="evenodd" transform="translate(-135 -8899)">
+    <rect width="1853" height="9311" fill="#B4B4B5"/>
+    <g transform="translate(95 8607)">
+      <use fill="#000" filter="url(#wdgt-most-time-consuming-a)" xlink:href="#wdgt-most-time-consuming-b"/>
+      <use fill="#FFF" xlink:href="#wdgt-most-time-consuming-b"/>
+      <g transform="translate(20 76)">
+        <rect width="320" height="589" fill="#F5F5F5"/>
+        <g transform="translate(20 216)">
+          <rect width="280" height="141" fill="#F9F9F9"/>
+          <rect width="250" height="125" x="15" y="8" transform="matrix(-1 0 0 1 280 0)"/>
+          <g stroke="#F5F5F5" transform="matrix(-1 0 0 1 264 27)">
+            <path d="M-2.84217094e-14 87.5L248 87.5M-2.84217094e-14 65.5L248 65.5M-2.84217094e-14 44.5L248 44.5M-2.84217094e-14 22.5L248 22.5M-2.84217094e-14.5L248 .5"/>
+          </g>
+          <rect width="219" height="13" x="45" y="29" fill="#EE9583" transform="matrix(-1 0 0 1 309 0)"/>
+          <rect width="167" height="13" x="45" y="47" fill="#D7E4B3" transform="matrix(-1 0 0 1 257 0)"/>
+          <rect width="120" height="13" x="45" y="65" fill="#D7E4B3" transform="matrix(-1 0 0 1 210 0)"/>
+          <rect width="78" height="13" x="45" y="83" fill="#EE9583" transform="matrix(-1 0 0 1 168 0)"/>
+          <rect width="23" height="13" x="45" y="101" fill="#D7E4B3" transform="matrix(-1 0 0 1 113 0)"/>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>

@@ -1,12 +1,15 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { destroy } from 'redux-form';
 import { CSSTransition } from 'react-transition-group';
+import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { withModal, ModalHeader } from 'components/main/modal';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { hideModalAction } from 'controllers/modal';
+import { WIDGET_WIZARD_FORM } from './widgetWizardContent/wizardControlsSection/constants';
 import { WidgetWizardContent } from './widgetWizardContent';
 import styles from './widgetWizardModal.scss';
 
@@ -23,6 +26,7 @@ const messages = defineMessages({
 @connect(
   null,
   {
+    destroyWizardForm: () => destroy(WIDGET_WIZARD_FORM),
     hideModalAction,
   },
 )
@@ -30,6 +34,7 @@ export class WidgetWizardModal extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
     hideModalAction: PropTypes.func.isRequired,
+    destroyWizardForm: PropTypes.func.isRequired,
   };
 
   static defaultProps = {};
@@ -47,6 +52,9 @@ export class WidgetWizardModal extends Component {
   onMount() {
     this.setState({ shown: true });
   }
+  onClickModal = (e) => {
+    !this.modal.contains(e.target) && this.closeModal();
+  };
   onKeydown = (e) => {
     if (e.keyCode === 27) {
       this.closeModal();
@@ -54,6 +62,10 @@ export class WidgetWizardModal extends Component {
     if ((e.ctrlKey && e.keyCode === 13) || (e.metaKey && e.keyCode === 13)) {
       this.onClickOk();
     }
+  };
+  onClosed = () => {
+    this.props.hideModalAction();
+    this.props.destroyWizardForm();
   };
   closeModal = () => {
     this.setState({ shown: false });
@@ -70,28 +82,32 @@ export class WidgetWizardModal extends Component {
         >
           <div className={cx('backdrop')} onClick={this.closeModal} />
         </CSSTransition>
-        <CSSTransition
-          timeout={300}
-          in={this.state.shown}
-          classNames={cx('modal-window-animation')}
-          onExited={this.props.hideModalAction}
-        >
-          {(status) => (
-            <div
-              ref={(modal) => {
-                this.modal = modal;
-              }}
-              className={cx('modal-window')}
+        <div className={cx('scrolling-content')} onClick={this.onClickModal}>
+          <ScrollWrapper>
+            <CSSTransition
+              timeout={300}
+              in={this.state.shown}
+              classNames={cx('modal-window-animation')}
+              onExited={this.onClosed}
             >
-              <ModalHeader
-                text={intl.formatMessage(messages.headerText)}
-                onClose={this.closeModal}
-              />
+              {(status) => (
+                <div
+                  ref={(modal) => {
+                    this.modal = modal;
+                  }}
+                  className={cx('modal-window')}
+                >
+                  <ModalHeader
+                    text={intl.formatMessage(messages.headerText)}
+                    onClose={this.closeModal}
+                  />
 
-              {status !== 'exited' ? <WidgetWizardContent /> : <SpinningPreloader />}
-            </div>
-          )}
-        </CSSTransition>
+                  {status !== 'exited' ? <WidgetWizardContent /> : <SpinningPreloader />}
+                </div>
+              )}
+            </CSSTransition>
+          </ScrollWrapper>
+        </div>
       </div>
     );
   }

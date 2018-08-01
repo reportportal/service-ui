@@ -16,3 +16,4 @@ export const PASSING_RATE_SUMMARY = 'passing_rate_summary';
 export const FLAKY_TEST_CASES_TABLE = 'flaky_test_cases';
 export const CUMULATIVE_TREND = 'cumulative';
 export const PRODUCT_STATUS = 'product_status';
+export const MOST_TIME_CONSUMING = 'most_time_consuming';

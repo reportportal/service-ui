@@ -45,6 +45,7 @@
       float: right;
     }
     .select2-search-tags {
+      position: relative;
       background-color: $COLOR--white-two;
 
       .Select-control,
@@ -164,6 +165,14 @@
         word-break: break-all;
         word-wrap: break-word;
         line-height: 18.5px;
+      }
+    }
+  }
+  &.touched.error {
+    :global {
+      .Select-control {
+        border-color: $COLOR--orange-red;
+        box-shadow: 0 0 2px 0 rgba($COLOR--orange-red, 0.7);
       }
     }
   }

@@ -19,7 +19,29 @@ import {
   FLAKY_TEST_CASES_TABLE,
   CUMULATIVE_TREND,
   PRODUCT_STATUS,
+  MOST_TIME_CONSUMING,
 } from 'common/constants/widgetTypes';
+import {
+  LaunchStatisticsControls,
+  OverallStatisticsControls,
+  LaunchDurationControls,
+  LaunchExecutionAndIssueStatisticsControls,
+  ProjectActivityControls,
+  TestCasesGrowthTrendControls,
+  InvestigatedPercentageOfLaunchesControls,
+  LaunchesTableControls,
+  UniqueBugsTableControls,
+  MostFailedTestCasesTableControls,
+  FailedCasesTrendControls,
+  NotPassedTestCasesTrendControls,
+  DifferentLaunchesComparisonControls,
+  PassingRatePerLaunchControls,
+  PassingRateSummaryControls,
+  FlakyTestCasesTableControls,
+  CumulativeTrendControls,
+  ProductStatusControls,
+  MostTimeConsumingTestCasesControls,
+} from './widgetControls';
 import LAUNCH_STATISTICS_PREVIEW from './img/wdgt-launch-statistics-line-chart-inline.svg';
 import OVERALL_STATISTICS_PREVIEW from './img/wdgt-overall-statistics-panel-inline.svg';
 import LAUNCH_DURATION_PREVIEW from './img/wdgt-launches-duration-chart-inline.svg';
@@ -38,6 +60,7 @@ import PASSING_RATE_SUMMARY_PREVIEW from './img/wdgt-passing-rate-summery-inline
 import FLAKY_TEST_CASES_TABLE_PREVIEW from './img/wdgt-flaky-test-cases-table-inline.svg';
 import CUMULATIVE_TREND_PREVIEW from './img/wdgt-cumulative-trend-chart-inline.svg';
 import PRODUCT_STATUS_PREVIEW from './img/wdgt-product-satus-inline.svg';
+import MOST_TIME_CONSUMING_PREVIEW from './img/wdgt-most-time-consuming-inline.svg';
 
 const titles = defineMessages({
   [LAUNCH_STATISTICS]: {
@@ -112,6 +135,10 @@ const titles = defineMessages({
     id: 'Widgets.Name.product_status',
     defaultMessage: 'Product status',
   },
+  [MOST_TIME_CONSUMING]: {
+    id: 'Widgets.Name.most_time_consuming',
+    defaultMessage: 'The most time-consuming test cases widget (TOP-20)',
+  },
 });
 export const getWidgets = (formatMessage) => [
   {
@@ -126,6 +153,7 @@ export const getWidgets = (formatMessage) => [
       />
     ),
     preview: Parser(LAUNCH_STATISTICS_PREVIEW),
+    controls: LaunchStatisticsControls,
   },
   {
     id: OVERALL_STATISTICS,
@@ -137,6 +165,7 @@ export const getWidgets = (formatMessage) => [
       />
     ),
     preview: Parser(OVERALL_STATISTICS_PREVIEW),
+    controls: OverallStatisticsControls,
   },
   {
     id: LAUNCH_DURATION,
@@ -148,6 +177,7 @@ export const getWidgets = (formatMessage) => [
       />
     ),
     preview: Parser(LAUNCH_DURATION_PREVIEW),
+    controls: LaunchDurationControls,
   },
   {
     id: LAUNCH_EXECUTION_AND_ISSUE_STATISTICS,
@@ -161,6 +191,7 @@ export const getWidgets = (formatMessage) => [
       />
     ),
     preview: Parser(LAUNCH_EXECUTION_AND_ISSUE_STATISTICS_PREVIEW),
+    controls: LaunchExecutionAndIssueStatisticsControls,
   },
   {
     id: PROJECT_ACTIVITY,
@@ -172,6 +203,7 @@ export const getWidgets = (formatMessage) => [
       />
     ),
     preview: Parser(PROJECT_ACTIVITY_PREVIEW),
+    controls: ProjectActivityControls,
   },
   {
     id: TEST_CASES_GROWTH_TREND,
@@ -185,6 +217,7 @@ export const getWidgets = (formatMessage) => [
       />
     ),
     preview: Parser(TEST_CASES_GROWTH_TREND_PREVIEW),
+    controls: TestCasesGrowthTrendControls,
   },
   {
     id: INVESTIGATED_PERCENTAGE_OF_LAUNCHES,
@@ -198,6 +231,7 @@ export const getWidgets = (formatMessage) => [
       />
     ),
     preview: Parser(INVESTIGATED_PERCENTAGE_OF_LAUNCHES_PREVIEW),
+    controls: InvestigatedPercentageOfLaunchesControls,
   },
   {
     id: LAUNCHES_TABLE,
@@ -209,6 +243,7 @@ export const getWidgets = (formatMessage) => [
       />
     ),
     preview: Parser(LAUNCHES_TABLE_PREVIEW),
+    controls: LaunchesTableControls,
   },
   {
     id: UNIQUE_BUGS_TABLE,
@@ -222,6 +257,7 @@ export const getWidgets = (formatMessage) => [
       />
     ),
     preview: Parser(UNIQUE_BUGS_TABLE_PREVIEW),
+    controls: UniqueBugsTableControls,
   },
   {
     id: MOST_FAILED_TEST_CASES_TABLE,
@@ -235,6 +271,7 @@ export const getWidgets = (formatMessage) => [
       />
     ),
     preview: Parser(MOST_FAILED_TEST_CASES_TABLE_PREVIEW),
+    controls: MostFailedTestCasesTableControls,
   },
   {
     id: FAILED_CASES_TREND,
@@ -248,6 +285,7 @@ export const getWidgets = (formatMessage) => [
       />
     ),
     preview: Parser(FAILED_CASES_TREND_PREVIEW),
+    controls: FailedCasesTrendControls,
   },
   {
     id: NON_PASSED_TEST_CASES_TREND,
@@ -261,6 +299,7 @@ export const getWidgets = (formatMessage) => [
       />
     ),
     preview: Parser(NON_PASSED_TEST_CASES_TREND_PREVIEW),
+    controls: NotPassedTestCasesTrendControls,
   },
   {
     id: DIFFERENT_LAUNCHES_COMPARISON,
@@ -272,6 +311,7 @@ export const getWidgets = (formatMessage) => [
       />
     ),
     preview: Parser(DIFFERENT_LAUNCHES_COMPARISON_PREVIEW),
+    controls: DifferentLaunchesComparisonControls,
   },
   {
     id: PASSING_RATE_PER_LAUNCH,
@@ -285,6 +325,7 @@ export const getWidgets = (formatMessage) => [
       />
     ),
     preview: Parser(PASSING_RATE_PER_LAUNCH_PREVIEW),
+    controls: PassingRatePerLaunchControls,
   },
   {
     id: PASSING_RATE_SUMMARY,
@@ -298,6 +339,7 @@ export const getWidgets = (formatMessage) => [
       />
     ),
     preview: Parser(PASSING_RATE_SUMMARY_PREVIEW),
+    controls: PassingRateSummaryControls,
   },
   {
     id: FLAKY_TEST_CASES_TABLE,
@@ -311,6 +353,7 @@ export const getWidgets = (formatMessage) => [
       />
     ),
     preview: Parser(FLAKY_TEST_CASES_TABLE_PREVIEW),
+    controls: FlakyTestCasesTableControls,
   },
   {
     id: CUMULATIVE_TREND,
@@ -324,6 +367,7 @@ export const getWidgets = (formatMessage) => [
       />
     ),
     preview: Parser(CUMULATIVE_TREND_PREVIEW),
+    controls: CumulativeTrendControls,
   },
   {
     id: PRODUCT_STATUS,
@@ -337,5 +381,20 @@ export const getWidgets = (formatMessage) => [
       />
     ),
     preview: Parser(PRODUCT_STATUS_PREVIEW),
+    controls: ProductStatusControls,
+  },
+  {
+    id: MOST_TIME_CONSUMING,
+    title: formatMessage(titles[MOST_TIME_CONSUMING]),
+    description: (
+      <FormattedMessage
+        id={'Widgets.Description.most_time_consuming'}
+        defaultMessage={
+          'show the TOP 20 the most time-consuming test cases in the last execution of the specified launch.'
+        }
+      />
+    ),
+    preview: Parser(MOST_TIME_CONSUMING_PREVIEW),
+    controls: MostTimeConsumingTestCasesControls,
   },
 ];

@@ -24,11 +24,14 @@ export const URLS = {
 
   filter: (activeProject, id) => `${urlBase}${activeProject}/filter/${id}`,
   filters: (activeProject) => `${urlBase}${activeProject}/filter`,
+  filtersSearch: (activeProject) =>
+    `${urlBase}${activeProject}/filter?page.sort=name&page.page=1&page.size=50&filter.cnt.name=`,
 
   debug: (activeProject) => `${urlBase}${activeProject}/launch/mode`,
 
   launch: (activeProject, id) => `${urlBase}${activeProject}/launch/${id}`,
   launchTagsSearch: (activeProject) => `${urlBase}${activeProject}/launch/tags?filter.cnt.tags=`,
+  launchNameSearch: (activeProject) => `${urlBase}${activeProject}/launch/names?filter.cnt.name=`,
   launchOwnersSearch: (activeProject) =>
     `${urlBase}${activeProject}/launch/owners?filter.cnt.user=`,
   launches: (activeProject, ids) => `${urlBase}${activeProject}/launch${getQueryParams({ ids })}`,
@@ -72,6 +75,8 @@ export const URLS = {
       'page.sort': 'login,ASC',
       term: input,
     })}`,
+  projectUsernamesSearch: (activeProject) =>
+    `${urlBase}project/${activeProject}/usernames?filter.cnt.users=`,
   projectIndex: (activeProject) => `${urlBase}project/${activeProject}/index`,
 
   suite: (activeProject, suiteId) => `${urlBase}${activeProject}/item/${suiteId}`,
