@@ -44,6 +44,13 @@ export const URLS = {
       view: exportType,
       access_token: getToken(),
     })}`,
+  launchItem: (activeProject) => `${urlBase}${activeProject}/item`,
+  launchItemHistory: (activeProject, ids, historyDepth) =>
+    `${urlBase}${activeProject}/item/history${getQueryParams({
+      ids,
+      history_depth: historyDepth,
+    })}`,
+
   login: (grantType, username, password) =>
     `/uat/sso/oauth/token${getQueryParams({
       grant_type: grantType,
