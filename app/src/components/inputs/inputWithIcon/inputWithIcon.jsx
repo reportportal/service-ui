@@ -1,32 +1,11 @@
-/*
- * Copyright 2017 EPAM Systems
- *
- *
- * This file is part of EPAM Report Portal.
- * https://github.com/reportportal/service-ui
- *
- * Report Portal is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * Report Portal is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
- */
-
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import styles from './input.scss';
+import styles from './inputWithIcon.scss';
 
 const cx = classNames.bind(styles);
 
-export const Input = ({
+export const InputWithIcon = ({
   type,
   value,
   readonly,
@@ -35,6 +14,8 @@ export const Input = ({
   placeholder,
   maxLength,
   disabled,
+  icon,
+  iconClass,
   refFunction,
   onChange,
   onFocus,
@@ -47,7 +28,7 @@ export const Input = ({
     <input
       ref={refFunction}
       type={type}
-      className={cx('input', className, { disabled, error, touched })}
+      className={cx('inputWithIcon', className, { disabled, error, touched })}
       value={value}
       placeholder={placeholder}
       maxLength={maxLength}
@@ -59,10 +40,11 @@ export const Input = ({
       onKeyUp={onKeyUp}
       onKeyPress={onKeyPress}
     />
+    <span className={cx('icon', `${iconClass}`)}>{icon}</span>
   </React.Fragment>
 );
 
-Input.propTypes = {
+InputWithIcon.propTypes = {
   type: PropTypes.string,
   value: PropTypes.string,
   placeholder: PropTypes.string,
@@ -70,6 +52,8 @@ Input.propTypes = {
   disabled: PropTypes.bool,
   readonly: PropTypes.bool,
   className: PropTypes.string,
+  icon: PropTypes.string,
+  iconClass: PropTypes.string,
   error: PropTypes.string,
   onChange: PropTypes.func,
   onFocus: PropTypes.func,
@@ -80,7 +64,7 @@ Input.propTypes = {
   touched: PropTypes.bool,
 };
 
-Input.defaultProps = {
+InputWithIcon.defaultProps = {
   type: 'text',
   value: '',
   placeholder: '',
@@ -88,6 +72,8 @@ Input.defaultProps = {
   disabled: false,
   readonly: false,
   className: '',
+  icon: '',
+  iconClass: '',
   error: '',
   touched: false,
   onChange: () => {},

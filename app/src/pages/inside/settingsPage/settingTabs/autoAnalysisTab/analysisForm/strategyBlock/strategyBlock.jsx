@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import Parser from 'html-react-parser';
 import { InputBigSwitcher } from 'components/inputs/inputBigSwitcher';
 import { InputRadio } from 'components/inputs/inputRadio';
 import { FormField } from 'components/fields/formField';
@@ -54,50 +55,44 @@ export class StrategyBlock extends Component {
     return (
       <React.Fragment>
         <FormField
-          fieldName="isAutoAnalyzerEnabled"
-          containerClasses={cx('accuracy-form-group')}
-          inputWrapperClasses={cx('switcher-wrapper')}
+          name="isAutoAnalyzerEnabled"
+          containerClassName={cx('accuracy-form-group')}
+          inputWrapperClassName={cx('switcher-wrapper')}
           label={intl.formatMessage(messages.autoAnalysisSwitcherTitle)}
-          description={intl.formatMessage(messages.analysisStatusInfo)}
-          formatValue={Boolean}
-          parseValue={Boolean}
+          description={Parser(intl.formatMessage(messages.analysisStatusInfo))}
+          format={Boolean}
+          parse={Boolean}
         >
           <InputBigSwitcher mobileDisabled />
         </FormField>
 
         <FormField
-          fieldName="analyzer_mode"
-          containerClasses={cx('radio-container')}
-          inputWrapperClasses={cx('aa-strategy-option', 'aa-strategy-option-selector')}
-          descriptionClasses={cx('radio-description')}
+          name="analyzer_mode"
+          containerClassName={cx('radio-container')}
+          inputWrapperClassName={cx('aa-strategy-option', 'aa-strategy-option-selector')}
+          descriptionClassName={cx('radio-description')}
           label={intl.formatMessage(messages.strategySelectorTitle)}
           description={intl.formatMessage(messages.sameNameLaunchesInfo)}
         >
-          <InputRadio
-            ownValue="LAUNCH_NAME"
-            name="aa-strategy"
-            childrenClass={cx('radio-children')}
-            mobileDisabled
-          >
-            {intl.formatMessage(messages.sameNameLaunchesCaption)}
+          <InputRadio ownValue="LAUNCH_NAME" name="aa-strategy" mobileDisabled>
+            <span className={cx('radio-children')}>
+              {intl.formatMessage(messages.sameNameLaunchesCaption)}
+            </span>
           </InputRadio>
         </FormField>
 
         <FormField
-          fieldName="analyzer_mode"
-          containerClasses={cx('radio-container')}
-          inputWrapperClasses={cx('aa-strategy-option', 'aa-strategy-option-selector')}
-          labelClasses={cx('no-label')}
-          descriptionClasses={cx('radio-description')}
+          name="analyzer_mode"
+          containerClassName={cx('radio-container')}
+          inputWrapperClassName={cx('aa-strategy-option', 'aa-strategy-option-selector')}
+          labelClassName={cx('no-label')}
+          descriptionClassName={cx('radio-description')}
           description={intl.formatMessage(messages.allLaunchesInfo)}
         >
-          <InputRadio
-            ownValue="ALL"
-            name="aa-strategy"
-            childrenClass={cx('radio-children')}
-            mobileDisabled
-          >
-            {intl.formatMessage(messages.allLaunchesCaption)}
+          <InputRadio ownValue="ALL" name="aa-strategy" mobileDisabled>
+            <span className={cx('radio-children')}>
+              {intl.formatMessage(messages.allLaunchesCaption)}
+            </span>
           </InputRadio>
         </FormField>
         <div className={cx('form-break-line')} />

@@ -1,7 +1,6 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import Parser from 'html-react-parser';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import styles from './formField.scss';
 
@@ -9,71 +8,55 @@ const cx = classNames.bind(styles);
 
 export class FormField extends PureComponent {
   static propTypes = {
-    containerClasses: PropTypes.string,
-    labelClasses: PropTypes.string,
-    inputWrapperClasses: PropTypes.string,
-    descriptionClasses: PropTypes.string,
+    containerClassName: PropTypes.string,
+    labelClassName: PropTypes.string,
+    inputWrapperClassName: PropTypes.string,
+    descriptionClassName: PropTypes.string,
     label: PropTypes.string,
-    description: PropTypes.string,
+    description: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
     onChange: PropTypes.func,
     normalize: PropTypes.func,
-    formatValue: PropTypes.func,
-    parseValue: PropTypes.func,
-    fieldName: PropTypes.string,
+    format: PropTypes.func,
+    parse: PropTypes.func,
+    name: PropTypes.string,
     children: PropTypes.any,
   };
 
   static defaultProps = {
-    containerClasses: '',
-    labelClasses: '',
-    inputWrapperClasses: '',
-    descriptionClasses: '',
+    containerClassName: '',
+    labelClassName: '',
+    inputWrapperClassName: '',
+    descriptionClassName: '',
     label: '',
     description: '',
     onChange: () => {},
     normalize: (value) => value,
-    formatValue: (value) => value,
-    parseValue: (value) => value,
-    fieldName: null,
+    format: (value) => value,
+    parse: (value) => value,
+    name: null,
     children: null,
   };
 
   render() {
     const {
-      containerClasses,
-      labelClasses,
-      inputWrapperClasses,
-      descriptionClasses,
+      containerClassName,
+      labelClassName,
+      inputWrapperClassName,
+      descriptionClassName,
       label,
       description,
-      onChange,
-      normalize,
-      formatValue,
-      parseValue,
-      fieldName,
       children,
+      ...rest
     } = this.props;
 
     return (
-      <div className={cx('form-group-container', `${containerClasses}`)}>
-        <span className={cx('form-group-column', 'form-group-label', `${labelClasses}`)}>
-          {label}
-        </span>
-        <div className={cx('form-group-column', `${inputWrapperClasses}`)}>
-          <FieldProvider
-            name={fieldName}
-            normalize={normalize}
-            format={formatValue}
-            parse={parseValue}
-            onChange={onChange}
-          >
-            {children}
-          </FieldProvider>
+      <div className={cx('form-field', containerClassName)}>
+        <span className={cx('form-group-label', labelClassName)}>{label}</span>
+        <div className={cx('input-wrapper', inputWrapperClassName)}>
+          <FieldProvider {...rest}>{children}</FieldProvider>
         </div>
-        <div className={cx('form-group-column', 'form-group-description', `${descriptionClasses}`)}>
-          <div className={cx('form-group-help-block')}>
-            <p>{Parser(description)}</p>
-          </div>
+        <div className={cx('form-group-description', descriptionClassName)}>
+          <p>{description}</p>
         </div>
       </div>
     );

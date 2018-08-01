@@ -93,7 +93,6 @@ export class GenerateIndexModal extends Component {
   render() {
     const okButton = {
       text: this.props.intl.formatMessage(messages.generateButtonText),
-      danger: false,
       onClick: this.onGenerateClick,
     };
     const cancelButton = {

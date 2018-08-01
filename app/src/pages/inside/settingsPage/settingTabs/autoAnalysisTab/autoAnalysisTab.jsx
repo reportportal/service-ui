@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
 import { injectIntl } from 'react-intl';
-import { fetchProjectAction, fetchAutoAnalysisConfigurationAction } from 'controllers/project';
+import { fetchAutoAnalysisConfigurationAction } from 'controllers/project';
 import { activeProjectSelector } from 'controllers/user';
 import { AnalysisForm } from './analysisForm/analysisForm';
 import { IndexActionsBlock } from './indexActionsBlock';
@@ -16,7 +16,6 @@ const cx = classNames.bind(styles);
     projectId: activeProjectSelector(state),
   }),
   {
-    fetchProjectAction,
     fetchAutoAnalysisConfigurationAction,
   },
 )

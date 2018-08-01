@@ -8,7 +8,6 @@ export const InputRadio = ({
   children,
   value,
   ownValue,
-  childrenClass,
   name,
   disabled,
   circleAtTop,
@@ -33,14 +32,13 @@ export const InputRadio = ({
       name={name}
     />
     <span className={cx('toggler', { checked: value === ownValue, 'at-top': circleAtTop })} />
-    {children && <span className={cx('children-container', `${childrenClass}`)}>{children}</span>}
+    {children && <span className={cx('children-container')}>{children}</span>}
   </label>
 );
 InputRadio.propTypes = {
   children: PropTypes.node,
   value: PropTypes.string,
   ownValue: PropTypes.string,
-  childrenClass: PropTypes.string,
   name: PropTypes.string,
   disabled: PropTypes.bool,
   mobileDisabled: PropTypes.bool,
@@ -53,7 +51,6 @@ InputRadio.defaultProps = {
   children: '',
   value: '',
   ownValue: '',
-  childrenClass: '',
   name: '',
   disabled: false,
   mobileDisabled: false,

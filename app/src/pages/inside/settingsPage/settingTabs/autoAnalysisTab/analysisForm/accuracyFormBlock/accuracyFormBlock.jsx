@@ -3,6 +3,7 @@ import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { Input } from 'components/inputs/input';
+import { InputWithIcon } from 'components/inputs/inputWithIcon';
 import { InputDropdown } from 'components/inputs/inputDropdown';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { BigButton } from 'components/buttons/bigButton';
@@ -87,69 +88,67 @@ export class AccuracyFormBlock extends Component {
 
   normalizeValue = (value) => value && `${value}`.replace(/\D+/g, '');
 
-  formatInputValue = (value) => value && `${value}`;
-
   render() {
     const { intl } = this.props;
     return (
       <React.Fragment>
         <FormField
-          fieldName="minShouldMatch"
-          containerClasses={cx('accuracy-form-group')}
-          inputWrapperClasses={cx('accuracy-form-input-wrapper')}
+          name="minShouldMatch"
+          containerClassName={cx('accuracy-form-group')}
+          inputWrapperClassName={cx('accuracy-form-input-wrapper')}
           label={intl.formatMessage(messages.minimumShouldMatchTitle)}
           onChange={this.props.onInputChange}
           normalize={this.normalizeValue}
-          formatValue={this.formatInputValue}
+          format={String}
           description={intl.formatMessage(messages.minimumShouldMatchDescription)}
         >
           <FieldErrorHint>
-            <Input
-              valueSymbol="%"
-              valueSymbolClass={cx('percent-icon')}
+            <InputWithIcon
+              icon="%"
+              iconClass={cx('percent-icon')}
               maxLength="3"
-              customClass={cx('mobile-input-disabled')}
+              className={cx('mobile-input-disabled')}
             />
           </FieldErrorHint>
         </FormField>
 
         <FormField
-          fieldName="minDocFreq"
-          containerClasses={cx('accuracy-form-group')}
-          inputWrapperClasses={cx('accuracy-form-input-wrapper')}
+          name="minDocFreq"
+          containerClassName={cx('accuracy-form-group')}
+          inputWrapperClassName={cx('accuracy-form-input-wrapper')}
           label={intl.formatMessage(messages.minimumDocFreqTitle)}
           onChange={this.props.onInputChange}
           normalize={this.normalizeValue}
-          formatValue={this.formatInputValue}
+          format={String}
           description={intl.formatMessage(messages.minimumDocFreqDescription)}
         >
           <FieldErrorHint>
-            <Input maxLength="2" customClass={cx('mobile-input-disabled')} />
+            <Input maxLength="2" className={cx('mobile-input-disabled')} />
           </FieldErrorHint>
         </FormField>
 
         <FormField
-          fieldName="minTermFreq"
-          containerClasses={cx('accuracy-form-group')}
-          inputWrapperClasses={cx('accuracy-form-input-wrapper')}
+          name="minTermFreq"
+          containerClassName={cx('accuracy-form-group')}
+          inputWrapperClassName={cx('accuracy-form-input-wrapper')}
           label={intl.formatMessage(messages.minimumTermFreqTitle)}
           onChange={this.props.onInputChange}
           normalize={this.normalizeValue}
-          formatValue={this.formatInputValue}
+          format={String}
           description={intl.formatMessage(messages.minimumTermFreqDescription)}
         >
           <FieldErrorHint>
-            <Input maxLength="2" customClass={cx('mobile-input-disabled')} />
+            <Input maxLength="2" className={cx('mobile-input-disabled')} />
           </FieldErrorHint>
         </FormField>
 
         <FormField
-          fieldName="numberOfLogLines"
-          containerClasses={cx('accuracy-form-group')}
-          inputWrapperClasses={cx('accuracy-form-input-wrapper', 'drop-down-block')}
+          name="numberOfLogLines"
+          containerClassName={cx('accuracy-form-group')}
+          inputWrapperClassName={cx('accuracy-form-input-wrapper', 'drop-down-block')}
           label={intl.formatMessage(messages.numberOfLogLinesTitle)}
           onChange={this.props.onInputChange}
-          formatValue={this.formatInputValue}
+          format={String}
           description={intl.formatMessage(messages.numberOfLogLinesDescription)}
         >
           <InputDropdown options={this.dropDownOptions} mobileDisabled />

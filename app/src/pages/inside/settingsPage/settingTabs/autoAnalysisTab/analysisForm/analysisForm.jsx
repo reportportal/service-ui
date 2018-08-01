@@ -167,7 +167,7 @@ export class AnalysisForm extends Component {
 
   setAnalysisMode = (modeConfig) => {
     const analysisModeKeys = Object.keys(analysisModeConfig);
-    const existedMode = analysisModeKeys.find(
+    const existingMode = analysisModeKeys.find(
       (key) =>
         analysisModeConfig[key].minShouldMatch === Number(modeConfig.minShouldMatch) &&
         analysisModeConfig[key].minDocFreq === Number(modeConfig.minDocFreq) &&
@@ -175,7 +175,7 @@ export class AnalysisForm extends Component {
         analysisModeConfig[key].numberOfLogLines === Number(modeConfig.numberOfLogLines),
     );
     this.setState({
-      autoAnalysisMode: existedMode || '',
+      autoAnalysisMode: existingMode || '',
     });
   };
 
@@ -219,6 +219,7 @@ export class AnalysisForm extends Component {
             <ToggleButton
               items={tabItems}
               value={this.state.autoAnalysisMode}
+              mobileDisabled
               onClickItem={this.tabChangeHandle}
             />
           </div>
