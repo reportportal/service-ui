@@ -83,10 +83,7 @@ define(function (require) {
                         label: Localization.widgets.includeMethods,
                         getValue: function (model) {
                             var widgetOptions = model.getWidgetOptions();
-                            if (widgetOptions.include_methods) {
-                                return true;
-                            }
-                            return false;
+                            return !!widgetOptions.include_methods;
                         },
                         setValue: function (value, model) {
                             var widgetOptions = model.getWidgetOptions();
