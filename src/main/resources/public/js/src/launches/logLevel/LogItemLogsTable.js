@@ -133,11 +133,6 @@ define(function (require) {
                 .off('resize.logItems')
                 .on('resize.logItems', _.debounce(self.resize.bind(self), 100));
         },
-        resetFilters: function () {
-            this.slider.slider.slider('value', this.slider.options.items.length); // activates all items in slider
-            this.nameModel.set({ value: '' });
-            $('[data-js-attachments-filter]', this.$el).prop('checked', false);
-        },
         setupStickyHeader: function () {
             this.destroyStickyHeader();
             this.stickyHeader = new StickyHeader({ fixedBlock: $('[data-js-fixed-header]', this.$el), topMargin: 0, minWidthWindow: 720 });
@@ -326,8 +321,6 @@ define(function (require) {
             } else {
                 this.collection.findLogPage(logId, true)
                     .done(function (number) {
-                        self.resetFilters();
-                        self.onChangeFilter();
                         self.onChangePage(number);
                         self.listenToOnce(self.collection, 'loading:false', function () {
                             self.collection.get(logId) && self.collection.get(logId).trigger('scrollTo');
