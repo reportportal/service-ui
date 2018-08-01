@@ -1,17 +1,16 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { injectIntl, intlShape } from 'react-intl';
-import className from 'classnames/bind';
 import { reduxForm } from 'redux-form';
-import { FieldProvider } from 'components/fields/fieldProvider';
+import classNames from 'classnames/bind';
 import { InputBigSwitcher } from 'components/inputs/inputBigSwitcher';
-import { ModalField } from 'components/main/modal';
+import { InputDropdown } from 'components/inputs/inputDropdown';
+import { FormField } from 'components/fields/formField';
 import { labelWidth } from './constants';
-import { FormRow } from './formRow/index';
-import styles from './forms.scss';
 import { emailToggleMessages } from './messages';
+import styles from './forms.scss';
 
-const cx = className.bind(styles);
+const cx = classNames.bind(styles);
 
 @injectIntl
 @reduxForm({
@@ -32,25 +31,44 @@ export class EmailToggle extends Component {
     emailEnabled: {},
     readOnly: true,
   };
+  getDropdownInputConfig = () => [
+    {
+      value: true,
+      label: this.props.intl.formatMessage(emailToggleMessages.turnOn),
+    },
+    {
+      value: false,
+      label: this.props.intl.formatMessage(emailToggleMessages.turnOff),
+    },
+  ];
+
   render() {
     const { intl } = this.props;
     return (
-      <FormRow
-        note={() => (
-          <div className={cx('note-checkbox')}>
-            {intl.formatMessage(emailToggleMessages.toggleNotificationsNote)}
-          </div>
-        )}
-      >
-        <ModalField
-          label={intl.formatMessage(emailToggleMessages.toggleNotificationsLabel)}
-          labelWidth={labelWidth}
-        >
-          <FieldProvider name="emailEnabled" format={Boolean} parse={Boolean}>
+      <Fragment>
+        <div className={cx('email-notification-toggle--desktop')}>
+          <FormField
+            label={intl.formatMessage(emailToggleMessages.toggleNotificationsLabel)}
+            labelWidth={labelWidth}
+            description={intl.formatMessage(emailToggleMessages.toggleNotificationsNote)}
+            name="emailEnabled"
+            format={Boolean}
+            parse={Boolean}
+          >
             <InputBigSwitcher disabled={this.props.readOnly} />
-          </FieldProvider>
-        </ModalField>
-      </FormRow>
+          </FormField>
+        </div>
+        <div className={cx('email-notification-toggle--mobile')}>
+          <FormField
+            label={intl.formatMessage(emailToggleMessages.toggleNotificationsLabel)}
+            description={intl.formatMessage(emailToggleMessages.toggleNotificationsNote)}
+            name="emailEnabled"
+            fieldWrapperClassName={cx('form-input')}
+          >
+            <InputDropdown options={this.getDropdownInputConfig()} />
+          </FormField>
+        </div>
+      </Fragment>
     );
   }
 }

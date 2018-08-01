@@ -22,6 +22,7 @@ import { NavigationTabs } from 'components/main/navigationTabs';
 import classNames from 'classnames/bind';
 import { GeneralTab } from './generalTab';
 import { AutoAnalysisTab } from './autoAnalysisTab';
+import { NotificationsTab } from './notificationsTab';
 import { DemoDataTab } from './demoDataTab';
 import styles from './settingTabs.scss';
 
@@ -97,7 +98,7 @@ export class SettingTabs extends Component {
       notifications: {
         name: this.props.intl.formatMessage(messages.notifications),
         link: this.createTabLink(NOTIFICATIONS),
-        component: <div>notification</div>,
+        component: <NotificationsTab />,
       },
       bts: {
         name: (

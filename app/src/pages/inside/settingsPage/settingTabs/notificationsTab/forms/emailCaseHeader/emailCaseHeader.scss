@@ -1,15 +1,18 @@
 .control-panel {
   position: relative;
-  background-color: $COLOR--white-four;
   padding: 7px 15px;
-  width: 750px;
-  margin: 20px 15px 20px 0;
+  margin: 20px 15px;
+  background-color: $COLOR--white-four;
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    margin: 20px 0;
+  }
 }
 
 .control-panel-name {
+  color: $COLOR--gray-47;
   font-size: 12px;
   font-family: $FONT-SEMIBOLD;
-  color: $COLOR--gray-47;
   text-transform: uppercase;
 }
 
@@ -26,8 +29,8 @@
   width: 20px;
   padding: 0;
   margin-left: 15px;
-  background: none;
   outline: none;
   border: 0;
+  background: none;
   cursor: pointer;
 }

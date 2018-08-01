@@ -11,3 +11,11 @@ export const defaultRecipient = {
   submitted: false,
   valid: true,
 };
+export const launchStatuses = {
+  ALWAYS: 'ALWAYS',
+  MORE_10: 'MORE_10',
+  MORE_20: 'MORE_20',
+  MORE_50: 'MORE_50',
+  FAILED: 'FAILED',
+  TO_INVESTIGATE: 'TO_INVESTIGATE',
+};
