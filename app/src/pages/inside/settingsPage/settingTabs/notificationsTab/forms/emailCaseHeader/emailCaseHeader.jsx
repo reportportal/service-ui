@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
-import styles from './formControls.scss';
+import styles from './emailCaseHeader.scss';
 import IconDelete from './img/icon-delete-inline.svg';
 import IconEdit from './img/icon-pencil-inline.svg';
 import IconTick from './img/ic-check-inline.svg';
@@ -17,7 +17,7 @@ const messages = defineMessages({
 });
 
 @injectIntl
-export class FormControls extends Component {
+export class EmailCaseHeader extends Component {
   static propTypes = {
     index: PropTypes.number,
     id: PropTypes.string,

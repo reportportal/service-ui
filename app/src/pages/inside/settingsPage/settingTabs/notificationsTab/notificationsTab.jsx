@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { projectEmailConfigurationSelector, updateProjectEmailConfig } from 'controllers/project';
-import { activeProjectRoleSelector } from 'controllers/user';
+import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { PROJECT_MANAGER, LEAD } from 'common/constants/projectRoles';
+import { canConfigreEmailNotifications } from 'common/utils/permissions';
 import { EmailToggle, EmailCasesList } from './forms/index';
 import styles from './notificationsTab.scss';
 
@@ -14,6 +14,7 @@ const cx = classNames.bind(styles);
   (state) => ({
     emailConfiguration: projectEmailConfigurationSelector(state),
     projectRole: activeProjectRoleSelector(state),
+    userRole: userAccountRoleSelector(state),
   }),
   { update: updateProjectEmailConfig },
 )
@@ -24,6 +25,7 @@ export class NotificationsTab extends Component {
     onSubmit: PropTypes.func,
     showModal: PropTypes.func,
     projectRole: PropTypes.string,
+    userRole: PropTypes.string,
   };
   static defaultProps = {
     emailConfiguration: {},
@@ -31,13 +33,15 @@ export class NotificationsTab extends Component {
     onSubmit: () => {},
     showModal: () => {},
     projectRole: '',
+    userRole: '',
   };
   submitForm = (data = {}) => {
     const { update, emailConfiguration } = this.props;
     update({ ...emailConfiguration, ...data });
   };
+
   isAbleToEditForm = () =>
-    this.props.projectRole === PROJECT_MANAGER || this.props.projectRole === LEAD;
+    canConfigreEmailNotifications(this.props.userRole, this.props.projectRole);
   render() {
     const {
       emailConfiguration: { emailCases, emailEnabled },

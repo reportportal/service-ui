@@ -1,5 +1,8 @@
 .notification-form {
-  max-width: 840px;
+  max-width: 1000px;
   margin: 0 auto;
   padding: 30px 0 120px 0;
+  @media (max-width: $SCREEN_XS_MAX) {
+    padding: 15px 10px;
+  }
 }

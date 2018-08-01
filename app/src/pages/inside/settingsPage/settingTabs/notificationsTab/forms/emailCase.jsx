@@ -10,13 +10,11 @@ import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { InputTagsSearch } from 'components/inputs/inputTagsSearch';
 import { InputCheckbox } from 'components/inputs/inputCheckbox';
 import { InputDropdown } from 'components/inputs/inputDropdown';
-import { FieldProvider } from 'components/fields/fieldProvider';
-import { ModalField } from 'components/main/modal';
+import { FormField } from 'components/fields/formField';
 import { activeProjectSelector } from 'controllers/user';
-import { FormControls } from './formControls/index';
-import { FormRow } from './formRow/index';
+import { EmailCaseHeader } from './emailCaseHeader';
 import styles from './forms.scss';
-import { labelWidth } from './constants';
+import { labelWidth, launchStatuses } from './constants';
 import { emailCasesMessages } from './messages';
 
 const cx = className.bind(styles);
@@ -79,34 +77,28 @@ export class EmailCase extends Component {
     const { intl } = this.props;
     return [
       {
-        value: 'ALWAYS',
+        value: launchStatuses.ALWAYS,
         label: intl.formatMessage(emailCasesMessages.dropdownValueAlways),
-        disabled: false,
       },
       {
-        value: 'MORE_10',
+        value: launchStatuses.MORE_10,
         label: intl.formatMessage(emailCasesMessages.dropdownValueMore10),
-        disabled: false,
       },
       {
-        value: 'MORE_20',
+        value: launchStatuses.MORE_20,
         label: intl.formatMessage(emailCasesMessages.dropdownValueMore20),
-        disabled: false,
       },
       {
-        value: 'MORE_50',
+        value: launchStatuses.MORE_50,
         label: intl.formatMessage(emailCasesMessages.dropdownValueMore50),
-        disabled: false,
       },
       {
-        value: 'FAILED',
+        value: launchStatuses.FAILED,
         label: intl.formatMessage(emailCasesMessages.dropdownValueFailed),
-        disabled: false,
       },
       {
-        value: 'TO_INVESTIGATE',
+        value: launchStatuses.TO_INVESTIGATE,
         label: intl.formatMessage(emailCasesMessages.dropdownValueToInvestigate),
-        disabled: false,
       },
     ];
   };
@@ -122,6 +114,8 @@ export class EmailCase extends Component {
     }
   };
   validateRecipientsNewItem = ({ label }) => label && validate.email(label);
+  validateLaunchNamesNewItem = ({ label }) => label && label.length >= 3;
+  validateTagsNewItem = ({ label }) => label && label.length >= 1;
   render() {
     const {
       teamMembersSearchUrl,
@@ -136,7 +130,7 @@ export class EmailCase extends Component {
     const { editMode } = this.state;
     return (
       <Fragment>
-        <FormControls
+        <EmailCaseHeader
           id={id}
           index={index}
           onDelete={onDelete}
@@ -151,126 +145,91 @@ export class EmailCase extends Component {
           this.props.emailCase.showValidationMessage && (
             <p className={cx('form-invalid-message')}>{this.props.emailCase.validationMessage}</p>
           )}
-        <FormRow>
-          <ModalField
-            label={intl.formatMessage(emailCasesMessages.recipientsLabel)}
-            labelWidth={labelWidth}
-          >
-            <div className={cx('form-input')}>
-              <FieldProvider
-                name="recipients"
-                format={this.formatOptions}
-                parse={this.parseOptions}
-                disabled={!editMode}
-              >
-                <FieldErrorHint hintType="top">
-                  <InputTagsSearch
-                    placeholder={intl.formatMessage(emailCasesMessages.recipientsPlaceholder)}
-                    nothingFound={intl.formatMessage(emailCasesMessages.recipientsHint)}
-                    minLength={3}
-                    async
-                    uri={teamMembersSearchUrl}
-                    makeOptions={this.formatOptions}
-                    creatable
-                    multi
-                    removeSelected
-                    isValidNewOption={this.validateRecipientsNewItem}
-                    dynamicSearchPromptText
-                  />
-                </FieldErrorHint>
-              </FieldProvider>
-            </div>
-          </ModalField>
-        </FormRow>
-        <FormRow>
-          <div className={cx('form-input-owner')}>
-            <FieldProvider name="informOwner" format={Boolean} disabled={!editMode}>
-              <InputCheckbox>
-                {intl.formatMessage(emailCasesMessages.launchOwnerLabel)}
-              </InputCheckbox>
-            </FieldProvider>
-          </div>
-        </FormRow>
-        <FormRow>
-          <ModalField
-            label={intl.formatMessage(emailCasesMessages.inCaseLabel)}
-            labelWidth={labelWidth}
-          >
-            <div className={cx('form-input', 'dropdown')}>
-              <FieldProvider name="sendCase" disabled={!editMode}>
-                <InputDropdown options={this.getDropdownInputConfig()} />
-              </FieldProvider>
-            </div>
-          </ModalField>
-        </FormRow>
-        <FormRow
-          note={() => (
-            <div className={cx('note')}>
-              {intl.formatMessage(emailCasesMessages.launchNamesNote)}
-            </div>
-          )}
+        <FormField
+          label={intl.formatMessage(emailCasesMessages.recipientsLabel)}
+          name="recipients"
+          format={this.formatOptions}
+          parse={this.parseOptions}
+          disabled={!editMode}
+          fieldWrapperClassName={cx('form-input')}
         >
-          <ModalField
-            label={intl.formatMessage(emailCasesMessages.launchNamesLabel)}
-            labelWidth={labelWidth}
-          >
-            <div className={cx('form-input')}>
-              <FieldProvider
-                name="launchNames"
-                format={this.formatOptions}
-                parse={this.parseOptions}
-                disabled={!editMode}
-              >
-                <FieldErrorHint hintType="top">
-                  <InputTagsSearch
-                    placeholder={intl.formatMessage(emailCasesMessages.launchNamesPlaceholder)}
-                    focusPlaceholder={intl.formatMessage(emailCasesMessages.launchNamesHint)}
-                    async
-                    minLength={3}
-                    uri={launchNamesSearch}
-                    makeOptions={this.formatOptions}
-                    creatable
-                    multi
-                    removeSelected
-                  />
-                </FieldErrorHint>
-              </FieldProvider>
-            </div>
-          </ModalField>
-        </FormRow>
-        <FormRow
-          note={() => (
-            <div className={cx('note')}>{intl.formatMessage(emailCasesMessages.tagsNote)}</div>
-          )}
+          <FieldErrorHint hintType="top">
+            <InputTagsSearch
+              placeholder={intl.formatMessage(emailCasesMessages.recipientsPlaceholder)}
+              nothingFound={intl.formatMessage(emailCasesMessages.recipientsHint)}
+              minLength={3}
+              async
+              uri={teamMembersSearchUrl}
+              makeOptions={this.formatOptions}
+              creatable
+              multi
+              removeSelected
+              isValidNewOption={this.validateRecipientsNewItem}
+              dynamicSearchPromptText
+            />
+          </FieldErrorHint>
+        </FormField>
+        <FormField name="informOwner" format={Boolean} disabled={!editMode}>
+          <InputCheckbox>{intl.formatMessage(emailCasesMessages.launchOwnerLabel)}</InputCheckbox>
+        </FormField>
+        <FormField
+          label={intl.formatMessage(emailCasesMessages.inCaseLabel)}
+          labelWidth={labelWidth}
+          name="sendCase"
+          disabled={!editMode}
+          fieldWrapperClassName={cx('form-input')}
         >
-          <ModalField
-            label={intl.formatMessage(emailCasesMessages.tagsLabel)}
-            labelWidth={labelWidth}
-          >
-            <div className={cx('form-input')}>
-              <FieldProvider
-                name="tags"
-                format={this.formatOptions}
-                parse={this.parseOptions}
-                disabled={!editMode}
-              >
-                <FieldErrorHint hintType="top">
-                  <InputTagsSearch
-                    placeholder={intl.formatMessage(emailCasesMessages.tagsPlaceholder)}
-                    focusPlaceholder={intl.formatMessage(emailCasesMessages.tagsHint)}
-                    async
-                    uri={launchTagsSearch}
-                    minLength={1}
-                    makeOptions={this.formatOptions}
-                    creatable
-                    multi
-                    removeSelected
-                  />
-                </FieldErrorHint>
-              </FieldProvider>
-            </div>
-          </ModalField>
-        </FormRow>
+          <InputDropdown options={this.getDropdownInputConfig()} />
+        </FormField>
+
+        <FormField
+          label={intl.formatMessage(emailCasesMessages.launchNamesLabel)}
+          description={intl.formatMessage(emailCasesMessages.launchNamesNote)}
+          name="launchNames"
+          format={this.formatOptions}
+          parse={this.parseOptions}
+          disabled={!editMode}
+          fieldWrapperClassName={cx('form-input')}
+        >
+          <FieldErrorHint hintType="top">
+            <InputTagsSearch
+              placeholder={intl.formatMessage(emailCasesMessages.launchNamesPlaceholder)}
+              focusPlaceholder={intl.formatMessage(emailCasesMessages.launchNamesHint)}
+              async
+              minLength={3}
+              uri={launchNamesSearch}
+              makeOptions={this.formatOptions}
+              creatable
+              multi
+              removeSelected
+              isValidNewOption={this.validateLaunchNamesNewItem}
+            />
+          </FieldErrorHint>
+        </FormField>
+        <FormField
+          label={intl.formatMessage(emailCasesMessages.tagsLabel)}
+          description={intl.formatMessage(emailCasesMessages.tagsNote)}
+          fieldWrapperClassName={cx('form-input')}
+          name="tags"
+          format={this.formatOptions}
+          parse={this.parseOptions}
+          disabled={!editMode}
+        >
+          <FieldErrorHint hintType="top">
+            <InputTagsSearch
+              placeholder={intl.formatMessage(emailCasesMessages.tagsPlaceholder)}
+              focusPlaceholder={intl.formatMessage(emailCasesMessages.tagsHint)}
+              async
+              uri={launchTagsSearch}
+              minLength={1}
+              makeOptions={this.formatOptions}
+              creatable
+              multi
+              removeSelected
+              isValidNewOption={this.validateTagsNewItem}
+            />
+          </FieldErrorHint>
+        </FormField>
       </Fragment>
     );
   }

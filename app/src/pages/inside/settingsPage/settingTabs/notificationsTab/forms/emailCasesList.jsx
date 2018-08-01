@@ -8,6 +8,7 @@ import { compareObjectsByKeys, uniqueId } from 'common/utils';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { EmailCase } from './emailCase';
 import styles from './forms.scss';
+import PlusIcon from './img/ic-plus-inline.svg';
 import { OWNER, defaultRecipient } from './constants';
 
 const messages = defineMessages({
@@ -23,12 +24,9 @@ const messages = defineMessages({
 const cx = classNames.bind(styles);
 
 @injectIntl
-@connect(
-  null,
-  {
-    showModal: showModalAction,
-  },
-)
+@connect(null, {
+  showModal: showModalAction,
+})
 export class EmailCasesList extends Component {
   static propTypes = {
     emailCases: PropTypes.array,
@@ -159,8 +157,8 @@ export class EmailCasesList extends Component {
         })}
         {!configurable && (
           <div className={cx('notification-form-button')}>
-            <GhostButton onClick={this.addEmailCase}>
-              + {intl.formatMessage(messages.addNewRuleButton)}
+            <GhostButton icon={PlusIcon} onClick={this.addEmailCase}>
+              {intl.formatMessage(messages.addNewRuleButton)}
             </GhostButton>
           </div>
         )}

@@ -87,4 +87,12 @@ export const emailToggleMessages = defineMessages({
     id: 'EmailToggle.toggleNotificationsNote',
     defaultMessage: 'Send e-mail notifications about launches finished',
   },
+  turnOn: {
+    id: 'EmailToggle.turnOn',
+    defaultMessage: 'On',
+  },
+  turnOff: {
+    id: 'EmailToggle.turnOff',
+    defaultMessage: 'Off',
+  },
 });
