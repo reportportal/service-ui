@@ -1,0 +1,34 @@
+.filters-block-wrapper {
+  padding: 0 15px;
+  border-bottom: solid 1px $COLOR--gray-91;
+}
+
+.filter-wrapper {
+  display: inline-block;
+  height: 60px;
+  width: 202px;
+  position: relative;
+  margin: 7px 35px 14px 2px;
+}
+
+.filter-name {
+  display: inline-block;
+  max-width: 100%;
+  margin-bottom: 5px;
+  box-sizing: border-box;
+  font-family: $FONT-REGULAR;
+  font-size: 13px;
+  line-height: 18px;
+}
+
+.drop-down-container {
+  display: inline-block;
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 30px;
+  font-family: $FONT-REGULAR;
+  font-size: 13px;
+  line-height: 13px;
+  color: $COLOR--charcoal-grey;
+}
