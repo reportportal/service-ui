@@ -61,46 +61,56 @@ define(function (require) {
                 deps: ['history', 'actionType', 'userRef'],
                 get: function (history, actionType, userRef) {
                     switch (actionType) {
-                        case 'update_item': {
-                            return _.size(history) > 1 ?
+                    case 'update_item': {
+                        return _.size(history) > 1 ?
                                 Localization.itemEvents.updateItemIssue :
                                 Localization.itemEvents.updateItem;
-                        }
-                        case 'post_issue': return Localization.itemEvents.postIssue;
-                        case 'link_issue': return Localization.itemEvents.linkIssue;
-                        case 'unlink_issue': return Localization.itemEvents.unlinkIssue;
-                        case 'analyze_item': return userRef + ' ' + Localization.itemEvents.changedByAnalyzer;
-                        case 'link_issue_aa': return userRef + ' ' + Localization.itemEvents.issueLoadByAnalyzer;
-                        default: break;
+                    }
+                    case 'post_issue': return Localization.itemEvents.postIssue;
+                    case 'link_issue': return Localization.itemEvents.linkIssue;
+                    case 'unlink_issue': return Localization.itemEvents.unlinkIssue;
+                    case 'analyze_item': return userRef + ' ' + Localization.itemEvents.changedByAnalyzer;
+                    case 'link_issue_aa': return userRef + ' ' + Localization.itemEvents.issueLoadByAnalyzer;
+                    default: break;
                     }
                 }
             },
             actionsHtml: {
-                deps: ['history'],
-                get: function (history) {
+                deps: ['history', 'projectRef'],
+                get: function (history, projectRef) {
+                    var self = this;
                     var result = '';
                     _.each(history, function (item) {
                         result += '<div class="action-row">';
                         if (item.field === 'ticketId') {
-                            result += '<div class="action-item"><span>FROM: </span>' + this.getActionTicketsHtml(item.oldValue) + '</div>' +
+                            result += '<div class="action-item">' + this.getActionTicketsHtml(item.oldValue) + '</div>' +
                                 '<div class="separate-items"><i class="material-icons">keyboard_arrow_right</i></div>' +
-                                '<div class="action-item"><span>TO: </span>' + this.getActionTicketsHtml(item.newValue) + '</div>';
+                                '<div class="action-item">' + this.getActionTicketsHtml(item.newValue) + '</div>';
                         } else if (item.field === 'ignoreAnalyzer') {
-                            result += '<div class="action-item"><span>FROM: </span>' +
+                            result += '<div class="action-item">' +
                                 ((item.oldValue === 'true') ? Localization.launches.ignoreAA : '') + '</div>' +
                                 '<div class="separate-items"><i class="material-icons">keyboard_arrow_right</i></div>' +
-                                '<div class="action-item"><span>TO: </span>' +
+                                '<div class="action-item">' +
                                 ((item.newValue === 'true') ? Localization.launches.ignoreAA : '') + '</div>';
-                        } else {
-                            result += '<div class="action-item"><span>FROM: </span>' + this.getActionValueHtml(item.oldValue) + '</div>' +
+                        } else if (item.field === 'relevantItem') {
+                            result += '<div class="action-item">' + this.getActionValueHtml(item.oldValue) + '</div>' +
                                 '<div class="separate-items"><i class="material-icons">keyboard_arrow_right</i></div>' +
-                                '<div class="action-item"><span>TO: </span>' + this.getActionValueHtml(item.newValue) + '</div>';
+                                '<div class="action-item">' + self.getLinkToRelevantItem(item, projectRef) + '</div>';
+                        } else {
+                            result += '<div class="action-item">' + this.getActionValueHtml(item.oldValue) + '</div>' +
+                                '<div class="separate-items"><i class="material-icons">keyboard_arrow_right</i></div>' +
+                                '<div class="action-item">' + this.getActionValueHtml(item.newValue) + '</div>';
                         }
                         result += '</div>';
                     }, this);
                     return result;
                 }
             }
+        },
+        getLinkToRelevantItem: function (field, projectRef) {
+            var itemInfo = JSON.parse(field.newValue);
+            var link = '#' + projectRef + '/launches/all/' + itemInfo.launchRef + '/' + itemInfo.path.join('/') + '?log.item=' + itemInfo.id;
+            return Localization.widgets.basedOn + ' <a href="' + link + '">' + Localization.ui.item + '</a>';
         },
         getActionTicketsHtml: function (tickets) {
             var tickets = tickets || '';
