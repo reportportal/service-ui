@@ -151,6 +151,11 @@ define(function (require, exports, module) {
                 .done(function (data) {
                     self.set({ apiToken: 'bearer ' + data.access_token });
                 })
+                .fail(function () {
+                    Service.generateApiToken().done(function (data) {
+                        self.set({ apiToken: 'bearer ' + data.access_token });
+                    });
+                });
         },
         load: function () {
             var self = this;
