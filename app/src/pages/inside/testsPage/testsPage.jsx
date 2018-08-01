@@ -24,6 +24,7 @@ import {
   loadingSelector,
 } from 'controllers/testItem';
 import { toggleFilter } from 'controllers/filterEntities';
+import { HistoryLine } from './historyLine';
 
 @connect(
   (state) => ({
@@ -121,6 +122,7 @@ export class TestsPage extends Component {
     return (
       <PageLayout>
         <PageSection>
+          <HistoryLine activePage={activePage} pageSize={pageSize}
           <SuiteTestToolbar
             selectedItems={selectedTests}
             parentItem={parentItem}

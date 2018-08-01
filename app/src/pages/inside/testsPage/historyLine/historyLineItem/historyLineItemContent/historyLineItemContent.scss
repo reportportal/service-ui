@@ -1,0 +1,204 @@
+.history-line-item-content {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 30px;
+  width: 100%;
+  text-align: center;
+  cursor: pointer;
+
+  &:before {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    left: 10px;
+  }
+}
+
+.first-item:before {
+  left: 0;
+}
+
+.last-item .item-block-bg:before {
+  display: none;
+}
+
+.item-block-bg {
+  position: absolute;
+  left: 2px;
+  right: -10px;
+  top: 0;
+  bottom: 0;
+  overflow: hidden;
+
+  &:before {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: -5px;
+    display: block;
+    border-top: 20px solid transparent !important;
+    border-bottom: 20px solid transparent !important;
+    border-right: 3px solid transparent !important;
+    border-left: 8px solid transparent;
+    box-sizing: border-box;
+  }
+
+  &:after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: -5px;
+    display: block;
+    border-left: 8px solid transparent !important;
+    border-right: 3px solid transparent;
+    border-top: 20px solid transparent;
+    border-bottom: 20px solid transparent;
+    box-sizing: border-box;
+  }
+}
+
+.status-FAILED {
+  &:before {
+    background-color: $COLOR--blush;
+  }
+  .item-block-bg:before,
+  .item-block-bg:after {
+    border-color: $COLOR--blush;
+  }
+}
+
+.status-PASSED {
+  &:before {
+    background-color: $COLOR--greenish-grey;
+  }
+
+  .item-block-bg:before,
+  .item-block-bg:after {
+    border-color: $COLOR--greenish-grey;
+  }
+}
+
+.status-SKIPPED {
+  &:before {
+    background-color: $COLOR--silver;
+  }
+  .item-block-bg:before,
+  .item-block-bg:after {
+    border-color: $COLOR--silver;
+  }
+}
+
+.status-MANY {
+  cursor: default;
+  &:before {
+    background-color: $COLOR--light-yellow;
+  }
+  .item-block-bg:before,
+  .item-block-bg:after {
+    border-color: $COLOR--light-yellow;
+  }
+}
+
+.status-RESETED {
+  &:before {
+    background-color: $COLOR--white;
+  }
+  .item-block-bg:before,
+  .item-block-bg:after {
+    border-color: $COLOR--white;
+  }
+}
+
+.status-NOT_FOUND {
+  cursor: default;
+  &:before {
+    background-color: $COLOR--white;
+  }
+  .item-block-bg:before,
+  .item-block-bg:after {
+    border-color: $COLOR--white;
+  }
+}
+
+.active {
+  cursor: default;
+  &:before {
+    top: -3px;
+    bottom: -3px;
+  }
+  .item-block-bg {
+    top: -3px;
+    bottom: -3px;
+    &:before {
+      top: -2px;
+    }
+    &:after {
+      top: -2px;
+    }
+  }
+
+  &.status-FAILED {
+    &:before {
+      background-color: $COLOR--orangish;
+    }
+    .item-block-bg:before,
+    .item-block-bg:after {
+      border-color: $COLOR--orangish;
+    }
+  }
+
+  &.status-PASSED {
+    &:before {
+      background-color: $COLOR--passed;
+    }
+
+    .item-block-bg:before,
+    .item-block-bg:after {
+      border-color: $COLOR--passed;
+    }
+  }
+
+  &.status-SKIPPED {
+    &:before {
+      background-color: $COLOR--skipped;
+    }
+    .item-block-bg:before,
+    .item-block-bg:after {
+      border-color: $COLOR--skipped;
+    }
+  }
+
+  &.status-MANY {
+    &:before {
+      background-color: $COLOR--light-yellow;
+    }
+    .item-block-bg:before,
+    .item-block-bg:after {
+      border-color: $COLOR--light-yellow;
+    }
+  }
+
+  &.status-RESETED {
+    &:before {
+      background-color: $COLOR--white;
+    }
+    .item-block-bg:before,
+    .item-block-bg:after {
+      border-color: $COLOR--white;
+    }
+  }
+
+  &.status-NOT_FOUND {
+    &:before {
+      background-color: $COLOR--white;
+    }
+    .item-block-bg:before,
+    .item-block-bg:after {
+      border-color: $COLOR--white;
+    }
+  }
+}

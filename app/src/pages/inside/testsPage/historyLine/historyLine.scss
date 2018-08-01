@@ -1,0 +1,11 @@
+.history-line {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-bottom: 30px;
+  padding: 15px;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    display: none;
+  }
+}
