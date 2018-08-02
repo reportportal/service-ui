@@ -123,7 +123,7 @@ define(function (require) {
         },
         startAnalyzeAction: function (e) {
             var self = this;
-            var modal = new ModalAnalyseLaunches({ analyzerMode: this.model.appModel.get('configuration').analyzer_mode || 'LAUNCH_NAME' });
+            var modal = new ModalAnalyseLaunches({ analyzerMode: this.model.appModel.get('configuration').analyzerConfiguration.analyzer_mode || 'LAUNCH_NAME' });
             var el = $(e.currentTarget);
             var id = this.model.get('id');
             var isLaunchAnalyze = el.data('analyze-type') === 'analyze';
