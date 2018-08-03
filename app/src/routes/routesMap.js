@@ -10,6 +10,7 @@ import {
   PROJECT_SETTINGS_TAB_PAGE,
   projectIdSelector,
 } from 'controllers/pages';
+import { GENERAL } from 'common/constants/settingTabs';
 import { isAuthorizedSelector } from 'controllers/auth';
 import { fetchDashboardAction, changeVisibilityTypeAction } from 'controllers/dashboard';
 import { fetchLaunchesAction } from 'controllers/launch';
@@ -101,20 +102,10 @@ export default {
     path: '/:projectId/members',
     thunk: (dispatch) => dispatch(fetchMembersAction()),
   },
-  PROJECT_SETTINGS_PAGE: {
-    path: '/:projectId/settings',
-    thunk: (dispatch, getState) => {
-      dispatch(
-        redirect({
-          type: PROJECT_SETTINGS_TAB_PAGE,
-          payload: {
-            settingTab: 'general',
-            projectId: activeProjectSelector(getState()),
-          },
-        }),
-      );
-    },
-  },
+  PROJECT_SETTINGS_PAGE: redirectRoute('/:projectId/settings', (payload) => ({
+    type: PROJECT_SETTINGS_TAB_PAGE,
+    payload: { ...payload, settingTab: GENERAL },
+  })),
   PROJECT_SETTINGS_TAB_PAGE: '/:projectId/settings/:settingTab',
   PROJECT_SANDBOX_PAGE: '/:projectId/sandbox',
   [TEST_ITEM_PAGE]: {
