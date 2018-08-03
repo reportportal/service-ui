@@ -137,6 +137,7 @@ define(function (require) {
                 config.trackingDispatcher.trackEventNumber(426);
                 return DefectTabView;
             case 'autoAnalysis':
+                config.trackingDispatcher.trackEventNumber(580);
                 return AutoAnalysisTabView;
             case 'demoData':
                 config.trackingDispatcher.trackEventNumber(427);

@@ -44,6 +44,7 @@ define(function (require) {
         tpl: 'tpl-project-settings-auto-analysis',
 
         events: {
+            'click [data-js-is-auto-analyze]': 'switchAutoAnalysis',
             'click [data-js-submit-settings]': 'submitSettings',
             'change input[type="radio"]': 'onChangeAABase',
             'change [data-js-mode-param]': 'isMatchPreset',
@@ -88,6 +89,9 @@ define(function (require) {
             this.registryModel = new SingletonRegistryInfoModel();
             this.render();
         },
+        switchAutoAnalysis: function(){
+            config.trackingDispatcher.trackEventNumber(581);
+        },
         render: function () {
             this.$el.html(Util.templates(this.tpl, { access: config.userModel.hasPermissions() }));
             this.logStrNumberSelector = new DropDownComponent({
@@ -110,6 +114,7 @@ define(function (require) {
             this.modeSwitcher.activate();
             $('[data-js-mode-switcher]', this.$el).html(this.modeSwitcher.$el);
             this.listenTo(this.modeSwitcher.model, 'change:value', function () {
+                config.trackingDispatcher.trackEventNumber(583);
                 this.setAccuracySettings(this.getModeValue());
                 this.validate();
             });
@@ -188,6 +193,7 @@ define(function (require) {
         },
         onRemoveIndex: function () {
             var modal;
+            config.trackingDispatcher.trackEventNumber(585);
             modal = new ModalConfirm({
                 headerText: Localization.project.removeIndex,
                 bodyText: Localization.project.removeIndexConfirm,
@@ -208,6 +214,7 @@ define(function (require) {
         onGenerateIndex: function () {
             var modal;
             var self = this;
+            config.trackingDispatcher.trackEventNumber(586);
             modal = new ModalConfirm({
                 headerText: Localization.project.generateIndex,
                 bodyText: Localization.project.generateIndexConfirm,
@@ -230,6 +237,7 @@ define(function (require) {
             modal.show();
         },
         onChangeAABase: function (e) {
+            config.trackingDispatcher.trackEventNumber(582);
             this.model.set('analyzer_mode', e.target.value);
         },
         setAccuracySettings: function (mode) {
@@ -254,7 +262,7 @@ define(function (require) {
             var generalSettings;
             if (!this.validate()) return;
             generalSettings = this.model.getAutoAnalysisSettings();
-            config.trackingDispatcher.trackEventNumber(385);
+            config.trackingDispatcher.trackEventNumber(584);
             Service.updateProject(generalSettings)
                 .done(function () {
                     var newConfig = appModel.get('configuration');
