@@ -1,0 +1,27 @@
+.log-message {
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    width: 3px;
+    top: 10px;
+    bottom: 10px;
+    left: 0;
+  }
+
+  &.level-error {
+    &::before {
+      background-color: $COLOR--orange-red;
+    }
+  }
+}
+
+.message {
+  color: $COLOR--charcoal-grey;
+  font-size: 11px;
+  font-family: Menlo, Monaco, Consolas, 'Courier New', monospace;
+  line-height: 1.82;
+  padding: 15px;
+  word-break: break-word;
+}

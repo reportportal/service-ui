@@ -76,6 +76,15 @@ export const URLS = {
   testItems: (activeProject) => `${urlBase}${activeProject}/item`,
   testItem: (activeProject, id) => `${urlBase}${activeProject}/item/${id}`,
 
+  logItem: (activeProject, itemId, level) =>
+    `${urlBase}${activeProject}/log${getQueryParams({
+      'filter.eq.item': itemId,
+      'filter.in.level': level,
+      'page.page': 1,
+      'page.size': 1,
+      'page.sort': 'time,DESC',
+    })}`,
+
   user: () => `${urlBase}user`,
   userRegistration: () => `${urlBase}user/registration`,
   userPasswordReset: () => `${urlBase}user/password/reset`,

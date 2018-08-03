@@ -209,7 +209,7 @@ export class LaunchSuiteGrid extends PureComponent {
         component: NameColumn,
         sortable: true,
         customProps: {
-          onEditLaunch: this.props.onEditLaunch,
+          onEditItem: this.props.onEditLaunch,
         },
       },
       {

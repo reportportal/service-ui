@@ -49,10 +49,24 @@ export class ItemInfo extends Component {
     value: {},
     analyzing: false,
     customProps: {
-      onEditLaunch: () => {},
+      onEditItem: () => {},
       onShowTestParams: () => {},
     },
     isStepLevel: false,
+  };
+
+  handleEditItem = () => {
+    const { onEditItem } = this.props.customProps;
+    if (onEditItem) {
+      onEditItem(this.props.value);
+    }
+  };
+
+  handleShowTestParams = () => {
+    const { onShowTestParams } = this.props.customProps;
+    if (onShowTestParams) {
+      onShowTestParams(this.props.value);
+    }
   };
 
   render() {
@@ -60,7 +74,6 @@ export class ItemInfo extends Component {
       value,
       refFunction,
       analyzing,
-      customProps,
       userProjectRole,
       userAccountRole,
       userId,
@@ -76,15 +89,12 @@ export class ItemInfo extends Component {
           </NameLink>
           {analyzing && <div className={cx('analysis-badge')}>Analysis</div>}
           {isStepLevel && (
-            <div
-              className={cx('test-params-icon')}
-              onClick={() => customProps.onShowTestParams(value)}
-            >
+            <div className={cx('test-params-icon')} onClick={this.handleShowTestParams}>
               {Parser(TestParamsIcon)}
             </div>
           )}
           {canEditLaunch(userAccountRole, userProjectRole, userId === value.owner) && (
-            <div className={cx('edit-icon')} onClick={() => customProps.onEditLaunch(value)}>
+            <div className={cx('edit-icon')} onClick={this.handleEditItem}>
               {Parser(PencilIcon)}
             </div>
           )}
