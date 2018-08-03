@@ -110,7 +110,7 @@ define(function (require, exports, module) {
             ':el': 'classes: {active: active}',
             '[data-js-tooltip-item]': 'attr: {title: statusTitle}',
             '[data-js-launch-link]': 'attr: {href: getUrl, class: getLinkClass}',
-            '[data-js-info]': 'classes: {hide: noInfo}',
+            '[data-js-info]': 'classes: {hide: not(hasInfo)}',
             '[data-js-growth-duration]': 'text: durationGrowth',
             '[data-js-growth-block]': 'classes: {hide: not(durationGrowth)}, attr: {title: durationGrowth}'
         },
@@ -134,10 +134,10 @@ define(function (require, exports, module) {
                     return '';
                 }
             },
-            noInfo: {
+            hasInfo: {
                 get: function () {
                     var issue = this.model.getIssue();
-                    return !issue.comment && !(issue.externalSystemIssues && issue.externalSystemIssues.length);
+                    return issue.comment || (issue.externalSystemIssues && issue.externalSystemIssues.length);
                 }
             },
             statusTitle: {
