@@ -5,7 +5,7 @@ import {
   FETCH_PROJECT_SUCCESS,
   FETCH_PROJECT_PREFERENCES_SUCCESS,
   TOGGLE_DISPLAY_FILTER_ON_LAUNCHES,
-  UPDATE_AUTO_ANALYSIS_CONFIGURATION_SUCCESS,
+  UPDATE_AUTO_ANALYSIS_CONFIGURATION,
 } from './constants';
 import { projectPreferencesSelector } from './selectors';
 
@@ -20,7 +20,7 @@ const fetchProjectPreferencesSuccessAction = (projectId) => ({
 });
 
 export const updateAutoAnalysisConfigurationAction = (project) => ({
-  type: UPDATE_AUTO_ANALYSIS_CONFIGURATION_SUCCESS,
+  type: UPDATE_AUTO_ANALYSIS_CONFIGURATION,
   payload: project.configuration.analyzerConfiguration,
 });
 

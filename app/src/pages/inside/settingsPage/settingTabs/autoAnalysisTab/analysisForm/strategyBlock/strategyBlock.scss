@@ -12,24 +12,17 @@
   }
 }
 
-.aa-strategy-option {
+.aa-strategy-option-selector {
   display: flex;
   justify-content: flex-start;
   align-items: flex-start;
+  width: 225px;
+  min-width: 240px;
+  padding-right: 0;
+  margin-right: 15px;
   box-sizing: border-box;
   @media (max-width: $SCREEN_XS_MAX) {
     flex-direction: column;
-  }
-}
-
-.aa-strategy-option-selector {
-  box-sizing: border-box;
-  padding-right: 0;
-  margin-right: 15px;
-  min-width: 240px;
-  width: 225px;
-
-  @media (max-width: $SCREEN_XS_MAX) {
     width: auto;
     margin-bottom: 0;
   }

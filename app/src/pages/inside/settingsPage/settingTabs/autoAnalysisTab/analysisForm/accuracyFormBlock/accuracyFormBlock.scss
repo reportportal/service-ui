@@ -41,13 +41,11 @@
   margin: 0;
 }
 
-.mobile-input-disabled {
-  @media (max-width: $SCREEN_XS_MAX) {
-    background-color: $COLOR--gray-91;
-  }
-}
-
 .percent-icon {
+  position: absolute;
+  z-index: 1;
+  top: 9px;
+  right: 10px;
   font-style: italic;
   font-size: 13px;
 }

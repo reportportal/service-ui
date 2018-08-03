@@ -16,6 +16,7 @@ import { activeProjectSelector } from 'controllers/user';
 import { NavigationTabs } from 'components/main/navigationTabs';
 import classNames from 'classnames/bind';
 import { GeneralTab } from './generalTab';
+import { AutoAnalysisTab } from './autoAnalysisTab';
 import styles from './settingTabs.scss';
 
 const cx = classNames.bind(styles);
@@ -105,7 +106,7 @@ export class SettingTabs extends Component {
     autoAnalysis: {
       name: this.props.intl.formatMessage(messages.analysis),
       link: this.createTabLink(ANALYSIS),
-      component: <div>autoAnalysis</div>,
+      component: <AutoAnalysisTab />,
     },
     demoData: {
       name: this.props.intl.formatMessage(messages.demoData),

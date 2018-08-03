@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
@@ -74,15 +74,15 @@ export class IndexActionsBlock extends Component {
   render() {
     const { intl } = this.props;
     return (
-      <React.Fragment>
+      <Fragment>
         <div className={cx('index-actions-title-wrapper')}>
           <p className={cx('index-actions-title')}>
             {intl.formatMessage(messages.indexActionsBlockTitle)}
           </p>
         </div>
 
-        <div className={cx('form-group-container', 'index-actions-group-container')}>
-          <div className={cx('form-group-column', 'index-action-description')}>
+        <div className={cx('form-group-container')}>
+          <div className={cx('index-action-description')}>
             {intl.formatMessage(messages.removeIndexDescription)}
           </div>
           <div className={cx('form-group-column')}>
@@ -98,8 +98,8 @@ export class IndexActionsBlock extends Component {
           </div>
         </div>
 
-        <div className={cx('form-group-container', 'index-actions-group-container')}>
-          <div className={cx('form-group-column', 'index-action-description')}>
+        <div className={cx('form-group-container')}>
+          <div className={cx('index-action-description')}>
             {intl.formatMessage(messages.generateIndexDescription)}
           </div>
           <div className={cx('form-group-column')}>
@@ -124,7 +124,7 @@ export class IndexActionsBlock extends Component {
             </GhostButton>
           </div>
         </div>
-      </React.Fragment>
+      </Fragment>
     );
   }
 }

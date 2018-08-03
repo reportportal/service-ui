@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import Parser from 'html-react-parser';
@@ -53,11 +53,11 @@ export class StrategyBlock extends Component {
     const { intl } = this.props;
 
     return (
-      <React.Fragment>
+      <Fragment>
         <FormField
           name="isAutoAnalyzerEnabled"
           containerClassName={cx('accuracy-form-group')}
-          inputWrapperClassName={cx('switcher-wrapper')}
+          fieldWrapperClassName={cx('switcher-wrapper')}
           label={intl.formatMessage(messages.autoAnalysisSwitcherTitle)}
           description={Parser(intl.formatMessage(messages.analysisStatusInfo))}
           format={Boolean}
@@ -69,7 +69,7 @@ export class StrategyBlock extends Component {
         <FormField
           name="analyzer_mode"
           containerClassName={cx('radio-container')}
-          inputWrapperClassName={cx('aa-strategy-option', 'aa-strategy-option-selector')}
+          fieldWrapperClassName={cx('aa-strategy-option-selector')}
           descriptionClassName={cx('radio-description')}
           label={intl.formatMessage(messages.strategySelectorTitle)}
           description={intl.formatMessage(messages.sameNameLaunchesInfo)}
@@ -84,7 +84,7 @@ export class StrategyBlock extends Component {
         <FormField
           name="analyzer_mode"
           containerClassName={cx('radio-container')}
-          inputWrapperClassName={cx('aa-strategy-option', 'aa-strategy-option-selector')}
+          fieldWrapperClassName={cx('aa-strategy-option-selector')}
           labelClassName={cx('no-label')}
           descriptionClassName={cx('radio-description')}
           description={intl.formatMessage(messages.allLaunchesInfo)}
@@ -96,7 +96,7 @@ export class StrategyBlock extends Component {
           </InputRadio>
         </FormField>
         <div className={cx('form-break-line')} />
-      </React.Fragment>
+      </Fragment>
     );
   }
 }

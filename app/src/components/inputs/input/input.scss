@@ -50,3 +50,8 @@
     background-color: $COLOR--gray-91;
   }
 }
+.mobile-disabled {
+  @media (max-width: $SCREEN_XS_MAX) {
+    background-color: $COLOR--gray-91;
+  }
+}

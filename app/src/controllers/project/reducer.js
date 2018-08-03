@@ -5,7 +5,7 @@ import {
   FETCH_PROJECT_SUCCESS,
   FETCH_PROJECT_PREFERENCES_SUCCESS,
   TOGGLE_DISPLAY_FILTER_ON_LAUNCHES,
-  UPDATE_AUTO_ANALYSIS_CONFIGURATION_SUCCESS,
+  UPDATE_AUTO_ANALYSIS_CONFIGURATION,
 } from './constants';
 
 const toggleFilter = (filters = [], filter) => {
@@ -20,7 +20,7 @@ export const projectInfoReducer = (state = PROJECT_INFO_INITIAL_STATE, { type, p
   switch (type) {
     case FETCH_PROJECT_SUCCESS:
       return { ...state, ...payload };
-    case UPDATE_AUTO_ANALYSIS_CONFIGURATION_SUCCESS:
+    case UPDATE_AUTO_ANALYSIS_CONFIGURATION:
       return {
         ...state,
         configuration: {

@@ -72,7 +72,7 @@ export class GenerateIndexModal extends Component {
     showNotification: () => {},
   };
 
-  onGenerateClick = (closeModal) => {
+  onClickGenerate = (closeModal) => {
     fetch(URLS.projectIndex(this.props.projectId), { method: 'put' })
       .then(() => {
         this.props.showNotification({
@@ -93,7 +93,7 @@ export class GenerateIndexModal extends Component {
   render() {
     const okButton = {
       text: this.props.intl.formatMessage(messages.generateButtonText),
-      onClick: this.onGenerateClick,
+      onClick: this.onClickGenerate,
     };
     const cancelButton = {
       text: this.props.intl.formatMessage(messages.cancelButtonText),
