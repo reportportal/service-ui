@@ -179,6 +179,21 @@ export class AnalysisForm extends Component {
     });
   };
 
+  tabItems = [
+    {
+      value: 'Strict',
+      label: this.props.intl.formatMessage(messages.analysisStrictModeTitle),
+    },
+    {
+      value: 'Moderate',
+      label: this.props.intl.formatMessage(messages.analysisModerateModeTitle),
+    },
+    {
+      value: 'Light',
+      label: this.props.intl.formatMessage(messages.analysisLightModeTitle),
+    },
+  ];
+
   tabChangeHandle = (newValue) => {
     this.props.change('minShouldMatch', analysisModeConfig[newValue].minShouldMatch);
     this.props.change('minDocFreq', analysisModeConfig[newValue].minDocFreq);
@@ -193,31 +208,16 @@ export class AnalysisForm extends Component {
   render() {
     const { intl, handleSubmit } = this.props;
 
-    const tabItems = [
-      {
-        value: 'Strict',
-        label: intl.formatMessage(messages.analysisStrictModeTitle),
-      },
-      {
-        value: 'Moderate',
-        label: intl.formatMessage(messages.analysisModerateModeTitle),
-      },
-      {
-        value: 'Light',
-        label: intl.formatMessage(messages.analysisLightModeTitle),
-      },
-    ];
-
     return (
       <form className={cx('analysis-form-content')} onSubmit={handleSubmit(this.onFormSubmit)}>
         <StrategyBlock />
         <div className={cx('accuracy-form-group')}>
-          <span className={cx('tabs-container-label', 'mode-tabs-label')}>
+          <span className={cx('tabs-container-label')}>
             {intl.formatMessage(messages.analysisModeTitle)}
           </span>
-          <div className={cx('form-group-column', 'toggle-button-wrapper')}>
+          <div className={cx('toggle-button-wrapper')}>
             <ToggleButton
-              items={tabItems}
+              items={this.tabItems}
               value={this.state.autoAnalysisMode}
               mobileDisabled
               onClickItem={this.tabChangeHandle}

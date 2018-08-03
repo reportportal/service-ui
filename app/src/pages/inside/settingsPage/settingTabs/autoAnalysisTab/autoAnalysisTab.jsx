@@ -37,7 +37,7 @@ export class AutoAnalysisTab extends Component {
 
   render() {
     return (
-      <div className={cx('settings-tab-content')}>
+      <div className={cx('auto-analysis-tab')}>
         <AnalysisForm />
         <IndexActionsBlock />
         <div className={cx('mobile-disabling-cover')} />

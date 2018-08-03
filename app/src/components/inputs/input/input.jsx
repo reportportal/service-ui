@@ -35,6 +35,7 @@ export const Input = ({
   placeholder,
   maxLength,
   disabled,
+  mobileDisabled,
   refFunction,
   onChange,
   onFocus,
@@ -43,23 +44,27 @@ export const Input = ({
   onKeyPress,
   touched,
 }) => (
-  <React.Fragment>
-    <input
-      ref={refFunction}
-      type={type}
-      className={cx('input', className, { disabled, error, touched })}
-      value={value}
-      placeholder={placeholder}
-      maxLength={maxLength}
-      disabled={disabled}
-      readOnly={readonly}
-      onChange={onChange}
-      onFocus={onFocus}
-      onBlur={onBlur}
-      onKeyUp={onKeyUp}
-      onKeyPress={onKeyPress}
-    />
-  </React.Fragment>
+  <input
+    ref={refFunction}
+    type={type}
+    className={cx('input', className, {
+      'mobile-disabled': mobileDisabled,
+      disabled,
+      error,
+      touched,
+      readonly,
+    })}
+    value={value}
+    placeholder={placeholder}
+    maxLength={maxLength}
+    disabled={disabled}
+    readOnly={readonly}
+    onChange={onChange}
+    onFocus={onFocus}
+    onBlur={onBlur}
+    onKeyUp={onKeyUp}
+    onKeyPress={onKeyPress}
+  />
 );
 
 Input.propTypes = {
@@ -67,6 +72,7 @@ Input.propTypes = {
   value: PropTypes.string,
   placeholder: PropTypes.string,
   maxLength: PropTypes.string,
+  mobileDisabled: PropTypes.bool,
   disabled: PropTypes.bool,
   readonly: PropTypes.bool,
   className: PropTypes.string,
@@ -85,6 +91,7 @@ Input.defaultProps = {
   value: '',
   placeholder: '',
   maxLength: '254',
+  mobileDisabled: false,
   disabled: false,
   readonly: false,
   className: '',

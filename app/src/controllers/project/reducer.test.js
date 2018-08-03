@@ -3,7 +3,7 @@ import {
   PROJECT_INFO_INITIAL_STATE,
   PROJECT_PREFERENCES_INITIAL_STATE,
   FETCH_PROJECT_SUCCESS,
-  UPDATE_AUTO_ANALYSIS_CONFIGURATION_SUCCESS,
+  UPDATE_AUTO_ANALYSIS_CONFIGURATION,
   FETCH_PROJECT_PREFERENCES_SUCCESS,
   TOGGLE_DISPLAY_FILTER_ON_LAUNCHES,
 } from './constants';
@@ -28,7 +28,7 @@ describe('project reducer', () => {
       expect(newState).toEqual(payload);
     });
 
-    test('should handle UPDATE_AUTO_ANALYSIS_CONFIGURATION_SUCCESS', () => {
+    test('should handle UPDATE_AUTO_ANALYSIS_CONFIGURATION', () => {
       const oldState = {
         ...PROJECT_INFO_INITIAL_STATE,
         configuration: {
@@ -38,7 +38,7 @@ describe('project reducer', () => {
       };
       const payload = { foo: 'bar' };
       const newState = projectInfoReducer(PROJECT_INFO_INITIAL_STATE, {
-        type: UPDATE_AUTO_ANALYSIS_CONFIGURATION_SUCCESS,
+        type: UPDATE_AUTO_ANALYSIS_CONFIGURATION,
         payload,
       });
       expect(newState).toEqual({

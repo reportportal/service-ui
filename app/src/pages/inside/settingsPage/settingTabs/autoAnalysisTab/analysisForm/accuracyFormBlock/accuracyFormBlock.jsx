@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
@@ -91,11 +91,11 @@ export class AccuracyFormBlock extends Component {
   render() {
     const { intl } = this.props;
     return (
-      <React.Fragment>
+      <Fragment>
         <FormField
           name="minShouldMatch"
           containerClassName={cx('accuracy-form-group')}
-          inputWrapperClassName={cx('accuracy-form-input-wrapper')}
+          fieldWrapperClassName={cx('accuracy-form-input-wrapper')}
           label={intl.formatMessage(messages.minimumShouldMatchTitle)}
           onChange={this.props.onInputChange}
           normalize={this.normalizeValue}
@@ -104,10 +104,9 @@ export class AccuracyFormBlock extends Component {
         >
           <FieldErrorHint>
             <InputWithIcon
-              icon="%"
-              iconClass={cx('percent-icon')}
+              icon={<i className={cx('percent-icon')}>%</i>}
               maxLength="3"
-              className={cx('mobile-input-disabled')}
+              mobileDisabled
             />
           </FieldErrorHint>
         </FormField>
@@ -115,7 +114,7 @@ export class AccuracyFormBlock extends Component {
         <FormField
           name="minDocFreq"
           containerClassName={cx('accuracy-form-group')}
-          inputWrapperClassName={cx('accuracy-form-input-wrapper')}
+          fieldWrapperClassName={cx('accuracy-form-input-wrapper')}
           label={intl.formatMessage(messages.minimumDocFreqTitle)}
           onChange={this.props.onInputChange}
           normalize={this.normalizeValue}
@@ -123,14 +122,14 @@ export class AccuracyFormBlock extends Component {
           description={intl.formatMessage(messages.minimumDocFreqDescription)}
         >
           <FieldErrorHint>
-            <Input maxLength="2" className={cx('mobile-input-disabled')} />
+            <Input maxLength="2" mobileDisabled />
           </FieldErrorHint>
         </FormField>
 
         <FormField
           name="minTermFreq"
           containerClassName={cx('accuracy-form-group')}
-          inputWrapperClassName={cx('accuracy-form-input-wrapper')}
+          fieldWrapperClassName={cx('accuracy-form-input-wrapper')}
           label={intl.formatMessage(messages.minimumTermFreqTitle)}
           onChange={this.props.onInputChange}
           normalize={this.normalizeValue}
@@ -138,14 +137,14 @@ export class AccuracyFormBlock extends Component {
           description={intl.formatMessage(messages.minimumTermFreqDescription)}
         >
           <FieldErrorHint>
-            <Input maxLength="2" className={cx('mobile-input-disabled')} />
+            <Input maxLength="2" mobileDisabled />
           </FieldErrorHint>
         </FormField>
 
         <FormField
           name="numberOfLogLines"
           containerClassName={cx('accuracy-form-group')}
-          inputWrapperClassName={cx('accuracy-form-input-wrapper', 'drop-down-block')}
+          fieldWrapperClassName={cx('drop-down-block')}
           label={intl.formatMessage(messages.numberOfLogLinesTitle)}
           onChange={this.props.onInputChange}
           format={String}
@@ -163,7 +162,7 @@ export class AccuracyFormBlock extends Component {
             </BigButton>
           </div>
         </div>
-      </React.Fragment>
+      </Fragment>
     );
   }
 }

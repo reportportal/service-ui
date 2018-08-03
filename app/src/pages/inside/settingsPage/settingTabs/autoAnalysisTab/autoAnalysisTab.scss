@@ -1,9 +1,9 @@
-.settings-tab-content {
+.auto-analysis-tab {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
-  padding: 15px;
+  padding: 0 15px;
   @media (min-width: $SCREEN_MD_MAX) {
     width: 1040px;
     max-width: 1040px;

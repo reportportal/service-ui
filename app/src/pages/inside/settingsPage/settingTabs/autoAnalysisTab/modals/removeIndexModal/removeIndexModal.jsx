@@ -58,7 +58,7 @@ export class RemoveIndexModal extends Component {
     showNotification: () => {},
   };
 
-  onRemoveClick = (closeModal) => {
+  onClickRemove = (closeModal) => {
     fetch(URLS.projectIndex(this.props.currentProject), { method: 'delete' })
       .then(() => {
         this.props.showNotification({
@@ -79,7 +79,7 @@ export class RemoveIndexModal extends Component {
     const okButton = {
       text: this.props.intl.formatMessage(messages.removeButtonText),
       danger: true,
-      onClick: this.onRemoveClick,
+      onClick: this.onClickRemove,
     };
     const cancelButton = {
       text: this.props.intl.formatMessage(messages.cancelButtonText),

@@ -10,7 +10,7 @@ export class FormField extends PureComponent {
   static propTypes = {
     containerClassName: PropTypes.string,
     labelClassName: PropTypes.string,
-    inputWrapperClassName: PropTypes.string,
+    fieldWrapperClassName: PropTypes.string,
     descriptionClassName: PropTypes.string,
     label: PropTypes.string,
     description: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
@@ -25,7 +25,7 @@ export class FormField extends PureComponent {
   static defaultProps = {
     containerClassName: '',
     labelClassName: '',
-    inputWrapperClassName: '',
+    fieldWrapperClassName: '',
     descriptionClassName: '',
     label: '',
     description: '',
@@ -41,7 +41,7 @@ export class FormField extends PureComponent {
     const {
       containerClassName,
       labelClassName,
-      inputWrapperClassName,
+      fieldWrapperClassName,
       descriptionClassName,
       label,
       description,
@@ -52,7 +52,7 @@ export class FormField extends PureComponent {
     return (
       <div className={cx('form-field', containerClassName)}>
         <span className={cx('form-group-label', labelClassName)}>{label}</span>
-        <div className={cx('input-wrapper', inputWrapperClassName)}>
+        <div className={cx('field-wrapper', fieldWrapperClassName)}>
           <FieldProvider {...rest}>{children}</FieldProvider>
         </div>
         <div className={cx('form-group-description', descriptionClassName)}>
