@@ -71,7 +71,7 @@
   width: 130px;
   height: 7px;
   margin: 0 auto;
-  background-image: url(./img/accordion-toggle.svg);
+  background-image: url(common/img/accordion-toggle.svg);
   cursor: pointer;
 
   @media (max-width: $SCREEN_SM_MAX) {
@@ -79,7 +79,7 @@
   }
 
   &:hover {
-    background-image: url(./img/accordion-toggle-hover.svg);
+    background-image: url(common/img/accordion-toggle-hover.svg);
   }
 
   &.rotated {
@@ -100,7 +100,7 @@
 .accordion-toggler-mobile {
   width: 20px;
   height: 20px;
-  background-image: url(./img/accordion-toggle-mobile.svg);
+  background-image: url(common/img/accordion-toggle-mobile.svg);
   position: absolute;
   top: 20px;
   right: 10px;

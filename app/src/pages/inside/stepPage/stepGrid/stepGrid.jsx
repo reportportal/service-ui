@@ -108,6 +108,7 @@ export class StepGrid extends Component {
     onAllItemsSelect: PropTypes.func,
     loading: PropTypes.bool,
     listView: PropTypes.bool,
+    onShowTestParams: PropTypes.func,
   };
 
   static defaultProps = {
@@ -117,6 +118,7 @@ export class StepGrid extends Component {
     onAllItemsSelect: () => {},
     loading: false,
     listView: false,
+    onShowTestParams: () => {},
   };
 
   constructor(props) {
@@ -137,7 +139,7 @@ export class StepGrid extends Component {
         sortable: true,
         component: MethodTypeColumn,
         customProps: {
-          formatMessage: this.props.intl.formatMessage,
+          formatMessage: props.intl.formatMessage,
         },
       },
       {
@@ -148,6 +150,9 @@ export class StepGrid extends Component {
         sortable: true,
         component: NameColumn,
         maxHeight: 170,
+        customProps: {
+          onShowTestParams: props.onShowTestParams,
+        },
       },
       {
         id: 'status',
@@ -157,7 +162,7 @@ export class StepGrid extends Component {
         sortable: true,
         component: StatusColumn,
         customProps: {
-          formatMessage: this.props.intl.formatMessage,
+          formatMessage: props.intl.formatMessage,
         },
       },
       {

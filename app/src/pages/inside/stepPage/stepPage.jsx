@@ -22,6 +22,7 @@ import {
   stepPaginationSelector,
 } from 'controllers/step';
 import { withPagination } from 'controllers/pagination';
+import { showModalAction } from 'controllers/modal';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
 import { StepGrid } from './stepGrid';
 
@@ -41,6 +42,7 @@ import { StepGrid } from './stepGrid';
     proceedWithValidItemsAction,
     selectStepsAction,
     fetchTestItemsAction,
+    showTestParamsModal: (item) => showModalAction({ id: 'testItemDetails', data: { item } }),
   },
 )
 @withPagination({
@@ -67,6 +69,7 @@ export class StepPage extends Component {
     pageSize: PropTypes.number,
     onChangePage: PropTypes.func,
     onChangePageSize: PropTypes.func,
+    showTestParamsModal: PropTypes.func,
   };
 
   static defaultProps = {
@@ -88,6 +91,7 @@ export class StepPage extends Component {
     pageSize: 20,
     onChangePage: () => {},
     onChangePageSize: () => {},
+    showTestParamsModal: () => {},
   };
 
   handleAllStepsSelection = () => {
@@ -118,6 +122,7 @@ export class StepPage extends Component {
       pageSize,
       onChangePage,
       onChangePageSize,
+      showTestParamsModal,
     } = this.props;
     return (
       <PageLayout>
@@ -137,6 +142,7 @@ export class StepPage extends Component {
           onItemSelect={toggleStepSelection}
           loading={loading}
           listView={listView}
+          onShowTestParams={showTestParamsModal}
         />
         <PaginationToolbar
           activePage={activePage}
