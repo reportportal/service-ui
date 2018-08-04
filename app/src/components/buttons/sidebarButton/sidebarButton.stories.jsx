@@ -45,14 +45,34 @@ storiesOf('Components/Buttons/sidebarButton', module)
     <MemoryRouter initialEntries={['/']}>{story()}</MemoryRouter>
   ))
   */
-  .add('default state', () => <SidebarButton />)
-  .add('with props', () => (
-    <SidebarButton icon={TestIcon} link="/some_route">
+  .add('with icon', () => (
+    <SidebarButton
+      icon={TestIcon}
+      link={{
+        type: 'TEST_ROUTE',
+      }}
+    >
+      Nav Button
+    </SidebarButton>
+  ))
+  .add('active', () => (
+    <SidebarButton
+      icon={TestIcon}
+      link={{
+        type: 'INDEX',
+      }}
+    >
       Nav Button
     </SidebarButton>
   ))
   .add('with actions', () => (
-    <SidebarButton icon={TestIcon} link="/some_route" onClick={action('clicked')}>
+    <SidebarButton
+      icon={TestIcon}
+      link={{
+        type: 'TEST_ROUTE',
+      }}
+      onClick={action('clicked')}
+    >
       Nav Button
     </SidebarButton>
   ));

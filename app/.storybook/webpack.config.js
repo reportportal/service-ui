@@ -1,4 +1,5 @@
 require('babel-register');
+const path = require('path');
 const config = require('../webpack.config.babel.js').default({
   dev: true,
   production: false,
@@ -6,12 +7,16 @@ const config = require('../webpack.config.babel.js').default({
 });
 
 module.exports = {
-  plugins: config.plugins.filter(
-    (plugin) => ['DefinePlugin', 'ProvidePlugin', 'ExtractTextPlugin'].includes(plugin.constructor.name)
+  plugins: config.plugins.filter((plugin) =>
+    ['DefinePlugin', 'ProvidePlugin', 'ExtractTextPlugin'].includes(plugin.constructor.name)
   ),
   devtool: 'cheap-module-source-map',
-  resolve: config.resolve,
+  resolve: Object.assign({}, config.resolve, {
+    alias: Object.assign({}, config.resolve.alias, {
+      'storybook-decorators': path.resolve(__dirname, 'decorators'),
+    }),
+  }),
   module: {
-    rules: config.module.loaders
-  }
-}
+    rules: config.module.loaders,
+  },
+};
