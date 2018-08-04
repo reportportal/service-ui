@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
-import { PageLayout } from 'layouts/pageLayout';
+import { PageLayout, PageHeader, PageSection } from 'layouts/pageLayout';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
@@ -131,8 +131,12 @@ export class LaunchesPage extends Component {
     fetchLaunchesAction: () => {},
   };
 
-  getTitle = () =>
-    !this.props.selectedLaunches.length && this.props.intl.formatMessage(messages.filtersPageTitle);
+  getBreadcrumbs = () => {
+    const title =
+      !this.props.selectedLaunches.length &&
+      this.props.intl.formatMessage(messages.launchesPageTitle);
+    return [{ title }];
+  };
 
   updateLaunch = (launch) => {
     fetch(URLS.launchesUpdate(this.props.activeProject, launch.id), {
@@ -211,43 +215,45 @@ export class LaunchesPage extends Component {
       debugMode,
     } = this.props;
     return (
-      <PageLayout title={!debugMode ? this.getTitle() : ''}>
-        <LaunchToolbar
-          errors={this.props.validationErrors}
-          selectedLaunches={selectedLaunches}
-          onUnselect={this.props.toggleLaunchSelectionAction}
-          onUnselectAll={this.props.unselectAllLaunchesAction}
-          onProceedValidItems={this.proceedWithValidItems}
-          onMove={this.moveLaunches}
-          onMerge={this.mergeLaunches}
-          onForceFinish={this.finishForceLaunches}
-          onCompare={this.compareLaunches}
-          onImportLaunch={this.openImportModal}
-          debugMode={debugMode}
-        />
-        <LaunchSuiteGrid
-          data={launches}
-          sortingColumn={sortingColumn}
-          sortingDirection={sortingDirection}
-          onChangeSorting={onChangeSorting}
-          onDeleteItem={this.confirmDeleteItem}
-          onMove={this.moveLaunches}
-          onEditLaunch={this.openEditModal}
-          onForceFinish={this.finishForceLaunches}
-          selectedItems={selectedLaunches}
-          onItemSelect={this.props.toggleLaunchSelectionAction}
-          onAllItemsSelect={this.handleAllLaunchesSelection}
-          withHamburger
-          loading={loading}
-        />
-        <PaginationToolbar
-          activePage={activePage}
-          itemCount={itemCount}
-          pageCount={pageCount}
-          pageSize={pageSize}
-          onChangePage={onChangePage}
-          onChangePageSize={onChangePageSize}
-        />
+      <PageLayout>
+        <PageHeader breadcrumbs={ !debugMode ? this.getBreadcrumbs() : []} />
+        <PageSection>
+          <LaunchToolbar
+            errors={this.props.validationErrors}
+            selectedLaunches={selectedLaunches}
+            onUnselect={this.props.toggleLaunchSelectionAction}
+            onUnselectAll={this.props.unselectAllLaunchesAction}
+            onProceedValidItems={this.proceedWithValidItems}
+            onMoveToDebug={this.moveLaunchesToDebug}
+            onMerge={this.mergeLaunches}
+            onForceFinish={this.finishForceLaunches}
+            onCompare={this.compareLaunches}
+            onImportLaunch={this.openImportModal}
+          />
+          <LaunchSuiteGrid
+            data={launches}
+            sortingColumn={sortingColumn}
+            sortingDirection={sortingDirection}
+            onChangeSorting={onChangeSorting}
+            onDeleteItem={this.confirmDeleteItem}
+            onMoveToDebug={this.moveLaunchesToDebug}
+            onEditLaunch={this.openEditModal}
+            onForceFinish={this.finishForceLaunches}
+            selectedItems={selectedLaunches}
+            onItemSelect={this.props.toggleLaunchSelectionAction}
+            onAllItemsSelect={this.handleAllLaunchesSelection}
+            withHamburger
+            loading={loading}
+          />
+          <PaginationToolbar
+            activePage={activePage}
+            itemCount={itemCount}
+            pageCount={pageCount}
+            pageSize={pageSize}
+            onChangePage={onChangePage}
+            onChangePageSize={onChangePageSize}
+          />
+        </PageSection>
       </PageLayout>
     );
   }
