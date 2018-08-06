@@ -33,6 +33,14 @@ const messages = defineMessages({
     id: 'LaunchesPage.noDefectType',
     defaultMessage: 'Item does not have defect type',
   },
+  alreadyIgnored: {
+    id: 'LaunchesPage.alreadyIgnored',
+    defaultMessage: 'Item already ignored in Auto-Analysis',
+  },
+  alreadyIncluded: {
+    id: 'LaunchesPage.alreadyIncluded',
+    defaultMessage: 'Item already included in Auto-Analysis',
+  },
 });
 
 const TooltipComponent = injectIntl(({ intl, error }) => (

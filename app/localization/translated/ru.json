@@ -403,6 +403,8 @@
   "LaunchStatus.failed": "Неудачно",
   "LaunchStatus.passed": "Успешно",
   "LaunchStatus.skipped": "Пропущено",
+  "LaunchesPage.alreadyIgnored": "Элемент уже игнорируется Авто-Анализом",
+  "LaunchesPage.alreadyIncluded": "Элемент уже включен в Авто-Анализ",
   "LaunchesPage.import": "Импорт",
   "LaunchesPage.launchFinished": "Запуск завершён",
   "LaunchesPage.launchIsProcessing": "Запуск не должен обрабатываться Автоанализатором!",

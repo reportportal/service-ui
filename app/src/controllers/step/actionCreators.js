@@ -7,7 +7,7 @@ import {
 } from 'controllers/groupOperations';
 import { showModalAction } from 'controllers/modal';
 import { NAMESPACE } from './constants';
-import { validateIgnoreIncludeInAA } from './actionValidators';
+import { validateIgnoreInAA, validateIncludeInAA } from './actionValidators';
 
 export const toggleStepSelectionAction = toggleItemSelectionAction(NAMESPACE);
 export const selectStepsAction = selectItemsAction(NAMESPACE);
@@ -19,12 +19,12 @@ export const ignoreInAutoAnalysisAction = defineGroupOperation(
   NAMESPACE,
   'ignore-in-aa',
   (items, { fetchFunc }) => showModalAction({ id: 'ignoreInAAModal', data: { items, fetchFunc } }),
-  validateIgnoreIncludeInAA,
+  validateIgnoreInAA,
 );
 
 export const includeInAutoAnalysisAction = defineGroupOperation(
   NAMESPACE,
   'include-in-aa',
   (items, { fetchFunc }) => showModalAction({ id: 'includeInAAModal', data: { items, fetchFunc } }),
-  validateIgnoreIncludeInAA,
+  validateIncludeInAA,
 );
