@@ -401,6 +401,8 @@
   "LaunchStatus.failed": "Няўдала",
   "LaunchStatus.passed": "Паспяхова",
   "LaunchStatus.skipped": "Прапушчана",
+  "LaunchesPage.alreadyIgnored": "Item already ignored in Auto-Analysis",
+  "LaunchesPage.alreadyIncluded": "Item already included in Auto-Analysis",
   "LaunchesPage.import": "Імпарт",
   "LaunchesPage.launchFinished": "Запуск завершаны",
   "LaunchesPage.launchIsProcessing": "Запуск не павінны апрацоўвацца Аўтааналізатарам!",
