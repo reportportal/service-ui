@@ -27,7 +27,7 @@
   font-size: 12px;
   color: $COLOR--gray-47;
 
-  @media (max-width: $SCREEN_SM_MAX) {
+  @media (max-width: $SCREEN_XS_MAX) {
     display: inline-block;
   }
 }

@@ -8,4 +8,5 @@ export const filtersSelector = (state) => domainSelector(state).filters;
 export const loadingSelector = (state) => domainSelector(state).loading || false;
 export const querySelector = createQueryParametersSelector({
   defaultPagination: DEFAULT_PAGINATION,
+  defaultSorting: 'name',
 });
