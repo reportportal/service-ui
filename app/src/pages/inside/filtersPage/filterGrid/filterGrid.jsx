@@ -5,6 +5,7 @@ import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-i
 import { ALIGN_CENTER, Grid } from 'components/main/grid';
 import { canDeleteFilter } from 'common/utils/permissions';
 import { FilterName } from './filterName';
+import { FilterOptions } from './filterOptions';
 import { ShareFilter } from './shareFilter';
 import { DisplayFilter } from './displayFilter';
 import { DeleteFilterButton } from './deleteFilterButton';
@@ -41,15 +42,17 @@ NameColumn.defaultProps = {
   customProps: {},
 };
 
-const OptionsColumn = ({ className, customProps }) => (
-  <div className={cx('options-col', className)}>{customProps.options}</div>
+const OptionsColumn = ({ className, value }) => (
+  <div className={cx('options-col', className)}>
+    <FilterOptions entities={value.entities} sort={value.selection_parameters.orders} />
+  </div>
 );
 OptionsColumn.propTypes = {
   className: PropTypes.string.isRequired,
-  customProps: PropTypes.object,
+  value: PropTypes.object,
 };
 OptionsColumn.defaultProps = {
-  customProps: {},
+  value: {},
 };
 
 const OwnerColumn = ({ className, value }) => (
@@ -172,9 +175,6 @@ export class FilterGrid extends Component {
         full: this.props.intl.formatMessage(messages.optionsCol),
       },
       component: OptionsColumn,
-      customProps: {
-        options: 'TBD',
-      },
     },
     {
       id: 'owner',

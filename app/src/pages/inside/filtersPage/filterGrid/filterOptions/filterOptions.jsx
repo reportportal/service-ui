@@ -3,9 +3,10 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import moment from 'moment';
 import { connect } from 'react-redux';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { injectIntl, intlShape } from 'react-intl';
 import { defectTypesSelector } from 'controllers/project';
 import { getTimestampFromMinutes } from 'common/utils';
+import { messages } from './optionTranslations';
 import styles from './filterOptions.scss';
 
 const cx = classNames.bind(styles);
@@ -28,124 +29,6 @@ const OPTIONS = {
   START_TIME: 'start_time',
   TOTAL: 'total',
 };
-const messages = defineMessages({
-  skipped: {
-    id: 'FilterOptions.skipped',
-    defaultMessage: 'Skipped',
-  },
-  passed: {
-    id: 'FilterOptions.passed',
-    defaultMessage: 'Passed',
-  },
-  failed: {
-    id: 'FilterOptions.failed',
-    defaultMessage: 'Failed',
-  },
-  total: {
-    id: 'FilterOptions.total',
-    defaultMessage: 'Total',
-  },
-  automation_bug: {
-    id: 'FilterOptions.automation_bug',
-    defaultMessage: 'Automation bug',
-  },
-  AB: {
-    id: 'FilterOptions.AB',
-    defaultMessage: 'AB',
-  },
-  system_issue: {
-    id: 'FilterOptions.system_issue',
-    defaultMessage: 'System issue',
-  },
-  SI: {
-    id: 'FilterOptions.SI',
-    defaultMessage: 'SI',
-  },
-  product_bug: {
-    id: 'FilterOptions.product_bug',
-    defaultMessage: 'Product bug',
-  },
-  PB: {
-    id: 'FilterOptions.PB',
-    defaultMessage: 'PB',
-  },
-  to_investigate: {
-    id: 'FilterOptions.to_investigate',
-    defaultMessage: 'To investigate',
-  },
-  TI: {
-    id: 'FilterOptions.TI',
-    defaultMessage: 'TI',
-  },
-  and: {
-    id: 'FilterOptions.and',
-    defaultMessage: 'AND',
-  },
-  number: {
-    id: 'FilterOptions.number',
-    defaultMessage: 'Launch number',
-  },
-  user: {
-    id: 'FilterOptions.user',
-    defaultMessage: 'Owner',
-  },
-  in: {
-    id: 'FilterOptions.in',
-    defaultMessage: 'has any of',
-  },
-  not_in: {
-    id: 'FilterOptions.not_in',
-    defaultMessage: 'without',
-  },
-  name: {
-    id: 'FilterOptions.name',
-    defaultMessage: 'Launch name',
-  },
-  cnt: {
-    id: 'FilterOptions.cnt',
-    defaultMessage: 'contains',
-  },
-  start_time: {
-    id: 'FilterOptions.start_time',
-    defaultMessage: 'Start time',
-  },
-  from: {
-    id: 'FilterOptions.from',
-    defaultMessage: 'from',
-  },
-  to: {
-    id: 'FilterOptions.to',
-    defaultMessage: 'to',
-  },
-  dynamic: {
-    id: 'FilterOptions.dynamic',
-    defaultMessage: '(dynamic)',
-  },
-  not_cnt: {
-    id: 'FilterOptions.not_cnt',
-    defaultMessage: 'not contains',
-  },
-  description: {
-    id: 'FilterOptions.description',
-    defaultMessage: 'Description',
-  },
-  tags: {
-    id: 'FilterOptions.tags',
-    defaultMessage: 'Tags',
-  },
-  has: {
-    id: 'FilterOptions.has',
-    defaultMessage: 'has',
-  },
-  not_has: {
-    id: 'FilterOptions.not_has',
-    defaultMessage: 'without any of',
-  },
-  sort: {
-    id: 'FilterOptions.sort',
-    defaultMessage: 'sorted by',
-  },
-});
 
 @connect((state) => ({
   defectTypes: defectTypesSelector(state),
@@ -166,13 +49,16 @@ export class FilterOptions extends Component {
 
   getTotalStatistics = (defectTypeTotal) => {
     const { intl, defectTypes } = this.props;
-    if (defectTypes[defectTypeTotal.toUpperCase()].length === 1) {
-      return intl.formatMessage(messages[defectTypeTotal]);
+    if (
+      defectTypes[defectTypeTotal.toUpperCase()] &&
+      defectTypes[defectTypeTotal.toUpperCase()].length !== 1
+    ) {
+      const currentDefectType = defectTypes[defectTypeTotal.toUpperCase()][0];
+      return `${intl.formatMessage(messages.total)} ${intl.formatMessage(
+        messages[currentDefectType.shortName],
+      )}`;
     }
-    const currentDefectType = defectTypes[defectTypeTotal.toUpperCase()][0];
-    return `${intl.formatMessage(messages.total)} ${intl.formatMessage(
-      messages[currentDefectType.shortName],
-    )}`;
+    return intl.formatMessage(messages[defectTypeTotal]);
   };
 
   statisticsOptions = (entity) => {
@@ -274,17 +160,16 @@ export class FilterOptions extends Component {
   };
 
   parseValue = (value) => {
-    const dateString = value;
-    if (dateString.indexOf(',') !== -1) {
-      const splitted = dateString.split(',');
+    if (value.indexOf(',') !== -1) {
+      const splitted = value.split(',');
       return {
         start: parseInt(splitted[0], 10),
         end: parseInt(splitted[1], 10),
         dynamic: false,
       };
     }
-    if (dateString.indexOf(';') !== -1) {
-      const splitted = dateString.split(';');
+    if (value.indexOf(';') !== -1) {
+      const splitted = value.split(';');
       return {
         start: getTimestampFromMinutes(splitted[0]),
         end: getTimestampFromMinutes(splitted[1]),
