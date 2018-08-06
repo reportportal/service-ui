@@ -9,6 +9,7 @@ import {
   fetchTestItemsAction,
   isListViewSelector,
   namespaceSelector,
+  DEFAULT_SORTING,
 } from 'controllers/testItem';
 import {
   stepsSelector,
@@ -22,6 +23,7 @@ import {
   stepPaginationSelector,
 } from 'controllers/step';
 import { withPagination } from 'controllers/pagination';
+import { withSorting } from 'controllers/sorting';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
 import { StepGrid } from './stepGrid';
 
@@ -43,6 +45,10 @@ import { StepGrid } from './stepGrid';
     fetchTestItemsAction,
   },
 )
+@withSorting({
+  defaultSorting: DEFAULT_SORTING,
+  namespaceSelector,
+})
 @withPagination({
   paginationSelector: stepPaginationSelector,
   namespaceSelector,
@@ -65,6 +71,9 @@ export class StepPage extends Component {
     itemCount: PropTypes.number,
     pageCount: PropTypes.number,
     pageSize: PropTypes.number,
+    sortingColumn: PropTypes.string,
+    sortingDirection: PropTypes.string,
+    onChangeSorting: PropTypes.func,
     onChangePage: PropTypes.func,
     onChangePageSize: PropTypes.func,
   };
@@ -85,7 +94,10 @@ export class StepPage extends Component {
     activePage: 1,
     itemCount: null,
     pageCount: null,
-    pageSize: 20,
+    pageSize: null,
+    sortingColumn: null,
+    sortingDirection: null,
+    onChangeSorting: () => {},
     onChangePage: () => {},
     onChangePageSize: () => {},
   };
@@ -116,8 +128,11 @@ export class StepPage extends Component {
       itemCount,
       pageCount,
       pageSize,
+      sortingColumn,
+      sortingDirection,
       onChangePage,
       onChangePageSize,
+      onChangeSorting,
     } = this.props;
     return (
       <PageLayout>
@@ -137,6 +152,9 @@ export class StepPage extends Component {
           onItemSelect={toggleStepSelection}
           loading={loading}
           listView={listView}
+          sortingDirection={sortingDirection}
+          sortingColumn={sortingColumn}
+          onChangeSorting={onChangeSorting}
         />
         <PaginationToolbar
           activePage={activePage}

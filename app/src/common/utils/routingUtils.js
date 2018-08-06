@@ -12,9 +12,9 @@ export const extractNamespacedQuery = (query, namespace) =>
 export const createNamespacedQuery = (query, namespace) =>
   namespace ? { [calculateNamespaceKey(namespace)]: stringify(query) } : query;
 
-export const copyQuery = (query, namespacesToCopy) =>
+export const copyQuery = (query, keysToCopy) =>
   Object.keys(query).reduce((acc, key) => {
-    if (namespacesToCopy.indexOf(getNamespaceFromKey(key)) !== -1) {
+    if (keysToCopy.indexOf(key) !== -1 || keysToCopy.indexOf(getNamespaceFromKey(key)) !== -1) {
       return {
         ...acc,
         [key]: query[key],

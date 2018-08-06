@@ -2,7 +2,7 @@ import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { injectIntl, intlShape } from 'react-intl';
-import { SORTING_ASC, withSorting } from 'controllers/sorting';
+import { withSorting } from 'controllers/sorting';
 import { PageLayout } from 'layouts/pageLayout';
 import { LaunchSuiteGrid } from 'pages/inside/common/launchSuiteGrid';
 import { SuiteTestToolbar } from 'pages/inside/common/suiteTestToolbar';
@@ -17,10 +17,11 @@ import {
 import { withPagination } from 'controllers/pagination';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
 import {
-  namespaceSelector,
   fetchTestItemsAction,
   parentItemSelector,
   loadingSelector,
+  namespaceSelector,
+  DEFAULT_SORTING,
 } from 'controllers/testItem';
 
 @connect(
@@ -38,8 +39,8 @@ import {
   },
 )
 @withSorting({
-  defaultSortingColumn: 'start_time',
-  defaultSortingDirection: SORTING_ASC,
+  defaultSorting: DEFAULT_SORTING,
+  namespaceSelector,
 })
 @withPagination({
   paginationSelector: testPaginationSelector,
@@ -74,7 +75,7 @@ export class TestsPage extends Component {
     activePage: 1,
     itemCount: null,
     pageCount: null,
-    pageSize: 20,
+    pageSize: null,
     sortingColumn: null,
     sortingDirection: null,
     fetchTestItemsAction: () => {},

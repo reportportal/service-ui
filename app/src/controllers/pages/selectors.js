@@ -1,7 +1,7 @@
 import { createSelector } from 'reselect';
 import { extractNamespacedQuery } from 'common/utils/routingUtils';
-import { DEFAULT_PAGINATION } from 'controllers/pagination';
 import { SORTING_KEY } from 'controllers/sorting';
+import { paginationSelector } from 'controllers/pagination';
 import { pageNames, NO_PAGE } from './constants';
 
 export const payloadSelector = (state) => state.location.payload;
@@ -42,13 +42,14 @@ export const pagePropertiesSelector = ({ location: { query } }, namespace, mappi
 
 export const createQueryParametersSelector = ({
   namespace: staticNamespace,
-  defaultPagination,
   defaultSorting,
-}) => (state, namespace) => {
-  const query = pagePropertiesSelector(state, staticNamespace || namespace);
+} = {}) => (state, namespace) => {
+  const query = {
+    ...pagePropertiesSelector(state, staticNamespace || namespace),
+    ...paginationSelector(state, staticNamespace || namespace),
+  };
   return {
-    ...(defaultPagination || DEFAULT_PAGINATION),
-    [SORTING_KEY]: defaultSorting || '',
+    [SORTING_KEY]: defaultSorting || undefined,
     ...query,
   };
 };

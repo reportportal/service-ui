@@ -14,3 +14,4 @@ export {
   pageLoadingSelector,
   isListViewSelector,
 } from './selectors';
+export { DEFAULT_SORTING } from './constants';

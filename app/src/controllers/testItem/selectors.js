@@ -17,6 +17,7 @@ import {
 } from 'common/utils/routingUtils';
 import { LEVEL_STEP } from 'common/constants/launchLevels';
 import { NAMESPACE as LAUNCH_NAMESPACE } from 'controllers/launch';
+import { PAGE_KEY, SIZE_KEY } from 'controllers/pagination';
 import { DEFAULT_SORTING } from './constants';
 import { createLink, getQueryNamespace, getDefectsString } from './utils';
 
@@ -54,7 +55,8 @@ export const breadcrumbsSelector = createSelector(
   testItemIdsArraySelector,
   pagePropertiesSelector,
   (projectId, filterId, parentItems, testItemIds, query) => {
-    const queryNamespacesToCopy = [LAUNCH_NAMESPACE];
+    const queryKeysToCopy = [PAGE_KEY, SIZE_KEY, LAUNCH_NAMESPACE];
+    const isNoTestItems = !testItemIds || testItemIds.length === 0;
     const descriptors = [
       {
         id: filterId,
@@ -66,13 +68,13 @@ export const breadcrumbsSelector = createSelector(
             filterId,
           },
           meta: {
-            query: copyQuery(query, queryNamespacesToCopy),
+            query: copyQuery(query, queryKeysToCopy),
           },
         },
-        active: !testItemIds || testItemIds.length === 0,
+        active: isNoTestItems,
       },
     ];
-    if (!testItemIds || testItemIds.length === 0) {
+    if (isNoTestItems) {
       return descriptors;
     }
     return [
@@ -85,7 +87,7 @@ export const breadcrumbsSelector = createSelector(
             lost: i === 0 && parentItems.length > 1,
           };
         }
-        queryNamespacesToCopy.push(getQueryNamespace(i));
+        queryKeysToCopy.push(getQueryNamespace(i));
         return {
           id: item.id,
           title: item.name,
@@ -98,7 +100,7 @@ export const breadcrumbsSelector = createSelector(
             },
             meta: {
               query: {
-                ...copyQuery(query, queryNamespacesToCopy),
+                ...copyQuery(query, queryKeysToCopy),
               },
             },
           },

@@ -8,7 +8,6 @@ import {
   fetchFiltersAction,
   filtersSelector,
   loadingSelector,
-  DEFAULT_PAGE_SIZE,
 } from 'controllers/filter';
 import {
   userIdSelector,
@@ -20,7 +19,6 @@ import { withPagination } from 'controllers/pagination';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
 import { PageLayout } from 'layouts/pageLayout';
 import { showModalAction } from 'controllers/modal';
-import { withSorting, SORTING_ASC } from 'controllers/sorting';
 import { userFiltersSelector, toggleDisplayFilterOnLaunchesAction } from 'controllers/project';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
@@ -52,10 +50,6 @@ const messages = defineMessages({
     fetchFiltersAction,
   },
 )
-@withSorting({
-  defaultSortingColumn: 'name',
-  defaultSortingDirection: SORTING_ASC,
-})
 @withFilter
 @withPagination({
   paginationSelector: filtersPaginationSelector,
@@ -88,7 +82,7 @@ export class FiltersPage extends Component {
     activePage: 1,
     itemCount: 0,
     pageCount: 0,
-    pageSize: DEFAULT_PAGE_SIZE,
+    pageSize: null,
     userId: '',
     filter: '',
     activeProject: '',

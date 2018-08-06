@@ -1,32 +1,38 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { connectRouter } from 'common/utils';
-import { defaultPaginationSelector, totalElementsSelector, totalPagesSelector } from './selectors';
-import { PAGE_KEY, SIZE_KEY } from './constants';
+import { updatePagePropertiesAction } from 'controllers/pages';
+import {
+  defaultPaginationSelector,
+  totalElementsSelector,
+  totalPagesSelector,
+  pageNumberSelector,
+  sizeSelector,
+} from './selectors';
+import { PAGE_KEY, SIZE_KEY, DEFAULT_PAGE_SIZE } from './constants';
 
 export const withPagination = ({
-  paginationSelector = defaultPaginationSelector,
   namespace,
   namespaceSelector,
+  paginationSelector = defaultPaginationSelector,
 } = {}) => (WrappedComponent) => {
   const getTotalElements = totalElementsSelector(paginationSelector);
   const getTotalPages = totalPagesSelector(paginationSelector);
 
-  @connectRouter(
-    (query) => ({
-      page: query[PAGE_KEY] && Number(query[PAGE_KEY]),
-      size: query[SIZE_KEY] && Number(query[SIZE_KEY]),
+  @connect(
+    (state) => ({
+      totalElements: getTotalElements(state),
+      totalPages: getTotalPages(state),
+      namespace: namespaceSelector ? namespaceSelector(state) : namespace,
+      page: pageNumberSelector(state, namespaceSelector ? namespaceSelector(state) : namespace),
+      size: sizeSelector(state),
     }),
     {
-      updatePagination: (page, size) => ({ [PAGE_KEY]: page, [SIZE_KEY]: size }),
+      updatePageSize: (size) => updatePagePropertiesAction({ [SIZE_KEY]: size }),
+      updatePageNumber: (number, queryNamespace) =>
+        updatePagePropertiesAction({ [PAGE_KEY]: number }, queryNamespace),
     },
-    { namespace, namespaceSelector },
   )
-  @connect((state) => ({
-    totalElements: getTotalElements(state),
-    totalPages: getTotalPages(state),
-  }))
   class PaginationWrapper extends Component {
     static displayName = `withPagination(${WrappedComponent.displayName || WrappedComponent.name})`;
 
@@ -34,33 +40,41 @@ export const withPagination = ({
       filter: PropTypes.string,
       page: PropTypes.number,
       size: PropTypes.number,
-      updatePagination: PropTypes.func,
-      sortingString: PropTypes.string,
+      updatePageNumber: PropTypes.func,
+      updatePageSize: PropTypes.func,
       totalElements: PropTypes.number,
       totalPages: PropTypes.number,
+      namespace: PropTypes.string,
     };
 
     static defaultProps = {
       filter: null,
-      page: undefined,
-      size: undefined,
-      sortingString: null,
+      page: 1,
+      size: DEFAULT_PAGE_SIZE,
       totalElements: 0,
       totalPages: 1,
-      updatePagination: () => {},
+      updatePageNumber: () => {},
+      updatePageSize: () => {},
+      namespace: null,
     };
 
-    changePageHandler = (page) => this.changePaginationOptions({ page });
+    changePageHandler = (page) => this.props.updatePageNumber(page, this.props.namespace);
 
-    changeSizeHandler = (size) => this.changePaginationOptions({ size, page: 1 });
-
-    changePaginationOptions = (options) => {
-      const { page, size } = this.props;
-      this.props.updatePagination(options.page || page, options.size || size);
+    changeSizeHandler = (size) => {
+      this.props.updatePageSize(size);
+      this.changePageHandler(1);
     };
 
     render() {
-      const { page, size, totalElements, totalPages, updatePagination, ...restProps } = this.props;
+      const {
+        page,
+        size,
+        totalElements,
+        totalPages,
+        updatePageNumber,
+        updatePageSize,
+        ...restProps
+      } = this.props;
       return (
         <WrappedComponent
           activePage={page}

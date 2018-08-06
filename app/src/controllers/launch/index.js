@@ -18,7 +18,8 @@ export {
   launchesSelector,
   launchPaginationSelector,
   loadingSelector,
+  queryParametersSelector,
 } from './selectors';
 export { launchReducer } from './reducer';
 export { launchSagas } from './sagas';
-export { NAMESPACE } from './constants';
+export { NAMESPACE, DEFAULT_SORTING } from './constants';

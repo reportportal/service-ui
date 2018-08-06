@@ -8,7 +8,7 @@ import { URLS } from 'common/urls';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
 import { activeProjectSelector, userIdSelector } from 'controllers/user';
 import { withPagination } from 'controllers/pagination';
-import { withSorting, SORTING_DESC } from 'controllers/sorting';
+import { withSorting } from 'controllers/sorting';
 import { showModalAction } from 'controllers/modal';
 import {
   selectedLaunchesSelector,
@@ -25,8 +25,9 @@ import {
   fetchLaunchesAction,
   lastOperationSelector,
   loadingSelector,
-  NAMESPACE,
   toggleAllLaunchesAction,
+  NAMESPACE,
+  DEFAULT_SORTING,
 } from 'controllers/launch';
 import { LaunchSuiteGrid } from 'pages/inside/common/launchSuiteGrid';
 import { LaunchToolbar } from './LaunchToolbar';
@@ -63,8 +64,8 @@ const messages = defineMessages({
   },
 )
 @withSorting({
-  defaultSortingColumn: 'start_time',
-  defaultSortingDirection: SORTING_DESC,
+  namespace: NAMESPACE,
+  defaultSorting: DEFAULT_SORTING,
 })
 @withPagination({
   paginationSelector: launchPaginationSelector,
@@ -106,7 +107,7 @@ export class LaunchesPage extends Component {
     activePage: 1,
     itemCount: null,
     pageCount: null,
-    pageSize: 20,
+    pageSize: null,
     sortingColumn: null,
     sortingDirection: null,
     showModalAction: () => {},

@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { injectIntl, intlShape } from 'react-intl';
 import { PageLayout } from 'layouts/pageLayout';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
-import { SORTING_ASC, withSorting } from 'controllers/sorting';
+import { withSorting } from 'controllers/sorting';
 import { userIdSelector } from 'controllers/user';
 import { withPagination } from 'controllers/pagination';
 import { LaunchSuiteGrid } from 'pages/inside/common/launchSuiteGrid';
@@ -18,10 +18,11 @@ import {
 } from 'controllers/suite';
 import { SuiteTestToolbar } from 'pages/inside/common/suiteTestToolbar';
 import {
-  namespaceSelector,
   fetchTestItemsAction,
   parentItemSelector,
   loadingSelector,
+  namespaceSelector,
+  DEFAULT_SORTING,
 } from 'controllers/testItem';
 
 @connect(
@@ -40,8 +41,8 @@ import {
   },
 )
 @withSorting({
-  defaultSortingColumn: 'start_time',
-  defaultSortingDirection: SORTING_ASC,
+  defaultSorting: DEFAULT_SORTING,
+  namespaceSelector,
 })
 @withPagination({
   paginationSelector: suitePaginationSelector,
@@ -76,7 +77,7 @@ export class SuitesPage extends Component {
     activePage: 1,
     itemCount: null,
     pageCount: null,
-    pageSize: 20,
+    pageSize: null,
     sortingColumn: null,
     sortingDirection: null,
     fetchTestItemsAction: () => {},

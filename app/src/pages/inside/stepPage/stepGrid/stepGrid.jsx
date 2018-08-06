@@ -108,6 +108,9 @@ export class StepGrid extends Component {
     onAllItemsSelect: PropTypes.func,
     loading: PropTypes.bool,
     listView: PropTypes.bool,
+    sortingColumn: PropTypes.string,
+    sortingDirection: PropTypes.string,
+    onChangeSorting: PropTypes.func,
   };
 
   static defaultProps = {
@@ -117,6 +120,9 @@ export class StepGrid extends Component {
     onAllItemsSelect: () => {},
     loading: false,
     listView: false,
+    sortingColumn: null,
+    sortingDirection: null,
+    onChangeSorting: () => {},
   };
 
   constructor(props) {
@@ -161,7 +167,7 @@ export class StepGrid extends Component {
         },
       },
       {
-        id: 'startTime',
+        id: 'start_time',
         title: {
           full: 'start time',
         },
@@ -193,7 +199,17 @@ export class StepGrid extends Component {
     }, {});
 
   render() {
-    const { data, onItemSelect, onAllItemsSelect, selectedItems, loading, listView } = this.props;
+    const {
+      data,
+      onItemSelect,
+      onAllItemsSelect,
+      selectedItems,
+      loading,
+      listView,
+      sortingColumn,
+      sortingDirection,
+      onChangeSorting,
+    } = this.props;
     return (
       <Grid
         columns={this.columns}
@@ -207,6 +223,9 @@ export class StepGrid extends Component {
         groupHeader={GroupHeader}
         groupFunction={this.groupStepItems}
         grouped={listView}
+        sortingColumn={sortingColumn}
+        sortingDirection={sortingDirection}
+        onChangeSorting={onChangeSorting}
       />
     );
   }
