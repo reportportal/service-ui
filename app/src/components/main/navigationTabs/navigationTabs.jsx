@@ -45,10 +45,9 @@ export class NavigationTabs extends Component {
           />
         </div>
         <div className={cx('tabs-wrapper')}>
-          {Object.keys(config).map((item, id) => (
+          {Object.keys(config).map((item) => (
             <NavLink
-              // eslint-disable-next-line react/no-array-index-key
-              key={id}
+              key={item}
               className={cx('tab')}
               to={config[item].link}
               activeClassName={cx('active')}
