@@ -71,21 +71,20 @@ export class SettingTabs extends Component {
     activeTab: GENERAL,
   };
 
+  createTabLink = (tabName) => ({
+    type: PROJECT_SETTINGS_TAB_PAGE,
+    payload: { projectId: this.props.projectId, settingTab: tabName },
+  });
+
   tabsConfig = {
     general: {
       name: this.props.intl.formatMessage(messages.general),
-      link: {
-        type: PROJECT_SETTINGS_TAB_PAGE,
-        payload: { projectId: this.props.projectId, settingTab: GENERAL },
-      },
+      link: this.createTabLink(GENERAL),
       component: <GeneralTab />,
     },
     notifications: {
       name: this.props.intl.formatMessage(messages.notifications),
-      link: {
-        type: PROJECT_SETTINGS_TAB_PAGE,
-        payload: { projectId: this.props.projectId, settingTab: NOTIFICATIONS },
-      },
+      link: this.createTabLink(NOTIFICATIONS),
       component: <div>notification</div>,
     },
     bts: {
@@ -95,34 +94,22 @@ export class SettingTabs extends Component {
           <span className={cx('beta')}>{this.props.intl.formatMessage(messages.beta)}</span>
         </span>
       ),
-      link: {
-        type: PROJECT_SETTINGS_TAB_PAGE,
-        payload: { projectId: this.props.projectId, settingTab: BTS },
-      },
+      link: this.createTabLink(BTS),
       component: <div>bts</div>,
     },
     defect: {
       name: this.props.intl.formatMessage(messages.defect),
-      link: {
-        type: PROJECT_SETTINGS_TAB_PAGE,
-        payload: { projectId: this.props.projectId, settingTab: DEFECT },
-      },
+      link: this.createTabLink(DEFECT),
       component: <div>defect</div>,
     },
     autoAnalysis: {
       name: this.props.intl.formatMessage(messages.analysis),
-      link: {
-        type: PROJECT_SETTINGS_TAB_PAGE,
-        payload: { projectId: this.props.projectId, settingTab: ANALYSIS },
-      },
+      link: this.createTabLink(ANALYSIS),
       component: <div>autoAnalysis</div>,
     },
     demoData: {
       name: this.props.intl.formatMessage(messages.demoData),
-      link: {
-        type: PROJECT_SETTINGS_TAB_PAGE,
-        payload: { projectId: this.props.projectId, settingTab: DEMO_DATA },
-      },
+      link: this.createTabLink(DEMO_DATA),
       component: <div>demo</div>,
     },
   };
