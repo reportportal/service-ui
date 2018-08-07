@@ -191,23 +191,23 @@ define(function (require) {
                 { name: Localization.ui.all, value: '-1' }
             ],
             autoAnalysisAccuracy: {
-                STRICT: {
-                    minDocFreq: '5',
+                CLASSIC: {
                     minShouldMatch: '95',
-                    minTermFreq: '7',
-                    numberOfLogLines: '2'
+                    minDocFreq: '1',
+                    minTermFreq: '1',
+                    numberOfLogLines: '-1'
                 },
                 MODERATE: {
-                    minDocFreq: '7',
                     minShouldMatch: '80',
+                    minDocFreq: '1',
                     minTermFreq: '1',
-                    numberOfLogLines: '2'
+                    numberOfLogLines: '5'
                 },
                 LIGHT: {
-                    minDocFreq: '7',
                     minShouldMatch: '60',
+                    minDocFreq: '1',
                     minTermFreq: '1',
-                    numberOfLogLines: '2'
+                    numberOfLogLines: '3'
                 }
             },
 

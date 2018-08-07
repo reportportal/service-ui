@@ -31,10 +31,10 @@ define(function (require) {
         defaults: {
             isAutoAnalyzerEnabled: true,
             analyzer_mode: config.forSettings.analyzerMode,
-            minDocFreq: config.autoAnalysisAccuracy.MODERATE.minDocFreq,
-            minShouldMatch: config.autoAnalysisAccuracy.MODERATE.minShouldMatch,
-            minTermFreq: config.autoAnalysisAccuracy.MODERATE.minTermFreq,
-            numberOfLogLines: config.autoAnalysisAccuracy.MODERATE.numberOfLogLines
+            minDocFreq: config.autoAnalysisAccuracy.CLASSIC.minDocFreq,
+            minShouldMatch: config.autoAnalysisAccuracy.CLASSIC.minShouldMatch,
+            minTermFreq: config.autoAnalysisAccuracy.CLASSIC.minTermFreq,
+            numberOfLogLines: config.autoAnalysisAccuracy.CLASSIC.numberOfLogLines
         },
 
         getAutoAnalysisSettings: function () {
