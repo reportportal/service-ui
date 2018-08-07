@@ -22,6 +22,7 @@ import { NavigationTabs } from 'components/main/navigationTabs';
 import classNames from 'classnames/bind';
 import { GeneralTab } from './generalTab';
 import { AutoAnalysisTab } from './autoAnalysisTab';
+import { DemoDataTab } from './demoDataTab';
 import styles from './settingTabs.scss';
 
 const cx = classNames.bind(styles);
@@ -121,7 +122,7 @@ export class SettingTabs extends Component {
       demoData: {
         name: this.props.intl.formatMessage(messages.demoData),
         link: this.createTabLink(DEMO_DATA),
-        component: <div>demo</div>,
+        component: <DemoDataTab />,
       },
     };
     if (!canSeeDemoData(this.props.accountRole, this.props.userRole)) {
