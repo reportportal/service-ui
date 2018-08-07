@@ -1,0 +1,88 @@
+.demo-data-tab {
+  display: flex;
+  flex-direction: column;
+  width: 80%;
+  max-width: 660px;
+  margin: 0 auto;
+  @media (max-width: $SCREEN_XS_MAX) {
+    width: 100%;
+  }
+}
+
+.description-header {
+  margin-top: 2px;
+  font-size: 12px;
+  font-family: $FONT-SEMIBOLD;
+  line-height: 1.33;
+  text-align: left;
+  text-transform: uppercase;
+  color: $COLOR--gray-47;
+  @media (max-width: $SCREEN_XS_MAX) {
+    margin-top: 12px;
+  }
+}
+
+.mobile-hint {
+  display: none;
+  font-size: 14px;
+  line-height: 1.57;
+  text-align: left;
+  color: $COLOR--charcoal-grey;
+  @media (max-width: $SCREEN_XS_MAX) {
+    display: inline-block;
+  }
+}
+
+.description-list {
+  margin: 7px 0 12px 34px;
+  list-style-type: disc;
+
+  li {
+    margin: 0 0 3px 0;
+    padding-left: 8px;
+    font-size: 13px;
+    line-height: 1.69;
+    text-align: left;
+    color: $COLOR--charcoal-grey;
+  }
+}
+
+.postfix-hint {
+  margin-bottom: 8px;
+  font-size: 13px;
+  line-height: 13px;
+  color: $COLOR--charcoal-grey;
+  @media (max-width: $SCREEN_XS_MAX) {
+    display: none;
+  }
+}
+
+.warning-block {
+  @media (max-width: $SCREEN_XS_MAX) {
+    display: none;
+  }
+}
+
+.warning-icon {
+  display: inline-block;
+  width: 15px;
+  height: 15px;
+  margin-right: 5px;
+  svg {
+    fill: white;
+  }
+}
+
+.warning-text {
+  display: inline-block;
+  font-size: 13px;
+  font-family: $FONT-REGULAR;
+  color: $COLOR--failed;
+}
+
+.warning-info {
+  margin-top: 5px;
+  font-size: 12px;
+  line-height: 1.17;
+  color: $COLOR--charcoal-grey;
+}

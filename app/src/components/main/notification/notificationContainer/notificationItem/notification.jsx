@@ -14,6 +14,10 @@ const messages = defineMessages({
     defaultMessage: 'An error occurred while connecting to server: {error}',
   },
   infoLogout: { id: 'Notification.infoLogout', defaultMessage: 'You have been logged out' },
+  generateDemoDataSuccess: {
+    id: 'SuccessMessages.generateDemoDataSuccess',
+    defaultMessage: 'Demo data has been generated',
+  },
 });
 
 export class Notification extends PureComponent {

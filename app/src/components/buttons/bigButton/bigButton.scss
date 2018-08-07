@@ -74,3 +74,11 @@
     }
   }
 }
+
+.mobile-disabled {
+  @media (max-width: $SCREEN_XS_MAX) {
+    opacity: 0.4;
+    pointer-events: none;
+    cursor: default;
+  }
+}

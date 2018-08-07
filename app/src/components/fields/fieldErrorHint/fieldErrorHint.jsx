@@ -82,6 +82,10 @@ const messages = defineMessages({
     id: 'LaunchLevelEntities.launchDescriptionEntityHint',
     defaultMessage: 'At least 3 symbols required',
   },
+  demoDataPostfixHint: {
+    id: 'DemoDataTabForm.demoDataPostfixHint',
+    defaultMessage: 'Postfix should have size from 1 to 90',
+  },
 });
 
 @injectIntl
