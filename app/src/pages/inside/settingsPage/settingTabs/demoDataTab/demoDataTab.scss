@@ -1,0 +1,88 @@
+.demo-data-tab {
+  display: flex;
+  flex-direction: column;
+  width: 80%;
+  max-width: 660px;
+  margin: 0 auto;
+  @media (max-width: $SCREEN_XS_MAX) {
+    width: 100%;
+  }
+}
+
+.description-header {
+  margin-top: 2px;
+  color: $COLOR--gray-47;
+  font-size: 12px;
+  font-family: $FONT-SEMIBOLD;
+  line-height: 1.33;
+  text-align: left;
+  text-transform: uppercase;
+  @media (max-width: $SCREEN_XS_MAX) {
+    margin-top: 12px;
+  }
+}
+
+.mobile-hint {
+  display: none;
+  color: $COLOR--charcoal-grey;
+  font-size: 14px;
+  line-height: 1.57;
+  text-align: left;
+  @media (max-width: $SCREEN_XS_MAX) {
+    display: inline-block;
+  }
+}
+
+.description-list {
+  margin: 7px 0 12px 34px;
+  list-style-type: disc;
+
+  li {
+    margin: 0 0 3px 0;
+    padding-left: 8px;
+    color: $COLOR--charcoal-grey;
+    font-size: 13px;
+    line-height: 1.69;
+    text-align: left;
+  }
+}
+
+.postfix-hint {
+  margin-bottom: 8px;
+  color: $COLOR--charcoal-grey;
+  font-size: 13px;
+  line-height: 13px;
+  @media (max-width: $SCREEN_XS_MAX) {
+    display: none;
+  }
+}
+
+.warning-block {
+  @media (max-width: $SCREEN_XS_MAX) {
+    display: none;
+  }
+}
+
+.warning-icon {
+  display: inline-block;
+  width: 15px;
+  height: 15px;
+  margin-right: 5px;
+  svg {
+    fill: white;
+  }
+}
+
+.warning-text {
+  display: inline-block;
+  color: $COLOR--failed;
+  font-size: 13px;
+  font-family: $FONT-REGULAR;
+}
+
+.warning-info {
+  margin-top: 5px;
+  color: $COLOR--charcoal-grey;
+  font-size: 12px;
+  line-height: 1.17;
+}
