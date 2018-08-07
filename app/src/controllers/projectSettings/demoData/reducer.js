@@ -1,4 +1,8 @@
-import {GENERATE_DEMO_DATA, GENERATE_DEMO_DATA_FAILURE, GENERATE_DEMO_DATA_SUCCESS} from './constants';
+import {
+  GENERATE_DEMO_DATA,
+  GENERATE_DEMO_DATA_FAILURE,
+  GENERATE_DEMO_DATA_SUCCESS,
+} from './constants';
 
 const inisialSate = {
   loading: false,

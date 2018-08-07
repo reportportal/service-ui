@@ -1,9 +1,8 @@
-import {GENERATE_DEMO_DATA, GENERATE_DEMO_DATA_FAILURE, GENERATE_DEMO_DATA_SUCCESS} from './constants';
-
-/**
- * @param input {string}
- * @returns {{type: string, payload: string}}
- */
+import {
+  GENERATE_DEMO_DATA,
+  GENERATE_DEMO_DATA_FAILURE,
+  GENERATE_DEMO_DATA_SUCCESS,
+} from './constants';
 
 export const generateDemoDataAction = (input) => ({
   type: GENERATE_DEMO_DATA,

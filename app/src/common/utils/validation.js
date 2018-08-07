@@ -12,3 +12,4 @@ export const itemNameEntity = (value) => value.length >= 3 && value.length <= 25
 export const launchNumericEntity = (value) =>
   value.length >= 1 && value.length <= 18 && !!value.match(/^[0-9]+$/);
 export const launchDescriptionEntity = (value) => value.length >= 3 && value.length <= 18;
+export const demoDataPostfix = (value) => value.length >= 1 && value.length <= 90;
