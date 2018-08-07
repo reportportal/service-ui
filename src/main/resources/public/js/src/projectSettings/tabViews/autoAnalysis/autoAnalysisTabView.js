@@ -97,7 +97,7 @@ define(function (require) {
             this.logStrNumberSelector = new DropDownComponent({
                 data: config.logStrNumberAutoAnalyze,
                 multiple: false,
-                defaultValue: this.model.get('numberOfLogLines') || config.autoAnalysisAccuracy.MODERATE.numberOfLogLines
+                defaultValue: this.model.get('numberOfLogLines') || config.autoAnalysisAccuracy.CLASSIC.numberOfLogLines
             });
             $('[data-js-numder-str-input]', this.$el).html(this.logStrNumberSelector.$el);
             this.listenTo(this.logStrNumberSelector, 'change', function (val) {
@@ -106,7 +106,7 @@ define(function (require) {
             });
             this.modeSwitcher = new SettingSwitcherView({ options: {
                 isShortForm: false,
-                items: [{ name: Localization.project.strictMode, value: 'STRICT' },
+                items: [{ name: Localization.project.classicMode, value: 'CLASSIC' },
                     { name: Localization.project.moderateMode, value: 'MODERATE' },
                     { name: Localization.project.lightMode, value: 'LIGHT' }],
                 value: -1
