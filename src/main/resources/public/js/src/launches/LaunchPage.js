@@ -68,23 +68,21 @@ define(function (require) {
             this.filterId = filterUrl.split('|')[0];
             isFilterAdded = this.isFilterExist(this.filterId);
             if (!isFilterAdded && this.filterId !== 'all' && this.filterId !== 'New_filter') {
-                Service.putPreferences({ filters: config.preferences.filters.concat([this.filterId]) }).done(function () {
-                    Service.getPreferences().done(function (response) {
-                        var newSubContext;
-                        config.preferences = response;
-                        isFilterAdded = self.isFilterExist(self.filterId);
-                        if (isFilterAdded) {
-                            self.launchFilterCollection.parse(config.preferences.filters)
+                Service.putPreferences({ filters: config.preferences.filters.concat([this.filterId]) }).done(function (response) {
+                    var newSubContext;
+                    config.preferences = response;
+                    isFilterAdded = self.isFilterExist(self.filterId);
+                    if (isFilterAdded) {
+                        self.launchFilterCollection.parse(config.preferences.filters)
                                 .done(function () {
                                     self.update({ subContext: options.subContext });
                                 });
-                        } else {
-                            newSubContext = options.subContext;
-                            newSubContext[1] = 'all';
-                            newSubContext[3] = null;
-                            self.update({ subContext: newSubContext });
-                        }
-                    });
+                    } else {
+                        newSubContext = options.subContext;
+                        newSubContext[1] = 'all';
+                        newSubContext[3] = null;
+                        self.update({ subContext: newSubContext });
+                    }
                 });
             } else {
                 if (options.subContext[2]) {
