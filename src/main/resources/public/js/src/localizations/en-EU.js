@@ -532,7 +532,7 @@ define(['util'], function () {
             flakyTestCasesTableDescription: 'shows the TOP-20 the most flaky test cases within the specified previous launches.',
 
             mostTimeConsumingTestCases: 'The most time-consuming test cases widget  <nobr>(TOP-20)</nobr>',
-            mostTimeConsumingTestCasesDescription: 'Show the TOP 20 the most time-consuming test cases in the last execution of the specified launch.',
+            mostTimeConsumingTestCasesDescription: 'show the TOP 20 the most time-consuming test cases in the last execution of the specified launch.',
 
             percentageOfInvestigationsChart: 'Percentage of investigations',
             percentageOfProductBugsChart: 'Percentage of product bugs',

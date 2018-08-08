@@ -93,7 +93,7 @@ define(function (require) {
                 }
 
                 durationTime = this.durationTime();
-                endTime = this.getBinding('formatEndTime');
+                endTime = this.getBinding('formatEndTime') || Util.dateFormat(this.model.get('end_time'), true);
                 if (this.isSkipped()) {
                     return Localization.launches.skippedDuration + ' ' + durationTime;
                 } else if (this.isStopped()) {
