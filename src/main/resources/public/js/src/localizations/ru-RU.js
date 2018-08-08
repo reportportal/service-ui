@@ -595,7 +595,7 @@ define(['util'], function () {
             flakyTestCasesTableDescription: 'показывает ТОП-20 наиболее изменчивых тестовых сценариев в обозначенных предыдущих запусках.',
 
             mostTimeConsumingTestCases: 'Таблица самых длительных тестовых сценариев  <nobr>(TOP-20)</nobr>',
-            mostTimeConsumingTestCasesDescription: 'Показывает топ-20 наиболее длительных тестовых сценариев',
+            mostTimeConsumingTestCasesDescription: 'показывает топ-20 наиболее длительных тестовых сценариев',
 
             launchStatisticsChart: 'Статистика запусков',
             trendChart: 'Диаграмма тенденций',
