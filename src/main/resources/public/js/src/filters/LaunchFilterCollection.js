@@ -59,7 +59,8 @@ define(function (require) {
                 this.remove(id);
             }
             call('PUT', Urls.getPreferences(), { filters: this.getFiltersId() })
-                .done(function () {
+                .done(function (pref) {
+                    config.preferences = pref;
                     Util.ajaxSuccessMessenger('savedLaunchFilter');
                 })
                 .fail(function (error) {
