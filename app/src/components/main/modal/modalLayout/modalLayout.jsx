@@ -10,13 +10,16 @@ import styles from './modalLayout.scss';
 
 const cx = classNames.bind(styles);
 
-@connect(null, {
-  hideModalAction,
-})
+@connect(
+  null,
+  {
+    hideModalAction,
+  },
+)
 export class ModalLayout extends Component {
   static propTypes = {
     className: PropTypes.string,
-    fullWidthContent: PropTypes.bool,
+    stretchedContent: PropTypes.bool,
     hideModalAction: PropTypes.func.isRequired, // this props
     title: PropTypes.string, // header props
 
@@ -38,7 +41,7 @@ export class ModalLayout extends Component {
   };
   static defaultProps = {
     className: '',
-    fullWidthContent: false,
+    stretchedContent: false,
     title: '',
 
     children: null,
@@ -155,7 +158,7 @@ export class ModalLayout extends Component {
                   className={cx('modal-window', this.props.className)}
                 >
                   <ModalHeader text={title} onClose={this.closeModal} />
-                  <ModalContent fullWidthContent={this.props.fullWidthContent}>
+                  <ModalContent stretchedContent={this.props.stretchedContent}>
                     {status !== 'exited' ? children : null}
                   </ModalContent>
 
