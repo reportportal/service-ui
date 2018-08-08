@@ -47,18 +47,23 @@ define(function (require) {
         template: 'tpl-widget-time-consuming-table',
         itemTemplate: 'tpl-widget-time-consuming-table-item',
         render: function () {
-            this.scrollers = [];
             var contentData = this.model.getContent();
-            this.$el.html(Util.templates(this.template, contentData));
-            _.each(contentData.result, function (item) {
-                var itemView = new TestCasesItemView({
-                    model: new Epoxy.Model(item),
-                    url: this.getFilterByUIDRedirectLink(contentData.lastLaunch[0].id, item.uniqueId)
-                });
-                $('[data-js-items-container]', this.$el).append(itemView.$el);
-            }, this);
-            this.scrollers.push(Util.setupBaronScroll($('[data-js-scroll-table]', this.$el)));
-            Util.hoverFullTime(this.$el);
+            if (!this.isEmptyData(contentData)) {
+                this.scrollers = [];
+                this.$el.html(Util.templates(this.template, contentData));
+                _.each(contentData.result, function (item) {
+                    var itemView = new TestCasesItemView({
+                        model: new Epoxy.Model(item),
+                        url: this.getFilterByUIDRedirectLink(contentData.lastLaunch[0].id, item.uniqueId)
+                    });
+                    $('[data-js-items-container]', this.$el).append(itemView.$el);
+                }, this);
+                this.scrollers.push(Util.setupBaronScroll($('[data-js-scroll-table]', this.$el)));
+                Util.hoverFullTime(this.$el);
+            } else {
+                this.addNoAvailableBock();
+            }
+
         },
         onBeforeDestroy: function () {
             _.each(this.scrollers, function (baronScrollElem) {
