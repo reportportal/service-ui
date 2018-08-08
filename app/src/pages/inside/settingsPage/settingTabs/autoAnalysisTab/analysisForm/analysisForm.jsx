@@ -24,9 +24,9 @@ const messages = defineMessages({
     id: 'AnalysisForm.analysisModeTitle',
     defaultMessage: 'Mode of Auto-Analyse Accuracy',
   },
-  analysisStrictModeTitle: {
-    id: 'AnalysisForm.analysisStrictModeTitle',
-    defaultMessage: 'Strict',
+  analysisClassicModeTitle: {
+    id: 'AnalysisForm.analysisClassicModeTitle',
+    defaultMessage: 'Classic',
   },
   analysisModerateModeTitle: {
     id: 'AnalysisForm.analysisModerateModeTitle',
@@ -49,23 +49,23 @@ const messages = defineMessages({
 const selector = formValueSelector('analysisForm');
 
 const analysisModeConfig = {
-  Strict: {
+  Classic: {
     minShouldMatch: 95,
-    minDocFreq: 5,
-    minTermFreq: 7,
-    numberOfLogLines: 2,
+    minDocFreq: 1,
+    minTermFreq: 1,
+    numberOfLogLines: -1,
   },
   Moderate: {
     minShouldMatch: 80,
-    minDocFreq: 7,
+    minDocFreq: 1,
     minTermFreq: 1,
-    numberOfLogLines: 2,
+    numberOfLogLines: 5,
   },
   Light: {
     minShouldMatch: 60,
-    minDocFreq: 7,
+    minDocFreq: 1,
     minTermFreq: 1,
-    numberOfLogLines: 2,
+    numberOfLogLines: 3,
   },
 };
 
@@ -181,8 +181,8 @@ export class AnalysisForm extends Component {
 
   tabItems = [
     {
-      value: 'Strict',
-      label: this.props.intl.formatMessage(messages.analysisStrictModeTitle),
+      value: 'Classic',
+      label: this.props.intl.formatMessage(messages.analysisClassicModeTitle),
     },
     {
       value: 'Moderate',
