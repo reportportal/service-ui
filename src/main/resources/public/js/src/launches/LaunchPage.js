@@ -68,7 +68,7 @@ define(function (require) {
             this.filterId = filterUrl.split('|')[0];
             isFilterAdded = this.isFilterExist(this.filterId);
             if (!isFilterAdded && this.filterId !== 'all' && this.filterId !== 'New_filter') {
-                Service.putPreferences({ filters: config.preferences.filters.concat([this.filterId]) }).done(function (response) {
+                Service.putPreferences({ filters: config.preferences.filters ? config.preferences.filters.concat([this.filterId]) : [this.filterId] }).done(function (response) {
                     var newSubContext;
                     config.preferences = response;
                     isFilterAdded = self.isFilterExist(self.filterId);
