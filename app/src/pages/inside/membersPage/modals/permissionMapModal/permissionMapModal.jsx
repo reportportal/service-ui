@@ -34,7 +34,6 @@ export class PermissionMapModal extends Component {
       <ModalLayout
         title={this.props.intl.formatMessage(messages.permissionMapHeader)}
         className={cx('permission-map')}
-        fullWidthContent
         okButton={okButton}
       >
         <PermissionMap />

@@ -1,10 +1,18 @@
 import { defineMessages } from 'react-intl';
-import { ACTIONS } from 'common/constants/permissions';
+import { ACTIONS } from './permissions';
+
+const CATEGORIES = {
+  PROJECT: 'PROJECT',
+  MEMBERS: 'MEMBERS',
+  LAUNCHES: 'LAUNCHES',
+  SUITE_TEST_TEST_ITEM: 'SUITE_TEST_TEST_ITEM',
+  WIDGET_FILTER_DASHBOARD: 'WIDGET_FILTER_DASHBOARD',
+};
 
 export const ROLE_NAMES = defineMessages({
   role: {
     id: 'PermissionMap.role',
-    defaultMessage: 'Action/Project role',
+    defaultMessage: 'Action \\\\ Project role',
   },
   admin: {
     id: 'PermissionMap.admin',
@@ -12,19 +20,11 @@ export const ROLE_NAMES = defineMessages({
   },
   manager: {
     id: 'PermissionMap.manager',
-    defaultMessage: 'Manager',
+    defaultMessage: 'PM',
   },
   member: {
     id: 'PermissionMap.member',
     defaultMessage: 'Member',
-  },
-  owner: {
-    id: 'PermissionMap.owner',
-    defaultMessage: 'Owner',
-  },
-  notOwner: {
-    id: 'PermissionMap.notOwner',
-    defaultMessage: 'Not owner',
   },
   operator: {
     id: 'PermissionMap.operator',
@@ -34,92 +34,126 @@ export const ROLE_NAMES = defineMessages({
     id: 'PermissionMap.customer',
     defaultMessage: 'Customer',
   },
-  oneAttention: {
-    id: 'PermissionMap.oneAttention',
-    defaultMessage: 'Action can be done for a internal user.',
+  attention: {
+    id: 'PermissionMap.attention',
+    defaultMessage: 'User with Admin role can perform all operations.',
+  },
+  ownTitle: {
+    id: 'PermissionMap.ownTitle',
+    defaultMessage: 'Own item',
+  },
+  notOwnTitle: {
+    id: 'PermissionMap.notOwnTitle',
+    defaultMessage: 'Not own item',
+  },
+  ownLegend: {
+    id: 'PermissionMap.ownLegend',
+    defaultMessage: 'Own item is created by user himself',
+  },
+  notOwnLegend: {
+    id: 'PermissionMap.notOwnLegend',
+    defaultMessage: 'Not own item is created by another person',
   },
 });
 
-export const PERMISSION_NAMES = defineMessages({
-  [ACTIONS.ACCESS_TO_MANAGEMENT_SYSTEM]: {
-    id: 'PermissionMap.accessToManagementSystem',
-    defaultMessage: 'Have access to management system',
+export const PERMISSION_CATEGORIES = defineMessages({
+  [CATEGORIES.PROJECT]: {
+    id: 'PermissionMap.projectManagement',
+    defaultMessage: 'Project management',
   },
-  [ACTIONS.CREATE_PROJECT]: {
-    id: 'PermissionMap.createProject',
-    defaultMessage: 'Create project',
+  [CATEGORIES.MEMBERS]: {
+    id: 'PermissionMap.projectMembers',
+    defaultMessage: 'Project members',
   },
-  [ACTIONS.DELETE_PROJECT]: {
-    id: 'PermissionMap.deleteProject',
-    defaultMessage: 'Delete project',
+  [CATEGORIES.LAUNCHES]: {
+    id: 'PermissionMap.launches',
+    defaultMessage: 'Launches',
   },
-  [ACTIONS.UPDATE_SETTINGS]: {
-    id: 'PermissionMap.updateSettings',
-    defaultMessage: 'Update project settings',
+  [CATEGORIES.SUITE_TEST_TEST_ITEM]: {
+    id: 'PermissionMap.suiteTestTestItem',
+    defaultMessage: 'Suite / test / test item',
   },
-  [ACTIONS.SEE_SETTINGS]: {
-    id: 'PermissionMap.seeSettings',
-    defaultMessage: 'See project settings',
-  },
-  [ACTIONS.CREATE_INTERNAL_USER]: {
-    id: 'PermissionMap.createInternalUser',
-    defaultMessage: 'Create internal user',
-  },
-  [ACTIONS.INVITE_INTERNAL_USER]: {
-    id: 'PermissionMap.inviteInternalUser',
-    defaultMessage: 'Invite internal user',
-  },
-  [ACTIONS.ASSIGN_UNASSIGN_INTERNAL_USER]: {
-    id: 'PermissionMap.unSlashAssignInternalUser',
-    defaultMessage: 'Un/Assign internal user to/from the project',
-  },
-  [ACTIONS.CHANGE_USER_ROLE]: {
-    id: 'PermissionMap.changeUserRole',
-    defaultMessage: 'Change users role on a project\t',
-  },
-  [ACTIONS.DELETE_USER]: {
-    id: 'PermissionMap.delUser',
-    defaultMessage: 'Delete internal user',
-  },
-  [ACTIONS.SEE_MEMBERS]: {
-    id: 'PermissionMap.seeMembers',
-    defaultMessage: 'See list of project members',
-  },
-  [ACTIONS.EDIT_OWN_ACCOUNT]: {
-    id: 'PermissionMap.editOwnAccount1',
-    defaultMessage: 'Edit own account',
-    attention: true,
-  },
-  [ACTIONS.DELETE_LAUNCH]: {
-    id: 'PermissionMap.deleteLaunch',
-    defaultMessage: 'Delete launch',
-  },
-  [ACTIONS.FORCE_FINISH_LAUNCH]: {
-    id: 'PermissionMap.forceFinishLaunch',
-    defaultMessage: 'Force finish launch',
-  },
-  [ACTIONS.START_ANALYSIS]: {
-    id: 'PermissionMap.startAnalysis',
-    defaultMessage: 'Start analysis manually\t',
-  },
-  [ACTIONS.DELETE_TEST_ITEM]: {
-    id: 'PermissionMap.deleteTestItem',
-    defaultMessage: 'Delete test item and log',
-  },
-  [ACTIONS.MOVE_TO_DEBUG]: {
-    id: 'PermissionMap.moveToDebug',
-    defaultMessage: 'Move launch to debug/default mode',
-  },
-  [ACTIONS.MERGE_LAUNCHES]: {
-    id: 'PermissionMap.mergeLaunches',
-    defaultMessage: 'Merge launches',
-  },
-  [ACTIONS.WORK_WITH_FILTERS]: {
-    id: 'PermissionMap.workWithFiltersEtc',
-    defaultMessage: 'Work with filters, widgets, dashboards (create, edit, delete, share)\t',
-  },
-  [ACTIONS.READ_DATA]: {
-    id: 'PermissionMap.readData',
-    defaultMessage: 'Read data',
+  [CATEGORIES.WIDGET_FILTER_DASHBOARD]: {
+    id: 'PermissionMap.widgetFilterDashboard',
+    defaultMessage: 'Widgets / filters / dashboards',
   },
 });
+
+const projectMessages = defineMessages({
+  [ACTIONS.EDIT_SETTINGS]: {
+    id: 'PermissionMap.editProjectSettings',
+    defaultMessage: 'Edit project settings',
+  },
+});
+
+const membersMessages = defineMessages({
+  [ACTIONS.ACTIONS_WITH_MEMBERS]: {
+    id: 'PermissionMap.actionsWithMembers',
+    defaultMessage: 'Actions with members (invite, assign/unassign, update roles)',
+  },
+  [ACTIONS.VIEW_INFO_ABOUT_MEMBERS]: {
+    id: 'PermissionMap.viewInfoAboutMembers',
+    defaultMessage: 'View info about project members',
+  },
+});
+
+const launchesMessages = defineMessages({
+  [ACTIONS.REPORT_LAUNCH]: {
+    id: 'PermissionMap.reportLaunch',
+    defaultMessage: 'Report launches',
+  },
+  [ACTIONS.VIEW_LAUNCH_IN_DEBUG_MODE]: {
+    id: 'PermissionMap.viewLaunchInDebugMode',
+    defaultMessage: 'View launches in debug mode',
+  },
+  [ACTIONS.MOVE_LAUNCH_TO_DEBUG_DEFAULT]: {
+    id: 'PermissionMap.moveLaunchToDebugDefault',
+    defaultMessage: 'Move launches to debug/default',
+  },
+  [ACTIONS.ACTIONS_WITH_LAUNCH]: {
+    id: 'PermissionMap.actionsWithLaunch',
+    defaultMessage: 'Actions with launches (edit, force finish, merge, delete)',
+  },
+  [ACTIONS.MANUAL_ANALYSIS_EXPORT_COMPARE_IMPORT]: {
+    id: 'PermissionMap.manualAnalysisExportCompareImport',
+    defaultMessage: 'Manual analysis, export, compare, import functionalities',
+  },
+});
+
+const suiteTestTestItemMessages = defineMessages({
+  [ACTIONS.ACTIONS_WITH_ITEM]: {
+    id: 'PermissionMap.actionsWithItem',
+    defaultMessage: 'Actions with item (edit, delete)',
+  },
+  [ACTIONS.INVESTIGATION_ACTIONS]: {
+    id: 'PermissionMap.investigationActions',
+    defaultMessage: 'Investigation actions (defect types and issues in BTS)',
+  },
+});
+
+const widgetFilterDashboardMessages = defineMessages({
+  [ACTIONS.CREATE_SHARE_ITEM]: {
+    id: 'PermissionMap.createShareItem',
+    defaultMessage: 'Create, share item',
+  },
+  [ACTIONS.EDIT_SHARED_ITEM]: {
+    id: 'PermissionMap.editSharedItem',
+    defaultMessage: 'Edit shared item',
+  },
+  [ACTIONS.DELETE_SHARED_ITEM]: {
+    id: 'PermissionMap.deleteSharedItem',
+    defaultMessage: 'Delete shared item',
+  },
+});
+
+export const PERMISSION_NAMES = {
+  [CATEGORIES.PROJECT]: projectMessages,
+
+  [CATEGORIES.MEMBERS]: membersMessages,
+
+  [CATEGORIES.LAUNCHES]: launchesMessages,
+
+  [CATEGORIES.SUITE_TEST_TEST_ITEM]: suiteTestTestItemMessages,
+
+  [CATEGORIES.WIDGET_FILTER_DASHBOARD]: widgetFilterDashboardMessages,
+};
