@@ -1,0 +1,19 @@
+.refine-filters-panel {
+  display: flex;
+  padding-top: 15px;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+.label {
+  padding-right: 17px;
+  color: $COLOR--gray-47;
+  font-family: $FONT-SEMIBOLD;
+  font-size: 12px;
+  line-height: 18px;
+  text-transform: uppercase;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    display: none;
+  }
+}

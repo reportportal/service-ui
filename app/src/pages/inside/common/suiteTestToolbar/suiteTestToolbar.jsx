@@ -2,6 +2,7 @@ import { InfoLine } from 'pages/inside/common/infoLine';
 import { SelectedItems } from 'pages/inside/common/selectedItems';
 import PropTypes from 'prop-types';
 import { ActionPanel } from './actionPanel';
+import { RefineFiltersPanel } from './refineFiltersPanel';
 
 export const SuiteTestToolbar = ({
   parentItem,
@@ -36,7 +37,7 @@ export const SuiteTestToolbar = ({
       onIncludeInAA={onIncludeInAA}
     />
     {parentItem && <InfoLine data={parentItem} />}
-    <div />
+    <RefineFiltersPanel />
   </div>
 );
 SuiteTestToolbar.propTypes = {

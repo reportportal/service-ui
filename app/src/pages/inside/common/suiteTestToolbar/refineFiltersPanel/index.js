@@ -1,0 +1,1 @@
+export { RefineFiltersPanel } from './refineFiltersPanel';
