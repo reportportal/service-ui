@@ -30,7 +30,7 @@ export class InputTagsSearch extends Component {
   static propTypes = {
     uri: PropTypes.string,
     options: PropTypes.array,
-    value: PropTypes.array,
+    value: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
     placeholder: PropTypes.string,
     focusPlaceholder: PropTypes.string,
     loadingPlaceholder: PropTypes.string,
@@ -45,18 +45,19 @@ export class InputTagsSearch extends Component {
     minLength: PropTypes.number,
     showNewLabel: PropTypes.bool,
     dynamicSearchPromptText: PropTypes.bool,
+    isClearable: PropTypes.bool,
   };
   static defaultProps = {
     uri: '',
     options: [],
-    value: [],
+    value: {},
     placeholder: '',
     focusPlaceholder: '',
     loadingPlaceholder: '',
     nothingFound: '',
     creatable: false,
     async: false,
-    multi: true,
+    multi: false,
     removeSelected: false,
     makeOptions: () => {},
     isValidNewOption: () => {},
@@ -64,6 +65,7 @@ export class InputTagsSearch extends Component {
     minLength: 1,
     showNewLabel: false,
     dynamicSearchPromptText: false,
+    isClearable: false,
   };
   state = {
     searchPromptText: this.props.nothingFound,
@@ -129,6 +131,7 @@ export class InputTagsSearch extends Component {
       multi,
       removeSelected,
       placeholder,
+      isClearable,
     } = this.props;
     const SelectComponent = selectType(async, creatable);
     return (
@@ -152,6 +155,7 @@ export class InputTagsSearch extends Component {
           menuRenderer={renderItems}
           promptTextCreator={this.renderNewItemLabel}
           removeSelected={removeSelected}
+          isClearable={isClearable}
         />
       </div>
     );

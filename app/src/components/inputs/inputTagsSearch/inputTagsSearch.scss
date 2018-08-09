@@ -93,7 +93,11 @@
         border: 1px solid $COLOR--topaz;
         border-top: none;
       }
-      .Select-clear-zone,
+      .Select-clear-zone {
+        top: 7px;
+        right: 5px;
+        position: absolute;
+      }
       .Select-aria-only {
         display: none;
       }
