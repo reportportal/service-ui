@@ -27,27 +27,27 @@ const messages = defineMessages({
     id: 'ActionPanel.actionsBtn',
     defaultMessage: 'Actions',
   },
-  actionEditDefects: {
+  editDefects: {
     id: 'ActionPanel.editDefects',
     defaultMessage: 'Edit defects',
   },
-  actionPostIssue: {
+  postIssue: {
     id: 'ActionPanel.postIssue',
     defaultMessage: 'Post issue',
   },
-  actionLinkIssue: {
+  linkIssue: {
     id: 'ActionPanel.linkIssue',
     defaultMessage: 'Link issue',
   },
-  actionUnlinkIssue: {
+  unlinkIssue: {
     id: 'ActionPanel.unlinkIssue',
     defaultMessage: 'Unlink issue',
   },
-  actionIgnoreInAA: {
+  ignoreInAA: {
     id: 'ActionPanel.ignoreInAA',
     defaultMessage: 'Ignore in Auto Analysis',
   },
-  actionIncludeIntoAA: {
+  includeIntoAA: {
     id: 'ActionPanel.includeIntoAA',
     defaultMessage: 'Include into Auto Analysis',
   },
@@ -122,32 +122,32 @@ export class ActionPanel extends Component {
 
   createActionDescriptors = () => [
     {
-      label: this.props.intl.formatMessage(messages.actionEditDefects),
+      label: this.props.intl.formatMessage(messages.editDefects),
       value: 'action-edit-defects',
       onClick: this.props.onEditDefects,
     },
     {
-      label: this.props.intl.formatMessage(messages.actionPostIssue),
+      label: this.props.intl.formatMessage(messages.postIssue),
       value: 'action-post-issue',
       onClick: this.props.onPostIssue,
     },
     {
-      label: this.props.intl.formatMessage(messages.actionLinkIssue),
+      label: this.props.intl.formatMessage(messages.linkIssue),
       value: 'action-link-issue',
       onClick: this.props.onLinkIssue,
     },
     {
-      label: this.props.intl.formatMessage(messages.actionUnlinkIssue),
+      label: this.props.intl.formatMessage(messages.unlinkIssue),
       value: 'action-unlink-issue',
       onClick: this.props.onUnlinkIssue,
     },
     {
-      label: this.props.intl.formatMessage(messages.actionIgnoreInAA),
+      label: this.props.intl.formatMessage(messages.ignoreInAA),
       value: 'action-ignore-in-AA',
       onClick: this.props.onIgnoreInAA,
     },
     {
-      label: this.props.intl.formatMessage(messages.actionIncludeIntoAA),
+      label: this.props.intl.formatMessage(messages.includeIntoAA),
       value: 'action-include-into-AA',
       onClick: this.props.onIncludeIntoAA,
     },
