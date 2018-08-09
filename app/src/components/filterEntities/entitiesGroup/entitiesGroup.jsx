@@ -57,7 +57,7 @@ export class EntitiesGroup extends Component {
   componentDidUpdate(prevProps, prevState) {
     if (
       this.props.entities !== prevProps.entities ||
-      this.state.acticeEntities !== prevState.activeEntities
+      this.state.activeEntities !== prevState.activeEntities
     ) {
       this.parseEntities();
     }

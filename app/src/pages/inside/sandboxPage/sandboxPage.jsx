@@ -2,7 +2,7 @@ import {
   // LaunchLevelEntities,
   // SuiteLevelEntities,
   StepLevelEntities,
-} from 'pages/inside/launchesPage/filterEntitiesGroups';
+} from 'pages/inside/common/filterEntitiesGroups';
 
 export const SandboxPage = () => (
   <div>
