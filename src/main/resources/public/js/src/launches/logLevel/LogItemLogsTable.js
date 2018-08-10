@@ -313,6 +313,13 @@ define(function (require) {
         onClickAttachments: function (model) {
             this.trigger('click:attachment', model);
         },
+        resetFilters: function () {
+            if(this.slider.active === 'FATAL'){
+                this.slider.slider.slider('value', 2); // activates all items in slider
+                this.nameModel.set({ value: '' });
+                $('[data-js-attachments-filter]', this.$el).prop('checked', false);
+            }
+        },
         goToLog: function (logId) {
             var self = this;
             if (this.collection.get(logId)) {
@@ -321,6 +328,8 @@ define(function (require) {
             } else {
                 this.collection.findLogPage(logId, true)
                     .done(function (number) {
+                        self.resetFilters();
+                        self.onChangeFilter();
                         self.onChangePage(number);
                         self.listenToOnce(self.collection, 'loading:false', function () {
                             self.collection.get(logId) && self.collection.get(logId).trigger('scrollTo');

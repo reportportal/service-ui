@@ -95,7 +95,9 @@ define(function (require) {
             var newParams = [];
             if (cleanFilters) {
                 _.each(params, function (param) {
-                    if (!~param.search(/(binary_content|cnt\.message)/)) {
+                    if (~param.search(/(FATAL)/)) {
+                        newParams.push('filter.gte.level=ERROR');
+                    } else if (!~param.search(/(binary_content|cnt\.message)/)) {
                         newParams.push(param);
                     }
                 });
