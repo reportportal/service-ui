@@ -109,8 +109,8 @@ define(function (require) {
         },
         getLinkToRelevantItem: function (field, projectRef) {
             var itemInfo = JSON.parse(field.newValue);
-            var link = '#' + projectRef + '/launches/all/' + itemInfo.launchRef + '/' + itemInfo.path.join('/') + '?log.item=' + itemInfo.id;
-            return Localization.widgets.basedOn + ' <a href="' + link + '">' + Localization.ui.item + '</a>';
+            var link = '#' + projectRef + '/launches/all/' + itemInfo.launchId + '/' + Object.keys(itemInfo.path_names).join('/') + '?log.item=' + itemInfo.id;
+            return Localization.widgets.basedOn + ' <a target="_blank" href="' + link + '">' + Localization.ui.item + '</a>';
         },
         getActionTicketsHtml: function (tickets) {
             var tickets = tickets || '';
