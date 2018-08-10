@@ -69,7 +69,7 @@ const analysisModeConfig = {
   },
 };
 
-const DEFAULT_ANALYSIS_MODE = 'Moderate';
+const DEFAULT_ANALYSIS_MODE = 'Classic';
 
 @injectIntl
 @reduxForm({

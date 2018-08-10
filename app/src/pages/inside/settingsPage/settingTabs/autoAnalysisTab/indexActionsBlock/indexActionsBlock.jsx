@@ -107,8 +107,9 @@ export class IndexActionsBlock extends Component {
               disabled={this.props.indexing_running || !this.props.appInfo.ANALYZER}
               onClick={this.props.showGenerateIndexModal}
               title={
-                !this.props.appInfo.ANALYZER &&
-                intl.formatMessage(messages.analyzerDisabledButtonTitle)
+                !this.props.appInfo.ANALYZER
+                  ? intl.formatMessage(messages.analyzerDisabledButtonTitle)
+                  : ''
               }
               mobileDisabled
             >
