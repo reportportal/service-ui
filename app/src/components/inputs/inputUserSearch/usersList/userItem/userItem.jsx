@@ -26,7 +26,10 @@ import styles from './userItem.scss';
 const cx = classNames.bind(styles);
 
 export const UserItem = ({ userName, userLogin, userAvatar, isAssigned, onClick }) => (
-  <div className={cx({ 'user-search-result-wrap': true, 'disabled-item': isAssigned })} onClick={onClick}>
+  <div
+    className={cx({ 'user-search-result-wrap': true, 'disabled-item': isAssigned })}
+    onClick={onClick}
+  >
     <div className={cx('user-avatar')} style={{ backgroundImage: `url(${userAvatar})` }} />
     <div className={cx('user-search-info')}>
       <p className={cx('user-search-name')}>{userName}</p>

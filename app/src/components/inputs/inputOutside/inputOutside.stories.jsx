@@ -3,7 +3,7 @@
  *
  *
  * This file is part of EPAM Report Portal.
- * https://github.com/reportportal/service-ui
+ * https://github.com/epam/ReportPortal
  *
  * Report Portal is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,39 +18,42 @@
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import { host } from 'storybook-host';
 import { withReadme } from 'storybook-readme';
-import { Input } from './input';
+import TestIcon from './img/test-icon-inline.svg';
+import { InputOutside } from './inputOutside';
 import README from './README.md';
 
-storiesOf('Components/Inputs/Input', module)
+storiesOf('Components/Inputs/InputOutside', module)
   .addDecorator(
     host({
-      title: 'Input component',
-      align: 'center middle',
+      title: 'InputOutside component',
+      align: 'center top',
       backdrop: 'rgba(70, 69, 71, 0.2)',
-      height: 30,
+      background: '#ffffff',
+      height: 45,
       width: 300,
     }),
   )
   .addDecorator(withReadme(README))
-  .add('default state', () => <Input />)
-  .add('with placeholder', () => <Input placeholder="Placeholder test" />)
-  .add('with predefined value', () => <Input value="Predefined text" />)
-  .add('with predefined value & readonly', () => <Input readonly value="Predefined text" />)
-  .add('with value & type number', () => <Input type="number" value="12345" />)
-  .add('with value & type password', () => <Input type="password" value="12345" />)
-  .add('max length (10)', () => <Input maxLength="10" />)
-  .add('disabled', () => <Input disabled />)
+  .add('default state', () => <InputOutside />)
+  .add('with placeholder', () => <InputOutside placeholder="Placeholder test" />)
+  .add('with predefined value', () => <InputOutside value="Predefined text" />)
+  .add('with predefined value & readonly', () => <InputOutside readonly value="Predefined text" />)
+  .add('with icon', () => <InputOutside icon={TestIcon} />)
+  .add('type number', () => <InputOutside type="number" value="value" />)
+  .add('with value & type password', () => <InputOutside type="password" value="value" />)
+  .add('max length (10)', () => <InputOutside maxLength="10" />)
+  .add('with error & touched', () => <InputOutside touched error="Something went wrong" />)
+  .add('disabled', () => <InputOutside disabled />)
+  .add('disabled with value', () => <InputOutside disabled value="value" />)
   .add('with actions', () => (
-    <Input
+    <InputOutside
       onFocus={action('focus')}
       onChange={action('change')}
       onBlur={action('blur')}
       onKeyUp={action('keyup')}
-      onKeyPress={action('keypress')}
     />
   ));

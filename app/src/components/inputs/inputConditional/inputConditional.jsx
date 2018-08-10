@@ -7,7 +7,10 @@ const cx = classNames.bind(styles);
 
 export class InputConditional extends Component {
   static propTypes = {
-    value: PropTypes.object,
+    value: PropTypes.shape({
+      value: PropTypes.string.isRequired,
+      condition: PropTypes.string.isRequired,
+    }),
     conditions: PropTypes.arrayOf(
       PropTypes.shape({
         value: PropTypes.string.isRequired,
@@ -109,7 +112,9 @@ export class InputConditional extends Component {
         <div className={cx('conditions-block')} ref={this.setConditionsBlockRef}>
           <div className={cx('conditions-selector')} onClick={this.onClickConditionBlock}>
             <span className={cx('condition-selected')}>
-              {conditions.filter((condition) => condition.value === value.condition)[0].shortLabel}
+              {conditions.length &&
+                value.condition &&
+                conditions.filter((condition) => condition.value === value.condition)[0].shortLabel}
             </span>
             <i className={cx('arrow', { rotated: this.state.opened })} />
           </div>

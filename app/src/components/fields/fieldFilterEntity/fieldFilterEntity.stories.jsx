@@ -1,8 +1,10 @@
 import { storiesOf } from '@storybook/react';
 import { host } from 'storybook-host';
 import { action } from '@storybook/addon-actions';
+import { withReadme } from 'storybook-readme';
 import { InputConditional } from 'components/inputs/inputConditional';
 import { FieldFilterEntity } from './fieldFilterEntity';
+import README from './README.md';
 
 const conditions = [
   {
@@ -31,16 +33,18 @@ const conditions = [
 storiesOf('Components/Fields/FieldFilterEntity', module)
   .addDecorator(
     host({
-      title: 'Field with icon',
+      title: 'Field filer entity',
       align: 'center middle',
       backdrop: 'rgba(70, 69, 71, 0.2)',
       background: '#ffffff',
       height: 60,
-      width: 237,
+      width: 260,
     }),
   )
+  .addDecorator(withReadme(README))
   .add('default state', () => <FieldFilterEntity />)
-  .add('with props', () => (
+  .add('without removable', () => <FieldFilterEntity removable={false} />)
+  .add('with children', () => (
     <FieldFilterEntity title={'Launch name'}>
       <InputConditional
         conditions={conditions}
@@ -51,8 +55,8 @@ storiesOf('Components/Fields/FieldFilterEntity', module)
       />
     </FieldFilterEntity>
   ))
-  .add('with props & actions', () => (
-    <FieldFilterEntity title={'Launch name'} onRemove={action('remove')}>
+  .add('with children & stretchable & actions', () => (
+    <FieldFilterEntity title={'Launch name'} stretchable onRemove={action('remove')}>
       <InputConditional
         conditions={conditions}
         value={{

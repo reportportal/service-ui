@@ -20,28 +20,40 @@
  */
 
 import { storiesOf } from '@storybook/react';
+import { action } from '@storybook/addon-actions';
 import { host } from 'storybook-host';
 import { withReadme } from 'storybook-readme';
-import { FieldBottomConstraints } from './fieldBottomConstraints';
+import { GhostMenuButton } from './ghostMenuButton';
 import README from './README.md';
 
-storiesOf('Components/Fields/fieldBottomConstraints', module)
+const items = [
+  {
+    label: 'Item label',
+    value: 'First item value',
+    onClick: action('clicked'),
+  },
+  {
+    label: 'Item label',
+    value: 'Second item value',
+    onClick: action('clicked'),
+  },
+];
+
+storiesOf('Components/Buttons/GhostMenuButton', module)
   .addDecorator(
     host({
-      title: 'Field with bottom text',
+      title: 'Ghost menu button component',
       align: 'center middle',
-      backdrop: 'rgba(70, 69, 71, 0.1)',
-      background: '#ffffff',
-      height: 42,
-      width: 382,
+      backdrop: 'rgba(70, 69, 71, 0.2)',
+      background: '#fff',
+      height: 50,
+      width: 150,
     }),
   )
   .addDecorator(withReadme(README))
-  .add('default state', () => <FieldBottomConstraints />)
-  .add('with text', () => <FieldBottomConstraints text="Some constraints text" />)
-  .add('with long text', () => (
-    <FieldBottomConstraints text="Some long constraints text. Some long constraints text. Some long constraints text." />
-  ))
-  .add('with very long text', () => (
-    <FieldBottomConstraints text="Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium animi autem consequatur culpa deleniti, dolor eos eveniet expedita itaque minima placeat quam quas quos recusandae similique totam vel veniam veritatis." />
+  .add('default state', () => <GhostMenuButton />)
+  .add('with title', () => <GhostMenuButton title="Menu title" />)
+  .add('with title & items & actions', () => <GhostMenuButton items={items} title="Menu title" />)
+  .add('disabled with title & items & actions', () => (
+    <GhostMenuButton disabled items={items} title="Menu title" />
   ));
