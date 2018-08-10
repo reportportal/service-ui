@@ -20,23 +20,46 @@
  */
 
 import { storiesOf } from '@storybook/react';
+import { action } from '@storybook/addon-actions';
 import { host } from 'storybook-host';
 import { withReadme } from 'storybook-readme';
-import { FieldErrorHint } from './fieldErrorHint';
+import { InputTextArea } from './inputTextArea';
 import README from './README.md';
 
-storiesOf('Components/Fields/InputErrorHint', module)
+storiesOf('Components/Inputs/InputTextArea', module)
   .addDecorator(
     host({
-      title: 'Field error hint',
+      title: 'Input text area component',
       align: 'center middle',
       backdrop: 'rgba(70, 69, 71, 0.2)',
       background: '#ffffff',
-      height: 42,
-      width: 382,
+      height: 70,
+      width: 300,
     }),
   )
   .addDecorator(withReadme(README))
-  .add('default state', () => <FieldErrorHint />)
-  .add('with error message without focus', () => <FieldErrorHint error={'test error message'} />)
-  .add('with error message & focus', () => <FieldErrorHint error={'test error message'} active />);
+  .add('default state', () => <InputTextArea />)
+  .add('with predefined value', () => <InputTextArea value="Some text." />)
+  .add('with predefined value & readonly', () => <InputTextArea readonly value="Some text." />)
+  .add('with placeholder', () => <InputTextArea placeholder="Some text." />)
+  .add('max length (10)', () => <InputTextArea maxLength="10" />)
+  .add('with actions', () => (
+    <InputTextArea
+      value="Some text."
+      onChange={action('change')}
+      onFocus={action('focus')}
+      onBlur={action('blur')}
+      onKeyUp={action('keyup')}
+    />
+  ))
+  .add('disabled', () => <InputTextArea disabled />)
+  .add('disabled with actions', () => (
+    <InputTextArea
+      disabled
+      value="Some text."
+      onChange={action('change')}
+      onFocus={action('focus')}
+      onBlur={action('blur')}
+      onKeyUp={action('keyup')}
+    />
+  ));

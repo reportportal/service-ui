@@ -22,7 +22,9 @@
 import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import { host } from 'storybook-host';
+import { withReadme } from 'storybook-readme';
 import { InputConditional } from './inputConditional';
+import README from './README.md';
 
 const conditions = [
   {
@@ -51,7 +53,7 @@ const conditions = [
 storiesOf('Components/Inputs/InputConditional', module)
   .addDecorator(
     host({
-      title: 'InputCheckbox component',
+      title: 'Input conditional component',
       align: 'center middle',
       backdrop: 'rgba(70, 69, 71, 0.2)',
       background: '#ffffff',
@@ -59,10 +61,10 @@ storiesOf('Components/Inputs/InputConditional', module)
       width: 300,
     }),
   )
+  .addDecorator(withReadme(README))
   .add('default state', () => <InputConditional />)
   .add('touched & error state', () => <InputConditional touched error={'error'} />)
-  .add('with conditions provided', () => <InputConditional conditions={conditions} />)
-  .add('with value & conditions provided', () => (
+  .add('with value & conditions', () => (
     <InputConditional
       conditions={conditions}
       value={{

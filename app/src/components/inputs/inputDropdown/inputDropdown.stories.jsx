@@ -85,7 +85,6 @@ storiesOf('Components/Inputs/InputDropdown', module)
       value="ND"
     />
   ))
-
   // Multiple dropdown
   .add('Multiple, default state', () => <InputDropdown options={options} multiple />)
   .add('Multiple, disabled', () => <InputDropdown options={options} multiple disabled />)

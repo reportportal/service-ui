@@ -22,7 +22,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import classNames from 'classnames/bind';
-import { NavLink } from 'redux-first-router-link'
+import { NavLink } from 'redux-first-router-link';
 import Parser from 'html-react-parser';
 import styles from './sidebarButton.scss';
 
@@ -35,14 +35,15 @@ export const SidebarButton = ({ onClick, icon, children, link, bottom }) => {
   });
   return (
     <div className={classes}>
-      <NavLink to={link} className={cx('nav-link')} activeClassName={cx('active')} onClick={onClick} >
+      <NavLink
+        to={link}
+        className={cx('nav-link')}
+        activeClassName={cx('active')}
+        onClick={onClick}
+      >
         <span className={cx('wrapper')}>
-          <i className={cx('btn-icon')}>
-            { Parser(icon) }
-          </i>
-          <span className={cx('btn-title')}>
-            {children}
-          </span>
+          <i className={cx('btn-icon')}>{Parser(icon)}</i>
+          <span className={cx('btn-title')}>{children}</span>
         </span>
       </NavLink>
     </div>
@@ -50,7 +51,7 @@ export const SidebarButton = ({ onClick, icon, children, link, bottom }) => {
 };
 
 SidebarButton.propTypes = {
-  link: PropTypes.object,
+  link: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
   icon: PropTypes.string,
   bottom: PropTypes.bool,
   children: PropTypes.node,
@@ -64,4 +65,3 @@ SidebarButton.defaultProps = {
   children: null,
   onClick: () => {},
 };
-

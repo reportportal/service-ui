@@ -23,15 +23,14 @@ import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import { host } from 'storybook-host';
 import { withReadme } from 'storybook-readme';
-// TODO: import { MemoryRouter } from 'react-router';
 import { SidebarButton } from './sidebarButton';
 import README from './README.md';
 import TestIcon from './img/test-icon-inline.svg';
 
-storiesOf('Components/Buttons/sidebarButton', module)
+storiesOf('Components/Buttons/SidebarButton', module)
   .addDecorator(
     host({
-      title: 'sidebarButton component',
+      title: 'Sidebar Button component',
       align: 'center middle',
       backdrop: 'rgba(70, 69, 71, 0.2)',
       background: '#ffffff',
@@ -40,11 +39,7 @@ storiesOf('Components/Buttons/sidebarButton', module)
     }),
   )
   .addDecorator(withReadme(README))
-  /* TODO
-  .addDecorator(story => (
-    <MemoryRouter initialEntries={['/']}>{story()}</MemoryRouter>
-  ))
-  */
+  .add('default state', () => <SidebarButton />)
   .add('with icon', () => (
     <SidebarButton
       icon={TestIcon}

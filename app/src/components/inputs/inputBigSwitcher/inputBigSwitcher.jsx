@@ -66,7 +66,7 @@ export const InputBigSwitcher = ({
         />
         <div className={sliderClasses} />
       </div>
-      <span className={cx('children-container')}>{children}</span>
+      {children && <span className={cx('children-container')}>{children}</span>}
     </label>
   );
 };

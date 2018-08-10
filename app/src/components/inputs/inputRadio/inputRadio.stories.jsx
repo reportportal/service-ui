@@ -3,7 +3,7 @@
  *
  *
  * This file is part of EPAM Report Portal.
- * https://github.com/reportportal/service-ui
+ * https://github.com/epam/ReportPortal
  *
  * Report Portal is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,56 +18,47 @@
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import { host } from 'storybook-host';
 import { withReadme } from 'storybook-readme';
-import { InputBigSwitcher } from './inputBigSwitcher';
+import { InputRadio } from './inputRadio';
 import README from './README.md';
 
-storiesOf('Components/Inputs/InputBigSwitcher', module)
+const value = 'value';
+
+storiesOf('Components/Inputs/InputRadio', module)
   .addDecorator(
     host({
-      title: 'InputBigSwitcher component',
-      align: 'center middle',
+      title: 'InputRadio component',
+      align: 'center top',
       backdrop: 'rgba(70, 69, 71, 0.2)',
       background: '#ffffff',
-      height: 80,
+      height: 45,
       width: 300,
-      padding: 15,
     }),
   )
   .addDecorator(withReadme(README))
-  .add('default state', () => <InputBigSwitcher />)
-  .add('turned-on', () => <InputBigSwitcher value>Some text.</InputBigSwitcher>)
-  .add('disabled', () => <InputBigSwitcher disabled>Some text.</InputBigSwitcher>)
-  .add('turned-on disabled', () => (
-    <InputBigSwitcher value disabled>
-      Some text.
-    </InputBigSwitcher>
-  ))
+  .add('default state', () => <InputRadio />)
+  .add('with value', () => <InputRadio value={value} />)
+  .add('checked', () => <InputRadio ownValue={value} value={value} />)
+  .add('with text', () => <InputRadio>Some text.</InputRadio>)
   .add('with long text', () => (
-    <InputBigSwitcher>
-      Some very long text. Some very long text. Some very long text. Some very long text.
-    </InputBigSwitcher>
+    <InputRadio>Some long text. Some long text. Some long text. Some long text.</InputRadio>
   ))
-  .add('with actions', () => (
-    <InputBigSwitcher
-      onChange={action('changed')}
-      onFocus={action('onFocus')}
-      onBlur={action('onBlur')}
-    >
-      Some text.
-    </InputBigSwitcher>
+  .add('with circleAtTop & long text', () => (
+    <InputRadio circleAtTop>
+      Some long text. Some long text. Some long text. Some long text.
+    </InputRadio>
   ))
-  .add('disabled with actions', () => (
-    <InputBigSwitcher
-      onChange={action('changed')}
-      onFocus={action('onFocus')}
-      onBlur={action('onBlur')}
-      disabled
-    >
-      Some text.
-    </InputBigSwitcher>
+  .add('disabled', () => <InputRadio disabled />)
+  .add('disabled with value', () => <InputRadio disabled value={value} />)
+  .add('disabled with text', () => <InputRadio disabled>Some text.</InputRadio>)
+  .add('with value & actions', () => (
+    <InputRadio
+      value={value}
+      onFocus={action('focus')}
+      onChange={action('change')}
+      onBlur={action('blur')}
+    />
   ));

@@ -37,18 +37,18 @@ storiesOf('Components/Inputs/InputUserSearch', module)
       align: 'center middle',
       background: 'white',
       backdrop: 'rgba(70, 69, 71, 0.2)',
-      height: 400,
-      width: 400,
+      height: 280,
+      width: 550,
     }),
   )
   .addDecorator(withReadme(README))
   .add('default state', () => <InputUserSearch />)
   .add(
-    'Admin,projectId="superadmin_personal",with actions (type "test" in input, close DevTools, you get MOCK DATA)',
+    'Admin,projectId="superadmin_personal",with actions(type "test" in input,close DevTools,you get MOCK DATA)',
     () => {
       const mock = new MockAdapter(axios);
       const API_REQUEST =
-        '/api/v1/user/search/?page.page=1&page.size=10&page.sort=login,ASC&term=test';
+        '/api/v1/user/search?page.page=1&page.size=10&page.sort=login%2CASC&term=test';
       mock.onGet(API_REQUEST).reply(200, {
         content: [
           {
@@ -513,8 +513,8 @@ storiesOf('Components/Inputs/InputUserSearch', module)
         <InputUserSearch
           isAdmin
           projectId="superadmin_personal"
-          onChange={action('Select user')}
           placeholder="Enter Login or Email"
+          onChange={action('Select user')}
         />
       );
     },

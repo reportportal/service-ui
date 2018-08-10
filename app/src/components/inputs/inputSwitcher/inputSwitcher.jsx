@@ -53,7 +53,7 @@ InputSwitcher.propTypes = {
 };
 
 InputSwitcher.defaultProps = {
-  children: '',
+  children: null,
   value: false,
   onChange: () => {},
   onFocus: () => {},

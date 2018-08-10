@@ -27,31 +27,30 @@ import { InputCheckbox } from './inputCheckbox';
 import README from './README.md';
 
 storiesOf('Components/Inputs/InputCheckbox', module)
-  .addDecorator(host({
-    title: 'InputCheckbox component',
-    align: 'center middle',
-    backdrop: 'rgba(70, 69, 71, 0.2)',
-    background: '#ffffff',
-    height: 30,
-    width: 300,
-  }))
+  .addDecorator(
+    host({
+      title: 'InputCheckbox component',
+      align: 'center middle',
+      backdrop: 'rgba(70, 69, 71, 0.2)',
+      background: '#ffffff',
+      height: 50,
+      width: 300,
+    }),
+  )
   .addDecorator(withReadme(README))
-  .add('default state', () => (
-    <InputCheckbox />
-  ))
+  .add('default state', () => <InputCheckbox />)
   .add('with long text', () => (
     <InputCheckbox>Some long text. Some long text. Some long text. Some long text.</InputCheckbox>
   ))
-  .add('checked', () => (
-    <InputCheckbox value>Some text.</InputCheckbox>
-  ))
-  .add('disabled', () => (
-    <InputCheckbox disabled>Some text.</InputCheckbox>
-  ))
+  .add('checked', () => <InputCheckbox value>Some text.</InputCheckbox>)
+  .add('disabled', () => <InputCheckbox disabled>Some text.</InputCheckbox>)
   .add('checked & disabled', () => (
-    <InputCheckbox value disabled>Some text.</InputCheckbox>
+    <InputCheckbox value disabled>
+      Some text.
+    </InputCheckbox>
   ))
   .add('with actions', () => (
-    <InputCheckbox onChange={action('change')} onFocus={action('focused')} onBlur={action('blur')}>Some text.</InputCheckbox>
+    <InputCheckbox onChange={action('change')} onFocus={action('focus')} onBlur={action('blur')}>
+      Some text.
+    </InputCheckbox>
   ));
-

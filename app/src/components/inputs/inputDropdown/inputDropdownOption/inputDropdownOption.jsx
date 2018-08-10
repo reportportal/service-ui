@@ -35,7 +35,7 @@ export const DropdownOption = ({
   value,
 }) => {
   const onChangeHandler = () => {
-    onChange(value);
+    onChange && onChange(value);
   };
   return (
     <div

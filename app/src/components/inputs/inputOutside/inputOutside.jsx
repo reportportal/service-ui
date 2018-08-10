@@ -82,23 +82,31 @@ export class InputOutside extends Component {
   };
   render() {
     const {
-      type, value, readonly, icon, placeholder, maxLength, disabled,
-      refFunction, onChange, onFocus, onBlur, onKeyUp, error, active, touched,
+      type,
+      value,
+      readonly,
+      icon,
+      placeholder,
+      maxLength,
+      disabled,
+      refFunction,
+      onChange,
+      onFocus,
+      onBlur,
+      onKeyUp,
+      error,
+      active,
+      touched,
     } = this.props;
     return (
       <div
-        className={cx(
-          'input-outside',
-          {
-            disabled,
-            password: type === 'password',
-            invalid: error && (active || touched),
-          })
-        }
+        className={cx('input-outside', {
+          disabled,
+          password: type === 'password',
+          invalid: error && (active || touched),
+        })}
       >
-        <div className={cx('icon')}>
-          { Parser(icon) }
-        </div>
+        <div className={cx('icon')}>{Parser(icon)}</div>
         <input
           ref={refFunction}
           className={cx('input')}
@@ -113,8 +121,7 @@ export class InputOutside extends Component {
           onBlur={onBlur}
           onKeyUp={onKeyUp}
         />
-        {
-          type === 'password' &&
+        {type === 'password' && (
           <div
             className={cx('eye-icon', { opened: this.state.passwordVisible })}
             onMouseDown={this.showPassword}
@@ -124,7 +131,7 @@ export class InputOutside extends Component {
             onTouchEnd={this.hidePassword}
             onTouchCancel={this.hidePassword}
           />
-        }
+        )}
       </div>
     );
   }
