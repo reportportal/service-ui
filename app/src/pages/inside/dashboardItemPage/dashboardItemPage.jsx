@@ -78,27 +78,15 @@ export class DashboardItemPage extends Component {
     this.setState({ isFullscreen });
   };
 
-  onDashboardDataReceived = ({ name }) => {
-    this.setState({
-      dashboardName: name,
-    });
-  };
-
-  getDashboardName = () => {
+  getDashboard = () => {
+    if (this.dashboard && this.dashboard.id === this.props.dashboardId) {
+      return;
+    }
     const { dashboardItems, dashboardId } = this.props;
-    let { dashboardName } = this.state;
-    if (dashboardName) {
-      return dashboardName;
-    }
-
-    const dashboard = dashboardItems.find((item) => item.id === dashboardId);
-
-    if (dashboard) {
-      dashboardName = dashboard.name;
-    }
-
-    return dashboardName;
+    this.dashboard = dashboardItems.find((item) => item.id === dashboardId);
   };
+
+  getDashboardName = () => (this.dashboard && this.dashboard.name) || '';
 
   getBreadcrumbs = () => {
     const { activeProject, intl } = this.props;
@@ -129,7 +117,12 @@ export class DashboardItemPage extends Component {
   };
 
   render() {
-    const { formatMessage } = this.props.intl;
+    const {
+      dashboardItems,
+      intl: { formatMessage },
+    } = this.props;
+    this.getDashboard();
+
     return (
       <PageLayout>
         <PageHeader breadcrumbs={this.getBreadcrumbs()}>
@@ -156,8 +149,8 @@ export class DashboardItemPage extends Component {
             </div>
             <Fullscreen enabled={this.state.isFullscreen} onChange={this.onChangeFullscreen}>
               <WidgetsGrid
-                onDashboardDataReceived={this.onDashboardDataReceived}
                 isFullscreen={this.state.isFullscreen}
+                dashboard={this.dashboard}
               />
               {this.state.isFullscreen && (
                 <i className={cx('icon-close')} onClick={this.toggleFullscreen}>
