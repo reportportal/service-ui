@@ -124,22 +124,18 @@ export class WidgetsGrid extends Component {
     });
   };
 
-  updateWidgets = (widgets) => {
-    fetch(this.props.url, {
-      method: 'PUT',
-      data: {
-        updateWidgets: widgets,
-      },
+  onWidgetsReady = (dashboard) => {
+    const { userInfo, project } = this.props;
+    const isOwner = dashboard.owner === userInfo.userId;
+    const projectRole =
+      userInfo.assigned_projects[project] && userInfo.assigned_projects[project].projectRole;
+
+    this.setState({
+      widgets: dashboard.widgets,
+      isFetching: false,
+      isModifiable: canResizeAndDragWidgets(userInfo.userRole, projectRole, isOwner),
     });
   };
-
-  deleteWidget = (widget) =>
-    fetch(this.props.url, {
-      method: 'PUT',
-      data: {
-        deleteWidget: widget,
-      },
-    });
 
   fetchWidgets = () => {
     const { project, dashboard } = this.props;
@@ -159,16 +155,20 @@ export class WidgetsGrid extends Component {
     }
   };
 
-  onWidgetsReady = (dashboard) => {
-    const { userInfo, project } = this.props;
-    const isOwner = dashboard.owner === userInfo.userId;
-    const projectRole =
-      userInfo.assigned_projects[project] && userInfo.assigned_projects[project].projectRole;
+  deleteWidget = (widget) =>
+    fetch(this.props.url, {
+      method: 'PUT',
+      data: {
+        deleteWidget: widget,
+      },
+    });
 
-    this.setState({
-      widgets: dashboard.widgets,
-      isFetching: false,
-      isModifiable: canResizeAndDragWidgets(userInfo.userRole, projectRole, isOwner),
+  updateWidgets = (widgets) => {
+    fetch(this.props.url, {
+      method: 'PUT',
+      data: {
+        updateWidgets: widgets,
+      },
     });
   };
 

@@ -118,7 +118,6 @@ export class DashboardItemPage extends Component {
 
   render() {
     const {
-      dashboardItems,
       intl: { formatMessage },
     } = this.props;
     this.getDashboard();
