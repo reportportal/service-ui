@@ -54,8 +54,6 @@ export class HistoryLineItem extends Component {
     return `#${projectId}/launches/${filterId}/${launchId}/${parentIds.join('/')}/${id}`;
   };
 
-  isLinkActive = this.checkIfTheLinkIsActive();
-
   render() {
     const { launchNumber, active, ...rest } = this.props;
 
@@ -63,15 +61,14 @@ export class HistoryLineItem extends Component {
       <div className={cx('history-line-item', { active })}>
         <a
           className={cx('history-line-item-title', {
-            'active-link': this.isLinkActive,
+            'active-link': this.checkIfTheLinkIsActive(),
           })}
-          href={this.isLinkActive ? this.createHistoryLineItemLink() : ''}
+          href={this.checkIfTheLinkIsActive() ? this.createHistoryLineItemLink() : ''}
         >
           <span className={cx('launch-title')}>{'launch '}</span>
           <span>#{launchNumber}</span>
         </a>
         <HistoryLineItemContent active={active} launchNumber={launchNumber} {...rest} />
-        <div className={cx('arrow-bottom')} />
       </div>
     );
   }

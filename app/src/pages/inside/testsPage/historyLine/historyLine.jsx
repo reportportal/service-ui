@@ -8,12 +8,12 @@ import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
 import classNames from 'classnames/bind';
 import { PASSED, FAILED, MANY, NOT_FOUND } from 'common/constants/launchStatuses';
-import { HistoryLineToggle } from './historyLineToggle/historyLineToggle';
+import { HistoryLineItem } from './historyLineItem';
 import styles from './historyLine.scss';
 
 const cx = classNames.bind(styles);
 
-const itemExample = '5b69a26b857aba0001810111'; // '5b69a26b857aba000181017a 5b69a26b857aba00018101a3';
+const itemExample = '5b6d9713857aba00013ab62b';
 const DEFAULT_HISTORY_DEPTH = 10;
 
 const messages = defineMessages({
@@ -157,13 +157,17 @@ export class HistoryLine extends Component {
   render() {
     return (
       <div className={cx('history-line')}>
-        {this.state.itemsToRender && (
-          <HistoryLineToggle
-            items={this.state.itemsToRender}
-            value={this.state.selectedLaunch}
-            onClickItem={this.onLineItemClick}
-          />
-        )}
+        {this.state.itemsToRender &&
+          this.state.itemsToRender.map((item, index) => (
+            <HistoryLineItem
+              key={item.launchNumber}
+              active={item.launchNumber === this.state.selectedLaunch}
+              isFirstItem={index === 0}
+              isLastItem={index === this.state.itemsToRender.length - 1}
+              onClick={() => this.onLineItemClick(item)}
+              {...item}
+            />
+          ))}
       </div>
     );
   }

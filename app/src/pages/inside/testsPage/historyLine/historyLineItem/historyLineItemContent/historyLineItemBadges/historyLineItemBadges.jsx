@@ -62,10 +62,7 @@ export class HistoryLineItemBadges extends Component {
     const badges = [];
 
     switch (status.toLowerCase()) {
-      case FAILED: {
-        badges.push(this.getDefectBadge());
-        break;
-      }
+      case FAILED:
       case SKIPPED: {
         badges.push(this.getDefectBadge());
         break;
