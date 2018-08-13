@@ -122,7 +122,7 @@ export class TestsPage extends Component {
     return (
       <PageLayout>
         <PageSection>
-          <HistoryLine activePage={activePage} pageSize={pageSize}
+          <HistoryLine />
           <SuiteTestToolbar
             selectedItems={selectedTests}
             parentItem={parentItem}
