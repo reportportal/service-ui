@@ -23,4 +23,5 @@ export {
   canDeleteDashboard,
   canDeleteFilter,
   canResizeAndDragWidgets,
+  canSeeDemoData,
 } from './permissions';

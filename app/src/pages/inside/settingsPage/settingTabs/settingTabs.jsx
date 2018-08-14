@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { redirect } from 'redux-first-router';
 import { defineMessages, injectIntl, intlShape } from 'react-intl';
 import { PROJECT_SETTINGS_TAB_PAGE } from 'controllers/pages';
+import { canSeeDemoData } from 'common/utils/permissions';
 import {
   GENERAL,
   NOTIFICATIONS,
@@ -12,7 +13,11 @@ import {
   ANALYSIS,
   DEMO_DATA,
 } from 'common/constants/settingTabs';
-import { activeProjectSelector } from 'controllers/user';
+import {
+  activeProjectSelector,
+  activeProjectRoleSelector,
+  userAccountRoleSelector,
+} from 'controllers/user';
 import { NavigationTabs } from 'components/main/navigationTabs';
 import classNames from 'classnames/bind';
 import { GeneralTab } from './generalTab';
@@ -55,6 +60,8 @@ const messages = defineMessages({
   (state) => ({
     projectId: activeProjectSelector(state),
     activeTab: state.location.payload.settingTab,
+    accountRole: userAccountRoleSelector(state),
+    userRole: activeProjectRoleSelector(state),
   }),
   {
     changeTab: (link) => redirect(link),
@@ -67,6 +74,8 @@ export class SettingTabs extends Component {
     intl: intlShape.isRequired,
     changeTab: PropTypes.func.isRequired,
     activeTab: PropTypes.string,
+    accountRole: PropTypes.string.isRequired,
+    userRole: PropTypes.string.isRequired,
   };
   static defaultProps = {
     activeTab: GENERAL,
@@ -77,48 +86,54 @@ export class SettingTabs extends Component {
     payload: { projectId: this.props.projectId, settingTab: tabName },
   });
 
-  tabsConfig = {
-    general: {
-      name: this.props.intl.formatMessage(messages.general),
-      link: this.createTabLink(GENERAL),
-      component: <GeneralTab />,
-    },
-    notifications: {
-      name: this.props.intl.formatMessage(messages.notifications),
-      link: this.createTabLink(NOTIFICATIONS),
-      component: <div>notification</div>,
-    },
-    bts: {
-      name: (
-        <span>
-          {this.props.intl.formatMessage(messages.bts)}
-          <span className={cx('beta')}>{this.props.intl.formatMessage(messages.beta)}</span>
-        </span>
-      ),
-      link: this.createTabLink(BTS),
-      component: <div>bts</div>,
-    },
-    defect: {
-      name: this.props.intl.formatMessage(messages.defect),
-      link: this.createTabLink(DEFECT),
-      component: <div>defect</div>,
-    },
-    autoAnalysis: {
-      name: this.props.intl.formatMessage(messages.analysis),
-      link: this.createTabLink(ANALYSIS),
-      component: <AutoAnalysisTab />,
-    },
-    demoData: {
-      name: this.props.intl.formatMessage(messages.demoData),
-      link: this.createTabLink(DEMO_DATA),
-      component: <div>demo</div>,
-    },
+  createTabsConfig = () => {
+    const tabsConfig = {
+      general: {
+        name: this.props.intl.formatMessage(messages.general),
+        link: this.createTabLink(GENERAL),
+        component: <GeneralTab />,
+      },
+      notifications: {
+        name: this.props.intl.formatMessage(messages.notifications),
+        link: this.createTabLink(NOTIFICATIONS),
+        component: <div>notification</div>,
+      },
+      bts: {
+        name: (
+          <span>
+            {this.props.intl.formatMessage(messages.bts)}
+            <span className={cx('beta')}>{this.props.intl.formatMessage(messages.beta)}</span>
+          </span>
+        ),
+        link: this.createTabLink(BTS),
+        component: <div>bts</div>,
+      },
+      defect: {
+        name: this.props.intl.formatMessage(messages.defect),
+        link: this.createTabLink(DEFECT),
+        component: <div>defect</div>,
+      },
+      autoAnalysis: {
+        name: this.props.intl.formatMessage(messages.analysis),
+        link: this.createTabLink(ANALYSIS),
+        component: <AutoAnalysisTab />,
+      },
+      demoData: {
+        name: this.props.intl.formatMessage(messages.demoData),
+        link: this.createTabLink(DEMO_DATA),
+        component: <div>demo</div>,
+      },
+    };
+    if (!canSeeDemoData(this.props.accountRole, this.props.userRole)) {
+      delete tabsConfig.demoData;
+    }
+    return tabsConfig;
   };
 
   render = () => (
     <div className={cx('settings')}>
       <NavigationTabs
-        config={this.tabsConfig}
+        config={this.createTabsConfig()}
         activeTab={this.props.activeTab || GENERAL}
         onChangeTab={this.props.changeTab}
       />
