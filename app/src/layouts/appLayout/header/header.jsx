@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { NavLink } from 'redux-first-router-link';
@@ -6,7 +6,10 @@ import {
   userInfoSelector,
   activeProjectSelector,
   assignedProjectsSelector,
+  activeProjectRoleSelector,
+  userAccountRoleSelector,
 } from 'controllers/user';
+import { canSeeMembers } from 'common/utils/permissions';
 import { PROJECT_MEMBERS_PAGE, PROJECT_SETTINGS_TAB_PAGE } from 'controllers/pages/constants';
 import { GENERAL } from 'common/constants/settingTabs';
 import { connect } from 'react-redux';
@@ -20,14 +23,18 @@ const cx = classNames.bind(styles);
   user: userInfoSelector(state),
   activeProject: activeProjectSelector(state),
   assignedProjects: assignedProjectsSelector(state),
+  accountRole: userAccountRoleSelector(state),
+  userRole: activeProjectRoleSelector(state),
 }))
-export class Header extends PureComponent {
+export class Header extends Component {
   static propTypes = {
     activeProject: PropTypes.string.isRequired,
     user: PropTypes.object,
     assignedProjects: PropTypes.object,
     sideMenuOpened: PropTypes.bool,
     toggleSideMenu: PropTypes.func,
+    accountRole: PropTypes.string.isRequired,
+    userRole: PropTypes.string.isRequired,
   };
 
   static defaultProps = {
@@ -38,7 +45,15 @@ export class Header extends PureComponent {
   };
 
   render() {
-    const { sideMenuOpened, user, toggleSideMenu, activeProject, assignedProjects } = this.props;
+    const {
+      sideMenuOpened,
+      user,
+      toggleSideMenu,
+      activeProject,
+      assignedProjects,
+      accountRole,
+      userRole,
+    } = this.props;
     return (
       <div className={cx('header')}>
         <div className={cx('mobile-header-block')}>
@@ -57,11 +72,13 @@ export class Header extends PureComponent {
         </div>
         <div className={cx('separator')} />
         <div className={cx('nav-btns-block')}>
-          <NavLink
-            to={{ type: PROJECT_MEMBERS_PAGE, payload: { projectId: activeProject } }}
-            className={cx('nav-btn', 'members-btn')}
-            activeClassName={cx('active')}
-          />
+          {canSeeMembers(accountRole, userRole) && (
+            <NavLink
+              to={{ type: PROJECT_MEMBERS_PAGE, payload: { projectId: activeProject } }}
+              className={cx('nav-btn', 'members-btn')}
+              activeClassName={cx('active')}
+            />
+          )}
           <NavLink
             to={{
               type: PROJECT_SETTINGS_TAB_PAGE,

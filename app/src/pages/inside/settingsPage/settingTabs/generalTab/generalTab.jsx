@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
@@ -6,13 +6,18 @@ import { injectIntl, intlShape } from 'react-intl';
 import { reduxForm } from 'redux-form';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
+import { canUpdateSettings } from 'common/utils/permissions';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { Input } from 'components/inputs/input';
 import { InputDropdown } from 'components/inputs/inputDropdown';
 import { BigButton } from 'components/buttons/bigButton';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { projectConfigSelector } from 'controllers/project';
-import { activeProjectSelector } from 'controllers/user';
+import {
+  activeProjectSelector,
+  activeProjectRoleSelector,
+  userAccountRoleSelector,
+} from 'controllers/user';
 import { authExtensionsSelector } from 'controllers/appInfo';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import styles from './generalTab.scss';
@@ -30,13 +35,15 @@ const cx = classNames.bind(styles);
     keepLogs: projectConfigSelector(state).keepLogs,
     keepScreenshots: projectConfigSelector(state).keepScreenshots,
     isEpamInstance: !!authExtensionsSelector(state).epam,
+    accountRole: userAccountRoleSelector(state),
+    userRole: activeProjectRoleSelector(state),
   }),
   {
     showNotification,
   },
 )
 @injectIntl
-export class GeneralTab extends PureComponent {
+export class GeneralTab extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
     handleSubmit: PropTypes.func.isRequired,
@@ -47,6 +54,8 @@ export class GeneralTab extends PureComponent {
     isEpamInstance: PropTypes.bool.isRequired,
     showNotification: PropTypes.func.isRequired,
     initialize: PropTypes.func.isRequired,
+    accountRole: PropTypes.string.isRequired,
+    userRole: PropTypes.string.isRequired,
   };
 
   static defaultProps = {
@@ -112,7 +121,7 @@ export class GeneralTab extends PureComponent {
   ];
 
   render() {
-    const { intl } = this.props;
+    const { intl, accountRole, userRole } = this.props;
     return (
       <div className={cx('settings-tab-content')}>
         <form onSubmit={this.props.handleSubmit(this.onFormSubmit)}>
@@ -128,7 +137,11 @@ export class GeneralTab extends PureComponent {
             <span className={cx('field-label')}>{intl.formatMessage(Messages.interruptedJob)}</span>
             <div className={cx('field-input')}>
               <FieldProvider name="interruptedJob">
-                <InputDropdown options={this.interruptedJob} mobileDisabled />
+                <InputDropdown
+                  options={this.interruptedJob}
+                  mobileDisabled
+                  disabled={!canUpdateSettings(accountRole, userRole)}
+                />
               </FieldProvider>
             </div>
             <p className={cx('field-description')}>
@@ -139,7 +152,11 @@ export class GeneralTab extends PureComponent {
             <span className={cx('field-label')}>{intl.formatMessage(Messages.keepLogs)}</span>
             <div className={cx('field-input')}>
               <FieldProvider name="keepLogs">
-                <InputDropdown options={this.filterOptions(this.keepLogs)} mobileDisabled />
+                <InputDropdown
+                  options={this.filterOptions(this.keepLogs)}
+                  mobileDisabled
+                  disabled={!canUpdateSettings(accountRole, userRole)}
+                />
               </FieldProvider>
             </div>
             <p className={cx('field-description')}>
@@ -152,7 +169,11 @@ export class GeneralTab extends PureComponent {
             </span>
             <div className={cx('field-input')}>
               <FieldProvider name="keepScreenshots">
-                <InputDropdown options={this.filterOptions(this.keepScreenshots)} mobileDisabled />
+                <InputDropdown
+                  options={this.filterOptions(this.keepScreenshots)}
+                  mobileDisabled
+                  disabled={!canUpdateSettings(accountRole, userRole)}
+                />
               </FieldProvider>
             </div>
             <p className={cx('field-description')}>
@@ -161,7 +182,11 @@ export class GeneralTab extends PureComponent {
           </div>
           <div className={cx('button-container')}>
             <div className={cx('submit-button')}>
-              <BigButton color="booger" type="submit">
+              <BigButton
+                color="booger"
+                type="submit"
+                disabled={!canUpdateSettings(accountRole, userRole)}
+              >
                 {this.props.intl.formatMessage(COMMON_LOCALE_KEYS.SUBMIT)}
               </BigButton>
             </div>
