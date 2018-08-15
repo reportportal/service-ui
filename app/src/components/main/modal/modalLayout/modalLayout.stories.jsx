@@ -1,0 +1,77 @@
+import React from 'react';
+import { storiesOf } from '@storybook/react';
+import { host } from 'storybook-host';
+import { withReadme } from 'storybook-readme';
+import { ModalLayout } from './modalLayout';
+import README from './README.md';
+
+const okButton = {
+  text: 'Submit',
+  danger: false,
+  onClick: () => {},
+};
+
+const cancelButton = {
+  text: 'Cancel',
+};
+
+const dangerOkButton = {
+  text: 'Submit',
+  danger: true,
+  onClick: () => {},
+};
+
+storiesOf('Components/Main/ModalLayout', module)
+  .addDecorator(
+    host({
+      title: 'Modal layout component',
+      align: 'top middle',
+      backdrop: '#ffffff',
+      background: '#E9E9E9',
+      height: 'auto',
+      width: '100%',
+    }),
+  )
+  .addDecorator(withReadme(README))
+  .add('default state', () => <ModalLayout />)
+  .add('with buttons', () => <ModalLayout okButton={okButton} cancelButton={cancelButton} />)
+  .add('with danger okButton', () => (
+    <ModalLayout okButton={dangerOkButton} cancelButton={cancelButton} />
+  ))
+  .add('with warningMessage', () => (
+    <ModalLayout
+      warningMessage="You are not launch owner!"
+      okButton={okButton}
+      cancelButton={cancelButton}
+    />
+  ))
+  .add('with header title', () => (
+    <ModalLayout
+      title="Storybook modal"
+      warningMessage="You are not launch owner!"
+      okButton={okButton}
+      cancelButton={cancelButton}
+    />
+  ))
+  .add('with children', () => (
+    <ModalLayout
+      title="Storybook modal"
+      warningMessage="You are not launch owner!"
+      okButton={okButton}
+      cancelButton={cancelButton}
+    >
+      <p>
+        <span>
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus ad animi aperiam
+          accusamus adipisci alias aspernatur delectus dolores eius enim, eum id itaque, labore
+          laudantium magni minima minus necessitatibus perferendis quae quas ratione reiciendis
+          temporibus ut vero, voluptate.
+        </span>
+        <span>
+          Ducimus eius eligendi incidunt iusto perspiciatis placeat saepe. Assumenda dolor iusto
+          maiores sequi voluptates. A, cupiditate esse eveniet id illum ipsam nam neque nostrum
+          nulla pariatur praesentium quis sunt ut.
+        </span>
+      </p>
+    </ModalLayout>
+  ));

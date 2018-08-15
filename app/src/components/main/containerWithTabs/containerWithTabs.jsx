@@ -49,9 +49,8 @@ export class ContainerWithTabs extends Component {
     return (
       <div className={cx('container-with-tabs')}>
         <div className={cx('tabs-wrapper')}>
-          {
-            this.props.data.length
-              ? this.props.data.map((item, id) => (
+          {this.props.data.length
+            ? this.props.data.map((item, id) => (
                 <div
                   // eslint-disable-next-line react/no-array-index-key
                   key={id}
@@ -61,12 +60,11 @@ export class ContainerWithTabs extends Component {
                 >
                   {item.name}
                 </div>
-                ))
-              : null
-          }
+              ))
+            : null}
         </div>
         <div className={cx('content-wrapper')}>
-          { this.props.data.length ? this.props.data[this.state.active].content : null }
+          {this.props.data.length ? this.props.data[this.state.active].content : null}
         </div>
       </div>
     );

@@ -23,33 +23,30 @@ import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import { host } from 'storybook-host';
 import { withReadme } from 'storybook-readme';
-import { Sidebar } from './sidebar';
+import { Icon } from './icon';
 import README from './README.md';
 
-storiesOf('Components/Main/Admin/Sidebar', module)
-  .addDecorator(host({
-    title: 'AdminSidebar component',
-    align: 'center middle',
-    backdrop: 'rgba(70, 69, 71, 0.2)',
-    background: '#ffffff',
-    height: 1000,
-    width: '100%',
-  }))
+storiesOf('Components/Main/Icon', module)
+  .addDecorator(
+    host({
+      title: 'Icon component',
+      align: 'center middle',
+      backdrop: 'rgba(70, 69, 71, 0.2)',
+      background: '#fff',
+      height: 40,
+      width: 100,
+    }),
+  )
   .addDecorator(withReadme(README))
-  .add('default state', () => (
-    <Sidebar />
-  ))
-  .add('open menu (max-width:768)', () => (
-    <Sidebar isMenuOpen />
-  ))
-  .add('with all action', () => (
-    <Sidebar
-      onClickProjects={action('Projects clicked ')}
-      onClickUsers={action('Users clicked ')}
-      onClickServerSettings={action('Settings clicked ')}
-      onClickBackToProject={action('Back to project clicked ')}
-      onClickLogout={action('Logout clicked ')}
-      onClickProfile={action('Profile clicked ')}
-      isMenuOpen
-    />
+  .add('default state', () => <Icon />)
+  .add('type icon-check', () => <Icon type="icon-check" />)
+  .add('type icon-pencil', () => <Icon type="icon-pencil" />)
+  .add('type icon-delete', () => <Icon type="icon-delete" />)
+  .add('type icon-close', () => <Icon type="icon-close" />)
+  .add('type icon-tables', () => <Icon type="icon-tables" />)
+  .add('type icon-planet', () => <Icon type="icon-planet" />)
+  .add('type icon-grid', () => <Icon type="icon-grid" />)
+  .add('type icon-table', () => <Icon type="icon-table" />)
+  .add('type icon-table with actions', () => (
+    <Icon type="icon-table" onClick={action('onclick')} />
   ));

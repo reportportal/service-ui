@@ -3,8 +3,6 @@ import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import { Tooltip } from './tooltip';
 
-const TooltipRoot = document.getElementById('tooltip-root');
-
 export const withTooltip = ({ TooltipComponent, data }) => (WrappedComponent) =>
   class Wrapper extends Component {
     static propTypes = {
@@ -23,6 +21,7 @@ export const withTooltip = ({ TooltipComponent, data }) => (WrappedComponent) =>
     componentWillUnmount() {
       this.hoverRect.removeEventListener('mouseenter', this.mouseEnterHandler, false);
     }
+    tooltipRoot = document.getElementById('tooltip-root');
     mouseEnterHandler = () => {
       this.setState({ shown: true });
     };
@@ -37,7 +36,7 @@ export const withTooltip = ({ TooltipComponent, data }) => (WrappedComponent) =>
               <Tooltip data={data} hoverRect={this.hoverRect} hideTooltip={this.hideTooltip}>
                 <TooltipComponent {...this.props} />
               </Tooltip>,
-              TooltipRoot,
+              this.tooltipRoot,
             )}
           {
             <div

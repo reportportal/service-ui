@@ -22,20 +22,32 @@
 import { storiesOf } from '@storybook/react';
 import { host } from 'storybook-host';
 import { withReadme } from 'storybook-readme';
-import ConfigExamplesBlock from './configExamplesBlock';
+import { LogMessage } from './logMessage';
 import README from './README.md';
 
-storiesOf('Pages/inside/profilePage/configExamplesBlock', module)
-  .addDecorator(host({
-    title: 'Assigned projects table on profile page',
-    align: 'center middle',
-    backdrop: 'rgba(70, 69, 71, 0.2)',
-    background: '#f5f5f5',
-    height: 'auto',
-    width: '70%',
-  }))
+storiesOf('Components/Main/LogMessage', module)
+  .addDecorator(
+    host({
+      title: 'Log message component',
+      align: 'center middle',
+      backdrop: 'rgba(70, 69, 71, 0.2)',
+      background: '#fff',
+      height: 50,
+      width: 150,
+    }),
+  )
   .addDecorator(withReadme(README))
-  .add('default state', () => (
-    <ConfigExamplesBlock />
-  ))
-;
+  .add('with item', () => {
+    const item = {
+      message: 'Some log message',
+      level: '',
+    };
+    return <LogMessage item={item} />;
+  })
+  .add('with item & level = error', () => {
+    const item = {
+      message: 'Some log message',
+      level: 'error',
+    };
+    return <LogMessage item={item} />;
+  });

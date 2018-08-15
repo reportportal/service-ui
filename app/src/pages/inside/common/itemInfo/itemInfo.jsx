@@ -39,8 +39,8 @@ export class ItemInfo extends Component {
     analyzing: PropTypes.bool,
     customProps: PropTypes.object,
     userAccountRole: PropTypes.string.isRequired,
-    userProjectRole: PropTypes.string.isRequired,
-    userId: PropTypes.string.isRequired,
+    userProjectRole: PropTypes.string,
+    userId: PropTypes.string,
     intl: PropTypes.object.isRequired,
     isStepLevel: PropTypes.bool,
   };
@@ -52,6 +52,8 @@ export class ItemInfo extends Component {
       onEditItem: () => {},
       onShowTestParams: () => {},
     },
+    userId: '',
+    userProjectRole: '',
     isStepLevel: false,
   };
 

@@ -26,9 +26,14 @@ import styles from './header.scss';
 
 const cx = classNames.bind(styles);
 
-export const AdminHeader = ({ onClickBackToProject, onClickLogout,
-adminHeaderCrumb, onClickMenu, isMenuOpen }) => (
-  <div className={cx({ 'admin-header': true, open: isMenuOpen })} >
+export const AdminHeader = ({
+  onClickBackToProject,
+  onClickLogout,
+  adminHeaderCrumb,
+  onClickMenu,
+  isMenuOpen,
+}) => (
+  <div className={cx({ 'admin-header': true, open: isMenuOpen })}>
     <div className={cx('mobile-header')}>
       <button onClick={onClickMenu} className={cx('button-menu-open')}>
         <i className={cx('menu-icon-part')} />
@@ -39,29 +44,23 @@ adminHeaderCrumb, onClickMenu, isMenuOpen }) => (
     </div>
     <div className={cx('container')}>
       <h3 className={cx('header-name')}>
-        <FormattedMessage
-          id={'AdminHeader.header'}
-          defaultMessage={'Management board'}
-        />
+        <FormattedMessage id={'AdminHeader.header'} defaultMessage={'Management board'} />
         <span className={cx('header-crumb')}>{adminHeaderCrumb}</span>
       </h3>
       <div className={cx('admin-header-controls')}>
-        <button className={cx({ 'back-to-project': true, btn: true })} onClick={onClickBackToProject}>
-          <FormattedMessage
-            id={'AdminHeader.btnToProject'}
-            defaultMessage={'Back to project'}
-          />
+        <button
+          className={cx({ 'back-to-project': true, btn: true })}
+          onClick={onClickBackToProject}
+        >
+          <FormattedMessage id={'AdminHeader.btnToProject'} defaultMessage={'Back to project'} />
         </button>
         <button className={cx('logout', 'btn')} onClick={onClickLogout}>
-          <FormattedMessage
-            id={'AdminHeader.btnLogout'}
-            defaultMessage={'Logout'}
-          />
+          <FormattedMessage id={'AdminHeader.btnLogout'} defaultMessage={'Logout'} />
         </button>
       </div>
     </div>
   </div>
-  );
+);
 
 AdminHeader.propTypes = {
   adminHeaderCrumb: PropTypes.string,
@@ -78,4 +77,3 @@ AdminHeader.defaultProps = {
   onClickMenu: () => {},
   isMenuOpen: false,
 };
-

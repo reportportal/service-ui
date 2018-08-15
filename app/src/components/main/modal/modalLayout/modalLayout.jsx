@@ -21,9 +21,7 @@ export class ModalLayout extends Component {
     className: PropTypes.string,
     hideModalAction: PropTypes.func.isRequired, // this props
     title: PropTypes.string, // header props
-
     children: PropTypes.node, // content props
-
     warningMessage: PropTypes.string, // footer props
     okButton: PropTypes.shape({
       text: PropTypes.string.isRequired,
@@ -41,9 +39,7 @@ export class ModalLayout extends Component {
   static defaultProps = {
     className: '',
     title: '',
-
     children: null,
-
     warningMessage: '',
     okButton: null,
     cancelButton: null,

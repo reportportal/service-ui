@@ -20,31 +20,43 @@
  */
 
 import { storiesOf } from '@storybook/react';
-import { action } from '@storybook/addon-actions';
 import { host } from 'storybook-host';
 import { withReadme } from 'storybook-readme';
-import { AdminHeader } from './header';
+// eslint-disable-next-line import/extensions, import/no-unresolved
+import { WithState } from 'storybook-decorators/withState';
+import { ScreenLock } from './screenLock';
 import README from './README.md';
 
-storiesOf('Layouts/Admin/Header', module)
+const withScreenLock = (getStory) => {
+  const screenLockRoot =
+    document.getElementById('screen-lock-root') || document.createElement('div');
+  screenLockRoot.setAttribute('id', 'screen-lock-root');
+  const rootDiv = document.getElementById('root');
+  rootDiv.parentNode.appendChild(screenLockRoot);
+  return <div>{getStory()}</div>;
+};
+
+const state = {
+  screenLock: {
+    visible: true,
+  },
+};
+
+storiesOf('Components/Main/ScreenLock', module)
   .addDecorator(
     host({
-      title: 'Admin header component',
+      title: 'ScreenLock component',
       align: 'center middle',
       backdrop: 'rgba(70, 69, 71, 0.2)',
-      background: '#ffffff',
-      height: 100,
-      width: '100%',
+      background: '#fff',
+      height: 150,
+      width: 100,
     }),
   )
   .addDecorator(withReadme(README))
-  .add('default state', () => <AdminHeader />)
-  .add('with crumb (mobile view)', () => <AdminHeader adminHeaderCrumb=" / Test crumb" />)
-  .add('with actions', () => (
-    <AdminHeader
-      onClickBackToProject={action('Back to project clicked ')}
-      onClickLogout={action('Logout clicked ')}
-    />
-  ))
-  .add('with mobile action', () => <AdminHeader onClickMenu={action('Menu clicked ')} />)
-  .add('menu open', () => <AdminHeader isMenuOpen />);
+  .addDecorator(withScreenLock)
+  .add('with pages', () => (
+    <WithState state={state}>
+      <ScreenLock />
+    </WithState>
+  ));

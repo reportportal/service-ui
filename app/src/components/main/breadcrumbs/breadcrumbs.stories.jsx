@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 EPAM Systems
+ * Copyright 2018 EPAM Systems
  *
  *
  * This file is part of EPAM Report Portal.
@@ -22,23 +22,51 @@
 import { storiesOf } from '@storybook/react';
 import { host } from 'storybook-host';
 import { withReadme } from 'storybook-readme';
-import UuidBlock from './uuidBlock';
+import { Breadcrumbs } from './breadcrumbs';
 import README from './README.md';
 
-storiesOf('Pages/inside/profilePage/uuidBlock', module)
-  .addDecorator(host({
-    title: 'Universally Unique Identifier form on profile page',
-    align: 'center middle',
-    backdrop: 'rgba(70, 69, 71, 0.2)',
-    background: '#f5f5f5',
-    height: 'auto',
-    width: '70%',
-  }))
+const descriptors = [
+  {
+    title: 'title1',
+    link: '/test1',
+    error: false,
+    listView: false,
+    active: false,
+  },
+  {
+    title: 'title2',
+    link: '/test2',
+    error: false,
+    listView: false,
+    active: false,
+  },
+  {
+    title: 'title3',
+    link: '/test3',
+    error: true,
+    listView: false,
+    active: false,
+  },
+  {
+    title: 'title4',
+    link: '/test4',
+    error: false,
+    listView: false,
+    active: true,
+  },
+];
+
+storiesOf('Components/Main/Breadcrumbs', module)
+  .addDecorator(
+    host({
+      title: 'Breadcrumbs component',
+      align: 'center middle',
+      backdrop: 'rgba(70, 69, 71, 0.2)',
+      background: '#ffffff',
+      height: 60,
+      width: 300,
+    }),
+  )
   .addDecorator(withReadme(README))
-  .add('default state (no provided info)', () => (
-    <UuidBlock />
-  ))
-  .add('with value', () => (
-    <UuidBlock uuid={'35668002-be4f-44a2-9a27-6cafcbd024b5'} />
-  ))
-;
+  .add('default state', () => <Breadcrumbs />)
+  .add('with descriptors', () => <Breadcrumbs descriptors={descriptors} />);

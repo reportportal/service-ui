@@ -23,40 +23,61 @@ import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import { host } from 'storybook-host';
 import { withReadme } from 'storybook-readme';
-import { PaginationToolbar } from './paginationToolbar';
+import { NavigationTabs } from './navigationTabs';
 import README from './README.md';
 
-storiesOf('Components/Main/PaginationToolbar', module)
+const activeTab = 'general';
+
+const config = {
+  general: {
+    name: 'General',
+    link: '/general',
+    component: <div>General</div>,
+  },
+  notifications: {
+    name: 'Notification',
+    link: '/notification',
+    component: <div>Notification</div>,
+  },
+  bts: {
+    name: 'Bts',
+    link: '/bts',
+    component: <div>Bts</div>,
+  },
+  defect: {
+    name: 'Defects',
+    link: '/defect',
+    component: <div>Defects</div>,
+  },
+  autoAnalysis: {
+    name: 'Auto Analysis',
+    link: '/autoAnalysis',
+    component: <div>Auto analysis</div>,
+  },
+  demoData: {
+    name: 'Demo data',
+    link: '/demoData',
+    component: <div>Demo data</div>,
+  },
+};
+
+storiesOf('Components/Main/NavigationTabs', module)
   .addDecorator(
     host({
-      title: 'Pagination toolbar component',
+      title: 'Navigation tabs component',
       align: 'center middle',
       backdrop: 'rgba(70, 69, 71, 0.2)',
       background: '#fff',
-      height: 80,
-      width: '100%',
+      height: 'auto',
+      width: 500,
     }),
   )
   .addDecorator(withReadme(README))
-  .add('with pages', () => (
-    <PaginationToolbar itemCount={50} activePage={1} pageCount={5} pageSize={10} />
+  .add('default state', () => <NavigationTabs />)
+  .add('with config', () => <NavigationTabs config={config} />)
+  .add('with config & activeTab="general"', () => (
+    <NavigationTabs activeTab={activeTab} config={config} />
   ))
-  .add('with many pages at start', () => (
-    <PaginationToolbar itemCount={470} activePage={1} pageCount={20} pageSize={50} />
-  ))
-  .add('with many pages at the middle', () => (
-    <PaginationToolbar itemCount={470} activePage={7} pageCount={20} pageSize={50} />
-  ))
-  .add('with many pages at the end', () => (
-    <PaginationToolbar itemCount={470} activePage={20} pageCount={20} pageSize={50} />
-  ))
-  .add('with actions', () => (
-    <PaginationToolbar
-      itemCount={470}
-      activePage={1}
-      pageCount={10}
-      pageSize={50}
-      onChangePage={action('onChangePage')}
-      onChangePageSize={action('onChangePageSize')}
-    />
+  .add('with config & actions', () => (
+    <NavigationTabs onChangeTab={action('onChangeTab')} config={config} />
   ));
