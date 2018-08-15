@@ -144,9 +144,7 @@ export class LaunchLevelEntities extends Component {
           condition: CONDITION_CNT,
         },
         validationFunc: (entityObject) =>
-          (!entityObject ||
-            !entityObject.value.value ||
-            !validate.itemNameEntity(entityObject.value.value)) &&
+          (!entityObject || !entityObject.value || !validate.itemNameEntity(entityObject.value)) &&
           'itemNameEntityHint',
         title: intl.formatMessage(messages.NameTitle),
         active: true,
@@ -162,8 +160,8 @@ export class LaunchLevelEntities extends Component {
         },
         validationFunc: (entityObject) =>
           (!entityObject ||
-            !entityObject.value.value ||
-            !validate.launchNumericEntity(entityObject.value.value)) &&
+            !entityObject.value ||
+            !validate.launchNumericEntity(entityObject.value)) &&
           'launchNumericEntityHint',
         title: intl.formatMessage(messages.NumberTitle),
         active: false,
@@ -179,8 +177,8 @@ export class LaunchLevelEntities extends Component {
         title: intl.formatMessage(messages.DescriptionTitle),
         validationFunc: (entityObject) =>
           (!entityObject ||
-            !entityObject.value.value ||
-            !validate.launchDescriptionEntity(entityObject.value.value)) &&
+            !entityObject.value ||
+            !validate.launchDescriptionEntity(entityObject.value)) &&
           'launchDescriptionEntityHint',
         active: false,
         removable: true,
@@ -232,8 +230,8 @@ export class LaunchLevelEntities extends Component {
         },
         validationFunc: (entityObject) =>
           (!entityObject ||
-            !entityObject.value.value ||
-            !validate.launchNumericEntity(entityObject.value.value)) &&
+            !entityObject.value ||
+            !validate.launchNumericEntity(entityObject.value)) &&
           'launchNumericEntityHint',
         title: intl.formatMessage(messages.TotalTitle),
         active: false,
@@ -248,8 +246,8 @@ export class LaunchLevelEntities extends Component {
         },
         validationFunc: (entityObject) =>
           (!entityObject ||
-            !entityObject.value.value ||
-            !validate.launchNumericEntity(entityObject.value.value)) &&
+            !entityObject.value ||
+            !validate.launchNumericEntity(entityObject.value)) &&
           'launchNumericEntityHint',
         title: intl.formatMessage(messages.PassedTitle),
         active: false,
@@ -264,8 +262,8 @@ export class LaunchLevelEntities extends Component {
         },
         validationFunc: (entityObject) =>
           (!entityObject ||
-            !entityObject.value.value ||
-            !validate.launchNumericEntity(entityObject.value.value)) &&
+            !entityObject.value ||
+            !validate.launchNumericEntity(entityObject.value)) &&
           'launchNumericEntityHint',
         title: intl.formatMessage(messages.FailedTitle),
         active: false,
@@ -280,8 +278,8 @@ export class LaunchLevelEntities extends Component {
         },
         validationFunc: (entityObject) =>
           (!entityObject ||
-            !entityObject.value.value ||
-            !validate.launchNumericEntity(entityObject.value.value)) &&
+            !entityObject.value ||
+            !validate.launchNumericEntity(entityObject.value)) &&
           'launchNumericEntityHint',
         title: intl.formatMessage(messages.SkippedTitle),
         active: false,
@@ -305,8 +303,8 @@ export class LaunchLevelEntities extends Component {
         },
         validationFunc: (entityObject) =>
           (!entityObject ||
-            !entityObject.value.value ||
-            !validate.launchNumericEntity(entityObject.value.value)) &&
+            !entityObject.value ||
+            !validate.launchNumericEntity(entityObject.value)) &&
           'launchNumericEntityHint',
         title: this.props.intl.formatMessage(
           messages[`${defectTypeRef}_${hasSubtypes ? 'totalTitle' : 'title'}`],
@@ -325,8 +323,8 @@ export class LaunchLevelEntities extends Component {
             },
             validationFunc: (entityObject) =>
               (!entityObject ||
-                !entityObject.value.value ||
-                !validate.launchNumericEntity(entityObject.value.value)) &&
+                !entityObject.value ||
+                !validate.launchNumericEntity(entityObject.value)) &&
               'launchNumericEntityHint',
             title: `${this.props.intl.formatMessage(messages[`${defectTypeRef}_title`])} ${
               defectType.shortName

@@ -116,24 +116,24 @@ export class SuiteLevelEntities extends Component {
     intl: intlShape.isRequired,
     defectTypes: PropTypes.object.isRequired,
     onChange: PropTypes.func,
+    entities: PropTypes.object,
   };
   static defaultProps = {
     onChange: () => {},
+    entities: {},
   };
   getStaticEntities = () => {
-    const { intl } = this.props;
+    const { intl, entities } = this.props;
     return [
       {
         id: ENTITY_NAME,
         component: EntityItemName,
-        value: {
+        value: entities[ENTITY_NAME] || {
           value: '',
           condition: CONDITION_CNT,
         },
         validationFunc: (entityObject) =>
-          (!entityObject ||
-            !entityObject.value.value ||
-            !validate.itemNameEntity(entityObject.value.value)) &&
+          (!entityObject || !entityObject.value || !validate.itemNameEntity(entityObject.value)) &&
           'itemNameEntityHint',
         title: intl.formatMessage(messages.NameTitle),
         active: true,
@@ -143,7 +143,7 @@ export class SuiteLevelEntities extends Component {
       {
         id: ENTITY_START_TIME,
         component: EntityItemStartTime,
-        value: {
+        value: entities[ENTITY_START_TIME] || {
           value: `${moment()
             .startOf('day')
             .subtract(1, 'months')
@@ -153,104 +153,105 @@ export class SuiteLevelEntities extends Component {
           condition: CONDITION_BETWEEN,
         },
         title: intl.formatMessage(messages.StartTimeTitle),
-        active: false,
+        active: ENTITY_START_TIME in entities,
         removable: true,
       },
       {
         id: ENTITY_DESCRIPTION,
         component: EntityItemDescription,
-        value: {
+        value: entities[ENTITY_DESCRIPTION] || {
           value: '',
           condition: CONDITION_CNT,
         },
         title: intl.formatMessage(messages.DescriptionTitle),
         validationFunc: (entityObject) =>
           (!entityObject ||
-            !entityObject.value.value ||
-            !validate.launchDescriptionEntity(entityObject.value.value)) &&
+            !entityObject.value ||
+            !validate.launchDescriptionEntity(entityObject.value)) &&
           'launchDescriptionEntityHint',
-        active: false,
+        active: ENTITY_DESCRIPTION in entities,
         removable: true,
       },
       {
         id: ENTITY_TAGS,
         component: EntityItemTags,
-        value: {
+        value: entities[ENTITY_TAGS] || {
           value: '',
           condition: CONDITION_HAS,
         },
         title: intl.formatMessage(messages.TagsTitle),
-        active: false,
+        active: ENTITY_TAGS in entities,
         removable: true,
       },
       {
         id: STATS_TOTAL,
         component: EntityItemStatistics,
-        value: {
+        value: entities[STATS_TOTAL] || {
           value: '',
           condition: CONDITION_GREATER_EQ,
         },
         validationFunc: (entityObject) =>
           (!entityObject ||
-            !entityObject.value.value ||
-            !validate.launchNumericEntity(entityObject.value.value)) &&
+            !entityObject.value ||
+            !validate.launchNumericEntity(entityObject.value)) &&
           'launchNumericEntityHint',
         title: intl.formatMessage(messages.TotalTitle),
-        active: false,
+        active: STATS_TOTAL in entities,
         removable: true,
       },
       {
         id: STATS_PASSED,
         component: EntityItemStatistics,
-        value: {
+        value: entities[STATS_PASSED] || {
           value: '',
           condition: CONDITION_GREATER_EQ,
         },
         validationFunc: (entityObject) =>
           (!entityObject ||
-            !entityObject.value.value ||
-            !validate.launchNumericEntity(entityObject.value.value)) &&
+            !entityObject.value ||
+            !validate.launchNumericEntity(entityObject.value)) &&
           'launchNumericEntityHint',
         title: intl.formatMessage(messages.PassedTitle),
-        active: false,
+        active: STATS_PASSED in entities,
         removable: true,
       },
       {
         id: STATS_FAILED,
         component: EntityItemStatistics,
-        value: {
+        value: entities[STATS_FAILED] || {
           value: '',
           condition: CONDITION_GREATER_EQ,
         },
         validationFunc: (entityObject) =>
           (!entityObject ||
-            !entityObject.value.value ||
-            !validate.launchNumericEntity(entityObject.value.value)) &&
+            !entityObject.value ||
+            !validate.launchNumericEntity(entityObject.value)) &&
           'launchNumericEntityHint',
         title: intl.formatMessage(messages.FailedTitle),
-        active: false,
+        active: STATS_FAILED in entities,
         removable: true,
       },
       {
         id: STATS_SKIPPED,
         component: EntityItemStatistics,
-        value: {
+        value: entities[STATS_SKIPPED] || {
           value: '',
           condition: CONDITION_GREATER_EQ,
         },
         validationFunc: (entityObject) =>
           (!entityObject ||
-            !entityObject.value.value ||
-            !validate.launchNumericEntity(entityObject.value.value)) &&
+            !entityObject.value ||
+            !validate.launchNumericEntity(entityObject.value)) &&
           'launchNumericEntityHint',
         title: intl.formatMessage(messages.SkippedTitle),
-        active: false,
+        active: STATS_SKIPPED in entities,
         removable: true,
       },
     ];
   };
 
   getDynamicEntities = () => {
+    const { intl, entities } = this.props;
     let defectTypeEntities = [];
     DEFECT_TYPES_SEQUENCE.forEach((defectTypeRef) => {
       const defectTypeGroup = this.props.defectTypes[defectTypeRef];
@@ -259,19 +260,19 @@ export class SuiteLevelEntities extends Component {
       defectTypeEntities.push({
         id: `${DEFECT_ENTITY_ID_BASE}${defectTypeRef.toLowerCase()}$total`,
         component: EntityItemStatistics,
-        value: {
+        value: entities[`${DEFECT_ENTITY_ID_BASE}${defectTypeRef.toLowerCase()}$total`] || {
           value: '',
           condition: CONDITION_GREATER_EQ,
         },
         validationFunc: (entityObject) =>
           (!entityObject ||
-            !entityObject.value.value ||
-            !validate.launchNumericEntity(entityObject.value.value)) &&
+            !entityObject.value ||
+            !validate.launchNumericEntity(entityObject.value)) &&
           'launchNumericEntityHint',
-        title: this.props.intl.formatMessage(
+        title: intl.formatMessage(
           messages[`${defectTypeRef}_${hasSubtypes ? 'totalTitle' : 'title'}`],
         ),
-        active: false,
+        active: `${DEFECT_ENTITY_ID_BASE}${defectTypeRef.toLowerCase()}$total` in entities,
         removable: true,
       });
       if (hasSubtypes) {
@@ -279,19 +280,23 @@ export class SuiteLevelEntities extends Component {
           defectTypeGroup.map((defectType) => ({
             id: `${DEFECT_ENTITY_ID_BASE}${defectType.typeRef.toLowerCase()}$${defectType.locator}`,
             component: EntityItemStatistics,
-            value: {
+            value: entities[
+              `${DEFECT_ENTITY_ID_BASE}${defectType.typeRef.toLowerCase()}$${defectType.locator}`
+            ] || {
               value: '',
               condition: CONDITION_GREATER_EQ,
             },
             validationFunc: (entityObject) =>
               (!entityObject ||
-                !entityObject.value.value ||
-                !validate.launchNumericEntity(entityObject.value.value)) &&
+                !entityObject.value ||
+                !validate.launchNumericEntity(entityObject.value)) &&
               'launchNumericEntityHint',
-            title: `${this.props.intl.formatMessage(messages[`${defectTypeRef}_title`])} ${
+            title: `${intl.formatMessage(messages[`${defectTypeRef}_title`])} ${
               defectType.shortName
             }`,
-            active: false,
+            active:
+              `${DEFECT_ENTITY_ID_BASE}${defectType.typeRef.toLowerCase()}$${defectType.locator}` in
+              entities,
             removable: true,
             meta: {
               longName: defectType.longName,
