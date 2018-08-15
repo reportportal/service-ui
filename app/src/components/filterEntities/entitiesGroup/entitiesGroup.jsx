@@ -1,6 +1,6 @@
 import { Component } from 'react';
 import { connect } from 'react-redux';
-import { reduxForm, getFormValues, getFormSyncErrors } from 'redux-form';
+import { reduxForm, getFormValues, getFormSyncErrors, clearFields } from 'redux-form';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { debounce } from 'common/utils';
@@ -12,20 +12,71 @@ const cx = classNames.bind(styles);
 
 const ENTITIES_FORM = 'entities-form';
 
-@connect((state) => ({
-  entities: getFormValues(ENTITIES_FORM)(state),
-  formSyncErrors: getFormSyncErrors(ENTITIES_FORM)(state),
-}))
+const isEntityActive = (item, activeItems) => item.active || activeItems.indexOf(item.id) > -1;
+
+const formChangeHandler = debounce((values, dispatch, props) => {
+  const entities = {};
+  const { formSyncErrors, onChangeOwn, activeEntities } = props;
+  activeEntities.forEach((entityId) => {
+    const isValid = !formSyncErrors[entityId];
+    const entity = values[entityId];
+    if (isValid && entity && entity.value) {
+      entities[entityId] = {
+        filtering_field: entityId,
+        condition: entity.condition,
+        value: entity.value,
+      };
+    }
+  });
+  onChangeOwn({
+    entities,
+  });
+}, 1000);
+
+@connect(
+  (state, ownProps) => {
+    const entityValues = getFormValues(ENTITIES_FORM)(state) || {};
+    const activeEntities = Object.keys(getFormValues(ENTITIES_FORM)(state) || []);
+    return {
+      entityValues,
+      entities: ownProps.entitiesSet.reduce(
+        (acc, entity) => ({
+          ...acc,
+          [entity.id]: {
+            ...entity,
+            active: isEntityActive(entity, activeEntities),
+            value: entityValues[entity.id] || entity.value,
+          },
+        }),
+        {},
+      ),
+      formSyncErrors: getFormSyncErrors(ENTITIES_FORM)(state),
+      initialValues: ownProps.entitiesSet.reduce(
+        (acc, item) =>
+          isEntityActive(item, activeEntities) ? { ...acc, [item.id]: item.value } : acc,
+        {},
+      ),
+      activeEntities,
+    };
+  },
+  {
+    clearField: (name) => clearFields(ENTITIES_FORM, false, false, [name]),
+  },
+)
 @reduxForm({
   form: ENTITIES_FORM,
-  validate: (entities) => {
+  validate: (entities, { entitiesSet }) => {
     const validationObject = {};
-    Object.keys(entities).forEach((entityId) => {
-      const entity = entities[entityId];
-      entity.validationFunc && (validationObject[entityId] = entity.validationFunc(entity));
+    entitiesSet.filter((entity) => entity.active).forEach((entity) => {
+      entity.validationFunc &&
+        (validationObject[entity.id] = entity.validationFunc(entities[entity.id]));
     });
     return validationObject;
   },
+  enableReinitialize: true,
+  keepDirtyOnReinitialize: true,
+  updateUnregisteredFields: true,
+  onChange: formChangeHandler,
 })
 export class EntitiesGroup extends Component {
   static propTypes = {
@@ -35,89 +86,39 @@ export class EntitiesGroup extends Component {
     formSyncErrors: PropTypes.object.isRequired,
     entitiesSet: PropTypes.array.isRequired,
     entities: PropTypes.object,
+    entityValues: PropTypes.object,
+    activeEntities: PropTypes.array,
+    clearField: PropTypes.func.isRequired,
   };
   static defaultProps = {
     entities: {},
+    activeEntities: [],
+    entityValues: {},
   };
-
-  constructor(props) {
-    super(props);
-    const initObject = {};
-    const activeEntities = [];
-    props.entitiesSet.forEach((entity) => {
-      entity.active && activeEntities.push(entity.id);
-      initObject[entity.id] = entity;
-    });
-    this.state = {
-      activeEntities,
-    };
-    props.initialize(initObject);
-  }
-
-  componentDidUpdate(prevProps, prevState) {
-    if (
-      this.props.entities !== prevProps.entities ||
-      this.state.activeEntities !== prevState.activeEntities
-    ) {
-      this.parseEntities();
-    }
-  }
-  parseEntities = debounce(() => {
-    const queryStrings = [];
-    const entitiesObj = {};
-    const { formSyncErrors, entities, onChangeOwn } = this.props;
-    this.state.activeEntities.forEach((entityId) => {
-      const isValid = !formSyncErrors[entityId];
-      const entity = entities[entityId];
-      if (isValid && entity) {
-        queryStrings.push(`filter.${entity.value.condition}.${entityId}=${entity.value.value}`);
-        entitiesObj[entityId] = {
-          filtering_field: entityId,
-          condition: entity.value.condition,
-          value: entity.value.value,
-        };
-      }
-    });
-    onChangeOwn({
-      queryString: queryStrings.join('&'),
-      entitiesObj,
-    });
-  }, 1000);
-  formatEntity = (valFromState) => valFromState.value;
-
-  parseEntity = (valFromField, fieldId) => ({
-    ...this.props.entities[fieldId],
-    value: valFromField,
-  });
 
   toggleEntity = (entityId) => {
     const entity = this.props.entities[entityId];
-    this.setState({
-      activeEntities:
-        this.state.activeEntities.indexOf(entityId) !== -1
-          ? this.state.activeEntities.filter((id) => id !== entityId)
-          : this.state.activeEntities.concat([entityId]),
-    });
-    this.props.change(entityId, { ...entity, active: !entity.active });
+    const value = this.props.entityValues[entityId];
+    if (!value) {
+      this.props.change(entityId, entity.value);
+    } else {
+      this.props.clearField(entityId);
+    }
   };
 
   render() {
-    const { entities } = this.props;
+    const { entities, entityValues } = this.props;
     return (
       <div className={cx('entities-group')}>
         <form>
-          {this.state.activeEntities.map((entityId) => {
+          {this.props.activeEntities.map((entityId) => {
             const entity = entities[entityId];
             const EntityComponent = entity && entity.component;
             return (
               entity &&
-              entity.active && (
+              entityValues[entityId] && (
                 <div key={entityId} className={cx('entity-item')}>
-                  <FieldProvider
-                    name={entityId}
-                    format={this.formatEntity}
-                    parse={this.parseEntity}
-                  >
+                  <FieldProvider name={entityId}>
                     <EntityComponent
                       entityId={entityId}
                       removable={entity.removable}

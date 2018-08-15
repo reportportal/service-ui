@@ -53,7 +53,10 @@ export const createQueryParametersSelector = ({
   };
 };
 
-export const launchIdSelector = (state) => testItemIdsArraySelector(state)[0];
+export const launchIdSelector = (state) => {
+  const testItemIds = testItemIdsArraySelector(state);
+  return testItemIds && testItemIds[0];
+};
 
 export const pathnameChangedSelector = (state) => {
   const pathName = state.location.pathname;

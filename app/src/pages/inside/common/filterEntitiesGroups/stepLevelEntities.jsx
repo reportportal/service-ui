@@ -254,12 +254,14 @@ export class StepLevelEntities extends Component {
     intl: intlShape.isRequired,
     defectTypes: PropTypes.object.isRequired,
     onChange: PropTypes.func,
+    entities: PropTypes.object,
   };
   static defaultProps = {
     onChange: () => {},
+    entities: {},
   };
   getDefectTypeEntity = () => {
-    const { intl, defectTypes } = this.props;
+    const { intl, defectTypes, entities } = this.props;
     let initChecked = [];
     let options = [];
     DEFECT_TYPES_SEQUENCE.forEach((defectTypeId) => {
@@ -295,12 +297,12 @@ export class StepLevelEntities extends Component {
     return {
       id: ENTITY_DEFECT_TYPE,
       component: EntityDropdown,
-      value: {
+      value: entities[ENTITY_DEFECT_TYPE] || {
         value: initChecked.join(','),
         condition: CONDITION_IN,
       },
       title: intl.formatMessage(messages.DefectTypeTitle),
-      active: false,
+      active: ENTITY_DEFECT_TYPE in entities,
       removable: true,
       meta: {
         options,
@@ -310,19 +312,17 @@ export class StepLevelEntities extends Component {
     };
   };
   getEntities = () => {
-    const { intl } = this.props;
+    const { intl, entities } = this.props;
     return [
       {
         id: ENTITY_NAME,
         component: EntityItemName,
-        value: {
+        value: entities[ENTITY_NAME] || {
           value: '',
           condition: CONDITION_CNT,
         },
         validationFunc: (entityObject) =>
-          (!entityObject ||
-            !entityObject.value.value ||
-            !validate.itemNameEntity(entityObject.value.value)) &&
+          (!entityObject || !entityObject.value || !validate.itemNameEntity(entityObject.value)) &&
           'itemNameEntityHint',
         title: intl.formatMessage(messages.NameTitle),
         active: true,
@@ -332,7 +332,7 @@ export class StepLevelEntities extends Component {
       {
         id: ENTITY_METHOD_TYPE,
         component: EntityDropdown,
-        value: {
+        value: entities[ENTITY_METHOD_TYPE] || {
           value: [
             BEFORE_SUITE,
             BEFORE_GROUPS,
@@ -350,7 +350,7 @@ export class StepLevelEntities extends Component {
           condition: CONDITION_IN,
         },
         title: intl.formatMessage(messages.MethodTypeTitle),
-        active: false,
+        active: ENTITY_METHOD_TYPE in entities,
         removable: true,
         meta: {
           options: [
@@ -410,17 +410,17 @@ export class StepLevelEntities extends Component {
       {
         id: ENTITY_DESCRIPTION,
         component: EntityItemDescription,
-        value: {
+        value: entities[ENTITY_DESCRIPTION] || {
           value: '',
           condition: CONDITION_CNT,
         },
         title: intl.formatMessage(messages.DescriptionTitle),
         validationFunc: (entityObject) =>
           (!entityObject ||
-            !entityObject.value.value ||
-            !validate.launchDescriptionEntity(entityObject.value.value)) &&
+            !entityObject.value ||
+            !validate.launchDescriptionEntity(entityObject.value)) &&
           'launchDescriptionEntityHint',
-        active: false,
+        active: ENTITY_DESCRIPTION in entities,
         removable: true,
         meta: {
           placeholder: intl.formatMessage(messages.DescriptionPlaceholder),
@@ -429,14 +429,14 @@ export class StepLevelEntities extends Component {
       {
         id: ENTITY_STATUS,
         component: EntityDropdown,
-        value: {
+        value: entities[ENTITY_STATUS] || {
           value: [FAILED, PASSED, SKIPPED, INTERRUPTED, IN_PROGRESS]
             .map((item) => item.toUpperCase())
             .join(','),
           condition: CONDITION_IN,
         },
         title: intl.formatMessage(messages.StatusTitle),
-        active: false,
+        active: ENTITY_STATUS in entities,
         removable: true,
         meta: {
           options: [
@@ -468,7 +468,7 @@ export class StepLevelEntities extends Component {
       {
         id: ENTITY_START_TIME,
         component: EntityItemStartTime,
-        value: {
+        value: entities[ENTITY_START_TIME] || {
           value: `${moment()
             .startOf('day')
             .subtract(1, 'months')
@@ -478,24 +478,24 @@ export class StepLevelEntities extends Component {
           condition: CONDITION_BETWEEN,
         },
         title: intl.formatMessage(messages.StartTimeTitle),
-        active: false,
+        active: ENTITY_START_TIME in entities,
         removable: true,
       },
       this.getDefectTypeEntity(),
       {
         id: ENTITY_DEFECT_COMMENT,
         component: EntityItemDescription,
-        value: {
+        value: entities[ENTITY_DEFECT_COMMENT] || {
           value: '',
           condition: CONDITION_CNT,
         },
         title: intl.formatMessage(messages.DefectCommentTitle),
         validationFunc: (entityObject) =>
           (!entityObject ||
-            !entityObject.value.value ||
-            !validate.launchDescriptionEntity(entityObject.value.value)) &&
+            !entityObject.value ||
+            !validate.launchDescriptionEntity(entityObject.value)) &&
           'launchDescriptionEntityHint',
-        active: false,
+        active: ENTITY_DEFECT_COMMENT in entities,
         removable: true,
         meta: {
           placeholder: intl.formatMessage(messages.DefectCommentPlaceholder),
@@ -504,23 +504,23 @@ export class StepLevelEntities extends Component {
       {
         id: ENTITY_TAGS,
         component: EntityItemTags,
-        value: {
+        value: entities[ENTITY_TAGS] || {
           value: '',
           condition: CONDITION_HAS,
         },
         title: intl.formatMessage(messages.TagsTitle),
-        active: false,
+        active: ENTITY_TAGS in entities,
         removable: true,
       },
       {
         id: ENTITY_AUTOANALYZE,
         component: EntityDropdown,
-        value: {
+        value: entities[ENTITY_AUTOANALYZE] || {
           value: '',
           condition: CONDITION_IN,
         },
         title: intl.formatMessage(messages.AnalyseTitle),
-        active: false,
+        active: ENTITY_AUTOANALYZE in entities,
         removable: true,
         meta: {
           options: [
@@ -538,12 +538,12 @@ export class StepLevelEntities extends Component {
       {
         id: ENTITY_IGNORE_ANALYZER,
         component: EntityDropdown,
-        value: {
+        value: entities[ENTITY_IGNORE_ANALYZER] || {
           value: '',
           condition: CONDITION_IN,
         },
         title: intl.formatMessage(messages.IgnoreAATitle),
-        active: false,
+        active: ENTITY_IGNORE_ANALYZER in entities,
         removable: true,
         meta: {
           options: [
@@ -561,12 +561,12 @@ export class StepLevelEntities extends Component {
       {
         id: ENTITY_BTS_ISSUES,
         component: EntityDropdown,
-        value: {
+        value: entities[ENTITY_BTS_ISSUES] || {
           value: '',
           condition: CONDITION_EX,
         },
         title: intl.formatMessage(messages.BtsIssueTitle),
-        active: false,
+        active: ENTITY_BTS_ISSUES in entities,
         removable: true,
         meta: {
           options: [

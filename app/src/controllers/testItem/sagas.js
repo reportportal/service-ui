@@ -24,6 +24,7 @@ import {
   parentItemSelector,
   queryParametersSelector,
   isLostLaunchSelector,
+  levelSelector,
 } from './selectors';
 import { calculateLevel } from './utils';
 
@@ -101,7 +102,8 @@ function* fetchTestItems() {
     }),
   );
   const dataPayload = yield take(createTestItemActionPredicate(NAMESPACE));
-  const level = calculateLevel(dataPayload.payload.content);
+  const currentLevel = yield select(levelSelector);
+  const level = calculateLevel(dataPayload.payload.content) || currentLevel;
 
   if (LEVELS[level]) {
     yield put(fetchSuccessAction(LEVELS[level].namespace, dataPayload.payload));
