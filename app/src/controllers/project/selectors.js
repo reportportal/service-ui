@@ -40,12 +40,13 @@ export const projectEmailEnabledSelector = (state) =>
 
 export const defectColorsSelector = createSelector(projectConfigSelector, (config) => {
   const colors = {};
-  Object.keys(config.subTypes).forEach((key) => {
-    colors[key.toLowerCase()] = config.subTypes[key][0].color;
-    const defectGroup = config.subTypes[key];
-    defectGroup.forEach((defect) => {
-      colors[defect.locator] = defect.color;
+  Object.keys(config).length &&
+    Object.keys(config.subTypes).forEach((key) => {
+      colors[key.toLowerCase()] = config.subTypes[key][0].color;
+      const defectGroup = config.subTypes[key];
+      defectGroup.forEach((defect) => {
+        colors[defect.locator] = defect.color;
+      });
     });
-  });
   return colors;
 });

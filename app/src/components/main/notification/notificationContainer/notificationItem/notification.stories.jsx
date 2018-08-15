@@ -1,12 +1,14 @@
 import React from 'react';
 import { storiesOf } from '@storybook/react';
 import { host } from 'storybook-host';
+import { withReadme } from 'storybook-readme';
 import { Notification } from './notification';
+import README from './README.md';
 
 storiesOf('Components/Main/Notification', module)
   .addDecorator(
     host({
-      title: 'Notification',
+      title: 'Notification component',
       align: 'center middle',
       backdrop: '#ffffff',
       background: '#E9E9E9',
@@ -14,6 +16,7 @@ storiesOf('Components/Main/Notification', module)
       width: 600,
     }),
   )
+  .addDecorator(withReadme(README))
   .add('default state', () => <Notification />)
   .add('simple message', () => <Notification message="Simple message" />)
   .add('error message', () => <Notification message="Simple message" type="error" />)

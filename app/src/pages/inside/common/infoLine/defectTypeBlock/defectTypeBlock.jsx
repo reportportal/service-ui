@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -29,14 +29,20 @@ export class DefectTypeBlock extends Component {
   };
 
   render() {
-    const defectType = this.props.projectConfig.subTypes[this.props.type.toUpperCase()][0];
+    const defectType =
+      this.props.projectConfig.subTypes &&
+      this.props.projectConfig.subTypes[this.props.type.toUpperCase()][0];
     return (
       <div className={cx('defect-type-block')}>
-        <div className={cx('circle')} style={{ backgroundColor: defectType.color }} />
-        <span className={cx('title')}>{defectType.shortName}</span>
-        <div className={cx('value')} style={{ borderColor: defectType.color }}>
-          {this.props.data.total}
-        </div>
+        {defectType && (
+          <Fragment>
+            <div className={cx('circle')} style={{ backgroundColor: defectType.color }} />
+            <span className={cx('title')}>{defectType.shortName}</span>
+            <div className={cx('value')} style={{ borderColor: defectType.color }}>
+              {this.props.data.total}
+            </div>
+          </Fragment>
+        )}
       </div>
     );
   }

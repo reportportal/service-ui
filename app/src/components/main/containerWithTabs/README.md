@@ -2,7 +2,15 @@
 
 Width = 100% of it's parent. Height grows with it's content.
 
-> data item format: { name: 'tab-name', content: 'come content(text, html, jsx, components and ect.)' }
+> data item format:
 
-### Props (main):
-* **data**: _array of objects_, optional, default = []
+```
+{
+    name: string,
+    content: 'come content(text, html, jsx, components etc.)'
+}
+```
+
+### Props:
+
+- **data**: _array of objects_, optional, default = []

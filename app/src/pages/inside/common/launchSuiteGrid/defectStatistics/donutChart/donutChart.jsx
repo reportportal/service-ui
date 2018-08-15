@@ -9,6 +9,7 @@ import { DefectLink } from 'pages/inside/common/defectLink';
 import styles from './donutChart.scss';
 
 const cx = classNames.bind(styles);
+
 @withHoverableTooltip({
   TooltipComponent: DefectTypeTooltip,
   data: {
@@ -37,35 +38,38 @@ export class DonutChart extends Component {
     type: '',
   };
 
-  constructor(props) {
-    super(props);
-    const defects = props.data;
+  getChartData = () => {
+    const defects = this.props.data;
     const chartData = [];
     let offset = 75;
 
-    Object.keys(props.data).forEach((defect) => {
+    Object.keys(this.props.data).forEach((defect) => {
       if (defect !== 'total') {
         const val = defects[defect];
-        const percents = val / defects.total * 100;
+        const percents = (val / defects.total) * 100;
 
         chartData.push({
           id: defect,
           value: percents,
-          color: props.defectColors[defect],
+          color: this.props.defectColors[defect],
           offset: 100 - offset,
         });
         offset += percents;
       }
     });
-    this.state = {
-      chartData,
-    };
-  }
+    return chartData;
+  };
+
+  chartData = [];
 
   render() {
-    const { data, type, viewBox, strokeWidth, itemId } = this.props;
+    const { data, type, viewBox, strokeWidth, itemId, defectColors } = this.props;
     const diameter = viewBox / 2;
     const r = 100 / (2 * Math.PI);
+
+    if (defectColors) {
+      this.chartData = this.getChartData();
+    }
 
     return (
       <DefectLink defects={Object.keys(data)} itemId={itemId}>
@@ -80,7 +84,7 @@ export class DonutChart extends Component {
               stroke="#d2d3d4"
               strokeWidth={strokeWidth}
             />
-            {this.state.chartData.map((item) => (
+            {this.chartData.map((item) => (
               <circle
                 key={item.id}
                 cx={diameter}

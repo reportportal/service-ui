@@ -7,7 +7,6 @@ import { screenLockVisibilitySelector } from 'controllers/screenLock';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import styles from './screenLock.scss';
 
-const ScreenLockRoot = document.getElementById('screen-lock-root');
 const cx = classNames.bind(styles);
 
 @connect((state) => ({
@@ -17,7 +16,7 @@ export class ScreenLock extends Component {
   static propTypes = {
     visible: PropTypes.bool.isRequired,
   };
-
+  screenLockRoot = document.getElementById('screen-lock-root');
   render() {
     return (
       <Fragment>
@@ -27,7 +26,7 @@ export class ScreenLock extends Component {
               <div className={cx('backdrop')} />
               <SpinningPreloader />
             </div>,
-            ScreenLockRoot,
+            this.screenLockRoot,
           )}
       </Fragment>
     );

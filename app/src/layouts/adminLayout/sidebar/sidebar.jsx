@@ -3,65 +3,57 @@ import { FormattedMessage } from 'react-intl';
 import classNames from 'classnames/bind';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { SidebarButton } from 'components/buttons/sidebarButton';
-import ProjectsIcon from './img/projects.svg';
-import UsersIcon from './img/users.svg';
-import SettingsIcon from './img/settings.svg';
-import BackIcon from './img/back.svg';
-import LogoutIcon from './img/logout.svg';
-import ProfileIcon from './img/profile.svg';
+import ProjectsIcon from './img/projects-inline.svg';
+import UsersIcon from './img/users-inline.svg';
+import SettingsIcon from './img/settings-inline.svg';
+import BackIcon from './img/back-inline.svg';
+import LogoutIcon from './img/logout-inline.svg';
+import ProfileIcon from './img/profile-inline.svg';
 import styles from './sidebar.scss';
 
 const cx = classNames.bind(styles);
 
-export const Sidebar = ({ isMenuOpen, onClickProjects, onClickUsers, onClickServerSettings,
-onClickBackToProject, onClickLogout, onClickProfile }) => (
+export const Sidebar = ({
+  isMenuOpen,
+  onClickProjects,
+  onClickUsers,
+  onClickServerSettings,
+  onClickBackToProject,
+  onClickLogout,
+  onClickProfile,
+}) => (
   <div className={cx({ adminSidebar: true, open: isMenuOpen })}>
-    <div className={cx('sidebar')}><ScrollWrapper autoHeightMax={440}>
-      <div className={cx('scroll-container')}>
-
-        <SidebarButton clickHandler={onClickProjects} icon={ProjectsIcon} >
-          <FormattedMessage
-            id={'AdminSidebar.allProjects'}
-            defaultMessage={'Projects'}
-          />
-        </SidebarButton >
-        <SidebarButton clickHandler={onClickUsers} icon={UsersIcon} >
-          <FormattedMessage
-            id={'AdminSidebar.allUsers'}
-            defaultMessage={'All Users'}
-          />
-        </SidebarButton>
-        <SidebarButton clickHandler={onClickServerSettings} icon={SettingsIcon} >
-          <FormattedMessage
-            id={'AdminSidebar.settings'}
-            defaultMessage={'Server settings'}
-          />
-        </SidebarButton>
-        <div className={cx('bottom-section')}>
-          <SidebarButton clickHandler={onClickBackToProject} icon={BackIcon} btnBottom>
-            <FormattedMessage
-              id={'AdminSidebar.btnToProject'}
-              defaultMessage={'Back to project'}
-            />
+    <div className={cx('sidebar')}>
+      <ScrollWrapper autoHeightMax={440}>
+        <div className={cx('scroll-container')}>
+          <SidebarButton clickHandler={onClickProjects} icon={ProjectsIcon}>
+            <FormattedMessage id={'AdminSidebar.allProjects'} defaultMessage={'Projects'} />
           </SidebarButton>
-          <SidebarButton clickHandler={onClickProfile} icon={ProfileIcon} btnBottom>
-            <FormattedMessage
-              id={'AdminSidebar.btnProfile'}
-              defaultMessage={'Profile'}
-            />
+          <SidebarButton clickHandler={onClickUsers} icon={UsersIcon}>
+            <FormattedMessage id={'AdminSidebar.allUsers'} defaultMessage={'All Users'} />
           </SidebarButton>
-          <SidebarButton clickHandler={onClickLogout} icon={LogoutIcon} btnBottom>
-            <FormattedMessage
-              id={'AdminSidebar.btnLogout'}
-              defaultMessage={'Logout'}
-            />
+          <SidebarButton clickHandler={onClickServerSettings} icon={SettingsIcon}>
+            <FormattedMessage id={'AdminSidebar.settings'} defaultMessage={'Server settings'} />
           </SidebarButton>
+          <div className={cx('bottom-section')}>
+            <SidebarButton clickHandler={onClickBackToProject} icon={BackIcon} btnBottom>
+              <FormattedMessage
+                id={'AdminSidebar.btnToProject'}
+                defaultMessage={'Back to project'}
+              />
+            </SidebarButton>
+            <SidebarButton clickHandler={onClickProfile} icon={ProfileIcon} btnBottom>
+              <FormattedMessage id={'AdminSidebar.btnProfile'} defaultMessage={'Profile'} />
+            </SidebarButton>
+            <SidebarButton clickHandler={onClickLogout} icon={LogoutIcon} btnBottom>
+              <FormattedMessage id={'AdminSidebar.btnLogout'} defaultMessage={'Logout'} />
+            </SidebarButton>
+          </div>
         </div>
-
-      </div></ScrollWrapper>
+      </ScrollWrapper>
     </div>
   </div>
-  );
+);
 
 Sidebar.propTypes = {
   isMenuOpen: PropTypes.bool,
@@ -82,4 +74,3 @@ Sidebar.defaultProps = {
   onClickLogout: () => {},
   onClickProfile: () => {},
 };
-
