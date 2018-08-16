@@ -29,12 +29,13 @@ export const BigButton = ({
   type,
   children,
   disabled,
+  className,
   mobileDisabled,
   color,
   roundedCorners,
   onClick,
 }) => {
-  const classes = cx('big-button', {
+  const classes = cx('big-button', className, {
     'rounded-corners': roundedCorners,
     'mobile-disabled': mobileDisabled,
     disabled,
@@ -51,6 +52,7 @@ export const BigButton = ({
 BigButton.propTypes = {
   children: PropTypes.node,
   mobileDisabled: PropTypes.bool,
+  className: PropTypes.string,
   disabled: PropTypes.bool,
   color: PropTypes.string,
   type: PropTypes.string,
@@ -61,6 +63,7 @@ BigButton.propTypes = {
 BigButton.defaultProps = {
   children: '',
   mobileDisabled: false,
+  className: '',
   disabled: false,
   color: 'booger',
   type: 'button',

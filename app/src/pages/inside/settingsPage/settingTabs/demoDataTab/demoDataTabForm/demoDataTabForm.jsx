@@ -29,7 +29,7 @@ const messages = defineMessages({
   preloaderInfo: {
     id: 'DemoDataTabForm.preloaderInfo',
     defaultMessage:
-      'Data generation is started. The process can take several minutes, please wait.',
+      'Data generation has started. The process can take several minutes, please wait.',
   },
   generateDemoDataSuccess: {
     id: 'SuccessMessages.generateDemoDataSuccess',
@@ -88,11 +88,10 @@ export class DemoDataTabForm extends Component {
         reset('demoDataTabForm');
       })
       .catch((e) => {
-        const error = (e.response && e.response.data && e.response.data.message) || e.message;
         this.props.showNotification({
           messageId: 'failureDefault',
           type: NOTIFICATION_TYPES.ERROR,
-          values: { error },
+          values: { error: e.message },
         });
         this.setState({
           isLoading: false,
@@ -104,23 +103,26 @@ export class DemoDataTabForm extends Component {
     const { intl, handleSubmit } = this.props;
 
     return (
-      <form onSubmit={handleSubmit(this.onFormSubmit)}>
-        <div className={cx('input-wrapper')}>
+      <form className={cx('demo-data-form')} onSubmit={handleSubmit(this.onFormSubmit)}>
+        <div className={cx('postfix-input')}>
           <FieldProvider name="demoDataPostfix" disabled={this.state.isLoading}>
             <FieldErrorHint>
               <Input placeholder={intl.formatMessage(messages.postfixInputPlaceholder)} />
             </FieldErrorHint>
           </FieldProvider>
         </div>
-        <div className={cx('generate-button')}>
-          <BigButton mobileDisabled type="submit" disabled={this.state.isLoading}>
-            <span className={cx('generate-button-title')}>
-              {intl.formatMessage(messages.generateButtonTitle)}
-            </span>
-          </BigButton>
-        </div>
+        <BigButton
+          className={cx('generate-button')}
+          mobileDisabled
+          type="submit"
+          disabled={this.state.isLoading}
+        >
+          <span className={cx('generate-button-title')}>
+            {intl.formatMessage(messages.generateButtonTitle)}
+          </span>
+        </BigButton>
         {this.state.isLoading && (
-          <div className={cx('preloader-wrapper')}>
+          <div className={cx('preloader-block')}>
             <div className={cx('preloader-icon')}>
               <SpinningPreloader />
             </div>
