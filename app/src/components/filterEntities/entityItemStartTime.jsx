@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import moment from 'moment/moment';
-import { utcOffset, getTimestampFromMinutes, getMinutesFromTimestamp } from 'common/utils';
+import { utcOffset, getMinutesFromTimestamp, parseValue } from 'common/utils';
 import { FieldFilterEntity } from 'components/fields/fieldFilterEntity';
 import { InputTimeDateRange } from 'components/inputs/inputTimeDateRange';
 import { CONDITION_BETWEEN } from 'components/filterEntities/constants';
@@ -70,27 +70,6 @@ const formatValue = ({ start, end, dynamic }) => {
     return `${start},${end}`;
   }
   return `${getMinutesFromTimestamp(start)};${getMinutesFromTimestamp(end)};${utcString}`;
-};
-
-const parseValue = (value) => {
-  const dateString = value.value;
-  if (dateString.indexOf(',') !== -1) {
-    const splitted = dateString.split(',');
-    return {
-      start: parseInt(splitted[0], 10),
-      end: parseInt(splitted[1], 10),
-      dynamic: false,
-    };
-  }
-  if (dateString.indexOf(';') !== -1) {
-    const splitted = dateString.split(';');
-    return {
-      start: getTimestampFromMinutes(splitted[0]),
-      end: getTimestampFromMinutes(splitted[1]),
-      dynamic: true,
-    };
-  }
-  throw new Error('Invalid date string provided');
 };
 
 export const EntityItemStartTime = ({ onRemove, onChange, removable, title, value }) => (

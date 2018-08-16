@@ -6,6 +6,12 @@ import classNames from 'classnames/bind';
 import { injectIntl, intlShape, defineMessages } from 'react-intl';
 import { InputCheckbox } from 'components/inputs/inputCheckbox';
 import 'react-datepicker/dist/react-datepicker.css';
+import {
+  TIME_INTERVAL,
+  DATE_FORMAT,
+  TIME_FORMAT,
+  TIME_DATE_FORMAT,
+} from 'common/constants/timeDateFormat';
 import styles from './inputTimeDateRange.scss';
 
 const cx = classNames.bind(styles);
@@ -35,10 +41,6 @@ const messages = defineMessages({
     defaultMessage: 'Your time range will be updated every day',
   },
 });
-const TIME_INTERVAL = 15;
-const DATE_FORMAT = 'DD-MM-YYYY';
-const TIME_FORMAT = 'HH:mm';
-const TIME_DATE_FORMAT = 'HH:mm DD/MM/YYYY';
 
 @injectIntl
 export class InputTimeDateRange extends Component {

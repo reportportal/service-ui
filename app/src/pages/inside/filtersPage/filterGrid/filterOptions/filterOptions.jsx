@@ -5,24 +5,24 @@ import moment from 'moment';
 import { connect } from 'react-redux';
 import { injectIntl, intlShape } from 'react-intl';
 import { defectTypesSelector } from 'controllers/project';
-import { getTimestampFromMinutes } from 'common/utils';
+import { parseValue } from 'common/utils';
+import {
+  CONDITION_CNT,
+  CONDITION_NOT_CNT,
+  CONDITION_EQ,
+  CONDITION_GREATER_EQ,
+  CONDITION_LESS_EQ,
+  CONDITION_HAS,
+  CONDITION_NOT_HAS,
+  CONDITION_IN,
+  CONDITION_NOT_IN,
+} from 'components/filterEntities/constants';
+import { TIME_DATE_FORMAT } from 'common/constants/timeDateFormat';
 import { messages } from './optionTranslations';
 import styles from './filterOptions.scss';
 
 const cx = classNames.bind(styles);
-const CONDITIONS = {
-  GTE: 'gte',
-  LTE: 'lte',
-  EQ: 'eq',
-  NOT: 'ne',
-  IN: 'in',
-  NOT_IN: '!in',
-  CNT: 'cnt',
-  NOT_CNT: '!cnt',
-  HAS: 'has',
-  NOT_HAS: '!has',
-};
-const TIME_DATE_FORMAT = 'HH:mm DD/MM/YYYY';
+const CONDITION_NOT = 'ne';
 const OPTIONS = {
   STATISTICS: 'statistics',
   EXECUTIONS: 'executions',
@@ -82,7 +82,7 @@ export class FilterOptions extends Component {
 
   startTimeOption = (entity) => {
     const { intl } = this.props;
-    const time = this.parseValue(entity.value);
+    const time = parseValue(entity);
     const optionName = intl.formatMessage(messages[entity.filtering_field]);
     const condition = `${this.fotmatTime(time.start)} ${intl.formatMessage(
       messages.to,
@@ -94,53 +94,51 @@ export class FilterOptions extends Component {
     const { intl } = this.props;
     let optionName;
     let condition;
-    const result = [];
-    this.props.entities.forEach((entity) => {
+    const result = this.props.entities.map((entity) => {
       const splitKey = entity.filtering_field.split('$');
       const type = splitKey[0];
-      if (type === OPTIONS.STATISTICS) {
+      if (type === OPTIONS.START_TIME) {
+        return this.startTimeOption(entity);
+      } else if (type === OPTIONS.STATISTICS) {
         optionName = this.statisticsOptions(entity);
-      } else if (type === OPTIONS.START_TIME) {
-        result.push(this.startTimeOption(entity));
-        return;
       } else {
         optionName = intl.formatMessage(messages[entity.filtering_field]);
       }
       switch (entity.condition) {
-        case CONDITIONS.GTE:
+        case CONDITION_GREATER_EQ:
           condition = '>=';
           break;
-        case CONDITIONS.LTE:
+        case CONDITION_LESS_EQ:
           condition = '<=';
           break;
-        case CONDITIONS.EQ:
+        case CONDITION_EQ:
           condition = '=';
           break;
-        case CONDITIONS.NOT:
+        case CONDITION_NOT:
           condition = '!=';
           break;
-        case CONDITIONS.IN:
+        case CONDITION_IN:
           condition = this.props.intl.formatMessage(messages.in);
           break;
-        case CONDITIONS.NOT_IN:
+        case CONDITION_NOT_IN:
           condition = this.props.intl.formatMessage(messages.not_in);
           break;
-        case CONDITIONS.CNT:
+        case CONDITION_CNT:
           condition = this.props.intl.formatMessage(messages.cnt);
           break;
-        case CONDITIONS.NOT_CNT:
+        case CONDITION_NOT_CNT:
           condition = this.props.intl.formatMessage(messages.not_cnt);
           break;
-        case CONDITIONS.HAS:
+        case CONDITION_HAS:
           condition = this.props.intl.formatMessage(messages.has);
           break;
-        case CONDITIONS.NOT_HAS:
+        case CONDITION_NOT_HAS:
           condition = this.props.intl.formatMessage(messages.not_has);
           break;
         default:
           condition = '';
       }
-      result.push(`${optionName} ${condition} ${entity.value}`);
+      return `${optionName} ${condition} ${entity.value}`;
     });
     const options = result.join(` ${intl.formatMessage(messages.and)} `);
     const sort = `${intl.formatMessage(messages.sort)}: ${this.sortingToString()}`;
@@ -159,27 +157,7 @@ export class FilterOptions extends Component {
     return `${intl.formatMessage(messages[sort])}`;
   };
 
-  parseValue = (value) => {
-    if (value.indexOf(',') !== -1) {
-      const splitted = value.split(',');
-      return {
-        start: parseInt(splitted[0], 10),
-        end: parseInt(splitted[1], 10),
-        dynamic: false,
-      };
-    }
-    if (value.indexOf(';') !== -1) {
-      const splitted = value.split(';');
-      return {
-        start: getTimestampFromMinutes(splitted[0]),
-        end: getTimestampFromMinutes(splitted[1]),
-        dynamic: true,
-      };
-    }
-    throw new Error('Invalid date string provided');
-  };
-
   render() {
-    return <p className={cx('options')}>{this.optionsToString()}</p>;
+    return <p className={cx('filter-options')}>{this.optionsToString()}</p>;
   }
 }
