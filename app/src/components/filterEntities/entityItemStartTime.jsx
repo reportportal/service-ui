@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import moment from 'moment/moment';
-import { utcOffset, getMinutesFromTimestamp, parseValue } from 'common/utils';
+import { utcOffset, getMinutesFromTimestamp, parseDateTimeRange } from 'common/utils';
 import { FieldFilterEntity } from 'components/fields/fieldFilterEntity';
 import { InputTimeDateRange } from 'components/inputs/inputTimeDateRange';
 import { CONDITION_BETWEEN } from 'components/filterEntities/constants';
@@ -79,7 +79,7 @@ export const EntityItemStartTime = ({ onRemove, onChange, removable, title, valu
       onChange={(val) => {
         onChange({ condition: CONDITION_BETWEEN, value: formatValue({ ...val }) });
       }}
-      value={parseValue(value)}
+      value={parseDateTimeRange(value)}
     />
   </FieldFilterEntity>
 );

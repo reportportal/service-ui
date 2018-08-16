@@ -1,7 +1,8 @@
 export const CONDITION_CNT = 'cnt';
 export const CONDITION_NOT_CNT = '!cnt';
 export const CONDITION_EQ = 'eq';
-export const CONDITION_NOT_EQ = '!eq';
+// TODO export const CONDITION_NOT_EQ = '!eq';
+export const CONDITION_NOT_EQ = 'ne';
 export const CONDITION_GREATER_EQ = 'gte';
 export const CONDITION_LESS_EQ = 'lte';
 export const CONDITION_BETWEEN = 'btw';
