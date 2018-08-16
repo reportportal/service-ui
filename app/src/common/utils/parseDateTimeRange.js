@@ -1,6 +1,6 @@
 import { getTimestampFromMinutes } from 'common/utils';
 
-export const parseValue = (value) => {
+export const parseDateTimeRange = (value) => {
   const dateString = value.value;
   if (dateString.indexOf(',') !== -1) {
     const splitted = dateString.split(',');

@@ -42,4 +42,4 @@ export { connectRouter } from './connectRouter';
 export { uniqueId } from './uniqueId';
 export { fileSizeConverter } from './fileSizeConverter';
 export { debounce } from './debounce';
-export { parseValue } from './parseDateTimeRange';
+export { parseDateTimeRange } from './parseDateTimeRange';

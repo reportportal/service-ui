@@ -5,7 +5,7 @@ import moment from 'moment';
 import { connect } from 'react-redux';
 import { injectIntl, intlShape } from 'react-intl';
 import { defectTypesSelector } from 'controllers/project';
-import { parseValue } from 'common/utils';
+import { parseDateTimeRange } from 'common/utils';
 import {
   CONDITION_CNT,
   CONDITION_NOT_CNT,
@@ -16,13 +16,13 @@ import {
   CONDITION_NOT_HAS,
   CONDITION_IN,
   CONDITION_NOT_IN,
+  CONDITION_NOT_EQ,
 } from 'components/filterEntities/constants';
 import { TIME_DATE_FORMAT } from 'common/constants/timeDateFormat';
 import { messages } from './optionTranslations';
 import styles from './filterOptions.scss';
 
 const cx = classNames.bind(styles);
-const CONDITION_NOT = 'ne';
 const OPTIONS = {
   STATISTICS: 'statistics',
   EXECUTIONS: 'executions',
@@ -82,7 +82,7 @@ export class FilterOptions extends Component {
 
   startTimeOption = (entity) => {
     const { intl } = this.props;
-    const time = parseValue(entity);
+    const time = parseDateTimeRange(entity);
     const optionName = intl.formatMessage(messages[entity.filtering_field]);
     const condition = `${this.fotmatTime(time.start)} ${intl.formatMessage(
       messages.to,
@@ -114,7 +114,7 @@ export class FilterOptions extends Component {
         case CONDITION_EQ:
           condition = '=';
           break;
-        case CONDITION_NOT:
+        case CONDITION_NOT_EQ:
           condition = '!=';
           break;
         case CONDITION_IN:
