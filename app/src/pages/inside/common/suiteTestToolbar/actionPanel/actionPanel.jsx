@@ -70,6 +70,7 @@ const messages = defineMessages({
 @injectIntl
 export class ActionPanel extends Component {
   static propTypes = {
+    debugMode: PropTypes.bool,
     onRefresh: PropTypes.func,
     breadcrumbs: PropTypes.arrayOf(breadcrumbDescriptorShape),
     restorePath: PropTypes.func,
@@ -91,6 +92,7 @@ export class ActionPanel extends Component {
   };
 
   static defaultProps = {
+    debugMode: false,
     onRefresh: () => {},
     breadcrumbs: [],
     errors: {},
@@ -129,26 +131,31 @@ export class ActionPanel extends Component {
     {
       label: this.props.intl.formatMessage(messages.postIssue),
       value: 'action-post-issue',
+      hidden: this.props.debugMode,
       onClick: this.props.onPostIssue,
     },
     {
       label: this.props.intl.formatMessage(messages.linkIssue),
       value: 'action-link-issue',
+      hidden: this.props.debugMode,
       onClick: this.props.onLinkIssue,
     },
     {
       label: this.props.intl.formatMessage(messages.unlinkIssue),
       value: 'action-unlink-issue',
+      hidden: this.props.debugMode,
       onClick: this.props.onUnlinkIssue,
     },
     {
       label: this.props.intl.formatMessage(messages.ignoreInAA),
       value: 'action-ignore-in-AA',
+      hidden: this.props.debugMode,
       onClick: this.props.onIgnoreInAA,
     },
     {
       label: this.props.intl.formatMessage(messages.includeInAA),
       value: 'action-include-into-AA',
+      hidden: this.props.debugMode,
       onClick: this.props.onIncludeInAA,
     },
     {
@@ -170,6 +177,7 @@ export class ActionPanel extends Component {
       onProceedValidItems,
       selectedItems,
       listView,
+      debugMode,
     } = this.props;
     return (
       <div className={cx('action-panel', { 'right-buttons-only': !showBreadcrumbs && !hasErrors })}>
@@ -196,13 +204,14 @@ export class ActionPanel extends Component {
               </GhostButton>
             </div>
           )}
-          {!listView && (
-            <div className={cx('action-button')}>
-              <GhostButton icon={HistoryIcon} disabled>
-                <FormattedMessage id="ActionPanel.history" defaultMessage="History" />
-              </GhostButton>
-            </div>
-          )}
+          {!listView &&
+            !debugMode && (
+              <div className={cx('action-button')}>
+                <GhostButton icon={HistoryIcon} disabled>
+                  <FormattedMessage id="ActionPanel.history" defaultMessage="History" />
+                </GhostButton>
+              </div>
+            )}
           <div className={cx('action-button')}>
             <GhostButton icon={RefreshIcon} onClick={onRefresh}>
               <FormattedMessage id="Common.refresh" defaultMessage="Refresh" />

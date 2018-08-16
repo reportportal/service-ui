@@ -1,48 +1,21 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { injectIntl, intlShape } from 'react-intl';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
-import { DEBUG } from 'common/constants/common';
+import { DEBUG, DEFAULT } from 'common/constants/common';
 import { activeProjectSelector } from 'controllers/user';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { withModal, ModalLayout } from 'components/main/modal';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import styles from './moveToDebugModal.scss';
+import { messages } from './translations';
 
 const cx = classNames.bind(styles);
 
-const messages = defineMessages({
-  moveToDebugHeader: {
-    id: 'MoveToDebugDialog.moveToDebugHeader',
-    defaultMessage: 'Move to debug',
-  },
-  moveToDebugText: {
-    id: 'MoveToDebugDialog.moveToDebug',
-    defaultMessage: 'Are you sure you want to move launch to Debug?',
-  },
-  moveToDebugMultipleText: {
-    id: 'MoveToDebugDialog.moveToDebugMultiple',
-    defaultMessage: 'Are you sure you want to move selected launches to Debug?',
-  },
-  moveToDebugFailedMessage: {
-    id: 'MoveToDebugDialog.moveToDebugFailedMessage',
-    defaultMessage: 'Failed to move to debug the launch: {message}',
-  },
-  moveToDebugSuccessMessage: {
-    id: 'MoveToDebugDialog.moveToDebugSuccessMessage',
-    defaultMessage: 'Launch has been successfully shifted to debug',
-  },
-  moveToDebugMultipleSuccessMessage: {
-    id: 'MoveToDebugDialog.moveToDebugMultipleSuccessMessage',
-    defaultMessage: 'Launches have been successfully shifted to debug',
-  },
-});
-
-@withModal('moveToDebugModal')
+@withModal('moveLaunchesModal')
 @injectIntl
 @connect(
   (state) => ({
@@ -59,6 +32,7 @@ export class MoveToDebugModal extends Component {
     data: PropTypes.shape({
       fetchFunc: PropTypes.func,
       ids: PropTypes.array,
+      debugMode: PropTypes.bool,
     }),
     showNotification: PropTypes.func,
   };
@@ -67,14 +41,15 @@ export class MoveToDebugModal extends Component {
     data: {
       fetchFunc: () => {},
       ids: [],
+      debugMode: false,
     },
     showNotification: () => {},
   };
 
   moveAndClose = (closeModal) => {
-    const { ids, fetchFunc } = this.props.data;
-
-    const entities = ids.reduce((acc, id) => ({ ...acc, [id]: { mode: DEBUG.toUpperCase() } }), {});
+    const { ids, fetchFunc, debugMode } = this.props.data;
+    const newMode = debugMode ? DEFAULT.toUpperCase() : DEBUG.toUpperCase();
+    const entities = ids.reduce((acc, id) => ({ ...acc, [id]: { mode: newMode } }), {});
     fetch(this.props.url, {
       method: 'put',
       data: {
@@ -82,10 +57,16 @@ export class MoveToDebugModal extends Component {
       },
     })
       .then(() => {
-        const successMessage =
-          ids.length > 1
-            ? this.props.intl.formatMessage(messages.moveToDebugMultipleSuccessMessage)
+        let successMessage;
+        if (ids.length > 1) {
+          successMessage = debugMode
+            ? this.props.intl.formatMessage(messages.moveToAllMultipleSuccessMessage)
+            : this.props.intl.formatMessage(messages.moveToDebugMultipleSuccessMessage);
+        } else {
+          successMessage = debugMode
+            ? this.props.intl.formatMessage(messages.moveToAllSuccessMessage)
             : this.props.intl.formatMessage(messages.moveToDebugSuccessMessage);
+        }
         this.props.showNotification({
           message: successMessage,
           type: NOTIFICATION_TYPES.SUCCESS,
@@ -93,8 +74,18 @@ export class MoveToDebugModal extends Component {
         fetchFunc();
       })
       .catch((response) => {
+        let errorMessage;
+        if (ids.length > 1) {
+          errorMessage = debugMode
+            ? messages.moveToAllMultipleErrorMessage
+            : messages.moveToDebugMultipleErrorMessage;
+        } else {
+          errorMessage = debugMode
+            ? messages.moveToAllErrorMessage
+            : messages.moveToDebugErrorMessage;
+        }
         this.props.showNotification({
-          message: this.props.intl.formatMessage(messages.moveToDebugFailedMessage, {
+          message: this.props.intl.formatMessage(errorMessage, {
             message: response.message,
           }),
           type: NOTIFICATION_TYPES.ERROR,
@@ -112,17 +103,27 @@ export class MoveToDebugModal extends Component {
     const cancelButton = {
       text: intl.formatMessage(COMMON_LOCALE_KEYS.CANCEL),
     };
+    let text;
+    if (data.ids.length > 1) {
+      text = data.debugMode
+        ? this.props.intl.formatMessage(messages.moveToAllMultipleText)
+        : this.props.intl.formatMessage(messages.moveToDebugMultipleText);
+    } else {
+      text = data.debugMode
+        ? this.props.intl.formatMessage(messages.moveToAllText)
+        : this.props.intl.formatMessage(messages.moveToDebugText);
+    }
     return (
       <ModalLayout
-        title={intl.formatMessage(messages.moveToDebugHeader)}
+        title={
+          data.debugMode
+            ? intl.formatMessage(messages.moveToAllHeader)
+            : intl.formatMessage(messages.moveToDebugHeader)
+        }
         okButton={okButton}
         cancelButton={cancelButton}
       >
-        <p className={cx('message')}>
-          {data.ids.length > 1
-            ? Parser(intl.formatMessage(messages.moveToDebugMultipleText))
-            : Parser(intl.formatMessage(messages.moveToDebugText))}
-        </p>
+        <p className={cx('message')}>{text}</p>
       </ModalLayout>
     );
   }

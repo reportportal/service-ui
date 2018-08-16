@@ -11,6 +11,7 @@ import { withPagination } from 'controllers/pagination';
 import { withSorting, SORTING_DESC } from 'controllers/sorting';
 import { showModalAction } from 'controllers/modal';
 import {
+  debugModeSelector,
   selectedLaunchesSelector,
   toggleLaunchSelectionAction,
   unselectAllLaunchesAction,
@@ -19,7 +20,7 @@ import {
   forceFinishLaunchesAction,
   mergeLaunchesAction,
   compareLaunchesAction,
-  moveLaunchesToDebugAction,
+  moveLaunchesAction,
   launchesSelector,
   launchPaginationSelector,
   fetchLaunchesAction,
@@ -40,6 +41,7 @@ const messages = defineMessages({
 
 @connect(
   (state) => ({
+    debugMode: debugModeSelector(state),
     userId: userIdSelector(state),
     activeProject: activeProjectSelector(state),
     url: URLS.launches(activeProjectSelector(state)),
@@ -57,7 +59,7 @@ const messages = defineMessages({
     forceFinishLaunchesAction,
     mergeLaunchesAction,
     compareLaunchesAction,
-    moveLaunchesToDebugAction,
+    moveLaunchesAction,
     fetchLaunchesAction,
     toggleAllLaunchesAction,
   },
@@ -73,6 +75,7 @@ const messages = defineMessages({
 @injectIntl
 export class LaunchesPage extends Component {
   static propTypes = {
+    debugMode: PropTypes.bool.isRequired,
     intl: intlShape.isRequired,
     launches: PropTypes.arrayOf(PropTypes.object),
     activePage: PropTypes.number,
@@ -95,7 +98,7 @@ export class LaunchesPage extends Component {
     forceFinishLaunchesAction: PropTypes.func,
     mergeLaunchesAction: PropTypes.func,
     compareLaunchesAction: PropTypes.func,
-    moveLaunchesToDebugAction: PropTypes.func,
+    moveLaunchesAction: PropTypes.func,
     lastOperation: PropTypes.string,
     loading: PropTypes.bool,
     fetchLaunchesAction: PropTypes.func,
@@ -122,7 +125,7 @@ export class LaunchesPage extends Component {
     forceFinishLaunchesAction: () => {},
     mergeLaunchesAction: () => {},
     compareLaunchesAction: () => {},
-    moveLaunchesToDebugAction: () => {},
+    moveLaunchesAction: () => {},
     lastOperation: '',
     loading: false,
     fetchLaunchesAction: () => {},
@@ -181,10 +184,11 @@ export class LaunchesPage extends Component {
       fetchFunc: this.props.fetchLaunchesAction,
     });
 
-  moveLaunchesToDebug = (eventData) => {
+  moveLaunches = (eventData) => {
     const launches = eventData && eventData.id ? [eventData] : this.props.selectedLaunches;
-    this.props.moveLaunchesToDebugAction(launches, {
+    this.props.moveLaunchesAction(launches, {
       fetchFunc: this.props.fetchLaunchesAction,
+      debugMode: this.props.debugMode,
     });
   };
 
@@ -204,20 +208,22 @@ export class LaunchesPage extends Component {
       selectedLaunches,
       launches,
       loading,
+      debugMode,
     } = this.props;
     return (
-      <PageLayout title={this.getTitle()}>
+      <PageLayout title={!debugMode ? this.getTitle() : ''}>
         <LaunchToolbar
           errors={this.props.validationErrors}
           selectedLaunches={selectedLaunches}
           onUnselect={this.props.toggleLaunchSelectionAction}
           onUnselectAll={this.props.unselectAllLaunchesAction}
           onProceedValidItems={this.proceedWithValidItems}
-          onMoveToDebug={this.moveLaunchesToDebug}
+          onMove={this.moveLaunches}
           onMerge={this.mergeLaunches}
           onForceFinish={this.finishForceLaunches}
           onCompare={this.compareLaunches}
           onImportLaunch={this.openImportModal}
+          debugMode={debugMode}
         />
         <LaunchSuiteGrid
           data={launches}
@@ -225,7 +231,7 @@ export class LaunchesPage extends Component {
           sortingDirection={sortingDirection}
           onChangeSorting={onChangeSorting}
           onDeleteItem={this.confirmDeleteItem}
-          onMoveToDebug={this.moveLaunchesToDebug}
+          onMove={this.moveLaunches}
           onEditLaunch={this.openEditModal}
           onForceFinish={this.finishForceLaunches}
           selectedItems={selectedLaunches}

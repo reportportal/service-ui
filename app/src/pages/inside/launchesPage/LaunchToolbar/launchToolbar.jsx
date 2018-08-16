@@ -11,12 +11,13 @@ export const LaunchToolbar = ({
   errors,
   onUnselect,
   onUnselectAll,
-  onMoveToDebug,
+  onMove,
   onMerge,
   onCompare,
   onForceFinish,
   onProceedValidItems,
   onImportLaunch,
+  debugMode,
 }) => (
   <div className={cx('launch-toolbar')}>
     {!!selectedLaunches.length && (
@@ -28,11 +29,12 @@ export const LaunchToolbar = ({
       />
     )}
     <ActionPanel
+      debugMode={debugMode}
       showBreadcrumb={selectedLaunches.length === 0}
       hasErrors={selectedLaunches.some((launch) => !!errors[launch.id])}
       hasValidItems={selectedLaunches.length > Object.keys(errors).length}
       onProceedValidItems={onProceedValidItems}
-      onMoveToDebug={onMoveToDebug}
+      onMove={onMove}
       onMerge={onMerge}
       onCompare={onCompare}
       onForceFinish={onForceFinish}
@@ -49,10 +51,11 @@ LaunchToolbar.propTypes = {
   onProceedValidItems: PropTypes.func,
   onMerge: PropTypes.func,
   onCompare: PropTypes.func,
-  onMoveToDebug: PropTypes.func,
+  onMove: PropTypes.func,
   onForceFinish: PropTypes.func,
   onDelete: PropTypes.func,
   onImportLaunch: PropTypes.func,
+  debugMode: PropTypes.bool,
 };
 LaunchToolbar.defaultProps = {
   selectedLaunches: [],
@@ -62,8 +65,9 @@ LaunchToolbar.defaultProps = {
   onProceedValidItems: () => {},
   onMerge: () => {},
   onCompare: () => {},
-  onMoveToDebug: () => {},
+  onMove: () => {},
   onForceFinish: () => {},
   onDelete: () => {},
   onImportLaunch: () => {},
+  debugMode: false,
 };

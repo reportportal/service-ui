@@ -5,11 +5,12 @@ export {
   proceedWithValidItemsAction,
   forceFinishLaunchesAction,
   mergeLaunchesAction,
-  moveLaunchesToDebugAction,
+  moveLaunchesAction,
   compareLaunchesAction,
   fetchLaunchesAction,
   toggleAllLaunchesAction,
   unselectLaunchesAction,
+  setDebugMode,
 } from './actionCreators';
 export {
   selectedLaunchesSelector,
@@ -18,6 +19,7 @@ export {
   launchesSelector,
   launchPaginationSelector,
   loadingSelector,
+  debugModeSelector,
 } from './selectors';
 export { launchReducer } from './reducer';
 export { launchSagas } from './sagas';

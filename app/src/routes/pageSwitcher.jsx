@@ -4,12 +4,7 @@ import { PropTypes } from 'prop-types';
 import { NOT_FOUND } from 'redux-first-router';
 import { ModalContainer } from 'components/main/modal';
 import { pageNames } from 'controllers/pages/constants';
-import {
-  pageSelector,
-  PROJECT_SUITES_PAGE,
-  PROJECT_TESTS_PAGE,
-  TEST_ITEM_PAGE,
-} from 'controllers/pages';
+import { pageSelector, TEST_ITEM_PAGE } from 'controllers/pages';
 import { LocalizationSwitcher } from 'components/main/localizationSwitcher';
 import { ScreenLock } from 'components/main/screenLock';
 import { Notifications } from 'components/main/notification';
@@ -23,11 +18,8 @@ import { ProjectsPage } from 'pages/admin/projectsPage';
 import { ApiPage } from 'pages/inside/apiPage';
 import { DashboardPage } from 'pages/inside/dashboardPage';
 import { DashboardItemPage } from 'pages/inside/dashboardItemPage';
-import { DebugPage } from 'pages/inside/debugPage';
 import { FiltersPage } from 'pages/inside/filtersPage';
 import { LaunchesPage } from 'pages/inside/launchesPage';
-import { SuitesPage } from 'pages/inside/suitesPage';
-import { TestsPage } from 'pages/inside/testsPage';
 import { MembersPage } from 'pages/inside/membersPage';
 import { ProfilePage } from 'pages/inside/profilePage';
 import { SandboxPage } from 'pages/inside/sandboxPage';
@@ -52,14 +44,13 @@ const pageRendering = {
   PROJECT_DASHBOARD_PAGE: { component: DashboardPage, layout: AppLayout },
   PROJECT_DASHBOARD_ITEM_PAGE: { component: DashboardItemPage, layout: AppLayout },
   PROJECT_FILTERS_PAGE: { component: FiltersPage, layout: AppLayout },
-  [PROJECT_SUITES_PAGE]: { component: SuitesPage, layout: AppLayout },
-  [PROJECT_TESTS_PAGE]: { component: TestsPage, layout: AppLayout },
   PROJECT_LAUNCHES_PAGE: { component: LaunchesPage, layout: AppLayout },
   PROJECT_MEMBERS_PAGE: { component: MembersPage, layout: AppLayout },
   PROJECT_SANDBOX_PAGE: { component: SandboxPage, layout: AppLayout },
   PROJECT_SETTINGS_PAGE: { component: SettingsPage, layout: AppLayout },
   PROJECT_SETTINGS_TAB_PAGE: { component: SettingsPage, layout: AppLayout },
-  PROJECT_USERDEBUG_PAGE: { component: DebugPage, layout: AppLayout },
+  PROJECT_USERDEBUG_PAGE: { component: LaunchesPage, layout: AppLayout },
+  PROJECT_USERDEBUG_TESTS_PAGE: { component: TestItemPage, layout: AppLayout },
   ADMINISTRATE_PAGE: { component: AdministratePage, layout: EmptyLayout },
   PROJECTS_PAGE: { component: ProjectsPage, layout: AdminLayout },
   [TEST_ITEM_PAGE]: { component: TestItemPage, layout: AppLayout },

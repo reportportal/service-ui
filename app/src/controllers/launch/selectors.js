@@ -22,3 +22,5 @@ export const queryParametersSelector = createQueryParametersSelector({
   namespace: NAMESPACE,
   defaultSorting: DEFAULT_SORTING,
 });
+
+export const debugModeSelector = (state) => domainSelector(state).debugMode || false;

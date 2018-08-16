@@ -64,7 +64,6 @@ export class Hamburger extends Component {
     onAction: PropTypes.func,
     launch: PropTypes.object.isRequired,
     projectId: PropTypes.string.isRequired,
-    onMoveToLaunches: PropTypes.func,
     onAnalysis: PropTypes.func,
     customProps: PropTypes.object,
     accountRole: PropTypes.string,
@@ -72,7 +71,6 @@ export class Hamburger extends Component {
 
   static defaultProps = {
     onAction: () => {},
-    onMoveToLaunches: () => {},
     onAnalysis: () => {},
     customProps: {},
     accountRole: '',
@@ -128,15 +126,7 @@ export class Hamburger extends Component {
   };
 
   render() {
-    const {
-      intl,
-      projectRole,
-      accountRole,
-      launch,
-      onMoveToLaunches,
-      onAnalysis,
-      customProps,
-    } = this.props;
+    const { intl, projectRole, accountRole, launch, onAnalysis, customProps } = this.props;
     return (
       <div className={cx('hamburger')}>
         <div
@@ -165,7 +155,7 @@ export class Hamburger extends Component {
                       )
                     }
                     onClick={() => {
-                      customProps.onMoveToDebug(launch);
+                      customProps.onMove(launch);
                     }}
                   />
                 ) : (
@@ -179,7 +169,7 @@ export class Hamburger extends Component {
                       )
                     }
                     onClick={() => {
-                      onMoveToLaunches(launch);
+                      customProps.onMove(launch);
                     }}
                   />
                 )}

@@ -21,11 +21,12 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { activeProjectSelector } from 'controllers/user';
+import { activeProjectSelector, activeProjectRoleSelector } from 'controllers/user';
 import { logoutAction } from 'controllers/auth';
 import classNames from 'classnames/bind';
 import { FormattedMessage } from 'react-intl';
 import { SidebarButton } from 'components/buttons/sidebarButton/sidebarButton';
+import { CUSTOMER } from 'common/constants/projectRoles';
 import {
   PROJECT_DASHBOARD_PAGE,
   PROJECT_LAUNCHES_PAGE,
@@ -50,6 +51,7 @@ const cx = classNames.bind(styles);
 @connect(
   (state) => ({
     activeProject: activeProjectSelector(state),
+    projectRole: activeProjectRoleSelector(state),
   }),
   {
     logout: logoutAction,
@@ -57,6 +59,7 @@ const cx = classNames.bind(styles);
 )
 export class Sidebar extends Component {
   static propTypes = {
+    projectRole: PropTypes.string.isRequired,
     onClickNavBtn: PropTypes.func,
     activeProject: PropTypes.string.isRequired,
     logout: PropTypes.func,
@@ -97,14 +100,19 @@ export class Sidebar extends Component {
               <FormattedMessage id={'Sidebar.filtersBtn'} defaultMessage={'Filters'} />
             </SidebarButton>
           </div>
-          <div className={cx('sidebar-btn')} onClick={this.props.onClickNavBtn}>
-            <SidebarButton
-              link={{ type: PROJECT_USERDEBUG_PAGE, payload: { projectId: activeProject } }}
-              icon={DebugIcon}
-            >
-              <FormattedMessage id={'Sidebar.debugBtn'} defaultMessage={'Debug'} />
-            </SidebarButton>
-          </div>
+          {this.props.projectRole !== CUSTOMER && (
+            <div className={cx('sidebar-btn')} onClick={this.props.onClickNavBtn}>
+              <SidebarButton
+                link={{
+                  type: PROJECT_USERDEBUG_PAGE,
+                  payload: { projectId: activeProject, filterId: 'all' },
+                }}
+                icon={DebugIcon}
+              >
+                <FormattedMessage id={'Sidebar.debugBtn'} defaultMessage={'Debug'} />
+              </SidebarButton>
+            </div>
+          )}
         </div>
         <div className={cx('bottom-block')}>
           <div className={cx('sidebar-btn')} onClick={this.props.onClickNavBtn}>

@@ -13,6 +13,7 @@ export const SuiteTestToolbar = ({
   onProceedValidItems,
   onIgnoreInAA,
   onIncludeInAA,
+  debugMode,
 }) => (
   <div>
     {!!selectedItems.length && (
@@ -24,6 +25,7 @@ export const SuiteTestToolbar = ({
       />
     )}
     <ActionPanel
+      debugMode={debugMode}
       hasErrors={selectedItems.some((item) => !!errors[item.id])}
       hasValidItems={selectedItems.length > Object.keys(errors).length}
       onProceedValidItems={onProceedValidItems}
@@ -47,6 +49,7 @@ SuiteTestToolbar.propTypes = {
   onProceedValidItems: PropTypes.func,
   onIgnoreInAA: PropTypes.func,
   onIncludeInAA: PropTypes.func,
+  debugMode: PropTypes.bool,
 };
 SuiteTestToolbar.defaultProps = {
   selectedItems: [],
@@ -58,4 +61,5 @@ SuiteTestToolbar.defaultProps = {
   onProceedValidItems: () => {},
   onIgnoreInAA: () => {},
   onIncludeInAA: () => {},
+  debugMode: false,
 };

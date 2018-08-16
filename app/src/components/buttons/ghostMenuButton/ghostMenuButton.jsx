@@ -31,7 +31,14 @@ const cx = classNames.bind(styles);
 export class GhostMenuButton extends Component {
   static propTypes = {
     title: PropTypes.string,
-    items: PropTypes.arrayOf(PropTypes.object),
+    items: PropTypes.arrayOf(
+      PropTypes.shape({
+        label: PropTypes.string,
+        value: PropTypes.string,
+        hidden: PropTypes.bool,
+        onClick: PropTypes.func,
+      }),
+    ),
     disabled: PropTypes.bool,
     color: PropTypes.string,
   };
@@ -86,7 +93,7 @@ export class GhostMenuButton extends Component {
         <span className={cx('title')}>{title}</span>
         <i className={cx('toggle-icon')}>{Parser(ArrowIcon)}</i>
         <div className={cx('menu')}>
-          {items.map((item) => (
+          {items.filter((item) => !item.hidden).map((item) => (
             <div
               key={item.value}
               className={cx('menu-item', { disabled: item.disabled })}

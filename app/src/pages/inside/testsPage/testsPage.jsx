@@ -6,6 +6,7 @@ import { SORTING_ASC, withSorting } from 'controllers/sorting';
 import { PageLayout } from 'layouts/pageLayout';
 import { LaunchSuiteGrid } from 'pages/inside/common/launchSuiteGrid';
 import { SuiteTestToolbar } from 'pages/inside/common/suiteTestToolbar';
+import { debugModeSelector } from 'controllers/launch';
 import {
   testsSelector,
   selectedTestsSelector,
@@ -25,6 +26,7 @@ import {
 
 @connect(
   (state) => ({
+    debugMode: debugModeSelector(state),
     tests: testsSelector(state),
     selectedTests: selectedTestsSelector(state),
     parentItem: parentItemSelector(state),
@@ -48,6 +50,7 @@ import {
 @injectIntl
 export class TestsPage extends Component {
   static propTypes = {
+    debugMode: PropTypes.bool.isRequired,
     intl: intlShape.isRequired,
     tests: PropTypes.arrayOf(PropTypes.object),
     selectedTests: PropTypes.arrayOf(PropTypes.object),
@@ -105,6 +108,7 @@ export class TestsPage extends Component {
       onChangePageSize,
       parentItem,
       loading,
+      debugMode,
     } = this.props;
     return (
       <PageLayout>
@@ -114,6 +118,7 @@ export class TestsPage extends Component {
           onUnselect={this.props.toggleTestSelectionAction}
           onUnselectAll={this.props.unselectAllTestsAction}
           onRefresh={this.props.fetchTestItemsAction}
+          debugMode={debugMode}
         />
         <LaunchSuiteGrid
           data={tests}
