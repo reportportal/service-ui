@@ -16,7 +16,7 @@ import {
   createNamespacedQuery,
 } from 'common/utils/routingUtils';
 import { LEVEL_STEP } from 'common/constants/launchLevels';
-import { NAMESPACE as LAUNCH_NAMESPACE } from 'controllers/launch';
+import { NAMESPACE as LAUNCH_NAMESPACE, debugModeSelector } from 'controllers/launch';
 import { DEFAULT_SORTING } from './constants';
 import { createLink, getQueryNamespace, getDefectsString } from './utils';
 
@@ -114,42 +114,57 @@ export const nameLinkSelector = (state, ownProps) => {
   const query = pagePropertiesSelector(state);
   const payload = payloadSelector(state);
   const testItemIds = testItemIdsSelector(state);
-  return createLink(testItemIds, ownProps.itemId, payload, query);
+  const isDebugMode = debugModeSelector(state);
+  return createLink(testItemIds, ownProps.itemId, payload, query, isDebugMode);
 };
 
 export const statisticsLinkSelector = (state, ownProps) => {
   const query = pagePropertiesSelector(state);
   const payload = payloadSelector(state);
   const testItemIds = testItemIdsSelector(state);
-  return createLink(testItemIds, ownProps.itemId, payload, {
-    ...query,
-    ...createNamespacedQuery(
-      {
-        'filter.eq.has_childs': false,
-        'filter.in.type': LEVEL_STEP,
-        'filter.in.status': ownProps.statuses && ownProps.statuses.join(','),
-      },
-      getQueryNamespace(
-        testItemIdsArraySelector(state) ? testItemIdsArraySelector(state).length : 0,
+  const isDebugMode = debugModeSelector(state);
+  return createLink(
+    testItemIds,
+    ownProps.itemId,
+    payload,
+    {
+      ...query,
+      ...createNamespacedQuery(
+        {
+          'filter.eq.has_childs': false,
+          'filter.in.type': LEVEL_STEP,
+          'filter.in.status': ownProps.statuses && ownProps.statuses.join(','),
+        },
+        getQueryNamespace(
+          testItemIdsArraySelector(state) ? testItemIdsArraySelector(state).length : 0,
+        ),
       ),
-    ),
-  });
+    },
+    isDebugMode,
+  );
 };
 
 export const defectLinkSelector = (state, ownProps) => {
   const query = pagePropertiesSelector(state);
   const payload = payloadSelector(state);
   const testItemIds = testItemIdsSelector(state);
-  return createLink(testItemIds, ownProps.itemId, payload, {
-    ...query,
-    ...createNamespacedQuery(
-      {
-        'filter.eq.has_childs': false,
-        'filter.in.issue$issue_type': getDefectsString(ownProps.defects),
-      },
-      getQueryNamespace(
-        testItemIdsArraySelector(state) ? testItemIdsArraySelector(state).length : 0,
+  const isDebugMode = debugModeSelector(state);
+  return createLink(
+    testItemIds,
+    ownProps.itemId,
+    payload,
+    {
+      ...query,
+      ...createNamespacedQuery(
+        {
+          'filter.eq.has_childs': false,
+          'filter.in.issue$issue_type': getDefectsString(ownProps.defects),
+        },
+        getQueryNamespace(
+          testItemIdsArraySelector(state) ? testItemIdsArraySelector(state).length : 0,
+        ),
       ),
-    ),
-  });
+    },
+    isDebugMode,
+  );
 };

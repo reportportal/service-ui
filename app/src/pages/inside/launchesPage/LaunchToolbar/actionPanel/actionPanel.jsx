@@ -29,6 +29,10 @@ const messages = defineMessages({
     id: 'ActionPanel.actionMoveToDebug',
     defaultMessage: 'Move to debug',
   },
+  actionMoveToAll: {
+    id: 'ActionPanel.actionMoveToAll',
+    defaultMessage: 'Move to all launches',
+  },
   actionForceFinish: {
     id: 'ActionPanel.actionForceFinish',
     defaultMessage: 'Force finish',
@@ -54,6 +58,7 @@ const messages = defineMessages({
 @injectIntl
 export class ActionPanel extends Component {
   static propTypes = {
+    debugMode: PropTypes.bool,
     selectedLaunches: PropTypes.array,
     hasErrors: PropTypes.bool,
     showBreadcrumb: PropTypes.bool,
@@ -63,7 +68,7 @@ export class ActionPanel extends Component {
     onProceedValidItems: PropTypes.func,
     onMerge: PropTypes.func,
     onCompare: PropTypes.func,
-    onMoveToDebug: PropTypes.func,
+    onMove: PropTypes.func,
     onForceFinish: PropTypes.func,
     onDelete: PropTypes.func,
     breadcrumbs: PropTypes.arrayOf(breadcrumbDescriptorShape),
@@ -71,6 +76,7 @@ export class ActionPanel extends Component {
   };
 
   static defaultProps = {
+    debugMode: false,
     selectedLaunches: [],
     hasErrors: false,
     showBreadcrumb: false,
@@ -79,7 +85,7 @@ export class ActionPanel extends Component {
     onProceedValidItems: () => {},
     onMerge: () => {},
     onCompare: () => {},
-    onMoveToDebug: () => {},
+    onMove: () => {},
     onForceFinish: () => {},
     onDelete: () => {},
     breadcrumbs: [],
@@ -95,17 +101,26 @@ export class ActionPanel extends Component {
     {
       label: this.props.intl.formatMessage(messages.actionMerge),
       value: 'action-merge',
+      hidden: this.props.debugMode,
       onClick: this.props.onMerge,
     },
     {
       label: this.props.intl.formatMessage(messages.actionCompare),
       value: 'action-compare',
+      hidden: this.props.debugMode,
       onClick: this.props.onCompare,
     },
     {
       label: this.props.intl.formatMessage(messages.actionMoveToDebug),
       value: 'action-move-to-debug',
-      onClick: this.props.onMoveToDebug,
+      hidden: this.props.debugMode,
+      onClick: this.props.onMove,
+    },
+    {
+      label: this.props.intl.formatMessage(messages.actionMoveToAll),
+      value: 'action-move-to-all',
+      hidden: !this.props.debugMode,
+      onClick: this.props.onMove,
     },
     {
       label: this.props.intl.formatMessage(messages.actionForceFinish),
@@ -130,6 +145,7 @@ export class ActionPanel extends Component {
       onImportLaunch,
       breadcrumbs,
       restorePath,
+      debugMode,
     } = this.props;
     return (
       <div className={cx('action-panel', { 'right-buttons-only': !showBreadcrumb && !hasErrors })}>
@@ -140,11 +156,13 @@ export class ActionPanel extends Component {
           </GhostButton>
         )}
         <div className={cx('action-buttons')}>
-          <div className={cx('action-button', 'mobile-hidden')}>
-            <GhostButton icon={ImportIcon} onClick={onImportLaunch}>
-              <FormattedMessage id="LaunchesPage.import" defaultMessage="Import" />
-            </GhostButton>
-          </div>
+          {!debugMode && (
+            <div className={cx('action-button', 'mobile-hidden')}>
+              <GhostButton icon={ImportIcon} onClick={onImportLaunch}>
+                <FormattedMessage id="LaunchesPage.import" defaultMessage="Import" />
+              </GhostButton>
+            </div>
+          )}
           <div className={cx('action-button', 'mobile-hidden')}>
             <GhostMenuButton
               title={intl.formatMessage(messages.actionsBtn)}

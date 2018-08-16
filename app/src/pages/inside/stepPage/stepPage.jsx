@@ -10,6 +10,7 @@ import {
   isListViewSelector,
   namespaceSelector,
 } from 'controllers/testItem';
+import { debugModeSelector } from 'controllers/launch';
 import {
   stepsSelector,
   selectedStepsSelector,
@@ -30,6 +31,7 @@ import { StepGrid } from './stepGrid';
 
 @connect(
   (state) => ({
+    debugMode: debugModeSelector(state),
     parentItem: parentItemSelector(state),
     steps: stepsSelector(state),
     lastOperation: lastOperationSelector(state),
@@ -55,6 +57,7 @@ import { StepGrid } from './stepGrid';
 })
 export class StepPage extends Component {
   static propTypes = {
+    debugMode: PropTypes.bool.isRequired,
     steps: PropTypes.arrayOf(PropTypes.object),
     parentItem: PropTypes.object,
     selectedItems: PropTypes.arrayOf(PropTypes.object),
@@ -141,6 +144,7 @@ export class StepPage extends Component {
       onChangePage,
       onChangePageSize,
       showTestParamsModal,
+      debugMode,
     } = this.props;
     return (
       <PageLayout>
@@ -152,6 +156,7 @@ export class StepPage extends Component {
           onUnselectAll={unselectAllSteps}
           onProceedValidItems={this.proceedWithValidItems}
           onRefresh={this.props.fetchTestItemsAction}
+          debugMode={debugMode}
           onIgnoreInAA={this.handleIgnoreInAA}
           onIncludeInAA={this.handleIncludeInAA}
         />

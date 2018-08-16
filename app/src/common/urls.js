@@ -25,6 +25,8 @@ export const URLS = {
   filter: (activeProject, id) => `${urlBase}${activeProject}/filter/${id}`,
   filters: (activeProject) => `${urlBase}${activeProject}/filter`,
 
+  debug: (activeProject) => `${urlBase}${activeProject}/launch/mode`,
+
   launch: (activeProject, id) => `${urlBase}${activeProject}/launch/${id}`,
   launchTagsSearch: (activeProject) => `${urlBase}${activeProject}/launch/tags?filter.cnt.tags=`,
   launchOwnersSearch: (activeProject) =>

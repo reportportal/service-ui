@@ -165,7 +165,7 @@ export class LaunchSuiteGrid extends PureComponent {
     sortingDirection: PropTypes.string,
     onChangeSorting: PropTypes.func,
     onDeleteItem: PropTypes.func,
-    onMoveToDebug: PropTypes.func,
+    onMove: PropTypes.func,
     onEditLaunch: PropTypes.func,
     onForceFinish: PropTypes.func,
     selectedItems: PropTypes.arrayOf(PropTypes.object),
@@ -180,7 +180,7 @@ export class LaunchSuiteGrid extends PureComponent {
     sortingDirection: null,
     onChangeSorting: () => {},
     onDeleteItem: () => {},
-    onMoveToDebug: () => {},
+    onMove: () => {},
     onEditLaunch: () => {},
     onForceFinish: () => {},
     selectedItems: [],
@@ -194,7 +194,7 @@ export class LaunchSuiteGrid extends PureComponent {
       component: HamburgerColumn,
       customProps: {
         onDeleteItem: this.props.onDeleteItem,
-        onMoveToDebug: this.props.onMoveToDebug,
+        onMove: this.props.onMove,
         onForceFinish: this.props.onForceFinish,
       },
     };

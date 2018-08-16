@@ -13,7 +13,7 @@ import {
 import { GENERAL } from 'common/constants/settingTabs';
 import { isAuthorizedSelector } from 'controllers/auth';
 import { fetchDashboardAction, changeVisibilityTypeAction } from 'controllers/dashboard';
-import { fetchLaunchesAction } from 'controllers/launch';
+import { fetchLaunchesAction, setDebugMode } from 'controllers/launch';
 import { TEST_ITEM_PAGE } from 'controllers/pages/constants';
 import { fetchTestItemsAction, setLevelAction } from 'controllers/testItem';
 import { fetchFiltersAction } from 'controllers/filter';
@@ -92,6 +92,7 @@ export default {
   PROJECT_LAUNCHES_PAGE: {
     path: '/:projectId/launches/:filterId?',
     thunk: (dispatch) => {
+      dispatch(setDebugMode(false));
       dispatch(setLevelAction(''));
       dispatch(fetchLaunchesAction());
     },
@@ -100,7 +101,21 @@ export default {
     path: '/:projectId/filters',
     thunk: (dispatch) => dispatch(fetchFiltersAction()),
   },
-  PROJECT_USERDEBUG_PAGE: '/:projectId/userdebug',
+  PROJECT_USERDEBUG_PAGE: {
+    path: '/:projectId/userdebug/:filterId',
+    thunk: (dispatch) => {
+      dispatch(setDebugMode(true));
+      dispatch(setLevelAction(''));
+      dispatch(fetchLaunchesAction());
+    },
+  },
+  PROJECT_USERDEBUG_TESTS_PAGE: {
+    path: '/:projectId/userdebug/:filterId/:testItemIds+',
+    thunk: (dispatch) => {
+      dispatch(setDebugMode(true));
+      dispatch(fetchTestItemsAction());
+    },
+  },
   PROJECT_MEMBERS_PAGE: {
     path: '/:projectId/members',
     thunk: (dispatch) => dispatch(fetchMembersAction()),
@@ -113,6 +128,9 @@ export default {
   PROJECT_SANDBOX_PAGE: '/:projectId/sandbox',
   [TEST_ITEM_PAGE]: {
     path: '/:projectId/launches/:filterId/:testItemIds+',
-    thunk: (dispatch) => dispatch(fetchTestItemsAction()),
+    thunk: (dispatch) => {
+      dispatch(setDebugMode(false));
+      dispatch(fetchTestItemsAction());
+    },
   },
 };

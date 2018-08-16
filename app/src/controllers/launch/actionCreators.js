@@ -7,8 +7,13 @@ import {
   createProceedWithValidItemsAction,
   toggleAllItemsAction,
 } from 'controllers/groupOperations';
-import { FETCH_LAUNCHES, NAMESPACE } from './constants';
+import { FETCH_LAUNCHES, NAMESPACE, SET_DEBUG_MODE } from './constants';
 import { validateMergeLaunch, validateFinishForceLaunch } from './actionValidators';
+
+export const setDebugMode = (isDebugMode) => ({
+  type: SET_DEBUG_MODE,
+  payload: isDebugMode,
+});
 
 export const fetchLaunchesAction = (params) => ({
   type: FETCH_LAUNCHES,
@@ -55,13 +60,13 @@ export const compareLaunchesAction = defineGroupOperation(
     }),
   () => null,
 );
-export const moveLaunchesToDebugAction = defineGroupOperation(
+export const moveLaunchesAction = defineGroupOperation(
   NAMESPACE,
-  'moveToDebugLaunches',
-  (launches, { fetchFunc }) =>
+  'moveLaunches',
+  (launches, { fetchFunc, debugMode }) =>
     showModalAction({
-      id: 'moveToDebugModal',
-      data: { ids: launches.map((launch) => launch.id), fetchFunc },
+      id: 'moveLaunchesModal',
+      data: { ids: launches.map((launch) => launch.id), fetchFunc, debugMode },
     }),
   () => null,
 );

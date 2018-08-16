@@ -1,4 +1,5 @@
 export const FETCH_LAUNCHES = 'fetchLaunchesAction';
+export const SET_DEBUG_MODE = 'setDebugMode';
 
 export const NAMESPACE = 'launches';
 

@@ -8,6 +8,7 @@ import { SORTING_ASC, withSorting } from 'controllers/sorting';
 import { userIdSelector } from 'controllers/user';
 import { withPagination } from 'controllers/pagination';
 import { LaunchSuiteGrid } from 'pages/inside/common/launchSuiteGrid';
+import { debugModeSelector } from 'controllers/launch';
 import {
   suitePaginationSelector,
   suitesSelector,
@@ -26,6 +27,7 @@ import {
 
 @connect(
   (state) => ({
+    debugMode: debugModeSelector(state),
     userId: userIdSelector(state),
     suites: suitesSelector(state),
     selectedSuites: selectedSuitesSelector(state),
@@ -50,6 +52,7 @@ import {
 @injectIntl
 export class SuitesPage extends Component {
   static propTypes = {
+    debugMode: PropTypes.bool.isRequired,
     intl: intlShape.isRequired,
     suites: PropTypes.arrayOf(PropTypes.object),
     selectedSuites: PropTypes.arrayOf(PropTypes.object),
@@ -107,6 +110,7 @@ export class SuitesPage extends Component {
       selectedSuites,
       parentItem,
       loading,
+      debugMode,
     } = this.props;
     return (
       <PageLayout>
@@ -116,6 +120,7 @@ export class SuitesPage extends Component {
           onUnselectAll={this.props.unselectAllSuitesAction}
           parentItem={parentItem}
           onRefresh={this.props.fetchTestItemsAction}
+          debugMode={debugMode}
         />
         <LaunchSuiteGrid
           data={suites}
