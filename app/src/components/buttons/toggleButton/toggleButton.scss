@@ -32,6 +32,14 @@
     text-overflow: ellipsis;
   }
 }
+.disabled {
+  &.active {
+    border-color: $COLOR--gray-80;
+    background: $COLOR--gray-80;
+  }
+  background: $COLOR--gray-91;
+  cursor: default;
+}
 
 .mobile-disabled {
   &.active {

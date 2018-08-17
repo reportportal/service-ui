@@ -25,7 +25,7 @@ import styles from './toggleButton.scss';
 
 const cx = classNames.bind(styles);
 
-export const ToggleButton = ({ items, value, onClickItem, mobileDisabled }) => (
+export const ToggleButton = ({ items, value, onClickItem, mobileDisabled, disabled }) => (
   <div className={cx('toggle-button')}>
     {items.map((item) => (
       <div
@@ -34,9 +34,10 @@ export const ToggleButton = ({ items, value, onClickItem, mobileDisabled }) => (
           'button-item': true,
           active: item.value === value,
           'mobile-disabled': mobileDisabled,
+          disabled,
         })}
         style={{ width: `${100 / items.length}%` }}
-        onClick={() => onClickItem(item.value)}
+        onClick={!disabled ? () => onClickItem(item.value) : null}
       >
         <span>{item.label}</span>
       </div>
@@ -50,6 +51,7 @@ ToggleButton.propTypes = {
       label: PropTypes.string.isRequired,
     }),
   ),
+  disabled: PropTypes.bool,
   mobileDisabled: PropTypes.bool,
   value: PropTypes.string,
   onClickItem: PropTypes.func,
@@ -57,6 +59,7 @@ ToggleButton.propTypes = {
 ToggleButton.defaultProps = {
   items: [],
   value: '',
+  disabled: false,
   mobileDisabled: false,
   onClickItem: () => {},
 };

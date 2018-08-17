@@ -57,6 +57,7 @@ const messages = defineMessages({
 @injectIntl
 export class IndexActionsBlock extends Component {
   static propTypes = {
+    canUpdate: PropTypes.bool,
     intl: intlShape.isRequired,
     indexing_running: PropTypes.bool,
     appInfo: PropTypes.object,
@@ -65,6 +66,7 @@ export class IndexActionsBlock extends Component {
   };
 
   static defaultProps = {
+    canUpdate: false,
     indexing_running: false,
     appInfo: {},
     showRemoveIndexModal: () => {},
@@ -72,7 +74,7 @@ export class IndexActionsBlock extends Component {
   };
 
   render() {
-    const { intl } = this.props;
+    const { intl, canUpdate } = this.props;
     return (
       <Fragment>
         <div className={cx('index-actions-title-wrapper')}>
@@ -87,7 +89,7 @@ export class IndexActionsBlock extends Component {
           </div>
           <div className={cx('form-group-column')}>
             <GhostButton
-              disabled={this.props.indexing_running || !this.props.appInfo.ANALYZER}
+              disabled={this.props.indexing_running || !this.props.appInfo.ANALYZER || !canUpdate}
               onClick={this.props.showRemoveIndexModal}
               mobileDisabled
             >
@@ -104,7 +106,7 @@ export class IndexActionsBlock extends Component {
           </div>
           <div className={cx('form-group-column')}>
             <GhostButton
-              disabled={this.props.indexing_running || !this.props.appInfo.ANALYZER}
+              disabled={this.props.indexing_running || !this.props.appInfo.ANALYZER || !canUpdate}
               onClick={this.props.showGenerateIndexModal}
               title={
                 !this.props.appInfo.ANALYZER

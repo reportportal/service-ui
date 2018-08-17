@@ -27,6 +27,9 @@
     margin-left: -50px;
   }
   &.disabled {
+    &:hover {
+      cursor: default;
+    }
     .on {
       background-color: $COLOR--greenish-beige;
     }
@@ -86,6 +89,5 @@
   font-family: $FONT-REGULAR;
   font-size: 13px;
   color: $COLOR--charcoal-grey;
-  cursor: pointer;
   box-sizing: border-box;
 }
