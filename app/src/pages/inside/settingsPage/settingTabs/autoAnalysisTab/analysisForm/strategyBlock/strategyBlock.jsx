@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from 'react';
+import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import Parser from 'html-react-parser';
@@ -47,10 +48,15 @@ const messages = defineMessages({
 export class StrategyBlock extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
+    canUpdate: PropTypes.bool,
+  };
+
+  static defaultProps = {
+    canUpdate: false,
   };
 
   render() {
-    const { intl } = this.props;
+    const { intl, canUpdate } = this.props;
 
     return (
       <Fragment>
@@ -63,7 +69,7 @@ export class StrategyBlock extends Component {
           format={Boolean}
           parse={Boolean}
         >
-          <InputBigSwitcher mobileDisabled />
+          <InputBigSwitcher mobileDisabled disabled={!canUpdate} />
         </FormField>
 
         <FormField
@@ -74,7 +80,12 @@ export class StrategyBlock extends Component {
           label={intl.formatMessage(messages.strategySelectorTitle)}
           description={intl.formatMessage(messages.sameNameLaunchesInfo)}
         >
-          <InputRadio ownValue="LAUNCH_NAME" name="aa-strategy" mobileDisabled>
+          <InputRadio
+            ownValue="LAUNCH_NAME"
+            name="aa-strategy"
+            mobileDisabled
+            disabled={!canUpdate}
+          >
             <span className={cx('radio-children')}>
               {intl.formatMessage(messages.sameNameLaunchesCaption)}
             </span>
@@ -89,7 +100,7 @@ export class StrategyBlock extends Component {
           descriptionClassName={cx('radio-description')}
           description={intl.formatMessage(messages.allLaunchesInfo)}
         >
-          <InputRadio ownValue="ALL" name="aa-strategy" mobileDisabled>
+          <InputRadio ownValue="ALL" name="aa-strategy" mobileDisabled disabled={!canUpdate}>
             <span className={cx('radio-children')}>
               {intl.formatMessage(messages.allLaunchesCaption)}
             </span>

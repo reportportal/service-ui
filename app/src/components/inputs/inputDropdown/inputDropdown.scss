@@ -33,6 +33,9 @@
   &.disabled {
     background-color: $COLOR--gray-91;
     cursor: default;
+    &:hover {
+      border-color: $COLOR--gray-80;
+    }
   }
 }
 .value {

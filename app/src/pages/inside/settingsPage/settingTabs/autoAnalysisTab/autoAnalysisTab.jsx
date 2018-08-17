@@ -3,8 +3,13 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
 import { injectIntl } from 'react-intl';
+import { canUpdateSettings } from 'common/utils/permissions';
 import { fetchAutoAnalysisConfigurationAction } from 'controllers/project';
-import { activeProjectSelector } from 'controllers/user';
+import {
+  activeProjectSelector,
+  activeProjectRoleSelector,
+  userAccountRoleSelector,
+} from 'controllers/user';
 import { AnalysisForm } from './analysisForm/analysisForm';
 import { IndexActionsBlock } from './indexActionsBlock';
 import styles from './autoAnalysisTab.scss';
@@ -14,6 +19,8 @@ const cx = classNames.bind(styles);
 @connect(
   (state) => ({
     projectId: activeProjectSelector(state),
+    accountRole: userAccountRoleSelector(state),
+    userRole: activeProjectRoleSelector(state),
   }),
   {
     fetchAutoAnalysisConfigurationAction,
@@ -24,6 +31,8 @@ export class AutoAnalysisTab extends Component {
   static propTypes = {
     projectId: PropTypes.string,
     fetchAutoAnalysisConfigurationAction: PropTypes.func.isRequired,
+    accountRole: PropTypes.string.isRequired,
+    userRole: PropTypes.string.isRequired,
   };
 
   static defaultProps = {
@@ -38,8 +47,10 @@ export class AutoAnalysisTab extends Component {
   render() {
     return (
       <div className={cx('auto-analysis-tab')}>
-        <AnalysisForm />
-        <IndexActionsBlock />
+        <AnalysisForm canUpdate={canUpdateSettings(this.props.accountRole, this.props.userRole)} />
+        <IndexActionsBlock
+          canUpdate={canUpdateSettings(this.props.accountRole, this.props.userRole)}
+        />
         <div className={cx('mobile-disabling-cover')} />
       </div>
     );
