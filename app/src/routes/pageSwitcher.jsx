@@ -50,7 +50,7 @@ const pageRendering = {
   PROJECT_SETTINGS_PAGE: { component: SettingsPage, layout: AppLayout },
   PROJECT_SETTINGS_TAB_PAGE: { component: SettingsPage, layout: AppLayout },
   PROJECT_USERDEBUG_PAGE: { component: LaunchesPage, layout: AppLayout },
-  PROJECT_USERDEBUG_TESTS_PAGE: { component: TestItemPage, layout: AppLayout },
+  PROJECT_USERDEBUG_TEST_ITEM_PAGE: { component: TestItemPage, layout: AppLayout },
   ADMINISTRATE_PAGE: { component: AdministratePage, layout: EmptyLayout },
   PROJECTS_PAGE: { component: ProjectsPage, layout: AdminLayout },
   [TEST_ITEM_PAGE]: { component: TestItemPage, layout: AppLayout },

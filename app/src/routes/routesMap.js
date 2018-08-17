@@ -109,7 +109,7 @@ export default {
       dispatch(fetchLaunchesAction());
     },
   },
-  PROJECT_USERDEBUG_TESTS_PAGE: {
+  PROJECT_USERDEBUG_TEST_ITEM_PAGE: {
     path: '/:projectId/userdebug/:filterId/:testItemIds+',
     thunk: (dispatch) => {
       dispatch(setDebugMode(true));
