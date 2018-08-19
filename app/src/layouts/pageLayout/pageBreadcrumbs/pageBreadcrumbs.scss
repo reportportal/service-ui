@@ -1,0 +1,25 @@
+.page-breadcrumbs {
+  padding-left: 15px;
+  min-height: 30px;
+  margin-bottom: 15px;
+  font-family: $FONT-CONDBOLD;
+  font-size: 16px;
+  letter-spacing: 1px;
+  line-height: 30px;
+  color: $COLOR--charcoal-grey;
+  text-transform: uppercase;
+  @media (max-width: $SCREEN_XS_MAX) {
+    display: none;
+  }
+}
+.page-breadcrumbs-link {
+  color: $COLOR--topaz;
+  text-decoration: none;
+}
+.page-breadcrumbs-item {
+  display: inline-block;
+  + .page-breadcrumbs-item:before {
+    content: '/';
+    margin: 0 3px;
+  }
+}

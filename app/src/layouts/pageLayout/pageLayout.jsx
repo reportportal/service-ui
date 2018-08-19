@@ -1,34 +1,38 @@
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import styles from './pageLayout.scss';
+import { PageBreadcrumbs } from './pageBreadcrumbs';
 
 const cx = classNames.bind(styles);
 
-export const PageLayout = ({ title, children }) => (
-  <div className={cx('page-layout')}>
-    {title && <PageTitle title={title} /> }
-    <div className={cx('page-content')}>
-      {children}
-    </div>
-  </div>
-);
+export const PageLayout = ({ children }) => <div className={cx('page-layout')}>{children}</div>;
+
 PageLayout.propTypes = {
-  title: PropTypes.node,
   children: PropTypes.node,
 };
 PageLayout.defaultProps = {
-  title: null,
   children: null,
 };
 
-const PageTitle = ({ title }) => (
-  <div className={cx('page-title')}>
-    {title}
+export const PageHeader = ({ children, breadcrumbs }) => (
+  <div className={cx('page-header')}>
+    <PageBreadcrumbs data={breadcrumbs} />
+    <div>{children}</div>
   </div>
 );
-PageTitle.propTypes = {
-  title: PropTypes.node,
+PageHeader.propTypes = {
+  breadcrumbs: PropTypes.array,
+  children: PropTypes.node,
 };
-PageTitle.defaultProps = {
-  title: null,
+PageHeader.defaultProps = {
+  breadcrumbs: [],
+  children: null,
+};
+
+export const PageSection = ({ children }) => <div className={cx('page-content')}>{children}</div>;
+PageSection.propTypes = {
+  children: PropTypes.node,
+};
+PageSection.defaultProps = {
+  children: null,
 };

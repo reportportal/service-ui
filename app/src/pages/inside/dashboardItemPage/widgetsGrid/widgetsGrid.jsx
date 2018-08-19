@@ -50,15 +50,17 @@ export class WidgetsGrid extends Component {
     userInfo: PropTypes.object.isRequired,
     redirect: PropTypes.func.isRequired,
     showNotification: PropTypes.func.isRequired,
+    dashboard: PropTypes.object,
   };
 
   static defaultProps = {
     isFullscreen: false,
+    dashboard: {},
   };
 
   state = {
     widgets: [],
-    isFetching: false,
+    isFetching: true,
     isMobile: false,
     isModifiable: false,
   };
@@ -122,12 +124,15 @@ export class WidgetsGrid extends Component {
     });
   };
 
-  updateWidgets = (widgets) => {
-    fetch(this.props.url, {
-      method: 'PUT',
-      data: {
-        updateWidgets: widgets,
-      },
+  onWidgetsReady = (dashboard) => {
+    const { userInfo, project } = this.props;
+    const isOwner = dashboard.owner === userInfo.userId;
+    const projectRole =
+      userInfo.assigned_projects[project] && userInfo.assigned_projects[project].projectRole;
+    this.setState({
+      widgets: dashboard.widgets,
+      isFetching: false,
+      isModifiable: canResizeAndDragWidgets(userInfo.userRole, projectRole, isOwner),
     });
   };
 
@@ -140,25 +145,28 @@ export class WidgetsGrid extends Component {
     });
 
   fetchWidgets = () => {
-    const { userInfo, project } = this.props;
-    const projectRole =
-      userInfo.assigned_projects[project] && userInfo.assigned_projects[project].projectRole;
-
-    this.setState({ isFetching: true });
-
-    return fetch(this.props.url)
-      .then((data) => {
-        const isOwner = data.owner === userInfo.userId;
-
-        this.setState({
-          widgets: data.widgets,
-          isFetching: false,
-          isModifiable: canResizeAndDragWidgets(userInfo.userRole, projectRole, isOwner),
+    const { project, dashboard } = this.props;
+    if (!dashboard) {
+      return;
+    }
+    if (dashboard.widgets) {
+      this.onWidgetsReady(dashboard);
+    } else {
+      fetch(this.props.url)
+        .then(this.onWidgetsReady)
+        .catch(() => {
+          this.props.redirect({ type: PROJECT_DASHBOARD_PAGE, payload: { projectId: project } });
         });
-      })
-      .catch(() => {
-        this.props.redirect({ type: PROJECT_DASHBOARD_PAGE, payload: { projectId: project } });
-      });
+    }
+  };
+
+  updateWidgets = (widgets) => {
+    fetch(this.props.url, {
+      method: 'PUT',
+      data: {
+        updateWidgets: widgets,
+      },
+    });
   };
 
   render() {

@@ -1,7 +1,7 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { PageLayout } from 'layouts/pageLayout';
+import { PageLayout, PageSection } from 'layouts/pageLayout';
 import { SuiteTestToolbar } from 'pages/inside/common/suiteTestToolbar';
 import {
   parentItemSelector,
@@ -148,35 +148,37 @@ export class StepPage extends Component {
     } = this.props;
     return (
       <PageLayout>
-        <SuiteTestToolbar
-          errors={validationErrors}
-          selectedItems={selectedItems}
-          parentItem={parentItem}
-          onUnselect={toggleStepSelection}
-          onUnselectAll={unselectAllSteps}
-          onProceedValidItems={this.proceedWithValidItems}
-          onRefresh={this.props.fetchTestItemsAction}
-          debugMode={debugMode}
-          onIgnoreInAA={this.handleIgnoreInAA}
-          onIncludeInAA={this.handleIncludeInAA}
-        />
-        <StepGrid
-          data={steps}
-          selectedItems={selectedItems}
-          onAllItemsSelect={this.handleAllStepsSelection}
-          onItemSelect={toggleStepSelection}
-          loading={loading}
-          listView={listView}
-          onShowTestParams={showTestParamsModal}
-        />
-        <PaginationToolbar
-          activePage={activePage}
-          itemCount={itemCount}
-          pageCount={pageCount}
-          pageSize={pageSize}
-          onChangePage={onChangePage}
-          onChangePageSize={onChangePageSize}
-        />
+        <PageSection>
+          <SuiteTestToolbar
+            errors={validationErrors}
+            selectedItems={selectedItems}
+            parentItem={parentItem}
+            onUnselect={toggleStepSelection}
+            onUnselectAll={unselectAllSteps}
+            onProceedValidItems={this.proceedWithValidItems}
+            onRefresh={this.props.fetchTestItemsAction}
+            debugMode={debugMode}
+            onIgnoreInAA={this.handleIgnoreInAA}
+            onIncludeInAA={this.handleIncludeInAA}
+          />
+          <StepGrid
+            data={steps}
+            selectedItems={selectedItems}
+            onAllItemsSelect={this.handleAllStepsSelection}
+            onItemSelect={toggleStepSelection}
+            loading={loading}
+            listView={listView}
+            onShowTestParams={showTestParamsModal}
+          />
+          <PaginationToolbar
+            activePage={activePage}
+            itemCount={itemCount}
+            pageCount={pageCount}
+            pageSize={pageSize}
+            onChangePage={onChangePage}
+            onChangePageSize={onChangePageSize}
+          />
+        </PageSection>
       </PageLayout>
     );
   }

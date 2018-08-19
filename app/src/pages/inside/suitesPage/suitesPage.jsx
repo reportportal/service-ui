@@ -2,7 +2,7 @@ import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { injectIntl, intlShape } from 'react-intl';
-import { PageLayout } from 'layouts/pageLayout';
+import { PageLayout, PageSection } from 'layouts/pageLayout';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
 import { SORTING_ASC, withSorting } from 'controllers/sorting';
 import { userIdSelector } from 'controllers/user';
@@ -114,32 +114,34 @@ export class SuitesPage extends Component {
     } = this.props;
     return (
       <PageLayout>
-        <SuiteTestToolbar
-          selectedItems={selectedSuites}
-          onUnselect={this.props.toggleSuiteSelectionAction}
-          onUnselectAll={this.props.unselectAllSuitesAction}
-          parentItem={parentItem}
-          onRefresh={this.props.fetchTestItemsAction}
-          debugMode={debugMode}
-        />
-        <LaunchSuiteGrid
-          data={suites}
-          sortingColumn={sortingColumn}
-          sortingDirection={sortingDirection}
-          onChangeSorting={onChangeSorting}
-          selectedItems={selectedSuites}
-          onItemSelect={this.props.toggleSuiteSelectionAction}
-          onAllItemsSelect={this.handleAllSuitesSelection}
-          loading={loading}
-        />
-        <PaginationToolbar
-          activePage={activePage}
-          itemCount={itemCount}
-          pageCount={pageCount}
-          pageSize={pageSize}
-          onChangePage={onChangePage}
-          onChangePageSize={onChangePageSize}
-        />
+        <PageSection>
+          <SuiteTestToolbar
+            selectedItems={selectedSuites}
+            onUnselect={this.props.toggleSuiteSelectionAction}
+            onUnselectAll={this.props.unselectAllSuitesAction}
+            parentItem={parentItem}
+            onRefresh={this.props.fetchTestItemsAction}
+            debugMode={debugMode}
+          />
+          <LaunchSuiteGrid
+            data={suites}
+            sortingColumn={sortingColumn}
+            sortingDirection={sortingDirection}
+            onChangeSorting={onChangeSorting}
+            selectedItems={selectedSuites}
+            onItemSelect={this.props.toggleSuiteSelectionAction}
+            onAllItemsSelect={this.handleAllSuitesSelection}
+            loading={loading}
+          />
+          <PaginationToolbar
+            activePage={activePage}
+            itemCount={itemCount}
+            pageCount={pageCount}
+            pageSize={pageSize}
+            onChangePage={onChangePage}
+            onChangePageSize={onChangePageSize}
+          />
+        </PageSection>
       </PageLayout>
     );
   }

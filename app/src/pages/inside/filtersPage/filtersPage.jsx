@@ -18,7 +18,7 @@ import {
 } from 'controllers/user';
 import { withPagination } from 'controllers/pagination';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
-import { PageLayout } from 'layouts/pageLayout';
+import { PageLayout, PageHeader, PageSection } from 'layouts/pageLayout';
 import { showModalAction } from 'controllers/modal';
 import { withSorting, SORTING_ASC } from 'controllers/sorting';
 import { userFiltersSelector, toggleDisplayFilterOnLaunchesAction } from 'controllers/project';
@@ -103,6 +103,8 @@ export class FiltersPage extends Component {
     loading: false,
   };
 
+  getBreadcrumbs = () => [{ title: this.props.intl.formatMessage(messages.filtersPageTitle) }];
+
   confirmDelete = (filter) =>
     this.props.showModalAction({
       id: 'filterDeleteModal',
@@ -144,26 +146,29 @@ export class FiltersPage extends Component {
     } = this.props;
     return (
       <PageLayout title={intl.formatMessage(messages.filtersPageTitle)}>
-        <FilterPageToolbar filter={filter} filters={filters} onFilterChange={onFilterChange} />
-        <FilterGrid
-          onEdit={this.openEditModal}
-          onDelete={this.confirmDelete}
-          filters={filters}
-          loading={loading}
-          {...rest}
-        />
-        {!filters.length && !loading && <NoFiltersBlock />}
-        {filters &&
-          !!filters.length && (
-            <PaginationToolbar
-              activePage={activePage}
-              itemCount={itemCount}
-              pageCount={pageCount}
-              pageSize={pageSize}
-              onChangePage={onChangePage}
-              onChangePageSize={onChangePageSize}
-            />
-          )}
+        <PageHeader breadcrumbs={this.getBreadcrumbs()} />
+        <PageSection>
+          <FilterPageToolbar filter={filter} filters={filters} onFilterChange={onFilterChange} />
+          <FilterGrid
+            onEdit={this.openEditModal}
+            onDelete={this.confirmDelete}
+            filters={filters}
+            loading={loading}
+            {...rest}
+          />
+          {!filters.length && !loading && <NoFiltersBlock />}
+          {filters &&
+            !!filters.length && (
+              <PaginationToolbar
+                activePage={activePage}
+                itemCount={itemCount}
+                pageCount={pageCount}
+                pageSize={pageSize}
+                onChangePage={onChangePage}
+                onChangePageSize={onChangePageSize}
+              />
+            )}
+        </PageSection>
       </PageLayout>
     );
   }

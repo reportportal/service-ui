@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
-import { PageLayout } from 'layouts/pageLayout';
+import { injectIntl, intlShape } from 'react-intl';
+import { PageLayout, PageSection } from 'layouts/pageLayout';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
@@ -31,13 +31,6 @@ import {
 } from 'controllers/launch';
 import { LaunchSuiteGrid } from 'pages/inside/common/launchSuiteGrid';
 import { LaunchToolbar } from './LaunchToolbar';
-
-const messages = defineMessages({
-  filtersPageTitle: {
-    id: 'LaunchesPage.title',
-    defaultMessage: 'Launches',
-  },
-});
 
 @connect(
   (state) => ({
@@ -131,9 +124,6 @@ export class LaunchesPage extends Component {
     fetchLaunchesAction: () => {},
   };
 
-  getTitle = () =>
-    !this.props.selectedLaunches.length && this.props.intl.formatMessage(messages.filtersPageTitle);
-
   updateLaunch = (launch) => {
     fetch(URLS.launchesUpdate(this.props.activeProject, launch.id), {
       method: 'put',
@@ -211,43 +201,45 @@ export class LaunchesPage extends Component {
       debugMode,
     } = this.props;
     return (
-      <PageLayout title={!debugMode ? this.getTitle() : ''}>
-        <LaunchToolbar
-          errors={this.props.validationErrors}
-          selectedLaunches={selectedLaunches}
-          onUnselect={this.props.toggleLaunchSelectionAction}
-          onUnselectAll={this.props.unselectAllLaunchesAction}
-          onProceedValidItems={this.proceedWithValidItems}
-          onMove={this.moveLaunches}
-          onMerge={this.mergeLaunches}
-          onForceFinish={this.finishForceLaunches}
-          onCompare={this.compareLaunches}
-          onImportLaunch={this.openImportModal}
-          debugMode={debugMode}
-        />
-        <LaunchSuiteGrid
-          data={launches}
-          sortingColumn={sortingColumn}
-          sortingDirection={sortingDirection}
-          onChangeSorting={onChangeSorting}
-          onDeleteItem={this.confirmDeleteItem}
-          onMove={this.moveLaunches}
-          onEditLaunch={this.openEditModal}
-          onForceFinish={this.finishForceLaunches}
-          selectedItems={selectedLaunches}
-          onItemSelect={this.props.toggleLaunchSelectionAction}
-          onAllItemsSelect={this.handleAllLaunchesSelection}
-          withHamburger
-          loading={loading}
-        />
-        <PaginationToolbar
-          activePage={activePage}
-          itemCount={itemCount}
-          pageCount={pageCount}
-          pageSize={pageSize}
-          onChangePage={onChangePage}
-          onChangePageSize={onChangePageSize}
-        />
+      <PageLayout>
+        <PageSection>
+          <LaunchToolbar
+            errors={this.props.validationErrors}
+            selectedLaunches={selectedLaunches}
+            onUnselect={this.props.toggleLaunchSelectionAction}
+            onUnselectAll={this.props.unselectAllLaunchesAction}
+            onProceedValidItems={this.proceedWithValidItems}
+            onMove={this.moveLaunches}
+            onMerge={this.mergeLaunches}
+            onForceFinish={this.finishForceLaunches}
+            onCompare={this.compareLaunches}
+            onImportLaunch={this.openImportModal}
+            debugMode={debugMode}
+          />
+          <LaunchSuiteGrid
+            data={launches}
+            sortingColumn={sortingColumn}
+            sortingDirection={sortingDirection}
+            onChangeSorting={onChangeSorting}
+            onDeleteItem={this.confirmDeleteItem}
+            onMove={this.moveLaunches}
+            onEditLaunch={this.openEditModal}
+            onForceFinish={this.finishForceLaunches}
+            selectedItems={selectedLaunches}
+            onItemSelect={this.props.toggleLaunchSelectionAction}
+            onAllItemsSelect={this.handleAllLaunchesSelection}
+            withHamburger
+            loading={loading}
+          />
+          <PaginationToolbar
+            activePage={activePage}
+            itemCount={itemCount}
+            pageCount={pageCount}
+            pageSize={pageSize}
+            onChangePage={onChangePage}
+            onChangePageSize={onChangePageSize}
+          />
+        </PageSection>
       </PageLayout>
     );
   }
