@@ -8,7 +8,8 @@ import { activeDashboardIdSelector } from 'controllers/pages';
 import classNames from 'classnames/bind';
 import { showModalAction } from 'controllers/modal';
 import { GhostButton } from 'components/buttons/ghostButton';
-import { PageLayout } from 'layouts/pageLayout';
+import { PageLayout, PageHeader, PageSection } from 'layouts/pageLayout';
+import { PROJECT_DASHBOARD_PAGE } from 'controllers/pages/constants';
 import { AddDashboardButton } from '../common/addDashboardButton';
 import AddWidgetIcon from './img/add-inline.svg';
 import AddSharedWidgetIcon from './img/add-shared-inline.svg';
@@ -49,7 +50,11 @@ const messages = defineMessages({
 
 @injectIntl
 @connect(
-  (state) => ({ dashboardId: activeDashboardIdSelector(state) }),
+  (state) => ({
+    activeProject: activeProjectSelector(state),
+    dashboardId: activeDashboardIdSelector(state),
+    dashboardItems: dashboardItemsSelector(state),
+  }),
   {
     showModalAction,
   },
@@ -73,6 +78,34 @@ export class DashboardItemPage extends Component {
     this.setState({ isFullscreen });
   };
 
+  getDashboard = () => {
+    if (this.dashboard && this.dashboard.id === this.props.dashboardId) {
+      return;
+    }
+    const { dashboardItems, dashboardId } = this.props;
+    this.dashboard = dashboardItems.find((item) => item.id === dashboardId);
+  };
+
+  getDashboardName = () => (this.dashboard && this.dashboard.name) || '';
+
+  getBreadcrumbs = () => {
+    const { activeProject, intl } = this.props;
+    const breadcrumbs = [
+      {
+        title: intl.formatMessage(messages.pageTitle),
+        to: {
+          type: PROJECT_DASHBOARD_PAGE,
+          payload: { projectId: activeProject },
+        },
+      },
+      {
+        title: this.getDashboardName(),
+      },
+    ];
+
+    return breadcrumbs;
+  };
+
   toggleFullscreen = () => {
     this.setState({ isFullscreen: !this.state.isFullscreen });
   };
@@ -84,40 +117,48 @@ export class DashboardItemPage extends Component {
   };
 
   render() {
-    const { formatMessage } = this.props.intl;
+    const {
+      intl: { formatMessage },
+    } = this.props;
+    this.getDashboard();
+
     return (
-      <PageLayout title={formatMessage(messages.pageTitle)}>
-        <AddDashboardButton />
-        <div className={cx('dashboard-item')}>
-          <div className={cx('buttons-container')}>
-            <div className={cx('nav-left')}>
-              <GhostButton icon={AddWidgetIcon} onClick={this.showWidgetWizard}>
-                {formatMessage(messages.addNewWidget)}
-              </GhostButton>
-              <GhostButton icon={AddSharedWidgetIcon}>
-                {formatMessage(messages.addSharedWidget)}
-              </GhostButton>
+      <PageLayout>
+        <PageHeader breadcrumbs={this.getBreadcrumbs()}>
+          <AddDashboardButton />
+        </PageHeader>
+        <PageSection>
+          <div className={cx('dashboard-item')}>
+            <div className={cx('buttons-container')}>
+              <div className={cx('nav-left')}>
+                <GhostButton icon={AddWidgetIcon} onClick={this.showWidgetWizard}>
+                  {formatMessage(messages.addNewWidget)}
+                </GhostButton>
+                <GhostButton icon={AddSharedWidgetIcon}>
+                  {formatMessage(messages.addSharedWidget)}
+                </GhostButton>
+              </div>
+              <div className={cx('nav-right')}>
+                <GhostButton icon={EditIcon}>{formatMessage(messages.editDashboard)}</GhostButton>
+                <GhostButton icon={FullscreenIcon} onClick={this.toggleFullscreen}>
+                  {formatMessage(messages.fullscreen)}
+                </GhostButton>
+                <GhostButton icon={CancelIcon}>{formatMessage(messages.deleteWidget)}</GhostButton>
+              </div>
             </div>
-            <div className={cx('nav-right')}>
-              <GhostButton icon={EditIcon}>{formatMessage(messages.editDashboard)}</GhostButton>
-              <GhostButton icon={FullscreenIcon} onClick={this.toggleFullscreen}>
-                {formatMessage(messages.fullscreen)}
-              </GhostButton>
-              <GhostButton icon={CancelIcon}>{formatMessage(messages.deleteWidget)}</GhostButton>
-            </div>
+            <Fullscreen enabled={this.state.isFullscreen} onChange={this.onChangeFullscreen}>
+              <WidgetsGrid
+                isFullscreen={this.state.isFullscreen}
+                dashboard={this.dashboard}
+              />
+              {this.state.isFullscreen && (
+                <i className={cx('icon-close')} onClick={this.toggleFullscreen}>
+                  {Parser(CancelIcon)}
+                </i>
+              )}
+            </Fullscreen>
           </div>
-          <Fullscreen enabled={this.state.isFullscreen} onChange={this.onChangeFullscreen}>
-            <WidgetsGrid
-              dashboardId={this.props.dashboardId}
-              isFullscreen={this.state.isFullscreen}
-            />
-            {this.state.isFullscreen && (
-              <i className={cx('icon-close')} onClick={this.toggleFullscreen}>
-                {Parser(CancelIcon)}
-              </i>
-            )}
-          </Fullscreen>
-        </div>
+        </PageSection>
       </PageLayout>
     );
   }

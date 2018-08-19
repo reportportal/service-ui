@@ -12,7 +12,11 @@ import {
 } from 'controllers/pages';
 import { GENERAL } from 'common/constants/settingTabs';
 import { isAuthorizedSelector } from 'controllers/auth';
-import { fetchDashboardAction, changeVisibilityTypeAction } from 'controllers/dashboard';
+import {
+  fetchDashboardAction,
+  changeVisibilityTypeAction,
+  dashboardItemsSelector,
+} from 'controllers/dashboard';
 import { fetchLaunchesAction, setDebugMode } from 'controllers/launch';
 import { TEST_ITEM_PAGE } from 'controllers/pages/constants';
 import { fetchTestItemsAction, setLevelAction } from 'controllers/testItem';
@@ -88,7 +92,20 @@ export default {
       dispatch(changeVisibilityTypeAction());
     },
   },
-  [PROJECT_DASHBOARD_ITEM_PAGE]: '/:projectId/dashboard/:dashboardId',
+  [PROJECT_DASHBOARD_ITEM_PAGE]: {
+    path: '/:projectId/dashboard/:dashboardId',
+    thunk: (dispatch, getState) => {
+      const authorized = isAuthorizedSelector(getState());
+      if (!authorized) {
+        return;
+      }
+      const dashboardItems = dashboardItemsSelector(getState());
+      if (dashboardItems.length === 0) {
+        const projectId = projectIdSelector(getState());
+        dispatch(fetchDashboardAction(projectId));
+      }
+    },
+  },
   PROJECT_LAUNCHES_PAGE: {
     path: '/:projectId/launches/:filterId?',
     thunk: (dispatch) => {

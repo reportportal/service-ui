@@ -17,7 +17,7 @@ import { withFilter } from 'controllers/filter';
 import { activeProjectSelector } from 'controllers/user';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
 import { withPagination } from 'controllers/pagination';
-import { PageLayout } from 'layouts/pageLayout';
+import { PageLayout, PageHeader, PageSection } from 'layouts/pageLayout';
 import { MembersPageToolbar } from './membersPageToolbar';
 import { MembersGrid } from './membersGrid';
 
@@ -90,6 +90,8 @@ export class MembersPage extends Component {
     loading: false,
   };
 
+  getBreadcrumbs = () => [{ title: this.props.intl.formatMessage(messages.membersPageTitle) }];
+
   inviteUser = (userData) => {
     const data = {};
     if (userData.user.externalUser) {
@@ -155,21 +157,24 @@ export class MembersPage extends Component {
       loading,
     } = this.props;
     return (
-      <PageLayout title={intl.formatMessage(messages.membersPageTitle)} fullMobileLayout>
-        <MembersPageToolbar
-          filter={filter}
-          onFilterChange={onFilterChange}
-          onInvite={this.inviteUser}
-        />
-        <MembersGrid data={members} fetchData={this.props.fetchMembersAction} loading={loading} />
-        <PaginationToolbar
-          activePage={activePage}
-          itemCount={itemCount}
-          pageCount={pageCount}
-          pageSize={pageSize}
-          onChangePage={onChangePage}
-          onChangePageSize={onChangePageSize}
-        />
+      <PageLayout>
+        <PageHeader breadcrumbs={this.getBreadcrumbs()} />
+        <PageSection>
+          <MembersPageToolbar
+            filter={filter}
+            onFilterChange={onFilterChange}
+            onInvite={this.inviteUser}
+          />
+          <MembersGrid data={members} fetchData={this.props.fetchMembersAction} loading={loading} />
+          <PaginationToolbar
+            activePage={activePage}
+            itemCount={itemCount}
+            pageCount={pageCount}
+            pageSize={pageSize}
+            onChangePage={onChangePage}
+            onChangePageSize={onChangePageSize}
+          />
+        </PageSection>
       </PageLayout>
     );
   }
