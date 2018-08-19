@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import PropTypes from 'prop-types';
-import { PageLayout } from 'layouts/pageLayout';
+import { PageLayout, PageHeader, PageSection } from 'layouts/pageLayout';
 import {
   changeVisibilityTypeAction,
   deleteDashboardAction,
@@ -140,6 +140,8 @@ export class DashboardPage extends Component {
     });
   };
 
+  getBreadcrumbs = () => [{ title: this.props.intl.formatMessage(messages.pageTitle) }];
+
   getFilteredDashboardItems = () => {
     const { filter, dashboardItems } = this.props;
 
@@ -161,28 +163,32 @@ export class DashboardPage extends Component {
   };
 
   render() {
-    const { gridType, userInfo, onFilterChange, filter, intl } = this.props;
+    const { gridType, userInfo, onFilterChange, filter } = this.props;
     const dashboardItems = this.getFilteredDashboardItems();
 
     return (
-      <PageLayout title={intl.formatMessage(messages.pageTitle)}>
-        <AddDashboardButton />
-        <DashboardPageToolbar
-          dashboardItems={dashboardItems}
-          onGridViewToggle={this.toggleGridView}
-          onTableViewToggle={this.toggleTableView}
-          gridType={gridType}
-          filter={filter}
-          onFilterChange={onFilterChange}
-        />
-        <DashboardList
-          dashboardItems={dashboardItems}
-          gridType={gridType}
-          userInfo={userInfo}
-          onDeleteItem={this.onDeleteDashboardItem}
-          onEditItem={this.onEditDashboardItem}
-          onAddItem={this.onAddDashboardItem}
-        />
+      <PageLayout>
+        <PageHeader breadcrumbs={this.getBreadcrumbs()}>
+          <AddDashboardButton />
+        </PageHeader>
+        <PageSection>
+          <DashboardPageToolbar
+            dashboardItems={dashboardItems}
+            onGridViewToggle={this.toggleGridView}
+            onTableViewToggle={this.toggleTableView}
+            gridType={gridType}
+            filter={filter}
+            onFilterChange={onFilterChange}
+          />
+          <DashboardList
+            dashboardItems={dashboardItems}
+            gridType={gridType}
+            userInfo={userInfo}
+            onDeleteItem={this.onDeleteDashboardItem}
+            onEditItem={this.onEditDashboardItem}
+            onAddItem={this.onAddDashboardItem}
+          />
+        </PageSection>
       </PageLayout>
     );
   }
