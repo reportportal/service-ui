@@ -44,12 +44,6 @@ export const URLS = {
       view: exportType,
       access_token: getToken(),
     })}`,
-  launchItem: (activeProject) => `${urlBase}${activeProject}/item`,
-  launchItemHistory: (activeProject, ids, historyDepth) =>
-    `${urlBase}${activeProject}/item/history${getQueryParams({
-      ids,
-      history_depth: historyDepth,
-    })}`,
 
   login: (grantType, username, password) =>
     `/uat/sso/oauth/token${getQueryParams({
@@ -84,6 +78,11 @@ export const URLS = {
 
   testItems: (activeProject, ids) => `${urlBase}${activeProject}/item${getQueryParams({ ids })}`,
   testItem: (activeProject, id) => `${urlBase}${activeProject}/item/${id}`,
+  testItemsHistory: (activeProject, ids, historyDepth) =>
+    `${urlBase}${activeProject}/item/history${getQueryParams({
+      ids,
+      history_depth: historyDepth,
+    })}`,
 
   logItem: (activeProject, itemId, level) =>
     `${urlBase}${activeProject}/log${getQueryParams({

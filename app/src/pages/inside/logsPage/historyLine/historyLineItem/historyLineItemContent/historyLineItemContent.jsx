@@ -53,7 +53,7 @@ export class HistoryLineItemContent extends Component {
     statistics: PropTypes.shape({
       defects: PropTypes.object,
     }),
-    has_childs: PropTypes.bool,
+    hasChilds: PropTypes.bool,
     active: PropTypes.bool,
     isFirstItem: PropTypes.bool,
     isLastItem: PropTypes.bool,
@@ -63,7 +63,7 @@ export class HistoryLineItemContent extends Component {
     onClick: () => {},
     status: '',
     statistics: {},
-    has_childs: false,
+    hasChilds: false,
     active: false,
     isFirstItem: false,
     isLastItem: false,
@@ -95,7 +95,7 @@ export class HistoryLineItemContent extends Component {
         <HistoryLineItemBadges
           active={active}
           status={status}
-          defects={!this.props.has_childs ? statistics.defects : {}}
+          defects={!this.props.hasChilds ? statistics.defects : {}}
           {...rest}
         />
       </div>

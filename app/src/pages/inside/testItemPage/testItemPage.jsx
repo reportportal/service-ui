@@ -24,7 +24,6 @@ import {
 import { SuitesPage } from 'pages/inside/suitesPage';
 import { TestsPage } from 'pages/inside/testsPage';
 import { StepPage } from 'pages/inside/stepPage';
-
 import styles from './testItemPage.scss';
 
 const cx = classNames.bind(styles);

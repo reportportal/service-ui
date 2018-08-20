@@ -15,6 +15,7 @@ import { testReducer } from 'controllers/test';
 import { membersReducer } from 'controllers/members';
 import { testItemReducer } from 'controllers/testItem';
 import { stepReducer } from 'controllers/step';
+import { logReducer } from 'controllers/log';
 
 export default {
   appInfo: appInfoReducer,
@@ -34,4 +35,5 @@ export default {
   members: membersReducer,
   testItem: testItemReducer,
   step: stepReducer,
+  log: logReducer,
 };

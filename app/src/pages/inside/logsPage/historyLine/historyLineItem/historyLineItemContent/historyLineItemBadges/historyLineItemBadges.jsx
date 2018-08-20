@@ -50,7 +50,7 @@ export class HistoryLineItemBadges extends Component {
 
     return (
       defectType && (
-        <div key={defectType} className={cx('defect-badge', defectsTitleMap[defectType])}>
+        <div key={defectType} className={cx('defect-badge', `type-${defectsTitleMap[defectType]}`)}>
           <span>{defectsTitleMap[defectType]}</span>
         </div>
       )
@@ -60,7 +60,7 @@ export class HistoryLineItemBadges extends Component {
   getBadges = () => {
     const { status, growthDuration } = this.props;
     const badges = [];
-
+    // eslint-disable-next-line default-case
     switch (status.toLowerCase()) {
       case FAILED:
       case SKIPPED: {
@@ -89,9 +89,6 @@ export class HistoryLineItemBadges extends Component {
             {Parser(NoItemIcon)}
           </i>,
         );
-        break;
-      }
-      default: {
         break;
       }
     }
