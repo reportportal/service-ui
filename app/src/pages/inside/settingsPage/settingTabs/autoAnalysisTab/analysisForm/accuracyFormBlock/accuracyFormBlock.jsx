@@ -62,14 +62,14 @@ const messages = defineMessages({
 @injectIntl
 export class AccuracyFormBlock extends Component {
   static propTypes = {
-    canUpdate: PropTypes.bool,
+    disabled: PropTypes.bool,
     intl: intlShape.isRequired,
     onInputChange: PropTypes.func,
     setAnalysisMode: PropTypes.func,
   };
 
   static defaultProps = {
-    canUpdate: false,
+    disabled: false,
     onInputChange: () => {},
     setAnalysisMode: () => {},
   };
@@ -91,7 +91,7 @@ export class AccuracyFormBlock extends Component {
   normalizeValue = (value) => value && `${value}`.replace(/\D+/g, '');
 
   render() {
-    const { intl, canUpdate } = this.props;
+    const { intl, disabled } = this.props;
     return (
       <Fragment>
         <FormField
@@ -109,7 +109,7 @@ export class AccuracyFormBlock extends Component {
               icon={<i className={cx('percent-icon')}>%</i>}
               maxLength="3"
               mobileDisabled
-              disabled={!canUpdate}
+              disabled={disabled}
             />
           </FieldErrorHint>
         </FormField>
@@ -125,7 +125,7 @@ export class AccuracyFormBlock extends Component {
           description={intl.formatMessage(messages.minimumDocFreqDescription)}
         >
           <FieldErrorHint>
-            <Input maxLength="2" mobileDisabled disabled={!canUpdate} />
+            <Input maxLength="2" mobileDisabled disabled={disabled} />
           </FieldErrorHint>
         </FormField>
 
@@ -140,7 +140,7 @@ export class AccuracyFormBlock extends Component {
           description={intl.formatMessage(messages.minimumTermFreqDescription)}
         >
           <FieldErrorHint>
-            <Input maxLength="2" mobileDisabled disabled={!canUpdate} />
+            <Input maxLength="2" mobileDisabled disabled={disabled} />
           </FieldErrorHint>
         </FormField>
 
@@ -153,12 +153,12 @@ export class AccuracyFormBlock extends Component {
           format={String}
           description={intl.formatMessage(messages.numberOfLogLinesDescription)}
         >
-          <InputDropdown options={this.dropDownOptions} mobileDisabled disabled={!canUpdate} />
+          <InputDropdown options={this.dropDownOptions} mobileDisabled disabled={disabled} />
         </FormField>
 
         <div className={cx('submit-button-container')}>
           <div className={cx('submit-button-wrapper')}>
-            <BigButton type="submit" disabled={!canUpdate}>
+            <BigButton type="submit" disabled={disabled}>
               <span className={cx('submit-button-text')}>
                 {intl.formatMessage(messages.submitButtonText)}
               </span>

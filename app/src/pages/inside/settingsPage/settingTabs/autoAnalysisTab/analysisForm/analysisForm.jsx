@@ -100,7 +100,7 @@ const DEFAULT_ANALYSIS_MODE = 'Classic';
 )
 export class AnalysisForm extends Component {
   static propTypes = {
-    canUpdate: PropTypes.bool,
+    disabled: PropTypes.bool,
     intl: intlShape.isRequired,
     analyzerConfiguration: PropTypes.object,
     currentProject: PropTypes.string,
@@ -113,7 +113,7 @@ export class AnalysisForm extends Component {
   };
 
   static defaultProps = {
-    canUpdate: false,
+    disabled: false,
     analyzerConfiguration: {},
     currentProject: '',
     initialize: () => {},
@@ -208,18 +208,18 @@ export class AnalysisForm extends Component {
   };
 
   render() {
-    const { intl, handleSubmit, canUpdate } = this.props;
+    const { intl, handleSubmit, disabled } = this.props;
 
     return (
       <form className={cx('analysis-form-content')} onSubmit={handleSubmit(this.onFormSubmit)}>
-        <StrategyBlock canUpdate={canUpdate} />
+        <StrategyBlock disabled={disabled} />
         <div className={cx('accuracy-form-group')}>
           <span className={cx('tabs-container-label')}>
             {intl.formatMessage(messages.analysisModeTitle)}
           </span>
           <div className={cx('toggle-button-wrapper')}>
             <ToggleButton
-              disabled={!canUpdate}
+              disabled={disabled}
               items={this.tabItems}
               value={this.state.autoAnalysisMode}
               mobileDisabled
@@ -227,7 +227,7 @@ export class AnalysisForm extends Component {
             />
           </div>
         </div>
-        <AccuracyFormBlock canUpdate={canUpdate} onInputChange={this.onInputChange} />
+        <AccuracyFormBlock disabled={disabled} onInputChange={this.onInputChange} />
       </form>
     );
   }

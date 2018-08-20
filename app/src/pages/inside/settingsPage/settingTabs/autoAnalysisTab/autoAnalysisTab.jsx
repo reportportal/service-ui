@@ -47,9 +47,9 @@ export class AutoAnalysisTab extends Component {
   render() {
     return (
       <div className={cx('auto-analysis-tab')}>
-        <AnalysisForm canUpdate={canUpdateSettings(this.props.accountRole, this.props.userRole)} />
+        <AnalysisForm disabled={!canUpdateSettings(this.props.accountRole, this.props.userRole)} />
         <IndexActionsBlock
-          canUpdate={canUpdateSettings(this.props.accountRole, this.props.userRole)}
+          disabled={!canUpdateSettings(this.props.accountRole, this.props.userRole)}
         />
         <div className={cx('mobile-disabling-cover')} />
       </div>
