@@ -3,8 +3,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { injectIntl, intlShape } from 'react-intl';
 import classNames from 'classnames/bind';
-import { activeProjectSelector } from 'controllers/user';
-import { filterIdSelector } from 'controllers/pages';
+import { filterIdSelector, projectIdSelector } from 'controllers/pages';
 import { MANY, NOT_FOUND } from 'common/constants/launchStatuses';
 import { HistoryLineItemContent } from './historyLineItemContent';
 import styles from './historyLineItem.scss';
@@ -12,7 +11,7 @@ import styles from './historyLineItem.scss';
 const cx = classNames.bind(styles);
 
 @connect((state) => ({
-  projectId: activeProjectSelector(state),
+  projectId: projectIdSelector(state),
   filterId: filterIdSelector(state),
 }))
 @injectIntl
@@ -22,7 +21,7 @@ export class HistoryLineItem extends Component {
     projectId: PropTypes.string.isRequired,
     filterId: PropTypes.string.isRequired,
     launchNumber: PropTypes.string.isRequired,
-    path_names: PropTypes.object,
+    pathNames: PropTypes.object,
     launchId: PropTypes.string,
     id: PropTypes.string,
     status: PropTypes.string,
@@ -32,7 +31,7 @@ export class HistoryLineItem extends Component {
   };
 
   static defaultProps = {
-    path_names: {},
+    pathNames: {},
     launchId: '',
     id: '',
     status: '',
@@ -48,8 +47,8 @@ export class HistoryLineItem extends Component {
   };
 
   createHistoryLineItemLink = () => {
-    const { projectId, filterId, launchId, path_names, id } = this.props;
-    const parentIds = Object.keys(path_names);
+    const { projectId, filterId, launchId, pathNames, id } = this.props;
+    const parentIds = Object.keys(pathNames);
 
     return `#${projectId}/launches/${filterId}/${launchId}/${parentIds.join('/')}/${id}`;
   };
@@ -68,7 +67,12 @@ export class HistoryLineItem extends Component {
           <span className={cx('launch-title')}>{'launch '}</span>
           <span>#{launchNumber}</span>
         </a>
-        <HistoryLineItemContent active={active} launchNumber={launchNumber} {...rest} />
+        <HistoryLineItemContent
+          active={active}
+          launchNumber={launchNumber}
+          hasChilds={rest.has_childs}
+          {...rest}
+        />
       </div>
     );
   }

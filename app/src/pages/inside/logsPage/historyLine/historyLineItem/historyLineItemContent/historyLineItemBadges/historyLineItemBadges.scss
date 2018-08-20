@@ -29,29 +29,29 @@
   }
 }
 
-.pb {
+.type-pb {
   background: $COLOR--product-bug;
   & span {
     color: $COLOR--white-two;
   }
 }
 
-.ab {
+.type-ab {
   background: $COLOR--automation-bug;
 }
 
-.si {
+.type-si {
   background: $COLOR--system-issue;
   & span {
     color: $COLOR--white-two;
   }
 }
 
-.ti {
+.type-ti {
   background: $COLOR--to-investigate;
 }
 
-.nd {
+.type-nd {
   background: $COLOR--gray-47;
   & span {
     color: $COLOR--white-two;
