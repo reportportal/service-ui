@@ -48,15 +48,15 @@ const messages = defineMessages({
 export class StrategyBlock extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
-    canUpdate: PropTypes.bool,
+    disabled: PropTypes.bool,
   };
 
   static defaultProps = {
-    canUpdate: false,
+    disabled: false,
   };
 
   render() {
-    const { intl, canUpdate } = this.props;
+    const { intl, disabled } = this.props;
 
     return (
       <Fragment>
@@ -69,7 +69,7 @@ export class StrategyBlock extends Component {
           format={Boolean}
           parse={Boolean}
         >
-          <InputBigSwitcher mobileDisabled disabled={!canUpdate} />
+          <InputBigSwitcher mobileDisabled disabled={disabled} />
         </FormField>
 
         <FormField
@@ -80,12 +80,7 @@ export class StrategyBlock extends Component {
           label={intl.formatMessage(messages.strategySelectorTitle)}
           description={intl.formatMessage(messages.sameNameLaunchesInfo)}
         >
-          <InputRadio
-            ownValue="LAUNCH_NAME"
-            name="aa-strategy"
-            mobileDisabled
-            disabled={!canUpdate}
-          >
+          <InputRadio ownValue="LAUNCH_NAME" name="aa-strategy" mobileDisabled disabled={disabled}>
             <span className={cx('radio-children')}>
               {intl.formatMessage(messages.sameNameLaunchesCaption)}
             </span>
@@ -100,7 +95,7 @@ export class StrategyBlock extends Component {
           descriptionClassName={cx('radio-description')}
           description={intl.formatMessage(messages.allLaunchesInfo)}
         >
-          <InputRadio ownValue="ALL" name="aa-strategy" mobileDisabled disabled={!canUpdate}>
+          <InputRadio ownValue="ALL" name="aa-strategy" mobileDisabled disabled={disabled}>
             <span className={cx('radio-children')}>
               {intl.formatMessage(messages.allLaunchesCaption)}
             </span>
