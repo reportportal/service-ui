@@ -1,7 +1,7 @@
 .defect-type {
   &:hover {
     .edit-icon {
-      display: block;
+      visibility: visible;
     }
   }
 }
@@ -37,7 +37,7 @@
 }
 
 .edit-icon {
-  display: none;
+  visibility: hidden;
   cursor: pointer;
   margin-left: 10px;
   height: 20px;

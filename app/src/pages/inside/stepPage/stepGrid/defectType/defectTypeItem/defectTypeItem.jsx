@@ -27,11 +27,15 @@ export class DefectTypeItem extends Component {
       (defectType, subType) =>
         projectConfig.subTypes[subType].find((issueType) => issueType.locator === type) ||
         defectType,
+      null,
     );
   };
 
   render() {
     const defectType = this.getDefectType();
+    if (!defectType) {
+      return null;
+    }
     return (
       <div
         className={cx('defect-type-item')}
