@@ -50,7 +50,8 @@ define(function (require) {
             'change [data-js-mode-param]': 'isMatchPreset',
             'click [data-js-remove-index]': 'onRemoveIndex',
             'click [data-js-generate-index]': 'onGenerateIndex',
-            'keypress [data-js-mode-param]': 'allowNumber'
+            'keypress [data-js-mode-param]': 'allowNumber',
+            'click [data-js-switch-item]': 'onChangeMode'
         },
         bindings: {
             '[data-js-is-auto-analyze]': 'checked: isAutoAnalyzerEnabled',
@@ -66,7 +67,7 @@ define(function (require) {
             inProgressText: {
                 deps: ['indexing_running'],
                 get: function (indexing_running) {
-                    return indexing_running? Localization.project.indexInProgress :
+                    return indexing_running ? Localization.project.indexInProgress :
                         Localization.project.generateIndex;
                 }
             },
@@ -83,13 +84,16 @@ define(function (require) {
                 }
             }
         },
+        onChangeMode: function () {
+            config.trackingDispatcher.trackEventNumber(583);
+        },
         initialize: function () {
             this.userModel = new UserModel();
             this.model = new AutoAnalysisSettingsModel(appModel.get('configuration').analyzerConfiguration);
             this.registryModel = new SingletonRegistryInfoModel();
             this.render();
         },
-        switchAutoAnalysis: function(){
+        switchAutoAnalysis: function () {
             config.trackingDispatcher.trackEventNumber(581);
         },
         render: function () {
@@ -114,7 +118,6 @@ define(function (require) {
             this.modeSwitcher.activate();
             $('[data-js-mode-switcher]', this.$el).html(this.modeSwitcher.$el);
             this.listenTo(this.modeSwitcher.model, 'change:value', function () {
-                config.trackingDispatcher.trackEventNumber(583);
                 this.setAccuracySettings(this.getModeValue());
                 this.validate();
             });
