@@ -17,33 +17,17 @@ export const messages = defineMessages({
     id: 'FilterOptions.total',
     defaultMessage: 'Total',
   },
-  automation_bug: {
-    id: 'FilterOptions.automation_bug',
-    defaultMessage: 'Automation bug',
-  },
   AB: {
     id: 'FilterOptions.AB',
     defaultMessage: 'AB',
-  },
-  system_issue: {
-    id: 'FilterOptions.system_issue',
-    defaultMessage: 'System issue',
   },
   SI: {
     id: 'FilterOptions.SI',
     defaultMessage: 'SI',
   },
-  product_bug: {
-    id: 'FilterOptions.product_bug',
-    defaultMessage: 'Product bug',
-  },
   PB: {
     id: 'FilterOptions.PB',
     defaultMessage: 'PB',
-  },
-  to_investigate: {
-    id: 'FilterOptions.to_investigate',
-    defaultMessage: 'To investigate',
   },
   TI: {
     id: 'FilterOptions.TI',
