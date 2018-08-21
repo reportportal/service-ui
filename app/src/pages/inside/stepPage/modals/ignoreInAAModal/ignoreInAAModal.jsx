@@ -76,6 +76,7 @@ export class IgnoreInAAModal extends Component {
       issue: {
         ...item.issue,
         ignoreAnalyzer: true,
+        autoAnalyzed: false,
       },
     }));
     fetch(URLS.testItems(activeProject), {
