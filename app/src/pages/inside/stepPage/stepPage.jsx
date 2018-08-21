@@ -59,6 +59,7 @@ import { StepGrid } from './stepGrid';
 })
 export class StepPage extends Component {
   static propTypes = {
+    deleteItems: PropTypes.func,
     debugMode: PropTypes.bool.isRequired,
     steps: PropTypes.arrayOf(PropTypes.object),
     parentItem: PropTypes.object,
@@ -85,6 +86,7 @@ export class StepPage extends Component {
   };
 
   static defaultProps = {
+    deleteItems: () => {},
     steps: [],
     parentItem: {},
     selectedItems: [],
@@ -131,6 +133,11 @@ export class StepPage extends Component {
   proceedWithValidItems = () =>
     this.props.proceedWithValidItemsAction(this.props.lastOperation, this.props.selectedItems);
 
+  deleteItems = () => {
+    const { selectedItems, deleteItems } = this.props;
+    deleteItems(selectedItems);
+  };
+
   render() {
     const {
       parentItem,
@@ -155,6 +162,7 @@ export class StepPage extends Component {
       <PageLayout>
         <PageSection>
           <SuiteTestToolbar
+            onDelete={this.deleteItems}
             errors={validationErrors}
             selectedItems={selectedItems}
             parentItem={parentItem}
@@ -174,8 +182,7 @@ export class StepPage extends Component {
             loading={loading}
             listView={listView}
             onShowTestParams={showTestParamsModal}
-            onFilterClick={changeFilter}
-          />
+          onFilterClick={changeFilter}/>
           <PaginationToolbar
             activePage={activePage}
             itemCount={itemCount}

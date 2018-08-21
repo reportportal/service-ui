@@ -45,6 +45,10 @@ const messages = defineMessages({
     id: 'ActionPanel.proceedButton',
     defaultMessage: 'Proceed Valid Items',
   },
+  actionsBtnTooltip: {
+    id: 'ActionPanel.actionsBtnTooltip',
+    defaultMessage: ' Select several items to processing',
+  },
 });
 
 @connect(
@@ -168,6 +172,9 @@ export class ActionPanel extends Component {
           )}
           <div className={cx('action-button', 'mobile-hidden')}>
             <GhostMenuButton
+              tooltip={
+                !selectedLaunches.length ? intl.formatMessage(messages.actionsBtnTooltip) : null
+              }
               title={intl.formatMessage(messages.actionsBtn)}
               items={this.actionDescriptors}
               disabled={!selectedLaunches.length}

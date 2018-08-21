@@ -11,6 +11,7 @@ export {
   toggleAllLaunchesAction,
   unselectLaunchesAction,
   setDebugMode,
+  deleteItemsAction,
 } from './actionCreators';
 export {
   selectedLaunchesSelector,

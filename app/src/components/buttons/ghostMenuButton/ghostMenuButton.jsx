@@ -41,12 +41,14 @@ export class GhostMenuButton extends Component {
     ),
     disabled: PropTypes.bool,
     color: PropTypes.string,
+    tooltip: PropTypes.string,
   };
   static defaultProps = {
     title: '',
     items: [],
     disabled: false,
     color: 'topaz',
+    tooltip: '',
   };
 
   state = {
@@ -72,9 +74,10 @@ export class GhostMenuButton extends Component {
   };
 
   render() {
-    const { title, items, disabled, color } = this.props;
+    const { title, items, disabled, color, tooltip } = this.props;
     return (
       <div
+        title={tooltip}
         className={cx('ghost-menu-button', {
           disabled,
           [`color-${color}`]: color,

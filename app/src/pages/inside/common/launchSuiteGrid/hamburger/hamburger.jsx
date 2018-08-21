@@ -47,6 +47,14 @@ const messages = defineMessages({
     id: 'Hamburger.noPermissions',
     defaultMessage: 'You are not a launch owner',
   },
+  launchInProgress: {
+    id: 'Hamburger.launchInProgress',
+    defaultMessage: 'Launch should not be in the status progress',
+  },
+  notYourLaunch: {
+    id: 'Hamburger.notYourLaunch',
+    defaultMessage: 'You are not a launch owner',
+  },
 });
 
 @injectIntl
@@ -132,6 +140,22 @@ export class Hamburger extends Component {
     this.setState({ menuShown: !this.state.menuShown });
   };
 
+  deleteTooltip = () => {
+    if (
+      !canDeleteLaunch(
+        this.props.accountRole,
+        this.props.projectRole,
+        this.props.userId === this.props.launch.owner,
+      )
+    ) {
+      return this.props.intl.formatMessage(messages.notYourLaunch);
+    }
+    if (this.props.launch.status && this.props.launch.status.toLowerCase() === IN_PROGRESS) {
+      return this.props.intl.formatMessage(messages.launchInProgress);
+    }
+    return '';
+  };
+
   render() {
     const { intl, projectRole, accountRole, launch, onAnalysis, customProps } = this.props;
     return (
@@ -213,11 +237,13 @@ export class Hamburger extends Component {
                   accountRole,
                   projectRole,
                   this.props.userId === this.props.launch.owner,
-                )
+                ) ||
+                (this.props.launch.status && this.props.launch.status.toLowerCase() === IN_PROGRESS)
               }
               onClick={() => {
                 customProps.onDeleteItem(launch);
               }}
+              title={this.deleteTooltip()}
             />
           </div>
           <div className={cx('export-block')}>

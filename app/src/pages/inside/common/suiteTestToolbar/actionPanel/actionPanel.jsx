@@ -55,6 +55,10 @@ const messages = defineMessages({
     id: 'ActionPanel.proceedButton',
     defaultMessage: 'Proceed Valid Items',
   },
+  actionsBtnTooltip: {
+    id: 'ActionPanel.actionsBtnTooltip',
+    defaultMessage: ' Select several items to processing',
+  },
 });
 
 @connect(
@@ -89,6 +93,7 @@ export class ActionPanel extends Component {
     onIncludeInAA: PropTypes.func,
     onDelete: PropTypes.func,
     listView: PropTypes.bool,
+    isDeleteDisabled: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -113,6 +118,7 @@ export class ActionPanel extends Component {
     onIncludeInAA: () => {},
     onDelete: () => {},
     listView: false,
+    isDeleteDisabled: false,
   };
 
   constructor(props) {
@@ -199,7 +205,16 @@ export class ActionPanel extends Component {
           )}
           {this.checkVisibility([LEVEL_SUITE, LEVEL_TEST]) && (
             <div className={cx('action-button')}>
-              <GhostButton icon={DeleteIcon} disabled>
+              <GhostButton
+                icon={DeleteIcon}
+                onClick={this.props.onDelete}
+                disabled={this.props.isDeleteDisabled}
+                title={
+                  this.props.isDeleteDisabled
+                    ? this.props.intl.formatMessage(messages.actionsBtnTooltip)
+                    : null
+                }
+              >
                 <FormattedMessage id="Common.delete" defaultMessage="Delete" />
               </GhostButton>
             </div>
