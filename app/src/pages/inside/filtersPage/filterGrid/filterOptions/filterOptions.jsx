@@ -49,14 +49,14 @@ export class FilterOptions extends Component {
 
   getTotalStatistics = (defectTypeTotal) => {
     const { intl, defectTypes } = this.props;
-    if (
-      defectTypes[defectTypeTotal.toUpperCase()] &&
-      defectTypes[defectTypeTotal.toUpperCase()].length !== 1
-    ) {
+    if (defectTypes[defectTypeTotal.toUpperCase()]) {
       const currentDefectType = defectTypes[defectTypeTotal.toUpperCase()][0];
-      return `${intl.formatMessage(messages.total)} ${intl.formatMessage(
-        messages[currentDefectType.shortName],
-      )}`;
+      if (defectTypes[defectTypeTotal.toUpperCase()].length !== 1) {
+        return `${intl.formatMessage(messages.total)} ${intl.formatMessage(
+          messages[currentDefectType.shortName],
+        )}`;
+      }
+      return currentDefectType.longName;
     }
     return intl.formatMessage(messages[defectTypeTotal]);
   };
@@ -83,10 +83,11 @@ export class FilterOptions extends Component {
   startTimeOption = (entity) => {
     const { intl } = this.props;
     const time = parseDateTimeRange(entity);
+    const dynamic = time.dynamic ? intl.formatMessage(messages.dynamic) : '';
     const optionName = intl.formatMessage(messages[entity.filtering_field]);
     const condition = `${this.fotmatTime(time.start)} ${intl.formatMessage(
       messages.to,
-    )} ${this.fotmatTime(time.end)} ${time.dynamic && intl.formatMessage(messages.dynamic)}`;
+    )} ${this.fotmatTime(time.end)} ${dynamic}`;
     return `${optionName} ${intl.formatMessage(messages.from)} ${condition}`;
   };
 
