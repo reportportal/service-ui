@@ -128,29 +128,44 @@ define(function (require) {
         getTabView: function (tab) {
             switch (tab) {
             case 'notifications':
-                config.trackingDispatcher.trackEventNumber(386);
                 return NotificationsTabView;
             case 'bts':
-                config.trackingDispatcher.trackEventNumber(397);
                 return BtsTabView;
             case 'defect':
-                config.trackingDispatcher.trackEventNumber(426);
                 return DefectTabView;
             case 'autoAnalysis':
-                config.trackingDispatcher.trackEventNumber(580);
                 return AutoAnalysisTabView;
             case 'demoData':
-                config.trackingDispatcher.trackEventNumber(427);
                 return DemoDataTabView;
             default:
-                config.trackingDispatcher.trackEventNumber(380);
                 return GeneralTabView;
             }
         },
 
         getTab: function (e) {
+            var tab = $(e.currentTarget).data('js-tab-action');
+            switch (tab) {
+            case 'notifications':
+                config.trackingDispatcher.trackEventNumber(386);
+                break;
+            case 'bts':
+                config.trackingDispatcher.trackEventNumber(397);
+                break;
+            case 'defect':
+                config.trackingDispatcher.trackEventNumber(426);
+                break;
+            case 'autoAnalysis':
+                config.trackingDispatcher.trackEventNumber(580);
+                break;
+            case 'demoData':
+                config.trackingDispatcher.trackEventNumber(427);
+                break;
+            default:
+                config.trackingDispatcher.trackEventNumber(380);
+                break;
+            }
             e.preventDefault();
-            this.updateTabs($(e.currentTarget).data('js-tab-action'));
+            this.updateTabs(tab);
         },
 
         updateTabs: function (tab) {
