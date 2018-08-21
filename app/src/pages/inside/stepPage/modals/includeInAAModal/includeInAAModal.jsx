@@ -76,6 +76,7 @@ export class IncludeInAAModal extends Component {
       issue: {
         ...item.issue,
         ignoreAnalyzer: false,
+        autoAnalyzed: false,
       },
     }));
     fetch(URLS.testItems(activeProject), {
