@@ -12,6 +12,7 @@ import {
   validateMergeLaunch,
   validateFinishForceLaunch,
   validateMoveLaunch,
+  validateDeleteLaunch
 } from './actionValidators';
 
 export const setDebugMode = (isDebugMode) => ({
@@ -73,4 +74,14 @@ export const moveLaunchesAction = defineGroupOperation(
       data: { ids: launches.map((launch) => launch.id), fetchFunc, debugMode },
     }),
   validateMoveLaunch,
+);
+export const deleteItemsAction = defineGroupOperation(
+  NAMESPACE,
+  'deleteLaunches',
+  (items, { onConfirm, header, mainContent, userId, warning }) =>
+    showModalAction({
+      id: 'deleteItemsModal',
+      data: { items, onConfirm, header, mainContent, userId, warning },
+    }),
+  validateDeleteLaunch,
 );

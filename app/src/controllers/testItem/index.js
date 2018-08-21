@@ -1,7 +1,13 @@
 export { testItemReducer } from './reducer';
-export { fetchTestItemsAction, restorePathAction, setLevelAction } from './actionCreators';
+export {
+  fetchTestItemsAction,
+  restorePathAction,
+  setLevelAction,
+  deleteItemsAction,
+} from './actionCreators';
 export { testItemsSaga } from './sagas';
 export {
+  launchSelector,
   levelSelector,
   loadingSelector,
   namespaceSelector,

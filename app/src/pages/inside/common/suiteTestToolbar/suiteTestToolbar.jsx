@@ -15,6 +15,7 @@ export const SuiteTestToolbar = ({
   onIgnoreInAA,
   onIncludeInAA,
   debugMode,
+  onDelete,
 }) => (
   <div>
     {!!selectedItems.length && (
@@ -35,6 +36,8 @@ export const SuiteTestToolbar = ({
       selectedItems={selectedItems}
       onIgnoreInAA={onIgnoreInAA}
       onIncludeInAA={onIncludeInAA}
+      onDelete={onDelete}
+      isDeleteDisabled={!selectedItems.length}
     />
     {parentItem && <InfoLine data={parentItem} />}
     <RefineFiltersPanel />
@@ -51,6 +54,7 @@ SuiteTestToolbar.propTypes = {
   onIgnoreInAA: PropTypes.func,
   onIncludeInAA: PropTypes.func,
   debugMode: PropTypes.bool,
+  onDelete: PropTypes.func,
 };
 SuiteTestToolbar.defaultProps = {
   selectedItems: [],
@@ -62,5 +66,6 @@ SuiteTestToolbar.defaultProps = {
   onProceedValidItems: () => {},
   onIgnoreInAA: () => {},
   onIncludeInAA: () => {},
+  onDelete: () => {},
   debugMode: false,
 };

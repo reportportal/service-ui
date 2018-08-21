@@ -19,6 +19,7 @@ export const LaunchToolbar = ({
   onImportLaunch,
   debugMode,
   onRefresh,
+  onDelete,
 }) => (
   <div className={cx('launch-toolbar')}>
     {!!selectedLaunches.length && (
@@ -42,6 +43,7 @@ export const LaunchToolbar = ({
       selectedLaunches={selectedLaunches}
       onImportLaunch={onImportLaunch}
       onRefresh={onRefresh}
+      onDelete={onDelete}
     />
   </div>
 );

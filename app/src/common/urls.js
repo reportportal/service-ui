@@ -87,6 +87,8 @@ export const URLS = {
       'page.sort': 'time,DESC',
     })}`,
 
+  items: (activeProject, ids) => `${urlBase}${activeProject}/item${getQueryParams({ ids })}`,
+
   user: () => `${urlBase}user`,
   userRegistration: () => `${urlBase}user/registration`,
   userPasswordReset: () => `${urlBase}user/password/reset`,

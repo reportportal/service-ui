@@ -1,7 +1,6 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { injectIntl, intlShape } from 'react-intl';
 import { SORTING_ASC, withSorting } from 'controllers/sorting';
 import { PageLayout, PageSection } from 'layouts/pageLayout';
 import { LaunchSuiteGrid } from 'pages/inside/common/launchSuiteGrid';
@@ -14,6 +13,7 @@ import {
   unselectAllTestsAction,
   testPaginationSelector,
   toggleAllTestsAction,
+  validationErrorsSelector,
 } from 'controllers/test';
 import { withPagination } from 'controllers/pagination';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
@@ -28,6 +28,7 @@ import { toggleFilter } from 'controllers/filterEntities';
 @connect(
   (state) => ({
     debugMode: debugModeSelector(state),
+    validationErrors: validationErrorsSelector(state),
     tests: testsSelector(state),
     selectedTests: selectedTestsSelector(state),
     parentItem: parentItemSelector(state),
@@ -49,11 +50,11 @@ import { toggleFilter } from 'controllers/filterEntities';
   paginationSelector: testPaginationSelector,
   namespaceSelector,
 })
-@injectIntl
 export class TestsPage extends Component {
   static propTypes = {
+    deleteItems: PropTypes.func,
+    validationErrors: PropTypes.object.isRequired,
     debugMode: PropTypes.bool.isRequired,
-    intl: intlShape.isRequired,
     tests: PropTypes.arrayOf(PropTypes.object),
     selectedTests: PropTypes.arrayOf(PropTypes.object),
     activePage: PropTypes.number,
@@ -75,6 +76,7 @@ export class TestsPage extends Component {
   };
 
   static defaultProps = {
+    deleteItems: () => {},
     tests: [],
     selectedTests: [],
     activePage: 1,
@@ -114,6 +116,7 @@ export class TestsPage extends Component {
       loading,
       debugMode,
       changeFilter,
+      deleteItems,
     } = this.props;
     return (
       <PageLayout>
@@ -125,6 +128,8 @@ export class TestsPage extends Component {
             onUnselectAll={this.props.unselectAllTestsAction}
             onRefresh={this.props.fetchTestItemsAction}
             debugMode={debugMode}
+            errors={this.props.validationErrors}
+            onDelete={() => deleteItems(selectedTests)}
           />
           <LaunchSuiteGrid
             data={tests}

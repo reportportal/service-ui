@@ -37,7 +37,7 @@ export const parentItemSelector = (state) => {
   const parentItems = parentItemsSelector(state);
   return parentItems[parentItems.length - 1];
 };
-export const launchSelector = (state) => parentItemsSelector(state)[0];
+export const launchSelector = (state) => parentItemsSelector(state)[0] || {};
 export const isLostLaunchSelector = (state) =>
   parentItemsSelector(state).length > 1 && !!launchSelector(state);
 

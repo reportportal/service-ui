@@ -1,11 +1,9 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { injectIntl, intlShape } from 'react-intl';
 import { PageLayout, PageSection } from 'layouts/pageLayout';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
 import { SORTING_ASC, withSorting } from 'controllers/sorting';
-import { userIdSelector } from 'controllers/user';
 import { withPagination } from 'controllers/pagination';
 import { LaunchSuiteGrid } from 'pages/inside/common/launchSuiteGrid';
 import { debugModeSelector } from 'controllers/launch';
@@ -16,8 +14,10 @@ import {
   toggleSuiteSelectionAction,
   unselectAllSuitesAction,
   toggleAllSuitesAction,
+  validationErrorsSelector,
 } from 'controllers/suite';
 import { SuiteTestToolbar } from 'pages/inside/common/suiteTestToolbar';
+import { userIdSelector } from 'controllers/user';
 import {
   namespaceSelector,
   fetchTestItemsAction,
@@ -34,6 +34,7 @@ import { toggleFilter } from 'controllers/filterEntities';
     selectedSuites: selectedSuitesSelector(state),
     parentItem: parentItemSelector(state),
     loading: loadingSelector(state),
+    validationErrors: validationErrorsSelector(state),
   }),
   {
     toggleSuiteSelectionAction,
@@ -51,11 +52,10 @@ import { toggleFilter } from 'controllers/filterEntities';
   paginationSelector: suitePaginationSelector,
   namespaceSelector,
 })
-@injectIntl
 export class SuitesPage extends Component {
   static propTypes = {
     debugMode: PropTypes.bool.isRequired,
-    intl: intlShape.isRequired,
+    deleteItems: PropTypes.func,
     suites: PropTypes.arrayOf(PropTypes.object),
     selectedSuites: PropTypes.arrayOf(PropTypes.object),
     activePage: PropTypes.number,
@@ -73,10 +73,12 @@ export class SuitesPage extends Component {
     toggleAllSuitesAction: PropTypes.func,
     parentItem: PropTypes.object,
     loading: PropTypes.bool,
+    validationErrors: PropTypes.object,
     changeFilter: PropTypes.func,
   };
 
   static defaultProps = {
+    deleteItems: () => {},
     suites: [],
     selectedSuites: [],
     activePage: 1,
@@ -95,6 +97,7 @@ export class SuitesPage extends Component {
     parentItem: null,
     loading: false,
     changeFilter: () => {},
+    validationErrors: {},
   };
 
   handleAllSuitesSelection = () => this.props.toggleAllSuitesAction(this.props.suites);
@@ -116,11 +119,14 @@ export class SuitesPage extends Component {
       loading,
       debugMode,
       changeFilter,
+      deleteItems,
     } = this.props;
     return (
       <PageLayout>
         <PageSection>
           <SuiteTestToolbar
+            onDelete={() => deleteItems(selectedSuites)}
+            errors={this.props.validationErrors}
             selectedItems={selectedSuites}
             onUnselect={this.props.toggleSuiteSelectionAction}
             onUnselectAll={this.props.unselectAllSuitesAction}
