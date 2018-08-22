@@ -8,7 +8,11 @@ import {
   toggleAllItemsAction,
 } from 'controllers/groupOperations';
 import { FETCH_LAUNCHES, NAMESPACE, SET_DEBUG_MODE } from './constants';
-import { validateMergeLaunch, validateFinishForceLaunch } from './actionValidators';
+import {
+  validateMergeLaunch,
+  validateFinishForceLaunch,
+  validateMoveLaunch,
+} from './actionValidators';
 
 export const setDebugMode = (isDebugMode) => ({
   type: SET_DEBUG_MODE,
@@ -68,5 +72,5 @@ export const moveLaunchesAction = defineGroupOperation(
       id: 'moveLaunchesModal',
       data: { ids: launches.map((launch) => launch.id), fetchFunc, debugMode },
     }),
-  () => null,
+  validateMoveLaunch,
 );
