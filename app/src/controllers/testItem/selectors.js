@@ -6,6 +6,8 @@ import {
   filterIdSelector,
   TEST_ITEM_PAGE,
   PROJECT_LAUNCHES_PAGE,
+  PROJECT_USERDEBUG_TEST_ITEM_PAGE,
+  PROJECT_USERDEBUG_PAGE,
   payloadSelector,
   testItemIdsSelector,
 } from 'controllers/pages';
@@ -53,14 +55,15 @@ export const breadcrumbsSelector = createSelector(
   parentItemsSelector,
   testItemIdsArraySelector,
   pagePropertiesSelector,
-  (projectId, filterId, parentItems, testItemIds, query) => {
+  debugModeSelector,
+  (projectId, filterId, parentItems, testItemIds, query, debugMode) => {
     const queryNamespacesToCopy = [LAUNCH_NAMESPACE];
     const descriptors = [
       {
         id: filterId,
         title: 'All',
         link: {
-          type: PROJECT_LAUNCHES_PAGE,
+          type: debugMode ? PROJECT_USERDEBUG_PAGE : PROJECT_LAUNCHES_PAGE,
           payload: {
             projectId,
             filterId,
@@ -90,7 +93,7 @@ export const breadcrumbsSelector = createSelector(
           id: item.id,
           title: item.name,
           link: {
-            type: TEST_ITEM_PAGE,
+            type: debugMode ? PROJECT_USERDEBUG_TEST_ITEM_PAGE : TEST_ITEM_PAGE,
             payload: {
               projectId,
               filterId,
