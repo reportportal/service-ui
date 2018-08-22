@@ -46,13 +46,11 @@ export class EmailCasesList extends Component {
       const { recipients } = emailCase;
       return {
         ...emailCase,
-        ...{
-          id: uniqueId(),
-          informOwner: recipients.includes(OWNER),
-          recipients: recipients.filter((recipient) => recipient !== OWNER),
-          submitted: true,
-          valid: true,
-        },
+        id: uniqueId(),
+        informOwner: recipients.includes(OWNER),
+        recipients: recipients.filter((recipient) => recipient !== OWNER),
+        submitted: true,
+        valid: true,
       };
     }),
   };
