@@ -107,6 +107,13 @@ export class Hamburger extends Component {
     return forceFinishTitle;
   };
 
+  getMoveToDebugTitle = () => {
+    const { intl, projectRole, accountRole, userId, launch } = this.props;
+    return !canMoveToDebug(accountRole, projectRole, userId === launch.owner)
+      ? intl.formatMessage(messages.noPermissions)
+      : '';
+  };
+
   isInProgress = () => this.props.launch.status === IN_PROGRESS.toUpperCase();
 
   exportAsPDF = () => this.onExportLaunch('pdf');
@@ -146,6 +153,7 @@ export class Hamburger extends Component {
               <Fragment>
                 {launch.mode === 'DEFAULT' ? (
                   <HamburgerMenuItem
+                    title={this.getMoveToDebugTitle()}
                     text={intl.formatMessage(messages.toDebug)}
                     disabled={
                       !canMoveToDebug(
@@ -161,6 +169,7 @@ export class Hamburger extends Component {
                 ) : (
                   <HamburgerMenuItem
                     text={intl.formatMessage(messages.toAllLaunches)}
+                    title={this.getMoveToDebugTitle()}
                     disabled={
                       !canMoveToDebug(
                         accountRole,

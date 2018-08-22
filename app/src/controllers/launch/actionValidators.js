@@ -4,7 +4,7 @@ import {
   activeProjectRoleSelector,
 } from 'controllers/user';
 import { IN_PROGRESS } from 'common/constants/launchStatuses';
-import { canMergeLaunches, canForceFinishLaunch } from 'common/utils/permissions';
+import { canMergeLaunches, canForceFinishLaunch, canMoveToDebug } from 'common/utils/permissions';
 
 export const validateMergeLaunch = (launch, launches, state) => {
   if (launches.length < 2) {
@@ -33,6 +33,16 @@ export const validateFinishForceLaunch = (launch, launches, state) => {
   const userRole = userAccountRoleSelector(state);
   const projectRole = activeProjectRoleSelector(state);
   if (!canForceFinishLaunch(userRole, projectRole, launch.owner === user.userId)) {
+    return 'notYourOwnLaunch';
+  }
+  return null;
+};
+
+export const validateMoveLaunch = (launch, launches, state) => {
+  const user = userInfoSelector(state);
+  const userRole = userAccountRoleSelector(state);
+  const projectRole = activeProjectRoleSelector(state);
+  if (!canMoveToDebug(userRole, projectRole, launch.owner === user.userId)) {
     return 'notYourOwnLaunch';
   }
   return null;
