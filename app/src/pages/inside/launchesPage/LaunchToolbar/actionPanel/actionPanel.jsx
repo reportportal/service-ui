@@ -59,6 +59,7 @@ const messages = defineMessages({
 export class ActionPanel extends Component {
   static propTypes = {
     debugMode: PropTypes.bool,
+    onRefresh: PropTypes.func,
     selectedLaunches: PropTypes.array,
     hasErrors: PropTypes.bool,
     showBreadcrumb: PropTypes.bool,
@@ -77,6 +78,7 @@ export class ActionPanel extends Component {
 
   static defaultProps = {
     debugMode: false,
+    onRefresh: () => {},
     selectedLaunches: [],
     hasErrors: false,
     showBreadcrumb: false,
@@ -138,6 +140,7 @@ export class ActionPanel extends Component {
     const {
       intl,
       showBreadcrumb,
+      onRefresh,
       hasErrors,
       selectedLaunches,
       hasValidItems,
@@ -171,7 +174,7 @@ export class ActionPanel extends Component {
             />
           </div>
           <div className={cx('action-button')}>
-            <GhostButton icon={RefreshIcon} disabled>
+            <GhostButton icon={RefreshIcon} onClick={onRefresh}>
               <FormattedMessage id="LaunchesPage.refresh" defaultMessage="Refresh" />
             </GhostButton>
           </div>
