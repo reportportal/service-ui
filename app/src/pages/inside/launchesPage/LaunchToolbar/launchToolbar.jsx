@@ -18,6 +18,7 @@ export const LaunchToolbar = ({
   onProceedValidItems,
   onImportLaunch,
   debugMode,
+  onRefresh,
 }) => (
   <div className={cx('launch-toolbar')}>
     {!!selectedLaunches.length && (
@@ -40,6 +41,7 @@ export const LaunchToolbar = ({
       onForceFinish={onForceFinish}
       selectedLaunches={selectedLaunches}
       onImportLaunch={onImportLaunch}
+      onRefresh={onRefresh}
     />
   </div>
 );
@@ -56,6 +58,7 @@ LaunchToolbar.propTypes = {
   onDelete: PropTypes.func,
   onImportLaunch: PropTypes.func,
   debugMode: PropTypes.bool,
+  onRefresh: PropTypes.func,
 };
 LaunchToolbar.defaultProps = {
   selectedLaunches: [],
@@ -70,4 +73,5 @@ LaunchToolbar.defaultProps = {
   onDelete: () => {},
   onImportLaunch: () => {},
   debugMode: false,
+  onRefresh: () => {},
 };

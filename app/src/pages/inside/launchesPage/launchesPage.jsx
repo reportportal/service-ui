@@ -205,6 +205,7 @@ export class LaunchesPage extends Component {
         <PageSection>
           <LaunchToolbar
             errors={this.props.validationErrors}
+            onRefresh={this.props.fetchLaunchesAction}
             selectedLaunches={selectedLaunches}
             onUnselect={this.props.toggleLaunchSelectionAction}
             onUnselectAll={this.props.unselectAllLaunchesAction}
