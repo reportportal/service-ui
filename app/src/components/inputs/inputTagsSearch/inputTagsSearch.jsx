@@ -86,10 +86,6 @@ export class InputTagsSearch extends Component {
   state = {
     searchPromptText: this.props.nothingFound,
   };
-  onBlur = () => {
-    const { onBlur, value } = this.props;
-    onBlur(value);
-  };
   onInputChange = (input) => {
     const diff = this.props.minLength - input.length;
     if (this.props.dynamicSearchPromptText && this.props.minLength && diff > 0) {
@@ -162,6 +158,7 @@ export class InputTagsSearch extends Component {
       error,
       onFocus,
       isValidNewOption,
+      onBlur,
     } = this.props;
     const SelectComponent = selectType(async, creatable);
     return (
@@ -177,7 +174,7 @@ export class InputTagsSearch extends Component {
           optionRenderer={this.renderOption}
           menuRenderer={renderItems}
           promptTextCreator={this.renderNewItemLabel}
-          onBlur={this.onBlur}
+          onBlur={onBlur}
           loadingPlaceholder={loadingPlaceholder}
           searchPromptText={focusPlaceholder}
           value={value}

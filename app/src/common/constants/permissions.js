@@ -1,4 +1,4 @@
-import { PROJECT_MANAGER, OPERATOR, CUSTOMER, MEMBER, LEAD } from 'common/constants/projectRoles';
+import { PROJECT_MANAGER, OPERATOR, CUSTOMER, MEMBER } from 'common/constants/projectRoles';
 
 export const ALL = 'ALL';
 export const OWNER = 'OWNER';
@@ -97,8 +97,5 @@ export const PERMISSIONS_MAP = {
     [ACTIONS.RESIZE_AND_DRAG_WIDGETS]: OWNER,
     [ACTIONS.DELETE_DASHBOARD]: OWNER,
     [ACTIONS.DELETE_FILTER]: OWNER,
-  },
-  [LEAD]: {
-    [ACTIONS.CONFIGURE_EMAIL_NOTIFICATION]: ALL,
   },
 };
