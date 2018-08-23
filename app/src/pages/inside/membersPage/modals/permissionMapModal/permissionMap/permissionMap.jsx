@@ -2,7 +2,8 @@ import React, { Component, Fragment } from 'react';
 import classNames from 'classnames/bind';
 import { injectIntl, intlShape } from 'react-intl';
 import { PROJECT_MANAGER, OPERATOR, CUSTOMER, MEMBER } from 'common/constants/projectRoles';
-import { PERMISSIONS_MAP, ALL } from './permissions';
+import { ALL } from 'common/constants/permissions';
+import { PERMISSIONS_MAP } from './permissions';
 import { PERMISSION_NAMES, ROLE_NAMES, PERMISSION_CATEGORIES } from './permissionsName';
 import styles from './permissionMap.scss';
 
@@ -20,39 +21,23 @@ export class PermissionMap extends Component {
     const { intl } = this.props;
     const roles = [PROJECT_MANAGER, MEMBER, OPERATOR, CUSTOMER];
     const ownerPermission = (
-      <div title={intl.formatMessage(ROLE_NAMES.ownTitle)} className={cx('permission-container')}>
-        <div className={cx('owner-permission')} />
-      </div>
+      <div title={intl.formatMessage(ROLE_NAMES.ownTitle)} className={cx('owner-permission')} />
     );
     const notOwnerPermission = (
       <div
         title={intl.formatMessage(ROLE_NAMES.notOwnTitle)}
-        className={cx('permission-container')}
-      >
-        <div className={cx('not-owner-permission')} />
-      </div>
+        className={cx('not-owner-permission')}
+      />
     );
 
-    return roles.map((role) => {
-      const permissionsArray = [];
-
-      if (PERMISSIONS_MAP[role][permission]) {
-        permissionsArray.push(ownerPermission);
-        if (PERMISSIONS_MAP[role][permission] === ALL) {
-          permissionsArray.push(notOwnerPermission);
-        }
-      }
-      return (
-        <td className={cx('permission-cell')} key={`${role}_${permission}`}>
-          <div className={cx('cell-content')}>
-            {permissionsArray.map((item, index) => (
-              // eslint-disable-next-line react/no-array-index-key
-              <Fragment key={index}>{item}</Fragment>
-            ))}
-          </div>
-        </td>
-      );
-    });
+    return roles.map((role) => (
+      <td className={cx('permission-cell')} key={`${role}_${permission}`}>
+        <div className={cx('cell-content')}>
+          {PERMISSIONS_MAP[role][permission] && ownerPermission}
+          {PERMISSIONS_MAP[role][permission] === ALL && notOwnerPermission}
+        </div>
+      </td>
+    ));
   };
 
   generateTableRows = () => {

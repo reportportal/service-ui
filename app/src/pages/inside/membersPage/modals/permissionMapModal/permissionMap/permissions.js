@@ -1,7 +1,5 @@
 import { PROJECT_MANAGER, OPERATOR, CUSTOMER, MEMBER } from 'common/constants/projectRoles';
-
-export const ALL = 'ALL';
-export const OWNER = 'OWNER';
+import { ALL, OWNER } from 'common/constants/permissions';
 
 export const ACTIONS = {
   EDIT_SETTINGS: 'EDIT_SETTINGS',
