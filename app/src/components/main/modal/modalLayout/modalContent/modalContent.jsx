@@ -5,14 +5,10 @@ import styles from './modalContent.scss';
 
 const cx = classNames.bind(styles);
 
-export const ModalContent = ({ children, stretchedContent }) => (
-  <div className={cx('modal-content', { 'stretched-content': stretchedContent })}>{children}</div>
-);
+export const ModalContent = ({ children }) => <div className={cx('modal-content')}>{children}</div>;
 ModalContent.propTypes = {
   children: PropTypes.node,
-  stretchedContent: PropTypes.bool,
 };
 ModalContent.defaultProps = {
   children: null,
-  stretchedContent: false,
 };

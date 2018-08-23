@@ -19,7 +19,6 @@ const cx = classNames.bind(styles);
 export class ModalLayout extends Component {
   static propTypes = {
     className: PropTypes.string,
-    stretchedContent: PropTypes.bool,
     hideModalAction: PropTypes.func.isRequired, // this props
     title: PropTypes.string, // header props
 
@@ -41,7 +40,6 @@ export class ModalLayout extends Component {
   };
   static defaultProps = {
     className: '',
-    stretchedContent: false,
     title: '',
 
     children: null,
@@ -158,9 +156,7 @@ export class ModalLayout extends Component {
                   className={cx('modal-window', this.props.className)}
                 >
                   <ModalHeader text={title} onClose={this.closeModal} />
-                  <ModalContent stretchedContent={this.props.stretchedContent}>
-                    {status !== 'exited' ? children : null}
-                  </ModalContent>
+                  <ModalContent>{status !== 'exited' ? children : null}</ModalContent>
 
                   <ModalFooter
                     {...footerProps}
