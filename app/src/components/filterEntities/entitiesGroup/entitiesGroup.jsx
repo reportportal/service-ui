@@ -6,11 +6,10 @@ import PropTypes from 'prop-types';
 import { debounce } from 'common/utils';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { EntitiesSelector } from 'components/filterEntities/entitiesSelector';
+import { ENTITIES_FORM_NAME } from 'controllers/filterEntities';
 import styles from './entitiesGroup.scss';
 
 const cx = classNames.bind(styles);
-
-const ENTITIES_FORM = 'entities-form';
 
 const isEntityActive = (item, activeItems) => item.active || activeItems.indexOf(item.id) > -1;
 
@@ -35,8 +34,8 @@ const formChangeHandler = debounce((values, dispatch, props) => {
 
 @connect(
   (state, ownProps) => {
-    const entityValues = getFormValues(ENTITIES_FORM)(state) || {};
-    const activeEntities = Object.keys(getFormValues(ENTITIES_FORM)(state) || []);
+    const entityValues = getFormValues(ENTITIES_FORM_NAME)(state) || {};
+    const activeEntities = Object.keys(getFormValues(ENTITIES_FORM_NAME)(state) || []);
     return {
       entityValues,
       entities: ownProps.entitiesSet.reduce(
@@ -50,7 +49,7 @@ const formChangeHandler = debounce((values, dispatch, props) => {
         }),
         {},
       ),
-      formSyncErrors: getFormSyncErrors(ENTITIES_FORM)(state),
+      formSyncErrors: getFormSyncErrors(ENTITIES_FORM_NAME)(state),
       initialValues: ownProps.entitiesSet.reduce(
         (acc, item) =>
           isEntityActive(item, activeEntities) ? { ...acc, [item.id]: item.value } : acc,
@@ -60,11 +59,11 @@ const formChangeHandler = debounce((values, dispatch, props) => {
     };
   },
   {
-    clearField: (name) => clearFields(ENTITIES_FORM, false, false, [name]),
+    clearField: (name) => clearFields(ENTITIES_FORM_NAME, false, false, [name]),
   },
 )
 @reduxForm({
-  form: ENTITIES_FORM,
+  form: ENTITIES_FORM_NAME,
   validate: (entities, { entitiesSet }) => {
     const validationObject = {};
     entitiesSet.filter((entity) => entity.active).forEach((entity) => {

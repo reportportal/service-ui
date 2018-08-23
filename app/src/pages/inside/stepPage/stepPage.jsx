@@ -27,6 +27,7 @@ import {
 import { withPagination } from 'controllers/pagination';
 import { showModalAction } from 'controllers/modal';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
+import { toggleFilter } from 'controllers/filterEntities';
 import { StepGrid } from './stepGrid';
 
 @connect(
@@ -49,6 +50,7 @@ import { StepGrid } from './stepGrid';
     showTestParamsModal: (item) => showModalAction({ id: 'testItemDetails', data: { item } }),
     ignoreInAutoAnalysisAction,
     includeInAutoAnalysisAction,
+    changeFilter: (id) => toggleFilter(id),
   },
 )
 @withPagination({
@@ -79,6 +81,7 @@ export class StepPage extends Component {
     showTestParamsModal: PropTypes.func,
     ignoreInAutoAnalysisAction: PropTypes.func,
     includeInAutoAnalysisAction: PropTypes.func,
+    changeFilter: PropTypes.func,
   };
 
   static defaultProps = {
@@ -103,6 +106,7 @@ export class StepPage extends Component {
     showTestParamsModal: () => {},
     ignoreInAutoAnalysisAction: () => {},
     includeInAutoAnalysisAction: () => {},
+    changeFilter: () => {},
   };
 
   handleAllStepsSelection = () => {
@@ -145,6 +149,7 @@ export class StepPage extends Component {
       onChangePageSize,
       showTestParamsModal,
       debugMode,
+      changeFilter,
     } = this.props;
     return (
       <PageLayout>
@@ -169,6 +174,7 @@ export class StepPage extends Component {
             loading={loading}
             listView={listView}
             onShowTestParams={showTestParamsModal}
+            onFilterClick={changeFilter}
           />
           <PaginationToolbar
             activePage={activePage}
