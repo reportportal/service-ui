@@ -23,6 +23,7 @@ import {
   parentItemSelector,
   loadingSelector,
 } from 'controllers/testItem';
+import { toggleFilter } from 'controllers/filterEntities';
 
 @connect(
   (state) => ({
@@ -37,6 +38,7 @@ import {
     unselectAllTestsAction,
     toggleAllTestsAction,
     fetchTestItemsAction,
+    changeFilter: (id) => toggleFilter(id),
   },
 )
 @withSorting({
@@ -69,6 +71,7 @@ export class TestsPage extends Component {
     toggleAllTestsAction: PropTypes.func,
     parentItem: PropTypes.object,
     loading: PropTypes.bool,
+    changeFilter: PropTypes.func,
   };
 
   static defaultProps = {
@@ -89,6 +92,7 @@ export class TestsPage extends Component {
     toggleAllTestsAction: () => {},
     parentItem: null,
     loading: false,
+    changeFilter: () => {},
   };
 
   handleAllTestsSelection = () => this.props.toggleAllTestsAction(this.props.tests);
@@ -109,6 +113,7 @@ export class TestsPage extends Component {
       parentItem,
       loading,
       debugMode,
+      changeFilter,
     } = this.props;
     return (
       <PageLayout>
@@ -130,6 +135,7 @@ export class TestsPage extends Component {
             onItemSelect={this.props.toggleTestSelectionAction}
             onAllItemsSelect={this.handleAllTestsSelection}
             loading={loading}
+            onFilterClick={changeFilter}
           />
           <PaginationToolbar
             activePage={activePage}

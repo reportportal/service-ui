@@ -6,6 +6,17 @@ import { FAILED, INTERRUPTED, PASSED, SKIPPED } from 'common/constants/launchSta
 import { Grid } from 'components/main/grid';
 import { AbsRelTime } from 'components/main/absRelTime';
 import { ItemInfo } from 'pages/inside/common/itemInfo';
+import { ENTITY_START_TIME } from 'components/filterEntities/constants';
+import {
+  STATS_TOTAL,
+  STATS_SKIPPED,
+  STATS_PASSED,
+  STATS_FAILED,
+  STATS_AB_TOTAL,
+  STATS_PB_TOTAL,
+  STATS_SI_TOTAL,
+  STATS_TI_TOTAL,
+} from 'common/constants/statistics';
 import { Hamburger } from './hamburger';
 import { ExecutionStatistics } from './executionStatistics';
 import { DefectStatistics } from './defectStatistics';
@@ -173,6 +184,7 @@ export class LaunchSuiteGrid extends PureComponent {
     onAllItemsSelect: PropTypes.func,
     withHamburger: PropTypes.bool,
     loading: PropTypes.bool,
+    onFilterClick: PropTypes.func,
   };
   static defaultProps = {
     data: [],
@@ -188,6 +200,7 @@ export class LaunchSuiteGrid extends PureComponent {
     onAllItemsSelect: () => {},
     withHamburger: false,
     loading: false,
+    onFilterClick: () => {},
   };
   getColumns() {
     const hamburgerColumn = {
@@ -213,52 +226,57 @@ export class LaunchSuiteGrid extends PureComponent {
         },
       },
       {
-        id: 'start_time',
+        id: ENTITY_START_TIME,
         title: {
           full: 'start time',
           short: 'start',
         },
         component: StartTimeColumn,
         sortable: true,
+        withFilter: true,
       },
       {
-        id: 'statistics$executions$total',
+        id: STATS_TOTAL,
         title: {
           full: 'total',
           short: 'ttl',
         },
         component: TotalColumn,
         sortable: true,
+        withFilter: true,
       },
       {
-        id: 'statistics$executions$passed',
+        id: STATS_PASSED,
         title: {
           full: 'passed',
           short: 'ps',
         },
         component: PassedColumn,
         sortable: true,
+        withFilter: true,
       },
       {
-        id: 'statistics$executions$failed',
+        id: STATS_FAILED,
         title: {
           full: 'failed',
           short: 'fl',
         },
         component: FailedColumn,
         sortable: true,
+        withFilter: true,
       },
       {
-        id: 'statistics$executions$skipped',
+        id: STATS_SKIPPED,
         title: {
           full: 'skipped',
           short: 'skp',
         },
         component: SkippedColumn,
         sortable: true,
+        withFilter: true,
       },
       {
-        id: 'statistics$defects$product_bug$total',
+        id: STATS_PB_TOTAL,
         title: {
           full: 'product bug',
           short: 'product bug',
@@ -268,9 +286,10 @@ export class LaunchSuiteGrid extends PureComponent {
           abbreviation: 'pb',
         },
         sortable: true,
+        withFilter: true,
       },
       {
-        id: 'statistics$defects$automation_bug$total',
+        id: STATS_AB_TOTAL,
         title: {
           full: 'auto bug',
           short: 'auto bug',
@@ -280,9 +299,10 @@ export class LaunchSuiteGrid extends PureComponent {
           abbreviation: 'ab',
         },
         sortable: true,
+        withFilter: true,
       },
       {
-        id: 'statistics$defects$system_issue$total',
+        id: STATS_SI_TOTAL,
         title: {
           full: 'system issue',
           short: 'system issue',
@@ -292,9 +312,10 @@ export class LaunchSuiteGrid extends PureComponent {
           abbreviation: 'si',
         },
         sortable: true,
+        withFilter: true,
       },
       {
-        id: 'statistics$defects$to_investigate$total',
+        id: STATS_TI_TOTAL,
         title: {
           full: 'to investigate',
           short: 'to invest',
@@ -304,6 +325,7 @@ export class LaunchSuiteGrid extends PureComponent {
           abbreviation: 'ti',
         },
         sortable: true,
+        withFilter: true,
       },
     ];
     if (this.props.withHamburger) {
@@ -324,6 +346,7 @@ export class LaunchSuiteGrid extends PureComponent {
       onItemSelect,
       onAllItemsSelect,
       loading,
+      onFilterClick,
     } = this.props;
 
     return (
@@ -338,6 +361,7 @@ export class LaunchSuiteGrid extends PureComponent {
         onToggleSelection={onItemSelect}
         onToggleSelectAll={onAllItemsSelect}
         loading={loading}
+        onFilterClick={onFilterClick}
       />
     );
   }

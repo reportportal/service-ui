@@ -27,7 +27,7 @@ const collectFilterEntities = (query) =>
       ...result,
       [filterName]: {
         condition,
-        value: query[key],
+        value: query[key] || null,
       },
     };
   }, {});
@@ -58,6 +58,9 @@ export class RefineFiltersPanel extends Component {
   };
 
   handleChange = ({ entities }) => {
+    if (Object.keys(entities).length === 0 && Object.keys(this.props.entities).length === 0) {
+      return;
+    }
     const query = Object.keys(entities).reduce((res, key) => {
       const entity = entities[key];
       return {

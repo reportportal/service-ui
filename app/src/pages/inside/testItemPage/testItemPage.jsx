@@ -2,7 +2,7 @@ import { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
-import { PageLayout } from 'layouts/pageLayout';
+import { PageLayout, PageSection } from 'layouts/pageLayout';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { Breadcrumbs } from 'components/main/breadcrumbs';
 import { LEVEL_SUITE, LEVEL_TEST, LEVEL_STEP } from 'common/constants/launchLevels';
@@ -59,10 +59,12 @@ export class TestItemPage extends Component {
     }
     return (
       <PageLayout>
-        <div className={cx('breadcrumbs-container')}>
-          {!loading && <Breadcrumbs descriptors={breadcrumbs} onRestorePath={restorePath} />}
-        </div>
-        {loading && <SpinningPreloader />}
+        <PageSection>
+          <div className={cx('breadcrumbs-container')}>
+            {!loading && <Breadcrumbs descriptors={breadcrumbs} onRestorePath={restorePath} />}
+          </div>
+          {loading && <SpinningPreloader />}
+        </PageSection>
       </PageLayout>
     );
   }

@@ -9,6 +9,7 @@ import { filterSagas } from 'controllers/filter';
 import { testSagas } from 'controllers/test';
 import { membersSagas } from 'controllers/members';
 import { testItemsSaga } from 'controllers/testItem';
+import { filterEntitiesSagas } from 'controllers/filterEntities';
 
 export function* rootSagas() {
   yield all([
@@ -22,5 +23,6 @@ export function* rootSagas() {
     testSagas(),
     membersSagas(),
     testItemsSaga(),
+    filterEntitiesSagas(),
   ]);
 }

@@ -24,6 +24,7 @@ import {
   parentItemSelector,
   loadingSelector,
 } from 'controllers/testItem';
+import { toggleFilter } from 'controllers/filterEntities';
 
 @connect(
   (state) => ({
@@ -39,6 +40,7 @@ import {
     unselectAllSuitesAction,
     toggleAllSuitesAction,
     fetchTestItemsAction,
+    changeFilter: (id) => toggleFilter(id),
   },
 )
 @withSorting({
@@ -71,6 +73,7 @@ export class SuitesPage extends Component {
     toggleAllSuitesAction: PropTypes.func,
     parentItem: PropTypes.object,
     loading: PropTypes.bool,
+    changeFilter: PropTypes.func,
   };
 
   static defaultProps = {
@@ -91,6 +94,7 @@ export class SuitesPage extends Component {
     toggleAllSuitesAction: () => {},
     parentItem: null,
     loading: false,
+    changeFilter: () => {},
   };
 
   handleAllSuitesSelection = () => this.props.toggleAllSuitesAction(this.props.suites);
@@ -111,6 +115,7 @@ export class SuitesPage extends Component {
       parentItem,
       loading,
       debugMode,
+      changeFilter,
     } = this.props;
     return (
       <PageLayout>
@@ -132,6 +137,7 @@ export class SuitesPage extends Component {
             onItemSelect={this.props.toggleSuiteSelectionAction}
             onAllItemsSelect={this.handleAllSuitesSelection}
             loading={loading}
+            onFilterClick={changeFilter}
           />
           <PaginationToolbar
             activePage={activePage}

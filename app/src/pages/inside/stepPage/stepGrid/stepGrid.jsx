@@ -7,6 +7,12 @@ import { ItemInfo } from 'pages/inside/common/itemInfo';
 import { AbsRelTime } from 'components/main/absRelTime';
 import { formatMethodType, formatStatus } from 'common/utils/localizationUtils';
 import { FAILED } from 'common/constants/testStatuses';
+import {
+  ENTITY_METHOD_TYPE,
+  ENTITY_STATUS,
+  ENTITY_START_TIME,
+  ENTITY_DEFECT_TYPE,
+} from 'components/filterEntities/constants';
 import { PredefinedFilterSwitcher } from './predefinedFilterSwitcher';
 import { DefectType } from './defectType';
 import { GroupHeader } from './groupHeader';
@@ -109,6 +115,7 @@ export class StepGrid extends Component {
     loading: PropTypes.bool,
     listView: PropTypes.bool,
     onShowTestParams: PropTypes.func,
+    onFilterClick: PropTypes.func,
   };
 
   static defaultProps = {
@@ -119,6 +126,7 @@ export class StepGrid extends Component {
     loading: false,
     listView: false,
     onShowTestParams: () => {},
+    onFilterClick: () => {},
   };
 
   constructor(props) {
@@ -132,7 +140,7 @@ export class StepGrid extends Component {
         formatter: () => {},
       },
       {
-        id: 'methodType',
+        id: ENTITY_METHOD_TYPE,
         title: {
           full: 'method type',
         },
@@ -141,6 +149,7 @@ export class StepGrid extends Component {
         customProps: {
           formatMessage: props.intl.formatMessage,
         },
+        withFilter: true,
       },
       {
         id: 'name',
@@ -155,7 +164,7 @@ export class StepGrid extends Component {
         },
       },
       {
-        id: 'status',
+        id: ENTITY_STATUS,
         title: {
           full: 'status',
         },
@@ -166,7 +175,7 @@ export class StepGrid extends Component {
         },
       },
       {
-        id: 'startTime',
+        id: ENTITY_START_TIME,
         title: {
           full: 'start time',
         },
@@ -174,7 +183,7 @@ export class StepGrid extends Component {
         component: StartTimeColumn,
       },
       {
-        id: 'defectType',
+        id: ENTITY_DEFECT_TYPE,
         title: {
           full: 'defect type',
         },
@@ -198,7 +207,15 @@ export class StepGrid extends Component {
     }, {});
 
   render() {
-    const { data, onItemSelect, onAllItemsSelect, selectedItems, loading, listView } = this.props;
+    const {
+      data,
+      onItemSelect,
+      onAllItemsSelect,
+      selectedItems,
+      loading,
+      listView,
+      onFilterClick,
+    } = this.props;
     return (
       <Grid
         columns={this.columns}
@@ -212,6 +229,7 @@ export class StepGrid extends Component {
         groupHeader={GroupHeader}
         groupFunction={this.groupStepItems}
         grouped={listView}
+        onFilterClick={onFilterClick}
       />
     );
   }
