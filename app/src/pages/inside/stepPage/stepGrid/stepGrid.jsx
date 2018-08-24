@@ -162,6 +162,7 @@ export class StepGrid extends Component {
         customProps: {
           onShowTestParams: props.onShowTestParams,
         },
+        withFilter: true,
       },
       {
         id: ENTITY_STATUS,
@@ -173,6 +174,7 @@ export class StepGrid extends Component {
         customProps: {
           formatMessage: props.intl.formatMessage,
         },
+        withFilter: true,
       },
       {
         id: ENTITY_START_TIME,
@@ -181,6 +183,7 @@ export class StepGrid extends Component {
         },
         sortable: true,
         component: StartTimeColumn,
+        withFilter: true,
       },
       {
         id: ENTITY_DEFECT_TYPE,
@@ -189,6 +192,7 @@ export class StepGrid extends Component {
         },
         sortable: true,
         component: DefectTypeColumn,
+        withFilter: true,
       },
     ];
   }
