@@ -25,7 +25,10 @@ export const calculateLevel = (data) =>
 export const getQueryNamespace = (levelIndex) => `item${levelIndex}`;
 
 export const createLink = (testItemIds, itemId, payload, query, isDebugMode) => {
-  const newTestItemsParam = testItemIds ? `${testItemIds}/${itemId}` : itemId;
+  let newTestItemsParam = testItemIds;
+  if (itemId) {
+    newTestItemsParam = testItemIds ? `${testItemIds}/${itemId}` : itemId;
+  }
   return {
     type: isDebugMode ? PROJECT_USERDEBUG_TEST_ITEM_PAGE : TEST_ITEM_PAGE,
     payload: {

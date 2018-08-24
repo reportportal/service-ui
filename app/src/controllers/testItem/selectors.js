@@ -152,6 +152,13 @@ export const defectLinkSelector = (state, ownProps) => {
   const payload = payloadSelector(state);
   const testItemIds = testItemIdsSelector(state);
   const isDebugMode = debugModeSelector(state);
+  let level = 0;
+  if (testItemIdsArraySelector(state).length >= 0) {
+    level = !ownProps.itemId
+      ? testItemIdsArraySelector(state).length - 1
+      : testItemIdsArraySelector(state).length;
+  }
+
   return createLink(
     testItemIds,
     ownProps.itemId,
@@ -161,11 +168,10 @@ export const defectLinkSelector = (state, ownProps) => {
       ...createNamespacedQuery(
         {
           'filter.eq.has_childs': false,
+          'filter.in.type': LEVEL_STEP,
           'filter.in.issue$issue_type': getDefectsString(ownProps.defects),
         },
-        getQueryNamespace(
-          testItemIdsArraySelector(state) ? testItemIdsArraySelector(state).length : 0,
-        ),
+        getQueryNamespace(level),
       ),
     },
     isDebugMode,
