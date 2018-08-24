@@ -4,7 +4,7 @@ import Parser from 'html-react-parser';
 import { FormattedMessage, injectIntl, defineMessages } from 'react-intl';
 import { MarkdownViewer } from 'components/main/markdown';
 import PencilIcon from 'common/img/pencil-icon-inline.svg';
-import { DefectTypeItem } from './defectTypeItem';
+import { DefectTypeItem } from 'pages/inside/common/defectTypeItem';
 import { AutoAnalyzedLabel } from './autoAnalyzedLabel';
 import { IssueList } from './issueList';
 import styles from './defectType.scss';
