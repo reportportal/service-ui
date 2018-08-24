@@ -122,6 +122,22 @@ export class Hamburger extends Component {
       : '';
   };
 
+  getDeleteItemTooltip = () => {
+    if (
+      !canDeleteLaunch(
+        this.props.accountRole,
+        this.props.projectRole,
+        this.props.userId === this.props.launch.owner,
+      )
+    ) {
+      return this.props.intl.formatMessage(messages.notYourLaunch);
+    }
+    if (this.props.launch.status && this.props.launch.status.toLowerCase() === IN_PROGRESS) {
+      return this.props.intl.formatMessage(messages.launchInProgress);
+    }
+    return '';
+  };
+
   isInProgress = () => this.props.launch.status === IN_PROGRESS.toUpperCase();
 
   exportAsPDF = () => this.onExportLaunch('pdf');
@@ -140,21 +156,12 @@ export class Hamburger extends Component {
     this.setState({ menuShown: !this.state.menuShown });
   };
 
-  deleteTooltip = () => {
-    if (
-      !canDeleteLaunch(
-        this.props.accountRole,
-        this.props.projectRole,
-        this.props.userId === this.props.launch.owner,
-      )
-    ) {
-      return this.props.intl.formatMessage(messages.notYourLaunch);
-    }
-    if (this.props.launch.status && this.props.launch.status.toLowerCase() === IN_PROGRESS) {
-      return this.props.intl.formatMessage(messages.launchInProgress);
-    }
-    return '';
-  };
+  canDeleteItem = () =>
+    canDeleteLaunch(
+      this.props.accountRole,
+      this.props.projectRole,
+      this.props.userId === this.props.launch.owner,
+    ) || !(this.props.launch.status && this.props.launch.status.toLowerCase() === IN_PROGRESS);
 
   render() {
     const { intl, projectRole, accountRole, launch, onAnalysis, customProps } = this.props;
@@ -232,18 +239,11 @@ export class Hamburger extends Component {
             )}
             <HamburgerMenuItem
               text={intl.formatMessage(messages.delete)}
-              disabled={
-                !canDeleteLaunch(
-                  accountRole,
-                  projectRole,
-                  this.props.userId === this.props.launch.owner,
-                ) ||
-                (this.props.launch.status && this.props.launch.status.toLowerCase() === IN_PROGRESS)
-              }
+              disabled={!this.canDeleteItem()}
               onClick={() => {
                 customProps.onDeleteItem(launch);
               }}
-              title={this.deleteTooltip()}
+              title={this.getDeleteItemTooltip()}
             />
           </div>
           <div className={cx('export-block')}>

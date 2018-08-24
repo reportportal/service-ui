@@ -29,7 +29,7 @@ export const setPageLoadingAction = (isLoading) => ({
 
 export const deleteItemsAction = defineGroupOperation(
   NAMESPACE,
-  'deleteTests',
+  'deleteTestItems',
   (items, { onConfirm, header, mainContent, userId, currentLaunch, warning }) =>
     showModalAction({
       id: 'deleteItemsModal',

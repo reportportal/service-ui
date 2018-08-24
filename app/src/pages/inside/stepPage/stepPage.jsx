@@ -182,7 +182,8 @@ export class StepPage extends Component {
             loading={loading}
             listView={listView}
             onShowTestParams={showTestParamsModal}
-          onFilterClick={changeFilter}/>
+            onFilterClick={changeFilter}
+          />
           <PaginationToolbar
             activePage={activePage}
             itemCount={itemCount}

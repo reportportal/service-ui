@@ -37,7 +37,7 @@ export const SuiteTestToolbar = ({
       onIgnoreInAA={onIgnoreInAA}
       onIncludeInAA={onIncludeInAA}
       onDelete={onDelete}
-      isDeleteDisabled={!selectedItems.length}
+      deleteDisabled={!selectedItems.length}
     />
     {parentItem && <InfoLine data={parentItem} />}
     <RefineFiltersPanel />
