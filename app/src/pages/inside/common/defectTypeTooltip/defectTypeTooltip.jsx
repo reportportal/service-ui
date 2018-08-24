@@ -31,10 +31,10 @@ export class DefectTypeTooltip extends Component {
     intl: intlShape.isRequired,
     itemId: PropTypes.string.isRequired,
   };
+
   render() {
     const { formatMessage } = this.props.intl;
     const defectConfig = this.props.projectConfig.subTypes[this.props.type.toUpperCase()];
-
     return (
       <div className={cx('defect-type-tooltip')}>
         {this.props.type !== TO_INVESTIGATE && (
