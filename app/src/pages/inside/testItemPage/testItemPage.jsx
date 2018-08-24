@@ -30,45 +30,45 @@ import styles from './testItemPage.scss';
 const cx = classNames.bind(styles);
 const messages = defineMessages({
   deleteModalHeader: {
-    id: 'TestsPage.deleteModalHeader',
+    id: 'TestItemsPage.deleteModalHeader',
     defaultMessage: 'Delete item',
   },
   deleteModalMultipleHeader: {
-    id: 'TestsPage.deleteModalMultipleHeader',
+    id: 'TestItemsPage.deleteModalMultipleHeader',
     defaultMessage: 'Delete items',
   },
   deleteModalContent: {
-    id: 'TestsPage.deleteModalContent',
+    id: 'TestItemsPage.deleteModalContent',
     defaultMessage: "Are you sure to delete item <b>'{name}'</b>? It will no longer exist.",
   },
   deleteModalMultipleContent: {
-    id: 'TestsPage.deleteModalMultipleContent',
+    id: 'TestItemsPage.deleteModalMultipleContent',
     defaultMessage: 'Are you sure to delete items? They will no longer exist.',
   },
   warning: {
-    id: 'TestsPage.warning',
+    id: 'TestItemsPage.warning',
     defaultMessage:
       'You are going to delete not your own item. This may affect other users information on the project.',
   },
   warningMultiple: {
-    id: 'TestsPage.warningMultiple',
+    id: 'TestItemsPage.warningMultiple',
     defaultMessage:
       'You are going to delete not your own items. This may affect other users information on the project.',
   },
   success: {
-    id: 'TestsPage.success',
+    id: 'TestItemsPage.success',
     defaultMessage: 'Item was deleted',
   },
   successMultiple: {
-    id: 'TestsPage.successMultiple',
+    id: 'TestItemsPage.successMultiple',
     defaultMessage: 'Items were deleted',
   },
   error: {
-    id: 'TestsPage.error',
+    id: 'TestItemsPage.error',
     defaultMessage: 'Error when deleting item',
   },
   errorMultiple: {
-    id: 'TestsPage.errorMultiple',
+    id: 'TestItemsPage.errorMultiple',
     defaultMessage: 'Error when deleting items',
   },
 });
@@ -125,7 +125,7 @@ export class TestItemPage extends Component {
   confirmDeleteItems = (items, selectedItems) => {
     const ids = items.map((item) => item.id).join(',');
     this.props.showScreenLockAction();
-    return fetch(URLS.items(this.props.activeProject, ids), {
+    return fetch(URLS.testItems(this.props.activeProject, ids), {
       method: 'delete',
     })
       .then(() => {

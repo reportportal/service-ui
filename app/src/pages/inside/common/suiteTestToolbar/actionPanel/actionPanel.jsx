@@ -93,7 +93,7 @@ export class ActionPanel extends Component {
     onIncludeInAA: PropTypes.func,
     onDelete: PropTypes.func,
     listView: PropTypes.bool,
-    isDeleteDisabled: PropTypes.bool,
+    deleteDisabled: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -118,7 +118,7 @@ export class ActionPanel extends Component {
     onIncludeInAA: () => {},
     onDelete: () => {},
     listView: false,
-    isDeleteDisabled: false,
+    deleteDisabled: false,
   };
 
   constructor(props) {
@@ -208,9 +208,9 @@ export class ActionPanel extends Component {
               <GhostButton
                 icon={DeleteIcon}
                 onClick={this.props.onDelete}
-                disabled={this.props.isDeleteDisabled}
+                disabled={this.props.deleteDisabled}
                 title={
-                  this.props.isDeleteDisabled
+                  this.props.deleteDisabled
                     ? this.props.intl.formatMessage(messages.actionsBtnTooltip)
                     : null
                 }

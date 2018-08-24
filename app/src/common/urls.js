@@ -75,7 +75,7 @@ export const URLS = {
 
   suite: (activeProject, suiteId) => `${urlBase}${activeProject}/item/${suiteId}`,
 
-  testItems: (activeProject) => `${urlBase}${activeProject}/item`,
+  testItems: (activeProject, ids) => `${urlBase}${activeProject}/item${getQueryParams({ ids })}`,
   testItem: (activeProject, id) => `${urlBase}${activeProject}/item/${id}`,
 
   logItem: (activeProject, itemId, level) =>
@@ -86,8 +86,6 @@ export const URLS = {
       'page.size': 1,
       'page.sort': 'time,DESC',
     })}`,
-
-  items: (activeProject, ids) => `${urlBase}${activeProject}/item${getQueryParams({ ids })}`,
 
   user: () => `${urlBase}user`,
   userRegistration: () => `${urlBase}user/registration`,
