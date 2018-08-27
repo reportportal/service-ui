@@ -7,7 +7,7 @@ Width = 100% of it's parent. Height grows with it's content.
 ```
 {
     name: string,
-    content: 'come content(text, html, jsx, components etc.)'
+    content: React.Node,
 }
 ```
 

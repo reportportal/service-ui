@@ -21,10 +21,24 @@
 
 import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
+// eslint-disable-next-line import/extensions, import/no-unresolved
+import { WithState } from 'storybook-decorators';
 import { host } from 'storybook-host';
 import { withReadme } from 'storybook-readme';
 import { NavigationTabs } from './navigationTabs';
 import README from './README.md';
+
+const state = {
+  location: {
+    pathname: '/general',
+    type: 'GENERAL_PAGE',
+    routesMap: {
+      GENERAL_PAGE: {
+        path: '/general',
+      },
+    },
+  },
+};
 
 const activeTab = 'general';
 
@@ -76,8 +90,12 @@ storiesOf('Components/Main/NavigationTabs', module)
   .add('default state', () => <NavigationTabs />)
   .add('with config', () => <NavigationTabs config={config} />)
   .add('with config & activeTab="general"', () => (
-    <NavigationTabs activeTab={activeTab} config={config} />
+    <WithState state={state}>
+      <NavigationTabs activeTab={activeTab} config={config} />
+    </WithState>
   ))
   .add('with config & actions', () => (
-    <NavigationTabs onChangeTab={action('onChangeTab')} config={config} />
+    <WithState state={state}>
+      <NavigationTabs onChangeTab={action('onChangeTab')} activeTab={activeTab} config={config} />
+    </WithState>
   ));

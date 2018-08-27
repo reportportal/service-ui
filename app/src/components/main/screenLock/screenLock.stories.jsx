@@ -23,7 +23,7 @@ import { storiesOf } from '@storybook/react';
 import { host } from 'storybook-host';
 import { withReadme } from 'storybook-readme';
 // eslint-disable-next-line import/extensions, import/no-unresolved
-import { WithState } from 'storybook-decorators/withState';
+import { WithState } from 'storybook-decorators';
 import { ScreenLock } from './screenLock';
 import README from './README.md';
 
@@ -31,9 +31,8 @@ const withScreenLock = (getStory) => {
   const screenLockRoot =
     document.getElementById('screen-lock-root') || document.createElement('div');
   screenLockRoot.setAttribute('id', 'screen-lock-root');
-  const rootDiv = document.getElementById('root');
-  rootDiv.parentNode.appendChild(screenLockRoot);
-  return <div>{getStory()}</div>;
+  document.getElementById('root').parentNode.appendChild(screenLockRoot);
+  return getStory();
 };
 
 const state = {

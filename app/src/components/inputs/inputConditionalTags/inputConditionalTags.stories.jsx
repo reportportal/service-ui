@@ -26,7 +26,7 @@ import MockAdapter from 'axios-mock-adapter';
 import { host } from 'storybook-host';
 import { withReadme } from 'storybook-readme';
 // eslint-disable-next-line import/extensions, import/no-unresolved
-import { WithState } from 'storybook-decorators/withState';
+import { WithState } from 'storybook-decorators';
 import { InputConditionalTags } from './inputConditionalTags';
 import README from './README.md';
 
