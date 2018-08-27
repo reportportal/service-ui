@@ -48,10 +48,7 @@ export const AdminHeader = ({
         <span className={cx('header-crumb')}>{adminHeaderCrumb}</span>
       </h3>
       <div className={cx('admin-header-controls')}>
-        <button
-          className={cx({ 'back-to-project': true, btn: true })}
-          onClick={onClickBackToProject}
-        >
+        <button className={cx('back-to-project', 'btn')} onClick={onClickBackToProject}>
           <FormattedMessage id={'AdminHeader.btnToProject'} defaultMessage={'Back to project'} />
         </button>
         <button className={cx('logout', 'btn')} onClick={onClickLogout}>

@@ -29,31 +29,34 @@ import README from './README.md';
 
 const COLUMNS = [
   {
+    id: 'name',
     title: { full: 'name' },
     formatter: ({ name }) => name,
   },
   {
+    id: 'total',
     title: { full: 'total' },
     align: ALIGN_CENTER,
     formatter: ({ total }) => total,
     sortable: true,
-    name: 'total',
     withFilter: true,
   },
   {
+    id: 'passed',
     title: { full: 'passed' },
     align: ALIGN_CENTER,
     formatter: ({ passed }) => passed,
     sortable: true,
-    name: 'passed',
     withFilter: true,
   },
   {
+    id: 'failed',
     title: { full: 'failed' },
     align: ALIGN_CENTER,
     formatter: ({ failed }) => failed,
   },
   {
+    id: 'skipped',
     title: { full: 'skipped' },
     align: ALIGN_CENTER,
     formatter: ({ skipped }) => skipped,

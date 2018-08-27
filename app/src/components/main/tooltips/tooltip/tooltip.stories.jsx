@@ -22,16 +22,10 @@
 import { storiesOf } from '@storybook/react';
 import { host } from 'storybook-host';
 import { withReadme } from 'storybook-readme';
+// eslint-disable-next-line import/extensions, import/no-unresolved
+import { withTooltipRoot } from 'storybook-decorators';
 import { withTooltip } from './withTooltip';
 import README from './README.md';
-
-const withToolTipRoot = (getStory) => {
-  const tooltipRoot = document.getElementById('tooltip-root') || document.createElement('div');
-  tooltipRoot.setAttribute('id', 'tooltip-root');
-  const rootDiv = document.getElementById('root');
-  rootDiv.parentNode.appendChild(tooltipRoot);
-  return <div>{getStory()}</div>;
-};
 
 const StoryBookTooltip = () => (
   <div>
@@ -56,7 +50,7 @@ storiesOf('Components/Main/Tooltips/Tooltip', module)
     }),
   )
   .addDecorator(withReadme(README))
-  .addDecorator(withToolTipRoot)
+  .addDecorator(withTooltipRoot)
   .add('with align = right', () => {
     const data = {
       width: 130,

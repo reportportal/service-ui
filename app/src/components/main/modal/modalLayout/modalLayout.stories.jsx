@@ -1,6 +1,7 @@
 import React from 'react';
 import { storiesOf } from '@storybook/react';
 import { host } from 'storybook-host';
+import { action } from '@storybook/addon-actions';
 import { withReadme } from 'storybook-readme';
 import { ModalLayout } from './modalLayout';
 import README from './README.md';
@@ -8,7 +9,7 @@ import README from './README.md';
 const okButton = {
   text: 'Submit',
   danger: false,
-  onClick: () => {},
+  onClick: action('submit'),
 };
 
 const cancelButton = {
@@ -18,7 +19,7 @@ const cancelButton = {
 const dangerOkButton = {
   text: 'Submit',
   danger: true,
-  onClick: () => {},
+  onClick: action('danger submit'),
 };
 
 storiesOf('Components/Main/ModalLayout', module)

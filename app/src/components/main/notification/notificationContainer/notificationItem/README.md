@@ -6,7 +6,7 @@ Width = 100% of it's parent. Height grows with it's content.
 
 - **message**: _string_, optional, default = ""
 - **messageId**: _string_, optional, default = ""
-- **uid**: _number_, required
-- **type**: one of ['', 'error', 'info', 'success'], optional, default = 'info'
-- **onMessageClick**: _func_, required
+- **type**: one of ['error', 'info', 'success'], optional, default = 'info'
 - **values**: _object_, optional, default = {}
+- **uid**: _number_, required
+- **onMessageClick**: _func_, required

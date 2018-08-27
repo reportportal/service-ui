@@ -23,38 +23,8 @@ import { storiesOf } from '@storybook/react';
 import { host } from 'storybook-host';
 import { withReadme } from 'storybook-readme';
 import { Breadcrumbs } from './breadcrumbs';
+import { errorDescriptors, descriptorsWithActive, listViewDescriptors } from './data';
 import README from './README.md';
-
-const descriptors = [
-  {
-    title: 'title1',
-    link: '/test1',
-    error: false,
-    listView: false,
-    active: false,
-  },
-  {
-    title: 'title2',
-    link: '/test2',
-    error: false,
-    listView: false,
-    active: false,
-  },
-  {
-    title: 'title3',
-    link: '/test3',
-    error: true,
-    listView: false,
-    active: false,
-  },
-  {
-    title: 'title4',
-    link: '/test4',
-    error: false,
-    listView: false,
-    active: true,
-  },
-];
 
 storiesOf('Components/Main/Breadcrumbs', module)
   .addDecorator(
@@ -69,4 +39,6 @@ storiesOf('Components/Main/Breadcrumbs', module)
   )
   .addDecorator(withReadme(README))
   .add('default state', () => <Breadcrumbs />)
-  .add('with descriptors', () => <Breadcrumbs descriptors={descriptors} />);
+  .add('with listView descriptors', () => <Breadcrumbs descriptors={listViewDescriptors} />)
+  .add('with active descriptors', () => <Breadcrumbs descriptors={descriptorsWithActive} />)
+  .add('with errorItems descriptors', () => <Breadcrumbs descriptors={errorDescriptors} />);
