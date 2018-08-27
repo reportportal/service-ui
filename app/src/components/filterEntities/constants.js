@@ -22,6 +22,6 @@ export const ENTITY_STATUS = 'status';
 export const ENTITY_METHOD_TYPE = 'type';
 export const ENTITY_DEFECT_TYPE = 'issue$issue_type';
 export const ENTITY_DEFECT_COMMENT = 'issue$issue_comment';
-export const ENTITY_BTS_ISSUES = 'externalSystemIssues$ticket_id';
+export const ENTITY_BTS_ISSUES = 'issue$externalSystemIssues$ticket_id';
 export const ENTITY_IGNORE_ANALYZER = 'issue$ignore_analyzer';
 export const ENTITY_AUTOANALYZE = 'issue$auto_analyzed';
