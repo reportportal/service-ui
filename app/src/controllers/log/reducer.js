@@ -1,19 +1,10 @@
 import { combineReducers } from 'redux';
 import { fetchReducer } from 'controllers/fetch';
-import { CHANGE_ACTIVE_LOG_ITEM, SET_LOG_ITEM_TO_GET_HISTORY, NAMESPACE } from './constants';
+import { SET_ACTIVE_HISTORY_ITEM_ID, NAMESPACE } from './constants';
 
 export const activeItemReducer = (state = '', { type, payload }) => {
   switch (type) {
-    case CHANGE_ACTIVE_LOG_ITEM:
-      return payload;
-    default:
-      return state;
-  }
-};
-
-export const itemToGetHistoryReducer = (state = '', { type, payload }) => {
-  switch (type) {
-    case SET_LOG_ITEM_TO_GET_HISTORY:
+    case SET_ACTIVE_HISTORY_ITEM_ID:
       return payload;
     default:
       return state;
@@ -21,7 +12,6 @@ export const itemToGetHistoryReducer = (state = '', { type, payload }) => {
 };
 
 export const logReducer = combineReducers({
-  logEntries: fetchReducer(NAMESPACE),
-  itemToGetHistory: itemToGetHistoryReducer,
+  historyEntries: fetchReducer(NAMESPACE),
   activeItemId: activeItemReducer,
 });

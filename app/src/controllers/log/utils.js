@@ -32,7 +32,7 @@ export const calculateGrowthDuration = (historyItems) => {
     .reverse();
 };
 
-export const getHistoryItemProps = (filteredLaunchHistoryItem) => {
+export const clarifyHistoryItemPropsAccordingToStatus = (filteredLaunchHistoryItem) => {
   const itemProps = { ...filteredLaunchHistoryItem[0] };
 
   if (!filteredLaunchHistoryItem.length) {

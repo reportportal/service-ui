@@ -1,30 +1,34 @@
 import { createSelector } from 'reselect';
-import { calculateGrowthDuration, getHistoryItemProps } from './utils';
+import { testItemIdsArraySelector } from '../pages/selectors';
+import { calculateGrowthDuration, clarifyHistoryItemPropsAccordingToStatus } from './utils';
 
 const logSelector = (state) => state.log || {};
 
-const logEntriesSelector = (state) => logSelector(state).logEntries || [];
-
-const itemToGetHistorySelector = (state) => logSelector(state).itemToGetHistory || '';
+const historyEntriesSelector = (state) => logSelector(state).logEntries || [];
 
 export const activeItemIdSelector = (state) => logSelector(state).activeItemId || '';
 
+export const logItemIdSelector = createSelector(
+  testItemIdsArraySelector,
+  (itemIdsArray) => (itemIdsArray.length && itemIdsArray.pop()) || '',
+);
+
 export const historyItemsSelector = createSelector(
-  logEntriesSelector,
-  itemToGetHistorySelector,
-  (entriesFromState, itemToGetHistory) => {
+  historyEntriesSelector,
+  logItemIdSelector,
+  (entriesFromState, logItemId) => {
     if (!entriesFromState.length) return [];
     const entries = [...entriesFromState].reverse();
 
     const currentLaunch = entries.pop();
-    const currentLaunchItem = currentLaunch.resources.find((item) => item.id === itemToGetHistory);
+    const currentLaunchItem = currentLaunch.resources.find((item) => item.id === logItemId);
     const historyItems = entries.map((historyItem) => {
       const filteredSameHistoryItems = historyItem.resources.filter(
         (item) => item.uniqueId === currentLaunchItem.uniqueId,
       );
 
       return {
-        ...getHistoryItemProps(filteredSameHistoryItems),
+        ...clarifyHistoryItemPropsAccordingToStatus(filteredSameHistoryItems),
         launchNumber: historyItem.launchNumber,
       };
     });

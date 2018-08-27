@@ -1,8 +1,4 @@
-export { historyItemsSelector, activeItemIdSelector } from './selectors';
-export {
-  fetchLogEntriesAction,
-  changeActiveLogItemAction,
-  setLogItemToGetHistoryAction,
-} from './actionCreators';
-export { logEntriesSagas } from './sagas';
+export { historyItemsSelector, activeItemIdSelector, logItemIdSelector } from './selectors';
+export { fetchHistoryEntriesAction, changeActiveHistoryItemAction } from './actionCreators';
+export { logSagas } from './sagas';
 export { logReducer } from './reducer';

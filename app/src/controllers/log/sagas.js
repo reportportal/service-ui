@@ -2,23 +2,39 @@ import { takeEvery, all, put, select } from 'redux-saga/effects';
 import { fetchDataAction } from 'controllers/fetch';
 import { activeProjectSelector } from 'controllers/user';
 import { URLS } from 'common/urls';
-import { activeItemIdSelector } from './selectors';
-import { FETCH_LOG_ENTRIES, DEFAULT_HISTORY_DEPTH, NAMESPACE } from './constants';
+import { logItemIdSelector } from './selectors';
+import { setActiveHistoryItemAction } from './actionCreators';
+import {
+  FETCH_HISTORY_ENTRIES,
+  CHANGE_ACTIVE_HISTORY_ITEM,
+  DEFAULT_HISTORY_DEPTH,
+  NAMESPACE,
+} from './constants';
 
-function* getLogEntries() {
+function* getHistoryEntries() {
   const activeProject = yield select(activeProjectSelector);
-  const activeItemId = yield select(activeItemIdSelector);
+  const logItemId = yield select(logItemIdSelector);
+
   yield put(
     fetchDataAction(NAMESPACE)(
-      URLS.testItemsHistory(activeProject, activeItemId, DEFAULT_HISTORY_DEPTH),
+      URLS.testItemsHistory(activeProject, logItemId, DEFAULT_HISTORY_DEPTH),
     ),
   );
+  yield put(setActiveHistoryItemAction(logItemId));
 }
 
-function* watchFetchLogEntries() {
-  yield takeEvery(FETCH_LOG_ENTRIES, getLogEntries);
+function* changeActiveHistoryItem({ payload }) {
+  yield put(setActiveHistoryItemAction(payload));
 }
 
-export function* logEntriesSagas() {
-  yield all([watchFetchLogEntries()]);
+function* watchFetchHistoryEntries() {
+  yield takeEvery(FETCH_HISTORY_ENTRIES, getHistoryEntries);
+}
+
+function* watchChangeActiveHistoryItem() {
+  yield takeEvery(CHANGE_ACTIVE_HISTORY_ITEM, changeActiveHistoryItem);
+}
+
+export function* logSagas() {
+  yield all([watchFetchHistoryEntries(), watchChangeActiveHistoryItem()]);
 }

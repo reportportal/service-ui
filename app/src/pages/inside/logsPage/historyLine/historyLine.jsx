@@ -18,9 +18,9 @@ const cx = classNames.bind(styles);
 export class HistoryLine extends Component {
   static propTypes = {
     projectId: PropTypes.string,
-    onItemSelect: PropTypes.func,
     historyItems: PropTypes.array,
     activeItemId: PropTypes.string,
+    onItemSelect: PropTypes.func,
   };
 
   static defaultProps = {

@@ -1,27 +1,19 @@
 import {
-  FETCH_LOG_ENTRIES,
-  CHANGE_ACTIVE_LOG_ITEM,
-  SET_LOG_ITEM_TO_GET_HISTORY,
+  FETCH_HISTORY_ENTRIES,
+  SET_ACTIVE_HISTORY_ITEM_ID,
+  CHANGE_ACTIVE_HISTORY_ITEM,
 } from './constants';
 
-export const fetchLogEntriesAction = () => ({
-  type: FETCH_LOG_ENTRIES,
+export const fetchHistoryEntriesAction = () => ({
+  type: FETCH_HISTORY_ENTRIES,
 });
 
-export const setLogItemToGetHistoryAction = (logItemId) => (dispatch) => {
-  dispatch({
-    type: SET_LOG_ITEM_TO_GET_HISTORY,
-    payload: logItemId,
-  });
-  dispatch({
-    type: CHANGE_ACTIVE_LOG_ITEM,
-    payload: logItemId,
-  });
-};
+export const setActiveHistoryItemAction = (logItemId) => ({
+  type: SET_ACTIVE_HISTORY_ITEM_ID,
+  payload: logItemId,
+});
 
-export const changeActiveLogItemAction = (logItemId) => (dispatch) => {
-  dispatch({
-    type: CHANGE_ACTIVE_LOG_ITEM,
-    payload: logItemId,
-  });
-};
+export const changeActiveHistoryItemAction = (logItemId) => ({
+  type: CHANGE_ACTIVE_HISTORY_ITEM,
+  payload: logItemId,
+});
