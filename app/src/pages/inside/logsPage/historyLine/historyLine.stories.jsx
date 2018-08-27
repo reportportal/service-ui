@@ -35,12 +35,12 @@ const state = {
     payload: {
       projectId: 'amsterget_personal',
       filterId: 'all',
+      testItemIds: '5b75a36397a1c00001ea3d4f',
     },
   },
   log: {
     logEntries: mockEntries,
     activeItemId: '5b75a36397a1c00001ea3d4f',
-    itemToGetHistory: '5b75a36397a1c00001ea3d4f',
   },
 };
 

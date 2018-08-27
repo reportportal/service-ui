@@ -24,12 +24,6 @@ import {
   loadingSelector,
 } from 'controllers/testItem';
 import { toggleFilter } from 'controllers/filterEntities';
-import {
-  setLogItemToGetHistoryAction,
-  fetchLogEntriesAction,
-  changeActiveLogItemAction,
-} from 'controllers/log';
-import { HistoryLine } from '../logsPage/historyLine';
 
 @connect(
   (state) => ({
@@ -46,9 +40,6 @@ import { HistoryLine } from '../logsPage/historyLine';
     toggleAllTestsAction,
     fetchTestItemsAction,
     changeFilter: (id) => toggleFilter(id),
-    setLogItemToGetHistoryAction,
-    fetchLogEntriesAction,
-    changeActiveLogItemAction,
   },
 )
 @withSorting({
@@ -82,9 +73,6 @@ export class TestsPage extends Component {
     parentItem: PropTypes.object,
     loading: PropTypes.bool,
     changeFilter: PropTypes.func,
-    setLogItemToGetHistoryAction: PropTypes.func.isRequired,
-    fetchLogEntriesAction: PropTypes.func.isRequired,
-    changeActiveLogItemAction: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
@@ -108,14 +96,6 @@ export class TestsPage extends Component {
     loading: false,
     changeFilter: () => {},
   };
-
-  componentWillMount() {
-    this.props.setLogItemToGetHistoryAction('5b75a36397a1c00001ea3d4f');
-  }
-
-  componentDidMount() {
-    this.props.fetchLogEntriesAction();
-  }
 
   handleAllTestsSelection = () => this.props.toggleAllTestsAction(this.props.tests);
 
@@ -141,7 +121,6 @@ export class TestsPage extends Component {
     return (
       <PageLayout>
         <PageSection>
-          <HistoryLine onItemSelect={this.props.changeActiveLogItemAction} />
           <SuiteTestToolbar
             selectedItems={selectedTests}
             parentItem={parentItem}

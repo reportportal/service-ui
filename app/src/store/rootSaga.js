@@ -10,7 +10,7 @@ import { testSagas } from 'controllers/test';
 import { membersSagas } from 'controllers/members';
 import { testItemsSaga } from 'controllers/testItem';
 import { filterEntitiesSagas } from 'controllers/filterEntities';
-import { logEntriesSagas } from 'controllers/log';
+import { logSagas } from 'controllers/log';
 
 export function* rootSagas() {
   yield all([
@@ -25,6 +25,6 @@ export function* rootSagas() {
     membersSagas(),
     testItemsSaga(),
     filterEntitiesSagas(),
-    logEntriesSagas(),
+    logSagas(),
   ]);
 }
