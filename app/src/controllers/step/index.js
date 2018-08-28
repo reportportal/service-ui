@@ -9,6 +9,7 @@ export {
 } from './selectors';
 export {
   selectStepsAction,
+  editDefectsAction,
   proceedWithValidItemsAction,
   toggleStepSelectionAction,
   unselectAllStepsAction,

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { BigButton } from 'components/buttons/bigButton';
+import { MultiActionButton } from 'components/buttons/multiActionButton';
 import { InputCheckbox } from 'components/inputs/inputCheckbox';
 import classNames from 'classnames/bind';
 import styles from './modalFooter.scss';
@@ -13,6 +14,11 @@ export class ModalFooter extends Component {
     okButton: PropTypes.shape({
       text: PropTypes.string.isRequired,
       danger: PropTypes.bool,
+    }),
+    multiActionOkButton: PropTypes.shape({
+      title: PropTypes.string.isRequired,
+      items: PropTypes.array,
+      onClick: PropTypes.func,
     }),
     cancelButton: PropTypes.shape({
       text: PropTypes.string.isRequired,
@@ -29,6 +35,7 @@ export class ModalFooter extends Component {
   static defaultProps = {
     warningMessage: '',
     okButton: null,
+    multiActionOkButton: null,
     cancelButton: null,
     customButton: null,
     onClickOk: () => {},
@@ -48,6 +55,7 @@ export class ModalFooter extends Component {
     const {
       warningMessage,
       okButton,
+      multiActionOkButton,
       cancelButton,
       customButton,
       onClickCancel,
@@ -100,6 +108,15 @@ export class ModalFooter extends Component {
               >
                 {okButton.text}
               </BigButton>
+            </div>
+          )}
+          {multiActionOkButton && (
+            <div className={cx('button-container')}>
+              <MultiActionButton
+                onClick={onClickOk}
+                items={multiActionOkButton.items}
+                title={multiActionOkButton.title}
+              />
             </div>
           )}
           {customButton ? <div className={cx('button-container')}>{customButton}</div> : null}

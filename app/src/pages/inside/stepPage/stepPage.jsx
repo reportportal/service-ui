@@ -24,6 +24,7 @@ import {
   ignoreInAutoAnalysisAction,
   includeInAutoAnalysisAction,
   unlinkIssueAction,
+  editDefectsAction,
 } from 'controllers/step';
 import { withPagination } from 'controllers/pagination';
 import { showModalAction } from 'controllers/modal';
@@ -52,6 +53,7 @@ import { StepGrid } from './stepGrid';
     ignoreInAutoAnalysisAction,
     includeInAutoAnalysisAction,
     unlinkIssueAction,
+    editDefectsAction,
     changeFilter: (id) => toggleFilter(id),
   },
 )
@@ -85,6 +87,7 @@ export class StepPage extends Component {
     ignoreInAutoAnalysisAction: PropTypes.func,
     includeInAutoAnalysisAction: PropTypes.func,
     unlinkIssueAction: PropTypes.func,
+    editDefectsAction: PropTypes.func.isRequired,
     changeFilter: PropTypes.func,
   };
 
@@ -139,6 +142,13 @@ export class StepPage extends Component {
       fetchFunc: this.props.fetchTestItemsAction,
     });
 
+  handleEditDefects = (eventData) => {
+    const items = eventData && eventData.id ? [eventData] : this.props.selectedItems;
+    this.props.editDefectsAction(items, {
+      fetchFunc: this.props.fetchTestItemsAction,
+    });
+  };
+
   proceedWithValidItems = () =>
     this.props.proceedWithValidItemsAction(this.props.lastOperation, this.props.selectedItems);
 
@@ -180,6 +190,7 @@ export class StepPage extends Component {
             onProceedValidItems={this.proceedWithValidItems}
             onRefresh={this.props.fetchTestItemsAction}
             debugMode={debugMode}
+            onEditDefects={this.handleEditDefects}
             onIgnoreInAA={this.handleIgnoreInAA}
             onIncludeInAA={this.handleIncludeInAA}
             onUnlinkIssue={this.handleUnlinkIssue}
@@ -192,6 +203,7 @@ export class StepPage extends Component {
             loading={loading}
             listView={listView}
             onShowTestParams={showTestParamsModal}
+            onEditDefect={this.handleEditDefects}
             onFilterClick={changeFilter}
           />
           <PaginationToolbar

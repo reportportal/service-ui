@@ -115,7 +115,8 @@ export class DefectTypeSelector extends Component {
           <DefectTypeItem
             type={toInvestigate.locator}
             noBorder={toInvestigate.locator !== value}
-            onClick={this.handleChange}
+            lessFont={toInvestigate.locator === value}
+            onClick={() => this.handleChange(toInvestigate.locator)}
           />
         </div>
         <div className={cx('defect-options')}>
@@ -126,7 +127,8 @@ export class DefectTypeSelector extends Component {
                   <DefectTypeItem
                     type={defectType.locator}
                     noBorder={defectType.locator !== value}
-                    onClick={this.handleChange}
+                    lessFont={defectType.locator === value}
+                    onClick={() => this.handleChange(defectType.locator)}
                   />
                 </div>
               ))}

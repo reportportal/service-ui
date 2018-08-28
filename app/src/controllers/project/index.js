@@ -18,4 +18,5 @@ export {
   projectEmailConfigurationSelector,
   projectEmailCasesSelector,
   projectEmailEnabledSelector,
+  externalSystemSelector,
 } from './selectors';
