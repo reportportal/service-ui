@@ -28,10 +28,16 @@ export class ModalLayout extends Component {
       danger: PropTypes.bool,
       onClick: PropTypes.func,
     }),
+    multiActionOkButton: PropTypes.shape({
+      title: PropTypes.string.isRequired,
+      items: PropTypes.array,
+      onClick: PropTypes.func,
+    }),
     cancelButton: PropTypes.shape({
       text: PropTypes.string.isRequired,
     }),
     customButton: PropTypes.node,
+    stopOutsideClose: PropTypes.bool,
     closeConfirmation: PropTypes.object,
     confirmationMessage: PropTypes.string,
     confirmationWarning: PropTypes.string,
@@ -42,8 +48,10 @@ export class ModalLayout extends Component {
     children: null,
     warningMessage: '',
     okButton: null,
+    multiActionOkButton: null,
     cancelButton: null,
     customButton: null,
+    stopOutsideClose: false,
     closeConfirmation: null,
     confirmationMessage: '',
     confirmationWarning: '',
@@ -72,10 +80,13 @@ export class ModalLayout extends Component {
     }
   };
   onClickModal = (e) => {
-    !this.modal.contains(e.target) && this.closeModal();
+    !this.modal.contains(e.target) && !this.props.stopOutsideClose && this.closeModal();
   };
   onClickOk = () => {
-    this.props.okButton.onClick(this.closeModal);
+    const { okButton, multiActionOkButton } = this.props;
+
+    okButton && okButton.onClick(this.closeModal);
+    multiActionOkButton && multiActionOkButton.onClick(this.closeModal);
   };
   onCloseConfirm = (closeConfirmed) => {
     this.setState({
@@ -116,6 +127,7 @@ export class ModalLayout extends Component {
       title,
       warningMessage,
       okButton,
+      multiActionOkButton,
       cancelButton,
       customButton,
       children,
@@ -125,6 +137,7 @@ export class ModalLayout extends Component {
     const footerProps = {
       warningMessage,
       okButton,
+      multiActionOkButton,
       cancelButton,
       customButton,
       confirmationMessage,

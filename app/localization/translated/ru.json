@@ -470,6 +470,7 @@
   "LaunchesPage.multipleSelectHeader": "Вы можете выполнять действия с выбранными элементами:",
   "LaunchesPage.noDefectType": "Элемент не имеет дефекта",
   "LaunchesPage.noLinkedIssue": "У элемента нет прикрепленной ошибки",
+  "LaunchesPage.noIssue": "У элемента нет дефекта для редактирования",
   "LaunchesPage.notYourOwnLaunch": "Запуск был создан не Вами",
   "LaunchesPage.refresh": "Обновить",
   "LaunchesPage.selectMoreItems": "Вам надо выбрать более одного элемента",
@@ -898,7 +899,17 @@
   "WizardThirdStepForm.nameLabel": "Widget name",
   "WizardThirdStepForm.namePlaceholder": "Enter widget name",
   "WizardThirdStepForm.shareLabel": "Share",
+  "editDefectModal.defectTypeTitle": "Тип Дефекта",
+  "editDefectModal.hotKeyCancelCaption": "для отмены",
+  "editDefectModal.hotKeySubmitCaption": "для подтверждения",
+  "editDefectModal.ignoreAaTitle": "Игнорировать при Авто-Анализе",
+  "editDefectModal.replaceCommentsTitle": "Заменить комментарии для всех выбранных элементов",
+  "editDefectModal.saveAndLinkIssueMessage": "Сохранить и прикрепить ошибку",
+  "editDefectModal.saveAndPostIssueMessage": "Сохранить и отправить ошибку",
+  "editDefectModal.saveAndUnlinkIssueMessage": "Сохранить и открепить ошибку",
+  "editDefectModal.title": "Редактировать тип дефекта",
+  "editDefectModal.warningMessage": "Вы должны сохранить изменения или отменить их перед закрытием окна",
   "emailCase.launchesHint": "Имя запуска должно иметь размер от 3 до 256",
   "emailCase.recipientsHint": "Пожалуйста, выберите хотя бы одного получателя",
   "emailCase.tagsHint": "Название метки должно иметь размер от 3 до 256"
-}
+  }

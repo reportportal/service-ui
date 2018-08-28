@@ -20,6 +20,8 @@ export const defectTypesSelector = (state) => projectConfigSelector(state).subTy
 export const projectAnalyzerConfigSelector = (state) =>
   projectConfigSelector(state).analyzerConfiguration || {};
 
+export const externalSystemSelector = (state) => projectConfigSelector(state).externalSystem || [];
+
 export const projectEmailConfigurationSelector = (state) =>
   projectConfigSelector(state).emailConfiguration || {};
 

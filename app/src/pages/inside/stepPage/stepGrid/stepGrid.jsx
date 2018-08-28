@@ -78,14 +78,17 @@ StartTimeColumn.defaultProps = {
   value: {},
 };
 
-const DefectTypeColumn = ({ className, value }) => (
+const DefectTypeColumn = ({ className, value, customProps: { onEdit } }) => (
   <div className={cx('defect-type-col', className)}>
-    {value.issue && <DefectType issue={value.issue} />}
+    {value.issue && <DefectType issue={value.issue} onEdit={() => onEdit(value)} />}
   </div>
 );
 DefectTypeColumn.propTypes = {
   className: PropTypes.string,
   value: PropTypes.object,
+  customProps: PropTypes.shape({
+    onEdit: PropTypes.func.isRequired,
+  }).isRequired,
 };
 DefectTypeColumn.defaultProps = {
   className: null,
@@ -116,6 +119,7 @@ export class StepGrid extends Component {
     listView: PropTypes.bool,
     onShowTestParams: PropTypes.func,
     onFilterClick: PropTypes.func,
+    onEditDefect: PropTypes.func,
   };
 
   static defaultProps = {
@@ -127,6 +131,7 @@ export class StepGrid extends Component {
     listView: false,
     onShowTestParams: () => {},
     onFilterClick: () => {},
+    onEditDefect: () => {},
   };
 
   constructor(props) {
@@ -192,6 +197,9 @@ export class StepGrid extends Component {
         },
         sortable: true,
         component: DefectTypeColumn,
+        customProps: {
+          onEdit: props.onEditDefect,
+        },
         withFilter: true,
       },
     ];

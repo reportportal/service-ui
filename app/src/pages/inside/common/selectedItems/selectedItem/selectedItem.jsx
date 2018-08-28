@@ -45,6 +45,10 @@ const messages = defineMessages({
     id: 'LaunchesPage.noLinkedIssue',
     defaultMessage: "Item doesn't have a linked issue",
   },
+  noIssue: {
+    id: 'LaunchesPage.noIssue',
+    defaultMessage: 'Item has not issue for edit',
+  },
 });
 
 const TooltipComponent = injectIntl(({ intl, error }) => (
