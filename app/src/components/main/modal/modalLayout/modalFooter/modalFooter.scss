@@ -40,9 +40,12 @@
   }
 }
 .buttons-block {
-  float: right;
   white-space: nowrap;
+  display: flex;
+  justify-content: space-between;
+  align-content: flex-end;
 }
+
 .button-container {
   display: inline-block;
   height: 30px;
