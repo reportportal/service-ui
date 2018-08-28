@@ -1,6 +1,6 @@
 ## **Typical field for text input**
 
-Has no own size. Width and Height = 100% of it's parent.
+Has 30px height & width adjusted by content.
 
 ### Props:
 
