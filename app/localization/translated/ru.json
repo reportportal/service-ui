@@ -568,7 +568,7 @@
   "PermissionMap.projectManagement": "Управление проектом",
   "PermissionMap.projectMembers": "Участники проекта",
   "PermissionMap.reportLaunch": "Запустить тесты",
-  "PermissionMap.role": "Действие \\\\ Проектная роль",
+  "PermissionMap.role": "Действие / Проектная роль",
   "PermissionMap.suiteTestTestItem": "Набор / тест / тестовый элемент",
   "PermissionMap.viewInfoAboutMembers": "Видеть информацию об участниках проекта",
   "PermissionMap.viewLaunchInDebugMode": "Видеть информацию о запусках в режиме отладки",
