@@ -41,7 +41,7 @@ storiesOf('Components/Buttons/BigButton', module)
   .add('default state', () => <BigButton />)
   .add('with text', () => <BigButton>Button title</BigButton>)
   .add('with roundedCorners & text', () => <BigButton roundedCorners>Button title</BigButton>)
-  .add('colored', () => <BigButton color={'organish'}>Button title</BigButton>)
+  .add('colored', () => <BigButton color="organish">Button title</BigButton>)
   .add('disabled', () => <BigButton disabled>Button title</BigButton>)
   .add('with actions', () => <BigButton onClick={action('clicked')}>Button title</BigButton>)
   .add('disabled with actions', () => (

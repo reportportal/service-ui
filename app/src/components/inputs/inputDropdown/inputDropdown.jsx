@@ -162,7 +162,7 @@ export class InputDropdown extends Component {
           subOption={!!option.groupRef}
           onChange={
             (!option.disabled && (option.groupId ? this.handleGroupChange : this.handleChange)) ||
-            (() => {})
+            null
           }
         />
       );
