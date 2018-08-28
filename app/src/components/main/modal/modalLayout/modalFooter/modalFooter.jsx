@@ -101,6 +101,7 @@ export class ModalFooter extends Component {
               </BigButton>
             </div>
           )}
+          {customButton ? <div className={cx('button-container')}>{customButton}</div> : null}
           {okButton && (
             <div className={cx('button-container')}>
               <BigButton
