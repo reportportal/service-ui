@@ -12,7 +12,7 @@ const CATEGORIES = {
 export const ROLE_NAMES = defineMessages({
   role: {
     id: 'PermissionMap.role',
-    defaultMessage: 'Action \\\\ Project role',
+    defaultMessage: 'Action / Project role',
   },
   admin: {
     id: 'PermissionMap.admin',
