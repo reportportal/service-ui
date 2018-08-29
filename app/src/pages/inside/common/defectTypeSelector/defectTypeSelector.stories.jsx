@@ -44,41 +44,33 @@ storiesOf('Pages/Inside/Common/DefectTypeSelector', module)
   .addDecorator(withReadme(README))
   .add('default state', () => (
     <div style={{ width: '100%', position: 'relative' }}>
-      <div style={{ width: 300 }}>
-        <WithState state={state}>
-          <DefectTypeSelector />
-        </WithState>
-      </div>
+      <WithState state={state}>
+        <DefectTypeSelector />
+      </WithState>
     </div>
   ))
   .add('with placeholder', () => (
     <div style={{ width: '100%', position: 'relative' }}>
-      <div style={{ width: 300 }}>
-        <WithState state={state}>
-          <DefectTypeSelector placeholder="Choose defect type" />
-        </WithState>
-      </div>
+      <WithState state={state}>
+        <DefectTypeSelector placeholder="Choose defect type" />
+      </WithState>
     </div>
   ))
   .add('with value', () => (
     <div style={{ width: '100%', position: 'relative' }}>
-      <div style={{ width: 300 }}>
-        <WithState state={state}>
-          <DefectTypeSelector value={value} />
-        </WithState>
-      </div>
+      <WithState state={state}>
+        <DefectTypeSelector value={value} />
+      </WithState>
     </div>
   ))
   .add('with actions', () => (
     <div style={{ width: '100%', position: 'relative' }}>
-      <div style={{ width: 300 }}>
-        <WithState state={state}>
-          <DefectTypeSelector
-            onChange={action('onchange')}
-            placeholder="Choose defect type"
-            value={value}
-          />
-        </WithState>
-      </div>
+      <WithState state={state}>
+        <DefectTypeSelector
+          onChange={action('onchange')}
+          placeholder="Choose defect type"
+          value={value}
+        />
+      </WithState>
     </div>
   ));

@@ -16,18 +16,13 @@
   cursor: pointer;
 }
 
-.select-mode {
+.no-border {
   border: 1px solid transparent;
   font-family: $FONT-REGULAR;
   font-size: 12px;
-  &:hover:not(.selected) {
+  &:hover {
     border: 1px solid $COLOR--gray-80;
   }
-}
-
-.selected {
-  border: 1px solid $COLOR--gray-80;
-  font-family: $FONT-SEMIBOLD;
 }
 
 .defect-type-circle {
