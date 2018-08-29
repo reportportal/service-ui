@@ -23,10 +23,10 @@
       background-color: $COLOR--booger;
 
       &:hover {
-        background-color: darken($COLOR--booger, 15%);
+        background-color: $COLOR--khaki-green;
       }
       &:active {
-        background-color: darken($COLOR--booger, 30%);
+        background-color: $COLOR--dirty-green;
       }
     }
 
@@ -34,28 +34,7 @@
       background-color: $COLOR--booger;
 
       &:hover {
-        background-color: darken($COLOR--booger, 15%);
-      }
-    }
-  }
-
-  &.color-organish {
-    .button-part {
-      background-color: $COLOR--organish;
-
-      &:hover {
-        background-color: darken($COLOR--organish, 15%);
-      }
-      &:active {
-        background-color: darken($COLOR--organish, 30%);
-      }
-    }
-
-    .menu-part {
-      background-color: $COLOR--organish;
-
-      &:hover {
-        background-color: darken($COLOR--organish, 15%);
+        background-color: $COLOR--khaki-green;
       }
     }
   }

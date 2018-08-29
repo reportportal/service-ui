@@ -30,17 +30,17 @@ const items = [
   {
     label: 'Save and post issue',
     value: 'Post',
-    onClick: action('clicked'),
+    onClick: action('clicked save and post'),
   },
   {
     label: 'Save and link issue',
     value: 'Link',
-    onClick: action('clicked'),
+    onClick: action('clicked save and link'),
   },
   {
     label: 'Save and unlink issue',
     value: 'Unlink',
-    onClick: action('clicked'),
+    onClick: action('clicked save and unlink'),
     disabled: true,
   },
 ];
@@ -60,10 +60,6 @@ storiesOf('Components/Buttons/MultiActionButton', module)
   .add('default state', () => <MultiActionButton />)
   .add('with title', () => <MultiActionButton title="Save" />)
   .add('with title & disabled', () => <MultiActionButton title="Save" disabled />)
-  .add('with title & color=organish', () => <MultiActionButton color="organish" title="Save" />)
-  .add('with title & color=organish & disabled', () => (
-    <MultiActionButton color="organish" title="Save" disabled />
-  ))
   .add('with title & items & actions', () => (
-    <MultiActionButton onClick={action('clicked')} items={items} title="Save" />
+    <MultiActionButton onClick={action('clicked save')} items={items} title="Save" />
   ));
