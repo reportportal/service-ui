@@ -1,17 +1,12 @@
 import { createSelector } from 'reselect';
-import { testItemIdsArraySelector } from '../pages/selectors';
-import { calculateGrowthDuration, clarifyHistoryItemPropsAccordingToStatus } from './utils';
+import { logItemIdSelector } from 'controllers/pages';
+import { calculateGrowthDuration, normalizeHistoryItem } from './utils';
 
 const logSelector = (state) => state.log || {};
 
-const historyEntriesSelector = (state) => logSelector(state).logEntries || [];
+const historyEntriesSelector = (state) => logSelector(state).historyEntries || [];
 
 export const activeItemIdSelector = (state) => logSelector(state).activeItemId || '';
-
-export const logItemIdSelector = createSelector(
-  testItemIdsArraySelector,
-  (itemIdsArray) => (itemIdsArray.length && itemIdsArray.pop()) || '',
-);
 
 export const historyItemsSelector = createSelector(
   historyEntriesSelector,
@@ -28,8 +23,7 @@ export const historyItemsSelector = createSelector(
       );
 
       return {
-        ...clarifyHistoryItemPropsAccordingToStatus(filteredSameHistoryItems),
-        launchNumber: historyItem.launchNumber,
+        ...normalizeHistoryItem(historyItem, filteredSameHistoryItems),
       };
     });
 

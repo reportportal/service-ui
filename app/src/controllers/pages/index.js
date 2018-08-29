@@ -11,6 +11,7 @@ export {
   createQueryParametersSelector,
   filterIdSelector,
   pathnameChangedSelector,
+  logItemIdSelector,
 } from './selectors';
 export { updatePagePropertiesAction } from './actionCreators';
 

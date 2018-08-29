@@ -17,6 +17,11 @@ export const testItemIdsArraySelector = createSelector(
   (itemIdsString) => (itemIdsString && itemIdsString.split('/')) || [],
 );
 
+export const logItemIdSelector = createSelector(
+  testItemIdsArraySelector,
+  (itemIdsArray) => (itemIdsArray.length && itemIdsArray[itemIdsArray.length - 1]) || '',
+);
+
 export const pageSelector = (state) => pageNames[state.location.type] || NO_PAGE;
 
 export const pagePropertiesSelector = ({ location: { query } }, namespace, mapping = undefined) => {

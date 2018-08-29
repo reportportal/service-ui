@@ -32,12 +32,15 @@ export const calculateGrowthDuration = (historyItems) => {
     .reverse();
 };
 
-export const clarifyHistoryItemPropsAccordingToStatus = (filteredLaunchHistoryItem) => {
-  const itemProps = { ...filteredLaunchHistoryItem[0] };
+export const normalizeHistoryItem = (historyItem, filteredSameHistoryItems) => {
+  const itemProps = {
+    launchNumber: historyItem.launchNumber,
+    ...filteredSameHistoryItems[0],
+  };
 
-  if (!filteredLaunchHistoryItem.length) {
+  if (!filteredSameHistoryItems.length) {
     itemProps.status = NOT_FOUND.toUpperCase();
-  } else if (filteredLaunchHistoryItem.length > 1) {
+  } else if (filteredSameHistoryItems.length > 1) {
     itemProps.status = MANY.toUpperCase();
     delete itemProps.issue;
     delete itemProps.statistics;
