@@ -99,7 +99,7 @@ export class MultiActionButton extends Component {
               className={cx('menu-item', { disabled: item.disabled })}
               onClick={!item.disabled ? item.onClick : null}
             >
-              <span>{item.label}</span>
+              {item.label}
             </div>
           ))}
         </div>
