@@ -14,17 +14,13 @@ export class DefectTypeItem extends Component {
   static propTypes = {
     projectConfig: PropTypes.object.isRequired,
     type: PropTypes.string.isRequired,
-    onEdit: PropTypes.func,
-    onChange: PropTypes.func,
-    selectMode: PropTypes.bool,
-    selected: PropTypes.bool,
+    onClick: PropTypes.func,
+    noBorder: PropTypes.bool,
   };
 
   static defaultProps = {
-    onEdit: () => {},
-    onChange: () => {},
-    selectMode: false,
-    selected: false,
+    onClick: () => {},
+    noBorder: false,
   };
 
   getDefectType = () => {
@@ -38,21 +34,21 @@ export class DefectTypeItem extends Component {
   };
 
   handleChange = () => {
-    const { type, onChange } = this.props;
-    onChange(type);
+    const { type, onClick } = this.props;
+    onClick(type);
   };
 
   render() {
-    const { selectMode, selected, onEdit } = this.props;
+    const { noBorder, onClick } = this.props;
     const defectType = this.getDefectType();
     if (!defectType) {
       return null;
     }
     return (
       <div
-        className={cx('defect-type-item', { 'select-mode': selectMode, selected })}
+        className={cx('defect-type-item', { 'no-border': noBorder })}
         title={defectType.longName}
-        onClick={selectMode ? this.handleChange : onEdit}
+        onClick={onClick}
       >
         <div className={cx('defect-type-circle')} style={{ backgroundColor: defectType.color }} />
         <div className={cx('defect-type-name')}>{defectType.longName}</div>

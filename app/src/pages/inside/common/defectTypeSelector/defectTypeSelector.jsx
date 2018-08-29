@@ -76,24 +76,24 @@ export class DefectTypeSelector extends Component {
     }
   };
 
-  displayedValue() {
+  formatValue() {
     const { defectTypes, value } = this.props;
-    let displayedValue = null;
+    let formattedValue = null;
 
     Object.keys(defectTypes).find((option) => {
       const foundDefectType = defectTypes[option].find(
         (defectType) => defectType.locator === value,
       );
       if (foundDefectType) {
-        displayedValue = foundDefectType;
+        formattedValue = foundDefectType;
       }
       return foundDefectType;
     });
 
     return (
-      displayedValue && (
+      formattedValue && (
         <div className={cx('selected-option')}>
-          <DefectTypeItem type={displayedValue.locator} />
+          <DefectTypeItem type={formattedValue.locator} />
         </div>
       )
     );
@@ -114,9 +114,8 @@ export class DefectTypeSelector extends Component {
         <div className={cx('to-investigate-option')}>
           <DefectTypeItem
             type={toInvestigate.locator}
-            selectMode
-            selected={toInvestigate.locator === value}
-            onChange={this.handleChange}
+            noBorder={toInvestigate.locator !== value}
+            onClick={this.handleChange}
           />
         </div>
         <div className={cx('defect-options')}>
@@ -126,9 +125,8 @@ export class DefectTypeSelector extends Component {
                 <div key={defectType.locator} className={cx('select-option')}>
                   <DefectTypeItem
                     type={defectType.locator}
-                    selectMode
-                    selected={defectType.locator === value}
-                    onChange={this.handleChange}
+                    noBorder={defectType.locator !== value}
+                    onClick={this.handleChange}
                   />
                 </div>
               ))}
@@ -143,13 +141,13 @@ export class DefectTypeSelector extends Component {
     const { defectTypes, placeholder } = this.props;
 
     return (
-      Object.keys(defectTypes).length && (
+      !!Object.keys(defectTypes).length && (
         <div
           ref={this.setRef}
           className={cx('defect-type-selector', { opened: this.state.opened })}
         >
           <div className={cx('select-block')} onClick={this.onClickSelectBlock}>
-            <span className={cx('value')}>{this.displayedValue() || placeholder}</span>
+            <span className={cx('value')}>{this.formatValue() || placeholder}</span>
             <span className={cx('arrow')} />
           </div>
           <div className={cx('select-list')}>{this.renderOptions()}</div>
