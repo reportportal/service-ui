@@ -57,33 +57,13 @@ storiesOf('Components/Buttons/MultiActionButton', module)
     }),
   )
   .addDecorator(withReadme(README))
-  .add('default state', () => (
-    <div style={{ display: 'inline-block' }}>
-      <MultiActionButton />
-    </div>
-  ))
-  .add('with title', () => (
-    <div style={{ display: 'inline-block' }}>
-      <MultiActionButton title="Save" />
-    </div>
-  ))
-  .add('with title & disabled', () => (
-    <div style={{ display: 'inline-block' }}>
-      <MultiActionButton title="Save" disabled />
-    </div>
-  ))
-  .add('with title & color=organish', () => (
-    <div style={{ display: 'inline-block' }}>
-      <MultiActionButton color="organish" title="Save" />
-    </div>
-  ))
+  .add('default state', () => <MultiActionButton />)
+  .add('with title', () => <MultiActionButton title="Save" />)
+  .add('with title & disabled', () => <MultiActionButton title="Save" disabled />)
+  .add('with title & color=organish', () => <MultiActionButton color="organish" title="Save" />)
   .add('with title & color=organish & disabled', () => (
-    <div style={{ display: 'inline-block' }}>
-      <MultiActionButton color="organish" title="Save" disabled />
-    </div>
+    <MultiActionButton color="organish" title="Save" disabled />
   ))
   .add('with title & items & actions', () => (
-    <div style={{ display: 'inline-block' }}>
-      <MultiActionButton onClick={action('clicked')} items={items} title="Save" />
-    </div>
+    <MultiActionButton onClick={action('clicked')} items={items} title="Save" />
   ));
