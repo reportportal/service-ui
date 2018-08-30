@@ -41,6 +41,10 @@ const messages = defineMessages({
     id: 'LaunchesPage.alreadyIncluded',
     defaultMessage: 'Item already included in Auto-Analysis',
   },
+  noLinkedIssue: {
+    id: 'LaunchesPage.noLinkedIssue',
+    defaultMessage: "Item doesn't have a linked issue",
+  },
 });
 
 const TooltipComponent = injectIntl(({ intl, error }) => (

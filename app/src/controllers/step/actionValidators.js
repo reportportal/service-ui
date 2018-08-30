@@ -17,3 +17,10 @@ export const validateIncludeInAA = (item) => {
   }
   return null;
 };
+
+export const validateUnlinkIssue = (item) => {
+  if (!item.issue || !item.issue.externalSystemIssues || !item.issue.externalSystemIssues.length) {
+    return 'noLinkedIssue';
+  }
+  return null;
+};
