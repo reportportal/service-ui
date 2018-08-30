@@ -14,4 +14,5 @@ export {
   unselectAllStepsAction,
   ignoreInAutoAnalysisAction,
   includeInAutoAnalysisAction,
+  unlinkIssueAction,
 } from './actionCreators';

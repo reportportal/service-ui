@@ -7,7 +7,7 @@ import {
 } from 'controllers/groupOperations';
 import { showModalAction } from 'controllers/modal';
 import { NAMESPACE } from './constants';
-import { validateIgnoreInAA, validateIncludeInAA } from './actionValidators';
+import { validateIgnoreInAA, validateIncludeInAA, validateUnlinkIssue } from './actionValidators';
 
 export const toggleStepSelectionAction = toggleItemSelectionAction(NAMESPACE);
 export const selectStepsAction = selectItemsAction(NAMESPACE);
@@ -27,4 +27,11 @@ export const includeInAutoAnalysisAction = defineGroupOperation(
   'include-in-aa',
   (items, { fetchFunc }) => showModalAction({ id: 'includeInAAModal', data: { items, fetchFunc } }),
   validateIncludeInAA,
+);
+
+export const unlinkIssueAction = defineGroupOperation(
+  NAMESPACE,
+  'unlink-issue',
+  (items, { fetchFunc }) => showModalAction({ id: 'unlinkIssueModal', data: { items, fetchFunc } }),
+  validateUnlinkIssue,
 );

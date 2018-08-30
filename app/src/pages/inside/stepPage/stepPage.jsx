@@ -23,6 +23,7 @@ import {
   stepPaginationSelector,
   ignoreInAutoAnalysisAction,
   includeInAutoAnalysisAction,
+  unlinkIssueAction,
 } from 'controllers/step';
 import { withPagination } from 'controllers/pagination';
 import { showModalAction } from 'controllers/modal';
@@ -50,6 +51,7 @@ import { StepGrid } from './stepGrid';
     showTestParamsModal: (item) => showModalAction({ id: 'testItemDetails', data: { item } }),
     ignoreInAutoAnalysisAction,
     includeInAutoAnalysisAction,
+    unlinkIssueAction,
     changeFilter: (id) => toggleFilter(id),
   },
 )
@@ -82,6 +84,7 @@ export class StepPage extends Component {
     showTestParamsModal: PropTypes.func,
     ignoreInAutoAnalysisAction: PropTypes.func,
     includeInAutoAnalysisAction: PropTypes.func,
+    unlinkIssueAction: PropTypes.func,
     changeFilter: PropTypes.func,
   };
 
@@ -109,6 +112,7 @@ export class StepPage extends Component {
     ignoreInAutoAnalysisAction: () => {},
     includeInAutoAnalysisAction: () => {},
     changeFilter: () => {},
+    unlinkIssueAction: () => {},
   };
 
   handleAllStepsSelection = () => {
@@ -119,6 +123,11 @@ export class StepPage extends Component {
     }
     this.props.selectStepsAction(steps);
   };
+
+  handleUnlinkIssue = () =>
+    this.props.unlinkIssueAction(this.props.selectedItems, {
+      fetchFunc: this.props.fetchTestItemsAction,
+    });
 
   handleIgnoreInAA = () =>
     this.props.ignoreInAutoAnalysisAction(this.props.selectedItems, {
@@ -173,6 +182,7 @@ export class StepPage extends Component {
             debugMode={debugMode}
             onIgnoreInAA={this.handleIgnoreInAA}
             onIncludeInAA={this.handleIncludeInAA}
+            onUnlinkIssue={this.handleUnlinkIssue}
           />
           <StepGrid
             data={steps}
