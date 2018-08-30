@@ -40,6 +40,7 @@ export const projectEmailCasesSelector = createSelector(
 export const projectEmailEnabledSelector = (state) =>
   projectEmailConfigurationSelector(state).emailEnabled || false;
 
+
 export const defectColorsSelector = createSelector(projectConfigSelector, (config) => {
   const colors = {};
   Object.keys(config).length &&

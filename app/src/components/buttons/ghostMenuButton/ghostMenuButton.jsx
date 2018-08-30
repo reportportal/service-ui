@@ -36,6 +36,8 @@ export class GhostMenuButton extends Component {
         label: PropTypes.string,
         value: PropTypes.string,
         hidden: PropTypes.bool,
+        disabled: PropTypes.bool,
+        title: PropTypes.string,
         onClick: PropTypes.func,
       }),
     ),
@@ -100,6 +102,7 @@ export class GhostMenuButton extends Component {
             <div
               key={item.value}
               className={cx('menu-item', { disabled: item.disabled })}
+              title={item.title || ''}
               onClick={!item.disabled ? item.onClick : null}
             >
               <span>{item.label}</span>

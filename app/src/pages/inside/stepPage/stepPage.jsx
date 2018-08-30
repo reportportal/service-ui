@@ -25,6 +25,7 @@ import {
   includeInAutoAnalysisAction,
   unlinkIssueAction,
   editDefectsAction,
+  linkIssueAction,
 } from 'controllers/step';
 import { withPagination } from 'controllers/pagination';
 import { showModalAction } from 'controllers/modal';
@@ -54,6 +55,7 @@ import { StepGrid } from './stepGrid';
     includeInAutoAnalysisAction,
     unlinkIssueAction,
     editDefectsAction,
+    linkIssueAction,
     changeFilter: (id) => toggleFilter(id),
   },
 )
@@ -88,6 +90,7 @@ export class StepPage extends Component {
     includeInAutoAnalysisAction: PropTypes.func,
     unlinkIssueAction: PropTypes.func,
     editDefectsAction: PropTypes.func.isRequired,
+    linkIssueAction: PropTypes.func,
     changeFilter: PropTypes.func,
   };
 
@@ -116,6 +119,7 @@ export class StepPage extends Component {
     includeInAutoAnalysisAction: () => {},
     changeFilter: () => {},
     unlinkIssueAction: () => {},
+    linkIssueAction: () => {},
   };
 
   handleAllStepsSelection = () => {
@@ -129,6 +133,11 @@ export class StepPage extends Component {
 
   handleUnlinkIssue = () =>
     this.props.unlinkIssueAction(this.props.selectedItems, {
+      fetchFunc: this.props.fetchTestItemsAction,
+    });
+
+  handleLinkIssue = () =>
+    this.props.linkIssueAction(this.props.selectedItems, {
       fetchFunc: this.props.fetchTestItemsAction,
     });
 
@@ -194,6 +203,7 @@ export class StepPage extends Component {
             onIgnoreInAA={this.handleIgnoreInAA}
             onIncludeInAA={this.handleIncludeInAA}
             onUnlinkIssue={this.handleUnlinkIssue}
+            onLinkIssue={this.handleLinkIssue}
           />
           <StepGrid
             data={steps}

@@ -10,6 +10,7 @@ import {
   isListViewSelector,
   namespaceSelector,
 } from 'controllers/testItem';
+import { externalSystemSelector } from 'controllers/project';
 import { Breadcrumbs, breadcrumbDescriptorShape } from 'components/main/breadcrumbs';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { GhostMenuButton } from 'components/buttons/ghostMenuButton';
@@ -63,6 +64,14 @@ const messages = defineMessages({
     id: 'ActionPanel.deleteBtnTooltip',
     defaultMessage: 'Delete test items in bulk',
   },
+  noBugTrackingSystemToLinkIssue: {
+    id: 'ActionPanel.noBugTrackingSystemToLinkIssue',
+    defaultMessage: 'Configure bug tracking system to link issue',
+  },
+  noBugTrackingSystemToPostIssue: {
+    id: 'ActionPanel.noBugTrackingSystemToPostIssue',
+    defaultMessage: 'Configure bug tracking system to post issue',
+  },
 });
 
 @connect(
@@ -70,6 +79,7 @@ const messages = defineMessages({
     breadcrumbs: breadcrumbsSelector(state),
     level: levelSelector(state),
     listView: isListViewSelector(state, namespaceSelector(state)),
+    externalSystems: externalSystemSelector(state),
   }),
   {
     restorePath: restorePathAction,
@@ -97,6 +107,7 @@ export class ActionPanel extends Component {
     onIncludeInAA: PropTypes.func,
     onDelete: PropTypes.func,
     listView: PropTypes.bool,
+    externalSystems: PropTypes.array,
     deleteDisabled: PropTypes.bool,
   };
 
@@ -122,6 +133,7 @@ export class ActionPanel extends Component {
     onIncludeInAA: () => {},
     onDelete: () => {},
     listView: false,
+    externalSystems: [],
     deleteDisabled: false,
   };
 
@@ -142,12 +154,22 @@ export class ActionPanel extends Component {
       label: this.props.intl.formatMessage(messages.postIssue),
       value: 'action-post-issue',
       hidden: this.props.debugMode,
+      disabled: !this.props.externalSystems.length,
+      title:
+        (!this.props.externalSystems.length &&
+          this.props.intl.formatMessage(messages.noBugTrackingSystemToPostIssue)) ||
+        '',
       onClick: this.props.onPostIssue,
     },
     {
       label: this.props.intl.formatMessage(messages.linkIssue),
       value: 'action-link-issue',
       hidden: this.props.debugMode,
+      disabled: !this.props.externalSystems.length,
+      title:
+        (!this.props.externalSystems.length &&
+          this.props.intl.formatMessage(messages.noBugTrackingSystemToLinkIssue)) ||
+        '',
       onClick: this.props.onLinkIssue,
     },
     {
