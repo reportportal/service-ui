@@ -3,3 +3,4 @@ export { IgnoreInAAModal } from './ignoreInAAModal';
 export { IncludeInAAModal } from './includeInAAModal';
 export { UnlinkIssueModal } from './unlinkIssueModal';
 export { EditDefectModal } from './editDefectModal';
+export { LinkIssueModal } from './linkIssueModal';

@@ -6,7 +6,7 @@ import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { activeProjectSelector } from 'controllers/user';
 import { externalSystemSelector } from 'controllers/project';
 import { fetchTestItemsAction } from 'controllers/testItem';
-import { unlinkIssueAction } from 'controllers/step';
+import { unlinkIssueAction, linkIssueAction } from 'controllers/step';
 import { hideModalAction } from 'controllers/modal';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { fetch, setStorageItem, getStorageItem } from 'common/utils';
@@ -85,6 +85,7 @@ const messages = defineMessages({
     hideModalAction,
     fetchTestItemsAction,
     unlinkIssueAction,
+    linkIssueAction,
   },
 )
 export class EditDefectModal extends Component {
@@ -100,6 +101,7 @@ export class EditDefectModal extends Component {
     hideModalAction: PropTypes.func.isRequired,
     fetchTestItemsAction: PropTypes.func.isRequired,
     unlinkIssueAction: PropTypes.func.isRequired,
+    linkIssueAction: PropTypes.func.isRequired,
   };
 
   constructor(props) {
@@ -222,7 +224,10 @@ export class EditDefectModal extends Component {
       fetchFunc: this.props.data.fetchFunc,
     });
 
-  handleLinkIssue = () => {}; // TODO
+  handleLinkIssue = () =>
+    this.props.linkIssueAction(this.getItemsToTheNextAction(), {
+      fetchFunc: this.props.data.fetchFunc,
+    });
 
   handlePostIssue = () => {}; // TODO
 

@@ -16,4 +16,5 @@ export {
   ignoreInAutoAnalysisAction,
   includeInAutoAnalysisAction,
   unlinkIssueAction,
+  linkIssueAction,
 } from './actionCreators';

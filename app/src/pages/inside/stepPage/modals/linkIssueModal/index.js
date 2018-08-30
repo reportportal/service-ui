@@ -1,0 +1,1 @@
+export { LinkIssueModal } from './linkIssueModal';

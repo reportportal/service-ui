@@ -110,6 +110,14 @@ const messages = defineMessages({
     id: 'emailCase.launchesHint',
     defaultMessage: 'Launch name should have size from 3 to 256',
   },
+  urlHint: {
+    id: 'LinkIssueModal.urlHint',
+    defaultMessage: 'Link should match a valid website address',
+  },
+  issueIdHint: {
+    id: 'LinkIssueModal.issueIdHint',
+    defaultMessage: 'Issue ID should have size from 1 to 128',
+  },
 });
 
 @injectIntl

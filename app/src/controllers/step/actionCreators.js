@@ -12,6 +12,7 @@ import {
   validateIncludeInAA,
   validateUnlinkIssue,
   validateEditDefect,
+  validateLinkIssue,
 } from './actionValidators';
 
 export const toggleStepSelectionAction = toggleItemSelectionAction(NAMESPACE);
@@ -46,4 +47,11 @@ export const editDefectsAction = defineGroupOperation(
   'edit-defect',
   (items, { fetchFunc }) => showModalAction({ id: 'editDefectModal', data: { items, fetchFunc } }),
   validateEditDefect,
+);
+
+export const linkIssueAction = defineGroupOperation(
+  NAMESPACE,
+  'link-issue',
+  (items, { fetchFunc }) => showModalAction({ id: 'linkIssueModal', data: { items, fetchFunc } }),
+  validateLinkIssue,
 );

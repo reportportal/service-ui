@@ -20,7 +20,7 @@ export class ModalLayout extends Component {
   static propTypes = {
     className: PropTypes.string,
     hideModalAction: PropTypes.func.isRequired, // this props
-    title: PropTypes.string, // header props
+    title: PropTypes.oneOfType([PropTypes.string, PropTypes.node]), // header props
     children: PropTypes.node, // content props
     warningMessage: PropTypes.string, // footer props
     okButton: PropTypes.shape({
@@ -39,7 +39,6 @@ export class ModalLayout extends Component {
         buttonProps: PropTypes.object,
       }),
     ]),
-    stopOutsideClose: PropTypes.bool,
     closeConfirmation: PropTypes.shape({
       closeConfirmedCallback: PropTypes.func,
       isAbleToClose: PropTypes.bool,

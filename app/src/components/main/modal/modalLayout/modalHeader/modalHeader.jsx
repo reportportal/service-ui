@@ -16,7 +16,7 @@ export const ModalHeader = ({ text, onClose }) => (
   </div>
 );
 ModalHeader.propTypes = {
-  text: PropTypes.string,
+  text: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
   onClose: PropTypes.func,
 };
 ModalHeader.defaultProps = {

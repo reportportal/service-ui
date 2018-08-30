@@ -90,6 +90,7 @@ export const URLS = {
       ids,
       history_depth: historyDepth,
     })}`,
+  testItemsAddIssues: (activeProject) => `${urlBase}${activeProject}/item/issue/add`,
 
   logItem: (activeProject, itemId, level) =>
     `${urlBase}${activeProject}/log${getQueryParams({
