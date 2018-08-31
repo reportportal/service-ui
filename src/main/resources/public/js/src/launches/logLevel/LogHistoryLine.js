@@ -143,7 +143,8 @@ define(function (require, exports, module) {
             statusTitle: {
                 deps: ['status'],
                 get: function (status) {
-                    return Localization.historyLine.tooltips[status];
+                    var duration = Util.timeFormat(this.model.get('start_time'), this.model.get('end_time'), true);
+                    return Localization.historyLine.tooltips[status] + '; ' + duration;
                 }
             },
             getLinkClass: {
