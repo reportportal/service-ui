@@ -59,7 +59,7 @@ export const DropdownOption = ({
 };
 
 DropdownOption.propTypes = {
-  value: PropTypes.string,
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   multiple: PropTypes.bool,
   label: PropTypes.node,
   disabled: PropTypes.bool,

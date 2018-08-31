@@ -1,3 +1,19 @@
+.form-input {
+  position: relative;
+  width: 310px;
+  flex-shrink: 0;
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    width: 100%;
+  }
+}
+
+.form-invalid-message {
+  margin: 20px 0 20px 100px;
+  color: $COLOR--fatal;
+  font-size: 10px;
+}
+
 .control-panel {
   position: relative;
   padding: 7px 15px;

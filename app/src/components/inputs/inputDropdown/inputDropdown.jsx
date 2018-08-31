@@ -28,7 +28,7 @@ const cx = classNames.bind(styles);
 
 export class InputDropdown extends Component {
   static propTypes = {
-    value: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
+    value: PropTypes.oneOfType([PropTypes.string, PropTypes.array, PropTypes.bool]),
     options: PropTypes.array,
     multiple: PropTypes.bool,
     selectAll: PropTypes.bool,

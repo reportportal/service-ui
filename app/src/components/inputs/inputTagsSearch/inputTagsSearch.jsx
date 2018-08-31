@@ -51,9 +51,6 @@ export class InputTagsSearch extends Component {
     dynamicSearchPromptText: PropTypes.bool,
     isClearable: PropTypes.bool,
     disabled: PropTypes.bool,
-    error: PropTypes.string,
-    onFocus: PropTypes.func,
-    onBlur: PropTypes.func,
   };
   static defaultProps = {
     uri: '',
@@ -79,9 +76,6 @@ export class InputTagsSearch extends Component {
     dynamicSearchPromptText: false,
     isClearable: false,
     disabled: false,
-    error: '',
-    onFocus: () => {},
-    onBlur: () => {},
   };
   state = {
     searchPromptText: this.props.nothingFound,
@@ -101,9 +95,6 @@ export class InputTagsSearch extends Component {
       this.setState({ searchPromptText: this.props.nothingFound });
     }
     return input;
-  };
-  onBlur = () => {
-    this.props.onBlur(this.props.value);
   };
   getItems = (input) => {
     if (input.length >= this.props.minLength) {
@@ -140,7 +131,6 @@ export class InputTagsSearch extends Component {
   };
   render() {
     const {
-      error,
       touched,
       async,
       creatable,
@@ -149,7 +139,6 @@ export class InputTagsSearch extends Component {
       value,
       options,
       onChange,
-      onFocus,
       multi,
       removeSelected,
       placeholder,
@@ -181,7 +170,6 @@ export class InputTagsSearch extends Component {
           options={options}
           onChange={onChange}
           onFocus={onFocus}
-          onBlur={this.onBlur}
           multi={multi}
           isValidNewOption={isValidNewOption}
           removeSelected={removeSelected}
