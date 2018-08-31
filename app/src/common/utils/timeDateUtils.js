@@ -34,7 +34,7 @@ const getTimeUnits = (time) => {
   };
 };
 
-export const getDuration = (start, end) => {
+export const getDuration = (start, end, isThreeDecimalPlaces) => {
   const secDuration = parseInt((end - start) / 1000, 10);
   const { days, hours, minutes, seconds } = getTimeUnits(secDuration);
 
@@ -54,7 +54,9 @@ export const getDuration = (start, end) => {
   if (result === '' && seconds > 0) {
     result = `${seconds}s`;
   } else if (result === '' && seconds === 0) {
-    result = `${Math.round((end - start) / 10) / 100}s`;
+    result = isThreeDecimalPlaces
+      ? `${(end - start) / 1000}s`
+      : `${Math.round((end - start) / 10) / 100}s`;
   }
   return result.trim();
 };

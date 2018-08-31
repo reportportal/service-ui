@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { defineMessages, injectIntl, intlShape } from 'react-intl';
 import { PASSED, FAILED, SKIPPED, MANY, NOT_FOUND, RESETED } from 'common/constants/launchStatuses';
+import { getDuration } from 'common/utils';
 import classNames from 'classnames/bind';
 import { HistoryLineItemBadges } from './historyLineItemBadges';
 import styles from './historyLineItemContent.scss';
@@ -69,6 +70,16 @@ export class HistoryLineItemContent extends Component {
     isLastItem: false,
   };
 
+  getItemTitle = () => {
+    const { intl, status, start_time, end_time } = this.props;
+    let itemTitle = intl.formatMessage(blockTitleMessagesMap[status.toLowerCase()]);
+    const isThreeDecimalPlaces = true;
+    if (status.toLowerCase() !== MANY && status.toLowerCase() !== NOT_FOUND) {
+      itemTitle = itemTitle.concat(`; ${getDuration(start_time, end_time, isThreeDecimalPlaces)}`);
+    }
+    return itemTitle;
+  };
+
   render() {
     const {
       intl,
@@ -88,7 +99,7 @@ export class HistoryLineItemContent extends Component {
           'first-item': isFirstItem,
           'last-item': isLastItem,
         })}
-        title={intl.formatMessage(blockTitleMessagesMap[status.toLowerCase()])}
+        title={this.getItemTitle()}
         onClick={onClick}
       >
         <div className={cx('item-block-bg')} />
