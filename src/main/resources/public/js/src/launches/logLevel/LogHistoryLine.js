@@ -143,8 +143,11 @@ define(function (require, exports, module) {
             statusTitle: {
                 deps: ['status'],
                 get: function (status) {
-                    var duration = Util.timeFormat(this.model.get('start_time'), this.model.get('end_time'), true);
-                    return Localization.historyLine.tooltips[status] + '; ' + duration;
+                    var duration = '';
+                    if(this.model.get('status') !== 'MANY' && this.model.get('status') !== 'NOT_FOUND'){
+                        duration = '; ' + Util.timeFormat(this.model.get('start_time'), this.model.get('end_time'), true);
+                    }
+                    return Localization.historyLine.tooltips[status] + duration;
                 }
             },
             getLinkClass: {
