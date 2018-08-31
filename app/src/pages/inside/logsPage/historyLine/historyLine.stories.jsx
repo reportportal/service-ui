@@ -39,7 +39,7 @@ const state = {
     },
   },
   log: {
-    logEntries: mockEntries,
+    historyEntries: mockEntries,
     activeItemId: '5b75a36397a1c00001ea3d4f',
   },
 };
