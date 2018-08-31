@@ -592,7 +592,7 @@ define(function (require, exports, module) {
             });
         },
 
-        timeFormat: function (start, end) {
+        timeFormat: function (start, end, threeDigitsAfterComa) {
             var sec_num = parseInt((end - start) / 1000, 10);
             var days = Math.floor(sec_num / 86400);
             var hours = Math.floor((sec_num - (days * 86400)) / 3600);
@@ -617,7 +617,9 @@ define(function (require, exports, module) {
             if (time === '' && seconds > 0) {
                 time = seconds + 's';
             } else if (time === '' && seconds === 0) {
-                time = (Math.round((end - start) / 10)) / 100 + 's';
+                time = threeDigitsAfterComa ?
+                    (end - start) / 1000 + 's' :
+                    (Math.round((end - start) / 10)) / 100 + 's';
             }
             return time;
         },
