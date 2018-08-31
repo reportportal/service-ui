@@ -1,34 +1,29 @@
 import React, { Component, Fragment } from 'react';
-import { reduxForm } from 'redux-form';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { injectIntl, intlShape } from 'react-intl';
 import className from 'classnames/bind';
+import Parser from 'html-react-parser';
 import { URLS } from 'common/urls';
 import { validate } from 'common/utils';
+import { activeProjectSelector } from 'controllers/user/index';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { InputTagsSearch } from 'components/inputs/inputTagsSearch';
 import { InputCheckbox } from 'components/inputs/inputCheckbox';
 import { InputDropdown } from 'components/inputs/inputDropdown';
 import { FormField } from 'components/fields/formField';
-import { activeProjectSelector } from 'controllers/user';
-import { EmailCaseHeader } from './emailCaseHeader';
-import styles from './forms.scss';
-import { labelWidth, launchStatuses } from './constants';
-import { emailCasesMessages } from './messages';
+import { FieldProvider } from 'components/fields/fieldProvider';
+import {
+  labelWidth,
+  launchStatuses,
+} from 'pages/inside/settingsPage/settingTabs/notificationsTab/forms/constants';
+import styles from './emailCase.scss';
+import IconDelete from './img/icon-delete-inline.svg';
+import { PencilCheckbox } from './pencilCheckbox/index';
+import { messages } from './messages';
 
 const cx = className.bind(styles);
-
 @injectIntl
-@reduxForm({
-  validate: ({ recipients, informOwner, launchNames, tags }) => ({
-    recipients: !(informOwner || recipients.length) && 'recipientsHint',
-    launchNames:
-      !(launchNames.length ? launchNames.every(validate.notificationTagSearch) : true) &&
-      'launchesHint',
-    tags: !(tags.length ? tags.every(validate.notificationTagSearch) : true) && 'tagsHint',
-  }),
-})
 @connect((state) => ({
   teamMembersSearchUrl: URLS.teamMembersSearchUrl(activeProjectSelector(state)),
   launchTagsSearch: URLS.launchTagsSearch(activeProjectSelector(state)),
@@ -37,82 +32,85 @@ const cx = className.bind(styles);
 export class EmailCase extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
-    emailCase: PropTypes.object,
+    emailCase: PropTypes.string,
     teamMembersSearchUrl: PropTypes.string,
     launchTagsSearch: PropTypes.string,
     launchNamesSearch: PropTypes.string,
-    index: PropTypes.number,
     onDelete: PropTypes.func,
-    toggleEditMode: PropTypes.func,
-    handleSubmit: PropTypes.func,
-    submit: PropTypes.func,
     valid: PropTypes.bool,
     readOnly: PropTypes.bool,
     deletable: PropTypes.bool,
+    confirmed: PropTypes.bool,
+    submitted: PropTypes.bool,
+    id: PropTypes.number,
   };
   static defaultProps = {
-    emailCase: {},
+    emailCase: '',
     teamMembersSearchUrl: '',
     launchTagsSearch: '',
     launchNamesSearch: '',
-    index: 0,
     onDelete: () => {},
-    toggleEditMode: () => {},
-    handleSubmit: () => {},
-    submit: () => {},
     valid: true,
     readOnly: false,
     deletable: false,
+    confirmed: false,
+    submitted: false,
+    id: 0,
   };
   state = {
-    editMode: this.props.emailCase.editMode,
+    isDuplicating: false,
   };
-  onSubmit = () => {
-    const { valid } = this.props;
-    if (valid) {
-      this.props.submit();
-    }
+  onDelete = (index) => () => {
+    const { confirmed, submitted } = this.props;
+    const showConfirmation = submitted || confirmed;
+
+    this.props.onDelete(index, showConfirmation);
+  };
+  onError = (err) => {
+    const message = this.errorMessagesMap(err);
+    this.setState({ isDuplicating: message });
   };
   getDropdownInputConfig = () => {
     const { intl } = this.props;
     return [
       {
         value: launchStatuses.ALWAYS,
-        label: intl.formatMessage(emailCasesMessages.dropdownValueAlways),
+        label: intl.formatMessage(messages.dropdownValueAlways),
       },
       {
         value: launchStatuses.MORE_10,
-        label: intl.formatMessage(emailCasesMessages.dropdownValueMore10),
+        label: intl.formatMessage(messages.dropdownValueMore10),
       },
       {
         value: launchStatuses.MORE_20,
-        label: intl.formatMessage(emailCasesMessages.dropdownValueMore20),
+        label: intl.formatMessage(messages.dropdownValueMore20),
       },
       {
         value: launchStatuses.MORE_50,
-        label: intl.formatMessage(emailCasesMessages.dropdownValueMore50),
+        label: intl.formatMessage(messages.dropdownValueMore50),
       },
       {
         value: launchStatuses.FAILED,
-        label: intl.formatMessage(emailCasesMessages.dropdownValueFailed),
+        label: intl.formatMessage(messages.dropdownValueFailed),
       },
       {
         value: launchStatuses.TO_INVESTIGATE,
-        label: intl.formatMessage(emailCasesMessages.dropdownValueToInvestigate),
+        label: intl.formatMessage(messages.dropdownValueToInvestigate),
       },
     ];
+  };
+  errorMessagesMap = (err) => {
+    const { intl } = this.props;
+    switch (err) {
+      case 'hasDuplicates':
+        return intl.formatMessage(messages.duplicationErrorMessage);
+      default:
+        return false;
+    }
   };
   formatOptions = (options) =>
     options && options.map((option) => ({ value: option, label: option }));
   parseOptions = (options) => options.map((option) => option.value);
-  toggleEditMode = () => {
-    const { valid: caseValid } = this.props.emailCase;
-    const { valid } = this.props;
-
-    if (caseValid && valid) {
-      this.setState({ editMode: !this.state.editMode });
-    }
-  };
   validateRecipientsNewItem = ({ label }) => label && validate.email(label);
   validateLaunchNamesNewItem = ({ label }) => label && label.length >= 3;
   validateTagsNewItem = ({ label }) => label && label.length >= 1;
@@ -122,32 +120,44 @@ export class EmailCase extends Component {
       launchTagsSearch,
       launchNamesSearch,
       intl,
-      onDelete,
-      index,
-      emailCase: { id, submitted },
+      id,
       deletable,
+      emailCase,
+      confirmed,
+      readOnly,
     } = this.props;
-    const { editMode } = this.state;
+    const editMode = !confirmed;
+    const { isDuplicating } = this.state;
+
     return (
       <Fragment>
-        <EmailCaseHeader
-          id={id}
-          index={index}
-          onDelete={onDelete}
-          editMode={editMode}
-          submitted={submitted}
-          toggleEditMode={this.toggleEditMode}
-          onSubmit={this.onSubmit}
-          readOnly={this.props.readOnly}
-          deletable={deletable}
-        />
-        {!this.props.emailCase.valid &&
-          this.props.emailCase.showValidationMessage && (
-            <p className={cx('form-invalid-message')}>{this.props.emailCase.validationMessage}</p>
+        <div className={cx('control-panel')}>
+          <span className={cx('control-panel-name')}>
+            {intl.formatMessage(messages.controlPanelName)} {id + 1}
+          </span>
+          {!readOnly && (
+            <div className={cx('control-panel-buttons')}>
+              <div className={cx('control-panel-button')}>
+                <FieldProvider
+                  name={`${emailCase}.confirmed`}
+                  format={Boolean}
+                  onError={this.onError}
+                >
+                  <PencilCheckbox />
+                </FieldProvider>
+              </div>
+              {deletable && (
+                <button className={cx('control-panel-button')} onClick={this.onDelete(id)}>
+                  {Parser(IconDelete)}
+                </button>
+              )}
+            </div>
           )}
+        </div>
+        {isDuplicating && <p className={cx('form-invalid-message')}>{isDuplicating}</p>}
         <FormField
-          label={intl.formatMessage(emailCasesMessages.recipientsLabel)}
-          name="recipients"
+          label={intl.formatMessage(messages.recipientsLabel)}
+          name={`${emailCase}.recipients`}
           format={this.formatOptions}
           parse={this.parseOptions}
           disabled={!editMode}
@@ -155,8 +165,8 @@ export class EmailCase extends Component {
         >
           <FieldErrorHint hintType="top">
             <InputTagsSearch
-              placeholder={intl.formatMessage(emailCasesMessages.recipientsPlaceholder)}
-              nothingFound={intl.formatMessage(emailCasesMessages.recipientsHint)}
+              placeholder={intl.formatMessage(messages.recipientsPlaceholder)}
+              nothingFound={intl.formatMessage(messages.recipientsHint)}
               minLength={3}
               async
               uri={teamMembersSearchUrl}
@@ -169,23 +179,22 @@ export class EmailCase extends Component {
             />
           </FieldErrorHint>
         </FormField>
-        <FormField name="informOwner" format={Boolean} disabled={!editMode}>
-          <InputCheckbox>{intl.formatMessage(emailCasesMessages.launchOwnerLabel)}</InputCheckbox>
+        <FormField name={`${emailCase}.informOwner`} format={Boolean} disabled={!editMode}>
+          <InputCheckbox>{intl.formatMessage(messages.launchOwnerLabel)}</InputCheckbox>
         </FormField>
         <FormField
-          label={intl.formatMessage(emailCasesMessages.inCaseLabel)}
+          label={intl.formatMessage(messages.inCaseLabel)}
           labelWidth={labelWidth}
-          name="sendCase"
+          name={`${emailCase}.sendCase`}
           disabled={!editMode}
           fieldWrapperClassName={cx('form-input')}
         >
           <InputDropdown options={this.getDropdownInputConfig()} />
         </FormField>
-
         <FormField
-          label={intl.formatMessage(emailCasesMessages.launchNamesLabel)}
-          description={intl.formatMessage(emailCasesMessages.launchNamesNote)}
-          name="launchNames"
+          label={intl.formatMessage(messages.launchNamesLabel)}
+          description={intl.formatMessage(messages.launchNamesNote)}
+          name={`${emailCase}.launchNames`}
           format={this.formatOptions}
           parse={this.parseOptions}
           disabled={!editMode}
@@ -193,8 +202,8 @@ export class EmailCase extends Component {
         >
           <FieldErrorHint hintType="top">
             <InputTagsSearch
-              placeholder={intl.formatMessage(emailCasesMessages.launchNamesPlaceholder)}
-              focusPlaceholder={intl.formatMessage(emailCasesMessages.launchNamesHint)}
+              placeholder={intl.formatMessage(messages.launchNamesPlaceholder)}
+              focusPlaceholder={intl.formatMessage(messages.launchNamesHint)}
               async
               minLength={3}
               uri={launchNamesSearch}
@@ -207,18 +216,18 @@ export class EmailCase extends Component {
           </FieldErrorHint>
         </FormField>
         <FormField
-          label={intl.formatMessage(emailCasesMessages.tagsLabel)}
-          description={intl.formatMessage(emailCasesMessages.tagsNote)}
+          label={intl.formatMessage(messages.tagsLabel)}
+          description={intl.formatMessage(messages.tagsNote)}
           fieldWrapperClassName={cx('form-input')}
-          name="tags"
+          name={`${emailCase}.tags`}
           format={this.formatOptions}
           parse={this.parseOptions}
           disabled={!editMode}
         >
           <FieldErrorHint hintType="top">
             <InputTagsSearch
-              placeholder={intl.formatMessage(emailCasesMessages.tagsPlaceholder)}
-              focusPlaceholder={intl.formatMessage(emailCasesMessages.tagsHint)}
+              placeholder={intl.formatMessage(messages.tagsPlaceholder)}
+              focusPlaceholder={intl.formatMessage(messages.tagsHint)}
               async
               uri={launchTagsSearch}
               minLength={1}

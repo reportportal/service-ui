@@ -1,0 +1,23 @@
+.form-input {
+  position: relative;
+  width: 310px;
+  flex-shrink: 0;
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    width: 100%;
+  }
+}
+
+.email-notification-toggle {
+  &--mobile {
+    display: none;
+  }
+  @media (max-width: $SCREEN_XS_MAX) {
+    &--desktop {
+      display: none;
+    }
+    &--mobile {
+      display: block;
+    }
+  }
+}

@@ -1,4 +1,5 @@
 import { createSelector } from 'reselect';
+import { OWNER } from 'common/constants/permissions';
 
 const projectSelector = (state) => state.project || {};
 
@@ -21,6 +22,20 @@ export const projectAnalyzerConfigSelector = (state) =>
 
 export const projectEmailConfigurationSelector = (state) =>
   projectConfigSelector(state).emailConfiguration || {};
+
+export const projectEmailCasesSelector = (state) => {
+  const { emailCases } = projectEmailConfigurationSelector(state);
+  return emailCases.map((emailCase) => ({
+    ...emailCase,
+    informOwner: emailCase.recipients.includes(OWNER),
+    submitted: true,
+    confirmed: true,
+    recipients: emailCase.recipients.filter((item) => item !== OWNER),
+  }));
+};
+
+export const projectEmailEnabledSelector = (state) =>
+  projectEmailConfigurationSelector(state).emailEnabled || false;
 
 export const defectColorsSelector = createSelector(projectConfigSelector, (config) => {
   const colors = {};

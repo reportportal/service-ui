@@ -16,4 +16,6 @@ export {
   defectTypesSelector,
   projectAnalyzerConfigSelector,
   projectEmailConfigurationSelector,
+  projectEmailCasesSelector,
+  projectEmailEnabledSelector,
 } from './selectors';

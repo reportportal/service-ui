@@ -6,10 +6,8 @@ export const defaultRecipient = {
   informOwner: true,
   sendCase: 'ALWAYS',
   tags: [],
-  editMode: true,
-  id: '',
   submitted: false,
-  valid: true,
+  confirmed: false,
 };
 export const launchStatuses = {
   ALWAYS: 'ALWAYS',
