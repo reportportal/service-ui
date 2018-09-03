@@ -20,7 +20,7 @@ import {
 import { LEVEL_STEP } from 'common/constants/launchLevels';
 import { NAMESPACE as LAUNCH_NAMESPACE, debugModeSelector } from 'controllers/launch';
 import { DEFAULT_SORTING } from './constants';
-import { createLink, getQueryNamespace, getDefectsString } from './utils';
+import { createLink, getQueryNamespace, getDefectsString, getNextPage } from './utils';
 
 const domainSelector = (state) => state.testItem || {};
 
@@ -118,7 +118,8 @@ export const nameLinkSelector = (state, ownProps) => {
   const payload = payloadSelector(state);
   const testItemIds = testItemIdsSelector(state);
   const isDebugMode = debugModeSelector(state);
-  return createLink(testItemIds, ownProps.itemId, payload, query, isDebugMode);
+  const level = levelSelector(state);
+  return createLink(testItemIds, ownProps.itemId, payload, query, getNextPage(level, isDebugMode));
 };
 
 export const statisticsLinkSelector = (state, ownProps) => {
@@ -126,6 +127,7 @@ export const statisticsLinkSelector = (state, ownProps) => {
   const payload = payloadSelector(state);
   const testItemIds = testItemIdsSelector(state);
   const isDebugMode = debugModeSelector(state);
+  const level = levelSelector(state);
   return createLink(
     testItemIds,
     ownProps.itemId,
@@ -143,7 +145,7 @@ export const statisticsLinkSelector = (state, ownProps) => {
         ),
       ),
     },
-    isDebugMode,
+    getNextPage(level, isDebugMode),
   );
 };
 
@@ -152,9 +154,10 @@ export const defectLinkSelector = (state, ownProps) => {
   const payload = payloadSelector(state);
   const testItemIds = testItemIdsSelector(state);
   const isDebugMode = debugModeSelector(state);
-  let level = 0;
+  const level = levelSelector(state);
+  let levelIndex = 0;
   if (testItemIdsArraySelector(state).length >= 0) {
-    level = !ownProps.itemId
+    levelIndex = !ownProps.itemId
       ? testItemIdsArraySelector(state).length - 1
       : testItemIdsArraySelector(state).length;
   }
@@ -171,9 +174,9 @@ export const defectLinkSelector = (state, ownProps) => {
           'filter.in.type': LEVEL_STEP,
           'filter.in.issue$issue_type': getDefectsString(ownProps.defects),
         },
-        getQueryNamespace(level),
+        getQueryNamespace(levelIndex),
       ),
     },
-    isDebugMode,
+    getNextPage(level, isDebugMode),
   );
 };

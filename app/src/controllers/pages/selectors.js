@@ -16,7 +16,6 @@ export const testItemIdsArraySelector = createSelector(
   testItemIdsSelector,
   (itemIdsString) => (itemIdsString && itemIdsString.split('/')) || [],
 );
-
 export const logItemIdSelector = createSelector(
   testItemIdsArraySelector,
   (itemIdsArray) => (itemIdsArray.length && itemIdsArray[itemIdsArray.length - 1]) || '',

@@ -55,7 +55,7 @@ function* restorePath() {
   yield call(updateLaunchId, parentItem.launchId);
 }
 
-function* fetchParentItems() {
+export function* fetchParentItems() {
   const itemIds = yield select(testItemIdsArraySelector);
   const project = yield select(activeProjectSelector);
   const urls = itemIds.map(

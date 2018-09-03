@@ -58,8 +58,8 @@ export class HistoryLineItemContent extends Component {
     active: PropTypes.bool,
     isFirstItem: PropTypes.bool,
     isLastItem: PropTypes.bool,
-    start_time: PropTypes.number,
-    end_time: PropTypes.number,
+    startTime: PropTypes.number,
+    endTime: PropTypes.number,
   };
 
   static defaultProps = {
@@ -70,16 +70,16 @@ export class HistoryLineItemContent extends Component {
     active: false,
     isFirstItem: false,
     isLastItem: false,
-    start_time: null,
-    end_time: null,
+    startTime: null,
+    endTime: null,
   };
 
   getItemTitle = () => {
-    const { intl, status, start_time, end_time } = this.props;
+    const { intl, status, startTime, endTime } = this.props;
     let itemTitle = intl.formatMessage(blockTitleMessagesMap[status.toLowerCase()]);
     const isThreeDecimalPlaces = true;
     if (status.toLowerCase() !== MANY && status.toLowerCase() !== NOT_FOUND) {
-      itemTitle = itemTitle.concat(`; ${getDuration(start_time, end_time, isThreeDecimalPlaces)}`);
+      itemTitle = itemTitle.concat(`; ${getDuration(startTime, endTime, isThreeDecimalPlaces)}`);
     }
     return itemTitle;
   };

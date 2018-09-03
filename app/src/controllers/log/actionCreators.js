@@ -1,10 +1,16 @@
-import { FETCH_HISTORY_ENTRIES, SET_ACTIVE_HISTORY_ITEM_ID } from './constants';
+import { FETCH_LOG_PAGE_DATA, FETCH_HISTORY_ENTRIES } from './constants';
+
+export const fetchLogPageData = () => ({
+  type: FETCH_LOG_PAGE_DATA,
+});
+
+export const refreshLogPageData = () => ({
+  type: FETCH_LOG_PAGE_DATA,
+  meta: {
+    refresh: true,
+  },
+});
 
 export const fetchHistoryEntriesAction = () => ({
   type: FETCH_HISTORY_ENTRIES,
-});
-
-export const setActiveHistoryItemAction = (logItemId) => ({
-  type: SET_ACTIVE_HISTORY_ITEM_ID,
-  payload: logItemId,
 });

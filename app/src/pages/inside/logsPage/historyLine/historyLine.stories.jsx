@@ -1,6 +1,5 @@
 import { storiesOf } from '@storybook/react';
 import { host } from 'storybook-host';
-import { action } from '@storybook/addon-actions';
 import { withReadme } from 'storybook-readme';
 // eslint-disable-next-line import/extensions, import/no-unresolved
 import { WithState } from 'storybook-decorators/withState';
@@ -64,10 +63,5 @@ storiesOf('Pages/inside/LogsPage/HistoryLine', module)
   .add('with mock data', () => (
     <WithState state={state}>
       <HistoryLine />
-    </WithState>
-  ))
-  .add('with mock data & actions', () => (
-    <WithState state={state}>
-      <HistoryLine onItemSelect={action('onItemSelect')} />
     </WithState>
   ));

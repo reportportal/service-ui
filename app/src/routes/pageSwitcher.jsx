@@ -4,7 +4,12 @@ import { PropTypes } from 'prop-types';
 import { NOT_FOUND } from 'redux-first-router';
 import { ModalContainer } from 'components/main/modal';
 import { pageNames } from 'controllers/pages/constants';
-import { pageSelector, TEST_ITEM_PAGE } from 'controllers/pages';
+import {
+  pageSelector,
+  TEST_ITEM_PAGE,
+  PROJECT_LOG_PAGE,
+  PROJECT_USERDEBUG_LOG_PAGE,
+} from 'controllers/pages';
 import { LocalizationSwitcher } from 'components/main/localizationSwitcher';
 import { ScreenLock } from 'components/main/screenLock';
 import { Notifications } from 'components/main/notification';
@@ -28,6 +33,7 @@ import { LoginPage } from 'pages/outside/loginPage';
 import { NotFoundPage } from 'pages/outside/notFoundPage';
 import { RegistrationPage } from 'pages/outside/registrationPage';
 import { TestItemPage } from 'pages/inside/testItemPage';
+import { LogsPage } from 'pages/inside/logsPage/index';
 
 import { authorizedRoute } from './authorizedRoute';
 import { anonymousRoute } from './anonymousRoute';
@@ -54,6 +60,8 @@ const pageRendering = {
   ADMINISTRATE_PAGE: { component: AdministratePage, layout: EmptyLayout },
   PROJECTS_PAGE: { component: ProjectsPage, layout: AdminLayout },
   [TEST_ITEM_PAGE]: { component: TestItemPage, layout: AppLayout },
+  [PROJECT_LOG_PAGE]: { component: LogsPage, layout: AppLayout },
+  [PROJECT_USERDEBUG_LOG_PAGE]: { component: LogsPage, layout: AppLayout },
 };
 
 Object.keys(pageNames).forEach((page) => {
