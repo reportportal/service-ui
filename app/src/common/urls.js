@@ -97,6 +97,15 @@ export const URLS = {
       'page.size': 1,
       'page.sort': 'time,DESC',
     })}`,
+  logItems: (activeProject, itemId, level) =>
+    `${urlBase}${activeProject}/log${getQueryParams({
+      'filter.eq.item': itemId,
+      'filter.gte.level': level,
+      'page.page': 1,
+      'page.size': 50,
+      'page.sort': 'time,ASC',
+    })}`,
+  logItemActivity: (activeProject, itemId) => `${urlBase}${activeProject}/activity/item/${itemId}`,
 
   user: () => `${urlBase}user`,
   userRegistration: () => `${urlBase}user/registration`,

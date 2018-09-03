@@ -3,31 +3,39 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { activeProjectSelector } from 'controllers/user';
 import classNames from 'classnames/bind';
-import { historyItemsSelector, activeItemIdSelector } from 'controllers/log';
+import { historyItemsSelector, activeLogIdSelector, NAMESPACE } from 'controllers/log';
 import { MANY, NOT_FOUND } from 'common/constants/launchStatuses';
+import { connectRouter } from 'common/utils';
 import { HistoryLineItem } from './historyLineItem';
 import styles from './historyLine.scss';
 
 const cx = classNames.bind(styles);
 
+@connectRouter(
+  undefined,
+  {
+    changeActiveItem: (itemId) => ({ history: itemId }),
+  },
+  { namespace: NAMESPACE },
+)
 @connect((state) => ({
   projectId: activeProjectSelector(state),
   historyItems: historyItemsSelector(state),
-  activeItemId: activeItemIdSelector(state),
+  activeItemId: activeLogIdSelector(state),
 }))
 export class HistoryLine extends Component {
   static propTypes = {
     projectId: PropTypes.string,
     historyItems: PropTypes.array,
     activeItemId: PropTypes.string,
-    onItemSelect: PropTypes.func,
+    changeActiveItem: PropTypes.func,
   };
 
   static defaultProps = {
     projectId: '',
     historyItems: [],
     activeItemId: '',
-    onItemSelect: () => {},
+    changeActiveItem: () => {},
   };
 
   checkIfTheItemLinkIsActive = (item) =>
@@ -45,9 +53,10 @@ export class HistoryLine extends Component {
               isFirstItem={index === 0}
               isLastItem={index === this.props.historyItems.length - 1}
               onClick={() =>
-                this.checkIfTheItemLinkIsActive(item) ? this.props.onItemSelect(item.id) : {}
+                this.checkIfTheItemLinkIsActive(item) ? this.props.changeActiveItem(item.id) : {}
               }
               pathNames={item.path_names}
+              projectId={this.props.projectId}
               {...item}
             />
           ))}

@@ -5,7 +5,7 @@ export {
   setLevelAction,
   deleteItemsAction,
 } from './actionCreators';
-export { testItemsSaga } from './sagas';
+export { fetchParentItems, testItemsSaga } from './sagas';
 export {
   launchSelector,
   levelSelector,

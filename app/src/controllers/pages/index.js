@@ -12,6 +12,7 @@ export {
   filterIdSelector,
   pathnameChangedSelector,
   logItemIdSelector,
+  activeLogIdSelector,
 } from './selectors';
 export { updatePagePropertiesAction } from './actionCreators';
 
@@ -35,5 +36,7 @@ export {
   LOGIN_PAGE,
   REGISTRATION_PAGE,
   TEST_ITEM_PAGE,
+  PROJECT_LOG_PAGE,
+  PROJECT_USERDEBUG_LOG_PAGE,
   pageNames,
 } from './constants';

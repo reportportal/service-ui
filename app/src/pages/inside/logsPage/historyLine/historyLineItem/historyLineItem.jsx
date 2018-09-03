@@ -2,24 +2,25 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { injectIntl, intlShape } from 'react-intl';
+import Link from 'redux-first-router-link';
 import classNames from 'classnames/bind';
-import { filterIdSelector, projectIdSelector } from 'controllers/pages';
+import { payloadSelector, PROJECT_LOG_PAGE, PROJECT_USERDEBUG_LOG_PAGE } from 'controllers/pages';
 import { MANY, NOT_FOUND } from 'common/constants/launchStatuses';
+import { debugModeSelector } from 'controllers/launch';
 import { HistoryLineItemContent } from './historyLineItemContent';
 import styles from './historyLineItem.scss';
 
 const cx = classNames.bind(styles);
 
 @connect((state) => ({
-  projectId: projectIdSelector(state),
-  filterId: filterIdSelector(state),
+  pagePayload: payloadSelector(state),
+  debugMode: debugModeSelector(state),
 }))
 @injectIntl
 export class HistoryLineItem extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
     projectId: PropTypes.string.isRequired,
-    filterId: PropTypes.string.isRequired,
     launchNumber: PropTypes.string.isRequired,
     pathNames: PropTypes.object,
     launchId: PropTypes.string,
@@ -28,6 +29,8 @@ export class HistoryLineItem extends Component {
     active: PropTypes.bool,
     isFirstItem: PropTypes.bool,
     isLastItem: PropTypes.bool,
+    pagePayload: PropTypes.object,
+    debugMode: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -38,6 +41,8 @@ export class HistoryLineItem extends Component {
     active: false,
     isFirstItem: false,
     isLastItem: false,
+    debugMode: false,
+    pagePayload: {},
   };
 
   checkIfTheLinkIsActive = () => {
@@ -47,10 +52,17 @@ export class HistoryLineItem extends Component {
   };
 
   createHistoryLineItemLink = () => {
-    const { projectId, filterId, launchId, pathNames, id } = this.props;
+    const { id, pagePayload, pathNames, launchId, debugMode } = this.props;
+
     const parentIds = Object.keys(pathNames);
 
-    return `#${projectId}/launches/${filterId}/${launchId}/${parentIds.join('/')}/${id}`;
+    return {
+      type: debugMode ? PROJECT_USERDEBUG_LOG_PAGE : PROJECT_LOG_PAGE,
+      payload: {
+        ...pagePayload,
+        testItemIds: [launchId, ...parentIds, id].join('/'),
+      },
+    };
   };
 
   render() {
@@ -58,19 +70,21 @@ export class HistoryLineItem extends Component {
 
     return (
       <div className={cx('history-line-item', { active })}>
-        <a
+        <Link
           className={cx('history-line-item-title', {
             'active-link': this.checkIfTheLinkIsActive(),
           })}
-          href={this.checkIfTheLinkIsActive() ? this.createHistoryLineItemLink() : ''}
+          to={this.checkIfTheLinkIsActive() ? this.createHistoryLineItemLink() : ''}
         >
           <span className={cx('launch-title')}>{'launch '}</span>
           <span>#{launchNumber}</span>
-        </a>
+        </Link>
         <HistoryLineItemContent
           active={active}
           launchNumber={launchNumber}
           hasChilds={rest.has_childs}
+          startTime={rest.start_time}
+          endTime={rest.end_time}
           {...rest}
         />
       </div>

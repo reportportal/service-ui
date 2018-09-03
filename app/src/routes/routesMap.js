@@ -8,6 +8,8 @@ import {
   PROJECT_PAGE,
   PROJECT_DASHBOARD_ITEM_PAGE,
   PROJECT_SETTINGS_TAB_PAGE,
+  PROJECT_LOG_PAGE,
+  PROJECT_USERDEBUG_LOG_PAGE,
   projectIdSelector,
 } from 'controllers/pages';
 import { GENERAL } from 'common/constants/settingTabs';
@@ -22,6 +24,7 @@ import { TEST_ITEM_PAGE } from 'controllers/pages/constants';
 import { fetchTestItemsAction, setLevelAction } from 'controllers/testItem';
 import { fetchFiltersAction } from 'controllers/filter';
 import { fetchMembersAction } from 'controllers/members';
+import { fetchLogPageData } from 'controllers/log';
 
 const redirectRoute = (path, createNewAction) => ({
   path,
@@ -117,6 +120,20 @@ export default {
   PROJECT_FILTERS_PAGE: {
     path: '/:projectId/filters',
     thunk: (dispatch) => dispatch(fetchFiltersAction()),
+  },
+  [PROJECT_LOG_PAGE]: {
+    path: '/:projectId/launches/:filterId/:testItemIds+/log',
+    thunk: (dispatch) => {
+      dispatch(setDebugMode(false));
+      dispatch(fetchLogPageData());
+    },
+  },
+  [PROJECT_USERDEBUG_LOG_PAGE]: {
+    path: '/:projectId/userdebug/:filterId/:testItemIds+/log',
+    thunk: (dispatch) => {
+      dispatch(setDebugMode(true));
+      dispatch(fetchLogPageData());
+    },
   },
   PROJECT_USERDEBUG_PAGE: {
     path: '/:projectId/userdebug/:filterId',

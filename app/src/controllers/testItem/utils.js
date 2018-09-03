@@ -1,4 +1,8 @@
-import { PROJECT_USERDEBUG_TEST_ITEM_PAGE, TEST_ITEM_PAGE } from 'controllers/pages';
+import {
+  PROJECT_USERDEBUG_TEST_ITEM_PAGE,
+  TEST_ITEM_PAGE,
+  PROJECT_LOG_PAGE,
+} from 'controllers/pages';
 import * as launchLevels from 'common/constants/launchLevels';
 import * as methodTypes from 'common/constants/methodTypes';
 import { LEVELS } from './levels';
@@ -24,13 +28,20 @@ export const calculateLevel = (data) =>
 
 export const getQueryNamespace = (levelIndex) => `item${levelIndex}`;
 
-export const createLink = (testItemIds, itemId, payload, query, isDebugMode) => {
+export const getNextPage = (currentLevel, debugMode) => {
+  if (currentLevel === launchLevels.LEVEL_STEP) {
+    return PROJECT_LOG_PAGE;
+  }
+  return debugMode ? PROJECT_USERDEBUG_TEST_ITEM_PAGE : TEST_ITEM_PAGE;
+};
+
+export const createLink = (testItemIds, itemId, payload, query, nextPage) => {
   let newTestItemsParam = testItemIds;
   if (itemId) {
     newTestItemsParam = testItemIds ? `${testItemIds}/${itemId}` : itemId;
   }
   return {
-    type: isDebugMode ? PROJECT_USERDEBUG_TEST_ITEM_PAGE : TEST_ITEM_PAGE,
+    type: nextPage,
     payload: {
       ...payload,
       testItemIds: newTestItemsParam,
