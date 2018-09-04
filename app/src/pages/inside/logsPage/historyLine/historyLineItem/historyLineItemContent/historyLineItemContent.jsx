@@ -58,6 +58,8 @@ export class HistoryLineItemContent extends Component {
     active: PropTypes.bool,
     isFirstItem: PropTypes.bool,
     isLastItem: PropTypes.bool,
+    start_time: PropTypes.number,
+    end_time: PropTypes.number,
   };
 
   static defaultProps = {
@@ -68,6 +70,8 @@ export class HistoryLineItemContent extends Component {
     active: false,
     isFirstItem: false,
     isLastItem: false,
+    start_time: null,
+    end_time: null,
   };
 
   getItemTitle = () => {
