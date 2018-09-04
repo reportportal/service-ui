@@ -144,7 +144,7 @@ define(function (require, exports, module) {
                 deps: ['status'],
                 get: function (status) {
                     var duration = '';
-                    if(this.model.get('status') !== 'MANY' && this.model.get('status') !== 'NOT_FOUND'){
+                    if (status !== 'MANY' && status !== 'NOT_FOUND' && status !== 'IN_PROGRESS') {
                         duration = '; ' + Util.timeFormat(this.model.get('start_time'), this.model.get('end_time'), true);
                     }
                     return Localization.historyLine.tooltips[status] + duration;
