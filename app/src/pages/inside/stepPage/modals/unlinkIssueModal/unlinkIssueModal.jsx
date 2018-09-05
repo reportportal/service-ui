@@ -1,7 +1,6 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import classNames from 'classnames/bind';
 import { injectIntl, defineMessages } from 'react-intl';
 import { activeProjectSelector } from 'controllers/user';
 import { ModalLayout, withModal } from 'components/main/modal';
@@ -9,9 +8,6 @@ import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
-import styles from './unlinkIssueModal.scss';
-
-const cx = classNames.bind(styles);
 
 const messages = defineMessages({
   unlinkButton: {
@@ -92,7 +88,6 @@ export class UnlinkIssueModal extends Component {
     };
     return (
       <ModalLayout
-        className={cx('message')}
         title={intl.formatMessage(messages.title)}
         okButton={okButton}
         cancelButton={cancelButton}
