@@ -100,7 +100,7 @@ export class Hamburger extends Component {
     window.location.href = URLS.exportLaunch(this.props.projectId, this.props.launch.id, type);
   };
 
-  getForceFinishTitle = () => {
+  getForceFinishTooltip = () => {
     const { intl, projectRole, accountRole } = this.props;
     let forceFinishTitle = '';
 
@@ -115,7 +115,7 @@ export class Hamburger extends Component {
     return forceFinishTitle;
   };
 
-  getMoveToDebugTitle = () => {
+  getMoveToDebugTooltip = () => {
     const { intl, projectRole, accountRole, userId, launch } = this.props;
     return !canMoveToDebug(accountRole, projectRole, userId === launch.owner)
       ? intl.formatMessage(messages.noPermissions)
@@ -132,7 +132,7 @@ export class Hamburger extends Component {
     ) {
       return this.props.intl.formatMessage(messages.notYourLaunch);
     }
-    if (this.props.launch.status && this.props.launch.status.toLowerCase() === IN_PROGRESS) {
+    if (this.isInProgress()) {
       return this.props.intl.formatMessage(messages.launchInProgress);
     }
     return '';
@@ -156,13 +156,6 @@ export class Hamburger extends Component {
     this.setState({ menuShown: !this.state.menuShown });
   };
 
-  canDeleteItem = () =>
-    canDeleteLaunch(
-      this.props.accountRole,
-      this.props.projectRole,
-      this.props.userId === this.props.launch.owner,
-    ) || !(this.props.launch.status && this.props.launch.status.toLowerCase() === IN_PROGRESS);
-
   render() {
     const { intl, projectRole, accountRole, launch, onAnalysis, customProps } = this.props;
     return (
@@ -184,7 +177,7 @@ export class Hamburger extends Component {
               <Fragment>
                 {launch.mode === 'DEFAULT' ? (
                   <HamburgerMenuItem
-                    title={this.getMoveToDebugTitle()}
+                    title={this.getMoveToDebugTooltip()}
                     text={intl.formatMessage(messages.toDebug)}
                     disabled={
                       !canMoveToDebug(
@@ -200,7 +193,7 @@ export class Hamburger extends Component {
                 ) : (
                   <HamburgerMenuItem
                     text={intl.formatMessage(messages.toAllLaunches)}
-                    title={this.getMoveToDebugTitle()}
+                    title={this.getMoveToDebugTooltip()}
                     disabled={
                       !canMoveToDebug(
                         accountRole,
@@ -217,7 +210,7 @@ export class Hamburger extends Component {
             )}
             <HamburgerMenuItem
               text={intl.formatMessage(messages.forceFinish)}
-              title={this.getForceFinishTitle()}
+              title={this.getForceFinishTooltip()}
               disabled={
                 !canForceFinishLaunch(
                   accountRole,
@@ -239,7 +232,13 @@ export class Hamburger extends Component {
             )}
             <HamburgerMenuItem
               text={intl.formatMessage(messages.delete)}
-              disabled={!this.canDeleteItem()}
+              disabled={
+                !canDeleteLaunch(
+                  accountRole,
+                  projectRole,
+                  this.props.userId === this.props.launch.owner,
+                ) || this.isInProgress()
+              }
               onClick={() => {
                 customProps.onDeleteItem(launch);
               }}
