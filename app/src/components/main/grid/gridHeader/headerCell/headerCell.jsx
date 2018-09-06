@@ -32,8 +32,9 @@ export const HeaderCell = ({
     onFilterClick(id);
   };
   const TitleComponent = title.component;
+  const titleComponentProps = title.componentProps;
   return title.component ? (
-    <TitleComponent className={cx('header-cell', computedClassName)} />
+    <TitleComponent className={cx('header-cell', computedClassName)} {...titleComponentProps} />
   ) : (
     <div className={cx('header-cell', computedClassName)} onClick={() => onChangeSorting(id)}>
       <div className={cx('title-container')}>
