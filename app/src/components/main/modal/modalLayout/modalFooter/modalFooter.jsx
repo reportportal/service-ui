@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { BigButton } from 'components/buttons/bigButton';
-import { MultiActionButton } from 'components/buttons/multiActionButton';
 import { InputCheckbox } from 'components/inputs/inputCheckbox';
 import classNames from 'classnames/bind';
 import styles from './modalFooter.scss';
@@ -15,15 +14,14 @@ export class ModalFooter extends Component {
       text: PropTypes.string.isRequired,
       danger: PropTypes.bool,
     }),
-    multiActionOkButton: PropTypes.shape({
-      title: PropTypes.string.isRequired,
-      items: PropTypes.array,
-      onClick: PropTypes.func,
-    }),
     cancelButton: PropTypes.shape({
       text: PropTypes.string.isRequired,
     }),
-    customButton: PropTypes.node,
+    customButton: PropTypes.shape({
+      onClick: PropTypes.func,
+      component: PropTypes.func,
+      buttonProps: PropTypes.object,
+    }),
     onClickOk: PropTypes.func,
     onClickCancel: PropTypes.func,
     onCloseConfirm: PropTypes.func,
@@ -31,11 +29,11 @@ export class ModalFooter extends Component {
     closeConfirmed: PropTypes.bool,
     confirmationMessage: PropTypes.string,
     confirmationWarning: PropTypes.string,
+    confirmWithCheckbox: PropTypes.bool,
   };
   static defaultProps = {
     warningMessage: '',
     okButton: null,
-    multiActionOkButton: null,
     cancelButton: null,
     customButton: null,
     onClickOk: () => {},
@@ -45,6 +43,7 @@ export class ModalFooter extends Component {
     closeConfirmed: false,
     confirmationMessage: '',
     confirmationWarning: '',
+    confirmWithCheckbox: false,
   };
   closeConfirmChangeHandler = () => {
     const { closeConfirmed } = this.props;
@@ -55,7 +54,6 @@ export class ModalFooter extends Component {
     const {
       warningMessage,
       okButton,
-      multiActionOkButton,
       cancelButton,
       customButton,
       onClickCancel,
@@ -64,6 +62,7 @@ export class ModalFooter extends Component {
       confirmationMessage,
       confirmationWarning,
       closeConfirmed,
+      confirmWithCheckbox,
     } = this.props;
 
     return (
@@ -78,11 +77,13 @@ export class ModalFooter extends Component {
                 </div>
               </div>
             )}
-            <div>
-              <InputCheckbox value={closeConfirmed} onChange={this.closeConfirmChangeHandler}>
-                <span className={cx('confirmation-label')}>{confirmationMessage}</span>
-              </InputCheckbox>
-            </div>
+            {confirmWithCheckbox && (
+              <div>
+                <InputCheckbox value={closeConfirmed} onChange={this.closeConfirmChangeHandler}>
+                  <span className={cx('confirmation-label')}>{confirmationMessage}</span>
+                </InputCheckbox>
+              </div>
+            )}
           </div>
         )}
         {warningMessage && (
@@ -110,16 +111,11 @@ export class ModalFooter extends Component {
               </BigButton>
             </div>
           )}
-          {multiActionOkButton && (
+          {customButton && (
             <div className={cx('button-container')}>
-              <MultiActionButton
-                onClick={onClickOk}
-                items={multiActionOkButton.items}
-                title={multiActionOkButton.title}
-              />
+              <customButton.component {...customButton.buttonProps} onClick={onClickOk} />
             </div>
           )}
-          {customButton ? <div className={cx('button-container')}>{customButton}</div> : null}
         </div>
       </div>
     );

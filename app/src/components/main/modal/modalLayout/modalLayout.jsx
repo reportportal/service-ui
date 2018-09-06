@@ -28,19 +28,22 @@ export class ModalLayout extends Component {
       danger: PropTypes.bool,
       onClick: PropTypes.func,
     }),
-    multiActionOkButton: PropTypes.shape({
-      title: PropTypes.string.isRequired,
-      items: PropTypes.array,
-      onClick: PropTypes.func,
-    }),
     cancelButton: PropTypes.shape({
       text: PropTypes.string.isRequired,
     }),
-    customButton: PropTypes.node,
+    customButton: PropTypes.shape({
+      onClick: PropTypes.func,
+      component: PropTypes.func,
+      buttonProps: PropTypes.object,
+    }),
     stopOutsideClose: PropTypes.bool,
-    closeConfirmation: PropTypes.object,
-    confirmationMessage: PropTypes.string,
-    confirmationWarning: PropTypes.string,
+    closeConfirmation: PropTypes.shape({
+      closeConfirmedCallback: PropTypes.func,
+      isAbleToClose: PropTypes.bool,
+      withCheckbox: PropTypes.bool,
+      confirmationMessage: PropTypes.string,
+      confirmationWarning: PropTypes.string,
+    }),
   };
   static defaultProps = {
     className: '',
@@ -48,13 +51,10 @@ export class ModalLayout extends Component {
     children: null,
     warningMessage: '',
     okButton: null,
-    multiActionOkButton: null,
     cancelButton: null,
     customButton: null,
     stopOutsideClose: false,
     closeConfirmation: null,
-    confirmationMessage: '',
-    confirmationWarning: '',
   };
   state = {
     shown: false,
@@ -80,13 +80,23 @@ export class ModalLayout extends Component {
     }
   };
   onClickModal = (e) => {
-    !this.modal.contains(e.target) && !this.props.stopOutsideClose && this.closeModal();
+    const { closeConfirmation } = this.props;
+
+    if (!this.modal.contains(e.target)) {
+      if (!closeConfirmation) {
+        this.closeModal();
+      } else {
+        closeConfirmation.withCheckbox
+          ? this.setState({ showConfirmation: true })
+          : this.setState({ showConfirmation: true, closeConfirmed: true });
+      }
+    }
   };
   onClickOk = () => {
-    const { okButton, multiActionOkButton } = this.props;
+    const { okButton, customButton } = this.props;
 
     okButton && okButton.onClick(this.closeModal);
-    multiActionOkButton && multiActionOkButton.onClick(this.closeModal);
+    customButton && customButton.onClick(this.closeModal);
   };
   onCloseConfirm = (closeConfirmed) => {
     this.setState({
@@ -104,12 +114,14 @@ export class ModalLayout extends Component {
   };
   showCloseConfirmation = () => {
     const { closeConfirmed } = this.state;
-    const { closeConfirmedCallback } = this.props.closeConfirmation;
+    const { closeConfirmedCallback, withCheckbox } = this.props.closeConfirmation;
 
     if (closeConfirmed) {
       closeConfirmedCallback && closeConfirmedCallback();
       this.setState({ shown: false });
     }
+
+    !withCheckbox && this.setState({ closeConfirmed: true });
 
     this.setState({ showConfirmation: true });
   };
@@ -127,24 +139,22 @@ export class ModalLayout extends Component {
       title,
       warningMessage,
       okButton,
-      multiActionOkButton,
       cancelButton,
       customButton,
       children,
-      confirmationMessage,
-      confirmationWarning,
+      closeConfirmation,
     } = this.props;
     const footerProps = {
       warningMessage,
       okButton,
-      multiActionOkButton,
       cancelButton,
       customButton,
-      confirmationMessage,
-      confirmationWarning,
+      confirmationMessage: closeConfirmation && closeConfirmation.confirmationMessage,
+      confirmationWarning: closeConfirmation && closeConfirmation.confirmationWarning,
       showConfirmation: this.state.showConfirmation,
       closeConfirmed: this.state.closeConfirmed,
       onCloseConfirm: this.onCloseConfirm,
+      confirmWithCheckbox: closeConfirmation && closeConfirmation.withCheckbox,
     };
 
     return (
