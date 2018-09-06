@@ -1,18 +1,10 @@
 .filters-block-wrapper {
-  padding: 0 15px;
-  border-bottom: solid 1px $COLOR--gray-91;
-}
-
-.filter-wrapper {
-  display: inline-block;
-  height: 60px;
-  width: 202px;
-  position: relative;
-  margin: 7px 35px 14px 2px;
+  padding: 7px 15px 14px 15px;
+  border-bottom: 1px solid $COLOR--gray-91;
 }
 
 .filter-name {
-  display: inline-block;
+  display: block;
   max-width: 100%;
   margin-bottom: 5px;
   box-sizing: border-box;
@@ -22,10 +14,9 @@
 }
 
 .drop-down-container {
-  display: inline-block;
   position: relative;
   z-index: 1;
-  width: 100%;
+  width: 202px;
   height: 30px;
   font-family: $FONT-REGULAR;
   font-size: 13px;

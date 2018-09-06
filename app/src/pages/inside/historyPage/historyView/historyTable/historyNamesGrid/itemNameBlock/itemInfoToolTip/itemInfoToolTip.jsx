@@ -1,4 +1,4 @@
-import React from 'react';
+import { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import Parser from 'html-react-parser';
 import { FormattedRelative } from 'react-intl';
@@ -11,7 +11,7 @@ import TagIcon from './img/tag-inline.svg';
 const cx = classNames.bind(styles);
 
 export const ItemInfoToolTip = ({ data }) => (
-  <React.Fragment>
+  <Fragment>
     <div className={cx('title-block')}>
       <span>{data.name}</span>
     </div>
@@ -38,7 +38,7 @@ export const ItemInfoToolTip = ({ data }) => (
       )}
     </div>
     <MarkdownViewer value={data.description} />
-  </React.Fragment>
+  </Fragment>
 );
 ItemInfoToolTip.propTypes = {
   data: PropTypes.object,

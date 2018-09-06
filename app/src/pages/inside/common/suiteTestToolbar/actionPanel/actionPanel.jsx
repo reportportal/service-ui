@@ -2,6 +2,7 @@ import { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
+import { redirect } from 'redux-first-router';
 import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
 import {
   breadcrumbsSelector,
@@ -16,7 +17,6 @@ import { Breadcrumbs, breadcrumbDescriptorShape } from 'components/main/breadcru
 import { GhostButton } from 'components/buttons/ghostButton';
 import { GhostMenuButton } from 'components/buttons/ghostMenuButton';
 import { LEVEL_STEP, LEVEL_SUITE, LEVEL_TEST } from 'common/constants/launchLevels';
-import { NavLink } from 'redux-first-router-link';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import RefreshIcon from 'common/img/refresh-inline.svg';
 import HistoryIcon from 'common/img/history-inline.svg';
@@ -86,6 +86,7 @@ const messages = defineMessages({
   }),
   {
     restorePath: restorePathAction,
+    redirect,
   },
 )
 @injectIntl
@@ -113,6 +114,7 @@ export class ActionPanel extends Component {
     listView: PropTypes.bool,
     externalSystems: PropTypes.array,
     deleteDisabled: PropTypes.bool,
+    redirect: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
@@ -145,6 +147,10 @@ export class ActionPanel extends Component {
     super(props);
     this.actionDescriptors = this.createActionDescriptors();
   }
+
+  onHistoryHandler = () => {
+    this.props.redirect({ type: SUITE_HISTORY_PAGE, payload: this.props.payload });
+  };
 
   checkVisibility = (levels) => levels.some((level) => this.props.level === level);
 
@@ -214,7 +220,6 @@ export class ActionPanel extends Component {
       selectedItems,
       listView,
       debugMode,
-      payload,
     } = this.props;
     return (
       <div className={cx('action-panel', { 'right-buttons-only': !showBreadcrumbs && !hasErrors })}>
@@ -253,13 +258,8 @@ export class ActionPanel extends Component {
           {!listView &&
             !debugMode && (
               <div className={cx('action-button')}>
-                <GhostButton icon={HistoryIcon}>
-                  <NavLink
-                    to={{ type: SUITE_HISTORY_PAGE, payload }}
-                    className={cx('history-link')}
-                  >
-                    <FormattedMessage id="ActionPanel.history" defaultMessage="History" />
-                  </NavLink>
+                <GhostButton icon={HistoryIcon} onClick={this.onHistoryHandler}>
+                  <FormattedMessage id="ActionPanel.history" defaultMessage="History" />
                 </GhostButton>
               </div>
             )}

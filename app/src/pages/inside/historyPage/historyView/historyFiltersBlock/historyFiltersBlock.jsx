@@ -33,16 +33,14 @@ export class HistoryFiltersBlock extends Component {
 
     return (
       <div className={cx('filters-block-wrapper')}>
-        <div className={cx('filter-wrapper')}>
-          <span className={cx('filter-name')}>{intl.formatMessage(messages.depthFilterTitle)}</span>
-          <div className={cx('drop-down-container')}>
-            <InputDropdown
-              options={HISTORY_DEPTH_CONFIG.options}
-              customClass={cx('mobile-input-disabled')}
-              value={this.props.historyDepth}
-              onChange={this.props.historyDepthHandle}
-            />
-          </div>
+        <span className={cx('filter-name')}>{intl.formatMessage(messages.depthFilterTitle)}</span>
+        <div className={cx('drop-down-container')}>
+          <InputDropdown
+            options={HISTORY_DEPTH_CONFIG.options}
+            customClass={cx('mobile-input-disabled')}
+            value={this.props.historyDepth}
+            onChange={this.props.historyDepthHandle}
+          />
         </div>
       </div>
     );

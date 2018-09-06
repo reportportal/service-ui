@@ -88,7 +88,7 @@ export class HistoryTable extends Component {
             </Fragment>
           )}
         </div>
-        {history.length > 0 &&
+        {history.length &&
           visibleItemsCount < items.length && (
             <div className={cx('load-more-container')}>
               <button className={cx('load-more')} onClick={this.loadMoreHistoryItems}>

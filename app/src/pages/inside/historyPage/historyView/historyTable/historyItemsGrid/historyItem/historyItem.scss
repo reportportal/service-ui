@@ -1,6 +1,5 @@
 .history-item-wrapper {
   display: flex;
-  flex-direction: row;
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
@@ -14,11 +13,11 @@
 }
 
 .history-item-status-FAILED {
-  background-color: lighten($COLOR--failed, 10%);
+  background-color: $COLOR--blush;
 }
 
 .history-item-status-SKIPPED {
-  background-color: lighten($COLOR--skipped, 10%);
+  background-color: $COLOR--silver;
 }
 
 .history-item-status-MANY {
@@ -27,7 +26,7 @@
 }
 
 .history-item-status-PASSED {
-  background-color: lighten($COLOR--passed, 10%);
+  background-color: $COLOR--greenish-grey;
 }
 
 .history-item-status-RESETED {
@@ -41,7 +40,7 @@
 }
 
 .launch-status-IN_PROGRESS {
-  background-color: #c5cae9;
+  background-color: $COLOR--violet;
   background-image: linear-gradient(
     135deg,
     rgba(255, 255, 255, 0.15) 25%,
@@ -54,15 +53,6 @@
   );
   background-size: 60px 60px;
   animation: progress-stripes-large 2s linear 0s reverse none infinite;
-}
-
-@keyframes progress-stripes-large {
-  from {
-    background-position: 0 0;
-  }
-  to {
-    background-position: -60px 0;
-  }
 }
 
 .item-text-content {
@@ -95,4 +85,13 @@
   width: 22px;
   height: 22px;
   padding-bottom: 0;
+}
+
+@keyframes progress-stripes-large {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: -60px 0;
+  }
 }

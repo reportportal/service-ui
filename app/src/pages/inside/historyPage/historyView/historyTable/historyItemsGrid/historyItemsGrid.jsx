@@ -87,7 +87,7 @@ export class HistoryItemsGrid extends Component {
 
     return (
       <div className={cx('history-content-wrapper', customClass)}>
-        <ScrollWrapper autoHeight autoHeightMax={'100%'} autoHide>
+        <ScrollWrapper autoHeight autoHeightMax={'100%'}>
           <div className={cx('history-items-grid')}>
             <div className={cx('history-grid-head')}>
               {itemsHistory.map((item) => (

@@ -12,7 +12,6 @@
 
 .history-grid-head {
   display: flex;
-  flex-direction: row;
   width: 100%;
 }
 
@@ -24,7 +23,7 @@
   height: 50px;
   min-height: 50px;
   min-width: 140px;
-  border-bottom: solid 1px $COLOR--gray-91;
+  border-bottom: 1px solid $COLOR--gray-91;
   border-right: 1px solid transparent;
   box-sizing: border-box;
   font-size: 12px;
@@ -37,7 +36,6 @@
 
 .history-grid-row {
   display: flex;
-  flex-direction: row;
   width: 100%;
 }
 
@@ -48,7 +46,7 @@
   min-width: 140px;
   box-sizing: border-box;
   text-align: left;
-  border-bottom: solid 1px $COLOR--gray-91;
+  border-bottom: 1px solid $COLOR--gray-91;
   border-right: 1px solid $COLOR--gray-91;
 }
 
