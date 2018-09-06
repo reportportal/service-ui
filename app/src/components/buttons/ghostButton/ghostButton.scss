@@ -24,7 +24,8 @@
     cursor: default;
 
     path,
-    polygon {
+    polygon,
+    rect {
       fill: $COLOR--gray-60;
     }
   }
@@ -53,7 +54,8 @@
       color: $COLOR--white-two;
 
       path,
-      polygon {
+      polygon,
+      rect {
         fill: $COLOR--white-two;
       }
     }

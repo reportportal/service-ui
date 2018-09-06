@@ -59,6 +59,10 @@ const messages = defineMessages({
     id: 'ActionPanel.actionsBtnTooltip',
     defaultMessage: ' Select several items to processing',
   },
+  deleteBtnTooltip: {
+    id: 'ActionPanel.deleteBtnTooltip',
+    defaultMessage: 'Delete test items in bulk',
+  },
 });
 
 @connect(
@@ -212,7 +216,7 @@ export class ActionPanel extends Component {
                 title={
                   this.props.deleteDisabled
                     ? this.props.intl.formatMessage(messages.actionsBtnTooltip)
-                    : null
+                    : this.props.intl.formatMessage(messages.deleteBtnTooltip)
                 }
               >
                 <FormattedMessage id="Common.delete" defaultMessage="Delete" />

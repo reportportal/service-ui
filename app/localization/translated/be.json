@@ -20,6 +20,7 @@
   "ActionPanel.actionMoveToDebug": "Aдправіць ў адладку",
   "ActionPanel.actionsBtn": "Дзеянні",
   "ActionPanel.actionsBtnTooltip": "Абярыце некалькі элементаў для апрацоўкі",
+  "ActionPanel.deleteBtnTooltip": "Выдаліць тэставыя элементы групай",
   "ActionPanel.editDefects": "Рэдагаваць Дэфекты",
   "ActionPanel.history": "Гісторыя",
   "ActionPanel.ignoreInAA": "Выключыць з Аўта-Аналiза",
