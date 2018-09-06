@@ -20,6 +20,7 @@
   "ActionPanel.actionMoveToDebug": "Переместить в отладку",
   "ActionPanel.actionsBtn": "Действия",
   "ActionPanel.actionsBtnTooltip": "Выберите несколько элементов для обработки",
+  "ActionPanel.deleteBtnTooltip": "Удалить тестовые элементы группой",
   "ActionPanel.editDefects": "Редактировать дефекты",
   "ActionPanel.history": "История",
   "ActionPanel.ignoreInAA": "Игнорировать при Авто-Анализе",
