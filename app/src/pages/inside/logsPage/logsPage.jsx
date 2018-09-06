@@ -12,7 +12,7 @@ import {
   NAMESPACE,
 } from 'controllers/log';
 import { withFilter } from 'controllers/filter';
-import { withPagination } from 'controllers/pagination';
+import { withPagination, PAGE_KEY } from 'controllers/pagination';
 import { withSorting, SORTING_ASC } from 'controllers/sorting';
 import { userIdSelector } from 'controllers/user';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
@@ -51,7 +51,7 @@ import { LogsGridToolbar } from './logsGridToolbar';
     logLevelId: query['filter.gte.level'],
   }),
   {
-    onChangeLogLevel: (logLevel) => ({ 'filter.gte.level': logLevel.id }),
+    onChangeLogLevel: (logLevel) => ({ 'filter.gte.level': logLevel.id, [PAGE_KEY]: 1 }),
     onChangeWithAttachments: (withAttachments) => ({ 'filter.ex.binaryContent': withAttachments }),
   },
   { namespace: NAMESPACE },
@@ -134,7 +134,11 @@ export class LogsPage extends Component {
         <PageSection>
           <LogToolbar onRefresh={this.handleRefresh} />
           <HistoryLine />
-          <LogItemInfo fetchFunc={refresh} />
+          <LogItemInfo
+            onChangeLogLevel={onChangeLogLevel}
+            onChangePage={onChangePage}
+            fetchFunc={refresh}
+          />
           <LogsGridToolbar
             activePage={activePage}
             pageCount={pageCount}

@@ -34,7 +34,6 @@ const MessageColumn = ({ className, value, ...rest }) => (
     className={cx('message-column', `level-${value.level}`, className, {
       console: rest.customProps.consoleView,
     })}
-    id={value.level === ERROR ? value.id : undefined}
   >
     <LogMessageBlock value={value} {...rest} />
   </div>

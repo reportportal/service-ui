@@ -200,3 +200,16 @@
     background: none;
   }
 }
+
+.highlight-block-wrapper {
+  .highlight-block {
+    position: absolute;
+    right: 0;
+    left: 0;
+
+    &:before {
+      content: '';
+      display: block;
+    }
+  }
+}

@@ -1,0 +1,1 @@
+export { StackTrace } from './stackTrace';

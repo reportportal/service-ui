@@ -42,6 +42,7 @@ export class GridRow extends Component {
     expanded: false,
   };
   componentDidMount() {
+    this.rowRef = React.createRef();
     this.handleAccordion();
   }
   componentDidUpdate() {
@@ -54,6 +55,14 @@ export class GridRow extends Component {
     this.setState({ withAccordion: true });
     this.overflowCell.style.maxHeight = `${this.overflowCellMaxHeight}px`;
   };
+
+  getHighLightBlockHeight = () => {
+    if (this.state.withAccordion && !this.state.expanded) {
+      return `${this.overflowCellMaxHeight}px`;
+    }
+    return `${this.rowRef && this.rowRef.current && this.rowRef.current.clientHeight}px`;
+  };
+
   removeAccordion = () => {
     this.setState({ withAccordion: false });
     this.overflowCell.style.maxHeight = null;
@@ -82,13 +91,25 @@ export class GridRow extends Component {
   render() {
     const { columns, value, selectable, changeOnlyMobileLayout, rowClassMapper } = this.props;
     const customClasses = (rowClassMapper && rowClassMapper(value)) || {};
+
     return (
       <div
         className={cx('grid-row-wrapper', {
           selected: this.isItemSelected(),
           ...customClasses,
         })}
+        data-id={value.id}
+        ref={this.rowRef}
       >
+        <div className={cx('grid-row', 'highlight-block-wrapper')}>
+          <div
+            id="highlight-block"
+            className={cx('highlight-block')}
+            style={{
+              height: this.getHighLightBlockHeight(),
+            }}
+          />
+        </div>
         {this.state.withAccordion && (
           <div className={cx('accordion-wrapper-mobile')}>
             <div
