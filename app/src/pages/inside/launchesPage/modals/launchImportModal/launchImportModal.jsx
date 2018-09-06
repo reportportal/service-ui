@@ -265,7 +265,7 @@ export class LaunchImportModal extends Component {
       },
       onUploadProgress: (progressEvent) => {
         const { files } = this.state;
-        const percentCompleted = Math.round(progressEvent.loaded * 100 / progressEvent.total);
+        const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
 
         this.setState({
           files: files.map((item) => {
@@ -295,9 +295,13 @@ export class LaunchImportModal extends Component {
         cancelButton={{
           text: intl.formatMessage(messages.cancelButton),
         }}
-        closeConfirmation={{ isAbleToClose, closeConfirmedCallback: this.closeConfirmedCallback }}
-        confirmationMessage={intl.formatMessage(messages.importConfirmation)}
-        confirmationWarning={intl.formatMessage(messages.importConfirmationWarning)}
+        closeConfirmation={{
+          isAbleToClose,
+          withCheckbox: true,
+          closeConfirmedCallback: this.closeConfirmedCallback,
+          confirmationMessage: intl.formatMessage(messages.importConfirmation),
+          confirmationWarning: intl.formatMessage(messages.importConfirmationWarning),
+        }}
       >
         <Dropzone
           className={cx('dropzone-wrapper')}
@@ -314,7 +318,9 @@ export class LaunchImportModal extends Component {
           )}
           {files.length > 0 && (
             <div className={cx('files-list')}>
-              {files.map((item) => <LaunchIcon {...item} onDelete={this.onDelete} key={item.id} />)}
+              {files.map((item) => (
+                <LaunchIcon {...item} onDelete={this.onDelete} key={item.id} />
+              ))}
             </div>
           )}
         </Dropzone>

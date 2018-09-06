@@ -31,9 +31,9 @@
   }
 }
 .value {
-  display: inline-block;
+  display: flex;
+  align-items: center;
   height: 100%;
-  width: 100%;
   overflow: hidden;
   font-family: $FONT-REGULAR;
   font-size: 13px;
@@ -167,12 +167,6 @@
       background-color: $COLOR--gray-91;
     }
   }
-}
-
-.selected-option {
-  display: inline-block;
-  max-width: 100%;
-  font-size: 13px;
 }
 
 .select-option {

@@ -90,13 +90,7 @@ export class DefectTypeSelector extends Component {
       return foundDefectType;
     });
 
-    return (
-      formattedValue && (
-        <div className={cx('selected-option')}>
-          <DefectTypeItem type={formattedValue.locator} />
-        </div>
-      )
-    );
+    return formattedValue && <DefectTypeItem type={formattedValue.locator} />;
   }
 
   handleChange = (selectedValue) => {
@@ -115,7 +109,7 @@ export class DefectTypeSelector extends Component {
           <DefectTypeItem
             type={toInvestigate.locator}
             noBorder={toInvestigate.locator !== value}
-            lessFont={toInvestigate.locator === value}
+            lesserFont={toInvestigate.locator === value}
             onClick={() => this.handleChange(toInvestigate.locator)}
           />
         </div>
@@ -127,7 +121,7 @@ export class DefectTypeSelector extends Component {
                   <DefectTypeItem
                     type={defectType.locator}
                     noBorder={defectType.locator !== value}
-                    lessFont={defectType.locator === value}
+                    lesserFont={defectType.locator === value}
                     onClick={() => this.handleChange(defectType.locator)}
                   />
                 </div>

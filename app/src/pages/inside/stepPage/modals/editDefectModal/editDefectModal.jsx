@@ -2,11 +2,14 @@ import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
-import { injectIntl, defineMessages } from 'react-intl';
+import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { activeProjectSelector } from 'controllers/user';
 import { externalSystemSelector } from 'controllers/project';
+import { fetchTestItemsAction } from 'controllers/testItem';
+import { unlinkIssueAction } from 'controllers/step';
+import { hideModalAction } from 'controllers/modal';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
-import { fetch } from 'common/utils';
+import { fetch, setStorageItem, getStorageItem } from 'common/utils';
 import { URLS } from 'common/urls';
 import { ModalLayout, withModal } from 'components/main/modal';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
@@ -14,6 +17,7 @@ import { InputSwitcher } from 'components/inputs/inputSwitcher';
 import { InputCheckbox } from 'components/inputs/inputCheckbox';
 import { MarkdownEditor } from 'components/main/markdown';
 import { DefectTypeSelector } from 'pages/inside/common/defectTypeSelector';
+import { MultiActionButton } from 'components/buttons/multiActionButton';
 import {
   REPLACE_COMMENTS_TO_ALL_AVAILABILITY_NAME,
   DEFAULT_REPLACE_COMMENTS_TO_ALL_AVAILABILITY_VALUE,
@@ -24,44 +28,52 @@ const cx = classNames.bind(styles);
 
 const messages = defineMessages({
   ignoreAaTitle: {
-    id: 'editDefectModal.ignoreAaTitle',
+    id: 'EditDefectModal.ignoreAaTitle',
     defaultMessage: 'Ignore in Auto Analysis',
   },
   title: {
-    id: 'editDefectModal.title',
+    id: 'EditDefectModal.title',
     defaultMessage: 'Edit defect type',
   },
   replaceCommentsTitle: {
-    id: 'editDefectModal.replaceCommentsTitle',
+    id: 'EditDefectModal.replaceCommentsTitle',
     defaultMessage: 'Replace comments to all selected items',
   },
   hotKeyCancelCaption: {
-    id: 'editDefectModal.hotKeyCancelCaption',
+    id: 'EditDefectModal.hotKeyCancelCaption',
     defaultMessage: 'to cancel',
   },
   hotKeySubmitCaption: {
-    id: 'editDefectModal.hotKeySubmitCaption',
+    id: 'EditDefectModal.hotKeySubmitCaption',
     defaultMessage: 'to submit',
   },
   defectTypeTitle: {
-    id: 'editDefectModal.defectTypeTitle',
+    id: 'EditDefectModal.defectTypeTitle',
     defaultMessage: 'Defect type',
   },
   warningMessage: {
-    id: 'editDefectModal.warningMessage',
+    id: 'EditDefectModal.warningMessage',
     defaultMessage: 'You have to save changes or cancel them before closing the window',
   },
   saveAndPostIssueMessage: {
-    id: 'editDefectModal.saveAndPostIssueMessage',
+    id: 'EditDefectModal.saveAndPostIssueMessage',
     defaultMessage: 'Save and post issue',
   },
   saveAndLinkIssueMessage: {
-    id: 'editDefectModal.saveAndLinkIssueMessage',
+    id: 'EditDefectModal.saveAndLinkIssueMessage',
     defaultMessage: 'Save and link issue',
   },
   saveAndUnlinkIssueMessage: {
-    id: 'editDefectModal.saveAndUnlinkIssueMessage',
+    id: 'EditDefectModal.saveAndUnlinkIssueMessage',
     defaultMessage: 'Save and unlink issue',
+  },
+  updateDefectsSuccess: {
+    id: 'EditDefectModal.updateDefectsSuccess',
+    defaultMessage: 'Defects have been updated',
+  },
+  updateDefectsFailed: {
+    id: 'EditDefectModal.updateDefectsFailed',
+    defaultMessage: 'Failed to update defects',
   },
 });
 
@@ -74,18 +86,24 @@ const messages = defineMessages({
   }),
   {
     showNotification,
+    fetchTestItemsAction,
+    unlinkIssueAction,
+    hideModalAction,
   },
 )
 export class EditDefectModal extends Component {
   static propTypes = {
-    intl: PropTypes.object.isRequired,
+    intl: intlShape.isRequired,
     url: PropTypes.string.isRequired,
     externalSystem: PropTypes.array.isRequired,
     data: PropTypes.shape({
       items: PropTypes.array,
       fetchFunc: PropTypes.func,
     }).isRequired,
+    hideModalAction: PropTypes.func.isRequired,
     showNotification: PropTypes.func.isRequired,
+    fetchTestItemsAction: PropTypes.func.isRequired,
+    unlinkIssueAction: PropTypes.func.isRequired,
   };
 
   constructor(props) {
@@ -111,22 +129,22 @@ export class EditDefectModal extends Component {
       {
         label: intl.formatMessage(messages.saveAndPostIssueMessage),
         value: 'Post',
-        onClick: () => {},
+        onClick: () => this.onEditDefects(this.handlePostIssue),
         disabled: !externalSystem.length,
       },
       {
         label: intl.formatMessage(messages.saveAndLinkIssueMessage),
         value: 'Link',
-        onClick: () => {},
+        onClick: () => this.onEditDefects(this.handleLinkIssue),
         disabled: !externalSystem.length,
       },
       {
         label: intl.formatMessage(messages.saveAndUnlinkIssueMessage),
         value: 'Unlink',
-        onClick: () => {},
-        disabled: items.some(
-          (item) => !item.issue.externalSystemIssue || !item.issue.externalSystemIssue.length,
-        ),
+        onClick: () => this.onEditDefects(this.handleUnlinkIssue),
+        disabled: this.isBulkEditOperation()
+          ? !externalSystem.length
+          : !items[0].issue.externalSystemIssues || !items[0].issue.externalSystemIssues.length,
       },
     ];
 
@@ -135,16 +153,19 @@ export class EditDefectModal extends Component {
     };
   }
 
-  onEditDefects = (closeModal) => {
+  onEditDefects = (nextAction) => {
     const { items } = this.props.data;
 
     if (this.checkIfTheDataWasChanged()) {
-      const issues = (this.isBulkEditOperation() &&
-        items.map((item) => {
+      let issues = null;
+
+      if (this.isBulkEditOperation()) {
+        issues = items.map((item) => {
           const dataToSend = {
             test_item_id: item.id,
             issue: {
               ...item.issue,
+              autoAnalyzed: false,
             },
           };
           if (this.state.defectType) {
@@ -154,36 +175,46 @@ export class EditDefectModal extends Component {
             dataToSend.issue.comment = this.state.markdownValue;
           }
           return dataToSend;
-        })) || [
-        {
-          test_item_id: items[0].id,
-          issue: {
-            ...items[0].issue,
-            comment: this.state.markdownValue,
-            issue_type: this.state.defectType,
-            ignoreAnalyzer: this.state.ignoreAnalyzer,
-            autoAnalyzed: false,
+        });
+      } else {
+        issues = [
+          {
+            test_item_id: items[0].id,
+            issue: {
+              ...items[0].issue,
+              comment: this.state.markdownValue,
+              issue_type: this.state.defectType,
+              ignoreAnalyzer: this.state.ignoreAnalyzer,
+              autoAnalyzed: false,
+            },
           },
-        },
-      ];
+        ];
+      }
 
       this.fetchEditDefects(issues);
     }
-
-    closeModal();
+    this.props.hideModalAction();
+    nextAction && nextAction();
   };
 
   getReplaceCommentsToAllItemsAvailability = () => {
-    const isReplaceToAllAvailable = localStorage.getItem(REPLACE_COMMENTS_TO_ALL_AVAILABILITY_NAME);
+    const isReplaceToAllAvailable = getStorageItem(REPLACE_COMMENTS_TO_ALL_AVAILABILITY_NAME);
 
-    !isReplaceToAllAvailable &&
+    isReplaceToAllAvailable === null &&
       this.changeReplaceCommentsToAllAvailability(
         DEFAULT_REPLACE_COMMENTS_TO_ALL_AVAILABILITY_VALUE,
       );
-    return isReplaceToAllAvailable
-      ? JSON.parse(isReplaceToAllAvailable)
-      : DEFAULT_REPLACE_COMMENTS_TO_ALL_AVAILABILITY_VALUE;
+    return getStorageItem(REPLACE_COMMENTS_TO_ALL_AVAILABILITY_NAME);
   };
+
+  handleUnlinkIssue = () =>
+    this.props.unlinkIssueAction(this.props.data.items, {
+      fetchFunc: this.props.data.fetchFunc,
+    });
+
+  handleLinkIssue = () => {};
+
+  handlePostIssue = () => {};
 
   checkIfTheDataWasChanged = () => {
     const { items } = this.props.data;
@@ -205,6 +236,7 @@ export class EditDefectModal extends Component {
 
   fetchEditDefects = (issues) => {
     const {
+      intl,
       url,
       data: { fetchFunc },
     } = this.props;
@@ -214,19 +246,26 @@ export class EditDefectModal extends Component {
       data: {
         issues,
       },
-    }).then(() => {
-      fetchFunc();
-      this.props.showNotification({
-        message: 'SUCCES',
-        type: NOTIFICATION_TYPES.SUCCESS,
+    })
+      .then(() => {
+        fetchFunc();
+        this.props.showNotification({
+          message: intl.formatMessage(messages.updateDefectsSuccess),
+          type: NOTIFICATION_TYPES.SUCCESS,
+        });
+      })
+      .catch(() => {
+        this.props.showNotification({
+          message: intl.formatMessage(messages.updateDefectsFailed),
+          type: NOTIFICATION_TYPES.ERROR,
+        });
       });
-    });
   };
 
   isBulkEditOperation = () => this.props.data.items.length > 1;
 
   changeReplaceCommentsToAllAvailability = (value) => {
-    localStorage.setItem(REPLACE_COMMENTS_TO_ALL_AVAILABILITY_NAME, value);
+    setStorageItem(REPLACE_COMMENTS_TO_ALL_AVAILABILITY_NAME, value);
   };
 
   handleSelectDefectTypeChange = (newValue) => {
@@ -256,10 +295,13 @@ export class EditDefectModal extends Component {
 
   render() {
     const { intl } = this.props;
-    const multiActionOkButton = {
-      title: intl.formatMessage(COMMON_LOCALE_KEYS.SAVE),
+    const customButton = {
       onClick: this.onEditDefects,
-      items: this.multiActionButtonItems,
+      buttonProps: {
+        items: this.multiActionButtonItems,
+        title: intl.formatMessage(COMMON_LOCALE_KEYS.SAVE),
+      },
+      component: MultiActionButton,
     };
     const cancelButton = {
       text: intl.formatMessage(COMMON_LOCALE_KEYS.CANCEL),
@@ -267,11 +309,14 @@ export class EditDefectModal extends Component {
     return (
       <ModalLayout
         title={intl.formatMessage(messages.title)}
-        multiActionOkButton={multiActionOkButton}
+        customButton={customButton}
         cancelButton={cancelButton}
-        stopOutsideClose={this.checkIfTheDataWasChanged()}
-        warningMessage={
-          (this.checkIfTheDataWasChanged() && intl.formatMessage(messages.warningMessage)) || ''
+        closeConfirmation={
+          this.checkIfTheDataWasChanged()
+            ? {
+                confirmationWarning: intl.formatMessage(messages.warningMessage),
+              }
+            : null
         }
       >
         <div className={cx('edit-defect-content')}>

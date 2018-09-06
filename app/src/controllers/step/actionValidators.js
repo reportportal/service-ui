@@ -25,9 +25,4 @@ export const validateUnlinkIssue = (item) => {
   return null;
 };
 
-export const validateEditDefect = (item) => {
-  if (!item.issue) {
-    return 'noIssue';
-  }
-  return null;
-};
+export const validateEditDefect = (item) => (!item.issue ? 'noIssue' : null);

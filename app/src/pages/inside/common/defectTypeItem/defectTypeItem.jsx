@@ -16,13 +16,13 @@ export class DefectTypeItem extends Component {
     type: PropTypes.string.isRequired,
     onClick: PropTypes.func,
     noBorder: PropTypes.bool,
-    lessFont: PropTypes.bool,
+    lesserFont: PropTypes.bool,
   };
 
   static defaultProps = {
     onClick: () => {},
     noBorder: false,
-    lessFont: false,
+    lesserFont: false,
   };
 
   getDefectType = () => {
@@ -41,14 +41,14 @@ export class DefectTypeItem extends Component {
   };
 
   render() {
-    const { noBorder, lessFont, onClick } = this.props;
+    const { noBorder, lesserFont, onClick } = this.props;
     const defectType = this.getDefectType();
     if (!defectType) {
       return null;
     }
     return (
       <div
-        className={cx('defect-type-item', { 'no-border': noBorder, 'less-font': lessFont })}
+        className={cx('defect-type-item', { 'no-border': noBorder, 'lesser-Font': lesserFont })}
         title={defectType.longName}
         onClick={onClick}
       >
