@@ -1,0 +1,70 @@
+.attachment-block {
+  float: right;
+}
+
+.image {
+  display: inline-block;
+  width: 100%;
+  min-width: 60px;
+  min-height: 35px;
+  max-width: 65px;
+  max-height: 100%;
+}
+
+.other {
+  background: url(common/img/attachment/other.png) no-repeat -9px 0;
+  background-size: cover;
+}
+
+.archive {
+  background: url(common/img/attachment/archive.png) no-repeat -9px 0;
+  background-size: cover;
+}
+
+.xml {
+  background: url(common/img/attachment/xml.png) no-repeat -9px 0;
+  background-size: cover;
+}
+
+.javascript {
+  background: url(common/img/attachment/javascript.png) no-repeat -9px 0;
+  background-size: cover;
+}
+
+.json {
+  background: url(common/img/attachment/json.png) no-repeat -9px 0;
+  background-size: cover;
+}
+
+.css {
+  background: url(common/img/attachment/css.png) no-repeat -9px 0;
+  background-size: cover;
+}
+
+.php {
+  background: url(common/img/attachment/php.png) no-repeat -9px 0;
+  background-size: cover;
+}
+
+.har {
+  background: url(common/img/attachment/har.png) no-repeat 0 0;
+  background-size: cover;
+}
+
+.txt {
+  background: url(common/img/attachment/txt.png) no-repeat -9px 0;
+  background-size: cover;
+}
+
+.html {
+  background: url(common/img/attachment/html.png) no-repeat -9px 0;
+  background-size: cover;
+}
+
+.attachment {
+  min-width: 7px;
+  min-height: 7px;
+  svg {
+    fill: #999;
+  }
+}

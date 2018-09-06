@@ -1,0 +1,26 @@
+.log-message-search {
+  position: relative;
+  height: 50px;
+  padding-top: 6px;
+  box-sizing: border-box;
+}
+
+.search-title {
+  position: relative;
+  top: 3px;
+  padding-right: 6px;
+  padding-left: 16px;
+  color: $COLOR--gray-47;
+  font-family: $FONT-SEMIBOLD;
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+.input-search-wrapper {
+  display: inline-block;
+  width: 200px;
+}
+
+.input-search {
+  background-color: transparent;
+}
