@@ -6,6 +6,7 @@ import classNames from 'classnames/bind';
 import { historyItemsSelector, activeLogIdSelector, NAMESPACE } from 'controllers/log';
 import { MANY, NOT_FOUND } from 'common/constants/launchStatuses';
 import { connectRouter } from 'common/utils';
+import { PAGE_KEY, DEFAULT_PAGINATION } from 'controllers/pagination';
 import { HistoryLineItem } from './historyLineItem';
 import styles from './historyLine.scss';
 
@@ -14,7 +15,7 @@ const cx = classNames.bind(styles);
 @connectRouter(
   undefined,
   {
-    changeActiveItem: (itemId) => ({ history: itemId }),
+    changeActiveItem: (itemId) => ({ history: itemId, [PAGE_KEY]: DEFAULT_PAGINATION[PAGE_KEY] }),
   },
   { namespace: NAMESPACE },
 )

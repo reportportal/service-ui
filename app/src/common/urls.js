@@ -134,6 +134,16 @@ export const URLS = {
   logItemActivity: (activeProject, itemId) => `${urlBase}${activeProject}/activity/item/${itemId}`,
   logAttachment: (activeProject, id) =>
     `${urlBase}${activeProject}/data/${id}${getQueryParams({ access_token: getToken() })}`,
+  logItemStackTrace: (activeProject, itemId) =>
+    `${urlBase}${activeProject}/log?filter.eq.item=${itemId}&page.page=1&page.size=1&filter.in.level=ERROR&page.sort=time%2CDESC`,
+  logItemStackTraceMessageLocation: (activeProject, itemId, stackTraceItemId, pageSize, level) =>
+    `${urlBase}${activeProject}/log/${stackTraceItemId}/page${getQueryParams({
+      'filter.eq.item': itemId,
+      'page.page': 1,
+      'page.size': pageSize,
+      'filter.gte.level': level,
+      'page.sort': 'time,ASC',
+    })}`,
 
   user: () => `${urlBase}user`,
   userRegistration: () => `${urlBase}user/registration`,

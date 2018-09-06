@@ -15,6 +15,7 @@ import { LogItemDetails } from './logItemDetails';
 import { LogItemActivity } from './logItemActivity';
 import { Parameters } from './parameters';
 import { Attachments } from './attachments';
+import { StackTrace } from './stackTrace';
 import { getActionMessage } from '../utils/getActionMessage';
 import styles from './logItemInfoTabs.scss';
 
@@ -43,13 +44,13 @@ const messages = defineMessages({
   },
 });
 
-const makeTabs = ({ formatMessage }, logItem) => [
+const makeTabs = ({ formatMessage }, logItem, onChangePage) => [
   {
     id: 'stack',
     label: formatMessage(messages.stackTab),
     icon: StackTraceIcon,
-    content: <div>Stack trace</div>,
     eventInfo: LOG_PAGE_EVENTS.STACK_TRACE_TAB,
+    content: <StackTrace onChangePage={onChangePage} />,
   },
   {
     id: 'attachments',
@@ -89,6 +90,7 @@ export class LogItemInfoTabs extends Component {
     intl: intlShape.isRequired,
     lastActivity: PropTypes.object,
     logItem: PropTypes.object.isRequired,
+    onChangePage: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
@@ -96,7 +98,7 @@ export class LogItemInfoTabs extends Component {
   };
 
   renderPanelContent() {
-    const { lastActivity, intl } = this.props;
+    const { intl, lastActivity } = this.props;
 
     return lastActivity ? (
       <div className={cx('panel-content')}>
@@ -107,8 +109,13 @@ export class LogItemInfoTabs extends Component {
   }
 
   render() {
-    const { intl, logItem } = this.props;
+    const { intl, logItem, onChangePage } = this.props;
 
-    return <InfoTabs tabs={makeTabs(intl, logItem)} panelContent={this.renderPanelContent()} />;
+    return (
+      <InfoTabs
+        tabs={makeTabs(intl, logItem, onChangePage)}
+        panelContent={this.renderPanelContent()}
+      />
+    );
   }
 }

@@ -134,7 +134,7 @@ export class LogsPage extends Component {
         <PageSection>
           <LogToolbar onRefresh={this.handleRefresh} />
           <HistoryLine />
-          <LogItemInfo fetchFunc={refresh} />
+          <LogItemInfo onChangePage={onChangePage} fetchFunc={refresh} />
           <LogsGridToolbar
             activePage={activePage}
             pageCount={pageCount}

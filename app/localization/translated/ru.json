@@ -864,6 +864,8 @@
   "Sidebar.launchesBtn": "Запуски",
   "Sidebar.logoutBtn": "Выйти",
   "Sidebar.profileBtn": "Профиль",
+  "StackTrace.messageRefCaption": "Перейдите к трассировке стека в записи журнала",
+  "StackTrace.noStackTrace": "Нет трассировки стека для отображения",
   "StatusPageContent.activities": "Панель активностей проекта",
   "StatusPageContent.autoBugs": "Процент ошибок тестов",
   "StatusPageContent.general": "Общая информация",

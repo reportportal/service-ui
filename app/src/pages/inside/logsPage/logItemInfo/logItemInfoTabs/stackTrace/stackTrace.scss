@@ -1,0 +1,61 @@
+.stack-trace {
+  .stack-trace-content {
+    padding: 10px 40px 15px 10px;
+    background-color: $COLOR--light-red;
+  }
+}
+
+.stack-trace-message {
+  color: $COLOR--charcoal-grey;
+  line-height: 19px;
+  font-size: 11px;
+  font-family: $FONT-MENLO;
+  white-space: pre-line;
+  word-wrap: break-word;
+  word-break: break-all;
+}
+
+.message-reference {
+  display: inline-block;
+  padding-top: 10px;
+  padding-left: 5px;
+  color: $COLOR--windows-blue;
+  font-size: 13px;
+  font-family: $FONT-REGULAR;
+  cursor: pointer;
+}
+
+.ref-icon {
+  display: inline-block;
+  width: 7px;
+  margin-left: 5px;
+
+  svg {
+    fill: $COLOR--windows-blue;
+    transform: translateY(-1px) rotate(270deg);
+  }
+}
+
+.highlight {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: $COLOR--go-to-stack-trace;
+  opacity: 0.7;
+  transition: opacity 5s ease;
+  @media (max-width: $SCREEN_SM_MAX) {
+    bottom: 18px;
+  }
+  @media (max-width: $SCREEN_XS_MAX) {
+    bottom: 70px;
+  }
+}
+
+.hide-highlight {
+  position: relative;
+  .highlight {
+    opacity: 0;
+  }
+}
