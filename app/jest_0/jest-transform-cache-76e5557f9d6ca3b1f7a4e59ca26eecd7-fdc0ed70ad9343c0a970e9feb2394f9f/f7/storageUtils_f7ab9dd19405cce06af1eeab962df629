@@ -1,0 +1,46 @@
+f41e45fe7790dca2c0d159a3d88a6146
+"use strict";Object.defineProperty(exports, "__esModule", { value: true });var _stringify = require("babel-runtime/core-js/json/stringify");var _stringify2 = _interopRequireDefault(_stringify);exports.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+getStorageItem = getStorageItem;exports.
+
+
+setStorageItem = setStorageItem;function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };} /*
+                                                                                                                               * Copyright 2017 EPAM Systems
+                                                                                                                               *
+                                                                                                                               *
+                                                                                                                               * This file is part of EPAM Report Portal.
+                                                                                                                               * https://github.com/reportportal/service-ui
+                                                                                                                               *
+                                                                                                                               * Report Portal is free software: you can redistribute it and/or modify
+                                                                                                                               * it under the terms of the GNU General Public License as published by
+                                                                                                                               * the Free Software Foundation, either version 3 of the License, or
+                                                                                                                               * (at your option) any later version.
+                                                                                                                               *
+                                                                                                                               * Report Portal is distributed in the hope that it will be useful,
+                                                                                                                               * but WITHOUT ANY WARRANTY; without even the implied warranty of
+                                                                                                                               * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+                                                                                                                               * GNU General Public License for more details.
+                                                                                                                               *
+                                                                                                                               * You should have received a copy of the GNU General Public License
+                                                                                                                               * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
+                                                                                                                               */function getStorageItem(key) {return localStorage.getItem(key) ? JSON.parse(localStorage.getItem(key)) : null;}function setStorageItem(key, value) {return localStorage.setItem(key, (0, _stringify2.default)(value));};var _temp = function () {if (typeof __REACT_HOT_LOADER__ === 'undefined') {return;}__REACT_HOT_LOADER__.register(getStorageItem, "getStorageItem", "/volumeC/workspace/service-ui - RELEASE/src/github.com/reportportal/service-ui/app/src/common/utils/storageUtils.js");__REACT_HOT_LOADER__.register(setStorageItem, "setStorageItem", "/volumeC/workspace/service-ui - RELEASE/src/github.com/reportportal/service-ui/app/src/common/utils/storageUtils.js");}();;
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInN0b3JhZ2VVdGlscy5qcyJdLCJuYW1lcyI6WyJnZXRTdG9yYWdlSXRlbSIsInNldFN0b3JhZ2VJdGVtIiwia2V5IiwibG9jYWxTdG9yYWdlIiwiZ2V0SXRlbSIsIkpTT04iLCJwYXJzZSIsInZhbHVlIiwic2V0SXRlbSJdLCJtYXBwaW5ncyI6Ijs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7O0FBcUJnQkEsYyxHQUFBQSxjOzs7QUFHQUMsYyxHQUFBQSxjLCtGQXhCaEI7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7aUlBcUJPLFNBQVNELGNBQVQsQ0FBd0JFLEdBQXhCLEVBQTZCLENBQ2xDLE9BQU9DLGFBQWFDLE9BQWIsQ0FBcUJGLEdBQXJCLElBQTRCRyxLQUFLQyxLQUFMLENBQVdILGFBQWFDLE9BQWIsQ0FBcUJGLEdBQXJCLENBQVgsQ0FBNUIsR0FBb0UsSUFBM0UsQ0FDRCxDQUNNLFNBQVNELGNBQVQsQ0FBd0JDLEdBQXhCLEVBQTZCSyxLQUE3QixFQUFvQyxDQUN6QyxPQUFPSixhQUFhSyxPQUFiLENBQXFCTixHQUFyQixFQUEwQix5QkFBZUssS0FBZixDQUExQixDQUFQLENBQ0QsQyxrSEFMZVAsYyx5S0FHQUMsYyIsImZpbGUiOiJzdG9yYWdlVXRpbHMuanMiLCJzb3VyY2VzQ29udGVudCI6WyIvKlxuICogQ29weXJpZ2h0IDIwMTcgRVBBTSBTeXN0ZW1zXG4gKlxuICpcbiAqIFRoaXMgZmlsZSBpcyBwYXJ0IG9mIEVQQU0gUmVwb3J0IFBvcnRhbC5cbiAqIGh0dHBzOi8vZ2l0aHViLmNvbS9yZXBvcnRwb3J0YWwvc2VydmljZS11aVxuICpcbiAqIFJlcG9ydCBQb3J0YWwgaXMgZnJlZSBzb2Z0d2FyZTogeW91IGNhbiByZWRpc3RyaWJ1dGUgaXQgYW5kL29yIG1vZGlmeVxuICogaXQgdW5kZXIgdGhlIHRlcm1zIG9mIHRoZSBHTlUgR2VuZXJhbCBQdWJsaWMgTGljZW5zZSBhcyBwdWJsaXNoZWQgYnlcbiAqIHRoZSBGcmVlIFNvZnR3YXJlIEZvdW5kYXRpb24sIGVpdGhlciB2ZXJzaW9uIDMgb2YgdGhlIExpY2Vuc2UsIG9yXG4gKiAoYXQgeW91ciBvcHRpb24pIGFueSBsYXRlciB2ZXJzaW9uLlxuICpcbiAqIFJlcG9ydCBQb3J0YWwgaXMgZGlzdHJpYnV0ZWQgaW4gdGhlIGhvcGUgdGhhdCBpdCB3aWxsIGJlIHVzZWZ1bCxcbiAqIGJ1dCBXSVRIT1VUIEFOWSBXQVJSQU5UWTsgd2l0aG91dCBldmVuIHRoZSBpbXBsaWVkIHdhcnJhbnR5IG9mXG4gKiBNRVJDSEFOVEFCSUxJVFkgb3IgRklUTkVTUyBGT1IgQSBQQVJUSUNVTEFSIFBVUlBPU0UuICBTZWUgdGhlXG4gKiBHTlUgR2VuZXJhbCBQdWJsaWMgTGljZW5zZSBmb3IgbW9yZSBkZXRhaWxzLlxuICpcbiAqIFlvdSBzaG91bGQgaGF2ZSByZWNlaXZlZCBhIGNvcHkgb2YgdGhlIEdOVSBHZW5lcmFsIFB1YmxpYyBMaWNlbnNlXG4gKiBhbG9uZyB3aXRoIFJlcG9ydCBQb3J0YWwuICBJZiBub3QsIHNlZSA8aHR0cDovL3d3dy5nbnUub3JnL2xpY2Vuc2VzLz4uXG4gKi9cblxuZXhwb3J0IGZ1bmN0aW9uIGdldFN0b3JhZ2VJdGVtKGtleSkge1xuICByZXR1cm4gbG9jYWxTdG9yYWdlLmdldEl0ZW0oa2V5KSA/IEpTT04ucGFyc2UobG9jYWxTdG9yYWdlLmdldEl0ZW0oa2V5KSkgOiBudWxsO1xufVxuZXhwb3J0IGZ1bmN0aW9uIHNldFN0b3JhZ2VJdGVtKGtleSwgdmFsdWUpIHtcbiAgcmV0dXJuIGxvY2FsU3RvcmFnZS5zZXRJdGVtKGtleSwgSlNPTi5zdHJpbmdpZnkodmFsdWUpKTtcbn1cbiJdfQ==
