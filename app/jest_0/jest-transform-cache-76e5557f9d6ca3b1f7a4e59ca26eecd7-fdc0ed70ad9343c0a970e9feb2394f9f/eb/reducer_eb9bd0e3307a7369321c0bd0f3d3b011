@@ -1,0 +1,12 @@
+117f05c5e8704e79405db5d022c38cfa
+'use strict';Object.defineProperty(exports, "__esModule", { value: true });exports.langReducer = undefined;var _constants = require('./constants');
+
+var langReducer = exports.langReducer = function langReducer() {var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : _constants.INITIAL_STATE;var _ref = arguments[1];var type = _ref.type,payload = _ref.payload;
+  switch (type) {
+    case _constants.CHANGE_LANG_ACTION:
+      return payload;
+    default:
+      return state;}
+
+};;var _temp = function () {if (typeof __REACT_HOT_LOADER__ === 'undefined') {return;}__REACT_HOT_LOADER__.register(langReducer, 'langReducer', '/volumeC/workspace/service-ui - RELEASE/src/github.com/reportportal/service-ui/app/src/controllers/lang/reducer.js');}();;
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInJlZHVjZXIuanMiXSwibmFtZXMiOlsibGFuZ1JlZHVjZXIiLCJzdGF0ZSIsIklOSVRJQUxfU1RBVEUiLCJ0eXBlIiwicGF5bG9hZCIsIkNIQU5HRV9MQU5HX0FDVElPTiJdLCJtYXBwaW5ncyI6IjJHQUFBOztBQUVPLElBQU1BLG9DQUFjLFNBQWRBLFdBQWMsR0FBOEMsS0FBN0NDLEtBQTZDLHVFQUFyQ0Msd0JBQXFDLDZCQUFwQkMsSUFBb0IsUUFBcEJBLElBQW9CLENBQWRDLE9BQWMsUUFBZEEsT0FBYztBQUN2RSxVQUFRRCxJQUFSO0FBQ0UsU0FBS0UsNkJBQUw7QUFDRSxhQUFPRCxPQUFQO0FBQ0Y7QUFDRSxhQUFPSCxLQUFQLENBSko7O0FBTUQsQ0FQTSxDLGtIQUFNRCxXIiwiZmlsZSI6InJlZHVjZXIuanMiLCJzb3VyY2VzQ29udGVudCI6WyJpbXBvcnQgeyBDSEFOR0VfTEFOR19BQ1RJT04sIElOSVRJQUxfU1RBVEUgfSBmcm9tICcuL2NvbnN0YW50cyc7XG5cbmV4cG9ydCBjb25zdCBsYW5nUmVkdWNlciA9IChzdGF0ZSA9IElOSVRJQUxfU1RBVEUsIHsgdHlwZSwgcGF5bG9hZCB9KSA9PiB7XG4gIHN3aXRjaCAodHlwZSkge1xuICAgIGNhc2UgQ0hBTkdFX0xBTkdfQUNUSU9OOlxuICAgICAgcmV0dXJuIHBheWxvYWQ7XG4gICAgZGVmYXVsdDpcbiAgICAgIHJldHVybiBzdGF0ZTtcbiAgfVxufTtcbiJdfQ==

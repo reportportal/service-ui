@@ -1,0 +1,94 @@
+567a5180f7d30fdcae84bcf3a955e053
+'use strict';Object.defineProperty(exports, "__esModule", { value: true });exports.Input = undefined;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+var _propTypes = require('prop-types');var _propTypes2 = _interopRequireDefault(_propTypes);
+var _bind = require('classnames/bind');var _bind2 = _interopRequireDefault(_bind);
+var _input = require('./input.scss');var _input2 = _interopRequireDefault(_input);function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}
+
+var cx = _bind2.default.bind(_input2.default); /*
+                                                * Copyright 2017 EPAM Systems
+                                                *
+                                                *
+                                                * This file is part of EPAM Report Portal.
+                                                * https://github.com/reportportal/service-ui
+                                                *
+                                                * Report Portal is free software: you can redistribute it and/or modify
+                                                * it under the terms of the GNU General Public License as published by
+                                                * the Free Software Foundation, either version 3 of the License, or
+                                                * (at your option) any later version.
+                                                *
+                                                * Report Portal is distributed in the hope that it will be useful,
+                                                * but WITHOUT ANY WARRANTY; without even the implied warranty of
+                                                * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+                                                * GNU General Public License for more details.
+                                                *
+                                                * You should have received a copy of the GNU General Public License
+                                                * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
+                                                */var Input = exports.Input = function Input(_ref) {var type = _ref.type,value = _ref.value,readonly = _ref.readonly,error = _ref.error,placeholder = _ref.placeholder,maxLength = _ref.maxLength,disabled = _ref.disabled,refFunction = _ref.refFunction,onChange = _ref.onChange,onFocus = _ref.onFocus,onBlur = _ref.onBlur,onKeyUp = _ref.onKeyUp,onKeyPress = _ref.onKeyPress,touched = _ref.touched;return React.createElement('input', { ref: refFunction,
+    type: type,
+    className: cx('input', { disabled: disabled, error: error, touched: touched }),
+    value: value,
+    placeholder: placeholder,
+    maxLength: maxLength,
+    disabled: disabled,
+    readOnly: readonly,
+    onChange: onChange,
+    onFocus: onFocus,
+    onBlur: onBlur,
+    onKeyUp: onKeyUp,
+    onKeyPress: onKeyPress });};
+
+
+
+Input.propTypes = {
+  type: _propTypes2.default.string,
+  value: _propTypes2.default.string,
+  placeholder: _propTypes2.default.string,
+  maxLength: _propTypes2.default.string,
+  disabled: _propTypes2.default.bool,
+  readonly: _propTypes2.default.bool,
+  error: _propTypes2.default.string,
+  onChange: _propTypes2.default.func,
+  onFocus: _propTypes2.default.func,
+  onBlur: _propTypes2.default.func,
+  onKeyUp: _propTypes2.default.func,
+  onKeyPress: _propTypes2.default.func,
+  refFunction: _propTypes2.default.func,
+  touched: _propTypes2.default.bool };
+
+
+Input.defaultProps = {
+  type: 'text',
+  value: '',
+  placeholder: '',
+  maxLength: '254',
+  disabled: false,
+  readonly: false,
+  error: '',
+  touched: false,
+  onChange: function onChange() {},
+  onFocus: function onFocus() {},
+  onBlur: function onBlur() {},
+  onKeyUp: function onKeyUp() {},
+  onKeyPress: function onKeyPress() {},
+  refFunction: function refFunction() {} };;var _temp = function () {if (typeof __REACT_HOT_LOADER__ === 'undefined') {return;}__REACT_HOT_LOADER__.register(cx, 'cx', '/volumeC/workspace/service-ui - RELEASE/src/github.com/reportportal/service-ui/app/src/components/inputs/input/input.jsx');__REACT_HOT_LOADER__.register(Input, 'Input', '/volumeC/workspace/service-ui - RELEASE/src/github.com/reportportal/service-ui/app/src/components/inputs/input/input.jsx');}();;
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImlucHV0LmpzeCJdLCJuYW1lcyI6WyJjeCIsImNsYXNzTmFtZXMiLCJiaW5kIiwic3R5bGVzIiwiSW5wdXQiLCJ0eXBlIiwidmFsdWUiLCJyZWFkb25seSIsImVycm9yIiwicGxhY2Vob2xkZXIiLCJtYXhMZW5ndGgiLCJkaXNhYmxlZCIsInJlZkZ1bmN0aW9uIiwib25DaGFuZ2UiLCJvbkZvY3VzIiwib25CbHVyIiwib25LZXlVcCIsIm9uS2V5UHJlc3MiLCJ0b3VjaGVkIiwicHJvcFR5cGVzIiwiUHJvcFR5cGVzIiwic3RyaW5nIiwiYm9vbCIsImZ1bmMiLCJkZWZhdWx0UHJvcHMiXSwibWFwcGluZ3MiOiI7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7OztBQXFCQSx1QztBQUNBLHVDO0FBQ0EscUM7O0FBRUEsSUFBTUEsS0FBS0MsZUFBV0MsSUFBWCxDQUFnQkMsZUFBaEIsQ0FBWCxDLENBekJBOzs7Ozs7Ozs7Ozs7Ozs7Ozs7O2tEQTJCTyxJQUFNQyx3QkFBUSxTQUFSQSxLQUFRLFlBQ25CQyxJQURtQixRQUNuQkEsSUFEbUIsQ0FFbkJDLEtBRm1CLFFBRW5CQSxLQUZtQixDQUduQkMsUUFIbUIsUUFHbkJBLFFBSG1CLENBSW5CQyxLQUptQixRQUluQkEsS0FKbUIsQ0FLbkJDLFdBTG1CLFFBS25CQSxXQUxtQixDQU1uQkMsU0FObUIsUUFNbkJBLFNBTm1CLENBT25CQyxRQVBtQixRQU9uQkEsUUFQbUIsQ0FRbkJDLFdBUm1CLFFBUW5CQSxXQVJtQixDQVNuQkMsUUFUbUIsUUFTbkJBLFFBVG1CLENBVW5CQyxPQVZtQixRQVVuQkEsT0FWbUIsQ0FXbkJDLE1BWG1CLFFBV25CQSxNQVhtQixDQVluQkMsT0FabUIsUUFZbkJBLE9BWm1CLENBYW5CQyxVQWJtQixRQWFuQkEsVUFibUIsQ0FjbkJDLE9BZG1CLFFBY25CQSxPQWRtQixRQWdCbkIsK0JBQ0UsS0FBS04sV0FEUDtBQUVFLFVBQU1QLElBRlI7QUFHRSxlQUFXTCxHQUFHLE9BQUgsRUFBWSxFQUFFVyxrQkFBRixFQUFZSCxZQUFaLEVBQW1CVSxnQkFBbkIsRUFBWixDQUhiO0FBSUUsV0FBT1osS0FKVDtBQUtFLGlCQUFhRyxXQUxmO0FBTUUsZUFBV0MsU0FOYjtBQU9FLGNBQVVDLFFBUFo7QUFRRSxjQUFVSixRQVJaO0FBU0UsY0FBVU0sUUFUWjtBQVVFLGFBQVNDLE9BVlg7QUFXRSxZQUFRQyxNQVhWO0FBWUUsYUFBU0MsT0FaWDtBQWFFLGdCQUFZQyxVQWJkLEdBaEJtQixFQUFkOzs7O0FBaUNQYixNQUFNZSxTQUFOLEdBQWtCO0FBQ2hCZCxRQUFNZSxvQkFBVUMsTUFEQTtBQUVoQmYsU0FBT2Msb0JBQVVDLE1BRkQ7QUFHaEJaLGVBQWFXLG9CQUFVQyxNQUhQO0FBSWhCWCxhQUFXVSxvQkFBVUMsTUFKTDtBQUtoQlYsWUFBVVMsb0JBQVVFLElBTEo7QUFNaEJmLFlBQVVhLG9CQUFVRSxJQU5KO0FBT2hCZCxTQUFPWSxvQkFBVUMsTUFQRDtBQVFoQlIsWUFBVU8sb0JBQVVHLElBUko7QUFTaEJULFdBQVNNLG9CQUFVRyxJQVRIO0FBVWhCUixVQUFRSyxvQkFBVUcsSUFWRjtBQVdoQlAsV0FBU0ksb0JBQVVHLElBWEg7QUFZaEJOLGNBQVlHLG9CQUFVRyxJQVpOO0FBYWhCWCxlQUFhUSxvQkFBVUcsSUFiUDtBQWNoQkwsV0FBU0Usb0JBQVVFLElBZEgsRUFBbEI7OztBQWlCQWxCLE1BQU1vQixZQUFOLEdBQXFCO0FBQ25CbkIsUUFBTSxNQURhO0FBRW5CQyxTQUFPLEVBRlk7QUFHbkJHLGVBQWEsRUFITTtBQUluQkMsYUFBVyxLQUpRO0FBS25CQyxZQUFVLEtBTFM7QUFNbkJKLFlBQVUsS0FOUztBQU9uQkMsU0FBTyxFQVBZO0FBUW5CVSxXQUFTLEtBUlU7QUFTbkJMLFlBQVUsb0JBQU0sQ0FBRSxDQVRDO0FBVW5CQyxXQUFTLG1CQUFNLENBQUUsQ0FWRTtBQVduQkMsVUFBUSxrQkFBTSxDQUFFLENBWEc7QUFZbkJDLFdBQVMsbUJBQU0sQ0FBRSxDQVpFO0FBYW5CQyxjQUFZLHNCQUFNLENBQUUsQ0FiRDtBQWNuQkwsZUFBYSx1QkFBTSxDQUFFLENBZEYsRUFBckIsQyxrSEFwRE1aLEUsa0tBRU9JLEsiLCJmaWxlIjoiaW5wdXQuanN4Iiwic291cmNlc0NvbnRlbnQiOlsiLypcbiAqIENvcHlyaWdodCAyMDE3IEVQQU0gU3lzdGVtc1xuICpcbiAqXG4gKiBUaGlzIGZpbGUgaXMgcGFydCBvZiBFUEFNIFJlcG9ydCBQb3J0YWwuXG4gKiBodHRwczovL2dpdGh1Yi5jb20vcmVwb3J0cG9ydGFsL3NlcnZpY2UtdWlcbiAqXG4gKiBSZXBvcnQgUG9ydGFsIGlzIGZyZWUgc29mdHdhcmU6IHlvdSBjYW4gcmVkaXN0cmlidXRlIGl0IGFuZC9vciBtb2RpZnlcbiAqIGl0IHVuZGVyIHRoZSB0ZXJtcyBvZiB0aGUgR05VIEdlbmVyYWwgUHVibGljIExpY2Vuc2UgYXMgcHVibGlzaGVkIGJ5XG4gKiB0aGUgRnJlZSBTb2Z0d2FyZSBGb3VuZGF0aW9uLCBlaXRoZXIgdmVyc2lvbiAzIG9mIHRoZSBMaWNlbnNlLCBvclxuICogKGF0IHlvdXIgb3B0aW9uKSBhbnkgbGF0ZXIgdmVyc2lvbi5cbiAqXG4gKiBSZXBvcnQgUG9ydGFsIGlzIGRpc3RyaWJ1dGVkIGluIHRoZSBob3BlIHRoYXQgaXQgd2lsbCBiZSB1c2VmdWwsXG4gKiBidXQgV0lUSE9VVCBBTlkgV0FSUkFOVFk7IHdpdGhvdXQgZXZlbiB0aGUgaW1wbGllZCB3YXJyYW50eSBvZlxuICogTUVSQ0hBTlRBQklMSVRZIG9yIEZJVE5FU1MgRk9SIEEgUEFSVElDVUxBUiBQVVJQT1NFLiAgU2VlIHRoZVxuICogR05VIEdlbmVyYWwgUHVibGljIExpY2Vuc2UgZm9yIG1vcmUgZGV0YWlscy5cbiAqXG4gKiBZb3Ugc2hvdWxkIGhhdmUgcmVjZWl2ZWQgYSBjb3B5IG9mIHRoZSBHTlUgR2VuZXJhbCBQdWJsaWMgTGljZW5zZVxuICogYWxvbmcgd2l0aCBSZXBvcnQgUG9ydGFsLiAgSWYgbm90LCBzZWUgPGh0dHA6Ly93d3cuZ251Lm9yZy9saWNlbnNlcy8+LlxuICovXG5cbmltcG9ydCBQcm9wVHlwZXMgZnJvbSAncHJvcC10eXBlcyc7XG5pbXBvcnQgY2xhc3NOYW1lcyBmcm9tICdjbGFzc25hbWVzL2JpbmQnO1xuaW1wb3J0IHN0eWxlcyBmcm9tICcuL2lucHV0LnNjc3MnO1xuXG5jb25zdCBjeCA9IGNsYXNzTmFtZXMuYmluZChzdHlsZXMpO1xuXG5leHBvcnQgY29uc3QgSW5wdXQgPSAoe1xuICB0eXBlLFxuICB2YWx1ZSxcbiAgcmVhZG9ubHksXG4gIGVycm9yLFxuICBwbGFjZWhvbGRlcixcbiAgbWF4TGVuZ3RoLFxuICBkaXNhYmxlZCxcbiAgcmVmRnVuY3Rpb24sXG4gIG9uQ2hhbmdlLFxuICBvbkZvY3VzLFxuICBvbkJsdXIsXG4gIG9uS2V5VXAsXG4gIG9uS2V5UHJlc3MsXG4gIHRvdWNoZWQsXG59KSA9PiAoXG4gIDxpbnB1dFxuICAgIHJlZj17cmVmRnVuY3Rpb259XG4gICAgdHlwZT17dHlwZX1cbiAgICBjbGFzc05hbWU9e2N4KCdpbnB1dCcsIHsgZGlzYWJsZWQsIGVycm9yLCB0b3VjaGVkIH0pfVxuICAgIHZhbHVlPXt2YWx1ZX1cbiAgICBwbGFjZWhvbGRlcj17cGxhY2Vob2xkZXJ9XG4gICAgbWF4TGVuZ3RoPXttYXhMZW5ndGh9XG4gICAgZGlzYWJsZWQ9e2Rpc2FibGVkfVxuICAgIHJlYWRPbmx5PXtyZWFkb25seX1cbiAgICBvbkNoYW5nZT17b25DaGFuZ2V9XG4gICAgb25Gb2N1cz17b25Gb2N1c31cbiAgICBvbkJsdXI9e29uQmx1cn1cbiAgICBvbktleVVwPXtvbktleVVwfVxuICAgIG9uS2V5UHJlc3M9e29uS2V5UHJlc3N9XG4gIC8+XG4pO1xuXG5JbnB1dC5wcm9wVHlwZXMgPSB7XG4gIHR5cGU6IFByb3BUeXBlcy5zdHJpbmcsXG4gIHZhbHVlOiBQcm9wVHlwZXMuc3RyaW5nLFxuICBwbGFjZWhvbGRlcjogUHJvcFR5cGVzLnN0cmluZyxcbiAgbWF4TGVuZ3RoOiBQcm9wVHlwZXMuc3RyaW5nLFxuICBkaXNhYmxlZDogUHJvcFR5cGVzLmJvb2wsXG4gIHJlYWRvbmx5OiBQcm9wVHlwZXMuYm9vbCxcbiAgZXJyb3I6IFByb3BUeXBlcy5zdHJpbmcsXG4gIG9uQ2hhbmdlOiBQcm9wVHlwZXMuZnVuYyxcbiAgb25Gb2N1czogUHJvcFR5cGVzLmZ1bmMsXG4gIG9uQmx1cjogUHJvcFR5cGVzLmZ1bmMsXG4gIG9uS2V5VXA6IFByb3BUeXBlcy5mdW5jLFxuICBvbktleVByZXNzOiBQcm9wVHlwZXMuZnVuYyxcbiAgcmVmRnVuY3Rpb246IFByb3BUeXBlcy5mdW5jLFxuICB0b3VjaGVkOiBQcm9wVHlwZXMuYm9vbCxcbn07XG5cbklucHV0LmRlZmF1bHRQcm9wcyA9IHtcbiAgdHlwZTogJ3RleHQnLFxuICB2YWx1ZTogJycsXG4gIHBsYWNlaG9sZGVyOiAnJyxcbiAgbWF4TGVuZ3RoOiAnMjU0JyxcbiAgZGlzYWJsZWQ6IGZhbHNlLFxuICByZWFkb25seTogZmFsc2UsXG4gIGVycm9yOiAnJyxcbiAgdG91Y2hlZDogZmFsc2UsXG4gIG9uQ2hhbmdlOiAoKSA9PiB7fSxcbiAgb25Gb2N1czogKCkgPT4ge30sXG4gIG9uQmx1cjogKCkgPT4ge30sXG4gIG9uS2V5VXA6ICgpID0+IHt9LFxuICBvbktleVByZXNzOiAoKSA9PiB7fSxcbiAgcmVmRnVuY3Rpb246ICgpID0+IHt9LFxufTtcbiJdfQ==

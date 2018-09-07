@@ -1,0 +1,20 @@
+21ee6466ad06ac2c66c3b7c8ef53fa7e
+'use strict';var _enzyme = require('enzyme');
+var _input = require('./input');
+
+it('should respond to the change event', function () {
+  var value = '2';
+  var formPath = 'test path';
+  var fieldName = 'field name';
+  var onChange = jest.fn();
+  var wrapper = (0, _enzyme.shallow)(
+  React.createElement(_input.Input, { formPath: formPath, fieldName: fieldName, onChange: onChange }));
+
+
+  wrapper.find('input').simulate('change', {
+    target: { value: value } });
+
+
+  expect(onChange).toBeCalledWith({ target: { value: value } });
+});;var _temp = function () {if (typeof __REACT_HOT_LOADER__ === 'undefined') {return;}}();;
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImlucHV0LnRlc3QuanN4Il0sIm5hbWVzIjpbIml0IiwidmFsdWUiLCJmb3JtUGF0aCIsImZpZWxkTmFtZSIsIm9uQ2hhbmdlIiwiamVzdCIsImZuIiwid3JhcHBlciIsImZpbmQiLCJzaW11bGF0ZSIsInRhcmdldCIsImV4cGVjdCIsInRvQmVDYWxsZWRXaXRoIl0sIm1hcHBpbmdzIjoiYUFBQTtBQUNBOztBQUVBQSxHQUFHLG9DQUFILEVBQXlDLFlBQU07QUFDN0MsTUFBTUMsUUFBUSxHQUFkO0FBQ0EsTUFBTUMsV0FBVyxXQUFqQjtBQUNBLE1BQU1DLFlBQVksWUFBbEI7QUFDQSxNQUFNQyxXQUFXQyxLQUFLQyxFQUFMLEVBQWpCO0FBQ0EsTUFBTUMsVUFBVTtBQUNkLHNCQUFDLFlBQUQsSUFBTyxVQUFVTCxRQUFqQixFQUEyQixXQUFXQyxTQUF0QyxFQUFpRCxVQUFVQyxRQUEzRCxHQURjLENBQWhCOzs7QUFJQUcsVUFBUUMsSUFBUixDQUFhLE9BQWIsRUFBc0JDLFFBQXRCLENBQStCLFFBQS9CLEVBQXlDO0FBQ3ZDQyxZQUFRLEVBQUVULFlBQUYsRUFEK0IsRUFBekM7OztBQUlBVSxTQUFPUCxRQUFQLEVBQWlCUSxjQUFqQixDQUFnQyxFQUFFRixRQUFRLEVBQUVULFlBQUYsRUFBVixFQUFoQztBQUNELENBZEQsRSIsImZpbGUiOiJpbnB1dC50ZXN0LmpzeCIsInNvdXJjZXNDb250ZW50IjpbImltcG9ydCB7IHNoYWxsb3cgfSBmcm9tICdlbnp5bWUnO1xuaW1wb3J0IHsgSW5wdXQgfSBmcm9tICcuL2lucHV0JztcblxuaXQoJ3Nob3VsZCByZXNwb25kIHRvIHRoZSBjaGFuZ2UgZXZlbnQnLCAoKSA9PiB7XG4gIGNvbnN0IHZhbHVlID0gJzInO1xuICBjb25zdCBmb3JtUGF0aCA9ICd0ZXN0IHBhdGgnO1xuICBjb25zdCBmaWVsZE5hbWUgPSAnZmllbGQgbmFtZSc7XG4gIGNvbnN0IG9uQ2hhbmdlID0gamVzdC5mbigpO1xuICBjb25zdCB3cmFwcGVyID0gc2hhbGxvdyhcbiAgICA8SW5wdXQgZm9ybVBhdGg9e2Zvcm1QYXRofSBmaWVsZE5hbWU9e2ZpZWxkTmFtZX0gb25DaGFuZ2U9e29uQ2hhbmdlfSAvPixcbiAgKTtcblxuICB3cmFwcGVyLmZpbmQoJ2lucHV0Jykuc2ltdWxhdGUoJ2NoYW5nZScsIHtcbiAgICB0YXJnZXQ6IHsgdmFsdWUgfSxcbiAgfSk7XG5cbiAgZXhwZWN0KG9uQ2hhbmdlKS50b0JlQ2FsbGVkV2l0aCh7IHRhcmdldDogeyB2YWx1ZSB9IH0pO1xufSk7XG4iXX0=
