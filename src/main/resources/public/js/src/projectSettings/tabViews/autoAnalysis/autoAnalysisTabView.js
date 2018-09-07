@@ -44,12 +44,14 @@ define(function (require) {
         tpl: 'tpl-project-settings-auto-analysis',
 
         events: {
+            'click [data-js-is-auto-analyze]': 'switchAutoAnalysis',
             'click [data-js-submit-settings]': 'submitSettings',
             'change input[type="radio"]': 'onChangeAABase',
             'change [data-js-mode-param]': 'isMatchPreset',
             'click [data-js-remove-index]': 'onRemoveIndex',
             'click [data-js-generate-index]': 'onGenerateIndex',
-            'keypress [data-js-mode-param]': 'allowNumber'
+            'keypress [data-js-mode-param]': 'allowNumber',
+            'click [data-js-switch-item]': 'onChangeMode'
         },
         bindings: {
             '[data-js-is-auto-analyze]': 'checked: isAutoAnalyzerEnabled',
@@ -65,7 +67,7 @@ define(function (require) {
             inProgressText: {
                 deps: ['indexing_running'],
                 get: function (indexing_running) {
-                    return indexing_running? Localization.project.indexInProgress :
+                    return indexing_running ? Localization.project.indexInProgress :
                         Localization.project.generateIndex;
                 }
             },
@@ -82,18 +84,24 @@ define(function (require) {
                 }
             }
         },
+        onChangeMode: function () {
+            config.trackingDispatcher.trackEventNumber(583);
+        },
         initialize: function () {
             this.userModel = new UserModel();
             this.model = new AutoAnalysisSettingsModel(appModel.get('configuration').analyzerConfiguration);
             this.registryModel = new SingletonRegistryInfoModel();
             this.render();
         },
+        switchAutoAnalysis: function () {
+            config.trackingDispatcher.trackEventNumber(581);
+        },
         render: function () {
             this.$el.html(Util.templates(this.tpl, { access: config.userModel.hasPermissions() }));
             this.logStrNumberSelector = new DropDownComponent({
                 data: config.logStrNumberAutoAnalyze,
                 multiple: false,
-                defaultValue: this.model.get('numberOfLogLines') || config.autoAnalysisAccuracy.MODERATE.numberOfLogLines
+                defaultValue: this.model.get('numberOfLogLines') || config.autoAnalysisAccuracy.CLASSIC.numberOfLogLines
             });
             $('[data-js-numder-str-input]', this.$el).html(this.logStrNumberSelector.$el);
             this.listenTo(this.logStrNumberSelector, 'change', function (val) {
@@ -102,7 +110,7 @@ define(function (require) {
             });
             this.modeSwitcher = new SettingSwitcherView({ options: {
                 isShortForm: false,
-                items: [{ name: Localization.project.strictMode, value: 'STRICT' },
+                items: [{ name: Localization.project.classicMode, value: 'CLASSIC' },
                     { name: Localization.project.moderateMode, value: 'MODERATE' },
                     { name: Localization.project.lightMode, value: 'LIGHT' }],
                 value: -1
@@ -188,6 +196,7 @@ define(function (require) {
         },
         onRemoveIndex: function () {
             var modal;
+            config.trackingDispatcher.trackEventNumber(585);
             modal = new ModalConfirm({
                 headerText: Localization.project.removeIndex,
                 bodyText: Localization.project.removeIndexConfirm,
@@ -208,6 +217,7 @@ define(function (require) {
         onGenerateIndex: function () {
             var modal;
             var self = this;
+            config.trackingDispatcher.trackEventNumber(586);
             modal = new ModalConfirm({
                 headerText: Localization.project.generateIndex,
                 bodyText: Localization.project.generateIndexConfirm,
@@ -230,6 +240,7 @@ define(function (require) {
             modal.show();
         },
         onChangeAABase: function (e) {
+            config.trackingDispatcher.trackEventNumber(582);
             this.model.set('analyzer_mode', e.target.value);
         },
         setAccuracySettings: function (mode) {
@@ -254,7 +265,7 @@ define(function (require) {
             var generalSettings;
             if (!this.validate()) return;
             generalSettings = this.model.getAutoAnalysisSettings();
-            config.trackingDispatcher.trackEventNumber(385);
+            config.trackingDispatcher.trackEventNumber(584);
             Service.updateProject(generalSettings)
                 .done(function () {
                     var newConfig = appModel.get('configuration');

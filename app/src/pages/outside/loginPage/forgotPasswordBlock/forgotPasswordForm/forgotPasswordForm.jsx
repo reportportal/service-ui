@@ -21,9 +21,13 @@
 
 import { PureComponent } from 'react';
 import classNames from 'classnames/bind';
+import { connect } from 'react-redux';
 import { reduxForm } from 'redux-form';
+import { redirect } from 'redux-first-router';
 import { FormattedMessage, injectIntl, intlShape, defineMessages } from 'react-intl';
-import { Link, withRouter } from 'react-router-dom';
+import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLock';
+import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
+import Link from 'redux-first-router-link';
 import PropTypes from 'prop-types';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
@@ -31,6 +35,7 @@ import { InputOutside } from 'components/inputs/inputOutside';
 import { BigButton } from 'components/buttons/bigButton';
 import { validate, fetch } from 'common/utils';
 import { URLS } from 'common/urls';
+import { LOGIN_PAGE } from 'controllers/pages';
 import EmailIcon from './img/email-icon-inline.svg';
 import styles from './forgotPasswordForm.scss';
 
@@ -42,8 +47,26 @@ const placeholders = defineMessages({
     defaultMessage: 'Enter email',
   },
 });
+const notifications = defineMessages({
+  successSendEmail: {
+    id: 'ForgotPasswordForm.successSendEmail',
+    defaultMessage: 'Password recovery instructions have been sent to email { email }',
+  },
+  errorSendEmail: {
+    id: 'ForgotPasswordForm.errorSendEmail',
+    defaultMessage: 'User with entered email address is not found',
+  },
+});
 
-@withRouter
+@connect(
+  null,
+  {
+    showScreenLockAction,
+    hideScreenLockAction,
+    showNotification,
+    redirect,
+  },
+)
 @reduxForm({
   form: 'forgotPassword',
   validate: ({ email }) => ({
@@ -54,28 +77,41 @@ const placeholders = defineMessages({
 export class ForgotPasswordForm extends PureComponent {
   static propTypes = {
     intl: intlShape.isRequired,
+    showScreenLockAction: PropTypes.func.isRequired,
+    hideScreenLockAction: PropTypes.func.isRequired,
+    showNotification: PropTypes.func.isRequired,
     handleSubmit: PropTypes.func.isRequired,
-    history: PropTypes.object.isRequired,
+    redirect: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
     intl: {},
   };
-  state = {
-    loading: false,
-  };
 
   submitForm = ({ email }) => {
-    this.setState({ loading: true });
+    this.props.showScreenLockAction();
     fetch(URLS.userPasswordRestore(), {
       method: 'post',
       data: {
         email,
       },
-    }).then(() => {
-      this.setState({ loading: false });
-      this.props.history.push('/login');
-    });
+    })
+      .then(() => {
+        this.props.showNotification({
+          type: NOTIFICATION_TYPES.SUCCESS,
+          message: this.props.intl.formatMessage(notifications.successSendEmail, { email }),
+        });
+        this.props.redirect({ type: LOGIN_PAGE });
+      })
+      .catch(() => {
+        this.props.showNotification({
+          type: NOTIFICATION_TYPES.ERROR,
+          message: this.props.intl.formatMessage(notifications.errorSendEmail),
+        });
+      })
+      .then(() => {
+        this.props.hideScreenLockAction();
+      });
   };
 
   render() {
@@ -92,14 +128,14 @@ export class ForgotPasswordForm extends PureComponent {
         </div>
         <div className={cx('forgot-password-buttons-container')}>
           <div className={cx('forgot-password-button')}>
-            <Link to="/login" className={cx('button-link')}>
+            <Link to={{ type: LOGIN_PAGE }} className={cx('button-link')}>
               <BigButton type={'button'} roundedCorners color={'gray-60'}>
                 <FormattedMessage id={'ForgotPasswordForm.cancel'} defaultMessage={'Cancel'} />
               </BigButton>
             </Link>
           </div>
           <div className={cx('forgot-password-button')}>
-            <BigButton type={'submit'} roundedCorners color={'organish'}  disabled={this.state.loading}>
+            <BigButton type={'submit'} roundedCorners color={'organish'}>
               <FormattedMessage id={'ForgotPasswordForm.sendEmail'} defaultMessage={'Send email'} />
             </BigButton>
           </div>

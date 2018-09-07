@@ -26,25 +26,22 @@ import { FieldBottomConstraints } from './fieldBottomConstraints';
 import README from './README.md';
 
 storiesOf('Components/Fields/fieldBottomConstraints', module)
-  .addDecorator(host({
-    title: 'Field with bottom text',
-    align: 'center middle',
-    backdrop: 'rgba(70, 69, 71, 0.1)',
-    background: '#ffffff',
-    height: 42,
-    width: 382,
-  }))
+  .addDecorator(
+    host({
+      title: 'Field with bottom text',
+      align: 'center middle',
+      backdrop: 'rgba(70, 69, 71, 0.1)',
+      background: '#ffffff',
+      height: 42,
+      width: 382,
+    }),
+  )
   .addDecorator(withReadme(README))
-  .add('default state', () => (
-    <FieldBottomConstraints />
-  ))
-  .add('with text', () => (
-    <FieldBottomConstraints text="Some constraints text" />
-  ))
+  .add('default state', () => <FieldBottomConstraints />)
+  .add('with text', () => <FieldBottomConstraints text="Some constraints text" />)
   .add('with long text', () => (
     <FieldBottomConstraints text="Some long constraints text. Some long constraints text. Some long constraints text." />
   ))
   .add('with very long text', () => (
     <FieldBottomConstraints text="Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium animi autem consequatur culpa deleniti, dolor eos eveniet expedita itaque minima placeat quam quas quos recusandae similique totam vel veniam veritatis." />
-  ))
-;
+  ));

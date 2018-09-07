@@ -1,18 +1,32 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
-import { withFilter } from 'controllers/filter';
-import { userIdSelector, activeProjectSelector, activeProjectRoleSelector } from 'controllers/user';
+import {
+  withFilter,
+  filtersPaginationSelector,
+  fetchFiltersAction,
+  filtersSelector,
+  loadingSelector,
+  DEFAULT_PAGE_SIZE,
+} from 'controllers/filter';
+import {
+  userIdSelector,
+  activeProjectSelector,
+  activeProjectRoleSelector,
+  userAccountRoleSelector,
+} from 'controllers/user';
 import { withPagination } from 'controllers/pagination';
-import { PageLayout } from 'layouts/pageLayout';
+import { PaginationToolbar } from 'components/main/paginationToolbar';
+import { PageLayout, PageHeader, PageSection } from 'layouts/pageLayout';
 import { showModalAction } from 'controllers/modal';
 import { withSorting, SORTING_ASC } from 'controllers/sorting';
 import { userFiltersSelector, toggleDisplayFilterOnLaunchesAction } from 'controllers/project';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
-import { FilterTable } from './filterTable';
+import { NoFiltersBlock } from './noFiltersBlock';
 import { FilterPageToolbar } from './filterPageToolbar';
+import { FilterGrid } from './filterGrid';
 
 const messages = defineMessages({
   filtersPageTitle: {
@@ -28,10 +42,14 @@ const messages = defineMessages({
     activeProject: activeProjectSelector(state),
     userFilters: userFiltersSelector(state),
     projectRole: activeProjectRoleSelector(state),
+    accountRole: userAccountRoleSelector(state),
+    filters: filtersSelector(state),
+    loading: loadingSelector(state),
   }),
   {
     showModalAction,
     toggleDisplayFilterOnLaunches: toggleDisplayFilterOnLaunchesAction,
+    fetchFiltersAction,
   },
 )
 @withSorting({
@@ -39,12 +57,14 @@ const messages = defineMessages({
   defaultSortingDirection: SORTING_ASC,
 })
 @withFilter
-@withPagination()
+@withPagination({
+  paginationSelector: filtersPaginationSelector,
+})
 @injectIntl
-export class FiltersPage extends PureComponent {
+export class FiltersPage extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
-    data: PropTypes.arrayOf(PropTypes.object),
+    filters: PropTypes.arrayOf(PropTypes.object),
     activePage: PropTypes.number,
     itemCount: PropTypes.number,
     pageCount: PropTypes.number,
@@ -55,27 +75,35 @@ export class FiltersPage extends PureComponent {
     filter: PropTypes.string,
     activeProject: PropTypes.string,
     onFilterChange: PropTypes.func,
-    fetchData: PropTypes.func,
+    fetchFiltersAction: PropTypes.func,
     showModalAction: PropTypes.func,
     projectRole: PropTypes.string,
+    userFilters: PropTypes.arrayOf(PropTypes.string),
+    accountRole: PropTypes.string,
+    loading: PropTypes.bool,
   };
 
   static defaultProps = {
-    data: [],
+    filters: [],
     activePage: 1,
     itemCount: 0,
     pageCount: 0,
-    pageSize: 20,
+    pageSize: DEFAULT_PAGE_SIZE,
     userId: '',
     filter: '',
     activeProject: '',
     onFilterChange: () => {},
     onChangePage: () => {},
     onChangePageSize: () => {},
-    fetchData: () => {},
+    fetchFiltersAction: () => {},
     showModalAction: () => {},
     projectRole: '',
+    userFilters: [],
+    accountRole: '',
+    loading: false,
   };
+
+  getBreadcrumbs = () => [{ title: this.props.intl.formatMessage(messages.filtersPageTitle) }];
 
   confirmDelete = (filter) =>
     this.props.showModalAction({
@@ -93,20 +121,54 @@ export class FiltersPage extends PureComponent {
     fetch(URLS.filter(this.props.activeProject, filter.id), {
       method: 'put',
       data: filter,
-    }).then(this.props.fetchData);
+    }).then(this.props.fetchFiltersAction);
 
   deleteFilter = (id) => {
     fetch(URLS.filter(this.props.activeProject, id), {
       method: 'delete',
-    }).then(this.props.fetchData);
+    }).then(this.props.fetchFiltersAction);
   };
 
   render() {
-    const { filter, intl, onFilterChange, ...rest } = this.props;
+    const {
+      filter,
+      intl,
+      onFilterChange,
+      activePage,
+      itemCount,
+      pageCount,
+      pageSize,
+      onChangePage,
+      onChangePageSize,
+      filters,
+      loading,
+      ...rest
+    } = this.props;
     return (
       <PageLayout title={intl.formatMessage(messages.filtersPageTitle)}>
-        <FilterPageToolbar filter={filter} filters={rest.data} onFilterChange={onFilterChange} />
-        <FilterTable onDelete={this.confirmDelete} onEdit={this.openEditModal} {...rest} />
+        <PageHeader breadcrumbs={this.getBreadcrumbs()} />
+        <PageSection>
+          <FilterPageToolbar filter={filter} filters={filters} onFilterChange={onFilterChange} />
+          <FilterGrid
+            onEdit={this.openEditModal}
+            onDelete={this.confirmDelete}
+            filters={filters}
+            loading={loading}
+            {...rest}
+          />
+          {!filters.length && !loading && <NoFiltersBlock />}
+          {filters &&
+            !!filters.length && (
+              <PaginationToolbar
+                activePage={activePage}
+                itemCount={itemCount}
+                pageCount={pageCount}
+                pageSize={pageSize}
+                onChangePage={onChangePage}
+                onChangePageSize={onChangePageSize}
+              />
+            )}
+        </PageSection>
       </PageLayout>
     );
   }

@@ -1,0 +1,1 @@
+export { DeleteWidgetModal } from './deleteWidgetModal';

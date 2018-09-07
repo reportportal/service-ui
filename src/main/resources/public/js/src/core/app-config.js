@@ -161,7 +161,7 @@ define(function (require) {
             },
 
             patterns: {
-                email: /^[a-z0-9._-]+@[a-z0-9_-]+?\.[a-z0-9]{2,}$/i,
+                email: /^[a-z0-9._%+-]+@([a-z0-9_-]+\.)+[a-z0-9]{2,}$/i,
                 emailInternal: '^((?!(@epam.com)).)*$',
                 emailWrong: /wrong email/i,
                 login: /^[0-9a-zA-Z-_.]{1,128}$/,
@@ -191,23 +191,23 @@ define(function (require) {
                 { name: Localization.ui.all, value: '-1' }
             ],
             autoAnalysisAccuracy: {
-                STRICT: {
-                    minDocFreq: '5',
+                CLASSIC: {
                     minShouldMatch: '95',
-                    minTermFreq: '7',
-                    numberOfLogLines: '2'
+                    minDocFreq: '1',
+                    minTermFreq: '1',
+                    numberOfLogLines: '-1'
                 },
                 MODERATE: {
-                    minDocFreq: '7',
                     minShouldMatch: '80',
+                    minDocFreq: '1',
                     minTermFreq: '1',
-                    numberOfLogLines: '2'
+                    numberOfLogLines: '5'
                 },
                 LIGHT: {
-                    minDocFreq: '7',
                     minShouldMatch: '60',
+                    minDocFreq: '1',
                     minTermFreq: '1',
-                    numberOfLogLines: '2'
+                    numberOfLogLines: '3'
                 }
             },
 

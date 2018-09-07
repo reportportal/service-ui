@@ -1,1 +1,0 @@
-export { FilterTableHeader } from './filterTableHeader';

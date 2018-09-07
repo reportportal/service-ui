@@ -23,7 +23,7 @@ const messages = defineMessages({
     defaultMessage: 'Name',
   },
   dashboardDescriptionPlaceholder: {
-    id: 'DashboardModal.dashboardDescriptionPlaceholder',
+    id: 'DashboardForm.dashboardDescriptionPlaceholder',
     defaultMessage: 'Enter Dashboard Description',
   },
   dashboardDescriptionLabel: {
@@ -33,6 +33,26 @@ const messages = defineMessages({
   dashboardShareLabel: {
     id: 'DashboardForm.dashboardShareLabel',
     defaultMessage: 'Share',
+  },
+  editModalTitle: {
+    id: 'DashboardForm.editModalTitle',
+    defaultMessage: 'Edit Dashboard',
+  },
+  editModalSubmitButtonText: {
+    id: 'DashboardForm.editModalSubmitButtonText',
+    defaultMessage: 'Update',
+  },
+  addModalTitle: {
+    id: 'DashboardForm.addModalTitle',
+    defaultMessage: 'Add New Dashboard',
+  },
+  addModalSubmitButtonText: {
+    id: 'DashboardForm.addModalSubmitButtonText',
+    defaultMessage: 'Add',
+  },
+  modalCancelButtonText: {
+    id: 'DashboardForm.modalCancelButtonText',
+    defaultMessage: 'Cancel',
   },
 });
 @withModal('dashboardAddEditModal')
@@ -67,8 +87,14 @@ export class AddEditModal extends Component {
   };
 
   render() {
-    const { submitText, title, cancelText } = this.props.data;
-    const { intl, handleSubmit } = this.props;
+    const {
+      intl,
+      handleSubmit,
+      data: { type },
+    } = this.props;
+    const submitText = intl.formatMessage(messages[`${type}ModalSubmitButtonText`]);
+    const title = intl.formatMessage(messages[`${type}ModalTitle`]);
+    const cancelText = intl.formatMessage(messages.modalCancelButtonText);
     const labelWidth = 70;
 
     return (

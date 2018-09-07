@@ -66,7 +66,6 @@ export class EmptyDashboards extends Component {
             </p>
             <div className={cx('empty-dashboard-content')}>
               <GhostButton icon={AddDashboardIcon} onClick={action}>
-                {' '}
                 {intl.formatMessage(messages.currentUserDashboardsActionText)}
               </GhostButton>
             </div>

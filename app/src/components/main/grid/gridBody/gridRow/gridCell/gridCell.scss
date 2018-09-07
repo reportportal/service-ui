@@ -1,9 +1,10 @@
 .grid-cell {
+  padding: 15px 10px;
   display: table-cell;
+  box-sizing: border-box;
+  vertical-align: top;
   color: $COLOR--charcoal-grey;
   font-family: $FONT-REGULAR;
-  box-sizing: border-box;
-  padding: 15px 10px;
 
   &:first-child {
     padding-left: 15px;
@@ -13,14 +14,16 @@
     padding-right: 15px;
   }
 
-  &.align-left {
-    text-align: left;
-  }
-  &.align-center {
-    text-align: center;
-  }
-  &.align-right {
-    text-align: right;
+  @media (min-width: $SCREEN_SM_MAX) {
+    &.align-left {
+      text-align: left;
+    }
+    &.align-center {
+      text-align: center;
+    }
+    &.align-right {
+      text-align: right;
+    }
   }
 }
 

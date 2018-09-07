@@ -64,7 +64,7 @@ define(function (require) {
                 this.collectionItems.loadLogLevelById()
                     .done(function () {
                         var model = self.collectionItems.models[0];
-                        var partPath = [model.get('launchId')].concat(_.keys(model.get('path_names')));
+                        var partPath = ['all', model.get('launchId')].concat(_.keys(model.get('path_names')));
                         var optionsUrl = 'log.item=' + model.get('id');
                         self.trigger('update:crumbs', partPath, optionsUrl);
                         Util.ajaxInfoMessenger('restoredTestItem');
@@ -90,9 +90,18 @@ define(function (require) {
         *
         * при этом перерендеривать вьюху таблицы логов, передавая ему новую модель ретрая
         * */
+
+        getLastPassedOrFailedItem: function (idx) {
+            var prevItems = this.history.collection.models.slice(0, idx).reverse();
+            return _.find(prevItems, function (item) {
+                return item.get('status') === 'PASSED' || item.get('status') === 'FAILED';
+            });
+        },
         selectHistoryItem: function (itemModel, firstInit) {
             var curOptions = this.collectionItems.getInfoLog();
             var itemModelFromCollection;
+            var prevModel;
+            var self = this;
             curOptions.history = itemModel.get('id');
             this.collectionItems.setInfoLog(curOptions);
             !firstInit && config.router.navigate(
@@ -104,13 +113,19 @@ define(function (require) {
             }
 
             this.historyItem && this.stopListening(this.historyItem) && this.historyItem.destroy();
+            _.map(this.history.collection.models, function (model, id) {
+                if (model.get('id') === itemModel.get('id')) {
+                    prevModel = self.getLastPassedOrFailedItem(id);
+                }
+            });
             this.historyItem = new LogItemInfoView({
                 el: $('[data-js-item-info]', this.$el),
                 context: this.context,
                 itemModel: itemModel,
                 launchModel: this.launchModel,
                 supportedLogBinary: this.supportedLogBinary,
-                collectionItems: this.collectionItems
+                collectionItems: this.collectionItems,
+                prevModel: prevModel
             });
             this.listenTo(this.historyItem, 'goToLog', this.goToLog);
             this.listenTo(this.historyItem, 'change:issue', this.onChangeItemIssue);

@@ -369,7 +369,6 @@ define(function (require) {
         381: ['Settings', 'Edit input Launch inactivity timeout on tab General', 'Change input Launch inactivity timeout on tab General'],
         382: ['Settings', 'Edit input Keep logs on tab General', 'Change input Keep logs on tab General'],
         383: ['Settings', 'Edit input Keep screenshots on tab General', 'Change input Keep screenshots on tab General'],
-        384: ['Settings', 'Edit input Auto Analysis on tab General', 'Change input Auto Analysis on tab General'],
         385: ['Settings', 'Click on Bttn Submit on tab General', 'Submit changes on tab General'],
         386: ['Settings', 'Click on tab Notifications in Settings', 'Open tab Notifications in Settings'],
         387: ['Settings', 'Edit input Email notifications on tab Notifications', 'Change input Email notifications on tab Notifications'],
@@ -515,8 +514,15 @@ define(function (require) {
         532: ['Login', 'Click on Icon VK on Welcome screen', 'Transition to VK'],
         533: ['Login', 'Click on Icon Slack on Welcome screen', 'Transition to Slack'],
         534: ['Login', 'Click on Icon Mail on Welcome screen', 'Arise Mail window'],
+        575: ['Profile', 'Edit input Language', 'Change language'],
+        580: ['Settings', 'Click on tab Auto-Analysis in Settings', 'Open tab Auto-Analysis in Settings'],
+        581: ['Settings', 'Click on Auto-Analysis on/off in Auto-Analysis tab', 'Auto-Analysis on/off'],
+        582: ['Settings', 'Choose radio bttn of Base for Auto-Analysis', 'Choose Base for Auto-Analysis'],
+        583: ['Settings', 'Toggle Mode of Auto-Analysis Accuracy', 'Choose Mode of Auto-Analysis'],
+        584: ['Settings', 'Click on Bttn Submit in Auto-Analysis tab', 'Submit changes in Auto-Analysis tab'],
+        585: ['Settings', 'Click on Bttn Remove index in Auto-Analysis tab', 'Remove index in Auto-Analysis tab'],
+        586: ['Settings', 'Click on Bttn Generate index in Auto-Analysis tab', 'Generate index in Auto-Analysis tab']
 
-        575: ['Profile', 'Edit input Language', 'Change language']
     };
 
     function getExportTitle(type) {

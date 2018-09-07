@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="250" height="125" viewBox="0 0 250 125">
+    <g fill="none" fill-rule="evenodd">
+        <path d="M250 0H0v125h250z"/>
+        <g stroke="#F5F5F5">
+            <path d="M249 103.5H1M249 81.5H1M249 60.5H1M249 38.5H1M249 16.5H1"/>
+        </g>
+        <path fill="#B6E4E3" d="M161 20H30v13h131zM220 38H30v13h190zM182 56H30v13h152zM144 74H30v13h114zM106 92H30v13h76z"/>
+    </g>
+</svg>

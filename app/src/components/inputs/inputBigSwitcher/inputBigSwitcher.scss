@@ -1,37 +1,43 @@
 .input-big-switcher {
-  width: 100%;
+  display: flex;
+  align-items: center;
   height: 100%;
-  position: relative;
-  outline: none;
   box-sizing: border-box;
+  outline: none;
 }
 .switcher-wrapper {
   display: inline-block;
-  position: absolute;
-  left: 0;
-  top: 50%;
-  margin-top: -15px;
-  width: 100px;
+  position: relative;
+  min-width: 100px;
   height: 30px;
-  box-sizing: border-box;
   border: 1px solid $COLOR--gray-80;
+  box-sizing: border-box;
+  color: $COLOR--white-two;
   font-family: $FONT-REGULAR;
   font-size: 13px;
-  color: $COLOR--white-two;
   text-align: center;
   line-height: 27px;
   cursor: pointer;
 
-  &.centered {
-    left: 50%;
-    margin-left: -50px;
-  }
   &.disabled {
+    &:hover {
+      cursor: default;
+    }
     .on {
       background-color: $COLOR--greenish-beige;
     }
     .off {
       background-color: $COLOR--gray-80;
+    }
+  }
+  &.mobile-disabled {
+    @media (max-width: $SCREEN_XS_MAX) {
+      .on {
+        background-color: $COLOR--greenish-beige;
+      }
+      .off {
+        background-color: $COLOR--gray-80;
+      }
     }
   }
 }
@@ -67,15 +73,10 @@
   }
 }
 .children-container {
-  position: relative;
-  display: table-cell;
-  width: 100%;
-  vertical-align: middle;
-  padding-left: 110px;
-  margin: 0;
+  padding-left: 5px;
+  box-sizing: border-box;
+  color: $COLOR--charcoal-grey;
   font-family: $FONT-REGULAR;
   font-size: 13px;
-  color: $COLOR--charcoal-grey;
   cursor: pointer;
-  box-sizing: border-box;
 }

@@ -10,16 +10,16 @@ const messages = defineMessages({
   loginHint: {
     id: 'RegistrationForm.loginHint',
     defaultMessage:
-      "Login should have size from '1' to '128' symbols, latin, numeric characters, hyphen, underscore, dot.",
+      'Login should have size from 1 to 128 symbols, latin, numeric characters, hyphen, underscore, dot.',
   },
   nameHint: {
     id: 'RegistrationForm.nameHint',
     defaultMessage:
-      "Full name should have size from '3' to '256' symbols, latin, cyrillic, numeric characters, hyphen, underscore, dot, space.",
+      'Full name should have size from 3 to 256 symbols, latin, cyrillic, numeric characters, hyphen, underscore, dot, space.',
   },
   passwordHint: {
     id: 'RegistrationForm.passwordHint',
-    defaultMessage: "Password should have size from '4' to '25' symbols.",
+    defaultMessage: 'Password should have size from 4 to 25 symbols.',
   },
   emailHint: {
     id: 'Common.validation.email',
@@ -49,6 +49,55 @@ const messages = defineMessages({
     id: 'SearchDashboardForm.dashboardNameSearchHint',
     defaultMessage: 'Dashboard name should have size from 3 to 128',
   },
+  minShouldMatchHint: {
+    id: 'AccuracyFormBlock.minShouldMatchHint',
+    defaultMessage: 'The parameter should have value from 50 to 100',
+  },
+  minDocFreqHint: {
+    id: 'AccuracyFormBlock.minDocFreqHint',
+    defaultMessage: 'The parameter should have value from 1 to 10',
+  },
+  minTermFreqHint: {
+    id: 'AccuracyFormBlock.minTermFreqHint',
+    defaultMessage: 'The parameter should have value from 1 to 10',
+  },
+  widgetNameHint: {
+    id: 'SearchDashboardForm.widgetNameHint',
+    defaultMessage: 'Widget name should have size from 3 to 128',
+  },
+  profilePassword: {
+    id: 'ChangePasswordModal.profilePassword',
+    defaultMessage: 'Password should have size from 4 to 25 symbols',
+  },
+  profileConfirmPassword: {
+    id: 'ChangePasswordModal.profileConfirmPassword',
+    defaultMessage: 'Passwords do not match',
+  },
+  profileUserName: {
+    id: 'ChangePasswordModal.profileUserName',
+    defaultMessage:
+      'Full name should have size from 3 to 256 symbols, latin, cyrillic, numeric characters, hyphen, underscore, dot, space.',
+  },
+  profileEmail: {
+    id: 'ChangePasswordModal.profileEmail',
+    defaultMessage: 'Email is incorrect.',
+  },
+  itemNameEntityHint: {
+    id: 'LaunchLevelEntities.itemNameEntityHint',
+    defaultMessage: 'At least 3 symbols required',
+  },
+  launchNumericEntityHint: {
+    id: 'LaunchLevelEntities.launchNumberEntityHint',
+    defaultMessage: 'This filter accepts only digits',
+  },
+  launchDescriptionEntityHint: {
+    id: 'LaunchLevelEntities.launchDescriptionEntityHint',
+    defaultMessage: 'At least 3 symbols required',
+  },
+  demoDataPostfixHint: {
+    id: 'DemoDataTabForm.demoDataPostfixHint',
+    defaultMessage: 'Postfix should have size from 1 to 90',
+  },
 });
 
 @injectIntl
@@ -68,10 +117,10 @@ export class FieldErrorHint extends PureComponent {
   };
   render() {
     const { hintType, children, intl, error, active, ...rest } = this.props;
-    const classes = cx({
-      'field-error-hint': true,
+    const classes = cx('field-error-hint', {
       show: error && active,
       'bottom-type': hintType === 'bottom',
+      'top-type': hintType === 'top',
     });
 
     return (

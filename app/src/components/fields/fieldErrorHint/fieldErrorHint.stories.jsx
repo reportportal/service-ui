@@ -21,23 +21,22 @@
 
 import { storiesOf } from '@storybook/react';
 import { host } from 'storybook-host';
+import { withReadme } from 'storybook-readme';
 import { FieldErrorHint } from './fieldErrorHint';
+import README from './README.md';
 
 storiesOf('Components/Fields/InputErrorHint', module)
-  .addDecorator(host({
-    title: 'Field with icon',
-    align: 'center middle',
-    backdrop: 'rgba(70, 69, 71, 0.2)',
-    background: '#ffffff',
-    height: 42,
-    width: 382,
-  }))
-  .add('default state', () => (
-    <FieldErrorHint />
-  ))
-  .add('width error message without focus', () => (
-    <FieldErrorHint error={'test error message'} />
-  ))
-  .add('width error message with focus', () => (
-    <FieldErrorHint error={'test error message'} active />
-  ));
+  .addDecorator(
+    host({
+      title: 'Field error hint',
+      align: 'center middle',
+      backdrop: 'rgba(70, 69, 71, 0.2)',
+      background: '#ffffff',
+      height: 42,
+      width: 382,
+    }),
+  )
+  .addDecorator(withReadme(README))
+  .add('default state', () => <FieldErrorHint />)
+  .add('with error message without focus', () => <FieldErrorHint error={'test error message'} />)
+  .add('with error message & focus', () => <FieldErrorHint error={'test error message'} active />);

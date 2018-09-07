@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="250" height="126" viewBox="0 0 250 126">
+    <defs>
+        <circle id="a" cx="80" cy="46" r="6"/>
+        <circle id="b" cx="80" cy="68" r="6"/>
+        <circle id="c" cx="80" cy="87" r="6"/>
+        <circle id="d" cx="80" cy="104" r="6"/>
+    </defs>
+    <g fill="none" fill-rule="evenodd">
+        <path d="M0 0h250v125H0z"/>
+        <g stroke="#F5F5F5">
+            <path d="M1 103.5h248M1 81.5h248M1 60.5h248M1 38.5h248M1 16.5h248"/>
+        </g>
+        <path fill="#B2E4E3" d="M0 125l80-79.668 30.397 30.537L170 7.675 250 125"/>
+        <path fill="#B2E4E3" d="M0 125l80-79.668 30.397 30.537L170 7.675 250 125"/>
+        <path fill="#F9CC90" d="M0 125l80-59.02 30 20.561 60-58.459L250 125"/>
+        <path fill="#F9CC90" d="M0 125l80-59.02 30 20.561 60-58.459L250 125"/>
+        <path fill="#F09583" d="M0 125l80-38.223 30 10.166 60-48.86L250 125"/>
+        <path fill="#D6E4AA" d="M0 125l80.093-21.042 29.844 5.081L170 68.388 250 125"/>
+        <path stroke="#FFF" stroke-linecap="square" stroke-width="2" d="M80 44v80.569" opacity=".4"/>
+        <g>
+            <use fill="#ADDBDB" xlink:href="#a"/>
+            <circle cx="80" cy="46" r="5" stroke="#FFF" stroke-opacity=".6" stroke-width="2"/>
+        </g>
+        <g>
+            <use fill="#F7CC90" xlink:href="#b"/>
+            <circle cx="80" cy="68" r="5" stroke="#FFF" stroke-opacity=".602" stroke-width="2"/>
+        </g>
+        <g>
+            <use fill="#EE9583" xlink:href="#c"/>
+            <circle cx="80" cy="87" r="5" stroke="#FFF" stroke-opacity=".6" stroke-width="2"/>
+        </g>
+        <g>
+            <use fill="#D6E4AA" xlink:href="#d"/>
+            <circle cx="80" cy="104" r="5" stroke="#FFF" stroke-opacity=".454" stroke-width="2"/>
+        </g>
+    </g>
+</svg>

@@ -4,13 +4,15 @@ import styles from './modalContentHeading.scss';
 
 const cx = classNames.bind(styles);
 
-export const ModalContentHeading = ({ text }) => (
-  <div className={cx('modal-content-heading')}>{text}</div>
+export const ModalContentHeading = ({ text, error }) => (
+  <div className={cx('modal-content-heading', { error })}>{text}</div>
 );
 
 ModalContentHeading.propTypes = {
   text: PropTypes.string,
+  error: PropTypes.bool,
 };
 ModalContentHeading.defaultProps = {
   text: '',
+  error: false,
 };

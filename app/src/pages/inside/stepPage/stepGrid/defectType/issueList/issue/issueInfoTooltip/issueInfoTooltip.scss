@@ -1,0 +1,26 @@
+.progressbar {
+  display: flex;
+  justify-content: center;
+}
+
+.header {
+  color: $COLOR--gray-47;
+  font-family: $FONT-SEMIBOLD;
+  text-transform: uppercase;
+  padding-bottom: 5px;
+}
+
+.content {
+  font-family: $FONT-REGULAR;
+  font-size: 12px;
+  line-height: 16px;
+  padding-bottom: 15px;
+
+  &:last-child {
+    padding-bottom: 0;
+  }
+
+  &.resolved {
+    text-decoration: line-through;
+  }
+}

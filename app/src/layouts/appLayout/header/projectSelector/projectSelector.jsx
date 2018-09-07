@@ -21,9 +21,10 @@
 
 import classNames from 'classnames/bind';
 import React, { Component } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink } from 'redux-first-router-link';
 import PropTypes from 'prop-types';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
+import { PROJECT_PAGE } from 'controllers/pages/constants';
 import styles from './projectSelector.scss';
 
 const cx = classNames.bind(styles);
@@ -57,22 +58,29 @@ export class ProjectSelector extends Component {
 
   render() {
     return (
-      <div ref={(node) => { this.node = node; }} className={cx('project-selector')} onClick={this.toggleShowList} >
+      <div
+        ref={(node) => {
+          this.node = node;
+        }}
+        className={cx('project-selector')}
+        onClick={this.toggleShowList}
+      >
         <div className={cx('current-project-block')}>
-          <div className={cx('current-project-name')}>
-            { this.props.activeProject }
-          </div>
+          <div className={cx('current-project-name')}>{this.props.activeProject}</div>
           <div className={cx({ 'show-list-icon': true, 'turned-over': this.state.opened })} />
         </div>
-        <div className={cx({ 'projects-list': true, shown: this.state.opened })} >
+        <div className={cx({ 'projects-list': true, shown: this.state.opened })}>
           <ScrollWrapper autoHeight autoHeightMax={600}>
-            {
-            Array.map(this.props.projects, project => (
-              <NavLink key={project} className={cx('project-list-item')} activeClassName={cx('active')} to={`/${project}`}>
+            {Array.map(this.props.projects, (project) => (
+              <NavLink
+                to={{ type: PROJECT_PAGE, payload: { projectId: project } }}
+                key={project}
+                className={cx('project-list-item')}
+                activeClassName={cx('active')}
+              >
                 {project}
               </NavLink>
-            ))
-            }
+            ))}
           </ScrollWrapper>
         </div>
       </div>

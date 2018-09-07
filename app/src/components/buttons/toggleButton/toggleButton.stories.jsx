@@ -26,25 +26,22 @@ import { withReadme } from 'storybook-readme';
 import { ToggleButton } from './toggleButton';
 import README from './README.md';
 
-storiesOf('Components/Buttons/toggleButton', module)
-  .addDecorator(host({
-    title: 'Toggle button component',
-    align: 'center middle',
-    backdrop: 'rgba(70, 69, 71, 0.2)',
-    background: '#fff',
-    height: 30,
-    width: 220,
-  }))
+storiesOf('Components/Buttons/ToggleButton', module)
+  .addDecorator(
+    host({
+      title: 'Toggle button component',
+      align: 'center middle',
+      backdrop: 'rgba(70, 69, 71, 0.2)',
+      background: '#fff',
+      height: 30,
+      width: 220,
+    }),
+  )
   .addDecorator(withReadme(README))
-  .add('default state', () => (
-    <ToggleButton />
-  ))
+  .add('default state', () => <ToggleButton />)
   .add('with 2 items', () => (
     <ToggleButton
-      items={[
-        { value: 'first', label: 'first' },
-        { value: 'second', label: 'second' },
-      ]}
+      items={[{ value: 'first', label: 'first' }, { value: 'second', label: 'second' }]}
     />
   ))
   .add('with 3 items', () => (
@@ -76,6 +73,27 @@ storiesOf('Components/Buttons/toggleButton', module)
       value={'second'}
     />
   ))
+  .add('with disabled', () => (
+    <ToggleButton
+      items={[
+        { value: 'first', label: 'first' },
+        { value: 'second', label: 'second' },
+        { value: 'third', label: 'third' },
+      ]}
+      disabled
+    />
+  ))
+  .add('with active item & disabled', () => (
+    <ToggleButton
+      items={[
+        { value: 'first', label: 'first' },
+        { value: 'second', label: 'second' },
+        { value: 'third', label: 'third' },
+      ]}
+      value={'second'}
+      disabled
+    />
+  ))
   .add('with actions', () => (
     <ToggleButton
       items={[
@@ -84,7 +102,6 @@ storiesOf('Components/Buttons/toggleButton', module)
         { value: 'third', label: 'third' },
       ]}
       value={'second'}
-      onClickItem={action('itemClicked')}
+      onChange={action('itemClicked')}
     />
-  ))
-;
+  ));

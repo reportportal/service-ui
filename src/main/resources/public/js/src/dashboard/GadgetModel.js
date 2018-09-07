@@ -135,6 +135,8 @@ define(function (require) {
                             return Localization.widgets.panelMode;
                         case 'barMode':
                             return Localization.widgets.barMode;
+                        case 'tableMode':
+                            return Localization.widgets.tableMode;
                         case 'pieChartMode':
                             return Localization.widgets.pieChartMode;
                         case 'areaChartMode':

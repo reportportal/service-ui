@@ -23,7 +23,11 @@ define(function (require) {
     var LaunchHeaderView = require('launches/LaunchHeaderView');
     var LaunchBodyView = require('launches/LaunchBodyView');
     var LaunchUtils = require('launches/LaunchUtils');
-
+    var _ = require('underscore');
+    var CallService = require('callService');
+    var call = CallService.call;
+    var Urls = require('dataUrlResolver');
+    var Service = require('coreService');
     var config = App.getInstance();
 
 
@@ -38,7 +42,6 @@ define(function (require) {
             this.body = new LaunchBodyView({
                 el: this.context.getMainView().$body
             });
-
             this.listenTo(this.body, 'change:level', this.onChangeLevel);
             this.update({ subContext: options.subContext });
         },
@@ -48,55 +51,83 @@ define(function (require) {
         onChangeLevel: function (level) {
             this.header.setState(level);
         },
+
+        isFilterExist: function (filterId) {
+            return _.find(config.preferences.filters, function (filter) {
+                return filterId === filter;
+            });
+        },
+
         update: function (options) {
             var pathPart;
             var query = options.subContext[3];
             var self = this;
+            var isFilterAdded;
             var filterUrl = options.subContext[1];
-            this.filterId = filterUrl.split('|')[0];
             pathPart = [filterUrl];
-            if (options.subContext[2]) {
-                pathPart = pathPart.concat(options.subContext[2].split('/'));
-            }
-            if (pathPart.length <= 1) {
-                this.onChangeLevel('LAUNCH');
-            }
-            this.launchFilterCollection.ready.done(function () {
-                var filters;
-                var tempFilterModel;
-                if (!self.launchFilterCollection.get(self.filterId)) {
-                    self.filterId = 'all';
+            this.filterId = filterUrl.split('|')[0];
+            isFilterAdded = this.isFilterExist(this.filterId);
+            if (!isFilterAdded && this.filterId !== 'all' && this.filterId !== 'New_filter') {
+                Service.putPreferences({ filters: config.preferences.filters ? config.preferences.filters.concat([this.filterId]) : [this.filterId] }).done(function (response) {
+                    var newSubContext;
+                    config.preferences = response;
+                    isFilterAdded = self.isFilterExist(self.filterId);
+                    if (isFilterAdded) {
+                        self.launchFilterCollection.parse(config.preferences.filters)
+                                .done(function () {
+                                    self.update({ subContext: options.subContext });
+                                });
+                    } else {
+                        newSubContext = options.subContext;
+                        newSubContext[1] = 'all';
+                        newSubContext[3] = null;
+                        self.update({ subContext: newSubContext });
+                    }
+                });
+            } else {
+                if (options.subContext[2]) {
+                    pathPart = pathPart.concat(options.subContext[2].split('/'));
                 }
-                if (self.filterId === 'all') {
-                    if (options.subContext[3] && !options.subContext[2]) {
-                        filters = LaunchUtils.calculateFilterOptions(options.subContext[3]);
-                        if (filters.entities !== '[]') {
-                            tempFilterModel = self.launchFilterCollection.generateTempModel(filters);
-                            self.launchFilterCollection.activateFilter(tempFilterModel.get('id')).done(function () {
-                                config.router.navigate(tempFilterModel.get('url') + '?' + options.subContext[3], { trigger: false, replace: true });
-                                self.body.update([tempFilterModel.get('id')], '');
-                            });
+                if (pathPart.length <= 1) {
+                    this.onChangeLevel('LAUNCH');
+                }
+                this.launchFilterCollection.ready.done(function () {
+                    var filters;
+                    var tempFilterModel;
+                    if (!self.launchFilterCollection.get(self.filterId)) {
+                        self.filterId = 'all';
+                    }
+                    if (self.filterId === 'all') {
+                        if (options.subContext[3] && !options.subContext[2]) {
+                            filters = LaunchUtils.calculateFilterOptions(options.subContext[3]);
+                            if (filters.entities !== '[]') {
+                                tempFilterModel = self.launchFilterCollection.generateTempModel(filters);
+                                self.launchFilterCollection.activateFilter(tempFilterModel.get('id')).done(function () {
+                                    config.router.navigate(tempFilterModel.get('url') + '?' + options.subContext[3], { trigger: false, replace: true });
+                                    self.body.update([tempFilterModel.get('id')], '');
+                                });
+                            } else {
+                                self.body.update(pathPart, query);
+                            }
                         } else {
+                            self.launchFilterCollection.activateFilter(self.filterId);
                             self.body.update(pathPart, query);
                         }
                     } else {
-                        self.launchFilterCollection.activateFilter(self.filterId);
-                        self.body.update(pathPart, query);
-                    }
-                } else {
-                    self.launchFilterCollection.activateFilter(self.filterId)
-                        .fail(function () {
-                            // set "all launches" if filter not exist
-                            setTimeout(function () { // for return render function (logic context)
-                                config.router.navigate(self.header.model.get('url') + (options.subContext[2] || ''), { trigger: true });
+                        self.launchFilterCollection.activateFilter(self.filterId)
+                            .fail(function () {
+                                // set "all launches" if filter not exist
+                                setTimeout(function () { // for return render function (logic context)
+                                    config.router.navigate(self.header.model.get('url') + (options.subContext[2] || ''), { trigger: true });
+                                });
+                                self.header.onChangeActiveFilter();
+                            })
+                            .done(function () {
+                                self.body.update(pathPart, query);
                             });
-                            self.header.onChangeActiveFilter();
-                        })
-                        .done(function () {
-                            self.body.update(pathPart, query);
-                        });
-                }
-            });
+                    }
+                });
+            }
         },
         onDestroy: function () {
             this.header.destroy();
@@ -110,3 +141,4 @@ define(function (require) {
         ContentView: LaunchPage
     };
 });
+

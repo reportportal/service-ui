@@ -11,13 +11,16 @@ const handleError = (error) => {
   if (error.response && error.response.status === 401) {
     throw new Error(ERROR_UNAUTHORIZED);
   }
+  if (error.response && error.response.data) {
+    throw error.response.data;
+  }
   throw error;
 };
 
-const handleResponse = res => res.data;
+const handleResponse = (res) => res.data;
 
 export const fetch = (url, params = {}) => {
-  const cancelToken = (params && params.abort) ? new CancelToken(params.abort) : null;
+  const cancelToken = params && params.abort ? new CancelToken(params.abort) : null;
   const token = localStorage.getItem(TOKEN_KEY) || DEFAULT_TOKEN;
   const headersFromParams = params && params.headers;
   const headers = Object.assign({}, headersFromParams || {}, { Authorization: token });
@@ -27,5 +30,7 @@ export const fetch = (url, params = {}) => {
     url,
     headers,
   };
-  return axios(requestParams).catch(handleError).then(handleResponse);
+  return axios(requestParams)
+    .catch(handleError)
+    .then(handleResponse);
 };

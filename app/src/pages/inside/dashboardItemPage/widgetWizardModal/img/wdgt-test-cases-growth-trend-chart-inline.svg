@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="250" height="125" viewBox="0 0 250 125">
+    <defs>
+        <path id="a" d="M94 25h32v25H94z"/>
+        <filter id="b" width="106.2%" height="108%" x="-3.1%" y="-4%" filterUnits="objectBoundingBox">
+            <feOffset dx="2" in="SourceAlpha" result="shadowOffsetInner1"/>
+            <feComposite in="shadowOffsetInner1" in2="SourceAlpha" k2="-1" k3="1" operator="arithmetic" result="shadowInnerInner1"/>
+            <feColorMatrix in="shadowInnerInner1" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.4 0"/>
+        </filter>
+        <path id="c" d="M158 0h32v25h-32z"/>
+        <filter id="d" width="106.2%" height="108%" x="-3.1%" y="-4%" filterUnits="objectBoundingBox">
+            <feOffset dx="2" in="SourceAlpha" result="shadowOffsetInner1"/>
+            <feComposite in="shadowOffsetInner1" in2="SourceAlpha" k2="-1" k3="1" operator="arithmetic" result="shadowInnerInner1"/>
+            <feColorMatrix in="shadowInnerInner1" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.4 0"/>
+        </filter>
+    </defs>
+    <g fill="none" fill-rule="evenodd">
+        <path d="M0 0h250v125H0z"/>
+        <g stroke="#F5F5F5">
+            <path d="M1 103.5h248M1 81.5h248M1 60.5h248M1 38.5h248M1 16.5h248"/>
+        </g>
+        <path fill="#D6E4AA" d="M30 100h30v10H30zM60 75h32v25H60z"/>
+        <path fill="#EF9586" d="M92 65h32v10H92z"/>
+        <g transform="translate(30 25)">
+            <use fill="#D6E4AA" xlink:href="#a"/>
+            <use fill="#000" filter="url(#b)" xlink:href="#a"/>
+        </g>
+        <path fill="#EF9586" d="M156 40h32v10h-32z"/>
+        <g transform="translate(30 25)">
+            <use fill="#D6E4AA" xlink:href="#c"/>
+            <use fill="#000" filter="url(#d)" xlink:href="#c"/>
+        </g>
+    </g>
+</svg>

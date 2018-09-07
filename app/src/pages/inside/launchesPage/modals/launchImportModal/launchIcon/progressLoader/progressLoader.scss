@@ -1,0 +1,13 @@
+.progress-bar {
+  height: 8px;
+  width: 43px;
+  background-color: $COLOR--gray-91;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.progress-indicator {
+  height: 8px;
+  transition: width 0.5s linear;
+  background-color: $COLOR--greenish-beige;
+}

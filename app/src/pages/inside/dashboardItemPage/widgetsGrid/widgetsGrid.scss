@@ -3,12 +3,17 @@
   flex-direction: column;
 }
 
+.preloader-container {
+  padding: 30px 0;
+}
+
 :global {
   .react-grid-layout {
     position: relative;
     transition: height 200ms ease;
+    overflow: hidden;
   }
-  
+
   .react-grid-item {
     transition: all 200ms ease;
     transition-property: left, top;
@@ -21,13 +26,13 @@
     z-index: 2;
     will-change: width, height;
   }
-  
+
   .react-grid-item.react-draggable-dragging {
     transition: none;
     z-index: 3;
     will-change: transform;
   }
-  
+
   .react-grid-item.react-grid-placeholder {
     background: $COLOR--white;
     border: 1px dashed $COLOR--gray-80;
@@ -35,16 +40,16 @@
     z-index: 1;
     user-select: none;
   }
-  
+
   .react-grid-item > .react-resizable-handle {
     position: absolute;
     width: 10px;
     height: 20px;
     cursor: se-resize;
   }
-  
+
   .react-grid-item > .react-resizable-handle::after {
-    content: "";
+    content: '';
     position: absolute;
     right: 3px;
     bottom: 3px;
@@ -73,5 +78,9 @@
 
   .react-grid-item:hover .react-resizable-handle {
     opacity: 1;
+  }
+
+  .mobile .react-resizable-handle {
+    display: none;
   }
 }

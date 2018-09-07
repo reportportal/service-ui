@@ -1,0 +1,49 @@
+.field-filter-entity {
+  position: relative;
+  display: inline-block;
+  width: 235px;
+  height: 55px;
+  vertical-align: top;
+
+  &.stretchable {
+    width: auto;
+    height: auto;
+    min-width: 235px;
+    min-height: 55px;
+  }
+}
+.entity-name {
+  display: inline-block;
+  width: 100%;
+  box-sizing: border-box;
+  padding-right: 20px;
+  margin-bottom: 5px;
+  font-family: $FONT-REGULAR;
+  font-size: 13px;
+  line-height: 18px;
+  color: $COLOR--charcoal-grey;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.close-icon {
+  position: absolute;
+  display: block;
+  top: 0;
+  right: 6px;
+  width: 8px;
+  height: 8px;
+  cursor: pointer;
+  transition: transform 200ms linear;
+
+  &:hover {
+    transform: scale(1.2);
+  }
+
+  svg {
+    fill: $COLOR--gray-60;
+  }
+}
+.entity-input-holder {
+  display: inline-block;
+  width: 100%;
+}

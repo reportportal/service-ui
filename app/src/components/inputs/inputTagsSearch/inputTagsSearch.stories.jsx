@@ -66,7 +66,7 @@ storiesOf('Components/Inputs/InputTagsSearch', module)
       { value: '93496', label: '4.1.2' },
       { value: '93497', label: '4.2' },
     ];
-    return <InputTagsSearch options={options} nothingFound="No mathes found" />;
+    return <InputTagsSearch options={options} />;
   })
   .add('with nothingFound label', () => {
     const options = [
@@ -94,15 +94,10 @@ storiesOf('Components/Inputs/InputTagsSearch', module)
       { value: '93496', label: '4.1.2' },
       { value: '93497', label: '4.2' },
     ];
-    return <InputTagsSearch options={options} nothingFound="No mathes found" />;
+    return <InputTagsSearch options={options} nothingFound="No matches found" />;
   })
   .add('with value ', () => (
-    <InputTagsSearch
-      value={[
-        { value: '68014', label: 'R3 v2.2' },
-        { value: '69373', label: 'TA Report Portal R3' },
-      ]}
-    />
+    <InputTagsSearch value={{ value: '69373', label: 'TA Report Portal R3' }} />
   ))
   .add('with onChange action', () => {
     const options = [

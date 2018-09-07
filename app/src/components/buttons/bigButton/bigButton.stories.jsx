@@ -26,32 +26,26 @@ import { withReadme } from 'storybook-readme';
 import { BigButton } from './bigButton';
 import README from './README.md';
 
-storiesOf('Components/Buttons/bigButton', module)
-  .addDecorator(host({
-    title: 'Big button component',
-    align: 'center middle',
-    backdrop: 'rgba(70, 69, 71, 0.2)',
-    background: '#fff',
-    height: 50,
-    width: 200,
-  }))
+storiesOf('Components/Buttons/BigButton', module)
+  .addDecorator(
+    host({
+      title: 'Big button component',
+      align: 'center middle',
+      backdrop: 'rgba(70, 69, 71, 0.2)',
+      background: '#fff',
+      height: 50,
+      width: 200,
+    }),
+  )
   .addDecorator(withReadme(README))
-  .add('default state', () => (
-    <BigButton />
-  ))
-  .add('with text', () => (
-    <BigButton>Button title</BigButton>
-  ))
-  .add('colored', () => (
-    <BigButton color={'organish'}>Button title</BigButton>
-  ))
-  .add('disabled', () => (
-    <BigButton disabled>Button title</BigButton>
-  ))
-  .add('with actions', () => (
-    <BigButton onClick={action('clicked')}>Button title</BigButton>
-  ))
+  .add('default state', () => <BigButton />)
+  .add('with text', () => <BigButton>Button title</BigButton>)
+  .add('with roundedCorners & text', () => <BigButton roundedCorners>Button title</BigButton>)
+  .add('colored', () => <BigButton color="organish">Button title</BigButton>)
+  .add('disabled', () => <BigButton disabled>Button title</BigButton>)
+  .add('with actions', () => <BigButton onClick={action('clicked')}>Button title</BigButton>)
   .add('disabled with actions', () => (
-    <BigButton disabled onClick={action('clicked')}>Button title</BigButton>
-  ))
-;
+    <BigButton disabled onClick={action('clicked')}>
+      Button title
+    </BigButton>
+  ));

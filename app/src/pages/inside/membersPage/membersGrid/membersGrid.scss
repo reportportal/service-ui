@@ -1,0 +1,36 @@
+.member-table-pagination {
+  background-color: $COLOR--white-two;
+}
+.name-col {
+  width: 35%;
+  vertical-align: top;
+  @media (max-width: $SCREEN_SM_MAX) {
+    width: 25%;
+  }
+  @media (max-width: $SCREEN_XS_MAX) {
+    width: 100%;
+  }
+}
+.last-login-col {
+  width: 20%;
+  vertical-align: top;
+  @media (max-width: $SCREEN_XS_MAX) {
+    width: 100%;
+    padding: 6px 15px;
+  }
+}
+.roles-col {
+  width: 35%;
+  vertical-align: top;
+  @media (max-width: $SCREEN_XS_MAX) {
+    width: 100%;
+    padding: 6px 15px 22px 15px;
+  }
+}
+.unassign-col {
+  width: 10%;
+  vertical-align: top;
+  @media (max-width: $SCREEN_XS_MAX) {
+    display: none;
+  }
+}

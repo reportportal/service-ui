@@ -1,4 +1,11 @@
-import { getDuration, approximateTimeFormat, dateFormat, daysBetween } from './timeDateUtils';
+import {
+  getDuration,
+  approximateTimeFormat,
+  dateFormat,
+  daysBetween,
+  getTimestampFromMinutes,
+  getMinutesFromTimestamp,
+} from './timeDateUtils';
 
 const NOW = Date.now();
 const ONE_SECOND = 1000;
@@ -47,20 +54,20 @@ describe('approximateTimeFormat', () => {
   });
 
   test('should return "20s" in case of the 20 seconds timestamp (in seconds) is passed as argument', () => {
-    expect(approximateTimeFormat(ONE_SECOND / 1000 * 20)).toEqual('20s');
+    expect(approximateTimeFormat((ONE_SECOND / 1000) * 20)).toEqual('20s');
   });
   test('should return "20m" in case of the 20 minutes timestamp (in seconds) is passed as argument', () => {
-    expect(approximateTimeFormat(ONE_MINUTE / 1000 * 20)).toEqual('20m');
+    expect(approximateTimeFormat((ONE_MINUTE / 1000) * 20)).toEqual('20m');
   });
   test('should return "20h" in case of the 20 hours timestamp (in seconds) is passed as argument', () => {
-    expect(approximateTimeFormat(ONE_HOUR / 1000 * 20)).toEqual('20h');
+    expect(approximateTimeFormat((ONE_HOUR / 1000) * 20)).toEqual('20h');
   });
   test('should return "20d" in case of the 20 days timestamp (in seconds) is passed as argument', () => {
-    expect(approximateTimeFormat(ONE_DAY / 1000 * 20)).toEqual('20d');
+    expect(approximateTimeFormat((ONE_DAY / 1000) * 20)).toEqual('20d');
   });
   test('should return "20d 20h 20m" in case of the 20 days, 20 hours 20 minutes and 20 seconds timestamp (in seconds) is passed as argument', () => {
     expect(
-      approximateTimeFormat((ONE_DAY + ONE_HOUR + ONE_MINUTE + ONE_SECOND) / 1000 * 20),
+      approximateTimeFormat(((ONE_DAY + ONE_HOUR + ONE_MINUTE + ONE_SECOND) / 1000) * 20),
     ).toEqual('20d 20h 20m');
   });
 });
@@ -89,5 +96,17 @@ describe('daysBetween', () => {
   });
   test('should return 365 for dates with a year difference', () => {
     expect(daysBetween(new Date(2017, 0, 1), new Date(2018, 0, 1))).toEqual(365);
+  });
+});
+
+describe('getTimestampFromMinutes', () => {
+  test('should return number', () => {
+    expect(typeof getTimestampFromMinutes(20)).toBe('number');
+  });
+});
+
+describe('getMinutesFromTimestamp', () => {
+  test('should return number', () => {
+    expect(typeof getMinutesFromTimestamp(1514754000000)).toBe('number');
   });
 });

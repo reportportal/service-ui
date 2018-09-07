@@ -27,36 +27,30 @@ import { Input } from './input';
 import README from './README.md';
 
 storiesOf('Components/Inputs/Input', module)
-  .addDecorator(host({
-    title: 'Input component',
-    align: 'center middle',
-    backdrop: 'rgba(70, 69, 71, 0.2)',
-    height: 30,
-    width: 300,
-  }))
+  .addDecorator(
+    host({
+      title: 'Input component',
+      align: 'center middle',
+      backdrop: 'rgba(70, 69, 71, 0.2)',
+      height: 30,
+      width: 300,
+    }),
+  )
   .addDecorator(withReadme(README))
-  .add('default state', () => (
-    <Input />
-  ))
-  .add('with placeholder', () => (
-    <Input placeholder="Placeholder test" />
-  ))
-  .add('with predefined value', () => (
-    <Input value="Predefined text" />
-  ))
-  .add('type number', () => (
-    <Input type="number" />
-  ))
-  .add('type password', () => (
-    <Input type="password" />
-  ))
-  .add('max length (10)', () => (
-    <Input maxLength="10" />
-  ))
-  .add('disabled', () => (
-    <Input disabled />
-  ))
+  .add('default state', () => <Input />)
+  .add('with placeholder', () => <Input placeholder="Placeholder test" />)
+  .add('with predefined value', () => <Input value="Predefined text" />)
+  .add('with predefined value & readonly', () => <Input readonly value="Predefined text" />)
+  .add('with value & type number', () => <Input type="number" value="12345" />)
+  .add('with value & type password', () => <Input type="password" value="12345" />)
+  .add('max length (10)', () => <Input maxLength="10" />)
+  .add('disabled', () => <Input disabled />)
   .add('with actions', () => (
-    <Input onFocus={action('focused')} onChange={action('change')} onBlur={action('blur')} />
+    <Input
+      onFocus={action('focus')}
+      onChange={action('change')}
+      onBlur={action('blur')}
+      onKeyUp={action('keyup')}
+      onKeyPress={action('keypress')}
+    />
   ));
-

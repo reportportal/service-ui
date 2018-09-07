@@ -239,6 +239,7 @@ define(function (require) {
                 });
                 $(this).html(fieldWithDropdown.$el);
                 $('[data-js-dropdown]', $(this)).attr('id', $(this).attr('data-js-field-with-dropdown')).addClass('default-value');
+                $('[data-js-dropdown]', $(this)).data('type', field.fieldType);
                 if (!config.userModel.hasPermissions()
                     || (config.forSettings.btsJIRA.disabledForEdit.indexOf(field.id) !== -1)) {
                     $('[data-js-dropdown]', $(this)).attr('disabled', 'disabled');
@@ -495,7 +496,7 @@ define(function (require) {
 
                 required = element.hasClass('required-value');
                 if (element.hasClass('rp-btn')) {
-                    value = element.parent().find('ul.dropdown-menu > li > a.selected').data('value') || $('.select-value', element).text();
+                    value = element.parent().find('ul.dropdown-menu > li > a.selected').text() || $('.select-value', element).text();
                 } else {
                     value = element.val().trim();
                 }

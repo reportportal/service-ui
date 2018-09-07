@@ -34,7 +34,7 @@ const getTimeUnits = (time) => {
   };
 };
 
-export const getDuration = (start, end) => {
+export const getDuration = (start, end, isThreeDecimalPlaces) => {
   const secDuration = parseInt((end - start) / 1000, 10);
   const { days, hours, minutes, seconds } = getTimeUnits(secDuration);
 
@@ -54,7 +54,9 @@ export const getDuration = (start, end) => {
   if (result === '' && seconds > 0) {
     result = `${seconds}s`;
   } else if (result === '' && seconds === 0) {
-    result = `${Math.round((end - start) / 10) / 100}s`;
+    result = isThreeDecimalPlaces
+      ? `${(end - start) / 1000}s`
+      : `${Math.round((end - start) / 10) / 100}s`;
   }
   return result.trim();
 };
@@ -87,7 +89,7 @@ export const dateFormat = (val, withUtc) => {
   const hour = date.getHours();
   const minute = date.getMinutes();
   const second = date.getSeconds();
-  let utc = date.getTimezoneOffset() / 60 * -1;
+  let utc = (date.getTimezoneOffset() / 60) * -1;
 
   if (utc.toString().indexOf('-') === -1) {
     utc = `UTC+${utc}`;
@@ -121,4 +123,20 @@ export const daysBetween = (date1, date2) => {
   const difference = Math.abs(date1.getTime() - date2.getTime());
   // Convert back to days and return
   return Math.round(difference / ONE_DAY);
+};
+
+export const utcOffset = (new Date().getTimezoneOffset() / 60) * -1;
+
+export const getTimestampFromMinutes = (minutes) => {
+  const currentUnix = moment()
+    .startOf('day')
+    .unix();
+  return (parseInt(minutes, 10) * 60 + currentUnix) * 1000;
+};
+
+export const getMinutesFromTimestamp = (timestamp) => {
+  const currentUnix = moment()
+    .startOf('day')
+    .unix();
+  return parseInt((moment(timestamp).unix() - currentUnix) / 60, 10);
 };

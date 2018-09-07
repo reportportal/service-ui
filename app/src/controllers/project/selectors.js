@@ -1,26 +1,32 @@
 import { createSelector } from 'reselect';
 
-const projectSelector = state => state.project || {};
-const projectInfoSelector = state => projectSelector(state).info || {};
+const projectSelector = (state) => state.project || {};
 
-export const projectConfigSelector = state => projectInfoSelector(state).configuration || {};
-export const projectMembersSelector = state => projectInfoSelector(state).users || [];
-export const projectCreationDateSelector = state => projectInfoSelector(state).creationDate || 0;
+const projectInfoSelector = (state) => projectSelector(state).info || {};
 
-export const projectPreferencesSelector = state => projectSelector(state).preferences || {};
-export const userFiltersSelector = state => projectPreferencesSelector(state).filters || [];
+export const projectConfigSelector = (state) => projectInfoSelector(state).configuration || {};
 
-export const defectColorsSelector = createSelector(
-  projectConfigSelector,
-  (config) => {
-    const colors = {};
-    Object.keys(config.subTypes).forEach((key) => {
-      colors[key.toLowerCase()] = config.subTypes[key][0].color;
-      const defectGroup = config.subTypes[key];
-      defectGroup.forEach((defect) => {
-        colors[defect.locator] = defect.color;
-      });
+export const projectMembersSelector = (state) => projectInfoSelector(state).users || [];
+
+export const projectCreationDateSelector = (state) => projectInfoSelector(state).creationDate || 0;
+
+export const projectPreferencesSelector = (state) => projectSelector(state).preferences || {};
+
+export const userFiltersSelector = (state) => projectPreferencesSelector(state).filters || [];
+
+export const defectTypesSelector = (state) => projectConfigSelector(state).subTypes || {};
+
+export const projectAnalyzerConfigSelector = (state) =>
+  projectConfigSelector(state).analyzerConfiguration || {};
+
+export const defectColorsSelector = createSelector(projectConfigSelector, (config) => {
+  const colors = {};
+  Object.keys(config.subTypes).forEach((key) => {
+    colors[key.toLowerCase()] = config.subTypes[key][0].color;
+    const defectGroup = config.subTypes[key];
+    defectGroup.forEach((defect) => {
+      colors[defect.locator] = defect.color;
     });
-    return colors;
-  },
-);
+  });
+  return colors;
+});

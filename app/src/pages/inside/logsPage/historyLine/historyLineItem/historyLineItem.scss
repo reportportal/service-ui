@@ -1,0 +1,78 @@
+.history-line-item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 10%;
+}
+
+.history-line-item-title {
+  padding-left: 8px;
+  margin-bottom: 7px;
+  box-sizing: border-box;
+  font-size: 11px;
+  font-family: $FONT-SEMIBOLD;
+  text-align: center;
+  color: $COLOR--gray-60;
+  text-decoration: none;
+  outline: none;
+  pointer-events: none;
+  cursor: default;
+}
+
+.launch-title {
+  display: none;
+  text-transform: uppercase;
+}
+
+.active {
+  .history-line-item-title {
+    font-size: 12px;
+    margin-bottom: 6px;
+
+    &:not(.active-link) {
+      color: $COLOR--charcoal-grey;
+    }
+
+    @media (max-width: $SCREEN_SM_MAX) {
+      font-size: 10px;
+    }
+  }
+
+  .launch-title {
+    display: inline;
+  }
+
+  &:before,
+  &:after {
+    content: '';
+    position: absolute;
+    left: 45%;
+    width: 0;
+    height: 0;
+    bottom: 0;
+    box-sizing: border-box;
+  }
+
+  &:before {
+    top: 58px;
+    border-left: 7px solid transparent;
+    border-right: 7px solid transparent;
+    border-bottom: 10px solid $COLOR--gray-80;
+  }
+
+  &:after {
+    top: 60px;
+    border-left: 7px solid transparent;
+    border-right: 7px solid transparent;
+    border-bottom: 10px solid $COLOR--white-four;
+    box-sizing: border-box;
+  }
+}
+
+.active-link {
+  color: $COLOR--windows-blue;
+  cursor: pointer;
+  pointer-events: all;
+}

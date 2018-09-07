@@ -49,7 +49,7 @@ export class Tooltip extends Component {
         left = hoverRect.right - tooltipWidth;
         break;
       default:
-        left = hoverRect.left + ((hoverRect.width / 2) - (tooltipWidth / 2));
+        left = hoverRect.left + (hoverRect.width / 2 - tooltipWidth / 2);
     }
     this.props.data.leftOffset && (left += this.props.data.leftOffset);
     this.tooltip.style.left = `${left}px`;
@@ -69,14 +69,19 @@ export class Tooltip extends Component {
   };
   render() {
     return (
-      <CSSTransition in={this.state.shown} timeout={300} classNames={cx('tooltip-fade')} onExited={this.props.hideTooltip}>
+      <CSSTransition
+        in={this.state.shown}
+        timeout={300}
+        classNames={cx('tooltip-fade')}
+        onExited={this.props.hideTooltip}
+      >
         <div
-          ref={(tooltip) => { this.tooltip = tooltip; }}
+          ref={(tooltip) => {
+            this.tooltip = tooltip;
+          }}
           className={cx('tooltip', { 'no-arrow': this.props.data.noArrow })}
         >
-          <div className={cx('tooltip-content')}>
-            { this.props.children }
-          </div>
+          <div className={cx('tooltip-content')}>{this.props.children}</div>
         </div>
       </CSSTransition>
     );

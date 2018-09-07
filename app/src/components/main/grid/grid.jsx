@@ -1,5 +1,7 @@
 import PropTypes from 'prop-types';
+import { Fragment } from 'react';
 import classNames from 'classnames/bind';
+import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { GridHeader } from './gridHeader';
 import { GridBody } from './gridBody';
 import { columnPropTypes } from './propTypes';
@@ -22,26 +24,47 @@ export const Grid = ({
   onToggleSelectAll,
   onToggleSelection,
   className,
+  changeOnlyMobileLayout,
+  loading,
+  rowClassMapper,
+  grouped,
+  groupHeader,
+  groupFunction,
 }) => (
-  <div className={cx('grid', className)}>
-    <GridHeader
-      columns={columns}
-      sortingColumn={sortingColumn}
-      sortingDirection={sortingDirection}
-      onChangeSorting={onChangeSorting}
-      onFilterClick={onFilterClick}
-      selectable={selectable}
-      allSelected={!!selectedItems.length && isAllItemsSelected(data, selectedItems)}
-      onToggleSelectAll={onToggleSelectAll}
-    />
-    <GridBody
-      columns={columns}
-      data={data}
-      selectable={selectable}
-      selectedItems={selectedItems}
-      onToggleSelection={onToggleSelection}
-    />
-  </div>
+  <Fragment>
+    <div className={cx('grid', className)}>
+      <GridHeader
+        columns={columns}
+        sortingColumn={sortingColumn}
+        sortingDirection={sortingDirection}
+        onChangeSorting={onChangeSorting}
+        onFilterClick={onFilterClick}
+        selectable={selectable}
+        allSelected={!!selectedItems.length && isAllItemsSelected(data, selectedItems)}
+        onToggleSelectAll={onToggleSelectAll}
+        hideHeaderForMobile={changeOnlyMobileLayout}
+      />
+      {!loading && (
+        <GridBody
+          columns={columns}
+          data={data}
+          selectable={selectable}
+          selectedItems={selectedItems}
+          onToggleSelection={onToggleSelection}
+          changeOnlyMobileLayout={changeOnlyMobileLayout}
+          rowClassMapper={rowClassMapper}
+          groupHeader={groupHeader}
+          groupFunction={groupFunction}
+          grouped={grouped}
+        />
+      )}
+    </div>
+    {loading && (
+      <div className={cx('spinner-block')}>
+        <SpinningPreloader />
+      </div>
+    )}
+  </Fragment>
 );
 Grid.propTypes = {
   columns: PropTypes.arrayOf(PropTypes.shape(columnPropTypes)),
@@ -55,6 +78,12 @@ Grid.propTypes = {
   onToggleSelection: PropTypes.func,
   onToggleSelectAll: PropTypes.func,
   className: PropTypes.string,
+  changeOnlyMobileLayout: PropTypes.bool,
+  loading: PropTypes.bool,
+  rowClassMapper: PropTypes.func,
+  grouped: PropTypes.bool,
+  groupFunction: PropTypes.func,
+  groupHeader: PropTypes.oneOfType([PropTypes.node, PropTypes.func]),
 };
 Grid.defaultProps = {
   columns: [],
@@ -68,4 +97,10 @@ Grid.defaultProps = {
   onToggleSelectAll: () => {},
   onToggleSelection: () => {},
   className: '',
+  changeOnlyMobileLayout: false,
+  loading: false,
+  rowClassMapper: () => {},
+  groupFunction: () => {},
+  grouped: false,
+  groupHeader: null,
 };

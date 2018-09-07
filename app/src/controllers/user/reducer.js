@@ -4,6 +4,7 @@ import {
   SET_ACTIVE_PROJECT,
   SET_START_TIME_FORMAT,
   SETTINGS_INITIAL_STATE,
+  SET_USER_TOKEN,
 } from './constants';
 
 export const settingsReducer = (state = SETTINGS_INITIAL_STATE, { type, payload }) => {
@@ -33,8 +34,18 @@ export const activeProjectReducer = (state = '', { type, payload }) => {
   }
 };
 
+export const userToken = (state = '', { type, payload }) => {
+  switch (type) {
+    case SET_USER_TOKEN:
+      return payload;
+    default:
+      return state;
+  }
+};
+
 export const userReducer = combineReducers({
   info: userInfoReducer,
   activeProject: activeProjectReducer,
   settings: settingsReducer,
+  token: userToken,
 });

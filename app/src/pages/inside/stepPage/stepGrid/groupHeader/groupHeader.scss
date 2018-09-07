@@ -1,0 +1,31 @@
+.group-header-row {
+  height: 20px;
+}
+
+.group-header-content {
+  border-bottom: 1px solid $COLOR--gray-91;
+  box-sizing: border-box;
+  color: $COLOR--gray-47;
+  font-family: $FONT-REGULAR;
+  font-size: 14px;
+  line-height: 20px;
+  position: absolute;
+  left: 0;
+  right: 0;
+  padding-left: 10px;
+  width: 100%;
+
+  transition: background-color 0.2s ease 0s;
+
+  &:hover {
+    background-color: $COLOR--tealish-hover;
+  }
+}
+.link {
+  color: $COLOR--topaz;
+  text-decoration: none;
+}
+
+.separator {
+  padding: 0 10px;
+}

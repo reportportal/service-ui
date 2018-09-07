@@ -1,0 +1,23 @@
+.name {
+  color: $COLOR--charcoal-grey;
+  font-family: $FONT-SEMIBOLD;
+  font-size: 14px;
+  padding-bottom: 10px;
+}
+
+.row {
+  display: flex;
+  justify-content: flex-start;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  position: relative;
+}
+
+.tags {
+  padding-left: 30px;
+}
+
+.tag {
+  padding-left: 8px;
+  padding-right: 5px;
+}

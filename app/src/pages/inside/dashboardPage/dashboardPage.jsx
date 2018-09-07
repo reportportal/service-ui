@@ -2,11 +2,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import PropTypes from 'prop-types';
-import classNames from 'classnames/bind';
-import { PageLayout } from 'layouts/pageLayout';
-import { GhostButton } from 'components/buttons/ghostButton';
+import { PageLayout, PageHeader, PageSection } from 'layouts/pageLayout';
 import {
-  fetchDashboardAction,
   changeVisibilityTypeAction,
   deleteDashboardAction,
   editDashboardAction,
@@ -19,12 +16,10 @@ import {
 import { userInfoSelector } from 'controllers/user';
 import { showModalAction } from 'controllers/modal';
 import { withFilter } from 'controllers/filter';
-import AddDashboardIcon from './img/ic-add-dash-inline.svg';
+import { AddDashboardButton } from '../common/addDashboardButton';
 import { DashboardList } from './dashboardList';
 import { DashboardPageToolbar } from './dashboardPageToolbar';
-import styles from './dashboardPage.scss';
 
-const cx = classNames.bind(styles);
 const messages = defineMessages({
   pageTitle: {
     id: 'DashboardPage.title',
@@ -51,22 +46,6 @@ const messages = defineMessages({
     id: 'DashboardPage.modal.deleteModalSubmitButtonText',
     defaultMessage: 'Delete',
   },
-  editModalTitle: {
-    id: 'DashboardPage.modal.editModalTitle',
-    defaultMessage: 'Edit Dashboard',
-  },
-  editModalSubmitButtonText: {
-    id: 'DashboardPage.modal.editModalSubmitButtonText',
-    defaultMessage: 'Update',
-  },
-  addModalTitle: {
-    id: 'DashboardPage.modal.addModalTitle',
-    defaultMessage: 'Add New Dashboard',
-  },
-  addModalSubmitButtonText: {
-    id: 'DashboardPage.modal.addModalSubmitButtonText',
-    defaultMessage: 'Add',
-  },
 });
 
 @connect(
@@ -76,7 +55,6 @@ const messages = defineMessages({
     userInfo: userInfoSelector(state),
   }),
   {
-    fetchDashboard: fetchDashboardAction,
     changeVisibilityType: changeVisibilityTypeAction,
     showModal: showModalAction,
     deleteDashboard: deleteDashboardAction,
@@ -93,7 +71,6 @@ export class DashboardPage extends Component {
     deleteDashboard: PropTypes.func,
     editDashboard: PropTypes.func,
     addDashboard: PropTypes.func,
-    fetchDashboard: PropTypes.func,
     userInfo: PropTypes.object,
     filter: PropTypes.string,
     dashboardItems: PropTypes.array,
@@ -107,7 +84,6 @@ export class DashboardPage extends Component {
     deleteDashboard: () => {},
     editDashboard: () => {},
     addDashboard: () => {},
-    fetchDashboard: () => {},
     userInfo: {},
     filter: '',
     dashboardItems: [],
@@ -115,13 +91,6 @@ export class DashboardPage extends Component {
     onFilterChange: () => {},
     changeVisibilityType: () => {},
   };
-
-  componentDidMount() {
-    const { fetchDashboard, changeVisibilityType } = this.props;
-
-    fetchDashboard();
-    changeVisibilityType();
-  }
 
   onDeleteDashboardItem = (item) => {
     const {
@@ -147,33 +116,31 @@ export class DashboardPage extends Component {
   };
 
   onEditDashboardItem = (item) => {
-    const { showModal, editDashboard, intl } = this.props;
+    const { showModal, editDashboard } = this.props;
 
     showModal({
       id: 'dashboardAddEditModal',
       data: {
         dashboardItem: item,
         onSubmit: editDashboard,
-        title: intl.formatMessage(messages.editModalTitle),
-        submitText: intl.formatMessage(messages.editModalSubmitButtonText),
-        cancelText: intl.formatMessage(messages.modalCancelButtonText),
+        type: 'edit',
       },
     });
   };
 
   onAddDashboardItem = () => {
-    const { showModal, addDashboard, intl } = this.props;
+    const { showModal, addDashboard } = this.props;
 
     showModal({
       id: 'dashboardAddEditModal',
       data: {
         onSubmit: addDashboard,
-        title: intl.formatMessage(messages.addModalTitle),
-        submitText: intl.formatMessage(messages.addModalSubmitButtonText),
-        cancelText: intl.formatMessage(messages.modalCancelButtonText),
+        type: 'add',
       },
     });
   };
+
+  getBreadcrumbs = () => [{ title: this.props.intl.formatMessage(messages.pageTitle) }];
 
   getFilteredDashboardItems = () => {
     const { filter, dashboardItems } = this.props;
@@ -196,32 +163,32 @@ export class DashboardPage extends Component {
   };
 
   render() {
-    const { gridType, userInfo, onFilterChange, filter, intl } = this.props;
+    const { gridType, userInfo, onFilterChange, filter } = this.props;
     const dashboardItems = this.getFilteredDashboardItems();
 
     return (
-      <PageLayout title={intl.formatMessage(messages.pageTitle)}>
-        <div className={cx('add-dashboard-btn')}>
-          <GhostButton onClick={this.onAddDashboardItem} icon={AddDashboardIcon}>
-            {intl.formatMessage(messages.addModalTitle)}
-          </GhostButton>
-        </div>
-        <DashboardPageToolbar
-          dashboardItems={dashboardItems}
-          onGridViewToggle={this.toggleGridView}
-          onTableViewToggle={this.toggleTableView}
-          gridType={gridType}
-          filter={filter}
-          onFilterChange={onFilterChange}
-        />
-        <DashboardList
-          dashboardItems={dashboardItems}
-          gridType={gridType}
-          userInfo={userInfo}
-          onDeleteItem={this.onDeleteDashboardItem}
-          onEditItem={this.onEditDashboardItem}
-          onAddItem={this.onAddDashboardItem}
-        />
+      <PageLayout>
+        <PageHeader breadcrumbs={this.getBreadcrumbs()}>
+          <AddDashboardButton />
+        </PageHeader>
+        <PageSection>
+          <DashboardPageToolbar
+            dashboardItems={dashboardItems}
+            onGridViewToggle={this.toggleGridView}
+            onTableViewToggle={this.toggleTableView}
+            gridType={gridType}
+            filter={filter}
+            onFilterChange={onFilterChange}
+          />
+          <DashboardList
+            dashboardItems={dashboardItems}
+            gridType={gridType}
+            userInfo={userInfo}
+            onDeleteItem={this.onDeleteDashboardItem}
+            onEditItem={this.onEditDashboardItem}
+            onAddItem={this.onAddDashboardItem}
+          />
+        </PageSection>
       </PageLayout>
     );
   }

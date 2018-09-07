@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 
 const ModalRoot = document.getElementById('modal-root');
 
-@connect(state => ({
+@connect((state) => ({
   activeModal: activeModalSelector(state),
 }))
 export class ModalContainer extends Component {

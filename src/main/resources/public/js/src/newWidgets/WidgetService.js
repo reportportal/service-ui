@@ -45,6 +45,7 @@ define(function (require) {
     var ProductStatus = require('newWidgets/widgets/productStatus/index');
     var CumulativeTrendChart = require('newWidgets/widgets/cumulativeTrendChart/index');
     var FlakyTestCasesTable = require('newWidgets/widgets/flakyTestCasesTable/index');
+    var MostTimeConsumingTestCases = require('newWidgets/widgets/mostTimeConsumingTestCases/index');
 
     // ------------------ PROJECT INFO PAGE WIDGETS ------------------
     var LastLaunchPieChart = require('newWidgets/widgets/projectInfoWidgets/LastLaunchPieChartView');
@@ -73,7 +74,8 @@ define(function (require) {
         passing_rate_summary: PassingRateSummaryChart,
         // product_status: ProductStatus,
         // cumulative: CumulativeTrendChart,
-        flaky_test_cases: FlakyTestCasesTable
+        flaky_test_cases: FlakyTestCasesTable,
+        most_time_consuming: MostTimeConsumingTestCases
     };
 
     var WidgetService = {

@@ -1,0 +1,50 @@
+.wizard-info-section {
+  display: inline-block;
+  width: 320px;
+  position: relative;
+  box-sizing: border-box;
+  padding: 20px;
+  margin-right: 20px;
+  background-color: $COLOR--white;
+}
+.steps-block {
+  box-sizing: border-box;
+  border-bottom: 1px solid $COLOR--gray-91;
+}
+.widget-info-block {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 20px 0;
+}
+.widget-title {
+  display: inline-block;
+  width: 100%;
+  margin-bottom: 10px;
+  font-family: $FONT-SEMIBOLD;
+  font-size: 14px;
+  line-height: 17px;
+  color: $COLOR--charcoal-grey;
+  text-align: center;
+}
+.widget-description {
+  display: inline-block;
+  box-sizing: border-box;
+  width: 100%;
+  font-family: $FONT-REGULAR;
+  font-size: 13px;
+  line-height: 22px;
+  color: $COLOR--gray-47;
+}
+.widget-preview-block {
+  width: 280px;
+  height: 140px;
+  margin-top: 20px;
+  padding: 7.5px 15px;
+  box-sizing: border-box;
+  background-color: $COLOR--white-four;
+
+  svg {
+    width: 250px;
+    height: 125px;
+  }
+}

@@ -2,17 +2,31 @@
   position: relative;
   text-align: left;
   height: 100%;
+  width: 100%;
 
   &.show {
     .hint {
       display: block;
     }
   }
+  &.bottom-type {
+    .hint {
+      top: 100%;
+    }
+  }
+  &.top-type {
+    .hint {
+      bottom: 100%;
+
+      .hint-content {
+        transform: translateY(-100%);
+      }
+    }
+  }
 }
 .hint {
   display: none;
   position: absolute;
-  top: 100%;
   left: 0;
   width: 100%;
   height: 0;

@@ -1,6 +1,11 @@
 import { fetch, getStorageItem, setStorageItem } from 'common/utils';
 import { URLS } from 'common/urls';
-import { FETCH_USER_SUCCESS, SET_ACTIVE_PROJECT, SET_START_TIME_FORMAT } from './constants';
+import {
+  FETCH_USER_SUCCESS,
+  SET_ACTIVE_PROJECT,
+  SET_START_TIME_FORMAT,
+  SET_USER_TOKEN,
+} from './constants';
 import { userInfoSelector } from './selectors';
 
 const fetchUserSuccessAction = (user) => ({
@@ -17,19 +22,32 @@ export const setActiveProjectAction = (project) => (dispatch, getState) => {
     payload: project,
   });
 };
+
+export const generateApiTokenAction = () => (dispatch) =>
+  fetch(URLS.apiToken(), { method: 'post' }).then((res) => {
+    dispatch({ type: SET_USER_TOKEN, payload: res.access_token });
+  });
+
+export const fetchApiTokenAction = () => (dispatch) =>
+  fetch(URLS.apiToken(), { method: 'get' })
+    .then((res) => {
+      dispatch({ type: SET_USER_TOKEN, payload: res.access_token });
+    })
+    .catch(() => dispatch(generateApiTokenAction()));
+
 export const fetchUserAction = () => (dispatch) =>
   fetch(URLS.user()).then((user) => {
     const userSettings = getStorageItem(`${user.userId}_settings`) || {};
-    const activeProject = userSettings.activeProject;
-
+    const savedActiveProject = userSettings.activeProject;
+    const activeProject =
+      savedActiveProject &&
+      Object.prototype.hasOwnProperty.call(user.assigned_projects, savedActiveProject)
+        ? savedActiveProject
+        : user.default_project;
+    dispatch(fetchApiTokenAction());
     dispatch(fetchUserSuccessAction(user));
-    dispatch(
-      setActiveProjectAction(
-        activeProject && Object.prototype.hasOwnProperty.call(user.assigned_projects, activeProject)
-          ? activeProject
-          : user.default_project,
-      ),
-    );
+    dispatch(setActiveProjectAction(activeProject));
+    return { user, activeProject };
   });
 
 export const setStartTimeFormatAction = (format) => ({

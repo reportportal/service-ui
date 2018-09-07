@@ -27,27 +27,30 @@ import { InputSwitcher } from './inputSwitcher';
 import README from './README.md';
 
 storiesOf('Components/Inputs/InputSwitcher', module)
-  .addDecorator(host({
-    title: 'InputSwitcher component',
-    align: 'center middle',
-    backdrop: 'rgba(70, 69, 71, 0.2)',
-    background: '#ffffff',
-    height: 30,
-    width: 300,
-  }))
+  .addDecorator(
+    host({
+      title: 'InputSwitcher component',
+      align: 'center middle',
+      backdrop: 'rgba(70, 69, 71, 0.2)',
+      background: '#ffffff',
+      height: 30,
+      width: 300,
+    }),
+  )
   .addDecorator(withReadme(README))
-  .add('default state', () => (
-    <InputSwitcher />
-  ))
+  .add('default state', () => <InputSwitcher />)
   .add('with long text', () => (
     <InputSwitcher>
       Some very long text. Some very long text. Some very long text. Some very long text.
     </InputSwitcher>
   ))
-  .add('enabled', () => (
-    <InputSwitcher value >Some text.</InputSwitcher>
-  ))
+  .add('enabled', () => <InputSwitcher value>Some text.</InputSwitcher>)
   .add('with actions', () => (
-    <InputSwitcher onChange={action('changed')} onFocus={action('onFocus')} onBlur={action('onBlur')}>Some text.</InputSwitcher>
+    <InputSwitcher
+      onChange={action('changed')}
+      onFocus={action('onFocus')}
+      onBlur={action('onBlur')}
+    >
+      Some text.
+    </InputSwitcher>
   ));
-

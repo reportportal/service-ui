@@ -11,7 +11,7 @@
                 <% if(field.definedValues && field.definedValues.length){ %>
                     <% if(field.fieldType === 'array') { %>
                             <div class="b-users-typeahead">
-                                <input class="rp-input-default rp-width-100 users-typeahead default-value" data-name="<%= field.fieldName %>" id="<%= field.id %>" value="<%= field.value ? field.value.join(',') : '' %>" <%= notAllowed %>>
+                                <input class="rp-input-default rp-width-100 users-typeahead default-value" data-type="<%= field.fieldType %>" data-name="<%= field.fieldName %>" id="<%= field.id %>" value="<%= field.value ? field.value.join(',') : '' %>" <%= notAllowed %>>
                             </div>
                     <% }else{ %>
                         <% if(field.definedValues.length > 10){ %>

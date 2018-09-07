@@ -1,0 +1,1 @@
+export { WidgetHeader } from './widgetHeader';

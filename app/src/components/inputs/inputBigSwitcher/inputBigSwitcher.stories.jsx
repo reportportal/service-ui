@@ -27,26 +27,25 @@ import { InputBigSwitcher } from './inputBigSwitcher';
 import README from './README.md';
 
 storiesOf('Components/Inputs/InputBigSwitcher', module)
-  .addDecorator(host({
-    title: 'InputBigSwitcher component',
-    align: 'center middle',
-    backdrop: 'rgba(70, 69, 71, 0.2)',
-    background: '#ffffff',
-    height: 60,
-    width: 300,
-  }))
+  .addDecorator(
+    host({
+      title: 'InputBigSwitcher component',
+      align: 'center middle',
+      backdrop: 'rgba(70, 69, 71, 0.2)',
+      background: '#ffffff',
+      height: 80,
+      width: 300,
+      padding: 15,
+    }),
+  )
   .addDecorator(withReadme(README))
-  .add('default state', () => (
-    <InputBigSwitcher />
-  ))
-  .add('turned-on', () => (
-    <InputBigSwitcher value>Some text.</InputBigSwitcher>
-  ))
-  .add('disabled', () => (
-    <InputBigSwitcher disabled>Some text.</InputBigSwitcher>
-  ))
+  .add('default state', () => <InputBigSwitcher />)
+  .add('turned-on', () => <InputBigSwitcher value>Some text.</InputBigSwitcher>)
+  .add('disabled', () => <InputBigSwitcher disabled>Some text.</InputBigSwitcher>)
   .add('turned-on disabled', () => (
-    <InputBigSwitcher value disabled>Some text.</InputBigSwitcher>
+    <InputBigSwitcher value disabled>
+      Some text.
+    </InputBigSwitcher>
   ))
   .add('with long text', () => (
     <InputBigSwitcher>
@@ -54,8 +53,21 @@ storiesOf('Components/Inputs/InputBigSwitcher', module)
     </InputBigSwitcher>
   ))
   .add('with actions', () => (
-    <InputBigSwitcher onChange={action('changed')} onFocus={action('onFocus')} onBlur={action('onBlur')}>Some text.</InputBigSwitcher>
+    <InputBigSwitcher
+      onChange={action('changed')}
+      onFocus={action('onFocus')}
+      onBlur={action('onBlur')}
+    >
+      Some text.
+    </InputBigSwitcher>
   ))
   .add('disabled with actions', () => (
-    <InputBigSwitcher onChange={action('changed')} onFocus={action('onFocus')} onBlur={action('onBlur')} disabled>Some text.</InputBigSwitcher>
+    <InputBigSwitcher
+      onChange={action('changed')}
+      onFocus={action('onFocus')}
+      onBlur={action('onBlur')}
+      disabled
+    >
+      Some text.
+    </InputBigSwitcher>
   ));

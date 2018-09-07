@@ -1,0 +1,1 @@
+export { DefectLink } from './defectLink';

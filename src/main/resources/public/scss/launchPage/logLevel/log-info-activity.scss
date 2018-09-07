@@ -93,8 +93,9 @@
       .action-item {
         min-height: 1px;
         width: 47%;
-        & > span {
-          display: none;
+        font-size: 12px;
+        a {
+          color: $COLOR--windows-blue;
         }
       }
     }

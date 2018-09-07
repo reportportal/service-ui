@@ -1,0 +1,51 @@
+.accuracy-form-input-wrapper {
+  min-width: 100px;
+  width: 100px;
+  height: 30px;
+  position: relative;
+}
+
+.drop-down-block {
+  position: relative;
+  display: inline-block;
+  min-width: 100px;
+  width: 100px;
+  height: 30px;
+  font-family: $FONT-REGULAR;
+  font-size: 13px;
+  line-height: 13px;
+  color: $COLOR--charcoal-grey;
+}
+
+.submit-button-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 30px;
+  @media (max-width: $SCREEN_XS_MAX) {
+    display: none;
+  }
+}
+
+.submit-button-wrapper {
+  height: 30px;
+  margin-right: 65px;
+  padding: 0 15px;
+}
+
+.submit-button-text {
+  position: relative;
+  font-size: 13px;
+  font-family: $FONT-REGULAR;
+  margin: 0;
+}
+
+.percent-icon {
+  position: absolute;
+  z-index: 1;
+  top: 9px;
+  right: 10px;
+  font-style: italic;
+  font-size: 13px;
+}

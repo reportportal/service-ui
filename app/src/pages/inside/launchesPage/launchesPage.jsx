@@ -1,71 +1,135 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
-import { PageLayout } from 'layouts/pageLayout';
+import { injectIntl, intlShape, defineMessages } from 'react-intl';
+import { PageLayout, PageSection } from 'layouts/pageLayout';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
-import { DEBUG } from 'common/constants/common';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
 import { activeProjectSelector, userIdSelector } from 'controllers/user';
 import { withPagination } from 'controllers/pagination';
 import { withSorting, SORTING_DESC } from 'controllers/sorting';
 import { showModalAction } from 'controllers/modal';
+import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
+import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLock';
 import {
+  debugModeSelector,
   selectedLaunchesSelector,
   toggleLaunchSelectionAction,
-  selectLaunchesAction,
   unselectAllLaunchesAction,
   validationErrorsSelector,
   proceedWithValidItemsAction,
+  forceFinishLaunchesAction,
   mergeLaunchesAction,
   compareLaunchesAction,
+  moveLaunchesAction,
+  launchesSelector,
+  launchPaginationSelector,
+  fetchLaunchesAction,
+  lastOperationSelector,
+  loadingSelector,
+  NAMESPACE,
+  toggleAllLaunchesAction,
+  deleteItemsAction,
 } from 'controllers/launch';
-import { LaunchSuiteGrid } from './launchSuiteGrid';
+import { LaunchSuiteGrid } from 'pages/inside/common/launchSuiteGrid';
 import { LaunchToolbar } from './LaunchToolbar';
 
 const messages = defineMessages({
-  filtersPageTitle: {
-    id: 'LaunchesPage.title',
-    defaultMessage: 'Launches',
+  deleteModalHeader: {
+    id: 'LaunchesPage.deleteModalHeader',
+    defaultMessage: 'Delete launch',
+  },
+  deleteModalMultipleHeader: {
+    id: 'LaunchesPage.deleteModalMultipleHeader',
+    defaultMessage: 'Delete launches',
+  },
+  deleteModalContent: {
+    id: 'LaunchesPage.deleteModalContent',
+    defaultMessage: "Are you sure to delete launch <b>'{name}'</b>? It will no longer exist.",
+  },
+  deleteModalMultipleContent: {
+    id: 'LaunchesPage.deleteModalMultipleContent',
+    defaultMessage: 'Are you sure to delete launches? They will no longer exist.',
+  },
+  warning: {
+    id: 'LaunchesPage.warning',
+    defaultMessage:
+      'You are going to delete not your own launch. This may affect other users information on the project.',
+  },
+  warningMultiple: {
+    id: 'LaunchesPage.warningMultiple',
+    defaultMessage:
+      'You are going to delete not your own launches. This may affect other users information on the project.',
+  },
+  success: {
+    id: 'LaunchesPage.success',
+    defaultMessage: 'Launch was deleted',
+  },
+  successMultiple: {
+    id: 'LaunchesPage.successMultiple',
+    defaultMessage: 'Launches were deleted',
+  },
+  error: {
+    id: 'LaunchesPage.error',
+    defaultMessage: 'Error when deleting launch',
+  },
+  errorMultiple: {
+    id: 'LaunchesPage.errorMultiple',
+    defaultMessage: 'Error when deleting launches',
   },
 });
 
 @connect(
   (state) => ({
+    debugMode: debugModeSelector(state),
     userId: userIdSelector(state),
     activeProject: activeProjectSelector(state),
-    url: URLS.launch(activeProjectSelector(state)),
+    url: URLS.launches(activeProjectSelector(state)),
     selectedLaunches: selectedLaunchesSelector(state),
     validationErrors: validationErrorsSelector(state),
+    launches: launchesSelector(state),
+    lastOperation: lastOperationSelector(state),
+    loading: loadingSelector(state),
   }),
   {
     showModalAction,
     toggleLaunchSelectionAction,
-    selectAllLaunchesAction: selectLaunchesAction,
     unselectAllLaunchesAction,
     proceedWithValidItemsAction,
+    forceFinishLaunchesAction,
     mergeLaunchesAction,
     compareLaunchesAction,
+    moveLaunchesAction,
+    fetchLaunchesAction,
+    toggleAllLaunchesAction,
+    deleteItemsAction,
+    showNotification,
+    showScreenLockAction,
+    hideScreenLockAction,
   },
 )
 @withSorting({
   defaultSortingColumn: 'start_time',
   defaultSortingDirection: SORTING_DESC,
 })
-@withPagination()
+@withPagination({
+  paginationSelector: launchPaginationSelector,
+  namespace: NAMESPACE,
+})
 @injectIntl
 export class LaunchesPage extends Component {
   static propTypes = {
+    debugMode: PropTypes.bool.isRequired,
+    userId: PropTypes.string.isRequired,
     intl: intlShape.isRequired,
-    data: PropTypes.arrayOf(PropTypes.object),
+    launches: PropTypes.arrayOf(PropTypes.object),
     activePage: PropTypes.number,
     itemCount: PropTypes.number,
     pageCount: PropTypes.number,
     pageSize: PropTypes.number,
     sortingColumn: PropTypes.string,
     sortingDirection: PropTypes.string,
-    fetchData: PropTypes.func,
     showModalAction: PropTypes.func,
     onChangePage: PropTypes.func,
     onChangePageSize: PropTypes.func,
@@ -73,62 +137,61 @@ export class LaunchesPage extends Component {
     activeProject: PropTypes.string.isRequired,
     selectedLaunches: PropTypes.arrayOf(PropTypes.object),
     validationErrors: PropTypes.object,
-    selectAllLaunchesAction: PropTypes.func,
+    toggleAllLaunchesAction: PropTypes.func,
     unselectAllLaunchesAction: PropTypes.func,
     proceedWithValidItemsAction: PropTypes.func,
     toggleLaunchSelectionAction: PropTypes.func,
+    forceFinishLaunchesAction: PropTypes.func,
     mergeLaunchesAction: PropTypes.func,
     compareLaunchesAction: PropTypes.func,
+    moveLaunchesAction: PropTypes.func,
+    lastOperation: PropTypes.string,
+    loading: PropTypes.bool,
+    fetchLaunchesAction: PropTypes.func,
+    showNotification: PropTypes.func.isRequired,
+    showScreenLockAction: PropTypes.func.isRequired,
+    hideScreenLockAction: PropTypes.func.isRequired,
+    deleteItemsAction: PropTypes.func,
   };
 
   static defaultProps = {
-    data: [],
+    launches: [],
     activePage: 1,
     itemCount: null,
     pageCount: null,
-    pageSize: null,
+    pageSize: 20,
     sortingColumn: null,
     sortingDirection: null,
     showModalAction: () => {},
-    fetchData: () => {},
     onChangePage: () => {},
     onChangePageSize: () => {},
     onChangeSorting: () => {},
     selectedLaunches: [],
     validationErrors: {},
-    selectAllLaunchesAction: () => {},
+    toggleAllLaunchesAction: () => {},
     unselectAllLaunchesAction: () => {},
     proceedWithValidItemsAction: () => {},
     toggleLaunchSelectionAction: () => {},
+    forceFinishLaunchesAction: () => {},
     mergeLaunchesAction: () => {},
     compareLaunchesAction: () => {},
+    moveLaunchesAction: () => {},
+    lastOperation: '',
+    loading: false,
+    fetchLaunchesAction: () => {},
+    deleteItemsAction: () => {},
   };
-
-  getTitle = () =>
-    !this.props.selectedLaunches.length && this.props.intl.formatMessage(messages.filtersPageTitle);
 
   updateLaunch = (launch) => {
     fetch(URLS.launchesUpdate(this.props.activeProject, launch.id), {
       method: 'put',
       data: launch,
-    }).then(this.props.fetchData);
+    }).then(this.props.fetchLaunchesAction);
   };
   deleteItem = (id) => {
     fetch(URLS.launches(this.props.activeProject, id), {
       method: 'delete',
-    }).then(this.props.fetchData);
-  };
-  moveToDebug = (id) => {
-    fetch(URLS.launchUpdate(this.props.activeProject), {
-      method: 'put',
-      data: {
-        entities: {
-          [id]: {
-            mode: DEBUG.toUpperCase(),
-          },
-        },
-      },
-    }).then(this.props.fetchData);
+    }).then(this.props.fetchLaunchesAction);
   };
   confirmDeleteItem = (item) => {
     this.props.showModalAction({
@@ -136,35 +199,99 @@ export class LaunchesPage extends Component {
       data: { item, onConfirm: () => this.deleteItem(item.id) },
     });
   };
-  confirmMoveToDebug = (item) => {
-    this.props.showModalAction({
-      id: 'moveToDebugModal',
-      data: { onConfirm: () => this.moveToDebug(item.id) },
+
+  confirmDeleteItems = (items) => {
+    const ids = items.map((item) => item.id).join(',');
+    this.props.showScreenLockAction();
+    fetch(URLS.launches(this.props.activeProject, ids), {
+      method: 'delete',
+    })
+      .then(() => {
+        this.props.fetchLaunchesAction();
+        this.props.hideScreenLockAction();
+        this.props.showNotification({
+          message:
+            this.props.selectedLaunches.length === 1
+              ? this.props.intl.formatMessage(messages.success)
+              : this.props.intl.formatMessage(messages.successMultiple),
+          type: NOTIFICATION_TYPES.SUCCESS,
+        });
+      })
+      .catch(() => {
+        this.props.showNotification({
+          message:
+            this.props.selectedLaunches.length === 1
+              ? this.props.intl.formatMessage(messages.error)
+              : this.props.intl.formatMessage(messages.errorMultiple),
+          type: NOTIFICATION_TYPES.ERROR,
+        });
+      });
+  };
+
+  deleteItems = () => {
+    const { selectedLaunches, intl, userId } = this.props;
+    this.props.deleteItemsAction(this.props.selectedLaunches, {
+      onConfirm: this.confirmDeleteItems,
+      header:
+        selectedLaunches.length === 1
+          ? intl.formatMessage(messages.deleteModalHeader)
+          : intl.formatMessage(messages.deleteModalMultipleHeader),
+      mainContent:
+        selectedLaunches.length === 1
+          ? intl.formatMessage(messages.deleteModalContent, { name: selectedLaunches[0].name })
+          : intl.formatMessage(messages.deleteModalMultipleContent),
+      userId,
+      warning:
+        selectedLaunches.length === 1
+          ? intl.formatMessage(messages.warning)
+          : intl.formatMessage(messages.warningMultiple),
     });
   };
+
+  finishForceLaunches = (eventData) => {
+    const launches = eventData && eventData.id ? [eventData] : this.props.selectedLaunches;
+    this.props.forceFinishLaunchesAction(launches, {
+      fetchFunc: this.props.fetchLaunchesAction,
+    });
+  };
+
   openEditModal = (launch) => {
     this.props.showModalAction({
       id: 'launchEditModal',
       data: { launch, onEdit: this.updateLaunch },
     });
   };
-
-  handleAllLaunchesSelection = () => {
-    const { selectedLaunches, data: launches } = this.props;
-    if (launches.length === selectedLaunches.length) {
-      this.props.unselectAllLaunchesAction();
-      return;
-    }
-    this.props.selectAllLaunchesAction(launches);
+  openImportModal = () => {
+    this.props.showModalAction({
+      id: 'launchImportModal',
+      data: {
+        onImport: this.props.fetchLaunchesAction,
+      },
+    });
   };
 
-  proceedWithValidItems = () => this.props.proceedWithValidItemsAction(this.props.fetchData);
+  handleAllLaunchesSelection = () => this.props.toggleAllLaunchesAction(this.props.launches);
 
-  mergeLaunches = () => this.props.mergeLaunchesAction(this.props.fetchData);
+  proceedWithValidItems = () =>
+    this.props.proceedWithValidItemsAction(this.props.lastOperation, this.props.selectedLaunches);
+
+  mergeLaunches = () =>
+    this.props.mergeLaunchesAction(this.props.selectedLaunches, {
+      fetchFunc: this.props.fetchLaunchesAction,
+    });
+
+  moveLaunches = (eventData) => {
+    const launches = eventData && eventData.id ? [eventData] : this.props.selectedLaunches;
+    this.props.moveLaunchesAction(launches, {
+      fetchFunc: this.props.fetchLaunchesAction,
+      debugMode: this.props.debugMode,
+    });
+  };
+
+  compareLaunches = () => this.props.compareLaunchesAction(this.props.selectedLaunches);
 
   render() {
     const {
-      data,
       activePage,
       itemCount,
       pageCount,
@@ -175,39 +302,52 @@ export class LaunchesPage extends Component {
       sortingDirection,
       onChangeSorting,
       selectedLaunches,
+      launches,
+      loading,
+      debugMode,
     } = this.props;
-
     return (
-      <PageLayout title={this.getTitle()}>
-        <LaunchToolbar
-          errors={this.props.validationErrors}
-          selectedLaunches={selectedLaunches}
-          onUnselect={this.props.toggleLaunchSelectionAction}
-          onUnselectAll={this.props.unselectAllLaunchesAction}
-          onProceedValidItems={this.proceedWithValidItems}
-          onMerge={this.mergeLaunches}
-          onCompare={this.props.compareLaunchesAction}
-        />
-        <LaunchSuiteGrid
-          data={data}
-          sortingColumn={sortingColumn}
-          sortingDirection={sortingDirection}
-          onChangeSorting={onChangeSorting}
-          onDeleteItem={this.confirmDeleteItem}
-          onMoveToDebug={this.confirmMoveToDebug}
-          onEditLaunch={this.openEditModal}
-          selectedLaunches={selectedLaunches}
-          onLaunchSelect={this.props.toggleLaunchSelectionAction}
-          onAllLaunchesSelect={this.handleAllLaunchesSelection}
-        />
-        <PaginationToolbar
-          activePage={activePage}
-          itemCount={itemCount}
-          pageCount={pageCount}
-          pageSize={pageSize}
-          onChangePage={onChangePage}
-          onChangePageSize={onChangePageSize}
-        />
+      <PageLayout>
+        <PageSection>
+          <LaunchToolbar
+            errors={this.props.validationErrors}
+            onRefresh={this.props.fetchLaunchesAction}
+            selectedLaunches={selectedLaunches}
+            onUnselect={this.props.toggleLaunchSelectionAction}
+            onUnselectAll={this.props.unselectAllLaunchesAction}
+            onProceedValidItems={this.proceedWithValidItems}
+            onMove={this.moveLaunches}
+            onMerge={this.mergeLaunches}
+            onForceFinish={this.finishForceLaunches}
+            onCompare={this.compareLaunches}
+            onImportLaunch={this.openImportModal}
+            debugMode={debugMode}
+            onDelete={this.deleteItems}
+          />
+          <LaunchSuiteGrid
+            data={launches}
+            sortingColumn={sortingColumn}
+            sortingDirection={sortingDirection}
+            onChangeSorting={onChangeSorting}
+            onDeleteItem={this.confirmDeleteItem}
+            onMove={this.moveLaunches}
+            onEditLaunch={this.openEditModal}
+            onForceFinish={this.finishForceLaunches}
+            selectedItems={selectedLaunches}
+            onItemSelect={this.props.toggleLaunchSelectionAction}
+            onAllItemsSelect={this.handleAllLaunchesSelection}
+            withHamburger
+            loading={loading}
+          />
+          <PaginationToolbar
+            activePage={activePage}
+            itemCount={itemCount}
+            pageCount={pageCount}
+            pageSize={pageSize}
+            onChangePage={onChangePage}
+            onChangePageSize={onChangePageSize}
+          />
+        </PageSection>
       </PageLayout>
     );
   }

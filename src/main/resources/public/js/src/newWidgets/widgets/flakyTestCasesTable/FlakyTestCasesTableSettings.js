@@ -76,6 +76,25 @@ define(function (require) {
                         action: 'metadata_fields',
                         fields: ['name', 'start_time']
                     }
+                },
+                {
+                    control: 'checkbox',
+                    options: {
+                        label: Localization.widgets.includeMethods,
+                        getValue: function (model) {
+                            var widgetOptions = model.getWidgetOptions();
+                            return !!widgetOptions.include_methods;
+                        },
+                        setValue: function (value, model) {
+                            var widgetOptions = model.getWidgetOptions();
+                            if (value) {
+                                widgetOptions.include_methods = [];
+                            } else {
+                                delete widgetOptions.include_methods;
+                            }
+                            model.setWidgetOptions(widgetOptions);
+                        }
+                    }
                 }
             ]);
 

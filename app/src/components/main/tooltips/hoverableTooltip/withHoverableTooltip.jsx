@@ -7,7 +7,7 @@ import { ALIGN_LEFT, ALIGN_RIGHT } from '../constants';
 const cx = classNames.bind(styles);
 const DEFAULT_TOOLTIP_WIDTH = 200;
 
-export const withHoverableTooltip = ({ TooltipComponent, data }) => WrappedComponent => (
+export const withHoverableTooltip = ({ TooltipComponent, data }) => (WrappedComponent) =>
   class Wrapper extends Component {
     static propTypes = {
       children: PropTypes.node,
@@ -27,7 +27,7 @@ export const withHoverableTooltip = ({ TooltipComponent, data }) => WrappedCompo
           left = this.hoverRect.offsetWidth - tooltipWidth;
           break;
         default:
-          left = `${(this.hoverRect.offsetWidth / 2) - (tooltipWidth / 2)}`;
+          left = `${this.hoverRect.offsetWidth / 2 - tooltipWidth / 2}`;
       }
       data.leftOffset && (left += data.leftOffset);
       this.tooltip.style.left = `${left}px`;
@@ -38,20 +38,22 @@ export const withHoverableTooltip = ({ TooltipComponent, data }) => WrappedCompo
     }
     render() {
       return (
-        <div className={cx('hover-rect')} ref={(hoverRect) => { this.hoverRect = hoverRect; }} >
-          <WrappedComponent {...this.props}>
-            { this.props.children }
-          </WrappedComponent>
+        <div
+          className={cx('hover-rect')}
+          ref={(hoverRect) => {
+            this.hoverRect = hoverRect;
+          }}
+        >
+          <WrappedComponent {...this.props}>{this.props.children}</WrappedComponent>
           <div
-            ref={(tooltip) => { this.tooltip = tooltip; }}
-            className={cx(
-              'hoverable-tooltip',
-              {
-                'no-arrow': data.noArrow,
-                'no-mobile': data.noMobile,
-                'desktop-only': data.desktopOnly,
-              },
-            )}
+            ref={(tooltip) => {
+              this.tooltip = tooltip;
+            }}
+            className={cx('hoverable-tooltip', {
+              'no-arrow': data.noArrow,
+              'no-mobile': data.noMobile,
+              'desktop-only': data.desktopOnly,
+            })}
           >
             <div className={cx('hoverable-tooltip-content')}>
               <TooltipComponent {...this.props} />
@@ -60,4 +62,4 @@ export const withHoverableTooltip = ({ TooltipComponent, data }) => WrappedCompo
         </div>
       );
     }
-});
+  };

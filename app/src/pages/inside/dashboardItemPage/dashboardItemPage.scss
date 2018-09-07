@@ -38,3 +38,9 @@
     margin-left: 10px;
   }
 }
+
+:global {
+  .fullscreen {
+    background: $COLOR--white-two;
+  }
+}

@@ -10,9 +10,9 @@ import {
   DASHBOARDS_TABLE_VIEW,
 } from './constants';
 
-export const fetchDashboardAction = () => (dispatch, getState) => {
+export const fetchDashboardAction = (projectId) => (dispatch, getState) => {
   const userId = userIdSelector(getState());
-  const activeProject = activeProjectSelector(getState());
+  const activeProject = projectId || activeProjectSelector(getState());
 
   Promise.all([
     fetch(URLS.dashboards(activeProject)),

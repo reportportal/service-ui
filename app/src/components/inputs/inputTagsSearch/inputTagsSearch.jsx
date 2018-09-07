@@ -30,40 +30,50 @@ export class InputTagsSearch extends Component {
   static propTypes = {
     uri: PropTypes.string,
     options: PropTypes.array,
-    value: PropTypes.array,
+    value: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
     placeholder: PropTypes.string,
     focusPlaceholder: PropTypes.string,
     loadingPlaceholder: PropTypes.string,
     nothingFound: PropTypes.string,
+    error: PropTypes.string,
+    touched: PropTypes.bool,
     creatable: PropTypes.bool,
     async: PropTypes.bool,
     multi: PropTypes.bool,
     removeSelected: PropTypes.bool,
     onChange: PropTypes.func,
+    onFocus: PropTypes.func,
+    onBlur: PropTypes.func,
     makeOptions: PropTypes.func,
     isValidNewOption: PropTypes.func,
     minLength: PropTypes.number,
     showNewLabel: PropTypes.bool,
     dynamicSearchPromptText: PropTypes.bool,
+    isClearable: PropTypes.bool,
   };
   static defaultProps = {
     uri: '',
     options: [],
-    value: [],
+    value: {},
     placeholder: '',
     focusPlaceholder: '',
     loadingPlaceholder: '',
     nothingFound: '',
+    error: '',
+    touched: false,
     creatable: false,
     async: false,
-    multi: true,
+    multi: false,
     removeSelected: false,
     makeOptions: () => {},
     isValidNewOption: () => {},
     onChange: () => {},
+    onFocus: () => {},
+    onBlur: () => {},
     minLength: 1,
     showNewLabel: false,
     dynamicSearchPromptText: false,
+    isClearable: false,
   };
   state = {
     searchPromptText: this.props.nothingFound,
@@ -83,6 +93,9 @@ export class InputTagsSearch extends Component {
       this.setState({ searchPromptText: this.props.nothingFound });
     }
     return input;
+  };
+  onBlur = () => {
+    this.props.onBlur(this.props.value);
   };
   getItems = (input) => {
     if (input.length >= this.props.minLength) {
@@ -119,6 +132,8 @@ export class InputTagsSearch extends Component {
   };
   render() {
     const {
+      error,
+      touched,
       async,
       creatable,
       loadingPlaceholder,
@@ -126,13 +141,15 @@ export class InputTagsSearch extends Component {
       value,
       options,
       onChange,
+      onFocus,
       multi,
       removeSelected,
       placeholder,
+      isClearable,
     } = this.props;
     const SelectComponent = selectType(async, creatable);
     return (
-      <div className={cx('select-container')}>
+      <div className={cx('select-container', { error, touched })}>
         <SelectComponent
           loadOptions={this.getItems}
           placeholder={placeholder}
@@ -146,12 +163,15 @@ export class InputTagsSearch extends Component {
           options={options}
           onInputChange={this.onInputChange}
           onChange={onChange}
+          onFocus={onFocus}
+          onBlur={this.onBlur}
           multi={multi}
           optionRenderer={this.renderOption}
           isValidNewOption={this.isValidNewOption}
           menuRenderer={renderItems}
           promptTextCreator={this.renderNewItemLabel}
           removeSelected={removeSelected}
+          isClearable={isClearable}
         />
       </div>
     );

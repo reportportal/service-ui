@@ -1,0 +1,44 @@
+.localization-block {
+  margin: 30px 0 30px 15px;
+  display: flex;
+  align-items: start;
+  @media (max-width: $SCREEN_SM_MAX) {
+    margin: 30px 0 0 15px;
+  }
+}
+.label {
+  margin-right: 30px;
+  margin-top: 5px;
+  font-size: 13px;
+  color: $COLOR--charcoal-grey;
+}
+.localization {
+  width: 310px;
+}
+.icon {
+  position: relative;
+  width: 24px;
+  height: 24px;
+  margin-right: 5px;
+  display: inline-block;
+}
+.icon-block {
+  display: flex;
+  align-items: center;
+}
+.note {
+  margin-top: 5px;
+  line-height: 18px;
+  font-size: 13px;
+  color: $COLOR--tealish;
+}
+.text {
+  line-height: 18px;
+  color: $COLOR--charcoal-grey;
+  font-size: 12px;
+  a {
+    color: $COLOR--windows-blue;
+    cursor: pointer;
+    text-decoration: none;
+  }
+}

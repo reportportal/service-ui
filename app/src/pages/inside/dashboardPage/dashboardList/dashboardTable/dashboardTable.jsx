@@ -1,12 +1,12 @@
 import React, { Component, Fragment } from 'react';
 import classNames from 'classnames/bind';
-import { NavLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { Grid } from 'components/main/grid';
 import { Icon } from 'components/main/icon';
 import { EmptyDashboards } from 'pages/inside/dashboardPage/dashboardList/EmptyDashboards';
-import { hasPrevilegesForDashboardDeletion } from 'common/utils/validation';
+import { DeleteColumn } from './deleteColumn';
+import DashboardNameColumn from './dashboardNameColumn';
 import styles from './dashboardTable.scss';
 
 const cx = classNames.bind(styles);
@@ -37,18 +37,6 @@ const messages = defineMessages({
   },
 });
 
-const DashboardNameColumn = (props) => (
-  <NavLink className={cx('name', 'cell')} to={`dashboard/${props.value.id}`}>
-    {props.value.name}
-  </NavLink>
-);
-DashboardNameColumn.propTypes = {
-  value: PropTypes.object,
-};
-DashboardNameColumn.defaultProps = {
-  value: {},
-};
-
 const DescriptionColumn = ({ value }) => <div className={cx('description', 'cell')}>{value}</div>;
 DescriptionColumn.propTypes = {
   value: PropTypes.string,
@@ -65,7 +53,12 @@ OwnerColumn.defaultProps = {
   value: '',
 };
 
-const SharedColumn = ({ value: { share, owner }, customProps: { currentUser: { userId } } }) => {
+const SharedColumn = ({
+  value: { share, owner },
+  customProps: {
+    currentUser: { userId },
+  },
+}) => {
   const isShared = share || userId !== owner;
 
   return <div className={cx('shared', 'cell')}>{isShared && <Icon type="icon-check" />}</div>;
@@ -80,7 +73,10 @@ SharedColumn.defaultProps = {
 };
 
 const EditColumn = ({ value, customProps }) => {
-  const { onEdit, currentUser: { userId } } = customProps;
+  const {
+    onEdit,
+    currentUser: { userId },
+  } = customProps;
   const { owner } = value;
 
   const editItemHandler = () => {
@@ -100,32 +96,6 @@ EditColumn.propTypes = {
   customProps: PropTypes.object,
 };
 EditColumn.defaultProps = {
-  value: {},
-  customProps: {},
-};
-
-const DeleteColumn = ({ value, customProps }) => {
-  const { onDelete, currentUser: { userId, userRole } } = customProps;
-  const { owner } = value;
-  const deleteItemHandler = () => {
-    onDelete(value);
-  };
-
-  return (
-    <div className={cx('cell', 'with-button', 'delete')}>
-      <div className={cx('icon-holder')}>
-        {(userId === owner || hasPrevilegesForDashboardDeletion(userRole)) && (
-          <Icon type="icon-delete" onClick={deleteItemHandler} />
-        )}
-      </div>
-    </div>
-  );
-};
-DeleteColumn.propTypes = {
-  value: PropTypes.object,
-  customProps: PropTypes.object,
-};
-DeleteColumn.defaultProps = {
   value: {},
   customProps: {},
 };

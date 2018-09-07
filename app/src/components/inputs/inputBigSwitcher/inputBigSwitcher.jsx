@@ -26,9 +26,18 @@ import styles from './inputBigSwitcher.scss';
 
 const cx = classNames.bind(styles);
 
-export const InputBigSwitcher = ({ children, disabled, value, onChange, onFocus, onBlur }) => {
+export const InputBigSwitcher = ({
+  children,
+  disabled,
+  value,
+  onChange,
+  onFocus,
+  onBlur,
+  mobileDisabled,
+}) => {
   const classes = cx({
     'switcher-wrapper': true,
+    'mobile-disabled': mobileDisabled,
     disabled,
   });
   const sliderClasses = cx({
@@ -42,16 +51,10 @@ export const InputBigSwitcher = ({ children, disabled, value, onChange, onFocus,
     <label className={cx('input-big-switcher')} tabIndex="1">
       <div className={classes}>
         <div className={cx('on')}>
-          <FormattedMessage
-            id={'Common.on'}
-            defaultMessage={'ON'}
-          />
+          <FormattedMessage id={'Common.on'} defaultMessage={'ON'} />
         </div>
         <div className={cx('off')}>
-          <FormattedMessage
-            id={'Common.off'}
-            defaultMessage={'OFF'}
-          />
+          <FormattedMessage id={'Common.off'} defaultMessage={'OFF'} />
         </div>
         <input
           className={cx('input')}
@@ -63,7 +66,7 @@ export const InputBigSwitcher = ({ children, disabled, value, onChange, onFocus,
         />
         <div className={sliderClasses} />
       </div>
-      <span className={cx('children-container')}>{children}</span>
+      {children && <span className={cx('children-container')}>{children}</span>}
     </label>
   );
 };
@@ -71,6 +74,7 @@ export const InputBigSwitcher = ({ children, disabled, value, onChange, onFocus,
 InputBigSwitcher.propTypes = {
   children: PropTypes.node,
   value: PropTypes.bool,
+  mobileDisabled: PropTypes.bool,
   disabled: PropTypes.bool,
   onChange: PropTypes.func,
   onFocus: PropTypes.func,
@@ -80,6 +84,7 @@ InputBigSwitcher.propTypes = {
 InputBigSwitcher.defaultProps = {
   children: '',
   value: false,
+  mobileDisabled: false,
   disabled: false,
   onChange: () => {},
   onFocus: () => {},

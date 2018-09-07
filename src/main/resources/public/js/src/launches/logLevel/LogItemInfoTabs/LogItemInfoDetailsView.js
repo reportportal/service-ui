@@ -42,7 +42,8 @@ define(function (require) {
                 el: $('[data-js-item-detail-container]', this.$el),
                 noIssue: true,
                 model: this.itemModel,
-                context: 'logLevel'
+                context: 'logLevel',
+                prevModel: options.prevModel
             });
         },
 

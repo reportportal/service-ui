@@ -1,4 +1,4 @@
-import { PureComponent } from 'react';
+import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connectRouter } from 'common/utils';
 
@@ -15,41 +15,37 @@ const debounce = (callback, time) => {
   };
 };
 
-export const withFilter = WrappedComponent => connectRouter(query => ({
-  filter: query[FILTER_KEY],
-}), {
-  updateFilter: filter => ({ [FILTER_KEY]: filter }),
-})(
-  class FilterWrapper extends PureComponent {
-    static displayName = `withFilter(${WrappedComponent.displayName || WrappedComponent.name})`;
+export const withFilter = (WrappedComponent) =>
+  connectRouter(
+    (query) => ({
+      filter: query[FILTER_KEY],
+    }),
+    {
+      updateFilter: (filter) => ({ [FILTER_KEY]: filter }),
+    },
+  )(
+    class FilterWrapper extends Component {
+      static displayName = `withFilter(${WrappedComponent.displayName || WrappedComponent.name})`;
 
-    static propTypes = {
-      filter: PropTypes.string,
-      updateFilter: PropTypes.func,
-    };
+      static propTypes = {
+        filter: PropTypes.string,
+        updateFilter: PropTypes.func,
+      };
 
-    static defaultProps = {
-      filter: null,
-      updateFilter: () => {
-      },
-    };
+      static defaultProps = {
+        filter: null,
+        updateFilter: () => {},
+      };
 
-    handleFilterChange = debounce((value) => {
-      this.props.updateFilter(value || undefined);
-    }, 300);
+      handleFilterChange = debounce((value) => {
+        this.props.updateFilter(value || undefined);
+      }, 300);
 
-    render() {
-      const {
-        filter,
-        updateFilter,
-        ...rest
-      } = this.props;
-      return (
-        <WrappedComponent
-          filter={filter}
-          onFilterChange={this.handleFilterChange}
-          {...rest}
-        />
-      );
-    }
-  });
+      render() {
+        const { filter, updateFilter, ...rest } = this.props;
+        return (
+          <WrappedComponent filter={filter} onFilterChange={this.handleFilterChange} {...rest} />
+        );
+      }
+    },
+  );

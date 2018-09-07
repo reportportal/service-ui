@@ -22,7 +22,11 @@
 import React, { Component } from 'react';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
+import Parser from 'html-react-parser';
+import { FormattedMessage } from 'react-intl';
+import { SpringSystem } from 'rebound';
 import { Scrollbars } from 'react-custom-scrollbars';
+import TopIcon from './img/top-inline.svg';
 import styles from './scrollWrapper.scss';
 
 const cx = classNames.bind(styles);
@@ -42,6 +46,7 @@ export class ScrollWrapper extends Component {
     renderView: PropTypes.func,
     hideTracksWhenNotNeeded: PropTypes.bool,
     thumbMinSize: PropTypes.number,
+    withBackToTop: PropTypes.bool,
   };
   static defaultProps = {
     children: {},
@@ -50,16 +55,71 @@ export class ScrollWrapper extends Component {
     autoHeightMin: 0,
     autoHeightMax: 200,
     autoHideTimeout: 500,
-    renderTrackHorizontal: props => <div {...props} className={cx('track-horizontal')} />,
-    renderTrackVertical: props => <div {...props} className={cx('track-vertical')} />,
-    renderThumbHorizontal: props => <div {...props} className={cx('thumb-horizontal')} />,
-    renderThumbVertical: props => <div {...props} className={cx('thumb-vertical')} />,
-    renderView: props => <div {...props} className={cx('scrolling-content')} />,
+    renderTrackHorizontal: (props) => <div {...props} className={cx('track-horizontal')} />,
+    renderTrackVertical: (props) => <div {...props} className={cx('track-vertical')} />,
+    renderThumbHorizontal: (props) => <div {...props} className={cx('thumb-horizontal')} />,
+    renderThumbVertical: (props) => <div {...props} className={cx('thumb-vertical')} />,
+    renderView: (props) => <div {...props} className={cx('scrolling-content')} />,
     hideTracksWhenNotNeeded: false,
     thumbMinSize: 30,
+    withBackToTop: false,
+  };
+  state = {
+    showButton: false,
+  };
+
+  componentDidMount = () => {
+    if (this.props.withBackToTop) {
+      this.springSystem = new SpringSystem();
+      this.spring = this.springSystem.createSpring();
+      this.spring.addListener({ onSpringUpdate: this.handleSpringUpdate });
+      this.stopScroll = false;
+    }
+  };
+
+  componentWillUnmount = () => {
+    if (this.props.withBackToTop) {
+      this.springSystem.deregisterSpring(this.spring);
+      this.springSystem.removeAllListeners();
+      this.springSystem = undefined;
+      this.spring.destroy();
+      this.spring = undefined;
+    }
+  };
+
+  getScrollTop = () => this.scrollbars.getScrollTop();
+
+  getScrollHeight = () => this.scrollbars.getScrollHeight();
+
+  getHeight = () => this.scrollbars.getHeight();
+
+  setupRef = (scrollbars) => {
+    this.scrollbars = scrollbars;
+  };
+
+  handleSpringUpdate = (spring) => {
+    const val = spring.getCurrentValue();
+    if (this.stopScroll) {
+      return;
+    } else if (val < 1) {
+      this.scrollbars.scrollTop(0);
+      this.stopScroll = true;
+      return;
+    }
+    this.scrollbars.scrollTop(val);
+  };
+
+  scrollTop = () => {
+    this.stopScroll = false;
+    const scrollTop = this.scrollbars.getScrollTop();
+    this.spring.setCurrentValue(scrollTop).setAtRest();
+    this.spring.setEndValue(0);
   };
 
   handleScrollFrame = (values) => {
+    this.props.withBackToTop && values.scrollTop > 100
+      ? this.setState({ showButton: true })
+      : this.setState({ showButton: false });
     if (values.scrollTop !== this.scrollbars.lastViewScrollTop) {
       this.scrollbars.thumbVertical.style.opacity = 1;
     }
@@ -73,9 +133,10 @@ export class ScrollWrapper extends Component {
   };
 
   render() {
-    return ( // base props are defined. For more info see https://github.com/malte-wessel/react-custom-scrollbars/blob/master/docs/API.md
+    return (
+      // base props are defined. For more info see https://github.com/malte-wessel/react-custom-scrollbars/blob/master/docs/API.md
       <Scrollbars
-        ref={(scrollbars) => { this.scrollbars = scrollbars; }}
+        ref={this.setupRef}
         className={cx('scroll-component')}
         autoHide={this.props.autoHide}
         autoHeight={this.props.autoHeight}
@@ -89,11 +150,16 @@ export class ScrollWrapper extends Component {
         renderView={this.props.renderView}
         hideTracksWhenNotNeeded={this.props.hideTracksWhenNotNeeded}
         thumbMinSize={this.props.thumbMinSize}
-
         onScrollFrame={this.handleScrollFrame}
         onScrollStop={this.handleScrollStop}
       >
-        { this.props.children }
+        {this.props.children}
+        {this.state.showButton && (
+          <button className={cx('back-to-top')} onClick={this.scrollTop}>
+            <i className={cx('top-icon')}>{Parser(TopIcon)}</i>
+            <FormattedMessage id="ScrollWrapper.backToTop" defaultMessage="Back to top" />
+          </button>
+        )}
       </Scrollbars>
     );
   }

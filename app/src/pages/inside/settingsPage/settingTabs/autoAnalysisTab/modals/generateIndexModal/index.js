@@ -1,0 +1,1 @@
+export { GenerateIndexModal } from './generateIndexModal';

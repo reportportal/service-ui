@@ -1,161 +1,164 @@
-/*
- * Copyright 2017 EPAM Systems
- *
- *
- * This file is part of EPAM Report Portal.
- * https://github.com/reportportal/service-ui
- *
- * Report Portal is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * Report Portal is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
- */
-/* eslint-disable react/no-danger */
-// TODO when state access will be available add avatar's show/load logic
 import PropTypes from 'prop-types';
-import React, { Component } from 'react';
-import { FormattedMessage } from 'react-intl';
 import classNames from 'classnames/bind';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { defineMessages, injectIntl, intlShape } from 'react-intl';
+import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
+import { showModalAction } from 'controllers/modal';
+import { userInfoSelector } from 'controllers/user';
+import { fetch } from 'common/utils';
+import { URLS } from 'common/urls';
+import { INTERNAL, LDAP } from 'common/constants/accountType';
 import { GhostButton } from 'components/buttons/ghostButton';
 import styles from './personalInfoBlock.scss';
 import { BlockContainerBody, BlockContainerHeader } from '../blockContainer';
-import PencilIcon from './img/pencil-icon-inline.svg';
+import { PhotoControls } from './photoControls';
+import { UserInfo } from './userInfo/userInfo';
 
 const cx = classNames.bind(styles);
+const getPhoto = (userId) => URLS.dataUserPhoto(new Date().getTime(), userId);
 
+const messages = defineMessages({
+  header: {
+    id: 'PersonalInfoBlock.header',
+    defaultMessage: 'Personal information',
+  },
+  changePassword: {
+    id: 'PersonalInfoBlock.changePassword',
+    defaultMessage: 'Change password',
+  },
+  passwordChanged: {
+    id: 'PersonalInfoBlock.passwordChanged',
+    defaultMessage: 'Your password has been changed successfully',
+  },
+  errorChangePassword: {
+    id: 'PersonalInfoBlock.errorChangePassword',
+    defaultMessage: "Error! Can't change password.",
+  },
+  forceUpdate: {
+    id: 'PersonalInfoBlock.forceUpdate',
+    defaultMessage: 'ForceUpdate',
+  },
+  synchronize: {
+    id: 'PersonalInfoBlock.synchronize',
+    defaultMessage: 'User info successfully synchronized',
+  },
+  synchronizeError: {
+    id: 'PersonalInfoBlock.synchronizeError',
+    defaultMessage: "Can't synchronize profile!",
+  },
+});
+
+@connect(
+  (state) => ({
+    userId: userInfoSelector(state).userId,
+    accountType: userInfoSelector(state).account_type,
+  }),
+  { showNotification, showModalAction },
+)
+@injectIntl
 export class PersonalInfoBlock extends Component {
   static propTypes = {
-    login: PropTypes.string,
-    name: PropTypes.string,
-    email: PropTypes.string,
-    photoSrc: PropTypes.string,
+    userId: PropTypes.string,
+    accountType: PropTypes.string,
+    intl: intlShape.isRequired,
+    showModalAction: PropTypes.func.isRequired,
+    showNotification: PropTypes.func.isRequired,
   };
   static defaultProps = {
-    login: '',
-    name: '',
-    email: '',
-    photoSrc: '',
+    userId: '',
+    accountType: '',
   };
 
   state = {
-    avatarSource: '',
-    photoLoaded: false,
+    avatarSource: getPhoto(this.props.userId),
   };
-
-  componentWillMount() {
-    this.setState({ avatarSource: this.props.photoSrc });
-  }
-  onClickUploadPhoto = () => {
-    this.fileSelector.click();
+  onChangePassword = () =>
+    this.props.showModalAction({
+      id: 'changePasswordModal',
+      data: { onChangePassword: this.changePasswordHandler },
+    });
+  onForceUpdate = () => {
+    const { accountType, intl } = this.props;
+    fetch(URLS.userSynchronize(accountType), { method: 'post' })
+      .then(() => {
+        this.props.showNotification({
+          message: intl.formatMessage(messages.synchronize),
+          type: NOTIFICATION_TYPES.SUCCESS,
+        });
+        this.props.showModalAction({
+          id: 'forceUpdateModal',
+          data: { onForceUpdate: this.forceUpdateHandler },
+        });
+      })
+      .catch(() => {
+        showNotification({
+          message: intl.formatMessage(messages.synchronizeError),
+          type: NOTIFICATION_TYPES.ERROR,
+        });
+      });
   };
-  selectPhotoHandler = (e) => {
-    const file = e.currentTarget.files[0];
-    if (file) {
-      if (this.validateFileExtension(file)) {
-        const reader = new FileReader();
-        const image = new Image();
-        reader.readAsDataURL(file);
-        reader.onload = (_file) => {
-          image.src = _file.target.result;
-          image.onload = () => {
-            // if (this.validateImageSize(image, file)) {
-            //   console.log('valid');
-            this.setState({ avatarSource: _file.target.result });
-            //   self.$profileAvatar.attr('src', _file.target.result);
-            //   self.$editPhotoBlock.hide();
-            //   self.$uploadPhotoBlock.show();
-            //   self.$wrongImageMessage.hide().removeClass('shown');
-            //   self.$profileAvatar.parent().removeClass('active');
-            // } else {
-            //   console.log('invalid');
-            //   self.$editPhotoBlock.show();
-            //   self.$uploadPhotoBlock.hide();
-            //   self.$wrongImageMessage.show().addClass('shown');
-            // }
-          };
-        };
-      } else {
-        // this.$wrongImageMessage.show();
-      }
-    }
+  changePasswordHandler = (data) => {
+    fetch(URLS.userChangePassword(), {
+      method: 'post',
+      data: { oldPassword: data.oldPassword, newPassword: data.newPassword },
+    })
+      .then(() => {
+        this.props.showNotification({
+          message: this.props.intl.formatMessage(messages.passwordChanged),
+          type: NOTIFICATION_TYPES.SUCCESS,
+        });
+      })
+      .catch(() => {
+        this.props.showNotification({
+          message: this.props.intl.formatMessage(messages.passwordChanged),
+          type: NOTIFICATION_TYPES.ERROR,
+        });
+      });
   };
-  validateFileExtension = file => (/\.(gif|jpg|jpeg|png)$/i).test(file.name);
-  validateImageSize = (image, file) => {
-    const width = image.width;
-    const height = image.height;
-    const size = Math.floor(file.size / 1024);
-    return size <= 1000 && width <= 300 && height <= 500;
+  forceUpdateHandler = () => {
+    fetch(URLS.sessionToken(), { method: 'delete' });
   };
-
+  uploadNewImage = (image) => {
+    this.setState({ avatarSource: image });
+  };
+  removeImage = () => {
+    this.setState({ avatarSource: getPhoto(this.props.userId) });
+  };
 
   render() {
-    // const xhr = new XMLHttpRequest();
-    // const url = `/api/v1/data/photo?superadmin?at=${Date.now()}` +
-    //  `&access_token=14113ab4-9c8f-421f-a203-fe86b7c964f6`;
-    // xhr.open('GET', url, false);
-    // xhr.send();
-    // xhr.onreadystatechange = function () { // (3)
-    //   if (xhr.readyState !== 4) return;
-    //   if (xhr.status === 200) {
-    //     console.log(xhr);
-    //   }
-    // };
-
+    const { intl, accountType, userId } = this.props;
     return (
       <div className={cx('personal-info-block')}>
-        <BlockContainerHeader>
-          <FormattedMessage id={'PersonalInfoBlock.header'} defaultMessage={'Personal information'} />
-        </BlockContainerHeader>
+        <BlockContainerHeader>{intl.formatMessage(messages.header)}</BlockContainerHeader>
         <BlockContainerBody>
           <div className={cx('block-content')}>
             <div className={cx('avatar-wrapper')}>
               <img className={cx('avatar')} src={this.state.avatarSource} alt="Profile avatar" />
             </div>
             <div className={cx('info')}>
-              <div className={cx('login')}>
-                { this.props.login }
-              </div>
-              <div className={cx('name-field')}>
-                <span className={cx('name')}>
-                  { this.props.name }
-                  <i className={cx('name-pencil-icon')} dangerouslySetInnerHTML={{ __html: PencilIcon }} />
-                </span>
-              </div>
-              <div className={cx('email')}>
-                { this.props.email }
-                { <i className={cx('email-pencil-icon')} dangerouslySetInnerHTML={{ __html: PencilIcon }} /> }
-              </div>
-              <div className={cx('photo-controls')}>
-                <div className={cx('input-file')}>
-                  <input ref={(inputFile) => { this.fileSelector = inputFile; }} onChange={this.selectPhotoHandler} type="file" accept="image/gif, image/jpeg, image/png" />
-                </div>
-                <div className={cx('photo-btn')}>
-                  <GhostButton onClick={this.onClickUploadPhoto}>
-                    <FormattedMessage id={'PersonalInfoBlock.uploadPhoto'} defaultMessage={'Upload photo'} />
+              <UserInfo accountType={accountType} userId={userId} />
+              {accountType === INTERNAL && (
+                <PhotoControls
+                  accountType={accountType}
+                  uploadNewImage={this.uploadNewImage}
+                  removeImage={this.removeImage}
+                />
+              )}
+              {accountType === INTERNAL && (
+                <div className={cx('top-btn')}>
+                  <GhostButton onClick={this.onChangePassword}>
+                    {intl.formatMessage(messages.changePassword)}
                   </GhostButton>
                 </div>
-                <div className={cx('photo-btn')}>
-                  <GhostButton>
-                    <FormattedMessage id={'PersonalInfoBlock.removePhoto'} defaultMessage={'Remove photo'} />
-                  </GhostButton>
-                </div>
-              </div>
+              )}
+              {accountType !== INTERNAL &&
+                accountType !== LDAP && (
+                  <div className={cx('top-btn')} onClick={this.onForceUpdate}>
+                    <GhostButton>{intl.formatMessage(messages.forceUpdate)}</GhostButton>
+                  </div>
+                )}
             </div>
-
-            <div className={cx('change-pass-btn')}>
-              <GhostButton>
-                <FormattedMessage id={'PersonalInfoBlock.changePassword'} defaultMessage={'Change password'} />
-              </GhostButton>
-            </div>
-
           </div>
         </BlockContainerBody>
       </div>

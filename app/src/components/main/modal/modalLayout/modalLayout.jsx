@@ -3,22 +3,22 @@ import { Scrollbars } from 'react-custom-scrollbars';
 import { CSSTransition } from 'react-transition-group';
 import { connect } from 'react-redux';
 import { hideModalAction } from 'controllers/modal';
-import Parser from 'html-react-parser';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { ModalContent, ModalFooter } from '../';
+import { ModalContent, ModalFooter, ModalHeader } from '../';
 import styles from './modalLayout.scss';
-import CloseIcon from './img/icon-close-inline.svg';
 
 const cx = classNames.bind(styles);
 
-@connect(null, {
-  hideModalAction,
-})
+@connect(
+  null,
+  {
+    hideModalAction,
+  },
+)
 export class ModalLayout extends Component {
   static propTypes = {
     className: PropTypes.string,
-    fullWidthContent: PropTypes.bool,
     hideModalAction: PropTypes.func.isRequired, // this props
     title: PropTypes.string, // header props
 
@@ -34,10 +34,12 @@ export class ModalLayout extends Component {
       text: PropTypes.string.isRequired,
     }),
     customButton: PropTypes.node,
+    closeConfirmation: PropTypes.object,
+    confirmationMessage: PropTypes.string,
+    confirmationWarning: PropTypes.string,
   };
   static defaultProps = {
     className: '',
-    fullWidthContent: false,
     title: '',
 
     children: null,
@@ -46,9 +48,14 @@ export class ModalLayout extends Component {
     okButton: null,
     cancelButton: null,
     customButton: null,
+    closeConfirmation: null,
+    confirmationMessage: '',
+    confirmationWarning: '',
   };
   state = {
     shown: false,
+    closeConfirmed: false,
+    showConfirmation: false,
   };
   componentDidMount() {
     document.addEventListener('keydown', this.onKeydown, false);
@@ -74,16 +81,61 @@ export class ModalLayout extends Component {
   onClickOk = () => {
     this.props.okButton.onClick(this.closeModal);
   };
+  onCloseConfirm = (closeConfirmed) => {
+    this.setState({
+      closeConfirmed,
+    });
+  };
   closeModal = () => {
-    this.setState({ shown: false });
+    const { closeConfirmation } = this.props;
+
+    if (closeConfirmation) {
+      this.closeModalWithConfirmation();
+    } else {
+      this.setState({ shown: false });
+    }
+  };
+  showCloseConfirmation = () => {
+    const { closeConfirmed } = this.state;
+    const { closeConfirmedCallback } = this.props.closeConfirmation;
+
+    if (closeConfirmed) {
+      closeConfirmedCallback && closeConfirmedCallback();
+      this.setState({ shown: false });
+    }
+
+    this.setState({ showConfirmation: true });
+  };
+  closeModalWithConfirmation = () => {
+    const { isAbleToClose } = this.props.closeConfirmation;
+
+    if (isAbleToClose) {
+      this.setState({ shown: false });
+    } else {
+      this.showCloseConfirmation();
+    }
   };
   render() {
-    const { title, warningMessage, okButton, cancelButton, customButton, children } = this.props;
+    const {
+      title,
+      warningMessage,
+      okButton,
+      cancelButton,
+      customButton,
+      children,
+      confirmationMessage,
+      confirmationWarning,
+    } = this.props;
     const footerProps = {
       warningMessage,
       okButton,
       cancelButton,
       customButton,
+      confirmationMessage,
+      confirmationWarning,
+      showConfirmation: this.state.showConfirmation,
+      closeConfirmed: this.state.closeConfirmed,
+      onCloseConfirm: this.onCloseConfirm,
     };
 
     return (
@@ -103,17 +155,8 @@ export class ModalLayout extends Component {
                   }}
                   className={cx('modal-window', this.props.className)}
                 >
-                  <div className={cx('modal-header')}>
-                    <span className={cx('modal-title')}>{title}</span>
-                    <div className={cx('close-modal-icon')} onClick={this.closeModal}>
-                      {Parser(CloseIcon)}
-                    </div>
-                    <div className={cx('separator')} />
-                  </div>
-
-                  <ModalContent fullWidthContent={this.props.fullWidthContent}>
-                    {status !== 'exited' ? children : null}
-                  </ModalContent>
+                  <ModalHeader text={title} onClose={this.closeModal} />
+                  <ModalContent>{status !== 'exited' ? children : null}</ModalContent>
 
                   <ModalFooter
                     {...footerProps}

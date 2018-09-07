@@ -1,9 +1,12 @@
 .config-example-block {
   width: 100%;
+  @media (max-width: $SCREEN_XS_MAX) {
+    display: none;
+  }
 }
 .header {
-  display: inline-block;
   width: 100%;
+  display: inline-block;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;

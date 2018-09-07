@@ -1,18 +1,18 @@
 import React from 'react';
-import { Provider } from 'react-redux';
-import store from 'store';
+import PropTypes from 'prop-types';
 import { InitialDataContainer } from 'components/containers/initialDataContainer';
-import RootRoute from 'routes/rootRoute';
+import PageSwitcher from 'routes/pageSwitcher';
 import { LocalizationContainer } from 'components/main/localizationContainer';
 
-const App = () => (
-  <Provider store={store}>
-    <InitialDataContainer>
-      <LocalizationContainer>
-        <RootRoute />
-      </LocalizationContainer>
-    </InitialDataContainer>
-  </Provider>
+const App = ({ initialDispatch }) => (
+  <InitialDataContainer initialDispatch={initialDispatch}>
+    <LocalizationContainer>
+      <PageSwitcher />
+    </LocalizationContainer>
+  </InitialDataContainer>
 );
+App.propTypes = {
+  initialDispatch: PropTypes.func.isRequired,
+};
 
 export default App;

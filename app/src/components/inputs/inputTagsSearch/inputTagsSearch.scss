@@ -45,6 +45,7 @@
       float: right;
     }
     .select2-search-tags {
+      position: relative;
       background-color: $COLOR--white-two;
 
       .Select-control,
@@ -93,7 +94,11 @@
         border: 1px solid $COLOR--topaz;
         border-top: none;
       }
-      .Select-clear-zone,
+      .Select-clear-zone {
+        top: 7px;
+        right: 5px;
+        position: absolute;
+      }
       .Select-aria-only {
         display: none;
       }
@@ -103,7 +108,9 @@
         height: 100%;
         line-height: 28px;
         margin-left: 10px;
-        color: $COLOR--gray-60;
+        font-family: $FONT-REGULAR;
+        font-size: 13px;
+        color: $COLOR--gray-47;
       }
 
       .Select-value {
@@ -136,7 +143,7 @@
       }
       .Select-input {
         input {
-          width: 100% !important;
+          width: 100%;
           margin: 4px 5px;
           line-height: 13px;
           font-family: $FONT-REGULAR, sans-serif;
@@ -158,6 +165,14 @@
         word-break: break-all;
         word-wrap: break-word;
         line-height: 18.5px;
+      }
+    }
+  }
+  &.touched.error {
+    :global {
+      .Select-control {
+        border-color: $COLOR--orange-red;
+        box-shadow: 0 0 2px 0 rgba($COLOR--orange-red, 0.7);
       }
     }
   }

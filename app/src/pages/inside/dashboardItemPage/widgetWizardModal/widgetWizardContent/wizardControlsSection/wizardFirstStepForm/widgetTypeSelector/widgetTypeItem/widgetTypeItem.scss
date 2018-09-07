@@ -1,0 +1,22 @@
+.widget-type-item {
+  display: inline-block;
+  width: 50%;
+  height: 55px;
+  box-sizing: border-box;
+  padding-right: 20px;
+  padding-top: 10px;
+  border-bottom: 1px solid $COLOR--gray-91;
+  vertical-align: top;
+
+  &:nth-child(odd) {
+    padding-right: 0;
+  }
+  &:nth-last-child(1),
+  &:nth-last-child(2) {
+    border: none;
+  }
+}
+.widget-type-item-name {
+  white-space: pre-wrap;
+  word-break: normal;
+}

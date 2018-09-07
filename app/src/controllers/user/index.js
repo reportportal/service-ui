@@ -4,6 +4,8 @@ export {
   fetchUserAction,
   setActiveProjectAction,
   setStartTimeFormatAction,
+  generateApiTokenAction,
+  fetchApiTokenAction,
 } from './actionCreators';
 export { userReducer } from './reducer';
 export {
@@ -13,5 +15,8 @@ export {
   userIdSelector,
   startTimeFormatSelector,
   isAdminSelector,
+  assignedProjectsSelector,
   activeProjectRoleSelector,
+  userAccountRoleSelector,
+  userTokenSelector,
 } from './selectors';

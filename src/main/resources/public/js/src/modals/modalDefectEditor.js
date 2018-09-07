@@ -282,6 +282,9 @@ define(function (require) {
             config.trackingDispatcher.trackEventNumber(160);
             _.forEach(this.items, function (item) {
                 var issue = item.getIssue();
+                if (issue.autoAnalyzed) {
+                    issue.autoAnalyzed = false;
+                }
                 if ((replaceComments && this.isMultipleEdit()) || (!this.isMultipleEdit())) {
                     config.trackingDispatcher.trackEventNumber(158);
                     issue.comment = comment;
@@ -305,9 +308,8 @@ define(function (require) {
                     Util.ajaxSuccessMessenger('updateDefect');
                     _.forEach(self.items, function (item) {
                         var issue = item.getIssue();
-                        if ((replaceComments && this.isMultipleEdit()) ||
-                            (!this.isMultipleEdit())) {
-                            issue.comment = comment;
+                        if (issue.autoAnalyzed) {
+                            issue.autoAnalyzed = false;
                         }
                         issue.issue_type = selectedIssue || this.getIssueType(item);
                         issue.ignoreAnalyzer = self.viewModel.get('ignoreAA');

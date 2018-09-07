@@ -85,7 +85,7 @@
   top: 15px;
   height: 30px;
   width: 1px;
-  background-color: $COLOR--gray-80;
+  background-color: $COLOR--brownish-grey;
 
   @media (max-width: $SCREEN_XS_MAX) {
     display: none;
@@ -117,7 +117,7 @@
     height: 50px;
     width: 50px;
   }
-  
+
   a {
     display: inline-block;
     width: 100%;
@@ -126,7 +126,7 @@
 }
 .members-btn {
   background-image: url(./img/members-icon.svg);
-  margin: 0 30px;
+  margin-left: 30px;
   background-size: 20px;
 
   @media (max-width: $SCREEN_XS_MAX) {
@@ -140,10 +140,12 @@
   }
 }
 .settings-btn {
+  margin-left: 30px;
   background-image: url(./img/gear-icon.svg);
   background-size: 17px;
 
   @media (max-width: $SCREEN_XS_MAX) {
+    margin: 0;
     background-size: 25px;
   }
 
@@ -152,5 +154,3 @@
     background-image: url(./img/gear-icon-active.svg);
   }
 }
-
-

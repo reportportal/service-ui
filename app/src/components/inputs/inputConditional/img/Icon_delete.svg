@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="20" height="20" viewBox="0 0 20 20">
+  <defs>
+    <polygon id="icon_delete-a" points="20 20 20 0 0 0 0 20"/>
+  </defs>
+  <g fill="none" fill-rule="evenodd">
+    <mask id="icon_delete-b" fill="#fff">
+      <use xlink:href="#icon_delete-a"/>
+    </mask>
+    <path fill="#999" d="M10,1.09864146 C5.09155346,1.09864146 1.09864146,5.09155346 1.09864146,10 C1.09864146,14.9078559 5.09155346,18.9013585 10,18.9013585 C14.9084465,18.9013585 18.9013585,14.9078559 18.9013585,10 C18.9013585,5.09155346 14.9084465,1.09864146 10,1.09864146 M10,20 C4.48611931,20 0,15.5138807 0,10 C0,4.48552865 4.48611931,0 10,0 C15.5138807,0 20,4.48552865 20,10 C20,15.5138807 15.5138807,20 10,20" mask="url(#icon_delete-b)"/>
+    <polygon fill="#999" points="5.982 14.737 5.263 14.017 14.018 5.263 14.737 5.983" mask="url(#icon_delete-b)"/>
+    <polygon fill="#999" points="14.018 14.737 5.263 5.983 5.982 5.263 14.737 14.017" mask="url(#icon_delete-b)"/>
+  </g>
+</svg>

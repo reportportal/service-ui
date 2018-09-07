@@ -71,7 +71,7 @@ export class AppLayout extends PureComponent {
             />
           </div>
           <div className={cx('content')}>
-            <ScrollWrapper>
+            <ScrollWrapper withBackToTop>
               <div className={cx('scrolling-content')}>
                 <div className={cx('header-container')}>
                   <Header

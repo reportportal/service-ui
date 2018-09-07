@@ -1,0 +1,55 @@
+.defect-type {
+  &:hover {
+    .edit-icon {
+      visibility: visible;
+    }
+  }
+}
+
+.defect-type-labels {
+  display: flex;
+  align-items: center;
+  padding-bottom: 10px;
+}
+
+.ignore-aa-label {
+  box-sizing: border-box;
+  border-radius: 100px;
+  background-color: $COLOR--white;
+  border: solid 1px $COLOR--gray-60;
+  cursor: pointer;
+  color: $COLOR--gray-60;
+  font-family: $FONT-SEMIBOLD;
+  font-size: 12px;
+  line-height: 18px;
+  text-align: center;
+  margin-right: 5px;
+  height: 20px;
+  width: 70px;
+}
+
+.aa-label {
+  margin-right: 5px;
+}
+
+.comment {
+  padding-top: 10px;
+}
+
+.edit-icon {
+  visibility: hidden;
+  cursor: pointer;
+  margin-left: 10px;
+  height: 20px;
+  width: 20px;
+
+  svg {
+    fill: $COLOR--gray-60;
+  }
+
+  &:hover {
+    svg {
+      fill: $COLOR--black-2;
+    }
+  }
+}

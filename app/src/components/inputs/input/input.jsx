@@ -19,6 +19,7 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import styles from './input.scss';
@@ -29,10 +30,12 @@ export const Input = ({
   type,
   value,
   readonly,
+  className,
   error,
   placeholder,
   maxLength,
   disabled,
+  mobileDisabled,
   refFunction,
   onChange,
   onFocus,
@@ -44,7 +47,13 @@ export const Input = ({
   <input
     ref={refFunction}
     type={type}
-    className={cx('input', { disabled, error, touched })}
+    className={cx('input', className, {
+      'mobile-disabled': mobileDisabled,
+      disabled,
+      error,
+      touched,
+      readonly,
+    })}
     value={value}
     placeholder={placeholder}
     maxLength={maxLength}
@@ -63,8 +72,10 @@ Input.propTypes = {
   value: PropTypes.string,
   placeholder: PropTypes.string,
   maxLength: PropTypes.string,
+  mobileDisabled: PropTypes.bool,
   disabled: PropTypes.bool,
   readonly: PropTypes.bool,
+  className: PropTypes.string,
   error: PropTypes.string,
   onChange: PropTypes.func,
   onFocus: PropTypes.func,
@@ -80,8 +91,10 @@ Input.defaultProps = {
   value: '',
   placeholder: '',
   maxLength: '254',
+  mobileDisabled: false,
   disabled: false,
   readonly: false,
+  className: '',
   error: '',
   touched: false,
   onChange: () => {},

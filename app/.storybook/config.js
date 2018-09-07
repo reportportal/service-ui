@@ -12,6 +12,10 @@ import be from 'react-intl/locale-data/be';
 
 import localeRU from '../localization/translated/ru.json';
 import localeBE from '../localization/translated/be.json';
+
+import { Provider } from 'react-redux';
+import { store } from './store';
+
 const messages = {
   ru: localeRU,
   be: localeBE,
@@ -22,14 +26,13 @@ setIntlConfig({
   defaultLocale: 'en',
   getMessages: (lang) => {
     return messages[lang];
-  }
+  },
 });
-
 
 const req = require.context('../src', true, /\.stories\.jsx?$/);
 
 function loadStories() {
-  req.keys().forEach((filename) => req(filename))
+  req.keys().forEach((filename) => req(filename));
 }
 
 setOptions({
@@ -97,5 +100,6 @@ setOptions({
   selectedAddonPanel: undefined, // The order of addons in the "Addons Panel" is the same as you import them in 'addons.js'. The first panel will be opened by default as you run Storybook
 });
 
+storybook.addDecorator((story) => <Provider store={store}>{story()}</Provider>);
 storybook.addDecorator(withIntl);
 storybook.configure(loadStories, module);

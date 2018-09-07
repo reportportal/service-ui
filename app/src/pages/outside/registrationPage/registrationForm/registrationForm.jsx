@@ -23,7 +23,7 @@ import { Component } from 'react';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { FormattedMessage, injectIntl, intlShape, defineMessages } from 'react-intl';
-import { reduxForm } from 'redux-form';
+import { reduxForm, SubmissionError } from 'redux-form';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldBottomConstraints } from 'components/fields/fieldBottomConstraints';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
@@ -106,12 +106,17 @@ export class RegistrationForm extends Component {
     this.autofillEmail();
   };
 
+  submitHandler = (...args) =>
+    this.props.submitForm(...args).catch((message) => {
+      throw new SubmissionError({ login: message });
+    });
+
   render() {
-    const { handleSubmit, submitForm, intl } = this.props;
+    const { handleSubmit, intl } = this.props;
     const { formatMessage } = intl;
 
     return (
-      <form className={cx('registration-form')} onSubmit={handleSubmit(submitForm)}>
+      <form className={cx('registration-form')} onSubmit={handleSubmit(this.submitHandler)}>
         <div className={cx('login-field')}>
           <FieldProvider name="login">
             <FieldBottomConstraints text={formatMessage(messages.loginConstraint)}>

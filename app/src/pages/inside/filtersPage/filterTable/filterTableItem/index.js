@@ -1,1 +1,0 @@
-export { FilterTableItem } from './filterTableItem';

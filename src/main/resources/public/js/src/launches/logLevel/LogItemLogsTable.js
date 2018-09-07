@@ -133,11 +133,6 @@ define(function (require) {
                 .off('resize.logItems')
                 .on('resize.logItems', _.debounce(self.resize.bind(self), 100));
         },
-        resetFilters: function () {
-            this.slider.slider.slider('value', this.slider.options.items.length); // activates all items in slider
-            this.nameModel.set({ value: '' });
-            $('[data-js-attachments-filter]', this.$el).prop('checked', false);
-        },
         setupStickyHeader: function () {
             this.destroyStickyHeader();
             this.stickyHeader = new StickyHeader({ fixedBlock: $('[data-js-fixed-header]', this.$el), topMargin: 0, minWidthWindow: 720 });
@@ -317,6 +312,13 @@ define(function (require) {
         },
         onClickAttachments: function (model) {
             this.trigger('click:attachment', model);
+        },
+        resetFilters: function () {
+            if(this.slider.active === 'FATAL'){
+                this.slider.slider.slider('value', 2); // activates all items in slider
+                this.nameModel.set({ value: '' });
+                $('[data-js-attachments-filter]', this.$el).prop('checked', false);
+            }
         },
         goToLog: function (logId) {
             var self = this;

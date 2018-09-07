@@ -270,7 +270,7 @@ define(function (require) {
             var launchCrumbModel = _.find(this.models, function (model) {
                 return model.get('level') === 'launch';
             });
-            return launchCrumbModel && launchCrumbModel.get('failLoad');
+            return launchCrumbModel && !launchCrumbModel.get('failLoad');
         },
         checkLostLaunch: function (async, launchModel, parentModel) {
             var self = this;
