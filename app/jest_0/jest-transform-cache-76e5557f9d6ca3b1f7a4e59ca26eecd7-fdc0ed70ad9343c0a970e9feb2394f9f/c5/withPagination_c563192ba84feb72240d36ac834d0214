@@ -1,0 +1,81 @@
+f57d268149a295589001961b9a0af00c
+'use strict';Object.defineProperty(exports, "__esModule", { value: true });exports.withPagination = undefined;var _extends2 = require('babel-runtime/helpers/extends');var _extends3 = _interopRequireDefault(_extends2);var _objectWithoutProperties2 = require('babel-runtime/helpers/objectWithoutProperties');var _objectWithoutProperties3 = _interopRequireDefault(_objectWithoutProperties2);var _getPrototypeOf = require('babel-runtime/core-js/object/get-prototype-of');var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);var _createClass2 = require('babel-runtime/helpers/createClass');var _createClass3 = _interopRequireDefault(_createClass2);var _possibleConstructorReturn2 = require('babel-runtime/helpers/possibleConstructorReturn');var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);var _inherits2 = require('babel-runtime/helpers/inherits');var _inherits3 = _interopRequireDefault(_inherits2);var _defineProperty2 = require('babel-runtime/helpers/defineProperty');var _defineProperty3 = _interopRequireDefault(_defineProperty2);var _react = require('react');
+var _propTypes = require('prop-types');var _propTypes2 = _interopRequireDefault(_propTypes);
+var _reactRedux = require('react-redux');
+var _utils = require('common/utils');
+var _selectors = require('./selectors');
+var _constants = require('./constants');function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}
+
+var withPagination = function withPagination() {var _ref = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] :
+
+
+
+  {},_ref$paginationSelect = _ref.paginationSelector,paginationSelector = _ref$paginationSelect === undefined ? _selectors.defaultPaginationSelector : _ref$paginationSelect,namespace = _ref.namespace,namespaceSelector = _ref.namespaceSelector;return function (WrappedComponent) {var _dec, _dec2, _class, _class2, _temp2;
+    var getTotalElements = (0, _selectors.totalElementsSelector)(paginationSelector);
+    var getTotalPages = (0, _selectors.totalPagesSelector)(paginationSelector);var
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    PaginationWrapper = (_dec = (0, _utils.connectRouter)(function (query) {return { page: query[_constants.PAGE_KEY] && Number(query[_constants.PAGE_KEY]), size: query[_constants.SIZE_KEY] && Number(query[_constants.SIZE_KEY]) };}, { updatePagination: function updatePagination(page, size) {var _ref2;return _ref2 = {}, (0, _defineProperty3.default)(_ref2, _constants.PAGE_KEY, page), (0, _defineProperty3.default)(_ref2, _constants.SIZE_KEY, size), _ref2;} }, { namespace: namespace, namespaceSelector: namespaceSelector }), _dec2 = (0, _reactRedux.connect)(function (state) {return { totalElements: getTotalElements(state), totalPages: getTotalPages(state) };}), _dec(_class = _dec2(_class = (_temp2 = _class2 = function (_Component) {(0, _inherits3.default)(PaginationWrapper, _Component);function PaginationWrapper() {var _ref3;var _temp, _this, _ret;(0, _classCallCheck3.default)(this, PaginationWrapper);for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {args[_key] = arguments[_key];}return _ret = (_temp = (_this = (0, _possibleConstructorReturn3.default)(this, (_ref3 = PaginationWrapper.__proto__ || (0, _getPrototypeOf2.default)(PaginationWrapper)).call.apply(_ref3, [this].concat(args))), _this), _this.changePageHandler = function () {var _this2;return (_this2 = _this).__changePageHandler__REACT_HOT_LOADER__.apply(_this2, arguments);}, _this.changeSizeHandler = function () {var _this3;return (_this3 = _this).__changeSizeHandler__REACT_HOT_LOADER__.apply(_this3, arguments);}, _this.changePaginationOptions = function () {var _this4;return (_this4 = _this).__changePaginationOptions__REACT_HOT_LOADER__.apply(_this4, arguments);}, _temp), (0, _possibleConstructorReturn3.default)(_this, _ret);}(0, _createClass3.default)(PaginationWrapper, [{ key: '__changePaginationOptions__REACT_HOT_LOADER__', value: function __changePaginationOptions__REACT_HOT_LOADER__() {return this.__changePaginationOptions__REACT_HOT_LOADER__.apply(this, arguments);} }, { key: '__changeSizeHandler__REACT_HOT_LOADER__', value: function __changeSizeHandler__REACT_HOT_LOADER__() {return this.__changeSizeHandler__REACT_HOT_LOADER__.apply(this, arguments);} }, { key: '__changePageHandler__REACT_HOT_LOADER__', value: function __changePageHandler__REACT_HOT_LOADER__() {return this.__changePageHandler__REACT_HOT_LOADER__.apply(this, arguments);} }, { key: '__changePageHandler__REACT_HOT_LOADER__', value: function __changePageHandler__REACT_HOT_LOADER__() {return this.__changePageHandler__REACT_HOT_LOADER__.apply(this, arguments);} }, { key: '__changePageHandler__REACT_HOT_LOADER__', value: function __changePageHandler__REACT_HOT_LOADER__() {return this.__changePageHandler__REACT_HOT_LOADER__.apply(this, arguments);} }, { key: '__changePageHandler__REACT_HOT_LOADER__', value: function __changePageHandler__REACT_HOT_LOADER__() {return this.__changePageHandler__REACT_HOT_LOADER__.apply(this, arguments);} }, { key: '__changePageHandler__REACT_HOT_LOADER__', value: function __changePageHandler__REACT_HOT_LOADER__(
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        page) {return this.changePaginationOptions({ page: page });} }, { key: '__changeSizeHandler__REACT_HOT_LOADER__', value: function __changeSizeHandler__REACT_HOT_LOADER__() {return this.__changeSizeHandler__REACT_HOT_LOADER__.apply(this, arguments);} }, { key: '__changeSizeHandler__REACT_HOT_LOADER__', value: function __changeSizeHandler__REACT_HOT_LOADER__() {return this.__changeSizeHandler__REACT_HOT_LOADER__.apply(this, arguments);} }, { key: '__changeSizeHandler__REACT_HOT_LOADER__', value: function __changeSizeHandler__REACT_HOT_LOADER__() {return this.__changeSizeHandler__REACT_HOT_LOADER__.apply(this, arguments);} }, { key: '__changeSizeHandler__REACT_HOT_LOADER__', value: function __changeSizeHandler__REACT_HOT_LOADER__(
+
+        size) {return this.changePaginationOptions({ size: size, page: 1 });} }, { key: '__changePaginationOptions__REACT_HOT_LOADER__', value: function __changePaginationOptions__REACT_HOT_LOADER__() {return this.__changePaginationOptions__REACT_HOT_LOADER__.apply(this, arguments);} }, { key: '__changePaginationOptions__REACT_HOT_LOADER__', value: function __changePaginationOptions__REACT_HOT_LOADER__() {return this.__changePaginationOptions__REACT_HOT_LOADER__.apply(this, arguments);} }, { key: '__changePaginationOptions__REACT_HOT_LOADER__', value: function __changePaginationOptions__REACT_HOT_LOADER__() {return this.__changePaginationOptions__REACT_HOT_LOADER__.apply(this, arguments);} }, { key: '__changePaginationOptions__REACT_HOT_LOADER__', value: function __changePaginationOptions__REACT_HOT_LOADER__(
+
+        options) {var _props =
+          this.props,page = _props.page,size = _props.size;
+          this.props.updatePagination(options.page || page, options.size || size);
+        } }, { key: 'render', value: function render()
+
+        {var _props2 =
+          this.props,page = _props2.page,size = _props2.size,totalElements = _props2.totalElements,totalPages = _props2.totalPages,updatePagination = _props2.updatePagination,restProps = (0, _objectWithoutProperties3.default)(_props2, ['page', 'size', 'totalElements', 'totalPages', 'updatePagination']);
+          return (
+            React.createElement(WrappedComponent, (0, _extends3.default)({
+              activePage: page,
+              itemCount: totalElements,
+              pageCount: totalPages,
+              pageSize: size,
+              onChangePage: this.changePageHandler,
+              onChangePageSize: this.changeSizeHandler },
+            restProps)));
+
+
+        } }]);return PaginationWrapper;}(_react.Component), _class2.displayName = 'withPagination(' + (WrappedComponent.displayName || WrappedComponent.name) + ')', _class2.propTypes = { filter: _propTypes2.default.string, page: _propTypes2.default.number, size: _propTypes2.default.number, updatePagination: _propTypes2.default.func, sortingString: _propTypes2.default.string, totalElements: _propTypes2.default.number, totalPages: _propTypes2.default.number }, _class2.defaultProps = { filter: null, page: undefined, size: undefined, sortingString: null, totalElements: 0, totalPages: 1, updatePagination: function updatePagination() {} }, _temp2)) || _class) || _class);
+
+
+    return PaginationWrapper;
+  };};exports.withPagination = withPagination;;var _temp3 = function () {if (typeof __REACT_HOT_LOADER__ === 'undefined') {return;}__REACT_HOT_LOADER__.register(withPagination, 'withPagination', '/volumeC/workspace/service-ui - RELEASE/src/github.com/reportportal/service-ui/app/src/controllers/pagination/withPagination.jsx');}();;
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndpdGhQYWdpbmF0aW9uLmpzeCJdLCJuYW1lcyI6WyJ3aXRoUGFnaW5hdGlvbiIsInBhZ2luYXRpb25TZWxlY3RvciIsImRlZmF1bHRQYWdpbmF0aW9uU2VsZWN0b3IiLCJuYW1lc3BhY2UiLCJuYW1lc3BhY2VTZWxlY3RvciIsIldyYXBwZWRDb21wb25lbnQiLCJnZXRUb3RhbEVsZW1lbnRzIiwiZ2V0VG90YWxQYWdlcyIsIlBhZ2luYXRpb25XcmFwcGVyIiwicXVlcnkiLCJwYWdlIiwiUEFHRV9LRVkiLCJOdW1iZXIiLCJzaXplIiwiU0laRV9LRVkiLCJ1cGRhdGVQYWdpbmF0aW9uIiwic3RhdGUiLCJ0b3RhbEVsZW1lbnRzIiwidG90YWxQYWdlcyIsImNoYW5nZVBhZ2luYXRpb25PcHRpb25zIiwib3B0aW9ucyIsInByb3BzIiwicmVzdFByb3BzIiwiY2hhbmdlUGFnZUhhbmRsZXIiLCJjaGFuZ2VTaXplSGFuZGxlciIsIkNvbXBvbmVudCIsImRpc3BsYXlOYW1lIiwibmFtZSIsInByb3BUeXBlcyIsImZpbHRlciIsIlByb3BUeXBlcyIsInN0cmluZyIsIm51bWJlciIsImZ1bmMiLCJzb3J0aW5nU3RyaW5nIiwiZGVmYXVsdFByb3BzIiwidW5kZWZpbmVkIl0sIm1hcHBpbmdzIjoiNnJDQUFBO0FBQ0EsdUM7QUFDQTtBQUNBO0FBQ0E7QUFDQSx3Qzs7QUFFTyxJQUFNQSxpQkFBaUIsU0FBakJBLGNBQWlCOzs7O0FBSTFCLElBSjBCLDhCQUM1QkMsa0JBRDRCLENBQzVCQSxrQkFENEIseUNBQ1BDLG9DQURPLHlCQUU1QkMsU0FGNEIsUUFFNUJBLFNBRjRCLENBRzVCQyxpQkFINEIsUUFHNUJBLGlCQUg0QixRQUluQixVQUFDQyxnQkFBRCxFQUFzQjtBQUMvQixRQUFNQyxtQkFBbUIsc0NBQXNCTCxrQkFBdEIsQ0FBekI7QUFDQSxRQUFNTSxnQkFBZ0IsbUNBQW1CTixrQkFBbkIsQ0FBdEIsQ0FGK0I7Ozs7Ozs7Ozs7Ozs7Ozs7QUFrQnpCTyxxQkFsQnlCLFdBSTlCLDBCQUNDLFVBQUNDLEtBQUQsVUFBWSxFQUNWQyxNQUFNRCxNQUFNRSxtQkFBTixLQUFtQkMsT0FBT0gsTUFBTUUsbUJBQU4sQ0FBUCxDQURmLEVBRVZFLE1BQU1KLE1BQU1LLG1CQUFOLEtBQW1CRixPQUFPSCxNQUFNSyxtQkFBTixDQUFQLENBRmYsRUFBWixFQURELEVBS0MsRUFDRUMsa0JBQWtCLDBCQUFDTCxJQUFELEVBQU9HLElBQVAscUVBQW9CRixtQkFBcEIsRUFBK0JELElBQS9CLHdDQUFzQ0ksbUJBQXRDLEVBQWlERCxJQUFqRCxVQURwQixFQUxELEVBUUMsRUFBRVYsb0JBQUYsRUFBYUMsb0NBQWIsRUFSRCxDQUo4QixVQWM5Qix5QkFBUSxVQUFDWSxLQUFELFVBQVksRUFDbkJDLGVBQWVYLGlCQUFpQlUsS0FBakIsQ0FESSxFQUVuQkUsWUFBWVgsY0FBY1MsS0FBZCxDQUZPLEVBQVosRUFBUixDQWQ4Qjs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7QUF5Q1JOLFlBekNRLFVBeUNDLEtBQUtTLHVCQUFMLENBQTZCLEVBQUVULFVBQUYsRUFBN0IsQ0F6Q0Q7O0FBMkNSRyxZQTNDUSxVQTJDQyxLQUFLTSx1QkFBTCxDQUE2QixFQUFFTixVQUFGLEVBQVFILE1BQU0sQ0FBZCxFQUE3QixDQTNDRDs7QUE2Q0ZVLGVBN0NFLEVBNkNVO0FBQ2QsZUFBS0MsS0FEUyxDQUM3QlgsSUFENkIsVUFDN0JBLElBRDZCLENBQ3ZCRyxJQUR1QixVQUN2QkEsSUFEdUI7QUFFckMsZUFBS1EsS0FBTCxDQUFXTixnQkFBWCxDQUE0QkssUUFBUVYsSUFBUixJQUFnQkEsSUFBNUMsRUFBa0RVLFFBQVFQLElBQVIsSUFBZ0JBLElBQWxFO0FBQ0QsU0FoRDRCOztBQWtEcEI7QUFDMkUsZUFBS1EsS0FEaEYsQ0FDQ1gsSUFERCxXQUNDQSxJQURELENBQ09HLElBRFAsV0FDT0EsSUFEUCxDQUNhSSxhQURiLFdBQ2FBLGFBRGIsQ0FDNEJDLFVBRDVCLFdBQzRCQSxVQUQ1QixDQUN3Q0gsZ0JBRHhDLFdBQ3dDQSxnQkFEeEMsQ0FDNkRPLFNBRDdEO0FBRVA7QUFDRSxnQ0FBQyxnQkFBRDtBQUNFLDBCQUFZWixJQURkO0FBRUUseUJBQVdPLGFBRmI7QUFHRSx5QkFBV0MsVUFIYjtBQUlFLHdCQUFVTCxJQUpaO0FBS0UsNEJBQWMsS0FBS1UsaUJBTHJCO0FBTUUsZ0NBQWtCLEtBQUtDLGlCQU56QjtBQU9NRixxQkFQTixFQURGOzs7QUFXRCxTQS9ENEIsZ0NBa0JDRyxnQkFsQkQsV0FtQnRCQyxXQW5Cc0Isd0JBbUJVckIsaUJBQWlCcUIsV0FBakIsSUFBZ0NyQixpQkFBaUJzQixJQW5CM0QsaUJBcUJ0QkMsU0FyQnNCLEdBcUJWLEVBQ2pCQyxRQUFRQyxvQkFBVUMsTUFERCxFQUVqQnJCLE1BQU1vQixvQkFBVUUsTUFGQyxFQUdqQm5CLE1BQU1pQixvQkFBVUUsTUFIQyxFQUlqQmpCLGtCQUFrQmUsb0JBQVVHLElBSlgsRUFLakJDLGVBQWVKLG9CQUFVQyxNQUxSLEVBTWpCZCxlQUFlYSxvQkFBVUUsTUFOUixFQU9qQmQsWUFBWVksb0JBQVVFLE1BUEwsRUFyQlUsVUErQnRCRyxZQS9Cc0IsR0ErQlAsRUFDcEJOLFFBQVEsSUFEWSxFQUVwQm5CLE1BQU0wQixTQUZjLEVBR3BCdkIsTUFBTXVCLFNBSGMsRUFJcEJGLGVBQWUsSUFKSyxFQUtwQmpCLGVBQWUsQ0FMSyxFQU1wQkMsWUFBWSxDQU5RLEVBT3BCSCxrQkFBa0IsNEJBQU0sQ0FBRSxDQVBOLEVBL0JPOzs7QUFrRS9CLFdBQU9QLGlCQUFQO0FBQ0QsR0F2RTZCLEVBQXZCLEMsMkpBQU1SLGMiLCJmaWxlIjoid2l0aFBhZ2luYXRpb24uanN4Iiwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IHsgQ29tcG9uZW50IH0gZnJvbSAncmVhY3QnO1xuaW1wb3J0IFByb3BUeXBlcyBmcm9tICdwcm9wLXR5cGVzJztcbmltcG9ydCB7IGNvbm5lY3QgfSBmcm9tICdyZWFjdC1yZWR1eCc7XG5pbXBvcnQgeyBjb25uZWN0Um91dGVyIH0gZnJvbSAnY29tbW9uL3V0aWxzJztcbmltcG9ydCB7IGRlZmF1bHRQYWdpbmF0aW9uU2VsZWN0b3IsIHRvdGFsRWxlbWVudHNTZWxlY3RvciwgdG90YWxQYWdlc1NlbGVjdG9yIH0gZnJvbSAnLi9zZWxlY3RvcnMnO1xuaW1wb3J0IHsgUEFHRV9LRVksIFNJWkVfS0VZIH0gZnJvbSAnLi9jb25zdGFudHMnO1xuXG5leHBvcnQgY29uc3Qgd2l0aFBhZ2luYXRpb24gPSAoe1xuICBwYWdpbmF0aW9uU2VsZWN0b3IgPSBkZWZhdWx0UGFnaW5hdGlvblNlbGVjdG9yLFxuICBuYW1lc3BhY2UsXG4gIG5hbWVzcGFjZVNlbGVjdG9yLFxufSA9IHt9KSA9PiAoV3JhcHBlZENvbXBvbmVudCkgPT4ge1xuICBjb25zdCBnZXRUb3RhbEVsZW1lbnRzID0gdG90YWxFbGVtZW50c1NlbGVjdG9yKHBhZ2luYXRpb25TZWxlY3Rvcik7XG4gIGNvbnN0IGdldFRvdGFsUGFnZXMgPSB0b3RhbFBhZ2VzU2VsZWN0b3IocGFnaW5hdGlvblNlbGVjdG9yKTtcblxuICBAY29ubmVjdFJvdXRlcihcbiAgICAocXVlcnkpID0+ICh7XG4gICAgICBwYWdlOiBxdWVyeVtQQUdFX0tFWV0gJiYgTnVtYmVyKHF1ZXJ5W1BBR0VfS0VZXSksXG4gICAgICBzaXplOiBxdWVyeVtTSVpFX0tFWV0gJiYgTnVtYmVyKHF1ZXJ5W1NJWkVfS0VZXSksXG4gICAgfSksXG4gICAge1xuICAgICAgdXBkYXRlUGFnaW5hdGlvbjogKHBhZ2UsIHNpemUpID0+ICh7IFtQQUdFX0tFWV06IHBhZ2UsIFtTSVpFX0tFWV06IHNpemUgfSksXG4gICAgfSxcbiAgICB7IG5hbWVzcGFjZSwgbmFtZXNwYWNlU2VsZWN0b3IgfSxcbiAgKVxuICBAY29ubmVjdCgoc3RhdGUpID0+ICh7XG4gICAgdG90YWxFbGVtZW50czogZ2V0VG90YWxFbGVtZW50cyhzdGF0ZSksXG4gICAgdG90YWxQYWdlczogZ2V0VG90YWxQYWdlcyhzdGF0ZSksXG4gIH0pKVxuICBjbGFzcyBQYWdpbmF0aW9uV3JhcHBlciBleHRlbmRzIENvbXBvbmVudCB7XG4gICAgc3RhdGljIGRpc3BsYXlOYW1lID0gYHdpdGhQYWdpbmF0aW9uKCR7V3JhcHBlZENvbXBvbmVudC5kaXNwbGF5TmFtZSB8fCBXcmFwcGVkQ29tcG9uZW50Lm5hbWV9KWA7XG5cbiAgICBzdGF0aWMgcHJvcFR5cGVzID0ge1xuICAgICAgZmlsdGVyOiBQcm9wVHlwZXMuc3RyaW5nLFxuICAgICAgcGFnZTogUHJvcFR5cGVzLm51bWJlcixcbiAgICAgIHNpemU6IFByb3BUeXBlcy5udW1iZXIsXG4gICAgICB1cGRhdGVQYWdpbmF0aW9uOiBQcm9wVHlwZXMuZnVuYyxcbiAgICAgIHNvcnRpbmdTdHJpbmc6IFByb3BUeXBlcy5zdHJpbmcsXG4gICAgICB0b3RhbEVsZW1lbnRzOiBQcm9wVHlwZXMubnVtYmVyLFxuICAgICAgdG90YWxQYWdlczogUHJvcFR5cGVzLm51bWJlcixcbiAgICB9O1xuXG4gICAgc3RhdGljIGRlZmF1bHRQcm9wcyA9IHtcbiAgICAgIGZpbHRlcjogbnVsbCxcbiAgICAgIHBhZ2U6IHVuZGVmaW5lZCxcbiAgICAgIHNpemU6IHVuZGVmaW5lZCxcbiAgICAgIHNvcnRpbmdTdHJpbmc6IG51bGwsXG4gICAgICB0b3RhbEVsZW1lbnRzOiAwLFxuICAgICAgdG90YWxQYWdlczogMSxcbiAgICAgIHVwZGF0ZVBhZ2luYXRpb246ICgpID0+IHt9LFxuICAgIH07XG5cbiAgICBjaGFuZ2VQYWdlSGFuZGxlciA9IChwYWdlKSA9PiB0aGlzLmNoYW5nZVBhZ2luYXRpb25PcHRpb25zKHsgcGFnZSB9KTtcblxuICAgIGNoYW5nZVNpemVIYW5kbGVyID0gKHNpemUpID0+IHRoaXMuY2hhbmdlUGFnaW5hdGlvbk9wdGlvbnMoeyBzaXplLCBwYWdlOiAxIH0pO1xuXG4gICAgY2hhbmdlUGFnaW5hdGlvbk9wdGlvbnMgPSAob3B0aW9ucykgPT4ge1xuICAgICAgY29uc3QgeyBwYWdlLCBzaXplIH0gPSB0aGlzLnByb3BzO1xuICAgICAgdGhpcy5wcm9wcy51cGRhdGVQYWdpbmF0aW9uKG9wdGlvbnMucGFnZSB8fCBwYWdlLCBvcHRpb25zLnNpemUgfHwgc2l6ZSk7XG4gICAgfTtcblxuICAgIHJlbmRlcigpIHtcbiAgICAgIGNvbnN0IHsgcGFnZSwgc2l6ZSwgdG90YWxFbGVtZW50cywgdG90YWxQYWdlcywgdXBkYXRlUGFnaW5hdGlvbiwgLi4ucmVzdFByb3BzIH0gPSB0aGlzLnByb3BzO1xuICAgICAgcmV0dXJuIChcbiAgICAgICAgPFdyYXBwZWRDb21wb25lbnRcbiAgICAgICAgICBhY3RpdmVQYWdlPXtwYWdlfVxuICAgICAgICAgIGl0ZW1Db3VudD17dG90YWxFbGVtZW50c31cbiAgICAgICAgICBwYWdlQ291bnQ9e3RvdGFsUGFnZXN9XG4gICAgICAgICAgcGFnZVNpemU9e3NpemV9XG4gICAgICAgICAgb25DaGFuZ2VQYWdlPXt0aGlzLmNoYW5nZVBhZ2VIYW5kbGVyfVxuICAgICAgICAgIG9uQ2hhbmdlUGFnZVNpemU9e3RoaXMuY2hhbmdlU2l6ZUhhbmRsZXJ9XG4gICAgICAgICAgey4uLnJlc3RQcm9wc31cbiAgICAgICAgLz5cbiAgICAgICk7XG4gICAgfVxuICB9XG5cbiAgcmV0dXJuIFBhZ2luYXRpb25XcmFwcGVyO1xufTtcbiJdfQ==

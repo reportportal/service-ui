@@ -1,0 +1,44 @@
+1ac014ff1943bd789c882a3ad5c08f45
+'use strict';var _permissions = require('./permissions');
+
+var PERMISSIONS_MAP = {
+  ADMINISTRATOR: {
+    CREATE_USER: 'OWNER' },
+
+  MANAGER: {
+    DELETE_USER: 'ALL' },
+
+  CUSTOMER: {
+    CREATE_USER: 'ALL' },
+
+  MEMBER: {
+    CREATE_USER: 'OWNER' } };
+
+
+var checkPermission = (0, _permissions.createCheckPermission)(PERMISSIONS_MAP);
+var canCreateUser = checkPermission('CREATE_USER');
+
+describe('permissions', function () {
+  it('should return true if user has ADMINISTRATOR role', function () {
+    expect(canCreateUser('ADMINISTRATOR')).toBeTruthy();
+  });
+  it('should return false if there is NO such project role', function () {
+    expect(canCreateUser('USER', 'NEW_ROLE')).toBeFalsy();
+  });
+  it("should return false if user hasn't got permission", function () {
+    expect(canCreateUser('USER', 'MANAGER')).toBeFalsy();
+  });
+  it('should return true if user has permission "ALL"', function () {
+    expect(canCreateUser('USER', 'CUSTOMER')).toBeTruthy();
+  });
+  it('should return true if owner has permission "ALL"', function () {
+    expect(canCreateUser('USER', 'CUSTOMER', true)).toBeTruthy();
+  });
+  it('should return true if owner has permission "OWNER"', function () {
+    expect(canCreateUser('USER', 'MEMBER', true)).toBeTruthy();
+  });
+  it('should return false if user has permission "OWNER"', function () {
+    expect(canCreateUser('USER', 'MEMBER', false)).toBeFalsy();
+  });
+});;var _temp = function () {if (typeof __REACT_HOT_LOADER__ === 'undefined') {return;}__REACT_HOT_LOADER__.register(PERMISSIONS_MAP, 'PERMISSIONS_MAP', '/volumeC/workspace/service-ui - RELEASE/src/github.com/reportportal/service-ui/app/src/common/utils/permissions/permissions.test.js');__REACT_HOT_LOADER__.register(checkPermission, 'checkPermission', '/volumeC/workspace/service-ui - RELEASE/src/github.com/reportportal/service-ui/app/src/common/utils/permissions/permissions.test.js');__REACT_HOT_LOADER__.register(canCreateUser, 'canCreateUser', '/volumeC/workspace/service-ui - RELEASE/src/github.com/reportportal/service-ui/app/src/common/utils/permissions/permissions.test.js');}();;
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInBlcm1pc3Npb25zLnRlc3QuanMiXSwibmFtZXMiOlsiUEVSTUlTU0lPTlNfTUFQIiwiQURNSU5JU1RSQVRPUiIsIkNSRUFURV9VU0VSIiwiTUFOQUdFUiIsIkRFTEVURV9VU0VSIiwiQ1VTVE9NRVIiLCJNRU1CRVIiLCJjaGVja1Blcm1pc3Npb24iLCJjYW5DcmVhdGVVc2VyIiwiZGVzY3JpYmUiLCJpdCIsImV4cGVjdCIsInRvQmVUcnV0aHkiLCJ0b0JlRmFsc3kiXSwibWFwcGluZ3MiOiJhQUFBOztBQUVBLElBQU1BLGtCQUFrQjtBQUN0QkMsaUJBQWU7QUFDYkMsaUJBQWEsT0FEQSxFQURPOztBQUl0QkMsV0FBUztBQUNQQyxpQkFBYSxLQUROLEVBSmE7O0FBT3RCQyxZQUFVO0FBQ1JILGlCQUFhLEtBREwsRUFQWTs7QUFVdEJJLFVBQVE7QUFDTkosaUJBQWEsT0FEUCxFQVZjLEVBQXhCOzs7QUFjQSxJQUFNSyxrQkFBa0Isd0NBQXNCUCxlQUF0QixDQUF4QjtBQUNBLElBQU1RLGdCQUFnQkQsZ0JBQWdCLGFBQWhCLENBQXRCOztBQUVBRSxTQUFTLGFBQVQsRUFBd0IsWUFBTTtBQUM1QkMsS0FBRyxtREFBSCxFQUF3RCxZQUFNO0FBQzVEQyxXQUFPSCxjQUFjLGVBQWQsQ0FBUCxFQUF1Q0ksVUFBdkM7QUFDRCxHQUZEO0FBR0FGLEtBQUcsc0RBQUgsRUFBMkQsWUFBTTtBQUMvREMsV0FBT0gsY0FBYyxNQUFkLEVBQXNCLFVBQXRCLENBQVAsRUFBMENLLFNBQTFDO0FBQ0QsR0FGRDtBQUdBSCxLQUFHLG1EQUFILEVBQXdELFlBQU07QUFDNURDLFdBQU9ILGNBQWMsTUFBZCxFQUFzQixTQUF0QixDQUFQLEVBQXlDSyxTQUF6QztBQUNELEdBRkQ7QUFHQUgsS0FBRyxpREFBSCxFQUFzRCxZQUFNO0FBQzFEQyxXQUFPSCxjQUFjLE1BQWQsRUFBc0IsVUFBdEIsQ0FBUCxFQUEwQ0ksVUFBMUM7QUFDRCxHQUZEO0FBR0FGLEtBQUcsa0RBQUgsRUFBdUQsWUFBTTtBQUMzREMsV0FBT0gsY0FBYyxNQUFkLEVBQXNCLFVBQXRCLEVBQWtDLElBQWxDLENBQVAsRUFBZ0RJLFVBQWhEO0FBQ0QsR0FGRDtBQUdBRixLQUFHLG9EQUFILEVBQXlELFlBQU07QUFDN0RDLFdBQU9ILGNBQWMsTUFBZCxFQUFzQixRQUF0QixFQUFnQyxJQUFoQyxDQUFQLEVBQThDSSxVQUE5QztBQUNELEdBRkQ7QUFHQUYsS0FBRyxvREFBSCxFQUF5RCxZQUFNO0FBQzdEQyxXQUFPSCxjQUFjLE1BQWQsRUFBc0IsUUFBdEIsRUFBZ0MsS0FBaEMsQ0FBUCxFQUErQ0ssU0FBL0M7QUFDRCxHQUZEO0FBR0QsQ0F0QkQsRSxrSEFqQk1iLGUsMExBY0FPLGUsMExBQ0FDLGEiLCJmaWxlIjoicGVybWlzc2lvbnMudGVzdC5qcyIsInNvdXJjZXNDb250ZW50IjpbImltcG9ydCB7IGNyZWF0ZUNoZWNrUGVybWlzc2lvbiB9IGZyb20gJy4vcGVybWlzc2lvbnMnO1xuXG5jb25zdCBQRVJNSVNTSU9OU19NQVAgPSB7XG4gIEFETUlOSVNUUkFUT1I6IHtcbiAgICBDUkVBVEVfVVNFUjogJ09XTkVSJyxcbiAgfSxcbiAgTUFOQUdFUjoge1xuICAgIERFTEVURV9VU0VSOiAnQUxMJyxcbiAgfSxcbiAgQ1VTVE9NRVI6IHtcbiAgICBDUkVBVEVfVVNFUjogJ0FMTCcsXG4gIH0sXG4gIE1FTUJFUjoge1xuICAgIENSRUFURV9VU0VSOiAnT1dORVInLFxuICB9LFxufTtcbmNvbnN0IGNoZWNrUGVybWlzc2lvbiA9IGNyZWF0ZUNoZWNrUGVybWlzc2lvbihQRVJNSVNTSU9OU19NQVApO1xuY29uc3QgY2FuQ3JlYXRlVXNlciA9IGNoZWNrUGVybWlzc2lvbignQ1JFQVRFX1VTRVInKTtcblxuZGVzY3JpYmUoJ3Blcm1pc3Npb25zJywgKCkgPT4ge1xuICBpdCgnc2hvdWxkIHJldHVybiB0cnVlIGlmIHVzZXIgaGFzIEFETUlOSVNUUkFUT1Igcm9sZScsICgpID0+IHtcbiAgICBleHBlY3QoY2FuQ3JlYXRlVXNlcignQURNSU5JU1RSQVRPUicpKS50b0JlVHJ1dGh5KCk7XG4gIH0pO1xuICBpdCgnc2hvdWxkIHJldHVybiBmYWxzZSBpZiB0aGVyZSBpcyBOTyBzdWNoIHByb2plY3Qgcm9sZScsICgpID0+IHtcbiAgICBleHBlY3QoY2FuQ3JlYXRlVXNlcignVVNFUicsICdORVdfUk9MRScpKS50b0JlRmFsc3koKTtcbiAgfSk7XG4gIGl0KFwic2hvdWxkIHJldHVybiBmYWxzZSBpZiB1c2VyIGhhc24ndCBnb3QgcGVybWlzc2lvblwiLCAoKSA9PiB7XG4gICAgZXhwZWN0KGNhbkNyZWF0ZVVzZXIoJ1VTRVInLCAnTUFOQUdFUicpKS50b0JlRmFsc3koKTtcbiAgfSk7XG4gIGl0KCdzaG91bGQgcmV0dXJuIHRydWUgaWYgdXNlciBoYXMgcGVybWlzc2lvbiBcIkFMTFwiJywgKCkgPT4ge1xuICAgIGV4cGVjdChjYW5DcmVhdGVVc2VyKCdVU0VSJywgJ0NVU1RPTUVSJykpLnRvQmVUcnV0aHkoKTtcbiAgfSk7XG4gIGl0KCdzaG91bGQgcmV0dXJuIHRydWUgaWYgb3duZXIgaGFzIHBlcm1pc3Npb24gXCJBTExcIicsICgpID0+IHtcbiAgICBleHBlY3QoY2FuQ3JlYXRlVXNlcignVVNFUicsICdDVVNUT01FUicsIHRydWUpKS50b0JlVHJ1dGh5KCk7XG4gIH0pO1xuICBpdCgnc2hvdWxkIHJldHVybiB0cnVlIGlmIG93bmVyIGhhcyBwZXJtaXNzaW9uIFwiT1dORVJcIicsICgpID0+IHtcbiAgICBleHBlY3QoY2FuQ3JlYXRlVXNlcignVVNFUicsICdNRU1CRVInLCB0cnVlKSkudG9CZVRydXRoeSgpO1xuICB9KTtcbiAgaXQoJ3Nob3VsZCByZXR1cm4gZmFsc2UgaWYgdXNlciBoYXMgcGVybWlzc2lvbiBcIk9XTkVSXCInLCAoKSA9PiB7XG4gICAgZXhwZWN0KGNhbkNyZWF0ZVVzZXIoJ1VTRVInLCAnTUVNQkVSJywgZmFsc2UpKS50b0JlRmFsc3koKTtcbiAgfSk7XG59KTtcbiJdfQ==

@@ -1,0 +1,43 @@
+d2be6b9b0c8276f5d2f0a0c7b4087469
+'use strict';var _typeof2 = require('babel-runtime/helpers/typeof');var _typeof3 = _interopRequireDefault(_typeof2);var _fileSizeConverter = require('./fileSizeConverter');function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}
+
+describe('fileSizeConverter', function () {
+  test('should return string', function () {
+    expect((0, _typeof3.default)((0, _fileSizeConverter.fileSizeConverter)(123456))).toBe('string');
+  });
+  test('Should return 1b if input number equals 1', function () {
+    expect((0, _fileSizeConverter.fileSizeConverter)(1)).toEqual('1b');
+  });
+  test('Should return 99b if input number equals 99', function () {
+    expect((0, _fileSizeConverter.fileSizeConverter)(99)).toEqual('99b');
+  });
+  test('Should return 0.1KB if input number equals 101', function () {
+    expect((0, _fileSizeConverter.fileSizeConverter)(101)).toEqual('0.1KB');
+  });
+  test('Should return 1KB if input number equals 1000', function () {
+    expect((0, _fileSizeConverter.fileSizeConverter)(1000)).toEqual('1KB');
+  });
+  test('Should return 1MB if input number equals 1000000', function () {
+    expect((0, _fileSizeConverter.fileSizeConverter)(1000000)).toEqual('1MB');
+  });
+  test('Should return 1GB if input number equals 1000000000', function () {
+    expect((0, _fileSizeConverter.fileSizeConverter)(1000000000)).toEqual('1GB');
+  });
+  test('Should return 1TB if input number equals 1000000000000', function () {
+    expect((0, _fileSizeConverter.fileSizeConverter)(1000000000000)).toEqual('1TB');
+  });
+  test('Should return 0b if input number equals 0', function () {
+    expect((0, _fileSizeConverter.fileSizeConverter)(0)).toEqual('0b');
+  });
+  test('Should throw an error if input is not numeric', function () {
+    expect(function () {
+      (0, _fileSizeConverter.fileSizeConverter)('string');
+    }).toThrow('You should provide positive integer or zero for this function');
+  });
+  test('Should throw an error if input number is negative', function () {
+    expect(function () {
+      (0, _fileSizeConverter.fileSizeConverter)(-140);
+    }).toThrow('You should provide positive integer or zero for this function');
+  });
+});;var _temp = function () {if (typeof __REACT_HOT_LOADER__ === 'undefined') {return;}}();;
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImZpbGVTaXplQ29udmVydGVyLnRlc3QuanMiXSwibmFtZXMiOlsiZGVzY3JpYmUiLCJ0ZXN0IiwiZXhwZWN0IiwidG9CZSIsInRvRXF1YWwiLCJ0b1Rocm93Il0sIm1hcHBpbmdzIjoib0hBQUEsd0Q7O0FBRUFBLFNBQVMsbUJBQVQsRUFBOEIsWUFBTTtBQUNsQ0MsT0FBSyxzQkFBTCxFQUE2QixZQUFNO0FBQ2pDQyxpQ0FBYywwQ0FBa0IsTUFBbEIsQ0FBZCxHQUF5Q0MsSUFBekMsQ0FBOEMsUUFBOUM7QUFDRCxHQUZEO0FBR0FGLE9BQUssMkNBQUwsRUFBa0QsWUFBTTtBQUN0REMsV0FBTywwQ0FBa0IsQ0FBbEIsQ0FBUCxFQUE2QkUsT0FBN0IsQ0FBcUMsSUFBckM7QUFDRCxHQUZEO0FBR0FILE9BQUssNkNBQUwsRUFBb0QsWUFBTTtBQUN4REMsV0FBTywwQ0FBa0IsRUFBbEIsQ0FBUCxFQUE4QkUsT0FBOUIsQ0FBc0MsS0FBdEM7QUFDRCxHQUZEO0FBR0FILE9BQUssZ0RBQUwsRUFBdUQsWUFBTTtBQUMzREMsV0FBTywwQ0FBa0IsR0FBbEIsQ0FBUCxFQUErQkUsT0FBL0IsQ0FBdUMsT0FBdkM7QUFDRCxHQUZEO0FBR0FILE9BQUssK0NBQUwsRUFBc0QsWUFBTTtBQUMxREMsV0FBTywwQ0FBa0IsSUFBbEIsQ0FBUCxFQUFnQ0UsT0FBaEMsQ0FBd0MsS0FBeEM7QUFDRCxHQUZEO0FBR0FILE9BQUssa0RBQUwsRUFBeUQsWUFBTTtBQUM3REMsV0FBTywwQ0FBa0IsT0FBbEIsQ0FBUCxFQUFtQ0UsT0FBbkMsQ0FBMkMsS0FBM0M7QUFDRCxHQUZEO0FBR0FILE9BQUsscURBQUwsRUFBNEQsWUFBTTtBQUNoRUMsV0FBTywwQ0FBa0IsVUFBbEIsQ0FBUCxFQUFzQ0UsT0FBdEMsQ0FBOEMsS0FBOUM7QUFDRCxHQUZEO0FBR0FILE9BQUssd0RBQUwsRUFBK0QsWUFBTTtBQUNuRUMsV0FBTywwQ0FBa0IsYUFBbEIsQ0FBUCxFQUF5Q0UsT0FBekMsQ0FBaUQsS0FBakQ7QUFDRCxHQUZEO0FBR0FILE9BQUssMkNBQUwsRUFBa0QsWUFBTTtBQUN0REMsV0FBTywwQ0FBa0IsQ0FBbEIsQ0FBUCxFQUE2QkUsT0FBN0IsQ0FBcUMsSUFBckM7QUFDRCxHQUZEO0FBR0FILE9BQUssK0NBQUwsRUFBc0QsWUFBTTtBQUMxREMsV0FBTyxZQUFNO0FBQ1gsZ0RBQWtCLFFBQWxCO0FBQ0QsS0FGRCxFQUVHRyxPQUZILENBRVcsK0RBRlg7QUFHRCxHQUpEO0FBS0FKLE9BQUssbURBQUwsRUFBMEQsWUFBTTtBQUM5REMsV0FBTyxZQUFNO0FBQ1gsZ0RBQWtCLENBQUMsR0FBbkI7QUFDRCxLQUZELEVBRUdHLE9BRkgsQ0FFVywrREFGWDtBQUdELEdBSkQ7QUFLRCxDQXRDRCxFIiwiZmlsZSI6ImZpbGVTaXplQ29udmVydGVyLnRlc3QuanMiLCJzb3VyY2VzQ29udGVudCI6WyJpbXBvcnQgeyBmaWxlU2l6ZUNvbnZlcnRlciB9IGZyb20gJy4vZmlsZVNpemVDb252ZXJ0ZXInO1xuXG5kZXNjcmliZSgnZmlsZVNpemVDb252ZXJ0ZXInLCAoKSA9PiB7XG4gIHRlc3QoJ3Nob3VsZCByZXR1cm4gc3RyaW5nJywgKCkgPT4ge1xuICAgIGV4cGVjdCh0eXBlb2YgZmlsZVNpemVDb252ZXJ0ZXIoMTIzNDU2KSkudG9CZSgnc3RyaW5nJyk7XG4gIH0pO1xuICB0ZXN0KCdTaG91bGQgcmV0dXJuIDFiIGlmIGlucHV0IG51bWJlciBlcXVhbHMgMScsICgpID0+IHtcbiAgICBleHBlY3QoZmlsZVNpemVDb252ZXJ0ZXIoMSkpLnRvRXF1YWwoJzFiJyk7XG4gIH0pO1xuICB0ZXN0KCdTaG91bGQgcmV0dXJuIDk5YiBpZiBpbnB1dCBudW1iZXIgZXF1YWxzIDk5JywgKCkgPT4ge1xuICAgIGV4cGVjdChmaWxlU2l6ZUNvbnZlcnRlcig5OSkpLnRvRXF1YWwoJzk5YicpO1xuICB9KTtcbiAgdGVzdCgnU2hvdWxkIHJldHVybiAwLjFLQiBpZiBpbnB1dCBudW1iZXIgZXF1YWxzIDEwMScsICgpID0+IHtcbiAgICBleHBlY3QoZmlsZVNpemVDb252ZXJ0ZXIoMTAxKSkudG9FcXVhbCgnMC4xS0InKTtcbiAgfSk7XG4gIHRlc3QoJ1Nob3VsZCByZXR1cm4gMUtCIGlmIGlucHV0IG51bWJlciBlcXVhbHMgMTAwMCcsICgpID0+IHtcbiAgICBleHBlY3QoZmlsZVNpemVDb252ZXJ0ZXIoMTAwMCkpLnRvRXF1YWwoJzFLQicpO1xuICB9KTtcbiAgdGVzdCgnU2hvdWxkIHJldHVybiAxTUIgaWYgaW5wdXQgbnVtYmVyIGVxdWFscyAxMDAwMDAwJywgKCkgPT4ge1xuICAgIGV4cGVjdChmaWxlU2l6ZUNvbnZlcnRlcigxMDAwMDAwKSkudG9FcXVhbCgnMU1CJyk7XG4gIH0pO1xuICB0ZXN0KCdTaG91bGQgcmV0dXJuIDFHQiBpZiBpbnB1dCBudW1iZXIgZXF1YWxzIDEwMDAwMDAwMDAnLCAoKSA9PiB7XG4gICAgZXhwZWN0KGZpbGVTaXplQ29udmVydGVyKDEwMDAwMDAwMDApKS50b0VxdWFsKCcxR0InKTtcbiAgfSk7XG4gIHRlc3QoJ1Nob3VsZCByZXR1cm4gMVRCIGlmIGlucHV0IG51bWJlciBlcXVhbHMgMTAwMDAwMDAwMDAwMCcsICgpID0+IHtcbiAgICBleHBlY3QoZmlsZVNpemVDb252ZXJ0ZXIoMTAwMDAwMDAwMDAwMCkpLnRvRXF1YWwoJzFUQicpO1xuICB9KTtcbiAgdGVzdCgnU2hvdWxkIHJldHVybiAwYiBpZiBpbnB1dCBudW1iZXIgZXF1YWxzIDAnLCAoKSA9PiB7XG4gICAgZXhwZWN0KGZpbGVTaXplQ29udmVydGVyKDApKS50b0VxdWFsKCcwYicpO1xuICB9KTtcbiAgdGVzdCgnU2hvdWxkIHRocm93IGFuIGVycm9yIGlmIGlucHV0IGlzIG5vdCBudW1lcmljJywgKCkgPT4ge1xuICAgIGV4cGVjdCgoKSA9PiB7XG4gICAgICBmaWxlU2l6ZUNvbnZlcnRlcignc3RyaW5nJyk7XG4gICAgfSkudG9UaHJvdygnWW91IHNob3VsZCBwcm92aWRlIHBvc2l0aXZlIGludGVnZXIgb3IgemVybyBmb3IgdGhpcyBmdW5jdGlvbicpO1xuICB9KTtcbiAgdGVzdCgnU2hvdWxkIHRocm93IGFuIGVycm9yIGlmIGlucHV0IG51bWJlciBpcyBuZWdhdGl2ZScsICgpID0+IHtcbiAgICBleHBlY3QoKCkgPT4ge1xuICAgICAgZmlsZVNpemVDb252ZXJ0ZXIoLTE0MCk7XG4gICAgfSkudG9UaHJvdygnWW91IHNob3VsZCBwcm92aWRlIHBvc2l0aXZlIGludGVnZXIgb3IgemVybyBmb3IgdGhpcyBmdW5jdGlvbicpO1xuICB9KTtcbn0pO1xuIl19
