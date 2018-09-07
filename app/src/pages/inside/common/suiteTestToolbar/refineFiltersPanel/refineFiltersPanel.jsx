@@ -61,8 +61,13 @@ export class RefineFiltersPanel extends Component {
     if (Object.keys(entities).length === 0 && Object.keys(this.props.entities).length === 0) {
       return;
     }
-    const query = Object.keys(entities).reduce((res, key) => {
+    const mergedEntities = { ...this.props.entities, ...entities };
+    const query = Object.keys(mergedEntities).reduce((res, key) => {
       const entity = entities[key];
+      const oldEntity = this.props.entities[key];
+      if (!entity && oldEntity) {
+        return { ...res, [`filter.${oldEntity.condition}.${key}`]: undefined };
+      }
       return {
         ...res,
         [`filter.${entity.condition}.${key}`]: entity.value,
