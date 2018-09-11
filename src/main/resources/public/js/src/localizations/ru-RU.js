@@ -276,6 +276,7 @@ define(['util'], function () {
             restorePassword: 'Восстановить пароль',
             emailToBegin: 'Введите адрес электронной почты, чтобы начать',
             forgotPassword: 'Забыли пароль?',
+            demoWelcomeMsg: '<span class="big">Добро пожаловать,</span><br>на Демо сервер',
             welcomeMsg: '<span class="big">Добро пожаловать,</span><br>войдите в вашу учетную запись',
             welcomeMsgForgotPass: '<span class="big">Забыли пароль?</span><br> Введите адрес вашей электронной почты, чтобы восстановить его',
             welcomeMsgResetPass: '<span class="big">Сменить пароль</span><br> Введите новый пароль и подтвердите его',

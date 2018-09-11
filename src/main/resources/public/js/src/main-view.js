@@ -43,12 +43,13 @@ define(function (require) {
             this.sidebarView = new Sidebar({
                 tpl: 'tpl-sidebar',
                 projectUrl: config.project.projectId,
-                currentPage: this.contextName
+                currentPage: this.contextName,
+                isDemo: true,
             }).render();
             this.footerView = new Footer().render();
             this.headerView = new Header({
                 tpl: 'tpl-header',
-                currentPage: this.contextName
+                currentPage: this.contextName,
             }).render();
 
             this.contentView = new Content({

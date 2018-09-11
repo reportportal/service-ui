@@ -276,6 +276,7 @@ define(['util'], function () {
             restorePassword: 'Restore password',
             emailToBegin: 'Enter email to begin',
             forgotPassword: 'Forgot password?',
+            demoWelcomeMsg: '<span class="big">Welcome,</span><br>to the Demo Server',
             welcomeMsg: '<span class="big">Welcome,</span><br>login to your account',
             welcomeMsgForgotPass: '<span class="big">Forgot password?</span><br>enter your email to restore',
             welcomeMsgResetPass: '<span class="big">Change password</span><br>enter new password and confirm it',

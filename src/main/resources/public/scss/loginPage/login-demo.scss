@@ -1,0 +1,52 @@
+.demo-login{
+  .warning-container{
+    position: absolute;
+    width: 380px;
+    padding-bottom: 60px;
+    bottom: 0;
+    display: flex;
+    color:  $COLOR--charcoal-grey;
+    @media (max-width: $SCREEN_SM_MAX) and (min-width: $SCREEN_XS_MAX) {
+      position: relative;
+      width: 100%;
+      padding: 30px;
+      font-size: 12px;
+    }
+    @media (max-width: $SCREEN_XS_MAX){
+      width: 100%;
+      padding: 0 20px 20px 20px;
+    }
+    .warning{
+      color: $COLOR--failed;
+      @media (max-width: $SCREEN_SM_MAX) and (min-width: $SCREEN_XS_MAX) {
+        font-size: 13px;
+        display: block;
+      }
+      @media (max-width: $SCREEN_XS_MAX){
+        display: block;
+      }
+    }
+    .rp-icons-warning{
+      margin-right: 10px;
+      color: $COLOR--orange-red;
+      @media (max-width: $SCREEN_XS_MAX){
+        font-size: 12px;
+      }
+    }
+    p{
+      margin: 0;
+      &.docs-link{
+        @media (max-width: $SCREEN_XS_MAX){
+          display: none;
+        }
+      }
+      @media (max-width: $SCREEN_XS_MAX){
+        font-size: 12px;
+      }
+      a{
+        color: $COLOR--tealish;
+      }
+    }
+  }
+}
+

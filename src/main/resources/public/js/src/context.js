@@ -32,7 +32,9 @@ define(function (require) {
     var Admin = require('admin');
     var Register = require('register/registerView');
     var LoginView = require('login/loginView');
+    var DemoLoginView = require('demoLogin/demoLoginView');
     var InvalidPage = require('invalidPage/invalidPage');
+    var Timer = require('components/Timer');
 
     var SingletonAppModel = require('model/SingletonAppModel');
     var SingletonUserStorage = require('storage/SingletonUserStorage');
@@ -161,6 +163,8 @@ define(function (require) {
                         projectId: projectId
                     });
                     self.mainView.render(data);
+                    self.timer = new Timer();
+                    $('[data-js-banner]').html(self.timer.$el);
                 } else {
                     self.mainView.update(data);
                 }
@@ -201,7 +205,7 @@ define(function (require) {
         },
         openLogin: function () {
             this.prepareOutsideView();
-            this.outsideView = new LoginView({
+            this.outsideView = new DemoLoginView({
                 context: this
             });
             $('[data-js-notapplication-container]').html(this.outsideView.$el);
@@ -262,6 +266,7 @@ define(function (require) {
         },
 
         logout: function () {
+            this.timer.$el.empty();
             this.currentProjectId = null;
             Util.ajaxInfoMessenger('logOuted');
         },
