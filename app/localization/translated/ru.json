@@ -225,6 +225,14 @@
   "Filter.name": "Имя",
   "Filter.namePlaceholder": "Ввести имя фильтра",
   "Filters.refine": "Уточнить:",
+  "filterNameById.statistics$defects$automation_bug": "Ошибка Теста",
+  "filterNameById.statistics$defects$no_defect": "Без Дефектов",
+  "filterNameById.statistics$defects$product_bug": "Дефект Продукта",
+  "filterNameById.statistics$defects$system_issue": "Системная Ошибка",
+  "filterNameById.statistics$defects$to_investigate": "Требует Анализа",
+  "filterNameById.statistics$executions$failed": "Неудачно",
+  "filterNameById.statistics$executions$passed": "Успешно",
+  "filterNameById.statistics$executions$skipped": "Пропущено",
   "FilterOptions.AB": "ОТ",
   "FilterOptions.PB": "ДП",
   "FilterOptions.SI": "СО",
@@ -810,5 +818,6 @@
   "WidgetHeader.widgetType.product_status": "Статус проекта",
   "WidgetHeader.widgetType.statistic_trend": "Диаграмма статистики запуска",
   "WidgetHeader.widgetType.unique_bug_table": "Таблица уникальных ошибок",
+  "Widgets.ofTestCases": "тестовых сценариев",
   "WidgetsGrid.notification.deleteWidgetSuccess": "Виджет успешно удалён"
 }

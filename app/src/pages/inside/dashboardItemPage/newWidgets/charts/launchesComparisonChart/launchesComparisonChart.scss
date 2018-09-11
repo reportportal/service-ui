@@ -1,0 +1,40 @@
+.legend {
+  position: absolute;
+  top: 5px;
+  left: 0;
+  right: 0;
+  text-align: right;
+  padding: 20px 20px 0;
+}
+
+.color-mark {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  margin-right: 1px;
+  border-radius: 6px;
+  position: relative;
+  top: 2px;
+}
+
+.item-name {
+  font-size: 10px;
+  letter-spacing: 0.2px;
+}
+
+.legend-item {
+  cursor: pointer;
+  margin-right: 15px;
+}
+
+:global {
+  .c3-grid .c3-ygrid {
+    stroke-dasharray: none;
+    stroke: #ccc;
+  }
+
+  .c3-axis path,
+  .tick line {
+    display: none;
+  }
+}
