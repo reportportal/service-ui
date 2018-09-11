@@ -1,0 +1,1 @@
+export { LaunchesComparisonChart } from './launchesComparisonChart';
