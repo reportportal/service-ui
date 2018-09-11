@@ -256,6 +256,14 @@
   "Filter.edit": "Рэдагаваць фільтр",
   "Filter.name": "Назва",
   "Filter.namePlaceholder": "Увядзіце назву фільтра",
+  "FilterNameById.statistics$defects$automation_bug": "Хіба аўтаматызацыі",
+  "FilterNameById.statistics$defects$no_defect": "Няма дэфектаў",
+  "FilterNameById.statistics$defects$product_bug": "Хіба прадукту",
+  "FilterNameById.statistics$defects$system_issue": "Сістэмная праблема",
+  "FilterNameById.statistics$defects$to_investigate": "Неабходны аналіз",
+  "FilterNameById.statistics$executions$failed": "Няўдала",
+  "FilterNameById.statistics$executions$passed": "Паспяхова",
+  "FilterNameById.statistics$executions$skipped": "Прапушчана",
   "FilterOptions.AB": "ОТ",
   "FilterOptions.PB": "ДП",
   "FilterOptions.SI": "СО",
@@ -921,5 +929,6 @@
   "EditDefectModal.updateDefectsFailed": "Не атрымалася абнавіць дэфекты",
   "emailCase.launchesHint": "Назву запуску павінна мець памер ад 3 да 256",
   "emailCase.recipientsHint": "Калі ласка, выберыце хаця б аднаго атрымальніка",
-  "emailCase.tagsHint": "Назва тэга павінна мець памер ад 3 да 256"
+  "emailCase.tagsHint": "Назва тэга павінна мець памер ад 3 да 256",
+  "Widgets.ofTestCases": "з тэставых сцэнароў"
 }

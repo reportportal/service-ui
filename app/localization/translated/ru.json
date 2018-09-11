@@ -258,6 +258,14 @@
   "Filter.edit": "Редактировать фильтр",
   "Filter.name": "Имя",
   "Filter.namePlaceholder": "Ввести имя фильтра",
+  "FilterNameById.statistics$defects$automation_bug": "Ошибка Теста",
+  "FilterNameById.statistics$defects$no_defect": "Без Дефектов",
+  "FilterNameById.statistics$defects$product_bug": "Дефект Продукта",
+  "FilterNameById.statistics$defects$system_issue": "Системная Ошибка",
+  "FilterNameById.statistics$defects$to_investigate": "Требует Анализа",
+  "FilterNameById.statistics$executions$failed": "Неудачно",
+  "FilterNameById.statistics$executions$passed": "Успешно",
+  "FilterNameById.statistics$executions$skipped": "Пропущено",
   "FilterOptions.AB": "ОТ",
   "FilterOptions.PB": "ДП",
   "FilterOptions.SI": "СО",
@@ -934,5 +942,6 @@
   "EditDefectModal.updateDefectsFailed": "Не удалось обновить дефекты",
   "emailCase.launchesHint": "Имя запуска должно иметь размер от 3 до 256",
   "emailCase.recipientsHint": "Пожалуйста, выберите хотя бы одного получателя",
-  "emailCase.tagsHint": "Название метки должно иметь размер от 3 до 256"
+  "emailCase.tagsHint": "Название метки должно иметь размер от 3 до 256",
+  "Widgets.ofTestCases": "тестовых сценариев"
 }

@@ -4,6 +4,7 @@ import { Responsive, WidthProvider } from 'react-grid-layout';
 import classNames from 'classnames/bind';
 import { redirect } from 'redux-first-router';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import ReactObserver from 'react-event-observer';
 import { PROJECT_DASHBOARD_PAGE, activeDashboardIdSelector } from 'controllers/pages';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { fetch } from 'common/utils';
@@ -58,6 +59,11 @@ export class WidgetsGrid extends Component {
     dashboard: {},
   };
 
+  constructor(props) {
+    super(props);
+    this.observer = ReactObserver();
+  }
+
   state = {
     widgets: [],
     isFetching: true,
@@ -108,8 +114,9 @@ export class WidgetsGrid extends Component {
     }
   };
 
-  onResizeStop = (newLayout) => {
-    this.onGridItemChange(newLayout);
+  onResizeStop = (newLayout, oldWidgetPosition, newWidgetPosition) => {
+    this.onGridItemChange(newLayout, oldWidgetPosition, newWidgetPosition);
+    this.observer.publish('widgetResized');
   };
 
   onDeleteWidget = (id) => {
@@ -186,6 +193,7 @@ export class WidgetsGrid extends Component {
             <Widget
               widgetId={widgetId}
               isModifiable={this.state.isModifiable}
+              observer={this.observer}
               onDelete={() => {
                 this.onDeleteWidget(widgetId);
               }}
@@ -213,7 +221,7 @@ export class WidgetsGrid extends Component {
               breakpoints={breakpoints}
               onBreakpointChange={this.onBreakpointChange}
               onDragStop={this.onGridItemChange}
-              onResizeStop={this.onGridItemChange}
+              onResizeStop={this.onResizeStop}
               cols={cols}
               isDraggable={this.state.isModifiable}
               isResizable={this.state.isModifiable}
