@@ -9,8 +9,13 @@ import { showModalAction } from 'controllers/modal';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { WidgetHeader } from './widgetHeader';
 import styles from './widget.scss';
+import { LaunchesComparisonChart } from '../../newWidgets/charts';
 
 const cx = classNames.bind(styles);
+
+const charts = {
+  launches_comparison_chart: LaunchesComparisonChart,
+};
 
 @connect(
   (state, ownProps) => ({
@@ -42,7 +47,10 @@ export class Widget extends Component {
 
     this.state = {
       loading: true,
-      widget: {},
+      widget: {
+        content: {},
+        content_parameters: {},
+      },
     };
   }
 
@@ -53,6 +61,20 @@ export class Widget extends Component {
   getContentParams = () => this.state.widget.content_parameters || {};
 
   getWidgetOptions = () => this.getContentParams().widgetOptions || {};
+
+  getWidgetNode = (node) => {
+    this.node = node;
+  };
+
+  deleteWidget = () => {
+    this.props.showModalAction({
+      id: 'deleteWidgetModal',
+      data: {
+        widget: this.state.widget,
+        onConfirm: () => this.props.onDelete(this.state.widget.id),
+      },
+    });
+  };
 
   fetchWidget = () => {
     this.setState({
@@ -66,16 +88,6 @@ export class Widget extends Component {
     });
   };
 
-  deleteWidget = () => {
-    this.props.showModalAction({
-      id: 'deleteWidgetModal',
-      data: {
-        widget: this.state.widget,
-        onConfirm: () => this.props.onDelete(this.state.widget.id),
-      },
-    });
-  };
-
   render() {
     const { widget } = this.state;
     const headerData = {
@@ -86,6 +98,8 @@ export class Widget extends Component {
       type: this.getContentParams().gadget,
       meta: this.getWidgetOptions().viewMode,
     };
+
+    const Chart = charts[widget.content_parameters.gadget];
 
     return (
       <div className={cx('widget-container')}>
@@ -104,7 +118,10 @@ export class Widget extends Component {
               onDelete={this.deleteWidget}
             />
           </div>
-          <div className={cx('widget')}>{this.state.loading && <SpinningPreloader />}</div>
+          <div ref={this.getWidgetNode} className={cx('widget')}>
+            {this.state.loading && <SpinningPreloader />}
+            {Chart && <Chart widget={widget} height={this.node.offsetHeight} />}
+          </div>
         </Fragment>
       </div>
     );
