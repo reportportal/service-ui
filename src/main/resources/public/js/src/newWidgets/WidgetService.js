@@ -74,8 +74,8 @@ define(function (require) {
         passing_rate_summary: PassingRateSummaryChart,
         // product_status: ProductStatus,
         // cumulative: CumulativeTrendChart,
-        flaky_test_cases: FlakyTestCasesTable,
-        most_time_consuming: MostTimeConsumingTestCases
+        //most_time_consuming: MostTimeConsumingTestCases,
+        flaky_test_cases: FlakyTestCasesTable
     };
 
     var WidgetService = {
