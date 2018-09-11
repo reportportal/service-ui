@@ -1,0 +1,26 @@
+.container {
+  margin: 0 15px;
+  border: 1px solid $COLOR--gray-91;
+}
+
+.content {
+  padding: 10px;
+  background-color: $COLOR--white-four;
+  display: flex;
+  justify-content: space-between;
+}
+
+.description {
+}
+
+.actions {
+  display: flex;
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    display: none;
+  }
+}
+
+.action {
+  margin-left: 10px;
+}
