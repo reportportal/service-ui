@@ -112,6 +112,24 @@ define(function (require) {
                 get: function (authExtensions) {
                     return !!authExtensions.epam;
                 }
+            },
+            isDemo: {
+                deps: ['services'],
+                get: function (services) {
+                    if (services && services.API && services.API.environment && services.API.environment.instance_type && services.API.environment.instance_type === 'demo'){
+                        return true;
+                    }
+                    return false;
+                }
+            },
+            getTriggersIn: {
+                deps: ['services'],
+                get: function (services) {
+                    if (services && services.API && services.API.jobs && services.API.jobs.flushingDataTrigger && services.API.jobs.flushingDataTrigger.triggersIn){
+                        return services.API.jobs.flushingDataTrigger.triggersIn;
+                    }
+                    return null;
+                }
             }
         },
 

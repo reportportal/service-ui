@@ -81,6 +81,9 @@ define(function (require) {
     var registryInfoModel = new SingletonRegistryInfoModel();
     // start app
     registryInfoModel.ready.done(function () {
+        if (registryInfoModel.get('isDemo')) {
+            $('body').addClass('demo-instance');
+        }
         function afterRegistryReady() {
             if (registryInfoModel.get('sendStatistics')) {
                 (new SingletonAnalyticsConnect()).init();
@@ -102,6 +105,5 @@ define(function (require) {
         } else {
             afterRegistryReady();
         }
-
     });
 });

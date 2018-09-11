@@ -1,0 +1,36 @@
+<div class="header-mobile">
+    <div class="logo-label"></div>
+    <span class="welcome-msg"><%= data.text.login.demoWelcomeMsg %></span>
+</div>
+<span class="welcome-msg"><%= data.text.login.demoWelcomeMsg %></span>
+<form class="login-form rp-form" data-js-login-login-form>
+    <div class="external-login hide" data-js-oauth-login>
+        <div data-js-oauth-container></div>
+        <div class="or-block">
+            <div class="or-line"></div>
+            <div class="or"><%= data.text.login.or %></div>
+        </div>
+    </div>
+    <label class="rp-field">
+        <div class="icon-wrapper"><i class="material-icons">person_outline</i></div>
+        <input type="text" class="rp-input" placeholder="<%= data.text.login.loginPlaceholder %>" data-js-login value="default">
+        <span class="validate-hint"></span>
+    </label>
+    <label class="rp-field">
+        <div class="icon-wrapper"><i class="material-icons">lock_outline</i></div>
+        <input type="password" class="rp-input password-field" placeholder="<%= data.text.login.password %>" data-js-password value="1q2w3e">
+        <div class="visability-toggler" data-js-toggle-visability>
+            <div class="shown"></div>
+            <div class="hided"></div>
+        </div>
+        <span class="validate-hint"></span>
+        <div class="error-block hide" data-js-error-block>
+            <i class="rp-icons rp-icons-warning"></i>
+            <span class="error"><%= data.text.login.error %></span>
+            <span class="error-message" data-js-error-message></span>
+        </div>
+    </label>
+    <button class="rp-btn rp-btn-login" type="submit" data-js-login-btn><%= data.text.login.loginTitle%>
+    </button>
+</form>
+

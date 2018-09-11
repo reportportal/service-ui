@@ -44,6 +44,7 @@ define(function (require) {
         },
 
         initialize: function (options) {
+            this.isDemo = options.isDemo;
             this.tpl = options.tpl;
             this.lastURL = options.lastURL;
             this.projectUrl = options.projectUrl;
@@ -80,6 +81,9 @@ define(function (require) {
                         self.closeMenu();
                     }
                 });
+            if(this.isDemo){
+                this.$el.addClass('demo-server');
+            }
             return this;
         },
         onClickToTop: function () {

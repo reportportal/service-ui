@@ -774,6 +774,42 @@ ul.rp-nav-left > li.title-holder {
   & .content-layout {
     width: 100%;
   }
+  .demo-banner{
+    background-color: #e6f7f8;
+    p{
+      margin-bottom: 0;
+      font-size: 14px;
+      text-align: center;
+      line-height: 60px;
+      .warning{
+        display: inline-block;
+        margin-right: 15px;
+        color: $COLOR--failed;
+      }
+      .timer{
+        .time-container{
+          margin: 0;
+          padding: 3px;
+          border-radius: 3px;
+          background-color: $COLOR--white-default;
+          .number{
+            margin: 0;
+            font-size: 14px;
+            color: $COLOR--failed;
+            width: 20px;
+            display: inline-block;
+          }
+          label{
+            font-size: 10px;
+            color: $COLOR--failed;
+          }
+        }
+        .delimiter{
+          margin: 0 5px;
+        }
+      }
+    }
+  }
 }
 
 .content-wrapper {
