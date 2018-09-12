@@ -9,6 +9,7 @@ import { ModalLayout, withModal } from 'components/main/modal';
 import { activeProjectSelector } from 'controllers/user';
 import { addTokenToImagePath, uniqueId, fetch } from 'common/utils';
 import { URLS } from 'common/urls';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { LaunchIcon } from './launchIcon';
 import styles from './launchImportModal.scss';
 import DropZoneIcon from './img/shape-inline.svg';
@@ -297,10 +298,12 @@ export class LaunchImportModal extends Component {
         }}
         closeConfirmation={{
           isAbleToClose,
-          withCheckbox: true,
+          withCheckbox: loading,
           closeConfirmedCallback: this.closeConfirmedCallback,
           confirmationMessage: intl.formatMessage(messages.importConfirmation),
-          confirmationWarning: intl.formatMessage(messages.importConfirmationWarning),
+          confirmationWarning: intl.formatMessage(
+            loading ? messages.importConfirmationWarning : COMMON_LOCALE_KEYS.CLOSE_MODAL_WARNING,
+          ),
         }}
       >
         <Dropzone

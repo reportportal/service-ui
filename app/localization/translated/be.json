@@ -73,6 +73,7 @@
   "ChangePasswordModal.profileUserName": "Поўнае імя павінна ўтрымліваць ад 3 да 256 знакаў, уключаючы лацінскія і рускія літары, лічбы, злучок, ніжняе падкрэсліванне, кропку і прабел.",
   "ChangePasswordModal.showPassword": "Show password",
   "Common.cancel": "Адмяніць",
+  "Common.closeModalWarning": "Вы павінны захаваць змены або адмяніць іх перад закрыццём вокны",
   "Common.confirm": "Пацвердзіць",
   "Common.delete": "Выдаліць",
   "Common.finish": "Завяршыць",
@@ -897,8 +898,7 @@
   "EditDefectModal.title": "Рэдагаваць тып дэфекту",
   "EditDefectModal.updateDefectsSuccess": "Дэфекты абноўлены",
   "EditDefectModal.updateDefectsFailed": "Не атрымалася абнавіць дэфекты",
-  "EditDefectModal.warningMessage": "Вы павінны захаваць змены або адмяніць іх перад закрыццём вокны",
   "emailCase.launchesHint": "Назву запуску павінна мець памер ад 3 да 256",
   "emailCase.recipientsHint": "Калі ласка, выберыце хаця б аднаго атрымальніка",
   "emailCase.tagsHint": "Назва тэга павінна мець памер ад 3 да 256"
-  }
+}
