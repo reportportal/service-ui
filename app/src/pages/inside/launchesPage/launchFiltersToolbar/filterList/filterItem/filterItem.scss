@@ -1,0 +1,42 @@
+.filter-item {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  height: 30px;
+  padding-left: 10px;
+  padding-right: 10px;
+  border: solid 1px $COLOR--gray-91;
+  cursor: pointer;
+
+  &:hover {
+    background-color: $COLOR--tealish-hover;
+  }
+
+  &.active {
+    background-color: $COLOR--gray-91;
+
+    &:hover {
+      background-color: $COLOR--gray-91;
+    }
+  }
+}
+
+.icon {
+  height: 16px;
+  width: 16px;
+
+  svg {
+    fill: $COLOR--gray-47;
+  }
+
+  &:not(:last-child) {
+    margin-right: 10px;
+  }
+}
+
+.name {
+  margin-right: 10px;
+  color: $COLOR--gray-47;
+  font-family: $FONT-SEMIBOLD;
+  font-size: 13px;
+}
