@@ -1,0 +1,17 @@
+.launch-filters-toolbar {
+  box-sizing: border-box;
+  padding: 15px;
+  display: flex;
+  align-items: center;
+}
+
+.all-latest-switcher {
+  width: 185px;
+}
+
+.separator {
+  height: 40px;
+  width: 1px;
+  background-color: $COLOR--gray-91;
+  margin-right: 15px;
+}
