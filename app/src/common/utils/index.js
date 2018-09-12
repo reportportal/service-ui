@@ -26,7 +26,7 @@ export { isEmptyObject } from './isEmptyObject';
 export { referenceDictionary } from './referenceDictionary';
 export { fetch, ERROR_CANCELED, ERROR_UNAUTHORIZED } from './fetch';
 export { addTokenToImagePath } from './addTokenToImagePath';
-export { getStorageItem, setStorageItem } from './storageUtils';
+export { getStorageItem, setStorageItem, removeStorageItem } from './storageUtils';
 export {
   getDuration,
   approximateTimeFormat,

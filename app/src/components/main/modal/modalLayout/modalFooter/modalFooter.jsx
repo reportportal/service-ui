@@ -17,13 +17,16 @@ export class ModalFooter extends Component {
     cancelButton: PropTypes.shape({
       text: PropTypes.string.isRequired,
     }),
-    customButton: PropTypes.shape({
-      onClick: PropTypes.func,
-      component: PropTypes.func,
-      buttonProps: PropTypes.object,
-    }),
+    customButton: PropTypes.oneOfType([
+      PropTypes.node,
+      PropTypes.shape({
+        onClick: PropTypes.func,
+        component: PropTypes.func,
+        buttonProps: PropTypes.object,
+      }),
+    ]),
     onClickOk: PropTypes.func,
-    onClickCancel: PropTypes.func,
+    closeHandler: PropTypes.func,
     onCloseConfirm: PropTypes.func,
     showConfirmation: PropTypes.bool,
     closeConfirmed: PropTypes.bool,
@@ -37,7 +40,7 @@ export class ModalFooter extends Component {
     cancelButton: null,
     customButton: null,
     onClickOk: () => {},
-    onClickCancel: () => {},
+    closeHandler: () => {},
     onCloseConfirm: () => {},
     showConfirmation: false,
     closeConfirmed: false,
@@ -56,7 +59,7 @@ export class ModalFooter extends Component {
       okButton,
       cancelButton,
       customButton,
-      onClickCancel,
+      closeHandler,
       onClickOk,
       showConfirmation,
       confirmationMessage,
@@ -78,11 +81,9 @@ export class ModalFooter extends Component {
               </div>
             )}
             {confirmWithCheckbox && (
-              <div>
-                <InputCheckbox value={closeConfirmed} onChange={this.closeConfirmChangeHandler}>
-                  <span className={cx('confirmation-label')}>{confirmationMessage}</span>
-                </InputCheckbox>
-              </div>
+              <InputCheckbox value={closeConfirmed} onChange={this.closeConfirmChangeHandler}>
+                <span className={cx('confirmation-label')}>{confirmationMessage}</span>
+              </InputCheckbox>
             )}
           </div>
         )}
@@ -95,7 +96,7 @@ export class ModalFooter extends Component {
         <div className={cx('buttons-block')}>
           {cancelButton && (
             <div className={cx('button-container')}>
-              <BigButton color={'gray-60'} onClick={onClickCancel}>
+              <BigButton color={'gray-60'} onClick={closeHandler}>
                 {cancelButton.text}
               </BigButton>
             </div>
@@ -104,7 +105,7 @@ export class ModalFooter extends Component {
             <div className={cx('button-container')}>
               <BigButton
                 color={okButton.danger ? 'tomato' : 'booger'}
-                onClick={onClickOk}
+                onClick={() => okButton.onClick(onClickOk)}
                 disabled={okButton.disabled}
               >
                 {okButton.text}
@@ -113,7 +114,14 @@ export class ModalFooter extends Component {
           )}
           {customButton && (
             <div className={cx('button-container')}>
-              <customButton.component {...customButton.buttonProps} onClick={onClickOk} />
+              {customButton.component ? (
+                <customButton.component
+                  {...customButton.buttonProps}
+                  onClick={() => customButton.onClick(onClickOk)}
+                />
+              ) : (
+                customButton
+              )}
             </div>
           )}
         </div>

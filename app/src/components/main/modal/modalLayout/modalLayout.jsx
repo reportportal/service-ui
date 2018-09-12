@@ -31,11 +31,14 @@ export class ModalLayout extends Component {
     cancelButton: PropTypes.shape({
       text: PropTypes.string.isRequired,
     }),
-    customButton: PropTypes.shape({
-      onClick: PropTypes.func,
-      component: PropTypes.func,
-      buttonProps: PropTypes.object,
-    }),
+    customButton: PropTypes.oneOfType([
+      PropTypes.node,
+      PropTypes.shape({
+        onClick: PropTypes.func,
+        component: PropTypes.func,
+        buttonProps: PropTypes.object,
+      }),
+    ]),
     stopOutsideClose: PropTypes.bool,
     closeConfirmation: PropTypes.shape({
       closeConfirmedCallback: PropTypes.func,
@@ -72,11 +75,13 @@ export class ModalLayout extends Component {
     this.setState({ shown: true });
   }
   onKeydown = (e) => {
+    const { okButton, customButton } = this.props;
     if (e.keyCode === 27) {
       this.closeModal();
     }
     if ((e.ctrlKey && e.keyCode === 13) || (e.metaKey && e.keyCode === 13)) {
-      this.onClickOk();
+      (okButton && okButton.onClick && okButton.onClick(this.closeModalWithOk)) ||
+        (customButton && customButton.onClick && customButton.onClick(this.closeModalWithOk));
     }
   };
   onClickModal = (e) => {
@@ -92,16 +97,13 @@ export class ModalLayout extends Component {
       }
     }
   };
-  onClickOk = () => {
-    const { okButton, customButton } = this.props;
-
-    okButton && okButton.onClick(this.closeModal);
-    customButton && customButton.onClick(this.closeModal);
-  };
   onCloseConfirm = (closeConfirmed) => {
     this.setState({
       closeConfirmed,
     });
+  };
+  closeModalWithOk = () => {
+    this.setState({ shown: false });
   };
   closeModal = () => {
     const { closeConfirmation } = this.props;
@@ -179,8 +181,8 @@ export class ModalLayout extends Component {
 
                   <ModalFooter
                     {...footerProps}
-                    onClickOk={this.onClickOk}
-                    onClickCancel={this.closeModal}
+                    onClickOk={this.closeModalWithOk}
+                    closeHandler={this.closeModal}
                     className={this.props.className}
                   />
                 </div>

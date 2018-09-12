@@ -45,4 +45,8 @@ export const COMMON_LOCALE_KEYS = defineMessages({
     id: 'Common.ok',
     defaultMessage: 'Ok',
   },
+  CLOSE_MODAL_WARNING: {
+    id: 'Common.closeModalWarning',
+    defaultMessage: 'You have to save changes or cancel them before closing the window',
+  },
 });
