@@ -1,6 +1,5 @@
 import React from 'react';
 import { defineMessages, injectIntl } from 'react-intl';
-import Parser from 'html-react-parser';
 import StackTraceIcon from 'common/img/stack-trace-inline.svg';
 import AttachmentIcon from 'common/img/attachment-inline.svg';
 import InfoIcon from 'common/img/info-inline.svg';
@@ -35,32 +34,32 @@ const makeTabs = ({ formatMessage }) => [
   {
     id: 'stack',
     label: formatMessage(messages.stackTab),
-    getIcon: () => Parser(StackTraceIcon),
-    getContent: () => <div>Stack trace</div>,
+    icon: StackTraceIcon,
+    content: <div>Stack trace</div>,
   },
   {
     id: 'attachments',
     label: formatMessage(messages.attachmentsTab),
-    getIcon: () => Parser(AttachmentIcon),
-    getContent: () => <div>Attachments</div>,
+    icon: AttachmentIcon,
+    content: <div>Attachments</div>,
   },
   {
     id: 'details',
     label: formatMessage(messages.detailsTab),
-    getIcon: () => Parser(InfoIcon),
-    getContent: () => <div>Item details</div>,
+    icon: InfoIcon,
+    content: <div>Item details</div>,
   },
   {
     id: 'parameters',
     label: formatMessage(messages.parametersTab),
-    getIcon: () => Parser(TestParamsIcon),
-    getContent: () => <div>Parameters</div>,
+    icon: TestParamsIcon,
+    content: <div>Parameters</div>,
   },
   {
     id: 'history',
     label: formatMessage(messages.historyTab),
-    getIcon: () => Parser(ClockIcon),
-    getContent: () => <div>History of actions</div>,
+    icon: ClockIcon,
+    content: <div>History of actions</div>,
   },
 ];
 
