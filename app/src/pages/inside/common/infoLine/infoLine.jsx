@@ -33,6 +33,9 @@ export class InfoLine extends Component {
     const passed = executions.passed / executions.total * 100;
     const failed = executions.failed / executions.total * 100;
     const skipped = executions.skipped / executions.total * 100;
+    const endTime = this.props.data.end_time;
+    const startTime = this.props.data.start_time;
+    const duration = (endTime - startTime) / 1000;
     return (
       <div className={cx('info-line')}>
         <div className={cx('bar-chart-holder')}>
@@ -48,7 +51,7 @@ export class InfoLine extends Component {
           <FormattedMessage id="InfoLine.duration" defaultMessage="Duration" />
           <div className={cx('duration-value')}>
             {/* TODO change on duration calculation */}
-            <Duration duration={'7s'} />
+            <Duration duration={`${duration}s`} />
           </div>
         </div>
         <div className={cx('defect-types')}>
