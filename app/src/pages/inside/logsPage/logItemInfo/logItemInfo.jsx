@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { defineMessages, injectIntl, intlShape } from 'react-intl';
@@ -40,29 +40,29 @@ export class LogItemInfo extends Component {
 
     return (
       <div className={cx('container')}>
-        {logItem && (
-          <Fragment>
-            <div className={cx('content')}>
-              <div className={cx('description')}>
-                {logItem.issue && <DefectType issue={logItem.issue} />}
-              </div>
-              <div className={cx('actions')}>
-                <div className={cx('action')}>
-                  <GhostButton icon={DownLeftArrowIcon}>
-                    {formatMessage(messages.copyDefect)}
-                  </GhostButton>
-                </div>
-                <div className={cx('action')}>
-                  <GhostButton icon={BugIcon}>{formatMessage(messages.postIssue)}</GhostButton>
-                </div>
-                <div className={cx('action')}>
-                  <GhostButton icon={LinkIcon}>{formatMessage(messages.linkIssue)}</GhostButton>
-                </div>
-              </div>
+        <div className={cx('content')}>
+          <div className={cx('description')}>
+            {logItem.issue && <DefectType issue={logItem.issue} />}
+          </div>
+          <div className={cx('actions')}>
+            <div className={cx('action')}>
+              <GhostButton icon={DownLeftArrowIcon} disabled>
+                {formatMessage(messages.copyDefect)}
+              </GhostButton>
             </div>
-            <LogItemInfoTabs />
-          </Fragment>
-        )}
+            <div className={cx('action')}>
+              <GhostButton icon={BugIcon} disabled>
+                {formatMessage(messages.postIssue)}
+              </GhostButton>
+            </div>
+            <div className={cx('action')}>
+              <GhostButton icon={LinkIcon} disabled>
+                {formatMessage(messages.linkIssue)}
+              </GhostButton>
+            </div>
+          </div>
+        </div>
+        <LogItemInfoTabs />
       </div>
     );
   }

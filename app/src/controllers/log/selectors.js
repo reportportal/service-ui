@@ -48,3 +48,9 @@ export const activeLogIdSelector = createSelector(
     return namespacedQuery.history || logItemId;
   },
 );
+
+export const activeLogSelector = createSelector(
+  historyItemsSelector,
+  activeLogIdSelector,
+  (historyItems, logItemId) => historyItems.find((historyItem) => historyItem.id === logItemId),
+);

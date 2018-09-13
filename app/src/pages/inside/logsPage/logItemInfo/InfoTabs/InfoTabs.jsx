@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
 import ArrowDownIcon from 'common/img/arrow-down-inline.svg';
-import styles from './logItemInfoTabs.scss';
+import styles from './InfoTabs.scss';
 
 const cx = classNames.bind(styles);
 
@@ -13,8 +13,8 @@ export class InfoTabs extends Component {
       PropTypes.shape({
         id: PropTypes.string.isRequired,
         label: PropTypes.string,
-        getContent: PropTypes.func,
-        getIcon: PropTypes.func,
+        content: PropTypes.node.isRequired,
+        icon: PropTypes.node,
       }),
     ),
   };
@@ -52,19 +52,19 @@ export class InfoTabs extends Component {
                 className={cx('tab', { active: this.isActiveTab(tab) })}
                 onClick={() => this.setActiveTab(tab)}
               >
-                {tab.getIcon && <i className={cx('tab-icon')}>{tab.getIcon()}</i>}
+                {tab.icon && <i className={cx('tab-icon')}>{Parser(tab.icon)}</i>}
                 {tab.label && <span className={cx('tab-label')}>{tab.label}</span>}
                 <i className={cx('tab-toggle-icon', { active: this.isActiveTab(tab) })}>
                   {Parser(ArrowDownIcon)}
                 </i>
               </button>
               {this.isActiveTab(tab) && (
-                <div className={cx('tabs-content', 'mobile')}>{tab.getContent()}</div>
+                <div className={cx('tabs-content', 'mobile')}>{tab.content}</div>
               )}
             </Fragment>
           ))}
         </div>
-        {activeTab && <div className={cx('tabs-content', 'desktop')}>{activeTab.getContent()}</div>}
+        {activeTab && <div className={cx('tabs-content', 'desktop')}>{activeTab.content}</div>}
       </div>
     );
   }
