@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
+import { getDuration } from 'common/utils/timeDateUtils';
 import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-intl';
 import styles from './infoLine.scss';
 import { BarChart } from './barChart';
 import { Duration } from './duration';
 import { DefectTypeBlock } from './defectTypeBlock';
-import { getDuration } from '../../../../common/utils/timeDateUtils';
 
 const cx = classNames.bind(styles);
 const messages = defineMessages({
