@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { defineMessages, injectIntl } from 'react-intl';
 import StackTraceIcon from 'common/img/stack-trace-inline.svg';
 import AttachmentIcon from 'common/img/attachment-inline.svg';
@@ -6,6 +7,7 @@ import InfoIcon from 'common/img/info-inline.svg';
 import TestParamsIcon from 'common/img/test-params-icon-inline.svg';
 import ClockIcon from 'common/img/clock-inline.svg';
 import { InfoTabs } from '../infoTabs';
+import { LogItemDetails } from '../logItemDetails';
 
 const messages = defineMessages({
   stackTab: {
@@ -30,7 +32,7 @@ const messages = defineMessages({
   },
 });
 
-const makeTabs = ({ formatMessage }) => [
+const makeTabs = ({ formatMessage }, logItem) => [
   {
     id: 'stack',
     label: formatMessage(messages.stackTab),
@@ -47,7 +49,7 @@ const makeTabs = ({ formatMessage }) => [
     id: 'details',
     label: formatMessage(messages.detailsTab),
     icon: InfoIcon,
-    content: <div>Item details</div>,
+    content: <LogItemDetails logItem={logItem} />,
   },
   {
     id: 'parameters',
@@ -63,4 +65,10 @@ const makeTabs = ({ formatMessage }) => [
   },
 ];
 
-export const LogItemInfoTabs = injectIntl(({ intl }) => <InfoTabs tabs={makeTabs(intl)} />);
+export const LogItemInfoTabs = injectIntl(({ intl, logItem }) => (
+  <InfoTabs tabs={makeTabs(intl, logItem)} />
+));
+
+LogItemInfoTabs.propTypes = {
+  logItem: PropTypes.object.isRequired,
+};
