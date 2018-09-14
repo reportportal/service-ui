@@ -62,7 +62,7 @@ export class LogItemInfo extends Component {
             </div>
           </div>
         </div>
-        <LogItemInfoTabs />
+        <LogItemInfoTabs logItem={logItem} />
       </div>
     );
   }
