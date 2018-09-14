@@ -5,7 +5,7 @@ import AttachmentIcon from 'common/img/attachment-inline.svg';
 import InfoIcon from 'common/img/info-inline.svg';
 import TestParamsIcon from 'common/img/test-params-icon-inline.svg';
 import ClockIcon from 'common/img/clock-inline.svg';
-import { InfoTabs } from '../InfoTabs/InfoTabs';
+import { InfoTabs } from '../infoTabs';
 
 const messages = defineMessages({
   stackTab: {

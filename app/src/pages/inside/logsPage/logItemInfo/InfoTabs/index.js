@@ -1,1 +1,0 @@
-export { InfoTabs } from './InfoTabs';
