@@ -6,6 +6,7 @@ import styles from './infoLine.scss';
 import { BarChart } from './barChart';
 import { Duration } from './duration';
 import { DefectTypeBlock } from './defectTypeBlock';
+import { getDuration } from '../../../../common/utils/timeDateUtils';
 
 const cx = classNames.bind(styles);
 const messages = defineMessages({
@@ -35,7 +36,7 @@ export class InfoLine extends Component {
     const skipped = executions.skipped / executions.total * 100;
     const endTime = this.props.data.end_time;
     const startTime = this.props.data.start_time;
-    const duration = (endTime - startTime) / 1000;
+    const duration = getDuration(startTime, endTime);
     return (
       <div className={cx('info-line')}>
         <div className={cx('bar-chart-holder')}>
@@ -50,8 +51,7 @@ export class InfoLine extends Component {
         <div className={cx('duration')}>
           <FormattedMessage id="InfoLine.duration" defaultMessage="Duration" />
           <div className={cx('duration-value')}>
-            {/* TODO change on duration calculation */}
-            <Duration duration={`${duration}s`} />
+            <Duration duration={duration} />
           </div>
         </div>
         <div className={cx('defect-types')}>
