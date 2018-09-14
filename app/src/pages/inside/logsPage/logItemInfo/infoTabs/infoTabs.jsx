@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
 import ArrowDownIcon from 'common/img/arrow-down-inline.svg';
-import styles from './InfoTabs.scss';
+import styles from './infoTabs.scss';
 
 const cx = classNames.bind(styles);
 
