@@ -1,8 +1,11 @@
 import { connect } from 'react-redux';
 import { pagePropertiesSelector, updatePagePropertiesAction } from 'controllers/pages';
 import { createNamespacedQuery, extractNamespacedQuery } from 'common/utils/routingUtils';
+import { omit } from './omit';
 
 const takeAll = (x) => ({ ...x });
+
+const mergeQuery = (oldQuery, paramsToMerge) => ({ ...oldQuery, ...paramsToMerge });
 
 export const connectRouter = (mapURLParamsToProps = takeAll, queryUpdaters = {}, options = {}) => (
   WrappedComponent,
@@ -20,27 +23,28 @@ export const connectRouter = (mapURLParamsToProps = takeAll, queryUpdaters = {},
       return {
         namespace,
         ...mapURLParamsToProps(namespacedQuery),
+        namespacedQuery,
       };
     },
     (dispatch) => {
       const mappedUpdaters = {};
       Object.keys(queryUpdaters).forEach((key) => {
-        mappedUpdaters[key] = (namespace) => (...args) =>
+        mappedUpdaters[key] = (namespace, oldQuery) => (...args) =>
           dispatch(
             updatePagePropertiesAction(
-              createNamespacedQuery(queryUpdaters[key](...args), namespace),
+              createNamespacedQuery(mergeQuery(oldQuery, queryUpdaters[key](...args)), namespace),
             ),
           );
       });
       return mappedUpdaters;
     },
     (stateProps, dispatchProps, ownProps) => ({
-      ...stateProps,
+      ...omit(stateProps, ['namespace', 'namespacedQuery']),
       ...ownProps,
       ...Object.keys(queryUpdaters).reduce(
         (acc, key) => ({
           ...acc,
-          [key]: acc[key](stateProps.namespace),
+          [key]: acc[key](stateProps.namespace, stateProps.namespacedQuery),
         }),
         dispatchProps,
       ),
