@@ -42,10 +42,6 @@ export const updateProjectEmailConfig = (emailConfig) => (dispatch, getState) =>
       payload: newConfig,
     });
   });
-  // dispatch({
-  //   type: UPDATE_EMAIL_CONFIG_SUCCESS,
-  //   payload: newConfig,
-  // });
 };
 
 export const toggleDisplayFilterOnLaunchesAction = (filter) => (dispatch, getState) => {
