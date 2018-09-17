@@ -10,13 +10,13 @@ Organization & coordination questions.
 Requirements related questions. Responsible for task descriptions.
 
 **UI Team Leader** - [Maxim Tumas](https://telescope.epam.com/who/Maxim_Tumas)<br/>
-UI related questions.
+UI related questions. Github account - [DiscoElevator](https://github.com/DiscoElevator)
 
 **WS Team Leader & Solution Architect** - [Andrei Varabyeu](https://telescope.epam.com/who/Andrei_Varabyeu)<br/>
-WS architecture related questions.
+WS architecture related questions. Github account - [avarabyeu](https://github.com/avarabyeu)
 
 **WS Key Developer** - [Pavel Bortnik](https://telescope.epam.com/who/Pavel_Bortnik)<br/>
-WS development related questions.
+WS development related questions. Github account - [pbortnik](https://github.com/pbortnik)
 
 **UX Designer** - [Oleksandra Yurchenko](https://telescope.epam.com/who/Oleksandra_Yurchenko)<br/>
 UX & Design related questions.
