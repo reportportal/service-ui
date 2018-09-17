@@ -1,0 +1,1 @@
+export {FiltersWrapper} from './filtersWrapper';

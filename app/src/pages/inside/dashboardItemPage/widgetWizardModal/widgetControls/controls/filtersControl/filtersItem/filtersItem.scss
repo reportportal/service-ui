@@ -1,0 +1,12 @@
+.filter {
+  &-item {
+    padding: 10px 0;
+    border-bottom: 1px solid $COLOR--gray-91;
+
+    &:hover {
+      [class*=pencil-icon] {
+        display: inline-block;
+      }
+    }
+  }
+}
