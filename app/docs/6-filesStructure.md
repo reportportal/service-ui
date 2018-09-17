@@ -12,7 +12,7 @@
 - `/src/components/` - common, reusable components base.
 - `/src/controllers/` - stuff related to Redux(reducers, sagas, action creators, selectors and ect.).
 - `/src/layouts/` - application layouts.
-- `/src/pages/` - main development area. Contains compiled project pages.
+- `/src/pages/` - main development area. Contains project pages.
 - `/src/routes/` - router configuration.
 - `/src/store/` - Redux store configuration.
 
