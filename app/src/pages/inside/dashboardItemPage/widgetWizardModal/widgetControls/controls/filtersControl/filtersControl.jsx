@@ -8,11 +8,11 @@ import { userIdSelector } from 'controllers/user';
 import { fetchFiltersAction } from 'controllers/filter';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader/spinningPreloader';
+import { FieldProvider } from 'components/fields/fieldProvider';
 
 import styles from './filtersControl.scss';
 import { FiltersHeader } from './filtersHeader';
 import { FiltersWrapper } from './filtersWrapper';
-import { FieldProvider } from 'components/fields/fieldProvider';
 import { WIDGET_WIZARD_FORM } from '../../../widgetWizardContent/wizardControlsSection/constants';
 
 import { FiltersItem } from './filtersItem';

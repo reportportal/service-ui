@@ -3,8 +3,8 @@ import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 
-import styles from './filtersWrapper.scss';
 import { FilterName } from 'pages/inside/filtersPage/filterGrid/filterName';
+import styles from './filtersWrapper.scss';
 
 const cx = classNames.bind(styles);
 const messages = defineMessages({
