@@ -26,8 +26,8 @@
 }
 
 .name {
-  font-family: $FONT-SEMIBOLD;
-  font-size: 14px;
+  font: 14px $FONT-SEMIBOLD;
+  color: $COLOR--charcoal-grey;
   margin-bottom: 14px;
 }
 
@@ -43,8 +43,8 @@
 }
 
 .status {
-  font-family: $FONT-SEMIBOLD;
-  font-size: 14px;
+  font: 14px $FONT-SEMIBOLD;
+  color: $COLOR--charcoal-grey;
   text-transform: uppercase;
 }
 
