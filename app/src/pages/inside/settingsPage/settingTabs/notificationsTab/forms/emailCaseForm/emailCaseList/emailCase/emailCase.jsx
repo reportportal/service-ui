@@ -6,7 +6,7 @@ import className from 'classnames/bind';
 import Parser from 'html-react-parser';
 import { URLS } from 'common/urls';
 import { validate } from 'common/utils';
-import { activeProjectSelector } from 'controllers/user/index';
+import { activeProjectSelector } from 'controllers/user';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { InputTagsSearch } from 'components/inputs/inputTagsSearch';
 import { InputCheckbox } from 'components/inputs/inputCheckbox';
@@ -19,7 +19,7 @@ import {
 } from 'pages/inside/settingsPage/settingTabs/notificationsTab/forms/constants';
 import styles from './emailCase.scss';
 import IconDelete from './img/icon-delete-inline.svg';
-import { PencilCheckbox } from './pencilCheckbox/index';
+import { PencilCheckbox } from './pencilCheckbox';
 import { messages } from './messages';
 
 const cx = className.bind(styles);
@@ -27,7 +27,7 @@ const cx = className.bind(styles);
 @connect((state) => ({
   teamMembersSearchUrl: URLS.teamMembersSearchUrl(activeProjectSelector(state)),
   launchTagsSearch: URLS.launchTagsSearch(activeProjectSelector(state)),
-  launchNamesSearch: URLS.launchNamesSearch(activeProjectSelector(state)),
+  launchNameSearch: URLS.launchNameSearch(activeProjectSelector(state)),
 }))
 export class EmailCase extends Component {
   static propTypes = {
@@ -35,7 +35,7 @@ export class EmailCase extends Component {
     emailCase: PropTypes.string,
     teamMembersSearchUrl: PropTypes.string,
     launchTagsSearch: PropTypes.string,
-    launchNamesSearch: PropTypes.string,
+    launchNameSearch: PropTypes.string,
     onDelete: PropTypes.func,
     valid: PropTypes.bool,
     readOnly: PropTypes.bool,
@@ -48,7 +48,7 @@ export class EmailCase extends Component {
     emailCase: '',
     teamMembersSearchUrl: '',
     launchTagsSearch: '',
-    launchNamesSearch: '',
+    launchNameSearch: '',
     onDelete: () => {},
     valid: true,
     readOnly: false,
@@ -67,7 +67,7 @@ export class EmailCase extends Component {
     this.props.onDelete(index, showConfirmation);
   };
   onError = (err) => {
-    const message = this.errorMessagesMap(err);
+    const message = this.getErrorMessage(err);
     this.setState({ isDuplicating: message });
   };
   getDropdownInputConfig = () => {
@@ -99,7 +99,7 @@ export class EmailCase extends Component {
       },
     ];
   };
-  errorMessagesMap = (err) => {
+  getErrorMessage = (err) => {
     const { intl } = this.props;
     switch (err) {
       case 'hasDuplicates':
@@ -118,7 +118,7 @@ export class EmailCase extends Component {
     const {
       teamMembersSearchUrl,
       launchTagsSearch,
-      launchNamesSearch,
+      launchNameSearch,
       intl,
       id,
       deletable,
@@ -206,7 +206,7 @@ export class EmailCase extends Component {
               focusPlaceholder={intl.formatMessage(messages.launchNamesHint)}
               async
               minLength={3}
-              uri={launchNamesSearch}
+              uri={launchNameSearch}
               makeOptions={this.formatOptions}
               creatable
               multi

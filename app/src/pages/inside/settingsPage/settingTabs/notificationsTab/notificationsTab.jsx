@@ -19,17 +19,15 @@ const cx = classNames.bind(styles);
   (state) => ({
     projectRole: activeProjectRoleSelector(state),
     userRole: userAccountRoleSelector(state),
-    projectEmailConfig: {
-      emailEnabled: projectEmailEnabledSelector(state),
-      emailCases: projectEmailCasesSelector(state),
-    },
+    emailEnabled: projectEmailEnabledSelector(state),
+    emailCases: projectEmailCasesSelector(state),
   }),
   { update: updateProjectEmailConfig },
 )
 export class NotificationsTab extends Component {
   static propTypes = {
-    projectEmailConfig: PropTypes.object,
-    emailEnabled: PropTypes.object,
+    emailEnabled: PropTypes.bool,
+    emailCases: PropTypes.array,
     update: PropTypes.func,
     onSubmit: PropTypes.func,
     showModal: PropTypes.func,
@@ -37,8 +35,8 @@ export class NotificationsTab extends Component {
     userRole: PropTypes.string,
   };
   static defaultProps = {
-    projectEmailConfig: {},
-    emailEnabled: {},
+    emailEnabled: false,
+    emailCases: [],
     update: () => {},
     onSubmit: () => {},
     showModal: () => {},
@@ -46,11 +44,12 @@ export class NotificationsTab extends Component {
     userRole: '',
   };
   submitForm = (values = {}, dispatch, formProps) => {
-    const { update, projectEmailConfig } = this.props;
+    const { update, emailEnabled, emailCases } = this.props;
+    const projectEmailConfig = { emailEnabled, emailCases };
     const { valid, dirty } = formProps;
     const config = { ...projectEmailConfig, ...values };
     const isAbleToSubmit = this.isAbleToSubmit(config);
-    const newConfig = this.formData(config);
+    const newConfig = this.prepareData(config);
 
     if (isAbleToSubmit && dirty && valid) {
       update(newConfig);
@@ -59,7 +58,7 @@ export class NotificationsTab extends Component {
   isAbleToEditForm = () =>
     canConfigreEmailNotifications(this.props.userRole, this.props.projectRole);
   isAbleToSubmit = ({ emailCases }) => emailCases.every(({ confirmed }) => confirmed);
-  convertEmailCasesForSubmission = (obj) => {
+  convertEmailCaseForSubmission = (obj) => {
     const { informOwner, launchNames, recipients, sendCase, tags } = obj;
     return {
       launchNames,
@@ -68,26 +67,27 @@ export class NotificationsTab extends Component {
       recipients: informOwner ? [...recipients, OWNER] : recipients,
     };
   };
-  formData(config) {
-    const emailCases = config.emailCases.map(this.convertEmailCasesForSubmission);
+  prepareData(config) {
+    const emailCases = config.emailCases.map(this.convertEmailCaseForSubmission);
 
     return { ...config, emailCases };
   }
   render() {
-    const {
-      projectEmailConfig: { emailEnabled },
-    } = this.props;
+    const { emailEnabled } = this.props;
     const readOnly = !this.isAbleToEditForm();
 
     return (
       <div className={cx('notification-form')}>
         <EmailEnableForm
           initialValues={{ emailEnabled }}
+          enableReinitialize
           onSubmit={this.submitForm}
           readOnly={readOnly}
         />
 
-        {emailEnabled && <EmailCaseForm onChange={this.submitForm} readOnly={readOnly} />}
+        {emailEnabled && (
+          <EmailCaseForm onChange={this.submitForm} readOnly={readOnly} enableReinitialize />
+        )}
       </div>
     );
   }

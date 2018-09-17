@@ -18,7 +18,7 @@ export const PencilCheckbox = (props) => {
   };
 
   return (
-    <label className={cx('pencil-checkbox')} onFocus={onFocus} onBlur={onBlur} tabIndex="1">
+    <label className={cx('pencil-checkbox')} onFocus={onFocus} onBlur={onBlur}>
       <input
         type="checkbox"
         className={cx('hidden')}

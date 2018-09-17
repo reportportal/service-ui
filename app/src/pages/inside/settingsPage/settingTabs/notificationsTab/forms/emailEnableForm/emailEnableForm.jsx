@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import { defineMessages, injectIntl, intlShape } from 'react-intl';
 import { reduxForm } from 'redux-form';
 import classNames from 'classnames/bind';
-import { InputBigSwitcher } from 'components/inputs/inputBigSwitcher/index';
-import { InputDropdown } from 'components/inputs/inputDropdown/index';
-import { FormField } from 'components/fields/formField/index';
+import { InputBigSwitcher } from 'components/inputs/inputBigSwitcher';
+import { InputDropdown } from 'components/inputs/inputDropdown';
+import { FormField } from 'components/fields/formField';
 import { labelWidth } from 'pages/inside/settingsPage/settingTabs/notificationsTab/forms/constants';
 import styles from './emailEnableForm.scss';
 

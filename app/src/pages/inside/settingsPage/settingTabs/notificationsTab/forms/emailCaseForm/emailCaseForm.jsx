@@ -1,7 +1,7 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { FieldArray, reduxForm } from 'redux-form';
-import { projectEmailCasesSelector } from 'controllers/project/index';
+import { projectEmailCasesSelector } from 'controllers/project';
 import { connect } from 'react-redux';
 import { EmailCaseList } from './emailCaseList';
 import { validate } from './validation';
@@ -23,17 +23,17 @@ export class EmailCaseForm extends Component {
   static defaultProps = {
     readOnly: false,
   };
+
   render() {
     const { readOnly } = this.props;
+
     return (
-      <Fragment>
-        <FieldArray
-          name="emailCases"
-          component={EmailCaseList}
-          rerenderOnEveryChange
-          readOnly={readOnly}
-        />
-      </Fragment>
+      <FieldArray
+        name="emailCases"
+        component={EmailCaseList}
+        rerenderOnEveryChange
+        readOnly={readOnly}
+      />
     );
   }
 }
