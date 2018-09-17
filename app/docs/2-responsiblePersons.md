@@ -1,4 +1,4 @@
-# 2 - Responsible Persons
+# Responsible Persons
 
 **Project Manager & Project Owner.** - [Dzmitry Humianiuk](https://telescope.epam.com/who/Dzmitry_Humianiuk)<br/>
 Product delivery. Promotion.
