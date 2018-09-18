@@ -123,6 +123,8 @@
   "BtsCommonMessages.btsUrlHint": "Калі ласка, падайце сапраўдную спасылку ў САХ",
   "BtsCommonMessages.integrationNameLabel": "Імя интеграцыі",
   "BtsCommonMessages.linkToBtsLabel": "Спасылка на САХ",
+  "BtsIntegrationSelector.btsTitle": "САХ",
+  "BtsIntegrationSelector.integrationNameTitle": "Імя інтэграцыі",
   "CategoriesList.addOrganizationButtonTitle": "Дадаць арганізацыю GitHub",
   "CategoriesList.organizationNameLabel": "Назва арганізацыі",
   "ChangePasswordBlock.changePass": "Змяніць пароль",

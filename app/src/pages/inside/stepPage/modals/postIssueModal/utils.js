@@ -1,5 +1,3 @@
-import { INCLUDE_ATTACHMENTS_KEY, INCLUDE_COMMENTS_KEY, INCLUDE_LOGS_KEY } from './constants';
-
 export const validate = (fields, validationConfig) => {
   let validValues = {
     username:
@@ -26,8 +24,13 @@ export const validate = (fields, validationConfig) => {
 export const createFieldsValidationConfig = (fields) =>
   fields.reduce((acc, item) => ({ ...acc, [item.id]: item.required }), {});
 
-export const getDataSectionConfig = (value) => ({
-  [INCLUDE_ATTACHMENTS_KEY]: value,
-  [INCLUDE_LOGS_KEY]: value,
-  [INCLUDE_COMMENTS_KEY]: value,
-});
+export function getSessionStorageItem(key) {
+  return sessionStorage.getItem(key) ? JSON.parse(sessionStorage.getItem(key)) : null;
+}
+export function setSessionStorageItem(key, value) {
+  return sessionStorage.setItem(key, JSON.stringify(value));
+}
+
+export function removeSessionStorageItem(key) {
+  sessionStorage.removeItem(key);
+}

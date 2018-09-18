@@ -123,6 +123,8 @@
   "BtsCommonMessages.btsUrlHint": "Пожалуйста, предоставьте действительную ссылку в СОД",
   "BtsCommonMessages.integrationNameLabel": "Имя интеграции",
   "BtsCommonMessages.linkToBtsLabel": "Ссылка на СОД",
+  "BtsIntegrationSelector.btsTitle": "СОД",
+  "BtsIntegrationSelector.integrationNameTitle": "Имя интеграции",
   "CategoriesList.addOrganizationButtonTitle": "Добавить организацию GitHub",
   "CategoriesList.organizationNameLabel": "Название организации",
   "ChangePasswordBlock.changePass": "Изменение пароля",

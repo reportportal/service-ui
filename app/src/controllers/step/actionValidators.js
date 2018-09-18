@@ -30,3 +30,6 @@ export const validateLinkIssue = (item) =>
 
 export const validateEditDefect = (item) =>
   !item.issue || !item.issue.issueType ? 'noIssue' : null;
+
+export const validatePostIssue = (item) =>
+  !item.issue || !item.issue.issueType ? 'noDefectTypeToPostIssue' : null;
