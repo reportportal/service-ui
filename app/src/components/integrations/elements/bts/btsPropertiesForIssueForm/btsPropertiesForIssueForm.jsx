@@ -13,10 +13,11 @@ import { InputCheckbox } from 'components/inputs/inputCheckbox';
 import { DynamicFieldsSection } from 'components/fields/dynamicFieldsSection';
 import {
   normalizeFieldsWithOptions,
+  mapFieldsToValues,
   mergeFields,
 } from 'components/fields/dynamicFieldsSection/utils';
 import { IntegrationFormField } from '../../integrationFormField';
-import { ISSUE_TYPE_FIELD_KEY } from './constants';
+import { ISSUE_TYPE_FIELD_KEY } from '../constants';
 import styles from './btsPropertiesForIssueForm.scss';
 
 const cx = classNames.bind(styles);
@@ -172,7 +173,7 @@ export class BtsPropertiesForIssueForm extends Component {
     let checkedFieldsIds = {};
     if (fields.length) {
       normalizedFields = normalizeFieldsWithOptions(fields);
-      const fieldsValues = this.mapFieldsToValues(normalizedFields);
+      const fieldsValues = mapFieldsToValues(normalizedFields);
       initialize(fieldsValues);
       checkedFieldsIds = Object.keys(fieldsValues).reduce(
         (acc, key) => ({ ...acc, [key]: true }),
@@ -195,17 +196,6 @@ export class BtsPropertiesForIssueForm extends Component {
     this.setState({
       ...fieldsConfig,
     });
-  };
-
-  mapFieldsToValues = (fields, issueTypeValue) => {
-    const valuesMap = {};
-    fields.forEach((field) => {
-      valuesMap[field.id] = field.value;
-      if (field.fieldType === ISSUE_TYPE_FIELD_KEY && issueTypeValue) {
-        valuesMap[field.id] = [issueTypeValue];
-      }
-    });
-    return valuesMap;
   };
 
   handleInputChange = (value) => {
@@ -249,7 +239,7 @@ export class BtsPropertiesForIssueForm extends Component {
         }
       }
 
-      this.props.initialize(this.mapFieldsToValues(fields, issueTypeValue));
+      this.props.initialize(mapFieldsToValues(fields, issueTypeValue, ISSUE_TYPE_FIELD_KEY));
       this.props.updateMetaData({
         fields,
         checkedFieldsIds,

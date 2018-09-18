@@ -13,25 +13,16 @@ export const DATE_FORMAT = 'YYYY-MM-DD';
 export class DateField extends Component {
   static propTypes = {
     field: PropTypes.object.isRequired,
-    customBlock: PropTypes.object,
-  };
-
-  static defaultProps = {
-    customBlock: null,
   };
 
   parseDateValue = (value) => value && moment(value).format(DATE_FORMAT);
 
   render() {
-    const { field, customBlock, ...rest } = this.props;
+    const { field, ...rest } = this.props;
     return (
       <div className={cx('date-field')}>
-        <DynamicField field={field} customBlock={customBlock} parse={this.parseDateValue} {...rest}>
-          <DatePicker
-            className={cx('date-input', { 'with-custom-block': customBlock })}
-            fixedHeight
-            dateFormat={DATE_FORMAT}
-          />
+        <DynamicField field={field} parse={this.parseDateValue} {...rest}>
+          <DatePicker className={cx('date-input')} fixedHeight dateFormat={DATE_FORMAT} />
         </DynamicField>
       </div>
     );

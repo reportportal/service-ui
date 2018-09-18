@@ -16,3 +16,4 @@ export const COMMON_BTS_MESSAGES = defineMessages({
 });
 
 export const BTS_FIELDS_FORM = 'BTS_FIELDS_FORM';
+export const ISSUE_TYPE_FIELD_KEY = 'issuetype';

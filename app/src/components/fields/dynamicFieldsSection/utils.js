@@ -11,7 +11,7 @@ export const normalizeFieldsWithOptions = (fields) =>
     const definedValues = field.definedValues.map(normalizeDefinedValue);
     let value = field.value;
     if (!value || !value.length) {
-      value = [definedValues[0].valueId];
+      value = [definedValues[0].valueName];
     }
     return { ...field, definedValues, value };
   });
@@ -21,6 +21,17 @@ export const mergeFields = (savedFields, fetchedFields) =>
     const savedField = savedFields.find((item) => item.id === field.id);
     return savedField ? { ...field, ...savedField } : field;
   });
+
+export const mapFieldsToValues = (fields, predefinedFieldValue, predefinedFieldKey) => {
+  const valuesMap = {};
+  fields.forEach((field) => {
+    valuesMap[field.id] = field.value;
+    if (field.fieldType === predefinedFieldKey && predefinedFieldValue) {
+      valuesMap[field.id] = [predefinedFieldValue];
+    }
+  });
+  return valuesMap;
+};
 
 export const getFieldComponent = (field) => {
   let fieldType = null;

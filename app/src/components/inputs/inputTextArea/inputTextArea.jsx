@@ -49,6 +49,7 @@ InputTextArea.propTypes = {
   mobileDisabled: PropTypes.bool,
   readonly: PropTypes.bool,
   error: PropTypes.string,
+  touched: PropTypes.bool,
   onChange: PropTypes.func,
   onFocus: PropTypes.func,
   onBlur: PropTypes.func,

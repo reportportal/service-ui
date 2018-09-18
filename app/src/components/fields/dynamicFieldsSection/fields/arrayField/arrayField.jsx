@@ -6,15 +6,10 @@ import { DynamicField } from '../../dynamicField';
 export class ArrayField extends Component {
   static propTypes = {
     field: PropTypes.object.isRequired,
-    customBlock: PropTypes.object,
-  };
-
-  static defaultProps = {
-    customBlock: null,
   };
 
   formatOptions = (values = []) =>
-    values.map(({ valueId, valueName }) => ({ value: valueId, label: valueName }));
+    values.map(({ valueName }) => ({ value: valueName, label: valueName }));
 
   creatable = !this.props.field.definedValues || !this.props.field.definedValues.length;
 
@@ -23,7 +18,7 @@ export class ArrayField extends Component {
     const values = [];
     tags &&
       tags.forEach((item) => {
-        const foundedItems = field.definedValues.find((defValue) => defValue.valueId === item);
+        const foundedItems = field.definedValues.find((defValue) => defValue.valueName === item);
         foundedItems && values.push(foundedItems);
       });
     return this.formatOptions(values);
@@ -32,12 +27,11 @@ export class ArrayField extends Component {
   parseTags = (options) => (options && options.map((option) => option.value)) || undefined;
 
   render() {
-    const { field, customBlock, ...rest } = this.props;
+    const { field, ...rest } = this.props;
 
     return (
       <DynamicField
         field={field}
-        customBlock={customBlock}
         format={this.creatable ? this.formatOptions : this.formatTags}
         parse={this.parseTags}
         {...rest}

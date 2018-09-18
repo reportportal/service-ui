@@ -13,12 +13,14 @@ export class DynamicFieldsSection extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
     fields: PropTypes.arrayOf(dynamicFieldShape),
+    withValidation: PropTypes.bool,
     customBlockCreator: PropTypes.func,
     customFieldWrapper: PropTypes.func,
   };
 
   static defaultProps = {
     fields: [],
+    withValidation: false,
     customBlockCreator: null,
     customFieldWrapper: null,
   };
@@ -32,7 +34,7 @@ export class DynamicFieldsSection extends Component {
   };
 
   createFields = () => {
-    const { fields = [], customFieldWrapper } = this.props;
+    const { fields = [], customFieldWrapper, withValidation } = this.props;
 
     return fields.map((field) => {
       const FieldComponent = getFieldComponent(field);
@@ -41,8 +43,9 @@ export class DynamicFieldsSection extends Component {
         <FieldComponent
           key={field.id}
           field={field}
-          customFieldWrapper={customFieldWrapper}
           customBlock={this.getCustomBlockConfig(field)}
+          withValidation={withValidation}
+          customFieldWrapper={customFieldWrapper}
         />
       );
     });
