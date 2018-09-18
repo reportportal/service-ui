@@ -103,6 +103,7 @@ export class LinkIssueFields extends Component {
         <li className={cx('add-issue-button')}>
           <GhostButton
             type="button"
+            notMinified
             onClick={() => {
               tracking.trackEvent(addEventInfo);
               fields.push({});

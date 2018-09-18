@@ -28,3 +28,5 @@ export const validateUnlinkIssue = (item) => {
 export const validateLinkIssue = (item) => (!item.issue ? 'noDefectTypeToLinkIssue' : null);
 
 export const validateEditDefect = (item) => (!item.issue ? 'noIssue' : null);
+
+export const validatePostIssue = (item) => (!item.issue ? 'noDefectTypeToPostIssue' : null);

@@ -1,0 +1,69 @@
+.issue-form-item {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  width: 100%;
+  margin-bottom: 25px;
+  @media (max-width: $SCREEN_XS_MAX) {
+    flex-direction: column;
+    margin-bottom: 15px;
+  }
+}
+
+.field-wrapper {
+  position: relative;
+  width: 310px;
+  padding: 0 15px;
+  @media (max-width: $SCREEN_XS_MAX) {
+    display: inline-block;
+    width: 100%;
+    margin-bottom: 8px;
+    padding: 0;
+    &.with-checkbox {
+      width: calc(100% - 37px);
+    }
+  }
+}
+
+.form-group-label {
+  min-width: 210px;
+  padding: 8px 15px 0 0;
+  vertical-align: middle;
+  text-align: right;
+  display: block;
+  font-size: 13px;
+  line-height: 13px;
+  color: $COLOR--charcoal-grey;
+  box-sizing: border-box;
+
+  &.required {
+    position: relative;
+    &:after {
+      content: '*';
+      position: absolute;
+      margin-left: 2px;
+      color: $COLOR--product-bug;
+    }
+  }
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    min-width: 150px;
+    width: 150px;
+  }
+  @media (max-width: $SCREEN_XS_MAX) {
+    display: inline-block;
+    width: 100%;
+    margin-bottom: 8px;
+    padding: 0;
+    text-align: left;
+  }
+}
+
+.checkbox-wrapper {
+  position: absolute;
+  right: -20px;
+  top: 14px;
+  @media (max-width: $SCREEN_XS_MAX) {
+    right: -25px;
+  }
+}

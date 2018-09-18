@@ -12,6 +12,9 @@
   font-size: 13px;
   font-family: $FONT-REGULAR;
   text-align: right;
+  @media (max-width: $SCREEN_XS_MAX) {
+    text-align: left;
+  }
 }
 
 .inputs-group-block {
@@ -24,6 +27,10 @@
   padding: 0;
   margin-left: 20px;
   margin-right: 25px;
+  @media (max-width: $SCREEN_XS_MAX) {
+    width: 100%;
+    margin: 0;
+  }
 }
 
 .remove-issue-fields-button {
@@ -46,8 +53,16 @@
       fill: $COLOR--gray-47;
     }
   }
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    right: -27px;
+    top: 56px;
+  }
 }
 
 .add-issue-button {
   margin-left: 160px;
+  @media (max-width: $SCREEN_XS_MAX) {
+    margin-left: 0;
+  }
 }

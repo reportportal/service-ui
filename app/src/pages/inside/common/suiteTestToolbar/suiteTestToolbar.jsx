@@ -16,6 +16,7 @@ export const SuiteTestToolbar = ({
   onIncludeInAA,
   onUnlinkIssue,
   onLinkIssue,
+  onPostIssue,
   onEditDefects,
   debugMode,
   onDelete,
@@ -48,6 +49,7 @@ export const SuiteTestToolbar = ({
       onIncludeInAA={onIncludeInAA}
       onUnlinkIssue={onUnlinkIssue}
       onLinkIssue={onLinkIssue}
+      onPostIssue={onPostIssue}
       onEditDefects={onEditDefects}
       onDelete={onDelete}
       deleteDisabled={!selectedItems.length}
@@ -75,6 +77,7 @@ SuiteTestToolbar.propTypes = {
   onIncludeInAA: PropTypes.func,
   onUnlinkIssue: PropTypes.func,
   onLinkIssue: PropTypes.func,
+  onPostIssue: PropTypes.func,
   onEditDefects: PropTypes.func,
   debugMode: PropTypes.bool,
   onDelete: PropTypes.func,
@@ -98,6 +101,7 @@ SuiteTestToolbar.defaultProps = {
   onIncludeInAA: () => {},
   onUnlinkIssue: () => {},
   onLinkIssue: () => {},
+  onPostIssue: PropTypes.func,
   onEditDefects: () => {},
   onDelete: () => {},
   debugMode: false,

@@ -27,7 +27,7 @@ export const URLS = {
 
   widget: (activeProject, widgetId = '') => `${urlBase}${activeProject}/widget/${widgetId}`,
 
-  externalSystemIssue: (activeProject, systemId, issueId) =>
+  externalSystemIssue: (activeProject, systemId, issueId = '') =>
     `${urlBase}${activeProject}/external-system/${systemId}/ticket/${issueId}`,
 
   filter: (activeProject, id = '') => `${urlBase}${activeProject}/filter/${id}`,
