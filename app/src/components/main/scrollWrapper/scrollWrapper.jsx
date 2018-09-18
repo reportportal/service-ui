@@ -53,7 +53,7 @@ export class ScrollWrapper extends Component {
     autoHide: false,
     autoHeight: false,
     autoHeightMin: 0,
-    autoHeightMax: 200,
+    autoHeightMax: '100%',
     autoHideTimeout: 500,
     renderTrackHorizontal: (props) => <div {...props} className={cx('track-horizontal')} />,
     renderTrackVertical: (props) => <div {...props} className={cx('track-vertical')} />,

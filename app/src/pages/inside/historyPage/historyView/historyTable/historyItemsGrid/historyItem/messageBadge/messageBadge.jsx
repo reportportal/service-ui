@@ -10,7 +10,7 @@ const cx = classNames.bind(styles);
 const MessageBadgeToolTip = ({ data }) => (
   <div className={cx('tooltip-content')}>
     {data.map((item) => (
-      <div className={cx('content-container')} key={item.ticketId.length}>
+      <div className={cx('content-container')} key={item.ticketId}>
         <span>{item.ticketId}</span>
       </div>
     ))}
@@ -35,25 +35,17 @@ MessageBadgeToolTip.defaultProps = {
 export class MessageBadge extends Component {
   static propTypes = {
     data: PropTypes.array,
-    type: PropTypes.string,
     icon: PropTypes.string,
-    iconClass: PropTypes.string,
   };
 
   static defaultProps = {
     data: [],
-    type: '',
     icon: '',
-    iconClass: '',
   };
 
   render() {
-    const { iconClass, icon } = this.props;
+    const { icon } = this.props;
 
-    return (
-      <div>
-        <i className={cx('icon', `${iconClass}`)}>{Parser(icon)}</i>
-      </div>
-    );
+    return <i className={cx('icon')}>{Parser(icon)}</i>;
   }
 }

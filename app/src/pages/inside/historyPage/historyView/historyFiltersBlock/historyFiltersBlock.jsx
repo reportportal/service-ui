@@ -33,7 +33,7 @@ export class HistoryFiltersBlock extends Component {
 
     return (
       <div className={cx('filters-block-wrapper')}>
-        <span className={cx('filter-name')}>{intl.formatMessage(messages.depthFilterTitle)}</span>
+        <p className={cx('filter-name')}>{intl.formatMessage(messages.depthFilterTitle)}</p>
         <div className={cx('drop-down-container')}>
           <InputDropdown
             options={HISTORY_DEPTH_CONFIG.options}

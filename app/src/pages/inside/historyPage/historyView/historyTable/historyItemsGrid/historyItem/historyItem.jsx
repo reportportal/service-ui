@@ -76,44 +76,51 @@ export class HistoryItem extends Component {
     });
   };
 
+  renderResetedTextContent = () => (
+    <Fragment>
+      <i className={cx('icon')}>{Parser(EmptyItemIcon)}</i>
+      <span>{this.props.intl.formatMessage(messages.emptyItemCaption)}</span>
+    </Fragment>
+  );
+
+  renderManyTextContent = () => (
+    <MessageBadge
+      data={[{ ticketId: this.props.intl.formatMessage(messages.sameItemsCaption) }]}
+      icon={NotEyeIcon}
+    />
+  );
+
+  renderNotFoundTextContent = () => (
+    <Fragment>
+      <i className={cx('icon', 'no-item-icon')}>{Parser(NoItemIcon)}</i>
+      <span>{Parser(this.props.intl.formatMessage(messages.noItemCaption))}</span>
+    </Fragment>
+  );
+
+  renderTextContent = () => {
+    switch (this.props.status.toLowerCase()) {
+      case RESETED:
+        return this.renderResetedTextContent();
+      case NOT_FOUND:
+        return this.renderNotFoundTextContent();
+      case MANY:
+        return this.renderManyTextContent();
+      default:
+        return '';
+    }
+  };
+
   render() {
-    const { intl, status, issue } = this.props;
+    const { status, issue } = this.props;
 
     return (
       <div className={cx('history-item-wrapper', `history-item-status-${status}`)}>
         {status.toLowerCase() === (FAILED || SKIPPED) && this.mapDefectsToBadges()}
-        {issue.comment && (
-          <div>
-            <MessageBadge data={[{ ticketId: issue.comment }]} icon={CommentIcon} />
-          </div>
-        )}
+        {issue.comment && <MessageBadge data={[{ ticketId: issue.comment }]} icon={CommentIcon} />}
         {issue.externalSystemIssues && (
-          <div>
-            <MessageBadge data={issue.externalSystemIssues} icon={TagIcon} />
-          </div>
+          <MessageBadge data={issue.externalSystemIssues} icon={TagIcon} />
         )}
-        <div className={cx('item-text-content')}>
-          {status.toLowerCase() === RESETED && (
-            <Fragment>
-              <i className={cx('icon')}>{Parser(EmptyItemIcon)}</i>
-              <span>{intl.formatMessage(messages.emptyItemCaption)}</span>
-            </Fragment>
-          )}
-          {status.toLowerCase() === NOT_FOUND && (
-            <Fragment>
-              <i className={cx('icon', 'no-item-icon')}>{Parser(NoItemIcon)}</i>
-              <span>{Parser(intl.formatMessage(messages.noItemCaption))}</span>
-            </Fragment>
-          )}
-          {status.toLowerCase() === MANY && (
-            <div>
-              <MessageBadge
-                data={[{ ticketId: intl.formatMessage(messages.sameItemsCaption) }]}
-                icon={NotEyeIcon}
-              />
-            </div>
-          )}
-        </div>
+        <div className={cx('item-text-content')}>{this.renderTextContent()}</div>
       </div>
     );
   }

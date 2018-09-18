@@ -34,7 +34,7 @@ export class HistoryNamesGrid extends Component {
       <div className={cx('history-names-grid-wrapper', customClass)}>
         <div className={cx('history-grid-head')}>
           <div className={cx('history-grid-header-column')}>
-            <span>{intl.formatMessage(messages.itemNamesHeaderTitle)}</span>
+            {intl.formatMessage(messages.itemNamesHeaderTitle)}
           </div>
         </div>
         {items.map((item) => (

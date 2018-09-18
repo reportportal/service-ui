@@ -148,7 +148,7 @@ export class ActionPanel extends Component {
     this.actionDescriptors = this.createActionDescriptors();
   }
 
-  onHistoryHandler = () => {
+  onClickHistory = () => {
     this.props.redirect({ type: SUITE_HISTORY_PAGE, payload: this.props.payload });
   };
 
@@ -258,7 +258,7 @@ export class ActionPanel extends Component {
           {!listView &&
             !debugMode && (
               <div className={cx('action-button')}>
-                <GhostButton icon={HistoryIcon} onClick={this.onHistoryHandler}>
+                <GhostButton icon={HistoryIcon} onClick={this.onClickHistory}>
                   <FormattedMessage id="ActionPanel.history" defaultMessage="History" />
                 </GhostButton>
               </div>

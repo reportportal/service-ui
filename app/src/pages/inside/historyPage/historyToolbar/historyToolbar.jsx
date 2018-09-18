@@ -1,12 +1,13 @@
+import React, { Fragment } from 'react';
 import { InfoLine } from 'pages/inside/common/infoLine';
 import PropTypes from 'prop-types';
 import { ActionPanel } from './actionPanel';
 
 export const HistoryToolbar = ({ parentItem, onRefresh }) => (
-  <div>
+  <Fragment>
     <ActionPanel onRefresh={onRefresh} />
     {parentItem && <InfoLine data={parentItem} />}
-  </div>
+  </Fragment>
 );
 HistoryToolbar.propTypes = {
   parentItem: PropTypes.object,

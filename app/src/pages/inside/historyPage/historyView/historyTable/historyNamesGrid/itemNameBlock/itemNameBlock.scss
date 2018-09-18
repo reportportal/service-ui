@@ -6,13 +6,10 @@
   line-height: 1.1;
   color: $COLOR--windows-blue;
   cursor: pointer;
-  & span {
-    display: inline-block;
-    width: 100%;
-    box-sizing: border-box;
-    padding: 2px 2px 2px 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
+  display: inline-block;
+  width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }

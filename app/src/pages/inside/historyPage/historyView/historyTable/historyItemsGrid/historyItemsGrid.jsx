@@ -62,7 +62,7 @@ export class HistoryItemsGrid extends Component {
     return itemProps;
   };
 
-  getHistoryItemsToRender = () => {
+  renderHistoryItems = () => {
     const { items, itemsHistory } = this.props;
 
     return items.map((launch) => (
@@ -87,7 +87,7 @@ export class HistoryItemsGrid extends Component {
 
     return (
       <div className={cx('history-content-wrapper', customClass)}>
-        <ScrollWrapper autoHeight autoHeightMax={'100%'}>
+        <ScrollWrapper autoHeight>
           <div className={cx('history-items-grid')}>
             <div className={cx('history-grid-head')}>
               {itemsHistory.map((item) => (
@@ -95,13 +95,11 @@ export class HistoryItemsGrid extends Component {
                   key={item.launchNumber}
                   className={cx('history-grid-header-column', `launch-status-${item.launchStatus}`)}
                 >
-                  <span>
-                    {`${intl.formatMessage(messages.launchNumberTitle)}${item.launchNumber}`}
-                  </span>
+                  {`${intl.formatMessage(messages.launchNumberTitle)}${item.launchNumber}`}
                 </div>
               ))}
             </div>
-            {this.getHistoryItemsToRender()}
+            {this.renderHistoryItems()}
           </div>
         </ScrollWrapper>
       </div>

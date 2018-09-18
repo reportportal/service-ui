@@ -28,10 +28,6 @@ export class ItemNameBlock extends Component {
   render() {
     const { data } = this.props;
 
-    return (
-      <div className={cx('history-grid-record-name')}>
-        <span>{data.name}</span>
-      </div>
-    );
+    return <p className={cx('history-grid-record-name')}>{data.name}</p>;
   }
 }
