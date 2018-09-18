@@ -68,7 +68,9 @@ export class EmailEnableForm extends Component {
           <FormField
             label={intl.formatMessage(messages.toggleNotificationsLabel)}
             labelWidth={labelWidth}
-            description={intl.formatMessage(messages.toggleNotificationsNote)}
+            customBlock={{
+              node: <p>{intl.formatMessage(messages.toggleNotificationsNote)}</p>,
+            }}
             name="emailEnabled"
             disabled={readOnly}
             format={Boolean}
@@ -80,7 +82,9 @@ export class EmailEnableForm extends Component {
         <div className={cx('email-notification-toggle--mobile')}>
           <FormField
             label={intl.formatMessage(messages.toggleNotificationsLabel)}
-            description={intl.formatMessage(messages.toggleNotificationsNote)}
+            customBlock={{
+              node: <p>{intl.formatMessage(messages.toggleNotificationsNote)}</p>,
+            }}
             name="emailEnabled"
             fieldWrapperClassName={cx('form-input')}
           >

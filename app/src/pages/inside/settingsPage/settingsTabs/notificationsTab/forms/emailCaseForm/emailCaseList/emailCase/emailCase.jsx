@@ -121,7 +121,7 @@ export class EmailCase extends Component {
   };
   formatOptions = (options) =>
     options && options.map((option) => ({ value: option, label: option }));
-  parseOptions = (options) => options.map((option) => option.value);
+  parseOptions = (options) => (options && options.map((option) => option.value)) || undefined;
   validateRecipientsNewItem = ({ label }) => label && validate.email(label);
   validateLaunchNamesNewItem = ({ label }) => label && label.length >= 3;
   validateTagsNewItem = ({ label }) => label && label.length >= 1;
@@ -221,7 +221,9 @@ export class EmailCase extends Component {
         </FormField>
         <FormField
           label={intl.formatMessage(messages.launchNamesLabel)}
-          description={intl.formatMessage(messages.launchNamesNote)}
+          customBlock={{
+            node: <p>{intl.formatMessage(messages.launchNamesNote)}</p>,
+          }}
           name={`${emailCase}.launchNames`}
           format={this.formatOptions}
           parse={this.parseOptions}
@@ -246,7 +248,9 @@ export class EmailCase extends Component {
         </FormField>
         <FormField
           label={intl.formatMessage(messages.tagsLabel)}
-          description={intl.formatMessage(messages.tagsNote)}
+          customBlock={{
+            node: <p>{intl.formatMessage(messages.tagsNote)}</p>,
+          }}
           fieldWrapperClassName={cx('form-input')}
           name={`${emailCase}.tags`}
           format={this.formatOptions}

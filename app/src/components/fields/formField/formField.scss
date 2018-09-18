@@ -14,13 +14,13 @@
 .field-wrapper {
   padding: 0 15px;
   @media (max-width: $SCREEN_XS_MAX) {
+    display: inline-block;
     padding: 0;
     margin-bottom: 8px;
-    display: inline-block;
   }
 }
 
-.form-group-description {
+.custom-block {
   display: inline-block;
   max-width: 100%;
   margin: 0;

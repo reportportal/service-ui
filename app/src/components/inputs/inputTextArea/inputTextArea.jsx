@@ -11,6 +11,7 @@ export const InputTextArea = ({
   placeholder,
   maxLength,
   disabled,
+  mobileDisabled,
   refFunction,
   onChange,
   onFocus,
@@ -19,7 +20,11 @@ export const InputTextArea = ({
 }) => (
   <textarea
     ref={refFunction}
-    className={cx('input-text-area', { disabled, error })}
+    className={cx('input-text-area', {
+      'mobile-disabled': mobileDisabled,
+      disabled,
+      error,
+    })}
     value={value}
     placeholder={placeholder}
     maxLength={maxLength}
@@ -39,6 +44,7 @@ InputTextArea.propTypes = {
   placeholder: PropTypes.string,
   maxLength: PropTypes.string,
   disabled: PropTypes.bool,
+  mobileDisabled: PropTypes.bool,
   readonly: PropTypes.bool,
   error: PropTypes.string,
   onChange: PropTypes.func,
@@ -53,6 +59,7 @@ InputTextArea.defaultProps = {
   placeholder: '',
   maxLength: '254',
   disabled: false,
+  mobileDisabled: false,
   readonly: false,
   error: '',
   onChange: () => {},

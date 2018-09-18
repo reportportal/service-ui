@@ -10,7 +10,7 @@
     .square {
       border-color: $COLOR--charcoal-grey;
 
-      &.checked {
+      &.checked:not(.disabled) {
         border-color: $COLOR--topaz;
       }
       &.disabled {
