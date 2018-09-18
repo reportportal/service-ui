@@ -40,9 +40,11 @@ export class FilterOptions extends Component {
     sort: PropTypes.array,
     defectTypes: PropTypes.object.isRequired,
     intl: intlShape.isRequired,
+    children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node]),
   };
 
   static defaultProps = {
+    children: null,
     entities: [],
     sort: [],
   };
@@ -159,6 +161,12 @@ export class FilterOptions extends Component {
   };
 
   render() {
-    return <p className={cx('filter-options')}>{this.optionsToString()}</p>;
+    const { children } = this.props;
+
+    return (
+      <p className={cx('filter-options')}>
+        {this.optionsToString()} {children}
+      </p>
+    );
   }
 }

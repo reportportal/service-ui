@@ -2,7 +2,9 @@ import React, { PureComponent } from 'react';
 import { injectIntl, intlShape } from 'react-intl';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
+import Parser from 'html-react-parser';
 
+import PencilIcon from 'common/img/pencil-icon-inline.svg';
 import { InputRadio } from 'components/inputs/inputRadio';
 import { FilterOptions } from 'pages/inside/filtersPage/filterGrid/filterOptions';
 import { FilterName } from 'pages/inside/filtersPage/filterGrid/filterName';
@@ -13,14 +15,15 @@ const cx = classNames.bind(styles);
 @injectIntl
 export class FiltersItem extends PureComponent {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: intlShape,
+    userId: PropTypes.string,
     activeFilterId: PropTypes.string,
     filter: PropTypes.object.isRequired,
-    userId: PropTypes.string,
     onChange: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
+    intl: {},
     userId: '',
     activeFilterId: '',
     item: {},
@@ -39,8 +42,14 @@ export class FiltersItem extends PureComponent {
           onChange={onChange}
           circleAtTop
         >
-          <FilterName filter={filter} userId={userId}/>
-          <FilterOptions entities={filter.entities} sort={filter.selection_parameters.orders}/>
+          <FilterName filter={filter} showDesc={false} />
+          <FilterOptions entities={filter.entities} sort={filter.selection_parameters.orders}>
+            {userId === filter.owner && (
+              <span className={cx('pencil-icon')} onClick={() => {}}>
+                {Parser(PencilIcon)}
+              </span>
+            )}
+          </FilterOptions>
         </InputRadio>
       </div>
     );

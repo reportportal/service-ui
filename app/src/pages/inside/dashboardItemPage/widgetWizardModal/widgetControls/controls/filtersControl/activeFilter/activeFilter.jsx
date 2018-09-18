@@ -4,26 +4,27 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 
 import { FilterName } from 'pages/inside/filtersPage/filterGrid/filterName';
-import styles from './filtersWrapper.scss';
+import styles from './activeFilter.scss';
 
 const cx = classNames.bind(styles);
 const messages = defineMessages({
   chooseFilter: {
-    id: 'FiltersPage.chooseFilter',
+    id: 'FiltersWrapper.chooseFilter',
     defaultMessage: 'Choose filter from the list below',
   },
 });
 
 @injectIntl
-export class FiltersWrapper extends PureComponent {
+export class ActiveFilter extends PureComponent {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: intlShape,
     touched: PropTypes.bool.isRequired,
-    error: PropTypes.string,
+    error: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
     filter: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
   };
 
   static defaultProps = {
+    intl: {},
     filter: false,
     touched: false,
     error: '',
@@ -35,7 +36,11 @@ export class FiltersWrapper extends PureComponent {
     return (
       <div className={cx('filters-wrapper')}>
         <span className={cx('filters-text', { error: error && touched })}>
-          {filter ? <FilterName filter={filter} /> : intl.formatMessage(messages.chooseFilter)}
+          {filter ? (
+            <FilterName filter={filter} showDesc={false} />
+          ) : (
+            intl.formatMessage(messages.chooseFilter)
+          )}
         </span>
       </div>
     );

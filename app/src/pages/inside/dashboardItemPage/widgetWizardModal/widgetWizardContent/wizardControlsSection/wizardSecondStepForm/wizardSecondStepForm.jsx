@@ -31,7 +31,7 @@ export class WizardSecondStepForm extends Component {
 
     return (
       <form onSubmit={handleSubmit(onSubmit)} className={cx('wizard-second-step-form')}>
-          <ControlsForm widgetType={widget.id} />
+        <ControlsForm widgetType={widget.id} />
       </form>
     );
   }

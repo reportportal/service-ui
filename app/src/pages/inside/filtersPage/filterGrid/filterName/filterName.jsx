@@ -2,7 +2,11 @@ import React, { Fragment, Component } from 'react';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
+import Parser from 'html-react-parser';
 
+import ShareIcon from 'common/img/share-icon-inline.svg';
+import PencilIcon from 'common/img/pencil-icon-inline.svg';
+import GlobeIcon from 'common/img/globe-icon-inline.svg';
 import { MarkdownViewer } from 'components/main/markdown';
 import styles from './filterName.scss';
 
@@ -18,24 +22,27 @@ const messages = defineMessages({
 @injectIntl
 export class FilterName extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
+    intl: intlShape,
     userFilters: PropTypes.array,
     filter: PropTypes.object,
     onClickName: PropTypes.func,
     onEdit: PropTypes.func,
     userId: PropTypes.string,
+    showDesc: PropTypes.bool,
   };
 
   static defaultProps = {
+    intl: {},
     userFilters: [],
     filter: {},
     onClickName: () => {},
     onEdit: () => {},
     userId: '',
+    showDesc: true,
   };
 
   render() {
-    const { intl, userFilters, filter, onClickName, onEdit, userId } = this.props;
+    const { intl, userFilters, filter, onClickName, onEdit, userId, showDesc } = this.props;
 
     return (
       <Fragment>
@@ -47,13 +54,23 @@ export class FilterName extends Component {
             {filter.name}
           </span>
           {filter.share && (
-            <span className={cx('share-icon')} title={intl.formatMessage(messages.shareFilter)} />
+            <span className={cx('share-icon')} title={intl.formatMessage(messages.shareFilter)}>
+              {Parser(ShareIcon)}
+            </span>
           )}
+          {!filter.share &&
+            userId !== filter.owner && (
+              <span className={cx('globe-icon')} title={intl.formatMessage(messages.shareFilter)}>
+                {Parser(GlobeIcon)}
+              </span>
+            )}
           {userId === filter.owner && (
-            <div className={cx('pencil-icon')} onClick={() => onEdit(filter)} />
+            <span className={cx('pencil-icon')} onClick={() => onEdit(filter)}>
+              {Parser(PencilIcon)}
+            </span>
           )}
         </span>
-        <MarkdownViewer value={filter.description} />
+        {showDesc && <MarkdownViewer value={filter.description} />}
       </Fragment>
     );
   }

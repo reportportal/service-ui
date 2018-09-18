@@ -4,6 +4,8 @@ export {
   fetchErrorAction,
   fetchSuccessAction,
   bulkFetchDataAction,
+  concatFetchDataAction,
+  concatFetchSuccessAction,
 } from './actionCreators';
 export { fetchReducer } from './reducer';
-export { FETCH_SUCCESS, FETCH_START } from './constants';
+export { FETCH_SUCCESS, FETCH_START, FETCH_ERROR, CONCAT_FETCH_SUCCESS } from './constants';

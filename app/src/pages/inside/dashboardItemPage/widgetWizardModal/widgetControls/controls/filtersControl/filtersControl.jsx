@@ -1,21 +1,23 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { touch, change, formValueSelector } from 'redux-form';
+import { change, formValueSelector } from 'redux-form';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 
-import { userIdSelector } from 'controllers/user';
-import { fetchFiltersAction } from 'controllers/filter';
-import { ScrollWrapper } from 'components/main/scrollWrapper';
-import { SpinningPreloader } from 'components/preloaders/spinningPreloader/spinningPreloader';
 import { FieldProvider } from 'components/fields/fieldProvider';
+import { userIdSelector } from 'controllers/user/selectors';
+import {
+  fetchFiltersConcatAction,
+  filtersSelector,
+  loadingSelector,
+  filtersPaginationSelector,
+} from 'controllers/filter';
 
 import styles from './filtersControl.scss';
-import { FiltersHeader } from './filtersHeader';
-import { FiltersWrapper } from './filtersWrapper';
+import { FiltersActionPanel } from './filtersActionPanel';
+import { ActiveFilter } from './activeFilter';
+import { FiltersList } from './filtersList';
 import { WIDGET_WIZARD_FORM } from '../../../widgetWizardContent/wizardControlsSection/constants';
-
-import { FiltersItem } from './filtersItem';
 
 const cx = classNames.bind(styles);
 const selector = formValueSelector(WIDGET_WIZARD_FORM);
@@ -23,78 +25,115 @@ const selector = formValueSelector(WIDGET_WIZARD_FORM);
 @connect(
   (state) => ({
     userId: userIdSelector(state),
-    form: state.form[WIDGET_WIZARD_FORM],
     activeFilterId: selector(state, 'filterItem'),
-    filters: state.filters,
+    filters: filtersSelector(state),
+    pagination: filtersPaginationSelector(state),
+    loading: loadingSelector(state),
   }),
   {
     changeWizardForm: (field, value) => change(WIDGET_WIZARD_FORM, field, value, null),
-    touchField: () => touch(WIDGET_WIZARD_FORM, 'filterItem'),
-    fetchFiltersAction,
+    fetchFiltersConcatAction,
   },
 )
 export class FiltersControl extends Component {
   static propTypes = {
+    userId: PropTypes.string,
     activeFilterId: PropTypes.string,
-    form: PropTypes.object.isRequired,
-    filters: PropTypes.object.isRequired,
-    touchField: PropTypes.func.isRequired,
-    changeWizardForm: PropTypes.func.isRequired,
-    fetchFiltersAction: PropTypes.func.isRequired,
-    userId: PropTypes.string.isRequired,
+    filter: PropTypes.string,
+    activeProject: PropTypes.string,
+    loading: PropTypes.bool.isRequired,
+    filters: PropTypes.array.isRequired,
+    pagination: PropTypes.object.isRequired,
+    changeWizardForm: PropTypes.func,
+    fetchFiltersConcatAction: PropTypes.func,
   };
 
   static defaultProps = {
+    userId: '',
     activeFilterId: '',
-    filters: {
-      loading: false,
-    },
-    touchField: () => {},
+    activeProject: '',
+    filter: '',
+    filters: [],
+    pagination: {},
     changeWizardForm: () => {},
-    fetchFiltersAction: () => {},
+    fetchFiltersConcatAction: () => {},
   };
 
-  componentDidMount() {
-    this.props.fetchFiltersAction();
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      page: 1,
+      size: 10,
+      search: false,
+    };
   }
 
-  handleFilterSelect = (event) => {
-    const { touchField, changeWizardForm } = this.props;
+  componentDidMount() {
+    const { page } = this.state;
+    this.fetchFilter({ page });
+  }
 
-    touchField();
-    changeWizardForm('filterItem', event.target.value);
+  onFilterChange = (search) => {
+    this.setState({ page: 1, search });
+    this.fetchFilter({ page: 1, search });
+  };
+
+  fetchFilter = ({ page, size, search } = {}) => {
+    const { filters } = this.props;
+    const { size: stateSize, page: statePage } = this.state;
+
+    let params = {
+      'page.page': page || statePage,
+      'page.size': size || stateSize,
+    };
+
+    if (search) {
+      params = { ...params, 'filter.cnt.name': search };
+    }
+
+    this.props.fetchFiltersConcatAction({ params, filters: page === 1 ? [] : filters });
+    this.setState({ page: page + 1 });
+  };
+
+  handleFilterListChange = (event) => {
+    this.props.changeWizardForm('filterItem', event.target.value);
+  };
+
+  handleFilterListLoad = () => {
+    const { page } = this.state;
+    const {
+      filters,
+      pagination: { totalElements, totalPages },
+      loading,
+    } = this.props;
+
+    if ((filters.length >= totalElements && page >= totalPages) || loading) {
+      return;
+    }
+
+    this.fetchFilter({ page });
   };
 
   render() {
-    const {
-      userId,
-      activeFilterId,
-      filters: { filters, loading },
-    } = this.props;
+    const { activeFilterId, filters, loading, userId, filter } = this.props;
 
-    const selectedFilter = filters.find((elem) => elem.id === activeFilterId);
+    const activeFilter = filters.find((elem) => elem.id === activeFilterId);
 
     return (
       <div className={cx('filters-control')}>
-        <FiltersHeader />
+        <FiltersActionPanel filter={filter} onFilterChange={this.onFilterChange} />
         <FieldProvider name={'filterItem'}>
-          <FiltersWrapper filter={selectedFilter || false} />
+          <ActiveFilter filter={activeFilter || false} />
         </FieldProvider>
-        {filters.length && loading ? (
-          <SpinningPreloader />
-        ) : (
-          <ScrollWrapper>
-            {filters.map((item) => (
-              <FiltersItem
-                userId={userId}
-                filter={item}
-                activeFilterId={activeFilterId}
-                key={item.id}
-                onChange={this.handleFilterSelect}
-              />
-            ))}
-          </ScrollWrapper>
-        )}
+        <FiltersList
+          userId={userId}
+          filters={filters}
+          loading={loading}
+          activeId={activeFilterId}
+          onChange={this.handleFilterListChange}
+          onLazyLoad={this.handleFilterListLoad}
+        />
       </div>
     );
   }
