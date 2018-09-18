@@ -126,6 +126,14 @@ const messages = defineMessages({
     id: 'EmailServerTab.portFieldHint',
     defaultMessage: "Only numbers from '1' to '65535' are possible.",
   },
+  btsUrlHint: {
+    id: 'JiraInstanceForm.btsUrlHint',
+    defaultMessage: 'Please provide a valid BTS link',
+  },
+  btsProjectHint: {
+    id: 'JiraInstanceForm.btsProjectHint',
+    defaultMessage: 'Project name should have size from 1 to 55',
+  },
 });
 
 @injectIntl

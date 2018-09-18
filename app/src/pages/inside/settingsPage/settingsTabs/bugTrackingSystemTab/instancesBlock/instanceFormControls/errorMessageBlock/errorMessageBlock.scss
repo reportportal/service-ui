@@ -1,0 +1,10 @@
+.error-message-block {
+  box-sizing: border-box;
+  padding: 15px;
+  border: 1px solid $COLOR--blush;
+  border-radius: 4px;
+  color: $COLOR--fatal;
+  background-color: $COLOR--light-red;
+  font-family: $FONT-REGULAR;
+  font-size: 13px;
+}

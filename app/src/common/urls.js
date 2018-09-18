@@ -29,6 +29,14 @@ export const URLS = {
 
   externalSystemIssue: (activeProject, systemId, issueId) =>
     `${urlBase}${activeProject}/external-system/${systemId}/ticket/${issueId}`,
+  externalSystemInstance: (activeProject, systemId) =>
+    `${urlBase}${activeProject}/external-system/${systemId}`,
+  externalSystem: (activeProject) => `${urlBase}${activeProject}/external-system`,
+  externalSystemClear: (activeProject) => `${urlBase}${activeProject}/external-system/clear`,
+  externalSystemIssueType: (activeProject, systemId) =>
+    `${urlBase}${activeProject}/external-system/${systemId}/issue_types`,
+  externalSystemFieldsSet: (activeProject, systemId, issueType) =>
+    `${urlBase}${activeProject}/external-system/${systemId}/fields-set?issuetype=${issueType}`,
 
   filter: (activeProject, id = '') => `${urlBase}${activeProject}/filter/${id}`,
   filters: (activeProject) => `${urlBase}${activeProject}/filter`,

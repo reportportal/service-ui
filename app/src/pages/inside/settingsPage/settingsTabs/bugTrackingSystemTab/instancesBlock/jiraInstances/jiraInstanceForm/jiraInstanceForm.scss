@@ -1,0 +1,16 @@
+.jira-instance-form {
+  .instance-form-input-wrapper {
+    position: relative;
+    width: 310px;
+    @media (max-width: $SCREEN_XS_MAX) {
+      width: 100%;
+    }
+  }
+}
+
+.instance-field-label {
+  @media (max-width: $SCREEN_SM_MAX) {
+    min-width: 210px;
+    width: 210px;
+  }
+}

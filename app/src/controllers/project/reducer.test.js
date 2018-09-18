@@ -7,6 +7,7 @@ import {
   FETCH_PROJECT_PREFERENCES_SUCCESS,
   TOGGLE_DISPLAY_FILTER_ON_LAUNCHES,
   UPDATE_EMAIL_CONFIG_SUCCESS,
+  UPDATE_EXTERNAL_SYSTEM,
 } from './constants';
 
 describe('project reducer', () => {
@@ -50,6 +51,21 @@ describe('project reducer', () => {
             ...oldState.configuration.attributes,
             ...payload,
           },
+        },
+      });
+    });
+
+    test('should handle UPDATE_EXTERNAL_SYSTEM', () => {
+      const payload = { foo: 'bar' };
+      const newState = projectInfoReducer(PROJECT_INFO_INITIAL_STATE, {
+        type: UPDATE_EXTERNAL_SYSTEM,
+        payload,
+      });
+      expect(newState).toEqual({
+        ...PROJECT_INFO_INITIAL_STATE,
+        configuration: {
+          ...PROJECT_INFO_INITIAL_STATE.configuration,
+          externalSystem: payload,
         },
       });
     });

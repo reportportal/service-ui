@@ -1,0 +1,39 @@
+.rally-instance-form {
+  position: relative;
+  width: 100%;
+  max-width: 600px;
+  @media (max-width: $SCREEN_XS_MAX) {
+    max-width: 100%;
+  }
+}
+
+.instance-form-input-wrapper {
+  position: relative;
+  width: 310px;
+  @media (max-width: $SCREEN_XS_MAX) {
+    width: 100%;
+  }
+}
+
+.text-area-container {
+  align-items: flex-start;
+}
+
+.instance-form-text-area-wrapper {
+  position: relative;
+  width: 310px;
+  @media (max-width: $SCREEN_XS_MAX) {
+    width: 100%;
+  }
+}
+
+.instance-field-label {
+  @media (max-width: $SCREEN_SM_MAX) {
+    min-width: 210px;
+    width: 210px;
+  }
+}
+
+.text-area-label {
+  padding-top: 5px;
+}

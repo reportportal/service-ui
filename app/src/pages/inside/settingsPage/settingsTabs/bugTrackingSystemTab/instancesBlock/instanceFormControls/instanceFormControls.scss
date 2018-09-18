@@ -1,0 +1,80 @@
+.instance-form-controls {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding-top: 10px;
+}
+
+.controls-items {
+  position: absolute;
+  top: 14px;
+  right: 0;
+  @media (max-width: $SCREEN_XS_MAX) {
+    display: none;
+  }
+}
+
+.controls-item {
+  display: inline-block;
+  width: 19px;
+  height: 19px;
+  margin-left: 8px;
+  cursor: pointer;
+
+  path {
+    fill: $COLOR--gray-60;
+  }
+
+  &:hover {
+    path {
+      fill: $COLOR--charcoal-grey;
+    }
+  }
+}
+
+.edit-project-warning {
+  padding-right: 102px;
+  margin-bottom: 15px;
+  color: $COLOR--orange-red;
+  font-family: $FONT-REGULAR;
+  font-size: 13px;
+  text-align: right;
+}
+
+.buttons-block {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 20px;
+  padding-right: 65px;
+
+  button {
+    font-size: 13px;
+  }
+  @media (max-width: $SCREEN_SM_MAX) {
+    padding-right: 125px;
+  }
+  @media (max-width: $SCREEN_XS_MAX) {
+    display: none;
+  }
+}
+
+.button-container {
+  display: inline-block;
+  height: 30px;
+  min-width: 70px;
+  &:last-child {
+    margin-left: 10px;
+  }
+}
+
+.disabling-cover {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  display: none;
+  @media (max-width: $SCREEN_XS_MAX) {
+    display: block;
+  }
+}

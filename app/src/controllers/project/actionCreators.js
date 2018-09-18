@@ -7,6 +7,7 @@ import {
   TOGGLE_DISPLAY_FILTER_ON_LAUNCHES,
   UPDATE_AUTO_ANALYSIS_CONFIGURATION,
   UPDATE_EMAIL_CONFIG_SUCCESS,
+  UPDATE_EXTERNAL_SYSTEM,
 } from './constants';
 import { projectPreferencesSelector, projectEmailConfigurationSelector } from './selectors';
 
@@ -23,6 +24,11 @@ const fetchProjectPreferencesSuccessAction = (projectId) => ({
 export const updateAutoAnalysisConfigurationAction = (project) => ({
   type: UPDATE_AUTO_ANALYSIS_CONFIGURATION,
   payload: project.configuration.attributes,
+});
+
+export const updateExternalSystemAction = (externalSystem) => ({
+  type: UPDATE_EXTERNAL_SYSTEM,
+  payload: externalSystem,
 });
 
 const updateProjectPreferencesAction = (settings) => (dispatch, getState) =>

@@ -7,6 +7,7 @@ import {
   TOGGLE_DISPLAY_FILTER_ON_LAUNCHES,
   UPDATE_AUTO_ANALYSIS_CONFIGURATION,
   UPDATE_EMAIL_CONFIG_SUCCESS,
+  UPDATE_EXTERNAL_SYSTEM,
 } from './constants';
 
 const toggleFilter = (filters = [], filter) => {
@@ -32,10 +33,21 @@ export const projectInfoReducer = (state = PROJECT_INFO_INITIAL_STATE, { type, p
           },
         },
       };
+    case UPDATE_EXTERNAL_SYSTEM:
+      return {
+        ...state,
+        configuration: {
+          ...state.configuration,
+          externalSystem: payload,
+        },
+      };
     case UPDATE_EMAIL_CONFIG_SUCCESS:
       return {
         ...state,
-        ...{ configuration: { ...state.configuration, emailConfiguration: payload } },
+        configuration: {
+          ...state.configuration,
+          emailConfiguration: payload,
+        },
       };
     default:
       return state;

@@ -1,0 +1,1 @@
+export { JiraInstances } from './jiraInstances';

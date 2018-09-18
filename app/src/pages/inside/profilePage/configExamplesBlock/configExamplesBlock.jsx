@@ -42,6 +42,17 @@ export class ConfigExamplesBlock extends Component {
   static defaultProps = {
     token: '',
   };
+
+  state = {
+    activeTab: 0,
+  };
+
+  tabChangeHandler = (activeTab) => {
+    this.setState({
+      activeTab,
+    });
+  };
+
   render = () => (
     <div className={cx('config-example-block')}>
       <BlockContainerHeader>
@@ -56,6 +67,8 @@ export class ConfigExamplesBlock extends Component {
         <div className={cx('content-container')}>
           <ContainerWithTabs
             selectTabEventInfo={PROFILE_PAGE_EVENTS.SELECT_CONFIGURATION_TAB}
+            active={this.state.activeTab}
+            onChange={this.tabChangeHandler}
             data={[
               TabsConfig.javaConfig(this.props.token),
               TabsConfig.rubyConfig(this.props.token),

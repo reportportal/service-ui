@@ -7,6 +7,9 @@
   text-align: center;
   border-bottom: 1px solid $COLOR--gray-91;
   box-sizing: border-box;
+  @media (max-width: $SCREEN_XS_MAX) {
+    border-bottom: none;
+  }
 }
 .tab {
   position: relative;
@@ -25,13 +28,38 @@
   text-transform: uppercase;
   line-height: 30px;
   cursor: pointer;
+  @media (max-width: $SCREEN_XS_MAX) {
+    width: 103px;
+    height: 30px;
+    padding: 0 5px;
+    margin-right: 10px;
+    border: 1px solid $COLOR--gray-91;
+    opacity: 0.6;
+    text-align: center;
+  }
 }
 .active {
   border-bottom: 1px solid $COLOR--topaz;
   color: $COLOR--topaz;
+  @media (max-width: $SCREEN_XS_MAX) {
+    border-bottom: none;
+    background-color: $COLOR--gray-91;
+    opacity: 0.9;
+  }
 }
 .content-wrapper {
   width: 100%;
   padding-top: 10px;
   box-sizing: border-box;
+}
+
+.remove-button {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 12px;
+  height: 12px;
+  svg {
+    fill: $COLOR--topaz;
+  }
 }

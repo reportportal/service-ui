@@ -6,6 +6,8 @@ const projectSelector = (state) => state.project || {};
 
 const projectInfoSelector = (state) => projectSelector(state).info || {};
 
+export const projectIntegrationsSelector = (state) => projectInfoSelector(state).integrations || [];
+
 export const projectConfigSelector = (state) => projectInfoSelector(state).configuration || {};
 
 export const projectMembersSelector = (state) => projectInfoSelector(state).users || [];
@@ -38,10 +40,9 @@ export const analyzerAttributesSelector = createPrefixedAttributesSelector(
   ANALYZER_ATTRIBUTE_PREFIX,
 );
 
-export const projectAnalyzerConfigSelector = (state) =>
-  projectConfigSelector(state).analyzerConfiguration || {};
-
-export const externalSystemSelector = (state) => projectConfigSelector(state).externalSystem || [];
+export const btsIntegrationsSelector = createSelector(projectIntegrationsSelector, (integrations) =>
+  integrations.filter((integration) => integration.integrationType.groupType === 'BTS'),
+);
 
 export const projectEmailConfigurationSelector = (state) =>
   projectConfigSelector(state).emailConfiguration || {};

@@ -20,6 +20,7 @@
  */
 
 import { storiesOf } from '@storybook/react';
+import { action } from '@storybook/addon-actions';
 import { host } from 'storybook-host';
 import { withReadme } from 'storybook-readme';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
@@ -83,7 +84,10 @@ storiesOf('Components/Main/ContainerWithTabs', module)
   .add('default state (no provided info)', () => <ContainerWithTabs />)
   .add('with different data', () => (
     <div id="tooltip-root">
-      <ContainerWithTabs data={mockDataContentTypes} />
+      <ContainerWithTabs active={2} data={mockDataContentTypes} />
     </div>
   ))
-  .add('with lot of tabs', () => <ContainerWithTabs data={mockDataManyTabs} />);
+  .add('with lot of tabs', () => <ContainerWithTabs data={mockDataManyTabs} />)
+  .add('with actions', () => (
+    <ContainerWithTabs onChange={action('onTabChange')} data={mockDataManyTabs} />
+  ));

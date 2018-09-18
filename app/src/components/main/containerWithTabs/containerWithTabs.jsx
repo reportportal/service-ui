@@ -22,7 +22,9 @@
 import React, { Component } from 'react';
 import track from 'react-tracking';
 import PropTypes from 'prop-types';
+import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
+import CrossIcon from 'common/img/cross-icon-inline.svg';
 import styles from './containerWithTabs.scss';
 
 const cx = classNames.bind(styles);
@@ -36,21 +38,23 @@ export class ContainerWithTabs extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    customClass: PropTypes.string,
+    active: PropTypes.number,
+    onChange: PropTypes.func,
   };
   static defaultProps = {
     data: [],
-    selectTabEventInfo: '',
-  };
-
-  state = {
+    selectTabEventInfo: null,
+    customClass: '',
     active: 0,
+    onChange: () => {},
   };
 
   tabClickHandler = (e) => {
     const id = +e.currentTarget.dataset.id;
     this.selectTabTracking(id);
-    if (this.state.active !== id) {
-      this.setState({ active: id });
+    if (this.props.active !== id) {
+      this.props.onChange(id);
     }
   };
 
@@ -63,26 +67,30 @@ export class ContainerWithTabs extends Component {
   };
 
   render() {
+    const { data, active } = this.props;
     return (
       <div className={cx('container-with-tabs')}>
-        <div className={cx('tabs-wrapper')}>
-          {this.props.data.length
-            ? this.props.data.map((item, id) => (
+        <div className={cx('tabs-wrapper', this.props.customClass)}>
+          {data.length
+            ? data.map((item, id) => (
                 <div
                   // eslint-disable-next-line react/no-array-index-key
                   key={id}
                   data-id={id}
-                  className={cx({ tab: true, active: this.state.active === id })}
+                  className={cx('tab', { active: active === id })}
                   onClick={this.tabClickHandler}
                 >
                   {item.name}
+                  {item.removable && (
+                    <span className={cx('remove-button')} onClick={item.onRemove}>
+                      {Parser(CrossIcon)}
+                    </span>
+                  )}
                 </div>
               ))
             : null}
         </div>
-        <div className={cx('content-wrapper')}>
-          {this.props.data.length ? this.props.data[this.state.active].content : null}
-        </div>
+        <div className={cx('content-wrapper')}>{data.length ? data[active].content : null}</div>
       </div>
     );
   }

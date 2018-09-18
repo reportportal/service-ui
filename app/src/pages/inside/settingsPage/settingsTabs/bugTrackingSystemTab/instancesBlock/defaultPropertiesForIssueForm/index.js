@@ -1,0 +1,1 @@
+export { DefaultPropertiesForIssueForm } from './defaultPropertiesForIssueForm';

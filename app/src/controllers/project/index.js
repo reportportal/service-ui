@@ -9,6 +9,7 @@ export {
   fetchAutoAnalysisConfigurationAction,
   updateAutoAnalysisConfigurationAction,
   updateProjectEmailConfig,
+  updateExternalSystemAction,
 } from './actionCreators';
 export { projectReducer } from './reducer';
 export {
@@ -18,11 +19,11 @@ export {
   userFiltersSelector,
   defectColorsSelector,
   defectTypesSelector,
-  projectAnalyzerConfigSelector,
+  projectIntegrationsSelector,
+  btsIntegrationsSelector,
   projectEmailConfigurationSelector,
   projectEmailCasesSelector,
   projectEmailEnabledSelector,
-  externalSystemSelector,
   analyzerAttributesSelector,
 } from './selectors';
 export { normalizeAttributesWithPrefix } from './utils';

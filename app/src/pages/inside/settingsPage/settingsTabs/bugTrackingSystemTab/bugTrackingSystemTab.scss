@@ -1,0 +1,67 @@
+.bug-tracking-system-tab {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.system-type-block {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin-bottom: 15px;
+  @media (max-width: $SCREEN_XS_MAX) {
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+  }
+}
+
+.system-type-caption {
+  color: $COLOR--charcoal-grey;
+  font-size: 13px;
+  font-family: $FONT-REGULAR;
+  line-height: 13px;
+  @media (max-width: $SCREEN_XS_MAX) {
+  }
+}
+
+.system-type-input-wrapper {
+  display: inline-block;
+  width: 310px;
+  margin-left: 34px;
+  @media (max-width: $SCREEN_XS_MAX) {
+    width: 100%;
+    margin: 12px 0;
+  }
+}
+
+.configure-new-system-warning {
+  display: inline-block;
+  padding-bottom: 20px;
+  color: $COLOR--orange-red;
+  font-size: 12px;
+  line-height: 14px;
+}
+
+.no-micro-service-message {
+  width: 310px;
+  margin-left: 160px;
+  font-size: 13px;
+  font-family: $FONT-REGULAR;
+}
+
+.disabling-cover {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  display: none;
+  @media (max-width: $SCREEN_XS_MAX) {
+    display: block;
+  }
+}

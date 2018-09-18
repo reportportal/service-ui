@@ -26,6 +26,7 @@ import { GeneralTab } from './generalTab';
 import { AutoAnalysisTab } from './autoAnalysisTab';
 import { NotificationsTab } from './notificationsTab';
 import { DemoDataTab } from './demoDataTab';
+import { BugTrackingSystemTab } from './bugTrackingSystemTab';
 import styles from './settingsTabs.scss';
 
 const cx = classNames.bind(styles);
@@ -108,8 +109,8 @@ export class SettingsTabs extends Component {
           </span>
         ),
         link: this.createTabLink(BTS),
-        component: <div>bts</div>,
         eventInfo: SETTINGS_PAGE_EVENTS.BTS_TAB,
+        component: <BugTrackingSystemTab />,
       },
       [DEFECT]: {
         name: this.props.intl.formatMessage(messages.defect),
