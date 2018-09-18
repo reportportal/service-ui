@@ -6,7 +6,7 @@ import { defineMessages, injectIntl, intlShape } from 'react-intl';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { DefectType } from 'pages/inside/stepPage/stepGrid/defectType';
 import { LOG_PAGE_EVENTS } from 'components/main/analytics/events';
-import { linkIssueAction, editDefectsAction } from 'controllers/step';
+import { linkIssueAction, postIssueAction, editDefectsAction } from 'controllers/step';
 import { showModalAction } from 'controllers/modal';
 import {
   activeLogSelector,
@@ -17,7 +17,7 @@ import {
   NAMESPACE,
 } from 'controllers/log';
 import { PASSED, SKIPPED, MANY, NOT_FOUND } from 'common/constants/launchStatuses';
-import { availableBtsIntegrationsSelector } from 'controllers/project';
+import { availableBtsIntegrationsSelector, isPostIssueActionAvailable } from 'controllers/project';
 import { connectRouter } from 'common/utils';
 import LinkIcon from 'common/img/link-inline.svg';
 import DownLeftArrowIcon from 'common/img/down-left-arrow-inline.svg';
@@ -58,6 +58,10 @@ const messages = defineMessages({
     id: 'LogItemInfo.noDefectTypeToLinkIssue',
     defaultMessage: "You can't link issue if item has no defect type",
   },
+  noBugTrackingSystemToPostIssue: {
+    id: 'LogItemInfo.noBugTrackingSystemToPostIssue',
+    defaultMessage: 'Configure bug tracking system to post issue',
+  },
   retries: {
     id: 'LogItemInfo.retries',
     defaultMessage: 'Retries',
@@ -74,6 +78,7 @@ const messages = defineMessages({
   }),
   {
     linkIssueAction,
+    postIssueAction,
     editDefectsAction,
     showModalAction,
   },
@@ -93,6 +98,7 @@ export class LogItemInfo extends Component {
     onChangeLogLevel: PropTypes.func.isRequired,
     editDefectsAction: PropTypes.func.isRequired,
     linkIssueAction: PropTypes.func.isRequired,
+    postIssueAction: PropTypes.func.isRequired,
     historyItems: PropTypes.array.isRequired,
     btsIntegrations: PropTypes.array.isRequired,
     fetchFunc: PropTypes.func.isRequired,
@@ -199,8 +205,15 @@ export class LogItemInfo extends Component {
     return logItem.issue && logItem.issue.issueType;
   };
   addExtraSpaceTop = () => this.isDefectTypeVisible() && this.hasRetries();
+
   handleLinkIssue = () => {
     this.props.linkIssueAction([this.props.logItem], {
+      fetchFunc: this.props.fetchFunc,
+    });
+  };
+
+  handlePostIssue = () => {
+    this.props.postIssueAction([this.props.logItem], {
       fetchFunc: this.props.fetchFunc,
     });
   };
@@ -231,6 +244,7 @@ export class LogItemInfo extends Component {
   render() {
     const {
       logItem,
+      btsIntegrations,
       loading,
       onChangePage,
       onChangeLogLevel,
@@ -239,6 +253,9 @@ export class LogItemInfo extends Component {
       isSauceLabsIntegrationView,
       intl: { formatMessage },
     } = this.props;
+
+    const isPostIssueUnavailable = !isPostIssueActionAvailable(this.props.btsIntegrations);
+
     return (
       logItem && (
         <div className={cx('container')}>
@@ -264,15 +281,24 @@ export class LogItemInfo extends Component {
                 </GhostButton>
               </div>
               <div className={cx('action')}>
-                <GhostButton icon={BugIcon} disabled>
+                <GhostButton
+                  icon={BugIcon}
+                  disabled={!logItem.issue || isPostIssueUnavailable}
+                  onClick={this.handlePostIssue}
+                  title={
+                    (isPostIssueUnavailable &&
+                      this.props.intl.formatMessage(messages.noBugTrackingSystemToPostIssue)) ||
+                    ''
+                  }
+                >
                   {formatMessage(messages.postIssue)}
                 </GhostButton>
               </div>
               <div className={cx('action')}>
                 <GhostButton
-                  onClick={this.handleLinkIssue}
                   icon={LinkIcon}
-                  disabled={!logItem.issue || !this.props.btsIntegrations.length}
+                  disabled={!logItem.issue || !btsIntegrations.length}
+                  onClick={this.handleLinkIssue}
                   title={this.getLinkIssueTitle()}
                 >
                   {formatMessage(messages.linkIssue)}

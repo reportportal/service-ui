@@ -141,7 +141,7 @@ const namedAvailableIntegrationsByGroupTypeSelector = (groupType) => (state) => 
     if (!availableIntegrations.length) {
       availableIntegrations = namedGlobalIntegrationsSelectorsMap[pluginName](state);
     }
-    return { ...acc, [pluginName]: availableIntegrations };
+    return availableIntegrations.length ? { ...acc, [pluginName]: availableIntegrations } : acc;
   }, {});
 };
 

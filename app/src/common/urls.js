@@ -43,9 +43,6 @@ export const URLS = {
   projectWidget: (activeProject, widgetId = '', interval = '') =>
     `${urlBase}project/${activeProject}/widget/${widgetId}${getQueryParams({ interval })}`,
 
-  externalSystemIssue: (activeProject, issueId, btsProject, btsUrl) =>
-    `${urlBase}bts/${activeProject}/ticket/${issueId}${getQueryParams({ btsProject, btsUrl })}`,
-
   filter: (activeProject, id = '') => `${urlBase}${activeProject}/filter/${id}`,
   filters: (activeProject) => `${urlBase}${activeProject}/filter`,
   filtersSearch: (activeProject) =>
@@ -236,4 +233,8 @@ export const URLS = {
     `${urlBase}bts/${projectId}/${integrationId}/issue_types`,
   btsIntegrationFieldsSet: (projectId, integrationId, issueType) =>
     `${urlBase}bts/${projectId}/${integrationId}/fields-set?issueType=${issueType}`,
+  btsIntegrationPostTicket: (projectId, integrationId) =>
+    `${urlBase}bts/${projectId}/${integrationId}/ticket`,
+  btsTicket: (activeProject, issueId, btsProject, btsUrl) =>
+    `${urlBase}bts/${activeProject}/ticket/${issueId}${getQueryParams({ btsProject, btsUrl })}`,
 };

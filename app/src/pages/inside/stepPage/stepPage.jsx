@@ -28,6 +28,7 @@ import {
   unlinkIssueAction,
   editDefectsAction,
   linkIssueAction,
+  postIssueAction,
 } from 'controllers/step';
 import { SORTING_ASC, withSortingURL } from 'controllers/sorting';
 import { ENTITY_START_TIME } from 'components/filterEntities/constants';
@@ -62,6 +63,7 @@ import { StepGrid } from './stepGrid';
     unlinkIssueAction,
     editDefectsAction,
     linkIssueAction,
+    postIssueAction,
   },
 )
 @withSortingURL({
@@ -106,6 +108,7 @@ export class StepPage extends Component {
     unlinkIssueAction: PropTypes.func,
     editDefectsAction: PropTypes.func.isRequired,
     linkIssueAction: PropTypes.func,
+    postIssueAction: PropTypes.func,
     onFilterAdd: PropTypes.func,
     onFilterRemove: PropTypes.func,
     onFilterValidate: PropTypes.func,
@@ -148,6 +151,7 @@ export class StepPage extends Component {
     includeInAutoAnalysisAction: () => {},
     unlinkIssueAction: () => {},
     linkIssueAction: () => {},
+    postIssueAction: () => {},
     onFilterAdd: () => {},
     onFilterRemove: () => {},
     onFilterValidate: () => {},
@@ -218,6 +222,11 @@ export class StepPage extends Component {
 
   handleLinkIssue = () =>
     this.props.linkIssueAction(this.props.selectedItems, {
+      fetchFunc: this.props.fetchTestItemsAction,
+    });
+
+  handlePostIssue = () =>
+    this.props.postIssueAction(this.props.selectedItems, {
       fetchFunc: this.props.fetchTestItemsAction,
     });
 
@@ -303,6 +312,7 @@ export class StepPage extends Component {
             onIncludeInAA={this.handleIncludeInAA}
             onUnlinkIssue={this.handleUnlinkIssue}
             onLinkIssue={this.handleLinkIssue}
+            onPostIssue={this.handlePostIssue}
             filterEntities={filterEntities}
             filterErrors={filterErrors}
             onFilterChange={onFilterChange}

@@ -72,7 +72,7 @@ export class IssueInfoTooltip extends Component {
       this.cancelRequest = cancel;
     };
     this.setState({ loading: true });
-    fetch(URLS.externalSystemIssue(activeProject, ticketId, btsProject, btsUrl), {
+    fetch(URLS.btsTicket(activeProject, ticketId, btsProject, btsUrl), {
       abort: cancelRequestFunc,
     })
       .then((issue) => this.setState({ loading: false, issue }))
