@@ -99,7 +99,9 @@ export class AccuracyFormBlock extends Component {
           onChange={this.props.onInputChange}
           normalize={this.normalizeValue}
           format={String}
-          description={intl.formatMessage(messages.minimumShouldMatchDescription)}
+          customBlock={{
+            node: <p>{intl.formatMessage(messages.minimumShouldMatchDescription)}</p>,
+          }}
           disabled={disabled}
         >
           <FieldErrorHint>
@@ -118,7 +120,9 @@ export class AccuracyFormBlock extends Component {
           onChange={this.props.onInputChange}
           normalize={this.normalizeValue}
           format={String}
-          description={intl.formatMessage(messages.minimumDocFreqDescription)}
+          customBlock={{
+            node: <p>{intl.formatMessage(messages.minimumDocFreqDescription)}</p>,
+          }}
           disabled={disabled}
         >
           <FieldErrorHint>
@@ -133,7 +137,9 @@ export class AccuracyFormBlock extends Component {
           onChange={this.props.onInputChange}
           normalize={this.normalizeValue}
           format={String}
-          description={intl.formatMessage(messages.minimumTermFreqDescription)}
+          customBlock={{
+            node: <p>{intl.formatMessage(messages.minimumTermFreqDescription)}</p>,
+          }}
           disabled={disabled}
         >
           <FieldErrorHint>
@@ -147,7 +153,9 @@ export class AccuracyFormBlock extends Component {
           label={intl.formatMessage(messages.numberOfLogLinesTitle)}
           onChange={this.props.onInputChange}
           format={String}
-          description={intl.formatMessage(messages.numberOfLogLinesDescription)}
+          customBlock={{
+            node: <p>{intl.formatMessage(messages.numberOfLogLinesDescription)}</p>,
+          }}
           disabled={disabled}
         >
           <InputDropdown options={this.dropDownOptions} mobileDisabled />

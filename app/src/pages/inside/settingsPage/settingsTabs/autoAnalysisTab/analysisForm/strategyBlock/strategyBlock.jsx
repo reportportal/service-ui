@@ -73,7 +73,9 @@ export class StrategyBlock extends Component {
           name="isAutoAnalyzerEnabled"
           fieldWrapperClassName={cx('switcher-wrapper')}
           label={intl.formatMessage(messages.autoAnalysisSwitcherTitle)}
-          description={Parser(intl.formatMessage(messages.analysisStatusInfo))}
+          customBlock={{
+            node: <p>{Parser(intl.formatMessage(messages.analysisStatusInfo))}</p>,
+          }}
           format={this.formatAnalyzerAvailabilityValue}
           parse={Boolean}
           disabled={disabled}
@@ -88,9 +90,11 @@ export class StrategyBlock extends Component {
           name="autoAnalyzerMode"
           containerClassName={cx('radio-container')}
           fieldWrapperClassName={cx('aa-strategy-option-selector')}
-          descriptionClassName={cx('radio-description')}
+          customBlock={{
+            node: <p>{intl.formatMessage(messages.sameNameLaunchesInfo)}</p>,
+            wrapperClassName: cx('radio-description'),
+          }}
           label={intl.formatMessage(messages.strategySelectorTitle)}
-          description={intl.formatMessage(messages.sameNameLaunchesInfo)}
           disabled={disabled}
           onChange={() => {
             tracking.trackEvent(SETTINGS_PAGE_EVENTS.AUTO_ANALYSIS_BASE_RADIO_BTN);
@@ -108,8 +112,10 @@ export class StrategyBlock extends Component {
           containerClassName={cx('radio-container')}
           fieldWrapperClassName={cx('aa-strategy-option-selector')}
           labelClassName={cx('no-label')}
-          descriptionClassName={cx('radio-description')}
-          description={intl.formatMessage(messages.allLaunchesInfo)}
+          customBlock={{
+            node: <p>{intl.formatMessage(messages.allLaunchesInfo)}</p>,
+            wrapperClassName: cx('radio-description'),
+          }}
           disabled={disabled}
           onChange={() => {
             tracking.trackEvent(SETTINGS_PAGE_EVENTS.AUTO_ANALYSIS_BASE_RADIO_BTN);

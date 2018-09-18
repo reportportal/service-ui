@@ -36,4 +36,9 @@
     background-color: $COLOR--gray-91;
     border-color: $COLOR--gray-80;
   }
+  &.mobile-disabled {
+    @media (max-width: $SCREEN_XS_MAX) {
+      background-color: $COLOR--gray-91;
+    }
+  }
 }

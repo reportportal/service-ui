@@ -1,4 +1,15 @@
 .select-container {
+  &.mobile-disabled {
+    :global {
+      .Select {
+        .Select-control {
+          @media (max-width: $SCREEN_XS_MAX) {
+            background-color: $COLOR--gray-91;
+          }
+        }
+      }
+    }
+  }
   &.error {
     :global {
       .Select {
