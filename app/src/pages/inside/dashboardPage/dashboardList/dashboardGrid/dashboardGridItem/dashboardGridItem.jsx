@@ -81,11 +81,11 @@ export class DashboardGridItem extends Component {
     const { name, description, owner, share, id } = item;
 
     return (
-      <NavLink
-        to={{ type: PROJECT_DASHBOARD_ITEM_PAGE, payload: { projectId, dashboardId: id } }}
-        className={cx('grid-view')}
-      >
-        <div className={cx('grid-view__inner')}>
+      <div className={cx('grid-view')}>
+        <NavLink
+          to={{ type: PROJECT_DASHBOARD_ITEM_PAGE, payload: { projectId, dashboardId: id } }}
+          className={cx('grid-view-inner')}
+        >
           <div className={cx('grid-cell', 'name')}>
             <h3 className={cx('dashboard-link')}>{name}</h3>
           </div>
@@ -133,8 +133,8 @@ export class DashboardGridItem extends Component {
               <Icon type="icon-close" />
             </div>
           )}
-        </div>
-      </NavLink>
+        </NavLink>
+      </div>
     );
   }
 }
