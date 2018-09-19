@@ -4,6 +4,11 @@ import classNames from 'classnames/bind';
 import { defineMessages, injectIntl, intlShape } from 'react-intl';
 import Parser from 'html-react-parser';
 import { SKIPPED, RESETED, FAILED, MANY, NOT_FOUND } from 'common/constants/launchStatuses';
+import NoItemIcon from 'common/img/noItem-inline.svg';
+import EmptyItemIcon from 'common/img/emptyItem-inline.svg';
+import NotEyeIcon from 'common/img/notEyeItem-inline.svg';
+import CommentIcon from 'common/img/comment-inline.svg';
+import TagIcon from 'common/img/tag-inline.svg';
 import {
   AUTOMATION_BUG,
   NO_DEFECT,
@@ -14,11 +19,6 @@ import {
 import { DefectBadge } from './defectBadge/defectBadge';
 import { MessageBadge } from './messageBadge/messageBadge';
 import styles from './historyItem.scss';
-import NoItemIcon from './img/noItem-inline.svg';
-import EmptyItemIcon from './img/emptyItem-inline.svg';
-import NotEyeIcon from './img/notEyeItem-inline.svg';
-import CommentIcon from './img/comment-inline.svg';
-import TagIcon from './img/tag-inline.svg';
 
 const cx = classNames.bind(styles);
 
