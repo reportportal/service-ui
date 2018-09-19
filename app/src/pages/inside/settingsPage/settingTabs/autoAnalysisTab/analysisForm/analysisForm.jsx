@@ -223,7 +223,7 @@ export class AnalysisForm extends Component {
               items={this.tabItems}
               value={this.state.autoAnalysisMode}
               mobileDisabled
-              onClickItem={this.tabChangeHandle}
+              onChange={this.tabChangeHandle}
             />
           </div>
         </div>
