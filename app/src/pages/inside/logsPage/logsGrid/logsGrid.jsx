@@ -6,10 +6,11 @@ import Parser from 'html-react-parser';
 import { Grid } from 'components/main/grid';
 import { dateFormat } from 'common/utils';
 import { ERROR, FATAL } from 'common/constants/logLevels';
+import ArrowIcon from 'common/img/arrow-down-inline.svg';
+import { NoItemMessage } from '../logItemInfo/logItemInfoTabs/noItemMessage';
 import { LogMessageSearch } from './logMessageSearch';
 import { LogMessageBlock } from './logMessageBlock';
 import { AttachmentBlock } from './attachmentBlock';
-import ArrowIcon from './img/arrow-down-inline.svg';
 import styles from './logsGrid.scss';
 
 const cx = classNames.bind(styles);
@@ -19,6 +20,10 @@ const messages = defineMessages({
     id: 'LogsGrid.timeColumnTitle',
     defaultMessage: 'Time',
   },
+  noResults: {
+    id: 'LogsGrid.noResults',
+    defaultMessage: 'No results found',
+  },
 });
 const timeColumnId = 'time';
 
@@ -27,6 +32,7 @@ const MessageColumn = ({ className, value, ...rest }) => (
     className={cx('message-column', `level-${value.level}`, className, {
       console: rest.customProps.consoleView,
     })}
+    id={value.level === ERROR ? value.id : undefined}
   >
     <LogMessageBlock value={value} {...rest} />
   </div>
@@ -88,6 +94,7 @@ export class LogsGrid extends Component {
     sortingDirection: PropTypes.string,
     onChangeSorting: PropTypes.func,
     consoleView: PropTypes.bool,
+    markdownMode: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -99,6 +106,7 @@ export class LogsGrid extends Component {
     sortingDirection: '',
     onChangeSorting: () => {},
     consoleView: false,
+    markdownMode: false,
   };
 
   getColumns = () =>
@@ -116,6 +124,7 @@ export class LogsGrid extends Component {
             sortable: true,
             customProps: {
               consoleView: true,
+              markdownMode: this.props.markdownMode,
             },
             component: MessageColumn,
           },
@@ -146,6 +155,9 @@ export class LogsGrid extends Component {
             },
             maxHeight: 200,
             component: MessageColumn,
+            customProps: {
+              markdownMode: this.props.markdownMode,
+            },
           },
           {
             id: 'attachment',
@@ -182,6 +194,33 @@ export class LogsGrid extends Component {
     };
   };
 
+  renderConsoleViewHeader = () => {
+    const {
+      intl,
+      sortingColumn,
+      sortingDirection,
+      onChangeSorting,
+      filter,
+      onFilterChange,
+    } = this.props;
+
+    return (
+      <div className={cx('console-view-header')}>
+        <div
+          className={cx('time-header', {
+            [`sorting-${sortingDirection.toLowerCase()}`]: sortingDirection,
+            'sorting-active': sortingColumn === timeColumnId,
+          })}
+          onClick={() => onChangeSorting(timeColumnId)}
+        >
+          {intl.formatMessage(messages.timeColumnTitle)}
+          <div className={cx('arrow')}>{Parser(ArrowIcon)}</div>
+        </div>
+        <LogMessageSearch filter={filter} onFilterChange={onFilterChange} />
+      </div>
+    );
+  };
+
   render() {
     const {
       intl,
@@ -191,27 +230,11 @@ export class LogsGrid extends Component {
       sortingDirection,
       onChangeSorting,
       consoleView,
-      filter,
-      onFilterChange,
     } = this.props;
 
     return (
       <div className={cx('logs-grid')}>
-        {consoleView && (
-          <div className={cx('console-view-header')}>
-            <div
-              className={cx('time-header', {
-                [`sorting-${sortingDirection.toLowerCase()}`]: sortingDirection,
-                'sorting-active': sortingColumn === timeColumnId,
-              })}
-              onClick={() => onChangeSorting(timeColumnId)}
-            >
-              {intl.formatMessage(messages.timeColumnTitle)}
-              <div className={cx('arrow')}>{Parser(ArrowIcon)}</div>
-            </div>
-            <LogMessageSearch filter={filter} onFilterChange={onFilterChange} />
-          </div>
-        )}
+        {consoleView && this.renderConsoleViewHeader()}
         <Grid
           columns={this.getColumns()}
           data={logItems}
@@ -222,6 +245,8 @@ export class LogsGrid extends Component {
           sortingDirection={sortingDirection}
           onChangeSorting={onChangeSorting}
         />
+        {!logItems.length &&
+          !loading && <NoItemMessage message={intl.formatMessage(messages.noResults)} />}
       </div>
     );
   }

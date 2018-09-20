@@ -519,6 +519,7 @@
   "LoginForm.loginPlaceholder": "Логин",
   "LoginForm.or": "или",
   "LoginForm.passwordPlaceholder": "Пароль",
+  "LogsGrid.noResults": "Результатов не найдено",
   "LogsGrid.timeColumnTitle": "Время",
   "MarkdownEditor.bold": "Жирное начертание",
   "MarkdownEditor.cleanBlock": "Очистить блок",
