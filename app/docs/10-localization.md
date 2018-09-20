@@ -12,7 +12,7 @@ Localization message id format: `ComponentsName.elementName` (for example Filter
 Localization of currently implemented (Backbone) version you can find [here](https://github.com/reportportal/service-ui/tree/localization_by/src/main/resources/public/js/src/localizations).
 If you can't find some keys required for your developing component please contact [Yauheniya Labanava](https://telescope.epam.com/who/Yauheniya_Labanava).
 
-> Please use `localization_by` brunch only for getting BY localization keys. For other languages use `develop` brunch. It's caused that `localization_by` brunch is not up-to-date.
+> Please use `localization_by` branch only for getting BY localization keys. For other languages use `develop` branch. It's caused that `localization_by` branch is not up-to-date.
 
 Localization workflow is:
 
