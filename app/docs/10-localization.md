@@ -9,12 +9,14 @@ At the moment Report Portal supports English (default), Russian and Belorussian 
 
 Localization message id format: `ComponentsName.elementName` (for example FiltersPage.addFilterButton)
 
-Localization of currently realised (Backbone) version you can find [here](https://github.com/reportportal/service-ui/tree/localization_by/src/main/resources/public/js/src/localizations).
+Localization of currently implemented (Backbone) version you can find [here](https://github.com/reportportal/service-ui/tree/localization_by/src/main/resources/public/js/src/localizations).
 If you can't find some keys required for your developing component please contact [Yauheniya Labanava](https://telescope.epam.com/who/Yauheniya_Labanava).
+
+> Please use `localization_by` brunch only for getting BY localization keys. For other languages use `develop` brunch. It's caused that `localization_by` brunch is not up-to-date.
 
 Localization workflow is:
 
-1. Develop component and define default (English) translations using `<FormattedMessage>` component or `intl.formattedMessage` function.
+1. Develop component and define default (English) translations using `<FormattedMessage>` component or `intl.formatMessage` function.
 2. Execute npm script `manage:translations`.
 3. Find keys, related to developing component, in `be.json` and `ru.json` files placed in `/localization/translated/` folder, and define translations for corresponding languages.
 4. **IMPORTANT!** Make sure that only related to your component keys have been changed, and there is no deleted lines related to other existing components.
