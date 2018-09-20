@@ -12,7 +12,7 @@ As far as usually components has small size, it's preferable to do not use css s
 
 It's allowed to use flex-box properties.
 
-Main element of component should have class name the same as component's name, but in lowercase and dash-notation (ComponentName / component-name).
+It's recommended to define class name the same as component's name, but in lowercase and dash-notation (ComponentName / component-name).
 
 We are strongly recommend to follow next order of CSS properties:
 
