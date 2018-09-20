@@ -6,6 +6,7 @@ import Parser from 'html-react-parser';
 import { projectIdSelector } from 'controllers/pages';
 import { URLS } from 'common/urls';
 import AttachIcon from 'common/img/attachment-inline.svg';
+import * as FILE_TYPES from 'common/constants/fileTypes';
 import styles from './attachmentBlock.scss';
 
 const cx = classNames.bind(styles);
@@ -49,29 +50,30 @@ export class AttachmentBlock extends Component {
 
   switchAttachmentType = (value, type) => {
     switch (type) {
-      case 'xml':
-      case 'javascript':
-      case 'json':
-      case 'css':
-      case 'php':
-      case 'har':
+      case FILE_TYPES.XML:
+      case FILE_TYPES.JAVASCRIPT:
+      case FILE_TYPES.JSON:
+      case FILE_TYPES.CSS:
+      case FILE_TYPES.PHP:
+      case FILE_TYPES.HAR:
         return (
           <a href={this.getAttachmentUrl(value.id)}>
             <div className={cx('image', `${type}`)} />
           </a>
         );
-      case 'txt':
-      case 'html':
+      case FILE_TYPES.TXT:
+      case FILE_TYPES.HTML:
         return (
           <a href={this.getAttachmentUrl(value.id)} target="_blank">
             <div className={cx('image', `${type}`)} />
           </a>
         );
-      case 'zip':
-      case 'rar':
-      case 'tgz':
-      case 'tar':
-      case 'gzip':
+      case FILE_TYPES.ZIP:
+      case FILE_TYPES.RAR:
+      case FILE_TYPES.TGZ:
+      case FILE_TYPES.TAZ:
+      case FILE_TYPES.TAR:
+      case FILE_TYPES.GZIP:
         return (
           <a href={this.getAttachmentUrl(value.id)} target="_blank">
             <div className={cx('image', 'archive')} />
