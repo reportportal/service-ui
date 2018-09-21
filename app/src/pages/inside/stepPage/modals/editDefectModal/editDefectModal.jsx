@@ -242,7 +242,8 @@ export class EditDefectModal extends Component {
       );
     } else {
       isDataChanged =
-        this.state.markdownValue !== items[0].issue.comment ||
+        (!items[0].issue.comment && this.state.markdownValue) ||
+        (items[0].issue.comment && this.state.markdownValue !== items[0].issue.comment) ||
         this.state.ignoreAnalyzer !== items[0].issue.ignoreAnalyzer ||
         this.state.defectType !== items[0].issue.issue_type;
     }
