@@ -22,19 +22,23 @@ const visibleItemsCountReducer = (state = 0, { type, payload }) => {
   }
 };
 
-const historyReducer = (namespace) => (state = [], { type, payload, meta }) => {
-  if (meta && meta.namespace && meta.namespace !== namespace) {
+const historyReducer = (state = [], { type, payload, meta }) => {
+  if (meta && meta.namespace && meta.namespace !== NAMESPACE) {
     return state;
   }
   let newItemsHistory;
+  let reversedPayload;
   switch (type) {
     case FETCH_SUCCESS:
       if (state.length === 0) {
-        return payload;
+        return payload.reverse();
       }
+      reversedPayload = payload.reverse();
       newItemsHistory = state.map((item, index) => ({
         ...item,
-        resources: item.resources.concat(payload[index] && payload[index].resources),
+        resources: item.resources.concat(
+          reversedPayload[index] && reversedPayload[index].resources,
+        ),
       }));
       return newItemsHistory;
     case RESET_HISTORY:
@@ -45,7 +49,7 @@ const historyReducer = (namespace) => (state = [], { type, payload, meta }) => {
 };
 
 export const itemsHistoryReducer = combineReducers({
-  history: historyReducer(NAMESPACE),
+  history: historyReducer,
   items: itemsReducer,
   visibleItemsCount: visibleItemsCountReducer,
 });

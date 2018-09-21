@@ -6,7 +6,7 @@ import { defineMessages, injectIntl, intlShape } from 'react-intl';
 import {
   itemsHistorySelector,
   historySelector,
-  STILL_MIN_HISTORY_ITEMS,
+  OPTIMAL_HISTORY_DEPTH_FOR_RENDER,
   visibleItemsCountSelector,
   fetchItemsHistoryAction,
 } from 'controllers/itemsHistory';
@@ -55,12 +55,12 @@ export class HistoryTable extends Component {
     fetchItemsHistoryAction: () => {},
   };
 
-  isTheBigDepth = () => this.props.history.length > STILL_MIN_HISTORY_ITEMS;
+  isTheBigDepth = () => this.props.history.length > OPTIMAL_HISTORY_DEPTH_FOR_RENDER;
 
   loadMoreHistoryItems = () => {
     this.props.fetchItemsHistoryAction({
       historyDepth: this.props.historyDepth,
-      isForLoadMore: true,
+      loadMore: true,
     });
   };
 

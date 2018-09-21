@@ -11,7 +11,7 @@ import {
   isListViewSelector,
   namespaceSelector,
 } from 'controllers/testItem';
-import { SUITE_HISTORY_PAGE, payloadSelector } from 'controllers/pages';
+import { HISTORY_PAGE, payloadSelector } from 'controllers/pages';
 import { externalSystemSelector } from 'controllers/project';
 import { Breadcrumbs, breadcrumbDescriptorShape } from 'components/main/breadcrumbs';
 import { GhostButton } from 'components/buttons/ghostButton';
@@ -149,7 +149,7 @@ export class ActionPanel extends Component {
   }
 
   onClickHistory = () => {
-    this.props.redirect({ type: SUITE_HISTORY_PAGE, payload: this.props.payload });
+    this.props.redirect({ type: HISTORY_PAGE, payload: this.props.payload });
   };
 
   checkVisibility = (levels) => levels.some((level) => this.props.level === level);

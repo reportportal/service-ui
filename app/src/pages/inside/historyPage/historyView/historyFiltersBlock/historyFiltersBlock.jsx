@@ -20,12 +20,12 @@ export class HistoryFiltersBlock extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
     historyDepth: PropTypes.string,
-    historyDepthHandle: PropTypes.func,
+    onChangeHistoryDepth: PropTypes.func,
   };
 
   static defaultProps = {
     historyDepth: HISTORY_DEPTH_CONFIG.defaultValue,
-    historyDepthHandle: () => {},
+    onChangeHistoryDepth: () => {},
   };
 
   render() {
@@ -39,7 +39,7 @@ export class HistoryFiltersBlock extends Component {
             options={HISTORY_DEPTH_CONFIG.options}
             customClass={cx('mobile-input-disabled')}
             value={this.props.historyDepth}
-            onChange={this.props.historyDepthHandle}
+            onChange={this.props.onChangeHistoryDepth}
           />
         </div>
       </div>

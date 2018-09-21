@@ -11,7 +11,7 @@
 
 .pb {
   background: $COLOR--product-bug;
-  & span {
+  & .defect-title {
     color: $COLOR--white-two;
   }
 }
@@ -22,7 +22,7 @@
 
 .si {
   background: $COLOR--system-issue;
-  & span {
+  & .defect-title {
     color: $COLOR--white-two;
   }
 }
@@ -33,7 +33,7 @@
 
 .nd {
   background: $COLOR--gray-47;
-  & span {
+  & .defect-title {
     color: $COLOR--white-two;
   }
 }

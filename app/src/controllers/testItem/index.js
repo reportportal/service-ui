@@ -22,5 +22,4 @@ export {
   isListViewSelector,
   queryParametersSelector,
   itemsSelector,
-  historyItemsSelector,
 } from './selectors';

@@ -118,7 +118,7 @@ export default {
       dispatch(fetchLaunchesAction());
     },
   },
-  SUITE_HISTORY_PAGE: {
+  HISTORY_PAGE: {
     path: '/:projectId/launches/:filterId/:testItemIds+/history',
     thunk: (dispatch) => {
       dispatch(fetchHistoryPageInfo());

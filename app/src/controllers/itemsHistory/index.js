@@ -3,11 +3,11 @@ export {
   fetchItemsHistoryAction,
   fetchHistoryPageInfo,
   setVisibleItemsCount,
-  resetFetchHistory,
+  refreshHistory,
 } from './actionCreators';
 export {
   FETCH_ITEMS_HISTORY,
-  STILL_MIN_HISTORY_ITEMS,
+  OPTIMAL_HISTORY_DEPTH_FOR_RENDER,
   HISTORY_ITEMS_TO_LOAD,
   RESET_HISTORY,
   HISTORY_DEPTH_CONFIG,
@@ -18,4 +18,5 @@ export {
   historySelector,
   visibleItemsCountSelector,
   loadingSelector,
+  historyItemsSelector,
 } from './selectors';

@@ -4,9 +4,9 @@ import Parser from 'html-react-parser';
 import { FormattedRelative } from 'react-intl';
 import classNames from 'classnames/bind';
 import { MarkdownViewer } from 'components/main/markdown';
-import { DurationInfoBlock } from './durationInfoBlock';
+import TagIcon from 'common/img/tag-inline.svg';
+import { DurationBlock } from 'pages/inside/common/itemInfo/durationBlock';
 import styles from './itemInfoToolTip.scss';
-import TagIcon from './img/tag-inline.svg';
 
 const cx = classNames.bind(styles);
 
@@ -16,7 +16,7 @@ export const ItemInfoToolTip = ({ data }) => (
       <span>{data.name}</span>
     </div>
     <div className={cx('info-block')}>
-      <DurationInfoBlock
+      <DurationBlock
         timing={{
           start: data.start_time,
           end: data.end_time,

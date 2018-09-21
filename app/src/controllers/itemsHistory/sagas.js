@@ -3,14 +3,14 @@ import { fetchDataAction } from 'controllers/fetch';
 import { URLS } from 'common/urls';
 import { getStorageItem } from 'common/utils';
 import { activeProjectSelector } from 'controllers/user';
-import { fetchTestItemsAction, SET_PAGE_LOADING, historyItemsSelector } from 'controllers/testItem';
+import { fetchTestItemsAction, SET_PAGE_LOADING } from 'controllers/testItem';
 import {
   fetchItemsHistoryAction,
   setItemsHistory,
   setVisibleItemsCount,
   resetHistory,
 } from './actionCreators';
-import { itemsHistorySelector, visibleItemsCountSelector } from './selectors';
+import { itemsHistorySelector, visibleItemsCountSelector, historyItemsSelector } from './selectors';
 import {
   FETCH_ITEMS_HISTORY,
   HISTORY_ITEMS_TO_LOAD,
@@ -25,7 +25,7 @@ function* getHistory({ payload }) {
   const visibleItemsCount = yield select(visibleItemsCountSelector);
   let startSliceIndex;
   let endSliceIndex;
-  if (payload && payload.isForLoadMore) {
+  if (payload && payload.loadMore) {
     startSliceIndex = visibleItemsCount;
     endSliceIndex = visibleItemsCount + HISTORY_ITEMS_TO_LOAD;
   } else {

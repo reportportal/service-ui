@@ -62,18 +62,6 @@ export const itemsSelector = (state) => {
   }
 };
 
-export const historyItemsSelector = (state) => {
-  const launchesToRender = [];
-
-  itemsSelector(state).forEach((item) => {
-    const sameName = launchesToRender.filter((obj) => obj.uniqueId === item.uniqueId);
-    if (!sameName.length) {
-      launchesToRender.push(item);
-    }
-  });
-  return launchesToRender;
-};
-
 export const isListViewSelector = (state, namespace) =>
   isListView(pagePropertiesSelector(state), namespace);
 

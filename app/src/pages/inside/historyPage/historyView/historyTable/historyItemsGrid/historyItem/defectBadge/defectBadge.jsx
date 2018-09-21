@@ -34,7 +34,7 @@ export class DefectBadge extends Component {
 
     return (
       <div type={type} className={cx('defect-badge', defectTitle)}>
-        <span>{defectTitle}</span>
+        <span className={cx('defect-title')}>{defectTitle}</span>
       </div>
     );
   }

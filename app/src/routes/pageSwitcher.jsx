@@ -63,7 +63,7 @@ const pageRendering = {
   [TEST_ITEM_PAGE]: { component: TestItemPage, layout: AppLayout },
   [PROJECT_LOG_PAGE]: { component: LogsPage, layout: AppLayout },
   [PROJECT_USERDEBUG_LOG_PAGE]: { component: LogsPage, layout: AppLayout },
-  SUITE_HISTORY_PAGE: { component: HistoryPage, layout: AppLayout },
+  HISTORY_PAGE: { component: HistoryPage, layout: AppLayout },
 };
 
 Object.keys(pageNames).forEach((page) => {

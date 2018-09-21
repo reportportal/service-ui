@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { PageLayout, PageSection } from 'layouts/pageLayout';
 import PropTypes from 'prop-types';
-import { resetFetchHistory } from 'controllers/itemsHistory';
+import { refreshHistory } from 'controllers/itemsHistory';
 import { parentItemSelector } from 'controllers/testItem';
 import { connect } from 'react-redux';
 import { HistoryToolbar } from './historyToolbar';
@@ -12,12 +12,12 @@ import { HistoryView } from './historyView';
     parentItem: parentItemSelector(state),
   }),
   {
-    resetFetchHistory,
+    refreshHistory,
   },
 )
 export class HistoryPage extends Component {
   static propTypes = {
-    resetFetchHistory: PropTypes.func.isRequired,
+    refreshHistory: PropTypes.func.isRequired,
     parentItem: PropTypes.object,
   };
 
@@ -30,7 +30,7 @@ export class HistoryPage extends Component {
       <PageLayout>
         <PageSection>
           <HistoryToolbar
-            onRefresh={this.props.resetFetchHistory}
+            onRefresh={this.props.refreshHistory}
             parentItem={this.props.parentItem}
           />
           <HistoryView />

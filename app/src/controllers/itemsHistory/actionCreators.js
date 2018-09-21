@@ -7,9 +7,9 @@ import {
   RESET_FETCH_HISTORY,
 } from './constants';
 
-export const fetchItemsHistoryAction = (payload) => ({
+export const fetchItemsHistoryAction = ({ historyDepth, loadMore } = {}) => ({
   type: FETCH_ITEMS_HISTORY,
-  payload,
+  payload: { historyDepth, loadMore },
 });
 
 export const setItemsHistory = (items) => ({
@@ -30,6 +30,6 @@ export const resetHistory = () => ({
   type: RESET_HISTORY,
 });
 
-export const resetFetchHistory = () => ({
+export const refreshHistory = () => ({
   type: RESET_FETCH_HISTORY,
 });
