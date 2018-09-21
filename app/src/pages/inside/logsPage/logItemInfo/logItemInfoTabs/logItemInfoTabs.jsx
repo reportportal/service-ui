@@ -8,6 +8,7 @@ import TestParamsIcon from 'common/img/test-params-icon-inline.svg';
 import ClockIcon from 'common/img/clock-inline.svg';
 import { InfoTabs } from '../infoTabs';
 import { LogItemDetails } from '../logItemDetails';
+import Attachments from '../../tabs/attachments/attachments';
 
 const messages = defineMessages({
   stackTab: {
@@ -43,7 +44,11 @@ const makeTabs = ({ formatMessage }, logItem) => [
     id: 'attachments',
     label: formatMessage(messages.attachmentsTab),
     icon: AttachmentIcon,
-    content: <div>Attachments</div>,
+    content: (
+      <div>
+        <Attachments logItem={logItem} />
+      </div>
+    ),
   },
   {
     id: 'details',

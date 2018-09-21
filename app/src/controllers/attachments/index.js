@@ -1,0 +1,1 @@
+export { attachmentsSelector } from './selectors';
