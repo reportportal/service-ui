@@ -7,7 +7,7 @@
   position: relative;
 
   .warning-block {
-    padding-right: 10px;
+    padding-right: 5px;
   }
 }
 .warning-block {
@@ -62,6 +62,8 @@
 }
 .confirmation-block {
   display: flex;
+  flex-wrap: wrap;
+  max-width: 380px;
   float: left;
 }
 .confirmation-label {

@@ -54,7 +54,7 @@ const messages = defineMessages({
   },
   importConfirmation: {
     id: 'LaunchImportModal.importConfirmation',
-    defaultMessage: 'Confirm cancelation',
+    defaultMessage: 'Confirm cancel',
   },
   incorrectFileFormat: {
     id: 'LaunchImportModal.incorrectFileFormat',
@@ -138,6 +138,23 @@ export class LaunchImportModal extends Component {
       },
     };
   };
+
+  getCloseConfirmationConfig = (isValidFilesExists, loading, uploadFinished) => {
+    const { intl } = this.props;
+
+    if (!isValidFilesExists || uploadFinished) {
+      return null;
+    }
+    return {
+      withCheckbox: loading,
+      closeConfirmedCallback: this.closeConfirmedCallback,
+      confirmationMessage: intl.formatMessage(messages.importConfirmation),
+      confirmationWarning: intl.formatMessage(
+        loading ? messages.importConfirmationWarning : COMMON_LOCALE_KEYS.CLOSE_MODAL_WARNING,
+      ),
+    };
+  };
+
   cancelRequests = [];
 
   validateFile = (file) => ({
@@ -285,7 +302,6 @@ export class LaunchImportModal extends Component {
     const { intl } = this.props;
     const { files } = this.state;
     const validFiles = files.filter(({ valid }) => valid);
-    const isAbleToClose = validFiles.length ? validFiles.some(({ isLoading }) => !isLoading) : true;
     const loading = validFiles.some(({ isLoading }) => isLoading);
     const uploadFinished = validFiles.length ? validFiles.every(({ uploaded }) => uploaded) : false;
 
@@ -296,15 +312,11 @@ export class LaunchImportModal extends Component {
         cancelButton={{
           text: intl.formatMessage(messages.cancelButton),
         }}
-        closeConfirmation={{
-          isAbleToClose,
-          withCheckbox: loading,
-          closeConfirmedCallback: this.closeConfirmedCallback,
-          confirmationMessage: intl.formatMessage(messages.importConfirmation),
-          confirmationWarning: intl.formatMessage(
-            loading ? messages.importConfirmationWarning : COMMON_LOCALE_KEYS.CLOSE_MODAL_WARNING,
-          ),
-        }}
+        closeConfirmation={this.getCloseConfirmationConfig(
+          validFiles.length,
+          loading,
+          uploadFinished,
+        )}
       >
         <Dropzone
           className={cx('dropzone-wrapper')}
