@@ -1,6 +1,6 @@
 ## **InputSlider component**
 
-Component use rc-slider library. https://github.com/react-component/slider
+Component uses rc-slider library. https://github.com/react-component/slider
 
 ### Props:
 

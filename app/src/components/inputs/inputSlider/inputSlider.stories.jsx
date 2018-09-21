@@ -41,7 +41,7 @@ storiesOf('Components/Inputs/InputSlider', module)
   .addDecorator(withReadme(README))
   .add('Default state', () => <InputSlider />)
   .add('With options', () => <InputSlider options={options} />)
-  .add('With options, value', () => <InputSlider options={options} value={'Info'} />)
-  .add('With options, value and action', () => (
+  .add('With options, value="Info"', () => <InputSlider options={options} value={'Info'} />)
+  .add('With options, value="Info" and action', () => (
     <InputSlider options={options} value={'Info'} onChange={action('changed')} />
   ));
