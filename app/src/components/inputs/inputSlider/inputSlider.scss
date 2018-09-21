@@ -1,0 +1,37 @@
+.slider-input {
+  padding: 0 15px;
+  :global {
+    .rc-slider-with-marks {
+      padding-top: 20px;
+      height: auto;
+    }
+    .rc-slider-mark {
+      top: 0;
+    }
+    .rc-slider-rail {
+      height: 3px;
+      background-color: $COLOR--gray-91;
+    }
+    .rc-slider-dot {
+      display: none;
+    }
+    .rc-slider-track {
+      background-color: $COLOR--topaz;
+      height: 3px;
+    }
+    .rc-slider-handle {
+      background: $COLOR--topaz;
+      border: none;
+      width: 10px;
+      height: 10px;
+      margin-top: -4px;
+    }
+    .rc-slider-mark-text {
+      font-size: 13px;
+      color: $COLOR--charcoal-grey;
+      &.rc-slider-mark-text-active {
+        color: $COLOR--topaz;
+      }
+    }
+  }
+}
