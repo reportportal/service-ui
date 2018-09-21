@@ -41,7 +41,6 @@ export class ModalLayout extends Component {
     ]),
     closeConfirmation: PropTypes.shape({
       closeConfirmedCallback: PropTypes.func,
-      isAbleToClose: PropTypes.bool,
       withCheckbox: PropTypes.bool,
       confirmationMessage: PropTypes.string,
       confirmationWarning: PropTypes.string,
@@ -90,9 +89,7 @@ export class ModalLayout extends Component {
       if (!closeConfirmation) {
         this.closeModal();
       } else {
-        closeConfirmation.withCheckbox
-          ? this.setState({ showConfirmation: true })
-          : this.setState({ showConfirmation: true, closeConfirmed: true });
+        this.setState({ showConfirmation: true });
       }
     }
   };
@@ -113,27 +110,16 @@ export class ModalLayout extends Component {
       this.setState({ shown: false });
     }
   };
-  showCloseConfirmation = () => {
+  closeModalWithConfirmation = () => {
     const { closeConfirmed } = this.state;
     const { closeConfirmedCallback, withCheckbox } = this.props.closeConfirmation;
 
-    if (closeConfirmed) {
+    if (withCheckbox && closeConfirmed) {
       closeConfirmedCallback && closeConfirmedCallback();
       this.setState({ shown: false });
     }
 
-    !withCheckbox && this.setState({ closeConfirmed: true });
-
-    this.setState({ showConfirmation: true });
-  };
-  closeModalWithConfirmation = () => {
-    const { isAbleToClose } = this.props.closeConfirmation;
-
-    if (isAbleToClose) {
-      this.setState({ shown: false });
-    } else {
-      this.showCloseConfirmation();
-    }
+    withCheckbox ? this.setState({ showConfirmation: true }) : this.setState({ shown: false });
   };
   render() {
     const {
