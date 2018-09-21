@@ -10,7 +10,7 @@ const cx = classNames.bind(styles);
 
 export class InputSlider extends Component {
   static propTypes = {
-    options: PropTypes.array,
+    options: PropTypes.arrayOf(PropTypes.string),
     value: PropTypes.string,
     onChange: PropTypes.func,
   };
@@ -19,48 +19,28 @@ export class InputSlider extends Component {
     value: '',
     onChange: () => {},
   };
-  constructor(props) {
-    super(props);
-    this.state = {
-      marks: this.createMarks(),
-      value: this.getSliderValue() || 0,
-    };
-  }
 
-  onChange = (newValue) => {
-    this.setState({ value: newValue });
-    this.props.onChange(this.state.marks[newValue]);
-  };
+  onChange = (newIndex) => this.props.onChange(this.props.options[newIndex]);
 
   getMaxValue = () => (this.props.options.length ? this.props.options.length - 1 : 0);
 
   getSliderValue = () => {
-    let value;
-    this.props.options.forEach((item, i) => {
-      if (item === this.props.value) {
-        value = i;
-      }
-    });
-    return value;
+    const index = this.props.options.indexOf(this.props.value);
+    return index > -1 ? index : 0;
   };
 
-  createMarks = () => {
-    const marks = {};
-    this.props.options.forEach((item, idx) => {
-      marks[idx] = item;
-    });
-    return marks;
-  };
+  createMarks = () =>
+    this.props.options.reduce((acc, item, index) => ({ ...acc, [index]: item }), {});
 
   render() {
     return (
-      <div className={cx('slider-input')}>
+      <div className={cx('input-slider')}>
         <Slider
           min={0}
-          max={+this.getMaxValue()}
-          marks={this.state.marks}
+          max={this.getMaxValue()}
+          marks={this.createMarks()}
           step={1}
-          value={this.state.value}
+          value={this.getSliderValue()}
           onChange={this.onChange}
         />
       </div>
