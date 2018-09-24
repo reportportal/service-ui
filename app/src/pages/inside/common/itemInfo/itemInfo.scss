@@ -78,6 +78,13 @@
   width: 100%;
   box-sizing: border-box;
 }
+.duration-block {
+  margin-right: 20px;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    margin-right: 15px;
+  }
+}
 .item-description {
   width: 100%;
   margin-top: 10px;
