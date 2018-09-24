@@ -43,7 +43,7 @@
     left: 0;
     display: block;
     width: 3px;
-    height: calc(100% + -1px);
+    border-top: 1px solid $COLOR--gray-91;
     border-left: 1px solid $COLOR--white-two;
   }
   &.level-FATAL {
@@ -113,11 +113,11 @@
 
 .time-column {
   width: 14%;
-  font-family: Menlo, Monaco, Consolas, 'Courier New', monospace;
-  font-size: 13px;
+  font-family: $FONT-MENLO;
+  font-size: 12px;
   @media (max-width: $SCREEN_XS_MAX) {
     width: 75%;
-    font-size: 14px;
+    font-size: 13px;
     line-height: 31px;
     float: left;
     word-spacing: 12px;
