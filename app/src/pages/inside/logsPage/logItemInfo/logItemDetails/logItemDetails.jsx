@@ -29,17 +29,29 @@ export class LogItemDetails extends Component {
         <div className={cx('body-column', 'column')}>
           <div className={cx('name')}>{logItem.name}</div>
           <div className={cx('attributes')}>
-            <DurationBlock
-              type={logItem.type}
-              status={logItem.status}
-              itemNumber={logItem.number}
-              timing={{
-                start: logItem.start_time,
-                end: logItem.end_time,
-                approxTime: logItem.approximateDuration,
-              }}
-            />
-            {logItem.tags && !!logItem.tags.length && <TagsBlock tags={logItem.tags} />}
+            <span className={cx('attribute')}>
+              <DurationBlock
+                type={logItem.type}
+                status={logItem.status}
+                itemNumber={logItem.number}
+                timing={{
+                  start: logItem.start_time,
+                  end: logItem.end_time,
+                  approxTime: logItem.approximateDuration,
+                }}
+              />
+            </span>
+            {logItem.growthDuration && (
+              <span className={cx('attribute')}>
+                <span className={cx('growth-duration')}>{logItem.growthDuration}</span>
+              </span>
+            )}
+            {logItem.tags &&
+              !!logItem.tags.length && (
+                <span className={cx('attribute')}>
+                  <TagsBlock tags={logItem.tags} />
+                </span>
+              )}
           </div>
           <div className={cx('description')}>
             <MarkdownViewer value={logItem.description} />
