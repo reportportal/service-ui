@@ -27,6 +27,7 @@ export class FilterName extends Component {
     filter: PropTypes.object,
     onClickName: PropTypes.func,
     onEdit: PropTypes.func,
+    search: PropTypes.string,
     userId: PropTypes.string,
     showDesc: PropTypes.bool,
   };
@@ -37,8 +38,25 @@ export class FilterName extends Component {
     filter: {},
     onClickName: () => {},
     onEdit: () => {},
+    search: '',
     userId: '',
     showDesc: true,
+  };
+
+  getHighlightName = () => {
+    const {
+      filter: { name },
+      search,
+    } = this.props;
+
+    if (!search.length) {
+      return name;
+    }
+
+    return name.replace(
+      new RegExp(search, 'i'),
+      (match) => `<span class=${cx('name-highlight')}>${match}</span>`,
+    );
   };
 
   render() {
@@ -51,7 +69,7 @@ export class FilterName extends Component {
             className={cx('name', { link: userFilters.indexOf(filter.id) !== -1 })}
             onClick={onClickName}
           >
-            {filter.name}
+            {Parser(this.getHighlightName(filter.name))}
           </span>
           {filter.share && (
             <span className={cx('share-icon')} title={intl.formatMessage(messages.shareFilter)}>

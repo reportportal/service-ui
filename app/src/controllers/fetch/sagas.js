@@ -25,12 +25,13 @@ function* bulkFetchData({ payload, meta }) {
 }
 
 function* concatFetchData({ payload, meta }) {
-  const { namespace, concat } = meta;
+  const { namespace } = meta;
+  const { url, options, concat } = payload;
 
   try {
     yield put(fetchStartAction(namespace, payload));
-    const response = yield call(fetch, payload.url, payload.options);
-    yield put(concatFetchSuccessAction(namespace, concat, response));
+    const response = yield call(fetch, url, options);
+    yield put(concatFetchSuccessAction(namespace, response, concat));
   } catch (err) {
     yield put(fetchErrorAction(namespace, err));
   }

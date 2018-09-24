@@ -9,7 +9,7 @@ const computeInitialState = (options) => {
 
 export const fetchReducer = (namespace, options = DEFAULT_OPTIONS) => (
   state = computeInitialState(options),
-  { type, payload, meta },
+  { type, payload, meta, concat },
 ) => {
   if (meta && meta.namespace && meta.namespace !== namespace) {
     return state;
@@ -21,8 +21,8 @@ export const fetchReducer = (namespace, options = DEFAULT_OPTIONS) => (
     case CONCAT_FETCH_SUCCESS: {
       const data = contentPath ? payload[contentPath] : payload;
 
-      if (data instanceof Array) {
-        return meta.concat.concat(data);
+      if (data instanceof Array && concat) {
+        return state.concat(data);
       }
 
       return data;

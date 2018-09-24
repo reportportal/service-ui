@@ -12,8 +12,8 @@ const cx = classNames.bind(styles);
   form: WIDGET_WIZARD_FORM,
   destroyOnUnmount: false,
   forceUnregisterOnUnmount: true,
-  validate: ({ filterItem }) => ({
-    filterItem: !filterItem && 'error',
+  validate: ({ filterId }) => ({
+    filterId: !filterId && 'error',
   }),
 })
 export class WizardSecondStepForm extends Component {
@@ -21,17 +21,42 @@ export class WizardSecondStepForm extends Component {
     widget: PropTypes.object.isRequired,
     handleSubmit: PropTypes.func.isRequired,
     onSubmit: PropTypes.func.isRequired,
+    onDisableButtons: PropTypes.func.isRequired,
   };
 
-  static defaultProps = {};
+  static defaultProps = {
+    handleSubmit: () => {},
+  };
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      formAppearance: {
+        mode: false,
+        filter: {},
+      },
+    };
+  }
+
+  handleFormAppearanceChange = (mode, filter) => {
+    const { onDisableButtons } = this.props;
+
+    this.setState({ formAppearance: { mode, filter } });
+    onDisableButtons(mode !== false);
+  };
 
   render() {
     const { onSubmit, handleSubmit, widget } = this.props;
+    const { formAppearance } = this.state;
     const ControlsForm = widget.controls;
 
     return (
       <form onSubmit={handleSubmit(onSubmit)} className={cx('wizard-second-step-form')}>
-        <ControlsForm widgetType={widget.id} />
+        <ControlsForm
+          widgetType={widget.id}
+          formAppearance={formAppearance}
+          onFormAppearanceChange={this.handleFormAppearanceChange}
+        />
       </form>
     );
   }

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { getFormValues, initialize } from 'redux-form';
 import { injectIntl, intlShape } from 'react-intl';
+import { FieldProvider } from 'components/fields/fieldProvider';
 import { defectTypesSelector } from 'controllers/project';
 import { FiltersControl } from './controls';
 import { WIDGET_WIZARD_FORM } from '../widgetWizardContent/wizardControlsSection/constants';
@@ -46,7 +47,9 @@ export class LaunchExecutionAndIssueStatisticsControls extends Component {
   render() {
     return (
       <Fragment>
-        <FiltersControl />
+        <FieldProvider name={'filterId'}>
+          <FiltersControl />
+        </FieldProvider>
       </Fragment>
     );
   }

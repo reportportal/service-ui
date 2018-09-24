@@ -23,6 +23,10 @@
   }
 }
 
+.name-highlight {
+  color: $COLOR--fatal;
+}
+
 .pencil-icon {
   width: 20px;
   height: 20px;
@@ -42,7 +46,7 @@
 }
 
 .share-icon,
-.browse-icon {
+.globe-icon {
   width: 20px;
   height: 20px;
   margin-left: 10px;

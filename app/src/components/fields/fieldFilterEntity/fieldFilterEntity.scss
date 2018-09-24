@@ -11,6 +11,14 @@
     min-width: 235px;
     min-height: 55px;
   }
+
+  &.small {
+    width: 190px;
+
+    &.stretchable {
+      min-width: 190px;
+    }
+  }
 }
 .entity-name {
   display: inline-block;

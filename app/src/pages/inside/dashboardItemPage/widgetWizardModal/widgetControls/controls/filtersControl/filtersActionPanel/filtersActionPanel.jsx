@@ -11,7 +11,7 @@ import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 
 import styles from './filtersActionPanel.scss';
 import AddFilterIcon from './img/ic-add-filter-inline.svg';
-import { FILTER_SEARCH_FORM } from '../constants';
+import { FILTER_SEARCH_FORM, FORM_APPEARANCE_MODE_ADD } from '../constants';
 
 const cx = classNames.bind(styles);
 const messages = defineMessages({
@@ -23,13 +23,30 @@ const messages = defineMessages({
     id: 'FiltersActionPanel.searchInputPlaceholder',
     defaultMessage: 'Search filter by name',
   },
+  filtersNotFound: {
+    id: 'FiltersActionPanel.filtersNotFound',
+    defaultMessage: `No filters found for {filter}.`,
+  },
 });
 
+@injectIntl
 @reduxForm({
   form: FILTER_SEARCH_FORM,
-  validate: ({ filter }) => ({
-    filter: filter && filter.length < 3 ? 'filterNameError' : undefined,
-  }),
+  validate: ({ filter }, { filters, intl }) => {
+    if (!filter) {
+      return {};
+    }
+
+    if (filter.length < 3) {
+      return { filter: 'filterNameError' };
+    }
+
+    if (!filters.length) {
+      return { filter: intl.formatMessage(messages.filtersNotFound, { filter }) };
+    }
+
+    return {};
+  },
   onChange: ({ filter }, dispatcher, { onFilterChange }) => {
     if (filter && filter.length < 3) {
       return;
@@ -38,25 +55,30 @@ const messages = defineMessages({
     onFilterChange(filter || undefined);
   },
 })
-@injectIntl
 export class FiltersActionPanel extends Component {
   static propTypes = {
     intl: intlShape,
+    value: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
     filter: PropTypes.string,
+    filters: PropTypes.array,
     invalid: PropTypes.bool,
     change: PropTypes.func,
+    onAdd: PropTypes.func,
   };
 
   static defaultProps = {
     intl: {},
     invalid: false,
     filter: null,
+    value: null,
+    filters: [],
     change: () => {},
+    onAdd: () => {},
   };
 
   componentDidMount() {
-    const { change, filter } = this.props;
-    change('filter', filter);
+    const { change, filter, value } = this.props;
+    change('filter', filter || value || '');
   }
 
   componentWillReceiveProps({ filter: nextFilter, invalid: nextInvalid }) {
@@ -68,7 +90,7 @@ export class FiltersActionPanel extends Component {
   }
 
   render() {
-    const { intl } = this.props;
+    const { intl, onAdd } = this.props;
 
     return (
       <div className={cx('filters-header')}>
@@ -82,7 +104,11 @@ export class FiltersActionPanel extends Component {
             </FieldErrorHint>
           </FieldProvider>
         </div>
-        <GhostButton icon={AddFilterIcon} title={intl.formatMessage(messages.addFilterButton)}>
+        <GhostButton
+          icon={AddFilterIcon}
+          title={intl.formatMessage(messages.addFilterButton)}
+          onClick={(event) => onAdd(event, FORM_APPEARANCE_MODE_ADD)}
+        >
           {intl.formatMessage(messages.addFilterButton)}
         </GhostButton>
       </div>

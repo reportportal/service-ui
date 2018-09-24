@@ -62,6 +62,13 @@ export class OverallStatisticsControls extends Component {
     defectTypes: PropTypes.object.isRequired,
     widgetSettings: PropTypes.object.isRequired,
     initializeWizardSecondStepForm: PropTypes.func.isRequired,
+    formAppearance: PropTypes.object.isRequired,
+    onFormAppearanceChange: PropTypes.func.isRequired,
+  };
+
+  static defaultProps = {
+    formAppearance: {},
+    onFormAppearanceChange: () => {},
   };
 
   constructor(props) {
@@ -85,50 +92,60 @@ export class OverallStatisticsControls extends Component {
   parseItems = (value) => (value.length < 4 ? value : this.props.widgetSettings.itemsCount);
 
   render() {
-    const { intl } = this.props;
+    const { intl, formAppearance, onFormAppearanceChange } = this.props;
+
     return (
       <Fragment>
-        <FiltersControl />
-        <FieldProvider
-          name="content_fields"
-          validate={validators.content_fields(intl.formatMessage)}
-        >
-          <DropdownControl
-            fieldLabel={intl.formatMessage(messages.CriteriaFieldLabel)}
-            multiple
-            selectAll
-            options={this.criteria}
+        <FieldProvider name={'filterId'}>
+          <FiltersControl
+            formAppearance={formAppearance}
+            onFormAppearanceChange={onFormAppearanceChange}
           />
         </FieldProvider>
-        <FieldProvider
-          name="itemsCount"
-          validate={validators.items(intl.formatMessage)}
-          parse={this.parseItems}
-        >
-          <InputControl
-            fieldLabel={intl.formatMessage(messages.ItemsFieldLabel)}
-            inputWidth={ITEMS_INPUT_WIDTH}
-            type="number"
-          />
-        </FieldProvider>
-        <FieldProvider name="viewMode">
-          <TogglerControl
-            fieldLabel={' '}
-            items={getWidgetModeOptions(
-              [CHART_MODES.PANEL_VIEW, CHART_MODES.DONUT_VIEW],
-              intl.formatMessage,
-            )}
-          />
-        </FieldProvider>
-        <FieldProvider name="mode">
-          <TogglerControl
-            fieldLabel={' '}
-            items={getWidgetModeOptions(
-              [CHART_MODES.ALL_LAUNCHES, CHART_MODES.LATEST_LAUNCHES],
-              intl.formatMessage,
-            )}
-          />
-        </FieldProvider>
+        {!formAppearance.mode && (
+          <Fragment>
+            <FieldProvider
+              name="content_fields"
+              validate={validators.content_fields(intl.formatMessage)}
+            >
+              <DropdownControl
+                fieldLabel={intl.formatMessage(messages.CriteriaFieldLabel)}
+                multiple
+                selectAll
+                options={this.criteria}
+              />
+            </FieldProvider>
+            <FieldProvider
+              name="itemsCount"
+              validate={validators.items(intl.formatMessage)}
+              parse={this.parseItems}
+            >
+              <InputControl
+                fieldLabel={intl.formatMessage(messages.ItemsFieldLabel)}
+                inputWidth={ITEMS_INPUT_WIDTH}
+                type="number"
+              />
+            </FieldProvider>
+            <FieldProvider name="viewMode">
+              <TogglerControl
+                fieldLabel={' '}
+                items={getWidgetModeOptions(
+                  [CHART_MODES.PANEL_VIEW, CHART_MODES.DONUT_VIEW],
+                  intl.formatMessage,
+                )}
+              />
+            </FieldProvider>
+            <FieldProvider name="mode">
+              <TogglerControl
+                fieldLabel={' '}
+                items={getWidgetModeOptions(
+                  [CHART_MODES.ALL_LAUNCHES, CHART_MODES.LATEST_LAUNCHES],
+                  intl.formatMessage,
+                )}
+              />
+            </FieldProvider>
+          </Fragment>
+        )}
       </Fragment>
     );
   }

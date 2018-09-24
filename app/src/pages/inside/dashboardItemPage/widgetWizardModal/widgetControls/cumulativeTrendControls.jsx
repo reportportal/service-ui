@@ -98,7 +98,9 @@ export class CumulativeTrendControls extends Component {
     const { intl } = this.props;
     return (
       <Fragment>
-        <FiltersControl />
+        <FieldProvider name={'filterId'}>
+          <FiltersControl />
+        </FieldProvider>
         <FieldProvider name="prefix" validate={validators.prefix(intl.formatMessage)}>
           <InputControl
             fieldLabel={intl.formatMessage(messages.prefixFieldLabel)}

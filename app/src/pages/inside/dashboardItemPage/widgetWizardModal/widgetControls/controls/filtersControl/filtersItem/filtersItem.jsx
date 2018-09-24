@@ -16,36 +16,40 @@ const cx = classNames.bind(styles);
 export class FiltersItem extends PureComponent {
   static propTypes = {
     intl: intlShape,
+    search: PropTypes.string,
     userId: PropTypes.string,
     activeFilterId: PropTypes.string,
     filter: PropTypes.object.isRequired,
     onChange: PropTypes.func.isRequired,
+    onEdit: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
     intl: {},
+    search: '',
     userId: '',
     activeFilterId: '',
     item: {},
     onChange: () => {},
+    onEdit: () => {},
   };
 
   render() {
-    const { activeFilterId, filter, onChange, userId } = this.props;
+    const { activeFilterId, filter, search, onChange, onEdit, userId } = this.props;
 
     return (
       <div className={cx('filter-item')}>
         <InputRadio
           value={activeFilterId}
           ownValue={filter.id}
-          name={'filter-item'}
+          name={'filter-id'}
           onChange={onChange}
           circleAtTop
         >
-          <FilterName filter={filter} showDesc={false} />
+          <FilterName search={search} filter={filter} showDesc={false} />
           <FilterOptions entities={filter.entities} sort={filter.selection_parameters.orders}>
             {userId === filter.owner && (
-              <span className={cx('pencil-icon')} onClick={() => {}}>
+              <span className={cx('pencil-icon')} onClick={onEdit}>
                 {Parser(PencilIcon)}
               </span>
             )}

@@ -127,7 +127,9 @@ export class LaunchesTableControls extends Component {
     const { intl } = this.props;
     return (
       <Fragment>
-        <FiltersControl />
+        <FieldProvider name={'filterId'}>
+          <FiltersControl />
+        </FieldProvider>
         <FieldProvider
           name="content_fields"
           parse={this.parseContentFields}

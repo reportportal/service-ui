@@ -27,6 +27,7 @@ export class EntityLaunchOwner extends Component {
     intl: intlShape.isRequired,
     value: PropTypes.object.isRequired,
     title: PropTypes.string,
+    size: PropTypes.string,
     ownersSearchUrl: PropTypes.string.isRequired,
     removable: PropTypes.bool,
     onRemove: PropTypes.func,
@@ -34,6 +35,7 @@ export class EntityLaunchOwner extends Component {
   };
   static defaultProps = {
     title: '',
+    size: '',
     removable: true,
     onRemove: () => {},
     onChange: () => {},
@@ -48,10 +50,16 @@ export class EntityLaunchOwner extends Component {
   formatValue = (values) => values.map((value) => ({ value, label: value }));
 
   render() {
-    const { intl, value, onRemove, removable, title, ownersSearchUrl } = this.props;
+    const { intl, value, onRemove, removable, title, size, ownersSearchUrl } = this.props;
     const formattedValue = this.formatValue(value.value.split(','));
     return (
-      <FieldFilterEntity stretchable title={title} removable={removable} onRemove={onRemove}>
+      <FieldFilterEntity
+        stretchable
+        title={title}
+        size={size}
+        removable={removable}
+        onRemove={onRemove}
+      >
         <InputTagsSearch
           value={formattedValue.length && formattedValue[0].value ? formattedValue : []}
           placeholder={intl.formatMessage(messages.placeholder)}

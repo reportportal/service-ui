@@ -2,10 +2,12 @@ import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { getFormValues, initialize } from 'redux-form';
+
 import { defectTypesSelector } from 'controllers/project';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { validate } from 'common/utils';
+
 import { getWidgetCriteriaOptions } from './utils/getWidgetCriteriaOptions';
 import { getWidgetModeOptions } from './utils/getWidgetModeOptions';
 import {
@@ -99,7 +101,9 @@ export class LaunchStatisticsControls extends Component {
     const { intl } = this.props;
     return (
       <Fragment>
-        <FiltersControl />
+        <FieldProvider name={'filterId'}>
+          <FiltersControl />
+        </FieldProvider>
         <FieldProvider
           name="content_fields"
           validate={validators.content_fields(intl.formatMessage)}

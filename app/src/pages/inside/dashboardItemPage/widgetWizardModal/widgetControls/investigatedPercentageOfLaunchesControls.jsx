@@ -74,7 +74,9 @@ export class InvestigatedPercentageOfLaunchesControls extends Component {
     const { intl } = this.props;
     return (
       <Fragment>
-        <FiltersControl />
+        <FieldProvider name={'filterId'}>
+          <FiltersControl />
+        </FieldProvider>
         <FieldProvider
           name="itemsCount"
           validate={validators.items(intl.formatMessage)}

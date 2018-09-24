@@ -15,13 +15,13 @@ function* fetchFilters() {
   );
 }
 
-function* fetchFiltersConcat({ payload }) {
+function* fetchFiltersConcat({ payload: { params, concat } }) {
   const activeProject = yield select(activeProjectSelector);
   const query = yield select(querySelector);
 
   yield put(
-    concatFetchDataAction(NAMESPACE, payload.filters)(URLS.filters(activeProject), {
-      params: { ...query, ...payload.params },
+    concatFetchDataAction(NAMESPACE, concat)(URLS.filters(activeProject), {
+      params: { ...query, ...params },
     }),
   );
 }

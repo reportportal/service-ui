@@ -119,7 +119,9 @@ export class MostFailedTestCasesTableControls extends Component {
     const { intl, launchNamesSearchUrl } = this.props;
     return (
       <Fragment>
-        <FiltersControl />
+        <FieldProvider name={'filterId'}>
+          <FiltersControl />
+        </FieldProvider>
         <FieldProvider
           name="content_fields"
           format={this.formatContentFields}

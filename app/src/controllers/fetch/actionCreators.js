@@ -52,13 +52,13 @@ export const bulkFetchDataAction = (namespace, silent) => (urls, options) => ({
   },
 });
 
-export const concatFetchSuccessAction = (namespace, concat, payload) => ({
+export const concatFetchSuccessAction = (namespace, payload, concat) => ({
   type: CONCAT_FETCH_SUCCESS,
   payload,
   meta: {
     namespace,
-    concat,
   },
+  concat,
 });
 
 export const concatFetchDataAction = (namespace, concat) => (url, options) => ({
@@ -66,9 +66,9 @@ export const concatFetchDataAction = (namespace, concat) => (url, options) => ({
   payload: {
     url,
     options,
+    concat,
   },
   meta: {
     namespace,
-    concat,
   },
 });

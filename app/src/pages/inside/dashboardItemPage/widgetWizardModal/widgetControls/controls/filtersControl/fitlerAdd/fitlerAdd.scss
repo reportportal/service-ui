@@ -1,0 +1,38 @@
+.filter-add {
+  position: relative;
+  width: 100%;
+  min-height: 200px;
+  padding-bottom: 70px;
+}
+
+.filter-add-title {
+  width: calc(100% - 20px);
+  margin: 1px 0 0;
+  padding: 18px 10px;
+  height: 14px;
+  color: $COLOR--gray-47;
+  font-size: 14px;
+  font-family: $FONT-SEMIBOLD;
+  text-transform: uppercase;
+  background: $COLOR--white;
+}
+
+.filter-add-block {
+  padding: 10px;
+}
+
+.filter-add-buttons-block {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+}
+.filter-add-button {
+  display: inline-block;
+  height: 30px;
+  margin-left: 10px;
+  vertical-align: top;
+
+  button {
+    font-size: 13px;
+  }
+}

@@ -105,11 +105,12 @@ export class FieldErrorHint extends PureComponent {
   static propTypes = {
     hintType: PropTypes.string,
     children: PropTypes.node,
-    intl: intlShape.isRequired,
+    intl: intlShape,
     error: PropTypes.string,
     active: PropTypes.bool,
   };
   static defaultProps = {
+    intl: {},
     hintType: 'bottom',
     children: null,
     error: '',
