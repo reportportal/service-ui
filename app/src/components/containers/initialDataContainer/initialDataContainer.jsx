@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { fetchInfoAction } from 'controllers/appInfo';
+import { fetchInfoAction, analyticsEnabledSelector } from 'controllers/appInfo';
+import { AnalyticsWrapper } from 'components/main/analytics/AnalyticsWrapper';
 import { fetchProjectAction } from 'controllers/project';
 import { fetchUserAction, activeProjectSelector } from 'controllers/user';
 import { TOKEN_KEY, DEFAULT_TOKEN, authSuccessAction } from 'controllers/auth';
@@ -9,6 +10,7 @@ import { TOKEN_KEY, DEFAULT_TOKEN, authSuccessAction } from 'controllers/auth';
 @connect(
   (state) => ({
     activeProject: activeProjectSelector(state),
+    isAnalyticsEnabled: analyticsEnabledSelector(state),
   }),
   {
     fetchInfoAction,
@@ -26,6 +28,7 @@ export class InitialDataContainer extends Component {
     authSuccessAction: PropTypes.func.isRequired,
     children: PropTypes.node,
     initialDispatch: PropTypes.func.isRequired,
+    isAnalyticsEnabled: PropTypes.bool.isRequired,
   };
 
   static defaultProps = {
@@ -57,6 +60,12 @@ export class InitialDataContainer extends Component {
   }
 
   render() {
-    return this.state.initialDataReady ? this.props.children : <span>Loading...</span>;
+    const { isAnalyticsEnabled } = this.props;
+    let insideComponent;
+    isAnalyticsEnabled
+      ? (insideComponent = <AnalyticsWrapper>{this.props.children}</AnalyticsWrapper>)
+      : (insideComponent = this.props.children);
+
+    return this.state.initialDataReady ? insideComponent : <span>Loading...</span>;
   }
 }
