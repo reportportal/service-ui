@@ -902,6 +902,8 @@
   "WizardThirdStepForm.nameLabel": "Widget name",
   "WizardThirdStepForm.namePlaceholder": "Enter widget name",
   "WizardThirdStepForm.shareLabel": "Share",
+  "EditDefectModal.defectCommentPlaceholder": "Пракаментуйце Тып дэфекту",
+  "EditDefectModal.defectTypeSelectorPlaceholder": "Выберыце Тып дэфекту",
   "EditDefectModal.defectTypeTitle": "Тып дэфекту",
   "EditDefectModal.hotKeyCancelCaption": "для адмены",
   "EditDefectModal.hotKeySubmitCaption": "для пацверджання",

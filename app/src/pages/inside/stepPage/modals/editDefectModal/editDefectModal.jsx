@@ -71,6 +71,14 @@ const messages = defineMessages({
     id: 'EditDefectModal.updateDefectsFailed',
     defaultMessage: 'Failed to update defects',
   },
+  defectTypeSelectorPlaceholder: {
+    id: 'EditDefectModal.defectTypeSelectorPlaceholder',
+    defaultMessage: 'Choose defect type',
+  },
+  defectCommentPlaceholder: {
+    id: 'EditDefectModal.defectCommentPlaceholder',
+    defaultMessage: 'Leave comment to defect type',
+  },
 });
 
 @withModal('editDefectModal')
@@ -338,7 +346,7 @@ export class EditDefectModal extends Component {
               <DefectTypeSelector
                 onChange={this.handleSelectDefectTypeChange}
                 value={this.state.defectType}
-                placeholder="Choose defect type"
+                placeholder={intl.formatMessage(messages.defectTypeSelectorPlaceholder)}
               />
             </div>
           </div>
@@ -361,7 +369,7 @@ export class EditDefectModal extends Component {
           >
             <MarkdownEditor
               value={this.state.markdownValue}
-              placeholder={'Leave comment to defect type'}
+              placeholder={intl.formatMessage(messages.defectCommentPlaceholder)}
               onChange={this.handleMarkdownChange}
             />
             <div className={cx('markdown-disable-cover')} />
