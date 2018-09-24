@@ -76,6 +76,8 @@ export class LaunchesTableControls extends Component {
     defectTypes: PropTypes.object.isRequired,
     widgetSettings: PropTypes.object.isRequired,
     initializeWizardSecondStepForm: PropTypes.func.isRequired,
+    formAppearance: PropTypes.object.isRequired,
+    onFormAppearanceChange: PropTypes.func.isRequired,
   };
 
   constructor(props) {
@@ -124,11 +126,14 @@ export class LaunchesTableControls extends Component {
   parseItems = (value) => (value.length < 4 ? value : this.props.widgetSettings.itemsCount);
 
   render() {
-    const { intl } = this.props;
+    const { intl, formAppearance, onFormAppearanceChange } = this.props;
     return (
       <Fragment>
         <FieldProvider name={'filterId'}>
-          <FiltersControl />
+          <FiltersControl
+            formAppearance={formAppearance}
+            onFormAppearanceChange={onFormAppearanceChange}
+          />
         </FieldProvider>
         <FieldProvider
           name="content_fields"

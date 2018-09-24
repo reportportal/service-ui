@@ -16,6 +16,7 @@
   display: none;
   vertical-align: top;
   cursor: pointer;
+  fill: $COLOR--gray-60;
 
   @media (max-width: $SCREEN_XS_MAX) {
     display: inline-block;

@@ -23,30 +23,12 @@ const messages = defineMessages({
     id: 'FiltersActionPanel.searchInputPlaceholder',
     defaultMessage: 'Search filter by name',
   },
-  filtersNotFound: {
-    id: 'FiltersActionPanel.filtersNotFound',
-    defaultMessage: `No filters found for {filter}.`,
-  },
 });
 
 @injectIntl
 @reduxForm({
   form: FILTER_SEARCH_FORM,
-  validate: ({ filter }, { filters, intl }) => {
-    if (!filter) {
-      return {};
-    }
-
-    if (filter.length < 3) {
-      return { filter: 'filterNameError' };
-    }
-
-    if (!filters.length) {
-      return { filter: intl.formatMessage(messages.filtersNotFound, { filter }) };
-    }
-
-    return {};
-  },
+  validate: ({ filter }) => (filter && filter.length < 3 ? { filter: 'filterNameError' } : {}),
   onChange: ({ filter }, dispatcher, { onFilterChange }) => {
     if (filter && filter.length < 3) {
       return;

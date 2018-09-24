@@ -27,6 +27,8 @@ export class LaunchExecutionAndIssueStatisticsControls extends Component {
     defectTypes: PropTypes.object.isRequired,
     widgetSettings: PropTypes.object.isRequired,
     initializeWizardSecondStepForm: PropTypes.func.isRequired,
+    formAppearance: PropTypes.object.isRequired,
+    onFormAppearanceChange: PropTypes.func.isRequired,
   };
 
   constructor(props) {
@@ -45,10 +47,14 @@ export class LaunchExecutionAndIssueStatisticsControls extends Component {
   }
 
   render() {
+    const { formAppearance, onFormAppearanceChange } = this.props;
     return (
       <Fragment>
         <FieldProvider name={'filterId'}>
-          <FiltersControl />
+          <FiltersControl
+            formAppearance={formAppearance}
+            onFormAppearanceChange={onFormAppearanceChange}
+          />
         </FieldProvider>
       </Fragment>
     );

@@ -57,7 +57,7 @@ const messages = defineMessages({
   keepDirtyOnReinitialize: true,
   updateUnregisteredFields: true,
 })
-export class FitlerAdd extends Component {
+export class FilterAdd extends Component {
   static propTypes = {
     intl: intlShape,
     filter: PropTypes.object.isRequired,

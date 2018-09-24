@@ -1,1 +1,1 @@
-export { FitlerAdd } from './fitlerAdd';
+export { FilterAdd } from './fitlerAdd';

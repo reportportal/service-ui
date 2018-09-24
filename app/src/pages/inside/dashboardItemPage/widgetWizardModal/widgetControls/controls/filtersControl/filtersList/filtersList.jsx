@@ -1,11 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import classNames from 'classnames/bind';
 
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader/spinningPreloader';
 
+import styles from './filtersList.scss';
 import { FiltersItem } from '../filtersItem/filtersItem';
 import { FORM_APPEARANCE_MODE_EDIT } from '../constants';
+
+const cx = classNames.bind(styles);
 
 export const FiltersList = ({
   search,
@@ -17,20 +21,22 @@ export const FiltersList = ({
   onEdit,
   onLazyLoad,
 }) => (
-  <ScrollWrapper onLazyLoad={onLazyLoad}>
-    {filters.map((item) => (
-      <FiltersItem
-        search={search || ''}
-        userId={userId}
-        filter={item}
-        activeFilterId={activeId}
-        key={item.id}
-        onChange={onChange}
-        onEdit={(event) => onEdit(event, FORM_APPEARANCE_MODE_EDIT, item)}
-      />
-    ))}
-    {loading && <SpinningPreloader />}
-  </ScrollWrapper>
+  <div className={cx('filter-list')}>
+    <ScrollWrapper onLazyLoad={onLazyLoad}>
+      {filters.map((item) => (
+        <FiltersItem
+          search={search || ''}
+          userId={userId}
+          filter={item}
+          activeFilterId={activeId}
+          key={item.id}
+          onChange={onChange}
+          onEdit={(event) => onEdit(event, FORM_APPEARANCE_MODE_EDIT, item)}
+        />
+      ))}
+      {loading && <SpinningPreloader />}
+    </ScrollWrapper>
+  </div>
 );
 
 FiltersList.propTypes = {

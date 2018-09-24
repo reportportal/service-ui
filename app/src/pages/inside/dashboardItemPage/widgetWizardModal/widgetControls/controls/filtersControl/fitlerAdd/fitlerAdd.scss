@@ -3,6 +3,7 @@
   width: 100%;
   min-height: 200px;
   padding-bottom: 70px;
+  border-bottom: 1px solid $COLOR--gray-91;
 }
 
 .filter-add-title {
@@ -23,7 +24,7 @@
 
 .filter-add-buttons-block {
   position: absolute;
-  bottom: 0;
+  bottom: 10px;
   right: 0;
 }
 .filter-add-button {

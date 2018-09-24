@@ -18,7 +18,6 @@ function* fetchFilters() {
 function* fetchFiltersConcat({ payload: { params, concat } }) {
   const activeProject = yield select(activeProjectSelector);
   const query = yield select(querySelector);
-
   yield put(
     concatFetchDataAction(NAMESPACE, concat)(URLS.filters(activeProject), {
       params: { ...query, ...params },
