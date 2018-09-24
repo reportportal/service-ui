@@ -1,8 +1,8 @@
 .log-message-block {
   overflow: hidden;
   color: $COLOR--charcoal-grey;
-  font-size: 12px;
-  font-family: Menlo, Monaco, Consolas, 'Courier New', monospace;
+  font-size: 11px;
+  font-family: $FONT-MENLO;
   word-break: break-all;
   .log-message {
     display: inline;
