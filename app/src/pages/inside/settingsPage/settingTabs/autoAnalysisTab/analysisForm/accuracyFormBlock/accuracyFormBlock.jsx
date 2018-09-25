@@ -96,64 +96,63 @@ export class AccuracyFormBlock extends Component {
       <Fragment>
         <FormField
           name="minShouldMatch"
-          containerClassName={cx('accuracy-form-group')}
           fieldWrapperClassName={cx('accuracy-form-input-wrapper')}
           label={intl.formatMessage(messages.minimumShouldMatchTitle)}
           onChange={this.props.onInputChange}
           normalize={this.normalizeValue}
           format={String}
           description={intl.formatMessage(messages.minimumShouldMatchDescription)}
+          disabled={disabled}
         >
           <FieldErrorHint>
             <InputWithIcon
               icon={<i className={cx('percent-icon')}>%</i>}
               maxLength="3"
               mobileDisabled
-              disabled={disabled}
             />
           </FieldErrorHint>
         </FormField>
 
         <FormField
           name="minDocFreq"
-          containerClassName={cx('accuracy-form-group')}
           fieldWrapperClassName={cx('accuracy-form-input-wrapper')}
           label={intl.formatMessage(messages.minimumDocFreqTitle)}
           onChange={this.props.onInputChange}
           normalize={this.normalizeValue}
           format={String}
           description={intl.formatMessage(messages.minimumDocFreqDescription)}
+          disabled={disabled}
         >
           <FieldErrorHint>
-            <Input maxLength="2" mobileDisabled disabled={disabled} />
+            <Input maxLength="2" mobileDisabled />
           </FieldErrorHint>
         </FormField>
 
         <FormField
           name="minTermFreq"
-          containerClassName={cx('accuracy-form-group')}
           fieldWrapperClassName={cx('accuracy-form-input-wrapper')}
           label={intl.formatMessage(messages.minimumTermFreqTitle)}
           onChange={this.props.onInputChange}
           normalize={this.normalizeValue}
           format={String}
           description={intl.formatMessage(messages.minimumTermFreqDescription)}
+          disabled={disabled}
         >
           <FieldErrorHint>
-            <Input maxLength="2" mobileDisabled disabled={disabled} />
+            <Input maxLength="2" mobileDisabled />
           </FieldErrorHint>
         </FormField>
 
         <FormField
           name="numberOfLogLines"
-          containerClassName={cx('accuracy-form-group')}
           fieldWrapperClassName={cx('drop-down-block')}
           label={intl.formatMessage(messages.numberOfLogLinesTitle)}
           onChange={this.props.onInputChange}
           format={String}
           description={intl.formatMessage(messages.numberOfLogLinesDescription)}
+          disabled={disabled}
         >
-          <InputDropdown options={this.dropDownOptions} mobileDisabled disabled={disabled} />
+          <InputDropdown options={this.dropDownOptions} mobileDisabled />
         </FormField>
 
         <div className={cx('submit-button-container')}>

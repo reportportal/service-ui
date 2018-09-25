@@ -4,6 +4,7 @@ import { defineMessages, injectIntl, intlShape } from 'react-intl';
 import { connect } from 'react-redux';
 import { activeProjectSelector } from 'controllers/user';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import classNames from 'classnames/bind';
 import { withModal, ModalLayout } from 'components/main/modal';
 import { URLS } from 'common/urls';
@@ -23,10 +24,6 @@ const messages = defineMessages({
   removeButtonText: {
     id: 'RemoveIndexModal.removeButtonText',
     defaultMessage: 'Remove',
-  },
-  cancelButtonText: {
-    id: 'RemoveIndexModal.cancelButtonText',
-    defaultMessage: 'Cancel',
   },
   removeSuccessNotification: {
     id: 'RemoveIndexModal.removeSuccessNotification',
@@ -65,7 +62,6 @@ export class RemoveIndexModal extends Component {
           message: this.props.intl.formatMessage(messages.removeSuccessNotification),
           type: NOTIFICATION_TYPES.SUCCESS,
         });
-        closeModal();
       })
       .catch(() => {
         this.props.showNotification({
@@ -73,6 +69,7 @@ export class RemoveIndexModal extends Component {
           type: NOTIFICATION_TYPES.ERROR,
         });
       });
+    closeModal();
   };
 
   render() {
@@ -82,7 +79,7 @@ export class RemoveIndexModal extends Component {
       onClick: this.onClickRemove,
     };
     const cancelButton = {
-      text: this.props.intl.formatMessage(messages.cancelButtonText),
+      text: this.props.intl.formatMessage(COMMON_LOCALE_KEYS.CANCEL),
     };
 
     return (

@@ -5,6 +5,7 @@ import { defineMessages, injectIntl, intlShape } from 'react-intl';
 import { fetchProjectAction } from 'controllers/project';
 import { activeProjectSelector } from 'controllers/user';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import classNames from 'classnames/bind';
 import { withModal, ModalLayout } from 'components/main/modal';
 import { URLS } from 'common/urls';
@@ -32,10 +33,6 @@ const messages = defineMessages({
   generateButtonText: {
     id: 'GenerateIndexModal.generateButtonText',
     defaultMessage: 'Generate',
-  },
-  cancelButtonText: {
-    id: 'GenerateIndexModal.cancelButtonText',
-    defaultMessage: 'Cancel',
   },
   generateSuccessNotification: {
     id: 'GenerateIndexModal.generateSuccessNotification',
@@ -80,7 +77,6 @@ export class GenerateIndexModal extends Component {
           type: NOTIFICATION_TYPES.SUCCESS,
         });
         this.props.fetchProjectAction(this.props.projectId);
-        closeModal();
       })
       .catch(() => {
         this.props.showNotification({
@@ -88,6 +84,7 @@ export class GenerateIndexModal extends Component {
           type: NOTIFICATION_TYPES.ERROR,
         });
       });
+    closeModal();
   };
 
   render() {
@@ -96,7 +93,7 @@ export class GenerateIndexModal extends Component {
       onClick: this.onClickGenerate,
     };
     const cancelButton = {
-      text: this.props.intl.formatMessage(messages.cancelButtonText),
+      text: this.props.intl.formatMessage(COMMON_LOCALE_KEYS.CANCEL),
     };
 
     return (
