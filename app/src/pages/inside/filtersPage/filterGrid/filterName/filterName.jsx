@@ -71,12 +71,13 @@ export class FilterName extends Component {
           >
             {Parser(this.getHighlightName(filter.name))}
           </span>
-          {filter.share && (
-            <span className={cx('share-icon')} title={intl.formatMessage(messages.shareFilter)}>
-              {Parser(ShareIcon)}
-            </span>
-          )}
-          {!filter.share &&
+          {filter.share &&
+            userId === filter.owner && (
+              <span className={cx('share-icon')} title={intl.formatMessage(messages.shareFilter)}>
+                {Parser(ShareIcon)}
+              </span>
+            )}
+          {filter.share &&
             userId !== filter.owner && (
               <span className={cx('globe-icon')} title={intl.formatMessage(messages.shareFilter)}>
                 {Parser(GlobeIcon)}
