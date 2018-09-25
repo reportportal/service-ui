@@ -2,6 +2,10 @@
   width: 100%;
   display: inline-block;
   margin-bottom: 5px;
+  
+  &:hover .pencil-icon{
+    display: inline-block;
+  }
 }
 .name {
   line-height: 20px;
