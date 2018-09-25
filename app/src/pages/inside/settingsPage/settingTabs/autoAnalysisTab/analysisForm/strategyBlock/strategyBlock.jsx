@@ -62,14 +62,14 @@ export class StrategyBlock extends Component {
       <Fragment>
         <FormField
           name="isAutoAnalyzerEnabled"
-          containerClassName={cx('accuracy-form-group')}
           fieldWrapperClassName={cx('switcher-wrapper')}
           label={intl.formatMessage(messages.autoAnalysisSwitcherTitle)}
           description={Parser(intl.formatMessage(messages.analysisStatusInfo))}
           format={Boolean}
           parse={Boolean}
+          disabled={disabled}
         >
-          <InputBigSwitcher mobileDisabled disabled={disabled} />
+          <InputBigSwitcher mobileDisabled />
         </FormField>
 
         <FormField
@@ -79,8 +79,9 @@ export class StrategyBlock extends Component {
           descriptionClassName={cx('radio-description')}
           label={intl.formatMessage(messages.strategySelectorTitle)}
           description={intl.formatMessage(messages.sameNameLaunchesInfo)}
+          disabled={disabled}
         >
-          <InputRadio ownValue="LAUNCH_NAME" name="aa-strategy" mobileDisabled disabled={disabled}>
+          <InputRadio ownValue="LAUNCH_NAME" name="aa-strategy" mobileDisabled>
             <span className={cx('radio-children')}>
               {intl.formatMessage(messages.sameNameLaunchesCaption)}
             </span>
@@ -94,8 +95,9 @@ export class StrategyBlock extends Component {
           labelClassName={cx('no-label')}
           descriptionClassName={cx('radio-description')}
           description={intl.formatMessage(messages.allLaunchesInfo)}
+          disabled={disabled}
         >
-          <InputRadio ownValue="ALL" name="aa-strategy" mobileDisabled disabled={disabled}>
+          <InputRadio ownValue="ALL" name="aa-strategy" mobileDisabled>
             <span className={cx('radio-children')}>
               {intl.formatMessage(messages.allLaunchesCaption)}
             </span>

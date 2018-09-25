@@ -52,7 +52,7 @@ export class FormField extends PureComponent {
     } = this.props;
     return (
       <div className={cx('form-field', containerClassName)}>
-        {label && <span className={cx('form-group-label', labelClassName)}>{label}</span>}
+        <span className={cx('form-group-label', labelClassName)}>{label}</span>
         <div className={cx('field-wrapper', fieldWrapperClassName)}>
           <FieldProvider {...rest}>{children}</FieldProvider>
         </div>
