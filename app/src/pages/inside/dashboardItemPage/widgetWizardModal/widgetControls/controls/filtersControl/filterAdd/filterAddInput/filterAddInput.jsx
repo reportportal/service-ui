@@ -5,7 +5,7 @@ import classNames from 'classnames/bind';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { Input } from 'components/inputs/input';
-import styles from './fitlerAddInput.scss';
+import styles from './filterAddInput.scss';
 
 const cx = classNames.bind(styles);
 const messages = defineMessages({

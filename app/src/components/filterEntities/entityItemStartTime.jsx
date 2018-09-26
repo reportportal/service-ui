@@ -73,7 +73,7 @@ const formatValue = ({ start, end, dynamic }) => {
 };
 
 export const EntityItemStartTime = ({ onRemove, onChange, removable, title, size, value }) => (
-  <FieldFilterEntity title={title} size={size} removable={removable} onRemove={onRemove}>
+  <FieldFilterEntity title={title} smallSize={size} removable={removable} onRemove={onRemove}>
     <InputTimeDateRange
       presets={presets}
       onChange={(val) => {
@@ -86,7 +86,7 @@ export const EntityItemStartTime = ({ onRemove, onChange, removable, title, size
 EntityItemStartTime.propTypes = {
   value: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
   title: PropTypes.string,
-  size: PropTypes.string,
+  size: PropTypes.bool,
   removable: PropTypes.bool,
   onRemove: PropTypes.func,
   onChange: PropTypes.func,
@@ -95,7 +95,7 @@ EntityItemStartTime.defaultProps = {
   value: {},
   removable: true,
   title: '',
-  size: '',
+  size: false,
   onRemove: () => {},
   onChange: () => {},
 };

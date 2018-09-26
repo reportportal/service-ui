@@ -59,7 +59,7 @@ export class EntityItemStatistics extends Component {
       <FieldErrorHint {...rest}>
         <FieldFilterEntity
           title={title || entityId}
-          size={size}
+          smallSize={size}
           removable={removable}
           onRemove={onRemove}
         >

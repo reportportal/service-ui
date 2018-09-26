@@ -24,16 +24,7 @@
 
 .filter-add-buttons-block {
   position: absolute;
+  display: flex;
   bottom: 10px;
   right: 0;
-}
-.filter-add-button {
-  display: inline-block;
-  height: 30px;
-  margin-left: 10px;
-  vertical-align: top;
-
-  button {
-    font-size: 13px;
-  }
 }

@@ -22,7 +22,7 @@ import { FiltersActionPanel } from './filtersActionPanel';
 import { ActiveFilter } from './activeFilter';
 import { FiltersList } from './filtersList';
 import { FilterEdit } from './filterEdit';
-import { FilterAdd } from './fitlerAdd';
+import { FilterAdd } from './filterAdd';
 import { WIDGET_WIZARD_FORM } from '../../../widgetWizardContent/wizardControlsSection/constants';
 import { FORM_APPEARANCE_MODE_ADD, FORM_APPEARANCE_MODE_EDIT } from './constants';
 
@@ -287,7 +287,7 @@ export class FiltersControl extends Component {
           onFilterChange={this.handleSearchValueChange}
           onAdd={this.handleFormAppearanceMode}
         />
-        <ActiveFilter filter={activeFilter || false} touched={touched} error={error} />
+        <ActiveFilter filter={activeFilter || null} touched={touched} error={error || null} />
         {this.notFound() && <FilterNotFound searchValue={searchValue} intl={intl} />}
         <FiltersList
           search={searchValue}

@@ -4,7 +4,7 @@ import classNames from 'classnames/bind';
 import { injectIntl, intlShape, defineMessages } from 'react-intl';
 
 import { InputRadio } from 'components/inputs/inputRadio';
-import { BigButton } from 'components/buttons/bigButton/bigButton';
+import { BigButton } from 'components/buttons/bigButton';
 import { LaunchLevelEntities } from 'pages/inside/common/filterEntitiesGroups/launchLevelEntities';
 import { ENTITY_NAME, CONDITION_CNT } from 'components/filterEntities/constants';
 
@@ -94,16 +94,12 @@ export class FilterEdit extends Component {
           />
           <FiltersSorting filter={filter} onChange={this.handleOrdersChange} />
           <div className={cx('filter-edit-buttons-block')}>
-            <div className={cx('filter-edit-button')}>
-              <BigButton color={'gray-60'} onClick={onCancel}>
-                {intl.formatMessage(messages.cancelButton)}
-              </BigButton>
-            </div>
-            <div className={cx('filter-edit-button')}>
-              <BigButton color={'booger'} onClick={this.onFilterSave}>
-                {intl.formatMessage(messages.submitButton)}
-              </BigButton>
-            </div>
+            <BigButton color={'gray-60'} onClick={onCancel} className={'inline'}>
+              {intl.formatMessage(messages.cancelButton)}
+            </BigButton>
+            <BigButton color={'booger'} onClick={this.onFilterSave} className={'inline'}>
+              {intl.formatMessage(messages.submitButton)}
+            </BigButton>
           </div>
         </div>
       </div>

@@ -11,10 +11,10 @@ import { LaunchLevelEntities } from 'pages/inside/common/filterEntitiesGroups/la
 import { ENTITY_NAME, CONDITION_CNT, ENTITY_START_TIME } from 'components/filterEntities/constants';
 
 import { FILTER_ADD_FORM, getOrdersWithDefault } from '../constants';
-import { FilterAddInput } from './fitlerAddInput';
+import { FilterAddInput } from './filterAddInput';
 import { FiltersSorting } from '../filtersSorting';
 
-import styles from './fitlerAdd.scss';
+import styles from './filterAdd.scss';
 
 const cx = classNames.bind(styles);
 const messages = defineMessages({
@@ -125,16 +125,17 @@ export class FilterAdd extends Component {
           />
           <FiltersSorting filter={filter} onChange={this.handleOrdersChange} />
           <div className={cx('filter-add-buttons-block')}>
-            <div className={cx('filter-add-button')}>
-              <BigButton color={'gray-60'} onClick={onCancel}>
-                {intl.formatMessage(messages.cancelButton)}
-              </BigButton>
-            </div>
-            <div className={cx('filter-add-button')}>
-              <BigButton type={'submit'} color={'booger'} onClick={handleSubmit(onSave)}>
-                {intl.formatMessage(messages.submitButton)}
-              </BigButton>
-            </div>
+            <BigButton color={'gray-60'} onClick={onCancel} className={'inline'}>
+              {intl.formatMessage(messages.cancelButton)}
+            </BigButton>
+            <BigButton
+              type={'submit'}
+              color={'booger'}
+              onClick={handleSubmit(onSave)}
+              className={'inline'}
+            >
+              {intl.formatMessage(messages.submitButton)}
+            </BigButton>
           </div>
         </div>
       </div>

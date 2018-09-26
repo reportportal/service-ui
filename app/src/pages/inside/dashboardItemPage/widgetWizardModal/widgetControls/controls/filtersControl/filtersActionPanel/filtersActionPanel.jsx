@@ -63,7 +63,8 @@ export class FiltersActionPanel extends Component {
     change('filter', filter || value || '');
   }
 
-  componentWillReceiveProps({ filter: nextFilter, invalid: nextInvalid }) {
+  componentDidUpdate(prevProps) {
+    const { filter: nextFilter, invalid: nextInvalid } = prevProps;
     const { change, filter } = this.props;
 
     if (nextFilter !== filter && !nextInvalid) {

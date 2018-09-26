@@ -19,8 +19,8 @@ export class ActiveFilter extends PureComponent {
   static propTypes = {
     intl: intlShape,
     touched: PropTypes.bool.isRequired,
-    error: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
-    filter: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
+    error: PropTypes.string,
+    filter: PropTypes.object,
   };
 
   static defaultProps = {

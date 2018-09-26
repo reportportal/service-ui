@@ -40,13 +40,13 @@ export class EntityItemTags extends Component {
     intl: intlShape.isRequired,
     value: PropTypes.object.isRequired,
     title: PropTypes.string,
-    size: PropTypes.string,
+    size: PropTypes.bool,
     removable: PropTypes.bool,
     onRemove: PropTypes.func,
   };
   static defaultProps = {
     title: '',
-    size: '',
+    size: false,
     removable: true,
     onRemove: () => {},
   };
@@ -58,7 +58,7 @@ export class EntityItemTags extends Component {
       <FieldFilterEntity
         title={title}
         removable={removable}
-        size={size}
+        smallSize={size}
         onRemove={onRemove}
         stretchable
       >

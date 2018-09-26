@@ -37,7 +37,7 @@ export class EntityDropdown extends Component {
     return (
       <FieldFilterEntity
         title={title || entityId}
-        size={size}
+        smallSize={size}
         removable={removable}
         onRemove={onRemove}
       >

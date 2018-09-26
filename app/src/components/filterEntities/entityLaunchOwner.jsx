@@ -27,7 +27,7 @@ export class EntityLaunchOwner extends Component {
     intl: intlShape.isRequired,
     value: PropTypes.object.isRequired,
     title: PropTypes.string,
-    size: PropTypes.string,
+    size: PropTypes.bool,
     ownersSearchUrl: PropTypes.string.isRequired,
     removable: PropTypes.bool,
     onRemove: PropTypes.func,
@@ -35,7 +35,7 @@ export class EntityLaunchOwner extends Component {
   };
   static defaultProps = {
     title: '',
-    size: '',
+    size: false,
     removable: true,
     onRemove: () => {},
     onChange: () => {},
@@ -56,7 +56,7 @@ export class EntityLaunchOwner extends Component {
       <FieldFilterEntity
         stretchable
         title={title}
-        size={size}
+        smallSize={size}
         removable={removable}
         onRemove={onRemove}
       >
