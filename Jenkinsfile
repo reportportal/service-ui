@@ -12,17 +12,16 @@ node {
             sh 'git pull'
         }
 
-        withEnv(["IMAGE_POSTFIX=-dev"]) {
+
             docker.withServer("$DOCKER_HOST") {
                 stage('Build Docker Image') {
                     sh 'make build-image-dev'
                 }
 
                 stage('Deploy container') {
-                    sh "docker-compose -p reportportal -f $COMPOSE_FILE up -d --force-recreate ui"
+                    sh "docker-compose -p reportportal5 -f $COMPOSE_FILE_RP_5 up -d --force-recreate ui"
                 }
             }
-        }
 
 
     }
