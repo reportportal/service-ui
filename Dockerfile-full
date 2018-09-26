@@ -9,9 +9,9 @@ RUN make build-server
 FROM node:argon as build-frontend
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
-COPY ./src/main/resources/public/package.json /usr/src/app/
+COPY ./app/package.json /usr/src/app/
 RUN npm install
-COPY ./src/main/resources/public/ /usr/src/app/
+COPY ./app/ /usr/src/app/
 RUN npm run build && npm run test
 
 FROM alpine:latest

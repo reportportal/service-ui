@@ -2,16 +2,16 @@ package main
 
 import (
 	"github.com/go-chi/chi"
+	"github.com/go-chi/chi/middleware"
 	"github.com/unrolled/secure"
-	"gopkg.in/reportportal/commons-go.v1/commons"
-	"gopkg.in/reportportal/commons-go.v1/conf"
-	"gopkg.in/reportportal/commons-go.v1/server"
+	"gopkg.in/reportportal/commons-go.v5/commons"
+	"gopkg.in/reportportal/commons-go.v5/conf"
+	"gopkg.in/reportportal/commons-go.v5/server"
 	"log"
 	"net/http"
 	"os"
 	"path/filepath"
 	"strings"
-	"github.com/go-chi/chi/middleware"
 )
 
 func main() {
@@ -22,12 +22,9 @@ func main() {
 	}
 
 	cfg := conf.EmptyConfig()
-	cfg.Consul.Tags = []string{
-		"urlprefix-/ui/ opts strip=/ui",
-		"traefik.frontend.rule=PathPrefixStrip:/ui/",
-	}
+
 	rpConf := struct {
-		Cfg         *conf.RpConfig
+		Cfg         *conf.ServerConfig
 		StaticsPath string `env:"RP_STATICS_PATH"`
 	}{
 		Cfg:         cfg,
@@ -37,10 +34,6 @@ func main() {
 	err := conf.LoadConfig(&rpConf)
 	if nil != err {
 		log.Fatalf("Cannot log app config")
-	}
-
-	if "goRP" == rpConf.Cfg.AppName {
-		rpConf.Cfg.AppName = "ui"
 	}
 
 	info := commons.GetBuildInfo()
