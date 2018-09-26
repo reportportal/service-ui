@@ -64,7 +64,11 @@ export class InfoTabs extends Component {
             </Fragment>
           ))}
         </div>
-        {activeTab && <div className={cx('tabs-content', 'desktop')}>{activeTab.content}</div>}
+        {activeTab && (
+          <div className={cx('tabs-content', 'desktop')}>
+            {tabs.find((tab) => tab.id === activeTab.id).content}
+          </div>
+        )}
       </div>
     );
   }
