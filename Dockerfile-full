@@ -6,7 +6,7 @@ COPY ./Makefile ./glide.yaml ./glide.lock ./main.go ./
 RUN make get-build-deps
 RUN make build-server
 
-FROM node:argon as build-frontend
+FROM node:8-alpine as build-frontend
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 COPY ./app/package.json /usr/src/app/

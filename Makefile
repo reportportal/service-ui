@@ -19,7 +19,7 @@ UI_BUILD_REACT=app/
 BUILD_INFO_LDFLAGS=-ldflags "-extldflags '"-static"' -X ${PACKAGE_COMMONS}/commons.repo=${REPO_NAME} -X ${PACKAGE_COMMONS}/commons.branch=${COMMIT_HASH} -X ${PACKAGE_COMMONS}/commons.buildDate=${BUILD_DATE} -X ${PACKAGE_COMMONS}/commons.version=${v}"
 IMAGE_NAME=reportportal-dev-5/service-ui$(IMAGE_POSTFIX)
 
-.PHONY: vendor test build
+.PHONY: vendor get-build-deps test build
 
 help:
 	@echo "build      - go build"
