@@ -130,10 +130,10 @@ export class LaunchLevelEntities extends Component {
     defectTypes: PropTypes.object.isRequired,
     onChange: PropTypes.func,
     entities: PropTypes.object,
-    entitySize: PropTypes.string,
+    entitySmallSize: PropTypes.string,
   };
   static defaultProps = {
-    entitySize: '',
+    entitySmallSize: false,
     entities: {},
     onChange: () => {},
   };
@@ -382,7 +382,7 @@ export class LaunchLevelEntities extends Component {
       <EntitiesGroup
         entitiesSet={this.getStaticEntities().concat(this.getDynamicEntities())}
         onChangeOwn={this.props.onChange}
-        entitySize={this.props.entitySize}
+        entitySmallSize={this.props.entitySmallSize}
       />
     );
   }

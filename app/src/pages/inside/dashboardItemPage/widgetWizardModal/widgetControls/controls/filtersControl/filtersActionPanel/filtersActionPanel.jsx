@@ -8,9 +8,9 @@ import { InputSearch } from 'components/inputs/inputSearch';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
+import AddFilterIcon from 'common/img/add-filter-inline.svg';
 
 import styles from './filtersActionPanel.scss';
-import AddFilterIcon from './img/ic-add-filter-inline.svg';
 import { FILTER_SEARCH_FORM, FORM_APPEARANCE_MODE_ADD } from '../constants';
 
 const cx = classNames.bind(styles);

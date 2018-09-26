@@ -88,13 +88,16 @@ export class EntitiesGroup extends Component {
     entityValues: PropTypes.object,
     activeEntities: PropTypes.array,
     clearField: PropTypes.func,
-    entitySize: PropTypes.string.isRequired,
+    entitySmallSize: PropTypes.string.isRequired,
   };
   static defaultProps = {
     entities: {},
     activeEntities: [],
     entityValues: {},
+    formSyncErrors: {},
     clearField: () => {},
+    change: () => {},
+    initialize: () => {},
   };
 
   toggleEntity = (entityId) => {
@@ -111,7 +114,7 @@ export class EntitiesGroup extends Component {
   };
 
   render() {
-    const { entities, entityValues, activeEntities, entitySize } = this.props;
+    const { entities, entityValues, activeEntities, entitySmallSize } = this.props;
 
     return (
       <div className={cx('entities-group')}>
@@ -124,7 +127,7 @@ export class EntitiesGroup extends Component {
               <div key={entityId} className={cx('entity-item')}>
                 <FieldProvider name={entityId}>
                   <EntityComponent
-                    size={entitySize}
+                    smallSize={entitySmallSize}
                     value={entityValues[entityId].value}
                     entityId={entityId}
                     removable={entity.removable}

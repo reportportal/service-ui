@@ -8,7 +8,7 @@ import { BigButton } from 'components/buttons/bigButton/bigButton';
 import { LaunchLevelEntities } from 'pages/inside/common/filterEntitiesGroups/launchLevelEntities';
 import { ENTITY_NAME, CONDITION_CNT } from 'components/filterEntities/constants';
 
-import { FiltersOrders } from '../filtersOrders';
+import { FiltersSorting } from '../filtersSorting';
 import styles from './filterEdit.scss';
 
 const cx = classNames.bind(styles);
@@ -42,6 +42,8 @@ export class FilterEdit extends Component {
     onChange: () => {},
   };
 
+  onFilterSave = () => this.props.onSave(this.props.filter);
+
   getFilterEntities = () => {
     const { filter } = this.props;
 
@@ -74,7 +76,7 @@ export class FilterEdit extends Component {
   };
 
   render() {
-    const { intl, filter, onCancel, onSave } = this.props;
+    const { intl, filter, onCancel } = this.props;
 
     return (
       <div className={cx('filter-edit')}>
@@ -86,11 +88,11 @@ export class FilterEdit extends Component {
         </div>
         <div className={cx('filter-edit-block')}>
           <LaunchLevelEntities
+            entitySmallSize
             entities={this.getFilterEntities()}
-            entitySize={'small'}
             onChange={this.handleEntitiesChange}
           />
-          <FiltersOrders filter={filter} onChange={this.handleOrdersChange} />
+          <FiltersSorting filter={filter} onChange={this.handleOrdersChange} />
           <div className={cx('filter-edit-buttons-block')}>
             <div className={cx('filter-edit-button')}>
               <BigButton color={'gray-60'} onClick={onCancel}>
@@ -98,7 +100,7 @@ export class FilterEdit extends Component {
               </BigButton>
             </div>
             <div className={cx('filter-edit-button')}>
-              <BigButton color={'booger'} onClick={() => onSave(filter)}>
+              <BigButton color={'booger'} onClick={this.onFilterSave}>
                 {intl.formatMessage(messages.submitButton)}
               </BigButton>
             </div>

@@ -15,7 +15,7 @@ import {
   STATS_TI_TOTAL,
 } from 'common/constants/statistics';
 import { ENTITY_START_TIME, ENTITY_NAME, ENTITY_NUMBER } from 'components/filterEntities/constants';
-import styles from './filtersOrders.scss';
+import styles from './filtersSorting.scss';
 import { getOrdersWithDefault } from '../constants';
 
 const cx = classNames.bind(styles);
@@ -79,7 +79,7 @@ const options = [
 ];
 
 @injectIntl
-export class FiltersOrders extends Component {
+export class FiltersSorting extends Component {
   static propTypes = {
     intl: intlShape,
     filter: PropTypes.object.isRequired,

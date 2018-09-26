@@ -119,7 +119,7 @@ export class ScrollWrapper extends Component {
   };
 
   handleScrollFrame = ({ scrollTop, scrollLeft, top }) => {
-    const { lastViewScrollTop, astViewScrollLeft } = this.scrollbars;
+    const { lastViewScrollTop, lastViewScrollLeft } = this.scrollbars;
     const { withBackToTop, onLazyLoad } = this.props;
 
     this.setState({ showButton: withBackToTop && scrollTop > 100 });
@@ -130,7 +130,7 @@ export class ScrollWrapper extends Component {
     if (scrollTop !== lastViewScrollTop) {
       this.scrollbars.thumbVertical.style.opacity = 1;
     }
-    if (scrollLeft !== astViewScrollLeft) {
+    if (scrollLeft !== lastViewScrollLeft) {
       this.scrollbars.thumbHorizontal.style.opacity = 1;
     }
   };

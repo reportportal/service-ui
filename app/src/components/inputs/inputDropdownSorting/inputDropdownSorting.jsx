@@ -105,37 +105,12 @@ export class InputDropdownSorting extends Component {
     this.setState({ opened: !this.state.opened });
   };
 
-  isGroupOptionSelected = (groupId) =>
-    this.props.options
-      .filter((item) => item.groupRef === groupId)
-      .map((item) => item.value)
-      .every((item) => this.props.value.indexOf(item) !== -1);
-
-  handleGroupChange = (groupId) => {
-    const relatedSubOptions = this.props.options
-      .filter((item) => item.groupRef === groupId)
-      .map((item) => item.value);
-    if (this.isGroupOptionSelected(groupId)) {
-      this.props.onChange(
-        this.props.value.filter((item) => relatedSubOptions.indexOf(item) === -1),
-      );
-    } else {
-      this.props.onChange(
-        this.props.value.concat(
-          relatedSubOptions.filter((item) => this.props.value.indexOf(item) === -1),
-        ),
-      );
-    }
-  };
-
   renderOptions() {
     const { options, value } = this.props;
 
     return options.map((option) => {
-      let selected = option.value === value;
-      if (option.groupId) {
-        selected = this.isGroupOptionSelected(option.groupId);
-      }
+      const selected = option.value === value;
+
       return (
         <DropdownSortingOption
           key={option.value}
@@ -144,10 +119,7 @@ export class InputDropdownSorting extends Component {
           selected={selected}
           label={option.label}
           subOption={!!option.groupRef}
-          onChange={
-            (!option.disabled && (option.groupId ? this.handleGroupChange : this.handleChange)) ||
-            null
-          }
+          onChange={(!option.disabled && this.handleChange) || null}
         />
       );
     });

@@ -22,13 +22,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 
-import { InputCheckbox } from 'components/inputs/inputCheckbox';
 import styles from './inputDropdownSortingOption.scss';
 
 const cx = classNames.bind(styles);
 
 export const DropdownSortingOption = ({
-  multiple,
   label,
   disabled,
   selected,
@@ -42,27 +40,20 @@ export const DropdownSortingOption = ({
   return (
     <div
       className={cx('dropdown-option', {
-        selected: !multiple && selected,
+        selected,
         disabled,
         'sub-option': subOption,
       })}
     >
-      {multiple ? (
-        <InputCheckbox value={selected} disabled={disabled} onChange={onChangeHandler}>
-          <span className={cx('option-label')}>{label}</span>
-        </InputCheckbox>
-      ) : (
-        <div className={cx('single-option')} onClick={onChangeHandler}>
-          {label}
-        </div>
-      )}
+      <div className={cx('single-option')} onClick={onChangeHandler}>
+        {label}
+      </div>
     </div>
   );
 };
 
 DropdownSortingOption.propTypes = {
   value: PropTypes.string,
-  multiple: PropTypes.bool,
   label: PropTypes.node,
   disabled: PropTypes.bool,
   subOption: PropTypes.bool,
@@ -72,7 +63,6 @@ DropdownSortingOption.propTypes = {
 
 DropdownSortingOption.defaultProps = {
   value: '',
-  multiple: false,
   label: '',
   disabled: false,
   subOption: false,

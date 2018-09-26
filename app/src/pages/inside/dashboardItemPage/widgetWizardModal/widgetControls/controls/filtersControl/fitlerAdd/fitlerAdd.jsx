@@ -12,7 +12,7 @@ import { ENTITY_NAME, CONDITION_CNT, ENTITY_START_TIME } from 'components/filter
 
 import { FILTER_ADD_FORM, getOrdersWithDefault } from '../constants';
 import { FilterAddInput } from './fitlerAddInput';
-import { FiltersOrders } from '../filtersOrders';
+import { FiltersSorting } from '../filtersSorting';
 
 import styles from './fitlerAdd.scss';
 
@@ -119,11 +119,11 @@ export class FilterAdd extends Component {
         <FilterAddInput intl={intl} />
         <div className={cx('filter-add-block')}>
           <LaunchLevelEntities
+            entitySmallSize
             entities={this.getFilterEntities()}
-            entitySize={'small'}
             onChange={this.handleEntitiesChange}
           />
-          <FiltersOrders filter={filter} onChange={this.handleOrdersChange} />
+          <FiltersSorting filter={filter} onChange={this.handleOrdersChange} />
           <div className={cx('filter-add-buttons-block')}>
             <div className={cx('filter-add-button')}>
               <BigButton color={'gray-60'} onClick={onCancel}>
