@@ -72,15 +72,18 @@ export class GridRow extends Component {
 
   render() {
     const { columns, value, selectable, changeOnlyMobileLayout, rowClassMapper } = this.props;
-    const customClasses = rowClassMapper(value) || {};
+    const customClasses = (rowClassMapper && rowClassMapper(value)) || {};
     return (
       <div
-        className={cx('grid-row-wrapper', { selected: this.isItemSelected(), ...customClasses })}
+        className={cx('grid-row-wrapper', {
+          selected: this.isItemSelected(),
+          ...customClasses,
+        })}
       >
         {this.state.withAccordion && (
           <div className={cx('accordion-wrapper-mobile')}>
             <div
-              className={cx({ 'accordion-toggler-mobile': true, rotated: this.state.expanded })}
+              className={cx('accordion-toggler-mobile', { rotated: this.state.expanded })}
               onClick={this.toggleAccordion}
             />
           </div>
@@ -119,9 +122,9 @@ export class GridRow extends Component {
         {this.state.withAccordion && (
           <div className={cx('grid-row')}>
             <div className={cx('accordion-wrapper')}>
-              <div className={cx('accordion-block')}>
+              <div className={cx('accordion-block', { expanded: this.state.expanded })}>
                 <div
-                  className={cx({ 'accordion-toggler': true, rotated: this.state.expanded })}
+                  className={cx('accordion-toggler', { rotated: this.state.expanded })}
                   onClick={this.toggleAccordion}
                 />
               </div>

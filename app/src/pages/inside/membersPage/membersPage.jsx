@@ -50,7 +50,7 @@ const messages = defineMessages({
     showNotification,
   },
 )
-@withFilter
+@withFilter()
 @withPagination({
   paginationSelector: membersPaginationSelector,
 })

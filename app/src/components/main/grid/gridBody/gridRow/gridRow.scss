@@ -10,6 +10,10 @@
     .accordion-block {
       background-color: $COLOR--gray-91;
       box-shadow: 0 -15px 20px 0px $COLOR--gray-91;
+
+      &.expanded {
+        box-shadow: none;
+      }
     }
   }
 
@@ -19,11 +23,16 @@
     .accordion-block {
       background-color: $COLOR--tealish-hover;
       box-shadow: 0 -15px 20px 0px $COLOR--tealish-hover;
+
+      &.expanded {
+        box-shadow: none;
+      }
     }
   }
   &::after {
     content: '';
     position: absolute;
+    z-index: 1;
     left: 0;
     right: 0;
     height: 1px;
@@ -62,6 +71,10 @@
   background-color: $COLOR--white-two;
   box-shadow: 0 -15px 20px 0px $COLOR--white-two;
   transition: background-color 0.2s ease 0s, box-shadow 0.2s ease 0s;
+
+  &.expanded {
+    box-shadow: none;
+  }
 
   @media (max-width: $SCREEN_SM_MAX) {
     bottom: 120px;
@@ -108,5 +121,57 @@
 
   &.rotated {
     transform: scaleY(-1);
+  }
+}
+
+.log {
+  .accordion-block {
+    @media (max-width: $SCREEN_SM_MAX) {
+      bottom: 0;
+    }
+    @media (max-width: $SCREEN_XS_MAX) {
+      bottom: 68px;
+    }
+  }
+
+  .accordion-toggler {
+    @media (max-width: $SCREEN_SM_MAX) {
+      display: block;
+    }
+    @media (max-width: $SCREEN_XS_MAX) {
+      display: none;
+    }
+  }
+
+  .accordion-wrapper-mobile {
+    @media (max-width: $SCREEN_SM_MAX) {
+      display: none;
+    }
+    @media (max-width: $SCREEN_XS_MAX) {
+      display: block;
+    }
+  }
+}
+
+.error-row {
+  background-color: $COLOR--light-red;
+
+  .accordion-block {
+    background-color: $COLOR--light-red;
+    box-shadow: 0 -15px 20px 0px $COLOR--light-red;
+    &.expanded {
+      box-shadow: none;
+    }
+  }
+
+  &:hover {
+    background-color: $COLOR--light-red;
+    .accordion-block {
+      background-color: $COLOR--light-red;
+      box-shadow: 0 -15px 20px 0px $COLOR--light-red;
+      &.expanded {
+        box-shadow: none;
+      }
+    }
   }
 }

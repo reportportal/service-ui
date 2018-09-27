@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { injectIntl, intlShape } from 'react-intl';
 import Link from 'redux-first-router-link';
 import classNames from 'classnames/bind';
 import { payloadSelector, PROJECT_LOG_PAGE, PROJECT_USERDEBUG_LOG_PAGE } from 'controllers/pages';
@@ -16,10 +15,8 @@ const cx = classNames.bind(styles);
   pagePayload: payloadSelector(state),
   debugMode: debugModeSelector(state),
 }))
-@injectIntl
 export class HistoryLineItem extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
     projectId: PropTypes.string.isRequired,
     launchNumber: PropTypes.string.isRequired,
     pathNames: PropTypes.object,

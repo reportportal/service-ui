@@ -1,0 +1,14 @@
+export const XML = 'xml';
+export const HTML = 'html';
+export const JAVASCRIPT = 'javascript';
+export const JSON = 'json';
+export const CSS = 'css';
+export const PHP = 'php';
+export const HAR = 'har';
+export const TXT = 'txt';
+export const ZIP = 'zip';
+export const RAR = 'rar';
+export const TGZ = 'tgz';
+export const TAZ = 'taz';
+export const TAR = 'tar';
+export const GZIP = 'gzip';

@@ -1,0 +1,20 @@
+.log-message-block {
+  overflow: hidden;
+  color: $COLOR--charcoal-grey;
+  font-size: 11px;
+  font-family: $FONT-MENLO;
+  word-break: break-all;
+  .log-message {
+    display: inline;
+    padding-bottom: 5px;
+    line-height: 18px;
+  }
+}
+
+.time {
+  position: relative;
+  padding-right: 15px;
+  @media (max-width: $SCREEN_XS_MAX) {
+    display: none;
+  }
+}

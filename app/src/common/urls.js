@@ -104,11 +104,10 @@ export const URLS = {
     `${urlBase}${activeProject}/log${getQueryParams({
       'filter.eq.item': itemId,
       'filter.gte.level': level,
-      'page.page': 1,
-      'page.size': 50,
-      'page.sort': 'time,ASC',
     })}`,
   logItemActivity: (activeProject, itemId) => `${urlBase}${activeProject}/activity/item/${itemId}`,
+  logAttachment: (activeProject, id) =>
+    `${urlBase}${activeProject}/data/${id}${getQueryParams({ access_token: getToken() })}`,
 
   user: () => `${urlBase}user`,
   userRegistration: () => `${urlBase}user/registration`,

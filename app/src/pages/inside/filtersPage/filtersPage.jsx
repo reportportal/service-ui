@@ -56,7 +56,7 @@ const messages = defineMessages({
   defaultSortingColumn: 'name',
   defaultSortingDirection: SORTING_ASC,
 })
-@withFilter
+@withFilter()
 @withPagination({
   paginationSelector: filtersPaginationSelector,
 })

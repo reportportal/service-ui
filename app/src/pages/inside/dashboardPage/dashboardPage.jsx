@@ -62,7 +62,7 @@ const messages = defineMessages({
     addDashboard: addDashboardAction,
   },
 )
-@withFilter
+@withFilter()
 @injectIntl
 export class DashboardPage extends Component {
   static propTypes = {
