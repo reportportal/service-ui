@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { dateFormat } from 'common/utils';
-import { MarkdownViewer } from 'components/main/markdown/markdownViewer/markdownViewer';
+import { MarkdownViewer } from 'components/main/markdown';
 import { safeMessage } from '../../utils';
 import styles from './logMessageBlock.scss';
 
