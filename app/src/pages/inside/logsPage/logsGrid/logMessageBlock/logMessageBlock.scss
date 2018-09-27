@@ -14,5 +14,7 @@
 .time {
   position: relative;
   padding-right: 15px;
-  font-size: 13px;
+  @media (max-width: $SCREEN_XS_MAX) {
+    display: none;
+  }
 }

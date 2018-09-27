@@ -25,7 +25,7 @@ const messages = defineMessages({
     defaultMessage: 'No results found',
   },
 });
-const timeColumnId = 'time';
+const TIME_COLUMN_ID = 'time';
 
 const MessageColumn = ({ className, value, ...rest }) => (
   <div
@@ -109,79 +109,85 @@ export class LogsGrid extends Component {
     markdownMode: false,
   };
 
+  getConsoleViewColumns = () => [
+    {
+      id: 'attachment',
+      component: AttachmentColumn,
+      customProps: {
+        consoleView: true,
+      },
+    },
+    {
+      id: TIME_COLUMN_ID,
+      sortable: true,
+      title: {
+        component: this.renderConsoleViewHeader,
+      },
+      customProps: {
+        consoleView: true,
+        markdownMode: this.props.markdownMode,
+      },
+      component: MessageColumn,
+    },
+    {
+      id: 'mobileTime',
+      component: TimeColumn,
+      customProps: {
+        mobile: true,
+      },
+    },
+    {
+      id: 'mobileAttachment',
+      component: AttachmentColumn,
+      customProps: {
+        mobile: true,
+      },
+    },
+  ];
+
+  getDefaultViewColumns = () => [
+    {
+      id: 'logMessage',
+      title: {
+        component: LogMessageSearch,
+        componentProps: {
+          filter: this.props.filter,
+          onFilterChange: this.props.onFilterChange,
+        },
+      },
+      sortable: true,
+      maxHeight: 200,
+      component: MessageColumn,
+      customProps: {
+        markdownMode: this.props.markdownMode,
+      },
+    },
+    {
+      id: 'attachment',
+      component: AttachmentColumn,
+    },
+    {
+      id: TIME_COLUMN_ID,
+      title: {
+        full: this.props.intl.formatMessage(messages.timeColumnTitle),
+      },
+      sortable: true,
+      component: TimeColumn,
+    },
+    {
+      id: 'mobileAttachment',
+      title: {
+        component: () => <div className={cx('no-header')} />,
+      },
+      component: AttachmentColumn,
+      customProps: {
+        mobile: true,
+      },
+    },
+  ];
+
   getColumns = () =>
-    this.props.consoleView
-      ? [
-          {
-            id: 'attachment',
-            component: AttachmentColumn,
-            customProps: {
-              consoleView: true,
-            },
-          },
-          {
-            id: timeColumnId,
-            sortable: true,
-            customProps: {
-              consoleView: true,
-              markdownMode: this.props.markdownMode,
-            },
-            component: MessageColumn,
-          },
-          {
-            id: 'mobileTime',
-            component: TimeColumn,
-            customProps: {
-              mobile: true,
-            },
-          },
-          {
-            id: 'mobileAttachment',
-            component: AttachmentColumn,
-            customProps: {
-              mobile: true,
-            },
-          },
-        ]
-      : [
-          {
-            id: 'logMessage',
-            title: {
-              component: LogMessageSearch,
-              componentProps: {
-                filter: this.props.filter,
-                onFilterChange: this.props.onFilterChange,
-              },
-            },
-            maxHeight: 200,
-            component: MessageColumn,
-            customProps: {
-              markdownMode: this.props.markdownMode,
-            },
-          },
-          {
-            id: 'attachment',
-            component: AttachmentColumn,
-          },
-          {
-            id: timeColumnId,
-            title: {
-              full: this.props.intl.formatMessage(messages.timeColumnTitle),
-            },
-            sortable: true,
-            component: TimeColumn,
-          },
-          {
-            id: 'mobileAttachment',
-            title: {
-              component: () => <div className={cx('no-header')} />,
-            },
-            component: AttachmentColumn,
-            customProps: {
-              mobile: true,
-            },
-          },
-        ];
+    this.props.consoleView ? this.getConsoleViewColumns() : this.getDefaultViewColumns();
 
   getLogRowClasses = (value) => {
     const { consoleView } = this.props;
@@ -209,9 +215,9 @@ export class LogsGrid extends Component {
         <div
           className={cx('time-header', {
             [`sorting-${sortingDirection.toLowerCase()}`]: sortingDirection,
-            'sorting-active': sortingColumn === timeColumnId,
+            'sorting-active': sortingColumn === TIME_COLUMN_ID,
           })}
-          onClick={() => onChangeSorting(timeColumnId)}
+          onClick={() => onChangeSorting(TIME_COLUMN_ID)}
         >
           {intl.formatMessage(messages.timeColumnTitle)}
           <div className={cx('arrow')}>{Parser(ArrowIcon)}</div>
@@ -229,12 +235,10 @@ export class LogsGrid extends Component {
       sortingColumn,
       sortingDirection,
       onChangeSorting,
-      consoleView,
     } = this.props;
 
     return (
       <div className={cx('logs-grid')}>
-        {consoleView && this.renderConsoleViewHeader()}
         <Grid
           columns={this.getColumns()}
           data={logItems}
