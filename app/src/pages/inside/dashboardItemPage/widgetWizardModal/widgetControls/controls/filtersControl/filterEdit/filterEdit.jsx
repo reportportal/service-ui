@@ -94,10 +94,10 @@ export class FilterEdit extends Component {
           />
           <FiltersSorting filter={filter} onChange={this.handleOrdersChange} />
           <div className={cx('filter-edit-buttons-block')}>
-            <BigButton color={'gray-60'} onClick={onCancel} className={'inline'}>
+            <BigButton color={'gray-60'} onClick={onCancel} className={cx('button-inline')}>
               {intl.formatMessage(messages.cancelButton)}
             </BigButton>
-            <BigButton color={'booger'} onClick={this.onFilterSave} className={'inline'}>
+            <BigButton color={'booger'} onClick={this.onFilterSave} className={cx('button-inline')}>
               {intl.formatMessage(messages.submitButton)}
             </BigButton>
           </div>

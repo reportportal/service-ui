@@ -9,7 +9,7 @@ export class EntityDropdown extends Component {
     meta: PropTypes.object,
     entityId: PropTypes.string,
     title: PropTypes.string,
-    size: PropTypes.string,
+    smallSize: PropTypes.bool,
     removable: PropTypes.bool,
     onRemove: PropTypes.func,
     onChange: PropTypes.func,
@@ -17,7 +17,7 @@ export class EntityDropdown extends Component {
   static defaultProps = {
     entityId: '',
     title: '',
-    size: '',
+    smallSize: false,
     value: {},
     meta: {},
     removable: true,
@@ -33,11 +33,11 @@ export class EntityDropdown extends Component {
   };
 
   render() {
-    const { value, onRemove, removable, entityId, size, title, meta } = this.props;
+    const { value, onRemove, removable, entityId, smallSize, title, meta } = this.props;
     return (
       <FieldFilterEntity
         title={title || entityId}
-        smallSize={size}
+        smallSize={smallSize}
         removable={removable}
         onRemove={onRemove}
       >

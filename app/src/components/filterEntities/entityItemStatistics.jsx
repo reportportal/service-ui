@@ -41,25 +41,25 @@ export class EntityItemStatistics extends Component {
     value: PropTypes.object.isRequired,
     entityId: PropTypes.string,
     title: PropTypes.string,
-    size: PropTypes.string,
+    smallSize: PropTypes.bool,
     removable: PropTypes.bool,
     onRemove: PropTypes.func,
   };
   static defaultProps = {
     entityId: '',
     title: '',
-    size: '',
+    smallSize: '',
     removable: true,
     onRemove: () => {},
   };
 
   render() {
-    const { intl, value, onRemove, removable, entityId, title, size, ...rest } = this.props;
+    const { intl, value, onRemove, removable, entityId, title, smallSize, ...rest } = this.props;
     return (
       <FieldErrorHint {...rest}>
         <FieldFilterEntity
           title={title || entityId}
-          smallSize={size}
+          smallSize={smallSize}
           removable={removable}
           onRemove={onRemove}
         >

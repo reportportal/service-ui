@@ -41,25 +41,30 @@ export class EntityItemDescription extends Component {
     intl: intlShape.isRequired,
     value: PropTypes.object.isRequired,
     title: PropTypes.string,
-    size: PropTypes.bool,
+    smallSize: PropTypes.bool,
     meta: PropTypes.object,
     removable: PropTypes.bool,
     onRemove: PropTypes.func,
   };
   static defaultProps = {
     title: '',
-    size: false,
+    smallSize: false,
     meta: {},
     removable: true,
     onRemove: () => {},
   };
 
   render() {
-    const { intl, value, onRemove, removable, title, meta, size, ...rest } = this.props;
+    const { intl, value, onRemove, removable, title, meta, smallSize, ...rest } = this.props;
 
     return (
       <FieldErrorHint {...rest}>
-        <FieldFilterEntity title={title} smallSize={size} removable={removable} onRemove={onRemove}>
+        <FieldFilterEntity
+          title={title}
+          smallSize={smallSize}
+          removable={removable}
+          onRemove={onRemove}
+        >
           <InputConditional
             conditions={conditions}
             value={value}

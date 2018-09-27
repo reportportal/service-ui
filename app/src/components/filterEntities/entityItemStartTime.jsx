@@ -72,8 +72,8 @@ const formatValue = ({ start, end, dynamic }) => {
   return `${getMinutesFromTimestamp(start)};${getMinutesFromTimestamp(end)};${utcString}`;
 };
 
-export const EntityItemStartTime = ({ onRemove, onChange, removable, title, size, value }) => (
-  <FieldFilterEntity title={title} smallSize={size} removable={removable} onRemove={onRemove}>
+export const EntityItemStartTime = ({ onRemove, onChange, removable, title, smallSize, value }) => (
+  <FieldFilterEntity title={title} smallSize={smallSize} removable={removable} onRemove={onRemove}>
     <InputTimeDateRange
       presets={presets}
       onChange={(val) => {
@@ -86,7 +86,7 @@ export const EntityItemStartTime = ({ onRemove, onChange, removable, title, size
 EntityItemStartTime.propTypes = {
   value: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
   title: PropTypes.string,
-  size: PropTypes.bool,
+  smallSize: PropTypes.bool,
   removable: PropTypes.bool,
   onRemove: PropTypes.func,
   onChange: PropTypes.func,
@@ -95,7 +95,7 @@ EntityItemStartTime.defaultProps = {
   value: {},
   removable: true,
   title: '',
-  size: false,
+  smallSize: false,
   onRemove: () => {},
   onChange: () => {},
 };

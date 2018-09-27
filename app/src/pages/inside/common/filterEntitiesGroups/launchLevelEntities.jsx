@@ -130,7 +130,7 @@ export class LaunchLevelEntities extends Component {
     defectTypes: PropTypes.object.isRequired,
     onChange: PropTypes.func,
     entities: PropTypes.object,
-    entitySmallSize: PropTypes.string,
+    entitySmallSize: PropTypes.bool,
   };
   static defaultProps = {
     entitySmallSize: false,
