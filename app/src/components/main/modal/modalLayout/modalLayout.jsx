@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import track from 'react-tracking';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { CSSTransition } from 'react-transition-group';
 import { connect } from 'react-redux';
@@ -10,12 +11,10 @@ import styles from './modalLayout.scss';
 
 const cx = classNames.bind(styles);
 
-@connect(
-  null,
-  {
-    hideModalAction,
-  },
-)
+@connect(null, {
+  hideModalAction,
+})
+@track()
 export class ModalLayout extends Component {
   static propTypes = {
     className: PropTypes.string,
@@ -30,6 +29,7 @@ export class ModalLayout extends Component {
     }),
     cancelButton: PropTypes.shape({
       text: PropTypes.string.isRequired,
+      eventInfo: PropTypes.object,
     }),
     customButton: PropTypes.oneOfType([
       PropTypes.node,
@@ -45,6 +45,11 @@ export class ModalLayout extends Component {
       confirmationMessage: PropTypes.string,
       confirmationWarning: PropTypes.string,
     }),
+    closeIconEventInfo: PropTypes.object,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
   static defaultProps = {
     className: '',
@@ -56,6 +61,7 @@ export class ModalLayout extends Component {
     customButton: null,
     stopOutsideClose: false,
     closeConfirmation: null,
+    closeIconEventInfo: {},
   };
   state = {
     shown: false,
@@ -84,7 +90,6 @@ export class ModalLayout extends Component {
   };
   onClickModal = (e) => {
     const { closeConfirmation } = this.props;
-
     if (!this.modal.contains(e.target)) {
       if (!closeConfirmation) {
         this.closeModal();
@@ -98,9 +103,21 @@ export class ModalLayout extends Component {
       closeConfirmed,
     });
   };
+
+  onClickCancelButton = () => {
+    this.closeModal();
+    this.props.tracking.trackEvent(this.props.cancelButton.eventInfo);
+  };
+
+  onClickCloseIcon = () => {
+    this.closeModal();
+    this.props.tracking.trackEvent(this.props.closeIconEventInfo);
+  };
+
   closeModalWithOk = () => {
     this.setState({ shown: false });
   };
+
   closeModal = () => {
     const { closeConfirmation } = this.props;
 
@@ -121,6 +138,7 @@ export class ModalLayout extends Component {
 
     withCheckbox ? this.setState({ showConfirmation: true }) : this.setState({ shown: false });
   };
+
   render() {
     const {
       title,
@@ -161,13 +179,13 @@ export class ModalLayout extends Component {
                   }}
                   className={cx('modal-window', this.props.className)}
                 >
-                  <ModalHeader text={title} onClose={this.closeModal} />
+                  <ModalHeader text={title} onClose={this.onClickCloseIcon} />
                   <ModalContent>{status !== 'exited' ? children : null}</ModalContent>
 
                   <ModalFooter
                     {...footerProps}
                     onClickOk={this.closeModalWithOk}
-                    closeHandler={this.closeModal}
+                    closeHandler={this.onClickCancelButton}
                     className={this.props.className}
                   />
                 </div>

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
@@ -24,6 +25,7 @@ import { withSorting, SORTING_ASC } from 'controllers/sorting';
 import { userFiltersSelector, toggleDisplayFilterOnLaunchesAction } from 'controllers/project';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
+import { FILTERS_PAGE, FILTERS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { NoFiltersBlock } from './noFiltersBlock';
 import { FilterPageToolbar } from './filterPageToolbar';
 import { FilterGrid } from './filterGrid';
@@ -61,6 +63,7 @@ const messages = defineMessages({
   paginationSelector: filtersPaginationSelector,
 })
 @injectIntl
+@track({ page: FILTERS_PAGE })
 export class FiltersPage extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
@@ -81,6 +84,10 @@ export class FiltersPage extends Component {
     userFilters: PropTypes.arrayOf(PropTypes.string),
     accountRole: PropTypes.string,
     loading: PropTypes.bool,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
     toggleDisplayFilterOnLaunches: PropTypes.func,
   };
 
@@ -137,6 +144,10 @@ export class FiltersPage extends Component {
       .then(this.props.fetchFiltersAction);
   };
 
+  openAddModal = () => {
+    this.props.tracking.trackEvent(FILTERS_PAGE_EVENTS.CLICK_ADD_FILTER_BTN);
+  };
+
   render() {
     const {
       filter,
@@ -156,7 +167,12 @@ export class FiltersPage extends Component {
       <PageLayout title={intl.formatMessage(messages.filtersPageTitle)}>
         <PageHeader breadcrumbs={this.getBreadcrumbs()} />
         <PageSection>
-          <FilterPageToolbar filter={filter} filters={filters} onFilterChange={onFilterChange} />
+          <FilterPageToolbar
+            filter={filter}
+            filters={filters}
+            onFilterChange={onFilterChange}
+            onAddFilter={this.openAddModal}
+          />
           <FilterGrid
             onEdit={this.openEditModal}
             onDelete={this.confirmDelete}

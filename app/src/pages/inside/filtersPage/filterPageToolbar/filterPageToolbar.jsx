@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import track from 'react-tracking';
 import { reduxForm } from 'redux-form';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
@@ -6,6 +7,7 @@ import { GhostButton } from 'components/buttons/ghostButton';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { InputSearch } from 'components/inputs/inputSearch';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
+import { FILTERS_PAGE_EVENTS } from 'components/main/analytics/events';
 import AddFilterIcon from './img/ic-add-filter-inline.svg';
 import styles from './filterPageToolbar.scss';
 
@@ -22,6 +24,7 @@ const messages = defineMessages({
   },
   searchInputPlaceholder: { id: 'FiltersPage.searchByName', defaultMessage: 'Search by name' },
 });
+@track()
 @reduxForm({
   form: 'filterSearch',
   validate: ({ filter }) => ({
@@ -31,6 +34,7 @@ const messages = defineMessages({
     if (vals.filter && vals.filter.length < 3) {
       return;
     }
+    vals.filter && props.tracking.trackEvent(FILTERS_PAGE_EVENTS.SEARCH_FILTER);
     props.onFilterChange(vals.filter || undefined);
   },
 })
@@ -41,6 +45,7 @@ export class FilterPageToolbar extends React.Component {
     invalid: PropTypes.bool,
     filter: PropTypes.string,
     filters: PropTypes.array,
+    onAddFilter: PropTypes.func,
     intl: intlShape,
   };
 
@@ -50,6 +55,7 @@ export class FilterPageToolbar extends React.Component {
     filters: [],
     intl: {},
     change: () => {},
+    onAddFilter: () => {},
   };
 
   componentDidMount() {
@@ -77,7 +83,7 @@ export class FilterPageToolbar extends React.Component {
           </FieldProvider>
         </div>
         <div className={cx('label')}>{this.props.intl.formatMessage(messages.favoriteFilters)}</div>
-        <GhostButton icon={AddFilterIcon}>
+        <GhostButton icon={AddFilterIcon} onClick={this.props.onAddFilter}>
           {this.props.intl.formatMessage(messages.addFilter)}
         </GhostButton>
       </div>

@@ -1,4 +1,6 @@
 import { Component } from 'react';
+import track from 'react-tracking';
+import { FILTERS_PAGE_EVENTS } from 'components/main/analytics/events';
 import PropTypes from 'prop-types';
 import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
@@ -22,6 +24,7 @@ const messages = defineMessages({
 
 @withModal('filterDeleteModal')
 @injectIntl
+@track()
 export class FilterDeleteModal extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
@@ -29,6 +32,10 @@ export class FilterDeleteModal extends Component {
       filter: PropTypes.object,
       onConfirm: PropTypes.func,
     }),
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
 
   static defaultProps = {
@@ -39,11 +46,12 @@ export class FilterDeleteModal extends Component {
   };
 
   render() {
-    const { intl } = this.props;
+    const { intl, tracking } = this.props;
     const { filter, onConfirm } = this.props.data;
     const confirmAndClose = (closeModal) => {
       onConfirm();
       closeModal();
+      tracking.trackEvent(FILTERS_PAGE_EVENTS.CLICK_DELETE_BTN_MODAL_DELETE_FILTER);
     };
     const okButton = {
       text: intl.formatMessage(COMMON_LOCALE_KEYS.DELETE),
@@ -52,12 +60,14 @@ export class FilterDeleteModal extends Component {
     };
     const cancelButton = {
       text: intl.formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+      eventInfo: FILTERS_PAGE_EVENTS.CLICK_CANCEL_BTN_MODAL_DELETE_FILTER,
     };
     return (
       <ModalLayout
         title={intl.formatMessage(messages.deleteFilterHeader)}
         okButton={okButton}
         cancelButton={cancelButton}
+        closeIconEventInfo={FILTERS_PAGE_EVENTS.CLICK_CLOSE_ICON_MODAL_DELETE_FILTER}
       >
         <p className={cx('message')}>
           {Parser(intl.formatMessage(messages.deleteFilterText, { name: filter.name }))}

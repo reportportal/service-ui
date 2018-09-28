@@ -18,6 +18,7 @@ const GOOGLE_ANALYTICS_INSTANCE = 'UA-96321031-1';
   {},
   {
     dispatch: (data) => {
+      console.log(data);
       if (data.actionType && data.actionType === PAGE_VIEW) {
         ReactGA.pageview(data.page);
       } else {
@@ -39,7 +40,7 @@ export class AnalyticsWrapper extends Component {
 
   componentDidMount() {
     ReactGA.initialize(GOOGLE_ANALYTICS_INSTANCE);
-    ReactGA.pageview(window.location.hash.substr(1));
+    ReactGA.pageview(window.location.pathname + window.location.search);
     ReactGA.set({ dimension1: this.props.instanceId });
   }
 
