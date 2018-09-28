@@ -112,7 +112,7 @@ define(function (require, exports, module) {
             '[data-js-launch-link]': 'attr: {href: getUrl, class: getLinkClass}',
             '[data-js-info]': 'classes: {hide: not(hasInfo)}',
             '[data-js-growth-duration]': 'text: durationGrowth',
-            '[data-js-growth-block]': 'classes: {hide: not(durationGrowth)}, attr: {title: durationGrowth}'
+            //'[data-js-growth-block]': 'classes: {hide: not(durationGrowth)}, attr: {title: durationGrowth}'
         },
 
         computeds: {
@@ -147,7 +147,8 @@ define(function (require, exports, module) {
                     if (status !== 'MANY' && status !== 'NOT_FOUND' && status !== 'IN_PROGRESS') {
                         duration = '; ' + Util.timeFormat(this.model.get('start_time'), this.model.get('end_time'), true);
                     }
-                    return Localization.historyLine.tooltips[status] + duration;
+                    //return Localization.historyLine.tooltips[status] + duration;
+                    return Localization.historyLine.tooltips[status];
                 }
             },
             getLinkClass: {
