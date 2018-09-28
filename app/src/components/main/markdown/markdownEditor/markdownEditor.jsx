@@ -20,6 +20,7 @@
  */
 
 import React from 'react';
+import track from 'react-tracking';
 import ReactDOMServer from 'react-dom/server';
 import SimpleMDE from 'simplemde';
 import { injectIntl, intlShape, defineMessages } from 'react-intl';
@@ -90,17 +91,24 @@ const toolbarTitles = defineMessages({
 });
 
 @injectIntl
+@track()
 export class MarkdownEditor extends React.Component {
   static propTypes = {
     value: PropTypes.string,
     placeholder: PropTypes.string,
     onChange: PropTypes.func,
     intl: intlShape.isRequired,
+    onChangeEventInfo: PropTypes.object,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
   static defaultProps = {
     value: '',
     placeholder: '',
     onChange: () => {},
+    onChangeEventInfo: {},
   };
 
   componentDidMount() {
@@ -218,6 +226,7 @@ export class MarkdownEditor extends React.Component {
   }
   onChangeHandler = () => {
     this.props.onChange(this.simpleMDE.value());
+    this.props.onChangeEventInfo && this.props.tracking.trackEvent(this.props.onChangeEventInfo);
   };
 
   render() {

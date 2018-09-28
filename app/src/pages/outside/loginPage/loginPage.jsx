@@ -20,9 +20,11 @@
  */
 
 import { PureComponent } from 'react';
+import track from 'react-tracking';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { referenceDictionary, connectRouter } from 'common/utils';
+import { LOGIN_PAGE } from 'components/main/analytics/events';
 import styles from './loginPage.scss';
 import { LoginPageSection } from './loginPageSection';
 import { SocialSection } from './socialSection';
@@ -34,6 +36,7 @@ import { ServiceVersionsBlock } from './serviceVersionsBlock';
 const cx = classNames.bind(styles);
 
 @connectRouter(({ forgotPass, reset }) => ({ forgotPass, reset }))
+@track({ page: LOGIN_PAGE })
 export class LoginPage extends PureComponent {
   static propTypes = {
     forgotPass: PropTypes.string,
