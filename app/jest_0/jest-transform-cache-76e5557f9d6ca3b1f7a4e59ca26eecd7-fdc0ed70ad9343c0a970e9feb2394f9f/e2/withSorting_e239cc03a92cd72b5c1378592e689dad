@@ -1,0 +1,50 @@
+47a84936876834b9339fc8cf921d8add
+'use strict';Object.defineProperty(exports, "__esModule", { value: true });exports.withSorting = undefined;var _extends2 = require('babel-runtime/helpers/extends');var _extends3 = _interopRequireDefault(_extends2);var _getPrototypeOf = require('babel-runtime/core-js/object/get-prototype-of');var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);var _createClass2 = require('babel-runtime/helpers/createClass');var _createClass3 = _interopRequireDefault(_createClass2);var _possibleConstructorReturn2 = require('babel-runtime/helpers/possibleConstructorReturn');var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);var _inherits2 = require('babel-runtime/helpers/inherits');var _inherits3 = _interopRequireDefault(_inherits2);var _react = require('react');
+var _constants = require('./constants');function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}
+
+var withSorting = exports.withSorting = function withSorting() {var _ref = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},defaultSortingColumn = _ref.defaultSortingColumn,defaultSortingDirection = _ref.defaultSortingDirection;return (
+    function (WrappedComponent) {var _class, _temp2;return _temp2 = _class = function (_PureComponent) {(0, _inherits3.default)(SortingWrapper, _PureComponent);function SortingWrapper() {var _ref2;var _temp, _this, _ret;(0, _classCallCheck3.default)(this, SortingWrapper);for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {args[_key] = arguments[_key];}return _ret = (_temp = (_this = (0, _possibleConstructorReturn3.default)(this, (_ref2 = SortingWrapper.__proto__ || (0, _getPrototypeOf2.default)(SortingWrapper)).call.apply(_ref2, [this].concat(args))), _this), _this.
+
+
+
+          state = {
+            sortingColumn: defaultSortingColumn,
+            sortingDirection: defaultSortingDirection || _constants.SORTING_DESC }, _this.changeSorting = function () {var _this2;return (_this2 = _this).__changeSorting__REACT_HOT_LOADER__.apply(_this2, arguments);}, _this.toggleSortingDirection = function () {var _this3;return (_this3 = _this).__toggleSortingDirection__REACT_HOT_LOADER__.apply(_this3, arguments);}, _this.createSortingString = function () {var _this4;return (_this4 = _this).__createSortingString__REACT_HOT_LOADER__.apply(_this4, arguments);}, _temp), (0, _possibleConstructorReturn3.default)(_this, _ret);}(0, _createClass3.default)(SortingWrapper, [{ key: '__createSortingString__REACT_HOT_LOADER__', value: function __createSortingString__REACT_HOT_LOADER__() {return this.__createSortingString__REACT_HOT_LOADER__.apply(this, arguments);} }, { key: '__toggleSortingDirection__REACT_HOT_LOADER__', value: function __toggleSortingDirection__REACT_HOT_LOADER__() {return this.__toggleSortingDirection__REACT_HOT_LOADER__.apply(this, arguments);} }, { key: '__changeSorting__REACT_HOT_LOADER__', value: function __changeSorting__REACT_HOT_LOADER__() {return this.__changeSorting__REACT_HOT_LOADER__.apply(this, arguments);} }, { key: '__changeSorting__REACT_HOT_LOADER__', value: function __changeSorting__REACT_HOT_LOADER__(
+
+
+          sortingColumn) {
+            if (sortingColumn === this.state.sortingColumn) {
+              this.setState({
+                sortingDirection: this.toggleSortingDirection() });
+
+            } else {
+              this.setState({
+                sortingDirection: _constants.SORTING_ASC,
+                sortingColumn: sortingColumn });
+
+            }
+          } }, { key: '__toggleSortingDirection__REACT_HOT_LOADER__', value: function __toggleSortingDirection__REACT_HOT_LOADER__() {return (
+
+
+              this.state.sortingDirection === _constants.SORTING_DESC ? _constants.SORTING_ASC : _constants.SORTING_DESC);} }, { key: '__createSortingString__REACT_HOT_LOADER__', value: function __createSortingString__REACT_HOT_LOADER__()
+
+          {var _state =
+
+
+
+            this.state,sortingColumn = _state.sortingColumn,sortingDirection = _state.sortingDirection;
+            return sortingColumn && sortingDirection && sortingColumn + ',' + sortingDirection;
+          } }, { key: 'render', value: function render()
+
+          {
+            return (
+              React.createElement(WrappedComponent, (0, _extends3.default)({},
+              this.props, {
+                sortingString: this.createSortingString(),
+                sortingColumn: this.state.sortingColumn,
+                sortingDirection: this.state.sortingDirection,
+                onChangeSorting: this.changeSorting })));
+
+
+          } }]);return SortingWrapper;}(_react.PureComponent), _class.displayName = 'withSorting(' + (WrappedComponent.displayName || WrappedComponent.name) + ')', _temp2;});};;var _temp3 = function () {if (typeof __REACT_HOT_LOADER__ === 'undefined') {return;}__REACT_HOT_LOADER__.register(withSorting, 'withSorting', '/volumeC/workspace/service-ui - RELEASE/src/github.com/reportportal/service-ui/app/src/controllers/sorting/withSorting.jsx');}();;
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndpdGhTb3J0aW5nLmpzeCJdLCJuYW1lcyI6WyJ3aXRoU29ydGluZyIsImRlZmF1bHRTb3J0aW5nQ29sdW1uIiwiZGVmYXVsdFNvcnRpbmdEaXJlY3Rpb24iLCJzdGF0ZSIsInNvcnRpbmdDb2x1bW4iLCJzb3J0aW5nRGlyZWN0aW9uIiwiU09SVElOR19ERVNDIiwic2V0U3RhdGUiLCJ0b2dnbGVTb3J0aW5nRGlyZWN0aW9uIiwiU09SVElOR19BU0MiLCJwcm9wcyIsImNyZWF0ZVNvcnRpbmdTdHJpbmciLCJjaGFuZ2VTb3J0aW5nIiwiUHVyZUNvbXBvbmVudCIsImRpc3BsYXlOYW1lIiwiV3JhcHBlZENvbXBvbmVudCIsIm5hbWUiXSwibWFwcGluZ3MiOiJ3NEJBQUE7QUFDQSx3Qzs7QUFFTyxJQUFNQSxvQ0FBYyxTQUFkQSxXQUFjLG1GQUFxRCxFQUFyRCxDQUFHQyxvQkFBSCxRQUFHQSxvQkFBSCxDQUF5QkMsdUJBQXpCLFFBQXlCQSx1QkFBekI7QUFDekI7Ozs7QUFJSUMsZUFKSixHQUlZO0FBQ05DLDJCQUFlSCxvQkFEVDtBQUVOSSw4QkFBa0JILDJCQUEyQkksdUJBRnZDLEVBSlo7OztBQVNxQkYsdUJBVHJCLEVBU3VDO0FBQ2pDLGdCQUFJQSxrQkFBa0IsS0FBS0QsS0FBTCxDQUFXQyxhQUFqQyxFQUFnRDtBQUM5QyxtQkFBS0csUUFBTCxDQUFjO0FBQ1pGLGtDQUFrQixLQUFLRyxzQkFBTCxFQUROLEVBQWQ7O0FBR0QsYUFKRCxNQUlPO0FBQ0wsbUJBQUtELFFBQUwsQ0FBYztBQUNaRixrQ0FBa0JJLHNCQUROO0FBRVpMLDRDQUZZLEVBQWQ7O0FBSUQ7QUFDRixXQXBCTDs7O0FBdUJPLG1CQUFLRCxLQUFMLENBQVdFLGdCQUFYLEtBQWdDQyx1QkFBaEMsR0FBK0NHLHNCQUEvQyxHQUE2REgsdUJBdkJwRTs7QUF5QmdDOzs7O0FBSXRCLGlCQUFLSCxLQUppQixDQUV4QkMsYUFGd0IsVUFFeEJBLGFBRndCLENBR3hCQyxnQkFId0IsVUFHeEJBLGdCQUh3QjtBQUsxQixtQkFBT0QsaUJBQWlCQyxnQkFBakIsSUFBd0NELGFBQXhDLFNBQXlEQyxnQkFBaEU7QUFDRCxXQS9CTDs7QUFpQ2E7QUFDUDtBQUNFLGtDQUFDLGdCQUFEO0FBQ00sbUJBQUtLLEtBRFg7QUFFRSwrQkFBZSxLQUFLQyxtQkFBTCxFQUZqQjtBQUdFLCtCQUFlLEtBQUtSLEtBQUwsQ0FBV0MsYUFINUI7QUFJRSxrQ0FBa0IsS0FBS0QsS0FBTCxDQUFXRSxnQkFKL0I7QUFLRSxpQ0FBaUIsS0FBS08sYUFMeEIsSUFERjs7O0FBU0QsV0EzQ0wsNkJBQytCQyxvQkFEL0IsVUFFV0MsV0FGWCxxQkFFd0NDLGlCQUFpQkQsV0FBakIsSUFBZ0NDLGlCQUFpQkMsSUFGekYsaUJBRHlCLEdBQXBCLEMsbUhBQU1oQixXIiwiZmlsZSI6IndpdGhTb3J0aW5nLmpzeCIsInNvdXJjZXNDb250ZW50IjpbImltcG9ydCB7IFB1cmVDb21wb25lbnQgfSBmcm9tICdyZWFjdCc7XG5pbXBvcnQgeyBTT1JUSU5HX0FTQywgU09SVElOR19ERVNDIH0gZnJvbSAnLi9jb25zdGFudHMnO1xuXG5leHBvcnQgY29uc3Qgd2l0aFNvcnRpbmcgPSAoeyBkZWZhdWx0U29ydGluZ0NvbHVtbiwgZGVmYXVsdFNvcnRpbmdEaXJlY3Rpb24gfSA9IHt9KSA9PlxuICBXcmFwcGVkQ29tcG9uZW50ID0+XG4gICAgY2xhc3MgU29ydGluZ1dyYXBwZXIgZXh0ZW5kcyBQdXJlQ29tcG9uZW50IHtcbiAgICAgIHN0YXRpYyBkaXNwbGF5TmFtZSA9IGB3aXRoU29ydGluZygke1dyYXBwZWRDb21wb25lbnQuZGlzcGxheU5hbWUgfHwgV3JhcHBlZENvbXBvbmVudC5uYW1lfSlgO1xuXG4gICAgICBzdGF0ZSA9IHtcbiAgICAgICAgc29ydGluZ0NvbHVtbjogZGVmYXVsdFNvcnRpbmdDb2x1bW4sXG4gICAgICAgIHNvcnRpbmdEaXJlY3Rpb246IGRlZmF1bHRTb3J0aW5nRGlyZWN0aW9uIHx8IFNPUlRJTkdfREVTQyxcbiAgICAgIH07XG5cbiAgICAgIGNoYW5nZVNvcnRpbmcgPSAoc29ydGluZ0NvbHVtbikgPT4ge1xuICAgICAgICBpZiAoc29ydGluZ0NvbHVtbiA9PT0gdGhpcy5zdGF0ZS5zb3J0aW5nQ29sdW1uKSB7XG4gICAgICAgICAgdGhpcy5zZXRTdGF0ZSh7XG4gICAgICAgICAgICBzb3J0aW5nRGlyZWN0aW9uOiB0aGlzLnRvZ2dsZVNvcnRpbmdEaXJlY3Rpb24oKSxcbiAgICAgICAgICB9KTtcbiAgICAgICAgfSBlbHNlIHtcbiAgICAgICAgICB0aGlzLnNldFN0YXRlKHtcbiAgICAgICAgICAgIHNvcnRpbmdEaXJlY3Rpb246IFNPUlRJTkdfQVNDLFxuICAgICAgICAgICAgc29ydGluZ0NvbHVtbixcbiAgICAgICAgICB9KTtcbiAgICAgICAgfVxuICAgICAgfTtcblxuICAgICAgdG9nZ2xlU29ydGluZ0RpcmVjdGlvbiA9ICgpID0+XG4gICAgICAgICh0aGlzLnN0YXRlLnNvcnRpbmdEaXJlY3Rpb24gPT09IFNPUlRJTkdfREVTQyA/IFNPUlRJTkdfQVNDIDogU09SVElOR19ERVNDKTtcblxuICAgICAgY3JlYXRlU29ydGluZ1N0cmluZyA9ICgpID0+IHtcbiAgICAgICAgY29uc3Qge1xuICAgICAgICAgIHNvcnRpbmdDb2x1bW4sXG4gICAgICAgICAgc29ydGluZ0RpcmVjdGlvbixcbiAgICAgICAgfSA9IHRoaXMuc3RhdGU7XG4gICAgICAgIHJldHVybiBzb3J0aW5nQ29sdW1uICYmIHNvcnRpbmdEaXJlY3Rpb24gJiYgYCR7c29ydGluZ0NvbHVtbn0sJHtzb3J0aW5nRGlyZWN0aW9ufWA7XG4gICAgICB9O1xuXG4gICAgICByZW5kZXIoKSB7XG4gICAgICAgIHJldHVybiAoXG4gICAgICAgICAgPFdyYXBwZWRDb21wb25lbnRcbiAgICAgICAgICAgIHsuLi50aGlzLnByb3BzfVxuICAgICAgICAgICAgc29ydGluZ1N0cmluZz17dGhpcy5jcmVhdGVTb3J0aW5nU3RyaW5nKCl9XG4gICAgICAgICAgICBzb3J0aW5nQ29sdW1uPXt0aGlzLnN0YXRlLnNvcnRpbmdDb2x1bW59XG4gICAgICAgICAgICBzb3J0aW5nRGlyZWN0aW9uPXt0aGlzLnN0YXRlLnNvcnRpbmdEaXJlY3Rpb259XG4gICAgICAgICAgICBvbkNoYW5nZVNvcnRpbmc9e3RoaXMuY2hhbmdlU29ydGluZ31cbiAgICAgICAgICAvPlxuICAgICAgICApO1xuICAgICAgfVxuICAgIH07XG4iXX0=

@@ -1,0 +1,31 @@
+b0f19937f88f53596aaf0336d689abfe
+'use strict';Object.defineProperty(exports, "__esModule", { value: true });exports.hideNotification = exports.showNotification = undefined;var _constants = require('./constants');
+
+/**
+                                                                                                                                                                                     *
+                                                                                                                                                                                     * @param message? {string}
+                                                                                                                                                                                     * @param type {('error' | 'info' | 'success')}
+                                                                                                                                                                                     * @param messageId? {string}
+                                                                                                                                                                                     * @param values? {object}
+                                                                                                                                                                                     * @returns {{type: string, payload: {message: string, type: (string), uid: number}}}
+                                                                                                                                                                                     */
+var showNotification = exports.showNotification = function showNotification(_ref) {var message = _ref.message,type = _ref.type,messageId = _ref.messageId,values = _ref.values;return {
+    type: _constants.SHOW_NOTIFICATION,
+    payload: {
+      message: message,
+      messageId: messageId,
+      type: type,
+      values: values,
+      uid: new Date().valueOf() } };};
+
+
+
+/**
+                                        *
+                                        * @param uid {number}
+                                        * @returns {{type: string, payload: number}}
+                                        */
+var hideNotification = exports.hideNotification = function hideNotification(uid) {return {
+    type: _constants.HIDE_NOTIFICATION,
+    payload: uid };};;var _temp = function () {if (typeof __REACT_HOT_LOADER__ === 'undefined') {return;}__REACT_HOT_LOADER__.register(showNotification, 'showNotification', '/volumeC/workspace/service-ui - RELEASE/src/github.com/reportportal/service-ui/app/src/controllers/notification/actionCreators.js');__REACT_HOT_LOADER__.register(hideNotification, 'hideNotification', '/volumeC/workspace/service-ui - RELEASE/src/github.com/reportportal/service-ui/app/src/controllers/notification/actionCreators.js');}();;
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImFjdGlvbkNyZWF0b3JzLmpzIl0sIm5hbWVzIjpbInNob3dOb3RpZmljYXRpb24iLCJtZXNzYWdlIiwidHlwZSIsIm1lc3NhZ2VJZCIsInZhbHVlcyIsIlNIT1dfTk9USUZJQ0FUSU9OIiwicGF5bG9hZCIsInVpZCIsIkRhdGUiLCJ2YWx1ZU9mIiwiaGlkZU5vdGlmaWNhdGlvbiIsIkhJREVfTk9USUZJQ0FUSU9OIl0sIm1hcHBpbmdzIjoiMklBQUE7O0FBRUE7Ozs7Ozs7O0FBUU8sSUFBTUEsOENBQW1CLFNBQW5CQSxnQkFBbUIsWUFBR0MsT0FBSCxRQUFHQSxPQUFILENBQVlDLElBQVosUUFBWUEsSUFBWixDQUFrQkMsU0FBbEIsUUFBa0JBLFNBQWxCLENBQTZCQyxNQUE3QixRQUE2QkEsTUFBN0IsUUFBMkM7QUFDekVGLFVBQU1HLDRCQURtRTtBQUV6RUMsYUFBUztBQUNQTCxzQkFETztBQUVQRSwwQkFGTztBQUdQRCxnQkFITztBQUlQRSxvQkFKTztBQUtQRyxXQUFLLElBQUlDLElBQUosR0FBV0MsT0FBWCxFQUxFLEVBRmdFLEVBQTNDLEVBQXpCOzs7O0FBV1A7Ozs7O0FBS08sSUFBTUMsOENBQW1CLFNBQW5CQSxnQkFBbUIsQ0FBQ0gsR0FBRCxVQUFVO0FBQ3hDTCxVQUFNUyw0QkFEa0M7QUFFeENMLGFBQVNDLEdBRitCLEVBQVYsRUFBekIsQyxrSEFoQk1QLGdCLHlMQWdCQVUsZ0IiLCJmaWxlIjoiYWN0aW9uQ3JlYXRvcnMuanMiLCJzb3VyY2VzQ29udGVudCI6WyJpbXBvcnQgeyBISURFX05PVElGSUNBVElPTiwgU0hPV19OT1RJRklDQVRJT04gfSBmcm9tICcuL2NvbnN0YW50cyc7XG5cbi8qKlxuICpcbiAqIEBwYXJhbSBtZXNzYWdlPyB7c3RyaW5nfVxuICogQHBhcmFtIHR5cGUgeygnZXJyb3InIHwgJ2luZm8nIHwgJ3N1Y2Nlc3MnKX1cbiAqIEBwYXJhbSBtZXNzYWdlSWQ/IHtzdHJpbmd9XG4gKiBAcGFyYW0gdmFsdWVzPyB7b2JqZWN0fVxuICogQHJldHVybnMge3t0eXBlOiBzdHJpbmcsIHBheWxvYWQ6IHttZXNzYWdlOiBzdHJpbmcsIHR5cGU6IChzdHJpbmcpLCB1aWQ6IG51bWJlcn19fVxuICovXG5leHBvcnQgY29uc3Qgc2hvd05vdGlmaWNhdGlvbiA9ICh7IG1lc3NhZ2UsIHR5cGUsIG1lc3NhZ2VJZCwgdmFsdWVzIH0pID0+ICh7XG4gIHR5cGU6IFNIT1dfTk9USUZJQ0FUSU9OLFxuICBwYXlsb2FkOiB7XG4gICAgbWVzc2FnZSxcbiAgICBtZXNzYWdlSWQsXG4gICAgdHlwZSxcbiAgICB2YWx1ZXMsXG4gICAgdWlkOiBuZXcgRGF0ZSgpLnZhbHVlT2YoKSxcbiAgfSxcbn0pO1xuXG4vKipcbiAqXG4gKiBAcGFyYW0gdWlkIHtudW1iZXJ9XG4gKiBAcmV0dXJucyB7e3R5cGU6IHN0cmluZywgcGF5bG9hZDogbnVtYmVyfX1cbiAqL1xuZXhwb3J0IGNvbnN0IGhpZGVOb3RpZmljYXRpb24gPSAodWlkKSA9PiAoe1xuICB0eXBlOiBISURFX05PVElGSUNBVElPTixcbiAgcGF5bG9hZDogdWlkLFxufSk7XG4iXX0=
