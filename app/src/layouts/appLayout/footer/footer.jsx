@@ -9,7 +9,7 @@ import styles from './footer.scss';
 
 const cx = classNames.bind(styles);
 
-@connect(state => ({
+@connect((state) => ({
   buildVersion: buildVersionSelector(state),
 }))
 export class Footer extends Component {
@@ -21,60 +21,30 @@ export class Footer extends Component {
     return (
       <div className={cx('footer')}>
         <div className={cx('footer-links')}>
-          <a
-            href={referenceDictionary.rpGitHub}
-            target="_blank"
-          >
-            <FormattedMessage
-              id={'Footer.git'}
-              defaultMessage={'Fork us on GitHub'}
-            />
+          <a href={referenceDictionary.rpGitHub} target="_blank">
+            <FormattedMessage id={'Footer.git'} defaultMessage={'Fork us on GitHub'} />
           </a>
-          <a
-            href={referenceDictionary.rpSlack}
-            target="_blank"
-          >
-            <FormattedMessage
-              id={'Footer.slack'}
-              defaultMessage={'Chat with us on Slack'}
-            />
+          <a href={referenceDictionary.rpSlack} target="_blank">
+            <FormattedMessage id={'Footer.slack'} defaultMessage={'Chat with us on Slack'} />
           </a>
           <a href={referenceDictionary.rpEmail}>
-            <FormattedMessage
-              id={'Footer.contact'}
-              defaultMessage={'Contact us'}
-            />
+            <FormattedMessage id={'Footer.contact'} defaultMessage={'Contact us'} />
           </a>
-          <a
-            href={referenceDictionary.rpEpam}
-            target="_blank"
-          >
-              EPAM
+          <a href={referenceDictionary.rpEpam} target="_blank">
+            EPAM
           </a>
-          <a
-            href={referenceDictionary.rpDoc}
-            target="_blank"
-          >
-            <FormattedMessage
-              id={'Footer.documentation'}
-              defaultMessage={'Documentation'}
-            />
+          <a href={referenceDictionary.rpDoc} target="_blank">
+            <FormattedMessage id={'Footer.documentation'} defaultMessage={'Documentation'} />
           </a>
         </div>
         <div className={cx('text-wrapper')}>
           <div className={cx('footer-text')}>
-            <FormattedMessage
-              id={'Footer.build'}
-              defaultMessage={'Build'}
-            />
+            <FormattedMessage id={'Footer.build'} defaultMessage={'Build'} />
             <span>: {buildVersion}</span>
           </div>
           <div className={cx('footer-text')}>
             <span> &copy; Report Portal 2018 </span>
-            <FormattedMessage
-              id={'Footer.copyright'}
-              defaultMessage={'All rights reserved'}
-            />
+            <FormattedMessage id={'Footer.copyright'} defaultMessage={'All rights reserved'} />
           </div>
         </div>
       </div>
