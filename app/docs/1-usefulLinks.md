@@ -8,4 +8,4 @@
 
 [Contribution notes on GitHub](https://github.com/reportportal/reportportal/wiki/Contribution)
 
-[React development branch](https://github.com/reportportal/service-ui/tree/develop)
+[React development branch](https://github.com/reportportal/service-ui/tree/v5)
