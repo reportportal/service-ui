@@ -33,7 +33,6 @@ import {
   EntityItemTags,
   EntityDropdown,
 } from 'components/filterEntities';
-import { EntitiesGroup } from 'components/filterEntities/entitiesGroup';
 import {
   CONDITION_CNT,
   CONDITION_BETWEEN,
@@ -253,15 +252,14 @@ export class StepLevelEntities extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
     defectTypes: PropTypes.object.isRequired,
-    onChange: PropTypes.func,
-    entities: PropTypes.object,
+    filterValues: PropTypes.object,
+    render: PropTypes.func.isRequired,
   };
   static defaultProps = {
-    onChange: () => {},
-    entities: {},
+    filterValues: {},
   };
   getDefectTypeEntity = () => {
-    const { intl, defectTypes, entities } = this.props;
+    const { intl, defectTypes, filterValues } = this.props;
     let initChecked = [];
     let options = [];
     DEFECT_TYPES_SEQUENCE.forEach((defectTypeId) => {
@@ -297,12 +295,12 @@ export class StepLevelEntities extends Component {
     return {
       id: ENTITY_DEFECT_TYPE,
       component: EntityDropdown,
-      value: entities[ENTITY_DEFECT_TYPE] || {
+      value: filterValues[ENTITY_DEFECT_TYPE] || {
         value: initChecked.join(','),
         condition: CONDITION_IN,
       },
       title: intl.formatMessage(messages.DefectTypeTitle),
-      active: ENTITY_DEFECT_TYPE in entities,
+      active: ENTITY_DEFECT_TYPE in filterValues,
       removable: true,
       meta: {
         options,
@@ -312,12 +310,12 @@ export class StepLevelEntities extends Component {
     };
   };
   getEntities = () => {
-    const { intl, entities } = this.props;
+    const { intl, filterValues } = this.props;
     return [
       {
         id: ENTITY_NAME,
         component: EntityItemName,
-        value: entities[ENTITY_NAME] || {
+        value: filterValues[ENTITY_NAME] || {
           value: '',
           condition: CONDITION_CNT,
         },
@@ -332,7 +330,7 @@ export class StepLevelEntities extends Component {
       {
         id: ENTITY_METHOD_TYPE,
         component: EntityDropdown,
-        value: entities[ENTITY_METHOD_TYPE] || {
+        value: filterValues[ENTITY_METHOD_TYPE] || {
           value: [
             BEFORE_SUITE,
             BEFORE_GROUPS,
@@ -350,7 +348,7 @@ export class StepLevelEntities extends Component {
           condition: CONDITION_IN,
         },
         title: intl.formatMessage(messages.MethodTypeTitle),
-        active: ENTITY_METHOD_TYPE in entities,
+        active: ENTITY_METHOD_TYPE in filterValues,
         removable: true,
         meta: {
           options: [
@@ -410,7 +408,7 @@ export class StepLevelEntities extends Component {
       {
         id: ENTITY_DESCRIPTION,
         component: EntityItemDescription,
-        value: entities[ENTITY_DESCRIPTION] || {
+        value: filterValues[ENTITY_DESCRIPTION] || {
           value: '',
           condition: CONDITION_CNT,
         },
@@ -420,7 +418,7 @@ export class StepLevelEntities extends Component {
             !entityObject.value ||
             !validate.launchDescriptionEntity(entityObject.value)) &&
           'launchDescriptionEntityHint',
-        active: ENTITY_DESCRIPTION in entities,
+        active: ENTITY_DESCRIPTION in filterValues,
         removable: true,
         meta: {
           placeholder: intl.formatMessage(messages.DescriptionPlaceholder),
@@ -429,14 +427,14 @@ export class StepLevelEntities extends Component {
       {
         id: ENTITY_STATUS,
         component: EntityDropdown,
-        value: entities[ENTITY_STATUS] || {
+        value: filterValues[ENTITY_STATUS] || {
           value: [FAILED, PASSED, SKIPPED, INTERRUPTED, IN_PROGRESS]
             .map((item) => item.toUpperCase())
             .join(','),
           condition: CONDITION_IN,
         },
         title: intl.formatMessage(messages.StatusTitle),
-        active: ENTITY_STATUS in entities,
+        active: ENTITY_STATUS in filterValues,
         removable: true,
         meta: {
           options: [
@@ -468,7 +466,7 @@ export class StepLevelEntities extends Component {
       {
         id: ENTITY_START_TIME,
         component: EntityItemStartTime,
-        value: entities[ENTITY_START_TIME] || {
+        value: filterValues[ENTITY_START_TIME] || {
           value: `${moment()
             .startOf('day')
             .subtract(1, 'months')
@@ -478,14 +476,14 @@ export class StepLevelEntities extends Component {
           condition: CONDITION_BETWEEN,
         },
         title: intl.formatMessage(messages.StartTimeTitle),
-        active: ENTITY_START_TIME in entities,
+        active: ENTITY_START_TIME in filterValues,
         removable: true,
       },
       this.getDefectTypeEntity(),
       {
         id: ENTITY_DEFECT_COMMENT,
         component: EntityItemDescription,
-        value: entities[ENTITY_DEFECT_COMMENT] || {
+        value: filterValues[ENTITY_DEFECT_COMMENT] || {
           value: '',
           condition: CONDITION_CNT,
         },
@@ -495,7 +493,7 @@ export class StepLevelEntities extends Component {
             !entityObject.value ||
             !validate.launchDescriptionEntity(entityObject.value)) &&
           'launchDescriptionEntityHint',
-        active: ENTITY_DEFECT_COMMENT in entities,
+        active: ENTITY_DEFECT_COMMENT in filterValues,
         removable: true,
         meta: {
           placeholder: intl.formatMessage(messages.DefectCommentPlaceholder),
@@ -504,23 +502,23 @@ export class StepLevelEntities extends Component {
       {
         id: ENTITY_TAGS,
         component: EntityItemTags,
-        value: entities[ENTITY_TAGS] || {
+        value: filterValues[ENTITY_TAGS] || {
           value: '',
           condition: CONDITION_HAS,
         },
         title: intl.formatMessage(messages.TagsTitle),
-        active: ENTITY_TAGS in entities,
+        active: ENTITY_TAGS in filterValues,
         removable: true,
       },
       {
         id: ENTITY_AUTOANALYZE,
         component: EntityDropdown,
-        value: entities[ENTITY_AUTOANALYZE] || {
+        value: filterValues[ENTITY_AUTOANALYZE] || {
           value: '',
           condition: CONDITION_IN,
         },
         title: intl.formatMessage(messages.AnalyseTitle),
-        active: ENTITY_AUTOANALYZE in entities,
+        active: ENTITY_AUTOANALYZE in filterValues,
         removable: true,
         meta: {
           options: [
@@ -538,12 +536,12 @@ export class StepLevelEntities extends Component {
       {
         id: ENTITY_IGNORE_ANALYZER,
         component: EntityDropdown,
-        value: entities[ENTITY_IGNORE_ANALYZER] || {
+        value: filterValues[ENTITY_IGNORE_ANALYZER] || {
           value: '',
           condition: CONDITION_IN,
         },
         title: intl.formatMessage(messages.IgnoreAATitle),
-        active: ENTITY_IGNORE_ANALYZER in entities,
+        active: ENTITY_IGNORE_ANALYZER in filterValues,
         removable: true,
         meta: {
           options: [
@@ -561,12 +559,12 @@ export class StepLevelEntities extends Component {
       {
         id: ENTITY_BTS_ISSUES,
         component: EntityDropdown,
-        value: entities[ENTITY_BTS_ISSUES] || {
+        value: filterValues[ENTITY_BTS_ISSUES] || {
           value: '',
           condition: CONDITION_EX,
         },
         title: intl.formatMessage(messages.BtsIssueTitle),
-        active: ENTITY_BTS_ISSUES in entities,
+        active: ENTITY_BTS_ISSUES in filterValues,
         removable: true,
         meta: {
           options: [
@@ -585,6 +583,11 @@ export class StepLevelEntities extends Component {
   };
 
   render() {
-    return <EntitiesGroup entitiesSet={this.getEntities()} onChangeOwn={this.props.onChange} />;
+    const { render, ...rest } = this.props;
+
+    return render({
+      ...rest,
+      filterEntities: this.getEntities(),
+    });
   }
 }

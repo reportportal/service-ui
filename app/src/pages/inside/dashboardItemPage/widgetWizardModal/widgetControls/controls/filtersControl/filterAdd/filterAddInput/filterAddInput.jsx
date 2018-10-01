@@ -1,5 +1,5 @@
 import React from 'react';
-import { defineMessages, intlShape } from 'react-intl';
+import { defineMessages, intlShape, injectIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 
 import { FieldProvider } from 'components/fields/fieldProvider';
@@ -19,7 +19,7 @@ const messages = defineMessages({
   },
 });
 
-export const FilterAddInput = ({ intl }) => (
+export const FilterAddInput = injectIntl(({ intl }) => (
   <div className={cx('filter-add-input')}>
     <span className={cx('filter-add-input-text')}>{intl.formatMessage(messages.filterName)}</span>
     <FieldProvider name={'name'}>
@@ -28,7 +28,7 @@ export const FilterAddInput = ({ intl }) => (
       </FieldErrorHint>
     </FieldProvider>
   </div>
-);
+));
 
 FilterAddInput.propTypes = {
   intl: intlShape.isRequired,

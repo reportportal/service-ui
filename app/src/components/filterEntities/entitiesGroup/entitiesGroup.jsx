@@ -1,145 +1,93 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { reduxForm, getFormValues, getFormSyncErrors, change as changeForm } from 'redux-form';
+import { Component } from 'react';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
-import { debounce } from 'common/utils';
-import { FieldProvider } from 'components/fields/fieldProvider';
 import { EntitiesSelector } from 'components/filterEntities/entitiesSelector';
-import { ENTITIES_FORM_NAME } from 'controllers/filterEntities';
 import styles from './entitiesGroup.scss';
 
 const cx = classNames.bind(styles);
 
-const isEntityActive = (item, activeItems) => item.active || activeItems.indexOf(item.id) > -1;
-
-const formChangeHandler = debounce((values, dispatch, props) => {
-  const entities = {};
-  const { formSyncErrors, onChangeOwn, activeEntities } = props;
-  activeEntities.forEach((entityId) => {
-    const isValid = !formSyncErrors[entityId];
-    const entity = values[entityId];
-    if (isValid && entity && entity.value) {
-      entities[entityId] = {
-        filtering_field: entityId,
-        condition: entity.condition,
-        value: entity.value,
-      };
-    }
-  });
-  onChangeOwn({
-    entities,
-  });
-}, 1000);
-
-@connect(
-  (state, ownProps) => {
-    const entityValues = getFormValues(ENTITIES_FORM_NAME)(state) || {};
-    const activeEntities = Object.keys(getFormValues(ENTITIES_FORM_NAME)(state) || []);
-    return {
-      entityValues,
-      entities: ownProps.entitiesSet.reduce(
-        (acc, entity) => ({
-          ...acc,
-          [entity.id]: {
-            ...entity,
-            active: isEntityActive(entity, activeEntities),
-            value: entityValues[entity.id] || entity.value,
-          },
-        }),
-        {},
-      ),
-      formSyncErrors: getFormSyncErrors(ENTITIES_FORM_NAME)(state),
-      initialValues: ownProps.entitiesSet.reduce(
-        (acc, item) =>
-          isEntityActive(item, activeEntities) ? { ...acc, [item.id]: item.value } : acc,
-        {},
-      ),
-      activeEntities,
-    };
-  },
-  {
-    clearField: (name) => changeForm(ENTITIES_FORM_NAME, name, null),
-  },
-)
-@reduxForm({
-  form: ENTITIES_FORM_NAME,
-  validate: (entities, { entitiesSet }) => {
-    const validationObject = {};
-    entitiesSet.filter((entity) => entity.active).forEach((entity) => {
-      entity.validationFunc &&
-        (validationObject[entity.id] = entity.validationFunc(entities[entity.id]));
-    });
-    return validationObject;
-  },
-  enableReinitialize: true,
-  keepDirtyOnReinitialize: true,
-  updateUnregisteredFields: true,
-  onChange: formChangeHandler,
-})
 export class EntitiesGroup extends Component {
   static propTypes = {
-    initialize: PropTypes.func.isRequired,
-    change: PropTypes.func.isRequired,
-    onChangeOwn: PropTypes.func.isRequired,
-    formSyncErrors: PropTypes.object.isRequired,
-    entitiesSet: PropTypes.array.isRequired,
-    entities: PropTypes.object,
-    entityValues: PropTypes.object,
-    activeEntities: PropTypes.array,
-    clearField: PropTypes.func,
-    entitySmallSize: PropTypes.string.isRequired,
+    entities: PropTypes.array,
+    onAdd: PropTypes.func,
+    onRemove: PropTypes.func,
+    onChange: PropTypes.func,
+    onValidate: PropTypes.func,
+    errors: PropTypes.object,
+    entitySmallSize: PropTypes.bool,
   };
+
   static defaultProps = {
-    entities: {},
-    activeEntities: [],
-    entityValues: {},
-    formSyncErrors: {},
-    clearField: () => {},
-    change: () => {},
-    initialize: () => {},
+    entities: [],
+    errors: {},
+    onAdd: () => {},
+    onRemove: () => {},
+    onChange: () => {},
+    onValidate: () => {},
+    entitySmallSize: false,
   };
+
+  state = {
+    activeField: null,
+  };
+
+  getEntity = (id) => this.props.entities.find((entity) => entity.id === id);
+
+  getActiveEntities = () => this.props.entities.filter((entity) => entity.active);
+
+  handleChange = (entity, value) => {
+    this.validateEntity(entity, value.value);
+    this.props.onChange(entity.id, value);
+  };
+
+  handleFocus = (entityId) => this.setState({ activeField: entityId });
+
+  handleBlur = (entityId) =>
+    this.state.activeField === entityId ? this.setState({ activeField: null }) : null;
 
   toggleEntity = (entityId) => {
-    const { entities, entityValues, change, clearField } = this.props;
-
-    const entity = entities[entityId];
-    const value = entityValues[entityId];
-
-    if (!value) {
-      change(entityId, entity.value);
+    const entity = this.getEntity(entityId);
+    if (entity.active) {
+      this.props.onRemove(entityId);
     } else {
-      clearField(entityId);
+      this.props.onAdd(entity);
     }
+  };
+
+  validateEntity = (entity, value) => {
+    if (!entity.validationFunc) {
+      return null;
+    }
+    const result = entity.validationFunc({ ...entity, value });
+    this.props.onValidate(entity.id, result);
+    return result;
   };
 
   render() {
-    const { entities, entityValues, activeEntities, entitySmallSize } = this.props;
-
+    const { entities, entitySmallSize, errors } = this.props;
     return (
       <div className={cx('entities-group')}>
-        {activeEntities.map((entityId) => {
-          const entity = entities[entityId];
-          const EntityComponent = entity && entity.component;
+        {this.getActiveEntities().map((entity) => {
+          const EntityComponent = entity.component;
           return (
-            entity &&
-            entityValues[entityId] && (
-              <div key={entityId} className={cx('entity-item')}>
-                <FieldProvider name={entityId}>
-                  <EntityComponent
-                    smallSize={entitySmallSize}
-                    value={entityValues[entityId].value}
-                    entityId={entityId}
-                    removable={entity.removable}
-                    title={entity.title}
-                    meta={entity.meta}
-                    onRemove={() => {
-                      this.toggleEntity(entityId);
-                    }}
-                  />
-                </FieldProvider>
-              </div>
-            )
+            <div key={entity.id} className={cx('entity-item')}>
+              <EntityComponent
+                entityId={entity.id}
+                smallSize={entitySmallSize}
+                removable={entity.removable}
+                title={entity.title}
+                meta={entity.meta}
+                onRemove={() => {
+                  this.toggleEntity(entity.id);
+                }}
+                onChange={(value) => this.handleChange(entity, value)}
+                onFocus={() => this.handleFocus(entity.id)}
+                onBlur={() => this.handleBlur(entity.id)}
+                value={entity.value}
+                active={this.state.activeField === entity.id}
+                error={errors[entity.id]}
+              />
+            </div>
           );
         })}
         <EntitiesSelector entities={entities} onChange={this.toggleEntity} />

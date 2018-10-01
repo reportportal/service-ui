@@ -24,7 +24,6 @@ import {
   parentItemSelector,
   loadingSelector,
 } from 'controllers/testItem';
-import { toggleFilter } from 'controllers/filterEntities';
 
 @connect(
   (state) => ({
@@ -41,7 +40,6 @@ import { toggleFilter } from 'controllers/filterEntities';
     unselectAllSuitesAction,
     toggleAllSuitesAction,
     fetchTestItemsAction,
-    changeFilter: (id) => toggleFilter(id),
   },
 )
 @withSorting({
@@ -75,6 +73,12 @@ export class SuitesPage extends Component {
     loading: PropTypes.bool,
     validationErrors: PropTypes.object,
     changeFilter: PropTypes.func,
+    onFilterAdd: PropTypes.func,
+    onFilterRemove: PropTypes.func,
+    onFilterValidate: PropTypes.func,
+    onFilterChange: PropTypes.func,
+    filterErrors: PropTypes.object,
+    filterEntities: PropTypes.array,
   };
 
   static defaultProps = {
@@ -98,6 +102,12 @@ export class SuitesPage extends Component {
     loading: false,
     changeFilter: () => {},
     validationErrors: {},
+    onFilterAdd: () => {},
+    onFilterRemove: () => {},
+    onFilterValidate: () => {},
+    onFilterChange: () => {},
+    filterErrors: {},
+    filterEntities: [],
   };
 
   handleAllSuitesSelection = () => this.props.toggleAllSuitesAction(this.props.suites);
@@ -118,8 +128,13 @@ export class SuitesPage extends Component {
       parentItem,
       loading,
       debugMode,
-      changeFilter,
       deleteItems,
+      onFilterAdd,
+      onFilterRemove,
+      onFilterValidate,
+      onFilterChange,
+      filterErrors,
+      filterEntities,
     } = this.props;
     return (
       <PageLayout>
@@ -133,6 +148,12 @@ export class SuitesPage extends Component {
             parentItem={parentItem}
             onRefresh={this.props.fetchTestItemsAction}
             debugMode={debugMode}
+            filterErrors={filterErrors}
+            onFilterChange={onFilterChange}
+            onFilterValidate={onFilterValidate}
+            onFilterRemove={onFilterRemove}
+            onFilterAdd={onFilterAdd}
+            filterEntities={filterEntities}
           />
           <LaunchSuiteGrid
             data={suites}
@@ -143,7 +164,7 @@ export class SuitesPage extends Component {
             onItemSelect={this.props.toggleSuiteSelectionAction}
             onAllItemsSelect={this.handleAllSuitesSelection}
             loading={loading}
-            onFilterClick={changeFilter}
+            onFilterClick={onFilterAdd}
           />
           <PaginationToolbar
             activePage={activePage}

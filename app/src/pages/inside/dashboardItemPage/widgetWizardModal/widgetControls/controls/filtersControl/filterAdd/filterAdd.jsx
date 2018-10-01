@@ -7,8 +7,10 @@ import { injectIntl, intlShape, defineMessages } from 'react-intl';
 
 import { BigButton } from 'components/buttons/bigButton';
 import { filterName } from 'common/utils/validation';
-import { LaunchLevelEntities } from 'pages/inside/common/filterEntitiesGroups/launchLevelEntities';
 import { ENTITY_NAME, CONDITION_CNT, ENTITY_START_TIME } from 'components/filterEntities/constants';
+import { FilterEntitiesContainer } from 'components/filterEntities/containers';
+import { EntitiesGroup } from 'components/filterEntities/entitiesGroup';
+import { LEVEL_LAUNCH } from 'common/constants/launchLevels';
 
 import { FILTER_ADD_FORM, getOrdersWithDefault } from '../constants';
 import { FilterAddInput } from './filterAddInput';
@@ -85,14 +87,14 @@ export class FilterAdd extends Component {
     if (filter.entities) {
       return filter.entities.reduce(
         (prev, current) => ({ ...prev, [current.filtering_field]: current }),
-        { [ENTITY_NAME]: { value: '', condition: CONDITION_CNT } },
+        {},
       );
     }
 
     return {};
   };
 
-  handleEntitiesChange = ({ entities }) => {
+  handleEntitiesChange = (entities) => {
     const { filter, onChange } = this.props;
 
     onChange({
@@ -116,12 +118,30 @@ export class FilterAdd extends Component {
     return (
       <div className={cx('filter-add')}>
         <h2 className={cx('filter-add-title')}>Add new filter</h2>
-        <FilterAddInput intl={intl} />
+        <FilterAddInput />
         <div className={cx('filter-add-block')}>
-          <LaunchLevelEntities
-            entitySmallSize
-            entities={this.getFilterEntities()}
+          <FilterEntitiesContainer
+            level={LEVEL_LAUNCH}
             onChange={this.handleEntitiesChange}
+            entities={this.getFilterEntities()}
+            render={({
+              onFilterAdd,
+              onFilterRemove,
+              onFilterValidate,
+              onFilterChange,
+              filterErrors,
+              filterEntities,
+            }) => (
+              <EntitiesGroup
+                onChange={onFilterChange}
+                onValidate={onFilterValidate}
+                onRemove={onFilterRemove}
+                onAdd={onFilterAdd}
+                errors={filterErrors}
+                entities={filterEntities}
+                entitySmallSize
+              />
+            )}
           />
           <FiltersSorting filter={filter} onChange={this.handleOrdersChange} />
           <div className={cx('filter-add-buttons-block')}>

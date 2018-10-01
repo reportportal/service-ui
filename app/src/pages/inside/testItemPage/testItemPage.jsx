@@ -24,6 +24,11 @@ import {
 import { SuitesPage } from 'pages/inside/suitesPage';
 import { TestsPage } from 'pages/inside/testsPage';
 import { StepPage } from 'pages/inside/stepPage';
+import {
+  FilterEntitiesURLContainer,
+  FilterEntitiesContainer,
+} from 'components/filterEntities/containers';
+
 import styles from './testItemPage.scss';
 
 const cx = classNames.bind(styles);
@@ -175,7 +180,37 @@ export class TestItemPage extends Component {
     const { level, loading, breadcrumbs, restorePath } = this.props;
     if (!loading && testItemPages[level]) {
       const PageComponent = testItemPages[level];
-      return <PageComponent deleteItems={this.deleteItems} />;
+      return (
+        <FilterEntitiesURLContainer
+          render={({ entities, onChange }) => (
+            <FilterEntitiesContainer
+              entities={entities}
+              onChange={onChange}
+              level={level}
+              render={({
+                filterErrors,
+                filterValues,
+                onFilterChange,
+                onFilterValidate,
+                onFilterAdd,
+                onFilterRemove,
+                filterEntities,
+              }) => (
+                <PageComponent
+                  deleteItems={this.deleteItems}
+                  filterErrors={filterErrors}
+                  filterValues={filterValues}
+                  onFilterChange={onFilterChange}
+                  onFilterValidate={onFilterValidate}
+                  onFilterAdd={onFilterAdd}
+                  onFilterRemove={onFilterRemove}
+                  filterEntities={filterEntities}
+                />
+              )}
+            />
+          )}
+        />
+      );
     }
     return (
       <PageLayout>

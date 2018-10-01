@@ -23,7 +23,6 @@ import {
   EntityItemTags,
   EntityItemStatistics,
 } from 'components/filterEntities';
-import { EntitiesGroup } from 'components/filterEntities/entitiesGroup';
 import {
   CONDITION_CNT,
   CONDITION_GREATER_EQ,
@@ -115,20 +114,20 @@ export class SuiteLevelEntities extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
     defectTypes: PropTypes.object.isRequired,
-    onChange: PropTypes.func,
-    entities: PropTypes.object,
+    filterValues: PropTypes.object,
+    render: PropTypes.func.isRequired,
   };
   static defaultProps = {
-    onChange: () => {},
-    entities: {},
+    filterValues: {},
   };
+
   getStaticEntities = () => {
-    const { intl, entities } = this.props;
+    const { intl, filterValues } = this.props;
     return [
       {
         id: ENTITY_NAME,
         component: EntityItemName,
-        value: entities[ENTITY_NAME] || {
+        value: filterValues[ENTITY_NAME] || {
           value: '',
           condition: CONDITION_CNT,
         },
@@ -143,7 +142,7 @@ export class SuiteLevelEntities extends Component {
       {
         id: ENTITY_START_TIME,
         component: EntityItemStartTime,
-        value: entities[ENTITY_START_TIME] || {
+        value: filterValues[ENTITY_START_TIME] || {
           value: `${moment()
             .startOf('day')
             .subtract(1, 'months')
@@ -153,13 +152,13 @@ export class SuiteLevelEntities extends Component {
           condition: CONDITION_BETWEEN,
         },
         title: intl.formatMessage(messages.StartTimeTitle),
-        active: ENTITY_START_TIME in entities,
+        active: ENTITY_START_TIME in filterValues,
         removable: true,
       },
       {
         id: ENTITY_DESCRIPTION,
         component: EntityItemDescription,
-        value: entities[ENTITY_DESCRIPTION] || {
+        value: filterValues[ENTITY_DESCRIPTION] || {
           value: '',
           condition: CONDITION_CNT,
         },
@@ -169,24 +168,24 @@ export class SuiteLevelEntities extends Component {
             !entityObject.value ||
             !validate.launchDescriptionEntity(entityObject.value)) &&
           'launchDescriptionEntityHint',
-        active: ENTITY_DESCRIPTION in entities,
+        active: ENTITY_DESCRIPTION in filterValues,
         removable: true,
       },
       {
         id: ENTITY_TAGS,
         component: EntityItemTags,
-        value: entities[ENTITY_TAGS] || {
+        value: filterValues[ENTITY_TAGS] || {
           value: '',
           condition: CONDITION_HAS,
         },
         title: intl.formatMessage(messages.TagsTitle),
-        active: ENTITY_TAGS in entities,
+        active: ENTITY_TAGS in filterValues,
         removable: true,
       },
       {
         id: STATS_TOTAL,
         component: EntityItemStatistics,
-        value: entities[STATS_TOTAL] || {
+        value: filterValues[STATS_TOTAL] || {
           value: '',
           condition: CONDITION_GREATER_EQ,
         },
@@ -196,13 +195,13 @@ export class SuiteLevelEntities extends Component {
             !validate.launchNumericEntity(entityObject.value)) &&
           'launchNumericEntityHint',
         title: intl.formatMessage(messages.TotalTitle),
-        active: STATS_TOTAL in entities,
+        active: STATS_TOTAL in filterValues,
         removable: true,
       },
       {
         id: STATS_PASSED,
         component: EntityItemStatistics,
-        value: entities[STATS_PASSED] || {
+        value: filterValues[STATS_PASSED] || {
           value: '',
           condition: CONDITION_GREATER_EQ,
         },
@@ -212,13 +211,13 @@ export class SuiteLevelEntities extends Component {
             !validate.launchNumericEntity(entityObject.value)) &&
           'launchNumericEntityHint',
         title: intl.formatMessage(messages.PassedTitle),
-        active: STATS_PASSED in entities,
+        active: STATS_PASSED in filterValues,
         removable: true,
       },
       {
         id: STATS_FAILED,
         component: EntityItemStatistics,
-        value: entities[STATS_FAILED] || {
+        value: filterValues[STATS_FAILED] || {
           value: '',
           condition: CONDITION_GREATER_EQ,
         },
@@ -228,13 +227,13 @@ export class SuiteLevelEntities extends Component {
             !validate.launchNumericEntity(entityObject.value)) &&
           'launchNumericEntityHint',
         title: intl.formatMessage(messages.FailedTitle),
-        active: STATS_FAILED in entities,
+        active: STATS_FAILED in filterValues,
         removable: true,
       },
       {
         id: STATS_SKIPPED,
         component: EntityItemStatistics,
-        value: entities[STATS_SKIPPED] || {
+        value: filterValues[STATS_SKIPPED] || {
           value: '',
           condition: CONDITION_GREATER_EQ,
         },
@@ -244,14 +243,14 @@ export class SuiteLevelEntities extends Component {
             !validate.launchNumericEntity(entityObject.value)) &&
           'launchNumericEntityHint',
         title: intl.formatMessage(messages.SkippedTitle),
-        active: STATS_SKIPPED in entities,
+        active: STATS_SKIPPED in filterValues,
         removable: true,
       },
     ];
   };
 
   getDynamicEntities = () => {
-    const { intl, entities } = this.props;
+    const { intl, filterValues } = this.props;
     let defectTypeEntities = [];
     DEFECT_TYPES_SEQUENCE.forEach((defectTypeRef) => {
       const defectTypeGroup = this.props.defectTypes[defectTypeRef];
@@ -260,7 +259,7 @@ export class SuiteLevelEntities extends Component {
       defectTypeEntities.push({
         id: `${DEFECT_ENTITY_ID_BASE}${defectTypeRef.toLowerCase()}$total`,
         component: EntityItemStatistics,
-        value: entities[`${DEFECT_ENTITY_ID_BASE}${defectTypeRef.toLowerCase()}$total`] || {
+        value: filterValues[`${DEFECT_ENTITY_ID_BASE}${defectTypeRef.toLowerCase()}$total`] || {
           value: '',
           condition: CONDITION_GREATER_EQ,
         },
@@ -272,7 +271,7 @@ export class SuiteLevelEntities extends Component {
         title: intl.formatMessage(
           messages[`${defectTypeRef}_${hasSubtypes ? 'totalTitle' : 'title'}`],
         ),
-        active: `${DEFECT_ENTITY_ID_BASE}${defectTypeRef.toLowerCase()}$total` in entities,
+        active: `${DEFECT_ENTITY_ID_BASE}${defectTypeRef.toLowerCase()}$total` in filterValues,
         removable: true,
       });
       if (hasSubtypes) {
@@ -280,7 +279,7 @@ export class SuiteLevelEntities extends Component {
           defectTypeGroup.map((defectType) => ({
             id: `${DEFECT_ENTITY_ID_BASE}${defectType.typeRef.toLowerCase()}$${defectType.locator}`,
             component: EntityItemStatistics,
-            value: entities[
+            value: filterValues[
               `${DEFECT_ENTITY_ID_BASE}${defectType.typeRef.toLowerCase()}$${defectType.locator}`
             ] || {
               value: '',
@@ -296,7 +295,7 @@ export class SuiteLevelEntities extends Component {
             }`,
             active:
               `${DEFECT_ENTITY_ID_BASE}${defectType.typeRef.toLowerCase()}$${defectType.locator}` in
-              entities,
+              filterValues,
             removable: true,
             meta: {
               longName: defectType.longName,
@@ -310,11 +309,11 @@ export class SuiteLevelEntities extends Component {
   };
 
   render() {
-    return (
-      <EntitiesGroup
-        entitiesSet={this.getStaticEntities().concat(this.getDynamicEntities())}
-        onChangeOwn={this.props.onChange}
-      />
-    );
+    const { render, ...rest } = this.props;
+
+    return render({
+      ...rest,
+      filterEntities: this.getStaticEntities().concat(this.getDynamicEntities()),
+    });
   }
 }
