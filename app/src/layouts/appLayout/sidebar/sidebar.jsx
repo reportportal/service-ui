@@ -20,8 +20,10 @@
  */
 
 import React, { Component } from 'react';
+import track from 'react-tracking';
 import { connect } from 'react-redux';
 import { activeProjectSelector, activeProjectRoleSelector } from 'controllers/user';
+import { SIDEBAR_EVENTS } from 'components/main/analytics/events';
 import { logoutAction } from 'controllers/auth';
 import classNames from 'classnames/bind';
 import { FormattedMessage } from 'react-intl';
@@ -57,23 +59,37 @@ const cx = classNames.bind(styles);
     logout: logoutAction,
   },
 )
+@track()
 export class Sidebar extends Component {
   static propTypes = {
     projectRole: PropTypes.string.isRequired,
     onClickNavBtn: PropTypes.func,
     activeProject: PropTypes.string.isRequired,
     logout: PropTypes.func,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
   static defaultProps = {
     onClickNavBtn: () => {},
     logout: () => {},
   };
+
+  onClickButton = (eventInfo) => {
+    this.props.onClickNavBtn();
+    this.props.tracking.trackEvent(eventInfo);
+  };
+
   render() {
     const { activeProject } = this.props;
     return (
       <div className={cx('sidebar')}>
         <div className={cx('top-block')}>
-          <div className={cx('sidebar-btn')} onClick={this.props.onClickNavBtn}>
+          <div
+            className={cx('sidebar-btn')}
+            onClick={() => this.onClickButton(SIDEBAR_EVENTS.CLICK_DASHBOARD_BTN)}
+          >
             <SidebarButton
               link={{ type: PROJECT_DASHBOARD_PAGE, payload: { projectId: activeProject } }}
               icon={DashboardIcon}
@@ -92,7 +108,10 @@ export class Sidebar extends Component {
               <FormattedMessage id={'Sidebar.launchesBtn'} defaultMessage={'Launches'} />
             </SidebarButton>
           </div>
-          <div className={cx('sidebar-btn')} onClick={this.props.onClickNavBtn}>
+          <div
+            className={cx('sidebar-btn')}
+            onClick={() => this.onClickButton(SIDEBAR_EVENTS.CLICK_FILTERS_BTN)}
+          >
             <SidebarButton
               link={{ type: PROJECT_FILTERS_PAGE, payload: { projectId: activeProject } }}
               icon={FiltersIcon}
@@ -101,7 +120,10 @@ export class Sidebar extends Component {
             </SidebarButton>
           </div>
           {this.props.projectRole !== CUSTOMER && (
-            <div className={cx('sidebar-btn')} onClick={this.props.onClickNavBtn}>
+            <div
+              className={cx('sidebar-btn')}
+              onClick={() => this.onClickButton(SIDEBAR_EVENTS.CLICK_DEBUG_BTN)}
+            >
               <SidebarButton
                 link={{
                   type: PROJECT_USERDEBUG_PAGE,
