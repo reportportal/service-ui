@@ -20,19 +20,26 @@
  */
 
 import classNames from 'classnames/bind';
+import track from 'react-tracking';
 import React, { Component } from 'react';
 import { NavLink } from 'redux-first-router-link';
 import PropTypes from 'prop-types';
+import { HEADER_EVENTS } from 'components/main/analytics/events';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { PROJECT_PAGE } from 'controllers/pages/constants';
 import styles from './projectSelector.scss';
 
 const cx = classNames.bind(styles);
 
+@track()
 export class ProjectSelector extends Component {
   static propTypes = {
     projects: PropTypes.arrayOf(PropTypes.string),
     activeProject: PropTypes.string,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
   static defaultProps = {
     projects: [],
@@ -47,13 +54,21 @@ export class ProjectSelector extends Component {
   componentWillUnmount() {
     document.removeEventListener('click', this.handleOutsideClick, false);
   }
+
+  onClickProjectName = (e) => {
+    this.props.tracking.trackEvent(HEADER_EVENTS.CLICK_PROJECT_NAME_LINK);
+    e.stopPropagation();
+  };
+
+  toggleShowList = () => {
+    this.props.tracking.trackEvent(HEADER_EVENTS.CLICK_PROJECT_DROPDOWN);
+    this.setState({ opened: !this.state.opened });
+  };
+
   handleOutsideClick = (e) => {
     if (!this.node.contains(e.target) && this.state.opened) {
       this.setState({ opened: false });
     }
-  };
-  toggleShowList = () => {
-    this.setState({ opened: !this.state.opened });
   };
 
   render() {
@@ -77,6 +92,7 @@ export class ProjectSelector extends Component {
                 key={project}
                 className={cx('project-list-item')}
                 activeClassName={cx('active')}
+                onClick={this.onClickProjectName}
               >
                 {project}
               </NavLink>

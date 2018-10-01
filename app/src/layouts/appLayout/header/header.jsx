@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
+import track from 'react-tracking';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { NavLink } from 'redux-first-router-link';
+import { HEADER_EVENTS } from 'components/main/analytics/events';
 import {
   userInfoSelector,
   activeProjectSelector,
@@ -26,6 +28,7 @@ const cx = classNames.bind(styles);
   accountRole: userAccountRoleSelector(state),
   userRole: activeProjectRoleSelector(state),
 }))
+@track()
 export class Header extends Component {
   static propTypes = {
     activeProject: PropTypes.string.isRequired,
@@ -35,6 +38,10 @@ export class Header extends Component {
     toggleSideMenu: PropTypes.func,
     accountRole: PropTypes.string.isRequired,
     userRole: PropTypes.string.isRequired,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
 
   static defaultProps = {
@@ -42,6 +49,10 @@ export class Header extends Component {
     assignedProjects: {},
     sideMenuOpened: false,
     toggleSideMenu: () => {},
+  };
+
+  onClickLink = (eventInfo) => {
+    this.props.tracking.trackEvent(eventInfo);
   };
 
   render() {
@@ -77,6 +88,7 @@ export class Header extends Component {
               to={{ type: PROJECT_MEMBERS_PAGE, payload: { projectId: activeProject } }}
               className={cx('nav-btn', 'members-btn')}
               activeClassName={cx('active')}
+              onClick={() => this.onClickLink(HEADER_EVENTS.CLICK_MEMBERS_BTN)}
             />
           )}
           <NavLink
@@ -86,6 +98,7 @@ export class Header extends Component {
             }}
             className={cx('nav-btn', 'settings-btn')}
             activeClassName={cx('active')}
+            onClick={() => this.onClickLink(HEADER_EVENTS.CLICK_SETTINGS_BTN)}
           />
         </div>
         <UserBlock user={user} />
