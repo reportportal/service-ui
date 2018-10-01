@@ -1,0 +1,19 @@
+.no-item-message {
+  padding: 25px 0;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.warning-icon {
+  display: inline-block;
+  width: 21px;
+  height: 21px;
+}
+.message {
+  padding-left: 8px;
+  color: $COLOR--gray-47;
+  font-family: $FONT-REGULAR;
+  font-size: 17px;
+  text-align: center;
+}

@@ -1,12 +1,23 @@
 import { createSelector } from 'reselect';
-import { logItemIdSelector, pagePropertiesSelector } from 'controllers/pages';
+import {
+  logItemIdSelector,
+  pagePropertiesSelector,
+  createQueryParametersSelector,
+} from 'controllers/pages';
+import { DEFAULT_PAGINATION } from 'controllers/pagination';
 import { extractNamespacedQuery } from 'common/utils/routingUtils';
 import { calculateGrowthDuration, normalizeHistoryItem } from './utils';
 import { NAMESPACE } from './constants';
 
 const logSelector = (state) => state.log || {};
-
 const historyEntriesSelector = (state) => logSelector(state).historyEntries || [];
+export const logItemsSelector = (state) => logSelector(state).logItems || [];
+export const logPaginationSelector = (state) => logSelector(state).pagination;
+export const loadingSelector = (state) => logSelector(state).loading || false;
+export const querySelector = createQueryParametersSelector({
+  defaultPagination: DEFAULT_PAGINATION,
+  defaultSorting: 'time,ASC',
+});
 
 export const historyItemsSelector = createSelector(
   historyEntriesSelector,
@@ -47,4 +58,10 @@ export const activeLogIdSelector = createSelector(
     const namespacedQuery = extractNamespacedQuery(query, NAMESPACE);
     return namespacedQuery.history || logItemId;
   },
+);
+
+export const activeLogSelector = createSelector(
+  historyItemsSelector,
+  activeLogIdSelector,
+  (historyItems, logItemId) => historyItems.find((historyItem) => historyItem.id === logItemId),
 );

@@ -33,6 +33,10 @@ const messages = defineMessages({
     id: 'LaunchesPage.noDefectType',
     defaultMessage: 'Item does not have defect type',
   },
+  noDefectTypeToLinkIssue: {
+    id: 'LaunchesPage.noDefectTypeToLinkIssue',
+    defaultMessage: "You can't link issue if item has no defect type",
+  },
   alreadyIgnored: {
     id: 'LaunchesPage.alreadyIgnored',
     defaultMessage: 'Item already ignored in Auto-Analysis',
@@ -44,6 +48,10 @@ const messages = defineMessages({
   noLinkedIssue: {
     id: 'LaunchesPage.noLinkedIssue',
     defaultMessage: "Item doesn't have a linked issue",
+  },
+  noIssue: {
+    id: 'LaunchesPage.noIssue',
+    defaultMessage: 'Item has not issue for edit',
   },
 });
 

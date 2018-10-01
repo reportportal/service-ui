@@ -3,8 +3,6 @@
   box-sizing: border-box;
   padding: 10px;
 
-  text-decoration: none;
-
   @media (max-width: $SCREEN_MD_MAX_DASHBOARD) {
     width: 33.3%;
   }
@@ -89,13 +87,14 @@
   }
 }
 
-.grid-view__inner {
+.grid-view-inner {
   $grid-hover-shadow: 0 0 20px 0 $COLOR--gray-91;
-
+  position: relative;
+  display: block;
   border: 1px solid $COLOR--gray-91;
   background: $COLOR--white-four;
-  position: relative;
   cursor: pointer;
+  text-decoration: none;
 
   &:hover {
     box-shadow: $grid-hover-shadow;

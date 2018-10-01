@@ -1,6 +1,10 @@
 .name-wrapper {
   width: 100%;
   display: inline-block;
+  
+  &:hover .pencil-icon{
+    display: inline-block;
+  }
 }
 
 .name {

@@ -1,10 +1,5 @@
 .duration-block {
   display: inline;
-  margin-right: 20px;
-
-  @media (max-width: $SCREEN_SM_MAX) {
-    margin-right: 15px;
-  }
 }
 .error {
   .icon {

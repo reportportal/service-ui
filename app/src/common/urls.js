@@ -79,6 +79,8 @@ export const URLS = {
     `${urlBase}project/${activeProject}/usernames?filter.cnt.users=`,
   projectIndex: (activeProject) => `${urlBase}project/${activeProject}/index`,
 
+  projectPreferencesEmailConfiguration: (activeProject) =>
+    `${urlBase}project/${activeProject}/emailconfig`,
   suite: (activeProject, suiteId) => `${urlBase}${activeProject}/item/${suiteId}`,
 
   testItems: (activeProject, ids) => `${urlBase}${activeProject}/item${getQueryParams({ ids })}`,
@@ -88,6 +90,7 @@ export const URLS = {
       ids,
       history_depth: historyDepth,
     })}`,
+  testItemsAddIssues: (activeProject) => `${urlBase}${activeProject}/item/issue/add`,
 
   logItem: (activeProject, itemId, level) =>
     `${urlBase}${activeProject}/log${getQueryParams({
@@ -101,11 +104,10 @@ export const URLS = {
     `${urlBase}${activeProject}/log${getQueryParams({
       'filter.eq.item': itemId,
       'filter.gte.level': level,
-      'page.page': 1,
-      'page.size': 50,
-      'page.sort': 'time,ASC',
     })}`,
   logItemActivity: (activeProject, itemId) => `${urlBase}${activeProject}/activity/item/${itemId}`,
+  logAttachment: (activeProject, id) =>
+    `${urlBase}${activeProject}/data/${id}${getQueryParams({ access_token: getToken() })}`,
 
   user: () => `${urlBase}user`,
   userRegistration: () => `${urlBase}user/registration`,
@@ -117,6 +119,8 @@ export const URLS = {
   userInfo: (userId) => `${urlBase}user/${userId}`,
   userInviteInternal: (activeProject) => `${urlBase}project/${activeProject}/assign`,
   userInviteExternal: () => `${urlBase}user/bid`,
+  teamMembersSearchUrl: (activeProject) =>
+    `${urlBase}project/${activeProject}/usernames?filter.cnt.users=`,
   userUnasign: (activeProject) => `${urlBase}project/${activeProject}/unassign`,
 
   widget: (activeProject, widgetId) => `${urlBase}${activeProject}/widget/${widgetId}`,

@@ -26,28 +26,25 @@ import { withReadme } from 'storybook-readme';
 import { AdminHeader } from './header';
 import README from './README.md';
 
-storiesOf('Components/Main/Admin/Header', module)
-  .addDecorator(host({
-    title: 'AdminHeader component',
-    align: 'center middle',
-    backdrop: 'rgba(70, 69, 71, 0.2)',
-    background: '#ffffff',
-    height: 100,
-    width: '100%',
-  }))
+storiesOf('Layouts/Admin/Header', module)
+  .addDecorator(
+    host({
+      title: 'Admin header component',
+      align: 'center middle',
+      backdrop: 'rgba(70, 69, 71, 0.2)',
+      background: '#ffffff',
+      height: 100,
+      width: '100%',
+    }),
+  )
   .addDecorator(withReadme(README))
-  .add('default state', () => (
-    <AdminHeader />
-  ))
-  .add('with crumb (mobile view)', () => (
-    <AdminHeader adminHeaderCrumb=" / Test crumb" />
-  ))
+  .add('default state', () => <AdminHeader />)
+  .add('with crumb (mobile view)', () => <AdminHeader adminHeaderCrumb=" / Test crumb" />)
   .add('with actions', () => (
-    <AdminHeader onClickBackToProject={action('Back to project clicked ')} onClickLogout={action('Logout clicked ')} />
+    <AdminHeader
+      onClickBackToProject={action('Back to project clicked ')}
+      onClickLogout={action('Logout clicked ')}
+    />
   ))
-  .add('with mobile action', () => (
-    <AdminHeader onClickMenu={action('Menu clicked ')} />
-  ))
-  .add('menu open', () => (
-    <AdminHeader isMenuOpen />
-  ));
+  .add('with mobile action', () => <AdminHeader onClickMenu={action('Menu clicked ')} />)
+  .add('menu open', () => <AdminHeader isMenuOpen />);

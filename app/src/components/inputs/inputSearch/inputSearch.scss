@@ -5,7 +5,7 @@
   width: 100%;
   border-bottom: 1px solid $COLOR--gray-80;
   box-sizing: border-box;
-  transition: border-color ease-in-out .15s;
+  transition: border-color ease-in-out 0.15s;
 
   &:hover {
     border-color: $COLOR--gray-47;
@@ -33,6 +33,12 @@
   height: 16px;
   margin-left: 2px;
 
+  &.at-right {
+    position: absolute;
+    right: 4px;
+    bottom: 3px;
+  }
+
   svg {
     fill: $COLOR--gray-60;
   }
@@ -54,10 +60,22 @@
   &:-webkit-autofill {
     -webkit-box-shadow: 0 0 0 1000px #fdffeb inset;
   }
-  &[type=number]::-webkit-inner-spin-button,
-  &[type=number]::-webkit-outer-spin-button {
+  &[type='number']::-webkit-inner-spin-button,
+  &[type='number']::-webkit-outer-spin-button {
     -webkit-appearance: none;
     margin: 0;
   }
 }
 
+.search-hint {
+  position: absolute;
+  bottom: -13px;
+  display: inline-block;
+  max-width: 101%;
+  overflow: hidden;
+  color: $COLOR--gray-60;
+  font-size: 10px;
+  text-transform: none;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

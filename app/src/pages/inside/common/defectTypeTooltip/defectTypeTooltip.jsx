@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -38,41 +38,51 @@ export class DefectTypeTooltip extends Component {
 
   render() {
     const { formatMessage } = this.props.intl;
-    const defectConfig = this.props.projectConfig.subTypes[this.props.type.toUpperCase()];
+    const defectConfig =
+      this.props.projectConfig.subTypes &&
+      this.props.projectConfig.subTypes[this.props.type.toUpperCase()];
+
     return (
       <div className={cx('defect-type-tooltip')}>
-        {this.props.type !== TO_INVESTIGATE && (
-          <DefectLink
-            itemId={this.props.itemId}
-            defects={Object.keys(this.props.data)}
-            className={cx('total-item')}
-          >
-            <div className={cx('name')}>
-              <div className={cx('circle')} style={{ backgroundColor: defectConfig[0].color }} />
-              {formatMessage(messages[`${this.props.type}_total`])}
-            </div>
-            <span className={cx('value')}>{this.props.data.total}</span>
-          </DefectLink>
-        )}
-        {Object.keys(this.props.data).map((key) => {
-          const defectType = defectConfig.find((item) => item.locator === key);
-          return (
-            defectType && (
+        {defectConfig && (
+          <Fragment>
+            {this.props.type !== TO_INVESTIGATE && (
               <DefectLink
-                key={key}
                 itemId={this.props.itemId}
-                defects={[key]}
-                className={cx('item')}
+                defects={Object.keys(this.props.data)}
+                className={cx('total-item')}
               >
                 <div className={cx('name')}>
-                  <div className={cx('circle')} style={{ backgroundColor: defectType.color }} />
-                  {defectType.longName}
+                  <div
+                    className={cx('circle')}
+                    style={{ backgroundColor: defectConfig[0].color }}
+                  />
+                  {formatMessage(messages[`${this.props.type}_total`])}
                 </div>
-                <span className={cx('value')}>{this.props.data[defectType.locator]}</span>
+                <span className={cx('value')}>{this.props.data.total}</span>
               </DefectLink>
-            )
-          );
-        })}
+            )}
+            {Object.keys(this.props.data).map((key) => {
+              const defectType = defectConfig.find((item) => item.locator === key);
+              return (
+                defectType && (
+                  <DefectLink
+                    key={key}
+                    itemId={this.props.itemId}
+                    defects={[key]}
+                    className={cx('item')}
+                  >
+                    <div className={cx('name')}>
+                      <div className={cx('circle')} style={{ backgroundColor: defectType.color }} />
+                      {defectType.longName}
+                    </div>
+                    <span className={cx('value')}>{this.props.data[defectType.locator]}</span>
+                  </DefectLink>
+                )
+              );
+            })}
+          </Fragment>
+        )}
       </div>
     );
   }

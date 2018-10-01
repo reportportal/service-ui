@@ -1,0 +1,53 @@
+.link-issue-fields {
+  .issue-fields-list-item {
+    position: relative;
+    margin-bottom: 18px;
+  }
+}
+
+.multiple-systems-title {
+  display: inline;
+  min-width: 140px;
+  padding: 0;
+  font-size: 13px;
+  font-family: $FONT-REGULAR;
+  text-align: center;
+}
+
+.inputs-group-block {
+  margin-bottom: 10px;
+}
+
+.field-wrapper {
+  display: inline-block;
+  width: 350px;
+  padding: 0;
+  margin-left: 20px;
+  margin-right: 25px;
+}
+
+.remove-issue-fields-button {
+  position: absolute;
+  right: -4px;
+  top: 25px;
+  width: 17px;
+  height: 17px;
+  vertical-align: middle;
+  transition: transform 200ms ease-in-out;
+  cursor: pointer;
+
+  svg {
+    fill: $COLOR--gray-60;
+  }
+  &:hover {
+    transform: scale(1.2);
+
+    svg {
+      fill: $COLOR--gray-47;
+    }
+  }
+}
+
+.add-issue-button {
+  margin-left: 160px;
+}

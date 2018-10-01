@@ -22,16 +22,32 @@
 import { storiesOf } from '@storybook/react';
 import { host } from 'storybook-host';
 import { withReadme } from 'storybook-readme';
-import { UuidBlock } from 'pages/inside/profilePage/uuidBlock';
+import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { ContainerWithTabs } from './containerWithTabs';
 import README from './README.md';
 
 const mockDataContentTypes = [
   { name: 'Text', content: 'some basic text.' },
   { name: 'SomeVeryLongTabName', content: 'With very long tab name' },
-  { name: 'HTML', content: <b>Content of second tab bold <small>Content of second  small</small></b> },
-  { name: 'Long text', content: <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Corporis eaque ex excepturi fuga itaque laborum libero maxime mollitia neque odio quisquam quod repellendus sequi suscipit tempora totam velit, voluptate voluptatum.</p> },
-  { name: 'Component', content: <UuidBlock uuid={'35668002-be4f-44a2-9a27-6cafcbd024b5'} /> },
+  {
+    name: 'HTML',
+    content: (
+      <b>
+        Content of second tab bold <small>Content of second tab small</small>
+      </b>
+    ),
+  },
+  {
+    name: 'Long text',
+    content: (
+      <p>
+        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Corporis eaque ex excepturi fuga
+        itaque laborum libero maxime mollitia neque odio quisquam quod repellendus sequi suscipit
+        tempora totam velit, voluptate voluptatum.
+      </p>
+    ),
+  },
+  { name: 'Component', content: <SpinningPreloader /> },
 ];
 const mockDataManyTabs = [
   { name: 'Text 0', content: 'some basic text 0.' },
@@ -52,23 +68,22 @@ const mockDataManyTabs = [
   { name: 'Text 15', content: 'some basic text 15.' },
 ];
 
-storiesOf('Components/Main/containerWithTabs', module)
-  .addDecorator(host({
-    title: 'Dynamic container with tabs',
-    align: 'center middle',
-    backdrop: 'rgba(70, 69, 71, 0.2)',
-    background: '#f5f5f5',
-    height: 'auto',
-    width: '70%',
-  }))
+storiesOf('Components/Main/ContainerWithTabs', module)
+  .addDecorator(
+    host({
+      title: 'Dynamic container with tabs',
+      align: 'center middle',
+      backdrop: 'rgba(70, 69, 71, 0.2)',
+      background: '#f5f5f5',
+      height: 'auto',
+      width: '70%',
+    }),
+  )
   .addDecorator(withReadme(README))
-  .add('default state (no provided info)', () => (
-    <ContainerWithTabs />
-  ))
+  .add('default state (no provided info)', () => <ContainerWithTabs />)
   .add('with different data', () => (
-    <ContainerWithTabs data={mockDataContentTypes} />
+    <div id="tooltip-root">
+      <ContainerWithTabs data={mockDataContentTypes} />
+    </div>
   ))
-  .add('with lot of tabs', () => (
-    <ContainerWithTabs data={mockDataManyTabs} />
-  ))
-;
+  .add('with lot of tabs', () => <ContainerWithTabs data={mockDataManyTabs} />);

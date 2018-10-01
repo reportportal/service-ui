@@ -6,6 +6,7 @@ import {
   UPDATE_AUTO_ANALYSIS_CONFIGURATION,
   FETCH_PROJECT_PREFERENCES_SUCCESS,
   TOGGLE_DISPLAY_FILTER_ON_LAUNCHES,
+  UPDATE_EMAIL_CONFIG_SUCCESS,
 } from './constants';
 
 describe('project reducer', () => {
@@ -47,6 +48,18 @@ describe('project reducer', () => {
           ...oldState.configuration,
           analyzerConfiguration: payload,
         },
+      });
+    });
+
+    test('should handle UPDATE_EMAIL_CONFIG_SUCCESS', () => {
+      const payload = { foo: 'bar' };
+      const newState = projectInfoReducer(PROJECT_INFO_INITIAL_STATE, {
+        type: UPDATE_EMAIL_CONFIG_SUCCESS,
+        payload,
+      });
+      expect(newState).toEqual({
+        ...PROJECT_INFO_INITIAL_STATE,
+        configuration: { ...PROJECT_INFO_INITIAL_STATE.configuration, emailConfiguration: payload },
       });
     });
   });

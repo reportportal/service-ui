@@ -9,6 +9,7 @@ import { ModalLayout, withModal } from 'components/main/modal';
 import { activeProjectSelector } from 'controllers/user';
 import { addTokenToImagePath, uniqueId, fetch } from 'common/utils';
 import { URLS } from 'common/urls';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { LaunchIcon } from './launchIcon';
 import styles from './launchImportModal.scss';
 import DropZoneIcon from './img/shape-inline.svg';
@@ -53,7 +54,7 @@ const messages = defineMessages({
   },
   importConfirmation: {
     id: 'LaunchImportModal.importConfirmation',
-    defaultMessage: 'Confirm cancelation',
+    defaultMessage: 'Confirm cancel',
   },
   incorrectFileFormat: {
     id: 'LaunchImportModal.incorrectFileFormat',
@@ -137,6 +138,23 @@ export class LaunchImportModal extends Component {
       },
     };
   };
+
+  getCloseConfirmationConfig = (isValidFilesExists, loading, uploadFinished) => {
+    const { intl } = this.props;
+
+    if (!isValidFilesExists || uploadFinished) {
+      return null;
+    }
+    return {
+      withCheckbox: loading,
+      closeConfirmedCallback: this.closeConfirmedCallback,
+      confirmationMessage: intl.formatMessage(messages.importConfirmation),
+      confirmationWarning: intl.formatMessage(
+        loading ? messages.importConfirmationWarning : COMMON_LOCALE_KEYS.CLOSE_MODAL_WARNING,
+      ),
+    };
+  };
+
   cancelRequests = [];
 
   validateFile = (file) => ({
@@ -265,7 +283,7 @@ export class LaunchImportModal extends Component {
       },
       onUploadProgress: (progressEvent) => {
         const { files } = this.state;
-        const percentCompleted = Math.round(progressEvent.loaded * 100 / progressEvent.total);
+        const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
 
         this.setState({
           files: files.map((item) => {
@@ -284,7 +302,6 @@ export class LaunchImportModal extends Component {
     const { intl } = this.props;
     const { files } = this.state;
     const validFiles = files.filter(({ valid }) => valid);
-    const isAbleToClose = validFiles.length ? validFiles.some(({ isLoading }) => !isLoading) : true;
     const loading = validFiles.some(({ isLoading }) => isLoading);
     const uploadFinished = validFiles.length ? validFiles.every(({ uploaded }) => uploaded) : false;
 
@@ -295,9 +312,11 @@ export class LaunchImportModal extends Component {
         cancelButton={{
           text: intl.formatMessage(messages.cancelButton),
         }}
-        closeConfirmation={{ isAbleToClose, closeConfirmedCallback: this.closeConfirmedCallback }}
-        confirmationMessage={intl.formatMessage(messages.importConfirmation)}
-        confirmationWarning={intl.formatMessage(messages.importConfirmationWarning)}
+        closeConfirmation={this.getCloseConfirmationConfig(
+          validFiles.length,
+          loading,
+          uploadFinished,
+        )}
       >
         <Dropzone
           className={cx('dropzone-wrapper')}
@@ -314,7 +333,9 @@ export class LaunchImportModal extends Component {
           )}
           {files.length > 0 && (
             <div className={cx('files-list')}>
-              {files.map((item) => <LaunchIcon {...item} onDelete={this.onDelete} key={item.id} />)}
+              {files.map((item) => (
+                <LaunchIcon {...item} onDelete={this.onDelete} key={item.id} />
+              ))}
             </div>
           )}
         </Dropzone>

@@ -6,6 +6,7 @@ import {
   FETCH_PROJECT_PREFERENCES_SUCCESS,
   TOGGLE_DISPLAY_FILTER_ON_LAUNCHES,
   UPDATE_AUTO_ANALYSIS_CONFIGURATION,
+  UPDATE_EMAIL_CONFIG_SUCCESS,
 } from './constants';
 
 const toggleFilter = (filters = [], filter) => {
@@ -27,6 +28,11 @@ export const projectInfoReducer = (state = PROJECT_INFO_INITIAL_STATE, { type, p
           ...state.configuration,
           analyzerConfiguration: payload,
         },
+      };
+    case UPDATE_EMAIL_CONFIG_SUCCESS:
+      return {
+        ...state,
+        ...{ configuration: { ...state.configuration, emailConfiguration: payload } },
       };
     default:
       return state;

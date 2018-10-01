@@ -50,6 +50,7 @@ export class InputTagsSearch extends Component {
     showNewLabel: PropTypes.bool,
     dynamicSearchPromptText: PropTypes.bool,
     isClearable: PropTypes.bool,
+    disabled: PropTypes.bool,
   };
   static defaultProps = {
     uri: '',
@@ -66,14 +67,15 @@ export class InputTagsSearch extends Component {
     multi: false,
     removeSelected: false,
     makeOptions: () => {},
-    isValidNewOption: () => {},
     onChange: () => {},
+    isValidNewOption: ({ label }) => label,
     onFocus: () => {},
     onBlur: () => {},
     minLength: 1,
     showNewLabel: false,
     dynamicSearchPromptText: false,
     isClearable: false,
+    disabled: false,
   };
   state = {
     searchPromptText: this.props.nothingFound,
@@ -93,9 +95,6 @@ export class InputTagsSearch extends Component {
       this.setState({ searchPromptText: this.props.nothingFound });
     }
     return input;
-  };
-  onBlur = () => {
-    this.props.onBlur(this.props.value);
   };
   getItems = (input) => {
     if (input.length >= this.props.minLength) {
@@ -132,7 +131,6 @@ export class InputTagsSearch extends Component {
   };
   render() {
     const {
-      error,
       touched,
       async,
       creatable,
@@ -141,11 +139,15 @@ export class InputTagsSearch extends Component {
       value,
       options,
       onChange,
-      onFocus,
       multi,
       removeSelected,
       placeholder,
       isClearable,
+      disabled,
+      error,
+      onFocus,
+      isValidNewOption,
+      onBlur,
     } = this.props;
     const SelectComponent = selectType(async, creatable);
     return (
@@ -157,21 +159,22 @@ export class InputTagsSearch extends Component {
           cache={false}
           className={cx('select2-search-tags')}
           noResultsText={this.state.searchPromptText}
+          onInputChange={this.onInputChange}
+          optionRenderer={this.renderOption}
+          menuRenderer={renderItems}
+          promptTextCreator={this.renderNewItemLabel}
+          onBlur={onBlur}
           loadingPlaceholder={loadingPlaceholder}
           searchPromptText={focusPlaceholder}
           value={value}
           options={options}
-          onInputChange={this.onInputChange}
           onChange={onChange}
           onFocus={onFocus}
-          onBlur={this.onBlur}
           multi={multi}
-          optionRenderer={this.renderOption}
-          isValidNewOption={this.isValidNewOption}
-          menuRenderer={renderItems}
-          promptTextCreator={this.renderNewItemLabel}
+          isValidNewOption={isValidNewOption}
           removeSelected={removeSelected}
           isClearable={isClearable}
+          disabled={disabled}
         />
       </div>
     );

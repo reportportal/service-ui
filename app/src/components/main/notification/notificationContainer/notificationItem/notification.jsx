@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { defineMessages, intlShape } from 'react-intl';
+import { defineMessages, intlShape, injectIntl } from 'react-intl';
 import { NOTIFICATION_TYPES } from 'controllers/notification/constants';
 import styles from './notification.scss';
 
@@ -16,15 +16,20 @@ const messages = defineMessages({
   infoLogout: { id: 'Notification.infoLogout', defaultMessage: 'You have been logged out' },
 });
 
+@injectIntl
 export class Notification extends PureComponent {
   static propTypes = {
     message: PropTypes.string,
     messageId: PropTypes.string,
+    type: PropTypes.oneOf([
+      NOTIFICATION_TYPES.ERROR,
+      NOTIFICATION_TYPES.INFO,
+      NOTIFICATION_TYPES.SUCCESS,
+    ]),
+    values: PropTypes.object,
     uid: PropTypes.number.isRequired,
-    type: PropTypes.oneOf(['', 'error', 'info', 'success']),
     onMessageClick: PropTypes.func.isRequired,
     intl: intlShape.isRequired,
-    values: PropTypes.object,
   };
   static defaultProps = {
     message: '',

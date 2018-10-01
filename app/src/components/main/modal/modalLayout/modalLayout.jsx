@@ -20,10 +20,8 @@ export class ModalLayout extends Component {
   static propTypes = {
     className: PropTypes.string,
     hideModalAction: PropTypes.func.isRequired, // this props
-    title: PropTypes.string, // header props
-
+    title: PropTypes.oneOfType([PropTypes.string, PropTypes.node]), // header props
     children: PropTypes.node, // content props
-
     warningMessage: PropTypes.string, // footer props
     okButton: PropTypes.shape({
       text: PropTypes.string.isRequired,
@@ -33,24 +31,31 @@ export class ModalLayout extends Component {
     cancelButton: PropTypes.shape({
       text: PropTypes.string.isRequired,
     }),
-    customButton: PropTypes.node,
-    closeConfirmation: PropTypes.object,
-    confirmationMessage: PropTypes.string,
-    confirmationWarning: PropTypes.string,
+    customButton: PropTypes.oneOfType([
+      PropTypes.node,
+      PropTypes.shape({
+        onClick: PropTypes.func,
+        component: PropTypes.func,
+        buttonProps: PropTypes.object,
+      }),
+    ]),
+    closeConfirmation: PropTypes.shape({
+      closeConfirmedCallback: PropTypes.func,
+      withCheckbox: PropTypes.bool,
+      confirmationMessage: PropTypes.string,
+      confirmationWarning: PropTypes.string,
+    }),
   };
   static defaultProps = {
     className: '',
     title: '',
-
     children: null,
-
     warningMessage: '',
     okButton: null,
     cancelButton: null,
     customButton: null,
+    stopOutsideClose: false,
     closeConfirmation: null,
-    confirmationMessage: '',
-    confirmationWarning: '',
   };
   state = {
     shown: false,
@@ -68,23 +73,33 @@ export class ModalLayout extends Component {
     this.setState({ shown: true });
   }
   onKeydown = (e) => {
+    const { okButton, customButton } = this.props;
     if (e.keyCode === 27) {
       this.closeModal();
     }
     if ((e.ctrlKey && e.keyCode === 13) || (e.metaKey && e.keyCode === 13)) {
-      this.onClickOk();
+      (okButton && okButton.onClick && okButton.onClick(this.closeModalWithOk)) ||
+        (customButton && customButton.onClick && customButton.onClick(this.closeModalWithOk));
     }
   };
   onClickModal = (e) => {
-    !this.modal.contains(e.target) && this.closeModal();
-  };
-  onClickOk = () => {
-    this.props.okButton.onClick(this.closeModal);
+    const { closeConfirmation } = this.props;
+
+    if (!this.modal.contains(e.target)) {
+      if (!closeConfirmation) {
+        this.closeModal();
+      } else {
+        this.setState({ showConfirmation: true });
+      }
+    }
   };
   onCloseConfirm = (closeConfirmed) => {
     this.setState({
       closeConfirmed,
     });
+  };
+  closeModalWithOk = () => {
+    this.setState({ shown: false });
   };
   closeModal = () => {
     const { closeConfirmation } = this.props;
@@ -95,25 +110,16 @@ export class ModalLayout extends Component {
       this.setState({ shown: false });
     }
   };
-  showCloseConfirmation = () => {
+  closeModalWithConfirmation = () => {
     const { closeConfirmed } = this.state;
-    const { closeConfirmedCallback } = this.props.closeConfirmation;
+    const { closeConfirmedCallback, withCheckbox } = this.props.closeConfirmation;
 
-    if (closeConfirmed) {
+    if (withCheckbox && closeConfirmed) {
       closeConfirmedCallback && closeConfirmedCallback();
       this.setState({ shown: false });
     }
 
-    this.setState({ showConfirmation: true });
-  };
-  closeModalWithConfirmation = () => {
-    const { isAbleToClose } = this.props.closeConfirmation;
-
-    if (isAbleToClose) {
-      this.setState({ shown: false });
-    } else {
-      this.showCloseConfirmation();
-    }
+    withCheckbox ? this.setState({ showConfirmation: true }) : this.setState({ shown: false });
   };
   render() {
     const {
@@ -123,19 +129,19 @@ export class ModalLayout extends Component {
       cancelButton,
       customButton,
       children,
-      confirmationMessage,
-      confirmationWarning,
+      closeConfirmation,
     } = this.props;
     const footerProps = {
       warningMessage,
       okButton,
       cancelButton,
       customButton,
-      confirmationMessage,
-      confirmationWarning,
+      confirmationMessage: closeConfirmation && closeConfirmation.confirmationMessage,
+      confirmationWarning: closeConfirmation && closeConfirmation.confirmationWarning,
       showConfirmation: this.state.showConfirmation,
       closeConfirmed: this.state.closeConfirmed,
       onCloseConfirm: this.onCloseConfirm,
+      confirmWithCheckbox: closeConfirmation && closeConfirmation.withCheckbox,
     };
 
     return (
@@ -160,8 +166,8 @@ export class ModalLayout extends Component {
 
                   <ModalFooter
                     {...footerProps}
-                    onClickOk={this.onClickOk}
-                    onClickCancel={this.closeModal}
+                    onClickOk={this.closeModalWithOk}
+                    closeHandler={this.closeModal}
                     className={this.props.className}
                   />
                 </div>

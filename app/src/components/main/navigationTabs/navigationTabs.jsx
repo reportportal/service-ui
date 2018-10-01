@@ -45,18 +45,19 @@ export class NavigationTabs extends Component {
           />
         </div>
         <div className={cx('tabs-wrapper')}>
-          {Object.keys(config).map((item) => (
-            <NavLink
-              key={item}
-              className={cx('tab')}
-              to={config[item].link}
-              activeClassName={cx('active')}
-            >
-              {config[item].name}
-            </NavLink>
-          ))}
+          {config &&
+            Object.keys(config).map((item) => (
+              <NavLink
+                key={item}
+                className={cx('tab')}
+                to={config[item].link}
+                activeClassName={cx('active')}
+              >
+                {config[item].name}
+              </NavLink>
+            ))}
         </div>
-        <div className={cx('content-wrapper')}>{config[activeTab].component}</div>
+        <div className={cx('content-wrapper')}>{activeTab && config[activeTab].component}</div>
       </div>
     );
   };

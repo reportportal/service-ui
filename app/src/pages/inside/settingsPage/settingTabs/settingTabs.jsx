@@ -20,8 +20,10 @@ import {
 } from 'controllers/user';
 import { NavigationTabs } from 'components/main/navigationTabs';
 import classNames from 'classnames/bind';
+import { BetaBadge } from 'pages/inside/common/betaBadge';
 import { GeneralTab } from './generalTab';
 import { AutoAnalysisTab } from './autoAnalysisTab';
+import { NotificationsTab } from './notificationsTab';
 import { DemoDataTab } from './demoDataTab';
 import styles from './settingTabs.scss';
 
@@ -50,10 +52,6 @@ const messages = defineMessages({
   demoData: {
     id: 'SettingTabs.demoData',
     defaultMessage: 'Demo data',
-  },
-  beta: {
-    id: 'SettingTabs.beta',
-    defaultMessage: 'beta',
   },
 });
 
@@ -97,13 +95,13 @@ export class SettingTabs extends Component {
       notifications: {
         name: this.props.intl.formatMessage(messages.notifications),
         link: this.createTabLink(NOTIFICATIONS),
-        component: <div>notification</div>,
+        component: <NotificationsTab />,
       },
       bts: {
         name: (
           <span>
             {this.props.intl.formatMessage(messages.bts)}
-            <span className={cx('beta')}>{this.props.intl.formatMessage(messages.beta)}</span>
+            <BetaBadge />
           </span>
         ),
         link: this.createTabLink(BTS),

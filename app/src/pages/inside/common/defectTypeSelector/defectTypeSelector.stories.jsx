@@ -23,7 +23,7 @@ import { action } from '@storybook/addon-actions';
 import { host } from 'storybook-host';
 import { withReadme } from 'storybook-readme';
 // eslint-disable-next-line import/extensions, import/no-unresolved
-import { WithState } from 'storybook-decorators/withState';
+import { WithState } from 'storybook-decorators';
 import { DefectTypeSelector } from './defectTypeSelector';
 import README from './README.md';
 import { state } from './data';

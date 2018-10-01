@@ -98,6 +98,26 @@ const messages = defineMessages({
     id: 'DemoDataTabForm.demoDataPostfixHint',
     defaultMessage: 'Postfix should have size from 1 to 90',
   },
+  recipientsHint: {
+    id: 'emailCase.recipientsHint',
+    defaultMessage: 'Select at least one recipient or set up “OFF” e-mail notifications',
+  },
+  tagsHint: {
+    id: 'emailCase.tagsHint',
+    defaultMessage: 'Tag name should have size from 3 to 256',
+  },
+  launchesHint: {
+    id: 'emailCase.launchesHint',
+    defaultMessage: 'Launch name should have size from 3 to 256',
+  },
+  urlHint: {
+    id: 'LinkIssueModal.urlHint',
+    defaultMessage: 'Link should match a valid website address',
+  },
+  issueIdHint: {
+    id: 'LinkIssueModal.issueIdHint',
+    defaultMessage: 'Issue ID should have size from 1 to 128',
+  },
 });
 
 @injectIntl

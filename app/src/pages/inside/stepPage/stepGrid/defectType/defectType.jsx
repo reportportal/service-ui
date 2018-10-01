@@ -30,13 +30,15 @@ const AALabel = () => (
   </div>
 );
 
-export const DefectType = ({ issue }) => (
+export const DefectType = ({ issue, onEdit }) => (
   <div className={cx('defect-type')}>
     <div className={cx('defect-type-labels')}>
       {issue.ignoreAnalyzer && <IgnoredInAALabel />}
       {issue.autoAnalyzed && <AALabel />}
-      {issue.issue_type && <DefectTypeItem type={issue.issue_type} />}
-      <div className={cx('edit-icon')}>{Parser(PencilIcon)}</div>
+      {issue.issue_type && <DefectTypeItem type={issue.issue_type} onClick={onEdit} />}
+      <div className={cx('edit-icon')} onClick={onEdit}>
+        {Parser(PencilIcon)}
+      </div>
     </div>
     <div className={cx('issues')}>
       <IssueList issues={issue.externalSystemIssues} />

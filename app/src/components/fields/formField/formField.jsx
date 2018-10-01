@@ -19,6 +19,7 @@ export class FormField extends PureComponent {
     format: PropTypes.func,
     parse: PropTypes.func,
     name: PropTypes.string,
+    disabled: PropTypes.bool,
     children: PropTypes.any,
   };
 
@@ -35,6 +36,7 @@ export class FormField extends PureComponent {
     parse: (value) => value,
     name: null,
     children: null,
+    disabled: false,
   };
 
   render() {
@@ -48,16 +50,17 @@ export class FormField extends PureComponent {
       children,
       ...rest
     } = this.props;
-
     return (
       <div className={cx('form-field', containerClassName)}>
-        <span className={cx('form-group-label', labelClassName)}>{label}</span>
+        {label && <span className={cx('form-group-label', labelClassName)}>{label}</span>}
         <div className={cx('field-wrapper', fieldWrapperClassName)}>
           <FieldProvider {...rest}>{children}</FieldProvider>
         </div>
-        <div className={cx('form-group-description', descriptionClassName)}>
-          <p>{description}</p>
-        </div>
+        {description && (
+          <div className={cx('form-group-description', descriptionClassName)}>
+            <p>{description}</p>
+          </div>
+        )}
       </div>
     );
   }

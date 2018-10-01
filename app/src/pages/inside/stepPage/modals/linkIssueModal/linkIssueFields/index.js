@@ -1,0 +1,1 @@
+export { LinkIssueFields } from './linkIssueFields';

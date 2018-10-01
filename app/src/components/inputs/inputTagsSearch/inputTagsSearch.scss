@@ -1,4 +1,14 @@
 .select-container {
+  &.error {
+    :global {
+      .Select {
+        .Select-control {
+          border-color: $COLOR--orange-red;
+          box-shadow: 00 0 2px 0 rgba($COLOR--orange-red, 0.7);
+        }
+      }
+    }
+  }
   :global {
     .Select.is-focused {
       .Select-control {
@@ -39,6 +49,12 @@
     .Select:not(.is-focused):hover {
       .Select-control {
         border-color: $COLOR--gray-47;
+      }
+    }
+    .Select.is-disabled {
+      .Select-control {
+        min-height: 30px;
+        background-color: $COLOR--gray-91;
       }
     }
     .new {

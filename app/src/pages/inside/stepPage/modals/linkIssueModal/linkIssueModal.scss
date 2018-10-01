@@ -1,0 +1,42 @@
+.add-issue-id-title {
+  margin: 0;
+  padding: 10px;
+  color: $COLOR--gray-47;
+  background-color: $COLOR--white-four;
+  font-size: 12px;
+  font-family: $FONT-SEMIBOLD;
+  text-transform: uppercase;
+}
+
+.link-issue-form-wrapper {
+  padding: 17px 9px 0 12px;
+  margin-bottom: 10px;
+  box-sizing: border-box;
+}
+
+.multiple-systems-title {
+  display: inline;
+  min-width: 140px;
+  padding: 0;
+  font-size: 13px;
+  font-family: $FONT-REGULAR;
+  text-align: center;
+}
+
+.field-wrapper {
+  display: inline-block;
+  width: 350px;
+  padding: 0;
+  margin-left: 20px;
+  margin-right: 25px;
+}
+
+.link-issue-title {
+  position: relative;
+  display: inline-block;
+  padding-right: 15px;
+
+  .beta {
+    top: -10px;
+  }
+}

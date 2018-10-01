@@ -39,8 +39,8 @@ export class ItemInfo extends Component {
     analyzing: PropTypes.bool,
     customProps: PropTypes.object,
     userAccountRole: PropTypes.string.isRequired,
-    userProjectRole: PropTypes.string.isRequired,
-    userId: PropTypes.string.isRequired,
+    userProjectRole: PropTypes.string,
+    userId: PropTypes.string,
     intl: PropTypes.object.isRequired,
     isStepLevel: PropTypes.bool,
   };
@@ -52,6 +52,8 @@ export class ItemInfo extends Component {
       onEditItem: () => {},
       onShowTestParams: () => {},
     },
+    userId: '',
+    userProjectRole: '',
     isStepLevel: false,
   };
 
@@ -101,16 +103,18 @@ export class ItemInfo extends Component {
         </div>
 
         <div className={cx('additional-info')}>
-          <DurationBlock
-            type={value.type}
-            status={value.status}
-            itemNumber={value.number}
-            timing={{
-              start: value.start_time,
-              end: value.end_time,
-              approxTime: value.approximateDuration,
-            }}
-          />
+          <span className={cx('duration-block')}>
+            <DurationBlock
+              type={value.type}
+              status={value.status}
+              itemNumber={value.number}
+              timing={{
+                start: value.start_time,
+                end: value.end_time,
+                approxTime: value.approximateDuration,
+              }}
+            />
+          </span>
           <div className={cx('mobile-start-time')}>{fromNowFormat(value.start_time)}</div>
           {value.owner && <OwnerBlock owner={value.owner} />}
           {value.tags && !!value.tags.length && <TagsBlock tags={value.tags} />}
