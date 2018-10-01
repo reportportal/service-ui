@@ -19,6 +19,12 @@ export const SuiteTestToolbar = ({
   onEditDefects,
   debugMode,
   onDelete,
+  onFilterAdd,
+  onFilterRemove,
+  onFilterValidate,
+  onFilterChange,
+  filterErrors,
+  filterEntities,
 }) => (
   <div>
     {!!selectedItems.length && (
@@ -46,7 +52,14 @@ export const SuiteTestToolbar = ({
       deleteDisabled={!selectedItems.length}
     />
     {parentItem && <InfoLine data={parentItem} />}
-    <RefineFiltersPanel />
+    <RefineFiltersPanel
+      onFilterAdd={onFilterAdd}
+      onFilterRemove={onFilterRemove}
+      onFilterValidate={onFilterValidate}
+      onFilterChange={onFilterChange}
+      filterErrors={filterErrors}
+      filterEntities={filterEntities}
+    />
   </div>
 );
 SuiteTestToolbar.propTypes = {
@@ -64,6 +77,12 @@ SuiteTestToolbar.propTypes = {
   onEditDefects: PropTypes.func,
   debugMode: PropTypes.bool,
   onDelete: PropTypes.func,
+  onFilterAdd: PropTypes.func,
+  onFilterRemove: PropTypes.func,
+  onFilterValidate: PropTypes.func,
+  onFilterChange: PropTypes.func,
+  filterErrors: PropTypes.object,
+  filterEntities: PropTypes.array,
 };
 SuiteTestToolbar.defaultProps = {
   selectedItems: [],
@@ -80,4 +99,11 @@ SuiteTestToolbar.defaultProps = {
   onEditDefects: () => {},
   onDelete: () => {},
   debugMode: false,
+  updateFilters: () => {},
+  onFilterAdd: () => {},
+  onFilterRemove: () => {},
+  onFilterValidate: () => {},
+  onFilterChange: () => {},
+  filterErrors: {},
+  filterEntities: [],
 };

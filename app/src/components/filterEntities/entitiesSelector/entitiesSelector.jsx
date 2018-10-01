@@ -9,7 +9,7 @@ const cx = classNames.bind(styles);
 
 export class EntitiesSelector extends Component {
   static propTypes = {
-    entities: PropTypes.object.isRequired,
+    entities: PropTypes.array.isRequired,
     onChange: PropTypes.func,
   };
   static defaultProps = {
@@ -51,27 +51,25 @@ export class EntitiesSelector extends Component {
           <FormattedMessage id={'EntitiesSelector.more'} defaultMessage={'More'} />
         </div>
         <div className={cx('entities-list')}>
-          {Object.keys(entities).map((entityId) => {
-            const entity = entities[entityId];
-            return (
+          {entities.map(
+            (entity) =>
               !entity.static && (
                 <div
-                  key={entityId}
+                  key={entity.id}
                   className={cx('entity-item', { 'sub-item': entity.meta && entity.meta.subItem })}
                 >
                   <InputCheckbox
                     value={entity.active}
                     onChange={() => {
                       this.setState({ opened: !this.state.opened });
-                      onChange(entityId);
+                      onChange(entity.id);
                     }}
                   >
                     {(entity.meta && entity.meta.longName) || entity.title}
                   </InputCheckbox>
                 </div>
-              )
-            );
-          })}
+              ),
+          )}
         </div>
       </div>
     );

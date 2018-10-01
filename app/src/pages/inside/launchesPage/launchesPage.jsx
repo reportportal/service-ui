@@ -34,7 +34,6 @@ import {
 } from 'controllers/launch';
 import { LaunchSuiteGrid } from 'pages/inside/common/launchSuiteGrid';
 import { LaunchToolbar } from './LaunchToolbar';
-import { LaunchFiltersToolbar } from './launchFiltersToolbar';
 
 const messages = defineMessages({
   deleteModalHeader: {
@@ -309,9 +308,6 @@ export class LaunchesPage extends Component {
     } = this.props;
     return (
       <PageLayout>
-        <PageSection>
-          <LaunchFiltersToolbar />
-        </PageSection>
         <PageSection>
           <LaunchToolbar
             errors={this.props.validationErrors}

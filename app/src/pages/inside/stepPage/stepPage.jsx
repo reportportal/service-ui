@@ -30,7 +30,6 @@ import {
 import { withPagination } from 'controllers/pagination';
 import { showModalAction } from 'controllers/modal';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
-import { toggleFilter } from 'controllers/filterEntities';
 import { StepGrid } from './stepGrid';
 
 @connect(
@@ -56,7 +55,6 @@ import { StepGrid } from './stepGrid';
     unlinkIssueAction,
     editDefectsAction,
     linkIssueAction,
-    changeFilter: (id) => toggleFilter(id),
   },
 )
 @withPagination({
@@ -91,7 +89,12 @@ export class StepPage extends Component {
     unlinkIssueAction: PropTypes.func,
     editDefectsAction: PropTypes.func.isRequired,
     linkIssueAction: PropTypes.func,
-    changeFilter: PropTypes.func,
+    onFilterAdd: PropTypes.func,
+    onFilterRemove: PropTypes.func,
+    onFilterValidate: PropTypes.func,
+    onFilterChange: PropTypes.func,
+    filterErrors: PropTypes.object,
+    filterEntities: PropTypes.array,
   };
 
   static defaultProps = {
@@ -117,9 +120,14 @@ export class StepPage extends Component {
     showTestParamsModal: () => {},
     ignoreInAutoAnalysisAction: () => {},
     includeInAutoAnalysisAction: () => {},
-    changeFilter: () => {},
     unlinkIssueAction: () => {},
     linkIssueAction: () => {},
+    onFilterAdd: () => {},
+    onFilterRemove: () => {},
+    onFilterValidate: () => {},
+    onFilterChange: () => {},
+    filterErrors: {},
+    filterEntities: [],
   };
 
   handleAllStepsSelection = () => {
@@ -184,7 +192,12 @@ export class StepPage extends Component {
       onChangePageSize,
       showTestParamsModal,
       debugMode,
-      changeFilter,
+      onFilterAdd,
+      onFilterRemove,
+      onFilterValidate,
+      onFilterChange,
+      filterErrors,
+      filterEntities,
     } = this.props;
     return (
       <PageLayout>
@@ -204,6 +217,12 @@ export class StepPage extends Component {
             onIncludeInAA={this.handleIncludeInAA}
             onUnlinkIssue={this.handleUnlinkIssue}
             onLinkIssue={this.handleLinkIssue}
+            filterEntities={filterEntities}
+            filterErrors={filterErrors}
+            onFilterChange={onFilterChange}
+            onFilterValidate={onFilterValidate}
+            onFilterRemove={onFilterRemove}
+            onFilterAdd={onFilterAdd}
           />
           <StepGrid
             data={steps}
@@ -214,7 +233,7 @@ export class StepPage extends Component {
             listView={listView}
             onShowTestParams={showTestParamsModal}
             onEditDefect={this.handleEditDefects}
-            onFilterClick={changeFilter}
+            onFilterClick={onFilterAdd}
           />
           <PaginationToolbar
             activePage={activePage}

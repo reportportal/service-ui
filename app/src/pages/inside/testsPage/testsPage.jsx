@@ -23,7 +23,6 @@ import {
   parentItemSelector,
   loadingSelector,
 } from 'controllers/testItem';
-import { toggleFilter } from 'controllers/filterEntities';
 
 @connect(
   (state) => ({
@@ -39,7 +38,6 @@ import { toggleFilter } from 'controllers/filterEntities';
     unselectAllTestsAction,
     toggleAllTestsAction,
     fetchTestItemsAction,
-    changeFilter: (id) => toggleFilter(id),
   },
 )
 @withSorting({
@@ -72,7 +70,12 @@ export class TestsPage extends Component {
     toggleAllTestsAction: PropTypes.func,
     parentItem: PropTypes.object,
     loading: PropTypes.bool,
-    changeFilter: PropTypes.func,
+    onFilterAdd: PropTypes.func,
+    onFilterRemove: PropTypes.func,
+    onFilterValidate: PropTypes.func,
+    onFilterChange: PropTypes.func,
+    filterErrors: PropTypes.object,
+    filterEntities: PropTypes.array,
   };
 
   static defaultProps = {
@@ -94,7 +97,12 @@ export class TestsPage extends Component {
     toggleAllTestsAction: () => {},
     parentItem: null,
     loading: false,
-    changeFilter: () => {},
+    onFilterAdd: () => {},
+    onFilterRemove: () => {},
+    onFilterValidate: () => {},
+    onFilterChange: () => {},
+    filterErrors: {},
+    filterEntities: [],
   };
 
   handleAllTestsSelection = () => this.props.toggleAllTestsAction(this.props.tests);
@@ -115,8 +123,13 @@ export class TestsPage extends Component {
       parentItem,
       loading,
       debugMode,
-      changeFilter,
       deleteItems,
+      onFilterAdd,
+      onFilterRemove,
+      onFilterValidate,
+      onFilterChange,
+      filterErrors,
+      filterEntities,
     } = this.props;
     return (
       <PageLayout>
@@ -130,6 +143,12 @@ export class TestsPage extends Component {
             debugMode={debugMode}
             errors={this.props.validationErrors}
             onDelete={() => deleteItems(selectedTests)}
+            filterEntities={filterEntities}
+            filterErrors={filterErrors}
+            onFilterChange={onFilterChange}
+            onFilterValidate={onFilterValidate}
+            onFilterRemove={onFilterRemove}
+            onFilterAdd={onFilterAdd}
           />
           <LaunchSuiteGrid
             data={tests}
@@ -140,7 +159,7 @@ export class TestsPage extends Component {
             onItemSelect={this.props.toggleTestSelectionAction}
             onAllItemsSelect={this.handleAllTestsSelection}
             loading={loading}
-            onFilterClick={changeFilter}
+            onFilterClick={onFilterAdd}
           />
           <PaginationToolbar
             activePage={activePage}

@@ -25,7 +25,6 @@ import {
   EntityItemTags,
   EntityItemStatistics,
 } from 'components/filterEntities';
-import { EntitiesGroup } from 'components/filterEntities/entitiesGroup';
 import {
   CONDITION_CNT,
   CONDITION_GREATER_EQ,
@@ -128,25 +127,22 @@ export class LaunchLevelEntities extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
     defectTypes: PropTypes.object.isRequired,
-    onChange: PropTypes.func,
-    entities: PropTypes.object,
-    entitySmallSize: PropTypes.bool,
+    filterValues: PropTypes.object,
+    render: PropTypes.func.isRequired,
   };
   static defaultProps = {
-    entitySmallSize: false,
-    entities: {},
-    onChange: () => {},
+    filterValues: {},
   };
   getStaticEntities = () => {
-    const { intl, entities } = this.props;
+    const { intl, filterValues } = this.props;
 
     return [
       {
         id: ENTITY_NAME,
         component: EntityItemName,
         value:
-          ENTITY_NAME in entities
-            ? entities[ENTITY_NAME]
+          ENTITY_NAME in filterValues
+            ? filterValues[ENTITY_NAME]
             : {
                 value: '',
                 condition: CONDITION_CNT,
@@ -155,7 +151,7 @@ export class LaunchLevelEntities extends Component {
           (!entityObject || !entityObject.value || !validate.itemNameEntity(entityObject.value)) &&
           'itemNameEntityHint',
         title: intl.formatMessage(messages.NameTitle),
-        active: ENTITY_NAME in entities,
+        active: true,
         removable: false,
         static: true,
       },
@@ -163,8 +159,8 @@ export class LaunchLevelEntities extends Component {
         id: ENTITY_NUMBER,
         component: EntityLaunchNumber,
         value:
-          ENTITY_NUMBER in entities
-            ? entities[ENTITY_NUMBER]
+          ENTITY_NUMBER in filterValues
+            ? filterValues[ENTITY_NUMBER]
             : {
                 value: '',
                 condition: CONDITION_GREATER_EQ,
@@ -175,15 +171,15 @@ export class LaunchLevelEntities extends Component {
             !validate.launchNumericEntity(entityObject.value)) &&
           'launchNumericEntityHint',
         title: intl.formatMessage(messages.NumberTitle),
-        active: ENTITY_NUMBER in entities,
+        active: ENTITY_NUMBER in filterValues,
         removable: true,
       },
       {
         id: ENTITY_DESCRIPTION,
         component: EntityItemDescription,
         value:
-          ENTITY_DESCRIPTION in entities
-            ? entities[ENTITY_DESCRIPTION]
+          ENTITY_DESCRIPTION in filterValues
+            ? filterValues[ENTITY_DESCRIPTION]
             : {
                 value: '',
                 condition: CONDITION_CNT,
@@ -194,29 +190,29 @@ export class LaunchLevelEntities extends Component {
             !entityObject.value ||
             !validate.launchDescriptionEntity(entityObject.value)) &&
           'launchDescriptionEntityHint',
-        active: ENTITY_DESCRIPTION in entities,
+        active: ENTITY_DESCRIPTION in filterValues,
         removable: true,
       },
       {
         id: ENTITY_USER,
         component: EntityLaunchOwner,
         value:
-          ENTITY_USER in entities
-            ? entities[ENTITY_USER]
+          ENTITY_USER in filterValues
+            ? filterValues[ENTITY_USER]
             : {
                 value: '',
                 condition: CONDITION_IN,
               },
         title: intl.formatMessage(messages.OwnerTitle),
-        active: false,
+        active: ENTITY_USER in filterValues,
         removable: true,
       },
       {
         id: ENTITY_START_TIME,
         component: EntityItemStartTime,
         value:
-          ENTITY_START_TIME in entities
-            ? entities[ENTITY_START_TIME]
+          ENTITY_START_TIME in filterValues
+            ? filterValues[ENTITY_START_TIME]
             : {
                 value: `${moment()
                   .startOf('day')
@@ -227,29 +223,29 @@ export class LaunchLevelEntities extends Component {
                 condition: CONDITION_BETWEEN,
               },
         title: intl.formatMessage(messages.StartTimeTitle),
-        active: ENTITY_START_TIME in entities,
+        active: ENTITY_START_TIME in filterValues,
         removable: true,
       },
       {
         id: ENTITY_TAGS,
         component: EntityItemTags,
         value:
-          ENTITY_TAGS in entities
-            ? entities[ENTITY_TAGS]
+          ENTITY_TAGS in filterValues
+            ? filterValues[ENTITY_TAGS]
             : {
                 value: '',
                 condition: CONDITION_HAS,
               },
         title: intl.formatMessage(messages.TagsTitle),
-        active: ENTITY_TAGS in entities,
+        active: ENTITY_TAGS in filterValues,
         removable: true,
       },
       {
         id: STATS_TOTAL,
         component: EntityItemStatistics,
         value:
-          STATS_TOTAL in entities
-            ? entities[STATS_TOTAL]
+          STATS_TOTAL in filterValues
+            ? filterValues[STATS_TOTAL]
             : {
                 value: '',
                 condition: CONDITION_GREATER_EQ,
@@ -260,15 +256,15 @@ export class LaunchLevelEntities extends Component {
             !validate.launchNumericEntity(entityObject.value)) &&
           'launchNumericEntityHint',
         title: intl.formatMessage(messages.TotalTitle),
-        active: STATS_TOTAL in entities,
+        active: STATS_TOTAL in filterValues,
         removable: true,
       },
       {
         id: STATS_PASSED,
         component: EntityItemStatistics,
         value:
-          STATS_PASSED in entities
-            ? entities[STATS_PASSED]
+          STATS_PASSED in filterValues
+            ? filterValues[STATS_PASSED]
             : {
                 value: '',
                 condition: CONDITION_GREATER_EQ,
@@ -279,15 +275,15 @@ export class LaunchLevelEntities extends Component {
             !validate.launchNumericEntity(entityObject.value)) &&
           'launchNumericEntityHint',
         title: intl.formatMessage(messages.PassedTitle),
-        active: STATS_PASSED in entities,
+        active: STATS_PASSED in filterValues,
         removable: true,
       },
       {
         id: STATS_FAILED,
         component: EntityItemStatistics,
         value:
-          STATS_FAILED in entities
-            ? entities[STATS_FAILED]
+          STATS_FAILED in filterValues
+            ? filterValues[STATS_FAILED]
             : {
                 value: '',
                 condition: CONDITION_GREATER_EQ,
@@ -298,15 +294,15 @@ export class LaunchLevelEntities extends Component {
             !validate.launchNumericEntity(entityObject.value)) &&
           'launchNumericEntityHint',
         title: intl.formatMessage(messages.FailedTitle),
-        active: STATS_FAILED in entities,
+        active: STATS_FAILED in filterValues,
         removable: true,
       },
       {
         id: STATS_SKIPPED,
         component: EntityItemStatistics,
         value:
-          STATS_SKIPPED in entities
-            ? entities[STATS_SKIPPED]
+          STATS_SKIPPED in filterValues
+            ? filterValues[STATS_SKIPPED]
             : {
                 value: '',
                 condition: CONDITION_GREATER_EQ,
@@ -317,7 +313,7 @@ export class LaunchLevelEntities extends Component {
             !validate.launchNumericEntity(entityObject.value)) &&
           'launchNumericEntityHint',
         title: intl.formatMessage(messages.SkippedTitle),
-        active: STATS_SKIPPED in entities,
+        active: STATS_SKIPPED in filterValues,
         removable: true,
       },
     ];
@@ -378,12 +374,11 @@ export class LaunchLevelEntities extends Component {
   };
 
   render() {
-    return (
-      <EntitiesGroup
-        entitiesSet={this.getStaticEntities().concat(this.getDynamicEntities())}
-        onChangeOwn={this.props.onChange}
-        entitySmallSize={this.props.entitySmallSize}
-      />
-    );
+    const { render, ...rest } = this.props;
+
+    return render({
+      ...rest,
+      filterEntities: this.getStaticEntities().concat(this.getDynamicEntities()),
+    });
   }
 }
