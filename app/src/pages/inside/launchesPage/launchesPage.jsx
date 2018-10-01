@@ -182,6 +182,10 @@ export class LaunchesPage extends Component {
     deleteItemsAction: () => {},
   };
 
+  componentWillMount(){
+    this.props.unselectAllLaunchesAction();
+  }
+
   updateLaunch = (launch) => {
     fetch(URLS.launchesUpdate(this.props.activeProject, launch.id), {
       method: 'put',
