@@ -1,10 +1,12 @@
 import React, { PureComponent } from 'react';
+import track from 'react-tracking';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { FormattedMessage } from 'react-intl';
 import { userInfoSelector } from 'controllers/user';
 import { logoutAction } from 'controllers/auth';
 import { API_PAGE, ADMINISTRATE_PAGE, USER_PROFILE_PAGE } from 'controllers/pages/constants';
+import { HEADER_EVENTS } from 'components/main/analytics/events';
 import { connect } from 'react-redux';
 import { NavLink } from 'redux-first-router-link';
 import { ADMINISTRATOR } from 'common/constants/accountRoles';
@@ -21,10 +23,15 @@ const cx = classNames.bind(styles);
     logout: logoutAction,
   },
 )
+@track()
 export class UserBlock extends PureComponent {
   static propTypes = {
     logout: PropTypes.func.isRequired,
     user: PropTypes.object,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
   static defaultProps = {
     user: {},
@@ -38,13 +45,24 @@ export class UserBlock extends PureComponent {
   componentWillUnmount() {
     document.removeEventListener('click', this.handleOutsideClick, false);
   }
+
+  onClickLink = (eventInfo) => {
+    this.props.tracking.trackEvent(eventInfo);
+  };
+
+  onClickLogout = () => {
+    this.props.logout();
+    this.props.tracking.trackEvent(HEADER_EVENTS.CLICK_LOGOUT_LINK);
+  };
   handleOutsideClick = (e) => {
     if (!this.node.contains(e.target) && this.state.menuOpened) {
       this.setState({ menuOpened: false });
     }
   };
+
   toggleMenu = () => {
     this.setState({ menuOpened: !this.state.menuOpened });
+    !this.state.menuOpened && this.props.tracking.trackEvent(HEADER_EVENTS.CLICK_PROFILE_DROPDOWN);
   };
 
   render() {
@@ -74,6 +92,7 @@ export class UserBlock extends PureComponent {
             to={{ type: API_PAGE }}
             className={cx('menu-item')}
             activeClassName={cx('active')}
+            onClick={() => this.onClickLink(HEADER_EVENTS.CLICK_API_LINK)}
           >
             API
           </NavLink>
@@ -81,6 +100,7 @@ export class UserBlock extends PureComponent {
             to={{ type: ADMINISTRATE_PAGE }}
             className={cx('menu-item')}
             activeClassName={cx('active')}
+            onClick={() => this.onClickLink(HEADER_EVENTS.CLICK_ADMINISTRATE_LINK)}
           >
             <FormattedMessage id={'UserBlock.administrate'} defaultMessage={'Administrate'} />
           </NavLink>
@@ -88,10 +108,11 @@ export class UserBlock extends PureComponent {
             to={{ type: USER_PROFILE_PAGE }}
             className={cx('menu-item')}
             activeClassName={cx('active')}
+            onClick={() => this.props.tracking.trackEvent(HEADER_EVENTS.CLICK_PROFILE_LINK)}
           >
             <FormattedMessage id={'UserBlock.profile'} defaultMessage={'Profile'} />
           </NavLink>
-          <div className={cx('menu-item')} onClick={this.props.logout}>
+          <div className={cx('menu-item')} onClick={this.onClickLogout}>
             <FormattedMessage id={'UserBlock.logout'} defaultMessage={'Logout'} />
           </div>
         </div>

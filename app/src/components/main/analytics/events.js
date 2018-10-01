@@ -187,4 +187,9 @@ export const HEADER_EVENTS = {
     action: 'Click on Another Project Name',
     label: 'Transition to another project',
   },
+  CLICK_API_LINK: {
+    category: HEADER,
+    action: 'Click on link API',
+    label: 'Transition to API page',
+  },
 };
