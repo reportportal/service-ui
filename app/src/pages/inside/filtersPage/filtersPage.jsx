@@ -81,6 +81,7 @@ export class FiltersPage extends Component {
     userFilters: PropTypes.arrayOf(PropTypes.string),
     accountRole: PropTypes.string,
     loading: PropTypes.bool,
+    toggleDisplayFilterOnLaunches: PropTypes.func,
   };
 
   static defaultProps = {
@@ -101,6 +102,7 @@ export class FiltersPage extends Component {
     userFilters: [],
     accountRole: '',
     loading: false,
+    toggleDisplayFilterOnLaunches: () => {},
   };
 
   getBreadcrumbs = () => [{ title: this.props.intl.formatMessage(messages.filtersPageTitle) }];
@@ -126,7 +128,13 @@ export class FiltersPage extends Component {
   deleteFilter = (id) => {
     fetch(URLS.filter(this.props.activeProject, id), {
       method: 'delete',
-    }).then(this.props.fetchFiltersAction);
+    })
+      .then(() => {
+        if (this.props.userFilters.indexOf(id) > -1) {
+          this.props.toggleDisplayFilterOnLaunches(id);
+        }
+      })
+      .then(this.props.fetchFiltersAction);
   };
 
   render() {
