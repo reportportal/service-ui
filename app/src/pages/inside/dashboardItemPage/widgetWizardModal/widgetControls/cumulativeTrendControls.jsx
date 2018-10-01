@@ -65,6 +65,8 @@ export class CumulativeTrendControls extends Component {
     intl: intlShape.isRequired,
     widgetSettings: PropTypes.object.isRequired,
     initializeWizardSecondStepForm: PropTypes.func.isRequired,
+    formAppearance: PropTypes.object.isRequired,
+    onFormAppearanceChange: PropTypes.func.isRequired,
   };
 
   constructor(props) {
@@ -95,10 +97,15 @@ export class CumulativeTrendControls extends Component {
   parseItems = (value) => (value.length < 3 ? value : this.props.widgetSettings.itemsCount);
 
   render() {
-    const { intl } = this.props;
+    const { intl, formAppearance, onFormAppearanceChange } = this.props;
     return (
       <Fragment>
-        <FiltersControl />
+        <FieldProvider name={'filterId'}>
+          <FiltersControl
+            formAppearance={formAppearance}
+            onFormAppearanceChange={onFormAppearanceChange}
+          />
+        </FieldProvider>
         <FieldProvider name="prefix" validate={validators.prefix(intl.formatMessage)}>
           <InputControl
             fieldLabel={intl.formatMessage(messages.prefixFieldLabel)}

@@ -1,12 +1,12 @@
 .name-wrapper {
   width: 100%;
   display: inline-block;
-  margin-bottom: 5px;
   
   &:hover .pencil-icon{
     display: inline-block;
   }
 }
+
 .name {
   line-height: 20px;
   word-break: break-all;
@@ -25,6 +25,11 @@
     font-size: 16px;
   }
 }
+
+.name-highlight {
+  color: $COLOR--fatal;
+}
+
 .pencil-icon {
   width: 20px;
   height: 20px;
@@ -41,4 +46,15 @@
   @media (max-width: $SCREEN_XS_MAX) {
     display: inline-block;
   }
+}
+
+.share-icon,
+.globe-icon {
+  width: 20px;
+  height: 20px;
+  margin-left: 10px;
+  display: inline-block;
+  vertical-align: top;
+  cursor: pointer;
+  fill: $COLOR--gray-60;
 }

@@ -49,6 +49,8 @@ export class InvestigatedPercentageOfLaunchesControls extends Component {
     intl: intlShape.isRequired,
     widgetSettings: PropTypes.object.isRequired,
     initializeWizardSecondStepForm: PropTypes.func.isRequired,
+    formAppearance: PropTypes.object.isRequired,
+    onFormAppearanceChange: PropTypes.func.isRequired,
   };
 
   constructor(props) {
@@ -71,10 +73,15 @@ export class InvestigatedPercentageOfLaunchesControls extends Component {
   parseItems = (value) => (value.length < 4 ? value : this.props.widgetSettings.itemsCount);
 
   render() {
-    const { intl } = this.props;
+    const { intl, formAppearance, onFormAppearanceChange } = this.props;
     return (
       <Fragment>
-        <FiltersControl />
+        <FieldProvider name={'filterId'}>
+          <FiltersControl
+            formAppearance={formAppearance}
+            onFormAppearanceChange={onFormAppearanceChange}
+          />
+        </FieldProvider>
         <FieldProvider
           name="itemsCount"
           validate={validators.items(intl.formatMessage)}

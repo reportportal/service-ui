@@ -6,8 +6,15 @@ import styles from './fieldFilterEntity.scss';
 
 const cx = classNames.bind(styles);
 
-export const FieldFilterEntity = ({ title, children, removable, stretchable, onRemove }) => (
-  <div className={cx('field-filter-entity', { stretchable })}>
+export const FieldFilterEntity = ({
+  title,
+  children,
+  removable,
+  stretchable,
+  smallSize,
+  onRemove,
+}) => (
+  <div className={cx('field-filter-entity', { stretchable }, { small: smallSize })}>
     <span className={cx('entity-name')}>{title}</span>
     {removable && (
       <i className={cx('close-icon')} onClick={onRemove}>
@@ -20,6 +27,7 @@ export const FieldFilterEntity = ({ title, children, removable, stretchable, onR
 FieldFilterEntity.propTypes = {
   children: PropTypes.node,
   title: PropTypes.string,
+  smallSize: PropTypes.bool,
   removable: PropTypes.bool,
   stretchable: PropTypes.bool,
   onRemove: PropTypes.func,
@@ -27,6 +35,7 @@ FieldFilterEntity.propTypes = {
 FieldFilterEntity.defaultProps = {
   children: null,
   title: '',
+  smallSize: false,
   removable: true,
   stretchable: false,
   onRemove: () => {},

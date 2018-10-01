@@ -44,6 +44,7 @@ export class ScrollWrapper extends Component {
     renderThumbHorizontal: PropTypes.func,
     renderThumbVertical: PropTypes.func,
     renderView: PropTypes.func,
+    onLazyLoad: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
     hideTracksWhenNotNeeded: PropTypes.bool,
     thumbMinSize: PropTypes.number,
     withBackToTop: PropTypes.bool,
@@ -60,6 +61,7 @@ export class ScrollWrapper extends Component {
     renderThumbHorizontal: (props) => <div {...props} className={cx('thumb-horizontal')} />,
     renderThumbVertical: (props) => <div {...props} className={cx('thumb-vertical')} />,
     renderView: (props) => <div {...props} className={cx('scrolling-content')} />,
+    onLazyLoad: false,
     hideTracksWhenNotNeeded: false,
     thumbMinSize: 30,
     withBackToTop: false,
@@ -116,17 +118,23 @@ export class ScrollWrapper extends Component {
     this.spring.setEndValue(0);
   };
 
-  handleScrollFrame = (values) => {
-    this.props.withBackToTop && values.scrollTop > 100
-      ? this.setState({ showButton: true })
-      : this.setState({ showButton: false });
-    if (values.scrollTop !== this.scrollbars.lastViewScrollTop) {
+  handleScrollFrame = ({ scrollTop, scrollLeft, top }) => {
+    const { lastViewScrollTop, lastViewScrollLeft } = this.scrollbars;
+    const { withBackToTop, onLazyLoad } = this.props;
+
+    this.setState({ showButton: withBackToTop && scrollTop > 100 });
+
+    if (onLazyLoad !== false && top > 0.9) {
+      onLazyLoad();
+    }
+    if (scrollTop !== lastViewScrollTop) {
       this.scrollbars.thumbVertical.style.opacity = 1;
     }
-    if (values.scrollLeft !== this.scrollbars.lastViewScrollLeft) {
+    if (scrollLeft !== lastViewScrollLeft) {
       this.scrollbars.thumbHorizontal.style.opacity = 1;
     }
   };
+
   handleScrollStop = () => {
     this.scrollbars.thumbVertical.style.opacity = '';
     this.scrollbars.thumbHorizontal.style.opacity = '';

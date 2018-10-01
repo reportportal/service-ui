@@ -2,10 +2,12 @@ import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { getFormValues, initialize } from 'redux-form';
+
 import { defectTypesSelector } from 'controllers/project';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { validate } from 'common/utils';
+
 import { getWidgetCriteriaOptions } from './utils/getWidgetCriteriaOptions';
 import { getWidgetModeOptions } from './utils/getWidgetModeOptions';
 import {
@@ -72,6 +74,8 @@ export class LaunchStatisticsControls extends Component {
     defectTypes: PropTypes.object.isRequired,
     widgetSettings: PropTypes.object.isRequired,
     initializeWizardSecondStepForm: PropTypes.func.isRequired,
+    formAppearance: PropTypes.object.isRequired,
+    onFormAppearanceChange: PropTypes.func.isRequired,
   };
 
   constructor(props) {
@@ -96,10 +100,15 @@ export class LaunchStatisticsControls extends Component {
   parseItems = (value) => (value.length < 4 ? value : this.props.widgetSettings.itemsCount);
 
   render() {
-    const { intl } = this.props;
+    const { intl, formAppearance, onFormAppearanceChange } = this.props;
     return (
       <Fragment>
-        <FiltersControl />
+        <FieldProvider name={'filterId'}>
+          <FiltersControl
+            formAppearance={formAppearance}
+            onFormAppearanceChange={onFormAppearanceChange}
+          />
+        </FieldProvider>
         <FieldProvider
           name="content_fields"
           validate={validators.content_fields(intl.formatMessage)}

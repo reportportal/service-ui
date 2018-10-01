@@ -40,20 +40,28 @@ export class EntityItemTags extends Component {
     intl: intlShape.isRequired,
     value: PropTypes.object.isRequired,
     title: PropTypes.string,
+    smallSize: PropTypes.bool,
     removable: PropTypes.bool,
     onRemove: PropTypes.func,
   };
   static defaultProps = {
     title: '',
+    smallSize: false,
     removable: true,
     onRemove: () => {},
   };
 
   render() {
-    const { intl, onRemove, removable, title, ...rest } = this.props;
+    const { intl, onRemove, removable, title, smallSize, ...rest } = this.props;
 
     return (
-      <FieldFilterEntity title={title} removable={removable} onRemove={onRemove} stretchable>
+      <FieldFilterEntity
+        title={title}
+        removable={removable}
+        smallSize={smallSize}
+        onRemove={onRemove}
+        stretchable
+      >
         <InputConditionalTags
           {...rest}
           conditions={conditions}

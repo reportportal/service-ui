@@ -41,21 +41,28 @@ export class EntityItemStatistics extends Component {
     value: PropTypes.object.isRequired,
     entityId: PropTypes.string,
     title: PropTypes.string,
+    smallSize: PropTypes.bool,
     removable: PropTypes.bool,
     onRemove: PropTypes.func,
   };
   static defaultProps = {
     entityId: '',
     title: '',
+    smallSize: '',
     removable: true,
     onRemove: () => {},
   };
 
   render() {
-    const { intl, value, onRemove, removable, entityId, title, ...rest } = this.props;
+    const { intl, value, onRemove, removable, entityId, title, smallSize, ...rest } = this.props;
     return (
       <FieldErrorHint {...rest}>
-        <FieldFilterEntity title={title || entityId} removable={removable} onRemove={onRemove}>
+        <FieldFilterEntity
+          title={title || entityId}
+          smallSize={smallSize}
+          removable={removable}
+          onRemove={onRemove}
+        >
           <InputConditional
             conditions={conditions}
             value={value}

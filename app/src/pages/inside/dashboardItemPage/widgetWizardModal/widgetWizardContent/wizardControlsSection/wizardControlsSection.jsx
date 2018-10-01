@@ -53,6 +53,14 @@ export class WizardControlsSection extends Component {
     onChangeWidgetType: () => {},
   };
 
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      buttonsDisabled: false,
+    };
+  }
+
   getControlsByStep = (step) => {
     const { activeWidgetId, widgets } = this.props;
     switch (step) {
@@ -61,6 +69,7 @@ export class WizardControlsSection extends Component {
           <WizardSecondStepForm
             widget={widgets.find((widget) => widget.id === activeWidgetId)}
             onSubmit={this.props.nextStep}
+            onDisableButtons={this.handleDisableButtons}
           />
         );
       case 2:
@@ -75,28 +84,47 @@ export class WizardControlsSection extends Component {
     }
   };
 
+  handleDisableButtons = (state) => {
+    this.setState({ buttonsDisabled: state });
+  };
+
   render() {
     const { intl, step, onClickPrevStep, onClickNextStep } = this.props;
+    const { buttonsDisabled } = this.state;
+
     return (
       <div className={cx('wizard-controls-section')}>
         <div className={cx('controls-wrapper')}>{this.getControlsByStep(step)}</div>
         <div className={cx('buttons-block')}>
           {step !== 0 && (
             <div className={cx('button')}>
-              <GhostButton icon={LeftArrowIcon} onClick={onClickPrevStep}>
+              <GhostButton
+                icon={LeftArrowIcon}
+                onClick={onClickPrevStep}
+                disabled={buttonsDisabled}
+              >
                 {Parser(intl.formatMessage(messages.prevStepButton))}
               </GhostButton>
             </div>
           )}
           {step !== 2 ? (
             <div className={cx('button')}>
-              <GhostButton icon={RightArrowIcon} onClick={onClickNextStep} iconAtRight>
+              <GhostButton
+                icon={RightArrowIcon}
+                onClick={onClickNextStep}
+                iconAtRight
+                disabled={buttonsDisabled}
+              >
                 {Parser(intl.formatMessage(messages.nextStepButton))}
               </GhostButton>
             </div>
           ) : (
             <div className={cx('button')}>
-              <BigButton color={'booger'} onClick={this.props.submitWidgetWizardForm}>
+              <BigButton
+                color={'booger'}
+                onClick={this.props.submitWidgetWizardForm}
+                disabled={buttonsDisabled}
+              >
                 {Parser(intl.formatMessage(messages.addWidgetButton))}
               </BigButton>
             </div>

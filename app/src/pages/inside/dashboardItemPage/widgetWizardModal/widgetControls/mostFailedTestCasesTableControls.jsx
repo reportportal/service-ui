@@ -87,6 +87,8 @@ export class MostFailedTestCasesTableControls extends Component {
     widgetSettings: PropTypes.object.isRequired,
     launchNamesSearchUrl: PropTypes.string.isRequired,
     initializeWizardSecondStepForm: PropTypes.func.isRequired,
+    formAppearance: PropTypes.object.isRequired,
+    onFormAppearanceChange: PropTypes.func.isRequired,
   };
 
   constructor(props) {
@@ -116,10 +118,15 @@ export class MostFailedTestCasesTableControls extends Component {
   parseLaunchNames = (value) => (value ? value.value : null);
 
   render() {
-    const { intl, launchNamesSearchUrl } = this.props;
+    const { intl, launchNamesSearchUrl, formAppearance, onFormAppearanceChange } = this.props;
     return (
       <Fragment>
-        <FiltersControl />
+        <FieldProvider name={'filterId'}>
+          <FiltersControl
+            formAppearance={formAppearance}
+            onFormAppearanceChange={onFormAppearanceChange}
+          />
+        </FieldProvider>
         <FieldProvider
           name="content_fields"
           format={this.formatContentFields}

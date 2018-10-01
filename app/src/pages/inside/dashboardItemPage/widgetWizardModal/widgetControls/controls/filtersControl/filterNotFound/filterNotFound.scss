@@ -1,0 +1,41 @@
+.filter-not-found {
+  width: 100%;
+  padding: 26px 10px 20px;
+  text-align: center;
+  border-bottom: 1px solid $COLOR--gray-91;
+  box-sizing: border-box;
+}
+.filter-not-found-icon {
+  display: inline-block;
+  width: 20px;
+  margin-right: 10px;
+
+  svg {
+    path {
+      fill: $COLOR--gray-80;
+    }
+  }
+}
+
+.filter-not-found-text {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 0 10px;
+  color: $COLOR--gray-47;
+  font-size: 14px;
+  font-family: $FONT-SEMIBOLD;
+
+  span {
+    max-width: 200px;
+    font-family: $FONT-REGULAR;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+.filter-not-found-hint {
+  margin: 0 0 10px;
+  color: $COLOR--gray-47;
+  font-size: 13px;
+}

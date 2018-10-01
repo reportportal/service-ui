@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { getFormValues, initialize } from 'redux-form';
 import { injectIntl, intlShape } from 'react-intl';
+import { FieldProvider } from 'components/fields/fieldProvider';
 import {
   STATS_TOTAL,
   STATS_FAILED,
@@ -35,6 +36,8 @@ export class DifferentLaunchesComparisonControls extends Component {
     intl: intlShape.isRequired,
     widgetSettings: PropTypes.object.isRequired,
     initializeWizardSecondStepForm: PropTypes.func.isRequired,
+    formAppearance: PropTypes.object.isRequired,
+    onFormAppearanceChange: PropTypes.func.isRequired,
   };
 
   constructor(props) {
@@ -58,6 +61,14 @@ export class DifferentLaunchesComparisonControls extends Component {
   }
 
   render() {
-    return <FiltersControl />;
+    const { formAppearance, onFormAppearanceChange } = this.props;
+    return (
+      <FieldProvider name={'filterId'}>
+        <FiltersControl
+          formAppearance={formAppearance}
+          onFormAppearanceChange={onFormAppearanceChange}
+        />
+      </FieldProvider>
+    );
   }
 }

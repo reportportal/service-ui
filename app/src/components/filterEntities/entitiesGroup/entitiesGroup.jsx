@@ -1,6 +1,6 @@
-import { Component } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { reduxForm, getFormValues, getFormSyncErrors, clearFields } from 'redux-form';
+import { reduxForm, getFormValues, getFormSyncErrors, change as changeForm } from 'redux-form';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { debounce } from 'common/utils';
@@ -59,7 +59,7 @@ const formChangeHandler = debounce((values, dispatch, props) => {
     };
   },
   {
-    clearField: (name) => clearFields(ENTITIES_FORM_NAME, false, false, [name]),
+    clearField: (name) => changeForm(ENTITIES_FORM_NAME, name, null),
   },
 )
 @reduxForm({
@@ -87,53 +87,62 @@ export class EntitiesGroup extends Component {
     entities: PropTypes.object,
     entityValues: PropTypes.object,
     activeEntities: PropTypes.array,
-    clearField: PropTypes.func.isRequired,
+    clearField: PropTypes.func,
+    entitySmallSize: PropTypes.string.isRequired,
   };
   static defaultProps = {
     entities: {},
     activeEntities: [],
     entityValues: {},
+    formSyncErrors: {},
+    clearField: () => {},
+    change: () => {},
+    initialize: () => {},
   };
 
   toggleEntity = (entityId) => {
-    const entity = this.props.entities[entityId];
-    const value = this.props.entityValues[entityId];
+    const { entities, entityValues, change, clearField } = this.props;
+
+    const entity = entities[entityId];
+    const value = entityValues[entityId];
+
     if (!value) {
-      this.props.change(entityId, entity.value);
+      change(entityId, entity.value);
     } else {
-      this.props.clearField(entityId);
+      clearField(entityId);
     }
   };
 
   render() {
-    const { entities, entityValues } = this.props;
+    const { entities, entityValues, activeEntities, entitySmallSize } = this.props;
+
     return (
       <div className={cx('entities-group')}>
-        <form>
-          {this.props.activeEntities.map((entityId) => {
-            const entity = entities[entityId];
-            const EntityComponent = entity && entity.component;
-            return (
-              entity &&
-              entityValues[entityId] && (
-                <div key={entityId} className={cx('entity-item')}>
-                  <FieldProvider name={entityId}>
-                    <EntityComponent
-                      entityId={entityId}
-                      removable={entity.removable}
-                      title={entity.title}
-                      meta={entity.meta}
-                      onRemove={() => {
-                        this.toggleEntity(entityId);
-                      }}
-                    />
-                  </FieldProvider>
-                </div>
-              )
-            );
-          })}
-          <EntitiesSelector entities={entities} onChange={this.toggleEntity} />
-        </form>
+        {activeEntities.map((entityId) => {
+          const entity = entities[entityId];
+          const EntityComponent = entity && entity.component;
+          return (
+            entity &&
+            entityValues[entityId] && (
+              <div key={entityId} className={cx('entity-item')}>
+                <FieldProvider name={entityId}>
+                  <EntityComponent
+                    smallSize={entitySmallSize}
+                    value={entityValues[entityId].value}
+                    entityId={entityId}
+                    removable={entity.removable}
+                    title={entity.title}
+                    meta={entity.meta}
+                    onRemove={() => {
+                      this.toggleEntity(entityId);
+                    }}
+                  />
+                </FieldProvider>
+              </div>
+            )
+          );
+        })}
+        <EntitiesSelector entities={entities} onChange={this.toggleEntity} />
       </div>
     );
   }

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { reduxForm } from 'redux-form';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
+
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { WidgetTypeSelector } from './widgetTypeSelector';
 import { WIDGET_WIZARD_FORM } from '../constants';
