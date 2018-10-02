@@ -25,6 +25,7 @@ define(function (require, exports, module) {
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
     var SingletonRegistryInfoModel = require('model/SingletonRegistryInfoModel');
+    var UserModel = require('model/UserModel');
     var SingletonAppStorage = require('storage/SingletonAppStorage');
 
     var Timer = Epoxy.View.extend({
@@ -43,6 +44,9 @@ define(function (require, exports, module) {
                 if (flushingTime < 0) {
                     clearInterval(self.timer);
                     self.storage.set('flushing_time', null);
+                    self.infoModel.update().done(function () {
+                        self.userModel.logout();
+                    });
                 } else {
                     self.storage.set('flushing_time', flushingTime);
                     var hours = Math.floor(flushingTime / 3600 / 1000);
@@ -64,20 +68,23 @@ define(function (require, exports, module) {
         initialize: function () {
             this.infoModel = new SingletonRegistryInfoModel();
             this.storage = new SingletonAppStorage();
-            this.storage.set('flushing_time', this.storage.get('flushing_time') || this.infoModel.get('getTriggersIn'));
-            var flushingTime = this.storage.get('flushing_time');
-            var hours = Math.floor(flushingTime / 3600 / 1000);
-            var minutes = Math.floor((flushingTime - hours * 3600 * 1000) / 60 / 1000);
-            var seconds = Math.floor((flushingTime - hours * 3600 * 1000 - minutes * 60 * 1000) / 1000);
-            this.model = new (Epoxy.Model.extend({
-                defaults: {
-                    hours: hours,
-                    minutes: minutes,
-                    seconds: seconds
-                }
-            }))();
-            this.render();
-            this.startTimer();
+            this.userModel = new UserModel();
+            if(this.infoModel.get('getTriggersIn')){
+                this.storage.set('flushing_time', this.infoModel.get('getTriggersIn'));
+                var flushingTime = this.storage.get('flushing_time');
+                var hours = Math.floor(flushingTime / 3600 / 1000);
+                var minutes = Math.floor((flushingTime - hours * 3600 * 1000) / 60 / 1000);
+                var seconds = Math.floor((flushingTime - hours * 3600 * 1000 - minutes * 60 * 1000) / 1000);
+                this.model = new (Epoxy.Model.extend({
+                    defaults: {
+                        hours: hours,
+                        minutes: minutes,
+                        seconds: seconds
+                    }
+                }))();
+                this.render();
+                this.startTimer();
+            }
         },
 
 

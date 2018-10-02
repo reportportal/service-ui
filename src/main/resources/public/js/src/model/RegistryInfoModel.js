@@ -119,7 +119,7 @@ define(function (require) {
                     if (services && services.API && services.API.environment && services.API.environment.instance_type && services.API.environment.instance_type === 'demo'){
                         return true;
                     }
-                    return false;
+                    return true;
                 }
             },
             getTriggersIn: {
