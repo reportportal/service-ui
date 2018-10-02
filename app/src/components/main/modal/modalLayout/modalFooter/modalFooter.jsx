@@ -23,6 +23,7 @@ export class ModalFooter extends Component {
         onClick: PropTypes.func,
         component: PropTypes.func,
         buttonProps: PropTypes.object,
+        left: PropTypes.bool
       }),
     ]),
     onClickOk: PropTypes.func,
@@ -114,7 +115,7 @@ export class ModalFooter extends Component {
             </div>
           )}
           {customButton && (
-            <div className={cx('button-container')}>
+            <div className={cx('button-container',{ left: customButton.left })}>
               {customButton.component ? (
                 <customButton.component
                   {...customButton.buttonProps}
