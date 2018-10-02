@@ -23,13 +23,13 @@ export class AttachmentCodeModal extends Component {
       intl,
       data: { language, content },
     } = this.props;
-    const okButton = {
+    const cancelButton = {
       text: intl.formatMessage(messages.close),
       onClick: (closeModal) => closeModal(),
     };
 
     return (
-      <ModalLayout title={intl.formatMessage(messages.title)} okButton={okButton}>
+      <ModalLayout title={intl.formatMessage(messages.title)} cancelButton={cancelButton}>
         <form>
           <Highlight {...language}>{content}</Highlight>
         </form>
