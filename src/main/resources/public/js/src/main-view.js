@@ -44,7 +44,6 @@ define(function (require) {
                 tpl: 'tpl-sidebar',
                 projectUrl: config.project.projectId,
                 currentPage: this.contextName,
-                isDemo: true,
             }).render();
             this.footerView = new Footer().render();
             this.headerView = new Header({

@@ -28,6 +28,7 @@ define(function (require, exports, module) {
     var ModalEditUserInfo = require('modals/modalEditUserInfo');
     var ModalConfirm = require('modals/modalConfirm');
     var RegenerateUUIDTooltipView = require('tooltips/RegenerateUUIDTooltipView');
+    var SingletonRegistryInfoModel = require('model/SingletonRegistryInfoModel');
     var DropDownComponent = require('components/DropDownComponent');
     var SingletonAppStorage = require('storage/SingletonAppStorage');
     var ModalForceUpdate = require('modals/modalForceUpdate');
@@ -43,7 +44,16 @@ define(function (require, exports, module) {
         bindings: {
             '[data-js-user-name]': 'text: fullName',
             '[data-js-user-email]': 'text: email',
-            '[data-js-user-login]': 'text: user_login'
+            '[data-js-user-login]': 'text: user_login',
+            '[data-js-change-password]': 'attr: {disabled: isDemo}',
+            '[data-js-upload-photo-form]': 'classes: {hide: isDemo}',
+            '[data-js-edit-name]': 'classes: {hide: isDemo}',
+            '[data-js-edit-email]': 'classes: {hide: isDemo}'
+        },
+        computeds: {
+            isDemo: function () {
+                return this.infoModel.get('isDemo');
+            }
         },
         events: {
             'click [data-js-config-tab] li > a ': 'changeLangConfig',
@@ -62,6 +72,7 @@ define(function (require, exports, module) {
             this.$el = options.body;
             this.context = options.context;
             this.model = config.userModel;
+            this.infoModel = new SingletonRegistryInfoModel();
             this.apiTokenModel = new Backbone.Model({
                 apiToken: null
             });
