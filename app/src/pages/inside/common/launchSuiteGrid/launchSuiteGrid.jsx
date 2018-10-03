@@ -57,7 +57,7 @@ const TotalColumn = ({ className, ...rest }) => (
     <ExecutionStatistics
       itemId={rest.value.id}
       title={rest.title}
-      value={rest.value.statistics.executions.total}
+      value={rest.value.statistics.executions && rest.value.statistics.executions.total}
       bold
       statuses={[
         PASSED.toUpperCase(),
@@ -77,7 +77,7 @@ const PassedColumn = ({ className, ...rest }) => (
     <ExecutionStatistics
       itemId={rest.value.id}
       title={rest.title}
-      value={rest.value.statistics.executions.passed}
+      value={rest.value.statistics.executions && rest.value.statistics.executions.passed}
       statuses={[PASSED.toUpperCase()]}
     />
   </div>
@@ -91,7 +91,7 @@ const FailedColumn = ({ className, ...rest }) => (
     <ExecutionStatistics
       itemId={rest.value.id}
       title={rest.title}
-      value={rest.value.statistics.executions.failed}
+      value={rest.value.statistics.executions && rest.value.statistics.executions.failed}
       statuses={[FAILED.toUpperCase(), INTERRUPTED.toUpperCase()]}
     />
   </div>
@@ -105,7 +105,7 @@ const SkippedColumn = ({ className, ...rest }) => (
     <ExecutionStatistics
       itemId={rest.value.id}
       title={rest.title}
-      value={rest.value.statistics.executions.skipped}
+      value={rest.value.statistics.executions && rest.value.statistics.executions.skipped}
       statuses={[SKIPPED.toUpperCase()]}
     />
   </div>
@@ -119,7 +119,7 @@ const PbColumn = ({ className, ...rest }) => (
     <DefectStatistics
       type={PRODUCT_BUG}
       customProps={rest.customProps}
-      data={rest.value.statistics.defects.product_bug}
+      data={rest.value.statistics.defects && rest.value.statistics.defects.product_bug}
       itemId={rest.value.id}
     />
   </div>
@@ -133,7 +133,7 @@ const AbColumn = ({ className, ...rest }) => (
     <DefectStatistics
       type={AUTOMATION_BUG}
       customProps={rest.customProps}
-      data={rest.value.statistics.defects.automation_bug}
+      data={rest.value.statistics.defects && rest.value.statistics.defects.automation_bug}
       itemId={rest.value.id}
     />
   </div>
@@ -147,7 +147,7 @@ const SiColumn = ({ className, ...rest }) => (
     <DefectStatistics
       type={SYSTEM_ISSUE}
       customProps={rest.customProps}
-      data={rest.value.statistics.defects.system_issue}
+      data={rest.value.statistics.defects && rest.value.statistics.defects.system_issue}
       itemId={rest.value.id}
     />
   </div>
@@ -160,7 +160,7 @@ const TiColumn = ({ className, ...rest }) => (
   <div className={cx('ti-col', className)}>
     <ToInvestigateStatistics
       customProps={rest.customProps}
-      value={rest.value.statistics.defects.to_investigate}
+      value={rest.value.statistics.defects && rest.value.statistics.defects.to_investigate}
       itemId={rest.value.id}
     />
   </div>
