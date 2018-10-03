@@ -17,13 +17,14 @@ export const ExecutionStatistics = ({ value, title, bold, itemId, statuses }) =>
 );
 
 ExecutionStatistics.propTypes = {
-  value: PropTypes.string.isRequired,
+  value: PropTypes.string,
   title: PropTypes.object,
   bold: PropTypes.bool,
-  itemId: PropTypes.string.isRequired,
+  itemId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   statuses: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
 ExecutionStatistics.defaultProps = {
   bold: false,
   title: {},
+  value: '',
 };

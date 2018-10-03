@@ -29,11 +29,12 @@ export const DefectStatistics = ({ type, data, customProps, itemId }) => (
 );
 DefectStatistics.propTypes = {
   type: PropTypes.string,
-  data: PropTypes.object.isRequired,
+  data: PropTypes.object,
   customProps: PropTypes.object,
-  itemId: PropTypes.string.isRequired,
+  itemId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
 };
 DefectStatistics.defaultProps = {
   type: '',
   customProps: {},
+  data: {},
 };

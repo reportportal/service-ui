@@ -19,10 +19,11 @@ export const ToInvestigateStatistics = ({ value, customProps, itemId }) => (
   </div>
 );
 ToInvestigateStatistics.propTypes = {
-  value: PropTypes.object.isRequired,
+  value: PropTypes.object,
   customProps: PropTypes.object,
-  itemId: PropTypes.string.isRequired,
+  itemId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
 };
 ToInvestigateStatistics.defaultProps = {
   customProps: {},
+  value: {},
 };
