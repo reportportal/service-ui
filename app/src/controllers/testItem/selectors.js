@@ -49,7 +49,12 @@ const isListView = (query, namespace) => {
 export const isListViewSelector = (state, namespace) =>
   isListView(pagePropertiesSelector(state), namespace);
 
-const itemTitle = (item) => `${item.name} ${item.number ? `#${item.number}` : ''}`;
+const itemTitleFormatter = (item) => {
+  if (item.number || item.number === 0) {
+    return `${item.name} #${item.number}`;
+  }
+  return item.name;
+};
 
 export const breadcrumbsSelector = createSelector(
   activeProjectSelector,
@@ -93,7 +98,7 @@ export const breadcrumbsSelector = createSelector(
         queryNamespacesToCopy.push(getQueryNamespace(i));
         return {
           id: item.id,
-          title: itemTitle(item),
+          title: itemTitleFormatter(item),
           link: {
             type: debugMode ? PROJECT_USERDEBUG_TEST_ITEM_PAGE : TEST_ITEM_PAGE,
             payload: {
