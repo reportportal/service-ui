@@ -1,12 +1,11 @@
 .widget {
-  flex: 1;
+  height: calc(100% - 60px);
+  position: relative;
 }
 
 .widget-container {
   height: 100%;
   border: 1px solid $COLOR--gray-91;
-  display: flex;
-  flex-direction: column;
 }
 
 .widget-header {
