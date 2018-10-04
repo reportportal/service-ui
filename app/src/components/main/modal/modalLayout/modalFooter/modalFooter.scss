@@ -1,3 +1,10 @@
+.rotate-icon {
+  display: inline-block;
+  position: relative;
+  width: 20px;
+  height: 20px;
+  margin: auto 0;
+}
 .modal-footer {
   position: relative;
   display: table;
@@ -46,8 +53,17 @@
 .left {
   position: absolute;
   left: 0;
+  width: 20px;
+  height: 20px;
 }
 .button-container {
+  &.left {
+    min-width: 20px;
+    height: 20px;
+    display: inline-block;
+    user-select: none;
+    cursor: pointer;
+  }
   display: inline-block;
   height: 30px;
   min-width: 70px;
