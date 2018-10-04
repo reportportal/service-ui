@@ -205,7 +205,7 @@ export class LaunchesPage extends Component {
   deleteItem = (id) => {
     fetch(URLS.launches(this.props.activeProject, id), {
       method: 'delete',
-    }).then(this.props.fetchLaunchesAction);
+    }).then(this.unselectAndFetchLaunches);
   };
   confirmDeleteItem = (item) => {
     this.props.showModalAction({
@@ -221,7 +221,7 @@ export class LaunchesPage extends Component {
       method: 'delete',
     })
       .then(() => {
-        this.props.fetchLaunchesAction();
+        this.unselectAndFetchLaunches();
         this.props.hideScreenLockAction();
         this.props.showNotification({
           message:
@@ -267,7 +267,7 @@ export class LaunchesPage extends Component {
     this.props.tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_FORCE_FINISH_ACTION);
     const launches = eventData && eventData.id ? [eventData] : this.props.selectedLaunches;
     this.props.forceFinishLaunchesAction(launches, {
-      fetchFunc: this.props.fetchLaunchesAction,
+      fetchFunc: this.unselectAndFetchLaunches,
     });
   };
 
@@ -307,7 +307,7 @@ export class LaunchesPage extends Component {
   mergeLaunches = () => {
     this.props.tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_MERGE_ACTION);
     this.props.mergeLaunchesAction(this.props.selectedLaunches, {
-      fetchFunc: this.props.fetchLaunchesAction,
+      fetchFunc: this.unselectAndFetchLaunches,
     });
   };
 
@@ -315,7 +315,7 @@ export class LaunchesPage extends Component {
     const launches = eventData && eventData.id ? [eventData] : this.props.selectedLaunches;
     this.props.tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_MOVE_TO_DEBUG_LAUNCH_MENU);
     this.props.moveLaunchesAction(launches, {
-      fetchFunc: this.props.fetchLaunchesAction,
+      fetchFunc: this.unselectAndFetchLaunches,
       debugMode: this.props.debugMode,
     });
   };
