@@ -5,7 +5,6 @@ import { ModalLayout, withModal } from 'components/main/modal';
 import { messages } from './messages';
 import { WithZipJs } from './har/WithZipJs';
 import { PerfCascade } from './har/PerfCascade';
-import './attachmentModal.scss';
 
 @withModal('attachmentHarFileModal')
 @injectIntl

@@ -5,7 +5,6 @@ import { injectIntl, intlShape } from 'react-intl';
 import { ModalLayout, withModal } from 'components/main/modal';
 import Highlight from 'react-highlight';
 import { messages } from './messages';
-import './attachmentModal.scss';
 
 @withModal('attachmentCodeModal')
 @injectIntl

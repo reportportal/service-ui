@@ -21,15 +21,11 @@
 
 import { storiesOf } from '@storybook/react';
 import { withReadme } from 'storybook-readme';
-import {
-  AttachmentCodeModal,
-  AttachmentHarFileModal,
-  AttachmentImageModal,
-} from '.';
+import { AttachmentCodeModal, AttachmentHarFileModal, AttachmentImageModal } from '.';
 import README from './README.md';
 import harData from './example.har';
 
-storiesOf('Pages/Inside/LogsPage/AttachmentModal', module)
+storiesOf('Pages/Inside/LogsPage/AttachmentCodeModal', module)
   .addDecorator(withReadme(README))
   .add('Code content with hljs', () => (
     <AttachmentCodeModal

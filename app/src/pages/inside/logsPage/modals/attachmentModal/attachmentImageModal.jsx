@@ -1,14 +1,10 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
-import classNames from 'classnames/bind';
+import Parser from 'html-react-parser';
 import { injectIntl, intlShape } from 'react-intl';
+import RotateImage from 'common/img/rotate-inline.svg';
 import { ModalLayout, withModal } from 'components/main/modal';
 import { messages } from './messages';
-import rotateImage from 'common/img/rotate-left-icon.svg';
-import styles from './attachmentImageModal.scss';
-import Parser from 'html-react-parser';
-
-const cx = classNames.bind(styles);
 
 @withModal('attachmentImageModal')
 @injectIntl
@@ -33,11 +29,12 @@ export class AttachmentImageModal extends Component {
 
   generateRotationCommand = (amount) => `rotate(${amount}deg)`;
 
-  renderCustomButton = (intl) => (
-    <div className={cx('rotate-icon')}
-      onClick={this.rotateImageHandler}>
-      {Parser(rotateImage)}
-    </div>);
+  renderCustomButton = () => (
+    <div onClick={this.rotateImageHandler} left="true">
+      {Parser(RotateImage)}
+      <span>Rotate</span>
+    </div>
+  );
 
   renderOkButton = (intl) => ({
     text: intl.formatMessage(messages.close),
