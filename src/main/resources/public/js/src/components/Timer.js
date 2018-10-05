@@ -27,13 +27,32 @@ define(function (require, exports, module) {
     var SingletonRegistryInfoModel = require('model/SingletonRegistryInfoModel');
     var UserModel = require('model/UserModel');
     var SingletonAppStorage = require('storage/SingletonAppStorage');
+    var Localization = require('localization');
+    var App = require('app');
+    var config = App.getInstance();
 
     var Timer = Epoxy.View.extend({
         template: 'tpl-component-timer',
         bindings: {
             '[data-js-hours]': 'text: hours',
             '[data-js-minutes]': 'text: minutes',
-            '[data-js-seconds]': 'text: seconds'
+            '[data-js-seconds]': 'text: seconds',
+            '[data-js-banner-text]': 'html: bannerText'
+        },
+        events: {
+            'click [data-js-github-auth]': 'onClickGithubAuth'
+        },
+        computeds: {
+            bannerText: function () {
+                if (config.userModel.get('account_type') === 'GITHUB') {
+                    return Localization.login.demoGithub;
+                }
+                return Localization.login.publicAccount;
+            }
+        },
+
+        onClickGithubAuth: function (e) {
+            window.location = window.location.protocol + '//' + window.location.host + '/uat' + this.infoModel.get('autGithubExtensions').path;
         },
 
         startTimer: function () {
@@ -43,10 +62,9 @@ define(function (require, exports, module) {
                 flushingTime -= 1000;
                 if (flushingTime < 0) {
                     clearInterval(self.timer);
-                    self.storage.set('flushing_time', null);
-                    self.infoModel.update().done(function () {
-                        self.userModel.logout();
-                    });
+                    self.storage.clear();
+                    window.localStorage.clear();
+                    self.userModel.logout();
                 } else {
                     self.storage.set('flushing_time', flushingTime);
                     var hours = Math.floor(flushingTime / 3600 / 1000);
@@ -69,7 +87,7 @@ define(function (require, exports, module) {
             this.infoModel = new SingletonRegistryInfoModel();
             this.storage = new SingletonAppStorage();
             this.userModel = new UserModel();
-            if(this.infoModel.get('getTriggersIn')){
+            if (this.infoModel.get('getTriggersIn')) {
                 this.storage.set('flushing_time', this.infoModel.get('getTriggersIn'));
                 var flushingTime = this.storage.get('flushing_time');
                 var hours = Math.floor(flushingTime / 3600 / 1000);
@@ -83,13 +101,19 @@ define(function (require, exports, module) {
                     }
                 }))();
                 this.render();
-                this.startTimer();
+                !this.timer && this.startTimer();
             }
         },
 
 
         render: function () {
             this.$el.html(Util.templates(this.template, {}));
+        },
+
+        destroy: function () {
+            clearInterval(this.timer);
+            this.storage.set('flushing_time', null);
+            this.$el.empty();
         }
 
     });

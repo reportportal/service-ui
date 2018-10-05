@@ -77,6 +77,15 @@ define(function (require) {
                     return {};
                 }
             },
+            autGithubExtensions: {
+                deps: ['services'],
+                get: function (services) {
+                    if (services && services.UAT && services.UAT.auth_extensions && services.UAT.auth_extensions.github) {
+                        return services.UAT.auth_extensions.github;
+                    }
+                    return {};
+                }
+            },
             bugTrackingExtensions: {
                 deps: ['services'],
                 get: function (services) {
@@ -119,8 +128,7 @@ define(function (require) {
                     if (services && services.API && services.API.environment && services.API.environment.instance_type && services.API.environment.instance_type === 'demo'){
                         return true;
                     }
-                    //return false;
-                    return true; // TODO: remove it when API.environment.instance_type will be implement
+                    return false;
                 }
             },
             getTriggersIn: {
