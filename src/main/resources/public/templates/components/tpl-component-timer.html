@@ -1,28 +1,30 @@
 <div class="demo-banner">
     <p>
-        You are using Personal GitHub Project.
-        <span class="warning">All data will be deleted in </span>
-        <span class="timer" >
-            <span data-js-hours-container>
-                <span class="time-container">
-                    <span data-js-hours class="number"></span>
-                    <label>h</label>
+        <span data-js-banner-text></span>
+        <span>
+            <span class="warning"><%= data.text.login.dataFlush %></span>
+            <span class="timer" >
+                <span data-js-hours-container>
+                    <span class="time-container">
+                        <span data-js-hours class="number"></span>
+                        <label><%= data.text.login.hours %></label>
+                    </span>
+                    <span class="delimiter">:</span>
                 </span>
-                <span class="delimiter">:</span>
-            </span>
-            <span  data-js-minutes-container>
-                <span class="time-container">
-                    <span data-js-minutes class="number"></span>
-                    <label>m</label>
+                <span  data-js-minutes-container>
+                    <span class="time-container">
+                        <span data-js-minutes class="number"></span>
+                        <label><%= data.text.login.minutes %></label>
+                    </span>
+                    <span class="delimiter">:</span>
                 </span>
-                <span class="delimiter">:</span>
-            </span>
-            <span>
-                <span class="time-container">
-                    <span data-js-seconds class="number"></span>
-                    <label>s</label>
+                <span>
+                    <span class="time-container">
+                        <span data-js-seconds class="number"></span>
+                        <label><%= data.text.login.seconds %></label>
+                    </span>
                 </span>
-            </span>
+        </span>
         </span>
     </p>
 </div>

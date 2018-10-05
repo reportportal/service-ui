@@ -39,11 +39,13 @@ define(function (require) {
     var SingletonAppModel = require('model/SingletonAppModel');
     var SingletonUserStorage = require('storage/SingletonUserStorage');
     var SingletonLaunchFilterCollection = require('filters/SingletonLaunchFilterCollection');
+    var SingletonRegistryInfoModel = require('model/SingletonRegistryInfoModel');
 
     var config = App.getInstance();
     var appModel = new SingletonAppModel();
     var userStorage = new SingletonUserStorage();
     var launchFilterCollection = new SingletonLaunchFilterCollection();
+    var infoModel = new SingletonRegistryInfoModel();
 
     var Context = {
 
@@ -163,8 +165,10 @@ define(function (require) {
                         projectId: projectId
                     });
                     self.mainView.render(data);
-                    self.timer = new Timer();
-                    $('[data-js-banner]').html(self.timer.$el);
+                    infoModel.update().done(function () {
+                        self.timer = new Timer();
+                        $('[data-js-banner]').html(self.timer.$el);
+                    });
                 } else {
                     self.mainView.update(data);
                 }
@@ -266,7 +270,7 @@ define(function (require) {
         },
 
         logout: function () {
-            this.timer.$el.empty();
+            this.timer.destroy();
             this.currentProjectId = null;
             Util.ajaxInfoMessenger('logOuted');
         },

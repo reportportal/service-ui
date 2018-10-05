@@ -775,16 +775,41 @@ ul.rp-nav-left > li.title-holder {
     width: 100%;
   }
   .demo-banner{
+    padding-left: 91px;
     background-color: #e6f7f8;
+    @media (max-width: $SCREEN_SM_MAX){
+      padding-left: 61px;
+    }
+    @media (max-width: $SCREEN_XS_MAX){
+      padding: 0 10px;
+    }
     p{
       margin-bottom: 0;
       font-size: 14px;
       text-align: center;
       line-height: 60px;
+      @media (max-width: $SCREEN_MD_MAX){
+        display: flex;
+        flex-direction: column;
+        line-height:22px;
+        padding: 10px 0;
+      }
+      @media (max-width: $SCREEN_XS_MAX){
+        font-size: 12px;
+        line-height:18px;
+        padding: 5px 0;
+        .banner-description{
+          display: none;
+        }
+      }
       .warning{
         display: inline-block;
         margin-right: 15px;
         color: $COLOR--failed;
+      }
+      .github-auth{
+        color:  $COLOR--tealish;
+        cursor: pointer;
       }
       .timer{
         .time-container{
@@ -792,12 +817,18 @@ ul.rp-nav-left > li.title-holder {
           padding: 3px;
           border-radius: 3px;
           background-color: $COLOR--white-default;
+          @media (max-width: $SCREEN_XS_MAX){
+            padding: 0 2px;
+          }
           .number{
             margin: 0;
             font-size: 14px;
             color: $COLOR--failed;
             width: 20px;
             display: inline-block;
+            @media (max-width: $SCREEN_XS_MAX){
+              font-size: 12px;
+            }
           }
           label{
             font-size: 10px;
