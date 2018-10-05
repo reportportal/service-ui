@@ -45,7 +45,8 @@ export const unlinkIssueAction = defineGroupOperation(
 export const editDefectsAction = defineGroupOperation(
   NAMESPACE,
   'edit-defect',
-  (items, { fetchFunc }) => showModalAction({ id: 'editDefectModal', data: { items, fetchFunc } }),
+  (items, { fetchFunc, debugMode }) =>
+    showModalAction({ id: 'editDefectModal', data: { items, fetchFunc, debugMode } }),
   validateEditDefect,
 );
 

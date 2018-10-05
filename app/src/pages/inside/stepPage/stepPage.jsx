@@ -155,6 +155,7 @@ export class StepPage extends Component {
     const items = eventData && eventData.id ? [eventData] : this.props.selectedItems;
     this.props.editDefectsAction(items, {
       fetchFunc: this.props.fetchTestItemsAction,
+      debugMode: this.props.debugMode,
     });
   };
 
