@@ -139,7 +139,7 @@ export class EditDefectModal extends Component {
         onClick: () => this.onEditDefects(this.handlePostIssue, true),
         disabled:
           !externalSystems.length ||
-          !externalSystems.some((item) => item.fields && item.fields.length),
+          !externalSystems.every((item) => item.fields && item.fields.length),
       },
       {
         label: intl.formatMessage(messages.saveAndLinkIssueMessage),

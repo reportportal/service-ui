@@ -146,7 +146,7 @@ export class ActionPanel extends Component {
 
   checkIfThePostIssueUnavailable = () =>
     !this.props.externalSystems.length ||
-    !this.props.externalSystems.some((item) => item.fields && item.fields.length);
+    !this.props.externalSystems.every((item) => item.fields && item.fields.length);
 
   createActionDescriptors = () => [
     {
