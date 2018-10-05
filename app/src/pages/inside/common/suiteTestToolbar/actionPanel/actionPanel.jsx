@@ -144,6 +144,10 @@ export class ActionPanel extends Component {
 
   checkVisibility = (levels) => levels.some((level) => this.props.level === level);
 
+  checkIfThePostIssueUnavailable = () =>
+    !this.props.externalSystems.length ||
+    !this.props.externalSystems.some((item) => item.fields && item.fields.length);
+
   createActionDescriptors = () => [
     {
       label: this.props.intl.formatMessage(messages.editDefects),
@@ -154,9 +158,9 @@ export class ActionPanel extends Component {
       label: this.props.intl.formatMessage(messages.postIssue),
       value: 'action-post-issue',
       hidden: this.props.debugMode,
-      disabled: !this.props.externalSystems.length,
+      disabled: this.checkIfThePostIssueUnavailable(),
       title:
-        (!this.props.externalSystems.length &&
+        (this.checkIfThePostIssueUnavailable() &&
           this.props.intl.formatMessage(messages.noBugTrackingSystemToPostIssue)) ||
         '',
       onClick: this.props.onPostIssue,

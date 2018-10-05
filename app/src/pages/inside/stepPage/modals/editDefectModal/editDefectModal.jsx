@@ -85,7 +85,7 @@ const messages = defineMessages({
 @injectIntl
 @connect(
   (state) => ({
-    externalSystem: externalSystemSelector(state),
+    externalSystems: externalSystemSelector(state),
     url: URLS.testItems(activeProjectSelector(state)),
   }),
   {
@@ -100,10 +100,11 @@ export class EditDefectModal extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
     url: PropTypes.string.isRequired,
-    externalSystem: PropTypes.array.isRequired,
+    externalSystems: PropTypes.array.isRequired,
     data: PropTypes.shape({
       items: PropTypes.array,
       fetchFunc: PropTypes.func,
+      debugMode: PropTypes.bool,
     }).isRequired,
     showNotification: PropTypes.func.isRequired,
     hideModalAction: PropTypes.func.isRequired,
@@ -116,7 +117,7 @@ export class EditDefectModal extends Component {
     super(props);
     const {
       intl,
-      externalSystem,
+      externalSystems,
       data: { items },
     } = props;
     const initialState = {};
@@ -136,20 +137,22 @@ export class EditDefectModal extends Component {
         label: intl.formatMessage(messages.saveAndPostIssueMessage),
         value: 'Post',
         onClick: () => this.onEditDefects(this.handlePostIssue, true),
-        disabled: !externalSystem.length,
+        disabled:
+          !externalSystems.length ||
+          !externalSystems.some((item) => item.fields && item.fields.length),
       },
       {
         label: intl.formatMessage(messages.saveAndLinkIssueMessage),
         value: 'Link',
         onClick: () => this.onEditDefects(this.handleLinkIssue, true),
-        disabled: !externalSystem.length,
+        disabled: !externalSystems.length,
       },
       {
         label: intl.formatMessage(messages.saveAndUnlinkIssueMessage),
         value: 'Unlink',
         onClick: () => this.onEditDefects(this.handleUnlinkIssue, true),
         disabled: this.isBulkEditOperation()
-          ? !externalSystem.length
+          ? false
           : !items[0].issue.externalSystemIssues || !items[0].issue.externalSystemIssues.length,
       },
     ];
@@ -318,7 +321,10 @@ export class EditDefectModal extends Component {
   };
 
   render() {
-    const { intl } = this.props;
+    const {
+      intl,
+      data: { debugMode },
+    } = this.props;
     const customButton = {
       onClick: this.onEditDefects,
       buttonProps: {
@@ -327,13 +333,18 @@ export class EditDefectModal extends Component {
       },
       component: MultiActionButton,
     };
+    const okButton = {
+      onClick: this.onEditDefects,
+      text: intl.formatMessage(COMMON_LOCALE_KEYS.SAVE),
+    };
     const cancelButton = {
       text: intl.formatMessage(COMMON_LOCALE_KEYS.CANCEL),
     };
     return (
       <ModalLayout
         title={intl.formatMessage(messages.title)}
-        customButton={customButton}
+        customButton={debugMode ? null : customButton}
+        okButton={debugMode ? okButton : null}
         cancelButton={cancelButton}
         closeConfirmation={this.getCloseConfirmationConfig()}
       >
