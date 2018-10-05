@@ -9,6 +9,7 @@ import {
   TEST_ITEM_PAGE,
   PROJECT_LOG_PAGE,
   PROJECT_USERDEBUG_LOG_PAGE,
+  HISTORY_PAGE,
 } from 'controllers/pages';
 import { LocalizationSwitcher } from 'components/main/localizationSwitcher';
 import { ScreenLock } from 'components/main/screenLock';
@@ -63,7 +64,7 @@ const pageRendering = {
   [TEST_ITEM_PAGE]: { component: TestItemPage, layout: AppLayout },
   [PROJECT_LOG_PAGE]: { component: LogsPage, layout: AppLayout },
   [PROJECT_USERDEBUG_LOG_PAGE]: { component: LogsPage, layout: AppLayout },
-  HISTORY_PAGE: { component: HistoryPage, layout: AppLayout },
+  [HISTORY_PAGE]: { component: HistoryPage, layout: AppLayout },
 };
 
 Object.keys(pageNames).forEach((page) => {

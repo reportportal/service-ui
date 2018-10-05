@@ -26,7 +26,6 @@ const historyReducer = (state = [], { type, payload, meta }) => {
   if (meta && meta.namespace && meta.namespace !== NAMESPACE) {
     return state;
   }
-  let newItemsHistory;
   let reversedPayload;
   switch (type) {
     case FETCH_SUCCESS:
@@ -34,13 +33,12 @@ const historyReducer = (state = [], { type, payload, meta }) => {
         return payload.reverse();
       }
       reversedPayload = payload.reverse();
-      newItemsHistory = state.map((item, index) => ({
+      return state.map((item, index) => ({
         ...item,
         resources: item.resources.concat(
           reversedPayload[index] && reversedPayload[index].resources,
         ),
       }));
-      return newItemsHistory;
     case RESET_HISTORY:
       return [];
     default:

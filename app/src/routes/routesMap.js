@@ -10,6 +10,7 @@ import {
   PROJECT_SETTINGS_TAB_PAGE,
   PROJECT_LOG_PAGE,
   PROJECT_USERDEBUG_LOG_PAGE,
+  HISTORY_PAGE,
   projectIdSelector,
 } from 'controllers/pages';
 import { GENERAL } from 'common/constants/settingTabs';
@@ -118,7 +119,7 @@ export default {
       dispatch(fetchLaunchesAction());
     },
   },
-  HISTORY_PAGE: {
+  [HISTORY_PAGE]: {
     path: '/:projectId/launches/:filterId/:testItemIds+/history',
     thunk: (dispatch) => {
       dispatch(fetchHistoryPageInfo());
