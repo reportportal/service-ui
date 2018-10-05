@@ -101,7 +101,7 @@ export class SettingTabs extends Component {
         name: (
           <span>
             {this.props.intl.formatMessage(messages.bts)}
-            <BetaBadge />
+            <BetaBadge className={cx('beta')} />
           </span>
         ),
         link: this.createTabLink(BTS),

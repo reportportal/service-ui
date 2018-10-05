@@ -164,7 +164,7 @@ export class LinkIssueModal extends Component {
         title={
           <span className={cx('link-issue-title')}>
             {intl.formatMessage(messages.title)}
-            <BetaBadge className={cx('beta')} />
+            <BetaBadge />
           </span>
         }
         okButton={okButton}
