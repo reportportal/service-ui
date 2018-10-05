@@ -7,7 +7,8 @@ import InfoIcon from 'common/img/info-inline.svg';
 import TestParamsIcon from 'common/img/test-params-icon-inline.svg';
 import ClockIcon from 'common/img/clock-inline.svg';
 import { InfoTabs } from '../infoTabs';
-import { LogItemDetails } from '../logItemDetails';
+import { Parameters } from './parameters';
+import { LogItemDetails } from './logItemDetails';
 
 const messages = defineMessages({
   stackTab: {
@@ -55,7 +56,7 @@ const makeTabs = ({ formatMessage }, logItem) => [
     id: 'parameters',
     label: formatMessage(messages.parametersTab),
     icon: TestParamsIcon,
-    content: <div>Parameters</div>,
+    content: <Parameters logItem={logItem} />,
   },
   {
     id: 'history',
