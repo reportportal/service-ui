@@ -1,9 +1,13 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
 import { defineMessages, injectIntl, intlShape } from 'react-intl';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { DefectType } from 'pages/inside/stepPage/stepGrid/defectType';
+import { linkIssueAction } from 'controllers/step';
+import { activeLogSelector } from 'controllers/log';
+import { externalSystemSelector } from 'controllers/project';
 import LinkIcon from 'common/img/link-inline.svg';
 import DownLeftArrowIcon from 'common/img/down-left-arrow-inline.svg';
 import BugIcon from 'common/img/bug-inline.svg';
@@ -25,18 +29,67 @@ const messages = defineMessages({
     id: 'LogItemInfo.linkIssue',
     defaultMessage: 'Link issue',
   },
+  noBugTrackingSystemToLinkIssue: {
+    id: 'LogItemInfo.noBugTrackingSystemToLinkIssue',
+    defaultMessage: 'Configure bug tracking system to link issue',
+  },
+  noDefectTypeToLinkIssue: {
+    id: 'LogItemInfo.noDefectTypeToLinkIssue',
+    defaultMessage: "You can't link issue if item has no defect type",
+  },
 });
 
+@connect(
+  (state) => ({
+    logItem: activeLogSelector(state),
+    externalSystems: externalSystemSelector(state),
+  }),
+  {
+    linkIssueAction,
+  },
+)
 @injectIntl
 export class LogItemInfo extends Component {
   static propTypes = {
-    logItem: PropTypes.object.isRequired,
     intl: intlShape.isRequired,
+    linkIssueAction: PropTypes.func.isRequired,
+    externalSystems: PropTypes.array.isRequired,
+    fetchFunc: PropTypes.func.isRequired,
+    logItem: PropTypes.object,
+  };
+  static defaultProps = {
+    logItem: {},
+  };
+
+  getLinkIssueTitle = () => {
+    const {
+      logItem,
+      externalSystems,
+      intl: { formatMessage },
+    } = this.props;
+    let title = '';
+
+    if (!externalSystems.length) {
+      title = formatMessage(messages.noBugTrackingSystemToLinkIssue);
+    }
+    if (!logItem.issue) {
+      title = formatMessage(messages.noDefectTypeToLinkIssue);
+    }
+
+    return title;
+  };
+
+  handleLinkIssue = () => {
+    this.props.linkIssueAction([this.props.logItem], {
+      fetchFunc: this.props.fetchFunc,
+    });
   };
 
   render() {
-    const { formatMessage } = this.props.intl;
-    const { logItem } = this.props;
+    const {
+      logItem,
+      intl: { formatMessage },
+    } = this.props;
 
     return (
       <div className={cx('container')}>
@@ -56,7 +109,12 @@ export class LogItemInfo extends Component {
               </GhostButton>
             </div>
             <div className={cx('action')}>
-              <GhostButton icon={LinkIcon} disabled>
+              <GhostButton
+                onClick={this.handleLinkIssue}
+                icon={LinkIcon}
+                disabled={!logItem.issue || !this.props.externalSystems.length}
+                title={this.getLinkIssueTitle()}
+              >
                 {formatMessage(messages.linkIssue)}
               </GhostButton>
             </div>

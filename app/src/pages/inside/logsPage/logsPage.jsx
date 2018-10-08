@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { PageLayout, PageSection } from 'layouts/pageLayout';
 import {
-  activeLogSelector,
   refreshLogPageData,
   logItemsSelector,
   logPaginationSelector,
@@ -21,7 +20,6 @@ import { LogsGrid } from './logsGrid/logsGrid';
 
 @connect(
   (state) => ({
-    activeLogItem: activeLogSelector(state),
     logItems: logItemsSelector(state),
     loading: loadingSelector(state),
   }),
@@ -44,7 +42,6 @@ import { LogsGrid } from './logsGrid/logsGrid';
 export class LogsPage extends Component {
   static propTypes = {
     refresh: PropTypes.func.isRequired,
-    activeLogItem: PropTypes.object,
     logItems: PropTypes.array,
     activePage: PropTypes.number,
     itemCount: PropTypes.number,
@@ -61,7 +58,6 @@ export class LogsPage extends Component {
   };
 
   static defaultProps = {
-    activeLogItem: null,
     logItems: [],
     activePage: 1,
     itemCount: 0,
@@ -80,7 +76,6 @@ export class LogsPage extends Component {
   render() {
     const {
       refresh,
-      activeLogItem,
       logItems,
       activePage,
       itemCount,
@@ -101,7 +96,7 @@ export class LogsPage extends Component {
         <PageSection>
           <LogToolbar onRefresh={refresh} />
           <HistoryLine />
-          {activeLogItem && <LogItemInfo logItem={activeLogItem} />}
+          <LogItemInfo fetchFunc={refresh} />
           <LogsGrid
             logItems={logItems}
             loading={loading}

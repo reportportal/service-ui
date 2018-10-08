@@ -503,6 +503,8 @@
   "LocalizationBlock.russian": "Рускі",
   "LogItemInfo.copyDefect": "Капіяваць дэфект",
   "LogItemInfo.linkIssue": "Прымацаваць памылку",
+  "LogItemInfo.noBugTrackingSystemToLinkIssue": "Наладзьце Сістэму адсочвання памылак на загрузку памылак",
+  "LogItemInfo.noDefectTypeToLinkIssue": "Вы не можаце прымацаваць памылку, калі элемент не мае дэфекту",
   "LogItemInfo.postIssue": "Адправіць памылку",
   "LogItemInfoTabs.attachmentsTab": "Ўкладання",
   "LogItemInfoTabs.detailsTab": "Апісанне элемента",
