@@ -2,9 +2,12 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { injectIntl, intlShape, defineMessages } from 'react-intl';
+import track from 'react-tracking';
+import { LAUNCHES_PAGE, LAUNCHES_PAGE_EVENTS } from 'components/main/analytics/events';
 import { PageLayout, PageSection } from 'layouts/pageLayout';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
+import { levelSelector } from 'controllers/testItem';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
 import { activeProjectSelector, userIdSelector } from 'controllers/user';
 import { withPagination } from 'controllers/pagination';
@@ -91,6 +94,7 @@ const messages = defineMessages({
     launches: launchesSelector(state),
     lastOperation: lastOperationSelector(state),
     loading: loadingSelector(state),
+    level: levelSelector(state),
   }),
   {
     showModalAction,
@@ -118,8 +122,10 @@ const messages = defineMessages({
   namespace: NAMESPACE,
 })
 @injectIntl
+@track({ page: LAUNCHES_PAGE })
 export class LaunchesPage extends Component {
   static propTypes = {
+    level: PropTypes.string,
     debugMode: PropTypes.bool.isRequired,
     userId: PropTypes.string.isRequired,
     intl: intlShape.isRequired,
@@ -152,9 +158,14 @@ export class LaunchesPage extends Component {
     showScreenLockAction: PropTypes.func.isRequired,
     hideScreenLockAction: PropTypes.func.isRequired,
     deleteItemsAction: PropTypes.func,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
 
   static defaultProps = {
+    level: '',
     launches: [],
     activePage: 1,
     itemCount: null,
@@ -274,7 +285,15 @@ export class LaunchesPage extends Component {
     });
   };
 
-  handleAllLaunchesSelection = () => this.props.toggleAllLaunchesAction(this.props.launches);
+  handleAllLaunchesSelection = () => {
+    !this.props.level && this.props.tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_SELECT_ALL_ICON);
+    this.props.toggleAllLaunchesAction(this.props.launches);
+  };
+
+  handleOneLaunchSelection = (value) => {
+    !this.props.level && this.props.tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_SELECT_ONE_ITEM);
+    this.props.toggleLaunchSelectionAction(value);
+  };
 
   proceedWithValidItems = () =>
     this.props.proceedWithValidItemsAction(this.props.lastOperation, this.props.selectedLaunches);
@@ -338,7 +357,7 @@ export class LaunchesPage extends Component {
             onEditLaunch={this.openEditModal}
             onForceFinish={this.finishForceLaunches}
             selectedItems={selectedLaunches}
-            onItemSelect={this.props.toggleLaunchSelectionAction}
+            onItemSelect={this.handleOneLaunchSelection}
             onAllItemsSelect={this.handleAllLaunchesSelection}
             withHamburger
             loading={loading}

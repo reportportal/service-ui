@@ -1,6 +1,8 @@
 import React, { Component, Fragment } from 'react';
+import track from 'react-tracking';
 import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
+import { LAUNCHES_PAGE_EVENTS } from 'components/main/analytics/events';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { CUSTOMER } from 'common/constants/projectRoles';
 import { IN_PROGRESS } from 'common/constants/launchStatuses';
@@ -64,6 +66,7 @@ const messages = defineMessages({
   accountRole: userAccountRoleSelector(state),
   projectId: activeProjectSelector(state),
 }))
+@track()
 export class Hamburger extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
@@ -75,6 +78,10 @@ export class Hamburger extends Component {
     onAnalysis: PropTypes.func,
     customProps: PropTypes.object,
     accountRole: PropTypes.string,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
 
   static defaultProps = {
@@ -86,6 +93,7 @@ export class Hamburger extends Component {
 
   state = {
     menuShown: false,
+    disableEventTrack: false,
   };
 
   componentDidMount() {
@@ -140,11 +148,20 @@ export class Hamburger extends Component {
 
   isInProgress = () => this.props.launch.status === IN_PROGRESS.toUpperCase();
 
-  exportAsPDF = () => this.onExportLaunch('pdf');
+  exportAsPDF = () => {
+    this.onExportLaunch('pdf');
+    this.props.tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_EXPORT_PDF);
+  };
 
-  exportAsXLS = () => this.onExportLaunch('xls');
+  exportAsXLS = () => {
+    this.onExportLaunch('xls');
+    this.props.tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_EXPORT_XLS);
+  };
 
-  exportAsHTML = () => this.onExportLaunch('html');
+  exportAsHTML = () => {
+    this.onExportLaunch('html');
+    this.props.tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_EXPORT_HTML);
+  };
 
   handleOutsideClick = (e) => {
     if (!this.icon.contains(e.target) && this.state.menuShown) {
@@ -154,10 +171,22 @@ export class Hamburger extends Component {
 
   toggleMenu = () => {
     this.setState({ menuShown: !this.state.menuShown });
+    if (!this.state.disableEventTrack) {
+      this.props.tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_HAMBURGER_MENU);
+      this.setState({ disableEventTrack: true });
+    }
   };
 
   render() {
-    const { intl, projectRole, accountRole, launch, onAnalysis, customProps } = this.props;
+    const {
+      intl,
+      projectRole,
+      accountRole,
+      launch,
+      onAnalysis,
+      customProps,
+      tracking,
+    } = this.props;
     return (
       <div className={cx('hamburger')}>
         <div
@@ -187,6 +216,7 @@ export class Hamburger extends Component {
                       )
                     }
                     onClick={() => {
+                      tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_MOVE_TO_DEBUG_LAUNCH_MENU);
                       customProps.onMove(launch);
                     }}
                   />
@@ -219,6 +249,7 @@ export class Hamburger extends Component {
                 ) || !this.isInProgress()
               }
               onClick={() => {
+                tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_FORCE_FINISH_LAUNCH_MENU);
                 customProps.onForceFinish(launch);
               }}
             />
@@ -226,6 +257,7 @@ export class Hamburger extends Component {
               <HamburgerMenuItem
                 text={intl.formatMessage(messages.analysis)}
                 onClick={() => {
+                  tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_ANALYSIS_LAUNCH_MENU);
                   onAnalysis(launch);
                 }}
               />
@@ -240,6 +272,7 @@ export class Hamburger extends Component {
                 ) || this.isInProgress()
               }
               onClick={() => {
+                tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_DELETE_LAUNCH_MENU);
                 customProps.onDeleteItem(launch);
               }}
               title={this.getDeleteItemTooltip()}

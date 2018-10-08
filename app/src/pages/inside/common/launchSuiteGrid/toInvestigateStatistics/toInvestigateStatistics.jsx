@@ -5,14 +5,19 @@ import styles from './toInvestigateStatistics.scss';
 
 const cx = classNames.bind(styles);
 
-export const ToInvestigateStatistics = ({ value, customProps, itemId }) => (
+export const ToInvestigateStatistics = ({ value, customProps, itemId, eventInfo }) => (
   <div className={cx('to-investigate-statistics')}>
     <span className={cx('title')}>
       <span className={cx('circle')} />
       {customProps.abbreviation}
     </span>
     {!!value.total && (
-      <DefectLink itemId={itemId} defects={Object.keys(value)} className={cx('value')}>
+      <DefectLink
+        itemId={itemId}
+        defects={Object.keys(value)}
+        className={cx('value')}
+        eventInfo={eventInfo}
+      >
         {value.total}
       </DefectLink>
     )}
@@ -22,8 +27,10 @@ ToInvestigateStatistics.propTypes = {
   value: PropTypes.object,
   customProps: PropTypes.object,
   itemId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+  eventInfo: PropTypes.object,
 };
 ToInvestigateStatistics.defaultProps = {
   customProps: {},
   value: {},
+  eventInfo: {},
 };

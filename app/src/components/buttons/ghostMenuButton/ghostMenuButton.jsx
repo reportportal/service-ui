@@ -44,6 +44,7 @@ export class GhostMenuButton extends Component {
     disabled: PropTypes.bool,
     color: PropTypes.string,
     tooltip: PropTypes.string,
+    onClick: PropTypes.func,
   };
   static defaultProps = {
     title: '',
@@ -51,6 +52,7 @@ export class GhostMenuButton extends Component {
     disabled: false,
     color: 'topaz',
     tooltip: '',
+    onClick: () => {},
   };
 
   state = {
@@ -73,6 +75,7 @@ export class GhostMenuButton extends Component {
 
   toggleMenu = () => {
     this.setState({ opened: !this.state.opened });
+    this.props.onClick();
   };
 
   render() {

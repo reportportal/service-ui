@@ -27,6 +27,7 @@ export const GridHeader = ({
         sortable={column.sortable}
         id={column.id}
         withFilter={column.withFilter}
+        filterEventInfo={column.filterEventInfo}
         sortingDirection={sortingDirection}
         sortingActive={sortingColumn === column.id}
         onChangeSorting={onChangeSorting}

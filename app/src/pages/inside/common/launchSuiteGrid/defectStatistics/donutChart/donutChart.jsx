@@ -33,9 +33,11 @@ export class DonutChart extends Component {
     projectConfig: PropTypes.object.isRequired,
     defectColors: PropTypes.object.isRequired,
     itemId: PropTypes.string.isRequired,
+    eventInfo: PropTypes.object,
   };
   static defaultProps = {
     type: '',
+    eventInfo: {},
   };
 
   getChartData = () => {
@@ -46,7 +48,7 @@ export class DonutChart extends Component {
     Object.keys(this.props.data).forEach((defect) => {
       if (defect !== 'total') {
         const val = defects[defect];
-        const percents = (val / defects.total) * 100;
+        const percents = val / defects.total * 100;
 
         chartData.push({
           id: defect,
@@ -63,7 +65,7 @@ export class DonutChart extends Component {
   chartData = [];
 
   render() {
-    const { data, type, viewBox, strokeWidth, itemId, defectColors } = this.props;
+    const { data, type, viewBox, strokeWidth, itemId, defectColors, eventInfo } = this.props;
     const diameter = viewBox / 2;
     const r = 100 / (2 * Math.PI);
 
@@ -72,7 +74,7 @@ export class DonutChart extends Component {
     }
 
     return (
-      <DefectLink defects={Object.keys(data)} itemId={itemId}>
+      <DefectLink defects={Object.keys(data)} itemId={itemId} eventInfo={eventInfo}>
         <div className={cx('chart-container')}>
           <svg width="100%" height="100%" viewBox={`0 0 ${viewBox} ${viewBox}`} className="donut">
             <circle cx={diameter} cy={diameter} r={r} fill="transparent" />

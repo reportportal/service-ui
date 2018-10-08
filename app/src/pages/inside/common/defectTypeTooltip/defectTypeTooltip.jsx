@@ -2,7 +2,13 @@ import React, { Component, Fragment } from 'react';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { TO_INVESTIGATE } from 'common/constants/defectTypes';
+import {
+  TO_INVESTIGATE,
+  PRODUCT_BUG,
+  AUTOMATION_BUG,
+  SYSTEM_ISSUE,
+} from 'common/constants/defectTypes';
+import { LAUNCHES_PAGE_EVENTS } from 'components/main/analytics/events';
 import { projectConfigSelector } from 'controllers/project';
 import { injectIntl, intlShape, defineMessages } from 'react-intl';
 import { DefectLink } from 'pages/inside/common/defectLink';
@@ -38,9 +44,23 @@ export class DefectTypeTooltip extends Component {
 
   render() {
     const { formatMessage } = this.props.intl;
+    let eventInfo;
     const defectConfig =
       this.props.projectConfig.subTypes &&
       this.props.projectConfig.subTypes[this.props.type.toUpperCase()];
+    switch (this.props.type) {
+      case PRODUCT_BUG:
+        eventInfo = LAUNCHES_PAGE_EVENTS.CLICK_TOOLTIP_TTL_PB;
+        break;
+      case AUTOMATION_BUG:
+        eventInfo = LAUNCHES_PAGE_EVENTS.CLICK_TOOLTIP_TTL_AB;
+        break;
+      case SYSTEM_ISSUE:
+        eventInfo = LAUNCHES_PAGE_EVENTS.CLICK_TOOLTIP_TTL_SI;
+        break;
+      default:
+        break;
+    }
 
     return (
       <div className={cx('defect-type-tooltip')}>
@@ -51,6 +71,7 @@ export class DefectTypeTooltip extends Component {
                 itemId={this.props.itemId}
                 defects={Object.keys(this.props.data)}
                 className={cx('total-item')}
+                eventInfo={eventInfo}
               >
                 <div className={cx('name')}>
                   <div
