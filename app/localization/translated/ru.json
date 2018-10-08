@@ -516,6 +516,8 @@
   "LocalizationBlock.russian": "Русский",
   "LogItemInfo.copyDefect": "Копировать дефект",
   "LogItemInfo.linkIssue": "Прикрепить ошибку",
+  "LogItemInfo.noBugTrackingSystemToLinkIssue": "Настройте Систему отслеживания ошибок на загрузку ошибок",
+  "LogItemInfo.noDefectTypeToLinkIssue": "Вы не можете прикрепить ошибку, если элемент не имеет дефекта",
   "LogItemInfo.postIssue": "Отправить ошибку",
   "LogItemInfoTabs.attachmentsTab": "Вложения",
   "LogItemInfoTabs.detailsTab": "Описание элемента",
