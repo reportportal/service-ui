@@ -6,6 +6,7 @@ export {
   deleteItemsAction,
 } from './actionCreators';
 export { fetchParentItems, testItemsSaga } from './sagas';
+export { SET_PAGE_LOADING } from './constants';
 export {
   launchSelector,
   levelSelector,
@@ -19,4 +20,6 @@ export {
   defectLinkSelector,
   pageLoadingSelector,
   isListViewSelector,
+  queryParametersSelector,
+  itemsSelector,
 } from './selectors';
