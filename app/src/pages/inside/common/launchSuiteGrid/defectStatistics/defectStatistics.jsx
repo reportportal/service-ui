@@ -7,7 +7,7 @@ import styles from './defectStatistics.scss';
 
 const cx = classNames.bind(styles);
 
-export const DefectStatistics = ({ type, data, customProps, itemId }) => (
+export const DefectStatistics = ({ type, data, customProps, itemId, eventInfo }) => (
   <div className={cx('defect-statistics')}>
     <span className={cx('title')}>
       <span className={cx('circle', { [`type-${type}`]: type })} />
@@ -16,10 +16,17 @@ export const DefectStatistics = ({ type, data, customProps, itemId }) => (
     {!!data.total && (
       <Fragment>
         <div className={cx('desktop-visible')}>
-          <DonutChart itemId={itemId} data={data} type={type} viewBox={64} strokeWidth={13} />
+          <DonutChart
+            itemId={itemId}
+            data={data}
+            type={type}
+            viewBox={64}
+            strokeWidth={13}
+            eventInfo={eventInfo}
+          />
         </div>
         <div className={cx('desktop-hidden')}>
-          <DefectLink itemId={itemId} defects={Object.keys(data)}>
+          <DefectLink itemId={itemId} defects={Object.keys(data)} eventInfo={eventInfo}>
             {data.total}
           </DefectLink>
         </div>
@@ -32,9 +39,11 @@ DefectStatistics.propTypes = {
   data: PropTypes.object,
   customProps: PropTypes.object,
   itemId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+  eventInfo: PropTypes.object,
 };
 DefectStatistics.defaultProps = {
   type: '',
   customProps: {},
   data: {},
+  eventInfo: {},
 };

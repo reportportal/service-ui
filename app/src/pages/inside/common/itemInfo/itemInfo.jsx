@@ -1,9 +1,11 @@
 import { Component } from 'react';
+import track from 'react-tracking';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { injectIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
+import { LAUNCHES_PAGE_EVENTS } from 'components/main/analytics/events';
 import { fromNowFormat } from 'common/utils';
 import { canEditLaunch } from 'common/utils/permissions';
 import { MarkdownViewer } from 'components/main/markdown';
@@ -32,6 +34,7 @@ const cx = classNames.bind(styles);
   userId: userIdSelector(state),
   isStepLevel: levelSelector(state) === LEVEL_STEP,
 }))
+@track()
 export class ItemInfo extends Component {
   static propTypes = {
     value: PropTypes.object,
@@ -43,6 +46,10 @@ export class ItemInfo extends Component {
     userId: PropTypes.string,
     intl: PropTypes.object.isRequired,
     isStepLevel: PropTypes.bool,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
 
   static defaultProps = {
@@ -61,6 +68,7 @@ export class ItemInfo extends Component {
     const { onEditItem } = this.props.customProps;
     if (onEditItem) {
       onEditItem(this.props.value);
+      this.props.tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_EDIT_ICON_AFTER_LAUNCH_NAME);
     }
   };
 
@@ -81,11 +89,16 @@ export class ItemInfo extends Component {
       userId,
       intl,
       isStepLevel,
+      tracking,
     } = this.props;
     return (
       <div ref={refFunction} className={cx('item-info')}>
         <div className={cx('main-info')}>
-          <NameLink itemId={value.id} className={cx('name-link')}>
+          <NameLink
+            itemId={value.id}
+            className={cx('name-link')}
+            onClick={() => tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_ITEM_NAME)}
+          >
             <span className={cx('name')}>{value.name}</span>
             {value.number && <span className={cx('number')}>#{value.number}</span>}
           </NameLink>

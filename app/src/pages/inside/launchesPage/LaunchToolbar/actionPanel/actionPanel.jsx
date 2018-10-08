@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { defineMessages, FormattedMessage, injectIntl, intlShape } from 'react-intl';
@@ -7,6 +8,7 @@ import { GhostButton } from 'components/buttons/ghostButton';
 import { GhostMenuButton } from 'components/buttons/ghostMenuButton';
 import { Breadcrumbs, breadcrumbDescriptorShape } from 'components/main/breadcrumbs';
 import { breadcrumbsSelector, restorePathAction } from 'controllers/testItem';
+import { LAUNCHES_PAGE_EVENTS } from 'components/main/analytics/events';
 import ImportIcon from './img/import-inline.svg';
 import RefreshIcon from './img/refresh-inline.svg';
 import styles from './actionPanel.scss';
@@ -60,6 +62,7 @@ const messages = defineMessages({
   },
 )
 @injectIntl
+@track()
 export class ActionPanel extends Component {
   static propTypes = {
     debugMode: PropTypes.bool,
@@ -78,6 +81,10 @@ export class ActionPanel extends Component {
     onDelete: PropTypes.func,
     breadcrumbs: PropTypes.arrayOf(breadcrumbDescriptorShape),
     restorePath: PropTypes.func,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
 
   static defaultProps = {
@@ -102,6 +109,10 @@ export class ActionPanel extends Component {
     super(props);
     this.actionDescriptors = this.createActionDescriptors();
   }
+
+  onClickActionButton = () => {
+    this.props.tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_ACTIONS_BTN);
+  };
 
   createActionDescriptors = () => [
     {
@@ -178,6 +189,7 @@ export class ActionPanel extends Component {
               title={intl.formatMessage(messages.actionsBtn)}
               items={this.actionDescriptors}
               disabled={!selectedLaunches.length}
+              onClick={this.onClickActionButton}
             />
           </div>
           <div className={cx('action-button')}>
