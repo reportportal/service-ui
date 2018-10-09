@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { injectIntl, intlShape } from 'react-intl';
-import { connect } from 'react-redux';
-import { activeProjectSelector } from 'controllers/user';
+import { injectIntl } from 'react-intl';
 import ReactDOMServer from 'react-dom/server';
 import classNames from 'classnames/bind';
 import { COLOR_CHART_DURATION, COLOR_FAILED } from 'common/constants/colors';
@@ -17,16 +15,11 @@ import styles from './launchesDurationChart.scss';
 const cx = classNames.bind(styles);
 
 @injectIntl
-@connect((state) => ({
-  project: activeProjectSelector(state),
-}))
 export class LaunchesDurationChart extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
     widget: PropTypes.object.isRequired,
     isPreview: PropTypes.bool,
     height: PropTypes.number,
-    project: PropTypes.string.isRequired,
     container: PropTypes.instanceOf(Element).isRequired,
     observer: PropTypes.object.isRequired,
   };
