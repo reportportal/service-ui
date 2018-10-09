@@ -52,7 +52,7 @@ define(function (require, exports, module) {
         },
 
         onClickGithubAuth: function (e) {
-            window.location = window.location.protocol + '//' + window.location.host + '/uat' + this.infoModel.get('autGithubExtensions').path;
+            this.userModel.logout();
         },
 
         startTimer: function () {
