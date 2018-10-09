@@ -209,9 +209,15 @@ define(function (require) {
         },
         openLogin: function () {
             this.prepareOutsideView();
-            this.outsideView = new DemoLoginView({
-                context: this
-            });
+            if (infoModel.get('isDemo')) {
+                this.outsideView = new DemoLoginView({
+                    context: this
+                });
+            } else {
+                this.outsideView = new LoginView({
+                    context: this
+                });
+            }
             $('[data-js-notapplication-container]').html(this.outsideView.$el);
         },
         prepareOutsideView: function () {
