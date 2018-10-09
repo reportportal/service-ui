@@ -6,6 +6,18 @@
   @media (max-width: $SCREEN_XS_MAX) {
     width: 100%;
   }
+
+  &-checkbox {
+    margin-left: 210px;
+
+    @media (max-width: $SCREEN_SM_MAX) {
+      margin-left: 150px;
+    }
+
+    @media (max-width: $SCREEN_XS_MAX) {
+      margin-left: 5px;
+    }
+  }
 }
 
 .form-invalid-message {

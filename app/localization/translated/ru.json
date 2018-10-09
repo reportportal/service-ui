@@ -171,7 +171,7 @@
   "DeleteLaunchDialog.deleteLaunchHeader": "Удалить запуск",
   "DeleteLaunchDialog.deleteLaunchWarning": "Вы собираетесь удалить запуск другого пользователя. Это может повлиять на информацию других пользователей на проекте.",
   "DeleteNotificationRuleModal.cancelButton": "Отменить",
-  "DeleteNotificationRuleModal.message": "Вы уверены, что вы хотите удалить правило рассылки уведомлений {number}?",
+  "DeleteNotificationRuleModal.message": "Вы уверены, что вы хотите удалить правило рассылки уведомлений <b>{number}</b>?",
   "DeleteNotificationRuleModal.submitButton": "Удалить",
   "DeleteNotificationRuleModal.title": "Удалить правило рассылки уведомлений",
   "DeleteWidgetModal.deleteOwnWidgetWarning": "Вы собираетесь удалить свой виджет. Это может повлиять на информацию на ваших панелях управления.",

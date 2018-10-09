@@ -43,6 +43,8 @@ export class EmailCase extends Component {
     confirmed: PropTypes.bool,
     submitted: PropTypes.bool,
     id: PropTypes.number,
+    numberOfConfirmedRules: PropTypes.number,
+    totalNumberOfFields: PropTypes.number,
   };
   static defaultProps = {
     emailCase: '',
@@ -56,6 +58,8 @@ export class EmailCase extends Component {
     confirmed: false,
     submitted: false,
     id: 0,
+    numberOfConfirmedRules: 0,
+    totalNumberOfFields: 0,
   };
   state = {
     isDuplicating: false,
@@ -121,12 +125,14 @@ export class EmailCase extends Component {
       launchNameSearch,
       intl,
       id,
-      deletable,
       emailCase,
       confirmed,
       readOnly,
+      numberOfConfirmedRules,
+      totalNumberOfFields,
     } = this.props;
     const editMode = !confirmed;
+    const deletable = totalNumberOfFields > 1 && (!confirmed || numberOfConfirmedRules > 1);
     const { isDuplicating } = this.state;
 
     return (
@@ -179,7 +185,12 @@ export class EmailCase extends Component {
             />
           </FieldErrorHint>
         </FormField>
-        <FormField name={`${emailCase}.informOwner`} format={Boolean} disabled={!editMode}>
+        <FormField
+          name={`${emailCase}.informOwner`}
+          format={Boolean}
+          disabled={!editMode}
+          fieldWrapperClassName={cx('form-input-checkbox')}
+        >
           <InputCheckbox>{intl.formatMessage(messages.launchOwnerLabel)}</InputCheckbox>
         </FormField>
         <FormField

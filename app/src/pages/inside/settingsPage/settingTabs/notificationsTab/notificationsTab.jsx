@@ -81,7 +81,7 @@ export class NotificationsTab extends Component {
         <EmailEnableForm
           initialValues={{ emailEnabled }}
           enableReinitialize
-          onSubmit={this.submitForm}
+          onChange={this.submitForm}
           readOnly={readOnly}
         />
 

@@ -1,7 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import className from 'classnames/bind';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import Parser from 'html-react-parser';
 import { ModalLayout, withModal } from 'components/main/modal';
+import styles from './deleteNotificationRuleModal.scss';
+
+const cx = className.bind(styles);
 
 const messages = defineMessages({
   title: {
@@ -10,7 +15,7 @@ const messages = defineMessages({
   },
   message: {
     id: 'DeleteNotificationRuleModal.message',
-    defaultMessage: 'Are you sure you want to delete notification rule {number}?',
+    defaultMessage: 'Are you sure you want to delete notification  rule <b>{number}</b>?',
   },
   submitButton: {
     id: 'DeleteNotificationRuleModal.submitButton',
@@ -52,7 +57,9 @@ export class DeleteNotificationRuleModal extends Component {
           text: intl.formatMessage(messages.cancelButton),
         }}
       >
-        {intl.formatMessage(messages.message, { number: index })}
+        <div className={cx('message')}>
+          {Parser(intl.formatMessage(messages.message, { number: index }))}
+        </div>
       </ModalLayout>
     );
   }
