@@ -19,11 +19,11 @@ export const messages = defineMessages({
   },
   inCaseLabel: {
     id: 'EmailCase.inCaseLabel',
-    defaultMessage: 'In Case',
+    defaultMessage: 'In case',
   },
   launchNamesLabel: {
     id: 'EmailCase.launchNamesLabel',
-    defaultMessage: 'Launch Names (and)',
+    defaultMessage: 'Launch names (and)',
   },
   launchNamesPlaceholder: {
     id: 'EmailCase.launchNamesPlaceholder',
