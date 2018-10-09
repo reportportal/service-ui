@@ -170,7 +170,7 @@
   "DeleteLaunchDialog.deleteLaunchHeader": "Выдаліць запуск",
   "DeleteLaunchDialog.deleteLaunchWarning": "Вы збіраецеся выдаліць не свой уласны запуск. Гэта можа паўплываць на інфармацыю іншых карыстальнікаў на праекце.",
   "DeleteNotificationRuleModal.cancelButton": "Адмяніць",
-  "DeleteNotificationRuleModal.message": "Вы ўпэўнены, што хочаце выдаліць правіла рассылкі апавяшчэнняў {number}?",
+  "DeleteNotificationRuleModal.message": "Вы ўпэўнены, што хочаце выдаліць правіла рассылкі апавяшчэнняў <b>{number}</b>?",
   "DeleteNotificationRuleModal.submitButton": "Выдаліць",
   "DeleteNotificationRuleModal.title": "Выдаліць правіла рассылкі апавяшчэнняў",
   "DeleteWidgetModal.deleteOwnWidgetWarning": "Вы збіраецеся выдаліць ваш відждэт. Гэта можа паўплываць на інфармацыю на вашых панэлях кіравання.",
