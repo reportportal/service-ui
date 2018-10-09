@@ -54,6 +54,8 @@ export class EmailCaseList extends Component {
       this.removeEmailCase(index);
     }
   };
+  getNumberOfConfirmedRules = (fields) =>
+    fields.getAll().filter(({ confirmed }) => confirmed).length;
   addEmailCase = () => {
     this.props.fields.push(defaultRecipient);
   };
@@ -63,19 +65,21 @@ export class EmailCaseList extends Component {
 
   render() {
     const { intl, fields, readOnly } = this.props;
+    const numberOfConfirmedRules = this.getNumberOfConfirmedRules(fields);
+    const totalNumberOfFields = fields.length;
     const { submit } = this;
-    const deletable = fields.length > 1;
 
     return (
       <Fragment>
         {fields.map((item, id, fieldsArray) => {
           const { submitted, confirmed } = fieldsArray.get(id);
           const customProps = {
-            deletable,
             submitted,
             readOnly,
             submit,
             confirmed,
+            numberOfConfirmedRules,
+            totalNumberOfFields,
           };
 
           return (
