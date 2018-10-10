@@ -69,11 +69,10 @@ export class LogItemInfo extends Component {
     } = this.props;
     let title = '';
 
-    if (!externalSystems.length) {
-      title = formatMessage(messages.noBugTrackingSystemToLinkIssue);
-    }
     if (!logItem.issue) {
       title = formatMessage(messages.noDefectTypeToLinkIssue);
+    } else if (!externalSystems.length) {
+      title = formatMessage(messages.noBugTrackingSystemToLinkIssue);
     }
 
     return title;
