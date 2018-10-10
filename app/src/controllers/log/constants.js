@@ -8,3 +8,6 @@ export const FETCH_LOG_PAGE_DATA = 'fetchLogPageData';
 export const FETCH_HISTORY_ENTRIES = 'fetchHistoryEntries';
 export const DEFAULT_HISTORY_DEPTH = 10;
 export const DEFAULT_LOG_LEVEL = TRACE;
+export const LOG_LEVEL_STORAGE_KEY = 'logFilteringLevel';
+export const DEFAULT_WITH_ATTACHMENTS = false;
+export const WITH_ATTACHMENTS_STORAGE_KEY = 'logFilteringLevelWithAttachments';

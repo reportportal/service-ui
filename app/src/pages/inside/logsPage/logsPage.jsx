@@ -1,8 +1,10 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { connectRouter } from 'common/utils';
 import { PageLayout, PageSection } from 'layouts/pageLayout';
 import {
+  activeLogSelector,
   refreshLogPageData,
   logItemsSelector,
   logPaginationSelector,
@@ -17,9 +19,11 @@ import { LogToolbar } from './logToolbar';
 import { HistoryLine } from './historyLine';
 import { LogItemInfo } from './logItemInfo';
 import { LogsGrid } from './logsGrid/logsGrid';
+import { LogsGridToolbar } from './logsGridToolbar';
 
 @connect(
   (state) => ({
+    activeLogItem: activeLogSelector(state),
     logItems: logItemsSelector(state),
     loading: loadingSelector(state),
   }),
@@ -39,9 +43,20 @@ import { LogsGrid } from './logsGrid/logsGrid';
   paginationSelector: logPaginationSelector,
   namespace: NAMESPACE,
 })
+@connectRouter(
+  (query) => ({
+    queryLogLevel: query['filter.gte.level'],
+  }),
+  {
+    onChangeLogLevel: (logLevel) => ({ 'filter.gte.level': logLevel.id }),
+    onChangeWithAttachments: (withAttachments) => ({ 'filter.ex.binary_content': withAttachments }),
+  },
+  { namespace: NAMESPACE },
+)
 export class LogsPage extends Component {
   static propTypes = {
     refresh: PropTypes.func.isRequired,
+    activeLogItem: PropTypes.object,
     logItems: PropTypes.array,
     activePage: PropTypes.number,
     itemCount: PropTypes.number,
@@ -51,13 +66,17 @@ export class LogsPage extends Component {
     onChangePageSize: PropTypes.func,
     loading: PropTypes.bool,
     filter: PropTypes.string,
+    queryLogLevel: PropTypes.string,
     onFilterChange: PropTypes.func,
     sortingColumn: PropTypes.string,
     sortingDirection: PropTypes.string,
     onChangeSorting: PropTypes.func,
+    onChangeLogLevel: PropTypes.func,
+    onChangeWithAttachments: PropTypes.func,
   };
 
   static defaultProps = {
+    activeLogItem: null,
     logItems: [],
     activePage: 1,
     itemCount: 0,
@@ -67,15 +86,19 @@ export class LogsPage extends Component {
     onChangePageSize: () => {},
     loading: false,
     filter: '',
+    queryLogLevel: null,
     onFilterChange: () => {},
     sortingColumn: '',
     sortingDirection: '',
     onChangeSorting: () => {},
+    onChangeLogLevel: () => {},
+    onChangeWithAttachments: () => {},
   };
 
   render() {
     const {
       refresh,
+      activeLogItem,
       logItems,
       activePage,
       itemCount,
@@ -85,10 +108,13 @@ export class LogsPage extends Component {
       onChangePageSize,
       loading,
       filter,
+      queryLogLevel,
       onFilterChange,
       sortingColumn,
       sortingDirection,
       onChangeSorting,
+      onChangeLogLevel,
+      onChangeWithAttachments,
     } = this.props;
 
     return (
@@ -96,16 +122,29 @@ export class LogsPage extends Component {
         <PageSection>
           <LogToolbar onRefresh={refresh} />
           <HistoryLine />
-          <LogItemInfo fetchFunc={refresh} />
-          <LogsGrid
-            logItems={logItems}
-            loading={loading}
-            filter={filter}
-            onFilterChange={onFilterChange}
-            sortingColumn={sortingColumn}
-            sortingDirection={sortingDirection}
-            onChangeSorting={onChangeSorting}
-          />
+          {activeLogItem && <LogItemInfo logItem={activeLogItem} fetchFunc={refresh} />}
+          <LogsGridToolbar
+            activePage={activePage}
+            pageCount={pageCount}
+            onChangePage={onChangePage}
+            initialLogLevel={queryLogLevel}
+            onChangeLogLevel={onChangeLogLevel}
+            onChangeWithAttachments={onChangeWithAttachments}
+          >
+            {({ markdownMode, consoleView }) => (
+              <LogsGrid
+                logItems={logItems}
+                loading={loading}
+                filter={filter}
+                onFilterChange={onFilterChange}
+                sortingColumn={sortingColumn}
+                sortingDirection={sortingDirection}
+                onChangeSorting={onChangeSorting}
+                markdownMode={markdownMode}
+                consoleView={consoleView}
+              />
+            )}
+          </LogsGridToolbar>
           {logItems &&
             !!logItems.length && (
               <PaginationToolbar

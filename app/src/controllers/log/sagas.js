@@ -1,18 +1,20 @@
-import { put, select, all, takeEvery, call } from 'redux-saga/effects';
+import { all, call, put, select, takeEvery } from 'redux-saga/effects';
+import { getStorageItem } from 'common/utils';
 import { fetchParentItems } from 'controllers/testItem';
 import { URLS } from 'common/urls';
 import { activeProjectSelector } from 'controllers/user';
-import { pagePropertiesSelector, logItemIdSelector } from 'controllers/pages';
+import { logItemIdSelector, pagePropertiesSelector } from 'controllers/pages';
 import { fetchDataAction } from 'controllers/fetch';
 import {
-  FETCH_LOG_PAGE_DATA,
-  NAMESPACE,
-  HISTORY_NAMESPACE,
-  LOG_ITEMS_NAMESPACE,
   ACTIVITY_NAMESPACE,
   DEFAULT_HISTORY_DEPTH,
-  FETCH_HISTORY_ENTRIES,
   DEFAULT_LOG_LEVEL,
+  FETCH_HISTORY_ENTRIES,
+  FETCH_LOG_PAGE_DATA,
+  HISTORY_NAMESPACE,
+  LOG_ITEMS_NAMESPACE,
+  LOG_LEVEL_STORAGE_KEY,
+  NAMESPACE,
 } from './constants';
 import { activeLogIdSelector, querySelector } from './selectors';
 
@@ -27,7 +29,8 @@ function* fetchActivity() {
 function* fetchLogItems() {
   const activeProject = yield select(activeProjectSelector);
   const query = yield select(pagePropertiesSelector, NAMESPACE);
-  const filterLevel = query['filter.gte.level'] || DEFAULT_LOG_LEVEL;
+  const filterLevel =
+    query['filter.gte.level'] || getStorageItem(LOG_LEVEL_STORAGE_KEY) || DEFAULT_LOG_LEVEL;
   const params = yield select(querySelector, NAMESPACE);
   const activeLogItemId = yield select(activeLogIdSelector);
   yield put(
