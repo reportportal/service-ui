@@ -1,19 +1,25 @@
-import Slider from 'rc-slider';
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
 import 'rc-tooltip/assets/bootstrap.css';
-import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import styles from './inputSlider.scss';
 
 const cx = classNames.bind(styles);
 
+const optionShape = PropTypes.shape({
+  id: PropTypes.string.isRequired,
+  label: PropTypes.string.isRequired,
+});
+
 export class InputSlider extends Component {
   static propTypes = {
-    options: PropTypes.arrayOf(PropTypes.string),
-    value: PropTypes.string,
+    options: PropTypes.arrayOf(optionShape),
+    value: optionShape,
     onChange: PropTypes.func,
   };
+
   static defaultProps = {
     options: [],
     value: '',
