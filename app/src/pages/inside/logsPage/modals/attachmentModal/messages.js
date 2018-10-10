@@ -13,4 +13,8 @@ export const messages = defineMessages({
     id: 'AttachmentDialog.editor',
     defaultMessage: 'Editor',
   },
+  rotate: {
+    id: 'AttachmentDialog.rotate',
+    defaultMessage: 'Rotate',
+  },
 });
