@@ -44,3 +44,4 @@ export { fileSizeConverter } from './fileSizeConverter';
 export { debounce } from './debounce';
 export { arrayRemoveDoubles } from './arrayRemoveDoubles';
 export { parseDateTimeRange } from './parseDateTimeRange';
+export { getTicketUrlId } from './getTicketUrlId';

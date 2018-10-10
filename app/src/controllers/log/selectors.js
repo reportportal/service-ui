@@ -10,6 +10,14 @@ import { calculateGrowthDuration, normalizeHistoryItem } from './utils';
 import { NAMESPACE } from './constants';
 
 const logSelector = (state) => state.log || {};
+
+export const logActivitySelector = (state) => logSelector(state).activity || [];
+
+export const lastLogActivitySelector = createSelector(
+  logActivitySelector,
+  (activity) => (activity.length ? activity[0] : null),
+);
+
 const historyEntriesSelector = (state) => logSelector(state).historyEntries || [];
 export const logItemsSelector = (state) => logSelector(state).logItems || [];
 export const logPaginationSelector = (state) => logSelector(state).pagination;

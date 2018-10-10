@@ -6,6 +6,8 @@ export {
   historyItemsSelector,
   activeLogIdSelector,
   activeLogSelector,
+  logActivitySelector,
+  lastLogActivitySelector,
   logItemsSelector,
   logPaginationSelector,
   loadingSelector,
