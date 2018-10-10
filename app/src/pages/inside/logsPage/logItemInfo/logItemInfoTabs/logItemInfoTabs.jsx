@@ -1,14 +1,22 @@
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { defineMessages, injectIntl } from 'react-intl';
+import { connect } from 'react-redux';
+import { defineMessages, injectIntl, intlShape } from 'react-intl';
+import classNames from 'classnames/bind';
+import { lastLogActivitySelector } from 'controllers/log';
 import StackTraceIcon from 'common/img/stack-trace-inline.svg';
 import AttachmentIcon from 'common/img/attachment-inline.svg';
 import InfoIcon from 'common/img/info-inline.svg';
 import TestParamsIcon from 'common/img/test-params-icon-inline.svg';
 import ClockIcon from 'common/img/clock-inline.svg';
 import { InfoTabs } from '../infoTabs';
-import { Parameters } from './parameters';
 import { LogItemDetails } from './logItemDetails';
+import { LogItemActivity } from './logItemActivity';
+import { Parameters } from './parameters';
+import { getActionMessage } from '../utils/getActionMessage';
+import styles from './logItemInfoTabs.scss';
+
+const cx = classNames.bind(styles);
 
 const messages = defineMessages({
   stackTab: {
@@ -62,14 +70,39 @@ const makeTabs = ({ formatMessage }, logItem) => [
     id: 'history',
     label: formatMessage(messages.historyTab),
     icon: ClockIcon,
-    content: <div>History of actions</div>,
+    content: <LogItemActivity />,
   },
 ];
 
-export const LogItemInfoTabs = injectIntl(({ intl, logItem }) => (
-  <InfoTabs tabs={makeTabs(intl, logItem)} />
-));
+@injectIntl
+@connect((state) => ({
+  lastActivity: lastLogActivitySelector(state),
+}))
+export class LogItemInfoTabs extends Component {
+  static propTypes = {
+    intl: intlShape.isRequired,
+    lastActivity: PropTypes.object,
+    logItem: PropTypes.object.isRequired,
+  };
 
-LogItemInfoTabs.propTypes = {
-  logItem: PropTypes.object.isRequired,
-};
+  static defaultProps = {
+    lastActivity: null,
+  };
+
+  renderPanelContent() {
+    const { lastActivity, intl } = this.props;
+
+    return lastActivity ? (
+      <div className={cx('panel-content')}>
+        <span className={cx('user')}>{lastActivity.userRef}</span>{' '}
+        <span className={cx('action')}>{getActionMessage(intl, lastActivity)}</span>
+      </div>
+    ) : null;
+  }
+
+  render() {
+    const { intl, logItem } = this.props;
+
+    return <InfoTabs tabs={makeTabs(intl, logItem)} panelContent={this.renderPanelContent()} />;
+  }
+}

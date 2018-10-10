@@ -17,10 +17,12 @@ export class InfoTabs extends Component {
         icon: PropTypes.node,
       }),
     ),
+    panelContent: PropTypes.node,
   };
 
   static defaultProps = {
     tabs: [],
+    panelContent: null,
   };
 
   state = {
@@ -41,7 +43,7 @@ export class InfoTabs extends Component {
 
   render() {
     const { activeTab } = this.state;
-    const { tabs } = this.props;
+    const { tabs, panelContent } = this.props;
 
     return (
       <div className={cx('tabs-container')}>
@@ -63,6 +65,7 @@ export class InfoTabs extends Component {
               )}
             </Fragment>
           ))}
+          {panelContent && <div className={cx('panel-content')}>{panelContent}</div>}
         </div>
         {activeTab && (
           <div className={cx('tabs-content', 'desktop')}>
