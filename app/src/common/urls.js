@@ -85,7 +85,7 @@ export const URLS = {
   suite: (activeProject, suiteId) => `${urlBase}${activeProject}/item/${suiteId}`,
 
   testItems: (activeProject, ids) => `${urlBase}${activeProject}/item${getQueryParams({ ids })}`,
-  testItem: (activeProject, id) => `${urlBase}${activeProject}/item/${id}`,
+  testItem: (activeProject, id = '') => `${urlBase}${activeProject}/item/${id}`,
   testItemsHistory: (activeProject, ids, historyDepth) =>
     `${urlBase}${activeProject}/item/history${getQueryParams({
       ids,

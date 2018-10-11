@@ -110,7 +110,7 @@ export class HistoryLineItemBadges extends Component {
     return (
       <Fragment>
         <div className={cx('badges-container')}>{this.getBadges()}</div>
-        {(issue.comment || issue.externalSystemIssues) && (
+        {(issue.comment || (issue.externalSystemIssues && issue.externalSystemIssues.length)) && (
           <i className={cx('info-icon', { 'active-icon': active })}>{Parser(InfoIcon)}</i>
         )}
       </Fragment>
