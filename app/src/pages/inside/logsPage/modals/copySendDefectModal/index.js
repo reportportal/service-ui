@@ -1,0 +1,1 @@
+export { CopySendDefectModal } from './copySendDefectModal';
