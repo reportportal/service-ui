@@ -70,12 +70,6 @@ define(function (require, exports, module) {
                     var hours = Math.floor(flushingTime / 3600 / 1000);
                     var minutes = Math.floor((flushingTime - hours * 3600 * 1000) / 60 / 1000);
                     var seconds = Math.floor((flushingTime - hours * 3600 * 1000 - minutes * 60 * 1000) / 1000);
-                    if (hours === 0) {
-                        $('[data-js-hours-container]').addClass('hide');
-                    }
-                    if (minutes === 0) {
-                        $('[data-js-minutes-container]').addClass('hide');
-                    }
                     self.model.set('hours', hours);
                     self.model.set('minutes', minutes);
                     self.model.set('seconds', seconds);
