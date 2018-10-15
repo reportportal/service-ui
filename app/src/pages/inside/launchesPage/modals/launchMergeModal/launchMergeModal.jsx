@@ -1,4 +1,5 @@
 import { Component } from 'react';
+import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { fetch, validate } from 'common/utils';
@@ -17,6 +18,7 @@ import { InputRadio } from 'components/inputs/inputRadio';
 import { InputTagsSearch } from 'components/inputs/inputTagsSearch';
 import { InputCheckbox } from 'components/inputs/inputCheckbox';
 import { activeProjectSelector, userInfoSelector } from 'controllers/user';
+import { LAUNCHES_MODAL_EVENTS } from 'components/main/analytics/events';
 import { MergeTypeScheme } from './mergeTypeScheme';
 import { StartEndTime } from './startEndTime';
 import styles from './launchMergeModal.scss';
@@ -114,6 +116,7 @@ const messages = defineMessages({
     hideScreenLockAction,
   },
 )
+@track()
 export class LaunchMergeModal extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
@@ -132,6 +135,10 @@ export class LaunchMergeModal extends Component {
     data: PropTypes.shape({
       launches: PropTypes.array,
       fetchFunc: PropTypes.func,
+    }).isRequired,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
     }).isRequired,
   };
   static defaultProps = {
@@ -201,15 +208,18 @@ export class LaunchMergeModal extends Component {
       endTime,
       syncErrors,
       fields,
+      tracking,
     } = this.props;
     const okButton = {
       text: intl.formatMessage(COMMON_LOCALE_KEYS.MERGE),
       onClick: (closeModal) => {
+        tracking.trackEvent(LAUNCHES_MODAL_EVENTS.MERGE_BTN_MERGE_MODAL);
         handleSubmit(this.mergeAndCloseModal(closeModal))();
       },
     };
     const cancelButton = {
       text: intl.formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+      eventInfo: LAUNCHES_MODAL_EVENTS.CANCEL_BTN_MERGE_MODAL,
     };
     return (
       <ModalLayout
@@ -217,6 +227,7 @@ export class LaunchMergeModal extends Component {
         className={cx('launch-merge-modal')}
         okButton={okButton}
         cancelButton={cancelButton}
+        closeIconEventInfo={LAUNCHES_MODAL_EVENTS.CLOSE_ICON_MERGE_MODAL}
       >
         <form>
           <ModalField>
@@ -229,12 +240,22 @@ export class LaunchMergeModal extends Component {
           <ModalField>
             <div className={cx('merge-type-section')}>
               <div className={cx('merge-type-options')}>
-                <FieldProvider name={'merge_type'}>
+                <FieldProvider
+                  name={'merge_type'}
+                  onChange={() =>
+                    tracking.trackEvent(LAUNCHES_MODAL_EVENTS.LINEAR_MERGE_BTN_MERGE_MODAL)
+                  }
+                >
                   <InputRadio ownValue={MERGE_TYPE_BASIC}>
                     {intl.formatMessage(messages.mergeTypeLinear)}
                   </InputRadio>
                 </FieldProvider>
-                <FieldProvider name={'merge_type'}>
+                <FieldProvider
+                  name={'merge_type'}
+                  onChange={() =>
+                    tracking.trackEvent(LAUNCHES_MODAL_EVENTS.DEEP_MERGE_BTN_MERGE_MODAL)
+                  }
+                >
                   <InputRadio ownValue={MERGE_TYPE_DEEP}>
                     {intl.formatMessage(messages.mergeTypeDeep)}
                   </InputRadio>

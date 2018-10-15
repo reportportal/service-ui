@@ -106,7 +106,14 @@ export class GhostMenuButton extends Component {
               key={item.value}
               className={cx('menu-item', { disabled: item.disabled })}
               title={item.title || ''}
-              onClick={!item.disabled ? item.onClick : null}
+              onClick={
+                !item.disabled
+                  ? (e) => {
+                      e.stopPropagation();
+                      item.onClick();
+                    }
+                  : null
+              }
             >
               <span>{item.label}</span>
             </div>

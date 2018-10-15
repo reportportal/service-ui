@@ -188,4 +188,123 @@ export const LAUNCHES_PAGE_EVENTS = {
     action: 'Click on Close Icon of all selection',
     label: 'Unselect all launches',
   },
+  CLICK_PROCEED_ITEMS_BUTTON: {
+    category: LAUNCHES_PAGE,
+    action: 'Click on button "Proceed Valid Items"',
+    label: 'Remove invalid launches from selection',
+  },
+  CLICK_ALL_LAUNCHES_DROPDOWN: {
+    category: LAUNCHES_PAGE,
+    action: 'Click on All Launches dropdown icon',
+    label: 'Arise dropdown',
+  },
+  SELECT_ALL_LAUNCHES: {
+    category: LAUNCHES_PAGE,
+    action: 'Select All Launches on dropdown',
+    label: 'Transition to All Launches',
+  },
+  SELECT_LATEST_LAUNCHES: {
+    category: LAUNCHES_PAGE,
+    action: 'Select Latest Launches in dropdown',
+    label: 'Transition to Latest Launches',
+  },
+  CLICK_IMPORT_BTN: {
+    category: LAUNCHES_PAGE,
+    action: 'Click on Bttn Import',
+    label: 'Arise Modul Import Launch',
+  },
+};
+
+const LAUNCHES_MODAL = 'Modal launches';
+export const LAUNCHES_MODAL_EVENTS = {
+  CLOSE_ICON_EDIT_MODAL: {
+    category: LAUNCHES_MODAL,
+    action: 'Click on Close Icon on Modal "Edit Launch"',
+    label: 'Close modal "Edit Launch"',
+  },
+  EDIT_DESCRIPTION_EDIT_MODAL: {
+    category: LAUNCHES_MODAL,
+    action: 'Edit description in Modal "Edit Launch"',
+    label: 'Edit launch description',
+  },
+  CLICK_CANCEL_BTN_EDIT_MODAL: {
+    category: LAUNCHES_MODAL,
+    action: 'Click on Bttn Cancel on Modal "Edit Launch"',
+    label: 'Close modal "Edit Launch"',
+  },
+  CLICK_SAVE_BTN_EDIT_MODAL: {
+    category: LAUNCHES_MODAL,
+    action: 'Click on Bttn Save on Modal "Edit Launch"',
+    label: 'Save changes "Edit Launch"',
+  },
+  CLOSE_ICON_MOVE_MODAL: {
+    category: LAUNCHES_MODAL,
+    action: 'Click on Close Icon on Modal "Move to Debug"',
+    label: 'Close modal "Move to Debug"',
+  },
+  CLICK_CANCEL_BTN_MOVE_MODAL: {
+    category: LAUNCHES_MODAL,
+    action: 'Click on Bttn Cancel on Modal "Move to Debug"',
+    label: 'Close modal "Move to Debug"',
+  },
+  CLICK_MOVE_BTN_MOVE_MODAL: {
+    category: LAUNCHES_MODAL,
+    action: 'Click on Bttn Move on Modal "Move to Debug"',
+    label: 'Save changes "Move to Debug"',
+  },
+  CLOSE_ICON_DELETE_MODAL: {
+    category: LAUNCHES_MODAL,
+    action: 'Click on Close Icon on Modal "Delete Launch"',
+    label: 'Close modal "Delete Launch"',
+  },
+  CANCEL_BTN_DELETE_MODAL: {
+    category: LAUNCHES_MODAL,
+    action: 'Click on Bttn Cancel on Modal "Delete Launch"',
+    label: 'Close modal "Delete Launch"',
+  },
+  DELETE_BTN_DELETE_MODAL: {
+    category: LAUNCHES_MODAL,
+    action: 'Click on Bttn Delete on Modal "Delete Launch"',
+    label: 'Delete launch mentioned in modal "Delete Launch"',
+  },
+  CLOSE_ICON_MERGE_MODAL: {
+    category: LAUNCHES_MODAL,
+    action: 'Click on Close Icon on Modal "Merge Launches"',
+    label: 'Close modal "Merge Launches"',
+  },
+  CANCEL_BTN_MERGE_MODAL: {
+    category: LAUNCHES_MODAL,
+    action: 'Click on Bttn Cancel on Modal "Merge Launches"',
+    label: 'Close modal "Merge Launches"',
+  },
+  MERGE_BTN_MERGE_MODAL: {
+    category: LAUNCHES_MODAL,
+    action: 'Click on Bttn Merge on Modal "Merge Launches"',
+    label: 'Merge launches mentioned in modal "Merge Launches"',
+  },
+  CLOSE_ICON_IMPORT_MODAL: {
+    category: LAUNCHES_MODAL,
+    action: 'Click on Close Icon on Modal "Import Launch"',
+    label: 'Close Modal Import Launch',
+  },
+  CANCEL_BTN_IMPORT_MODAL: {
+    category: LAUNCHES_MODAL,
+    action: 'Click on Bttn Cancel on Modal "Import Launch"',
+    label: 'Close Modal Import Launch',
+  },
+  OK_BTN_IMPORT_MODAL: {
+    category: LAUNCHES_MODAL,
+    action: 'Click on Bttn Ok on Modal "Import Launch"',
+    label: 'Import Launch',
+  },
+  LINEAR_MERGE_BTN_MERGE_MODAL: {
+    category: LAUNCHES_MODAL,
+    action: 'Click on Bttn Linear Merge on Modal "Merge Launches"',
+    label: 'Linear Merge',
+  },
+  DEEP_MERGE_BTN_MERGE_MODAL: {
+    category: LAUNCHES_MODAL,
+    action: 'Click on Bttn Deep Merge on Modal "Merge Launches"',
+    label: 'Deep Merge',
+  },
 };

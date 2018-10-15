@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import track from 'react-tracking';
 import classNames from 'classnames/bind';
 import Dropzone from 'react-dropzone';
 import Parser from 'html-react-parser';
@@ -10,6 +11,7 @@ import { activeProjectSelector } from 'controllers/user';
 import { addTokenToImagePath, uniqueId, fetch } from 'common/utils';
 import { URLS } from 'common/urls';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { LAUNCHES_MODAL_EVENTS } from 'components/main/analytics/events';
 import { LaunchIcon } from './launchIcon';
 import styles from './launchImportModal.scss';
 import DropZoneIcon from './img/shape-inline.svg';
@@ -69,11 +71,16 @@ const messages = defineMessages({
 @withModal('launchImportModal')
 @injectIntl
 @connect((state) => ({ activeProject: activeProjectSelector(state) }))
+@track()
 export class LaunchImportModal extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
     activeProject: PropTypes.string,
     data: PropTypes.object,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
 
   static defaultProps = {
@@ -120,7 +127,7 @@ export class LaunchImportModal extends Component {
   };
 
   getOkButtonConfig = (isLoading, uploadFinished) => {
-    const { intl } = this.props;
+    const { intl, tracking } = this.props;
     const text =
       isLoading || uploadFinished
         ? intl.formatMessage(messages.okButton)
@@ -131,6 +138,7 @@ export class LaunchImportModal extends Component {
       disabled: isLoading,
       onClick: (closeModal) => {
         if (uploadFinished) {
+          tracking.trackEvent(LAUNCHES_MODAL_EVENTS.OK_BTN_IMPORT_MODAL);
           closeModal();
         } else {
           this.uploadFilesOnOkClick();
@@ -283,7 +291,7 @@ export class LaunchImportModal extends Component {
       },
       onUploadProgress: (progressEvent) => {
         const { files } = this.state;
-        const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+        const percentCompleted = Math.round(progressEvent.loaded * 100 / progressEvent.total);
 
         this.setState({
           files: files.map((item) => {
@@ -311,12 +319,14 @@ export class LaunchImportModal extends Component {
         okButton={this.getOkButtonConfig(loading, uploadFinished)}
         cancelButton={{
           text: intl.formatMessage(messages.cancelButton),
+          eventInfo: LAUNCHES_MODAL_EVENTS.CANCEL_BTN_IMPORT_MODAL,
         }}
         closeConfirmation={this.getCloseConfirmationConfig(
           validFiles.length,
           loading,
           uploadFinished,
         )}
+        closeIconEventInfo={LAUNCHES_MODAL_EVENTS.CLOSE_ICON_IMPORT_MODAL}
       >
         <Dropzone
           className={cx('dropzone-wrapper')}
@@ -333,9 +343,7 @@ export class LaunchImportModal extends Component {
           )}
           {files.length > 0 && (
             <div className={cx('files-list')}>
-              {files.map((item) => (
-                <LaunchIcon {...item} onDelete={this.onDelete} key={item.id} />
-              ))}
+              {files.map((item) => <LaunchIcon {...item} onDelete={this.onDelete} key={item.id} />)}
             </div>
           )}
         </Dropzone>

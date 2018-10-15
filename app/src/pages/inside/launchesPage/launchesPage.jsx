@@ -239,6 +239,7 @@ export class LaunchesPage extends Component {
   };
 
   deleteItems = () => {
+    this.props.tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_DELETE_ACTION);
     const { selectedLaunches, intl, userId } = this.props;
     this.props.deleteItemsAction(this.props.selectedLaunches, {
       onConfirm: this.confirmDeleteItems,
@@ -259,6 +260,7 @@ export class LaunchesPage extends Component {
   };
 
   finishForceLaunches = (eventData) => {
+    this.props.tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_FORCE_FINISH_ACTION);
     const launches = eventData && eventData.id ? [eventData] : this.props.selectedLaunches;
     this.props.forceFinishLaunchesAction(launches, {
       fetchFunc: this.props.fetchLaunchesAction,
@@ -276,6 +278,7 @@ export class LaunchesPage extends Component {
     });
   };
   openImportModal = () => {
+    this.props.tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_IMPORT_BTN);
     this.props.showModalAction({
       id: 'launchImportModal',
       data: {
@@ -297,20 +300,36 @@ export class LaunchesPage extends Component {
   proceedWithValidItems = () =>
     this.props.proceedWithValidItemsAction(this.props.lastOperation, this.props.selectedLaunches);
 
-  mergeLaunches = () =>
+  mergeLaunches = () => {
+    this.props.tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_MERGE_ACTION);
     this.props.mergeLaunchesAction(this.props.selectedLaunches, {
       fetchFunc: this.props.fetchLaunchesAction,
     });
+  };
 
   moveLaunches = (eventData) => {
     const launches = eventData && eventData.id ? [eventData] : this.props.selectedLaunches;
+    this.props.tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_MOVE_TO_DEBUG_LAUNCH_MENU);
     this.props.moveLaunchesAction(launches, {
       fetchFunc: this.props.fetchLaunchesAction,
       debugMode: this.props.debugMode,
     });
   };
 
-  compareLaunches = () => this.props.compareLaunchesAction(this.props.selectedLaunches);
+  compareLaunches = () => {
+    this.props.tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_COMPARE_ACTION);
+    this.props.compareLaunchesAction(this.props.selectedLaunches);
+  };
+
+  unselectAllItems = () => {
+    this.props.tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_CLOSE_ICON_ALL_SELECTION);
+    this.props.unselectAllLaunchesAction();
+  };
+
+  unselectItem = (item) => {
+    this.props.tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_CLOSE_ICON_FROM_SELECTION);
+    this.props.toggleLaunchSelectionAction(item);
+  };
 
   render() {
     const {
@@ -335,8 +354,8 @@ export class LaunchesPage extends Component {
             errors={this.props.validationErrors}
             onRefresh={this.props.fetchLaunchesAction}
             selectedLaunches={selectedLaunches}
-            onUnselect={this.props.toggleLaunchSelectionAction}
-            onUnselectAll={this.props.unselectAllLaunchesAction}
+            onUnselect={this.unselectItem}
+            onUnselectAll={this.unselectAllItems}
             onProceedValidItems={this.proceedWithValidItems}
             onMove={this.moveLaunches}
             onMerge={this.mergeLaunches}
