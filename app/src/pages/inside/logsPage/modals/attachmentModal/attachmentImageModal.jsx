@@ -35,7 +35,7 @@ export class AttachmentImageModal extends Component {
   generateRotationCommand = (amount) => `rotate(${amount}deg)`;
 
   renderCustomButton = () => (
-    <div onClick={this.rotateImageHandler} left="true" className={cx('attachment-image-rotate')}>
+    <div onClick={this.rotateImageHandler} left className={cx('attachment-image-rotate')}>
       <span className={cx('icon')}>{Parser(RotateImage)}</span>
       <span className={cx('text')}>{this.props.intl.formatMessage(messages.rotate)}</span>
     </div>
@@ -60,8 +60,8 @@ export class AttachmentImageModal extends Component {
         okButton={this.renderOkButton(intl, messages)}
         customButton={this.renderCustomButton(intl, messages)}
       >
-        <div>
-          <img style={style} id="attachment-image" alt="attachment" src={image} />
+        <div className={cx('attachment-image-wrap')}>
+          <img style={style} alt="attachment" src={image} />
         </div>
       </ModalLayout>
     );

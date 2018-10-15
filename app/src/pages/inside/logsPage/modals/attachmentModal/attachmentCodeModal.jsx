@@ -24,13 +24,12 @@ export class AttachmentCodeModal extends Component {
     } = this.props;
     const cancelButton = {
       text: intl.formatMessage(messages.close),
-      onClick: (closeModal) => closeModal(),
     };
 
     return (
       <ModalLayout title={intl.formatMessage(messages.title)} cancelButton={cancelButton}>
         <form>
-          <Highlight {...language}>{content}</Highlight>
+          <Highlight language={language}>{content}</Highlight>
         </form>
       </ModalLayout>
     );
