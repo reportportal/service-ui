@@ -110,6 +110,10 @@ export class SuitesPage extends Component {
     filterEntities: [],
   };
 
+  componentWillUnmount(){
+    this.props.unselectAllSuitesAction();
+  }
+
   handleAllSuitesSelection = () => this.props.toggleAllSuitesAction(this.props.suites);
 
   render() {

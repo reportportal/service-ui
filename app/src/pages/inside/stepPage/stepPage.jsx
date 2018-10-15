@@ -130,6 +130,10 @@ export class StepPage extends Component {
     filterEntities: [],
   };
 
+  componentWillUnmount(){
+    this.props.unselectAllSteps();
+  }
+
   handleAllStepsSelection = () => {
     const { selectedItems, steps } = this.props;
     if (steps.length === selectedItems.length) {

@@ -105,6 +105,10 @@ export class TestsPage extends Component {
     filterEntities: [],
   };
 
+  componentWillUnmount(){
+    this.props.unselectAllTestsAction();
+  }
+
   handleAllTestsSelection = () => this.props.toggleAllTestsAction(this.props.tests);
 
   render() {
