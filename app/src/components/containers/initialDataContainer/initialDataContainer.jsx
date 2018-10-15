@@ -61,11 +61,12 @@ export class InitialDataContainer extends Component {
 
   render() {
     const { isAnalyticsEnabled } = this.props;
-    let insideComponent;
-    isAnalyticsEnabled
-      ? (insideComponent = <AnalyticsWrapper>{this.props.children}</AnalyticsWrapper>)
-      : (insideComponent = this.props.children);
+    const component = isAnalyticsEnabled ? (
+      <AnalyticsWrapper>{this.props.children}</AnalyticsWrapper>
+    ) : (
+      this.props.children
+    );
 
-    return this.state.initialDataReady ? insideComponent : <span>Loading...</span>;
+    return this.state.initialDataReady ? component : <span>Loading...</span>;
   }
 }
