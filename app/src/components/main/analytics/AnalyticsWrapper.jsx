@@ -8,17 +8,13 @@ import ReactGA from 'react-ga';
 const PAGE_VIEW = 'pageview';
 const GOOGLE_ANALYTICS_INSTANCE = 'UA-96321031-1';
 
-@connect(
-  (state) => ({
-    instanceId: instanceIdSelector(state),
-  }),
-  null,
-)
+@connect((state) => ({
+  instanceId: instanceIdSelector(state),
+}))
 @track(
   {},
   {
     dispatch: (data) => {
-      console.log(data);
       if (data.actionType && data.actionType === PAGE_VIEW) {
         ReactGA.pageview(data.page);
       } else {

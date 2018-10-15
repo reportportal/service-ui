@@ -24,6 +24,11 @@ const messages = defineMessages({
   system_issue_total: { id: 'DefectTypeTooltip.si-total', defaultMessage: 'Total system issues' },
   no_defect_total: { id: 'DefectTypeTooltip.nd-total', defaultMessage: 'Total no defects' },
 });
+const EVENTS_MAP = {
+  [PRODUCT_BUG]: LAUNCHES_PAGE_EVENTS.CLICK_TOOLTIP_TTL_PB,
+  [AUTOMATION_BUG]: LAUNCHES_PAGE_EVENTS.CLICK_TOOLTIP_TTL_AB,
+  [SYSTEM_ISSUE]: LAUNCHES_PAGE_EVENTS.CLICK_TOOLTIP_TTL_SI,
+};
 
 @injectIntl
 @connect((state) => ({
@@ -44,23 +49,10 @@ export class DefectTypeTooltip extends Component {
 
   render() {
     const { formatMessage } = this.props.intl;
-    let eventInfo;
+    const eventInfo = EVENTS_MAP[this.props.type];
     const defectConfig =
       this.props.projectConfig.subTypes &&
       this.props.projectConfig.subTypes[this.props.type.toUpperCase()];
-    switch (this.props.type) {
-      case PRODUCT_BUG:
-        eventInfo = LAUNCHES_PAGE_EVENTS.CLICK_TOOLTIP_TTL_PB;
-        break;
-      case AUTOMATION_BUG:
-        eventInfo = LAUNCHES_PAGE_EVENTS.CLICK_TOOLTIP_TTL_AB;
-        break;
-      case SYSTEM_ISSUE:
-        eventInfo = LAUNCHES_PAGE_EVENTS.CLICK_TOOLTIP_TTL_SI;
-        break;
-      default:
-        break;
-    }
 
     return (
       <div className={cx('defect-type-tooltip')}>

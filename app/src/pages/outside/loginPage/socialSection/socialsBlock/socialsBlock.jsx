@@ -45,55 +45,55 @@ export class SocialsBlock extends Component {
           onClick={() => tracking.trackEvent(LOGIN_PAGE_EVENTS.CLICK_GITHUB_ICON)}
           href={referenceDictionary.rpGitHub}
           target="_blank"
-          className={cx({ 'social-link': true, 'gh-icon': true })}
+          className={cx('social-link', 'gh-icon')}
         >
           {}
         </a>
         <a
           onClick={() => tracking.trackEvent(LOGIN_PAGE_EVENTS.CLICK_FACEBOOK_ICON)}
-          href={referenceDictionary.rpGitHub}
+          href={referenceDictionary.rpFacebook}
           target="_blank"
-          className={cx({ 'social-link': true, 'fb-icon': true })}
+          className={cx('social-link', 'fb-icon')}
         >
           {}
         </a>
         <a
           onClick={() => tracking.trackEvent(LOGIN_PAGE_EVENTS.CLICK_TWEETER_ICON)}
-          href={referenceDictionary.rpGitHub}
+          href={referenceDictionary.rpTwitter}
           target="_blank"
-          className={cx({ 'social-link': true, 'tw-icon': true })}
+          className={cx('social-link', 'tw-icon')}
         >
           {}
         </a>
         <a
           onClick={() => tracking.trackEvent(LOGIN_PAGE_EVENTS.CLICK_YOUTUBE_ICON)}
-          href={referenceDictionary.rpGitHub}
+          href={referenceDictionary.rpYoutube}
           target="_blank"
-          className={cx({ 'social-link': true, 'yt-icon': true })}
+          className={cx('social-link', 'yt-icon')}
         >
           {}
         </a>
         <a
           onClick={() => tracking.trackEvent(LOGIN_PAGE_EVENTS.CLICK_VK_ICON)}
-          href={referenceDictionary.rpGitHub}
+          href={referenceDictionary.rpVk}
           target="_blank"
-          className={cx({ 'social-link': true, 'vk-icon': true })}
+          className={cx('social-link', 'vk-icon')}
         >
           {}
         </a>
         <a
           onClick={() => tracking.trackEvent(LOGIN_PAGE_EVENTS.CLICK_SLACK_ICON)}
-          href={referenceDictionary.rpGitHub}
+          href={referenceDictionary.rpSlack}
           target="_blank"
-          className={cx({ 'social-link': true, 'slk-icon': true })}
+          className={cx('social-link', 'slk-icon')}
         >
           {}
         </a>
         <a
           onClick={() => tracking.trackEvent(LOGIN_PAGE_EVENTS.CLICK_MAIL_ICON)}
-          href={referenceDictionary.rpGitHub}
+          href={referenceDictionary.rpEmail}
           target="_blank"
-          className={cx({ 'social-link': true, 'mail-icon': true })}
+          className={cx('social-link', 'mail-icon')}
         >
           {}
         </a>
