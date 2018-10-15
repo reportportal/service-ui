@@ -182,7 +182,7 @@ export class LaunchesPage extends Component {
     deleteItemsAction: () => {},
   };
 
-  componentWillMount(){
+  componentWillUnmount(){
     this.props.unselectAllLaunchesAction();
   }
 
