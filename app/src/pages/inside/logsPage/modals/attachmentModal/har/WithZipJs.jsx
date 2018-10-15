@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 
+/* eslint-disable */
 export class WithZipJs extends Component {
   constructor(props) {
     super(props);
