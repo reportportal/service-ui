@@ -1,4 +1,5 @@
 import { Component } from 'react';
+import track from 'react-tracking';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Parser from 'html-react-parser';
@@ -7,6 +8,7 @@ import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { withModal, ModalLayout } from 'components/main/modal';
 import { userIdSelector } from 'controllers/user';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { LAUNCHES_MODAL_EVENTS } from 'components/main/analytics/events';
 import styles from './launchDeleteModal.scss';
 
 const cx = classNames.bind(styles);
@@ -33,6 +35,7 @@ const messages = defineMessages({
 @connect((state) => ({
   userId: userIdSelector(state),
 }))
+@track()
 export class LaunchDeleteModal extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
@@ -41,6 +44,10 @@ export class LaunchDeleteModal extends Component {
       onConfirm: PropTypes.func,
     }),
     userId: PropTypes.string.isRequired,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
 
   static defaultProps = {
@@ -50,6 +57,7 @@ export class LaunchDeleteModal extends Component {
     },
   };
   confirmAndClose = (closeModal) => {
+    this.props.tracking.trackEvent(LAUNCHES_MODAL_EVENTS.DELETE_BTN_DELETE_MODAL);
     this.props.data.onConfirm();
     closeModal();
   };
@@ -64,6 +72,7 @@ export class LaunchDeleteModal extends Component {
     };
     const cancelButton = {
       text: intl.formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+      eventInfo: LAUNCHES_MODAL_EVENTS.CANCEL_BTN_DELETE_MODAL,
     };
     return (
       <ModalLayout
@@ -73,6 +82,7 @@ export class LaunchDeleteModal extends Component {
         warningMessage={
           item.owner !== this.props.userId ? intl.formatMessage(messages.deleteLaunchWarning) : null
         }
+        closeIconEventInfo={LAUNCHES_MODAL_EVENTS.CLOSE_ICON_DELETE_MODAL}
       >
         <p className={cx('message')}>
           {Parser(
