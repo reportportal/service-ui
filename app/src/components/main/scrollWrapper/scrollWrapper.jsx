@@ -20,17 +20,20 @@
  */
 
 import React, { Component } from 'react';
+import track from 'react-tracking';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import Parser from 'html-react-parser';
 import { FormattedMessage } from 'react-intl';
 import { SpringSystem } from 'rebound';
 import { Scrollbars } from 'react-custom-scrollbars';
+import { FOOTER_EVENTS } from 'components/main/analytics/events';
 import TopIcon from './img/top-inline.svg';
 import styles from './scrollWrapper.scss';
 
 const cx = classNames.bind(styles);
 
+@track()
 export class ScrollWrapper extends Component {
   static propTypes = {
     children: PropTypes.node,
@@ -48,6 +51,10 @@ export class ScrollWrapper extends Component {
     hideTracksWhenNotNeeded: PropTypes.bool,
     thumbMinSize: PropTypes.number,
     withBackToTop: PropTypes.bool,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
   static defaultProps = {
     children: {},
@@ -112,6 +119,7 @@ export class ScrollWrapper extends Component {
   };
 
   scrollTop = () => {
+    this.props.tracking.trackEvent(FOOTER_EVENTS.BACK_TO_TOP_CLICK);
     this.stopScroll = false;
     const scrollTop = this.scrollbars.getScrollTop();
     this.spring.setCurrentValue(scrollTop).setAtRest();

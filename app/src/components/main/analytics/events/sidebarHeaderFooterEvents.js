@@ -65,3 +65,42 @@ export const HEADER_EVENTS = {
     label: 'Transition to API page',
   },
 };
+
+const FOOTER = 'footer';
+export const FOOTER_EVENTS = {
+  BACK_TO_TOP_CLICK: {
+    category: FOOTER,
+    action: 'Click on Back to Top link',
+    label: 'Transition to top',
+  },
+  FORK_US_CLICK: {
+    category: FOOTER,
+    action: 'Click on Fork us on GitHub link',
+    label: 'Fork on GitHub',
+  },
+  SLACK_LINK: {
+    category: FOOTER,
+    action: 'Click on Chat with us on Slack link',
+    label: 'Move to Slack',
+  },
+  CONTACT_US_LINK: {
+    category: FOOTER,
+    action: 'Click on Contact us link',
+    label: 'Open message window',
+  },
+  EPAM_LINK: {
+    category: FOOTER,
+    action: 'Click on EPAM link',
+    label: 'Transition to EPAM site',
+  },
+  DOCUMENTATION_LINK: {
+    category: FOOTER,
+    action: 'Click on Documentation link',
+    label: 'Transition to Documentation',
+  },
+  EDIT_NUMBER_PER_PAGE: {
+    category: FOOTER,
+    action: 'Edit number per page',
+    label: 'Change number per page',
+  },
+};
