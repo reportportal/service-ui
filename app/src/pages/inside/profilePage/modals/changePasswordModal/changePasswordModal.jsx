@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import { defineMessages, injectIntl, intlShape } from 'react-intl';
 import { ModalLayout, withModal, ModalField } from 'components/main/modal';
@@ -9,6 +10,7 @@ import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { reduxForm } from 'redux-form';
 import { Input } from 'components/inputs/input';
 import { InputCheckbox } from 'components/inputs/inputCheckbox';
+import { PROFILE_PAGE_EVENTS } from 'components/main/analytics/events';
 import classNames from 'classnames/bind';
 import styles from './changePasswordModal.scss';
 
@@ -59,6 +61,7 @@ const messages = defineMessages({
     confirmPassword: newPassword !== confirmPassword && 'profileConfirmPassword',
   }),
 })
+@track()
 export class ChangePasswordModal extends Component {
   static propTypes = {
     handleSubmit: PropTypes.func.isRequired,
@@ -67,6 +70,10 @@ export class ChangePasswordModal extends Component {
     }).isRequired,
     intl: intlShape.isRequired,
     invalid: PropTypes.bool.isRequired,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
   state = {
     showPassword: false,
@@ -79,22 +86,25 @@ export class ChangePasswordModal extends Component {
     closeModal();
   };
   render() {
-    const { intl, invalid, handleSubmit } = this.props;
+    const { intl, invalid, handleSubmit, tracking } = this.props;
     const okButton = {
       text: intl.formatMessage(COMMON_LOCALE_KEYS.SUBMIT),
       onClick: (closeModal) => {
+        tracking.trackEvent(PROFILE_PAGE_EVENTS.SUBMIT_BTN_CHANGE_PASSWORD_MODAL);
         handleSubmit(this.changePasswordAndCloseModal(closeModal))();
       },
       disabled: invalid,
     };
     const cancelButton = {
       text: intl.formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+      eventInfo: PROFILE_PAGE_EVENTS.CANCEL_BTN_CHANGE_PASSWORD_MODAL,
     };
     return (
       <ModalLayout
         title={intl.formatMessage(messages.header)}
         okButton={okButton}
         cancelButton={cancelButton}
+        closeIconEventInfo={PROFILE_PAGE_EVENTS.CLOSE_ICON_CHANGE_PASSWORD_MODAL}
       >
         <form className={cx('form')}>
           <ModalField

@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import track from 'react-tracking';
 import classNames from 'classnames/bind';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
@@ -10,6 +11,7 @@ import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
 import { INTERNAL, LDAP } from 'common/constants/accountType';
 import { GhostButton } from 'components/buttons/ghostButton';
+import { PROFILE_PAGE_EVENTS } from 'components/main/analytics/events';
 import styles from './personalInfoBlock.scss';
 import { BlockContainerBody, BlockContainerHeader } from '../blockContainer';
 import { PhotoControls } from './photoControls';
@@ -57,6 +59,7 @@ const messages = defineMessages({
   { showNotification, showModalAction },
 )
 @injectIntl
+@track()
 export class PersonalInfoBlock extends Component {
   static propTypes = {
     userId: PropTypes.string,
@@ -64,6 +67,10 @@ export class PersonalInfoBlock extends Component {
     intl: intlShape.isRequired,
     showModalAction: PropTypes.func.isRequired,
     showNotification: PropTypes.func.isRequired,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
   static defaultProps = {
     userId: '',
@@ -73,11 +80,14 @@ export class PersonalInfoBlock extends Component {
   state = {
     avatarSource: getPhoto(this.props.userId),
   };
-  onChangePassword = () =>
+  onChangePassword = () => {
+    this.props.tracking.trackEvent(PROFILE_PAGE_EVENTS.CHANGE_PASSWORD_CLICK);
     this.props.showModalAction({
       id: 'changePasswordModal',
       data: { onChangePassword: this.changePasswordHandler },
     });
+  };
+
   onForceUpdate = () => {
     const { accountType, intl } = this.props;
     fetch(URLS.userSynchronize(accountType), { method: 'post' })

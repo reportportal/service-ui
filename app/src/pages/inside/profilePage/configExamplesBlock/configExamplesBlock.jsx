@@ -25,6 +25,7 @@ import { connect } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
 import { ContainerWithTabs } from 'components/main/containerWithTabs';
 import { userTokenSelector } from 'controllers/user';
+import { PROFILE_PAGE_EVENTS } from 'components/main/analytics/events';
 import styles from './configExamplesBlock.scss';
 import { BlockContainerHeader, BlockContainerBody } from '../blockContainer';
 import { TabsConfig } from './tabsConfig';
@@ -54,6 +55,7 @@ export class ConfigExamplesBlock extends Component {
       <BlockContainerBody>
         <div className={cx('content-container')}>
           <ContainerWithTabs
+            selectTabEventInfo={PROFILE_PAGE_EVENTS.SELECT_CONFIGURATION_TAB}
             data={[
               TabsConfig.javaConfig(this.props.token),
               TabsConfig.rubyConfig(this.props.token),

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import { defineMessages, injectIntl, intlShape } from 'react-intl';
 import { ModalLayout, withModal, ModalField } from 'components/main/modal';
@@ -8,6 +9,7 @@ import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { reduxForm } from 'redux-form';
 import { Input } from 'components/inputs/input';
+import { PROFILE_PAGE_EVENTS } from 'components/main/analytics/events';
 import classNames from 'classnames/bind';
 import styles from './editPersonalInfoModal.scss';
 
@@ -45,6 +47,7 @@ const messages = defineMessages({
     email: (!email || !validate.email(email)) && 'profileEmail',
   }),
 })
+@track()
 export class EditPersonalInformationModal extends Component {
   static propTypes = {
     handleSubmit: PropTypes.func.isRequired,
@@ -54,30 +57,41 @@ export class EditPersonalInformationModal extends Component {
     }).isRequired,
     initialize: PropTypes.func.isRequired,
     intl: intlShape.isRequired,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
   componentDidMount() {
     this.props.initialize(this.props.data.info);
   }
   editAndCloseModal = (closeModal) => (formData) => {
+    this.props.data.info.email !== formData.email &&
+      this.props.tracking.trackEvent(PROFILE_PAGE_EVENTS.EDIT_EMAIL_EDIT_PERSONAL_INFO_MODAL);
+    this.props.data.info.name !== formData.name &&
+      this.props.tracking.trackEvent(PROFILE_PAGE_EVENTS.EDIT_USER_NAME_EDIT_PERSONAL_INFO_MODAL);
     this.props.data.onEdit(formData);
     closeModal();
   };
   render() {
-    const { intl, handleSubmit } = this.props;
+    const { intl, handleSubmit, tracking } = this.props;
     const okButton = {
       text: intl.formatMessage(COMMON_LOCALE_KEYS.SUBMIT),
       onClick: (closeModal) => {
+        tracking.trackEvent(PROFILE_PAGE_EVENTS.SUBMIT_BTN_EDIT_PERSONAL_INFO_MODAL);
         handleSubmit(this.editAndCloseModal(closeModal))();
       },
     };
     const cancelButton = {
       text: intl.formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+      eventInfo: PROFILE_PAGE_EVENTS.CANCEL_BTN_EDIT_PERSONAL_INFO_MODAL,
     };
     return (
       <ModalLayout
         title={intl.formatMessage(messages.header)}
         okButton={okButton}
         cancelButton={cancelButton}
+        closeIconEventInfo={PROFILE_PAGE_EVENTS.CLOSE_ICON_EDIT_PERSONAL_INFO_MODAL}
       >
         <form className={cx('form')}>
           <ModalField label={intl.formatMessage(messages.nameLabel)} labelWidth={LABEL_WIDTH}>
