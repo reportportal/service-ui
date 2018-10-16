@@ -86,7 +86,7 @@ function* fetchTestItems() {
   const namespace = yield select(namespaceSelector);
   const query = yield select(queryParametersSelector, namespace);
 
-  const noChildFilter = 'filter.eq.has_childs' in query;
+  const noChildFilter = 'filter.eq.has_children' in query;
 
   const sizePath = !parentId && !noChildFilter ? 1 : undefined;
 
