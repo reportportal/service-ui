@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import track from 'react-tracking';
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
@@ -9,6 +10,7 @@ import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
 import { INTERNAL } from 'common/constants/accountType';
 import { GhostButton } from 'components/buttons/ghostButton';
+import { PROFILE_PAGE_EVENTS } from 'components/main/analytics/events';
 import styles from './photoControls.scss';
 
 const cx = classNames.bind(styles);
@@ -50,6 +52,7 @@ const messages = defineMessages({
 
 @connect(null, { showNotification, showModalAction })
 @injectIntl
+@track()
 export class PhotoControls extends Component {
   static propTypes = {
     accountType: PropTypes.string,
@@ -58,6 +61,10 @@ export class PhotoControls extends Component {
     intl: intlShape.isRequired,
     showModalAction: PropTypes.func.isRequired,
     showNotification: PropTypes.func.isRequired,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
   static defaultProps = {
     accountType: '',
@@ -71,11 +78,14 @@ export class PhotoControls extends Component {
     image: null,
   };
 
-  onRemove = () =>
+  onRemove = () => {
+    this.props.tracking.trackEvent(PROFILE_PAGE_EVENTS.REMOVE_PHOTO_BTN);
     this.props.showModalAction({
       id: 'deleteImageModal',
       data: { onRemove: this.removeImageHandler },
     });
+  };
+
   onSave = () => {
     const formData = new FormData();
     formData.append('file', this.state.image);
@@ -95,6 +105,7 @@ export class PhotoControls extends Component {
     this.setState({ newPhotoLoaded: false });
   };
   onClickUploadPhoto = () => {
+    this.props.tracking.trackEvent(PROFILE_PAGE_EVENTS.UPLOAD_PHOTO_BTN);
     this.fileSelector.click();
   };
   onLoadFile = (file) => {

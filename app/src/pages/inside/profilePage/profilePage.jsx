@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
+import track from 'react-tracking';
 import { defineMessages, injectIntl, intlShape } from 'react-intl';
 import classNames from 'classnames/bind';
-import { PageLayout } from 'layouts/pageLayout';
+import { PageLayout, PageHeader, PageSection } from 'layouts/pageLayout';
+import { PROFILE_PAGE } from 'components/main/analytics/events';
 import { PersonalInfoBlock } from './personalInfoBlock';
 import { UuidBlock } from './uuidBlock';
 import { AssignedProjectsBlock } from './assignedProjectsBlock';
@@ -18,15 +20,18 @@ const messages = defineMessages({
   },
 });
 @injectIntl
+@track({ page: PROFILE_PAGE })
 export class ProfilePage extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
   };
 
-  render = () => {
-    const { intl } = this.props;
-    return (
-      <PageLayout title={intl.formatMessage(messages.profilePageTitle)}>
+  getBreadcrumbs = () => [{ title: this.props.intl.formatMessage(messages.profilePageTitle) }];
+
+  render = () => (
+    <PageLayout>
+      <PageHeader breadcrumbs={this.getBreadcrumbs()} />
+      <PageSection>
         <div className={cx('container')}>
           <div className={cx('column')}>
             <PersonalInfoBlock />
@@ -38,7 +43,7 @@ export class ProfilePage extends Component {
             <ConfigExamplesBlock />
           </div>
         </div>
-      </PageLayout>
-    );
-  };
+      </PageSection>
+    </PageLayout>
+  );
 }

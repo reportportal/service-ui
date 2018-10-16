@@ -20,18 +20,26 @@
  */
 
 import React, { Component } from 'react';
+import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import styles from './containerWithTabs.scss';
 
 const cx = classNames.bind(styles);
 
+@track()
 export class ContainerWithTabs extends Component {
   static propTypes = {
     data: PropTypes.arrayOf(PropTypes.object),
+    selectTabEventInfo: PropTypes.object,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
   static defaultProps = {
     data: [],
+    selectTabEventInfo: '',
   };
 
   state = {
@@ -40,6 +48,11 @@ export class ContainerWithTabs extends Component {
 
   tabClickHandler = (e) => {
     const id = +e.currentTarget.dataset.id;
+    if (this.props.selectTabEventInfo) {
+      this.props.tracking.trackEvent(this.props.selectTabEventInfo);
+    } else if (this.props.data[id].eventInfo) {
+      this.props.tracking.trackEvent(this.props.data[id].eventInfo);
+    }
     if (this.state.active !== id) {
       this.setState({ active: id });
     }

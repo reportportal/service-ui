@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { showModalAction } from 'controllers/modal';
@@ -7,6 +8,7 @@ import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { userTokenSelector, generateApiTokenAction } from 'controllers/user';
 import { Input } from 'components/inputs/input/input';
 import { GhostButton } from 'components/buttons/ghostButton';
+import { PROFILE_PAGE_EVENTS } from 'components/main/analytics/events';
 import { defineMessages, injectIntl, intlShape } from 'react-intl';
 import { ButtonWithTooltip } from './buttonWithTooltip';
 import styles from './uuidBlock.scss';
@@ -44,6 +46,7 @@ const messages = defineMessages({
   { showNotification, showModalAction, generateApiTokenAction },
 )
 @injectIntl
+@track()
 export class UuidBlock extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
@@ -51,15 +54,22 @@ export class UuidBlock extends Component {
     generateApiTokenAction: PropTypes.func.isRequired,
     showNotification: PropTypes.func.isRequired,
     token: PropTypes.string,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
   static defaultProps = {
     token: '',
   };
-  onGenerate = () =>
+  onGenerate = () => {
+    this.props.tracking.trackEvent(PROFILE_PAGE_EVENTS.REGENERATE_BTN);
     this.props.showModalAction({
       id: 'regenerateUuidModal',
       data: { onRegenerate: this.regenerateHandler },
     });
+  };
+
   setupRef = (node) => {
     this.inputLink = node;
   };
