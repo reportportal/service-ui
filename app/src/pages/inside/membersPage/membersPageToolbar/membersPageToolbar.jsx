@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import track from 'react-tracking';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
 import { showModalAction } from 'controllers/modal';
@@ -9,6 +10,7 @@ import { canInviteInternalUser } from 'common/utils/permissions';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { InputSearch } from 'components/inputs/inputSearch';
+import { MEMBERS_PAGE_EVENTS } from 'components/main/analytics/events';
 import PermissionMapIcon from './img/ic_premission-inline.svg';
 import InviteUserIcon from './img/ic_invite-inline.svg';
 import styles from './membersPageToolbar.scss';
@@ -45,6 +47,7 @@ const messages = defineMessages({
   },
 })
 @injectIntl
+@track()
 export class MembersPageToolbar extends React.Component {
   static propTypes = {
     change: PropTypes.func,
@@ -54,6 +57,10 @@ export class MembersPageToolbar extends React.Component {
     onInvite: PropTypes.func,
     currentRole: PropTypes.string,
     userRole: PropTypes.string,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
 
   static defaultProps = {
@@ -76,9 +83,15 @@ export class MembersPageToolbar extends React.Component {
     }
   }
 
-  showInviteUserModal = () =>
+  showInviteUserModal = () => {
+    this.props.tracking.trackEvent(MEMBERS_PAGE_EVENTS.INVITE_USER_CLICK);
     this.props.showModalAction({ id: 'inviteUserModal', data: { onInvite: this.props.onInvite } });
-  showPermissionMapModal = () => this.props.showModalAction({ id: 'permissionMapModal' });
+  };
+
+  showPermissionMapModal = () => {
+    this.props.tracking.trackEvent(MEMBERS_PAGE_EVENTS.PERMISSION_MAP_CLICK);
+    this.props.showModalAction({ id: 'permissionMapModal' });
+  };
 
   render() {
     return (

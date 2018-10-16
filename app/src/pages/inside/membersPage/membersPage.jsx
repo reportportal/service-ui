@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
@@ -17,6 +18,7 @@ import { withFilter } from 'controllers/filter';
 import { activeProjectSelector } from 'controllers/user';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
 import { withPagination } from 'controllers/pagination';
+import { MEMBERS_PAGE, MEMBERS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { PageLayout, PageHeader, PageSection } from 'layouts/pageLayout';
 import { MembersPageToolbar } from './membersPageToolbar';
 import { MembersGrid } from './membersGrid';
@@ -55,6 +57,7 @@ const messages = defineMessages({
   paginationSelector: membersPaginationSelector,
 })
 @injectIntl
+@track({ page: MEMBERS_PAGE })
 export class MembersPage extends Component {
   static propTypes = {
     showScreenLockAction: PropTypes.func.isRequired,
@@ -74,6 +77,10 @@ export class MembersPage extends Component {
     members: PropTypes.arrayOf(PropTypes.object).isRequired,
     loading: PropTypes.bool,
     activeProject: PropTypes.string.isRequired,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
   static defaultProps = {
     onSearchChange: () => {},
@@ -142,10 +149,14 @@ export class MembersPage extends Component {
       });
   };
 
+  searchUser = (filterQuery) => {
+    this.props.tracking.trackEvent(MEMBERS_PAGE_EVENTS.ENTER_SEARCH_PARAM);
+    this.props.onFilterChange(filterQuery);
+  };
+
   render() {
     const {
       filter,
-      onFilterChange,
       activePage,
       itemCount,
       pageCount,
@@ -161,7 +172,7 @@ export class MembersPage extends Component {
         <PageSection>
           <MembersPageToolbar
             filter={filter}
-            onFilterChange={onFilterChange}
+            onFilterChange={this.searchUser}
             onInvite={this.inviteUser}
           />
           <MembersGrid data={members} fetchData={this.props.fetchMembersAction} loading={loading} />

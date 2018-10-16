@@ -1,4 +1,5 @@
 import { Fragment, Component } from 'react';
+import track from 'react-tracking';
 import { connect } from 'react-redux';
 import { injectIntl, intlShape, defineMessages } from 'react-intl';
 import PropTypes from 'prop-types';
@@ -15,6 +16,7 @@ import {
   assignedProjectsSelector,
 } from 'controllers/user';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
+import { MEMBERS_PAGE_EVENTS } from 'components/main/analytics/events';
 import UnassignIcon from './img/unassign-inline.svg';
 
 const messages = defineMessages({
@@ -59,6 +61,7 @@ const messages = defineMessages({
   }),
   { showNotification, showModalAction },
 )
+@track()
 export class UnassignButton extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
@@ -72,6 +75,10 @@ export class UnassignButton extends Component {
     showNotification: PropTypes.func,
     fetchUserAction: PropTypes.func,
     fetchData: PropTypes.func,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
   static defaultProps = {
     userId: '',
@@ -97,7 +104,9 @@ export class UnassignButton extends Component {
   isPersonalProject = () =>
     this.props.entryType === 'PERSONAL' &&
     this.props.projectId === `${this.props.userId.replace('.', '_')}_personal`;
-  showUnassignModal = () =>
+  showUnassignModal = () => {
+    const { tracking } = this.props;
+    tracking.trackEvent(MEMBERS_PAGE_EVENTS.UNASSIGN_BTN_CLICK);
     this.props.showModalAction({
       id: 'unassignModal',
       data: {
@@ -106,6 +115,8 @@ export class UnassignButton extends Component {
         project: this.props.projectId,
       },
     });
+  };
+
   unassignAction = () => {
     const { projectId, userId, intl } = this.props;
     fetch(URLS.userUnasign(projectId), {
