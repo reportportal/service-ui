@@ -1,4 +1,5 @@
 import { Fragment, Component } from 'react';
+import track from 'react-tracking';
 import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
 import { injectIntl, intlShape, defineMessages } from 'react-intl';
@@ -14,6 +15,7 @@ import {
   isAdminSelector,
   userIdSelector,
 } from 'controllers/user';
+import { MEMBERS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { ROLES_MAP } from 'common/constants/projectRoles';
 import { ADMINISTRATOR } from 'common/constants/accountRoles';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
@@ -46,6 +48,7 @@ const messages = defineMessages({
   }),
   { showNotification },
 )
+@track()
 export class ProjectRole extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
@@ -57,6 +60,10 @@ export class ProjectRole extends Component {
     currentUser: PropTypes.string,
     canChangeRole: PropTypes.bool,
     isAdmin: PropTypes.bool,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
   static defaultProps = {
     assignedProjects: {},
@@ -73,12 +80,13 @@ export class ProjectRole extends Component {
   };
 
   onChangeRole = (val) => {
-    const { intl, userId } = this.props;
+    const { intl, userId, tracking } = this.props;
     const param = {
       users: {},
     };
     param.users[this.props.userId] = val;
     this.setState({ currentRole: val });
+    tracking.trackEvent(MEMBERS_PAGE_EVENTS.CHANGE_PROJECT_ROLE);
     fetch(URLS.project(this.props.projectId), {
       method: 'put',
       data: param,

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { defineMessages, injectIntl, intlShape } from 'react-intl';
@@ -11,6 +12,7 @@ import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { showModalAction } from 'controllers/modal';
 import { InputUserSearch } from 'components/inputs/inputUserSearch';
 import { InputDropdown } from 'components/inputs/inputDropdown';
+import { MEMBERS_PAGE_EVENTS } from 'components/main/analytics/events';
 import classNames from 'classnames/bind';
 import { activeProjectSelector, isAdminSelector } from 'controllers/user';
 import styles from './inviteUserModal.scss';
@@ -56,6 +58,7 @@ const messages = defineMessages({
     role: DEFAULT_PROJECT_ROLE,
   },
 })
+@track()
 export class InviteUserModal extends Component {
   static propTypes = {
     intl: intlShape,
@@ -66,6 +69,10 @@ export class InviteUserModal extends Component {
     showModalAction: PropTypes.func.isRequired,
     activeProject: PropTypes.string,
     isAdmin: PropTypes.bool,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
   static defaultProps = {
     intl: {},
@@ -86,21 +93,24 @@ export class InviteUserModal extends Component {
   };
   formatUser = (user) => (user && { value: user.userLogin, label: user.userLogin }) || null;
   render() {
-    const { intl, handleSubmit, activeProject, isAdmin } = this.props;
+    const { intl, handleSubmit, activeProject, isAdmin, tracking } = this.props;
     const okButton = {
       text: intl.formatMessage(COMMON_LOCALE_KEYS.INVITE),
       onClick: (closeModal) => {
+        tracking.trackEvent(MEMBERS_PAGE_EVENTS.INVITE_BTN_INVITE_USER_MODAL);
         handleSubmit(this.inviteUserAndCloseModal(closeModal))();
       },
     };
     const cancelButton = {
       text: intl.formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+      eventInfo: MEMBERS_PAGE_EVENTS.CANCEL_BTN_INVITE_USER_MODAL,
     };
     return (
       <ModalLayout
         title={intl.formatMessage(messages.headerInviteUserModal)}
         okButton={okButton}
         cancelButton={cancelButton}
+        closeIconEventInfo={MEMBERS_PAGE_EVENTS.CLOSE_ICON_INVITE_USER_MODAL}
       >
         <p className={cx('modal-description')}>{intl.formatMessage(messages.description)}</p>
         <form className={cx('invite-form')}>
