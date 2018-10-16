@@ -2,18 +2,18 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { connect } from 'react-redux';
-import { activeProjectSelector } from 'controllers/user';
 import { redirect } from 'redux-first-router';
-import { TEST_ITEM_PAGE } from 'controllers/pages';
-import { defectLinkSelector, statisticsLinkSelector } from 'controllers/testItem';
-import * as COLORS from 'common/constants/colors';
 import * as d3 from 'd3-selection';
 import ReactDOMServer from 'react-dom/server';
+import { TEST_ITEM_PAGE } from 'controllers/pages';
+import { defectLinkSelector, statisticsLinkSelector } from 'controllers/testItem';
+import { activeProjectSelector } from 'controllers/user';
+import * as COLORS from 'common/constants/colors';
+import { chartConfigs } from 'common/constants/chartConfigs';
 import { C3Chart } from '../common/c3chart';
 import { TooltipWrapper, TooltipContent } from '../common/tooltip';
-import './launchesComparisonChart.scss';
-import { chartConfigs } from '../common/chartConfigs';
 import { Legend } from '../common/legend';
+import './launchesComparisonChart.scss';
 
 const messages = defineMessages({
   statistics$executions$total: {

@@ -7,9 +7,9 @@ import { connect } from 'react-redux';
 import { activeProjectSelector } from 'controllers/user';
 import { showModalAction } from 'controllers/modal';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
+import { LaunchesComparisonChart } from 'components/widgets/charts/launchesComparisonChart';
 import { WidgetHeader } from './widgetHeader';
 import styles from './widget.scss';
-import { LaunchesComparisonChart } from '../../charts/launchesComparisonChart';
 
 const cx = classNames.bind(styles);
 
