@@ -29,15 +29,16 @@ export const LOG_LEVELS = [
   },
 ];
 
-const getLogLevelById = (logLevelId) => LOG_LEVELS.find((logLevel) => logLevel.id === logLevelId);
+export const getLogLevelById = (logLevelId) =>
+  LOG_LEVELS.find((logLevel) => logLevel.id === logLevelId);
 
 const getLogLevelFromStorage = (userId) =>
   getLogLevelById((getStorageItem(`${userId}_settings`) || {})[LOG_LEVEL_STORAGE_KEY]);
 
 const getDefaultLogLevel = () => getLogLevelById(DEFAULT_LOG_LEVEL);
 
-export const getLogLevel = (initialLogLevelId, userId) =>
-  getLogLevelById(initialLogLevelId) ||
+export const getLogLevel = (logLevelId, userId) =>
+  getLogLevelById(logLevelId) ||
   getLogLevelFromStorage(userId) ||
   getDefaultLogLevel() ||
   LOG_LEVELS[LOG_LEVELS.length - 1];

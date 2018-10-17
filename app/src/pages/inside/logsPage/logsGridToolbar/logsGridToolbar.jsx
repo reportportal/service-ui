@@ -9,7 +9,7 @@ import { InputSlider } from 'components/inputs/inputSlider';
 import { InputCheckbox } from 'components/inputs/inputCheckbox';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { Pagination } from './pagination';
-import { getLogLevel, LOG_LEVELS, setLogLevel } from './utils/logLevel';
+import { setLogLevel, LOG_LEVELS } from './utils/logLevel';
 import { getWithAttachments, setWithAttachments } from './utils/withAttachments';
 import ConsoleIcon from './img/console-inline.svg';
 import MarkdownIcon from './img/markdown-inline.svg';
@@ -47,14 +47,16 @@ export class LogsGridToolbar extends Component {
     pageCount: PropTypes.number.isRequired,
     onChangePage: PropTypes.func.isRequired,
     userId: PropTypes.string.isRequired,
-    initialLogLevel: PropTypes.string,
+    logLevel: PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      label: PropTypes.string.isRequired,
+    }).isRequired,
     children: PropTypes.func,
     onChangeLogLevel: PropTypes.func,
     onChangeWithAttachments: PropTypes.func,
   };
 
   static defaultProps = {
-    initialLogLevel: null,
     children: () => {},
     onChangeLogLevel: () => {},
     onChangeWithAttachments: () => {},
@@ -64,7 +66,6 @@ export class LogsGridToolbar extends Component {
     markdownMode: false,
     consoleView: false,
     withAttachments: getWithAttachments(this.props.userId),
-    logLevel: getLogLevel(this.props.initialLogLevel, this.props.userId),
   };
 
   toggleMarkdownMode = () => {
@@ -91,17 +92,13 @@ export class LogsGridToolbar extends Component {
     });
   };
 
-  changeLogLevel = (logLevel) => {
-    const { onChangeLogLevel, userId } = this.props;
+  changeLogLevel = (newLogLevel) => {
+    const { onChangeLogLevel, userId, logLevel: activeLogLevel } = this.props;
 
-    if (logLevel.id !== this.state.logLevel.id) {
-      this.setState({
-        logLevel,
-      });
+    if (newLogLevel.id !== activeLogLevel.id) {
+      setLogLevel(newLogLevel, userId);
 
-      onChangeLogLevel(logLevel);
-
-      setLogLevel(logLevel, userId);
+      onChangeLogLevel(newLogLevel);
     }
   };
 
@@ -119,8 +116,8 @@ export class LogsGridToolbar extends Component {
   };
 
   render() {
-    const { intl, children, activePage, pageCount, onChangePage } = this.props;
-    const { markdownMode, consoleView, logLevel, withAttachments } = this.state;
+    const { intl, children, activePage, pageCount, onChangePage, logLevel } = this.props;
+    const { markdownMode, consoleView, withAttachments } = this.state;
 
     return (
       <div className={cx('container')}>

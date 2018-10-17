@@ -14,7 +14,9 @@ import {
 import { withFilter } from 'controllers/filter';
 import { withPagination } from 'controllers/pagination';
 import { withSorting, SORTING_ASC } from 'controllers/sorting';
+import { userIdSelector } from 'controllers/user';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
+import { getLogLevel } from './logsGridToolbar/utils/logLevel';
 import { LogToolbar } from './logToolbar';
 import { HistoryLine } from './historyLine';
 import { LogItemInfo } from './logItemInfo';
@@ -26,6 +28,7 @@ import { LogsGridToolbar } from './logsGridToolbar';
     activeLogItem: activeLogSelector(state),
     logItems: logItemsSelector(state),
     loading: loadingSelector(state),
+    userId: userIdSelector(state),
   }),
   {
     refresh: refreshLogPageData,
@@ -45,7 +48,7 @@ import { LogsGridToolbar } from './logsGridToolbar';
 })
 @connectRouter(
   (query) => ({
-    queryLogLevel: query['filter.gte.level'],
+    logLevelId: query['filter.gte.level'],
   }),
   {
     onChangeLogLevel: (logLevel) => ({ 'filter.gte.level': logLevel.id }),
@@ -58,6 +61,7 @@ export class LogsPage extends Component {
     refresh: PropTypes.func.isRequired,
     activeLogItem: PropTypes.object,
     logItems: PropTypes.array,
+    userId: PropTypes.string.isRequired,
     activePage: PropTypes.number,
     itemCount: PropTypes.number,
     pageCount: PropTypes.number,
@@ -66,7 +70,7 @@ export class LogsPage extends Component {
     onChangePageSize: PropTypes.func,
     loading: PropTypes.bool,
     filter: PropTypes.string,
-    queryLogLevel: PropTypes.string,
+    logLevelId: PropTypes.string,
     onFilterChange: PropTypes.func,
     sortingColumn: PropTypes.string,
     sortingDirection: PropTypes.string,
@@ -86,7 +90,7 @@ export class LogsPage extends Component {
     onChangePageSize: () => {},
     loading: false,
     filter: '',
-    queryLogLevel: null,
+    logLevelId: null,
     onFilterChange: () => {},
     sortingColumn: '',
     sortingDirection: '',
@@ -100,6 +104,7 @@ export class LogsPage extends Component {
       refresh,
       activeLogItem,
       logItems,
+      userId,
       activePage,
       itemCount,
       pageCount,
@@ -108,7 +113,7 @@ export class LogsPage extends Component {
       onChangePageSize,
       loading,
       filter,
-      queryLogLevel,
+      logLevelId,
       onFilterChange,
       sortingColumn,
       sortingDirection,
@@ -127,7 +132,7 @@ export class LogsPage extends Component {
             activePage={activePage}
             pageCount={pageCount}
             onChangePage={onChangePage}
-            initialLogLevel={queryLogLevel}
+            logLevel={getLogLevel(logLevelId, userId)}
             onChangeLogLevel={onChangeLogLevel}
             onChangeWithAttachments={onChangeWithAttachments}
           >
