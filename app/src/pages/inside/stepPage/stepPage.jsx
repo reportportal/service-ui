@@ -64,6 +64,7 @@ import { StepGrid } from './stepGrid';
 export class StepPage extends Component {
   static propTypes = {
     deleteItems: PropTypes.func,
+    onEditItem: PropTypes.func,
     debugMode: PropTypes.bool.isRequired,
     steps: PropTypes.arrayOf(PropTypes.object),
     parentItem: PropTypes.object,
@@ -99,6 +100,7 @@ export class StepPage extends Component {
 
   static defaultProps = {
     deleteItems: () => {},
+    onEditItem: () => {},
     steps: [],
     parentItem: {},
     selectedItems: [],
@@ -130,7 +132,7 @@ export class StepPage extends Component {
     filterEntities: [],
   };
 
-  componentWillUnmount(){
+  componentWillUnmount() {
     this.props.unselectAllSteps();
   }
 
@@ -203,6 +205,7 @@ export class StepPage extends Component {
       onFilterChange,
       filterErrors,
       filterEntities,
+      onEditItem,
     } = this.props;
     return (
       <PageLayout>
@@ -238,6 +241,7 @@ export class StepPage extends Component {
             listView={listView}
             onShowTestParams={showTestParamsModal}
             onEditDefect={this.handleEditDefects}
+            onEditItem={onEditItem}
             onFilterClick={onFilterAdd}
           />
           <PaginationToolbar

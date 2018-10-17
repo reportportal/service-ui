@@ -121,6 +121,7 @@ export class StepGrid extends Component {
     onShowTestParams: PropTypes.func,
     onFilterClick: PropTypes.func,
     onEditDefect: PropTypes.func,
+    onEditItem: PropTypes.func,
   };
 
   static defaultProps = {
@@ -133,6 +134,7 @@ export class StepGrid extends Component {
     onShowTestParams: () => {},
     onFilterClick: () => {},
     onEditDefect: () => {},
+    onEditItem: () => {},
   };
 
   constructor(props) {
@@ -167,6 +169,7 @@ export class StepGrid extends Component {
         maxHeight: 170,
         customProps: {
           onShowTestParams: props.onShowTestParams,
+          onEditItem: props.onEditItem,
         },
         withFilter: true,
       },
