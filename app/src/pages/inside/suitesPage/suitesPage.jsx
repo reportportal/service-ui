@@ -54,6 +54,7 @@ export class SuitesPage extends Component {
   static propTypes = {
     debugMode: PropTypes.bool.isRequired,
     deleteItems: PropTypes.func,
+    onEditItem: PropTypes.func,
     suites: PropTypes.arrayOf(PropTypes.object),
     selectedSuites: PropTypes.arrayOf(PropTypes.object),
     activePage: PropTypes.number,
@@ -83,6 +84,7 @@ export class SuitesPage extends Component {
 
   static defaultProps = {
     deleteItems: () => {},
+    onEditItem: () => {},
     suites: [],
     selectedSuites: [],
     activePage: 1,
@@ -110,7 +112,7 @@ export class SuitesPage extends Component {
     filterEntities: [],
   };
 
-  componentWillUnmount(){
+  componentWillUnmount() {
     this.props.unselectAllSuitesAction();
   }
 
@@ -133,6 +135,7 @@ export class SuitesPage extends Component {
       loading,
       debugMode,
       deleteItems,
+      onEditItem,
       onFilterAdd,
       onFilterRemove,
       onFilterValidate,
@@ -169,6 +172,7 @@ export class SuitesPage extends Component {
             onAllItemsSelect={this.handleAllSuitesSelection}
             loading={loading}
             onFilterClick={onFilterAdd}
+            onEditItem={onEditItem}
           />
           <PaginationToolbar
             activePage={activePage}

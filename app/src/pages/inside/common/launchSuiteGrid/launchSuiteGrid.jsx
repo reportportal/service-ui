@@ -182,7 +182,7 @@ export class LaunchSuiteGrid extends PureComponent {
     onChangeSorting: PropTypes.func,
     onDeleteItem: PropTypes.func,
     onMove: PropTypes.func,
-    onEditLaunch: PropTypes.func,
+    onEditItem: PropTypes.func,
     onForceFinish: PropTypes.func,
     selectedItems: PropTypes.arrayOf(PropTypes.object),
     onItemSelect: PropTypes.func,
@@ -198,7 +198,7 @@ export class LaunchSuiteGrid extends PureComponent {
     onChangeSorting: () => {},
     onDeleteItem: () => {},
     onMove: () => {},
-    onEditLaunch: () => {},
+    onEditItem: () => {},
     onForceFinish: () => {},
     selectedItems: [],
     onItemSelect: () => {},
@@ -227,7 +227,7 @@ export class LaunchSuiteGrid extends PureComponent {
         component: NameColumn,
         sortable: true,
         customProps: {
-          onEditItem: this.props.onEditLaunch,
+          onEditItem: this.props.onEditItem,
         },
       },
       {

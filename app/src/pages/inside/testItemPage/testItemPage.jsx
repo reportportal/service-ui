@@ -21,6 +21,7 @@ import {
   launchSelector,
   fetchTestItemsAction,
 } from 'controllers/testItem';
+import { showModalAction } from 'controllers/modal';
 import { SuitesPage } from 'pages/inside/suitesPage';
 import { TestsPage } from 'pages/inside/testsPage';
 import { StepPage } from 'pages/inside/stepPage';
@@ -28,7 +29,7 @@ import {
   FilterEntitiesURLContainer,
   FilterEntitiesContainer,
 } from 'components/filterEntities/containers';
-
+import { ITEM_TYPES } from 'pages/inside/common/modals/editItemModal/constants';
 import styles from './testItemPage.scss';
 
 const cx = classNames.bind(styles);
@@ -99,6 +100,7 @@ const testItemPages = {
     showScreenLockAction,
     hideScreenLockAction,
     fetchTestItemsAction,
+    showModalAction,
   },
 )
 @injectIntl
@@ -113,6 +115,7 @@ export class TestItemPage extends Component {
     showScreenLockAction: PropTypes.func.isRequired,
     hideScreenLockAction: PropTypes.func.isRequired,
     fetchTestItemsAction: PropTypes.func.isRequired,
+    showModalAction: PropTypes.func.isRequired,
     level: PropTypes.string,
     loading: PropTypes.bool,
     breadcrumbs: PropTypes.arrayOf(PropTypes.object),
@@ -124,6 +127,38 @@ export class TestItemPage extends Component {
     loading: false,
     breadcrumbs: [],
     restorePath: () => {},
+  };
+
+  onEditItem = (launch) => {
+    this.props.showModalAction({
+      id: 'editItemModal',
+      data: {
+        item: launch,
+        type: ITEM_TYPES.item,
+        fetchFunc: this.props.fetchTestItemsAction,
+      },
+    });
+  };
+
+  deleteItems = (selectedItems) => {
+    const { intl, userId } = this.props;
+    this.props.deleteItemsAction(selectedItems, {
+      onConfirm: (items) => this.confirmDeleteItems(items, selectedItems),
+      header:
+        selectedItems.length === 1
+          ? intl.formatMessage(messages.deleteModalHeader)
+          : intl.formatMessage(messages.deleteModalMultipleHeader),
+      mainContent:
+        selectedItems.length === 1
+          ? intl.formatMessage(messages.deleteModalContent, { name: selectedItems[0].name })
+          : intl.formatMessage(messages.deleteModalMultipleContent),
+      userId,
+      currentLaunch: this.props.parentLaunch,
+      warning:
+        selectedItems.length === 1
+          ? intl.formatMessage(messages.warning)
+          : intl.formatMessage(messages.warningMultiple),
+    });
   };
 
   confirmDeleteItems = (items, selectedItems) => {
@@ -155,27 +190,6 @@ export class TestItemPage extends Component {
       });
   };
 
-  deleteItems = (selectedItems) => {
-    const { intl, userId } = this.props;
-    this.props.deleteItemsAction(selectedItems, {
-      onConfirm: (items) => this.confirmDeleteItems(items, selectedItems),
-      header:
-        selectedItems.length === 1
-          ? intl.formatMessage(messages.deleteModalHeader)
-          : intl.formatMessage(messages.deleteModalMultipleHeader),
-      mainContent:
-        selectedItems.length === 1
-          ? intl.formatMessage(messages.deleteModalContent, { name: selectedItems[0].name })
-          : intl.formatMessage(messages.deleteModalMultipleContent),
-      userId,
-      currentLaunch: this.props.parentLaunch,
-      warning:
-        selectedItems.length === 1
-          ? intl.formatMessage(messages.warning)
-          : intl.formatMessage(messages.warningMultiple),
-    });
-  };
-
   render() {
     const { level, loading, breadcrumbs, restorePath } = this.props;
     if (!loading && testItemPages[level]) {
@@ -198,6 +212,7 @@ export class TestItemPage extends Component {
               }) => (
                 <PageComponent
                   deleteItems={this.deleteItems}
+                  onEditItem={this.onEditItem}
                   filterErrors={filterErrors}
                   filterValues={filterValues}
                   onFilterChange={onFilterChange}

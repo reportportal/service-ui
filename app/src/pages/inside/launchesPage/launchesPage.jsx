@@ -36,6 +36,7 @@ import {
   deleteItemsAction,
 } from 'controllers/launch';
 import { LaunchSuiteGrid } from 'pages/inside/common/launchSuiteGrid';
+import { ITEM_TYPES } from 'pages/inside/common/modals/editItemModal/constants';
 import { LaunchToolbar } from './LaunchToolbar';
 
 const messages = defineMessages({
@@ -193,16 +194,10 @@ export class LaunchesPage extends Component {
     deleteItemsAction: () => {},
   };
 
-  componentWillUnmount(){
+  componentWillUnmount() {
     this.props.unselectAllLaunchesAction();
   }
 
-  updateLaunch = (launch) => {
-    fetch(URLS.launchesUpdate(this.props.activeProject, launch.id), {
-      method: 'put',
-      data: launch,
-    }).then(this.props.fetchLaunchesAction);
-  };
   deleteItem = (id) => {
     fetch(URLS.launches(this.props.activeProject, id), {
       method: 'delete',
@@ -272,8 +267,12 @@ export class LaunchesPage extends Component {
 
   openEditModal = (launch) => {
     this.props.showModalAction({
-      id: 'launchEditModal',
-      data: { launch, onEdit: this.updateLaunch },
+      id: 'editItemModal',
+      data: {
+        item: launch,
+        type: ITEM_TYPES.launch,
+        fetchFunc: this.props.fetchLaunchesAction,
+      },
     });
   };
   openImportModal = () => {
@@ -354,7 +353,7 @@ export class LaunchesPage extends Component {
             onChangeSorting={onChangeSorting}
             onDeleteItem={this.confirmDeleteItem}
             onMove={this.moveLaunches}
-            onEditLaunch={this.openEditModal}
+            onEditItem={this.openEditModal}
             onForceFinish={this.finishForceLaunches}
             selectedItems={selectedLaunches}
             onItemSelect={this.handleOneLaunchSelection}

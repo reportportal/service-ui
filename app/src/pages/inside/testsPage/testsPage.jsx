@@ -51,6 +51,7 @@ import {
 export class TestsPage extends Component {
   static propTypes = {
     deleteItems: PropTypes.func,
+    onEditItem: PropTypes.func,
     validationErrors: PropTypes.object.isRequired,
     debugMode: PropTypes.bool.isRequired,
     tests: PropTypes.arrayOf(PropTypes.object),
@@ -80,6 +81,7 @@ export class TestsPage extends Component {
 
   static defaultProps = {
     deleteItems: () => {},
+    onEditItem: () => {},
     tests: [],
     selectedTests: [],
     activePage: 1,
@@ -105,7 +107,7 @@ export class TestsPage extends Component {
     filterEntities: [],
   };
 
-  componentWillUnmount(){
+  componentWillUnmount() {
     this.props.unselectAllTestsAction();
   }
 
@@ -128,6 +130,7 @@ export class TestsPage extends Component {
       loading,
       debugMode,
       deleteItems,
+      onEditItem,
       onFilterAdd,
       onFilterRemove,
       onFilterValidate,
@@ -164,6 +167,7 @@ export class TestsPage extends Component {
             onAllItemsSelect={this.handleAllTestsSelection}
             loading={loading}
             onFilterClick={onFilterAdd}
+            onEditItem={onEditItem}
           />
           <PaginationToolbar
             activePage={activePage}

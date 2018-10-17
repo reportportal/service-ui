@@ -15,7 +15,7 @@ import {
   userIdSelector,
 } from 'controllers/user';
 import { LEVEL_STEP } from 'common/constants/launchLevels';
-import { levelSelector } from 'controllers/testItem';
+import { levelSelector, launchSelector } from 'controllers/testItem';
 import { formatMethodType, formatStatus } from 'common/utils/localizationUtils';
 import TestParamsIcon from 'common/img/test-params-icon-inline.svg';
 import PencilIcon from 'common/img/pencil-icon-inline.svg';
@@ -33,10 +33,12 @@ const cx = classNames.bind(styles);
   userProjectRole: activeProjectRoleSelector(state),
   userId: userIdSelector(state),
   isStepLevel: levelSelector(state) === LEVEL_STEP,
+  launch: launchSelector(state),
 }))
 @track()
 export class ItemInfo extends Component {
   static propTypes = {
+    intl: PropTypes.object.isRequired,
     value: PropTypes.object,
     refFunction: PropTypes.func.isRequired,
     analyzing: PropTypes.bool,
@@ -44,8 +46,8 @@ export class ItemInfo extends Component {
     userAccountRole: PropTypes.string.isRequired,
     userProjectRole: PropTypes.string,
     userId: PropTypes.string,
-    intl: PropTypes.object.isRequired,
     isStepLevel: PropTypes.bool,
+    launch: PropTypes.object,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
@@ -62,6 +64,7 @@ export class ItemInfo extends Component {
     userId: '',
     userProjectRole: '',
     isStepLevel: false,
+    launch: {},
   };
 
   handleEditItem = () => {
@@ -81,16 +84,18 @@ export class ItemInfo extends Component {
 
   render() {
     const {
+      intl,
       value,
       refFunction,
       analyzing,
       userProjectRole,
       userAccountRole,
       userId,
-      intl,
       isStepLevel,
+      launch,
       tracking,
     } = this.props;
+
     return (
       <div ref={refFunction} className={cx('item-info')}>
         <div className={cx('main-info')}>
@@ -108,7 +113,11 @@ export class ItemInfo extends Component {
               {Parser(TestParamsIcon)}
             </div>
           )}
-          {canEditLaunch(userAccountRole, userProjectRole, userId === value.owner) && (
+          {canEditLaunch(
+            userAccountRole,
+            userProjectRole,
+            value.owner ? userId === value.owner : userId === launch.owner,
+          ) && (
             <div className={cx('edit-icon')} onClick={this.handleEditItem}>
               {Parser(PencilIcon)}
             </div>
