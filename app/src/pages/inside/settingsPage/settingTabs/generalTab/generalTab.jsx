@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
@@ -13,6 +14,7 @@ import { InputDropdown } from 'components/inputs/inputDropdown';
 import { BigButton } from 'components/buttons/bigButton';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { projectConfigSelector } from 'controllers/project';
+import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import {
   activeProjectSelector,
   activeProjectRoleSelector,
@@ -43,6 +45,7 @@ const cx = classNames.bind(styles);
   },
 )
 @injectIntl
+@track()
 export class GeneralTab extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
@@ -56,6 +59,10 @@ export class GeneralTab extends Component {
     initialize: PropTypes.func.isRequired,
     accountRole: PropTypes.string.isRequired,
     userRole: PropTypes.string.isRequired,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
 
   static defaultProps = {
@@ -73,6 +80,7 @@ export class GeneralTab extends Component {
   }
 
   onFormSubmit = (data) => {
+    this.props.tracking.trackEvent(SETTINGS_PAGE_EVENTS.GENERAL_SUBMIT);
     const dataToSend = {
       configuration: {
         ...data,
@@ -121,7 +129,7 @@ export class GeneralTab extends Component {
   ];
 
   render() {
-    const { intl, accountRole, userRole } = this.props;
+    const { intl, accountRole, userRole, tracking } = this.props;
     return (
       <div className={cx('settings-tab-content')}>
         <form onSubmit={this.props.handleSubmit(this.onFormSubmit)}>
@@ -136,7 +144,12 @@ export class GeneralTab extends Component {
           <div className={cx('field-container')}>
             <span className={cx('field-label')}>{intl.formatMessage(Messages.interruptedJob)}</span>
             <div className={cx('field-input')}>
-              <FieldProvider name="interruptedJob">
+              <FieldProvider
+                name="interruptedJob"
+                onChange={() =>
+                  tracking.trackEvent(SETTINGS_PAGE_EVENTS.INACTIVITY_TIMEOUT_GENERAL)
+                }
+              >
                 <InputDropdown
                   options={this.interruptedJob}
                   mobileDisabled
@@ -151,7 +164,10 @@ export class GeneralTab extends Component {
           <div className={cx('field-container')}>
             <span className={cx('field-label')}>{intl.formatMessage(Messages.keepLogs)}</span>
             <div className={cx('field-input')}>
-              <FieldProvider name="keepLogs">
+              <FieldProvider
+                name="keepLogs"
+                onChange={() => tracking.trackEvent(SETTINGS_PAGE_EVENTS.KEEP_LOGS_GENERAL)}
+              >
                 <InputDropdown
                   options={this.filterOptions(this.keepLogs)}
                   mobileDisabled
@@ -168,7 +184,10 @@ export class GeneralTab extends Component {
               {intl.formatMessage(Messages.keepScreenshots)}
             </span>
             <div className={cx('field-input')}>
-              <FieldProvider name="keepScreenshots">
+              <FieldProvider
+                name="keepScreenshots"
+                onChange={() => tracking.trackEvent(SETTINGS_PAGE_EVENTS.KEEP_SCREENSHOTS_GENERAL)}
+              >
                 <InputDropdown
                   options={this.filterOptions(this.keepScreenshots)}
                   mobileDisabled
