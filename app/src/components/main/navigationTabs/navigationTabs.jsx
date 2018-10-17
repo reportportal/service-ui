@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import track from 'react-tracking';
 import { NavLink } from 'redux-first-router-link';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
@@ -7,11 +8,16 @@ import styles from './navigationTabs.scss';
 
 const cx = classNames.bind(styles);
 
+@track()
 export class NavigationTabs extends Component {
   static propTypes = {
     onChangeTab: PropTypes.func,
     config: PropTypes.object,
     activeTab: PropTypes.string,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
   static defaultProps = {
     onChangeTab: () => {},
@@ -26,7 +32,13 @@ export class NavigationTabs extends Component {
   generateOptions = () =>
     Object.keys(this.props.config).map((item) => ({
       label: (
-        <NavLink to={this.props.config[item].link} className={cx('link')}>
+        <NavLink
+          to={this.props.config[item].link}
+          className={cx('link')}
+          onClick={() => {
+            this.props.tracking.trackEvent(this.props.config[item].eventInfo);
+          }}
+        >
           {this.props.config[item].name}
         </NavLink>
       ),
@@ -52,6 +64,9 @@ export class NavigationTabs extends Component {
                 className={cx('tab')}
                 to={config[item].link}
                 activeClassName={cx('active')}
+                onClick={() => {
+                  this.props.tracking.trackEvent(this.props.config[item].eventInfo);
+                }}
               >
                 {config[item].name}
               </NavLink>

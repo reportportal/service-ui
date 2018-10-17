@@ -5,6 +5,7 @@ import { redirect } from 'redux-first-router';
 import { defineMessages, injectIntl, intlShape } from 'react-intl';
 import { PROJECT_SETTINGS_TAB_PAGE } from 'controllers/pages';
 import { canSeeDemoData } from 'common/utils/permissions';
+import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import {
   GENERAL,
   NOTIFICATIONS,
@@ -91,11 +92,13 @@ export class SettingTabs extends Component {
         name: this.props.intl.formatMessage(messages.general),
         link: this.createTabLink(GENERAL),
         component: <GeneralTab />,
+        eventInfo: SETTINGS_PAGE_EVENTS.GENERAL_TAB,
       },
       notifications: {
         name: this.props.intl.formatMessage(messages.notifications),
         link: this.createTabLink(NOTIFICATIONS),
         component: <NotificationsTab />,
+        eventInfo: SETTINGS_PAGE_EVENTS.NOTIFICATIONS_TAB,
       },
       bts: {
         name: (
@@ -106,21 +109,25 @@ export class SettingTabs extends Component {
         ),
         link: this.createTabLink(BTS),
         component: <div>bts</div>,
+        eventInfo: SETTINGS_PAGE_EVENTS.BTS_TAB,
       },
       defect: {
         name: this.props.intl.formatMessage(messages.defect),
         link: this.createTabLink(DEFECT),
         component: <div>defect</div>,
+        eventInfo: SETTINGS_PAGE_EVENTS.DEFECT_TYPE_TAB,
       },
       autoAnalysis: {
         name: this.props.intl.formatMessage(messages.analysis),
         link: this.createTabLink(ANALYSIS),
         component: <AutoAnalysisTab />,
+        eventInfo: SETTINGS_PAGE_EVENTS.AUTO_ANALYSIS_TAB,
       },
       demoData: {
         name: this.props.intl.formatMessage(messages.demoData),
         link: this.createTabLink(DEMO_DATA),
         component: <DemoDataTab />,
+        eventInfo: SETTINGS_PAGE_EVENTS.DEMO_DATA_TAB,
       },
     };
     if (!canSeeDemoData(this.props.accountRole, this.props.userRole)) {
