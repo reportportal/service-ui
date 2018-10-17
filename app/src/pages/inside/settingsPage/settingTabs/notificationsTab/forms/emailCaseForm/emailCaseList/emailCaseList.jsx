@@ -2,12 +2,14 @@
     are used as key for react components
   */
 import React, { Component, Fragment } from 'react';
+import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { defineMessages, injectIntl, intlShape } from 'react-intl';
 import classNames from 'classnames/bind';
 import { showModalAction } from 'controllers/modal';
 import { GhostButton } from 'components/buttons/ghostButton';
+import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { defaultRecipient } from 'pages/inside/settingsPage/settingTabs/notificationsTab/forms/constants';
 import { EmailCase } from './emailCase';
 import styles from './emailCasesList.scss';
@@ -25,6 +27,7 @@ const cx = classNames.bind(styles);
 @connect(null, {
   showModal: showModalAction,
 })
+@track()
 export class EmailCaseList extends Component {
   static propTypes = {
     showModal: PropTypes.func,
@@ -32,6 +35,10 @@ export class EmailCaseList extends Component {
     configurable: PropTypes.bool,
     fields: PropTypes.object,
     readOnly: PropTypes.bool,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
   static defaultProps = {
     showModal: () => {},
@@ -57,6 +64,7 @@ export class EmailCaseList extends Component {
   getNumberOfConfirmedRules = (fields) =>
     fields.getAll().filter(({ confirmed }) => confirmed).length;
   addEmailCase = () => {
+    this.props.tracking.trackEvent(SETTINGS_PAGE_EVENTS.ADD_RULE_BTN_NOTIFICATIONS);
     this.props.fields.push(defaultRecipient);
   };
   removeEmailCase = (index) => {

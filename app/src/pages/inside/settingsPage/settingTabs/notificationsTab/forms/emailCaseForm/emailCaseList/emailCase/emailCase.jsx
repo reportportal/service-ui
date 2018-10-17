@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from 'react';
+import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { injectIntl, intlShape } from 'react-intl';
@@ -17,6 +18,7 @@ import {
   labelWidth,
   launchStatuses,
 } from 'pages/inside/settingsPage/settingTabs/notificationsTab/forms/constants';
+import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import styles from './emailCase.scss';
 import IconDelete from './img/icon-delete-inline.svg';
 import { PencilCheckbox } from './pencilCheckbox';
@@ -29,6 +31,7 @@ const cx = className.bind(styles);
   launchTagsSearch: URLS.launchTagsSearch(activeProjectSelector(state)),
   launchNameSearch: URLS.launchNameSearch(activeProjectSelector(state)),
 }))
+@track()
 export class EmailCase extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
@@ -45,6 +48,10 @@ export class EmailCase extends Component {
     id: PropTypes.number,
     numberOfConfirmedRules: PropTypes.number,
     totalNumberOfFields: PropTypes.number,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
   static defaultProps = {
     emailCase: '',
@@ -65,9 +72,9 @@ export class EmailCase extends Component {
     isDuplicating: false,
   };
   onDelete = (index) => () => {
-    const { confirmed, submitted } = this.props;
+    const { confirmed, submitted, tracking } = this.props;
     const showConfirmation = submitted || confirmed;
-
+    tracking.trackEvent(SETTINGS_PAGE_EVENTS.DELETE_RULE_NOTIFICATIONS);
     this.props.onDelete(index, showConfirmation);
   };
   onError = (err) => {
@@ -130,6 +137,7 @@ export class EmailCase extends Component {
       readOnly,
       numberOfConfirmedRules,
       totalNumberOfFields,
+      tracking,
     } = this.props;
     const editMode = !confirmed;
     const deletable = totalNumberOfFields > 1 && (!confirmed || numberOfConfirmedRules > 1);
@@ -168,6 +176,9 @@ export class EmailCase extends Component {
           parse={this.parseOptions}
           disabled={!editMode}
           fieldWrapperClassName={cx('form-input')}
+          onChange={() =>
+            tracking.trackEvent(SETTINGS_PAGE_EVENTS.EDIT_RECIPIENTS_INPUT_NOTIFICATIONS)
+          }
         >
           <FieldErrorHint hintType="top">
             <InputTagsSearch
@@ -189,6 +200,9 @@ export class EmailCase extends Component {
           name={`${emailCase}.informOwner`}
           format={Boolean}
           disabled={!editMode}
+          onChange={() =>
+            tracking.trackEvent(SETTINGS_PAGE_EVENTS.CHECKBOX_LAUNCH_OWNER_NOTIFICATIONS)
+          }
           fieldWrapperClassName={cx('form-input-checkbox')}
         >
           <InputCheckbox>{intl.formatMessage(messages.launchOwnerLabel)}</InputCheckbox>
@@ -199,6 +213,9 @@ export class EmailCase extends Component {
           name={`${emailCase}.sendCase`}
           disabled={!editMode}
           fieldWrapperClassName={cx('form-input')}
+          onChange={() =>
+            tracking.trackEvent(SETTINGS_PAGE_EVENTS.EDIT_IN_CASE_INPUT_NOTIFICATIONS)
+          }
         >
           <InputDropdown options={this.getDropdownInputConfig()} />
         </FormField>
@@ -210,6 +227,7 @@ export class EmailCase extends Component {
           parse={this.parseOptions}
           disabled={!editMode}
           fieldWrapperClassName={cx('form-input')}
+          onChange={() => tracking.trackEvent(SETTINGS_PAGE_EVENTS.LAUNCH_NAME_INPUT_NOTIFICATIONS)}
         >
           <FieldErrorHint hintType="top">
             <InputTagsSearch
@@ -234,6 +252,7 @@ export class EmailCase extends Component {
           format={this.formatOptions}
           parse={this.parseOptions}
           disabled={!editMode}
+          onChange={() => tracking.trackEvent(SETTINGS_PAGE_EVENTS.TAGS_INPUT_NOTIFICATIONS)}
         >
           <FieldErrorHint hintType="top">
             <InputTagsSearch

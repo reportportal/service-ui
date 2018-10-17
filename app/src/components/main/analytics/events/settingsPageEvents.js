@@ -30,16 +30,6 @@ export const SETTINGS_PAGE_EVENTS = {
     action: 'Click on tab Notifications in Settings',
     label: 'Open tab Notifications in Settings',
   },
-  EMAIL_NOTIFICATIONS_NOTIFICATIONS: {
-    category: SETTINGS_PAGE,
-    action: 'Edit input Email notifications on tab Notifications',
-    label: 'Change input Email notifications on tab Notifications',
-  },
-  CHANGE_FROM_INPUT_NOTIFICATIONS: {
-    category: SETTINGS_PAGE,
-    action: 'Edit input From on tab Notifications',
-    label: 'Change input From on tab Notifications',
-  },
   DELETE_RULE_NOTIFICATIONS: {
     category: SETTINGS_PAGE,
     action: 'Delete rule on tab Notifications',
@@ -74,11 +64,6 @@ export const SETTINGS_PAGE_EVENTS = {
     category: SETTINGS_PAGE,
     action: 'Click on Bttn Add new rule on tab Notifications',
     label: 'Add new rule on tab Notifications',
-  },
-  SUBMIT_BTN_NOTIFICATIONS: {
-    category: SETTINGS_PAGE,
-    action: 'Click on Bttn Submit on tab Notifications',
-    label: 'Submit changes on tab Notifications',
   },
   BTS_TAB: {
     category: SETTINGS_PAGE,
