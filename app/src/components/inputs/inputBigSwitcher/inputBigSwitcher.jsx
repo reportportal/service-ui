@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
-
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import track from 'react-tracking';
 import { FormattedMessage } from 'react-intl';
@@ -26,19 +26,45 @@ import classNames from 'classnames/bind';
 import styles from './inputBigSwitcher.scss';
 
 const cx = classNames.bind(styles);
+@track()
+export class InputBigSwitcher extends Component {
+  static propTypes = {
+    children: PropTypes.node,
+    value: PropTypes.bool,
+    mobileDisabled: PropTypes.bool,
+    disabled: PropTypes.bool,
+    onChange: PropTypes.func,
+    onFocus: PropTypes.func,
+    onBlur: PropTypes.func,
+    onChangeEventInfo: PropTypes.object,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
+  };
 
-export const InputBigSwitcher = track()(
-  ({
-    children,
-    disabled,
-    value,
-    onChange,
-    onFocus,
-    onBlur,
-    mobileDisabled,
-    onChangeEventInfo,
-    tracking,
-  }) => {
+  static defaultProps = {
+    children: '',
+    value: false,
+    mobileDisabled: false,
+    disabled: false,
+    onChange: () => {},
+    onFocus: () => {},
+    onBlur: () => {},
+    onChangeEventInfo: {},
+  };
+  render() {
+    const {
+      mobileDisabled,
+      onChangeEventInfo,
+      tracking,
+      onChange,
+      disabled,
+      onFocus,
+      onBlur,
+      children,
+      value,
+    } = this.props;
     const classes = cx({
       'switcher-wrapper': true,
       'mobile-disabled': mobileDisabled,
@@ -74,31 +100,5 @@ export const InputBigSwitcher = track()(
         {children && <span className={cx('children-container')}>{children}</span>}
       </label>
     );
-  },
-);
-
-InputBigSwitcher.propTypes = {
-  children: PropTypes.node,
-  value: PropTypes.bool,
-  mobileDisabled: PropTypes.bool,
-  disabled: PropTypes.bool,
-  onChange: PropTypes.func,
-  onFocus: PropTypes.func,
-  onBlur: PropTypes.func,
-  onChangeEventInfo: PropTypes.object,
-  tracking: PropTypes.shape({
-    trackEvent: PropTypes.func,
-    getTrackingData: PropTypes.func,
-  }).isRequired,
-};
-
-InputBigSwitcher.defaultProps = {
-  children: '',
-  value: false,
-  mobileDisabled: false,
-  disabled: false,
-  onChange: () => {},
-  onFocus: () => {},
-  onBlur: () => {},
-  onChangeEventInfo: {},
-};
+  }
+}
