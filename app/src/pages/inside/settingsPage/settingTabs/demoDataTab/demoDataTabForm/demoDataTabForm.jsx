@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import { fetch, validate } from 'common/utils';
 import { URLS } from 'common/urls';
@@ -8,6 +9,7 @@ import classNames from 'classnames/bind';
 import { defineMessages, injectIntl, intlShape } from 'react-intl';
 import { activeProjectSelector } from 'controllers/user';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
+import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { Input } from 'components/inputs/input';
 import { BigButton } from 'components/buttons/bigButton';
 import { FieldProvider } from 'components/fields/fieldProvider';
@@ -53,6 +55,7 @@ const messages = defineMessages({
   },
 )
 @injectIntl
+@track()
 export class DemoDataTabForm extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
@@ -60,6 +63,10 @@ export class DemoDataTabForm extends Component {
     projectId: PropTypes.string.isRequired,
     showNotification: PropTypes.func.isRequired,
     reset: PropTypes.func.isRequired,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
 
   state = {
@@ -67,7 +74,7 @@ export class DemoDataTabForm extends Component {
   };
 
   onFormSubmit = (formData) => {
-    const { intl, projectId, reset } = this.props;
+    const { intl, projectId, reset, tracking } = this.props;
     const data = {
       isCreateDashboard: 'true',
       postfix: formData.demoDataPostfix,
@@ -76,6 +83,7 @@ export class DemoDataTabForm extends Component {
     this.setState({
       isLoading: true,
     });
+    tracking.trackEvent(SETTINGS_PAGE_EVENTS.GENERATE_DATA_BTN);
     fetch(URLS.generateDemoData(projectId), { method: 'POST', data })
       .then(() => {
         this.props.showNotification({
@@ -100,12 +108,16 @@ export class DemoDataTabForm extends Component {
   };
 
   render() {
-    const { intl, handleSubmit } = this.props;
+    const { intl, handleSubmit, tracking } = this.props;
 
     return (
       <form className={cx('demo-data-form')} onSubmit={handleSubmit(this.onFormSubmit)}>
         <div className={cx('postfix-input')}>
-          <FieldProvider name="demoDataPostfix" disabled={this.state.isLoading}>
+          <FieldProvider
+            name="demoDataPostfix"
+            disabled={this.state.isLoading}
+            onChange={() => tracking.trackEvent(SETTINGS_PAGE_EVENTS.ENTER_POSTFIX_DEMO_DATA)}
+          >
             <FieldErrorHint>
               <Input placeholder={intl.formatMessage(messages.postfixInputPlaceholder)} />
             </FieldErrorHint>

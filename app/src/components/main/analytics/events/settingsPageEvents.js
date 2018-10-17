@@ -71,141 +71,169 @@ export const SETTINGS_PAGE_EVENTS = {
     label: 'Open tab Bug tracking system in Settings',
   },
   SELECT_BTS_BTS: {
+    // todo add analytics
     category: SETTINGS_PAGE,
     action: 'Edit input Bug tracking system on tab Bug tracking system',
     label: 'Change input Bug tracking system on tab Bug tracking system',
   },
   CHANGE_PROJECT_BTS: {
+    // todo add analytics
     category: SETTINGS_PAGE,
     action: 'Change project of BTS Instances on tab Bug tracking system',
     label: 'Change project of BTS Instances on tab Bug tracking system',
   },
   ADD_NEW_BTS_INSTANCE: {
+    // todo add analytics
     category: SETTINGS_PAGE,
     action: 'Click on link Add new instance on tab Bug tracking system',
     label: 'Arise fields for adding new project on tab Bug tracking system',
   },
   EDIT_PROJECT_BTS: {
+    // todo add analytics
     category: SETTINGS_PAGE,
     action: 'Click on icon Edit Projects BTS Instance on tab Bug tracking system',
     label: 'Arise fields for editing Projects BTS Instance on tab Bug tracking system',
   },
   DELETE_PROJECT_BTS: {
+    // todo add analytics
     category: SETTINGS_PAGE,
     action: 'Click on icon Delete Projects BTS Instance on tab Bug tracking system',
     label: 'Arise Modal delete Projects BTS Instance on tab Bug tracking system',
   },
   CANCEL_EDIT_PROJECT_BTS: {
+    // todo add analytics
     category: SETTINGS_PAGE,
     action: 'Click on Bttn Cancel Edit Projects BTS Instance on tab Bug tracking system',
     label: 'Cancel Change of Projects BTS Instance on tab Bug tracking system',
   },
   SUBMIT_EDIT_PROJECT_BTS: {
+    // todo add analytics
     category: SETTINGS_PAGE,
     action: 'Click on Bttn Submit Edit Projects BTS Instance on tab Bug tracking system',
     label: 'Submit Change of Projects BTS Instance on tab Bug tracking system',
   },
   CLOSE_ICON_DELETE_PROJECT_MODAL_BTS: {
+    // todo add analytics
     category: SETTINGS_PAGE,
     action: 'Click on icon Close on Modal Delete Project',
     label: 'Close Modal Delete Project',
   },
   CANCEL_BTN_DELETE_PROJECT_MODAL_BTS: {
+    // todo add analytics
     category: SETTINGS_PAGE,
     action: 'Click on Bttn Cancel on Modal Delete Project',
     label: 'Close Modal Delete Project',
   },
   DELETE_BTN_DELETE_PROJECT_MODAL_BTS: {
+    // todo add analytics
     category: SETTINGS_PAGE,
     action: 'Click on Bttn Delete on Modal Delete Project',
     label: 'Delete Project',
   },
   EDIT_DEFAULT_PROPS_FOR_ISSUE_BTS: {
+    // todo add analytics
     category: SETTINGS_PAGE,
     action: 'Edit inputs of Default properties for issue form on tab Bug tracking system',
     label: 'Change inputs of Default properties for issue form on tab Bug tracking system',
   },
   UPDATE_BTN_DEFAULT_PROPS_BTS: {
+    // todo add analytics
     category: SETTINGS_PAGE,
     action: 'Click on Bttn Update Default properties for issue form on tab Bug tracking system',
     label: 'Update Default properties for issue form on tab Bug tracking system',
   },
   SUBMIT_BTN_DEFAULT_PROPS_BTS: {
+    // todo add analytics
     category: SETTINGS_PAGE,
     action: 'Click on Bttn Submit Default properties for issue form on tab Bug tracking system',
     label: 'Submit Change of Default properties for issue form on tab Bug tracking system',
   },
   EDIT_DEFECT_TAG_DEFECT_TYPES: {
+    // todo add analytics
     category: SETTINGS_PAGE,
     action: 'Click on icon Edit defect tag on tab Defect Types',
     label: 'Arise fields for editing defect tag on tab Defect Types',
   },
   DELETE_ICON_DEFECT_TYPE: {
+    // todo add analytics
     category: SETTINGS_PAGE,
     action: 'Click on icon Delete defect tag on tab Defect Types',
     label: 'Arise Modal Delete defect type on tab Defect Types',
   },
   EDIT_DEFECT_TYPE_NAME_DEFECT_TYPE: {
+    // todo add analytics
     category: SETTINGS_PAGE,
     action: 'Edit input Defect type name on tab Defect Types',
     label: 'Change Defect type name on tab Defect Types',
   },
   EDIT_DEFECT_TYPE_ABBREVIATION: {
+    // todo add analytics
     category: SETTINGS_PAGE,
     action: 'Edit input Defect type abbreviation on tab Defect Types',
     label: 'Change Defect type abbreviation on tab Defect Types',
   },
   CHANGE_DEFECT_TYPE_COLOR: {
+    // todo add analytics
     category: SETTINGS_PAGE,
     action: 'Edit input Defect type color on tab Defect Types',
     label: 'Change Defect type color on tab Defect Types',
   },
   SUBMIT_DEFECT_TYPE_CHANGES: {
+    // todo add analytics
     category: SETTINGS_PAGE,
     action: 'Click on icon Submit defect type change on tab Defect Types',
     label: 'Change defect type on tab Defect Types',
   },
   CANCEL_DEFECT_TYPE_CHANGES: {
+    // todo add analytics
     category: SETTINGS_PAGE,
     action: 'Click on icon Cancel defect type change on tab Defect Types',
     label: 'Cancel defect type change on tab Defect Types',
   },
-  CLOSE_ICON_DELELE_DEFECT_TYPE: {
+  CLOSE_ICON_DELETE_DEFECT_TYPE: {
+    // todo add analytics
     category: SETTINGS_PAGE,
     action: 'Click on icon Close on Modal Delete Defect type',
     label: 'Close Modal Delete Defect type',
   },
   CANCEL_BTN_DELETE_DEFECT_TYPE_MODAL: {
+    // todo add analytics
     category: SETTINGS_PAGE,
     action: 'Click on Bttn Cancel on Modal Delete Defect type',
     label: 'Close Modal Delete Defect type',
   },
   DELETE_BTN_DELETE_DEFECT_TYPE_MODAL: {
+    // todo add analytics
     category: SETTINGS_PAGE,
     action: 'Click on Bttn Delete on Modal Delete Defect type',
     label: 'Delete Defect type',
   },
   ADD_DEFECT_TYPE_BTN: {
+    // todo add analytics
     category: SETTINGS_PAGE,
     action: 'Click on Bttn Add defect type on tab Defect types',
     label: 'Arise fieldes for Add defect type on tab Defect types',
   },
   RESET_DEFAULT_COLOR: {
+    // todo add analytics
     category: SETTINGS_PAGE,
     action: 'Click on link Reset to default colors on tab Defect types',
     label: 'Arise fieldes for Add defect type on tab Defect types',
   },
   CLOSE_ICON_RESET_DEFECT_COLORS_MODAL: {
+    // todo add analytics
     category: SETTINGS_PAGE,
     action: 'Click on icon Close on Modal Reset Defect colors',
     label: 'Close Modal Reset Defect colors',
   },
   CANCEL_BTN_RESET_DEFECT_COLORS_MODAL: {
+    // todo add analytics
     category: SETTINGS_PAGE,
     action: 'Click on Bttn Cancel on Modal Reset Defect colors',
     label: 'Close Modal Reset Defect colors',
   },
   RESET_BTN_RESET_DEFECT_COLORS_MODAL: {
+    // todo add analytics
     category: SETTINGS_PAGE,
     action: 'Click on Bttn Reset on Modal Reset Defect colors',
     label: 'Reset Defect colors',
