@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from 'react';
+import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
@@ -6,6 +7,7 @@ import Parser from 'html-react-parser';
 import { InputBigSwitcher } from 'components/inputs/inputBigSwitcher';
 import { InputRadio } from 'components/inputs/inputRadio';
 import { FormField } from 'components/fields/formField';
+import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import styles from './strategyBlock.scss';
 
 const cx = classNames.bind(styles);
@@ -45,10 +47,15 @@ const messages = defineMessages({
 });
 
 @injectIntl
+@track()
 export class StrategyBlock extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
     disabled: PropTypes.bool,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
 
   static defaultProps = {
@@ -56,7 +63,7 @@ export class StrategyBlock extends Component {
   };
 
   render() {
-    const { intl, disabled } = this.props;
+    const { intl, disabled, tracking } = this.props;
 
     return (
       <Fragment>
@@ -68,6 +75,9 @@ export class StrategyBlock extends Component {
           format={Boolean}
           parse={Boolean}
           disabled={disabled}
+          onChange={() => {
+            tracking.trackEvent(SETTINGS_PAGE_EVENTS.AUTO_ANALYSIS_SWITCHER);
+          }}
         >
           <InputBigSwitcher mobileDisabled />
         </FormField>
@@ -80,6 +90,9 @@ export class StrategyBlock extends Component {
           label={intl.formatMessage(messages.strategySelectorTitle)}
           description={intl.formatMessage(messages.sameNameLaunchesInfo)}
           disabled={disabled}
+          onChange={() => {
+            tracking.trackEvent(SETTINGS_PAGE_EVENTS.AUTO_ANALYSIS_BASE_RADIO_BTN);
+          }}
         >
           <InputRadio ownValue="LAUNCH_NAME" name="aa-strategy" mobileDisabled>
             <span className={cx('radio-children')}>
@@ -96,6 +109,9 @@ export class StrategyBlock extends Component {
           descriptionClassName={cx('radio-description')}
           description={intl.formatMessage(messages.allLaunchesInfo)}
           disabled={disabled}
+          onChange={() => {
+            tracking.trackEvent(SETTINGS_PAGE_EVENTS.AUTO_ANALYSIS_BASE_RADIO_BTN);
+          }}
         >
           <InputRadio ownValue="ALL" name="aa-strategy" mobileDisabled>
             <span className={cx('radio-children')}>

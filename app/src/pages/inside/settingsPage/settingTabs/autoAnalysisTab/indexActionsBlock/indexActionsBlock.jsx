@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from 'react';
+import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
@@ -7,6 +8,7 @@ import { appInfoSelector } from 'controllers/appInfo/selectors';
 import classNames from 'classnames/bind';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { projectAnalyzerConfigSelector } from 'controllers/project';
+import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import styles from './indexActionsBlock.scss';
 
 const cx = classNames.bind(styles);
@@ -55,6 +57,7 @@ const messages = defineMessages({
   },
 )
 @injectIntl
+@track()
 export class IndexActionsBlock extends Component {
   static propTypes = {
     disabled: PropTypes.bool,
@@ -63,6 +66,10 @@ export class IndexActionsBlock extends Component {
     appInfo: PropTypes.object,
     showRemoveIndexModal: PropTypes.func,
     showGenerateIndexModal: PropTypes.func,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
 
   static defaultProps = {
@@ -71,6 +78,16 @@ export class IndexActionsBlock extends Component {
     appInfo: {},
     showRemoveIndexModal: () => {},
     showGenerateIndexModal: () => {},
+  };
+
+  removeIndex = () => {
+    this.props.tracking.trackEvent(SETTINGS_PAGE_EVENTS.REMOVE_INDEX_BTN);
+    this.props.showRemoveIndexModal();
+  };
+
+  generateIndex = () => {
+    this.props.tracking.trackEvent(SETTINGS_PAGE_EVENTS.GENERATE_INDEX_BTN);
+    this.props.showGenerateIndexModal();
   };
 
   render() {
@@ -90,7 +107,7 @@ export class IndexActionsBlock extends Component {
           <div className={cx('form-group-column')}>
             <GhostButton
               disabled={this.props.indexing_running || !this.props.appInfo.ANALYZER || disabled}
-              onClick={this.props.showRemoveIndexModal}
+              onClick={this.removeIndex}
               mobileDisabled
             >
               <span className={cx('index-action-caption')}>
@@ -107,7 +124,7 @@ export class IndexActionsBlock extends Component {
           <div className={cx('form-group-column')}>
             <GhostButton
               disabled={this.props.indexing_running || !this.props.appInfo.ANALYZER || disabled}
-              onClick={this.props.showGenerateIndexModal}
+              onClick={this.generateIndex}
               title={
                 !this.props.appInfo.ANALYZER
                   ? intl.formatMessage(messages.analyzerDisabledButtonTitle)

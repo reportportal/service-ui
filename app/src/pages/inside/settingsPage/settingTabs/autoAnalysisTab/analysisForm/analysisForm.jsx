@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { reduxForm, formValueSelector } from 'redux-form';
@@ -13,6 +14,7 @@ import {
 import { activeProjectSelector } from 'controllers/user';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { ToggleButton } from 'components/buttons/toggleButton';
+import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { StrategyBlock } from './strategyBlock';
 import { AccuracyFormBlock } from './accuracyFormBlock';
 import styles from './analysisForm.scss';
@@ -98,6 +100,7 @@ const DEFAULT_ANALYSIS_MODE = 'Classic';
     updateAutoAnalysisConfigurationAction,
   },
 )
+@track()
 export class AnalysisForm extends Component {
   static propTypes = {
     disabled: PropTypes.bool,
@@ -110,6 +113,10 @@ export class AnalysisForm extends Component {
     showNotification: PropTypes.func,
     updateAutoAnalysisConfigurationAction: PropTypes.func,
     formInputsValues: PropTypes.object,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
 
   static defaultProps = {
@@ -151,6 +158,7 @@ export class AnalysisForm extends Component {
         },
       },
     };
+    this.props.tracking.trackEvent(SETTINGS_PAGE_EVENTS.SUBMIT_AUTO_ANALYSIS_SETTINGS);
     fetch(URLS.project(this.props.currentProject), { method: 'put', data: dataToSend })
       .then(() => {
         this.props.showNotification({
@@ -197,6 +205,7 @@ export class AnalysisForm extends Component {
   ];
 
   tabChangeHandle = (newValue) => {
+    this.props.tracking.trackEvent(SETTINGS_PAGE_EVENTS.TOGGLE_AUTO_ANALYSIS_MODE);
     this.props.change('minShouldMatch', analysisModeConfig[newValue].minShouldMatch);
     this.props.change('minDocFreq', analysisModeConfig[newValue].minDocFreq);
     this.props.change('minTermFreq', analysisModeConfig[newValue].minTermFreq);
