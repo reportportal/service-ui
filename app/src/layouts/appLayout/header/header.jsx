@@ -3,7 +3,7 @@ import track from 'react-tracking';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { NavLink } from 'redux-first-router-link';
-import { HEADER_EVENTS } from 'components/main/analytics/events/sidebarHeaderFooterEvents';
+import { HEADER_EVENTS } from 'components/main/analytics/events';
 import {
   userInfoSelector,
   activeProjectSelector,
