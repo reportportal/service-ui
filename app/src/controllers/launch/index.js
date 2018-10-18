@@ -12,6 +12,7 @@ export {
   unselectLaunchesAction,
   setDebugMode,
   deleteItemsAction,
+  fetchLaunchesWithParamsAction,
 } from './actionCreators';
 export {
   selectedLaunchesSelector,

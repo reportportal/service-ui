@@ -1,5 +1,6 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
+import isEqual from 'fast-deep-equal';
 import { omit } from 'common/utils/omit';
 import { LEVEL_STEP, LEVEL_SUITE, LEVEL_TEST, LEVEL_LAUNCH } from 'common/constants/launchLevels';
 import {
@@ -29,19 +30,32 @@ export class FilterEntitiesContainer extends Component {
     onChange: () => {},
   };
 
+  static getDerivedStateFromProps(props, state) {
+    if (props.entities !== state.values || !isEqual(props.entities, state.values)) {
+      return {
+        values: props.entities,
+      };
+    }
+    return null;
+  }
+
   state = {
     errors: {},
     values: this.props.entities,
   };
 
-  getValues = () => ({ ...this.state.values, ...this.props.entities });
-
-  collectEntities = (values) => {
-    const { errors } = this.state;
-    return Object.keys(values).reduce((acc, entityId) => {
+  collectEntities = (values) =>
+    Object.keys(values).reduce((acc, entityId) => {
       const value = values[entityId];
-      return entityId in errors ? acc : { ...acc, [entityId]: value };
+      return !this.isValidChange(entityId) ? acc : { ...acc, [entityId]: value };
     }, {});
+
+  isValidChange = (entityId) => {
+    const value = this.state.values[entityId] && this.state.values[entityId].value;
+    if (!value) {
+      return true;
+    }
+    return !this.state.errors[entityId];
   };
 
   handleChange = (entityId, value) => {
@@ -49,7 +63,9 @@ export class FilterEntitiesContainer extends Component {
       {
         values: { ...this.state.values, [entityId]: { ...this.state.values[entityId], ...value } },
       },
-      () => this.props.onChange(this.collectEntities(this.state.values)),
+      () =>
+        this.isValidChange(entityId) &&
+        this.props.onChange(this.collectEntities(this.state.values)),
     );
   };
 
@@ -66,7 +82,7 @@ export class FilterEntitiesContainer extends Component {
       {
         values: { ...this.state.values, [entity.id]: entity.value },
       },
-      () => this.props.onChange(this.collectEntities(this.state.values)),
+      () => entity.value.value && this.props.onChange(this.collectEntities(this.state.values)),
     );
 
   handleRemove = (entityId) => {
@@ -75,13 +91,13 @@ export class FilterEntitiesContainer extends Component {
   };
 
   render() {
-    const { errors } = this.state;
+    const { errors, values } = this.state;
     const { render, level } = this.props;
     const EntitiesProvider = ENTITY_PROVIDERS[level];
     return (
       <EntitiesProvider
         filterErrors={errors}
-        filterValues={this.getValues()}
+        filterValues={values}
         onFilterChange={this.handleChange}
         onFilterValidate={this.handleValidate}
         onFilterAdd={this.handleAdd}
