@@ -2,7 +2,17 @@
   box-sizing: border-box;
   padding: 15px;
   display: flex;
+  flex-direction: column;
+}
+
+.filter-tickets-row {
+  display: flex;
   align-items: center;
+  padding-bottom: 10px;
+}
+
+.filter-tickets-container {
+  flex-grow: 1;
 }
 
 .all-latest-switcher {
@@ -14,4 +24,13 @@
   width: 1px;
   background-color: $COLOR--gray-91;
   margin-right: 15px;
+}
+
+.filter-entities-container {
+  background-color: $COLOR--white-four;
+  border: 1px solid $COLOR--gray-91;
+  padding-top: 10px;
+  padding-bottom: 15px;
+  padding-left: 15px;
+  padding-right: 15px;
 }

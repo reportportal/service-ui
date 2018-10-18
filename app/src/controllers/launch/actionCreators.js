@@ -7,12 +7,18 @@ import {
   createProceedWithValidItemsAction,
   toggleAllItemsAction,
 } from 'controllers/groupOperations';
-import { FETCH_LAUNCHES, NAMESPACE, SET_DEBUG_MODE } from './constants';
+import {
+  FETCH_LAUNCHES,
+  NAMESPACE,
+  SET_DEBUG_MODE,
+  FETCH_LAUNCHES_WITH_PARAMS,
+  FETCH_LAUNCHES_PAGE_DATA,
+} from './constants';
 import {
   validateMergeLaunch,
   validateFinishForceLaunch,
   validateMoveLaunch,
-  validateDeleteLaunch
+  validateDeleteLaunch,
 } from './actionValidators';
 
 export const setDebugMode = (isDebugMode) => ({
@@ -23,6 +29,15 @@ export const setDebugMode = (isDebugMode) => ({
 export const fetchLaunchesAction = (params) => ({
   type: FETCH_LAUNCHES,
   payload: params,
+});
+
+export const fetchLaunchesWithParamsAction = (filterId) => ({
+  type: FETCH_LAUNCHES_WITH_PARAMS,
+  payload: filterId,
+});
+
+export const fetchLaunchesPageData = () => ({
+  type: FETCH_LAUNCHES_PAGE_DATA,
 });
 
 export const toggleLaunchSelectionAction = toggleItemSelectionAction(NAMESPACE);

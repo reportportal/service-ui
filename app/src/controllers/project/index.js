@@ -1,4 +1,4 @@
-export { FETCH_PROJECT_SUCCESS } from './constants';
+export { FETCH_PROJECT_SUCCESS, FETCH_PROJECT_PREFERENCES_SUCCESS } from './constants';
 export {
   fetchProjectAction,
   toggleDisplayFilterOnLaunchesAction,

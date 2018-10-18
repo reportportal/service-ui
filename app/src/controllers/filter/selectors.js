@@ -1,4 +1,5 @@
-import { createQueryParametersSelector } from 'controllers/pages';
+import { createSelector } from 'reselect';
+import { createQueryParametersSelector, filterIdSelector } from 'controllers/pages';
 import { DEFAULT_PAGINATION } from './constants';
 
 const domainSelector = (state) => state.filters || {};
@@ -10,3 +11,10 @@ export const querySelector = createQueryParametersSelector({
   defaultPagination: DEFAULT_PAGINATION,
   defaultSorting: 'name',
 });
+export const launchFiltersSelector = (state) => domainSelector(state).launchesFilters || [];
+export const activeFilterSelector = createSelector(
+  launchFiltersSelector,
+  filterIdSelector,
+  (filters, filterId) => filters.find((filter) => filter.id === filterId),
+);
+export const launchFiltersLoadedSelector = (state) => domainSelector(state).launchFiltersLoaded;

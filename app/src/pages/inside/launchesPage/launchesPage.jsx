@@ -37,7 +37,11 @@ import {
   deleteItemsAction,
 } from 'controllers/launch';
 import { LaunchSuiteGrid } from 'pages/inside/common/launchSuiteGrid';
+import { LaunchFiltersContainer } from 'pages/inside/common/launchFiltersContainer/launchFiltersContainer';
+import { LEVEL_LAUNCH } from 'common/constants/launchLevels';
+import { FilterEntitiesContainer } from 'components/filterEntities/containers';
 import { LaunchToolbar } from './LaunchToolbar';
+import { LaunchFiltersToolbar } from './launchFiltersToolbar';
 
 const messages = defineMessages({
   deleteModalHeader: {
@@ -348,49 +352,78 @@ export class LaunchesPage extends Component {
       debugMode,
     } = this.props;
     return (
-      <PageLayout>
-        <PageSection>
-          <LaunchToolbar
-            errors={this.props.validationErrors}
-            onRefresh={this.props.fetchLaunchesAction}
-            selectedLaunches={selectedLaunches}
-            onUnselect={this.unselectItem}
-            onUnselectAll={this.unselectAllItems}
-            onProceedValidItems={this.proceedWithValidItems}
-            onMove={this.moveLaunches}
-            onMerge={this.mergeLaunches}
-            onForceFinish={this.finishForceLaunches}
-            onCompare={this.compareLaunches}
-            onImportLaunch={this.openImportModal}
-            debugMode={debugMode}
-            onDelete={this.deleteItems}
+      <LaunchFiltersContainer
+        render={({
+          launchFilters,
+          activeFilterId,
+          activeFilterEntities,
+          onSelectFilter,
+          onRemoveFilter,
+          onChangeFilter,
+        }) => (
+          <FilterEntitiesContainer
+            level={LEVEL_LAUNCH}
+            filterId={activeFilterId}
+            entities={activeFilterEntities}
+            onChange={onChangeFilter}
+            render={({ onFilterAdd, ...rest }) => (
+              <PageLayout><PageSection>
+                  <LaunchFiltersToolbar
+                    filters={launchFilters}
+                    activeFilterId={activeFilterId}
+                    onSelectFilter={onSelectFilter}
+                    onRemoveFilter={onRemoveFilter}
+                    onFilterAdd={onFilterAdd}
+                    {...rest}
+                  />
+                </PageSection>
+                <PageSection>
+                  <LaunchToolbar
+                    errors={this.props.validationErrors}
+                    onRefresh={this.props.fetchLaunchesAction}
+                    selectedLaunches={selectedLaunches}
+                    onUnselect={this.unselectItem}
+                    onUnselectAll={this.unselectAllItems}
+                    onProceedValidItems={this.proceedWithValidItems}
+                    onMove={this.moveLaunches}
+                    onMerge={this.mergeLaunches}
+                    onForceFinish={this.finishForceLaunches}
+                    onCompare={this.compareLaunches}
+                    onImportLaunch={this.openImportModal}
+                    debugMode={debugMode}
+                    onDelete={this.deleteItems}
+                  />
+                  <LaunchSuiteGrid
+                    data={launches}
+                    sortingColumn={sortingColumn}
+                    sortingDirection={sortingDirection}
+                    onChangeSorting={onChangeSorting}
+                    onDeleteItem={this.confirmDeleteItem}
+                    onMove={this.moveLaunches}
+                    onEditItem={this.openEditModal}
+                    onForceFinish={this.finishForceLaunches}
+                    selectedItems={selectedLaunches}
+                    onItemSelect={this.handleOneLaunchSelection}
+                    onAllItemsSelect={this.handleAllLaunchesSelection}
+                    withHamburger
+                    loading={loading}
+                    onFilterClick={onFilterAdd}
+                    events={LAUNCHES_PAGE_EVENTS}
+                  />
+                  <PaginationToolbar
+                    activePage={activePage}
+                    itemCount={itemCount}
+                    pageCount={pageCount}
+                    pageSize={pageSize}
+                    onChangePage={onChangePage}
+                    onChangePageSize={onChangePageSize}
+                  />
+                </PageSection>
+              </PageLayout>
+            )}
           />
-          <LaunchSuiteGrid
-            data={launches}
-            sortingColumn={sortingColumn}
-            sortingDirection={sortingDirection}
-            onChangeSorting={onChangeSorting}
-            onDeleteItem={this.confirmDeleteItem}
-            onMove={this.moveLaunches}
-            onEditItem={this.openEditModal}
-            onForceFinish={this.finishForceLaunches}
-            selectedItems={selectedLaunches}
-            onItemSelect={this.handleOneLaunchSelection}
-            onAllItemsSelect={this.handleAllLaunchesSelection}
-            withHamburger
-            loading={loading}
-            events={LAUNCHES_PAGE_EVENTS}
-          />
-          <PaginationToolbar
-            activePage={activePage}
-            itemCount={itemCount}
-            pageCount={pageCount}
-            pageSize={pageSize}
-            onChangePage={onChangePage}
-            onChangePageSize={onChangePageSize}
-          />
-        </PageSection>
-      </PageLayout>
+        )}
+      />
     );
   }
 }
