@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import { connectRouter } from 'common/utils';
 import { PageLayout, PageSection } from 'layouts/pageLayout';
 import {
-  activeLogSelector,
   refreshLogPageData,
   logItemsSelector,
   logPaginationSelector,
@@ -25,7 +24,6 @@ import { LogsGridToolbar } from './logsGridToolbar';
 
 @connect(
   (state) => ({
-    activeLogItem: activeLogSelector(state),
     logItems: logItemsSelector(state),
     loading: loadingSelector(state),
     userId: userIdSelector(state),
@@ -59,7 +57,6 @@ import { LogsGridToolbar } from './logsGridToolbar';
 export class LogsPage extends Component {
   static propTypes = {
     refresh: PropTypes.func.isRequired,
-    activeLogItem: PropTypes.object,
     logItems: PropTypes.array,
     userId: PropTypes.string.isRequired,
     activePage: PropTypes.number,
@@ -80,7 +77,6 @@ export class LogsPage extends Component {
   };
 
   static defaultProps = {
-    activeLogItem: null,
     logItems: [],
     activePage: 1,
     itemCount: 0,
@@ -102,7 +98,6 @@ export class LogsPage extends Component {
   render() {
     const {
       refresh,
-      activeLogItem,
       logItems,
       userId,
       activePage,
@@ -127,7 +122,7 @@ export class LogsPage extends Component {
         <PageSection>
           <LogToolbar onRefresh={refresh} />
           <HistoryLine />
-          {activeLogItem && <LogItemInfo logItem={activeLogItem} fetchFunc={refresh} />}
+          <LogItemInfo fetchFunc={refresh} />
           <LogsGridToolbar
             activePage={activePage}
             pageCount={pageCount}

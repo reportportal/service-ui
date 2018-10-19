@@ -27,14 +27,14 @@ export class HistoryLine extends Component {
   static propTypes = {
     projectId: PropTypes.string,
     historyItems: PropTypes.array,
-    activeItemId: PropTypes.string,
+    activeItemId: PropTypes.number,
     changeActiveItem: PropTypes.func,
   };
 
   static defaultProps = {
     projectId: '',
     historyItems: [],
-    activeItemId: '',
+    activeItemId: 0,
     changeActiveItem: () => {},
   };
 

@@ -64,7 +64,7 @@ export const activeLogIdSelector = createSelector(
   pagePropertiesSelector,
   (logItemId, query) => {
     const namespacedQuery = extractNamespacedQuery(query, NAMESPACE);
-    return namespacedQuery.history || logItemId;
+    return Number(namespacedQuery.history) || logItemId;
   },
 );
 

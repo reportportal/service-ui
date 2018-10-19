@@ -87,23 +87,3 @@
     width: 100%;
   }
 }
-
-.no-activities {
-  display: flex;
-  justify-content: center;
-  padding: 25px;
-
-  .icon {
-    display: inline-block;
-    width: 20px;
-    height: 20px;
-    padding-right: 8px;
-    margin-top: -1px;
-    fill: $COLOR--gray-47;
-  }
-
-  .text {
-    color: $COLOR--gray-47;
-    font-size: 17px;
-  }
-}

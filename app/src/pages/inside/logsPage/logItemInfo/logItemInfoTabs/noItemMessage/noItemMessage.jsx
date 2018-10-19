@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
-import WarningIcon from 'common/img/warning-inline.svg';
+import WarningIcon from 'common/img/error-inline.svg';
 import styles from './noItemMessage.scss';
 
 const cx = classNames.bind(styles);

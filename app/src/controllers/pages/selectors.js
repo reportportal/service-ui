@@ -18,7 +18,7 @@ export const testItemIdsArraySelector = createSelector(
 );
 export const logItemIdSelector = createSelector(
   testItemIdsArraySelector,
-  (itemIdsArray) => (itemIdsArray.length && itemIdsArray[itemIdsArray.length - 1]) || '',
+  (itemIdsArray) => Number(itemIdsArray.length && itemIdsArray[itemIdsArray.length - 1]) || 0,
 );
 
 export const pageSelector = (state) => pageNames[state.location.type] || NO_PAGE;

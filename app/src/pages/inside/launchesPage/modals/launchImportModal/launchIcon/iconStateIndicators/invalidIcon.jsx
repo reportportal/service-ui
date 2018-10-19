@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
 import { withHoverableTooltip } from 'components/main/tooltips/hoverableTooltip';
+import WarningIcon from 'common/img/error-inline.svg';
 import { InvalidIconTooltip } from './invalidIconTooltip';
 import styles from './iconStateIndicators.scss';
-import WarningIcon from './img/ic-warning-inline.svg';
 
 const cx = classNames.bind(styles);
 

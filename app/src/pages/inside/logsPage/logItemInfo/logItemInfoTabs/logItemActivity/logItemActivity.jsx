@@ -1,13 +1,12 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import Parser from 'html-react-parser';
 import { injectIntl, intlShape, defineMessages } from 'react-intl';
 import classNames from 'classnames/bind';
 import { logActivitySelector } from 'controllers/log';
 import { AbsRelTime } from 'components/main/absRelTime';
 import { OwnerBlock } from 'pages/inside/common/itemInfo/ownerBlock';
-import ErrorIcon from 'common/img/error-inline.svg';
+import { NoItemMessage } from '../noItemMessage';
 import { getActionMessage } from '../../utils/getActionMessage';
 import { HistoryItem } from './historyItem';
 import styles from './logItemActivity.scss';
@@ -73,25 +72,16 @@ export class LogItemActivity extends Component {
     );
   }
 
-  renderNoActivities() {
-    const { intl } = this.props;
-
-    return (
-      <div className={cx('no-activities')}>
-        <span className={cx('icon')}>{Parser(ErrorIcon)}</span>
-        <span className={cx('text')}>{intl.formatMessage(messages.noActivities)}</span>
-      </div>
-    );
-  }
-
   render() {
-    const { activity } = this.props;
+    const { intl, activity } = this.props;
 
     return (
       <div className={cx('container')}>
-        {activity.length
-          ? activity.map((activityItem) => this.renderActivityItem(activityItem))
-          : this.renderNoActivities()}
+        {activity.length ? (
+          activity.map((activityItem) => this.renderActivityItem(activityItem))
+        ) : (
+          <NoItemMessage message={intl.formatMessage(messages.noActivities)} />
+        )}
       </div>
     );
   }

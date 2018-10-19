@@ -114,7 +114,11 @@ export class ModalFooter extends Component {
             </div>
           )}
           {customButton && (
-            <div className={cx('button-container', { left: customButton.props.left })}>
+            <div
+              className={cx('button-container', {
+                left: customButton.component ? customButton.left : customButton.props.left,
+              })}
+            >
               {customButton.component ? (
                 <customButton.component
                   {...customButton.buttonProps}

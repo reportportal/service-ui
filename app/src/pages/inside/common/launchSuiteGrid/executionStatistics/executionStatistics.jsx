@@ -17,7 +17,7 @@ export const ExecutionStatistics = ({ value, title, bold, itemId, statuses }) =>
 );
 
 ExecutionStatistics.propTypes = {
-  value: PropTypes.string,
+  value: PropTypes.number,
   title: PropTypes.object,
   bold: PropTypes.bool,
   itemId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
@@ -26,5 +26,5 @@ ExecutionStatistics.propTypes = {
 ExecutionStatistics.defaultProps = {
   bold: false,
   title: {},
-  value: '',
+  value: null,
 };

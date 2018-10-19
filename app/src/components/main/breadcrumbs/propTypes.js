@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 
 export const breadcrumbDescriptorShape = PropTypes.shape({
-  id: PropTypes.string,
+  id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   title: PropTypes.string,
   link: PropTypes.object,
   error: PropTypes.bool,
