@@ -6,6 +6,7 @@ Height & width grows with it's content.
 
 ```
 {
+    id: one of [string, number],
     title: string,
     link: object,
     error: bool,

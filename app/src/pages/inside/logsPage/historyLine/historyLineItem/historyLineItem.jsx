@@ -20,8 +20,8 @@ export class HistoryLineItem extends Component {
     projectId: PropTypes.string.isRequired,
     launchNumber: PropTypes.string.isRequired,
     pathNames: PropTypes.object,
-    launchId: PropTypes.string,
-    id: PropTypes.string,
+    launchId: PropTypes.number,
+    id: PropTypes.number,
     status: PropTypes.string,
     active: PropTypes.bool,
     isFirstItem: PropTypes.bool,
@@ -32,8 +32,8 @@ export class HistoryLineItem extends Component {
 
   static defaultProps = {
     pathNames: {},
-    launchId: '',
-    id: '',
+    launchId: 0,
+    id: 0,
     status: '',
     active: false,
     isFirstItem: false,

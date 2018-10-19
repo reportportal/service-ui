@@ -40,7 +40,7 @@ export class DefectTypeTooltip extends Component {
     data: PropTypes.object.isRequired,
     projectConfig: PropTypes.object.isRequired,
     intl: intlShape.isRequired,
-    itemId: PropTypes.string,
+    itemId: PropTypes.number,
   };
 
   static defaultProps = {

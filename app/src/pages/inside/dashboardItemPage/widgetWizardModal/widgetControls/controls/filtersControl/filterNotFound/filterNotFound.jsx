@@ -3,7 +3,6 @@ import { defineMessages, intlShape } from 'react-intl';
 import Parser from 'html-react-parser';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-
 import ErrorIcon from 'common/img/error-inline.svg';
 
 import styles from './filterNotFound.scss';

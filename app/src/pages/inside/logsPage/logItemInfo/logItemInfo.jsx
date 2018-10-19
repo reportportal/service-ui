@@ -171,7 +171,7 @@ export class LogItemInfo extends Component {
         <div className={cx('container')}>
           <div className={cx('content')}>
             <div className={cx('description')}>
-              {logItem.issue && <DefectType issue={logItem.issue} />}
+              {logItem.issue && logItem.issue.issue_type && <DefectType issue={logItem.issue} />}
             </div>
             <div className={cx('actions')}>
               <div className={cx('action')}>
