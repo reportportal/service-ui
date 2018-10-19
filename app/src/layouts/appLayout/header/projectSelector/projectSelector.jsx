@@ -66,7 +66,7 @@ export class ProjectSelector extends Component {
   };
 
   handleOutsideClick = (e) => {
-    if (!this.node.contains(e.target) && this.state.opened) {
+    if (this.node && !this.node.contains(e.target) && this.state.opened) {
       this.setState({ opened: false });
     }
   };
