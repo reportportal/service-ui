@@ -55,7 +55,7 @@ export class UserBlock extends PureComponent {
     this.props.tracking.trackEvent(HEADER_EVENTS.CLICK_LOGOUT_LINK);
   };
   handleOutsideClick = (e) => {
-    if (!this.node.contains(e.target) && this.state.menuOpened) {
+    if (this.node && !this.node.contains(e.target) && this.state.menuOpened) {
       this.setState({ menuOpened: false });
     }
   };

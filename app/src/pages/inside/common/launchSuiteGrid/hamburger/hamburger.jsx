@@ -164,7 +164,7 @@ export class Hamburger extends Component {
   };
 
   handleOutsideClick = (e) => {
-    if (!this.icon.contains(e.target) && this.state.menuShown) {
+    if (this.icon && !this.icon.contains(e.target) && this.state.menuShown) {
       this.setState({ menuShown: false });
     }
   };
