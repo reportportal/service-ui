@@ -5,5 +5,16 @@
     <i class="rp-icons rp-icons-warning"></i>
     <span><%= data.text.ui.noResultsFound %></span>
 </div>
+<div class="generate-data">
+    <p class="no-data-label"><%= data.text.ui.noData %></p>
+    <p class="action-point">
+        <%= data.text.ui.toGetStarted %>
+        <a data-js-own-integration class="rp-link" href="http://reportportal.io/download/integration" target="_blank"><%= data.text.ui.setUpIntegration %></a>
+        <%= data.text.ui.generateTestResults %>
+    </p>
+    <button type="button" class="rp-btn rp-btn-submit" data-js-demo-data-submit>
+        <%= data.text.project.generateDemoData %>
+    </button>
+</div>
 <div data-js-launches-container></div>
 <div data-js-paginate-container></div>

@@ -29,6 +29,7 @@ define(function (require, exports, module) {
     var Service = require('coreService');
     var SingletonURLParamsModel = require('model/SingletonURLParamsModel');
     var SingletonAppModel = require('model/SingletonAppModel');
+    var SingletonRegistryInfoModel = require('model/SingletonRegistryInfoModel');
     require('cookie');
 
     var config = App.getInstance();
@@ -57,7 +58,7 @@ define(function (require, exports, module) {
             photo_loaded: false,
             lastInsideHash: null,
             token: 'Basic dWk6dWltYW4=',
-            apiToken: null,
+            apiToken: null
         },
         computeds: {
             isAdmin: {
@@ -74,6 +75,7 @@ define(function (require, exports, module) {
             this.set({ token: this.getToken() });
             this.listenTo(this, 'change:token', this.onChangeToken);
             this.appModel = new SingletonAppModel();
+            this.infoModel = new SingletonRegistryInfoModel();
 
             // this.loadSession();
             // this.isLogin = false;
@@ -165,12 +167,18 @@ define(function (require, exports, module) {
                         self.getApiToken();
                         self.updateProjects()
                             .done(function () {
-                                self.set({
-                                    lastInsideHash: self.getAnonymousHash() || self.getLastInsideHashStorage() ||
-                                    self.getDefaultProjectHash()
-                                });
+                                if (self.infoModel.get('isDemo')) {
+                                    self.set({
+                                        lastInsideHash: self.getAnonymousHash() || self.getLastInsideHashStorage() ||
+                                        self.getDefaultHashForDemo()
+                                    });
+                                } else {
+                                    self.set({
+                                        lastInsideHash: self.getAnonymousHash() || self.getLastInsideHashStorage() ||
+                                        self.getDefaultProjectHash()
+                                    });
+                                }
                                 self.set({ auth: true });
-
                                 self.ready.resolve();
                             })
                             .fail(function () {
@@ -233,6 +241,9 @@ define(function (require, exports, module) {
         },
         getDefaultProjectHash: function () {
             return '#' + this.get('defaultProject');
+        },
+        getDefaultHashForDemo: function () {
+            return '#' + this.get('defaultProject') + '/launches/all';
         },
         clearSession: function () {
             this.set(this.defaults);
