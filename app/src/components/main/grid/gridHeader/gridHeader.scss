@@ -13,6 +13,19 @@
       display: none;
     }
   }
+
+  &.sticky > div{ 
+    --WebkitTransition: 'all';
+    --msTransition: 'all';
+    position: sticky;
+    z-index: 100;
+    top: 0px;
+    background-color: inherit;
+  }
+
+  &.hidden{
+    display: none;
+  }
 }
 
 .grid-header-cell {

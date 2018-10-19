@@ -30,6 +30,9 @@ import { Scrollbars } from 'react-custom-scrollbars';
 import { FOOTER_EVENTS } from 'components/main/analytics/events';
 import TopIcon from './img/top-inline.svg';
 import styles from './scrollWrapper.scss';
+import { createContext } from 'react';
+
+export const HeaderContext = createContext({});
 
 const cx = classNames.bind(styles);
 
@@ -75,6 +78,7 @@ export class ScrollWrapper extends Component {
   };
   state = {
     showButton: false,
+    headerShouldBeSticky: false,
   };
 
   componentDidMount = () => {
@@ -130,7 +134,10 @@ export class ScrollWrapper extends Component {
     const { lastViewScrollTop, lastViewScrollLeft } = this.scrollbars;
     const { withBackToTop, onLazyLoad } = this.props;
 
-    this.setState({ showButton: withBackToTop && scrollTop > 100 });
+    this.setState({
+      showButton: withBackToTop && scrollTop > 100,
+      headerShouldBeSticky: scrollTop,
+    });
 
     if (onLazyLoad !== false && top > 0.9) {
       onLazyLoad();
@@ -151,32 +158,34 @@ export class ScrollWrapper extends Component {
   render() {
     return (
       // base props are defined. For more info see https://github.com/malte-wessel/react-custom-scrollbars/blob/master/docs/API.md
-      <Scrollbars
-        ref={this.setupRef}
-        className={cx('scroll-component')}
-        autoHide={this.props.autoHide}
-        autoHeight={this.props.autoHeight}
-        autoHeightMin={this.props.autoHeightMin}
-        autoHeightMax={this.props.autoHeightMax}
-        autoHideTimeout={this.props.autoHideTimeout}
-        renderTrackHorizontal={this.props.renderTrackHorizontal}
-        renderTrackVertical={this.props.renderTrackVertical}
-        renderThumbHorizontal={this.props.renderThumbHorizontal}
-        renderThumbVertical={this.props.renderThumbVertical}
-        renderView={this.props.renderView}
-        hideTracksWhenNotNeeded={this.props.hideTracksWhenNotNeeded}
-        thumbMinSize={this.props.thumbMinSize}
-        onScrollFrame={this.handleScrollFrame}
-        onScrollStop={this.handleScrollStop}
-      >
-        {this.props.children}
-        {this.state.showButton && (
-          <button className={cx('back-to-top')} onClick={this.scrollTop}>
-            <i className={cx('top-icon')}>{Parser(TopIcon)}</i>
-            <FormattedMessage id="ScrollWrapper.backToTop" defaultMessage="Back to top" />
-          </button>
-        )}
-      </Scrollbars>
+      <HeaderContext.Provider value={this.state.headerShouldBeSticky}>
+        <Scrollbars
+          ref={this.setupRef}
+          className={cx('scroll-component')}
+          autoHide={this.props.autoHide}
+          autoHeight={this.props.autoHeight}
+          autoHeightMin={this.props.autoHeightMin}
+          autoHeightMax={this.props.autoHeightMax}
+          autoHideTimeout={this.props.autoHideTimeout}
+          renderTrackHorizontal={this.props.renderTrackHorizontal}
+          renderTrackVertical={this.props.renderTrackVertical}
+          renderThumbHorizontal={this.props.renderThumbHorizontal}
+          renderThumbVertical={this.props.renderThumbVertical}
+          renderView={this.props.renderView}
+          hideTracksWhenNotNeeded={this.props.hideTracksWhenNotNeeded}
+          thumbMinSize={this.props.thumbMinSize}
+          onScrollFrame={this.handleScrollFrame}
+          onScrollStop={this.handleScrollStop}
+        >
+          {this.props.children}
+          {this.state.showButton && (
+            <button className={cx('back-to-top')} onClick={this.scrollTop}>
+              <i className={cx('top-icon')}>{Parser(TopIcon)}</i>
+              <FormattedMessage id="ScrollWrapper.backToTop" defaultMessage="Back to top" />
+            </button>
+          )}
+        </Scrollbars>
+      </HeaderContext.Provider>
     );
   }
 }
