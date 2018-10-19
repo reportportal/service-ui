@@ -1,0 +1,1 @@
+export { LaunchesDurationChart } from './launchesDurationChart';
