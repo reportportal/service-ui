@@ -29,13 +29,21 @@ define(function (require) {
     var Components = require('core/components');
     var SingletonUserStorage = require('storage/SingletonUserStorage');
     var ParentStepItemView = require('launches/stepLevel/ParentStepItemView');
+    var SingletonRegistryInfoModel = require('model/SingletonRegistryInfoModel');
+    var UserModel = require('model/UserModel');
+    var Service = require('coreService');
 
     var LaunchSuiteTestItemsView = Epoxy.View.extend({
         className: 'launch-suite-step-items',
         template: 'tpl-launch-suite-step-items',
+        events: {
+            'click [data-js-demo-data-submit]': 'generateData'
+        },
 
         initialize: function (options) {
             var self = this;
+            this.infoModel = new SingletonRegistryInfoModel();
+            this.userModel = new UserModel();
             this.context = options.context;
             this.itemView = options.itemView;
             this.filterModel = options.filterModel;
@@ -57,7 +65,10 @@ define(function (require) {
             this.listenTo(this.paging, 'page', this.onChangePage);
             this.listenTo(this.paging, 'count', this.onChangePageCount);
             if (!this.collection.models.length) {
-                this.$el.addClass('not-found');
+                this.collection.checkType()
+                    .done(function (type) {
+                        self.noData(type);
+                    });
             }
             this.debounceCollectionLoad = _.debounce(function () {
                 self.collection.load();
@@ -65,6 +76,15 @@ define(function (require) {
             $(window)
                 .off('resize.launchItems')
                 .on('resize.launchItems', _.debounce(self.activateAccordions.bind(self), 100));
+        },
+        generateData: function () {
+            var postfix = (new Date()).getTime().toString().substr(-4);
+            var data = {
+                isCreateDashboard: 'true',
+                postfix: postfix
+            };
+            Service.generateDemoData(data);
+            window.location.reload();
         },
         activateNextId: function (id) {
             var self = this;
@@ -115,6 +135,7 @@ define(function (require) {
             });
         },
         onLoadingCollection: function (state) {
+            var self = this;
             if (state) {
                 this.$el.addClass('load').removeClass('not-found');
                 return;
@@ -123,6 +144,16 @@ define(function (require) {
             this.activateAccordions();
             this.$el.removeClass('load');
             if (!this.collection.models.length) {
+                this.collection.checkType()
+                    .done(function (type) {
+                        self.noData(type);
+                    });
+            }
+        },
+        noData: function (levelType) {
+            if (this.infoModel.get('isDemo') && levelType === 'LAUNCH') {
+                this.$el.addClass('generate-demo-data');
+            } else {
                 this.$el.addClass('not-found');
             }
         },

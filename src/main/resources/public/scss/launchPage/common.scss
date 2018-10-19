@@ -146,6 +146,42 @@
       display: block;
     }
   }
+  &.generate-demo-data{
+    .pagination-component {
+      display: none;
+    }
+    .generate-data{
+      display: block;
+    }
+  }
+  .generate-data{
+    display: none;
+    width: 500px;
+    margin: 0 auto;
+    padding: 40px 0;
+    text-align: center;
+    @media (max-width: $SCREEN_XS_MAX){
+      width: 100%;
+    }
+    color: $COLOR--gray-47;
+    &::before{
+      content: '';
+      display: inline-block;
+      background-image: url(../../img/launch/demo_no_data.svg);
+      width: 152px;
+      height: 84px;
+    }
+    .no-data-label{
+      margin: 25px 0 5px 0;
+      font-size: 16px;
+      font-family: OpenSansSemiBold;
+    }
+    button{
+      margin-top: 15px;
+      height: auto;
+      padding: 13px 13px;
+    }
+  }
   .item-edit-icon, .item-details-icon {
     vertical-align: top;
     font-size: 18px;
