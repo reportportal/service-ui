@@ -6,3 +6,4 @@ export const COLOR_PRODUCT_BUG = '#ec3900';
 export const COLOR_NO_DEFECT = '#777777';
 export const COLOR_SYSTEM_ISSUE = '#0274d1';
 export const COLOR_TO_INVESTIGATE = '#ffb743';
+export const COLOR_INVESTIGATED = '#87B87F';

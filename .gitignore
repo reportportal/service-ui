@@ -8,6 +8,7 @@ build/
 *.iml
 *.iws
 *.log
+.vscode
 
 coverage
 

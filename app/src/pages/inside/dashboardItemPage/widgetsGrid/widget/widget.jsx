@@ -10,6 +10,7 @@ import { activeProjectSelector } from 'controllers/user';
 import { showModalAction } from 'controllers/modal';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { LaunchesComparisonChart } from 'components/widgets/charts/launchesComparisonChart';
+import { InvestigatedTrendChart } from 'components/widgets/charts/investigatedTrendChart';
 import { WidgetHeader } from './widgetHeader';
 import styles from './widget.scss';
 
@@ -17,6 +18,7 @@ const cx = classNames.bind(styles);
 
 const charts = {
   launches_comparison_chart: LaunchesComparisonChart,
+  investigated_trend: InvestigatedTrendChart,
 };
 
 @connect(
