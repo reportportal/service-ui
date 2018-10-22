@@ -15,13 +15,16 @@ export const TooltipContent = ({
   itemName,
 }) => (
   <React.Fragment>
-    <div className={cx('launch-name')}>{`${launchName} #${launchNumber}`}</div>
-    <div className={cx('launch-start-time')}>{dateFormat(startTime)}</div>
+    <div className={cx('launch-name')}>
+      {launchName}
+      {launchNumber && ` #${launchNumber}`}
+    </div>
+    {startTime && <div className={cx('launch-start-time')}>{dateFormat(startTime)}</div>}
     <div className={cx('item-wrapper')}>
       <span className={cx('color-mark')} style={{ backgroundColor: color }} />
       <span className={cx('item-name')}>{`${itemName}:`}</span>
       <span className={cx('item-cases')}>
-        <span>{`${itemCases}%`}</span>
+        <span>{itemCases}</span>
       </span>
     </div>
   </React.Fragment>
@@ -31,7 +34,7 @@ TooltipContent.propTypes = {
   launchName: PropTypes.string,
   launchNumber: PropTypes.string,
   startTime: PropTypes.number,
-  itemCases: PropTypes.number,
+  itemCases: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   itemName: PropTypes.string,
   color: PropTypes.string.isRequired,
 };

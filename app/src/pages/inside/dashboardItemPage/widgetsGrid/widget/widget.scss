@@ -1,6 +1,12 @@
 .widget {
   height: calc(100% - 60px);
   position: relative;
+  transition: opacity 0.5s ease;
+  opacity: 1;
+}
+
+.hidden {
+  opacity: 0;
 }
 
 .widget-container {

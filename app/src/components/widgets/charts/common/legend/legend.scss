@@ -1,8 +1,17 @@
 .legend {
-  clear: both;
-  display: inline-block;
-  float: right;
-  width: 30%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 85px;
+  width: 100%;
+  padding: 20px 20px 0;
+  box-sizing: border-box;
+}
+
+.content-wrapper {
+  height: 100%;
+  overflow: hidden;
   text-align: right;
 }
 
@@ -35,13 +44,14 @@
 }
 
 .item-name {
-  font-size: 10px;
+  font-size: 11px;
   letter-spacing: 0.2px;
 }
 
 .legend-item {
   display: inline-block;
   margin-right: 15px;
+  margin-bottom: 10px;
   cursor: pointer;
 }
 

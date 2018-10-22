@@ -10,6 +10,9 @@
 
 .launch-name {
   margin-bottom: 4px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
   font-family: $FONT-SEMIBOLD;
 }
 

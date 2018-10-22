@@ -114,6 +114,10 @@ export class WidgetsGrid extends Component {
     }
   };
 
+  onResizeStart = (layout, oldItem) => {
+    this.observer.publish(`${oldItem.i}_resizeStarted`);
+  };
+
   onResizeStop = (newLayout, oldWidgetPosition, newWidgetPosition) => {
     this.onGridItemChange(newLayout, oldWidgetPosition, newWidgetPosition);
     this.observer.publish('widgetResized');
@@ -227,6 +231,7 @@ export class WidgetsGrid extends Component {
               breakpoints={breakpoints}
               onBreakpointChange={this.onBreakpointChange}
               onDragStop={this.onGridItemChange}
+              onResizeStart={this.onResizeStart}
               onResizeStop={this.onResizeStop}
               cols={cols}
               isDraggable={this.state.isModifiable}
