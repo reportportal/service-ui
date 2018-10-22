@@ -6,52 +6,21 @@ import { redirect } from 'redux-first-router';
 import * as d3 from 'd3-selection';
 import ReactDOMServer from 'react-dom/server';
 import { TEST_ITEM_PAGE } from 'controllers/pages';
+import { defectTypesSelector } from 'controllers/project';
 import { defectLinkSelector, statisticsLinkSelector } from 'controllers/testItem';
 import { activeProjectSelector } from 'controllers/user';
-import * as COLORS from 'common/constants/colors';
-import { chartConfigs } from 'common/constants/chartConfigs';
+import {
+  getDefectTypeLocators,
+  getItemColor,
+  getItemName,
+  getItemNameConfig,
+} from '../common/utils';
 import { C3Chart } from '../common/c3chart';
 import { TooltipWrapper, TooltipContent } from '../common/tooltip';
 import { Legend } from '../common/legend';
 import './launchesComparisonChart.scss';
 
 const messages = defineMessages({
-  statistics$executions$total: {
-    id: 'FilterNameById.statistics$executions$total',
-    defaultMessage: 'Total',
-  },
-  statistics$executions$passed: {
-    id: 'FilterNameById.statistics$executions$passed',
-    defaultMessage: 'Passed',
-  },
-  statistics$executions$failed: {
-    id: 'FilterNameById.statistics$executions$failed',
-    defaultMessage: 'Failed',
-  },
-  statistics$executions$skipped: {
-    id: 'FilterNameById.statistics$executions$skipped',
-    defaultMessage: 'Skipped',
-  },
-  statistics$defects$product_bug: {
-    id: 'FilterNameById.statistics$defects$product_bug',
-    defaultMessage: 'Product bug',
-  },
-  statistics$defects$automation_bug: {
-    id: 'FilterNameById.statistics$defects$automation_bug',
-    defaultMessage: 'Automation bug',
-  },
-  statistics$defects$system_issue: {
-    id: 'FilterNameById.statistics$defects$system_issue',
-    defaultMessage: 'System issue',
-  },
-  statistics$defects$no_defect: {
-    id: 'FilterNameById.statistics$defects$no_defect',
-    defaultMessage: 'No defect',
-  },
-  statistics$defects$to_investigate: {
-    id: 'FilterNameById.statistics$defects$to_investigate',
-    defaultMessage: 'To investigate',
-  },
   ofTestCases: {
     id: 'Widgets.ofTestCases',
     defaultMessage: 'of test cases',
@@ -62,6 +31,7 @@ const messages = defineMessages({
 @connect(
   (state) => ({
     project: activeProjectSelector(state),
+    defectTypes: defectTypesSelector(state),
     getDefectLink: (params) => defectLinkSelector(state, params),
     getStatisticsLink: (name) => statisticsLinkSelector(state, { statuses: [name] }),
   }),
@@ -77,6 +47,7 @@ export class LaunchesComparisonChart extends Component {
     isPreview: PropTypes.bool,
     height: PropTypes.number,
     project: PropTypes.string.isRequired,
+    defectTypes: PropTypes.object.isRequired,
     container: PropTypes.instanceOf(Element).isRequired,
     observer: PropTypes.object.isRequired,
     getDefectLink: PropTypes.func.isRequired,
@@ -132,16 +103,17 @@ export class LaunchesComparisonChart extends Component {
     this.chart.toggle(id);
   };
 
-  onChartClick = (d) => {
-    const { widget, getDefectLink, getStatisticsLink } = this.props;
-    const name = d.id.split('$')[2];
-    const id = widget.content.result[d.index].id;
-    const defaultParams = this.getDefaultLinkParams(id);
-    const defectLocator = chartConfigs.defectLocators[name];
-    const link = defectLocator
-      ? getDefectLink({ defects: [defectLocator], itemId: id })
-      : getStatisticsLink(name);
+  onChartClick = (data) => {
+    const { widget, getDefectLink, getStatisticsLink, defectTypes } = this.props;
 
+    const nameConfig = getItemNameConfig(data.id);
+    const id = widget.content.result[data.index].id;
+    const defaultParams = this.getDefaultLinkParams(id);
+    const defectLocators = getDefectTypeLocators(nameConfig, defectTypes);
+
+    const link = defectLocators
+      ? getDefectLink({ defects: defectLocators, itemId: id })
+      : getStatisticsLink(nameConfig.defectType.toUpperCase());
     this.props.redirect(Object.assign(link, defaultParams));
   };
 
@@ -178,9 +150,9 @@ export class LaunchesComparisonChart extends Component {
     this.itemData = [];
 
     Object.keys(data[0].values).forEach((key) => {
-      const testName = key.split('$')[2].toUpperCase();
+      const keyConfig = getItemNameConfig(key);
       chartData[key] = [key];
-      colors[key] = COLORS[`COLOR_${testName}`];
+      colors[key] = getItemColor(keyConfig, this.props.defectTypes);
     });
 
     data.forEach((item) => {
@@ -291,6 +263,10 @@ export class LaunchesComparisonChart extends Component {
 
   renderContents = (d, defaultTitleFormat, defaultValueFormat, color) => {
     const { name, number, startTime } = this.itemData[d[0].index];
+    const {
+      intl: { formatMessage },
+      defectTypes,
+    } = this.props;
     const id = d[0].id;
 
     return ReactDOMServer.renderToStaticMarkup(
@@ -299,9 +275,9 @@ export class LaunchesComparisonChart extends Component {
           launchName={name}
           launchNumber={number}
           startTime={Number(startTime)}
-          itemCases={d[0].value}
+          itemCases={`${d[0].value}%`}
           color={color(id)}
-          itemName={this.props.intl.formatMessage(messages[id.split('$total')[0]])}
+          itemName={getItemName(getItemNameConfig(id), defectTypes, formatMessage, true)}
         />
       </TooltipWrapper>,
     );
@@ -313,6 +289,7 @@ export class LaunchesComparisonChart extends Component {
         <C3Chart config={this.config} onChartCreated={this.onChartCreated}>
           <Legend
             items={this.itemNames}
+            noTotal
             onClick={this.onClick}
             onMouseOver={this.onMouseOver}
             onMouseOut={this.onMouseOut}

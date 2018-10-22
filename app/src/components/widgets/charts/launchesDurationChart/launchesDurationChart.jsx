@@ -5,7 +5,6 @@ import ReactDOMServer from 'react-dom/server';
 import classNames from 'classnames/bind';
 import { COLOR_CHART_DURATION, COLOR_FAILED } from 'common/constants/colors';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-
 import { C3Chart } from '../common/c3chart';
 import { LaunchDurationTooltip } from './launchDurationTooltip';
 import { isValueInterrupted, transformCategoryLabel, getLaunchAxisTicks } from './chartUtils';

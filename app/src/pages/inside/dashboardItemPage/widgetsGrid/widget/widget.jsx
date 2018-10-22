@@ -15,6 +15,7 @@ import { LaunchesComparisonChart } from 'components/widgets/charts/launchesCompa
 import { UniqueBugsTable } from 'pages/inside/dashboardPage/widgets/uniqueBugsTable';
 import { LaunchesDurationChart } from 'components/widgets/charts/launchesDurationChart';
 import { LaunchesTable } from 'pages/inside/dashboardPage/widgets/launchesTable';
+import { LaunchStatisticsChart } from 'components/widgets/charts/launchStatisticsChart';
 import { FailedCasesTrendChart } from 'components/widgets/charts/failedCasesTrendChart';
 import { NonPassedTestCasesTrendChart } from 'components/widgets/charts/nonPassedTestCasesTrendChart';
 import { PassingRatePerLaunch } from 'components/widgets/charts/passingRatePerLaunch';
@@ -27,6 +28,7 @@ const charts = {
   [widgetTypes.UNIQUE_BUGS_TABLE]: UniqueBugsTable,
   [widgetTypes.DIFFERENT_LAUNCHES_COMPARISON]: LaunchesComparisonChart,
   [widgetTypes.LAUNCHES_TABLE]: LaunchesTable,
+  [widgetTypes.LAUNCH_STATISTICS]: LaunchStatisticsChart,
   [widgetTypes.LAUNCH_DURATION]: LaunchesDurationChart,
   [widgetTypes.FAILED_CASES_TREND]: FailedCasesTrendChart,
   [widgetTypes.NON_PASSED_TEST_CASES_TREND]: NonPassedTestCasesTrendChart,
@@ -72,6 +74,7 @@ export class Widget extends Component {
 
     this.state = {
       loading: true,
+      show: true,
       widget: {
         content: {},
         contentParameters: {},
@@ -80,7 +83,14 @@ export class Widget extends Component {
   }
 
   componentDidMount() {
+    this.props.observer.subscribe(`${this.props.widgetId}_resizeStarted`, this.hideWidget);
+    this.props.observer.subscribe('widgetResized', this.showWidget);
     this.fetchWidget();
+  }
+
+  componentWillUnmount() {
+    this.props.observer.unsubscribe(`${this.props.widgetId}_resizeStarted`, this.hideWidget);
+    this.props.observer.unsubscribe('widgetResized', this.showWidget);
   }
 
   getContentParams = () => this.state.widget.contentParameters || {};
@@ -89,6 +99,18 @@ export class Widget extends Component {
 
   getWidgetNode = (node) => {
     this.node = node;
+  };
+
+  showWidget = () => {
+    this.setState({
+      show: true,
+    });
+  };
+
+  hideWidget = () => {
+    this.setState({
+      show: false,
+    });
   };
 
   fetchWidget = () => {
@@ -116,7 +138,7 @@ export class Widget extends Component {
   };
 
   render() {
-    const { widget } = this.state;
+    const { widget, show } = this.state;
     const headerData = {
       owner: widget.owner,
       shared: widget.share,
@@ -145,7 +167,7 @@ export class Widget extends Component {
               onDelete={this.deleteWidget}
             />
           </div>
-          <div ref={this.getWidgetNode} className={cx('widget')}>
+          <div ref={this.getWidgetNode} className={cx('widget', { hidden: !show })}>
             {this.state.loading && <SpinningPreloader />}
             {Chart && (
               <Chart widget={widget} container={this.node} observer={this.props.observer} />
