@@ -1,1 +1,1 @@
-export { rangeMaxValue, getLaunchAxisTicks } from './chartRange';
+export { rangeMaxValue, getLaunchAxisTicks, getTimelineAxisTicks } from './chartRange';

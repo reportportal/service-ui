@@ -1,0 +1,37 @@
+.launch-name {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  font-family: $FONT-SEMIBOLD;
+}
+.launch-start-time {
+  width: 100%;
+
+  &.timeline-mode {
+    font-family: $FONT-SEMIBOLD;
+  }
+}
+.item-wrapper {
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  position: relative;
+
+  .item-cases {
+    display: inline-block;
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+
+    .item-cases-growth {
+      .increase {
+        color: $COLOR--dark-pastel-green;
+      }
+      .decrease {
+        color: $COLOR--orange-red;
+      }
+    }
+    span {
+      font-family: $FONT-SEMIBOLD;
+    }
+  }
+}
