@@ -8,3 +8,5 @@ export const COLOR_NO_DEFECT = '#777777';
 export const COLOR_SYSTEM_ISSUE = '#0274d1';
 export const COLOR_TO_INVESTIGATE = '#ffb743';
 export const COLOR_CHART_DURATION = '#557fd3';
+export const COLOR_ORANGE_RED = '#ff3222';
+export const COLOR_DARK_PASTEL_GREEN = '#5cb755';

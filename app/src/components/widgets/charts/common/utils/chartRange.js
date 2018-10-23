@@ -8,3 +8,13 @@ export const getLaunchAxisTicks = (itemsLength) => {
   }
   return array;
 };
+
+export const getTimelineAxisTicks = (itemsLength) => {
+  const start = itemsLength > 5 ? ((itemsLength / 5 / 2).toFixed() / 2).toFixed() : 0;
+  const step = itemsLength > 5 ? (itemsLength / 5).toFixed() : 1;
+  const result = [];
+  for (let iterator = start; iterator < itemsLength; iterator += step) {
+    result.push(iterator);
+  }
+  return result;
+};

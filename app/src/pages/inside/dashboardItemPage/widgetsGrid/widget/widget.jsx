@@ -10,6 +10,7 @@ import { connect } from 'react-redux';
 import { activeProjectSelector } from 'controllers/user';
 import { showModalAction } from 'controllers/modal';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
+import { TestCasesGrowthTrendChart } from 'components/widgets/charts/testCasesGrowthTrendChart';
 import { LaunchesComparisonChart } from 'components/widgets/charts/launchesComparisonChart';
 import { LaunchesDurationChart } from 'components/widgets/charts/launchesDurationChart';
 import { LaunchesTable } from 'pages/inside/dashboardPage/widgets/launchesTable';
@@ -26,6 +27,7 @@ const charts = {
   [widgetTypes.LAUNCH_DURATION]: LaunchesDurationChart,
   [widgetTypes.FAILED_CASES_TREND]: FailedCasesTrendChart,
   [widgetTypes.NON_PASSED_TEST_CASES_TREND]: NonPassedTestCasesTrendChart,
+  [widgetTypes.TEST_CASES_GROWTH_TREND]: TestCasesGrowthTrendChart,
 };
 
 @connect(
