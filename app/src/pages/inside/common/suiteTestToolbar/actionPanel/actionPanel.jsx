@@ -15,7 +15,8 @@ import {
 import { HISTORY_PAGE, payloadSelector } from 'controllers/pages';
 import { externalSystemSelector } from 'controllers/project';
 import { Breadcrumbs, breadcrumbDescriptorShape } from 'components/main/breadcrumbs';
-import { SUITES_PAGE_EVENTS } from 'components/main/analytics/events';
+import { SUITES_PAGE_EVENTS } from 'components/main/analytics/events/suitesPageEvents';
+import { STEP_PAGE_EVENTS } from 'components/main/analytics/events';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { GhostMenuButton } from 'components/buttons/ghostMenuButton';
 import { LEVEL_STEP, LEVEL_SUITE, LEVEL_TEST } from 'common/constants/launchLevels';
@@ -118,8 +119,6 @@ export class ActionPanel extends Component {
     externalSystems: PropTypes.array,
     deleteDisabled: PropTypes.bool,
     redirect: PropTypes.func.isRequired,
-    historyEventInfo: PropTypes.object,
-    refreshEventInfo: PropTypes.object,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
@@ -150,8 +149,6 @@ export class ActionPanel extends Component {
     listView: false,
     externalSystems: [],
     deleteDisabled: false,
-    historyEventInfo: {},
-    refreshEventInfo: {},
   };
 
   constructor(props) {
@@ -160,12 +157,20 @@ export class ActionPanel extends Component {
   }
 
   onClickHistory = () => {
-    this.props.tracking.trackEvent(this.props.historyEventInfo);
+    this.props.tracking.trackEvent(
+      this.props.level === LEVEL_STEP
+        ? STEP_PAGE_EVENTS.HISTORY_BTN
+        : SUITES_PAGE_EVENTS.HISTORY_BTN,
+    );
     this.props.redirect({ type: HISTORY_PAGE, payload: this.props.payload });
   };
 
   onClickRefresh = () => {
-    this.props.tracking.trackEvent(this.props.refreshEventInfo);
+    this.props.tracking.trackEvent(
+      this.props.level === LEVEL_STEP
+        ? STEP_PAGE_EVENTS.REFRESH_BTN
+        : SUITES_PAGE_EVENTS.REFRESH_BTN,
+    );
     this.props.onRefresh();
   };
 
@@ -177,7 +182,10 @@ export class ActionPanel extends Component {
     {
       label: this.props.intl.formatMessage(messages.editDefects),
       value: 'action-edit-defects',
-      onClick: this.props.onEditDefects,
+      onClick: (data) => {
+        this.props.tracking.trackEvent(STEP_PAGE_EVENTS.EDIT_DEFECT_ACTION);
+        this.props.onEditDefects(data);
+      },
     },
     {
       label: this.props.intl.formatMessage(messages.postIssue),
@@ -188,7 +196,10 @@ export class ActionPanel extends Component {
         (this.checkIfThePostIssueUnavailable() &&
           this.props.intl.formatMessage(messages.noBugTrackingSystemToPostIssue)) ||
         '',
-      onClick: this.props.onPostIssue,
+      onClick: () => {
+        this.props.tracking.trackEvent(STEP_PAGE_EVENTS.POST_BUG_ACTION);
+        this.props.onPostIssue();
+      },
     },
     {
       label: this.props.intl.formatMessage(messages.linkIssue),
@@ -199,7 +210,10 @@ export class ActionPanel extends Component {
         (!this.props.externalSystems.length &&
           this.props.intl.formatMessage(messages.noBugTrackingSystemToLinkIssue)) ||
         '',
-      onClick: this.props.onLinkIssue,
+      onClick: () => {
+        this.props.tracking.trackEvent(STEP_PAGE_EVENTS.LOAD_BUG_ACTION);
+        this.props.onLinkIssue();
+      },
     },
     {
       label: this.props.intl.formatMessage(messages.unlinkIssue),
@@ -240,14 +254,17 @@ export class ActionPanel extends Component {
       selectedItems,
       listView,
       debugMode,
+      level,
     } = this.props;
     return (
       <div className={cx('action-panel', { 'right-buttons-only': !showBreadcrumbs && !hasErrors })}>
         {showBreadcrumbs && (
           <Breadcrumbs
-            togglerEventInfo={SUITES_PAGE_EVENTS.PLUS_MINUS_BREADCRUMB}
-            breadcrumbEventInfo={SUITES_PAGE_EVENTS.ITEM_NAME_BREADCRUMB_CLICK}
-            allEventClick={SUITES_PAGE_EVENTS.ALL_LABEL_BREADCRUMB}
+            togglerEventInfo={level !== LEVEL_STEP ? SUITES_PAGE_EVENTS.PLUS_MINUS_BREADCRUMB : {}}
+            breadcrumbEventInfo={
+              level !== LEVEL_STEP ? SUITES_PAGE_EVENTS.ITEM_NAME_BREADCRUMB_CLICK : {}
+            }
+            allEventClick={level !== LEVEL_STEP ? SUITES_PAGE_EVENTS.ALL_LABEL_BREADCRUMB : {}}
             descriptors={breadcrumbs}
             onRestorePath={restorePath}
           />

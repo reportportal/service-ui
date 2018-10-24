@@ -1,4 +1,5 @@
 import { Component } from 'react';
+import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
@@ -8,6 +9,7 @@ import { externalSystemSelector } from 'controllers/project';
 import { fetchTestItemsAction } from 'controllers/testItem';
 import { unlinkIssueAction, linkIssueAction } from 'controllers/step';
 import { hideModalAction } from 'controllers/modal';
+import { STEP_PAGE_EVENTS } from 'components/main/analytics/events';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { fetch, setStorageItem, getStorageItem } from 'common/utils';
 import { URLS } from 'common/urls';
@@ -96,6 +98,7 @@ const messages = defineMessages({
     linkIssueAction,
   },
 )
+@track()
 export class EditDefectModal extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
@@ -111,6 +114,10 @@ export class EditDefectModal extends Component {
     fetchTestItemsAction: PropTypes.func.isRequired,
     unlinkIssueAction: PropTypes.func.isRequired,
     linkIssueAction: PropTypes.func.isRequired,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
 
   constructor(props) {
@@ -164,8 +171,10 @@ export class EditDefectModal extends Component {
 
   onEditDefects = (nextAction, issueAction) => {
     if (this.checkIfTheDataWasChanged()) {
+      this.props.tracking.trackEvent(STEP_PAGE_EVENTS.EDIT_DESCRIPTION_EDIT_DEFECT_MODAL);
       this.fetchEditDefects(this.prepareDataToSend());
     }
+    !issueAction && this.props.tracking.trackEvent(STEP_PAGE_EVENTS.SAVE_BTN_EDIT_DEFECT_MODAL);
     issueAction && this.props.hideModalAction();
     nextAction();
   };
@@ -339,6 +348,7 @@ export class EditDefectModal extends Component {
     };
     const cancelButton = {
       text: intl.formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+      eventInfo: STEP_PAGE_EVENTS.CANCEL_BTN_EDIT_DEFECT_MODAL,
     };
     return (
       <ModalLayout
@@ -347,6 +357,7 @@ export class EditDefectModal extends Component {
         okButton={debugMode ? okButton : null}
         cancelButton={cancelButton}
         closeConfirmation={this.getCloseConfirmationConfig()}
+        closeIconEventInfo={STEP_PAGE_EVENTS.CLOSE_ICON_EDIT_DEFECT_MODAL}
       >
         <div className={cx('edit-defect-content')}>
           <div className={cx('defect-type')}>

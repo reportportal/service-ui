@@ -51,8 +51,6 @@ export const SuiteTestToolbar = ({
       onEditDefects={onEditDefects}
       onDelete={onDelete}
       deleteDisabled={!selectedItems.length}
-      historyEventInfo={events.HISTORY_BTN}
-      refreshEventInfo={events.REFRESH_BTN}
     />
     {parentItem && <InfoLine data={parentItem} events={events} />}
     <RefineFiltersPanel

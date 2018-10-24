@@ -30,10 +30,10 @@ export const setPageLoadingAction = (isLoading) => ({
 export const deleteItemsAction = defineGroupOperation(
   NAMESPACE,
   'deleteTestItems',
-  (items, { onConfirm, header, mainContent, userId, currentLaunch, warning }) =>
+  (items, { onConfirm, header, mainContent, userId, currentLaunch, warning, eventsInfo }) =>
     showModalAction({
       id: 'deleteItemsModal',
-      data: { items, onConfirm, header, mainContent, userId, currentLaunch, warning },
+      data: { items, onConfirm, header, mainContent, userId, currentLaunch, warning, eventsInfo },
     }),
   validateDeleteItem,
 );

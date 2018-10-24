@@ -13,7 +13,8 @@ import { PageLayout, PageSection } from 'layouts/pageLayout';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { Breadcrumbs } from 'components/main/breadcrumbs';
 import { LEVEL_SUITE, LEVEL_TEST, LEVEL_STEP } from 'common/constants/launchLevels';
-import { SUITES_PAGE_EVENTS } from 'components/main/analytics/events';
+import { SUITES_PAGE_EVENTS } from 'components/main/analytics/events/suitesPageEvents';
+import { STEP_PAGE_EVENTS } from 'components/main/analytics/events';
 import { userIdSelector, activeProjectSelector } from 'controllers/user';
 import {
   levelSelector,
@@ -177,8 +178,11 @@ export class TestItemPage extends Component {
   };
 
   deleteItems = (selectedItems) => {
-    const { intl, userId, tracking } = this.props;
-    tracking.trackEvent(SUITES_PAGE_EVENTS.DELETE_BTN);
+    const { intl, userId, tracking, level } = this.props;
+    tracking.trackEvent(
+      LEVEL_STEP === level ? STEP_PAGE_EVENTS.DELETE_ACTION : SUITES_PAGE_EVENTS.DELETE_BTN,
+    );
+
     this.props.deleteItemsAction(selectedItems, {
       onConfirm: (items) => this.confirmDeleteItems(items, selectedItems),
       header:
@@ -195,6 +199,11 @@ export class TestItemPage extends Component {
         selectedItems.length === 1
           ? intl.formatMessage(messages.warning)
           : intl.formatMessage(messages.warningMultiple),
+      eventsInfo: {
+        closeIcon: LEVEL_STEP === level ? STEP_PAGE_EVENTS.CLOSE_ICON_DELETE_ITEM_MODAL : {},
+        cancelBtn: LEVEL_STEP === level ? STEP_PAGE_EVENTS.CANCEL_BTN_DELETE_ITEM_MODAL : {},
+        deleteBtn: LEVEL_STEP === level ? STEP_PAGE_EVENTS.DELETE_BTN_DELETE_ITEM_MODAL : {},
+      },
     });
   };
 

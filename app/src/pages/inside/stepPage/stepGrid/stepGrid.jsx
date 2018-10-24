@@ -1,4 +1,5 @@
 import { Component } from 'react';
+import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import { injectIntl } from 'react-intl';
 import classNames from 'classnames/bind';
@@ -13,6 +14,7 @@ import {
   ENTITY_START_TIME,
   ENTITY_DEFECT_TYPE,
 } from 'components/filterEntities/constants';
+import { STEP_PAGE_EVENTS } from 'components/main/analytics/events';
 import { PredefinedFilterSwitcher } from './predefinedFilterSwitcher';
 import { DefectType } from './defectType';
 import { GroupHeader } from './groupHeader';
@@ -109,6 +111,7 @@ PredefinedFilterSwitcherCell.defaultProps = {
 };
 
 @injectIntl
+@track()
 export class StepGrid extends Component {
   static propTypes = {
     data: PropTypes.array,
@@ -121,6 +124,11 @@ export class StepGrid extends Component {
     onShowTestParams: PropTypes.func,
     onFilterClick: PropTypes.func,
     onEditDefect: PropTypes.func,
+    events: PropTypes.object,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
     onEditItem: PropTypes.func,
   };
 
@@ -135,10 +143,12 @@ export class StepGrid extends Component {
     onFilterClick: () => {},
     onEditDefect: () => {},
     onEditItem: () => {},
+    events: {},
   };
 
   constructor(props) {
     super(props);
+    const { events } = this.props;
     this.columns = [
       {
         id: 'predefinedFilterSwitcher',
@@ -158,6 +168,8 @@ export class StepGrid extends Component {
           formatMessage: props.intl.formatMessage,
         },
         withFilter: true,
+        filterEventInfo: events.METHOD_TYPE_FILTER,
+        sortingEventInfo: events.METHOD_TYPE_SORTING,
       },
       {
         id: 'name',
@@ -172,6 +184,8 @@ export class StepGrid extends Component {
           onEditItem: props.onEditItem,
         },
         withFilter: true,
+        filterEventInfo: events.NAME_FILTER,
+        sortingEventInfo: events.NAME_SORTING,
       },
       {
         id: ENTITY_STATUS,
@@ -184,6 +198,8 @@ export class StepGrid extends Component {
           formatMessage: props.intl.formatMessage,
         },
         withFilter: true,
+        filterEventInfo: events.STATUS_FILTER,
+        sortingEventInfo: events.STATUS_SORTING,
       },
       {
         id: ENTITY_START_TIME,
@@ -193,6 +209,8 @@ export class StepGrid extends Component {
         sortable: true,
         component: StartTimeColumn,
         withFilter: true,
+        filterEventInfo: events.START_TIME_FILTER,
+        sortingEventInfo: events.START_TIME_SORTING,
       },
       {
         id: ENTITY_DEFECT_TYPE,
@@ -202,9 +220,14 @@ export class StepGrid extends Component {
         sortable: true,
         component: DefectTypeColumn,
         customProps: {
-          onEdit: props.onEditDefect,
+          onEdit: (data) => {
+            props.tracking.trackEvent(STEP_PAGE_EVENTS.EDIT_DEFECT_TYPE_ICON);
+            props.onEditDefect(data);
+          },
         },
         withFilter: true,
+        filterEventInfo: events.DEFECT_TYPE_FILTER,
+        sortingEventInfo: events.DEFECT_TYPE_SORTING,
       },
     ];
   }
