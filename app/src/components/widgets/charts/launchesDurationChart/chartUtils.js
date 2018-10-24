@@ -22,7 +22,7 @@ export const getTimeType = (max) => {
   return { value: 3600000, type: TIME_TYPES.HOURS };
 };
 export const transformCategoryLabel = (item) => `# ${item.number}`;
-export const validItemsFilter = (item) => validStatuses.indexOf(item.values.status) > -1;
+export const validItemsFilter = (item) => validStatuses.indexOf(item.status) > -1;
 export const rangeMaxValue = (itemsLength) => (itemsLength > 6 ? Math.round(itemsLength / 12) : 1);
 export const getLaunchAxisTicks = (itemsLength) => {
   const step = rangeMaxValue(itemsLength);
@@ -36,9 +36,9 @@ export const getListAverage = (data) => {
   let count = 0;
   let sum = 0; // sum of not-interrupted launches duration
   data.filter(validItemsFilter).forEach((item) => {
-    if (!isValueInterrupted(item.values)) {
+    if (!isValueInterrupted(item)) {
       count += 1;
-      sum += +item.values.duration;
+      sum += +item.duration;
     }
   });
   return sum / count;
