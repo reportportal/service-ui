@@ -1,4 +1,5 @@
 import { Component } from 'react';
+import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { PageLayout, PageSection } from 'layouts/pageLayout';
@@ -11,6 +12,7 @@ import {
   namespaceSelector,
 } from 'controllers/testItem';
 import { debugModeSelector } from 'controllers/launch';
+import { STEP_PAGE_EVENTS, STEP_PAGE } from 'components/main/analytics/events';
 import {
   stepsSelector,
   selectedStepsSelector,
@@ -61,6 +63,7 @@ import { StepGrid } from './stepGrid';
   paginationSelector: stepPaginationSelector,
   namespaceSelector,
 })
+@track({ page: STEP_PAGE })
 export class StepPage extends Component {
   static propTypes = {
     deleteItems: PropTypes.func,
@@ -96,6 +99,10 @@ export class StepPage extends Component {
     onFilterChange: PropTypes.func,
     filterErrors: PropTypes.object,
     filterEntities: PropTypes.array,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
 
   static defaultProps = {
@@ -138,11 +145,27 @@ export class StepPage extends Component {
 
   handleAllStepsSelection = () => {
     const { selectedItems, steps } = this.props;
+    this.props.tracking.trackEvent(STEP_PAGE_EVENTS.SELECT_ALL_ITEMS);
     if (steps.length === selectedItems.length) {
       this.props.unselectAllSteps();
       return;
     }
     this.props.selectStepsAction(steps);
+  };
+
+  handleOneItemSelection = (value) => {
+    this.props.tracking.trackEvent(STEP_PAGE_EVENTS.SELECT_ONE_ITEM);
+    this.props.toggleStepSelection(value);
+  };
+
+  unselectAllItems = () => {
+    this.props.tracking.trackEvent(STEP_PAGE_EVENTS.CLOSE_ICON_FOR_ALL_SELECTIONS);
+    this.props.unselectAllSteps();
+  };
+
+  unselectItem = (item) => {
+    this.props.tracking.trackEvent(STEP_PAGE_EVENTS.CLOSE_ICON_SELECTED_ITEM);
+    this.props.toggleStepSelection(item);
   };
 
   handleUnlinkIssue = () =>
@@ -173,8 +196,10 @@ export class StepPage extends Component {
     });
   };
 
-  proceedWithValidItems = () =>
+  proceedWithValidItems = () => {
+    this.props.tracking.trackEvent(STEP_PAGE_EVENTS.PROCEED_VALID_ITEMS);
     this.props.proceedWithValidItemsAction(this.props.lastOperation, this.props.selectedItems);
+  };
 
   deleteItems = () => {
     const { selectedItems, deleteItems } = this.props;
@@ -186,8 +211,6 @@ export class StepPage extends Component {
       parentItem,
       steps,
       selectedItems,
-      toggleStepSelection,
-      unselectAllSteps,
       validationErrors,
       loading,
       listView,
@@ -215,8 +238,8 @@ export class StepPage extends Component {
             errors={validationErrors}
             selectedItems={selectedItems}
             parentItem={parentItem}
-            onUnselect={toggleStepSelection}
-            onUnselectAll={unselectAllSteps}
+            onUnselect={this.unselectItem}
+            onUnselectAll={this.unselectAllItems}
             onProceedValidItems={this.proceedWithValidItems}
             onRefresh={this.props.fetchTestItemsAction}
             debugMode={debugMode}
@@ -236,11 +259,12 @@ export class StepPage extends Component {
             data={steps}
             selectedItems={selectedItems}
             onAllItemsSelect={this.handleAllStepsSelection}
-            onItemSelect={toggleStepSelection}
+            onItemSelect={this.handleOneItemSelection}
             loading={loading}
             listView={listView}
             onShowTestParams={showTestParamsModal}
             onEditDefect={this.handleEditDefects}
+            events={STEP_PAGE_EVENTS}
             onEditItem={onEditItem}
             onFilterClick={onFilterAdd}
           />

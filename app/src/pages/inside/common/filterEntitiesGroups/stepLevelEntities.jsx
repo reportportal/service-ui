@@ -26,6 +26,7 @@ import {
   AFTER_GROUPS,
   AFTER_SUITE,
 } from 'common/constants/methodTypes';
+import { STEP_PAGE_EVENTS } from 'components/main/analytics/events';
 import {
   EntityItemName,
   EntityItemDescription,
@@ -326,6 +327,7 @@ export class StepLevelEntities extends Component {
         active: true,
         removable: false,
         static: true,
+        eventInfo: STEP_PAGE_EVENTS.REFINE_BY_NAME,
       },
       {
         id: ENTITY_METHOD_TYPE,

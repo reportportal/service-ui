@@ -6,3 +6,4 @@ export { MEMBERS_PAGE, MEMBERS_PAGE_EVENTS } from './membersPageEvents';
 export { PROFILE_PAGE, PROFILE_PAGE_EVENTS } from './profilePageEvents';
 export { SETTINGS_PAGE, SETTINGS_PAGE_EVENTS } from './settingsPageEvents';
 export { SUITE_PAGE, SUITES_PAGE_EVENTS } from './suitesPageEvents';
+export { STEP_PAGE, STEP_PAGE_EVENTS } from './stepPageEvents';

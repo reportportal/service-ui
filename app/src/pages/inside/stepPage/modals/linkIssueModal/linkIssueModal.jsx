@@ -1,4 +1,5 @@
 import { Component } from 'react';
+import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { reduxForm, FieldArray } from 'redux-form';
@@ -9,6 +10,7 @@ import { externalSystemSelector } from 'controllers/project';
 import { ModalLayout, withModal } from 'components/main/modal';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { STEP_PAGE_EVENTS } from 'components/main/analytics/events';
 import { URLS } from 'common/urls';
 import { InputDropdown } from 'components/inputs/inputDropdown';
 import { FormField } from 'components/fields/formField';
@@ -68,6 +70,7 @@ const messages = defineMessages({
   },
 )
 @injectIntl
+@track()
 export class LinkIssueModal extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
@@ -81,6 +84,10 @@ export class LinkIssueModal extends Component {
     data: PropTypes.shape({
       items: PropTypes.array,
       fetchFunc: PropTypes.func,
+    }).isRequired,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
     }).isRequired,
   };
 
@@ -134,6 +141,7 @@ export class LinkIssueModal extends Component {
   };
 
   onLink = () => (closeModal) => {
+    this.props.tracking.trackEvent(STEP_PAGE_EVENTS.LOAD_BTN_LOAD_BUG_MODAL);
     this.closeModal = closeModal;
     this.props.handleSubmit(this.onFormSubmit)();
   };
@@ -157,6 +165,7 @@ export class LinkIssueModal extends Component {
     };
     const cancelButton = {
       text: intl.formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+      eventInfo: STEP_PAGE_EVENTS.CANCEL_BTN_LOAD_BUG_MODAL,
     };
 
     return (
@@ -170,6 +179,7 @@ export class LinkIssueModal extends Component {
         okButton={okButton}
         cancelButton={cancelButton}
         closeConfirmation={this.getCloseConfirmationConfig()}
+        closeIconEventInfo={STEP_PAGE_EVENTS.CLOSE_ICON_LOAD_BUG_MODAL}
       >
         <h4 className={cx('add-issue-id-title')}>{intl.formatMessage(messages.addIssueIdTitle)}</h4>
         <div className={cx('link-issue-form-wrapper')}>
@@ -184,7 +194,12 @@ export class LinkIssueModal extends Component {
                 <InputDropdown options={this.dropdownOptions} />
               </FormField>
             )}
-            <FieldArray name="issues" change={this.props.change} component={LinkIssueFields} />
+            <FieldArray
+              name="issues"
+              change={this.props.change}
+              component={LinkIssueFields}
+              addEventInfo={STEP_PAGE_EVENTS.ADD_NEW_ISSUE_BTN_LOAD_BUG_MODAL}
+            />
           </form>
         </div>
       </ModalLayout>
