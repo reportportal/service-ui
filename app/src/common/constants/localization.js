@@ -66,7 +66,7 @@ export const COMMON_LOCALE_KEYS = defineMessages({
     defaultMessage: 'Add',
   },
   SECONDS: {
-    id: 'Common.dateTime.seconds',
+    id: 'Common.seconds',
     defaultMessage: 'seconds',
   },
 });

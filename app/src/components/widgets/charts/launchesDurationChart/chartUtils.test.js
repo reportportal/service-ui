@@ -52,10 +52,10 @@ describe('chartUtils', () => {
 
   describe('validItemsFilter', () => {
     test('can filter out valid items', () => {
-      const itemStopped = { values: { status: 'STOPPED' }, id: '5bb342ee0274390001975997' };
-      const itemFailed = { values: { status: 'FAILED' }, id: '5bb342e60274390001974193' };
-      const itemInterrupted = { values: { status: 'INTERRUPTED' }, id: '5bb342e50274390001973ec7' };
-      const itemPassed = { values: { status: 'PASSED' }, id: '5bb342e50274390001973f69' };
+      const itemStopped = { id: '5bb342ee0274390001975997', status: 'STOPPED' };
+      const itemFailed = { id: '5bb342e60274390001974193', status: 'FAILED' };
+      const itemInterrupted = { id: '5bb342e50274390001973ec7', status: 'INTERRUPTED' };
+      const itemPassed = { id: '5bb342e50274390001973f69', status: 'PASSED' };
       expect(validItemsFilter(itemStopped)).toBe(true);
       expect(validItemsFilter(itemFailed)).toBe(true);
       expect(validItemsFilter(itemInterrupted)).toBe(false);
@@ -90,34 +90,28 @@ describe('chartUtils', () => {
     test('can calculate average value from a list of valid items', () => {
       const input = [
         {
-          values: {
-            duration: '4607',
-            start_time: '1538474734721',
-            end_time: '1538474739328',
-            status: 'STOPPED',
-          },
+          duration: '4607',
+          start_time: '1538474734721',
+          end_time: '1538474739328',
+          status: 'STOPPED',
           name: 'Demo Api Tests__ncst',
           number: '6',
           id: '5bb342ee0274390001975997',
         },
         {
-          values: {
-            duration: '1526',
-            start_time: '1538474726486',
-            end_time: '1538474728012',
-            status: 'FAILED',
-          },
+          duration: '1526',
+          start_time: '1538474726486',
+          end_time: '1538474728012',
+          status: 'FAILED',
           name: 'Demo Api Tests__ncst',
           number: '3',
           id: '5bb342e60274390001974193',
         },
         {
-          values: {
-            duration: '830',
-            start_time: '1538474725654',
-            end_time: '1538474726485',
-            status: 'PASSED',
-          },
+          duration: '830',
+          start_time: '1538474725654',
+          end_time: '1538474726485',
+          status: 'PASSED',
           name: 'Demo Api Tests__ncst',
           number: '2',
           id: '5bb342e50274390001973f69',
@@ -129,34 +123,28 @@ describe('chartUtils', () => {
     test('can calculate average value from a list of valid and invalid items', () => {
       const input = [
         {
-          values: {
-            duration: '4607',
-            start_time: '1538474734721',
-            end_time: '1538474739328',
-            status: 'STOPPED',
-          },
+          duration: '4607',
+          start_time: '1538474734721',
+          end_time: '1538474739328',
+          status: 'STOPPED',
           name: 'Demo Api Tests__ncst',
           number: '6',
           id: '5bb342ee0274390001975997',
         },
         {
-          values: {
-            duration: '1526',
-            start_time: '1538474726486',
-            end_time: '1538474728012',
-            status: 'FAILED',
-          },
+          duration: '1526',
+          start_time: '1538474726486',
+          end_time: '1538474728012',
+          status: 'FAILED',
           name: 'Demo Api Tests__ncst',
           number: '3',
           id: '5bb342e60274390001974193',
         },
         {
-          values: {
-            duration: '830',
-            start_time: '1538474725654',
-            end_time: '1538474726485',
-            status: 'INTERRUPTED',
-          },
+          duration: '830',
+          start_time: '1538474725654',
+          end_time: '1538474726485',
+          status: 'INTERRUPTED',
           name: 'Demo Api Tests__ncst',
           number: '2',
           id: '5bb342e50274390001973f69',
