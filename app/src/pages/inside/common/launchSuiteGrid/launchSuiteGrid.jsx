@@ -7,7 +7,6 @@ import { Grid } from 'components/main/grid';
 import { AbsRelTime } from 'components/main/absRelTime';
 import { ItemInfo } from 'pages/inside/common/itemInfo';
 import { ENTITY_START_TIME } from 'components/filterEntities/constants';
-import { LAUNCHES_PAGE_EVENTS } from 'components/main/analytics/events';
 import {
   STATS_TOTAL,
   STATS_SKIPPED,
@@ -122,7 +121,8 @@ const PbColumn = ({ className, ...rest }) => (
       customProps={rest.customProps}
       data={rest.value.statistics.defects && rest.value.statistics.defects.product_bug}
       itemId={rest.value.id}
-      eventInfo={LAUNCHES_PAGE_EVENTS.CLICK_PB_CIRCLE}
+      eventInfo={rest.customProps.events.PB_CHART}
+      tooltipEventInfo={rest.customProps.events.PB_TOOLTIP}
     />
   </div>
 );
@@ -137,7 +137,8 @@ const AbColumn = ({ className, ...rest }) => (
       customProps={rest.customProps}
       data={rest.value.statistics.defects && rest.value.statistics.defects.automation_bug}
       itemId={rest.value.id}
-      eventInfo={LAUNCHES_PAGE_EVENTS.CLICK_AB_CIRCLE}
+      eventInfo={rest.customProps.events.AB_CHART}
+      tooltipEventInfo={rest.customProps.events.AB_TOOLTIP}
     />
   </div>
 );
@@ -152,7 +153,8 @@ const SiColumn = ({ className, ...rest }) => (
       customProps={rest.customProps}
       data={rest.value.statistics.defects && rest.value.statistics.defects.system_issue}
       itemId={rest.value.id}
-      eventInfo={LAUNCHES_PAGE_EVENTS.CLICK_SI_CIRCLE}
+      eventInfo={rest.customProps.events.SI_CHART}
+      tooltipEventInfo={rest.customProps.events.SI_TOOLTIP}
     />
   </div>
 );
@@ -166,7 +168,7 @@ const TiColumn = ({ className, ...rest }) => (
       customProps={rest.customProps}
       value={rest.value.statistics.defects && rest.value.statistics.defects.to_investigate}
       itemId={rest.value.id}
-      eventInfo={LAUNCHES_PAGE_EVENTS.CLICK_TI_TAG}
+      eventInfo={rest.customProps.events.TI_CHART}
     />
   </div>
 );
@@ -190,6 +192,7 @@ export class LaunchSuiteGrid extends PureComponent {
     withHamburger: PropTypes.bool,
     loading: PropTypes.bool,
     onFilterClick: PropTypes.func,
+    events: PropTypes.object,
   };
   static defaultProps = {
     data: [],
@@ -206,6 +209,7 @@ export class LaunchSuiteGrid extends PureComponent {
     withHamburger: false,
     loading: false,
     onFilterClick: () => {},
+    events: {},
   };
   getColumns() {
     const hamburgerColumn = {
@@ -216,6 +220,7 @@ export class LaunchSuiteGrid extends PureComponent {
         onForceFinish: this.props.onForceFinish,
       },
     };
+    const { events } = this.props;
     const columns = [
       {
         id: 'name',
@@ -228,7 +233,9 @@ export class LaunchSuiteGrid extends PureComponent {
         sortable: true,
         customProps: {
           onEditItem: this.props.onEditItem,
+          events,
         },
+        sortingEventInfo: events.NAME_SORTING,
       },
       {
         id: ENTITY_START_TIME,
@@ -239,7 +246,8 @@ export class LaunchSuiteGrid extends PureComponent {
         component: StartTimeColumn,
         sortable: true,
         withFilter: true,
-        filterEventInfo: LAUNCHES_PAGE_EVENTS.CLICK_START_FILTER_ICON,
+        filterEventInfo: events.START_TIME_FILTER,
+        sortingEventInfo: events.START_TIME_SORTING,
       },
       {
         id: STATS_TOTAL,
@@ -250,7 +258,8 @@ export class LaunchSuiteGrid extends PureComponent {
         component: TotalColumn,
         sortable: true,
         withFilter: true,
-        filterEventInfo: LAUNCHES_PAGE_EVENTS.CLICK_TOTAL_FILTER_ICON,
+        filterEventInfo: events.TOTAL_FILTER,
+        sortingEventInfo: events.TOTAL_SORTING,
       },
       {
         id: STATS_PASSED,
@@ -261,7 +270,8 @@ export class LaunchSuiteGrid extends PureComponent {
         component: PassedColumn,
         sortable: true,
         withFilter: true,
-        filterEventInfo: LAUNCHES_PAGE_EVENTS.CLICK_PASSED_FILTER_ICON,
+        filterEventInfo: events.PASSED_FILTER,
+        sortingEventInfo: events.PASSED_SORTING,
       },
       {
         id: STATS_FAILED,
@@ -272,7 +282,8 @@ export class LaunchSuiteGrid extends PureComponent {
         component: FailedColumn,
         sortable: true,
         withFilter: true,
-        filterEventInfo: LAUNCHES_PAGE_EVENTS.CLICK_FAILED_FILTER_ICON,
+        filterEventInfo: events.FAILED_FILTER,
+        sortingEventInfo: events.FAILED_SORTING,
       },
       {
         id: STATS_SKIPPED,
@@ -283,7 +294,8 @@ export class LaunchSuiteGrid extends PureComponent {
         component: SkippedColumn,
         sortable: true,
         withFilter: true,
-        filterEventInfo: LAUNCHES_PAGE_EVENTS.CLICK_SKIPPED_FILTER_ICON,
+        filterEventInfo: events.SKIPPED_FILTER,
+        sortingEventInfo: events.SKIPPED_SORTING,
       },
       {
         id: STATS_PB_TOTAL,
@@ -294,10 +306,12 @@ export class LaunchSuiteGrid extends PureComponent {
         component: PbColumn,
         customProps: {
           abbreviation: 'pb',
+          events,
         },
         sortable: true,
         withFilter: true,
-        filterEventInfo: LAUNCHES_PAGE_EVENTS.CLICK_PRODUCT_BUG_FILTER_ICON,
+        filterEventInfo: events.PB_FILTER,
+        sortingEventInfo: events.PB_SORTING,
       },
       {
         id: STATS_AB_TOTAL,
@@ -308,10 +322,12 @@ export class LaunchSuiteGrid extends PureComponent {
         component: AbColumn,
         customProps: {
           abbreviation: 'ab',
+          events,
         },
         sortable: true,
         withFilter: true,
-        filterEventInfo: LAUNCHES_PAGE_EVENTS.CLICK_AUTO_BUG_FILTER_ICON,
+        filterEventInfo: events.AB_FILTER,
+        sortingEventInfo: events.AB_SORTING,
       },
       {
         id: STATS_SI_TOTAL,
@@ -322,10 +338,12 @@ export class LaunchSuiteGrid extends PureComponent {
         component: SiColumn,
         customProps: {
           abbreviation: 'si',
+          events,
         },
         sortable: true,
         withFilter: true,
-        filterEventInfo: LAUNCHES_PAGE_EVENTS.CLICK_SYSTEM_ISSUE_FILTER_ICON,
+        filterEventInfo: events.SI_FILTER,
+        sortingEventInfo: events.SI_SORTING,
       },
       {
         id: STATS_TI_TOTAL,
@@ -336,10 +354,12 @@ export class LaunchSuiteGrid extends PureComponent {
         component: TiColumn,
         customProps: {
           abbreviation: 'ti',
+          events,
         },
         sortable: true,
         withFilter: true,
-        filterEventInfo: LAUNCHES_PAGE_EVENTS.CLICK_TO_INVESTIGATE_FILTER_ICON,
+        filterEventInfo: events.TI_FILTER,
+        sortingEventInfo: events.TI_SORTING,
       },
     ];
     if (this.props.withHamburger) {

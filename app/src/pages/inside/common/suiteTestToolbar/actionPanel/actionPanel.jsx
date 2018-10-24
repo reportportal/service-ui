@@ -1,4 +1,5 @@
 import { Component } from 'react';
+import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
@@ -14,6 +15,7 @@ import {
 import { HISTORY_PAGE, payloadSelector } from 'controllers/pages';
 import { externalSystemSelector } from 'controllers/project';
 import { Breadcrumbs, breadcrumbDescriptorShape } from 'components/main/breadcrumbs';
+import { SUITES_PAGE_EVENTS } from 'components/main/analytics/events';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { GhostMenuButton } from 'components/buttons/ghostMenuButton';
 import { LEVEL_STEP, LEVEL_SUITE, LEVEL_TEST } from 'common/constants/launchLevels';
@@ -90,6 +92,7 @@ const messages = defineMessages({
   },
 )
 @injectIntl
+@track()
 export class ActionPanel extends Component {
   static propTypes = {
     payload: PropTypes.object.isRequired,
@@ -115,6 +118,12 @@ export class ActionPanel extends Component {
     externalSystems: PropTypes.array,
     deleteDisabled: PropTypes.bool,
     redirect: PropTypes.func.isRequired,
+    historyEventInfo: PropTypes.object,
+    refreshEventInfo: PropTypes.object,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
 
   static defaultProps = {
@@ -141,6 +150,8 @@ export class ActionPanel extends Component {
     listView: false,
     externalSystems: [],
     deleteDisabled: false,
+    historyEventInfo: {},
+    refreshEventInfo: {},
   };
 
   constructor(props) {
@@ -149,10 +160,14 @@ export class ActionPanel extends Component {
   }
 
   onClickHistory = () => {
+    this.props.tracking.trackEvent(this.props.historyEventInfo);
     this.props.redirect({ type: HISTORY_PAGE, payload: this.props.payload });
   };
 
-  checkVisibility = (levels) => levels.some((level) => this.props.level === level);
+  onClickRefresh = () => {
+    this.props.tracking.trackEvent(this.props.refreshEventInfo);
+    this.props.onRefresh();
+  };
 
   checkIfThePostIssueUnavailable = () =>
     !this.props.externalSystems.length ||
@@ -211,10 +226,11 @@ export class ActionPanel extends Component {
     },
   ];
 
+  checkVisibility = (levels) => levels.some((level) => this.props.level === level);
+
   render() {
     const {
       breadcrumbs,
-      onRefresh,
       restorePath,
       showBreadcrumbs,
       hasErrors,
@@ -227,7 +243,15 @@ export class ActionPanel extends Component {
     } = this.props;
     return (
       <div className={cx('action-panel', { 'right-buttons-only': !showBreadcrumbs && !hasErrors })}>
-        {showBreadcrumbs && <Breadcrumbs descriptors={breadcrumbs} onRestorePath={restorePath} />}
+        {showBreadcrumbs && (
+          <Breadcrumbs
+            togglerEventInfo={SUITES_PAGE_EVENTS.PLUS_MINUS_BREADCRUMB}
+            breadcrumbEventInfo={SUITES_PAGE_EVENTS.ITEM_NAME_BREADCRUMB_CLICK}
+            allEventClick={SUITES_PAGE_EVENTS.ALL_LABEL_BREADCRUMB}
+            descriptors={breadcrumbs}
+            onRestorePath={restorePath}
+          />
+        )}
         {hasErrors && (
           <GhostButton disabled={!hasValidItems} onClick={onProceedValidItems}>
             {intl.formatMessage(messages.proceedButton)}
@@ -268,7 +292,7 @@ export class ActionPanel extends Component {
               </div>
             )}
           <div className={cx('action-button')}>
-            <GhostButton icon={RefreshIcon} onClick={onRefresh}>
+            <GhostButton icon={RefreshIcon} onClick={this.onClickRefresh}>
               <FormattedMessage id="Common.refresh" defaultMessage="Refresh" />
             </GhostButton>
           </div>

@@ -1,4 +1,5 @@
 import { Fragment, Component } from 'react';
+import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import { FormattedMessage } from 'react-intl';
 import Parser from 'html-react-parser';
@@ -12,21 +13,41 @@ import styles from './breadcrumbs.scss';
 
 const cx = classNames.bind(styles);
 
+@track()
 export class Breadcrumbs extends Component {
   static propTypes = {
     descriptors: PropTypes.arrayOf(breadcrumbDescriptorShape),
     onRestorePath: PropTypes.func,
+    togglerEventInfo: PropTypes.object,
+    breadcrumbEventInfo: PropTypes.object,
+    allEventClick: PropTypes.object,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
   static defaultProps = {
     descriptors: [],
     onRestorePath: () => {},
+    togglerEventInfo: {},
+    breadcrumbEventInfo: {},
+    allEventClick: {},
   };
 
   state = {
     expanded: false,
   };
 
-  toggleExpand = () => this.setState({ expanded: !this.state.expanded });
+  onClickBreadcrumbItem = (idx) => {
+    this.props.tracking.trackEvent(
+      idx === 0 ? this.props.allEventClick : this.props.breadcrumbEventInfo,
+    );
+  };
+
+  toggleExpand = () => {
+    this.props.togglerEventInfo && this.props.tracking.trackEvent(this.props.togglerEventInfo);
+    this.setState({ expanded: !this.state.expanded });
+  };
 
   render() {
     const isLostLaunch = this.props.descriptors[1] && this.props.descriptors[1].lost;
@@ -43,7 +64,10 @@ export class Breadcrumbs extends Component {
           this.props.descriptors.map((descriptor, i) => (
             <Fragment key={descriptor.id}>
               {i > 0 && <div className={cx('separator')}>{Parser(RightArrowIcon)}</div>}
-              <Breadcrumb descriptor={descriptor} />
+              <Breadcrumb
+                descriptor={descriptor}
+                onClick={(idx) => this.onClickBreadcrumbItem(idx)}
+              />
             </Fragment>
           ))
         ) : (

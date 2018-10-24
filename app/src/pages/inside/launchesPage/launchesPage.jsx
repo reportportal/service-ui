@@ -288,7 +288,7 @@ export class LaunchesPage extends Component {
   };
 
   handleAllLaunchesSelection = () => {
-    !this.props.level && this.props.tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_SELECT_ALL_ICON);
+    this.props.tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_SELECT_ALL_ICON);
     this.props.toggleAllLaunchesAction(this.props.launches);
   };
 
@@ -379,6 +379,7 @@ export class LaunchesPage extends Component {
             onAllItemsSelect={this.handleAllLaunchesSelection}
             withHamburger
             loading={loading}
+            events={LAUNCHES_PAGE_EVENTS}
           />
           <PaginationToolbar
             activePage={activePage}

@@ -22,6 +22,7 @@ export const HeaderCell = track()(
     withFilter,
     onFilterClick,
     filterEventInfo,
+    sortingEventInfo,
     tracking,
   }) => {
     const computedClassName = {
@@ -41,7 +42,13 @@ export const HeaderCell = track()(
     return title.component ? (
       <TitleComponent className={cx('header-cell', computedClassName)} {...titleComponentProps} />
     ) : (
-      <div className={cx('header-cell', computedClassName)} onClick={() => onChangeSorting(id)}>
+      <div
+        className={cx('header-cell', computedClassName)}
+        onClick={() => {
+          tracking.trackEvent(sortingEventInfo);
+          onChangeSorting(id);
+        }}
+      >
         <div className={cx('title-container')}>
           <div className={cx('filter')} onClick={filterClickHandler}>
             {Parser(FilterIcon)}
@@ -61,6 +68,7 @@ HeaderCell.propTypes = {
   onChangeSorting: PropTypes.func,
   onFilterClick: PropTypes.func,
   filterEventInfo: PropTypes.object,
+  sortingEventInfo: PropTypes.object,
   tracking: PropTypes.shape({
     trackEvent: PropTypes.func,
     getTrackingData: PropTypes.func,
@@ -79,6 +87,7 @@ HeaderCell.defaultProps = {
   onChangeSorting: () => {},
   onFilterClick: () => {},
   filterEventInfo: {},
+  sortingEventInfo: {},
   tracking: {
     trackEvent: () => {},
     getTrackingData: () => {},

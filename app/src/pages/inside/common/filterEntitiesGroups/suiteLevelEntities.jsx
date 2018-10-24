@@ -23,6 +23,7 @@ import {
   EntityItemTags,
   EntityItemStatistics,
 } from 'components/filterEntities';
+import { SUITES_PAGE_EVENTS } from 'components/main/analytics/events';
 import {
   CONDITION_CNT,
   CONDITION_GREATER_EQ,
@@ -138,6 +139,7 @@ export class SuiteLevelEntities extends Component {
         active: true,
         removable: false,
         static: true,
+        eventInfo: SUITES_PAGE_EVENTS.REFINE_BY_NAME,
       },
       {
         id: ENTITY_START_TIME,

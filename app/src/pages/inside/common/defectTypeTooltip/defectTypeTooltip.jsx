@@ -2,13 +2,7 @@ import React, { Component, Fragment } from 'react';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import {
-  TO_INVESTIGATE,
-  PRODUCT_BUG,
-  AUTOMATION_BUG,
-  SYSTEM_ISSUE,
-} from 'common/constants/defectTypes';
-import { LAUNCHES_PAGE_EVENTS } from 'components/main/analytics/events';
+import { TO_INVESTIGATE } from 'common/constants/defectTypes';
 import { projectConfigSelector } from 'controllers/project';
 import { injectIntl, intlShape, defineMessages } from 'react-intl';
 import { DefectLink } from 'pages/inside/common/defectLink';
@@ -24,11 +18,6 @@ const messages = defineMessages({
   system_issue_total: { id: 'DefectTypeTooltip.si-total', defaultMessage: 'Total system issues' },
   no_defect_total: { id: 'DefectTypeTooltip.nd-total', defaultMessage: 'Total no defects' },
 });
-const EVENTS_MAP = {
-  [PRODUCT_BUG]: LAUNCHES_PAGE_EVENTS.CLICK_TOOLTIP_TTL_PB,
-  [AUTOMATION_BUG]: LAUNCHES_PAGE_EVENTS.CLICK_TOOLTIP_TTL_AB,
-  [SYSTEM_ISSUE]: LAUNCHES_PAGE_EVENTS.CLICK_TOOLTIP_TTL_SI,
-};
 
 @injectIntl
 @connect((state) => ({
@@ -40,16 +29,17 @@ export class DefectTypeTooltip extends Component {
     data: PropTypes.object.isRequired,
     projectConfig: PropTypes.object.isRequired,
     intl: intlShape.isRequired,
+    tooltipEventInfo: PropTypes.object,
     itemId: PropTypes.number,
   };
 
   static defaultProps = {
     itemId: null,
+    tooltipEventInfo: {},
   };
 
   render() {
     const { formatMessage } = this.props.intl;
-    const eventInfo = EVENTS_MAP[this.props.type];
     const defectConfig =
       this.props.projectConfig.subTypes &&
       this.props.projectConfig.subTypes[this.props.type.toUpperCase()];
@@ -63,7 +53,7 @@ export class DefectTypeTooltip extends Component {
                 itemId={this.props.itemId}
                 defects={Object.keys(this.props.data)}
                 className={cx('total-item')}
-                eventInfo={eventInfo}
+                eventInfo={this.props.tooltipEventInfo}
               >
                 <div className={cx('name')}>
                   <div

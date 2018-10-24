@@ -6,9 +6,9 @@ import styles from './linkItem.scss';
 
 const cx = classNames.bind(styles);
 
-export const LinkItem = ({ link, active, title }) =>
+export const LinkItem = ({ link, active, title, onClick }) =>
   !active ? (
-    <NavLink className={cx('link')} to={link}>
+    <NavLink className={cx('link')} to={link} onClick={onClick}>
       {title}
     </NavLink>
   ) : (
@@ -18,7 +18,9 @@ LinkItem.propTypes = {
   link: PropTypes.object.isRequired,
   title: PropTypes.string.isRequired,
   active: PropTypes.bool,
+  onClick: PropTypes.func,
 };
 LinkItem.defaultProps = {
   active: false,
+  onClick: () => {},
 };

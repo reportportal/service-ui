@@ -48,92 +48,93 @@ export const LAUNCHES_PAGE_EVENTS = {
     action: 'Click on "Export: XLS" in Launch Menu',
     label: 'Stars download of report in XLS',
   },
-  CLICK_NAME_FILTER_ICON: {
+  NAME_FILTER: {
+    // todo
     category: LAUNCHES_PAGE,
     action: getActionTableFilter('NAME'),
     label: getDescriptionTableFilter(),
   },
-  CLICK_START_FILTER_ICON: {
+  START_TIME_FILTER: {
     category: LAUNCHES_PAGE,
     action: getActionTableFilter('START'),
     label: getDescriptionTableFilter(),
   },
-  CLICK_TOTAL_FILTER_ICON: {
+  TOTAL_FILTER: {
     category: LAUNCHES_PAGE,
     action: getActionTableFilter('TOTAL'),
     label: getDescriptionTableFilter(),
   },
-  CLICK_PASSED_FILTER_ICON: {
+  PASSED_FILTER: {
     category: LAUNCHES_PAGE,
     action: getActionTableFilter('PASSED'),
     label: getDescriptionTableFilter(),
   },
-  CLICK_FAILED_FILTER_ICON: {
+  FAILED_FILTER: {
     category: LAUNCHES_PAGE,
     action: getActionTableFilter('FAILED'),
     label: getDescriptionTableFilter(),
   },
-  CLICK_SKIPPED_FILTER_ICON: {
+  SKIPPED_FILTER: {
     category: LAUNCHES_PAGE,
     action: getActionTableFilter('SKIPPED'),
     label: getDescriptionTableFilter(),
   },
-  CLICK_PRODUCT_BUG_FILTER_ICON: {
+  PB_FILTER: {
     category: LAUNCHES_PAGE,
     action: getActionTableFilter('PRODUCT BUG'),
     label: getDescriptionTableFilter(),
   },
-  CLICK_AUTO_BUG_FILTER_ICON: {
+  AB_FILTER: {
     category: LAUNCHES_PAGE,
     action: getActionTableFilter('AUTO BUG'),
     label: getDescriptionTableFilter(),
   },
-  CLICK_SYSTEM_ISSUE_FILTER_ICON: {
+  SI_FILTER: {
     category: LAUNCHES_PAGE,
     action: getActionTableFilter('SYSTEM ISSUE'),
     label: getDescriptionTableFilter(),
   },
-  CLICK_TO_INVESTIGATE_FILTER_ICON: {
+  TI_FILTER: {
     category: LAUNCHES_PAGE,
     action: getActionTableFilter('TO INVESTIGATE'),
     label: getDescriptionTableFilter(),
   },
-  CLICK_EDIT_ICON_AFTER_LAUNCH_NAME: {
+  EDIT_ICON_CLICK: {
     category: LAUNCHES_PAGE,
     action: 'Click on Edit Icon after launch name',
     label: 'Edit Launch/Arise Modal "Edit Launch"',
   },
-  CLICK_PB_CIRCLE: {
+  PB_CHART: {
     category: LAUNCHES_PAGE,
     action: 'Click on Product Bug Circle',
     label: 'Transition to inner level of launch with Product Bugs',
   },
-  CLICK_AB_CIRCLE: {
+  AB_CHART: {
     category: LAUNCHES_PAGE,
     action: 'Click on Auto Bug Circle',
     label: 'Transition to inner level of launch with Auto Bug',
   },
-  CLICK_SI_CIRCLE: {
+  SI_CHART: {
     category: LAUNCHES_PAGE,
     action: 'Click on System Issue Circle',
     label: 'Transition to inner level of launch with System Issue',
   },
-  CLICK_TI_TAG: {
+  TI_CHART: {
     category: LAUNCHES_PAGE,
     action: 'Click on To Investigate tag',
     label: 'Transition to inner level of launch with To Investigate',
   },
-  CLICK_TOOLTIP_TTL_PB: {
+  PB_TOOLTIP_CLICK: {
     category: LAUNCHES_PAGE,
     action: 'Click on Tooltip "Total Product Bugs"',
     label: 'Transition to inner level of launch with Product Bugs',
   },
-  CLICK_TOOLTIP_TTL_AB: {
+  AB_TOOLTIP: {
     category: LAUNCHES_PAGE,
     action: 'Click on Tooltip "Total Auto Bug"',
     label: 'Transition to inner level of launch with Auto Bug',
   },
-  CLICK_TOOLTIP_TTL_SI: {
+  SI_TOOLTIP_CLICK: {
     category: LAUNCHES_PAGE,
     action: 'Click on Tooltip "Total System Issue"',
     label: 'Transition to inner level of launch with System Issue',
@@ -189,6 +190,7 @@ export const LAUNCHES_PAGE_EVENTS = {
     label: 'Unselect all launches',
   },
   CLICK_PROCEED_ITEMS_BUTTON: {
+    // todo
     category: LAUNCHES_PAGE,
     action: 'Click on button "Proceed Valid Items"',
     label: 'Remove invalid launches from selection',
