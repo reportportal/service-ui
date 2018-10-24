@@ -7,6 +7,7 @@ import { LAUNCHES_PAGE, LAUNCHES_PAGE_EVENTS } from 'components/main/analytics/e
 import { PageLayout, PageSection } from 'layouts/pageLayout';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
+import { LAUNCH_ITEM_TYPES } from 'common/constants/launchItemTypes';
 import { levelSelector } from 'controllers/testItem';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
 import { activeProjectSelector, userIdSelector } from 'controllers/user';
@@ -36,7 +37,6 @@ import {
   deleteItemsAction,
 } from 'controllers/launch';
 import { LaunchSuiteGrid } from 'pages/inside/common/launchSuiteGrid';
-import { ITEM_TYPES } from 'pages/inside/common/modals/editItemModal/constants';
 import { LaunchToolbar } from './LaunchToolbar';
 
 const messages = defineMessages({
@@ -270,7 +270,7 @@ export class LaunchesPage extends Component {
       id: 'editItemModal',
       data: {
         item: launch,
-        type: ITEM_TYPES.launch,
+        type: LAUNCH_ITEM_TYPES.launch,
         fetchFunc: this.props.fetchLaunchesAction,
       },
     });

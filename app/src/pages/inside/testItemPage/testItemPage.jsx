@@ -6,6 +6,7 @@ import { fetch } from 'common/utils';
 import { injectIntl, intlShape, defineMessages } from 'react-intl';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { URLS } from 'common/urls';
+import { LAUNCH_ITEM_TYPES } from 'common/constants/launchItemTypes';
 import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLock';
 import { PageLayout, PageSection } from 'layouts/pageLayout';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
@@ -29,7 +30,6 @@ import {
   FilterEntitiesURLContainer,
   FilterEntitiesContainer,
 } from 'components/filterEntities/containers';
-import { ITEM_TYPES } from 'pages/inside/common/modals/editItemModal/constants';
 import styles from './testItemPage.scss';
 
 const cx = classNames.bind(styles);
@@ -134,7 +134,7 @@ export class TestItemPage extends Component {
       id: 'editItemModal',
       data: {
         item: launch,
-        type: ITEM_TYPES.item,
+        type: LAUNCH_ITEM_TYPES.item,
         fetchFunc: this.props.fetchTestItemsAction,
       },
     });
