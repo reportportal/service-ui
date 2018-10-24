@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { getDuration } from 'common/utils/timeDateUtils';
+import { PRODUCT_BUG, AUTOMATION_BUG, SYSTEM_ISSUE } from 'common/constants/defectTypes';
 import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-intl';
 import styles from './infoLine.scss';
 import { BarChart } from './barChart';
@@ -25,9 +26,14 @@ export class InfoLine extends Component {
   static propTypes = {
     data: PropTypes.object.isRequired,
     intl: intlShape.isRequired,
+    events: PropTypes.object,
+  };
+  static defaultProps = {
+    events: {},
   };
 
   render() {
+    const { events } = this.props;
     const { formatMessage } = this.props.intl;
     const defects = this.props.data.statistics.defects;
     const executions = this.props.data.statistics.executions;
@@ -37,6 +43,11 @@ export class InfoLine extends Component {
     const endTime = this.props.data.end_time;
     const startTime = this.props.data.start_time;
     const duration = getDuration(startTime, endTime);
+    const tooltipEventsInfo = {
+      [PRODUCT_BUG]: events.PB_TOOLTIP,
+      [SYSTEM_ISSUE]: events.SI_TOOLTIP,
+      [AUTOMATION_BUG]: events.AB_TOOLTIP,
+    };
     return (
       <div className={cx('info-line')}>
         <div className={cx('bar-chart-holder')}>
@@ -57,7 +68,11 @@ export class InfoLine extends Component {
         <div className={cx('defect-types')}>
           {Object.keys(defects).map((key) => (
             <div key={key} className={cx('defect-type')}>
-              <DefectTypeBlock type={key} data={defects[key]} />
+              <DefectTypeBlock
+                type={key}
+                data={defects[key]}
+                tooltipEventInfo={tooltipEventsInfo[key]}
+              />
             </div>
           ))}
         </div>

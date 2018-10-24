@@ -1,11 +1,12 @@
 import { Component } from 'react';
+import track from 'react-tracking';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { EntitiesSelector } from 'components/filterEntities/entitiesSelector';
 import styles from './entitiesGroup.scss';
 
 const cx = classNames.bind(styles);
-
+@track()
 export class EntitiesGroup extends Component {
   static propTypes = {
     entities: PropTypes.array,
@@ -15,6 +16,10 @@ export class EntitiesGroup extends Component {
     onValidate: PropTypes.func,
     errors: PropTypes.object,
     entitySmallSize: PropTypes.bool,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
 
   static defaultProps = {
@@ -25,6 +30,10 @@ export class EntitiesGroup extends Component {
     onChange: () => {},
     onValidate: () => {},
     entitySmallSize: false,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
 
   state = {
@@ -36,6 +45,7 @@ export class EntitiesGroup extends Component {
   getActiveEntities = () => this.props.entities.filter((entity) => entity.active);
 
   handleChange = (entity, value) => {
+    this.props.tracking.trackEvent(entity.eventInfo);
     this.validateEntity(entity, value.value);
     this.props.onChange(entity.id, value);
   };

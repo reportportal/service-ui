@@ -1,4 +1,5 @@
 import { Component } from 'react';
+import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { PageLayout, PageSection } from 'layouts/pageLayout';
@@ -16,6 +17,7 @@ import {
   toggleAllSuitesAction,
   validationErrorsSelector,
 } from 'controllers/suite';
+import { SUITE_PAGE, SUITES_PAGE_EVENTS } from 'components/main/analytics/events';
 import { SuiteTestToolbar } from 'pages/inside/common/suiteTestToolbar';
 import { userIdSelector } from 'controllers/user';
 import {
@@ -50,6 +52,7 @@ import {
   paginationSelector: suitePaginationSelector,
   namespaceSelector,
 })
+@track({ page: SUITE_PAGE })
 export class SuitesPage extends Component {
   static propTypes = {
     debugMode: PropTypes.bool.isRequired,
@@ -80,6 +83,10 @@ export class SuitesPage extends Component {
     onFilterChange: PropTypes.func,
     filterErrors: PropTypes.object,
     filterEntities: PropTypes.array,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
 
   static defaultProps = {
@@ -116,7 +123,25 @@ export class SuitesPage extends Component {
     this.props.unselectAllSuitesAction();
   }
 
-  handleAllSuitesSelection = () => this.props.toggleAllSuitesAction(this.props.suites);
+  handleAllSuitesSelection = () => {
+    this.props.tracking.trackEvent(SUITES_PAGE_EVENTS.SELECT_ALL_ITEMS);
+    this.props.toggleAllSuitesAction(this.props.suites);
+  };
+
+  handleOneItemSelection = (value) => {
+    this.props.tracking.trackEvent(SUITES_PAGE_EVENTS.SELECT_ONE_ITEM);
+    this.props.toggleSuiteSelectionAction(value);
+  };
+
+  unselectAllItems = () => {
+    this.props.tracking.trackEvent(SUITES_PAGE_EVENTS.CLOSE_ICON_FOR_ALL_SELECTIONS);
+    this.props.unselectAllSuitesAction();
+  };
+
+  unselectItem = (item) => {
+    this.props.tracking.trackEvent(SUITES_PAGE_EVENTS.CLOSE_ICON_SELECTED_ITEM);
+    this.props.toggleSuiteSelectionAction(item);
+  };
 
   render() {
     const {
@@ -150,11 +175,12 @@ export class SuitesPage extends Component {
             onDelete={() => deleteItems(selectedSuites)}
             errors={this.props.validationErrors}
             selectedItems={selectedSuites}
-            onUnselect={this.props.toggleSuiteSelectionAction}
-            onUnselectAll={this.props.unselectAllSuitesAction}
+            onUnselect={this.unselectItem}
+            onUnselectAll={this.unselectAllItems}
             parentItem={parentItem}
             onRefresh={this.props.fetchTestItemsAction}
             debugMode={debugMode}
+            events={SUITES_PAGE_EVENTS}
             filterErrors={filterErrors}
             onFilterChange={onFilterChange}
             onFilterValidate={onFilterValidate}
@@ -168,9 +194,10 @@ export class SuitesPage extends Component {
             sortingDirection={sortingDirection}
             onChangeSorting={onChangeSorting}
             selectedItems={selectedSuites}
-            onItemSelect={this.props.toggleSuiteSelectionAction}
+            onItemSelect={this.handleOneItemSelection}
             onAllItemsSelect={this.handleAllSuitesSelection}
             loading={loading}
+            events={SUITES_PAGE_EVENTS}
             onFilterClick={onFilterAdd}
             onEditItem={onEditItem}
           />

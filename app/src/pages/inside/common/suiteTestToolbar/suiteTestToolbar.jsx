@@ -19,6 +19,7 @@ export const SuiteTestToolbar = ({
   onEditDefects,
   debugMode,
   onDelete,
+  events,
   onFilterAdd,
   onFilterRemove,
   onFilterValidate,
@@ -50,8 +51,10 @@ export const SuiteTestToolbar = ({
       onEditDefects={onEditDefects}
       onDelete={onDelete}
       deleteDisabled={!selectedItems.length}
+      historyEventInfo={events.HISTORY_BTN}
+      refreshEventInfo={events.REFRESH_BTN}
     />
-    {parentItem && <InfoLine data={parentItem} />}
+    {parentItem && <InfoLine data={parentItem} events={events} />}
     <RefineFiltersPanel
       onFilterAdd={onFilterAdd}
       onFilterRemove={onFilterRemove}
@@ -77,6 +80,7 @@ SuiteTestToolbar.propTypes = {
   onEditDefects: PropTypes.func,
   debugMode: PropTypes.bool,
   onDelete: PropTypes.func,
+  events: PropTypes.object,
   onFilterAdd: PropTypes.func,
   onFilterRemove: PropTypes.func,
   onFilterValidate: PropTypes.func,
@@ -106,4 +110,5 @@ SuiteTestToolbar.defaultProps = {
   onFilterChange: () => {},
   filterErrors: {},
   filterEntities: [],
+  events: {},
 };

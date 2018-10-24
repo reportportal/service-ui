@@ -7,7 +7,14 @@ import styles from './defectStatistics.scss';
 
 const cx = classNames.bind(styles);
 
-export const DefectStatistics = ({ type, data, customProps, itemId, eventInfo }) => (
+export const DefectStatistics = ({
+  type,
+  data,
+  customProps,
+  itemId,
+  eventInfo,
+  tooltipEventInfo,
+}) => (
   <div className={cx('defect-statistics')}>
     <span className={cx('title')}>
       <span className={cx('circle', { [`type-${type}`]: type })} />
@@ -23,6 +30,7 @@ export const DefectStatistics = ({ type, data, customProps, itemId, eventInfo })
             viewBox={64}
             strokeWidth={13}
             eventInfo={eventInfo}
+            tooltipEventInfo={tooltipEventInfo}
           />
         </div>
         <div className={cx('desktop-hidden')}>
@@ -40,10 +48,12 @@ DefectStatistics.propTypes = {
   customProps: PropTypes.object,
   itemId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   eventInfo: PropTypes.object,
+  tooltipEventInfo: PropTypes.object,
 };
 DefectStatistics.defaultProps = {
   type: '',
   customProps: {},
   data: {},
   eventInfo: {},
+  tooltipEventInfo: {},
 };

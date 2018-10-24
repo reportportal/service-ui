@@ -1,4 +1,5 @@
 import { Component } from 'react';
+import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
@@ -12,6 +13,7 @@ import { PageLayout, PageSection } from 'layouts/pageLayout';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { Breadcrumbs } from 'components/main/breadcrumbs';
 import { LEVEL_SUITE, LEVEL_TEST, LEVEL_STEP } from 'common/constants/launchLevels';
+import { SUITES_PAGE_EVENTS } from 'components/main/analytics/events';
 import { userIdSelector, activeProjectSelector } from 'controllers/user';
 import {
   levelSelector,
@@ -104,6 +106,7 @@ const testItemPages = {
   },
 )
 @injectIntl
+@track()
 export class TestItemPage extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
@@ -120,6 +123,10 @@ export class TestItemPage extends Component {
     loading: PropTypes.bool,
     breadcrumbs: PropTypes.arrayOf(PropTypes.object),
     restorePath: PropTypes.func,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
 
   static defaultProps = {
@@ -137,27 +144,6 @@ export class TestItemPage extends Component {
         type: LAUNCH_ITEM_TYPES.item,
         fetchFunc: this.props.fetchTestItemsAction,
       },
-    });
-  };
-
-  deleteItems = (selectedItems) => {
-    const { intl, userId } = this.props;
-    this.props.deleteItemsAction(selectedItems, {
-      onConfirm: (items) => this.confirmDeleteItems(items, selectedItems),
-      header:
-        selectedItems.length === 1
-          ? intl.formatMessage(messages.deleteModalHeader)
-          : intl.formatMessage(messages.deleteModalMultipleHeader),
-      mainContent:
-        selectedItems.length === 1
-          ? intl.formatMessage(messages.deleteModalContent, { name: selectedItems[0].name })
-          : intl.formatMessage(messages.deleteModalMultipleContent),
-      userId,
-      currentLaunch: this.props.parentLaunch,
-      warning:
-        selectedItems.length === 1
-          ? intl.formatMessage(messages.warning)
-          : intl.formatMessage(messages.warningMultiple),
     });
   };
 
@@ -188,6 +174,28 @@ export class TestItemPage extends Component {
           type: NOTIFICATION_TYPES.ERROR,
         });
       });
+  };
+
+  deleteItems = (selectedItems) => {
+    const { intl, userId, tracking } = this.props;
+    tracking.trackEvent(SUITES_PAGE_EVENTS.DELETE_BTN);
+    this.props.deleteItemsAction(selectedItems, {
+      onConfirm: (items) => this.confirmDeleteItems(items, selectedItems),
+      header:
+        selectedItems.length === 1
+          ? intl.formatMessage(messages.deleteModalHeader)
+          : intl.formatMessage(messages.deleteModalMultipleHeader),
+      mainContent:
+        selectedItems.length === 1
+          ? intl.formatMessage(messages.deleteModalContent, { name: selectedItems[0].name })
+          : intl.formatMessage(messages.deleteModalMultipleContent),
+      userId,
+      currentLaunch: this.props.parentLaunch,
+      warning:
+        selectedItems.length === 1
+          ? intl.formatMessage(messages.warning)
+          : intl.formatMessage(messages.warningMultiple),
+    });
   };
 
   render() {
