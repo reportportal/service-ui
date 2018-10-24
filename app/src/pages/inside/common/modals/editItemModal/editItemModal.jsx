@@ -7,13 +7,13 @@ import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { activeProjectSelector } from 'controllers/user';
 import { ModalLayout, withModal, ModalField, ModalContentHeading } from 'components/main/modal';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { LAUNCH_ITEM_TYPES } from 'common/constants/launchItemTypes';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { MarkdownEditor } from 'components/main/markdown';
 import { InputTagsSearch } from 'components/inputs/inputTagsSearch';
 import { connect } from 'react-redux';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
-import { ITEM_TYPES } from './constants';
 import styles from './editItemModal.scss';
 
 const cx = classNames.bind(styles);
@@ -169,8 +169,8 @@ export class EditItemModal extends Component {
           </ModalField>
           <ModalField>
             <div className={cx('item-name')}>
-              {`${item.name}`}
-              {type === ITEM_TYPES.launch && ` #${item.number}`}
+              {item.name}
+              {type === LAUNCH_ITEM_TYPES.launch && ` #${item.number}`}
             </div>
           </ModalField>
           <ModalField label={formatMessage(messages.tagsLabel)}>
