@@ -332,7 +332,7 @@
     margin-top: 30px;
     padding-left: 15px;
     margin-bottom: 30px;
-    .en-flag, .ru-flag {
+    .en-flag, .ru-flag, .cn-flag {
       display: inline-block;
       vertical-align: middle;
       width: 24px;
@@ -345,6 +345,9 @@
     }
     .ru-flag {
       background: url('../../img/user-profile/ru-flag.svg') center no-repeat;
+    }
+    .cn-flag {
+      background: url('../../img/user-profile/cn-flag.png') center no-repeat;
     }
     .dropdown-container {
       display: inline-block;

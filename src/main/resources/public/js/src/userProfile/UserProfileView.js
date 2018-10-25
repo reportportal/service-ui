@@ -82,7 +82,8 @@ define(function (require, exports, module) {
             this.dropDown = new DropDownComponent({
                 data: [
                     { name: '<span class="en-flag"></span>' + Localization.userProfile.english, value: 'en' },
-                    { name: '<span class="ru-flag"></span>' + Localization.userProfile.russian, value: 'ru' }
+                    { name: '<span class="ru-flag"></span>' + Localization.userProfile.russian, value: 'ru' },
+                    { name: '<span class="cn-flag"></span>' + Localization.userProfile.chinese, value: 'cn' }
                 ],
                 multiple: false,
                 defaultValue: this.appStorage.get('appLanguage') || 'en'
@@ -350,20 +351,20 @@ define(function (require, exports, module) {
                             '<h1>' + Localization.userProfile.rubyConfigTitle + '</h1>' +
                             '<br>' +
                             '<div class="options">' +
-                                // '<p>username: ' + this.user.get('name') + '</p>' +
+                            // '<p>username: ' + this.user.get('name') + '</p>' +
                             '<p>uuid: ' + this.apiTokenModel.get('apiToken') + '</p>' +
                             '<p>endpoint: ' + document.location.origin + '/api/v1' + '</p>' +
                             '<p>project: ' + this.model.appModel.get('projectId') + '</p>' +
                             '<p>launch: ' + this.model.get('name') + '_TEST_EXAMPLE</p>' +
                             '<p>tags:  [tag1, tag2]</p>' +
                             '</div>';
-                    break;
-                case 'soap':
-                    value =
+                        break;
+                    case 'soap':
+                        value =
                             '<h1>' + Localization.userProfile.soapConfigTitle + '</h1>' +
                             '<br>' +
                             '<div class="options">' +
-                                // '<p>rp.username = ' + this.model.get('name') + '</p>' +
+                            // '<p>rp.username = ' + this.model.get('name') + '</p>' +
                             '<p>rp.uuid = ' + this.apiTokenModel.get('apiToken') + '</p>' +
                             '<p>rp.endpoint = ' + document.location.origin + '</p>' +
                             '<br>' +
@@ -372,31 +373,31 @@ define(function (require, exports, module) {
                             '<p>rp.tags = TAG1;TAG2</p>' +
                             '<p>rp.description = My awesome launch</p>' +
                             '</div>';
-                    break;
-                case '.net':
-                    value =
+                        break;
+                    case '.net':
+                        value =
                             '<h1>' + Localization.userProfile.dotnetConfigTitle + '</h1>';
-                    break;
-                case 'nodeJS':
-                    value =
-                        '<h1>' + Localization.userProfile.nodeJSConfigTitle +
-                        ' <a href="https://github.com/reportportal/client-javascript">' + Localization.userProfile.nodeJSConfigLink + '</a></h1>' +
-                        '<h1>' + Localization.userProfile.nodeJSConfigExample + '</h1>' +
-                        '<br>' +
-                        '<div class="options">' +
-                        '<p>uuid: ' + this.apiTokenModel.get('apiToken') + '</p>' +
-                        '<p>endpoint: ' + document.location.origin + '/api/v1</p>' +
-                        '<p>launch: ' + this.model.get('name') + '_TEST_EXAMPLE</p>' +
-                        '<p>project: ' + this.model.appModel.get('projectId') + '</p>' +
-                        '</div>';
-                    break;
-                default:
-                    value =
+                        break;
+                    case 'nodeJS':
+                        value =
+                            '<h1>' + Localization.userProfile.nodeJSConfigTitle +
+                            ' <a href="https://github.com/reportportal/client-javascript">' + Localization.userProfile.nodeJSConfigLink + '</a></h1>' +
+                            '<h1>' + Localization.userProfile.nodeJSConfigExample + '</h1>' +
+                            '<br>' +
+                            '<div class="options">' +
+                            '<p>uuid: ' + this.apiTokenModel.get('apiToken') + '</p>' +
+                            '<p>endpoint: ' + document.location.origin + '/api/v1</p>' +
+                            '<p>launch: ' + this.model.get('name') + '_TEST_EXAMPLE</p>' +
+                            '<p>project: ' + this.model.appModel.get('projectId') + '</p>' +
+                            '</div>';
+                        break;
+                    default:
+                        value =
                             '<h1>' + Localization.userProfile.defaultConfigTitle + '</h1>' +
                             '<h1>' + Localization.userProfile.required + '</h1>' +
                             '<div class="options">' +
                             '<p>rp.endpoint = ' + document.location.origin + '</p>' +
-                                // '<p>rp.username = ' + this.model.get('name') + '</p>' +
+                            // '<p>rp.username = ' + this.model.get('name') + '</p>' +
                             '<p>rp.uuid = ' + this.apiTokenModel.get('apiToken') + '</p>' +
                             '<p>rp.launch = ' + this.model.get('name') + '_TEST_EXAMPLE</p>' +
                             '<p>rp.project = ' + this.model.appModel.get('projectId') + '</p>' +
@@ -413,7 +414,7 @@ define(function (require, exports, module) {
                             '<p>rp.keystore.resource = &lt;PATH_TO_YOUR_KEYSTORE&gt;</p>' +
                             '<p>rp.keystore.password = &lt;PASSWORD_OF_YOUR_KEYSTORE&gt;</p>' +
                             '</div>';
-                    break;
+                        break;
                 }
                 this.$editor.html(value);
             }

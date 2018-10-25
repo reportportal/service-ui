@@ -21,10 +21,12 @@ define(function (require) {
     var $ = require('jquery');
     var langEn = require('localizations/en-EU');
     var langRu = require('localizations/ru-RU');
+    var langCN = require('localizations/cn-CN');
     var SingletonAppStorage = require('storage/SingletonAppStorage');
     var appStorage = new SingletonAppStorage();
     var lang = appStorage.get('appLanguage') || 'en';
     var langRuSafe = extendLoc(langEn, langRu);
+    var langCNSafe = extendLoc(langEn, langCN);
     var Localization = {};
     require('select2');
 
@@ -47,11 +49,14 @@ define(function (require) {
     }
     $.extend($.fn.select2.defaults, $.fn.select2.locales[lang]);
     switch (lang) {
-    case 'ru':
-        Localization = langRuSafe;
-        break;
-    default:
-        Localization = langEn;
+        case 'ru':
+            Localization = langRuSafe;
+            break;
+        case 'cn':
+            Localization = langCNSafe;
+            break;
+        default:
+            Localization = langEn;
     }
     return Localization;
 });
