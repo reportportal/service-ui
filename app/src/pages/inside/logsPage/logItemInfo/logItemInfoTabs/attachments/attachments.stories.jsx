@@ -38,7 +38,7 @@ const MOCK_DATA = ALL_FILETYPES.map((fileType, id) => ({
 }));
 const projectId = 'ProjectXYZ';
 
-storiesOf('Pages/Inside/LogsPage/LogItemInfo/LogItemInfoTabs/Attachment', module)
+storiesOf('Pages/Inside/LogsPage/LogItemInfo/LogItemInfoTabs/Attachments', module)
   .addDecorator(
     host({
       title: 'Log Attachment',

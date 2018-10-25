@@ -1,16 +1,16 @@
 import { GET_ATTACHMENT_IMAGE, GET_ATTACHMENT_HAR, GET_ATTACHMENT_BINARY } from './constants';
 
-export const openImageModal = (payload) => ({
+export const openImageModalAction = (payload) => ({
   type: GET_ATTACHMENT_IMAGE,
   payload,
 });
 
-export const openHarModal = (payload) => ({
+export const openHarModalAction = (payload) => ({
   type: GET_ATTACHMENT_HAR,
   payload,
 });
 
-export const openBinaryModal = (payload) => ({
+export const openBinaryModalAction = (payload) => ({
   type: GET_ATTACHMENT_BINARY,
   payload,
 });

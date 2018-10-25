@@ -16,22 +16,31 @@ In our case, the main area is not displayed initially, with a little css it is n
 - **openHarModal**: _function_
 - **openBinaryModal**: _function_
 
-The componenct receives `attachments` which is an array of attachments in the following
+The component receives `attachments` which is an array of attachments in the following
 format:
 
 ```
 [
     {
         "id": "5b83fa4497a1c00001150f20",
-        "thumbnail_id": "5b83fa4497a1c00001150f20",
-        "content_type": "application/zip"
+        "src": "...",
+        "alt": "application/zip",
+        "attachment": {
+            "id": "5b83fa4497a1c00001150f20",
+            "thumbnail_id": "5b83fa4497a1c00001150f20",
+            "content_type": "application/zip"
+        }
     },
-
     {
         "id": "5b83fa4497a1c00001150f20",
-        "thumbnail_id": "5b83fa4497a1c00001150f20",
-        "content_type": "application/zip"
+        "src": "...",
+        "alt": "application/zip",
+        "attachment": {
+            "id": "5b83fa4497a1c00001150f20",
+            "thumbnail_id": "5b83fa4497a1c00001150f20",
+            "content_type": "application/zip"
+        }
     }
     ...
-    ]
+]
 ```

@@ -83,7 +83,7 @@ export class Attachments extends React.Component {
         >
           {this.props.attachments.map((attachment) => (
             <div key={attachment.id} className={cx('preview-container')}>
-              <img className={cx('preview-image')} src={attachment.src} alt={attachment.alt} />
+              <img src={attachment.src} alt={attachment.alt} />
             </div>
           ))}
         </Carousel>
