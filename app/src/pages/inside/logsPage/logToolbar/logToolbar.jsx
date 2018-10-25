@@ -2,6 +2,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { FormattedMessage } from 'react-intl';
+import { LOG_PAGE_EVENTS } from 'components/main/analytics/events';
 import { Breadcrumbs } from 'components/main/breadcrumbs';
 import { GhostButton } from 'components/buttons/ghostButton';
 import LeftArrowIcon from 'common/img/arrow-left-small-inline.svg';
@@ -16,7 +17,12 @@ export const LogToolbar = connect((state) => ({
   breadcrumbs: breadcrumbsSelector(state),
 }))(({ breadcrumbs, onRefresh }) => (
   <div className={cx('log-toolbar')}>
-    <Breadcrumbs descriptors={breadcrumbs} />
+    <Breadcrumbs
+      descriptors={breadcrumbs}
+      togglerEventInfo={LOG_PAGE_EVENTS.PLUS_MINUS_BREADCRUMB}
+      breadcrumbEventInfo={LOG_PAGE_EVENTS.ITEM_NAME_BREADCRUMB_CLICK}
+      allEventClick={LOG_PAGE_EVENTS.ALL_LABEL_BREADCRUMB}
+    />
     <div className={cx('action-buttons')}>
       <div className={cx('action-button')}>
         <div className={cx('left-arrow-button')}>

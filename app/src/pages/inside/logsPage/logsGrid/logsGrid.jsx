@@ -5,6 +5,7 @@ import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import Parser from 'html-react-parser';
 import { Grid } from 'components/main/grid';
 import { dateFormat } from 'common/utils';
+import { LOG_PAGE_EVENTS } from 'components/main/analytics/events';
 import { ERROR, FATAL } from 'common/constants/logLevels';
 import ArrowIcon from 'common/img/arrow-down-inline.svg';
 import { NoItemMessage } from '../logItemInfo/logItemInfoTabs/noItemMessage';
@@ -173,6 +174,7 @@ export class LogsGrid extends Component {
       },
       sortable: true,
       component: TimeColumn,
+      sortingEventInfo: LOG_PAGE_EVENTS.TIME_SORTING,
     },
     {
       id: 'mobileAttachment',
@@ -248,6 +250,7 @@ export class LogsGrid extends Component {
           sortingColumn={sortingColumn}
           sortingDirection={sortingDirection}
           onChangeSorting={onChangeSorting}
+          toggleAccordionEventInfo={LOG_PAGE_EVENTS.EXPAND_LOG_MSG}
         />
         {!logItems.length &&
           !loading && <NoItemMessage message={intl.formatMessage(messages.noResults)} />}

@@ -30,6 +30,7 @@ export const Grid = ({
   grouped,
   groupHeader,
   groupFunction,
+  ...rest
 }) => (
   <Fragment>
     <div className={cx('grid', className)}>
@@ -56,6 +57,7 @@ export const Grid = ({
           groupHeader={groupHeader}
           groupFunction={groupFunction}
           grouped={grouped}
+          {...rest}
         />
       )}
     </div>

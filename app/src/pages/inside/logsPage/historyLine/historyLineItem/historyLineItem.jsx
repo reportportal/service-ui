@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
+import track from 'react-tracking';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Link from 'redux-first-router-link';
 import classNames from 'classnames/bind';
+import { LOG_PAGE_EVENTS } from 'components/main/analytics/events';
 import { payloadSelector, PROJECT_LOG_PAGE, PROJECT_USERDEBUG_LOG_PAGE } from 'controllers/pages';
 import { MANY, NOT_FOUND } from 'common/constants/launchStatuses';
 import { debugModeSelector } from 'controllers/launch';
@@ -15,6 +17,7 @@ const cx = classNames.bind(styles);
   pagePayload: payloadSelector(state),
   debugMode: debugModeSelector(state),
 }))
+@track()
 export class HistoryLineItem extends Component {
   static propTypes = {
     projectId: PropTypes.string.isRequired,
@@ -28,6 +31,10 @@ export class HistoryLineItem extends Component {
     isLastItem: PropTypes.bool,
     pagePayload: PropTypes.object,
     debugMode: PropTypes.bool,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
 
   static defaultProps = {
@@ -72,6 +79,7 @@ export class HistoryLineItem extends Component {
             'active-link': this.checkIfTheLinkIsActive(),
           })}
           to={this.checkIfTheLinkIsActive() ? this.createHistoryLineItemLink() : ''}
+          onClick={() => this.props.tracking.trackEvent(LOG_PAGE_EVENTS.HISTORY_LINE_ITEM)}
         >
           <span className={cx('launch-title')}>{'launch '}</span>
           <span>#{launchNumber}</span>

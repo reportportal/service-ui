@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { defineMessages, injectIntl, intlShape } from 'react-intl';
 import classNames from 'classnames/bind';
 import { lastLogActivitySelector } from 'controllers/log';
+import { LOG_PAGE_EVENTS } from 'components/main/analytics/events';
 import StackTraceIcon from 'common/img/stack-trace-inline.svg';
 import AttachmentIcon from 'common/img/attachment-inline.svg';
 import InfoIcon from 'common/img/info-inline.svg';
@@ -47,18 +48,21 @@ const makeTabs = ({ formatMessage }, logItem) => [
     label: formatMessage(messages.stackTab),
     icon: StackTraceIcon,
     content: <div>Stack trace</div>,
+    eventInfo: LOG_PAGE_EVENTS.STACK_TRACE_TAB,
   },
   {
     id: 'attachments',
     label: formatMessage(messages.attachmentsTab),
     icon: AttachmentIcon,
     content: <div>Attachments</div>,
+    eventInfo: LOG_PAGE_EVENTS.ATTACHMENT_TAB,
   },
   {
     id: 'details',
     label: formatMessage(messages.detailsTab),
     icon: InfoIcon,
     content: <LogItemDetails logItem={logItem} />,
+    eventInfo: LOG_PAGE_EVENTS.ITEM_DETAILS_TAB,
   },
   {
     id: 'parameters',
@@ -71,6 +75,7 @@ const makeTabs = ({ formatMessage }, logItem) => [
     label: formatMessage(messages.historyTab),
     icon: ClockIcon,
     content: <LogItemActivity />,
+    eventInfo: LOG_PAGE_EVENTS.ACTIONS_TAB,
   },
 ];
 

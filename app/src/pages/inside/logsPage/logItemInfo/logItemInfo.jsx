@@ -5,6 +5,7 @@ import classNames from 'classnames/bind';
 import { defineMessages, injectIntl, intlShape } from 'react-intl';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { DefectType } from 'pages/inside/stepPage/stepGrid/defectType';
+import { LOG_PAGE_EVENTS } from 'components/main/analytics/events';
 import { linkIssueAction } from 'controllers/step';
 import { showModalAction } from 'controllers/modal';
 import { activeLogSelector, historyItemsSelector } from 'controllers/log';
@@ -171,7 +172,13 @@ export class LogItemInfo extends Component {
         <div className={cx('container')}>
           <div className={cx('content')}>
             <div className={cx('description')}>
-              {logItem.issue && logItem.issue.issue_type && <DefectType issue={logItem.issue} />}
+              {logItem.issue &&
+                logItem.issue.issue_type && (
+                  <DefectType
+                    issue={logItem.issue}
+                    editEventInfo={LOG_PAGE_EVENTS.DEFECT_TYPE_TAG}
+                  />
+                )}
             </div>
             <div className={cx('actions')}>
               <div className={cx('action')}>
