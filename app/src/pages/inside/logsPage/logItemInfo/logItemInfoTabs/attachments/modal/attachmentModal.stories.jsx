@@ -25,7 +25,7 @@ import { AttachmentCodeModal, AttachmentHarFileModal, AttachmentImageModal } fro
 import README from './README.md';
 import harData from './example.har';
 
-storiesOf('Pages/Inside/LogsPage/AttachmentModal', module)
+storiesOf('Pages/Inside/LogsPage/LogItemInfo/LogItemInfoTabs/Attachments/modal', module)
   .addDecorator(withReadme(README))
   .add('Code content with hljs', () => (
     <AttachmentCodeModal

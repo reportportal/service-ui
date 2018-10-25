@@ -14,7 +14,7 @@ import { InfoTabs } from '../infoTabs';
 import { LogItemDetails } from './logItemDetails';
 import { LogItemActivity } from './logItemActivity';
 import { Parameters } from './parameters';
-import { AttachmentsContainer } from './attachments/attachmentsContainer';
+import { Attachments } from './attachments';
 import { getActionMessage } from '../utils/getActionMessage';
 import styles from './logItemInfoTabs.scss';
 
@@ -55,7 +55,7 @@ const makeTabs = ({ formatMessage }, logItem) => [
     id: 'attachments',
     label: formatMessage(messages.attachmentsTab),
     icon: AttachmentIcon,
-    content: <AttachmentsContainer />,
+    content: <Attachments />,
     eventInfo: LOG_PAGE_EVENTS.ATTACHMENT_TAB,
   },
   {

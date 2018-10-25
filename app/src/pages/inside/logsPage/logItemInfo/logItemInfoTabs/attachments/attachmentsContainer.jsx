@@ -1,9 +1,9 @@
 import { connect } from 'react-redux';
 import {
   attachmentsSelector,
-  openImageModal,
-  openHarModal,
-  openBinaryModal,
+  openImageModalAction,
+  openHarModalAction,
+  openBinaryModalAction,
 } from 'controllers/attachments';
 import { activeProjectSelector } from 'controllers/user';
 
@@ -15,9 +15,9 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = {
-  openImageModal,
-  openHarModal,
-  openBinaryModal,
+  openImageModal: openImageModalAction,
+  openHarModal: openHarModalAction,
+  openBinaryModal: openBinaryModalAction,
 };
 
 export const AttachmentsContainer = connect(mapStateToProps, mapDispatchToProps)(Attachments);
