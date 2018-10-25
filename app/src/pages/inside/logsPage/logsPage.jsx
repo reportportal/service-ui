@@ -1,4 +1,5 @@
 import { Component } from 'react';
+import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { connectRouter } from 'common/utils';
@@ -15,6 +16,7 @@ import { withPagination } from 'controllers/pagination';
 import { withSorting, SORTING_ASC } from 'controllers/sorting';
 import { userIdSelector } from 'controllers/user';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
+import { LOG_PAGE, LOG_PAGE_EVENTS } from 'components/main/analytics/events';
 import { getLogLevel } from './logsGridToolbar/utils/logLevel';
 import { LogToolbar } from './logToolbar';
 import { HistoryLine } from './historyLine';
@@ -54,9 +56,14 @@ import { LogsGridToolbar } from './logsGridToolbar';
   },
   { namespace: NAMESPACE },
 )
+@track({ page: LOG_PAGE })
 export class LogsPage extends Component {
   static propTypes = {
     refresh: PropTypes.func.isRequired,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
     logItems: PropTypes.array,
     userId: PropTypes.string.isRequired,
     activePage: PropTypes.number,
@@ -95,6 +102,11 @@ export class LogsPage extends Component {
     onChangeWithAttachments: () => {},
   };
 
+  handleRefresh = () => {
+    this.props.tracking.trackEvent(LOG_PAGE_EVENTS.REFRESH_BTN);
+    this.props.refresh();
+  };
+
   render() {
     const {
       refresh,
@@ -120,7 +132,7 @@ export class LogsPage extends Component {
     return (
       <PageLayout>
         <PageSection>
-          <LogToolbar onRefresh={refresh} />
+          <LogToolbar onRefresh={this.handleRefresh} />
           <HistoryLine />
           <LogItemInfo fetchFunc={refresh} />
           <LogsGridToolbar

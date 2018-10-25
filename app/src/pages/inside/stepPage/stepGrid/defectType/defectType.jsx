@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import track from 'react-tracking';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
 import { FormattedMessage, injectIntl, defineMessages } from 'react-intl';
@@ -30,12 +31,20 @@ const AALabel = () => (
   </div>
 );
 
-export const DefectType = ({ issue, onEdit }) => (
+export const DefectType = track()(({ issue, onEdit, tracking, editEventInfo }) => (
   <div className={cx('defect-type')}>
     <div className={cx('defect-type-labels')}>
       {issue.ignoreAnalyzer && <IgnoredInAALabel />}
       {issue.autoAnalyzed && <AALabel />}
-      {issue.issue_type && <DefectTypeItem type={issue.issue_type} onClick={onEdit} />}
+      {issue.issue_type && (
+        <DefectTypeItem
+          type={issue.issue_type}
+          onClick={() => {
+            tracking.trackEvent(editEventInfo);
+            onEdit();
+          }}
+        />
+      )}
       <div className={cx('edit-icon')} onClick={onEdit}>
         {Parser(PencilIcon)}
       </div>
@@ -47,12 +56,18 @@ export const DefectType = ({ issue, onEdit }) => (
       <MarkdownViewer value={issue.comment} />
     </div>
   </div>
-);
+));
 
 DefectType.propTypes = {
   issue: PropTypes.object.isRequired,
   onEdit: PropTypes.func,
+  editEventInfo: PropTypes.object,
+  tracking: PropTypes.shape({
+    trackEvent: PropTypes.func,
+    getTrackingData: PropTypes.func,
+  }).isRequired,
 };
 DefectType.defaultProps = {
   onEdit: () => {},
+  editEventInfo: {},
 };

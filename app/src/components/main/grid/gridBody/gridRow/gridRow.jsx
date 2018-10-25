@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { columnPropTypes } from '../../propTypes';
@@ -8,6 +9,7 @@ import styles from './gridRow.scss';
 
 const cx = classNames.bind(styles);
 
+@track()
 export class GridRow extends Component {
   static propTypes = {
     columns: PropTypes.arrayOf(PropTypes.shape(columnPropTypes)),
@@ -17,6 +19,11 @@ export class GridRow extends Component {
     onToggleSelection: PropTypes.func,
     changeOnlyMobileLayout: PropTypes.bool,
     rowClassMapper: PropTypes.func,
+    toggleAccordionEventInfo: PropTypes.object,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
 
   static defaultProps = {
@@ -27,6 +34,7 @@ export class GridRow extends Component {
     onToggleSelection: () => {},
     changeOnlyMobileLayout: false,
     rowClassMapper: () => {},
+    toggleAccordionEventInfo: {},
   };
 
   state = {
@@ -62,6 +70,7 @@ export class GridRow extends Component {
   };
 
   toggleAccordion = () => {
+    this.props.tracking.trackEvent(this.props.toggleAccordionEventInfo);
     this.setState({ expanded: !this.state.expanded });
     this.overflowCell.style.maxHeight = this.state.expanded
       ? `${this.overflowCellMaxHeight}px`

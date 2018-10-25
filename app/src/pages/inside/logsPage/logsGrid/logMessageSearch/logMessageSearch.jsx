@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
+import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { InputSearch } from 'components/inputs/inputSearch/inputSearch';
+import { LOG_PAGE_EVENTS } from 'components/main/analytics/events';
 import styles from './logMessageSearch.scss';
 
 const cx = classNames.bind(styles);
@@ -19,11 +21,16 @@ const messages = defineMessages({
 });
 
 @injectIntl
+@track()
 export class LogMessageSearch extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
     onFilterChange: PropTypes.func.isRequired,
     filter: PropTypes.string,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
 
   static defaultProps = {
@@ -56,9 +63,9 @@ export class LogMessageSearch extends Component {
 
   handleInputChange = (event) => {
     if (!event.target.value || event.target.value.length >= 3) {
+      this.props.tracking.trackEvent(LOG_PAGE_EVENTS.ENTER_LOG_MSG_FILTER);
       this.props.onFilterChange(event.target.value || undefined);
     }
-
     this.setState({
       inputValue: event.target.value,
       isSearchHintRequired: event.target.value.length < 3,

@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
+import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import { defineMessages, injectIntl, intlShape } from 'react-intl';
 import { PASSED, FAILED, SKIPPED, MANY, NOT_FOUND, RESETED } from 'common/constants/launchStatuses';
+import { LOG_PAGE_EVENTS } from 'components/main/analytics/events';
 import { getDuration } from 'common/utils';
 import classNames from 'classnames/bind';
 import { HistoryLineItemBadges } from './historyLineItemBadges';
@@ -46,6 +48,7 @@ const blockTitleMessagesMap = {
 };
 
 @injectIntl
+@track()
 export class HistoryLineItemContent extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
@@ -60,6 +63,10 @@ export class HistoryLineItemContent extends Component {
     isLastItem: PropTypes.bool,
     startTime: PropTypes.number,
     endTime: PropTypes.number,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
 
   static defaultProps = {
@@ -93,6 +100,7 @@ export class HistoryLineItemContent extends Component {
       isLastItem,
       statistics,
       onClick,
+      tracking,
       ...rest
     } = this.props;
 
@@ -104,7 +112,10 @@ export class HistoryLineItemContent extends Component {
           'last-item': isLastItem,
         })}
         title={this.getItemTitle()}
-        onClick={onClick}
+        onClick={() => {
+          tracking.trackEvent(LOG_PAGE_EVENTS.HISTORY_LINE_ITEM);
+          onClick();
+        }}
       >
         <div className={cx('item-block-bg')} />
         <HistoryLineItemBadges

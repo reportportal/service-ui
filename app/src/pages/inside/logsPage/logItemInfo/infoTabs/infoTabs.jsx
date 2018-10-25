@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from 'react';
+import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
@@ -7,6 +8,7 @@ import styles from './infoTabs.scss';
 
 const cx = classNames.bind(styles);
 
+@track()
 export class InfoTabs extends Component {
   static propTypes = {
     tabs: PropTypes.arrayOf(
@@ -18,6 +20,10 @@ export class InfoTabs extends Component {
       }),
     ),
     panelContent: PropTypes.node,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
 
   static defaultProps = {
@@ -43,7 +49,7 @@ export class InfoTabs extends Component {
 
   render() {
     const { activeTab } = this.state;
-    const { tabs, panelContent } = this.props;
+    const { tabs, panelContent, tracking } = this.props;
 
     return (
       <div className={cx('tabs-container')}>
@@ -52,7 +58,10 @@ export class InfoTabs extends Component {
             <Fragment key={tab.id}>
               <button
                 className={cx('tab', { active: this.isActiveTab(tab) })}
-                onClick={() => this.setActiveTab(tab)}
+                onClick={() => {
+                  tracking.trackEvent(tab.eventInfo);
+                  this.setActiveTab(tab);
+                }}
               >
                 {tab.icon && <i className={cx('tab-icon')}>{Parser(tab.icon)}</i>}
                 {tab.label && <span className={cx('tab-label')}>{tab.label}</span>}

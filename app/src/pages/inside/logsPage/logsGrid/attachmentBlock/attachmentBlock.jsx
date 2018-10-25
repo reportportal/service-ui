@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
@@ -6,6 +7,7 @@ import Parser from 'html-react-parser';
 import { projectIdSelector } from 'controllers/pages';
 import { URLS } from 'common/urls';
 import AttachIcon from 'common/img/attachment-inline.svg';
+import { LOG_PAGE_EVENTS } from 'components/main/analytics/events';
 import * as FILE_TYPES from 'common/constants/fileTypes';
 import styles from './attachmentBlock.scss';
 
@@ -14,17 +16,26 @@ const cx = classNames.bind(styles);
 @connect((state) => ({
   projectId: projectIdSelector(state),
 }))
+@track()
 export class AttachmentBlock extends Component {
   static propTypes = {
     projectId: PropTypes.string,
     value: PropTypes.object,
     customProps: PropTypes.object,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
 
   static defaultProps = {
     projectId: '',
     value: {},
     customProps: {},
+  };
+
+  onClickLink = () => {
+    this.props.tracking.trackEvent(LOG_PAGE_EVENTS.ATTACHMENT_IN_LOG_MSG);
   };
 
   getAttachmentUrl = (id) => URLS.logAttachment(this.props.projectId, id);
@@ -95,7 +106,7 @@ export class AttachmentBlock extends Component {
     } = this.props;
 
     return (
-      <div className={cx('attachment-block')}>
+      <div className={cx('attachment-block')} onClick={this.onClickLink}>
         {consoleView ? (
           <a href={this.getAttachmentUrl(value.id)}>
             <div className={cx('image', 'attachment')}>{Parser(AttachIcon)}</div>
