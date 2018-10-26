@@ -26,6 +26,7 @@ import { CheckIcon } from './checkIcon';
 const cx = classNames.bind(styles);
 
 export const InputCheckbox = ({ children, value, disabled, onChange, onFocus, onBlur }) => (
+  // eslint-disable-next-line
   <label className={cx('input-checkbox')} onFocus={onFocus} onBlur={onBlur} tabIndex="1">
     <input
       type="checkbox"

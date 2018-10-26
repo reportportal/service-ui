@@ -36,6 +36,7 @@ export const InputSwitcher = ({ children, value, onChange, onFocus, onBlur }) =>
   };
 
   return (
+    // eslint-disable-next-line
     <label className={cx('input-switcher')} onFocus={onFocus} onBlur={onBlur} tabIndex="1">
       <input type="checkbox" className={cx('input')} checked={value} onChange={onChangeHandler} />
       <span className={sliderClasses} />

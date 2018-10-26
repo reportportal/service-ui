@@ -18,6 +18,7 @@ export const PencilCheckbox = (props) => {
   };
 
   return (
+    // eslint-disable-next-line
     <label className={cx('pencil-checkbox')} onFocus={onFocus} onBlur={onBlur}>
       <input
         type="checkbox"

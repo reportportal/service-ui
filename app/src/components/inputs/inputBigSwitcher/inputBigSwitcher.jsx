@@ -53,6 +53,7 @@ export const InputBigSwitcher = track()(
       onChangeEventInfo && tracking.trackEvent(onChangeEventInfo);
     };
     return (
+      // eslint-disable-next-line
       <label className={cx('input-big-switcher')} tabIndex="1">
         <div className={classes}>
           <div className={cx('on')}>
