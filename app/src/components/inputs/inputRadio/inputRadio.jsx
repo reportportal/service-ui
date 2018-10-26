@@ -16,6 +16,7 @@ export const InputRadio = ({
   onBlur,
   mobileDisabled,
 }) => (
+  // eslint-disable-next-line
   <label
     className={cx('input-radio', { disabled, 'mobile-disabled': mobileDisabled })}
     onFocus={onFocus}

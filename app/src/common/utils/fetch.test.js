@@ -43,7 +43,7 @@ describe('fetch', () => {
       const cancelFuncCallback = (cancel) => {
         cancelRequest = cancel;
       };
-      setTimeout(() => cancelRequest(), 5);
+      setTimeout(() => cancelRequest(), 0);
       fetch('https://api.com/timeout', { abort: cancelFuncCallback }).catch((err) => {
         expect(err).toBeInstanceOf(Error);
         expect(err.message).toBe(ERROR_CANCELED);
