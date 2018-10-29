@@ -96,7 +96,7 @@ function* fetchTestItems() {
         'filter.eq.launch': launchId,
         'filter.eq.parent': !noChildFilter ? parentId : undefined,
         'filter.level.path': sizePath,
-        'filter.in.path': noChildFilter ? parentId : undefined,
+        'filter.under.path': noChildFilter ? parentId : undefined,
         ...query,
       },
     }),
