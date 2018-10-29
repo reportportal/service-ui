@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import track from 'react-tracking';
 import Parser from 'html-react-parser';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -18,13 +19,11 @@ const messages = defineMessages({
 });
 
 @injectIntl
-@connect(
-  null,
-  {
-    initializeWizardForm: (data) => initialize(WIDGET_WIZARD_FORM, data),
-    touchField: () => touch(WIDGET_WIZARD_FORM, 'widgetType'),
-  },
-)
+@connect(null, {
+  initializeWizardForm: (data) => initialize(WIDGET_WIZARD_FORM, data),
+  touchField: () => touch(WIDGET_WIZARD_FORM, 'widgetType'),
+})
+@track()
 export class WidgetTypeSelector extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
@@ -35,15 +34,22 @@ export class WidgetTypeSelector extends Component {
     touched: PropTypes.bool.isRequired,
     error: PropTypes.string,
     touchField: PropTypes.func.isRequired,
+    eventsInfo: PropTypes.object,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
 
   static defaultProps = {
     value: '',
     error: '',
     widgets: [],
+    eventsInfo: {},
   };
 
   handleWidgetSelect = (e) => {
+    this.props.tracking.trackEvent(this.props.eventsInfo.chooseWidgetType);
     this.props.touchField();
     this.props.initializeWizardForm({ widgetType: e.target.value });
   };

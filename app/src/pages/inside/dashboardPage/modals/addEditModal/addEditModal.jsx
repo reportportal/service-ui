@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import { ModalLayout, withModal, ModalField } from 'components/main/modal';
 import { reduxForm } from 'redux-form';
@@ -63,16 +64,31 @@ const messages = defineMessages({
     name: (!name || !validate.dashboardName(name)) && 'dashboardNameHint',
   }),
 })
+@track()
 export class AddEditModal extends Component {
   static propTypes = {
-    data: PropTypes.object,
+    data: PropTypes.shape({
+      dashboardItem: PropTypes.object,
+      onSubmit: PropTypes.func,
+      type: PropTypes.string,
+      eventsInfo: PropTypes.object,
+    }),
     intl: intlShape.isRequired,
     initialize: PropTypes.func,
     handleSubmit: PropTypes.func,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
 
   static defaultProps = {
-    data: {},
+    data: {
+      dashboardItem: {},
+      onSubmit: () => {},
+      type: '',
+      eventsInfo: {},
+    },
     initialize: () => {},
     handleSubmit: () => {},
   };
@@ -81,8 +97,13 @@ export class AddEditModal extends Component {
     this.props.initialize(this.props.data.dashboardItem);
   }
 
-  submitFormAndCloseModal = (closeModal) => (dashboardItem) => {
-    this.props.data.onSubmit(dashboardItem);
+  submitFormAndCloseModal = (closeModal) => (item) => {
+    const {
+      tracking,
+      data: { dashboardItem, eventsInfo },
+    } = this.props;
+    !dashboardItem && item.description && tracking.trackEvent(eventsInfo.changeDescription);
+    this.props.data.onSubmit(item);
     closeModal();
   };
 
@@ -90,7 +111,7 @@ export class AddEditModal extends Component {
     const {
       intl,
       handleSubmit,
-      data: { type },
+      data: { type, eventsInfo },
     } = this.props;
     const submitText = intl.formatMessage(messages[`${type}ModalSubmitButtonText`]);
     const title = intl.formatMessage(messages[`${type}ModalTitle`]);
@@ -103,12 +124,15 @@ export class AddEditModal extends Component {
         okButton={{
           text: submitText,
           onClick: (closeModal) => {
+            this.props.tracking.trackEvent(eventsInfo.submitBtn);
             handleSubmit(this.submitFormAndCloseModal(closeModal))();
           },
         }}
         cancelButton={{
           text: cancelText,
+          eventInfo: eventsInfo.cancelBtn,
         }}
+        closeIconEventInfo={eventsInfo.closeIcon}
       >
         <form className={cx('add-dashboard-form')}>
           <ModalField
@@ -136,7 +160,12 @@ export class AddEditModal extends Component {
             label={intl.formatMessage(messages.dashboardShareLabel)}
             labelWidth={labelWidth}
           >
-            <FieldProvider name="share" format={Boolean} parse={Boolean}>
+            <FieldProvider
+              name="share"
+              format={Boolean}
+              parse={Boolean}
+              onChange={() => this.props.tracking.trackEvent(eventsInfo.shareSwitcher)}
+            >
               <InputBigSwitcher />
             </FieldProvider>
           </ModalField>

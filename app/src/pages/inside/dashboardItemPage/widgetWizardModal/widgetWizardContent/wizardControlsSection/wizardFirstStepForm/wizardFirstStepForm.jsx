@@ -23,18 +23,20 @@ export class WizardFirstStepForm extends Component {
     widgets: PropTypes.array,
     handleSubmit: PropTypes.func.isRequired,
     onSubmit: PropTypes.func.isRequired,
+    eventsInfo: PropTypes.object,
   };
 
   static defaultProps = {
     widgets: [],
+    eventsInfo: {},
   };
 
   render() {
-    const { handleSubmit, widgets, onSubmit } = this.props;
+    const { handleSubmit, widgets, onSubmit, eventsInfo } = this.props;
     return (
       <form onSubmit={handleSubmit(onSubmit)} className={cx('wizard-first-step-form')}>
         <FieldProvider name={'widgetType'}>
-          <WidgetTypeSelector widgets={widgets} />
+          <WidgetTypeSelector widgets={widgets} eventsInfo={eventsInfo} />
         </FieldProvider>
       </form>
     );

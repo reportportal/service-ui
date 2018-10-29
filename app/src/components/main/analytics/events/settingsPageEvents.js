@@ -2,8 +2,8 @@ export const SETTINGS_PAGE = 'settings';
 export const SETTINGS_PAGE_EVENTS = {
   GENERAL_TAB: {
     category: SETTINGS_PAGE,
-    action: 'Click on tab General in Settings',
-    label: 'Open tab General in Settings',
+    action: 'MY CUSTOM EVENT',
+    label: 'MY CUSTOM EVENT',
   },
   INACTIVITY_TIMEOUT_GENERAL: {
     category: SETTINGS_PAGE,

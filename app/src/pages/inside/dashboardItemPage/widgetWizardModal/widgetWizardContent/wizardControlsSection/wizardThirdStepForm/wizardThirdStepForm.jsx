@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import track from 'react-tracking';
 import { connect } from 'react-redux';
 import { reduxForm, initialize } from 'redux-form';
 import { injectIntl, intlShape, defineMessages } from 'react-intl';
@@ -46,13 +47,11 @@ const messages = defineMessages({
     name: !validate.widgetName(name) && 'widgetNameHint',
   }),
 })
-@connect(
-  null,
-  {
-    initializeWizardThirdStepForm: (data) =>
-      initialize(WIDGET_WIZARD_FORM, data, true, { keepValues: true }),
-  },
-)
+@connect(null, {
+  initializeWizardThirdStepForm: (data) =>
+    initialize(WIDGET_WIZARD_FORM, data, true, { keepValues: true }),
+})
+@track()
 export class WizardThirdStepForm extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
@@ -60,8 +59,14 @@ export class WizardThirdStepForm extends Component {
     handleSubmit: PropTypes.func.isRequired,
     onSubmit: PropTypes.func,
     widgetTitle: PropTypes.string,
+    eventsInfo: PropTypes.object,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
   static defaultProps = {
+    eventsInfo: {},
     widgetTitle: '',
     onSubmit: () => {},
   };
@@ -82,7 +87,7 @@ export class WizardThirdStepForm extends Component {
       .slice(-3);
 
   render() {
-    const { intl, handleSubmit, onSubmit } = this.props;
+    const { intl, handleSubmit, onSubmit, tracking, eventsInfo } = this.props;
     return (
       <form onSubmit={handleSubmit(onSubmit)}>
         <ModalField label={intl.formatMessage(messages.nameLabel)} labelWidth={LABEL_WIDTH}>
@@ -96,12 +101,18 @@ export class WizardThirdStepForm extends Component {
           <FieldProvider
             name={'description'}
             placeholder={intl.formatMessage(messages.descriptionPlaceholder)}
+            onChange={() => tracking.trackEvent(eventsInfo.changeDescription)}
           >
             <InputTextArea />
           </FieldProvider>
         </ModalField>
         <ModalField label={intl.formatMessage(messages.shareLabel)} labelWidth={LABEL_WIDTH}>
-          <FieldProvider name={'share'} format={Boolean} parse={Boolean}>
+          <FieldProvider
+            name={'share'}
+            format={Boolean}
+            parse={Boolean}
+            onChange={() => tracking.trackEvent(eventsInfo.shareWidget)}
+          >
             <InputBigSwitcher />
           </FieldProvider>
         </ModalField>

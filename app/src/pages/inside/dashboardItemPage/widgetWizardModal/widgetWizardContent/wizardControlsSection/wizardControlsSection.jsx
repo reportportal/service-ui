@@ -40,7 +40,7 @@ export class WizardControlsSection extends Component {
     onClickNextStep: PropTypes.func,
     nextStep: PropTypes.func,
     onAddWidget: PropTypes.func,
-    onChangeWidgetType: PropTypes.func,
+    eventsInfo: PropTypes.object,
   };
   static defaultProps = {
     widgets: [],
@@ -50,7 +50,7 @@ export class WizardControlsSection extends Component {
     onClickNextStep: () => {},
     nextStep: () => {},
     onAddWidget: () => {},
-    onChangeWidgetType: () => {},
+    eventsInfo: {},
   };
 
   constructor(props) {
@@ -75,12 +75,19 @@ export class WizardControlsSection extends Component {
       case 2:
         return (
           <WizardThirdStepForm
+            eventsInfo={this.props.eventsInfo}
             widgetTitle={widgets.find((widget) => widget.id === activeWidgetId).title}
             onSubmit={this.props.onAddWidget}
           />
         );
       default:
-        return <WizardFirstStepForm widgets={widgets} onSubmit={this.props.nextStep} />;
+        return (
+          <WizardFirstStepForm
+            widgets={widgets}
+            onSubmit={this.props.nextStep}
+            eventsInfo={this.props.eventsInfo}
+          />
+        );
     }
   };
 

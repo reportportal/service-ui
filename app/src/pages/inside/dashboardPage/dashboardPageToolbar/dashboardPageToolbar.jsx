@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import track from 'react-tracking';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import PropTypes from 'prop-types';
@@ -6,6 +7,7 @@ import { GhostButton } from 'components/buttons/ghostButton';
 import { reduxForm } from 'redux-form';
 import { InputSearch } from 'components/inputs/inputSearch';
 import { FieldProvider } from 'components/fields/fieldProvider';
+import { DASHBOARD_PAGE_EVENTS } from 'components/main/analytics/events';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import styles from './dashboardPageToolbar.scss';
 import GridViewDashboardIcon from './img/grid-inline.svg';
@@ -32,6 +34,7 @@ const messages = defineMessages({
   },
 })
 @injectIntl
+@track()
 export class DashboardPageToolbar extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
@@ -42,6 +45,10 @@ export class DashboardPageToolbar extends Component {
     onTableViewToggle: PropTypes.func,
     gridType: PropTypes.string,
     invalid: PropTypes.bool,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
   static defaultProps = {
     dashboardItems: [],
@@ -76,7 +83,13 @@ export class DashboardPageToolbar extends Component {
     return (
       <div className={cx('tool-bar')}>
         <div className={cx('input')}>
-          <FieldProvider name="dashboardName">
+          <FieldProvider
+            name="dashboardName"
+            onChange={(val) => {
+              val.length >= 3 &&
+                this.props.tracking.trackEvent(DASHBOARD_PAGE_EVENTS.ENTER_PARAM_FOR_SEARCH);
+            }}
+          >
             <FieldErrorHint>
               <InputSearch
                 disabled={!dashboardItems.length && !filter}

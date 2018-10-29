@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import track from 'react-tracking';
 import { connect } from 'react-redux';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import PropTypes from 'prop-types';
@@ -13,6 +14,7 @@ import {
   DASHBOARDS_TABLE_VIEW,
   DASHBOARDS_GRID_VIEW,
 } from 'controllers/dashboard';
+import { DASHBOARD_PAGE, DASHBOARD_PAGE_EVENTS } from 'components/main/analytics/events';
 import { userInfoSelector } from 'controllers/user';
 import { showModalAction } from 'controllers/modal';
 import { withFilter } from 'controllers/filter';
@@ -64,6 +66,7 @@ const messages = defineMessages({
 )
 @withFilter()
 @injectIntl
+@track({ page: DASHBOARD_PAGE })
 export class DashboardPage extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
@@ -77,6 +80,10 @@ export class DashboardPage extends Component {
     gridType: PropTypes.string,
     onFilterChange: PropTypes.func,
     changeVisibilityType: PropTypes.func,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
 
   static defaultProps = {
@@ -98,8 +105,9 @@ export class DashboardPage extends Component {
       deleteDashboard,
       userInfo: { userId },
       intl,
+      tracking,
     } = this.props;
-
+    tracking.trackEvent(DASHBOARD_PAGE_EVENTS.DELETE_ICON_DASHBOARD_TILE);
     showModal({
       id: 'dashboardDeleteModal',
       data: {
@@ -124,6 +132,13 @@ export class DashboardPage extends Component {
         dashboardItem: item,
         onSubmit: editDashboard,
         type: 'edit',
+        eventsInfo: {
+          closeIcon: DASHBOARD_PAGE_EVENTS.CLOSE_ICON_EDIT_DASHBOARD_MODAL,
+          changeDescription: DASHBOARD_PAGE_EVENTS.ENTER_DESCRIPTION_EDIT_DASHBOARD_MODAL,
+          shareSwitcher: DASHBOARD_PAGE_EVENTS.SHARE_SWITCHER_EDIT_DASHBOARD_MODAL,
+          cancelBtn: DASHBOARD_PAGE_EVENTS.CANCEL_BTN_EDIT_DASHBOARD_MODAL,
+          submitBtn: DASHBOARD_PAGE_EVENTS.UPDATE_BTN_EDIT_DASHBOARD_MODAL,
+        },
       },
     });
   };
@@ -136,11 +151,23 @@ export class DashboardPage extends Component {
       data: {
         onSubmit: addDashboard,
         type: 'add',
+        eventsInfo: {
+          closeIcon: DASHBOARD_PAGE_EVENTS.CLOSE_ICON_ADD_NEW_DASHBOARD_MODAL,
+          changeDescription: DASHBOARD_PAGE_EVENTS.ENTER_DESCRIPTION_ADD_NEW_DASHBOARD_MODAL,
+          shareSwitcher: DASHBOARD_PAGE_EVENTS.SHARE_SWITCHER_ADD_NEW_DASHBOARD_MODAL,
+          cancelBtn: DASHBOARD_PAGE_EVENTS.CANCEL_BTN_ADD_NEW_DASHBOARD_MODAL,
+          submitBtn: DASHBOARD_PAGE_EVENTS.ADD_BTN_ADD_NEW_DASHBOARD_MODAL,
+        },
       },
     });
   };
 
-  getBreadcrumbs = () => [{ title: this.props.intl.formatMessage(messages.pageTitle) }];
+  getBreadcrumbs = () => [
+    {
+      title: this.props.intl.formatMessage(messages.pageTitle),
+      eventInfo: DASHBOARD_PAGE_EVENTS.BREADCRUMB_ALL_DASHBOARD,
+    },
+  ];
 
   getFilteredDashboardItems = () => {
     const { filter, dashboardItems } = this.props;
@@ -165,11 +192,17 @@ export class DashboardPage extends Component {
   render() {
     const { gridType, userInfo, onFilterChange, filter } = this.props;
     const dashboardItems = this.getFilteredDashboardItems();
-
+    const eventsInfo = {
+      closeIcon: DASHBOARD_PAGE_EVENTS.CLOSE_ICON_ADD_NEW_DASHBOARD_MODAL,
+      changeDescription: DASHBOARD_PAGE_EVENTS.ENTER_DESCRIPTION_ADD_NEW_DASHBOARD_MODAL,
+      shareSwitcher: DASHBOARD_PAGE_EVENTS.SHARE_SWITCHER_ADD_NEW_DASHBOARD_MODAL,
+      cancelBtn: DASHBOARD_PAGE_EVENTS.CANCEL_BTN_ADD_NEW_DASHBOARD_MODAL,
+      submitBtn: DASHBOARD_PAGE_EVENTS.ADD_BTN_ADD_NEW_DASHBOARD_MODAL,
+    };
     return (
       <PageLayout>
         <PageHeader breadcrumbs={this.getBreadcrumbs()}>
-          <AddDashboardButton />
+          <AddDashboardButton eventsInfo={eventsInfo} />
         </PageHeader>
         <PageSection>
           <DashboardPageToolbar

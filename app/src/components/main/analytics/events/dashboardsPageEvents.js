@@ -1,0 +1,445 @@
+export const DASHBOARD_PAGE = 'dashboards';
+export const DASHBOARD_PAGE_EVENTS = {
+  ADD_NEW_DASHBOARD_BTN: {
+    category: DASHBOARD_PAGE,
+    action: 'Click on Bttn Add New Dashboard',
+    label: 'Arise Modal Add New Dashboard',
+  },
+  ENTER_PARAM_FOR_SEARCH: {
+    category: DASHBOARD_PAGE,
+    action: 'Enter parameter for search',
+    label: 'Show dashboards by parameter',
+  },
+  DASHBOARD_NAME_CLICK: {
+    category: DASHBOARD_PAGE,
+    action: 'Click on Dashboard name',
+    label: 'Transition to Dashboard',
+  },
+  DELETE_ICON_DASHBOARD_TILE: {
+    category: DASHBOARD_PAGE,
+    action: 'Click on icon Close on Dashboard tile',
+    label: 'Arise Modal Delete Dashboard',
+  },
+  SHARED_DASHBOARD_NAME: {
+    category: DASHBOARD_PAGE,
+    action: 'Click on Shared Dashboard name',
+    label: 'Transition to Dashboard',
+  },
+  CLOSE_ICON_ADD_NEW_DASHBOARD_MODAL: {
+    category: DASHBOARD_PAGE,
+    action: 'Click on icon Close on Modal Add New Dashboard',
+    label: 'Close Modal Add New Dashboard',
+  },
+  ENTER_DESCRIPTION_ADD_NEW_DASHBOARD_MODAL: {
+    category: DASHBOARD_PAGE,
+    action: 'Enter description in Modal Add New Dashboard',
+    label: 'Description',
+  },
+  SHARE_SWITCHER_ADD_NEW_DASHBOARD_MODAL: {
+    category: DASHBOARD_PAGE,
+    action: 'Click on Share on/off in Modal Add New Dashboard',
+    label: 'Share/unshare Dashboard',
+  },
+  CANCEL_BTN_ADD_NEW_DASHBOARD_MODAL: {
+    category: DASHBOARD_PAGE,
+    action: 'Click on Bttn Cancel in Modal Add New Dashboard',
+    label: 'Close Modal Add New Dashboard',
+  },
+  ADD_BTN_ADD_NEW_DASHBOARD_MODAL: {
+    category: DASHBOARD_PAGE,
+    action: 'Click on Bttn Add in Modal Add New Dashboard',
+    label: 'Add Dashboard',
+  },
+  CLOSE_ICON_EDIT_DASHBOARD_MODAL: {
+    category: DASHBOARD_PAGE,
+    action: 'Click on icon Close on Modal Edit Dashboard',
+    label: 'Close Modal Edit Dashboard',
+  },
+  ENTER_DESCRIPTION_EDIT_DASHBOARD_MODAL: {
+    category: DASHBOARD_PAGE,
+    action: 'Enter description in Modal Edit Dashboard',
+    label: 'Description',
+  },
+  SHARE_SWITCHER_EDIT_DASHBOARD_MODAL: {
+    category: DASHBOARD_PAGE,
+    action: 'Click on Share on/off in Modal Edit Dashboard',
+    label: 'Share/unshare Dashboard',
+  },
+  CANCEL_BTN_EDIT_DASHBOARD_MODAL: {
+    category: DASHBOARD_PAGE,
+    action: 'Click on Bttn Cancel in Modal Edit Dashboard',
+    label: 'Close Modal Edit Dashboard',
+  },
+  UPDATE_BTN_EDIT_DASHBOARD_MODAL: {
+    category: DASHBOARD_PAGE,
+    action: 'Click on Bttn Update in Modal Edit Dashboard',
+    label: 'Update Dashboard',
+  },
+  CLOSE_ICON_DELETE_DASHBOARD_MODAL: {
+    category: DASHBOARD_PAGE,
+    action: 'Click on icon Close on Modal Delete Dashboard',
+    label: 'Close Modal Delete Dashboard',
+  },
+  CANCEL_BTN_DELETE_DASHBOARD_MODAL: {
+    category: DASHBOARD_PAGE,
+    action: 'Click on Bttn Cancel in Modal Delete Dashboard',
+    label: 'Close Modal Delete Dashboard',
+  },
+  DELETE_BTN_DELETE_DASHBOARD_MODAL: {
+    category: DASHBOARD_PAGE,
+    action: 'Click on Bttn Delete in Modal Delete Dashboard',
+    label: 'Delete Dashboard',
+  },
+  BREADCRUMB_ALL_DASHBOARD: {
+    category: DASHBOARD_PAGE,
+    action: 'Click on Bread Crumb All Dashboards',
+    label: 'Transition to All Dashboards',
+  },
+  ADD_NEW_WIDGET_BTN: {
+    category: DASHBOARD_PAGE,
+    action: 'Click on Bttn Add New Widget on Dashboard',
+    label: 'Arise Modal Add New Widget',
+  },
+  ADD_SHARED_WIDGET_BTN: {
+    // todo
+    category: DASHBOARD_PAGE,
+    action: 'Click on Bttn Add Shared Widget on Dashboard',
+    label: 'Arise Modal Add Shared Widget',
+  },
+  EDIT_DASHBOARD_BTN: {
+    category: DASHBOARD_PAGE,
+    action: 'Click on Bttn Edit on Dashboard',
+    label: 'Arise Modal Edit Dashboard',
+  },
+  FULL_SCREEN_BTN: {
+    category: DASHBOARD_PAGE,
+    action: 'Click on Bttn Full Screen on Dashboard',
+    label: 'Full Screen of Dashboard',
+  },
+  DELETE_DASHBOARD: {
+    category: DASHBOARD_PAGE,
+    action: 'Click on Bttn Remove on Dashboard',
+    label: 'Arise Modal Delete Dashboard',
+  },
+  DRAG_WIDGET: {
+    category: DASHBOARD_PAGE,
+    action: 'Click and drag Widget',
+    label: 'Move Widget',
+  },
+  EDIT_WIDGET: {
+    // todo
+    category: DASHBOARD_PAGE,
+    action: 'Click on icon Edit on Widget',
+    label: 'Arise Modal Edit Widget',
+  },
+  REFRESH_WIDGET: {
+    category: DASHBOARD_PAGE,
+    action: 'Click on icon Refresh on Widget',
+    label: 'Refresh Widget',
+  },
+  REMOVE_WIDGET: {
+    category: DASHBOARD_PAGE,
+    action: 'Click on icon Remove on Widget',
+    label: 'Arise Modal Delete Widget',
+  },
+  RESIZE_WIDGET: {
+    category: DASHBOARD_PAGE,
+    action: 'Click and drag on icon Resize on Widget',
+    label: 'Resize Widget',
+  },
+  CLOSE_ICON_ADD_WIDGET_MODAL: {
+    category: DASHBOARD_PAGE,
+    action: 'Click on icon Close on Modal Add New Widget',
+    label: 'Close Modal Add New Widget',
+  },
+  CHOOSE_WIDGET_TYPE_ADD_WIDGET_MODAL: {
+    category: DASHBOARD_PAGE,
+    action: 'Choose radio bttn of Widget type in Modal Add New Widget',
+    label: 'Choose Widget type in Modal Add New Widget',
+  },
+  NEXT_STEP_ADD_WIDGET_MODAL: {
+    category: DASHBOARD_PAGE,
+    action: 'Click on Bttn Next Step on Modal Add New Widget',
+    label: 'Transition to Next Step on Modal Add New Widget',
+  },
+  ENTER_PARAMS_FOR_SEARCH_ADD_WIDGET_MODAL: {
+    // todo
+    category: DASHBOARD_PAGE,
+    action: 'Enter parameter for search',
+    label: 'Show filter by parameter',
+  },
+  ADD_FILTER_BTN_ADD_WIDGET_MODAL: {
+    // todo
+    category: DASHBOARD_PAGE,
+    action: 'Click on Bttn Add Filter on Modal Add New Widget',
+    label: 'Arise fields for adding new filter',
+  },
+  CHOOSE_FILTER_ADD_WIDGET_MODAL: {
+    // todo
+    category: DASHBOARD_PAGE,
+    action: 'Click on radio bttn of Filter on Modal Add New Widget',
+    label: 'Choose filter',
+  },
+  EDIT_FILTER_ADD_WIDGET_MODAL: {
+    // todo
+    category: DASHBOARD_PAGE,
+    action: 'Click on icon Edit Filter on Modal Add New Widget',
+    label: 'Arise fields to edit filter',
+  },
+  PREVIOUS_STEP_ADD_WIDGET_MODAL: {
+    category: DASHBOARD_PAGE,
+    action: 'Click on Bttn Previous Step on Modal Add New Widget',
+    label: 'Transition to Previous Step in Modal Add New Widget',
+  },
+  SELECT_PARAMS_NEW_FILTER_ADD_WIDGET_MODAL: {
+    // todo
+    category: DASHBOARD_PAGE,
+    action: 'Select parameters of new filter on Modal Add New Widget',
+    label: 'Show parameters of new filter on Modal Add New Widget',
+  },
+  SELECT_SORTING_NEW_FILTER_ADD_WIDGET_MODAL: {
+    // todo
+    category: DASHBOARD_PAGE,
+    action: 'Select parameters of sorting in new filter on Modal Add New Widget',
+    label: 'Show parameters of sorting in new filter on Modal Add New Widget',
+  },
+  CANCEL_BTN_ADD_NEW_FILTER_ADD_WIDGET_MODAL: {
+    // todo
+    category: DASHBOARD_PAGE,
+    action: 'Click on Bttn Cancel in Add new filter in Modal Add New Widget',
+    label: 'Cancel adding new filter in Modal Add New Widget',
+  },
+  ADD_BTN_ADD_NEW_FILTER_ADD_WIDGET_MODAL: {
+    // todo
+    category: DASHBOARD_PAGE,
+    action: 'Click on Bttn Add in Add new filter in Modal Add New Widget',
+    label: 'Add new filter in Modal Add New Widget',
+  },
+  EDIT_FILTER_NAME_ADD_WIDGET_MODAL: {
+    // todo
+    category: DASHBOARD_PAGE,
+    action: 'Edit filter name in Modal Add New Widget',
+    label: 'Edited filter name in Modal Add New Widget',
+  },
+  SELECT_PARAMS_FOR_EDITED_FILTER_ADD_WIDGET_MODAL: {
+    // todo
+    category: DASHBOARD_PAGE,
+    action: 'Select parameters of edited filter in Modal Add New Widget',
+    label: 'Show parameters of edited filter in Modal Add New Widget',
+  },
+  SELECT_SORTING_EDITED_FILTER_ADD_WIDGET_MODAL: {
+    // todo
+    category: DASHBOARD_PAGE,
+    action: 'Select parameters of sorting in edited filter in Modal Add New Widget',
+    label: 'Show parameters of sorting of edited filter in Modal Add New Widget',
+  },
+  CANCEL_BTN_EDIT_FILTER_ADD_WIDGET_MODAL: {
+    // todo
+    category: DASHBOARD_PAGE,
+    action: 'Click on Bttn Cancel in Edit filter in Modal Add New Widget',
+    label: 'Cancel Edit filter in Modal Add New Widget',
+  },
+  SUBMIT_FILTER_EDIT_ADD_WIDGET_MODAL: {
+    // todo
+    category: DASHBOARD_PAGE,
+    action: 'Click on Bttn Submit in Edit filter in Modal Add New Widget',
+    label: 'Submit changes in filter in Modal Add New Widget',
+  },
+  ENTER_WIDGET_DESCRIPTION_ADD_WIDGET_MODAL: {
+    category: DASHBOARD_PAGE,
+    action: 'Enter Widget description in Modal Add New Widget',
+    label: 'Widget description in Modal Add New Widget',
+  },
+  SHARE_WIDGET_ADD_WIDGET_MODAL: {
+    category: DASHBOARD_PAGE,
+    action: 'Click on Share Widget on/off in Modal Add New Widget',
+    label: 'Share/unshare Widget',
+  },
+  ADD_BTN_ADD_WIDGET_MODAL: {
+    category: DASHBOARD_PAGE,
+    action: 'Click on Bttn Add in Modal Add New Widget',
+    label: 'Submit changes in filter in Modal Add New Widget',
+  },
+  CLOSE_ICON_SHARE_WIDGET_MODAL: {
+    // todo
+    category: DASHBOARD_PAGE,
+    action: 'Click on icon Close on Modal Add Shared Widget',
+    label: 'Close Modal Add Shared Widget',
+  },
+  WIDGET_TYPE_SHARE_WIDGET_MODAL: {
+    // todo
+    category: DASHBOARD_PAGE,
+    action: 'Choose radio bttn of Widget type in Modal Add Shared Widget',
+    label: 'Choose Widget type in Modal Add Shared Widget',
+  },
+  SCROLL_WIDGET_SHARE_WIDGET_MODAL: {
+    // todo
+    category: DASHBOARD_PAGE,
+    action: 'Scroll widgets in Modal Add Shared Widget',
+    label: 'Scroll widgets in Modal Add Shared Widget',
+  },
+  CANCEL_BTN_SHARE_WIDGET_MODAL: {
+    // todo
+    category: DASHBOARD_PAGE,
+    action: 'Click on Bttn Cancel in Modal Add Shared Widget',
+    label: 'Cancel Modal Add Shared Widget',
+  },
+  ADD_BTN_SHARE_WIDGET_MODAL: {
+    // todo
+    category: DASHBOARD_PAGE,
+    action: 'Click on Bttn Add in Modal Add Shared Widget',
+    label: 'Add Shared Widget',
+  },
+  CLOSE_ICON_EDIT_WIDGET_MODAL: {
+    // todo
+    category: DASHBOARD_PAGE,
+    action: 'Click on icon Close on Modal Edit Widget',
+    label: 'Close Modal Edit Widget',
+  },
+  EDIT_FILTER_ICON_EDIT_WIDGET_MODAL: {
+    // todo
+    category: DASHBOARD_PAGE,
+    action: 'Click on icon Edit Filter on Modal Edit Widget',
+    label: 'Arise fields to edit filter in Modal Edit Widget',
+  },
+  WIDGET_NAME_EDIT_WIDGET_MODAL: {
+    // todo
+    category: DASHBOARD_PAGE,
+    action: 'Change Widget name in Modal Edit Widget',
+    label: 'New Widget name in Modal Edit Widget',
+  },
+  WIDGET_DESCRIPTION_EDIT_WIDGET_MODAL: {
+    // todo
+    category: DASHBOARD_PAGE,
+    action: 'Change Widget description in Modal Edit Widget',
+    label: 'New Widget description in Modal Edit Widget',
+  },
+  SHARE_WIDGET_EDIT_WIDGET_MODAL: {
+    // todo
+    category: DASHBOARD_PAGE,
+    action: 'Click on Share Widget on/off in Modal Edit Widget',
+    label: 'Share/unshare Widget',
+  },
+  CANCEL_BTN_EDIT_WIDGET_MODAL: {
+    // todo
+    category: DASHBOARD_PAGE,
+    action: 'Click on Bttn Cancel in Modal Edit Widget',
+    label: 'Close Modal Edit Widget',
+  },
+  SAVE_BTN_EDIT_WIDGET_MODAL: {
+    // todo
+    category: DASHBOARD_PAGE,
+    action: 'Click on Bttn Save in Modal Edit Widget',
+    label: 'Save changes in Modal Edit Widget',
+  },
+  ENTER_SEARCH_PARAMS_EDIT_WIDGET_MODAL: {
+    // todo
+    category: DASHBOARD_PAGE,
+    action: 'Enter parametr for search in Modal Edit Widget',
+    label: 'Show filter by parameter in Modal Edit Widget',
+  },
+  ADD_FILTER_BTN_EDIT_WIDGET_MODAL: {
+    // todo
+    category: DASHBOARD_PAGE,
+    action: 'Click on Bttn Add Filter in Modal Edit Widget',
+    label: 'Arise fields for adding new filter in Modal Edit Widget',
+  },
+  CHOOSE_FILTER_EDIT_WIDGET_MODAL: {
+    // todo
+    category: DASHBOARD_PAGE,
+    action: 'Click on radio bttn of Filter in Modal Edit Widget',
+    label: 'Choose filter in Modal Edit Widget',
+  },
+  CANCEL_EDIT_FILTER_BTN_EDIT_WIDGET_MODAL: {
+    // todo
+    category: DASHBOARD_PAGE,
+    action: 'Click on Bttn Cancel in Edit filter in Modal Edit Widget',
+    label: 'Close Edit filter in Modal Edit Widget',
+  },
+  SUBMIT_CHANGES_EDIT_WIDGET_MODAL: {
+    // todo
+    category: DASHBOARD_PAGE,
+    action: 'Click on Bttn Submit filter change in Modal Edit Widget',
+    label: 'Save filter change in Modal Edit Widget',
+  },
+  PARAMS_FOR_NEW_FILTER_EDIT_WIDGET_MODAL: {
+    // todo
+    category: DASHBOARD_PAGE,
+    action: 'Select parameters of new filter in Modal Edit Widget',
+    label: 'Show parameters of new filter in Modal Edit Widget',
+  },
+  SORTING_FOR_NEW_FILTER_EDIT_WIDGET_MODAL: {
+    // todo
+    category: DASHBOARD_PAGE,
+    action: 'Select parameters of sorting in new filter in Modal Edit Widget',
+    label: 'Show parameters of sorting of new filter in Modal Edit Widget',
+  },
+  CANCEL_BTN_ADD_NEW_FILTER_EDIT_WIDGET_MODAL: {
+    // todo
+    category: DASHBOARD_PAGE,
+    action: 'Click on Bttn Cancel in add new filter in Modal Edit Widget',
+    label: 'Cancel add new filter in Modal Edit Widget',
+  },
+  ADD_NEW_FILTER_BTN_EDIT_WIDGET_MODAL: {
+    // todo
+    category: DASHBOARD_PAGE,
+    action: 'Click on Bttn Add in add new filter in Modal Edit Widget',
+    label: 'Add new filter in Modal Edit Widget',
+  },
+  EDIT_FILTER_PARAMS_EDIT_WIDGET_MODAL: {
+    // todo
+    category: DASHBOARD_PAGE,
+    action: 'Edit filter parametrs in Modal Edit Widget',
+    label: 'Show new filter parameters in Modal Edit Widget',
+  },
+  CANCEL_EDIT_FILTER_EDIT_WIDGET_MODAL: {
+    // todo
+    category: DASHBOARD_PAGE,
+    action: 'Click on Bttn Cancel in Edit filter in Modal Edit Widget',
+    label: 'Cancel Edit filter in Modal Edit Widget',
+  },
+  SUBMIT_EDIT_FILTER_EDIT_WIDGET_MODAL: {
+    // todo
+    category: DASHBOARD_PAGE,
+    action: 'Click on Bttn Submit in Edit filter in Modal Edit Widget',
+    label: 'Submit changes in filter in Modal Edit Widget',
+  },
+  CLOSE_ICON_DELETE_WIDGET_MODAL: {
+    // todo
+    category: DASHBOARD_PAGE,
+    action: 'Click on Icon Close on Modal Delete Widget',
+    label: 'Close Modal Delete Widget',
+  },
+  CANCEL_BTN_DELETE_WIDGET_MODAL: {
+    // todo
+    category: DASHBOARD_PAGE,
+    action: 'Click on Bttn Cancel on Modal Delete Widget',
+    label: 'Close Modal Delete Widget',
+  },
+  DELETE_BTN_DELETE_WIDGET_MODAL: {
+    // todo
+    category: DASHBOARD_PAGE,
+    action: 'Click on Bttn Delete on Modal Delete Widget',
+    label: 'Delete Widget',
+  },
+  EDIT_WIDGET_LEGEND: {
+    category: DASHBOARD_PAGE,
+    action: 'Edit Widget legend',
+    label: 'Change Widget legend',
+  },
+  WIDGET_CLICK: {
+    category: DASHBOARD_PAGE,
+    action: 'Click on Widget',
+    label: 'Transition to launches page',
+  },
+  ADD_NEW_WIDGET_LINK: {
+    category: DASHBOARD_PAGE,
+    action: 'Click on link Add New Widget on Dashboard',
+    label: 'Arise Modal Add New Widget',
+  },
+  ADD_NEW_WIDGET_EMPTY_PAGE: {
+    category: DASHBOARD_PAGE,
+    action: 'Click on Bttn Add New Dashboard on empty page',
+    label: 'Arise Modal Add New Dashboard',
+  },
+};

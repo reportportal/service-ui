@@ -1,8 +1,10 @@
 import React, { Component, Fragment } from 'react';
+import track from 'react-tracking';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
+import { DASHBOARD_PAGE_EVENTS } from 'components/main/analytics/events';
 import { connect } from 'react-redux';
 import { activeProjectSelector } from 'controllers/user';
 import { showModalAction } from 'controllers/modal';
@@ -25,6 +27,7 @@ const charts = {
     showModalAction,
   },
 )
+@track()
 export class Widget extends Component {
   static propTypes = {
     url: PropTypes.string.isRequired,
@@ -34,6 +37,10 @@ export class Widget extends Component {
     onDelete: PropTypes.func,
     isModifiable: PropTypes.bool,
     observer: PropTypes.object.isRequired,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
 
   static defaultProps = {
@@ -67,17 +74,8 @@ export class Widget extends Component {
     this.node = node;
   };
 
-  deleteWidget = () => {
-    this.props.showModalAction({
-      id: 'deleteWidgetModal',
-      data: {
-        widget: this.state.widget,
-        onConfirm: () => this.props.onDelete(this.state.widget.id),
-      },
-    });
-  };
-
   fetchWidget = () => {
+    this.props.tracking.trackEvent(DASHBOARD_PAGE_EVENTS.REFRESH_WIDGET);
     this.setState({
       loading: true,
     });
@@ -86,6 +84,17 @@ export class Widget extends Component {
         loading: false,
         widget,
       });
+    });
+  };
+
+  deleteWidget = () => {
+    this.props.tracking.trackEvent(DASHBOARD_PAGE_EVENTS.REMOVE_WIDGET);
+    this.props.showModalAction({
+      id: 'deleteWidgetModal',
+      data: {
+        widget: this.state.widget,
+        onConfirm: () => this.props.onDelete(this.state.widget.id),
+      },
     });
   };
 
