@@ -1,10 +1,15 @@
-import { takeEvery, all, put, select } from 'redux-saga/effects';
+import { takeEvery, all, put, select, take } from 'redux-saga/effects';
 import { redirect } from 'redux-first-router';
-import { fetchDataAction, concatFetchDataAction } from 'controllers/fetch';
+import { fetchDataAction, concatFetchDataAction, FETCH_SUCCESS } from 'controllers/fetch';
 import { activeProjectSelector } from 'controllers/user';
 import { URLS } from 'common/urls';
-import { userFiltersSelector, FETCH_PROJECT_PREFERENCES_SUCCESS } from 'controllers/project';
+import {
+  userFiltersSelector,
+  FETCH_PROJECT_PREFERENCES_SUCCESS,
+  toggleDisplayFilterOnLaunchesAction,
+} from 'controllers/project';
 import { PROJECT_LAUNCHES_PAGE, filterIdSelector } from 'controllers/pages';
+import { omit } from 'common/utils/omit';
 import {
   NAMESPACE,
   FETCH_FILTERS,
@@ -12,8 +17,20 @@ import {
   FETCH_LAUNCHES_FILTERS,
   LAUNCHES_FILTERS_NAMESPACE,
   CHANGE_ACTIVE_FILTER,
+  UPDATE_FILTER,
+  LAUNCHES_FILTERS_UPDATE_NAMESPACE,
+  CREATE_FILTER,
+  DEFAULT_FILTER,
+  SAVE_NEW_FILTER,
+  RESET_FILTER,
+  REMOVE_FILTER,
 } from './constants';
-import { querySelector } from './selectors';
+import { querySelector, savedLaunchesFiltersSelector, launchFiltersSelector } from './selectors';
+import {
+  addFilterAction,
+  changeActiveFilterAction,
+  updateFilterSuccessAction,
+} from './actionCreators';
 
 const collectFilterIds = (userFilters, activeFilter) => {
   if (userFilters.indexOf(activeFilter) === -1 && activeFilter !== 'all') {
@@ -52,17 +69,68 @@ function* fetchLaunchesFilters() {
   );
 }
 
-function* changeActiveFilter({ payload }) {
+function* updateLaunchesFilter({ payload: filter }) {
+  const activeProject = yield select(activeProjectSelector);
+  yield put(
+    fetchDataAction(LAUNCHES_FILTERS_UPDATE_NAMESPACE)(URLS.filter(activeProject, filter.id), {
+      method: 'put',
+      data: omit(filter, ['id']),
+    }),
+  );
+  yield put(updateFilterSuccessAction(filter));
+}
+
+function* changeActiveFilter({ payload: filterId }) {
   const activeProject = yield select(activeProjectSelector);
   yield put(
     redirect({
       type: PROJECT_LAUNCHES_PAGE,
       payload: {
         projectId: activeProject,
-        filterId: payload,
+        filterId,
       },
     }),
   );
+}
+
+function* resetFilter({ payload: filterId }) {
+  const savedFilters = yield select(savedLaunchesFiltersSelector);
+  const savedFilter = savedFilters.find((filter) => filter.id === filterId);
+  yield put(updateFilterSuccessAction(savedFilter));
+}
+
+function* createFilter({ payload: filter = {} }) {
+  const launchFilters = yield select(launchFiltersSelector);
+  const lastNewFilterId = launchFilters.reduce(
+    (acc, launchFilter) => (launchFilter.id < acc ? launchFilter.id : acc),
+    0,
+  );
+  const newFilter = {
+    ...DEFAULT_FILTER,
+    ...filter,
+    id: lastNewFilterId - 1,
+    name: `New_Filter ${-(lastNewFilterId - 1)}`,
+  };
+  yield put(addFilterAction(newFilter));
+  yield put(changeActiveFilterAction(newFilter.id));
+}
+
+function* saveNewFilter({ payload: filter }) {
+  const activeProject = yield select(activeProjectSelector);
+  yield put(
+    fetchDataAction(LAUNCHES_FILTERS_UPDATE_NAMESPACE)(URLS.filter(activeProject), {
+      method: 'post',
+      data: omit(filter, ['id']),
+    }),
+  );
+  const response = yield take(
+    ({ type, meta }) =>
+      type === FETCH_SUCCESS && meta && meta.namespace === LAUNCHES_FILTERS_UPDATE_NAMESPACE,
+  );
+  const newId = response.payload.id;
+  yield put(updateFilterSuccessAction({ ...filter, id: newId }, filter.id));
+  yield put(toggleDisplayFilterOnLaunchesAction(newId));
+  yield put(changeActiveFilterAction(newId));
 }
 
 function* watchFetchFilters() {
@@ -80,8 +148,32 @@ function* watchFetchLaunchesFilters() {
   );
 }
 
+function* resetActiveFilter() {
+  yield put(changeActiveFilterAction('all'));
+}
+
 function* watchChangeActiveFilter() {
   yield takeEvery(CHANGE_ACTIVE_FILTER, changeActiveFilter);
+}
+
+function* watchResetFilter() {
+  yield takeEvery(RESET_FILTER, resetFilter);
+}
+
+function* watchUpdateLaunchesFilter() {
+  yield takeEvery(UPDATE_FILTER, updateLaunchesFilter);
+}
+
+function* watchCreateFilter() {
+  yield takeEvery(CREATE_FILTER, createFilter);
+}
+
+function* watchSaveNewFilter() {
+  yield takeEvery(SAVE_NEW_FILTER, saveNewFilter);
+}
+
+function* watchRemoveFilter() {
+  yield takeEvery(REMOVE_FILTER, resetActiveFilter);
 }
 
 export function* filterSagas() {
@@ -90,5 +182,10 @@ export function* filterSagas() {
     watchFetchFiltersConcat(),
     watchFetchLaunchesFilters(),
     watchChangeActiveFilter(),
+    watchResetFilter(),
+    watchUpdateLaunchesFilter(),
+    watchCreateFilter(),
+    watchSaveNewFilter(),
+    watchRemoveFilter(),
   ]);
 }

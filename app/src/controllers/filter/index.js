@@ -5,6 +5,11 @@ export {
   fetchLaunchesFiltersAction,
   changeActiveFilterAction,
   updateFilterEntitiesAction,
+  updateFilterAction,
+  resetFilterAction,
+  createFilterAction,
+  saveNewFilterAction,
+  removeFilterAction,
 } from './actionCreators';
 export { filterReducer } from './reducer';
 export {
@@ -14,6 +19,7 @@ export {
   launchFiltersSelector,
   launchFiltersLoadedSelector,
   activeFilterSelector,
+  unsavedFilterIdsSelector,
 } from './selectors';
 export { filterSagas } from './sagas';
 export { DEFAULT_PAGE_SIZE, LAUNCHES_FILTERS_NAMESPACE } from './constants';

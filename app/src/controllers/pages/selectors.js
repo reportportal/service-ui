@@ -9,7 +9,7 @@ export const payloadSelector = (state) => state.location.payload;
 export const activeDashboardIdSelector = (state) => payloadSelector(state).dashboardId;
 export const projectIdSelector = (state) => payloadSelector(state).projectId;
 export const suiteIdSelector = (state) => payloadSelector(state).suiteId;
-export const filterIdSelector = (state) => payloadSelector(state).filterId;
+export const filterIdSelector = (state) => payloadSelector(state).filterId || 'all';
 export const testItemIdsSelector = (state) =>
   payloadSelector(state).testItemIds && String(payloadSelector(state).testItemIds);
 export const testItemIdsArraySelector = createSelector(

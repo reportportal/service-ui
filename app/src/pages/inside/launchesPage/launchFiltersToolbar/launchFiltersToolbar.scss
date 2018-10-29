@@ -26,11 +26,17 @@
   margin-right: 15px;
 }
 
-.filter-entities-container {
+.filter-controls-container {
   background-color: $COLOR--white-four;
   border: 1px solid $COLOR--gray-91;
   padding-top: 10px;
-  padding-bottom: 15px;
+}
+
+.filter-entities-container {
   padding-left: 15px;
+  padding-right: 15px;
+}
+
+.add-filter-button {
   padding-right: 15px;
 }

@@ -1,0 +1,7 @@
+.filter-controls {
+  display: flex;
+}
+
+.control-button:not(:last-child) {
+  padding-right: 10px;
+}

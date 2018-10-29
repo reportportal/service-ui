@@ -31,7 +31,7 @@ export class FilterEntitiesContainer extends Component {
   };
 
   static getDerivedStateFromProps(props, state) {
-    if (props.entities !== state.values || !isEqual(props.entities, state.values)) {
+    if (props.entities !== state.values && !isEqual(props.entities, state.values)) {
       return {
         values: props.entities,
       };
@@ -89,6 +89,10 @@ export class FilterEntitiesContainer extends Component {
     const values = omit(this.state.values, [entityId]);
     this.setState({ values }, () => this.props.onChange(this.collectEntities(this.state.values)));
   };
+
+  renderAddContainer = (props) => (
+    <FilterEntitiesAddHandlerContainer {...props} render={this.props.render} />
+  );
 
   render() {
     const { errors, values } = this.state;

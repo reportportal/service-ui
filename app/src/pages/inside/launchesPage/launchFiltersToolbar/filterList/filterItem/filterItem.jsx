@@ -13,14 +13,19 @@ const stopPropagation = (func) => (e) => {
   func(e);
 };
 
-export const FilterItem = ({ name, active, share, description, onClick, onRemove }) => (
+export const FilterItem = ({ name, active, share, description, unsaved, onClick, onRemove }) => (
   <div className={cx('filter-item', { active })} onClick={onClick}>
     {share && <div className={cx('icon')}>{Parser(ShareIcon)}</div>}
-    <span className={cx('name')}>{name}</span>
+    <span className={cx('name')}>
+      {name}
+      {unsaved && <span className={cx('unsaved')}>*</span>}
+    </span>
     {description && <div className={cx('icon')}>{Parser(TooltipIcon)}</div>}
-    <div className={cx('icon')} onClick={stopPropagation(onRemove)}>
-      {Parser(CrossIcon)}
-    </div>
+    {active && (
+      <div className={cx('icon')} onClick={stopPropagation(onRemove)}>
+        {Parser(CrossIcon)}
+      </div>
+    )}
   </div>
 );
 FilterItem.propTypes = {
@@ -28,6 +33,7 @@ FilterItem.propTypes = {
   active: PropTypes.bool,
   description: PropTypes.string,
   share: PropTypes.bool,
+  unsaved: PropTypes.bool,
   onClick: PropTypes.func,
   onRemove: PropTypes.func,
 };
@@ -35,6 +41,7 @@ FilterItem.defaultProps = {
   active: false,
   description: null,
   share: false,
+  unsaved: false,
   onClick: () => {},
   onRemove: () => {},
 };

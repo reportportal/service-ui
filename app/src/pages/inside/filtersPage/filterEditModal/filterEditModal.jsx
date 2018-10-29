@@ -34,6 +34,10 @@ const messages = defineMessages({
     id: 'Filter.edit',
     defaultMessage: 'Edit filter',
   },
+  add: {
+    id: 'Filter.add',
+    defaultMessage: 'Add filter',
+  },
 });
 
 @withModal('filterEditModal')
@@ -48,6 +52,7 @@ export class FilterEditModal extends Component {
     data: PropTypes.shape({
       filter: PropTypes.object,
       onEdit: PropTypes.func,
+      creationMode: PropTypes.bool,
     }).isRequired,
     initialize: PropTypes.func.isRequired,
     handleSubmit: PropTypes.func.isRequired,
@@ -62,6 +67,24 @@ export class FilterEditModal extends Component {
     this.props.initialize(this.props.data.filter);
   }
 
+  getOkButtonTitle = () => {
+    const {
+      data: { creationMode },
+      intl,
+    } = this.props;
+    const message = creationMode ? COMMON_LOCALE_KEYS.ADD : COMMON_LOCALE_KEYS.UPDATE;
+    return intl.formatMessage(message);
+  };
+
+  getTitle = () => {
+    const {
+      data: { creationMode },
+      intl,
+    } = this.props;
+    const message = creationMode ? messages.add : messages.edit;
+    return intl.formatMessage(message);
+  };
+
   saveFilterAndCloseModal = (closeModal) => (values) => {
     this.props.data.onEdit(values);
     closeModal();
@@ -70,7 +93,7 @@ export class FilterEditModal extends Component {
   render() {
     const { intl, handleSubmit, tracking } = this.props;
     const okButton = {
-      text: intl.formatMessage(COMMON_LOCALE_KEYS.UPDATE),
+      text: this.getOkButtonTitle(),
       onClick: (closeModal) => {
         tracking.trackEvent(FILTERS_PAGE_EVENTS.CLICK_UPDATE_BTN_MODAL_EDIT_FILTER);
         handleSubmit(this.saveFilterAndCloseModal(closeModal))();
@@ -82,11 +105,10 @@ export class FilterEditModal extends Component {
     };
     return (
       <ModalLayout
-        title={intl.formatMessage(messages.edit)}
+        title={this.getTitle()}
         okButton={okButton}
         cancelButton={cancelButton}
-        closeIconEventInfo={FILTERS_PAGE_EVENTS.CLICK_CLOSE_ICON_MODAL_EDIT_FILTER}
-      >
+        closeIconEventInfo={FILTERS_PAGE_EVENTS.CLICK_CLOSE_ICON_MODAL_EDIT_FILTER}>
         <form>
           <ModalField label={intl.formatMessage(messages.name)}>
             <FieldProvider name="name">
