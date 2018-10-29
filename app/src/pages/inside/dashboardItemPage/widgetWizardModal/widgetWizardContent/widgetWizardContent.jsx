@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import track from 'react-tracking';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { injectIntl, intlShape } from 'react-intl';
@@ -21,14 +22,21 @@ const cx = classNames.bind(styles);
     submitWidgetWizardForm: () => submit(WIDGET_WIZARD_FORM),
   },
 )
+@track()
 export class WidgetWizardContent extends Component {
   static propTypes = {
     activeWidgetId: PropTypes.string,
     submitWidgetWizardForm: PropTypes.func.isRequired,
     intl: intlShape.isRequired,
+    eventsInfo: PropTypes.object,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
   static defaultProps = {
     activeWidgetId: '',
+    eventsInfo: {},
   };
 
   constructor(props) {
@@ -40,14 +48,17 @@ export class WidgetWizardContent extends Component {
   }
 
   onClickNextStep = () => {
+    this.props.tracking.trackEvent(this.props.eventsInfo.nextStep);
     this.props.submitWidgetWizardForm();
   };
 
   onClickPrevStep = () => {
     this.setState({ step: this.state.step - 1 });
+    this.props.tracking.trackEvent(this.props.eventsInfo.prevStep);
   };
 
   onAddWidget = (data) => {
+    this.props.tracking.trackEvent(this.props.eventsInfo.addWidget);
     console.log(data);
   };
 
@@ -63,6 +74,7 @@ export class WidgetWizardContent extends Component {
           step={this.state.step}
         />
         <WizardControlsSection
+          eventsInfo={this.props.eventsInfo}
           widgets={this.widgets}
           activeWidgetId={this.props.activeWidgetId}
           step={this.state.step}
@@ -70,7 +82,6 @@ export class WidgetWizardContent extends Component {
           onClickPrevStep={this.onClickPrevStep}
           nextStep={this.nextStep}
           onAddWidget={this.onAddWidget}
-          onChangeWidgetType={this.onChangeWidgetType}
           submitWidgetWizardForm={this.props.submitWidgetWizardForm}
         />
       </div>

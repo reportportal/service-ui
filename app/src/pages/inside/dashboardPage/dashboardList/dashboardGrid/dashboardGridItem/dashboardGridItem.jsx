@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from 'react';
+import track from 'react-tracking';
 import { injectIntl, intlShape, defineMessages } from 'react-intl';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
@@ -27,6 +28,7 @@ const messages = defineMessages({
   projectId: activeProjectSelector(state),
   projectRole: activeProjectRoleSelector(state),
 }))
+@track()
 export class DashboardGridItem extends Component {
   static calculateGridPreviewBaseOnWidgetId(id) {
     return id % 14;
@@ -40,6 +42,11 @@ export class DashboardGridItem extends Component {
     onEdit: PropTypes.func,
     onDelete: PropTypes.func,
     projectRole: PropTypes.string,
+    nameEventInfo: PropTypes.object,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
 
   static defaultProps = {
@@ -49,6 +56,7 @@ export class DashboardGridItem extends Component {
     onEdit: () => {},
     onDelete: () => {},
     projectRole: '',
+    nameEventInfo: {},
   };
 
   editItem = (e) => {
@@ -82,6 +90,7 @@ export class DashboardGridItem extends Component {
         <NavLink
           to={{ type: PROJECT_DASHBOARD_ITEM_PAGE, payload: { projectId, dashboardId: id } }}
           className={cx('grid-view-inner')}
+          onClick={() => this.props.tracking.trackEvent(this.props.nameEventInfo)}
         >
           <div className={cx('grid-cell', 'name')}>
             <h3 className={cx('dashboard-link')}>{name}</h3>

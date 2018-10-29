@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { destroy } from 'redux-form';
@@ -23,24 +24,39 @@ const messages = defineMessages({
 
 @withModal('widgetWizardModal')
 @injectIntl
-@connect(
-  null,
-  {
-    destroyWizardForm: () => destroy(WIDGET_WIZARD_FORM),
-    hideModalAction,
-  },
-)
+@connect(null, {
+  destroyWizardForm: () => destroy(WIDGET_WIZARD_FORM),
+  hideModalAction,
+})
+@track()
 export class WidgetWizardModal extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
+    data: PropTypes.shape({
+      onConfirm: PropTypes.func,
+      eventsInfo: PropTypes.object,
+    }),
     hideModalAction: PropTypes.func.isRequired,
     destroyWizardForm: PropTypes.func.isRequired,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
 
-  static defaultProps = {};
+  static defaultProps = {
+    data: {
+      onConfirm: () => {},
+      eventsInfo: {},
+    },
+  };
 
   state = {
     shown: false,
+    data: PropTypes.shape({
+      onConform: () => {},
+      eventsInfo: {},
+    }),
   };
   componentDidMount() {
     document.addEventListener('keydown', this.onKeydown, false);
@@ -68,6 +84,7 @@ export class WidgetWizardModal extends Component {
     this.props.destroyWizardForm();
   };
   closeModal = () => {
+    this.props.tracking.trackEvent(this.props.data.eventsInfo.closeIcon);
     this.setState({ shown: false });
   };
 
@@ -102,7 +119,11 @@ export class WidgetWizardModal extends Component {
                     onClose={this.closeModal}
                   />
 
-                  {status !== 'exited' ? <WidgetWizardContent /> : <SpinningPreloader />}
+                  {status !== 'exited' ? (
+                    <WidgetWizardContent eventsInfo={this.props.data.eventsInfo} />
+                  ) : (
+                    <SpinningPreloader />
+                  )}
                 </div>
               )}
             </CSSTransition>

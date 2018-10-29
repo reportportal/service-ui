@@ -15,6 +15,7 @@ export const DashboardGridList = ({
   onDeleteItem,
   onAddItem,
   userInfo,
+  ...rest
 }) => (
   <Fragment>
     <h3 className={cx('headline')}> {name} </h3>
@@ -27,6 +28,7 @@ export const DashboardGridList = ({
             onEdit={onEditItem}
             onDelete={onDeleteItem}
             currentUser={userInfo}
+            {...rest}
           />
         ))
       ) : (
