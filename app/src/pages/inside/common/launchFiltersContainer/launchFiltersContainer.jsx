@@ -6,10 +6,12 @@ import {
   changeActiveFilterAction,
   updateFilterEntitiesAction,
   activeFilterSelector,
+  removeFilterAction,
 } from 'controllers/filter';
 import { filterIdSelector } from 'controllers/pages';
-import { fetchLaunchesWithParamsAction } from 'controllers/launch';
+import { fetchLaunchesWithParamsAction, fetchLaunchesAction } from 'controllers/launch';
 import { debounce } from 'common/utils';
+import { toggleDisplayFilterOnLaunchesAction } from 'controllers/project';
 
 const isEmptyValue = (value) => value === '' || value === null || value === undefined;
 
@@ -23,17 +25,23 @@ const isEmptyValue = (value) => value === '' || value === null || value === unde
     changeActiveFilterAction,
     fetchLaunchesWithParamsAction,
     updateFilterEntitiesAction,
+    fetchLaunchesAction,
+    toggleDisplayFilterOnLaunchesAction,
+    removeFilterAction,
   },
 )
 export class LaunchFiltersContainer extends Component {
   static propTypes = {
     launchFilters: PropTypes.array,
-    activeFilterId: PropTypes.string,
+    activeFilterId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     activeFilter: PropTypes.object,
     render: PropTypes.func.isRequired,
     changeActiveFilterAction: PropTypes.func,
     fetchLaunchesWithParamsAction: PropTypes.func,
     updateFilterEntitiesAction: PropTypes.func,
+    fetchLaunchesAction: PropTypes.func,
+    toggleDisplayFilterOnLaunchesAction: PropTypes.func,
+    removeFilterAction: PropTypes.func,
   };
 
   static defaultProps = {
@@ -43,6 +51,9 @@ export class LaunchFiltersContainer extends Component {
     changeActiveFilterAction: () => {},
     fetchLaunchesWithParamsAction: () => {},
     updateFilterEntitiesAction: () => {},
+    fetchLaunchesAction: () => {},
+    toggleDisplayFilterOnLaunchesAction: () => {},
+    removeFilterAction: () => {},
   };
 
   getEntities = () => {
@@ -77,12 +88,15 @@ export class LaunchFiltersContainer extends Component {
     );
   };
 
-  handleFilterSelect = (filterId) => {
-    this.props.changeActiveFilterAction(filterId);
+  handleFilterRemove = (filterId) => {
+    if (filterId >= 0) {
+      this.props.toggleDisplayFilterOnLaunchesAction(filterId);
+    }
+    this.props.removeFilterAction(filterId);
   };
 
-  handleFilterRemove = (filterId) => {
-    console.log('filter:remove', filterId); // TODO
+  handleFilterSelect = (filterId) => {
+    this.props.changeActiveFilterAction(filterId);
   };
 
   updateFilter = debounce(
@@ -91,14 +105,16 @@ export class LaunchFiltersContainer extends Component {
   );
 
   render() {
-    const { render, launchFilters, activeFilterId } = this.props;
+    const { render, launchFilters, activeFilterId, activeFilter } = this.props;
     return render({
       launchFilters,
       activeFilterId,
+      activeFilter,
       onSelectFilter: this.handleFilterSelect,
       onRemoveFilter: this.handleFilterRemove,
       onChangeFilter: this.handleFilterChange,
       activeFilterEntities: this.getEntities(),
+      onResetFilter: this.props.fetchLaunchesAction,
     });
   }
 }

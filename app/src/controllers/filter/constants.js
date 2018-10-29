@@ -10,5 +10,23 @@ export const DEFAULT_PAGINATION = {
   [SIZE_KEY]: DEFAULT_PAGE_SIZE,
 };
 export const LAUNCHES_FILTERS_NAMESPACE = `${NAMESPACE}/launchesFilters`;
+export const LAUNCHES_FILTERS_UPDATE_NAMESPACE = `${NAMESPACE}/launchesFiltersUpdate`;
 export const CHANGE_ACTIVE_FILTER = 'changeActiveFilter';
 export const UPDATE_FILTER_ENTITIES = 'updateFilterEntities';
+export const UPDATE_FILTER = 'updateFilter';
+export const RESET_FILTER = 'resetFilter';
+export const CREATE_FILTER = 'createFilter';
+export const ADD_FILTER = 'addFilter';
+export const SAVE_NEW_FILTER = 'saveNewFilter';
+export const REMOVE_FILTER = 'removeFilter';
+
+export const UPDATE_FILTER_SUCCESS = 'updateFilterSuccess';
+
+export const DEFAULT_FILTER = {
+  entities: [],
+  type: 'launch',
+  orders: [
+    { is_asc: false, sorting_column: 'start_time' },
+    { is_asc: false, sorting_column: 'number' },
+  ],
+};

@@ -22,7 +22,7 @@ export const URLS = {
   externalSystemIssue: (activeProject, systemId, issueId) =>
     `${urlBase}${activeProject}/external-system/${systemId}/ticket/${issueId}`,
 
-  filter: (activeProject, id) => `${urlBase}${activeProject}/filter/${id}`,
+  filter: (activeProject, id = '') => `${urlBase}${activeProject}/filter/${id}`,
   filters: (activeProject) => `${urlBase}${activeProject}/filter`,
   filtersSearch: (activeProject) =>
     `${urlBase}${activeProject}/filter?page.sort=name&page.page=1&page.size=50&filter.cnt.name=`,
