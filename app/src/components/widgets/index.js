@@ -9,6 +9,7 @@ import {
   NonPassedTestCasesTrendChart,
   PassingRatePerLaunch,
   LaunchExecutionAndIssueStatistics,
+  CumulativeTrendChart
 } from './charts';
 import {
   LaunchesTable,
@@ -33,6 +34,7 @@ const CHARTS = {
   [widgetTypes.FLAKY_TEST_CASES_TABLE]: FlakyTests,
   [widgetTypes.MOST_FAILED_TEST_CASES_TABLE]: MostFailedTests,
   [widgetTypes.PROJECT_ACTIVITY]: ProjectActivity,
+  [widgetTypes.CUMULATIVE_TREND]: CumulativeTrendChart,
 };
 
 export { CHARTS, NoDataAvailable };

@@ -1,0 +1,1 @@
+export { CumulativeTrendChart } from './cumulativeTrendChart';

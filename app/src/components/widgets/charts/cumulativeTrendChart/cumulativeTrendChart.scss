@@ -1,0 +1,99 @@
+.cumulative-trend-chart {
+  :global {
+    svg {
+      .c3-axis {
+        font-family: $FONT-REGULAR, sans-serif;
+        fill: $COLOR--charcoal-grey;
+        .c3-axis-y-label {
+          font-size: 12px;
+        }
+      }
+    }
+
+    .c3-grid line {
+      stroke: $COLOR--gray-80;
+    }
+
+    .c3-xgrid,
+    .c3-ygrid {
+      stroke-dasharray: none;
+    }
+
+    .c3-tooltip-container {
+      width: 215px;
+      background-color: $COLOR--white-two;
+      padding: 0 10px 5px 10px;
+      border: solid 1px $COLOR--gray-80;
+      border-radius: 2px;
+      font-size: 13px;
+
+      .tooltip-header {
+        width: 100%;
+        height: 35px;
+        border-bottom: solid 2px $COLOR--gray-91;
+        font-family: $FONT-SEMIBOLD;
+        color: $COLOR--charcoal-grey;
+        line-height: 35px;
+        .group-name {
+          display: block;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+      }
+      .tooltip-body {
+        clear: both;
+        font-family: $FONT-REGULAR;
+        color: $COLOR--gray-47;
+        overflow: hidden;
+
+        .item-wrapper {
+          clear: both;
+          position: relative;
+          height: 25px;
+          line-height: 25px;
+
+          .color-mark {
+            position: relative;
+            top: 7px;
+            float: left;
+            width: 12px;
+            height: 12px;
+            margin-right: 5px;
+            border-radius: 100%;
+          }
+          .item-name {
+            float: left;
+            max-width: 130px;
+          }
+          .item-value {
+            float: right;
+          }
+        }
+      }
+
+      &:after {
+        content: '';
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        margin-left: -5px;
+        border-top: 6px solid $COLOR--white-two;
+        border-left: 6px solid transparent;
+        border-right: 6px solid transparent;
+      }
+      &:before {
+        content: '';
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        margin-left: -7px;
+        width: 0;
+        height: 0;
+        border-left: 8px solid transparent;
+        border-right: 8px solid transparent;
+        border-top: 8px solid $COLOR--gray-80;
+      }
+    }
+  }
+}
