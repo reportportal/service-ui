@@ -28,7 +28,7 @@ const charts = {
 export class Widget extends Component {
   static propTypes = {
     url: PropTypes.string.isRequired,
-    widgetId: PropTypes.string.isRequired,
+    widgetId: PropTypes.number.isRequired,
     showModalAction: PropTypes.func.isRequired,
     switchDraggable: PropTypes.func,
     onDelete: PropTypes.func,

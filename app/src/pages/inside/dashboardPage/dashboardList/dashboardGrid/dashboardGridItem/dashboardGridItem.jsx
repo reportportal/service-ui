@@ -29,10 +29,7 @@ const messages = defineMessages({
 }))
 export class DashboardGridItem extends Component {
   static calculateGridPreviewBaseOnWidgetId(id) {
-    const idChars = id.split('');
-    const result = idChars.reduce((memo, char, idx) => memo + id.charCodeAt(idx), 0);
-
-    return result % 14;
+    return id % 14;
   }
 
   static propTypes = {
