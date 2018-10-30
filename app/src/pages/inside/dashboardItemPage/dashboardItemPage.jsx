@@ -65,7 +65,7 @@ export class DashboardItemPage extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
     showModalAction: PropTypes.func.isRequired,
-    dashboardId: PropTypes.string,
+    dashboardId: PropTypes.number,
     dashboardItems: PropTypes.array,
     activeProject: PropTypes.string.isRequired,
   };

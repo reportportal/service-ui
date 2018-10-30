@@ -182,25 +182,31 @@ export class WidgetsGrid extends Component {
     let height = 0; // we need to set large height to avoid double scroll
 
     if (widgets.length) {
-      Items = widgets.map(({ widgetPosition: [x, y], widgetSize: [w, h], widgetId }) => {
-        height += h * (rowHeight + 20);
-        return (
-          <div
-            key={widgetId}
-            className={cx('widget-view')}
-            data-grid={{ x, y, w, h, minW: 4, minH: 4, i: widgetId }}
-          >
-            <Widget
-              widgetId={widgetId}
-              isModifiable={this.state.isModifiable}
-              observer={this.observer}
-              onDelete={() => {
-                this.onDeleteWidget(widgetId);
-              }}
-            />
-          </div>
-        );
-      });
+      Items = widgets.map(
+        ({
+          widgetPosition: { position_x: x, position_y: y },
+          widgetSize: { width: w, height: h },
+          widgetId,
+        }) => {
+          height += h * (rowHeight + 20);
+          return (
+            <div
+              key={widgetId}
+              className={cx('widget-view')}
+              data-grid={{ x, y, w, h, minW: 4, minH: 4, i: String(widgetId) }}
+            >
+              <Widget
+                widgetId={widgetId}
+                isModifiable={this.state.isModifiable}
+                observer={this.observer}
+                onDelete={() => {
+                  this.onDeleteWidget(widgetId);
+                }}
+              />
+            </div>
+          );
+        },
+      );
     }
 
     return (
