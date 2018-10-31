@@ -24,6 +24,7 @@
     "postcommit": "git update-index --again"
   },
   "dependencies": {
+    "array-differ": "^2.0.3",
     "array.find": "1.0.7",
     "array.findindex": "1.0.4",
     "axios": "0.17.1",
