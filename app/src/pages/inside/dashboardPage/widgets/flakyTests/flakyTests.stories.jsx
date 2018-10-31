@@ -22,7 +22,7 @@ const withRedux = (getStory) => {
   return <Provider store={store}>{getStory()}</Provider>;
 };
 
-storiesOf('Pages/Inside/DashboardPage/FlakyTests', module)
+storiesOf('Pages/Inside/DashboardPage/Widgets/FlakyTests', module)
   .addDecorator(
     host({
       title: 'Flaky Tests widget',

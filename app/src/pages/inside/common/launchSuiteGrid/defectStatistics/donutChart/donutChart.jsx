@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { DefectTypeTooltip } from 'pages/inside/common/defectTypeTooltip';
 import { withHoverableTooltip } from 'components/main/tooltips/hoverableTooltip';
-import { projectConfigSelector, defectColorsSelector } from 'controllers/project';
+import { defectColorsSelector } from 'controllers/project';
 import { DefectLink } from 'pages/inside/common/defectLink';
 import styles from './donutChart.scss';
 
@@ -21,7 +21,6 @@ const cx = classNames.bind(styles);
   },
 })
 @connect((state) => ({
-  projectConfig: projectConfigSelector(state),
   defectColors: defectColorsSelector(state),
 }))
 export class DonutChart extends Component {
@@ -30,7 +29,6 @@ export class DonutChart extends Component {
     data: PropTypes.object.isRequired,
     viewBox: PropTypes.number.isRequired,
     strokeWidth: PropTypes.number.isRequired,
-    projectConfig: PropTypes.object.isRequired,
     defectColors: PropTypes.object.isRequired,
     itemId: PropTypes.number.isRequired,
     eventInfo: PropTypes.object,

@@ -48,6 +48,7 @@ export class ItemInfo extends Component {
     userId: PropTypes.string,
     isStepLevel: PropTypes.bool,
     launch: PropTypes.object,
+    editDisabled: PropTypes.bool,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
@@ -64,6 +65,7 @@ export class ItemInfo extends Component {
     userId: '',
     userProjectRole: '',
     isStepLevel: false,
+    editDisabled: false,
     launch: {},
   };
 
@@ -86,6 +88,7 @@ export class ItemInfo extends Component {
     const {
       intl,
       value,
+      editDisabled,
       refFunction,
       analyzing,
       userProjectRole,
@@ -117,29 +120,36 @@ export class ItemInfo extends Component {
             userAccountRole,
             userProjectRole,
             value.owner ? userId === value.owner : userId === launch.owner,
-          ) && (
-            <div className={cx('edit-icon')} onClick={this.handleEditItem}>
-              {Parser(PencilIcon)}
-            </div>
-          )}
+          ) &&
+            !editDisabled && (
+              <div className={cx('edit-icon')} onClick={this.handleEditItem}>
+                {Parser(PencilIcon)}
+              </div>
+            )}
         </div>
 
         <div className={cx('additional-info')}>
-          <span className={cx('duration-block')}>
-            <DurationBlock
-              type={value.type}
-              status={value.status}
-              itemNumber={value.number}
-              timing={{
-                start: value.start_time,
-                end: value.end_time,
-                approxTime: value.approximateDuration,
-              }}
-            />
-          </span>
-          <div className={cx('mobile-start-time')}>{fromNowFormat(value.start_time)}</div>
-          {value.owner && <OwnerBlock owner={value.owner} />}
-          {value.tags && !!value.tags.length && <TagsBlock tags={value.tags} />}
+          {value.start_time && (
+            <span className={cx('duration-block')}>
+              <DurationBlock
+                type={value.type}
+                status={value.status}
+                itemNumber={value.number}
+                timing={{
+                  start: value.start_time,
+                  end: value.end_time,
+                  approxTime: value.approximateDuration,
+                }}
+              />
+            </span>
+          )}
+          {value.start_time && (
+            <div className={cx('mobile-start-time')}>{fromNowFormat(value.start_time)}</div>
+          )}
+          <div className={cx({ 'owner-tags-block': editDisabled })}>
+            {value.owner && <OwnerBlock owner={value.owner} />}
+            {value.tags && !!value.tags.length && <TagsBlock tags={value.tags} />}
+          </div>
           {isStepLevel && (
             <div className={cx('mobile-info')}>
               @{formatMethodType(intl.formatMessage, value.type)}

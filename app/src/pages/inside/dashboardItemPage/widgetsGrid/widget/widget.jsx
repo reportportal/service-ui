@@ -5,12 +5,14 @@ import PropTypes from 'prop-types';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
 import { DASHBOARD_PAGE_EVENTS } from 'components/main/analytics/events';
+import * as widgetTypes from 'common/constants/widgetTypes';
 import { connect } from 'react-redux';
 import { activeProjectSelector } from 'controllers/user';
 import { showModalAction } from 'controllers/modal';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { LaunchesComparisonChart } from 'components/widgets/charts/launchesComparisonChart';
 import { LaunchesDurationChart } from 'components/widgets/charts/launchesDurationChart';
+import { LaunchesTable } from 'pages/inside/dashboardPage/widgets/launchesTable';
 import { FailedCasesTrendChart } from 'components/widgets/charts/failedCasesTrendChart';
 import { NonPassedTestCasesTrendChart } from 'components/widgets/charts/nonPassedTestCasesTrendChart';
 import { WidgetHeader } from './widgetHeader';
@@ -19,10 +21,11 @@ import styles from './widget.scss';
 const cx = classNames.bind(styles);
 
 const charts = {
-  launches_comparison_chart: LaunchesComparisonChart,
-  launches_duration_chart: LaunchesDurationChart,
-  bug_trend: FailedCasesTrendChart,
-  not_passed: NonPassedTestCasesTrendChart,
+  [widgetTypes.DIFFERENT_LAUNCHES_COMPARISON]: LaunchesComparisonChart,
+  [widgetTypes.LAUNCHES_TABLE]: LaunchesTable,
+  [widgetTypes.LAUNCH_DURATION]: LaunchesDurationChart,
+  [widgetTypes.FAILED_CASES_TREND]: FailedCasesTrendChart,
+  [widgetTypes.NON_PASSED_TEST_CASES_TREND]: NonPassedTestCasesTrendChart,
 };
 
 @connect(
@@ -115,7 +118,7 @@ export class Widget extends Component {
       meta: this.getWidgetOptions().viewMode,
     };
 
-    const Chart = charts[widget.content_parameters.gadget];
+    const Chart = charts[this.getContentParams().gadget];
 
     return (
       <div className={cx('widget-container')}>

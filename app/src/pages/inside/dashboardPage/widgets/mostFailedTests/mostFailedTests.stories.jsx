@@ -22,7 +22,7 @@ const withRedux = (getStory) => {
   return <Provider store={store}>{getStory()}</Provider>;
 };
 
-storiesOf('Pages/Inside/DashboardPage/MostFailedTests', module)
+storiesOf('Pages/Inside/DashboardPage/Widgets/MostFailedTests', module)
   .addDecorator(
     host({
       title: 'Most Failed test-cases widget',
