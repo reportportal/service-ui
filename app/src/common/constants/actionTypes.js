@@ -1,40 +1,47 @@
-export const START_LAUNCH = 'start_launch';
-export const FINISH_LAUNCH = 'finish_launch';
-export const DELETE_LAUNCH = 'delete_launch';
-export const POST_ISSUE = 'post_issue';
-export const LINK_ISSUE = 'link_issue';
-export const UNLINK_ISSUE = 'unlink_issue';
-export const CREATE_USER = 'create_user';
-export const CREATE_DASHBOARD = 'create_dashboard';
-export const UPDATE_DASHBOARD = 'update_dashboard';
-export const DELETE_DASHBOARD = 'delete_dashboard';
-export const CREATE_WIDGET = 'create_widget';
-export const UPDATE_WIDGET = 'update_widget';
-export const DELETE_WIDGET = 'delete_widget';
-export const CREATE_FILTER = 'create_filter';
-export const UPDATE_FILTER = 'update_filter';
-export const DELETE_FILTER = 'delete_filter';
-export const CREATE_BTS = 'create_bts';
-export const UPDATE_BTS = 'update_bts';
-export const DELETE_BTS = 'delete_bts';
-export const UPDATE_PROJECT = 'update_project';
-export const UPDATE_ANALYZER = 'update_analyzer';
-export const GENERATE_INDEX = 'generate_index';
-export const DELETE_INDEX = 'delete_index';
-export const UPDATE_DEFECT = 'update_defect';
-export const DELETE_DEFECT = 'delete_defect';
-export const START_IMPORT = 'start_import';
-export const FINISH_IMPORT = 'finish_import';
+export const START_LAUNCH = 'startLaunch';
+export const FINISH_LAUNCH = 'finishLaunch';
+export const DELETE_LAUNCH = 'deleteLaunch';
+export const POST_ISSUE = 'postIssue';
+export const LINK_ISSUE = 'linkIssue';
+export const UNLINK_ISSUE = 'unlinkIssue';
+export const CREATE_USER = 'createUser';
+export const CREATE_DASHBOARD = 'createDashboard';
+export const UPDATE_DASHBOARD = 'updateDashboard';
+export const DELETE_DASHBOARD = 'deleteDashboard';
+export const CREATE_WIDGET = 'createWidget';
+export const UPDATE_WIDGET = 'updateWidget';
+export const DELETE_WIDGET = 'deleteWidget';
+export const CREATE_FILTER = 'createFilter';
+export const UPDATE_FILTER = 'updateFilter';
+export const DELETE_FILTER = 'deleteFilter';
+export const CREATE_BTS = 'createBts';
+export const UPDATE_BTS = 'updateBts';
+export const DELETE_BTS = 'deleteBts';
+export const UPDATE_PROJECT = 'updateProject';
+export const UPDATE_ANALYZER = 'updateAnalyzer';
+export const GENERATE_INDEX = 'generateIndex';
+export const DELETE_INDEX = 'deleteIndex';
+export const UPDATE_DEFECT = 'updateDefect';
+export const DELETE_DEFECT = 'deleteDefect';
+export const START_IMPORT = 'startImport';
+export const FINISH_IMPORT = 'finishImport';
+export const UPDATE_NOTIFICATIONS = 'updateEmail';
+export const SWITCH_ON_NOTIFICATIONS = 'onEmail';
+export const SWITCH_OFF_NOTIFICATIONS = 'offEmail';
 
 // grouped actions
-export const ACTIONS_WITH_ISSUES = 'issues_actions';
-export const ACTIONS_WITH_DASHBOARDS = 'dashboards_actions';
-export const ACTIONS_WITH_WIDGETS = 'widgets_actions';
-export const ACTIONS_WITH_FILTERS = 'filters_actions';
-export const ACTIONS_WITH_BTS = 'bts_actions';
-export const ACTIONS_WITH_AA_SETTINGS = 'aa_settings_actions';
-export const ACTIONS_WITH_DEFECTS = 'defects_actions';
-export const ACTIONS_WITH_IMPORT = 'import_actions';
+export const ACTIONS_WITH_ISSUES = 'issuesActions';
+export const ACTIONS_WITH_DASHBOARDS = 'dashboardsActions';
+export const ACTIONS_WITH_WIDGETS = 'widgetsActions';
+export const ACTIONS_WITH_FILTERS = 'filtersActions';
+export const ACTIONS_WITH_BTS = 'btsActions';
+export const ACTIONS_WITH_AA_SETTINGS = 'aaSettingsActions';
+export const ACTIONS_WITH_DEFECTS = 'defectsActions';
+export const ACTIONS_WITH_IMPORT = 'importActions';
+export const ACTIONS_WITH_PROJECT = 'projectActions';
+export const ACTIONS_WITH_USER = 'usersActions';
+export const ACTIONS_WITH_NOTIFICATIONS = 'notificationsActions';
+export const ACTIONS_WITH_LAUNCH = 'launchActions';
 
 export const GROUP_TO_ACTION_MAP = {
   [ACTIONS_WITH_ISSUES]: [POST_ISSUE, LINK_ISSUE, UNLINK_ISSUE],
@@ -45,6 +52,14 @@ export const GROUP_TO_ACTION_MAP = {
   [ACTIONS_WITH_AA_SETTINGS]: [UPDATE_ANALYZER, GENERATE_INDEX, DELETE_INDEX],
   [ACTIONS_WITH_DEFECTS]: [UPDATE_DEFECT, DELETE_DEFECT],
   [ACTIONS_WITH_IMPORT]: [START_IMPORT, FINISH_IMPORT],
+  [ACTIONS_WITH_PROJECT]: [UPDATE_PROJECT],
+  [ACTIONS_WITH_USER]: [CREATE_USER],
+  [ACTIONS_WITH_NOTIFICATIONS]: [
+    UPDATE_NOTIFICATIONS,
+    SWITCH_ON_NOTIFICATIONS,
+    SWITCH_OFF_NOTIFICATIONS,
+  ],
+  [ACTIONS_WITH_LAUNCH]: [START_LAUNCH, FINISH_LAUNCH, DELETE_LAUNCH],
 };
 
 export const ACTION_TO_GROUP_MAP = {
@@ -77,4 +92,14 @@ export const ACTION_TO_GROUP_MAP = {
 
   [START_IMPORT]: ACTIONS_WITH_IMPORT,
   [FINISH_IMPORT]: ACTIONS_WITH_IMPORT,
+  [UPDATE_PROJECT]: ACTIONS_WITH_PROJECT,
+  [CREATE_USER]: ACTIONS_WITH_USER,
+
+  [UPDATE_NOTIFICATIONS]: ACTIONS_WITH_NOTIFICATIONS,
+  [SWITCH_ON_NOTIFICATIONS]: ACTIONS_WITH_NOTIFICATIONS,
+  [SWITCH_OFF_NOTIFICATIONS]: ACTIONS_WITH_NOTIFICATIONS,
+
+  [START_LAUNCH]: ACTIONS_WITH_LAUNCH,
+  [FINISH_LAUNCH]: ACTIONS_WITH_LAUNCH,
+  [DELETE_LAUNCH]: ACTIONS_WITH_LAUNCH,
 };
