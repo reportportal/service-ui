@@ -130,6 +130,11 @@
   }
 }
 
+.owner-tags-block {
+  display: flex;
+  flex-wrap: wrap;
+}
+
 @keyframes auto-analyze-blink {
   from {
     opacity: 0;
