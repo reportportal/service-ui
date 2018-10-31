@@ -48,13 +48,17 @@ export class ContainerWithTabs extends Component {
 
   tabClickHandler = (e) => {
     const id = +e.currentTarget.dataset.id;
+    this.selectTabTracking(id);
+    if (this.state.active !== id) {
+      this.setState({ active: id });
+    }
+  };
+
+  selectTabTracking = (id) => {
     if (this.props.selectTabEventInfo) {
       this.props.tracking.trackEvent(this.props.selectTabEventInfo);
     } else if (this.props.data[id].eventInfo) {
       this.props.tracking.trackEvent(this.props.data[id].eventInfo);
-    }
-    if (this.state.active !== id) {
-      this.setState({ active: id });
     }
   };
 
