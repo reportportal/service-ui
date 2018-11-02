@@ -2,6 +2,7 @@ import { createSelector } from 'reselect';
 import { extractNamespacedQuery } from 'common/utils/routingUtils';
 import { DEFAULT_PAGINATION } from 'controllers/pagination';
 import { SORTING_KEY } from 'controllers/sorting';
+import { ALL } from 'common/constants/reservedFilterIds';
 import { pageNames, NO_PAGE } from './constants';
 
 export const payloadSelector = (state) => state.location.payload;
@@ -9,7 +10,7 @@ export const payloadSelector = (state) => state.location.payload;
 export const activeDashboardIdSelector = (state) => payloadSelector(state).dashboardId;
 export const projectIdSelector = (state) => payloadSelector(state).projectId;
 export const suiteIdSelector = (state) => payloadSelector(state).suiteId;
-export const filterIdSelector = (state) => payloadSelector(state).filterId || 'all';
+export const filterIdSelector = (state) => payloadSelector(state).filterId || ALL;
 export const testItemIdsSelector = (state) =>
   payloadSelector(state).testItemIds && String(payloadSelector(state).testItemIds);
 export const testItemIdsArraySelector = createSelector(
