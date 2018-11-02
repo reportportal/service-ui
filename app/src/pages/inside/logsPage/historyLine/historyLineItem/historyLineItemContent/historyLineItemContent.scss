@@ -61,7 +61,8 @@
   }
 }
 
-.status-FAILED {
+.status-FAILED,
+.status-INTERRUPTED {
   &:before {
     background-color: $COLOR--blush;
   }
@@ -141,7 +142,8 @@
     }
   }
 
-  &.status-FAILED {
+  &.status-FAILED,
+  &.status-INTERRUPTED {
     &:before {
       background-color: $COLOR--orangish;
     }

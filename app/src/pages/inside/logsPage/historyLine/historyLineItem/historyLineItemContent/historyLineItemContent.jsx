@@ -2,7 +2,15 @@ import React, { Component } from 'react';
 import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import { defineMessages, injectIntl, intlShape } from 'react-intl';
-import { PASSED, FAILED, SKIPPED, MANY, NOT_FOUND, RESETED } from 'common/constants/launchStatuses';
+import {
+  PASSED,
+  FAILED,
+  SKIPPED,
+  MANY,
+  NOT_FOUND,
+  RESETED,
+  INTERRUPTED,
+} from 'common/constants/launchStatuses';
 import { LOG_PAGE_EVENTS } from 'components/main/analytics/events';
 import { getDuration } from 'common/utils';
 import classNames from 'classnames/bind';
@@ -28,6 +36,10 @@ const messages = defineMessages({
     id: 'HistoryLineItemContent.launchNotFound',
     defaultMessage: 'No item in launch',
   },
+  launchInterrupted: {
+    id: 'HistoryLineItemContent.launchInterrupted',
+    defaultMessage: 'Interrupted',
+  },
   launchSkipped: {
     id: 'HistoryLineItemContent.launchSkipped',
     defaultMessage: 'Skipped',
@@ -43,6 +55,7 @@ const blockTitleMessagesMap = {
   [FAILED]: messages.launchFailed,
   [SKIPPED]: messages.launchSkipped,
   [RESETED]: messages.launchReseted,
+  [INTERRUPTED]: messages.launchInterrupted,
   [MANY]: messages.launchSameItems,
   [NOT_FOUND]: messages.launchNotFound,
 };

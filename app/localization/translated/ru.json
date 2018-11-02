@@ -403,6 +403,7 @@
   "HistoryItem.sameItemsCaption": "Существует несколько элементов с одинаковым значением UID.",
   "HistoryLine.loadHistoryErrorNotification": "Не удалось загрузить историю для текущего элемента",
   "HistoryLineItemContent.launchFailed": "Неудачно",
+  "HistoryLineItemContent.launchInterrupted": "Прервано",
   "HistoryLineItemContent.launchNotFound": "Нет элементов в запуске",
   "HistoryLineItemContent.launchPassed": "Успешно",
   "HistoryLineItemContent.launchReseted": "Элемент пуст",
