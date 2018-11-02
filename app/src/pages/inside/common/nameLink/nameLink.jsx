@@ -4,7 +4,7 @@ import { nameLinkSelector } from 'controllers/testItem';
 
 export const NameLink = connect((state, ownProps) => ({
   link: nameLinkSelector(state, ownProps),
-}))(({ className, page, link, itemId, children, ...rest }) => (
+}))(({ className, page, link, itemId, children, uniqueId, testItemIds, ...rest }) => (
   <Link to={link} className={className} {...rest}>
     {children}
   </Link>

@@ -19,7 +19,7 @@ import { levelSelector, launchSelector } from 'controllers/testItem';
 import { formatMethodType, formatStatus } from 'common/utils/localizationUtils';
 import TestParamsIcon from 'common/img/test-params-icon-inline.svg';
 import PencilIcon from 'common/img/pencil-icon-inline.svg';
-import { NameLink } from './nameLink';
+import { NameLink } from 'pages/inside/common/nameLink';
 import { TagsBlock } from './tagsBlock';
 import { OwnerBlock } from './ownerBlock';
 import { DurationBlock } from './durationBlock';

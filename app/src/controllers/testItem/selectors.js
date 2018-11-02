@@ -145,12 +145,26 @@ export const breadcrumbsSelector = createSelector(
 );
 
 export const nameLinkSelector = (state, ownProps) => {
-  const query = pagePropertiesSelector(state);
   const payload = payloadSelector(state);
-  const testItemIds = testItemIdsSelector(state);
+  const testItemIds = ownProps.testItemIds || testItemIdsSelector(state);
   const isDebugMode = debugModeSelector(state);
   const level = levelSelector(state);
-  return createLink(testItemIds, ownProps.itemId, payload, query, getNextPage(level, isDebugMode));
+  let query = pagePropertiesSelector(state);
+
+  if (ownProps.uniqueId) {
+    query = {
+      ...query,
+      ...createNamespacedQuery({ 'filter.eq.uniqueId': ownProps.uniqueId }),
+    };
+  }
+
+  return createLink(
+    testItemIds,
+    ownProps.itemId,
+    payload,
+    query,
+    ownProps.page || getNextPage(level, isDebugMode),
+  );
 };
 
 export const statisticsLinkSelector = (state, ownProps) => {

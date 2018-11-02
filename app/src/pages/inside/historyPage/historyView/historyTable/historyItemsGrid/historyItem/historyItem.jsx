@@ -3,7 +3,14 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { defineMessages, injectIntl, intlShape } from 'react-intl';
 import Parser from 'html-react-parser';
-import { SKIPPED, RESETED, FAILED, MANY, NOT_FOUND } from 'common/constants/launchStatuses';
+import {
+  SKIPPED,
+  RESETED,
+  FAILED,
+  MANY,
+  NOT_FOUND,
+  INTERRUPTED,
+} from 'common/constants/launchStatuses';
 import NoItemIcon from 'common/img/noItem-inline.svg';
 import EmptyItemIcon from 'common/img/emptyItem-inline.svg';
 import NotEyeIcon from 'common/img/notEyeItem-inline.svg';
@@ -115,7 +122,7 @@ export class HistoryItem extends Component {
 
     return (
       <div className={cx('history-item-wrapper', `history-item-status-${status}`)}>
-        {status.toLowerCase() === (FAILED || SKIPPED) && this.mapDefectsToBadges()}
+        {status.toLowerCase() === (FAILED || SKIPPED || INTERRUPTED) && this.mapDefectsToBadges()}
         {issue.comment && <MessageBadge data={[{ ticketId: issue.comment }]} icon={CommentIcon} />}
         {issue.externalSystemIssues && (
           <MessageBadge data={issue.externalSystemIssues} icon={TagIcon} />

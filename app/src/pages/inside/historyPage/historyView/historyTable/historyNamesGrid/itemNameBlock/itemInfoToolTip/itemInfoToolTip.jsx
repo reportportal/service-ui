@@ -1,4 +1,3 @@
-import { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import Parser from 'html-react-parser';
 import { FormattedRelative } from 'react-intl';
@@ -11,7 +10,7 @@ import styles from './itemInfoToolTip.scss';
 const cx = classNames.bind(styles);
 
 export const ItemInfoToolTip = ({ data }) => (
-  <Fragment>
+  <div className={cx('info-tooltip-wrapper')}>
     <div className={cx('title-block')}>
       <span>{data.name}</span>
     </div>
@@ -38,7 +37,7 @@ export const ItemInfoToolTip = ({ data }) => (
       )}
     </div>
     <MarkdownViewer value={data.description} />
-  </Fragment>
+  </div>
 );
 ItemInfoToolTip.propTypes = {
   data: PropTypes.object,

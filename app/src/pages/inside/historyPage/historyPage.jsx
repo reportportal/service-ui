@@ -33,7 +33,7 @@ export class HistoryPage extends Component {
             onRefresh={this.props.refreshHistory}
             parentItem={this.props.parentItem}
           />
-          <HistoryView />
+          <HistoryView refreshHistory={this.props.refreshHistory} />
         </PageSection>
       </PageLayout>
     );

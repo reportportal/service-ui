@@ -29,7 +29,7 @@ export class HistoryFiltersBlock extends Component {
   };
 
   render() {
-    const { intl } = this.props;
+    const { intl, historyDepth, onChangeHistoryDepth } = this.props;
 
     return (
       <div className={cx('filters-block-wrapper')}>
@@ -38,8 +38,8 @@ export class HistoryFiltersBlock extends Component {
           <InputDropdown
             options={HISTORY_DEPTH_CONFIG.options}
             customClass={cx('mobile-input-disabled')}
-            value={this.props.historyDepth}
-            onChange={this.props.onChangeHistoryDepth}
+            value={historyDepth}
+            onChange={onChangeHistoryDepth}
           />
         </div>
       </div>
