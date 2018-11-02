@@ -10,6 +10,7 @@ import {
 } from 'controllers/project';
 import { PROJECT_LAUNCHES_PAGE, filterIdSelector } from 'controllers/pages';
 import { omit } from 'common/utils/omit';
+import { ALL, LATEST } from 'common/constants/reservedFilterIds';
 import {
   NAMESPACE,
   FETCH_FILTERS,
@@ -33,7 +34,7 @@ import {
 } from './actionCreators';
 
 const collectFilterIds = (userFilters, activeFilter) => {
-  if (userFilters.indexOf(activeFilter) === -1 && activeFilter !== 'all') {
+  if (userFilters.indexOf(activeFilter) === -1 && activeFilter !== ALL && activeFilter !== LATEST) {
     return [...userFilters, activeFilter];
   }
   return userFilters;
@@ -149,7 +150,7 @@ function* watchFetchLaunchesFilters() {
 }
 
 function* resetActiveFilter() {
-  yield put(changeActiveFilterAction('all'));
+  yield put(changeActiveFilterAction(ALL));
 }
 
 function* watchChangeActiveFilter() {

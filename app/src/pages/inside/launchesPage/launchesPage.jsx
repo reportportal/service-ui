@@ -372,10 +372,12 @@ export class LaunchesPage extends Component {
               <LaunchFiltersToolbar
                 filters={launchFilters}
                 activeFilterId={activeFilterId}
-                activeFilter={activeFilter}    onSelectFilter={onSelectFilter}
+                activeFilter={activeFilter}
+                onSelectFilter={onSelectFilter}
                 onRemoveFilter={onRemoveFilter}
                 onFilterAdd={onFilterAdd}
-                onResetFilter={onResetFilter}    {...rest}
+                onResetFilter={onResetFilter}
+                {...rest}
               />
             </PageSection>
             <PageSection>

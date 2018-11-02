@@ -1,8 +1,9 @@
 import { takeEvery, all, put, select, take, call } from 'redux-saga/effects';
-import { fetchDataAction, FETCH_SUCCESS } from 'controllers/fetch';
+import { fetchDataAction, FETCH_SUCCESS, FETCH_ERROR } from 'controllers/fetch';
 import { activeProjectSelector } from 'controllers/user';
 import { URLS } from 'common/urls';
 import { debugModeSelector } from 'controllers/launch';
+import { ALL, LATEST } from 'common/constants/reservedFilterIds';
 import {
   launchFiltersSelector,
   launchFiltersLoadedSelector,
@@ -13,11 +14,14 @@ import { FETCH_LAUNCHES, NAMESPACE, FETCH_LAUNCHES_WITH_PARAMS } from './constan
 import { queryParametersSelector } from './selectors';
 
 function* waitForFilters() {
+  const filterId = yield select(filterIdSelector);
   const isFiltersLoaded = yield select(launchFiltersLoadedSelector);
-  if (!isFiltersLoaded) {
+  if (!isFiltersLoaded && filterId !== ALL && filterId !== LATEST) {
     yield take(
       ({ type, meta }) =>
-        type === FETCH_SUCCESS && meta && meta.namespace === LAUNCHES_FILTERS_NAMESPACE,
+        (type === FETCH_SUCCESS || type === FETCH_ERROR) &&
+        meta &&
+        meta.namespace === LAUNCHES_FILTERS_NAMESPACE,
     );
   }
 }
