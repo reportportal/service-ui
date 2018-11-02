@@ -88,6 +88,8 @@ function* fetchTestItems({ payload = {} }) {
   const project = yield select(activeProjectSelector);
   const namespace = yield select(namespaceSelector, offset);
   const query = yield select(queryParametersSelector, namespace);
+  const pageQuery = yield select(pagePropertiesSelector);
+  const uniqueIdFilterKey = 'filter.eq.uniqueId';
 
   const noChildFilter = 'filter.eq.hasChildren' in query;
 
@@ -102,6 +104,7 @@ function* fetchTestItems({ payload = {} }) {
         'filter.under.path': noChildFilter
           ? itemIds.filter((item) => item !== launchId).join('.')
           : undefined,
+        [uniqueIdFilterKey]: pageQuery[uniqueIdFilterKey],
         ...query,
       },
     }),

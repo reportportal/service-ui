@@ -1,3 +1,7 @@
+.info-tooltip-wrapper {
+  max-width: 600px;
+}
+
 .title-block {
   margin-bottom: 10px;
   font-size: 14px;
@@ -16,8 +20,9 @@
 }
 
 .separator {
-  border-right: 1px solid $COLOR--gray-60;
   height: 11px;
+  border-right: 1px solid $COLOR--gray-60;
+  margin-left: 10px;
 }
 
 .date-info {

@@ -12,7 +12,8 @@
   line-height: 1;
 }
 
-.history-item-status-FAILED {
+.history-item-status-FAILED,
+.history-item-status-INTERRUPTED {
   background-color: $COLOR--blush;
 }
 

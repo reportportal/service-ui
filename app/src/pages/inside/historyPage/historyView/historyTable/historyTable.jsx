@@ -44,14 +44,17 @@ const messages = defineMessages({
 export class HistoryTable extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
-    items: PropTypes.array.isRequired,
-    history: PropTypes.array.isRequired,
     historyDepth: PropTypes.string.isRequired,
-    visibleItemsCount: PropTypes.number.isRequired,
+    items: PropTypes.array,
+    history: PropTypes.array,
+    visibleItemsCount: PropTypes.number,
     fetchItemsHistoryAction: PropTypes.func,
   };
 
   static defaultProps = {
+    items: [],
+    history: [],
+    visibleItemsCount: 0,
     fetchItemsHistoryAction: () => {},
   };
 
@@ -70,7 +73,7 @@ export class HistoryTable extends Component {
     return (
       <Fragment>
         <div className={cx('history-table-wrapper')}>
-          {history.length === 0 ? (
+          {!history.length ? (
             <div className={cx('spinner-wrapper')}>
               <SpinningPreloader />
             </div>
@@ -88,7 +91,7 @@ export class HistoryTable extends Component {
             </Fragment>
           )}
         </div>
-        {history.length &&
+        {!!history.length &&
           visibleItemsCount < items.length && (
             <div className={cx('load-more-container')}>
               <button className={cx('load-more')} onClick={this.loadMoreHistoryItems}>

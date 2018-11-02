@@ -3,7 +3,9 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { defineMessages, injectIntl, intlShape } from 'react-intl';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
-import { MANY, NOT_FOUND } from 'common/constants/launchStatuses';
+import { MANY, NOT_FOUND, RESETED } from 'common/constants/launchStatuses';
+import { PROJECT_LOG_PAGE, TEST_ITEM_PAGE } from 'controllers/pages';
+import { NameLink } from 'pages/inside/common/nameLink';
 import { HistoryItem } from './historyItem';
 import styles from './historyItemsGrid.scss';
 
@@ -48,18 +50,56 @@ export class HistoryItemsGrid extends Component {
         defects: {},
       };
     } else if (filteredLaunchHistoryItem.length > 1) {
+      const itemIdsArray = filteredLaunchHistoryItem[0].path.split('.');
+      const itemIds = itemIdsArray.slice(0, itemIdsArray.length - 1).join('/');
       itemProps = {
         status: MANY.toUpperCase(),
         defects: {},
+        itemIds,
       };
     } else {
+      const itemIdsArray = filteredLaunchHistoryItem[0].path.split('.');
+      const itemIds = itemIdsArray.slice(0, itemIdsArray.length - 1).join('/');
       itemProps = {
         status: filteredLaunchHistoryItem[0].status,
         issue: filteredLaunchHistoryItem[0].issue,
         defects: filteredLaunchHistoryItem[0].statistics.defects,
+        itemIds,
       };
     }
     return itemProps;
+  };
+
+  switchCorrespondHistoryItem = (historyItemProps, currentHistoryItem, launchId) => {
+    switch (historyItemProps.status) {
+      case NOT_FOUND.toUpperCase():
+      case RESETED.toUpperCase():
+        return <HistoryItem {...historyItemProps} />;
+      case MANY.toUpperCase():
+        return (
+          <NameLink
+            page={TEST_ITEM_PAGE}
+            uniqueId={currentHistoryItem.uniqueId}
+            testItemIds={
+              historyItemProps.itemIds ? `${launchId}/${historyItemProps.itemIds}` : launchId
+            }
+          >
+            <HistoryItem {...historyItemProps} />
+          </NameLink>
+        );
+      default:
+        return (
+          <NameLink
+            itemId={currentHistoryItem.id}
+            page={currentHistoryItem.has_children ? null : PROJECT_LOG_PAGE}
+            testItemIds={
+              historyItemProps.itemIds ? `${launchId}/${historyItemProps.itemIds}` : launchId
+            }
+          >
+            <HistoryItem {...historyItemProps} />
+          </NameLink>
+        );
+    }
   };
 
   renderHistoryItems = () => {
@@ -73,7 +113,11 @@ export class HistoryItemsGrid extends Component {
           const historyItemProps = this.getHistoryItemProps(currentLaunchHistoryItem);
           return (
             <div key={historyItem.launchId} className={cx('history-grid-column')}>
-              <HistoryItem {...historyItemProps} />
+              {this.switchCorrespondHistoryItem(
+                historyItemProps,
+                currentLaunchHistoryItem[0],
+                historyItem.launchId,
+              )}
             </div>
           );
         })}
