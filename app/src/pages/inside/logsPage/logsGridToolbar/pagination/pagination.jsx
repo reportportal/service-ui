@@ -16,15 +16,13 @@ export class Pagination extends Component {
     onChangePage: PropTypes.func.isRequired,
   };
 
-  previewsPage = () => this.props.onChangePage(this.props.activePage - 1);
+  previousPage = () => this.props.onChangePage(this.props.activePage - 1);
 
   nextPage = () => this.props.onChangePage(this.props.activePage + 1);
 
   isFirstPageActive = () => this.props.activePage === 1;
 
   isLastPageActive = () => this.props.activePage === this.props.pageCount;
-
-  isNoPages = () => this.props.pageCount === 0;
 
   render() {
     const { activePage, pageCount } = this.props;
@@ -33,8 +31,8 @@ export class Pagination extends Component {
       <div className={cx('pagination')}>
         <button
           className={cx('arrow-button')}
-          disabled={this.isFirstPageActive() || this.isNoPages()}
-          onClick={this.previewsPage}
+          disabled={this.isFirstPageActive()}
+          onClick={this.previousPage}
         >
           {Parser(ArrowLeftIcon)}
         </button>
@@ -47,7 +45,7 @@ export class Pagination extends Component {
 
         <button
           className={cx('arrow-button')}
-          disabled={this.isLastPageActive() || this.isNoPages()}
+          disabled={this.isLastPageActive()}
           onClick={this.nextPage}
         >
           {Parser(ArrowRightIcon)}

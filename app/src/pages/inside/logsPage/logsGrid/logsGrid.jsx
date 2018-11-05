@@ -126,7 +126,6 @@ export class LogsGrid extends Component {
       },
       customProps: {
         consoleView: true,
-        markdownMode: this.props.markdownMode,
       },
       component: MessageColumn,
     },
@@ -140,6 +139,9 @@ export class LogsGrid extends Component {
     {
       id: 'mobileAttachment',
       component: AttachmentColumn,
+      title: {
+        component: () => <div className={cx('no-header')} />,
+      },
       customProps: {
         mobile: true,
       },
@@ -197,8 +199,8 @@ export class LogsGrid extends Component {
     return {
       log: true,
       'error-row': !consoleView && (value.level === ERROR || value.level === FATAL),
+      'error-row-console': consoleView && (value.level === ERROR || value.level === FATAL),
       [cx('row-console')]: consoleView,
-      [cx('error-row-console')]: consoleView && (value.level === ERROR || value.level === FATAL),
     };
   };
 
