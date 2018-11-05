@@ -152,13 +152,15 @@ export class LogsGridToolbar extends Component {
             <div className={cx('action-buttons')}>
               <GhostButton disabled>{intl.formatMessage(messages.nextError)}</GhostButton>
             </div>
-            <div className={cx('pagination')}>
-              <Pagination
-                activePage={activePage}
-                pageCount={pageCount}
-                onChangePage={onChangePage}
-              />
-            </div>
+            {pageCount !== 0 && (
+              <div className={cx('pagination')}>
+                <Pagination
+                  activePage={activePage}
+                  pageCount={pageCount}
+                  onChangePage={onChangePage}
+                />
+              </div>
+            )}
           </div>
         </div>
         <div className={cx('children')}>

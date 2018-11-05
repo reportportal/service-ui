@@ -130,7 +130,7 @@
       bottom: 0;
     }
     @media (max-width: $SCREEN_XS_MAX) {
-      bottom: 68px;
+      bottom: 64px;
     }
   }
 
@@ -173,5 +173,26 @@
         box-shadow: none;
       }
     }
+  }
+}
+
+.error-row-console {
+  background: none;
+
+  .accordion-block {
+    display: none;
+  }
+  .accordion-toggler {
+    display: none;
+  }
+  .accordion-toggler-mobile {
+    display: none;
+  }
+  .accordion-wrapper-mobile {
+    display: none;
+  }
+
+  &:hover {
+    background: none;
   }
 }
