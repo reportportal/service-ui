@@ -23,7 +23,7 @@ import { storiesOf } from '@storybook/react';
 import { host } from 'storybook-host';
 import { withReadme } from 'storybook-readme';
 
-import { LaunchesDurationChart } from './launchesDurationChart';
+import { FailedCasesTrendChart } from './failedCasesTrendChart';
 import README from './README.md';
 import testData from './testData.json';
 
@@ -33,7 +33,7 @@ const mockObserver = {
   unsubscribe: () => {},
 };
 
-storiesOf('Components/Widgets/Charts/LaunchesDurationChart', module)
+storiesOf('Components/Widgets/Charts/FailedCasesTrendChart', module)
   .addDecorator(
     host({
       title: 'Launch Duration Chart component',
@@ -46,8 +46,13 @@ storiesOf('Components/Widgets/Charts/LaunchesDurationChart', module)
   )
   .addDecorator(withReadme(README))
   .add('default state', () => (
-    <LaunchesDurationChart widget={testData} container={mockNode} observer={mockObserver} />
+    <FailedCasesTrendChart widget={testData} container={mockNode} observer={mockObserver} />
   ))
   .add('preview mode', () => (
-    <LaunchesDurationChart widget={testData} container={mockNode} observer={mockObserver} preview />
+    <FailedCasesTrendChart
+      widget={testData}
+      container={mockNode}
+      observer={mockObserver}
+      isPreview
+    />
   ));

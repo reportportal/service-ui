@@ -20,6 +20,10 @@ const messages = defineMessages({
     id: 'FilterNameById.statistics$executions$failed',
     defaultMessage: 'Failed',
   },
+  statistics$executions$failedSkippedTotal: {
+    id: 'FilterNameById.statistics$executions$failedSkippedTotal',
+    defaultMessage: '% (Failed+Skipped)/Total',
+  },
   statistics$executions$skipped: {
     id: 'FilterNameById.statistics$executions$skipped',
     defaultMessage: 'Skipped',

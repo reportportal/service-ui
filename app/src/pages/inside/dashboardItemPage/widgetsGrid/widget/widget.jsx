@@ -11,6 +11,8 @@ import { showModalAction } from 'controllers/modal';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { LaunchesComparisonChart } from 'components/widgets/charts/launchesComparisonChart';
 import { LaunchesDurationChart } from 'components/widgets/charts/launchesDurationChart';
+import { FailedCasesTrendChart } from 'components/widgets/charts/failedCasesTrendChart';
+import { NonPassedTestCasesTrendChart } from 'components/widgets/charts/nonPassedTestCasesTrendChart';
 import { WidgetHeader } from './widgetHeader';
 import styles from './widget.scss';
 
@@ -19,6 +21,8 @@ const cx = classNames.bind(styles);
 const charts = {
   launches_comparison_chart: LaunchesComparisonChart,
   launches_duration_chart: LaunchesDurationChart,
+  bug_trend: FailedCasesTrendChart,
+  not_passed: NonPassedTestCasesTrendChart,
 };
 
 @connect(
