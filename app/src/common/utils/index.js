@@ -45,3 +45,4 @@ export { debounce } from './debounce';
 export { arrayRemoveDoubles } from './arrayRemoveDoubles';
 export { parseDateTimeRange } from './parseDateTimeRange';
 export { getTicketUrlId } from './getTicketUrlId';
+export { range } from './range';

@@ -4,6 +4,7 @@ import { setIntlConfig, withIntl } from 'storybook-addon-intl';
 import 'reset-css/reset.css';
 import 'common/css/fonts/fonts.scss';
 import 'common/css/common.scss';
+import 'c3/c3.css';
 
 import { addLocaleData } from 'react-intl';
 import en from 'react-intl/locale-data/en';
