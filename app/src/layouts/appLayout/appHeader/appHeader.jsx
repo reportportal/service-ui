@@ -13,9 +13,8 @@ import {
   userAccountRoleSelector,
 } from 'controllers/user';
 import { canSeeMembers } from 'common/utils/permissions';
-import { PROJECT_MEMBERS_PAGE, PROJECT_SETTINGS_TAB_PAGE } from 'controllers/pages/constants';
-import { GENERAL } from 'common/constants/settingsTabs';
-import { MobileHeader } from 'layouts/common/mobileHeader';
+import { PROJECT_MEMBERS_PAGE, PROJECT_SETTINGS_PAGE } from 'controllers/pages/constants';
+import { connect } from 'react-redux';
 import { ProjectSelector } from './projectSelector';
 import { UserBlock } from './userBlock';
 import styles from './appHeader.scss';
@@ -87,8 +86,8 @@ export class AppHeader extends Component {
           )}
           <NavLink
             to={{
-              type: PROJECT_SETTINGS_TAB_PAGE,
-              payload: { projectId: activeProject, settingsTab: GENERAL },
+              type: PROJECT_SETTINGS_PAGE,
+              payload: { projectId: activeProject },
             }}
             className={cx('nav-btn', 'settings-btn')}
             activeClassName={cx('active')}
