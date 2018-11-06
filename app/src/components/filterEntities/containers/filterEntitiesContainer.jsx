@@ -31,9 +31,10 @@ export class FilterEntitiesContainer extends Component {
   };
 
   static getDerivedStateFromProps(props, state) {
-    if (props.entities !== state.values && !isEqual(props.entities, state.values)) {
+    if (props.entities !== state.values && !isEqual(props.entities, state.prevEntities)) {
       return {
         values: props.entities,
+        prevEntities: props.entities,
       };
     }
     return null;
@@ -42,6 +43,7 @@ export class FilterEntitiesContainer extends Component {
   state = {
     errors: {},
     values: this.props.entities,
+    prevEntities: this.props.entities,
   };
 
   collectEntities = (values) =>
