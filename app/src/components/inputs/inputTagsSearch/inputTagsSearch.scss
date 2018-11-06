@@ -163,12 +163,13 @@
           margin: 4px 5px;
           line-height: 13px;
           font-family: $FONT-REGULAR, sans-serif;
-          height: auto;
+          height: 20px;
           outline: 0;
           font-size: 13px;
           border: none;
           border-radius: 0;
           box-sizing: border-box !important;
+          background-color: transparent;
         }
       }
       .select2-item {
