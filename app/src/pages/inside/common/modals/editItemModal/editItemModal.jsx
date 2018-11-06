@@ -109,7 +109,7 @@ export class EditItemModal extends Component {
 
   formatTags = (tags) =>
     tags && !!tags.length ? tags.map((tag) => ({ value: tag, label: tag })) : [];
-  parseTags = (options) => options.map((option) => option.value);
+  parseTags = (options) => (options && options.map((option) => option.value)) || undefined;
 
   updateItemAndCloseModal = (closeModal) => (formData) => {
     this.props.dirty && this.updateItem(formData);

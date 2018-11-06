@@ -85,7 +85,7 @@ const BASE_COLUMNS_ORDER = [
   PASSING_RATE,
 ];
 const validators = {
-  filters: (formatMessage) => (value) =>
+  filterId: (formatMessage) => (value) =>
     (!value || !value.length) && formatMessage(messages.FiltersValidationError),
 };
 
@@ -116,27 +116,30 @@ export class ProductStatusControls extends Component {
       { value: STATUS, label: props.intl.formatMessage(messages.StatusCriteria) },
     ].concat(getWidgetCriteriaOptions([DEFECT_TYPES_GROUPS_OPTIONS], intl.formatMessage));
     initializeWizardSecondStepForm({
-      basicColumns: this.parseBasicColumns(
-        widgetSettings.basicColumns || this.criteria.map((criteria) => criteria.value),
-      ),
-      customColumns: widgetSettings.customColumns || [{ name: '', value: '' }],
-      itemsCount: DEFAULT_ITEMS_COUNT,
-      filters: widgetSettings.filter || [],
-      mode: widgetSettings.mode || CHART_MODES.ALL_LAUNCHES,
-      group: !!widgetSettings.group,
+      contentParameters: widgetSettings.contentParameters || {
+        itemsCount: DEFAULT_ITEMS_COUNT,
+        widgetOptions: {
+          basicColumns: this.parseBasicColumns(this.criteria.map((criteria) => criteria.value)),
+          customColumns: [{ name: '', value: '' }],
+          mode: CHART_MODES.ALL_LAUNCHES,
+          group: false,
+        },
+      },
+      filterId: [],
     });
   }
 
   formatFilterOptions = (values) =>
     values.content.map((value) => ({ value: value.id, label: value.name }));
   formatFilters = (values) => values.map((value) => ({ value, label: value.name }));
-  parseFilters = (values) => values.map((value) => ({ value: value.value, name: value.label }));
+  parseFilters = (values) =>
+    (values && values.map((value) => ({ value: value.value, name: value.label }))) || undefined;
 
   formatBasicColumns = (values) =>
     values.filter((value) => STATIC_BASE_COLUMNS.indexOf(value) === -1);
   parseBasicColumns = (values) => {
     if (!values) {
-      return this.props.widgetSettings.basicColumns;
+      return this.props.widgetSettings.contentParameters.widgetOptions.basicColumns;
     }
     return BASE_COLUMNS_ORDER.filter(
       (column) => STATIC_BASE_COLUMNS.indexOf(column) !== -1 || values.indexOf(column) !== -1,
@@ -144,20 +147,24 @@ export class ProductStatusControls extends Component {
   };
 
   render() {
-    const { intl, filtersSearchUrl } = this.props;
+    const {
+      intl: { formatMessage },
+      filtersSearchUrl,
+    } = this.props;
+
     return (
       <Fragment>
         <FieldProvider
-          name="filters"
+          name="filterId"
           format={this.formatFilters}
           parse={this.parseFilters}
-          validate={validators.filters(intl.formatMessage)}
+          validate={validators.filterId(formatMessage)}
         >
           <TagsControl
-            fieldLabel={intl.formatMessage(messages.FiltersFieldLabel)}
-            placeholder={intl.formatMessage(messages.FiltersPlaceholder)}
-            focusPlaceholder={intl.formatMessage(messages.FiltersFocusPlaceholder)}
-            nothingFound={intl.formatMessage(messages.FiltersNoMatches)}
+            fieldLabel={formatMessage(messages.FiltersFieldLabel)}
+            placeholder={formatMessage(messages.FiltersPlaceholder)}
+            focusPlaceholder={formatMessage(messages.FiltersFocusPlaceholder)}
+            nothingFound={formatMessage(messages.FiltersNoMatches)}
             minLength={3}
             async
             multi
@@ -167,31 +174,31 @@ export class ProductStatusControls extends Component {
           />
         </FieldProvider>
         <FieldProvider
-          name="basicColumns"
+          name="contentParameters.widgetOptions.basicColumns"
           format={this.formatBasicColumns}
           parse={this.parseBasicColumns}
         >
           <DropdownControl
-            fieldLabel={intl.formatMessage(messages.BasicColumnsFieldLabel)}
+            fieldLabel={formatMessage(messages.BasicColumnsFieldLabel)}
             multiple
             selectAll
             options={this.criteria}
           />
         </FieldProvider>
-        <FieldProvider name="customColumns">
+        <FieldProvider name="contentParameters.widgetOptions.customColumns">
           <CustomColumnsControl />
         </FieldProvider>
-        <FieldProvider name="mode">
+        <FieldProvider name="contentParameters.widgetOptions.mode">
           <TogglerControl
-            fieldLabel={' '}
+            fieldLabel=" "
             items={getWidgetModeOptions(
               [CHART_MODES.ALL_LAUNCHES, CHART_MODES.LATEST_LAUNCHES],
-              intl.formatMessage,
+              formatMessage,
             )}
           />
         </FieldProvider>
-        <FieldProvider name="group">
-          <CheckboxControl fieldLabel={' '} text={intl.formatMessage(messages.GroupControlText)} />
+        <FieldProvider name="contentParameters.widgetOptions.group">
+          <CheckboxControl fieldLabel=" " text={formatMessage(messages.GroupControlText)} />
         </FieldProvider>
       </Fragment>
     );

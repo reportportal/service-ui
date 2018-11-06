@@ -40,17 +40,26 @@ export class LaunchExecutionAndIssueStatisticsControls extends Component {
       { defectTypes },
     );
     initializeWizardSecondStepForm({
-      content_fields: widgetSettings.criteria || this.criteria.map((criteria) => criteria.value),
-      itemsCount: 1,
-      metadata_fields: [METADATA_FIELDS.NAME, METADATA_FIELDS.NUMBER, METADATA_FIELDS.START_TIME],
+      contentParameters: widgetSettings.contentParameters || {
+        contentFields: this.criteria.map((criteria) => criteria.value),
+        itemsCount: 1,
+        metadataFields: [METADATA_FIELDS.NAME, METADATA_FIELDS.NUMBER, METADATA_FIELDS.START_TIME],
+      },
     });
   }
+
+  formatFilterValue = (value) => value && value[0];
+  parseFilterValue = (value) => value && [value];
 
   render() {
     const { formAppearance, onFormAppearanceChange } = this.props;
     return (
       <Fragment>
-        <FieldProvider name={'filterId'}>
+        <FieldProvider
+          name="filterId"
+          parse={this.parseFilterValue}
+          format={this.formatFilterValue}
+        >
           <FiltersControl
             formAppearance={formAppearance}
             onFormAppearanceChange={onFormAppearanceChange}

@@ -13,7 +13,7 @@ const cx = classNames.bind(styles);
   destroyOnUnmount: false,
   forceUnregisterOnUnmount: true,
   validate: ({ filterId }) => ({
-    filterId: !filterId && 'error',
+    filterId: (!filterId || !filterId.length) && 'error',
   }),
 })
 export class WizardSecondStepForm extends Component {

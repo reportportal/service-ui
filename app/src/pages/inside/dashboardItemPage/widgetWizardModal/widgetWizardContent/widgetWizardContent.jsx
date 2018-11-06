@@ -2,9 +2,14 @@ import React, { Component } from 'react';
 import track from 'react-tracking';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
-import { injectIntl, intlShape } from 'react-intl';
+import { injectIntl, intlShape, defineMessages } from 'react-intl';
 import { formValueSelector, submit } from 'redux-form';
 import { connect } from 'react-redux';
+import { URLS } from 'common/urls';
+import { fetch } from 'common/utils';
+import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
+import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLock';
+import { activeProjectSelector } from 'controllers/user';
 import { WizardInfoSection } from './wizardInfoSection';
 import { WizardControlsSection } from './wizardControlsSection';
 import styles from './widgetWizardContent.scss';
@@ -13,22 +18,37 @@ import { WIDGET_WIZARD_FORM } from './wizardControlsSection/constants';
 
 const cx = classNames.bind(styles);
 
+const messages = defineMessages({
+  addWidgetSuccess: {
+    id: 'WidgetWizardContent.addWidgetSuccess',
+    defaultMessage: 'Widget has been added',
+  },
+});
+
 @injectIntl
 @connect(
   (state) => ({
     activeWidgetId: formValueSelector(WIDGET_WIZARD_FORM)(state, 'widgetType'),
+    widgetUrl: URLS.widget(activeProjectSelector(state)),
   }),
   {
     submitWidgetWizardForm: () => submit(WIDGET_WIZARD_FORM),
+    showNotification,
+    showScreenLockAction,
+    hideScreenLockAction,
   },
 )
 @track()
 export class WidgetWizardContent extends Component {
   static propTypes = {
+    intl: intlShape.isRequired,
     activeWidgetId: PropTypes.string,
     submitWidgetWizardForm: PropTypes.func.isRequired,
-    intl: intlShape.isRequired,
+    widgetUrl: PropTypes.string.isRequired,
     eventsInfo: PropTypes.object,
+    showNotification: PropTypes.func.isRequired,
+    showScreenLockAction: PropTypes.func.isRequired,
+    hideScreenLockAction: PropTypes.func.isRequired,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
@@ -57,9 +77,36 @@ export class WidgetWizardContent extends Component {
     this.props.tracking.trackEvent(this.props.eventsInfo.prevStep);
   };
 
-  onAddWidget = (data) => {
-    this.props.tracking.trackEvent(this.props.eventsInfo.addWidget);
-    console.log(data);
+  onAddWidget = (formData) => {
+    const {
+      intl: { formatMessage },
+      tracking: { trackEvent },
+      eventsInfo: { addWidget },
+      widgetUrl,
+    } = this.props;
+
+    const data = {
+      ...formData,
+      filterId: formData.filterId.map((item) => (typeof item === 'number' ? item : item.value)),
+    };
+
+    trackEvent(addWidget);
+    this.props.showScreenLockAction();
+    fetch(widgetUrl, {
+      method: 'post',
+      data,
+    })
+      .then(() => {
+        this.props.hideScreenLockAction();
+        this.props.showNotification({
+          message: formatMessage(messages.addWidgetSuccess),
+          type: NOTIFICATION_TYPES.SUCCESS,
+        });
+      })
+      .catch((err) => {
+        this.props.hideScreenLockAction();
+        this.props.showNotification({ message: err.msg, type: NOTIFICATION_TYPES.ERROR });
+      });
   };
 
   nextStep = () => {

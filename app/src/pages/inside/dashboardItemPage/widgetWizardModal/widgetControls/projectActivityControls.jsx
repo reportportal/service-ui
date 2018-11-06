@@ -80,20 +80,24 @@ export class ProjectActivityControls extends Component {
     const { intl, widgetSettings, initializeWizardSecondStepForm } = props;
     this.criteria = getWidgetCriteriaOptions([USER_ACTIONS_OPTIONS], intl.formatMessage);
     initializeWizardSecondStepForm({
-      actionType: this.parseActionTypes(widgetSettings.actionType || this.criteria),
-      itemsCount: widgetSettings.itemsCount || DEFAULT_ITEMS_COUNT,
-      userRef: widgetSettings.userRef || [],
-      content_fields: [
-        CONTENT_FIELDS.NAME,
-        CONTENT_FIELDS.USER_REF,
-        CONTENT_FIELDS.LAST_MODIFIED,
-        CONTENT_FIELDS.ACTION_TYPE,
-        CONTENT_FIELDS.OBJECT_TYPE,
-        CONTENT_FIELDS.PROJECT_REF,
-        CONTENT_FIELDS.LOGGED_OBJECT_REF,
-        CONTENT_FIELDS.HISTORY,
-      ],
-      filter_id: '',
+      contentParameters: widgetSettings.contentParameters || {
+        contentFields: [
+          CONTENT_FIELDS.NAME,
+          CONTENT_FIELDS.USER_REF,
+          CONTENT_FIELDS.LAST_MODIFIED,
+          CONTENT_FIELDS.ACTION_TYPE,
+          CONTENT_FIELDS.OBJECT_TYPE,
+          CONTENT_FIELDS.PROJECT_REF,
+          CONTENT_FIELDS.LOGGED_OBJECT_REF,
+          CONTENT_FIELDS.HISTORY,
+        ],
+        itemsCount: DEFAULT_ITEMS_COUNT,
+        widgetOptions: {
+          actionType: this.parseActionTypes(this.criteria),
+          userRef: [],
+        },
+      },
+      filterId: [],
     });
   }
 
@@ -101,7 +105,7 @@ export class ProjectActivityControls extends Component {
     arrayRemoveDoubles(criteries.map((criteria) => ACTION_TO_GROUP_MAP[criteria] || criteria));
   parseActionTypes = (criteries) => {
     if (!criteries) {
-      return this.props.widgetSettings.actionType;
+      return this.props.widgetSettings.contentParameters.widgetOptions.actionType;
     }
     return criteries
       .map((criteria) => {
@@ -111,45 +115,54 @@ export class ProjectActivityControls extends Component {
       .reduce((acc, val) => acc.concat(val), []);
   };
 
-  parseItems = (value) => (value.length < 4 ? value : this.props.widgetSettings.itemsCount);
+  parseItems = (value) =>
+    value.length < 4 ? value : this.props.widgetSettings.contentParameters.itemsCount;
 
   formatUsernames = (values) => values.map((value) => ({ value, label: value }));
-  parseUsernames = (values) => values.map((value) => value.value);
+  parseUsernames = (values) => (values && values.map((value) => value.value)) || undefined;
 
   render() {
-    const { intl, usernamesSearchUrl } = this.props;
+    const {
+      intl: { formatMessage },
+      usernamesSearchUrl,
+    } = this.props;
+
     return (
       <Fragment>
         <FieldProvider
-          name="actionType"
+          name="contentParameters.widgetOptions.actionType"
           format={this.formatActionTypes}
           parse={this.parseActionTypes}
-          validate={validators.actionType(intl.formatMessage)}
+          validate={validators.actionType(formatMessage)}
         >
           <DropdownControl
-            fieldLabel={intl.formatMessage(messages.CriteriaFieldLabel)}
+            fieldLabel={formatMessage(messages.CriteriaFieldLabel)}
             multiple
             selectAll
             options={this.criteria}
           />
         </FieldProvider>
         <FieldProvider
-          name="itemsCount"
-          validate={validators.items(intl.formatMessage)}
+          name="contentParameters.itemsCount"
+          validate={validators.items(formatMessage)}
           parse={this.parseItems}
         >
           <InputControl
-            fieldLabel={intl.formatMessage(messages.ItemsFieldLabel)}
+            fieldLabel={formatMessage(messages.ItemsFieldLabel)}
             inputWidth={ITEMS_INPUT_WIDTH}
             type="number"
           />
         </FieldProvider>
-        <FieldProvider name="userRef" format={this.formatUsernames} parse={this.parseUsernames}>
+        <FieldProvider
+          name="contentParameters.widgetOptions.userRef"
+          format={this.formatUsernames}
+          parse={this.parseUsernames}
+        >
           <TagsControl
-            fieldLabel={intl.formatMessage(messages.UsernameControlText)}
-            placeholder={intl.formatMessage(messages.UsersPlaceholder)}
-            focusPlaceholder={intl.formatMessage(messages.UsersFocusPlaceholder)}
-            nothingFound={intl.formatMessage(messages.UsersNoMatches)}
+            fieldLabel={formatMessage(messages.UsernameControlText)}
+            placeholder={formatMessage(messages.UsersPlaceholder)}
+            focusPlaceholder={formatMessage(messages.UsersFocusPlaceholder)}
+            nothingFound={formatMessage(messages.UsersNoMatches)}
             minLength={3}
             async
             uri={usernamesSearchUrl}

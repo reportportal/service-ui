@@ -51,42 +51,59 @@ export class TestCasesGrowthTrendControls extends Component {
     super(props);
     const { widgetSettings, initializeWizardSecondStepForm } = props;
     initializeWizardSecondStepForm({
-      itemsCount: widgetSettings.itemsCount || DEFAULT_ITEMS_COUNT,
-      mode: widgetSettings.mode || CHART_MODES.LAUNCH_MODE,
-      content_fields: [STATS_TOTAL],
-      metadata_fields: [METADATA_FIELDS.NAME, METADATA_FIELDS.NUMBER, METADATA_FIELDS.START_TIME],
+      contentParameters: widgetSettings.contentParameters || {
+        contentFields: [STATS_TOTAL],
+        itemsCount: DEFAULT_ITEMS_COUNT,
+        metadataFields: [METADATA_FIELDS.NAME, METADATA_FIELDS.NUMBER, METADATA_FIELDS.START_TIME],
+        widgetOptions: {
+          mode: CHART_MODES.LAUNCH_MODE,
+        },
+      },
     });
   }
 
-  parseItems = (value) => (value.length < 4 ? value : this.props.widgetSettings.itemsCount);
+  parseItems = (value) =>
+    value.length < 4 ? value : this.props.widgetSettings.contentParameters.itemsCount;
+
+  formatFilterValue = (value) => value && value[0];
+  parseFilterValue = (value) => value && [value];
 
   render() {
-    const { intl, formAppearance, onFormAppearanceChange } = this.props;
+    const {
+      intl: { formatMessage },
+      formAppearance,
+      onFormAppearanceChange,
+    } = this.props;
+
     return (
       <Fragment>
-        <FieldProvider name={'filterId'}>
+        <FieldProvider
+          name="filterId"
+          parse={this.parseFilterValue}
+          format={this.formatFilterValue}
+        >
           <FiltersControl
             formAppearance={formAppearance}
             onFormAppearanceChange={onFormAppearanceChange}
           />
         </FieldProvider>
         <FieldProvider
-          name="itemsCount"
-          validate={validators.items(intl.formatMessage)}
+          name="contentParameters.itemsCount"
+          validate={validators.items(formatMessage)}
           parse={this.parseItems}
         >
           <InputControl
-            fieldLabel={intl.formatMessage(messages.ItemsFieldLabel)}
+            fieldLabel={formatMessage(messages.ItemsFieldLabel)}
             inputWidth={ITEMS_INPUT_WIDTH}
             type="number"
           />
         </FieldProvider>
-        <FieldProvider name="mode">
+        <FieldProvider name="contentParameters.widgetOptions.mode">
           <TogglerControl
-            fieldLabel={' '}
+            fieldLabel=" "
             items={getWidgetModeOptions(
               [CHART_MODES.LAUNCH_MODE, CHART_MODES.TIMELINE_MODE],
-              intl.formatMessage,
+              formatMessage,
             )}
           />
         </FieldProvider>

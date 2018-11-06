@@ -49,29 +49,44 @@ export class UniqueBugsTableControls extends Component {
     super(props);
     const { widgetSettings, initializeWizardSecondStepForm } = props;
     initializeWizardSecondStepForm({
-      itemsCount: widgetSettings.itemsCount || DEFAULT_ITEMS_COUNT,
+      contentParameters: widgetSettings.contentParameters || {
+        itemsCount: DEFAULT_ITEMS_COUNT,
+      },
     });
   }
 
-  parseItems = (value) => (value.length < 4 ? value : this.props.widgetSettings.itemsCount);
+  parseItems = (value) =>
+    value.length < 4 ? value : this.props.widgetSettings.contentParameters.itemsCount;
+
+  formatFilterValue = (value) => value && value[0];
+  parseFilterValue = (value) => value && [value];
 
   render() {
-    const { intl, formAppearance, onFormAppearanceChange } = this.props;
+    const {
+      intl: { formatMessage },
+      formAppearance,
+      onFormAppearanceChange,
+    } = this.props;
+
     return (
       <Fragment>
-        <FieldProvider name={'filterId'}>
+        <FieldProvider
+          name="filterId"
+          parse={this.parseFilterValue}
+          format={this.formatFilterValue}
+        >
           <FiltersControl
             formAppearance={formAppearance}
             onFormAppearanceChange={onFormAppearanceChange}
           />
         </FieldProvider>
         <FieldProvider
-          name="itemsCount"
-          validate={validators.items(intl.formatMessage)}
+          name="contentParameters.itemsCount"
+          validate={validators.items(formatMessage)}
           parse={this.parseItems}
         >
           <InputControl
-            fieldLabel={intl.formatMessage(messages.ItemsFieldLabel)}
+            fieldLabel={formatMessage(messages.ItemsFieldLabel)}
             inputWidth={ITEMS_INPUT_WIDTH}
             type="number"
           />

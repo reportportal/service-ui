@@ -91,7 +91,7 @@ export class WizardThirdStepForm extends Component {
     return (
       <form onSubmit={handleSubmit(onSubmit)}>
         <ModalField label={intl.formatMessage(messages.nameLabel)} labelWidth={LABEL_WIDTH}>
-          <FieldProvider name={'name'} placeholder={intl.formatMessage(messages.namePlaceholder)}>
+          <FieldProvider name="name" placeholder={intl.formatMessage(messages.namePlaceholder)}>
             <FieldErrorHint>
               <Input maxLength="128" />
             </FieldErrorHint>
@@ -99,7 +99,7 @@ export class WizardThirdStepForm extends Component {
         </ModalField>
         <ModalField label={intl.formatMessage(messages.descriptionLabel)} labelWidth={LABEL_WIDTH}>
           <FieldProvider
-            name={'description'}
+            name="description"
             placeholder={intl.formatMessage(messages.descriptionPlaceholder)}
             onChange={() => tracking.trackEvent(eventsInfo.changeDescription)}
           >
@@ -108,7 +108,7 @@ export class WizardThirdStepForm extends Component {
         </ModalField>
         <ModalField label={intl.formatMessage(messages.shareLabel)} labelWidth={LABEL_WIDTH}>
           <FieldProvider
-            name={'share'}
+            name="share"
             format={Boolean}
             parse={Boolean}
             onChange={() => tracking.trackEvent(eventsInfo.shareWidget)}

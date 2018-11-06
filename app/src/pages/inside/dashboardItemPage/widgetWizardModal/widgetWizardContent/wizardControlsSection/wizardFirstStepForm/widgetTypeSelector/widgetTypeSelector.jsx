@@ -19,10 +19,13 @@ const messages = defineMessages({
 });
 
 @injectIntl
-@connect(null, {
-  initializeWizardForm: (data) => initialize(WIDGET_WIZARD_FORM, data),
-  touchField: () => touch(WIDGET_WIZARD_FORM, 'widgetType'),
-})
+@connect(
+  null,
+  {
+    initializeWizardForm: (data) => initialize(WIDGET_WIZARD_FORM, data),
+    touchField: () => touch(WIDGET_WIZARD_FORM, 'widgetType'),
+  },
+)
 @track()
 export class WidgetTypeSelector extends Component {
   static propTypes = {

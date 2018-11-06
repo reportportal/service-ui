@@ -53,7 +53,7 @@ const messages = defineMessages({
 const validators = {
   launchNames: (formatMessage) => (value) =>
     (!value || !value.length) && formatMessage(messages.LaunchNamesValidationError),
-  content_fields: (formatMessage) => (value) =>
+  contentFields: (formatMessage) => (value) =>
     (!value || !value.length) && formatMessage(messages.ContentFieldsValidationError),
 };
 
@@ -81,46 +81,53 @@ export class MostTimeConsumingTestCasesControls extends Component {
     const { intl, widgetSettings, initializeWizardSecondStepForm } = props;
     this.criteria = getWidgetCriteriaOptions([PASSED_FAILED_LAUNCHES_OPTIONS], intl.formatMessage);
     initializeWizardSecondStepForm({
-      content_fields:
-        widgetSettings.content_fields || this.criteria.map((criteria) => criteria.value),
-      include_methods: !!widgetSettings.include_methods,
-      launchNameFilter: !!widgetSettings.launchNameFilter,
-      viewMode: widgetSettings.viewMode || CHART_MODES.BAR_VIEW,
-      metadata_fields: [METADATA_FIELDS.NAME, METADATA_FIELDS.START_TIME],
-      filter_id: '',
+      contentParameters: widgetSettings.contentParameters || {
+        contentFields: this.criteria.map((criteria) => criteria.value),
+        metadataFields: [METADATA_FIELDS.NAME, METADATA_FIELDS.START_TIME],
+        widgetOptions: {
+          viewMode: CHART_MODES.BAR_VIEW,
+          includeMethods: false,
+          launchNameFilter: false,
+        },
+      },
+      filterId: [],
     });
   }
 
   formatLaunchNameOptions = (values) => values.map((value) => ({ value, label: value }));
   formatLaunchNames = (value) => (value ? { value, label: value } : null);
-  parseLaunchNames = (value) => (value ? value.value : null);
+  parseLaunchNames = (value) => (value ? value.value : undefined);
 
   render() {
-    const { intl, launchNamesSearchUrl } = this.props;
+    const {
+      intl: { formatMessage },
+      launchNamesSearchUrl,
+    } = this.props;
+
     return (
       <Fragment>
         <FieldProvider
-          name="content_fields"
-          validate={validators.content_fields(intl.formatMessage)}
+          name="contentParameters.contentFields"
+          validate={validators.contentFields(formatMessage)}
         >
           <DropdownControl
-            fieldLabel={intl.formatMessage(messages.CriteriaFieldLabel)}
+            fieldLabel={formatMessage(messages.CriteriaFieldLabel)}
             multiple
             selectAll
             options={this.criteria}
           />
         </FieldProvider>
         <FieldProvider
-          name="launchNameFilter"
+          name="contentParameters.widgetOptions.launchNameFilter"
           format={this.formatLaunchNames}
           parse={this.parseLaunchNames}
-          validate={validators.launchNames(intl.formatMessage)}
+          validate={validators.launchNames(formatMessage)}
         >
           <TagsControl
-            fieldLabel={intl.formatMessage(messages.LaunchNameFieldLabel)}
-            placeholder={intl.formatMessage(messages.LaunchNamePlaceholder)}
-            focusPlaceholder={intl.formatMessage(messages.LaunchNameFocusPlaceholder)}
-            nothingFound={intl.formatMessage(messages.LaunchNameNoMatches)}
+            fieldLabel={formatMessage(messages.LaunchNameFieldLabel)}
+            placeholder={formatMessage(messages.LaunchNamePlaceholder)}
+            focusPlaceholder={formatMessage(messages.LaunchNameFocusPlaceholder)}
+            nothingFound={formatMessage(messages.LaunchNameNoMatches)}
             minLength={3}
             async
             uri={launchNamesSearchUrl}
@@ -128,19 +135,19 @@ export class MostTimeConsumingTestCasesControls extends Component {
             removeSelected
           />
         </FieldProvider>
-        <FieldProvider name="viewMode">
+        <FieldProvider name="contentParameters.widgetOptions.viewMode">
           <TogglerControl
-            fieldLabel={' '}
+            fieldLabel=" "
             items={getWidgetModeOptions(
               [CHART_MODES.BAR_VIEW, CHART_MODES.TABLE_VIEW],
-              intl.formatMessage,
+              formatMessage,
             )}
           />
         </FieldProvider>
-        <FieldProvider name="include_methods">
+        <FieldProvider name="contentParameters.widgetOptions.includeMethods">
           <CheckboxControl
-            fieldLabel={' '}
-            text={intl.formatMessage(messages.IncludeMethodsControlText)}
+            fieldLabel=" "
+            text={formatMessage(messages.IncludeMethodsControlText)}
           />
         </FieldProvider>
       </Fragment>

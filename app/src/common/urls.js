@@ -19,6 +19,8 @@ export const URLS = {
       'page.size': 300,
     })}`,
 
+  widget: (activeProject, widgetId = '') => `${urlBase}${activeProject}/widget/${widgetId}`,
+
   externalSystemIssue: (activeProject, systemId, issueId) =>
     `${urlBase}${activeProject}/external-system/${systemId}/ticket/${issueId}`,
 
@@ -127,7 +129,6 @@ export const URLS = {
     `${urlBase}project/${activeProject}/usernames?filter.cnt.users=`,
   userUnasign: (activeProject) => `${urlBase}project/${activeProject}/unassign`,
 
-  widget: (activeProject, widgetId) => `${urlBase}${activeProject}/widget/${widgetId}`,
   generateDemoData: (projectId) => `${urlBase}demo/${projectId}`,
   getFileById: (activeProject, dataId) =>
     `${urlBase}${activeProject}/data/${dataId}${getQueryParams({ access_token: getToken() })}`,
