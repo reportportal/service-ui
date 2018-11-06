@@ -62,35 +62,43 @@ export class PassingRatePerLaunchControls extends Component {
     super(props);
     const { widgetSettings, initializeWizardSecondStepForm } = props;
     initializeWizardSecondStepForm({
-      content_fields: [],
-      itemsCount: DEFAULT_ITEMS_COUNT,
-      launchNameFilter: !!widgetSettings.launchNameFilter,
-      viewMode: widgetSettings.viewMode || CHART_MODES.BAR_VIEW,
-      metadata_fields: [METADATA_FIELDS.NAME, METADATA_FIELDS.NUMBER, METADATA_FIELDS.START_TIME],
-      filter_id: '',
+      contentParameters: widgetSettings.contentParameters || {
+        contentFields: [],
+        itemsCount: DEFAULT_ITEMS_COUNT,
+        metadataFields: [METADATA_FIELDS.NAME, METADATA_FIELDS.NUMBER, METADATA_FIELDS.START_TIME],
+        widgetOptions: {
+          viewMode: CHART_MODES.BAR_VIEW,
+          launchNameFilter: false,
+        },
+      },
+      filterId: [],
     });
   }
 
   formatLaunchNameOptions = (values) => values.map((value) => ({ value, label: value }));
 
   formatLaunchNames = (value) => (value ? { value, label: value } : null);
-  parseLaunchNames = (value) => (value ? value.value : null);
+  parseLaunchNames = (value) => (value ? value.value : undefined);
 
   render() {
-    const { intl, launchNamesSearchUrl } = this.props;
+    const {
+      intl: { formatMessage },
+      launchNamesSearchUrl,
+    } = this.props;
+
     return (
       <Fragment>
         <FieldProvider
-          name="launchNameFilter"
+          name="contentParameters.widgetOptions.launchNameFilter"
           format={this.formatLaunchNames}
           parse={this.parseLaunchNames}
-          validate={validators.launchNames(intl.formatMessage)}
+          validate={validators.launchNames(formatMessage)}
         >
           <TagsControl
-            fieldLabel={intl.formatMessage(messages.LaunchNameFieldLabel)}
-            placeholder={intl.formatMessage(messages.LaunchNamePlaceholder)}
-            focusPlaceholder={intl.formatMessage(messages.LaunchNameFocusPlaceholder)}
-            nothingFound={intl.formatMessage(messages.LaunchNameNoMatches)}
+            fieldLabel={formatMessage(messages.LaunchNameFieldLabel)}
+            placeholder={formatMessage(messages.LaunchNamePlaceholder)}
+            focusPlaceholder={formatMessage(messages.LaunchNameFocusPlaceholder)}
+            nothingFound={formatMessage(messages.LaunchNameNoMatches)}
             minLength={3}
             async
             uri={launchNamesSearchUrl}
@@ -98,12 +106,12 @@ export class PassingRatePerLaunchControls extends Component {
             removeSelected
           />
         </FieldProvider>
-        <FieldProvider name="viewMode">
+        <FieldProvider name="contentParameters.widgetOptions.viewMode">
           <TogglerControl
-            fieldLabel={' '}
+            fieldLabel=" "
             items={getWidgetModeOptions(
               [CHART_MODES.BAR_VIEW, CHART_MODES.PIE_VIEW],
-              intl.formatMessage,
+              formatMessage,
             )}
           />
         </FieldProvider>

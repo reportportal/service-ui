@@ -99,66 +99,85 @@ export class MostFailedTestCasesTableControls extends Component {
       intl.formatMessage,
     );
     initializeWizardSecondStepForm({
-      content_fields: widgetSettings.content_fields || [this.criteria[0].value],
-      itemsCount: widgetSettings.itemsCount || DEFAULT_ITEMS_COUNT,
-      include_methods: !!widgetSettings.include_methods,
-      launchNameFilter: !!widgetSettings.launchNameFilter,
-      metadata_fields: [METADATA_FIELDS.NAME, METADATA_FIELDS.START_TIME],
-      filter_id: '',
+      contentParameters: widgetSettings.contentParameters || {
+        contentFields: [this.criteria[0].value],
+        itemsCount: DEFAULT_ITEMS_COUNT,
+        metadataFields: [METADATA_FIELDS.NAME, METADATA_FIELDS.START_TIME],
+        widgetOptions: {
+          includeMethods: false,
+          launchNameFilter: false,
+        },
+      },
+      filterId: [],
     });
   }
 
   formatContentFields = (value) => value[0];
-  parseContentFields = (value) => (value ? [value] : this.props.widgetSettings.content_fields);
+  parseContentFields = (value) =>
+    value ? [value] : this.props.widgetSettings.contentParameters.contentFields;
 
-  parseItems = (value) => (value.length < 4 ? value : this.props.widgetSettings.itemsCount);
+  parseItems = (value) =>
+    value.length < 4 ? value : this.props.widgetSettings.contentParameters.itemsCount;
 
   formatLaunchNameOptions = (values) => values.map((value) => ({ value, label: value }));
   formatLaunchNames = (value) => (value ? { value, label: value } : null);
-  parseLaunchNames = (value) => (value ? value.value : null);
+  parseLaunchNames = (value) => (value ? value.value : undefined);
+
+  formatFilterValue = (value) => value && value[0];
+  parseFilterValue = (value) => value && [value];
 
   render() {
-    const { intl, launchNamesSearchUrl, formAppearance, onFormAppearanceChange } = this.props;
+    const {
+      intl: { formatMessage },
+      launchNamesSearchUrl,
+      formAppearance,
+      onFormAppearanceChange,
+    } = this.props;
+
     return (
       <Fragment>
-        <FieldProvider name={'filterId'}>
+        <FieldProvider
+          name="filterId"
+          parse={this.parseFilterValue}
+          format={this.formatFilterValue}
+        >
           <FiltersControl
             formAppearance={formAppearance}
             onFormAppearanceChange={onFormAppearanceChange}
           />
         </FieldProvider>
         <FieldProvider
-          name="content_fields"
+          name="contentParameters.contentFields"
           format={this.formatContentFields}
           parse={this.parseContentFields}
         >
           <DropdownControl
-            fieldLabel={intl.formatMessage(messages.CriteriaFieldLabel)}
+            fieldLabel={formatMessage(messages.CriteriaFieldLabel)}
             options={this.criteria}
           />
         </FieldProvider>
         <FieldProvider
-          name="itemsCount"
-          validate={validators.items(intl.formatMessage)}
+          name="contentParameters.itemsCount"
+          validate={validators.items(formatMessage)}
           parse={this.parseItems}
         >
           <InputControl
-            fieldLabel={intl.formatMessage(messages.ItemsFieldLabel)}
+            fieldLabel={formatMessage(messages.ItemsFieldLabel)}
             inputWidth={ITEMS_INPUT_WIDTH}
             type="number"
           />
         </FieldProvider>
         <FieldProvider
-          name="launchNameFilter"
+          name="contentParameters.widgetOptions.launchNameFilter"
           format={this.formatLaunchNames}
           parse={this.parseLaunchNames}
-          validate={validators.launchNames(intl.formatMessage)}
+          validate={validators.launchNames(formatMessage)}
         >
           <TagsControl
-            fieldLabel={intl.formatMessage(messages.LaunchNameFieldLabel)}
-            placeholder={intl.formatMessage(messages.LaunchNamePlaceholder)}
-            focusPlaceholder={intl.formatMessage(messages.LaunchNameFocusPlaceholder)}
-            nothingFound={intl.formatMessage(messages.LaunchNameNoMatches)}
+            fieldLabel={formatMessage(messages.LaunchNameFieldLabel)}
+            placeholder={formatMessage(messages.LaunchNamePlaceholder)}
+            focusPlaceholder={formatMessage(messages.LaunchNameFocusPlaceholder)}
+            nothingFound={formatMessage(messages.LaunchNameNoMatches)}
             minLength={3}
             async
             uri={launchNamesSearchUrl}
@@ -166,10 +185,10 @@ export class MostFailedTestCasesTableControls extends Component {
             removeSelected
           />
         </FieldProvider>
-        <FieldProvider name="include_methods">
+        <FieldProvider name="contentParameters.widgetOptions.includeMethods">
           <CheckboxControl
-            fieldLabel={' '}
-            text={intl.formatMessage(messages.IncludeMethodsControlText)}
+            fieldLabel=" "
+            text={formatMessage(messages.IncludeMethodsControlText)}
           />
         </FieldProvider>
       </Fragment>

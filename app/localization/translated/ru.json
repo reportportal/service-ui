@@ -973,6 +973,7 @@
   "WidgetHeader.widgetType.unique_bug_table": "Таблица уникальных ошибок",
   "WidgetTypeSelector.heading": "Choose widget type from the list below",
   "WidgetWizardModal.headerText": "Add new widget",
+  "WidgetWizardContent.addWidgetSuccess": "Виджет добавлен",
   "Widgets.Description.activity_stream": "Shows all activities occurring on the project.",
   "Widgets.Description.bug_trend": "Shows the trend of growth in the number of failed test cases from run to run.",
   "Widgets.Description.cases_trend": "- in \"Launch Mode\" shows the increment of test-cases from run to run,<br> - in \"Timeline Mode\" shows the increment of test-cases distributed by dates (in launches with the largest number of test-cases per day).",

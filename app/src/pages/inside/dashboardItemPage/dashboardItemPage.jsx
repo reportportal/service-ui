@@ -92,7 +92,7 @@ export class DashboardItemPage extends Component {
 
   getBreadcrumbs = () => {
     const { activeProject, intl } = this.props;
-    const breadcrumbs = [
+    return [
       {
         title: intl.formatMessage(messages.pageTitle),
         link: {
@@ -104,7 +104,6 @@ export class DashboardItemPage extends Component {
         title: this.getDashboardName(),
       },
     ];
-    return breadcrumbs;
   };
 
   getDashboardName = () => (this.dashboard && this.dashboard.name) || '';
@@ -158,7 +157,7 @@ export class DashboardItemPage extends Component {
                 <GhostButton icon={AddWidgetIcon} onClick={this.showWidgetWizard}>
                   {formatMessage(messages.addNewWidget)}
                 </GhostButton>
-                <GhostButton icon={AddSharedWidgetIcon}>
+                <GhostButton icon={AddSharedWidgetIcon} disabled>
                   {formatMessage(messages.addSharedWidget)}
                 </GhostButton>
               </div>

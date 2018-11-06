@@ -66,7 +66,7 @@ export class Widget extends Component {
       loading: true,
       widget: {
         content: {},
-        content_parameters: {},
+        contentParameters: {},
       },
     };
   }
@@ -75,7 +75,7 @@ export class Widget extends Component {
     this.fetchWidget();
   }
 
-  getContentParams = () => this.state.widget.content_parameters || {};
+  getContentParams = () => this.state.widget.contentParameters || {};
 
   getWidgetOptions = () => this.getContentParams().widgetOptions || {};
 
@@ -114,11 +114,11 @@ export class Widget extends Component {
       shared: widget.share,
       name: widget.name,
       description: widget.description,
-      type: this.getContentParams().gadget,
+      type: widget.widgetType,
       meta: this.getWidgetOptions().viewMode,
     };
 
-    const Chart = charts[this.getContentParams().gadget];
+    const Chart = charts[headerData.type];
 
     return (
       <div className={cx('widget-container')}>

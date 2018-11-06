@@ -77,9 +77,13 @@ export class CumulativeTrendControls extends Component {
       intl.formatMessage,
     );
     initializeWizardSecondStepForm({
-      content_fields: this.parseContentFields(widgetSettings.content_fields || this.criteria),
-      itemsCount: widgetSettings.itemsCount || DEFAULT_ITEMS_COUNT,
-      prefix: widgetSettings.prefix || '',
+      contentParameters: widgetSettings.contentParameters || {
+        itemsCount: DEFAULT_ITEMS_COUNT,
+        contentFields: this.parseContentFields(this.criteria),
+        widgetOptions: {
+          prefix: '',
+        },
+      },
     });
   }
 
@@ -92,21 +96,32 @@ export class CumulativeTrendControls extends Component {
             .map((criteria) => criteria.value || criteria)
             .reduce((acc, val) => acc.concat(val), []),
         )
-      : this.props.widgetSettings.content_fields;
+      : this.props.widgetSettings.contentParameters.contentFields;
 
-  parseItems = (value) => (value.length < 3 ? value : this.props.widgetSettings.itemsCount);
+  parseItems = (value) =>
+    value.length < 3 ? value : this.props.widgetSettings.contentParameters.itemsCount;
+
+  formatFilterValue = (value) => value && value[0];
+  parseFilterValue = (value) => value && [value];
 
   render() {
     const { intl, formAppearance, onFormAppearanceChange } = this.props;
     return (
       <Fragment>
-        <FieldProvider name={'filterId'}>
+        <FieldProvider
+          name="filterId"
+          parse={this.parseFilterValue}
+          format={this.formatFilterValue}
+        >
           <FiltersControl
             formAppearance={formAppearance}
             onFormAppearanceChange={onFormAppearanceChange}
           />
         </FieldProvider>
-        <FieldProvider name="prefix" validate={validators.prefix(intl.formatMessage)}>
+        <FieldProvider
+          name="contentParameters.widgetOptions.prefix"
+          validate={validators.prefix(intl.formatMessage)}
+        >
           <InputControl
             fieldLabel={intl.formatMessage(messages.prefixFieldLabel)}
             placeholder={intl.formatMessage(messages.prefixFieldPlaceholder)}
@@ -114,7 +129,7 @@ export class CumulativeTrendControls extends Component {
           />
         </FieldProvider>
         <FieldProvider
-          name="content_fields"
+          name="contentParameters.contentFields"
           parse={this.parseContentFields}
           format={this.formatContentFields}
         >
@@ -126,7 +141,7 @@ export class CumulativeTrendControls extends Component {
           />
         </FieldProvider>
         <FieldProvider
-          name="itemsCount"
+          name="contentParameters.itemsCount"
           validate={validators.items(intl.formatMessage)}
           parse={this.parseItems}
         >

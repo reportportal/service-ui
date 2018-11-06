@@ -58,10 +58,10 @@ export class CustomColumnsControl extends Component {
             noRemove={value.length === 1}
           />
         ))}
-        <ModalField className={cx('tip-field')} label={' '} labelWidth={FIELD_LABEL_WIDTH}>
+        <ModalField className={cx('tip-field')} label=" " labelWidth={FIELD_LABEL_WIDTH}>
           <div className={cx('tip')}>{intl.formatMessage(messages.tip)}</div>
         </ModalField>
-        <ModalField className={cx('add-column-field')} label={' '} labelWidth={FIELD_LABEL_WIDTH}>
+        <ModalField className={cx('add-column-field')} label=" " labelWidth={FIELD_LABEL_WIDTH}>
           <div className={cx('add-column')} onClick={this.addColumn}>
             {intl.formatMessage(messages.addColumn)}
           </div>

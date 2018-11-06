@@ -77,46 +77,55 @@ export class FlakyTestCasesTableControls extends Component {
     super(props);
     const { widgetSettings, initializeWizardSecondStepForm } = props;
     initializeWizardSecondStepForm({
-      itemsCount: widgetSettings.itemsCount || DEFAULT_ITEMS_COUNT,
-      include_methods: !!widgetSettings.include_methods,
-      launchNameFilter: !!widgetSettings.launchNameFilter,
-      metadata_fields: [METADATA_FIELDS.NAME, METADATA_FIELDS.START_TIME],
-      filter_id: '',
+      contentParameters: widgetSettings.contentParameters || {
+        itemsCount: DEFAULT_ITEMS_COUNT,
+        metadataFields: [METADATA_FIELDS.NAME, METADATA_FIELDS.START_TIME],
+        widgetOptions: {
+          includeMethods: false,
+          launchNameFilter: false,
+        },
+      },
+      filterId: [],
     });
   }
 
-  parseItems = (value) => (value.length < 4 ? value : this.props.widgetSettings.itemsCount);
+  parseItems = (value) =>
+    value.length < 4 ? value : this.props.widgetSettings.contentParameters.itemsCount;
 
   formatLaunchNameOptions = (values) => values.map((value) => ({ value, label: value }));
   formatLaunchNames = (value) => (value ? { value, label: value } : null);
-  parseLaunchNames = (value) => (value ? value.value : null);
+  parseLaunchNames = (value) => (value ? value.value : undefined);
 
   render() {
-    const { intl, launchNamesSearchUrl } = this.props;
+    const {
+      intl: { formatMessage },
+      launchNamesSearchUrl,
+    } = this.props;
+
     return (
       <Fragment>
         <FieldProvider
-          name="itemsCount"
-          validate={validators.items(intl.formatMessage)}
+          name="contentParameters.itemsCount"
+          validate={validators.items(formatMessage)}
           parse={this.parseItems}
         >
           <InputControl
-            fieldLabel={intl.formatMessage(messages.ItemsFieldLabel)}
+            fieldLabel={formatMessage(messages.ItemsFieldLabel)}
             inputWidth={ITEMS_INPUT_WIDTH}
             type="number"
           />
         </FieldProvider>
         <FieldProvider
-          name="launchNameFilter"
+          name="contentParameters.widgetOptions.launchNameFilter"
           format={this.formatLaunchNames}
           parse={this.parseLaunchNames}
-          validate={validators.launchNames(intl.formatMessage)}
+          validate={validators.launchNames(formatMessage)}
         >
           <TagsControl
-            fieldLabel={intl.formatMessage(messages.LaunchNameFieldLabel)}
-            placeholder={intl.formatMessage(messages.LaunchNamePlaceholder)}
-            focusPlaceholder={intl.formatMessage(messages.LaunchNameFocusPlaceholder)}
-            nothingFound={intl.formatMessage(messages.LaunchNameNoMatches)}
+            fieldLabel={formatMessage(messages.LaunchNameFieldLabel)}
+            placeholder={formatMessage(messages.LaunchNamePlaceholder)}
+            focusPlaceholder={formatMessage(messages.LaunchNameFocusPlaceholder)}
+            nothingFound={formatMessage(messages.LaunchNameNoMatches)}
             minLength={3}
             async
             uri={launchNamesSearchUrl}
@@ -124,10 +133,10 @@ export class FlakyTestCasesTableControls extends Component {
             removeSelected
           />
         </FieldProvider>
-        <FieldProvider name="include_methods">
+        <FieldProvider name="contentParameters.widgetOptions.includeMethods">
           <CheckboxControl
-            fieldLabel={' '}
-            text={intl.formatMessage(messages.IncludeMethodsControlText)}
+            fieldLabel=" "
+            text={formatMessage(messages.IncludeMethodsControlText)}
           />
         </FieldProvider>
       </Fragment>

@@ -55,7 +55,7 @@ const validators = {
   items: (formatMessage) => (value) =>
     (!value || !validate.widgetItems(value, 1, 150)) &&
     formatMessage(messages.ItemsValidationError),
-  content_fields: (formatMessage) => (value) =>
+  contentFields: (formatMessage) => (value) =>
     (!value || value.length === 4) && formatMessage(messages.ContentFieldsValidationError), // 4 - count of static content fields
 };
 
@@ -89,9 +89,11 @@ export class LaunchesTableControls extends Component {
       { withoutNoDefect: true },
     );
     initializeWizardSecondStepForm({
-      content_fields: this.parseContentFields(widgetSettings.content_fields || this.criteria),
-      itemsCount: widgetSettings.itemsCount || DEFAULT_ITEMS_COUNT,
-      metadata_fields: [METADATA_FIELDS.NAME, METADATA_FIELDS.NUMBER, METADATA_FIELDS.START_TIME],
+      contentParameters: widgetSettings.contentParameters || {
+        contentFields: this.parseContentFields(this.criteria),
+        itemsCount: DEFAULT_ITEMS_COUNT,
+        metadataFields: [METADATA_FIELDS.NAME, METADATA_FIELDS.NUMBER, METADATA_FIELDS.START_TIME],
+      },
     });
   }
 
@@ -105,7 +107,7 @@ export class LaunchesTableControls extends Component {
 
   parseContentFields = (criteries) => {
     if (!criteries) {
-      return this.props.widgetSettings.content_fields;
+      return this.props.widgetSettings.contentParameters.contentFields;
     }
     return STATIC_CONTENT_FIELDS.concat(
       criteries
@@ -123,38 +125,51 @@ export class LaunchesTableControls extends Component {
     );
   };
 
-  parseItems = (value) => (value.length < 4 ? value : this.props.widgetSettings.itemsCount);
+  parseItems = (value) =>
+    value.length < 4 ? value : this.props.widgetSettings.contentParameters.itemsCount;
+
+  formatFilterValue = (value) => value && value[0];
+  parseFilterValue = (value) => value && [value];
 
   render() {
-    const { intl, formAppearance, onFormAppearanceChange } = this.props;
+    const {
+      intl: { formatMessage },
+      formAppearance,
+      onFormAppearanceChange,
+    } = this.props;
+
     return (
       <Fragment>
-        <FieldProvider name={'filterId'}>
+        <FieldProvider
+          name="filterId"
+          parse={this.parseFilterValue}
+          format={this.formatFilterValue}
+        >
           <FiltersControl
             formAppearance={formAppearance}
             onFormAppearanceChange={onFormAppearanceChange}
           />
         </FieldProvider>
         <FieldProvider
-          name="content_fields"
+          name="contentParameters.contentFields"
           parse={this.parseContentFields}
           format={this.formatContentFields}
-          validate={validators.content_fields(intl.formatMessage)}
+          validate={validators.contentFields(formatMessage)}
         >
           <DropdownControl
-            fieldLabel={intl.formatMessage(messages.CriteriaFieldLabel)}
+            fieldLabel={formatMessage(messages.CriteriaFieldLabel)}
             multiple
             selectAll
             options={this.criteria}
           />
         </FieldProvider>
         <FieldProvider
-          name="itemsCount"
-          validate={validators.items(intl.formatMessage)}
+          name="contentParameters.itemsCount"
+          validate={validators.items(formatMessage)}
           parse={this.parseItems}
         >
           <InputControl
-            fieldLabel={intl.formatMessage(messages.ItemsFieldLabel)}
+            fieldLabel={formatMessage(messages.ItemsFieldLabel)}
             inputWidth={ITEMS_INPUT_WIDTH}
             type="number"
           />

@@ -44,26 +44,31 @@ export class DifferentLaunchesComparisonControls extends Component {
     super(props);
     const { initializeWizardSecondStepForm } = props;
     initializeWizardSecondStepForm({
-      content_fields: [
-        STATS_TOTAL,
-        STATS_PASSED,
-        STATS_FAILED,
-        STATS_SKIPPED,
-        STATS_PB_TOTAL,
-        STATS_AB_TOTAL,
-        STATS_SI_TOTAL,
-        STATS_ND_TOTAL,
-        STATS_TI_TOTAL,
-      ],
-      itemsCount: DEFAULT_ITEMS_COUNT,
-      metadata_fields: [METADATA_FIELDS.NAME, METADATA_FIELDS.NUMBER, METADATA_FIELDS.START_TIME],
+      contentParameters: {
+        contentFields: [
+          STATS_TOTAL,
+          STATS_PASSED,
+          STATS_FAILED,
+          STATS_SKIPPED,
+          STATS_PB_TOTAL,
+          STATS_AB_TOTAL,
+          STATS_SI_TOTAL,
+          STATS_ND_TOTAL,
+          STATS_TI_TOTAL,
+        ],
+        itemsCount: DEFAULT_ITEMS_COUNT,
+        metadataFields: [METADATA_FIELDS.NAME, METADATA_FIELDS.NUMBER, METADATA_FIELDS.START_TIME],
+      },
     });
   }
+
+  formatFilterValue = (value) => value && value[0];
+  parseFilterValue = (value) => value && [value];
 
   render() {
     const { formAppearance, onFormAppearanceChange } = this.props;
     return (
-      <FieldProvider name={'filterId'}>
+      <FieldProvider name="filterId" parse={this.parseFilterValue} format={this.formatFilterValue}>
         <FiltersControl
           formAppearance={formAppearance}
           onFormAppearanceChange={onFormAppearanceChange}

@@ -1,3 +1,26 @@
+import PropTypes from 'prop-types';
+import {
+  LAUNCH_STATISTICS,
+  OVERALL_STATISTICS,
+  LAUNCH_DURATION,
+  LAUNCH_EXECUTION_AND_ISSUE_STATISTICS,
+  PROJECT_ACTIVITY,
+  TEST_CASES_GROWTH_TREND,
+  INVESTIGATED_PERCENTAGE_OF_LAUNCHES,
+  LAUNCHES_TABLE,
+  UNIQUE_BUGS_TABLE,
+  MOST_FAILED_TEST_CASES_TABLE,
+  FAILED_CASES_TREND,
+  NON_PASSED_TEST_CASES_TREND,
+  DIFFERENT_LAUNCHES_COMPARISON,
+  PASSING_RATE_PER_LAUNCH,
+  PASSING_RATE_SUMMARY,
+  FLAKY_TEST_CASES_TABLE,
+  CUMULATIVE_TREND,
+  PRODUCT_STATUS,
+  MOST_TIME_CONSUMING,
+} from 'common/constants/widgetTypes';
+
 export const LAUNCH_STATUSES_OPTIONS = 'launchStatusesOptions';
 export const DEFECT_TYPES_OPTIONS = 'defectTypesOptions';
 export const GROUPED_DEFECT_TYPES_OPTIONS = 'groupedDefectTypesOptions';
@@ -53,3 +76,37 @@ export const CONTENT_FIELDS = {
   LOGGED_OBJECT_REF: 'loggedObjectRef',
   HISTORY: 'history',
 };
+
+export const requestDataShape = PropTypes.shape({
+  filterId: PropTypes.array,
+  description: PropTypes.string,
+  name: PropTypes.string,
+  share: PropTypes.bool,
+  widgetType: PropTypes.oneOf([
+    LAUNCH_STATISTICS,
+    OVERALL_STATISTICS,
+    LAUNCH_DURATION,
+    LAUNCH_EXECUTION_AND_ISSUE_STATISTICS,
+    PROJECT_ACTIVITY,
+    TEST_CASES_GROWTH_TREND,
+    INVESTIGATED_PERCENTAGE_OF_LAUNCHES,
+    LAUNCHES_TABLE,
+    UNIQUE_BUGS_TABLE,
+    MOST_FAILED_TEST_CASES_TABLE,
+    FAILED_CASES_TREND,
+    NON_PASSED_TEST_CASES_TREND,
+    DIFFERENT_LAUNCHES_COMPARISON,
+    PASSING_RATE_PER_LAUNCH,
+    PASSING_RATE_SUMMARY,
+    FLAKY_TEST_CASES_TABLE,
+    CUMULATIVE_TREND,
+    PRODUCT_STATUS,
+    MOST_TIME_CONSUMING,
+  ]),
+  contentParameters: PropTypes.shape({
+    itemsCount: PropTypes.string,
+    metadataFields: PropTypes.array,
+    contentFields: PropTypes.array,
+    widgetOptions: PropTypes.object,
+  }),
+});

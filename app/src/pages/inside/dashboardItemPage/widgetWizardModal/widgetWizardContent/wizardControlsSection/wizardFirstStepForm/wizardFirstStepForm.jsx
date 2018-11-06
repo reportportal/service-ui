@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { reduxForm } from 'redux-form';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
-
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { WidgetTypeSelector } from './widgetTypeSelector';
 import { WIDGET_WIZARD_FORM } from '../constants';
@@ -35,7 +34,7 @@ export class WizardFirstStepForm extends Component {
     const { handleSubmit, widgets, onSubmit, eventsInfo } = this.props;
     return (
       <form onSubmit={handleSubmit(onSubmit)} className={cx('wizard-first-step-form')}>
-        <FieldProvider name={'widgetType'}>
+        <FieldProvider name="widgetType">
           <WidgetTypeSelector widgets={widgets} eventsInfo={eventsInfo} />
         </FieldProvider>
       </form>

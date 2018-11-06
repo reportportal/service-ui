@@ -24,10 +24,13 @@ const messages = defineMessages({
 
 @withModal('widgetWizardModal')
 @injectIntl
-@connect(null, {
-  destroyWizardForm: () => destroy(WIDGET_WIZARD_FORM),
-  hideModalAction,
-})
+@connect(
+  null,
+  {
+    destroyWizardForm: () => destroy(WIDGET_WIZARD_FORM),
+    hideModalAction,
+  },
+)
 @track()
 export class WidgetWizardModal extends Component {
   static propTypes = {

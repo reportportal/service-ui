@@ -2,12 +2,10 @@ import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { getFormValues, initialize } from 'redux-form';
-
 import { defectTypesSelector } from 'controllers/project';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { validate } from 'common/utils';
-
 import { getWidgetCriteriaOptions } from './utils/getWidgetCriteriaOptions';
 import { getWidgetModeOptions } from './utils/getWidgetModeOptions';
 import {
@@ -53,7 +51,7 @@ const validators = {
   items: (formatMessage) => (value) =>
     (!value || !validate.widgetItems(value, 1, 150)) &&
     formatMessage(messages.ItemsValidationError),
-  content_fields: (formatMessage) => (value) =>
+  contentFields: (formatMessage) => (value) =>
     (!value || !value.length) && formatMessage(messages.ContentFieldsValidationError),
 };
 
@@ -87,70 +85,86 @@ export class LaunchStatisticsControls extends Component {
       { defectTypes },
     );
     initializeWizardSecondStepForm({
-      content_fields:
-        widgetSettings.content_fields || this.criteria.map((criteria) => criteria.value),
-      itemsCount: widgetSettings.itemsCount || DEFAULT_ITEMS_COUNT,
-      mode: widgetSettings.mode || CHART_MODES.LAUNCH_MODE,
-      viewMode: widgetSettings.viewMode || CHART_MODES.AREA_VIEW,
-      zoom: !!widgetSettings.zoom,
-      metadata_fields: [METADATA_FIELDS.NAME, METADATA_FIELDS.NUMBER, METADATA_FIELDS.START_TIME],
+      contentParameters: widgetSettings.contentParameters || {
+        contentFields: this.criteria.map((criteria) => criteria.value),
+        itemsCount: DEFAULT_ITEMS_COUNT,
+        metadataFields: [METADATA_FIELDS.NAME, METADATA_FIELDS.NUMBER, METADATA_FIELDS.START_TIME],
+        widgetOptions: {
+          zoom: false,
+          mode: CHART_MODES.LAUNCH_MODE,
+          viewMode: CHART_MODES.AREA_VIEW,
+        },
+      },
     });
   }
 
-  parseItems = (value) => (value.length < 4 ? value : this.props.widgetSettings.itemsCount);
+  parseItems = (value) =>
+    value.length < 4 ? value : this.props.widgetSettings.contentParameters.itemsCount;
+
+  formatFilterValue = (value) => value && value[0];
+  parseFilterValue = (value) => value && [value];
 
   render() {
-    const { intl, formAppearance, onFormAppearanceChange } = this.props;
+    const {
+      intl: { formatMessage },
+      formAppearance,
+      onFormAppearanceChange,
+    } = this.props;
+
     return (
       <Fragment>
-        <FieldProvider name={'filterId'}>
+        <FieldProvider
+          name="filterId"
+          parse={this.parseFilterValue}
+          format={this.formatFilterValue}
+        >
           <FiltersControl
             formAppearance={formAppearance}
             onFormAppearanceChange={onFormAppearanceChange}
           />
         </FieldProvider>
         <FieldProvider
-          name="content_fields"
-          validate={validators.content_fields(intl.formatMessage)}
+          name="contentParameters.contentFields"
+          validate={validators.contentFields(formatMessage)}
         >
           <DropdownControl
-            fieldLabel={intl.formatMessage(messages.CriteriaFieldLabel)}
+            fieldLabel={formatMessage(messages.CriteriaFieldLabel)}
             multiple
             selectAll
             options={this.criteria}
           />
         </FieldProvider>
         <FieldProvider
-          name="itemsCount"
-          validate={validators.items(intl.formatMessage)}
+          name="contentParameters.itemsCount"
+          validate={validators.items(formatMessage)}
           parse={this.parseItems}
         >
           <InputControl
-            fieldLabel={intl.formatMessage(messages.ItemsFieldLabel)}
+            fieldLabel={formatMessage(messages.ItemsFieldLabel)}
             inputWidth={ITEMS_INPUT_WIDTH}
             type="number"
           />
         </FieldProvider>
-        <FieldProvider name="mode">
+        <FieldProvider name="contentParameters.widgetOptions.mode">
           <TogglerControl
-            fieldLabel={' '}
+            fieldLabel=" "
             items={getWidgetModeOptions(
               [CHART_MODES.LAUNCH_MODE, CHART_MODES.TIMELINE_MODE],
-              intl.formatMessage,
+              formatMessage,
             )}
           />
         </FieldProvider>
-        <FieldProvider name="viewMode">
+        <FieldProvider name="contentParameters.widgetOptions.viewMode">
           <TogglerControl
-            fieldLabel={' '}
+            fieldLabel=" "
             items={getWidgetModeOptions(
               [CHART_MODES.AREA_VIEW, CHART_MODES.BAR_VIEW],
-              intl.formatMessage,
+              formatMessage,
             )}
           />
         </FieldProvider>
-        <FieldProvider name="zoom">
-          <CheckboxControl fieldLabel={' '} text={intl.formatMessage(messages.ZoomControlText)} />
+        <FieldProvider name="contentParameters.widgetOptions.zoom">
+          <CheckboxControl fieldLabel=" " text={formatMessage(messages.ZoomControlText)} />
         </FieldProvider>
       </Fragment>
     );
