@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { fromHar } from 'perf-cascade';
+import { fromHar } from 'perf-cascade/dist/perf-cascade'; // exports ES6 from main
 
 import 'perf-cascade/dist/perf-cascade.css';
 

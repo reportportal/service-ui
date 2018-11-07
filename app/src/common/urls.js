@@ -129,4 +129,6 @@ export const URLS = {
 
   widget: (activeProject, widgetId) => `${urlBase}${activeProject}/widget/${widgetId}`,
   generateDemoData: (projectId) => `${urlBase}demo/${projectId}`,
+  getFileById: (activeProject, dataId) =>
+    `${urlBase}${activeProject}/data/${dataId}${getQueryParams({ access_token: getToken() })}`,
 };
