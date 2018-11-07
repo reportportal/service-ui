@@ -59,6 +59,7 @@
     "react-hot-loader": "3.1.1",
     "react-intl": "2.4.0",
     "react-redux": "5.0.7",
+    "react-responsive-carousel": "3.1.43",
     "react-select": "1.2.1",
     "react-tracking": "5.4.1",
     "react-transition-group": "2.3.1",
@@ -146,6 +147,7 @@
     ],
     "moduleNameMapper": {
       "^.+\\.(css|scss)$": "identity-obj-proxy",
+      "^.+\\.(svg)$": "<rootDir>/test/__mocks__/svgMock.js",
       "^components[/](.+)": "<rootDir>/src/components/$1",
       "^controllers[/](.+)": "<rootDir>/src/controllers/$1",
       "^common[/](.+)": "<rootDir>/src/common/$1",

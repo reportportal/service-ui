@@ -1,0 +1,73 @@
+.attachments-wrap {
+  width: 100%;
+  text-align: center;
+
+  .log-attachments {
+    margin: 0 auto;
+    width: 80%;
+    &.hideMainArea :global .carousel-slider {
+      display: none;
+    }
+  
+    .preview-container {
+      line-height: 365px;
+      cursor: pointer;
+  
+      .preview-image {
+        vertical-align: middle;
+      }
+    }
+  
+    :global {
+      .carousel {
+        .control-prev.control-arrow:before {
+          border-right: 8px solid $COLOR--gray-60;
+        }
+        .control-next.control-arrow:before {
+          border-left: 8px solid $COLOR--gray-60;
+        }
+  
+        .thumbs {
+          line-height: 50px;
+  
+          .thumb {
+            img {
+              vertical-align: middle;
+            }
+          }
+        }
+      }
+      .carousel-slider {
+        height: 365px;
+        .control-arrow:hover {
+          background: inherit;
+        }
+      }
+      .slider-wrapper,
+      ul.slider {
+        height: 100%;
+      }
+      li.slide {
+        background-color: initial;
+        height: 100%;
+        & img {
+          cursor: pointer;
+          width: 150px;
+        }
+        div {
+          height: 100%;
+        }
+      }
+  
+      li.thumb,
+      li.thumb:hover {
+        margin: 0px 10px;
+        border: 1px solid transparent;
+        cursor: pointer;
+      }
+      li.thumb.selected {
+        border: 1px solid #bdc7cc;
+      }
+    }
+  }
+}
