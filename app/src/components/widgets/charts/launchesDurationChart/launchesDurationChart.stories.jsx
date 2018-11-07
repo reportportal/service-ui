@@ -32,7 +32,7 @@ const mockObserver = {
   subscribe: () => {},
   unsubscribe: () => {},
 };
-const widgetData1 = Object.freeze({
+const widgetData = {
   owner: 'just_an_owner',
   share: true,
   id: '7fjh37hfh3333ggdfs53',
@@ -104,7 +104,7 @@ const widgetData1 = Object.freeze({
       },
     ],
   },
-});
+};
 
 storiesOf('Components/Widgets/Charts/LaunchesDurationChart', module)
   .addDecorator(
@@ -119,13 +119,13 @@ storiesOf('Components/Widgets/Charts/LaunchesDurationChart', module)
   )
   .addDecorator(withReadme(README))
   .add('default state', () => (
-    <LaunchesDurationChart widget={widgetData1} container={mockNode} observer={mockObserver} />
+    <LaunchesDurationChart widget={widgetData} container={mockNode} observer={mockObserver} />
   ))
   .add('preview mode', () => (
     <LaunchesDurationChart
-      widget={widgetData1}
+      widget={widgetData}
       container={mockNode}
       observer={mockObserver}
-      isPreview
+      preview
     />
   ));

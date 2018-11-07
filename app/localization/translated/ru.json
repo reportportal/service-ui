@@ -81,6 +81,7 @@
   "Common.clone": "Клонировать",
   "Common.closeModalWarning": "Вы должны сохранить изменения или отменить их перед закрытием окна",
   "Common.confirm": "Подтвердить",
+  "Common.dateTime.seconds": "seconds",
   "Common.delete": "Удалить",
   "Common.discard": "Сбросить",
   "Common.edit": "Редактировать",
