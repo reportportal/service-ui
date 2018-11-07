@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { injectIntl } from 'react-intl';
+import { injectIntl, intlShape } from 'react-intl';
 import ReactDOMServer from 'react-dom/server';
 import classNames from 'classnames/bind';
 import { COLOR_CHART_DURATION, COLOR_FAILED } from 'common/constants/colors';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 
 import { C3Chart } from '../common/c3chart';
 import { LaunchDurationTooltip } from './tooltip';
@@ -17,15 +18,16 @@ const cx = classNames.bind(styles);
 @injectIntl
 export class LaunchesDurationChart extends Component {
   static propTypes = {
+    intl: intlShape.isRequired,
     widget: PropTypes.object.isRequired,
-    isPreview: PropTypes.bool,
+    preview: PropTypes.bool,
     height: PropTypes.number,
     container: PropTypes.instanceOf(Element).isRequired,
     observer: PropTypes.object.isRequired,
   };
 
   static defaultProps = {
-    isPreview: false,
+    preview: false,
     height: 0,
   };
 
@@ -47,7 +49,7 @@ export class LaunchesDurationChart extends Component {
     this.chart = chart;
     this.node = element;
 
-    if (!this.props.widget.content.result || this.props.isPreview) {
+    if (!this.props.widget.content.result || this.props.preview) {
       return;
     }
 
@@ -68,7 +70,7 @@ export class LaunchesDurationChart extends Component {
   };
 
   getConfig = () => {
-    const { widget, isPreview, container } = this.props;
+    const { widget, preview, container } = this.props;
 
     this.height = container.offsetHeight;
     this.width = container.offsetWidth;
@@ -94,13 +96,13 @@ export class LaunchesDurationChart extends Component {
       },
       grid: {
         y: {
-          show: !isPreview,
+          show: !preview,
         },
       },
       axis: {
         rotated: true,
         x: {
-          show: !isPreview,
+          show: !preview,
           type: 'category',
           categories: itemData.map(transformCategoryLabel),
           tick: {
@@ -113,7 +115,7 @@ export class LaunchesDurationChart extends Component {
           },
         },
         y: {
-          show: !isPreview,
+          show: !preview,
           tick: {
             format: (d) => (parseInt(d, 10) / timeType.value).toFixed(2),
           },
@@ -122,19 +124,19 @@ export class LaunchesDurationChart extends Component {
             bottom: 0,
           },
           label: {
-            text: 'seconds',
+            text: this.props.intl.formatMessage(COMMON_LOCALE_KEYS.SECONDS),
             position: 'outer-center',
           },
         },
       },
       interaction: {
-        enabled: !isPreview,
+        enabled: !preview,
       },
       padding: {
-        top: isPreview ? 0 : 20,
-        left: isPreview ? 0 : 40,
-        right: isPreview ? 0 : 20,
-        bottom: isPreview ? 0 : 10,
+        top: preview ? 0 : 20,
+        left: preview ? 0 : 40,
+        right: preview ? 0 : 20,
+        bottom: preview ? 0 : 10,
       },
       legend: {
         show: false,
@@ -182,9 +184,9 @@ export class LaunchesDurationChart extends Component {
   };
 
   render() {
-    const { isPreview } = this.props;
+    const { preview } = this.props;
     const classes = cx('launches-duration-chart', {
-      'preview-view': isPreview,
+      'preview-view': preview,
     });
     return (
       <div className={classes}>
