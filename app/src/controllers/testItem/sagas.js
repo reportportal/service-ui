@@ -97,7 +97,7 @@ function* fetchTestItems() {
         'filter.eq.parent': !noChildFilter ? parentId : undefined,
         'filter.level.path': sizePath,
         'filter.under.path': noChildFilter
-          ? itemIds.filter((item) => item !== launchId.toString()).join('.')
+          ? itemIds.filter((item) => item !== launchId).join('.')
           : undefined,
         ...query,
       },
