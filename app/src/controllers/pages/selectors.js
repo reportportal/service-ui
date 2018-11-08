@@ -15,7 +15,7 @@ export const testItemIdsSelector = (state) =>
   payloadSelector(state).testItemIds && String(payloadSelector(state).testItemIds);
 export const testItemIdsArraySelector = createSelector(
   testItemIdsSelector,
-  (itemIdsString) => (itemIdsString && itemIdsString.split('/')) || [],
+  (itemIdsString) => (itemIdsString && itemIdsString.split('/').map((item) => Number(item))) || [],
 );
 export const logItemIdSelector = createSelector(
   testItemIdsArraySelector,
