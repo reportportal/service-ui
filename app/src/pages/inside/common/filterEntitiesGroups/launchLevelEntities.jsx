@@ -320,6 +320,7 @@ export class LaunchLevelEntities extends Component {
   };
 
   getDynamicEntities = () => {
+    const { filterValues } = this.props;
     let defectTypeEntities = [];
     DEFECT_TYPES_SEQUENCE.forEach((defectTypeRef) => {
       const defectTypeGroup = this.props.defectTypes[defectTypeRef];
@@ -340,7 +341,7 @@ export class LaunchLevelEntities extends Component {
         title: this.props.intl.formatMessage(
           messages[`${defectTypeRef}_${hasSubtypes ? 'totalTitle' : 'title'}`],
         ),
-        active: false,
+        active: `${DEFECT_ENTITY_ID_BASE}${defectTypeRef.toLowerCase()}$total` in filterValues,
         removable: true,
       });
       if (hasSubtypes) {
@@ -360,7 +361,9 @@ export class LaunchLevelEntities extends Component {
             title: `${this.props.intl.formatMessage(messages[`${defectTypeRef}_title`])} ${
               defectType.shortName
             }`,
-            active: false,
+            active:
+              `${DEFECT_ENTITY_ID_BASE}${defectType.typeRef.toLowerCase()}$${defectType.locator}` in
+              filterValues,
             removable: true,
             meta: {
               longName: defectType.longName,
