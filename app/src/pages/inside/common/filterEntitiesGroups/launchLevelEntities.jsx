@@ -325,14 +325,18 @@ export class LaunchLevelEntities extends Component {
     DEFECT_TYPES_SEQUENCE.forEach((defectTypeRef) => {
       const defectTypeGroup = this.props.defectTypes[defectTypeRef];
       const hasSubtypes = defectTypeGroup.length > 1;
+      const totalEntityId = `${DEFECT_ENTITY_ID_BASE}${defectTypeRef.toLowerCase()}$total`;
 
       defectTypeEntities.push({
-        id: `${DEFECT_ENTITY_ID_BASE}${defectTypeRef.toLowerCase()}$total`,
+        id: totalEntityId,
         component: EntityItemStatistics,
-        value: {
-          value: '',
-          condition: CONDITION_GREATER_EQ,
-        },
+        value:
+          totalEntityId in filterValues
+            ? filterValues[totalEntityId]
+            : {
+                value: '',
+                condition: CONDITION_GREATER_EQ,
+              },
         validationFunc: (entityObject) =>
           (!entityObject ||
             !entityObject.value ||
@@ -341,35 +345,41 @@ export class LaunchLevelEntities extends Component {
         title: this.props.intl.formatMessage(
           messages[`${defectTypeRef}_${hasSubtypes ? 'totalTitle' : 'title'}`],
         ),
-        active: `${DEFECT_ENTITY_ID_BASE}${defectTypeRef.toLowerCase()}$total` in filterValues,
+        active: totalEntityId in filterValues,
         removable: true,
       });
       if (hasSubtypes) {
         defectTypeEntities = defectTypeEntities.concat(
-          defectTypeGroup.map((defectType) => ({
-            id: `${DEFECT_ENTITY_ID_BASE}${defectType.typeRef.toLowerCase()}$${defectType.locator}`,
-            component: EntityItemStatistics,
-            value: {
-              value: '',
-              condition: CONDITION_GREATER_EQ,
-            },
-            validationFunc: (entityObject) =>
-              (!entityObject ||
-                !entityObject.value ||
-                !validate.launchNumericEntity(entityObject.value)) &&
-              'launchNumericEntityHint',
-            title: `${this.props.intl.formatMessage(messages[`${defectTypeRef}_title`])} ${
-              defectType.shortName
-            }`,
-            active:
-              `${DEFECT_ENTITY_ID_BASE}${defectType.typeRef.toLowerCase()}$${defectType.locator}` in
-              filterValues,
-            removable: true,
-            meta: {
-              longName: defectType.longName,
-              subItem: true,
-            },
-          })),
+          defectTypeGroup.map((defectType) => {
+            const entityId = `${DEFECT_ENTITY_ID_BASE}${defectType.typeRef.toLowerCase()}$${
+              defectType.locator
+            }`;
+            return {
+              id: entityId,
+              component: EntityItemStatistics,
+              value:
+                entityId in filterValues
+                  ? filterValues[entityId]
+                  : {
+                      value: '',
+                      condition: CONDITION_GREATER_EQ,
+                    },
+              validationFunc: (entityObject) =>
+                (!entityObject ||
+                  !entityObject.value ||
+                  !validate.launchNumericEntity(entityObject.value)) &&
+                'launchNumericEntityHint',
+              title: `${this.props.intl.formatMessage(messages[`${defectTypeRef}_title`])} ${
+                defectType.shortName
+              }`,
+              active: entityId in filterValues,
+              removable: true,
+              meta: {
+                longName: defectType.longName,
+                subItem: true,
+              },
+            };
+          }),
         );
       }
     });
