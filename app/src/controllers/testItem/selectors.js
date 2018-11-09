@@ -149,22 +149,8 @@ export const nameLinkSelector = (state, ownProps) => {
   const testItemIds = ownProps.testItemIds || testItemIdsSelector(state);
   const isDebugMode = debugModeSelector(state);
   const level = levelSelector(state);
-  let query = pagePropertiesSelector(state);
-
-  if (ownProps.uniqueId) {
-    query = {
-      ...query,
-      'filter.eq.uniqueId': ownProps.uniqueId,
-    };
-  }
-
-  return createLink(
-    testItemIds,
-    ownProps.itemId,
-    payload,
-    query,
-    ownProps.page || getNextPage(level, isDebugMode),
-  );
+  const currentType = state.location.type;
+  return createLink(testItemIds, ownProps.itemId, payload, query, getNextPage(level, isDebugMode, currentType));
 };
 
 export const statisticsLinkSelector = (state, ownProps) => {

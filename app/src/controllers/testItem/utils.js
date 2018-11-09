@@ -2,6 +2,7 @@ import {
   PROJECT_USERDEBUG_TEST_ITEM_PAGE,
   TEST_ITEM_PAGE,
   PROJECT_LOG_PAGE,
+  PROJECT_USERDEBUG_LOG_PAGE,
 } from 'controllers/pages';
 import * as launchLevels from 'common/constants/launchLevels';
 import * as methodTypes from 'common/constants/methodTypes';
@@ -28,9 +29,12 @@ export const calculateLevel = (data) =>
 
 export const getQueryNamespace = (levelIndex) => `item${levelIndex}`;
 
-export const getNextPage = (currentLevel, debugMode) => {
-  if (currentLevel === launchLevels.LEVEL_STEP) {
+export const getNextPage = (currentLevel, debugMode, currentType) => {
+  if (currentLevel === launchLevels.LEVEL_STEP && currentType != PROJECT_USERDEBUG_TEST_ITEM_PAGE) {
     return PROJECT_LOG_PAGE;
+  }
+  else if (currentLevel === launchLevels.LEVEL_STEP && currentType === PROJECT_USERDEBUG_TEST_ITEM_PAGE){
+    return debugMode ? PROJECT_USERDEBUG_LOG_PAGE : TEST_ITEM_PAGE;
   }
   return debugMode ? PROJECT_USERDEBUG_TEST_ITEM_PAGE : TEST_ITEM_PAGE;
 };
