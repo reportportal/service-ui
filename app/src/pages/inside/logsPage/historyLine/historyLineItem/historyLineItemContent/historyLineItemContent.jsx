@@ -10,6 +10,7 @@ import {
   NOT_FOUND,
   RESETED,
   INTERRUPTED,
+  IN_PROGRESS,
 } from 'common/constants/launchStatuses';
 import { LOG_PAGE_EVENTS } from 'components/main/analytics/events';
 import { getDuration } from 'common/utils';
@@ -48,6 +49,10 @@ const messages = defineMessages({
     id: 'HistoryLineItemContent.launchSameItems',
     defaultMessage: "There're several items with the same UID meaning.",
   },
+  launchInProgress: {
+    id: 'HistoryLineItemContent.launchInProgress',
+    defaultMessage: 'In progress',
+  },
 });
 
 const blockTitleMessagesMap = {
@@ -58,6 +63,7 @@ const blockTitleMessagesMap = {
   [INTERRUPTED]: messages.launchInterrupted,
   [MANY]: messages.launchSameItems,
   [NOT_FOUND]: messages.launchNotFound,
+  [IN_PROGRESS]: messages.launchInProgress,
 };
 
 @injectIntl
@@ -98,7 +104,11 @@ export class HistoryLineItemContent extends Component {
     const { intl, status, startTime, endTime } = this.props;
     let itemTitle = intl.formatMessage(blockTitleMessagesMap[status.toLowerCase()]);
     const isThreeDecimalPlaces = true;
-    if (status.toLowerCase() !== MANY && status.toLowerCase() !== NOT_FOUND) {
+    if (
+      status.toLowerCase() !== MANY &&
+      status.toLowerCase() !== NOT_FOUND &&
+      status.toLowerCase() !== IN_PROGRESS
+    ) {
       itemTitle = itemTitle.concat(`; ${getDuration(startTime, endTime, isThreeDecimalPlaces)}`);
     }
     return itemTitle;

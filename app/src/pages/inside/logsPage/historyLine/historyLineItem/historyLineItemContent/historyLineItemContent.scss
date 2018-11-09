@@ -125,6 +125,17 @@
   }
 }
 
+.status-IN_PROGRESS {
+  cursor: default;
+  &:before {
+    background-color: $COLOR--violet;
+  }
+  .item-block-bg:before,
+  .item-block-bg:after {
+    border-color: $COLOR--violet;
+  }
+}
+
 .active {
   cursor: default;
   &:before {
