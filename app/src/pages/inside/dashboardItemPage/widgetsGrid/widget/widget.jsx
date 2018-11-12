@@ -55,6 +55,7 @@ export class Widget extends Component {
     switchDraggable: PropTypes.func,
     onDelete: PropTypes.func,
     isModifiable: PropTypes.bool,
+    isFullscreen: PropTypes.bool,
     observer: PropTypes.object.isRequired,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
@@ -66,6 +67,7 @@ export class Widget extends Component {
     onDelete: () => {},
     switchDraggable: () => {},
     isModifiable: false,
+    isFullscreen: false,
   };
 
   constructor(props) {
@@ -74,7 +76,7 @@ export class Widget extends Component {
 
     this.state = {
       loading: true,
-      show: true,
+      visible: true,
       widget: {
         content: {},
         contentParameters: {},
@@ -103,13 +105,13 @@ export class Widget extends Component {
 
   showWidget = () => {
     this.setState({
-      show: true,
+      visible: true,
     });
   };
 
   hideWidget = () => {
     this.setState({
-      show: false,
+      visible: false,
     });
   };
 
@@ -138,7 +140,7 @@ export class Widget extends Component {
   };
 
   render() {
-    const { widget, show } = this.state;
+    const { widget, visible } = this.state;
     const headerData = {
       owner: widget.owner,
       shared: widget.share,
@@ -167,10 +169,15 @@ export class Widget extends Component {
               onDelete={this.deleteWidget}
             />
           </div>
-          <div ref={this.getWidgetNode} className={cx('widget', { hidden: !show })}>
+          <div ref={this.getWidgetNode} className={cx('widget', { hidden: !visible })}>
             {this.state.loading && <SpinningPreloader />}
             {Chart && (
-              <Chart widget={widget} container={this.node} observer={this.props.observer} />
+              <Chart
+                widget={widget}
+                isFullscreen={this.props.isFullscreen}
+                container={this.node}
+                observer={this.props.observer}
+              />
             )}
           </div>
         </Fragment>

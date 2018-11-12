@@ -2,12 +2,9 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import ReactDOMServer from 'react-dom/server';
-import { connect } from 'react-redux';
-import { activeProjectSelector } from 'controllers/user';
-import { TEST_ITEM_PAGE } from 'controllers/pages';
 import classNames from 'classnames/bind';
 import { COLOR_FAILEDSKIPPEDTOTAL } from 'common/constants/colors';
-
+import { messages } from '../common/messages';
 import { C3Chart } from '../common/c3chart';
 import { TooltipWrapper } from '../common/tooltip';
 import { Legend } from '../common/legend';
@@ -17,30 +14,23 @@ import styles from './nonPassedTestCasesTrendChart.scss';
 
 const cx = classNames.bind(styles);
 
-const messages = defineMessages({
+const localMessages = defineMessages({
   nonPassedCases: {
-    id: 'NonPassedTestCasesTrendChart.label.nonPassedCases',
+    id: 'NonPassedTestCasesTrendChart.nonPassedCases',
     defaultMessage: 'of non-passed cases',
-  },
-  failedSkippedTotal: {
-    id: 'NonPassedTestCasesTrendChart.tooltip.failedSkippedTotal',
-    defaultMessage: '% (Failed+Skipped)/Total',
   },
 });
 
 const FAILED_SKIPPED_TOTAL = '% (Failed+Skipped)/Total';
+const FAILED_SKIPPED_STATISTICS_KEY = 'statistics$executions$failedSkippedTotal';
 
 @injectIntl
-@connect((state) => ({
-  project: activeProjectSelector(state),
-}))
 export class NonPassedTestCasesTrendChart extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
     widget: PropTypes.object.isRequired,
     isPreview: PropTypes.bool,
     height: PropTypes.number,
-    project: PropTypes.string.isRequired,
     container: PropTypes.instanceOf(Element).isRequired,
     observer: PropTypes.object.isRequired,
   };
@@ -60,7 +50,7 @@ export class NonPassedTestCasesTrendChart extends Component {
   }
 
   componentWillUnmount() {
-    this.node.removeEventListener('mousemove', this.getCoords);
+    this.node.removeEventListener('mousemove', this.setupCoords);
     this.props.observer.unsubscribe('widgetResized', this.resizeChart);
   }
 
@@ -74,17 +64,8 @@ export class NonPassedTestCasesTrendChart extends Component {
 
     this.resizeChart();
 
-    this.node.addEventListener('mousemove', this.getCoords);
+    this.node.addEventListener('mousemove', this.setupCoords);
   };
-
-  getDefaultLinkParams = (testItemIds) => ({
-    payload: {
-      projectId: this.props.project,
-      filterId: 'all',
-      testItemIds,
-    },
-    type: TEST_ITEM_PAGE,
-  });
 
   getConfig = () => {
     const { widget, intl, isPreview } = this.props;
@@ -143,7 +124,7 @@ export class NonPassedTestCasesTrendChart extends Component {
             bottom: 0,
           },
           label: {
-            text: `% ${intl.formatMessage(messages.nonPassedCases)}`,
+            text: `% ${intl.formatMessage(localMessages.nonPassedCases)}`,
             position: 'outer-middle',
           },
         },
@@ -182,7 +163,7 @@ export class NonPassedTestCasesTrendChart extends Component {
     };
   };
 
-  getCoords = ({ pageX, pageY }) => {
+  setupCoords = ({ pageX, pageY }) => {
     this.x = pageX;
     this.y = pageY;
   };
@@ -231,7 +212,7 @@ export class NonPassedTestCasesTrendChart extends Component {
           <C3Chart config={this.config} onChartCreated={this.onChartCreated}>
             {!isPreview && (
               <Legend
-                items={['statistics$executions$failedSkippedTotal']}
+                items={[FAILED_SKIPPED_STATISTICS_KEY]}
                 onClick={this.onClick}
                 onMouseOver={this.onMouseOver}
                 onMouseOut={this.onMouseOut}

@@ -5,9 +5,9 @@ import ReactDOMServer from 'react-dom/server';
 import classNames from 'classnames/bind';
 import { COLOR_CHART_DURATION, COLOR_FAILED } from 'common/constants/colors';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { isValueInterrupted, transformCategoryLabel, getLaunchAxisTicks } from '../common/utils';
 import { C3Chart } from '../common/c3chart';
 import { LaunchDurationTooltip } from './launchDurationTooltip';
-import { isValueInterrupted, transformCategoryLabel, getLaunchAxisTicks } from './chartUtils';
 import { prepareChartData } from './prepareChartData';
 import { DURATION } from './constants';
 import styles from './launchesDurationChart.scss';
@@ -40,7 +40,7 @@ export class LaunchesDurationChart extends Component {
   }
 
   componentWillUnmount() {
-    this.node.removeEventListener('mousemove', this.getCoords);
+    this.node.removeEventListener('mousemove', this.setupCoords);
     this.props.observer.unsubscribe('widgetResized', this.resizeChart);
   }
 
@@ -54,7 +54,7 @@ export class LaunchesDurationChart extends Component {
 
     this.resizeChart();
 
-    this.node.addEventListener('mousemove', this.getCoords);
+    this.node.addEventListener('mousemove', this.setupCoords);
   };
 
   getPosition = (d, width, height) => {
@@ -155,7 +155,7 @@ export class LaunchesDurationChart extends Component {
     });
   };
 
-  getCoords = ({ pageX, pageY }) => {
+  setupCoords = ({ pageX, pageY }) => {
     this.x = pageX;
     this.y = pageY;
   };

@@ -20,7 +20,7 @@ const mockObserver = {
   unsubscribe: () => {},
 };
 
-storiesOf('Components/Main/Widgets/Charts/LaunchStatisticsChart', module)
+storiesOf('Components/Widgets/Charts/LaunchStatisticsChart', module)
   .addDecorator(
     host({
       title: 'Launch statistics trend chart',

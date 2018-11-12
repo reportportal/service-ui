@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { defectTypesSelector } from 'controllers/project';
 import { injectIntl, intlShape } from 'react-intl';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
-import { getItemColor, getItemName, getItemNameConfig } from '../../common/utils';
+import { getItemColor, getItemName, getItemNameConfig } from '../utils';
 import styles from './legend.scss';
 
 const cx = classNames.bind(styles);

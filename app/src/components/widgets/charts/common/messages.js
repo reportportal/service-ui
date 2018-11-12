@@ -39,6 +39,10 @@ export const messages = defineMessages({
   },
   cases: {
     id: 'Charts.cases',
-    defaultMessage: 'cases', // сценарии
+    defaultMessage: 'cases',
+  },
+  failedSkippedTotal: {
+    id: 'Charts.failedSkippedTotal',
+    defaultMessage: '% (Failed+Skipped)/Total',
   },
 });

@@ -69,7 +69,7 @@ export class LaunchesComparisonChart extends Component {
   }
 
   componentWillUnmount() {
-    this.node.removeEventListener('mousemove', this.getCoords);
+    this.node.removeEventListener('mousemove', this.setupCoords);
     this.props.observer.unsubscribe('widgetResized', this.resizeChart);
   }
 
@@ -81,7 +81,7 @@ export class LaunchesComparisonChart extends Component {
       return;
     }
 
-    this.node.addEventListener('mousemove', this.getCoords);
+    this.node.addEventListener('mousemove', this.setupCoords);
 
     d3.selectAll(document.querySelectorAll('.c3-chart-bar path')).each(function() {
       const elem = d3.select(this);
@@ -241,7 +241,7 @@ export class LaunchesComparisonChart extends Component {
     });
   };
 
-  getCoords = ({ pageX, pageY }) => {
+  setupCoords = ({ pageX, pageY }) => {
     this.x = pageX;
     this.y = pageY;
   };

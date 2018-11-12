@@ -109,24 +109,19 @@
   }
 }
 
-:global {
-  // TODO: fix fulscreen mode for this chart
-  .fullscreen-enabled {
-    .launch-statistics-chart {
-      svg {
-        .c3-grid {
-          line {
-            display: inline !important;
-          }
-        }
-        .c3-axis-y {
-          display: inline !important;
+.full-screen {
+  svg {
+    .c3-grid {
+      line {
+        display: inline !important;
+      }
+    }
+    .c3-axis-y {
+      display: inline !important;
 
-          .domain {
-            display: inline !important;
-            stroke: $COLOR--gray-80 !important;
-          }
-        }
+      .domain {
+        display: inline !important;
+        stroke: $COLOR--gray-80 !important;
       }
     }
   }

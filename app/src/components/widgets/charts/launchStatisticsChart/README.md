@@ -7,6 +7,7 @@ Has no own size. Width and Height = 100% of it's parent.
 - **widget**: _object_, required
 - **launch**: _object_, required
 - **isPreview**: _bool_, optional, default = false
+- **isFullscreen**: _bool_, optional, default = false
 - **height**: _number_, optional, default = 0
 - **project**: _string_, required
 - **defectTypes**: _object_, required

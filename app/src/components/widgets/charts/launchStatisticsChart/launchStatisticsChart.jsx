@@ -54,6 +54,7 @@ export class LaunchStatisticsChart extends Component {
     redirect: PropTypes.func,
     widget: PropTypes.object.isRequired,
     isPreview: PropTypes.bool,
+    isFullscreen: PropTypes.bool,
     height: PropTypes.number,
     project: PropTypes.string.isRequired,
     defectTypes: PropTypes.object.isRequired,
@@ -68,6 +69,7 @@ export class LaunchStatisticsChart extends Component {
     getDefectLink: () => {},
     getStatisticsLink: () => {},
     isPreview: false,
+    isFullscreen: false,
     height: 0,
   };
 
@@ -83,7 +85,7 @@ export class LaunchStatisticsChart extends Component {
   componentWillUnmount() {
     this.isCustomTooltipNeeded()
       ? this.removeChartListeners()
-      : this.node && this.node.removeEventListener('mousemove', this.getCoords);
+      : this.node && this.node.removeEventListener('mousemove', this.setupCoords);
     this.props.observer.unsubscribe('widgetResized', this.resizeChart);
   }
 
@@ -99,7 +101,7 @@ export class LaunchStatisticsChart extends Component {
   };
 
   onDefaultChartCreated = () => {
-    this.node.addEventListener('mousemove', this.getCoords);
+    this.node.addEventListener('mousemove', this.setupCoords);
   };
 
   onCustomChartCreated = () => {
@@ -133,7 +135,7 @@ export class LaunchStatisticsChart extends Component {
 
   onChartClick = (data) => {
     if (this.isTimeLine) {
-      return; // TODO: do it when filters will be available ob launches page
+      return; // TODO: do it when filters will be available on launches page
     }
     const { widget, getDefectLink, getStatisticsLink, defectTypes } = this.props;
     const nameConfig = getItemNameConfig(data.id);
@@ -159,7 +161,12 @@ export class LaunchStatisticsChart extends Component {
     this.selectedLaunchData = data.values.find((item) => item.index === dataIndex);
     this.tooltip
       .html(() =>
-        this.renderContents([this.selectedLaunchData], null, null, (id) => this.colors[id]),
+        this.renderContents(
+          [this.selectedLaunchData],
+          null,
+          null,
+          (id) => this.configData.colors[id],
+        ),
       )
       .style('left', `${currentMousePosition[0] - 108}px`)
       .style('top', `${currentMousePosition[1] - 72}px`);
@@ -181,83 +188,27 @@ export class LaunchStatisticsChart extends Component {
     type: TEST_ITEM_PAGE,
   });
 
-  getCoords = ({ pageX, pageY }) => {
+  setupCoords = ({ pageX, pageY }) => {
     this.x = pageX;
     this.y = pageY;
   };
 
   getConfig = () => {
-    const {
-      isPreview,
-      container,
-      defectTypes,
-      widget: {
-        content,
-        content_parameters: { content_fields, widgetOptions },
-      },
-    } = this.props;
-    const chartData = {};
-    const chartDataOrdered = [];
-    this.colors = {};
-    const isZoomEnabled = widgetOptions[ZOOM_KEY];
-    let data = [];
-    this.widgetViewMode = widgetOptions.viewMode[0];
-    this.isTimeLine = widgetOptions[TIME_LINE_KEY];
+    const { isPreview } = this.props;
 
-    if (!Object.keys(content).length) {
-      return;
-    }
-
-    if (this.isTimeLine) {
-      Object.keys(content).forEach((item) => {
-        data.push({
-          date: item,
-          values: content[item][0].values,
-        });
-      });
-    } else {
-      data = content.result;
-    }
-
-    this.height = container.offsetHeight;
-    this.width = container.offsetWidth;
-    this.itemData = [];
-
-    Object.keys(data[0].values).forEach((key) => {
-      const keyConfig = getItemNameConfig(key);
-      chartData[key] = [key];
-      this.colors[key] = getItemColor(keyConfig, defectTypes);
-    });
-
-    data.forEach((item) => {
-      const currentItemData = {
-        ...item,
-      };
-      delete currentItemData.values;
-      this.itemData.push(currentItemData);
-      Object.keys(item.values).forEach((key) => {
-        const value = item.values[key];
-        chartData[key].push(!Number(value) && this.isTimeLine ? null : Number(value));
-      });
-    });
-
-    content_fields.forEach((key) => {
-      chartDataOrdered.push(chartData[key]);
-    });
-
-    this.itemNames = chartDataOrdered.map((item) => item[0]);
+    this.prepareChartData();
 
     this.config = {
       data: {
-        columns: chartDataOrdered,
-        type: CHART_MODES[this.widgetViewMode],
+        columns: this.configData.chartDataOrdered,
+        type: CHART_MODES[this.configData.widgetViewMode],
         onclick: !isPreview && !this.isCustomTooltipNeeded() ? this.onChartClick : null,
         order: null,
-        colors: this.colors,
-        groups: [this.itemNames],
+        colors: this.configData.colors,
+        groups: [this.configData.itemNames],
       },
       point: {
-        show: this.isSingleColumn() && this.widgetViewMode === AREA_CHART_KEY,
+        show: this.isSingleColumn() && this.configData.widgetViewMode === AREA_CHART_KEY,
         r: 3,
         focus: {
           expand: {
@@ -269,8 +220,8 @@ export class LaunchStatisticsChart extends Component {
         x: {
           show: !isPreview,
           type: 'category',
-          categories: this.itemData.map((item) => {
-            if (this.isTimeLine) {
+          categories: this.configData.itemData.map((item) => {
+            if (this.configData.isTimeLine) {
               const day = moment(item.date)
                 .format('dddd')
                 .substring(0, 3);
@@ -279,32 +230,35 @@ export class LaunchStatisticsChart extends Component {
             return `#${item.number}`;
           }),
           tick: {
-            values: this.isTimeLine
-              ? getTimelineAxisTicks(this.itemData.length)
-              : getLaunchAxisTicks(this.itemData.length),
+            values: this.configData.isTimeLine
+              ? getTimelineAxisTicks(this.configData.itemData.length)
+              : getLaunchAxisTicks(this.configData.itemData.length),
             width: 60,
             centered: true,
             inner: true,
-            multiline: this.isTimeLine,
+            multiline: this.configData.isTimeLine,
             outer: false,
           },
         },
         y: {
-          show: false,
+          show: !isPreview && this.props.isFullscreen,
+          padding: {
+            top: this.configData.widgetViewMode === AREA_CHART_KEY ? 3 : 0,
+          },
         },
       },
       interaction: {
         enabled: !isPreview,
       },
       zoom: {
-        enabled: !isPreview && isZoomEnabled,
-        rescale: !isPreview && isZoomEnabled,
+        enabled: !isPreview && this.configData.isZoomEnabled,
+        rescale: !isPreview && this.configData.isZoomEnabled,
         onzoomend: () => {
           this.chart.flush();
         },
       },
       subchart: {
-        show: !isPreview && isZoomEnabled,
+        show: !isPreview && this.configData.isZoomEnabled,
         size: {
           height: 30,
         },
@@ -313,7 +267,7 @@ export class LaunchStatisticsChart extends Component {
         top: isPreview ? 0 : 85,
         left: isPreview ? 0 : 40,
         right: isPreview ? 0 : 20,
-        bottom: isPreview || !this.isTimeLine ? 0 : 10,
+        bottom: isPreview || !this.configData.isTimeLine ? 0 : 10,
       },
       legend: {
         show: false,
@@ -345,6 +299,83 @@ export class LaunchStatisticsChart extends Component {
     };
   };
 
+  setupConfigData = (data, isTimeLine) => {
+    const {
+      defectTypes,
+      widget: {
+        content_parameters: { content_fields, widgetOptions },
+      },
+    } = this.props;
+    const itemData = [];
+    const chartData = {};
+    const chartDataOrdered = [];
+    const colors = {};
+
+    Object.keys(data[0].values).forEach((key) => {
+      const keyConfig = getItemNameConfig(key);
+      chartData[key] = [key];
+      colors[key] = getItemColor(keyConfig, defectTypes);
+    });
+
+    data.forEach((item) => {
+      const currentItemData = {
+        ...item,
+      };
+      delete currentItemData.values;
+      itemData.push(currentItemData);
+      Object.keys(item.values).forEach((key) => {
+        const value = item.values[key];
+        chartData[key].push(!Number(value) && isTimeLine ? null : Number(value));
+      });
+    });
+
+    content_fields.forEach((key) => {
+      chartDataOrdered.push(chartData[key]);
+    });
+
+    this.configData = {
+      itemData,
+      chartDataOrdered,
+      itemNames: chartDataOrdered.map((item) => item[0]),
+      colors,
+      isTimeLine,
+      isZoomEnabled: widgetOptions[ZOOM_KEY],
+      widgetViewMode: widgetOptions.viewMode[0],
+    };
+  };
+
+  prepareChartData = () => {
+    const {
+      container,
+      widget: {
+        content,
+        content_parameters: { widgetOptions },
+      },
+    } = this.props;
+
+    let data = [];
+    const isTimeLine = widgetOptions[TIME_LINE_KEY];
+
+    if (!Object.keys(content).length) {
+      return;
+    }
+
+    if (isTimeLine) {
+      Object.keys(content).forEach((item) => {
+        data.push({
+          date: item,
+          values: content[item][0].values,
+        });
+      });
+    } else {
+      data = content.result;
+    }
+
+    this.height = container.offsetHeight;
+    this.width = container.offsetWidth;
+    this.setupConfigData(data, isTimeLine);
+  };
+
   createInteractiveTooltip = () => {
     this.tooltip = d3.select(this.node.querySelector('.c3-tooltip-container'));
 
@@ -360,9 +391,10 @@ export class LaunchStatisticsChart extends Component {
     this.interactElems && this.interactElems.on('click mousemove mouseover mouseout', null);
   };
 
-  isSingleColumn = () => this.itemData.length < 2;
+  isSingleColumn = () => this.configData.itemData.length < 2;
 
-  isCustomTooltipNeeded = () => this.widgetViewMode === AREA_CHART_KEY && !this.isTimeLine;
+  isCustomTooltipNeeded = () =>
+    this.configData.widgetViewMode === AREA_CHART_KEY && !this.configData.isTimeLine;
 
   resizeChart = () => {
     const newHeight = this.props.container.offsetHeight;
@@ -380,7 +412,7 @@ export class LaunchStatisticsChart extends Component {
   };
 
   renderContents = (data, defaultTitleFormat, defaultValueFormat, color) => {
-    const { name, number, startTime, date } = this.itemData[data[0].index];
+    const { name, number, startTime, date } = this.configData.itemData[data[0].index];
     const {
       intl: { formatMessage },
       defectTypes,
@@ -390,9 +422,9 @@ export class LaunchStatisticsChart extends Component {
     return ReactDOMServer.renderToStaticMarkup(
       <TooltipWrapper>
         <TooltipContent
-          launchName={this.isTimeLine ? date : name}
-          launchNumber={this.isTimeLine ? null : number}
-          startTime={this.isTimeLine ? null : Number(startTime)}
+          launchName={this.configData.isTimeLine ? date : name}
+          launchNumber={this.configData.isTimeLine ? null : number}
+          startTime={this.configData.isTimeLine ? null : Number(startTime)}
           itemCases={`${data[0].value} ${formatMessage(messages.cases)}`}
           color={color(id)}
           itemName={getItemName(getItemNameConfig(id), defectTypes, formatMessage)}
@@ -406,7 +438,8 @@ export class LaunchStatisticsChart extends Component {
       this.state.isConfigReady && (
         <C3Chart
           className={cx('launch-statistics-chart', {
-            'area-view': this.widgetViewMode === AREA_CHART_KEY,
+            'area-view': this.configData.widgetViewMode === AREA_CHART_KEY,
+            'full-screen': this.props.isFullscreen,
             preview: this.props.isPreview,
           })}
           config={this.config}
@@ -414,7 +447,7 @@ export class LaunchStatisticsChart extends Component {
         >
           {!this.props.isPreview && (
             <Legend
-              items={this.itemNames}
+              items={this.configData.itemNames}
               onClick={this.onClick}
               onMouseOver={this.onMouseOver}
               onMouseOut={this.onMouseOut}
