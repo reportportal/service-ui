@@ -3,7 +3,6 @@ import { injectIntl, intlShape } from 'react-intl';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
-
 import PencilIcon from 'common/img/pencil-icon-inline.svg';
 import { InputRadio } from 'components/inputs/inputRadio';
 import { FilterOptions } from 'pages/inside/filtersPage/filterGrid/filterOptions';
@@ -41,13 +40,13 @@ export class FiltersItem extends PureComponent {
       <div className={cx('filter-item')}>
         <InputRadio
           value={activeFilterId}
-          ownValue={filter.id}
+          ownValue={String(filter.id)}
           name={'filter-id'}
           onChange={onChange}
           circleAtTop
         >
           <FilterName search={search} filter={filter} userId={userId} showDesc={false} />
-          <FilterOptions entities={filter.entities} sort={filter.selection_parameters.orders}>
+          <FilterOptions entities={filter.conditions} sort={filter.orders}>
             {userId === filter.owner && (
               <span className={cx('pencil-icon')} onClick={onEdit}>
                 {Parser(PencilIcon)}
