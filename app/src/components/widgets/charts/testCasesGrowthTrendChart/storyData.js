@@ -1,3 +1,19 @@
+export const state = {
+  project: {
+    info: {
+      projectId: 'default_personal',
+    },
+  },
+  location: {
+    pathname: '/default_personal/dashboard',
+    type: 'PROJECT_DASHBOARD_PAGE',
+    projectId: 'default_personal',
+    payload: {
+      testItemIds: '1/2',
+    },
+  },
+};
+
 export const widgetData = {
   id: '6',
   name: 'casesTrend',

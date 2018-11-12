@@ -2,15 +2,12 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import ReactDOMServer from 'react-dom/server';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
-import { connect } from 'react-redux';
-import { activeProjectSelector } from 'controllers/user';
-import { TEST_ITEM_PAGE } from 'controllers/pages';
 import classNames from 'classnames/bind';
 import { COLOR_FAILED } from 'common/constants/colors';
 import { STATS_FAILED } from 'common/constants/statistics';
 import { FAILED } from 'common/constants/testStatuses';
 import { statusLocalization } from 'common/constants/statusLocalization';
-
+import { messages } from '../common/messages';
 import { TooltipWrapper } from '../common/tooltip';
 import { C3Chart } from '../common/c3chart';
 import { Legend } from '../common/legend';
@@ -21,28 +18,20 @@ import styles from './failedCasesTrendChart.scss';
 
 const cx = classNames.bind(styles);
 
-const messages = defineMessages({
-  failedCases: {
-    id: 'FailedCasesTrendChart.label.failedCases',
+const localMessages = defineMessages({
+  failedCasesLabel: {
+    id: 'FailedCasesTrendChart.failedCases',
     defaultMessage: 'failed cases',
-  },
-  cases: {
-    id: 'FailedCasesTrendChart.tooltip.cases',
-    defaultMessage: 'cases',
   },
 });
 
 @injectIntl
-@connect((state) => ({
-  project: activeProjectSelector(state),
-}))
 export class FailedCasesTrendChart extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
     widget: PropTypes.object.isRequired,
     isPreview: PropTypes.bool,
     height: PropTypes.number,
-    project: PropTypes.string.isRequired,
     container: PropTypes.instanceOf(Element).isRequired,
     observer: PropTypes.object.isRequired,
   };
@@ -62,7 +51,7 @@ export class FailedCasesTrendChart extends Component {
   }
 
   componentWillUnmount() {
-    this.node.removeEventListener('mousemove', this.updateCoords);
+    this.node.removeEventListener('mousemove', this.setupCoords);
     this.props.observer.unsubscribe('widgetResized', this.resizeChart);
   }
 
@@ -76,17 +65,8 @@ export class FailedCasesTrendChart extends Component {
 
     this.resizeChart();
 
-    this.node.addEventListener('mousemove', this.updateCoords);
+    this.node.addEventListener('mousemove', this.setupCoords);
   };
-
-  getDefaultLinkParams = (testItemIds) => ({
-    payload: {
-      projectId: this.props.project,
-      filterId: 'all',
-      testItemIds,
-    },
-    type: TEST_ITEM_PAGE,
-  });
 
   getConfig = () => {
     const { widget, intl, isPreview } = this.props;
@@ -158,7 +138,7 @@ export class FailedCasesTrendChart extends Component {
             bottom: 0,
           },
           label: {
-            text: intl.formatMessage(messages.failedCases),
+            text: intl.formatMessage(localMessages.failedCasesLabel),
             position: 'outer-middle',
           },
         },
@@ -197,7 +177,7 @@ export class FailedCasesTrendChart extends Component {
     };
   };
 
-  updateCoords = ({ pageX, pageY }) => {
+  setupCoords = ({ pageX, pageY }) => {
     this.x = pageX;
     this.y = pageY;
   };

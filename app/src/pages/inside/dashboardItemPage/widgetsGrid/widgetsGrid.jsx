@@ -201,6 +201,7 @@ export class WidgetsGrid extends Component {
             >
               <Widget
                 widgetId={widgetId}
+                isFullscreen={this.props.isFullscreen}
                 isModifiable={this.state.isModifiable}
                 observer={this.observer}
                 onDelete={() => {

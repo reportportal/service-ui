@@ -2,9 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { duration } from 'moment';
 import classNames from 'classnames/bind';
-
-import { isValueInterrupted } from '../chartUtils';
-
+import { isValueInterrupted } from '../../common/utils';
 import styles from './launchDurationTooltip.scss';
 
 const cx = classNames.bind(styles);

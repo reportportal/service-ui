@@ -8,7 +8,7 @@ import {
   rangeMaxValue,
   getLaunchAxisTicks,
   getListAverage,
-} from './chartUtils';
+} from './utils';
 
 describe('chartUtils', () => {
   describe('isValueInterrupted', () => {

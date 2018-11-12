@@ -1,4 +1,4 @@
-import { isValueInterrupted, validItemsFilter, getTimeType, getListAverage } from './chartUtils';
+import { isValueInterrupted, validItemsFilter, getTimeType, getListAverage } from '../common/utils';
 import { DURATION } from './constants';
 
 export const prepareChartData = (data) => {
