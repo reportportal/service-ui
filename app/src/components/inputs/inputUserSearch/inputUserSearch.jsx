@@ -18,12 +18,16 @@
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+import React, { Component } from 'react';
 import Select from 'react-select';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { FormattedMessage } from 'react-intl';
-import { fetch, validate } from 'common/utils';
+import { fetchAPI, validate } from 'common/utils';
 import { URLS } from 'common/urls';
+import { tokenSelector } from 'controllers/auth';
 import styles from './inputUserSearch.scss';
 import { UsersList } from './usersList';
 
@@ -54,10 +58,10 @@ const makeOptions = (options, projectId) =>
     isAssigned: !!option.assignedProjects[projectId],
     userAvatar: getPhoto(option.userId),
   }));
-const getUsers = (input, isAdmin, projectId) => {
+const getUsers = (input, isAdmin, projectId, token) => {
   if (input) {
     const url = makeURL(input, isAdmin, projectId);
-    return fetch(url).then((response) => {
+    return fetchAPI(url, token).then((response) => {
       const arr = makeOptions(response.content, projectId);
       return { options: arr };
     });
@@ -65,59 +69,62 @@ const getUsers = (input, isAdmin, projectId) => {
   return Promise.resolve({ options: [] });
 };
 
-export const InputUserSearch = ({
-  isAdmin,
-  onChange,
-  projectId,
-  placeholder,
-  value,
-  error,
-  touched,
-}) => (
-  <div className={cx('select2-search-users')}>
-    <Select.AsyncCreatable
-      className={cx({ error: error && touched })}
-      value={value}
-      cache={false}
-      loadOptions={(input) => getUsers(input, isAdmin, projectId)}
-      filterOption={() => true}
-      loadingPlaceholder={
-        <FormattedMessage id="InputUserSearch.searching" defaultMessage="Searching..." />
-      }
-      noResultsText={
-        <FormattedMessage id="InputUserSearch.noResults" defaultMessage="No matches found" />
-      }
-      searchPromptText={
-        <FormattedMessage
-          id="InputUserSearch.placeholder"
-          defaultMessage="Please enter 1 or more character"
-        />
-      }
-      onChange={onChange}
-      menuRenderer={({ options, selectValue }) => UsersList({ options, selectValue })}
-      isValidNewOption={isValidNewOption}
-      newOptionCreator={newOptionCreator}
-      promptTextCreator={promptTextCreator}
-      placeholder={placeholder}
-    />
-  </div>
-);
+@connect((state) => ({
+  token: tokenSelector(state),
+}))
+export class InputUserSearch extends Component {
+  static propTypes = {
+    isAdmin: PropTypes.bool,
+    projectId: PropTypes.string,
+    onChange: PropTypes.func,
+    placeholder: PropTypes.string,
+    value: PropTypes.object,
+    error: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
+    touched: PropTypes.bool,
+    token: PropTypes.string.isRequired,
+  };
 
-InputUserSearch.propTypes = {
-  isAdmin: PropTypes.bool,
-  projectId: PropTypes.string,
-  onChange: PropTypes.func,
-  placeholder: PropTypes.string,
-  value: PropTypes.object,
-  error: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
-  touched: PropTypes.bool,
-};
-InputUserSearch.defaultProps = {
-  isAdmin: false,
-  projectId: '',
-  onChange: () => {},
-  placeholder: '',
-  value: {},
-  error: false,
-  touched: false,
-};
+  static defaultProps = {
+    isAdmin: false,
+    projectId: '',
+    onChange: () => {},
+    placeholder: '',
+    value: {},
+    error: false,
+    touched: false,
+  };
+
+  render() {
+    const { isAdmin, onChange, projectId, placeholder, value, error, touched, token } = this.props;
+
+    return (
+      <div className={cx('select2-search-users')}>
+        <Select.AsyncCreatable
+          className={cx({ error: error && touched })}
+          value={value}
+          cache={false}
+          loadOptions={(input) => getUsers(input, isAdmin, projectId, token)}
+          filterOption={() => true}
+          loadingPlaceholder={
+            <FormattedMessage id="InputUserSearch.searching" defaultMessage="Searching..." />
+          }
+          noResultsText={
+            <FormattedMessage id="InputUserSearch.noResults" defaultMessage="No matches found" />
+          }
+          searchPromptText={
+            <FormattedMessage
+              id="InputUserSearch.placeholder"
+              defaultMessage="Please enter 1 or more character"
+            />
+          }
+          onChange={onChange}
+          menuRenderer={({ options, selectValue }) => UsersList({ options, selectValue })}
+          isValidNewOption={isValidNewOption}
+          newOptionCreator={newOptionCreator}
+          promptTextCreator={promptTextCreator}
+          placeholder={placeholder}
+        />
+      </div>
+    );
+  }
+}

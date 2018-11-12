@@ -4,7 +4,8 @@ import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
 import { injectIntl, intlShape, defineMessages } from 'react-intl';
 import PropTypes from 'prop-types';
-import { fetch } from 'common/utils';
+import { fetchAPI } from 'common/utils';
+import { tokenSelector } from 'controllers/auth';
 import { URLS } from 'common/urls';
 import { InputDropdown } from 'components/inputs/inputDropdown';
 import { canChangeUserRole } from 'common/utils/permissions';
@@ -45,6 +46,7 @@ const messages = defineMessages({
       userAccountRoleSelector(state),
       activeProjectRoleSelector(state),
     ),
+    token: tokenSelector(state),
   }),
   { showNotification },
 )
@@ -64,6 +66,7 @@ export class ProjectRole extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    token: PropTypes.string.isRequired,
   };
   static defaultProps = {
     assignedProjects: {},
@@ -87,7 +90,7 @@ export class ProjectRole extends Component {
     param.users[this.props.userId] = val;
     this.setState({ currentRole: val });
     tracking.trackEvent(MEMBERS_PAGE_EVENTS.CHANGE_PROJECT_ROLE);
-    fetch(URLS.project(this.props.projectId), {
+    fetchAPI(URLS.project(this.props.projectId), this.props.token, {
       method: 'put',
       data: param,
     })

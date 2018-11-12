@@ -1,10 +1,11 @@
-import { fetch, getStorageItem, setStorageItem } from 'common/utils';
+import { fetchAPI, getStorageItem, setStorageItem } from 'common/utils';
 import { URLS } from 'common/urls';
+import { tokenSelector } from 'controllers/auth';
 import {
   FETCH_USER_SUCCESS,
   SET_ACTIVE_PROJECT,
   SET_START_TIME_FORMAT,
-  SET_USER_TOKEN,
+  SET_API_TOKEN,
 } from './constants';
 import { userInfoSelector } from './selectors';
 
@@ -23,20 +24,20 @@ export const setActiveProjectAction = (project) => (dispatch, getState) => {
   });
 };
 
-export const generateApiTokenAction = () => (dispatch) =>
-  fetch(URLS.apiToken(), { method: 'post' }).then((res) => {
-    dispatch({ type: SET_USER_TOKEN, payload: res.access_token });
+export const generateApiTokenAction = () => (dispatch, getState) =>
+  fetchAPI(URLS.apiToken(), tokenSelector(getState()), { method: 'post' }).then((result) => {
+    dispatch({ type: SET_API_TOKEN, payload: `${result.token_type} ${result.access_token}` });
   });
 
-export const fetchApiTokenAction = () => (dispatch) =>
-  fetch(URLS.apiToken(), { method: 'get' })
-    .then((res) => {
-      dispatch({ type: SET_USER_TOKEN, payload: res.access_token });
+export const fetchApiTokenAction = () => (dispatch, getState) =>
+  fetchAPI(URLS.apiToken(), tokenSelector(getState()), { method: 'get' })
+    .then((result) => {
+      dispatch({ type: SET_API_TOKEN, payload: `${result.token_type} ${result.access_token}` });
     })
     .catch(() => dispatch(generateApiTokenAction()));
 
-export const fetchUserAction = () => (dispatch) =>
-  fetch(URLS.user()).then((user) => {
+export const fetchUserAction = () => (dispatch, getState) =>
+  fetchAPI(URLS.user(), tokenSelector(getState())).then((user) => {
     const userSettings = getStorageItem(`${user.userId}_settings`) || {};
     const savedActiveProject = userSettings.activeProject;
     const activeProject =

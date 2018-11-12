@@ -6,7 +6,8 @@ import { connect } from 'react-redux';
 import { injectIntl, intlShape } from 'react-intl';
 import { reduxForm } from 'redux-form';
 import { URLS } from 'common/urls';
-import { fetch } from 'common/utils';
+import { fetchAPI } from 'common/utils';
+import { tokenSelector } from 'controllers/auth';
 import { canUpdateSettings } from 'common/utils/permissions';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { Input } from 'components/inputs/input';
@@ -39,6 +40,7 @@ const cx = classNames.bind(styles);
     isEpamInstance: !!authExtensionsSelector(state).epam,
     accountRole: userAccountRoleSelector(state),
     userRole: activeProjectRoleSelector(state),
+    token: tokenSelector(state),
   }),
   {
     showNotification,
@@ -63,6 +65,7 @@ export class GeneralTab extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    token: PropTypes.string.isRequired,
   };
 
   static defaultProps = {
@@ -86,7 +89,10 @@ export class GeneralTab extends Component {
         ...data,
       },
     };
-    fetch(URLS.project(this.props.projectId), { method: 'put', data: dataToSend })
+    fetchAPI(URLS.project(this.props.projectId), this.props.token, {
+      method: 'put',
+      data: dataToSend,
+    })
       .then(() => {
         this.props.showNotification({
           message: this.props.intl.formatMessage(Messages.updateSuccessNotification),

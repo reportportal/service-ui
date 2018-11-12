@@ -33,7 +33,8 @@ import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { InputOutside } from 'components/inputs/inputOutside';
 import { BigButton } from 'components/buttons/bigButton';
-import { validate, fetch } from 'common/utils';
+import { validate, fetchAPI } from 'common/utils';
+import { tokenSelector } from 'controllers/auth';
 import { URLS } from 'common/urls';
 import { LOGIN_PAGE } from 'controllers/pages';
 import EmailIcon from './img/email-icon-inline.svg';
@@ -59,7 +60,9 @@ const notifications = defineMessages({
 });
 
 @connect(
-  null,
+  (state) => ({
+    token: tokenSelector(state),
+  }),
   {
     showScreenLockAction,
     hideScreenLockAction,
@@ -82,6 +85,7 @@ export class ForgotPasswordForm extends PureComponent {
     showNotification: PropTypes.func.isRequired,
     handleSubmit: PropTypes.func.isRequired,
     redirect: PropTypes.func.isRequired,
+    token: PropTypes.string.isRequired,
   };
 
   static defaultProps = {
@@ -90,7 +94,7 @@ export class ForgotPasswordForm extends PureComponent {
 
   submitForm = ({ email }) => {
     this.props.showScreenLockAction();
-    fetch(URLS.userPasswordRestore(), {
+    fetchAPI(URLS.userPasswordRestore(), this.props.token, {
       method: 'post',
       data: {
         email,

@@ -23,7 +23,8 @@ import { PageLayout, PageHeader, PageSection } from 'layouts/pageLayout';
 import { showModalAction } from 'controllers/modal';
 import { withSorting, SORTING_ASC } from 'controllers/sorting';
 import { userFiltersSelector, toggleDisplayFilterOnLaunchesAction } from 'controllers/project';
-import { fetch } from 'common/utils';
+import { fetchAPI } from 'common/utils';
+import { tokenSelector } from 'controllers/auth';
 import { URLS } from 'common/urls';
 import { FILTERS_PAGE, FILTERS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { NoFiltersBlock } from './noFiltersBlock';
@@ -47,6 +48,7 @@ const messages = defineMessages({
     accountRole: userAccountRoleSelector(state),
     filters: filtersSelector(state),
     loading: loadingSelector(state),
+    token: tokenSelector(state),
   }),
   {
     showModalAction,
@@ -89,6 +91,7 @@ export class FiltersPage extends Component {
       getTrackingData: PropTypes.func,
     }).isRequired,
     toggleDisplayFilterOnLaunches: PropTypes.func,
+    token: PropTypes.string.isRequired,
   };
 
   static defaultProps = {
@@ -127,13 +130,13 @@ export class FiltersPage extends Component {
     });
 
   updateFilter = (filter) =>
-    fetch(URLS.filter(this.props.activeProject, filter.id), {
+    fetchAPI(URLS.filter(this.props.activeProject, filter.id), this.props.token, {
       method: 'put',
       data: filter,
     }).then(this.props.fetchFiltersAction);
 
   deleteFilter = (id) => {
-    fetch(URLS.filter(this.props.activeProject, id), {
+    fetchAPI(URLS.filter(this.props.activeProject, id), this.props.token, {
       method: 'delete',
     })
       .then(() => {

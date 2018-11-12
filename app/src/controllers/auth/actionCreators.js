@@ -1,4 +1,4 @@
-import { AUTH_ERROR, AUTH_SUCCESS, LOGIN, LOGOUT } from './constants';
+import { AUTH_ERROR, AUTH_SUCCESS, LOGIN, LOGOUT, SET_TOKEN } from './constants';
 
 export const authSuccessAction = () => ({ type: AUTH_SUCCESS });
 
@@ -10,3 +10,5 @@ export const loginAction = ({ login, password }) => ({
 });
 
 export const logoutAction = () => ({ type: LOGOUT });
+
+export const setTokenAction = (token) => ({ type: SET_TOKEN, payload: token });

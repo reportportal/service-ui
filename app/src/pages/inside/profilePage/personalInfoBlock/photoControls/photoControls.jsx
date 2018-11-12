@@ -6,7 +6,8 @@ import classNames from 'classnames/bind';
 import { defineMessages, injectIntl, intlShape } from 'react-intl';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { showModalAction } from 'controllers/modal';
-import { fetch } from 'common/utils';
+import { fetchAPI } from 'common/utils';
+import { tokenSelector } from 'controllers/auth';
 import { URLS } from 'common/urls';
 import { INTERNAL } from 'common/constants/accountType';
 import { GhostButton } from 'components/buttons/ghostButton';
@@ -50,7 +51,12 @@ const messages = defineMessages({
   },
 });
 
-@connect(null, { showNotification, showModalAction })
+@connect(
+  (state) => ({
+    token: tokenSelector(state),
+  }),
+  { showNotification, showModalAction },
+)
 @injectIntl
 @track()
 export class PhotoControls extends Component {
@@ -65,6 +71,7 @@ export class PhotoControls extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    token: PropTypes.string.isRequired,
   };
   static defaultProps = {
     accountType: '',
@@ -89,7 +96,7 @@ export class PhotoControls extends Component {
   onSave = () => {
     const formData = new FormData();
     formData.append('file', this.state.image);
-    fetch(URLS.dataPhoto(), { method: 'post', data: formData })
+    fetchAPI(URLS.dataPhoto(), this.props.token, { method: 'post', data: formData })
       .then(() => {
         this.props.showNotification({
           message: this.props.intl.formatMessage(messages.submitUpload),
@@ -139,7 +146,7 @@ export class PhotoControls extends Component {
     }
   };
   removeImageHandler = () => {
-    fetch(URLS.dataPhoto(), { method: 'delete' })
+    fetchAPI(URLS.dataPhoto(), this.props.token, { method: 'delete' })
       .then(() => {
         this.props.removeImage();
         this.props.showNotification({

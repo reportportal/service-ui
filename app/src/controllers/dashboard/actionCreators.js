@@ -1,6 +1,8 @@
-import { fetch, getStorageItem, setStorageItem } from 'common/utils';
+import { fetchAPI, getStorageItem, setStorageItem } from 'common/utils';
 import { URLS } from 'common/urls';
 import { activeProjectSelector, userIdSelector } from 'controllers/user';
+import { tokenSelector } from 'controllers/auth';
+import { dashboardFullScreenModeSelector } from 'controllers/dashboard';
 import {
   FETCH_DASHBOARD_SUCCESS,
   CHANGE_VISIBILITY_TYPE,
@@ -8,6 +10,7 @@ import {
   DELETE_DASHBOARD_ITEM_SUCCESS,
   UPDATE_DASHBOARD_ITEM_SUCCESS,
   DASHBOARDS_TABLE_VIEW,
+  CHANGE_FULL_SCREEN_MODE,
 } from './constants';
 
 export const fetchDashboardAction = (projectId) => (dispatch, getState) => {
@@ -15,8 +18,8 @@ export const fetchDashboardAction = (projectId) => (dispatch, getState) => {
   const activeProject = projectId || activeProjectSelector(getState());
 
   Promise.all([
-    fetch(URLS.dashboards(activeProject)),
-    fetch(URLS.dashboardsShared(activeProject)),
+    fetchAPI(URLS.dashboards(activeProject), tokenSelector(getState())),
+    fetchAPI(URLS.dashboardsShared(activeProject), tokenSelector(getState())),
   ]).then(([dashboards, sharedDashboards = {}]) => {
     const { content = [] } = sharedDashboards;
 
@@ -39,7 +42,7 @@ export const changeVisibilityTypeAction = (type) => (dispatch) => {
 export const deleteDashboardAction = ({ id }) => (dispatch, getState) => {
   const activeProject = activeProjectSelector(getState());
 
-  fetch(URLS.dashboard(activeProject, id), {
+  fetchAPI(URLS.dashboard(activeProject, id), tokenSelector(getState()), {
     method: 'DELETE',
   }).then(() => {
     dispatch({
@@ -54,7 +57,7 @@ export const editDashboardAction = (item) => (dispatch, getState) => {
 
   const { name, description, share, id } = item;
 
-  fetch(URLS.dashboard(activeProject, id), {
+  fetchAPI(URLS.dashboard(activeProject, id), tokenSelector(getState()), {
     method: 'PUT',
     data: { name, description, share },
   }).then((response) => {
@@ -68,7 +71,7 @@ export const editDashboardAction = (item) => (dispatch, getState) => {
 };
 
 export const addDashboardAction = (item) => (dispatch, getState) => {
-  fetch(URLS.dashboards(activeProjectSelector(getState())), {
+  fetchAPI(URLS.dashboards(activeProjectSelector(getState())), tokenSelector(getState()), {
     method: 'POST',
     data: item,
   }).then((response) => {
@@ -80,3 +83,15 @@ export const addDashboardAction = (item) => (dispatch, getState) => {
     });
   });
 };
+
+export const toggleFullScreenMode = () => (dispatch, getState) => {
+  dispatch({
+    type: CHANGE_FULL_SCREEN_MODE,
+    payload: !dashboardFullScreenModeSelector(getState()),
+  });
+};
+
+export const changeFullScreenMode = (mode) => ({
+  type: CHANGE_FULL_SCREEN_MODE,
+  payload: mode,
+});

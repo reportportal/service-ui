@@ -6,7 +6,8 @@ import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { withModal, ModalLayout } from 'components/main/modal';
 import { LogMessage } from 'components/main/logMessage';
-import { fetch } from 'common/utils/fetch';
+import { fetchAPI } from 'common/utils/fetch';
+import { tokenSelector } from 'controllers/auth';
 import { URLS } from 'common/urls';
 import { activeProjectSelector } from 'controllers/user';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
@@ -49,6 +50,7 @@ const messages = defineMessages({
 @withModal('testItemDetails')
 @connect((state) => ({
   activeProject: activeProjectSelector(state),
+  token: tokenSelector(state),
 }))
 @injectIntl
 export class TestItemDetailsModal extends Component {
@@ -58,6 +60,7 @@ export class TestItemDetailsModal extends Component {
       item: PropTypes.object,
     }).isRequired,
     activeProject: PropTypes.string.isRequired,
+    token: PropTypes.string.isRequired,
   };
 
   state = {
@@ -70,7 +73,7 @@ export class TestItemDetailsModal extends Component {
       activeProject,
       data: { item },
     } = this.props;
-    fetch(URLS.logItem(activeProject, item.id, 'ERROR'))
+    fetchAPI(URLS.logItem(activeProject, item.id, 'ERROR'), this.props.token)
       .then((data) => data.content[0])
       .then((logItem) => this.setState({ logItem, loading: false }))
       .catch(() => this.setState({ loading: false }));

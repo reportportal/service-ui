@@ -14,7 +14,8 @@ import { STEP_PAGE_EVENTS } from 'components/main/analytics/events';
 import { URLS } from 'common/urls';
 import { InputDropdown } from 'components/inputs/inputDropdown';
 import { FormField } from 'components/fields/formField';
-import { validate, fetch } from 'common/utils';
+import { validate, fetchAPI } from 'common/utils';
+import { tokenSelector } from 'controllers/auth';
 import { BetaBadge } from 'pages/inside/common/betaBadge';
 import styles from './linkIssueModal.scss';
 import { LinkIssueFields } from './linkIssueFields';
@@ -64,6 +65,7 @@ const messages = defineMessages({
   (state) => ({
     url: URLS.testItemsAddIssues(activeProjectSelector(state)),
     externalSystems: externalSystemSelector(state),
+    token: tokenSelector(state),
   }),
   {
     showNotification,
@@ -89,6 +91,7 @@ export class LinkIssueModal extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    token: PropTypes.string.isRequired,
   };
 
   constructor(props) {
@@ -116,7 +119,7 @@ export class LinkIssueModal extends Component {
       url: issue.issueLink,
     }));
 
-    fetch(url, {
+    fetchAPI(url, this.props.token, {
       method: 'put',
       data: {
         issues,

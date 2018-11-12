@@ -26,7 +26,8 @@ import { reduxForm } from 'redux-form';
 import { redirect } from 'redux-first-router';
 import classNames from 'classnames/bind';
 import { FormattedMessage, injectIntl, intlShape, defineMessages } from 'react-intl';
-import { validate, fetch, connectRouter } from 'common/utils';
+import { validate, fetchAPI, connectRouter } from 'common/utils';
+import { tokenSelector } from 'controllers/auth';
 import { URLS } from 'common/urls';
 import { LOGIN_PAGE } from 'controllers/pages';
 import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLock';
@@ -64,7 +65,9 @@ const notifications = defineMessages({
 
 @connectRouter(({ reset: resetQueryParam }) => ({ resetQueryParam }))
 @connect(
-  null,
+  (state) => ({
+    token: tokenSelector(state),
+  }),
   {
     redirect,
     showScreenLockAction,
@@ -89,6 +92,7 @@ export class ChangePasswordForm extends PureComponent {
     handleSubmit: PropTypes.func.isRequired,
     resetQueryParam: PropTypes.string,
     redirect: PropTypes.func.isRequired,
+    token: PropTypes.string.isRequired,
   };
   static defaultProps = {
     resetQueryParam: '',
@@ -99,7 +103,7 @@ export class ChangePasswordForm extends PureComponent {
   changePassword = ({ password }) => {
     this.props.showScreenLockAction();
     const uuid = this.props.resetQueryParam;
-    fetch(URLS.userPasswordReset(), {
+    fetchAPI(URLS.userPasswordReset(), this.props.token, {
       method: 'post',
       data: {
         password,

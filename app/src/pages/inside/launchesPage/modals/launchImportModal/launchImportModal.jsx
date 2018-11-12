@@ -8,7 +8,8 @@ import { connect } from 'react-redux';
 import { injectIntl, intlShape, defineMessages } from 'react-intl';
 import { ModalLayout, withModal } from 'components/main/modal';
 import { activeProjectSelector } from 'controllers/user';
-import { addTokenToImagePath, uniqueId, fetch } from 'common/utils';
+import { addTokenToImagePath, uniqueId, fetchAPI } from 'common/utils';
+import { tokenSelector } from 'controllers/auth';
 import { URLS } from 'common/urls';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { LAUNCHES_MODAL_EVENTS } from 'components/main/analytics/events';
@@ -70,7 +71,7 @@ const messages = defineMessages({
 
 @withModal('launchImportModal')
 @injectIntl
-@connect((state) => ({ activeProject: activeProjectSelector(state) }))
+@connect((state) => ({ activeProject: activeProjectSelector(state), token: tokenSelector(state) }))
 @track()
 export class LaunchImportModal extends Component {
   static propTypes = {
@@ -81,6 +82,7 @@ export class LaunchImportModal extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    token: PropTypes.string.isRequired,
   };
 
   static defaultProps = {
@@ -282,7 +284,7 @@ export class LaunchImportModal extends Component {
     const { activeProject } = this.props;
     const { id } = file;
 
-    return fetch(addTokenToImagePath(URLS.launchImport(activeProject)), {
+    return fetchAPI(addTokenToImagePath(URLS.launchImport(activeProject)), this.props.token, {
       method: 'POST',
       headers: { 'Content-Type': 'multipart/form-data;' },
       data: file.data,

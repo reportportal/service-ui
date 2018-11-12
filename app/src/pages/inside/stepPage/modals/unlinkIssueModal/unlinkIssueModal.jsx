@@ -6,7 +6,8 @@ import { activeProjectSelector } from 'controllers/user';
 import { ModalLayout, withModal } from 'components/main/modal';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { fetch } from 'common/utils';
+import { fetchAPI } from 'common/utils';
+import { tokenSelector } from 'controllers/auth';
 import { URLS } from 'common/urls';
 
 const messages = defineMessages({
@@ -33,6 +34,7 @@ const messages = defineMessages({
 @connect(
   (state) => ({
     url: URLS.testItems(activeProjectSelector(state)),
+    token: tokenSelector(state),
   }),
   {
     showNotification,
@@ -47,6 +49,7 @@ export class UnlinkIssueModal extends Component {
       items: PropTypes.array,
       fetchFunc: PropTypes.func,
     }).isRequired,
+    token: PropTypes.string.isRequired,
   };
 
   onUnlink = (closeModal) => {
@@ -62,7 +65,7 @@ export class UnlinkIssueModal extends Component {
         externalSystemIssues: [],
       },
     }));
-    fetch(url, {
+    fetchAPI(url, this.props.token, {
       method: 'put',
       data: {
         issues,

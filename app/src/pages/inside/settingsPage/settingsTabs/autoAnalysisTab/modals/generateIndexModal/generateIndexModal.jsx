@@ -9,7 +9,8 @@ import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import classNames from 'classnames/bind';
 import { withModal, ModalLayout } from 'components/main/modal';
 import { URLS } from 'common/urls';
-import { fetch } from 'common/utils';
+import { fetchAPI } from 'common/utils';
+import { tokenSelector } from 'controllers/auth';
 import styles from './generateIndexModal.scss';
 
 const cx = classNames.bind(styles);
@@ -48,6 +49,7 @@ const messages = defineMessages({
 @connect(
   (state) => ({
     projectId: activeProjectSelector(state),
+    token: tokenSelector(state),
   }),
   {
     fetchProjectAction,
@@ -61,6 +63,7 @@ export class GenerateIndexModal extends Component {
     projectId: PropTypes.string,
     fetchProjectAction: PropTypes.func.isRequired,
     showNotification: PropTypes.func,
+    token: PropTypes.string.isRequired,
   };
   static defaultProps = {
     intl: {},
@@ -70,7 +73,7 @@ export class GenerateIndexModal extends Component {
   };
 
   onClickGenerate = (closeModal) => {
-    fetch(URLS.projectIndex(this.props.projectId), { method: 'put' })
+    fetchAPI(URLS.projectIndex(this.props.projectId), this.props.token, { method: 'put' })
       .then(() => {
         this.props.showNotification({
           message: this.props.intl.formatMessage(messages.generateSuccessNotification),

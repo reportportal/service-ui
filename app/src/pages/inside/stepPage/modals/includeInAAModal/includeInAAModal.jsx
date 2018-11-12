@@ -8,7 +8,8 @@ import { ModalLayout, withModal } from 'components/main/modal';
 import { activeProjectSelector } from 'controllers/user';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { fetch } from 'common/utils';
+import { fetchAPI } from 'common/utils';
+import { tokenSelector } from 'controllers/auth';
 import { URLS } from 'common/urls';
 import styles from './includeInAAModal.scss';
 
@@ -50,6 +51,7 @@ const messages = defineMessages({
 @connect(
   (state) => ({
     activeProject: activeProjectSelector(state),
+    token: tokenSelector(state),
   }),
   {
     showNotification,
@@ -64,6 +66,7 @@ export class IncludeInAAModal extends Component {
       items: PropTypes.array,
       fetchFunc: PropTypes.func,
     }).isRequired,
+    token: PropTypes.string.isRequired,
   };
 
   onInclude = (closeModal) => {
@@ -79,7 +82,7 @@ export class IncludeInAAModal extends Component {
         autoAnalyzed: false,
       },
     }));
-    fetch(URLS.testItems(activeProject), {
+    fetchAPI(URLS.testItems(activeProject), this.props.token, {
       method: 'put',
       data: {
         issues,

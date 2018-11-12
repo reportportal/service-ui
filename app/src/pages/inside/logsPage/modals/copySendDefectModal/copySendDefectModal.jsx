@@ -6,7 +6,8 @@ import { ModalLayout, withModal } from 'components/main/modal';
 import { activeProjectSelector } from 'controllers/user';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { fetch } from 'common/utils';
+import { fetchAPI } from 'common/utils';
+import { tokenSelector } from 'controllers/auth';
 import { URLS } from 'common/urls';
 
 const MESSAGE_TYPES = {
@@ -51,6 +52,7 @@ const messages = defineMessages({
 @connect(
   (state) => ({
     activeProject: activeProjectSelector(state),
+    token: tokenSelector(state),
   }),
   {
     showNotification,
@@ -67,6 +69,7 @@ export class CopySendDefectModal extends Component {
       isCopy: PropTypes.bool,
       fetchFunc: PropTypes.func,
     }).isRequired,
+    token: PropTypes.string.isRequired,
   };
 
   onInclude = (closeModal) => {
@@ -85,7 +88,7 @@ export class CopySendDefectModal extends Component {
       },
     ];
 
-    fetch(URLS.testItem(activeProject), {
+    fetchAPI(URLS.testItem(activeProject), this.props.token, {
       method: 'put',
       data: {
         issues,

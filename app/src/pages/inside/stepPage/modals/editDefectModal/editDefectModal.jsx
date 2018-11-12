@@ -11,7 +11,8 @@ import { unlinkIssueAction, linkIssueAction } from 'controllers/step';
 import { hideModalAction } from 'controllers/modal';
 import { STEP_PAGE_EVENTS } from 'components/main/analytics/events';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
-import { fetch, setStorageItem, getStorageItem } from 'common/utils';
+import { fetchAPI, setStorageItem, getStorageItem } from 'common/utils';
+import { tokenSelector } from 'controllers/auth';
 import { URLS } from 'common/urls';
 import { ModalLayout, withModal } from 'components/main/modal';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
@@ -89,6 +90,7 @@ const messages = defineMessages({
   (state) => ({
     externalSystems: externalSystemSelector(state),
     url: URLS.testItems(activeProjectSelector(state)),
+    token: tokenSelector(state),
   }),
   {
     showNotification,
@@ -118,6 +120,7 @@ export class EditDefectModal extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    token: PropTypes.string.isRequired,
   };
 
   constructor(props) {
@@ -277,7 +280,7 @@ export class EditDefectModal extends Component {
       data: { fetchFunc },
     } = this.props;
 
-    fetch(url, {
+    fetchAPI(url, this.props.token, {
       method: 'put',
       data: {
         issues,

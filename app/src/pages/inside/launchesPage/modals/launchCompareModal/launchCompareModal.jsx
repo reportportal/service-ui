@@ -5,7 +5,8 @@ import PropTypes from 'prop-types';
 import C3Chart from 'react-c3js';
 import d3 from 'd3';
 import classNames from 'classnames/bind';
-import { fetch, dateFormat } from 'common/utils';
+import { fetchAPI, dateFormat } from 'common/utils';
+import { tokenSelector } from 'controllers/auth';
 import {
   STATS_AB_TOTAL,
   STATS_ND_TOTAL,
@@ -130,6 +131,7 @@ const getInitialChartConfig = () => ({
 @connect((state) => ({
   defectColors: defectColorsSelector(state),
   activeProject: activeProjectSelector(state),
+  token: tokenSelector(state),
 }))
 export class LaunchCompareModal extends Component {
   static propTypes = {
@@ -139,6 +141,7 @@ export class LaunchCompareModal extends Component {
     data: PropTypes.shape({
       ids: PropTypes.array,
     }).isRequired,
+    token: PropTypes.string.isRequired,
   };
 
   constructor(props) {
@@ -150,9 +153,13 @@ export class LaunchCompareModal extends Component {
   }
 
   componentDidMount() {
-    fetch(URLS.launchesCompare(this.props.activeProject, this.props.data.ids.join(',')), {
-      method: 'get',
-    }).then((response) => {
+    fetchAPI(
+      URLS.launchesCompare(this.props.activeProject, this.props.data.ids.join(',')),
+      this.props.token,
+      {
+        method: 'get',
+      },
+    ).then((response) => {
       this.prepareDataForConfig(response.result);
     });
   }

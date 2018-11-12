@@ -7,7 +7,8 @@ import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import ReactObserver from 'react-event-observer';
 import { PROJECT_DASHBOARD_PAGE, activeDashboardIdSelector } from 'controllers/pages';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
-import { fetch } from 'common/utils';
+import { fetchAPI } from 'common/utils';
+import { tokenSelector } from 'controllers/auth';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import PropTypes from 'prop-types';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
@@ -36,6 +37,7 @@ const messages = defineMessages({
     url: URLS.dashboard(activeProjectSelector(state), activeDashboardIdSelector(state)),
     userInfo: userInfoSelector(state),
     project: activeProjectSelector(state),
+    token: tokenSelector(state),
   }),
   {
     redirect,
@@ -52,6 +54,7 @@ export class WidgetsGrid extends Component {
     redirect: PropTypes.func.isRequired,
     showNotification: PropTypes.func.isRequired,
     dashboard: PropTypes.object,
+    token: PropTypes.string.isRequired,
   };
 
   static defaultProps = {
@@ -144,7 +147,7 @@ export class WidgetsGrid extends Component {
   };
 
   deleteWidget = (widget) =>
-    fetch(this.props.url, {
+    fetchAPI(this.props.url, this.props.token, {
       method: 'PUT',
       data: {
         deleteWidget: widget,
@@ -159,7 +162,7 @@ export class WidgetsGrid extends Component {
     if (dashboard.widgets) {
       this.onWidgetsReady(dashboard);
     } else {
-      fetch(this.props.url)
+      fetchAPI(this.props.url, this.props.token)
         .then(this.onWidgetsReady)
         .catch(() => {
           this.props.redirect({ type: PROJECT_DASHBOARD_PAGE, payload: { projectId: project } });
@@ -168,7 +171,7 @@ export class WidgetsGrid extends Component {
   };
 
   updateWidgets = (widgets) => {
-    fetch(this.props.url, {
+    fetchAPI(this.props.url, this.props.token, {
       method: 'PUT',
       data: {
         updateWidgets: widgets,

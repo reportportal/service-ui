@@ -3,7 +3,8 @@ import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
-import { fetch } from 'common/utils';
+import { fetchAPI } from 'common/utils';
+import { tokenSelector } from 'controllers/auth';
 import { injectIntl, intlShape, defineMessages } from 'react-intl';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { URLS } from 'common/urls';
@@ -95,6 +96,7 @@ const testItemPages = {
     parentLaunch: launchSelector(state),
     userId: userIdSelector(state),
     activeProject: activeProjectSelector(state),
+    token: tokenSelector(state),
   }),
   {
     restorePath: restorePathAction,
@@ -128,6 +130,7 @@ export class TestItemPage extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    token: PropTypes.string.isRequired,
   };
 
   static defaultProps = {
@@ -151,7 +154,7 @@ export class TestItemPage extends Component {
   confirmDeleteItems = (items, selectedItems) => {
     const ids = items.map((item) => item.id).join(',');
     this.props.showScreenLockAction();
-    return fetch(URLS.testItems(this.props.activeProject, ids), {
+    return fetchAPI(URLS.testItems(this.props.activeProject, ids), this.props.token, {
       method: 'delete',
     })
       .then(() => {

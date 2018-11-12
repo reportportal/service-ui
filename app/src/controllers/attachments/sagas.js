@@ -1,7 +1,8 @@
-import { takeLatest, call, put, all } from 'redux-saga/effects';
+import { takeLatest, call, put, all, select } from 'redux-saga/effects';
 import { URLS } from 'common/urls';
-import { fetch } from 'common/utils';
+import { fetchAPI } from 'common/utils';
 import { showModalAction } from 'controllers/modal';
+import { tokenSelector } from 'controllers/auth';
 
 import { GET_ATTACHMENT_HAR, GET_ATTACHMENT_BINARY, GET_ATTACHMENT_IMAGE } from './constants';
 
@@ -13,8 +14,10 @@ export function fetchImageData({ projectId, binaryId }) {
   );
 }
 
-export function fetchData({ projectId, binaryId }) {
-  return fetch(URLS.getFileById(projectId, binaryId));
+export function* fetchData({ projectId, binaryId }) {
+  const token = yield select(tokenSelector);
+  const data = yield call(fetchAPI, URLS.getFileById(projectId, binaryId), token);
+  return data;
 }
 
 /* IMAGE */

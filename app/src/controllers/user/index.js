@@ -18,5 +18,5 @@ export {
   assignedProjectsSelector,
   activeProjectRoleSelector,
   userAccountRoleSelector,
-  userTokenSelector,
+  apiTokenSelector,
 } from './selectors';

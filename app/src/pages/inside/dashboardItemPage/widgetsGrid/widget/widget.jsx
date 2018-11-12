@@ -2,7 +2,8 @@ import React, { Component, Fragment } from 'react';
 import track from 'react-tracking';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
-import { fetch } from 'common/utils';
+import { fetchAPI } from 'common/utils';
+import { tokenSelector } from 'controllers/auth';
 import { URLS } from 'common/urls';
 import { DASHBOARD_PAGE_EVENTS } from 'components/main/analytics/events';
 import * as widgetTypes from 'common/constants/widgetTypes';
@@ -39,6 +40,7 @@ const charts = {
 @connect(
   (state, ownProps) => ({
     url: URLS.widget(activeProjectSelector(state), ownProps.widgetId),
+    token: tokenSelector(state),
   }),
   {
     showModalAction,
@@ -58,6 +60,7 @@ export class Widget extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    token: PropTypes.string.isRequired,
   };
 
   static defaultProps = {
@@ -96,7 +99,7 @@ export class Widget extends Component {
     this.setState({
       loading: true,
     });
-    fetch(this.props.url).then((widget) => {
+    fetchAPI(this.props.url, this.props.token).then((widget) => {
       this.setState({
         loading: false,
         widget,

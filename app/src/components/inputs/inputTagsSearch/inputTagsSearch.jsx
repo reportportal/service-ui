@@ -1,10 +1,12 @@
 import Select, { AsyncCreatable, Async, Creatable } from 'react-select';
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
-import { fetch } from 'common/utils';
+import { fetchAPI } from 'common/utils';
+import { tokenSelector } from 'controllers/auth';
 import styles from './inputTagsSearch.scss';
 
 const cx = classNames.bind(styles);
@@ -26,6 +28,9 @@ const selectType = (async, creatable) => {
   return Select;
 };
 
+@connect((state) => ({
+  token: tokenSelector(state),
+}))
 export class InputTagsSearch extends Component {
   static propTypes = {
     uri: PropTypes.string,
@@ -51,6 +56,7 @@ export class InputTagsSearch extends Component {
     dynamicSearchPromptText: PropTypes.bool,
     isClearable: PropTypes.bool,
     disabled: PropTypes.bool,
+    token: PropTypes.string.isRequired,
   };
   static defaultProps = {
     uri: '',
@@ -98,7 +104,7 @@ export class InputTagsSearch extends Component {
   };
   getItems = (input) => {
     if (input.length >= this.props.minLength) {
-      return fetch(`${this.props.uri}${input}`).then((response) => {
+      return fetchAPI(`${this.props.uri}${input}`, this.props.token).then((response) => {
         const options = this.props.makeOptions(response);
         return { options };
       });

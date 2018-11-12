@@ -9,4 +9,4 @@ export const SETTINGS_INITIAL_STATE = {
   startTimeFormat: START_TIME_FORMAT_RELATIVE,
 };
 
-export const SET_USER_TOKEN = 'setUserToken';
+export const SET_API_TOKEN = 'setApiToken';

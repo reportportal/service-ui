@@ -7,7 +7,8 @@ import { defineMessages, injectIntl, intlShape } from 'react-intl';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { showModalAction } from 'controllers/modal';
 import { userInfoSelector } from 'controllers/user';
-import { fetch } from 'common/utils';
+import { fetchAPI } from 'common/utils';
+import { tokenSelector } from 'controllers/auth';
 import { URLS } from 'common/urls';
 import { INTERNAL, LDAP } from 'common/constants/accountType';
 import { GhostButton } from 'components/buttons/ghostButton';
@@ -55,6 +56,7 @@ const messages = defineMessages({
   (state) => ({
     userId: userInfoSelector(state).userId,
     accountType: userInfoSelector(state).accountType,
+    token: tokenSelector(state),
   }),
   { showNotification, showModalAction },
 )
@@ -71,6 +73,7 @@ export class PersonalInfoBlock extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    token: PropTypes.string.isRequired,
   };
   static defaultProps = {
     userId: '',
@@ -90,7 +93,7 @@ export class PersonalInfoBlock extends Component {
 
   onForceUpdate = () => {
     const { accountType, intl } = this.props;
-    fetch(URLS.userSynchronize(accountType), { method: 'post' })
+    fetchAPI(URLS.userSynchronize(accountType), this.props.token, { method: 'post' })
       .then(() => {
         this.props.showNotification({
           message: intl.formatMessage(messages.synchronize),
@@ -109,7 +112,7 @@ export class PersonalInfoBlock extends Component {
       });
   };
   changePasswordHandler = (data) => {
-    fetch(URLS.userChangePassword(), {
+    fetchAPI(URLS.userChangePassword(), this.props.token, {
       method: 'post',
       data: { oldPassword: data.oldPassword, newPassword: data.newPassword },
     })
@@ -127,7 +130,7 @@ export class PersonalInfoBlock extends Component {
       });
   };
   forceUpdateHandler = () => {
-    fetch(URLS.sessionToken(), { method: 'delete' });
+    fetchAPI(URLS.sessionToken(), this.props.token, { method: 'delete' });
   };
   uploadNewImage = (image) => {
     this.setState({ avatarSource: image });

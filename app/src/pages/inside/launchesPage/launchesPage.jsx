@@ -5,7 +5,8 @@ import { injectIntl, intlShape, defineMessages } from 'react-intl';
 import track from 'react-tracking';
 import { LAUNCHES_PAGE, LAUNCHES_PAGE_EVENTS } from 'components/main/analytics/events';
 import { PageLayout, PageSection } from 'layouts/pageLayout';
-import { fetch } from 'common/utils';
+import { fetchAPI } from 'common/utils';
+import { tokenSelector } from 'controllers/auth';
 import { URLS } from 'common/urls';
 import { LAUNCH_ITEM_TYPES } from 'common/constants/launchItemTypes';
 import { levelSelector } from 'controllers/testItem';
@@ -101,6 +102,7 @@ const messages = defineMessages({
     lastOperation: lastOperationSelector(state),
     loading: loadingSelector(state),
     level: levelSelector(state),
+    token: tokenSelector(state),
   }),
   {
     showModalAction,
@@ -168,6 +170,7 @@ export class LaunchesPage extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    token: PropTypes.string.isRequired,
   };
 
   static defaultProps = {
@@ -204,7 +207,7 @@ export class LaunchesPage extends Component {
   }
 
   deleteItem = (id) => {
-    fetch(URLS.launches(this.props.activeProject, id), {
+    fetchAPI(URLS.launches(this.props.activeProject, id), this.props.token, {
       method: 'delete',
     }).then(this.unselectAndFetchLaunches);
   };
@@ -218,7 +221,7 @@ export class LaunchesPage extends Component {
   confirmDeleteItems = (items) => {
     const ids = items.map((item) => item.id).join(',');
     this.props.showScreenLockAction();
-    fetch(URLS.launches(this.props.activeProject, ids), {
+    fetchAPI(URLS.launches(this.props.activeProject, ids), this.props.token, {
       method: 'delete',
     })
       .then(() => {

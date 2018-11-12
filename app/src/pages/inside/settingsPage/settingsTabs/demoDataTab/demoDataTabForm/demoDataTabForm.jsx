@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import track from 'react-tracking';
 import PropTypes from 'prop-types';
-import { fetch, validate } from 'common/utils';
+import { fetchAPI, validate } from 'common/utils';
+import { tokenSelector } from 'controllers/auth';
 import { URLS } from 'common/urls';
 import { connect } from 'react-redux';
 import { reduxForm } from 'redux-form';
@@ -49,6 +50,7 @@ const messages = defineMessages({
 @connect(
   (state) => ({
     projectId: activeProjectSelector(state),
+    token: tokenSelector(state),
   }),
   {
     showNotification,
@@ -67,6 +69,7 @@ export class DemoDataTabForm extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    token: PropTypes.string.isRequired,
   };
 
   state = {
@@ -84,7 +87,7 @@ export class DemoDataTabForm extends Component {
       isLoading: true,
     });
     tracking.trackEvent(SETTINGS_PAGE_EVENTS.GENERATE_DATA_BTN);
-    fetch(URLS.generateDemoData(projectId), { method: 'POST', data })
+    fetchAPI(URLS.generateDemoData(projectId), this.props.token, { method: 'POST', data })
       .then(() => {
         this.props.showNotification({
           message: intl.formatMessage(messages.generateDemoDataSuccess),

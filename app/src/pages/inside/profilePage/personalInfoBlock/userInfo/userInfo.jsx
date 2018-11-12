@@ -9,7 +9,8 @@ import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { showModalAction } from 'controllers/modal';
 import { userInfoSelector, fetchUserAction } from 'controllers/user';
 import { PROFILE_PAGE_EVENTS } from 'components/main/analytics/events';
-import { fetch } from 'common/utils';
+import { fetchAPI } from 'common/utils';
+import { tokenSelector } from 'controllers/auth';
 import { URLS } from 'common/urls';
 import { INTERNAL } from 'common/constants/accountType';
 import styles from './userInfo.scss';
@@ -32,6 +33,7 @@ const messages = defineMessages({
   (state) => ({
     name: userInfoSelector(state).full_name,
     email: userInfoSelector(state).email,
+    token: tokenSelector(state),
   }),
   { showNotification, showModalAction, fetchUserAction },
 )
@@ -51,6 +53,7 @@ export class UserInfo extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    token: PropTypes.string.isRequired,
   };
   static defaultProps = {
     userId: '',
@@ -73,7 +76,7 @@ export class UserInfo extends Component {
     });
   };
   editInfoHandler = (data) => {
-    fetch(URLS.userInfo(this.props.userId), {
+    fetchAPI(URLS.userInfo(this.props.userId), this.props.token, {
       method: 'put',
       data: { full_name: data.name, email: data.email },
     })

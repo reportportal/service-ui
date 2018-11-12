@@ -5,7 +5,8 @@ import classNames from 'classnames/bind';
 import { reduxForm, formValueSelector } from 'redux-form';
 import { connect } from 'react-redux';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
-import { validate, fetch } from 'common/utils';
+import { validate, fetchAPI } from 'common/utils';
+import { tokenSelector } from 'controllers/auth';
 import { URLS } from 'common/urls';
 import {
   updateAutoAnalysisConfigurationAction,
@@ -103,6 +104,7 @@ const DEFAULT_ANALYSIS_MODE = 'Classic';
       MIN_TERM_FREQ,
       NUMBER_OF_LOG_LINES,
     ),
+    token: tokenSelector(state),
   }),
   {
     showNotification,
@@ -126,6 +128,7 @@ export class AnalysisForm extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    token: PropTypes.string.isRequired,
   };
 
   static defaultProps = {
@@ -170,7 +173,10 @@ export class AnalysisForm extends Component {
       },
     };
     this.props.tracking.trackEvent(SETTINGS_PAGE_EVENTS.SUBMIT_AUTO_ANALYSIS_SETTINGS);
-    fetch(URLS.project(this.props.currentProject), { method: 'put', data })
+    fetchAPI(URLS.project(this.props.currentProject), this.props.token, {
+      method: 'put',
+      data,
+    })
       .then(() => {
         this.props.showNotification({
           message: this.props.intl.formatMessage(messages.updateSuccessNotification),

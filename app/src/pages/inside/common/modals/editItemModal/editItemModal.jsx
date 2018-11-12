@@ -7,13 +7,14 @@ import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { activeProjectSelector } from 'controllers/user';
 import { SectionHeader } from 'components/main/sectionHeader';
 import { ModalLayout, withModal, ModalField } from 'components/main/modal';
+import { tokenSelector } from 'controllers/auth';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { LAUNCH_ITEM_TYPES } from 'common/constants/launchItemTypes';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { MarkdownEditor } from 'components/main/markdown';
 import { InputTagsSearch } from 'components/inputs/inputTagsSearch';
 import { connect } from 'react-redux';
-import { fetch } from 'common/utils';
+import { fetchAPI } from 'common/utils';
 import { URLS } from 'common/urls';
 import styles from './editItemModal.scss';
 
@@ -71,6 +72,7 @@ const messages = defineMessages({
   (state) => ({
     tagsSearchUrl: URLS.launchTagsSearch(activeProjectSelector(state)),
     currentProject: activeProjectSelector(state),
+    token: tokenSelector(state),
   }),
   {
     showNotification,
@@ -88,6 +90,7 @@ export class EditItemModal extends Component {
     handleSubmit: PropTypes.func.isRequired,
     tagsSearchUrl: PropTypes.string.isRequired,
     currentProject: PropTypes.string.isRequired,
+    token: PropTypes.string.isRequired,
     showNotification: PropTypes.func.isRequired,
     intl: intlShape.isRequired,
   };
@@ -122,9 +125,10 @@ export class EditItemModal extends Component {
       intl: { formatMessage },
       currentProject,
       data: { item, type, fetchFunc },
+      token,
     } = this.props;
 
-    fetch(URLS.launchesItemsUpdate(currentProject, item.id, type), {
+    fetchAPI(URLS.launchesItemsUpdate(currentProject, item.id, type), token, {
       method: 'put',
       data,
     }).then(() => {

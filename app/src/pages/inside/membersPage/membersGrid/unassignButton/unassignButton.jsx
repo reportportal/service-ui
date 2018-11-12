@@ -5,7 +5,8 @@ import { injectIntl, intlShape, defineMessages } from 'react-intl';
 import PropTypes from 'prop-types';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { showModalAction } from 'controllers/modal';
-import { fetch } from 'common/utils';
+import { fetchAPI } from 'common/utils';
+import { tokenSelector } from 'controllers/auth';
 import { URLS } from 'common/urls';
 import { canAssignUnassignInternalUser } from 'common/utils/permissions';
 import {
@@ -58,6 +59,7 @@ const messages = defineMessages({
     projectRole: activeProjectRoleSelector(state),
     accountRole: userAccountRoleSelector(state),
     entryType: assignedProjectsSelector(state)[activeProjectSelector(state)].entryType,
+    token: tokenSelector(state),
   }),
   { showNotification, showModalAction },
 )
@@ -79,6 +81,7 @@ export class UnassignButton extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    token: PropTypes.string.isRequired,
   };
   static defaultProps = {
     userId: '',
@@ -119,7 +122,7 @@ export class UnassignButton extends Component {
 
   unassignAction = () => {
     const { projectId, userId, intl } = this.props;
-    fetch(URLS.userUnasign(projectId), {
+    fetchAPI(URLS.userUnasign(projectId), this.props.token, {
       method: 'put',
       data: { userNames: [userId] },
     })

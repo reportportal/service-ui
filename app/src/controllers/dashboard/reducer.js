@@ -5,6 +5,7 @@ import {
   ADD_DASHBOARD_ITEM_SUCCESS,
   DELETE_DASHBOARD_ITEM_SUCCESS,
   UPDATE_DASHBOARD_ITEM_SUCCESS,
+  CHANGE_FULL_SCREEN_MODE,
 } from './constants';
 
 export const dashboardReducer = (state = INITIAL_STATE, { type, payload }) => {
@@ -32,6 +33,8 @@ export const dashboardReducer = (state = INITIAL_STATE, { type, payload }) => {
           }),
         },
       };
+    case CHANGE_FULL_SCREEN_MODE:
+      return { ...state, ...{ fullScreenMode: payload } };
     default:
       return state;
   }

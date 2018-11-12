@@ -4,7 +4,8 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
 import { injectIntl, intlShape } from 'react-intl';
-import { fetch } from 'common/utils';
+import { fetchAPI } from 'common/utils';
+import { tokenSelector } from 'controllers/auth';
 import { URLS } from 'common/urls';
 import { DEBUG, DEFAULT } from 'common/constants/common';
 import { activeProjectSelector } from 'controllers/user';
@@ -22,6 +23,7 @@ const cx = classNames.bind(styles);
 @connect(
   (state) => ({
     url: URLS.launchUpdate(activeProjectSelector(state)),
+    token: tokenSelector(state),
   }),
   {
     showNotification,
@@ -42,6 +44,7 @@ export class MoveToDebugModal extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    token: PropTypes.string.isRequired,
   };
 
   static defaultProps = {
@@ -58,7 +61,7 @@ export class MoveToDebugModal extends Component {
     const { ids, fetchFunc, debugMode } = this.props.data;
     const newMode = debugMode ? DEFAULT.toUpperCase() : DEBUG.toUpperCase();
     const entities = ids.reduce((acc, id) => ({ ...acc, [id]: { mode: newMode } }), {});
-    fetch(this.props.url, {
+    fetchAPI(this.props.url, this.props.token, {
       method: 'put',
       data: {
         entities,

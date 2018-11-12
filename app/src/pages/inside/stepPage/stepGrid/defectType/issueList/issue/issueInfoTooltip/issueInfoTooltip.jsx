@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
 import { URLS } from 'common/urls';
-import { fetch, ERROR_CANCELED } from 'common/utils/fetch';
+import { fetchAPI, ERROR_CANCELED } from 'common/utils/fetch';
+import { tokenSelector } from 'controllers/auth';
 import InProgressGif from 'common/img/item-in-progress.gif';
 import { activeProjectSelector } from 'controllers/user';
 import styles from './issueInfoTooltip.scss';
@@ -16,12 +17,14 @@ const isResolved = (status) => status.toUpperCase() === STATUS_RESOLVED;
 
 @connect((state) => ({
   activeProject: activeProjectSelector(state),
+  token: tokenSelector(state),
 }))
 export class IssueInfoTooltip extends Component {
   static propTypes = {
     activeProject: PropTypes.string.isRequired,
     systemId: PropTypes.string.isRequired,
     ticketId: PropTypes.string.isRequired,
+    token: PropTypes.string.isRequired,
   };
 
   constructor(props) {
@@ -49,7 +52,9 @@ export class IssueInfoTooltip extends Component {
       this.cancelRequest = cancel;
     };
     this.setState({ loading: true });
-    fetch(URLS.externalSystemIssue(activeProject, systemId, ticketId), { abort: cancelRequestFunc })
+    fetchAPI(URLS.externalSystemIssue(activeProject, systemId, ticketId), this.props.token, {
+      abort: cancelRequestFunc,
+    })
       .then((issue) => this.setState({ loading: false, issue }))
       .catch((err) => {
         if (err.message === ERROR_CANCELED) {

@@ -2,7 +2,8 @@ import { Component } from 'react';
 import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { fetch, validate } from 'common/utils';
+import { fetchAPI, validate } from 'common/utils';
+import { tokenSelector } from 'controllers/auth';
 import { URLS } from 'common/urls';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { reduxForm, formValueSelector, getFormSyncErrors, getFormMeta } from 'redux-form';
@@ -111,6 +112,7 @@ const messages = defineMessages({
     startTime: formValueSelector(MERGE_FORM)(state, 'start_time'),
     endTime: formValueSelector(MERGE_FORM)(state, 'end_time'),
     tagsSearchUrl: URLS.launchTagsSearch(activeProjectSelector(state)),
+    token: tokenSelector(state),
   }),
   {
     showScreenLockAction,
@@ -141,6 +143,7 @@ export class LaunchMergeModal extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    token: PropTypes.string.isRequired,
   };
   static defaultProps = {
     mergeType: '',
@@ -188,7 +191,7 @@ export class LaunchMergeModal extends Component {
 
   mergeAndCloseModal = (closeModal) => (values) => {
     this.props.showScreenLockAction();
-    fetch(URLS.launchesMerge(this.props.activeProject), {
+    fetchAPI(URLS.launchesMerge(this.props.activeProject), this.props.token, {
       method: 'post',
       data: values,
     }).then(() => {

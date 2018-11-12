@@ -5,7 +5,8 @@ import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { withModal, ModalLayout } from 'components/main/modal';
-import { fetch } from 'common/utils';
+import { fetchAPI } from 'common/utils';
+import { tokenSelector } from 'controllers/auth';
 import { URLS } from 'common/urls';
 import { activeProjectSelector, userIdSelector } from 'controllers/user';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
@@ -57,6 +58,7 @@ const messages = defineMessages({
   (state) => ({
     userId: userIdSelector(state),
     url: URLS.launchStop(activeProjectSelector(state)),
+    token: tokenSelector(state),
   }),
   {
     showNotification,
@@ -72,6 +74,7 @@ export class LaunchFinishForceModal extends Component {
       items: PropTypes.array,
     }),
     showNotification: PropTypes.func,
+    token: PropTypes.string.isRequired,
   };
 
   static defaultProps = {
@@ -94,7 +97,7 @@ export class LaunchFinishForceModal extends Component {
       }),
       {},
     );
-    fetch(this.props.url, {
+    fetchAPI(this.props.url, this.props.token, {
       method: 'put',
       data: {
         entities,

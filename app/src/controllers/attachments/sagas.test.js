@@ -1,9 +1,11 @@
 import * as utils from 'common/utils';
+import { call, select } from 'redux-saga/effects';
+import { tokenSelector } from 'controllers/auth';
 
 import { fetchImageData, fetchData } from './sagas';
 
 jest.mock('common/utils', () => ({
-  fetch: jest.fn(),
+  fetchAPI: jest.fn(),
 }));
 
 const mockParams = {
@@ -21,7 +23,12 @@ describe('Attachments Sagas', () => {
   });
 
   test('fetchData resolves data', () => {
-    fetchData(mockParams);
-    expect(utils.fetch).toBeCalledWith('/api/v1/1234/data/abcd');
+    const gen = fetchData(mockParams);
+
+    expect(gen.next().value).toEqual(select(tokenSelector));
+    expect(gen.next('mock_token').value).toEqual(
+      call(utils.fetchAPI, '/api/v1/1234/data/abcd', 'mock_token'),
+    );
+    expect(gen.next().done).toEqual(true);
   });
 });

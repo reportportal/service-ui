@@ -8,7 +8,8 @@ import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import classNames from 'classnames/bind';
 import { withModal, ModalLayout } from 'components/main/modal';
 import { URLS } from 'common/urls';
-import { fetch } from 'common/utils';
+import { fetchAPI } from 'common/utils';
+import { tokenSelector } from 'controllers/auth';
 import styles from './removeIndexModal.scss';
 
 const cx = classNames.bind(styles);
@@ -39,6 +40,7 @@ const messages = defineMessages({
 @connect(
   (state) => ({
     currentProject: activeProjectSelector(state),
+    token: tokenSelector(state),
   }),
   { showNotification },
 )
@@ -48,6 +50,7 @@ export class RemoveIndexModal extends Component {
     intl: intlShape,
     currentProject: PropTypes.string,
     showNotification: PropTypes.func,
+    token: PropTypes.string.isRequired,
   };
   static defaultProps = {
     intl: {},
@@ -56,7 +59,7 @@ export class RemoveIndexModal extends Component {
   };
 
   onClickRemove = (closeModal) => {
-    fetch(URLS.projectIndex(this.props.currentProject), { method: 'delete' })
+    fetchAPI(URLS.projectIndex(this.props.currentProject), this.props.token, { method: 'delete' })
       .then(() => {
         this.props.showNotification({
           message: this.props.intl.formatMessage(messages.removeSuccessNotification),

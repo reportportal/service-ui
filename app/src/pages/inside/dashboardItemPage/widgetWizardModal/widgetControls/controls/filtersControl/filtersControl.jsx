@@ -7,7 +7,8 @@ import classNames from 'classnames/bind';
 
 import { userIdSelector, activeProjectSelector } from 'controllers/user/selectors';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
-import { fetch } from 'common/utils';
+import { fetchAPI } from 'common/utils';
+import { tokenSelector } from 'controllers/auth';
 import { URLS } from 'common/urls';
 import {
   fetchFiltersConcatAction,
@@ -55,6 +56,7 @@ const messages = defineMessages({
     filters: filtersSelector(state),
     pagination: filtersPaginationSelector(state),
     loading: loadingSelector(state),
+    token: tokenSelector(state),
   }),
   {
     changeWizardForm: (field, value) => change(WIDGET_WIZARD_FORM, field, value, null),
@@ -80,6 +82,7 @@ export class FiltersControl extends Component {
     fetchFiltersConcatAction: PropTypes.func,
     onFormAppearanceChange: PropTypes.func.isRequired,
     notify: PropTypes.func.isRequired,
+    token: PropTypes.string.isRequired,
   };
 
   static defaultProps = {
@@ -203,7 +206,7 @@ export class FiltersControl extends Component {
   handleFilterInsert = (filter) => {
     const { intl, activeProject, notify } = this.props;
 
-    fetch(URLS.filters(activeProject), {
+    fetchAPI(URLS.filters(activeProject), this.props.token, {
       method: 'post',
       data: { elements: [filter] },
     })
@@ -227,7 +230,7 @@ export class FiltersControl extends Component {
   handleFilterUpdate = (filter) => {
     const { intl, notify, activeProject } = this.props;
 
-    fetch(URLS.filter(activeProject, filter.id), {
+    fetchAPI(URLS.filter(activeProject, filter.id), this.props.token, {
       method: 'put',
       data: filter,
     })

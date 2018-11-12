@@ -1,22 +1,28 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { connectRouter, fetch } from 'common/utils';
-import { loginAction } from 'controllers/auth';
+import { connectRouter, fetchAPI } from 'common/utils';
+import { tokenSelector, loginAction } from 'controllers/auth';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { URLS } from 'common/urls';
 import { RegistrationPage } from './registrationPage';
 
-@connect(null, {
-  loginAction,
-  showNotification,
-})
+@connect(
+  (state) => ({
+    token: tokenSelector(state),
+  }),
+  {
+    loginAction,
+    showNotification,
+  },
+)
 @connectRouter(({ uuid }) => ({ uuid }))
 export class RegistrationPageContainer extends Component {
   static propTypes = {
     uuid: PropTypes.string,
     loginAction: PropTypes.func.isRequired,
     showNotification: PropTypes.func.isRequired,
+    token: PropTypes.string.isRequired,
   };
   static defaultProps = {
     uuid: undefined,
@@ -33,7 +39,7 @@ export class RegistrationPageContainer extends Component {
     if (!uuid) {
       return;
     }
-    fetch(URLS.userRegistration(), { params: { uuid } }).then((data) =>
+    fetchAPI(URLS.userRegistration(), this.props.token, { params: { uuid } }).then((data) =>
       this.setState({
         isTokenActive: data.isActive,
         email: data.email,
@@ -50,7 +56,11 @@ export class RegistrationPageContainer extends Component {
       password,
       email,
     };
-    return fetch(URLS.userRegistration(), { method: 'post', data, params: { uuid } })
+    return fetchAPI(URLS.userRegistration(), this.props.token, {
+      method: 'post',
+      data,
+      params: { uuid },
+    })
       .then(() => this.props.loginAction({ login, password }))
       .catch((err) => {
         let message;

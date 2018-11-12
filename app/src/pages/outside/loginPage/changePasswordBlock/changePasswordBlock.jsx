@@ -25,11 +25,11 @@ import classNames from 'classnames/bind';
 import { FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import { redirect as rfrRedirect } from 'redux-first-router';
-import { fetch, connectRouter } from 'common/utils';
+import { fetchAPI, connectRouter } from 'common/utils';
 import { URLS } from 'common/urls';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { LOGIN_PAGE } from 'controllers/pages';
-import { isAuthorizedSelector } from 'controllers/auth';
+import { tokenSelector, isAuthorizedSelector } from 'controllers/auth';
 import { ChangePasswordForm } from './changePasswordForm';
 
 import styles from './changePasswordBlock.scss';
@@ -40,6 +40,7 @@ const cx = classNames.bind(styles);
 @connect(
   (state) => ({
     authorized: isAuthorizedSelector(state),
+    token: tokenSelector(state),
   }),
   (dispatch) => ({
     redirectToLoginPage: () => dispatch(rfrRedirect({ type: LOGIN_PAGE })),
@@ -49,6 +50,7 @@ export class ChangePasswordBlock extends PureComponent {
   static propTypes = {
     reset: PropTypes.string,
     redirectToLoginPage: PropTypes.func.isRequired,
+    token: PropTypes.string.isRequired,
   };
   static defaultProps = {
     reset: '',
@@ -58,7 +60,7 @@ export class ChangePasswordBlock extends PureComponent {
     valid: true,
   };
   componentDidMount() {
-    fetch(URLS.userPasswordResetToken(this.props.reset), {
+    fetchAPI(URLS.userPasswordResetToken(this.props.reset), this.props.token, {
       method: 'get',
     }).then((response) => {
       this.setState({ valid: response.is, loading: false });

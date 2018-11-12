@@ -12,7 +12,8 @@ import {
 } from 'controllers/members';
 import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLock';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
-import { fetch } from 'common/utils';
+import { fetchAPI } from 'common/utils';
+import { tokenSelector } from 'controllers/auth';
 import { URLS } from 'common/urls';
 import { withFilter } from 'controllers/filter';
 import { activeProjectSelector } from 'controllers/user';
@@ -44,6 +45,7 @@ const messages = defineMessages({
     url: URLS.projectUsers(activeProjectSelector(state)),
     members: membersSelector(state),
     loading: loadingSelector(state),
+    token: tokenSelector(state),
   }),
   {
     fetchMembersAction,
@@ -81,6 +83,7 @@ export class MembersPage extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    token: PropTypes.string.isRequired,
   };
   static defaultProps = {
     onSearchChange: () => {},
@@ -106,7 +109,7 @@ export class MembersPage extends Component {
       data.defaultProject = this.props.activeProject;
       data.email = userData.user.userLogin;
       data.role = userData.role;
-      return fetch(URLS.userInviteExternal(), {
+      return fetchAPI(URLS.userInviteExternal(), this.props.token, {
         method: 'post',
         data,
       })
@@ -130,7 +133,7 @@ export class MembersPage extends Component {
     data.userNames = {
       [userData.user.userLogin]: userData.role,
     };
-    return fetch(URLS.userInviteInternal(this.props.activeProject), {
+    return fetchAPI(URLS.userInviteInternal(this.props.activeProject), this.props.token, {
       method: 'put',
       data,
     })
