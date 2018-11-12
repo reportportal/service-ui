@@ -30,10 +30,15 @@ export const calculateLevel = (data) =>
 export const getQueryNamespace = (levelIndex) => `item${levelIndex}`;
 
 export const getNextPage = (currentLevel, debugMode, currentType) => {
-  if (currentLevel === launchLevels.LEVEL_STEP && currentType != PROJECT_USERDEBUG_TEST_ITEM_PAGE) {
+  if (
+    currentLevel === launchLevels.LEVEL_STEP &&
+    currentType !== PROJECT_USERDEBUG_TEST_ITEM_PAGE
+  ) {
     return PROJECT_LOG_PAGE;
-  }
-  else if (currentLevel === launchLevels.LEVEL_STEP && currentType === PROJECT_USERDEBUG_TEST_ITEM_PAGE){
+  } else if (
+    currentLevel === launchLevels.LEVEL_STEP &&
+    currentType === PROJECT_USERDEBUG_TEST_ITEM_PAGE
+  ) {
     return debugMode ? PROJECT_USERDEBUG_LOG_PAGE : TEST_ITEM_PAGE;
   }
   return debugMode ? PROJECT_USERDEBUG_TEST_ITEM_PAGE : TEST_ITEM_PAGE;
