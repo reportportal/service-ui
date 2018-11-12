@@ -51,7 +51,7 @@ const messages = defineMessages({
   (state) => ({
     userId: userIdSelector(state),
     activeProject: activeProjectSelector(state),
-    activeFilterId: selector(state, 'filterId'),
+    activeFilterId: (selector(state, 'filterId') && selector(state, 'filterId')[0]) || '',
     filters: filtersSelector(state),
     pagination: filtersPaginationSelector(state),
     loading: loadingSelector(state),
@@ -249,7 +249,7 @@ export class FiltersControl extends Component {
   };
 
   handleFilterListChange = (event) => {
-    this.props.changeWizardForm('filterId', event.target.value);
+    this.props.changeWizardForm('filterId', [event.target.value]);
   };
 
   handleFilterListLoad = () => {

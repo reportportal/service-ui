@@ -1,25 +1,5 @@
 import PropTypes from 'prop-types';
-import {
-  LAUNCH_STATISTICS,
-  OVERALL_STATISTICS,
-  LAUNCH_DURATION,
-  LAUNCH_EXECUTION_AND_ISSUE_STATISTICS,
-  PROJECT_ACTIVITY,
-  TEST_CASES_GROWTH_TREND,
-  INVESTIGATED_PERCENTAGE_OF_LAUNCHES,
-  LAUNCHES_TABLE,
-  UNIQUE_BUGS_TABLE,
-  MOST_FAILED_TEST_CASES_TABLE,
-  FAILED_CASES_TREND,
-  NON_PASSED_TEST_CASES_TREND,
-  DIFFERENT_LAUNCHES_COMPARISON,
-  PASSING_RATE_PER_LAUNCH,
-  PASSING_RATE_SUMMARY,
-  FLAKY_TEST_CASES_TABLE,
-  CUMULATIVE_TREND,
-  PRODUCT_STATUS,
-  MOST_TIME_CONSUMING,
-} from 'common/constants/widgetTypes';
+import * as WIDGET_TYPES from 'common/constants/widgetTypes';
 
 export const LAUNCH_STATUSES_OPTIONS = 'launchStatusesOptions';
 export const DEFECT_TYPES_OPTIONS = 'defectTypesOptions';
@@ -82,27 +62,7 @@ export const requestDataShape = PropTypes.shape({
   description: PropTypes.string,
   name: PropTypes.string,
   share: PropTypes.bool,
-  widgetType: PropTypes.oneOf([
-    LAUNCH_STATISTICS,
-    OVERALL_STATISTICS,
-    LAUNCH_DURATION,
-    LAUNCH_EXECUTION_AND_ISSUE_STATISTICS,
-    PROJECT_ACTIVITY,
-    TEST_CASES_GROWTH_TREND,
-    INVESTIGATED_PERCENTAGE_OF_LAUNCHES,
-    LAUNCHES_TABLE,
-    UNIQUE_BUGS_TABLE,
-    MOST_FAILED_TEST_CASES_TABLE,
-    FAILED_CASES_TREND,
-    NON_PASSED_TEST_CASES_TREND,
-    DIFFERENT_LAUNCHES_COMPARISON,
-    PASSING_RATE_PER_LAUNCH,
-    PASSING_RATE_SUMMARY,
-    FLAKY_TEST_CASES_TABLE,
-    CUMULATIVE_TREND,
-    PRODUCT_STATUS,
-    MOST_TIME_CONSUMING,
-  ]),
+  widgetType: PropTypes.oneOf(Object.keys(WIDGET_TYPES).map((key) => WIDGET_TYPES[key])),
   contentParameters: PropTypes.shape({
     itemsCount: PropTypes.string,
     metadataFields: PropTypes.array,

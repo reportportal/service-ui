@@ -87,7 +87,7 @@ export class WidgetWizardContent extends Component {
 
     const data = {
       ...formData,
-      filterId: formData.filterId.map((item) => (typeof item === 'number' ? item : item.value)),
+      filterId: formData.filterId.map((item) => (typeof item === 'object' ? item.value : item)),
     };
 
     trackEvent(addWidget);
