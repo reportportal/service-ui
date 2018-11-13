@@ -19,7 +19,7 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { Component } from 'react';
+import React, { Component, createContext } from 'react';
 import track from 'react-tracking';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
@@ -30,7 +30,6 @@ import { Scrollbars } from 'react-custom-scrollbars';
 import { FOOTER_EVENTS } from 'components/main/analytics/events';
 import TopIcon from './img/top-inline.svg';
 import styles from './scrollWrapper.scss';
-import { createContext } from 'react';
 
 export const HeaderContext = createContext({});
 
