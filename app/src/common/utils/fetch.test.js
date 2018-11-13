@@ -39,6 +39,7 @@ describe('fetch', () => {
   it(
     'should be cancelable',
     (done) => {
+      jest.useFakeTimers();
       let cancelRequest;
       const cancelFuncCallback = (cancel) => {
         cancelRequest = cancel;
@@ -49,6 +50,7 @@ describe('fetch', () => {
         expect(err.message).toBe(ERROR_CANCELED);
         done();
       });
+      jest.runAllTimers();
     },
     20,
   );
