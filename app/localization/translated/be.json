@@ -47,6 +47,7 @@
   "AnalysisForm.analysisModerateModeTitle": "Сярэдні",
   "AnalysisForm.updateErrorNotification": "Something went wrong",
   "AnalysisForm.updateSuccessNotification": "Налады праекта паспяхова абноўлены",
+  "ApiPage.title": "Дакументацыя API",
   "AssignedProjectsBlock.headerNameCol": "Прызначаныя праекты",
   "AssignedProjectsBlock.headerRoleCol": "Праектная роля",
   "BarChartTooltip.failed": "Няўдалы:",

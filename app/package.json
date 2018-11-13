@@ -74,7 +74,8 @@
     "reselect": "3.0.1",
     "reset-css": "2.2.1",
     "semver-diff": "2.1.0",
-    "simplemde": "1.11.2"
+    "simplemde": "1.11.2",
+    "swagger-ui": "3.19.5"
   },
   "devDependencies": {
     "@storybook/addon-actions": "3.4.3",
