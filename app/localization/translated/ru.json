@@ -47,6 +47,7 @@
   "AnalysisForm.analysisModerateModeTitle": "Средний",
   "AnalysisForm.updateErrorNotification": "Something went wrong",
   "AnalysisForm.updateSuccessNotification": "Настройки проекта успешно обновлены",
+  "ApiPage.title": "Документация API",
   "AssignedProjectsBlock.headerNameCol": "Назначенные проекты",
   "AssignedProjectsBlock.headerRoleCol": "Проектная роль",
   "AutoAnalysisSwitcher.title": "Автоматический анализ",

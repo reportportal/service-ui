@@ -1,11 +1,16 @@
 import { stringify } from 'qs';
 import { TOKEN_KEY } from 'controllers/auth';
 
-const urlBase = '/api/v1/';
+export const DEFAULT_API_URL_PREFIX = '/api/v1/';
+export const UAT_API_URL_PREFIX = '/uat/';
+
+const urlBase = DEFAULT_API_URL_PREFIX;
 const getToken = () => (localStorage.getItem(TOKEN_KEY) || '').split(' ')[1];
 const getQueryParams = (paramsObj) => stringify(paramsObj, { addQueryPrefix: true });
 
 export const URLS = {
+  apiDocs: (apiType) => `${apiType}api-docs${getQueryParams({ access_token: getToken() })}`,
+
   dataPhoto: (userId, at) =>
     `${urlBase}data/photo${getQueryParams({ [userId]: null, at, access_token: getToken() })}`,
   dataUserPhoto: (v, id) =>
