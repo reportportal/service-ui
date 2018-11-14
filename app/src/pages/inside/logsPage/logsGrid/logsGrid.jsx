@@ -55,9 +55,10 @@ const AttachmentColumn = ({ className, value, customProps }) => (
       console: customProps.consoleView,
     })}
   >
-    {value.binary_content && (
-      <AttachmentBlock customProps={customProps} value={value.binary_content} />
-    )}
+    {value.binary_content &&
+      value.binary_content.content_type && (
+        <AttachmentBlock customProps={customProps} value={value.binary_content} />
+      )}
   </div>
 );
 AttachmentColumn.propTypes = {
