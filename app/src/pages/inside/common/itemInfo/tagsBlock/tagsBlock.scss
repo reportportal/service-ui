@@ -26,7 +26,9 @@
   color: $COLOR--gray-60;
   text-decoration: none;
   margin-right: 3px;
-  word-break: break-word;
+  word-break: break-all;
+  word-wrap: break-word;
+  display: block;
 
   &:hover {
     color: $COLOR--charcoal-grey;
