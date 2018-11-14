@@ -32,7 +32,8 @@ const updateProjectPreferencesAction = (settings) => (dispatch, getState) =>
   });
 export const updateProjectEmailConfig = (emailConfig) => (dispatch, getState) => {
   const currentConfig = projectEmailConfigurationSelector(getState());
-  const newConfig = { ...currentConfig, ...emailConfig };
+  const editMode = !currentConfig.emailEnabled;
+  const newConfig = { ...currentConfig, ...emailConfig, editMode };
   fetch(URLS.projectPreferencesEmailConfiguration(activeProjectSelector(getState())), {
     method: 'PUT',
     data: newConfig,

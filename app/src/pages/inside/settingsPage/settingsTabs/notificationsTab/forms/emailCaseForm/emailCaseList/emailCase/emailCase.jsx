@@ -193,6 +193,7 @@ export class EmailCase extends Component {
               removeSelected
               isValidNewOption={this.validateRecipientsNewItem}
               dynamicSearchPromptText
+              autosize={false}
             />
           </FieldErrorHint>
         </FormField>
@@ -243,6 +244,7 @@ export class EmailCase extends Component {
               multi
               removeSelected
               isValidNewOption={this.validateLaunchNamesNewItem}
+              autosize={false}
             />
           </FieldErrorHint>
         </FormField>
@@ -270,6 +272,7 @@ export class EmailCase extends Component {
               multi
               removeSelected
               isValidNewOption={this.validateTagsNewItem}
+              autosize={false}
             />
           </FieldErrorHint>
         </FormField>

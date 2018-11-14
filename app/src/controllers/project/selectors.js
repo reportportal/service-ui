@@ -48,12 +48,12 @@ export const projectEmailConfigurationSelector = (state) =>
 
 export const projectEmailCasesSelector = createSelector(
   projectEmailConfigurationSelector,
-  ({ emailCases }) =>
-    emailCases.map((emailCase) => ({
+  ({ emailCases, editMode }) =>
+    emailCases.map((emailCase, index) => ({
       ...emailCase,
       informOwner: emailCase.recipients.includes(OWNER),
       submitted: true,
-      confirmed: true,
+      confirmed: index === 0 ? !editMode : true,
       recipients: emailCase.recipients.filter((item) => item !== OWNER),
     })),
 );

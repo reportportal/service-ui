@@ -86,6 +86,7 @@ export class EmailEnableForm extends Component {
               node: <p>{intl.formatMessage(messages.toggleNotificationsNote)}</p>,
             }}
             name="emailEnabled"
+            disabled={readOnly}
             fieldWrapperClassName={cx('form-input')}
           >
             <InputDropdown options={this.getDropdownInputConfig()} />

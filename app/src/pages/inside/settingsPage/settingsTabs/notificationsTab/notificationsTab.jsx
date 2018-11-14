@@ -10,6 +10,8 @@ import { OWNER } from 'common/constants/permissions';
 import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
 import classNames from 'classnames/bind';
 import { canConfigreEmailNotifications } from 'common/utils/permissions';
+import { debounce } from 'common/utils/debounce';
+import { SCREEN_XS_MAX } from 'common/constants/screenSizeVariables';
 import { EmailEnableForm, EmailCaseForm } from './forms';
 import styles from './notificationsTab.scss';
 
@@ -43,6 +45,16 @@ export class NotificationsTab extends Component {
     projectRole: '',
     userRole: '',
   };
+  state = {
+    editable: false,
+  };
+  componentDidMount() {
+    this.toggleReadOnlyMode();
+    window.addEventListener('resize', this.toggleReadOnlyMode);
+  }
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.toggleReadOnlyMode);
+  }
   submitForm = (values = {}, dispatch, formProps) => {
     const { update, emailEnabled, emailCases } = this.props;
     const projectEmailConfig = { emailEnabled, emailCases };
@@ -50,14 +62,14 @@ export class NotificationsTab extends Component {
     const config = { ...projectEmailConfig, ...values };
     const isAbleToSubmit = this.isAbleToSubmit(config);
     const newConfig = this.prepareData(config);
-
     if (isAbleToSubmit && dirty && valid) {
       update(newConfig);
     }
   };
   isAbleToEditForm = () =>
     canConfigreEmailNotifications(this.props.userRole, this.props.projectRole);
-  isAbleToSubmit = ({ emailCases }) => emailCases.every(({ confirmed }) => confirmed);
+  isAbleToSubmit = ({ emailCases }) =>
+    emailCases.every(({ confirmed, submitted }) => submitted || confirmed);
   convertEmailCaseForSubmission = (obj) => {
     const { informOwner, launchNames, recipients, sendCase, tags } = obj;
     return {
@@ -72,21 +84,26 @@ export class NotificationsTab extends Component {
 
     return { ...config, emailCases };
   }
+  isOnMobile = () => window.matchMedia(SCREEN_XS_MAX).matches;
+  toggleReadOnlyMode = () => {
+    debounce(() => {
+      this.setState({ editable: this.isAbleToEditForm() && !this.isOnMobile() });
+    }, 200)();
+  };
   render() {
     const { emailEnabled } = this.props;
-    const readOnly = !this.isAbleToEditForm();
-
+    const { editable } = this.state;
     return (
       <div className={cx('notification-form')}>
         <EmailEnableForm
           initialValues={{ emailEnabled }}
           enableReinitialize
           onChange={this.submitForm}
-          readOnly={readOnly}
+          readOnly={!editable}
         />
 
         {emailEnabled && (
-          <EmailCaseForm onChange={this.submitForm} readOnly={readOnly} enableReinitialize />
+          <EmailCaseForm onChange={this.submitForm} readOnly={!editable} enableReinitialize />
         )}
       </div>
     );

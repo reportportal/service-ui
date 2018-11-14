@@ -1,3 +1,5 @@
+import { launchName } from 'common/utils/validation';
+
 const compareCases = (caseOne, caseTwo) => {
   if (caseOne.sendCase !== caseTwo.sendCase) {
     return false;
@@ -35,6 +37,12 @@ export const validate = ({ emailCases }) => {
 
     if (item.recipients.length === 0 && !item.informOwner) {
       emailCasesErrors.recipients = 'recipientsHint';
+      emailCasesErrors.confirmed = 'error';
+      emailCasesArrayErrors[index] = emailCasesErrors;
+    }
+
+    if (item.launchNames.length && !item.launchNames.some(launchName)) {
+      emailCasesErrors.launchNames = 'launchesHint';
       emailCasesErrors.confirmed = 'error';
       emailCasesArrayErrors[index] = emailCasesErrors;
     }
