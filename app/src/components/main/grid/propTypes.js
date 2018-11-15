@@ -3,8 +3,8 @@ import { ALIGN_CENTER, ALIGN_LEFT, ALIGN_RIGHT } from './constants';
 
 export const columnPropTypes = {
   title: PropTypes.shape({
-    full: PropTypes.string,
-    short: PropTypes.string,
+    full: PropTypes.oneOfType([PropTypes.node, PropTypes.string]),
+    short: PropTypes.oneOfType([PropTypes.node, PropTypes.string]),
     component: PropTypes.oneOfType([PropTypes.node, PropTypes.func]),
   }),
   customProps: PropTypes.object,
