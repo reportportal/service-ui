@@ -1,0 +1,44 @@
+.bug-id-col,
+.submit-date-col,
+.submitter-col {
+  width: 20%;
+  font-size: 13px;
+}
+
+.bug-id-col {
+  font-family: $FONT-SEMIBOLD;
+  word-break: break-all;
+
+  .bug-link {
+    color: $COLOR--windows-blue;
+    text-decoration: none;
+  }
+}
+
+.submit-date-col {
+  .mobile-hint {
+    display: none;
+    padding-right: 2px;
+    font-family: $FONT-SEMIBOLD;
+  }
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    .mobile-hint {
+      display: inline;
+    }
+  }
+}
+
+.submitter-col {
+  .avatar-wrapper {
+    position: absolute;
+    width: 27px;
+    height: 30px;
+    overflow: hidden;
+    background-color: transparent;
+  }
+  .submitter {
+    margin-left: 30px;
+    font-family: $FONT-SEMIBOLD;
+  }
+}

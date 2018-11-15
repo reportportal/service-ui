@@ -12,6 +12,7 @@ import { showModalAction } from 'controllers/modal';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { TestCasesGrowthTrendChart } from 'components/widgets/charts/testCasesGrowthTrendChart';
 import { LaunchesComparisonChart } from 'components/widgets/charts/launchesComparisonChart';
+import { UniqueBugsTable } from 'pages/inside/dashboardPage/widgets/uniqueBugsTable';
 import { LaunchesDurationChart } from 'components/widgets/charts/launchesDurationChart';
 import { LaunchesTable } from 'pages/inside/dashboardPage/widgets/launchesTable';
 import { FailedCasesTrendChart } from 'components/widgets/charts/failedCasesTrendChart';
@@ -22,6 +23,7 @@ import styles from './widget.scss';
 const cx = classNames.bind(styles);
 
 const charts = {
+  [widgetTypes.UNIQUE_BUGS_TABLE]: UniqueBugsTable,
   [widgetTypes.DIFFERENT_LAUNCHES_COMPARISON]: LaunchesComparisonChart,
   [widgetTypes.LAUNCHES_TABLE]: LaunchesTable,
   [widgetTypes.LAUNCH_DURATION]: LaunchesDurationChart,
