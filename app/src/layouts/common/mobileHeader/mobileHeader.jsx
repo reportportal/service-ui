@@ -21,23 +21,32 @@
 
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { Layout } from 'layouts/common/layout';
-import { AdminHeader } from './adminHeader';
-import { AdminSidebar } from './adminSidebar';
+import classNames from 'classnames/bind';
+import styles from './mobileHeader.scss';
 
-export class AdminLayout extends PureComponent {
+const cx = classNames.bind(styles);
+
+export class MobileHeader extends PureComponent {
   static propTypes = {
-    children: PropTypes.node,
+    opened: PropTypes.bool,
+    toggleSideMenu: PropTypes.func,
   };
   static defaultProps = {
-    children: null,
+    opened: false,
+    toggleSideMenu: () => {},
   };
 
   render() {
+    const { opened, toggleSideMenu } = this.props;
     return (
-      <Layout Header={AdminHeader} Sidebar={AdminSidebar}>
-        {this.props.children}
-      </Layout>
+      <div className={cx('mobile-header')}>
+        <div className={cx('hamburger', { opened })} onClick={toggleSideMenu}>
+          <div className={cx('hamburger-part')} />
+          <div className={cx('hamburger-part')} />
+          <div className={cx('hamburger-part')} />
+        </div>
+        <div className={cx('rp-logo')} />
+      </div>
     );
   }
 }

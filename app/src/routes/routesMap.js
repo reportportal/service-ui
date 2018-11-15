@@ -11,6 +11,10 @@ import {
   PROJECT_LOG_PAGE,
   PROJECT_USERDEBUG_LOG_PAGE,
   HISTORY_PAGE,
+  PROJECTS_PAGE,
+  ALL_USERS_PAGE,
+  SERVER_SETTINGS_PAGE,
+  PLUGINS_PAGE,
   projectIdSelector,
 } from 'controllers/pages';
 import { GENERAL } from 'common/constants/settingTabs';
@@ -67,10 +71,15 @@ export default {
   [LOGIN_PAGE]: '/login',
   [REGISTRATION_PAGE]: '/registration',
 
-  ADMINISTRATE_PAGE: '/administrate',
+  ADMINISTRATE_PAGE: redirectRoute('/administrate', () => ({ type: PROJECTS_PAGE })),
   USER_PROFILE_PAGE: '/user-profile',
 
   API_PAGE: '/api',
+
+  [PROJECTS_PAGE]: '/administrate/projects',
+  [ALL_USERS_PAGE]: '/administrate/users',
+  [SERVER_SETTINGS_PAGE]: '/administrate/settings',
+  [PLUGINS_PAGE]: '/administrate/plugins',
 
   [PROJECT_PAGE]: {
     path: '/:projectId',
