@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import { duration } from 'moment';
 import classNames from 'classnames/bind';
 
-import { isValueInterrupted } from './chartUtils';
+import { isValueInterrupted } from '../chartUtils';
 
-import styles from './launchesDurationChart.scss';
+import styles from './launchDurationTooltip.scss';
 
 const cx = classNames.bind(styles);
 
