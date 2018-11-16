@@ -18,17 +18,4 @@
       stroke-dasharray: none;
     }
   }
-
-  .launch-name {
-    width: 100%;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    font-family: $FONT-SEMIBOLD, sans-serif;
-  }
-
-  .launch-duration {
-    width: 100%;
-    text-overflow: ellipsis;
-    overflow: hidden;
-  }
 }
