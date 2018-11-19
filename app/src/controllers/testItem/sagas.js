@@ -86,15 +86,15 @@ function* fetchTestItems() {
   const namespace = yield select(namespaceSelector);
   const query = yield select(queryParametersSelector, namespace);
 
-  const noChildFilter = 'filter.eq.has_children' in query;
+  const noChildFilter = 'filter.eq.hasChildren' in query;
 
   const sizePath = !parentId && !noChildFilter ? 1 : undefined;
 
   yield put(
     fetchDataAction(NAMESPACE)(URLS.testItems(project), {
       params: {
-        'filter.eq.launch': launchId,
-        'filter.eq.parent': !noChildFilter ? parentId : undefined,
+        'filter.eq.launchId': launchId,
+        'filter.eq.parentId': !noChildFilter ? parentId : undefined,
         'filter.level.path': sizePath,
         'filter.under.path': noChildFilter
           ? itemIds.filter((item) => item !== launchId).join('.')

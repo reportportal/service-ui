@@ -4,4 +4,4 @@ export const RESTORE_PATH = 'restorePath';
 export const NAMESPACE = 'testItem';
 export const PARENT_ITEMS_NAMESPACE = `${NAMESPACE}/parentItems`;
 export const SET_PAGE_LOADING = `${NAMESPACE}/setPageLoading`;
-export const DEFAULT_SORTING = 'start_time,ASC';
+export const DEFAULT_SORTING = 'startTime,ASC';

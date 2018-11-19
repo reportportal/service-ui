@@ -5,4 +5,4 @@ export const FETCH_LAUNCHES_PAGE_DATA = 'fetchLaunchesPageData';
 
 export const NAMESPACE = 'launches';
 
-export const DEFAULT_SORTING = 'start_time,number,DESC';
+export const DEFAULT_SORTING = 'startTime,number,DESC';
