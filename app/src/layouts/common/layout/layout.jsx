@@ -19,7 +19,7 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
@@ -28,7 +28,7 @@ import styles from './layout.scss';
 
 const cx = classNames.bind(styles);
 
-export class Layout extends PureComponent {
+export class Layout extends Component {
   static propTypes = {
     children: PropTypes.node,
     Header: PropTypes.func,
@@ -39,21 +39,25 @@ export class Layout extends PureComponent {
     Header: null,
     Sidebar: null,
   };
-  constructor(props) {
-    super(props);
-    window.addEventListener('resize', this.windowResizeHandler, false);
-  }
+
   state = {
     sideMenuOpened: false,
   };
+
+  componentDidMount() {
+    window.addEventListener('resize', this.windowResizeHandler, false);
+  }
+
   componentWillUnmount() {
     window.removeEventListener('resize', this.windowResizeHandler, false);
   }
+
   windowResizeHandler = () => {
     if (this.state.sideMenuOpened && window.innerWidth > 767) {
       this.setState({ sideMenuOpened: false });
     }
   };
+
   toggleSideMenu = () => {
     this.setState({ sideMenuOpened: !this.state.sideMenuOpened });
   };
@@ -62,9 +66,7 @@ export class Layout extends PureComponent {
     const { Header, Sidebar } = this.props;
     return (
       <div className={cx('layout')}>
-        <div
-          className={cx({ 'slide-container': true, 'side-menu-opened': this.state.sideMenuOpened })}
-        >
+        <div className={cx('slide-container', { 'side-menu-opened': this.state.sideMenuOpened })}>
           <div className={cx('sidebar-container')}>
             <div className={cx('corner-area')} />
             <Sidebar
@@ -87,7 +89,7 @@ export class Layout extends PureComponent {
               </div>
             </ScrollWrapper>
             <div
-              className={cx({ 'sidebar-close-area': true, visible: this.state.sideMenuOpened })}
+              className={cx('sidebar-close-area', { visible: this.state.sideMenuOpened })}
               onClick={this.toggleSideMenu}
             />
           </div>

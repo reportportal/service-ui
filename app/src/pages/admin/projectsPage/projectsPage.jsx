@@ -1,5 +1,1 @@
-import React from 'react';
-
-export const ProjectsPage = () => (
-  <h1>Projects page</h1>
-);
+export const ProjectsPage = () => <h1>Projects page</h1>;

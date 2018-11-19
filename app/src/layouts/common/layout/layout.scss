@@ -42,10 +42,7 @@
   box-sizing: border-box;
   border-right: 1px solid $COLOR--charcoal-grey;
   border-bottom: 1px solid $COLOR--charcoal-grey;
-  background-color: $COLOR--black-2;
-  background-image: url(../img/rp_logo.png);
-  background-repeat: no-repeat;
-  background-position: 50% 60%;
+  background: $COLOR--black-2 url(../img/rp_logo.png) no-repeat 50% 60%;
   cursor: pointer;
 
   @media (max-width: $SCREEN_XS_MAX) {

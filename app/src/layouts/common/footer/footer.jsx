@@ -26,7 +26,7 @@ export class Footer extends Component {
   render() {
     const { buildVersion, tracking } = this.props;
     return (
-      <div className={cx('footer')}>
+      <footer className={cx('footer')}>
         <div className={cx('footer-links')}>
           <a
             href={referenceDictionary.rpGitHub}
@@ -73,7 +73,7 @@ export class Footer extends Component {
             <FormattedMessage id={'Footer.copyright'} defaultMessage={'All rights reserved'} />
           </div>
         </div>
-      </div>
+      </footer>
     );
   }
 }

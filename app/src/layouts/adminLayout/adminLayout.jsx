@@ -19,25 +19,20 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { Layout } from 'layouts/common/layout';
 import { AdminHeader } from './adminHeader';
 import { AdminSidebar } from './adminSidebar';
 
-export class AdminLayout extends PureComponent {
-  static propTypes = {
-    children: PropTypes.node,
-  };
-  static defaultProps = {
-    children: null,
-  };
+export const AdminLayout = ({ children }) => (
+  <Layout Header={AdminHeader} Sidebar={AdminSidebar}>
+    {children}
+  </Layout>
+);
 
-  render() {
-    return (
-      <Layout Header={AdminHeader} Sidebar={AdminSidebar}>
-        {this.props.children}
-      </Layout>
-    );
-  }
-}
+AdminLayout.propTypes = {
+  children: PropTypes.node,
+};
+AdminLayout.defaultProps = {
+  children: null,
+};
