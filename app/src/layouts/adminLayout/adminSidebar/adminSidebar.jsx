@@ -31,6 +31,7 @@ import {
   ALL_USERS_PAGE,
   PROJECTS_PAGE,
 } from 'controllers/pages/constants';
+import { ALL } from 'common/constants/reservedFilterIds';
 import PropTypes from 'prop-types';
 import { Sidebar } from 'layouts/common/sidebar';
 import ProjectsIcon from './img/projects-inline.svg';
@@ -83,7 +84,7 @@ export class AdminSidebar extends Component {
       onClick: this.props.onClickNavBtn,
       link: {
         type: PROJECT_LAUNCHES_PAGE,
-        payload: { projectId: this.props.activeProject, filterId: 'all' },
+        payload: { projectId: this.props.activeProject, filterId: ALL },
       },
       icon: BackIcon,
       message: (

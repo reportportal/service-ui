@@ -20,8 +20,9 @@
  */
 
 import React, { Component } from 'react';
-import track from 'react-tracking';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import track from 'react-tracking';
 import { activeProjectSelector, activeProjectRoleSelector } from 'controllers/user';
 import { SIDEBAR_EVENTS } from 'components/main/analytics/events';
 import { FormattedMessage } from 'react-intl';
@@ -35,7 +36,7 @@ import {
   ADMINISTRATE_PAGE,
 } from 'controllers/pages/constants';
 import { Sidebar } from 'layouts/common/sidebar';
-import PropTypes from 'prop-types';
+import { ALL } from 'common/constants/reservedFilterIds';
 import DashboardIcon from './img/dashboard-icon-inline.svg';
 import LaunchesIcon from './img/launches-icon-inline.svg';
 import FiltersIcon from './img/filters-icon-inline.svg';
@@ -78,7 +79,7 @@ export class AppSidebar extends Component {
       onClick: this.props.onClickNavBtn,
       link: {
         type: PROJECT_LAUNCHES_PAGE,
-        payload: { projectId: this.props.activeProject, filterId: 'all' },
+        payload: { projectId: this.props.activeProject, filterId: ALL },
       },
       icon: LaunchesIcon,
       message: <FormattedMessage id={'Sidebar.launchesBtn'} defaultMessage={'Launches'} />,
@@ -93,7 +94,7 @@ export class AppSidebar extends Component {
       onClick: () => this.onClickButton(SIDEBAR_EVENTS.CLICK_DEBUG_BTN),
       link: {
         type: PROJECT_USERDEBUG_PAGE,
-        payload: { projectId: this.props.activeProject, filterId: 'all' },
+        payload: { projectId: this.props.activeProject, filterId: ALL },
       },
       icon: DebugIcon,
       message: <FormattedMessage id={'Sidebar.debugBtn'} defaultMessage={'Debug'} />,
@@ -119,7 +120,9 @@ export class AppSidebar extends Component {
     const { projectRole } = this.props;
 
     const topSidebarItems = this.createTopSidebarItems();
-    projectRole !== CUSTOMER && topSidebarItems.pop();
+    if (projectRole === CUSTOMER) {
+      topSidebarItems.pop();
+    }
     const bottomSidebarItems = this.createBottomSidebarItems();
 
     return <Sidebar topSidebarItems={topSidebarItems} bottomSidebarItems={bottomSidebarItems} />;

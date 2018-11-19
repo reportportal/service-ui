@@ -67,7 +67,7 @@ export class AppHeader extends Component {
       userRole,
     } = this.props;
     return (
-      <div className={cx('header')}>
+      <header className={cx('header')}>
         <MobileHeader opened={sideMenuOpened} toggleSideMenu={toggleSideMenu} />
         <div className={cx('projects-block')}>
           <ProjectSelector
@@ -96,7 +96,7 @@ export class AppHeader extends Component {
           />
         </div>
         <UserBlock user={user} />
-      </div>
+      </header>
     );
   }
 }

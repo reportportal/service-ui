@@ -19,25 +19,20 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { Layout } from 'layouts/common/layout';
 import { AppHeader } from './appHeader';
 import { AppSidebar } from './appSidebar';
 
-export class AppLayout extends PureComponent {
-  static propTypes = {
-    children: PropTypes.node,
-  };
-  static defaultProps = {
-    children: null,
-  };
+export const AppLayout = ({ children }) => (
+  <Layout Header={AppHeader} Sidebar={AppSidebar}>
+    {children}
+  </Layout>
+);
 
-  render() {
-    return (
-      <Layout Header={AppHeader} Sidebar={AppSidebar}>
-        {this.props.children}
-      </Layout>
-    );
-  }
-}
+AppLayout.propTypes = {
+  children: PropTypes.node,
+};
+AppLayout.defaultProps = {
+  children: null,
+};

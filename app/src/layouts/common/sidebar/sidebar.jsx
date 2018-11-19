@@ -51,7 +51,7 @@ export class Sidebar extends Component {
     const { topSidebarItems, bottomSidebarItems } = this.props;
 
     return (
-      <div className={cx('sidebar')}>
+      <aside className={cx('sidebar')}>
         <div className={cx('top-block')}>
           {topSidebarItems.map((item) => (
             <div key={item.link.type} className={cx('sidebar-btn')} onClick={item.onClick}>
@@ -75,7 +75,7 @@ export class Sidebar extends Component {
             </SidebarButton>
           </div>
         </div>
-      </div>
+      </aside>
     );
   }
 }

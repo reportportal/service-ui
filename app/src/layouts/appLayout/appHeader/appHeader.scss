@@ -20,8 +20,8 @@
 
   @media (max-width: $SCREEN_XS_MAX) {
     height: 50px;
-    margin: 0;
     width: 100%;
+    margin: 0;
     max-width: none;
   }
 }
@@ -48,8 +48,8 @@
 }
 
 .nav-btn {
-  display: inline-block;
   position: relative;
+  display: inline-block;
   height: 30px;
   width: 30px;
   background-repeat: no-repeat;
@@ -71,8 +71,8 @@
   }
 }
 .members-btn {
-  background-image: url(./img/members-icon.svg);
   margin-left: 30px;
+  background-image: url(./img/members-icon.svg);
   background-size: 20px;
 
   @media (max-width: $SCREEN_XS_MAX) {

@@ -25,6 +25,7 @@ import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
 import { NavLink } from 'redux-first-router-link';
 import { FormattedMessage } from 'react-intl';
+import { ALL } from 'common/constants/reservedFilterIds';
 import { logoutAction } from 'controllers/auth';
 import { PROJECT_LAUNCHES_PAGE } from 'controllers/pages/constants';
 import { activeProjectSelector } from 'controllers/user';
@@ -60,7 +61,7 @@ export class AdminHeader extends Component {
   render() {
     const { activeProject, sideMenuOpened, adminHeaderCrumb, toggleSideMenu, logout } = this.props;
     return (
-      <div className={cx('header')}>
+      <header className={cx('header')}>
         <MobileHeader opened={sideMenuOpened} toggleSideMenu={toggleSideMenu} />
         <div className={cx('container')}>
           <h3 className={cx('header-name')}>
@@ -72,7 +73,7 @@ export class AdminHeader extends Component {
               className={cx('back-to-project', 'btn')}
               to={{
                 type: PROJECT_LAUNCHES_PAGE,
-                payload: { projectId: activeProject, filterId: 'all' },
+                payload: { projectId: activeProject, filterId: ALL },
               }}
             >
               <FormattedMessage
@@ -85,7 +86,7 @@ export class AdminHeader extends Component {
             </button>
           </div>
         </div>
-      </div>
+      </header>
     );
   }
 }
