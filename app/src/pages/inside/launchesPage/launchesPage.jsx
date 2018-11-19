@@ -14,6 +14,7 @@ import { activeProjectSelector, userIdSelector } from 'controllers/user';
 import { withPagination } from 'controllers/pagination';
 import { withSorting, SORTING_DESC } from 'controllers/sorting';
 import { showModalAction } from 'controllers/modal';
+import { ENTITY_START_TIME } from 'components/filterEntities/constants';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLock';
 import {
@@ -119,7 +120,7 @@ const messages = defineMessages({
   },
 )
 @withSorting({
-  defaultSortingColumn: 'start_time',
+  defaultSortingColumn: ENTITY_START_TIME,
   defaultSortingDirection: SORTING_DESC,
 })
 @withPagination({

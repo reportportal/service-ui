@@ -46,7 +46,7 @@ export const isLostLaunchSelector = (state) =>
 
 const isListView = (query, namespace) => {
   const namespacedQuery = extractNamespacedQuery(query, namespace);
-  return namespacedQuery && 'filter.eq.has_children' in namespacedQuery;
+  return namespacedQuery && 'filter.eq.hasChildren' in namespacedQuery;
 };
 
 export const itemsSelector = (state) => {
@@ -159,7 +159,7 @@ export const statisticsLinkSelector = (state, ownProps) => {
       ...query,
       ...createNamespacedQuery(
         {
-          'filter.eq.has_children': false,
+          'filter.eq.hasChildren': false,
           'filter.in.type': LEVEL_STEP,
           'filter.in.status': ownProps.statuses && ownProps.statuses.join(','),
         },
@@ -193,7 +193,7 @@ export const defectLinkSelector = (state, ownProps) => {
       ...query,
       ...createNamespacedQuery(
         {
-          'filter.eq.has_children': false,
+          'filter.eq.hasChildren': false,
           'filter.in.type': LEVEL_STEP,
           'filter.in.issue$issue_type': getDefectsString(ownProps.defects),
         },
