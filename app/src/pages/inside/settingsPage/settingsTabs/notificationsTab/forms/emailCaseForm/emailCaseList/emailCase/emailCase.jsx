@@ -17,7 +17,7 @@ import { FieldProvider } from 'components/fields/fieldProvider';
 import {
   labelWidth,
   launchStatuses,
-} from 'pages/inside/settingsPage/settingTabs/notificationsTab/forms/constants';
+} from 'pages/inside/settingsPage/settingsTabs/notificationsTab/forms/constants';
 import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import styles from './emailCase.scss';
 import IconDelete from './img/icon-delete-inline.svg';

@@ -10,7 +10,7 @@ import classNames from 'classnames/bind';
 import { showModalAction } from 'controllers/modal';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
-import { defaultRecipient } from 'pages/inside/settingsPage/settingTabs/notificationsTab/forms/constants';
+import { defaultRecipient } from 'pages/inside/settingsPage/settingsTabs/notificationsTab/forms/constants';
 import { EmailCase } from './emailCase';
 import styles from './emailCasesList.scss';
 import PlusIcon from './img/ic-plus-inline.svg';

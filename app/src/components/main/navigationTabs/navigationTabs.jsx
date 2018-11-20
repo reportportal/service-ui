@@ -48,7 +48,7 @@ export class NavigationTabs extends Component {
   render = () => {
     const { config, activeTab } = this.props;
     return (
-      <div className={cx('container-with-tabs')}>
+      <div className={cx('navigation-tabs')}>
         <div className={cx('tabs-mobile')}>
           <InputDropdown
             options={this.generateOptions()}

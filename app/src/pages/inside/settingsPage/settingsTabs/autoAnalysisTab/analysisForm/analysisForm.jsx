@@ -220,7 +220,7 @@ export class AnalysisForm extends Component {
     const { intl, handleSubmit, disabled } = this.props;
 
     return (
-      <form className={cx('analysis-form-content')} onSubmit={handleSubmit(this.onFormSubmit)}>
+      <form className={cx('analysis-form')} onSubmit={handleSubmit(this.onFormSubmit)}>
         <StrategyBlock disabled={disabled} />
         <div className={cx('accuracy-form-group')}>
           <span className={cx('tabs-container-label')}>

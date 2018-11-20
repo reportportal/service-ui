@@ -1,0 +1,1 @@
+export { SettingsTabs } from './settingsTabs';

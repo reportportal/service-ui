@@ -14,10 +14,11 @@ import {
   PROJECTS_PAGE,
   ALL_USERS_PAGE,
   SERVER_SETTINGS_PAGE,
+  SERVER_SETTINGS_TAB_PAGE,
   PLUGINS_PAGE,
   projectIdSelector,
 } from 'controllers/pages';
-import { GENERAL } from 'common/constants/settingTabs';
+import { GENERAL, EMAIL_SERVER } from 'common/constants/settingsTabs';
 import { isAuthorizedSelector } from 'controllers/auth';
 import {
   fetchDashboardAction,
@@ -78,7 +79,11 @@ export default {
 
   [PROJECTS_PAGE]: '/administrate/projects',
   [ALL_USERS_PAGE]: '/administrate/users',
-  [SERVER_SETTINGS_PAGE]: '/administrate/settings',
+  [SERVER_SETTINGS_PAGE]: redirectRoute('/administrate/settings', () => ({
+    type: SERVER_SETTINGS_TAB_PAGE,
+    payload: { settingTab: EMAIL_SERVER },
+  })),
+  [SERVER_SETTINGS_TAB_PAGE]: '/administrate/settings/:settingTab',
   [PLUGINS_PAGE]: '/administrate/plugins',
 
   [PROJECT_PAGE]: {
