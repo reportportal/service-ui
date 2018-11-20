@@ -22,8 +22,15 @@ import { suitesSelector } from 'controllers/suite';
 import { testsSelector } from 'controllers/test';
 import { stepsSelector } from 'controllers/step';
 import { NAMESPACE as LAUNCH_NAMESPACE, debugModeSelector } from 'controllers/launch';
+import { defectTypesSelector } from 'controllers/project';
 import { DEFAULT_SORTING } from './constants';
-import { createLink, getQueryNamespace, getDefectsString, getNextPage } from './utils';
+import {
+  createLink,
+  getQueryNamespace,
+  getDefectsString,
+  getNextPage,
+  normalizeTestItem,
+} from './utils';
 
 const domainSelector = (state) => state.testItem || {};
 
@@ -36,10 +43,11 @@ export const queryParametersSelector = createQueryParametersSelector({
   defaultSorting: DEFAULT_SORTING,
 });
 export const parentItemsSelector = (state) => domainSelector(state).parentItems || [];
-export const parentItemSelector = (state) => {
-  const parentItems = parentItemsSelector(state);
-  return parentItems[parentItems.length - 1];
-};
+export const parentItemSelector = createSelector(
+  parentItemsSelector,
+  defectTypesSelector,
+  (parentItems, defectTypes) => normalizeTestItem(parentItems[parentItems.length - 1], defectTypes),
+);
 export const launchSelector = (state) => parentItemsSelector(state)[0] || {};
 export const isLostLaunchSelector = (state) =>
   parentItemsSelector(state).length > 1 && !!launchSelector(state);

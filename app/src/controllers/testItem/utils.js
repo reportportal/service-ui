@@ -54,3 +54,26 @@ export const createLink = (testItemIds, itemId, payload, query, nextPage) => {
 
 export const getDefectsString = (defects) =>
   defects && defects.filter((k) => k !== 'total').join(',');
+
+export const normalizeTestItem = (testItem, defectTypesConfig = {}) => {
+  const testItemDefects = (testItem.statistics && testItem.statistics.defects) || {};
+  const defectStatistics = Object.keys(defectTypesConfig).reduce((result, key) => {
+    const defectTypeName = key.toLowerCase();
+    const testItemDefectType = testItemDefects[defectTypeName] || {};
+    const newDefect = defectTypesConfig[key].reduce(
+      (acc, defectTypeConfig) => ({
+        ...acc,
+        [defectTypeConfig.locator]: testItemDefectType[defectTypeConfig.locator] || 0,
+      }),
+      { total: testItemDefectType.total || 0 },
+    );
+    return { ...result, [defectTypeName]: newDefect };
+  }, {});
+  return {
+    ...testItem,
+    statistics: {
+      ...(testItem.statistics || {}),
+      defects: defectStatistics,
+    },
+  };
+};

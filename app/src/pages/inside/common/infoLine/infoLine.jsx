@@ -21,6 +21,13 @@ const messages = defineMessages({
   },
 });
 
+const normalizeExecutions = (executions) => ({
+  total: executions.total || 0,
+  passed: executions.passed || 0,
+  failed: executions.failed || 0,
+  skipped: executions.skipped || 0,
+});
+
 @injectIntl
 export class InfoLine extends Component {
   static propTypes = {
@@ -36,7 +43,7 @@ export class InfoLine extends Component {
     const { events } = this.props;
     const { formatMessage } = this.props.intl;
     const defects = this.props.data.statistics.defects;
-    const executions = this.props.data.statistics.executions;
+    const executions = normalizeExecutions(this.props.data.statistics.executions);
     const passed = executions.passed / executions.total * 100;
     const failed = executions.failed / executions.total * 100;
     const skipped = executions.skipped / executions.total * 100;
