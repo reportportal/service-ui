@@ -25,6 +25,7 @@ import {
   queryParametersSelector,
   isLostLaunchSelector,
   levelSelector,
+  createParentItemsSelector,
 } from './selectors';
 import { calculateLevel } from './utils';
 
@@ -65,25 +66,27 @@ export function* fetchParentItems() {
   yield take(createTestItemActionPredicate(PARENT_ITEMS_NAMESPACE));
 }
 
-function* fetchTestItems() {
+function* fetchTestItems({ payload = {} }) {
+  const offset = payload.offset || 0;
   const isPathNameChanged = yield select(pathnameChangedSelector);
-  if (isPathNameChanged) {
+  if (isPathNameChanged && !payload.offset) {
     yield put(setPageLoadingAction(true));
     yield call(fetchParentItems);
   }
-  const itemIds = yield select(testItemIdsArraySelector);
+  const itemIdsArray = yield select(testItemIdsArraySelector);
+  const itemIds = offset ? itemIdsArray.slice(0, itemIdsArray.length - offset) : itemIdsArray;
   let launchId = yield select(launchIdSelector);
   const isLostLaunch = yield select(isLostLaunchSelector);
   let parentId;
   if (isLostLaunch) {
-    const parentItem = yield select(parentItemSelector);
+    const parentItem = yield select(createParentItemsSelector(offset));
     launchId = parentItem ? parentItem.launchId : launchId;
   }
   if (itemIds.length > 1) {
     parentId = itemIds[itemIds.length - 1];
   }
   const project = yield select(activeProjectSelector);
-  const namespace = yield select(namespaceSelector);
+  const namespace = yield select(namespaceSelector, offset);
   const query = yield select(queryParametersSelector, namespace);
 
   const noChildFilter = 'filter.eq.hasChildren' in query;

@@ -1,6 +1,6 @@
 import { all, call, put, select, takeEvery } from 'redux-saga/effects';
 import { getStorageItem } from 'common/utils';
-import { fetchParentItems } from 'controllers/testItem';
+import { fetchParentItems, fetchTestItemsAction } from 'controllers/testItem';
 import { URLS } from 'common/urls';
 import { activeProjectSelector } from 'controllers/user';
 import { logItemIdSelector, pagePropertiesSelector } from 'controllers/pages';
@@ -58,6 +58,7 @@ function* fetchLogPageData({ meta = {} }) {
   if (meta.refresh) {
     yield all([call(fetchLogItems), call(fetchActivity), call(fetchHistoryEntries)]);
   } else {
+    yield put(fetchTestItemsAction({ offset: 1 }));
     yield all([
       call(fetchParentItems),
       call(fetchLogItems),
