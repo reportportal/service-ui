@@ -3,8 +3,14 @@ import {
   logItemIdSelector,
   pagePropertiesSelector,
   createQueryParametersSelector,
+  PROJECT_LOG_PAGE,
+  PROJECT_USERDEBUG_LOG_PAGE,
+  testItemIdsArraySelector,
+  payloadSelector,
 } from 'controllers/pages';
 import { DEFAULT_PAGINATION } from 'controllers/pagination';
+import { itemsSelector } from 'controllers/testItem';
+import { debugModeSelector } from 'controllers/launch';
 import { extractNamespacedQuery } from 'common/utils/routingUtils';
 import { calculateGrowthDuration, normalizeHistoryItem } from './utils';
 import { NAMESPACE } from './constants';
@@ -72,4 +78,79 @@ export const activeLogSelector = createSelector(
   historyItemsSelector,
   activeLogIdSelector,
   (historyItems, logItemId) => historyItems.find((historyItem) => historyItem.id === logItemId),
+);
+
+const getPreviousItemId = (testItems = [], currentId) => {
+  if (testItems.length < 2) {
+    return null;
+  }
+  const itemIndex = testItems.findIndex((item) => item.id === currentId);
+  const nextItem = testItems[itemIndex - 1];
+  return nextItem ? nextItem.id : null;
+};
+
+const getNextItemId = (testItems = [], currentId) => {
+  if (testItems.length < 2) {
+    return null;
+  }
+  const itemIndex = testItems.findIndex((item) => item.id === currentId);
+  const nextItem = testItems[itemIndex + 1];
+  return nextItem ? nextItem.id : null;
+};
+
+export const canGoBackSelector = createSelector(
+  itemsSelector,
+  logItemIdSelector,
+  (testItems, logId) => getPreviousItemId(testItems, logId) !== null,
+);
+export const canGoForwardSelector = createSelector(
+  itemsSelector,
+  logItemIdSelector,
+  (testItems, logId) => getNextItemId(testItems, logId) !== null,
+);
+
+export const previousLogLinkSelector = createSelector(
+  payloadSelector,
+  pagePropertiesSelector,
+  testItemIdsArraySelector,
+  logItemIdSelector,
+  debugModeSelector,
+  itemsSelector,
+  (payload, query, testItemIds, logId, debugMode, testItems) => {
+    const nextItemId = getPreviousItemId(testItems, logId);
+    if (!nextItemId) {
+      return null;
+    }
+    return {
+      type: debugMode ? PROJECT_USERDEBUG_LOG_PAGE : PROJECT_LOG_PAGE,
+      payload: {
+        ...payload,
+        testItemIds: [...testItemIds.slice(0, testItemIds.length - 1), nextItemId].join('/'),
+      },
+      meta: query,
+    };
+  },
+);
+
+export const nextLogLinkSelector = createSelector(
+  payloadSelector,
+  pagePropertiesSelector,
+  testItemIdsArraySelector,
+  logItemIdSelector,
+  debugModeSelector,
+  itemsSelector,
+  (payload, query, testItemIds, logId, debugMode, testItems) => {
+    const nextItemId = getNextItemId(testItems, logId);
+    if (!nextItemId) {
+      return null;
+    }
+    return {
+      type: debugMode ? PROJECT_USERDEBUG_LOG_PAGE : PROJECT_LOG_PAGE,
+      payload: {
+        ...payload,
+        testItemIds: [...testItemIds.slice(0, testItemIds.length - 1), nextItemId].join('/'),
+      },
+      meta: query,
+    };
+  },
 );

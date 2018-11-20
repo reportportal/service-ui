@@ -14,6 +14,7 @@ export {
   namespaceSelector,
   parentItemSelector,
   parentItemsSelector,
+  createParentItemsSelector,
   breadcrumbsSelector,
   nameLinkSelector,
   statisticsLinkSelector,

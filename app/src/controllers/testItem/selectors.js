@@ -37,17 +37,17 @@ const domainSelector = (state) => state.testItem || {};
 export const levelSelector = (state) => domainSelector(state).level;
 export const loadingSelector = (state) => domainSelector(state).loading;
 export const pageLoadingSelector = (state) => domainSelector(state).pageLoading;
-export const namespaceSelector = (state) =>
-  getQueryNamespace(testItemIdsArraySelector(state).length - 1);
+export const namespaceSelector = (state, offset = 0) =>
+  getQueryNamespace(testItemIdsArraySelector(state).length - 1 - offset);
 export const queryParametersSelector = createQueryParametersSelector({
   defaultSorting: DEFAULT_SORTING,
 });
 export const parentItemsSelector = (state) => domainSelector(state).parentItems || [];
-export const parentItemSelector = createSelector(
-  parentItemsSelector,
-  defectTypesSelector,
-  (parentItems, defectTypes) => normalizeTestItem(parentItems[parentItems.length - 1], defectTypes),
-);
+export const createParentItemsSelector = (offset = 0) =>
+  createSelector(parentItemsSelector, defectTypesSelector, (parentItems, defectTypes) =>
+    normalizeTestItem(parentItems[parentItems.length - 1 - offset], defectTypes),
+  );
+export const parentItemSelector = createParentItemsSelector(0);
 export const launchSelector = (state) => parentItemsSelector(state)[0] || {};
 export const isLostLaunchSelector = (state) =>
   parentItemsSelector(state).length > 1 && !!launchSelector(state);
