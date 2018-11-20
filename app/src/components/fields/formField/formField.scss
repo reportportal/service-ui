@@ -45,6 +45,17 @@
   line-height: 13px;
   color: $COLOR--charcoal-grey;
   box-sizing: border-box;
+
+  &.required {
+    position: relative;
+    &:after {
+      content: '*';
+      position: absolute;
+      margin-left: 2px;
+      color: $COLOR--product-bug;
+    }
+  }
+
   @media (max-width: $SCREEN_SM_MAX) {
     min-width: 150px;
     width: 150px;

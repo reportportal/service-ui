@@ -1,0 +1,40 @@
+.email-server-tab-form-fields {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin-top: 5px;
+}
+
+.form-field-wrapper {
+  min-width: 330px;
+  width: 330px;
+  position: relative;
+  @media (max-width: $SCREEN_XS_MAX) {
+    width: 100%;
+  }
+}
+
+.label {
+  padding-right: 4px;
+}
+
+.checkboxes-container {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: 25%;
+  @media (max-width: $SCREEN_SM_MAX) {
+    width: 45%;
+  }
+  @media (max-width: $SCREEN_XS_MAX) {
+    width: 100%;
+  }
+}
+
+.checkbox-wrapper {
+  &:first-child {
+    margin-right: 30px;
+  }
+}

@@ -53,7 +53,7 @@ const messages = defineMessages({
 });
 const validators = {
   items: (formatMessage) => (value) =>
-    (!value || !validate.widgetItems(value, 1, 150)) &&
+    (!value || !validate.inRangeValidate(value, 1, 150)) &&
     formatMessage(messages.ItemsValidationError),
   contentFields: (formatMessage) => (value) =>
     (!value || value.length === 4) && formatMessage(messages.ContentFieldsValidationError), // 4 - count of static content fields
