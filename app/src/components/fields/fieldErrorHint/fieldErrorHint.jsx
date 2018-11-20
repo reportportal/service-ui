@@ -118,6 +118,14 @@ const messages = defineMessages({
     id: 'LinkIssueModal.issueIdHint',
     defaultMessage: 'Issue ID should have size from 1 to 128',
   },
+  requiredFieldHint: {
+    id: 'Common.requiredFieldHint',
+    defaultMessage: 'This field is required',
+  },
+  portFieldHint: {
+    id: 'EmailServerTab.portFieldHint',
+    defaultMessage: "Only numbers from '1' to '65535' are possible.",
+  },
 });
 
 @injectIntl

@@ -137,4 +137,7 @@ export const URLS = {
   generateDemoData: (projectId) => `${urlBase}demo/${projectId}`,
   getFileById: (activeProject, dataId) =>
     `${urlBase}${activeProject}/data/${dataId}${getQueryParams({ access_token: getToken() })}`,
+
+  serverSettings: () => `${urlBase}settings`,
+  emailServerSettings: () => `${urlBase}settings/email`,
 };

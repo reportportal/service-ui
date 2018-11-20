@@ -64,7 +64,7 @@ const messages = defineMessages({
 });
 const validators = {
   items: (formatMessage) => (value) =>
-    (!value || !validate.widgetItems(value, 2, 150)) &&
+    (!value || !validate.inRangeValidate(value, 2, 150)) &&
     formatMessage(messages.ItemsValidationError),
   launchNames: (formatMessage) => (value) =>
     (!value || !value.length) && formatMessage(messages.LaunchNamesValidationError),

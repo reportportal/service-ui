@@ -45,7 +45,8 @@ const messages = defineMessages({
 });
 const validators = {
   items: (formatMessage) => (value) =>
-    (!value || !validate.widgetItems(value, 1, 10)) && formatMessage(messages.ItemsValidationError),
+    (!value || !validate.inRangeValidate(value, 1, 10)) &&
+    formatMessage(messages.ItemsValidationError),
   prefix: (formatMessage) => (value) =>
     (!value || !validate.widgetPrefix(value)) && formatMessage(messages.PrefixValidationError),
 };
