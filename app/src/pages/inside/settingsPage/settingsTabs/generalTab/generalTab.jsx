@@ -131,7 +131,7 @@ export class GeneralTab extends Component {
   render() {
     const { intl, accountRole, userRole, tracking } = this.props;
     return (
-      <div className={cx('settings-tab-content')}>
+      <div className={cx('general-tab')}>
         <form onSubmit={this.props.handleSubmit(this.onFormSubmit)}>
           <div className={cx('field-container')}>
             <span className={cx('field-label')}>

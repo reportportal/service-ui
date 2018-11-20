@@ -14,7 +14,7 @@ import {
 } from 'controllers/user';
 import { canSeeMembers } from 'common/utils/permissions';
 import { PROJECT_MEMBERS_PAGE, PROJECT_SETTINGS_TAB_PAGE } from 'controllers/pages/constants';
-import { GENERAL } from 'common/constants/settingTabs';
+import { GENERAL } from 'common/constants/settingsTabs';
 import { MobileHeader } from 'layouts/common/mobileHeader';
 import { ProjectSelector } from './projectSelector';
 import { UserBlock } from './userBlock';

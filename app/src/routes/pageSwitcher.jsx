@@ -66,6 +66,7 @@ const pageRendering = {
   PROJECTS_PAGE: { component: ProjectsPage, layout: AdminLayout },
   ALL_USERS_PAGE: { component: AllUsersPage, layout: AdminLayout },
   SERVER_SETTINGS_PAGE: { component: ServerSettingsPage, layout: AdminLayout },
+  SERVER_SETTINGS_TAB_PAGE: { component: ServerSettingsPage, layout: AdminLayout },
   PLUGINS_PAGE: { component: PluginsPage, layout: AdminLayout },
   [TEST_ITEM_PAGE]: { component: TestItemPage, layout: AppLayout },
   [PROJECT_LOG_PAGE]: { component: LogsPage, layout: AppLayout },

@@ -1,5 +1,7 @@
-.container-with-tabs {
+.navigation-tabs {
   width: 100%;
+  box-sizing: border-box;
+  padding: 5px 15px 15px 15px;
   background-color: $COLOR--white-two;
   @media (max-width: $SCREEN_XS_MAX) {
     padding-top: 15px;
@@ -63,6 +65,7 @@
   display: none;
   @media (max-width: $SCREEN_XS_MAX) {
     display: block;
+    //padding: 0 15px;
     span {
       a {
         color: $COLOR--topaz;

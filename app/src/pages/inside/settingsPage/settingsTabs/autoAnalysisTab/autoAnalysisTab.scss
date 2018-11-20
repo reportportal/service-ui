@@ -1,4 +1,5 @@
 .auto-analysis-tab {
+  position: relative;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -8,6 +9,9 @@
     width: 1040px;
     max-width: 1040px;
     margin: 0 auto;
+  }
+  @media (max-width: $SCREEN_XS_MAX) {
+    padding: 0;
   }
 }
 

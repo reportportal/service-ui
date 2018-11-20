@@ -13,7 +13,7 @@ import {
   DEFECT,
   ANALYSIS,
   DEMO_DATA,
-} from 'common/constants/settingTabs';
+} from 'common/constants/settingsTabs';
 import {
   activeProjectSelector,
   activeProjectRoleSelector,
@@ -26,32 +26,32 @@ import { GeneralTab } from './generalTab';
 import { AutoAnalysisTab } from './autoAnalysisTab';
 import { NotificationsTab } from './notificationsTab';
 import { DemoDataTab } from './demoDataTab';
-import styles from './settingTabs.scss';
+import styles from './settingsTabs.scss';
 
 const cx = classNames.bind(styles);
 const messages = defineMessages({
   general: {
-    id: 'SettingTabs.general',
+    id: 'SettingsTabs.general',
     defaultMessage: 'General',
   },
   notifications: {
-    id: 'SettingTabs.notifications',
+    id: 'SettingsTabs.notifications',
     defaultMessage: 'Notifications',
   },
   bts: {
-    id: 'SettingTabs.bts',
+    id: 'SettingsTabs.bts',
     defaultMessage: 'Bug tracking system',
   },
   defect: {
-    id: 'SettingTabs.defect',
+    id: 'SettingsTabs.defect',
     defaultMessage: 'Defect types',
   },
   analysis: {
-    id: 'SettingTabs.analysis',
+    id: 'SettingsTabs.analysis',
     defaultMessage: 'Auto-Analysis',
   },
   demoData: {
-    id: 'SettingTabs.demoData',
+    id: 'SettingsTabs.demoData',
     defaultMessage: 'Demo data',
   },
 });
@@ -68,7 +68,7 @@ const messages = defineMessages({
   },
 )
 @injectIntl
-export class SettingTabs extends Component {
+export class SettingsTabs extends Component {
   static propTypes = {
     projectId: PropTypes.string.isRequired,
     intl: intlShape.isRequired,
@@ -88,19 +88,19 @@ export class SettingTabs extends Component {
 
   createTabsConfig = () => {
     const tabsConfig = {
-      general: {
+      [GENERAL]: {
         name: this.props.intl.formatMessage(messages.general),
         link: this.createTabLink(GENERAL),
         component: <GeneralTab />,
         eventInfo: SETTINGS_PAGE_EVENTS.GENERAL_TAB,
       },
-      notifications: {
+      [NOTIFICATIONS]: {
         name: this.props.intl.formatMessage(messages.notifications),
         link: this.createTabLink(NOTIFICATIONS),
         component: <NotificationsTab />,
         eventInfo: SETTINGS_PAGE_EVENTS.NOTIFICATIONS_TAB,
       },
-      bts: {
+      [BTS]: {
         name: (
           <span>
             {this.props.intl.formatMessage(messages.bts)}
@@ -111,19 +111,19 @@ export class SettingTabs extends Component {
         component: <div>bts</div>,
         eventInfo: SETTINGS_PAGE_EVENTS.BTS_TAB,
       },
-      defect: {
+      [DEFECT]: {
         name: this.props.intl.formatMessage(messages.defect),
         link: this.createTabLink(DEFECT),
         component: <div>defect</div>,
         eventInfo: SETTINGS_PAGE_EVENTS.DEFECT_TYPE_TAB,
       },
-      autoAnalysis: {
+      [ANALYSIS]: {
         name: this.props.intl.formatMessage(messages.analysis),
         link: this.createTabLink(ANALYSIS),
         component: <AutoAnalysisTab />,
         eventInfo: SETTINGS_PAGE_EVENTS.AUTO_ANALYSIS_TAB,
       },
-      demoData: {
+      [DEMO_DATA]: {
         name: this.props.intl.formatMessage(messages.demoData),
         link: this.createTabLink(DEMO_DATA),
         component: <DemoDataTab />,
@@ -131,16 +131,16 @@ export class SettingTabs extends Component {
       },
     };
     if (!canSeeDemoData(this.props.accountRole, this.props.userRole)) {
-      delete tabsConfig.demoData;
+      delete tabsConfig[DEMO_DATA];
     }
     return tabsConfig;
   };
 
   render = () => (
-    <div className={cx('settings')}>
+    <div className={cx('settings-tabs')}>
       <NavigationTabs
         config={this.createTabsConfig()}
-        activeTab={this.props.activeTab || GENERAL}
+        activeTab={this.props.activeTab}
         onChangeTab={this.props.changeTab}
       />
     </div>

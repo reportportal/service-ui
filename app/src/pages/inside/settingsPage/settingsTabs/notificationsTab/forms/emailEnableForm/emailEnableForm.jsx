@@ -6,7 +6,7 @@ import classNames from 'classnames/bind';
 import { InputBigSwitcher } from 'components/inputs/inputBigSwitcher';
 import { InputDropdown } from 'components/inputs/inputDropdown';
 import { FormField } from 'components/fields/formField';
-import { labelWidth } from 'pages/inside/settingsPage/settingTabs/notificationsTab/forms/constants';
+import { labelWidth } from 'pages/inside/settingsPage/settingsTabs/notificationsTab/forms/constants';
 import styles from './emailEnableForm.scss';
 
 const messages = defineMessages({
