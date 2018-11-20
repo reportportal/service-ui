@@ -47,3 +47,19 @@ export const normalizeHistoryItem = (historyItem, filteredSameHistoryItems) => {
   }
   return itemProps;
 };
+
+export const getPreviousItem = (testItems = [], currentId) => {
+  if (testItems.length < 2) {
+    return null;
+  }
+  const itemIndex = testItems.findIndex((item) => item.id === currentId);
+  return testItems[itemIndex - 1] || null;
+};
+
+export const getNextItem = (testItems = [], currentId) => {
+  if (testItems.length < 2) {
+    return null;
+  }
+  const itemIndex = testItems.findIndex((item) => item.id === currentId);
+  return testItems[itemIndex + 1] || null;
+};

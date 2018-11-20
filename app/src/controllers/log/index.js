@@ -11,8 +11,8 @@ export {
   logItemsSelector,
   logPaginationSelector,
   loadingSelector,
-  canGoBackSelector,
-  canGoForwardSelector,
+  previousItemSelector,
+  nextItemSelector,
   nextLogLinkSelector,
   previousLogLinkSelector,
 } from './selectors';
