@@ -12,10 +12,10 @@ import RightArrowIcon from 'common/img/arrow-right-small-inline.svg';
 import RefreshIcon from 'common/img/refresh-icon-inline.svg';
 import { breadcrumbsSelector } from 'controllers/testItem';
 import {
-  canGoBackSelector,
-  canGoForwardSelector,
   nextLogLinkSelector,
   previousLogLinkSelector,
+  previousItemSelector,
+  nextItemSelector,
 } from 'controllers/log';
 import styles from './logToolbar.scss';
 
@@ -24,10 +24,10 @@ const cx = classNames.bind(styles);
 @connect(
   (state) => ({
     breadcrumbs: breadcrumbsSelector(state),
-    canGoBack: canGoBackSelector(state),
-    canGoForward: canGoForwardSelector(state),
     nextLink: nextLogLinkSelector(state),
     previousLink: previousLogLinkSelector(state),
+    previousItem: previousItemSelector(state),
+    nextItem: nextItemSelector(state),
   }),
   {
     redirect: redirectAction,
@@ -37,8 +37,8 @@ export class LogToolbar extends Component {
   static propTypes = {
     breadcrumbs: PropTypes.array,
     onRefresh: PropTypes.func,
-    canGoBack: PropTypes.bool,
-    canGoForward: PropTypes.bool,
+    previousItem: PropTypes.object,
+    nextItem: PropTypes.object,
     nextLink: PropTypes.object,
     previousLink: PropTypes.object,
     redirect: PropTypes.func,
@@ -47,8 +47,8 @@ export class LogToolbar extends Component {
   static defaultProps = {
     breadcrumbs: [],
     onRefresh: () => {},
-    canGoBack: () => {},
-    canGoForward: () => {},
+    previousItem: null,
+    nextItem: null,
     nextLink: null,
     previousLink: null,
     redirect: () => {},
@@ -64,7 +64,7 @@ export class LogToolbar extends Component {
   };
 
   render() {
-    const { breadcrumbs, canGoBack, canGoForward, onRefresh } = this.props;
+    const { breadcrumbs, previousLink, nextLink, previousItem, nextItem, onRefresh } = this.props;
     return (
       <div className={cx('log-toolbar')}>
         <Breadcrumbs
@@ -78,13 +78,15 @@ export class LogToolbar extends Component {
             <div className={cx('left-arrow-button')}>
               <GhostButton
                 icon={LeftArrowIcon}
-                disabled={!canGoBack}
+                disabled={!previousLink}
+                title={previousItem && previousItem.name}
                 onClick={this.handleBackClick}
               />
             </div>
             <GhostButton
               icon={RightArrowIcon}
-              disabled={!canGoForward}
+              disabled={!nextLink}
+              title={nextItem && nextItem.name}
               onClick={this.handleForwardClick}
             />
           </div>
