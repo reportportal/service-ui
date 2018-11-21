@@ -74,7 +74,9 @@ const columnComponentsMap = {
 
 const getColumn = (name, columnType, formatMessage) => ({
   id: name,
-  title: COLUMN_NAMES_MAP[name],
+  title: {
+    full: formatMessage(COLUMN_NAMES_MAP[name]),
+  },
   component: (data) => columnComponentsMap[columnType](data, name, formatMessage),
 });
 
