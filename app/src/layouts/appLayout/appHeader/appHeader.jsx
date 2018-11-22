@@ -88,7 +88,7 @@ export class AppHeader extends Component {
           <NavLink
             to={{
               type: PROJECT_SETTINGS_TAB_PAGE,
-              payload: { projectId: activeProject, settingTab: GENERAL },
+              payload: { projectId: activeProject, settingsTab: GENERAL },
             }}
             className={cx('nav-btn', 'settings-btn')}
             activeClassName={cx('active')}

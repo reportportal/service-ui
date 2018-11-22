@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { redirect } from 'redux-first-router';
 import { defineMessages, injectIntl, intlShape } from 'react-intl';
-import { PROJECT_SETTINGS_TAB_PAGE } from 'controllers/pages';
+import { PROJECT_SETTINGS_TAB_PAGE, settingsTabSelector } from 'controllers/pages';
 import { canSeeDemoData } from 'common/utils/permissions';
 import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import {
@@ -59,7 +59,7 @@ const messages = defineMessages({
 @connect(
   (state) => ({
     projectId: activeProjectSelector(state),
-    activeTab: state.location.payload.settingTab,
+    activeTab: settingsTabSelector(state),
     accountRole: userAccountRoleSelector(state),
     userRole: activeProjectRoleSelector(state),
   }),
@@ -83,7 +83,7 @@ export class SettingsTabs extends Component {
 
   createTabLink = (tabName) => ({
     type: PROJECT_SETTINGS_TAB_PAGE,
-    payload: { projectId: this.props.projectId, settingTab: tabName },
+    payload: { projectId: this.props.projectId, settingsTab: tabName },
   });
 
   createTabsConfig = () => {

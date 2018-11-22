@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { redirect } from 'redux-first-router';
 import { defineMessages, injectIntl, intlShape } from 'react-intl';
-import { SERVER_SETTINGS_TAB_PAGE } from 'controllers/pages';
+import { SERVER_SETTINGS_TAB_PAGE, settingsTabSelector } from 'controllers/pages';
 import {
   EMAIL_SERVER,
   AUTHORIZATION_CONFIGURATION,
@@ -28,10 +28,10 @@ const messages = defineMessages({
 
 @connect(
   (state) => ({
-    activeTab: state.location.payload.settingTab,
+    activeTab: settingsTabSelector(state),
   }),
   {
-    changeTab: (link) => redirect(link),
+    onChangeTab: redirect,
   },
 )
 @injectIntl
@@ -39,16 +39,16 @@ export class ServerSettingsTabs extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
     activeTab: PropTypes.string,
-    changeTab: PropTypes.func,
+    onChangeTab: PropTypes.func,
   };
   static defaultProps = {
     activeTab: EMAIL_SERVER,
-    changeTab: () => {},
+    onChangeTab: () => {},
   };
 
   createTabLink = (tabName) => ({
     type: SERVER_SETTINGS_TAB_PAGE,
-    payload: { settingTab: tabName },
+    payload: { settingsTab: tabName },
   });
 
   createTabsConfig = () => ({
@@ -73,7 +73,7 @@ export class ServerSettingsTabs extends Component {
     <NavigationTabs
       config={this.createTabsConfig()}
       activeTab={this.props.activeTab}
-      onChangeTab={this.props.changeTab}
+      onChangeTab={this.props.onChangeTab}
     />
   );
 }
