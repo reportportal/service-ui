@@ -10,6 +10,7 @@ import {
   STATISTICS,
 } from 'common/constants/settingsTabs';
 import { NavigationTabs } from 'components/main/navigationTabs';
+import { EmailServerTab } from './emailServerTab';
 
 const messages = defineMessages({
   eMailServer: {
@@ -55,7 +56,7 @@ export class ServerSettingsTabs extends Component {
     [EMAIL_SERVER]: {
       name: this.props.intl.formatMessage(messages.eMailServer),
       link: this.createTabLink(EMAIL_SERVER),
-      component: <div>E-mail server</div>,
+      component: <EmailServerTab />,
     },
     [AUTHORIZATION_CONFIGURATION]: {
       name: this.props.intl.formatMessage(messages.authConfiguration),

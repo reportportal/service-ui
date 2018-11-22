@@ -16,4 +16,6 @@ export const DEFAULT_FORM_CONFIG = {
   [PROTOCOL_KEY]: 'smtp',
   [SSL_KEY]: false,
   [TLS_KEY]: false,
+  [USERNAME_KEY]: '',
+  [PASSWORD_KEY]: '',
 };
