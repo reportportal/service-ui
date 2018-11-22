@@ -25,13 +25,13 @@ export const GroupHeader = connect((state) => ({
 }))(({ data, activeProject, launchId, filterId }) => (
   <div className={cx('group-header-row')}>
     <div className={cx('group-header-content')}>
-      {Object.keys(data[0].path_names || {}).map((key, i, array) => (
+      {Object.keys(data[0].pathNames || {}).map((key, i, array) => (
         <Fragment key={key}>
           <Link
             className={cx('link')}
             to={createLink(activeProject, filterId, launchId, array.slice(0, i + 1))}
           >
-            {data[0].path_names[key]}
+            {data[0].pathNames[key]}
           </Link>
           {i < array.length - 1 && <span className={cx('separator')}> / </span>}
         </Fragment>
