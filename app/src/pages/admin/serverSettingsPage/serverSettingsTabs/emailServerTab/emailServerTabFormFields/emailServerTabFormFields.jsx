@@ -81,7 +81,7 @@ export class EmailServerTabFormFields extends Component {
     this.authOptions = [{ value: true, label: 'ON' }, { value: false, label: 'OFF' }];
   }
 
-  onChangeAuthAvailability = (arg, value) => {
+  onChangeAuthAvailability = (event, value) => {
     if (!value) {
       this.props.changeFieldValue(USERNAME_KEY, '');
       this.props.changeFieldValue(PASSWORD_KEY, '');
@@ -135,7 +135,7 @@ export class EmailServerTabFormFields extends Component {
           labelClassName={cx('label')}
         >
           <FieldErrorHint>
-            <Input type="number" maxLength={5} mobileDisabled />
+            <Input type="number" maxLength="5" mobileDisabled />
           </FieldErrorHint>
         </FormField>
         <FormField

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { defineMessages, injectIntl, intlShape } from 'react-intl';
-import { fetch, validate } from 'common/utils'; //
+import { fetch, validate } from 'common/utils';
 import { URLS } from 'common/urls';
 import { connect } from 'react-redux';
 import { reduxForm, formValueSelector } from 'redux-form';
@@ -15,7 +15,7 @@ import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { BigButton } from 'components/buttons/bigButton';
 import WarningIcon from 'common/img/error-inline.svg';
 import { EMAIL_SERVER_FORM, EMAIL_ENABLED_KEY, DEFAULT_FORM_CONFIG } from './constants';
-import { EmailServerTabFormFields } from './emailServerTabFormFields';
+import { EmailServerTabFormFields } from './emailServerTabFormFields/index';
 import styles from './emailServerTab.scss';
 
 const cx = classNames.bind(styles);
@@ -95,18 +95,18 @@ export class EmailServerTab extends Component {
 
   updateEmailConfig = (options) =>
     fetch(URLS.emailServerSettings(), options)
-      .then(this.updateSettingSuccess)
+      .then(() => this.updateSettingSuccess(options.method))
       .catch(this.catchRequestError);
 
   fetchEmailConfig = () =>
     fetch(URLS.serverSettings())
       .then((data) => {
-        this.props.initialize({
-          [EMAIL_ENABLED_KEY]: true,
-          password: '',
-          username: '',
-          ...data.serverEmailConfig,
-        });
+        const config = {
+          [EMAIL_ENABLED_KEY]: !!data.serverEmailConfig,
+          ...DEFAULT_FORM_CONFIG,
+          ...(data.serverEmailConfig || {}),
+        };
+        this.props.initialize(config);
         this.setState({
           loading: false,
         });
@@ -117,11 +117,11 @@ export class EmailServerTab extends Component {
         });
       });
 
-  updateSettingSuccess = (response) => {
+  updateSettingSuccess = (method) => {
     const {
       intl: { formatMessage },
     } = this.props;
-    if (response.msg.match('remove')) {
+    if (method === 'DELETE') {
       this.props.initialize(DEFAULT_FORM_CONFIG);
     }
     this.props.showNotification({
