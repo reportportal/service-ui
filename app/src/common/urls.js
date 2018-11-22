@@ -44,6 +44,8 @@ export const URLS = {
   launchOwnersSearch: (activeProject) =>
     `${urlBase}${activeProject}/launch/owners?filter.cnt.user=`,
   launches: (activeProject, ids) => `${urlBase}${activeProject}/launch${getQueryParams({ ids })}`,
+  launchesLatest: (activeProject, ids) =>
+    `${urlBase}${activeProject}/launch/latest${getQueryParams({ ids })}`,
   launchUpdate: (activeProject) => `${urlBase}${activeProject}/launch/update`,
   launchStop: (activeProject) => `${urlBase}${activeProject}/launch/stop`,
   launchesItemsUpdate: (activeProject, id, type) =>

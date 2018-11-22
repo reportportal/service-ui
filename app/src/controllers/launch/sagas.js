@@ -31,9 +31,11 @@ function* fetchLaunchesWithParams({ payload }) {
   const params = yield select(queryParametersSelector, NAMESPACE);
   const isDebugMode = yield select(debugModeSelector);
   const queryParams = { ...params, ...payload };
+  const filterId = yield select(filterIdSelector);
+  const urlCreator = filterId === LATEST ? URLS.launchesLatest : URLS.launches;
   yield put(
     fetchDataAction(NAMESPACE)(
-      !isDebugMode ? URLS.launches(activeProject) : URLS.debug(activeProject),
+      !isDebugMode ? urlCreator(activeProject) : URLS.debug(activeProject),
       { params: queryParams },
     ),
   );
