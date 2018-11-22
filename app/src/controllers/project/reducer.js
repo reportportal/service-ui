@@ -26,7 +26,10 @@ export const projectInfoReducer = (state = PROJECT_INFO_INITIAL_STATE, { type, p
         ...state,
         configuration: {
           ...state.configuration,
-          analyzerConfiguration: payload,
+          attributes: {
+            ...((state.configuration && state.configuration.attributes) || {}),
+            ...payload,
+          },
         },
       };
     case UPDATE_EMAIL_CONFIG_SUCCESS:

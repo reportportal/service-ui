@@ -65,13 +65,11 @@ export class AccuracyFormBlock extends Component {
     disabled: PropTypes.bool,
     intl: intlShape.isRequired,
     onInputChange: PropTypes.func,
-    setAnalysisMode: PropTypes.func,
   };
 
   static defaultProps = {
     disabled: false,
     onInputChange: () => {},
-    setAnalysisMode: () => {},
   };
 
   constructor(props) {

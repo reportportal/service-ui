@@ -8,8 +8,10 @@ import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { validate, fetch } from 'common/utils';
 import { URLS } from 'common/urls';
 import {
-  projectAnalyzerConfigSelector,
   updateAutoAnalysisConfigurationAction,
+  attributesByPrefixSelector,
+  normalizeAttributesWithPrefix,
+  ANALYZER_ATTRIBUTE_PREFIX,
 } from 'controllers/project';
 import { activeProjectSelector } from 'controllers/user';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
@@ -17,6 +19,13 @@ import { ToggleButton } from 'components/buttons/toggleButton';
 import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { StrategyBlock } from './strategyBlock';
 import { AccuracyFormBlock } from './accuracyFormBlock';
+import {
+  NUMBER_OF_LOG_LINES,
+  MIN_DOC_FREQ,
+  MIN_SHOULD_MATCH,
+  MIN_TERM_FREQ,
+  INDEXING_RUNNING,
+} from './constants';
 import styles from './analysisForm.scss';
 
 const cx = classNames.bind(styles);
@@ -52,22 +61,22 @@ const selector = formValueSelector('analysisForm');
 
 const analysisModeConfig = {
   Classic: {
-    minShouldMatch: 95,
-    minDocFreq: 1,
-    minTermFreq: 1,
-    numberOfLogLines: -1,
+    [MIN_SHOULD_MATCH]: 95,
+    [MIN_DOC_FREQ]: 1,
+    [MIN_TERM_FREQ]: 1,
+    [NUMBER_OF_LOG_LINES]: -1,
   },
   Moderate: {
-    minShouldMatch: 80,
-    minDocFreq: 1,
-    minTermFreq: 1,
-    numberOfLogLines: 5,
+    [MIN_SHOULD_MATCH]: 80,
+    [MIN_DOC_FREQ]: 1,
+    [MIN_TERM_FREQ]: 1,
+    [NUMBER_OF_LOG_LINES]: 5,
   },
   Light: {
-    minShouldMatch: 60,
-    minDocFreq: 1,
-    minTermFreq: 1,
-    numberOfLogLines: 3,
+    [MIN_SHOULD_MATCH]: 60,
+    [MIN_DOC_FREQ]: 1,
+    [MIN_TERM_FREQ]: 1,
+    [NUMBER_OF_LOG_LINES]: 3,
   },
 };
 
@@ -85,14 +94,14 @@ const DEFAULT_ANALYSIS_MODE = 'Classic';
 })
 @connect(
   (state) => ({
-    analyzerConfiguration: projectAnalyzerConfigSelector(state),
+    analyzerConfiguration: attributesByPrefixSelector(state, ANALYZER_ATTRIBUTE_PREFIX),
     currentProject: activeProjectSelector(state),
     formInputsValues: selector(
       state,
-      'minShouldMatch',
-      'minDocFreq',
-      'minTermFreq',
-      'numberOfLogLines',
+      MIN_SHOULD_MATCH,
+      MIN_DOC_FREQ,
+      MIN_TERM_FREQ,
+      NUMBER_OF_LOG_LINES,
     ),
   }),
   {
@@ -139,7 +148,7 @@ export class AnalysisForm extends Component {
     const initialConfiguration = {
       ...this.props.analyzerConfiguration,
     };
-    delete initialConfiguration.indexing_running;
+    delete initialConfiguration[INDEXING_RUNNING];
     this.setAnalysisMode(initialConfiguration);
     this.props.initialize(initialConfiguration);
   }
@@ -150,22 +159,24 @@ export class AnalysisForm extends Component {
     this.setAnalysisMode(formInputsValues);
   };
 
-  onFormSubmit = (data) => {
-    const dataToSend = {
+  onFormSubmit = (formData) => {
+    const preparedData = normalizeAttributesWithPrefix(formData, 'analyzer');
+
+    const data = {
       configuration: {
-        analyzerConfiguration: {
-          ...data,
+        attributes: {
+          ...preparedData,
         },
       },
     };
     this.props.tracking.trackEvent(SETTINGS_PAGE_EVENTS.SUBMIT_AUTO_ANALYSIS_SETTINGS);
-    fetch(URLS.project(this.props.currentProject), { method: 'put', data: dataToSend })
+    fetch(URLS.project(this.props.currentProject), { method: 'put', data })
       .then(() => {
         this.props.showNotification({
           message: this.props.intl.formatMessage(messages.updateSuccessNotification),
           type: NOTIFICATION_TYPES.SUCCESS,
         });
-        this.props.updateAutoAnalysisConfigurationAction(dataToSend);
+        this.props.updateAutoAnalysisConfigurationAction(data);
       })
       .catch(() => {
         this.props.showNotification({
@@ -179,10 +190,10 @@ export class AnalysisForm extends Component {
     const analysisModeKeys = Object.keys(analysisModeConfig);
     const existingMode = analysisModeKeys.find(
       (key) =>
-        analysisModeConfig[key].minShouldMatch === Number(modeConfig.minShouldMatch) &&
-        analysisModeConfig[key].minDocFreq === Number(modeConfig.minDocFreq) &&
-        analysisModeConfig[key].minTermFreq === Number(modeConfig.minTermFreq) &&
-        analysisModeConfig[key].numberOfLogLines === Number(modeConfig.numberOfLogLines),
+        analysisModeConfig[key][MIN_SHOULD_MATCH] === Number(modeConfig[MIN_SHOULD_MATCH]) &&
+        analysisModeConfig[key][MIN_DOC_FREQ] === Number(modeConfig[MIN_DOC_FREQ]) &&
+        analysisModeConfig[key][MIN_TERM_FREQ] === Number(modeConfig[MIN_TERM_FREQ]) &&
+        analysisModeConfig[key][NUMBER_OF_LOG_LINES] === Number(modeConfig[NUMBER_OF_LOG_LINES]),
     );
     this.setState({
       autoAnalysisMode: existingMode || '',
@@ -206,10 +217,10 @@ export class AnalysisForm extends Component {
 
   tabChangeHandle = (newValue) => {
     this.props.tracking.trackEvent(SETTINGS_PAGE_EVENTS.TOGGLE_AUTO_ANALYSIS_MODE);
-    this.props.change('minShouldMatch', analysisModeConfig[newValue].minShouldMatch);
-    this.props.change('minDocFreq', analysisModeConfig[newValue].minDocFreq);
-    this.props.change('minTermFreq', analysisModeConfig[newValue].minTermFreq);
-    this.props.change('numberOfLogLines', analysisModeConfig[newValue].numberOfLogLines);
+    this.props.change(MIN_SHOULD_MATCH, analysisModeConfig[newValue][MIN_SHOULD_MATCH]);
+    this.props.change(MIN_DOC_FREQ, analysisModeConfig[newValue][MIN_DOC_FREQ]);
+    this.props.change(MIN_TERM_FREQ, analysisModeConfig[newValue][MIN_TERM_FREQ]);
+    this.props.change(NUMBER_OF_LOG_LINES, analysisModeConfig[newValue][NUMBER_OF_LOG_LINES]);
 
     this.setState({
       autoAnalysisMode: newValue,
