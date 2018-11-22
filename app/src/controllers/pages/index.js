@@ -13,6 +13,7 @@ export {
   pathnameChangedSelector,
   logItemIdSelector,
   activeLogIdSelector,
+  settingsTabSelector,
 } from './selectors';
 export { updatePagePropertiesAction } from './actionCreators';
 

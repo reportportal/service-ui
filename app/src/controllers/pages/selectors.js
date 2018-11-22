@@ -22,6 +22,8 @@ export const logItemIdSelector = createSelector(
   (itemIdsArray) => Number(itemIdsArray.length && itemIdsArray[itemIdsArray.length - 1]) || 0,
 );
 
+export const settingsTabSelector = (state) => payloadSelector(state).settingsTab || '';
+
 export const pageSelector = (state) => pageNames[state.location.type] || NO_PAGE;
 
 export const pagePropertiesSelector = ({ location: { query } }, namespace, mapping = undefined) => {

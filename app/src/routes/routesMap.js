@@ -81,9 +81,9 @@ export default {
   [ALL_USERS_PAGE]: '/administrate/users',
   [SERVER_SETTINGS_PAGE]: redirectRoute('/administrate/settings', () => ({
     type: SERVER_SETTINGS_TAB_PAGE,
-    payload: { settingTab: EMAIL_SERVER },
+    payload: { settingsTab: EMAIL_SERVER },
   })),
-  [SERVER_SETTINGS_TAB_PAGE]: '/administrate/settings/:settingTab',
+  [SERVER_SETTINGS_TAB_PAGE]: '/administrate/settings/:settingsTab',
   [PLUGINS_PAGE]: '/administrate/plugins',
 
   [PROJECT_PAGE]: {
@@ -178,9 +178,9 @@ export default {
   },
   PROJECT_SETTINGS_PAGE: redirectRoute('/:projectId/settings', (payload) => ({
     type: PROJECT_SETTINGS_TAB_PAGE,
-    payload: { ...payload, settingTab: GENERAL },
+    payload: { ...payload, settingsTab: GENERAL },
   })),
-  PROJECT_SETTINGS_TAB_PAGE: '/:projectId/settings/:settingTab',
+  PROJECT_SETTINGS_TAB_PAGE: '/:projectId/settings/:settingsTab',
   PROJECT_SANDBOX_PAGE: '/:projectId/sandbox',
   [TEST_ITEM_PAGE]: {
     path: '/:projectId/launches/:filterId/:testItemIds+',
