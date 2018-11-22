@@ -62,6 +62,8 @@ export class StrategyBlock extends Component {
     disabled: false,
   };
 
+  formatAnalyzerAvailabilityValue = (value) => value && JSON.parse(value);
+
   render() {
     const { intl, disabled, tracking } = this.props;
 
@@ -72,7 +74,7 @@ export class StrategyBlock extends Component {
           fieldWrapperClassName={cx('switcher-wrapper')}
           label={intl.formatMessage(messages.autoAnalysisSwitcherTitle)}
           description={Parser(intl.formatMessage(messages.analysisStatusInfo))}
-          format={Boolean}
+          format={this.formatAnalyzerAvailabilityValue}
           parse={Boolean}
           disabled={disabled}
           onChange={() => {
@@ -83,7 +85,7 @@ export class StrategyBlock extends Component {
         </FormField>
 
         <FormField
-          name="analyzer_mode"
+          name="autoAnalyzerMode"
           containerClassName={cx('radio-container')}
           fieldWrapperClassName={cx('aa-strategy-option-selector')}
           descriptionClassName={cx('radio-description')}
@@ -102,7 +104,7 @@ export class StrategyBlock extends Component {
         </FormField>
 
         <FormField
-          name="analyzer_mode"
+          name="autoAnalyzerMode"
           containerClassName={cx('radio-container')}
           fieldWrapperClassName={cx('aa-strategy-option-selector')}
           labelClassName={cx('no-label')}

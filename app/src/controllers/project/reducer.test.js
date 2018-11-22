@@ -34,7 +34,7 @@ describe('project reducer', () => {
         ...PROJECT_INFO_INITIAL_STATE,
         configuration: {
           ...PROJECT_INFO_INITIAL_STATE.configuration,
-          analyzerConfiguration: {},
+          attributes: {},
         },
       };
       const payload = { foo: 'bar' };
@@ -46,7 +46,10 @@ describe('project reducer', () => {
         ...oldState,
         configuration: {
           ...oldState.configuration,
-          analyzerConfiguration: payload,
+          attributes: {
+            ...oldState.configuration.attributes,
+            ...payload,
+          },
         },
       });
     });

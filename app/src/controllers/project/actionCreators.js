@@ -22,7 +22,7 @@ const fetchProjectPreferencesSuccessAction = (projectId) => ({
 
 export const updateAutoAnalysisConfigurationAction = (project) => ({
   type: UPDATE_AUTO_ANALYSIS_CONFIGURATION,
-  payload: project.configuration.analyzerConfiguration,
+  payload: project.configuration.attributes,
 });
 
 const updateProjectPreferencesAction = (settings) => (dispatch, getState) =>

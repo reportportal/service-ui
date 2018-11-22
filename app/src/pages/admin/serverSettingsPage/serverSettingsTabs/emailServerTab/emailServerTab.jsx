@@ -15,7 +15,7 @@ import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { BigButton } from 'components/buttons/bigButton';
 import WarningIcon from 'common/img/error-inline.svg';
 import { EMAIL_SERVER_FORM, EMAIL_ENABLED_KEY, DEFAULT_FORM_CONFIG } from './constants';
-import { EmailServerTabFormFields } from './emailServerTabFormFields/index';
+import { EmailServerTabFormFields } from './emailServerTabFormFields';
 import styles from './emailServerTab.scss';
 
 const cx = classNames.bind(styles);

@@ -17,6 +17,22 @@ export const userFiltersSelector = (state) => projectPreferencesSelector(state).
 
 export const defectTypesSelector = (state) => projectConfigSelector(state).subTypes || {};
 
+const attributesSelector = (state) => projectConfigSelector(state).attributes || {};
+
+export const attributesByPrefixSelector = (state, prefix) =>
+  createSelector(attributesSelector, (attributes) =>
+    Object.keys(attributes).reduce(
+      (result, attribute) =>
+        attribute.match(prefix)
+          ? {
+              ...result,
+              [attribute.replace(`${prefix}.`, '')]: attributes[attribute],
+            }
+          : result,
+      {},
+    ),
+  )(state);
+
 export const projectAnalyzerConfigSelector = (state) =>
   projectConfigSelector(state).analyzerConfiguration || {};
 
@@ -39,7 +55,6 @@ export const projectEmailCasesSelector = createSelector(
 
 export const projectEmailEnabledSelector = (state) =>
   projectEmailConfigurationSelector(state).emailEnabled || false;
-
 
 export const defectColorsSelector = createSelector(projectConfigSelector, (config) => {
   const colors = {};

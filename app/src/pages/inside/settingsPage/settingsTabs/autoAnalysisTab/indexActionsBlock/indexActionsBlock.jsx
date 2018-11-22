@@ -7,8 +7,9 @@ import { showModalAction } from 'controllers/modal';
 import { appInfoSelector } from 'controllers/appInfo/selectors';
 import classNames from 'classnames/bind';
 import { GhostButton } from 'components/buttons/ghostButton';
-import { projectAnalyzerConfigSelector } from 'controllers/project';
+import { attributesByPrefixSelector, ANALYZER_ATTRIBUTE_PREFIX } from 'controllers/project';
 import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
+import { INDEXING_RUNNING } from '../analysisForm/constants';
 import styles from './indexActionsBlock.scss';
 
 const cx = classNames.bind(styles);
@@ -48,7 +49,9 @@ const messages = defineMessages({
 
 @connect(
   (state) => ({
-    indexing_running: projectAnalyzerConfigSelector(state).indexing_running,
+    indexingRunning: JSON.parse(
+      attributesByPrefixSelector(state, ANALYZER_ATTRIBUTE_PREFIX)[INDEXING_RUNNING] || 'false',
+    ),
     appInfo: appInfoSelector(state),
   }),
   {
@@ -62,7 +65,7 @@ export class IndexActionsBlock extends Component {
   static propTypes = {
     disabled: PropTypes.bool,
     intl: intlShape.isRequired,
-    indexing_running: PropTypes.bool,
+    indexingRunning: PropTypes.bool,
     appInfo: PropTypes.object,
     showRemoveIndexModal: PropTypes.func,
     showGenerateIndexModal: PropTypes.func,
@@ -74,7 +77,7 @@ export class IndexActionsBlock extends Component {
 
   static defaultProps = {
     disabled: false,
-    indexing_running: false,
+    indexingRunning: false,
     appInfo: {},
     showRemoveIndexModal: () => {},
     showGenerateIndexModal: () => {},
@@ -106,7 +109,7 @@ export class IndexActionsBlock extends Component {
           </div>
           <div className={cx('form-group-column')}>
             <GhostButton
-              disabled={this.props.indexing_running || !this.props.appInfo.ANALYZER || disabled}
+              disabled={this.props.indexingRunning || !this.props.appInfo.ANALYZER || disabled}
               onClick={this.removeIndex}
               mobileDisabled
             >
@@ -123,7 +126,7 @@ export class IndexActionsBlock extends Component {
           </div>
           <div className={cx('form-group-column')}>
             <GhostButton
-              disabled={this.props.indexing_running || !this.props.appInfo.ANALYZER || disabled}
+              disabled={this.props.indexingRunning || !this.props.appInfo.ANALYZER || disabled}
               onClick={this.generateIndex}
               title={
                 !this.props.appInfo.ANALYZER
@@ -135,7 +138,7 @@ export class IndexActionsBlock extends Component {
               <span className={cx('index-action-caption')}>
                 {intl.formatMessage(
                   messages[
-                    this.props.indexing_running
+                    this.props.indexingRunning
                       ? 'generateIndexButtonProgressCaption'
                       : 'generateIndexButtonCaption'
                   ],
