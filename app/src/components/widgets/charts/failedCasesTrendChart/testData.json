@@ -21,7 +21,7 @@
               "id": 1,
               "number": 1,
               "name": "launch name 1",
-              "start_time": 1541662237750,
+              "startTime": 1541662237750,
               "values": {
                   "total": "11",
                   "statistics$defects$product_bug$total": "0",
@@ -35,7 +35,7 @@
               "id": 2,
               "number": 2,
               "name": "launch name 1",
-              "start_time": 1541662237750,
+              "startTime": 1541662237750,
               "values": {
                   "total": "10",
                   "statistics$defects$product_bug$total": "0",
@@ -49,7 +49,7 @@
               "id": 3,
               "number": 3,
               "name": "launch name 1",
-              "start_time": 1541662237750,
+              "startTime": 1541662237750,
               "values": {
                   "total": "9",
                   "statistics$defects$product_bug$total": "0",
@@ -63,7 +63,7 @@
               "id": 4,
               "number": 4,
               "name": "launch name 1",
-              "start_time": 1541662237750,
+              "startTime": 1541662237750,
               "values": {
                   "total": "9",
                   "statistics$defects$product_bug$total": "0",
@@ -77,7 +77,7 @@
               "id": 5,
               "number": 1,
               "name": "launch name 2",
-              "start_time": 1541662237750,
+              "startTime": 1541662237750,
               "values": {
                   "total": "8",
                   "statistics$defects$product_bug$total": "0",
@@ -91,7 +91,7 @@
               "id": 6,
               "number": 2,
               "name": "launch name 2",
-              "start_time": 1541662237750,
+              "startTime": 1541662237750,
               "values": {
                   "total": "8",
                   "statistics$defects$product_bug$total": "0",
@@ -105,7 +105,7 @@
               "id": 7,
               "number": 3,
               "name": "launch name 2",
-              "start_time": 1541662237750,
+              "startTime": 1541662237750,
               "values": {
                   "total": "2",
                   "statistics$defects$product_bug$total": "0",
@@ -119,7 +119,7 @@
               "id": 8,
               "number": 4,
               "name": "launch name 2",
-              "start_time": 1541662237750,
+              "startTime": 1541662237750,
               "values": {
                   "total": "2",
                   "statistics$defects$product_bug$total": "0",
@@ -133,7 +133,7 @@
               "id": 9,
               "number": 1,
               "name": "launch name 3",
-              "start_time": 1541662237750,
+              "startTime": 1541662237750,
               "values": {
                   "total": "3",
                   "statistics$defects$product_bug$total": "0",
@@ -147,7 +147,7 @@
               "id": 10,
               "number": 2,
               "name": "launch name 3",
-              "start_time": 1541662237750,
+              "startTime": 1541662237750,
               "values": {
                   "total": "4",
                   "statistics$defects$product_bug$total": "0",

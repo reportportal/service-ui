@@ -94,7 +94,7 @@ export class NonPassedTestCasesTrendChart extends Component {
 
     widget.content.result.forEach((item) => {
       const value = parseFloat(item.values[FAILED_SKIPPED_TOTAL]);
-      const { id, name, number, start_time: startTime } = item;
+      const { id, name, number, startTime } = item;
       this.itemData.push({ id, name, number, startTime });
       this.chartData.push(value);
     });

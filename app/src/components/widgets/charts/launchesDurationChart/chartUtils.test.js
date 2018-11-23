@@ -91,8 +91,8 @@ describe('chartUtils', () => {
       const input = [
         {
           duration: '4607',
-          start_time: '1538474734721',
-          end_time: '1538474739328',
+          startTime: '1538474734721',
+          endTime: '1538474739328',
           status: 'STOPPED',
           name: 'Demo Api Tests__ncst',
           number: '6',
@@ -100,8 +100,8 @@ describe('chartUtils', () => {
         },
         {
           duration: '1526',
-          start_time: '1538474726486',
-          end_time: '1538474728012',
+          startTime: '1538474726486',
+          endTime: '1538474728012',
           status: 'FAILED',
           name: 'Demo Api Tests__ncst',
           number: '3',
@@ -109,8 +109,8 @@ describe('chartUtils', () => {
         },
         {
           duration: '830',
-          start_time: '1538474725654',
-          end_time: '1538474726485',
+          startTime: '1538474725654',
+          endTime: '1538474726485',
           status: 'PASSED',
           name: 'Demo Api Tests__ncst',
           number: '2',
@@ -124,8 +124,8 @@ describe('chartUtils', () => {
       const input = [
         {
           duration: '4607',
-          start_time: '1538474734721',
-          end_time: '1538474739328',
+          startTime: '1538474734721',
+          endTime: '1538474739328',
           status: 'STOPPED',
           name: 'Demo Api Tests__ncst',
           number: '6',
@@ -133,8 +133,8 @@ describe('chartUtils', () => {
         },
         {
           duration: '1526',
-          start_time: '1538474726486',
-          end_time: '1538474728012',
+          startTime: '1538474726486',
+          endTime: '1538474728012',
           status: 'FAILED',
           name: 'Demo Api Tests__ncst',
           number: '3',
@@ -142,8 +142,8 @@ describe('chartUtils', () => {
         },
         {
           duration: '830',
-          start_time: '1538474725654',
-          end_time: '1538474726485',
+          startTime: '1538474725654',
+          endTime: '1538474726485',
           status: 'INTERRUPTED',
           name: 'Demo Api Tests__ncst',
           number: '2',

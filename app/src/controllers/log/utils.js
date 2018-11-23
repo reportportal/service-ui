@@ -22,8 +22,8 @@ export const calculateGrowthDuration = (historyItems) => {
       }
       if (prevItemIndex <= historyItemsLastIndex) {
         const prevDuration =
-          historyItems[prevItemIndex].end_time - historyItems[prevItemIndex].start_time;
-        const currentDuration = item.end_time - item.start_time;
+          historyItems[prevItemIndex].endTime - historyItems[prevItemIndex].startTime;
+        const currentDuration = item.endTime - item.startTime;
         const growth = currentDuration / prevDuration - 1;
         growth > 0 && (newItem.growthDuration = `+${Math.round(growth * 100)}%`);
       }

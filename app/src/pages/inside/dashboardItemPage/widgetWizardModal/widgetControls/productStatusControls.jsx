@@ -67,7 +67,7 @@ const messages = defineMessages({
 });
 const PASSING_RATE = 'passing_rate';
 const TOTAL = 'total';
-const START_TIME = 'start_time';
+const START_TIME = 'startTime';
 const STATUS = 'status';
 const STATIC_BASE_COLUMNS = [TOTAL, PASSED, FAILED, SKIPPED, PASSING_RATE];
 const BASE_COLUMNS_ORDER = [

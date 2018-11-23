@@ -107,7 +107,7 @@ export class FailedCasesTrendChart extends Component {
         id: item.id,
         name: item.name,
         number: item.number,
-        startTime: item.start_time,
+        startTime: item.startTime,
       });
       this.chartData.push(item.values.total);
     });

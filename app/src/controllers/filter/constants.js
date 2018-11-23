@@ -26,7 +26,7 @@ export const DEFAULT_FILTER = {
   conditions: [],
   type: 'launch',
   orders: [
-    { isAsc: false, sortingColumn: 'start_time' },
+    { isAsc: false, sortingColumn: 'startTime' },
     { isAsc: false, sortingColumn: 'number' },
   ],
 };

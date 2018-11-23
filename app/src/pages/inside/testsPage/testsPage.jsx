@@ -44,7 +44,7 @@ import { LaunchFiltersSection } from 'pages/inside/common/launchFiltersSection';
   },
 )
 @withSorting({
-  defaultSortingColumn: 'start_time',
+  defaultSortingColumn: 'startTime',
   defaultSortingDirection: SORTING_ASC,
 })
 @withPagination({

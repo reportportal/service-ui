@@ -10,7 +10,7 @@ import {
 } from 'controllers/project';
 import { PROJECT_LAUNCHES_PAGE, filterIdSelector } from 'controllers/pages';
 import { omit } from 'common/utils/omit';
-import { ALL, LATEST } from 'common/constants/reservedFilterIds';
+import { ALL, LATEST, NEW_FILTER_PREFIX } from 'common/constants/reservedFilterIds';
 import {
   NAMESPACE,
   FETCH_FILTERS,
@@ -110,7 +110,7 @@ function* createFilter({ payload: filter = {} }) {
     ...DEFAULT_FILTER,
     ...filter,
     id: lastNewFilterId - 1,
-    name: `New_Filter ${-(lastNewFilterId - 1)}`,
+    name: `${NEW_FILTER_PREFIX} ${-(lastNewFilterId - 1)}`,
   };
   yield put(addFilterAction(newFilter));
   yield put(changeActiveFilterAction(newFilter.id));
