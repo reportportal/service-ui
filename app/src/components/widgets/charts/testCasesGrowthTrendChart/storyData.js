@@ -18,7 +18,7 @@ export const widgetData = {
         number: 6,
         name:
           'Long name of launch name to_be_sure_it_is_correctly_displayed_on_Launches_pages_under_different_browsers_New_Long name of launch name to_be_sure_it_is_correctly_displayed_on_Launches_pages_under_different_browsers_New_Long name of launch name to_be_sure_it',
-        start_time: 1541760891421,
+        startTime: 1541760891421,
         delta: 0,
         statistics$executions$total: 3,
       },
@@ -27,7 +27,7 @@ export const widgetData = {
         number: 5,
         name:
           'Long name of launch name to_be_sure_it_is_correctly_displayed_on_Launches_pages_under_different_browsers_New_Long name of launch name to_be_sure_it_is_correctly_displayed_on_Launches_pages_under_different_browsers_New_Long name of launch name to_be_sure_it',
-        start_time: 1541760891421,
+        startTime: 1541760891421,
         delta: 3,
         statistics$executions$total: 6,
       },
@@ -36,7 +36,7 @@ export const widgetData = {
         number: 4,
         name:
           'Long name of launch name to_be_sure_it_is_correctly_displayed_on_Launches_pages_under_different_browsers_New_Long name of launch name to_be_sure_it_is_correctly_displayed_on_Launches_pages_under_different_browsers_New_Long name of launch name to_be_sure_it',
-        start_time: 1541760891421,
+        startTime: 1541760891421,
         delta: -2,
         statistics$executions$total: 4,
       },
@@ -45,7 +45,7 @@ export const widgetData = {
         number: 3,
         name:
           'Long name of launch name to_be_sure_it_is_correctly_displayed_on_Launches_pages_under_different_browsers_New_Long name of launch name to_be_sure_it_is_correctly_displayed_on_Launches_pages_under_different_browsers_New_Long name of launch name to_be_sure_it',
-        start_time: 1541760891421,
+        startTime: 1541760891421,
         delta: -3,
         statistics$executions$total: 1,
       },
@@ -54,7 +54,7 @@ export const widgetData = {
         number: 2,
         name:
           'Long name of launch name to_be_sure_it_is_correctly_displayed_on_Launches_pages_under_different_browsers_New_Long name of launch name to_be_sure_it_is_correctly_displayed_on_Launches_pages_under_different_browsers_New_Long name of launch name to_be_sure_it',
-        start_time: 1541760891421,
+        startTime: 1541760891421,
         delta: 7,
         statistics$executions$total: 8,
       },
@@ -63,7 +63,7 @@ export const widgetData = {
         number: 1,
         name:
           'Long name of launch name to_be_sure_it_is_correctly_displayed_on_Launches_pages_under_different_browsers_New_Long name of launch name to_be_sure_it_is_correctly_displayed_on_Launches_pages_under_different_browsers_New_Long name of launch name to_be_sure_it',
-        start_time: 1541760891421,
+        startTime: 1541760891421,
         delta: 1,
         statistics$executions$total: 9,
       },

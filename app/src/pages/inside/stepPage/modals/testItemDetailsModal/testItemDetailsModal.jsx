@@ -95,7 +95,7 @@ export class TestItemDetailsModal extends Component {
         </div>
         <div className={cx('row')}>
           <LabeledSection label={intl.formatMessage(messages.duration)}>
-            {getDuration(item.start_time, item.end_time)}
+            {getDuration(item.startTime, item.endTime)}
           </LabeledSection>
           {item.tags &&
             item.tags.length > 0 && (

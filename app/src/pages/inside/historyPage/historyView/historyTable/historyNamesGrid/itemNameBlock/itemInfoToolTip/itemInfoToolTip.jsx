@@ -17,13 +17,13 @@ export const ItemInfoToolTip = ({ data }) => (
     <div className={cx('info-block')}>
       <DurationBlock
         timing={{
-          start: data.start_time,
-          end: data.end_time,
+          start: data.startTime,
+          end: data.endTime,
         }}
       />
       <span className={cx('separator')} />
       <div className={cx('date-info')}>
-        <FormattedRelative value={data.start_time} />
+        <FormattedRelative value={data.startTime} />
       </div>
       {data.tags && (
         <div className={cx('tags-info')}>

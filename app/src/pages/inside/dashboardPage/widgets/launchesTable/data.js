@@ -9,7 +9,7 @@ export const mockData = {
     content_fields: [
       'name',
       'number',
-      'last_modified',
+      'lastModified',
       'status',
       'statistics$defects$product_bug$PB001',
       'statistics$defects$automation_bug$AB001',
@@ -21,8 +21,8 @@ export const mockData = {
       'statistics$defects$to_investigate$TI001',
       'tags',
       'user',
-      'start_time',
-      'end_time',
+      'startTime',
+      'endTime',
       'description',
       'statistics$executions$total',
       'statistics$executions$passed',
@@ -42,7 +42,7 @@ export const mockData = {
           statistics$defects$automation_bug$AB001: '11',
           statistics$executions$skipped: '22',
           statistics$executions$total: '119',
-          end_time: '1533908750104',
+          endTime: '1533908750104',
           description:
             '### **Demonstration launch.**\n' +
             'A typical *Launch structure* comprises the following elements: Suite > Test > Step > Log.\n' +
@@ -60,7 +60,7 @@ export const mockData = {
           statistics$defects$automation_bug$ab_1h7inqu51mgys: '0',
           statistics$executions$failed: '23',
           statistics$defects$automation_bug$ab_1k1tyymqtlp46: '0',
-          last_modified: '1540987067590',
+          lastModified: '1540987067590',
           statistics$defects$product_bug$PB001: '11',
           status: 'FAILED',
         },
@@ -74,7 +74,7 @@ export const mockData = {
           statistics$defects$automation_bug$AB001: '2',
           statistics$executions$skipped: '11',
           statistics$executions$total: '76',
-          end_time: '1533908746422',
+          endTime: '1533908746422',
           description:
             '### **Demonstration launch.**\n' +
             'A typical *Launch structure* comprises the following elements: Suite > Test > Step > Log.\n' +
@@ -92,7 +92,7 @@ export const mockData = {
           statistics$defects$automation_bug$ab_1h7inqu51mgys: '0',
           statistics$executions$failed: '16',
           statistics$defects$automation_bug$ab_1k1tyymqtlp46: '0',
-          last_modified: '1533908746422',
+          lastModified: '1533908746422',
           statistics$defects$product_bug$PB001: '6',
           status: 'FAILED',
         },
@@ -106,7 +106,7 @@ export const mockData = {
           statistics$defects$automation_bug$AB001: '3',
           statistics$executions$skipped: '11',
           statistics$executions$total: '76',
-          end_time: '1533908745503',
+          endTime: '1533908745503',
           description:
             '### **Demonstration launch.**\n' +
             'A typical *Launch structure* comprises the following elements: Suite > Test > Step > Log.\n' +
@@ -124,7 +124,7 @@ export const mockData = {
           statistics$defects$automation_bug$ab_1h7inqu51mgys: '0',
           statistics$executions$failed: '14',
           statistics$defects$automation_bug$ab_1k1tyymqtlp46: '0',
-          last_modified: '1533908745503',
+          lastModified: '1533908745503',
           statistics$defects$product_bug$PB001: '11',
           status: 'FAILED',
         },
@@ -138,7 +138,7 @@ export const mockData = {
           statistics$defects$automation_bug$AB001: '3',
           statistics$executions$skipped: '8',
           statistics$executions$total: '42',
-          end_time: '1533908743999',
+          endTime: '1533908743999',
           description:
             '### **Demonstration launch.**\n' +
             'A typical *Launch structure* comprises the following elements: Suite > Test > Step > Log.\n' +
@@ -156,7 +156,7 @@ export const mockData = {
           statistics$defects$automation_bug$ab_1h7inqu51mgys: '0',
           statistics$executions$failed: '10',
           statistics$defects$automation_bug$ab_1k1tyymqtlp46: '0',
-          last_modified: '1533908744009',
+          lastModified: '1533908744009',
           statistics$defects$product_bug$PB001: '5',
           status: 'FAILED',
         },
@@ -170,7 +170,7 @@ export const mockData = {
           statistics$defects$automation_bug$AB001: '4',
           statistics$executions$skipped: '2',
           statistics$executions$total: '42',
-          end_time: '1533908743769',
+          endTime: '1533908743769',
           description:
             '### **Demonstration launch.**\n' +
             'A typical *Launch structure* comprises the following elements: Suite > Test > Step > Log.\n' +
@@ -188,7 +188,7 @@ export const mockData = {
           statistics$defects$automation_bug$ab_1h7inqu51mgys: '0',
           statistics$executions$failed: '12',
           statistics$defects$automation_bug$ab_1k1tyymqtlp46: '0',
-          last_modified: '1533908743769',
+          lastModified: '1533908743769',
           statistics$defects$product_bug$PB001: '5',
           status: 'FAILED',
         },
@@ -202,7 +202,7 @@ export const mockData = {
           statistics$defects$automation_bug$AB001: '1',
           statistics$executions$skipped: '1',
           statistics$executions$total: '20',
-          end_time: '1533908742537',
+          endTime: '1533908742537',
           description:
             '### **Demonstration launch.**\n' +
             'A typical *Launch structure* comprises the following elements: Suite > Test > Step > Log.\n' +
@@ -220,7 +220,7 @@ export const mockData = {
           statistics$defects$automation_bug$ab_1h7inqu51mgys: '0',
           statistics$executions$failed: '9',
           statistics$defects$automation_bug$ab_1k1tyymqtlp46: '0',
-          last_modified: '1533908742538',
+          lastModified: '1533908742538',
           statistics$defects$product_bug$PB001: '5',
           status: 'FAILED',
         },
@@ -234,7 +234,7 @@ export const mockData = {
           statistics$defects$automation_bug$AB001: '1',
           statistics$executions$skipped: '4',
           statistics$executions$total: '20',
-          end_time: '1533908742371',
+          endTime: '1533908742371',
           description:
             '### **Demonstration launch.**\n' +
             'A typical *Launch structure* comprises the following elements: Suite > Test > Step > Log.\n' +
@@ -252,7 +252,7 @@ export const mockData = {
           statistics$defects$automation_bug$ab_1h7inqu51mgys: '0',
           statistics$executions$failed: '5',
           statistics$defects$automation_bug$ab_1k1tyymqtlp46: '0',
-          last_modified: '1533908742371',
+          lastModified: '1533908742371',
           statistics$defects$product_bug$PB001: '4',
           status: 'FAILED',
         },
@@ -266,7 +266,7 @@ export const mockData = {
           statistics$defects$automation_bug$AB001: '0',
           statistics$executions$skipped: '0',
           statistics$executions$total: '5',
-          end_time: '1533908741782',
+          endTime: '1533908741782',
           description:
             '### **Demonstration launch.**\n' +
             'A typical *Launch structure* comprises the following elements: Suite > Test > Step > Log.\n' +
@@ -284,7 +284,7 @@ export const mockData = {
           statistics$defects$automation_bug$ab_1h7inqu51mgys: '0',
           statistics$executions$failed: '2',
           statistics$defects$automation_bug$ab_1k1tyymqtlp46: '0',
-          last_modified: '1533908741783',
+          lastModified: '1533908741783',
           statistics$defects$product_bug$PB001: '2',
           status: 'FAILED',
         },

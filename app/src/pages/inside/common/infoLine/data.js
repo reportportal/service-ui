@@ -186,5 +186,5 @@ export const mockData = {
   },
   status: 'FAILED',
   tags: ['desktop', 'demo', 'build:3.0.1.10'],
-  start_time: 1534436195270,
+  startTime: 1534436195270,
 };

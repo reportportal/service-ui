@@ -9,15 +9,15 @@ export const prepareChartData = (data) => {
   data.content.result.filter(validItemsFilter).forEach((item) => {
     const duration = parseInt(item.duration, 10);
     const { id, name, number } = item;
-    const { status, start_time, end_time } = item;
+    const { status, startTime, endTime } = item;
     max = duration > max ? duration : max;
     itemData.push({
       id,
       name,
       number,
       status,
-      start_time,
-      end_time,
+      startTime,
+      endTime,
       duration,
     });
     chartData.push(isValueInterrupted(item) ? average : duration);

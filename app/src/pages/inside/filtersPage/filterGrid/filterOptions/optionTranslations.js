@@ -61,8 +61,8 @@ export const messages = defineMessages({
     id: 'FilterOptions.cnt',
     defaultMessage: 'contains',
   },
-  start_time: {
-    id: 'FilterOptions.start_time',
+  startTime: {
+    id: 'FilterOptions.startTime',
     defaultMessage: 'Start time',
   },
   from: {

@@ -329,7 +329,7 @@
   "FilterOptions.passed": "Успешно",
   "FilterOptions.skipped": "Пропущено",
   "FilterOptions.sort": "отсортировано по",
-  "FilterOptions.start_time": "Время начала",
+  "FilterOptions.startTime": "Время начала",
   "FilterOptions.tags": "Метки",
   "FilterOptions.to": "по",
   "FilterOptions.total": "Всего",

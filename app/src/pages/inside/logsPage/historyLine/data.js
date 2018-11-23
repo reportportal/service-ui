@@ -11,8 +11,8 @@ export const mockEntries = [
           'Clear all created and not deleted during test *userFilter*, *widget* and *dashboard* objects.',
         tags: ['api', 'ios', 'android'],
         type: 'BEFORE_CLASS',
-        start_time: 1534436195277,
-        end_time: 1534436195280,
+        startTime: 1534436195277,
+        endTime: 1534436195280,
         status: 'PASSED',
         statistics: {
           executions: {
@@ -45,12 +45,12 @@ export const mockEntries = [
           },
         },
         parent: '5b75a36397a1c00001ea3d4e',
-        path_names: {
+        pathNames: {
           '5b75a36397a1c00001ea3d4d': 'Launch Tests',
           '5b75a36397a1c00001ea3d4e': 'LaunchStatusTest',
         },
         launchStatus: 'FAILED',
-        has_children: false,
+        hasChildren: false,
         launchId: '5b75a36397a1c00001ea3d4c',
         uniqueId: 'auto:6ae7751a200b7ff10dbdc9ed0521d2ce',
       },
@@ -76,8 +76,8 @@ export const mockEntries = [
           'This is the last **test case** of demo launch. There are only `logs` with `attachments` inside it.',
         tags: ['api', 'ios', 'android'],
         type: 'BEFORE_CLASS',
-        start_time: 1534436186834,
-        end_time: 1534436186837,
+        startTime: 1534436186834,
+        endTime: 1534436186837,
         status: 'PASSED',
         statistics: {
           executions: {
@@ -110,12 +110,12 @@ export const mockEntries = [
           },
         },
         parent: '5b75a35a97a1c00001ea2225',
-        path_names: {
+        pathNames: {
           '5b75a35a97a1c00001ea2224': 'Launch Tests',
           '5b75a35a97a1c00001ea2225': 'LaunchStatusTest',
         },
         launchStatus: 'FAILED',
-        has_children: false,
+        hasChildren: false,
         launchId: '5b75a35a97a1c00001ea2223',
         uniqueId: 'auto:6ae7751a200b7ff10dbdc9ed0521d2ce',
       },
@@ -134,8 +134,8 @@ export const mockEntries = [
           'Clear all created and not deleted during test *userFilter*, *widget* and *dashboard* objects.',
         tags: ['ios', 'android', 'flaky'],
         type: 'BEFORE_CLASS',
-        start_time: 1534436182235,
-        end_time: 1534436182238,
+        startTime: 1534436182235,
+        endTime: 1534436182238,
         status: 'FAILED',
         statistics: {
           executions: {
@@ -168,7 +168,7 @@ export const mockEntries = [
           },
         },
         parent: '5b75a35697a1c00001ea13d9',
-        path_names: {
+        pathNames: {
           '5b75a35697a1c00001ea13d8': 'Launch Tests',
           '5b75a35697a1c00001ea13d9': 'LaunchStatusTest',
         },
@@ -178,7 +178,7 @@ export const mockEntries = [
           autoAnalyzed: false,
           ignoreAnalyzer: false,
         },
-        has_children: false,
+        hasChildren: false,
         launchId: '5b75a35697a1c00001ea13d7',
         uniqueId: 'auto:6ae7751a200b7ff10dbdc9ed0521d2ce',
       },
@@ -197,8 +197,8 @@ export const mockEntries = [
           'Greater or equals filter test for test items product bugs criteria. Negative value',
         tags: ['most failed', 'longest', 'most stable'],
         type: 'BEFORE_CLASS',
-        start_time: 1534436178029,
-        end_time: 1534436178032,
+        startTime: 1534436178029,
+        endTime: 1534436178032,
         status: 'PASSED',
         statistics: {
           executions: {
@@ -231,12 +231,12 @@ export const mockEntries = [
           },
         },
         parent: '5b75a35297a1c00001ea0636',
-        path_names: {
+        pathNames: {
           '5b75a35297a1c00001ea0635': 'Launch Tests',
           '5b75a35297a1c00001ea0636': 'LaunchStatusTest',
         },
         launchStatus: 'FAILED',
-        has_children: false,
+        hasChildren: false,
         launchId: '5b75a35297a1c00001ea0634',
         uniqueId: 'auto:6ae7751a200b7ff10dbdc9ed0521d2ce',
       },
@@ -262,8 +262,8 @@ export const mockEntries = [
           'Clear all created and not deleted during test *userFilter*, *widget* and *dashboard* objects.',
         tags: ['most failed', 'longest', 'most stable'],
         type: 'BEFORE_CLASS',
-        start_time: 1534436171693,
-        end_time: 1534436171696,
+        startTime: 1534436171693,
+        endTime: 1534436171696,
         status: 'PASSED',
         statistics: {
           executions: {
@@ -296,12 +296,12 @@ export const mockEntries = [
           },
         },
         parent: '5b75a34b97a1c00001e9f249',
-        path_names: {
+        pathNames: {
           '5b75a34b97a1c00001e9f248': 'Launch Tests',
           '5b75a34b97a1c00001e9f249': 'LaunchStatusTest',
         },
         launchStatus: 'FAILED',
-        has_children: false,
+        hasChildren: false,
         launchId: '5b75a34b97a1c00001e9f247',
         uniqueId: 'auto:6ae7751a200b7ff10dbdc9ed0521d2ce',
       },
@@ -334,8 +334,8 @@ export const mockEntries = [
           'Greater or equals filter test for test items product bugs criteria. Negative value',
         tags: ['most failed', 'longest', 'most stable'],
         type: 'BEFORE_CLASS',
-        start_time: 1534436169110,
-        end_time: 1534436169113,
+        startTime: 1534436169110,
+        endTime: 1534436169113,
         status: 'PASSED',
         statistics: {
           executions: {
@@ -368,12 +368,12 @@ export const mockEntries = [
           },
         },
         parent: '5b75a34997a1c00001e9eaf1',
-        path_names: {
+        pathNames: {
           '5b75a34997a1c00001e9eaf0': 'Launch Tests',
           '5b75a34997a1c00001e9eaf1': 'LaunchStatusTest',
         },
         launchStatus: 'FAILED',
-        has_children: false,
+        hasChildren: false,
         launchId: '5b75a34997a1c00001e9eaef',
         uniqueId: 'auto:6ae7751a200b7ff10dbdc9ed0521d2ce',
       },
