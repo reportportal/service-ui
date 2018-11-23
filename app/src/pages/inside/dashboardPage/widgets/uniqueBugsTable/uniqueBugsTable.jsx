@@ -5,7 +5,6 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { Grid } from 'components/main/grid';
 import { AbsRelTime } from 'components/main/absRelTime';
-import { URLS } from 'common/urls';
 import styles from './uniqueBugsTable.scss';
 import {
   BUG_ID,
@@ -51,18 +50,9 @@ const SubmitDateColumn = ({ className, value }, name, formatMessage) => (
 );
 SubmitDateColumn.propTypes = ColumnProps;
 
-const SubmitterColumn = ({ className, value }) => {
-  const avatarUrl = URLS.dataPhoto(value.submitter, Date.now());
-
-  return (
-    <div className={cx('submitter-col', className)}>
-      <div className={cx('avatar-wrapper')}>
-        <img className={cx('avatar')} src={avatarUrl} alt="avatar" />
-      </div>
-      <div className={cx('submitter')}>{value.submitter}</div>
-    </div>
-  );
-};
+const SubmitterColumn = ({ className, value }) => (
+  <div className={cx('submitter-col', className)}>{value.submitter}</div>
+);
 SubmitterColumn.propTypes = ColumnProps;
 
 const columnComponentsMap = {
