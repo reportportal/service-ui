@@ -103,7 +103,7 @@ export const previousLogLinkSelector = createSelector(
         ...payload,
         testItemIds: [...testItemIds.slice(0, testItemIds.length - 1), previousItem.id].join('/'),
       },
-      meta: query,
+      meta: { query },
     };
   },
 );
@@ -126,7 +126,7 @@ export const nextLogLinkSelector = createSelector(
         ...payload,
         testItemIds: [...testItemIds.slice(0, testItemIds.length - 1), nextItem.id].join('/'),
       },
-      meta: query,
+      meta: { query },
     };
   },
 );
