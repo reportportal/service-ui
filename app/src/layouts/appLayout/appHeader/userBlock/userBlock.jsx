@@ -76,11 +76,11 @@ export class UserBlock extends PureComponent {
         onClick={this.toggleMenu}
       >
         <div className={cx('user-wrapper')}>
-          {this.props.user.userRole === ADMINISTRATOR ? (
+          {this.props.user.userRole === ADMINISTRATOR && (
             <div className={cx('admin-badge')}>
               <FormattedMessage id={'UserBlock.adminBadge'} defaultMessage={'admin'} />
             </div>
-          ) : null}
+          )}
           <div className={cx('username')}>{this.props.user.userId}</div>
         </div>
         <div className={cx('avatar-wrapper')}>
@@ -96,14 +96,16 @@ export class UserBlock extends PureComponent {
           >
             API
           </NavLink>
-          <NavLink
-            to={{ type: ADMINISTRATE_PAGE }}
-            className={cx('menu-item')}
-            activeClassName={cx('active')}
-            onClick={() => this.onClickLink(HEADER_EVENTS.CLICK_ADMINISTRATE_LINK)}
-          >
-            <FormattedMessage id={'UserBlock.administrate'} defaultMessage={'Administrate'} />
-          </NavLink>
+          {this.props.user.userRole === ADMINISTRATOR && (
+            <NavLink
+              to={{ type: ADMINISTRATE_PAGE }}
+              className={cx('menu-item')}
+              activeClassName={cx('active')}
+              onClick={() => this.onClickLink(HEADER_EVENTS.CLICK_ADMINISTRATE_LINK)}
+            >
+              <FormattedMessage id={'UserBlock.administrate'} defaultMessage={'Administrate'} />
+            </NavLink>
+          )}
           <NavLink
             to={{ type: USER_PROFILE_PAGE }}
             className={cx('menu-item')}

@@ -71,7 +71,7 @@ export class Sidebar extends Component {
           ))}
           <div className={cx('sidebar-btn')} onClick={this.props.logout}>
             <SidebarButton link={{ type: LOGIN_PAGE }} icon={LogoutIcon} bottom>
-              <FormattedMessage id={'Sidebar.btnLogout'} defaultMessage={'Logout'} />
+              <FormattedMessage id={'Sidebar.logoutBtn'} defaultMessage={'Logout'} />
             </SidebarButton>
           </div>
         </div>
