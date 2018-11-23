@@ -1,0 +1,148 @@
+.statistics-settings-tab {
+  position: relative;
+
+  .statistics-settings-form {
+    width: 600px;
+    margin: 0 auto 20px;
+
+    @media (max-width: $SCREEN_XS_MAX) {
+      width: 100%;
+    }
+
+    .image-holder {
+      width: 320px;
+      height: 141px;
+      margin: 30px auto 20px;
+      background-image: url(./img/serverSettingsStatistics.png);
+    }
+
+    .statistics-info {
+      width: 560px;
+      margin: 0 16px 10px;
+      font-size: 13px;
+      line-height: 18px;
+      color: $COLOR--black-2;
+
+      @media (max-width: $SCREEN_XS_MAX) {
+        width: 100%;
+        margin-left: 0;
+      }
+    }
+
+    .statistics-list {
+      margin: 0 0 20px 15px;
+
+      @media (max-width: $SCREEN_XS_MAX) {
+        margin-left: 0;
+      }
+
+      .statistics-list-toggler {
+        position: relative;
+        font-family: $FONT-SEMIBOLD;
+        font-size: 12px;
+        line-height: 18px;
+        color: $COLOR--gray-47;
+        text-transform: uppercase;
+        cursor: pointer;
+
+        .arrow {
+          svg {
+            height: 17px;
+            vertical-align: text-bottom;
+            fill: $COLOR--gray-47;
+
+            @media (max-width: $SCREEN_XS_MAX) {
+              display: none;
+            }
+          }
+        }
+      }
+
+      .list-message {
+        display: none;
+        margin-top: 5px;
+        font-size: 13px;
+        line-height: 18px;
+        color: $COLOR--black-2;
+
+        @media (max-width: $SCREEN_XS_MAX) {
+          display: block;
+          margin-top: 10px;
+        }
+
+        .statistics-point {
+          position: relative;
+          padding-left: 25px;
+          line-height: 22px;
+          margin-left: 12px;
+
+          @media (max-width: $SCREEN_XS_MAX) {
+            margin-left: 0;
+            padding-left: 12px;
+          }
+
+          &:before {
+            position: absolute;
+            left: 8px;
+            font-size: 15px;
+            line-height: 22px;
+            color: $COLOR--windows-blue;
+            content: '\2022';
+
+            @media (max-width: $SCREEN_XS_MAX) {
+              left: 0;
+            }
+          }
+        }
+      }
+
+      &.list-shown {
+        .list-message {
+          display: block;
+        }
+        .arrow {
+          svg {
+            transform: rotate(90deg);
+          }
+        }
+      }
+    }
+
+    .enabled-checkbox {
+      margin-left: 16px;
+      margin-bottom: 20px;
+
+      @media (max-width: $SCREEN_XS_MAX) {
+        margin-left: 0;
+      }
+    }
+
+    .submit-button {
+      display: block;
+      margin: 0 auto;
+      width: auto;
+
+      @media (max-width: $SCREEN_XS_MAX) {
+        display: none;
+      }
+
+      .submit-button-title {
+        width: 129px;
+        height: 18px;
+        font-size: 13px;
+      }
+    }
+  }
+
+  .mobile-disabling-cover {
+    position: absolute;
+    left: 0;
+    top: 0;
+    display: none;
+    width: 100%;
+    height: 100%;
+    @media (max-width: $SCREEN_XS_MAX) {
+      display: block;
+    }
+  }
+}
