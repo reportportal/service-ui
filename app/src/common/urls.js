@@ -140,4 +140,5 @@ export const URLS = {
 
   serverSettings: () => `${urlBase}settings`,
   emailServerSettings: () => `${urlBase}settings/email`,
+  statisticsServerSettings: () => `${urlBase}settings/analytics`,
 };

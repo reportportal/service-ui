@@ -11,6 +11,7 @@ import {
 } from 'common/constants/settingsTabs';
 import { NavigationTabs } from 'components/main/navigationTabs';
 import { EmailServerTab } from './emailServerTab';
+import { StatisticsTab } from './statisticsTab';
 
 const messages = defineMessages({
   eMailServer: {
@@ -66,7 +67,7 @@ export class ServerSettingsTabs extends Component {
     [STATISTICS]: {
       name: this.props.intl.formatMessage(messages.statistics),
       link: this.createTabLink(STATISTICS),
-      component: <div>Statistics</div>,
+      component: <StatisticsTab />,
     },
   });
 
