@@ -30,15 +30,5 @@
 }
 
 .submitter-col {
-  .avatar-wrapper {
-    position: absolute;
-    width: 27px;
-    height: 30px;
-    overflow: hidden;
-    background-color: transparent;
-  }
-  .submitter {
-    margin-left: 30px;
-    font-family: $FONT-SEMIBOLD;
-  }
+  font-family: $FONT-SEMIBOLD;
 }
