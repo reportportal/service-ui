@@ -26,6 +26,8 @@ import {
   parentItemSelector,
   loadingSelector,
 } from 'controllers/testItem';
+import { LEVEL_SUITE } from 'common/constants/launchLevels';
+import { LaunchFiltersSection } from 'pages/inside/common/launchFiltersSection';
 
 @connect(
   (state) => ({
@@ -168,6 +170,9 @@ export class SuitesPage extends Component {
     } = this.props;
     return (
       <PageLayout>
+        <PageSection>
+          <LaunchFiltersSection level={LEVEL_SUITE} />
+        </PageSection>
         <PageSection>
           <SuiteTestToolbar
             onDelete={() => deleteItems(selectedSuites)}
