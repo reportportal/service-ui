@@ -19,8 +19,8 @@ import {
   launchStatuses,
 } from 'pages/inside/settingsPage/settingsTabs/notificationsTab/forms/constants';
 import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
+import IconDelete from 'common/img/circle-cross-icon-inline.svg';
 import styles from './emailCase.scss';
-import IconDelete from './img/icon-delete-inline.svg';
 import { PencilCheckbox } from './pencilCheckbox';
 import { messages } from './messages';
 

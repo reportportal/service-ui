@@ -51,7 +51,6 @@ export class AutoAnalysisTab extends Component {
         <IndexActionsBlock
           disabled={!canUpdateSettings(this.props.accountRole, this.props.userRole)}
         />
-        <div className={cx('mobile-disabling-cover')} />
       </div>
     );
   }

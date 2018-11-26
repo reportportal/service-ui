@@ -11,6 +11,7 @@ import {
 } from 'common/constants/settingsTabs';
 import { NavigationTabs } from 'components/main/navigationTabs';
 import { EmailServerTab } from './emailServerTab';
+import { AuthConfigurationTab } from './authConfigurationTab';
 import { StatisticsTab } from './statisticsTab';
 
 const messages = defineMessages({
@@ -62,7 +63,7 @@ export class ServerSettingsTabs extends Component {
     [AUTHORIZATION_CONFIGURATION]: {
       name: this.props.intl.formatMessage(messages.authConfiguration),
       link: this.createTabLink(AUTHORIZATION_CONFIGURATION),
-      component: <div>Authorization configuration</div>,
+      component: <AuthConfigurationTab />,
     },
     [STATISTICS]: {
       name: this.props.intl.formatMessage(messages.statistics),
@@ -76,6 +77,7 @@ export class ServerSettingsTabs extends Component {
       config={this.createTabsConfig()}
       activeTab={this.props.activeTab}
       onChangeTab={this.props.onChangeTab}
+      mobileDisabled
     />
   );
 }

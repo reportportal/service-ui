@@ -21,6 +21,24 @@
       }
     }
   }
+  @media (max-width: $SCREEN_XS_MAX) {
+    &.mobile-disabled {
+      .conditions-block {
+        cursor: default;
+      }
+      .input {
+        background-color: $COLOR--gray-91;
+        border-color: $COLOR--gray-80;
+      }
+      .clear-icon {
+        cursor: default;
+
+        &:hover {
+          transform: none;
+        }
+      }
+    }
+  }
 }
 
 .input {

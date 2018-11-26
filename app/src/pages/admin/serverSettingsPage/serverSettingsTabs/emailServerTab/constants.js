@@ -1,5 +1,6 @@
+import { ENABLED_KEY } from '../common/constants';
+
 export const EMAIL_SERVER_FORM = 'emailServerTabForm';
-export const EMAIL_ENABLED_KEY = 'enabled';
 export const AUTH_ENABLED_KEY = 'authEnabled';
 export const PROTOCOL_KEY = 'protocol';
 export const SSL_KEY = 'sslEnabled';
@@ -11,7 +12,7 @@ export const USERNAME_KEY = 'username';
 export const PASSWORD_KEY = 'password';
 
 export const DEFAULT_FORM_CONFIG = {
-  [EMAIL_ENABLED_KEY]: false,
+  [ENABLED_KEY]: false,
   [AUTH_ENABLED_KEY]: false,
   [PROTOCOL_KEY]: 'smtp',
   [SSL_KEY]: false,

@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
 import { formValueSelector } from 'redux-form';
 import { defineMessages, injectIntl, intlShape } from 'react-intl';
-import { activeProjectSelector } from 'controllers/user';
 import { FormField } from 'components/fields/formField';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
@@ -59,7 +58,6 @@ const messages = defineMessages({
 });
 
 @connect((state) => ({
-  projectId: activeProjectSelector(state),
   authEnabled: formValueSelector(EMAIL_SERVER_FORM)(state, AUTH_ENABLED_KEY),
 }))
 @injectIntl
