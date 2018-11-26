@@ -142,6 +142,7 @@ export class SettingsTabs extends Component {
         config={this.createTabsConfig()}
         activeTab={this.props.activeTab}
         onChangeTab={this.props.changeTab}
+        mobileDisabled
       />
     </div>
   );

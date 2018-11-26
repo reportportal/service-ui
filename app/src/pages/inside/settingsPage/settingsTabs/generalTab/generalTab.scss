@@ -87,14 +87,3 @@
     font-size: 13px;
   }
 }
-.mobile-disabling-cover {
-  position: absolute;
-  left: 0;
-  top: 0;
-  display: none;
-  width: 100%;
-  height: 100%;
-  @media (max-width: $SCREEN_XS_MAX) {
-    display: block;
-  }
-}

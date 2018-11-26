@@ -5,6 +5,7 @@ export const DEFAULT_API_URL_PREFIX = '/api/v1/';
 export const UAT_API_URL_PREFIX = '/uat/';
 
 const urlBase = DEFAULT_API_URL_PREFIX;
+const uatBase = UAT_API_URL_PREFIX;
 const getToken = () => (localStorage.getItem(TOKEN_KEY) || '').split(' ')[1];
 const getQueryParams = (paramsObj) => stringify(paramsObj, { addQueryPrefix: true });
 
@@ -62,7 +63,7 @@ export const URLS = {
     })}`,
 
   login: (grantType, username, password) =>
-    `/uat/sso/oauth/token${getQueryParams({
+    `${uatBase}sso/oauth/token${getQueryParams({
       grant_type: grantType,
       username,
       password,
@@ -142,5 +143,7 @@ export const URLS = {
 
   serverSettings: () => `${urlBase}settings`,
   emailServerSettings: () => `${urlBase}settings/email`,
+  authSettings: (authType) => `${uatBase}settings/auth/${authType}`,
+  githubAuthSettings: () => `${uatBase}settings/default/oauth/github`,
   statisticsServerSettings: () => `${urlBase}settings/analytics`,
 };

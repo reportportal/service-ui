@@ -210,7 +210,6 @@ export class GeneralTab extends Component {
               </BigButton>
             </div>
           </div>
-          <div className={cx('mobile-disabling-cover')} />
         </form>
       </div>
     );

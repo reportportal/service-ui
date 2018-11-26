@@ -9,7 +9,7 @@ export const ModalContentHeading = ({ text, error }) => (
 );
 
 ModalContentHeading.propTypes = {
-  text: PropTypes.string,
+  text: PropTypes.oneOfType([PropTypes.node, PropTypes.string]),
   error: PropTypes.bool,
 };
 ModalContentHeading.defaultProps = {
