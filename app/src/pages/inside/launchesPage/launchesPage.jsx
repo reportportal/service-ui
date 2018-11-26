@@ -41,8 +41,8 @@ import { LaunchSuiteGrid } from 'pages/inside/common/launchSuiteGrid';
 import { LaunchFiltersContainer } from 'pages/inside/common/launchFiltersContainer/launchFiltersContainer';
 import { LEVEL_LAUNCH } from 'common/constants/launchLevels';
 import { FilterEntitiesContainer } from 'components/filterEntities/containers';
+import { LaunchFiltersToolbar } from 'pages/inside/common/launchFiltersToolbar';
 import { LaunchToolbar } from './LaunchToolbar';
-import { LaunchFiltersToolbar } from './launchFiltersToolbar';
 
 const messages = defineMessages({
   deleteModalHeader: {

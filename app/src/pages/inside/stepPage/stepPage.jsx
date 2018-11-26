@@ -32,6 +32,9 @@ import {
 import { withPagination } from 'controllers/pagination';
 import { showModalAction } from 'controllers/modal';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
+import { LEVEL_STEP } from 'common/constants/launchLevels';
+import { LaunchFiltersSection } from 'pages/inside/common/launchFiltersSection';
+
 import { StepGrid } from './stepGrid';
 
 @connect(
@@ -232,6 +235,9 @@ export class StepPage extends Component {
     } = this.props;
     return (
       <PageLayout>
+        <PageSection>
+          <LaunchFiltersSection level={LEVEL_STEP} />
+        </PageSection>
         <PageSection>
           <SuiteTestToolbar
             onDelete={this.deleteItems}
