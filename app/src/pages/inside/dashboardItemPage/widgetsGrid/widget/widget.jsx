@@ -17,6 +17,7 @@ import { LaunchesDurationChart } from 'components/widgets/charts/launchesDuratio
 import { LaunchesTable } from 'pages/inside/dashboardPage/widgets/launchesTable';
 import { FailedCasesTrendChart } from 'components/widgets/charts/failedCasesTrendChart';
 import { NonPassedTestCasesTrendChart } from 'components/widgets/charts/nonPassedTestCasesTrendChart';
+import { PassingRatePerLaunch } from 'components/widgets/charts/passingRatePerLaunch';
 import { WidgetHeader } from './widgetHeader';
 import styles from './widget.scss';
 
@@ -30,6 +31,9 @@ const charts = {
   [widgetTypes.FAILED_CASES_TREND]: FailedCasesTrendChart,
   [widgetTypes.NON_PASSED_TEST_CASES_TREND]: NonPassedTestCasesTrendChart,
   [widgetTypes.TEST_CASES_GROWTH_TREND]: TestCasesGrowthTrendChart,
+  launches_comparison_chart: LaunchesComparisonChart,
+  launches_duration_chart: LaunchesDurationChart,
+  passing_rate_per_launch: PassingRatePerLaunch,
 };
 
 @connect(

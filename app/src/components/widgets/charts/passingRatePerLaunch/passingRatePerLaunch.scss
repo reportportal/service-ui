@@ -1,0 +1,11 @@
+:global {
+  .c3-chart-text text,
+  .c3-chart-arc text {
+    font-family: OpenSansSemibold, sans-serif;
+    font-size: 13px;
+    fill: #fff !important;
+  }
+  .c3-grid line {
+    stroke: transparent;
+  }
+}

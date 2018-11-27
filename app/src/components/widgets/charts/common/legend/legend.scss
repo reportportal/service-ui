@@ -1,10 +1,9 @@
 .legend {
-  position: absolute;
-  top: 5px;
-  left: 0;
-  right: 0;
+  clear: both;
+  display: inline-block;
+  float: right;
+  width: 30%;
   text-align: right;
-  padding: 20px 20px 0;
 }
 
 .color-mark {
@@ -44,4 +43,31 @@
   display: inline-block;
   margin-right: 15px;
   cursor: pointer;
+}
+
+.top-block {
+  position: absolute;
+  padding: 20px 20px 0;
+  overflow: hidden;
+  top: 0;
+  width: calc(100% - 40px);
+  height: 85px;
+  .info-data {
+    width: 70%;
+    clear: both;
+    text-align: left;
+    margin-bottom: 10px;
+    font-family: OpenSansSemibold, sans-serif;
+    font-size: 12px;
+    color: #777;
+    display: inline-block;
+    overflow: hidden;
+    white-space: nowrap;
+    -ms-text-overflow: ellipsis;
+    text-overflow: ellipsis;
+    span {
+      font-size: 13px;
+      color: #464547;
+    }
+  }
 }
