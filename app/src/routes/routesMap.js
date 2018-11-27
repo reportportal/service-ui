@@ -12,6 +12,7 @@ import {
   PROJECT_USERDEBUG_LOG_PAGE,
   HISTORY_PAGE,
   PROJECTS_PAGE,
+  PROJECT_DETAILS_PAGE,
   ALL_USERS_PAGE,
   SERVER_SETTINGS_PAGE,
   SERVER_SETTINGS_TAB_PAGE,
@@ -78,6 +79,8 @@ export default {
   API_PAGE: '/api',
 
   [PROJECTS_PAGE]: '/administrate/projects',
+  [PROJECT_DETAILS_PAGE]:
+    '/administrate/project-details/:projectId/:projectSection(settings|members|events)?',
   [ALL_USERS_PAGE]: '/administrate/users',
   [SERVER_SETTINGS_PAGE]: redirectRoute('/administrate/settings', () => ({
     type: SERVER_SETTINGS_TAB_PAGE,
