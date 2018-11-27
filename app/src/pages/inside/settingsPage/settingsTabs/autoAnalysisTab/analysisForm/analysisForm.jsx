@@ -9,7 +9,7 @@ import { validate, fetch } from 'common/utils';
 import { URLS } from 'common/urls';
 import {
   updateAutoAnalysisConfigurationAction,
-  attributesByPrefixSelector,
+  analyzerAttributesSelector,
   normalizeAttributesWithPrefix,
   ANALYZER_ATTRIBUTE_PREFIX,
 } from 'controllers/project';
@@ -94,7 +94,7 @@ const DEFAULT_ANALYSIS_MODE = 'Classic';
 })
 @connect(
   (state) => ({
-    analyzerConfiguration: attributesByPrefixSelector(state, ANALYZER_ATTRIBUTE_PREFIX),
+    analyzerConfiguration: analyzerAttributesSelector(state),
     currentProject: activeProjectSelector(state),
     formInputsValues: selector(
       state,
@@ -160,7 +160,7 @@ export class AnalysisForm extends Component {
   };
 
   onFormSubmit = (formData) => {
-    const preparedData = normalizeAttributesWithPrefix(formData, 'analyzer');
+    const preparedData = normalizeAttributesWithPrefix(formData, ANALYZER_ATTRIBUTE_PREFIX);
 
     const data = {
       configuration: {

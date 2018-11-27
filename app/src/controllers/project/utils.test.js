@@ -1,22 +1,23 @@
 import { normalizeAttributesWithPrefix } from './utils';
-import { ANALYZER_ATTRIBUTE_PREFIX } from './constants';
 
 describe('project/utils', () => {
+  const prefix = 'prefix';
   const attributes = {
     numberOfLogLines: '3',
   };
   const normalizedAttributes = {
-    [`${ANALYZER_ATTRIBUTE_PREFIX}.numberOfLogLines`]: '3',
+    [`${prefix}.numberOfLogLines`]: '3',
   };
   describe('normalizeAttributesWithPrefix', () => {
-    test('should return {} in case of attributes object is empty', () => {
+    test('should return an empty object if case of empty arguments', () => {
       expect(normalizeAttributesWithPrefix({}, '')).toEqual({});
-      expect(normalizeAttributesWithPrefix({}, ANALYZER_ATTRIBUTE_PREFIX)).toEqual({});
+      expect(normalizeAttributesWithPrefix({}, prefix)).toEqual({});
     });
-    test('should return normalized attributes object if attributes provided', () => {
-      expect(normalizeAttributesWithPrefix(attributes, ANALYZER_ATTRIBUTE_PREFIX)).toEqual(
-        normalizedAttributes,
-      );
+    test('should return the same object if case of no prefix', () => {
+      expect(normalizeAttributesWithPrefix(attributes)).toEqual(attributes);
+    });
+    test('should return object containing attribute keys with the corresponding prefix', () => {
+      expect(normalizeAttributesWithPrefix(attributes, prefix)).toEqual(normalizedAttributes);
     });
   });
 });
