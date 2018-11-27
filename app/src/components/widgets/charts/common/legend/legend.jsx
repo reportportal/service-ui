@@ -52,23 +52,35 @@ const messages = defineMessages({
     id: 'Widgets.ofTestCases',
     defaultMessage: 'of test cases',
   },
+  Passed: {
+    id: 'Passed',
+    defaultMessage: 'Passed',
+  },
+  Failed: {
+    id: 'Failed',
+    defaultMessage: 'Failed',
+  },
 });
 
 @injectIntl
 export class Legend extends Component {
   static propTypes = {
+    isPreview: PropTypes.bool,
     intl: intlShape.isRequired,
     items: PropTypes.array,
     onClick: PropTypes.func,
     onMouseOver: PropTypes.func,
     onMouseOut: PropTypes.func,
+    widgetName: PropTypes.string,
   };
 
   static defaultProps = {
+    isPreview: false,
     items: [],
     onClick: () => {},
     onMouseOver: () => {},
     onMouseOut: () => {},
+    widgetName: '',
   };
 
   onClick = (e) => {
@@ -85,7 +97,8 @@ export class Legend extends Component {
   getTarget = ({ target }) => (target.getAttribute('data-id') ? target : target.parentElement);
 
   render() {
-    const { items, intl, onMouseOut } = this.props;
+    const { items, intl, onMouseOut, isPreview, widgetName } = this.props;
+    if (isPreview) return '';
 
     const elements = items.map((name) => (
       <span
@@ -98,14 +111,19 @@ export class Legend extends Component {
       >
         <span
           className={cx('color-mark')}
-          style={{ backgroundColor: COLORS[`COLOR_${name.split('$')[2].toUpperCase()}`] }}
+          style={{ backgroundColor: COLORS[`COLOR_${name.toUpperCase()}_PER_LAUNCH`] }}
         />
-        <span className={cx('item-name')}>
-          {intl.formatMessage(messages[name.split('$total')[0]])}
-        </span>
+        <span className={cx('item-name')}>{intl.formatMessage(messages[name])}</span>
       </span>
     ));
 
-    return <div className={cx('legend')}>{elements}</div>;
+    return (
+      <div className={cx('top-block')}>
+        <div className={cx('info-data')}>
+          LAUNCH NAME: <span>{widgetName}</span>
+        </div>
+        <div className={cx('legend')}>{elements}</div>
+      </div>
+    );
   }
 }
