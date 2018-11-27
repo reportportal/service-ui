@@ -25,6 +25,7 @@ export const logItemIdSelector = createSelector(
 export const settingsTabSelector = (state) => payloadSelector(state).settingsTab || '';
 
 export const pageSelector = (state) => pageNames[state.location.type] || NO_PAGE;
+export const projectSectionSelector = (state) => payloadSelector(state).projectSection || '';
 
 export const pagePropertiesSelector = ({ location: { query } }, namespace, mapping = undefined) => {
   if (!query) {

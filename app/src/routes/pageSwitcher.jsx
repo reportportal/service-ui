@@ -10,6 +10,7 @@ import {
   PROJECT_LOG_PAGE,
   PROJECT_USERDEBUG_LOG_PAGE,
   HISTORY_PAGE,
+  PROJECT_DETAILS_PAGE,
 } from 'controllers/pages';
 import { LocalizationSwitcher } from 'components/main/localizationSwitcher';
 import { ScreenLock } from 'components/main/screenLock';
@@ -64,6 +65,7 @@ const pageRendering = {
   PROJECT_USERDEBUG_TEST_ITEM_PAGE: { component: TestItemPage, layout: AppLayout },
   ADMINISTRATE_PAGE: { component: ProjectsPage, layout: AdminLayout },
   PROJECTS_PAGE: { component: ProjectsPage, layout: AdminLayout },
+  [PROJECT_DETAILS_PAGE]: { component: ProjectsPage, layout: AdminLayout },
   ALL_USERS_PAGE: { component: AllUsersPage, layout: AdminLayout },
   SERVER_SETTINGS_PAGE: { component: ServerSettingsPage, layout: AdminLayout },
   SERVER_SETTINGS_TAB_PAGE: { component: ServerSettingsPage, layout: AdminLayout },
