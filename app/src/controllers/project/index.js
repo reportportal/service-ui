@@ -23,6 +23,6 @@ export {
   projectEmailCasesSelector,
   projectEmailEnabledSelector,
   externalSystemSelector,
-  attributesByPrefixSelector,
+  analyzerAttributesSelector,
 } from './selectors';
 export { normalizeAttributesWithPrefix } from './utils';

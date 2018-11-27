@@ -1,5 +1,6 @@
 import { createSelector } from 'reselect';
 import { OWNER } from 'common/constants/permissions';
+import { ANALYZER_ATTRIBUTE_PREFIX } from './constants';
 
 const projectSelector = (state) => state.project || {};
 
@@ -19,11 +20,11 @@ export const defectTypesSelector = (state) => projectConfigSelector(state).subTy
 
 const attributesSelector = (state) => projectConfigSelector(state).attributes || {};
 
-export const attributesByPrefixSelector = (state, prefix) =>
+const createPrefixedAttributesSelector = (prefix) =>
   createSelector(attributesSelector, (attributes) =>
     Object.keys(attributes).reduce(
       (result, attribute) =>
-        attribute.match(prefix)
+        attribute.match(`${prefix}.`)
           ? {
               ...result,
               [attribute.replace(`${prefix}.`, '')]: attributes[attribute],
@@ -31,7 +32,11 @@ export const attributesByPrefixSelector = (state, prefix) =>
           : result,
       {},
     ),
-  )(state);
+  );
+
+export const analyzerAttributesSelector = createPrefixedAttributesSelector(
+  ANALYZER_ATTRIBUTE_PREFIX,
+);
 
 export const projectAnalyzerConfigSelector = (state) =>
   projectConfigSelector(state).analyzerConfiguration || {};
