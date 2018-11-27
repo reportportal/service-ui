@@ -16,16 +16,16 @@ export class ServerSettingsPage extends Component {
     intl: intlShape.isRequired,
   };
 
+  getBreadcrumbs = () => [
+    {
+      title: this.props.intl.formatMessage(messages.pageTitle),
+    },
+  ];
+
   render() {
     return (
       <PageLayout>
-        <PageHeader
-          breadcrumbs={[
-            {
-              title: this.props.intl.formatMessage(messages.pageTitle),
-            },
-          ]}
-        />
+        <PageHeader breadcrumbs={this.getBreadcrumbs()} />
         <PageSection>
           <ServerSettingsTabs />
         </PageSection>
