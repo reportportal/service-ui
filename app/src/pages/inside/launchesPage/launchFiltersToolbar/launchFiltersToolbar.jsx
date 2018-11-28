@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
+import { redirect } from 'redux-first-router';
 import { showModalAction } from 'controllers/modal';
 import {
   updateFilterAction,
@@ -11,14 +12,18 @@ import {
   createFilterAction,
   saveNewFilterAction,
 } from 'controllers/filter';
+import { allLaunchesLikSelector, latestLaunchesLinkSelector } from 'controllers/launch';
+import { ALL, LATEST } from 'common/constants/reservedFilterIds';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { activeProjectSelector } from 'controllers/user';
+import { filterIdSelector } from 'controllers/pages';
 import { EntitiesGroup } from 'components/filterEntities/entitiesGroup';
 import AddFilterIcon from 'common/img/add-filter-inline.svg';
 import { FilterList } from './filterList';
 import { FiltersActionBar } from './filtersActionBar';
 import { ExpandToggler } from './expandToggler';
 import { filterShape } from './propTypes';
+import { AllLatestDropdown } from './allLatestDropdown';
 import styles from './launchFiltersToolbar.scss';
 
 const cx = classNames.bind(styles);
@@ -27,6 +32,9 @@ const cx = classNames.bind(styles);
   (state) => ({
     activeProject: activeProjectSelector(state),
     unsavedFilterIds: unsavedFilterIdsSelector(state),
+    allLaunchesLink: allLaunchesLikSelector(state),
+    latestLaunchesLink: latestLaunchesLinkSelector(state),
+    filterId: filterIdSelector(state) === LATEST ? LATEST : ALL,
   }),
   {
     showModal: showModalAction,
@@ -34,6 +42,7 @@ const cx = classNames.bind(styles);
     resetFilter: resetFilterAction,
     createFilter: createFilterAction,
     saveNewFilter: saveNewFilterAction,
+    redirect,
   },
 )
 export class LaunchFiltersToolbar extends Component {
@@ -57,6 +66,10 @@ export class LaunchFiltersToolbar extends Component {
     onResetFilter: PropTypes.func,
     createFilter: PropTypes.func,
     saveNewFilter: PropTypes.func,
+    redirect: PropTypes.func,
+    allLaunchesLink: PropTypes.object,
+    latestLaunchesLink: PropTypes.object,
+    filterId: PropTypes.string,
   };
 
   static defaultProps = {
@@ -79,6 +92,10 @@ export class LaunchFiltersToolbar extends Component {
     onResetFilter: () => {},
     createFilter: () => {},
     saveNewFilter: () => {},
+    redirect: () => {},
+    allLaunchesLink: null,
+    latestLaunchesLink: null,
+    filterId: '',
   };
 
   state = {
@@ -110,6 +127,13 @@ export class LaunchFiltersToolbar extends Component {
     resetFilter(activeFilter.id);
     onResetFilter();
   };
+
+  handleAllLatestLaunchesSelect = (filterId) => {
+    const link = filterId === LATEST ? this.props.latestLaunchesLink : this.props.allLaunchesLink;
+    this.props.redirect(link);
+  };
+
+  redirectToLaunches = () => this.handleAllLatestLaunchesSelect(this.props.filterId);
 
   updateActiveFilter = () => {
     const { activeFilter, updateFilter, activeFilterId, showModal, saveNewFilter } = this.props;
@@ -143,13 +167,20 @@ export class LaunchFiltersToolbar extends Component {
       onFilterAdd,
       onFilterRemove,
       unsavedFilterIds,
+      filterId,
     } = this.props;
     const isFilterUnsaved = unsavedFilterIds.indexOf(activeFilterId) !== -1;
     const isNewFilter = activeFilterId < 0;
     return (
       <div className={cx('launch-filters-toolbar')}>
         <div className={cx('filter-tickets-row')}>
-          <div className={cx('all-latest-switcher')}>TODO (EPMRPP-35466)</div>
+          <div className={cx('all-latest-switcher')}>
+            <AllLatestDropdown
+              value={filterId}
+              onClick={this.redirectToLaunches}
+              onChange={this.handleAllLatestLaunchesSelect}
+            />
+          </div>
           <div className={cx('separator')} />
           <div className={cx('add-filter-button')}>
             <GhostButton icon={AddFilterIcon} onClick={this.handleFilterCreate}>

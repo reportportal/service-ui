@@ -17,13 +17,17 @@
 
 .all-latest-switcher {
   width: 185px;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    width: 78px;
+  }
 }
 
 .separator {
   height: 40px;
   width: 1px;
   background-color: $COLOR--gray-91;
-  margin-right: 15px;
+  margin: 0 15px;
 }
 
 .filter-controls-container {

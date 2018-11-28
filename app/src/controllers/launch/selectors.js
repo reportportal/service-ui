@@ -1,9 +1,16 @@
+import { createSelector } from 'reselect';
 import {
   createValidationErrorsSelector,
   createSelectedItemsSelector,
   createLastOperationSelector,
 } from 'controllers/groupOperations';
-import { createQueryParametersSelector } from 'controllers/pages';
+import {
+  createQueryParametersSelector,
+  PROJECT_LAUNCHES_PAGE,
+  payloadSelector,
+  projectIdSelector,
+} from 'controllers/pages';
+import { ALL, LATEST } from 'common/constants/reservedFilterIds';
 import { DEFAULT_SORTING, NAMESPACE } from './constants';
 
 const domainSelector = (state) => state.launches || {};
@@ -24,3 +31,15 @@ export const queryParametersSelector = createQueryParametersSelector({
 });
 
 export const debugModeSelector = (state) => domainSelector(state).debugMode || false;
+
+const createLaunchesLinkSelector = (filterId) =>
+  createSelector(projectIdSelector, payloadSelector, (activeProject, payload) => ({
+    type: PROJECT_LAUNCHES_PAGE,
+    payload: {
+      ...payload,
+      filterId,
+    },
+  }));
+
+export const allLaunchesLikSelector = createLaunchesLinkSelector(ALL);
+export const latestLaunchesLinkSelector = createLaunchesLinkSelector(LATEST);
