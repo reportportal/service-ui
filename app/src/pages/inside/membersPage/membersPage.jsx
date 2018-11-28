@@ -103,7 +103,7 @@ export class MembersPage extends Component {
     const data = {};
     if (userData.user.externalUser) {
       this.props.showScreenLockAction();
-      data.default_project = this.props.activeProject;
+      data.defaultProject = this.props.activeProject;
       data.email = userData.user.userLogin;
       data.role = userData.role;
       return fetch(URLS.userInviteExternal(), {

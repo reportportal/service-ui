@@ -47,11 +47,11 @@ const makeURL = (input, isAdmin, projectId) => {
 };
 const makeOptions = (options, projectId) =>
   options.map((option) => ({
-    userName: option.full_name || '',
+    userName: option.fullName || '',
     userLogin: option.userId,
     email: option.email || '',
-    disabled: !!option.assigned_projects[projectId],
-    isAssigned: !!option.assigned_projects[projectId],
+    disabled: !!option.assignedProjects[projectId],
+    isAssigned: !!option.assignedProjects[projectId],
     userAvatar: getPhoto(option.userId),
   }));
 const getUsers = (input, isAdmin, projectId) => {

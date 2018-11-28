@@ -85,13 +85,13 @@ export const state = {
       userId: 'default',
       email: 'examle@mail.com',
       photoId: '5b7584da97a1c00001e7fd1f',
-      full_name: 'SuperTester',
-      account_type: 'INTERNAL',
+      fullName: 'SuperTester',
+      accountType: 'INTERNAL',
       userRole: 'ADMINISTRATOR',
-      last_login: 1534867405428,
-      photo_loaded: true,
-      default_project: 'default_personal',
-      assigned_projects: {
+      lastLogin: 1534867405428,
+      photoLoaded: true,
+      defaultProject: 'default_personal',
+      assignedProjects: {
         '11111': {
           projectRole: 'PROJECT_MANAGER',
           proposedRole: 'PROJECT_MANAGER',

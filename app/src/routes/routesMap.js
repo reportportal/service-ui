@@ -55,7 +55,7 @@ export const onBeforeRouteChange = (dispatch, getState, { action }) => {
 
   const activeProjectId = activeProjectSelector(getState());
   const userInfo = userInfoSelector(getState());
-  const userProjects = userInfo ? userInfo.assigned_projects : {};
+  const userProjects = userInfo ? userInfo.assignedProjects : {};
   if (
     userProjects &&
     Object.prototype.hasOwnProperty.call(userProjects, hashProject) &&

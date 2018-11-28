@@ -54,7 +54,7 @@ const messages = defineMessages({
 @connect(
   (state) => ({
     userId: userInfoSelector(state).userId,
-    accountType: userInfoSelector(state).account_type,
+    accountType: userInfoSelector(state).accountType,
   }),
   { showNotification, showModalAction },
 )
