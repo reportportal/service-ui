@@ -31,9 +31,9 @@ const charts = {
   [widgetTypes.FAILED_CASES_TREND]: FailedCasesTrendChart,
   [widgetTypes.NON_PASSED_TEST_CASES_TREND]: NonPassedTestCasesTrendChart,
   [widgetTypes.TEST_CASES_GROWTH_TREND]: TestCasesGrowthTrendChart,
-  launches_comparison_chart: LaunchesComparisonChart,
-  launches_duration_chart: LaunchesDurationChart,
-  passing_rate_per_launch: PassingRatePerLaunch,
+  [widgetTypes.DIFFERENT_LAUNCHES_COMPARISON]: LaunchesComparisonChart,
+  [widgetTypes.LAUNCH_DURATION]: LaunchesDurationChart,
+  [widgetTypes.PASSING_RATE_PER_LAUNCH]: PassingRatePerLaunch,
 };
 
 @connect(

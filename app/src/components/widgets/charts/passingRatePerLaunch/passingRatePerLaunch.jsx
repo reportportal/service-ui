@@ -73,7 +73,6 @@ export class PassingRatePerLaunch extends Component {
     if (!this.props.isPreview) {
       this.resizeHelper(this.node);
     }
-    // this.resizeChart();
   };
 
   onMouseOut = () => {
@@ -181,8 +180,8 @@ export class PassingRatePerLaunch extends Component {
     const { widget, isPreview, container } = this.props;
     const data = widget.content.result;
     const colors = {
-      Passed: COLORS[`COLOR_PASSED_PER_LAUNCH`],
-      Failed: COLORS[`COLOR_FAILED_PER_LAUNCH`],
+      Passed: COLORS.COLOR_PASSED_PER_LAUNCH,
+      Failed: COLORS.COLOR_FAILED_PER_LAUNCH,
     };
     const processedData = this.getProcessedData(widget, isPreview, colors);
 
@@ -295,7 +294,6 @@ export class PassingRatePerLaunch extends Component {
           <Legend
             isPreview={this.props.isPreview}
             items={this.itemData.itemNames}
-            onClick={() => {}}
             onMouseOver={this.onMouseOver}
             onMouseOut={this.onMouseOut}
             widgetName={this.props.widget.name}

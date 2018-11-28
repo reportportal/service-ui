@@ -58,7 +58,7 @@ export class C3Chart extends React.Component {
       this.unloadData();
     }
 
-    // this.loadNewData(config.data);
+    this.loadNewData(config.data);
   }
 
   render() {
