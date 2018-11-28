@@ -50,7 +50,7 @@ export class FilterEdit extends Component {
 
     if (filter.entities) {
       return filter.entities.reduce(
-        (prev, current) => ({ ...prev, [current.filtering_field]: current }),
+        (prev, current) => ({ ...prev, [current.filteringField]: current }),
         {},
       );
     }

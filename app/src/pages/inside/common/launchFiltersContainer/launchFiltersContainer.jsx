@@ -62,7 +62,7 @@ export class LaunchFiltersContainer extends Component {
       return {};
     }
     return activeFilter.entities.reduce(
-      (acc, entity) => ({ ...acc, [entity.filtering_field]: entity }),
+      (acc, entity) => ({ ...acc, [entity.filteringField]: entity }),
       {},
     );
   };
@@ -84,7 +84,7 @@ export class LaunchFiltersContainer extends Component {
     this.fetchLaunches(this.createFilterQuery(entities));
     this.updateFilter(
       this.props.activeFilterId,
-      Object.keys(entities).map((key) => ({ ...entities[key], filtering_field: key })),
+      Object.keys(entities).map((key) => ({ ...entities[key], filteringField: key })),
     );
   };
 
