@@ -9,7 +9,7 @@ export const passingRateBarData = {
       total: 36,
     },
   },
-  content_parameters: {
+  contentParameters: {
     widget_type: 'passing_rate_per_launch',
     content_fields: [],
     itemsCount: 100,
@@ -31,7 +31,7 @@ export const passingRatePieData = {
       total: 36,
     },
   },
-  content_parameters: {
+  contentParameters: {
     widget_type: 'passing_rate_per_launch',
     content_fields: [],
     itemsCount: 100,
