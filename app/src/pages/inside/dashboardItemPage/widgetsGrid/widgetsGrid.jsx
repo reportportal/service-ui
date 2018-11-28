@@ -135,7 +135,7 @@ export class WidgetsGrid extends Component {
     const { userInfo, project } = this.props;
     const isOwner = dashboard.owner === userInfo.userId;
     const projectRole =
-      userInfo.assigned_projects[project] && userInfo.assigned_projects[project].projectRole;
+      userInfo.assignedProjects[project] && userInfo.assignedProjects[project].projectRole;
     this.setState({
       widgets: dashboard.widgets,
       isFetching: false,

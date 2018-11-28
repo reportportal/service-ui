@@ -19,7 +19,7 @@ const messages = defineMessages({
 
 const NameColumn = ({ className, value }) => (
   <div className={cx('name-col', className)}>
-    <PersonalInfo name={value.full_name} login={value.userId} userRole={value.userRole} />
+    <PersonalInfo name={value.fullName} login={value.userId} userRole={value.userRole} />
   </div>
 );
 NameColumn.propTypes = {
@@ -32,7 +32,7 @@ NameColumn.defaultProps = {
 
 const LastLoginColumn = ({ className, value }) => (
   <div className={cx('last-login-col', className)}>
-    <LastLogin time={value.last_login} />
+    <LastLogin time={value.lastLogin} />
   </div>
 );
 LastLoginColumn.propTypes = {
@@ -46,7 +46,7 @@ LastLoginColumn.defaultProps = {
 const RolesColumn = ({ className, value }) => (
   <div className={cx('roles-col', className)}>
     <ProjectRole
-      assignedProjects={value.assigned_projects}
+      assignedProjects={value.assignedProjects}
       accountRole={value.userRole}
       userId={value.userId}
     />
@@ -100,7 +100,7 @@ export class MembersGrid extends PureComponent {
       component: NameColumn,
     },
     {
-      id: 'last_login',
+      id: 'lastLogin',
       title: {
         full: this.props.intl.formatMessage(messages.lastLoginCol),
       },
