@@ -26,7 +26,7 @@ export const DEFAULT_FILTER = {
   entities: [],
   type: 'launch',
   orders: [
-    { is_asc: false, sorting_column: 'start_time' },
-    { is_asc: false, sorting_column: 'number' },
+    { isAsc: false, sortingColumn: 'start_time' },
+    { isAsc: false, sortingColumn: 'number' },
   ],
 };

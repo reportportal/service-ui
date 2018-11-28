@@ -35,7 +35,7 @@ const messages = defineMessages({
   initialValues: {
     share: '',
     type: 'launch',
-    entities: [{ value: '', condition: CONDITION_CNT, filtering_field: ENTITY_NAME }],
+    entities: [{ value: '', condition: CONDITION_CNT, filteringField: ENTITY_NAME }],
     selection_parameters: {
       orders: getOrdersWithDefault(ENTITY_START_TIME),
     },
@@ -86,7 +86,7 @@ export class FilterAdd extends Component {
 
     if (filter.entities) {
       return filter.entities.reduce(
-        (prev, current) => ({ ...prev, [current.filtering_field]: current }),
+        (prev, current) => ({ ...prev, [current.filteringField]: current }),
         {},
       );
     }

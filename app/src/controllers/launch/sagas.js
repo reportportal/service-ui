@@ -48,7 +48,7 @@ function* fetchLaunches() {
     ? activeFilter.entities.reduce(
         (res, entity) => ({
           ...res,
-          [`filter.${entity.condition}.${entity.filtering_field}`]: entity.value,
+          [`filter.${entity.condition}.${entity.filteringField}`]: entity.value,
         }),
         {},
       )

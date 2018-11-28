@@ -106,8 +106,8 @@ export class FiltersSorting extends Component {
   getFilterOrder = () => {
     const { filter } = this.props;
     let defaultValue = {
-      is_asc: false,
-      sorting_column: '',
+      isAsc: false,
+      sortingColumn: '',
     };
 
     if (filter.selection_parameters) {
@@ -124,11 +124,11 @@ export class FiltersSorting extends Component {
       selection_parameters: { orders },
     } = filter;
 
-    const hasOrder = orders.find((order) => order.sorting_column === sortingColumn);
+    const hasOrder = orders.find((order) => order.sortingColumn === sortingColumn);
 
     const selectionParameters = {
       orders: hasOrder
-        ? orders.map((order) => ({ ...order, is_asc: !order.is_asc }))
+        ? orders.map((order) => ({ ...order, isAsc: !order.isAsc }))
         : getOrdersWithDefault(sortingColumn),
     };
 
@@ -143,8 +143,8 @@ export class FiltersSorting extends Component {
       <div className={cx('filter-sort')}>
         <span className={cx('filter-sort-text')}>{intl.formatMessage(messages.sortBy)}:</span>
         <InputDropdownSorting
-          value={order.sorting_column}
-          sortingMode={order.is_asc}
+          value={order.sortingColumn}
+          sortingMode={order.isAsc}
           options={this.getFilterOptions()}
           onChange={this.handleChange}
         />

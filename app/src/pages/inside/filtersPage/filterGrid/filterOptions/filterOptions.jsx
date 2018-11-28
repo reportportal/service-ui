@@ -65,7 +65,7 @@ export class FilterOptions extends Component {
 
   statisticsOptions = (entity) => {
     const { intl, defectTypes } = this.props;
-    const splitKey = entity.filtering_field.split('$');
+    const splitKey = entity.filteringField.split('$');
     const locator = splitKey.pop();
     const defectTypeTotal = splitKey.pop();
     if (defectTypeTotal === OPTIONS.EXECUTIONS) {
@@ -86,7 +86,7 @@ export class FilterOptions extends Component {
     const { intl } = this.props;
     const time = parseDateTimeRange(entity);
     const dynamic = time.dynamic ? intl.formatMessage(messages.dynamic) : '';
-    const optionName = intl.formatMessage(messages[entity.filtering_field]);
+    const optionName = intl.formatMessage(messages[entity.filteringField]);
     const condition = `${this.fotmatTime(time.start)} ${intl.formatMessage(
       messages.to,
     )} ${this.fotmatTime(time.end)} ${dynamic}`;
@@ -98,14 +98,14 @@ export class FilterOptions extends Component {
     let optionName;
     let condition;
     const result = this.props.entities.map((entity) => {
-      const splitKey = entity.filtering_field.split('$');
+      const splitKey = entity.filteringField.split('$');
       const type = splitKey[0];
       if (type === OPTIONS.START_TIME) {
         return this.startTimeOption(entity);
       } else if (type === OPTIONS.STATISTICS) {
         optionName = this.statisticsOptions(entity);
       } else {
-        optionName = intl.formatMessage(messages[entity.filtering_field]);
+        optionName = intl.formatMessage(messages[entity.filteringField]);
       }
       switch (entity.condition) {
         case CONDITION_GREATER_EQ:
@@ -150,8 +150,8 @@ export class FilterOptions extends Component {
 
   sortingToString = () => {
     const { intl } = this.props;
-    const sort = this.props.sort[0].sorting_column;
-    const splitKey = this.props.sort[0].sorting_column.split('$');
+    const sort = this.props.sort[0].sortingColumn;
+    const splitKey = this.props.sort[0].sortingColumn.split('$');
     const type = splitKey[0];
     if (type === OPTIONS.STATISTICS) {
       const defectTypeTotal = splitKey[2];

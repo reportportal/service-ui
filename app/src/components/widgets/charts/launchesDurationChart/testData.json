@@ -18,8 +18,8 @@
       "conditions": [],
       "orders": [
         {
-          "sorting_column": "statistics$defects$no_defect$nd001",
-          "is_asc": false
+          "sortingColumn": "statistics$defects$no_defect$nd001",
+          "isAsc": false
         }
       ],
       "type": "Launch"
