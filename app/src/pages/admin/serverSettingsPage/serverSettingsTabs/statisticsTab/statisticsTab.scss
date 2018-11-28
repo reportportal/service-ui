@@ -55,6 +55,11 @@
               display: none;
             }
           }
+          &.rotated {
+            svg {
+              transform: rotate(90deg);
+            }
+          }
         }
       }
 
@@ -64,6 +69,10 @@
         font-size: 13px;
         line-height: 18px;
         color: $COLOR--black-2;
+
+        &.list-shown {
+          display: block;
+        }
 
         @media (max-width: $SCREEN_XS_MAX) {
           display: block;
@@ -92,17 +101,6 @@
             @media (max-width: $SCREEN_XS_MAX) {
               left: 0;
             }
-          }
-        }
-      }
-
-      &.list-shown {
-        .list-message {
-          display: block;
-        }
-        .arrow {
-          svg {
-            transform: rotate(90deg);
           }
         }
       }
