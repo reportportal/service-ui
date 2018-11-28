@@ -107,7 +107,7 @@ export class PassingRatePerLaunch extends Component {
     const chartData = {
       columns,
       groups: [itemNames],
-      type: data.content_parameters.widgetOptions.viewMode === 'barMode' ? 'bar' : 'pie',
+      type: data.contentParameters.widgetOptions.viewMode === 'barMode' ? 'bar' : 'pie',
       onclick: () => {},
       order: null,
       colors,
@@ -118,7 +118,7 @@ export class PassingRatePerLaunch extends Component {
     };
 
     const bar =
-      data.content_parameters.widgetOptions.viewMode === 'barMode'
+      data.contentParameters.widgetOptions.viewMode === 'barMode'
         ? {
             width: {
               ratio: 0.35,
@@ -126,7 +126,7 @@ export class PassingRatePerLaunch extends Component {
           }
         : {};
     const pie =
-      data.content_parameters.widgetOptions.viewMode === 'barMode'
+      data.contentParameters.widgetOptions.viewMode === 'barMode'
         ? {}
         : {
             label: {
@@ -136,7 +136,7 @@ export class PassingRatePerLaunch extends Component {
             },
           };
     const padding =
-      data.content_parameters.widgetOptions.viewMode === 'barMode'
+      data.contentParameters.widgetOptions.viewMode === 'barMode'
         ? {
             top: isPreview ? 0 : 30,
             left: 20,
@@ -147,7 +147,7 @@ export class PassingRatePerLaunch extends Component {
             top: isPreview ? 0 : 85,
           };
     const axis =
-      data.content_parameters.widgetOptions.viewMode === 'barMode'
+      data.contentParameters.widgetOptions.viewMode === 'barMode'
         ? {
             rotated: true,
             x: {
@@ -185,7 +185,7 @@ export class PassingRatePerLaunch extends Component {
     };
     const processedData = this.getProcessedData(widget, isPreview, colors);
 
-    this.chartType = widget.content_parameters.widgetOptions.viewMode === 'barMode' ? 'bar' : 'pie';
+    this.chartType = widget.contentParameters.widgetOptions.viewMode === 'barMode' ? 'bar' : 'pie';
     this.height = container.offsetHeight;
     this.width = container.offsetWidth;
     this.itemData = processedData;
@@ -289,7 +289,7 @@ export class PassingRatePerLaunch extends Component {
         <C3Chart
           config={this.config}
           onChartCreated={this.onChartCreated}
-          className={this.props.widget.content_parameters.widgetOptions.viewMode[0]}
+          className={this.props.widget.contentParameters.widgetOptions.viewMode[0]}
         >
           <Legend
             isPreview={this.props.isPreview}
