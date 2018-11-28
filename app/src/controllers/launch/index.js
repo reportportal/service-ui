@@ -22,6 +22,8 @@ export {
   launchPaginationSelector,
   loadingSelector,
   debugModeSelector,
+  allLaunchesLikSelector,
+  latestLaunchesLinkSelector,
 } from './selectors';
 export { launchReducer } from './reducer';
 export { launchSagas } from './sagas';
