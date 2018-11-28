@@ -81,7 +81,7 @@ export class StatisticsTab extends Component {
   };
 
   componentDidMount() {
-    this.fetchEmailConfig();
+    this.fetchStatisticsConfig();
   }
 
   onFormSubmit = (data) => {
@@ -89,13 +89,7 @@ export class StatisticsTab extends Component {
       loading: true,
     });
 
-    this.updateEmailConfig({
-      method: 'POST',
-      data: {
-        type: STATISTICS_TYPE,
-        enabled: data.enabled,
-      },
-    });
+    this.updateStatisticsConfig(data.enabled);
   };
 
   onListClick = () => {
@@ -104,13 +98,19 @@ export class StatisticsTab extends Component {
     }));
   };
 
-  updateEmailConfig = (options) => {
-    fetch(URLS.statisticsServerSettings(), options)
+  updateStatisticsConfig = (statisticsEnabled) => {
+    fetch(URLS.statisticsServerSettings(), {
+      method: 'POST',
+      data: {
+        type: STATISTICS_TYPE,
+        enabled: statisticsEnabled,
+      },
+    })
       .then(() => this.updateSettingSuccess())
       .catch(this.catchRequestError);
   };
 
-  fetchEmailConfig = () => {
+  fetchStatisticsConfig = () => {
     fetch(URLS.serverSettings())
       .then((data) => {
         const analyticsResource = data.analyticsResource && data.analyticsResource[STATISTICS_TYPE];
@@ -164,13 +164,15 @@ export class StatisticsTab extends Component {
           <div className={cx('image-holder')} />
           <p className={cx('statistics-info')}>{formatMessage(messages.statisticsInfo)}</p>
 
-          <div className={cx('statistics-list', { 'list-shown': this.state.listShown })}>
+          <div className={cx('statistics-list')}>
             <div className={cx('statistics-list-toggler')} onClick={this.onListClick}>
               <span>{formatMessage(messages.statisticsList)}</span>
-              <span className={cx('arrow')}>{Parser(ArrowRightIcon)}</span>
+              <span className={cx('arrow', { rotated: this.state.listShown })}>
+                {Parser(ArrowRightIcon)}
+              </span>
             </div>
 
-            <div className={cx('list-message')}>
+            <div className={cx('list-message', { 'list-shown': this.state.listShown })}>
               <p>{formatMessage(messages.statisticsListMessage)}</p>
               <ul>
                 <li className={cx('statistics-point')}>
