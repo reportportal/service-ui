@@ -60,6 +60,10 @@ const messages = defineMessages({
     id: 'Failed',
     defaultMessage: 'Failed',
   },
+  LaunchName: {
+    id: 'LaunchName',
+    defaultMessage: 'LAUNCH NAME:',
+  },
 });
 
 @injectIntl
@@ -120,7 +124,7 @@ export class Legend extends Component {
     return (
       <div className={cx('top-block')}>
         <div className={cx('info-data')}>
-          LAUNCH NAME: <span>{widgetName}</span>
+          {intl.formatMessage(messages.LaunchName)} <span>{widgetName}</span>
         </div>
         <div className={cx('legend')}>{elements}</div>
       </div>

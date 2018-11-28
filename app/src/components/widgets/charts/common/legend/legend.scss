@@ -59,7 +59,7 @@
     margin-bottom: 10px;
     font-family: OpenSansSemibold, sans-serif;
     font-size: 12px;
-    color: #777;
+    color: $COLOR--gray-47;
     display: inline-block;
     overflow: hidden;
     white-space: nowrap;
@@ -67,7 +67,7 @@
     text-overflow: ellipsis;
     span {
       font-size: 13px;
-      color: #464547;
+      color: $COLOR--charcoal-grey;
     }
   }
 }
