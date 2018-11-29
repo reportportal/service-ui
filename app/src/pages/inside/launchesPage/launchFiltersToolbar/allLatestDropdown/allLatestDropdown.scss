@@ -45,6 +45,7 @@
 
   @media (max-width: $SCREEN_SM_MAX) {
     display: flex;
+    padding-left: 10px;
   }
 }
 
@@ -79,6 +80,10 @@
 
   svg {
     fill: $COLOR--charcoal-grey;
+  }
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    padding-left: 5px;
   }
 }
 
