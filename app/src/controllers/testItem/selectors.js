@@ -154,7 +154,7 @@ export const nameLinkSelector = (state, ownProps) => {
   if (ownProps.uniqueId) {
     query = {
       ...query,
-      ...createNamespacedQuery({ 'filter.eq.uniqueId': ownProps.uniqueId }),
+      'filter.eq.uniqueId': ownProps.uniqueId,
     };
   }
 

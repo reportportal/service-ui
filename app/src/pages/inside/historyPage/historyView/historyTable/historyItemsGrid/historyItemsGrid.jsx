@@ -70,7 +70,7 @@ export class HistoryItemsGrid extends Component {
     return itemProps;
   };
 
-  switchCorrespondHistoryItem = (historyItemProps, currentHistoryItem, launchId) => {
+  getCorrespondHistoryItem = (historyItemProps, currentHistoryItem, launchId) => {
     switch (historyItemProps.status) {
       case NOT_FOUND.toUpperCase():
       case RESETED.toUpperCase():
@@ -91,7 +91,7 @@ export class HistoryItemsGrid extends Component {
         return (
           <NameLink
             itemId={currentHistoryItem.id}
-            page={currentHistoryItem.has_children ? null : PROJECT_LOG_PAGE}
+            page={currentHistoryItem.hasChildren ? null : PROJECT_LOG_PAGE}
             testItemIds={
               historyItemProps.itemIds ? `${launchId}/${historyItemProps.itemIds}` : launchId
             }
@@ -113,7 +113,7 @@ export class HistoryItemsGrid extends Component {
           const historyItemProps = this.getHistoryItemProps(currentLaunchHistoryItem);
           return (
             <div key={historyItem.launchId} className={cx('history-grid-column')}>
-              {this.switchCorrespondHistoryItem(
+              {this.getCorrespondHistoryItem(
                 historyItemProps,
                 currentLaunchHistoryItem[0],
                 historyItem.launchId,

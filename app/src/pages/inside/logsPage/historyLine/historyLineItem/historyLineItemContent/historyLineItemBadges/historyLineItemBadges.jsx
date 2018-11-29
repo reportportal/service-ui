@@ -95,7 +95,7 @@ export class HistoryLineItemBadges extends Component {
 
     growthDuration &&
       badges.push(
-        <div key={growthDuration} title={growthDuration} className={cx('growth-duration', 'hide')}>
+        <div key={growthDuration} title={growthDuration} className={cx('growth-duration')}>
           <i className={cx('duration-icon')}>{Parser(DurationIcon)}</i>
           <span className={cx('duration-text')}>{growthDuration}</span>
         </div>,
