@@ -1088,6 +1088,9 @@
   "ProjectDetailsPageSettings.title": "Настройки",
   "ProjectDetailsPageMembers.title": "Налады",
   "ProjectDetailsPageEvents.title": "Падзеі",
-  "Legend.launchName": "імя запуску",
-  "PageSizeControl.perPage": "на старонцы"
+  "PageSizeControl.perPage": "на старонцы",
+  "ProjectStatusPage.sixMonths": "6 месяцаў",
+  "ProjectStatusPage.threeMonths": "3 месяца",
+  "ProjectStatusPage.oneMonth": "1 месяц",
+  "Legend.launchName": "імя запуску"
 }

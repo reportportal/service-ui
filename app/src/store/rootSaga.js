@@ -12,6 +12,7 @@ import { membersSagas } from 'controllers/members';
 import { testItemsSaga } from 'controllers/testItem';
 import { historySagas } from 'controllers/itemsHistory';
 import { logSagas } from 'controllers/log';
+import { projectDetailsSaga } from 'controllers/projectDetails';
 
 export function* rootSagas() {
   yield all([
@@ -28,5 +29,6 @@ export function* rootSagas() {
     logSagas(),
     historySagas(),
     attachmentSagas(),
+    projectDetailsSaga(),
   ]);
 }
