@@ -11,12 +11,14 @@ import {
   projectIdSelector,
   projectSectionSelector,
 } from 'controllers/pages';
+import { fetchProjectInfoAction } from 'controllers/projectDetails';
 import { SETTINGS, MEMBERS, EVENTS } from 'common/constants/projectSections';
 import { GhostButton } from 'components/buttons/ghostButton';
 import AddProjectIcon from 'common/img/add-project-inline.svg';
 import ProjectUsersIcon from 'common/img/project-users-inline.svg';
 import ProjectSettingsIcon from 'common/img/project-settings-inline.svg';
 import ProjectEventsIcon from 'common/img/project-events-inline.svg';
+import { ProjectStatusPage } from '../projectStatusPage';
 
 import styles from './projectsPage.scss';
 
@@ -71,6 +73,7 @@ const HEADER_BUTTONS = [
         type: PROJECT_DETAILS_PAGE,
         payload: { projectId, projectSection: section },
       }),
+    fetchProjectInfoAction,
   },
 )
 @injectIntl
@@ -78,8 +81,9 @@ export class ProjectsPage extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
     section: PropTypes.string,
-    projectId: PropTypes.string,
+    projectId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     redirectToSection: PropTypes.func.isRequired,
+    fetchProjectInfoAction: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
@@ -92,10 +96,15 @@ export class ProjectsPage extends Component {
   };
 
   getBreadcrumbs = () => {
-    const { intl, projectId, section } = this.props;
+    const {
+      intl: { formatMessage },
+      projectId,
+      section,
+    } = this.props;
+
     const breadcrumbs = [
       {
-        title: intl.formatMessage(messages.pageTitle),
+        title: formatMessage(messages.pageTitle),
         link: {
           type: PROJECTS_PAGE,
         },
@@ -114,7 +123,7 @@ export class ProjectsPage extends Component {
 
     if (section) {
       breadcrumbs.push({
-        title: intl.formatMessage(messages[`${section}Title`]),
+        title: formatMessage(messages[`${section}Title`]),
       });
     }
 
@@ -122,12 +131,14 @@ export class ProjectsPage extends Component {
   };
 
   renderHeaderButtons = () => {
-    const { intl, projectId, section } = this.props;
+    const {
+      intl: { formatMessage },
+      projectId,
+      section,
+    } = this.props;
 
     if (!projectId) {
-      return (
-        <GhostButton icon={AddProjectIcon}>{intl.formatMessage(messages.addProject)}</GhostButton>
-      );
+      return <GhostButton icon={AddProjectIcon}>{formatMessage(messages.addProject)}</GhostButton>;
     }
 
     return (
@@ -138,8 +149,9 @@ export class ProjectsPage extends Component {
             disabled={section === key}
             icon={icon}
             onClick={this.onHeaderButtonClick(key)}
+            title={formatMessage(messages[`${key}Title`])}
           >
-            {intl.formatMessage(messages[`${key}Title`])}
+            {formatMessage(messages[`${key}Title`])}
           </GhostButton>
         ))}
       </div>
@@ -153,6 +165,7 @@ export class ProjectsPage extends Component {
       return <h1>Projects</h1>;
     }
 
+    this.props.fetchProjectInfoAction();
     switch (section) {
       case SETTINGS:
         return <h1>Project Settings</h1>;
@@ -161,7 +174,7 @@ export class ProjectsPage extends Component {
       case EVENTS:
         return <h1>Project Events</h1>;
       default:
-        return <h1>Project Details</h1>;
+        return <ProjectStatusPage />;
     }
   };
 
