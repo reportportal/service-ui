@@ -34,7 +34,7 @@ const presets = [
     },
   },
   {
-    label: 'Last week',
+    label: 'Last 7 days',
     value: {
       start: moment()
         .startOf('day')
@@ -48,7 +48,7 @@ const presets = [
     },
   },
   {
-    label: 'Last month',
+    label: 'Last 30 days',
     value: {
       start: moment()
         .startOf('day')
