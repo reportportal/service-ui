@@ -20,6 +20,7 @@ import {
   projectIdSelector,
 } from 'controllers/pages';
 import { GENERAL, EMAIL_SERVER } from 'common/constants/settingsTabs';
+import { SETTINGS, MEMBERS, EVENTS } from 'common/constants/projectSections';
 import { isAuthorizedSelector } from 'controllers/auth';
 import {
   fetchDashboardAction,
@@ -79,8 +80,7 @@ export default {
   API_PAGE: '/api',
 
   [PROJECTS_PAGE]: '/administrate/projects',
-  [PROJECT_DETAILS_PAGE]:
-    '/administrate/project-details/:projectId/:projectSection(settings|members|events)?',
+  [PROJECT_DETAILS_PAGE]: `/administrate/projects/:projectId/:projectSection(${SETTINGS}|${MEMBERS}|${EVENTS})?`,
   [ALL_USERS_PAGE]: '/administrate/users',
   [SERVER_SETTINGS_PAGE]: redirectRoute('/administrate/settings', () => ({
     type: SERVER_SETTINGS_TAB_PAGE,

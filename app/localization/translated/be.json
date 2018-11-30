@@ -1052,5 +1052,10 @@
   "StatisticsTab.statisticsListPoint1": "Інфармацыя пра прыладу: мадэль вашага абсталявання, версія аперацыйнай сістэмы, дазвол экрана, версія браўзэра;",
   "StatisticsTab.statisticsListPoint2": "Інфармацыя пра часопіс: падрабязнасці вашага выкарыстання ReportPortal, на што вы націскаеце і якія дзеянні вырабляеце, як доўга трымаеце прыкладанне адкрытым.",
   "StatisticsTab.statisticsEnabled": "Дапамажыце нам зрабіць ReportPortal лепш з дапамогай аўтаматычнай адпраўкі статыстыкі",
-  "StatisticsTab.updateStatisticsEnabledSuccess": "Настройкі сервера паспяхова абноўленыя"
+  "StatisticsTab.updateStatisticsEnabledSuccess": "Настройкі сервера паспяхова абноўленыя",
+  "ProjectsPage.title": "Усе Праекты",
+  "ProjectsPage.addProject": "Дадаць Праект",
+  "ProjectDetailsPageSettings.title": "Настройки",
+  "ProjectDetailsPageMembers.title": "Налады",
+  "ProjectDetailsPageEvents.title": "Падзеі"
 }
