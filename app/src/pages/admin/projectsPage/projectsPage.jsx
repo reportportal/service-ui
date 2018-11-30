@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { redirect as rfrRedirect } from 'redux-first-router';
+import { redirect } from 'redux-first-router';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import classNames from 'classnames/bind';
 import { PageLayout, PageHeader, PageSection } from 'layouts/pageLayout';
@@ -11,11 +11,12 @@ import {
   projectIdSelector,
   projectSectionSelector,
 } from 'controllers/pages';
+import { SETTINGS, MEMBERS, EVENTS } from 'common/constants/projectSections';
 import { GhostButton } from 'components/buttons/ghostButton';
-import AddProjectIcon from './img/add-project-inline.svg';
-import ProjectUsersIcon from './img/project-users-inline.svg';
-import ProjectSettingsIcon from './img/project-settings-inline.svg';
-import ProjectEventsIcon from './img/project-events-inline.svg';
+import AddProjectIcon from 'common/img/add-project-inline.svg';
+import ProjectUsersIcon from 'common/img/project-users-inline.svg';
+import ProjectSettingsIcon from 'common/img/project-settings-inline.svg';
+import ProjectEventsIcon from 'common/img/project-events-inline.svg';
 
 import styles from './projectsPage.scss';
 
@@ -26,15 +27,19 @@ const messages = defineMessages({
     id: 'ProjectsPage.title',
     defaultMessage: 'All projects',
   },
-  settingsTitle: {
+  addProject: {
+    id: 'ProjectsPage.addProject',
+    defaultMessage: 'Add New Project',
+  },
+  [`${SETTINGS}Title`]: {
     id: 'ProjectDetailsPageSettings.title',
     defaultMessage: 'Settings',
   },
-  membersTitle: {
+  [`${MEMBERS}Title`]: {
     id: 'ProjectDetailsPageMembers.title',
     defaultMessage: 'Members',
   },
-  eventsTitle: {
+  [`${EVENTS}Title`]: {
     id: 'ProjectDetailsPageEvents.title',
     defaultMessage: 'Events',
   },
@@ -42,18 +47,15 @@ const messages = defineMessages({
 
 const HEADER_BUTTONS = [
   {
-    key: 'members',
-    text: 'Members',
+    key: MEMBERS,
     icon: ProjectUsersIcon,
   },
   {
-    key: 'settings',
-    text: 'Settings',
+    key: SETTINGS,
     icon: ProjectSettingsIcon,
   },
   {
-    key: 'events',
-    text: 'Events',
+    key: EVENTS,
     icon: ProjectEventsIcon,
   },
 ];
@@ -63,16 +65,13 @@ const HEADER_BUTTONS = [
     projectId: projectIdSelector(state),
     section: projectSectionSelector(state),
   }),
-  (dispatch) => ({
-    dispatchRedirectToSection: (projectId, section) => {
-      dispatch(
-        rfrRedirect({
-          type: PROJECT_DETAILS_PAGE,
-          payload: { projectId, projectSection: section },
-        }),
-      );
-    },
-  }),
+  {
+    redirectToSection: (projectId, section) =>
+      redirect({
+        type: PROJECT_DETAILS_PAGE,
+        payload: { projectId, projectSection: section },
+      }),
+  },
 )
 @injectIntl
 export class ProjectsPage extends Component {
@@ -80,7 +79,7 @@ export class ProjectsPage extends Component {
     intl: intlShape.isRequired,
     section: PropTypes.string,
     projectId: PropTypes.string,
-    dispatchRedirectToSection: PropTypes.func.isRequired,
+    redirectToSection: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
@@ -89,7 +88,7 @@ export class ProjectsPage extends Component {
   };
 
   onHeaderButtonClick = (section) => () => {
-    this.props.dispatchRedirectToSection(this.props.projectId, section);
+    this.props.redirectToSection(this.props.projectId, section);
   };
 
   getBreadcrumbs = () => {
@@ -123,22 +122,24 @@ export class ProjectsPage extends Component {
   };
 
   renderHeaderButtons = () => {
-    const { projectId, section } = this.props;
+    const { intl, projectId, section } = this.props;
 
     if (!projectId) {
-      return <GhostButton icon={AddProjectIcon}>Add New Project</GhostButton>;
+      return (
+        <GhostButton icon={AddProjectIcon}>{intl.formatMessage(messages.addProject)}</GhostButton>
+      );
     }
 
     return (
       <div className={cx('header-buttons')}>
-        {HEADER_BUTTONS.map(({ key, text, icon }) => (
+        {HEADER_BUTTONS.map(({ key, icon }) => (
           <GhostButton
             key={key}
             disabled={section === key}
             icon={icon}
             onClick={this.onHeaderButtonClick(key)}
           >
-            {text}
+            {intl.formatMessage(messages[`${key}Title`])}
           </GhostButton>
         ))}
       </div>
@@ -153,11 +154,11 @@ export class ProjectsPage extends Component {
     }
 
     switch (section) {
-      case 'settings':
+      case SETTINGS:
         return <h1>Project Settings</h1>;
-      case 'members':
+      case MEMBERS:
         return <h1>Project Members</h1>;
-      case 'events':
+      case EVENTS:
         return <h1>Project Events</h1>;
       default:
         return <h1>Project Details</h1>;
