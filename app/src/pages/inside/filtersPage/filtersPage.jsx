@@ -81,7 +81,7 @@ export class FiltersPage extends Component {
     fetchFiltersAction: PropTypes.func,
     showModalAction: PropTypes.func,
     projectRole: PropTypes.string,
-    userFilters: PropTypes.arrayOf(PropTypes.string),
+    userFilters: PropTypes.arrayOf(PropTypes.number),
     accountRole: PropTypes.string,
     loading: PropTypes.bool,
     tracking: PropTypes.shape({

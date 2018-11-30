@@ -47,10 +47,10 @@ function* fetchLaunches() {
   const filters = yield select(launchFiltersSelector);
   const activeFilter = filters.find((filter) => filter.id === filterId);
   const filtersQuery = activeFilter
-    ? activeFilter.entities.reduce(
-        (res, entity) => ({
+    ? activeFilter.conditions.reduce(
+        (res, condition) => ({
           ...res,
-          [`filter.${entity.condition}.${entity.filteringField}`]: entity.value,
+          [`filter.${condition.condition}.${condition.filteringField}`]: condition.value,
         }),
         {},
       )

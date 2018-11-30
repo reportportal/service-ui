@@ -136,7 +136,7 @@ export class FilterGrid extends Component {
   static propTypes = {
     filters: PropTypes.arrayOf(PropTypes.object),
     intl: intlShape.isRequired,
-    userFilters: PropTypes.arrayOf(PropTypes.string),
+    userFilters: PropTypes.arrayOf(PropTypes.number),
     onEdit: PropTypes.func,
     userId: PropTypes.string,
     toggleDisplayFilterOnLaunches: PropTypes.func,

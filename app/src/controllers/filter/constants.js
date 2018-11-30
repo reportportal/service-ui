@@ -12,7 +12,7 @@ export const DEFAULT_PAGINATION = {
 export const LAUNCHES_FILTERS_NAMESPACE = `${NAMESPACE}/launchesFilters`;
 export const LAUNCHES_FILTERS_UPDATE_NAMESPACE = `${NAMESPACE}/launchesFiltersUpdate`;
 export const CHANGE_ACTIVE_FILTER = 'changeActiveFilter';
-export const UPDATE_FILTER_ENTITIES = 'updateFilterEntities';
+export const UPDATE_FILTER_CONDITIONS = 'updateFilterConditions';
 export const UPDATE_FILTER = 'updateFilter';
 export const RESET_FILTER = 'resetFilter';
 export const CREATE_FILTER = 'createFilter';
@@ -23,7 +23,7 @@ export const REMOVE_FILTER = 'removeFilter';
 export const UPDATE_FILTER_SUCCESS = 'updateFilterSuccess';
 
 export const DEFAULT_FILTER = {
-  entities: [],
+  conditions: [],
   type: 'launch',
   orders: [
     { isAsc: false, sortingColumn: 'start_time' },

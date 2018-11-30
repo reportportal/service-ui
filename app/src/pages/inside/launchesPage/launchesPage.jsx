@@ -340,7 +340,7 @@ export class LaunchesPage extends Component {
     launchFilters,
     activeFilterId,
     activeFilter,
-    activeFilterEntities,
+    activeFilterConditions,
     onSelectFilter,
     onRemoveFilter,
     onChangeFilter,
@@ -365,7 +365,7 @@ export class LaunchesPage extends Component {
       <FilterEntitiesContainer
         level={LEVEL_LAUNCH}
         filterId={activeFilterId}
-        entities={activeFilterEntities}
+        entities={activeFilterConditions}
         onChange={onChangeFilter}
         render={({ onFilterAdd, ...rest }) => (
           <PageLayout>

@@ -3,7 +3,7 @@ import {
   FETCH_FILTERS_CONCAT,
   FETCH_LAUNCHES_FILTERS,
   CHANGE_ACTIVE_FILTER,
-  UPDATE_FILTER_ENTITIES,
+  UPDATE_FILTER_CONDITIONS,
   UPDATE_FILTER,
   UPDATE_FILTER_SUCCESS,
   ADD_FILTER,
@@ -32,11 +32,11 @@ export const changeActiveFilterAction = (filterId) => ({
   payload: filterId,
 });
 
-export const updateFilterEntitiesAction = (filterId, entities) => ({
-  type: UPDATE_FILTER_ENTITIES,
+export const updateFilterConditionsAction = (filterId, conditions) => ({
+  type: UPDATE_FILTER_CONDITIONS,
   payload: {
     filterId,
-    entities,
+    conditions,
   },
 });
 

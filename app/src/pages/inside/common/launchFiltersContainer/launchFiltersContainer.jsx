@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import {
   launchFiltersSelector,
   changeActiveFilterAction,
-  updateFilterEntitiesAction,
+  updateFilterConditionsAction,
   activeFilterSelector,
   removeFilterAction,
 } from 'controllers/filter';
@@ -24,7 +24,7 @@ const isEmptyValue = (value) => value === '' || value === null || value === unde
   {
     changeActiveFilterAction,
     fetchLaunchesWithParamsAction,
-    updateFilterEntitiesAction,
+    updateFilterConditionsAction,
     fetchLaunchesAction,
     toggleDisplayFilterOnLaunchesAction,
     removeFilterAction,
@@ -38,7 +38,7 @@ export class LaunchFiltersContainer extends Component {
     render: PropTypes.func.isRequired,
     changeActiveFilterAction: PropTypes.func,
     fetchLaunchesWithParamsAction: PropTypes.func,
-    updateFilterEntitiesAction: PropTypes.func,
+    updateFilterConditionsAction: PropTypes.func,
     fetchLaunchesAction: PropTypes.func,
     toggleDisplayFilterOnLaunchesAction: PropTypes.func,
     removeFilterAction: PropTypes.func,
@@ -50,41 +50,41 @@ export class LaunchFiltersContainer extends Component {
     activeFilterId: null,
     changeActiveFilterAction: () => {},
     fetchLaunchesWithParamsAction: () => {},
-    updateFilterEntitiesAction: () => {},
+    updateFilterConditionsAction: () => {},
     fetchLaunchesAction: () => {},
     toggleDisplayFilterOnLaunchesAction: () => {},
     removeFilterAction: () => {},
   };
 
-  getEntities = () => {
+  getConditions = () => {
     const { activeFilter } = this.props;
     if (!activeFilter) {
       return {};
     }
-    return activeFilter.entities.reduce(
-      (acc, entity) => ({ ...acc, [entity.filteringField]: entity }),
+    return activeFilter.conditions.reduce(
+      (acc, condition) => ({ ...acc, [condition.filteringField]: condition }),
       {},
     );
   };
 
   fetchLaunches = debounce((query) => this.props.fetchLaunchesWithParamsAction(query), 1000);
 
-  createFilterQuery = (entities) =>
-    Object.keys(entities)
-      .filter((id) => !isEmptyValue(entities[id].value))
+  createFilterQuery = (conditions) =>
+    Object.keys(conditions)
+      .filter((id) => !isEmptyValue(conditions[id].value))
       .reduce((res, key) => {
-        const entity = entities[key];
+        const condition = conditions[key];
         return {
           ...res,
-          [`filter.${entity.condition}.${key}`]: entity.value,
+          [`filter.${condition.condition}.${key}`]: condition.value,
         };
       }, {});
 
-  handleFilterChange = (entities) => {
-    this.fetchLaunches(this.createFilterQuery(entities));
+  handleFilterChange = (conditions) => {
+    this.fetchLaunches(this.createFilterQuery(conditions));
     this.updateFilter(
       this.props.activeFilterId,
-      Object.keys(entities).map((key) => ({ ...entities[key], filteringField: key })),
+      Object.keys(conditions).map((key) => ({ ...conditions[key], filteringField: key })),
     );
   };
 
@@ -100,7 +100,7 @@ export class LaunchFiltersContainer extends Component {
   };
 
   updateFilter = debounce(
-    (filterId, entities) => this.props.updateFilterEntitiesAction(filterId, entities),
+    (filterId, conditions) => this.props.updateFilterConditionsAction(filterId, conditions),
     1000,
   );
 
@@ -113,7 +113,7 @@ export class LaunchFiltersContainer extends Component {
       onSelectFilter: this.handleFilterSelect,
       onRemoveFilter: this.handleFilterRemove,
       onChangeFilter: this.handleFilterChange,
-      activeFilterEntities: this.getEntities(),
+      activeFilterConditions: this.getConditions(),
       onResetFilter: this.props.fetchLaunchesAction,
     });
   }
