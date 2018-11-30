@@ -7,7 +7,7 @@ import {
 import {
   createQueryParametersSelector,
   PROJECT_LAUNCHES_PAGE,
-  payloadSelector,
+  projectIdSelector,
 } from 'controllers/pages';
 import { ALL, LATEST } from 'common/constants/reservedFilterIds';
 import { DEFAULT_SORTING, NAMESPACE } from './constants';
@@ -32,10 +32,10 @@ export const queryParametersSelector = createQueryParametersSelector({
 export const debugModeSelector = (state) => domainSelector(state).debugMode || false;
 
 const createLaunchesLinkSelector = (filterId) =>
-  createSelector(payloadSelector, (payload) => ({
+  createSelector(projectIdSelector, (projectId) => ({
     type: PROJECT_LAUNCHES_PAGE,
     payload: {
-      ...payload,
+      projectId,
       filterId,
     },
   }));
