@@ -1,7 +1,7 @@
 :global {
   .c3-chart-text text,
   .c3-chart-arc text {
-    font-family: OpenSansSemibold, sans-serif;
+    font-family: $FONT-SEMIBOLD;
     font-size: 13px;
     fill: $COLOR--white-two !important;
   }

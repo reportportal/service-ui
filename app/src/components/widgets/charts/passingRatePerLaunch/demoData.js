@@ -2,7 +2,7 @@ export const passingRateBarData = {
   share: false,
   id: 2,
   name: 'test widget1',
-  applied_filters: [],
+  appliedFilters: [],
   content: {
     result: {
       passed: 10,
@@ -10,8 +10,8 @@ export const passingRateBarData = {
     },
   },
   contentParameters: {
-    widget_type: 'passing_rate_per_launch',
-    content_fields: [],
+    widgetType: 'passing_rate_per_launch',
+    contentFields: [],
     itemsCount: 100,
     widgetOptions: {
       launchNameFilter: 'test launch',
@@ -24,7 +24,7 @@ export const passingRatePieData = {
   share: false,
   id: 2,
   name: 'test widget1',
-  applied_filters: [],
+  appliedFilters: [],
   content: {
     result: {
       passed: 10,
@@ -32,8 +32,8 @@ export const passingRatePieData = {
     },
   },
   contentParameters: {
-    widget_type: 'passing_rate_per_launch',
-    content_fields: [],
+    widgetType: 'passing_rate_per_launch',
+    contentFields: [],
     itemsCount: 100,
     widgetOptions: {
       launchNameFilter: 'test launch',
