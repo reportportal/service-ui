@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
-import * as COLORS from 'common/constants/colors';
 import styles from './legend.scss';
 
 const cx = classNames.bind(styles);
@@ -52,16 +51,8 @@ const messages = defineMessages({
     id: 'Widgets.ofTestCases',
     defaultMessage: 'of test cases',
   },
-  Passed: {
-    id: 'Passed',
-    defaultMessage: 'Passed',
-  },
-  Failed: {
-    id: 'Failed',
-    defaultMessage: 'Failed',
-  },
   LaunchName: {
-    id: 'LaunchName',
+    id: 'Legend.launchName',
     defaultMessage: 'LAUNCH NAME:',
   },
 });
@@ -76,6 +67,7 @@ export class Legend extends Component {
     onMouseOver: PropTypes.func,
     onMouseOut: PropTypes.func,
     widgetName: PropTypes.string,
+    colors: PropTypes.array,
   };
 
   static defaultProps = {
@@ -85,6 +77,7 @@ export class Legend extends Component {
     onMouseOver: () => {},
     onMouseOut: () => {},
     widgetName: '',
+    colors: [],
   };
 
   onClick = (e) => {
@@ -101,7 +94,7 @@ export class Legend extends Component {
   getTarget = ({ target }) => (target.getAttribute('data-id') ? target : target.parentElement);
 
   render() {
-    const { items, intl, onMouseOut, isPreview, widgetName } = this.props;
+    const { items, intl, onMouseOut, isPreview, widgetName, colors } = this.props;
     if (isPreview) return '';
 
     const elements = items.map((name) => (
@@ -113,11 +106,8 @@ export class Legend extends Component {
         onMouseOver={this.onMouseOver}
         onMouseOut={onMouseOut}
       >
-        <span
-          className={cx('color-mark')}
-          style={{ backgroundColor: COLORS[`COLOR_${name.toUpperCase()}_PER_LAUNCH`] }}
-        />
-        <span className={cx('item-name')}>{intl.formatMessage(messages[name])}</span>
+        <span className={cx('color-mark')} style={{ backgroundColor: colors[name] }} />
+        <span className={cx('item-name')}>{name}</span>
       </span>
     ));
 

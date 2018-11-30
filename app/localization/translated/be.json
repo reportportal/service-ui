@@ -1057,5 +1057,6 @@
   "ProjectsPage.addProject": "Дадаць Праект",
   "ProjectDetailsPageSettings.title": "Настройки",
   "ProjectDetailsPageMembers.title": "Налады",
-  "ProjectDetailsPageEvents.title": "Падзеі"
+  "ProjectDetailsPageEvents.title": "Падзеі",
+  "Legend.launchName": "імя запуску"
 }

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { injectIntl, intlShape } from 'react-intl';
+import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { connect } from 'react-redux';
 import { activeProjectSelector } from 'controllers/user';
 import { redirect } from 'redux-first-router';
@@ -12,6 +12,17 @@ import { C3Chart } from '../common/c3chart';
 import { TooltipWrapper, TooltipPassingContent } from '../common/tooltip';
 import './passingRatePerLaunch.scss';
 import { Legend } from '../common/legend';
+
+const messages = defineMessages({
+  Passed: {
+    id: 'FilterNameById.statistics$executions$passed',
+    defaultMessage: 'Passed',
+  },
+  Failed: {
+    id: 'FilterNameById.statistics$executions$failed',
+    defaultMessage: 'Failed',
+  },
+});
 
 @injectIntl
 @connect(
@@ -95,15 +106,20 @@ export class PassingRatePerLaunch extends Component {
   };
 
   getProcessedData = (data, isPreview, colors) => {
-    const itemNames = ['Passed', 'Failed'];
+    const { intl } = this.props;
+    const passedTranslations = intl.formatMessage(messages.Passed);
+    const failedTranslations = intl.formatMessage(messages.Failed);
+    const itemNames = [passedTranslations, failedTranslations];
     const columns = [
-      ['Passed', parseInt(data.content.result.passed, 10)],
+      [passedTranslations, parseInt(data.content.result.passed, 10)],
       [
-        'Failed',
+        failedTranslations,
         parseInt(data.content.result.total, 10) - parseInt(data.content.result.passed, 10),
       ],
     ];
-    const columnData = { Passed: columns[0][1], Failed: columns[1][1] };
+    const columnData = {};
+    columnData[passedTranslations] = columns[0][1];
+    columnData[failedTranslations] = columns[1][1];
     const chartData = {
       columns,
       groups: [itemNames],
@@ -177,14 +193,14 @@ export class PassingRatePerLaunch extends Component {
   };
 
   getConfig = () => {
-    const { widget, isPreview, container } = this.props;
+    const { widget, intl, isPreview, container } = this.props;
+    const passedTranslations = intl.formatMessage(messages.Passed);
+    const failedTranslations = intl.formatMessage(messages.Failed);
     const data = widget.content.result;
-    const colors = {
-      Passed: COLORS.COLOR_PASSED_PER_LAUNCH,
-      Failed: COLORS.COLOR_FAILED_PER_LAUNCH,
-    };
+    const colors = {};
+    colors[passedTranslations] = COLORS.COLOR_PASSED_PER_LAUNCH;
+    colors[failedTranslations] = COLORS.COLOR_FAILED_PER_LAUNCH;
     const processedData = this.getProcessedData(widget, isPreview, colors);
-
     this.chartType = widget.contentParameters.widgetOptions.viewMode === 'barMode' ? 'bar' : 'pie';
     this.height = container.offsetHeight;
     this.width = container.offsetWidth;
@@ -226,6 +242,9 @@ export class PassingRatePerLaunch extends Component {
   getPercentage = (value) => (value / this.totalItems * 100).toFixed(2);
 
   resizeHelper = () => {
+    const { intl } = this.props;
+    const passedTranslations = intl.formatMessage(messages.Passed);
+    const failedTranslations = intl.formatMessage(messages.Failed);
     // eslint-disable-next-line func-names
     d3.selectAll('.barMode .c3-chart-texts text').each(function(d) {
       const barBox = d3
@@ -237,8 +256,8 @@ export class PassingRatePerLaunch extends Component {
         .node()
         .getBBox();
       let x = barBox.x + barBox.width / 2 - textBox.width / 2;
-      if (d.id === 'Passed' && x < 5) x = 5;
-      if (d.id === 'Failed' && x + textBox.width > barBox.x + barBox.width)
+      if (d.id === passedTranslations && x < 5) x = 5;
+      if (d.id === failedTranslations && x + textBox.width > barBox.x + barBox.width)
         x = barBox.x + barBox.width - textBox.width - 5;
       d3.select(this).attr('x', x);
     });
@@ -297,6 +316,7 @@ export class PassingRatePerLaunch extends Component {
             onMouseOver={this.onMouseOver}
             onMouseOut={this.onMouseOut}
             widgetName={this.props.widget.name}
+            colors={this.config.data.colors}
           />
         </C3Chart>
       )

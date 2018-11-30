@@ -1071,5 +1071,6 @@
   "ProjectsPage.addProject": "Добавить Проект",
   "ProjectDetailsPageSettings.title": "Настройки",
   "ProjectDetailsPageMembers.title": "Участники",
-  "ProjectDetailsPageEvents.title": "События"
+  "ProjectDetailsPageEvents.title": "События",
+  "Legend.launchName": "имя запуска"
 }
