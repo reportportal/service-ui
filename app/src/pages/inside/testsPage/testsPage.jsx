@@ -25,7 +25,6 @@ import {
   parentItemSelector,
   loadingSelector,
 } from 'controllers/testItem';
-import { LEVEL_TEST } from 'common/constants/launchLevels';
 import { LaunchFiltersSection } from 'pages/inside/common/launchFiltersSection';
 
 @connect(
@@ -168,7 +167,7 @@ export class TestsPage extends Component {
     return (
       <PageLayout>
         <PageSection>
-          <LaunchFiltersSection level={LEVEL_TEST} />
+          <LaunchFiltersSection />
         </PageSection>
         <PageSection>
           <SuiteTestToolbar

@@ -32,7 +32,6 @@ import {
 import { withPagination } from 'controllers/pagination';
 import { showModalAction } from 'controllers/modal';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
-import { LEVEL_STEP } from 'common/constants/launchLevels';
 import { LaunchFiltersSection } from 'pages/inside/common/launchFiltersSection';
 
 import { StepGrid } from './stepGrid';
@@ -236,7 +235,7 @@ export class StepPage extends Component {
     return (
       <PageLayout>
         <PageSection>
-          <LaunchFiltersSection level={LEVEL_STEP} />
+          <LaunchFiltersSection />
         </PageSection>
         <PageSection>
           <SuiteTestToolbar

@@ -1,10 +1,9 @@
-import PropTypes from 'prop-types';
-
 import { FilterEntitiesContainer } from 'components/filterEntities/containers';
 import { LaunchFiltersContainer } from 'pages/inside/common/launchFiltersContainer/launchFiltersContainer';
 import { LaunchFiltersToolbar } from 'pages/inside/common/launchFiltersToolbar';
+import { LEVEL_LAUNCH } from 'common/constants/launchLevels';
 
-export const LaunchFiltersSection = ({ level }) => (
+export const LaunchFiltersSection = () => (
   <LaunchFiltersContainer
     render={({
       launchFilters,
@@ -17,7 +16,7 @@ export const LaunchFiltersSection = ({ level }) => (
       onResetFilter,
     }) => (
       <FilterEntitiesContainer
-        level={level}
+        level={LEVEL_LAUNCH}
         filterId={activeFilterId}
         entities={activeFilterEntities}
         onChange={onChangeFilter}
@@ -37,6 +36,3 @@ export const LaunchFiltersSection = ({ level }) => (
     )}
   />
 );
-LaunchFiltersSection.propTypes = {
-  level: PropTypes.string.isRequired,
-};
