@@ -68,7 +68,7 @@ StatusColumn.defaultProps = {
 
 const StartTimeColumn = ({ className, value }) => (
   <div className={cx('start-time-col', className)}>
-    <AbsRelTime startTime={value.start_time} />
+    <AbsRelTime startTime={value.startTime} />
   </div>
 );
 StartTimeColumn.propTypes = {
