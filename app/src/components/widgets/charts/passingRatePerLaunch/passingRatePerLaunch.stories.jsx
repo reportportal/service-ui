@@ -32,10 +32,10 @@ const mockObserver = {
   unsubscribe: () => {},
 };
 
-storiesOf('Pages/Inside/DashboardItemPage/Charts/PassingRatePerLaunch', module)
+storiesOf('Components/Widgets/Charts/PassingRatePerLaunch', module)
   .addDecorator(
     host({
-      title: 'Passing Rates / Launches',
+      title: 'Passing Rate per Launch',
       align: 'center middle',
       backdrop: 'rgba(70, 69, 71, 0.2)',
       background: '#fff',

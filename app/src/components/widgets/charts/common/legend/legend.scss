@@ -15,6 +15,16 @@
   text-align: right;
 }
 
+.with-custom-block {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.legend-elements {
+  min-width: 17%;
+}
+
 .color-mark {
   display: inline-block;
   width: 12px;
@@ -53,31 +63,4 @@
   margin-right: 15px;
   margin-bottom: 10px;
   cursor: pointer;
-}
-
-.top-block {
-  position: absolute;
-  padding: 20px 20px 0;
-  overflow: hidden;
-  top: 0;
-  width: calc(100% - 40px);
-  height: 85px;
-  .info-data {
-    width: 70%;
-    clear: both;
-    text-align: left;
-    margin-bottom: 10px;
-    font-family: $FONT-SEMIBOLD;
-    font-size: 12px;
-    color: $COLOR--gray-47;
-    display: inline-block;
-    overflow: hidden;
-    white-space: nowrap;
-    -ms-text-overflow: ellipsis;
-    text-overflow: ellipsis;
-    span {
-      font-size: 13px;
-      color: $COLOR--charcoal-grey;
-    }
-  }
 }

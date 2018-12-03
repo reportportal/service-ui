@@ -1,30 +1,26 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { injectIntl, intlShape } from 'react-intl';
 import { connect } from 'react-redux';
+import ReactDOMServer from 'react-dom/server';
+import * as d3 from 'd3-selection';
+import classNames from 'classnames/bind';
 import { activeProjectSelector } from 'controllers/user';
 import { redirect } from 'redux-first-router';
 import { defectLinkSelector, statisticsLinkSelector } from 'controllers/testItem';
 import * as COLORS from 'common/constants/colors';
-import * as d3 from 'd3-selection';
-import ReactDOMServer from 'react-dom/server';
+import { STATS_PASSED } from 'common/constants/statistics';
 import { C3Chart } from '../common/c3chart';
-import { TooltipWrapper, TooltipPassingContent } from '../common/tooltip';
-import './passingRatePerLaunch.scss';
 import { Legend } from '../common/legend';
+import { messages } from '../common/messages';
+import { getItemNameConfig, getItemName } from '../common/utils';
+import { PassingRatePerLaunchTooltip } from './passingRatePerLaunchTooltip';
+import styles from './passingRatePerLaunch.scss';
 
-const messages = defineMessages({
-  Passed: {
-    id: 'FilterNameById.statistics$executions$passed',
-    defaultMessage: 'Passed',
-  },
-  Failed: {
-    id: 'FilterNameById.statistics$executions$failed',
-    defaultMessage: 'Failed',
-  },
-});
+const cx = classNames.bind(styles);
 
-@injectIntl
+const NOT_PASSED_STATISTICS_KEY = 'statistics$executions$notPassed';
+
 @connect(
   (state) => ({
     project: activeProjectSelector(state),
@@ -35,6 +31,7 @@ const messages = defineMessages({
     redirect,
   },
 )
+@injectIntl
 export class PassingRatePerLaunch extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
@@ -64,7 +61,7 @@ export class PassingRatePerLaunch extends Component {
   }
 
   componentWillUnmount() {
-    this.node.removeEventListener('mousemove', this.getCoords);
+    this.node.removeEventListener('mousemove', this.setupCoords);
     this.props.observer.unsubscribe('widgetResized', this.resizeChart);
   }
 
@@ -79,7 +76,7 @@ export class PassingRatePerLaunch extends Component {
       return;
     }
 
-    this.node.addEventListener('mousemove', this.getCoords);
+    this.node.addEventListener('mousemove', this.setupCoords);
 
     if (!this.props.isPreview) {
       this.resizeHelper(this.node);
@@ -106,20 +103,17 @@ export class PassingRatePerLaunch extends Component {
   };
 
   getProcessedData = (data, isPreview, colors) => {
-    const { intl } = this.props;
-    const passedTranslations = intl.formatMessage(messages.Passed);
-    const failedTranslations = intl.formatMessage(messages.Failed);
-    const itemNames = [passedTranslations, failedTranslations];
+    const itemNames = [STATS_PASSED, NOT_PASSED_STATISTICS_KEY];
     const columns = [
-      [passedTranslations, parseInt(data.content.result.passed, 10)],
+      [STATS_PASSED, parseInt(data.content.result.passed, 10)],
       [
-        failedTranslations,
+        NOT_PASSED_STATISTICS_KEY,
         parseInt(data.content.result.total, 10) - parseInt(data.content.result.passed, 10),
       ],
     ];
     const columnData = {};
-    columnData[passedTranslations] = columns[0][1];
-    columnData[failedTranslations] = columns[1][1];
+    columnData[STATS_PASSED] = columns[0][1];
+    columnData[NOT_PASSED_STATISTICS_KEY] = columns[1][1];
     const chartData = {
       columns,
       groups: [itemNames],
@@ -193,18 +187,14 @@ export class PassingRatePerLaunch extends Component {
   };
 
   getConfig = () => {
-    const { widget, intl, isPreview, container } = this.props;
-    const passedTranslations = intl.formatMessage(messages.Passed);
-    const failedTranslations = intl.formatMessage(messages.Failed);
+    const { widget, isPreview, container } = this.props;
     const data = widget.content.result;
     const colors = {};
-    colors[passedTranslations] = COLORS.COLOR_PASSED_PER_LAUNCH;
-    colors[failedTranslations] = COLORS.COLOR_FAILED_PER_LAUNCH;
+    colors[STATS_PASSED] = COLORS.COLOR_PASSED;
+    colors[NOT_PASSED_STATISTICS_KEY] = COLORS.COLOR_NOTPASSED;
     const processedData = this.getProcessedData(widget, isPreview, colors);
-    this.chartType = widget.contentParameters.widgetOptions.viewMode === 'barMode' ? 'bar' : 'pie';
     this.height = container.offsetHeight;
     this.width = container.offsetWidth;
-    this.itemData = processedData;
     this.totalItems = parseInt(data.total, 10);
 
     this.config = {
@@ -234,7 +224,7 @@ export class PassingRatePerLaunch extends Component {
     });
   };
 
-  getCoords = ({ pageX, pageY }) => {
+  setupCoords = ({ pageX, pageY }) => {
     this.x = pageX;
     this.y = pageY;
   };
@@ -242,9 +232,6 @@ export class PassingRatePerLaunch extends Component {
   getPercentage = (value) => (value / this.totalItems * 100).toFixed(2);
 
   resizeHelper = () => {
-    const { intl } = this.props;
-    const passedTranslations = intl.formatMessage(messages.Passed);
-    const failedTranslations = intl.formatMessage(messages.Failed);
     // eslint-disable-next-line func-names
     d3.selectAll('.barMode .c3-chart-texts text').each(function(d) {
       const barBox = d3
@@ -256,8 +243,8 @@ export class PassingRatePerLaunch extends Component {
         .node()
         .getBBox();
       let x = barBox.x + barBox.width / 2 - textBox.width / 2;
-      if (d.id === passedTranslations && x < 5) x = 5;
-      if (d.id === failedTranslations && x + textBox.width > barBox.x + barBox.width)
+      if (d.id === STATS_PASSED && x < 5) x = 5;
+      if (d.id === NOT_PASSED_STATISTICS_KEY && x + textBox.width > barBox.x + barBox.width)
         x = barBox.x + barBox.width - textBox.width - 5;
       d3.select(this).attr('x', x);
     });
@@ -286,23 +273,30 @@ export class PassingRatePerLaunch extends Component {
   };
 
   renderContents = (d, defaultTitleFormat, defaultValueFormat, color) => {
-    const name = d[0].name;
     const number = parseInt(d[0].value, 10);
     const id = d[0].id;
+    const nameConfig = getItemNameConfig(d[0].name);
 
     return ReactDOMServer.renderToStaticMarkup(
-      <TooltipWrapper>
-        <TooltipPassingContent
-          launchNumber={number}
-          launchPercent={this.getPercentage(number)}
-          color={color(id)}
-          itemName={name}
-        />
-      </TooltipWrapper>,
+      <PassingRatePerLaunchTooltip
+        launchNumber={number}
+        launchPercent={this.getPercentage(number)}
+        color={color(id)}
+        itemName={getItemName(nameConfig, {}, this.props.intl.formatMessage)}
+      />,
     );
   };
 
   render() {
+    const customBlock = (
+      <div className={cx('launch-info-block')}>
+        <span className={cx('launch-name-title')}>
+          {this.props.intl.formatMessage(messages.launchName)}
+        </span>
+        <span className={cx('launch-name')}>{this.props.widget.name}</span>
+      </div>
+    );
+
     return (
       this.state.isConfigReady && (
         <C3Chart
@@ -310,14 +304,14 @@ export class PassingRatePerLaunch extends Component {
           onChartCreated={this.onChartCreated}
           className={this.props.widget.contentParameters.widgetOptions.viewMode[0]}
         >
-          <Legend
-            isPreview={this.props.isPreview}
-            items={this.itemData.itemNames}
-            onMouseOver={this.onMouseOver}
-            onMouseOut={this.onMouseOut}
-            widgetName={this.props.widget.name}
-            colors={this.config.data.colors}
-          />
+          {!this.props.isPreview && (
+            <Legend
+              items={[STATS_PASSED, NOT_PASSED_STATISTICS_KEY]}
+              onMouseOver={this.onMouseOver}
+              onMouseOut={this.onMouseOut}
+              customBlock={customBlock}
+            />
+          )}
         </C3Chart>
       )
     );

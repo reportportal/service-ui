@@ -37,9 +37,17 @@ export const messages = defineMessages({
     id: 'Charts.skipped',
     defaultMessage: 'Skipped',
   },
+  notPassed: {
+    id: 'Charts.notPassed',
+    defaultMessage: 'Not passed',
+  },
   cases: {
     id: 'Charts.cases',
     defaultMessage: 'cases',
+  },
+  launchName: {
+    id: 'Charts.launchName',
+    defaultMessage: 'Launch name:',
   },
   failedSkippedTotal: {
     id: 'Charts.failedSkippedTotal',

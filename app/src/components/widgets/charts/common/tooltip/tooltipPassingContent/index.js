@@ -1,1 +1,0 @@
-export { TooltipPassingContent } from './TooltipPassingContent';

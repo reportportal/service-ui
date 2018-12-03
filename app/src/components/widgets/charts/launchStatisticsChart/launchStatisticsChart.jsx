@@ -168,8 +168,8 @@ export class LaunchStatisticsChart extends Component {
           (id) => this.configData.colors[id],
         ),
       )
-      .style('left', `${currentMousePosition[0] - 108}px`)
-      .style('top', `${currentMousePosition[1] - 72}px`);
+      .style('left', `${currentMousePosition[0] - 90}px`)
+      .style('top', `${currentMousePosition[1] - 116}px`);
   };
 
   getLinkParametersStatuses = ({ defectType }) => {
@@ -303,7 +303,7 @@ export class LaunchStatisticsChart extends Component {
     const {
       defectTypes,
       widget: {
-        content_parameters: { content_fields, widgetOptions },
+        contentParameters: { contentFields, widgetOptions },
       },
     } = this.props;
     const itemData = [];
@@ -329,7 +329,7 @@ export class LaunchStatisticsChart extends Component {
       });
     });
 
-    content_fields.forEach((key) => {
+    contentFields.forEach((key) => {
       chartDataOrdered.push(chartData[key]);
     });
 
@@ -349,7 +349,7 @@ export class LaunchStatisticsChart extends Component {
       container,
       widget: {
         content,
-        content_parameters: { widgetOptions },
+        contentParameters: { widgetOptions },
       },
     } = this.props;
 

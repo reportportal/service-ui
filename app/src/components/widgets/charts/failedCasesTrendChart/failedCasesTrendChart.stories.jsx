@@ -22,7 +22,6 @@
 import { storiesOf } from '@storybook/react';
 import { host } from 'storybook-host';
 import { withReadme } from 'storybook-readme';
-
 import { FailedCasesTrendChart } from './failedCasesTrendChart';
 import README from './README.md';
 import testData from './testData.json';
