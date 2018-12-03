@@ -8,8 +8,8 @@ const cx = classNames.bind(styles);
 export class InputConditional extends Component {
   static propTypes = {
     value: PropTypes.shape({
-      value: PropTypes.string.isRequired,
-      condition: PropTypes.string.isRequired,
+      value: PropTypes.string,
+      condition: PropTypes.string,
     }),
     conditions: PropTypes.arrayOf(
       PropTypes.shape({

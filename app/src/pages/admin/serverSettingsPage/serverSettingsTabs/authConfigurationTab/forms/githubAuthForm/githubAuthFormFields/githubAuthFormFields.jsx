@@ -81,6 +81,8 @@ export class GithubAuthFormFields extends Component {
       organizations,
     } = this.props;
 
+    const filteredOrganizations = organizations.filter(Boolean);
+
     return (
       <div className={cx('github-auth-form-fields')}>
         <FormField
@@ -105,9 +107,8 @@ export class GithubAuthFormFields extends Component {
             <Input mobileDisabled />
           </FieldErrorHint>
         </FormField>
-        {!!organizations.length &&
-          organizations[0] &&
-          organizations.map((item, index) => (
+        {!!filteredOrganizations.length &&
+          filteredOrganizations.map((item, index) => (
             // eslint-disable-next-line
             <div className={cx('organization-container')} key={`${item}.${index}`}>
               <FormField
@@ -139,7 +140,7 @@ export class GithubAuthFormFields extends Component {
           </FormField>
         ) : (
           <div className={cx('button-wrapper')}>
-            <GhostButton onClick={this.addOrganization} icon={PlusIcon} type="button">
+            <GhostButton onClick={this.addOrganization} icon={PlusIcon}>
               {formatMessage(messages.addOrganizationButtonTitle)}
             </GhostButton>
           </div>

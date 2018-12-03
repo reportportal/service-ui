@@ -5,7 +5,8 @@ import { injectIntl, intlShape, defineMessages } from 'react-intl';
 import { reduxForm } from 'redux-form';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { activeProjectSelector } from 'controllers/user';
-import { ModalLayout, withModal, ModalField, ModalContentHeading } from 'components/main/modal';
+import { SectionHeader } from 'components/main/sectionHeader';
+import { ModalLayout, withModal, ModalField } from 'components/main/modal';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { LAUNCH_ITEM_TYPES } from 'common/constants/launchItemTypes';
 import { FieldProvider } from 'components/fields/fieldProvider';
@@ -161,7 +162,7 @@ export class EditItemModal extends Component {
       >
         <form>
           <ModalField>
-            <ModalContentHeading
+            <SectionHeader
               text={formatMessage(messages.contentTitle, {
                 type: formatMessage(messages[type]),
               })}

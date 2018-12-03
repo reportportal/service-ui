@@ -67,12 +67,19 @@ export class ActiveDirectoryAuthFormFields extends Component {
     ];
   }
 
-  formatConditionalValue = (value) => {
-    const splittedValue = value && value.split('//');
-    return {
-      value: (value && splittedValue[1]) || '',
-      condition: value ? `${splittedValue[0]}//` : this.urlConditions[0].condition,
+  formatConditionalValue = (fullValue) => {
+    let formattedValue = {
+      value: '',
+      condition: this.urlConditions[0].condition,
     };
+    if (fullValue) {
+      const [condition, value] = fullValue.split('//');
+      formattedValue = {
+        value,
+        condition: `${condition}//`,
+      };
+    }
+    return formattedValue;
   };
 
   parseConditionalValue = (value) => value && `${value.condition}${value.value}`;
