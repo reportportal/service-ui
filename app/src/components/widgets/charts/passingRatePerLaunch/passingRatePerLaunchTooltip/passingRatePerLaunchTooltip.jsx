@@ -1,28 +1,29 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import styles from './TooltipPassingContent.scss';
+import { TooltipWrapper } from '../../common/tooltip/tooltipWrapper';
+import styles from './passingRatePerLaunchTooltip.scss';
 
 const cx = classNames.bind(styles);
 
-export const TooltipPassingContent = ({ launchPercent, launchNumber, color, itemName }) => (
-  <React.Fragment>
+export const PassingRatePerLaunchTooltip = ({ launchPercent, launchNumber, color, itemName }) => (
+  <TooltipWrapper>
     <div className={cx('launch-name')}>{`${launchNumber} (${launchPercent}%)`}</div>
     <div className={cx('item-wrapper')}>
       <span className={cx('color-mark')} style={{ backgroundColor: color }} />
       <span className={cx('item-name')}>{`${itemName}`}</span>
     </div>
-  </React.Fragment>
+  </TooltipWrapper>
 );
 
-TooltipPassingContent.propTypes = {
+PassingRatePerLaunchTooltip.propTypes = {
   launchPercent: PropTypes.string,
   launchNumber: PropTypes.number,
   itemName: PropTypes.string,
   color: PropTypes.string.isRequired,
 };
 
-TooltipPassingContent.defaultProps = {
+PassingRatePerLaunchTooltip.defaultProps = {
   launchPercent: '',
   launchNumber: 0,
   itemName: '',

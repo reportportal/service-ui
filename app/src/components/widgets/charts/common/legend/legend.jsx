@@ -16,7 +16,6 @@ const cx = classNames.bind(styles);
 @injectIntl
 export class Legend extends Component {
   static propTypes = {
-    isPreview: PropTypes.bool,
     intl: intlShape.isRequired,
     defectTypes: PropTypes.object.isRequired,
     items: PropTypes.array,
@@ -24,19 +23,16 @@ export class Legend extends Component {
     onClick: PropTypes.func,
     onMouseOver: PropTypes.func,
     onMouseOut: PropTypes.func,
-    widgetName: PropTypes.string,
-    colors: PropTypes.array,
+    customBlock: PropTypes.node,
   };
 
   static defaultProps = {
-    isPreview: false,
     items: [],
     noTotal: false,
     onClick: () => {},
     onMouseOver: () => {},
     onMouseOut: () => {},
-    widgetName: '',
-    colors: [],
+    customBlock: null,
   };
 
   onClick = (e) => {
@@ -50,20 +46,15 @@ export class Legend extends Component {
     this.props.onMouseOver(target.getAttribute('data-id'));
   };
 
-  getTarget = ({ target }) => (target.getAttribute('data-id') ? target : target.parentElement);
-
-  render() {
+  getElements = () => {
     const {
       items,
       noTotal,
       onMouseOut,
-      isPreview,
-      widgetName,
       intl: { formatMessage },
     } = this.props;
-    if (isPreview) return '';
 
-    const elements = items.map((name) => {
+    return items.map((name) => {
       const nameConfig = getItemNameConfig(name);
 
       return (
@@ -87,15 +78,25 @@ export class Legend extends Component {
         </span>
       );
     });
+  };
+
+  getTarget = ({ target }) => (target.getAttribute('data-id') ? target : target.parentElement);
+
+  render() {
+    const { customBlock } = this.props;
 
     return (
       <div className={cx('legend')}>
         <ScrollWrapper autoHide autoHeight autoHeightMax={65} hideTracksWhenNotNeeded>
-          <div className={cx('top-block')}>
-            <div className={cx('info-data')}>
-              {intl.formatMessage(messages.LaunchName)} <span>{widgetName}</span>
-            </div>
-            <div className={cx('content-wrapper')}>{elements}</div>
+          <div className={cx('content-wrapper')}>
+            {customBlock ? (
+              <div className={cx('with-custom-block')}>
+                {customBlock}
+                <div className={cx('legend-elements')}>{this.getElements()}</div>
+              </div>
+            ) : (
+              this.getElements()
+            )}
           </div>
         </ScrollWrapper>
       </div>

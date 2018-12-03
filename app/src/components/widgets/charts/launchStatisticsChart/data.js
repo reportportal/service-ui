@@ -3,11 +3,11 @@ export const areaViewData = {
   share: true,
   id: '5b3e3d991aa8410001223a89',
   name: 'LAUNCH STATISTICS AREA CHART#090090',
-  content_parameters: {
+  contentParameters: {
     type: 'trends_chart',
     gadget: 'statistic_trend',
-    metadata_fields: ['name', 'number', 'start_time'],
-    content_fields: [
+    metadataFields: ['name', 'number', 'start_time'],
+    contentFields: [
       'statistics$executions$total',
       'statistics$executions$passed',
       'statistics$executions$failed',
@@ -1293,11 +1293,11 @@ export const barViewData = {
   share: true,
   id: '5b3e3d991aa8410001223a8a',
   name: 'LAUNCH STATISTICS BAR CHART#090090',
-  content_parameters: {
+  contentParameters: {
     type: 'trends_chart',
     gadget: 'statistic_trend',
-    metadata_fields: ['name', 'number', 'start_time'],
-    content_fields: [
+    metadataFields: ['name', 'number', 'start_time'],
+    contentFields: [
       'statistics$executions$total',
       'statistics$executions$passed',
       'statistics$executions$failed',
@@ -2125,11 +2125,11 @@ export const areaTimelineData = {
   share: true,
   id: '5b3e3d991aa8410001223a89',
   name: 'LAUNCH STATISTICS AREA CHART#090090',
-  content_parameters: {
+  contentParameters: {
     type: 'trends_chart',
     gadget: 'statistic_trend',
-    metadata_fields: ['name', 'number', 'start_time'],
-    content_fields: [
+    metadataFields: ['name', 'number', 'start_time'],
+    contentFields: [
       'statistics$executions$total',
       'statistics$executions$passed',
       'statistics$executions$failed',
@@ -2187,11 +2187,11 @@ export const barTimelineData = {
   share: true,
   id: '5b3e3d991aa8410001223a8a',
   name: 'LAUNCH STATISTICS BAR CHART#090090',
-  content_parameters: {
+  contentParameters: {
     type: 'trends_chart',
     gadget: 'statistic_trend',
-    metadata_fields: ['name', 'number', 'start_time'],
-    content_fields: [
+    metadataFields: ['name', 'number', 'start_time'],
+    contentFields: [
       'statistics$executions$total',
       'statistics$executions$passed',
       'statistics$executions$failed',
@@ -2232,11 +2232,11 @@ export const areaViewWithZoomData = {
   share: true,
   id: '5b3e3d991aa8410001223a89',
   name: 'LAUNCH STATISTICS AREA CHART#090090',
-  content_parameters: {
+  contentParameters: {
     type: 'trends_chart',
     gadget: 'statistic_trend',
-    metadata_fields: ['name', 'number', 'start_time'],
-    content_fields: [
+    metadataFields: ['name', 'number', 'start_time'],
+    contentFields: [
       'statistics$executions$total',
       'statistics$executions$passed',
       'statistics$executions$failed',
