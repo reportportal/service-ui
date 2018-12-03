@@ -9,7 +9,8 @@ import { reduxForm, formValueSelector, getFormSyncErrors, getFormMeta } from 're
 import { connect } from 'react-redux';
 import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLock';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
-import { ModalLayout, withModal, ModalField, ModalContentHeading } from 'components/main/modal';
+import { SectionHeader } from 'components/main/sectionHeader';
+import { ModalLayout, withModal, ModalField } from 'components/main/modal';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { Input } from 'components/inputs/input';
@@ -231,7 +232,7 @@ export class LaunchMergeModal extends Component {
       >
         <form>
           <ModalField>
-            <ModalContentHeading
+            <SectionHeader
               error={syncErrors.merge_type && fields.merge_type && !fields.merge_type.visited}
               text={intl.formatMessage(messages.mergeTypeHeading)}
             />
@@ -268,7 +269,7 @@ export class LaunchMergeModal extends Component {
           </ModalField>
 
           <ModalField>
-            <ModalContentHeading text={intl.formatMessage(messages.launchInfoHeading)} />
+            <SectionHeader text={intl.formatMessage(messages.launchInfoHeading)} />
           </ModalField>
 
           <div className={cx('launch-info-section', { unavailable: !mergeType })}>

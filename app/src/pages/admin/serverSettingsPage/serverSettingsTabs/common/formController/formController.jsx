@@ -12,7 +12,7 @@ import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { BigButton } from 'components/buttons/bigButton';
 import WarningIcon from 'common/img/error-inline.svg';
 import { InputBigSwitcher } from 'components/inputs/inputBigSwitcher';
-import { ModalContentHeading } from 'components/main/modal';
+import { SectionHeader } from 'components/main/sectionHeader';
 import { messages } from '../constants';
 import styles from './formController.scss';
 
@@ -25,40 +25,34 @@ const cx = classNames.bind(styles);
 export class FormController extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
-    handleSubmit: PropTypes.func,
-    initialize: PropTypes.func,
+    handleSubmit: PropTypes.func.isRequired,
+    initialize: PropTypes.func.isRequired,
     enabled: PropTypes.bool,
     prepareDataBeforeSubmit: PropTypes.func,
     prepareDataBeforeInitialize: PropTypes.func,
     showNotification: PropTypes.func,
     successMessage: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
     formOptions: PropTypes.shape({
+      switcherLabel: PropTypes.oneOfType([PropTypes.string, PropTypes.object]).isRequired,
+      FieldsComponent: PropTypes.oneOfType([PropTypes.func, PropTypes.node]).isRequired,
+      initialConfigUrl: PropTypes.string.isRequired,
+      submitFormUrl: PropTypes.string.isRequired,
       formHeader: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
-      switcherLabel: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
-      FieldsComponent: PropTypes.func,
       customProps: PropTypes.object,
-      initialConfigUrl: PropTypes.string,
-      submitFormUrl: PropTypes.string,
       withErrorBlock: PropTypes.bool,
       defaultFormConfig: PropTypes.object,
     }),
   };
 
   static defaultProps = {
-    handleSubmit: () => {},
-    initialize: () => {},
     enabled: false,
-    prepareDataBeforeSubmit: null,
-    prepareDataBeforeInitialize: null,
+    prepareDataBeforeSubmit: (data) => data,
+    prepareDataBeforeInitialize: (data) => data,
     showNotification: () => {},
     successMessage: '',
     formOptions: {
       formHeader: '',
-      switcherLabel: '',
-      FieldsComponent: () => {},
       customProps: {},
-      initialConfigUrl: PropTypes.string,
-      submitFormUrl: PropTypes.string,
       withErrorBlock: false,
       defaultFormConfig: {},
     },
@@ -78,9 +72,7 @@ export class FormController extends Component {
       loading: true,
       errorMessage: '',
     });
-    const data = this.props.prepareDataBeforeSubmit
-      ? this.props.prepareDataBeforeSubmit(formData)
-      : formData;
+    const data = this.props.prepareDataBeforeSubmit(formData);
     const requestOptions = {
       method: this.props.enabled ? 'POST' : 'DELETE',
     };
@@ -99,7 +91,7 @@ export class FormController extends Component {
     fetch(this.props.formOptions.initialConfigUrl)
       .then((data) => {
         const { prepareDataBeforeInitialize, initialize } = this.props;
-        const initialData = prepareDataBeforeInitialize ? prepareDataBeforeInitialize(data) : data;
+        const initialData = prepareDataBeforeInitialize(data);
         initialize(initialData);
         this.stopLoading();
       })
@@ -145,7 +137,7 @@ export class FormController extends Component {
       <div className={cx('form-controller')}>
         {formHeader && (
           <div className={cx('heading-wrapper')}>
-            <ModalContentHeading text={formHeader} />
+            <SectionHeader text={formHeader} />
           </div>
         )}
         <form className={cx('form')} onSubmit={handleSubmit(this.onFormSubmit)}>
