@@ -31,7 +31,8 @@ import {
   EntityItemName,
   EntityItemDescription,
   EntityItemStartTime,
-  EntityItemTags,
+  EntityItemAttributeKeys,
+  EntityItemAttributeValues,
   EntityDropdown,
 } from 'components/filterEntities';
 import {
@@ -43,7 +44,8 @@ import {
   ENTITY_NAME,
   ENTITY_START_TIME,
   ENTITY_DESCRIPTION,
-  ENTITY_TAGS,
+  ENTITY_ATTRIBUTE_KEYS,
+  ENTITY_ATTRIBUTE_VALUES,
   ENTITY_STATUS,
   ENTITY_DEFECT_TYPE,
   ENTITY_METHOD_TYPE,
@@ -83,9 +85,13 @@ const messages = defineMessages({
     id: 'StepLevelEntities.DefectCommentPlaceholder',
     defaultMessage: 'Enter comment',
   },
-  TagsTitle: {
-    id: 'StepLevelEntities.TagsTitle',
-    defaultMessage: 'Tags',
+  AttributeKeysTitle: {
+    id: 'LaunchLevelEntities.AttributeKeysTitle',
+    defaultMessage: 'Attribute keys',
+  },
+  AttributeValuesTitle: {
+    id: 'LaunchLevelEntities.AttributeValuesTitle',
+    defaultMessage: 'Attribute values',
   },
   BtsIssueTitle: {
     id: 'StepLevelEntities.BtsIssueTitle',
@@ -502,14 +508,31 @@ export class StepLevelEntities extends Component {
         },
       },
       {
-        id: ENTITY_TAGS,
-        component: EntityItemTags,
-        value: filterValues[ENTITY_TAGS] || {
-          value: '',
-          condition: CONDITION_HAS,
-        },
-        title: intl.formatMessage(messages.TagsTitle),
-        active: ENTITY_TAGS in filterValues,
+        id: ENTITY_ATTRIBUTE_KEYS,
+        component: EntityItemAttributeKeys,
+        value:
+          ENTITY_ATTRIBUTE_KEYS in filterValues
+            ? filterValues[ENTITY_ATTRIBUTE_KEYS]
+            : {
+                value: '',
+                condition: CONDITION_HAS,
+              },
+        title: intl.formatMessage(messages.AttributeKeysTitle),
+        active: ENTITY_ATTRIBUTE_KEYS in filterValues,
+        removable: true,
+      },
+      {
+        id: ENTITY_ATTRIBUTE_VALUES,
+        component: EntityItemAttributeValues,
+        value:
+          ENTITY_ATTRIBUTE_VALUES in filterValues
+            ? filterValues[ENTITY_ATTRIBUTE_VALUES]
+            : {
+                value: '',
+                condition: CONDITION_HAS,
+              },
+        title: intl.formatMessage(messages.AttributeValuesTitle),
+        active: ENTITY_ATTRIBUTE_VALUES in filterValues,
         removable: true,
       },
       {

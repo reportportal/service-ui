@@ -1,1 +1,0 @@
-export { TagsBlock } from './tagsBlock';

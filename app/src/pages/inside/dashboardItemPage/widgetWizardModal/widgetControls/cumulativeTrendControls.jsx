@@ -22,24 +22,24 @@ const messages = defineMessages({
     id: 'CumulativeTrendControls.ItemsFieldLabel',
     defaultMessage: 'Items',
   },
-  prefixFieldLabel: {
-    id: 'CumulativeTrendControls.prefixFieldLabel',
-    defaultMessage: 'Tags prefix',
+  attributeKeyFieldLabel: {
+    id: 'CumulativeTrendControls.attributeKeyFieldLabel',
+    defaultMessage: 'Attribute key',
   },
-  prefixFieldPlaceholder: {
-    id: 'CumulativeTrendControls.prefixFieldPlaceholder',
-    defaultMessage: "Enter a part of tag before ':'",
+  attributeKeyFieldPlaceholder: {
+    id: 'CumulativeTrendControls.attributeKeyFieldPlaceholder',
+    defaultMessage: 'Enter an attribute key',
   },
-  prefixFieldTip: {
-    id: 'CumulativeTrendControls.prefixFieldTip',
-    defaultMessage: 'To view a dynamic of a definite tag you should type its part before colon ‘:’',
+  attributeKeyFieldTip: {
+    id: 'CumulativeTrendControls.attributeKeyFieldTip',
+    defaultMessage: 'To view a dynamic of a definite attribute you should type its key',
   },
   ItemsValidationError: {
     id: 'LaunchStatisticsControls.ItemsValidationError',
     defaultMessage: 'Items count should have value from 1 to 10',
   },
-  PrefixValidationError: {
-    id: 'LaunchStatisticsControls.PrefixValidationError',
+  attributeKeyValidationError: {
+    id: 'LaunchStatisticsControls.attributeKeyValidationError',
     defaultMessage: 'Value should have size from 1 to 128',
   },
 });
@@ -47,8 +47,9 @@ const validators = {
   items: (formatMessage) => (value) =>
     (!value || !validate.inRangeValidate(value, 1, 10)) &&
     formatMessage(messages.ItemsValidationError),
-  prefix: (formatMessage) => (value) =>
-    (!value || !validate.widgetPrefix(value)) && formatMessage(messages.PrefixValidationError),
+  attributeKey: (formatMessage) => (value) =>
+    (!value || !validate.attributeKey(value)) &&
+    formatMessage(messages.attributeKeyValidationError),
 };
 
 @injectIntl
@@ -82,7 +83,7 @@ export class CumulativeTrendControls extends Component {
         itemsCount: DEFAULT_ITEMS_COUNT,
         contentFields: this.parseContentFields(this.criteria),
         widgetOptions: {
-          prefix: '',
+          attributeKey: '',
         },
       },
     });
@@ -120,13 +121,13 @@ export class CumulativeTrendControls extends Component {
           />
         </FieldProvider>
         <FieldProvider
-          name="contentParameters.widgetOptions.prefix"
-          validate={validators.prefix(intl.formatMessage)}
+          name="contentParameters.widgetOptions.attributeKey"
+          validate={validators.attributeKey(intl.formatMessage)}
         >
           <InputControl
-            fieldLabel={intl.formatMessage(messages.prefixFieldLabel)}
-            placeholder={intl.formatMessage(messages.prefixFieldPlaceholder)}
-            tip={intl.formatMessage(messages.prefixFieldTip)}
+            fieldLabel={intl.formatMessage(messages.attributeKeyFieldLabel)}
+            placeholder={intl.formatMessage(messages.attributeKeyFieldPlaceholder)}
+            tip={intl.formatMessage(messages.attributeKeyFieldTip)}
           />
         </FieldProvider>
         <FieldProvider

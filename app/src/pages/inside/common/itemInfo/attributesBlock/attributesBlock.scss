@@ -1,13 +1,13 @@
-.tags-block {
+.attributes-block {
   display: inline;
 }
-.tags-icon {
+.attributes-icon {
   display: inline-block;
   width: 15px;
   height: 15px;
   box-sizing: border-box;
   margin-right: 5px;
-  background-image: url(./img/tags-icon.svg);
+  background-image: url(common/img/attributes-icon.svg);
   background-position: center;
   background-size: 100%;
   background-repeat: no-repeat;
@@ -19,7 +19,7 @@
     vertical-align: top;
   }
 }
-.tag {
+.attribute {
   display: inline-block;
   font-family: $FONT-REGULAR;
   font-size: 12px;

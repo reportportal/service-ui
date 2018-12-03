@@ -20,7 +20,7 @@ import { formatMethodType, formatStatus } from 'common/utils/localizationUtils';
 import TestParamsIcon from 'common/img/test-params-icon-inline.svg';
 import PencilIcon from 'common/img/pencil-icon-inline.svg';
 import { NameLink } from 'pages/inside/common/nameLink';
-import { TagsBlock } from './tagsBlock';
+import { AttributesBlock } from './attributesBlock';
 import { OwnerBlock } from './ownerBlock';
 import { DurationBlock } from './durationBlock';
 import styles from './itemInfo.scss';
@@ -148,7 +148,10 @@ export class ItemInfo extends Component {
           )}
           <div className={cx({ 'owner-tags-block': editDisabled })}>
             {value.owner && <OwnerBlock owner={value.owner} />}
-            {value.tags && !!value.tags.length && <TagsBlock tags={value.tags} />}
+            {value.attributes &&
+              !!Object.keys(value.attributes).length && (
+                <AttributesBlock attributes={value.attributes} />
+              )}
           </div>
           {isStepLevel && (
             <div className={cx('mobile-info')}>
