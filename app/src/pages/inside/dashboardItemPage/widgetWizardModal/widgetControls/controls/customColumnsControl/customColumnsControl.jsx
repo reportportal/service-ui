@@ -11,7 +11,7 @@ const cx = classNames.bind(styles);
 const messages = defineMessages({
   tip: {
     id: 'CustomColumnsControl.tip',
-    defaultMessage: 'You can add custom column to view tags with chosen tag prefix',
+    defaultMessage: 'You can add custom column to view attributes with chosen key',
   },
   addColumn: {
     id: 'CustomColumnsControl.addColumn',
@@ -51,7 +51,7 @@ export class CustomColumnsControl extends Component {
             key={`column_${i + 1}`}
             index={i}
             name={column.name}
-            prefix={column.value}
+            attributeKey={column.value}
             last={value.length === i + 1}
             onChange={this.onChangeColumn}
             onRemove={this.removeColumn}

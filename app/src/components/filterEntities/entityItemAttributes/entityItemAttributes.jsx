@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-intl';
+import { connect } from 'react-redux';
+import { FormattedMessage } from 'react-intl';
+import { activeProjectSelector } from 'controllers/user';
 import { InputConditionalTags } from 'components/inputs/inputConditionalTags';
 import { FieldFilterEntity } from 'components/fields/fieldFilterEntity';
-import { CONDITION_HAS, CONDITION_NOT_HAS, CONDITION_IN, CONDITION_NOT_IN } from './constants';
+import { CONDITION_HAS, CONDITION_NOT_HAS, CONDITION_IN, CONDITION_NOT_IN } from '../constants';
 
 const conditions = [
   {
@@ -27,32 +29,40 @@ const conditions = [
     shortLabel: <FormattedMessage id={'Conditions.withoutAnyShort'} defaultMessage={'!any'} />,
   },
 ];
-const messages = defineMessages({
-  placeholder: {
-    id: 'EntityItemTags.placeholder',
-    defaultMessage: 'Enter tags',
-  },
-});
 
-@injectIntl
-export class EntityItemTags extends Component {
+@connect((state) => ({
+  activeProject: activeProjectSelector(state),
+}))
+export class EntityItemAttributes extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
     value: PropTypes.object.isRequired,
     title: PropTypes.string,
     smallSize: PropTypes.bool,
     removable: PropTypes.bool,
     onRemove: PropTypes.func,
+    placeholder: PropTypes.string,
+    urlResolver: PropTypes.func.isRequired,
+    activeProject: PropTypes.string.isRequired,
   };
   static defaultProps = {
     title: '',
     smallSize: false,
     removable: true,
+    placeholder: '',
     onRemove: () => {},
   };
 
   render() {
-    const { intl, onRemove, removable, title, smallSize, ...rest } = this.props;
+    const {
+      placeholder,
+      activeProject,
+      urlResolver,
+      onRemove,
+      removable,
+      title,
+      smallSize,
+      ...rest
+    } = this.props;
 
     return (
       <FieldFilterEntity
@@ -65,7 +75,8 @@ export class EntityItemTags extends Component {
         <InputConditionalTags
           {...rest}
           conditions={conditions}
-          placeholder={intl.formatMessage(messages.placeholder)}
+          placeholder={placeholder}
+          url={urlResolver(activeProject)}
         />
       </FieldFilterEntity>
     );

@@ -22,7 +22,8 @@ import {
   EntityItemDescription,
   EntityLaunchOwner,
   EntityItemStartTime,
-  EntityItemTags,
+  EntityItemAttributeKeys,
+  EntityItemAttributeValues,
   EntityItemStatistics,
 } from 'components/filterEntities';
 import {
@@ -36,7 +37,8 @@ import {
   ENTITY_USER,
   ENTITY_START_TIME,
   ENTITY_DESCRIPTION,
-  ENTITY_TAGS,
+  ENTITY_ATTRIBUTE_KEYS,
+  ENTITY_ATTRIBUTE_VALUES,
 } from 'components/filterEntities/constants';
 import { defectTypesSelector } from 'controllers/project';
 
@@ -61,9 +63,13 @@ const messages = defineMessages({
     id: 'LaunchLevelEntities.OwnerTitle',
     defaultMessage: 'Owner',
   },
-  TagsTitle: {
-    id: 'LaunchLevelEntities.TagsTitle',
-    defaultMessage: 'Tags',
+  AttributeKeysTitle: {
+    id: 'LaunchLevelEntities.AttributeKeysTitle',
+    defaultMessage: 'Attribute keys',
+  },
+  AttributeValuesTitle: {
+    id: 'LaunchLevelEntities.AttributeValuesTitle',
+    defaultMessage: 'Attribute values',
   },
   TotalTitle: {
     id: 'LaunchLevelEntities.TotalTitle',
@@ -227,17 +233,31 @@ export class LaunchLevelEntities extends Component {
         removable: true,
       },
       {
-        id: ENTITY_TAGS,
-        component: EntityItemTags,
+        id: ENTITY_ATTRIBUTE_KEYS,
+        component: EntityItemAttributeKeys,
         value:
-          ENTITY_TAGS in filterValues
-            ? filterValues[ENTITY_TAGS]
+          ENTITY_ATTRIBUTE_KEYS in filterValues
+            ? filterValues[ENTITY_ATTRIBUTE_KEYS]
             : {
                 value: '',
                 condition: CONDITION_HAS,
               },
-        title: intl.formatMessage(messages.TagsTitle),
-        active: ENTITY_TAGS in filterValues,
+        title: intl.formatMessage(messages.AttributeKeysTitle),
+        active: ENTITY_ATTRIBUTE_KEYS in filterValues,
+        removable: true,
+      },
+      {
+        id: ENTITY_ATTRIBUTE_VALUES,
+        component: EntityItemAttributeValues,
+        value:
+          ENTITY_ATTRIBUTE_VALUES in filterValues
+            ? filterValues[ENTITY_ATTRIBUTE_VALUES]
+            : {
+                value: '',
+                condition: CONDITION_HAS,
+              },
+        title: intl.formatMessage(messages.AttributeValuesTitle),
+        active: ENTITY_ATTRIBUTE_VALUES in filterValues,
         removable: true,
       },
       {

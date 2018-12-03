@@ -19,9 +19,9 @@ const messages = defineMessages({
     id: 'CustomColumnItem.namePlaceholder',
     defaultMessage: 'Column name',
   },
-  prefixPlaceholder: {
-    id: 'CustomColumnItem.prefixPlaceholder',
-    defaultMessage: 'Tag prefix',
+  attributeKeyPlaceholder: {
+    id: 'CustomColumnItem.attributeKeyPlaceholder',
+    defaultMessage: 'Attribute key',
   },
 });
 
@@ -30,7 +30,7 @@ export class CustomColumnItem extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
     name: PropTypes.string,
-    prefix: PropTypes.string,
+    attributeKey: PropTypes.string,
     index: PropTypes.number,
     last: PropTypes.bool,
     onRemove: PropTypes.func,
@@ -39,7 +39,7 @@ export class CustomColumnItem extends Component {
   };
   static defaultProps = {
     name: '',
-    prefix: '',
+    attributeKey: '',
     index: 0,
     last: false,
     onRemove: () => {},
@@ -51,15 +51,15 @@ export class CustomColumnItem extends Component {
     !noRemove && onRemove(index);
   };
   onChangeName = (e) => {
-    const { index, onChange, prefix } = this.props;
-    onChange({ name: e.target.value, value: prefix }, index);
+    const { index, onChange, attributeKey } = this.props;
+    onChange({ name: e.target.value, value: attributeKey }, index);
   };
-  onChangePrefix = (e) => {
+  onChangeAttributeKey = (e) => {
     const { index, onChange, name } = this.props;
     onChange({ name, value: e.target.value }, index);
   };
   render() {
-    const { intl, name, prefix, index, last, noRemove } = this.props;
+    const { intl, name, attributeKey, index, last, noRemove } = this.props;
     return (
       <ModalField
         className={cx({ 'last-custom-column-field': last })}
@@ -74,10 +74,10 @@ export class CustomColumnItem extends Component {
             onChange={this.onChangeName}
           />
           <Input
-            className={cx('prefix-input')}
-            value={prefix}
-            placeholder={intl.formatMessage(messages.prefixPlaceholder)}
-            onChange={this.onChangePrefix}
+            className={cx('attribute-key-input')}
+            value={attributeKey}
+            placeholder={intl.formatMessage(messages.attributeKeyPlaceholder)}
+            onChange={this.onChangeAttributeKey}
           />
           <div className={cx('remove-icon', { 'no-remove': noRemove })} onClick={this.onRemove}>
             {!noRemove && Parser(CrossIcon)}

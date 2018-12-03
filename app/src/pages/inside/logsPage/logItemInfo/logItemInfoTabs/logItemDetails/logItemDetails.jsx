@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { injectIntl, intlShape } from 'react-intl';
 import classNames from 'classnames/bind';
 import { DurationBlock } from 'pages/inside/common/itemInfo/durationBlock';
-import { TagsBlock } from 'pages/inside/common/itemInfo/tagsBlock';
+import { AttributesBlock } from 'pages/inside/common/itemInfo/attributesBlock';
 import { MarkdownViewer } from 'components/main/markdown';
 import { AbsRelTime } from 'components/main/absRelTime';
 import { formatMethodType, formatStatus } from 'common/utils/localizationUtils';
@@ -49,7 +49,7 @@ export class LogItemDetails extends Component {
             {logItem.tags &&
               !!logItem.tags.length && (
                 <span className={cx('attribute')}>
-                  <TagsBlock tags={logItem.tags} />
+                  <AttributesBlock attributes={logItem.tags} />
                 </span>
               )}
           </div>

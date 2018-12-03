@@ -20,7 +20,8 @@ import {
   EntityItemName,
   EntityItemDescription,
   EntityItemStartTime,
-  EntityItemTags,
+  EntityItemAttributeKeys,
+  EntityItemAttributeValues,
   EntityItemStatistics,
 } from 'components/filterEntities';
 import { SUITES_PAGE_EVENTS } from 'components/main/analytics/events';
@@ -32,7 +33,8 @@ import {
   ENTITY_NAME,
   ENTITY_START_TIME,
   ENTITY_DESCRIPTION,
-  ENTITY_TAGS,
+  ENTITY_ATTRIBUTE_KEYS,
+  ENTITY_ATTRIBUTE_VALUES,
 } from 'components/filterEntities/constants';
 import { defectTypesSelector } from 'controllers/project';
 
@@ -49,9 +51,13 @@ const messages = defineMessages({
     id: 'SuiteLevelEntities.StartTimeTitle',
     defaultMessage: 'Start time',
   },
-  TagsTitle: {
-    id: 'SuiteLevelEntities.TagsTitle',
-    defaultMessage: 'Tags',
+  AttributeKeysTitle: {
+    id: 'LaunchLevelEntities.AttributeKeysTitle',
+    defaultMessage: 'Attribute keys',
+  },
+  AttributeValuesTitle: {
+    id: 'LaunchLevelEntities.AttributeValuesTitle',
+    defaultMessage: 'Attribute values',
   },
   TotalTitle: {
     id: 'SuiteLevelEntities.TotalTitle',
@@ -174,14 +180,31 @@ export class SuiteLevelEntities extends Component {
         removable: true,
       },
       {
-        id: ENTITY_TAGS,
-        component: EntityItemTags,
-        value: filterValues[ENTITY_TAGS] || {
-          value: '',
-          condition: CONDITION_HAS,
-        },
-        title: intl.formatMessage(messages.TagsTitle),
-        active: ENTITY_TAGS in filterValues,
+        id: ENTITY_ATTRIBUTE_KEYS,
+        component: EntityItemAttributeKeys,
+        value:
+          ENTITY_ATTRIBUTE_KEYS in filterValues
+            ? filterValues[ENTITY_ATTRIBUTE_KEYS]
+            : {
+                value: '',
+                condition: CONDITION_HAS,
+              },
+        title: intl.formatMessage(messages.AttributeKeysTitle),
+        active: ENTITY_ATTRIBUTE_KEYS in filterValues,
+        removable: true,
+      },
+      {
+        id: ENTITY_ATTRIBUTE_VALUES,
+        component: EntityItemAttributeValues,
+        value:
+          ENTITY_ATTRIBUTE_VALUES in filterValues
+            ? filterValues[ENTITY_ATTRIBUTE_VALUES]
+            : {
+                value: '',
+                condition: CONDITION_HAS,
+              },
+        title: intl.formatMessage(messages.AttributeValuesTitle),
+        active: ENTITY_ATTRIBUTE_VALUES in filterValues,
         removable: true,
       },
       {

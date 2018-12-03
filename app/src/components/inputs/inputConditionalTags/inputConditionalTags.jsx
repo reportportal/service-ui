@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { injectIntl, intlShape, defineMessages } from 'react-intl';
-import { URLS } from 'common/urls';
 import { InputTagsSearch } from 'components/inputs/inputTagsSearch';
 import { activeProjectSelector } from 'controllers/user';
 import { connect } from 'react-redux';
@@ -31,7 +30,7 @@ export class InputConditionalTags extends Component {
       }),
     ),
     placeholder: PropTypes.string,
-    activeProject: PropTypes.string.isRequired,
+    url: PropTypes.string.isRequired,
     onChange: PropTypes.func,
     onFocus: PropTypes.func,
     onBlur: PropTypes.func,
@@ -88,7 +87,7 @@ export class InputConditionalTags extends Component {
   parseTags = (options) => options.map((option) => option.value).join(',');
 
   render() {
-    const { intl, value, conditions, activeProject, placeholder } = this.props;
+    const { intl, value, conditions, url, placeholder } = this.props;
     const formattedValue = value.value ? this.formatTags(value.value.split(',')) : [];
     return (
       <div className={cx('input-conditional-tags', { opened: this.state.opened })}>
@@ -97,7 +96,7 @@ export class InputConditionalTags extends Component {
           focusPlaceholder={intl.formatMessage(messages.tagsHint)}
           minLength={1}
           async
-          uri={URLS.launchTagsSearch(activeProject)}
+          uri={url}
           makeOptions={this.formatTags}
           creatable
           showNewLabel
