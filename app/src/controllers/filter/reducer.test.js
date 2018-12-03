@@ -1,4 +1,4 @@
-import { UPDATE_FILTER_ENTITIES } from './constants';
+import { UPDATE_FILTER_CONDITIONS } from './constants';
 import { launchesFiltersReducer } from './reducer';
 
 describe('filter reducer', () => {
@@ -12,11 +12,11 @@ describe('filter reducer', () => {
       ).toBe(oldState);
     });
 
-    test('should update entities in filter on UPDATE_FILTER_ENTITIES', () => {
+    test('should update entities in filter on UPDATE_FILTER_CONDITIONS', () => {
       const oldState = [
         {
           id: '0',
-          entities: [
+          conditions: [
             {
               value: 'foo',
             },
@@ -24,7 +24,7 @@ describe('filter reducer', () => {
         },
         {
           id: '1',
-          entities: [
+          conditions: [
             {
               value: 'bar',
             },
@@ -32,10 +32,10 @@ describe('filter reducer', () => {
         },
       ];
       const newState = launchesFiltersReducer(oldState, {
-        type: UPDATE_FILTER_ENTITIES,
+        type: UPDATE_FILTER_CONDITIONS,
         payload: {
           filterId: '1',
-          entities: [
+          conditions: [
             {
               value: 'baz',
             },
@@ -45,7 +45,7 @@ describe('filter reducer', () => {
       expect(newState).toEqual([
         {
           id: '0',
-          entities: [
+          conditions: [
             {
               value: 'foo',
             },
@@ -53,7 +53,7 @@ describe('filter reducer', () => {
         },
         {
           id: '1',
-          entities: [
+          conditions: [
             {
               value: 'baz',
             },

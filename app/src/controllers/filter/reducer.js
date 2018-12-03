@@ -6,7 +6,7 @@ import { queueReducers } from 'common/utils/queueReducers';
 import {
   NAMESPACE,
   LAUNCHES_FILTERS_NAMESPACE,
-  UPDATE_FILTER_ENTITIES,
+  UPDATE_FILTER_CONDITIONS,
   ADD_FILTER,
   UPDATE_FILTER_SUCCESS,
   REMOVE_FILTER,
@@ -23,9 +23,9 @@ const updateFilter = (filters, filter, oldId) => {
   return newFilters;
 };
 
-const updateFilterEntities = (filters, filterId, entities) => {
+const updateFilterConditions = (filters, filterId, conditions) => {
   const filter = filters.find((item) => item.id === filterId);
-  return updateFilter(filters, { ...filter, entities });
+  return updateFilter(filters, { ...filter, conditions });
 };
 
 const launchFilterLoadedReducer = (state = false, { type, meta }) => {
@@ -42,8 +42,8 @@ const launchFilterLoadedReducer = (state = false, { type, meta }) => {
 
 export const launchesFiltersReducer = (state = [], { type, payload, meta: { oldId } = {} }) => {
   switch (type) {
-    case UPDATE_FILTER_ENTITIES:
-      return updateFilterEntities(state, payload.filterId, payload.entities);
+    case UPDATE_FILTER_CONDITIONS:
+      return updateFilterConditions(state, payload.filterId, payload.conditions);
     case UPDATE_FILTER_SUCCESS:
       return updateFilter(state, payload, oldId);
     case ADD_FILTER:

@@ -4,7 +4,7 @@ export {
   fetchFiltersConcatAction,
   fetchLaunchesFiltersAction,
   changeActiveFilterAction,
-  updateFilterEntitiesAction,
+  updateFilterConditionsAction,
   updateFilterAction,
   resetFilterAction,
   createFilterAction,
