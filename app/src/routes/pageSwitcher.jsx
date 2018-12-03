@@ -41,16 +41,18 @@ import { RegistrationPage } from 'pages/outside/registrationPage';
 import { TestItemPage } from 'pages/inside/testItemPage';
 import { LogsPage } from 'pages/inside/logsPage/index';
 
+import { ANONYMOUS_ACCESS, ADMIN_ACCESS } from './constants';
 import { authorizedRoute } from './authorizedRoute';
 import { anonymousRoute } from './anonymousRoute';
+import { adminRoute } from './adminRoute';
 
 import styles from './pageSwitcher.css';
 
 const pageRendering = {
   [NOT_FOUND]: { component: NotFoundPage, layout: EmptyLayout },
 
-  LOGIN_PAGE: { component: LoginPage, layout: EmptyLayout, anonymousAccess: true },
-  REGISTRATION_PAGE: { component: RegistrationPage, layout: EmptyLayout, anonymousAccess: true },
+  LOGIN_PAGE: { component: LoginPage, layout: EmptyLayout, access: ANONYMOUS_ACCESS },
+  REGISTRATION_PAGE: { component: RegistrationPage, layout: EmptyLayout, access: ANONYMOUS_ACCESS },
   USER_PROFILE_PAGE: { component: ProfilePage, layout: AppLayout },
   API_PAGE: { component: ApiPage, layout: AppLayout },
   PROJECT_DASHBOARD_PAGE: { component: DashboardPage, layout: AppLayout },
@@ -63,13 +65,21 @@ const pageRendering = {
   PROJECT_SETTINGS_TAB_PAGE: { component: SettingsPage, layout: AppLayout },
   PROJECT_USERDEBUG_PAGE: { component: LaunchesPage, layout: AppLayout },
   PROJECT_USERDEBUG_TEST_ITEM_PAGE: { component: TestItemPage, layout: AppLayout },
-  ADMINISTRATE_PAGE: { component: ProjectsPage, layout: AdminLayout },
-  PROJECTS_PAGE: { component: ProjectsPage, layout: AdminLayout },
-  [PROJECT_DETAILS_PAGE]: { component: ProjectsPage, layout: AdminLayout },
-  ALL_USERS_PAGE: { component: AllUsersPage, layout: AdminLayout },
-  SERVER_SETTINGS_PAGE: { component: ServerSettingsPage, layout: AdminLayout },
-  SERVER_SETTINGS_TAB_PAGE: { component: ServerSettingsPage, layout: AdminLayout },
-  PLUGINS_PAGE: { component: PluginsPage, layout: AdminLayout },
+  ADMINISTRATE_PAGE: { component: ProjectsPage, layout: AdminLayout, access: ADMIN_ACCESS },
+  PROJECTS_PAGE: { component: ProjectsPage, layout: AdminLayout, access: ADMIN_ACCESS },
+  [PROJECT_DETAILS_PAGE]: { component: ProjectsPage, layout: AdminLayout, access: ADMIN_ACCESS },
+  ALL_USERS_PAGE: { component: AllUsersPage, layout: AdminLayout, access: ADMIN_ACCESS },
+  SERVER_SETTINGS_PAGE: {
+    component: ServerSettingsPage,
+    layout: AdminLayout,
+    access: ADMIN_ACCESS,
+  },
+  SERVER_SETTINGS_TAB_PAGE: {
+    component: ServerSettingsPage,
+    layout: AdminLayout,
+    access: ADMIN_ACCESS,
+  },
+  PLUGINS_PAGE: { component: PluginsPage, layout: AdminLayout, access: ADMIN_ACCESS },
   [TEST_ITEM_PAGE]: { component: TestItemPage, layout: AppLayout },
   [PROJECT_LOG_PAGE]: { component: LogsPage, layout: AppLayout },
   [PROJECT_USERDEBUG_LOG_PAGE]: { component: LogsPage, layout: AppLayout },
@@ -82,11 +92,15 @@ Object.keys(pageNames).forEach((page) => {
   }
 });
 
-const withAccess = (Inner, anonymousAccess) => {
-  if (anonymousAccess) {
-    return anonymousRoute(Inner);
+const withAccess = (Inner, access) => {
+  switch (access) {
+    case ANONYMOUS_ACCESS:
+      return anonymousRoute(Inner);
+    case ADMIN_ACCESS:
+      return adminRoute(Inner);
+    default:
+      return authorizedRoute(Inner);
   }
-  return authorizedRoute(Inner);
 };
 
 class PageSwitcher extends React.PureComponent {
@@ -98,7 +112,7 @@ class PageSwitcher extends React.PureComponent {
 
     if (!page) return null;
 
-    const { component: PageComponent, layout: Layout, anonymousAccess } = pageRendering[page];
+    const { component: PageComponent, layout: Layout, access } = pageRendering[page];
 
     if (!PageComponent) throw new Error(`Page ${page} does not exist`);
     if (!Layout) throw new Error(`Page ${page} is missing layout`);
@@ -115,7 +129,7 @@ class PageSwitcher extends React.PureComponent {
           <ScreenLock />
         </div>
       ),
-      anonymousAccess,
+      access,
     );
 
     return <FullPage />;

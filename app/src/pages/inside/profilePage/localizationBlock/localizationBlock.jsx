@@ -39,7 +39,7 @@ const messages = defineMessages({
   },
   contribute: {
     id: 'LocalizationBlock.contribute',
-    defaultMessage: `Ru lang in beta. Please help us to translate it, send your PR to this <a target='_blank' href='https://github.com/reportportal/service-ui/blob/develop/src/main/resources/public/js/src/localizations/ru-RU.js' >file.</a>`,
+    defaultMessage: `Ru lang in beta. Please help us to translate it, send your PR to this <a target='_blank' href='https://github.com/reportportal/service-ui/blob/v5/app/localization/translated/ru.json' >file.</a>`,
   },
 });
 
