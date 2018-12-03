@@ -47,8 +47,8 @@ export class InfoLine extends Component {
     const passed = executions.passed / executions.total * 100;
     const failed = executions.failed / executions.total * 100;
     const skipped = executions.skipped / executions.total * 100;
-    const endTime = this.props.data.end_time;
-    const startTime = this.props.data.start_time;
+    const endTime = this.props.data.endTime;
+    const startTime = this.props.data.startTime;
     const duration = getDuration(startTime, endTime);
     const tooltipEventsInfo = {
       [PRODUCT_BUG]: events.PB_TOOLTIP,
