@@ -23,3 +23,27 @@
     margin: 0 3px;
   }
 }
+
+:global {
+  div[class^='breadcrumb__breadcrumb']:nth-child(n + 3),
+  div[class^='breadcrumb__breadcrumb']:nth-child(n + 5),
+  div[class^='breadcrumb__breadcrumb']:nth-child(n + 7),
+  div[class^='breadcrumb__breadcrumb']:nth-child(n + 9) {
+    display: block;
+    word-wrap: break-word;
+    width: 27.5%;
+  }
+
+  div[class^='breadcrumbs__breadcrumbs'] {
+    width: 70%;
+  }
+
+  @media screen and (max-width: 425px) {
+    div[class^='breadcrumb__breadcrumb']:nth-child(n + 3),
+    div[class^='breadcrumb__breadcrumb']:nth-child(n + 5),
+    div[class^='breadcrumb__breadcrumb']:nth-child(n + 7),
+    div[class^='breadcrumb__breadcrumb']:nth-child(n + 9) {
+      width: 18.5%;
+    }
+  }
+}

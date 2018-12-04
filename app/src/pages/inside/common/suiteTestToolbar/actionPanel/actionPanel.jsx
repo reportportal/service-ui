@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { Component, Fragment } from 'react';
 import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
@@ -257,26 +257,72 @@ export class ActionPanel extends Component {
       level,
     } = this.props;
     return (
-      <div className={cx('action-panel', { 'right-buttons-only': !showBreadcrumbs && !hasErrors })}>
-        {showBreadcrumbs && (
-          <Breadcrumbs
-            togglerEventInfo={level !== LEVEL_STEP ? SUITES_PAGE_EVENTS.PLUS_MINUS_BREADCRUMB : {}}
-            breadcrumbEventInfo={
-              level !== LEVEL_STEP ? SUITES_PAGE_EVENTS.ITEM_NAME_BREADCRUMB_CLICK : {}
-            }
-            allEventClick={level !== LEVEL_STEP ? SUITES_PAGE_EVENTS.ALL_LABEL_BREADCRUMB : {}}
-            descriptors={breadcrumbs}
-            onRestorePath={restorePath}
-          />
-        )}
-        {hasErrors && (
-          <GhostButton disabled={!hasValidItems} onClick={onProceedValidItems}>
-            {intl.formatMessage(messages.proceedButton)}
-          </GhostButton>
-        )}
-        <div className={cx('action-buttons')}>
+      <Fragment>
+        <div
+          className={cx('action-panel', { 'right-buttons-only': !showBreadcrumbs && !hasErrors })}
+        >
+          {showBreadcrumbs && (
+            <Breadcrumbs
+              togglerEventInfo={
+                level !== LEVEL_STEP ? SUITES_PAGE_EVENTS.PLUS_MINUS_BREADCRUMB : {}
+              }
+              breadcrumbEventInfo={
+                level !== LEVEL_STEP ? SUITES_PAGE_EVENTS.ITEM_NAME_BREADCRUMB_CLICK : {}
+              }
+              allEventClick={level !== LEVEL_STEP ? SUITES_PAGE_EVENTS.ALL_LABEL_BREADCRUMB : {}}
+              descriptors={breadcrumbs}
+              onRestorePath={restorePath}
+            />
+          )}
+          {hasErrors && (
+            <GhostButton disabled={!hasValidItems} onClick={onProceedValidItems}>
+              {intl.formatMessage(messages.proceedButton)}
+            </GhostButton>
+          )}
+          <div className={cx('action-buttons', 'hidden--l')}>
+            {this.checkVisibility([LEVEL_STEP]) && (
+              <div className={cx('action-button', 'mobile-hidden')}>
+                <GhostMenuButton
+                  title={intl.formatMessage(messages.actionsBtn)}
+                  items={this.actionDescriptors}
+                  disabled={!selectedItems.length}
+                />
+              </div>
+            )}
+            {this.checkVisibility([LEVEL_SUITE, LEVEL_TEST]) && (
+              <div className={cx('action-button')}>
+                <GhostButton
+                  icon={DeleteIcon}
+                  onClick={this.props.onDelete}
+                  disabled={this.props.deleteDisabled}
+                  title={
+                    this.props.deleteDisabled
+                      ? this.props.intl.formatMessage(messages.actionsBtnTooltip)
+                      : this.props.intl.formatMessage(messages.deleteBtnTooltip)
+                  }
+                >
+                  <FormattedMessage id="Common.delete" defaultMessage="Delete" />
+                </GhostButton>
+              </div>
+            )}
+            {!listView &&
+              !debugMode && (
+                <div className={cx('action-button')}>
+                  <GhostButton icon={HistoryIcon} onClick={this.onClickHistory}>
+                    <FormattedMessage id="ActionPanel.history" defaultMessage="History" />
+                  </GhostButton>
+                </div>
+              )}
+            <div className={cx('action-button')}>
+              <GhostButton icon={RefreshIcon} onClick={this.onClickRefresh}>
+                <FormattedMessage id="Common.refresh" defaultMessage="Refresh" />
+              </GhostButton>
+            </div>
+          </div>
+        </div>
+        <div className={cx('action-buttons', 'hidden--xl', 'hidden--xs-s-m')}>
           {this.checkVisibility([LEVEL_STEP]) && (
-            <div className={cx('action-button', 'mobile-hidden')}>
+            <div className={cx('action-button')}>
               <GhostMenuButton
                 title={intl.formatMessage(messages.actionsBtn)}
                 items={this.actionDescriptors}
@@ -314,7 +360,7 @@ export class ActionPanel extends Component {
             </GhostButton>
           </div>
         </div>
-      </div>
+      </Fragment>
     );
   }
 }

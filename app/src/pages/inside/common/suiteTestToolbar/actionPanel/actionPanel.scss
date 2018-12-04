@@ -22,3 +22,32 @@
     display: none;
   }
 }
+
+@media (min-width: 768px) and (max-width: 1195px) {
+  .hidden--l {
+    display: none;
+  }
+  div[class^='actionPanel__action-button_']:first-child {
+    margin-left: auto;
+  }
+
+  div[class^='actionPanel__action-button_']:last-child {
+    margin-right: 16px;
+  }
+
+  div[class^='actionPanel__action-buttons'] {
+    margin-bottom: 12px;
+  }
+}
+
+@media (max-width: 768px) {
+  .hidden--xs-s-m {
+    display: none;
+  }
+}
+
+@media (min-width: 1195px) {
+  .hidden--xl {
+    display: none;
+  }
+}
