@@ -200,8 +200,7 @@ export class LogsGrid extends Component {
     return {
       log: true,
       'error-row': !consoleView && (value.level === ERROR || value.level === FATAL),
-      'error-row-console': consoleView && (value.level === ERROR || value.level === FATAL),
-      [cx('row-console')]: consoleView,
+      'row-console': consoleView,
     };
   };
 
