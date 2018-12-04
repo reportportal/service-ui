@@ -1,0 +1,34 @@
+.item-wrapper {
+  margin: 3px 0;
+}
+
+.color-mark {
+  position: relative;
+  top: 1px;
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  margin-right: 4px;
+  border-radius: 6px;
+}
+
+.launch-name {
+  width: 100%;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  font-family: $FONT-SEMIBOLD, sans-serif;
+}
+
+.launch-start-time {
+  margin-bottom: 4px;
+}
+
+.item-name {
+  margin-right: 4px;
+  text-transform: uppercase;
+}
+
+.item-cases {
+  font-family: $FONT-SEMIBOLD;
+  font-size: 12px;
+}
