@@ -1230,5 +1230,15 @@
   "EventObjectTypes.defectType": "Тып дэфекта",
   "AllUsersPage.export": "Экспартаваць",
   "AllUsersPage.inviteUser" : "Запрасіць карыстальніка",
-  "AllUsersPage.AddUser": "Дадаць карыстальніка"
+  "AllUsersPage.AddUser": "Дадаць карыстальніка",
+  "AllUsersGrid.nameCol" : "Iмя",
+  "AllUsersGrid.typeCol": "Тып",
+  "AllUsersGrid.loginCol": "Лагін",
+  "AllUsersGrid.emailCol": "Электронны адрас",
+  "AllUsersGrid.lastLoginCol": "Апошні ўваход",
+  "AllUsersGrid.projectsAndRolesCol": "Праекты і ролі",
+  "NameColumn.youLabel": "вы",
+  "NameColumn.adminLabel": "адмiнiстратар",
+  "NameColumn.makeAdminLabel": "прызначыць адміністратарам",
+  "ProjectsAndRolesColumn.more": "яшчэ" 
 }

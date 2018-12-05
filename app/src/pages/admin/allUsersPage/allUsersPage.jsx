@@ -11,7 +11,9 @@ import {
   allUsersPaginationSelector,
   loadingSelector,
 } from 'controllers/administrate/allUsers';
+
 import { UsersToolbar } from './usersToolbar';
+import { AllUsersGrid } from './allUsersGrid';
 
 const titleMessage = defineMessages({
   pageTitle: {
@@ -74,12 +76,14 @@ export class AllUsersPage extends Component {
       onChangePage,
       onChangePageSize,
       loading,
+      users,
     } = this.props;
     return (
       <PageLayout>
         <PageHeader breadcrumbs={this.getBreadcrumbs()} />
         <PageSection>
           <UsersToolbar />
+          <AllUsersGrid data={users} loading={loading} />
           {!!pageCount &&
             !loading && (
               <PaginationToolbar
