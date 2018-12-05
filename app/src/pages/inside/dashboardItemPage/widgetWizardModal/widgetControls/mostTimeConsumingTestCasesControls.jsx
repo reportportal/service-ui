@@ -90,7 +90,7 @@ export class MostTimeConsumingTestCasesControls extends Component {
           launchNameFilter: false,
         },
       },
-      filterId: [],
+      filterIds: [],
     });
   }
 

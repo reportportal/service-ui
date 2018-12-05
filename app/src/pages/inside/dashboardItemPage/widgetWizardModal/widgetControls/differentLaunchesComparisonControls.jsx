@@ -68,7 +68,7 @@ export class DifferentLaunchesComparisonControls extends Component {
   render() {
     const { formAppearance, onFormAppearanceChange } = this.props;
     return (
-      <FieldProvider name="filterId" parse={this.parseFilterValue} format={this.formatFilterValue}>
+      <FieldProvider name="filterIds" parse={this.parseFilterValue} format={this.formatFilterValue}>
         <FiltersControl
           formAppearance={formAppearance}
           onFormAppearanceChange={onFormAppearanceChange}
