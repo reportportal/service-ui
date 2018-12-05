@@ -7,7 +7,7 @@ const cx = classNames.bind(styles);
 
 export const AttributesBlock = ({ attributes }) => (
   <div className={cx('attributes-block')}>
-    <div className={cx('attributes-icon')} />
+    {attributes.some(notSystemAttributePredicate) && <div className={cx('attributes-icon')} />}
     {attributes.filter(notSystemAttributePredicate).map((attribute) => (
       <a key={formatAttribute(attribute)} href="/" className={cx('attribute')}>
         {formatAttribute(attribute)}
