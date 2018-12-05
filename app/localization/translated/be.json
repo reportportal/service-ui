@@ -1222,5 +1222,8 @@
   "EventObjectTypes.launch": "Запуск",
   "EventObjectTypes.widget": "Вiджэт",
   "EventObjectTypes.filter": "Фiльтр",
-  "EventObjectTypes.import": "Iмпарт"
+  "EventObjectTypes.import": "Iмпарт",
+  "AllUsersPage.export": "Экспартаваць",
+  "AllUsersPage.inviteUser" : "Запрасіць карыстальніка",
+  "AllUsersPage.AddUser": "Дадаць карыстальніка"
 }

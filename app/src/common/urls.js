@@ -176,4 +176,5 @@ export const URLS = {
   githubAuthSettings: () => `${uatBase}settings/oauth/github`,
   statisticsServerSettings: () => `${urlBase}settings/analytics`,
   events: (projectId) => `${urlBase}${projectId}/activity`,
+  allUsers: () => `${urlBase}user/all`,
 };

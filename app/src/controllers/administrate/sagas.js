@@ -3,6 +3,7 @@ import { EVENTS } from 'common/constants/projectSections';
 import { projectSectionSelector } from 'controllers/pages';
 import { projectSaga } from './project';
 import { eventsSagas, fetchEventsAction } from './events';
+import { allUsersSagas } from './allUsers';
 import { FETCH_PROJECT_DATA } from './constants';
 
 const pageDataActions = {
@@ -21,5 +22,5 @@ function* watchFetchProjectData() {
 }
 
 export function* administrateSaga() {
-  yield all([projectSaga(), eventsSagas(), watchFetchProjectData()]);
+  yield all([projectSaga(), eventsSagas(), watchFetchProjectData(), allUsersSagas()]);
 }
