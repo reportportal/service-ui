@@ -2,13 +2,13 @@
   "share": false,
   "id": 4,
   "name": "start1",
-  "content_parameters": {
-    "widget_type": "not_passed",
-    "content_fields": [],
+  "contentParameters": {
+    "widgetType": "notPassed",
+    "contentFields": [],
     "itemsCount": 10,
     "widgetOptions": {}
   },
-  "applied_filters": [
+  "appliedFilters": [
     {
       "share": false,
       "id": 1,

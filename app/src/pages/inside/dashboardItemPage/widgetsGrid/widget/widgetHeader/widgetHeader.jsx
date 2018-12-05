@@ -15,76 +15,76 @@ import styles from './widgetHeader.scss';
 
 const cx = classNames.bind(styles);
 const widgetTypesMessages = defineMessages({
-  statistic_trend: {
-    id: 'WidgetHeader.widgetType.statistic_trend',
+  statisticTrend: {
+    id: 'WidgetHeader.widgetType.statisticTrend',
     defaultMessage: 'Launch statistics chart',
   },
-  overall_statistics: {
-    id: 'WidgetHeader.widgetType.overall_statistics',
+  overallStatistics: {
+    id: 'WidgetHeader.widgetType.overallStatistics',
     defaultMessage: 'Overall statistics',
   },
-  launches_duration_chart: {
-    id: 'WidgetHeader.widgetType.launches_duration_chart',
+  launchesDurationChart: {
+    id: 'WidgetHeader.widgetType.launchesDurationChart',
     defaultMessage: 'Launches duration chart',
   },
-  launch_statistics: {
-    id: 'WidgetHeader.widgetType.launch_statistics',
+  launchStatistics: {
+    id: 'WidgetHeader.widgetType.launchStatistics',
     defaultMessage: 'Launch statistics chart',
   },
-  activity_stream: {
-    id: 'WidgetHeader.widgetType.activity_stream',
+  activityStream: {
+    id: 'WidgetHeader.widgetType.activityStream',
     defaultMessage: 'Project activity panel',
   },
-  cases_trend: {
-    id: 'WidgetHeader.widgetType.cases_trend',
+  casesTrend: {
+    id: 'WidgetHeader.widgetType.casesTrend',
     defaultMessage: 'Test-cases growth trend chart',
   },
-  investigated_trend: {
-    id: 'WidgetHeader.widgetType.investigated_trend',
+  investigatedTrend: {
+    id: 'WidgetHeader.widgetType.investigatedTrend',
     defaultMessage: 'Investigated percentage of launches',
   },
-  launches_table: {
-    id: 'WidgetHeader.widgetType.launches_table',
+  launchesTable: {
+    id: 'WidgetHeader.widgetType.launchesTable',
     defaultMessage: 'Launches table',
   },
-  unique_bug_table: {
-    id: 'WidgetHeader.widgetType.unique_bug_table',
+  uniqueBugTable: {
+    id: 'WidgetHeader.widgetType.uniqueBugTable',
     defaultMessage: 'Unique bugs table',
   },
-  most_failed_test_cases: {
-    id: 'WidgetHeader.widgetType.most_failed_test_cases',
+  mostFailedTestCases: {
+    id: 'WidgetHeader.widgetType.mostFailedTestCases',
     defaultMessage: 'Most failed test-cases table (TOP-20)',
   },
-  bug_trend: {
-    id: 'WidgetHeader.widgetType.bug_trend',
+  bugTrend: {
+    id: 'WidgetHeader.widgetType.bugTrend',
     defaultMessage: 'Launch execution and issue statistic',
   },
-  not_passed: {
-    id: 'WidgetHeader.widgetType.not_passed',
+  notPassed: {
+    id: 'WidgetHeader.widgetType.notPassed',
     defaultMessage: 'Non-passed test-cases trend chart',
   },
-  launches_comparison_chart: {
-    id: 'WidgetHeader.widgetType.launches_comparison_chart',
+  launchesComparisonChart: {
+    id: 'WidgetHeader.widgetType.launchesComparisonChart',
     defaultMessage: 'Different launches comparison chart',
   },
-  passing_rate_per_launch: {
-    id: 'WidgetHeader.widgetType.passing_rate_per_launch',
+  passingRatePerLaunch: {
+    id: 'WidgetHeader.widgetType.passingRatePerLaunch',
     defaultMessage: 'Passing rate per launch',
   },
-  passing_rate_summary: {
-    id: 'WidgetHeader.widgetType.passing_rate_summary',
+  passingRateSummary: {
+    id: 'WidgetHeader.widgetType.passingRateSummary',
     defaultMessage: 'Passing rate summary',
   },
-  product_status: {
-    id: 'WidgetHeader.widgetType.product_status',
+  productStatus: {
+    id: 'WidgetHeader.widgetType.productStatus',
     defaultMessage: 'Product status',
   },
   cumulative: {
     id: 'WidgetHeader.widgetType.cumulative',
     defaultMessage: 'Cumulative trend chart',
   },
-  flaky_test_cases: {
-    id: 'WidgetHeader.widgetType.flaky_test_cases',
+  flakyTestCases: {
+    id: 'WidgetHeader.widgetType.flakyTestCases',
     defaultMessage: 'Flaky test cases table (TOP-20)',
   },
 });

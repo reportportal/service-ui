@@ -3,10 +3,10 @@ export const mockData = {
   share: true,
   id: '5bd8b0949daec2000132daba',
   name: 'Temporary table',
-  content_parameters: {
-    type: 'launches_table',
-    gadget: 'launches_table',
-    content_fields: [
+  contentParameters: {
+    type: 'launchesTable',
+    gadget: 'launchesTable',
+    contentFields: [
       'name',
       'number',
       'lastModified',

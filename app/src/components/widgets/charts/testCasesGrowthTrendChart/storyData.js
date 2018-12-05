@@ -1,10 +1,10 @@
 export const widgetData = {
   id: '6',
-  name: 'cases_trend',
+  name: 'casesTrend',
   description: 'bbbb',
   owner: 'test_testing',
   share: true,
-  widgetType: 'cases_trend',
+  widgetType: 'casesTrend',
   contentParameters: {
     itemsCount: 50,
     widgetOptions: {
@@ -76,8 +76,8 @@ export const widgetDataTimelineMode = {
   owner: 'default',
   share: false,
   id: '8',
-  name: 'cases_trend_timeline',
-  widgetType: 'cases_trend',
+  name: 'casesTrend_timeline',
+  widgetType: 'casesTrend',
   contentParameters: {
     itemsCount: 18,
     widgetOptions: {

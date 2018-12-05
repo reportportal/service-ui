@@ -2,15 +2,15 @@
   "share": false,
   "id": 2,
   "name": "start",
-  "content_parameters": {
-    "widget_type": "launches_duration_chart",
-    "content_fields": [],
+  "contentParameters": {
+    "widgetType": "launchesDurationChart",
+    "contentFields": [],
     "itemsCount": 10,
     "widgetOptions": {
       "latest": ""
     }
   },
-  "applied_filters": [
+  "appliedFilters": [
     {
       "share": false,
       "id": 1,

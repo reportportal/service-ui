@@ -1,10 +1,10 @@
 export const widgetData = {
   id: '6',
-  name: 'unique_bug_table',
+  name: 'uniqueBugTable',
   description: 'bbbb',
   owner: 'test_testing',
   share: true,
-  widgetType: 'unique_bug_table',
+  widgetType: 'uniqueBugTable',
   contentParameters: {
     itemsCount: 50,
     contentFields: ['bugID', 'foundIn', 'submitDate', 'submitter'],
