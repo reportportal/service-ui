@@ -17,7 +17,7 @@ export class FiltersItem extends PureComponent {
     intl: intlShape,
     search: PropTypes.string,
     userId: PropTypes.string,
-    activeFilterId: PropTypes.string,
+    activeFilterIds: PropTypes.string,
     filter: PropTypes.object.isRequired,
     onChange: PropTypes.func.isRequired,
     onEdit: PropTypes.func.isRequired,
@@ -27,19 +27,19 @@ export class FiltersItem extends PureComponent {
     intl: {},
     search: '',
     userId: '',
-    activeFilterId: '',
+    activeFilterIds: '',
     item: {},
     onChange: () => {},
     onEdit: () => {},
   };
 
   render() {
-    const { activeFilterId, filter, search, onChange, onEdit, userId } = this.props;
+    const { activeFilterIds, filter, search, onChange, onEdit, userId } = this.props;
 
     return (
       <div className={cx('filter-item')}>
         <InputRadio
-          value={activeFilterId}
+          value={activeFilterIds}
           ownValue={String(filter.id)}
           name={'filter-id'}
           onChange={onChange}

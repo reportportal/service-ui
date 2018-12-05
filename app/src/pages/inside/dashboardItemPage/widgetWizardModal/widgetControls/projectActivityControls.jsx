@@ -97,7 +97,7 @@ export class ProjectActivityControls extends Component {
           userRef: [],
         },
       },
-      filterId: [],
+      filterIds: [],
     });
   }
 

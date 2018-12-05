@@ -51,7 +51,7 @@ const messages = defineMessages({
   (state) => ({
     userId: userIdSelector(state),
     activeProject: activeProjectSelector(state),
-    activeFilterId: (selector(state, 'filterId') && selector(state, 'filterId')[0]) || '',
+    activeFilterIds: (selector(state, 'filterIds') && selector(state, 'filterIds')[0]) || '',
     filters: filtersSelector(state),
     pagination: filtersPaginationSelector(state),
     loading: loadingSelector(state),
@@ -71,7 +71,7 @@ export class FiltersControl extends Component {
     error: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
     userId: PropTypes.string,
     activeProject: PropTypes.string,
-    activeFilterId: PropTypes.string,
+    activeFilterIds: PropTypes.string,
     filter: PropTypes.string,
     pagination: PropTypes.object.isRequired,
     formAppearance: PropTypes.object.isRequired,
@@ -88,7 +88,7 @@ export class FiltersControl extends Component {
     touched: false,
     error: '',
     userId: '',
-    activeFilterId: '',
+    activeFilterIds: '',
     filter: '',
     activeProject: '',
     loading: false,
@@ -249,7 +249,7 @@ export class FiltersControl extends Component {
   };
 
   handleFilterListChange = (event) => {
-    this.props.changeWizardForm('filterId', [event.target.value]);
+    this.props.changeWizardForm('filterIds', [event.target.value]);
   };
 
   handleFilterListLoad = () => {
@@ -274,9 +274,9 @@ export class FiltersControl extends Component {
       return this.getFormAppearanceComponent();
     }
 
-    const { activeFilterId, filters, loading, userId, filter, touched, error, intl } = this.props;
+    const { activeFilterIds, filters, loading, userId, filter, touched, error, intl } = this.props;
     const { searchValue } = this.state;
-    const activeFilter = filters.find((elem) => elem.id === activeFilterId);
+    const activeFilter = filters.find((elem) => elem.id === activeFilterIds);
 
     return (
       <div className={cx('filters-control')}>
@@ -294,7 +294,7 @@ export class FiltersControl extends Component {
           userId={userId}
           filters={filters}
           loading={loading}
-          activeId={activeFilterId}
+          activeId={activeFilterIds}
           onChange={this.handleFilterListChange}
           onEdit={this.handleFormAppearanceMode}
           onLazyLoad={this.handleFilterListLoad}

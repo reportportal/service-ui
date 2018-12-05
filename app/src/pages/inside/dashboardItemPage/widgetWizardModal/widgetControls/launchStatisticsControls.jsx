@@ -114,7 +114,7 @@ export class LaunchStatisticsControls extends Component {
     return (
       <Fragment>
         <FieldProvider
-          name="filterId"
+          name="filterIds"
           parse={this.parseFilterValue}
           format={this.formatFilterValue}
         >
