@@ -19,6 +19,7 @@ import ProjectUsersIcon from 'common/img/project-users-inline.svg';
 import ProjectSettingsIcon from 'common/img/project-settings-inline.svg';
 import ProjectEventsIcon from 'common/img/project-events-inline.svg';
 import { ProjectStatusPage } from '../projectStatusPage';
+import { ProjectEventsPage } from '../projectEventsPage';
 
 import styles from './projectsPage.scss';
 
@@ -172,7 +173,7 @@ export class ProjectsPage extends Component {
       case MEMBERS:
         return <h1>Project Members</h1>;
       case EVENTS:
-        return <h1>Project Events</h1>;
+        return <ProjectEventsPage />;
       default:
         return <ProjectStatusPage projectId={projectId} />;
     }

@@ -32,6 +32,7 @@ import { TEST_ITEM_PAGE } from 'controllers/pages/constants';
 import { fetchTestItemsAction, setLevelAction } from 'controllers/testItem';
 import { fetchFiltersAction } from 'controllers/filter';
 import { fetchMembersAction } from 'controllers/members';
+import { fetchProjectDataAction } from 'controllers/administrate';
 import { fetchLogPageData } from 'controllers/log';
 import { fetchHistoryPageInfo } from 'controllers/itemsHistory';
 
@@ -80,7 +81,10 @@ export default {
   API_PAGE: '/api',
 
   [PROJECTS_PAGE]: '/administrate/projects',
-  [PROJECT_DETAILS_PAGE]: `/administrate/projects/:projectId/:projectSection(${SETTINGS}|${MEMBERS}|${EVENTS})?`,
+  [PROJECT_DETAILS_PAGE]: {
+    path: `/administrate/projects/:projectId/:projectSection(${SETTINGS}|${MEMBERS}|${EVENTS})`,
+    thunk: (dispatch) => dispatch(fetchProjectDataAction()),
+  },
   [ALL_USERS_PAGE]: '/administrate/users',
   [SERVER_SETTINGS_PAGE]: redirectRoute('/administrate/settings', () => ({
     type: SERVER_SETTINGS_TAB_PAGE,
