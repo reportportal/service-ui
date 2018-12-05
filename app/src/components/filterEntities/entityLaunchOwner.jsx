@@ -32,6 +32,7 @@ export class EntityLaunchOwner extends Component {
     removable: PropTypes.bool,
     onRemove: PropTypes.func,
     onChange: PropTypes.func,
+    vertical: PropTypes.bool,
   };
   static defaultProps = {
     title: '',
@@ -39,6 +40,7 @@ export class EntityLaunchOwner extends Component {
     removable: true,
     onRemove: () => {},
     onChange: () => {},
+    vertical: false,
   };
 
   onChange = (value) => {
@@ -50,7 +52,16 @@ export class EntityLaunchOwner extends Component {
   formatValue = (values) => values.map((value) => ({ value, label: value }));
 
   render() {
-    const { intl, value, onRemove, removable, title, smallSize, ownersSearchUrl } = this.props;
+    const {
+      intl,
+      value,
+      onRemove,
+      removable,
+      title,
+      smallSize,
+      ownersSearchUrl,
+      vertical,
+    } = this.props;
     const formattedValue = this.formatValue(value.value.split(','));
     return (
       <FieldFilterEntity
@@ -59,6 +70,7 @@ export class EntityLaunchOwner extends Component {
         smallSize={smallSize}
         removable={removable}
         onRemove={onRemove}
+        vertical={vertical}
       >
         <InputTagsSearch
           value={formattedValue.length && formattedValue[0].value ? formattedValue : []}

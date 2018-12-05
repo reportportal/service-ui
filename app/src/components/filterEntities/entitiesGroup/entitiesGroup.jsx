@@ -3,13 +3,14 @@ import track from 'react-tracking';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { EntitiesSelector } from 'components/filterEntities/entitiesSelector';
+import { filterEntityShape } from '../propTypes';
 import styles from './entitiesGroup.scss';
 
 const cx = classNames.bind(styles);
 @track()
 export class EntitiesGroup extends Component {
   static propTypes = {
-    entities: PropTypes.array,
+    entities: PropTypes.arrayOf(filterEntityShape),
     onAdd: PropTypes.func,
     onRemove: PropTypes.func,
     onChange: PropTypes.func,
