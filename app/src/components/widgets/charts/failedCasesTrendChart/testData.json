@@ -2,9 +2,9 @@
   "share": false,
   "id": 1,
   "name": "start",
-  "content_parameters": {
-      "widget_type": "bug_trend",
-      "content_fields": [
+  "contentParameters": {
+      "widgetType": "bugTrend",
+      "contentFields": [
           "statistics$defects$product_bug$total",
           "statistics$defects$no_defect$total",
           "statistics$defects$automation_bug$total",
@@ -14,7 +14,7 @@
       "itemsCount": 10,
       "widgetOptions": {}
   },
-  "applied_filters": [],
+  "appliedFilters": [],
   "content": {
       "result": [
           {

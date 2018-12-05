@@ -64,67 +64,67 @@ import MOST_TIME_CONSUMING_PREVIEW from './img/wdgt-most-time-consuming-inline.s
 
 const titles = defineMessages({
   [LAUNCH_STATISTICS]: {
-    id: 'Widgets.Name.statistic_trend',
+    id: 'Widgets.Name.statisticTrend',
     defaultMessage: 'Launch statistics chart',
   },
   [OVERALL_STATISTICS]: {
-    id: 'Widgets.Name.overall_statistics',
+    id: 'Widgets.Name.overallStatistics',
     defaultMessage: 'Overall statistics',
   },
   [LAUNCH_DURATION]: {
-    id: 'Widgets.Name.launches_duration_chart',
+    id: 'Widgets.Name.launchesDurationChart',
     defaultMessage: 'Launches duration chart',
   },
   [LAUNCH_EXECUTION_AND_ISSUE_STATISTICS]: {
-    id: 'Widgets.Name.launch_statistics',
+    id: 'Widgets.Name.launchStatistics',
     defaultMessage: 'Launch execution and issue statistic',
   },
   [PROJECT_ACTIVITY]: {
-    id: 'Widgets.Name.activity_stream',
+    id: 'Widgets.Name.activityStream',
     defaultMessage: 'Project activity panel',
   },
   [TEST_CASES_GROWTH_TREND]: {
-    id: 'Widgets.Name.cases_trend',
+    id: 'Widgets.Name.casesTrend',
     defaultMessage: 'Test-Cases growth trend chart',
   },
   [INVESTIGATED_PERCENTAGE_OF_LAUNCHES]: {
-    id: 'Widgets.Name.investigated_trend',
+    id: 'Widgets.Name.investigatedTrend',
     defaultMessage: 'Investigated percentage of launches',
   },
   [LAUNCHES_TABLE]: {
-    id: 'Widgets.Name.launches_table',
+    id: 'Widgets.Name.launchesTable',
     defaultMessage: 'Launches table',
   },
   [UNIQUE_BUGS_TABLE]: {
-    id: 'Widgets.Name.unique_bug_table',
+    id: 'Widgets.Name.uniqueBugTable',
     defaultMessage: 'Unique bugs table',
   },
   [MOST_FAILED_TEST_CASES_TABLE]: {
-    id: 'Widgets.Name.most_failed_test_cases',
+    id: 'Widgets.Name.mostFailedTestCases',
     defaultMessage: 'Most failure test-cases table (TOP-20)',
   },
   [FAILED_CASES_TREND]: {
-    id: 'Widgets.Name.bug_trend',
+    id: 'Widgets.Name.bugTrend',
     defaultMessage: 'Failed cases trend chart',
   },
   [NON_PASSED_TEST_CASES_TREND]: {
-    id: 'Widgets.Name.not_passed',
+    id: 'Widgets.Name.notPassed',
     defaultMessage: 'Non-Passed test-cases trend chart',
   },
   [DIFFERENT_LAUNCHES_COMPARISON]: {
-    id: 'Widgets.Name.launches_comparison_chart',
+    id: 'Widgets.Name.launchesComparisonChart',
     defaultMessage: 'Different launches comparison chart',
   },
   [PASSING_RATE_PER_LAUNCH]: {
-    id: 'Widgets.Name.passing_rate_per_launch',
+    id: 'Widgets.Name.passingRatePerLaunch',
     defaultMessage: 'Passing rate per launch',
   },
   [PASSING_RATE_SUMMARY]: {
-    id: 'Widgets.Name.passing_rate_summary',
+    id: 'Widgets.Name.passingRateSummary',
     defaultMessage: 'Passing rate summary',
   },
   [FLAKY_TEST_CASES_TABLE]: {
-    id: 'Widgets.Name.flaky_test_cases',
+    id: 'Widgets.Name.flakyTestCases',
     defaultMessage: 'Flaky test cases table (TOP-20)',
   },
   [CUMULATIVE_TREND]: {
@@ -132,11 +132,11 @@ const titles = defineMessages({
     defaultMessage: 'Cumulative trend chart',
   },
   [PRODUCT_STATUS]: {
-    id: 'Widgets.Name.product_status',
+    id: 'Widgets.Name.productStatus',
     defaultMessage: 'Product status',
   },
   [MOST_TIME_CONSUMING]: {
-    id: 'Widgets.Name.most_time_consuming',
+    id: 'Widgets.Name.mostTimeConsuming',
     defaultMessage: 'The most time-consuming test cases widget (TOP-20)',
   },
 });
@@ -146,7 +146,7 @@ export const getWidgets = (formatMessage) => [
     title: formatMessage(titles[LAUNCH_STATISTICS]),
     description: (
       <FormattedHTMLMessage
-        id={'Widgets.Description.statistic_trend'}
+        id={'Widgets.Description.statisticTrend'}
         defaultMessage={
           '- in "Launch mode" shows the growth trend in the number of test cases with each selected statuses from run to run,<br> - in "Timeline mode" shows sum, distributed by dates.'
         }
@@ -160,7 +160,7 @@ export const getWidgets = (formatMessage) => [
     title: formatMessage(titles[OVERALL_STATISTICS]),
     description: (
       <FormattedMessage
-        id={'Widgets.Description.overall_statistics'}
+        id={'Widgets.Description.overallStatistics'}
         defaultMessage={'Shows summary of test cases with each statuses in the selected launches.'}
       />
     ),
@@ -172,7 +172,7 @@ export const getWidgets = (formatMessage) => [
     title: formatMessage(titles[LAUNCH_DURATION]),
     description: (
       <FormattedMessage
-        id={'Widgets.Description.launches_duration_chart'}
+        id={'Widgets.Description.launchesDurationChart'}
         defaultMessage={'Shows duration of the selected launches.'}
       />
     ),
@@ -184,7 +184,7 @@ export const getWidgets = (formatMessage) => [
     title: formatMessage(titles[LAUNCH_EXECUTION_AND_ISSUE_STATISTICS]),
     description: (
       <FormattedHTMLMessage
-        id={'Widgets.Description.launch_statistics'}
+        id={'Widgets.Description.launchStatistics'}
         defaultMessage={
           'Shows statistics of the last launch divided into 2 sections:</br> - Skipped, Passed, Failed </br> - Product Bug, System Issue, To Investigate, Automation Bugs.'
         }
@@ -198,7 +198,7 @@ export const getWidgets = (formatMessage) => [
     title: formatMessage(titles[PROJECT_ACTIVITY]),
     description: (
       <FormattedMessage
-        id={'Widgets.Description.activity_stream'}
+        id={'Widgets.Description.activityStream'}
         defaultMessage={'Shows all activities occurring on the project.'}
       />
     ),
@@ -210,7 +210,7 @@ export const getWidgets = (formatMessage) => [
     title: formatMessage(titles[TEST_CASES_GROWTH_TREND]),
     description: (
       <FormattedHTMLMessage
-        id={'Widgets.Description.cases_trend'}
+        id={'Widgets.Description.casesTrend'}
         defaultMessage={
           '- in "Launch Mode" shows the increment of test-cases from run to run,<br> - in "Timeline Mode" shows the increment of test-cases distributed by dates (in launches with the largest number of test-cases per day).'
         }
@@ -224,7 +224,7 @@ export const getWidgets = (formatMessage) => [
     title: formatMessage(titles[INVESTIGATED_PERCENTAGE_OF_LAUNCHES]),
     description: (
       <FormattedHTMLMessage
-        id={'Widgets.Description.investigated_trend'}
+        id={'Widgets.Description.investigatedTrend'}
         defaultMessage={
           '- in "Launch Mode" shows whether the launches are analyzed or not (the percentage of "Investigated"/"To Investigate") from run to run,<br> - in "Timeline Mode" shows percentage of "Investigated"/"To Investigate" tests in all runs per day distributed by dates.'
         }
@@ -238,7 +238,7 @@ export const getWidgets = (formatMessage) => [
     title: formatMessage(titles[LAUNCHES_TABLE]),
     description: (
       <FormattedMessage
-        id={'Widgets.Description.launches_table'}
+        id={'Widgets.Description.launchesTable'}
         defaultMessage={'Shows the configurable table of launches.'}
       />
     ),
@@ -250,7 +250,7 @@ export const getWidgets = (formatMessage) => [
     title: formatMessage(titles[UNIQUE_BUGS_TABLE]),
     description: (
       <FormattedMessage
-        id={'Widgets.Description.unique_bug_table'}
+        id={'Widgets.Description.uniqueBugTable'}
         defaultMessage={
           'Shows real identified bugs, posted to the Bug Tracking System, and existing in the BTS bugs, loaded on the project.'
         }
@@ -264,7 +264,7 @@ export const getWidgets = (formatMessage) => [
     title: formatMessage(titles[MOST_FAILED_TEST_CASES_TABLE]),
     description: (
       <FormattedMessage
-        id={'Widgets.Description.most_failed_test_cases'}
+        id={'Widgets.Description.mostFailedTestCases'}
         defaultMessage={
           'Shows the TOP-20 most failing test cases within the specified previous launches.'
         }
@@ -278,7 +278,7 @@ export const getWidgets = (formatMessage) => [
     title: formatMessage(titles[FAILED_CASES_TREND]),
     description: (
       <FormattedMessage
-        id={'Widgets.Description.bug_trend'}
+        id={'Widgets.Description.bugTrend'}
         defaultMessage={
           'Shows the trend of growth in the number of failed test cases from run to run.'
         }
@@ -292,7 +292,7 @@ export const getWidgets = (formatMessage) => [
     title: formatMessage(titles[NON_PASSED_TEST_CASES_TREND]),
     description: (
       <FormattedMessage
-        id={'Widgets.Description.not_passed'}
+        id={'Widgets.Description.notPassed'}
         defaultMessage={
           'Shows the percent ratio of non-passed test cases (Failed + Skipped) to Total cases from run to run.'
         }
@@ -306,7 +306,7 @@ export const getWidgets = (formatMessage) => [
     title: formatMessage(titles[DIFFERENT_LAUNCHES_COMPARISON]),
     description: (
       <FormattedMessage
-        id={'Widgets.Description.launches_comparison_chart'}
+        id={'Widgets.Description.launchesComparisonChart'}
         defaultMessage={'Allows to compare statistics for 2 last launches side by side.'}
       />
     ),
@@ -318,7 +318,7 @@ export const getWidgets = (formatMessage) => [
     title: formatMessage(titles[PASSING_RATE_PER_LAUNCH]),
     description: (
       <FormattedMessage
-        id={'Widgets.Description.passing_rate_per_launch'}
+        id={'Widgets.Description.passingRatePerLaunch'}
         defaultMessage={
           'Shows the percentage ratio of Passed test cases to Total cases for last run of selected launch.'
         }
@@ -332,7 +332,7 @@ export const getWidgets = (formatMessage) => [
     title: formatMessage(titles[PASSING_RATE_SUMMARY]),
     description: (
       <FormattedMessage
-        id={'Widgets.Description.passing_rate_summary'}
+        id={'Widgets.Description.passingRateSummary'}
         defaultMessage={
           'Shows the percentage ratio of Passed test cases to Total cases for set of launches.'
         }
@@ -346,7 +346,7 @@ export const getWidgets = (formatMessage) => [
     title: formatMessage(titles[FLAKY_TEST_CASES_TABLE]),
     description: (
       <FormattedMessage
-        id={'Widgets.Description.flaky_test_cases'}
+        id={'Widgets.Description.flakyTestCases'}
         defaultMessage={
           'Shows the TOP-20 the most flaky test cases within the specified previous launches.'
         }
@@ -374,7 +374,7 @@ export const getWidgets = (formatMessage) => [
     title: formatMessage(titles[PRODUCT_STATUS]),
     description: (
       <FormattedMessage
-        id={'Widgets.Description.product_status'}
+        id={'Widgets.Description.productStatus'}
         defaultMessage={
           'Shows the configurable table that is representing launch statistics or group statistics by special filter.'
         }
@@ -388,7 +388,7 @@ export const getWidgets = (formatMessage) => [
     title: formatMessage(titles[MOST_TIME_CONSUMING]),
     description: (
       <FormattedMessage
-        id={'Widgets.Description.most_time_consuming'}
+        id={'Widgets.Description.mostTimeConsuming'}
         defaultMessage={
           'show the TOP 20 the most time-consuming test cases in the last execution of the specified launch.'
         }

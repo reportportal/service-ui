@@ -171,7 +171,7 @@ export class LaunchesComparisonChart extends Component {
     const chartData = {};
     const chartDataOrdered = [];
     const colors = {};
-    const contentFields = widget.content_parameters.content_fields;
+    const contentFields = widget.contentParameters.contentFields;
 
     this.height = container.offsetHeight;
     this.width = container.offsetWidth;
