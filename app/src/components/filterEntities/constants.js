@@ -15,8 +15,12 @@ export const CONDITION_ANY = 'any';
 export const CONDITION_NOT_ANY = '!any';
 
 export const ENTITY_NAME = 'name';
+export const ACTIVITIES = 'activities';
 export const ENTITY_NUMBER = 'number';
 export const ENTITY_USER = 'user';
+export const ENTITY_ACTION = 'action';
+export const ENTITY_OBJECT_TYPE = 'objectType';
+export const ENTITY_OBJECT_NAME = 'objectName';
 export const ENTITY_START_TIME = 'startTime';
 export const ENTITY_DESCRIPTION = 'description';
 export const ENTITY_TAGS = 'tags';

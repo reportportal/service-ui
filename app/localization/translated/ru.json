@@ -1240,6 +1240,8 @@
   "EventObjectTypes.user": "Пользователь",
   "EventObjectTypes.emailConfig": "Настройки электронной почты",
   "EventObjectTypes.defectType": "Тип дефекта",
+  "EventsGrid.contains": "Содержит",
+  "EntityContains.focusPlaceholder": "По крайней мере 1 символа необходим.",
   "AllUsersPage.export": "Экспортировать",
   "AllUsersPage.inviteUser" : "Пригласить пользователя",
   "AllUsersPage.AddUser": "Добавить пользователя",

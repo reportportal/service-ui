@@ -6,6 +6,8 @@
   vertical-align: top;
 
   &.vertical {
+    display: inline-flex;
+    align-items: center;
     width: 370px;
     height: 60px;
   }

@@ -42,7 +42,7 @@
     "moment": "2.22.1",
     "perf-cascade": "2.5.4",
     "promise-polyfill": "8.1.0",
-    "prop-types": "15.6.1",
+    "prop-types": "15.7.2",
     "qhistory": "1.0.0",
     "qs": "6.5.2",
     "rc-slider": "8.6.3",
