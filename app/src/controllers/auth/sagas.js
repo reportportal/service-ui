@@ -7,7 +7,7 @@ import { activeProjectSelector, fetchUserAction } from 'controllers/user';
 import { tokenSelector, setTokenAction } from 'controllers/auth';
 import { fetchProjectAction } from 'controllers/project';
 import { authSuccessAction } from 'controllers/auth/actionCreators';
-import { LOGIN, LOGOUT, GRANT_TYPES } from './constants';
+import { LOGIN, LOGOUT, GRANT_TYPES, TOKEN_KEY, SET_TOKEN } from './constants';
 
 function* handleLogout() {
   yield put(setTokenAction());
@@ -54,6 +54,14 @@ function* watchLogin() {
   yield takeEvery(LOGIN, handleLogin);
 }
 
+function* handleSetToken({ payload }) {
+  yield call([localStorage, 'setItem'], TOKEN_KEY, payload);
+}
+
+function* watchSetToken() {
+  yield takeEvery(SET_TOKEN, handleSetToken);
+}
+
 export function* authSagas() {
-  yield all([watchLogin(), watchLogout()]);
+  yield all([watchLogin(), watchLogout(), watchSetToken()]);
 }

@@ -6,6 +6,7 @@ import queryString from 'qs';
 import reduxThunk from 'redux-thunk';
 
 import routesMap, { onBeforeRouteChange } from 'routes/routesMap';
+import { TOKEN_KEY, DEFAULT_TOKEN } from 'controllers/auth/constants';
 import reducers from './reducers';
 import { rootSagas } from './rootSaga';
 
@@ -19,11 +20,18 @@ export const configureStore = (history, preloadedState) => {
     initialDispatch: false,
   });
 
+  const initialStore = {
+    ...preloadedState,
+    auth: {
+      token: localStorage.getItem(TOKEN_KEY) || DEFAULT_TOKEN,
+    },
+  };
+
   const rootReducer = combineReducers({ ...reducers, location: reducer });
   const saga = createSagaMiddleware();
   const middlewares = applyMiddleware(reduxThunk, saga, middleware);
   const enhancers = composeEnhancers(enhancer, middlewares);
-  const store = createStore(rootReducer, preloadedState, enhancers);
+  const store = createStore(rootReducer, initialStore, enhancers);
 
   if (module.hot && process.env.NODE_ENV === 'development') {
     module.hot.accept('./reducers', () => {
