@@ -36,11 +36,11 @@
   }
 
   &:-webkit-autofill {
-    -webkit-box-shadow: 0 0 0 1000px #fdffeb inset;
+    box-shadow: 0 0 0 1000px #fdffeb inset; /* stylelint-disable-line color-no-hex */
   }
-  &[type='number']::-webkit-inner-spin-button,
-  &[type='number']::-webkit-outer-spin-button {
-    -webkit-appearance: none;
+  &.type-number::-webkit-inner-spin-button,
+  &.type-number::-webkit-outer-spin-button {
+    appearance: none;
     margin: 0;
   }
 }

@@ -100,9 +100,8 @@ export class InputOutside extends Component {
     } = this.props;
     return (
       <div
-        className={cx('input-outside', {
+        className={cx('input-outside', `type-${type}`, {
           disabled,
-          password: type === 'password',
           invalid: error && (active || touched),
         })}
       >
