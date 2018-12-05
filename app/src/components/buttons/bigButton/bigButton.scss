@@ -73,6 +73,32 @@
       border-color: darken($COLOR--tomato, 30%);
     }
   }
+  &.color-white-two {
+    background-color: $COLOR--white-two;
+    border-color: $COLOR--white-two;
+
+    &:hover:not(.disabled) {
+      background-color: $COLOR--white-two;
+      border-color: $COLOR--white-two;
+    }
+    &:active:not(.disabled) {
+      background-color: $COLOR--white-two;
+      border-color: $COLOR--white-two;
+    }
+  }
+  &.color-topaz {
+    background-color: $COLOR--topaz;
+    border-color: $COLOR--topaz;
+
+    &:hover:not(.disabled) {
+      background-color: darken($COLOR--topaz, 15%);
+      border-color: darken($COLOR--topaz, 15%);
+    }
+    &:active:not(.disabled) {
+      background-color: darken($COLOR--topaz, 30%);
+      border-color: darken($COLOR--topaz, 30%);
+    }
+  }
 }
 
 .mobile-disabled {

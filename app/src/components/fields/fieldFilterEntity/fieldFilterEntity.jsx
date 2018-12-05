@@ -14,14 +14,21 @@ export const FieldFilterEntity = ({
   smallSize,
   onRemove,
 }) => (
-  <div className={cx('field-filter-entity', { stretchable }, { small: smallSize })}>
-    <span className={cx('entity-name')}>{title}</span>
+  <div
+    className={cx(
+      'field-filter-entity',
+      { stretchable },
+      { small: smallSize },
+      { vertical: 'vertical' },
+    )}
+  >
+    <span className={cx('entity-name', { vertical: 'vertical' })}>{title}</span>
     {removable && (
       <i className={cx('close-icon')} onClick={onRemove}>
         {Parser(CrossIcon)}
       </i>
     )}
-    <div className={cx('entity-input-holder')}>{children}</div>
+    <div className={cx('entity-input-holder', { vertical: 'vertical' })}>{children}</div>
   </div>
 );
 FieldFilterEntity.propTypes = {
