@@ -68,9 +68,10 @@
       .Select-menu-outer {
         position: relative;
         margin-top: -1px;
-        background: white;
+        background: white; /* stylelint-disable-line color-named */
       }
       .Select-value {
+        display: inline-block;
         padding: 3px 5px 3px 5px;
         margin: 3px;
         position: relative;
@@ -129,9 +130,6 @@
         color: $COLOR--gray-47;
       }
 
-      .Select-value {
-        display: inline-block;
-      }
       .Select-value-icon {
         margin-right: 5px;
         font-weight: bold;

@@ -2,7 +2,6 @@ import { Component } from 'react';
 import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import classNames from 'classnames/bind';
 import { injectIntl, intlShape } from 'react-intl';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
@@ -12,10 +11,7 @@ import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { withModal, ModalLayout } from 'components/main/modal';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { LAUNCHES_MODAL_EVENTS } from 'components/main/analytics/events';
-import styles from './moveToDebugModal.scss';
 import { messages } from './translations';
-
-const cx = classNames.bind(styles);
 
 @withModal('moveLaunchesModal')
 @injectIntl
@@ -133,7 +129,7 @@ export class MoveToDebugModal extends Component {
         cancelButton={cancelButton}
         closeIconEventInfo={LAUNCHES_MODAL_EVENTS.CLOSE_ICON_MOVE_MODAL}
       >
-        <p className={cx('message')}>{text}</p>
+        <p>{text}</p>
       </ModalLayout>
     );
   }

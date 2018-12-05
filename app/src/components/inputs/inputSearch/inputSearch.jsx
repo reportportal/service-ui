@@ -49,7 +49,7 @@ export const InputSearch = ({
     <input
       ref={refFunction}
       type={type}
-      className={cx('input', className)}
+      className={cx('input', `type-${type}`, className)}
       value={value}
       disabled={disabled}
       placeholder={placeholder}
