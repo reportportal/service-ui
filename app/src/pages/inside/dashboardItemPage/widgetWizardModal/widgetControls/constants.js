@@ -36,12 +36,6 @@ export const STATIC_CRITERIA = {
   STATUS: 'status',
 };
 
-export const METADATA_FIELDS = {
-  NAME: 'name',
-  NUMBER: 'number',
-  START_TIME: 'startTime',
-};
-
 export const CONTENT_FIELDS = {
   NAME: 'name',
   NUMBER: 'number',

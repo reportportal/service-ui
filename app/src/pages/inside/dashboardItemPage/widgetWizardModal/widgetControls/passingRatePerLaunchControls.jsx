@@ -8,7 +8,7 @@ import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { URLS } from 'common/urls';
 import { WIDGET_WIZARD_FORM } from '../widgetWizardContent/wizardControlsSection/constants';
 import { getWidgetModeOptions } from './utils/getWidgetModeOptions';
-import { METADATA_FIELDS, CHART_MODES } from './constants';
+import { CHART_MODES } from './constants';
 import { TogglerControl, TagsControl } from './controls';
 
 const DEFAULT_ITEMS_COUNT = '30';
@@ -65,7 +65,6 @@ export class PassingRatePerLaunchControls extends Component {
       contentParameters: widgetSettings.contentParameters || {
         contentFields: [],
         itemsCount: DEFAULT_ITEMS_COUNT,
-        metadataFields: [METADATA_FIELDS.NAME, METADATA_FIELDS.NUMBER, METADATA_FIELDS.START_TIME],
         widgetOptions: {
           viewMode: CHART_MODES.BAR_VIEW,
           launchNameFilter: false,

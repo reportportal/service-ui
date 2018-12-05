@@ -8,7 +8,7 @@ import { STATS_TOTAL, STATS_PASSED } from 'common/constants/statistics';
 import { validate } from 'common/utils';
 import { WIDGET_WIZARD_FORM } from '../widgetWizardContent/wizardControlsSection/constants';
 import { getWidgetModeOptions } from './utils/getWidgetModeOptions';
-import { METADATA_FIELDS, CHART_MODES, ITEMS_INPUT_WIDTH } from './constants';
+import { CHART_MODES, ITEMS_INPUT_WIDTH } from './constants';
 import { TogglerControl, FiltersControl, InputControl } from './controls';
 
 const DEFAULT_ITEMS_COUNT = '50';
@@ -54,7 +54,6 @@ export class PassingRateSummaryControls extends Component {
       contentParameters: widgetSettings.contentParameters || {
         contentFields: [STATS_TOTAL, STATS_PASSED],
         itemsCount: DEFAULT_ITEMS_COUNT,
-        metadataFields: [METADATA_FIELDS.NAME, METADATA_FIELDS.NUMBER, METADATA_FIELDS.START_TIME],
         widgetOptions: {
           viewMode: CHART_MODES.BAR_VIEW,
         },
