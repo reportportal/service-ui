@@ -1,0 +1,1 @@
+export { inputFilter } from './inputFilter';
