@@ -1244,5 +1244,15 @@
   "EventObjectTypes.defectType": "Тип дефекта",
   "AllUsersPage.export": "Экспортировать",
   "AllUsersPage.inviteUser" : "Пригласить пользователя",
-  "AllUsersPage.AddUser": "Добавить пользователя"
+  "AllUsersPage.AddUser": "Добавить пользователя",
+  "AllUsersGrid.nameCol" : "Имя",
+  "AllUsersGrid.typeCol": "Тип",
+  "AllUsersGrid.loginCol": "Логин",
+  "AllUsersGrid.emailCol": "Электронный адрес",
+  "AllUsersGrid.lastLoginCol": "Последний вход",
+  "AllUsersGrid.projectsAndRolesCol": "Проекты и роли",
+  "NameColumn.youLabel": "вы",
+  "NameColumn.adminLabel": "администратор",
+  "NameColumn.makeAdminLabel": "сделать администратором",
+  "ProjectsAndRolesColumn.more": "еще"
 }
