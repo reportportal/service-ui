@@ -1237,5 +1237,8 @@
   "EventObjectTypes.filter": "Фильтр",
   "EventObjectTypes.import": "Импорт",
   "EventObjectTypes.project": "Проект",
-  "EventObjectTypes.defectType": "Тип дефекта"
+  "EventObjectTypes.defectType": "Тип дефекта",
+  "AllUsersPage.export": "Экспортировать",
+  "AllUsersPage.inviteUser" : "Пригласить пользователя",
+  "AllUsersPage.AddUser": "Добавить пользователя"
 }

@@ -37,6 +37,7 @@ import { fetchTestItemsAction, setLevelAction } from 'controllers/testItem';
 import { fetchFiltersAction } from 'controllers/filter';
 import { fetchMembersAction } from 'controllers/members';
 import { fetchProjectDataAction } from 'controllers/administrate';
+import { fetchAllUsersAction } from 'controllers/administrate/allUsers';
 import { fetchLogPageData } from 'controllers/log';
 import { fetchHistoryPageInfo } from 'controllers/itemsHistory';
 
@@ -89,7 +90,10 @@ export default {
     path: `/administrate/projects/:projectId/:projectSection(${SETTINGS}|${MEMBERS}|${EVENTS})?`,
     thunk: (dispatch) => dispatch(fetchProjectDataAction()),
   },
-  [ALL_USERS_PAGE]: '/administrate/users',
+  [ALL_USERS_PAGE]: {
+    path: '/administrate/users',
+    thunk: (dispatch) => dispatch(fetchAllUsersAction()),
+  },
   [SERVER_SETTINGS_PAGE]: redirectRoute('/administrate/settings', () => ({
     type: SERVER_SETTINGS_TAB_PAGE,
     payload: { settingsTab: EMAIL_SERVER },
