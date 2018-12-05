@@ -13,7 +13,7 @@ import {
 } from 'common/constants/statistics';
 import { validate } from 'common/utils';
 import { getWidgetModeOptions } from './utils/getWidgetModeOptions';
-import { ITEMS_INPUT_WIDTH, CHART_MODES, METADATA_FIELDS } from './constants';
+import { ITEMS_INPUT_WIDTH, CHART_MODES } from './constants';
 import { FiltersControl, InputControl, TogglerControl } from './controls';
 import { WIDGET_WIZARD_FORM } from '../widgetWizardContent/wizardControlsSection/constants';
 
@@ -66,7 +66,6 @@ export class InvestigatedPercentageOfLaunchesControls extends Component {
           STATS_TI_TOTAL,
         ],
         itemsCount: DEFAULT_ITEMS_COUNT,
-        metadataFields: [METADATA_FIELDS.NAME, METADATA_FIELDS.NUMBER, METADATA_FIELDS.START_TIME],
         widgetOptions: {
           mode: CHART_MODES.LAUNCH_MODE,
         },

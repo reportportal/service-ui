@@ -13,7 +13,6 @@ import {
   GROUPED_DEFECT_TYPES_OPTIONS,
   ITEMS_INPUT_WIDTH,
   CHART_MODES,
-  METADATA_FIELDS,
 } from './constants';
 import {
   FiltersControl,
@@ -88,7 +87,6 @@ export class LaunchStatisticsControls extends Component {
       contentParameters: widgetSettings.contentParameters || {
         contentFields: this.criteria.map((criteria) => criteria.value),
         itemsCount: DEFAULT_ITEMS_COUNT,
-        metadataFields: [METADATA_FIELDS.NAME, METADATA_FIELDS.NUMBER, METADATA_FIELDS.START_TIME],
         widgetOptions: {
           zoom: false,
           mode: CHART_MODES.LAUNCH_MODE,

@@ -12,7 +12,7 @@ import {
   STATS_TI_TOTAL,
 } from 'common/constants/statistics';
 import { validate } from 'common/utils';
-import { ITEMS_INPUT_WIDTH, METADATA_FIELDS } from './constants';
+import { ITEMS_INPUT_WIDTH } from './constants';
 import { FiltersControl, InputControl } from './controls';
 import { WIDGET_WIZARD_FORM } from '../widgetWizardContent/wizardControlsSection/constants';
 
@@ -65,7 +65,6 @@ export class FailedCasesTrendControls extends Component {
           STATS_TI_TOTAL,
         ],
         itemsCount: DEFAULT_ITEMS_COUNT,
-        metadataFields: [METADATA_FIELDS.NAME, METADATA_FIELDS.NUMBER, METADATA_FIELDS.START_TIME],
       },
     });
   }

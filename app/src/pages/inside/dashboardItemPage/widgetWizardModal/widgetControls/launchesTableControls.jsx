@@ -19,7 +19,6 @@ import {
   LAUNCH_STATUSES_OPTIONS,
   DEFECT_TYPES_GROUPS_OPTIONS,
   STATIC_CRITERIA,
-  METADATA_FIELDS,
   ITEMS_INPUT_WIDTH,
 } from './constants';
 import { FiltersControl, DropdownControl, InputControl } from './controls';
@@ -92,7 +91,6 @@ export class LaunchesTableControls extends Component {
       contentParameters: widgetSettings.contentParameters || {
         contentFields: this.parseContentFields(this.criteria),
         itemsCount: DEFAULT_ITEMS_COUNT,
-        metadataFields: [METADATA_FIELDS.NAME, METADATA_FIELDS.NUMBER, METADATA_FIELDS.START_TIME],
       },
     });
   }

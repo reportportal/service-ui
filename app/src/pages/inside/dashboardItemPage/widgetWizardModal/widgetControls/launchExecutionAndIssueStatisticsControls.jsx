@@ -7,7 +7,7 @@ import { FieldProvider } from 'components/fields/fieldProvider';
 import { defectTypesSelector } from 'controllers/project';
 import { FiltersControl } from './controls';
 import { WIDGET_WIZARD_FORM } from '../widgetWizardContent/wizardControlsSection/constants';
-import { DEFECT_TYPES_OPTIONS, LAUNCH_STATUSES_OPTIONS, METADATA_FIELDS } from './constants';
+import { DEFECT_TYPES_OPTIONS, LAUNCH_STATUSES_OPTIONS } from './constants';
 import { getWidgetCriteriaOptions } from './utils/getWidgetCriteriaOptions';
 
 @injectIntl
@@ -43,7 +43,6 @@ export class LaunchExecutionAndIssueStatisticsControls extends Component {
       contentParameters: widgetSettings.contentParameters || {
         contentFields: this.criteria.map((criteria) => criteria.value),
         itemsCount: 1,
-        metadataFields: [METADATA_FIELDS.NAME, METADATA_FIELDS.NUMBER, METADATA_FIELDS.START_TIME],
       },
     });
   }
