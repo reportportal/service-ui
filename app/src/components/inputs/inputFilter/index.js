@@ -1,1 +1,1 @@
-export { inputFilter } from './inputFilter';
+export { InputFilterContainer as InputFilter } from './inputFilterContainer';

@@ -1223,6 +1223,8 @@
   "EventObjectTypes.widget": "Вiджэт",
   "EventObjectTypes.filter": "Фiльтр",
   "EventObjectTypes.import": "Iмпарт",
+  "EventsGrid.contains": "Змяшчае",
+  "EntityContains.focusPlaceholder": "Патрабуецца па меншай меры 1 сімвал.",
   "AllUsersPage.export": "Экспартаваць",
   "AllUsersPage.inviteUser" : "Запрасіць карыстальніка",
   "AllUsersPage.AddUser": "Дадаць карыстальніка"

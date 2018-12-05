@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { injectIntl } from 'react-intl';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
+import { InputFilter } from 'components/inputs/inputFilter';
 import { withPagination, DEFAULT_PAGINATION, SIZE_KEY } from 'controllers/pagination';
 import { URLS } from 'common/urls';
 import { projectIdSelector } from 'controllers/pages';
@@ -13,6 +13,7 @@ import {
   loadingSelector,
 } from 'controllers/administrate/events';
 import { EventsGrid } from './eventsGrid';
+import { EventsEntities } from './eventsEntities';
 
 @connect((state) => ({
   projectId: projectIdSelector(state),
@@ -23,7 +24,6 @@ import { EventsGrid } from './eventsGrid';
 @withPagination({
   paginationSelector: eventsPaginationSelector,
 })
-@injectIntl
 export class ProjectEventsPage extends Component {
   static propTypes = {
     activePage: PropTypes.number,
@@ -64,8 +64,10 @@ export class ProjectEventsPage extends Component {
       loading,
       events,
     } = this.props;
+
     return (
       <React.Fragment>
+        <InputFilter entitiesProvider={EventsEntities} onChange={console.log} />
         <EventsGrid data={events} loading={loading} />
         {!!pageCount &&
           !loading && (

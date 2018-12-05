@@ -72,14 +72,29 @@ const formatValue = ({ start, end, dynamic }) => {
   return `${getMinutesFromTimestamp(start)};${getMinutesFromTimestamp(end)};${utcString}`;
 };
 
-export const EntityItemStartTime = ({ onRemove, onChange, removable, title, smallSize, value }) => (
-  <FieldFilterEntity title={title} smallSize={smallSize} removable={removable} onRemove={onRemove}>
+export const EntityItemStartTime = ({
+  onRemove,
+  onChange,
+  removable,
+  title,
+  smallSize,
+  value,
+  vertical,
+}) => (
+  <FieldFilterEntity
+    title={title}
+    smallSize={smallSize}
+    removable={removable}
+    onRemove={onRemove}
+    vertical={vertical}
+  >
     <InputTimeDateRange
       presets={presets}
       onChange={(val) => {
         onChange({ condition: CONDITION_BETWEEN, value: formatValue({ ...val }) });
       }}
       value={parseDateTimeRange(value)}
+      withoutDynamic
     />
   </FieldFilterEntity>
 );
@@ -90,6 +105,7 @@ EntityItemStartTime.propTypes = {
   removable: PropTypes.bool,
   onRemove: PropTypes.func,
   onChange: PropTypes.func,
+  vertical: PropTypes.bool,
 };
 EntityItemStartTime.defaultProps = {
   value: {},
@@ -98,4 +114,5 @@ EntityItemStartTime.defaultProps = {
   smallSize: false,
   onRemove: () => {},
   onChange: () => {},
+  vertical: false,
 };

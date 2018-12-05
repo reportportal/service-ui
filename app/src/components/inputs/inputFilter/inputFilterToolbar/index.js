@@ -1,1 +1,1 @@
-export { inputFilterToolbar } from './inputFilterToolbar';
+export { InputFilterToolbar } from './inputFilterToolbar';

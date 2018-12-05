@@ -6,6 +6,7 @@ import AddFilterIcon from 'common/img/add-filter-inline.svg';
 import CrossIcon from 'common/img/cross-icon-inline.svg';
 import SearchIcon from 'common/img/search-icon-inline.svg';
 import { EntitiesGroup } from 'components/filterEntities/entitiesGroup';
+import { CONDITION_IN } from 'components/filterEntities/constants';
 import { InputFilterToolbar } from './inputFilterToolbar';
 import styles from './inputFilter.scss';
 
@@ -34,6 +35,7 @@ export class InputFilter extends Component {
     onFilterValidate: PropTypes.func,
     onFilterRemove: PropTypes.func,
     onFilterAdd: PropTypes.func,
+    onFilterApply: PropTypes.func,
   };
 
   static defaultProps = {
@@ -58,6 +60,7 @@ export class InputFilter extends Component {
     onFilterValidate: () => {},
     onFilterRemove: () => {},
     onFilterAdd: () => {},
+    onFilterApply: () => {},
   };
 
   state = {
@@ -65,7 +68,15 @@ export class InputFilter extends Component {
   };
 
   onChangeInput = (e) => {
-    this.props.onChange({ value: e.target.value });
+    this.props.onFilterChange('contains', {
+      value: e.target.value,
+      condition: CONDITION_IN,
+      filteringField: 'contains',
+    });
+  };
+
+  onBlurInput = (e) => {
+    this.props.onBlur({ value: e.target.value });
   };
 
   onClickClear = () => {
@@ -78,23 +89,26 @@ export class InputFilter extends Component {
 
   onApply = () => {
     this.setState({ opened: false });
+    this.props.onFilterApply();
   };
 
   onCancel = () => {
     this.setState({ opened: false });
   };
 
+  getValue = () => {
+    this.props.filterEntities.find((entitie) => entitie.id === 'contains');
+  };
+
   render() {
     const {
       error,
-      value,
       active,
       disabled,
       className,
       placeholder,
       maxLength,
       onFocus,
-      onBlur,
       onKeyUp,
       onFilterChange,
       onFilterValidate,
@@ -108,7 +122,10 @@ export class InputFilter extends Component {
       <React.Fragment>
         <div className={cx('input-filter', { error, active, disabled })}>
           <div className={cx('icon', 'search')}>{Parser(SearchIcon)}</div>
-          <div className={cx('icon', 'add-filter')} onClick={this.onClickAddFilter}>
+          <div
+            className={cx('icon', 'add-filter', { disabled: !this.state.opened })}
+            onClick={this.onClickAddFilter}
+          >
             {Parser(AddFilterIcon)}
           </div>
           <div className={cx('icon', 'cross')} onClick={this.onClickClear}>
@@ -116,13 +133,13 @@ export class InputFilter extends Component {
           </div>
           <input
             className={cx('input', className)}
-            value={value}
+            value={this.getValue()}
             disabled={disabled}
             placeholder={placeholder}
             maxLength={maxLength}
             onChange={this.onChangeInput}
             onFocus={onFocus}
-            onBlur={onBlur}
+            onBlur={this.onBlurInput}
             onKeyUp={onKeyUp}
           />
         </div>
@@ -140,7 +157,12 @@ export class InputFilter extends Component {
                 vertical
               />
             </div>
-            <InputFilterToolbar onApply={this.onApply} onClear={onClear} onCancel={this.onCancel} />
+            <InputFilterToolbar
+              onApply={this.onApply}
+              onClear={onClear}
+              onCancel={this.onCancel}
+              entities={filterEntities}
+            />
           </div>
         )}
       </React.Fragment>

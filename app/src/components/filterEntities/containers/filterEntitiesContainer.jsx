@@ -22,12 +22,15 @@ export class FilterEntitiesContainer extends Component {
     entities: PropTypes.object,
     onChange: PropTypes.func,
     render: PropTypes.func.isRequired,
-    level: PropTypes.string.isRequired,
+    level: PropTypes.string,
+    entitiesProvider: PropTypes.node,
   };
 
   static defaultProps = {
     entities: {},
     onChange: () => {},
+    entitiesProvider: () => {},
+    level: '',
   };
 
   static getDerivedStateFromProps(props, state) {
@@ -98,8 +101,8 @@ export class FilterEntitiesContainer extends Component {
 
   render() {
     const { errors, values } = this.state;
-    const { render, level } = this.props;
-    const EntitiesProvider = ENTITY_PROVIDERS[level];
+    const { render, level, entitiesProvider } = this.props;
+    const EntitiesProvider = entitiesProvider || ENTITY_PROVIDERS[level];
     return (
       <EntitiesProvider
         filterErrors={errors}

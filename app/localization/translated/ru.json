@@ -1238,6 +1238,8 @@
   "EventObjectTypes.import": "Импорт",
   "EventObjectTypes.project": "Проект",
   "EventObjectTypes.defectType": "Тип дефекта",
+  "EventsGrid.contains": "Содержит",
+  "EntityContains.focusPlaceholder": "По крайней мере 1 символа необходим.",
   "AllUsersPage.export": "Экспортировать",
   "AllUsersPage.inviteUser" : "Пригласить пользователя",
   "AllUsersPage.AddUser": "Добавить пользователя"

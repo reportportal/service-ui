@@ -51,6 +51,7 @@ export class InputTimeDateRange extends Component {
     onChange: PropTypes.func,
     onFocus: PropTypes.func,
     onBlur: PropTypes.func,
+    withoutDynamic: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -59,6 +60,7 @@ export class InputTimeDateRange extends Component {
     onChange: () => {},
     onFocus: () => {},
     onBlur: () => {},
+    withoutDynamic: false,
   };
 
   state = {
@@ -126,7 +128,7 @@ export class InputTimeDateRange extends Component {
   };
 
   render() {
-    const { intl, presets, value } = this.props;
+    const { intl, presets, value, withoutDynamic } = this.props;
 
     return (
       <div className={cx('input-time-date-range')} ref={this.setRef}>
@@ -209,16 +211,18 @@ export class InputTimeDateRange extends Component {
               />
             </div>
           </div>
-          <div className={cx('dynamic-update')}>
-            <InputCheckbox value={value.dynamic} onChange={this.handleChangeDynamic}>
-              {intl.formatMessage(messages.dynamicUpdate)}
-            </InputCheckbox>
-            {value.dynamic && (
-              <span className={cx('dynamic-update-hint')}>
-                {intl.formatMessage(messages.dynamicUpdateHint)}
-              </span>
-            )}
-          </div>
+          {!withoutDynamic && (
+            <div className={cx('dynamic-update')}>
+              <InputCheckbox value={value.dynamic} onChange={this.handleChangeDynamic}>
+                {intl.formatMessage(messages.dynamicUpdate)}
+              </InputCheckbox>
+              {value.dynamic && (
+                <span className={cx('dynamic-update-hint')}>
+                  {intl.formatMessage(messages.dynamicUpdateHint)}
+                </span>
+              )}
+            </div>
+          )}
         </div>
       </div>
     );
