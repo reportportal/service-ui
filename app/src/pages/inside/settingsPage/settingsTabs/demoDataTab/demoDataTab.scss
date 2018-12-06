@@ -34,7 +34,7 @@
 }
 
 .description-list {
-  margin: 7px 0 12px 34px;
+  margin: 10px 0 0 34px;
   list-style-type: disc;
 
   li {
@@ -44,16 +44,6 @@
     font-size: 13px;
     line-height: 1.69;
     text-align: left;
-  }
-}
-
-.postfix-hint {
-  margin-bottom: 8px;
-  color: $COLOR--charcoal-grey;
-  font-size: 13px;
-  line-height: 13px;
-  @media (max-width: $SCREEN_XS_MAX) {
-    display: none;
   }
 }
 
@@ -85,4 +75,37 @@
   color: $COLOR--charcoal-grey;
   font-size: 12px;
   line-height: 1.17;
+}
+
+.generate-button {
+  display: block;
+  width: 155px;
+  height: 30px;
+  margin: 15px 0;
+  box-sizing: border-box;
+  @media (max-width: $SCREEN_XS_MAX) {
+    margin: 0 auto;
+  }
+}
+
+.generate-button-title {
+  width: 129px;
+  height: 18px;
+  font-size: 13px;
+}
+
+.preloader-block {
+  display: flex;
+  align-items: center;
+  margin-bottom: 35px;
+}
+
+.preloader-icon {
+  margin-right: 20px;
+}
+
+.preloader-info {
+  color: $COLOR--charcoal-grey;
+  font-size: 13px;
+  line-height: 1.85;
 }

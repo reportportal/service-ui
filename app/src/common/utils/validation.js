@@ -21,7 +21,6 @@ export const launchDescriptionEntity = (value) => value.length >= 3 && value.len
 export const inRangeValidate = (value, min, max) => Number(value) >= min && Number(value) <= max;
 export const widgetPrefix = (value) => value.length >= 1 && value.length <= 128;
 export const notificationTagSearch = (value) => value.length >= 3 && value.length <= 256;
-export const demoDataPostfix = (value) => value.length >= 1 && value.length <= 90;
 export const url = (urlValue) => !!/^(ftp|http|https):\/\/[^ "]+$/.exec(urlValue);
 export const issueId = (value) => value.length >= 1 && value.length <= 128;
 export const urlPart = (value) => !!/:\/\/.+/.exec(value);
