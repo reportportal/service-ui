@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
-import * as COLORS from 'common/constants/colors';
 import styles from './legend.scss';
 
 const cx = classNames.bind(styles);
@@ -52,23 +51,33 @@ const messages = defineMessages({
     id: 'Widgets.ofTestCases',
     defaultMessage: 'of test cases',
   },
+  LaunchName: {
+    id: 'Legend.launchName',
+    defaultMessage: 'LAUNCH NAME:',
+  },
 });
 
 @injectIntl
 export class Legend extends Component {
   static propTypes = {
+    isPreview: PropTypes.bool,
     intl: intlShape.isRequired,
     items: PropTypes.array,
     onClick: PropTypes.func,
     onMouseOver: PropTypes.func,
     onMouseOut: PropTypes.func,
+    widgetName: PropTypes.string,
+    colors: PropTypes.array,
   };
 
   static defaultProps = {
+    isPreview: false,
     items: [],
     onClick: () => {},
     onMouseOver: () => {},
     onMouseOut: () => {},
+    widgetName: '',
+    colors: [],
   };
 
   onClick = (e) => {
@@ -85,7 +94,8 @@ export class Legend extends Component {
   getTarget = ({ target }) => (target.getAttribute('data-id') ? target : target.parentElement);
 
   render() {
-    const { items, intl, onMouseOut } = this.props;
+    const { items, intl, onMouseOut, isPreview, widgetName, colors } = this.props;
+    if (isPreview) return '';
 
     const elements = items.map((name) => (
       <span
@@ -96,16 +106,18 @@ export class Legend extends Component {
         onMouseOver={this.onMouseOver}
         onMouseOut={onMouseOut}
       >
-        <span
-          className={cx('color-mark')}
-          style={{ backgroundColor: COLORS[`COLOR_${name.split('$')[2].toUpperCase()}`] }}
-        />
-        <span className={cx('item-name')}>
-          {intl.formatMessage(messages[name.split('$total')[0]])}
-        </span>
+        <span className={cx('color-mark')} style={{ backgroundColor: colors[name] }} />
+        <span className={cx('item-name')}>{name}</span>
       </span>
     ));
 
-    return <div className={cx('legend')}>{elements}</div>;
+    return (
+      <div className={cx('top-block')}>
+        <div className={cx('info-data')}>
+          {intl.formatMessage(messages.LaunchName)} <span>{widgetName}</span>
+        </div>
+        <div className={cx('legend')}>{elements}</div>
+      </div>
+    );
   }
 }

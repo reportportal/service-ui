@@ -87,9 +87,9 @@ export class HistoryLineItem extends Component {
         <HistoryLineItemContent
           active={active}
           launchNumber={launchNumber}
-          hasChildren={rest.has_children}
-          startTime={rest.start_time}
-          endTime={rest.end_time}
+          hasChildren={rest.hasChildren}
+          startTime={rest.startTime}
+          endTime={rest.endTime}
           {...rest}
         />
       </div>

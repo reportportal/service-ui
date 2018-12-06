@@ -8,7 +8,7 @@ import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { URLS } from 'common/urls';
 import { WIDGET_WIZARD_FORM } from '../widgetWizardContent/wizardControlsSection/constants';
 import { getWidgetCriteriaOptions } from './utils/getWidgetCriteriaOptions';
-import { PASSED_FAILED_LAUNCHES_OPTIONS, CHART_MODES, METADATA_FIELDS } from './constants';
+import { PASSED_FAILED_LAUNCHES_OPTIONS, CHART_MODES } from './constants';
 import { DropdownControl, TogglerControl, TagsControl, CheckboxControl } from './controls';
 import { getWidgetModeOptions } from './utils/getWidgetModeOptions';
 
@@ -83,14 +83,13 @@ export class MostTimeConsumingTestCasesControls extends Component {
     initializeWizardSecondStepForm({
       contentParameters: widgetSettings.contentParameters || {
         contentFields: this.criteria.map((criteria) => criteria.value),
-        metadataFields: [METADATA_FIELDS.NAME, METADATA_FIELDS.START_TIME],
         widgetOptions: {
           viewMode: CHART_MODES.BAR_VIEW,
           includeMethods: false,
           launchNameFilter: false,
         },
       },
-      filterId: [],
+      filterIds: [],
     });
   }
 

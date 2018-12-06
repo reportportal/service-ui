@@ -6,7 +6,7 @@ import { validate } from 'common/utils';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { getWidgetModeOptions } from './utils/getWidgetModeOptions';
-import { ITEMS_INPUT_WIDTH, CHART_MODES, CONTENT_FIELDS, METADATA_FIELDS } from './constants';
+import { ITEMS_INPUT_WIDTH, CHART_MODES, CONTENT_FIELDS } from './constants';
 import { FiltersControl, InputControl, TogglerControl } from './controls';
 import { WIDGET_WIZARD_FORM } from '../widgetWizardContent/wizardControlsSection/constants';
 
@@ -59,7 +59,6 @@ export class LaunchDurationControls extends Component {
           CONTENT_FIELDS.STATUS,
         ],
         itemsCount: DEFAULT_ITEMS_COUNT,
-        metadataFields: [METADATA_FIELDS.NAME, METADATA_FIELDS.NUMBER, METADATA_FIELDS.START_TIME],
         widgetOptions: {
           mode: CHART_MODES.ALL_LAUNCHES,
         },
@@ -83,7 +82,7 @@ export class LaunchDurationControls extends Component {
     return (
       <Fragment>
         <FieldProvider
-          name="filterId"
+          name="filterIds"
           parse={this.parseFilterValue}
           format={this.formatFilterValue}
         >

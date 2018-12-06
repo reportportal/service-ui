@@ -13,7 +13,6 @@ import {
   SKIPPED_FAILED_LAUNCHES_OPTIONS,
   DEFECT_STATISTICS_OPTIONS,
   ITEMS_INPUT_WIDTH,
-  METADATA_FIELDS,
 } from './constants';
 import {
   FiltersControl,
@@ -102,13 +101,12 @@ export class MostFailedTestCasesTableControls extends Component {
       contentParameters: widgetSettings.contentParameters || {
         contentFields: [this.criteria[0].value],
         itemsCount: DEFAULT_ITEMS_COUNT,
-        metadataFields: [METADATA_FIELDS.NAME, METADATA_FIELDS.START_TIME],
         widgetOptions: {
           includeMethods: false,
           launchNameFilter: false,
         },
       },
-      filterId: [],
+      filterIds: [],
     });
   }
 
@@ -137,7 +135,7 @@ export class MostFailedTestCasesTableControls extends Component {
     return (
       <Fragment>
         <FieldProvider
-          name="filterId"
+          name="filterIds"
           parse={this.parseFilterValue}
           format={this.formatFilterValue}
         >

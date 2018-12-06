@@ -32,24 +32,18 @@ export const CHART_MODES = {
 export const STATIC_CRITERIA = {
   NAME: 'name',
   NUMBER: 'number',
-  LAST_MODIFIED: 'last_modified',
+  LAST_MODIFIED: 'lastModified',
   STATUS: 'status',
-};
-
-export const METADATA_FIELDS = {
-  NAME: 'name',
-  NUMBER: 'number',
-  START_TIME: 'start_time',
 };
 
 export const CONTENT_FIELDS = {
   NAME: 'name',
   NUMBER: 'number',
   STATUS: 'status',
-  START_TIME: 'start_time',
-  END_TIME: 'end_time',
+  START_TIME: 'startTime',
+  END_TIME: 'endTime',
   USER_REF: 'userRef',
-  LAST_MODIFIED: 'last_modified',
+  LAST_MODIFIED: 'lastModified',
   ACTION_TYPE: 'actionType',
   OBJECT_TYPE: 'objectType',
   PROJECT_REF: 'projectRef',
@@ -58,7 +52,7 @@ export const CONTENT_FIELDS = {
 };
 
 export const requestDataShape = PropTypes.shape({
-  filterId: PropTypes.array,
+  filterIds: PropTypes.array,
   description: PropTypes.string,
   name: PropTypes.string,
   share: PropTypes.bool,

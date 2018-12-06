@@ -45,7 +45,7 @@ NameColumn.propTypes = {
 
 const StartTimeColumn = ({ className, ...rest }) => (
   <div className={cx('start-time-col', className)}>
-    <AbsRelTime startTime={rest.value.start_time} />
+    <AbsRelTime startTime={rest.value.startTime} />
   </div>
 );
 StartTimeColumn.propTypes = {

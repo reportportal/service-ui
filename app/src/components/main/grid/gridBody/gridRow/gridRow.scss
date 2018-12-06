@@ -176,8 +176,12 @@
   }
 }
 
-.error-row-console {
+.row-console {
   background: none;
+
+  &::after {
+    display: none;
+  }
 
   .accordion-block {
     display: none;

@@ -182,12 +182,12 @@ const messages = defineMessages({
     id: 'WidgetCriteriaOption.user',
     defaultMessage: 'User',
   },
-  start_time: {
-    id: 'WidgetCriteriaOption.start_time',
+  startTime: {
+    id: 'WidgetCriteriaOption.startTime',
     defaultMessage: 'Start time',
   },
-  end_time: {
-    id: 'WidgetCriteriaOption.end_time',
+  endTime: {
+    id: 'WidgetCriteriaOption.endTime',
     defaultMessage: 'Finish time',
   },
   description: {
@@ -308,8 +308,8 @@ const getUserActionOptions = (formatMessage) => [
 const getLaunchGridColumnsOptions = (formatMessage) => [
   { value: 'tags', label: formatMessage(messages.tags) },
   { value: 'user', label: formatMessage(messages.user) },
-  { value: 'start_time', label: formatMessage(messages.start_time) },
-  { value: 'end_time', label: formatMessage(messages.end_time) },
+  { value: 'startTime', label: formatMessage(messages.startTime) },
+  { value: 'endTime', label: formatMessage(messages.endTime) },
   { value: 'description', label: formatMessage(messages.description) },
 ];
 

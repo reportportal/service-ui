@@ -13,7 +13,6 @@ import {
   DEFECT_TYPES_OPTIONS,
   ITEMS_INPUT_WIDTH,
   CHART_MODES,
-  METADATA_FIELDS,
 } from './constants';
 import { FiltersControl, DropdownControl, InputControl, TogglerControl } from './controls';
 import { WIDGET_WIZARD_FORM } from '../widgetWizardContent/wizardControlsSection/constants';
@@ -83,7 +82,6 @@ export class OverallStatisticsControls extends Component {
       contentParameters: widgetSettings.contentParameters || {
         contentFields: this.criteria.map((criteria) => criteria.value),
         itemsCount: DEFAULT_ITEMS_COUNT,
-        metadataFields: [METADATA_FIELDS.NAME, METADATA_FIELDS.NUMBER, METADATA_FIELDS.START_TIME],
         widgetOptions: {
           viewMode: CHART_MODES.PANEL_VIEW,
           mode: CHART_MODES.ALL_LAUNCHES,
@@ -108,7 +106,7 @@ export class OverallStatisticsControls extends Component {
     return (
       <Fragment>
         <FieldProvider
-          name="filterId"
+          name="filterIds"
           parse={this.parseFilterValue}
           format={this.formatFilterValue}
         >

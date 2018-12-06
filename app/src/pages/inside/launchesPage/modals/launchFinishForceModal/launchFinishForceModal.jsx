@@ -88,7 +88,7 @@ export class LaunchFinishForceModal extends Component {
       (acc, item) => ({
         ...acc,
         [item.id]: {
-          end_time: Date.now(),
+          endTime: Date.now(),
           status: STOPPED.toUpperCase(),
         },
       }),

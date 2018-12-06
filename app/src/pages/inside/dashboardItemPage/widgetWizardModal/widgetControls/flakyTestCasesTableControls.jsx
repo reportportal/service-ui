@@ -8,7 +8,7 @@ import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { URLS } from 'common/urls';
 import { validate } from 'common/utils';
 import { WIDGET_WIZARD_FORM } from '../widgetWizardContent/wizardControlsSection/constants';
-import { ITEMS_INPUT_WIDTH, METADATA_FIELDS } from './constants';
+import { ITEMS_INPUT_WIDTH } from './constants';
 import { InputControl, TagsControl, CheckboxControl } from './controls';
 
 const DEFAULT_ITEMS_COUNT = '30';
@@ -79,13 +79,12 @@ export class FlakyTestCasesTableControls extends Component {
     initializeWizardSecondStepForm({
       contentParameters: widgetSettings.contentParameters || {
         itemsCount: DEFAULT_ITEMS_COUNT,
-        metadataFields: [METADATA_FIELDS.NAME, METADATA_FIELDS.START_TIME],
         widgetOptions: {
           includeMethods: false,
           launchNameFilter: false,
         },
       },
-      filterId: [],
+      filterIds: [],
     });
   }
 

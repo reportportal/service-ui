@@ -26,7 +26,7 @@ export const FiltersList = ({
           search={search || ''}
           userId={userId}
           filter={item}
-          activeFilterId={activeId}
+          activeFilterIds={activeId}
           key={item.id}
           onChange={onChange}
           onEdit={(event) => onEdit(event, FORM_APPEARANCE_MODE_EDIT, item)}

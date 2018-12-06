@@ -6,7 +6,7 @@ import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { STATS_TOTAL, STATS_FAILED, STATS_SKIPPED } from 'common/constants/statistics';
 import { validate } from 'common/utils';
-import { ITEMS_INPUT_WIDTH, METADATA_FIELDS } from './constants';
+import { ITEMS_INPUT_WIDTH } from './constants';
 import { FiltersControl, InputControl } from './controls';
 import { WIDGET_WIZARD_FORM } from '../widgetWizardContent/wizardControlsSection/constants';
 
@@ -53,7 +53,6 @@ export class NotPassedTestCasesTrendControls extends Component {
       contentParameters: widgetSettings.contentParameters || {
         contentFields: [STATS_FAILED, STATS_SKIPPED, STATS_TOTAL],
         itemsCount: DEFAULT_ITEMS_COUNT,
-        metadataFields: [METADATA_FIELDS.NAME, METADATA_FIELDS.NUMBER, METADATA_FIELDS.START_TIME],
       },
     });
   }
@@ -74,7 +73,7 @@ export class NotPassedTestCasesTrendControls extends Component {
     return (
       <Fragment>
         <FieldProvider
-          name="filterId"
+          name="filterIds"
           parse={this.parseFilterValue}
           format={this.formatFilterValue}
         >

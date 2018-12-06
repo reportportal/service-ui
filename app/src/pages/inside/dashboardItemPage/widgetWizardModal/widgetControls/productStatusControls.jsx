@@ -67,7 +67,7 @@ const messages = defineMessages({
 });
 const PASSING_RATE = 'passing_rate';
 const TOTAL = 'total';
-const START_TIME = 'start_time';
+const START_TIME = 'startTime';
 const STATUS = 'status';
 const STATIC_BASE_COLUMNS = [TOTAL, PASSED, FAILED, SKIPPED, PASSING_RATE];
 const BASE_COLUMNS_ORDER = [
@@ -85,7 +85,7 @@ const BASE_COLUMNS_ORDER = [
   PASSING_RATE,
 ];
 const validators = {
-  filterId: (formatMessage) => (value) =>
+  filterIds: (formatMessage) => (value) =>
     (!value || !value.length) && formatMessage(messages.FiltersValidationError),
 };
 
@@ -125,7 +125,7 @@ export class ProductStatusControls extends Component {
           group: false,
         },
       },
-      filterId: [],
+      filterIds: [],
     });
   }
 
@@ -155,10 +155,10 @@ export class ProductStatusControls extends Component {
     return (
       <Fragment>
         <FieldProvider
-          name="filterId"
+          name="filterIds"
           format={this.formatFilters}
           parse={this.parseFilters}
-          validate={validators.filterId(formatMessage)}
+          validate={validators.filterIds(formatMessage)}
         >
           <TagsControl
             fieldLabel={formatMessage(messages.FiltersFieldLabel)}

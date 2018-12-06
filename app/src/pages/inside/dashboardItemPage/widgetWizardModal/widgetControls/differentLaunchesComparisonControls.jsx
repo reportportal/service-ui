@@ -15,7 +15,6 @@ import {
   STATS_SI_TOTAL,
   STATS_TI_TOTAL,
 } from 'common/constants/statistics';
-import { METADATA_FIELDS } from './constants';
 import { FiltersControl } from './controls';
 import { WIDGET_WIZARD_FORM } from '../widgetWizardContent/wizardControlsSection/constants';
 
@@ -57,7 +56,6 @@ export class DifferentLaunchesComparisonControls extends Component {
           STATS_TI_TOTAL,
         ],
         itemsCount: DEFAULT_ITEMS_COUNT,
-        metadataFields: [METADATA_FIELDS.NAME, METADATA_FIELDS.NUMBER, METADATA_FIELDS.START_TIME],
       },
     });
   }
@@ -68,7 +66,7 @@ export class DifferentLaunchesComparisonControls extends Component {
   render() {
     const { formAppearance, onFormAppearanceChange } = this.props;
     return (
-      <FieldProvider name="filterId" parse={this.parseFilterValue} format={this.formatFilterValue}>
+      <FieldProvider name="filterIds" parse={this.parseFilterValue} format={this.formatFilterValue}>
         <FiltersControl
           formAppearance={formAppearance}
           onFormAppearanceChange={onFormAppearanceChange}

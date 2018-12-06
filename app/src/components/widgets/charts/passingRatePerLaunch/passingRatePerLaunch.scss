@@ -1,0 +1,11 @@
+:global {
+  .c3-chart-text text,
+  .c3-chart-arc text {
+    font-family: $FONT-SEMIBOLD;
+    font-size: 13px;
+    fill: $COLOR--white-two !important;
+  }
+  .c3-grid line {
+    stroke: transparent;
+  }
+}

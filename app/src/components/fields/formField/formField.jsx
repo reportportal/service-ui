@@ -22,6 +22,7 @@ export class FormField extends PureComponent {
     disabled: PropTypes.bool,
     children: PropTypes.any,
     required: PropTypes.bool,
+    withoutProvider: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -39,6 +40,7 @@ export class FormField extends PureComponent {
     children: null,
     disabled: false,
     required: false,
+    withoutProvider: false,
   };
 
   render() {
@@ -51,13 +53,14 @@ export class FormField extends PureComponent {
       description,
       children,
       required,
+      withoutProvider,
       ...rest
     } = this.props;
     return (
       <div className={cx('form-field', containerClassName)}>
         <span className={cx('form-group-label', labelClassName, { required })}>{label}</span>
         <div className={cx('field-wrapper', fieldWrapperClassName)}>
-          <FieldProvider {...rest}>{children}</FieldProvider>
+          {withoutProvider ? children : <FieldProvider {...rest}>{children}</FieldProvider>}
         </div>
         {description && (
           <div className={cx('form-group-description', descriptionClassName)}>

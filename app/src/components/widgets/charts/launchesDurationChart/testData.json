@@ -2,15 +2,15 @@
   "share": false,
   "id": 2,
   "name": "start",
-  "content_parameters": {
-    "widget_type": "launches_duration_chart",
-    "content_fields": [],
+  "contentParameters": {
+    "widgetType": "launchesDurationChart",
+    "contentFields": [],
     "itemsCount": 10,
     "widgetOptions": {
       "latest": ""
     }
   },
-  "applied_filters": [
+  "appliedFilters": [
     {
       "share": false,
       "id": 1,
@@ -31,18 +31,18 @@
         "id": 3,
         "number": 3,
         "name": "test launch",
-        "start_time": 1541397081305,
+        "startTime": 1541397081305,
         "status": "FAILED",
-        "end_time": 1541397083306,
+        "endTime": 1541397083306,
         "duration": 2000
       },
       {
         "id": 4,
         "number": 1,
         "name": "launch name test",
-        "start_time": 1541397081305,
+        "startTime": 1541397081305,
         "status": "FAILED",
-        "end_time": 1541397083306,
+        "endTime": 1541397083306,
         "duration": 2000
       }
     ]

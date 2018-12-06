@@ -26,7 +26,7 @@ const cx = classNames.bind(styles);
 const OPTIONS = {
   STATISTICS: 'statistics',
   EXECUTIONS: 'executions',
-  START_TIME: 'start_time',
+  START_TIME: 'startTime',
   TOTAL: 'total',
 };
 

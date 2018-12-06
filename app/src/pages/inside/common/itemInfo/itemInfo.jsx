@@ -129,22 +129,22 @@ export class ItemInfo extends Component {
         </div>
 
         <div className={cx('additional-info')}>
-          {value.start_time && (
+          {value.startTime && (
             <span className={cx('duration-block')}>
               <DurationBlock
                 type={value.type}
                 status={value.status}
                 itemNumber={value.number}
                 timing={{
-                  start: value.start_time,
-                  end: value.end_time,
+                  start: value.startTime,
+                  end: value.endTime,
                   approxTime: value.approximateDuration,
                 }}
               />
             </span>
           )}
-          {value.start_time && (
-            <div className={cx('mobile-start-time')}>{fromNowFormat(value.start_time)}</div>
+          {value.startTime && (
+            <div className={cx('mobile-start-time')}>{fromNowFormat(value.startTime)}</div>
           )}
           <div className={cx({ 'owner-tags-block': editDisabled })}>
             {value.owner && <OwnerBlock owner={value.owner} />}

@@ -9,7 +9,8 @@ import { reduxForm, formValueSelector, getFormSyncErrors, getFormMeta } from 're
 import { connect } from 'react-redux';
 import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLock';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
-import { ModalLayout, withModal, ModalField, ModalContentHeading } from 'components/main/modal';
+import { SectionHeader } from 'components/main/sectionHeader';
+import { ModalLayout, withModal, ModalField } from 'components/main/modal';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { Input } from 'components/inputs/input';
@@ -93,8 +94,8 @@ const messages = defineMessages({
 @injectIntl
 @reduxForm({
   form: MERGE_FORM,
-  validate: ({ name, description, merge_type }) => ({
-    merge_type: !merge_type, // eslint-disable-line camelcase
+  validate: ({ name, description, mergeType }) => ({
+    mergeType: !mergeType, // eslint-disable-line camelcase
     name: (!name || !validate.launchName(name)) && 'launchNameHint',
     description:
       (!description || !validate.launchDescription(description)) && 'launchDescriptionHint',
@@ -106,9 +107,9 @@ const messages = defineMessages({
     syncErrors: getFormSyncErrors(MERGE_FORM)(state),
     fields: getFormMeta(MERGE_FORM)(state),
     activeProject: activeProjectSelector(state),
-    mergeType: formValueSelector(MERGE_FORM)(state, 'merge_type'),
-    startTime: formValueSelector(MERGE_FORM)(state, 'start_time'),
-    endTime: formValueSelector(MERGE_FORM)(state, 'end_time'),
+    mergeType: formValueSelector(MERGE_FORM)(state, 'mergeType'),
+    startTime: formValueSelector(MERGE_FORM)(state, 'startTime'),
+    endTime: formValueSelector(MERGE_FORM)(state, 'endTime'),
     tagsSearchUrl: URLS.launchTagsSearch(activeProjectSelector(state)),
   }),
   {
@@ -151,21 +152,21 @@ export class LaunchMergeModal extends Component {
     const launches = this.props.data.launches;
     const commonObject = {
       launches: [],
-      merge_type: this.props.mergeType,
+      mergeType: this.props.mergeType,
       name: launches[0].name,
       description: [],
-      end_time: this.props.endTime,
-      start_time: this.props.startTime,
+      endTime: this.props.endTime,
+      startTime: this.props.startTime,
       tags: {},
       extendSuitesDescription: false,
     };
     launches.forEach((launch) => {
       commonObject.launches.push(launch.id);
-      if (launch.start_time < commonObject.start_time) {
-        commonObject.start_time = launch.start_time;
+      if (launch.startTime < commonObject.startTime) {
+        commonObject.startTime = launch.startTime;
       }
-      if (launch.end_time > commonObject.end_time) {
-        commonObject.end_time = launch.end_time;
+      if (launch.endTime > commonObject.endTime) {
+        commonObject.endTime = launch.endTime;
       }
       if (launch.description) {
         commonObject.description.push(launch.description.trim());
@@ -231,8 +232,8 @@ export class LaunchMergeModal extends Component {
       >
         <form>
           <ModalField>
-            <ModalContentHeading
-              error={syncErrors.merge_type && fields.merge_type && !fields.merge_type.visited}
+            <SectionHeader
+              error={syncErrors.mergeType && fields.mergeType && !fields.mergeType.visited}
               text={intl.formatMessage(messages.mergeTypeHeading)}
             />
           </ModalField>
@@ -241,7 +242,7 @@ export class LaunchMergeModal extends Component {
             <div className={cx('merge-type-section')}>
               <div className={cx('merge-type-options')}>
                 <FieldProvider
-                  name={'merge_type'}
+                  name="mergeType"
                   onChange={() =>
                     tracking.trackEvent(LAUNCHES_MODAL_EVENTS.LINEAR_MERGE_BTN_MERGE_MODAL)
                   }
@@ -251,7 +252,7 @@ export class LaunchMergeModal extends Component {
                   </InputRadio>
                 </FieldProvider>
                 <FieldProvider
-                  name={'merge_type'}
+                  name="mergeType"
                   onChange={() =>
                     tracking.trackEvent(LAUNCHES_MODAL_EVENTS.DEEP_MERGE_BTN_MERGE_MODAL)
                   }
@@ -268,7 +269,7 @@ export class LaunchMergeModal extends Component {
           </ModalField>
 
           <ModalField>
-            <ModalContentHeading text={intl.formatMessage(messages.launchInfoHeading)} />
+            <SectionHeader text={intl.formatMessage(messages.launchInfoHeading)} />
           </ModalField>
 
           <div className={cx('launch-info-section', { unavailable: !mergeType })}>
@@ -276,7 +277,7 @@ export class LaunchMergeModal extends Component {
               label={intl.formatMessage(messages.launchNameLabel)}
               labelWidth={FIELD_LABEL_WIDTH}
             >
-              <FieldProvider name={'name'} maxLength={'256'}>
+              <FieldProvider name="name" maxLength={'256'}>
                 <FieldErrorHint>
                   <Input placeholder={intl.formatMessage(messages.launchNamePlaceholder)} />
                 </FieldErrorHint>
@@ -296,7 +297,7 @@ export class LaunchMergeModal extends Component {
               label={intl.formatMessage(messages.launchDescriptionLabel)}
               labelWidth={FIELD_LABEL_WIDTH}
             >
-              <FieldProvider name={'description'} maxLength={'1024'}>
+              <FieldProvider name="description" maxLength={'1024'}>
                 <FieldErrorHint>
                   <InputTextArea />
                 </FieldErrorHint>

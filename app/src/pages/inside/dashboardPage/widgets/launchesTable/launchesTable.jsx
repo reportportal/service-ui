@@ -199,7 +199,7 @@ export class LaunchesTable extends PureComponent {
 
   getColumns = () => {
     const { widget } = this.props;
-    const fieldsFromProps = widget.content_parameters.content_fields;
+    const fieldsFromProps = widget.contentParameters.contentFields;
 
     return fieldsFromProps.reduce(
       (columns, item) => (COLUMNS_MAP[item] ? [...columns, COLUMNS_MAP[item]] : columns),

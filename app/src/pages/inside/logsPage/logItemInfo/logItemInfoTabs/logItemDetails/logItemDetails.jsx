@@ -35,8 +35,8 @@ export class LogItemDetails extends Component {
                 status={logItem.status}
                 itemNumber={logItem.number}
                 timing={{
-                  start: logItem.start_time,
-                  end: logItem.end_time,
+                  start: logItem.startTime,
+                  end: logItem.endTime,
                   approxTime: logItem.approximateDuration,
                 }}
               />
@@ -62,7 +62,7 @@ export class LogItemDetails extends Component {
         </div>
         <div className={cx('time-column', 'column')}>
           <span className={cx('time')}>
-            <AbsRelTime startTime={logItem.start_time} />
+            <AbsRelTime startTime={logItem.startTime} />
           </span>
         </div>
       </div>
