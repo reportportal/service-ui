@@ -43,9 +43,77 @@
 }
 .statistics-col {
   width: 6.5%;
+
+  .mobile-block {
+    &.statistics-passed {
+      &:before {
+        background-color: $COLOR--passed;
+      }
+    }
+
+    &.statistics-failed {
+      &:before {
+        background-color: $COLOR--failed;
+      }
+    }
+
+    &.statistics-skipped {
+      &:before {
+        background-color: $COLOR--skipped;
+      }
+    }
+
+    &.statistics-total {
+      &:before {
+        background-color: $COLOR--windows-blue;
+      }
+    }
+
+    .value {
+      font-family: $FONT-REGULAR;
+      font-size: 13px;
+      line-height: 20px;
+      color: $COLOR--windows-blue;
+      text-decoration: none;
+    }
+  }
 }
 .defect-col {
   width: 8%;
+
+  .mobile-block {
+    &.defect-to_investigate {
+      &:before {
+        background-color: $COLOR--to-investigate;
+      }
+    }
+
+    &.defect-system_issue {
+      &:before {
+        background-color: $COLOR--system-issue;
+      }
+    }
+
+    &.defect-product_bug {
+      &:before {
+        background-color: $COLOR--product-bug;
+      }
+    }
+
+    &.defect-automation_bug {
+      &:before {
+        background-color: $COLOR--automation-bug;
+      }
+    }
+
+    a {
+      font-family: $FONT-REGULAR;
+      font-size: 13px;
+      line-height: 20px;
+      color: $COLOR--windows-blue;
+      text-decoration: none;
+    }
+  }
 }
 
 .mobile-block {
@@ -81,78 +149,6 @@
     left: 0;
     width: 12px;
     height: 100%;
-  }
-}
-
-.statistics-col {
-  .mobile-block {
-    &.statistics-passed {
-      &:before {
-        background-color: $COLOR--passed;
-      }
-    }
-
-    &.statistics-failed {
-      &:before {
-        background-color: $COLOR--failed;
-      }
-    }
-
-    &.statistics-skipped {
-      &:before {
-        background-color: $COLOR--skipped;
-      }
-    }
-
-    &.statistics-total {
-      &:before {
-        background-color: $COLOR--windows-blue;
-      }
-    }
-
-    .value {
-      font-family: $FONT-REGULAR;
-      font-size: 13px;
-      line-height: 20px;
-      color: $COLOR--windows-blue;
-      text-decoration: none;
-    }
-  }
-}
-
-.defect-col {
-  .mobile-block {
-    &.defect-to_investigate {
-      &:before {
-        background-color: $COLOR--to-investigate;
-      }
-    }
-
-    &.defect-system_issue {
-      &:before {
-        background-color: $COLOR--system-issue;
-      }
-    }
-
-    &.defect-product_bug {
-      &:before {
-        background-color: $COLOR--product-bug;
-      }
-    }
-
-    &.defect-automation_bug {
-      &:before {
-        background-color: $COLOR--automation-bug;
-      }
-    }
-
-    a {
-      font-family: $FONT-REGULAR;
-      font-size: 13px;
-      line-height: 20px;
-      color: $COLOR--windows-blue;
-      text-decoration: none;
-    }
   }
 }
 

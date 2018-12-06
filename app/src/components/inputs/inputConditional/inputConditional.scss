@@ -110,7 +110,7 @@
   height: 0;
   margin: auto 5px;
   box-sizing: border-box;
-  border-top: 4px solid black;
+  border-top: 4px solid black; /* stylelint-disable-line color-named */
   border-right: 4px solid transparent;
   border-left: 4px solid transparent;
   transition: transform 200ms linear;

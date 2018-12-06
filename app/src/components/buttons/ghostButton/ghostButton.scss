@@ -13,9 +13,8 @@
   white-space: nowrap;
   text-shadow: none;
   vertical-align: top;
-  background-color: transparent;
+  background-color: $COLOR--white-two;
   cursor: pointer;
-  background: $COLOR--white-two;
 
   &.disabled {
     color: $COLOR--gray-60;

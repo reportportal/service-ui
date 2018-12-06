@@ -4,9 +4,12 @@
   "version": "0.0.0",
   "license": "GPL-3.0-only",
   "scripts": {
-    "lint": "eslint \"./**/*.jsx\" \"./**/*.js\"",
-    "format:js": "npm run lint -- --fix",
-    "format": "npm run format:js && prettier --write */**/*.scss */**/*.md",
+    "eslint": "eslint \"./**/*.jsx\" \"./**/*.js\"",
+    "stylelint": "stylelint \"./**/*.scss\"",
+    "lint": "npm run eslint && npm run stylelint",
+    "format:js": "npm run eslint -- --fix",
+    "format:scss": "npm run stylelint -- --fix",
+    "format": "npm run format:js && npm run format:scss && prettier --write */**/*.md",
     "dev": "webpack-dev-server --port 3000",
     "build": "webpack -p --env.production",
     "storybook": "start-storybook -p 9001 -c .storybook",
@@ -131,6 +134,11 @@
     "storybook-host": "4.1.4",
     "storybook-readme": "3.3.0",
     "style-loader": "0.19.0",
+    "stylelint": "9.9.0",
+    "stylelint-config-recommended-scss": "3.2.0",
+    "stylelint-declaration-use-variable": "1.7.0",
+    "stylelint-prettier": "1.0.5",
+    "stylelint-scss": "3.4.0",
     "svg-inline-loader": "0.8.0",
     "url-loader": "0.6.2",
     "webpack": "3.7.1",
@@ -164,7 +172,11 @@
       "eslint --fix",
       "git add"
     ],
-    "*.{scss,md}": [
+    "*.{scss}": [
+      "stylelint --fix",
+      "git add"
+    ],
+    "*.{md}": [
       "prettier --write",
       "git add"
     ]
