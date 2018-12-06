@@ -40,7 +40,7 @@ export class ItemNameBlock extends Component {
     return (
       <NameLink
         itemId={data.id}
-        page={data.has_children ? null : PROJECT_LOG_PAGE}
+        page={data.hasChildren ? null : PROJECT_LOG_PAGE}
         className={cx('name-link')}
         onClick={() => tracking.trackEvent(HISTORY_PAGE_EVENTS.CLICK_ON_ITEM)}
       >
