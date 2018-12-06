@@ -3,7 +3,11 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { injectIntl, intlShape, defineMessages } from 'react-intl';
 import track from 'react-tracking';
-import { LAUNCHES_PAGE, LAUNCHES_PAGE_EVENTS } from 'components/main/analytics/events';
+import {
+  LAUNCHES_PAGE,
+  LAUNCHES_PAGE_EVENTS,
+  LAUNCHES_MODAL_EVENTS,
+} from 'components/main/analytics/events';
 import { PageLayout, PageSection } from 'layouts/pageLayout';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
@@ -203,6 +207,11 @@ export class LaunchesPage extends Component {
     this.props.unselectAllLaunchesAction();
   }
 
+  unselectAndFetchLaunches = () => {
+    this.props.unselectAllLaunchesAction();
+    this.props.fetchLaunchesAction();
+  };
+
   deleteItem = (id) => {
     fetch(URLS.launches(this.props.activeProject, id), {
       method: 'delete',
@@ -226,16 +235,17 @@ export class LaunchesPage extends Component {
         this.props.hideScreenLockAction();
         this.props.showNotification({
           message:
-            this.props.selectedLaunches.length === 1
+            items.length === 1
               ? this.props.intl.formatMessage(messages.success)
               : this.props.intl.formatMessage(messages.successMultiple),
           type: NOTIFICATION_TYPES.SUCCESS,
         });
       })
       .catch(() => {
+        this.props.hideScreenLockAction();
         this.props.showNotification({
           message:
-            this.props.selectedLaunches.length === 1
+            items.length === 1
               ? this.props.intl.formatMessage(messages.error)
               : this.props.intl.formatMessage(messages.errorMultiple),
           type: NOTIFICATION_TYPES.ERROR,
@@ -261,6 +271,11 @@ export class LaunchesPage extends Component {
         selectedLaunches.length === 1
           ? intl.formatMessage(messages.warning)
           : intl.formatMessage(messages.warningMultiple),
+      eventsInfo: {
+        closeIcon: LAUNCHES_MODAL_EVENTS.CLOSE_ICON_DELETE_MODAL,
+        cancelBtn: LAUNCHES_MODAL_EVENTS.CANCEL_BTN_DELETE_MODAL,
+        deleteBtn: LAUNCHES_MODAL_EVENTS.DELETE_BTN_DELETE_MODAL,
+      },
     });
   };
 
