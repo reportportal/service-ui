@@ -17,12 +17,12 @@ export const fetchDashboardAction = (projectId) => (dispatch, getState) => {
   Promise.all([
     fetch(URLS.dashboards(activeProject)),
     fetch(URLS.dashboardsShared(activeProject)),
-  ]).then(([dashboards, sharedDashboards = {}]) => {
+  ]).then(([dashboards = {}, sharedDashboards = {}]) => {
     const { content = [] } = sharedDashboards;
 
     dispatch({
       type: FETCH_DASHBOARD_SUCCESS,
-      payload: [...dashboards, ...content.filter((item) => item.owner !== userId)],
+      payload: [...dashboards.content, ...content.filter((item) => item.owner !== userId)],
     });
   });
 };
