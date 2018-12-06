@@ -3,20 +3,15 @@ import { redirect } from 'redux-first-router';
 import { fetchDataAction, concatFetchDataAction, FETCH_SUCCESS } from 'controllers/fetch';
 import { activeProjectSelector } from 'controllers/user';
 import { URLS } from 'common/urls';
-import {
-  userFiltersSelector,
-  FETCH_PROJECT_PREFERENCES_SUCCESS,
-  toggleDisplayFilterOnLaunchesAction,
-} from 'controllers/project';
-import { PROJECT_LAUNCHES_PAGE, filterIdSelector } from 'controllers/pages';
+import { userFiltersSelector, toggleDisplayFilterOnLaunchesAction } from 'controllers/project';
+import { PROJECT_LAUNCHES_PAGE } from 'controllers/pages';
 import { omit } from 'common/utils/omit';
-import { ALL, LATEST, NEW_FILTER_PREFIX } from 'common/constants/reservedFilterIds';
+import { ALL, NEW_FILTER_PREFIX } from 'common/constants/reservedFilterIds';
 import {
   NAMESPACE,
   FETCH_FILTERS,
   FETCH_FILTERS_CONCAT,
-  FETCH_LAUNCHES_FILTERS,
-  LAUNCHES_FILTERS_NAMESPACE,
+  REMOVE_LAUNCHES_FILTER,
   CHANGE_ACTIVE_FILTER,
   UPDATE_FILTER,
   LAUNCHES_FILTERS_UPDATE_NAMESPACE,
@@ -24,21 +19,14 @@ import {
   DEFAULT_FILTER,
   SAVE_NEW_FILTER,
   RESET_FILTER,
-  REMOVE_FILTER,
 } from './constants';
-import { querySelector, savedLaunchesFiltersSelector, launchFiltersSelector } from './selectors';
+import { querySelector, launchFiltersSelector } from './selectors';
 import {
   addFilterAction,
   changeActiveFilterAction,
   updateFilterSuccessAction,
+  removeFilterAction,
 } from './actionCreators';
-
-const collectFilterIds = (userFilters, activeFilter) => {
-  if (userFilters.indexOf(activeFilter) === -1 && activeFilter !== ALL && activeFilter !== LATEST) {
-    return [...userFilters, activeFilter];
-  }
-  return userFilters;
-};
 
 function* fetchFilters() {
   const activeProject = yield select(activeProjectSelector);
@@ -57,16 +45,6 @@ function* fetchFiltersConcat({ payload: { params, concat } }) {
     concatFetchDataAction(NAMESPACE, concat)(URLS.filters(activeProject), {
       params: { ...query, ...params },
     }),
-  );
-}
-
-function* fetchLaunchesFilters() {
-  const activeProject = yield select(activeProjectSelector);
-  const userFilters = yield select(userFiltersSelector);
-  const activeFilter = yield select(filterIdSelector);
-  const filterIds = collectFilterIds(userFilters, activeFilter);
-  yield put(
-    fetchDataAction(LAUNCHES_FILTERS_NAMESPACE)(URLS.launchesFilters(activeProject, filterIds)),
   );
 }
 
@@ -95,7 +73,7 @@ function* changeActiveFilter({ payload: filterId }) {
 }
 
 function* resetFilter({ payload: filterId }) {
-  const savedFilters = yield select(savedLaunchesFiltersSelector);
+  const savedFilters = yield select(userFiltersSelector);
   const savedFilter = savedFilters.find((filter) => filter.id === filterId);
   yield put(updateFilterSuccessAction(savedFilter));
 }
@@ -129,8 +107,9 @@ function* saveNewFilter({ payload: filter }) {
       type === FETCH_SUCCESS && meta && meta.namespace === LAUNCHES_FILTERS_UPDATE_NAMESPACE,
   );
   const newId = response.payload.id;
-  yield put(updateFilterSuccessAction({ ...filter, id: newId }, filter.id));
-  yield put(toggleDisplayFilterOnLaunchesAction(newId));
+  const newFilter = { ...filter, id: newId };
+  yield put(updateFilterSuccessAction(newFilter, filter.id));
+  yield put(toggleDisplayFilterOnLaunchesAction(newFilter, 'PUT', false));
   yield put(changeActiveFilterAction(newId));
 }
 
@@ -142,15 +121,9 @@ function* watchFetchFiltersConcat() {
   yield takeEvery(FETCH_FILTERS_CONCAT, fetchFiltersConcat);
 }
 
-function* watchFetchLaunchesFilters() {
-  yield takeEvery(
-    [FETCH_LAUNCHES_FILTERS, FETCH_PROJECT_PREFERENCES_SUCCESS],
-    fetchLaunchesFilters,
-  );
-}
-
-function* resetActiveFilter() {
+function* resetActiveFilter({ payload: filterId }) {
   yield put(changeActiveFilterAction(ALL));
+  yield put(removeFilterAction(filterId));
 }
 
 function* watchChangeActiveFilter() {
@@ -174,14 +147,13 @@ function* watchSaveNewFilter() {
 }
 
 function* watchRemoveFilter() {
-  yield takeEvery(REMOVE_FILTER, resetActiveFilter);
+  yield takeEvery(REMOVE_LAUNCHES_FILTER, resetActiveFilter);
 }
 
 export function* filterSagas() {
   yield all([
     watchFetchFilters(),
     watchFetchFiltersConcat(),
-    watchFetchLaunchesFilters(),
     watchChangeActiveFilter(),
     watchResetFilter(),
     watchUpdateLaunchesFilter(),

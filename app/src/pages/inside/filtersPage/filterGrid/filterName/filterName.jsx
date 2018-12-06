@@ -77,7 +77,7 @@ export class FilterName extends Component {
       <Fragment>
         <span className={cx('name-wrapper')}>
           <span
-            className={cx('name', { link: userFilters.indexOf(filter.id) !== -1 })}
+            className={cx('name', { link: userFilters.find((item) => item.id === filter.id) })}
             onClick={onClickName}
           >
             {Parser(this.getHighlightName(filter.name))}

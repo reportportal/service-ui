@@ -1,6 +1,7 @@
 import { createSelector } from 'reselect';
 import isEqual from 'fast-deep-equal';
 import { createQueryParametersSelector, filterIdSelector } from 'controllers/pages';
+import { userFiltersSelector } from '../project/selectors';
 import { DEFAULT_PAGINATION } from './constants';
 
 const domainSelector = (state) => state.filters || {};
@@ -18,16 +19,15 @@ export const activeFilterSelector = createSelector(
   filterIdSelector,
   (filters, filterId) => filters.find((filter) => filter.id === filterId),
 );
-export const launchFiltersLoadedSelector = (state) => domainSelector(state).launchFiltersLoaded;
-export const savedLaunchesFiltersSelector = (state) => domainSelector(state).savedLaunchesFilters;
+
 export const unsavedFilterIdsSelector = createSelector(
   launchFiltersSelector,
-  savedLaunchesFiltersSelector,
+  userFiltersSelector,
   (filters, savedFilters) =>
     filters
       .map((filter) => {
         const savedFilter = savedFilters.find((item) => item.id === filter.id);
-        return !isEqual(filter, savedFilter) ? savedFilter.id : null;
+        return savedFilter && !isEqual(filter, savedFilter) ? savedFilter.id : null;
       })
       .filter(Boolean),
 );

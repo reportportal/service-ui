@@ -1,30 +1,13 @@
-import { takeEvery, all, put, select, take, call } from 'redux-saga/effects';
-import { fetchDataAction, FETCH_SUCCESS, FETCH_ERROR } from 'controllers/fetch';
+import { takeEvery, all, put, select, call } from 'redux-saga/effects';
+import { fetchDataAction } from 'controllers/fetch';
 import { activeProjectSelector } from 'controllers/user';
 import { URLS } from 'common/urls';
 import { debugModeSelector } from 'controllers/launch';
-import { ALL, LATEST } from 'common/constants/reservedFilterIds';
-import {
-  launchFiltersSelector,
-  launchFiltersLoadedSelector,
-  LAUNCHES_FILTERS_NAMESPACE,
-} from 'controllers/filter';
+import { LATEST } from 'common/constants/reservedFilterIds';
+import { launchFiltersSelector } from 'controllers/filter';
 import { filterIdSelector } from 'controllers/pages';
 import { FETCH_LAUNCHES, NAMESPACE, FETCH_LAUNCHES_WITH_PARAMS } from './constants';
 import { queryParametersSelector } from './selectors';
-
-function* waitForFilters() {
-  const filterId = yield select(filterIdSelector);
-  const isFiltersLoaded = yield select(launchFiltersLoadedSelector);
-  if (!isFiltersLoaded && filterId !== ALL && filterId !== LATEST) {
-    yield take(
-      ({ type, meta }) =>
-        (type === FETCH_SUCCESS || type === FETCH_ERROR) &&
-        meta &&
-        meta.namespace === LAUNCHES_FILTERS_NAMESPACE,
-    );
-  }
-}
 
 function* fetchLaunchesWithParams({ payload }) {
   const activeProject = yield select(activeProjectSelector);
@@ -42,7 +25,6 @@ function* fetchLaunchesWithParams({ payload }) {
 }
 
 function* fetchLaunches() {
-  yield call(waitForFilters);
   const filterId = yield select(filterIdSelector);
   const filters = yield select(launchFiltersSelector);
   const activeFilter = filters.find((filter) => filter.id === filterId);

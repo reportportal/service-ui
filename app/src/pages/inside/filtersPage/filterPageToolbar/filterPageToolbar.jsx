@@ -43,19 +43,19 @@ const messages = defineMessages({
 @injectIntl
 export class FilterPageToolbar extends React.Component {
   static propTypes = {
+    intl: intlShape,
     change: PropTypes.func,
     invalid: PropTypes.bool,
     filter: PropTypes.string,
     filters: PropTypes.array,
     onAddFilter: PropTypes.func,
-    intl: intlShape,
   };
 
   static defaultProps = {
+    intl: {},
     invalid: false,
     filter: null,
     filters: [],
-    intl: {},
     change: () => {},
     onAddFilter: () => {},
   };

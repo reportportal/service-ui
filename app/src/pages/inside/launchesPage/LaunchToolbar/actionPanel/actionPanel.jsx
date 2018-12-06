@@ -193,7 +193,11 @@ export class ActionPanel extends Component {
             />
           </div>
           <div className={cx('action-button')}>
-            <GhostButton icon={RefreshIcon} onClick={onRefresh}>
+            <GhostButton
+              disabled={!!selectedLaunches.length}
+              icon={RefreshIcon}
+              onClick={onRefresh}
+            >
               <FormattedMessage id="LaunchesPage.refresh" defaultMessage="Refresh" />
             </GhostButton>
           </div>

@@ -1,3 +1,4 @@
+import { UPDATE_FILTER_SUCCESS, ADD_FILTER, REMOVE_FILTER } from 'controllers/filter';
 import { projectInfoReducer, projectPreferencesReducer } from './reducer';
 import {
   PROJECT_INFO_INITIAL_STATE,
@@ -5,7 +6,6 @@ import {
   FETCH_PROJECT_SUCCESS,
   UPDATE_CONFIGURATION_ATTRIBUTES,
   FETCH_PROJECT_PREFERENCES_SUCCESS,
-  TOGGLE_DISPLAY_FILTER_ON_LAUNCHES,
   UPDATE_NOTIFICATIONS_CONFIG_SUCCESS,
   EMAIL_NOTIFICATION_INTEGRATION_TYPE,
 } from './constants';
@@ -105,25 +105,65 @@ describe('project reducer', () => {
       expect(newState).toEqual(payload);
     });
 
-    test('should handle TOGGLE_DISPLAY_FILTER_ON_LAUNCHES', () => {
+    test('should handle UPDATE_FILTER_SUCCESS', () => {
       const oldState = {
         ...PROJECT_PREFERENCES_INITIAL_STATE,
-        filters: ['filter0'],
+        filters: [{ id: 'filter0' }],
       };
-      const payload = 'filter1';
-      const stateWithFilter = projectPreferencesReducer(oldState, {
-        type: TOGGLE_DISPLAY_FILTER_ON_LAUNCHES,
+      const payload = { id: 'filter1' };
+      const stateWithoutFilter = projectPreferencesReducer(oldState, {
+        type: UPDATE_FILTER_SUCCESS,
         payload,
       });
-      expect(stateWithFilter).toEqual({
+      expect(stateWithoutFilter).toEqual({
         ...oldState,
         filters: [...oldState.filters, payload],
       });
-      const stateWithoutFilter = projectPreferencesReducer(stateWithFilter, {
-        type: TOGGLE_DISPLAY_FILTER_ON_LAUNCHES,
+
+      const newPayload = { id: 'filter2' };
+      const stateWithFilter = projectPreferencesReducer(stateWithoutFilter, {
+        type: UPDATE_FILTER_SUCCESS,
+        payload: newPayload,
+        meta: {
+          oldId: 'filter1',
+        },
+      });
+      expect(stateWithFilter).toEqual({
+        ...oldState,
+        filters: [...oldState.filters, newPayload],
+      });
+    });
+
+    test('should handle ADD_FILTER', () => {
+      const oldState = {
+        ...PROJECT_PREFERENCES_INITIAL_STATE,
+        filters: [{ id: 'filter0' }],
+      };
+      const payload = { id: 'filter1' };
+      const updatedState = projectPreferencesReducer(oldState, {
+        type: ADD_FILTER,
         payload,
       });
-      expect(stateWithoutFilter).toEqual(oldState);
+      expect(updatedState).toEqual({
+        ...oldState,
+        filters: [...oldState.filters, payload],
+      });
+    });
+
+    test('should handle REMOVE_FILTER', () => {
+      const oldState = {
+        ...PROJECT_PREFERENCES_INITIAL_STATE,
+        filters: [{ id: 'filter0' }],
+      };
+      const payload = 'filter0';
+      const updatedState = projectPreferencesReducer(oldState, {
+        type: REMOVE_FILTER,
+        payload,
+      });
+      expect(updatedState).toEqual({
+        ...oldState,
+        filters: [],
+      });
     });
   });
 });

@@ -1,5 +1,5 @@
 import { FilterEntitiesContainer } from 'components/filterEntities/containers';
-import { LaunchFiltersContainer } from 'pages/inside/common/launchFiltersContainer/launchFiltersContainer';
+import { LaunchFiltersContainer } from 'pages/inside/common/launchFiltersContainer';
 import { LaunchFiltersToolbar } from 'pages/inside/common/launchFiltersToolbar';
 import { LEVEL_LAUNCH } from 'common/constants/launchLevels';
 
