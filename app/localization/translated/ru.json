@@ -1104,5 +1104,6 @@
   "ProjectDetailsPageSettings.title": "Настройки",
   "ProjectDetailsPageMembers.title": "Участники",
   "ProjectDetailsPageEvents.title": "События",
-  "Legend.launchName": "имя запуска"
+  "Legend.launchName": "имя запуска",
+  "perPage": "на странице"
 }
