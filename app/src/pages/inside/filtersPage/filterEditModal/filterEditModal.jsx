@@ -108,7 +108,8 @@ export class FilterEditModal extends Component {
         title={this.getTitle()}
         okButton={okButton}
         cancelButton={cancelButton}
-        closeIconEventInfo={FILTERS_PAGE_EVENTS.CLICK_CLOSE_ICON_MODAL_EDIT_FILTER}>
+        closeIconEventInfo={FILTERS_PAGE_EVENTS.CLICK_CLOSE_ICON_MODAL_EDIT_FILTER}
+      >
         <form>
           <ModalField label={intl.formatMessage(messages.name)}>
             <FieldProvider name="name">

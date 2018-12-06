@@ -85,8 +85,8 @@ export const URLS = {
   sessionToken: () => `${urlBase}uat/sso/me`,
 
   project: (activeProject) => `${urlBase}project/${activeProject}`,
-  projectPreferences: (activeProject, userId) =>
-    `${urlBase}project/${activeProject}/preference/${userId}`,
+  projectPreferences: (activeProject, userId, filterId = '') =>
+    `${urlBase}project/${activeProject}/preference/${userId}/${filterId}`,
   projectUsers: (activeProject) => `${urlBase}project/${activeProject}/users`,
   projectAdminSearchUser: (input) =>
     `${urlBase}user/search${getQueryParams({

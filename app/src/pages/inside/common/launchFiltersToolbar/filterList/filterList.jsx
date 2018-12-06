@@ -23,7 +23,7 @@ export const FilterList = ({
           share={filter.share}
           unsaved={unsavedFilterIds.indexOf(filter.id) > -1}
           onClick={() => onSelectFilter(filter.id)}
-          onRemove={() => onRemoveFilter(filter.id)}
+          onRemove={() => onRemoveFilter(filter)}
         />
       </div>
     ))}

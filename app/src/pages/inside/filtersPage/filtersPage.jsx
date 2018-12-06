@@ -3,12 +3,15 @@ import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { fetch } from 'common/utils';
+import { URLS } from 'common/urls';
 import {
   withFilter,
   filtersPaginationSelector,
   fetchFiltersAction,
   filtersSelector,
   loadingSelector,
+  removeFilterAction,
   DEFAULT_PAGE_SIZE,
 } from 'controllers/filter';
 import {
@@ -23,8 +26,6 @@ import { PageLayout, PageHeader, PageSection } from 'layouts/pageLayout';
 import { showModalAction } from 'controllers/modal';
 import { withSorting, SORTING_ASC } from 'controllers/sorting';
 import { userFiltersSelector, toggleDisplayFilterOnLaunchesAction } from 'controllers/project';
-import { fetch } from 'common/utils';
-import { URLS } from 'common/urls';
 import { FILTERS_PAGE, FILTERS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { NoFiltersBlock } from './noFiltersBlock';
 import { FilterPageToolbar } from './filterPageToolbar';
@@ -51,6 +52,7 @@ const messages = defineMessages({
   {
     showModalAction,
     toggleDisplayFilterOnLaunches: toggleDisplayFilterOnLaunchesAction,
+    removeUserFilter: removeFilterAction,
     fetchFiltersAction,
   },
 )
@@ -81,7 +83,7 @@ export class FiltersPage extends Component {
     fetchFiltersAction: PropTypes.func,
     showModalAction: PropTypes.func,
     projectRole: PropTypes.string,
-    userFilters: PropTypes.arrayOf(PropTypes.number),
+    userFilters: PropTypes.arrayOf(PropTypes.object),
     accountRole: PropTypes.string,
     loading: PropTypes.bool,
     tracking: PropTypes.shape({
@@ -89,6 +91,7 @@ export class FiltersPage extends Component {
       getTrackingData: PropTypes.func,
     }).isRequired,
     toggleDisplayFilterOnLaunches: PropTypes.func,
+    removeUserFilter: PropTypes.func,
   };
 
   static defaultProps = {
@@ -110,6 +113,7 @@ export class FiltersPage extends Component {
     accountRole: '',
     loading: false,
     toggleDisplayFilterOnLaunches: () => {},
+    removeUserFilter: () => {},
   };
 
   getBreadcrumbs = () => [{ title: this.props.intl.formatMessage(messages.filtersPageTitle) }];
@@ -117,7 +121,7 @@ export class FiltersPage extends Component {
   confirmDelete = (filter) =>
     this.props.showModalAction({
       id: 'filterDeleteModal',
-      data: { filter, onConfirm: () => this.deleteFilter(filter.id) },
+      data: { filter, onConfirm: () => this.deleteFilter(filter) },
     });
 
   openEditModal = (filter) =>
@@ -132,13 +136,13 @@ export class FiltersPage extends Component {
       data: filter,
     }).then(this.props.fetchFiltersAction);
 
-  deleteFilter = (id) => {
-    fetch(URLS.filter(this.props.activeProject, id), {
+  deleteFilter = (filter) => {
+    fetch(URLS.filter(this.props.activeProject, filter.id), {
       method: 'delete',
     })
       .then(() => {
-        if (this.props.userFilters.indexOf(id) > -1) {
-          this.props.toggleDisplayFilterOnLaunches(id);
+        if (this.props.userFilters.find((item) => item.id === filter.id)) {
+          this.props.removeUserFilter(filter.id);
         }
       })
       .then(this.props.fetchFiltersAction);

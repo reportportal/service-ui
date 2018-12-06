@@ -2,7 +2,7 @@ export { withFilter } from './withFilter';
 export {
   fetchFiltersAction,
   fetchFiltersConcatAction,
-  fetchLaunchesFiltersAction,
+  fetchUserFiltersSuccessAction,
   changeActiveFilterAction,
   updateFilterConditionsAction,
   updateFilterAction,
@@ -10,6 +10,8 @@ export {
   createFilterAction,
   saveNewFilterAction,
   removeFilterAction,
+  removeLaunchesFilterAction,
+  addFilterAction,
 } from './actionCreators';
 export { filterReducer } from './reducer';
 export {
@@ -17,9 +19,15 @@ export {
   filtersSelector,
   loadingSelector,
   launchFiltersSelector,
-  launchFiltersLoadedSelector,
   activeFilterSelector,
   unsavedFilterIdsSelector,
 } from './selectors';
 export { filterSagas } from './sagas';
-export { DEFAULT_PAGE_SIZE, LAUNCHES_FILTERS_NAMESPACE } from './constants';
+export {
+  DEFAULT_PAGE_SIZE,
+  LAUNCHES_FILTERS_NAMESPACE,
+  ADD_FILTER,
+  REMOVE_FILTER,
+  UPDATE_FILTER_SUCCESS,
+} from './constants';
+export { updateFilter } from './utils';

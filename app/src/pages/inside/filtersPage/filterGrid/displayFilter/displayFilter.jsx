@@ -7,31 +7,37 @@ import styles from './displayFilter.scss';
 
 const cx = classNames.bind(styles);
 
-export const DisplayFilter = ({ userFilters, filter, onChangeDisplay }) => (
-  <Fragment>
-    <div className={cx('mobile-label', 'display-label')}>
-      <FormattedMessage id={'DisplayFilter.display'} defaultMessage={'Display on launches:'} />
-    </div>
-    <div className={cx('switcher-wrapper')}>
-      <InputSwitcher
-        value={userFilters.indexOf(filter.id) !== -1}
-        onChange={() => onChangeDisplay(filter.id)}
-      >
-        <span className={cx('switcher-label')}>
-          {userFilters.indexOf(filter.id) !== -1 ? (
-            <FormattedMessage id={'DisplayFilter.showOnLaunchesSwitcherOn'} defaultMessage={'ON'} />
-          ) : (
-            <FormattedMessage
-              id={'DisplayFilter.showOnLaunchesSwitcherOff'}
-              defaultMessage={'OFF'}
-            />
-          )}
-        </span>
-      </InputSwitcher>
-    </div>
-    <div className={cx('separator')} />
-  </Fragment>
-);
+export const DisplayFilter = ({ userFilters, filter, onChangeDisplay }) => {
+  const isFilterDisplayed = userFilters.find((item) => item.id === filter.id);
+  return (
+    <Fragment>
+      <div className={cx('mobile-label', 'display-label')}>
+        <FormattedMessage id={'DisplayFilter.display'} defaultMessage={'Display on launches:'} />
+      </div>
+      <div className={cx('switcher-wrapper')}>
+        <InputSwitcher
+          value={!!isFilterDisplayed}
+          onChange={() => onChangeDisplay(filter, isFilterDisplayed ? 'DELETE' : 'PUT')}
+        >
+          <span className={cx('switcher-label')}>
+            {isFilterDisplayed ? (
+              <FormattedMessage
+                id={'DisplayFilter.showOnLaunchesSwitcherOn'}
+                defaultMessage={'ON'}
+              />
+            ) : (
+              <FormattedMessage
+                id={'DisplayFilter.showOnLaunchesSwitcherOff'}
+                defaultMessage={'OFF'}
+              />
+            )}
+          </span>
+        </InputSwitcher>
+      </div>
+      <div className={cx('separator')} />
+    </Fragment>
+  );
+};
 DisplayFilter.propTypes = {
   userFilters: PropTypes.array,
   filter: PropTypes.object,

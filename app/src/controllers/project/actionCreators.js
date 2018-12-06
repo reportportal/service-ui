@@ -2,22 +2,26 @@ import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
 import { userIdSelector, activeProjectSelector } from 'controllers/user';
 import {
+  fetchUserFiltersSuccessAction,
+  removeFilterAction,
+  addFilterAction,
+} from 'controllers/filter';
+import {
   FETCH_PROJECT_SUCCESS,
   FETCH_PROJECT_PREFERENCES_SUCCESS,
-  TOGGLE_DISPLAY_FILTER_ON_LAUNCHES,
   UPDATE_CONFIGURATION_ATTRIBUTES,
   UPDATE_NOTIFICATIONS_CONFIG_SUCCESS,
 } from './constants';
-import { projectPreferencesSelector, notificationIntegrationNameSelector } from './selectors';
+import { notificationIntegrationNameSelector } from './selectors';
 
 const fetchProjectSuccessAction = (project) => ({
   type: FETCH_PROJECT_SUCCESS,
   payload: project,
 });
 
-const fetchProjectPreferencesSuccessAction = (projectId) => ({
+const fetchProjectPreferencesSuccessAction = (preferences) => ({
   type: FETCH_PROJECT_PREFERENCES_SUCCESS,
-  payload: projectId,
+  payload: preferences,
 });
 
 export const updateConfigurationAttributesAction = (project) => ({
@@ -25,11 +29,17 @@ export const updateConfigurationAttributesAction = (project) => ({
   payload: project.configuration.attributes,
 });
 
-const updateProjectPreferencesAction = (settings) => (dispatch, getState) =>
-  fetch(URLS.projectPreferences(activeProjectSelector(getState()), userIdSelector(getState())), {
-    method: 'PUT',
-    data: settings,
-  });
+const updateProjectPreferencesAction = (filterId, method) => (dispatch, getState) =>
+  fetch(
+    URLS.projectPreferences(
+      activeProjectSelector(getState()),
+      userIdSelector(getState()),
+      filterId,
+    ),
+    {
+      method,
+    },
+  );
 export const updateProjectNotificationsIntegrationAction = ({ enabled, rules }) => (
   dispatch,
   getState,
@@ -53,17 +63,18 @@ export const updateProjectNotificationsIntegrationAction = ({ enabled, rules }) 
   });
 };
 
-export const toggleDisplayFilterOnLaunchesAction = (filter) => (dispatch, getState) => {
-  dispatch({
-    type: TOGGLE_DISPLAY_FILTER_ON_LAUNCHES,
-    payload: filter,
-  });
-  dispatch(updateProjectPreferencesAction(projectPreferencesSelector(getState())));
+export const toggleDisplayFilterOnLaunchesAction = (filter, method, stateUpdate = true) => (
+  dispatch,
+) => {
+  stateUpdate &&
+    dispatch(method === 'DELETE' ? removeFilterAction(filter.id) : addFilterAction(filter));
+  dispatch(updateProjectPreferencesAction(filter.id, method));
 };
 
 const fetchProjectPreferencesAction = (projectId) => (dispatch, getState) =>
-  fetch(URLS.projectPreferences(projectId, userIdSelector(getState()))).then((project) => {
-    dispatch(fetchProjectPreferencesSuccessAction(project));
+  fetch(URLS.projectPreferences(projectId, userIdSelector(getState()))).then((preferences) => {
+    dispatch(fetchProjectPreferencesSuccessAction(preferences));
+    dispatch(fetchUserFiltersSuccessAction(preferences.filters));
   });
 
 export const fetchProjectAction = (projectId) => (dispatch) =>

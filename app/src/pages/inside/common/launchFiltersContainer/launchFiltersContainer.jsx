@@ -6,7 +6,7 @@ import {
   changeActiveFilterAction,
   updateFilterConditionsAction,
   activeFilterSelector,
-  removeFilterAction,
+  removeLaunchesFilterAction,
 } from 'controllers/filter';
 import { filterIdSelector } from 'controllers/pages';
 import { fetchLaunchesWithParamsAction, fetchLaunchesAction } from 'controllers/launch';
@@ -27,7 +27,7 @@ const isEmptyValue = (value) => value === '' || value === null || value === unde
     updateFilterConditionsAction,
     fetchLaunchesAction,
     toggleDisplayFilterOnLaunchesAction,
-    removeFilterAction,
+    removeLaunchesFilterAction,
   },
 )
 export class LaunchFiltersContainer extends Component {
@@ -41,7 +41,7 @@ export class LaunchFiltersContainer extends Component {
     updateFilterConditionsAction: PropTypes.func,
     fetchLaunchesAction: PropTypes.func,
     toggleDisplayFilterOnLaunchesAction: PropTypes.func,
-    removeFilterAction: PropTypes.func,
+    removeLaunchesFilterAction: PropTypes.func,
   };
 
   static defaultProps = {
@@ -53,7 +53,7 @@ export class LaunchFiltersContainer extends Component {
     updateFilterConditionsAction: () => {},
     fetchLaunchesAction: () => {},
     toggleDisplayFilterOnLaunchesAction: () => {},
-    removeFilterAction: () => {},
+    removeLaunchesFilterAction: () => {},
   };
 
   getConditions = () => {
@@ -88,11 +88,11 @@ export class LaunchFiltersContainer extends Component {
     );
   };
 
-  handleFilterRemove = (filterId) => {
-    if (filterId >= 0) {
-      this.props.toggleDisplayFilterOnLaunchesAction(filterId);
+  handleFilterRemove = (filter) => {
+    if (filter.id >= 0) {
+      this.props.toggleDisplayFilterOnLaunchesAction(filter, 'DELETE');
     }
-    this.props.removeFilterAction(filterId);
+    this.props.removeLaunchesFilterAction(filter.id);
   };
 
   handleFilterSelect = (filterId) => {

@@ -136,7 +136,7 @@ export class FilterGrid extends Component {
   static propTypes = {
     filters: PropTypes.arrayOf(PropTypes.object),
     intl: intlShape.isRequired,
-    userFilters: PropTypes.arrayOf(PropTypes.number),
+    userFilters: PropTypes.arrayOf(PropTypes.object),
     onEdit: PropTypes.func,
     userId: PropTypes.string,
     toggleDisplayFilterOnLaunches: PropTypes.func,
@@ -217,8 +217,8 @@ export class FilterGrid extends Component {
       component: DisplayOnLaunchColumn,
       customProps: {
         userFilters: this.props.userFilters,
-        onChangeDisplay: (id) => {
-          this.props.toggleDisplayFilterOnLaunches(id);
+        onChangeDisplay: (filter, method) => {
+          this.props.toggleDisplayFilterOnLaunches(filter, method);
           this.props.tracking.trackEvent(FILTERS_PAGE_EVENTS.CLICK_DISPLAY_ON_LAUNCH_SWITCHER);
         },
       },
