@@ -1,6 +1,7 @@
 import { Component } from 'react';
 import track from 'react-tracking';
 import PropTypes from 'prop-types';
+import { FormattedMessage } from 'react-intl';
 import classNames from 'classnames/bind';
 import { Input } from 'components/inputs/input';
 import { FOOTER_EVENTS } from 'components/main/analytics/events';
@@ -85,7 +86,7 @@ export class PageSizeControl extends Component {
             {this.props.pageSize}
           </span>
         )}{' '}
-        per page
+        <FormattedMessage id="PageSizeControl.perPage" defaultMessage="per page" />
       </div>
     );
   }
