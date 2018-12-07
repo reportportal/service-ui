@@ -86,7 +86,7 @@ export class PageSizeControl extends Component {
             {this.props.pageSize}
           </span>
         )}{' '}
-        <FormattedMessage id="pageSizeControl.perPage" defaultMessage="per page" />
+        <FormattedMessage id="PageSizeControl.perPage" defaultMessage="per page" />
       </div>
     );
   }
