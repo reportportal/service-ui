@@ -31,11 +31,11 @@ const messages = defineMessages({
     filter: filter && filter.length < 3 ? 'filterNameError' : undefined,
   }),
   onChange: (vals, dispatch, props) => {
-    if (vals.filter && vals.filter.length < 3) {
+    if (!vals.filter || vals.filter.length < 3) {
       return;
     }
-    vals.filter && props.tracking.trackEvent(FILTERS_PAGE_EVENTS.SEARCH_FILTER);
-    props.onFilterChange(vals.filter || undefined);
+    props.tracking.trackEvent(FILTERS_PAGE_EVENTS.SEARCH_FILTER);
+    props.onFilterChange(vals.filter);
   },
 })
 @injectIntl
