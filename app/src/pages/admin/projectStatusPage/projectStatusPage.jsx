@@ -29,12 +29,12 @@ export class ProjectStatusPage extends Component {
   };
 
   state = {
-    periodValue: PERIOD_VALUES.threeMonths,
+    selectedPeriod: PERIOD_VALUES.threeMonths,
   };
 
-  onPeriodChange = (periodValue) => this.setState({ periodValue });
+  onPeriodChange = (selectedPeriod) => this.setState({ selectedPeriod });
 
-  toggleItems = [
+  periods = [
     { value: PERIOD_VALUES.sixMonths, label: this.props.intl.formatMessage(messages.sixMonths) },
     {
       value: PERIOD_VALUES.threeMonths,
@@ -48,9 +48,9 @@ export class ProjectStatusPage extends Component {
       <div className={cx('project-status-page')}>
         <div className={cx('toggle-container')}>
           <ToggleButton
-            items={this.toggleItems}
-            value={this.state.periodValue}
-            separatedMode
+            items={this.periods}
+            value={this.state.selectedPeriod}
+            separated
             onChange={this.onPeriodChange}
           />
         </div>

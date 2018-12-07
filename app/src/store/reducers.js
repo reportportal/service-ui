@@ -17,7 +17,7 @@ import { testItemReducer } from 'controllers/testItem';
 import { stepReducer } from 'controllers/step';
 import { itemsHistoryReducer } from 'controllers/itemsHistory';
 import { logReducer } from 'controllers/log';
-import { adminReducer } from 'controllers/admin';
+import { administrateReducer } from 'controllers/administrate';
 
 export default {
   appInfo: appInfoReducer,
@@ -39,5 +39,5 @@ export default {
   step: stepReducer,
   log: logReducer,
   itemsHistory: itemsHistoryReducer,
-  admin: adminReducer,
+  administrate: administrateReducer,
 };
