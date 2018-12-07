@@ -14,7 +14,7 @@ import {
 } from 'controllers/user';
 import { canSeeMembers } from 'common/utils/permissions';
 import { PROJECT_MEMBERS_PAGE, PROJECT_SETTINGS_PAGE } from 'controllers/pages/constants';
-import { connect } from 'react-redux';
+import { MobileHeader } from 'layouts/common/mobileHeader';
 import { ProjectSelector } from './projectSelector';
 import { UserBlock } from './userBlock';
 import styles from './appHeader.scss';
