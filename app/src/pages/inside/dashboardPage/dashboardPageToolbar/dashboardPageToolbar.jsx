@@ -27,10 +27,10 @@ const messages = defineMessages({
     dashboardName: dashboardName && dashboardName.length < 3 && 'dashboardNameSearchHint',
   }),
   onChange: (vals, dispatch, props) => {
-    if (vals.dashboardName && vals.dashboardName.length < 3) {
+    if (!vals.dashboardName || vals.dashboardName.length < 3) {
       return;
     }
-    props.onFilterChange(vals.dashboardName || undefined);
+    props.onFilterChange(vals.dashboardName);
   },
 })
 @injectIntl
