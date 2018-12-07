@@ -25,15 +25,8 @@ import styles from './toggleButton.scss';
 
 const cx = classNames.bind(styles);
 
-export const ToggleButton = ({
-  items,
-  value,
-  separatedMode,
-  onChange,
-  mobileDisabled,
-  disabled,
-}) => (
-  <div className={cx('toggle-button', { separated: separatedMode })}>
+export const ToggleButton = ({ items, value, separated, onChange, mobileDisabled, disabled }) => (
+  <div className={cx('toggle-button', { separated })}>
     {items.map((item) => (
       <div
         key={item.value}
@@ -59,7 +52,7 @@ ToggleButton.propTypes = {
   ),
   disabled: PropTypes.bool,
   mobileDisabled: PropTypes.bool,
-  separatedMode: PropTypes.bool,
+  separated: PropTypes.bool,
   value: PropTypes.string,
   onChange: PropTypes.func,
 };
@@ -68,6 +61,6 @@ ToggleButton.defaultProps = {
   value: '',
   disabled: false,
   mobileDisabled: false,
-  separatedMode: false,
+  separated: false,
   onChange: () => {},
 };

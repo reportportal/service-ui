@@ -11,7 +11,7 @@ import {
   projectIdSelector,
   projectSectionSelector,
 } from 'controllers/pages';
-import { fetchProjectInfoAction } from 'controllers/projectDetails';
+import { fetchProjectAction } from 'controllers/administrate';
 import { SETTINGS, MEMBERS, EVENTS } from 'common/constants/projectSections';
 import { GhostButton } from 'components/buttons/ghostButton';
 import AddProjectIcon from 'common/img/add-project-inline.svg';
@@ -73,7 +73,7 @@ const HEADER_BUTTONS = [
         type: PROJECT_DETAILS_PAGE,
         payload: { projectId, projectSection: section },
       }),
-    fetchProjectInfoAction,
+    fetchProjectAction,
   },
 )
 @injectIntl
@@ -83,7 +83,7 @@ export class ProjectsPage extends Component {
     section: PropTypes.string,
     projectId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     redirectToSection: PropTypes.func.isRequired,
-    fetchProjectInfoAction: PropTypes.func.isRequired,
+    fetchProjectAction: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
@@ -165,7 +165,7 @@ export class ProjectsPage extends Component {
       return <h1>Projects</h1>;
     }
 
-    this.props.fetchProjectInfoAction();
+    this.props.fetchProjectAction();
     switch (section) {
       case SETTINGS:
         return <h1>Project Settings</h1>;

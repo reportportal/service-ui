@@ -70,7 +70,7 @@ storiesOf('Components/Buttons/ToggleButton', module)
         { value: 'second', label: 'second' },
         { value: 'third', label: 'third' },
       ]}
-      value={'second'}
+      value="second"
     />
   ))
   .add('with disabled', () => (
@@ -90,19 +90,19 @@ storiesOf('Components/Buttons/ToggleButton', module)
         { value: 'second', label: 'second' },
         { value: 'third', label: 'third' },
       ]}
-      value={'second'}
+      value="second"
       disabled
     />
   ))
-  .add('with separatedMode', () => (
+  .add('with separated', () => (
     <ToggleButton
       items={[
         { value: 'first', label: 'first' },
         { value: 'second', label: 'second' },
         { value: 'third', label: 'third' },
       ]}
-      value={'second'}
-      separatedMode
+      value="second"
+      separated
       onChange={action('itemClicked')}
     />
   ))
@@ -113,7 +113,7 @@ storiesOf('Components/Buttons/ToggleButton', module)
         { value: 'second', label: 'second' },
         { value: 'third', label: 'third' },
       ]}
-      value={'second'}
+      value="second"
       onChange={action('itemClicked')}
     />
   ));
