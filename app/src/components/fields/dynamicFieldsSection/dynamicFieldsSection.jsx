@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { injectIntl, intlShape } from 'react-intl';
 import classNames from 'classnames/bind';
-import { TEXT_TYPE, ARRAY_TYPE, DROPDOWN_TYPE, DATE_TYPE } from 'common/constants/fieldTypes';
-import { TextField, DropdownField, DateField, ArrayField } from './fields';
+import { FILEDS_MAP } from './constants';
 import styles from './dynamicFieldsSection.scss';
 
 const cx = classNames.bind(styles);
@@ -21,18 +20,11 @@ export class DynamicFieldsSection extends Component {
     customBlock: null,
   };
 
-  fieldsMap = {
-    [TEXT_TYPE]: TextField,
-    [DROPDOWN_TYPE]: DropdownField,
-    [DATE_TYPE]: DateField,
-    [ARRAY_TYPE]: ArrayField,
-  };
-
   createFields = () => {
     const { fields = [], customBlock } = this.props;
 
     return fields.map((field) => {
-      const FieldComponent = this.fieldsMap[field.type];
+      const FieldComponent = FILEDS_MAP[field.type];
 
       return <FieldComponent key={field.id} field={field} customBlock={customBlock} />;
     });
