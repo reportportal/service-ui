@@ -9,7 +9,7 @@
     }
   }
   @media (max-width: $SCREEN_XS_MAX) {
-    width: 100%;
+    width: calc(100% - 40px);
     padding: 25px 15px 15px 15px;
   }
 }
