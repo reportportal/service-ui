@@ -3,8 +3,6 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { injectIntl, intlShape, defineMessages } from 'react-intl';
 import { InputTagsSearch } from 'components/inputs/inputTagsSearch';
-import { activeProjectSelector } from 'controllers/user';
-import { connect } from 'react-redux';
 import styles from './inputConditionalTags.scss';
 
 const cx = classNames.bind(styles);
@@ -16,9 +14,6 @@ const messages = defineMessages({
 });
 
 @injectIntl
-@connect((state) => ({
-  activeProject: activeProjectSelector(state),
-}))
 export class InputConditionalTags extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
