@@ -149,9 +149,7 @@ export class ItemInfo extends Component {
           <div className={cx({ 'owner-tags-block': editDisabled })}>
             {value.owner && <OwnerBlock owner={value.owner} />}
             {value.attributes &&
-              !!Object.keys(value.attributes).length && (
-                <AttributesBlock attributes={value.attributes} />
-              )}
+              !!value.attributes.length && <AttributesBlock attributes={value.attributes} />}
           </div>
           {isStepLevel && (
             <div className={cx('mobile-info')}>
