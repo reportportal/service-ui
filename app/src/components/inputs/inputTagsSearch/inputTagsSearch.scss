@@ -63,6 +63,11 @@
       }
     }
     .Select.is-disabled {
+      &:hover {
+        .Select-control {
+          border-color: $COLOR--gray-80;
+        }
+      }
       .Select-control {
         min-height: 30px;
         background-color: $COLOR--gray-91;

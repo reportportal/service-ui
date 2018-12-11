@@ -7,23 +7,23 @@ import { InputBigSwitcher } from 'components/inputs/inputBigSwitcher';
 import { InputDropdown } from 'components/inputs/inputDropdown';
 import { FormField } from 'components/fields/formField';
 import { labelWidth } from 'pages/inside/settingsPage/settingsTabs/notificationsTab/forms/constants';
-import styles from './emailEnableForm.scss';
+import styles from './notificationsEnableForm.scss';
 
 const messages = defineMessages({
   toggleNotificationsLabel: {
-    id: 'EmailEnableForm.toggleNotificationsLabel',
+    id: 'NotificationsEnableForm.toggleNotificationsLabel',
     defaultMessage: 'E-mail notification',
   },
   toggleNotificationsNote: {
-    id: 'EmailEnableForm.toggleNotificationsNote',
+    id: 'NotificationsEnableForm.toggleNotificationsNote',
     defaultMessage: 'Send e-mail notifications about launches finished',
   },
   turnOn: {
-    id: 'EmailEnableForm.turnOn',
+    id: 'NotificationsEnableForm.turnOn',
     defaultMessage: 'On',
   },
   turnOff: {
-    id: 'EmailEnableForm.turnOff',
+    id: 'NotificationsEnableForm.turnOff',
     defaultMessage: 'Off',
   },
 });
@@ -31,22 +31,22 @@ const cx = classNames.bind(styles);
 
 @injectIntl
 @reduxForm({
-  form: 'toggleEmailNotification',
+  form: 'notificationsEnableForm',
   onChange: (values, dispatch, props) => {
     props.submit();
   },
   destroyOnUnmount: false,
 })
-export class EmailEnableForm extends Component {
+export class NotificationsEnableForm extends Component {
   static propTypes = {
     initialize: PropTypes.func,
-    emailEnabled: PropTypes.object,
+    enabled: PropTypes.object,
     intl: intlShape.isRequired,
     readOnly: PropTypes.bool,
   };
   static defaultProps = {
     initialize: () => {},
-    emailEnabled: {},
+    enabled: {},
     readOnly: true,
   };
   getDropdownInputConfig = () => [
@@ -71,7 +71,7 @@ export class EmailEnableForm extends Component {
             customBlock={{
               node: <p>{intl.formatMessage(messages.toggleNotificationsNote)}</p>,
             }}
-            name="emailEnabled"
+            name="enabled"
             disabled={readOnly}
             format={Boolean}
             parse={Boolean}
@@ -85,7 +85,7 @@ export class EmailEnableForm extends Component {
             customBlock={{
               node: <p>{intl.formatMessage(messages.toggleNotificationsNote)}</p>,
             }}
-            name="emailEnabled"
+            name="enabled"
             fieldWrapperClassName={cx('form-input')}
           >
             <InputDropdown options={this.getDropdownInputConfig()} />

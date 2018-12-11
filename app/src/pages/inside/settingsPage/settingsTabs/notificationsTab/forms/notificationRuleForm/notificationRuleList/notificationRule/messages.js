@@ -2,87 +2,87 @@ import { defineMessages } from 'react-intl';
 
 export const messages = defineMessages({
   recipientsLabel: {
-    id: 'EmailCase.recipientsLabel',
+    id: 'NotificationRule.recipientsLabel',
     defaultMessage: 'Recipients',
   },
   recipientsPlaceholder: {
-    id: 'EmailCase.recipientsPlaceholder',
+    id: 'NotificationRule.recipientsPlaceholder',
     defaultMessage: 'Select team members',
   },
   recipientsHint: {
-    id: 'EmailCase.recipientsHint',
+    id: 'NotificationRule.recipientsHint',
     defaultMessage: 'Please enter correct email',
   },
   launchOwnerLabel: {
-    id: 'EmailCase.launchOwnerLabel',
+    id: 'NotificationRule.launchOwnerLabel',
     defaultMessage: 'Launch owner (who launched - that received)',
   },
   inCaseLabel: {
-    id: 'EmailCase.inCaseLabel',
+    id: 'NotificationRule.inCaseLabel',
     defaultMessage: 'In case',
   },
   launchNamesLabel: {
-    id: 'EmailCase.launchNamesLabel',
+    id: 'NotificationRule.launchNamesLabel',
     defaultMessage: 'Launch names (and)',
   },
   launchNamesPlaceholder: {
-    id: 'EmailCase.launchNamesPlaceholder',
+    id: 'NotificationRule.launchNamesPlaceholder',
     defaultMessage: 'Select launches names',
   },
   launchNamesHint: {
-    id: 'EmailCase.launchNamesHint',
+    id: 'NotificationRule.launchNamesHint',
     defaultMessage: 'At least 3 symbols required for autocomplete.',
   },
   launchNamesNote: {
-    id: 'EmailCase.launchNamesNote',
+    id: 'NotificationRule.launchNamesNote',
     defaultMessage: 'Send notifications about selected launches finished',
   },
   tagsLabel: {
-    id: 'EmailCase.tagsLabel',
+    id: 'NotificationRule.tagsLabel',
     defaultMessage: 'Tags (and)',
   },
   tagsPlaceholder: {
-    id: 'EmailCase.tagsPlaceholder',
+    id: 'NotificationRule.tagsPlaceholder',
     defaultMessage: 'Select tags',
   },
   tagsHint: {
-    id: 'EmailCase.tagsHint',
+    id: 'NotificationRule.tagsHint',
     defaultMessage: 'At least 1 symbol required for autocomplete.',
   },
   tagsNote: {
-    id: 'EmailCase.tagsNote',
+    id: 'NotificationRule.tagsNote',
     defaultMessage: 'Send notifications about launches containing specified tags',
   },
   dropdownValueAlways: {
-    id: 'EmailCase.dropdownValueAlways',
+    id: 'NotificationRule.dropdownValueAlways',
     defaultMessage: 'Always',
   },
   dropdownValueMore10: {
-    id: 'EmailCase.dropdownValueMore10',
+    id: 'NotificationRule.dropdownValueMore10',
     defaultMessage: '> 10% of items have issues',
   },
   dropdownValueMore20: {
-    id: 'EmailCase.dropdownValueMore20',
+    id: 'NotificationRule.dropdownValueMore20',
     defaultMessage: '> 20% of items have issues',
   },
   dropdownValueMore50: {
-    id: 'EmailCase.dropdownValueMore50',
+    id: 'NotificationRule.dropdownValueMore50',
     defaultMessage: '> 50% of items have issues',
   },
   dropdownValueFailed: {
-    id: 'EmailCase.dropdownValueFailed',
+    id: 'NotificationRule.dropdownValueFailed',
     defaultMessage: 'Launch has issues',
   },
   dropdownValueToInvestigate: {
-    id: 'EmailCase.dropdownValueToInvestigate',
+    id: 'NotificationRule.dropdownValueToInvestigate',
     defaultMessage: 'Launch has "To Investigate" items',
   },
   controlPanelName: {
-    id: 'EmailCase.controlPanelName',
+    id: 'NotificationRule.controlPanelName',
     defaultMessage: 'Rule',
   },
   duplicationErrorMessage: {
-    id: 'EmailCase.duplicationErrorMessage',
+    id: 'NotificationRule.duplicationErrorMessage',
     defaultMessage: "Such notification rule already exists. You can't create duplicate.",
   },
 });

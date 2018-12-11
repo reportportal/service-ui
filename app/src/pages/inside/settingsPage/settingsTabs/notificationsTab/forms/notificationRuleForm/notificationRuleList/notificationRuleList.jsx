@@ -11,13 +11,13 @@ import { showModalAction } from 'controllers/modal';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { defaultRecipient } from 'pages/inside/settingsPage/settingsTabs/notificationsTab/forms/constants';
-import { EmailCase } from './emailCase';
-import styles from './emailCasesList.scss';
-import PlusIcon from './img/ic-plus-inline.svg';
+import PlusIcon from 'common/img/plus-button-inline.svg';
+import { NotificationRule } from './notificationRule';
+import styles from './notificationRuleList.scss';
 
 const messages = defineMessages({
   addNewRuleButton: {
-    id: 'EmailCaseList.addNewRuleButton',
+    id: 'NotificationRuleList.addNewRuleButton',
     defaultMessage: 'Add New Rule',
   },
 });
@@ -28,7 +28,7 @@ const cx = classNames.bind(styles);
   showModal: showModalAction,
 })
 @track()
-export class EmailCaseList extends Component {
+export class NotificationRuleList extends Component {
   static propTypes = {
     showModal: PropTypes.func,
     intl: intlShape.isRequired,
@@ -46,6 +46,7 @@ export class EmailCaseList extends Component {
     fields: {},
     readOnly: false,
   };
+
   onDelete = (index, showConfirmation) => {
     const { showModal } = this.props;
 
@@ -54,20 +55,23 @@ export class EmailCaseList extends Component {
         id: 'deleteNotificationRuleModal',
         data: {
           index: index + 1,
-          onSubmit: () => this.removeEmailCase(index),
+          onSubmit: () => this.removeRule(index),
         },
       });
     } else {
-      this.removeEmailCase(index);
+      this.removeRule(index);
     }
   };
+
   getNumberOfConfirmedRules = (fields) =>
     fields.getAll().filter(({ confirmed }) => confirmed).length;
-  addEmailCase = () => {
+
+  addRule = () => {
     this.props.tracking.trackEvent(SETTINGS_PAGE_EVENTS.ADD_RULE_BTN_NOTIFICATIONS);
     this.props.fields.push(defaultRecipient);
   };
-  removeEmailCase = (index) => {
+
+  removeRule = (index) => {
     this.props.fields.remove(index);
   };
 
@@ -91,10 +95,10 @@ export class EmailCaseList extends Component {
           };
 
           return (
-            <EmailCase
+            <NotificationRule
               key={`index_${id}`} // eslint-disable-line react/no-array-index-key
               id={id}
-              emailCase={item}
+              rule={item}
               onDelete={this.onDelete}
               {...customProps}
             />
@@ -102,7 +106,7 @@ export class EmailCaseList extends Component {
         })}
         {!readOnly && (
           <div className={cx('notification-form-button')}>
-            <GhostButton icon={PlusIcon} onClick={this.addEmailCase}>
+            <GhostButton icon={PlusIcon} onClick={this.addRule}>
               {intl.formatMessage(messages.addNewRuleButton)}
             </GhostButton>
           </div>

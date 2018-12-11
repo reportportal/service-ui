@@ -6,9 +6,9 @@ import {
   FETCH_PROJECT_PREFERENCES_SUCCESS,
   TOGGLE_DISPLAY_FILTER_ON_LAUNCHES,
   UPDATE_CONFIGURATION_ATTRIBUTES,
-  UPDATE_EMAIL_CONFIG_SUCCESS,
+  UPDATE_NOTIFICATIONS_CONFIG_SUCCESS,
 } from './constants';
-import { projectPreferencesSelector, projectEmailConfigurationSelector } from './selectors';
+import { projectPreferencesSelector, notificationIntegrationNameSelector } from './selectors';
 
 const fetchProjectSuccessAction = (project) => ({
   type: FETCH_PROJECT_SUCCESS,
@@ -30,16 +30,25 @@ const updateProjectPreferencesAction = (settings) => (dispatch, getState) =>
     method: 'PUT',
     data: settings,
   });
-export const updateProjectEmailConfig = (emailConfig) => (dispatch, getState) => {
-  const currentConfig = projectEmailConfigurationSelector(getState());
-  const newConfig = { ...currentConfig, ...emailConfig };
-  fetch(URLS.projectPreferencesEmailConfiguration(activeProjectSelector(getState())), {
+export const updateProjectNotificationsIntegrationAction = ({ enabled, rules }) => (
+  dispatch,
+  getState,
+) => {
+  const integrationName = notificationIntegrationNameSelector(getState());
+  const newConfig = {
+    integrationName,
+    enabled,
+    integrationParameters: {
+      rules,
+    },
+  };
+  fetch(URLS.projectIntegration(activeProjectSelector(getState())), {
     method: 'PUT',
     data: newConfig,
   }).then(() => {
     dispatch({
-      type: UPDATE_EMAIL_CONFIG_SUCCESS,
-      payload: newConfig,
+      type: UPDATE_NOTIFICATIONS_CONFIG_SUCCESS,
+      payload: { enabled, rules },
     });
   });
 };
