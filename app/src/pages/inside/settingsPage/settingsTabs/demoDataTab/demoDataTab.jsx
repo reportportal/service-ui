@@ -88,15 +88,12 @@ export class DemoDataTab extends Component {
 
   onGenerateDemoData = () => {
     const { intl, projectId, tracking } = this.props;
-    const data = {
-      isCreateDashboard: 'false',
-    };
 
     this.setState({
       isLoading: true,
     });
     tracking.trackEvent(SETTINGS_PAGE_EVENTS.GENERATE_DATA_BTN);
-    fetch(URLS.generateDemoData(projectId), { method: 'POST', data })
+    fetch(URLS.generateDemoData(projectId), { method: 'POST' })
       .then(() => {
         this.props.showNotification({
           message: intl.formatMessage(messages.generateDemoDataSuccess),
