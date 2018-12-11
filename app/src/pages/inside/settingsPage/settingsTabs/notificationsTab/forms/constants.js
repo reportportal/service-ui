@@ -1,19 +1,18 @@
 export const labelWidth = 140;
-export const OWNER = 'OWNER';
+export const launchStatuses = {
+  ALWAYS: 'always',
+  MORE_10: 'more10',
+  MORE_20: 'more20',
+  MORE_50: 'more50',
+  FAILED: 'failed',
+  TO_INVESTIGATE: 'toInvestigate',
+};
 export const defaultRecipient = {
-  launchNames: [],
+  launchNameRule: [],
   recipients: [],
   informOwner: true,
-  sendCase: 'ALWAYS',
-  tags: [],
+  launchStatsRule: launchStatuses.ALWAYS,
+  launchTagRule: [],
   submitted: false,
   confirmed: false,
-};
-export const launchStatuses = {
-  ALWAYS: 'ALWAYS',
-  MORE_10: 'MORE_10',
-  MORE_20: 'MORE_20',
-  MORE_50: 'MORE_50',
-  FAILED: 'FAILED',
-  TO_INVESTIGATE: 'TO_INVESTIGATE',
 };

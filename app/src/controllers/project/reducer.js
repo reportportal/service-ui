@@ -6,7 +6,8 @@ import {
   FETCH_PROJECT_PREFERENCES_SUCCESS,
   TOGGLE_DISPLAY_FILTER_ON_LAUNCHES,
   UPDATE_CONFIGURATION_ATTRIBUTES,
-  UPDATE_EMAIL_CONFIG_SUCCESS,
+  UPDATE_NOTIFICATIONS_CONFIG_SUCCESS,
+  EMAIL_NOTIFICATION_INTEGRATION_TYPE,
 } from './constants';
 
 const toggleFilter = (filters = [], filter) => {
@@ -15,6 +16,26 @@ const toggleFilter = (filters = [], filter) => {
     return filters.filter((item) => item !== filter);
   }
   return [...filters, filter];
+};
+
+const getUpdatedIntegrations = (integrations = [], { enabled, rules }) => {
+  const emailIndex = integrations.findIndex(
+    (integration) => integration.integrationType.groupType === EMAIL_NOTIFICATION_INTEGRATION_TYPE,
+  );
+  if (emailIndex === -1) {
+    return integrations;
+  }
+  const updatedNotificationsIntegration = {
+    ...integrations[emailIndex],
+    enabled,
+    integrationParameters: {
+      rules,
+    },
+  };
+
+  const updatedIntegrations = [...integrations];
+  updatedIntegrations.splice(emailIndex, 1, updatedNotificationsIntegration);
+  return updatedIntegrations;
 };
 
 export const projectInfoReducer = (state = PROJECT_INFO_INITIAL_STATE, { type, payload }) => {
@@ -32,11 +53,12 @@ export const projectInfoReducer = (state = PROJECT_INFO_INITIAL_STATE, { type, p
           },
         },
       };
-    case UPDATE_EMAIL_CONFIG_SUCCESS:
+    case UPDATE_NOTIFICATIONS_CONFIG_SUCCESS: {
       return {
         ...state,
-        ...{ configuration: { ...state.configuration, emailConfiguration: payload } },
+        integrations: getUpdatedIntegrations(state.integrations, payload),
       };
+    }
     default:
       return state;
   }

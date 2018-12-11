@@ -20,9 +20,9 @@ import {
 } from 'pages/inside/settingsPage/settingsTabs/notificationsTab/forms/constants';
 import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import IconDelete from 'common/img/circle-cross-icon-inline.svg';
-import styles from './emailCase.scss';
 import { PencilCheckbox } from './pencilCheckbox';
 import { messages } from './messages';
+import styles from './notificationRule.scss';
 
 const cx = className.bind(styles);
 @injectIntl
@@ -32,10 +32,10 @@ const cx = className.bind(styles);
   launchNameSearch: URLS.launchNameSearch(activeProjectSelector(state)),
 }))
 @track()
-export class EmailCase extends Component {
+export class NotificationRule extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
-    emailCase: PropTypes.string,
+    rule: PropTypes.string,
     projectUsernamesSearch: PropTypes.string,
     launchTagsSearch: PropTypes.string,
     launchNameSearch: PropTypes.string,
@@ -54,7 +54,7 @@ export class EmailCase extends Component {
     }).isRequired,
   };
   static defaultProps = {
-    emailCase: '',
+    rule: '',
     projectUsernamesSearch: '',
     launchTagsSearch: '',
     launchNameSearch: '',
@@ -71,16 +71,19 @@ export class EmailCase extends Component {
   state = {
     isDuplicating: false,
   };
+
   onDelete = (index) => () => {
     const { confirmed, submitted, tracking } = this.props;
     const showConfirmation = submitted || confirmed;
     tracking.trackEvent(SETTINGS_PAGE_EVENTS.DELETE_RULE_NOTIFICATIONS);
     this.props.onDelete(index, showConfirmation);
   };
+
   onError = (err) => {
     const message = this.getErrorMessage(err);
     this.setState({ isDuplicating: message });
   };
+
   getDropdownInputConfig = () => {
     const { intl } = this.props;
     return [
@@ -110,6 +113,7 @@ export class EmailCase extends Component {
       },
     ];
   };
+
   getErrorMessage = (err) => {
     const { intl } = this.props;
     switch (err) {
@@ -119,12 +123,15 @@ export class EmailCase extends Component {
         return false;
     }
   };
+
   formatOptions = (options) =>
     options && options.map((option) => ({ value: option, label: option }));
-  parseOptions = (options) => (options && options.map((option) => option.value)) || undefined;
+  parseOptions = (options) =>
+    (Array.isArray(options) && options.map((option) => option.value)) || undefined;
   validateRecipientsNewItem = ({ label }) => label && validate.email(label);
   validateLaunchNamesNewItem = ({ label }) => label && label.length >= 3;
   validateTagsNewItem = ({ label }) => label && label.length >= 1;
+
   render() {
     const {
       projectUsernamesSearch,
@@ -132,7 +139,7 @@ export class EmailCase extends Component {
       launchNameSearch,
       intl,
       id,
-      emailCase,
+      rule,
       confirmed,
       readOnly,
       numberOfConfirmedRules,
@@ -152,11 +159,7 @@ export class EmailCase extends Component {
           {!readOnly && (
             <div className={cx('control-panel-buttons')}>
               <div className={cx('control-panel-button')}>
-                <FieldProvider
-                  name={`${emailCase}.confirmed`}
-                  format={Boolean}
-                  onError={this.onError}
-                >
+                <FieldProvider name={`${rule}.confirmed`} format={Boolean} onError={this.onError}>
                   <PencilCheckbox />
                 </FieldProvider>
               </div>
@@ -171,7 +174,7 @@ export class EmailCase extends Component {
         {isDuplicating && <p className={cx('form-invalid-message')}>{isDuplicating}</p>}
         <FormField
           label={intl.formatMessage(messages.recipientsLabel)}
-          name={`${emailCase}.recipients`}
+          name={`${rule}.recipients`}
           format={this.formatOptions}
           parse={this.parseOptions}
           disabled={!editMode}
@@ -197,7 +200,7 @@ export class EmailCase extends Component {
           </FieldErrorHint>
         </FormField>
         <FormField
-          name={`${emailCase}.informOwner`}
+          name={`${rule}.informOwner`}
           format={Boolean}
           disabled={!editMode}
           onChange={() =>
@@ -210,7 +213,7 @@ export class EmailCase extends Component {
         <FormField
           label={intl.formatMessage(messages.inCaseLabel)}
           labelWidth={labelWidth}
-          name={`${emailCase}.sendCase`}
+          name={`${rule}.launchStatsRule`}
           disabled={!editMode}
           fieldWrapperClassName={cx('form-input')}
           onChange={() =>
@@ -224,7 +227,7 @@ export class EmailCase extends Component {
           customBlock={{
             node: <p>{intl.formatMessage(messages.launchNamesNote)}</p>,
           }}
-          name={`${emailCase}.launchNames`}
+          name={`${rule}.launchNameRule`}
           format={this.formatOptions}
           parse={this.parseOptions}
           disabled={!editMode}
@@ -252,7 +255,7 @@ export class EmailCase extends Component {
             node: <p>{intl.formatMessage(messages.tagsNote)}</p>,
           }}
           fieldWrapperClassName={cx('form-input')}
-          name={`${emailCase}.tags`}
+          name={`${rule}.launchTagRule`}
           format={this.formatOptions}
           parse={this.parseOptions}
           disabled={!editMode}

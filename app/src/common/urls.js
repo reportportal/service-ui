@@ -111,8 +111,7 @@ export const URLS = {
       interval,
     })}`,
 
-  projectPreferencesEmailConfiguration: (activeProject) =>
-    `${urlBase}project/${activeProject}/emailconfig`,
+  projectIntegration: (activeProject) => `${urlBase}project/${activeProject}/integration`,
   suite: (activeProject, suiteId) => `${urlBase}${activeProject}/item/${suiteId}`,
 
   testItems: (activeProject, ids) => `${urlBase}${activeProject}/item${getQueryParams({ ids })}`,

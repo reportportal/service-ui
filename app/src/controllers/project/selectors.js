@@ -1,6 +1,10 @@
 import { createSelector } from 'reselect';
 import { OWNER } from 'common/constants/permissions';
-import { ANALYZER_ATTRIBUTE_PREFIX, JOB_ATTRIBUTE_PREFIX } from './constants';
+import {
+  ANALYZER_ATTRIBUTE_PREFIX,
+  JOB_ATTRIBUTE_PREFIX,
+  EMAIL_NOTIFICATION_INTEGRATION_TYPE,
+} from './constants';
 
 const projectSelector = (state) => state.project || {};
 
@@ -11,6 +15,8 @@ export const projectConfigSelector = (state) => projectInfoSelector(state).confi
 export const projectMembersSelector = (state) => projectInfoSelector(state).users || [];
 
 export const projectCreationDateSelector = (state) => projectInfoSelector(state).creationDate || 0;
+
+export const projectIntegrationsSelector = (state) => projectInfoSelector(state).integrations || [];
 
 export const projectPreferencesSelector = (state) => projectSelector(state).preferences || {};
 
@@ -45,23 +51,31 @@ export const projectAnalyzerConfigSelector = (state) =>
 
 export const externalSystemSelector = (state) => projectConfigSelector(state).externalSystem || [];
 
-export const projectEmailConfigurationSelector = (state) =>
-  projectConfigSelector(state).emailConfiguration || {};
+const createTypedIntegrationsSelector = (integrationType) =>
+  createSelector(projectIntegrationsSelector, (integrations) =>
+    integrations.filter((integration) => integration.integrationType.groupType === integrationType),
+  );
 
-export const projectEmailCasesSelector = createSelector(
-  projectEmailConfigurationSelector,
-  ({ emailCases }) =>
-    emailCases.map((emailCase) => ({
-      ...emailCase,
-      informOwner: emailCase.recipients.includes(OWNER),
+export const notificationIntegrationSelector = (state) =>
+  createTypedIntegrationsSelector(EMAIL_NOTIFICATION_INTEGRATION_TYPE)(state)[0];
+
+export const notificationIntegrationNameSelector = (state) =>
+  notificationIntegrationSelector(state).integrationType.name;
+
+const notificationIntegrationParametersSelector = (state) =>
+  notificationIntegrationSelector(state).integrationParameters || {};
+
+export const notificationRulesSelector = createSelector(
+  notificationIntegrationParametersSelector,
+  ({ rules = [] }) =>
+    rules.map((rule) => ({
+      ...rule,
+      informOwner: rule.recipients.includes(OWNER),
       submitted: true,
       confirmed: true,
-      recipients: emailCase.recipients.filter((item) => item !== OWNER),
+      recipients: rule.recipients.filter((item) => item !== OWNER),
     })),
 );
-
-export const projectEmailEnabledSelector = (state) =>
-  projectEmailConfigurationSelector(state).emailEnabled || false;
 
 export const defectColorsSelector = createSelector(projectConfigSelector, (config) => {
   const colors = {};

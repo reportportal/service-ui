@@ -9,7 +9,7 @@ export {
   toggleDisplayFilterOnLaunchesAction,
   fetchConfigurationAttributesAction,
   updateConfigurationAttributesAction,
-  updateProjectEmailConfig,
+  updateProjectNotificationsIntegrationAction,
 } from './actionCreators';
 export { projectReducer } from './reducer';
 export {
@@ -19,10 +19,9 @@ export {
   userFiltersSelector,
   defectColorsSelector,
   defectTypesSelector,
-  projectAnalyzerConfigSelector,
-  projectEmailConfigurationSelector,
-  projectEmailCasesSelector,
-  projectEmailEnabledSelector,
+  notificationIntegrationSelector,
+  notificationRulesSelector,
+  notificationIntegrationNameSelector,
   externalSystemSelector,
   analyzerAttributesSelector,
   jobAttributesSelector,

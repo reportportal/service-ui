@@ -2,15 +2,15 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {
-  updateProjectEmailConfig,
-  projectEmailCasesSelector,
-  projectEmailEnabledSelector,
+  updateProjectNotificationsIntegrationAction,
+  notificationRulesSelector,
+  notificationIntegrationSelector,
 } from 'controllers/project';
 import { OWNER } from 'common/constants/permissions';
 import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
 import classNames from 'classnames/bind';
 import { canConfigreEmailNotifications } from 'common/utils/permissions';
-import { EmailEnableForm, EmailCaseForm } from './forms';
+import { NotificationsEnableForm, NotificationRuleForm } from './forms';
 import styles from './notificationsTab.scss';
 
 const cx = classNames.bind(styles);
@@ -19,15 +19,15 @@ const cx = classNames.bind(styles);
   (state) => ({
     projectRole: activeProjectRoleSelector(state),
     userRole: userAccountRoleSelector(state),
-    emailEnabled: projectEmailEnabledSelector(state),
-    emailCases: projectEmailCasesSelector(state),
+    enabled: notificationIntegrationSelector(state).enabled,
+    rules: notificationRulesSelector(state),
   }),
-  { update: updateProjectEmailConfig },
+  { update: updateProjectNotificationsIntegrationAction },
 )
 export class NotificationsTab extends Component {
   static propTypes = {
-    emailEnabled: PropTypes.bool,
-    emailCases: PropTypes.array,
+    enabled: PropTypes.bool,
+    rules: PropTypes.array,
     update: PropTypes.func,
     onSubmit: PropTypes.func,
     showModal: PropTypes.func,
@@ -35,17 +35,18 @@ export class NotificationsTab extends Component {
     userRole: PropTypes.string,
   };
   static defaultProps = {
-    emailEnabled: false,
-    emailCases: [],
+    enabled: false,
+    rules: [],
     update: () => {},
     onSubmit: () => {},
     showModal: () => {},
     projectRole: '',
     userRole: '',
   };
+
   submitForm = (values = {}, dispatch, formProps) => {
-    const { update, emailEnabled, emailCases } = this.props;
-    const projectEmailConfig = { emailEnabled, emailCases };
+    const { update, enabled, rules } = this.props;
+    const projectEmailConfig = { enabled, rules };
     const { valid, dirty } = formProps;
     const config = { ...projectEmailConfig, ...values };
     const isAbleToSubmit = this.isAbleToSubmit(config);
@@ -55,38 +56,51 @@ export class NotificationsTab extends Component {
       update(newConfig);
     }
   };
+
   isAbleToEditForm = () =>
     canConfigreEmailNotifications(this.props.userRole, this.props.projectRole);
-  isAbleToSubmit = ({ emailCases }) => emailCases.every(({ confirmed }) => confirmed);
-  convertEmailCaseForSubmission = (obj) => {
-    const { informOwner, launchNames, recipients, sendCase, tags } = obj;
+
+  isAbleToSubmit = ({ rules }) => rules.every(({ confirmed }) => confirmed);
+
+  convertRulesForSubmission = (obj) => {
+    const {
+      informOwner,
+      recipients,
+      launchStatsRule,
+      fromAddress,
+      launchNameRule = [],
+      launchTagRule = [],
+    } = obj;
     return {
-      launchNames,
-      sendCase,
-      tags,
+      fromAddress,
+      launchNameRule,
+      launchStatsRule,
+      launchTagRule,
       recipients: informOwner ? [...recipients, OWNER] : recipients,
     };
   };
-  prepareData(config) {
-    const emailCases = config.emailCases.map(this.convertEmailCaseForSubmission);
 
-    return { ...config, emailCases };
+  prepareData(config) {
+    const rules = config.rules.map(this.convertRulesForSubmission);
+
+    return { ...config, rules };
   }
+
   render() {
-    const { emailEnabled } = this.props;
+    const { enabled } = this.props;
     const readOnly = !this.isAbleToEditForm();
 
     return (
-      <div className={cx('notification-form')}>
-        <EmailEnableForm
-          initialValues={{ emailEnabled }}
+      <div className={cx('notifications-tab')}>
+        <NotificationsEnableForm
+          initialValues={{ enabled }}
           enableReinitialize
           onChange={this.submitForm}
           readOnly={readOnly}
         />
 
-        {emailEnabled && (
-          <EmailCaseForm onChange={this.submitForm} readOnly={readOnly} enableReinitialize />
+        {enabled && (
+          <NotificationRuleForm onChange={this.submitForm} readOnly={readOnly} enableReinitialize />
         )}
       </div>
     );
