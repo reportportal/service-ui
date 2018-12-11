@@ -5,7 +5,7 @@ export const ARRAY_TYPE = 'array';
 export const DROPDOWN_TYPE = 'dropdown';
 export const DATE_TYPE = 'date';
 
-export const FILEDS_MAP = {
+export const FIELDS_MAP = {
   [TEXT_TYPE]: TextField,
   [DROPDOWN_TYPE]: DropdownField,
   [DATE_TYPE]: DateField,

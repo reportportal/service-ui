@@ -17,6 +17,15 @@ export const Messages = defineMessages({
     id: 'GeneralTab.keepLogs',
     defaultMessage: 'Keep logs',
   },
+  keepLaunches: {
+    id: 'GeneralTab.keepLaunches',
+    defaultMessage: '​Keep launches',
+  },
+  keepLaunchesDescription: {
+    id: 'GeneralTab.keepLaunchesDescription',
+    defaultMessage:
+      'How long to keep old launches. A launch and all it descendants (suites, tests, steps, logs) will be deleted. Launch will be deleted from filters and widgets.',
+  },
   keepLogsDescription: {
     id: 'GeneralTab.keepLogsDescription',
     defaultMessage:
