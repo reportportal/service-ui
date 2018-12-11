@@ -93,7 +93,7 @@ export class DemoDataTab extends Component {
       isLoading: true,
     });
     tracking.trackEvent(SETTINGS_PAGE_EVENTS.GENERATE_DATA_BTN);
-    fetch(URLS.generateDemoData(projectId), { method: 'POST' })
+    fetch(URLS.generateDemoData(projectId), { method: 'POST', data: {} })
       .then(() => {
         this.props.showNotification({
           message: intl.formatMessage(messages.generateDemoDataSuccess),
