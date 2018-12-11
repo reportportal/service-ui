@@ -32,3 +32,7 @@
   font-family: $FONT-SEMIBOLD;
   font-size: 12px;
 }
+
+div[class^='tooltipWrapper__tooltip_'] {
+  border: none;
+}

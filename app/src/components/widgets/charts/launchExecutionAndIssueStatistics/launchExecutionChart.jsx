@@ -21,7 +21,7 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { injectIntl, intlShape, defineMessages } from 'react-intl';
+import { injectIntl, intlShape } from 'react-intl';
 import * as d3 from 'd3-selection';
 import classNames from 'classnames/bind';
 import * as COLORS from 'common/constants/colors';
@@ -31,41 +31,21 @@ import { C3Chart } from '../common/c3chart';
 import styles from './launchExecutionAndIssueStatistics.scss';
 import { Legend } from './launchExecutionAndIssuesChartLegend';
 import { LaunchExecutionAndIssueStatisticsTooltip } from './launchExecutionAndIssueStatisticsTooltip';
-import { getPercentage, getDefectItems } from './chartUtils';
+import { getPercentage, getDefectItems, messages } from './chartUtils';
 
 const cx = classNames.bind(styles);
-
-const messages = defineMessages({
-  statistics$executions$total: {
-    id: 'FilterNameById.statistics$executions$total',
-    defaultMessage: 'Total',
-  },
-  statistics$executions$passed: {
-    id: 'FilterNameById.statistics$executions$passed',
-    defaultMessage: 'Passed',
-  },
-  statistics$executions$failed: {
-    id: 'FilterNameById.statistics$executions$failed',
-    defaultMessage: 'Failed',
-  },
-  statistics$executions$skipped: {
-    id: 'FilterNameById.statistics$executions$skipped',
-    defaultMessage: 'Skipped',
-  },
-});
 
 @injectIntl
 export class LaunchExecutionChart extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
     widget: PropTypes.object.isRequired,
-    isPreview: PropTypes.bool,
+    isPreview: PropTypes.bool.isRequired,
     container: PropTypes.instanceOf(Element).isRequired,
     observer: PropTypes.object.isRequired,
   };
 
   static defaultProps = {
-    isPreview: false,
     height: 0,
   };
 
@@ -78,7 +58,7 @@ export class LaunchExecutionChart extends Component {
     this.getConfig();
   }
   componentWillUnmount() {
-    this.statusNode.removeEventListener('mousemove', this.getCoords);
+    this.statusNode.removeEventListener('mousemove', this.setCoords);
     this.props.observer.unsubscribe('widgetResized', this.resizeStatusChart);
   }
 
@@ -99,7 +79,7 @@ export class LaunchExecutionChart extends Component {
       .attr('fill', '#666')
       .text('SUM');
 
-    this.statusNode.addEventListener('mousemove', this.getCoords);
+    this.statusNode.addEventListener('mousemove', this.setCoords);
   };
 
   onStatusMouseOut = () => {
@@ -116,14 +96,15 @@ export class LaunchExecutionChart extends Component {
 
   getConfig = () => {
     const { widget, container } = this.props;
-
-    this.height = container.offsetHeight;
-    this.width = container.offsetWidth;
-    this.noAvailableData = false;
     const statusChartData = {};
     const statusChartDataOrdered = [];
     const statusChartColors = {};
     const values = widget.content.result[0].values;
+
+    this.height = container.offsetHeight;
+    this.width = container.offsetWidth;
+    this.noAvailableData = false;
+
     Object.keys(values).forEach((key) => {
       if (key.indexOf('$executions$') > -1) {
         const testStatus = key.split('$')[2].toUpperCase();
@@ -203,7 +184,7 @@ export class LaunchExecutionChart extends Component {
     });
   };
 
-  getCoords = ({ pageX, pageY }) => {
+  setCoords = ({ pageX, pageY }) => {
     this.x = pageX;
     this.y = pageY;
   };
@@ -233,14 +214,17 @@ export class LaunchExecutionChart extends Component {
     }
   };
 
-  renderStatusContents = (d, a, b, color) => {
-    const launchData = this.statusItems.find((item) => item.id === d[0].id);
+  // This function is a reimplementation of its d3 counterpart, and it needs 4 arguments of which 2 are not used here.
+  // These two are named a and b in the original implementation.
+
+  renderStatusContents = (data, a, b, color) => {
+    const launchData = this.statusItems.find((item) => item.id === data[0].id);
 
     return ReactDOMServer.renderToStaticMarkup(
       <TooltipWrapper>
         <LaunchExecutionAndIssueStatisticsTooltip
-          launchNumber={d[0].value}
-          itemCases={getPercentage(d[0].ratio)}
+          launchNumber={data[0].value}
+          itemCases={getPercentage(data[0].ratio)}
           color={color(launchData.name)}
           itemName={this.props.intl.formatMessage(messages[launchData.name.split('$total')[0]])}
         />
@@ -250,9 +234,7 @@ export class LaunchExecutionChart extends Component {
 
   render() {
     const { isPreview } = this.props;
-    const classes = cx('', {
-      'preview-view': isPreview,
-    });
+    const classes = cx({ 'preview-view': isPreview });
     const { isConfigReady } = this.state;
     return (
       <div className={classes}>
@@ -260,12 +242,14 @@ export class LaunchExecutionChart extends Component {
           <div className="launch-execution-chart">
             {!this.leftChartHidden && (
               <div className="data-js-launch-execution-chart-container">
-                <Legend
-                  items={this.statusItems}
-                  onClick={this.onStatusClick}
-                  onMouseOver={this.onStatusMouseOver}
-                  onMouseOut={this.onStatusMouseOut}
-                />
+                {!isPreview && (
+                  <Legend
+                    items={this.statusItems}
+                    onClick={this.onStatusClick}
+                    onMouseOver={this.onStatusMouseOver}
+                    onMouseOut={this.onStatusMouseOut}
+                  />
+                )}
                 <C3Chart config={this.statusConfig} onChartCreated={this.onStatusChartCreated} />
               </div>
             )}

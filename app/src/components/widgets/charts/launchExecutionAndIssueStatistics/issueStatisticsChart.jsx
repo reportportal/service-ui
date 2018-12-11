@@ -21,7 +21,7 @@
 import 'c3/c3.css';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { injectIntl, intlShape, defineMessages } from 'react-intl';
+import { injectIntl, intlShape } from 'react-intl';
 import * as d3 from 'd3-selection';
 import classNames from 'classnames/bind';
 import * as COLORS from 'common/constants/colors';
@@ -31,36 +31,9 @@ import { C3Chart } from '../common/c3chart';
 import styles from './launchExecutionAndIssueStatistics.scss';
 import { Legend } from './launchExecutionAndIssuesChartLegend';
 import { LaunchExecutionAndIssueStatisticsTooltip } from './launchExecutionAndIssueStatisticsTooltip';
-import { getPercentage, getDefectItems } from './chartUtils';
+import { getPercentage, getDefectItems, messages } from './chartUtils';
 
 const cx = classNames.bind(styles);
-
-const messages = defineMessages({
-  statistics$defects$product_bug: {
-    id: 'FilterNameById.statistics$defects$product_bug',
-    defaultMessage: 'Product bug',
-  },
-  statistics$defects$automation_bug: {
-    id: 'FilterNameById.statistics$defects$automation_bug',
-    defaultMessage: 'Automation bug',
-  },
-  statistics$defects$system_issue: {
-    id: 'FilterNameById.statistics$defects$system_issue',
-    defaultMessage: 'System issue',
-  },
-  statistics$defects$no_defect: {
-    id: 'FilterNameById.statistics$defects$no_defect',
-    defaultMessage: 'No defect',
-  },
-  statistics$defects$to_investigate: {
-    id: 'FilterNameById.statistics$defects$to_investigate',
-    defaultMessage: 'To investigate',
-  },
-  ofTestCases: {
-    id: 'Widgets.ofTestCases',
-    defaultMessage: 'of test cases',
-  },
-});
 
 @injectIntl
 export class IssueStatisticsChart extends Component {
@@ -86,7 +59,7 @@ export class IssueStatisticsChart extends Component {
     this.getConfig();
   }
   componentWillUnmount() {
-    this.issuesNode.removeEventListener('mousemove', this.getCoords);
+    this.issuesNode.removeEventListener('mousemove', this.setCoords);
     this.props.observer.unsubscribe('widgetResized', this.resizeIssuesChart);
   }
 
@@ -107,7 +80,7 @@ export class IssueStatisticsChart extends Component {
       .attr('fill', '#666')
       .text('ISSUES');
 
-    this.issuesNode.addEventListener('mousemove', this.getCoords);
+    this.issuesNode.addEventListener('mousemove', this.setCoords);
   };
 
   onIssuesMouseOut = () => {
@@ -124,16 +97,17 @@ export class IssueStatisticsChart extends Component {
 
   getConfig = () => {
     const { widget, container } = this.props;
-
-    this.height = container.offsetHeight;
-    this.width = container.offsetWidth;
-    this.noAvailableData = false;
     const defectTypesChartData = {};
     const defectTypesChartDataOrdered = [];
     const defectTypesChartColors = {};
     const values = widget.content.result[0].values;
+
+    this.height = container.offsetHeight;
+    this.width = container.offsetWidth;
+    this.noAvailableData = false;
+
     Object.keys(values).forEach((key) => {
-      if (key.indexOf('$executions$') === -1) {
+      if (!key.includes('$executions$')) {
         const defectStatus = key.split('$')[2].toUpperCase();
         defectTypesChartData[key] = +values[key];
         defectTypesChartColors[key] = COLORS[`COLOR_${defectStatus}`];
@@ -199,7 +173,7 @@ export class IssueStatisticsChart extends Component {
     });
   };
 
-  getCoords = ({ pageX, pageY }) => {
+  setCoords = ({ pageX, pageY }) => {
     this.x = pageX;
     this.y = pageY;
   };
@@ -229,15 +203,17 @@ export class IssueStatisticsChart extends Component {
     }
   };
 
-  renderIssuesContents = (d, a, b, color) => {
-    const launchData = this.defectItems.find((item) => item.id === d[0].id);
+  // This function is a reimplementation of its d3 counterpart, and it needs 4 arguments of which 2 are not used here.
+  // These two are named a and b in the original implementation.
+  renderIssuesContents = (data, a, b, color) => {
+    const launchData = this.defectItems.find((item) => item.id === data[0].id);
 
     return ReactDOMServer.renderToStaticMarkup(
       <TooltipWrapper>
         <LaunchExecutionAndIssueStatisticsTooltip
-          launchNumber={d[0].value}
-          itemCases={getPercentage(d[0].ratio)}
-          color={color(d[0].name)}
+          launchNumber={data[0].value}
+          itemCases={getPercentage(data[0].ratio)}
+          color={color(data[0].name)}
           itemName={this.props.intl.formatMessage(messages[launchData.name.split('$total')[0]])}
         />
       </TooltipWrapper>,
@@ -254,12 +230,14 @@ export class IssueStatisticsChart extends Component {
           <div className="issue-statistics-chart">
             {!this.rightChartHidden && (
               <div className="data-js-issue-statistics-chart-container">
-                <Legend
-                  items={this.defectItems}
-                  onClick={this.onIssuesClick}
-                  onMouseOver={this.onIssuesMouseOver}
-                  onMouseOut={this.onIssuesMouseOut}
-                />
+                {!isPreview && (
+                  <Legend
+                    items={this.defectItems}
+                    onClick={this.onIssuesClick}
+                    onMouseOver={this.onIssuesMouseOver}
+                    onMouseOut={this.onIssuesMouseOut}
+                  />
+                )}
                 <C3Chart config={this.issueConfig} onChartCreated={this.onIssuesChartCreated} />
               </div>
             )}

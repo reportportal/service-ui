@@ -9,13 +9,12 @@ export class LaunchExecutionAndIssueStatistics extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
     widget: PropTypes.object.isRequired,
-    isPreview: PropTypes.bool,
+    isPreview: PropTypes.bool.isRequired,
     container: PropTypes.instanceOf(Element).isRequired,
     observer: PropTypes.object.isRequired,
   };
 
   static defaultProps = {
-    isPreview: false,
     height: 0,
   };
 
@@ -26,11 +25,13 @@ export class LaunchExecutionAndIssueStatistics extends Component {
           widget={this.props.widget}
           container={this.props.container}
           observer={this.props.observer}
+          isPreview={this.props.isPreview}
         />
         <IssueStatisticsChart
           widget={this.props.widget}
           container={this.props.container}
           observer={this.props.observer}
+          isPreview={this.props.isPreview}
         />
       </div>
     );
