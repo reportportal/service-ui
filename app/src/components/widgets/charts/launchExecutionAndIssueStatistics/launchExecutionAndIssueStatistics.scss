@@ -20,33 +20,37 @@
 
   .launch-execution-chart {
     background-color: $COLOR--light-yellow;
+  }
+
+  .issue-statistics-chart {
     & div[class^='legend'] {
-      position: relative;
-      padding: 20px 20px 0;
-      overflow: hidden;
-      top: 0;
-      min-height: 40px;
-      text-align: right;
-      z-index: 999;
-    }
-    & .c3 {
-      bottom: 56px;
+      top: -4px;
+      line-height: 1.5;
     }
   }
 
+  .preview-view {
+    & .launch-execution-chart,
+    & .issue-statistics-chart {
+      & .c3 {
+        bottom: 0;
+      }
+    }
+  }
+
+  .launch-execution-chart,
   .issue-statistics-chart {
     & div[class^='legend'] {
       position: relative;
       padding: 20px 20px 0;
       overflow: hidden;
-      top: -4px;
-      line-height: 1.5;
       min-height: 40px;
       text-align: right;
       z-index: 999;
+      width: 100%;
     }
     & .c3 {
-      bottom: 60px;
+      bottom: 56px;
     }
   }
 

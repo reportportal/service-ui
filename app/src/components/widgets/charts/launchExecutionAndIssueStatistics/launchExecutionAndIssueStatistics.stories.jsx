@@ -66,8 +66,8 @@ const widgetData = {
         values: {
           statistics$executions$passed: '8',
           statistics$executions$skipped: '6',
-          statistics$defects$product_bug$pb001: '0',
-          statistics$defects$automation_bug$ab001: '0',
+          statistics$defects$product_bug$pb001: '13',
+          statistics$defects$automation_bug$ab001: '25',
           statistics$executions$failed: '13',
           statistics$executions$total: '27',
         },
@@ -97,5 +97,15 @@ storiesOf('Components/Widgets/Charts/LaunchExecutionAndIssueStatistics', module)
       widget={widgetData}
       container={mockNode}
       observer={mockObserver}
+      isPreview={false}
+    />
+  ))
+
+  .add('preview', () => (
+    <LaunchExecutionAndIssueStatistics
+      widget={widgetData}
+      container={mockNode}
+      observer={mockObserver}
+      isPreview
     />
   ));
