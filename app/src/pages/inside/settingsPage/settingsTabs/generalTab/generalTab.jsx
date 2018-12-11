@@ -8,13 +8,13 @@ import { reduxForm } from 'redux-form';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
 import { canUpdateSettings } from 'common/utils/permissions';
-import { FieldProvider } from 'components/fields/fieldProvider';
 import { Input } from 'components/inputs/input';
 import { InputDropdown } from 'components/inputs/inputDropdown';
 import { BigButton } from 'components/buttons/bigButton';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { projectConfigSelector } from 'controllers/project';
+import { jobAttributesSelector } from 'controllers/project';
 import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
+import { FormField } from 'components/fields/formField';
 import {
   activeProjectSelector,
   activeProjectRoleSelector,
@@ -33,9 +33,7 @@ const cx = classNames.bind(styles);
 @connect(
   (state) => ({
     projectId: activeProjectSelector(state),
-    interruptedJob: projectConfigSelector(state).interruptedJob,
-    keepLogs: projectConfigSelector(state).keepLogs,
-    keepScreenshots: projectConfigSelector(state).keepScreenshots,
+    jobConfig: jobAttributesSelector(state),
     isEpamInstance: !!authExtensionsSelector(state).epam,
     accountRole: userAccountRoleSelector(state),
     userRole: activeProjectRoleSelector(state),
@@ -51,9 +49,12 @@ export class GeneralTab extends Component {
     intl: intlShape.isRequired,
     handleSubmit: PropTypes.func.isRequired,
     projectId: PropTypes.string.isRequired,
-    interruptedJob: PropTypes.string.isRequired,
-    keepLogs: PropTypes.string.isRequired,
-    keepScreenshots: PropTypes.string.isRequired,
+    jobConfig: PropTypes.shape({
+      interruptJobTime: PropTypes.string.isRequired,
+      keepLogs: PropTypes.string.isRequired,
+      keepScreenshots: PropTypes.string.isRequired,
+      keepLaunches: PropTypes.string.isRequired,
+    }).isRequired,
     isEpamInstance: PropTypes.bool.isRequired,
     showNotification: PropTypes.func.isRequired,
     initialize: PropTypes.func.isRequired,
@@ -71,9 +72,10 @@ export class GeneralTab extends Component {
   };
 
   componentDidMount() {
-    const { interruptedJob, keepLogs, keepScreenshots } = this.props;
+    const { interruptJobTime, keepLogs, keepScreenshots, keepLaunches } = this.props.jobConfig;
     this.props.initialize({
-      interruptedJob,
+      interruptJobTime,
+      keepLaunches,
       keepLogs,
       keepScreenshots,
     });
@@ -104,7 +106,7 @@ export class GeneralTab extends Component {
   filterOptions = (options) =>
     this.props.isEpamInstance ? options.filter((item) => item.value !== 'forever') : options;
 
-  interruptedJob = [
+  interruptJobTime = [
     { label: this.props.intl.formatMessage(Messages.hour1), value: '1 hour' },
     { label: this.props.intl.formatMessage(Messages.hour3), value: '3 hours' },
     { label: this.props.intl.formatMessage(Messages.hour6), value: '6 hours' },
@@ -127,78 +129,86 @@ export class GeneralTab extends Component {
     { label: this.props.intl.formatMessage(Messages.month3), value: '3 months' },
     { label: this.props.intl.formatMessage(Messages.forever), value: 'forever' },
   ];
+  keepLaunches = [
+    { label: this.props.intl.formatMessage(Messages.week2), value: '2 weeks' },
+    { label: this.props.intl.formatMessage(Messages.month1), value: '1 month' },
+    { label: this.props.intl.formatMessage(Messages.month3), value: '3 months' },
+    { label: this.props.intl.formatMessage(Messages.month6), value: '6 months' },
+    { label: this.props.intl.formatMessage(Messages.forever), value: 'forever' },
+  ];
 
   render() {
     const { intl, accountRole, userRole, tracking } = this.props;
     return (
       <div className={cx('general-tab')}>
         <form onSubmit={this.props.handleSubmit(this.onFormSubmit)}>
-          <div className={cx('field-container')}>
-            <span className={cx('field-label')}>
-              {intl.formatMessage(Messages.projectNameLabel)}
-            </span>
-            <div className={cx('field-input')}>
-              <Input disabled value={this.props.projectId} />
-            </div>
-          </div>
-          <div className={cx('field-container')}>
-            <span className={cx('field-label')}>{intl.formatMessage(Messages.interruptedJob)}</span>
-            <div className={cx('field-input')}>
-              <FieldProvider
-                name="interruptedJob"
-                onChange={() =>
-                  tracking.trackEvent(SETTINGS_PAGE_EVENTS.INACTIVITY_TIMEOUT_GENERAL)
-                }
-              >
-                <InputDropdown
-                  options={this.interruptedJob}
-                  mobileDisabled
-                  disabled={!canUpdateSettings(accountRole, userRole)}
-                />
-              </FieldProvider>
-            </div>
-            <p className={cx('field-description')}>
-              {intl.formatMessage(Messages.interruptedJobDescription)}
-            </p>
-          </div>
-          <div className={cx('field-container')}>
-            <span className={cx('field-label')}>{intl.formatMessage(Messages.keepLogs)}</span>
-            <div className={cx('field-input')}>
-              <FieldProvider
-                name="keepLogs"
-                onChange={() => tracking.trackEvent(SETTINGS_PAGE_EVENTS.KEEP_LOGS_GENERAL)}
-              >
-                <InputDropdown
-                  options={this.filterOptions(this.keepLogs)}
-                  mobileDisabled
-                  disabled={!canUpdateSettings(accountRole, userRole)}
-                />
-              </FieldProvider>
-            </div>
-            <p className={cx('field-description')}>
-              {intl.formatMessage(Messages.keepLogsDescription)}
-            </p>
-          </div>
-          <div className={cx('field-container')}>
-            <span className={cx('field-label')}>
-              {intl.formatMessage(Messages.keepScreenshots)}
-            </span>
-            <div className={cx('field-input')}>
-              <FieldProvider
-                name="keepScreenshots"
-                onChange={() => tracking.trackEvent(SETTINGS_PAGE_EVENTS.KEEP_SCREENSHOTS_GENERAL)}
-              >
-                <InputDropdown
-                  options={this.filterOptions(this.keepScreenshots)}
-                  mobileDisabled
-                  disabled={!canUpdateSettings(accountRole, userRole)}
-                />
-              </FieldProvider>
-            </div>
-            <p className={cx('field-description')}>
-              {intl.formatMessage(Messages.keepScreenshotsDescription)}
-            </p>
-          </div>
+          <FormField
+            fieldWrapperClassName={cx('field-input')}
+            label={intl.formatMessage(Messages.projectNameLabel)}
+            withoutProvider
+          >
+            <Input disabled value={this.props.projectId} />
+          </FormField>
+          <FormField
+            name="interruptJobTime"
+            fieldWrapperClassName={cx('field-input')}
+            label={intl.formatMessage(Messages.interruptedJob)}
+            onChange={() => tracking.trackEvent(SETTINGS_PAGE_EVENTS.INACTIVITY_TIMEOUT_GENERAL)}
+            customBlock={{
+              node: <p>{intl.formatMessage(Messages.interruptedJobDescription)}</p>,
+            }}
+          >
+            <InputDropdown
+              options={this.interruptJobTime}
+              mobileDisabled
+              disabled={!canUpdateSettings(accountRole, userRole)}
+            />
+          </FormField>
+          <FormField
+            name="keepLaunches"
+            fieldWrapperClassName={cx('field-input')}
+            label={intl.formatMessage(Messages.keepLaunches)}
+            onChange={() => tracking.trackEvent(SETTINGS_PAGE_EVENTS.INACTIVITY_TIMEOUT_GENERAL)}
+            customBlock={{
+              node: <p>{intl.formatMessage(Messages.keepLaunchesDescription)}</p>,
+            }}
+          >
+            <InputDropdown
+              options={this.filterOptions(this.keepLaunches)}
+              mobileDisabled
+              disabled={!canUpdateSettings(accountRole, userRole)}
+            />
+          </FormField>
+          <FormField
+            name="keepLogs"
+            fieldWrapperClassName={cx('field-input')}
+            label={intl.formatMessage(Messages.keepLogs)}
+            onChange={() => tracking.trackEvent(SETTINGS_PAGE_EVENTS.KEEP_LOGS_GENERAL)}
+            customBlock={{
+              node: <p>{intl.formatMessage(Messages.keepLogsDescription)}</p>,
+            }}
+          >
+            <InputDropdown
+              options={this.filterOptions(this.keepLogs)}
+              mobileDisabled
+              disabled={!canUpdateSettings(accountRole, userRole)}
+            />
+          </FormField>
+          <FormField
+            name="keepScreenshots"
+            fieldWrapperClassName={cx('field-input')}
+            label={intl.formatMessage(Messages.keepScreenshots)}
+            onChange={() => tracking.trackEvent(SETTINGS_PAGE_EVENTS.KEEP_SCREENSHOTS_GENERAL)}
+            customBlock={{
+              node: <p>{intl.formatMessage(Messages.keepScreenshotsDescription)}</p>,
+            }}
+          >
+            <InputDropdown
+              options={this.filterOptions(this.keepScreenshots)}
+              mobileDisabled
+              disabled={!canUpdateSettings(accountRole, userRole)}
+            />
+          </FormField>
           <div className={cx('button-container')}>
             <div className={cx('submit-button')}>
               <BigButton

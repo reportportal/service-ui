@@ -392,6 +392,8 @@
   "GeneralTab.hour6": "6 часов",
   "GeneralTab.interruptedJob": "Время бездействия запуска",
   "GeneralTab.interruptedJobDescription": "Назначьте рабочее время, чтобы прервать неактивные запуски",
+  "GeneralTab.keepLaunches": "Сохранять запуски",
+  "GeneralTab.keepLaunchesDescription": "Как долго хранить старые запуски. Запуск и все его потомки (наборы, тесты, шаги, логи) будут удалены. Запуск будет удален из фильтров и виджетов",
   "GeneralTab.keepLogs": "Сохранять записи в журнале",
   "GeneralTab.keepLogsDescription": "Сколько времени сохранять старые записи журнала в запусках. Соответствующие запуски будут сохраняться, чтобы не утратить статистику",
   "GeneralTab.keepScreenshots": "Сохранять скриншоты",

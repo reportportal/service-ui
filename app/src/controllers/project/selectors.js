@@ -1,6 +1,6 @@
 import { createSelector } from 'reselect';
 import { OWNER } from 'common/constants/permissions';
-import { ANALYZER_ATTRIBUTE_PREFIX } from './constants';
+import { ANALYZER_ATTRIBUTE_PREFIX, JOB_ATTRIBUTE_PREFIX } from './constants';
 
 const projectSelector = (state) => state.project || {};
 
@@ -37,6 +37,8 @@ const createPrefixedAttributesSelector = (prefix) =>
 export const analyzerAttributesSelector = createPrefixedAttributesSelector(
   ANALYZER_ATTRIBUTE_PREFIX,
 );
+
+export const jobAttributesSelector = createPrefixedAttributesSelector(JOB_ATTRIBUTE_PREFIX);
 
 export const projectAnalyzerConfigSelector = (state) =>
   projectConfigSelector(state).analyzerConfiguration || {};

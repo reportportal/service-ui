@@ -11,77 +11,36 @@
     padding: 0;
   }
 }
-.field-container {
-  display: flex;
-  align-items: center;
-  margin-bottom: 20px;
-  @media (max-width: $SCREEN_XS_MAX) {
-    flex-direction: column;
-    align-items: start;
-  }
-  @media (max-width: $SCREEN_XS_MAX) {
-    margin-bottom: 25px;
-  }
-}
-.field-label {
-  box-sizing: border-box;
-  width: 25%;
-  padding: 0 15px;
-  font-family: $FONT-REGULAR;
-  font-size: 13px;
-  text-align: right;
-  color: $COLOR--charcoal-grey;
-  @media (max-width: $SCREEN_SM_MAX) {
-    width: 20%;
-  }
-  @media (max-width: $SCREEN_XS_MAX) {
-    width: 100%;
-    margin-bottom: 10px;
-    padding: 0;
-    text-align: left;
-  }
-}
+
 .field-input {
-  box-sizing: border-box;
-  width: 33.5%;
-  padding: 0 15px;
+  min-width: 300px;
+  width: 300px;
+  position: relative;
   @media (max-width: $SCREEN_SM_MAX) {
-    width: 38.5%;
+    min-width: 250px;
+    width: 250px;
   }
   @media (max-width: $SCREEN_XS_MAX) {
     width: 100%;
-    padding: 0;
   }
 }
-.field-description {
-  box-sizing: border-box;
-  width: 41.5%;
-  padding: 0 15px;
-  font-family: $FONT-REGULAR;
-  font-size: 12px;
-  line-height: 14px;
-  color: $COLOR--gray-60;
-  @media (max-width: $SCREEN_XS_MAX) {
-    width: 100%;
-    margin-top: 10px;
-    padding: 0;
-  }
-}
+
 .button-container {
   box-sizing: content-box;
-  width: 53.5%;
-  padding-left: 34px;
+  margin-left: 455px;
   &::after {
     content: '';
     clear: both;
     display: table;
+  }
+  @media (max-width: $SCREEN_SM_MAX) {
+    margin-left: 345px;
   }
   @media (max-width: $SCREEN_XS_MAX) {
     display: none;
   }
 }
 .submit-button {
-  float: right;
   width: 70px;
   button {
     font-size: 13px;
