@@ -28,12 +28,14 @@ import * as COLORS from 'common/constants/colors';
 import ReactDOMServer from 'react-dom/server';
 import { TooltipWrapper } from '../common/tooltip';
 import { C3Chart } from '../common/c3chart';
-import styles from './launchExecutionAndIssueStatistics.scss';
+import chartStyles from './launchExecutionAndIssueStatistics.scss';
+import tooltipStyles from './launchExecutionAndIssueStatisticsTooltip.scss';
 import { Legend } from './launchExecutionAndIssuesChartLegend';
 import { LaunchExecutionAndIssueStatisticsTooltip } from './launchExecutionAndIssueStatisticsTooltip';
 import { getPercentage, getDefectItems, messages } from './chartUtils';
 
-const cx = classNames.bind(styles);
+const chartContext = classNames.bind(chartStyles);
+const tooltipContext = classNames.bind(tooltipStyles);
 
 @injectIntl
 export class IssueStatisticsChart extends Component {
@@ -158,11 +160,10 @@ export class IssueStatisticsChart extends Component {
         contents: this.renderIssuesContents,
       },
       onrendered: () => {
-        let total = 0;
         if (this.issuesChart) {
-          this.issuesChart.data.shown().forEach((dataItem) => {
-            total += dataItem.values[0].value;
-          });
+          const total = this.issuesChart.data
+            .shown()
+            .reduce((acc, dataItem) => acc + dataItem.values[0].value, 0);
           this.issuesNode.querySelector('.c3-chart-arcs-title').childNodes[0].textContent = total;
         }
       },
@@ -209,7 +210,7 @@ export class IssueStatisticsChart extends Component {
     const launchData = this.defectItems.find((item) => item.id === data[0].id);
 
     return ReactDOMServer.renderToStaticMarkup(
-      <TooltipWrapper>
+      <TooltipWrapper className={tooltipContext('chart-tooltip')}>
         <LaunchExecutionAndIssueStatisticsTooltip
           launchNumber={data[0].value}
           itemCases={getPercentage(data[0].ratio)}
@@ -222,7 +223,7 @@ export class IssueStatisticsChart extends Component {
 
   render() {
     const { isPreview } = this.props;
-    const classes = cx({ 'preview-view': isPreview });
+    const classes = chartContext({ 'preview-view': isPreview });
     const { isConfigReady } = this.state;
     return (
       <div className={classes}>
