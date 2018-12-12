@@ -27,6 +27,9 @@ export const URLS = {
 
   widget: (activeProject, widgetId = '') => `${urlBase}${activeProject}/widget/${widgetId}`,
 
+  projectWidget: (activeProject, widgetId = '', interval = '') =>
+    `${urlBase}project/${activeProject}/widget/${widgetId}${getQueryParams({ interval })}`,
+
   externalSystemIssue: (activeProject, systemId, issueId) =>
     `${urlBase}${activeProject}/external-system/${systemId}/ticket/${issueId}`,
 
@@ -96,6 +99,11 @@ export const URLS = {
   projectUsernamesSearch: (activeProject) =>
     `${urlBase}project/${activeProject}/usernames?filter.cnt.users=`,
   projectIndex: (activeProject) => `${urlBase}project/${activeProject}/index`,
+
+  projectStatus: (activeProject, interval) =>
+    `${urlBase}project/list/${activeProject}/${getQueryParams({
+      interval,
+    })}`,
 
   projectPreferencesEmailConfiguration: (activeProject) =>
     `${urlBase}project/${activeProject}/emailconfig`,

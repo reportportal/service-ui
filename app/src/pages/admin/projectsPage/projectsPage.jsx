@@ -174,7 +174,7 @@ export class ProjectsPage extends Component {
       case EVENTS:
         return <h1>Project Events</h1>;
       default:
-        return <ProjectStatusPage />;
+        return <ProjectStatusPage projectId={projectId} />;
     }
   };
 

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { injectIntl, intlShape, defineMessages } from 'react-intl';
 import classNames from 'classnames/bind';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
-import { NoItemMessage } from '../noItemMessage';
+import { NoItemMessage } from 'components/main/noItemMessage';
 import styles from './parameters.scss';
 
 const cx = classNames.bind(styles);

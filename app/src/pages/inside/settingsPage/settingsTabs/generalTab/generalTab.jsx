@@ -23,7 +23,7 @@ import {
 import { authExtensionsSelector } from 'controllers/appInfo';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import styles from './generalTab.scss';
-import { Messages } from './generalTabsMessages';
+import { Messages } from './generalTabMessages';
 
 const cx = classNames.bind(styles);
 

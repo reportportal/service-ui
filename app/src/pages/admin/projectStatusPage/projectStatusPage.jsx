@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import classNames from 'classnames/bind';
 import { ToggleButton } from 'components/buttons/toggleButton';
+import { StatusPageContent } from './statusPageContent';
 import { PERIOD_VALUES } from './constants';
 import styles from './projectStatusPage.scss';
 
@@ -26,6 +28,7 @@ const messages = defineMessages({
 export class ProjectStatusPage extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
+    projectId: PropTypes.string.isRequired,
   };
 
   state = {
@@ -54,6 +57,7 @@ export class ProjectStatusPage extends Component {
             onChange={this.onPeriodChange}
           />
         </div>
+        <StatusPageContent interval={this.state.selectedPeriod} projectId={this.props.projectId} />
       </div>
     );
   }
