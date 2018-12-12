@@ -8,7 +8,7 @@ import { dateFormat } from 'common/utils';
 import { LOG_PAGE_EVENTS } from 'components/main/analytics/events';
 import { ERROR, FATAL } from 'common/constants/logLevels';
 import ArrowIcon from 'common/img/arrow-down-inline.svg';
-import { NoItemMessage } from '../logItemInfo/logItemInfoTabs/noItemMessage';
+import { NoItemMessage } from 'components/main/noItemMessage';
 import { LogMessageSearch } from './logMessageSearch';
 import { LogMessageBlock } from './logMessageBlock';
 import { AttachmentBlock } from './attachmentBlock';

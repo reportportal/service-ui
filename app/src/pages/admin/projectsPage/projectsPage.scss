@@ -2,4 +2,7 @@
   button {
     margin-left: 10px;
   }
+  @media (max-width: $SCREEN_XS_MAX) {
+    display: none;
+  }
 }

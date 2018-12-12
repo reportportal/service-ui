@@ -1,7 +1,6 @@
 import React from 'react';
 import { defineMessages, intlShape, injectIntl } from 'react-intl';
 import classNames from 'classnames/bind';
-
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { Input } from 'components/inputs/input';
