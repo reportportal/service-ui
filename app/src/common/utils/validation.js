@@ -11,7 +11,7 @@ export const minDocFreq = (minDocFreqValue) => /^[1-9]$|^10$/.exec(minDocFreqVal
 
 export const filterName = (value) => value.length >= 3 && value.length <= 128;
 export const launchName = (value) => value.length >= 1 && value.length <= 256;
-export const launchDescription = (value) => value.length >= 0 && value.length <= 1024;
+export const launchDescription = (value = '') => value.length >= 0 && value.length <= 1024;
 export const dashboardName = (value) => value.length >= 3 && value.length <= 128;
 export const widgetName = (value) => value && value.length >= 3 && value.length <= 128;
 export const itemNameEntity = (value) => value.length >= 3 && value.length <= 256;
