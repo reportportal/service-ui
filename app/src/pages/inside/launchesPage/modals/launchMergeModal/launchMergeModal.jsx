@@ -97,8 +97,7 @@ const messages = defineMessages({
   validate: ({ name, description, mergeType }) => ({
     mergeType: !mergeType, // eslint-disable-line camelcase
     name: (!name || !validate.launchName(name)) && 'launchNameHint',
-    description:
-      (!description || !validate.launchDescription(description)) && 'launchDescriptionHint',
+    description: !validate.launchDescription(description) && 'launchDescriptionHint',
   }),
 })
 @connect(
