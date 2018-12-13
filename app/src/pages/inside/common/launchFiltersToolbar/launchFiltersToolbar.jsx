@@ -176,7 +176,6 @@ export class LaunchFiltersToolbar extends Component {
         <div className={cx('filter-tickets-row')}>
           <div className={cx('all-latest-switcher')}>
             <AllLatestDropdown
-              activeFilterId={activeFilterId}
               value={filterId}
               onClick={this.redirectToLaunches}
               onChange={this.handleAllLatestLaunchesSelect}

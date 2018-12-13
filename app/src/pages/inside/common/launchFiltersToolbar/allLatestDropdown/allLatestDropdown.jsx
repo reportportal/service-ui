@@ -35,14 +35,12 @@ export class AllLatestDropdown extends Component {
     value: PropTypes.string,
     onChange: PropTypes.func,
     onClick: PropTypes.func,
-    activeFilterId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   };
 
   static defaultProps = {
     value: ALL,
     onChange: () => {},
     onClick: () => {},
-    activeFilterId: null,
   };
 
   constructor(props) {
