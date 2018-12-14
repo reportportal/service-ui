@@ -6,7 +6,7 @@ import { namespaceSelector } from 'controllers/testItem';
 import { STEP_PAGE_EVENTS } from 'components/main/analytics/events';
 
 const FILTER_COLLAPSED = 'collapsed';
-const FILTER_KEY = 'predefined_filter';
+const FILTER_KEY = 'predefinedFilter';
 
 const messages = defineMessages({
   collapse: {

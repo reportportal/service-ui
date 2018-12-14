@@ -26,11 +26,13 @@ const messages = defineMessages({
   validate: ({ dashboardName }) => ({
     dashboardName: dashboardName && dashboardName.length < 3 && 'dashboardNameSearchHint',
   }),
-  onChange: (vals, dispatch, props) => {
-    if (!vals.dashboardName || vals.dashboardName.length < 3) {
+  onChange: (values, dispatch, props, previousValues) => {
+    if (typeof previousValues.dashboardName === 'undefined') {
       return;
     }
-    props.onFilterChange(vals.dashboardName);
+    if (!values.dashboardName || values.dashboardName.length >= 3) {
+      props.onFilterChange(values.dashboardName);
+    }
   },
 })
 @injectIntl
