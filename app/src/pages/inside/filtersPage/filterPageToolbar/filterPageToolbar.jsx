@@ -30,12 +30,14 @@ const messages = defineMessages({
   validate: ({ filter }) => ({
     filter: filter && filter.length < 3 ? 'filterNameError' : undefined,
   }),
-  onChange: (vals, dispatch, props) => {
-    if (!vals.filter || vals.filter.length < 3) {
+  onChange: (values, dispatch, props, previousValues) => {
+    if (typeof previousValues.filter === 'undefined') {
       return;
     }
-    props.tracking.trackEvent(FILTERS_PAGE_EVENTS.SEARCH_FILTER);
-    props.onFilterChange(vals.filter);
+    if (!values.filter || values.filter.length >= 3) {
+      props.tracking.trackEvent(FILTERS_PAGE_EVENTS.SEARCH_FILTER);
+      props.onFilterChange(values.filter);
+    }
   },
 })
 @injectIntl
