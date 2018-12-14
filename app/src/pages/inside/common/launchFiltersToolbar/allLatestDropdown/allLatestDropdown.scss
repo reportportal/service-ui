@@ -1,8 +1,10 @@
 .all-latest-dropdown {
   position: relative;
   height: 30px;
-  background-color: $COLOR--gray-91;
   cursor: pointer;
+  &.active {
+    background-color: $COLOR--gray-91;
+  }
 
   @media (max-width: $SCREEN_SM_MAX) {
     background-color: $COLOR--gray-80;
