@@ -4,7 +4,7 @@ import { FormattedRelative } from 'react-intl';
 import classNames from 'classnames/bind';
 import { MarkdownViewer } from 'components/main/markdown';
 import TagIcon from 'common/img/tag-inline.svg';
-import { DurationBlock } from 'pages/inside/common/itemInfo/durationBlock';
+import { DurationBlock } from 'pages/inside/common/durationBlock';
 import styles from './itemInfoToolTip.scss';
 
 const cx = classNames.bind(styles);

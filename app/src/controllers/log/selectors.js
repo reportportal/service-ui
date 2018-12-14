@@ -11,7 +11,7 @@ import {
 import { DEFAULT_PAGINATION } from 'controllers/pagination';
 import { itemsSelector } from 'controllers/testItem';
 import { debugModeSelector } from 'controllers/launch';
-import { extractNamespacedQuery } from 'common/utils/routingUtils';
+import { extractNamespacedQuery, createNamespacedQuery } from 'common/utils/routingUtils';
 import {
   calculateGrowthDuration,
   normalizeHistoryItem,
@@ -141,4 +141,24 @@ export const nextItemSelector = createSelector(
   itemsSelector,
   logItemIdSelector,
   (testItems, logId) => getNextItem(testItems, logId),
+);
+
+export const retryLinkSelector = createSelector(
+  payloadSelector,
+  pagePropertiesSelector,
+  debugModeSelector,
+  (state, props) => props.retryId,
+  (payload, query, debugMode, retryId) => ({
+    type: debugMode ? PROJECT_USERDEBUG_LOG_PAGE : PROJECT_LOG_PAGE,
+    payload: {
+      ...payload,
+      testItemIds: [...(payload.testItemIds || '').split('/'), retryId].join('/'),
+    },
+    meta: {
+      query: {
+        ...query,
+        ...createNamespacedQuery({ retryId }, NAMESPACE),
+      },
+    },
+  }),
 );
