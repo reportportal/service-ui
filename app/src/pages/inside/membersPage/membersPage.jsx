@@ -20,9 +20,14 @@ import { PaginationToolbar } from 'components/main/paginationToolbar';
 import { withPagination } from 'controllers/pagination';
 import { MEMBERS_PAGE, MEMBERS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { PageLayout, PageHeader, PageSection } from 'layouts/pageLayout';
+import classNames from 'classnames/bind';
+import ErrorIcon from 'common/img/error-inline.svg';
+import Parser from 'html-react-parser';
 import { MembersPageToolbar } from './membersPageToolbar';
 import { MembersGrid } from './membersGrid';
+import styles from './membersPage.scss';
 
+const cx = classNames.bind(styles);
 const messages = defineMessages({
   membersPageTitle: {
     id: 'MembersPage.title',
@@ -36,6 +41,14 @@ const messages = defineMessages({
     id: 'MembersPage.inviteExternalMember',
     defaultMessage:
       'Invite for member is successfully registered. Confirmation info will be send on provided email. Expiration: 1 day.',
+  },
+  membersNotFound: {
+    id: 'MembersPage.notFound',
+    defaultMessage: 'No members found for "{filter}".',
+  },
+  checkQuery: {
+    id: 'MembersPage.checkQuery',
+    defaultMessage: 'Check your query and try again',
   },
 });
 @connect(
@@ -98,6 +111,28 @@ export class MembersPage extends Component {
   };
 
   getBreadcrumbs = () => [{ title: this.props.intl.formatMessage(messages.membersPageTitle) }];
+
+  getNoItemMessage = () => {
+    let output = '';
+    if (this.props.filter !== null && this.props.filter !== '') {
+      output = (
+        <div className={cx('filter-not-found')}>
+          <p className={cx('filter-not-found-text')}>
+            <i className={cx('filter-not-found-icon')}>{Parser(ErrorIcon)}</i>
+            {Parser(
+              this.props.intl.formatMessage(messages.membersNotFound, {
+                filter: `<span>${this.props.filter}</span>`,
+              }),
+            )}
+          </p>
+          <p className={cx('filter-not-found-hint')}>
+            {this.props.intl.formatMessage(messages.checkQuery)}
+          </p>
+        </div>
+      );
+    }
+    return output;
+  };
 
   inviteUser = (userData) => {
     const data = {};
@@ -166,6 +201,7 @@ export class MembersPage extends Component {
       members,
       loading,
     } = this.props;
+
     return (
       <PageLayout>
         <PageHeader breadcrumbs={this.getBreadcrumbs()} />
@@ -176,14 +212,18 @@ export class MembersPage extends Component {
             onInvite={this.inviteUser}
           />
           <MembersGrid data={members} fetchData={this.props.fetchMembersAction} loading={loading} />
-          <PaginationToolbar
-            activePage={activePage}
-            itemCount={itemCount}
-            pageCount={pageCount}
-            pageSize={pageSize}
-            onChangePage={onChangePage}
-            onChangePageSize={onChangePageSize}
-          />
+          {this.props.filter !== null
+            ? !loading && this.getNoItemMessage()
+            : !loading && (
+                <PaginationToolbar
+                  activePage={activePage}
+                  itemCount={itemCount}
+                  pageCount={pageCount}
+                  pageSize={pageSize}
+                  onChangePage={onChangePage}
+                  onChangePageSize={onChangePageSize}
+                />
+              )}
         </PageSection>
       </PageLayout>
     );

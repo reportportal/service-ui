@@ -1,0 +1,39 @@
+.filter-not-found {
+  width: 100%;
+  padding: 26px 10px 40px;
+  text-align: center;
+  border-bottom: 1px solid $COLOR--gray-91;
+  box-sizing: border-box;
+}
+.filter-not-found-icon {
+  display: inline-block;
+  width: 20px;
+  margin-right: 10px;
+
+  svg {
+    position: relative;
+    top: 3px;
+
+    path {
+      fill: $COLOR--gray-80;
+    }
+  }
+}
+
+.filter-not-found-text {
+  display: flex;
+  margin: 0 0 10px;
+  color: $COLOR--gray-47;
+  align-items: center;
+  justify-content: center;
+  font-family: $FONT-SEMIBOLD;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 22px;
+}
+
+.filter-not-found-hint {
+  margin: 0 0 10px;
+  color: $COLOR--gray-47;
+  font-size: 13px;
+}

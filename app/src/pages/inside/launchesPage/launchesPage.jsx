@@ -9,6 +9,9 @@ import {
   LAUNCHES_MODAL_EVENTS,
 } from 'components/main/analytics/events';
 import { PageLayout, PageSection } from 'layouts/pageLayout';
+import classNames from 'classnames/bind';
+import ErrorIcon from 'common/img/error-inline.svg';
+import Parser from 'html-react-parser';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
 import { LAUNCH_ITEM_TYPES } from 'common/constants/launchItemTypes';
@@ -47,7 +50,9 @@ import { LEVEL_LAUNCH } from 'common/constants/launchLevels';
 import { FilterEntitiesContainer } from 'components/filterEntities/containers';
 import { LaunchFiltersToolbar } from 'pages/inside/common/launchFiltersToolbar';
 import { LaunchToolbar } from './LaunchToolbar';
+import styles from './launchesPage.scss';
 
+const cx = classNames.bind(styles);
 const messages = defineMessages({
   deleteModalHeader: {
     id: 'LaunchesPage.deleteModalHeader',
@@ -90,6 +95,14 @@ const messages = defineMessages({
   errorMultiple: {
     id: 'LaunchesPage.errorMultiple',
     defaultMessage: 'Error when deleting launches',
+  },
+  launchesNotFound: {
+    id: 'LaunchesPage.notFound',
+    defaultMessage: 'Launch is not found',
+  },
+  failedToLoadData: {
+    id: 'LaunchesPage.checkQuery',
+    defaultMessage: 'Failed to load data for launches table',
   },
 });
 
@@ -206,6 +219,18 @@ export class LaunchesPage extends Component {
   componentWillUnmount() {
     this.props.unselectAllLaunchesAction();
   }
+
+  getNoItemMessage = () => (
+    <div className={cx('filter-not-found')}>
+      <p className={cx('filter-not-found-text')}>
+        <i className={cx('filter-not-found-icon')}>{Parser(ErrorIcon)}</i>
+        {this.props.intl.formatMessage(messages.launchesNotFound)}
+      </p>
+      <p className={cx('filter-not-found-hint')}>
+        {this.props.intl.formatMessage(messages.failedToLoadData)}
+      </p>
+    </div>
+  );
 
   unselectAndFetchLaunches = () => {
     this.props.unselectAllLaunchesAction();
@@ -429,14 +454,18 @@ export class LaunchesPage extends Component {
                 onFilterClick={onFilterAdd}
                 events={LAUNCHES_PAGE_EVENTS}
               />
-              <PaginationToolbar
-                activePage={activePage}
-                itemCount={itemCount}
-                pageCount={pageCount}
-                pageSize={pageSize}
-                onChangePage={onChangePage}
-                onChangePageSize={onChangePageSize}
-              />
+              {itemCount === 0
+                ? !loading && this.getNoItemMessage()
+                : !loading && (
+                    <PaginationToolbar
+                      activePage={activePage}
+                      itemCount={itemCount}
+                      pageCount={pageCount}
+                      pageSize={pageSize}
+                      onChangePage={onChangePage}
+                      onChangePageSize={onChangePageSize}
+                    />
+                  )}
             </PageSection>
           </PageLayout>
         )}

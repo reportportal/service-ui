@@ -20,6 +20,9 @@ import {
 import { withPagination } from 'controllers/pagination';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
 import { PageLayout, PageHeader, PageSection } from 'layouts/pageLayout';
+import classNames from 'classnames/bind';
+import ErrorIcon from 'common/img/error-inline.svg';
+import Parser from 'html-react-parser';
 import { showModalAction } from 'controllers/modal';
 import { withSorting, SORTING_ASC } from 'controllers/sorting';
 import { userFiltersSelector, toggleDisplayFilterOnLaunchesAction } from 'controllers/project';
@@ -29,11 +32,21 @@ import { FILTERS_PAGE, FILTERS_PAGE_EVENTS } from 'components/main/analytics/eve
 import { NoFiltersBlock } from './noFiltersBlock';
 import { FilterPageToolbar } from './filterPageToolbar';
 import { FilterGrid } from './filterGrid';
+import styles from './filtersPage.scss';
 
+const cx = classNames.bind(styles);
 const messages = defineMessages({
   filtersPageTitle: {
     id: 'FiltersPage.title',
     defaultMessage: 'Filters',
+  },
+  filtersNotFound: {
+    id: 'FiltersPage.notFound',
+    defaultMessage: "No filters found for '{filter}'",
+  },
+  checkQuery: {
+    id: 'FiltersPage.checkQuery',
+    defaultMessage: 'Check your query and try again',
   },
 });
 
@@ -114,6 +127,25 @@ export class FiltersPage extends Component {
 
   getBreadcrumbs = () => [{ title: this.props.intl.formatMessage(messages.filtersPageTitle) }];
 
+  getNoItemMessage = () =>
+    this.props.filter !== null && this.props.filter !== '' ? (
+      <div className={cx('filter-not-found')}>
+        <p className={cx('filter-not-found-text')}>
+          <i className={cx('filter-not-found-icon')}>{Parser(ErrorIcon)}</i>
+          {Parser(
+            this.props.intl.formatMessage(messages.filtersNotFound, {
+              filter: `<span>${this.props.filter}</span>`,
+            }),
+          )}
+        </p>
+        <p className={cx('filter-not-found-hint')}>
+          {this.props.intl.formatMessage(messages.checkQuery)}
+        </p>
+      </div>
+    ) : (
+      ''
+    );
+
   confirmDelete = (filter) =>
     this.props.showModalAction({
       id: 'filterDeleteModal',
@@ -180,7 +212,8 @@ export class FiltersPage extends Component {
             loading={loading}
             {...rest}
           />
-          {!filters.length && !loading && <NoFiltersBlock />}
+          {!filters.length && !loading && this.props.filter === null && <NoFiltersBlock />}
+          {!filters.length && !loading && this.props.filter !== null && this.getNoItemMessage()}
           {filters &&
             !!filters.length && (
               <PaginationToolbar

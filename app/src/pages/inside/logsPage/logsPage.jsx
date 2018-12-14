@@ -158,7 +158,8 @@ export class LogsPage extends Component {
             )}
           </LogsGridToolbar>
           {logItems &&
-            !!logItems.length && (
+            !!logItems.length &&
+            !loading && (
               <PaginationToolbar
                 activePage={activePage}
                 itemCount={itemCount}

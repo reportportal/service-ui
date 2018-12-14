@@ -1,0 +1,31 @@
+.no-item-message {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 40px 10px;
+  text-align: center;
+}
+.no-item-message-icon {
+  display: inline-block;
+  width: 20px;
+  margin-right: 9px;
+
+  svg {
+    position: relative;
+    top: 3px;
+
+    path {
+      fill: $COLOR--gray-80;
+    }
+  }
+}
+
+.no-item-message-text {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 0 10px;
+  color: $COLOR--gray-47;
+  font-family: $FONT-SEMIBOLD;
+  font-size: 16px;
+  line-height: 22px;
+}

@@ -273,14 +273,16 @@ export class StepPage extends Component {
             onEditItem={onEditItem}
             onFilterClick={onFilterAdd}
           />
-          <PaginationToolbar
-            activePage={activePage}
-            itemCount={itemCount}
-            pageCount={pageCount}
-            pageSize={pageSize}
-            onChangePage={onChangePage}
-            onChangePageSize={onChangePageSize}
-          />
+          {!loading && (
+            <PaginationToolbar
+              activePage={activePage}
+              itemCount={itemCount}
+              pageCount={pageCount}
+              pageSize={pageSize}
+              onChangePage={onChangePage}
+              onChangePageSize={onChangePageSize}
+            />
+          )}
         </PageSection>
       </PageLayout>
     );

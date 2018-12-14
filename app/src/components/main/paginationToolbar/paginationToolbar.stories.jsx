@@ -59,4 +59,7 @@ storiesOf('Components/Main/PaginationToolbar', module)
       onChangePage={action('onChangePage')}
       onChangePageSize={action('onChangePageSize')}
     />
+  ))
+  .add('with no items', () => (
+    <PaginationToolbar itemCount={0} activePage={1} pageCount={0} pageSize={50} />
   ));
