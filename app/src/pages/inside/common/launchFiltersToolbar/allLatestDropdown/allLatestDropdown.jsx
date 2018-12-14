@@ -35,12 +35,14 @@ export class AllLatestDropdown extends Component {
     value: PropTypes.string,
     onChange: PropTypes.func,
     onClick: PropTypes.func,
+    activeFilterId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   };
 
   static defaultProps = {
     value: ALL,
     onChange: () => {},
     onClick: () => {},
+    activeFilterId: null,
   };
 
   constructor(props) {
@@ -102,7 +104,12 @@ export class AllLatestDropdown extends Component {
     const label = currentOption && currentOption.label;
     const shortLabel = currentOption && currentOption.shortLabel;
     return (
-      <div ref={this.nodeRef} className={cx('all-latest-dropdown')}>
+      <div
+        ref={this.nodeRef}
+        className={cx('all-latest-dropdown', {
+          active: this.props.activeFilterId === 'all' || this.props.activeFilterId === 'latest',
+        })}
+      >
         <div className={cx('selected-value')}>
           <div className={cx('value')} onClick={this.handleCurrentOptionClick}>
             {label}
