@@ -4,9 +4,8 @@ export const areaViewData = {
   id: '5b3e3d991aa8410001223a89',
   name: 'LAUNCH STATISTICS AREA CHART#090090',
   contentParameters: {
-    type: 'trends_chart',
-    gadget: 'statistic_trend',
-    metadataFields: ['name', 'number', 'start_time'],
+    type: 'statisticTrend',
+
     contentFields: [
       'statistics$executions$total',
       'statistics$executions$passed',
@@ -28,10 +27,10 @@ export const areaViewData = {
     ],
     itemsCount: 50,
     widgetOptions: {
-      viewMode: ['areaChartMode'],
+      viewMode: 'area-spline',
     },
   },
-  filter_id: '5b3e3d991aa8410001223a88',
+  filtersId: ['5b3e3d991aa8410001223a88'],
   content: {
     result: [
       {
@@ -1294,9 +1293,8 @@ export const barViewData = {
   id: '5b3e3d991aa8410001223a8a',
   name: 'LAUNCH STATISTICS BAR CHART#090090',
   contentParameters: {
-    type: 'trends_chart',
-    gadget: 'statistic_trend',
-    metadataFields: ['name', 'number', 'start_time'],
+    type: 'statisticTrend',
+
     contentFields: [
       'statistics$executions$total',
       'statistics$executions$passed',
@@ -1310,10 +1308,10 @@ export const barViewData = {
     itemsCount: 50,
     widgetOptions: {
       filterName: ['DEMO_FILTER#090090'],
-      viewMode: ['barMode'],
+      viewMode: 'bar',
     },
   },
-  filter_id: '5b3e3d991aa8410001223a88',
+  filtersId: ['5b3e3d991aa8410001223a88'],
   content: {
     result: [
       {
@@ -2126,9 +2124,7 @@ export const areaTimelineData = {
   id: '5b3e3d991aa8410001223a89',
   name: 'LAUNCH STATISTICS AREA CHART#090090',
   contentParameters: {
-    type: 'trends_chart',
-    gadget: 'statistic_trend',
-    metadataFields: ['name', 'number', 'start_time'],
+    type: 'statisticTrend',
     contentFields: [
       'statistics$executions$total',
       'statistics$executions$passed',
@@ -2150,11 +2146,11 @@ export const areaTimelineData = {
     ],
     itemsCount: 50,
     widgetOptions: {
-      viewMode: ['areaChartMode'],
-      timeline: ['DAY'],
+      viewMode: 'area-spline',
+      mode: 'timeline',
     },
   },
-  filter_id: '5b3e3d991aa8410001223a88',
+  filtersId: ['5b3e3d991aa8410001223a88'],
   content: {
     '2018-08-10': [
       {
@@ -2188,9 +2184,8 @@ export const barTimelineData = {
   id: '5b3e3d991aa8410001223a8a',
   name: 'LAUNCH STATISTICS BAR CHART#090090',
   contentParameters: {
-    type: 'trends_chart',
-    gadget: 'statistic_trend',
-    metadataFields: ['name', 'number', 'start_time'],
+    type: 'statisticTrend',
+
     contentFields: [
       'statistics$executions$total',
       'statistics$executions$passed',
@@ -2204,11 +2199,11 @@ export const barTimelineData = {
     itemsCount: 50,
     widgetOptions: {
       filterName: ['DEMO_FILTER#090090'],
-      timeline: ['DAY'],
-      viewMode: ['barMode'],
+      mode: 'timeline',
+      viewMode: 'bar',
     },
   },
-  filter_id: '5b3e3d991aa8410001223a88',
+  filtersId: ['5b3e3d991aa8410001223a88'],
   content: {
     '2018-08-10': [
       {
@@ -2233,9 +2228,7 @@ export const areaViewWithZoomData = {
   id: '5b3e3d991aa8410001223a89',
   name: 'LAUNCH STATISTICS AREA CHART#090090',
   contentParameters: {
-    type: 'trends_chart',
-    gadget: 'statistic_trend',
-    metadataFields: ['name', 'number', 'start_time'],
+    type: 'statisticTrend',
     contentFields: [
       'statistics$executions$total',
       'statistics$executions$passed',
@@ -2257,11 +2250,11 @@ export const areaViewWithZoomData = {
     ],
     itemsCount: 50,
     widgetOptions: {
-      viewMode: ['areaChartMode'],
-      zoom: {},
+      viewMode: 'area-spline',
+      zoom: true,
     },
   },
-  filter_id: '5b3e3d991aa8410001223a88',
+  filtersId: ['5b3e3d991aa8410001223a88'],
   content: {
     result: [
       {

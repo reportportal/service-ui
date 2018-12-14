@@ -181,8 +181,8 @@ export class FiltersPage extends Component {
             {...rest}
           />
           {!filters.length && !loading && <NoFiltersBlock />}
-          {filters &&
-            !!filters.length && (
+          {!!pageCount &&
+            !loading && (
               <PaginationToolbar
                 activePage={activePage}
                 itemCount={itemCount}

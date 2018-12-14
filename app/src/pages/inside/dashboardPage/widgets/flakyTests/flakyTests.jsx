@@ -1,21 +1,26 @@
 import * as React from 'react';
-import { func } from 'prop-types';
-import { TestsTableWidget, PTypes } from '../components/testsTableWidget';
+import PropTypes from 'prop-types';
+import { TestsTableWidget } from '../components/testsTableWidget';
 import * as cfg from './flakyTestsCfg';
 
-const FlakyTests = ({ tests, launch, nameClickHandler }) => (
+const FlakyTests = ({ widget: { content }, nameClickHandler }) => (
   <TestsTableWidget
-    tests={tests}
-    launchName={launch.name}
+    tests={content.flaky}
+    launchName={content.latestLaunch.name}
     nameClickHandler={nameClickHandler}
     columns={cfg.columns}
   />
 );
 
 FlakyTests.propTypes = {
-  tests: PTypes.PTTests.isRequired,
-  launch: PTypes.PTLaunch.isRequired,
-  nameClickHandler: func.isRequired,
+  // tests: PTypes.PTTests.isRequired,
+  // launch: PTypes.PTLaunch.isRequired,
+  widget: PropTypes.object.isRequired,
+  nameClickHandler: PropTypes.func.isRequired,
+};
+
+FlakyTests.defaultProps = {
+  nameClickHandler: () => {},
 };
 
 export { FlakyTests };

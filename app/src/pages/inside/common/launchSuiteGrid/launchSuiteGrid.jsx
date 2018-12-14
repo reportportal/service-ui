@@ -1,12 +1,15 @@
-import React, { PureComponent } from 'react';
+import React, { PureComponent, Fragment } from 'react';
+import { injectIntl, intlShape } from 'react-intl';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { PRODUCT_BUG, AUTOMATION_BUG, SYSTEM_ISSUE } from 'common/constants/defectTypes';
 import { FAILED, INTERRUPTED, PASSED, SKIPPED } from 'common/constants/launchStatuses';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { Grid } from 'components/main/grid';
 import { AbsRelTime } from 'components/main/absRelTime';
 import { ItemInfo } from 'pages/inside/common/itemInfo';
 import { ENTITY_START_TIME } from 'components/filterEntities/constants';
+import { NoItemMessage } from 'components/main/noItemMessage';
 import {
   STATS_TOTAL,
   STATS_SKIPPED,
@@ -176,8 +179,10 @@ TiColumn.propTypes = {
   className: PropTypes.string.isRequired,
 };
 
+@injectIntl
 export class LaunchSuiteGrid extends PureComponent {
   static propTypes = {
+    intl: intlShape.isRequired,
     data: PropTypes.array,
     sortingColumn: PropTypes.string,
     sortingDirection: PropTypes.string,
@@ -372,6 +377,7 @@ export class LaunchSuiteGrid extends PureComponent {
 
   render() {
     const {
+      intl: { formatMessage },
       data,
       onChangeSorting,
       sortingColumn,
@@ -384,19 +390,23 @@ export class LaunchSuiteGrid extends PureComponent {
     } = this.props;
 
     return (
-      <Grid
-        columns={this.COLUMNS}
-        data={data}
-        sortingColumn={sortingColumn}
-        sortingDirection={sortingDirection}
-        onChangeSorting={onChangeSorting}
-        selectedItems={selectedItems}
-        selectable
-        onToggleSelection={onItemSelect}
-        onToggleSelectAll={onAllItemsSelect}
-        loading={loading}
-        onFilterClick={onFilterClick}
-      />
+      <Fragment>
+        <Grid
+          columns={this.COLUMNS}
+          data={data}
+          sortingColumn={sortingColumn}
+          sortingDirection={sortingDirection}
+          onChangeSorting={onChangeSorting}
+          selectedItems={selectedItems}
+          selectable
+          onToggleSelection={onItemSelect}
+          onToggleSelectAll={onAllItemsSelect}
+          loading={loading}
+          onFilterClick={onFilterClick}
+        />
+        {!data.length &&
+          !loading && <NoItemMessage message={formatMessage(COMMON_LOCALE_KEYS.NO_RESULTS)} />}
+      </Fragment>
     );
   }
 }

@@ -27,6 +27,12 @@ export const URLS = {
 
   widget: (activeProject, widgetId = '') => `${urlBase}${activeProject}/widget/${widgetId}`,
 
+  dashboardWidget: (activeProject, dashboardId, widgetId) =>
+    `${urlBase}${activeProject}/dashboard/${dashboardId}/${widgetId}`,
+
+  addDashboardWidget: (activeProject, dashboardId) =>
+    `${urlBase}${activeProject}/dashboard/${dashboardId}/add`,
+
   projectWidget: (activeProject, widgetId = '', interval = '') =>
     `${urlBase}project/${activeProject}/widget/${widgetId}${getQueryParams({ interval })}`,
 

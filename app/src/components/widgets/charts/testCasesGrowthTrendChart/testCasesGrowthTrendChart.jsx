@@ -12,6 +12,7 @@ import { activeProjectSelector } from 'controllers/user';
 import { TEST_ITEM_PAGE } from 'controllers/pages';
 import * as COLORS from 'common/constants/colors';
 import * as STATUSES from 'common/constants/testStatuses';
+import { CHART_MODES } from 'pages/inside/dashboardItemPage/widgetWizardModal/widgetControls/constants';
 import { C3Chart } from '../common/c3chart';
 import { TooltipWrapper } from '../common/tooltip';
 import { getLaunchAxisTicks, getTimelineAxisTicks } from '../common/utils';
@@ -74,7 +75,7 @@ export class TestCasesGrowthTrendChart extends Component {
   }
 
   componentWillUnmount() {
-    this.node.removeEventListener('mousemove', this.getCoords);
+    this.node.removeEventListener('mousemove', this.setupCoords);
     this.props.observer.unsubscribe('widgetResized', this.resizeChart);
   }
 
@@ -82,7 +83,7 @@ export class TestCasesGrowthTrendChart extends Component {
     this.chart = chart;
     this.node = element;
 
-    this.node.addEventListener('mousemove', this.getCoords);
+    this.node.addEventListener('mousemove', this.setupCoords);
   };
 
   onChartClick = (d) => {
@@ -97,7 +98,7 @@ export class TestCasesGrowthTrendChart extends Component {
     this.props.redirect(Object.assign(statisticsLink, defaultParams));
   };
 
-  getCoords = ({ pageX, pageY }) => {
+  setupCoords = ({ pageX, pageY }) => {
     this.x = pageX;
     this.y = pageY;
   };
@@ -113,7 +114,9 @@ export class TestCasesGrowthTrendChart extends Component {
 
   getConfig = () => {
     const { widget, intl, isPreview, container } = this.props;
-    this.isTimeLine = widget.contentParameters && widget.contentParameters.widgetOptions.timeline;
+    this.isTimeLine =
+      widget.contentParameters &&
+      widget.contentParameters.widgetOptions.mode === CHART_MODES.TIMELINE_MODE;
 
     let data;
 
@@ -158,7 +161,7 @@ export class TestCasesGrowthTrendChart extends Component {
     this.config = {
       data: {
         columns: [offsets, bars],
-        type: 'bar',
+        type: CHART_MODES.BAR_VIEW,
         order: null,
         groups: [['offset', 'bar']],
         onclick: this.onChartClick,

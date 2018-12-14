@@ -9,6 +9,7 @@ import { FormattedMessage } from 'react-intl';
 import { activeProjectSelector } from 'controllers/user';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { PROJECT_LAUNCHES_PAGE } from 'controllers/pages';
+import { ALL } from 'common/constants/reservedFilterIds';
 import AddFilterIcon from './img/ic-add-filter-inline.svg';
 
 import styles from './noFiltersBlock.scss';
@@ -45,7 +46,13 @@ export class NoFiltersBlock extends PureComponent {
             />
             <Link
               className={cx('link')}
-              to={{ type: PROJECT_LAUNCHES_PAGE, payload: { projectId: this.props.activeProject } }}
+              to={{
+                type: PROJECT_LAUNCHES_PAGE,
+                payload: {
+                  projectId: this.props.activeProject,
+                  filterId: ALL,
+                },
+              }}
             >
               <FormattedMessage id={'NoFiltersBlock.link'} defaultMessage={'Launch Page'} />
             </Link>

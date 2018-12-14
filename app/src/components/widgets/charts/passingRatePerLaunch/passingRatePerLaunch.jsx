@@ -10,6 +10,7 @@ import { redirect } from 'redux-first-router';
 import { defectLinkSelector, statisticsLinkSelector } from 'controllers/testItem';
 import * as COLORS from 'common/constants/colors';
 import { STATS_PASSED } from 'common/constants/statistics';
+import { CHART_MODES } from 'pages/inside/dashboardItemPage/widgetWizardModal/widgetControls/constants';
 import { C3Chart } from '../common/c3chart';
 import { Legend } from '../common/legend';
 import { messages } from '../common/messages';
@@ -117,7 +118,7 @@ export class PassingRatePerLaunch extends Component {
     const chartData = {
       columns,
       groups: [itemNames],
-      type: data.contentParameters.widgetOptions.viewMode === 'barMode' ? 'bar' : 'pie',
+      type: data.contentParameters.widgetOptions.viewMode,
       onclick: () => {},
       order: null,
       colors,
@@ -128,7 +129,7 @@ export class PassingRatePerLaunch extends Component {
     };
 
     const bar =
-      data.contentParameters.widgetOptions.viewMode === 'barMode'
+      data.contentParameters.widgetOptions.viewMode === CHART_MODES.BAR_VIEW
         ? {
             width: {
               ratio: 0.35,
@@ -136,7 +137,7 @@ export class PassingRatePerLaunch extends Component {
           }
         : {};
     const pie =
-      data.contentParameters.widgetOptions.viewMode === 'barMode'
+      data.contentParameters.widgetOptions.viewMode === CHART_MODES.BAR_VIEW
         ? {}
         : {
             label: {
@@ -146,7 +147,7 @@ export class PassingRatePerLaunch extends Component {
             },
           };
     const padding =
-      data.contentParameters.widgetOptions.viewMode === 'barMode'
+      data.contentParameters.widgetOptions.viewMode === CHART_MODES.BAR_VIEW
         ? {
             top: isPreview ? 0 : 30,
             left: 20,
@@ -157,7 +158,7 @@ export class PassingRatePerLaunch extends Component {
             top: isPreview ? 0 : 85,
           };
     const axis =
-      data.contentParameters.widgetOptions.viewMode === 'barMode'
+      data.contentParameters.widgetOptions.viewMode === CHART_MODES.BAR_VIEW
         ? {
             rotated: true,
             x: {
@@ -302,7 +303,7 @@ export class PassingRatePerLaunch extends Component {
         <C3Chart
           config={this.config}
           onChartCreated={this.onChartCreated}
-          className={this.props.widget.contentParameters.widgetOptions.viewMode[0]}
+          className={this.props.widget.contentParameters.widgetOptions.viewMode}
         >
           {!this.props.isPreview && (
             <Legend

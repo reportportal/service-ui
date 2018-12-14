@@ -35,3 +35,9 @@
     }
   }
 }
+
+:global {
+  .c3-grid line {
+    stroke: $COLOR--gray-80;
+  }
+}

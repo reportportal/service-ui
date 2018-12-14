@@ -1,11 +1,9 @@
 export const flakyTests = {
-  lastLaunch: [
-    {
-      name: 'Demo Api Tests_test2',
-      number: '7',
-      id: '59f9af3108813b00015560a9',
-    },
-  ],
+  latestLaunch: {
+    name: 'Demo Api Tests_test2',
+    number: '7',
+    id: '59f9af3108813b00015560a9',
+  },
   flaky: [
     {
       uniqueId: 'auto:c6be22c35d9f4573ef5137c66466cd26',

@@ -37,7 +37,7 @@ storiesOf('Pages/Inside/DashboardPage/Widgets/FlakyTests', module)
   .addDecorator(withRedux)
   .add('with required props: launch, tests, nameClickHandler', () => (
     <FlakyTests
-      launch={flakyTests.lastLaunch[0]}
+      launch={flakyTests.latestLaunch}
       tests={flakyTests.flaky}
       nameClickHandler={action('Test id: ')}
     />
