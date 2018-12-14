@@ -20,9 +20,9 @@ import { formatMethodType, formatStatus } from 'common/utils/localizationUtils';
 import TestParamsIcon from 'common/img/test-params-icon-inline.svg';
 import PencilIcon from 'common/img/pencil-icon-inline.svg';
 import { NameLink } from 'pages/inside/common/nameLink';
+import { DurationBlock } from 'pages/inside/common/durationBlock';
 import { AttributesBlock } from './attributesBlock';
 import { OwnerBlock } from './ownerBlock';
-import { DurationBlock } from './durationBlock';
 import styles from './itemInfo.scss';
 
 const cx = classNames.bind(styles);

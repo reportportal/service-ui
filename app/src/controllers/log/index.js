@@ -15,4 +15,5 @@ export {
   nextItemSelector,
   nextLogLinkSelector,
   previousLogLinkSelector,
+  retryLinkSelector,
 } from './selectors';

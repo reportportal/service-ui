@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { injectIntl, intlShape } from 'react-intl';
 import classNames from 'classnames/bind';
-import { DurationBlock } from 'pages/inside/common/itemInfo/durationBlock';
+import { DurationBlock } from 'pages/inside/common/durationBlock';
 import { AttributesBlock } from 'pages/inside/common/itemInfo/attributesBlock';
 import { MarkdownViewer } from 'components/main/markdown';
 import { AbsRelTime } from 'components/main/absRelTime';

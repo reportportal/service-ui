@@ -21,7 +21,7 @@ AttributesBlock.propTypes = {
     PropTypes.shape({
       key: PropTypes.string,
       value: PropTypes.string,
-      system: PropTypes.boolean,
+      system: PropTypes.bool,
     }),
   ).isRequired,
 };
