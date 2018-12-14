@@ -70,6 +70,9 @@ export class GridRow extends Component {
   };
 
   toggleAccordion = () => {
+    if (!this.overflowCell) {
+      return;
+    }
     this.props.tracking.trackEvent(this.props.toggleAccordionEventInfo);
     this.setState({ expanded: !this.state.expanded });
     this.overflowCell.style.maxHeight = this.state.expanded
@@ -81,6 +84,7 @@ export class GridRow extends Component {
 
   render() {
     const { columns, value, selectable, changeOnlyMobileLayout, rowClassMapper } = this.props;
+    const { expanded, withAccordion } = this.state;
     const customClasses = (rowClassMapper && rowClassMapper(value)) || {};
     return (
       <div
@@ -113,6 +117,8 @@ export class GridRow extends Component {
                 formatter={column.formatter}
                 title={column.title}
                 customProps={column.customProps}
+                expanded={withAccordion ? expanded : true}
+                toggleExpand={this.toggleAccordion}
               />
             );
           })}
