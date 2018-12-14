@@ -20,11 +20,12 @@ export const TestsTableWidget = ({ launchName, tests, nameClickHandler, issueTyp
 TestsTableWidget.propTypes = {
   launchName: string.isRequired,
   tests: PTTests.isRequired,
-  nameClickHandler: func.isRequired,
+  nameClickHandler: func,
   issueType: element,
   columns: PTColumns.isRequired,
 };
 
 TestsTableWidget.defaultProps = {
   issueType: null,
+  nameClickHandler: () => {},
 };

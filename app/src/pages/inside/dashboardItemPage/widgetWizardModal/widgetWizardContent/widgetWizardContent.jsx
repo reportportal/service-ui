@@ -10,6 +10,7 @@ import { fetch } from 'common/utils';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLock';
 import { activeProjectSelector } from 'controllers/user';
+import { activeDashboardIdSelector } from 'controllers/pages';
 import { WizardInfoSection } from './wizardInfoSection';
 import { WizardControlsSection } from './wizardControlsSection';
 import styles from './widgetWizardContent.scss';
@@ -30,6 +31,10 @@ const messages = defineMessages({
   (state) => ({
     activeWidgetId: formValueSelector(WIDGET_WIZARD_FORM)(state, 'widgetType'),
     widgetUrl: URLS.widget(activeProjectSelector(state)),
+    dashboardWidgetUrl: URLS.addDashboardWidget(
+      activeProjectSelector(state),
+      activeDashboardIdSelector(state),
+    ),
   }),
   {
     submitWidgetWizardForm: () => submit(WIDGET_WIZARD_FORM),
@@ -45,6 +50,8 @@ export class WidgetWizardContent extends Component {
     activeWidgetId: PropTypes.string,
     submitWidgetWizardForm: PropTypes.func.isRequired,
     widgetUrl: PropTypes.string.isRequired,
+    dashboardWidgetUrl: PropTypes.string.isRequired,
+    closeModal: PropTypes.func.isRequired,
     eventsInfo: PropTypes.object,
     showNotification: PropTypes.func.isRequired,
     showScreenLockAction: PropTypes.func.isRequired,
@@ -83,6 +90,7 @@ export class WidgetWizardContent extends Component {
       tracking: { trackEvent },
       eventsInfo: { addWidget },
       widgetUrl,
+      dashboardWidgetUrl,
     } = this.props;
 
     const data = {
@@ -96,8 +104,20 @@ export class WidgetWizardContent extends Component {
       method: 'post',
       data,
     })
+      .then(({ id }) => {
+        const newWidget = {
+          widgetId: id,
+          widgetPosition: { positionX: 0, positionY: 0 },
+          widgetSize: { width: 12, height: 7 },
+        };
+        return fetch(dashboardWidgetUrl, {
+          method: 'put',
+          data: { addWidget: newWidget },
+        });
+      })
       .then(() => {
         this.props.hideScreenLockAction();
+        this.props.closeModal();
         this.props.showNotification({
           message: formatMessage(messages.addWidgetSuccess),
           type: NOTIFICATION_TYPES.SUCCESS,

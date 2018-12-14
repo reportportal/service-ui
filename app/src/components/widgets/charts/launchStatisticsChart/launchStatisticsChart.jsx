@@ -12,6 +12,7 @@ import { defectTypesSelector } from 'controllers/project';
 import { defectLinkSelector, statisticsLinkSelector } from 'controllers/testItem';
 import { activeProjectSelector } from 'controllers/user';
 import { PASSED, FAILED, SKIPPED, INTERRUPTED } from 'common/constants/testStatuses';
+import { CHART_MODES } from 'pages/inside/dashboardItemPage/widgetWizardModal/widgetControls/constants';
 import {
   getItemColor,
   getItemName,
@@ -24,14 +25,7 @@ import { C3Chart } from '../common/c3chart';
 import { Legend } from '../common/legend';
 import { TooltipWrapper, TooltipContent } from '../common/tooltip';
 import { messages } from '../common/messages';
-import {
-  CHART_MODES,
-  ZOOM_KEY,
-  AREA_CHART_KEY,
-  TIME_LINE_KEY,
-  TOTAL_KEY,
-  CHART_OFFSET,
-} from './constants';
+import { TOTAL_KEY, CHART_OFFSET } from './constants';
 import styles from './launchStatisticsChart.scss';
 
 const cx = classNames.bind(styles);
@@ -194,21 +188,28 @@ export class LaunchStatisticsChart extends Component {
   };
 
   getConfig = () => {
-    const { isPreview } = this.props;
+    const {
+      isPreview,
+      widget: { content },
+    } = this.props;
+
+    if (!content || !Object.keys(content).length) {
+      return;
+    }
 
     this.prepareChartData();
 
     this.config = {
       data: {
         columns: this.configData.chartDataOrdered,
-        type: CHART_MODES[this.configData.widgetViewMode],
+        type: this.configData.widgetViewMode,
         onclick: !isPreview && !this.isCustomTooltipNeeded() ? this.onChartClick : null,
         order: null,
         colors: this.configData.colors,
         groups: [this.configData.itemNames],
       },
       point: {
-        show: this.isSingleColumn() && this.configData.widgetViewMode === AREA_CHART_KEY,
+        show: this.isSingleColumn() && this.configData.widgetViewMode === CHART_MODES.AREA_VIEW,
         r: 3,
         focus: {
           expand: {
@@ -243,7 +244,7 @@ export class LaunchStatisticsChart extends Component {
         y: {
           show: !isPreview && this.props.isFullscreen,
           padding: {
-            top: this.configData.widgetViewMode === AREA_CHART_KEY ? 3 : 0,
+            top: this.configData.widgetViewMode === CHART_MODES.AREA_VIEW ? 3 : 0,
           },
         },
       },
@@ -339,8 +340,8 @@ export class LaunchStatisticsChart extends Component {
       itemNames: chartDataOrdered.map((item) => item[0]),
       colors,
       isTimeLine,
-      isZoomEnabled: widgetOptions[ZOOM_KEY],
-      widgetViewMode: widgetOptions.viewMode[0],
+      isZoomEnabled: widgetOptions.zoom,
+      widgetViewMode: widgetOptions.viewMode,
     };
   };
 
@@ -354,11 +355,7 @@ export class LaunchStatisticsChart extends Component {
     } = this.props;
 
     let data = [];
-    const isTimeLine = widgetOptions[TIME_LINE_KEY];
-
-    if (!Object.keys(content).length) {
-      return;
-    }
+    const isTimeLine = widgetOptions.mode === CHART_MODES.TIMELINE_MODE;
 
     if (isTimeLine) {
       Object.keys(content).forEach((item) => {
@@ -394,7 +391,7 @@ export class LaunchStatisticsChart extends Component {
   isSingleColumn = () => this.configData.itemData.length < 2;
 
   isCustomTooltipNeeded = () =>
-    this.configData.widgetViewMode === AREA_CHART_KEY && !this.configData.isTimeLine;
+    this.configData.widgetViewMode === CHART_MODES.AREA_VIEW && !this.configData.isTimeLine;
 
   resizeChart = () => {
     const newHeight = this.props.container.offsetHeight;
@@ -438,7 +435,7 @@ export class LaunchStatisticsChart extends Component {
       this.state.isConfigReady && (
         <C3Chart
           className={cx('launch-statistics-chart', {
-            'area-view': this.configData.widgetViewMode === AREA_CHART_KEY,
+            'area-view': this.configData.widgetViewMode === CHART_MODES.AREA_VIEW,
             'full-screen': this.props.isFullscreen,
             preview: this.props.isPreview,
           })}

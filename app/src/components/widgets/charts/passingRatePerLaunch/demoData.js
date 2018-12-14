@@ -15,7 +15,7 @@ export const passingRateBarData = {
     itemsCount: 100,
     widgetOptions: {
       launchNameFilter: 'test launch',
-      viewMode: 'barMode',
+      viewMode: 'bar',
     },
   },
 };
@@ -37,7 +37,7 @@ export const passingRatePieData = {
     itemsCount: 100,
     widgetOptions: {
       launchNameFilter: 'test launch',
-      viewMode: 'pieChartMode',
+      viewMode: 'pie',
     },
   },
 };

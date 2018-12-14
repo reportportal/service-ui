@@ -15,18 +15,18 @@ export const TO_INVESTIGATE_OPTION = 'toInvestigateOption';
 export const ITEMS_INPUT_WIDTH = 70;
 
 export const CHART_MODES = {
-  LAUNCH_MODE: 'launchMode',
-  TIMELINE_MODE: 'timelineMode',
+  LAUNCH_MODE: 'launch',
+  TIMELINE_MODE: 'timeline',
 
   ALL_LAUNCHES: 'allLaunches',
   LATEST_LAUNCHES: 'latestLaunches',
 
-  AREA_VIEW: 'areaView',
+  AREA_VIEW: 'area-spline',
+  BAR_VIEW: 'bar',
   TABLE_VIEW: 'tableView',
-  BAR_VIEW: 'barView',
   PANEL_VIEW: 'panelView',
   DONUT_VIEW: 'donutView',
-  PIE_VIEW: 'pieView',
+  PIE_VIEW: 'pie',
 };
 
 export const STATIC_CRITERIA = {
@@ -59,7 +59,6 @@ export const requestDataShape = PropTypes.shape({
   widgetType: PropTypes.oneOf(Object.keys(WIDGET_TYPES).map((key) => WIDGET_TYPES[key])),
   contentParameters: PropTypes.shape({
     itemsCount: PropTypes.string,
-    metadataFields: PropTypes.array,
     contentFields: PropTypes.array,
     widgetOptions: PropTypes.object,
   }),

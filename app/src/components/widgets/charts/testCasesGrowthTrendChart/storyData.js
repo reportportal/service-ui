@@ -98,7 +98,7 @@ export const widgetDataTimelineMode = {
     itemsCount: 18,
     widgetOptions: {
       filterName: ['Add0 smf'],
-      timeline: ['DAY'],
+      mode: 'timeline',
     },
   },
   content: {

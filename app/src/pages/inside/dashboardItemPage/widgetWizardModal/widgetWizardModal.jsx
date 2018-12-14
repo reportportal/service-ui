@@ -24,13 +24,10 @@ const messages = defineMessages({
 
 @withModal('widgetWizardModal')
 @injectIntl
-@connect(
-  null,
-  {
-    destroyWizardForm: () => destroy(WIDGET_WIZARD_FORM),
-    hideModalAction,
-  },
-)
+@connect(null, {
+  destroyWizardForm: () => destroy(WIDGET_WIZARD_FORM),
+  hideModalAction,
+})
 @track()
 export class WidgetWizardModal extends Component {
   static propTypes = {
@@ -56,10 +53,6 @@ export class WidgetWizardModal extends Component {
 
   state = {
     shown: false,
-    data: PropTypes.shape({
-      onConform: () => {},
-      eventsInfo: {},
-    }),
   };
   componentDidMount() {
     document.addEventListener('keydown', this.onKeydown, false);
@@ -123,7 +116,10 @@ export class WidgetWizardModal extends Component {
                   />
 
                   {status !== 'exited' ? (
-                    <WidgetWizardContent eventsInfo={this.props.data.eventsInfo} />
+                    <WidgetWizardContent
+                      closeModal={this.onClosed}
+                      eventsInfo={this.props.data.eventsInfo}
+                    />
                   ) : (
                     <SpinningPreloader />
                   )}

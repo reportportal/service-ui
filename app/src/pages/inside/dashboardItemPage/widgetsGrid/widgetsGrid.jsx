@@ -34,6 +34,12 @@ const messages = defineMessages({
 @connect(
   (state) => ({
     url: URLS.dashboard(activeProjectSelector(state), activeDashboardIdSelector(state)),
+    deleteWidgetUrl: (widgetId) =>
+      URLS.dashboardWidget(
+        activeProjectSelector(state),
+        activeDashboardIdSelector(state),
+        widgetId,
+      ),
     userInfo: userInfoSelector(state),
     project: activeProjectSelector(state),
   }),
@@ -46,6 +52,7 @@ export class WidgetsGrid extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
     url: PropTypes.string.isRequired,
+    deleteWidgetUrl: PropTypes.func.isRequired,
     isFullscreen: PropTypes.bool,
     project: PropTypes.string.isRequired,
     userInfo: PropTypes.object.isRequired,
@@ -99,14 +106,14 @@ export class WidgetsGrid extends Component {
 
         newWidgets = newLayout.map(({ i, y, h }, index) => ({
           widgetId: i,
-          widgetPosition: [oldWidgets[index].widgetPosition[0], y],
-          widgetSize: [oldWidgets[index].widgetSize[0], h],
+          widgetPosition: { positionX: oldWidgets[index].widgetPosition.positionX, positionY: y },
+          widgetSize: { width: oldWidgets[index].widgetSize.width, height: h },
         }));
       } else {
         newWidgets = newLayout.map(({ i, x, y, w, h }) => ({
           widgetId: i,
-          widgetPosition: [x, y],
-          widgetSize: [w, h],
+          widgetPosition: { positionX: x, positionY: y },
+          widgetSize: { width: w, height: h },
         }));
       }
       this.setState({ widgets: newWidgets });
@@ -147,12 +154,9 @@ export class WidgetsGrid extends Component {
     });
   };
 
-  deleteWidget = (widget) =>
-    fetch(this.props.url, {
-      method: 'PUT',
-      data: {
-        deleteWidget: widget,
-      },
+  deleteWidget = (widgetId) =>
+    fetch(this.props.deleteWidgetUrl(widgetId), {
+      method: 'DELETE',
     });
 
   fetchWidgets = () => {
@@ -188,7 +192,7 @@ export class WidgetsGrid extends Component {
     if (widgets.length) {
       Items = widgets.map(
         ({
-          widgetPosition: { position_x: x, position_y: y },
+          widgetPosition: { positionX: x, positionY: y },
           widgetSize: { width: w, height: h },
           widgetId,
         }) => {

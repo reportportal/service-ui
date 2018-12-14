@@ -5,38 +5,16 @@ import PropTypes from 'prop-types';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
 import { DASHBOARD_PAGE_EVENTS } from 'components/main/analytics/events';
-import * as widgetTypes from 'common/constants/widgetTypes';
 import { connect } from 'react-redux';
 import { activeProjectSelector } from 'controllers/user';
 import { showModalAction } from 'controllers/modal';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
-import { TestCasesGrowthTrendChart } from 'components/widgets/charts/testCasesGrowthTrendChart';
-import { LaunchesComparisonChart } from 'components/widgets/charts/launchesComparisonChart';
-import { UniqueBugsTable } from 'pages/inside/dashboardPage/widgets/uniqueBugsTable';
-import { LaunchesDurationChart } from 'components/widgets/charts/launchesDurationChart';
-import { LaunchesTable } from 'pages/inside/dashboardPage/widgets/launchesTable';
-import { LaunchStatisticsChart } from 'components/widgets/charts/launchStatisticsChart';
-import { FailedCasesTrendChart } from 'components/widgets/charts/failedCasesTrendChart';
-import { NonPassedTestCasesTrendChart } from 'components/widgets/charts/nonPassedTestCasesTrendChart';
-import { PassingRatePerLaunch } from 'components/widgets/charts/passingRatePerLaunch';
+import { NoDataAvailable } from 'components/widgets/noDataAvailable';
 import { WidgetHeader } from './widgetHeader';
+import { CHARTS } from './constants';
 import styles from './widget.scss';
 
 const cx = classNames.bind(styles);
-
-const charts = {
-  [widgetTypes.UNIQUE_BUGS_TABLE]: UniqueBugsTable,
-  [widgetTypes.DIFFERENT_LAUNCHES_COMPARISON]: LaunchesComparisonChart,
-  [widgetTypes.LAUNCHES_TABLE]: LaunchesTable,
-  [widgetTypes.LAUNCH_STATISTICS]: LaunchStatisticsChart,
-  [widgetTypes.LAUNCH_DURATION]: LaunchesDurationChart,
-  [widgetTypes.FAILED_CASES_TREND]: FailedCasesTrendChart,
-  [widgetTypes.NON_PASSED_TEST_CASES_TREND]: NonPassedTestCasesTrendChart,
-  [widgetTypes.TEST_CASES_GROWTH_TREND]: TestCasesGrowthTrendChart,
-  [widgetTypes.DIFFERENT_LAUNCHES_COMPARISON]: LaunchesComparisonChart,
-  [widgetTypes.LAUNCH_DURATION]: LaunchesDurationChart,
-  [widgetTypes.PASSING_RATE_PER_LAUNCH]: PassingRatePerLaunch,
-};
 
 @connect(
   (state, ownProps) => ({
@@ -50,7 +28,7 @@ const charts = {
 export class Widget extends Component {
   static propTypes = {
     url: PropTypes.string.isRequired,
-    widgetId: PropTypes.number.isRequired,
+    widgetId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
     showModalAction: PropTypes.func.isRequired,
     switchDraggable: PropTypes.func,
     onDelete: PropTypes.func,
@@ -120,12 +98,18 @@ export class Widget extends Component {
     this.setState({
       loading: true,
     });
-    fetch(this.props.url).then((widget) => {
-      this.setState({
-        loading: false,
-        widget,
+    fetch(this.props.url)
+      .then((widget) => {
+        this.setState({
+          loading: false,
+          widget,
+        });
+      })
+      .catch(() => {
+        this.setState({
+          loading: false,
+        });
       });
-    });
   };
 
   deleteWidget = () => {
@@ -150,7 +134,8 @@ export class Widget extends Component {
       meta: this.getWidgetOptions().viewMode,
     };
 
-    const Chart = charts[headerData.type];
+    const noWidgetDataAvailable = !widget.content || !Object.keys(widget.content).length;
+    const Chart = CHARTS[headerData.type];
 
     return (
       <div className={cx('widget-container')}>
@@ -170,15 +155,19 @@ export class Widget extends Component {
             />
           </div>
           <div ref={this.getWidgetNode} className={cx('widget', { hidden: !visible })}>
-            {this.state.loading && <SpinningPreloader />}
-            {Chart && (
-              <Chart
-                widget={widget}
-                isFullscreen={this.props.isFullscreen}
-                container={this.node}
-                observer={this.props.observer}
-              />
-            )}
+            {(this.state.loading && <SpinningPreloader />) ||
+              (noWidgetDataAvailable ? (
+                <NoDataAvailable />
+              ) : (
+                Chart && (
+                  <Chart
+                    widget={widget}
+                    isFullscreen={this.props.isFullscreen}
+                    container={this.node}
+                    observer={this.props.observer}
+                  />
+                )
+              ))}
           </div>
         </Fragment>
       </div>

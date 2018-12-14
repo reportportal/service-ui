@@ -149,7 +149,7 @@ export class LaunchesComparisonChart extends Component {
     this.width = container.offsetWidth;
     this.itemData = [];
 
-    Object.keys(data[0].values).forEach((key) => {
+    contentFields.forEach((key) => {
       const keyConfig = getItemNameConfig(key);
       chartData[key] = [key];
       colors[key] = getItemColor(keyConfig, this.props.defectTypes);

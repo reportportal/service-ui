@@ -125,7 +125,7 @@ export class DashboardItemPage extends Component {
     this.props.showModalAction({
       id: 'widgetWizardModal',
       data: {
-        onConfirm: () => {},
+        onConfirm: () => {}, // TODO: put dashboard update actions here
         eventsInfo: {
           closeIcon: DASHBOARD_PAGE_EVENTS.CLOSE_ICON_ADD_WIDGET_MODAL,
           chooseWidgetType: DASHBOARD_PAGE_EVENTS.CHOOSE_WIDGET_TYPE_ADD_WIDGET_MODAL,
