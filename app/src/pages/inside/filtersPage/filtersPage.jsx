@@ -34,11 +34,16 @@ import { FILTERS_PAGE, FILTERS_PAGE_EVENTS } from 'components/main/analytics/eve
 import { NoFiltersBlock } from './noFiltersBlock';
 import { FilterPageToolbar } from './filterPageToolbar';
 import { FilterGrid } from './filterGrid';
+import { NoFiltersFound } from '../common/NoFiltersFound';
 
 const messages = defineMessages({
   filtersPageTitle: {
     id: 'FiltersPage.title',
     defaultMessage: 'Filters',
+  },
+  filtersNotFound: {
+    id: 'FiltersPage.notFound',
+    defaultMessage: "No filters found for '{filter}'",
   },
 });
 
@@ -125,6 +130,10 @@ export class FiltersPage extends Component {
 
   getBreadcrumbs = () => [{ title: this.props.intl.formatMessage(messages.filtersPageTitle) }];
 
+  getNoFiltersFound = () => (
+    <NoFiltersFound filter={this.props.filter} notFoundMessage={messages.filtersNotFound} />
+  );
+
   confirmDelete = (filter) =>
     this.props.showModalAction({
       id: 'filterDeleteModal',
@@ -191,8 +200,11 @@ export class FiltersPage extends Component {
             loading={loading}
             {...rest}
           />
-          {!filters.length && !loading && <NoFiltersBlock />}
-          {!!pageCount &&
+          {!filters.length && !loading && !this.props.filter && <NoFiltersBlock />}
+          {!filters.length && !loading && !!this.props.filter && this.getNoFiltersFound()}
+          {filters &&
+            !!filters.length &&
+            !!pageCount &&
             !loading && (
               <PaginationToolbar
                 activePage={activePage}
