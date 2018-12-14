@@ -2,7 +2,7 @@ import { Component } from 'react';
 import track from 'react-tracking';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { injectIntl } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
 import { LAUNCHES_PAGE_EVENTS } from 'components/main/analytics/events';
@@ -19,13 +19,22 @@ import { levelSelector, launchSelector } from 'controllers/testItem';
 import { formatMethodType, formatStatus } from 'common/utils/localizationUtils';
 import TestParamsIcon from 'common/img/test-params-icon-inline.svg';
 import PencilIcon from 'common/img/pencil-icon-inline.svg';
+import RetryIcon from 'common/img/retry-inline.svg';
 import { NameLink } from 'pages/inside/common/nameLink';
 import { DurationBlock } from 'pages/inside/common/durationBlock';
 import { AttributesBlock } from './attributesBlock';
 import { OwnerBlock } from './ownerBlock';
+import { RetriesCounter } from './retriesCounter';
 import styles from './itemInfo.scss';
 
 const cx = classNames.bind(styles);
+
+const messages = defineMessages({
+  retryTooltip: {
+    id: 'ItemInfo.RetryTooltip',
+    defaultMessage: 'Launch has test items with retries',
+  },
+});
 
 @injectIntl
 @connect((state) => ({
@@ -53,6 +62,7 @@ export class ItemInfo extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    onClickRetries: PropTypes.func,
   };
 
   static defaultProps = {
@@ -67,6 +77,7 @@ export class ItemInfo extends Component {
     isStepLevel: false,
     editDisabled: false,
     launch: {},
+    onClickRetries: () => {},
   };
 
   handleEditItem = () => {
@@ -97,6 +108,7 @@ export class ItemInfo extends Component {
       isStepLevel,
       launch,
       tracking,
+      onClickRetries,
     } = this.props;
 
     return (
@@ -146,11 +158,14 @@ export class ItemInfo extends Component {
           {value.startTime && (
             <div className={cx('mobile-start-time')}>{fromNowFormat(value.startTime)}</div>
           )}
-          <div className={cx({ 'owner-tags-block': editDisabled })}>
-            {value.owner && <OwnerBlock owner={value.owner} />}
-            {value.attributes &&
-              !!value.attributes.length && <AttributesBlock attributes={value.attributes} />}
-          </div>
+          {value.hasRetries && (
+            <div className={cx('retry-icon')} title={intl.formatMessage(messages.retryTooltip)}>
+              {Parser(RetryIcon)}
+            </div>
+          )}
+          {value.owner && <OwnerBlock owner={value.owner} />}
+          {value.attributes &&
+            !!value.attributes.length && <AttributesBlock attributes={value.attributes} />}
           {isStepLevel && (
             <div className={cx('mobile-info')}>
               @{formatMethodType(intl.formatMessage, value.type)}
@@ -159,6 +174,12 @@ export class ItemInfo extends Component {
               </span>
             </div>
           )}
+          {isStepLevel &&
+            value.retries.length > 0 && (
+              <div className={cx('retries')}>
+                <RetriesCounter testItem={value} onLabelClick={onClickRetries} />
+              </div>
+            )}
           {value.description && (
             <div className={cx('item-description')}>
               <MarkdownViewer value={value.description} />

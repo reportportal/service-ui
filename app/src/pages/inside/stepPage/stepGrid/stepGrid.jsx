@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import { injectIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import { Grid } from 'components/main/grid';
-import { ItemInfo } from 'pages/inside/common/itemInfo';
 import { AbsRelTime } from 'components/main/absRelTime';
 import { formatMethodType, formatStatus } from 'common/utils/localizationUtils';
 import { FAILED } from 'common/constants/testStatuses';
@@ -18,6 +17,7 @@ import { STEP_PAGE_EVENTS } from 'components/main/analytics/events';
 import { PredefinedFilterSwitcher } from './predefinedFilterSwitcher';
 import { DefectType } from './defectType';
 import { GroupHeader } from './groupHeader';
+import { ItemInfoWithRetries } from './itemInfoWithRetries';
 import styles from './stepGrid.scss';
 
 const cx = classNames.bind(styles);
@@ -41,7 +41,7 @@ MethodTypeColumn.defaultProps = {
 
 const NameColumn = ({ className, ...rest }) => (
   <div className={cx('name-col', className)}>
-    <ItemInfo {...rest} />
+    <ItemInfoWithRetries {...rest} />
   </div>
 );
 NameColumn.propTypes = {

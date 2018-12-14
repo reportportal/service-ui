@@ -12,6 +12,7 @@ export const Retries = ({
   selectedId,
   logItem,
   selectedIndex,
+  loading,
   onRetrySelect,
 }) => (
   <div className={cx('retries')}>
@@ -23,7 +24,8 @@ export const Retries = ({
         retryId={selectedId}
         testItemId={testItemId}
         index={selectedIndex}
-        message={logItem.message}
+        message={logItem ? logItem.message : ''}
+        loading={loading}
       />
     </div>
   </div>
@@ -32,12 +34,14 @@ Retries.propTypes = {
   testItemId: PropTypes.number.isRequired,
   retries: PropTypes.arrayOf(PropTypes.object),
   selectedId: PropTypes.number.isRequired,
-  logItem: PropTypes.object.isRequired,
+  logItem: PropTypes.object,
   selectedIndex: PropTypes.number.isRequired,
+  loading: PropTypes.bool,
   onRetrySelect: PropTypes.func,
 };
 Retries.defaultProps = {
   retries: [],
   logItem: {},
+  loading: false,
   onRetrySelect: () => {},
 };

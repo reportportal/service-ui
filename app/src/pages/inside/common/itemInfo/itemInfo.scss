@@ -131,8 +131,38 @@
 }
 
 .owner-tags-block {
-  display: flex;
-  flex-wrap: wrap;
+  display: inline-block;
+
+  &.disabled {
+    display: flex;
+    flex-wrap: wrap;
+  }
+}
+
+.retries-block {
+  position: relative;
+}
+
+.retries-hidden-block {
+  visibility: hidden;
+}
+
+.retries-visible-block {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: calc(-100% + 12px);
+}
+
+.retry-icon {
+  display: inline-block;
+  height: 15px;
+  width: 18px;
+  padding-right: 20px;
+}
+
+.retries {
+  display: inline-block;
 }
 
 @keyframes auto-analyze-blink {
