@@ -13,7 +13,7 @@ const messages = defineMessages({
     defaultMessage: `No filters found for "{filter}".`,
   },
   checkQuery: {
-    id: 'FiltersNotFound.checkQuery',
+    id: 'NoFiltersFound.checkQuery',
     defaultMessage: `Check your query and try again`,
   },
 });
