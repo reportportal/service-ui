@@ -1,8 +1,11 @@
 .all-latest-dropdown {
   position: relative;
   height: 30px;
-  background-color: $COLOR--gray-91;
   cursor: pointer;
+  border: 1px solid $COLOR--gray-91;
+  &.active {
+    background-color: $COLOR--gray-91;
+  }
 
   @media (max-width: $SCREEN_SM_MAX) {
     background-color: $COLOR--gray-80;
@@ -21,11 +24,14 @@
   align-items: center;
   justify-content: center;
   min-width: 150px;
-  color: $COLOR--charcoal-grey;
+  color: $COLOR--gray-47;
   font-family: $FONT-SEMIBOLD;
   font-size: 13px;
   text-align: center;
   text-transform: uppercase;
+  &.active {
+    color: $COLOR--charcoal-grey;
+  }
 
   @media (max-width: $SCREEN_SM_MAX) {
     display: none;
@@ -77,9 +83,14 @@
   width: 10px;
   height: 10px;
   line-height: 8px;
+  &.active {
+    svg {
+      fill: $COLOR--charcoal-grey;
+    }
+  }
 
   svg {
-    fill: $COLOR--charcoal-grey;
+    fill: $COLOR--gray-47;
   }
 
   @media (max-width: $SCREEN_SM_MAX) {

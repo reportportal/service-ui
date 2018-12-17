@@ -35,12 +35,14 @@ export class AllLatestDropdown extends Component {
     value: PropTypes.string,
     onChange: PropTypes.func,
     onClick: PropTypes.func,
+    activeFilterId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   };
 
   static defaultProps = {
     value: ALL,
     onChange: () => {},
     onClick: () => {},
+    activeFilterId: null,
   };
 
   constructor(props) {
@@ -95,6 +97,8 @@ export class AllLatestDropdown extends Component {
 
   toggleExpand = () => this.setState({ expanded: !this.state.expanded });
 
+  isActive = () => this.props.activeFilterId === ALL || this.props.activeFilterId === LATEST;
+
   render() {
     const { value } = this.props;
     const options = this.getOptions();
@@ -102,9 +106,12 @@ export class AllLatestDropdown extends Component {
     const label = currentOption && currentOption.label;
     const shortLabel = currentOption && currentOption.shortLabel;
     return (
-      <div ref={this.nodeRef} className={cx('all-latest-dropdown')}>
+      <div ref={this.nodeRef} className={cx('all-latest-dropdown', { active: this.isActive() })}>
         <div className={cx('selected-value')}>
-          <div className={cx('value')} onClick={this.handleCurrentOptionClick}>
+          <div
+            className={cx('value', { active: this.isActive() })}
+            onClick={this.handleCurrentOptionClick}
+          >
             {label}
           </div>
           <div className={cx('value-short')} onClick={this.toggleExpand}>
@@ -112,7 +119,7 @@ export class AllLatestDropdown extends Component {
           </div>
           <div className={cx('arrow')} onClick={this.toggleExpand}>
             <div className={cx('separator')} />
-            <div className={cx('icon')}>{Parser(ArrowDownIcon)}</div>
+            <div className={cx('icon', { active: this.isActive() })}>{Parser(ArrowDownIcon)}</div>
           </div>
         </div>
         {this.state.expanded && (
