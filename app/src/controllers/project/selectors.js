@@ -56,8 +56,11 @@ const createTypedIntegrationsSelector = (integrationType) =>
     integrations.filter((integration) => integration.integrationType.groupType === integrationType),
   );
 
-export const notificationIntegrationSelector = (state) =>
+const notificationIntegrationSelector = (state) =>
   createTypedIntegrationsSelector(EMAIL_NOTIFICATION_INTEGRATION_TYPE)(state)[0];
+
+export const notificationIntegrationEnabledSelector = (state) =>
+  notificationIntegrationSelector(state).enabled;
 
 export const notificationIntegrationNameSelector = (state) =>
   notificationIntegrationSelector(state).integrationType.name;

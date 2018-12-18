@@ -8,10 +8,10 @@ import PencilIcon from './img/icon-pencil-inline.svg';
 const cx = classNames.bind(styles);
 
 export const PencilCheckbox = (props) => {
-  const { value, disabled, onChange, onFocus, onBlur, error, onError } = props;
+  const { value, disabled, onChange, onFocus, onBlur, onValidate, error } = props;
   const changeHandler = (v) => {
+    onValidate(error);
     if (error) {
-      onError(error);
       return;
     }
     onChange(v);
@@ -42,8 +42,8 @@ PencilCheckbox.propTypes = {
   onChange: PropTypes.func,
   onFocus: PropTypes.func,
   onBlur: PropTypes.func,
+  onValidate: PropTypes.func,
   error: PropTypes.string,
-  onError: PropTypes.func,
 };
 PencilCheckbox.defaultProps = {
   children: '',
@@ -52,6 +52,6 @@ PencilCheckbox.defaultProps = {
   onChange: () => {},
   onFocus: () => {},
   onBlur: () => {},
+  onValidate: () => {},
   error: null,
-  onError: () => {},
 };

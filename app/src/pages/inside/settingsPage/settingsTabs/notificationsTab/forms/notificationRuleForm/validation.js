@@ -19,29 +19,28 @@ const compareRules = (ruleOne, ruleTwo) => {
 };
 
 export const validate = ({ rules }) => {
-  const errors = {};
-  const rulesArrayErrors = [];
-
-  rules.forEach((item, index, arr) => {
-    const rulesErrors = {};
-
-    if (arr.length > 1) {
-      const alreadyInArray = arr.find((it, id) => compareRules(it, item) && id !== index);
-      if (alreadyInArray) {
-        rulesErrors.confirmed = 'hasDuplicates';
-        rulesArrayErrors[index] = rulesErrors;
+  const rulesErrors = rules
+    .map((rule, index) => {
+      if (rule.recipients.length === 0 && !rule.informOwner) {
+        return {
+          confirmed: 'error',
+          recipients: 'recipientsHint',
+        };
       }
-    }
 
-    if (item.recipients.length === 0 && !item.informOwner) {
-      rulesErrors.recipients = 'recipientsHint';
-      rulesErrors.confirmed = 'error';
-      rulesArrayErrors[index] = rulesErrors;
-    }
-  });
-  if (rulesArrayErrors.length) {
-    errors.rules = rulesArrayErrors;
-  }
+      if (rules.length > 1) {
+        const hasDuplicates = rules.find((item, i) => compareRules(item, rule) && i !== index);
+        if (hasDuplicates) {
+          return {
+            confirmed: 'hasDuplicates',
+          };
+        }
+      }
+      return null;
+    })
+    .filter(Boolean);
 
-  return errors;
+  return {
+    rules: rulesErrors,
+  };
 };
