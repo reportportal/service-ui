@@ -101,7 +101,7 @@ export const URLS = {
   projectIndex: (activeProject) => `${urlBase}project/${activeProject}/index`,
 
   projectStatus: (activeProject, interval) =>
-    `${urlBase}project/list/${activeProject}/${getQueryParams({
+    `${urlBase}project/list/${activeProject}${getQueryParams({
       interval,
     })}`,
 

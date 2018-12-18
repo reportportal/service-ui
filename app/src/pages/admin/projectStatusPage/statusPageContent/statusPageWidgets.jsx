@@ -9,7 +9,7 @@ export const statusPageWidgets = [
     id: WIDGETS_IDS.general,
     source: WIDGETS_IDS.general,
     component: (data) => <GeneralInfo data={data} />,
-    getUrl: (...params) => URLS.projectStatus(...params),
+    getUrl: URLS.projectStatus,
   },
   {
     title: messages.owners,
