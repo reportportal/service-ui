@@ -22,12 +22,9 @@ export class StatusPageContent extends Component {
     interval: '',
   };
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      loading: true,
-    };
-  }
+  state = {
+    loading: true,
+  };
 
   componentDidMount() {
     this.fetchData();
@@ -42,26 +39,22 @@ export class StatusPageContent extends Component {
     }
   }
 
-  getItem = (item) => (
-    <StatusPageItem title={this.props.intl.formatMessage(item.title)}>
-      {this.state.loading ? <SpinningPreloader /> : item.component(this.state[item.source])}
-    </StatusPageItem>
-  );
-
   fetchData = () => {
     const { projectId, interval } = this.props;
     this.setState({
       loading: true,
     });
-    const widgetsWithUrls = statusPageWidgets.filter((item) => item.getUrl);
-    widgetsWithUrls.push(activityItem);
+    const widgetsWithUrls = [...statusPageWidgets.filter((item) => item.getUrl), activityItem];
 
     Promise.all(widgetsWithUrls.map((item) => fetch(item.getUrl(projectId, interval))))
       .then((responses) => {
-        const itemsData = {};
-        widgetsWithUrls.forEach((item, index) => {
-          itemsData[item.id] = responses[index];
-        });
+        const itemsData = widgetsWithUrls.reduce(
+          (acc, item, index) => ({
+            ...acc,
+            [item.id]: responses[index],
+          }),
+          {},
+        );
         this.setState({
           ...itemsData,
           loading: false,
@@ -74,17 +67,27 @@ export class StatusPageContent extends Component {
       });
   };
 
+  renderWidget = (wdigetData) => (
+    <StatusPageItem title={this.props.intl.formatMessage(wdigetData.title)}>
+      {this.state.loading ? (
+        <SpinningPreloader />
+      ) : (
+        wdigetData.component(this.state[wdigetData.source])
+      )}
+    </StatusPageItem>
+  );
+
   render() {
     return (
       <div className={cx('status-page-content')}>
         <div className={cx('status-items-block')}>
           {statusPageWidgets.map((item) => (
             <div key={item.id} className={cx('status-item-wrapper')}>
-              {this.getItem(item)}
+              {this.renderWidget(item)}
             </div>
           ))}
         </div>
-        <div className={cx('activity-block')}>{this.getItem(activityItem)}</div>
+        <div className={cx('activity-block')}>{this.renderWidget(activityItem)}</div>
       </div>
     );
   }
