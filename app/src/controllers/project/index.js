@@ -19,7 +19,7 @@ export {
   userFiltersSelector,
   defectColorsSelector,
   defectTypesSelector,
-  notificationIntegrationSelector,
+  notificationIntegrationEnabledSelector,
   notificationRulesSelector,
   notificationIntegrationNameSelector,
   externalSystemSelector,

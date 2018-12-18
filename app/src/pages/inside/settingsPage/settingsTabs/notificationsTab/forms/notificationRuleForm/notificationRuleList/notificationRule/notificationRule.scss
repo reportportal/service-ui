@@ -9,9 +9,17 @@
 }
 
 .form-invalid-message {
-  margin: 20px 0 20px 100px;
+  margin: 20px 0 20px 226px;
   color: $COLOR--fatal;
-  font-size: 10px;
+  font-size: 12px;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    margin-left: 166px;
+  }
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    margin-left: 0;
+  }
 }
 
 .control-panel {

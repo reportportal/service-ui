@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import {
   updateProjectNotificationsIntegrationAction,
   notificationRulesSelector,
-  notificationIntegrationSelector,
+  notificationIntegrationEnabledSelector,
 } from 'controllers/project';
 import { OWNER } from 'common/constants/permissions';
 import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
@@ -19,7 +19,7 @@ const cx = classNames.bind(styles);
   (state) => ({
     projectRole: activeProjectRoleSelector(state),
     userRole: userAccountRoleSelector(state),
-    enabled: notificationIntegrationSelector(state).enabled,
+    enabled: notificationIntegrationEnabledSelector(state),
     rules: notificationRulesSelector(state),
   }),
   { update: updateProjectNotificationsIntegrationAction },
@@ -62,7 +62,7 @@ export class NotificationsTab extends Component {
 
   isAbleToSubmit = ({ rules }) => rules.every(({ confirmed }) => confirmed);
 
-  convertRulesForSubmission = (obj) => {
+  convertRuleForSubmission = (obj) => {
     const {
       informOwner,
       recipients,
@@ -81,7 +81,7 @@ export class NotificationsTab extends Component {
   };
 
   prepareData(config) {
-    const rules = config.rules.map(this.convertRulesForSubmission);
+    const rules = config.rules.map(this.convertRuleForSubmission);
 
     return { ...config, rules };
   }

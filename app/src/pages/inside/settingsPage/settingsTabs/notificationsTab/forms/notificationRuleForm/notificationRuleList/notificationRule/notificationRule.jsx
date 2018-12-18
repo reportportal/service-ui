@@ -40,7 +40,6 @@ export class NotificationRule extends Component {
     launchTagsSearch: PropTypes.string,
     launchNameSearch: PropTypes.string,
     onDelete: PropTypes.func,
-    valid: PropTypes.bool,
     readOnly: PropTypes.bool,
     deletable: PropTypes.bool,
     confirmed: PropTypes.bool,
@@ -59,7 +58,6 @@ export class NotificationRule extends Component {
     launchTagsSearch: '',
     launchNameSearch: '',
     onDelete: () => {},
-    valid: true,
     readOnly: false,
     deletable: false,
     confirmed: false,
@@ -79,7 +77,7 @@ export class NotificationRule extends Component {
     this.props.onDelete(index, showConfirmation);
   };
 
-  onError = (err) => {
+  onValidate = (err) => {
     const message = this.getErrorMessage(err);
     this.setState({ isDuplicating: message });
   };
@@ -159,7 +157,11 @@ export class NotificationRule extends Component {
           {!readOnly && (
             <div className={cx('control-panel-buttons')}>
               <div className={cx('control-panel-button')}>
-                <FieldProvider name={`${rule}.confirmed`} format={Boolean} onError={this.onError}>
+                <FieldProvider
+                  name={`${rule}.confirmed`}
+                  format={Boolean}
+                  onValidate={this.onValidate}
+                >
                   <PencilCheckbox />
                 </FieldProvider>
               </div>
