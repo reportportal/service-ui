@@ -58,16 +58,19 @@ define(function (require) {
         setupAnchors: function () {
             this.$bodyElement = $('body');
         },
-
         render: function () {
             var self = this;
+            var currentDate = new Date();
+            var newYearStartDate = new Date(2018, 11, 21);
+            var newYearEndDate = new Date(2019, 0, 13);
             var param = {
                 projectUrl: this.projectUrl,
                 userLogin: Storage.getDebugUser() || config.userModel.get('name'),
                 canDebug: this.canDebug,
                 isAdmin: Util.isAdmin(config.userModel.toJSON()),
                 lastActive: this.getLastActive(),
-                lastURL: this.lastURL
+                lastURL: this.lastURL,
+                isNewYear: currentDate >= newYearStartDate && currentDate <= newYearEndDate,
             };
             this.$el.html(Util.templates(this.tpl, param)).show();
             this.setupAnchors();

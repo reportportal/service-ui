@@ -17,7 +17,11 @@
         <% } %>
         <li>
             <a href="#<%- data.projectUrl %>/dashboard" id="dashboard">
-                <i class="rp-icons rp-icons-dashboard fsize-18"></i>
+                <% if(data.isNewYear) { %>
+                    <i class="new-year-icon new-year-dashboard"></i>
+                <% } else { %>
+                    <i class="rp-icons rp-icons-dashboard fsize-18"></i>
+                <% } %>
                 <span><%= data.text.topMenu.dashboard %></span>
             </a>
         </li>
@@ -26,20 +30,32 @@
             var launchesUrl = '#' + data.projectUrl + '/launches/all';
             %>
             <a href="<%- launchesUrl %>" id="launches">
-                <i class="rp-icons rp-icons-launches fsize-23"></i>
+                <% if(data.isNewYear) { %>
+                    <i class="new-year-icon new-year-launches"></i>
+                <% } else { %>
+                    <i class="rp-icons rp-icons-launches fsize-23"></i>
+                <% } %>
                 <span><%= data.text.topMenu.launches %></span>
             </a>
         </li>
         <li>
             <a href="#<%- data.projectUrl %>/filters" id="filters">
-                <i class="rp-icons rp-icons-filter fsize-20"></i>
+                <% if(data.isNewYear) { %>
+                    <i class="new-year-icon new-year-filters"></i>
+                <% } else { %>
+                    <i class="rp-icons rp-icons-filter fsize-20"></i>
+                <% } %>
                 <span><%= data.text.topMenu.filters %></span>
             </a>
         </li>
         <% if (data.canDebug) { %>
         <li>
             <a href="#<%- data.projectUrl %>/userdebug/all" id="userdebug">
-                <i class="rp-icons rp-icons-eye fsize-17"></i>
+                <% if(data.isNewYear) { %>
+                    <i class="new-year-icon new-year-debug"></i>
+                <% } else { %>
+                    <i class="rp-icons rp-icons-eye fsize-17"></i>
+                <% } %>
                 <span><%= data.text.topMenu.debug %></span>
             </a>
         </li>
