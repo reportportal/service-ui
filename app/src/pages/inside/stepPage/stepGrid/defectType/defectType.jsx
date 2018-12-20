@@ -36,9 +36,9 @@ export const DefectType = track()(({ issue, onEdit, tracking, editEventInfo }) =
     <div className={cx('defect-type-labels')}>
       {issue.ignoreAnalyzer && <IgnoredInAALabel />}
       {issue.autoAnalyzed && <AALabel />}
-      {issue.issue_type && (
+      {issue.issueType && (
         <DefectTypeItem
-          type={issue.issue_type}
+          type={issue.issueType}
           onClick={() => {
             tracking.trackEvent(editEventInfo);
             onEdit();
