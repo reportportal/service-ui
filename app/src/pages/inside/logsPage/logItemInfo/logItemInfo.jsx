@@ -173,7 +173,7 @@ export class LogItemInfo extends Component {
           <div className={cx('content')}>
             <div className={cx('description')}>
               {logItem.issue &&
-                logItem.issue.issue_type && (
+                logItem.issue.issueType && (
                   <DefectType
                     issue={logItem.issue}
                     editEventInfo={LOG_PAGE_EVENTS.DEFECT_TYPE_TAG}

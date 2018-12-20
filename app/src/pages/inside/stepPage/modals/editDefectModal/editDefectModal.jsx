@@ -136,7 +136,7 @@ export class EditDefectModal extends Component {
     } else {
       initialState.ignoreAnalyzer = items[0].issue.ignoreAnalyzer;
       initialState.markdownValue = items[0].issue.comment || '';
-      initialState.defectType = items[0].issue.issue_type;
+      initialState.defectType = items[0].issue.issueType;
     }
 
     this.multiActionButtonItems = [
@@ -215,7 +215,7 @@ export class EditDefectModal extends Component {
           },
         };
         if (this.state.defectType) {
-          dataToSend.issue.issue_type = this.state.defectType;
+          dataToSend.issue.issueType = this.state.defectType;
         }
         if (this.state.markdownValue) {
           dataToSend.issue.comment = this.state.markdownValue;
@@ -229,7 +229,7 @@ export class EditDefectModal extends Component {
           issue: {
             ...items[0].issue,
             comment: this.state.markdownValue,
-            issue_type: this.state.defectType,
+            issueType: this.state.defectType,
             ignoreAnalyzer: this.state.ignoreAnalyzer,
             autoAnalyzed: false,
           },
@@ -265,7 +265,7 @@ export class EditDefectModal extends Component {
         (!items[0].issue.comment && this.state.markdownValue) ||
         (items[0].issue.comment && this.state.markdownValue !== items[0].issue.comment) ||
         this.state.ignoreAnalyzer !== items[0].issue.ignoreAnalyzer ||
-        this.state.defectType !== items[0].issue.issue_type;
+        this.state.defectType !== items[0].issue.issueType;
     }
     return isDataChanged;
   };

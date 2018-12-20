@@ -217,7 +217,7 @@ export const defectLinkSelector = (state, ownProps) => {
         {
           'filter.eq.hasChildren': false,
           'filter.in.type': LEVEL_STEP,
-          'filter.in.issue$issue_type': getDefectsString(ownProps.defects),
+          'filter.in.issueType': getDefectsString(ownProps.defects),
         },
         getQueryNamespace(levelIndex),
       ),

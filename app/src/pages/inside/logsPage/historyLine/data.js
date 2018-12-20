@@ -174,7 +174,7 @@ export const mockEntries = [
         },
         launchStatus: 'FAILED',
         issue: {
-          issue_type: 'PB001',
+          issueType: 'PB001',
           autoAnalyzed: false,
           ignoreAnalyzer: false,
         },
