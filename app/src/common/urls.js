@@ -10,7 +10,7 @@ const getToken = () => (localStorage.getItem(TOKEN_KEY) || '').split(' ')[1];
 const getQueryParams = (paramsObj) => stringify(paramsObj, { addQueryPrefix: true });
 
 export const URLS = {
-  apiDocs: (apiType) => `${apiType}api-docs${getQueryParams({ access_token: getToken() })}`,
+  apiDocs: (apiType) => `${apiType}api-docs`,
 
   dataPhoto: (userId, at) =>
     `${urlBase}data/photo${getQueryParams({ [userId]: null, at, access_token: getToken() })}`,
