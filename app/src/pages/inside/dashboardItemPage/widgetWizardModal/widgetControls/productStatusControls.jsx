@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
+import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { connect } from 'react-redux';
 import { getFormValues, initialize } from 'redux-form';
 import { FieldProvider } from 'components/fields/fieldProvider';
@@ -12,11 +13,11 @@ import {
   NO_DEFECT,
   TO_INVESTIGATE,
 } from 'common/constants/defectTypes';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { CHART_MODES } from 'common/constants/chartModes';
 import { activeProjectSelector } from 'controllers/user';
 import { getWidgetCriteriaOptions } from './utils/getWidgetCriteriaOptions';
 import { getWidgetModeOptions } from './utils/getWidgetModeOptions';
-import { DEFECT_TYPES_GROUPS_OPTIONS, CHART_MODES } from './constants';
+import { DEFECT_TYPES_GROUPS_OPTIONS } from './constants';
 import {
   DropdownControl,
   TogglerControl,

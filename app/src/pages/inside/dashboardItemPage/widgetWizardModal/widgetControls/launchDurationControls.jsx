@@ -1,12 +1,13 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
+import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { connect } from 'react-redux';
 import { getFormValues, initialize } from 'redux-form';
 import { validate } from 'common/utils';
 import { FieldProvider } from 'components/fields/fieldProvider';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { CHART_MODES } from 'common/constants/chartModes';
 import { getWidgetModeOptions } from './utils/getWidgetModeOptions';
-import { ITEMS_INPUT_WIDTH, CHART_MODES, CONTENT_FIELDS } from './constants';
+import { ITEMS_INPUT_WIDTH, CONTENT_FIELDS } from './constants';
 import { FiltersControl, InputControl, TogglerControl } from './controls';
 import { WIDGET_WIZARD_FORM } from '../widgetWizardContent/wizardControlsSection/constants';
 

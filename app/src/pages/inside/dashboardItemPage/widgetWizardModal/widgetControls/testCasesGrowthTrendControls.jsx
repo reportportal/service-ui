@@ -5,9 +5,10 @@ import { getFormValues, initialize } from 'redux-form';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { STATS_TOTAL } from 'common/constants/statistics';
+import { CHART_MODES } from 'common/constants/chartModes';
 import { validate } from 'common/utils';
 import { getWidgetModeOptions } from './utils/getWidgetModeOptions';
-import { ITEMS_INPUT_WIDTH, CHART_MODES } from './constants';
+import { ITEMS_INPUT_WIDTH } from './constants';
 import { FiltersControl, InputControl, TogglerControl } from './controls';
 import { WIDGET_WIZARD_FORM } from '../widgetWizardContent/wizardControlsSection/constants';
 
