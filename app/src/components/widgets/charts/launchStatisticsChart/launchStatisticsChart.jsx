@@ -12,7 +12,7 @@ import { defectTypesSelector } from 'controllers/project';
 import { defectLinkSelector, statisticsLinkSelector } from 'controllers/testItem';
 import { activeProjectSelector } from 'controllers/user';
 import { PASSED, FAILED, SKIPPED, INTERRUPTED } from 'common/constants/testStatuses';
-import { CHART_MODES } from 'pages/inside/dashboardItemPage/widgetWizardModal/widgetControls/constants';
+import { CHART_MODES } from 'common/constants/chartModes';
 import {
   getItemColor,
   getItemName,

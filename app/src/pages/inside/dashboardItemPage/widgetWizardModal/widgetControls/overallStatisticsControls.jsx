@@ -1,19 +1,15 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
+import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { connect } from 'react-redux';
 import { getFormValues, initialize } from 'redux-form';
 import { defectTypesSelector } from 'controllers/project';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { validate } from 'common/utils';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { CHART_MODES } from 'common/constants/chartModes';
 import { getWidgetCriteriaOptions } from './utils/getWidgetCriteriaOptions';
 import { getWidgetModeOptions } from './utils/getWidgetModeOptions';
-import {
-  LAUNCH_STATUSES_OPTIONS,
-  DEFECT_TYPES_OPTIONS,
-  ITEMS_INPUT_WIDTH,
-  CHART_MODES,
-} from './constants';
+import { LAUNCH_STATUSES_OPTIONS, DEFECT_TYPES_OPTIONS, ITEMS_INPUT_WIDTH } from './constants';
 import { FiltersControl, DropdownControl, InputControl, TogglerControl } from './controls';
 import { WIDGET_WIZARD_FORM } from '../widgetWizardContent/wizardControlsSection/constants';
 

@@ -14,21 +14,6 @@ export const TO_INVESTIGATE_OPTION = 'toInvestigateOption';
 
 export const ITEMS_INPUT_WIDTH = 70;
 
-export const CHART_MODES = {
-  LAUNCH_MODE: 'launch',
-  TIMELINE_MODE: 'timeline',
-
-  ALL_LAUNCHES: 'allLaunches',
-  LATEST_LAUNCHES: 'latestLaunches',
-
-  AREA_VIEW: 'area-spline',
-  BAR_VIEW: 'bar',
-  TABLE_VIEW: 'tableView',
-  PANEL_VIEW: 'panelView',
-  DONUT_VIEW: 'donutView',
-  PIE_VIEW: 'pie',
-};
-
 export const STATIC_CRITERIA = {
   NAME: 'name',
   NUMBER: 'number',

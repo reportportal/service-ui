@@ -1,14 +1,15 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
+import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { connect } from 'react-redux';
 import { getFormValues, initialize } from 'redux-form';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { activeProjectSelector } from 'controllers/user';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { CHART_MODES } from 'common/constants/chartModes';
 import { URLS } from 'common/urls';
 import { WIDGET_WIZARD_FORM } from '../widgetWizardContent/wizardControlsSection/constants';
 import { getWidgetCriteriaOptions } from './utils/getWidgetCriteriaOptions';
-import { PASSED_FAILED_LAUNCHES_OPTIONS, CHART_MODES } from './constants';
+import { PASSED_FAILED_LAUNCHES_OPTIONS } from './constants';
 import { DropdownControl, TogglerControl, TagsControl, CheckboxControl } from './controls';
 import { getWidgetModeOptions } from './utils/getWidgetModeOptions';
 

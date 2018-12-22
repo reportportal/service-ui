@@ -10,7 +10,7 @@ import { redirect } from 'redux-first-router';
 import { defectLinkSelector, statisticsLinkSelector } from 'controllers/testItem';
 import * as COLORS from 'common/constants/colors';
 import { STATS_PASSED } from 'common/constants/statistics';
-import { CHART_MODES } from 'pages/inside/dashboardItemPage/widgetWizardModal/widgetControls/constants';
+import { CHART_MODES } from 'common/constants/chartModes';
 import { C3Chart } from '../common/c3chart';
 import { Legend } from '../common/legend';
 import { messages } from '../common/messages';

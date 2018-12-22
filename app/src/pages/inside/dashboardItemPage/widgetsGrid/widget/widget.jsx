@@ -73,12 +73,36 @@ export class Widget extends Component {
     this.props.observer.unsubscribe('widgetResized', this.showWidget);
   }
 
-  getContentParams = () => this.state.widget.contentParameters || {};
-
-  getWidgetOptions = () => this.getContentParams().widgetOptions || {};
+  getWidgetOptions = () => (this.state.widget.contentParameters || {}).widgetOptions || {};
 
   getWidgetNode = (node) => {
     this.node = node;
+  };
+
+  getWidgetContent = () => {
+    const { widget } = this.state;
+    const noWidgetDataAvailable = !widget.content || !Object.keys(widget.content).length;
+
+    if (this.state.loading) {
+      return <SpinningPreloader />;
+    }
+
+    if (noWidgetDataAvailable) {
+      return <NoDataAvailable />;
+    }
+
+    const Chart = CHARTS[widget.widgetType];
+
+    return (
+      Chart && (
+        <Chart
+          widget={widget}
+          isFullscreen={this.props.isFullscreen}
+          container={this.node}
+          observer={this.props.observer}
+        />
+      )
+    );
   };
 
   showWidget = () => {
@@ -134,9 +158,6 @@ export class Widget extends Component {
       meta: this.getWidgetOptions().viewMode,
     };
 
-    const noWidgetDataAvailable = !widget.content || !Object.keys(widget.content).length;
-    const Chart = CHARTS[headerData.type];
-
     return (
       <div className={cx('widget-container')}>
         <Fragment>
@@ -155,19 +176,7 @@ export class Widget extends Component {
             />
           </div>
           <div ref={this.getWidgetNode} className={cx('widget', { hidden: !visible })}>
-            {(this.state.loading && <SpinningPreloader />) ||
-              (noWidgetDataAvailable ? (
-                <NoDataAvailable />
-              ) : (
-                Chart && (
-                  <Chart
-                    widget={widget}
-                    isFullscreen={this.props.isFullscreen}
-                    container={this.node}
-                    observer={this.props.observer}
-                  />
-                )
-              ))}
+            {this.getWidgetContent()}
           </div>
         </Fragment>
       </div>

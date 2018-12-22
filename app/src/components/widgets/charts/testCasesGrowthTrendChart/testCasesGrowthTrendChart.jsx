@@ -12,7 +12,7 @@ import { activeProjectSelector } from 'controllers/user';
 import { TEST_ITEM_PAGE } from 'controllers/pages';
 import * as COLORS from 'common/constants/colors';
 import * as STATUSES from 'common/constants/testStatuses';
-import { CHART_MODES } from 'pages/inside/dashboardItemPage/widgetWizardModal/widgetControls/constants';
+import { CHART_MODES } from 'common/constants/chartModes';
 import { C3Chart } from '../common/c3chart';
 import { TooltipWrapper } from '../common/tooltip';
 import { getLaunchAxisTicks, getTimelineAxisTicks } from '../common/utils';

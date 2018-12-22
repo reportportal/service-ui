@@ -1,14 +1,14 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
+import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { connect } from 'react-redux';
 import { getFormValues, initialize } from 'redux-form';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { activeProjectSelector } from 'controllers/user';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { URLS } from 'common/urls';
+import { CHART_MODES } from 'common/constants/chartModes';
 import { WIDGET_WIZARD_FORM } from '../widgetWizardContent/wizardControlsSection/constants';
 import { getWidgetModeOptions } from './utils/getWidgetModeOptions';
-import { CHART_MODES } from './constants';
 import { TogglerControl, TagsControl } from './controls';
 
 const DEFAULT_ITEMS_COUNT = '30';

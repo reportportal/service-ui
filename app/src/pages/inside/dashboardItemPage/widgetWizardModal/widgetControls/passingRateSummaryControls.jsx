@@ -5,10 +5,11 @@ import { getFormValues, initialize } from 'redux-form';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { STATS_TOTAL, STATS_PASSED } from 'common/constants/statistics';
+import { CHART_MODES } from 'common/constants/chartModes';
 import { validate } from 'common/utils';
 import { WIDGET_WIZARD_FORM } from '../widgetWizardContent/wizardControlsSection/constants';
 import { getWidgetModeOptions } from './utils/getWidgetModeOptions';
-import { CHART_MODES, ITEMS_INPUT_WIDTH } from './constants';
+import { ITEMS_INPUT_WIDTH } from './constants';
 import { TogglerControl, FiltersControl, InputControl } from './controls';
 
 const DEFAULT_ITEMS_COUNT = '50';

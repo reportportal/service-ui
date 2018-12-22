@@ -1,5 +1,5 @@
 import { defineMessages } from 'react-intl';
-import { CHART_MODES } from '../constants';
+import { CHART_MODES } from 'common/constants/chartModes';
 
 const messages = defineMessages({
   [CHART_MODES.LAUNCH_MODE]: {
