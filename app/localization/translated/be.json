@@ -1192,5 +1192,12 @@
   "ProjectDetailsPageMembers.title": "Налады",
   "ProjectDetailsPageEvents.title": "Падзеі",
   "PageSizeControl.perPage": "на старонцы",
-  "Legend.launchName": "імя запуску"
+  "Legend.launchName": "імя запуску",
+  "EventsGrid.timeCol": "Час",
+  "EventsGrid.userCol": "Kарыстальнік",
+  "EventsGrid.actionCol": "Дзеянне",
+  "EventsGrid.objectTypeCol": "Тып аб'екта",
+  "EventsGrid.objectNameCol":"Iмя аб'екта",
+  "EventsGrid.oldValueCol": "Cтарое значэнне",
+  "EventsGrid.newValueCol": "Новае значэнне"
 }

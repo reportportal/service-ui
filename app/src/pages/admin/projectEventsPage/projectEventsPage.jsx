@@ -15,6 +15,7 @@ import {
   NAMESPACE,
   DEFAULT_PAGE_SIZE,
 } from 'controllers/administrate/events';
+import { EventsGrid } from './eventsGrid';
 
 @connect(
   (state) => ({
@@ -44,6 +45,7 @@ export class ProjectEventsPage extends Component {
     fetchEventsAction: PropTypes.func,
     projectId: PropTypes.string.isRequired,
     loading: PropTypes.bool,
+    events: PropTypes.arrayOf(PropTypes.object),
   };
 
   static defaultProps = {
@@ -58,6 +60,7 @@ export class ProjectEventsPage extends Component {
     onChangePageSize: () => {},
     fetchEventsAction: () => {},
     loading: false,
+    events: [],
   };
   render() {
     const {
@@ -68,9 +71,11 @@ export class ProjectEventsPage extends Component {
       onChangePage,
       onChangePageSize,
       loading,
+      events,
     } = this.props;
     return (
       <React.Fragment>
+        <EventsGrid data={events} loading={loading} />
         {!!pageCount &&
           !loading && (
             <PaginationToolbar
