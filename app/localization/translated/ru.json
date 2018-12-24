@@ -1198,5 +1198,12 @@
   "ProjectDetailsPageMembers.title": "Участники",
   "ProjectDetailsPageEvents.title": "События",
   "PageSizeControl.perPage": "на странице",
-  "Legend.launchName": "имя запуска"
+  "Legend.launchName": "имя запуска",
+  "EventsGrid.timeCol": "Время",
+  "EventsGrid.userCol": "Пользователь",
+  "EventsGrid.actionCol": "Действие",
+  "EventsGrid.objectTypeCol": "Тип объекта",
+  "EventsGrid.objectNameCol":"Имя объекта",
+  "EventsGrid.oldValueCol": "Старое значение",
+  "EventsGrid.newValueCol": "Новое значение"
 }
