@@ -13,6 +13,7 @@ import {
   fetchEventsAction,
   loadingSelector,
   NAMESPACE,
+  DEFAULT_PAGE_SIZE,
 } from 'controllers/administrate/events';
 
 @connect(
@@ -49,7 +50,7 @@ export class ProjectEventsPage extends Component {
     activePage: 1,
     itemCount: null,
     pageCount: null,
-    pageSize: 20,
+    pageSize: DEFAULT_PAGE_SIZE,
     sortingColumn: null,
     sortingDirection: null,
     showModalAction: () => {},
