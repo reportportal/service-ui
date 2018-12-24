@@ -2,12 +2,12 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
-import { EntitiesGroup } from '../../filterEntities/entitiesGroup/entitiesGroup';
+import AddFilterIcon from 'common/img/add-filter-inline.svg';
+import CrossIcon from 'common/img/cross-icon-inline.svg';
+import SearchIcon from 'common/img/search-icon-inline.svg';
+import { EntitiesGroup } from 'components/filterEntities/entitiesGroup/entitiesGroup';
 import { InputFilterToolbar } from './inputFilterToolbar/inputFilterToolbar';
-import AddFilterIcon from '../../../common/img/add-filter-inline.svg';
-import CrossIcon from '../../../common/img/cross-icon-inline.svg';
 import styles from './inputFilter.scss';
-import SearchIcon from './img/search-icon-inline.svg';
 
 const cx = classNames.bind(styles);
 
@@ -24,14 +24,11 @@ export class InputFilter extends Component {
     onFocus: PropTypes.func,
     onBlur: PropTypes.func,
     onKeyUp: PropTypes.func,
-    refFunction: PropTypes.func,
     filterEntities: PropTypes.array,
     onAdd: PropTypes.func,
     onRemove: PropTypes.func,
     onValidate: PropTypes.func,
     filterErrors: PropTypes.object,
-    onApply: PropTypes.func,
-    onCancel: PropTypes.func,
     onClear: PropTypes.func,
     onFilterChange: PropTypes.func,
     onFilterValidate: PropTypes.func,
@@ -51,14 +48,11 @@ export class InputFilter extends Component {
     onFocus: () => {},
     onBlur: () => {},
     onKeyUp: () => {},
-    refFunction: () => {},
     filterEntities: [],
     onAdd: () => {},
     onRemove: () => {},
     onValidate: () => {},
     filterErrors: {},
-    onApply: () => {},
-    onCancel: () => {},
     onClear: () => {},
     onFilterChange: () => {},
     onFilterValidate: () => {},
@@ -82,6 +76,14 @@ export class InputFilter extends Component {
     this.setState({ opened: true });
   };
 
+  onApply = () => {
+    this.setState({ opened: false });
+  };
+
+  onCancel = () => {
+    this.setState({ opened: false });
+  };
+
   render() {
     const {
       error,
@@ -100,13 +102,11 @@ export class InputFilter extends Component {
       onFilterAdd,
       filterErrors,
       filterEntities,
-      onCancel,
-      onApply,
       onClear,
     } = this.props;
     return (
-      <div>
-        <div className={cx('input-search', { error, active, disabled })}>
+      <React.Fragment>
+        <div className={cx('input-filter', { error, active, disabled })}>
           <div className={cx('icon', 'search')}>{Parser(SearchIcon)}</div>
           <div className={cx('icon', 'add-filter')} onClick={this.onClickAddFilter}>
             {Parser(AddFilterIcon)}
@@ -126,22 +126,24 @@ export class InputFilter extends Component {
             onKeyUp={onKeyUp}
           />
         </div>
-        <div className={cx('all-filters-container', { opened: this.state.opened && !disabled })}>
-          <div className={cx('all-filters')}>
-            <EntitiesGroup
-              onChange={onFilterChange}
-              onValidate={onFilterValidate}
-              onRemove={onFilterRemove}
-              onAdd={onFilterAdd}
-              errors={filterErrors}
-              entities={filterEntities}
-              staticMode
-              vertical
-            />
+        {this.state.opened && (
+          <div className={cx('filters-container')}>
+            <div className={cx('filters')}>
+              <EntitiesGroup
+                onChange={onFilterChange}
+                onValidate={onFilterValidate}
+                onRemove={onFilterRemove}
+                onAdd={onFilterAdd}
+                errors={filterErrors}
+                entities={filterEntities}
+                staticMode
+                vertical
+              />
+            </div>
+            <InputFilterToolbar onApply={this.onApply} onClear={onClear} onCancel={this.onCancel} />
           </div>
-          <InputFilterToolbar onApply={onApply} onClear={onClear} onCancel={onCancel} />
-        </div>
-      </div>
+        )}
+      </React.Fragment>
     );
   }
 }

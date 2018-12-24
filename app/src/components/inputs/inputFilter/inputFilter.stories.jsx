@@ -19,73 +19,50 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { storiesOf } from '@storybook/react';
-import { action } from '@storybook/addon-actions';
 import { host } from 'storybook-host';
 import { withReadme } from 'storybook-readme';
-import { EntityItemAttributeValues } from '../../../components/filterEntities';
 import {
-  ENTITY_ATTRIBUTE_VALUES,
-  CONDITION_HAS,
-} from '../../../components/filterEntities/constants';
+  EntityItemName,
+  EntityItemDescription,
+  EntityLaunchNumber,
+} from 'components/filterEntities';
+import {
+  ENTITY_NAME,
+  ENTITY_DESCRIPTION,
+  ENTITY_NUMBER,
+  CONDITION_CNT,
+  CONDITION_GREATER_EQ,
+} from 'components/filterEntities/constants';
 import { InputFilter } from './inputFilter';
 import README from './README.md';
 
 const value = 'Adam';
-const filterValues = {};
 const entities = [
   {
-    id: ENTITY_ATTRIBUTE_VALUES,
-    component: EntityItemAttributeValues,
-    value:
-      ENTITY_ATTRIBUTE_VALUES in filterValues
-        ? filterValues[ENTITY_ATTRIBUTE_VALUES]
-        : {
-            value: '',
-            condition: CONDITION_HAS,
-          },
+    id: ENTITY_NAME,
+    component: EntityItemName,
+    value: '',
+    condition: CONDITION_CNT,
     title: 'Name',
     active: true,
     removable: false,
+    static: true,
   },
   {
-    id: ENTITY_ATTRIBUTE_VALUES,
-    component: EntityItemAttributeValues,
-    value:
-      ENTITY_ATTRIBUTE_VALUES in filterValues
-        ? filterValues[ENTITY_ATTRIBUTE_VALUES]
-        : {
-            value: '',
-            condition: CONDITION_HAS,
-          },
+    id: ENTITY_DESCRIPTION,
+    component: EntityItemDescription,
+    value: '',
+    condition: CONDITION_CNT,
     title: 'Login',
     active: true,
     removable: false,
   },
   {
-    id: ENTITY_ATTRIBUTE_VALUES,
-    component: EntityItemAttributeValues,
-    value:
-      ENTITY_ATTRIBUTE_VALUES in filterValues
-        ? filterValues[ENTITY_ATTRIBUTE_VALUES]
-        : {
-            value: '',
-            condition: CONDITION_HAS,
-          },
+    id: ENTITY_NUMBER,
+    component: EntityLaunchNumber,
+    value: '',
+    condition: CONDITION_GREATER_EQ,
     title: 'Email',
-    active: true,
-    removable: false,
-  },
-  {
-    id: ENTITY_ATTRIBUTE_VALUES,
-    component: EntityItemAttributeValues,
-    value:
-      ENTITY_ATTRIBUTE_VALUES in filterValues
-        ? filterValues[ENTITY_ATTRIBUTE_VALUES]
-        : {
-            value: '',
-            condition: CONDITION_HAS,
-          },
-    title: 'Projects',
     active: true,
     removable: false,
   },
@@ -105,13 +82,4 @@ storiesOf('Components/Inputs/InputFilter', module)
   .add('default state', () => <InputFilter filterEntities={entities} />)
   .add('with value', () => <InputFilter value={value} />)
   .add('with placeholder', () => <InputFilter placeholder="Search" />)
-  .add('active', () => <InputFilter active />)
-  .add('with actions', () => (
-    <InputFilter
-      onChange={action('change')}
-      onFocus={action('focus')}
-      onBlur={action('blur')}
-      onKeyUp={action('keyup')}
-    />
-  ))
-  .add('disabled', () => <InputFilter disabled />);
+  .add('active', () => <InputFilter active />);

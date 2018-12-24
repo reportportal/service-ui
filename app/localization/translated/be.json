@@ -488,6 +488,8 @@
   "InfoLine.passed": "Паспяховы {value}%",
   "InfoLine.total": "Усяго {value}",
   "InputConditionalTags.tagsHint": "Калі ласка, увядзіце 1 ці болей знакаў",
+  "InputFilterToolbar.clearAllfilters": "Ачысціць ўсе фільтры",
+  "InputFilterToolbar.apply": "Прымяніць",
   "InputTagsSearch.dynamicSearchPromptText": "Калі ласка увядзіце {length} або больш сімвалаў",
   "InputTagsSearch.new": "Новы",
   "InputTimeDateRange.customRange": "За абраны перыяд",

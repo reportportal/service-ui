@@ -13,15 +13,9 @@ export const FieldFilterEntity = ({
   stretchable,
   smallSize,
   onRemove,
+  vertical,
 }) => (
-  <div
-    className={cx(
-      'field-filter-entity',
-      { stretchable },
-      { small: smallSize },
-      { vertical: 'vertical' },
-    )}
-  >
+  <div className={cx('field-filter-entity', { stretchable, small: smallSize, vertical })}>
     <span className={cx('entity-name', { vertical: 'vertical' })}>{title}</span>
     {removable && (
       <i className={cx('close-icon')} onClick={onRemove}>
@@ -37,6 +31,7 @@ FieldFilterEntity.propTypes = {
   smallSize: PropTypes.bool,
   removable: PropTypes.bool,
   stretchable: PropTypes.bool,
+  vertical: PropTypes.bool,
   onRemove: PropTypes.func,
 };
 FieldFilterEntity.defaultProps = {
@@ -45,5 +40,6 @@ FieldFilterEntity.defaultProps = {
   smallSize: false,
   removable: true,
   stretchable: false,
+  vertical: false,
   onRemove: () => {},
 };
