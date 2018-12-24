@@ -1,7 +1,8 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
+import { FormattedMessage } from 'react-intl';
 import classNames from 'classnames/bind';
-import { BigButton } from '../../../buttons/bigButton';
+import { BigButton } from 'components/buttons/bigButton';
 import styles from './inputFilterToolbar.scss';
 
 const cx = classNames.bind(styles);
@@ -24,18 +25,27 @@ export class InputFilterToolbar extends PureComponent {
     return (
       <div className={cx('toolbar')}>
         <div className={cx('button-container', 'left')}>
-          <BigButton color={'white-two'} onClick={onClear}>
-            Clear all filters
+          <BigButton color="white-two" onClick={onClear}>
+            <span className={cx('clear-all-filters-button')}>
+              <FormattedMessage
+                id="InputFilterToolbar.clearAllfilters"
+                defaultMessage="Clear all filters"
+              />
+            </span>
+          </BigButton>
+        </div>
+        <div className={cx('button-container', 'right')}>
+          <BigButton color="topaz" onClick={onApply}>
+            <span className={cx('apply-button')}>
+              <FormattedMessage id="InputFilterToolbar.apply" defaultMessage="Apply" />
+            </span>
           </BigButton>
         </div>
         <div className={cx('button-container', 'middle')}>
-          <BigButton color={'white-two'} onClick={onCancel}>
-            Cancel
-          </BigButton>
-        </div>
-        <div className={cx('button-container')}>
-          <BigButton color={'topaz'} onClick={onApply}>
-            Apply
+          <BigButton color="white-two" onClick={onCancel}>
+            <span className={cx('cancel-button')}>
+              <FormattedMessage id="Common.cancel" defaultMessage="Cancel" />
+            </span>
           </BigButton>
         </div>
       </div>

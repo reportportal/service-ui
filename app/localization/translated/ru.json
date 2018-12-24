@@ -501,6 +501,8 @@
   "InfoLine.passed": "Успешно {value}%",
   "InfoLine.total": "Всего {value}",
   "InputConditionalTags.tagsHint": "Пожалуйста, введите 1 или более знаков",
+  "InputFilterToolbar.clearAllfilters": "Очистить все фильтры",
+  "InputFilterToolbar.apply": "Применить",
   "InputTagsSearch.dynamicSearchPromptText": "Пожалуйста введите{length} или более символов",
   "InputTagsSearch.new": "Новый",
   "InputTimeDateRange.customRange": "За выбранный период",

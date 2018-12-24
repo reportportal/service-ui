@@ -6,58 +6,54 @@
   width: 400px;
   height: 50px;
   text-align: center;
-  vertical-align: middle;
+  vertical-align: bottom;
   background-color: $COLOR--white-two;
   border-top: 1px solid $COLOR--gray-91;
-  position:absolute;
-  bottom: 0;
 }
 
 .button-container {
   display: inline-block;
+  margin-top: 10px;
   background-color: $COLOR--white-two;
 
   &.left {
-    display: inline-block;
-    position:absolute;
-    left: 0;
-    bottom: 10px;
+    float: left;
     height: 30px;
     cursor: pointer;
-    button {
-      color: $COLOR--orange-red;
-    }
+  }
+
+  &.right {
+    float: right;
+    margin-right: 15px;
+    width: 97px;
+    height: 30px;
+    border-radius: 2px;
   }
 
   &.middle {
-    position: absolute;
-    width: 66px;
+    float: right;
+    margin-right: 10px;
+    width: 80px;
     height: 30px;
-    right: 81px;
-    bottom: 10px;
-    button {
-      &:hover {
-        color: $COLOR--charcoal-grey;
-      }
-    }
-  }
-
-  &:last-child {
-    margin-right: 0;
-    width: 66px;
-    height: 30px;
-    border-radius: 2px;
-    position: absolute;
-    right: 15px;
-    bottom: 10px;
-    button {
-      color: $COLOR--white-two;
-    }
   }
 
   button {
     font-size: 13px;
-    color: $COLOR--gray-60;
     border-radius: 2px;
+    color: $COLOR--gray-60;
   }
+
+ .clear-all-filters-button {
+  color: $COLOR--orange-red;
+ }
+
+ .cancel-button {
+  &:hover {
+    color: $COLOR--charcoal-grey;
+  }
+ }
+
+ .apply-button {
+    color: $COLOR--white-two;
+ }
 }
