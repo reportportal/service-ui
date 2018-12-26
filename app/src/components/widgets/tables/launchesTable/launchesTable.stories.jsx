@@ -7,7 +7,7 @@ import { LaunchesTable } from './launchesTable';
 import { mockData, state } from './data';
 import README from './README.md';
 
-storiesOf('Pages/Inside/DashboardPage/Widgets/LaunchesTable', module)
+storiesOf('Components/Widgets/Tables/LaunchesTable', module)
   .addDecorator(
     host({
       title: 'Launches table widget',

@@ -125,7 +125,7 @@ export class WidgetWizardContent extends Component {
       })
       .catch((err) => {
         this.props.hideScreenLockAction();
-        this.props.showNotification({ message: err.msg, type: NOTIFICATION_TYPES.ERROR });
+        this.props.showNotification({ message: err.message, type: NOTIFICATION_TYPES.ERROR });
       });
   };
 

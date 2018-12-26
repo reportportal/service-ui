@@ -12,7 +12,7 @@ const mockObserver = {
   unsubscribe: () => {},
 };
 
-storiesOf('Pages/Inside/DashboardPage/Widgets/UniqueBugsTable', module)
+storiesOf('Components/Widgets/Tables/UniqueBugsTable', module)
   .addDecorator(
     host({
       title: 'Unique Bug Table component',

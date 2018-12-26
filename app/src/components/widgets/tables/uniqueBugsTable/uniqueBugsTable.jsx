@@ -7,13 +7,9 @@ import { Grid } from 'components/main/grid';
 import { AbsRelTime } from 'components/main/absRelTime';
 import styles from './uniqueBugsTable.scss';
 import {
-  BUG_ID,
   BUG_ID_COLUMN_KEY,
-  SUBMIT_DATE,
   SUBMIT_DATE_COLUMN_KEY,
-  FOUND_IN,
   FOUND_IN_COLUMN_KEY,
-  SUBMITTER,
   SUBMITTER_COLUMN_KEY,
 } from './constants';
 
@@ -71,10 +67,10 @@ const getColumn = (name, columnType, formatMessage) => ({
 });
 
 const COLUMNS_MAP = {
-  [BUG_ID]: BUG_ID_COLUMN_KEY,
-  [FOUND_IN]: FOUND_IN_COLUMN_KEY,
-  [SUBMIT_DATE]: SUBMIT_DATE_COLUMN_KEY,
-  [SUBMITTER]: SUBMITTER_COLUMN_KEY,
+  [BUG_ID_COLUMN_KEY]: BUG_ID_COLUMN_KEY,
+  [FOUND_IN_COLUMN_KEY]: FOUND_IN_COLUMN_KEY,
+  [SUBMIT_DATE_COLUMN_KEY]: SUBMIT_DATE_COLUMN_KEY,
+  [SUBMITTER_COLUMN_KEY]: SUBMITTER_COLUMN_KEY,
 };
 
 @injectIntl

@@ -6,6 +6,12 @@ import { LaunchStatisticsChart } from 'components/widgets/charts/launchStatistic
 import { FailedCasesTrendChart } from 'components/widgets/charts/failedCasesTrendChart';
 import { NonPassedTestCasesTrendChart } from 'components/widgets/charts/nonPassedTestCasesTrendChart';
 import { PassingRatePerLaunch } from 'components/widgets/charts/passingRatePerLaunch';
+import {
+  LaunchesTable,
+  UniqueBugsTable,
+  FlakyTests,
+  MostFailedTests,
+} from 'components/widgets/tables';
 
 export const CHARTS = {
   [widgetTypes.DIFFERENT_LAUNCHES_COMPARISON]: LaunchesComparisonChart,
@@ -16,8 +22,8 @@ export const CHARTS = {
   [widgetTypes.TEST_CASES_GROWTH_TREND]: TestCasesGrowthTrendChart,
   [widgetTypes.LAUNCH_DURATION]: LaunchesDurationChart,
   [widgetTypes.PASSING_RATE_PER_LAUNCH]: PassingRatePerLaunch,
-  // [widgetTypes.UNIQUE_BUGS_TABLE]: UniqueBugsTable,
-  // [widgetTypes.LAUNCHES_TABLE]: LaunchesTable,
-  // [widgetTypes.FLAKY_TEST_CASES_TABLE]: FlakyTests,
-  // [widgetTypes.MOST_FAILED_TEST_CASES_TABLE]: MostFailedTests,
+  [widgetTypes.LAUNCHES_TABLE]: LaunchesTable,
+  [widgetTypes.UNIQUE_BUGS_TABLE]: UniqueBugsTable,
+  [widgetTypes.FLAKY_TEST_CASES_TABLE]: FlakyTests,
+  [widgetTypes.MOST_FAILED_TEST_CASES_TABLE]: MostFailedTests,
 };

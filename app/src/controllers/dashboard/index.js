@@ -1,9 +1,11 @@
 export {
-  fetchDashboardAction,
+  fetchDashboardsAction,
   changeVisibilityTypeAction,
   deleteDashboardAction,
   editDashboardAction,
   addDashboardAction,
+  fetchDashboardAction,
+  updateDashboardWidgetsAction,
 } from './actionCreators';
 export { dashboardReducer } from './reducer';
 export { dashboardItemsSelector, dashboardGridTypeSelector } from './selectors';
