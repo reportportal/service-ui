@@ -139,7 +139,8 @@ export class FilterGrid extends Component {
     userFilters: PropTypes.arrayOf(PropTypes.object),
     onEdit: PropTypes.func,
     userId: PropTypes.string,
-    toggleDisplayFilterOnLaunches: PropTypes.func,
+    showFilterOnLaunchesAction: PropTypes.func,
+    hideFilterOnLaunchesAction: PropTypes.func,
     projectRole: PropTypes.string,
     onDelete: PropTypes.func,
     accountRole: PropTypes.string,
@@ -154,7 +155,8 @@ export class FilterGrid extends Component {
     filters: [],
     userFilters: [],
     onEdit: () => {},
-    toggleDisplayFilterOnLaunches: () => {},
+    showFilterOnLaunchesAction: () => {},
+    hideFilterOnLaunchesAction: () => {},
     userId: '',
     projectRole: '',
     onDelete: () => {},
@@ -217,8 +219,10 @@ export class FilterGrid extends Component {
       component: DisplayOnLaunchColumn,
       customProps: {
         userFilters: this.props.userFilters,
-        onChangeDisplay: (filter, method) => {
-          this.props.toggleDisplayFilterOnLaunches(filter, method);
+        onChangeDisplay: (isFilterDisplayed, filter) => {
+          isFilterDisplayed
+            ? this.props.hideFilterOnLaunchesAction(filter)
+            : this.props.showFilterOnLaunchesAction(filter);
           this.props.tracking.trackEvent(FILTERS_PAGE_EVENTS.CLICK_DISPLAY_ON_LAUNCH_SWITCHER);
         },
       },

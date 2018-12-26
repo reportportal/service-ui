@@ -25,7 +25,11 @@ import { PaginationToolbar } from 'components/main/paginationToolbar';
 import { PageLayout, PageHeader, PageSection } from 'layouts/pageLayout';
 import { showModalAction } from 'controllers/modal';
 import { withSorting, SORTING_ASC } from 'controllers/sorting';
-import { userFiltersSelector, toggleDisplayFilterOnLaunchesAction } from 'controllers/project';
+import {
+  userFiltersSelector,
+  showFilterOnLaunchesAction,
+  hideFilterOnLaunchesAction,
+} from 'controllers/project';
 import { FILTERS_PAGE, FILTERS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { NoFiltersBlock } from './noFiltersBlock';
 import { FilterPageToolbar } from './filterPageToolbar';
@@ -51,9 +55,10 @@ const messages = defineMessages({
   }),
   {
     showModalAction,
-    toggleDisplayFilterOnLaunches: toggleDisplayFilterOnLaunchesAction,
     removeUserFilter: removeFilterAction,
     fetchFiltersAction,
+    showFilterOnLaunchesAction,
+    hideFilterOnLaunchesAction,
   },
 )
 @withSorting({
@@ -90,8 +95,9 @@ export class FiltersPage extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
-    toggleDisplayFilterOnLaunches: PropTypes.func,
     removeUserFilter: PropTypes.func,
+    showFilterOnLaunchesAction: PropTypes.func,
+    hideFilterOnLaunchesAction: PropTypes.func,
   };
 
   static defaultProps = {
@@ -112,8 +118,9 @@ export class FiltersPage extends Component {
     userFilters: [],
     accountRole: '',
     loading: false,
-    toggleDisplayFilterOnLaunches: () => {},
     removeUserFilter: () => {},
+    showFilterOnLaunchesAction: () => {},
+    hideFilterOnLaunchesAction: () => {},
   };
 
   getBreadcrumbs = () => [{ title: this.props.intl.formatMessage(messages.filtersPageTitle) }];

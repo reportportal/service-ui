@@ -29,7 +29,7 @@ export const updateConfigurationAttributesAction = (project) => ({
   payload: project.configuration.attributes,
 });
 
-const updateProjectPreferencesAction = (filterId, method) => (dispatch, getState) =>
+export const updateProjectFilterPreferencesAction = (filterId, method) => (dispatch, getState) =>
   fetch(
     URLS.projectPreferences(
       activeProjectSelector(getState()),
@@ -63,12 +63,14 @@ export const updateProjectNotificationsIntegrationAction = ({ enabled, rules }) 
   });
 };
 
-export const toggleDisplayFilterOnLaunchesAction = (filter, method, stateUpdate = true) => (
-  dispatch,
-) => {
-  stateUpdate &&
-    dispatch(method === 'DELETE' ? removeFilterAction(filter.id) : addFilterAction(filter));
-  dispatch(updateProjectPreferencesAction(filter.id, method));
+export const showFilterOnLaunchesAction = (filter) => (dispatch) => {
+  dispatch(addFilterAction(filter));
+  dispatch(updateProjectFilterPreferencesAction(filter.id, 'PUT'));
+};
+
+export const hideFilterOnLaunchesAction = (filter) => (dispatch) => {
+  dispatch(removeFilterAction(filter.id));
+  dispatch(updateProjectFilterPreferencesAction(filter.id, 'DELETE'));
 };
 
 const fetchProjectPreferencesAction = (projectId) => (dispatch, getState) =>

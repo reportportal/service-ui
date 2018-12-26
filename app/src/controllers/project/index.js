@@ -6,7 +6,9 @@ export {
 } from './constants';
 export {
   fetchProjectAction,
-  toggleDisplayFilterOnLaunchesAction,
+  updateProjectFilterPreferencesAction,
+  showFilterOnLaunchesAction,
+  hideFilterOnLaunchesAction,
   fetchConfigurationAttributesAction,
   updateConfigurationAttributesAction,
   updateProjectNotificationsIntegrationAction,

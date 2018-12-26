@@ -11,7 +11,7 @@ import {
 import { filterIdSelector } from 'controllers/pages';
 import { fetchLaunchesWithParamsAction, fetchLaunchesAction } from 'controllers/launch';
 import { debounce } from 'common/utils';
-import { toggleDisplayFilterOnLaunchesAction } from 'controllers/project';
+import { hideFilterOnLaunchesAction } from 'controllers/project';
 
 const isEmptyValue = (value) => value === '' || value === null || value === undefined;
 
@@ -26,7 +26,7 @@ const isEmptyValue = (value) => value === '' || value === null || value === unde
     fetchLaunchesWithParamsAction,
     updateFilterConditionsAction,
     fetchLaunchesAction,
-    toggleDisplayFilterOnLaunchesAction,
+    hideFilterOnLaunchesAction,
     removeLaunchesFilterAction,
   },
 )
@@ -40,7 +40,7 @@ export class LaunchFiltersContainer extends Component {
     fetchLaunchesWithParamsAction: PropTypes.func,
     updateFilterConditionsAction: PropTypes.func,
     fetchLaunchesAction: PropTypes.func,
-    toggleDisplayFilterOnLaunchesAction: PropTypes.func,
+    hideFilterOnLaunchesAction: PropTypes.func,
     removeLaunchesFilterAction: PropTypes.func,
   };
 
@@ -52,7 +52,7 @@ export class LaunchFiltersContainer extends Component {
     fetchLaunchesWithParamsAction: () => {},
     updateFilterConditionsAction: () => {},
     fetchLaunchesAction: () => {},
-    toggleDisplayFilterOnLaunchesAction: () => {},
+    hideFilterOnLaunchesAction: () => {},
     removeLaunchesFilterAction: () => {},
   };
 
@@ -90,7 +90,7 @@ export class LaunchFiltersContainer extends Component {
 
   handleFilterRemove = (filter) => {
     if (filter.id >= 0) {
-      this.props.toggleDisplayFilterOnLaunchesAction(filter, 'DELETE');
+      this.props.hideFilterOnLaunchesAction(filter);
     }
     this.props.removeLaunchesFilterAction(filter.id);
   };

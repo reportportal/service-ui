@@ -111,24 +111,24 @@ describe('project reducer', () => {
         filters: [{ id: 'filter0' }],
       };
       const payload = { id: 'filter1' };
-      const stateWithoutFilter = projectPreferencesReducer(oldState, {
+      const stateWithFilter = projectPreferencesReducer(oldState, {
         type: UPDATE_FILTER_SUCCESS,
         payload,
       });
-      expect(stateWithoutFilter).toEqual({
+      expect(stateWithFilter).toEqual({
         ...oldState,
         filters: [...oldState.filters, payload],
       });
 
       const newPayload = { id: 'filter2' };
-      const stateWithFilter = projectPreferencesReducer(stateWithoutFilter, {
+      const stateWithUpdatedFilter = projectPreferencesReducer(stateWithFilter, {
         type: UPDATE_FILTER_SUCCESS,
         payload: newPayload,
         meta: {
           oldId: 'filter1',
         },
       });
-      expect(stateWithFilter).toEqual({
+      expect(stateWithUpdatedFilter).toEqual({
         ...oldState,
         filters: [...oldState.filters, newPayload],
       });
