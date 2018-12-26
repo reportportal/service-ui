@@ -1,20 +1,25 @@
 import { defineMessages } from 'react-intl';
-import { BUG_ID, SUBMIT_DATE, FOUND_IN, SUBMITTER } from './constants';
+import {
+  BUG_ID_COLUMN_KEY,
+  SUBMIT_DATE_COLUMN_KEY,
+  FOUND_IN_COLUMN_KEY,
+  SUBMITTER_COLUMN_KEY,
+} from './constants';
 
 export const COLUMN_NAMES_MAP = defineMessages({
-  [BUG_ID]: {
+  [BUG_ID_COLUMN_KEY]: {
     id: 'UniqueBugsTable.bugIDColumn',
     defaultMessage: 'BUG ID',
   },
-  [SUBMIT_DATE]: {
+  [SUBMIT_DATE_COLUMN_KEY]: {
     id: 'UniqueBugsTable.submitDateColumn',
     defaultMessage: 'SUBMIT DATE',
   },
-  [FOUND_IN]: {
+  [FOUND_IN_COLUMN_KEY]: {
     id: 'UniqueBugsTable.foundInColumn',
     defaultMessage: 'FOUND IN',
   },
-  [SUBMITTER]: {
+  [SUBMITTER_COLUMN_KEY]: {
     id: 'UniqueBugsTable.submitterColumn',
     defaultMessage: 'SUBMITTER',
   },

@@ -1,5 +1,4 @@
 import React, { PureComponent } from 'react';
-import { injectIntl, intlShape } from 'react-intl';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
@@ -11,10 +10,8 @@ import styles from './filtersItem.scss';
 
 const cx = classNames.bind(styles);
 
-@injectIntl
 export class FiltersItem extends PureComponent {
   static propTypes = {
-    intl: intlShape,
     search: PropTypes.string,
     userId: PropTypes.string,
     activeFilterIds: PropTypes.string,
@@ -24,7 +21,6 @@ export class FiltersItem extends PureComponent {
   };
 
   static defaultProps = {
-    intl: {},
     search: '',
     userId: '',
     activeFilterIds: '',

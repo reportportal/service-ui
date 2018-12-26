@@ -23,7 +23,7 @@ import { GENERAL, EMAIL_SERVER } from 'common/constants/settingsTabs';
 import { SETTINGS, MEMBERS, EVENTS } from 'common/constants/projectSections';
 import { isAuthorizedSelector } from 'controllers/auth';
 import {
-  fetchDashboardAction,
+  fetchDashboardsAction,
   changeVisibilityTypeAction,
   dashboardItemsSelector,
 } from 'controllers/dashboard';
@@ -110,7 +110,7 @@ export default {
         return;
       }
       const projectId = projectIdSelector(getState());
-      dispatch(fetchDashboardAction(projectId));
+      dispatch(fetchDashboardsAction(projectId));
       dispatch(changeVisibilityTypeAction());
     },
   },
@@ -124,7 +124,7 @@ export default {
       const dashboardItems = dashboardItemsSelector(getState());
       if (dashboardItems.length === 0) {
         const projectId = projectIdSelector(getState());
-        dispatch(fetchDashboardAction(projectId));
+        dispatch(fetchDashboardsAction(projectId));
       }
     },
   },

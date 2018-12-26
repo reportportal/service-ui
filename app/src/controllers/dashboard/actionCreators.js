@@ -1,6 +1,7 @@
 import { fetch, getStorageItem, setStorageItem } from 'common/utils';
 import { URLS } from 'common/urls';
 import { activeProjectSelector, userIdSelector } from 'controllers/user';
+import { PROJECT_DASHBOARD_PAGE, activeDashboardIdSelector } from 'controllers/pages';
 import {
   FETCH_DASHBOARD_SUCCESS,
   CHANGE_VISIBILITY_TYPE,
@@ -10,7 +11,13 @@ import {
   DASHBOARDS_TABLE_VIEW,
 } from './constants';
 
-export const fetchDashboardAction = (projectId) => (dispatch, getState) => {
+const updateDashboardItemAction = (payload) => (dispatch) =>
+  dispatch({
+    type: UPDATE_DASHBOARD_ITEM_SUCCESS,
+    payload,
+  });
+
+export const fetchDashboardsAction = (projectId) => (dispatch, getState) => {
   const userId = userIdSelector(getState());
   const activeProject = projectId || activeProjectSelector(getState());
 
@@ -24,6 +31,32 @@ export const fetchDashboardAction = (projectId) => (dispatch, getState) => {
       type: FETCH_DASHBOARD_SUCCESS,
       payload: [...dashboards.content, ...content.filter((item) => item.owner !== userId)],
     });
+  });
+};
+
+export const fetchDashboardAction = () => (dispatch, getState) => {
+  const activeProject = activeProjectSelector(getState());
+  const activeDashboard = activeDashboardIdSelector(getState());
+
+  fetch(URLS.dashboard(activeProject, activeDashboard))
+    .then((dashboard) => {
+      updateDashboardItemAction(dashboard)(dispatch);
+    })
+    .catch(() => {
+      this.props.redirect({ type: PROJECT_DASHBOARD_PAGE, payload: { projectId: activeProject } });
+    });
+};
+
+export const updateDashboardWidgetsAction = (dashboard) => (dispatch, getState) => {
+  const activeProject = activeProjectSelector(getState());
+
+  fetch(URLS.dashboard(activeProject, dashboard.id), {
+    method: 'PUT',
+    data: {
+      updateWidgets: dashboard.widgets,
+    },
+  }).then(() => {
+    updateDashboardItemAction(dashboard)(dispatch);
   });
 };
 
@@ -59,11 +92,7 @@ export const editDashboardAction = (item) => (dispatch, getState) => {
     data: { name, description, share },
   }).then((response) => {
     const payload = { ...item, ...response };
-
-    dispatch({
-      type: UPDATE_DASHBOARD_ITEM_SUCCESS,
-      payload,
-    });
+    updateDashboardItemAction(payload)(dispatch);
   });
 };
 

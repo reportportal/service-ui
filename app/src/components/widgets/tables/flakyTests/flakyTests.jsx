@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { TestsTableWidget } from '../components/testsTableWidget';
 import * as cfg from './flakyTestsCfg';
 
-const FlakyTests = ({ widget: { content }, nameClickHandler }) => (
+export const FlakyTests = ({ widget: { content }, nameClickHandler }) => (
   <TestsTableWidget
     tests={content.flaky}
     launchName={content.latestLaunch.name}
@@ -13,14 +13,9 @@ const FlakyTests = ({ widget: { content }, nameClickHandler }) => (
 );
 
 FlakyTests.propTypes = {
-  // tests: PTypes.PTTests.isRequired,
-  // launch: PTypes.PTLaunch.isRequired,
   widget: PropTypes.object.isRequired,
-  nameClickHandler: PropTypes.func.isRequired,
+  nameClickHandler: PropTypes.func,
 };
-
 FlakyTests.defaultProps = {
   nameClickHandler: () => {},
 };
-
-export { FlakyTests };

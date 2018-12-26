@@ -77,6 +77,7 @@ export class WidgetWizardModal extends Component {
   };
   onClosed = () => {
     this.props.hideModalAction();
+    this.props.data.onConfirm();
     this.props.destroyWizardForm();
   };
   closeModal = () => {

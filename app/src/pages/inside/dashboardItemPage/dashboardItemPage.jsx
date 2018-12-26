@@ -6,7 +6,7 @@ import Fullscreen from 'react-full-screen';
 import Parser from 'html-react-parser';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { activeDashboardIdSelector } from 'controllers/pages';
-import { dashboardItemsSelector } from 'controllers/dashboard';
+import { dashboardItemsSelector, fetchDashboardAction } from 'controllers/dashboard';
 import { activeProjectSelector } from 'controllers/user';
 import classNames from 'classnames/bind';
 import { showModalAction } from 'controllers/modal';
@@ -61,6 +61,7 @@ const messages = defineMessages({
   }),
   {
     showModalAction,
+    fetchDashboardAction,
   },
 )
 @track()
@@ -68,6 +69,7 @@ export class DashboardItemPage extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
     showModalAction: PropTypes.func.isRequired,
+    fetchDashboardAction: PropTypes.func.isRequired,
     dashboardId: PropTypes.number,
     dashboardItems: PropTypes.array,
     activeProject: PropTypes.string.isRequired,
@@ -109,9 +111,6 @@ export class DashboardItemPage extends Component {
   getDashboardName = () => (this.dashboard && this.dashboard.name) || '';
 
   getDashboard = () => {
-    if (this.dashboard && this.dashboard.id === this.props.dashboardId) {
-      return;
-    }
     const { dashboardItems, dashboardId } = this.props;
     this.dashboard = dashboardItems.find((item) => item.id === dashboardId);
   };
@@ -125,7 +124,7 @@ export class DashboardItemPage extends Component {
     this.props.showModalAction({
       id: 'widgetWizardModal',
       data: {
-        onConfirm: () => {}, // TODO: put dashboard update actions here
+        onConfirm: this.props.fetchDashboardAction,
         eventsInfo: {
           closeIcon: DASHBOARD_PAGE_EVENTS.CLOSE_ICON_ADD_WIDGET_MODAL,
           chooseWidgetType: DASHBOARD_PAGE_EVENTS.CHOOSE_WIDGET_TYPE_ADD_WIDGET_MODAL,
@@ -170,10 +169,7 @@ export class DashboardItemPage extends Component {
               </div>
             </div>
             <Fullscreen enabled={this.state.isFullscreen} onChange={this.onChangeFullscreen}>
-              <WidgetsGrid
-                dashboardId={this.props.dashboardId}
-                isFullscreen={this.state.isFullscreen}
-              />
+              <WidgetsGrid dashboard={this.dashboard} isFullscreen={this.state.isFullscreen} />
               {this.state.isFullscreen && (
                 <i className={cx('icon-close')} onClick={this.toggleFullscreen}>
                   {Parser(CancelIcon)}
