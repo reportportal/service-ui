@@ -8,7 +8,7 @@ import styles from './displayFilter.scss';
 const cx = classNames.bind(styles);
 
 export const DisplayFilter = ({ userFilters, filter, onChangeDisplay }) => {
-  const isFilterDisplayed = userFilters.find((item) => item.id === filter.id);
+  const isFilterDisplayed = !!userFilters.find((item) => item.id === filter.id);
   return (
     <Fragment>
       <div className={cx('mobile-label', 'display-label')}>
@@ -17,7 +17,7 @@ export const DisplayFilter = ({ userFilters, filter, onChangeDisplay }) => {
       <div className={cx('switcher-wrapper')}>
         <InputSwitcher
           value={!!isFilterDisplayed}
-          onChange={() => onChangeDisplay(filter, isFilterDisplayed ? 'DELETE' : 'PUT')}
+          onChange={() => onChangeDisplay(isFilterDisplayed, filter)}
         >
           <span className={cx('switcher-label')}>
             {isFilterDisplayed ? (

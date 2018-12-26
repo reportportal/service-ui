@@ -3,7 +3,7 @@ import { redirect } from 'redux-first-router';
 import { fetchDataAction, concatFetchDataAction, FETCH_SUCCESS } from 'controllers/fetch';
 import { activeProjectSelector } from 'controllers/user';
 import { URLS } from 'common/urls';
-import { userFiltersSelector, toggleDisplayFilterOnLaunchesAction } from 'controllers/project';
+import { userFiltersSelector, updateProjectFilterPreferencesAction } from 'controllers/project';
 import { PROJECT_LAUNCHES_PAGE } from 'controllers/pages';
 import { omit } from 'common/utils/omit';
 import { ALL, NEW_FILTER_PREFIX } from 'common/constants/reservedFilterIds';
@@ -109,7 +109,7 @@ function* saveNewFilter({ payload: filter }) {
   const newId = response.payload.id;
   const newFilter = { ...filter, id: newId };
   yield put(updateFilterSuccessAction(newFilter, filter.id));
-  yield put(toggleDisplayFilterOnLaunchesAction(newFilter, 'PUT', false));
+  yield put(updateProjectFilterPreferencesAction(newFilter.id, 'PUT'));
   yield put(changeActiveFilterAction(newId));
 }
 
