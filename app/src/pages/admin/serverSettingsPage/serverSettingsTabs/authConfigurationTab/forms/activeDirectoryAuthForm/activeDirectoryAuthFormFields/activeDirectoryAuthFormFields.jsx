@@ -5,15 +5,17 @@ import { FormField } from 'components/fields/formField';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { Input } from 'components/inputs/input';
 import { InputConditional } from 'components/inputs/inputConditional';
-import { LDAP_PREFIX, LDAPS_PREFIX } from '../../../../common/constants';
 import {
-  DOMAIN_KEY,
+  LDAP_ATTRIBUTES_KEY,
+  LDAP_PREFIX,
+  LDAPS_PREFIX,
   BASE_DN_KEY,
   EMAIL_KEY,
   FULL_NAME_KEY,
   URL_KEY,
   PHOTO_KEY,
-} from '../constants';
+} from '../../../../common/constants';
+import { DOMAIN_KEY } from '../constants';
 import styles from './activeDirectoryAuthFormFields.scss';
 
 const cx = classNames.bind(styles);
@@ -103,7 +105,7 @@ export class ActiveDirectoryAuthFormFields extends Component {
           </FieldErrorHint>
         </FormField>
         <FormField
-          name={URL_KEY}
+          name={`${LDAP_ATTRIBUTES_KEY}.${URL_KEY}`}
           required
           fieldWrapperClassName={cx('form-field-wrapper')}
           label={formatMessage(messages.urlLabel)}
@@ -121,7 +123,7 @@ export class ActiveDirectoryAuthFormFields extends Component {
           </FieldErrorHint>
         </FormField>
         <FormField
-          name={BASE_DN_KEY}
+          name={`${LDAP_ATTRIBUTES_KEY}.${BASE_DN_KEY}`}
           required
           fieldWrapperClassName={cx('form-field-wrapper')}
           label={formatMessage(messages.baseDnLabel)}
@@ -132,7 +134,7 @@ export class ActiveDirectoryAuthFormFields extends Component {
           </FieldErrorHint>
         </FormField>
         <FormField
-          name={EMAIL_KEY}
+          name={`${LDAP_ATTRIBUTES_KEY}.${EMAIL_KEY}`}
           required
           fieldWrapperClassName={cx('form-field-wrapper')}
           label={formatMessage(messages.emailAttributeLabel)}
@@ -143,7 +145,7 @@ export class ActiveDirectoryAuthFormFields extends Component {
           </FieldErrorHint>
         </FormField>
         <FormField
-          name={FULL_NAME_KEY}
+          name={`${LDAP_ATTRIBUTES_KEY}.${FULL_NAME_KEY}`}
           fieldWrapperClassName={cx('form-field-wrapper')}
           label={formatMessage(messages.fullNameAttributeLabel)}
           labelClassName={cx('label')}
@@ -153,7 +155,7 @@ export class ActiveDirectoryAuthFormFields extends Component {
           </FieldErrorHint>
         </FormField>
         <FormField
-          name={PHOTO_KEY}
+          name={`${LDAP_ATTRIBUTES_KEY}.${PHOTO_KEY}`}
           fieldWrapperClassName={cx('form-field-wrapper')}
           label={formatMessage(messages.photoAttributeLabel)}
           labelClassName={cx('label')}

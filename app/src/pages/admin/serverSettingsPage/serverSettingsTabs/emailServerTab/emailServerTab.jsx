@@ -51,6 +51,8 @@ export class EmailServerTab extends Component {
     change: () => {},
   };
 
+  getSubmitUrl = () => URLS.emailServerSettings();
+
   prepareDataBeforeInitialize = (data) => ({
     [ENABLED_KEY]: !!data.serverEmailConfig,
     ...DEFAULT_FORM_CONFIG,
@@ -59,8 +61,6 @@ export class EmailServerTab extends Component {
 
   initialConfigUrl = URLS.serverSettings();
 
-  submitFormUrl = URLS.emailServerSettings();
-
   render() {
     const { enabled, initialize, handleSubmit } = this.props;
 
@@ -68,7 +68,7 @@ export class EmailServerTab extends Component {
       switcherLabel: messages.emailSwitcher,
       FieldsComponent: EmailServerTabFormFields,
       initialConfigUrl: this.initialConfigUrl,
-      submitFormUrl: this.submitFormUrl,
+      getSubmitUrl: this.getSubmitUrl,
       withErrorBlock: false,
       defaultFormConfig: DEFAULT_FORM_CONFIG,
     };

@@ -50,12 +50,19 @@ export class GithubAuthForm extends Component {
     handleSubmit: () => {},
   };
 
-  prepareDataBeforeSubmit = (data) => ({
-    ...data,
-    restrictions: {
-      organizations: data.restrictions.organizations.concat(`,${data.restrictions.organization}`),
-    },
-  });
+  getSubmitUrl = () => this.commonUrl;
+
+  prepareDataBeforeSubmit = (data) => {
+    const updatedOrganization = data.restrictions.organizations.length
+      ? `,${data.restrictions.organization}`
+      : data.restrictions.organization;
+    return {
+      ...data,
+      restrictions: {
+        organizations: data.restrictions.organizations.concat(updatedOrganization),
+      },
+    };
+  };
 
   commonUrl = URLS.githubAuthSettings();
 
@@ -72,7 +79,7 @@ export class GithubAuthForm extends Component {
       switcherLabel: localMessages.switcherLabel,
       FieldsComponent: GithubAuthFormFields,
       initialConfigUrl: this.commonUrl,
-      submitFormUrl: this.commonUrl,
+      getSubmitUrl: this.getSubmitUrl,
       withErrorBlock: false,
       defaultFormConfig: DEFAULT_FORM_CONFIG,
     };

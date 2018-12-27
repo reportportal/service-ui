@@ -13,7 +13,7 @@ import { BigButton } from 'components/buttons/bigButton';
 import WarningIcon from 'common/img/error-inline.svg';
 import { InputBigSwitcher } from 'components/inputs/inputBigSwitcher';
 import { SectionHeader } from 'components/main/sectionHeader';
-import { messages } from '../constants';
+import { messages, ENABLED_KEY } from '../constants';
 import styles from './formController.scss';
 
 const cx = classNames.bind(styles);
@@ -36,7 +36,7 @@ export class FormController extends Component {
       switcherLabel: PropTypes.oneOfType([PropTypes.string, PropTypes.object]).isRequired,
       FieldsComponent: PropTypes.oneOfType([PropTypes.func, PropTypes.node]).isRequired,
       initialConfigUrl: PropTypes.string.isRequired,
-      submitFormUrl: PropTypes.string.isRequired,
+      getSubmitUrl: PropTypes.func.isRequired,
       formHeader: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
       customProps: PropTypes.object,
       withErrorBlock: PropTypes.bool,
@@ -79,20 +79,27 @@ export class FormController extends Component {
     if (this.props.enabled) {
       requestOptions.data = data;
     }
-    return this.updateConfig(requestOptions);
+    return this.updateConfig(requestOptions, formData.id);
   };
 
-  updateConfig = (options) =>
-    fetch(this.props.formOptions.submitFormUrl, options)
+  updateConfig = (options, id) =>
+    fetch(this.props.formOptions.getSubmitUrl(id), options)
       .then(() => this.updateConfigSuccess(options.method))
       .catch(this.catchRequestError);
 
   fetchInitialConfig = () =>
     fetch(this.props.formOptions.initialConfigUrl)
       .then((data) => {
-        const { prepareDataBeforeInitialize, initialize } = this.props;
+        const {
+          prepareDataBeforeInitialize,
+          initialize,
+          formOptions: { defaultFormConfig },
+        } = this.props;
         const initialData = prepareDataBeforeInitialize(data);
-        initialize(initialData);
+        initialize({
+          ...defaultFormConfig,
+          ...initialData,
+        });
         this.stopLoading();
       })
       .catch(this.stopLoading);
@@ -145,7 +152,7 @@ export class FormController extends Component {
             <SpinningPreloader />
           ) : (
             <FormField
-              name={'enabled'}
+              name={ENABLED_KEY}
               label={formatMessage(switcherLabel)}
               labelClassName={cx('label')}
               format={Boolean}
