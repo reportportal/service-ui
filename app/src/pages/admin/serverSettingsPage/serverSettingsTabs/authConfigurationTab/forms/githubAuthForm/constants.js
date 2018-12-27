@@ -10,5 +10,6 @@ export const DEFAULT_FORM_CONFIG = {
   [ENABLED_KEY]: false,
   restrictions: {
     organizations: '',
+    organization: '',
   },
 };
