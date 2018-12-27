@@ -16,13 +16,13 @@ export const FieldFilterEntity = ({
   vertical,
 }) => (
   <div className={cx('field-filter-entity', { stretchable, small: smallSize, vertical })}>
-    <span className={cx('entity-name', { vertical: 'vertical' })}>{title}</span>
+    <span className={cx('entity-name', { vertical })}>{title}</span>
     {removable && (
       <i className={cx('close-icon')} onClick={onRemove}>
         {Parser(CrossIcon)}
       </i>
     )}
-    <div className={cx('entity-input-holder', { vertical: 'vertical' })}>{children}</div>
+    <div className={cx('entity-input-holder', { vertical })}>{children}</div>
   </div>
 );
 FieldFilterEntity.propTypes = {

@@ -78,13 +78,13 @@ export class EntitiesGroup extends Component {
   };
 
   render() {
-    const { entities, entitySmallSize, errors, staticMode } = this.props;
+    const { entities, entitySmallSize, errors, staticMode, vertical } = this.props;
     return (
       <div className={cx('entities-group')}>
         {this.getActiveEntities().map((entity) => {
           const EntityComponent = entity.component;
           return (
-            <div key={entity.id} className={cx('entity-item', { vertical: 'vertical' })}>
+            <div key={entity.id} className={cx('entity-item', { vertical })}>
               <EntityComponent
                 entityId={entity.id}
                 smallSize={entitySmallSize}
@@ -100,7 +100,7 @@ export class EntitiesGroup extends Component {
                 value={entity.value}
                 active={this.state.activeField === entity.id}
                 error={errors[entity.id]}
-                vertical
+                vertical={vertical}
               />
             </div>
           );
