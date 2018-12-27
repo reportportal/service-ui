@@ -46,11 +46,12 @@
   &.add-filter {
     position: absolute;
     right: 10px;
-      &.disabled {
-        svg {
-          fill: $COLOR--gray-91;
-        }
+
+    &.disabled {
+      svg {
+        fill: $COLOR--gray-91;
       }
+    }
 
     &:hover {
       cursor: pointer;
@@ -94,7 +95,7 @@
     border-radius: 2px;
     margin-top: 4px;
     background-color: $COLOR--white-two;
-    box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.09);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.09);
 }
 .filters {
   padding: 15px;

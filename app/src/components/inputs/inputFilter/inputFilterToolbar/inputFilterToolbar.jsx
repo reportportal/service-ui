@@ -26,7 +26,7 @@ export class InputFilterToolbar extends PureComponent {
       <div className={cx('toolbar')}>
         <div className={cx('button-container', 'left')}>
           <BigButton color="white-two" onClick={onClear}>
-            <span className={cx('clear-all-filters-button')}>
+            <span className={cx('button', 'clear-all-filters')}>
               <FormattedMessage
                 id="InputFilterToolbar.clearAllfilters"
                 defaultMessage="Clear all filters"
@@ -34,17 +34,17 @@ export class InputFilterToolbar extends PureComponent {
             </span>
           </BigButton>
         </div>
-        <div className={cx('button-container', 'right')}>
-          <BigButton color="topaz" onClick={onApply}>
-            <span className={cx('apply-button')}>
-              <FormattedMessage id="InputFilterToolbar.apply" defaultMessage="Apply" />
+        <div className={cx('button-container', 'middle')}>
+          <BigButton color="white-two" onClick={onCancel}>
+            <span className={cx('button', 'cancel')}>
+              <FormattedMessage id="Common.cancel" defaultMessage="Cancel" />
             </span>
           </BigButton>
         </div>
-        <div className={cx('button-container', 'middle')}>
-          <BigButton color="white-two" onClick={onCancel}>
-            <span className={cx('cancel-button')}>
-              <FormattedMessage id="Common.cancel" defaultMessage="Cancel" />
+        <div className={cx('button-container', 'right')}>
+          <BigButton color="topaz" roundedCorners onClick={onApply}>
+            <span className={cx('button', 'apply')}>
+              <FormattedMessage id="InputFilterToolbar.apply" defaultMessage="Apply" />
             </span>
           </BigButton>
         </div>
