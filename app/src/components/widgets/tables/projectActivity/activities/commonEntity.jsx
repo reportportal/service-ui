@@ -74,7 +74,7 @@ export class CommonEntity extends Component {
     return (
       <Fragment>
         <span className={cx('user-name')}>{activity.userRef}</span>
-        {intl.formatMessage(messages[activity.actionType])}
+        {messages[activity.actionType] && intl.formatMessage(messages[activity.actionType])}
         <span className={cx('activity-name')}> {activity.name}.</span>
       </Fragment>
     );

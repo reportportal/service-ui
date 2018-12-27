@@ -1,8 +1,15 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
-import classNames from 'classnames/bind';
 import { injectIntl, intlShape, defineMessages } from 'react-intl';
+import classNames from 'classnames/bind';
+import Link from 'redux-first-router-link';
 import { NOTIFICATIONS } from 'common/constants/settingsTabs';
+import {
+  UPDATE_NOTIFICATIONS,
+  SWITCH_ON_NOTIFICATIONS,
+  SWITCH_OFF_NOTIFICATIONS,
+} from 'common/constants/actionTypes';
+import { getProjectSettingTabPageLink } from './utils';
 import styles from './common.scss';
 
 const cx = classNames.bind(styles);
@@ -12,15 +19,15 @@ const messages = defineMessages({
     id: 'Notifications.notifications',
     defaultMessage: 'E-mail notifications',
   },
-  update_email: {
+  [UPDATE_NOTIFICATIONS]: {
     id: 'Notifications.updateEmail',
     defaultMessage: 'updated',
   },
-  on_email: {
+  [SWITCH_ON_NOTIFICATIONS]: {
     id: 'Notifications.onEmail',
     defaultMessage: 'configured',
   },
-  off_email: {
+  [SWITCH_OFF_NOTIFICATIONS]: {
     id: 'Notifications.offEmail',
     defaultMessage: 'switched off',
   },
@@ -40,14 +47,14 @@ export class Notifications extends Component {
     return (
       <Fragment>
         <span className={cx('user-name')}>{activity.userRef}</span>
-        {intl.formatMessage(messages[activity.actionType])}
-        <a
+        {messages[activity.actionType] && intl.formatMessage(messages[activity.actionType])}
+        <Link
+          to={getProjectSettingTabPageLink(activity.projectRef, NOTIFICATIONS)}
           className={cx('link')}
           target="_blank"
-          href={`#${activity.projectRef}/settings/${NOTIFICATIONS}`}
         >
           {intl.formatMessage(messages.notifications)}.
-        </a>
+        </Link>
       </Fragment>
     );
   }

@@ -1,35 +1,36 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
-import Parser from 'html-react-parser';
-import classNames from 'classnames/bind';
 import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-intl';
+import Link from 'redux-first-router-link';
+import classNames from 'classnames/bind';
 import { ANALYSIS } from 'common/constants/settingsTabs';
+import { getProjectSettingTabPageLink } from './utils';
 import styles from './common.scss';
 
 const cx = classNames.bind(styles);
 
 const messages = defineMessages({
-  auto_analyze: {
+  isAutoAnalyzerEnabled: {
     id: 'UpdateAnalysisSettings.autoAnalyze',
     defaultMessage: 'switch Auto Analysis',
   },
-  number_of_log_lines: {
+  numberOfLogLines: {
     id: 'UpdateAnalysisSettings.numberOfLogLines',
     defaultMessage: 'Number of log lines',
   },
-  min_doc_freq: {
+  minDocFreq: {
     id: 'UpdateAnalysisSettings.minDocFreq',
     defaultMessage: 'Minimum document frequency',
   },
-  min_should_match: {
+  minShouldMatch: {
     id: 'UpdateAnalysisSettings.minShouldMatch',
     defaultMessage: 'Minimum should match',
   },
-  min_term_freq: {
+  minTermFreq: {
     id: 'UpdateAnalysisSettings.minTermFreq',
     defaultMessage: 'Minimum term frequency',
   },
-  analyze_mode: {
+  autoAnalyzerMode: {
     id: 'UpdateAnalysisSettings.analyzeMode',
     defaultMessage: 'Base for Auto Analysis',
   },
@@ -66,34 +67,30 @@ export class AnalysisProperties extends Component {
   };
 
   getActivityHistory = (activity) => {
-    const size = Object.keys(activity.history).length;
-    let i = 0;
-    let activities = '';
+    const from = this.props.intl.formatMessage(messages.from);
+    const to = this.props.intl.formatMessage(messages.to);
+    const activities = [];
     Object.keys(activity.history).forEach((key) => {
-      i += 1;
       if (activity.history[key].newValue && activity.history[key].oldValue) {
-        const activityName = Parser(this.props.intl.formatMessage(messages[key]));
-        const from = Parser(this.props.intl.formatMessage(messages.from));
+        const activityName = messages[key] ? this.props.intl.formatMessage(messages[key]) : '';
         const oldValue =
           this.valueReplacer(activity.history[key].oldValue) || activity.history[key].oldValue;
-        const to = Parser(this.props.intl.formatMessage(messages.to));
         const newValue =
           this.valueReplacer(activity.history[key].newValue) || activity.history[key].newValue;
-        const end = i < size ? ', ' : '.';
-        activities += `${activityName} ${from} ${oldValue} ${to} ${newValue}${end}`;
+        activities.push(`${activityName} ${from} ${oldValue} ${to} ${newValue}`);
       }
     });
-    return activities;
+    return `${activities.join(', ')}.`;
   };
 
   valueReplacer = (value) => {
     switch (value.toString()) {
       case '-1':
-        return Parser(this.props.intl.formatMessage(messages.all));
+        return this.props.intl.formatMessage(messages.all);
       case 'true':
-        return Parser(this.props.intl.formatMessage(messages.on));
+        return this.props.intl.formatMessage(messages.on);
       case 'false':
-        return Parser(this.props.intl.formatMessage(messages.off));
+        return this.props.intl.formatMessage(messages.off);
       default:
         return null;
     }
@@ -105,16 +102,16 @@ export class AnalysisProperties extends Component {
       <Fragment>
         <span className={cx('user-name')}>{activity.userRef}</span>
         <FormattedMessage id="UpdateAnalysisSettings.updated" defaultMessage="updated" />
-        <a
+        <Link
           className={cx('link')}
           target="_blank"
-          href={`#${activity.projectRef}/settings/${ANALYSIS}`}
+          to={getProjectSettingTabPageLink(activity.projectRef, ANALYSIS)}
         >
           <FormattedMessage
             id="UpdateAnalysisSettings.analysisProps"
             defaultMessage="Auto-Analysis properties:"
           />
-        </a>
+        </Link>
         <span>{this.getActivityHistory(activity)}</span>
       </Fragment>
     );
