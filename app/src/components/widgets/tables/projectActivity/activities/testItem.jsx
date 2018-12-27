@@ -4,8 +4,10 @@ import classNames from 'classnames/bind';
 import { injectIntl, intlShape, defineMessages } from 'react-intl';
 import arrayDiffer from 'array-differ';
 import { URLS } from 'common/urls';
+import Link from 'redux-first-router-link';
 import { fetch } from 'common/utils';
 import { UNLINK_ISSUE, LINK_ISSUE, POST_ISSUE } from 'common/constants/actionTypes';
+import { getTestItemPageLink } from './utils';
 import styles from './common.scss';
 
 const cx = classNames.bind(styles);
@@ -88,7 +90,7 @@ export class TestItem extends Component {
     return (
       <Fragment>
         <span className={cx('user-name')}>{activity.userRef}</span>
-        {intl.formatMessage(messages[activity.actionType])}
+        {messages[activity.actionType] && intl.formatMessage(messages[activity.actionType])}
         {this.getTickets(activity).map((ticket, t, tickets) => {
           const ticketData = this.getTicketUrlId(ticket);
           const coma = tickets.length > 1 && t < tickets.length - 1 ? ',' : '';
@@ -98,17 +100,17 @@ export class TestItem extends Component {
               {coma}
             </a>
           );
-        })}
+        })}{' '}
         {activity.actionType === [UNLINK_ISSUE]
           ? intl.formatMessage(messages.fromItem)
           : intl.formatMessage(messages.toItem)}
-        <a
-          target="_blank"
+        <Link
+          to={getTestItemPageLink(activity.projectRef, pathToTestItem)}
           className={cx('link')}
-          href={`#${activity.projectRef}/launches/all/${pathToTestItem}`}
+          target="_blank"
         >
           {activity.name}
-        </a>
+        </Link>
       </Fragment>
     );
   }

@@ -2,8 +2,10 @@ import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { injectIntl, intlShape, defineMessages } from 'react-intl';
+import Link from 'redux-first-router-link';
 import { BTS } from 'common/constants/settingsTabs';
 import { UPDATE_BTS, CREATE_BTS, DELETE_BTS } from 'common/constants/actionTypes';
+import { getProjectSettingTabPageLink } from './utils';
 import styles from './common.scss';
 
 const cx = classNames.bind(styles);
@@ -47,34 +49,34 @@ export class Bts extends Component {
   };
 
   render() {
-    const { activity, intl } = this.props;
+    const {
+      activity,
+      intl: { formatMessage },
+    } = this.props;
     const bts = this.btsName(activity.name);
-    const link = `#${activity.projectRef}/settings/${BTS}`;
+    const linksParams = {
+      target: '_blank',
+      to: getProjectSettingTabPageLink(activity.projectRef, BTS),
+      className: cx('link'),
+    };
     return (
       <Fragment>
         <span className={cx('user-name')}>{activity.userRef}</span>
-        {intl.formatMessage(messages[activity.actionType])}
-        <span> {bts.type} </span>
+        {`${messages[activity.actionType] && formatMessage(messages[activity.actionType])} ${
+          bts.type
+        }`}
         {activity.actionType === UPDATE_BTS && (
-          <span>
-            {bts.name}
-            <a target="_blank" href={link} className={cx('link')}>
-              {intl.formatMessage(messages.properties)}
-            </a>.
-          </span>
+          <Fragment>
+            {` ${bts.name}`}
+            <Link {...linksParams}>{formatMessage(messages.properties)}.</Link>
+          </Fragment>
         )}
-        {activity.actionType === CREATE_BTS && (
-          <a target="_blank" href={link} className={cx('link')}>
-            {bts.name}.
-          </a>
-        )}
+        {activity.actionType === CREATE_BTS && <Link {...linksParams}>{bts.name}.</Link>}
         {activity.actionType === DELETE_BTS && (
-          <span>
-            <a target="_blank" href={link} className={cx('link')}>
-              {bts.name}
-            </a>
-            {intl.formatMessage(messages.fromProject)}.
-          </span>
+          <Fragment>
+            <Link {...linksParams}>{bts.name}</Link>
+            {formatMessage(messages.fromProject)}.
+          </Fragment>
         )}
       </Fragment>
     );

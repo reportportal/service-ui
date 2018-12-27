@@ -16,7 +16,7 @@ const state = {
   },
 };
 
-storiesOf('Pages/Inside/DashboardPage/ProjectActivity', module)
+storiesOf('Components/Widgets/Tables/ProjectActivity', module)
   .addDecorator(
     host({
       title: 'Project activity widget',

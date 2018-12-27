@@ -1,9 +1,11 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
-import classNames from 'classnames/bind';
 import { injectIntl, intlShape, defineMessages } from 'react-intl';
+import classNames from 'classnames/bind';
+import Link from 'redux-first-router-link';
 import { DEFECT } from 'common/constants/settingsTabs';
 import { DELETE_DEFECT, UPDATE_DEFECT } from 'common/constants/actionTypes';
+import { getProjectSettingTabPageLink } from './utils';
 import styles from './common.scss';
 
 const cx = classNames.bind(styles);
@@ -38,16 +40,19 @@ export class DefectType extends Component {
 
   render() {
     const { activity, intl } = this.props;
-    const link = `#${activity.projectRef}/settings/${DEFECT}`;
     return (
       <Fragment>
         <span className={cx('user-name')}>{activity.userRef}</span>
-        {intl.formatMessage(messages[activity.actionType])}
-        <a target="_blank" href={link} className={cx('link')}>
+        {messages[activity.actionType] && intl.formatMessage(messages[activity.actionType])}
+        <Link
+          to={getProjectSettingTabPageLink(activity.projectRef, DEFECT)}
+          className={cx('link')}
+          target="_blank"
+        >
           {activity.actionType === DELETE_DEFECT
             ? activity.name
             : intl.formatMessage(messages.defectTypes)}
-        </a>
+        </Link>
       </Fragment>
     );
   }

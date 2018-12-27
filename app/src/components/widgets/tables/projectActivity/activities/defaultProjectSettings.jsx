@@ -1,8 +1,9 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
-import Parser from 'html-react-parser';
-import classNames from 'classnames/bind';
 import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-intl';
+import classNames from 'classnames/bind';
+import Link from 'redux-first-router-link';
+import { PROJECT_SETTINGS_PAGE } from 'controllers/pages';
 import styles from './common.scss';
 
 const cx = classNames.bind(styles);
@@ -41,23 +42,24 @@ export class DefaultProjectSettings extends Component {
   };
 
   getActivityHistory = (activity) => {
-    const size = Object.keys(activity.history).length;
-    let i = 0;
-    let activities = '';
+    const from = this.props.intl.formatMessage(messages.from);
+    const to = this.props.intl.formatMessage(messages.to);
+    const activities = [];
     Object.keys(activity.history).forEach((key) => {
-      i += 1;
       if (activity.history[key].newValue && activity.history[key].oldValue) {
-        const activityName = Parser(this.props.intl.formatMessage(messages[key]));
-        const from = Parser(this.props.intl.formatMessage(messages.from));
+        const activityName = messages[key] ? this.props.intl.formatMessage(messages[key]) : '';
         const oldValue = activity.history[key].oldValue;
-        const to = Parser(this.props.intl.formatMessage(messages.to));
         const newValue = activity.history[key].newValue;
-        const end = i < size ? ', ' : '.';
-        activities += `${activityName} ${from} ${oldValue} ${to} ${newValue}${end}`;
+        activities.push(`${activityName} ${from} ${oldValue} ${to} ${newValue}`);
       }
     });
-    return activities;
+    return `${activities.join(', ')}.`;
   };
+
+  getProjectSettingsLink = (projectId) => ({
+    type: PROJECT_SETTINGS_PAGE,
+    payload: { projectId },
+  });
 
   render() {
     const { activity } = this.props;
@@ -65,13 +67,17 @@ export class DefaultProjectSettings extends Component {
       <Fragment>
         <span className={cx('user-name')}>{activity.userRef}</span>
         <FormattedMessage id="ProjectActivity.updateProject" defaultMessage="updated" />
-        <a className={cx('link')} target="_blank" href={`#${activity.projectRef}/settings`}>
+        <Link
+          to={this.getProjectSettingsLink(activity.projectRef)}
+          className={cx('link')}
+          target="_blank"
+        >
           <FormattedMessage
             id="ProjectActivity.projectProps"
             defaultMessage="properties of project:"
           />
-        </a>
-        <span>{this.getActivityHistory(activity)}</span>
+        </Link>
+        {this.getActivityHistory(activity)}
       </Fragment>
     );
   }
