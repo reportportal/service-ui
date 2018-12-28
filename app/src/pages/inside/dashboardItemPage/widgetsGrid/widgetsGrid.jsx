@@ -159,7 +159,7 @@ export class WidgetsGrid extends Component {
   };
 
   render() {
-    const { widgets } = this.props.dashboard;
+    const { widgets = [] } = this.props.dashboard;
     let Items = null;
     let height = 0; // we need to set large height to avoid double scroll
 
