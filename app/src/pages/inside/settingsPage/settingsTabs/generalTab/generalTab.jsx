@@ -12,7 +12,12 @@ import { Input } from 'components/inputs/input';
 import { InputDropdown } from 'components/inputs/inputDropdown';
 import { BigButton } from 'components/buttons/bigButton';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { jobAttributesSelector } from 'controllers/project';
+import {
+  updateConfigurationAttributesAction,
+  jobAttributesSelector,
+  normalizeAttributesWithPrefix,
+  JOB_ATTRIBUTE_PREFIX,
+} from 'controllers/project';
 import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { FormField } from 'components/fields/formField';
 import {
@@ -40,6 +45,7 @@ const cx = classNames.bind(styles);
   }),
   {
     showNotification,
+    updateConfigurationAttributesAction,
   },
 )
 @injectIntl
@@ -57,6 +63,7 @@ export class GeneralTab extends Component {
     }).isRequired,
     isEpamInstance: PropTypes.bool.isRequired,
     showNotification: PropTypes.func.isRequired,
+    updateConfigurationAttributesAction: PropTypes.func.isRequired,
     initialize: PropTypes.func.isRequired,
     accountRole: PropTypes.string.isRequired,
     userRole: PropTypes.string.isRequired,
@@ -81,19 +88,23 @@ export class GeneralTab extends Component {
     });
   }
 
-  onFormSubmit = (data) => {
+  onFormSubmit = (formData) => {
     this.props.tracking.trackEvent(SETTINGS_PAGE_EVENTS.GENERAL_SUBMIT);
-    const dataToSend = {
+    const preparedData = normalizeAttributesWithPrefix(formData, JOB_ATTRIBUTE_PREFIX);
+    const data = {
       configuration: {
-        ...data,
+        attributes: {
+          ...preparedData,
+        },
       },
     };
-    fetch(URLS.project(this.props.projectId), { method: 'put', data: dataToSend })
+    fetch(URLS.project(this.props.projectId), { method: 'put', data })
       .then(() => {
         this.props.showNotification({
           message: this.props.intl.formatMessage(Messages.updateSuccessNotification),
           type: NOTIFICATION_TYPES.SUCCESS,
         });
+        this.props.updateConfigurationAttributesAction(data);
       })
       .catch(() => {
         this.props.showNotification({

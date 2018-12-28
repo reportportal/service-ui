@@ -7,8 +7,8 @@ export {
 export {
   fetchProjectAction,
   toggleDisplayFilterOnLaunchesAction,
-  fetchAutoAnalysisConfigurationAction,
-  updateAutoAnalysisConfigurationAction,
+  fetchConfigurationAttributesAction,
+  updateConfigurationAttributesAction,
   updateProjectEmailConfig,
 } from './actionCreators';
 export { projectReducer } from './reducer';
