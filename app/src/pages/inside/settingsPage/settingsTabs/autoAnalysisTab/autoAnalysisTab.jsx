@@ -4,7 +4,7 @@ import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
 import { injectIntl } from 'react-intl';
 import { canUpdateSettings } from 'common/utils/permissions';
-import { fetchAutoAnalysisConfigurationAction } from 'controllers/project';
+import { fetchConfigurationAttributesAction } from 'controllers/project';
 import {
   activeProjectSelector,
   activeProjectRoleSelector,
@@ -23,25 +23,25 @@ const cx = classNames.bind(styles);
     userRole: activeProjectRoleSelector(state),
   }),
   {
-    fetchAutoAnalysisConfigurationAction,
+    fetchConfigurationAttributesAction,
   },
 )
 @injectIntl
 export class AutoAnalysisTab extends Component {
   static propTypes = {
     projectId: PropTypes.string,
-    fetchAutoAnalysisConfigurationAction: PropTypes.func.isRequired,
+    fetchConfigurationAttributesAction: PropTypes.func.isRequired,
     accountRole: PropTypes.string.isRequired,
     userRole: PropTypes.string.isRequired,
   };
 
   static defaultProps = {
     projectId: '',
-    fetchAutoAnalysisConfigurationAction: () => {},
+    fetchConfigurationAttributesAction: () => {},
   };
 
   componentDidMount() {
-    this.props.fetchAutoAnalysisConfigurationAction(this.props.projectId);
+    this.props.fetchConfigurationAttributesAction(this.props.projectId);
   }
 
   render() {

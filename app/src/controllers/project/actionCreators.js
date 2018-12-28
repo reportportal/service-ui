@@ -5,7 +5,7 @@ import {
   FETCH_PROJECT_SUCCESS,
   FETCH_PROJECT_PREFERENCES_SUCCESS,
   TOGGLE_DISPLAY_FILTER_ON_LAUNCHES,
-  UPDATE_AUTO_ANALYSIS_CONFIGURATION,
+  UPDATE_CONFIGURATION_ATTRIBUTES,
   UPDATE_EMAIL_CONFIG_SUCCESS,
 } from './constants';
 import { projectPreferencesSelector, projectEmailConfigurationSelector } from './selectors';
@@ -20,8 +20,8 @@ const fetchProjectPreferencesSuccessAction = (projectId) => ({
   payload: projectId,
 });
 
-export const updateAutoAnalysisConfigurationAction = (project) => ({
-  type: UPDATE_AUTO_ANALYSIS_CONFIGURATION,
+export const updateConfigurationAttributesAction = (project) => ({
+  type: UPDATE_CONFIGURATION_ATTRIBUTES,
   payload: project.configuration.attributes,
 });
 
@@ -63,8 +63,8 @@ export const fetchProjectAction = (projectId) => (dispatch) =>
     dispatch(fetchProjectPreferencesAction(projectId));
   });
 
-export const fetchAutoAnalysisConfigurationAction = (projectId) => (dispatch) => {
+export const fetchConfigurationAttributesAction = (projectId) => (dispatch) => {
   fetch(URLS.project(projectId)).then((project) => {
-    dispatch(updateAutoAnalysisConfigurationAction(project));
+    dispatch(updateConfigurationAttributesAction(project));
   });
 };

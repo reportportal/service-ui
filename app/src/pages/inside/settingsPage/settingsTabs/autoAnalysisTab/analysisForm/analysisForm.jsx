@@ -8,7 +8,7 @@ import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { validate, fetch } from 'common/utils';
 import { URLS } from 'common/urls';
 import {
-  updateAutoAnalysisConfigurationAction,
+  updateConfigurationAttributesAction,
   analyzerAttributesSelector,
   normalizeAttributesWithPrefix,
   ANALYZER_ATTRIBUTE_PREFIX,
@@ -106,7 +106,7 @@ const DEFAULT_ANALYSIS_MODE = 'Classic';
   }),
   {
     showNotification,
-    updateAutoAnalysisConfigurationAction,
+    updateConfigurationAttributesAction,
   },
 )
 @track()
@@ -120,7 +120,7 @@ export class AnalysisForm extends Component {
     change: PropTypes.func,
     handleSubmit: PropTypes.func,
     showNotification: PropTypes.func,
-    updateAutoAnalysisConfigurationAction: PropTypes.func,
+    updateConfigurationAttributesAction: PropTypes.func,
     formInputsValues: PropTypes.object,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
@@ -136,7 +136,7 @@ export class AnalysisForm extends Component {
     change: () => {},
     handleSubmit: () => {},
     showNotification: () => {},
-    updateAutoAnalysisConfigurationAction: () => {},
+    updateConfigurationAttributesAction: () => {},
     formInputsValues: {},
   };
 
@@ -176,7 +176,7 @@ export class AnalysisForm extends Component {
           message: this.props.intl.formatMessage(messages.updateSuccessNotification),
           type: NOTIFICATION_TYPES.SUCCESS,
         });
-        this.props.updateAutoAnalysisConfigurationAction(data);
+        this.props.updateConfigurationAttributesAction(data);
       })
       .catch(() => {
         this.props.showNotification({
