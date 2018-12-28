@@ -15,12 +15,12 @@ import {
   ACTIONS_WITH_AA_SETTINGS,
   ACTIONS_WITH_DEFECTS,
   ACTIONS_WITH_IMPORT,
-  ACTIONS_WITH_PROJECT,
   ACTIONS_WITH_NOTIFICATIONS,
-  ACTIONS_WITH_LAUNCH,
+  START_LAUNCH,
+  FINISH_LAUNCH,
+  DELETE_LAUNCH,
   UPDATE_ANALYZER,
   CREATE_USER,
-  ACTIONS_WITH_USER,
   UPDATE_PROJECT,
   UPDATE_EMAIL,
   OFF_EMAIL,
@@ -288,7 +288,7 @@ export class ProjectActivity extends Component {
     );
 
   selectActivitiesComponent = (activity) => {
-    const actionGroup = ACTION_TO_GROUP_MAP[activity.actionType];
+    const actionGroup = ACTION_TO_GROUP_MAP[activity.actionType] || activity.actionType;
     switch (actionGroup) {
       case ACTIONS_WITH_ISSUES:
         return <TestItem activity={activity} />;
@@ -307,11 +307,13 @@ export class ProjectActivity extends Component {
       case ACTIONS_WITH_DEFECTS:
         return <DefectType activity={activity} />;
       case ACTIONS_WITH_IMPORT:
-      case ACTIONS_WITH_LAUNCH:
+      case START_LAUNCH:
+      case FINISH_LAUNCH:
+      case DELETE_LAUNCH:
         return <Launch activity={activity} />;
-      case ACTIONS_WITH_PROJECT:
+      case UPDATE_PROJECT:
         return <DefaultProjectSettings activity={activity} />;
-      case ACTIONS_WITH_USER:
+      case CREATE_USER:
         return <CreateUser activity={activity} />;
       case ACTIONS_WITH_NOTIFICATIONS:
         return <Notifications activity={activity} />;
