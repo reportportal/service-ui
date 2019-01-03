@@ -16,6 +16,7 @@ import { DefectStatistics } from 'pages/inside/common/launchSuiteGrid/defectStat
 import { ToInvestigateStatistics } from 'pages/inside/common/launchSuiteGrid/toInvestigateStatistics';
 import { DefectLink } from 'pages/inside/common/defectLink';
 import { formatStatus } from 'common/utils/localizationUtils';
+import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { getStatisticsStatuses } from './utils';
 import {
   STATS_SI,
@@ -51,7 +52,7 @@ const NameColumn = ({ className, value }) => {
     owner: values.user,
     number: value.number,
     description: values.description,
-    tags: values.tags && value.values.tags.split(','),
+    attributes: values.attributes || null,
   };
   return (
     <div className={cx('name-col', className)}>
@@ -80,7 +81,9 @@ const TimeColumn = ({ className, value }, name) => (
     <span className={cx('mobile-hint')}>
       {formatMessage(name === START_TIME ? hintMessages.startTimeHint : hintMessages.endTimeHint)}
     </span>
-    <AbsRelTime startTime={Number(name === START_TIME ? value.startTime : value.values.end_time)} />
+    <AbsRelTime
+      startTime={new Date(name === START_TIME ? value.startTime : value.values.endTime).getTime()}
+    />
   </div>
 );
 TimeColumn.propTypes = {
@@ -210,6 +213,10 @@ export class LaunchesTable extends PureComponent {
   render() {
     const { result } = this.props.widget.content;
 
-    return <Grid columns={this.columns} data={result} />;
+    return (
+      <ScrollWrapper hideTracksWhenNotNeeded>
+        <Grid columns={this.columns} data={result} />
+      </ScrollWrapper>
+    );
   }
 }

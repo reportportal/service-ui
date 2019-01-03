@@ -94,7 +94,7 @@ export class ProjectActivityControls extends Component {
         itemsCount: DEFAULT_ITEMS_COUNT,
         widgetOptions: {
           actionType: this.parseActionTypes(this.criteria),
-          userRef: [],
+          user: [],
         },
       },
       filterIds: [],
@@ -154,7 +154,7 @@ export class ProjectActivityControls extends Component {
           />
         </FieldProvider>
         <FieldProvider
-          name="contentParameters.widgetOptions.userRef"
+          name="contentParameters.widgetOptions.user"
           format={this.formatUsernames}
           parse={this.parseUsernames}
         >
