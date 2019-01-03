@@ -42,8 +42,11 @@ const messages = defineMessages({
 )
 @reduxForm({
   form: 'filterSearch',
-  onChange: (vals, dispatch, props) => {
-    props.onFilterChange(vals.filter || undefined);
+  onChange: (vals, dispatch, props, previousValues) => {
+    if (typeof previousValues.filter === 'undefined') {
+      return;
+    }
+    props.onFilterChange(vals.filter);
   },
 })
 @injectIntl

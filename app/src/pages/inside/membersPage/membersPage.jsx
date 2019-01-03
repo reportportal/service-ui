@@ -52,7 +52,9 @@ const messages = defineMessages({
     showNotification,
   },
 )
-@withFilter()
+@withFilter({
+  filterKey: 'filter.cnt.user',
+})
 @withPagination({
   paginationSelector: membersPaginationSelector,
 })
