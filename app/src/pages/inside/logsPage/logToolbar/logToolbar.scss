@@ -24,7 +24,7 @@
     display: none;
   }
 
-  div[class^='logToolbar__action-button']:first-child {
+  .action-button:first-child {
     padding-left: 53px;
   }
 }
@@ -37,21 +37,21 @@
     border-bottom: none;
   }
 
-  div[class^='logToolbar__action-button']:first-child {
+  .action-button:first-child {
     margin-left: auto;
     margin-bottom: 12px;
   }
-  div[class^='logToolbar__action-button']:last-child {
+  .action-button:last-child {
     margin-right: 15px;
   }
 }
 
-div[class^='logToolbar__action-button']:nth-child(2) {
+.action-button:nth-child(2) {
   padding-left: 0px;
 }
 
 @media (min-width: 954px) {
-  div[class^='logToolbar__action-button']:nth-child(2) {
+  .action-button:nth-child(2) {
     padding-left: 5px;
   }
 }

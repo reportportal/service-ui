@@ -13,3 +13,21 @@
     height: 20px;
   }
 }
+
+.breadcrumb:nth-child(n + 3),
+.breadcrumb:nth-child(n + 5),
+.breadcrumb:nth-child(n + 7),
+.breadcrumb:nth-child(n + 9) {
+  display: block;
+  word-wrap: break-word;
+  width: 27.5%;
+}
+
+@media screen and (max-width: 425px) {
+  .breadcrumb:nth-child(n + 3),
+  .breadcrumb:nth-child(n + 5),
+  .breadcrumb:nth-child(n + 7),
+  .breadcrumb:nth-child(n + 9) {
+    width: 18.5%;
+  }
+}
