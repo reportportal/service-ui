@@ -27,7 +27,7 @@ export const CONTENT_FIELDS = {
   STATUS: 'status',
   START_TIME: 'startTime',
   END_TIME: 'endTime',
-  USER_REF: 'userRef',
+  USER: 'user',
   LAST_MODIFIED: 'lastModified',
   ACTION_TYPE: 'actionType',
   OBJECT_TYPE: 'objectType',
