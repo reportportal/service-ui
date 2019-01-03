@@ -83,7 +83,7 @@ export class ProjectActivityControls extends Component {
       contentParameters: widgetSettings.contentParameters || {
         contentFields: [
           CONTENT_FIELDS.NAME,
-          CONTENT_FIELDS.USER_REF,
+          CONTENT_FIELDS.USER,
           CONTENT_FIELDS.LAST_MODIFIED,
           CONTENT_FIELDS.ACTION_TYPE,
           CONTENT_FIELDS.OBJECT_TYPE,
@@ -94,7 +94,7 @@ export class ProjectActivityControls extends Component {
         itemsCount: DEFAULT_ITEMS_COUNT,
         widgetOptions: {
           actionType: this.parseActionTypes(this.criteria),
-          user: [],
+          user: '',
         },
       },
       filterIds: [],
@@ -118,8 +118,13 @@ export class ProjectActivityControls extends Component {
   parseItems = (value) =>
     value.length < 4 ? value : this.props.widgetSettings.contentParameters.itemsCount;
 
-  formatUsernames = (values) => values.map((value) => ({ value, label: value }));
-  parseUsernames = (values) => (values && values.map((value) => value.value)) || undefined;
+  formatUsernames = (values) =>
+    ((values.length && values.split && values.split(',')) || values || []).map((value) => ({
+      value,
+      label: value,
+    }));
+  parseUsernames = (values) =>
+    (values && values.map((value) => value.value).join(',')) || undefined;
 
   render() {
     const {
