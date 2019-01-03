@@ -1,24 +1,22 @@
 export const mockData = {
   owner: 'default',
+  widgetType: 'launchesTable',
   share: true,
   id: '5bd8b0949daec2000132daba',
   name: 'Temporary table',
   contentParameters: {
-    type: 'launchesTable',
-    gadget: 'launchesTable',
     contentFields: [
       'name',
       'number',
-      'lastModified',
       'status',
-      'statistics$defects$product_bug$PB001',
-      'statistics$defects$automation_bug$AB001',
+      'statistics$defects$product_bug$pb001',
+      'statistics$defects$automation_bug$ab001',
       'statistics$defects$automation_bug$ab_1h7inqu51mgys',
       'statistics$defects$automation_bug$ab_qecoiezu7sc8',
       'statistics$defects$automation_bug$ab_1k1tyymqtlp46',
-      'statistics$defects$system_issue$SI001',
+      'statistics$defects$system_issue$si001',
       'statistics$defects$system_issue$si_rhowwtmbonz6',
-      'statistics$defects$to_investigate$TI001',
+      'statistics$defects$to_investigate$ti001',
       'tags',
       'user',
       'startTime',
@@ -39,7 +37,7 @@ export const mockData = {
     result: [
       {
         values: {
-          statistics$defects$automation_bug$AB001: '11',
+          statistics$defects$automation_bug$ab001: '11',
           statistics$executions$skipped: '22',
           statistics$executions$total: '119',
           endTime: '1533908750104',
@@ -50,8 +48,8 @@ export const mockData = {
             '* random issues and statuses,\n' +
             '* logs,\n' +
             '* attachments with different formats.',
-          statistics$defects$to_investigate$TI001: '26',
-          statistics$defects$system_issue$SI001: '5',
+          statistics$defects$to_investigate$ti001: '26',
+          statistics$defects$system_issue$si001: '5',
           statistics$defects$automation_bug$ab_qecoiezu7sc8: '0',
           tags: 'desktop,build:3.0.1.5,demo',
           statistics$defects$system_issue$si_rhowwtmbonz6: '0',
@@ -61,7 +59,7 @@ export const mockData = {
           statistics$executions$failed: '23',
           statistics$defects$automation_bug$ab_1k1tyymqtlp46: '0',
           lastModified: '1540987067590',
-          statistics$defects$product_bug$PB001: '11',
+          statistics$defects$product_bug$pb001: '11',
           status: 'FAILED',
         },
         name: 'Demo Api Tests_214r2323adsddads123dsdsdsdsddsds',
@@ -71,7 +69,7 @@ export const mockData = {
       },
       {
         values: {
-          statistics$defects$automation_bug$AB001: '2',
+          statistics$defects$automation_bug$ab001: '2',
           statistics$executions$skipped: '11',
           statistics$executions$total: '76',
           endTime: '1533908746422',
@@ -82,8 +80,8 @@ export const mockData = {
             '* random issues and statuses,\n' +
             '* logs,\n' +
             '* attachments with different formats.',
-          statistics$defects$to_investigate$TI001: '10',
-          statistics$defects$system_issue$SI001: '6',
+          statistics$defects$to_investigate$ti001: '10',
+          statistics$defects$system_issue$si001: '6',
           statistics$defects$automation_bug$ab_qecoiezu7sc8: '0',
           tags: 'desktop,demo,build:3.0.1.4',
           statistics$defects$system_issue$si_rhowwtmbonz6: '0',
@@ -93,7 +91,7 @@ export const mockData = {
           statistics$executions$failed: '16',
           statistics$defects$automation_bug$ab_1k1tyymqtlp46: '0',
           lastModified: '1533908746422',
-          statistics$defects$product_bug$PB001: '6',
+          statistics$defects$product_bug$pb001: '6',
           status: 'FAILED',
         },
         name: 'Demo Api Tests_214r2323adsddads123dsdsdsdsddsds',
@@ -103,7 +101,7 @@ export const mockData = {
       },
       {
         values: {
-          statistics$defects$automation_bug$AB001: '3',
+          statistics$defects$automation_bug$ab001: '3',
           statistics$executions$skipped: '11',
           statistics$executions$total: '76',
           endTime: '1533908745503',
@@ -114,8 +112,8 @@ export const mockData = {
             '* random issues and statuses,\n' +
             '* logs,\n' +
             '* attachments with different formats.',
-          statistics$defects$to_investigate$TI001: '13',
-          statistics$defects$system_issue$SI001: '3',
+          statistics$defects$to_investigate$ti001: '13',
+          statistics$defects$system_issue$si001: '3',
           statistics$defects$automation_bug$ab_qecoiezu7sc8: '0',
           tags: 'desktop,demo,build:3.0.1.4',
           statistics$defects$system_issue$si_rhowwtmbonz6: '0',
@@ -125,7 +123,7 @@ export const mockData = {
           statistics$executions$failed: '14',
           statistics$defects$automation_bug$ab_1k1tyymqtlp46: '0',
           lastModified: '1533908745503',
-          statistics$defects$product_bug$PB001: '11',
+          statistics$defects$product_bug$pb001: '11',
           status: 'FAILED',
         },
         name: 'Demo Api Tests_214r2323adsddads123dsdsdsdsddsds',
@@ -135,7 +133,7 @@ export const mockData = {
       },
       {
         values: {
-          statistics$defects$automation_bug$AB001: '3',
+          statistics$defects$automation_bug$ab001: '3',
           statistics$executions$skipped: '8',
           statistics$executions$total: '42',
           endTime: '1533908743999',
@@ -146,8 +144,8 @@ export const mockData = {
             '* random issues and statuses,\n' +
             '* logs,\n' +
             '* attachments with different formats.',
-          statistics$defects$to_investigate$TI001: '9',
-          statistics$defects$system_issue$SI001: '1',
+          statistics$defects$to_investigate$ti001: '9',
+          statistics$defects$system_issue$si001: '1',
           statistics$defects$automation_bug$ab_qecoiezu7sc8: '0',
           tags: 'desktop,demo,build:3.0.1.3',
           statistics$defects$system_issue$si_rhowwtmbonz6: '0',
@@ -157,7 +155,7 @@ export const mockData = {
           statistics$executions$failed: '10',
           statistics$defects$automation_bug$ab_1k1tyymqtlp46: '0',
           lastModified: '1533908744009',
-          statistics$defects$product_bug$PB001: '5',
+          statistics$defects$product_bug$pb001: '5',
           status: 'FAILED',
         },
         name: 'Demo Api Tests_214r2323adsddads123dsdsdsdsddsds',
@@ -167,7 +165,7 @@ export const mockData = {
       },
       {
         values: {
-          statistics$defects$automation_bug$AB001: '4',
+          statistics$defects$automation_bug$ab001: '4',
           statistics$executions$skipped: '2',
           statistics$executions$total: '42',
           endTime: '1533908743769',
@@ -178,8 +176,8 @@ export const mockData = {
             '* random issues and statuses,\n' +
             '* logs,\n' +
             '* attachments with different formats.',
-          statistics$defects$to_investigate$TI001: '10',
-          statistics$defects$system_issue$SI001: '0',
+          statistics$defects$to_investigate$ti001: '10',
+          statistics$defects$system_issue$si001: '0',
           statistics$defects$automation_bug$ab_qecoiezu7sc8: '0',
           tags: 'desktop,demo,build:3.0.1.3',
           statistics$defects$system_issue$si_rhowwtmbonz6: '0',
@@ -189,7 +187,7 @@ export const mockData = {
           statistics$executions$failed: '12',
           statistics$defects$automation_bug$ab_1k1tyymqtlp46: '0',
           lastModified: '1533908743769',
-          statistics$defects$product_bug$PB001: '5',
+          statistics$defects$product_bug$pb001: '5',
           status: 'FAILED',
         },
         name: 'Demo Api Tests_214r2323adsddads123dsdsdsdsddsds',
@@ -199,7 +197,7 @@ export const mockData = {
       },
       {
         values: {
-          statistics$defects$automation_bug$AB001: '1',
+          statistics$defects$automation_bug$ab001: '1',
           statistics$executions$skipped: '1',
           statistics$executions$total: '20',
           endTime: '1533908742537',
@@ -210,8 +208,8 @@ export const mockData = {
             '* random issues and statuses,\n' +
             '* logs,\n' +
             '* attachments with different formats.',
-          statistics$defects$to_investigate$TI001: '6',
-          statistics$defects$system_issue$SI001: '1',
+          statistics$defects$to_investigate$ti001: '6',
+          statistics$defects$system_issue$si001: '1',
           statistics$defects$automation_bug$ab_qecoiezu7sc8: '0',
           tags: 'desktop,demo,build:3.0.1.2',
           statistics$defects$system_issue$si_rhowwtmbonz6: '0',
@@ -221,7 +219,7 @@ export const mockData = {
           statistics$executions$failed: '9',
           statistics$defects$automation_bug$ab_1k1tyymqtlp46: '0',
           lastModified: '1533908742538',
-          statistics$defects$product_bug$PB001: '5',
+          statistics$defects$product_bug$pb001: '5',
           status: 'FAILED',
         },
         name: 'Demo Api Tests_214r2323adsddads123dsdsdsdsddsds',
@@ -231,7 +229,7 @@ export const mockData = {
       },
       {
         values: {
-          statistics$defects$automation_bug$AB001: '1',
+          statistics$defects$automation_bug$ab001: '1',
           statistics$executions$skipped: '4',
           statistics$executions$total: '20',
           endTime: '1533908742371',
@@ -242,8 +240,8 @@ export const mockData = {
             '* random issues and statuses,\n' +
             '* logs,\n' +
             '* attachments with different formats.',
-          statistics$defects$to_investigate$TI001: '2',
-          statistics$defects$system_issue$SI001: '0',
+          statistics$defects$to_investigate$ti001: '2',
+          statistics$defects$system_issue$si001: '0',
           statistics$defects$automation_bug$ab_qecoiezu7sc8: '0',
           tags: 'desktop,demo,build:3.0.1.2',
           statistics$defects$system_issue$si_rhowwtmbonz6: '0',
@@ -253,7 +251,7 @@ export const mockData = {
           statistics$executions$failed: '5',
           statistics$defects$automation_bug$ab_1k1tyymqtlp46: '0',
           lastModified: '1533908742371',
-          statistics$defects$product_bug$PB001: '4',
+          statistics$defects$product_bug$pb001: '4',
           status: 'FAILED',
         },
         name: 'Demo Api Tests_214r2323adsddads123dsdsdsdsddsds',
@@ -263,7 +261,7 @@ export const mockData = {
       },
       {
         values: {
-          statistics$defects$automation_bug$AB001: '0',
+          statistics$defects$automation_bug$ab001: '0',
           statistics$executions$skipped: '0',
           statistics$executions$total: '5',
           endTime: '1533908741782',
@@ -274,8 +272,8 @@ export const mockData = {
             '* random issues and statuses,\n' +
             '* logs,\n' +
             '* attachments with different formats.',
-          statistics$defects$to_investigate$TI001: '0',
-          statistics$defects$system_issue$SI001: '1',
+          statistics$defects$to_investigate$ti001: '0',
+          statistics$defects$system_issue$si001: '1',
           statistics$defects$automation_bug$ab_qecoiezu7sc8: '0',
           tags: 'desktop,demo,build:3.0.1.1',
           statistics$defects$system_issue$si_rhowwtmbonz6: '0',
@@ -285,7 +283,7 @@ export const mockData = {
           statistics$executions$failed: '2',
           statistics$defects$automation_bug$ab_1k1tyymqtlp46: '0',
           lastModified: '1533908741783',
-          statistics$defects$product_bug$PB001: '2',
+          statistics$defects$product_bug$pb001: '2',
           status: 'FAILED',
         },
         name: 'Demo Api Tests_214r2323adsddads123dsdsdsdsddsds',
@@ -339,7 +337,7 @@ export const state = {
         subTypes: {
           TO_INVESTIGATE: [
             {
-              locator: 'TI001',
+              locator: 'ti001',
               typeRef: 'TO_INVESTIGATE',
               longName: 'To Investigate',
               shortName: 'TI',
@@ -348,7 +346,7 @@ export const state = {
           ],
           NO_DEFECT: [
             {
-              locator: 'ND001',
+              locator: 'nd001',
               typeRef: 'NO_DEFECT',
               longName: 'No Defect',
               shortName: 'ND',
@@ -357,7 +355,7 @@ export const state = {
           ],
           AUTOMATION_BUG: [
             {
-              locator: 'AB001',
+              locator: 'ab001',
               typeRef: 'AUTOMATION_BUG',
               longName: 'Automation Bug',
               shortName: 'AB',
@@ -366,7 +364,7 @@ export const state = {
           ],
           PRODUCT_BUG: [
             {
-              locator: 'PB001',
+              locator: 'pb001',
               typeRef: 'PRODUCT_BUG',
               longName: 'Product Bug',
               shortName: 'PB',
@@ -375,7 +373,7 @@ export const state = {
           ],
           SYSTEM_ISSUE: [
             {
-              locator: 'SI001',
+              locator: 'si001',
               typeRef: 'SYSTEM_ISSUE',
               longName: 'System Issue',
               shortName: 'SI',

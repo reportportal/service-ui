@@ -174,9 +174,9 @@ const messages = defineMessages({
     defaultMessage: 'Import',
   },
 
-  tags: {
-    id: 'WidgetCriteriaOption.tags',
-    defaultMessage: 'Tags',
+  attributes: {
+    id: 'WidgetCriteriaOption.attributes',
+    defaultMessage: 'Attributes',
   },
   user: {
     id: 'WidgetCriteriaOption.user',
@@ -306,7 +306,7 @@ const getUserActionOptions = (formatMessage) => [
 ];
 
 const getLaunchGridColumnsOptions = (formatMessage) => [
-  { value: 'tags', label: formatMessage(messages.tags) },
+  { value: 'attributes', label: formatMessage(messages.attributes) },
   { value: 'user', label: formatMessage(messages.user) },
   { value: 'startTime', label: formatMessage(messages.startTime) },
   { value: 'endTime', label: formatMessage(messages.endTime) },
