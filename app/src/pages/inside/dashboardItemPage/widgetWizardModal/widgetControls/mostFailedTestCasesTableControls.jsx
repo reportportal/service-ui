@@ -14,13 +14,7 @@ import {
   DEFECT_STATISTICS_OPTIONS,
   ITEMS_INPUT_WIDTH,
 } from './constants';
-import {
-  FiltersControl,
-  DropdownControl,
-  InputControl,
-  TagsControl,
-  CheckboxControl,
-} from './controls';
+import { DropdownControl, InputControl, TagsControl, CheckboxControl } from './controls';
 
 const DEFAULT_ITEMS_COUNT = '30';
 const messages = defineMessages({
@@ -86,8 +80,6 @@ export class MostFailedTestCasesTableControls extends Component {
     widgetSettings: PropTypes.object.isRequired,
     launchNamesSearchUrl: PropTypes.string.isRequired,
     initializeWizardSecondStepForm: PropTypes.func.isRequired,
-    formAppearance: PropTypes.object.isRequired,
-    onFormAppearanceChange: PropTypes.func.isRequired,
   };
 
   constructor(props) {
@@ -128,22 +120,10 @@ export class MostFailedTestCasesTableControls extends Component {
     const {
       intl: { formatMessage },
       launchNamesSearchUrl,
-      formAppearance,
-      onFormAppearanceChange,
     } = this.props;
 
     return (
       <Fragment>
-        <FieldProvider
-          name="filterIds"
-          parse={this.parseFilterValue}
-          format={this.formatFilterValue}
-        >
-          <FiltersControl
-            formAppearance={formAppearance}
-            onFormAppearanceChange={onFormAppearanceChange}
-          />
-        </FieldProvider>
         <FieldProvider
           name="contentParameters.contentFields"
           format={this.formatContentFields}
