@@ -8,12 +8,11 @@ import { STATS_FAILED } from 'common/constants/statistics';
 import { FAILED } from 'common/constants/testStatuses';
 import { statusLocalization } from 'common/constants/statusLocalization';
 import { messages } from '../common/messages';
-import { TooltipWrapper } from '../common/tooltip';
+import { TooltipWrapper, TooltipContent } from '../common/tooltip';
 import { C3Chart } from '../common/c3chart';
 import { Legend } from '../common/legend';
 import { getLaunchAxisTicks } from '../common/utils';
 import { getTicks } from './configuration';
-import { FailedCasesTooltipContent } from './failedCasesTooltipContent';
 import styles from './failedCasesTrendChart.scss';
 
 const cx = classNames.bind(styles);
@@ -203,12 +202,11 @@ export class FailedCasesTrendChart extends Component {
 
     return ReactDOMServer.renderToStaticMarkup(
       <TooltipWrapper>
-        <FailedCasesTooltipContent
+        <TooltipContent
           launchName={name}
           launchNumber={number}
           startTime={Number(startTime)}
-          itemCases={d[0].value}
-          itemCasesSuffix={this.props.intl.formatMessage(messages.cases)}
+          itemCases={`${d[0].value} ${this.props.intl.formatMessage(messages.cases)}`}
           color={color(id)}
           itemName={this.props.intl.formatMessage(statusLocalization[FAILED])}
         />
