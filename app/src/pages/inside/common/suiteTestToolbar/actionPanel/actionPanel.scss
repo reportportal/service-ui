@@ -23,7 +23,7 @@
   }
 }
 
-@media (min-width: 768px) and (max-width: 1195px) {
+@media (min-width: $SCREEN_SM_MIN) and (max-width: 1195px) {
   .hidden--l {
     display: none;
   }
@@ -40,7 +40,7 @@
   }
 }
 
-@media (max-width: 767px) {
+@media (max-width: $SCREEN_XS_MAX) {
   .hidden--xs-s-m {
     display: none;
   }

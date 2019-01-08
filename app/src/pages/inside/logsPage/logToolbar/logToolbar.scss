@@ -19,7 +19,7 @@
   margin-right: -1px;
 }
 
-@media (min-width: 768px) {
+@media (min-width: $SCREEN_SM_MIN) {
   .desktop-hidden {
     display: none;
   }
@@ -28,7 +28,7 @@
     padding-left: 53px;
   }
 }
-@media (max-width: 767px) {
+@media (max-width: $SCREEN_XS_MAX) {
   .mobile-hidden {
     display: none;
   }
