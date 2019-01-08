@@ -36,7 +36,7 @@ const mockObserver = {
 storiesOf('Components/Widgets/Charts/NonPassedTestCasesTrendChart', module)
   .addDecorator(
     host({
-      title: 'Launch Duration Chart component',
+      title: 'Non passed test cases trend chart component',
       align: 'center middle',
       backdrop: 'rgba(70, 69, 71, 0.2)',
       background: '#ffffff',

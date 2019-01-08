@@ -6,10 +6,9 @@ import classNames from 'classnames/bind';
 import { COLOR_FAILEDSKIPPEDTOTAL } from 'common/constants/colors';
 import { messages } from '../common/messages';
 import { C3Chart } from '../common/c3chart';
-import { TooltipWrapper } from '../common/tooltip';
+import { TooltipWrapper, TooltipContent } from '../common/tooltip';
 import { Legend } from '../common/legend';
 import { getLaunchAxisTicks } from '../common/utils';
-import { NonPassedTestCasesTooltipContent } from './NonPassedTestCasesTooltipContent';
 import styles from './nonPassedTestCasesTrendChart.scss';
 
 const cx = classNames.bind(styles);
@@ -189,7 +188,7 @@ export class NonPassedTestCasesTrendChart extends Component {
 
     return ReactDOMServer.renderToStaticMarkup(
       <TooltipWrapper>
-        <NonPassedTestCasesTooltipContent
+        <TooltipContent
           launchName={name}
           launchNumber={number}
           startTime={startTime}

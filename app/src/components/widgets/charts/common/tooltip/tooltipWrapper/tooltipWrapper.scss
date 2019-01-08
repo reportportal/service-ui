@@ -1,9 +1,10 @@
 .tooltip {
   padding: 10px;
-  max-width: 160px;
+  max-width: 190px;
   background-color: $COLOR--white-two;
   border: 1px solid $COLOR--gray-80;
   border-radius: 2px;
+  font-size: 12px;
   &:before {
     content: '';
     position: absolute;
