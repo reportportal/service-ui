@@ -11,6 +11,7 @@ import {
   UniqueBugsTable,
   FlakyTests,
   MostFailedTests,
+  ProjectActivity,
 } from 'components/widgets/tables';
 
 export const CHARTS = {
@@ -26,4 +27,5 @@ export const CHARTS = {
   [widgetTypes.UNIQUE_BUGS_TABLE]: UniqueBugsTable,
   [widgetTypes.FLAKY_TEST_CASES_TABLE]: FlakyTests,
   [widgetTypes.MOST_FAILED_TEST_CASES_TABLE]: MostFailedTests,
+  [widgetTypes.PROJECT_ACTIVITY]: ProjectActivity,
 };

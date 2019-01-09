@@ -151,33 +151,33 @@ const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 
 export class ProjectActivity extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
-    activity: PropTypes.array,
+    widget: PropTypes.object,
     hasBts: PropTypes.bool,
   };
   static defaultProps = {
-    activity: [],
+    widget: {
+      content: {
+        result: [],
+      },
+    },
     hasBts: false,
   };
 
   getActivities = () => {
     const dates = [];
-    const activities = this.props.activity;
-    activities.forEach((activity) => {
+    const { result = [] } = this.props.widget.content;
+
+    result.forEach((activity) => {
       let dateKey;
       let contains;
       let values;
       if (this.isValidActivity(activity)) {
-        if (activity.values.actionType === UPDATE_PROJECT) {
+        if (activity.actionType === UPDATE_PROJECT) {
           values = this.updateProjectValues(activity);
-        } else if (activity.values.actionType === UPDATE_ANALYZER) {
+        } else if (activity.actionType === UPDATE_ANALYZER) {
           values = this.updateAnalyzerOptions(activity);
         } else {
-          values = Object.assign(
-            {
-              id: activity.id,
-            },
-            activity.values,
-          );
+          values = activity;
         }
         dateKey = this.getDayKey(values.lastModified);
         contains = dates.find((item) => item.day === dateKey);
@@ -227,21 +227,24 @@ export class ProjectActivity extends Component {
       id: activity.id,
       history: {},
     };
-    Object.keys(activity.values).forEach((k) => {
+    const activities = { ...activity };
+    delete activities.id;
+
+    Object.keys(activities).forEach((k) => {
       let a = k.split('$');
       let name = a[0];
       let type = a[1];
       const obj = {};
       if (k.indexOf('Value') > 0) {
         if (k === 'emailEnabled$newValue') {
-          values.actionType = activity.values[k] === 'false' ? OFF_EMAIL : ON_EMAIL;
+          values.actionType = activities[k] === 'false' ? OFF_EMAIL : ON_EMAIL;
         } else if (k === 'emailCases$newValue') {
           values.actionType = UPDATE_EMAIL;
         } else {
           a = k.split('$');
           name = a[0];
           type = a[1];
-          obj[type] = activity.values[k];
+          obj[type] = activities[k];
           if (values.history[name]) {
             values.history[name] = Object.assign(values.history[name], obj);
           } else {
@@ -249,7 +252,7 @@ export class ProjectActivity extends Component {
           }
         }
       }
-      values[k] = activity.values[k];
+      values[k] = activities[k];
     });
     return values;
   };
@@ -259,7 +262,10 @@ export class ProjectActivity extends Component {
       id: activity.id,
       history: {},
     };
-    Object.keys(activity.values).forEach((k) => {
+    const activities = { ...activity };
+    delete activities.id;
+
+    Object.keys(activities).forEach((k) => {
       let a = k.split('$');
       let name = a[0];
       let type = a[1];
@@ -268,14 +274,14 @@ export class ProjectActivity extends Component {
         a = k.split('$');
         name = a[0];
         type = a[1];
-        obj[type] = activity.values[k];
+        obj[type] = activities[k];
         if (values.history[name]) {
           values.history[name] = Object.assign(values.history[name], obj);
         } else {
           values.history[name] = obj;
         }
       }
-      values[k] = activity.values[k];
+      values[k] = activities[k];
     });
     return values;
   };
@@ -283,8 +289,8 @@ export class ProjectActivity extends Component {
   isValidActivity = (activity) =>
     !(
       !this.props.hasBts &&
-      activity.values.objectType === 'testItem' &&
-      activity.values.actionType.indexOf('issue') > 0
+      activity.objectType === 'testItem' &&
+      activity.actionType.indexOf('issue') > 0
     );
 
   selectActivitiesComponent = (activity) => {
@@ -358,16 +364,16 @@ export class ProjectActivity extends Component {
     const dates = this.getActivities();
     return (
       <div className={cx('project-activity')}>
-        <div className={cx('widget-wrapper')}>
-          <ScrollWrapper>
+        <ScrollWrapper>
+          <div className={cx('widget-wrapper')}>
             {dates.map((date) => (
               <Fragment key={date.day}>
                 <p className={cx('day-title')}>{date.dayTitle}</p>
                 {this.renderDateActivity(date)}
               </Fragment>
             ))}
-          </ScrollWrapper>
-        </div>
+          </div>
+        </ScrollWrapper>
       </div>
     );
   }
