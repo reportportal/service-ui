@@ -13,7 +13,7 @@ import {
   NO_DEFECT,
   TO_INVESTIGATE,
 } from 'common/constants/defectTypes';
-import { CHART_MODES } from 'common/constants/chartModes';
+import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
 import { activeProjectSelector } from 'controllers/user';
 import { getWidgetCriteriaOptions } from './utils/getWidgetCriteriaOptions';
 import { getWidgetModeOptions } from './utils/getWidgetModeOptions';
@@ -66,7 +66,7 @@ const messages = defineMessages({
     defaultMessage: 'You must select at least one item',
   },
 });
-const PASSING_RATE = 'passing_rate';
+const PASSING_RATE = 'passingRate';
 const TOTAL = 'total';
 const START_TIME = 'startTime';
 const STATUS = 'status';
@@ -122,7 +122,7 @@ export class ProductStatusControls extends Component {
         widgetOptions: {
           basicColumns: this.parseBasicColumns(this.criteria.map((criteria) => criteria.value)),
           customColumns: [{ name: '', value: '' }],
-          mode: CHART_MODES.ALL_LAUNCHES,
+          latest: MODES_VALUES[CHART_MODES.ALL_LAUNCHES],
           group: false,
         },
       },
@@ -189,7 +189,7 @@ export class ProductStatusControls extends Component {
         <FieldProvider name="contentParameters.widgetOptions.customColumns">
           <CustomColumnsControl />
         </FieldProvider>
-        <FieldProvider name="contentParameters.widgetOptions.mode">
+        <FieldProvider name="contentParameters.widgetOptions.latest">
           <TogglerControl
             fieldLabel=" "
             items={getWidgetModeOptions(

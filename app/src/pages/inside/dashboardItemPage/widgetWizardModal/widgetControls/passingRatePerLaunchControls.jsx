@@ -6,7 +6,7 @@ import { getFormValues, initialize } from 'redux-form';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { activeProjectSelector } from 'controllers/user';
 import { URLS } from 'common/urls';
-import { CHART_MODES } from 'common/constants/chartModes';
+import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
 import { WIDGET_WIZARD_FORM } from '../widgetWizardContent/wizardControlsSection/constants';
 import { getWidgetModeOptions } from './utils/getWidgetModeOptions';
 import { TogglerControl, TagsControl } from './controls';
@@ -66,7 +66,7 @@ export class PassingRatePerLaunchControls extends Component {
         contentFields: [],
         itemsCount: DEFAULT_ITEMS_COUNT,
         widgetOptions: {
-          viewMode: CHART_MODES.BAR_VIEW,
+          viewMode: MODES_VALUES[CHART_MODES.BAR_VIEW],
           launchNameFilter: false,
         },
       },

@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { getFormValues, initialize } from 'redux-form';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { activeProjectSelector } from 'controllers/user';
-import { CHART_MODES } from 'common/constants/chartModes';
+import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
 import { URLS } from 'common/urls';
 import { WIDGET_WIZARD_FORM } from '../widgetWizardContent/wizardControlsSection/constants';
 import { getWidgetCriteriaOptions } from './utils/getWidgetCriteriaOptions';
@@ -85,7 +85,7 @@ export class MostTimeConsumingTestCasesControls extends Component {
       contentParameters: widgetSettings.contentParameters || {
         contentFields: this.criteria.map((criteria) => criteria.value),
         widgetOptions: {
-          viewMode: CHART_MODES.BAR_VIEW,
+          viewMode: MODES_VALUES[CHART_MODES.BAR_VIEW],
           includeMethods: false,
           launchNameFilter: false,
         },

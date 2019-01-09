@@ -10,7 +10,7 @@ import { redirect } from 'redux-first-router';
 import { defectLinkSelector, statisticsLinkSelector } from 'controllers/testItem';
 import * as COLORS from 'common/constants/colors';
 import { STATS_PASSED } from 'common/constants/statistics';
-import { CHART_MODES } from 'common/constants/chartModes';
+import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
 import { C3Chart } from '../common/c3chart';
 import { Legend } from '../common/legend';
 import { messages } from '../common/messages';
@@ -129,7 +129,7 @@ export class PassingRatePerLaunch extends Component {
     };
 
     const bar =
-      data.contentParameters.widgetOptions.viewMode === CHART_MODES.BAR_VIEW
+      data.contentParameters.widgetOptions.viewMode === MODES_VALUES[CHART_MODES.BAR_VIEW]
         ? {
             width: {
               ratio: 0.35,
@@ -137,7 +137,7 @@ export class PassingRatePerLaunch extends Component {
           }
         : {};
     const pie =
-      data.contentParameters.widgetOptions.viewMode === CHART_MODES.BAR_VIEW
+      data.contentParameters.widgetOptions.viewMode === MODES_VALUES[CHART_MODES.BAR_VIEW]
         ? {}
         : {
             label: {
@@ -147,7 +147,7 @@ export class PassingRatePerLaunch extends Component {
             },
           };
     const padding =
-      data.contentParameters.widgetOptions.viewMode === CHART_MODES.BAR_VIEW
+      data.contentParameters.widgetOptions.viewMode === MODES_VALUES[CHART_MODES.BAR_VIEW]
         ? {
             top: isPreview ? 0 : 30,
             left: 20,
@@ -158,7 +158,7 @@ export class PassingRatePerLaunch extends Component {
             top: isPreview ? 0 : 85,
           };
     const axis =
-      data.contentParameters.widgetOptions.viewMode === CHART_MODES.BAR_VIEW
+      data.contentParameters.widgetOptions.viewMode === MODES_VALUES[CHART_MODES.BAR_VIEW]
         ? {
             rotated: true,
             x: {

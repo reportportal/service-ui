@@ -5,7 +5,7 @@ import { getFormValues, initialize } from 'redux-form';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { STATS_TOTAL, STATS_PASSED } from 'common/constants/statistics';
-import { CHART_MODES } from 'common/constants/chartModes';
+import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
 import { validate } from 'common/utils';
 import { WIDGET_WIZARD_FORM } from '../widgetWizardContent/wizardControlsSection/constants';
 import { getWidgetModeOptions } from './utils/getWidgetModeOptions';
@@ -56,7 +56,7 @@ export class PassingRateSummaryControls extends Component {
         contentFields: [STATS_TOTAL, STATS_PASSED],
         itemsCount: DEFAULT_ITEMS_COUNT,
         widgetOptions: {
-          viewMode: CHART_MODES.BAR_VIEW,
+          viewMode: MODES_VALUES[CHART_MODES.BAR_VIEW],
         },
       },
     });

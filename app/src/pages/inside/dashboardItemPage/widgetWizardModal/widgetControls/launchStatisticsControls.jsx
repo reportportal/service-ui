@@ -6,7 +6,7 @@ import { getFormValues, initialize } from 'redux-form';
 import { defectTypesSelector } from 'controllers/project';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { validate } from 'common/utils';
-import { CHART_MODES } from 'common/constants/chartModes';
+import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
 import { getWidgetCriteriaOptions } from './utils/getWidgetCriteriaOptions';
 import { getWidgetModeOptions } from './utils/getWidgetModeOptions';
 import {
@@ -89,8 +89,8 @@ export class LaunchStatisticsControls extends Component {
         itemsCount: DEFAULT_ITEMS_COUNT,
         widgetOptions: {
           zoom: false,
-          mode: CHART_MODES.LAUNCH_MODE,
-          viewMode: CHART_MODES.AREA_VIEW,
+          mode: MODES_VALUES[CHART_MODES.LAUNCH_MODE],
+          viewMode: MODES_VALUES[CHART_MODES.AREA_VIEW],
         },
       },
     });

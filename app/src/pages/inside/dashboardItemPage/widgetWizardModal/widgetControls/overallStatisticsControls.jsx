@@ -6,7 +6,7 @@ import { getFormValues, initialize } from 'redux-form';
 import { defectTypesSelector } from 'controllers/project';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { validate } from 'common/utils';
-import { CHART_MODES } from 'common/constants/chartModes';
+import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
 import { getWidgetCriteriaOptions } from './utils/getWidgetCriteriaOptions';
 import { getWidgetModeOptions } from './utils/getWidgetModeOptions';
 import { LAUNCH_STATUSES_OPTIONS, DEFECT_TYPES_OPTIONS, ITEMS_INPUT_WIDTH } from './constants';
@@ -79,8 +79,8 @@ export class OverallStatisticsControls extends Component {
         contentFields: this.criteria.map((criteria) => criteria.value),
         itemsCount: DEFAULT_ITEMS_COUNT,
         widgetOptions: {
-          viewMode: CHART_MODES.PANEL_VIEW,
-          mode: CHART_MODES.ALL_LAUNCHES,
+          viewMode: MODES_VALUES[CHART_MODES.PANEL_VIEW],
+          latest: MODES_VALUES[CHART_MODES.ALL_LAUNCHES],
         },
       },
     });
@@ -144,7 +144,7 @@ export class OverallStatisticsControls extends Component {
                 )}
               />
             </FieldProvider>
-            <FieldProvider name="contentParameters.widgetOptions.mode">
+            <FieldProvider name="contentParameters.widgetOptions.latest">
               <TogglerControl
                 fieldLabel=" "
                 items={getWidgetModeOptions(
