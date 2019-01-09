@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { injectIntl, intlShape, defineMessages } from 'react-intl';
-
 import { InputDropdownSorting } from 'components/inputs/inputDropdownSorting';
 import {
   STATS_SKIPPED,
@@ -16,7 +15,7 @@ import {
 } from 'common/constants/statistics';
 import { ENTITY_START_TIME, ENTITY_NAME, ENTITY_NUMBER } from 'components/filterEntities/constants';
 import styles from './filtersSorting.scss';
-import { getOrdersWithDefault } from '../constants';
+import { getOrdersWithDefault } from '../common/constants';
 
 const cx = classNames.bind(styles);
 const messages = defineMessages({
@@ -107,12 +106,12 @@ export class FiltersSorting extends Component {
     const { filter } = this.props;
     let defaultValue = {
       isAsc: false,
-      sortingColumn: '',
+      sortingColumn: ENTITY_START_TIME,
     };
 
-    if (filter.selection_parameters) {
-      const order = filter.selection_parameters.orders[0];
-      defaultValue = order === ENTITY_NUMBER ? defaultValue : order;
+    if (filter.orders) {
+      const order = filter.orders[0];
+      defaultValue = order.sortingColumn === ENTITY_NUMBER ? defaultValue : order;
     }
 
     return defaultValue;
@@ -120,19 +119,15 @@ export class FiltersSorting extends Component {
 
   handleChange = (sortingColumn) => {
     const { filter, onChange } = this.props;
-    const {
-      selection_parameters: { orders },
-    } = filter;
+    const { orders } = filter;
 
     const hasOrder = orders.find((order) => order.sortingColumn === sortingColumn);
 
-    const selectionParameters = {
-      orders: hasOrder
-        ? orders.map((order) => ({ ...order, isAsc: !order.isAsc }))
-        : getOrdersWithDefault(sortingColumn),
-    };
+    const newOrders = hasOrder
+      ? orders.map((order) => ({ ...order, isAsc: !order.isAsc }))
+      : getOrdersWithDefault(sortingColumn);
 
-    onChange(selectionParameters);
+    onChange(newOrders);
   };
 
   render() {

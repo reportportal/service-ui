@@ -46,7 +46,7 @@ NameColumn.defaultProps = {
 
 const OptionsColumn = ({ className, value }) => (
   <div className={cx('options-col', className)}>
-    <FilterOptions entities={value.entities} sort={value.orders} />
+    <FilterOptions entities={value.conditions} sort={value.orders} />
   </div>
 );
 OptionsColumn.propTypes = {

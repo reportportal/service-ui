@@ -150,6 +150,7 @@ export class LaunchLevelEntities extends Component {
           ENTITY_NAME in filterValues
             ? filterValues[ENTITY_NAME]
             : {
+                filteringField: ENTITY_NAME,
                 value: '',
                 condition: CONDITION_CNT,
               },
@@ -168,6 +169,7 @@ export class LaunchLevelEntities extends Component {
           ENTITY_NUMBER in filterValues
             ? filterValues[ENTITY_NUMBER]
             : {
+                filteringField: ENTITY_NUMBER,
                 value: '',
                 condition: CONDITION_GREATER_EQ,
               },
@@ -187,6 +189,7 @@ export class LaunchLevelEntities extends Component {
           ENTITY_DESCRIPTION in filterValues
             ? filterValues[ENTITY_DESCRIPTION]
             : {
+                filteringField: ENTITY_DESCRIPTION,
                 value: '',
                 condition: CONDITION_CNT,
               },
@@ -206,6 +209,7 @@ export class LaunchLevelEntities extends Component {
           ENTITY_USER in filterValues
             ? filterValues[ENTITY_USER]
             : {
+                filteringField: ENTITY_USER,
                 value: '',
                 condition: CONDITION_IN,
               },
@@ -220,6 +224,7 @@ export class LaunchLevelEntities extends Component {
           ENTITY_START_TIME in filterValues
             ? filterValues[ENTITY_START_TIME]
             : {
+                filteringField: ENTITY_START_TIME,
                 value: `${moment()
                   .startOf('day')
                   .subtract(1, 'months')
@@ -239,6 +244,7 @@ export class LaunchLevelEntities extends Component {
           ENTITY_ATTRIBUTE_KEYS in filterValues
             ? filterValues[ENTITY_ATTRIBUTE_KEYS]
             : {
+                filteringField: ENTITY_ATTRIBUTE_KEYS,
                 value: '',
                 condition: CONDITION_HAS,
               },
@@ -253,6 +259,7 @@ export class LaunchLevelEntities extends Component {
           ENTITY_ATTRIBUTE_VALUES in filterValues
             ? filterValues[ENTITY_ATTRIBUTE_VALUES]
             : {
+                filteringField: ENTITY_ATTRIBUTE_VALUES,
                 value: '',
                 condition: CONDITION_HAS,
               },
@@ -267,6 +274,7 @@ export class LaunchLevelEntities extends Component {
           STATS_TOTAL in filterValues
             ? filterValues[STATS_TOTAL]
             : {
+                filteringField: STATS_TOTAL,
                 value: '',
                 condition: CONDITION_GREATER_EQ,
               },
@@ -286,6 +294,7 @@ export class LaunchLevelEntities extends Component {
           STATS_PASSED in filterValues
             ? filterValues[STATS_PASSED]
             : {
+                filteringField: STATS_PASSED,
                 value: '',
                 condition: CONDITION_GREATER_EQ,
               },
@@ -305,6 +314,7 @@ export class LaunchLevelEntities extends Component {
           STATS_FAILED in filterValues
             ? filterValues[STATS_FAILED]
             : {
+                filteringField: STATS_FAILED,
                 value: '',
                 condition: CONDITION_GREATER_EQ,
               },
@@ -324,6 +334,7 @@ export class LaunchLevelEntities extends Component {
           STATS_SKIPPED in filterValues
             ? filterValues[STATS_SKIPPED]
             : {
+                filteringField: STATS_SKIPPED,
                 value: '',
                 condition: CONDITION_GREATER_EQ,
               },
@@ -354,6 +365,7 @@ export class LaunchLevelEntities extends Component {
           totalEntityId in filterValues
             ? filterValues[totalEntityId]
             : {
+                filteringField: totalEntityId,
                 value: '',
                 condition: CONDITION_GREATER_EQ,
               },
@@ -381,6 +393,7 @@ export class LaunchLevelEntities extends Component {
                 entityId in filterValues
                   ? filterValues[entityId]
                   : {
+                      filteringField: entityId,
                       value: '',
                       condition: CONDITION_GREATER_EQ,
                     },
