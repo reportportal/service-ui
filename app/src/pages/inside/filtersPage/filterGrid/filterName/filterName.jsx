@@ -30,6 +30,7 @@ export class FilterName extends Component {
     search: PropTypes.string,
     userId: PropTypes.string,
     showDesc: PropTypes.bool,
+    editable: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -41,6 +42,7 @@ export class FilterName extends Component {
     search: '',
     userId: '',
     showDesc: true,
+    editable: true,
   };
 
   getHighlightName = () => {
@@ -60,7 +62,16 @@ export class FilterName extends Component {
   };
 
   render() {
-    const { intl, userFilters, filter, onClickName, onEdit, userId, showDesc } = this.props;
+    const {
+      intl,
+      userFilters,
+      filter,
+      onClickName,
+      onEdit,
+      userId,
+      showDesc,
+      editable,
+    } = this.props;
 
     return (
       <Fragment>
@@ -83,11 +94,12 @@ export class FilterName extends Component {
                 {Parser(GlobeIcon)}
               </span>
             )}
-          {userId === filter.owner && (
-            <span className={cx('pencil-icon')} onClick={() => onEdit(filter)}>
-              {Parser(PencilIcon)}
-            </span>
-          )}
+          {userId === filter.owner &&
+            editable && (
+              <span className={cx('pencil-icon')} onClick={() => onEdit(filter)}>
+                {Parser(PencilIcon)}
+              </span>
+            )}
         </span>
         {showDesc && <MarkdownViewer value={filter.description} />}
       </Fragment>
