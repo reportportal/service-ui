@@ -27,7 +27,7 @@ import { messages } from './messages';
 const cx = className.bind(styles);
 @injectIntl
 @connect((state) => ({
-  teamMembersSearchUrl: URLS.teamMembersSearchUrl(activeProjectSelector(state)),
+  projectUsernamesSearch: URLS.projectUsernamesSearch(activeProjectSelector(state)),
   launchTagsSearch: URLS.launchTagsSearch(activeProjectSelector(state)),
   launchNameSearch: URLS.launchNameSearch(activeProjectSelector(state)),
 }))
@@ -36,7 +36,7 @@ export class EmailCase extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
     emailCase: PropTypes.string,
-    teamMembersSearchUrl: PropTypes.string,
+    projectUsernamesSearch: PropTypes.string,
     launchTagsSearch: PropTypes.string,
     launchNameSearch: PropTypes.string,
     onDelete: PropTypes.func,
@@ -55,7 +55,7 @@ export class EmailCase extends Component {
   };
   static defaultProps = {
     emailCase: '',
-    teamMembersSearchUrl: '',
+    projectUsernamesSearch: '',
     launchTagsSearch: '',
     launchNameSearch: '',
     onDelete: () => {},
@@ -127,7 +127,7 @@ export class EmailCase extends Component {
   validateTagsNewItem = ({ label }) => label && label.length >= 1;
   render() {
     const {
-      teamMembersSearchUrl,
+      projectUsernamesSearch,
       launchTagsSearch,
       launchNameSearch,
       intl,
@@ -186,7 +186,7 @@ export class EmailCase extends Component {
               nothingFound={intl.formatMessage(messages.recipientsHint)}
               minLength={3}
               async
-              uri={teamMembersSearchUrl}
+              uri={projectUsernamesSearch}
               makeOptions={this.formatOptions}
               creatable
               multi

@@ -53,7 +53,7 @@ const messages = defineMessages({
   },
 )
 @withFilter({
-  filterKey: 'filter.cnt.user',
+  filterKey: 'filter.cnt.fullName',
 })
 @withPagination({
   paginationSelector: membersPaginationSelector,
