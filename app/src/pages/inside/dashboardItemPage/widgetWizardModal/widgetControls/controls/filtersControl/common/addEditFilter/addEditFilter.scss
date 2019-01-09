@@ -1,12 +1,13 @@
-.filter-add {
+.add-edit-filter {
   position: relative;
   width: 100%;
   min-height: 200px;
-  padding-bottom: 70px;
+  padding-bottom: 30px;
+  margin-bottom: 20px;
   border-bottom: 1px solid $COLOR--gray-91;
 }
 
-.filter-add-title {
+.block-title {
   width: calc(100% - 20px);
   margin: 1px 0 0;
   padding: 18px 10px;
@@ -18,11 +19,11 @@
   background: $COLOR--white;
 }
 
-.filter-add-block {
+.filters-block {
   padding: 10px;
 }
 
-.filter-add-buttons-block {
+.filter-buttons-block {
   position: absolute;
   display: flex;
   bottom: 10px;

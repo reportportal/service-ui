@@ -84,7 +84,7 @@ export class LaunchFiltersContainer extends Component {
     this.fetchLaunches(this.createFilterQuery(conditions));
     this.updateFilter(
       this.props.activeFilterId,
-      Object.keys(conditions).map((key) => ({ ...conditions[key], filteringField: key })),
+      Object.keys(conditions).map((key) => ({ ...conditions[key] })),
     );
   };
 
