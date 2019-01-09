@@ -111,6 +111,7 @@ export class GhostMenuButton extends Component {
                   ? (e) => {
                       e.stopPropagation();
                       item.onClick();
+                      this.toggleMenu();
                     }
                   : null
               }
