@@ -1,5 +1,5 @@
 import { defineMessages } from 'react-intl';
-import { CHART_MODES } from 'common/constants/chartModes';
+import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
 
 const messages = defineMessages({
   [CHART_MODES.LAUNCH_MODE]: {
@@ -46,6 +46,6 @@ const messages = defineMessages({
 
 export const getWidgetModeOptions = (viewModes, formatMessage) =>
   viewModes.map((viewMode) => ({
-    value: viewMode,
+    value: MODES_VALUES[viewMode],
     label: formatMessage(messages[`${viewMode}`]),
   }));

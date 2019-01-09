@@ -12,7 +12,7 @@ import { defectTypesSelector } from 'controllers/project';
 import { defectLinkSelector, statisticsLinkSelector } from 'controllers/testItem';
 import { activeProjectSelector } from 'controllers/user';
 import { PASSED, FAILED, SKIPPED, INTERRUPTED } from 'common/constants/testStatuses';
-import { CHART_MODES } from 'common/constants/chartModes';
+import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
 import {
   getItemColor,
   getItemName,
@@ -209,7 +209,9 @@ export class LaunchStatisticsChart extends Component {
         groups: [this.configData.itemNames],
       },
       point: {
-        show: this.isSingleColumn() && this.configData.widgetViewMode === CHART_MODES.AREA_VIEW,
+        show:
+          this.isSingleColumn() &&
+          this.configData.widgetViewMode === MODES_VALUES[CHART_MODES.AREA_VIEW],
         r: 3,
         focus: {
           expand: {
@@ -244,7 +246,7 @@ export class LaunchStatisticsChart extends Component {
         y: {
           show: !isPreview && this.props.isFullscreen,
           padding: {
-            top: this.configData.widgetViewMode === CHART_MODES.AREA_VIEW ? 3 : 0,
+            top: this.configData.widgetViewMode === MODES_VALUES[CHART_MODES.AREA_VIEW] ? 3 : 0,
           },
         },
       },
@@ -355,7 +357,7 @@ export class LaunchStatisticsChart extends Component {
     } = this.props;
 
     let data = [];
-    const isTimeLine = widgetOptions.mode === CHART_MODES.TIMELINE_MODE;
+    const isTimeLine = widgetOptions.mode === MODES_VALUES[CHART_MODES.TIMELINE_MODE];
 
     if (isTimeLine) {
       Object.keys(content).forEach((item) => {
@@ -391,7 +393,8 @@ export class LaunchStatisticsChart extends Component {
   isSingleColumn = () => this.configData.itemData.length < 2;
 
   isCustomTooltipNeeded = () =>
-    this.configData.widgetViewMode === CHART_MODES.AREA_VIEW && !this.configData.isTimeLine;
+    this.configData.widgetViewMode === MODES_VALUES[CHART_MODES.AREA_VIEW] &&
+    !this.configData.isTimeLine;
 
   resizeChart = () => {
     const newHeight = this.props.container.offsetHeight;
@@ -435,7 +438,7 @@ export class LaunchStatisticsChart extends Component {
       this.state.isConfigReady && (
         <C3Chart
           className={cx('launch-statistics-chart', {
-            'area-view': this.configData.widgetViewMode === CHART_MODES.AREA_VIEW,
+            'area-view': this.configData.widgetViewMode === MODES_VALUES[CHART_MODES.AREA_VIEW],
             'full-screen': this.props.isFullscreen,
             preview: this.props.isPreview,
           })}

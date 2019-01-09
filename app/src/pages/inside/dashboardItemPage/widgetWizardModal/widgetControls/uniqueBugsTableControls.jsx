@@ -5,9 +5,11 @@ import { getFormValues, initialize } from 'redux-form';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { validate } from 'common/utils';
+import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
 import { ITEMS_INPUT_WIDTH } from './constants';
-import { FiltersControl, InputControl } from './controls';
+import { FiltersControl, InputControl, TogglerControl } from './controls';
 import { WIDGET_WIZARD_FORM } from '../widgetWizardContent/wizardControlsSection/constants';
+import { getWidgetModeOptions } from './utils/getWidgetModeOptions';
 
 const DEFAULT_ITEMS_COUNT = '10';
 const messages = defineMessages({
@@ -51,6 +53,9 @@ export class UniqueBugsTableControls extends Component {
     initializeWizardSecondStepForm({
       contentParameters: widgetSettings.contentParameters || {
         itemsCount: DEFAULT_ITEMS_COUNT,
+        widgetOptions: {
+          latest: MODES_VALUES[CHART_MODES.ALL_LAUNCHES],
+        },
       },
     });
   }
@@ -89,6 +94,15 @@ export class UniqueBugsTableControls extends Component {
             fieldLabel={formatMessage(messages.ItemsFieldLabel)}
             inputWidth={ITEMS_INPUT_WIDTH}
             type="number"
+          />
+        </FieldProvider>
+        <FieldProvider name="contentParameters.widgetOptions.latest">
+          <TogglerControl
+            fieldLabel=" "
+            items={getWidgetModeOptions(
+              [CHART_MODES.ALL_LAUNCHES, CHART_MODES.LATEST_LAUNCHES],
+              formatMessage,
+            )}
           />
         </FieldProvider>
       </Fragment>

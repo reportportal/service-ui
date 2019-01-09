@@ -11,7 +11,7 @@ import {
   STATS_SI_TOTAL,
   STATS_TI_TOTAL,
 } from 'common/constants/statistics';
-import { CHART_MODES } from 'common/constants/chartModes';
+import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
 import { validate } from 'common/utils';
 import { getWidgetModeOptions } from './utils/getWidgetModeOptions';
 import { ITEMS_INPUT_WIDTH } from './constants';
@@ -68,7 +68,7 @@ export class InvestigatedPercentageOfLaunchesControls extends Component {
         ],
         itemsCount: DEFAULT_ITEMS_COUNT,
         widgetOptions: {
-          mode: CHART_MODES.LAUNCH_MODE,
+          mode: MODES_VALUES[CHART_MODES.LAUNCH_MODE],
         },
       },
     });

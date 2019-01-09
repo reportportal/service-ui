@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { getFormValues, initialize } from 'redux-form';
 import { validate } from 'common/utils';
 import { FieldProvider } from 'components/fields/fieldProvider';
-import { CHART_MODES } from 'common/constants/chartModes';
+import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
 import { getWidgetModeOptions } from './utils/getWidgetModeOptions';
 import { ITEMS_INPUT_WIDTH, CONTENT_FIELDS } from './constants';
 import { FiltersControl, InputControl, TogglerControl } from './controls';
@@ -61,7 +61,7 @@ export class LaunchDurationControls extends Component {
         ],
         itemsCount: DEFAULT_ITEMS_COUNT,
         widgetOptions: {
-          mode: CHART_MODES.ALL_LAUNCHES,
+          latest: MODES_VALUES[CHART_MODES.ALL_LAUNCHES],
         },
       },
     });
@@ -103,7 +103,7 @@ export class LaunchDurationControls extends Component {
             type="number"
           />
         </FieldProvider>
-        <FieldProvider name="contentParameters.widgetOptions.mode">
+        <FieldProvider name="contentParameters.widgetOptions.latest">
           <TogglerControl
             fieldLabel=" "
             items={getWidgetModeOptions(

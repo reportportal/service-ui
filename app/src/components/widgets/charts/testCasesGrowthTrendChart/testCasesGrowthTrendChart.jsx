@@ -12,7 +12,7 @@ import { activeProjectSelector } from 'controllers/user';
 import { TEST_ITEM_PAGE } from 'controllers/pages';
 import * as COLORS from 'common/constants/colors';
 import * as STATUSES from 'common/constants/testStatuses';
-import { CHART_MODES } from 'common/constants/chartModes';
+import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
 import { C3Chart } from '../common/c3chart';
 import { TooltipWrapper } from '../common/tooltip';
 import { getLaunchAxisTicks, getTimelineAxisTicks } from '../common/utils';
@@ -116,7 +116,7 @@ export class TestCasesGrowthTrendChart extends Component {
     const { widget, intl, isPreview, container } = this.props;
     this.isTimeLine =
       widget.contentParameters &&
-      widget.contentParameters.widgetOptions.mode === CHART_MODES.TIMELINE_MODE;
+      widget.contentParameters.widgetOptions.mode === MODES_VALUES[CHART_MODES.TIMELINE_MODE];
 
     let data;
 
@@ -161,7 +161,7 @@ export class TestCasesGrowthTrendChart extends Component {
     this.config = {
       data: {
         columns: [offsets, bars],
-        type: CHART_MODES.BAR_VIEW,
+        type: MODES_VALUES[CHART_MODES.BAR_VIEW],
         order: null,
         groups: [['offset', 'bar']],
         onclick: this.onChartClick,
