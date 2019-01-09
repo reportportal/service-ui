@@ -92,14 +92,14 @@ export const URLS = {
     `${urlBase}user/search${getQueryParams({
       'page.page': 1,
       'page.size': 10,
-      'page.sort': 'login,ASC',
+      'page.sort': 'user,ASC',
       term: input,
     })}`,
   projectUserSearchUser: (activeProject, input) =>
     `${urlBase}project/${activeProject}/usernames/search${getQueryParams({
       'page.page': 1,
       'page.size': 10,
-      'page.sort': 'login,ASC',
+      'page.sort': 'user,ASC',
       term: input,
     })}`,
   projectUsernamesSearch: (activeProject) =>
@@ -151,8 +151,6 @@ export const URLS = {
   userInfo: (userId) => `${urlBase}user/${userId}`,
   userInviteInternal: (activeProject) => `${urlBase}project/${activeProject}/assign`,
   userInviteExternal: () => `${urlBase}user/bid`,
-  teamMembersSearchUrl: (activeProject) =>
-    `${urlBase}project/${activeProject}/usernames?filter.cnt.users=`,
   userUnasign: (activeProject) => `${urlBase}project/${activeProject}/unassign`,
 
   generateDemoData: (projectId) => `${urlBase}demo/${projectId}`,
