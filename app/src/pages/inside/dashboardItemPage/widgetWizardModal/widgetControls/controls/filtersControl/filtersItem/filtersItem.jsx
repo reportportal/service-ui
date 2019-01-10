@@ -48,7 +48,7 @@ export class FiltersItem extends PureComponent {
             filter={filter}
             userId={userId}
             showDesc={false}
-            editable={false}
+            editable={editable}
           />
           <FilterOptions entities={filter.conditions} sort={filter.orders}>
             {userId === filter.owner &&
