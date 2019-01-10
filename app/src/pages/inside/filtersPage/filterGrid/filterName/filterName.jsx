@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
 
-import ShareIcon from 'common/img/share-icon-inline.svg';
 import PencilIcon from 'common/img/pencil-icon-inline.svg';
 import GlobeIcon from 'common/img/globe-icon-inline.svg';
 import { MarkdownViewer } from 'components/main/markdown';
@@ -71,12 +70,6 @@ export class FilterName extends Component {
           >
             {Parser(this.getHighlightName(filter.name))}
           </span>
-          {filter.share &&
-            userId === filter.owner && (
-              <span className={cx('share-icon')} title={intl.formatMessage(messages.shareFilter)}>
-                {Parser(ShareIcon)}
-              </span>
-            )}
           {filter.share &&
             userId !== filter.owner && (
               <span className={cx('globe-icon')} title={intl.formatMessage(messages.shareFilter)}>
