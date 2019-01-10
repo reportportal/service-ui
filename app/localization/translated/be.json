@@ -245,7 +245,7 @@
   "DemoDataTabForm.preloaderInfo": "Генераванне дадзеных пачалося. Працэс можа заняць некалькі хвілін, калі ласка, пачакайце.",
   "DisplayFilter.display": "Адлюстраваць на запусках:",
   "DisplayFilter.showOnLaunchesSwitcherOff": "Выкл",
-  "DisplayFilter.showOnLaunchesSwitcherOn": "УКЛ",
+  "DisplayFilter.showOnLaunchesSwitcherOn": "Укл",
   "DurationBlock.finished": "Працягласць: {durationTime}. Час заканчэння: {endTime}",
   "DurationBlock.inProgress": "У працэсе",
   "DurationBlock.inProgressWithEnd": "Няправільны статус: 'У працэсе' мае час заканчэння",
