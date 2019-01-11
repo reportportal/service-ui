@@ -18,7 +18,6 @@ export class FiltersItem extends PureComponent {
     filter: PropTypes.object.isRequired,
     onChange: PropTypes.func.isRequired,
     onEdit: PropTypes.func.isRequired,
-    editable: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -28,11 +27,10 @@ export class FiltersItem extends PureComponent {
     item: {},
     onChange: () => {},
     onEdit: () => {},
-    editable: false,
   };
 
   render() {
-    const { activeFilterIds, filter, search, onChange, onEdit, userId, editable } = this.props;
+    const { activeFilterIds, filter, search, onChange, onEdit, userId } = this.props;
 
     return (
       <div className={cx('filter-item')}>
@@ -48,7 +46,7 @@ export class FiltersItem extends PureComponent {
             filter={filter}
             userId={userId}
             showDesc={false}
-            editable={editable}
+            editable={false}
           />
           <FilterOptions entities={filter.conditions} sort={filter.orders}>
             {userId === filter.owner && (
