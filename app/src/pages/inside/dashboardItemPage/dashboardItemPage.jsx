@@ -42,8 +42,8 @@ const messages = defineMessages({
     id: 'DashboardItemPage.editDashboard',
     defaultMessage: 'Edit',
   },
-  deleteWidget: {
-    id: 'DashboardItemPage.deleteWidget',
+  delete: {
+    id: 'DashboardItemPage.delete',
     defaultMessage: 'Delete',
   },
   fullscreen: {
@@ -165,7 +165,7 @@ export class DashboardItemPage extends Component {
                 <GhostButton icon={FullscreenIcon} onClick={this.toggleFullscreen}>
                   {formatMessage(messages.fullscreen)}
                 </GhostButton>
-                <GhostButton icon={CancelIcon}>{formatMessage(messages.deleteWidget)}</GhostButton>
+                <GhostButton icon={CancelIcon}>{formatMessage(messages.delete)}</GhostButton>
               </div>
             </div>
             <Fullscreen enabled={this.state.isFullscreen} onChange={this.onChangeFullscreen}>

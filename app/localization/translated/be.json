@@ -184,7 +184,7 @@
   "DashboardItemPage.addNewWidget": "Дадаць новы віджэт",
   "DashboardItemPage.addSharedWidget": "Дадаць агульны віджэт",
   "DashboardItemPage.dashboardEmptyText": "Дадайце Ваш першы віджэт каб прааналізаваць статыстыку",
-  "DashboardItemPage.deleteWidget": "Выдаліць віджэт",
+  "DashboardItemPage.delete": "Выдаліць",
   "DashboardItemPage.editDashboard": "Рэдагаваць",
   "DashboardItemPage.fullscreen": "Поўнаэкранны рэжым",
   "DashboardItemPage.notMyDashboardEmptyHeader": "На гэтай панэлі кіравання няма віджэтаў",

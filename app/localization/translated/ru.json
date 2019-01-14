@@ -185,7 +185,7 @@
   "DashboardItemPage.addNewWidget": "Добавить новый виджет",
   "DashboardItemPage.addSharedWidget": "Добавить виджет и поделиться",
   "DashboardItemPage.dashboardEmptyText": "Добавьте первый виджет, чтобы проанализировать статистику",
-  "DashboardItemPage.deleteWidget": "Удалить виджет",
+  "DashboardItemPage.delete": "Удалить",
   "DashboardItemPage.editDashboard": "Редактировать",
   "DashboardItemPage.fullscreen": "Полноэкранный режим",
   "DashboardItemPage.notMyDashboardEmptyHeader": "На этой Панели управления нет виджетов",

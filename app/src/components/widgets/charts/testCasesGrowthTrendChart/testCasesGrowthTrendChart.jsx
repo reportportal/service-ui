@@ -5,6 +5,7 @@ import ReactDOMServer from 'react-dom/server';
 import { connect } from 'react-redux';
 import { redirect } from 'redux-first-router';
 import moment from 'moment';
+import * as d3 from 'd3-selection';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { dateFormat } from 'common/utils/timeDateUtils';
 import { statisticsLinkSelector } from 'controllers/testItem';
@@ -13,6 +14,7 @@ import { TEST_ITEM_PAGE } from 'controllers/pages';
 import * as COLORS from 'common/constants/colors';
 import * as STATUSES from 'common/constants/testStatuses';
 import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
+import { messages } from '../common/messages';
 import { C3Chart } from '../common/c3chart';
 import { TooltipWrapper } from '../common/tooltip';
 import { getLaunchAxisTicks, getTimelineAxisTicks } from '../common/utils';
@@ -20,11 +22,7 @@ import styles from './testCasesGrowthTrendChart.scss';
 
 const cx = classNames.bind(styles);
 
-const messages = defineMessages({
-  cases: {
-    id: 'Widgets.cases',
-    defaultMessage: 'cases',
-  },
+const localMessages = defineMessages({
   growTestCases: {
     id: 'Widgets.growtestCases',
     defaultMessage: 'Grow test cases',
@@ -116,14 +114,14 @@ export class TestCasesGrowthTrendChart extends Component {
     const { widget, intl, isPreview, container } = this.props;
     this.isTimeLine =
       widget.contentParameters &&
-      widget.contentParameters.widgetOptions.mode === MODES_VALUES[CHART_MODES.TIMELINE_MODE];
+      widget.contentParameters.widgetOptions.timeline === MODES_VALUES[CHART_MODES.TIMELINE_MODE];
 
     let data;
 
     if (this.isTimeLine) {
-      data = Object.keys(widget.content).map((key) => ({
+      data = Object.keys(widget.content.result).map((key) => ({
         date: key,
-        ...widget.content[key],
+        ...widget.content.result[key],
       }));
     } else {
       data = widget.content.result;
@@ -136,15 +134,17 @@ export class TestCasesGrowthTrendChart extends Component {
     const bars = ['bar'];
     this.positiveTrend = [];
 
+    // console.log(data);
     data.forEach((item) => {
-      if (+item.delta < 0) {
+      const { values } = item;
+      if (+values.delta < 0) {
         this.positiveTrend.push(false);
-        offsets.push(+item.statistics$executions$total);
+        offsets.push(+values.statistics$executions$total);
       } else {
         this.positiveTrend.push(true);
-        offsets.push(+item.statistics$executions$total - +item.delta);
+        offsets.push(+values.statistics$executions$total - +values.delta);
       }
-      bars.push(Math.abs(+item.delta));
+      bars.push(Math.abs(+values.delta));
 
       if (this.isTimeLine) {
         this.itemData.push({ date: item.date });
@@ -257,6 +257,19 @@ export class TestCasesGrowthTrendChart extends Component {
         position: this.getTooltipPosition,
         contents: this.renderTooltip,
       },
+      onrendered: () => {
+        const barPathSelector = '.c3-chart-bar.c3-target-bar path';
+        const barPaths = d3.select(this.node).selectAll(barPathSelector);
+        barPaths.each((pathData, i) => {
+          const elem = d3.select(this.node).select(`${barPathSelector}.c3-bar-${i}`);
+          if (pathData.value === 0) {
+            elem
+              .style('stroke-width', '1px')
+              .style('stroke', '#464547')
+              .style('shape-rendering', 'initial');
+          }
+        });
+      },
     };
 
     this.setState({
@@ -317,11 +330,11 @@ export class TestCasesGrowthTrendChart extends Component {
         <div className={cx('item-wrapper')}>
           <div className={cx('item-cases')}>
             <div className={cx('item-cases-growth')}>
-              {this.props.intl.formatMessage(messages.growTestCases)}:{' '}
+              {this.props.intl.formatMessage(localMessages.growTestCases)}:{' '}
               <span className={cx(growthClass)}>{growth}</span>
             </div>
             <div className={cx('item-cases-total')}>
-              {this.props.intl.formatMessage(messages.totalTestCases)}: <span>{total}</span>
+              {this.props.intl.formatMessage(localMessages.totalTestCases)}: <span>{total}</span>
             </div>
           </div>
         </div>
@@ -331,9 +344,11 @@ export class TestCasesGrowthTrendChart extends Component {
 
   render() {
     return (
-      this.state.isConfigReady && (
-        <C3Chart config={this.config} onChartCreated={this.onChartCreated} />
-      )
+      <div className={cx('test-cases-growth-trend-chart')}>
+        {this.state.isConfigReady && (
+          <C3Chart config={this.config} onChartCreated={this.onChartCreated} />
+        )}
+      </div>
     );
   }
 }

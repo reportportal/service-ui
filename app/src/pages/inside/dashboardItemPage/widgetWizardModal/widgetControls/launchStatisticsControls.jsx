@@ -89,7 +89,7 @@ export class LaunchStatisticsControls extends Component {
         itemsCount: DEFAULT_ITEMS_COUNT,
         widgetOptions: {
           zoom: false,
-          mode: MODES_VALUES[CHART_MODES.LAUNCH_MODE],
+          timeline: MODES_VALUES[CHART_MODES.LAUNCH_MODE],
           viewMode: MODES_VALUES[CHART_MODES.AREA_VIEW],
         },
       },
@@ -143,7 +143,7 @@ export class LaunchStatisticsControls extends Component {
             type="number"
           />
         </FieldProvider>
-        <FieldProvider name="contentParameters.widgetOptions.mode">
+        <FieldProvider name="contentParameters.widgetOptions.timeline">
           <TogglerControl
             fieldLabel=" "
             items={getWidgetModeOptions(
