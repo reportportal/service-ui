@@ -20,29 +20,23 @@
 }
 
 @media (min-width: $SCREEN_SM_MIN) {
-  .desktop-hidden {
-    display: none;
-  }
-
   .action-button:first-child {
     padding-left: 53px;
   }
 }
-@media (max-width: $SCREEN_XS_MAX) {
-  .mobile-hidden {
-    display: none;
+@media (max-width: 510px) {
+  .log-toolbar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .action-buttons {
+    align-self: flex-end;
+    margin-top: 8px;
   }
 
   .log-toolbar {
     border-bottom: none;
-  }
-
-  .action-button:first-child {
-    margin-left: auto;
-    margin-bottom: 12px;
-  }
-  .action-button:last-child {
-    margin-right: 15px;
   }
 }
 

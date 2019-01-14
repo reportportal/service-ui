@@ -1,4 +1,4 @@
-import { Component, Fragment } from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
@@ -66,39 +66,14 @@ export class LogToolbar extends Component {
   render() {
     const { breadcrumbs, previousLink, nextLink, previousItem, nextItem, onRefresh } = this.props;
     return (
-      <Fragment>
-        <div className={cx('log-toolbar')}>
-          <Breadcrumbs
-            descriptors={breadcrumbs}
-            togglerEventInfo={LOG_PAGE_EVENTS.PLUS_MINUS_BREADCRUMB}
-            breadcrumbEventInfo={LOG_PAGE_EVENTS.ITEM_NAME_BREADCRUMB_CLICK}
-            allEventClick={LOG_PAGE_EVENTS.ALL_LABEL_BREADCRUMB}
-          />
-          <div className={cx('action-buttons', 'mobile-hidden')}>
-            <div className={cx('action-button')}>
-              <div className={cx('left-arrow-button')}>
-                <GhostButton
-                  icon={LeftArrowIcon}
-                  disabled={!previousLink}
-                  title={previousItem && previousItem.name}
-                  onClick={this.handleBackClick}
-                />
-              </div>
-              <GhostButton
-                icon={RightArrowIcon}
-                disabled={!nextLink}
-                title={nextItem && nextItem.name}
-                onClick={this.handleForwardClick}
-              />
-            </div>
-            <div className={cx('action-button')}>
-              <GhostButton icon={RefreshIcon} onClick={onRefresh}>
-                <FormattedMessage id="Common.refresh" defaultMessage="Refresh" />
-              </GhostButton>
-            </div>
-          </div>
-        </div>
-        <div className={cx('action-buttons', 'desktop-hidden')}>
+      <div className={cx('log-toolbar')}>
+        <Breadcrumbs
+          descriptors={breadcrumbs}
+          togglerEventInfo={LOG_PAGE_EVENTS.PLUS_MINUS_BREADCRUMB}
+          breadcrumbEventInfo={LOG_PAGE_EVENTS.ITEM_NAME_BREADCRUMB_CLICK}
+          allEventClick={LOG_PAGE_EVENTS.ALL_LABEL_BREADCRUMB}
+        />
+        <div className={cx('action-buttons')}>
           <div className={cx('action-button')}>
             <div className={cx('left-arrow-button')}>
               <GhostButton
@@ -121,7 +96,7 @@ export class LogToolbar extends Component {
             </GhostButton>
           </div>
         </div>
-      </Fragment>
+      </div>
     );
   }
 }

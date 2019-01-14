@@ -24,30 +24,25 @@
 }
 
 @media (min-width: $SCREEN_SM_MIN) and (max-width: 1195px) {
-  .hidden--l {
-    display: none;
-  }
-  .action-button:first-child {
-    margin-left: auto;
-  }
-
-  .action-button:last-child {
-    margin-right: 16px;
+  .action-panel {
+    flex-direction: column;
+    align-items: flex-start;
   }
 
   .action-buttons {
-    margin-bottom: 12px;
+    align-self: flex-end;
+    margin-top: 8px;
   }
 }
 
-@media (max-width: $SCREEN_XS_MAX) {
-  .hidden--xs-s-m {
-    display: none;
-  }
-}
+// @media (max-width: 554px) {
+//   .action-panel {
+//     flex-direction: column;
+//     align-items: flex-start;
+//   }
 
-@media (min-width: 1195px) {
-  .hidden--xl {
-    display: none;
-  }
-}
+//   .action-buttons {
+//     align-self: flex-end;
+//     margin-top: 8px;
+//     }
+//   }
