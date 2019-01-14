@@ -176,7 +176,7 @@ export class ItemInfo extends Component {
           )}
           {isStepLevel &&
             value.retries.length > 0 && (
-              <div className={cx('retries')}>
+              <div className={cx('retries-counter')}>
                 <RetriesCounter testItem={value} onLabelClick={onClickRetries} />
               </div>
             )}
