@@ -24,7 +24,7 @@ export const widgetData = {
   contentParameters: {
     itemsCount: 50,
     widgetOptions: {
-      filterName: 'New_Filter 1',
+      timeline: 'launch',
     },
   },
   content: {
@@ -35,8 +35,10 @@ export const widgetData = {
         name:
           'Long name of launch name to_be_sure_it_is_correctly_displayed_on_Launches_pages_under_different_browsers_New_Long name of launch name to_be_sure_it_is_correctly_displayed_on_Launches_pages_under_different_browsers_New_Long name of launch name to_be_sure_it',
         startTime: 1541760891421,
-        delta: 0,
-        statistics$executions$total: 3,
+        values: {
+          delta: 0,
+          statistics$executions$total: 3,
+        },
       },
       {
         id: 5,
@@ -44,8 +46,10 @@ export const widgetData = {
         name:
           'Long name of launch name to_be_sure_it_is_correctly_displayed_on_Launches_pages_under_different_browsers_New_Long name of launch name to_be_sure_it_is_correctly_displayed_on_Launches_pages_under_different_browsers_New_Long name of launch name to_be_sure_it',
         startTime: 1541760891421,
-        delta: 3,
-        statistics$executions$total: 6,
+        values: {
+          delta: 3,
+          statistics$executions$total: 6,
+        },
       },
       {
         id: 4,
@@ -53,8 +57,10 @@ export const widgetData = {
         name:
           'Long name of launch name to_be_sure_it_is_correctly_displayed_on_Launches_pages_under_different_browsers_New_Long name of launch name to_be_sure_it_is_correctly_displayed_on_Launches_pages_under_different_browsers_New_Long name of launch name to_be_sure_it',
         startTime: 1541760891421,
-        delta: -2,
-        statistics$executions$total: 4,
+        values: {
+          delta: -2,
+          statistics$executions$total: 4,
+        },
       },
       {
         id: 3,
@@ -62,8 +68,10 @@ export const widgetData = {
         name:
           'Long name of launch name to_be_sure_it_is_correctly_displayed_on_Launches_pages_under_different_browsers_New_Long name of launch name to_be_sure_it_is_correctly_displayed_on_Launches_pages_under_different_browsers_New_Long name of launch name to_be_sure_it',
         startTime: 1541760891421,
-        delta: -3,
-        statistics$executions$total: 1,
+        values: {
+          delta: -3,
+          statistics$executions$total: 1,
+        },
       },
       {
         id: 2,
@@ -71,8 +79,10 @@ export const widgetData = {
         name:
           'Long name of launch name to_be_sure_it_is_correctly_displayed_on_Launches_pages_under_different_browsers_New_Long name of launch name to_be_sure_it_is_correctly_displayed_on_Launches_pages_under_different_browsers_New_Long name of launch name to_be_sure_it',
         startTime: 1541760891421,
-        delta: 7,
-        statistics$executions$total: 8,
+        values: {
+          delta: 7,
+          statistics$executions$total: 8,
+        },
       },
       {
         id: 1,
@@ -80,8 +90,10 @@ export const widgetData = {
         name:
           'Long name of launch name to_be_sure_it_is_correctly_displayed_on_Launches_pages_under_different_browsers_New_Long name of launch name to_be_sure_it_is_correctly_displayed_on_Launches_pages_under_different_browsers_New_Long name of launch name to_be_sure_it',
         startTime: 1541760891421,
-        delta: 1,
-        statistics$executions$total: 9,
+        values: {
+          delta: 1,
+          statistics$executions$total: 9,
+        },
       },
     ],
   },
@@ -97,34 +109,43 @@ export const widgetDataTimelineMode = {
   contentParameters: {
     itemsCount: 18,
     widgetOptions: {
-      filterName: ['Add0 smf'],
-      mode: 'timeline',
+      timeline: 'day',
     },
   },
   content: {
-    '2018-09-21': {
-      statistics$executions$total: '138',
-      delta: '0',
-      name: 'Demo Api Tests_dfrt',
-      startTime: '1537516124168',
-      number: '10',
-      id: '5ba4a25c857aba0001b03631',
-    },
-    '2018-09-22': {
-      statistics$executions$total: '0',
-      delta: '-138',
-    },
-    '2018-09-23': {
-      statistics$executions$total: '0',
-      delta: '0',
-    },
-    '2018-09-24': {
-      statistics$executions$total: '138',
-      delta: '138',
-      name: 'Demo Api Tests_testdata',
-      startTime: '1537793436846',
-      number: '10',
-      id: '5ba8dd9c857aba0001b0b59f',
+    result: {
+      '2018-09-21': {
+        values: {
+          statistics$executions$total: '138',
+          delta: '0',
+        },
+        name: 'Demo Api Tests_dfrt',
+        startTime: '1537516124168',
+        number: '10',
+        id: '5ba4a25c857aba0001b03631',
+      },
+      '2018-09-22': {
+        values: {
+          statistics$executions$total: '0',
+          delta: '-138',
+        },
+      },
+      '2018-09-23': {
+        values: {
+          statistics$executions$total: '0',
+          delta: '0',
+        },
+      },
+      '2018-09-24': {
+        values: {
+          statistics$executions$total: '138',
+          delta: '138',
+        },
+        name: 'Demo Api Tests_testdata',
+        startTime: '1537793436846',
+        number: '10',
+        id: '5ba8dd9c857aba0001b0b59f',
+      },
     },
   },
 };

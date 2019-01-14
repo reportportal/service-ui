@@ -357,7 +357,7 @@ export class LaunchStatisticsChart extends Component {
     } = this.props;
 
     let data = [];
-    const isTimeLine = widgetOptions.mode === MODES_VALUES[CHART_MODES.TIMELINE_MODE];
+    const isTimeLine = widgetOptions.timeline === MODES_VALUES[CHART_MODES.TIMELINE_MODE];
 
     if (isTimeLine) {
       Object.keys(content).forEach((item) => {

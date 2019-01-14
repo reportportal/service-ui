@@ -56,7 +56,7 @@ export class TestCasesGrowthTrendControls extends Component {
         contentFields: [STATS_TOTAL],
         itemsCount: DEFAULT_ITEMS_COUNT,
         widgetOptions: {
-          mode: MODES_VALUES[CHART_MODES.LAUNCH_MODE],
+          timeline: MODES_VALUES[CHART_MODES.LAUNCH_MODE],
         },
       },
     });
@@ -98,7 +98,7 @@ export class TestCasesGrowthTrendControls extends Component {
             type="number"
           />
         </FieldProvider>
-        <FieldProvider name="contentParameters.widgetOptions.mode">
+        <FieldProvider name="contentParameters.widgetOptions.timeline">
           <TogglerControl
             fieldLabel=" "
             items={getWidgetModeOptions(

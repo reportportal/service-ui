@@ -20,6 +20,7 @@ export const MODES_VALUES = {
   [CHART_MODES.PIE_VIEW]: 'pie',
   [CHART_MODES.BAR_VIEW]: 'bar',
   [CHART_MODES.LAUNCH_MODE]: 'launch',
+  [CHART_MODES.TIMELINE_MODE]: 'day',
   [CHART_MODES.TABLE_VIEW]: 'table',
   [CHART_MODES.DONUT_VIEW]: 'donut',
   [CHART_MODES.PANEL_VIEW]: 'panel',
