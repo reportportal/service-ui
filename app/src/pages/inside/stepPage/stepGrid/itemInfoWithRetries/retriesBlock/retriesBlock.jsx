@@ -14,13 +14,7 @@ It is necessary to overcome table limitations.
 export const RetriesBlock = forwardRef(({ testItemId, retries }, ref) => (
   <div className={cx('retries-block')} ref={ref}>
     <div className={cx('retries-hidden-block')}>
-      <Retries
-        retries={retries}
-        testItemId={testItemId}
-        logItem={{}}
-        selectedId={0}
-        selectedIndex={0}
-      />
+      <Retries retries={retries} testItemId={testItemId} selectedId={0} selectedIndex={0} />
     </div>
     <div className={cx('retries-visible-block')}>
       <RetriesContainer testItemId={testItemId} retries={retries} />
