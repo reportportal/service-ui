@@ -139,7 +139,7 @@ const messages = defineMessages({
   },
   [CREATE_USER]: {
     id: 'WidgetCriteriaOption.create_user',
-    defaultMessage: 'Add, create user',
+    defaultMessage: 'Add, register user',
   },
   [ACTIONS_WITH_DASHBOARDS]: {
     id: 'WidgetCriteriaOption.dashboards_actions',

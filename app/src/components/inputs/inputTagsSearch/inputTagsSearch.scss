@@ -173,7 +173,7 @@
       }
       .Select-input {
         input {
-          width: 100%;
+          max-width: 100%;
           margin: 4px 5px;
           line-height: 13px;
           font-family: $FONT-REGULAR, sans-serif;
