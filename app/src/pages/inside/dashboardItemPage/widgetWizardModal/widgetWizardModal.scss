@@ -70,3 +70,20 @@
   opacity: 1;
   transition: margin-top 300ms ease-in, opacity 300ms ease-in;
 }
+
+.launch-controls {
+  position: absolute;
+  background: $COLOR--dark-pastel-green;
+  color: $COLOR--white-two;
+  display: inline-block;
+  font-size: 11px;
+  border-radius: 8px;
+  width: 28px;
+  height: 14px;
+  line-height: 14px;
+  text-align: center;
+  font-family: OpenSansRegular,sans-serif,sans-serif;
+  text-transform: initial;
+  top: 626px;
+  right: 76px;
+}
