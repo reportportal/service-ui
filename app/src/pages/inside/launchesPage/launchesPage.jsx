@@ -385,16 +385,18 @@ export class LaunchesPage extends Component {
         render={({ onFilterAdd, ...rest }) => (
           <PageLayout>
             <PageSection>
-              <LaunchFiltersToolbar
-                filters={launchFilters}
-                activeFilterId={activeFilterId}
-                activeFilter={activeFilter}
-                onSelectFilter={onSelectFilter}
-                onRemoveFilter={onRemoveFilter}
-                onFilterAdd={onFilterAdd}
-                onResetFilter={onResetFilter}
-                {...rest}
-              />
+              {!debugMode && (
+                <LaunchFiltersToolbar
+                  filters={launchFilters}
+                  activeFilterId={activeFilterId}
+                  activeFilter={activeFilter}
+                  onSelectFilter={onSelectFilter}
+                  onRemoveFilter={onRemoveFilter}
+                  onFilterAdd={onFilterAdd}
+                  onResetFilter={onResetFilter}
+                  {...rest}
+                />
+              )}
             </PageSection>
             <PageSection>
               <LaunchToolbar
