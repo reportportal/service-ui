@@ -9,6 +9,7 @@ import {
   TEST_ITEM_PAGE,
   PROJECT_LOG_PAGE,
   PROJECT_USERDEBUG_LOG_PAGE,
+  LAUNCHES_PAGE,
   HISTORY_PAGE,
   PROJECT_DETAILS_PAGE,
 } from 'controllers/pages';
@@ -58,6 +59,7 @@ const pageRendering = {
   PROJECT_DASHBOARD_PAGE: { component: DashboardPage, layout: AppLayout },
   PROJECT_DASHBOARD_ITEM_PAGE: { component: DashboardItemPage, layout: AppLayout },
   PROJECT_FILTERS_PAGE: { component: FiltersPage, layout: AppLayout },
+  [LAUNCHES_PAGE]: { component: LaunchesPage, layout: AppLayout },
   PROJECT_LAUNCHES_PAGE: { component: LaunchesPage, layout: AppLayout },
   PROJECT_MEMBERS_PAGE: { component: MembersPage, layout: AppLayout },
   PROJECT_SANDBOX_PAGE: { component: SandboxPage, layout: AppLayout },
