@@ -54,7 +54,7 @@ const validators = {
     (!value || !validate.inRangeValidate(value, 1, 150)) &&
     formatMessage(messages.ItemsValidationError),
   contentFields: (formatMessage) => (value) =>
-    (!value || value.length === 4) && formatMessage(messages.ContentFieldsValidationError), // 4 - count of static content fields
+    (!value || value.length === 3) && formatMessage(messages.ContentFieldsValidationError), // 3 - count of static content fields
 };
 
 @injectIntl
