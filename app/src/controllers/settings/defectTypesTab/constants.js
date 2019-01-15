@@ -1,0 +1,1 @@
+export const DELETE_DEFECT_TYPE = 'DELETE_DEFECT_TYPE';

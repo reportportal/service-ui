@@ -162,4 +162,7 @@ export const URLS = {
   githubAuthSettings: () => `${uatBase}settings/oauth/github`,
   statisticsServerSettings: () => `${urlBase}settings/analytics`,
   events: (projectId) => `${urlBase}${projectId}/activity`,
+  defectTypesDelete: (projectId, subTypetId) =>
+    `${urlBase}/${projectId}/settings/sub-type/${subTypetId}`,
+  defectTypesCreate: (projectId) => `${urlBase}/${projectId}/settings/sub-type`,
 };

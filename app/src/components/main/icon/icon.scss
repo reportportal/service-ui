@@ -59,3 +59,38 @@
     background-image: url(./img/table-active.svg);
   }
 }
+
+.icon-close-circle {
+  background-image: url(./img/circle-cross-icon.svg);
+  &:hover{
+    background-image: url(./img/circle-cross-icon-hover.svg);
+  }
+}
+
+.icon-check-circle {
+  box-sizing: border-box;
+  border: 1px solid $COLOR--tealish;
+  border-radius: 50%;
+  background-image: url(./img/circle-check.svg);
+  &:hover{
+    border-color: $COLOR--topaz;
+    background-image: url(./img/circle-check-hover.svg);
+  }
+}
+
+.icon-triangle {
+  &-down{
+    width: 0px;
+    height: 0px;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-bottom: 15px solid $COLOR--gray-60;
+  }
+  &-up{
+    width: 0px;
+    height: 0px;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 15px solid $COLOR--gray-60;
+  }
+}

@@ -47,6 +47,8 @@ storiesOf('Components/Main/Icon', module)
   .add('type icon-planet', () => <Icon type="icon-planet" />)
   .add('type icon-grid', () => <Icon type="icon-grid" />)
   .add('type icon-table', () => <Icon type="icon-table" />)
-  .add('type icon-table with actions', () => (
-    <Icon type="icon-table" onClick={action('onclick')} />
-  ));
+  .add('type icon-table with actions', () => <Icon type="icon-table" onClick={action('onclick')} />)
+  .add('type icon-close-circle', () => <Icon type="icon-close-circle" />)
+  .add('type icon-check-circle', () => <Icon type="icon-check-circle" />)
+  .add('type icon-up', () => <Icon type="icon-triangle-up" />)
+  .add('type icon-down', () => <Icon type="icon-triangle-down" />);

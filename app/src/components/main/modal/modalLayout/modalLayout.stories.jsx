@@ -22,6 +22,12 @@ const dangerOkButton = {
   onClick: action('danger submit'),
 };
 
+const deleteButton = {
+  text: 'Delete',
+  danger: true,
+  onClick: action('delete submit'),
+};
+
 storiesOf('Components/Main/ModalLayout', module)
   .addDecorator(
     host({
@@ -73,6 +79,22 @@ storiesOf('Components/Main/ModalLayout', module)
           maiores sequi voluptates. A, cupiditate esse eveniet id illum ipsam nam neque nostrum
           nulla pariatur praesentium quis sunt ut.
         </span>
+      </p>
+    </ModalLayout>
+  ))
+  .add('defect deletion', () => (
+    <ModalLayout
+      title="delete defect type"
+      warningMessage=""
+      okButton={deleteButton}
+      cancelButton={cancelButton}
+    >
+      <p>
+        Are you sure you want to delete the defect type? All Investigated as
+        <strong>PB1</strong>
+        defects will be marked as
+        <strong>Product Bug</strong>
+        .
       </p>
     </ModalLayout>
   ));

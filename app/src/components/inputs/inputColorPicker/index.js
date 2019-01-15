@@ -1,0 +1,1 @@
+export { InputColorPicker } from './inputColorPicker';

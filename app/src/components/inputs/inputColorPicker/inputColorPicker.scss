@@ -1,0 +1,63 @@
+.color-picker {
+  width: 212px;
+  padding: 15px 14px;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  box-shadow: 0 6px 12px rgba(0,0,0,.175);
+  position: relative;
+  user-select: none;
+}
+
+.title {
+  font-size: 11px;
+  line-height: 12px;
+  font-weight: bold;
+  letter-spacing: 0.7px;
+  color: #777;
+  margin-bottom: 10px;
+}
+
+.circle-picker {
+  border-bottom: 1px solid #ddd;
+  margin-bottom: 10px !important;
+  > span{
+    > div{
+      margin-bottom: 5px !important;
+    }
+  }
+}
+
+.saturation-picker {
+  width: 110px;
+  height: 110px;
+  position: relative;
+  display: inline-block;
+  margin-right: 12px;
+}
+
+.hue-picker {
+  display: inline-block;
+  width: 15px;
+  height: 110px;
+  position: relative;
+}
+
+.hue-picker-btn {
+  background-color: $COLOR--white-two;
+  width: 19px;
+  height: 3px;
+  border: 1px solid $COLOR--black-2;
+  left: -3px;
+  position: relative;
+  cursor: row-resize;
+}
+
+.color-editable-input {
+  position: absolute;
+  top: 120px;
+  left: 160px;
+  width: calc( 100% - 170px );
+  input{
+    width: 100%;
+  }
+}
