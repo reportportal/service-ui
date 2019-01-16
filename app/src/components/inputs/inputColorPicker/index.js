@@ -1,1 +1,1 @@
-export { InputColorPicker } from './inputColorPicker';
+// export { InputColorPicker } from './inputColorPicker';
