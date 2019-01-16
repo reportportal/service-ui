@@ -181,7 +181,7 @@ $table-column-padding: 11px;
   font-size: 12px;
   line-height: 30px;
   margin-left: 20px;
-  color: #999;
+  color: $COLOR--gray-60;
   vertical-align: -webkit-baseline-middle;
 }
 
@@ -193,17 +193,17 @@ $table-column-padding: 11px;
   display: none;
   .locator-tooltip-content{
       height: 30px;
-      background-color: #fff;
-      border: 1px solid #ccc;
+      background-color: $COLOR--white-two;
+      border: 1px solid $COLOR--gray-80;
       line-height: 30px;
       padding-left: 15px;
       padding-right: 15px;
       border-radius: 2px;
-      box-shadow: 0 1px 3px 0 rgba(0,0,0,.2);
+      box-shadow: 0 1px 3px 0 rgba(0,0,0,0.2);
       font-family: $FONT-REGULAR,sans-serif;
       font-weight: normal;
       font-size: 13px;
-      color: #464547;
+      color: $COLOR--charcoal-grey;
       display: flex;
       .locator {
           font-family: $FONT-SEMIBOLD,sans-serif;
@@ -221,7 +221,7 @@ $table-column-padding: 11px;
       height: 0;
       border-left: 8px solid transparent;
       border-right: 8px solid transparent;
-      border-bottom: 8px solid #ccc;
+      border-bottom: 8px solid $COLOR--gray-80;
   }
   &:after {
       content: '';
@@ -229,7 +229,7 @@ $table-column-padding: 11px;
       top: 2px;
       left: 60px;
       margin-left: -5px;
-      border-bottom: 6px solid #fff;
+      border-bottom: 6px solid $COLOR--white-two;
       border-left: 6px solid transparent;
       border-right: 6px solid transparent;
   }
@@ -238,7 +238,7 @@ $table-column-padding: 11px;
 .cp-helper {
    width: 240px;
    height: 264px;
-   border: 1px solid #ccc;
+   border: 1px solid $COLOR--gray-80;
    box-shadow: 0 6px 12px rgba(0,0,0,.175);
    background: url(./color_picker.png) no-repeat;
    background-size: calc(479px/2);
@@ -252,9 +252,9 @@ $table-column-padding: 11px;
   margin: 0;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
-  border: 1px solid #cccccc;
+  border: 1px solid $COLOR--gray-80;
   &:hover{
-    border-color: #777777;
+    border-color: $COLOR--gray-47;
   }
   .color-spot{
     left: -1px;
