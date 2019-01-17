@@ -62,6 +62,11 @@ export class GithubAuthForm extends Component {
     };
   };
 
+  prepareDataBeforeInitialize = (data) => ({
+    ...data,
+    [ENABLED_KEY]: true,
+  });
+
   render() {
     const {
       intl: { formatMessage },
@@ -85,6 +90,7 @@ export class GithubAuthForm extends Component {
         <FormController
           enabled={enabled}
           prepareDataBeforeSubmit={this.prepareDataBeforeSubmit}
+          prepareDataBeforeInitialize={this.prepareDataBeforeInitialize}
           successMessage={messages.updateAuthSuccess}
           initialize={initialize}
           formOptions={formOptions}

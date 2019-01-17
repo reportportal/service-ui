@@ -14,7 +14,7 @@ import {
   FULL_NAME_KEY,
   URL_KEY,
   PHOTO_KEY,
-} from '../../../../../common/constants';
+} from 'pages/admin/serverSettingsPage/common/constants';
 import { DOMAIN_KEY } from '../constants';
 import styles from './activeDirectoryAuthFormFields.scss';
 

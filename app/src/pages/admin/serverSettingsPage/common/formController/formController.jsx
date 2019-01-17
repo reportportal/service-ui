@@ -84,7 +84,7 @@ export class FormController extends Component {
 
   updateConfig = (options, id) =>
     fetch(this.props.formOptions.getSubmitUrl(id), options)
-      .then(() => this.updateConfigSuccess(options.method))
+      .then((response) => this.updateConfigSuccess(options.method, response))
       .catch(this.catchRequestError);
 
   fetchInitialConfig = () =>
@@ -104,15 +104,13 @@ export class FormController extends Component {
       })
       .catch(this.stopLoading);
 
-  updateConfigSuccess = (method) => {
+  updateConfigSuccess = (method, data) => {
     const {
       intl: { formatMessage },
       formOptions: { defaultFormConfig },
       successMessage,
     } = this.props;
-    if (method === 'DELETE') {
-      this.props.initialize(defaultFormConfig);
-    }
+    this.props.initialize(method === 'DELETE' ? defaultFormConfig : data);
     this.props.showNotification({
       message: formatMessage(successMessage),
       type: NOTIFICATION_TYPES.SUCCESS,

@@ -18,7 +18,7 @@ import {
   PHOTO_KEY,
   FULL_NAME_KEY,
   EMAIL_KEY,
-} from '../../../../../common/constants';
+} from 'pages/admin/serverSettingsPage/common/constants';
 import {
   LDAP_AUTH_FORM,
   MANAGER_DN_KEY,
