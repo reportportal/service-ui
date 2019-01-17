@@ -24,7 +24,7 @@ import {
   CheckboxControl,
 } from './controls';
 import { WIDGET_WIZARD_FORM } from '../widgetWizardContent/wizardControlsSection/constants';
-import styles from '../widgetWizardModal.scss';
+import styles from './widgetControls.scss';
 
 const cx = classNames.bind(styles);
 
@@ -49,10 +49,6 @@ const messages = defineMessages({
   ContentFieldsValidationError: {
     id: 'LaunchStatisticsControls.ContentFieldsValidationError',
     defaultMessage: 'You must select at least one item',
-  },
-  BetaBadge: {
-    id: 'LaunchStatisticsControls.BetaBadgeLabel',
-    defaultMessage: 'beta',
   },
 });
 const validators = {
@@ -170,10 +166,12 @@ export class LaunchStatisticsControls extends Component {
             )}
           />
         </FieldProvider>
-        <FieldProvider name="contentParameters.widgetOptions.zoom">
-          <CheckboxControl fieldLabel=" " text={formatMessage(messages.ZoomControlText)} />
-        </FieldProvider>
-        <BetaBadge className={cx('launch-controls')} />
+        <div className={cx('zoom-container')}>
+          <FieldProvider name="contentParameters.widgetOptions.zoom">
+            <CheckboxControl fieldLabel=" " text={formatMessage(messages.ZoomControlText)} />
+          </FieldProvider>
+          <BetaBadge className={cx('launch-controls')} />
+        </div>
       </Fragment>
     );
   }
