@@ -6,10 +6,10 @@ import { URLS } from 'common/urls';
 import { connect } from 'react-redux';
 import { reduxForm, formValueSelector } from 'redux-form';
 import classNames from 'classnames/bind';
-import { ENABLED_KEY } from '../common/constants';
+import { ENABLED_KEY } from '../../common/constants';
 import { EMAIL_SERVER_FORM, DEFAULT_FORM_CONFIG } from './constants';
 import { EmailServerTabFormFields } from './emailServerTabFormFields';
-import { FormController } from '../common/formController';
+import { FormController } from '../../common/formController';
 import styles from './emailServerTab.scss';
 
 const cx = classNames.bind(styles);
@@ -51,15 +51,11 @@ export class EmailServerTab extends Component {
     change: () => {},
   };
 
-  getSubmitUrl = () => URLS.emailServerSettings();
-
   prepareDataBeforeInitialize = (data) => ({
     [ENABLED_KEY]: !!data.serverEmailConfig,
     ...DEFAULT_FORM_CONFIG,
     ...(data.serverEmailConfig || {}),
   });
-
-  initialConfigUrl = URLS.serverSettings();
 
   render() {
     const { enabled, initialize, handleSubmit } = this.props;
@@ -67,8 +63,8 @@ export class EmailServerTab extends Component {
     const formOptions = {
       switcherLabel: messages.emailSwitcher,
       FieldsComponent: EmailServerTabFormFields,
-      initialConfigUrl: this.initialConfigUrl,
-      getSubmitUrl: this.getSubmitUrl,
+      initialConfigUrl: URLS.serverSettings(),
+      getSubmitUrl: URLS.emailServerSettings,
       withErrorBlock: false,
       defaultFormConfig: DEFAULT_FORM_CONFIG,
     };

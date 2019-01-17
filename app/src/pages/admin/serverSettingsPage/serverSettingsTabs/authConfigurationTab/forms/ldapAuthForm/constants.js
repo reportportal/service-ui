@@ -1,4 +1,9 @@
-import { LDAP_ATTRIBUTES_KEY, LDAP_PREFIX, ENABLED_KEY, URL_KEY } from '../../../common/constants';
+import {
+  LDAP_ATTRIBUTES_KEY,
+  LDAP_PREFIX,
+  ENABLED_KEY,
+  URL_KEY,
+} from '../../../../common/constants';
 
 export const MANAGER_DN_KEY = 'managerDn';
 export const MANAGER_PASSWORD_KEY = 'managerPassword';

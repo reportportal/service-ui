@@ -5,8 +5,8 @@ import classNames from 'classnames/bind';
 import { URLS } from 'common/urls';
 import { connect } from 'react-redux';
 import { reduxForm, formValueSelector } from 'redux-form';
-import { FormController } from '../../../common/formController';
-import { ENABLED_KEY, messages } from '../../../common/constants';
+import { FormController } from 'pages/admin/serverSettingsPage/common/formController';
+import { ENABLED_KEY, messages } from 'pages/admin/serverSettingsPage/common/constants';
 import { GITHUB_AUTH_FORM, DEFAULT_FORM_CONFIG } from './constants';
 import { GithubAuthFormFields } from './githubAuthFormFields';
 import styles from './githubAuthForm.scss';
@@ -50,8 +50,6 @@ export class GithubAuthForm extends Component {
     handleSubmit: () => {},
   };
 
-  getSubmitUrl = () => this.commonUrl;
-
   prepareDataBeforeSubmit = (data) => {
     const updatedOrganization = data.restrictions.organizations.length
       ? `,${data.restrictions.organization}`
@@ -63,8 +61,6 @@ export class GithubAuthForm extends Component {
       },
     };
   };
-
-  commonUrl = URLS.githubAuthSettings();
 
   render() {
     const {
@@ -78,8 +74,8 @@ export class GithubAuthForm extends Component {
       formHeader: formatMessage(localMessages.formHeader),
       switcherLabel: localMessages.switcherLabel,
       FieldsComponent: GithubAuthFormFields,
-      initialConfigUrl: this.commonUrl,
-      getSubmitUrl: this.getSubmitUrl,
+      initialConfigUrl: URLS.githubAuthSettings(),
+      getSubmitUrl: URLS.githubAuthSettings,
       withErrorBlock: false,
       defaultFormConfig: DEFAULT_FORM_CONFIG,
     };
