@@ -34,15 +34,16 @@ export class LaunchesDurationChart extends Component {
     redirect: PropTypes.func.isRequired,
     projectId: PropTypes.string.isRequired,
     widget: PropTypes.object.isRequired,
-    preview: PropTypes.bool,
-    height: PropTypes.number,
     container: PropTypes.instanceOf(Element).isRequired,
-    observer: PropTypes.object.isRequired,
+    isPreview: PropTypes.bool,
+    height: PropTypes.number,
+    observer: PropTypes.object,
   };
 
   static defaultProps = {
-    preview: false,
+    isPreview: false,
     height: 0,
+    observer: {},
   };
 
   state = {
@@ -50,13 +51,15 @@ export class LaunchesDurationChart extends Component {
   };
 
   componentDidMount() {
-    this.props.observer.subscribe('widgetResized', this.resizeChart);
+    !this.props.isPreview && this.props.observer.subscribe('widgetResized', this.resizeChart);
     this.getConfig();
   }
 
   componentWillUnmount() {
-    this.node.removeEventListener('mousemove', this.setupCoords);
-    this.props.observer.unsubscribe('widgetResized', this.resizeChart);
+    if (!this.props.isPreview) {
+      this.node.removeEventListener('mousemove', this.setupCoords);
+      this.props.observer.unsubscribe('widgetResized', this.resizeChart);
+    }
   }
 
   onChartClick = (data) => {
@@ -76,7 +79,7 @@ export class LaunchesDurationChart extends Component {
     this.chart = chart;
     this.node = element;
 
-    if (!this.props.widget.content.result || this.props.preview) {
+    if (!this.props.widget.content.result || this.props.isPreview) {
       return;
     }
 
@@ -97,7 +100,7 @@ export class LaunchesDurationChart extends Component {
   };
 
   getConfig = () => {
-    const { widget, preview, container } = this.props;
+    const { widget, isPreview, container } = this.props;
 
     this.height = container.offsetHeight;
     this.width = container.offsetWidth;
@@ -124,13 +127,13 @@ export class LaunchesDurationChart extends Component {
       },
       grid: {
         y: {
-          show: !preview,
+          show: !isPreview,
         },
       },
       axis: {
         rotated: true,
         x: {
-          show: !preview,
+          show: !isPreview,
           type: 'category',
           categories: itemData.map(transformCategoryLabel),
           tick: {
@@ -143,7 +146,7 @@ export class LaunchesDurationChart extends Component {
           },
         },
         y: {
-          show: !preview,
+          show: !isPreview,
           tick: {
             format: (d) => (parseInt(d, 10) / timeType.value).toFixed(2),
           },
@@ -158,13 +161,13 @@ export class LaunchesDurationChart extends Component {
         },
       },
       interaction: {
-        enabled: !preview,
+        enabled: !isPreview,
       },
       padding: {
-        top: preview ? 0 : 20,
-        left: preview ? 0 : 40,
-        right: preview ? 0 : 20,
-        bottom: preview ? 0 : 10,
+        top: isPreview ? 0 : 20,
+        left: isPreview ? 0 : 40,
+        right: isPreview ? 0 : 20,
+        bottom: isPreview ? 0 : 10,
       },
       legend: {
         show: false,
@@ -212,9 +215,9 @@ export class LaunchesDurationChart extends Component {
   };
 
   render() {
-    const { preview } = this.props;
+    const { isPreview } = this.props;
     const classes = cx('launches-duration-chart', {
-      'preview-view': preview,
+      'isPreview-view': isPreview,
     });
     return (
       <div className={classes}>

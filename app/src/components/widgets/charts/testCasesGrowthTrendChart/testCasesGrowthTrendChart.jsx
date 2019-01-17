@@ -49,18 +49,19 @@ export class TestCasesGrowthTrendChart extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
     widget: PropTypes.object.isRequired,
-    isPreview: PropTypes.bool,
-    height: PropTypes.number,
     container: PropTypes.instanceOf(Element).isRequired,
-    observer: PropTypes.object.isRequired,
     project: PropTypes.string.isRequired,
     statisticsLink: PropTypes.object.isRequired,
     redirect: PropTypes.func.isRequired,
+    isPreview: PropTypes.bool,
+    height: PropTypes.number,
+    observer: PropTypes.object,
   };
 
   static defaultProps = {
     isPreview: false,
     height: 0,
+    observer: {},
   };
 
   state = {
@@ -68,13 +69,15 @@ export class TestCasesGrowthTrendChart extends Component {
   };
 
   componentDidMount() {
-    this.props.observer.subscribe('widgetResized', this.resizeChart);
+    !this.props.isPreview && this.props.observer.subscribe('widgetResized', this.resizeChart);
     this.getConfig();
   }
 
   componentWillUnmount() {
-    this.node.removeEventListener('mousemove', this.setupCoords);
-    this.props.observer.unsubscribe('widgetResized', this.resizeChart);
+    if (!this.props.isPreview) {
+      this.node.removeEventListener('mousemove', this.setupCoords);
+      this.props.observer.unsubscribe('widgetResized', this.resizeChart);
+    }
   }
 
   onChartCreated = (chart, element) => {

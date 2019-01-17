@@ -1,0 +1,1 @@
+export { SharedWidgetsSearch } from './sharedWidgetsSearch';

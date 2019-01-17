@@ -24,6 +24,7 @@ export class ModalLayout extends Component {
     warningMessage: PropTypes.string, // footer props
     okButton: PropTypes.shape({
       text: PropTypes.string.isRequired,
+      disabled: PropTypes.bool,
       danger: PropTypes.bool,
       onClick: PropTypes.func,
     }),

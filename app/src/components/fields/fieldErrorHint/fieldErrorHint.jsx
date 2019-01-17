@@ -33,6 +33,10 @@ const messages = defineMessages({
     id: 'FiltersPage.filterNameLength',
     defaultMessage: 'Filter name length should have size from 3 to 128 characters.',
   },
+  sharedWidgetSearchHint: {
+    id: 'SharedWidgetsSearch.sharedWidgetSearchHint',
+    defaultMessage: 'Value should have size from 3 to 256.',
+  },
   launchNameHint: {
     id: '  LaunchMergeModal.launchNameHint',
     defaultMessage: 'Launch name should have size from 3 to 256.',

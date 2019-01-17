@@ -18,18 +18,12 @@ const updateDashboardItemAction = (payload) => (dispatch) =>
   });
 
 export const fetchDashboardsAction = (projectId) => (dispatch, getState) => {
-  const userId = userIdSelector(getState());
   const activeProject = projectId || activeProjectSelector(getState());
 
-  Promise.all([
-    fetch(URLS.dashboards(activeProject)),
-    fetch(URLS.dashboardsShared(activeProject)),
-  ]).then(([dashboards = {}, sharedDashboards = {}]) => {
-    const { content = [] } = sharedDashboards;
-
+  fetch(URLS.dashboards(activeProject)).then((dashboards = {}) => {
     dispatch({
       type: FETCH_DASHBOARD_SUCCESS,
-      payload: [...dashboards.content, ...content.filter((item) => item.owner !== userId)],
+      payload: dashboards.content,
     });
   });
 };
@@ -50,7 +44,7 @@ export const fetchDashboardAction = () => (dispatch, getState) => {
 export const updateDashboardWidgetsAction = (dashboard) => (dispatch, getState) => {
   const activeProject = activeProjectSelector(getState());
 
-  fetch(URLS.dashboard(activeProject, dashboard.id), {
+  return fetch(URLS.dashboard(activeProject, dashboard.id), {
     method: 'PUT',
     data: {
       updateWidgets: dashboard.widgets,

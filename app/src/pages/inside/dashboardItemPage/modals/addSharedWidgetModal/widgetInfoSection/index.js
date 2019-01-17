@@ -1,0 +1,1 @@
+export { WidgetInfoSection } from './widgetInfoSection';

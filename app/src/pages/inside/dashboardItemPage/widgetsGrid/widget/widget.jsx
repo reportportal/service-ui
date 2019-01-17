@@ -9,9 +9,9 @@ import { connect } from 'react-redux';
 import { activeProjectSelector } from 'controllers/user';
 import { showModalAction } from 'controllers/modal';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
-import { NoDataAvailable } from 'components/widgets/noDataAvailable';
+import { CHARTS, NoDataAvailable } from 'components/widgets';
+import { isWidgetDataAvailable } from '../../modals/common/utils';
 import { WidgetHeader } from './widgetHeader';
-import { CHARTS } from './constants';
 import styles from './widget.scss';
 
 const cx = classNames.bind(styles);
@@ -81,13 +81,12 @@ export class Widget extends Component {
 
   getWidgetContent = () => {
     const { widget } = this.state;
-    const noWidgetDataAvailable = !widget.content || !Object.keys(widget.content).length;
 
     if (this.state.loading) {
       return <SpinningPreloader />;
     }
 
-    if (noWidgetDataAvailable) {
+    if (!isWidgetDataAvailable(widget)) {
       return <NoDataAvailable />;
     }
 

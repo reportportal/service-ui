@@ -4,15 +4,23 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Fullscreen from 'react-full-screen';
 import Parser from 'html-react-parser';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
-import { activeDashboardIdSelector } from 'controllers/pages';
-import { dashboardItemsSelector, fetchDashboardAction } from 'controllers/dashboard';
-import { activeProjectSelector } from 'controllers/user';
 import classNames from 'classnames/bind';
+import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { URLS } from 'common/urls';
+import { fetch } from 'common/utils';
+import { canResizeAndDragWidgets } from 'common/utils/permissions';
+import {
+  activeDashboardItemSelector,
+  fetchDashboardAction,
+  updateDashboardWidgetsAction,
+} from 'controllers/dashboard';
+import { userInfoSelector, activeProjectSelector } from 'controllers/user';
+import { PROJECT_DASHBOARD_PAGE } from 'controllers/pages';
 import { showModalAction } from 'controllers/modal';
+import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
+import { hideScreenLockAction } from 'controllers/screenLock';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { PageLayout, PageHeader, PageSection } from 'layouts/pageLayout';
-import { PROJECT_DASHBOARD_PAGE } from 'controllers/pages/constants';
 import { DASHBOARD_PAGE_EVENTS } from 'components/main/analytics/events';
 import { AddDashboardButton } from '../common/addDashboardButton';
 import AddWidgetIcon from './img/add-inline.svg';
@@ -50,18 +58,25 @@ const messages = defineMessages({
     id: 'DashboardItemPage.fullscreen',
     defaultMessage: 'Full screen',
   },
+  addWidgetSuccess: {
+    id: 'DashboardItemPage.addWidgetSuccess',
+    defaultMessage: 'Widget has been added',
+  },
 });
 
 @injectIntl
 @connect(
   (state) => ({
     activeProject: activeProjectSelector(state),
-    dashboardId: activeDashboardIdSelector(state),
-    dashboardItems: dashboardItemsSelector(state),
+    dashboard: activeDashboardItemSelector(state),
+    userInfo: userInfoSelector(state),
   }),
   {
     showModalAction,
     fetchDashboardAction,
+    updateDashboardWidgetsAction,
+    showNotification,
+    hideScreenLockAction,
   },
 )
 @track()
@@ -70,9 +85,12 @@ export class DashboardItemPage extends Component {
     intl: intlShape.isRequired,
     showModalAction: PropTypes.func.isRequired,
     fetchDashboardAction: PropTypes.func.isRequired,
-    dashboardId: PropTypes.number,
-    dashboardItems: PropTypes.array,
+    updateDashboardWidgetsAction: PropTypes.func.isRequired,
+    showNotification: PropTypes.func.isRequired,
+    hideScreenLockAction: PropTypes.func.isRequired,
     activeProject: PropTypes.string.isRequired,
+    dashboard: PropTypes.object.isRequired,
+    userInfo: PropTypes.object.isRequired,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
@@ -80,8 +98,7 @@ export class DashboardItemPage extends Component {
   };
 
   static defaultProps = {
-    dashboardId: undefined,
-    dashboardItems: [],
+    currentDashboard: {},
   };
 
   state = {
@@ -90,6 +107,47 @@ export class DashboardItemPage extends Component {
 
   onChangeFullscreen = (isFullscreen) => {
     this.setState({ isFullscreen });
+  };
+
+  onConfirm = (widget, closeModal) => {
+    const {
+      intl: { formatMessage },
+      activeProject,
+      dashboard,
+    } = this.props;
+
+    return fetch(URLS.addDashboardWidget(activeProject, dashboard.id), {
+      method: 'put',
+      data: { addWidget: widget },
+    })
+      .then(() => {
+        const oldWidgets = dashboard.widgets;
+        const newWidgets = oldWidgets.map((item) => ({
+          ...item,
+          widgetPosition: {
+            ...item.widgetPosition,
+            positionY: item.widgetPosition.positionY + widget.widgetSize.height,
+          },
+        }));
+        newWidgets.unshift(widget);
+
+        return this.props.updateDashboardWidgetsAction({
+          ...this.props.dashboard,
+          widgets: newWidgets,
+        });
+      })
+      .then(() => {
+        this.props.hideScreenLockAction();
+        closeModal();
+        this.props.showNotification({
+          message: formatMessage(messages.addWidgetSuccess),
+          type: NOTIFICATION_TYPES.SUCCESS,
+        });
+      })
+      .catch((err) => {
+        this.props.hideScreenLockAction();
+        this.props.showNotification({ message: err.message, type: NOTIFICATION_TYPES.ERROR });
+      });
   };
 
   getBreadcrumbs = () => {
@@ -108,12 +166,7 @@ export class DashboardItemPage extends Component {
     ];
   };
 
-  getDashboardName = () => (this.dashboard && this.dashboard.name) || '';
-
-  getDashboard = () => {
-    const { dashboardItems, dashboardId } = this.props;
-    this.dashboard = dashboardItems.find((item) => item.id === dashboardId);
-  };
+  getDashboardName = () => (this.props.dashboard && this.props.dashboard.name) || '';
 
   toggleFullscreen = () => {
     this.props.tracking.trackEvent(DASHBOARD_PAGE_EVENTS.FULL_SCREEN_BTN);
@@ -124,7 +177,7 @@ export class DashboardItemPage extends Component {
     this.props.showModalAction({
       id: 'widgetWizardModal',
       data: {
-        onConfirm: this.props.fetchDashboardAction,
+        onConfirm: this.onConfirm,
         eventsInfo: {
           closeIcon: DASHBOARD_PAGE_EVENTS.CLOSE_ICON_ADD_WIDGET_MODAL,
           chooseWidgetType: DASHBOARD_PAGE_EVENTS.CHOOSE_WIDGET_TYPE_ADD_WIDGET_MODAL,
@@ -138,11 +191,31 @@ export class DashboardItemPage extends Component {
     });
   };
 
+  showAddSharedWidgetModal = () => {
+    this.props.showModalAction({
+      id: 'addSharedWidgetModal',
+      data: {
+        onConfirm: this.onConfirm,
+        currentDashboard: this.props.dashboard,
+      },
+    });
+  };
+
+  checkIfWidgetsModifiable = () => {
+    const { userInfo, activeProject, dashboard } = this.props;
+    const isOwner = dashboard.owner === userInfo.userId;
+    const projectRole =
+      userInfo.assignedProjects[activeProject] &&
+      userInfo.assignedProjects[activeProject].projectRole;
+
+    return canResizeAndDragWidgets(userInfo.userRole, projectRole, isOwner);
+  };
+
   render() {
     const {
       intl: { formatMessage },
+      dashboard,
     } = this.props;
-    this.getDashboard();
 
     return (
       <PageLayout>
@@ -156,7 +229,7 @@ export class DashboardItemPage extends Component {
                 <GhostButton icon={AddWidgetIcon} onClick={this.showWidgetWizard}>
                   {formatMessage(messages.addNewWidget)}
                 </GhostButton>
-                <GhostButton icon={AddSharedWidgetIcon} disabled>
+                <GhostButton icon={AddSharedWidgetIcon} onClick={this.showAddSharedWidgetModal}>
                   {formatMessage(messages.addSharedWidget)}
                 </GhostButton>
               </div>
@@ -169,7 +242,11 @@ export class DashboardItemPage extends Component {
               </div>
             </div>
             <Fullscreen enabled={this.state.isFullscreen} onChange={this.onChangeFullscreen}>
-              <WidgetsGrid dashboard={this.dashboard} isFullscreen={this.state.isFullscreen} />
+              <WidgetsGrid
+                isModifiable={this.checkIfWidgetsModifiable()}
+                dashboard={dashboard}
+                isFullscreen={this.state.isFullscreen}
+              />
               {this.state.isFullscreen && (
                 <i className={cx('icon-close')} onClick={this.toggleFullscreen}>
                   {Parser(CancelIcon)}

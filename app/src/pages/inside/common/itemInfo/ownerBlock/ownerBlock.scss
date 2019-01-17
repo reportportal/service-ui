@@ -40,3 +40,9 @@
     font-size: 14px;
   }
 }
+
+.disabled {
+  .owner:hover {
+    color: $COLOR--gray-60;
+  }
+}
