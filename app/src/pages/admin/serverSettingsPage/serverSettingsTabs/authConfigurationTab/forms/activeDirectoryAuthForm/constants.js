@@ -3,7 +3,7 @@ import {
   LDAP_PREFIX,
   ENABLED_KEY,
   URL_KEY,
-} from '../../../../common/constants';
+} from 'pages/admin/serverSettingsPage/common/constants';
 
 export const DOMAIN_KEY = 'domain';
 

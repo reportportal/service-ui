@@ -81,7 +81,7 @@ export class LdapAuthForm extends Component {
 
   prepareDataBeforeInitialize = (data) => ({
     ...data,
-    [ENABLED_KEY]: data[LDAP_ATTRIBUTES_KEY][ENABLED_KEY],
+    [ENABLED_KEY]: (data[LDAP_ATTRIBUTES_KEY] || {})[ENABLED_KEY],
   });
 
   render() {
