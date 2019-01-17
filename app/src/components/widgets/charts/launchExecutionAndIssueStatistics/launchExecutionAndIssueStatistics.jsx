@@ -13,14 +13,15 @@ export class LaunchExecutionAndIssueStatistics extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
     widget: PropTypes.object.isRequired,
-    isPreview: PropTypes.bool,
     container: PropTypes.instanceOf(Element).isRequired,
-    observer: PropTypes.object.isRequired,
+    isPreview: PropTypes.bool,
+    observer: PropTypes.object,
   };
 
   static defaultProps = {
     isPreview: false,
     height: 0,
+    observer: {},
   };
 
   render() {

@@ -32,7 +32,7 @@ export const TooltipContent = ({
 
 TooltipContent.propTypes = {
   launchName: PropTypes.string,
-  launchNumber: PropTypes.string,
+  launchNumber: PropTypes.number,
   startTime: PropTypes.number,
   itemCases: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   itemName: PropTypes.string,

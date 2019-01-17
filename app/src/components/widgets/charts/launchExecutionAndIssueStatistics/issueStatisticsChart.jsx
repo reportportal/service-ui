@@ -27,14 +27,12 @@ import ReactDOMServer from 'react-dom/server';
 import { TooltipWrapper } from '../common/tooltip';
 import { C3Chart } from '../common/c3chart';
 import chartStyles from './launchExecutionAndIssueStatistics.scss';
-import tooltipStyles from './launchExecutionAndIssueStatisticsTooltip.scss';
 import { Legend } from './launchExecutionAndIssuesChartLegend';
 import { LaunchExecutionAndIssueStatisticsTooltip } from './launchExecutionAndIssueStatisticsTooltip';
 import { getPercentage, getDefectItems, getChartData } from './chartUtils';
 import { messages } from './messages';
 
 const chartCx = classNames.bind(chartStyles);
-const tooltipCx = classNames.bind(tooltipStyles);
 
 @injectIntl
 export class IssueStatisticsChart extends Component {
@@ -43,12 +41,13 @@ export class IssueStatisticsChart extends Component {
     widget: PropTypes.object.isRequired,
     isPreview: PropTypes.bool,
     container: PropTypes.instanceOf(Element).isRequired,
-    observer: PropTypes.object.isRequired,
+    observer: PropTypes.object,
   };
 
   static defaultProps = {
     isPreview: false,
     height: 0,
+    observer: {},
   };
 
   state = {
@@ -56,12 +55,14 @@ export class IssueStatisticsChart extends Component {
   };
 
   componentDidMount() {
-    this.props.observer.subscribe('widgetResized', this.resizeIssuesChart);
+    !this.props.isPreview && this.props.observer.subscribe('widgetResized', this.resizeIssuesChart);
     this.getConfig();
   }
   componentWillUnmount() {
-    this.issuesNode.removeEventListener('mousemove', this.setCoords);
-    this.props.observer.unsubscribe('widgetResized', this.resizeIssuesChart);
+    if (!this.props.isPreview) {
+      this.issuesNode.removeEventListener('mousemove', this.setCoords);
+      this.props.observer.unsubscribe('widgetResized', this.resizeIssuesChart);
+    }
   }
 
   onIssuesChartCreated = (chart, element) => {
@@ -203,10 +204,10 @@ export class IssueStatisticsChart extends Component {
     const launchData = this.defectItems.find((item) => item.id === data[0].id);
 
     return ReactDOMServer.renderToStaticMarkup(
-      <TooltipWrapper className={tooltipCx('chart-tooltip')}>
+      <TooltipWrapper>
         <LaunchExecutionAndIssueStatisticsTooltip
           launchNumber={data[0].value}
-          itemCases={getPercentage(data[0].ratio)}
+          duration={getPercentage(data[0].ratio)}
           color={color(data[0].name)}
           itemName={this.props.intl.formatMessage(messages[launchData.name.split('$total')[0]])}
         />

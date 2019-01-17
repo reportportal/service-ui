@@ -1,2 +1,2 @@
 export { DashboardItemPage } from './dashboardItemPage';
-export { WidgetWizardModal } from './widgetWizardModal';
+export { WidgetWizardModal, AddSharedWidgetModal } from './modals';

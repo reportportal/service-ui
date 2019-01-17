@@ -24,12 +24,9 @@ export const dashboardReducer = (state = INITIAL_STATE, { type, payload }) => {
       return {
         ...state,
         ...{
-          dashboardItems: state.dashboardItems.map((item) => {
-            if (item.id === payload.id) {
-              return payload;
-            }
-            return item;
-          }),
+          dashboardItems: state.dashboardItems.map(
+            (item) => (item.id === payload.id ? payload : item),
+          ),
         },
       };
     default:

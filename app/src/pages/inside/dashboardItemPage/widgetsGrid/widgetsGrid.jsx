@@ -11,9 +11,8 @@ import { URLS } from 'common/urls';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import PropTypes from 'prop-types';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
-import { userInfoSelector, activeProjectSelector } from 'controllers/user';
+import { activeProjectSelector } from 'controllers/user';
 import { fetchDashboardAction, updateDashboardWidgetsAction } from 'controllers/dashboard';
-import { canResizeAndDragWidgets } from 'common/utils/permissions';
 import { EmptyWidgetGrid } from './emptyWidgetGrid';
 import styles from './widgetsGrid.scss';
 import { Widget } from './widget';
@@ -35,8 +34,6 @@ const messages = defineMessages({
   (state, ownProps) => ({
     deleteWidgetUrl: (widgetId) =>
       URLS.dashboardWidget(activeProjectSelector(state), ownProps.dashboard.id, widgetId),
-    userInfo: userInfoSelector(state),
-    project: activeProjectSelector(state),
   }),
   {
     redirect,
@@ -50,8 +47,7 @@ export class WidgetsGrid extends Component {
     intl: intlShape.isRequired,
     deleteWidgetUrl: PropTypes.func.isRequired,
     isFullscreen: PropTypes.bool,
-    project: PropTypes.string.isRequired,
-    userInfo: PropTypes.object.isRequired,
+    isModifiable: PropTypes.bool,
     redirect: PropTypes.func.isRequired,
     showNotification: PropTypes.func.isRequired,
     fetchDashboardAction: PropTypes.func.isRequired,
@@ -65,6 +61,7 @@ export class WidgetsGrid extends Component {
 
   static defaultProps = {
     isFullscreen: false,
+    isModifiable: true,
     loading: false,
     dashboard: {
       widgets: [],
@@ -74,15 +71,10 @@ export class WidgetsGrid extends Component {
 
   constructor(props) {
     super(props);
-    const { userInfo, project, dashboard } = props;
     this.observer = ReactObserver();
 
-    const isOwner = dashboard.owner === userInfo.userId;
-    const projectRole =
-      userInfo.assignedProjects[project] && userInfo.assignedProjects[project].projectRole;
     this.state = {
       isMobile: false,
-      isModifiable: canResizeAndDragWidgets(userInfo.userRole, projectRole, isOwner),
     };
   }
 
@@ -124,6 +116,7 @@ export class WidgetsGrid extends Component {
           widgetSize: { width: w, height: h },
         }));
       }
+
       this.props.updateDashboardWidgetsAction({
         ...this.props.dashboard,
         widgets: newWidgets,
@@ -180,7 +173,7 @@ export class WidgetsGrid extends Component {
               <Widget
                 widgetId={widgetId}
                 isFullscreen={this.props.isFullscreen}
-                isModifiable={this.state.isModifiable}
+                isModifiable={this.props.isModifiable}
                 observer={this.observer}
                 onDelete={() => {
                   this.onDeleteWidget(widgetId);
@@ -213,8 +206,8 @@ export class WidgetsGrid extends Component {
               onResizeStart={this.onResizeStart}
               onResizeStop={this.onResizeStop}
               cols={cols}
-              isDraggable={this.state.isModifiable}
-              isResizable={this.state.isModifiable}
+              isDraggable={this.props.isModifiable}
+              isResizable={this.props.isModifiable}
               draggableHandle=".draggable-field"
             >
               {Items}

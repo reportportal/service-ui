@@ -47,15 +47,15 @@ export class LaunchStatisticsChart extends Component {
     intl: intlShape.isRequired,
     redirect: PropTypes.func,
     widget: PropTypes.object.isRequired,
+    project: PropTypes.string.isRequired,
+    defectTypes: PropTypes.object.isRequired,
+    getDefectLink: PropTypes.func.isRequired,
+    getStatisticsLink: PropTypes.func.isRequired,
+    container: PropTypes.instanceOf(Element).isRequired,
     isPreview: PropTypes.bool,
     isFullscreen: PropTypes.bool,
     height: PropTypes.number,
-    project: PropTypes.string.isRequired,
-    defectTypes: PropTypes.object.isRequired,
-    container: PropTypes.instanceOf(Element).isRequired,
-    observer: PropTypes.object.isRequired,
-    getDefectLink: PropTypes.func.isRequired,
-    getStatisticsLink: PropTypes.func.isRequired,
+    observer: PropTypes.object,
   };
 
   static defaultProps = {
@@ -65,6 +65,7 @@ export class LaunchStatisticsChart extends Component {
     isPreview: false,
     isFullscreen: false,
     height: 0,
+    observer: {},
   };
 
   state = {
@@ -72,15 +73,17 @@ export class LaunchStatisticsChart extends Component {
   };
 
   componentDidMount() {
-    this.props.observer.subscribe('widgetResized', this.resizeChart);
+    !this.props.isPreview && this.props.observer.subscribe('widgetResized', this.resizeChart);
     this.getConfig();
   }
 
   componentWillUnmount() {
-    this.isCustomTooltipNeeded()
-      ? this.removeChartListeners()
-      : this.node && this.node.removeEventListener('mousemove', this.setupCoords);
-    this.props.observer.unsubscribe('widgetResized', this.resizeChart);
+    if (!this.props.isPreview) {
+      this.isCustomTooltipNeeded()
+        ? this.removeChartListeners()
+        : this.node && this.node.removeEventListener('mousemove', this.setupCoords);
+      this.props.observer.unsubscribe('widgetResized', this.resizeChart);
+    }
   }
 
   onChartCreated = (chart, element) => {

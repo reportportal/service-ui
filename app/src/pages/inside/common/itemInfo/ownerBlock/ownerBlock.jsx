@@ -12,15 +12,19 @@ const messages = defineMessages({
   },
 });
 
-export const OwnerBlock = injectIntl(({ intl, owner }) => (
-  <div className={cx('owner-block')} title={intl.formatMessage(messages.ownerTitle)}>
+// TODO: add an action with filters by clicking on the owner item
+export const OwnerBlock = injectIntl(({ intl, owner, disabled }) => (
+  <div className={cx('owner-block', { disabled })} title={intl.formatMessage(messages.ownerTitle)}>
     <div className={cx('owner-icon')} />
-    <a href="/" className={cx('owner')}>
-      {owner}
-    </a>
+    <span className={cx('owner')}>{owner}</span>
   </div>
 ));
 
 OwnerBlock.propTypes = {
   owner: PropTypes.string.isRequired,
+  disabled: PropTypes.bool,
+};
+
+OwnerBlock.defaultProps = {
+  disabled: false,
 };

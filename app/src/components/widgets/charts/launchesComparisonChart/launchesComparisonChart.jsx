@@ -44,19 +44,20 @@ export class LaunchesComparisonChart extends Component {
     intl: intlShape.isRequired,
     redirect: PropTypes.func.isRequired,
     widget: PropTypes.object.isRequired,
-    isPreview: PropTypes.bool,
-    height: PropTypes.number,
     project: PropTypes.string.isRequired,
     defectTypes: PropTypes.object.isRequired,
-    container: PropTypes.instanceOf(Element).isRequired,
-    observer: PropTypes.object.isRequired,
     getDefectLink: PropTypes.func.isRequired,
     getStatisticsLink: PropTypes.func.isRequired,
+    container: PropTypes.instanceOf(Element).isRequired,
+    isPreview: PropTypes.bool,
+    height: PropTypes.number,
+    observer: PropTypes.object,
   };
 
   static defaultProps = {
     isPreview: false,
     height: 0,
+    observer: {},
   };
 
   state = {
@@ -64,13 +65,15 @@ export class LaunchesComparisonChart extends Component {
   };
 
   componentDidMount() {
-    this.props.observer.subscribe('widgetResized', this.resizeChart);
+    !this.props.isPreview && this.props.observer.subscribe('widgetResized', this.resizeChart);
     this.getConfig();
   }
 
   componentWillUnmount() {
-    this.node.removeEventListener('mousemove', this.setupCoords);
-    this.props.observer.unsubscribe('widgetResized', this.resizeChart);
+    if (!this.props.isPreview) {
+      this.node.removeEventListener('mousemove', this.setupCoords);
+      this.props.observer.unsubscribe('widgetResized', this.resizeChart);
+    }
   }
 
   onChartCreated = (chart, element) => {

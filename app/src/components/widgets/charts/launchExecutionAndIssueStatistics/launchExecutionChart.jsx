@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 EPAM Systems
+ * Copyright 2018 EPAM Systems
  *
  *
  * This file is part of EPAM Report Portal.
@@ -28,14 +28,12 @@ import ReactDOMServer from 'react-dom/server';
 import { TooltipWrapper } from '../common/tooltip';
 import { C3Chart } from '../common/c3chart';
 import chartStyles from './launchExecutionAndIssueStatistics.scss';
-import tooltipStyles from './launchExecutionAndIssueStatisticsTooltip.scss';
 import { Legend } from './launchExecutionAndIssuesChartLegend';
 import { LaunchExecutionAndIssueStatisticsTooltip } from './launchExecutionAndIssueStatisticsTooltip';
 import { getPercentage, getDefectItems, getChartData } from './chartUtils';
 import { messages } from './messages';
 
 const chartCx = classNames.bind(chartStyles);
-const tooltipCx = classNames.bind(tooltipStyles);
 
 @injectIntl
 export class LaunchExecutionChart extends Component {
@@ -44,11 +42,12 @@ export class LaunchExecutionChart extends Component {
     widget: PropTypes.object.isRequired,
     isPreview: PropTypes.bool.isRequired,
     container: PropTypes.instanceOf(Element).isRequired,
-    observer: PropTypes.object.isRequired,
+    observer: PropTypes.object,
   };
 
   static defaultProps = {
     height: 0,
+    observer: {},
   };
 
   state = {
@@ -56,13 +55,14 @@ export class LaunchExecutionChart extends Component {
   };
 
   componentDidMount() {
-    console.log(messages);
-    this.props.observer.subscribe('widgetResized', this.resizeStatusChart);
+    !this.props.isPreview && this.props.observer.subscribe('widgetResized', this.resizeStatusChart);
     this.getConfig();
   }
   componentWillUnmount() {
-    this.statusNode.removeEventListener('mousemove', this.setCoords);
-    this.props.observer.unsubscribe('widgetResized', this.resizeStatusChart);
+    if (!this.props.isPreview) {
+      this.statusNode.removeEventListener('mousemove', this.setCoords);
+      this.props.observer.unsubscribe('widgetResized', this.resizeStatusChart);
+    }
   }
 
   onStatusChartCreated = (chart, element) => {
@@ -216,10 +216,10 @@ export class LaunchExecutionChart extends Component {
     const launchData = this.statusItems.find((item) => item.id === data[0].id);
 
     return ReactDOMServer.renderToStaticMarkup(
-      <TooltipWrapper className={tooltipCx('chart-tooltip')}>
+      <TooltipWrapper>
         <LaunchExecutionAndIssueStatisticsTooltip
           launchNumber={data[0].value}
-          itemCases={getPercentage(data[0].ratio)}
+          duration={getPercentage(data[0].ratio)}
           color={color(launchData.name)}
           itemName={this.props.intl.formatMessage(messages[launchData.name.split('$total')[0]])}
         />
