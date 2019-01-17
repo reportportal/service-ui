@@ -1,4 +1,4 @@
-import { ENABLED_KEY } from '../common/constants';
+import { ENABLED_KEY } from '../../common/constants';
 
 export const EMAIL_SERVER_FORM = 'emailServerTabForm';
 export const AUTH_ENABLED_KEY = 'authEnabled';

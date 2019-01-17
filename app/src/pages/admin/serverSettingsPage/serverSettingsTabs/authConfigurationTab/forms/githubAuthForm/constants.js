@@ -1,4 +1,4 @@
-import { ENABLED_KEY } from '../../../common/constants';
+import { ENABLED_KEY } from '../../../../common/constants';
 
 export const CLIENT_ID_KEY = 'clientId';
 export const CLIENT_SECRET_KEY = 'clientSecret';

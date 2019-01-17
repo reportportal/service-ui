@@ -6,9 +6,13 @@ import { URLS } from 'common/urls';
 import { connect } from 'react-redux';
 import { reduxForm, formValueSelector } from 'redux-form';
 import { BetaBadge } from 'pages/inside/common/betaBadge';
-import { validateLdapAttributes } from '../../../common/validate';
-import { FormController } from '../../../common/formController';
-import { messages, ENABLED_KEY, LDAP_ATTRIBUTES_KEY } from '../../../common/constants';
+import { validateLdapAttributes } from 'pages/admin/serverSettingsPage/common/validate';
+import { FormController } from 'pages/admin/serverSettingsPage/common/formController';
+import {
+  messages,
+  ENABLED_KEY,
+  LDAP_ATTRIBUTES_KEY,
+} from 'pages/admin/serverSettingsPage/common/constants';
 import {
   LDAP_AUTH_FORM,
   DEFAULT_FORM_CONFIG,
@@ -58,7 +62,7 @@ export class LdapAuthForm extends Component {
     handleSubmit: () => {},
   };
 
-  getSubmitUrl = (id) => this.commonUrl(this.props.enabled ? LDAP_AUTH_TYPE : id);
+  getSubmitUrl = (id) => URLS.authSettings(this.props.enabled ? LDAP_AUTH_TYPE : id);
 
   prepareDataBeforeSubmit = (data) => {
     const preparedData = {
@@ -80,8 +84,6 @@ export class LdapAuthForm extends Component {
     [ENABLED_KEY]: data[LDAP_ATTRIBUTES_KEY][ENABLED_KEY],
   });
 
-  commonUrl = (authTypeOrId) => URLS.authSettings(authTypeOrId);
-
   render() {
     const { enabled, initialize, handleSubmit } = this.props;
 
@@ -89,7 +91,7 @@ export class LdapAuthForm extends Component {
       formHeader: ldapHeader,
       switcherLabel: localMessages.switcherLabel,
       FieldsComponent: LdapAuthFormFields,
-      initialConfigUrl: this.commonUrl(LDAP_AUTH_TYPE),
+      initialConfigUrl: URLS.authSettings(LDAP_AUTH_TYPE),
       getSubmitUrl: this.getSubmitUrl,
       withErrorBlock: false,
       defaultFormConfig: DEFAULT_FORM_CONFIG,
