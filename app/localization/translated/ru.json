@@ -1221,5 +1221,7 @@
   "defectTypesGroup.modal.deleteModalTitle": "Удалить тип дефекта",
   "defectTypesGroup.modal.deleteModalConfirmationText": "Вы уверены, что хотите удалить тип дефекта? Все дефекты, которые признаны <b>'{defectType}'</b>, будут отмечены как <b>'{defaultDefectGroup}'</b>.",
   "defectTypesGroup.colorPicker.title" : "PICK A SWATCH: (RU)",
-  "defectTypesGroup.colorPicker.select" : "SELECT YOUR COLORS: (RU)"
+  "defectTypesGroup.colorPicker.select" : "SELECT YOUR COLORS: (RU)",
+  "defectTypesGroup.defectTypesLongNameHint" : "Краткое имя должно быть размером от '1' до '4'",
+  "defectTypesGroup.defectTypesShortNameHint": "Полное имя должно иметь размер от '3' до '55'"
 }
