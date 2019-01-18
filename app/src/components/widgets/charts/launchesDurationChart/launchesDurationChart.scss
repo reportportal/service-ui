@@ -7,7 +7,7 @@
         .c3-axis-y-label {
           font-size: 12px;
         }
-        path {
+        &.c3-axis-y path.domain {
           display: inline;
           stroke: $COLOR--gray-80;
         }
