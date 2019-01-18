@@ -109,8 +109,10 @@ export class FormController extends Component {
       intl: { formatMessage },
       formOptions: { defaultFormConfig },
       successMessage,
+      prepareDataBeforeInitialize,
+      initialize,
     } = this.props;
-    this.props.initialize(method === 'DELETE' ? defaultFormConfig : data);
+    initialize(method === 'DELETE' ? defaultFormConfig : prepareDataBeforeInitialize(data));
     this.props.showNotification({
       message: formatMessage(successMessage),
       type: NOTIFICATION_TYPES.SUCCESS,
