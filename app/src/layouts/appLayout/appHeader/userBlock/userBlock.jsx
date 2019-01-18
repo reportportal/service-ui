@@ -3,7 +3,7 @@ import track from 'react-tracking';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { FormattedMessage } from 'react-intl';
-import { userInfoSelector } from 'controllers/user';
+import { userInfoSelector, photoTimeStampSelector } from 'controllers/user';
 import { logoutAction } from 'controllers/auth';
 import { API_PAGE, ADMINISTRATE_PAGE, USER_PROFILE_PAGE } from 'controllers/pages/constants';
 import { HEADER_EVENTS } from 'components/main/analytics/events';
@@ -18,6 +18,7 @@ const cx = classNames.bind(styles);
 @connect(
   (state) => ({
     user: userInfoSelector(state),
+    photoTimeStamp: photoTimeStampSelector(state),
   }),
   {
     logout: logoutAction,
@@ -28,6 +29,7 @@ export class UserBlock extends PureComponent {
   static propTypes = {
     logout: PropTypes.func.isRequired,
     user: PropTypes.object,
+    photoTimeStamp: PropTypes.number,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
@@ -35,6 +37,7 @@ export class UserBlock extends PureComponent {
   };
   static defaultProps = {
     user: {},
+    photoTimeStamp: null,
   };
   state = {
     menuOpened: false,
@@ -54,6 +57,7 @@ export class UserBlock extends PureComponent {
     this.props.logout();
     this.props.tracking.trackEvent(HEADER_EVENTS.CLICK_LOGOUT_LINK);
   };
+
   handleOutsideClick = (e) => {
     if (this.node && !this.node.contains(e.target) && this.state.menuOpened) {
       this.setState({ menuOpened: false });
@@ -66,7 +70,6 @@ export class UserBlock extends PureComponent {
   };
 
   render() {
-    const avatarUrl = URLS.dataPhoto(this.props.user.userId, Date.now());
     return (
       <div
         ref={(node) => {
@@ -84,10 +87,14 @@ export class UserBlock extends PureComponent {
           <div className={cx('username')}>{this.props.user.userId}</div>
         </div>
         <div className={cx('avatar-wrapper')}>
-          <img className={cx('avatar')} src={avatarUrl} alt="avatar" />
+          <img
+            className={cx('avatar')}
+            src={URLS.dataPhoto(this.props.user.userId, this.props.photoTimeStamp)}
+            alt="avatar"
+          />
         </div>
-        <div className={cx({ 'menu-icon': true, flipped: this.state.menuOpened })} />
-        <div className={cx({ menu: true, opened: this.state.menuOpened })}>
+        <div className={cx('menu-icon', { flipped: this.state.menuOpened })} />
+        <div className={cx('menu', { opened: this.state.menuOpened })}>
           <NavLink
             to={{ type: API_PAGE }}
             className={cx('menu-item')}

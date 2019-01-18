@@ -1,11 +1,11 @@
 export { START_TIME_FORMAT_ABSOLUTE, START_TIME_FORMAT_RELATIVE } from './constants';
 export {
-  fetchUserSuccessAction,
   fetchUserAction,
   setActiveProjectAction,
   setStartTimeFormatAction,
   generateApiTokenAction,
   fetchApiTokenAction,
+  setPhotoTimeStampAction,
 } from './actionCreators';
 export { userReducer } from './reducer';
 export {
@@ -19,4 +19,5 @@ export {
   activeProjectRoleSelector,
   userAccountRoleSelector,
   userTokenSelector,
+  photoTimeStampSelector,
 } from './selectors';

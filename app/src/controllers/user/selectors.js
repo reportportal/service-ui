@@ -10,6 +10,7 @@ export const userIdSelector = (state) => userInfoSelector(state).userId;
 export const settingsSelector = (state) => userSelector(state).settings || {};
 export const startTimeFormatSelector = (state) =>
   settingsSelector(state).startTimeFormat || START_TIME_FORMAT_RELATIVE;
+export const photoTimeStampSelector = (state) => settingsSelector(state).photoTimeStamp || null;
 export const assignedProjectsSelector = (state) => userInfoSelector(state).assignedProjects || {};
 export const userAccountRoleSelector = (state) => userInfoSelector(state).userRole || '';
 export const activeProjectRoleSelector = (state) => {

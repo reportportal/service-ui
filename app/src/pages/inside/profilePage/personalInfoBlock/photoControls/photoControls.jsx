@@ -4,11 +4,12 @@ import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
 import { defineMessages, injectIntl, intlShape } from 'react-intl';
-import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
-import { showModalAction } from 'controllers/modal';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
 import { INTERNAL } from 'common/constants/accountType';
+import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
+import { showModalAction } from 'controllers/modal';
+import { setPhotoTimeStampAction } from 'controllers/user';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { PROFILE_PAGE_EVENTS } from 'components/main/analytics/events';
 import styles from './photoControls.scss';
@@ -50,7 +51,7 @@ const messages = defineMessages({
   },
 });
 
-@connect(null, { showNotification, showModalAction })
+@connect(null, { showNotification, showModalAction, setPhotoTimeStampAction })
 @injectIntl
 @track()
 export class PhotoControls extends Component {
@@ -61,6 +62,7 @@ export class PhotoControls extends Component {
     intl: intlShape.isRequired,
     showModalAction: PropTypes.func.isRequired,
     showNotification: PropTypes.func.isRequired,
+    setPhotoTimeStampAction: PropTypes.func.isRequired,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
@@ -95,6 +97,7 @@ export class PhotoControls extends Component {
           message: this.props.intl.formatMessage(messages.submitUpload),
           type: NOTIFICATION_TYPES.SUCCESS,
         });
+        this.props.setPhotoTimeStampAction(Date.now());
       })
       .catch(() => {
         this.props.showNotification({

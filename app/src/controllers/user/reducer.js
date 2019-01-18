@@ -4,6 +4,7 @@ import {
   SET_ACTIVE_PROJECT,
   SET_START_TIME_FORMAT,
   SETTINGS_INITIAL_STATE,
+  SET_PHOTO_TIME_STAMP,
   SET_USER_TOKEN,
 } from './constants';
 
@@ -11,6 +12,8 @@ export const settingsReducer = (state = SETTINGS_INITIAL_STATE, { type, payload 
   switch (type) {
     case SET_START_TIME_FORMAT:
       return { ...state, startTimeFormat: payload };
+    case SET_PHOTO_TIME_STAMP:
+      return { ...state, photoTimeStamp: payload };
     default:
       return state;
   }
