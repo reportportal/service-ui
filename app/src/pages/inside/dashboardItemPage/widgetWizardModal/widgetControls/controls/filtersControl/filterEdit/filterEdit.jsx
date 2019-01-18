@@ -26,7 +26,6 @@ export class FilterEdit extends Component {
 
   render() {
     const { filter, onCancel, onChange } = this.props;
-    console.log(filter);
 
     const customBlock = (
       <div className={cx('filter-edit-header')}>
