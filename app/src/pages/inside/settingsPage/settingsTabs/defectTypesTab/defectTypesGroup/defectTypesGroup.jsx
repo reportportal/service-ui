@@ -13,10 +13,10 @@ import { showModalAction, hideModalAction } from 'controllers/modal/index';
 import { deleteDefectTypeAction } from 'controllers/settings/index';
 import PlusIcon from 'common/img/plus-button-inline.svg';
 import { MAX_SUB_TYPES } from 'common/constants/settingsTabs';
+import { Icon } from 'components/main/icon/index';
 import C3Chart from 'react-c3js';
 import 'c3/c3.css';
 import { Messages } from './defectTypesGroupMessages';
-import { Icon } from '../../../../../../components/main/icon/index';
 import { DefectTypeInput } from './defectTypeInput';
 import { defectTypeDonutChartConfiguration } from './defectTypeChartConfig';
 
@@ -179,7 +179,7 @@ export class DefectTypesGroup extends Component {
   createDefectTypeRequest = (data, setState) => {
     const newData = data;
     newData.color = this.state.newColor;
-    fetch(URLS.defectTypesCreate(this.props.projectId), { method: 'post', newData })
+    fetch(URLS.defectTypesCreate(this.props.projectId), { method: 'post', data: newData })
       .then((response) => {
         setState({ locator: response.locator, id: response.id, ...newData });
         this.showSuccessNotification(Messages.createSuccessNotification);
@@ -190,7 +190,7 @@ export class DefectTypesGroup extends Component {
   changeDefectTypeRequest = (data, setState) => {
     const newData = data;
     newData.ids[0].color = this.state.newColor;
-    fetch(URLS.defectTypesCreate(this.props.projectId), { method: 'put', newData })
+    fetch(URLS.defectTypesCreate(this.props.projectId), { method: 'put', data: newData })
       .then((response) => {
         setState({ id: response.id, ...newData });
         this.showSuccessNotification(Messages.updateSuccessNotification);
@@ -325,7 +325,10 @@ export class DefectTypesGroup extends Component {
           <this.AddDefectTypeButton
             cx={cx}
             setEditMode={this.setNewEditMode}
-            disabled={this.state.defectTypes.length > this.MAX_DEFECT_SUBTYPES_SIZE}
+            disabled={
+              this.state.isNewInEdit ||
+              this.state.defectTypes.length > this.MAX_DEFECT_SUBTYPES_SIZE
+            }
             btnText={formatMessage(Messages.addBtn)}
             defectTypesLeftText={
               this.state.defectTypes.length < MAX_SUB_TYPES

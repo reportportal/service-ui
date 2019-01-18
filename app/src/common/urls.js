@@ -163,6 +163,6 @@ export const URLS = {
   statisticsServerSettings: () => `${urlBase}settings/analytics`,
   events: (projectId) => `${urlBase}${projectId}/activity`,
   defectTypesDelete: (projectId, subTypetId) =>
-    `${urlBase}/${projectId}/settings/sub-type/${subTypetId}`,
-  defectTypesCreate: (projectId) => `${urlBase}/${projectId}/settings/sub-type`,
+    `${urlBase}${projectId}/settings/sub-type/${subTypetId}`,
+  defectTypesCreate: (projectId) => `${urlBase}${projectId}/settings/sub-type`,
 };

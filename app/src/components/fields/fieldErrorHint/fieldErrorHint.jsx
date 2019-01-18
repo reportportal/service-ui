@@ -126,6 +126,14 @@ const messages = defineMessages({
     id: 'EmailServerTab.portFieldHint',
     defaultMessage: "Only numbers from '1' to '65535' are possible.",
   },
+  defectTypesLongNameHint: {
+    id: 'defectTypesGroup.defectTypesLongNameHint',
+    defaultMessage: "Full name should have size from '3' to '55'",
+  },
+  defectTypesShortNameHint: {
+    id: 'defectTypesGroup.defectTypesShortNameHint',
+    defaultMessage: "Short name should have size from '1' to '4'",
+  },
 });
 
 @injectIntl

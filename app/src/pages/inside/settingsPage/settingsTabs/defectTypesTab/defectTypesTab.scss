@@ -235,15 +235,6 @@ $table-column-padding: 11px;
   }
 }
 
-.cp-helper {
-   width: 240px;
-   height: 264px;
-   border: 1px solid $COLOR--gray-80;
-   box-shadow: 0 6px 12px rgba(0,0,0,.175);
-   background: url(./color_picker.png) no-repeat;
-   background-size: calc(479px/2);
-}
-
 .color-preview-input{
   display: flex;
   height: 30px;

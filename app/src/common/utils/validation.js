@@ -24,3 +24,6 @@ export const notificationTagSearch = (value) => value.length >= 3 && value.lengt
 export const url = (urlValue) => !!/^(ftp|http|https):\/\/[^ "]+$/.exec(urlValue);
 export const issueId = (value) => value.length >= 1 && value.length <= 128;
 export const urlPart = (value) => !!/:\/\/.+/.exec(value);
+
+export const defectLongName = (value) => value.length >= 3 && value.length <= 55;
+export const defectShortName = (value) => value.length >= 1 && value.length <= 4;

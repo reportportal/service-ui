@@ -3,17 +3,35 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { injectIntl, intlShape } from 'react-intl';
 import { reduxForm } from 'redux-form';
+import { validate } from 'common/utils';
 import { FieldProvider } from 'components/fields/fieldProvider';
+import { FieldErrorHint } from 'components/fields/fieldErrorHint';
+import {
+  MIN_LONG_NAME_LENGTH,
+  MAX_LONG_NAME_LENGTH,
+  MIN_SHORT_NAME_LENGTH,
+  MAX_SHORT_NAME_LENGTH,
+} from 'common/constants/settingsTabs';
 import { Input } from 'components/inputs/input/index';
 import { InputColorPicker } from 'components/inputs/inputColorPicker/index';
 import 'c3/c3.css';
-import { Icon } from '../../../../../../../components/main/icon/index';
+import { Icon } from 'components/main/icon/index';
 
 @connect(() => ({
   colorChoicerToggle: false,
+  longName: '',
+  shortName: '',
 }))
 @reduxForm({
   form: 'defectTypesInput',
+  validate: ({ longName, shortName }) => ({
+    longName:
+      (!longName && 'requiredFieldHint') ||
+      (!validate.defectLongName(longName) && 'defectTypesLongNameHint'),
+    shortName:
+      (!shortName && 'requiredFieldHint') ||
+      (!validate.defectShortName(shortName) && 'defectTypesShortNameHint'),
+  }),
 })
 @injectIntl
 export class DefectTypeInput extends Component {
@@ -40,11 +58,14 @@ export class DefectTypeInput extends Component {
     color: '#f00',
     newColor: '#',
     colorChange: () => {},
+    longName: '',
   };
 
   componentWillMount() {
     this.setState({
       colorChoicerToggle: false,
+      longName: '',
+      shortName: '',
     });
   }
 
@@ -59,14 +80,32 @@ export class DefectTypeInput extends Component {
   }
 
   onSubmitHandler = (eventData) => {
-    this.props.handleSubmit(this.props.onFormSubmit)(eventData);
-    this.props.onDestroy();
+    if (
+      this.state.longName.length >= MIN_LONG_NAME_LENGTH &&
+      this.state.longName.length <= MAX_LONG_NAME_LENGTH &&
+      this.state.shortName.length >= MIN_SHORT_NAME_LENGTH &&
+      this.state.shortName.length <= MAX_SHORT_NAME_LENGTH
+    ) {
+      this.props.handleSubmit(this.props.onFormSubmit)(eventData, this.props.onDestroy);
+      this.props.onDestroy();
+    }
   };
 
   showColorChoicer = () => {
     this.setState({
       colorChoicerToggle: !this.state.colorChoicerToggle,
     });
+  };
+
+  nameChange = (e, newName, b, type) => {
+    type === 'shortName' &&
+      this.setState({
+        shortName: newName,
+      });
+    type === 'longName' &&
+      this.setState({
+        longName: newName,
+      });
   };
 
   render() {
@@ -76,15 +115,31 @@ export class DefectTypeInput extends Component {
         <div className={cx('table_row', 'defect-types-input')}>
           <div className={cx('table_column', 'table_column--defect-name')}>
             <div className={cx('defect-types-input-name')}>
-              <FieldProvider name="longName">
-                <Input placeholder={this.props.longNamePlaceholder} />
+              <FieldProvider
+                name="longName"
+                type="text"
+                maxLength={`${MAX_LONG_NAME_LENGTH}`}
+                value={this.props.longName}
+                onChange={this.nameChange}
+              >
+                <FieldErrorHint>
+                  <Input placeholder={this.props.longNamePlaceholder} />
+                </FieldErrorHint>
               </FieldProvider>
             </div>
           </div>
           <div className={cx('table_column', 'table_column--shortName')}>
             <div className={cx('defect-types-input-shortName')}>
-              <FieldProvider name="shortName">
-                <Input placeholder={this.props.shortNamePlaceholder} />
+              <FieldProvider
+                name="shortName"
+                type="text"
+                maxLength={`${MAX_SHORT_NAME_LENGTH}`}
+                value={this.props.shortName}
+                onChange={this.nameChange}
+              >
+                <FieldErrorHint>
+                  <Input placeholder={this.props.shortNamePlaceholder} />
+                </FieldErrorHint>
               </FieldProvider>
             </div>
           </div>
