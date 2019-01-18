@@ -14,8 +14,8 @@ export const URLS = {
 
   dataPhoto: (userId, at) =>
     `${urlBase}data/photo${getQueryParams({ [userId]: null, at, access_token: getToken() })}`,
-  dataUserPhoto: (v, id) =>
-    `${urlBase}data/userphoto${getQueryParams({ v, id, access_token: getToken() })}`,
+  dataUserPhoto: (id) =>
+    `${urlBase}data/userphoto${getQueryParams({ id, access_token: getToken() })}`,
 
   dashboard: (activeProject, id) => `${urlBase}${activeProject}/dashboard/${id}`,
   dashboards: (activeProject) => `${urlBase}${activeProject}/dashboard`,

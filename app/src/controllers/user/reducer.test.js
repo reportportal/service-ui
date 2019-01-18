@@ -4,6 +4,7 @@ import {
   SET_START_TIME_FORMAT,
   SETTINGS_INITIAL_STATE,
   START_TIME_FORMAT_ABSOLUTE,
+  SET_PHOTO_TIME_STAMP,
 } from './constants';
 import { settingsReducer, userInfoReducer, activeProjectReducer } from './reducer';
 
@@ -25,7 +26,19 @@ describe('user reducer', () => {
         payload,
       });
       expect(newState).toEqual({
+        ...SETTINGS_INITIAL_STATE,
         startTimeFormat: payload,
+      });
+    });
+
+    test('should handle SET_PHOTO_TIME_STAMP', () => {
+      const newState = settingsReducer(SETTINGS_INITIAL_STATE, {
+        type: SET_PHOTO_TIME_STAMP,
+        payload: Date.now(),
+      });
+      expect(newState).toEqual({
+        ...SETTINGS_INITIAL_STATE,
+        photoTimeStamp: newState.photoTimeStamp,
       });
     });
   });

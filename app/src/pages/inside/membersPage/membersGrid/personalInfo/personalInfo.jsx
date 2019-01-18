@@ -10,7 +10,7 @@ import { userIdSelector } from 'controllers/user';
 import styles from './personalInfo.scss';
 
 const cx = classNames.bind(styles);
-const getPhotoURL = (userId) => URLS.dataUserPhoto(new Date().getTime(), userId);
+const getPhotoURL = (userId) => URLS.dataUserPhoto(userId);
 
 @connect((state) => ({
   currentUser: userIdSelector(state),

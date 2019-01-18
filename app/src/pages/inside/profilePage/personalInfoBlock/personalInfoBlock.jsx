@@ -18,7 +18,7 @@ import { PhotoControls } from './photoControls';
 import { UserInfo } from './userInfo/userInfo';
 
 const cx = classNames.bind(styles);
-const getPhoto = (userId) => URLS.dataUserPhoto(new Date().getTime(), userId);
+const getPhoto = (userId) => URLS.dataUserPhoto(userId);
 
 const messages = defineMessages({
   header: {
