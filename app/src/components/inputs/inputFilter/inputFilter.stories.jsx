@@ -41,8 +41,10 @@ const entities = [
   {
     id: ENTITY_NAME,
     component: EntityItemName,
-    value: '',
-    condition: CONDITION_CNT,
+    value: {
+      value: '',
+      condition: CONDITION_CNT,
+    },
     title: 'Name',
     active: true,
     removable: false,
@@ -51,8 +53,10 @@ const entities = [
   {
     id: ENTITY_DESCRIPTION,
     component: EntityItemDescription,
-    value: '',
-    condition: CONDITION_CNT,
+    value: {
+      value: '',
+      condition: CONDITION_CNT,
+    },
     title: 'Login',
     active: true,
     removable: false,
@@ -60,8 +64,10 @@ const entities = [
   {
     id: ENTITY_NUMBER,
     component: EntityLaunchNumber,
-    value: '',
-    condition: CONDITION_GREATER_EQ,
+    value: {
+      value: '',
+      condition: CONDITION_GREATER_EQ,
+    },
     title: 'Email',
     active: true,
     removable: false,

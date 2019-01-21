@@ -5,8 +5,8 @@ import classNames from 'classnames/bind';
 import AddFilterIcon from 'common/img/add-filter-inline.svg';
 import CrossIcon from 'common/img/cross-icon-inline.svg';
 import SearchIcon from 'common/img/search-icon-inline.svg';
-import { EntitiesGroup } from 'components/filterEntities/entitiesGroup/entitiesGroup';
-import { InputFilterToolbar } from './inputFilterToolbar/inputFilterToolbar';
+import { EntitiesGroup } from 'components/filterEntities/entitiesGroup';
+import { InputFilterToolbar } from './inputFilterToolbar';
 import styles from './inputFilter.scss';
 
 const cx = classNames.bind(styles);
