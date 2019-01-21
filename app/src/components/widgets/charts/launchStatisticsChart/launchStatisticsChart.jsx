@@ -128,7 +128,7 @@ export class LaunchStatisticsChart extends Component {
   };
 
   onChartClick = (data) => {
-    if (this.isTimeLine) {
+    if (this.configData.isTimeLine) {
       return; // TODO: do it when filters will be available on launches page
     }
     const { widget, getDefectLink, getStatisticsLink, defectTypes } = this.props;
@@ -314,7 +314,7 @@ export class LaunchStatisticsChart extends Component {
     const chartDataOrdered = [];
     const colors = {};
 
-    Object.keys(data[0].values).forEach((key) => {
+    contentFields.forEach((key) => {
       const keyConfig = getItemNameConfig(key);
       chartData[key] = [key];
       colors[key] = getItemColor(keyConfig, defectTypes);
@@ -363,7 +363,7 @@ export class LaunchStatisticsChart extends Component {
       Object.keys(content).forEach((item) => {
         data.push({
           date: item,
-          values: content[item][0].values,
+          values: content[item].values,
         });
       });
     } else {
@@ -440,6 +440,7 @@ export class LaunchStatisticsChart extends Component {
           className={cx('launch-statistics-chart', {
             'area-view': this.configData.widgetViewMode === MODES_VALUES[CHART_MODES.AREA_VIEW],
             'full-screen': this.props.isFullscreen,
+            'time-line': this.configData.isTimeLine,
             preview: this.props.isPreview,
           })}
           config={this.config}
