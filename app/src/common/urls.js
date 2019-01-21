@@ -51,8 +51,8 @@ export const URLS = {
   launch: (activeProject, id) => `${urlBase}${activeProject}/launch/${id}`,
   launchAttributeKeysSearch: (activeProject) =>
     `${urlBase}${activeProject}/launch/attribute/keys?filter.cnt.attributeKey=`,
-  launchAttributeValuesSearch: (activeProject) =>
-    `${urlBase}${activeProject}/launch/attribute/values?filter.cnt.attributeValue=`,
+  launchAttributeValuesSearch: (activeProject, key = '') =>
+    `${urlBase}${activeProject}/launch/attribute/values?filter.eq.attributeKey=${key}&filter.cnt.attributeValue=`,
   launchTagsSearch: (activeProject) => `${urlBase}${activeProject}/launch/tags?filter.cnt.tags=`,
   launchNameSearch: (activeProject) => `${urlBase}${activeProject}/launch/names?filter.cnt.name=`,
   launchOwnersSearch: (activeProject) =>

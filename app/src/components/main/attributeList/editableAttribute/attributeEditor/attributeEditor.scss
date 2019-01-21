@@ -1,0 +1,44 @@
+.attribute-editor {
+  display: flex;
+  align-items: center;
+  padding-bottom: 10px;
+
+  .input {
+    width: 130px;
+    cursor: text;
+
+    :global {
+      .Select {
+        .Select-control {
+          border-top: none;
+          border-left: none;
+          border-right: none;
+          box-shadow: none;
+        }
+
+        .Select-value {
+          background-color: inherit;
+          background-image: none;
+          border: none;
+          box-shadow: none;
+        }
+      }
+
+      .Select.is-focused {
+        .Select-control {
+          box-shadow: none;
+        }
+      }
+    }
+  }
+}
+
+.control {
+  padding-right: 10px;
+}
+
+.icon {
+  height: 20px;
+  width: 20px;
+  cursor: pointer;
+}

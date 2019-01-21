@@ -1,4 +1,4 @@
-import { cloneElement, PureComponent } from 'react';
+import { cloneElement, Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { injectIntl, intlShape, defineMessages } from 'react-intl';
@@ -129,34 +129,42 @@ const messages = defineMessages({
 });
 
 @injectIntl
-export class FieldErrorHint extends PureComponent {
+export class FieldErrorHint extends Component {
   static propTypes = {
     hintType: PropTypes.string,
     children: PropTypes.node,
     intl: intlShape,
     error: PropTypes.string,
     active: PropTypes.bool,
+    staticHint: PropTypes.bool,
   };
+
   static defaultProps = {
     intl: {},
     hintType: 'bottom',
     children: null,
     error: '',
     active: false,
+    staticHint: false,
   };
+
+  isHintVisible = () => {
+    const { error, active, staticHint } = this.props;
+    if (staticHint) {
+      return !!error;
+    }
+    return !!error && active;
+  };
+
   render() {
-    const { hintType, children, intl, error, active, ...rest } = this.props;
-    const classes = cx('field-error-hint', {
-      show: error && active,
-      'bottom-type': hintType === 'bottom',
-      'top-type': hintType === 'top',
-    });
+    const { hintType, children, intl, error, active, staticHint, ...rest } = this.props;
+    const classes = cx('field-error-hint', `type-${hintType}`);
 
     return (
       <div className={classes}>
         {children && cloneElement(children, { error, active, ...rest })}
-        <div className={cx('hint')}>
-          <div className={cx('hint-content')}>
+        <div className={cx('hint', { 'static-hint': staticHint, visible: this.isHintVisible() })}>
+          <div className={cx('hint-content', `type-${hintType}`, { 'static-hint': staticHint })}>
             {error && messages[error] ? intl.formatMessage(messages[error]) : error}
           </div>
         </div>
