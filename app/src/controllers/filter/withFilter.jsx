@@ -21,7 +21,7 @@ export const withFilter = ({ filterKey = FILTER_KEY, namespace } = {}) => (Wrapp
       filter: query[filterKey],
     }),
     {
-      updateFilter: (filter) => ({ [filterKey]: filter }),
+      updateFilter: (filter) => ({ [filterKey]: filter, 'page.page': '1' }),
     },
     { namespace },
   )(
@@ -38,8 +38,15 @@ export const withFilter = ({ filterKey = FILTER_KEY, namespace } = {}) => (Wrapp
         updateFilter: () => {},
       };
 
+      state = {
+        prevValue: '',
+      };
+
       handleFilterChange = debounce((value) => {
-        this.props.updateFilter(value || undefined);
+        if (this.state.prevValue !== String(value)) {
+          this.setState({ prevValue: String(value) });
+          this.props.updateFilter(value || undefined);
+        }
       }, 300);
 
       render() {
