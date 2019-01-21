@@ -20,7 +20,7 @@
   width: 27.5%;
 }
 
-@media screen and (max-width: 425px) {
+@media screen and (max-width: $SCREEN_XS_MAX_DASHBOARD) {
   .breadcrumb:nth-child(even) {
     width: 18.5%;
   }

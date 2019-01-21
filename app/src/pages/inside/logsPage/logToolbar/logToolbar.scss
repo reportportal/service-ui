@@ -24,7 +24,7 @@
     padding-left: 53px;
   }
 }
-@media (max-width: 510px) {
+@media (max-width: $SCREEN_XS_MAX_DASHBOARD) {
   .log-toolbar {
     flex-direction: column;
     align-items: flex-start;
