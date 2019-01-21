@@ -109,6 +109,22 @@
   }
 }
 
+.time-line {
+  :global {
+    svg {
+      .c3-chart {
+        .c3-chart-line {
+         .c3-shapes {
+           .c3-shape.c3-circle {
+             opacity: 1 !important;
+           }
+         }
+        }
+      }
+    }
+  }
+}
+
 .full-screen {
   svg {
     .c3-grid {
