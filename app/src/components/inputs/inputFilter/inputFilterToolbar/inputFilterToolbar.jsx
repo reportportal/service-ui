@@ -23,7 +23,7 @@ export class InputFilterToolbar extends PureComponent {
     const { onApply, onClear, onCancel } = this.props;
 
     return (
-      <div className={cx('toolbar')}>
+      <div className={cx('input-filter-toolbar')}>
         <div className={cx('button-container', 'left')}>
           <BigButton color="white-two" onClick={onClear}>
             <span className={cx('button', 'clear-all-filters')}>
