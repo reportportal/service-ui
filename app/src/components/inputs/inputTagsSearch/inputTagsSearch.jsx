@@ -52,11 +52,12 @@ export class InputTagsSearch extends Component {
     isClearable: PropTypes.bool,
     disabled: PropTypes.bool,
     mobileDisabled: PropTypes.bool,
+    customClass: PropTypes.string,
   };
   static defaultProps = {
     uri: '',
     options: [],
-    value: {},
+    value: null,
     placeholder: '',
     focusPlaceholder: '',
     loadingPlaceholder: '',
@@ -78,6 +79,7 @@ export class InputTagsSearch extends Component {
     isClearable: false,
     disabled: false,
     mobileDisabled: false,
+    customClass: null,
   };
   state = {
     searchPromptText: this.props.nothingFound,
@@ -151,11 +153,16 @@ export class InputTagsSearch extends Component {
       isValidNewOption,
       onBlur,
       mobileDisabled,
+      customClass,
     } = this.props;
     const SelectComponent = selectType(async, creatable);
     return (
       <div
-        className={cx('select-container', { error, touched, 'mobile-disabled': mobileDisabled })}
+        className={cx(
+          'select-container',
+          { error, touched, 'mobile-disabled': mobileDisabled },
+          customClass,
+        )}
       >
         <SelectComponent
           loadOptions={this.getItems}

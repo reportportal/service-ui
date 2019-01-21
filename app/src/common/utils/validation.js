@@ -20,7 +20,6 @@ export const launchNumericEntity = (value) =>
 export const launchDescriptionEntity = (value) => value.length >= 3 && value.length <= 18;
 export const inRangeValidate = (value, min, max) => Number(value) >= min && Number(value) <= max;
 export const attributeKey = (value) => value.length >= 1 && value.length <= 128;
-export const notificationTagSearch = (value) => value.length >= 3 && value.length <= 256;
 export const url = (urlValue) => !!/^(ftp|http|https):\/\/[^ "]+$/.exec(urlValue);
 export const issueId = (value) => value.length >= 1 && value.length <= 128;
 export const urlPart = (value) => !!/:\/\/.+/.exec(value);

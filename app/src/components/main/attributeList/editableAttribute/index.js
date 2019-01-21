@@ -1,0 +1,1 @@
+export { EditableAttribute } from './editableAttribute';
