@@ -1,5 +1,6 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
+import isEqual from 'fast-deep-equal';
 import { connect } from 'react-redux';
 import {
   launchFiltersSelector,
@@ -7,6 +8,7 @@ import {
   updateFilterConditionsAction,
   activeFilterSelector,
   removeLaunchesFilterAction,
+  createFilterAction,
 } from 'controllers/filter';
 import { filterIdSelector } from 'controllers/pages';
 import { fetchLaunchesWithParamsAction, fetchLaunchesAction } from 'controllers/launch';
@@ -14,6 +16,9 @@ import { debounce } from 'common/utils';
 import { hideFilterOnLaunchesAction } from 'controllers/project';
 
 const isEmptyValue = (value) => value === '' || value === null || value === undefined;
+
+const addFilteringFieldToConditions = (conditions = {}) =>
+  Object.keys(conditions).map((key) => ({ ...conditions[key], filteringField: key }));
 
 @connect(
   (state) => ({
@@ -28,6 +33,7 @@ const isEmptyValue = (value) => value === '' || value === null || value === unde
     fetchLaunchesAction,
     hideFilterOnLaunchesAction,
     removeLaunchesFilterAction,
+    createFilter: createFilterAction,
   },
 )
 export class LaunchFiltersContainer extends Component {
@@ -42,6 +48,7 @@ export class LaunchFiltersContainer extends Component {
     fetchLaunchesAction: PropTypes.func,
     hideFilterOnLaunchesAction: PropTypes.func,
     removeLaunchesFilterAction: PropTypes.func,
+    createFilter: PropTypes.func,
   };
 
   static defaultProps = {
@@ -54,6 +61,7 @@ export class LaunchFiltersContainer extends Component {
     fetchLaunchesAction: () => {},
     hideFilterOnLaunchesAction: () => {},
     removeLaunchesFilterAction: () => {},
+    createFilter: () => {},
   };
 
   getConditions = () => {
@@ -81,11 +89,20 @@ export class LaunchFiltersContainer extends Component {
       }, {});
 
   handleFilterChange = (conditions) => {
-    this.fetchLaunches(this.createFilterQuery(conditions));
-    this.updateFilter(
-      this.props.activeFilterId,
-      Object.keys(conditions).map((key) => ({ ...conditions[key], filteringField: key })),
-    );
+    const newFilter = this.createFilterQuery(conditions);
+    const currentFilter = this.createFilterQuery(this.getConditions());
+
+    if (!isEqual(currentFilter, newFilter)) {
+      this.fetchLaunches(newFilter);
+    }
+
+    if (this.props.activeFilter) {
+      this.updateFilter(this.props.activeFilterId, addFilteringFieldToConditions(conditions));
+    } else {
+      this.props.createFilter({
+        conditions: addFilteringFieldToConditions(conditions),
+      });
+    }
   };
 
   handleFilterRemove = (filter) => {
@@ -99,10 +116,8 @@ export class LaunchFiltersContainer extends Component {
     this.props.changeActiveFilterAction(filterId);
   };
 
-  updateFilter = debounce(
-    (filterId, conditions) => this.props.updateFilterConditionsAction(filterId, conditions),
-    1000,
-  );
+  updateFilter = (filterId, conditions) =>
+    this.props.updateFilterConditionsAction(filterId, conditions);
 
   render() {
     const { render, launchFilters, activeFilterId, activeFilter } = this.props;

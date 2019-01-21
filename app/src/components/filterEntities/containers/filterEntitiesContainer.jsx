@@ -84,7 +84,8 @@ export class FilterEntitiesContainer extends Component {
       (prevState) => ({
         values: { ...prevState.values, [entity.id]: entity.value },
       }),
-      () => entity.value.value && this.props.onChange(this.collectEntities(this.state.values)),
+      () =>
+        entity.value.value !== null && this.props.onChange(this.collectEntities(this.state.values)),
     );
 
   handleRemove = (entityId) => {
