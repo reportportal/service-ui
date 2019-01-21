@@ -36,12 +36,15 @@ function* fetchLaunchesWithParams({ payload }) {
   );
 }
 
+const notEmptyConditionsPredicate = ({ value }) =>
+  value !== '' && value !== null && value !== undefined;
+
 function* fetchLaunches() {
   const filterId = yield select(filterIdSelector);
   const filters = yield select(launchFiltersSelector);
   const activeFilter = filters.find((filter) => filter.id === filterId);
   const filtersQuery = activeFilter
-    ? activeFilter.conditions.reduce(
+    ? activeFilter.conditions.filter(notEmptyConditionsPredicate).reduce(
         (res, condition) => ({
           ...res,
           [`filter.${condition.condition}.${condition.filteringField}`]: condition.value,

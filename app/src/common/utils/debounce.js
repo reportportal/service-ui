@@ -4,5 +4,6 @@ export const debounce = (fn, time) => {
     const functionCall = () => fn.apply(this, args);
     clearTimeout(timeout);
     timeout = setTimeout(functionCall, time);
+    return () => clearTimeout(timeout);
   };
 };
