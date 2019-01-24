@@ -1,4 +1,5 @@
 import { validate } from 'common/utils';
+import { LDAP_ATTRIBUTES_KEY, ENABLED_KEY } from './constants';
 
 export const validateLdapAttributes = (ldapAttributes) => ({
   url:
@@ -13,3 +14,17 @@ export const validateLdapAttributes = (ldapAttributes) => ({
       'requiredFieldHint',
   },
 });
+
+export const prepareDataBeforeInitialize = (data) => {
+  const enabled = (data[LDAP_ATTRIBUTES_KEY] || {})[ENABLED_KEY];
+  let preparedData = {
+    [ENABLED_KEY]: enabled,
+  };
+  if (enabled) {
+    preparedData = {
+      ...preparedData,
+      ...data,
+    };
+  }
+  return preparedData;
+};

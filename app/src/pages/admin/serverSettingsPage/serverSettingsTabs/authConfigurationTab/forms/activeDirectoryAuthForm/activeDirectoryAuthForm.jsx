@@ -6,7 +6,10 @@ import { URLS } from 'common/urls';
 import { connect } from 'react-redux';
 import { reduxForm, formValueSelector } from 'redux-form';
 import { FormController } from 'pages/admin/serverSettingsPage/common/formController';
-import { validateLdapAttributes } from 'pages/admin/serverSettingsPage/common/validate';
+import {
+  validateLdapAttributes,
+  prepareDataBeforeInitialize,
+} from 'pages/admin/serverSettingsPage/common/utils';
 import {
   messages,
   ENABLED_KEY,
@@ -65,11 +68,6 @@ export class ActiveDirectoryAuthForm extends Component {
     },
   });
 
-  prepareDataBeforeInitialize = (data) => ({
-    ...data,
-    [ENABLED_KEY]: (data[LDAP_ATTRIBUTES_KEY] || {})[ENABLED_KEY],
-  });
-
   render() {
     const {
       intl: { formatMessage },
@@ -93,7 +91,7 @@ export class ActiveDirectoryAuthForm extends Component {
         <FormController
           enabled={enabled}
           prepareDataBeforeSubmit={this.prepareDataBeforeSubmit}
-          prepareDataBeforeInitialize={this.prepareDataBeforeInitialize}
+          prepareDataBeforeInitialize={prepareDataBeforeInitialize}
           successMessage={messages.updateAuthSuccess}
           initialize={initialize}
           formOptions={formOptions}
