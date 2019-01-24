@@ -3,7 +3,11 @@ import { getStorageItem } from 'common/utils';
 import { fetchParentItems, fetchTestItemsAction } from 'controllers/testItem';
 import { URLS } from 'common/urls';
 import { activeProjectSelector } from 'controllers/user';
-import { logItemIdSelector, pagePropertiesSelector } from 'controllers/pages';
+import {
+  logItemIdSelector,
+  pagePropertiesSelector,
+  pathnameChangedSelector,
+} from 'controllers/pages';
 import { fetchDataAction } from 'controllers/fetch';
 import {
   ACTIVITY_NAMESPACE,
@@ -16,7 +20,7 @@ import {
   LOG_LEVEL_STORAGE_KEY,
   NAMESPACE,
 } from './constants';
-import { activeLogIdSelector, querySelector } from './selectors';
+import { activeLogIdSelector, prevActiveLogIdSelector, querySelector } from './selectors';
 
 function* fetchActivity() {
   const activeProject = yield select(activeProjectSelector);
@@ -54,17 +58,36 @@ function* fetchHistoryEntries() {
   );
 }
 
+function* fetchWholePage() {
+  yield put(fetchTestItemsAction({ offset: 1 }));
+  yield all([
+    call(fetchParentItems),
+    call(fetchLogItems),
+    call(fetchActivity),
+    call(fetchHistoryEntries),
+  ]);
+}
+
+function* fetchHistoryItemData() {
+  const activeLogId = yield select(activeLogIdSelector);
+  const prevActiveLogId = yield select(prevActiveLogIdSelector);
+  if (activeLogId !== prevActiveLogId) {
+    yield all([call(fetchLogItems), call(fetchActivity)]);
+  } else {
+    yield call(fetchLogItems);
+  }
+}
+
 function* fetchLogPageData({ meta = {} }) {
+  const isPathNameChanged = yield select(pathnameChangedSelector);
   if (meta.refresh) {
     yield all([call(fetchLogItems), call(fetchActivity), call(fetchHistoryEntries)]);
+    return;
+  }
+  if (isPathNameChanged) {
+    yield call(fetchWholePage);
   } else {
-    yield put(fetchTestItemsAction({ offset: 1 }));
-    yield all([
-      call(fetchParentItems),
-      call(fetchLogItems),
-      call(fetchActivity),
-      call(fetchHistoryEntries),
-    ]);
+    yield call(fetchHistoryItemData);
   }
 }
 

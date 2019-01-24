@@ -7,6 +7,7 @@ import {
   PROJECT_USERDEBUG_LOG_PAGE,
   testItemIdsArraySelector,
   payloadSelector,
+  prevPagePropertiesSelector,
 } from 'controllers/pages';
 import { DEFAULT_PAGINATION } from 'controllers/pagination';
 import { itemsSelector } from 'controllers/testItem';
@@ -70,14 +71,14 @@ export const historyItemsSelector = createSelector(
   },
 );
 
-export const activeLogIdSelector = createSelector(
-  logItemIdSelector,
-  pagePropertiesSelector,
-  (logItemId, query) => {
+const createActiveLogItemIdSelector = (pageQuerySelector) =>
+  createSelector(logItemIdSelector, pageQuerySelector, (logItemId, query) => {
     const namespacedQuery = extractNamespacedQuery(query, NAMESPACE);
     return Number(namespacedQuery.history) || logItemId;
-  },
-);
+  });
+
+export const activeLogIdSelector = createActiveLogItemIdSelector(pagePropertiesSelector);
+export const prevActiveLogIdSelector = createActiveLogItemIdSelector(prevPagePropertiesSelector);
 
 export const activeLogSelector = createSelector(
   historyItemsSelector,
