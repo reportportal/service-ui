@@ -6,7 +6,10 @@ import { URLS } from 'common/urls';
 import { connect } from 'react-redux';
 import { reduxForm, formValueSelector } from 'redux-form';
 import { BetaBadge } from 'pages/inside/common/betaBadge';
-import { validateLdapAttributes } from 'pages/admin/serverSettingsPage/common/validate';
+import {
+  validateLdapAttributes,
+  prepareDataBeforeInitialize,
+} from 'pages/admin/serverSettingsPage/common/utils';
 import { FormController } from 'pages/admin/serverSettingsPage/common/formController';
 import {
   messages,
@@ -79,11 +82,6 @@ export class LdapAuthForm extends Component {
     return preparedData;
   };
 
-  prepareDataBeforeInitialize = (data) => ({
-    ...data,
-    [ENABLED_KEY]: (data[LDAP_ATTRIBUTES_KEY] || {})[ENABLED_KEY],
-  });
-
   render() {
     const { enabled, initialize, handleSubmit } = this.props;
 
@@ -102,7 +100,7 @@ export class LdapAuthForm extends Component {
         <FormController
           enabled={enabled}
           prepareDataBeforeSubmit={this.prepareDataBeforeSubmit}
-          prepareDataBeforeInitialize={this.prepareDataBeforeInitialize}
+          prepareDataBeforeInitialize={prepareDataBeforeInitialize}
           initialize={initialize}
           formOptions={formOptions}
           handleSubmit={handleSubmit}
