@@ -101,6 +101,7 @@ export class EntitiesGroup extends Component {
                 active={this.state.activeField === entity.id}
                 error={errors[entity.id]}
                 vertical={vertical}
+                customProps={entity.customProps}
               />
             </div>
           );
