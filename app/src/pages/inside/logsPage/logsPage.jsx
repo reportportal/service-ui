@@ -52,7 +52,7 @@ import { LogsGridToolbar } from './logsGridToolbar';
   }),
   {
     onChangeLogLevel: (logLevel) => ({ 'filter.gte.level': logLevel.id }),
-    onChangeWithAttachments: (withAttachments) => ({ 'filter.ex.binary_content': withAttachments }),
+    onChangeWithAttachments: (withAttachments) => ({ 'filter.ex.binaryContent': withAttachments }),
   },
   { namespace: NAMESPACE },
 )

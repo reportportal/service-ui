@@ -3,7 +3,6 @@ import { action } from '@storybook/addon-actions';
 import { host } from 'storybook-host';
 import { withReadme } from 'storybook-readme';
 import { getIcon } from 'controllers/attachments/utils';
-
 import { Attachments } from './attachments';
 import README from './README.md';
 
@@ -32,8 +31,7 @@ const MOCK_DATA = ALL_FILETYPES.map((fileType, id) => ({
   alt: fileType,
   attachment: {
     id: String(id),
-    content_type: fileType,
-    thumbnail_id: String(id),
+    contentType: fileType,
   },
 }));
 const projectId = 'ProjectXYZ';
