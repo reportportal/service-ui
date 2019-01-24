@@ -1,68 +1,42 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
+import { injectIntl, intlShape } from 'react-intl';
 import { Carousel } from 'react-responsive-carousel';
 import 'react-responsive-carousel/lib/styles/carousel.css';
-import { URLS } from 'common/urls';
-
+import { connect } from 'react-redux';
+import { attachmentsSelector, openAttachmentAction } from 'controllers/attachments';
+import { NoItemMessage } from 'components/main/noItemMessage';
+import { messages } from './modals/messages';
 import styles from './attachments.scss';
 
 const cx = classNames.bind(styles);
-const supportedLanguages = ['xml', 'javascript', 'json', 'css', 'php', 'har'];
-const getModalId = (isImage, language) => {
-  if (isImage) {
-    return 'attachmentImageModal';
-  } else if (language === 'har') {
-    return 'attachmentHarFileModal';
-  }
-  return 'attachmentCodeModal';
-};
 
+@connect(
+  (state) => ({
+    attachments: attachmentsSelector(state),
+  }),
+  {
+    openAttachmentAction,
+  },
+)
+@injectIntl
 export class Attachments extends React.Component {
-  static defaultProps = {
-    openImageModal: () => {},
-    openHarModal: () => {},
-    openBinaryModal: () => {},
+  static propTypes = {
+    intl: intlShape.isRequired,
+    attachments: PropTypes.array.isRequired,
+    openAttachmentAction: PropTypes.func,
   };
 
-  static propTypes = {
-    attachments: PropTypes.array.isRequired,
-    projectId: PropTypes.string.isRequired,
-    openImageModal: PropTypes.func,
-    openHarModal: PropTypes.func,
-    openBinaryModal: PropTypes.func,
+  static defaultProps = {
+    openAttachmentAction: () => {},
   };
 
   state = {
     mainAreaVisible: false,
   };
 
-  onClickItem(itemIndex) {
-    const { attachments, projectId } = this.props;
-    const selectedItem = attachments[itemIndex];
-    const contentType = selectedItem.attachment.content_type;
-    const binaryId = selectedItem.id;
-    const language = contentType.split('/')[1];
-    const isImage = contentType.indexOf('image/') > -1;
-    const isValidForModal = supportedLanguages.indexOf(language) > -1 || isImage;
-    const modalId = getModalId(isImage, language);
-
-    if (isValidForModal) {
-      const data = { projectId, binaryId, language };
-      switch (modalId) {
-        case 'attachmentImageModal':
-          this.props.openImageModal(data);
-          break;
-        case 'attachmentHarFileModal':
-          this.props.openHarModal(data);
-          break;
-        default:
-          this.props.openBinaryModal(data);
-      }
-    } else {
-      window.open(URLS.getFileById(projectId, binaryId));
-    }
-  }
+  onClickItem = (itemIndex) => this.props.openAttachmentAction(this.props.attachments[itemIndex]);
 
   onClickThumb = () => {
     if (!this.state.mainAreaVisible) {
@@ -70,24 +44,36 @@ export class Attachments extends React.Component {
     }
   };
 
-  render = () => (
-    <div className={cx('attachments-wrap')}>
-      <div className={cx('log-attachments', { hideMainArea: !this.state.mainAreaVisible })}>
-        <Carousel
-          emulateTouch
-          showStatus={false}
-          showIndicators={false}
-          showArrows
-          onClickThumb={this.onClickThumb}
-          onClickItem={(itemIndex) => this.onClickItem(itemIndex)}
-        >
-          {this.props.attachments.map((attachment) => (
-            <div key={attachment.id} className={cx('preview-container')}>
-              <img src={attachment.src} alt={attachment.alt} />
+  isOneAttachmentItem = () => this.props.attachments.length === 1 && this.state.mainAreaVisible;
+
+  render() {
+    const { intl } = this.props;
+
+    return (
+      <div className={cx('attachments-wrap')}>
+        <div className={cx('log-attachments', { 'hide-main-area': !this.state.mainAreaVisible })}>
+          {this.props.attachments.length ? (
+            <div onClick={this.isOneAttachmentItem() ? () => this.onClickItem(0) : undefined}>
+              <Carousel
+                emulateTouch
+                showStatus={false}
+                showIndicators={false}
+                showArrows
+                onClickThumb={this.onClickThumb}
+                onClickItem={this.onClickItem}
+              >
+                {this.props.attachments.map((attachment) => (
+                  <div key={attachment.id} className={cx('preview-container')}>
+                    <img src={attachment.src} alt={attachment.alt} />
+                  </div>
+                ))}
+              </Carousel>
             </div>
-          ))}
-        </Carousel>
+          ) : (
+            <NoItemMessage message={intl.formatMessage(messages.noAttachmentsMessage)} />
+          )}
+        </div>
       </div>
-    </div>
-  );
+    );
+  }
 }

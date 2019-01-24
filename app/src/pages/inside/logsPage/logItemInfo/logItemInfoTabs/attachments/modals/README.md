@@ -2,7 +2,7 @@
 
 ## attachmentModal
 
-A basic attachment modal sceen
+A basic attachment modal screen
 
 ## attachmentCodeModal
 

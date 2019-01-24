@@ -137,8 +137,6 @@ export const URLS = {
       'filter.gte.level': level,
     })}`,
   logItemActivity: (activeProject, itemId) => `${urlBase}${activeProject}/activity/item/${itemId}`,
-  logAttachment: (activeProject, id) =>
-    `${urlBase}${activeProject}/data/${id}${getQueryParams({ access_token: getToken() })}`,
 
   user: () => `${urlBase}user`,
   userRegistration: () => `${urlBase}user/registration`,
@@ -153,8 +151,8 @@ export const URLS = {
   userUnasign: (activeProject) => `${urlBase}project/${activeProject}/unassign`,
 
   generateDemoData: (projectId) => `${urlBase}demo/${projectId}`,
-  getFileById: (activeProject, dataId) =>
-    `${urlBase}${activeProject}/data/${dataId}${getQueryParams({ access_token: getToken() })}`,
+  getFileById: (dataId) =>
+    `${urlBase}data/${dataId}${getQueryParams({ access_token: getToken() })}`,
 
   serverSettings: () => `${urlBase}settings`,
   emailServerSettings: () => `${urlBase}settings/email`,

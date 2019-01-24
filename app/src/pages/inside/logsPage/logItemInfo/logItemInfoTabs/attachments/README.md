@@ -27,8 +27,7 @@ format:
         "alt": "application/zip",
         "attachment": {
             "id": "5b83fa4497a1c00001150f20",
-            "thumbnail_id": "5b83fa4497a1c00001150f20",
-            "content_type": "application/zip"
+            "contentType": "application/zip"
         }
     },
     {
@@ -37,8 +36,7 @@ format:
         "alt": "application/zip",
         "attachment": {
             "id": "5b83fa4497a1c00001150f20",
-            "thumbnail_id": "5b83fa4497a1c00001150f20",
-            "content_type": "application/zip"
+            "contentType": "application/zip"
         }
     }
     ...

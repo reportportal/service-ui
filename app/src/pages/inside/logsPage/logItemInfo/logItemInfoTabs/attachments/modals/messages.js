@@ -17,4 +17,8 @@ export const messages = defineMessages({
     id: 'AttachmentDialog.rotate',
     defaultMessage: 'Rotate',
   },
+  noAttachmentsMessage: {
+    id: 'AttachmentDialog.noAttachmentsMessage',
+    defaultMessage: 'No attachments to display',
+  },
 });
