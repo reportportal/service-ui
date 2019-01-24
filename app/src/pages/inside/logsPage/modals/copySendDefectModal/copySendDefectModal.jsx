@@ -81,7 +81,7 @@ export class CopySendDefectModal extends Component {
           ...itemForCopy.issue,
           externalSystemIssues: itemForCopy.issue.externalSystemIssues || [],
         },
-        test_item_id: lastHistoryItem.id,
+        testItemId: lastHistoryItem.id,
       },
     ];
 
