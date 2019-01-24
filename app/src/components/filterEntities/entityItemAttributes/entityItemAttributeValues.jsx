@@ -9,9 +9,13 @@ const messages = defineMessages({
   },
 });
 
-export const EntityItemAttributeValues = injectIntl(({ intl, ...props }) => (
+const normalizeValue = (value) => (Array.isArray(value) ? value.join(',') : value);
+
+export const EntityItemAttributeValues = injectIntl(({ intl, customProps, ...props }) => (
   <EntityItemAttributes
-    urlResolver={URLS.launchAttributeValuesSearch}
+    urlResolver={(projectId) =>
+      URLS.launchAttributeValuesSearch(projectId, normalizeValue(customProps.value))
+    }
     placeholder={intl.formatMessage(messages.placeholder)}
     {...props}
   />
