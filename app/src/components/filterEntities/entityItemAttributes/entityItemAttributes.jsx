@@ -5,7 +5,7 @@ import { FormattedMessage } from 'react-intl';
 import { activeProjectSelector } from 'controllers/user';
 import { InputConditionalTags } from 'components/inputs/inputConditionalTags';
 import { FieldFilterEntity } from 'components/fields/fieldFilterEntity';
-import { CONDITION_HAS, CONDITION_NOT_HAS, CONDITION_IN, CONDITION_NOT_IN } from '../constants';
+import { CONDITION_HAS, CONDITION_NOT_HAS, CONDITION_ANY, CONDITION_NOT_ANY } from '../constants';
 
 const conditions = [
   {
@@ -14,17 +14,17 @@ const conditions = [
     shortLabel: <FormattedMessage id={'Conditions.allShort'} defaultMessage={'All'} />,
   },
   {
-    value: CONDITION_NOT_IN,
+    value: CONDITION_NOT_HAS,
     label: <FormattedMessage id={'Conditions.withoutAll'} defaultMessage={'Without all'} />,
     shortLabel: <FormattedMessage id={'Conditions.withoutAllShort'} defaultMessage={'!all'} />,
   },
   {
-    value: CONDITION_IN,
+    value: CONDITION_ANY,
     label: <FormattedMessage id={'Conditions.any'} defaultMessage={'Any'} />,
     shortLabel: <FormattedMessage id={'Conditions.anyShort'} defaultMessage={'Any'} />,
   },
   {
-    value: CONDITION_NOT_HAS,
+    value: CONDITION_NOT_ANY,
     label: <FormattedMessage id={'Conditions.withoutAny'} defaultMessage={'Without any'} />,
     shortLabel: <FormattedMessage id={'Conditions.withoutAnyShort'} defaultMessage={'!any'} />,
   },
