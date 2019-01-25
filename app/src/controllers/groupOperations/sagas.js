@@ -6,6 +6,7 @@ import {
   setLastOperationNameAction,
   selectItemsAction,
   removeValidationErrorsAction,
+  unselectItemsAction,
 } from './actionCreators';
 import {
   TOGGLE_ITEM_SELECTION,
@@ -75,16 +76,17 @@ function* proceedWithValidItems({ payload, meta }) {
   const { namespace } = meta;
   const state = yield select(getState);
   const validItems = selectedItems.filter((item) => !validator(item, selectedItems, state));
-  const launchesToValidate = validItems.length > 0 ? validItems : selectedItems;
-  const errors = validateItems(launchesToValidate, validator, state);
-  if (Object.keys(errors).length > 0) {
-    yield put(setValidationErrorsAction(namespace)(errors));
-    return;
+  const invalidItems = selectedItems.filter((item) => validator(item, selectedItems, state));
+
+  if (invalidItems.length > 0) {
+    yield put(unselectItemsAction(namespace)(invalidItems));
+    yield put(resetValidationErrorsAction(namespace)());
   }
-  yield put(selectItemsAction(namespace)(validItems));
-  yield put(action(validItems, additionalArgs));
-  yield put(setLastOperationNameAction(namespace)(''));
-  yield put(resetValidationErrorsAction(namespace)());
+  if (validItems.length > 0) {
+    yield put(selectItemsAction(namespace)(validItems));
+    yield put(action(validItems, additionalArgs));
+    yield put(setLastOperationNameAction(namespace)(''));
+  }
 }
 
 function* watchProceedWithValidItems() {
