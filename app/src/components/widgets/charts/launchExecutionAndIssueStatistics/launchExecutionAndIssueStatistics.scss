@@ -4,50 +4,6 @@
       display: none;
     }
   }
-
-  .data-js-launch-execution-chart-container,
-  .data-js-issue-statistics-chart-container {
-    position: relative;
-    width: 100%;
-  }
-
-  .launch-execution-chart {
-    background-color: $COLOR--light-yellow;
-  }
-
-  .issue-statistics-chart .legend {
-    top: -4px;
-    line-height: 1.5;
-  }
-
-  .preview-view {
-    & .launch-execution-chart,
-    & .issue-statistics-chart {
-      & .c3 {
-        bottom: 0;
-      }
-    }
-  }
-
-  .launch-execution-chart,
-  .issue-statistics-chart {
-    width: 49%;
-    float: left;
-    height: 390px;
-
-    & .legend {
-      position: relative;
-      padding-top: 20px;
-      overflow: hidden;
-      min-height: 40px;
-      text-align: right;
-      z-index: 999;
-    }
-    & .c3 {
-      bottom: 56px;
-    }
-  }
-
   .c3-legend-background {
     stroke: none !important;
     stroke-width: 0;
@@ -98,5 +54,50 @@
       border-right: 8px solid transparent;
       border-top: 8px solid $COLOR--gray-80;
     }
+  }
+}
+
+.launch-execution-chart {
+  background-color: $COLOR--light-yellow;
+}
+
+.issue-statistics-chart .legend {
+  top: -4px;
+  line-height: 1.5;
+}
+
+.preview-view {
+  & .launch-execution-chart,
+  & .issue-statistics-chart {
+    & .c3 {
+      bottom: 0;
+    }
+  }
+}
+
+.data-js-launch-execution-chart-container,
+.data-js-issue-statistics-chart-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.launch-execution-chart,
+.issue-statistics-chart {
+  width: 49%;
+  float: left;
+  height: 390px;
+
+  .legend-title {
+    position: relative;
+    padding-top: 20px;
+    overflow: hidden;
+    min-height: 40px;
+    text-align: right;
+    z-index: 999;
+  }
+
+  .c3 {
+    bottom: 82px;
   }
 }

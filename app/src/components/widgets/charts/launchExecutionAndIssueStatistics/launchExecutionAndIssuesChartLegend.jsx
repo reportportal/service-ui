@@ -1,18 +1,34 @@
 import React, { Component } from 'react';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
+import { redirect } from 'redux-first-router';
 import { injectIntl, intlShape } from 'react-intl';
-import * as COLORS from 'common/constants/colors';
-import styles from '../common/legend/legend.scss';
-import { messages } from './chartUtils';
+import { defectTypesSelector } from 'controllers/project';
+import { connect } from 'react-redux';
+import { activeProjectSelector } from 'controllers/user';
+import commonLegendStyles from '../common/legend/legend.scss';
+import chartStyles from './launchExecutionAndIssueStatistics.scss';
+import { getItemColor, getItemName, getItemNameConfig } from '../common/utils';
 
-const cx = classNames.bind(styles);
+const commonCx = classNames.bind(commonLegendStyles);
+const chartCx = classNames.bind(chartStyles);
 
 @injectIntl
+@connect(
+  (state) => ({
+    project: activeProjectSelector(state),
+    defectTypes: defectTypesSelector(state),
+  }),
+  {
+    redirect,
+  },
+)
 export class Legend extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
     items: PropTypes.array,
+    defectTypes: PropTypes.object.isRequired,
+    project: PropTypes.string.isRequired,
     onClick: PropTypes.func,
     onMouseOver: PropTypes.func,
     onMouseOut: PropTypes.func,
@@ -24,35 +40,59 @@ export class Legend extends Component {
     onMouseOver: () => {},
     onMouseOut: () => {},
   };
-  onClick = ({ currentTarget }) => {
-    currentTarget.classList.toggle(cx('unchecked'));
-    this.props.onClick(currentTarget.getAttribute('data-id'));
+
+  state = {
+    uncheckedIds: [],
   };
 
-  onMouseOver = ({ currentTarget }) => {
-    this.props.onMouseOver(currentTarget.getAttribute('data-id'));
+  calculateItemClassName = (id) =>
+    this.state.uncheckedIds.indexOf(id) !== -1 ? commonCx('unchecked') : null;
+
+  handleClick = (id) => {
+    this.toggleUnchecked(id);
+    this.props.onClick(id);
+  };
+
+  toggleUnchecked = (id) => {
+    const [...idList] = this.state.uncheckedIds;
+    if (idList.includes(id)) {
+      idList.splice(idList.indexOf(id), 1);
+    } else {
+      idList.push(id);
+    }
+
+    this.setState({
+      uncheckedIds: idList,
+    });
   };
 
   render() {
-    const { items, intl, onMouseOut } = this.props;
+    const {
+      intl: { formatMessage },
+      items,
+      onMouseOut,
+    } = this.props;
+    const legendContainerClass = `${commonCx('legend')} ${chartCx('legend-title')}`;
 
     return (
-      <div className="legend">
+      <div className={legendContainerClass}>
         {items.map((item) => (
           <span
             key={item.name}
             data-id={item.id}
-            className={cx('legend-item')}
-            onClick={this.onClick}
-            onMouseOver={this.onMouseOver}
+            className={`${commonCx('legend-item')} ${this.calculateItemClassName(item.id)}`}
+            onClick={() => this.handleClick(item.id)}
+            onMouseOver={() => this.props.onMouseOver(item.id)}
             onMouseOut={onMouseOut}
           >
             <span
-              className={cx('color-mark')}
-              style={{ backgroundColor: COLORS[`COLOR_${item.name.split('$')[2].toUpperCase()}`] }}
+              className={commonCx('color-mark')}
+              style={{
+                backgroundColor: getItemColor(getItemNameConfig(item.name), this.props.defectTypes),
+              }}
             />
-            <span className={cx('item-name')}>
-              {intl.formatMessage(messages[item.name.split('$total')[0]])}
+            <span className={commonCx('item-name')}>
+              {getItemName(getItemNameConfig(item.id), this.props.defectTypes, formatMessage)}
             </span>
           </span>
         ))}

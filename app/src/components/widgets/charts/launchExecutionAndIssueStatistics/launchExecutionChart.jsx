@@ -24,7 +24,6 @@ import PropTypes from 'prop-types';
 import { injectIntl, intlShape } from 'react-intl';
 import * as d3 from 'd3-selection';
 import classNames from 'classnames/bind';
-import * as COLORS from 'common/constants/colors';
 import ReactDOMServer from 'react-dom/server';
 import { TooltipWrapper } from '../common/tooltip';
 import { C3Chart } from '../common/c3chart';
@@ -32,10 +31,11 @@ import chartStyles from './launchExecutionAndIssueStatistics.scss';
 import tooltipStyles from './launchExecutionAndIssueStatisticsTooltip.scss';
 import { Legend } from './launchExecutionAndIssuesChartLegend';
 import { LaunchExecutionAndIssueStatisticsTooltip } from './launchExecutionAndIssueStatisticsTooltip';
-import { getPercentage, getDefectItems, messages } from './chartUtils';
+import { getPercentage, getDefectItems, getChartData } from './chartUtils';
+import { messages } from './messages';
 
-const chartContext = classNames.bind(chartStyles);
-const tooltipContext = classNames.bind(tooltipStyles);
+const chartCx = classNames.bind(chartStyles);
+const tooltipCx = classNames.bind(tooltipStyles);
 
 @injectIntl
 export class LaunchExecutionChart extends Component {
@@ -56,6 +56,7 @@ export class LaunchExecutionChart extends Component {
   };
 
   componentDidMount() {
+    console.log(messages);
     this.props.observer.subscribe('widgetResized', this.resizeStatusChart);
     this.getConfig();
   }
@@ -97,23 +98,17 @@ export class LaunchExecutionChart extends Component {
   };
 
   getConfig = () => {
+    const EXECUTIONS = '$executions$';
     const { widget, container } = this.props;
-    const statusChartData = {};
-    const statusChartDataOrdered = [];
-    const statusChartColors = {};
     const values = widget.content.result[0].values;
+    const statusDataItems = getChartData(values, EXECUTIONS);
+    const statusChartData = statusDataItems.itemTypes;
+    const statusChartColors = statusDataItems.itemColors;
+    const statusChartDataOrdered = [];
 
     this.height = container.offsetHeight;
     this.width = container.offsetWidth;
     this.noAvailableData = false;
-
-    Object.keys(values).forEach((key) => {
-      if (key.indexOf('$executions$') > -1) {
-        const testStatus = key.split('$')[2].toUpperCase();
-        statusChartData[key] = +values[key];
-        statusChartColors[key] = COLORS[`COLOR_${testStatus}`];
-      }
-    });
 
     statusChartData.statistics$executions$passed &&
       statusChartDataOrdered.push([
@@ -139,7 +134,6 @@ export class LaunchExecutionChart extends Component {
       return;
     }
 
-    this.leftChartHidden = !statusChartDataOrdered.length;
     this.statusItems = getDefectItems(statusChartDataOrdered);
     this.statusConfig = {
       data: {
@@ -222,7 +216,7 @@ export class LaunchExecutionChart extends Component {
     const launchData = this.statusItems.find((item) => item.id === data[0].id);
 
     return ReactDOMServer.renderToStaticMarkup(
-      <TooltipWrapper className={tooltipContext('chart-tooltip')}>
+      <TooltipWrapper className={tooltipCx('chart-tooltip')}>
         <LaunchExecutionAndIssueStatisticsTooltip
           launchNumber={data[0].value}
           itemCases={getPercentage(data[0].ratio)}
@@ -235,25 +229,27 @@ export class LaunchExecutionChart extends Component {
 
   render() {
     const { isPreview } = this.props;
-    const classes = chartContext({ 'preview-view': isPreview });
+    const classes = chartCx({ 'preview-view': isPreview });
     const { isConfigReady } = this.state;
     return (
       <div className={classes}>
         {isConfigReady && (
-          <div className="launch-execution-chart">
-            {!this.leftChartHidden && (
-              <div className="data-js-launch-execution-chart-container">
-                {!isPreview && (
-                  <Legend
-                    items={this.statusItems}
-                    onClick={this.onStatusClick}
-                    onMouseOver={this.onStatusMouseOver}
-                    onMouseOut={this.onStatusMouseOut}
-                  />
-                )}
-                <C3Chart config={this.statusConfig} onChartCreated={this.onStatusChartCreated} />
-              </div>
-            )}
+          <div className={chartCx('launch-execution-chart')}>
+            <div className={chartCx('data-js-launch-execution-chart-container')}>
+              {!isPreview && (
+                <Legend
+                  items={this.statusItems}
+                  onClick={this.onStatusClick}
+                  onMouseOver={this.onStatusMouseOver}
+                  onMouseOut={this.onStatusMouseOut}
+                />
+              )}
+              <C3Chart
+                config={this.statusConfig}
+                onChartCreated={this.onStatusChartCreated}
+                className={chartCx('c3')}
+              />
+            </div>
           </div>
         )}
       </div>
