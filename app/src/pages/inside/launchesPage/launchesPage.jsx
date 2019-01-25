@@ -363,7 +363,12 @@ export class LaunchesPage extends Component {
   };
 
   proceedWithValidItems = () =>
-    this.props.proceedWithValidItemsAction(this.props.lastOperation, this.props.selectedLaunches);
+    this.props.proceedWithValidItemsAction(this.props.lastOperation, this.props.selectedLaunches, {
+      fetchFunc: () => {
+        this.props.fetchLaunchesAction();
+        this.props.unselectAllLaunchesAction();
+      },
+    });
 
   mergeLaunches = () => {
     this.props.tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_MERGE_ACTION);
