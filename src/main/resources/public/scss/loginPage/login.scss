@@ -82,9 +82,10 @@
     }
 
     .logo-label {
-      width: 140px;
-      height: 23px;
-      background-image: url('../../img/rp-logo.svg');
+      width: 300px;
+      height: 150px;
+      background-image: url('../../img/praegus-logo-full.svg'), url('../../img/rp-logo.svg');
+      background-position: left top, left bottom;
       background-repeat: no-repeat;
       -webkit-background-size: 100%;
       background-size: 100%;
