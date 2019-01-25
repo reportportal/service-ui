@@ -120,8 +120,10 @@ export class LaunchFinishForceModal extends Component {
           }),
           type: NOTIFICATION_TYPES.ERROR,
         });
+      })
+      .then(() => {
+        closeModal();
       });
-    closeModal();
   };
 
   render() {
