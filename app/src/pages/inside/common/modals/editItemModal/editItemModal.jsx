@@ -20,8 +20,8 @@ import styles from './editItemModal.scss';
 const cx = classNames.bind(styles);
 
 const messages = defineMessages({
-  tagsLabel: {
-    id: 'EditItemModal.tagsLabel',
+  attributesLabel: {
+    id: 'EditItemModal.attributesLabel',
     defaultMessage: 'Attributes',
   },
   descriptionPlaceholder: {
@@ -159,7 +159,7 @@ export class EditItemModal extends Component {
               {type === LAUNCH_ITEM_TYPES.launch && ` #${item.number}`}
             </div>
           </ModalField>
-          <ModalField label={formatMessage(messages.tagsLabel)}>
+          <ModalField label={formatMessage(messages.attributesLabel)}>
             <FieldProvider name="attributes">
               <AttributeListField />
             </FieldProvider>

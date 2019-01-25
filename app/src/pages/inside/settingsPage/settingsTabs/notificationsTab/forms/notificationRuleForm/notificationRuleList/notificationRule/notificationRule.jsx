@@ -248,7 +248,7 @@ export class NotificationRule extends Component {
           </FieldErrorHint>
         </FormField>
         <FormField
-          label={intl.formatMessage(messages.tagsLabel)}
+          label={intl.formatMessage(messages.attributesLabel)}
           customBlock={{
             node: <p>{intl.formatMessage(messages.tagsNote)}</p>,
           }}
