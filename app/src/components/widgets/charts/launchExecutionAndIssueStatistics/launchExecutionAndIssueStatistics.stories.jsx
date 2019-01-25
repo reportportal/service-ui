@@ -22,59 +22,12 @@
 import { storiesOf } from '@storybook/react';
 import { host } from 'storybook-host';
 import { withReadme } from 'storybook-readme';
+// eslint-disable-next-line import/extensions, import/no-unresolved
+import { WithState } from 'storybook-decorators';
 import React from 'react';
 import { LaunchExecutionAndIssueStatistics } from './launchExecutionAndIssueStatistics';
 import README from './README.md';
-
-const widgetData = {
-  share: false,
-  id: 13,
-  name: 'start11',
-  contentParameters: {
-    widgetType: 'overall_statistics',
-    contentFields: [
-      'statistics$executions$passed',
-      'statistics$executions$skipped',
-      'statistics$defects$product_bug$pb001',
-      'statistics$defects$automation_bug$ab001',
-      'statistics$executions$failed',
-      'statistics$executions$total',
-    ],
-    itemsCount: 10,
-    widgetOptions: {
-      latest: '',
-    },
-  },
-  appliedFilters: [
-    {
-      share: false,
-      id: 1,
-      name: 'launch name',
-      conditions: [],
-      orders: [
-        {
-          sortingColumn: 'statistics$defects$no_defect$nd001',
-          isAsc: false,
-        },
-      ],
-      type: 'Launch',
-    },
-  ],
-  content: {
-    result: [
-      {
-        values: {
-          statistics$executions$passed: '8',
-          statistics$executions$skipped: '6',
-          statistics$defects$product_bug$pb001: '13',
-          statistics$defects$automation_bug$ab001: '25',
-          statistics$executions$failed: '13',
-          statistics$executions$total: '27',
-        },
-      },
-    ],
-  },
-};
+import { widgetData, state } from './data';
 
 const mockNode = document.createElement('node');
 const mockObserver = {
@@ -93,19 +46,22 @@ storiesOf('Components/Widgets/Charts/LaunchExecutionAndIssueStatistics', module)
   )
   .addDecorator(withReadme(README))
   .add('default state', () => (
-    <LaunchExecutionAndIssueStatistics
-      widget={widgetData}
-      container={mockNode}
-      observer={mockObserver}
-      isPreview={false}
-    />
+    <WithState state={state}>
+      <LaunchExecutionAndIssueStatistics
+        widget={widgetData}
+        container={mockNode}
+        observer={mockObserver}
+      />
+    </WithState>
   ))
 
   .add('preview', () => (
-    <LaunchExecutionAndIssueStatistics
-      widget={widgetData}
-      container={mockNode}
-      observer={mockObserver}
-      isPreview
-    />
+    <WithState state={state}>
+      <LaunchExecutionAndIssueStatistics
+        widget={widgetData}
+        container={mockNode}
+        observer={mockObserver}
+        isPreview
+      />
+    </WithState>
   ));

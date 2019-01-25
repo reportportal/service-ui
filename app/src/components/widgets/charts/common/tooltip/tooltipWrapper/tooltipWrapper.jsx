@@ -1,13 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import classnames from 'classnames';
 import styles from './tooltipWrapper.scss';
 
 const cx = classNames.bind(styles);
 
 export const TooltipWrapper = ({ children, className }) => (
-  <div className={classnames(cx('tooltip'), className)}>{children}</div>
+  <div className={cx('tooltip', className)}>{children}</div>
 );
 
 TooltipWrapper.propTypes = {
