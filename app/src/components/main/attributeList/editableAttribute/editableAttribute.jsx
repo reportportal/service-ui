@@ -25,7 +25,9 @@ export class EditableAttribute extends Component {
   exitEditMode = () => this.props.onEdit(null);
 
   calculateFormName = (attribute) =>
-    attribute ? `attributesEditor__${attribute.key}_${attribute.value}` : 'attributesEditor';
+    attribute && attribute.key && attribute.value
+      ? `attributesEditor__${attribute.key}_${attribute.value}`.replace(/\W/g, '_')
+      : 'attributesEditor';
 
   render() {
     const { attribute, onChange, editMode, ...rest } = this.props;

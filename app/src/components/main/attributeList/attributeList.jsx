@@ -2,6 +2,7 @@ import { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { FormattedMessage } from 'react-intl';
+import { notSystemAttributePredicate } from 'common/utils/attributeUtils';
 import { EditableAttribute } from './editableAttribute';
 import styles from './attributeList.scss';
 
@@ -27,7 +28,7 @@ const isEditMode = (currentAttribute, editedAttribute) =>
 export const AttributeList = ({ attributes, editedAttribute, onChange, onEdit, onAddNew }) => (
   <Fragment>
     {attributes
-      .filter((attr) => !attr.system)
+      .filter(notSystemAttributePredicate)
       .map((attribute, i) => (
         <EditableAttribute
           key={`${attribute.key}_${attribute.value}`}

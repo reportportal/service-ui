@@ -26,6 +26,8 @@ const ValueField = formValues({ attributeKey: 'key' })(
           minLength={1}
           makeOptions={makeOptions}
           uri={URLS.launchAttributeValuesSearch(projectId, attributeKey)}
+          creatable
+          showNewLabel
           {...rest}
         />
       </FieldErrorHint>
@@ -84,7 +86,9 @@ export class AttributeEditor extends Component {
                 minLength={1}
                 makeOptions={this.makeOptions}
                 uri={URLS.launchAttributeKeysSearch(projectId)}
+                creatable
                 isClearable
+                showNewLabel
               />
             </FieldErrorHint>
           </FieldProvider>
