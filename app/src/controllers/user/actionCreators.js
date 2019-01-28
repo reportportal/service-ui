@@ -14,11 +14,10 @@ const fetchUserSuccessAction = (user) => ({
   payload: user,
 });
 
-export const setPhotoTimeStampAction = (timeStamp) => (dispatch) =>
-  dispatch({
-    type: SET_PHOTO_TIME_STAMP,
-    payload: timeStamp,
-  });
+export const setPhotoTimeStampAction = (timeStamp) => ({
+  type: SET_PHOTO_TIME_STAMP,
+  payload: timeStamp,
+});
 
 export const setActiveProjectAction = (project) => (dispatch, getState) => {
   const user = userInfoSelector(getState());
