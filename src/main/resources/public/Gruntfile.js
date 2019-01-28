@@ -393,6 +393,25 @@ module.exports = function (grunt) {
     );
 
     grunt.registerTask(
+        'compile',
+        [
+            'clean',
+            'compileResource',
+            'sass:production',
+            'string-replace:jsProd',
+            'requirejs',
+            'string-replace:jsProd',
+            'concat:production',
+            'copy:mainProduction',
+            'copy:jsLib',
+            'copy:swagger',
+            'postcss:production',
+            'cssmin',
+            'sync:production'
+        ]
+    );
+
+    grunt.registerTask(
         'fileRevision',
         [
             'useminPrepare',

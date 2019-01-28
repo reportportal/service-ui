@@ -6,6 +6,7 @@
   "scripts": {
     "eslint": "eslint -f node_modules/eslint-friendly-formatter \"js/src/**/*.js\"",
     "grunt": "grunt",
+    "compile": "grunt compile",
     "build": "grunt build",
     "server": "webpack-dev-server --config config-server.js",
     "tests": "karma start",
