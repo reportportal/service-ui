@@ -728,7 +728,7 @@
   "MergeLaunchDialog.launchNamePlaceholder": "Введите имя запуска",
   "MergeLaunchDialog.launchOwnerLabel": "Владелец",
   "MergeLaunchDialog.launchTagsHint": "Пожалуйста введите 1 или более символов",
-  "MergeLaunchDialog.launchTagsLabel": "Метки",
+  "MergeLaunchDialog.launchAttributesLabel": "Атрибуты",
   "MergeLaunchDialog.launchTagsPlaceholder": "Введите название метки",
   "MergeLaunchDialog.launchTimeLabel": "Время Старта/Окончания",
   "MergeLaunchDialog.mergeTypeDeep": "Полное объединение",

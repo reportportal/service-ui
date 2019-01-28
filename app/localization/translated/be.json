@@ -715,7 +715,7 @@
   "MergeLaunchDialog.launchNamePlaceholder": "Увядзіце імя запуску",
   "MergeLaunchDialog.launchOwnerLabel": "Уласник",
   "MergeLaunchDialog.launchTagsHint": "Калі ласка увядзіце 1 або больш сімвалаў",
-  "MergeLaunchDialog.launchTagsLabel": "Тэгі",
+  "MergeLaunchDialog.launchAttributesLabel": "Атрыбуты",
   "MergeLaunchDialog.launchTagsPlaceholder": "Увядзіце назву тэга",
   "MergeLaunchDialog.launchTimeLabel": "Час пачатку/заканчэння",
   "MergeLaunchDialog.mergeTypeDeep": "Поўнае аб'яданне",
