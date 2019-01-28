@@ -46,7 +46,7 @@
       position: absolute;
       display: inline-block;
       box-sizing: border-box;
-      padding: 16px 0 0 0;
+      padding: 10px 10px 0 0;
       border-bottom: 1px solid #353536;
       text-align: center;
       font-weight: bold;
@@ -57,15 +57,15 @@
 
       .sprite {
         display: inline-block;
-        background-image: url("../img/rp_logo.png");
+        background-image: url("../img/praegus-p-small.png");
         background-repeat: no-repeat;
         background-position: 0 0;
       }
 
       .sprite-logo {
-        width: 36px;
-        height: 34px;
-        background-position: -5px 0px;
+        width: 70px;
+        height: 100%;
+        background-position: 20px 0px;
       }
     }
 
