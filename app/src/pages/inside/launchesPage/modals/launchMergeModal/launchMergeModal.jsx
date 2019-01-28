@@ -16,10 +16,11 @@ import { FieldProvider } from 'components/fields/fieldProvider';
 import { Input } from 'components/inputs/input';
 import { InputTextArea } from 'components/inputs/inputTextArea';
 import { InputRadio } from 'components/inputs/inputRadio';
-import { InputTagsSearch } from 'components/inputs/inputTagsSearch';
 import { InputCheckbox } from 'components/inputs/inputCheckbox';
 import { activeProjectSelector, userInfoSelector } from 'controllers/user';
 import { LAUNCHES_MODAL_EVENTS } from 'components/main/analytics/events';
+import { compareAttributes } from 'common/utils/attributeUtils';
+import { AttributeListField } from 'components/main/attributeList';
 import { MergeTypeScheme } from './mergeTypeScheme';
 import { StartEndTime } from './startEndTime';
 import styles from './launchMergeModal.scss';
@@ -67,17 +68,9 @@ const messages = defineMessages({
     id: 'MergeLaunchDialog.launchDescriptionLabel',
     defaultMessage: 'Description',
   },
-  launchTagsLabel: {
-    id: 'MergeLaunchDialog.launchTagsLabel',
-    defaultMessage: 'Tags',
-  },
-  launchTagsPlaceholder: {
-    id: 'MergeLaunchDialog.launchTagsPlaceholder',
-    defaultMessage: 'Enter tag name',
-  },
-  launchTagsHint: {
-    id: 'MergeLaunchDialog.launchTagsHint',
-    defaultMessage: 'Please enter 1 or more characters',
+  launchAttributesLabel: {
+    id: 'MergeLaunchDialog.launchAttributesLabel',
+    defaultMessage: 'Attributes',
   },
   launchTimeLabel: {
     id: 'MergeLaunchDialog.launchTimeLabel',
@@ -90,12 +83,16 @@ const messages = defineMessages({
   },
 });
 
+const valueSelector = formValueSelector(MERGE_FORM);
+const formMetaSelector = getFormMeta(MERGE_FORM);
+const formSyncErrorsSelector = getFormSyncErrors(MERGE_FORM);
+
 @withModal('launchMergeModal')
 @injectIntl
 @reduxForm({
   form: MERGE_FORM,
   validate: ({ name, description, mergeType }) => ({
-    mergeType: !mergeType, // eslint-disable-line camelcase
+    mergeType: !mergeType,
     name: (!name || !validate.launchName(name)) && 'launchNameHint',
     description: !validate.launchDescription(description) && 'launchDescriptionHint',
   }),
@@ -103,13 +100,12 @@ const messages = defineMessages({
 @connect(
   (state) => ({
     user: userInfoSelector(state),
-    syncErrors: getFormSyncErrors(MERGE_FORM)(state),
-    fields: getFormMeta(MERGE_FORM)(state),
+    syncErrors: formSyncErrorsSelector(state),
+    fields: formMetaSelector(state),
     activeProject: activeProjectSelector(state),
-    mergeType: formValueSelector(MERGE_FORM)(state, 'mergeType'),
-    startTime: formValueSelector(MERGE_FORM)(state, 'startTime'),
-    endTime: formValueSelector(MERGE_FORM)(state, 'endTime'),
-    tagsSearchUrl: URLS.launchTagsSearch(activeProjectSelector(state)),
+    mergeType: valueSelector(state, 'mergeType'),
+    startTime: valueSelector(state, 'startTime'),
+    endTime: valueSelector(state, 'endTime'),
   }),
   {
     showScreenLockAction,
@@ -124,7 +120,6 @@ export class LaunchMergeModal extends Component {
     hideScreenLockAction: PropTypes.func.isRequired,
     handleSubmit: PropTypes.func.isRequired,
     activeProject: PropTypes.string.isRequired,
-    tagsSearchUrl: PropTypes.string.isRequired,
     user: PropTypes.object.isRequired,
     initialize: PropTypes.func.isRequired,
     syncErrors: PropTypes.object.isRequired,
@@ -156,7 +151,7 @@ export class LaunchMergeModal extends Component {
       description: [],
       endTime: this.props.endTime,
       startTime: this.props.startTime,
-      tags: {},
+      attributes: [],
       extendSuitesDescription: false,
     };
     launches.forEach((launch) => {
@@ -170,20 +165,18 @@ export class LaunchMergeModal extends Component {
       if (launch.description) {
         commonObject.description.push(launch.description.trim());
       }
-      if (launch.tags) {
-        launch.tags.forEach((tag) => {
-          commonObject.tags[tag] = true;
-        });
+      if (launch.attributes && launch.attributes.length > 0) {
+        commonObject.attributes = launch.attributes.reduce((acc, attribute) => {
+          if (!commonObject.attributes.find((attr) => compareAttributes(attr, attribute))) {
+            return [...acc, attribute];
+          }
+          return acc;
+        }, []);
       }
     });
     commonObject.description = commonObject.description.join(DESCRIPTION_SEPARATOR);
-    commonObject.tags = Object.keys(commonObject.tags);
     this.props.initialize(commonObject);
   }
-
-  formatTags = (tags) => tags.map((tag) => ({ value: tag, label: tag }));
-
-  parseTags = (options) => options.map((option) => option.value);
 
   mergeAndCloseModal = (closeModal) => (values) => {
     this.props.showScreenLockAction();
@@ -203,7 +196,6 @@ export class LaunchMergeModal extends Component {
       handleSubmit,
       mergeType,
       user,
-      tagsSearchUrl,
       startTime,
       endTime,
       syncErrors,
@@ -304,22 +296,11 @@ export class LaunchMergeModal extends Component {
             </ModalField>
 
             <ModalField
-              label={intl.formatMessage(messages.launchTagsLabel)}
+              label={intl.formatMessage(messages.launchAttributesLabel)}
               labelWidth={FIELD_LABEL_WIDTH}
             >
-              <FieldProvider name="tags" format={this.formatTags} parse={this.parseTags}>
-                <InputTagsSearch
-                  placeholder={intl.formatMessage(messages.launchTagsPlaceholder)}
-                  focusPlaceholder={intl.formatMessage(messages.launchTagsHint)}
-                  minLength={1}
-                  async
-                  uri={tagsSearchUrl}
-                  makeOptions={this.formatTags}
-                  creatable
-                  showNewLabel
-                  multi
-                  removeSelected
-                />
+              <FieldProvider name="attributes">
+                <AttributeListField />
               </FieldProvider>
             </ModalField>
 
