@@ -43,6 +43,7 @@ define(function (require) {
         template: 'tpl-new-login',
         events: {
             'click [data-js-logo]': 'onClickLogo',
+            'click [data-js-logo-praegus]': 'onClickLogoPraegus',
             'click [data-js-gh-link]': 'onClickGitHub',
             'click [data-js-fb-link]': 'onClickFaceBook',
             'click [data-js-yt-link]': 'onClickYouTube',
@@ -151,6 +152,10 @@ define(function (require) {
         onClickLogo: function () {
             window.open('http://reportportal.io/');
         },
+        onClickLogoPraegus: function () {
+            window.open('http://www.praegus.nl/');
+        },
+
         blockLoginForm: function () {
             var date = Date.now();
             this.storage.set('login_block_time', date);

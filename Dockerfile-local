@@ -1,0 +1,19 @@
+# put your local stuff in a docker container
+FROM alpine:3.6
+
+LABEL maintainer="Andrei Varabyeu <andrei_varabyeu@epam.com>"
+LABEL version=4.3.7
+
+ENV APP_DOWNLOAD_URL https://dl.bintray.com/epam/reportportal/4.3.7
+
+ADD ${APP_DOWNLOAD_URL}/service-ui_linux_amd64 /service-ui
+ADD /build/resources/main/ /
+
+RUN chmod +x /service-ui
+#RUN tar -zxvf ui.tar.gz -C / && rm -f ui.tar.gz
+
+ENV RP_STATICS_PATH=/public
+
+
+EXPOSE 8080
+ENTRYPOINT ["/service-ui"]

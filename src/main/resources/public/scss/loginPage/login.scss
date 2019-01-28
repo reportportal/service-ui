@@ -83,9 +83,31 @@
 
     .logo-label {
       width: 300px;
-      height: 150px;
-      background-image: url('../../img/praegus-logo-full.svg'), url('../../img/rp-logo.svg');
-      background-position: left top, left bottom;
+      height: 50px;
+      background-image: url('../../img/rp-logo.svg');
+      background-position: right top;
+      background-repeat: no-repeat;
+      -webkit-background-size: 100%;
+      background-size: 100%;
+      cursor: pointer;
+
+      @media (min-width: $SCREEN_SM_MIN) and (max-width: $SCREEN_SM_MAX) {
+        position: absolute;
+        top: -720px;
+        left: 0;
+        z-index: 1;
+      }
+    }
+
+    .logo-text {
+      font-size: 12px;
+    }
+
+    .logo-label-praegus {
+      width: 300px;
+      height: 95px;
+      background-image: url('../../img/praegus-logo-black.png');
+      background-position: right bottom;
       background-repeat: no-repeat;
       -webkit-background-size: 100%;
       background-size: 100%;
