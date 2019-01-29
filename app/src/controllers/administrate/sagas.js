@@ -10,7 +10,7 @@ const pageDataActions = {
 };
 function* fetchProjectData() {
   const section = yield select(projectSectionSelector);
-  if (!section) {
+  if (!section || !pageDataActions[section]) {
     return;
   }
   yield put(pageDataActions[section]());

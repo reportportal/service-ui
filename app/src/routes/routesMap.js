@@ -86,7 +86,7 @@ export default {
 
   [PROJECTS_PAGE]: '/administrate/projects',
   [PROJECT_DETAILS_PAGE]: {
-    path: `/administrate/projects/:projectId/:projectSection(${SETTINGS}|${MEMBERS}|${EVENTS})`,
+    path: `/administrate/projects/:projectId/:projectSection(${SETTINGS}|${MEMBERS}|${EVENTS})?`,
     thunk: (dispatch) => dispatch(fetchProjectDataAction()),
   },
   [ALL_USERS_PAGE]: '/administrate/users',

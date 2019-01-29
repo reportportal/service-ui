@@ -4,6 +4,8 @@ import classNames from 'classnames/bind';
 import { injectIntl, intlShape, defineMessages } from 'react-intl';
 import { Grid } from 'components/main/grid';
 import { AbsRelTime } from 'components/main/absRelTime';
+import { EventActions } from './eventActions';
+import { EventObjectTypes } from './eventObjectTypes';
 import styles from './eventsGrid.scss';
 
 const cx = classNames.bind(styles);
@@ -41,10 +43,11 @@ UserColumn.defaultProps = {
   value: {},
 };
 
-const ActionColumn = ({ className, value }) => {
-  const formattedActionType = value.actionType.split(/(?=[A-Z])/).join(' ');
-  return <div className={cx('action-col', className)}>{formattedActionType}</div>;
-};
+const ActionColumn = ({ className, value }) => (
+  <div className={cx('action-col', className)}>
+    <EventActions className={className} value={value} />
+  </div>
+);
 ActionColumn.propTypes = {
   className: PropTypes.string.isRequired,
   value: PropTypes.object,
@@ -54,7 +57,7 @@ ActionColumn.defaultProps = {
 };
 
 const ObjectTypeColumn = ({ className, value }) => (
-  <div className={cx('object-type-col', className)}>{value.objectType}</div>
+  <EventObjectTypes className={className} value={value} />
 );
 ObjectTypeColumn.propTypes = {
   className: PropTypes.string.isRequired,
@@ -75,42 +78,27 @@ ObjectNameColumn.defaultProps = {
   value: {},
 };
 
-const OldValueColumn = ({ className, value }) => (
-  <div className={cx('old-value-col', className)}>
+const ValueColumn = ({ className, value, customProps: { valueType } }) => (
+  <div className={cx('value-col', className)}>
     {value.details.history.map((item) => (
       <React.Fragment key={item.toString()}>
         <div className={cx('value-field')}>{item.field}:</div>
-        <div className={cx('old-value')}>{item.oldValue}</div>
+        <div className={cx('value')}>{item[valueType]}</div>
       </React.Fragment>
     ))}
   </div>
 );
-OldValueColumn.propTypes = {
+ValueColumn.propTypes = {
   className: PropTypes.string.isRequired,
   value: PropTypes.object,
+  customProps: PropTypes.shape({
+    valueType: PropTypes.string,
+  }),
 };
-OldValueColumn.defaultProps = {
+ValueColumn.defaultProps = {
   value: {},
+  customProps: {},
 };
-
-const NewValueColumn = ({ className, value }) => (
-  <div className={cx('new-value-col', className)}>
-    {value.details.history.map((item) => (
-      <React.Fragment key={item.toString()}>
-        <div className={cx('value-field')}>{item.field}:</div>
-        <div className={cx('new-value')}>{item.newValue}</div>
-      </React.Fragment>
-    ))}
-  </div>
-);
-NewValueColumn.propTypes = {
-  className: PropTypes.string.isRequired,
-  value: PropTypes.object,
-};
-NewValueColumn.defaultProps = {
-  value: {},
-};
-
 @injectIntl
 export class EventsGrid extends PureComponent {
   static propTypes = {
@@ -147,32 +135,38 @@ export class EventsGrid extends PureComponent {
       component: ActionColumn,
     },
     {
-      id: 'object_type',
+      id: 'objectType',
       title: {
         full: this.props.intl.formatMessage(messages.objectTypeCol),
       },
       component: ObjectTypeColumn,
     },
     {
-      id: 'object_name',
+      id: 'objectName',
       title: {
         full: this.props.intl.formatMessage(messages.objectNameCol),
       },
       component: ObjectNameColumn,
     },
     {
-      id: 'old_value',
+      id: 'oldValue',
       title: {
         full: this.props.intl.formatMessage(messages.oldValueCol),
       },
-      component: OldValueColumn,
+      component: ValueColumn,
+      customProps: {
+        valueType: 'oldValue',
+      },
     },
     {
-      id: 'new_value',
+      id: 'newValue',
       title: {
         full: this.props.intl.formatMessage(messages.newValueCol),
       },
-      component: NewValueColumn,
+      component: ValueColumn,
+      customProps: {
+        valueType: 'newValue',
+      },
     },
   ];
 
