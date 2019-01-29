@@ -10,22 +10,18 @@ import { activeProjectSelector } from 'controllers/user';
 import {
   eventsSelector,
   eventsPaginationSelector,
-  fetchEventsAction,
   loadingSelector,
   NAMESPACE,
   DEFAULT_PAGE_SIZE,
 } from 'controllers/administrate/events';
 import { EventsGrid } from './eventsGrid';
 
-@connect(
-  (state) => ({
-    projectId: projectIdSelector(state),
-    url: URLS.events(activeProjectSelector(state)),
-    events: eventsSelector(state),
-    loading: loadingSelector(state),
-  }),
-  { fetchEventsAction },
-)
+@connect((state) => ({
+  projectId: projectIdSelector(state),
+  url: URLS.events(activeProjectSelector(state)),
+  events: eventsSelector(state),
+  loading: loadingSelector(state),
+}))
 @withPagination({
   paginationSelector: eventsPaginationSelector,
   namespace: NAMESPACE,
@@ -42,7 +38,6 @@ export class ProjectEventsPage extends Component {
     showModalAction: PropTypes.func,
     onChangePage: PropTypes.func,
     onChangePageSize: PropTypes.func,
-    fetchEventsAction: PropTypes.func,
     projectId: PropTypes.string.isRequired,
     loading: PropTypes.bool,
     events: PropTypes.arrayOf(PropTypes.object),
@@ -58,7 +53,6 @@ export class ProjectEventsPage extends Component {
     showModalAction: () => {},
     onChangePage: () => {},
     onChangePageSize: () => {},
-    fetchEventsAction: () => {},
     loading: false,
     events: [],
   };
