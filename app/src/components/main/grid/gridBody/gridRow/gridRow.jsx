@@ -103,7 +103,7 @@ export class GridRow extends Component {
       >
         <div className={cx('grid-row', 'highlight-block-wrapper')}>
           <div
-            id="highlight-block"
+            datatype="highlight-block"
             className={cx('highlight-block')}
             style={{
               height: this.getHighLightBlockHeight(),

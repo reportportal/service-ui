@@ -4,13 +4,13 @@ import styles from './utils.scss';
 
 const cx = classNames.bind(styles);
 
-export async function highLightGridRow(itemId) {
+export function highLightGridRow(itemId) {
   const targetItem = document.querySelector(`div[data-id='${itemId}']`);
   if (!targetItem) {
     return false;
   }
 
-  const highlightBlock = targetItem.querySelector(`#highlight-block`);
+  const highlightBlock = targetItem.querySelector(`div[datatype='highlight-block']`);
   highlightBlock.scrollIntoView({ behavior: 'smooth', block: 'end' });
   highlightBlock.classList.add(cx('highlight'));
   highlightBlock.classList.add(cx('hide-highlight'));
