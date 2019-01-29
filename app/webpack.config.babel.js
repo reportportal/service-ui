@@ -2,10 +2,11 @@
 import path from 'path';
 import webpack from 'webpack';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
-import ExtractTextPlugin from 'extract-text-webpack-plugin';
+import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import WebpackNotifierPlugin from 'webpack-notifier';
 import CleanWebpackPlugin from 'clean-webpack-plugin';
 import CompressionPlugin from 'compression-webpack-plugin';
+import TerserPlugin from 'terser-webpack-plugin';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -20,6 +21,7 @@ const defaultEnv = {
 };
 
 export default (env = defaultEnv) => ({
+  mode: env.production ? 'production' : 'development',
   entry: [path.resolve('src', 'index.jsx')],
   output: {
     path: path.resolve('build'),
@@ -38,6 +40,16 @@ export default (env = defaultEnv) => ({
       layouts: path.resolve(__dirname, 'src/layouts'),
     },
   },
+  optimization: {
+    minimizer: [
+      new TerserPlugin({
+        parallel: true,
+      }),
+    ],
+    splitChunks: {
+      chunks: 'all',
+    },
+  },
   plugins: [
     new CleanWebpackPlugin([path.resolve(__dirname, 'localization/messages')]),
     new WebpackNotifierPlugin({ skipFirstNotification: true }),
@@ -49,13 +61,9 @@ export default (env = defaultEnv) => ({
       React: 'react',
       Utils: 'common/utils',
     }),
-    new ExtractTextPlugin({
-      filename: '[name].[hash:6].css',
-      allChunks: true,
-      disable: env.dev,
+    new MiniCssExtractPlugin({
+      filename: env.dev ? '[name].css' : '[name].[hash:6].css',
     }),
-    new webpack.NamedModulesPlugin(),
-    new webpack.HotModuleReplacementPlugin(),
     new HtmlWebpackPlugin({
       template: path.resolve('src', 'index.tpl.html'),
       filename: 'index.html',
@@ -64,25 +72,16 @@ export default (env = defaultEnv) => ({
       ? [
           new CleanWebpackPlugin([path.resolve(__dirname, 'build')]),
           new CompressionPlugin({
-            asset: '[path].gz[query]',
+            filename: '[path].gz[query]',
             algorithm: 'gzip',
             threshold: 10240,
             minRatio: 0.8,
           }),
         ]
-      : []),
+      : [new webpack.HotModuleReplacementPlugin()]),
   ],
   module: {
-    loaders: [
-      // {
-      //   test: /\.jsx?$/,
-      //   enforce: 'pre',
-      //   loader: 'eslint-loader',
-      //   exclude: /(node_modules|bower_components)/,
-      //   options: {
-      //     formatter: require('eslint-friendly-formatter'),
-      //   },
-      // },
+    rules: [
       {
         test: /\.jsx?$/,
         loader: 'babel-loader',
@@ -100,38 +99,35 @@ export default (env = defaultEnv) => ({
       {
         test: /\.css$/,
         include: /(node_modules|bower_components)/,
-        use: ExtractTextPlugin.extract({
-          fallback: 'style-loader',
-          use: ['css-loader'],
-        }),
+        use: [env.dev ? 'style-loader' : MiniCssExtractPlugin.loader, 'css-loader'],
       },
       {
         test: /\.s?css$/,
         exclude: /(node_modules|bower_components)/,
-        use: ExtractTextPlugin.extract({
-          fallback: 'style-loader',
-          use: [
-            {
-              loader: 'css-loader',
-              options: {
-                modules: true,
-                alias: {
-                  common: path.resolve(__dirname, 'src/common'),
-                },
-                importLoaders: 1,
-                localIdentName: '[name]__[local]___[hash:base64:5]',
+        use: [
+          {
+            loader: env.dev ? 'style-loader' : MiniCssExtractPlugin.loader,
+          },
+          {
+            loader: 'css-loader',
+            options: {
+              modules: true,
+              alias: {
+                common: path.resolve(__dirname, 'src/common'),
               },
+              importLoaders: 1,
+              localIdentName: '[name]__[local]___[hash:base64:5]',
             },
-            'postcss-loader',
-            'sass-loader',
-            {
-              loader: 'sass-resources-loader',
-              options: {
-                resources: path.resolve(__dirname, 'src/common/css/variables/**/*.scss'),
-              },
+          },
+          'postcss-loader',
+          'sass-loader',
+          {
+            loader: 'sass-resources-loader',
+            options: {
+              resources: path.resolve(__dirname, 'src/common/css/variables/**/*.scss'),
             },
-          ],
-        }),
+          },
+        ],
       },
       {
         test: /\.(ico|jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2)(\?.*)?$/,

@@ -8,7 +8,7 @@ const config = require('../webpack.config.babel.js').default({
 
 module.exports = {
   plugins: config.plugins.filter((plugin) =>
-    ['DefinePlugin', 'ProvidePlugin', 'ExtractTextPlugin'].includes(plugin.constructor.name)
+    ['DefinePlugin', 'ProvidePlugin', 'MiniCssExtractPlugin'].includes(plugin.constructor.name)
   ),
   devtool: 'cheap-module-source-map',
   resolve: Object.assign({}, config.resolve, {
@@ -17,6 +17,6 @@ module.exports = {
     }),
   }),
   module: {
-    rules: config.module.loaders,
+    rules: config.module.rules,
   },
 };
