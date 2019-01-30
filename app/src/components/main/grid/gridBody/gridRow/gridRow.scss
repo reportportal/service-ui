@@ -213,3 +213,29 @@
     }
   }
 }
+
+.highlight {
+  &:before {
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: $COLOR--go-to-stack-trace;
+    opacity: 0.6;
+    transition: opacity 3s ease;
+    @media (max-width: $SCREEN_SM_MAX) {
+      bottom: 18px;
+    }
+    @media (max-width: $SCREEN_XS_MAX) {
+      bottom: 70px;
+    }
+  }
+}
+
+.hide-highlight {
+  &:before {
+    opacity: 0;
+  }
+}

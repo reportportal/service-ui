@@ -20,8 +20,7 @@ import { fetch } from 'common/utils/fetch';
 import { URLS } from 'common/urls';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { NoItemMessage } from 'components/main/noItemMessage';
-import { highLightGridRow } from 'components/main/grid/utils';
-import { getLogLevelById } from '../../../logsGridToolbar/utils/logLevel';
+import { getLogLevelById } from 'pages/inside/logsPage/logsGridToolbar/utils/logLevel';
 import styles from './stackTrace.scss';
 
 const cx = classNames.bind(styles);
@@ -55,6 +54,7 @@ export class StackTrace extends Component {
     pagination: PropTypes.object.isRequired,
     pageProperties: PropTypes.object.isRequired,
     logItems: PropTypes.array.isRequired,
+    onHighlightRow: PropTypes.func.isRequired,
   };
 
   static checkIfStackTraceItemOnThisPage = (logItems, stackTraceItem) =>
@@ -85,7 +85,7 @@ export class StackTrace extends Component {
     this.checkIfPageWasChanged(prevProps);
   }
 
-  getFilterLevel = (filterLevel = DEFAULT_LOG_LEVEL) => {
+  updateFilterLevel = (filterLevel = DEFAULT_LOG_LEVEL) => {
     if (filterLevel === FATAL) {
       this.props.onChangeLogLevel(getLogLevelById(ERROR));
       return ERROR;
@@ -113,12 +113,10 @@ export class StackTrace extends Component {
   };
 
   highlightStackTrace = () => {
-    const isItemHighLighted = highLightGridRow(this.state.stackTraceItem.id);
-    if (isItemHighLighted) {
-      this.setState({
-        messageReferenceWasClicked: false,
-      });
-    }
+    this.props.onHighlightRow(this.state.stackTraceItem.id);
+    this.setState({
+      messageReferenceWasClicked: false,
+    });
   };
 
   fetchStackTrace = () => {
@@ -154,7 +152,7 @@ export class StackTrace extends Component {
     if (isStackTraceItemOnThisPage) {
       return;
     }
-    const filterLevel = this.getFilterLevel(pageProperties['filter.gte.level']);
+    const filterLevel = this.updateFilterLevel(pageProperties['filter.gte.level']);
     fetch(
       URLS.logItemStackTraceMessageLocation(
         projectId,

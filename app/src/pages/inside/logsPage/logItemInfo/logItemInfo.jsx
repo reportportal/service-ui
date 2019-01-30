@@ -75,6 +75,7 @@ export class LogItemInfo extends Component {
     externalSystems: PropTypes.array.isRequired,
     fetchFunc: PropTypes.func.isRequired,
     showModalAction: PropTypes.func.isRequired,
+    onHighlightRow: PropTypes.func.isRequired,
     logItem: PropTypes.object,
   };
   static defaultProps = {
@@ -176,6 +177,7 @@ export class LogItemInfo extends Component {
       logItem,
       onChangePage,
       onChangeLogLevel,
+      onHighlightRow,
       intl: { formatMessage },
     } = this.props;
 
@@ -224,6 +226,7 @@ export class LogItemInfo extends Component {
             logItem={logItem}
             onChangePage={onChangePage}
             onChangeLogLevel={onChangeLogLevel}
+            onHighlightRow={onHighlightRow}
           />
         </div>
       )

@@ -86,6 +86,11 @@ Grid.propTypes = {
   grouped: PropTypes.bool,
   groupFunction: PropTypes.func,
   groupHeader: PropTypes.oneOfType([PropTypes.node, PropTypes.func]),
+  rowHighlightingConfig: PropTypes.shape({
+    onGridRowHighlighted: PropTypes.func,
+    isGridRowHighlighted: PropTypes.bool,
+    rowToHighlightId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  }),
 };
 Grid.defaultProps = {
   columns: [],
@@ -101,8 +106,13 @@ Grid.defaultProps = {
   className: '',
   changeOnlyMobileLayout: false,
   loading: false,
-  rowClassMapper: () => {},
+  rowClassMapper: null,
   groupFunction: () => {},
   grouped: false,
   groupHeader: null,
+  rowHighlightingConfig: PropTypes.shape({
+    onGridRowHighlighted: () => {},
+    isGridRowHighlighted: false,
+    rowToHighlightId: null,
+  }),
 };
