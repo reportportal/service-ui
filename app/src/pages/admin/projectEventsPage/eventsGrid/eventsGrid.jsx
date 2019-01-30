@@ -4,8 +4,8 @@ import classNames from 'classnames/bind';
 import { injectIntl, intlShape, defineMessages } from 'react-intl';
 import { Grid } from 'components/main/grid';
 import { AbsRelTime } from 'components/main/absRelTime';
-import { EventActions } from './eventActions';
-import { EventObjectTypes } from './eventObjectTypes';
+import { actionMessages, objectTypesMessages } from 'common/constants/eventsLocalization';
+
 import styles from './eventsGrid.scss';
 
 const cx = classNames.bind(styles);
@@ -43,28 +43,38 @@ UserColumn.defaultProps = {
   value: {},
 };
 
-const ActionColumn = ({ className, value }) => (
+const ActionColumn = ({ className, value, customProps: { formatMessage } }) => (
   <div className={cx('action-col', className)}>
-    <EventActions className={className} value={value} />
+    {value.actionType && formatMessage(actionMessages[value.actionType])}
   </div>
 );
 ActionColumn.propTypes = {
   className: PropTypes.string.isRequired,
   value: PropTypes.object,
+  customProps: PropTypes.shape({
+    formatMessage: PropTypes.func,
+  }),
 };
 ActionColumn.defaultProps = {
   value: {},
+  customProps: {},
 };
 
-const ObjectTypeColumn = ({ className, value }) => (
-  <EventObjectTypes className={className} value={value} />
+const ObjectTypeColumn = ({ className, value, customProps: { formatMessage } }) => (
+  <div className={cx('object-type-col', className)}>
+    {value.objectType && formatMessage(objectTypesMessages[value.objectType])}
+  </div>
 );
 ObjectTypeColumn.propTypes = {
   className: PropTypes.string.isRequired,
   value: PropTypes.object,
+  customProps: PropTypes.shape({
+    formatMessage: PropTypes.func,
+  }),
 };
 ObjectTypeColumn.defaultProps = {
   value: {},
+  customProps: {},
 };
 
 const ObjectNameColumn = ({ className, value }) => (
@@ -133,6 +143,9 @@ export class EventsGrid extends PureComponent {
         full: this.props.intl.formatMessage(messages.actionCol),
       },
       component: ActionColumn,
+      customProps: {
+        formatMessage: this.props.intl.formatMessage,
+      },
     },
     {
       id: 'objectType',
@@ -140,6 +153,9 @@ export class EventsGrid extends PureComponent {
         full: this.props.intl.formatMessage(messages.objectTypeCol),
       },
       component: ObjectTypeColumn,
+      customProps: {
+        formatMessage: this.props.intl.formatMessage,
+      },
     },
     {
       id: 'objectName',
