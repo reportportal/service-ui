@@ -4,13 +4,14 @@ import { FormattedMessage } from 'react-intl';
 const columns = {
   name: {
     header: <FormattedMessage id="FlakyTests.table.header.testCase" defaultMessage="Test case" />,
+    nameKey: 'itemName',
   },
   count: {
     header: <FormattedMessage id="FlakyTests.table.header.switches" defaultMessage="Switches" />,
     headerShort: (
       <FormattedMessage id="FlakyTests.table.header.switchesShort" defaultMessage="Swtchs" />
     ),
-    countKey: 'switchCounter',
+    countKey: 'flakyCount',
     matrixKey: 'statuses',
   },
   percents: {
@@ -25,6 +26,7 @@ const columns = {
     header: (
       <FormattedMessage id="FlakyTests.table.header.lastSwitch" defaultMessage="Last switch" />
     ),
+    dateKey: 'endTime',
   },
 };
 

@@ -25,6 +25,7 @@ const ALL_FILETYPES = [
   'application/x-tar',
   'application/gzip',
 ];
+
 const MOCK_DATA = ALL_FILETYPES.map((fileType, id) => ({
   id: String(id),
   src: getFileIconSource(fileType),

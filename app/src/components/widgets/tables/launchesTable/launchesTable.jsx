@@ -56,7 +56,7 @@ const NameColumn = ({ className, value }) => {
   };
   return (
     <div className={cx('name-col', className)}>
-      <ItemInfo value={itemPropValue} editDisabled />
+      <ItemInfo widgetView value={itemPropValue} editDisabled />
     </div>
   );
 };

@@ -1,3 +1,1 @@
-import { MostFailedTests } from './mostFailedTests';
-
-export { MostFailedTests };
+export { MostFailedTests } from './mostFailedTests';

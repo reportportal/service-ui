@@ -1,5 +1,4 @@
 import { storiesOf } from '@storybook/react';
-import { action } from '@storybook/addon-actions';
 import { host } from 'storybook-host';
 // eslint-disable-next-line import/extensions, import/no-unresolved
 import { WithState } from 'storybook-decorators';
@@ -22,6 +21,6 @@ storiesOf('Components/Widgets/Tables/FlakyTests', module)
   .addDecorator(withReadme(README))
   .add('with required props: launch, tests, nameClickHandler', () => (
     <WithState state={state}>
-      <FlakyTests widget={flakyTests} nameClickHandler={action('Test id: ')} />
+      <FlakyTests widget={flakyTests} />
     </WithState>
   ));

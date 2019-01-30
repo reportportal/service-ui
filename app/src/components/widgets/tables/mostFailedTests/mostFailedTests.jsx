@@ -3,14 +3,9 @@ import PropTypes from 'prop-types';
 import { TestsTableWidget } from '../components/testsTableWidget';
 import * as cfg from './mostFailedTestsCfg';
 
-class MostFailedTests extends React.Component {
+export class MostFailedTests extends React.Component {
   static propTypes = {
     widget: PropTypes.object.isRequired,
-    nameClickHandler: PropTypes.func,
-  };
-
-  static defaultProps = {
-    nameClickHandler: () => {},
   };
 
   getIssueTypeMessage = (issueType) => {
@@ -24,21 +19,17 @@ class MostFailedTests extends React.Component {
         content,
         contentParameters: { contentFields },
       },
-      nameClickHandler,
     } = this.props;
 
     const issueType = contentFields[0];
 
     return (
       <TestsTableWidget
-        tests={content.mostFailed}
-        launchName={content.latestLaunch.name}
-        nameClickHandler={nameClickHandler}
+        tests={content.result}
+        launch={content.latestLaunch}
         issueType={this.getIssueTypeMessage(issueType)}
         columns={cfg.columns}
       />
     );
   }
 }
-
-export { MostFailedTests };

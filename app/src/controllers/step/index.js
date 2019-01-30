@@ -1,4 +1,4 @@
-export { NAMESPACE } from './constants';
+export { NAMESPACE, PREDEFINED_FILTER_KEY, FILTER_COLLAPSED } from './constants';
 export { stepReducer } from './reducer';
 export {
   stepsSelector,

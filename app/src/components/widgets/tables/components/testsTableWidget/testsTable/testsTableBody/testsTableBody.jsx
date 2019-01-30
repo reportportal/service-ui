@@ -1,18 +1,18 @@
 import * as React from 'react';
-import { func } from 'prop-types';
+import { number, string, oneOfType } from 'prop-types';
 import classNames from 'classnames/bind';
 import { PTTests, PTColumns } from '../../pTypes';
 import { TestsTableRow } from '../testsTableRow';
-import { matrixFactory } from '../matrix';
+import { matrixFactory } from '../matrixFactory';
 import styles from './testsTableBody.scss';
 
 const cx = classNames.bind(styles);
 
-class TestsTableBody extends React.Component {
+export class TestsTableBody extends React.Component {
   static propTypes = {
     tests: PTTests,
-    nameClickHandler: func.isRequired,
     columns: PTColumns.isRequired,
+    launchId: oneOfType([number, string]).isRequired,
   };
 
   static defaultProps = {
@@ -26,16 +26,18 @@ class TestsTableBody extends React.Component {
   }
 
   renderRow = (test) => {
-    const { columns, nameClickHandler } = this.props;
-    const { count } = columns;
+    const { columns, launchId } = this.props;
+    const { count, name, date } = columns;
 
     return (
       <TestsTableRow
         key={`row-${test.uniqueId}`}
+        launchId={launchId}
         data={test}
-        nameClickHandler={nameClickHandler}
-        countKey={count.countKey}
-        matrixDataKey={count.matrixKey}
+        name={test[name.nameKey]}
+        count={test[count.countKey]}
+        matrixData={test[count.matrixKey]}
+        time={test[date.dateKey]}
         matrixComponent={this.matrixComponent}
       />
     );
@@ -45,5 +47,3 @@ class TestsTableBody extends React.Component {
     return <div className={cx('tests-table-body')}>{this.props.tests.map(this.renderRow)}</div>;
   }
 }
-
-export { TestsTableBody };

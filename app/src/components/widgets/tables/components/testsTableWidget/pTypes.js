@@ -11,19 +11,21 @@ export const PTLaunch = shape({
 export const PTStatus = oneOf([FAILED.toUpperCase(), PASSED.toUpperCase(), SKIPPED.toUpperCase()]);
 
 export const PTTest = shape({
-  name: string.isRequired,
+  name: string,
+  itemName: string,
   uniqueId: string.isRequired,
   percentage: string.isRequired,
-  isFailed: arrayOf(bool),
+  status: arrayOf(bool),
   total: number.isRequired,
-  failedCount: number,
-  switchCounter: number,
+  criteria: number,
+  flakyCount: number,
   statuses: arrayOf(PTStatus),
 });
 
 export const PTColumns = shape({
   name: shape({
     header: node.isRequired,
+    nameKey: string.isRequired,
   }).isRequired,
   count: shape({
     header: node.isRequired,
@@ -38,6 +40,7 @@ export const PTColumns = shape({
   }),
   date: shape({
     header: node.isRequired,
+    dateKey: string.isRequired,
   }),
 });
 

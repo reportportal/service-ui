@@ -1,0 +1,1 @@
+export { TestsTable } from './testsTable';
