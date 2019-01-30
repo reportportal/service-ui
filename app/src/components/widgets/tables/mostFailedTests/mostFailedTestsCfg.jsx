@@ -34,6 +34,7 @@ const columns = {
     header: (
       <FormattedMessage id="MostFailedTests.table.header.testCase" defaultMessage="Test case" />
     ),
+    nameKey: 'name',
   },
   count: {
     header: (
@@ -48,8 +49,8 @@ const columns = {
         defaultMessage="Issues"
       />
     ),
-    countKey: 'failedCount',
-    matrixKey: 'isFailed',
+    countKey: 'criteria',
+    matrixKey: 'status',
     renderAsBool: true,
   },
   percents: {
@@ -64,6 +65,7 @@ const columns = {
     header: (
       <FormattedMessage id="MostFailedTests.table.header.lastIssue" defaultMessage="Last issue" />
     ),
+    dateKey: 'startTime',
   },
 };
 

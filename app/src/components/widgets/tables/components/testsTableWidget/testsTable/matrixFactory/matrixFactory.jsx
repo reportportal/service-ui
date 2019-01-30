@@ -2,7 +2,7 @@ import * as React from 'react';
 import { arrayOf, bool, string, oneOfType } from 'prop-types';
 import classNames from 'classnames/bind';
 import { PTStatus } from '../../pTypes';
-import styles from './matrix.scss';
+import styles from './matrixFactory.scss';
 
 const cx = classNames.bind(styles);
 
@@ -14,7 +14,7 @@ const renderForString = (id) => (status, idx) => (
   <div key={`${id}-square-${idx}`} className={cx('square', status.toLowerCase())} />
 );
 
-function matrixFactory(renderBool) {
+export function matrixFactory(renderBool) {
   const renderFn = renderBool ? renderForBool : renderForString;
 
   const Matrix = ({ tests, id }) => (
@@ -30,5 +30,3 @@ function matrixFactory(renderBool) {
 
   return Matrix;
 }
-
-export { matrixFactory };

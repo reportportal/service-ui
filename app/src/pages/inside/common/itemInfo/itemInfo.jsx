@@ -3,19 +3,23 @@ import track from 'react-tracking';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { injectIntl, defineMessages } from 'react-intl';
+import { NavLink } from 'redux-first-router-link';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
-import { LAUNCHES_PAGE_EVENTS } from 'components/main/analytics/events';
 import { fromNowFormat } from 'common/utils';
 import { canEditLaunch } from 'common/utils/permissions';
-import { MarkdownViewer } from 'components/main/markdown';
+import { LEVEL_STEP } from 'common/constants/launchLevels';
+import { ALL } from 'common/constants/reservedFilterIds';
 import {
+  activeProjectSelector,
   activeProjectRoleSelector,
   userAccountRoleSelector,
   userIdSelector,
 } from 'controllers/user';
-import { LEVEL_STEP } from 'common/constants/launchLevels';
 import { levelSelector, launchSelector } from 'controllers/testItem';
+import { TEST_ITEM_PAGE } from 'controllers/pages';
+import { MarkdownViewer } from 'components/main/markdown';
+import { LAUNCHES_PAGE_EVENTS } from 'components/main/analytics/events';
 import { formatMethodType, formatStatus } from 'common/utils/localizationUtils';
 import TestParamsIcon from 'common/img/test-params-icon-inline.svg';
 import PencilIcon from 'common/img/pencil-icon-inline.svg';
@@ -38,6 +42,7 @@ const messages = defineMessages({
 
 @injectIntl
 @connect((state) => ({
+  activeProject: activeProjectSelector(state),
   userAccountRole: userAccountRoleSelector(state),
   userProjectRole: activeProjectRoleSelector(state),
   userId: userIdSelector(state),
@@ -52,12 +57,14 @@ export class ItemInfo extends Component {
     refFunction: PropTypes.func.isRequired,
     analyzing: PropTypes.bool,
     customProps: PropTypes.object,
-    userAccountRole: PropTypes.string.isRequired,
+    activeProject: PropTypes.string.isRequired,
     userProjectRole: PropTypes.string,
+    userAccountRole: PropTypes.string.isRequired,
     userId: PropTypes.string,
     isStepLevel: PropTypes.bool,
     launch: PropTypes.object,
     editDisabled: PropTypes.bool,
+    widgetView: PropTypes.bool,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
@@ -77,6 +84,7 @@ export class ItemInfo extends Component {
     userProjectRole: '',
     isStepLevel: false,
     editDisabled: false,
+    widgetView: false,
     launch: {},
     onClickRetries: () => {},
   };
@@ -103,10 +111,12 @@ export class ItemInfo extends Component {
       editDisabled,
       refFunction,
       analyzing,
+      activeProject,
       userProjectRole,
       userAccountRole,
       userId,
       isStepLevel,
+      widgetView,
       launch,
       tracking,
       onClickRetries,
@@ -116,14 +126,31 @@ export class ItemInfo extends Component {
     return (
       <div ref={refFunction} className={cx('item-info')}>
         <div className={cx('main-info')}>
-          <NameLink
-            itemId={value.id}
-            className={cx('name-link')}
-            onClick={() => tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_ITEM_NAME)}
-          >
-            <span className={cx('name')}>{value.name}</span>
-            {value.number && <span className={cx('number')}>#{value.number}</span>}
-          </NameLink>
+          {widgetView ? (
+            <NavLink
+              to={{
+                type: TEST_ITEM_PAGE,
+                payload: {
+                  projectId: activeProject,
+                  filterId: ALL,
+                  testItemIds: value.id,
+                },
+              }}
+              className={cx('name-link')}
+            >
+              <span className={cx('name')}>{value.name}</span>
+              {value.number && <span className={cx('number')}>#{value.number}</span>}
+            </NavLink>
+          ) : (
+            <NameLink
+              itemId={value.id}
+              className={cx('name-link')}
+              onClick={() => tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_ITEM_NAME)}
+            >
+              <span className={cx('name')}>{value.name}</span>
+              {value.number && <span className={cx('number')}>#{value.number}</span>}
+            </NameLink>
+          )}
           {analyzing && <div className={cx('analysis-badge')}>Analysis</div>}
           {isStepLevel && (
             <div className={cx('test-params-icon')} onClick={this.handleShowTestParams}>

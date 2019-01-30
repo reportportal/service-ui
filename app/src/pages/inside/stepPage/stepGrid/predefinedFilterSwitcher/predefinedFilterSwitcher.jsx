@@ -3,10 +3,8 @@ import track from 'react-tracking';
 import { InputSwitcher } from 'components/inputs/inputSwitcher';
 import { connectRouter } from 'common/utils';
 import { namespaceSelector } from 'controllers/testItem';
+import { PREDEFINED_FILTER_KEY, FILTER_COLLAPSED } from 'controllers/step';
 import { STEP_PAGE_EVENTS } from 'components/main/analytics/events';
-
-const FILTER_COLLAPSED = 'collapsed';
-const FILTER_KEY = 'predefinedFilter';
 
 const messages = defineMessages({
   collapse: {
@@ -22,10 +20,10 @@ const messages = defineMessages({
 export const PredefinedFilterSwitcher = track()(
   connectRouter(
     (query) => ({
-      predefinedFilter: query[FILTER_KEY],
+      predefinedFilter: query[PREDEFINED_FILTER_KEY],
     }),
     {
-      toggleFilter: (value) => ({ [FILTER_KEY]: value ? FILTER_COLLAPSED : undefined }),
+      toggleFilter: (value) => ({ [PREDEFINED_FILTER_KEY]: value ? FILTER_COLLAPSED : undefined }),
     },
     {
       namespaceSelector,

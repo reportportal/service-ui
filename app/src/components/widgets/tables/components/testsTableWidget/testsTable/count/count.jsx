@@ -6,7 +6,7 @@ import styles from './count.scss';
 
 const cx = classNames.bind(styles);
 
-const Count = ({ count, total }) => (
+export const Count = ({ count, total }) => (
   <div className={cx('count')}>
     {count} <FormattedMessage id="Common.of" defaultMessage="of" /> {total}
   </div>
@@ -16,5 +16,3 @@ Count.propTypes = {
   count: number.isRequired,
   total: number.isRequired,
 };
-
-export { Count };
