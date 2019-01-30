@@ -102,6 +102,24 @@ export class LogsPage extends Component {
     onChangeWithAttachments: () => {},
   };
 
+  state = {
+    rowToHighlightId: null,
+    isGridRowHighlighted: false,
+  };
+
+  onHighlightRow = (rowToHighlightId) => {
+    this.setState({
+      rowToHighlightId,
+      isGridRowHighlighted: false,
+    });
+  };
+
+  onGridRowHighlighted = () => {
+    this.setState({
+      isGridRowHighlighted: true,
+    });
+  };
+
   handleRefresh = () => {
     this.props.tracking.trackEvent(LOG_PAGE_EVENTS.REFRESH_BTN);
     this.props.refresh();
@@ -129,6 +147,12 @@ export class LogsPage extends Component {
       onChangeWithAttachments,
     } = this.props;
 
+    const rowHighlightingConfig = {
+      onGridRowHighlighted: this.onGridRowHighlighted,
+      isGridRowHighlighted: this.state.isGridRowHighlighted,
+      rowToHighlightId: this.state.rowToHighlightId,
+    };
+
     return (
       <PageLayout>
         <PageSection>
@@ -137,6 +161,7 @@ export class LogsPage extends Component {
           <LogItemInfo
             onChangeLogLevel={onChangeLogLevel}
             onChangePage={onChangePage}
+            onHighlightRow={this.onHighlightRow}
             fetchFunc={refresh}
           />
           <LogsGridToolbar
@@ -156,6 +181,7 @@ export class LogsPage extends Component {
                 sortingColumn={sortingColumn}
                 sortingDirection={sortingDirection}
                 onChangeSorting={onChangeSorting}
+                rowHighlightingConfig={rowHighlightingConfig}
                 markdownMode={markdownMode}
                 consoleView={consoleView}
               />

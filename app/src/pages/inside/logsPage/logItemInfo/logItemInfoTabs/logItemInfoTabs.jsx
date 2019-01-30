@@ -44,13 +44,19 @@ const messages = defineMessages({
   },
 });
 
-const makeTabs = ({ formatMessage }, logItem, onChangePage, onChangeLogLevel) => [
+const makeTabs = ({ formatMessage }, logItem, onChangePage, onChangeLogLevel, onHighlightRow) => [
   {
     id: 'stack',
     label: formatMessage(messages.stackTab),
     icon: StackTraceIcon,
     eventInfo: LOG_PAGE_EVENTS.STACK_TRACE_TAB,
-    content: <StackTrace onChangePage={onChangePage} onChangeLogLevel={onChangeLogLevel} />,
+    content: (
+      <StackTrace
+        onHighlightRow={onHighlightRow}
+        onChangePage={onChangePage}
+        onChangeLogLevel={onChangeLogLevel}
+      />
+    ),
   },
   {
     id: 'attachments',
@@ -92,6 +98,7 @@ export class LogItemInfoTabs extends Component {
     logItem: PropTypes.object.isRequired,
     onChangePage: PropTypes.func.isRequired,
     onChangeLogLevel: PropTypes.func.isRequired,
+    onHighlightRow: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
@@ -126,11 +133,11 @@ export class LogItemInfoTabs extends Component {
   }
 
   render() {
-    const { intl, logItem, onChangePage, onChangeLogLevel } = this.props;
+    const { intl, logItem, onChangePage, onChangeLogLevel, onHighlightRow } = this.props;
 
     return (
       <InfoTabs
-        tabs={makeTabs(intl, logItem, onChangePage, onChangeLogLevel)}
+        tabs={makeTabs(intl, logItem, onChangePage, onChangeLogLevel, onHighlightRow)}
         activeTab={this.state.activeTab}
         setActiveTab={this.setActiveTab}
         panelContent={this.renderPanelContent()}
