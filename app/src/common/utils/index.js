@@ -46,3 +46,4 @@ export { arrayRemoveDoubles } from './arrayRemoveDoubles';
 export { parseDateTimeRange } from './parseDateTimeRange';
 export { getTicketUrlId } from './getTicketUrlId';
 export { range } from './range';
+export { arrayDiffer } from './arrayDiffer';
