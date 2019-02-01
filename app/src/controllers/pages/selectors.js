@@ -65,7 +65,7 @@ export const createQueryParametersSelector = ({
   namespace: staticNamespace,
   defaultPagination,
   defaultSorting,
-}) => (state, namespace) => {
+} = {}) => (state, namespace) => {
   const query = pagePropertiesSelector(state, staticNamespace || namespace);
   return {
     ...(defaultPagination || DEFAULT_PAGINATION),
