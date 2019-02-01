@@ -28,7 +28,7 @@ export class GridRow extends Component {
     rowHighlightingConfig: PropTypes.shape({
       onGridRowHighlighted: PropTypes.func,
       isGridRowHighlighted: PropTypes.bool,
-      rowToHighlightId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+      highlightedRowId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     }),
   };
 
@@ -44,7 +44,7 @@ export class GridRow extends Component {
     rowHighlightingConfig: PropTypes.shape({
       onGridRowHighlighted: () => {},
       isGridRowHighlighted: false,
-      rowToHighlightId: null,
+      highlightedRowId: null,
     }),
   };
 
@@ -57,13 +57,8 @@ export class GridRow extends Component {
     this.handleAccordion();
   }
   componentDidUpdate() {
-    const { rowToHighlightId, isGridRowHighlighted } = this.props.rowHighlightingConfig;
     this.handleAccordion();
-    if (
-      this.highlightBlockRef.current &&
-      rowToHighlightId === this.props.value.id &&
-      !isGridRowHighlighted
-    ) {
+    if (this.checkIfTheHighlightNeeded()) {
       this.highLightGridRow();
     }
   }
@@ -75,32 +70,36 @@ export class GridRow extends Component {
     this.overflowCell.style.maxHeight = `${this.overflowCellMaxHeight}px`;
   };
 
-  getHighLightBlockHeight = () => {
-    const { rowClassMapper, value } = this.props;
-    if (
-      this.state.withAccordion &&
-      !this.state.expanded &&
-      rowClassMapper &&
-      !rowClassMapper(value)['row-console']
-    ) {
-      return `${this.overflowCellMaxHeight}px`;
-    }
-    return `${this.rowRef && this.rowRef.current && this.rowRef.current.clientHeight}px`;
+  getHighLightBlockSize = () =>
+    this.rowRef && this.rowRef.current
+      ? {
+          height: `${this.rowRef.current.clientHeight}px`,
+          width: `${this.rowRef.current.clientWidth}px`,
+        }
+      : {};
+
+  getHighlightBlockClasses = () =>
+    this.checkIfTheHighlightNeeded() ? this.highLightBlockClasses : '';
+
+  checkIfTheHighlightNeeded = () => {
+    const { highlightedRowId, isGridRowHighlighted } = this.props.rowHighlightingConfig;
+
+    return (
+      this.highlightBlockRef.current &&
+      highlightedRowId === this.props.value.id &&
+      !isGridRowHighlighted
+    );
   };
 
   highlightBlockRef = React.createRef();
 
   rowRef = React.createRef();
 
+  highLightBlockClasses = `${cx('highlight')} ${cx('hide-highlight')}`;
+
   highLightGridRow() {
     this.highlightBlockRef.current.scrollIntoView({ behavior: 'smooth' });
-    this.highlightBlockRef.current.classList.add(cx('highlight'));
-    this.highlightBlockRef.current.classList.add(cx('hide-highlight'));
     setTimeout(() => {
-      if (this.highlightBlockRef.current) {
-        this.highlightBlockRef.current.classList.remove(cx('highlight'));
-        this.highlightBlockRef.current.classList.remove(cx('hide-highlight'));
-      }
       this.props.rowHighlightingConfig.onGridRowHighlighted();
     }, LOG_MESSAGE_HIGHLIGHT_TIMEOUT);
   }
@@ -143,13 +142,11 @@ export class GridRow extends Component {
         data-id={value.id}
         ref={this.rowRef}
       >
-        <div className={cx('grid-row', 'highlight-block-wrapper')}>
+        <div className={cx('grid-row')}>
           <div
             ref={this.highlightBlockRef}
-            className={cx('highlight-block')}
-            style={{
-              height: this.getHighLightBlockHeight(),
-            }}
+            className={cx('highlight-block', this.getHighlightBlockClasses())}
+            style={this.getHighLightBlockSize()}
           />
         </div>
         {this.state.withAccordion && (

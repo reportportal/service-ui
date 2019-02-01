@@ -103,13 +103,13 @@ export class LogsPage extends Component {
   };
 
   state = {
-    rowToHighlightId: null,
+    highlightedRowId: null,
     isGridRowHighlighted: false,
   };
 
-  onHighlightRow = (rowToHighlightId) => {
+  onHighlightRow = (highlightedRowId) => {
     this.setState({
-      rowToHighlightId,
+      highlightedRowId,
       isGridRowHighlighted: false,
     });
   };
@@ -150,7 +150,7 @@ export class LogsPage extends Component {
     const rowHighlightingConfig = {
       onGridRowHighlighted: this.onGridRowHighlighted,
       isGridRowHighlighted: this.state.isGridRowHighlighted,
-      rowToHighlightId: this.state.rowToHighlightId,
+      highlightedRowId: this.state.highlightedRowId,
     };
 
     return (
