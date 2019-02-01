@@ -89,7 +89,7 @@ Grid.propTypes = {
   rowHighlightingConfig: PropTypes.shape({
     onGridRowHighlighted: PropTypes.func,
     isGridRowHighlighted: PropTypes.bool,
-    rowToHighlightId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    highlightedRowId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   }),
 };
 Grid.defaultProps = {
@@ -113,6 +113,6 @@ Grid.defaultProps = {
   rowHighlightingConfig: PropTypes.shape({
     onGridRowHighlighted: () => {},
     isGridRowHighlighted: false,
-    rowToHighlightId: null,
+    highlightedRowId: null,
   }),
 };

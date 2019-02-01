@@ -100,7 +100,7 @@ export class LogsGrid extends Component {
     rowHighlightingConfig: PropTypes.shape({
       onGridRowHighlighted: PropTypes.func,
       isGridRowHighlighted: PropTypes.bool,
-      rowToHighlightId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+      highlightedRowId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     }),
   };
 
@@ -117,7 +117,7 @@ export class LogsGrid extends Component {
     rowHighlightingConfig: PropTypes.shape({
       onGridRowHighlighted: () => {},
       isGridRowHighlighted: false,
-      rowToHighlightId: null,
+      highlightedRowId: null,
     }),
   };
 
