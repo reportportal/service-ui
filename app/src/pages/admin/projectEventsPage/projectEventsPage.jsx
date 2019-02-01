@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { injectIntl } from 'react-intl';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
-import { withPagination } from 'controllers/pagination';
+import { withPagination, DEFAULT_PAGINATION, SIZE_KEY } from 'controllers/pagination';
 import { URLS } from 'common/urls';
 import { projectIdSelector } from 'controllers/pages';
 import { activeProjectSelector } from 'controllers/user';
@@ -11,8 +11,6 @@ import {
   eventsSelector,
   eventsPaginationSelector,
   loadingSelector,
-  NAMESPACE,
-  DEFAULT_PAGE_SIZE,
 } from 'controllers/administrate/events';
 import { EventsGrid } from './eventsGrid';
 
@@ -24,7 +22,6 @@ import { EventsGrid } from './eventsGrid';
 }))
 @withPagination({
   paginationSelector: eventsPaginationSelector,
-  namespace: NAMESPACE,
 })
 @injectIntl
 export class ProjectEventsPage extends Component {
@@ -47,7 +44,7 @@ export class ProjectEventsPage extends Component {
     activePage: 1,
     itemCount: null,
     pageCount: null,
-    pageSize: DEFAULT_PAGE_SIZE,
+    pageSize: DEFAULT_PAGINATION[SIZE_KEY],
     sortingColumn: null,
     sortingDirection: null,
     showModalAction: () => {},
