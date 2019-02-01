@@ -25,6 +25,16 @@ export class EntityDropdown extends Component {
     onChange: () => {},
   };
 
+  getValue = () => {
+    const { value, meta } = this.props;
+    if (!meta.multiple) {
+      return value.value;
+    } else if (!value.value) {
+      return [];
+    }
+    return value.value.split(',');
+  };
+
   handleChange = (value) => {
     this.props.onChange({
       condition: this.props.value.condition,
@@ -33,15 +43,8 @@ export class EntityDropdown extends Component {
   };
 
   render() {
-    const { value, onRemove, removable, entityId, smallSize, title, meta } = this.props;
-    let dropDownValue;
-    if (!meta.multiple) {
-      dropDownValue = value.value;
-    } else if (!value.value) {
-      dropDownValue = [];
-    } else {
-      dropDownValue = value.value.split(',');
-    }
+    const { onRemove, removable, entityId, smallSize, title, meta } = this.props;
+
     return (
       <FieldFilterEntity
         title={title || entityId}
@@ -51,7 +54,7 @@ export class EntityDropdown extends Component {
       >
         <InputDropdown
           options={meta.options}
-          value={dropDownValue}
+          value={this.getValue()}
           onChange={this.handleChange}
           multiple={meta.multiple}
           selectAll={meta.selectAll}
