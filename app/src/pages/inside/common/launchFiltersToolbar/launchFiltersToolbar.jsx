@@ -17,6 +17,7 @@ import { ALL, LATEST } from 'common/constants/reservedFilterIds';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { activeProjectSelector } from 'controllers/user';
 import { filterIdSelector } from 'controllers/pages';
+import { levelSelector } from 'controllers/testItem';
 import { EntitiesGroup } from 'components/filterEntities/entitiesGroup';
 import AddFilterIcon from 'common/img/add-filter-inline.svg';
 import { FilterList } from './filterList';
@@ -35,6 +36,7 @@ const cx = classNames.bind(styles);
     allLaunchesLink: allLaunchesLikSelector(state),
     latestLaunchesLink: latestLaunchesLinkSelector(state),
     filterId: filterIdSelector(state) === LATEST ? LATEST : ALL,
+    level: levelSelector(state),
   }),
   {
     showModal: showModalAction,
@@ -70,6 +72,7 @@ export class LaunchFiltersToolbar extends Component {
     allLaunchesLink: PropTypes.object,
     latestLaunchesLink: PropTypes.object,
     filterId: PropTypes.string,
+    level: PropTypes.string,
   };
 
   static defaultProps = {
@@ -96,6 +99,7 @@ export class LaunchFiltersToolbar extends Component {
     allLaunchesLink: null,
     latestLaunchesLink: null,
     filterId: '',
+    level: '',
   };
 
   state = {
@@ -168,6 +172,7 @@ export class LaunchFiltersToolbar extends Component {
       onFilterRemove,
       unsavedFilterIds,
       filterId,
+      level,
     } = this.props;
     const isFilterUnsaved = unsavedFilterIds.indexOf(activeFilterId) !== -1;
     const isNewFilter = activeFilterId < 0;
@@ -197,11 +202,13 @@ export class LaunchFiltersToolbar extends Component {
               onRemoveFilter={onRemoveFilter}
             />
           </div>
-          {!!activeFilter && (
-            <ExpandToggler expanded={this.state.expanded} onToggleExpand={this.toggleExpand} />
-          )}
+          {!!activeFilter &&
+            !level && (
+              <ExpandToggler expanded={this.state.expanded} onToggleExpand={this.toggleExpand} />
+            )}
         </div>
         {this.state.expanded &&
+          !level &&
           !!activeFilter && (
             <div className={cx('filter-controls-container')}>
               <div className={cx('filter-entities-container')}>
