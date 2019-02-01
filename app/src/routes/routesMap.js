@@ -18,6 +18,7 @@ import {
   SERVER_SETTINGS_TAB_PAGE,
   PLUGINS_PAGE,
   projectIdSelector,
+  NOT_FOUND,
 } from 'controllers/pages';
 import { GENERAL, EMAIL_SERVER } from 'common/constants/settingsTabs';
 import { SETTINGS, MEMBERS, EVENTS } from 'common/constants/projectSections';
@@ -73,6 +74,7 @@ export default {
 
   [LOGIN_PAGE]: '/login',
   [REGISTRATION_PAGE]: '/registration',
+  [NOT_FOUND]: '/notfound',
 
   ADMINISTRATE_PAGE: redirectRoute('/administrate', () => ({ type: PROJECTS_PAGE })),
   USER_PROFILE_PAGE: '/user-profile',
