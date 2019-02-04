@@ -46,10 +46,10 @@ export class LogItemDetails extends Component {
                 <span className={cx('growth-duration')}>{logItem.growthDuration}</span>
               </span>
             )}
-            {logItem.tags &&
-              !!logItem.tags.length && (
+            {logItem.attributes &&
+              !!logItem.attributes.length && (
                 <span className={cx('attribute')}>
-                  <AttributesBlock attributes={logItem.tags} />
+                  <AttributesBlock attributes={logItem.attributes} />
                 </span>
               )}
           </div>
