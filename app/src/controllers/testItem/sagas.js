@@ -79,7 +79,10 @@ function* fetchTestItems({ payload = {} }) {
   const isLostLaunch = yield select(isLostLaunchSelector);
   let parentId;
   if (isLostLaunch) {
-    const parentItem = yield select(createParentItemsSelector(offset));
+    let parentItem;
+    try {
+      parentItem = yield select(createParentItemsSelector(offset));
+    } catch (e) {} // eslint-disable-line no-empty
     launchId = parentItem ? parentItem.launchId : launchId;
   }
   if (itemIds.length > 1) {
