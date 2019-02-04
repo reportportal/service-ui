@@ -33,6 +33,8 @@ import {
   FilterEntitiesURLContainer,
   FilterEntitiesContainer,
 } from 'components/filterEntities/containers';
+import { NotFound } from './notFound';
+
 import styles from './testItemPage.scss';
 
 const cx = classNames.bind(styles);
@@ -250,6 +252,7 @@ export class TestItemPage extends Component {
           <div className={cx('breadcrumbs-container')}>
             {!loading && <Breadcrumbs descriptors={breadcrumbs} onRestorePath={restorePath} />}
           </div>
+          {!loading && <NotFound />}
           {loading && <SpinningPreloader />}
         </PageSection>
       </PageLayout>
