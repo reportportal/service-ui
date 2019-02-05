@@ -63,41 +63,10 @@
       border-color: $COLOR--topaz;
       color: $COLOR--white-two;
     }
-  }
 
-  &.color-gray-91:not(.disabled) {
-    border-color: $COLOR--gray-91;
-    color: $COLOR--topaz;
-
-    path,
-    polygon {
-      fill: $COLOR--topaz;
-    }
-
-    &.mobile-disabled {
-      @media (max-width: $SCREEN_XS_MAX) {
-        color: $COLOR--gray-60;
-        background-color: $COLOR--white;
-        border-color: $COLOR--gray-91;
-      }
-    }
-
-    .active,
-    &:hover {
-      background-color: lighten($COLOR--topaz, 10%);
-      border-color: lighten($COLOR--topaz, 10%);
-      color: $COLOR--white-two;
-
-      path,
-      polygon,
-      rect {
-        fill: $COLOR--white-two;
-      }
-    }
-    &:active {
-      background-color: $COLOR--topaz;
-      border-color: $COLOR--topaz;
-      color: $COLOR--white-two;
+    &.gray-border {
+      border-color: $COLOR--gray-91;
+      border-radius: 2px;
     }
   }
 }

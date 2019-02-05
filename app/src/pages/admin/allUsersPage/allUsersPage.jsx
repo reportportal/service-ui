@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
-import classNames from 'classnames/bind';
 import { PageLayout, PageHeader, PageSection } from 'layouts/pageLayout';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
 import { withPagination, DEFAULT_PAGINATION, SIZE_KEY } from 'controllers/pagination';
@@ -12,29 +11,7 @@ import {
   allUsersPaginationSelector,
   loadingSelector,
 } from 'controllers/administrate/allUsers';
-import { EXPORT, INVITE_USER, ADD_USER } from 'common/constants/allUsersActions';
-import { GhostButton } from 'components/buttons/ghostButton';
-import ExportIcon from 'common/img/export-inline.svg';
-import InviteUserIcon from 'common/img/ic-invite-inline.svg';
-import AddUserIcon from 'common/img/ic-add-user-inline.svg';
-import styles from './allUsersPage.scss';
-
-const cx = classNames.bind(styles);
-
-const messages = defineMessages({
-  [EXPORT]: {
-    id: 'AllUsersPage.export',
-    defaultMessage: 'Export',
-  },
-  [INVITE_USER]: {
-    id: 'AllUsersPage.inviteUser',
-    defaultMessage: 'Invite user',
-  },
-  [ADD_USER]: {
-    id: 'AllUsersPage.AddUser',
-    defaultMessage: 'Add user',
-  },
-});
+import { UsersToolbar } from './usersToolbar';
 
 const titleMessage = defineMessages({
   pageTitle: {
@@ -43,24 +20,9 @@ const titleMessage = defineMessages({
   },
 });
 
-const HEADER_BUTTONS = [
-  {
-    key: EXPORT,
-    icon: ExportIcon,
-  },
-  {
-    key: INVITE_USER,
-    icon: InviteUserIcon,
-  },
-  {
-    key: ADD_USER,
-    icon: AddUserIcon,
-  },
-];
-
 @connect((state) => ({
   url: URLS.allUsers(state),
-  allUsers: allUsersSelector(state),
+  users: allUsersSelector(state),
   loading: loadingSelector(state),
 }))
 @withPagination({
@@ -79,7 +41,7 @@ export class AllUsersPage extends Component {
     onChangePage: PropTypes.func,
     onChangePageSize: PropTypes.func,
     loading: PropTypes.bool,
-    allUsers: PropTypes.arrayOf(PropTypes.object),
+    users: PropTypes.arrayOf(PropTypes.object),
     intl: intlShape.isRequired,
   };
 
@@ -94,7 +56,7 @@ export class AllUsersPage extends Component {
     onChangePage: () => {},
     onChangePageSize: () => {},
     loading: false,
-    allUsers: [],
+    users: [],
   };
 
   getBreadcrumbs = () => [
@@ -102,21 +64,6 @@ export class AllUsersPage extends Component {
       title: this.props.intl.formatMessage(titleMessage.pageTitle),
     },
   ];
-
-  renderHeaderButtons = () => {
-    const {
-      intl: { formatMessage },
-    } = this.props;
-    return (
-      <div className={cx('header-buttons')}>
-        {HEADER_BUTTONS.map(({ key, icon }) => (
-          <GhostButton color={key === EXPORT ? 'gray-91' : 'topaz'} key={key} icon={icon}>
-            {formatMessage(messages[key])}
-          </GhostButton>
-        ))}
-      </div>
-    );
-  };
 
   render() {
     const {
@@ -132,7 +79,7 @@ export class AllUsersPage extends Component {
       <PageLayout>
         <PageHeader breadcrumbs={this.getBreadcrumbs()} />
         <PageSection>
-          {this.renderHeaderButtons()}
+          <UsersToolbar />
           {!!pageCount &&
             !loading && (
               <PaginationToolbar
