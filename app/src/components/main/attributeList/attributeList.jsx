@@ -29,10 +29,11 @@ export const AttributeList = ({ attributes, editedAttribute, onChange, onEdit, o
   <Fragment>
     {attributes
       .filter(notSystemAttributePredicate)
-      .map((attribute, i) => (
+      .map((attribute, i, filteredAttributes) => (
         <EditableAttribute
           key={`${attribute.key}_${attribute.value}`}
           attribute={attribute}
+          attributes={filteredAttributes}
           editMode={isEditMode(attribute, editedAttribute)}
           onChange={createEditHandler(attributes, i, onChange)}
           onRemove={createRemoveHandler(attributes, i, onChange)}

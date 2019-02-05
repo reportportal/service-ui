@@ -6,6 +6,7 @@ import { AttributeEditor } from './attributeEditor';
 export class EditableAttribute extends Component {
   static propTypes = {
     attribute: PropTypes.object,
+    attributes: PropTypes.array,
     editMode: PropTypes.bool,
     onEdit: PropTypes.func,
     onRemove: PropTypes.func,
@@ -14,6 +15,7 @@ export class EditableAttribute extends Component {
 
   static defaultProps = {
     attribute: {},
+    attributes: [],
     editMode: false,
     onEdit: () => {},
     onRemove: () => {},
