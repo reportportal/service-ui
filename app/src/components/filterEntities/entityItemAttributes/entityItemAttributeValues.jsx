@@ -14,7 +14,7 @@ const normalizeValue = (value) => (Array.isArray(value) ? value.join(',') : valu
 export const EntityItemAttributeValues = injectIntl(({ intl, customProps, ...props }) => (
   <EntityItemAttributes
     urlResolver={(projectId) =>
-      URLS.launchAttributeValuesSearch(projectId, normalizeValue(customProps.value))
+      URLS.launchAttributeValuesSearch(projectId, normalizeValue(customProps.attributeKey))
     }
     placeholder={intl.formatMessage(messages.placeholder)}
     {...props}
