@@ -5,26 +5,26 @@ import classNames from 'classnames/bind';
 import { reduxForm, formValues } from 'redux-form';
 import Parser from 'html-react-parser';
 import { FieldProvider } from 'components/fields/fieldProvider';
-import { InputTagsSearch } from 'components/inputs/inputTagsSearch';
 import { URLS } from 'common/urls';
 import { activeProjectSelector } from 'controllers/user';
 import { validate } from 'common/utils';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import CircleCrossIcon from 'common/img/circle-cross-icon-inline.svg';
 import CircleCheckIcon from 'common/img/circle-check-inline.svg';
+import { AttributeInput } from './attributeInput';
 import styles from './attributeEditor.scss';
 
 const cx = classNames.bind(styles);
 
 const ValueField = formValues({ attributeKey: 'key' })(
-  ({ attributeKey, parse, format, makeOptions, projectId, ...rest }) => (
+  ({ attributeKey, parse, format, attributeComparator, projectId, ...rest }) => (
     <FieldProvider name="value" format={format} parse={parse}>
       <FieldErrorHint staticHint>
-        <InputTagsSearch
+        <AttributeInput
           customClass={cx('input')}
           async
           minLength={1}
-          makeOptions={makeOptions}
+          attributeComparator={attributeComparator}
           uri={URLS.launchAttributeValuesSearch(projectId, attributeKey)}
           creatable
           showNewLabel
@@ -55,6 +55,7 @@ const ValueField = formValues({ attributeKey: 'key' })(
 export class AttributeEditor extends Component {
   static propTypes = {
     projectId: PropTypes.string,
+    attributes: PropTypes.array,
     onConfirm: PropTypes.func,
     onCancel: PropTypes.func,
     handleSubmit: PropTypes.func,
@@ -62,29 +63,33 @@ export class AttributeEditor extends Component {
 
   static defaultProps = {
     projectId: null,
+    attributes: [],
     handleSubmit: () => {},
     onConfirm: () => {},
     onCancel: () => {},
   };
 
-  makeOptions = (attributes) =>
-    attributes && !!attributes.length ? attributes.map((tag) => ({ value: tag, label: tag })) : [];
+  byKeyComparator = (attribute, item, key, value) =>
+    attribute.key === item && attribute.value === value;
+
+  byValueComparator = (attribute, item, key) => attribute.key === key && attribute.value === item;
 
   formatValue = (value) => (value ? { value, label: value } : null);
   parseValue = (value) => (value ? value.value : undefined);
 
   render() {
-    const { projectId, onConfirm, onCancel, handleSubmit } = this.props;
+    const { projectId, attributes, onConfirm, onCancel, handleSubmit } = this.props;
     return (
       <div className={cx('attribute-editor')}>
         <div className={cx('control')}>
           <FieldProvider name="key" format={this.formatValue} parse={this.parseValue}>
             <FieldErrorHint staticHint>
-              <InputTagsSearch
+              <AttributeInput
                 customClass={cx('input')}
+                attributes={attributes}
                 async
                 minLength={1}
-                makeOptions={this.makeOptions}
+                attributeComparator={this.byKeyComparator}
                 uri={URLS.launchAttributeKeysSearch(projectId)}
                 creatable
                 isClearable
@@ -98,7 +103,8 @@ export class AttributeEditor extends Component {
             parse={this.parseValue}
             format={this.formatValue}
             projectId={projectId}
-            makeOptions={this.makeOptions}
+            attributeComparator={this.byValueComparator}
+            attributes={attributes}
           />
         </div>
         <div className={cx('control')}>
