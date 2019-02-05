@@ -52,7 +52,9 @@ export const URLS = {
   launchAttributeKeysSearch: (activeProject) =>
     `${urlBase}${activeProject}/launch/attribute/keys?filter.cnt.attributeKey=`,
   launchAttributeValuesSearch: (activeProject, key = '') =>
-    `${urlBase}${activeProject}/launch/attribute/values?filter.eq.attributeKey=${key}&filter.cnt.attributeValue=`,
+    `${urlBase}${activeProject}/launch/attribute/values?${
+      key ? `filter.eq.attributeKey=${key}&` : ''
+    }filter.cnt.attributeValue=`,
   launchTagsSearch: (activeProject) => `${urlBase}${activeProject}/launch/tags?filter.cnt.tags=`,
   launchNameSearch: (activeProject) => `${urlBase}${activeProject}/launch/names?filter.cnt.name=`,
   launchOwnersSearch: (activeProject) =>
