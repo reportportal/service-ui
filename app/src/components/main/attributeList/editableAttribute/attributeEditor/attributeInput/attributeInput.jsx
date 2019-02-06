@@ -19,6 +19,13 @@ export class AttributeInput extends Component {
     attributeComparator: () => {},
   };
 
+  isAttributeUnique = ({ option }) => {
+    const { attributes, attributeKey, attributeValue, attributeComparator } = this.props;
+    return !attributes.find((attribute) =>
+      attributeComparator(attribute, option.value, attributeKey, attributeValue),
+    );
+  };
+
   makeOptions = (items) => {
     const { attributes, attributeKey, attributeValue, attributeComparator } = this.props;
     const filteredItems = items.filter(
@@ -32,6 +39,12 @@ export class AttributeInput extends Component {
 
   render() {
     const { attributes, attributeKey, attributeValue, attributeComparator, ...rest } = this.props;
-    return <InputTagsSearch {...rest} makeOptions={this.makeOptions} />;
+    return (
+      <InputTagsSearch
+        {...rest}
+        makeOptions={this.makeOptions}
+        isOptionUnique={this.isAttributeUnique}
+      />
+    );
   }
 }
