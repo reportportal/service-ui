@@ -381,7 +381,7 @@
   "FiltersPage.filterNameLength": "Имя фильтра должно быть длиной от 3 до 128 знаков.",
   "FiltersPage.msgFavoriteFilters": "Фильтры - это поисковые запросы, которые были сохранены для повторного использования.",
   "FiltersPage.notFound": "No filters found for '{filter}'",
-  "FiltersPage.searchByName": "Поиск по Имени",
+  "FiltersPage.searchByName": "Поиск по имени",
   "FiltersPage.shareFilter": "Общий фильтр",
   "FiltersPage.title": "Фильтры",
   "FiltersNotFound.notFound": "No filters found for '{filter}'",
