@@ -1,9 +1,9 @@
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
-import TooltipIcon from 'common/img/tooltip-icon-inline.svg';
 import CrossIcon from 'common/img/cross-icon-inline.svg';
 import ShareIcon from 'common/img/share-icon-inline.svg';
+import { FilterTooltipIcon } from './filterTooltipIcon';
 import styles from './filterItem.scss';
 
 const cx = classNames.bind(styles);
@@ -20,7 +20,11 @@ export const FilterItem = ({ name, active, share, description, unsaved, onClick,
       {name}
       {unsaved && <span className={cx('unsaved')}>*</span>}
     </span>
-    {description && <div className={cx('icon')}>{Parser(TooltipIcon)}</div>}
+    {description && (
+      <div className={cx('icon')}>
+        <FilterTooltipIcon tooltipContent={description} />
+      </div>
+    )}
     {active && (
       <div className={cx('icon')} onClick={stopPropagation(onRemove)}>
         {Parser(CrossIcon)}

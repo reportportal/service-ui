@@ -1,0 +1,11 @@
+.filter-tooltip-icon {
+  position: relative;
+  top: 2px;
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+
+  svg {
+    fill: $COLOR--gray-47;
+  }
+}
