@@ -1,6 +1,9 @@
 .attachment-image {
   &-wrap {
     text-align: center;
+    & img {
+      width: 100%;
+    }
   }
 
   &-rotate {

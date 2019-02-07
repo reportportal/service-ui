@@ -57,14 +57,13 @@
   }
 }
 .modal-window {
-  position: absolute;
+  position: relative;
   display: inline-block;
-  width: 600px;
+  width: 70%;
   margin-top: 10px;
   margin-bottom: 10px;
   padding: 20px;
   box-sizing: border-box;
-  margin-left: -300px;
   background-color: $COLOR--white-two;
   text-align: left;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
@@ -72,7 +71,8 @@
   transition: margin-top 300ms ease-in, opacity 300ms ease-in;
 
   @media (max-width: $SCREEN_XS_MAX) {
-    right: 10px;
+    position: absolute;
+    right: 16px;
     left: 10px;
     width: auto;
     margin-left: 0;
