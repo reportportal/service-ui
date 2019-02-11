@@ -4,7 +4,7 @@ import { injectIntl, intlShape } from 'react-intl';
 import { ModalLayout, withModal } from 'components/main/modal';
 import Highlight from 'react-highlight';
 import 'highlight.js/styles/github.css';
-import { ATTACHMENT_CODE_MODAL_ID } from 'controllers/attachments';
+import { ATTACHMENT_CODE_MODAL_ID } from 'controllers/log/attachments';
 import { messages } from './messages';
 
 @withModal(ATTACHMENT_CODE_MODAL_ID)

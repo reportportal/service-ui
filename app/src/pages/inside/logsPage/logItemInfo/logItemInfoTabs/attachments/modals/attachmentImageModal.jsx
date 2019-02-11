@@ -5,7 +5,7 @@ import { injectIntl, intlShape } from 'react-intl';
 import RotateImage from 'common/img/rotate-inline.svg';
 import { ModalLayout, withModal } from 'components/main/modal';
 import classNames from 'classnames/bind';
-import { ATTACHMENT_IMAGE_MODAL_ID } from 'controllers/attachments';
+import { ATTACHMENT_IMAGE_MODAL_ID } from 'controllers/log/attachments';
 import { messages } from './messages';
 import styles from './attachmentModal.scss';
 

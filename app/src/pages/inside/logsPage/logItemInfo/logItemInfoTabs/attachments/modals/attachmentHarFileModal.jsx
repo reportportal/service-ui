@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { injectIntl, intlShape } from 'react-intl';
 import { ModalLayout, withModal } from 'components/main/modal';
-import { ATTACHMENT_HAR_FILE_MODAL_ID } from 'controllers/attachments';
+import { ATTACHMENT_HAR_FILE_MODAL_ID } from 'controllers/log/attachments';
 import { messages } from './messages';
 import { WithZipJs } from './har/WithZipJs';
 import { PerfCascade } from './har/PerfCascade';

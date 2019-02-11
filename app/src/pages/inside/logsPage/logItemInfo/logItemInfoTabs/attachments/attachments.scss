@@ -6,9 +6,6 @@
 .log-attachments {
   margin: 0 auto;
   width: 80%;
-  &.hide-main-area :global .carousel-slider {
-    display: none;
-  }
 
   :global {
     .carousel {
@@ -65,6 +62,14 @@
     }
     li.thumb.selected {
       border: 1px solid $COLOR--skipped;
+    }
+  }
+}
+
+.hide-main-area {
+  :global {
+    .carousel-slider {
+      display: none;
     }
   }
 }

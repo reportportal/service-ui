@@ -44,49 +44,6 @@ const messages = defineMessages({
   },
 });
 
-const makeTabs = ({ formatMessage }, logItem, onChangePage, onChangeLogLevel, onHighlightRow) => [
-  {
-    id: 'stack',
-    label: formatMessage(messages.stackTab),
-    icon: StackTraceIcon,
-    eventInfo: LOG_PAGE_EVENTS.STACK_TRACE_TAB,
-    content: (
-      <StackTrace
-        onHighlightRow={onHighlightRow}
-        onChangePage={onChangePage}
-        onChangeLogLevel={onChangeLogLevel}
-      />
-    ),
-  },
-  {
-    id: 'attachments',
-    label: formatMessage(messages.attachmentsTab),
-    icon: AttachmentIcon,
-    content: <Attachments />,
-    eventInfo: LOG_PAGE_EVENTS.ATTACHMENT_TAB,
-  },
-  {
-    id: 'details',
-    label: formatMessage(messages.detailsTab),
-    icon: InfoIcon,
-    content: <LogItemDetails logItem={logItem} />,
-    eventInfo: LOG_PAGE_EVENTS.ITEM_DETAILS_TAB,
-  },
-  {
-    id: 'parameters',
-    label: formatMessage(messages.parametersTab),
-    icon: TestParamsIcon,
-    content: <Parameters logItem={logItem} />,
-  },
-  {
-    id: 'history',
-    label: formatMessage(messages.historyTab),
-    icon: ClockIcon,
-    content: <LogItemActivity />,
-    eventInfo: LOG_PAGE_EVENTS.ACTIONS_TAB,
-  },
-];
-
 @injectIntl
 @connect((state) => ({
   lastActivity: lastLogActivitySelector(state),
@@ -107,11 +64,12 @@ export class LogItemInfoTabs extends Component {
 
   state = {
     activeTab: null,
+    activeAttachmentId: null,
   };
 
   componentDidUpdate(prevProps) {
     if (prevProps.logItem.id !== this.props.logItem.id) {
-      this.setActiveTab();
+      this.setInitialState();
     }
   }
 
@@ -119,6 +77,75 @@ export class LogItemInfoTabs extends Component {
     this.setState({
       activeTab: this.state.activeTab && this.state.activeTab.id === tab.id ? null : tab,
     });
+  };
+
+  setInitialState = () =>
+    this.setState({
+      activeTab: null,
+      activeAttachmentId: null,
+    });
+
+  changeActiveAttachment = (activeAttachmentId) =>
+    this.setState({
+      activeAttachmentId,
+    });
+
+  makeTabs = () => {
+    const {
+      intl: { formatMessage },
+      logItem,
+      onChangePage,
+      onChangeLogLevel,
+      onHighlightRow,
+    } = this.props;
+
+    return [
+      {
+        id: 'stack',
+        label: formatMessage(messages.stackTab),
+        icon: StackTraceIcon,
+        eventInfo: LOG_PAGE_EVENTS.STACK_TRACE_TAB,
+        content: (
+          <StackTrace
+            onHighlightRow={onHighlightRow}
+            onChangePage={onChangePage}
+            onChangeLogLevel={onChangeLogLevel}
+          />
+        ),
+      },
+      {
+        id: 'attachments',
+        label: formatMessage(messages.attachmentsTab),
+        icon: AttachmentIcon,
+        content: (
+          <Attachments
+            activeItemId={this.state.activeAttachmentId}
+            onChangeActiveItem={this.changeActiveAttachment}
+          />
+        ),
+        eventInfo: LOG_PAGE_EVENTS.ATTACHMENT_TAB,
+      },
+      {
+        id: 'details',
+        label: formatMessage(messages.detailsTab),
+        icon: InfoIcon,
+        content: <LogItemDetails logItem={logItem} />,
+        eventInfo: LOG_PAGE_EVENTS.ITEM_DETAILS_TAB,
+      },
+      {
+        id: 'parameters',
+        label: formatMessage(messages.parametersTab),
+        icon: TestParamsIcon,
+        content: <Parameters logItem={logItem} />,
+      },
+      {
+        id: 'history',
+        label: formatMessage(messages.historyTab),
+        icon: ClockIcon,
+        content: <LogItemActivity />,
+        eventInfo: LOG_PAGE_EVENTS.ACTIONS_TAB,
+      },
+    ];
   };
 
   renderPanelContent() {
@@ -133,11 +160,9 @@ export class LogItemInfoTabs extends Component {
   }
 
   render() {
-    const { intl, logItem, onChangePage, onChangeLogLevel, onHighlightRow } = this.props;
-
     return (
       <InfoTabs
-        tabs={makeTabs(intl, logItem, onChangePage, onChangeLogLevel, onHighlightRow)}
+        tabs={this.makeTabs()}
         activeTab={this.state.activeTab}
         setActiveTab={this.setActiveTab}
         panelContent={this.renderPanelContent()}
