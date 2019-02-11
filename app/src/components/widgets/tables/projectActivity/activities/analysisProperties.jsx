@@ -100,12 +100,12 @@ export class AnalysisProperties extends Component {
     const { activity } = this.props;
     return (
       <Fragment>
-        <span className={cx('user-name')}>{activity.userRef}</span>
+        <span className={cx('user-name')}>{activity.user}</span>
         <FormattedMessage id="UpdateAnalysisSettings.updated" defaultMessage="updated" />
         <Link
           className={cx('link')}
           target="_blank"
-          to={getProjectSettingTabPageLink(activity.projectRef, ANALYSIS)}
+          to={getProjectSettingTabPageLink(activity.projectName, ANALYSIS)}
         >
           <FormattedMessage
             id="UpdateAnalysisSettings.analysisProps"

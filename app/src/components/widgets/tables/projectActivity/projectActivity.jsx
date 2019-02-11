@@ -144,6 +144,7 @@ const months = [
 ];
 const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
+// TODO: rewrite it when integrations will be added
 @connect((state) => ({
   hasBts: externalSystemSelector(state).length > 0,
 }))
@@ -218,7 +219,7 @@ export class ProjectActivity extends Component {
   };
 
   getUserAvatar = (activity) => {
-    const avatarUrl = URLS.dataPhoto(activity.userRef, Date.now());
+    const avatarUrl = URLS.dataUserPhoto(activity.user);
     return <img className={cx('avatar')} src={avatarUrl} alt="avatar" />;
   };
 

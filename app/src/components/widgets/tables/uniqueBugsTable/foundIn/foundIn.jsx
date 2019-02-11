@@ -6,8 +6,7 @@ import PropTypes from 'prop-types';
 import { activeProjectSelector } from 'controllers/user';
 import { ALL } from 'common/constants/reservedFilterIds';
 import { PROJECT_LOG_PAGE } from 'controllers/pages';
-import TagIcon from 'common/img/tag-inline.svg';
-import Parser from 'html-react-parser';
+import { AttributesBlock } from 'pages/inside/common/itemInfo/attributesBlock';
 import styles from './foundIn.scss';
 
 export const cx = classNames.bind(styles);
@@ -40,12 +39,7 @@ export class FoundIn extends Component {
             {item.name}
           </NavLink>
         </div>
-        {item.tags && (
-          <span>
-            <i className={cx('icon')}>{Parser(TagIcon)}</i>
-            {item.tags.join(', ')}
-          </span>
-        )}
+        {item.attributes && <AttributesBlock attributes={item.attributes} />}
       </Fragment>
     );
   };

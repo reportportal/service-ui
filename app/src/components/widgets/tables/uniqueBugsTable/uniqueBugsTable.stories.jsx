@@ -1,16 +1,9 @@
 import { storiesOf } from '@storybook/react';
 import { host } from 'storybook-host';
 import { withReadme } from 'storybook-readme';
-
 import { UniqueBugsTable } from './uniqueBugsTable';
 import { widgetData } from './storyData';
 import README from './README.md';
-
-const mockNode = document.createElement('node');
-const mockObserver = {
-  subscribe: () => {},
-  unsubscribe: () => {},
-};
 
 storiesOf('Components/Widgets/Tables/UniqueBugsTable', module)
   .addDecorator(
@@ -24,9 +17,4 @@ storiesOf('Components/Widgets/Tables/UniqueBugsTable', module)
     }),
   )
   .addDecorator(withReadme(README))
-  .add('default state', () => (
-    <UniqueBugsTable widget={widgetData} container={mockNode} observer={mockObserver} />
-  ))
-  .add('preview mode', () => (
-    <UniqueBugsTable widget={widgetData} container={mockNode} observer={mockObserver} isPreview />
-  ));
+  .add('default state', () => <UniqueBugsTable widget={widgetData} />);

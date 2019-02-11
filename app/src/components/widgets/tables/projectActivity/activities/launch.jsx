@@ -69,33 +69,33 @@ export class Launch extends Component {
     } = this.props;
     return (
       <Fragment>
-        <span className={cx('user-name')}>{activity.userRef}</span>
+        <span className={cx('user-name')}>{activity.user}</span>
         {`${messages[activity.actionType] && formatMessage(messages[activity.actionType])}`}
         {activity.actionType === DELETE_LAUNCH && (
           <Fragment>
             {` ${formatMessage(messages.launch)} `}
-            {activity.name}
+            {activity.details.objectName}.
           </Fragment>
         )}
         {(activity.actionType === START_LAUNCH || activity.actionType === FINISH_LAUNCH) && (
           <Fragment>
             {` ${formatMessage(messages.launch)}`}
             <Link
-              to={getTestItemPageLink(activity.projectRef, activity.loggedObjectRef)}
+              to={getTestItemPageLink(activity.projectName, activity.loggedObjectId)}
               className={cx('link')}
               target="_blank"
             >
-              {activity.name}
+              {activity.details.objectName}.
             </Link>
           </Fragment>
         )}
         {(activity.actionType === START_IMPORT || activity.actionType === FINISH_IMPORT) && (
           <Link
-            to={this.getLaunchesPageLink(activity.projectRef)}
+            to={this.getLaunchesPageLink(activity.projectName)}
             className={cx('link')}
             target="_blank"
           >
-            {activity.name}
+            {activity.details.objectName}.
           </Link>
         )}
       </Fragment>

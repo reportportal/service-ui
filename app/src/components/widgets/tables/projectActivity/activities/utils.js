@@ -6,11 +6,11 @@ export const getProjectSettingTabPageLink = (projectId, settingsTab) => ({
   payload: { projectId, settingsTab },
 });
 
-export const getTestItemPageLink = (projectId, itemIds) => ({
+export const getTestItemPageLink = (projectId, testItemIds) => ({
   type: TEST_ITEM_PAGE,
   payload: {
     projectId,
     filterId: ALL,
-    itemIds,
+    testItemIds,
   },
 });
