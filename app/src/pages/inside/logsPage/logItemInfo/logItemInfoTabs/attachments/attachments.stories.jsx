@@ -28,7 +28,10 @@ const ALL_FILETYPES = [
 
 const MOCK_DATA = ALL_FILETYPES.map((fileType, id) => ({
   id: String(id),
-  src: getFileIconSource(fileType),
+  src: getFileIconSource({
+    id: String(id),
+    contentType: fileType,
+  }),
   alt: fileType,
   attachment: {
     id: String(id),

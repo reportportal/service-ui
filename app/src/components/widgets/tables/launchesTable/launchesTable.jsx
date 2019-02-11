@@ -2,18 +2,23 @@ import React, { PureComponent } from 'react';
 import classNames from 'classnames/bind';
 import { injectIntl, intlShape } from 'react-intl';
 import PropTypes from 'prop-types';
-import { Grid } from 'components/main/grid';
-import { AbsRelTime } from 'components/main/absRelTime';
-import { ItemInfo } from 'pages/inside/common/itemInfo';
+import { connect } from 'react-redux';
 import {
   STATS_TOTAL,
   STATS_SKIPPED,
   STATS_PASSED,
   STATS_FAILED,
 } from 'common/constants/statistics';
+import { ALL } from 'common/constants/reservedFilterIds';
+import { activeProjectSelector } from 'controllers/user';
+import { TEST_ITEM_PAGE } from 'controllers/pages';
+import { Grid } from 'components/main/grid';
+import { AbsRelTime } from 'components/main/absRelTime';
+import { ItemInfo } from 'pages/inside/common/itemInfo';
 import { ExecutionStatistics } from 'pages/inside/common/launchSuiteGrid/executionStatistics';
 import { DefectStatistics } from 'pages/inside/common/launchSuiteGrid/defectStatistics';
 import { ToInvestigateStatistics } from 'pages/inside/common/launchSuiteGrid/toInvestigateStatistics';
+import { StatisticsLink } from 'pages/inside/common/statisticsLink';
 import { DefectLink } from 'pages/inside/common/defectLink';
 import { formatStatus } from 'common/utils/localizationUtils';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
@@ -43,6 +48,7 @@ import styles from './launchesTable.scss';
 
 const cx = classNames.bind(styles);
 let formatMessage = null;
+let linkPayload = null;
 
 const NameColumn = ({ className, value }) => {
   const { values, attributes } = value;
@@ -54,9 +60,14 @@ const NameColumn = ({ className, value }) => {
     description: values.description,
     attributes: attributes || null,
   };
+  const ownLinkParams = {
+    page: TEST_ITEM_PAGE,
+    isOtherPage: true,
+    payload: linkPayload,
+  };
   return (
     <div className={cx('name-col', className)}>
-      <ItemInfo widgetView value={itemPropValue} editDisabled />
+      <ItemInfo customProps={{ ownLinkParams }} value={itemPropValue} editDisabled />
     </div>
   );
 };
@@ -91,23 +102,32 @@ TimeColumn.propTypes = {
   className: PropTypes.string.isRequired,
 };
 
-const StatisticsColumn = ({ className, value }, name) => (
-  <div className={cx('statistics-col', className)}>
-    <div className={cx('desktop-block')}>
-      <ExecutionStatistics
-        itemId={Number(value.id)}
-        value={Number(value.values[name])}
-        statuses={getStatisticsStatuses(name)}
-      />
-    </div>
-    <div className={cx('mobile-block', `statistics-${name.split('$')[2]}`)}>
-      <div className={cx('block-content')}>
-        <span className={cx('value')}>{Number(value.values[name])}</span>
-        <span className={cx('message')}>{defaultStatisticsMessages[name]}</span>
+const StatisticsColumn = ({ className, value }, name) => {
+  const defaultColumnProps = {
+    itemId: Number(value.id),
+    statuses: getStatisticsStatuses(name),
+    ownLinkParams: {
+      page: TEST_ITEM_PAGE,
+      isOtherPage: true,
+      payload: linkPayload,
+    },
+  };
+  return (
+    <div className={cx('statistics-col', className)}>
+      <div className={cx('desktop-block')}>
+        <ExecutionStatistics value={Number(value.values[name])} {...defaultColumnProps} />
+      </div>
+      <div className={cx('mobile-block', `statistics-${name.split('$')[2]}`)}>
+        <div className={cx('block-content')}>
+          <StatisticsLink className={cx('value')} {...defaultColumnProps}>
+            {Number(value.values[name])}
+          </StatisticsLink>
+          <span className={cx('message')}>{defaultStatisticsMessages[name]}</span>
+        </div>
       </div>
     </div>
-  </div>
-);
+  );
+};
 StatisticsColumn.propTypes = {
   value: PropTypes.object.isRequired,
   className: PropTypes.string.isRequired,
@@ -118,7 +138,14 @@ const DefectsColumn = ({ className, value }, name) => {
   const defectType = nameConfig[2];
   const defectLocator = nameConfig[3];
   const itemValue = value.values[name];
-
+  const defaultColumnProps = {
+    itemId: Number(value.id),
+    ownLinkParams: {
+      page: TEST_ITEM_PAGE,
+      isOtherPage: true,
+      payload: linkPayload,
+    },
+  };
   return (
     <div className={cx('defect-col', className)}>
       <div className={cx('desktop-block')}>
@@ -129,7 +156,7 @@ const DefectsColumn = ({ className, value }, name) => {
                 [defectLocator]: itemValue,
                 total: itemValue,
               }}
-              itemId={Number(value.id)}
+              {...defaultColumnProps}
             />
           ) : (
             <DefectStatistics
@@ -138,13 +165,13 @@ const DefectsColumn = ({ className, value }, name) => {
                 [defectLocator]: itemValue,
                 total: itemValue,
               }}
-              itemId={Number(value.id)}
+              {...defaultColumnProps}
             />
           ))}
       </div>
       <div className={cx('mobile-block', `defect-${defectType}`)}>
         <div className={cx('block-content')}>
-          <DefectLink itemId={Number(value.id)} defects={[defectLocator, 'total']}>
+          <DefectLink {...defaultColumnProps} defects={[defectLocator, 'total']}>
             {itemValue}
           </DefectLink>
           <span className={cx('message')}>{defaultStatusesMessages[name]}</span>
@@ -187,16 +214,24 @@ const COLUMNS_MAP = {
   [STATS_TI]: getColumn(STATS_TI, DEFECT_COLUMN_KEY),
 };
 
+@connect((state) => ({
+  projectId: activeProjectSelector(state),
+}))
 @injectIntl
 export class LaunchesTable extends PureComponent {
   static propTypes = {
     intl: intlShape.isRequired,
     widget: PropTypes.object.isRequired,
+    projectId: PropTypes.string.isRequired,
   };
 
   constructor(props) {
     super(props);
     formatMessage = props.intl.formatMessage;
+    linkPayload = {
+      projectId: props.projectId,
+      filterId: ALL,
+    };
     this.columns = this.getColumns();
   }
 

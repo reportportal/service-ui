@@ -16,7 +16,7 @@ export const getTicks = (bottom, top) => {
       step = Math.round(height / count / 10) * 10;
       break;
   }
-  range(0, top, step).forEach((item) => {
+  range(0, top, step || 1).forEach((item) => {
     if (item > bottom) {
       result.push(item);
     }

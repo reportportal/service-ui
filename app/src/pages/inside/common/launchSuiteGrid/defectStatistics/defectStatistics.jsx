@@ -14,6 +14,7 @@ export const DefectStatistics = ({
   itemId,
   eventInfo,
   tooltipEventInfo,
+  ownLinkParams,
 }) => (
   <div className={cx('defect-statistics')}>
     <span className={cx('title')}>
@@ -30,11 +31,17 @@ export const DefectStatistics = ({
             viewBox={64}
             strokeWidth={13}
             eventInfo={eventInfo}
+            ownLinkParams={ownLinkParams}
             tooltipEventInfo={tooltipEventInfo}
           />
         </div>
         <div className={cx('desktop-hidden')}>
-          <DefectLink itemId={itemId} defects={Object.keys(data)} eventInfo={eventInfo}>
+          <DefectLink
+            itemId={itemId}
+            defects={Object.keys(data)}
+            ownLinkParams={ownLinkParams}
+            eventInfo={eventInfo}
+          >
             {data.total}
           </DefectLink>
         </div>
@@ -49,6 +56,11 @@ DefectStatistics.propTypes = {
   itemId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   eventInfo: PropTypes.object,
   tooltipEventInfo: PropTypes.object,
+  ownLinkParams: PropTypes.shape({
+    isOtherPage: PropTypes.bool,
+    payload: PropTypes.object,
+    page: PropTypes.string,
+  }),
 };
 DefectStatistics.defaultProps = {
   type: '',
@@ -56,4 +68,5 @@ DefectStatistics.defaultProps = {
   data: {},
   eventInfo: {},
   tooltipEventInfo: {},
+  ownLinkParams: {},
 };

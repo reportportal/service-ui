@@ -3,21 +3,17 @@ import track from 'react-tracking';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { injectIntl, defineMessages } from 'react-intl';
-import { NavLink } from 'redux-first-router-link';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
 import { fromNowFormat } from 'common/utils';
 import { canEditLaunch } from 'common/utils/permissions';
 import { LEVEL_STEP } from 'common/constants/launchLevels';
-import { ALL } from 'common/constants/reservedFilterIds';
 import {
-  activeProjectSelector,
   activeProjectRoleSelector,
   userAccountRoleSelector,
   userIdSelector,
 } from 'controllers/user';
 import { levelSelector, launchSelector } from 'controllers/testItem';
-import { TEST_ITEM_PAGE } from 'controllers/pages';
 import { MarkdownViewer } from 'components/main/markdown';
 import { LAUNCHES_PAGE_EVENTS } from 'components/main/analytics/events';
 import { formatMethodType, formatStatus } from 'common/utils/localizationUtils';
@@ -42,7 +38,6 @@ const messages = defineMessages({
 
 @injectIntl
 @connect((state) => ({
-  activeProject: activeProjectSelector(state),
   userAccountRole: userAccountRoleSelector(state),
   userProjectRole: activeProjectRoleSelector(state),
   userId: userIdSelector(state),
@@ -57,7 +52,6 @@ export class ItemInfo extends Component {
     refFunction: PropTypes.func.isRequired,
     analyzing: PropTypes.bool,
     customProps: PropTypes.object,
-    activeProject: PropTypes.string.isRequired,
     userProjectRole: PropTypes.string,
     userAccountRole: PropTypes.string.isRequired,
     userId: PropTypes.string,
@@ -76,6 +70,7 @@ export class ItemInfo extends Component {
     value: {},
     analyzing: false,
     customProps: {
+      ownLinkParams: {},
       onEditItem: () => {},
       onShowTestParams: () => {},
       onClickAttribute: () => {},
@@ -111,12 +106,10 @@ export class ItemInfo extends Component {
       editDisabled,
       refFunction,
       analyzing,
-      activeProject,
       userProjectRole,
       userAccountRole,
       userId,
       isStepLevel,
-      widgetView,
       launch,
       tracking,
       onClickRetries,
@@ -126,31 +119,15 @@ export class ItemInfo extends Component {
     return (
       <div ref={refFunction} className={cx('item-info')}>
         <div className={cx('main-info')}>
-          {widgetView ? (
-            <NavLink
-              to={{
-                type: TEST_ITEM_PAGE,
-                payload: {
-                  projectId: activeProject,
-                  filterId: ALL,
-                  testItemIds: value.id,
-                },
-              }}
-              className={cx('name-link')}
-            >
-              <span className={cx('name')}>{value.name}</span>
-              {value.number && <span className={cx('number')}>#{value.number}</span>}
-            </NavLink>
-          ) : (
-            <NameLink
-              itemId={value.id}
-              className={cx('name-link')}
-              onClick={() => tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_ITEM_NAME)}
-            >
-              <span className={cx('name')}>{value.name}</span>
-              {value.number && <span className={cx('number')}>#{value.number}</span>}
-            </NameLink>
-          )}
+          <NameLink
+            itemId={value.id}
+            ownLinkParams={customProps.ownLinkParams}
+            className={cx('name-link')}
+            onClick={() => tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_ITEM_NAME)}
+          >
+            <span className={cx('name')}>{value.name}</span>
+            {value.number && <span className={cx('number')}>#{value.number}</span>}
+          </NameLink>
           {analyzing && <div className={cx('analysis-badge')}>Analysis</div>}
           {isStepLevel && (
             <div className={cx('test-params-icon')} onClick={this.handleShowTestParams}>
@@ -209,6 +186,7 @@ export class ItemInfo extends Component {
             </div>
           )}
           {isStepLevel &&
+            value.retries &&
             value.retries.length > 0 && (
               <div className={cx('retries-counter')}>
                 <RetriesCounter testItem={value} onLabelClick={onClickRetries} />

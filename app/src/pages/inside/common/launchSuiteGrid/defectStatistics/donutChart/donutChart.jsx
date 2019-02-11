@@ -32,10 +32,16 @@ export class DonutChart extends Component {
     defectColors: PropTypes.object.isRequired,
     itemId: PropTypes.number.isRequired,
     eventInfo: PropTypes.object,
+    ownLinkParams: PropTypes.shape({
+      isOtherPage: PropTypes.bool,
+      payload: PropTypes.object,
+      page: PropTypes.string,
+    }),
   };
   static defaultProps = {
     type: '',
     eventInfo: {},
+    ownLinkParams: {},
   };
 
   getChartData = () => {
@@ -46,7 +52,7 @@ export class DonutChart extends Component {
     Object.keys(this.props.data).forEach((defect) => {
       if (defect !== 'total') {
         const val = defects[defect];
-        const percents = (val / defects.total) * 100;
+        const percents = val / defects.total * 100;
 
         chartData.push({
           id: defect,
@@ -63,7 +69,16 @@ export class DonutChart extends Component {
   chartData = [];
 
   render() {
-    const { data, type, viewBox, strokeWidth, itemId, defectColors, eventInfo } = this.props;
+    const {
+      data,
+      type,
+      viewBox,
+      strokeWidth,
+      itemId,
+      defectColors,
+      eventInfo,
+      ownLinkParams,
+    } = this.props;
     const diameter = viewBox / 2;
     const r = 100 / (2 * Math.PI);
 
@@ -72,7 +87,12 @@ export class DonutChart extends Component {
     }
 
     return (
-      <DefectLink defects={Object.keys(data)} itemId={itemId} eventInfo={eventInfo}>
+      <DefectLink
+        defects={Object.keys(data)}
+        itemId={itemId}
+        eventInfo={eventInfo}
+        ownLinkParams={ownLinkParams}
+      >
         <div className={cx('chart-container')}>
           <svg width="100%" height="100%" viewBox={`0 0 ${viewBox} ${viewBox}`} className="donut">
             <circle cx={diameter} cy={diameter} r={r} fill="transparent" />

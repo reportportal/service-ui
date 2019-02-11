@@ -5,6 +5,7 @@ import { ModalLayout, withModal, ModalField } from 'components/main/modal';
 import { reduxForm } from 'redux-form';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { Input } from 'components/inputs/input';
@@ -56,6 +57,7 @@ const messages = defineMessages({
     defaultMessage: 'Cancel',
   },
 });
+
 @withModal('dashboardAddEditModal')
 @injectIntl
 @reduxForm({
@@ -75,6 +77,7 @@ export class AddEditModal extends Component {
     }),
     intl: intlShape.isRequired,
     initialize: PropTypes.func,
+    dirty: PropTypes.bool.isRequired,
     handleSubmit: PropTypes.func,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
@@ -97,13 +100,25 @@ export class AddEditModal extends Component {
     this.props.initialize(this.props.data.dashboardItem);
   }
 
+  getCloseConfirmationConfig = () => {
+    if (!this.props.dirty) {
+      return null;
+    }
+    return {
+      confirmationWarning: this.props.intl.formatMessage(COMMON_LOCALE_KEYS.CLOSE_MODAL_WARNING),
+    };
+  };
+
   submitFormAndCloseModal = (closeModal) => (item) => {
     const {
       tracking,
       data: { dashboardItem, eventsInfo },
+      dirty,
     } = this.props;
-    !dashboardItem && item.description && tracking.trackEvent(eventsInfo.changeDescription);
-    this.props.data.onSubmit(item);
+    if (dirty) {
+      !dashboardItem && item.description && tracking.trackEvent(eventsInfo.changeDescription);
+      this.props.data.onSubmit(item);
+    }
     closeModal();
   };
 
@@ -132,9 +147,10 @@ export class AddEditModal extends Component {
           text: cancelText,
           eventInfo: eventsInfo.cancelBtn,
         }}
+        closeConfirmation={this.getCloseConfirmationConfig()}
         closeIconEventInfo={eventsInfo.closeIcon}
       >
-        <form className={cx('add-dashboard-form')}>
+        <form onSubmit={(event) => event.preventDefault()} className={cx('add-dashboard-form')}>
           <ModalField
             label={intl.formatMessage(messages.dashboardNameLabel)}
             labelWidth={labelWidth}

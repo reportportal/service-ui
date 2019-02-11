@@ -8,18 +8,18 @@ import {
 
 export const getStatisticsStatuses = (type) => {
   switch (type) {
-    case [STATS_TOTAL]:
+    case STATS_TOTAL:
       return [
         PASSED.toUpperCase(),
         FAILED.toUpperCase(),
         SKIPPED.toUpperCase(),
         INTERRUPTED.toUpperCase(),
       ];
-    case [STATS_PASSED]:
+    case STATS_PASSED:
       return [PASSED.toUpperCase()];
-    case [STATS_FAILED]:
+    case STATS_FAILED:
       return [FAILED.toUpperCase(), INTERRUPTED.toUpperCase()];
-    case [STATS_SKIPPED]:
+    case STATS_SKIPPED:
       return [SKIPPED.toUpperCase()];
     default:
       break;

@@ -12,16 +12,17 @@ import {
   testItemIdsSelector,
 } from 'controllers/pages';
 import { activeProjectSelector } from 'controllers/user';
+import { NAMESPACE as LAUNCH_NAMESPACE, debugModeSelector } from 'controllers/launch';
 import {
   copyQuery,
   extractNamespacedQuery,
   createNamespacedQuery,
 } from 'common/utils/routingUtils';
 import { LEVEL_SUITE, LEVEL_TEST, LEVEL_STEP } from 'common/constants/launchLevels';
+import { ALL } from 'common/constants/reservedFilterIds';
 import { suitesSelector } from 'controllers/suite';
 import { testsSelector } from 'controllers/test';
 import { stepsSelector } from 'controllers/step';
-import { NAMESPACE as LAUNCH_NAMESPACE, debugModeSelector } from 'controllers/launch';
 import { defectTypesSelector } from 'controllers/project';
 import { DEFAULT_SORTING } from './constants';
 import {
@@ -145,11 +146,15 @@ export const breadcrumbsSelector = createSelector(
 );
 
 export const nameLinkSelector = (state, ownProps) => {
-  const payload = payloadSelector(state);
-  const testItemIds = ownProps.testItemIds || testItemIdsSelector(state);
+  const payload =
+    (ownProps.ownLinkParams && ownProps.ownLinkParams.payload) || payloadSelector(state);
+  const testItemIds =
+    (ownProps.ownLinkParams && ownProps.testItemIds) || testItemIdsSelector(state);
   const isDebugMode = debugModeSelector(state);
   const level = levelSelector(state);
   let query = pagePropertiesSelector(state);
+  const page =
+    (ownProps.ownLinkParams && ownProps.ownLinkParams.page) || getNextPage(level, isDebugMode);
 
   if (ownProps.uniqueId) {
     query = {
@@ -158,21 +163,19 @@ export const nameLinkSelector = (state, ownProps) => {
     };
   }
 
-  return createLink(
-    testItemIds,
-    ownProps.itemId,
-    payload,
-    query,
-    ownProps.page || getNextPage(level, isDebugMode),
-  );
+  return createLink(testItemIds, ownProps.itemId, payload, query, page);
 };
 
 export const statisticsLinkSelector = (state, ownProps) => {
   const query = pagePropertiesSelector(state);
-  const payload = payloadSelector(state);
+  const payload =
+    (ownProps.ownLinkParams && ownProps.ownLinkParams.payload) || payloadSelector(state);
   const testItemIds = testItemIdsSelector(state);
   const isDebugMode = debugModeSelector(state);
   const level = levelSelector(state);
+  const page =
+    (ownProps.ownLinkParams && ownProps.ownLinkParams.page) || getNextPage(level, isDebugMode);
+
   return createLink(
     testItemIds,
     ownProps.itemId,
@@ -190,13 +193,14 @@ export const statisticsLinkSelector = (state, ownProps) => {
         ),
       ),
     },
-    getNextPage(level, isDebugMode),
+    page,
   );
 };
 
 export const defectLinkSelector = (state, ownProps) => {
   const query = pagePropertiesSelector(state);
-  const payload = payloadSelector(state);
+  const payload =
+    (ownProps.ownLinkParams && ownProps.ownLinkParams.payload) || payloadSelector(state);
   const testItemIds = testItemIdsSelector(state);
   const isDebugMode = debugModeSelector(state);
   const level = levelSelector(state);
@@ -206,6 +210,8 @@ export const defectLinkSelector = (state, ownProps) => {
       ? testItemIdsArraySelector(state).length - 1
       : testItemIdsArraySelector(state).length;
   }
+  const page =
+    (ownProps.ownLinkParams && ownProps.ownLinkParams.page) || getNextPage(level, isDebugMode);
 
   return createLink(
     testItemIds,
@@ -222,6 +228,30 @@ export const defectLinkSelector = (state, ownProps) => {
         getQueryNamespace(levelIndex),
       ),
     },
-    getNextPage(level, isDebugMode),
+    page,
+  );
+};
+
+export const testCaseNameLinkSelector = (state, ownProps) => {
+  const activeProject = activeProjectSelector(state);
+  const payload = {
+    projectId: activeProject,
+    filterId: ALL,
+  };
+
+  return createLink(
+    ownProps.testItemIds,
+    ownProps.itemId,
+    payload,
+    {
+      ...createNamespacedQuery(
+        {
+          'filter.eq.uniqueId': ownProps.uniqueId,
+          'filter.eq.hasChildren': false,
+        },
+        getQueryNamespace(0),
+      ),
+    },
+    TEST_ITEM_PAGE,
   );
 };
