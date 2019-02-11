@@ -128,7 +128,7 @@ func (hrw *redirectingRW) Header() http.Header {
 func (hrw *redirectingRW) WriteHeader(status int) {
 	if status == 404 {
 		hrw.ignore = true
-		http.Redirect(hrw.ResponseWriter, hrw.Request, "/ui/404.html", http.StatusTemporaryRedirect)
+		http.Redirect(hrw.ResponseWriter, hrw.Request, "/ui/#notfound", http.StatusTemporaryRedirect)
 	} else {
 		hrw.ResponseWriter.WriteHeader(status)
 	}
