@@ -53,15 +53,15 @@ export class Bts extends Component {
       activity,
       intl: { formatMessage },
     } = this.props;
-    const bts = this.btsName(activity.name);
+    const bts = this.btsName(activity.details.objectName);
     const linksParams = {
       target: '_blank',
-      to: getProjectSettingTabPageLink(activity.projectRef, BTS),
+      to: getProjectSettingTabPageLink(activity.projectName, BTS),
       className: cx('link'),
     };
     return (
       <Fragment>
-        <span className={cx('user-name')}>{activity.userRef}</span>
+        <span className={cx('user-name')}>{activity.user}</span>
         {`${messages[activity.actionType] && formatMessage(messages[activity.actionType])} ${
           bts.type
         }`}

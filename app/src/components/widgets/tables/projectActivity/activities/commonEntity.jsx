@@ -73,9 +73,9 @@ export class CommonEntity extends Component {
     const { activity, intl } = this.props;
     return (
       <Fragment>
-        <span className={cx('user-name')}>{activity.userRef}</span>
+        <span className={cx('user-name')}>{activity.user}</span>
         {messages[activity.actionType] && intl.formatMessage(messages[activity.actionType])}
-        <span className={cx('activity-name')}> {activity.name}.</span>
+        <span className={cx('activity-name')}> {activity.details.objectName}.</span>
       </Fragment>
     );
   }

@@ -12,7 +12,6 @@ import {
   FOUND_IN_COLUMN_KEY,
   SUBMITTER_COLUMN_KEY,
 } from './constants';
-
 import { COLUMN_NAMES_MAP, hintMessages } from './messages';
 import { FoundIn } from './foundIn';
 
@@ -26,7 +25,7 @@ const ColumnProps = {
 const BugIDColumn = ({ className, value }) => (
   <div className={cx('bug-id-col', className)}>
     {value.url ? (
-      <Link to={value.url} className={cx('bug-link')}>
+      <Link to={value.url} target="_blank" className={cx('bug-link')}>
         {value.bugID}
       </Link>
     ) : (

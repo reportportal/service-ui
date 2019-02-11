@@ -12,10 +12,10 @@ const cx = classNames.bind(styles);
 
 export const AnalysisConfigurations = ({ activity }) => (
   <Fragment>
-    <span className={cx('user-name')}>{activity.userRef}</span>
+    <span className={cx('user-name')}>{activity.user}</span>
     <FormattedMessage id="AnalysisConfigurations.update" defaultMessage="updated" />
     <Link
-      to={getProjectSettingTabPageLink(activity.projectRef, ANALYSIS)}
+      to={getProjectSettingTabPageLink(activity.projectName, ANALYSIS)}
       className={cx('link')}
       target="_blank"
     >

@@ -48,7 +48,7 @@ export class TestItem extends Component {
   };
 
   componentDidMount() {
-    fetch(URLS.testItem(this.props.activity.projectRef, this.props.activity.loggedObjectRef), {
+    fetch(URLS.testItem(this.props.activity.projectName, this.props.activity.loggedObjectId), {
       method: 'get',
     }).then((response) => {
       this.setState({ testItem: response });
@@ -84,11 +84,11 @@ export class TestItem extends Component {
     const pathToTestItem =
       this.state.testItem &&
       `${this.state.testItem.launchId}/${Object.keys(this.state.testItem.path_names).join('/')}/${
-        activity.loggedObjectRef
+        activity.loggedObjectId
       }`;
     return (
       <Fragment>
-        <span className={cx('user-name')}>{activity.userRef}</span>
+        <span className={cx('user-name')}>{activity.user}</span>
         {messages[activity.actionType] && intl.formatMessage(messages[activity.actionType])}
         {this.getTickets(activity).map((ticket, t, tickets) => {
           const ticketData = this.getTicketUrlId(ticket);
@@ -104,11 +104,11 @@ export class TestItem extends Component {
           ? intl.formatMessage(messages.fromItem)
           : intl.formatMessage(messages.toItem)}
         <Link
-          to={getTestItemPageLink(activity.projectRef, pathToTestItem)}
+          to={getTestItemPageLink(activity.projectName, pathToTestItem)}
           className={cx('link')}
           target="_blank"
         >
-          {activity.name}
+          {activity.details.objectName}
         </Link>
       </Fragment>
     );

@@ -30,10 +30,10 @@ const startTimeColumnShortTitle = (
   <FormattedMessage id={'LaunchesTable.startTimeColumnShort'} defaultMessage={'Start'} />
 );
 const endTimeColumnFullTitle = (
-  <FormattedMessage id={'LaunchesTable.endTimeColumnFull'} defaultMessage={'End time'} />
+  <FormattedMessage id={'LaunchesTable.endTimeColumnFull'} defaultMessage={'Finish time'} />
 );
 const endTimeColumnShortTitle = (
-  <FormattedMessage id={'LaunchesTable.endTimeColumnShort'} defaultMessage={'End'} />
+  <FormattedMessage id={'LaunchesTable.endTimeColumnShort'} defaultMessage={'Finish'} />
 );
 const totalColumnFullTitle = (
   <FormattedMessage id={'LaunchesTable.totalColumnFull'} defaultMessage={'Total'} />

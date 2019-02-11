@@ -65,10 +65,10 @@ export class DefaultProjectSettings extends Component {
     const { activity } = this.props;
     return (
       <Fragment>
-        <span className={cx('user-name')}>{activity.userRef}</span>
+        <span className={cx('user-name')}>{activity.user}</span>
         <FormattedMessage id="ProjectActivity.updateProject" defaultMessage="updated" />
         <Link
-          to={this.getProjectSettingsLink(activity.projectRef)}
+          to={this.getProjectSettingsLink(activity.projectName)}
           className={cx('link')}
           target="_blank"
         >

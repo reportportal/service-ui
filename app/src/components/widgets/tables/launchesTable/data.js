@@ -40,7 +40,7 @@ export const mockData = {
           statistics$defects$automation_bug$ab001: '11',
           statistics$executions$skipped: '22',
           statistics$executions$total: '119',
-          endTime: '1533908750104',
+          endTime: 1533908750104,
           description:
             '### **Demonstration launch.**\n' +
             'A typical *Launch structure* comprises the following elements: Suite > Test > Step > Log.\n' +
@@ -63,7 +63,7 @@ export const mockData = {
           status: 'FAILED',
         },
         name: 'Demo Api Tests_214r2323adsddads123dsdsdsdsddsds',
-        startTime: '1533908745504',
+        startTime: 1533908745504,
         number: '13',
         id: '5b6d9709857aba00013a5d92',
       },
@@ -72,7 +72,7 @@ export const mockData = {
           statistics$defects$automation_bug$ab001: '2',
           statistics$executions$skipped: '11',
           statistics$executions$total: '76',
-          endTime: '1533908746422',
+          endTime: 1533908746422,
           description:
             '### **Demonstration launch.**\n' +
             'A typical *Launch structure* comprises the following elements: Suite > Test > Step > Log.\n' +
@@ -95,7 +95,7 @@ export const mockData = {
           status: 'FAILED',
         },
         name: 'Demo Api Tests_214r2323adsddads123dsdsdsdsddsds',
-        startTime: '1533908743770',
+        startTime: 1533908743770,
         number: '11',
         id: '5b6d9707857aba00013a4e51',
       },
@@ -104,7 +104,7 @@ export const mockData = {
           statistics$defects$automation_bug$ab001: '3',
           statistics$executions$skipped: '11',
           statistics$executions$total: '76',
-          endTime: '1533908745503',
+          endTime: 1533908745503,
           description:
             '### **Demonstration launch.**\n' +
             'A typical *Launch structure* comprises the following elements: Suite > Test > Step > Log.\n' +
@@ -127,7 +127,7 @@ export const mockData = {
           status: 'FAILED',
         },
         name: 'Demo Api Tests_214r2323adsddads123dsdsdsdsddsds',
-        startTime: '1533908742771',
+        startTime: 1533908742771,
         number: '10',
         id: '5b6d9706857aba00013a4587',
       },
@@ -136,7 +136,7 @@ export const mockData = {
           statistics$defects$automation_bug$ab001: '3',
           statistics$executions$skipped: '8',
           statistics$executions$total: '42',
-          endTime: '1533908743999',
+          endTime: 1533908743999,
           description:
             '### **Demonstration launch.**\n' +
             'A typical *Launch structure* comprises the following elements: Suite > Test > Step > Log.\n' +
@@ -159,7 +159,7 @@ export const mockData = {
           status: 'FAILED',
         },
         name: 'Demo Api Tests_214r2323adsddads123dsdsdsdsddsds',
-        startTime: '1533908742538',
+        startTime: 1533908742538,
         number: '9',
         id: '5b6d9706857aba00013a43b8',
       },
@@ -168,7 +168,7 @@ export const mockData = {
           statistics$defects$automation_bug$ab001: '4',
           statistics$executions$skipped: '2',
           statistics$executions$total: '42',
-          endTime: '1533908743769',
+          endTime: 1533908743769,
           description:
             '### **Demonstration launch.**\n' +
             'A typical *Launch structure* comprises the following elements: Suite > Test > Step > Log.\n' +
@@ -191,7 +191,7 @@ export const mockData = {
           status: 'FAILED',
         },
         name: 'Demo Api Tests_214r2323adsddads123dsdsdsdsddsds',
-        startTime: '1533908742372',
+        startTime: 1533908742372,
         number: '8',
         id: '5b6d9706857aba00013a4251',
       },
@@ -200,7 +200,7 @@ export const mockData = {
           statistics$defects$automation_bug$ab001: '1',
           statistics$executions$skipped: '1',
           statistics$executions$total: '20',
-          endTime: '1533908742537',
+          endTime: 1533908742537,
           description:
             '### **Demonstration launch.**\n' +
             'A typical *Launch structure* comprises the following elements: Suite > Test > Step > Log.\n' +
@@ -223,7 +223,7 @@ export const mockData = {
           status: 'FAILED',
         },
         name: 'Demo Api Tests_214r2323adsddads123dsdsdsdsddsds',
-        startTime: '1533908741784',
+        startTime: 1533908741784,
         number: '7',
         id: '5b6d9705857aba00013a3cf7',
       },
@@ -232,7 +232,7 @@ export const mockData = {
           statistics$defects$automation_bug$ab001: '1',
           statistics$executions$skipped: '4',
           statistics$executions$total: '20',
-          endTime: '1533908742371',
+          endTime: 1533908742371,
           description:
             '### **Demonstration launch.**\n' +
             'A typical *Launch structure* comprises the following elements: Suite > Test > Step > Log.\n' +
@@ -255,7 +255,7 @@ export const mockData = {
           status: 'FAILED',
         },
         name: 'Demo Api Tests_214r2323adsddads123dsdsdsdsddsds',
-        startTime: '1533908741639',
+        startTime: 1533908741639,
         number: '6',
         id: '5b6d9705857aba00013a3bd3',
       },
@@ -264,7 +264,7 @@ export const mockData = {
           statistics$defects$automation_bug$ab001: '0',
           statistics$executions$skipped: '0',
           statistics$executions$total: '5',
-          endTime: '1533908741782',
+          endTime: 1533908741782,
           description:
             '### **Demonstration launch.**\n' +
             'A typical *Launch structure* comprises the following elements: Suite > Test > Step > Log.\n' +
@@ -287,7 +287,7 @@ export const mockData = {
           status: 'FAILED',
         },
         name: 'Demo Api Tests_214r2323adsddads123dsdsdsdsddsds',
-        startTime: '1533908741587',
+        startTime: 1533908741587,
         number: '5',
         id: '5b6d9705857aba00013a3b61',
       },

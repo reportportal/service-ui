@@ -28,7 +28,18 @@ export const widgetData = {
               '5bbeef4b02743900019af4b0': 'Widgets',
               '5bbeef4b02743900019af4b1': 'Widget Type Tab',
             },
-            tags: ['ios', 'android', 'flaky'],
+            attributes: [
+              {
+                key: 'ios',
+                value: 'desktop',
+                system: false,
+              },
+              {
+                key: 'desktop',
+                value: 'true',
+                system: false,
+              },
+            ],
           },
           {
             id: '5bbeef4b02743900019af48f',
@@ -56,7 +67,18 @@ export const widgetData = {
               '5bbeef4002743900019ad076': 'Test entity tests',
               '5bbeef4002743900019ad12b': 'ItemStatusTest',
             },
-            tags: ['android', 'flaky', 'most failed'],
+            attributes: [
+              {
+                key: 'ios',
+                value: 'desktop',
+                system: false,
+              },
+              {
+                key: 'desktop',
+                value: 'true',
+                system: false,
+              },
+            ],
           },
           {
             id: '5bbeef4902743900019aee8b',
@@ -66,7 +88,18 @@ export const widgetData = {
               '5bbeef4902743900019aee1a': 'Test entity tests',
               '5bbeef4902743900019aee89': 'ItemStatusTest',
             },
-            tags: ['ios', 'android', 'flaky'],
+            attributes: [
+              {
+                key: 'ios',
+                value: 'desktop',
+                system: false,
+              },
+              {
+                key: 'desktop',
+                value: 'true',
+                system: false,
+              },
+            ],
           },
         ],
       },
@@ -84,7 +117,18 @@ export const widgetData = {
               '5baa153e857aba000112987f': 'Filtering Launch Tests',
               '5baa153f857aba0001129a85': 'GetAllTags',
             },
-            tags: ['most failed', 'longest', 'most stable'],
+            attributes: [
+              {
+                key: 'ios',
+                value: 'desktop',
+                system: false,
+              },
+              {
+                key: 'desktop',
+                value: 'true',
+                system: false,
+              },
+            ],
           },
         ],
       },

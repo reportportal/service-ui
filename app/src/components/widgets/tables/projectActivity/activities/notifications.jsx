@@ -46,10 +46,10 @@ export class Notifications extends Component {
     const { activity, intl } = this.props;
     return (
       <Fragment>
-        <span className={cx('user-name')}>{activity.userRef}</span>
+        <span className={cx('user-name')}>{activity.user}</span>
         {messages[activity.actionType] && intl.formatMessage(messages[activity.actionType])}
         <Link
-          to={getProjectSettingTabPageLink(activity.projectRef, NOTIFICATIONS)}
+          to={getProjectSettingTabPageLink(activity.projectName, NOTIFICATIONS)}
           className={cx('link')}
           target="_blank"
         >

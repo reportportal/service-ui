@@ -45,14 +45,14 @@ const cx = classNames.bind(styles);
 let formatMessage = null;
 
 const NameColumn = ({ className, value }) => {
-  const { values } = value;
+  const { values, attributes } = value;
   const itemPropValue = {
     id: value.id,
     name: value.name,
     owner: values.user,
     number: value.number,
     description: values.description,
-    attributes: values.attributes || null,
+    attributes: attributes || null,
   };
   return (
     <div className={cx('name-col', className)}>
@@ -201,11 +201,13 @@ export class LaunchesTable extends PureComponent {
   }
 
   getColumns = () => {
-    const { widget } = this.props;
-    const fieldsFromProps = widget.contentParameters.contentFields;
+    const fieldsMap = this.props.widget.contentParameters.contentFields.reduce(
+      (map, item) => ({ ...map, [item]: item }),
+      {},
+    );
 
-    return fieldsFromProps.reduce(
-      (columns, item) => (COLUMNS_MAP[item] ? [...columns, COLUMNS_MAP[item]] : columns),
+    return Object.keys(COLUMNS_MAP).reduce(
+      (columns, item) => (fieldsMap[item] ? [...columns, COLUMNS_MAP[item]] : columns),
       [],
     );
   };
