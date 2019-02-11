@@ -76,7 +76,6 @@ export class LdapAuthForm extends Component {
       },
     };
     if (!preparedData[PASSWORD_ENCODER_TYPE_KEY]) {
-      delete preparedData[PASSWORD_ENCODER_TYPE_KEY];
       delete preparedData[PASSWORD_ATTRIBUTE_KEY];
     }
     return preparedData;

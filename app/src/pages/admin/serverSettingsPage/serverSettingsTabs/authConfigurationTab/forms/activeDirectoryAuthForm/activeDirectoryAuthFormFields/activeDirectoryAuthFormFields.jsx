@@ -101,7 +101,7 @@ export class ActiveDirectoryAuthFormFields extends Component {
           labelClassName={cx('label')}
         >
           <FieldErrorHint>
-            <Input mobileDisabled />
+            <Input maxLength="128" mobileDisabled />
           </FieldErrorHint>
         </FormField>
         <FormField
@@ -130,7 +130,7 @@ export class ActiveDirectoryAuthFormFields extends Component {
           labelClassName={cx('label')}
         >
           <FieldErrorHint>
-            <Input mobileDisabled />
+            <Input maxLength="128" mobileDisabled />
           </FieldErrorHint>
         </FormField>
         <FormField
@@ -141,7 +141,7 @@ export class ActiveDirectoryAuthFormFields extends Component {
           labelClassName={cx('label')}
         >
           <FieldErrorHint>
-            <Input mobileDisabled />
+            <Input maxLength="128" mobileDisabled />
           </FieldErrorHint>
         </FormField>
         <FormField
@@ -151,7 +151,7 @@ export class ActiveDirectoryAuthFormFields extends Component {
           labelClassName={cx('label')}
         >
           <FieldErrorHint>
-            <Input mobileDisabled />
+            <Input maxLength="128" mobileDisabled />
           </FieldErrorHint>
         </FormField>
         <FormField
@@ -161,7 +161,7 @@ export class ActiveDirectoryAuthFormFields extends Component {
           labelClassName={cx('label')}
         >
           <FieldErrorHint>
-            <Input mobileDisabled />
+            <Input maxLength="128" mobileDisabled />
           </FieldErrorHint>
         </FormField>
       </div>
