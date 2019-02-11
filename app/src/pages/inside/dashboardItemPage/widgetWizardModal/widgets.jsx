@@ -362,7 +362,7 @@ export const getWidgets = (formatMessage) => [
       <FormattedMessage
         id={'Widgets.Description.cumulative'}
         defaultMessage={
-          'Shows the growth trend of summary statistics of launches with the same tag prefix.'
+          'Shows the growth trend of summary statistics of launches with the same attribute key.'
         }
       />
     ),

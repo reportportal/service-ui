@@ -1121,7 +1121,7 @@
   "Widgets.Description.activityStream": "Shows all activities occurring on the project.",
   "Widgets.Description.bugTrend": "Shows the trend of growth in the number of failed test cases from run to run.",
   "Widgets.Description.casesTrend": "- in \"Launch Mode\" shows the increment of test-cases from run to run,<br> - in \"Timeline Mode\" shows the increment of test-cases distributed by dates (in launches with the largest number of test-cases per day).",
-  "Widgets.Description.cumulative": "Shows the growth trend of summary statistics of launches with the same tag prefix.",
+  "Widgets.Description.cumulative": "Паказвае тэндэнцыю росту зводных статыстычных дадзеных па запусках з аднолькавым ключом атрыбуту.",
   "Widgets.Description.flakyTestCases": "Shows the TOP-20 the most flaky test cases within the specified previous launches.",
   "Widgets.Description.investigatedTrend": "- in \"Launch Mode\" shows whether the launches are analyzed or not (the percentage of \"Investigated\"/\"To Investigate\") from run to run,<br> - in \"Timeline Mode\" shows percentage of \"Investigated\"/\"To Investigate\" tests in all runs per day distributed by dates.",
   "Widgets.Description.launchStatistics": "Shows statistics of the last launch divided into 2 sections:</br> - Skipped, Passed, Failed </br> - Product Bug, System Issue, To Investigate, Automation Bugs.",
