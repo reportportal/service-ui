@@ -5,7 +5,7 @@ import { injectIntl, intlShape } from 'react-intl';
 import { Carousel } from 'react-responsive-carousel';
 import 'react-responsive-carousel/lib/styles/carousel.css';
 import { connect } from 'react-redux';
-import { attachmentsSelector, openAttachmentAction } from 'controllers/attachments';
+import { attachmentsSelector, openAttachmentAction } from 'controllers/log/attachments';
 import { NoItemMessage } from 'components/main/noItemMessage';
 import { messages } from './modals/messages';
 import styles from './attachments.scss';
@@ -25,20 +25,27 @@ export class Attachments extends React.Component {
   static propTypes = {
     intl: intlShape.isRequired,
     attachments: PropTypes.array.isRequired,
+    activeItemId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    onChangeActiveItem: PropTypes.func,
     openAttachmentAction: PropTypes.func,
   };
 
   static defaultProps = {
+    activeItemId: null,
+    onChangeActiveItem: () => {},
     openAttachmentAction: () => {},
   };
 
   state = {
-    mainAreaVisible: false,
+    mainAreaVisible: this.props.activeItemId !== null,
   };
 
   onClickItem = (itemIndex) => this.props.openAttachmentAction(this.props.attachments[itemIndex]);
 
-  onClickThumb = () => {
+  onClickThumb = (itemIndex) => {
+    if (itemIndex !== this.props.activeItemId) {
+      this.props.onChangeActiveItem(itemIndex);
+    }
     if (!this.state.mainAreaVisible) {
       this.setState({ mainAreaVisible: true });
     }
@@ -47,7 +54,7 @@ export class Attachments extends React.Component {
   isOneAttachmentItem = () => this.props.attachments.length === 1 && this.state.mainAreaVisible;
 
   render() {
-    const { intl } = this.props;
+    const { intl, activeItemId } = this.props;
 
     return (
       <div className={cx('attachments-wrap')}>
@@ -59,6 +66,7 @@ export class Attachments extends React.Component {
                 showStatus={false}
                 showIndicators={false}
                 showArrows
+                selectedItem={activeItemId || 0}
                 onClickThumb={this.onClickThumb}
                 onClickItem={this.onClickItem}
               >

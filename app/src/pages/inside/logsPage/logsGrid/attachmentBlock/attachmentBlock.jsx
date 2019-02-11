@@ -6,7 +6,7 @@ import Parser from 'html-react-parser';
 import { connect } from 'react-redux';
 import AttachIcon from 'common/img/attachment-inline.svg';
 import { LOG_PAGE_EVENTS } from 'components/main/analytics/events';
-import { openAttachmentAction, getFileIconSource } from 'controllers/attachments';
+import { openAttachmentAction, getFileIconSource } from 'controllers/log/attachments';
 import styles from './attachmentBlock.scss';
 
 const cx = classNames.bind(styles);
