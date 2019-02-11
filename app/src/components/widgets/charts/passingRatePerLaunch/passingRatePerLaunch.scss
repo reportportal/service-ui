@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 .passing-rate-per-launch {
   :global {
     .c3-chart-text text,
@@ -14,6 +15,16 @@
 
     .c3-event-rect {
       cursor: default !important;
+=======
+:global {
+  .c3-chart-texts {
+    .c3-texts {
+      .c3-text {
+        font-family: $FONT-SEMIBOLD;
+        font-size: 13px;
+        fill: $COLOR--white-two !important;
+      }
+>>>>>>> EPMRPP-37984 fixed percentage position, color and font-weight
     }
   }
 }

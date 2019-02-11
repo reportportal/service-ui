@@ -18,6 +18,16 @@ const cx = classNames.bind(styles);
 
 const NOT_PASSED_STATISTICS_KEY = 'statistics$executions$notPassed';
 
+@connect(
+  (state) => ({
+    project: activeProjectSelector(state),
+    getDefectLink: (params) => defectLinkSelector(state, params),
+    getStatisticsLink: (name) => statisticsLinkSelector(state, { statuses: [name] }),
+  }),
+  {
+    redirect,
+  },
+)
 @injectIntl
 export class PassingRatePerLaunch extends Component {
   static propTypes = {
@@ -173,6 +183,15 @@ export class PassingRatePerLaunch extends Component {
 
     this.config = {
       ...processedData,
+
+      data: processedData.chartData,
+      grid: {
+        focus: {
+          show: false,
+        },
+      },
+      axis: processedData.axis,
+
       interaction: {
         enabled: !isPreview,
       },
@@ -251,6 +270,8 @@ export class PassingRatePerLaunch extends Component {
     const number = Number(d[0].value);
     const id = d[0].id;
     const nameConfig = getItemNameConfig(d[0].name);
+
+    alignChartText();
 
     return ReactDOMServer.renderToStaticMarkup(
       <PassingRatePerLaunchTooltip
