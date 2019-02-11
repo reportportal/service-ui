@@ -23,4 +23,5 @@ export {
   isListViewSelector,
   queryParametersSelector,
   itemsSelector,
+  testCaseNameLinkSelector,
 } from './selectors';

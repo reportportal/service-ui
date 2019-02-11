@@ -78,11 +78,13 @@ export class HistoryItemsGrid extends Component {
       case MANY.toUpperCase():
         return (
           <NameLink
-            page={TEST_ITEM_PAGE}
+            ownLinkParams={{
+              page: TEST_ITEM_PAGE,
+              testItemIds: historyItemProps.itemIds
+                ? `${launchId}/${historyItemProps.itemIds}`
+                : launchId,
+            }}
             uniqueId={currentHistoryItem.uniqueId}
-            testItemIds={
-              historyItemProps.itemIds ? `${launchId}/${historyItemProps.itemIds}` : launchId
-            }
           >
             <HistoryItem {...historyItemProps} />
           </NameLink>
@@ -90,11 +92,13 @@ export class HistoryItemsGrid extends Component {
       default:
         return (
           <NameLink
+            ownLinkParams={{
+              page: currentHistoryItem.hasChildren ? null : PROJECT_LOG_PAGE,
+              testItemIds: historyItemProps.itemIds
+                ? `${launchId}/${historyItemProps.itemIds}`
+                : launchId,
+            }}
             itemId={currentHistoryItem.id}
-            page={currentHistoryItem.hasChildren ? null : PROJECT_LOG_PAGE}
-            testItemIds={
-              historyItemProps.itemIds ? `${launchId}/${historyItemProps.itemIds}` : launchId
-            }
           >
             <HistoryItem {...historyItemProps} />
           </NameLink>

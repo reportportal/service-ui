@@ -14,7 +14,6 @@ export const PTTest = shape({
   name: string,
   itemName: string,
   uniqueId: string.isRequired,
-  percentage: string.isRequired,
   status: arrayOf(bool),
   total: number.isRequired,
   criteria: number,

@@ -5,7 +5,13 @@ import styles from './toInvestigateStatistics.scss';
 
 const cx = classNames.bind(styles);
 
-export const ToInvestigateStatistics = ({ value, customProps, itemId, eventInfo }) => (
+export const ToInvestigateStatistics = ({
+  value,
+  customProps,
+  itemId,
+  eventInfo,
+  ownLinkParams,
+}) => (
   <div className={cx('to-investigate-statistics')}>
     <span className={cx('title')}>
       <span className={cx('circle')} />
@@ -17,6 +23,7 @@ export const ToInvestigateStatistics = ({ value, customProps, itemId, eventInfo 
         defects={Object.keys(value)}
         className={cx('value')}
         eventInfo={eventInfo}
+        ownLinkParams={ownLinkParams}
       >
         {value.total}
       </DefectLink>
@@ -28,9 +35,15 @@ ToInvestigateStatistics.propTypes = {
   customProps: PropTypes.object,
   itemId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   eventInfo: PropTypes.object,
+  ownLinkParams: PropTypes.shape({
+    isOtherPage: PropTypes.bool,
+    payload: PropTypes.object,
+    page: PropTypes.string,
+  }),
 };
 ToInvestigateStatistics.defaultProps = {
   customProps: {},
   value: {},
   eventInfo: {},
+  ownLinkParams: {},
 };
