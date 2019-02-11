@@ -1,6 +1,5 @@
 .name-col {
   width: 30%;
-  padding-top: 20px;
 
   @media (max-width: $SCREEN_SM_MAX) {
     width: 100%;
@@ -27,6 +26,7 @@
   width: 6%;
   font-family: $FONT-REGULAR;
   font-size: 13px;
+  line-height: 20px;
 
   .mobile-hint {
     display: none;

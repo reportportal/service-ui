@@ -5,8 +5,8 @@ import classNames from 'classnames/bind';
 import { URLS } from 'common/urls';
 import { connect } from 'react-redux';
 import { reduxForm, formValueSelector } from 'redux-form';
-import { FormController } from '../../../common/formController';
-import { ENABLED_KEY, messages } from '../../../common/constants';
+import { FormController } from 'pages/admin/serverSettingsPage/common/formController';
+import { ENABLED_KEY, messages } from 'pages/admin/serverSettingsPage/common/constants';
 import { GITHUB_AUTH_FORM, DEFAULT_FORM_CONFIG } from './constants';
 import { GithubAuthFormFields } from './githubAuthFormFields';
 import styles from './githubAuthForm.scss';
@@ -50,14 +50,22 @@ export class GithubAuthForm extends Component {
     handleSubmit: () => {},
   };
 
-  prepareDataBeforeSubmit = (data) => ({
-    ...data,
-    restrictions: {
-      organizations: data.restrictions.organizations.concat(`,${data.restrictions.organization}`),
-    },
-  });
+  prepareDataBeforeSubmit = (data) => {
+    const updatedOrganization = data.restrictions.organizations.length
+      ? `,${data.restrictions.organization}`
+      : data.restrictions.organization;
+    return {
+      ...data,
+      restrictions: {
+        organizations: data.restrictions.organizations.concat(updatedOrganization),
+      },
+    };
+  };
 
-  commonUrl = URLS.githubAuthSettings();
+  prepareDataBeforeInitialize = (data) => ({
+    ...data,
+    [ENABLED_KEY]: true,
+  });
 
   render() {
     const {
@@ -71,8 +79,8 @@ export class GithubAuthForm extends Component {
       formHeader: formatMessage(localMessages.formHeader),
       switcherLabel: localMessages.switcherLabel,
       FieldsComponent: GithubAuthFormFields,
-      initialConfigUrl: this.commonUrl,
-      submitFormUrl: this.commonUrl,
+      initialConfigUrl: URLS.githubAuthSettings(),
+      getSubmitUrl: URLS.githubAuthSettings,
       withErrorBlock: false,
       defaultFormConfig: DEFAULT_FORM_CONFIG,
     };
@@ -82,6 +90,7 @@ export class GithubAuthForm extends Component {
         <FormController
           enabled={enabled}
           prepareDataBeforeSubmit={this.prepareDataBeforeSubmit}
+          prepareDataBeforeInitialize={this.prepareDataBeforeInitialize}
           successMessage={messages.updateAuthSuccess}
           initialize={initialize}
           formOptions={formOptions}

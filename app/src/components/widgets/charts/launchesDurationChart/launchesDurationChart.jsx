@@ -2,9 +2,14 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { injectIntl, intlShape } from 'react-intl';
 import ReactDOMServer from 'react-dom/server';
+import { connect } from 'react-redux';
+import { redirect } from 'redux-first-router';
 import classNames from 'classnames/bind';
+import { activeProjectSelector } from 'controllers/user';
+import { TEST_ITEM_PAGE } from 'controllers/pages';
 import { COLOR_CHART_DURATION, COLOR_FAILED } from 'common/constants/colors';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { ALL } from 'common/constants/reservedFilterIds';
 import { isValueInterrupted, transformCategoryLabel, getLaunchAxisTicks } from '../common/utils';
 import { C3Chart } from '../common/c3chart';
 import { LaunchDurationTooltip } from './launchDurationTooltip';
@@ -15,9 +20,19 @@ import styles from './launchesDurationChart.scss';
 const cx = classNames.bind(styles);
 
 @injectIntl
+@connect(
+  (state) => ({
+    projectId: activeProjectSelector(state),
+  }),
+  {
+    redirect,
+  },
+)
 export class LaunchesDurationChart extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
+    redirect: PropTypes.func.isRequired,
+    projectId: PropTypes.string.isRequired,
     widget: PropTypes.object.isRequired,
     preview: PropTypes.bool,
     height: PropTypes.number,
@@ -43,6 +58,19 @@ export class LaunchesDurationChart extends Component {
     this.node.removeEventListener('mousemove', this.setupCoords);
     this.props.observer.unsubscribe('widgetResized', this.resizeChart);
   }
+
+  onChartClick = (data) => {
+    const { projectId } = this.props;
+
+    this.props.redirect({
+      type: TEST_ITEM_PAGE,
+      payload: {
+        projectId,
+        filterId: ALL,
+        testItemIds: `${this.itemData[data.index].id}`,
+      },
+    });
+  };
 
   onChartCreated = (chart, element) => {
     this.chart = chart;
@@ -74,14 +102,15 @@ export class LaunchesDurationChart extends Component {
     this.height = container.offsetHeight;
     this.width = container.offsetWidth;
 
-    const { timeType, chartData, itemData } = prepareChartData(widget);
-    this.itemData = itemData || [];
+    const { timeType, chartData, itemData = [] } = prepareChartData(widget);
+    this.itemData = itemData;
     this.timeType = timeType;
 
     this.config = {
       data: {
         columns: [chartData],
         type: 'bar',
+        onclick: this.onChartClick,
         colors: {
           [DURATION]: COLOR_CHART_DURATION,
         },

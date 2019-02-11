@@ -1,2 +1,2 @@
-export { AttachmentsContainer as Attachments } from './attachmentsContainer';
-export { AttachmentCodeModal, AttachmentHarFileModal, AttachmentImageModal } from './modal';
+export { Attachments } from './attachments';
+export { AttachmentCodeModal, AttachmentHarFileModal, AttachmentImageModal } from './modals';

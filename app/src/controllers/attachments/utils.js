@@ -1,51 +1,22 @@
-import xml from 'common/img/launch/attachments/xml.svg';
-import php from 'common/img/launch/attachments/php.svg';
-import json from 'common/img/launch/attachments/json.svg';
-import js from 'common/img/launch/attachments/js.svg';
-import har from 'common/img/launch/attachments/har.svg';
-import css from 'common/img/launch/attachments/css.svg';
-import csv from 'common/img/launch/attachments/csv.svg';
-import html from 'common/img/launch/attachments/html.svg';
-import pic from 'common/img/launch/attachments/pic.svg';
-import txt from 'common/img/launch/attachments/txt.svg';
-import archive from 'common/img/launch/attachments/archive.svg';
-import attachment from 'common/img/launch/attachments/attachment.svg';
+import { URLS } from 'common/urls';
+import { IMAGE } from 'common/constants/fileTypes';
+import attachment from 'common/img/attachments/attachment.svg';
+import { FILE_EXTENSIONS_MAP, FILE_MODAL_IDS_MAP } from './constants';
 
-const zip = archive;
-const rar = archive;
-const tgz = archive;
-const tar = archive;
-const gzip = archive;
-const plain = txt;
-const png = pic;
-const jpeg = pic;
+const getAttachmentTypeConfig = (contentType) =>
+  (contentType && contentType.toLowerCase().split('/')) || '';
 
-export const EXTENSION_MAP = {
-  xml,
-  php,
-  'x-php': php,
-  json,
-  js,
-  har,
-  css,
-  csv,
-  html,
-  pic,
-  txt,
-  zip,
-  rar,
-  tgz,
-  tar,
-  gzip,
-  attachment,
-  plain,
-  png,
-  jpeg,
+export const extractExtension = (contentType) => getAttachmentTypeConfig(contentType)[1] || '';
+
+export const getFileIconSource = (item) => {
+  const [fileType, extension] = getAttachmentTypeConfig(item.contentType);
+  if (fileType === IMAGE) {
+    return URLS.getFileById(item.id);
+  }
+  return FILE_EXTENSIONS_MAP[extension] || attachment;
 };
 
-const extractExtension = (contentType) => (contentType && contentType.split('/')[1]) || '';
-
-export function getIcon(contentType) {
-  const extension = extractExtension(contentType).toLowerCase();
-  return EXTENSION_MAP[extension] || attachment;
-}
+export const getAttachmentModalId = (contentType) => {
+  const [fileType, extension] = getAttachmentTypeConfig(contentType);
+  return FILE_MODAL_IDS_MAP[fileType === IMAGE ? IMAGE : extension];
+};

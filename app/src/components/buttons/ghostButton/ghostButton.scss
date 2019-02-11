@@ -63,6 +63,11 @@
       border-color: $COLOR--topaz;
       color: $COLOR--white-two;
     }
+
+    &.gray-border {
+      border-color: $COLOR--gray-91;
+      border-radius: 2px;
+    }
   }
 }
 .icon {

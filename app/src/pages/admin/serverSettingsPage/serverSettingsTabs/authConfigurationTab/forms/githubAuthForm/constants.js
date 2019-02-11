@@ -1,4 +1,4 @@
-import { ENABLED_KEY } from '../../../common/constants';
+import { ENABLED_KEY } from 'pages/admin/serverSettingsPage/common/constants';
 
 export const CLIENT_ID_KEY = 'clientId';
 export const CLIENT_SECRET_KEY = 'clientSecret';
@@ -10,5 +10,6 @@ export const DEFAULT_FORM_CONFIG = {
   [ENABLED_KEY]: false,
   restrictions: {
     organizations: '',
+    organization: '',
   },
 };

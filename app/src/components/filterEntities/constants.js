@@ -11,6 +11,8 @@ export const CONDITION_NOT_HAS = '!has';
 export const CONDITION_IN = 'in';
 export const CONDITION_NOT_IN = '!in';
 export const CONDITION_EX = 'ex';
+export const CONDITION_ANY = 'any';
+export const CONDITION_NOT_ANY = '!any';
 
 export const ENTITY_NAME = 'name';
 export const ENTITY_NUMBER = 'number';

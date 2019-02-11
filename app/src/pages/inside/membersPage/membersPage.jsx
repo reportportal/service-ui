@@ -22,6 +22,7 @@ import { MEMBERS_PAGE, MEMBERS_PAGE_EVENTS } from 'components/main/analytics/eve
 import { PageLayout, PageHeader, PageSection } from 'layouts/pageLayout';
 import { MembersPageToolbar } from './membersPageToolbar';
 import { MembersGrid } from './membersGrid';
+import { NoFiltersFound } from '../common/NoFiltersFound';
 
 const messages = defineMessages({
   membersPageTitle: {
@@ -36,6 +37,10 @@ const messages = defineMessages({
     id: 'MembersPage.inviteExternalMember',
     defaultMessage:
       'Invite for member is successfully registered. Confirmation info will be send on provided email. Expiration: 1 day.',
+  },
+  membersNotFound: {
+    id: 'MembersPage.notFound',
+    defaultMessage: 'No members found for "{filter}".',
   },
 });
 @connect(
@@ -100,6 +105,10 @@ export class MembersPage extends Component {
   };
 
   getBreadcrumbs = () => [{ title: this.props.intl.formatMessage(messages.membersPageTitle) }];
+
+  getNoFiltersFound = () => (
+    <NoFiltersFound filter={this.props.filter} notFoundMessage={messages.membersNotFound} />
+  );
 
   inviteUser = (userData) => {
     const data = {};
@@ -168,6 +177,7 @@ export class MembersPage extends Component {
       members,
       loading,
     } = this.props;
+
     return (
       <PageLayout>
         <PageHeader breadcrumbs={this.getBreadcrumbs()} />
@@ -178,14 +188,18 @@ export class MembersPage extends Component {
             onInvite={this.inviteUser}
           />
           <MembersGrid data={members} fetchData={this.props.fetchMembersAction} loading={loading} />
-          <PaginationToolbar
-            activePage={activePage}
-            itemCount={itemCount}
-            pageCount={pageCount}
-            pageSize={pageSize}
-            onChangePage={onChangePage}
-            onChangePageSize={onChangePageSize}
-          />
+          {this.props.filter !== null && this.props.filter !== ''
+            ? !loading && this.getNoFiltersFound()
+            : !loading && (
+                <PaginationToolbar
+                  activePage={activePage}
+                  itemCount={itemCount}
+                  pageCount={pageCount}
+                  pageSize={pageSize}
+                  onChangePage={onChangePage}
+                  onChangePageSize={onChangePageSize}
+                />
+              )}
         </PageSection>
       </PageLayout>
     );

@@ -37,13 +37,9 @@ export const messages = defineMessages({
     id: 'NotificationRule.launchNamesNote',
     defaultMessage: 'Send notifications about selected launches finished',
   },
-  tagsLabel: {
-    id: 'NotificationRule.tagsLabel',
-    defaultMessage: 'Tags (and)',
-  },
-  tagsPlaceholder: {
-    id: 'NotificationRule.tagsPlaceholder',
-    defaultMessage: 'Select tags',
+  attributesLabel: {
+    id: 'NotificationRule.attributesLabel',
+    defaultMessage: 'Attributes (and)',
   },
   tagsHint: {
     id: 'NotificationRule.tagsHint',

@@ -5,9 +5,16 @@ import classNames from 'classnames/bind';
 import { URLS } from 'common/urls';
 import { connect } from 'react-redux';
 import { reduxForm, formValueSelector } from 'redux-form';
-import { validate } from 'common/utils';
-import { FormController } from '../../../common/formController';
-import { messages, ENABLED_KEY } from '../../../common/constants';
+import { FormController } from 'pages/admin/serverSettingsPage/common/formController';
+import {
+  validateLdapAttributes,
+  prepareDataBeforeInitialize,
+} from 'pages/admin/serverSettingsPage/common/utils';
+import {
+  messages,
+  ENABLED_KEY,
+  LDAP_ATTRIBUTES_KEY,
+} from 'pages/admin/serverSettingsPage/common/constants';
 import { AD_AUTH_FORM, DEFAULT_FORM_CONFIG, AD_AUTH_TYPE } from './constants';
 import { ActiveDirectoryAuthFormFields } from './activeDirectoryAuthFormFields';
 import styles from './activeDirectoryAuthForm.scss';
@@ -27,14 +34,9 @@ const localMessages = defineMessages({
 
 @reduxForm({
   form: AD_AUTH_FORM,
-  validate: ({ domain, url, baseDn, synchronizationAttributes }) => ({
+  validate: ({ domain, ldapAttributes }) => ({
     domain: !domain && 'requiredFieldHint',
-    url: (!url || !validate.urlPart(url)) && 'requiredFieldHint',
-    baseDn: !baseDn && 'requiredFieldHint',
-    synchronizationAttributes: {
-      email:
-        (!synchronizationAttributes || !synchronizationAttributes.email) && 'requiredFieldHint',
-    },
+    ldapAttributes: validateLdapAttributes(ldapAttributes),
   }),
   initialValues: DEFAULT_FORM_CONFIG,
 })
@@ -56,7 +58,15 @@ export class ActiveDirectoryAuthForm extends Component {
     handleSubmit: () => {},
   };
 
-  commonUrl = URLS.authSettings(AD_AUTH_TYPE);
+  getSubmitUrl = (id) => URLS.authSettings(this.props.enabled ? AD_AUTH_TYPE : id);
+
+  prepareDataBeforeSubmit = (data) => ({
+    ...data,
+    [LDAP_ATTRIBUTES_KEY]: {
+      ...data[LDAP_ATTRIBUTES_KEY],
+      [ENABLED_KEY]: data[ENABLED_KEY],
+    },
+  });
 
   render() {
     const {
@@ -70,8 +80,8 @@ export class ActiveDirectoryAuthForm extends Component {
       formHeader: formatMessage(localMessages.formHeader),
       switcherLabel: localMessages.switcherLabel,
       FieldsComponent: ActiveDirectoryAuthFormFields,
-      initialConfigUrl: this.commonUrl,
-      submitFormUrl: this.commonUrl,
+      initialConfigUrl: URLS.authSettings(AD_AUTH_TYPE),
+      getSubmitUrl: this.getSubmitUrl,
       withErrorBlock: false,
       defaultFormConfig: DEFAULT_FORM_CONFIG,
     };
@@ -80,6 +90,8 @@ export class ActiveDirectoryAuthForm extends Component {
       <div className={cx('active-directory-auth-form')}>
         <FormController
           enabled={enabled}
+          prepareDataBeforeSubmit={this.prepareDataBeforeSubmit}
+          prepareDataBeforeInitialize={prepareDataBeforeInitialize}
           successMessage={messages.updateAuthSuccess}
           initialize={initialize}
           formOptions={formOptions}

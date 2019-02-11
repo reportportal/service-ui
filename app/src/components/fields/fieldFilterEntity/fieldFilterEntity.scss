@@ -5,6 +5,11 @@
   height: 55px;
   vertical-align: top;
 
+  &.vertical {
+    width: 370px;
+    height: 60px;
+  }
+
   &.stretchable {
     width: auto;
     height: auto;
@@ -32,6 +37,13 @@
   color: $COLOR--charcoal-grey;
   overflow: hidden;
   text-overflow: ellipsis;
+
+  &.vertical {
+    padding-right: 0;
+    width: 78px;
+    vertical-align: middle;
+    color: $COLOR--black-2;
+  }
 }
 .close-icon {
   position: absolute;
@@ -54,4 +66,8 @@
 .entity-input-holder {
   display: inline-block;
   width: 100%;
+
+  &.vertical {
+    width: 292px;
+  }
 }

@@ -9,10 +9,18 @@ import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { Input } from 'components/inputs/input';
 import { InputConditional } from 'components/inputs/inputConditional';
 import { InputDropdown } from 'components/inputs/inputDropdown';
-import { LDAP_PREFIX, LDAPS_PREFIX } from '../../../../common/constants';
+import {
+  LDAP_ATTRIBUTES_KEY,
+  LDAP_PREFIX,
+  LDAPS_PREFIX,
+  URL_KEY,
+  BASE_DN_KEY,
+  PHOTO_KEY,
+  FULL_NAME_KEY,
+  EMAIL_KEY,
+} from 'pages/admin/serverSettingsPage/common/constants';
 import {
   LDAP_AUTH_FORM,
-  BASE_DN_KEY,
   MANAGER_DN_KEY,
   GROUP_SEARCH_BASE_KEY,
   GROUP_SEARCH_FILTER_KEY,
@@ -21,10 +29,6 @@ import {
   PASSWORD_ATTRIBUTE_KEY,
   PASSWORD_ENCODER_TYPE_KEY,
   MANAGER_PASSWORD_KEY,
-  EMAIL_KEY,
-  FULL_NAME_KEY,
-  URL_KEY,
-  PHOTO_KEY,
 } from '../constants';
 import styles from './ldapAuthFormFields.scss';
 
@@ -149,7 +153,7 @@ export class LdapAuthFormFields extends Component {
     return (
       <div className={cx('ldap-auth-form-fields')}>
         <FormField
-          name={URL_KEY}
+          name={`${LDAP_ATTRIBUTES_KEY}.${URL_KEY}`}
           required
           fieldWrapperClassName={cx('form-field-wrapper')}
           label={formatMessage(messages.urlLabel)}
@@ -167,7 +171,7 @@ export class LdapAuthFormFields extends Component {
           </FieldErrorHint>
         </FormField>
         <FormField
-          name={BASE_DN_KEY}
+          name={`${LDAP_ATTRIBUTES_KEY}.${BASE_DN_KEY}`}
           required
           fieldWrapperClassName={cx('form-field-wrapper')}
           label={formatMessage(messages.baseDnLabel)}
@@ -261,7 +265,7 @@ export class LdapAuthFormFields extends Component {
           </FormField>
         )}
         <FormField
-          name={EMAIL_KEY}
+          name={`${LDAP_ATTRIBUTES_KEY}.${EMAIL_KEY}`}
           required
           fieldWrapperClassName={cx('form-field-wrapper')}
           label={formatMessage(messages.emailAttributeLabel)}
@@ -272,7 +276,7 @@ export class LdapAuthFormFields extends Component {
           </FieldErrorHint>
         </FormField>
         <FormField
-          name={FULL_NAME_KEY}
+          name={`${LDAP_ATTRIBUTES_KEY}.${FULL_NAME_KEY}`}
           fieldWrapperClassName={cx('form-field-wrapper')}
           label={formatMessage(messages.fullNameAttributeLabel)}
           labelClassName={cx('label')}
@@ -282,7 +286,7 @@ export class LdapAuthFormFields extends Component {
           </FieldErrorHint>
         </FormField>
         <FormField
-          name={PHOTO_KEY}
+          name={`${LDAP_ATTRIBUTES_KEY}.${PHOTO_KEY}`}
           fieldWrapperClassName={cx('form-field-wrapper')}
           label={formatMessage(messages.photoAttributeLabel)}
           labelClassName={cx('label')}

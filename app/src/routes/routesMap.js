@@ -10,17 +10,21 @@ import {
   PROJECT_SETTINGS_TAB_PAGE,
   PROJECT_LOG_PAGE,
   PROJECT_USERDEBUG_LOG_PAGE,
+  PROJECT_USERDEBUG_PAGE,
   HISTORY_PAGE,
   PROJECTS_PAGE,
   PROJECT_DETAILS_PAGE,
   ALL_USERS_PAGE,
   SERVER_SETTINGS_PAGE,
   SERVER_SETTINGS_TAB_PAGE,
+  LAUNCHES_PAGE,
+  PROJECT_LAUNCHES_PAGE,
   PLUGINS_PAGE,
   projectIdSelector,
   NOT_FOUND,
 } from 'controllers/pages';
 import { GENERAL, EMAIL_SERVER } from 'common/constants/settingsTabs';
+import { ALL } from 'common/constants/reservedFilterIds';
 import { SETTINGS, MEMBERS, EVENTS } from 'common/constants/projectSections';
 import { isAuthorizedSelector } from 'controllers/auth';
 import {
@@ -33,6 +37,8 @@ import { TEST_ITEM_PAGE } from 'controllers/pages/constants';
 import { fetchTestItemsAction, setLevelAction } from 'controllers/testItem';
 import { fetchFiltersAction } from 'controllers/filter';
 import { fetchMembersAction } from 'controllers/members';
+import { fetchProjectDataAction } from 'controllers/administrate';
+import { fetchAllUsersAction } from 'controllers/administrate/allUsers';
 import { fetchLogPageData } from 'controllers/log';
 import { fetchHistoryPageInfo } from 'controllers/itemsHistory';
 
@@ -82,8 +88,14 @@ export default {
   API_PAGE: '/api',
 
   [PROJECTS_PAGE]: '/administrate/projects',
-  [PROJECT_DETAILS_PAGE]: `/administrate/projects/:projectId/:projectSection(${SETTINGS}|${MEMBERS}|${EVENTS})?`,
-  [ALL_USERS_PAGE]: '/administrate/users',
+  [PROJECT_DETAILS_PAGE]: {
+    path: `/administrate/projects/:projectId/:projectSection(${SETTINGS}|${MEMBERS}|${EVENTS})?`,
+    thunk: (dispatch) => dispatch(fetchProjectDataAction()),
+  },
+  [ALL_USERS_PAGE]: {
+    path: '/administrate/users',
+    thunk: (dispatch) => dispatch(fetchAllUsersAction()),
+  },
   [SERVER_SETTINGS_PAGE]: redirectRoute('/administrate/settings', () => ({
     type: SERVER_SETTINGS_TAB_PAGE,
     payload: { settingsTab: EMAIL_SERVER },
@@ -130,8 +142,12 @@ export default {
       }
     },
   },
-  PROJECT_LAUNCHES_PAGE: {
-    path: '/:projectId/launches/:filterId?',
+  [LAUNCHES_PAGE]: redirectRoute('/:projectId/launches', (payload) => ({
+    type: PROJECT_LAUNCHES_PAGE,
+    payload: { ...payload, filterId: ALL },
+  })),
+  [PROJECT_LAUNCHES_PAGE]: {
+    path: '/:projectId/launches/:filterId',
     thunk: (dispatch) => {
       dispatch(setDebugMode(false));
       dispatch(setLevelAction(''));
@@ -162,7 +178,7 @@ export default {
       dispatch(fetchLogPageData());
     },
   },
-  PROJECT_USERDEBUG_PAGE: {
+  [PROJECT_USERDEBUG_PAGE]: {
     path: '/:projectId/userdebug/:filterId',
     thunk: (dispatch) => {
       dispatch(setDebugMode(true));

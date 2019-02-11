@@ -1,0 +1,59 @@
+.input-filter-toolbar {
+  line-height: 56px;
+  color: $COLOR--gray-47;
+  font-family: $FONT-REGULAR;
+  font-size: 13px;
+  width: 400px;
+  height: 50px;
+  display: flex;
+  justify-content: space-between;
+  text-align: center;
+  vertical-align: bottom;
+  background-color: $COLOR--white-two;
+  border-top: 1px solid $COLOR--gray-91;
+}
+
+.button-container {
+  display: inline-block;
+  margin-top: 10px;
+  background-color: $COLOR--white-two;
+
+  &.left {
+    height: 30px;
+    cursor: pointer;
+  }
+
+  &.middle {
+    width: 80px;
+    height: 30px;
+    padding-left: 25px;
+  }
+
+  &.right {
+    margin-right: 15px;
+    width: 97px;
+    height: 30px;
+    border-radius: 2px;
+  }
+
+  .button {
+    display: inline-block;
+    font-size: 13px;
+    border-radius: 2px;
+    color: $COLOR--gray-60;
+
+    &.cancel {
+      &:hover {
+        color: $COLOR--charcoal-grey;
+      }
+    }
+
+    &.apply {
+      color: $COLOR--white-two;
+    }
+
+    &.clear-all-filters {
+      color: $COLOR--orange-red;
+    }
+  }
+}

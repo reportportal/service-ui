@@ -14,6 +14,7 @@ export {
   pathnameChangedSelector,
   logItemIdSelector,
   settingsTabSelector,
+  prevPagePropertiesSelector,
 } from './selectors';
 export { updatePagePropertiesAction } from './actionCreators';
 
@@ -31,6 +32,7 @@ export {
   PROJECT_DASHBOARD_PAGE,
   PROJECT_DASHBOARD_ITEM_PAGE,
   PROJECT_FILTERS_PAGE,
+  LAUNCHES_PAGE,
   PROJECT_LAUNCHES_PAGE,
   PROJECT_MEMBERS_PAGE,
   PROJECT_SANDBOX_PAGE,

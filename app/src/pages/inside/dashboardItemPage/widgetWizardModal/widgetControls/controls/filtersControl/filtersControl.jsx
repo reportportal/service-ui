@@ -4,7 +4,6 @@ import { intlShape, injectIntl, defineMessages } from 'react-intl';
 import { change, formValueSelector } from 'redux-form';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-
 import { userIdSelector, activeProjectSelector } from 'controllers/user/selectors';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { fetch } from 'common/utils';
@@ -15,16 +14,19 @@ import {
   loadingSelector,
   filtersPaginationSelector,
 } from 'controllers/filter';
-
-import styles from './filtersControl.scss';
+import { WIDGET_WIZARD_FORM } from '../../../widgetWizardContent/wizardControlsSection/constants';
 import { FilterNotFound } from './filterNotFound/filterNotFound';
 import { FiltersActionPanel } from './filtersActionPanel';
 import { ActiveFilter } from './activeFilter';
 import { FiltersList } from './filtersList';
 import { FilterEdit } from './filterEdit';
 import { FilterAdd } from './filterAdd';
-import { WIDGET_WIZARD_FORM } from '../../../widgetWizardContent/wizardControlsSection/constants';
-import { FORM_APPEARANCE_MODE_ADD, FORM_APPEARANCE_MODE_EDIT } from './constants';
+import {
+  FORM_APPEARANCE_MODE_ADD,
+  FORM_APPEARANCE_MODE_EDIT,
+  NEW_FILTER_DEFAULT_CONFIG,
+} from './common/constants';
+import styles from './filtersControl.scss';
 
 const cx = classNames.bind(styles);
 const selector = formValueSelector(WIDGET_WIZARD_FORM);
@@ -135,7 +137,7 @@ export class FiltersControl extends Component {
         case FORM_APPEARANCE_MODE_ADD: {
           return (
             <FilterAdd
-              filter={formAppearanceFilter}
+              filter={NEW_FILTER_DEFAULT_CONFIG}
               onChange={this.handleFilterChange}
               onCancel={this.clearFormAppearance}
               onSave={this.handleFilterInsert}
@@ -191,21 +193,31 @@ export class FiltersControl extends Component {
     onFormAppearanceChange(mode || formAppearance.mode, filter || {});
   };
 
-  handleFilterChange = (filter) => {
+  handleFilterChange = (newFilter) => {
     const {
       onFormAppearanceChange,
-      formAppearance: { mode },
+      formAppearance: { mode, filter },
     } = this.props;
 
-    onFormAppearanceChange(mode, filter);
+    const updatedFilter = {
+      ...filter,
+      ...newFilter,
+    };
+
+    onFormAppearanceChange(mode, updatedFilter);
   };
 
-  handleFilterInsert = (filter) => {
-    const { intl, activeProject, notify } = this.props;
+  handleFilterInsert = () => {
+    const {
+      intl,
+      activeProject,
+      notify,
+      formAppearance: { filter },
+    } = this.props;
 
     fetch(URLS.filters(activeProject), {
       method: 'post',
-      data: { elements: [filter] },
+      data: filter,
     })
       .then(() => {
         this.fetchFilter({ page: 1 });

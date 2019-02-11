@@ -1,164 +1,103 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { reduxForm } from 'redux-form';
 import classNames from 'classnames/bind';
-import { injectIntl, intlShape, defineMessages } from 'react-intl';
-
-import { BigButton } from 'components/buttons/bigButton';
-import { filterName } from 'common/utils/validation';
-import { ENTITY_NAME, CONDITION_CNT, ENTITY_START_TIME } from 'components/filterEntities/constants';
-import { FilterEntitiesContainer } from 'components/filterEntities/containers';
-import { EntitiesGroup } from 'components/filterEntities/entitiesGroup';
-import { LEVEL_LAUNCH } from 'common/constants/launchLevels';
-
-import { FILTER_ADD_FORM, getOrdersWithDefault } from '../constants';
-import { FilterAddInput } from './filterAddInput';
-import { FiltersSorting } from '../filtersSorting';
-
+import { defineMessages, intlShape, injectIntl } from 'react-intl';
+import { connect } from 'react-redux';
+import { reduxForm, formValueSelector } from 'redux-form';
+import { validate } from 'common/utils';
+import { FieldProvider } from 'components/fields/fieldProvider';
+import { FieldErrorHint } from 'components/fields/fieldErrorHint';
+import { Input } from 'components/inputs/input';
+import { messages } from '../common/messages';
+import { FILTER_ADD_FORM, FILTER_NAME_KEY } from '../common/constants';
+import { AddEditFilter } from '../common/addEditFilter';
 import styles from './filterAdd.scss';
 
 const cx = classNames.bind(styles);
-const messages = defineMessages({
-  cancelButton: {
-    id: 'AddFilter.cancelButton',
-    defaultMessage: 'Cancel',
+const selector = formValueSelector(FILTER_ADD_FORM);
+
+const localMessages = defineMessages({
+  filterName: {
+    id: 'AddFilter.filterName',
+    defaultMessage: 'Filter Name',
   },
-  submitButton: {
-    id: 'AddFilter.submitButton',
-    defaultMessage: 'Submit',
+  placeholderFilterName: {
+    id: 'AddFilter.placeholderFilterName',
+    defaultMessage: 'Input filter name',
   },
 });
 
-@injectIntl
-@connect(() => ({
-  initialValues: {
-    share: '',
-    type: 'launch',
-    entities: [{ value: '', condition: CONDITION_CNT, filteringField: ENTITY_NAME }],
-    selection_parameters: {
-      orders: getOrdersWithDefault(ENTITY_START_TIME),
-    },
-  },
-}))
 @reduxForm({
   form: FILTER_ADD_FORM,
-  validate: (values, { filter, onChange }) => {
-    onChange({
-      filter,
-      ...values,
-    });
-
-    if (!values.name || !filterName(values.name)) {
-      return { name: 'filterNameError' };
-    }
-
-    return true;
-  },
+  validate: ({ name }) => ({
+    name: (!name || !validate.filterName(name)) && 'filterNameError',
+  }),
+  onChange: ({ name }, dispatcher, { onChange }) => onChange({ name }),
   enableReinitialize: true,
   keepDirtyOnReinitialize: true,
   updateUnregisteredFields: true,
 })
+@connect((state) => ({
+  name: selector(state, FILTER_NAME_KEY),
+}))
+@injectIntl
 export class FilterAdd extends Component {
   static propTypes = {
-    intl: intlShape,
+    intl: intlShape.isRequired,
     filter: PropTypes.object.isRequired,
-    defectTypes: PropTypes.object.isRequired,
     onSave: PropTypes.func.isRequired,
     onCancel: PropTypes.func.isRequired,
     onChange: PropTypes.func.isRequired,
-    validate: PropTypes.func.isRequired,
-    handleSubmit: PropTypes.func.isRequired,
+    valid: PropTypes.bool.isRequired,
+    name: PropTypes.string,
   };
 
   static defaultProps = {
-    intl: {},
-    defectTypes: {},
-    validate: () => {},
-    handleSubmit: () => {},
+    name: '',
     onSave: () => {},
     onCancel: () => {},
     onChange: () => {},
   };
 
-  getFilterEntities = () => {
-    const { filter } = this.props;
-
-    if (filter.entities) {
-      return filter.entities.reduce(
-        (prev, current) => ({ ...prev, [current.filteringField]: current }),
-        {},
-      );
-    }
-
-    return {};
-  };
-
-  handleEntitiesChange = (entities) => {
-    const { filter, onChange } = this.props;
-
-    onChange({
-      ...filter,
-      entities: Object.values(entities),
-    });
-  };
-
-  handleOrdersChange = (selectionParameters) => {
-    const { filter, onChange } = this.props;
-
-    onChange({
-      ...filter,
-      selection_parameters: selectionParameters,
-    });
-  };
-
-  render() {
-    const { intl, onCancel, handleSubmit, filter, onSave } = this.props;
+  getCustomBlock = () => {
+    const {
+      intl: { formatMessage },
+    } = this.props;
 
     return (
-      <div className={cx('filter-add')}>
-        <h2 className={cx('filter-add-title')}>Add new filter</h2>
-        <FilterAddInput />
-        <div className={cx('filter-add-block')}>
-          <FilterEntitiesContainer
-            level={LEVEL_LAUNCH}
-            onChange={this.handleEntitiesChange}
-            entities={this.getFilterEntities()}
-            render={({
-              onFilterAdd,
-              onFilterRemove,
-              onFilterValidate,
-              onFilterChange,
-              filterErrors,
-              filterEntities,
-            }) => (
-              <EntitiesGroup
-                onChange={onFilterChange}
-                onValidate={onFilterValidate}
-                onRemove={onFilterRemove}
-                onAdd={onFilterAdd}
-                errors={filterErrors}
-                entities={filterEntities}
-                entitySmallSize
-              />
-            )}
-          />
-          <FiltersSorting filter={filter} onChange={this.handleOrdersChange} />
-          <div className={cx('filter-add-buttons-block')}>
-            <BigButton color={'gray-60'} onClick={onCancel} className={cx('button-inline')}>
-              {intl.formatMessage(messages.cancelButton)}
-            </BigButton>
-            <BigButton
-              type={'submit'}
-              color={'booger'}
-              onClick={handleSubmit(onSave)}
-              className={cx('button-inline')}
-            >
-              {intl.formatMessage(messages.submitButton)}
-            </BigButton>
-          </div>
-        </div>
+      <div className={cx('filter-add-custom-block')}>
+        <span className={cx('custom-block-text')}>{formatMessage(localMessages.filterName)}</span>
+        <FieldProvider name={FILTER_NAME_KEY}>
+          <FieldErrorHint>
+            <Input
+              placeholder={formatMessage(localMessages.placeholderFilterName)}
+              maxLength="128"
+            />
+          </FieldErrorHint>
+        </FieldProvider>
       </div>
+    );
+  };
+
+  handleFilterChange = (filter) =>
+    this.props.onChange({
+      ...filter,
+      name: this.props.name,
+    });
+
+  render() {
+    const { onCancel, filter, valid, onSave } = this.props;
+
+    return (
+      <AddEditFilter
+        filter={filter}
+        onCancel={onCancel}
+        onSubmit={onSave}
+        onChange={this.handleFilterChange}
+        canSubmit={valid}
+        blockTitle={messages.addTitle}
+        customBlock={this.getCustomBlock()}
+      />
     );
   }
 }

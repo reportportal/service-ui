@@ -40,8 +40,11 @@ export class Parameters extends Component {
           {this.props.intl.formatMessage(messages.valueHeader)}
         </div>
       </div>
-      {parameters.map((item) => (
-        <div key={item.key} className={cx('parameters-row')}>
+      {parameters.map((item, index) => (
+        <div
+          key={`${item.key}_${index}`} // eslint-disable-line react/no-array-index-key
+          className={cx('parameters-row')}
+        >
           <div className={cx('parameters-column')}>{item.key}</div>
           <div className={cx('parameters-column')}>{item.value}</div>
         </div>
@@ -52,16 +55,14 @@ export class Parameters extends Component {
   render() {
     const { logItem, intl } = this.props;
 
-    return (
+    return logItem.parameters && logItem.parameters.length ? (
       <div className={cx('parameters')}>
         <ScrollWrapper autoHeight autoHeightMax={105} hideTracksWhenNotNeeded>
-          {logItem.parameters && logItem.parameters.length ? (
-            this.renderParametersGrid(logItem.parameters)
-          ) : (
-            <NoItemMessage message={intl.formatMessage(messages.noParameters)} />
-          )}
+          {this.renderParametersGrid(logItem.parameters)}
         </ScrollWrapper>
       </div>
+    ) : (
+      <NoItemMessage message={intl.formatMessage(messages.noParameters)} />
     );
   }
 }

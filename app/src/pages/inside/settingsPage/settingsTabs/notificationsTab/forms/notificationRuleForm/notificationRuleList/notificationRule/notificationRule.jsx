@@ -20,6 +20,7 @@ import {
 } from 'pages/inside/settingsPage/settingsTabs/notificationsTab/forms/constants';
 import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import IconDelete from 'common/img/circle-cross-icon-inline.svg';
+import { AttributeListField } from 'components/main/attributeList';
 import { PencilCheckbox } from './pencilCheckbox';
 import { messages } from './messages';
 import styles from './notificationRule.scss';
@@ -28,7 +29,6 @@ const cx = className.bind(styles);
 @injectIntl
 @connect((state) => ({
   projectUsernamesSearch: URLS.projectUsernamesSearch(activeProjectSelector(state)),
-  launchTagsSearch: URLS.launchTagsSearch(activeProjectSelector(state)),
   launchNameSearch: URLS.launchNameSearch(activeProjectSelector(state)),
 }))
 @track()
@@ -37,7 +37,6 @@ export class NotificationRule extends Component {
     intl: intlShape.isRequired,
     rule: PropTypes.string,
     projectUsernamesSearch: PropTypes.string,
-    launchTagsSearch: PropTypes.string,
     launchNameSearch: PropTypes.string,
     onDelete: PropTypes.func,
     readOnly: PropTypes.bool,
@@ -55,7 +54,6 @@ export class NotificationRule extends Component {
   static defaultProps = {
     rule: '',
     projectUsernamesSearch: '',
-    launchTagsSearch: '',
     launchNameSearch: '',
     onDelete: () => {},
     readOnly: false,
@@ -128,12 +126,10 @@ export class NotificationRule extends Component {
     (Array.isArray(options) && options.map((option) => option.value)) || undefined;
   validateRecipientsNewItem = ({ label }) => label && validate.email(label);
   validateLaunchNamesNewItem = ({ label }) => label && label.length >= 3;
-  validateTagsNewItem = ({ label }) => label && label.length >= 1;
 
   render() {
     const {
       projectUsernamesSearch,
-      launchTagsSearch,
       launchNameSearch,
       intl,
       id,
@@ -252,31 +248,16 @@ export class NotificationRule extends Component {
           </FieldErrorHint>
         </FormField>
         <FormField
-          label={intl.formatMessage(messages.tagsLabel)}
+          label={intl.formatMessage(messages.attributesLabel)}
           customBlock={{
             node: <p>{intl.formatMessage(messages.tagsNote)}</p>,
           }}
           fieldWrapperClassName={cx('form-input')}
           name={`${rule}.launchTagRule`}
-          format={this.formatOptions}
-          parse={this.parseOptions}
           disabled={!editMode}
           onChange={() => tracking.trackEvent(SETTINGS_PAGE_EVENTS.TAGS_INPUT_NOTIFICATIONS)}
         >
-          <FieldErrorHint hintType="top">
-            <InputTagsSearch
-              placeholder={intl.formatMessage(messages.tagsPlaceholder)}
-              focusPlaceholder={intl.formatMessage(messages.tagsHint)}
-              async
-              uri={launchTagsSearch}
-              minLength={1}
-              makeOptions={this.formatOptions}
-              creatable
-              multi
-              removeSelected
-              isValidNewOption={this.validateTagsNewItem}
-            />
-          </FieldErrorHint>
+          <AttributeListField />
         </FormField>
       </Fragment>
     );

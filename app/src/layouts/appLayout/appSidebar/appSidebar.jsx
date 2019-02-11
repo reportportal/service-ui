@@ -27,16 +27,16 @@ import { activeProjectSelector, activeProjectRoleSelector } from 'controllers/us
 import { SIDEBAR_EVENTS } from 'components/main/analytics/events';
 import { FormattedMessage } from 'react-intl';
 import { CUSTOMER } from 'common/constants/projectRoles';
+import { ALL } from 'common/constants/reservedFilterIds';
 import {
   PROJECT_DASHBOARD_PAGE,
-  PROJECT_LAUNCHES_PAGE,
-  PROJECT_FILTERS_PAGE,
   PROJECT_USERDEBUG_PAGE,
+  LAUNCHES_PAGE,
+  PROJECT_FILTERS_PAGE,
   USER_PROFILE_PAGE,
   ADMINISTRATE_PAGE,
 } from 'controllers/pages/constants';
 import { Sidebar } from 'layouts/common/sidebar';
-import { ALL } from 'common/constants/reservedFilterIds';
 import DashboardIcon from './img/dashboard-icon-inline.svg';
 import LaunchesIcon from './img/launches-icon-inline.svg';
 import FiltersIcon from './img/filters-icon-inline.svg';
@@ -78,8 +78,8 @@ export class AppSidebar extends Component {
     {
       onClick: this.props.onClickNavBtn,
       link: {
-        type: PROJECT_LAUNCHES_PAGE,
-        payload: { projectId: this.props.activeProject, filterId: ALL },
+        type: LAUNCHES_PAGE,
+        payload: { projectId: this.props.activeProject },
       },
       icon: LaunchesIcon,
       message: <FormattedMessage id={'Sidebar.launchesBtn'} defaultMessage={'Launches'} />,

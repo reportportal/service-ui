@@ -16,6 +16,12 @@ const state = {
   },
 };
 
+const widget = {
+  content: {
+    result: data,
+  },
+};
+
 storiesOf('Components/Widgets/Tables/ProjectActivity', module)
   .addDecorator(
     host({
@@ -30,6 +36,6 @@ storiesOf('Components/Widgets/Tables/ProjectActivity', module)
   .addDecorator(withReadme(README))
   .add('with activity prop', () => (
     <WithState state={state}>
-      <ProjectActivity activity={data} />
+      <ProjectActivity widget={widget} />
     </WithState>
   ));

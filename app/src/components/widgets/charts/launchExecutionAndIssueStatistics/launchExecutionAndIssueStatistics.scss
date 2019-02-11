@@ -1,0 +1,103 @@
+:global {
+  .c3-chart-arc {
+    & text {
+      display: none;
+    }
+  }
+  .c3-legend-background {
+    stroke: none !important;
+    stroke-width: 0;
+  }
+
+  .c3-chart-arcs-title {
+    font-size: 24px !important;
+    font-weight: bold;
+  }
+
+  .c3-tooltip-container {
+    max-width: 215px;
+    background-color: $COLOR--white-two;
+    padding: 5px 10px;
+    border: 1px solid $COLOR--gray-80;
+    border-radius: 2px;
+    font-size: 13px;
+    white-space: nowrap;
+    font-family: $FONT-REGULAR, sans-serif;
+
+    .launch-name {
+      width: 100%;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      font-family: $FONT-SEMIBOLD, sans-serif;
+    }
+
+    > :after {
+      content: '';
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      margin-left: -5px;
+      border-top: 6px solid $COLOR--white-two;
+      border-left: 6px solid transparent;
+      border-right: 6px solid transparent;
+    }
+
+    > :before {
+      content: '';
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      margin-left: -7px;
+      width: 0;
+      height: 0;
+      border-left: 8px solid transparent;
+      border-right: 8px solid transparent;
+      border-top: 8px solid $COLOR--gray-80;
+    }
+  }
+}
+
+.launch-execution-chart {
+  background-color: $COLOR--light-yellow;
+}
+
+.issue-statistics-chart .legend {
+  top: -4px;
+  line-height: 1.5;
+}
+
+.preview-view {
+  & .launch-execution-chart,
+  & .issue-statistics-chart {
+    & .c3 {
+      bottom: 0;
+    }
+  }
+}
+
+.data-js-launch-execution-chart-container,
+.data-js-issue-statistics-chart-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.launch-execution-chart,
+.issue-statistics-chart {
+  width: 49%;
+  float: left;
+  height: 390px;
+
+  .legend-title {
+    position: relative;
+    padding-top: 20px;
+    overflow: hidden;
+    min-height: 40px;
+    text-align: right;
+    z-index: 999;
+  }
+
+  .c3 {
+    bottom: 82px;
+  }
+}

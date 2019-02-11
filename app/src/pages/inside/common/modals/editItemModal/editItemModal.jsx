@@ -11,26 +11,18 @@ import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { LAUNCH_ITEM_TYPES } from 'common/constants/launchItemTypes';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { MarkdownEditor } from 'components/main/markdown';
-import { InputTagsSearch } from 'components/inputs/inputTagsSearch';
 import { connect } from 'react-redux';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
+import { AttributeListField } from 'components/main/attributeList';
 import styles from './editItemModal.scss';
 
 const cx = classNames.bind(styles);
 
 const messages = defineMessages({
-  tagsLabel: {
-    id: 'EditItemModal.tagsLabel',
-    defaultMessage: 'Tags',
-  },
-  tagsPlaceholder: {
-    id: 'EditItemModal.tagsPlaceholder',
-    defaultMessage: 'Enter tag name',
-  },
-  tagsHint: {
-    id: 'EditItemModal.tagsHint',
-    defaultMessage: 'Please enter 1 or more characters',
+  attributesLabel: {
+    id: 'EditItemModal.attributesLabel',
+    defaultMessage: 'Attributes',
   },
   descriptionPlaceholder: {
     id: 'EditItemModal.descriptionPlaceholder',
@@ -69,7 +61,6 @@ const messages = defineMessages({
 })
 @connect(
   (state) => ({
-    tagsSearchUrl: URLS.launchTagsSearch(activeProjectSelector(state)),
     currentProject: activeProjectSelector(state),
   }),
   {
@@ -86,7 +77,6 @@ export class EditItemModal extends Component {
     initialize: PropTypes.func.isRequired,
     dirty: PropTypes.bool.isRequired,
     handleSubmit: PropTypes.func.isRequired,
-    tagsSearchUrl: PropTypes.string.isRequired,
     currentProject: PropTypes.string.isRequired,
     showNotification: PropTypes.func.isRequired,
     intl: intlShape.isRequired,
@@ -95,7 +85,7 @@ export class EditItemModal extends Component {
   componentDidMount() {
     this.props.initialize({
       description: this.props.data.item.description || '',
-      tags: this.props.data.item.tags || [],
+      attributes: this.props.data.item.attributes || [],
     });
   }
 
@@ -107,10 +97,6 @@ export class EditItemModal extends Component {
       confirmationWarning: this.props.intl.formatMessage(COMMON_LOCALE_KEYS.CLOSE_MODAL_WARNING),
     };
   };
-
-  formatTags = (tags) =>
-    tags && !!tags.length ? tags.map((tag) => ({ value: tag, label: tag })) : [];
-  parseTags = (options) => (options && options.map((option) => option.value)) || undefined;
 
   updateItemAndCloseModal = (closeModal) => (formData) => {
     this.props.dirty && this.updateItem(formData);
@@ -141,7 +127,6 @@ export class EditItemModal extends Component {
       intl: { formatMessage },
       data: { item, type },
       handleSubmit,
-      tagsSearchUrl,
     } = this.props;
     const okButton = {
       text: formatMessage(COMMON_LOCALE_KEYS.SAVE),
@@ -174,20 +159,9 @@ export class EditItemModal extends Component {
               {type === LAUNCH_ITEM_TYPES.launch && ` #${item.number}`}
             </div>
           </ModalField>
-          <ModalField label={formatMessage(messages.tagsLabel)}>
-            <FieldProvider name="tags" format={this.formatTags} parse={this.parseTags}>
-              <InputTagsSearch
-                placeholder={formatMessage(messages.tagsPlaceholder)}
-                focusPlaceholder={formatMessage(messages.tagsHint)}
-                minLength={1}
-                async
-                uri={tagsSearchUrl}
-                makeOptions={this.formatTags}
-                creatable
-                showNewLabel
-                multi
-                removeSelected
-              />
+          <ModalField label={formatMessage(messages.attributesLabel)}>
+            <FieldProvider name="attributes">
+              <AttributeListField />
             </FieldProvider>
           </ModalField>
           <ModalField>

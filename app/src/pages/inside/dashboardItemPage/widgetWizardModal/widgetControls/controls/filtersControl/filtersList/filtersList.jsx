@@ -5,7 +5,7 @@ import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader/spinningPreloader';
 import styles from './filtersList.scss';
 import { FiltersItem } from '../filtersItem';
-import { FORM_APPEARANCE_MODE_EDIT } from '../constants';
+import { FORM_APPEARANCE_MODE_EDIT } from '../common/constants';
 
 const cx = classNames.bind(styles);
 

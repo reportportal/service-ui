@@ -5,7 +5,13 @@ import { omit } from './omit';
 
 const takeAll = (x) => ({ ...x });
 
-const mergeQuery = (oldQuery, paramsToMerge) => ({ ...oldQuery, ...paramsToMerge });
+const mergeQuery = (oldQuery, paramsToMerge) => {
+  const newQuery = { ...oldQuery, ...paramsToMerge };
+  return Object.keys(newQuery).reduce(
+    (acc, key) => (!newQuery[key] ? acc : { ...acc, [key]: newQuery[key] }),
+    {},
+  );
+};
 
 export const connectRouter = (mapURLParamsToProps = takeAll, queryUpdaters = {}, options = {}) => (
   WrappedComponent,

@@ -28,7 +28,7 @@ import styles from './inputUserSearch.scss';
 import { UsersList } from './usersList';
 
 const cx = classNames.bind(styles);
-const getPhoto = (userId) => URLS.dataUserPhoto(new Date().getTime(), userId);
+const getPhoto = (userId) => URLS.dataUserPhoto(userId);
 const isValidNewOption = ({ label }) => validate.email(label);
 const newOptionCreator = (option) => ({
   externalUser: true,

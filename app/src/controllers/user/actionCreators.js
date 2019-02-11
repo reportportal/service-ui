@@ -5,12 +5,18 @@ import {
   SET_ACTIVE_PROJECT,
   SET_START_TIME_FORMAT,
   SET_USER_TOKEN,
+  SET_PHOTO_TIME_STAMP,
 } from './constants';
 import { userInfoSelector } from './selectors';
 
 const fetchUserSuccessAction = (user) => ({
   type: FETCH_USER_SUCCESS,
   payload: user,
+});
+
+export const setPhotoTimeStampAction = (timeStamp) => ({
+  type: SET_PHOTO_TIME_STAMP,
+  payload: timeStamp,
 });
 
 export const setActiveProjectAction = (project) => (dispatch, getState) => {

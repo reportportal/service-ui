@@ -7,6 +7,8 @@ import { defectTypesSelector } from 'controllers/project';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { validate } from 'common/utils';
 import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
+import classNames from 'classnames/bind';
+import { BetaBadge } from 'pages/inside/common/betaBadge';
 import { getWidgetCriteriaOptions } from './utils/getWidgetCriteriaOptions';
 import { getWidgetModeOptions } from './utils/getWidgetModeOptions';
 import {
@@ -22,6 +24,9 @@ import {
   CheckboxControl,
 } from './controls';
 import { WIDGET_WIZARD_FORM } from '../widgetWizardContent/wizardControlsSection/constants';
+import styles from './widgetControls.scss';
+
+const cx = classNames.bind(styles);
 
 const DEFAULT_ITEMS_COUNT = '50';
 const messages = defineMessages({
@@ -161,9 +166,12 @@ export class LaunchStatisticsControls extends Component {
             )}
           />
         </FieldProvider>
-        <FieldProvider name="contentParameters.widgetOptions.zoom">
-          <CheckboxControl fieldLabel=" " text={formatMessage(messages.ZoomControlText)} />
-        </FieldProvider>
+        <div className={cx('zoom-container')}>
+          <FieldProvider name="contentParameters.widgetOptions.zoom">
+            <CheckboxControl fieldLabel=" " text={formatMessage(messages.ZoomControlText)} />
+          </FieldProvider>
+          <BetaBadge className={cx('launch-controls')} />
+        </div>
       </Fragment>
     );
   }

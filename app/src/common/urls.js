@@ -14,8 +14,8 @@ export const URLS = {
 
   dataPhoto: (userId, at) =>
     `${urlBase}data/photo${getQueryParams({ [userId]: null, at, access_token: getToken() })}`,
-  dataUserPhoto: (v, id) =>
-    `${urlBase}data/userphoto${getQueryParams({ v, id, access_token: getToken() })}`,
+  dataUserPhoto: (id) =>
+    `${urlBase}data/userphoto${getQueryParams({ id, access_token: getToken() })}`,
 
   dashboard: (activeProject, id) => `${urlBase}${activeProject}/dashboard/${id}`,
   dashboards: (activeProject) => `${urlBase}${activeProject}/dashboard`,
@@ -51,8 +51,10 @@ export const URLS = {
   launch: (activeProject, id) => `${urlBase}${activeProject}/launch/${id}`,
   launchAttributeKeysSearch: (activeProject) =>
     `${urlBase}${activeProject}/launch/attribute/keys?filter.cnt.attributeKey=`,
-  launchAttributeValuesSearch: (activeProject) =>
-    `${urlBase}${activeProject}/launch/attribute/values?filter.cnt.attributeValue=`,
+  launchAttributeValuesSearch: (activeProject, key = '') =>
+    `${urlBase}${activeProject}/launch/attribute/values?${
+      key ? `filter.eq.attributeKey=${key}&` : ''
+    }filter.cnt.attributeValue=`,
   launchTagsSearch: (activeProject) => `${urlBase}${activeProject}/launch/tags?filter.cnt.tags=`,
   launchNameSearch: (activeProject) => `${urlBase}${activeProject}/launch/names?filter.cnt.name=`,
   launchOwnersSearch: (activeProject) =>
@@ -137,8 +139,22 @@ export const URLS = {
       'filter.gte.level': level,
     })}`,
   logItemActivity: (activeProject, itemId) => `${urlBase}${activeProject}/activity/item/${itemId}`,
-  logAttachment: (activeProject, id) =>
-    `${urlBase}${activeProject}/data/${id}${getQueryParams({ access_token: getToken() })}`,
+  logItemStackTrace: (activeProject, itemId) =>
+    `${urlBase}${activeProject}/log${getQueryParams({
+      'filter.eq.item': itemId,
+      'page.page': 1,
+      'page.size': 1,
+      'filter.in.level': 'ERROR',
+      'page.sort': 'logTime,DESC',
+    })}`,
+  logItemStackTraceMessageLocation: (activeProject, itemId, stackTraceItemId, pageSize, level) =>
+    `${urlBase}${activeProject}/log/${stackTraceItemId}/page${getQueryParams({
+      'filter.eq.item': itemId,
+      'page.page': 1,
+      'page.size': pageSize,
+      'filter.gte.level': level,
+      'page.sort': 'logTime,ASC',
+    })}`,
 
   user: () => `${urlBase}user`,
   userRegistration: () => `${urlBase}user/registration`,
@@ -153,12 +169,14 @@ export const URLS = {
   userUnasign: (activeProject) => `${urlBase}project/${activeProject}/unassign`,
 
   generateDemoData: (projectId) => `${urlBase}demo/${projectId}`,
-  getFileById: (activeProject, dataId) =>
-    `${urlBase}${activeProject}/data/${dataId}${getQueryParams({ access_token: getToken() })}`,
+  getFileById: (dataId) =>
+    `${urlBase}data/${dataId}${getQueryParams({ access_token: getToken() })}`,
 
   serverSettings: () => `${urlBase}settings`,
   emailServerSettings: () => `${urlBase}settings/email`,
-  authSettings: (authType) => `${uatBase}settings/auth/${authType}`,
-  githubAuthSettings: () => `${uatBase}settings/default/oauth/github`,
+  authSettings: (authTypeOrId) => `${uatBase}settings/auth/${authTypeOrId}`,
+  githubAuthSettings: () => `${uatBase}settings/oauth/github`,
   statisticsServerSettings: () => `${urlBase}settings/analytics`,
+  events: (projectId) => `${urlBase}${projectId}/activity`,
+  allUsers: () => `${urlBase}user/all`,
 };

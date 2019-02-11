@@ -6,7 +6,7 @@
 .log-attachments {
   margin: 0 auto;
   width: 80%;
-  &.hideMainArea :global .carousel-slider {
+  &.hide-main-area :global .carousel-slider {
     display: none;
   }
 
@@ -59,7 +59,7 @@
 
     li.thumb,
     li.thumb:hover {
-      margin: 0px 10px;
+      margin: 0 10px;
       border: 1px solid transparent;
       cursor: pointer;
     }

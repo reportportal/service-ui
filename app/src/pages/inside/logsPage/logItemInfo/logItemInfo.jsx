@@ -6,7 +6,7 @@ import { defineMessages, injectIntl, intlShape } from 'react-intl';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { DefectType } from 'pages/inside/stepPage/stepGrid/defectType';
 import { LOG_PAGE_EVENTS } from 'components/main/analytics/events';
-import { linkIssueAction } from 'controllers/step';
+import { linkIssueAction, editDefectsAction } from 'controllers/step';
 import { showModalAction } from 'controllers/modal';
 import { activeLogSelector, historyItemsSelector } from 'controllers/log';
 import { PASSED, SKIPPED, MANY, NOT_FOUND } from 'common/constants/launchStatuses';
@@ -59,6 +59,7 @@ const messages = defineMessages({
   }),
   {
     linkIssueAction,
+    editDefectsAction,
     showModalAction,
   },
 )
@@ -66,11 +67,15 @@ const messages = defineMessages({
 export class LogItemInfo extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
+    onChangePage: PropTypes.func.isRequired,
+    onChangeLogLevel: PropTypes.func.isRequired,
+    editDefectsAction: PropTypes.func.isRequired,
     linkIssueAction: PropTypes.func.isRequired,
     historyItems: PropTypes.array.isRequired,
     externalSystems: PropTypes.array.isRequired,
     fetchFunc: PropTypes.func.isRequired,
     showModalAction: PropTypes.func.isRequired,
+    onHighlightRow: PropTypes.func.isRequired,
     logItem: PropTypes.object,
   };
   static defaultProps = {
@@ -161,9 +166,18 @@ export class LogItemInfo extends Component {
     });
   };
 
+  handleEditDefect = () => {
+    this.props.editDefectsAction([this.props.logItem], {
+      fetchFunc: this.props.fetchFunc,
+    });
+  };
+
   render() {
     const {
       logItem,
+      onChangePage,
+      onChangeLogLevel,
+      onHighlightRow,
       intl: { formatMessage },
     } = this.props;
 
@@ -176,6 +190,7 @@ export class LogItemInfo extends Component {
                 logItem.issue.issueType && (
                   <DefectType
                     issue={logItem.issue}
+                    onEdit={this.handleEditDefect}
                     editEventInfo={LOG_PAGE_EVENTS.DEFECT_TYPE_TAG}
                   />
                 )}
@@ -207,7 +222,12 @@ export class LogItemInfo extends Component {
               </div>
             </div>
           </div>
-          <LogItemInfoTabs logItem={logItem} />
+          <LogItemInfoTabs
+            logItem={logItem}
+            onChangePage={onChangePage}
+            onChangeLogLevel={onChangeLogLevel}
+            onHighlightRow={onHighlightRow}
+          />
         </div>
       )
     );

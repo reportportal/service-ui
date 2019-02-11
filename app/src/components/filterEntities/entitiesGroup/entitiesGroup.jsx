@@ -20,6 +20,8 @@ export class EntitiesGroup extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    staticMode: PropTypes.bool,
+    vertical: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -34,6 +36,8 @@ export class EntitiesGroup extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    staticMode: false,
+    vertical: false,
   };
 
   state = {
@@ -74,13 +78,13 @@ export class EntitiesGroup extends Component {
   };
 
   render() {
-    const { entities, entitySmallSize, errors } = this.props;
+    const { entities, entitySmallSize, errors, staticMode, vertical } = this.props;
     return (
       <div className={cx('entities-group')}>
         {this.getActiveEntities().map((entity) => {
           const EntityComponent = entity.component;
           return (
-            <div key={entity.id} className={cx('entity-item')}>
+            <div key={entity.id} className={cx('entity-item', { vertical })}>
               <EntityComponent
                 entityId={entity.id}
                 smallSize={entitySmallSize}
@@ -96,11 +100,13 @@ export class EntitiesGroup extends Component {
                 value={entity.value}
                 active={this.state.activeField === entity.id}
                 error={errors[entity.id]}
+                vertical={vertical}
+                customProps={entity.customProps}
               />
             </div>
           );
         })}
-        <EntitiesSelector entities={entities} onChange={this.toggleEntity} />
+        {!staticMode && <EntitiesSelector entities={entities} onChange={this.toggleEntity} />}
       </div>
     );
   }

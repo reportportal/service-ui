@@ -11,7 +11,7 @@ import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import AddFilterIcon from 'common/img/add-filter-inline.svg';
 
 import styles from './filtersActionPanel.scss';
-import { FILTER_SEARCH_FORM, FORM_APPEARANCE_MODE_ADD } from '../constants';
+import { FILTER_SEARCH_FORM, FORM_APPEARANCE_MODE_ADD } from '../common/constants';
 
 const cx = classNames.bind(styles);
 const messages = defineMessages({

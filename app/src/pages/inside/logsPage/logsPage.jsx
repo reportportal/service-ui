@@ -12,7 +12,7 @@ import {
   NAMESPACE,
 } from 'controllers/log';
 import { withFilter } from 'controllers/filter';
-import { withPagination } from 'controllers/pagination';
+import { withPagination, PAGE_KEY } from 'controllers/pagination';
 import { withSorting, SORTING_ASC } from 'controllers/sorting';
 import { userIdSelector } from 'controllers/user';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
@@ -51,8 +51,8 @@ import { LogsGridToolbar } from './logsGridToolbar';
     logLevelId: query['filter.gte.level'],
   }),
   {
-    onChangeLogLevel: (logLevel) => ({ 'filter.gte.level': logLevel.id }),
-    onChangeWithAttachments: (withAttachments) => ({ 'filter.ex.binary_content': withAttachments }),
+    onChangeLogLevel: (logLevel) => ({ 'filter.gte.level': logLevel.id, [PAGE_KEY]: 1 }),
+    onChangeWithAttachments: (withAttachments) => ({ 'filter.ex.binaryContent': withAttachments }),
   },
   { namespace: NAMESPACE },
 )
@@ -102,6 +102,24 @@ export class LogsPage extends Component {
     onChangeWithAttachments: () => {},
   };
 
+  state = {
+    highlightedRowId: null,
+    isGridRowHighlighted: false,
+  };
+
+  onHighlightRow = (highlightedRowId) => {
+    this.setState({
+      highlightedRowId,
+      isGridRowHighlighted: false,
+    });
+  };
+
+  onGridRowHighlighted = () => {
+    this.setState({
+      isGridRowHighlighted: true,
+    });
+  };
+
   handleRefresh = () => {
     this.props.tracking.trackEvent(LOG_PAGE_EVENTS.REFRESH_BTN);
     this.props.refresh();
@@ -129,12 +147,23 @@ export class LogsPage extends Component {
       onChangeWithAttachments,
     } = this.props;
 
+    const rowHighlightingConfig = {
+      onGridRowHighlighted: this.onGridRowHighlighted,
+      isGridRowHighlighted: this.state.isGridRowHighlighted,
+      highlightedRowId: this.state.highlightedRowId,
+    };
+
     return (
       <PageLayout>
         <PageSection>
           <LogToolbar onRefresh={this.handleRefresh} />
           <HistoryLine />
-          <LogItemInfo fetchFunc={refresh} />
+          <LogItemInfo
+            onChangeLogLevel={onChangeLogLevel}
+            onChangePage={onChangePage}
+            onHighlightRow={this.onHighlightRow}
+            fetchFunc={refresh}
+          />
           <LogsGridToolbar
             activePage={activePage}
             pageCount={pageCount}
@@ -152,21 +181,25 @@ export class LogsPage extends Component {
                 sortingColumn={sortingColumn}
                 sortingDirection={sortingDirection}
                 onChangeSorting={onChangeSorting}
+                rowHighlightingConfig={rowHighlightingConfig}
                 markdownMode={markdownMode}
                 consoleView={consoleView}
               />
             )}
           </LogsGridToolbar>
-          {!!pageCount && (
-            <PaginationToolbar
-              activePage={activePage}
-              itemCount={itemCount}
-              pageCount={pageCount}
-              pageSize={pageSize}
-              onChangePage={onChangePage}
-              onChangePageSize={onChangePageSize}
-            />
-          )}
+          {!!pageCount &&
+            logItems &&
+            !!logItems.length &&
+            !loading && (
+              <PaginationToolbar
+                activePage={activePage}
+                itemCount={itemCount}
+                pageCount={pageCount}
+                pageSize={pageSize}
+                onChangePage={onChangePage}
+                onChangePageSize={onChangePageSize}
+              />
+            )}
         </PageSection>
       </PageLayout>
     );

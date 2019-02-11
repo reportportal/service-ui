@@ -19,6 +19,8 @@ export class InfoTabs extends Component {
         icon: PropTypes.node,
       }),
     ),
+    activeTab: PropTypes.object,
+    setActiveTab: PropTypes.func,
     panelContent: PropTypes.node,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
@@ -28,28 +30,19 @@ export class InfoTabs extends Component {
 
   static defaultProps = {
     tabs: [],
+    activeTab: null,
+    setActiveTab: () => {},
     panelContent: null,
   };
 
-  state = {
-    activeTab: null,
-  };
-
-  setActiveTab(tab) {
-    this.setState({
-      activeTab: this.isActiveTab(tab) ? null : tab,
-    });
-  }
-
   isActiveTab(tab) {
-    const { activeTab } = this.state;
+    const { activeTab } = this.props;
 
     return activeTab && tab.id === activeTab.id;
   }
 
   render() {
-    const { activeTab } = this.state;
-    const { tabs, panelContent, tracking } = this.props;
+    const { tabs, activeTab, setActiveTab, panelContent, tracking } = this.props;
 
     return (
       <div className={cx('tabs-container')}>
@@ -60,7 +53,7 @@ export class InfoTabs extends Component {
                 className={cx('tab', { active: this.isActiveTab(tab) })}
                 onClick={() => {
                   tracking.trackEvent(tab.eventInfo);
-                  this.setActiveTab(tab);
+                  setActiveTab(tab);
                 }}
               >
                 {tab.icon && <i className={cx('tab-icon')}>{Parser(tab.icon)}</i>}
@@ -76,11 +69,7 @@ export class InfoTabs extends Component {
           ))}
           {panelContent && <div className={cx('panel-content')}>{panelContent}</div>}
         </div>
-        {activeTab && (
-          <div className={cx('tabs-content', 'desktop')}>
-            {tabs.find((tab) => tab.id === activeTab.id).content}
-          </div>
-        )}
+        {activeTab && <div className={cx('tabs-content', 'desktop')}>{activeTab.content}</div>}
       </div>
     );
   }

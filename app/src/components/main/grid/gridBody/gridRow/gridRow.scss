@@ -200,3 +200,36 @@
     background: none;
   }
 }
+
+.highlight-block {
+  position: absolute;
+  right: 0;
+  left: 0;
+  z-index: -1;
+
+  &:before {
+    content: '';
+    display: block;
+  }
+}
+
+.highlight {
+  z-index: 1;
+  &:before {
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: $COLOR--go-to-stack-trace;
+    opacity: 0.6;
+    transition: opacity 3s ease;
+  }
+}
+
+.hide-highlight {
+  &:before {
+    opacity: 0;
+  }
+}

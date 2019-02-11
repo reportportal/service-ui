@@ -30,7 +30,7 @@ const messages = defineMessages({
 
 @connect(
   (state) => ({
-    name: userInfoSelector(state).full_name,
+    name: userInfoSelector(state).fullName,
     email: userInfoSelector(state).email,
   }),
   { showNotification, showModalAction, fetchUserAction },

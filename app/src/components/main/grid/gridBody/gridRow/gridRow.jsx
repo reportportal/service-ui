@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
+import { LOG_MESSAGE_HIGHLIGHT_TIMEOUT } from '../../constants';
 import { columnPropTypes } from '../../propTypes';
 import { GridCell } from './gridCell';
 import { CheckboxCell } from './checkboxCell';
@@ -24,6 +25,11 @@ export class GridRow extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    rowHighlightingConfig: PropTypes.shape({
+      onGridRowHighlighted: PropTypes.func,
+      isGridRowHighlighted: PropTypes.bool,
+      highlightedRowId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    }),
   };
 
   static defaultProps = {
@@ -33,19 +39,28 @@ export class GridRow extends Component {
     selectedItems: [],
     onToggleSelection: () => {},
     changeOnlyMobileLayout: false,
-    rowClassMapper: () => {},
+    rowClassMapper: null,
     toggleAccordionEventInfo: {},
+    rowHighlightingConfig: PropTypes.shape({
+      onGridRowHighlighted: () => {},
+      isGridRowHighlighted: false,
+      highlightedRowId: null,
+    }),
   };
 
   state = {
     withAccordion: false,
     expanded: false,
   };
+
   componentDidMount() {
     this.handleAccordion();
   }
   componentDidUpdate() {
     this.handleAccordion();
+    if (this.checkIfTheHighlightNeeded()) {
+      this.highLightGridRow();
+    }
   }
   setupRef = (overflowCell) => {
     this.overflowCell = overflowCell;
@@ -54,6 +69,41 @@ export class GridRow extends Component {
     this.setState({ withAccordion: true });
     this.overflowCell.style.maxHeight = `${this.overflowCellMaxHeight}px`;
   };
+
+  getHighLightBlockSize = () =>
+    this.rowRef && this.rowRef.current
+      ? {
+          height: `${this.rowRef.current.clientHeight}px`,
+          width: `${this.rowRef.current.clientWidth}px`,
+        }
+      : {};
+
+  getHighlightBlockClasses = () =>
+    this.checkIfTheHighlightNeeded() ? this.highLightBlockClasses : '';
+
+  checkIfTheHighlightNeeded = () => {
+    const { highlightedRowId, isGridRowHighlighted } = this.props.rowHighlightingConfig;
+
+    return (
+      this.highlightBlockRef.current &&
+      highlightedRowId === this.props.value.id &&
+      !isGridRowHighlighted
+    );
+  };
+
+  highlightBlockRef = React.createRef();
+
+  rowRef = React.createRef();
+
+  highLightBlockClasses = `${cx('highlight')} ${cx('hide-highlight')}`;
+
+  highLightGridRow() {
+    this.highlightBlockRef.current.scrollIntoView({ behavior: 'smooth' });
+    setTimeout(() => {
+      this.props.rowHighlightingConfig.onGridRowHighlighted();
+    }, LOG_MESSAGE_HIGHLIGHT_TIMEOUT);
+  }
+
   removeAccordion = () => {
     this.setState({ withAccordion: false });
     this.overflowCell.style.maxHeight = null;
@@ -82,13 +132,23 @@ export class GridRow extends Component {
   render() {
     const { columns, value, selectable, changeOnlyMobileLayout, rowClassMapper } = this.props;
     const customClasses = (rowClassMapper && rowClassMapper(value)) || {};
+
     return (
       <div
         className={cx('grid-row-wrapper', {
           selected: this.isItemSelected(),
           ...customClasses,
         })}
+        data-id={value.id}
+        ref={this.rowRef}
       >
+        <div className={cx('grid-row')}>
+          <div
+            ref={this.highlightBlockRef}
+            className={cx('highlight-block', this.getHighlightBlockClasses())}
+            style={this.getHighLightBlockSize()}
+          />
+        </div>
         {this.state.withAccordion && (
           <div className={cx('accordion-wrapper-mobile')}>
             <div

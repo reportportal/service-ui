@@ -34,7 +34,6 @@ const MessageColumn = ({ className, value, ...rest }) => (
     className={cx('message-column', `level-${value.level}`, className, {
       console: rest.customProps.consoleView,
     })}
-    id={value.level === ERROR ? value.id : undefined}
   >
     <LogMessageBlock value={value} {...rest} />
   </div>
@@ -56,9 +55,9 @@ const AttachmentColumn = ({ className, value, customProps }) => (
       console: customProps.consoleView,
     })}
   >
-    {value.binary_content &&
-      value.binary_content.content_type && (
-        <AttachmentBlock customProps={customProps} value={value.binary_content} />
+    {value.binaryContent &&
+      value.binaryContent.contentType && (
+        <AttachmentBlock customProps={customProps} value={value.binaryContent} />
       )}
   </div>
 );
@@ -98,6 +97,11 @@ export class LogsGrid extends Component {
     onChangeSorting: PropTypes.func,
     consoleView: PropTypes.bool,
     markdownMode: PropTypes.bool,
+    rowHighlightingConfig: PropTypes.shape({
+      onGridRowHighlighted: PropTypes.func,
+      isGridRowHighlighted: PropTypes.bool,
+      highlightedRowId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    }),
   };
 
   static defaultProps = {
@@ -110,6 +114,11 @@ export class LogsGrid extends Component {
     onChangeSorting: () => {},
     consoleView: false,
     markdownMode: false,
+    rowHighlightingConfig: PropTypes.shape({
+      onGridRowHighlighted: () => {},
+      isGridRowHighlighted: false,
+      highlightedRowId: null,
+    }),
   };
 
   getConsoleViewColumns = () => [
@@ -240,6 +249,7 @@ export class LogsGrid extends Component {
       sortingColumn,
       sortingDirection,
       onChangeSorting,
+      rowHighlightingConfig,
     } = this.props;
 
     return (
@@ -247,6 +257,7 @@ export class LogsGrid extends Component {
         <Grid
           columns={this.getColumns()}
           data={logItems}
+          rowHighlightingConfig={rowHighlightingConfig}
           rowClassMapper={this.getLogRowClasses}
           changeOnlyMobileLayout
           loading={loading}

@@ -134,7 +134,6 @@ export class TestCasesGrowthTrendChart extends Component {
     const bars = ['bar'];
     this.positiveTrend = [];
 
-    // console.log(data);
     data.forEach((item) => {
       const { values } = item;
       if (+values.delta < 0) {

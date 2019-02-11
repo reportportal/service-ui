@@ -27,7 +27,7 @@ export const settingsTabSelector = (state) => payloadSelector(state).settingsTab
 export const pageSelector = (state) => pageNames[state.location.type] || NO_PAGE;
 export const projectSectionSelector = (state) => payloadSelector(state).projectSection || '';
 
-export const pagePropertiesSelector = ({ location: { query } }, namespace, mapping = undefined) => {
+const commonPagePropertiesSelector = (query, namespace, mapping = undefined) => {
   if (!query) {
     return {};
   }
@@ -48,11 +48,24 @@ export const pagePropertiesSelector = ({ location: { query } }, namespace, mappi
   return result;
 };
 
+export const pagePropertiesSelector = ({ location: { query } }, namespace, mapping) =>
+  commonPagePropertiesSelector(query, namespace, mapping);
+
+export const prevPagePropertiesSelector = (
+  {
+    location: {
+      prev: { query },
+    },
+  },
+  namespace,
+  mapping,
+) => commonPagePropertiesSelector(query, namespace, mapping);
+
 export const createQueryParametersSelector = ({
   namespace: staticNamespace,
   defaultPagination,
   defaultSorting,
-}) => (state, namespace) => {
+} = {}) => (state, namespace) => {
   const query = pagePropertiesSelector(state, staticNamespace || namespace);
   return {
     ...(defaultPagination || DEFAULT_PAGINATION),
