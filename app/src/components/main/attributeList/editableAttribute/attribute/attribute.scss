@@ -1,7 +1,7 @@
 .attribute {
   display: inline-flex;
   align-items: center;
-  height: 24px;
+  min-height: 24px;
   margin-bottom: 10px;
   margin-right: 10px;
   padding-left: 10px;
@@ -17,6 +17,11 @@
   font-family: $FONT-REGULAR;
   font-size: 13px;
   line-height: 18px;
+  word-break: break-all;
+
+  @supports (word-break: break-word) {
+    word-break: break-word;
+  }
 }
 
 .remove-icon {
