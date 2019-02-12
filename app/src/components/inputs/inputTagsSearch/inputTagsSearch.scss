@@ -106,6 +106,11 @@
           darken($COLOR--gray-91, 2%) 52%,
           $COLOR--gray-91 100%
         );
+        word-break: break-all;
+
+        @supports (word-break: break-word) {
+          word-break: break-word;
+        }
       }
       .Select-value-label {
         max-width: 100%;
