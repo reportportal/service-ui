@@ -11,10 +11,10 @@ const messages = defineMessages({
 
 const normalizeValue = (value) => (Array.isArray(value) ? value.join(',') : value);
 
-export const EntityItemAttributeValues = injectIntl(({ intl, customProps, ...props }) => (
+export const EntityItemAttributeValues = injectIntl(({ intl, meta, ...props }) => (
   <EntityItemAttributes
     urlResolver={(projectId) =>
-      URLS.launchAttributeValuesSearch(projectId, normalizeValue(customProps.attributeKey))
+      URLS.launchAttributeValuesSearch(projectId, normalizeValue(meta.attributeKey))
     }
     placeholder={intl.formatMessage(messages.placeholder)}
     {...props}

@@ -206,6 +206,7 @@ export class SuiteLevelEntities extends Component {
         title: intl.formatMessage(messages.AttributeValuesTitle),
         active: ENTITY_ATTRIBUTE_VALUES in filterValues,
         removable: true,
+        meta: { attributeKey: (filterValues[ENTITY_ATTRIBUTE_KEYS] || {}).value },
       },
       {
         id: STATS_TOTAL,

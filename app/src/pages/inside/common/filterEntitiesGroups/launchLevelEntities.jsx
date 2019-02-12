@@ -266,7 +266,7 @@ export class LaunchLevelEntities extends Component {
         title: intl.formatMessage(messages.AttributeValuesTitle),
         active: ENTITY_ATTRIBUTE_VALUES in filterValues,
         removable: true,
-        customProps: { attributeKey: (filterValues[ENTITY_ATTRIBUTE_KEYS] || {}).value },
+        meta: { attributeKey: (filterValues[ENTITY_ATTRIBUTE_KEYS] || {}).value },
       },
       {
         id: STATS_TOTAL,
