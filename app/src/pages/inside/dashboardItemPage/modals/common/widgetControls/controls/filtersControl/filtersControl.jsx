@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { userIdSelector, activeProjectSelector } from 'controllers/user/selectors';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
-import { fetch } from 'common/utils';
+import { fetch, debounce } from 'common/utils';
 import { URLS } from 'common/urls';
 import {
   fetchFiltersConcatAction,
@@ -15,13 +15,13 @@ import {
   filtersPaginationSelector,
 } from 'controllers/filter';
 import { PAGE_KEY, SIZE_KEY } from 'controllers/pagination';
-import { WIDGET_WIZARD_FORM } from '../../../../widgetWizardModal/constants';
+import { WIDGET_WIZARD_FORM } from 'pages/inside/dashboardItemPage/modals/widgetWizardModal/constants';
 import { FilterNotFound } from './filterNotFound/filterNotFound';
-import { FiltersActionPanel } from './filtersActionPanel/index';
-import { ActiveFilter } from './activeFilter/index';
-import { FiltersList } from './filtersList/index';
-import { FilterEdit } from './filterEdit/index';
-import { FilterAdd } from './filterAdd/index';
+import { FiltersActionPanel } from './filtersActionPanel';
+import { ActiveFilter } from './activeFilter';
+import { FiltersList } from './filtersList';
+import { FilterEdit } from './filterEdit';
+import { FilterAdd } from './filterAdd';
 import {
   FORM_APPEARANCE_MODE_ADD,
   FORM_APPEARANCE_MODE_EDIT,
@@ -261,9 +261,10 @@ export class FiltersControl extends Component {
     this.clearFormAppearance();
   };
 
-  handleFilterListChange = (event) => {
-    this.props.changeWizardForm('filterIds', [event.target.value]);
-  };
+  handleFilterListChange = debounce(
+    (event) => this.props.changeWizardForm('filterIds', [event.target.value]),
+    300,
+  );
 
   handleFiltersListLoad = () => {
     const { page, searchValue } = this.state;

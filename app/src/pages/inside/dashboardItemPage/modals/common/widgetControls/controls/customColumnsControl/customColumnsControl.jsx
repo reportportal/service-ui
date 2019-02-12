@@ -5,7 +5,7 @@ import classNames from 'classnames/bind';
 import { ModalField } from 'components/main/modal';
 import { FIELD_LABEL_WIDTH } from '../constants';
 import styles from './customColumnsControl.scss';
-import { CustomColumnItem } from './customColumnItem/index';
+import { CustomColumnItem } from './customColumnItem';
 
 const cx = classNames.bind(styles);
 const messages = defineMessages({

@@ -20,6 +20,7 @@ export class WidgetInfoSection extends PureComponent {
 
   state = {
     loading: false,
+    widgetType: '',
     widget: {},
   };
 
@@ -36,6 +37,7 @@ export class WidgetInfoSection extends PureComponent {
   fetchWidget = () => {
     this.setState({
       loading: true,
+      widgetType: this.props.selectedWidget.widgetType,
     });
     fetch(URLS.widget(this.props.projectId, this.props.selectedWidget.id))
       .then((widget) => {
@@ -53,14 +55,14 @@ export class WidgetInfoSection extends PureComponent {
 
   render() {
     const { selectedWidget } = this.props;
-    const { loading, widget } = this.state;
+    const { loading, widgetType, widget } = this.state;
 
     return (
       <div className={cx('widget-info-section')}>
         {selectedWidget && (
           <Fragment>
             <h2 className={cx('widget-name')}>{selectedWidget.name}</h2>
-            <WidgetPreview widgetType={selectedWidget.widgetType} data={widget} loading={loading} />
+            <WidgetPreview widgetType={widgetType} data={widget} loading={loading} />
           </Fragment>
         )}
       </div>

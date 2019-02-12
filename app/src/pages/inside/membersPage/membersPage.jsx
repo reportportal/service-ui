@@ -22,7 +22,7 @@ import { MEMBERS_PAGE, MEMBERS_PAGE_EVENTS } from 'components/main/analytics/eve
 import { PageLayout, PageHeader, PageSection } from 'layouts/pageLayout';
 import { MembersPageToolbar } from './membersPageToolbar';
 import { MembersGrid } from './membersGrid';
-import { NoFiltersFound } from '../common/NoFiltersFound';
+import { NoFiltersFound } from '../common/noFiltersFound';
 
 const messages = defineMessages({
   membersPageTitle: {

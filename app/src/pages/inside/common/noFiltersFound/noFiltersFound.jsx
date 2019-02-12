@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { injectIntl, defineMessages } from 'react-intl';
 import classNames from 'classnames/bind';
 import ErrorIcon from 'common/img/error-inline.svg';
-import styles from './NoFiltersFound.scss';
+import styles from './noFiltersFound.scss';
 
 const cx = classNames.bind(styles);
 const messages = defineMessages({

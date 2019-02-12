@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { InputRadio } from 'components/inputs/inputRadio';
 import { messages } from '../common/messages';
-import { AddEditFilter } from '../common/addEditFilter/index';
+import { AddEditFilter } from '../common/addEditFilter';
 import styles from './filterEdit.scss';
 
 const cx = classNames.bind(styles);

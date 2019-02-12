@@ -3,11 +3,11 @@ import PropTypes from 'prop-types';
 import { defineMessages, injectIntl, intlShape } from 'react-intl';
 import classNames from 'classnames/bind';
 import { URLS } from 'common/urls';
-import { fetch } from 'common/utils';
+import { fetch, debounce } from 'common/utils';
 import { PAGE_KEY, SIZE_KEY } from 'controllers/pagination';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { WidgetsList } from './widgetsList/index';
-import { SharedWidgetsSearch } from './sharedWidgetsSearch/index';
+import { WidgetsList } from './widgetsList';
+import { SharedWidgetsSearch } from './sharedWidgetsSearch';
 import styles from './sharedWidgetsListSection.scss';
 
 const cx = classNames.bind(styles);
@@ -35,18 +35,14 @@ export class SharedWidgetsListSection extends Component {
     onSelectWidget: () => {},
   };
 
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      page: 1,
-      size: 10,
-      searchValue: false,
-      loading: false,
-      widgets: [],
-      pagination: {},
-    };
-  }
+  state = {
+    page: 1,
+    size: 10,
+    searchValue: false,
+    loading: false,
+    widgets: [],
+    pagination: {},
+  };
 
   componentDidMount() {
     this.handleSearchValueChange();
@@ -57,7 +53,7 @@ export class SharedWidgetsListSection extends Component {
 
     return widgets.map((item) => {
       const currentInDashboardWidgetsIndex = dashboardWidgets.findIndex(
-        (dashboardWidget) => dashboardWidget.id === item.id,
+        (dashboardWidget) => dashboardWidget.widgetId === item.id,
       );
       return currentInDashboardWidgetsIndex === -1
         ? item
@@ -125,9 +121,10 @@ export class SharedWidgetsListSection extends Component {
     this.fetchWidgets({ page, searchValue });
   };
 
-  handleSearchValueChange = (searchValue = '') => {
-    this.fetchWidgets({ page: 1, searchValue });
-  };
+  handleSearchValueChange = debounce(
+    (searchValue = '') => this.fetchWidgets({ page: 1, searchValue }),
+    300,
+  );
 
   render() {
     const {

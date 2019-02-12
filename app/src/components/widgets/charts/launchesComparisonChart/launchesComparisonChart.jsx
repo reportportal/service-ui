@@ -290,13 +290,15 @@ export class LaunchesComparisonChart extends Component {
     return (
       this.state.isConfigReady && (
         <C3Chart config={this.config} onChartCreated={this.onChartCreated}>
-          <Legend
-            items={this.itemNames}
-            noTotal
-            onClick={this.onClick}
-            onMouseOver={this.onMouseOver}
-            onMouseOut={this.onMouseOut}
-          />
+          {!this.props.isPreview && (
+            <Legend
+              items={this.itemNames}
+              noTotal
+              onClick={this.onClick}
+              onMouseOver={this.onMouseOver}
+              onMouseOut={this.onMouseOut}
+            />
+          )}
         </C3Chart>
       )
     );

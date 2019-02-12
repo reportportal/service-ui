@@ -4,7 +4,7 @@ import classNames from 'classnames/bind';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader/spinningPreloader';
 import styles from './filtersList.scss';
-import { FiltersItem } from '../filtersItem/index';
+import { FiltersItem } from '../filtersItem';
 import { FORM_APPEARANCE_MODE_EDIT } from '../common/constants';
 
 const cx = classNames.bind(styles);
@@ -45,7 +45,7 @@ FiltersList.propTypes = {
   filters: PropTypes.array.isRequired,
   onChange: PropTypes.func,
   onEdit: PropTypes.func,
-  onLazyLoad: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
+  onLazyLoad: PropTypes.func,
 };
 
 FiltersList.defaultProps = {
@@ -54,5 +54,5 @@ FiltersList.defaultProps = {
   loading: false,
   onChange: () => {},
   onEdit: () => {},
-  onLazyLoad: false,
+  onLazyLoad: null,
 };
