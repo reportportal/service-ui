@@ -38,7 +38,7 @@ export class RetriesContainer extends Component {
     fetch(URLS.logItem(this.props.activeProject, itemId, ERROR))
       .then((result) =>
         this.setState({
-          testItem: result.content[0],
+          logItem: result.content[0],
           loading: false,
         }),
       )
