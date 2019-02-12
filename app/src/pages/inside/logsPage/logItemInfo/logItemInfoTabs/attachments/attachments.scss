@@ -4,11 +4,11 @@
 }
 
 .log-attachments {
-  margin: 0 auto;
-  width: 80%;
-
   :global {
     .carousel {
+      max-width: 890px;
+      width: 100%;
+      margin: 0 auto;
       .control-prev.control-arrow:before {
         border-right: 8px solid $COLOR--gray-60;
       }
@@ -20,6 +20,7 @@
         line-height: 50px;
 
         .thumb {
+          width: 100px;
           img {
             vertical-align: middle;
           }
@@ -31,9 +32,18 @@
           vertical-align: middle;
         }
       }
+
+      @media (max-width: $SCREEN_SM_MAX) {
+        max-width: 600px;
+      }
+      @media (max-width: $SCREEN_XS_MAX) {
+        max-width: 450px;
+      }
     }
     .carousel-slider {
+      width: 80% !important;
       height: 365px;
+      margin: 0 auto;
       .control-arrow:hover {
         background: inherit;
       }
@@ -56,7 +66,7 @@
 
     li.thumb,
     li.thumb:hover {
-      margin: 0 10px;
+      margin: 0 19px;
       border: 1px solid transparent;
       cursor: pointer;
     }
