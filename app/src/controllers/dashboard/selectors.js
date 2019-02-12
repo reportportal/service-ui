@@ -5,8 +5,10 @@ const domainSelector = (state) => state.dashboard || {};
 
 export const dashboardItemsUnsortedSelector = (state) => domainSelector(state).dashboardItems;
 
-export const dashboardItemsSelector = (state) =>
-  dashboardItemsUnsortedSelector(state).sort((a, b) => a.name.localeCompare(b.name));
+export const dashboardItemsSelector = createSelector(
+  dashboardItemsUnsortedSelector,
+  (dashboardItems) => dashboardItems.sort((a, b) => a.name.localeCompare(b.name)),
+);
 
 export const dashboardGridTypeSelector = (state) => domainSelector(state).gridType;
 

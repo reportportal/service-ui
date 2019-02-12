@@ -7,6 +7,7 @@ import { activeProjectSelector } from 'controllers/user';
 import { withModal, ModalLayout } from 'components/main/modal';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { showScreenLockAction } from 'controllers/screenLock';
+import { DEFAULT_WIDGET_CONFIG } from '../common/constants';
 import { WidgetInfoSection } from './widgetInfoSection';
 import { SharedWidgetsListSection } from './sharedWidgetsListSection';
 import styles from './addSharedWidgetModal.scss';
@@ -36,17 +37,17 @@ export class AddSharedWidgetModal extends Component {
     showScreenLockAction: PropTypes.func.isRequired,
     data: PropTypes.shape({
       onConfirm: PropTypes.func,
+      currentDashboard: PropTypes.object,
     }),
     projectId: PropTypes.string,
-    currentDashboard: PropTypes.object,
   };
 
   static defaultProps = {
     data: {
       onConfirm: () => {},
+      currentDashboard: {},
     },
     projectId: '',
-    currentDashboard: {},
   };
 
   state = {
@@ -62,8 +63,7 @@ export class AddSharedWidgetModal extends Component {
     this.props.showScreenLockAction();
     const widget = {
       widgetId: this.state.selectedWidget.id,
-      widgetPosition: { positionX: 0, positionY: 0 },
-      widgetSize: { width: 12, height: 7 },
+      ...DEFAULT_WIDGET_CONFIG,
     };
     onConfirm(widget, closeModal);
   };
@@ -72,7 +72,7 @@ export class AddSharedWidgetModal extends Component {
     const {
       intl: { formatMessage },
       projectId,
-      currentDashboard,
+      data: { currentDashboard },
     } = this.props;
     const okButton = {
       text: formatMessage(COMMON_LOCALE_KEYS.ADD),

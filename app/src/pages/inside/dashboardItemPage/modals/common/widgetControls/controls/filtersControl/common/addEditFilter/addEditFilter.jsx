@@ -7,7 +7,7 @@ import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { BigButton } from 'components/buttons/bigButton';
 import { FilterEntitiesContainer } from 'components/filterEntities/containers';
 import { EntitiesGroup } from 'components/filterEntities/entitiesGroup';
-import { FiltersSorting } from '../../filtersSorting/index';
+import { FiltersSorting } from '../../filtersSorting';
 import styles from './addEditFilter.scss';
 
 const cx = classNames.bind(styles);

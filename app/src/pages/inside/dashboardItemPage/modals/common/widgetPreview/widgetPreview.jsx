@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { CHARTS, NoDataAvailable } from 'components/widgets';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
+import { TABLE_WIDGETS_PREVIEWS } from '../widgets';
 import { isWidgetDataAvailable } from '../utils';
 import styles from './widgetPreview.scss';
 
@@ -29,6 +30,10 @@ export class WidgetPreview extends PureComponent {
 
     if (!isWidgetDataAvailable(data)) {
       return <NoDataAvailable />;
+    }
+
+    if (TABLE_WIDGETS_PREVIEWS[widgetType]) {
+      return TABLE_WIDGETS_PREVIEWS[widgetType];
     }
 
     const Chart = CHARTS[widgetType];

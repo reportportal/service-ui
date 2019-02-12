@@ -10,6 +10,7 @@ import { fetch } from 'common/utils';
 import { showScreenLockAction } from 'controllers/screenLock';
 import { activeProjectSelector } from 'controllers/user';
 import { getWidgets } from 'pages/inside/dashboardItemPage/modals/common/widgets';
+import { DEFAULT_WIDGET_CONFIG } from '../../common/constants';
 import { WizardInfoSection } from './wizardInfoSection';
 import { WizardControlsSection } from './wizardControlsSection';
 import styles from './widgetWizardContent.scss';
@@ -89,8 +90,7 @@ export class WidgetWizardContent extends Component {
     }).then(({ id }) => {
       const newWidget = {
         widgetId: id,
-        widgetPosition: { positionX: 0, positionY: 0 },
-        widgetSize: { width: 12, height: 7 },
+        ...DEFAULT_WIDGET_CONFIG,
       };
       onConfirm(newWidget, this.props.closeModal);
     });

@@ -10,7 +10,7 @@ import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { Input } from 'components/inputs/input';
 import { messages } from '../common/messages';
 import { FILTER_ADD_FORM, FILTER_NAME_KEY } from '../common/constants';
-import { AddEditFilter } from '../common/addEditFilter/index';
+import { AddEditFilter } from '../common/addEditFilter';
 import styles from './filterAdd.scss';
 
 const cx = classNames.bind(styles);

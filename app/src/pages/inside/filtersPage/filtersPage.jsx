@@ -34,7 +34,7 @@ import { FILTERS_PAGE, FILTERS_PAGE_EVENTS } from 'components/main/analytics/eve
 import { NoFiltersBlock } from './noFiltersBlock';
 import { FilterPageToolbar } from './filterPageToolbar';
 import { FilterGrid } from './filterGrid';
-import { NoFiltersFound } from '../common/NoFiltersFound';
+import { NoFiltersFound } from '../common/noFiltersFound';
 
 const messages = defineMessages({
   filtersPageTitle: {

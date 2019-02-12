@@ -33,7 +33,7 @@ WidgetsList.propTypes = {
   widgets: PropTypes.array.isRequired,
   loading: PropTypes.bool,
   onChange: PropTypes.func,
-  onLazyLoad: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
+  onLazyLoad: PropTypes.func,
   noItemsMessage: PropTypes.string,
 };
 
@@ -41,6 +41,6 @@ WidgetsList.defaultProps = {
   activeId: '',
   loading: false,
   onChange: () => {},
-  onLazyLoad: false,
+  onLazyLoad: null,
   noItemsMessage: '',
 };
