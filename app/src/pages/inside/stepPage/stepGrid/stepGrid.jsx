@@ -12,6 +12,9 @@ import {
   ENTITY_STATUS,
   ENTITY_START_TIME,
   ENTITY_DEFECT_TYPE,
+  CONDITION_HAS,
+  ENTITY_ATTRIBUTE_KEYS,
+  ENTITY_ATTRIBUTE_VALUES,
 } from 'components/filterEntities/constants';
 import { STEP_PAGE_EVENTS } from 'components/main/analytics/events';
 import { PredefinedFilterSwitcher } from './predefinedFilterSwitcher';
@@ -182,6 +185,7 @@ export class StepGrid extends Component {
         customProps: {
           onShowTestParams: props.onShowTestParams,
           onEditItem: props.onEditItem,
+          onClickAttribute: this.handleAttributeFilterClick,
         },
         withFilter: true,
         filterEventInfo: events.NAME_FILTER,
@@ -231,6 +235,26 @@ export class StepGrid extends Component {
       },
     ];
   }
+
+  handleAttributeFilterClick = (attribute) => {
+    this.props.onFilterClick({
+      id: ENTITY_ATTRIBUTE_KEYS,
+      value: {
+        filteringField: ENTITY_ATTRIBUTE_KEYS,
+        condition: CONDITION_HAS,
+        value: attribute.key || '',
+      },
+    });
+    this.props.onFilterClick({
+      id: ENTITY_ATTRIBUTE_VALUES,
+      value: {
+        filteringField: ENTITY_ATTRIBUTE_VALUES,
+        condition: CONDITION_HAS,
+        value: attribute.value || '',
+      },
+    });
+  };
+
   highlightFailedItems = (value) => ({
     [cx('failed')]: value.status === FAILED,
   });

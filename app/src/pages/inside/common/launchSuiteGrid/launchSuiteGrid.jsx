@@ -8,7 +8,13 @@ import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { Grid } from 'components/main/grid';
 import { AbsRelTime } from 'components/main/absRelTime';
 import { ItemInfo } from 'pages/inside/common/itemInfo';
-import { ENTITY_START_TIME } from 'components/filterEntities/constants';
+import {
+  ENTITY_START_TIME,
+  ENTITY_NAME,
+  ENTITY_ATTRIBUTE_KEYS,
+  ENTITY_ATTRIBUTE_VALUES,
+  CONDITION_HAS,
+} from 'components/filterEntities/constants';
 import { NoItemMessage } from 'components/main/noItemMessage';
 import {
   STATS_TOTAL,
@@ -228,7 +234,7 @@ export class LaunchSuiteGrid extends PureComponent {
     const { events } = this.props;
     const columns = [
       {
-        id: 'name',
+        id: ENTITY_NAME,
         title: {
           full: 'name',
           short: 'name',
@@ -238,6 +244,7 @@ export class LaunchSuiteGrid extends PureComponent {
         sortable: true,
         customProps: {
           onEditItem: this.props.onEditItem,
+          onClickAttribute: this.handleAttributeFilterClick,
           events,
         },
         sortingEventInfo: events.NAME_SORTING,
@@ -372,6 +379,25 @@ export class LaunchSuiteGrid extends PureComponent {
     }
     return columns;
   }
+
+  handleAttributeFilterClick = (attribute) => {
+    this.props.onFilterClick({
+      id: ENTITY_ATTRIBUTE_KEYS,
+      value: {
+        filteringField: ENTITY_ATTRIBUTE_KEYS,
+        condition: CONDITION_HAS,
+        value: attribute.key || '',
+      },
+    });
+    this.props.onFilterClick({
+      id: ENTITY_ATTRIBUTE_VALUES,
+      value: {
+        filteringField: ENTITY_ATTRIBUTE_VALUES,
+        condition: CONDITION_HAS,
+        value: attribute.value || '',
+      },
+    });
+  };
 
   COLUMNS = this.getColumns();
 

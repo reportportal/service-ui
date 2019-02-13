@@ -71,6 +71,7 @@ export class ItemInfo extends Component {
     customProps: {
       onEditItem: () => {},
       onShowTestParams: () => {},
+      onClickAttribute: () => {},
     },
     userId: '',
     userProjectRole: '',
@@ -109,6 +110,7 @@ export class ItemInfo extends Component {
       launch,
       tracking,
       onClickRetries,
+      customProps,
     } = this.props;
 
     return (
@@ -165,7 +167,12 @@ export class ItemInfo extends Component {
           )}
           {value.owner && <OwnerBlock owner={value.owner} />}
           {value.attributes &&
-            !!value.attributes.length && <AttributesBlock attributes={value.attributes} />}
+            !!value.attributes.length && (
+              <AttributesBlock
+                attributes={value.attributes}
+                onClickAttribute={customProps.onClickAttribute}
+              />
+            )}
           {isStepLevel && (
             <div className={cx('mobile-info')}>
               @{formatMethodType(intl.formatMessage, value.type)}
