@@ -5,8 +5,14 @@ import { injectIntl, intlShape } from 'react-intl';
 import { Carousel } from 'react-responsive-carousel';
 import 'react-responsive-carousel/lib/styles/carousel.css';
 import { connect } from 'react-redux';
-import { attachmentsSelector, openAttachmentAction } from 'controllers/log/attachments';
+import {
+  attachmentItemsSelector,
+  attachmentsLoadingSelector,
+  openAttachmentAction,
+  fetchAttachmentsAction,
+} from 'controllers/log/attachments';
 import { NoItemMessage } from 'components/main/noItemMessage';
+import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { messages } from './modals/messages';
 import styles from './attachments.scss';
 
@@ -14,9 +20,11 @@ const cx = classNames.bind(styles);
 
 @connect(
   (state) => ({
-    attachments: attachmentsSelector(state),
+    attachments: attachmentItemsSelector(state),
+    loading: attachmentsLoadingSelector(state),
   }),
   {
+    fetchAttachmentsAction,
     openAttachmentAction,
   },
 )
@@ -24,15 +32,20 @@ const cx = classNames.bind(styles);
 export class Attachments extends React.Component {
   static propTypes = {
     intl: intlShape.isRequired,
-    attachments: PropTypes.array.isRequired,
+    attachments: PropTypes.array,
     activeItemId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    loading: PropTypes.bool,
     onChangeActiveItem: PropTypes.func,
+    fetchAttachmentsAction: PropTypes.func,
     openAttachmentAction: PropTypes.func,
   };
 
   static defaultProps = {
+    attachments: [],
+    loading: false,
     activeItemId: null,
     onChangeActiveItem: () => {},
+    fetchAttachmentsAction: () => {},
     openAttachmentAction: () => {},
   };
 
@@ -40,9 +53,45 @@ export class Attachments extends React.Component {
     mainAreaVisible: this.props.activeItemId !== null,
   };
 
+  componentDidMount() {
+    !this.props.attachments.length && this.props.fetchAttachmentsAction();
+  }
+
   onClickItem = (itemIndex) => this.props.openAttachmentAction(this.props.attachments[itemIndex]);
 
-  onClickThumb = (itemIndex) => {
+  getAttachmentsContent = () => {
+    const { intl, activeItemId, loading } = this.props;
+
+    if (loading) {
+      return <SpinningPreloader />;
+    }
+
+    if (!this.props.attachments.length) {
+      return <NoItemMessage message={intl.formatMessage(messages.noAttachmentsMessage)} />;
+    }
+
+    return (
+      <div onClick={this.isOneAttachmentItem() ? () => this.onClickItem(0) : undefined}>
+        <Carousel
+          emulateTouch
+          showStatus={false}
+          showIndicators={false}
+          showArrows
+          selectedItem={activeItemId || 0}
+          onChange={this.changeHandler}
+          onClickItem={this.onClickItem}
+        >
+          {this.props.attachments.map((attachment) => (
+            <div key={attachment.id} className={cx('preview-container')}>
+              <img src={attachment.src} alt={attachment.alt} />
+            </div>
+          ))}
+        </Carousel>
+      </div>
+    );
+  };
+
+  changeHandler = (itemIndex) => {
     if (itemIndex !== this.props.activeItemId) {
       this.props.onChangeActiveItem(itemIndex);
     }
@@ -54,32 +103,10 @@ export class Attachments extends React.Component {
   isOneAttachmentItem = () => this.props.attachments.length === 1 && this.state.mainAreaVisible;
 
   render() {
-    const { intl, activeItemId } = this.props;
-
     return (
       <div className={cx('attachments-wrap')}>
         <div className={cx('log-attachments', { 'hide-main-area': !this.state.mainAreaVisible })}>
-          {this.props.attachments.length ? (
-            <div onClick={this.isOneAttachmentItem() ? () => this.onClickItem(0) : undefined}>
-              <Carousel
-                emulateTouch
-                showStatus={false}
-                showIndicators={false}
-                showArrows
-                selectedItem={activeItemId || 0}
-                onClickThumb={this.onClickThumb}
-                onClickItem={this.onClickItem}
-              >
-                {this.props.attachments.map((attachment) => (
-                  <div key={attachment.id} className={cx('preview-container')}>
-                    <img src={attachment.src} alt={attachment.alt} />
-                  </div>
-                ))}
-              </Carousel>
-            </div>
-          ) : (
-            <NoItemMessage message={intl.formatMessage(messages.noAttachmentsMessage)} />
-          )}
+          {this.getAttachmentsContent()}
         </div>
       </div>
     );

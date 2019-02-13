@@ -1,6 +1,5 @@
 import { all } from 'redux-saga/effects';
 import { notificationSagas } from 'controllers/notification';
-import { attachmentSagas } from 'controllers/log/attachments/sagas';
 import { authSagas } from 'controllers/auth/sagas';
 import { fetchSagas } from 'controllers/fetch';
 import { launchSagas } from 'controllers/launch';
@@ -9,10 +8,10 @@ import { suiteSagas } from 'controllers/suite';
 import { filterSagas } from 'controllers/filter';
 import { testSagas } from 'controllers/test';
 import { membersSagas } from 'controllers/members';
-import { testItemsSaga } from 'controllers/testItem';
+import { testItemsSagas } from 'controllers/testItem';
 import { historySagas } from 'controllers/itemsHistory';
 import { logSagas } from 'controllers/log';
-import { administrateSaga } from 'controllers/administrate';
+import { administrateSagas } from 'controllers/administrate';
 
 export function* rootSagas() {
   yield all([
@@ -25,10 +24,9 @@ export function* rootSagas() {
     filterSagas(),
     testSagas(),
     membersSagas(),
-    testItemsSaga(),
+    testItemsSagas(),
     logSagas(),
     historySagas(),
-    attachmentSagas(),
-    administrateSaga(),
+    administrateSagas(),
   ]);
 }

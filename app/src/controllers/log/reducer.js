@@ -3,6 +3,7 @@ import { fetchReducer } from 'controllers/fetch';
 import { paginationReducer } from 'controllers/pagination';
 import { loadingReducer } from 'controllers/loading';
 import { LOG_ITEMS_NAMESPACE, ACTIVITY_NAMESPACE, HISTORY_NAMESPACE } from './constants';
+import { attachmentsReducer } from './attachments/reducer';
 
 export const logReducer = combineReducers({
   logItems: fetchReducer(LOG_ITEMS_NAMESPACE, { contentPath: 'content' }),
@@ -10,4 +11,5 @@ export const logReducer = combineReducers({
   loading: loadingReducer(LOG_ITEMS_NAMESPACE),
   activity: fetchReducer(ACTIVITY_NAMESPACE),
   historyEntries: fetchReducer(HISTORY_NAMESPACE),
+  attachments: attachmentsReducer,
 });

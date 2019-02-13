@@ -1,7 +1,7 @@
 import { all, select, put, takeEvery } from 'redux-saga/effects';
 import { EVENTS } from 'common/constants/projectSections';
 import { projectSectionSelector } from 'controllers/pages';
-import { projectSaga } from './project';
+import { projectSagas } from './project';
 import { eventsSagas, fetchEventsAction } from './events';
 import { allUsersSagas } from './allUsers';
 import { FETCH_PROJECT_DATA } from './constants';
@@ -21,6 +21,6 @@ function* watchFetchProjectData() {
   yield takeEvery(FETCH_PROJECT_DATA, fetchProjectData);
 }
 
-export function* administrateSaga() {
-  yield all([projectSaga(), eventsSagas(), watchFetchProjectData(), allUsersSagas()]);
+export function* administrateSagas() {
+  yield all([projectSagas(), eventsSagas(), watchFetchProjectData(), allUsersSagas()]);
 }

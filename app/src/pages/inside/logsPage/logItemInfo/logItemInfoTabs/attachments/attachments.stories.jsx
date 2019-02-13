@@ -2,7 +2,7 @@ import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import { host } from 'storybook-host';
 import { withReadme } from 'storybook-readme';
-import { getFileIconSource } from 'controllers/attachments/utils';
+import { getFileIconSource } from 'controllers/log/attachments/utils';
 import { Attachments } from './attachments';
 import README from './README.md';
 
