@@ -16,7 +16,7 @@ export const ATTACHMENT_IMAGE_MODAL_ID = 'attachmentImageModal';
 export const ATTACHMENT_HAR_FILE_MODAL_ID = 'attachmentHarFileModal';
 export const ATTACHMENT_CODE_MODAL_ID = 'attachmentCodeModal';
 
-export const FILE_EXTENSIONS_MAP = {
+export const FILE_PREVIEWS_MAP = {
   [FILE_TYPES.XML]: xml,
   [FILE_TYPES.JAVASCRIPT]: js,
   [FILE_TYPES.JSON]: json,
@@ -33,6 +33,12 @@ export const FILE_EXTENSIONS_MAP = {
   [FILE_TYPES.TAZ]: archive,
   [FILE_TYPES.TAR]: archive,
   [FILE_TYPES.GZIP]: archive,
+};
+
+export const FILE_PATTERNS_MAP = {
+  [FILE_TYPES.RAR]: /\brar\b/i,
+  [FILE_TYPES.HAR]: /\bhar\b/i,
+  [FILE_TYPES.PHP]: /\bphp\b/i,
 };
 
 export const FILE_MODAL_IDS_MAP = {

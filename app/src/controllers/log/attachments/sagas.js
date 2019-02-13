@@ -12,11 +12,7 @@ import {
 import { getAttachmentModalId, extractExtension } from './utils';
 
 export function fetchImageData({ binaryId }) {
-  return new Promise((resolve) =>
-    resolve({
-      image: URLS.getFileById(binaryId),
-    }),
-  );
+  return Promise.resolve({ image: URLS.getFileById(binaryId) });
 }
 
 export function fetchData({ binaryId }) {
@@ -57,7 +53,9 @@ function* openAttachment({ payload: { id, contentType } }) {
   const modalId = getAttachmentModalId(contentType);
   if (modalId) {
     const data = { binaryId: id, extension: extractExtension(contentType) };
-    yield call(ATTACHMENT_MODAL_WORKERS[modalId], data);
+    try {
+      yield call(ATTACHMENT_MODAL_WORKERS[modalId], data);
+    } catch (e) {} // eslint-disable-line no-empty
   } else {
     window.open(URLS.getFileById(id));
   }
