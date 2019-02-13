@@ -5,13 +5,17 @@ import styles from './attributesBlock.scss';
 
 const cx = classNames.bind(styles);
 
-export const AttributesBlock = ({ attributes }) => (
+export const AttributesBlock = ({ attributes, onClickAttribute }) => (
   <div className={cx('attributes-block')}>
     {attributes.some(notSystemAttributePredicate) && <div className={cx('attributes-icon')} />}
     {attributes.filter(notSystemAttributePredicate).map((attribute) => (
-      <a key={formatAttribute(attribute)} href="/" className={cx('attribute')}>
+      <div
+        key={formatAttribute(attribute)}
+        className={cx('attribute')}
+        onClick={() => onClickAttribute(attribute)}
+      >
         {formatAttribute(attribute)}
-      </a>
+      </div>
     ))}
   </div>
 );
@@ -24,4 +28,8 @@ AttributesBlock.propTypes = {
       system: PropTypes.bool,
     }),
   ).isRequired,
+  onClickAttribute: PropTypes.func,
+};
+AttributesBlock.defaultProps = {
+  onClickAttribute: () => {},
 };

@@ -81,9 +81,9 @@ export class FilterEntitiesContainer extends Component {
 
   handleAdd = (entity) =>
     this.setState(
-      {
-        values: { ...this.state.values, [entity.id]: entity.value },
-      },
+      (prevState) => ({
+        values: { ...prevState.values, [entity.id]: entity.value },
+      }),
       () => entity.value.value && this.props.onChange(this.collectEntities(this.state.values)),
     );
 
@@ -91,10 +91,6 @@ export class FilterEntitiesContainer extends Component {
     const values = omit(this.state.values, [entityId]);
     this.setState({ values }, () => this.props.onChange(this.collectEntities(this.state.values)));
   };
-
-  renderAddContainer = (props) => (
-    <FilterEntitiesAddHandlerContainer {...props} render={this.props.render} />
-  );
 
   render() {
     const { errors, values } = this.state;
