@@ -8,7 +8,7 @@ import {
   pagePropertiesSelector,
   pathnameChangedSelector,
 } from 'controllers/pages';
-import { fetchDataAction } from 'controllers/fetch';
+import { fetchDataAction, fetchSuccessAction } from 'controllers/fetch';
 import {
   ACTIVITY_NAMESPACE,
   DEFAULT_HISTORY_DEPTH,
@@ -21,6 +21,7 @@ import {
   NAMESPACE,
 } from './constants';
 import { activeLogIdSelector, prevActiveLogIdSelector, querySelector } from './selectors';
+import { attachmentSagas, fetchAttachmentsAction, ATTACHMENTS_NAMESPACE } from './attachments';
 
 function* fetchActivity() {
   const activeProject = yield select(activeProjectSelector);
@@ -72,7 +73,11 @@ function* fetchHistoryItemData() {
   const activeLogId = yield select(activeLogIdSelector);
   const prevActiveLogId = yield select(prevActiveLogIdSelector);
   if (activeLogId !== prevActiveLogId) {
-    yield all([call(fetchLogItems), call(fetchActivity)]);
+    yield all([
+      call(fetchLogItems),
+      call(fetchActivity),
+      put(fetchSuccessAction(ATTACHMENTS_NAMESPACE, { content: [] })),
+    ]);
   } else {
     yield call(fetchLogItems);
   }
@@ -81,7 +86,12 @@ function* fetchHistoryItemData() {
 function* fetchLogPageData({ meta = {} }) {
   const isPathNameChanged = yield select(pathnameChangedSelector);
   if (meta.refresh) {
-    yield all([call(fetchLogItems), call(fetchActivity), call(fetchHistoryEntries)]);
+    yield all([
+      call(fetchLogItems),
+      call(fetchActivity),
+      call(fetchHistoryEntries),
+      put(fetchAttachmentsAction()),
+    ]);
     return;
   }
   if (isPathNameChanged) {
@@ -100,5 +110,5 @@ function* watchFetchHistoryEntries() {
 }
 
 export function* logSagas() {
-  yield all([watchFetchLogPageData(), watchFetchHistoryEntries()]);
+  yield all([watchFetchLogPageData(), watchFetchHistoryEntries(), attachmentSagas()]);
 }

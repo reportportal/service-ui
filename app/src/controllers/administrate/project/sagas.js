@@ -13,6 +13,6 @@ function* watchFetchProject() {
   yield takeEvery(FETCH_PROJECT, fetchProject);
 }
 
-export function* projectSaga() {
+export function* projectSagas() {
   yield all([watchFetchProject()]);
 }

@@ -6,7 +6,10 @@ import { FILE_PREVIEWS_MAP, FILE_MODAL_IDS_MAP, FILE_PATTERNS_MAP } from './cons
 const getAttachmentTypeConfig = (contentType) =>
   (contentType && contentType.toLowerCase().split('/')) || '';
 
-export const extractExtension = (contentType) => getAttachmentTypeConfig(contentType)[1] || '';
+export const extractExtension = (contentType) => {
+  const attachmentTypeConfig = getAttachmentTypeConfig(contentType);
+  return attachmentTypeConfig[1] || attachmentTypeConfig[0] || '';
+};
 
 export const getExtensionFromPattern = (extensionString) =>
   Object.keys(FILE_PATTERNS_MAP).find((key) => !!FILE_PATTERNS_MAP[key].exec(extensionString));
@@ -16,15 +19,19 @@ export const getFileIconSource = (item) => {
   if (fileType === IMAGE) {
     return URLS.getFileById(item.id);
   }
-  const extensionFromPattern = getExtensionFromPattern(extension);
-  return FILE_PREVIEWS_MAP[extension] || FILE_PREVIEWS_MAP[extensionFromPattern] || attachment;
+  const extensionFromPattern = getExtensionFromPattern(extension || fileType);
+  return (
+    FILE_PREVIEWS_MAP[extension || fileType] ||
+    FILE_PREVIEWS_MAP[extensionFromPattern] ||
+    attachment
+  );
 };
 
 export const getAttachmentModalId = (contentType) => {
   const [fileType, extension] = getAttachmentTypeConfig(contentType);
-  const extensionFromPattern = getExtensionFromPattern(extension);
+  const extensionFromPattern = getExtensionFromPattern(extension || fileType);
   return (
-    FILE_MODAL_IDS_MAP[fileType === IMAGE ? IMAGE : extension] ||
+    FILE_MODAL_IDS_MAP[fileType === IMAGE ? IMAGE : extension || fileType] ||
     FILE_MODAL_IDS_MAP[extensionFromPattern]
   );
 };

@@ -10,6 +10,7 @@ import txt from 'common/img/attachments/txt.svg';
 import archive from 'common/img/attachments/archive.svg';
 import * as FILE_TYPES from 'common/constants/fileTypes';
 
+export const ATTACHMENTS_NAMESPACE = 'log/attachments';
 export const FETCH_ATTACHMENTS_ACTION = 'fetchAttachmentsAction';
 export const OPEN_ATTACHMENT_ACTION = 'openAttachmentAction';
 export const ATTACHMENT_IMAGE_MODAL_ID = 'attachmentImageModal';

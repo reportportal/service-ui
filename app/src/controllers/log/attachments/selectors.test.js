@@ -1,27 +1,31 @@
-import { attachmentsSelector } from './selectors';
+import { attachmentItemsSelector } from './selectors';
 
 const mockState = {
   log: {
-    logItems: [
-      {
-        binaryContent: {
-          id: '1234',
-          contentType: 'text/html',
+    attachments: {
+      logsWithAttachments: [
+        {
+          binaryContent: {
+            id: '1234',
+            contentType: 'text/html',
+          },
         },
-      },
-      {
-        binaryContent: {
-          id: '5678',
-          contentType: 'image/png',
+        {
+          binaryContent: {
+            id: '5678',
+            contentType: 'image/png',
+          },
         },
-      },
-    ],
+      ],
+    },
   },
 };
 
 describe('Attachments Selectors', () => {
   test('attachmentsSelector works', () => {
-    const selected = attachmentsSelector.resultFunc(mockState.log.logItems);
+    const selected = attachmentItemsSelector.resultFunc(
+      mockState.log.attachments.logsWithAttachments,
+    );
     const expected = [
       {
         alt: 'text/html',

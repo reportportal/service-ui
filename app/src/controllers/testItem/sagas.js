@@ -129,6 +129,6 @@ function* watchFetchTestItems() {
   yield takeEvery(FETCH_TEST_ITEMS, fetchTestItems);
 }
 
-export function* testItemsSaga() {
+export function* testItemsSagas() {
   yield all([watchFetchTestItems(), watchRestorePath()]);
 }

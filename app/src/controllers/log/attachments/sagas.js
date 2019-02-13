@@ -1,15 +1,32 @@
-import { takeLatest, call, put, all } from 'redux-saga/effects';
+import { takeLatest, call, put, all, select } from 'redux-saga/effects';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
 import { showModalAction } from 'controllers/modal';
+import { fetchDataAction } from 'controllers/fetch';
+import { activeProjectSelector } from 'controllers/user';
+import { activeLogIdSelector } from 'controllers/log/selectors';
 import { JSON as JSON_TYPE } from 'common/constants/fileTypes';
 import {
   ATTACHMENT_IMAGE_MODAL_ID,
   ATTACHMENT_CODE_MODAL_ID,
   ATTACHMENT_HAR_FILE_MODAL_ID,
   OPEN_ATTACHMENT_ACTION,
+  FETCH_ATTACHMENTS_ACTION,
+  ATTACHMENTS_NAMESPACE,
 } from './constants';
 import { getAttachmentModalId, extractExtension } from './utils';
+
+function* fetchAttachments() {
+  const activeProject = yield select(activeProjectSelector);
+  const activeLogItemId = yield select(activeLogIdSelector);
+  yield put(
+    fetchDataAction(ATTACHMENTS_NAMESPACE)(URLS.logItems(activeProject, activeLogItemId), {
+      params: {
+        'filter.ex.binaryContent': true,
+      },
+    }),
+  );
+}
 
 export function fetchImageData({ binaryId }) {
   return Promise.resolve({ image: URLS.getFileById(binaryId) });
@@ -61,10 +78,14 @@ function* openAttachment({ payload: { id, contentType } }) {
   }
 }
 
+function* watchFetchAttachments() {
+  yield takeLatest(FETCH_ATTACHMENTS_ACTION, fetchAttachments);
+}
+
 function* watchOpenAttachment() {
   yield takeLatest(OPEN_ATTACHMENT_ACTION, openAttachment);
 }
 
 export function* attachmentSagas() {
-  yield all([watchOpenAttachment()]);
+  yield all([watchOpenAttachment(), watchFetchAttachments()]);
 }
