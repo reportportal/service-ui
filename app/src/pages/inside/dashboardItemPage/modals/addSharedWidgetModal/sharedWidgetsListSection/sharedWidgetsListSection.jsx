@@ -39,7 +39,7 @@ export class SharedWidgetsListSection extends Component {
     page: 1,
     size: 10,
     searchValue: false,
-    loading: false,
+    loading: true,
     widgets: [],
     pagination: {},
   };
