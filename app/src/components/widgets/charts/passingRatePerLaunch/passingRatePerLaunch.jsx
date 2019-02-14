@@ -187,6 +187,7 @@ export class PassingRatePerLaunch extends Component {
       size: {
         height: this.height,
       },
+      onrendered: this.resizeHelper,
     };
 
     this.setState({
@@ -235,7 +236,6 @@ export class PassingRatePerLaunch extends Component {
       this.chart.flush();
       this.width = newWidth;
     }
-    this.resizeHelper();
   };
 
   customBlock = (
