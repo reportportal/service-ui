@@ -1,12 +1,20 @@
-:global {
-  .c3-chart-text text,
-  .c3-chart-arc text {
-    font-family: $FONT-SEMIBOLD;
-    font-size: 13px;
-    fill: $COLOR--white-two !important;
-  }
-  .c3-grid line {
-    stroke: transparent;
+.passing-rate-per-launch {
+  :global {
+    .c3-chart-text text,
+    .c3-chart-text .c3-text,
+    .c3-chart-arc text {
+      display: inline-block !important;
+      font-family: $FONT-SEMIBOLD;
+      font-size: 13px;
+      fill: $COLOR--white-two !important;
+    }
+    .c3-grid line {
+      stroke: transparent;
+    }
+
+    .c3-event-rect {
+      cursor: default !important;
+    }
   }
 }
 
