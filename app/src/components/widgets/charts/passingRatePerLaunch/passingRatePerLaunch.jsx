@@ -1,13 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { injectIntl, intlShape } from 'react-intl';
-import { connect } from 'react-redux';
 import ReactDOMServer from 'react-dom/server';
 import * as d3 from 'd3-selection';
 import classNames from 'classnames/bind';
-import { activeProjectSelector } from 'controllers/user';
-import { redirect } from 'redux-first-router';
-import { defectLinkSelector, statisticsLinkSelector } from 'controllers/testItem';
 import * as COLORS from 'common/constants/colors';
 import { STATS_PASSED } from 'common/constants/statistics';
 import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
@@ -22,28 +18,14 @@ const cx = classNames.bind(styles);
 
 const NOT_PASSED_STATISTICS_KEY = 'statistics$executions$notPassed';
 
-@connect(
-  (state) => ({
-    project: activeProjectSelector(state),
-    getDefectLink: (params) => defectLinkSelector(state, params),
-    getStatisticsLink: (name) => statisticsLinkSelector(state, { statuses: [name] }),
-  }),
-  {
-    redirect,
-  },
-)
 @injectIntl
 export class PassingRatePerLaunch extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
-    redirect: PropTypes.func.isRequired,
     widget: PropTypes.object.isRequired,
-    project: PropTypes.string.isRequired,
-    getDefectLink: PropTypes.func.isRequired,
-    getStatisticsLink: PropTypes.func.isRequired,
-    container: PropTypes.instanceOf(Element).isRequired,
     isPreview: PropTypes.bool,
     height: PropTypes.number,
+    container: PropTypes.instanceOf(Element).isRequired,
     observer: PropTypes.object,
   };
 
@@ -81,10 +63,7 @@ export class PassingRatePerLaunch extends Component {
     }
 
     this.node.addEventListener('mousemove', this.setupCoords);
-
-    if (!this.props.isPreview) {
-      this.resizeHelper(this.node);
-    }
+    this.resizeHelper();
   };
 
   onMouseOut = () => {
@@ -106,23 +85,21 @@ export class PassingRatePerLaunch extends Component {
     };
   };
 
-  getProcessedData = (data, isPreview, colors) => {
+  getProcessedData = ({ content = {}, contentParameters = {} }, isPreview, colors) => {
+    const { viewMode } = contentParameters.widgetOptions;
     const itemNames = [STATS_PASSED, NOT_PASSED_STATISTICS_KEY];
+    const columnData = {
+      [STATS_PASSED]: Number(content.result.passed),
+      [NOT_PASSED_STATISTICS_KEY]: Number(content.result.total) - Number(content.result.passed),
+    };
     const columns = [
-      [STATS_PASSED, parseInt(data.content.result.passed, 10)],
-      [
-        NOT_PASSED_STATISTICS_KEY,
-        parseInt(data.content.result.total, 10) - parseInt(data.content.result.passed, 10),
-      ],
+      [STATS_PASSED, columnData[STATS_PASSED]],
+      [NOT_PASSED_STATISTICS_KEY, columnData[NOT_PASSED_STATISTICS_KEY]],
     ];
-    const columnData = {};
-    columnData[STATS_PASSED] = columns[0][1];
-    columnData[NOT_PASSED_STATISTICS_KEY] = columns[1][1];
     const chartData = {
       columns,
       groups: [itemNames],
-      type: data.contentParameters.widgetOptions.viewMode,
-      onclick: () => {},
+      type: viewMode,
       order: null,
       colors,
       labels: {
@@ -131,85 +108,74 @@ export class PassingRatePerLaunch extends Component {
       },
     };
 
-    const bar =
-      data.contentParameters.widgetOptions.viewMode === MODES_VALUES[CHART_MODES.BAR_VIEW]
-        ? {
+    let parameters = {};
+    if (viewMode === MODES_VALUES[CHART_MODES.BAR_VIEW]) {
+      parameters = {
+        bar: {
+          width: {
+            ratio: 0.35,
+          },
+        },
+        padding: {
+          top: isPreview ? 0 : 30,
+          left: 20,
+          right: 20,
+          bottom: 0,
+        },
+        axis: {
+          rotated: true,
+          x: {
+            show: false,
+          },
+          y: {
+            show: false,
+            padding: {
+              top: 0,
+            },
+          },
+          bar: {
             width: {
               ratio: 0.35,
             },
-          }
-        : {};
-    const pie =
-      data.contentParameters.widgetOptions.viewMode === MODES_VALUES[CHART_MODES.BAR_VIEW]
-        ? {}
-        : {
-            label: {
-              show: !isPreview,
-              threshold: 0.05,
-              format: (value, r, id) => `${this.getPercentage(columnData[id])}%`,
-            },
-          };
-    const padding =
-      data.contentParameters.widgetOptions.viewMode === MODES_VALUES[CHART_MODES.BAR_VIEW]
-        ? {
-            top: isPreview ? 0 : 30,
-            left: 20,
-            right: 20,
-            bottom: 0,
-          }
-        : {
-            top: isPreview ? 0 : 85,
-          };
-    const axis =
-      data.contentParameters.widgetOptions.viewMode === MODES_VALUES[CHART_MODES.BAR_VIEW]
-        ? {
-            rotated: true,
-            x: {
-              show: false,
-            },
-            y: {
-              show: false,
-              padding: {
-                top: 0,
-              },
-            },
-            bar: {
-              width: {
-                ratio: 0.35,
-              },
-            },
-          }
-        : {};
+          },
+        },
+      };
+    } else {
+      parameters = {
+        pie: {
+          label: {
+            show: !isPreview,
+            threshold: 0.05,
+            format: (value, r, id) => `${this.getPercentage(columnData[id])}%`,
+          },
+        },
+        padding: {
+          top: isPreview ? 0 : 85,
+        },
+      };
+    }
     return {
-      chartData,
-      itemNames,
-      padding,
-      pie,
-      axis,
-      bar,
+      data: chartData,
+      ...parameters,
     };
   };
 
   getConfig = () => {
     const { widget, isPreview, container } = this.props;
-    const data = widget.content.result;
+    const widgetData = widget.content.result;
     const colors = {};
     colors[STATS_PASSED] = COLORS.COLOR_PASSED;
     colors[NOT_PASSED_STATISTICS_KEY] = COLORS.COLOR_NOTPASSED;
     const processedData = this.getProcessedData(widget, isPreview, colors);
     this.height = container.offsetHeight;
     this.width = container.offsetWidth;
-    this.totalItems = parseInt(data.total, 10);
+    this.totalItems = Number(widgetData.total);
 
     this.config = {
-      data: processedData.chartData,
-      axis: processedData.axis,
+      ...processedData,
       interaction: {
         enabled: !isPreview,
       },
-      bar: processedData.bar,
-      pie: processedData.pie,
-      padding: processedData.padding,
       legend: {
         show: false,
       },
@@ -236,28 +202,24 @@ export class PassingRatePerLaunch extends Component {
   getPercentage = (value) => (value / this.totalItems * 100).toFixed(2);
 
   resizeHelper = () => {
+    const nodeElement = this.node;
+    if (!nodeElement) {
+      return;
+    }
     // eslint-disable-next-line func-names
-    d3.selectAll('.barMode .c3-chart-texts text').each(function(d) {
+    d3.selectAll(nodeElement.querySelectorAll('.bar .c3-chart-texts .c3-text')).each(function(d) {
+      const selector = `c3-target-${d.id}`;
       const barBox = d3
-        .selectAll(`.barMode .c3-target-${d.id}`)
+        .selectAll(nodeElement.getElementsByClassName(selector))
         .node()
         .getBBox();
-      const textBox = d3
-        .select(this)
-        .node()
-        .getBBox();
+      const textElement = d3.select(this).node();
+      const textBox = textElement.getBBox();
       let x = barBox.x + barBox.width / 2 - textBox.width / 2;
       if (d.id === STATS_PASSED && x < 5) x = 5;
       if (d.id === NOT_PASSED_STATISTICS_KEY && x + textBox.width > barBox.x + barBox.width)
         x = barBox.x + barBox.width - textBox.width - 5;
-      d3.select(this).attr('x', x);
-    });
-    // eslint-disable-next-line func-names
-    d3.selectAll('.pieChartMode .c3-chart-arc text').each(function() {
-      const elem = d3.select(this);
-      (elem.datum().endAngle - elem.datum().startAngle) / 2 + elem.datum().startAngle > Math.PI
-        ? elem.attr('dx', 10)
-        : elem.attr('dx', -10);
+      textElement.setAttribute('x', `${x}`);
     });
   };
 
@@ -273,11 +235,20 @@ export class PassingRatePerLaunch extends Component {
       this.chart.flush();
       this.width = newWidth;
     }
-    this.resizeHelper(this.node);
+    this.resizeHelper();
   };
 
+  customBlock = (
+    <div className={cx('launch-info-block')}>
+      <span className={cx('launch-name-title')}>
+        {this.props.intl.formatMessage(messages.launchName)}
+      </span>
+      <span className={cx('launch-name')}>{this.props.widget.name}</span>
+    </div>
+  );
+
   renderContents = (d, defaultTitleFormat, defaultValueFormat, color) => {
-    const number = parseInt(d[0].value, 10);
+    const number = Number(d[0].value);
     const id = d[0].id;
     const nameConfig = getItemNameConfig(d[0].name);
 
@@ -292,28 +263,21 @@ export class PassingRatePerLaunch extends Component {
   };
 
   render() {
-    const customBlock = (
-      <div className={cx('launch-info-block')}>
-        <span className={cx('launch-name-title')}>
-          {this.props.intl.formatMessage(messages.launchName)}
-        </span>
-        <span className={cx('launch-name')}>{this.props.widget.name}</span>
-      </div>
-    );
+    const viewMode = this.props.widget.contentParameters.widgetOptions.viewMode;
 
     return (
       this.state.isConfigReady && (
         <C3Chart
           config={this.config}
           onChartCreated={this.onChartCreated}
-          className={this.props.widget.contentParameters.widgetOptions.viewMode}
+          className={`${cx('passing-rate-per-launch')} ${viewMode}`}
         >
           {!this.props.isPreview && (
             <Legend
               items={[STATS_PASSED, NOT_PASSED_STATISTICS_KEY]}
               onMouseOver={this.onMouseOver}
               onMouseOut={this.onMouseOut}
-              customBlock={customBlock}
+              customBlock={this.customBlock}
             />
           )}
         </C3Chart>
