@@ -52,6 +52,7 @@ export class NotPassedTestCasesTrendControls extends Component {
     initializeWizardSecondStepForm({
       contentParameters: widgetSettings.contentParameters || {
         contentFields: [STATS_FAILED, STATS_SKIPPED, STATS_TOTAL],
+        widgetOptions: {},
         itemsCount: DEFAULT_ITEMS_COUNT,
       },
     });

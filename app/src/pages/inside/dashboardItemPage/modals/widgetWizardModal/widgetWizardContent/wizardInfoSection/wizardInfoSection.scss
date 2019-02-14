@@ -14,7 +14,7 @@
 .widget-info-block {
   width: 100%;
   box-sizing: border-box;
-  padding: 20px 0;
+  padding-top: 20px;
 }
 .widget-title {
   display: inline-block;
@@ -34,17 +34,4 @@
   font-size: 13px;
   line-height: 22px;
   color: $COLOR--gray-47;
-}
-.widget-preview-block {
-  width: 280px;
-  height: 140px;
-  margin-top: 20px;
-  padding: 7.5px 15px;
-  box-sizing: border-box;
-  background-color: $COLOR--white-four;
-
-  svg {
-    width: 250px;
-    height: 125px;
-  }
 }

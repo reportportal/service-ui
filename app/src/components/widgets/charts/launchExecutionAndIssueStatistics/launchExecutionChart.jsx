@@ -230,10 +230,10 @@ export class LaunchExecutionChart extends Component {
   render() {
     const { isPreview } = this.props;
     const classes = chartCx({ 'preview-view': isPreview });
-    const { isConfigReady } = this.state;
+
     return (
       <div className={classes}>
-        {isConfigReady && (
+        {this.state.isConfigReady && (
           <div className={chartCx('launch-execution-chart')}>
             <div className={chartCx('data-js-launch-execution-chart-container')}>
               {!isPreview && (

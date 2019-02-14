@@ -64,6 +64,7 @@ export class FailedCasesTrendControls extends Component {
           STATS_ND_TOTAL,
           STATS_TI_TOTAL,
         ],
+        widgetOptions: {},
         itemsCount: DEFAULT_ITEMS_COUNT,
       },
     });

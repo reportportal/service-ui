@@ -42,6 +42,7 @@ export class LaunchExecutionAndIssueStatisticsControls extends Component {
     initializeWizardSecondStepForm({
       contentParameters: widgetSettings.contentParameters || {
         contentFields: this.criteria.map((criteria) => criteria.value),
+        widgetOptions: {},
         itemsCount: 1,
       },
     });

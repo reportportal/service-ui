@@ -26,6 +26,7 @@ export const URLS = {
     })}`,
 
   widget: (activeProject, widgetId = '') => `${urlBase}${activeProject}/widget/${widgetId}`,
+  widgetPreview: (activeProject) => `${urlBase}${activeProject}/widget/preview`,
   sharedWidget: (activeProject, params) =>
     `${urlBase}${activeProject}/widget/shared${getQueryParams({
       ...params,
