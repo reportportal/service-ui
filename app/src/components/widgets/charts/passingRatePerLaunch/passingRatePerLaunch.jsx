@@ -104,7 +104,7 @@ export class PassingRatePerLaunch extends Component {
       colors,
       labels: {
         show: !isPreview,
-        format: (v, id) => `${this.getPercentage(columnData[id])}%`,
+        format: (v, id) => (isPreview ? '' : `${this.getPercentage(columnData[id])}%`),
       },
     };
 
@@ -187,7 +187,7 @@ export class PassingRatePerLaunch extends Component {
       size: {
         height: this.height,
       },
-      onrendered: this.resizeHelper,
+      onrendered: this.props.isPreview ? this.resizeHelper : undefined,
     };
 
     this.setState({

@@ -11,9 +11,17 @@ const cx = classNames.bind(styles);
 
 export class WidgetPreview extends PureComponent {
   static propTypes = {
-    widgetType: PropTypes.string.isRequired,
-    loading: PropTypes.bool.isRequired,
-    data: PropTypes.object.isRequired,
+    widgetType: PropTypes.string,
+    data: PropTypes.object,
+    loading: PropTypes.bool,
+    defaultPreview: PropTypes.any,
+  };
+
+  static defaultProps = {
+    widgetType: '',
+    defaultPreview: null,
+    data: null,
+    loading: false,
   };
 
   constructor(props) {
@@ -21,25 +29,33 @@ export class WidgetPreview extends PureComponent {
     this.widgetContainerRef = createRef();
   }
 
+  getTableWidgetPreview = () => TABLE_WIDGETS_PREVIEWS[this.props.widgetType];
+
   getWidgetContent = () => {
-    const { data, loading, widgetType } = this.props;
+    const { data, loading, widgetType, defaultPreview } = this.props;
+    const tableWidgetPreview = this.getTableWidgetPreview();
+
+    if (tableWidgetPreview) {
+      return tableWidgetPreview;
+    }
 
     if (loading) {
       return <SpinningPreloader />;
     }
 
-    if (!isWidgetDataAvailable(data)) {
+    if (data && !isWidgetDataAvailable(data)) {
       return <NoDataAvailable />;
-    }
-
-    if (TABLE_WIDGETS_PREVIEWS[widgetType]) {
-      return TABLE_WIDGETS_PREVIEWS[widgetType];
     }
 
     const Chart = CHARTS[widgetType];
 
+    if (!data || !Chart) {
+      return defaultPreview;
+    }
+
     return (
-      Chart && (
+      data.widgetType === widgetType &&
+      this.widgetContainerRef.current && (
         <Chart
           isPreview
           widget={data}
@@ -51,7 +67,10 @@ export class WidgetPreview extends PureComponent {
   };
 
   render = () => (
-    <div ref={this.widgetContainerRef} className={cx('widget-preview')}>
+    <div
+      ref={this.widgetContainerRef}
+      className={cx('widget-preview', { table: !!this.getTableWidgetPreview() })}
+    >
       {this.getWidgetContent()}
     </div>
   );

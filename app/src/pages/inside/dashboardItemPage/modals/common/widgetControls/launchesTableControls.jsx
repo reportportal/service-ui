@@ -89,6 +89,7 @@ export class LaunchesTableControls extends Component {
     initializeWizardSecondStepForm({
       contentParameters: widgetSettings.contentParameters || {
         contentFields: this.parseContentFields(this.criteria),
+        widgetOptions: {},
         itemsCount: DEFAULT_ITEMS_COUNT,
       },
     });

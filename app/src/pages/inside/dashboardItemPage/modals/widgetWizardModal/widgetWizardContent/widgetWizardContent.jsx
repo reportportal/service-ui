@@ -3,7 +3,7 @@ import track from 'react-tracking';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { injectIntl, intlShape } from 'react-intl';
-import { formValueSelector, submit } from 'redux-form';
+import { getFormValues, submit } from 'redux-form';
 import { connect } from 'react-redux';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
@@ -21,8 +21,8 @@ const cx = classNames.bind(styles);
 @injectIntl
 @connect(
   (state) => ({
-    activeWidgetId: formValueSelector(WIDGET_WIZARD_FORM)(state, 'widgetType'),
-    widgetUrl: URLS.widget(activeProjectSelector(state)),
+    formValues: getFormValues(WIDGET_WIZARD_FORM)(state),
+    projectId: activeProjectSelector(state),
   }),
   {
     submitWidgetWizardForm: () => submit(WIDGET_WIZARD_FORM),
@@ -33,9 +33,9 @@ const cx = classNames.bind(styles);
 export class WidgetWizardContent extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
-    activeWidgetId: PropTypes.string,
+    formValues: PropTypes.object,
     submitWidgetWizardForm: PropTypes.func.isRequired,
-    widgetUrl: PropTypes.string.isRequired,
+    projectId: PropTypes.string.isRequired,
     showScreenLockAction: PropTypes.func.isRequired,
     closeModal: PropTypes.func.isRequired,
     onConfirm: PropTypes.func,
@@ -46,7 +46,9 @@ export class WidgetWizardContent extends Component {
     }).isRequired,
   };
   static defaultProps = {
-    activeWidgetId: '',
+    formValues: {
+      widgetType: '',
+    },
     eventsInfo: {},
     onConfirm: () => {},
   };
@@ -73,7 +75,7 @@ export class WidgetWizardContent extends Component {
     const {
       tracking: { trackEvent },
       eventsInfo: { addWidget },
-      widgetUrl,
+      projectId,
       onConfirm,
     } = this.props;
 
@@ -84,7 +86,7 @@ export class WidgetWizardContent extends Component {
 
     trackEvent(addWidget);
     this.props.showScreenLockAction();
-    fetch(widgetUrl, {
+    fetch(URLS.widget(projectId), {
       method: 'post',
       data,
     }).then(({ id }) => {
@@ -101,16 +103,22 @@ export class WidgetWizardContent extends Component {
   };
 
   render() {
+    const {
+      formValues: { widgetType },
+    } = this.props;
+
     return (
       <div className={cx('widget-wizard-content')}>
         <WizardInfoSection
-          activeWidget={this.widgets.find((widget) => this.props.activeWidgetId === widget.id)}
+          activeWidget={this.widgets.find((widget) => widgetType === widget.id)}
+          projectId={this.props.projectId}
+          widgetConfig={this.props.formValues}
           step={this.state.step}
         />
         <WizardControlsSection
           eventsInfo={this.props.eventsInfo}
           widgets={this.widgets}
-          activeWidgetId={this.props.activeWidgetId}
+          activeWidgetId={widgetType}
           step={this.state.step}
           onClickNextStep={this.onClickNextStep}
           onClickPrevStep={this.onClickPrevStep}
