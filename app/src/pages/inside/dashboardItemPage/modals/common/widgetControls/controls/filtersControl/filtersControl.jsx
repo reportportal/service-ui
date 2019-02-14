@@ -182,9 +182,10 @@ export class FiltersControl extends Component {
     this.props.onFormAppearanceChange(false, {});
   };
 
-  handleSearchValueChange = (value) => {
-    this.fetchFilter({ page: 1, searchValue: value });
-  };
+  handleSearchValueChange = debounce(
+    (value) => this.fetchFilter({ page: 1, searchValue: value }),
+    300,
+  );
 
   handleFormAppearanceMode = (event, mode, filter) => {
     event.preventDefault();
@@ -261,10 +262,9 @@ export class FiltersControl extends Component {
     this.clearFormAppearance();
   };
 
-  handleFilterListChange = debounce(
-    (event) => this.props.changeWizardForm('filterIds', [event.target.value]),
-    300,
-  );
+  handleFilterListChange = (event) => {
+    this.props.changeWizardForm('filterIds', [event.target.value]);
+  };
 
   handleFiltersListLoad = () => {
     const { page, searchValue } = this.state;
