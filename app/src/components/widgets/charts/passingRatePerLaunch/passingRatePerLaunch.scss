@@ -1,21 +1,3 @@
-<<<<<<< HEAD
-.passing-rate-per-launch {
-  :global {
-    .c3-chart-text text,
-    .c3-chart-text .c3-text,
-    .c3-chart-arc text {
-      display: inline-block !important;
-      font-family: $FONT-SEMIBOLD;
-      font-size: 13px;
-      fill: $COLOR--white-two !important;
-    }
-    .c3-grid line {
-      stroke: transparent;
-    }
-
-    .c3-event-rect {
-      cursor: default !important;
-=======
 :global {
   .c3-chart-texts {
     .c3-texts {
@@ -24,7 +6,6 @@
         font-size: 13px;
         fill: $COLOR--white-two !important;
       }
->>>>>>> EPMRPP-37984 fixed percentage position, color and font-weight
     }
   }
 }
