@@ -1,13 +1,11 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { getFormValues, initialize } from 'redux-form';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { activeProjectSelector } from 'controllers/user';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { URLS } from 'common/urls';
 import { validate } from 'common/utils';
-import { WIDGET_WIZARD_FORM } from '../../widgetWizardModal/constants';
 import { getWidgetCriteriaOptions } from './utils/getWidgetCriteriaOptions';
 import {
   SKIPPED_FAILED_LAUNCHES_OPTIONS,
@@ -64,32 +62,25 @@ const validators = {
 };
 
 @injectIntl
-@connect(
-  (state) => ({
-    widgetSettings: getFormValues(WIDGET_WIZARD_FORM)(state),
-    launchNamesSearchUrl: URLS.launchNameSearch(activeProjectSelector(state)),
-  }),
-  {
-    initializeWizardSecondStepForm: (data) =>
-      initialize(WIDGET_WIZARD_FORM, data, true, { keepValues: true }),
-  },
-)
+@connect((state) => ({
+  launchNamesSearchUrl: URLS.launchNameSearch(activeProjectSelector(state)),
+}))
 export class MostFailedTestCasesTableControls extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
     widgetSettings: PropTypes.object.isRequired,
     launchNamesSearchUrl: PropTypes.string.isRequired,
-    initializeWizardSecondStepForm: PropTypes.func.isRequired,
+    initializeControlsForm: PropTypes.func.isRequired,
   };
 
   constructor(props) {
     super(props);
-    const { intl, widgetSettings, initializeWizardSecondStepForm } = props;
+    const { intl, widgetSettings, initializeControlsForm } = props;
     this.criteria = getWidgetCriteriaOptions(
       [SKIPPED_FAILED_LAUNCHES_OPTIONS, DEFECT_STATISTICS_OPTIONS],
       intl.formatMessage,
     );
-    initializeWizardSecondStepForm({
+    initializeControlsForm({
       contentParameters: widgetSettings.contentParameters || {
         contentFields: [this.criteria[0].value],
         itemsCount: DEFAULT_ITEMS_COUNT,

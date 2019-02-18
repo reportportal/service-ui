@@ -17,6 +17,7 @@ import {
   CONDITION_IN,
   CONDITION_NOT_IN,
   CONDITION_NOT_EQ,
+  ENTITY_NUMBER,
 } from 'components/filterEntities/constants';
 import { TIME_DATE_FORMAT } from 'common/constants/timeDateFormat';
 import { messages } from './optionTranslations';
@@ -149,15 +150,18 @@ export class FilterOptions extends Component {
   };
 
   sortingToString = () => {
-    const { intl } = this.props;
-    const sort = this.props.sort[0].sortingColumn;
-    const splitKey = this.props.sort[0].sortingColumn.split('$');
+    const { intl, sort } = this.props;
+    const nonDefaultOrders = sort.filter((order) => order.sortingColumn !== ENTITY_NUMBER);
+    const sortingColumn = nonDefaultOrders.length
+      ? nonDefaultOrders[0].sortingColumn
+      : sort[0].sortingColumn;
+    const splitKey = sortingColumn.split('$');
     const type = splitKey[0];
     if (type === OPTIONS.STATISTICS) {
       const defectTypeTotal = splitKey[2];
       return this.getTotalStatistics(defectTypeTotal);
     }
-    return `${intl.formatMessage(messages[sort])}`;
+    return `${intl.formatMessage(messages[sortingColumn])}`;
   };
 
   render() {

@@ -91,8 +91,8 @@ export class WizardControlsSection extends Component {
     }
   };
 
-  handleDisableButtons = (state) => {
-    this.setState({ buttonsDisabled: state });
+  handleDisableButtons = (buttonsDisabled) => {
+    this.setState({ buttonsDisabled });
   };
 
   render() {

@@ -24,16 +24,16 @@ export class FilterEdit extends Component {
 
   onFilterSave = () => this.props.onSave(this.props.filter);
 
+  getCustomBlock = (filter) => (
+    <div className={cx('filter-edit-header')}>
+      <InputRadio value={filter.id} ownValue={filter.id} name="filter-item" circleAtTop>
+        {filter.name}
+      </InputRadio>
+    </div>
+  );
+
   render() {
     const { filter, onCancel, onChange } = this.props;
-
-    const customBlock = (
-      <div className={cx('filter-edit-header')}>
-        <InputRadio value={filter.id} ownValue={filter.id} name="filter-item" circleAtTop>
-          {filter.name}
-        </InputRadio>
-      </div>
-    );
 
     return (
       <AddEditFilter
@@ -41,7 +41,7 @@ export class FilterEdit extends Component {
         onCancel={onCancel}
         onSubmit={this.onFilterSave}
         onChange={onChange}
-        customBlock={customBlock}
+        customBlock={this.getCustomBlock(filter)}
         blockTitle={messages.editTitle}
       />
     );

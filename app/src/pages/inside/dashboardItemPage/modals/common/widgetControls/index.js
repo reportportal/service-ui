@@ -21,3 +21,4 @@ export { FlakyTestCasesTableControls } from './flakyTestCasesTableControls';
 export { CumulativeTrendControls } from './cumulativeTrendControls';
 export { ProductStatusControls } from './productStatusControls';
 export { MostTimeConsumingTestCasesControls } from './mostTimeConsumingTestCasesControls';
+export { CommonWidgetControls } from './commonWidgetControls';

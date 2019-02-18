@@ -1,7 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { getFormValues, initialize } from 'redux-form';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { URLS } from 'common/urls';
@@ -11,7 +10,6 @@ import { activeProjectSelector } from 'controllers/user';
 import { getWidgetCriteriaOptions } from './utils/getWidgetCriteriaOptions';
 import { USER_ACTIONS_OPTIONS, ITEMS_INPUT_WIDTH, CONTENT_FIELDS } from './constants';
 import { DropdownControl, InputControl, TagsControl } from './controls';
-import { WIDGET_WIZARD_FORM } from '../../widgetWizardModal/constants';
 
 const DEFAULT_ITEMS_COUNT = '50';
 const messages = defineMessages({
@@ -57,29 +55,22 @@ const validators = {
 };
 
 @injectIntl
-@connect(
-  (state) => ({
-    widgetSettings: getFormValues(WIDGET_WIZARD_FORM)(state),
-    usernamesSearchUrl: URLS.projectUsernamesSearch(activeProjectSelector(state)),
-  }),
-  {
-    initializeWizardSecondStepForm: (data) =>
-      initialize(WIDGET_WIZARD_FORM, data, true, { keepValues: true }),
-  },
-)
+@connect((state) => ({
+  usernamesSearchUrl: URLS.projectUsernamesSearch(activeProjectSelector(state)),
+}))
 export class ProjectActivityControls extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
     widgetSettings: PropTypes.object.isRequired,
     usernamesSearchUrl: PropTypes.string.isRequired,
-    initializeWizardSecondStepForm: PropTypes.func.isRequired,
+    initializeControlsForm: PropTypes.func.isRequired,
   };
 
   constructor(props) {
     super(props);
-    const { intl, widgetSettings, initializeWizardSecondStepForm } = props;
+    const { intl, widgetSettings, initializeControlsForm } = props;
     this.criteria = getWidgetCriteriaOptions([USER_ACTIONS_OPTIONS], intl.formatMessage);
-    initializeWizardSecondStepForm({
+    initializeControlsForm({
       contentParameters: widgetSettings.contentParameters || {
         contentFields: [
           CONTENT_FIELDS.NAME,

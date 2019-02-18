@@ -15,8 +15,8 @@ import {
   filtersPaginationSelector,
 } from 'controllers/filter';
 import { PAGE_KEY, SIZE_KEY } from 'controllers/pagination';
-import { WIDGET_WIZARD_FORM } from 'pages/inside/dashboardItemPage/modals/widgetWizardModal/constants';
-import { FilterNotFound } from './filterNotFound/filterNotFound';
+import { WIDGET_WIZARD_FORM } from '../../../constants';
+import { LockedActiveFilter } from './lockedActiveFilter';
 import { FiltersActionPanel } from './filtersActionPanel';
 import { ActiveFilter } from './activeFilter';
 import { FiltersList } from './filtersList';
@@ -25,6 +25,7 @@ import { FilterAdd } from './filterAdd';
 import {
   FORM_APPEARANCE_MODE_ADD,
   FORM_APPEARANCE_MODE_EDIT,
+  FORM_APPEARANCE_MODE_LOCKED,
   NEW_FILTER_DEFAULT_CONFIG,
 } from './common/constants';
 import styles from './filtersControl.scss';
@@ -47,6 +48,10 @@ const messages = defineMessages({
   updateFilterError: {
     id: 'FiltersControl.updateFilterError',
     defaultMessage: "Filter don't updated",
+  },
+  filtersNotFound: {
+    id: 'FiltersControl.notFound',
+    defaultMessage: `No filters found for "{filter}".`,
   },
 });
 
@@ -74,7 +79,7 @@ export class FiltersControl extends Component {
     error: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
     userId: PropTypes.string,
     activeProject: PropTypes.string,
-    activeFilterId: PropTypes.string,
+    activeFilterId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     filter: PropTypes.string,
     pagination: PropTypes.object.isRequired,
     formAppearance: PropTypes.object.isRequired,
@@ -118,7 +123,7 @@ export class FiltersControl extends Component {
     this.fetchFilter({ page });
   }
 
-  getFormAppearanceComponent = () => {
+  getFormAppearanceComponent = (activeFilter) => {
     const {
       formAppearance: { mode: formAppearanceMode, filter: formAppearanceFilter },
     } = this.props;
@@ -138,12 +143,19 @@ export class FiltersControl extends Component {
         case FORM_APPEARANCE_MODE_ADD: {
           return (
             <FilterAdd
-              filter={NEW_FILTER_DEFAULT_CONFIG}
+              filter={
+                formAppearanceFilter.conditions ? formAppearanceFilter : NEW_FILTER_DEFAULT_CONFIG
+              }
               onChange={this.handleFilterChange}
               onCancel={this.clearFormAppearance}
               onSave={this.handleFilterInsert}
             />
           );
+        }
+        case FORM_APPEARANCE_MODE_LOCKED: {
+          return activeFilter ? (
+            <LockedActiveFilter filter={activeFilter} onEdit={this.clearFormAppearance} />
+          ) : null;
         }
         default:
           return null;
@@ -151,13 +163,6 @@ export class FiltersControl extends Component {
     })();
 
     return <div className={cx('filters-control-form')}>{component}</div>;
-  };
-
-  notFound = () => {
-    const { filters } = this.props;
-    const { searchValue } = this.state;
-
-    return searchValue && searchValue.length >= 3 && filters.length === 0;
   };
 
   fetchFilter = ({ page, size, searchValue }) => {
@@ -282,15 +287,15 @@ export class FiltersControl extends Component {
   };
 
   render() {
-    const { formAppearance } = this.props;
+    const { activeFilterId, filters, formAppearance } = this.props;
+    const activeFilter = filters.find((elem) => elem.id === Number(activeFilterId));
 
     if (formAppearance.mode !== false) {
-      return this.getFormAppearanceComponent();
+      return this.getFormAppearanceComponent(activeFilter);
     }
 
-    const { activeFilterId, filters, loading, userId, filter, touched, error, intl } = this.props;
+    const { loading, userId, filter, touched, error } = this.props;
     const { searchValue } = this.state;
-    const activeFilter = filters.find((elem) => elem.id === Number(activeFilterId));
 
     return (
       <div className={cx('filters-control')}>
@@ -302,7 +307,6 @@ export class FiltersControl extends Component {
           onAdd={this.handleFormAppearanceMode}
         />
         <ActiveFilter filter={activeFilter || null} touched={touched} error={error || null} />
-        {this.notFound() && <FilterNotFound searchValue={searchValue} intl={intl} />}
         <FiltersList
           search={searchValue}
           userId={userId}
@@ -312,6 +316,7 @@ export class FiltersControl extends Component {
           onChange={this.handleFilterListChange}
           onEdit={this.handleFormAppearanceMode}
           onLazyLoad={this.handleFiltersListLoad}
+          noItemsMessage={messages.filtersNotFound}
         />
       </div>
     );

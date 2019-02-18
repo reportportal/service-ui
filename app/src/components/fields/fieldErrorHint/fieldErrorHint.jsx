@@ -65,10 +65,6 @@ const messages = defineMessages({
     id: 'AccuracyFormBlock.minTermFreqHint',
     defaultMessage: 'The parameter should have value from 1 to 10',
   },
-  widgetNameHint: {
-    id: 'SearchDashboardForm.widgetNameHint',
-    defaultMessage: 'Widget name should have size from 3 to 128',
-  },
   profilePassword: {
     id: 'ChangePasswordModal.profilePassword',
     defaultMessage: 'Password should have size from 4 to 25 symbols',

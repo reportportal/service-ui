@@ -8,7 +8,7 @@ import { withModal, ModalLayout } from 'components/main/modal';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { showScreenLockAction } from 'controllers/screenLock';
 import { DEFAULT_WIDGET_CONFIG } from '../common/constants';
-import { WidgetInfoSection } from './widgetInfoSection';
+import { SharedWidgetInfoSection } from './sharedWidgetInfoSection';
 import { SharedWidgetsListSection } from './sharedWidgetsListSection';
 import styles from './addSharedWidgetModal.scss';
 
@@ -91,7 +91,10 @@ export class AddSharedWidgetModal extends Component {
         className={cx('add-shared-widget-modal')}
       >
         <div className={cx('shared-widget-modal-content')}>
-          <WidgetInfoSection selectedWidget={this.state.selectedWidget} projectId={projectId} />
+          <SharedWidgetInfoSection
+            selectedWidget={this.state.selectedWidget}
+            projectId={projectId}
+          />
           <SharedWidgetsListSection
             projectId={projectId}
             currentDashboard={currentDashboard}

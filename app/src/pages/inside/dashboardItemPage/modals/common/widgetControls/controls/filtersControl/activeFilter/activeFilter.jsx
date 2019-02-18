@@ -2,7 +2,6 @@ import React, { PureComponent } from 'react';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-
 import { FilterName } from 'pages/inside/filtersPage/filterGrid/filterName';
 import styles from './activeFilter.scss';
 

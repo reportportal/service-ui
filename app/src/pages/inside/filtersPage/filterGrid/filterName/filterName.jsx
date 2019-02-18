@@ -31,6 +31,7 @@ export class FilterName extends Component {
     userId: PropTypes.string,
     showDesc: PropTypes.bool,
     editable: PropTypes.bool,
+    isBold: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -43,6 +44,7 @@ export class FilterName extends Component {
     userId: '',
     showDesc: true,
     editable: true,
+    isBold: false,
   };
 
   getHighlightName = () => {
@@ -71,13 +73,17 @@ export class FilterName extends Component {
       userId,
       showDesc,
       editable,
+      isBold,
     } = this.props;
 
     return (
       <Fragment>
         <span className={cx('name-wrapper')}>
           <span
-            className={cx('name', { link: userFilters.find((item) => item.id === filter.id) })}
+            className={cx('name', {
+              bold: isBold,
+              link: userFilters.find((item) => item.id === filter.id),
+            })}
             onClick={onClickName}
           >
             {Parser(this.getHighlightName(filter.name))}

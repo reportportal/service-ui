@@ -110,10 +110,11 @@ export class FiltersSorting extends Component {
     };
 
     if (filter.orders) {
-      const order = filter.orders[0];
-      defaultValue = order.sortingColumn === ENTITY_NUMBER ? defaultValue : order;
+      const nonDefaultOrders = filter.orders.filter(
+        (order) => order.sortingColumn !== ENTITY_NUMBER,
+      );
+      defaultValue = nonDefaultOrders.length ? nonDefaultOrders[0] : defaultValue;
     }
-
     return defaultValue;
   };
 

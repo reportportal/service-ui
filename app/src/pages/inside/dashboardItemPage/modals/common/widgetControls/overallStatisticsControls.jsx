@@ -2,7 +2,6 @@ import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { connect } from 'react-redux';
-import { getFormValues, initialize } from 'redux-form';
 import { defectTypesSelector } from 'controllers/project';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { validate } from 'common/utils';
@@ -11,7 +10,6 @@ import { getWidgetCriteriaOptions } from './utils/getWidgetCriteriaOptions';
 import { getWidgetModeOptions } from './utils/getWidgetModeOptions';
 import { LAUNCH_STATUSES_OPTIONS, DEFECT_TYPES_OPTIONS, ITEMS_INPUT_WIDTH } from './constants';
 import { FiltersControl, DropdownControl, InputControl, TogglerControl } from './controls';
-import { WIDGET_WIZARD_FORM } from '../../widgetWizardModal/constants';
 
 const DEFAULT_ITEMS_COUNT = '50';
 const messages = defineMessages({
@@ -41,22 +39,15 @@ const validators = {
 };
 
 @injectIntl
-@connect(
-  (state) => ({
-    widgetSettings: getFormValues(WIDGET_WIZARD_FORM)(state),
-    defectTypes: defectTypesSelector(state),
-  }),
-  {
-    initializeWizardSecondStepForm: (data) =>
-      initialize(WIDGET_WIZARD_FORM, data, true, { keepValues: true }),
-  },
-)
+@connect((state) => ({
+  defectTypes: defectTypesSelector(state),
+}))
 export class OverallStatisticsControls extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
     defectTypes: PropTypes.object.isRequired,
     widgetSettings: PropTypes.object.isRequired,
-    initializeWizardSecondStepForm: PropTypes.func.isRequired,
+    initializeControlsForm: PropTypes.func.isRequired,
     formAppearance: PropTypes.object.isRequired,
     onFormAppearanceChange: PropTypes.func.isRequired,
   };
@@ -68,13 +59,13 @@ export class OverallStatisticsControls extends Component {
 
   constructor(props) {
     super(props);
-    const { intl, widgetSettings, defectTypes, initializeWizardSecondStepForm } = props;
+    const { intl, widgetSettings, defectTypes, initializeControlsForm } = props;
     this.criteria = getWidgetCriteriaOptions(
       [LAUNCH_STATUSES_OPTIONS, DEFECT_TYPES_OPTIONS],
       intl.formatMessage,
       { defectTypes },
     );
-    initializeWizardSecondStepForm({
+    initializeControlsForm({
       contentParameters: widgetSettings.contentParameters || {
         contentFields: this.criteria.map((criteria) => criteria.value),
         itemsCount: DEFAULT_ITEMS_COUNT,
@@ -111,7 +102,7 @@ export class OverallStatisticsControls extends Component {
             onFormAppearanceChange={onFormAppearanceChange}
           />
         </FieldProvider>
-        {!formAppearance.mode && (
+        {!formAppearance.isMainControlsLocked && (
           <Fragment>
             <FieldProvider
               name="contentParameters.contentFields"

@@ -10,7 +10,7 @@ import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { hideModalAction } from 'controllers/modal';
-import { WIDGET_WIZARD_FORM } from './constants';
+import { WIDGET_WIZARD_FORM } from '../common/constants';
 import { WidgetWizardContent } from './widgetWizardContent';
 import styles from './widgetWizardModal.scss';
 

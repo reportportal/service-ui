@@ -1,7 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { getFormValues, initialize } from 'redux-form';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { arrayRemoveDoubles, validate } from 'common/utils';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
@@ -22,7 +21,6 @@ import {
   ITEMS_INPUT_WIDTH,
 } from './constants';
 import { FiltersControl, DropdownControl, InputControl } from './controls';
-import { WIDGET_WIZARD_FORM } from '../../widgetWizardModal/constants';
 
 const DEFECT_STATISTICS_BASE = 'statistics$defects$';
 const DEFAULT_ITEMS_COUNT = '50';
@@ -58,35 +56,28 @@ const validators = {
 };
 
 @injectIntl
-@connect(
-  (state) => ({
-    widgetSettings: getFormValues(WIDGET_WIZARD_FORM)(state),
-    defectTypes: defectTypesSelector(state),
-  }),
-  {
-    initializeWizardSecondStepForm: (data) =>
-      initialize(WIDGET_WIZARD_FORM, data, true, { keepValues: true }),
-  },
-)
+@connect((state) => ({
+  defectTypes: defectTypesSelector(state),
+}))
 export class LaunchesTableControls extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
     defectTypes: PropTypes.object.isRequired,
     widgetSettings: PropTypes.object.isRequired,
-    initializeWizardSecondStepForm: PropTypes.func.isRequired,
+    initializeControlsForm: PropTypes.func.isRequired,
     formAppearance: PropTypes.object.isRequired,
     onFormAppearanceChange: PropTypes.func.isRequired,
   };
 
   constructor(props) {
     super(props);
-    const { intl, widgetSettings, initializeWizardSecondStepForm } = props;
+    const { intl, widgetSettings, initializeControlsForm } = props;
     this.criteria = getWidgetCriteriaOptions(
       [LAUNCH_STATUSES_OPTIONS, DEFECT_TYPES_GROUPS_OPTIONS, LAUNCH_GRID_COLUMNS_OPTIONS],
       intl.formatMessage,
       { withoutNoDefect: true },
     );
-    initializeWizardSecondStepForm({
+    initializeControlsForm({
       contentParameters: widgetSettings.contentParameters || {
         contentFields: this.parseContentFields(this.criteria),
         widgetOptions: {},
@@ -148,30 +139,34 @@ export class LaunchesTableControls extends Component {
             onFormAppearanceChange={onFormAppearanceChange}
           />
         </FieldProvider>
-        <FieldProvider
-          name="contentParameters.contentFields"
-          parse={this.parseContentFields}
-          format={this.formatContentFields}
-          validate={validators.contentFields(formatMessage)}
-        >
-          <DropdownControl
-            fieldLabel={formatMessage(messages.CriteriaFieldLabel)}
-            multiple
-            selectAll
-            options={this.criteria}
-          />
-        </FieldProvider>
-        <FieldProvider
-          name="contentParameters.itemsCount"
-          validate={validators.items(formatMessage)}
-          parse={this.parseItems}
-        >
-          <InputControl
-            fieldLabel={formatMessage(messages.ItemsFieldLabel)}
-            inputWidth={ITEMS_INPUT_WIDTH}
-            type="number"
-          />
-        </FieldProvider>
+        {!formAppearance.isMainControlsLocked && (
+          <Fragment>
+            <FieldProvider
+              name="contentParameters.contentFields"
+              parse={this.parseContentFields}
+              format={this.formatContentFields}
+              validate={validators.contentFields(formatMessage)}
+            >
+              <DropdownControl
+                fieldLabel={formatMessage(messages.CriteriaFieldLabel)}
+                multiple
+                selectAll
+                options={this.criteria}
+              />
+            </FieldProvider>
+            <FieldProvider
+              name="contentParameters.itemsCount"
+              validate={validators.items(formatMessage)}
+              parse={this.parseItems}
+            >
+              <InputControl
+                fieldLabel={formatMessage(messages.ItemsFieldLabel)}
+                inputWidth={ITEMS_INPUT_WIDTH}
+                type="number"
+              />
+            </FieldProvider>
+          </Fragment>
+        )}
       </Fragment>
     );
   }

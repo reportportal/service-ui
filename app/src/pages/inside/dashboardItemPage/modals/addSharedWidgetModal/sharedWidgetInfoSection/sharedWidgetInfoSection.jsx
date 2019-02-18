@@ -4,11 +4,11 @@ import classNames from 'classnames/bind';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
 import { WidgetPreview } from '../../common/widgetPreview';
-import styles from './widgetInfoSection.scss';
+import styles from './sharedWidgetInfoSection.scss';
 
 const cx = classNames.bind(styles);
 
-export class WidgetInfoSection extends PureComponent {
+export class SharedWidgetInfoSection extends PureComponent {
   static propTypes = {
     projectId: PropTypes.string.isRequired,
     selectedWidget: PropTypes.object,
@@ -21,7 +21,7 @@ export class WidgetInfoSection extends PureComponent {
   state = {
     loading: false,
     widgetType: '',
-    widget: {},
+    widgetData: {},
   };
 
   componentDidMount() {
@@ -40,10 +40,10 @@ export class WidgetInfoSection extends PureComponent {
       widgetType: this.props.selectedWidget.widgetType,
     });
     fetch(URLS.widget(this.props.projectId, this.props.selectedWidget.id))
-      .then((widget) => {
+      .then((widgetData) => {
         this.setState({
           loading: false,
-          widget,
+          widgetData,
         });
       })
       .catch(() => {
@@ -55,14 +55,14 @@ export class WidgetInfoSection extends PureComponent {
 
   render() {
     const { selectedWidget } = this.props;
-    const { loading, widgetType, widget } = this.state;
+    const { loading, widgetType, widgetData } = this.state;
 
     return (
-      <div className={cx('widget-info-section')}>
+      <div className={cx('shared-widget-info-section')}>
         {selectedWidget && (
           <Fragment>
             <h2 className={cx('widget-name')}>{selectedWidget.name}</h2>
-            <WidgetPreview widgetType={widgetType} data={widget} loading={loading} />
+            <WidgetPreview widgetType={widgetType} data={widgetData} loading={loading} />
           </Fragment>
         )}
       </div>
