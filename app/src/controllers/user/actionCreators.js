@@ -49,7 +49,7 @@ export const fetchUserAction = () => (dispatch) =>
       savedActiveProject &&
       Object.prototype.hasOwnProperty.call(user.assignedProjects, savedActiveProject)
         ? savedActiveProject
-        : user.defaultProject;
+        : Object.keys(user.assignedProjects)[0];
     dispatch(fetchApiTokenAction());
     dispatch(fetchUserSuccessAction(user));
     dispatch(setActiveProjectAction(activeProject));
