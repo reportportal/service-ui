@@ -10,6 +10,7 @@ export const FILTER_ADD_FORM = 'FilterAddFrom';
 
 export const FORM_APPEARANCE_MODE_EDIT = 'formAppearanceModeEdit';
 export const FORM_APPEARANCE_MODE_ADD = 'formAppearanceModeAdd';
+export const FORM_APPEARANCE_MODE_LOCKED = 'formAppearanceModeLocked';
 
 export const FILTER_NAME_KEY = 'name';
 

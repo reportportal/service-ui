@@ -2,7 +2,6 @@ import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { connect } from 'react-redux';
-import { getFormValues, initialize } from 'redux-form';
 import { defectTypesSelector } from 'controllers/project';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { validate } from 'common/utils';
@@ -23,7 +22,6 @@ import {
   TogglerControl,
   CheckboxControl,
 } from './controls';
-import { WIDGET_WIZARD_FORM } from '../../widgetWizardModal/constants';
 import styles from './widgetControls.scss';
 
 const cx = classNames.bind(styles);
@@ -60,35 +58,28 @@ const validators = {
 };
 
 @injectIntl
-@connect(
-  (state) => ({
-    widgetSettings: getFormValues(WIDGET_WIZARD_FORM)(state),
-    defectTypes: defectTypesSelector(state),
-  }),
-  {
-    initializeWizardSecondStepForm: (data) =>
-      initialize(WIDGET_WIZARD_FORM, data, true, { keepValues: true }),
-  },
-)
+@connect((state) => ({
+  defectTypes: defectTypesSelector(state),
+}))
 export class LaunchStatisticsControls extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
     defectTypes: PropTypes.object.isRequired,
     widgetSettings: PropTypes.object.isRequired,
-    initializeWizardSecondStepForm: PropTypes.func.isRequired,
+    initializeControlsForm: PropTypes.func.isRequired,
     formAppearance: PropTypes.object.isRequired,
     onFormAppearanceChange: PropTypes.func.isRequired,
   };
 
   constructor(props) {
     super(props);
-    const { intl, widgetSettings, defectTypes, initializeWizardSecondStepForm } = props;
+    const { intl, widgetSettings, defectTypes, initializeControlsForm } = props;
     this.criteria = getWidgetCriteriaOptions(
       [LAUNCH_STATUSES_OPTIONS, GROUPED_DEFECT_TYPES_OPTIONS],
       intl.formatMessage,
       { defectTypes },
     );
-    initializeWizardSecondStepForm({
+    initializeControlsForm({
       contentParameters: widgetSettings.contentParameters || {
         contentFields: this.criteria.map((criteria) => criteria.value),
         itemsCount: DEFAULT_ITEMS_COUNT,
@@ -126,52 +117,56 @@ export class LaunchStatisticsControls extends Component {
             onFormAppearanceChange={onFormAppearanceChange}
           />
         </FieldProvider>
-        <FieldProvider
-          name="contentParameters.contentFields"
-          validate={validators.contentFields(formatMessage)}
-        >
-          <DropdownControl
-            fieldLabel={formatMessage(messages.CriteriaFieldLabel)}
-            multiple
-            selectAll
-            options={this.criteria}
-          />
-        </FieldProvider>
-        <FieldProvider
-          name="contentParameters.itemsCount"
-          validate={validators.items(formatMessage)}
-          parse={this.parseItems}
-        >
-          <InputControl
-            fieldLabel={formatMessage(messages.ItemsFieldLabel)}
-            inputWidth={ITEMS_INPUT_WIDTH}
-            type="number"
-          />
-        </FieldProvider>
-        <FieldProvider name="contentParameters.widgetOptions.timeline">
-          <TogglerControl
-            fieldLabel=" "
-            items={getWidgetModeOptions(
-              [CHART_MODES.LAUNCH_MODE, CHART_MODES.TIMELINE_MODE],
-              formatMessage,
-            )}
-          />
-        </FieldProvider>
-        <FieldProvider name="contentParameters.widgetOptions.viewMode">
-          <TogglerControl
-            fieldLabel=" "
-            items={getWidgetModeOptions(
-              [CHART_MODES.AREA_VIEW, CHART_MODES.BAR_VIEW],
-              formatMessage,
-            )}
-          />
-        </FieldProvider>
-        <div className={cx('zoom-container')}>
-          <FieldProvider name="contentParameters.widgetOptions.zoom">
-            <CheckboxControl fieldLabel=" " text={formatMessage(messages.ZoomControlText)} />
-          </FieldProvider>
-          <BetaBadge className={cx('launch-controls')} />
-        </div>
+        {!formAppearance.isMainControlsLocked && (
+          <Fragment>
+            <FieldProvider
+              name="contentParameters.contentFields"
+              validate={validators.contentFields(formatMessage)}
+            >
+              <DropdownControl
+                fieldLabel={formatMessage(messages.CriteriaFieldLabel)}
+                multiple
+                selectAll
+                options={this.criteria}
+              />
+            </FieldProvider>
+            <FieldProvider
+              name="contentParameters.itemsCount"
+              validate={validators.items(formatMessage)}
+              parse={this.parseItems}
+            >
+              <InputControl
+                fieldLabel={formatMessage(messages.ItemsFieldLabel)}
+                inputWidth={ITEMS_INPUT_WIDTH}
+                type="number"
+              />
+            </FieldProvider>
+            <FieldProvider name="contentParameters.widgetOptions.timeline">
+              <TogglerControl
+                fieldLabel=" "
+                items={getWidgetModeOptions(
+                  [CHART_MODES.LAUNCH_MODE, CHART_MODES.TIMELINE_MODE],
+                  formatMessage,
+                )}
+              />
+            </FieldProvider>
+            <FieldProvider name="contentParameters.widgetOptions.viewMode">
+              <TogglerControl
+                fieldLabel=" "
+                items={getWidgetModeOptions(
+                  [CHART_MODES.AREA_VIEW, CHART_MODES.BAR_VIEW],
+                  formatMessage,
+                )}
+              />
+            </FieldProvider>
+            <div className={cx('zoom-container')}>
+              <FieldProvider name="contentParameters.widgetOptions.zoom">
+                <CheckboxControl fieldLabel=" " text={formatMessage(messages.ZoomControlText)} />
+              </FieldProvider>
+              <BetaBadge className={cx('launch-controls')} />
+            </div>
+          </Fragment>
+        )}
       </Fragment>
     );
   }

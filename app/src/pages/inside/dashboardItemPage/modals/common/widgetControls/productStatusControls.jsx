@@ -2,7 +2,6 @@ import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { connect } from 'react-redux';
-import { getFormValues, initialize } from 'redux-form';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { URLS } from 'common/urls';
 import { FAILED, PASSED, SKIPPED } from 'common/constants/launchStatuses';
@@ -25,7 +24,6 @@ import {
   TagsControl,
   CustomColumnsControl,
 } from './controls';
-import { WIDGET_WIZARD_FORM } from '../../widgetWizardModal/constants';
 
 const DEFAULT_ITEMS_COUNT = '50';
 const messages = defineMessages({
@@ -91,32 +89,25 @@ const validators = {
 };
 
 @injectIntl
-@connect(
-  (state) => ({
-    widgetSettings: getFormValues(WIDGET_WIZARD_FORM)(state),
-    filtersSearchUrl: URLS.filtersSearch(activeProjectSelector(state)),
-  }),
-  {
-    initializeWizardSecondStepForm: (data) =>
-      initialize(WIDGET_WIZARD_FORM, data, true, { keepValues: true }),
-  },
-)
+@connect((state) => ({
+  filtersSearchUrl: URLS.filtersSearch(activeProjectSelector(state)),
+}))
 export class ProductStatusControls extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
     widgetSettings: PropTypes.object.isRequired,
     filtersSearchUrl: PropTypes.string.isRequired,
-    initializeWizardSecondStepForm: PropTypes.func.isRequired,
+    initializeControlsForm: PropTypes.func.isRequired,
   };
 
   constructor(props) {
     super(props);
-    const { intl, widgetSettings, initializeWizardSecondStepForm } = props;
+    const { intl, widgetSettings, initializeControlsForm } = props;
     this.criteria = [
       { value: START_TIME, label: props.intl.formatMessage(messages.StartTimeCriteria) },
       { value: STATUS, label: props.intl.formatMessage(messages.StatusCriteria) },
     ].concat(getWidgetCriteriaOptions([DEFECT_TYPES_GROUPS_OPTIONS], intl.formatMessage));
-    initializeWizardSecondStepForm({
+    initializeControlsForm({
       contentParameters: widgetSettings.contentParameters || {
         itemsCount: DEFAULT_ITEMS_COUNT,
         widgetOptions: {

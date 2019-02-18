@@ -1,7 +1,5 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { getFormValues, initialize } from 'redux-form';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import {
@@ -16,7 +14,6 @@ import { validate } from 'common/utils';
 import { getWidgetModeOptions } from './utils/getWidgetModeOptions';
 import { ITEMS_INPUT_WIDTH } from './constants';
 import { FiltersControl, InputControl, TogglerControl } from './controls';
-import { WIDGET_WIZARD_FORM } from '../../widgetWizardModal/constants';
 
 const DEFAULT_ITEMS_COUNT = '50';
 const messages = defineMessages({
@@ -36,28 +33,19 @@ const validators = {
 };
 
 @injectIntl
-@connect(
-  (state) => ({
-    widgetSettings: getFormValues(WIDGET_WIZARD_FORM)(state),
-  }),
-  {
-    initializeWizardSecondStepForm: (data) =>
-      initialize(WIDGET_WIZARD_FORM, data, true, { keepValues: true }),
-  },
-)
 export class InvestigatedPercentageOfLaunchesControls extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
     widgetSettings: PropTypes.object.isRequired,
-    initializeWizardSecondStepForm: PropTypes.func.isRequired,
+    initializeControlsForm: PropTypes.func.isRequired,
     formAppearance: PropTypes.object.isRequired,
     onFormAppearanceChange: PropTypes.func.isRequired,
   };
 
   constructor(props) {
     super(props);
-    const { widgetSettings, initializeWizardSecondStepForm } = props;
-    initializeWizardSecondStepForm({
+    const { widgetSettings, initializeControlsForm } = props;
+    initializeControlsForm({
       contentParameters: widgetSettings.contentParameters || {
         contentFields: [
           STATS_PB_TOTAL,
@@ -98,26 +86,30 @@ export class InvestigatedPercentageOfLaunchesControls extends Component {
             onFormAppearanceChange={onFormAppearanceChange}
           />
         </FieldProvider>
-        <FieldProvider
-          name="contentParameters.itemsCount"
-          validate={validators.items(formatMessage)}
-          parse={this.parseItems}
-        >
-          <InputControl
-            fieldLabel={formatMessage(messages.ItemsFieldLabel)}
-            inputWidth={ITEMS_INPUT_WIDTH}
-            type="number"
-          />
-        </FieldProvider>
-        <FieldProvider name="contentParameters.widgetOptions.timeline">
-          <TogglerControl
-            fieldLabel=" "
-            items={getWidgetModeOptions(
-              [CHART_MODES.LAUNCH_MODE, CHART_MODES.TIMELINE_MODE],
-              formatMessage,
-            )}
-          />
-        </FieldProvider>
+        {!formAppearance.isMainControlsLocked && (
+          <Fragment>
+            <FieldProvider
+              name="contentParameters.itemsCount"
+              validate={validators.items(formatMessage)}
+              parse={this.parseItems}
+            >
+              <InputControl
+                fieldLabel={formatMessage(messages.ItemsFieldLabel)}
+                inputWidth={ITEMS_INPUT_WIDTH}
+                type="number"
+              />
+            </FieldProvider>
+            <FieldProvider name="contentParameters.widgetOptions.timeline">
+              <TogglerControl
+                fieldLabel=" "
+                items={getWidgetModeOptions(
+                  [CHART_MODES.LAUNCH_MODE, CHART_MODES.TIMELINE_MODE],
+                  formatMessage,
+                )}
+              />
+            </FieldProvider>
+          </Fragment>
+        )}
       </Fragment>
     );
   }

@@ -1,7 +1,7 @@
 .name-wrapper {
   width: 100%;
   display: inline-block;
-  
+
   &:hover .pencil-icon{
     display: inline-block;
   }
@@ -11,6 +11,10 @@
   line-height: 20px;
   word-break: break-all;
   font-size: 14px;
+
+  &.bold {
+    font-family: $FONT-SEMIBOLD;
+  }
 
   &.link {
     color: $COLOR--windows-blue;
@@ -55,6 +59,5 @@
   margin-left: 10px;
   display: inline-block;
   vertical-align: top;
-  cursor: pointer;
   fill: $COLOR--gray-60;
 }

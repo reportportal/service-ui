@@ -34,6 +34,7 @@ export class ModalFooter extends Component {
     closeConfirmed: PropTypes.bool,
     confirmationMessage: PropTypes.string,
     confirmationWarning: PropTypes.string,
+    confirmationWarningClassName: PropTypes.string,
     confirmWithCheckbox: PropTypes.bool,
   };
   static defaultProps = {
@@ -48,6 +49,7 @@ export class ModalFooter extends Component {
     closeConfirmed: false,
     confirmationMessage: '',
     confirmationWarning: '',
+    confirmationWarningClassName: '',
     confirmWithCheckbox: false,
   };
   closeConfirmChangeHandler = () => {
@@ -66,6 +68,7 @@ export class ModalFooter extends Component {
       showConfirmation,
       confirmationMessage,
       confirmationWarning,
+      confirmationWarningClassName,
       closeConfirmed,
       confirmWithCheckbox,
     } = this.props;
@@ -75,7 +78,7 @@ export class ModalFooter extends Component {
         {showConfirmation && (
           <div className={cx('confirmation-block')}>
             {confirmationWarning && (
-              <div className={cx('warning-block-wrap')}>
+              <div className={cx('warning-block-wrap', confirmationWarningClassName)}>
                 <div className={cx('warning-block')}>
                   <i className={cx('warning-icon')} />
                   <span className={cx('warning-message')}>{confirmationWarning}</span>
@@ -98,7 +101,7 @@ export class ModalFooter extends Component {
         <div className={cx('buttons-block')}>
           {cancelButton && (
             <div className={cx('button-container')}>
-              <BigButton color={'gray-60'} onClick={closeHandler}>
+              <BigButton color={'gray-60'} onClick={closeHandler} disabled={cancelButton.disabled}>
                 {cancelButton.text}
               </BigButton>
             </div>

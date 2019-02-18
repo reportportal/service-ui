@@ -1,3 +1,5 @@
+export const WIDGET_WIZARD_FORM = 'widgetWizardForm';
+
 export const DEFAULT_WIDGET_SIZE = {
   width: 12,
   height: 7,

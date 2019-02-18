@@ -10,11 +10,10 @@ import { fetch } from 'common/utils';
 import { showScreenLockAction } from 'controllers/screenLock';
 import { activeProjectSelector } from 'controllers/user';
 import { getWidgets } from 'pages/inside/dashboardItemPage/modals/common/widgets';
-import { DEFAULT_WIDGET_CONFIG } from '../../common/constants';
+import { DEFAULT_WIDGET_CONFIG, WIDGET_WIZARD_FORM } from '../../common/constants';
 import { WizardInfoSection } from './wizardInfoSection';
 import { WizardControlsSection } from './wizardControlsSection';
 import styles from './widgetWizardContent.scss';
-import { WIDGET_WIZARD_FORM } from '../constants';
 
 const cx = classNames.bind(styles);
 
@@ -112,7 +111,7 @@ export class WidgetWizardContent extends Component {
         <WizardInfoSection
           activeWidget={this.widgets.find((widget) => widgetType === widget.id)}
           projectId={this.props.projectId}
-          widgetConfig={this.props.formValues}
+          widgetSettings={this.props.formValues}
           step={this.state.step}
         />
         <WizardControlsSection

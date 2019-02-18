@@ -2,12 +2,10 @@ import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { connect } from 'react-redux';
-import { getFormValues, initialize } from 'redux-form';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { activeProjectSelector } from 'controllers/user';
 import { URLS } from 'common/urls';
 import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
-import { WIDGET_WIZARD_FORM } from '../../widgetWizardModal/constants';
 import { getWidgetModeOptions } from './utils/getWidgetModeOptions';
 import { TogglerControl, TagsControl } from './controls';
 
@@ -40,28 +38,21 @@ const validators = {
 };
 
 @injectIntl
-@connect(
-  (state) => ({
-    widgetSettings: getFormValues(WIDGET_WIZARD_FORM)(state),
-    launchNamesSearchUrl: URLS.launchNameSearch(activeProjectSelector(state)),
-  }),
-  {
-    initializeWizardSecondStepForm: (data) =>
-      initialize(WIDGET_WIZARD_FORM, data, true, { keepValues: true }),
-  },
-)
+@connect((state) => ({
+  launchNamesSearchUrl: URLS.launchNameSearch(activeProjectSelector(state)),
+}))
 export class PassingRatePerLaunchControls extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
     widgetSettings: PropTypes.object.isRequired,
     launchNamesSearchUrl: PropTypes.string.isRequired,
-    initializeWizardSecondStepForm: PropTypes.func.isRequired,
+    initializeControlsForm: PropTypes.func.isRequired,
   };
 
   constructor(props) {
     super(props);
-    const { widgetSettings, initializeWizardSecondStepForm } = props;
-    initializeWizardSecondStepForm({
+    const { widgetSettings, initializeControlsForm } = props;
+    initializeControlsForm({
       contentParameters: widgetSettings.contentParameters || {
         contentFields: [],
         itemsCount: DEFAULT_ITEMS_COUNT,

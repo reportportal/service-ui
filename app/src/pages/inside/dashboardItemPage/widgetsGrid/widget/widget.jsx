@@ -135,7 +135,17 @@ export class Widget extends Component {
       });
   };
 
-  deleteWidget = () => {
+  showEditWidgetModal = () => {
+    this.props.showModalAction({
+      id: 'editWidgetModal',
+      data: {
+        widget: this.state.widget,
+        onConfirm: this.fetchWidget,
+      },
+    });
+  };
+
+  showDeleteWidgetModal = () => {
     this.props.tracking.trackEvent(DASHBOARD_PAGE_EVENTS.REMOVE_WIDGET);
     this.props.showModalAction({
       id: 'deleteWidgetModal',
@@ -171,7 +181,8 @@ export class Widget extends Component {
             <WidgetHeader
               data={headerData}
               onRefresh={this.fetchWidget}
-              onDelete={this.deleteWidget}
+              onDelete={this.showDeleteWidgetModal}
+              onEdit={this.showEditWidgetModal}
             />
           </div>
           <div ref={this.getWidgetNode} className={cx('widget', { hidden: !visible })}>

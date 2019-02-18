@@ -1,4 +1,4 @@
-.widget-info-section {
+.edit-widget-info-section {
   position: relative;
   display: inline-block;
   width: 320px;
@@ -17,12 +17,4 @@
     height: 70px;
     background-color: $COLOR--white;
   }
-}
-
-.widget-name {
-  margin: 10px 0;
-  color: $COLOR--charcoal-grey;
-  font-size: 14px;
-  font-family: $FONT-SEMIBOLD;
-  text-align: center;
 }

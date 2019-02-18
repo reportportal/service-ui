@@ -1,14 +1,11 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { getFormValues, initialize } from 'redux-form';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { validate } from 'common/utils';
 import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
 import { ITEMS_INPUT_WIDTH } from './constants';
 import { FiltersControl, InputControl, TogglerControl } from './controls';
-import { WIDGET_WIZARD_FORM } from '../../widgetWizardModal/constants';
 import { getWidgetModeOptions } from './utils/getWidgetModeOptions';
 
 const DEFAULT_ITEMS_COUNT = '10';
@@ -29,28 +26,19 @@ const validators = {
 };
 
 @injectIntl
-@connect(
-  (state) => ({
-    widgetSettings: getFormValues(WIDGET_WIZARD_FORM)(state),
-  }),
-  {
-    initializeWizardSecondStepForm: (data) =>
-      initialize(WIDGET_WIZARD_FORM, data, true, { keepValues: true }),
-  },
-)
 export class UniqueBugsTableControls extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
     widgetSettings: PropTypes.object.isRequired,
-    initializeWizardSecondStepForm: PropTypes.func.isRequired,
+    initializeControlsForm: PropTypes.func.isRequired,
     formAppearance: PropTypes.object.isRequired,
     onFormAppearanceChange: PropTypes.func.isRequired,
   };
 
   constructor(props) {
     super(props);
-    const { widgetSettings, initializeWizardSecondStepForm } = props;
-    initializeWizardSecondStepForm({
+    const { widgetSettings, initializeControlsForm } = props;
+    initializeControlsForm({
       contentParameters: widgetSettings.contentParameters || {
         itemsCount: DEFAULT_ITEMS_COUNT,
         widgetOptions: {
@@ -85,26 +73,30 @@ export class UniqueBugsTableControls extends Component {
             onFormAppearanceChange={onFormAppearanceChange}
           />
         </FieldProvider>
-        <FieldProvider
-          name="contentParameters.itemsCount"
-          validate={validators.items(formatMessage)}
-          parse={this.parseItems}
-        >
-          <InputControl
-            fieldLabel={formatMessage(messages.ItemsFieldLabel)}
-            inputWidth={ITEMS_INPUT_WIDTH}
-            type="number"
-          />
-        </FieldProvider>
-        <FieldProvider name="contentParameters.widgetOptions.latest">
-          <TogglerControl
-            fieldLabel=" "
-            items={getWidgetModeOptions(
-              [CHART_MODES.ALL_LAUNCHES, CHART_MODES.LATEST_LAUNCHES],
-              formatMessage,
-            )}
-          />
-        </FieldProvider>
+        {!formAppearance.isMainControlsLocked && (
+          <Fragment>
+            <FieldProvider
+              name="contentParameters.itemsCount"
+              validate={validators.items(formatMessage)}
+              parse={this.parseItems}
+            >
+              <InputControl
+                fieldLabel={formatMessage(messages.ItemsFieldLabel)}
+                inputWidth={ITEMS_INPUT_WIDTH}
+                type="number"
+              />
+            </FieldProvider>
+            <FieldProvider name="contentParameters.widgetOptions.latest">
+              <TogglerControl
+                fieldLabel=" "
+                items={getWidgetModeOptions(
+                  [CHART_MODES.ALL_LAUNCHES, CHART_MODES.LATEST_LAUNCHES],
+                  formatMessage,
+                )}
+              />
+            </FieldProvider>
+          </Fragment>
+        )}
       </Fragment>
     );
   }

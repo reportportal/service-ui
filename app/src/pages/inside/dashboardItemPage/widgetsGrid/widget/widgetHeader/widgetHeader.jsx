@@ -145,18 +145,20 @@ export class WidgetHeader extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
     userId: PropTypes.string.isRequired,
-    onRefresh: PropTypes.func,
     data: PropTypes.object,
+    onRefresh: PropTypes.func,
     onDelete: PropTypes.func,
+    onEdit: PropTypes.func,
   };
   static defaultProps = {
     onRefresh: () => {},
     onDelete: () => {},
+    onEdit: () => {},
     data: {},
   };
 
   render() {
-    const { intl, onRefresh, data, userId, onDelete } = this.props;
+    const { intl, data, userId, onRefresh, onDelete, onEdit } = this.props;
     return (
       <div className={cx('widget-header')}>
         <div className={cx('info-block')}>
@@ -198,7 +200,9 @@ export class WidgetHeader extends Component {
           </div>
         </div>
         <div className={cx('controls-block')}>
-          <div className={cx('control')}>{data.owner === userId && Parser(PencilIcon)}</div>
+          <div className={cx('control')} onClick={onEdit}>
+            {data.owner === userId && Parser(PencilIcon)}
+          </div>
           <div className={cx('control')} onClick={onRefresh}>
             {Parser(RefreshIcon)}
           </div>

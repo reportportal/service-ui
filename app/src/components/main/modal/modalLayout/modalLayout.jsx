@@ -44,6 +44,7 @@ export class ModalLayout extends Component {
       closeConfirmedCallback: PropTypes.func,
       withCheckbox: PropTypes.bool,
       confirmationMessage: PropTypes.string,
+      confirmationWarningClassName: PropTypes.string,
       confirmationWarning: PropTypes.string,
     }),
     closeIconEventInfo: PropTypes.object,
@@ -157,6 +158,8 @@ export class ModalLayout extends Component {
       customButton,
       confirmationMessage: closeConfirmation && closeConfirmation.confirmationMessage,
       confirmationWarning: closeConfirmation && closeConfirmation.confirmationWarning,
+      confirmationWarningClassName:
+        closeConfirmation && closeConfirmation.confirmationWarningClassName,
       showConfirmation: this.state.showConfirmation,
       closeConfirmed: this.state.closeConfirmed,
       onCloseConfirm: this.onCloseConfirm,
