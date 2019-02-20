@@ -18,7 +18,7 @@ const messages = defineMessages({
   },
   deleteFilterText: {
     id: 'DeleteFilterDialog.deleteFilter',
-    defaultMessage: "Are you sure to delete filter '<b>{name}</b>'? It will no longer exist.",
+    defaultMessage: "Are you sure to delete filter <b>'{name}'</b>? It will no longer exist.",
   },
 });
 
