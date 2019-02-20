@@ -558,6 +558,8 @@
   "LaunchLevelEntities.NameTitle": "Имя запуска",
   "LaunchLevelEntities.NumberTitle": "Номер запуска",
   "LaunchLevelEntities.OwnerTitle": "Владелец",
+  "LaunchLevelEntities.AttributeKeysTitle": "Ключ параметра",
+  "LaunchLevelEntities.AttributeValuesTitle": "Значение параметра",
   "LaunchLevelEntities.PRODUCT_BUG_title": "Дефект продукта",
   "LaunchLevelEntities.PRODUCT_BUG_totalTitle": "Всего дефектов продукта",
   "LaunchLevelEntities.PassedTitle": "Успешно",
