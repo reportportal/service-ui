@@ -92,7 +92,7 @@ export const URLS = {
       username,
       password,
     })}`,
-  apiToken: () => `uat/sso/me/apitoken`,
+  apiToken: () => `${uatBase}sso/me/apitoken`,
   sessionToken: () => `${urlBase}uat/sso/me`,
 
   project: (activeProject) => `${urlBase}project/${activeProject}`,

@@ -24,6 +24,7 @@ export class InputConditionalTags extends Component {
         label: PropTypes.oneOfType([PropTypes.string, PropTypes.object]).isRequired,
       }),
     ),
+    inputProps: PropTypes.object,
     placeholder: PropTypes.string,
     url: PropTypes.string.isRequired,
     onChange: PropTypes.func,
@@ -34,6 +35,7 @@ export class InputConditionalTags extends Component {
   static defaultProps = {
     value: {},
     conditions: [],
+    inputProps: {},
     placeholder: '',
     onChange: () => {},
     onFocus: () => {},
@@ -82,7 +84,7 @@ export class InputConditionalTags extends Component {
   parseTags = (options) => options.map((option) => option.value).join(',');
 
   render() {
-    const { intl, value, conditions, url, placeholder } = this.props;
+    const { intl, value, conditions, url, placeholder, inputProps } = this.props;
     const formattedValue = value.value ? this.formatTags(value.value.split(',')) : [];
     return (
       <div className={cx('input-conditional-tags', { opened: this.state.opened })}>
@@ -99,6 +101,7 @@ export class InputConditionalTags extends Component {
           removeSelected
           value={formattedValue.length && formattedValue[0].value ? formattedValue : []}
           onChange={this.onChangeTags}
+          inputProps={inputProps}
         />
         <div className={cx('conditions-block')} ref={this.setConditionsBlockRef}>
           <div className={cx('conditions-selector')} onClick={this.onClickConditionBlock}>

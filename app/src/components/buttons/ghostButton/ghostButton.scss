@@ -46,18 +46,21 @@
       }
     }
 
-    .active,
+    &:active,
     &:hover {
-      background-color: lighten($COLOR--topaz, 10%);
-      border-color: lighten($COLOR--topaz, 10%);
-      color: $COLOR--white-two;
-
       path,
       polygon,
       rect {
         fill: $COLOR--white-two;
       }
     }
+
+    &:hover {
+      background-color: lighten($COLOR--topaz, 10%);
+      border-color: lighten($COLOR--topaz, 10%);
+      color: $COLOR--white-two;
+    }
+
     &:active {
       background-color: $COLOR--topaz;
       border-color: $COLOR--topaz;

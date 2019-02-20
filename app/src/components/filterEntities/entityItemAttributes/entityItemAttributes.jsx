@@ -77,6 +77,7 @@ export class EntityItemAttributes extends Component {
           conditions={conditions}
           placeholder={placeholder}
           url={urlResolver(activeProject)}
+          inputProps={{ maxLength: 128 }}
         />
       </FieldFilterEntity>
     );

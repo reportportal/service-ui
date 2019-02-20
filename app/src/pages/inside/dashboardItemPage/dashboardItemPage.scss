@@ -11,6 +11,10 @@
   margin: 0;
   padding: 20px 10px;
   border-bottom: 1px solid $COLOR--gray-91;
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    display: none;
+  }
 }
 
 .icon-close {

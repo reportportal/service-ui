@@ -82,7 +82,6 @@
 
       .Select-control,
       .Select-menu-outer {
-        position: relative;
         margin-top: -1px;
         background: white; /* stylelint-disable-line color-named */
       }
@@ -121,6 +120,8 @@
         font-family: $FONT-REGULAR;
       }
       .Select-control {
+        position: relative;
+        overflow: hidden;
         box-sizing: border-box;
         border: 1px solid $COLOR--gray-80;
       }
@@ -144,11 +145,12 @@
         position: absolute;
         display: inline-block;
         height: 100%;
-        line-height: 28px;
-        margin-left: 10px;
-        font-family: $FONT-REGULAR;
-        font-size: 13px;
+        margin-left: 5px;
         color: $COLOR--gray-47;
+        line-height: 28px;
+        font-size: 13px;
+        font-family: $FONT-REGULAR;
+        white-space: nowrap;
       }
 
       .Select-value-icon {
@@ -160,7 +162,6 @@
         background: lighten($COLOR--gray-91, 5%);
         position: absolute;
         z-index: 1;
-        bottom: -28px;
         left: -1px;
         right: -1px;
         box-sizing: border-box;

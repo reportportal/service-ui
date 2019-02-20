@@ -51,15 +51,13 @@ export class GithubAuthForm extends Component {
   };
 
   prepareDataBeforeSubmit = (data) => {
-    const updatedOrganization = data.restrictions.organizations.length
-      ? `,${data.restrictions.organization}`
-      : data.restrictions.organization;
-    return {
-      ...data,
-      restrictions: {
-        organizations: data.restrictions.organizations.concat(updatedOrganization),
-      },
-    };
+    const updatedOrganization =
+      data.restrictions.organizations.length && data.restrictions.organization
+        ? `,${data.restrictions.organization}`
+        : data.restrictions.organization;
+    const organizations = data.restrictions.organizations.concat(updatedOrganization);
+
+    return updatedOrganization ? { ...data, restrictions: { organizations } } : data;
   };
 
   prepareDataBeforeInitialize = (data) => ({

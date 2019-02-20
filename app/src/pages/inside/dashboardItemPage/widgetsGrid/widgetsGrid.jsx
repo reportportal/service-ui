@@ -52,6 +52,7 @@ export class WidgetsGrid extends Component {
     showNotification: PropTypes.func.isRequired,
     fetchDashboardAction: PropTypes.func.isRequired,
     updateDashboardWidgetsAction: PropTypes.func.isRequired,
+    showWidgetWizard: PropTypes.func.isRequired,
     loading: PropTypes.bool, // TODO: add from state when action logic will migrate to sagas
     dashboard: PropTypes.shape({
       widgets: PropTypes.array,
@@ -216,7 +217,12 @@ export class WidgetsGrid extends Component {
         )}
 
         {!this.props.loading &&
-          !widgets.length && <EmptyWidgetGrid isFullscreen={this.props.isFullscreen} />}
+          !widgets.length && (
+            <EmptyWidgetGrid
+              action={this.props.showWidgetWizard}
+              isFullscreen={this.props.isFullscreen}
+            />
+          )}
       </div>
     );
   }

@@ -54,6 +54,7 @@ export class InputTagsSearch extends Component {
     mobileDisabled: PropTypes.bool,
     customClass: PropTypes.string,
     isOptionUnique: PropTypes.func,
+    inputProps: PropTypes.object,
   };
   static defaultProps = {
     uri: '',
@@ -82,6 +83,7 @@ export class InputTagsSearch extends Component {
     mobileDisabled: false,
     customClass: null,
     isOptionUnique: null,
+    inputProps: {},
   };
   state = {
     searchPromptText: this.props.nothingFound,
@@ -157,8 +159,10 @@ export class InputTagsSearch extends Component {
       mobileDisabled,
       customClass,
       isOptionUnique,
+      inputProps,
     } = this.props;
     const SelectComponent = selectType(async, creatable);
+
     return (
       <div
         className={cx(
@@ -191,6 +195,7 @@ export class InputTagsSearch extends Component {
           isClearable={isClearable}
           disabled={disabled}
           isOptionUnique={isOptionUnique || undefined}
+          inputProps={inputProps}
         />
       </div>
     );
