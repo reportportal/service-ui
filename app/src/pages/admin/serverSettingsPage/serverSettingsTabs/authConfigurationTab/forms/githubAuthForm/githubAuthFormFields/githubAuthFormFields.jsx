@@ -44,7 +44,7 @@ const messages = defineMessages({
 
 @connect(
   (state) => ({
-    organizations: (formValueSelector(GITHUB_AUTH_FORM)(state, ORGANIZATIONS_KEY) || '').split(','),
+    organizations: formValueSelector(GITHUB_AUTH_FORM)(state, ORGANIZATIONS_KEY),
   }),
   { showModalAction },
 )
@@ -52,12 +52,12 @@ const messages = defineMessages({
 export class GithubAuthFormFields extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
-    organizations: PropTypes.array,
+    organizations: PropTypes.string,
     showModalAction: PropTypes.func,
   };
 
   static defaultProps = {
-    organizations: [],
+    organizations: '',
     showModalAction: () => {},
   };
 
@@ -65,9 +65,15 @@ export class GithubAuthFormFields extends Component {
     isAddOrganizationClicked: false,
   };
 
-  addOrganization = () => {
+  componentDidUpdate(prevProps) {
+    if (this.props.organizations !== prevProps.organizations) {
+      this.showOrganizationInput(false);
+    }
+  }
+
+  showOrganizationInput = (isAddOrganizationClicked) => {
     this.setState({
-      isAddOrganizationClicked: true,
+      isAddOrganizationClicked,
     });
   };
 
@@ -81,7 +87,7 @@ export class GithubAuthFormFields extends Component {
       organizations,
     } = this.props;
 
-    const filteredOrganizations = organizations.filter(Boolean);
+    const filteredOrganizations = (organizations || '').split(',').filter(Boolean);
 
     return (
       <div className={cx('github-auth-form-fields')}>
@@ -140,7 +146,7 @@ export class GithubAuthFormFields extends Component {
           </FormField>
         ) : (
           <div className={cx('button-wrapper')}>
-            <GhostButton onClick={this.addOrganization} icon={PlusIcon}>
+            <GhostButton onClick={() => this.showOrganizationInput(true)} icon={PlusIcon}>
               {formatMessage(messages.addOrganizationButtonTitle)}
             </GhostButton>
           </div>

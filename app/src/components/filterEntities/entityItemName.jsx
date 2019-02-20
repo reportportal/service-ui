@@ -67,7 +67,7 @@ export class EntityItemName extends Component {
           <InputConditional
             conditions={conditions}
             value={value}
-            maxLength={256}
+            maxLength={128}
             placeholder={intl.formatMessage(messages.placeholder)}
             {...rest}
           />

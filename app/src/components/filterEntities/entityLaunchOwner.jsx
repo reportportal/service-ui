@@ -73,6 +73,7 @@ export class EntityLaunchOwner extends Component {
           multi
           removeSelected
           onChange={this.onChange}
+          inputProps={{ maxLength: 128 }}
         />
       </FieldFilterEntity>
     );

@@ -61,7 +61,7 @@ export class AddDashboardButton extends Component {
 
     return (
       <div className={cx('add-dashboard-btn')}>
-        <GhostButton onClick={this.onAddDashboardItem} icon={AddDashboardIcon}>
+        <GhostButton onClick={this.onAddDashboardItem} icon={AddDashboardIcon} grayBorder>
           {intl.formatMessage(messages.addModalTitle)}
         </GhostButton>
       </div>

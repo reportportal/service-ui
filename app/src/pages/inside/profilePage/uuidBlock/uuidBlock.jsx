@@ -62,6 +62,7 @@ export class UuidBlock extends Component {
   static defaultProps = {
     token: '',
   };
+
   onGenerate = () => {
     this.props.tracking.trackEvent(PROFILE_PAGE_EVENTS.REGENERATE_BTN);
     this.props.showModalAction({

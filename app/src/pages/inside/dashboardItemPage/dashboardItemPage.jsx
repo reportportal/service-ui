@@ -246,6 +246,7 @@ export class DashboardItemPage extends Component {
                 isModifiable={this.checkIfWidgetsModifiable()}
                 dashboard={dashboard}
                 isFullscreen={this.state.isFullscreen}
+                showWidgetWizard={this.showWidgetWizard}
               />
               {this.state.isFullscreen && (
                 <i className={cx('icon-close')} onClick={this.toggleFullscreen}>
