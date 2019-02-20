@@ -1,8 +1,8 @@
 import { takeEvery, all, put, select } from 'redux-saga/effects';
 import { URLS } from 'common/urls';
 import { fetchDataAction } from 'controllers/fetch';
-import { NAMESPACE, FETCH_ALL_USERS } from './constants';
 import { querySelector } from './selectors';
+import { NAMESPACE, FETCH_ALL_USERS } from './constants';
 
 function* fetchAllUsers() {
   const query = yield select(querySelector);
@@ -12,7 +12,6 @@ function* fetchAllUsers() {
     }),
   );
 }
-
 function* watchFetchAllUsers() {
   yield takeEvery(FETCH_ALL_USERS, fetchAllUsers);
 }
