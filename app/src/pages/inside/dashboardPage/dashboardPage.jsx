@@ -42,7 +42,7 @@ const messages = defineMessages({
   },
   deleteModalConfirmationText: {
     id: 'DashboardPage.modal.deleteModalConfirmationText',
-    defaultMessage: 'Are you sure to delete dashboard {name}? It will no longer exist.',
+    defaultMessage: "Are you sure to delete dashboard '<b>{name}</b>'? It will no longer exist.",
   },
   deleteModalSubmitButtonText: {
     id: 'DashboardPage.modal.deleteModalSubmitButtonText',

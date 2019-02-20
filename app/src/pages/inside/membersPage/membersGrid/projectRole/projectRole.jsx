@@ -31,7 +31,7 @@ const messages = defineMessages({
   },
   updateMember: {
     id: 'ProjectRole.updateMember',
-    defaultMessage: 'Member {name} has been updated',
+    defaultMessage: "Member '<b>{name}</b>' has been updated",
   },
 });
 
