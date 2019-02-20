@@ -9,6 +9,9 @@
       cursor: pointer;
       opacity: 1;
     }
+    .admin-label {
+      cursor: pointer;
+    }
   }
   @media (max-width: $SCREEN_SM_MAX) {
     width: 100%;

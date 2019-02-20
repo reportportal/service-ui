@@ -1240,7 +1240,7 @@
   "EventObjectTypes.import": "Импорт",
   "EventObjectTypes.project": "Проект",
   "EventObjectTypes.user": "Пользователь",
-  "EventObjectTypes.emailConfig": "Настройки электронной почты", 
+  "EventObjectTypes.emailConfig": "Настройки электронной почты",
   "EventObjectTypes.defectType": "Тип дефекта",
   "AllUsersPage.export": "Экспортировать",
   "AllUsersPage.inviteUser" : "Пригласить пользователя",
@@ -1254,5 +1254,10 @@
   "NameColumn.youLabel": "вы",
   "NameColumn.adminLabel": "администратор",
   "NameColumn.makeAdminLabel": "сделать администратором",
-  "ProjectsAndRolesColumn.more": "еще"
+  "ProjectsAndRolesColumn.more": "еще",
+  "NameColumn.changeAccountRoleNotification": "Роль пользователя для '{name}' изменена",
+  "ChangeProjectRoleModal.changeAccountRoleText": "Вы уверены, что хотите изменить проектную роль для '{name}'?",
+  "ChangeProjectRoleModal.changeAccountRoleTitle": "изменить роль",
+  "ChangeProjectRoleModal.submitText": "Изменить",
+  "ChangeProjectRoleModal.cancelText": "Отмена"
 }

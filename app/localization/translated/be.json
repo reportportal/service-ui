@@ -1240,5 +1240,10 @@
   "NameColumn.youLabel": "вы",
   "NameColumn.adminLabel": "адмiнiстратар",
   "NameColumn.makeAdminLabel": "прызначыць адміністратарам",
-  "ProjectsAndRolesColumn.more": "яшчэ" 
+  "ProjectsAndRolesColumn.more": "яшчэ",
+  "NameColumn.changeAccountRoleNotification": "Роля карыстальніка для '{name}' зменена",
+  "ChangeProjectRoleModal.changeAccountRoleText": "Вы ўпэўнены, што хочаце змяніць праектную ролю для '{name}'?",
+  "ChangeProjectRoleModal.changeAccountRoleTitle": "змянiць ролю",
+  "ChangeProjectRoleModal.submitText": "Змяніць",
+  "ChangeProjectRoleModal.cancelText": "Адмяніць"
 }
