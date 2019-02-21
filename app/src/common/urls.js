@@ -122,7 +122,8 @@ export const URLS = {
       interval,
     })}`,
 
-  projectIntegration: (activeProject) => `${urlBase}project/${activeProject}/integration`,
+  projectNotificationConfiguration: (activeProject) =>
+    `${urlBase}project/${activeProject}/notification`,
   suite: (activeProject, suiteId) => `${urlBase}${activeProject}/item/${suiteId}`,
 
   testItems: (activeProject, ids) => `${urlBase}${activeProject}/item${getQueryParams({ ids })}`,

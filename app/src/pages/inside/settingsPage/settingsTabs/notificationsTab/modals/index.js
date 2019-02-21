@@ -1,1 +1,1 @@
-export { DeleteNotificationRuleModal } from './deleteNotificationRuleModal';
+export { DeleteNotificationCaseModal } from './deleteNotificationCaseModal';

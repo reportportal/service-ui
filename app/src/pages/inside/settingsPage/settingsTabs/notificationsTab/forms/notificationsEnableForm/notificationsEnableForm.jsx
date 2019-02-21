@@ -32,9 +32,6 @@ const cx = classNames.bind(styles);
 @injectIntl
 @reduxForm({
   form: 'notificationsEnableForm',
-  onChange: (values, dispatch, props) => {
-    props.submit();
-  },
   destroyOnUnmount: false,
 })
 export class NotificationsEnableForm extends Component {

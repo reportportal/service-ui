@@ -1,2 +1,2 @@
 export { NotificationsTab } from './notificationsTab';
-export { DeleteNotificationRuleModal } from './modals';
+export { DeleteNotificationCaseModal } from './modals';

@@ -1,2 +1,2 @@
 export { NotificationsEnableForm } from './notificationsEnableForm';
-export { NotificationRuleForm } from './notificationRuleForm';
+export { NotificationCaseForm } from './notificationCaseForm';

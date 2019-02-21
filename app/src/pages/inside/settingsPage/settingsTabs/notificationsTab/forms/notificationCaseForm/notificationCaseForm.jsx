@@ -1,22 +1,15 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { FieldArray, reduxForm } from 'redux-form';
-import { notificationRulesSelector } from 'controllers/project';
-import { connect } from 'react-redux';
-import { NotificationRuleList } from './notificationRuleList';
+import { NotificationCaseList } from './notificationCaseList';
 import { validate } from './validation';
 
-@connect((state) => ({
-  initialValues: {
-    rules: notificationRulesSelector(state),
-  },
-}))
 @reduxForm({
   destroyOnUnmount: false,
-  form: 'notificationRuleForm',
+  form: 'notificationCaseForm',
   validate,
 })
-export class NotificationRuleForm extends Component {
+export class NotificationCaseForm extends Component {
   static propTypes = {
     readOnly: PropTypes.bool,
   };
@@ -29,8 +22,8 @@ export class NotificationRuleForm extends Component {
 
     return (
       <FieldArray
-        name="rules"
-        component={NotificationRuleList}
+        name="cases"
+        component={NotificationCaseList}
         rerenderOnEveryChange
         readOnly={readOnly}
       />

@@ -8,11 +8,13 @@ export class EditableAttributeList extends Component {
   static propTypes = {
     attributes: PropTypes.arrayOf(PropTypes.object),
     onChange: PropTypes.func,
+    disabled: PropTypes.bool,
   };
 
   static defaultProps = {
     attributes: [],
     onChange: () => {},
+    disabled: false,
   };
 
   state = {
@@ -44,6 +46,7 @@ export class EditableAttributeList extends Component {
         onChange={this.handleChange}
         onEdit={this.changeActiveAttribute}
         onAddNew={this.handleAddNew}
+        disabled={this.props.disabled}
       />
     );
   }

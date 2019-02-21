@@ -7,5 +7,6 @@
 
   &.disabled {
     color: $COLOR--gray-80;
+    cursor: default;
   }
 }

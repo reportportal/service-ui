@@ -7,28 +7,7 @@ import {
   FETCH_PROJECT_PREFERENCES_SUCCESS,
   UPDATE_CONFIGURATION_ATTRIBUTES,
   UPDATE_NOTIFICATIONS_CONFIG_SUCCESS,
-  EMAIL_NOTIFICATION_INTEGRATION_TYPE,
 } from './constants';
-
-const getUpdatedIntegrations = (integrations = [], { enabled, rules }) => {
-  const emailIndex = integrations.findIndex(
-    (integration) => integration.integrationType.groupType === EMAIL_NOTIFICATION_INTEGRATION_TYPE,
-  );
-  if (emailIndex === -1) {
-    return integrations;
-  }
-  const updatedNotificationsIntegration = {
-    ...integrations[emailIndex],
-    enabled,
-    integrationParameters: {
-      rules,
-    },
-  };
-
-  const updatedIntegrations = [...integrations];
-  updatedIntegrations.splice(emailIndex, 1, updatedNotificationsIntegration);
-  return updatedIntegrations;
-};
 
 export const projectInfoReducer = (state = PROJECT_INFO_INITIAL_STATE, { type, payload }) => {
   switch (type) {
@@ -45,12 +24,14 @@ export const projectInfoReducer = (state = PROJECT_INFO_INITIAL_STATE, { type, p
           },
         },
       };
-    case UPDATE_NOTIFICATIONS_CONFIG_SUCCESS: {
+    case UPDATE_NOTIFICATIONS_CONFIG_SUCCESS:
       return {
         ...state,
-        integrations: getUpdatedIntegrations(state.integrations, payload),
+        configuration: {
+          ...state.configuration,
+          notificationsConfiguration: payload,
+        },
       };
-    }
     default:
       return state;
   }

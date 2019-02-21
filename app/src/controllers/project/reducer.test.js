@@ -7,7 +7,6 @@ import {
   UPDATE_CONFIGURATION_ATTRIBUTES,
   FETCH_PROJECT_PREFERENCES_SUCCESS,
   UPDATE_NOTIFICATIONS_CONFIG_SUCCESS,
-  EMAIL_NOTIFICATION_INTEGRATION_TYPE,
 } from './constants';
 
 describe('project reducer', () => {
@@ -55,33 +54,18 @@ describe('project reducer', () => {
       });
     });
 
-    test('should handle UPDATE_NOTIFICATIONS_CONFIG_SUCCESS', () => {
-      const payload = { enabled: true, rules: [] };
-      const oldState = {
-        integrations: [
-          {
-            integrationType: {
-              groupType: EMAIL_NOTIFICATION_INTEGRATION_TYPE,
-            },
-          },
-        ],
-      };
-      const newState = projectInfoReducer(oldState, {
+    test('should handle UPDATE_EMAIL_CONFIG_SUCCESS', () => {
+      const payload = { foo: 'bar' };
+      const newState = projectInfoReducer(PROJECT_INFO_INITIAL_STATE, {
         type: UPDATE_NOTIFICATIONS_CONFIG_SUCCESS,
         payload,
       });
       expect(newState).toEqual({
-        integrations: [
-          {
-            integrationType: {
-              groupType: EMAIL_NOTIFICATION_INTEGRATION_TYPE,
-            },
-            enabled: payload.enabled,
-            integrationParameters: {
-              rules: payload.rules,
-            },
-          },
-        ],
+        ...PROJECT_INFO_INITIAL_STATE,
+        configuration: {
+          ...PROJECT_INFO_INITIAL_STATE.configuration,
+          notificationsConfiguration: payload,
+        },
       });
     });
   });

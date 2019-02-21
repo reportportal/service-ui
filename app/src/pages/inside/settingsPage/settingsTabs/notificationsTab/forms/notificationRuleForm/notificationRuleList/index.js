@@ -1,1 +1,0 @@
-export { NotificationRuleList } from './notificationRuleList';
