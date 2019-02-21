@@ -7,12 +7,12 @@ export const launchStatuses = {
   FAILED: 'failed',
   TO_INVESTIGATE: 'toInvestigate',
 };
-export const defaultRecipient = {
-  launchNameRule: [],
+export const defaultCase = {
+  launchNames: [],
   recipients: [],
   informOwner: true,
-  launchStatsRule: launchStatuses.ALWAYS,
-  launchTagRule: [],
+  sendCase: launchStatuses.ALWAYS,
+  attributes: [],
   submitted: false,
   confirmed: false,
 };

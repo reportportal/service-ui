@@ -4,32 +4,32 @@ import className from 'classnames/bind';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import Parser from 'html-react-parser';
 import { ModalLayout, withModal } from 'components/main/modal';
-import styles from './deleteNotificationRuleModal.scss';
+import styles from './deleteNotificationCaseModal.scss';
 
 const cx = className.bind(styles);
 
 const messages = defineMessages({
   title: {
-    id: 'DeleteNotificationRuleModal.title',
+    id: 'DeleteNotificationCaseModal.title',
     defaultMessage: 'Delete Notification Rule',
   },
   message: {
-    id: 'DeleteNotificationRuleModal.message',
+    id: 'DeleteNotificationCaseModal.message',
     defaultMessage: 'Are you sure you want to delete notification  rule <b>{number}</b>?',
   },
   submitButton: {
-    id: 'DeleteNotificationRuleModal.submitButton',
+    id: 'DeleteNotificationCaseModal.submitButton',
     defaultMessage: 'Delete',
   },
   cancelButton: {
-    id: 'DeleteNotificationRuleModal.cancelButton',
+    id: 'DeleteNotificationCaseModal.cancelButton',
     defaultMessage: 'Cancel',
   },
 });
 
-@withModal('deleteNotificationRuleModal')
+@withModal('deleteNotificationCaseModal')
 @injectIntl
-export class DeleteNotificationRuleModal extends Component {
+export class DeleteNotificationCaseModal extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
     data: PropTypes.object,

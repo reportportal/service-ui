@@ -11,7 +11,7 @@ export {
   hideFilterOnLaunchesAction,
   fetchConfigurationAttributesAction,
   updateConfigurationAttributesAction,
-  updateProjectNotificationsIntegrationAction,
+  updateProjectNotificationsConfig,
 } from './actionCreators';
 export { projectReducer } from './reducer';
 export {
@@ -22,8 +22,10 @@ export {
   defectColorsSelector,
   defectTypesSelector,
   notificationIntegrationEnabledSelector,
-  notificationRulesSelector,
   notificationIntegrationNameSelector,
+  projectNotificationsConfigurationSelector,
+  projectNotificationsCasesSelector,
+  projectNotificationsEnabledSelector,
   externalSystemSelector,
   analyzerAttributesSelector,
   jobAttributesSelector,

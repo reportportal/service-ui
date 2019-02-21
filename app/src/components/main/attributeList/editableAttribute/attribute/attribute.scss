@@ -9,6 +9,10 @@
   background-color: $COLOR--white;
   border-radius: 2px;
   cursor: pointer;
+
+  &.disabled {
+    cursor: default;
+  }
 }
 
 .label {

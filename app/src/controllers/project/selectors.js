@@ -46,9 +46,6 @@ export const analyzerAttributesSelector = createPrefixedAttributesSelector(
 
 export const jobAttributesSelector = createPrefixedAttributesSelector(JOB_ATTRIBUTE_PREFIX);
 
-export const projectAnalyzerConfigSelector = (state) =>
-  projectConfigSelector(state).analyzerConfiguration || {};
-
 export const externalSystemSelector = (state) => projectConfigSelector(state).externalSystem || [];
 
 const createTypedIntegrationsSelector = (integrationType) =>
@@ -65,20 +62,23 @@ export const notificationIntegrationEnabledSelector = (state) =>
 export const notificationIntegrationNameSelector = (state) =>
   notificationIntegrationSelector(state).integrationType.name;
 
-const notificationIntegrationParametersSelector = (state) =>
-  notificationIntegrationSelector(state).integrationParameters || {};
+export const projectNotificationsConfigurationSelector = (state) =>
+  projectConfigSelector(state).notificationsConfiguration || {};
 
-export const notificationRulesSelector = createSelector(
-  notificationIntegrationParametersSelector,
-  ({ rules = [] }) =>
-    rules.map((rule) => ({
-      ...rule,
-      informOwner: rule.recipients.includes(OWNER),
+export const projectNotificationsCasesSelector = createSelector(
+  projectNotificationsConfigurationSelector,
+  ({ cases = [] }) =>
+    cases.map((notificationCase) => ({
+      ...notificationCase,
+      informOwner: notificationCase.recipients.includes(OWNER),
       submitted: true,
       confirmed: true,
-      recipients: rule.recipients.filter((item) => item !== OWNER),
+      recipients: notificationCase.recipients.filter((item) => item !== OWNER),
     })),
 );
+
+export const projectNotificationsEnabledSelector = (state) =>
+  projectNotificationsConfigurationSelector(state).enabled || false;
 
 export const defectColorsSelector = createSelector(projectConfigSelector, (config) => {
   const colors = {};

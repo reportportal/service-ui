@@ -12,7 +12,7 @@ import {
   UPDATE_CONFIGURATION_ATTRIBUTES,
   UPDATE_NOTIFICATIONS_CONFIG_SUCCESS,
 } from './constants';
-import { notificationIntegrationNameSelector } from './selectors';
+import { projectNotificationsConfigurationSelector } from './selectors';
 
 const fetchProjectSuccessAction = (project) => ({
   type: FETCH_PROJECT_SUCCESS,
@@ -40,25 +40,16 @@ export const updateProjectFilterPreferencesAction = (filterId, method) => (dispa
       method,
     },
   );
-export const updateProjectNotificationsIntegrationAction = ({ enabled, rules }) => (
-  dispatch,
-  getState,
-) => {
-  const integrationName = notificationIntegrationNameSelector(getState());
-  const newConfig = {
-    integrationName,
-    enabled,
-    integrationParameters: {
-      rules,
-    },
-  };
-  fetch(URLS.projectIntegration(activeProjectSelector(getState())), {
+export const updateProjectNotificationsConfig = (notificationsConfig) => (dispatch, getState) => {
+  const currentConfig = projectNotificationsConfigurationSelector(getState());
+  const newConfig = { ...currentConfig, ...notificationsConfig };
+  fetch(URLS.projectNotificationConfiguration(activeProjectSelector(getState())), {
     method: 'PUT',
     data: newConfig,
   }).then(() => {
     dispatch({
       type: UPDATE_NOTIFICATIONS_CONFIG_SUCCESS,
-      payload: { enabled, rules },
+      payload: newConfig,
     });
   });
 };

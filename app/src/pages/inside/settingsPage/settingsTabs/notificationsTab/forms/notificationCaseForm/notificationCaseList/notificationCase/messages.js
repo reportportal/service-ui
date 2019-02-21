@@ -2,83 +2,79 @@ import { defineMessages } from 'react-intl';
 
 export const messages = defineMessages({
   recipientsLabel: {
-    id: 'NotificationRule.recipientsLabel',
+    id: 'NotificationCase.recipientsLabel',
     defaultMessage: 'Recipients',
   },
   recipientsPlaceholder: {
-    id: 'NotificationRule.recipientsPlaceholder',
+    id: 'NotificationCase.recipientsPlaceholder',
     defaultMessage: 'Select team members',
   },
   recipientsHint: {
-    id: 'NotificationRule.recipientsHint',
+    id: 'NotificationCase.recipientsHint',
     defaultMessage: 'Please enter correct email',
   },
   launchOwnerLabel: {
-    id: 'NotificationRule.launchOwnerLabel',
+    id: 'NotificationCase.launchOwnerLabel',
     defaultMessage: 'Launch owner (who launched - that received)',
   },
   inCaseLabel: {
-    id: 'NotificationRule.inCaseLabel',
+    id: 'NotificationCase.inCaseLabel',
     defaultMessage: 'In case',
   },
   launchNamesLabel: {
-    id: 'NotificationRule.launchNamesLabel',
+    id: 'NotificationCase.launchNamesLabel',
     defaultMessage: 'Launch names (and)',
   },
   launchNamesPlaceholder: {
-    id: 'NotificationRule.launchNamesPlaceholder',
+    id: 'NotificationCase.launchNamesPlaceholder',
     defaultMessage: 'Select launches names',
   },
   launchNamesHint: {
-    id: 'NotificationRule.launchNamesHint',
+    id: 'NotificationCase.launchNamesHint',
     defaultMessage: 'At least 3 symbols required for autocomplete.',
   },
   launchNamesNote: {
-    id: 'NotificationRule.launchNamesNote',
+    id: 'NotificationCase.launchNamesNote',
     defaultMessage: 'Send notifications about selected launches finished',
   },
   attributesLabel: {
-    id: 'NotificationRule.attributesLabel',
+    id: 'NotificationCase.attributesLabel',
     defaultMessage: 'Attributes (and)',
   },
-  tagsHint: {
-    id: 'NotificationRule.tagsHint',
-    defaultMessage: 'At least 1 symbol required for autocomplete.',
-  },
-  tagsNote: {
-    id: 'NotificationRule.tagsNote',
-    defaultMessage: 'Send notifications about launches containing specified tags',
+  attributesNote: {
+    id: 'NotificationCase.attributesNote',
+    defaultMessage: 'Send notifications about launches containing specified attributes',
   },
   dropdownValueAlways: {
-    id: 'NotificationRule.dropdownValueAlways',
+    id: 'NotificationCase.dropdownValueAlways',
     defaultMessage: 'Always',
   },
   dropdownValueMore10: {
-    id: 'NotificationRule.dropdownValueMore10',
+    id: 'NotificationCase.dropdownValueMore10',
     defaultMessage: '> 10% of items have issues',
   },
   dropdownValueMore20: {
-    id: 'NotificationRule.dropdownValueMore20',
+    id: 'NotificationCase.dropdownValueMore20',
     defaultMessage: '> 20% of items have issues',
   },
   dropdownValueMore50: {
-    id: 'NotificationRule.dropdownValueMore50',
+    id: 'NotificationCase.dropdownValueMore50',
     defaultMessage: '> 50% of items have issues',
   },
   dropdownValueFailed: {
-    id: 'NotificationRule.dropdownValueFailed',
+    id: 'NotificationCase.dropdownValueFailed',
     defaultMessage: 'Launch has issues',
   },
   dropdownValueToInvestigate: {
-    id: 'NotificationRule.dropdownValueToInvestigate',
+    id: 'NotificationCase.dropdownValueToInvestigate',
     defaultMessage: 'Launch has "To Investigate" items',
   },
   controlPanelName: {
-    id: 'NotificationRule.controlPanelName',
+    id: 'NotificationCase.controlPanelName',
     defaultMessage: 'Rule',
   },
   duplicationErrorMessage: {
-    id: 'NotificationRule.duplicationErrorMessage',
+    id: 'NotificationCase.duplicationErrorMessage',
     defaultMessage: "Such notification rule already exists. You can't create duplicate.",
   },
 });

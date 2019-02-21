@@ -23,7 +23,7 @@ import IconDelete from 'common/img/circle-cross-icon-inline.svg';
 import { AttributeListField } from 'components/main/attributeList';
 import { PencilCheckbox } from './pencilCheckbox';
 import { messages } from './messages';
-import styles from './notificationRule.scss';
+import styles from './notificationCase.scss';
 
 const cx = className.bind(styles);
 @injectIntl
@@ -32,10 +32,10 @@ const cx = className.bind(styles);
   launchNameSearch: URLS.launchNameSearch(activeProjectSelector(state)),
 }))
 @track()
-export class NotificationRule extends Component {
+export class NotificationCase extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
-    rule: PropTypes.string,
+    notificationCase: PropTypes.string,
     projectUsernamesSearch: PropTypes.string,
     launchNameSearch: PropTypes.string,
     onDelete: PropTypes.func,
@@ -52,7 +52,7 @@ export class NotificationRule extends Component {
     }).isRequired,
   };
   static defaultProps = {
-    rule: '',
+    notificationCase: '',
     projectUsernamesSearch: '',
     launchNameSearch: '',
     onDelete: () => {},
@@ -129,11 +129,11 @@ export class NotificationRule extends Component {
 
   render() {
     const {
+      intl: { formatMessage },
       projectUsernamesSearch,
       launchNameSearch,
-      intl,
       id,
-      rule,
+      notificationCase,
       confirmed,
       readOnly,
       numberOfConfirmedRules,
@@ -148,13 +148,13 @@ export class NotificationRule extends Component {
       <Fragment>
         <div className={cx('control-panel')}>
           <span className={cx('control-panel-name')}>
-            {intl.formatMessage(messages.controlPanelName)} {id + 1}
+            {formatMessage(messages.controlPanelName)} {id + 1}
           </span>
           {!readOnly && (
             <div className={cx('control-panel-buttons')}>
               <div className={cx('control-panel-button')}>
                 <FieldProvider
-                  name={`${rule}.confirmed`}
+                  name={`${notificationCase}.confirmed`}
                   format={Boolean}
                   onValidate={this.onValidate}
                 >
@@ -171,8 +171,8 @@ export class NotificationRule extends Component {
         </div>
         {isDuplicating && <p className={cx('form-invalid-message')}>{isDuplicating}</p>}
         <FormField
-          label={intl.formatMessage(messages.recipientsLabel)}
-          name={`${rule}.recipients`}
+          label={formatMessage(messages.recipientsLabel)}
+          name={`${notificationCase}.recipients`}
           format={this.formatOptions}
           parse={this.parseOptions}
           disabled={!editMode}
@@ -183,8 +183,8 @@ export class NotificationRule extends Component {
         >
           <FieldErrorHint hintType="top">
             <InputTagsSearch
-              placeholder={intl.formatMessage(messages.recipientsPlaceholder)}
-              nothingFound={intl.formatMessage(messages.recipientsHint)}
+              placeholder={formatMessage(messages.recipientsPlaceholder)}
+              nothingFound={formatMessage(messages.recipientsHint)}
               minLength={3}
               async
               uri={projectUsernamesSearch}
@@ -198,7 +198,7 @@ export class NotificationRule extends Component {
           </FieldErrorHint>
         </FormField>
         <FormField
-          name={`${rule}.informOwner`}
+          name={`${notificationCase}.informOwner`}
           format={Boolean}
           disabled={!editMode}
           onChange={() =>
@@ -206,12 +206,12 @@ export class NotificationRule extends Component {
           }
           fieldWrapperClassName={cx('form-input-checkbox')}
         >
-          <InputCheckbox>{intl.formatMessage(messages.launchOwnerLabel)}</InputCheckbox>
+          <InputCheckbox>{formatMessage(messages.launchOwnerLabel)}</InputCheckbox>
         </FormField>
         <FormField
-          label={intl.formatMessage(messages.inCaseLabel)}
+          label={formatMessage(messages.inCaseLabel)}
           labelWidth={labelWidth}
-          name={`${rule}.launchStatsRule`}
+          name={`${notificationCase}.sendCase`}
           disabled={!editMode}
           fieldWrapperClassName={cx('form-input')}
           onChange={() =>
@@ -221,11 +221,11 @@ export class NotificationRule extends Component {
           <InputDropdown options={this.getDropdownInputConfig()} />
         </FormField>
         <FormField
-          label={intl.formatMessage(messages.launchNamesLabel)}
+          label={formatMessage(messages.launchNamesLabel)}
           customBlock={{
-            node: <p>{intl.formatMessage(messages.launchNamesNote)}</p>,
+            node: <p>{formatMessage(messages.launchNamesNote)}</p>,
           }}
-          name={`${rule}.launchNameRule`}
+          name={`${notificationCase}.launchNames`}
           format={this.formatOptions}
           parse={this.parseOptions}
           disabled={!editMode}
@@ -234,8 +234,8 @@ export class NotificationRule extends Component {
         >
           <FieldErrorHint hintType="top">
             <InputTagsSearch
-              placeholder={intl.formatMessage(messages.launchNamesPlaceholder)}
-              focusPlaceholder={intl.formatMessage(messages.launchNamesHint)}
+              placeholder={formatMessage(messages.launchNamesPlaceholder)}
+              focusPlaceholder={formatMessage(messages.launchNamesHint)}
               async
               minLength={3}
               uri={launchNameSearch}
@@ -248,12 +248,12 @@ export class NotificationRule extends Component {
           </FieldErrorHint>
         </FormField>
         <FormField
-          label={intl.formatMessage(messages.attributesLabel)}
+          label={formatMessage(messages.attributesLabel)}
           customBlock={{
-            node: <p>{intl.formatMessage(messages.tagsNote)}</p>,
+            node: <p>{formatMessage(messages.attributesNote)}</p>,
           }}
           fieldWrapperClassName={cx('form-input')}
-          name={`${rule}.launchTagRule`}
+          name={`${notificationCase}.attributes`}
           disabled={!editMode}
           onChange={() => tracking.trackEvent(SETTINGS_PAGE_EVENTS.TAGS_INPUT_NOTIFICATIONS)}
         >

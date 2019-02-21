@@ -25,7 +25,14 @@ const isEditMode = (currentAttribute, editedAttribute) =>
   currentAttribute.key === editedAttribute.key &&
   currentAttribute.value === editedAttribute.value;
 
-export const AttributeList = ({ attributes, editedAttribute, onChange, onEdit, onAddNew }) => (
+export const AttributeList = ({
+  attributes,
+  editedAttribute,
+  onChange,
+  onEdit,
+  onAddNew,
+  disabled,
+}) => (
   <Fragment>
     {attributes
       .filter(notSystemAttributePredicate)
@@ -38,11 +45,12 @@ export const AttributeList = ({ attributes, editedAttribute, onChange, onEdit, o
           onChange={createEditHandler(attributes, i, onChange)}
           onRemove={createRemoveHandler(attributes, i, onChange)}
           onEdit={onEdit}
+          disabled={disabled}
         />
       ))}
     <div
-      className={cx('add-new-button', { disabled: !!editedAttribute })}
-      onClick={!editedAttribute ? onAddNew : undefined}
+      className={cx('add-new-button', { disabled: !!editedAttribute || disabled })}
+      onClick={!editedAttribute && !disabled ? onAddNew : undefined}
     >
       + <FormattedMessage id="AttributeList.addNew" defaultMessage="Add new" />
     </div>
@@ -51,6 +59,7 @@ export const AttributeList = ({ attributes, editedAttribute, onChange, onEdit, o
 AttributeList.propTypes = {
   attributes: PropTypes.arrayOf(PropTypes.object),
   editedAttribute: PropTypes.object,
+  disabled: PropTypes.bool,
   onChange: PropTypes.func,
   onEdit: PropTypes.func,
   onAddNew: PropTypes.func,
@@ -58,6 +67,7 @@ AttributeList.propTypes = {
 AttributeList.defaultProps = {
   attributes: [],
   editedAttribute: null,
+  disabled: false,
   onChange: () => {},
   onEdit: () => {},
   onAddNew: () => {},
