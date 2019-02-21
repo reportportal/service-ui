@@ -21,6 +21,7 @@ export const UPDATE_PROJECT = 'updateProject';
 export const UPDATE_ANALYZER = 'updateAnalyzer';
 export const GENERATE_INDEX = 'generateIndex';
 export const DELETE_INDEX = 'deleteIndex';
+export const CREATE_DEFECT = 'createDefect';
 export const UPDATE_DEFECT = 'updateDefect';
 export const DELETE_DEFECT = 'deleteDefect';
 export const START_IMPORT = 'startImport';

@@ -7,6 +7,7 @@ import {
   IMPORT,
   PROJECT,
   DEFECT_TYPE,
+  USER,
 } from 'common/constants/eventsObjectTypes';
 import {
   CREATE_DASHBOARD,
@@ -25,6 +26,16 @@ import {
   FINISH_IMPORT,
   CREATE_USER,
   UPDATE_PROJECT,
+  CREATE_DEFECT,
+  UPDATE_DEFECT,
+  DELETE_DEFECT,
+  POST_ISSUE,
+  LINK_ISSUE,
+  UPDATE_ANALYZER,
+  CREATE_BTS,
+  UPDATE_BTS,
+  DELETE_BTS,
+  GENERATE_INDEX,
 } from 'common/constants/actionTypes';
 
 export const actionMessages = defineMessages({
@@ -85,12 +96,52 @@ export const actionMessages = defineMessages({
     defaultMessage: 'finish import',
   },
   [CREATE_USER]: {
-    id: 'EventActions.CreateUser',
+    id: 'EventActions.createUser',
     defaultMessage: 'create user',
   },
   [UPDATE_PROJECT]: {
     id: 'EventActions.updateProject',
     defaultMessage: 'update project',
+  },
+  [UPDATE_DEFECT]: {
+    id: 'EventActions.updateDefect',
+    defaultMessage: 'update defect',
+  },
+  [DELETE_DEFECT]: {
+    id: 'EventActions.deleteDefect',
+    defaultMessage: 'delete defect',
+  },
+  [POST_ISSUE]: {
+    id: 'EventActions.postIssue',
+    defaultMessage: 'post issue',
+  },
+  [LINK_ISSUE]: {
+    id: 'EventActions.linkIssue',
+    defaultMessage: 'link issue',
+  },
+  [CREATE_BTS]: {
+    id: 'EventActions.createBts',
+    defaultMessage: 'create bts',
+  },
+  [UPDATE_BTS]: {
+    id: 'EventActions.updateBts',
+    defaultMessage: 'update bts',
+  },
+  [DELETE_BTS]: {
+    id: 'EventActions.deleteBts',
+    defaultMessage: 'delete bts',
+  },
+  [UPDATE_ANALYZER]: {
+    id: 'EventActions.updateAnalyzer',
+    defaultMessage: 'update analizer',
+  },
+  [GENERATE_INDEX]: {
+    id: 'EventActions.generateIndex',
+    defaultMessage: 'generate index',
+  },
+  [CREATE_DEFECT]: {
+    id: 'EventActions.createDefect',
+    defaultMessage: 'create defect',
   },
 });
 
@@ -122,5 +173,9 @@ export const objectTypesMessages = defineMessages({
   [DEFECT_TYPE]: {
     id: 'EventObjectTypes.defectType',
     defaultMessage: 'defectType',
+  },
+  [USER]: {
+    id: 'EventObjectTypes.user',
+    defaultMessage: 'user',
   },
 });
