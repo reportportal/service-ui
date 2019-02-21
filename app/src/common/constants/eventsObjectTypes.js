@@ -5,3 +5,4 @@ export const FILTER = 'filter';
 export const IMPORT = 'import';
 export const PROJECT = 'project';
 export const DEFECT_TYPE = 'defectType';
+export const USER = 'user';
