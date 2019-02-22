@@ -48,7 +48,7 @@ const messages = defineMessages({
   noteMessage: {
     id: 'LaunchImportModal.noteMessage',
     defaultMessage:
-      'If your runner does not write the test start date in the .xml file, then the current server time will be substituted automatically.',
+      'If your runner does not write the test start time in .xml file, then the current server time will be used.',
   },
   importConfirmationWarning: {
     id: 'LaunchImportModal.importConfirmationWarning',
