@@ -24,7 +24,12 @@ import PropTypes from 'prop-types';
 import { injectIntl, intlShape } from 'react-intl';
 import * as d3 from 'd3-selection';
 import classNames from 'classnames/bind';
+import { connect } from 'react-redux';
+import { redirect } from 'redux-first-router';
 import ReactDOMServer from 'react-dom/server';
+import { statisticsLinkSelector } from 'controllers/testItem';
+import { activeProjectSelector } from 'controllers/user';
+import { TEST_ITEM_PAGE } from 'controllers/pages';
 import { TooltipWrapper } from '../common/tooltip';
 import { C3Chart } from '../common/c3chart';
 import chartStyles from './launchExecutionAndIssueStatistics.scss';
@@ -32,15 +37,29 @@ import { Legend } from './launchExecutionAndIssuesChartLegend';
 import { LaunchExecutionAndIssueStatisticsTooltip } from './launchExecutionAndIssueStatisticsTooltip';
 import { getPercentage, getDefectItems, getChartData } from './chartUtils';
 import { messages } from './messages';
+import { getItemNameConfig } from '../common/utils';
 
 const chartCx = classNames.bind(chartStyles);
 
 @injectIntl
+@connect(
+  (state) => ({
+    project: activeProjectSelector(state),
+    getStatisticsLink: (name) => statisticsLinkSelector(state, { statuses: [name] }),
+  }),
+  {
+    redirect,
+  },
+)
 export class LaunchExecutionChart extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
     widget: PropTypes.object.isRequired,
     isPreview: PropTypes.bool.isRequired,
+    statisticsLink: PropTypes.object.isRequired,
+    getStatisticsLink: PropTypes.func.isRequired,
+    redirect: PropTypes.func.isRequired,
+    project: PropTypes.string.isRequired,
     container: PropTypes.instanceOf(Element).isRequired,
     observer: PropTypes.object,
   };
@@ -97,6 +116,25 @@ export class LaunchExecutionChart extends Component {
     this.statusChart.toggle(id);
   };
 
+  onChartClick = (d) => {
+    const { widget, getStatisticsLink } = this.props;
+    const id = widget.content.result[0].id;
+    const defaultParams = this.getDefaultLinkParams(id);
+    const nameConfig = getItemNameConfig(d.id);
+
+    const link = getStatisticsLink(nameConfig.defectType.toUpperCase());
+    this.props.redirect(Object.assign(link, defaultParams));
+  };
+
+  getDefaultLinkParams = (testItemIds) => ({
+    payload: {
+      projectId: this.props.project,
+      filterId: 'all',
+      testItemIds,
+    },
+    type: TEST_ITEM_PAGE,
+  });
+
   getConfig = () => {
     const EXECUTIONS = '$executions$';
     const { widget, container } = this.props;
@@ -141,6 +179,7 @@ export class LaunchExecutionChart extends Component {
         type: 'donut',
         order: null,
         colors: statusChartColors,
+        onclick: this.onChartClick,
       },
       interaction: {
         enabled: !self.isPreview,
@@ -169,6 +208,7 @@ export class LaunchExecutionChart extends Component {
           const total = this.statusChart.data
             .shown()
             .reduce((acc, dataItem) => acc + dataItem.values[0].value, 0);
+
           this.statusNode.querySelector('.c3-chart-arcs-title').childNodes[0].textContent = total;
         }
       },
