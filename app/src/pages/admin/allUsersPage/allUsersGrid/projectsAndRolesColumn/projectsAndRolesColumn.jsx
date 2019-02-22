@@ -5,6 +5,7 @@ import { FormattedMessage } from 'react-intl';
 import styles from './projectsAndRolesColumn.scss';
 
 const cx = classNames.bind(styles);
+const formatProjectRole = (projectRole) => projectRole.toLowerCase().replace(/_/g, ' ');
 
 export class ProjectsAndRolesColumn extends Component {
   static propTypes = {
@@ -28,7 +29,10 @@ export class ProjectsAndRolesColumn extends Component {
     return (
       <div className={cx('projects-and-roles-col', className)}>
         <span className={cx('mobile-label', 'projects-and-roles-mobile-label')}>
-          Projects and roles
+          <FormattedMessage
+            id={'AllUsersGrid.projectsAndRolesCol'}
+            defaultMessage={'Projects and roles'}
+          />
         </span>
         {firstProjects.map((project, index) => (
           <span key={project} className={cx('project')}>
@@ -37,7 +41,7 @@ export class ProjectsAndRolesColumn extends Component {
             <span className={cx('shown-on-mobile')}>
               {index >= 0 && ', '}
               <span className={cx('project-role')}>
-                {value.assignedProjects[project].projectRole.toLowerCase().replace(/_/g, ' ')}
+                {formatProjectRole(value.assignedProjects[project].projectRole)}
               </span>
             </span>
           </span>
@@ -48,7 +52,7 @@ export class ProjectsAndRolesColumn extends Component {
               {project}
               {index < restProjects.length && ', '}
               <span className={cx('project-role')}>
-                {value.assignedProjects[project].projectRole.toLowerCase().replace(/_/g, ' ')}
+                {formatProjectRole(value.assignedProjects[project].projectRole)}
               </span>
             </span>
           ))}

@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { injectIntl, intlShape, defineMessages } from 'react-intl';
+import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-intl';
 import { Grid } from 'components/main/grid';
 import { AbsRelTime } from 'components/main/absRelTime';
 import { ProjectsAndRolesColumn } from './projectsAndRolesColumn';
@@ -45,7 +45,9 @@ LoginColumn.defaultProps = {
 
 const EmailColumn = ({ className, value }) => (
   <div className={cx('email-col', className)}>
-    <span className={cx('mobile-label')}>Email</span>
+    <span className={cx('mobile-label')}>
+      <FormattedMessage id={'AllUsersGrid.emailCol'} defaultMessage={'Email'} />
+    </span>
     {value.email}
   </div>
 );
@@ -59,7 +61,9 @@ EmailColumn.defaultProps = {
 
 const LastLoginColumn = ({ className, value }) => (
   <div className={cx('last-login-col', className)}>
-    <span className={cx('mobile-label', 'last-login-label')}>Login</span>
+    <span className={cx('mobile-label', 'last-login-label')}>
+      <FormattedMessage id={'AllUsersGrid.loginCol'} defaultMessage={'Login'} />
+    </span>
     <AbsRelTime startTime={Date.parse(value.metadata.last_login)} />
   </div>
 );
@@ -140,7 +144,6 @@ export class AllUsersGrid extends PureComponent {
         loading={this.props.loading}
         changeOnlyMobileLayout
         selectable
-        capitalized
       />
     );
   }
