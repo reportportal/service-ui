@@ -6,3 +6,4 @@ export const IMPORT = 'import';
 export const PROJECT = 'project';
 export const DEFECT_TYPE = 'defectType';
 export const USER = 'user';
+export const EMAIL_CONFIG = 'emailConfig';

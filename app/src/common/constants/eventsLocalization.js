@@ -8,6 +8,7 @@ import {
   PROJECT,
   DEFECT_TYPE,
   USER,
+  EMAIL_CONFIG,
 } from 'common/constants/eventsObjectTypes';
 import {
   CREATE_DASHBOARD,
@@ -177,5 +178,9 @@ export const objectTypesMessages = defineMessages({
   [USER]: {
     id: 'EventObjectTypes.user',
     defaultMessage: 'user',
+  },
+  [EMAIL_CONFIG]: {
+    id: 'EventObjectTypes.emailConfig',
+    defaultMessage: 'email config',
   },
 });

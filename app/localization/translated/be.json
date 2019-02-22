@@ -1226,6 +1226,7 @@
   "EventObjectTypes.filter": "Фiльтр",
   "EventObjectTypes.import": "Iмпарт",
   "EventObjectTypes.user": "Kарыстальнік",
+  "EventObjectTypes.emailConfig": "Налады электроннай пошты",
   "EventObjectTypes.defectType": "Тып дэфекта",
   "AllUsersPage.export": "Экспартаваць",
   "AllUsersPage.inviteUser" : "Запрасіць карыстальніка",
