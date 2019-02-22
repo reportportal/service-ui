@@ -23,11 +23,18 @@ import PropTypes from 'prop-types';
 import { injectIntl, intlShape } from 'react-intl';
 import * as d3 from 'd3-selection';
 import classNames from 'classnames/bind';
+import { connect } from 'react-redux';
+import { redirect } from 'redux-first-router';
 import ReactDOMServer from 'react-dom/server';
+import { defectLinkSelector } from 'controllers/testItem';
+import { defectTypesSelector } from 'controllers/project';
+import { activeProjectSelector } from 'controllers/user';
+import { TEST_ITEM_PAGE } from 'controllers/pages';
 import { TooltipWrapper } from '../common/tooltip';
 import { C3Chart } from '../common/c3chart';
 import chartStyles from './launchExecutionAndIssueStatistics.scss';
 import { Legend } from './launchExecutionAndIssuesChartLegend';
+import { getDefectTypeLocators, getItemNameConfig } from '../common/utils';
 import { LaunchExecutionAndIssueStatisticsTooltip } from './launchExecutionAndIssueStatisticsTooltip';
 import { getPercentage, getDefectItems, getChartData } from './chartUtils';
 import { messages } from './messages';
@@ -35,11 +42,25 @@ import { messages } from './messages';
 const chartCx = classNames.bind(chartStyles);
 
 @injectIntl
+@connect(
+  (state) => ({
+    project: activeProjectSelector(state),
+    defectTypes: defectTypesSelector(state),
+    getDefectLink: (params) => defectLinkSelector(state, params),
+  }),
+  {
+    redirect,
+  },
+)
 export class IssueStatisticsChart extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
     widget: PropTypes.object.isRequired,
     isPreview: PropTypes.bool,
+    defectTypes: PropTypes.object.isRequired,
+    getDefectLink: PropTypes.func.isRequired,
+    redirect: PropTypes.func.isRequired,
+    project: PropTypes.string.isRequired,
     container: PropTypes.instanceOf(Element).isRequired,
     observer: PropTypes.object,
   };
@@ -97,6 +118,28 @@ export class IssueStatisticsChart extends Component {
     this.issuesChart.toggle(id);
   };
 
+  onChartClick = (d) => {
+    const { widget, getDefectLink, defectTypes } = this.props;
+
+    const nameConfig = getItemNameConfig(d.id);
+    const id = widget.content.result[0].id;
+    const defaultParams = this.getDefaultLinkParams(id);
+    const defectLocators = getDefectTypeLocators(nameConfig, defectTypes);
+
+    const link = getDefectLink({ defects: defectLocators, itemId: id });
+
+    this.props.redirect(Object.assign(link, defaultParams));
+  };
+
+  getDefaultLinkParams = (testItemIds) => ({
+    payload: {
+      projectId: this.props.project,
+      filterId: 'all',
+      testItemIds,
+    },
+    type: TEST_ITEM_PAGE,
+  });
+
   getConfig = () => {
     const DEFECTS = '$defects$';
     const { widget, container } = this.props;
@@ -131,6 +174,7 @@ export class IssueStatisticsChart extends Component {
         type: 'donut',
         order: null,
         colors: defectTypesChartColors,
+        onclick: this.onChartClick,
       },
       interaction: {
         enabled: !self.isPreview,
