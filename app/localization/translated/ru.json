@@ -1240,6 +1240,7 @@
   "EventObjectTypes.import": "Импорт",
   "EventObjectTypes.project": "Проект",
   "EventObjectTypes.user": "Пользователь",
+  "EventObjectTypes.emailConfig": "Настройки электронной почты", 
   "EventObjectTypes.defectType": "Тип дефекта",
   "AllUsersPage.export": "Экспортировать",
   "AllUsersPage.inviteUser" : "Пригласить пользователя",
