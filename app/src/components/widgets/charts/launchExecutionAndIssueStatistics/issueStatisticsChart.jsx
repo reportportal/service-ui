@@ -21,7 +21,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { injectIntl, intlShape } from 'react-intl';
-import * as d3 from 'd3-selection';
 import classNames from 'classnames/bind';
 import ReactDOMServer from 'react-dom/server';
 import { TooltipWrapper } from '../common/tooltip';
@@ -29,7 +28,14 @@ import { C3Chart } from '../common/c3chart';
 import chartStyles from './launchExecutionAndIssueStatistics.scss';
 import { Legend } from './launchExecutionAndIssuesChartLegend';
 import { LaunchExecutionAndIssueStatisticsTooltip } from './launchExecutionAndIssueStatisticsTooltip';
-import { getPercentage, getDefectItems, getChartData } from './chartUtils';
+import {
+  getPercentage,
+  getDefectItems,
+  getChartData,
+  toggleResponsiveClasses,
+  resizeChart,
+  addChartTitle,
+} from './chartUtils';
 import { messages } from './messages';
 
 const chartCx = classNames.bind(chartStyles);
@@ -71,16 +77,8 @@ export class IssueStatisticsChart extends Component {
     if (!this.props.widget.content.result || this.props.isPreview) {
       return;
     }
-
-    d3
-      .select(chart.element)
-      .select('.c3-chart-arcs-title')
-      .attr('dy', -15)
-      .append('tspan')
-      .attr('dy', 30)
-      .attr('x', 0)
-      .attr('fill', '#666')
-      .text('ISSUES');
+    addChartTitle(chart, 'ISSUES');
+    toggleResponsiveClasses(this.props.container.offsetHeight, this.issuesChart);
 
     this.issuesNode.addEventListener('mousemove', this.setCoords);
   };
@@ -142,11 +140,15 @@ export class IssueStatisticsChart extends Component {
         show: false, // we use custom legend
       },
       donut: {
-        title: 0,
+        title: '',
         label: {
           show: false,
           threshold: 0.05,
         },
+      },
+      size: {
+        height: this.props.container.offsetHeight,
+        width: this.props.container.offsetWidth / 2,
       },
       tooltip: {
         grouped: false,
@@ -185,17 +187,15 @@ export class IssueStatisticsChart extends Component {
   };
 
   resizeIssuesChart = () => {
-    const newHeight = this.props.container.offsetHeight;
-    const newWidth = this.props.container.offsetWidth;
-    if (this.height !== newHeight) {
-      this.issuesChart.resize({
-        height: newHeight,
-      });
-      this.height = newHeight;
-    } else if (this.width !== newWidth) {
-      this.issuesChart.flush();
-      this.width = newWidth;
-    }
+    const { newHeight, newWidth } = resizeChart(
+      this.height,
+      this.props.container.offsetHeight,
+      this.width,
+      this.props.container.offsetWidth,
+      this.issuesChart,
+    );
+    this.height = newHeight;
+    this.width = newWidth;
   };
 
   // This function is a reimplementation of its d3 counterpart, and it needs 4 arguments of which 2 are not used here.

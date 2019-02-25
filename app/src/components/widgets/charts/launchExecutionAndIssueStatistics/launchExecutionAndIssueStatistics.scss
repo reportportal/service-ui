@@ -10,8 +10,19 @@
   }
 
   .c3-chart-arcs-title {
-    font-size: 24px !important;
     font-weight: bold;
+  }
+
+  .fs-medium .c3-chart-arcs-title {
+    font-size: 24px;
+  }
+
+  .fs-small .c3-chart-arcs-title {
+    font-size: 16px;
+  }
+
+  .fs-large .c3-chart-arcs-title {
+    font-size: 30px;
   }
 }
 
@@ -42,12 +53,12 @@
 
 .launch-execution-chart,
 .issue-statistics-chart {
-  width: 49%;
+  width: 50%;
   float: left;
 
   .legend-title {
     position: relative;
-    padding-top: 20px;
+    padding: 20px 0 0 0;
     overflow: hidden;
     min-height: 40px;
     text-align: right;
@@ -57,4 +68,9 @@
   .c3 {
     bottom: 82px;
   }
+}
+
+.launch-execution-and-issues-chart {
+  height: 100%;
+  overflow: hidden;
 }
