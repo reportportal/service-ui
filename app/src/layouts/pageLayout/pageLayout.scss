@@ -40,3 +40,9 @@
   justify-content: space-between;
   align-items: flex-start;
 }
+
+.children-container {
+  @media (max-width: $SCREEN_XS_MAX) {
+    width: 100%;
+  }
+}

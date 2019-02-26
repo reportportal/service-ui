@@ -18,7 +18,7 @@ import { DASHBOARD_PAGE, DASHBOARD_PAGE_EVENTS } from 'components/main/analytics
 import { userInfoSelector } from 'controllers/user';
 import { showModalAction } from 'controllers/modal';
 import { withFilter } from 'controllers/filter';
-import { AddDashboardButton } from '../common/addDashboardButton';
+import { DashboardPageHeader } from 'pages/inside/common/dashboardPageHeader';
 import { DashboardList } from './dashboardList';
 import { DashboardPageToolbar } from './dashboardPageToolbar';
 
@@ -202,7 +202,7 @@ export class DashboardPage extends Component {
     return (
       <PageLayout>
         <PageHeader breadcrumbs={this.getBreadcrumbs()}>
-          <AddDashboardButton eventsInfo={eventsInfo} />
+          <DashboardPageHeader eventsInfo={eventsInfo} />
         </PageHeader>
         <PageSection>
           <DashboardPageToolbar
