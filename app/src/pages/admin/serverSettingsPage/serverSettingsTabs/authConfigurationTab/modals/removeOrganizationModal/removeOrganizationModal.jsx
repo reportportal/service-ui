@@ -15,6 +15,7 @@ import {
   CLIENT_SECRET_KEY,
   CLIENT_ID_KEY,
 } from '../../forms/githubAuthForm/constants';
+import { joinOrganizations } from '../../forms/githubAuthForm/utils';
 import styles from './removeOrganizationModal.scss';
 
 const cx = classNames.bind(styles);
@@ -65,16 +66,10 @@ export class RemoveOrganizationModal extends Component {
 
   onClickRemove = (closeModal) => {
     const { data, formData } = this.props;
-    let organizations = formData.restrictions.organizations.replace(
-      `,${data.organizationForRemove}`,
-      '',
+    const filteredOrganizations = formData.restrictions.organizations.filter(
+      (item) => item.organization !== data.organizationForRemove,
     );
-    if (organizations === formData.restrictions.organizations) {
-      organizations = formData.restrictions.organizations.replace(
-        `${data.organizationForRemove}`,
-        '',
-      );
-    }
+    const organizations = joinOrganizations(filteredOrganizations);
     const dataToSend = {
       ...formData,
       restrictions: {
@@ -83,7 +78,7 @@ export class RemoveOrganizationModal extends Component {
     };
     fetch(URLS.githubAuthSettings(), { method: 'PUT', data: dataToSend })
       .then(() => {
-        this.props.change(GITHUB_AUTH_FORM, ORGANIZATIONS_KEY, organizations);
+        this.props.data.onConfirm();
         this.props.showNotification({
           message: this.props.intl.formatMessage(messages.removeSuccessNotification),
           type: NOTIFICATION_TYPES.SUCCESS,

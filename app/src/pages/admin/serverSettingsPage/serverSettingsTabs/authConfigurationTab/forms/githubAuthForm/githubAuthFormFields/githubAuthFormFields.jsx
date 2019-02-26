@@ -1,24 +1,12 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
-import { connect } from 'react-redux';
-import { formValueSelector } from 'redux-form';
+import { FieldArray } from 'redux-form';
 import { defineMessages, injectIntl, intlShape } from 'react-intl';
-import IconDelete from 'common/img/circle-cross-icon-inline.svg';
 import { FormField } from 'components/fields/formField';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { Input } from 'components/inputs/input';
-import { GhostButton } from 'components/buttons/ghostButton';
-import { showModalAction } from 'controllers/modal';
-import PlusIcon from 'common/img/plus-button-inline.svg';
-import {
-  GITHUB_AUTH_FORM,
-  CLIENT_ID_KEY,
-  CLIENT_SECRET_KEY,
-  ORGANIZATIONS_KEY,
-  NEW_ORGANIZATION_KEY,
-} from '../constants';
+import { CLIENT_ID_KEY, CLIENT_SECRET_KEY, ORGANIZATIONS_KEY } from '../constants';
+import { CategoriesList } from './categoriesList';
 import styles from './githubAuthFormFields.scss';
 
 const cx = classNames.bind(styles);
@@ -32,62 +20,18 @@ const messages = defineMessages({
     id: 'GithubAuthFormFields.clientSecretLabel',
     defaultMessage: 'Client secret',
   },
-  addOrganizationButtonTitle: {
-    id: 'GithubAuthFormFields.addOrganizationButtonTitle',
-    defaultMessage: 'Add GitHub organization',
-  },
-  organizationNameLabel: {
-    id: 'GithubAuthFormFields.organizationNameLabel',
-    defaultMessage: 'Organization name',
-  },
 });
 
-@connect(
-  (state) => ({
-    organizations: formValueSelector(GITHUB_AUTH_FORM)(state, ORGANIZATIONS_KEY),
-  }),
-  { showModalAction },
-)
 @injectIntl
 export class GithubAuthFormFields extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
-    organizations: PropTypes.string,
-    showModalAction: PropTypes.func,
-  };
-
-  static defaultProps = {
-    organizations: '',
-    showModalAction: () => {},
-  };
-
-  state = {
-    isAddOrganizationClicked: false,
-  };
-
-  componentDidUpdate(prevProps) {
-    if (this.props.organizations !== prevProps.organizations) {
-      this.showOrganizationInput(false);
-    }
-  }
-
-  showOrganizationInput = (isAddOrganizationClicked) => {
-    this.setState({
-      isAddOrganizationClicked,
-    });
-  };
-
-  removeOrganizationHandler = (organizationForRemove) => {
-    this.props.showModalAction({ id: 'removeOrganizationModal', data: { organizationForRemove } });
   };
 
   render() {
     const {
       intl: { formatMessage },
-      organizations,
     } = this.props;
-
-    const filteredOrganizations = (organizations || '').split(',').filter(Boolean);
 
     return (
       <div className={cx('github-auth-form-fields')}>
@@ -113,44 +57,7 @@ export class GithubAuthFormFields extends Component {
             <Input mobileDisabled />
           </FieldErrorHint>
         </FormField>
-        {!!filteredOrganizations.length &&
-          filteredOrganizations.map((item, index) => (
-            // eslint-disable-next-line
-            <div className={cx('organization-container')} key={`${item}.${index}`}>
-              <FormField
-                fieldWrapperClassName={cx('form-field-wrapper')}
-                label={formatMessage(messages.organizationNameLabel)}
-                labelClassName={cx('label')}
-                withoutProvider
-              >
-                <Input value={item} disabled mobileDisabled />
-              </FormField>
-              <span
-                className={cx('remove-organization')}
-                onClick={() => this.removeOrganizationHandler(item)}
-              >
-                {Parser(IconDelete)}
-              </span>
-            </div>
-          ))}
-        {this.state.isAddOrganizationClicked ? (
-          <FormField
-            name={NEW_ORGANIZATION_KEY}
-            fieldWrapperClassName={cx('form-field-wrapper')}
-            label={formatMessage(messages.organizationNameLabel)}
-            labelClassName={cx('label')}
-          >
-            <FieldErrorHint>
-              <Input mobileDisabled />
-            </FieldErrorHint>
-          </FormField>
-        ) : (
-          <div className={cx('button-wrapper')}>
-            <GhostButton onClick={() => this.showOrganizationInput(true)} icon={PlusIcon}>
-              {formatMessage(messages.addOrganizationButtonTitle)}
-            </GhostButton>
-          </div>
-        )}
+        <FieldArray name={ORGANIZATIONS_KEY} component={CategoriesList} />
       </div>
     );
   }
