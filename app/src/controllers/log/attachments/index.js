@@ -1,4 +1,8 @@
-export { openAttachmentAction, fetchAttachmentsAction } from './actionCreators';
+export {
+  openAttachmentAction,
+  fetchAttachmentsAction,
+  clearAttachmentsAction,
+} from './actionCreators';
 export {
   FILE_PREVIEWS_MAP,
   FILE_MODAL_IDS_MAP,
