@@ -1,0 +1,54 @@
+.form-field-wrapper {
+  width: 330px;
+  position: relative;
+  @media (max-width: $SCREEN_XS_MAX) {
+    width: 100%;
+  }
+}
+
+.label {
+  padding-right: 4px;
+}
+
+.organization-container {
+  position: relative;
+  width: 100%;
+}
+
+.remove-organization {
+  position: absolute;
+  right: 10px;
+  top: 7px;
+  display: inline-block;
+  width: 17px;
+  height: 17px;
+  cursor: pointer;
+
+  path {
+    fill: $COLOR--gray-60;
+  }
+
+  &:hover {
+    path {
+      fill: $COLOR--charcoal-grey;
+    }
+  }
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    right: 75px;
+  }
+  @media (max-width: $SCREEN_XS_MAX) {
+    display: none;
+  }
+}
+
+.button-wrapper {
+  margin-left: 46px;
+  @media (max-width: $SCREEN_SM_MAX) {
+    margin-left: 0;
+    margin-right: 71px;
+  }
+  @media (max-width: $SCREEN_XS_MAX) {
+    display: none;
+  }
+}

@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 import { reduxForm, formValueSelector } from 'redux-form';
 import { FormController } from 'pages/admin/serverSettingsPage/common/formController';
 import { ENABLED_KEY, messages } from 'pages/admin/serverSettingsPage/common/constants';
+import { joinOrganizations, splitOrganizations } from './utils';
 import { GITHUB_AUTH_FORM, DEFAULT_FORM_CONFIG } from './constants';
 import { GithubAuthFormFields } from './githubAuthFormFields';
 import styles from './githubAuthForm.scss';
@@ -51,17 +52,15 @@ export class GithubAuthForm extends Component {
   };
 
   prepareDataBeforeSubmit = (data) => {
-    const updatedOrganization =
-      data.restrictions.organizations.length && data.restrictions.organization
-        ? `,${data.restrictions.organization}`
-        : data.restrictions.organization;
-    const organizations = data.restrictions.organizations.concat(updatedOrganization);
-
-    return updatedOrganization ? { ...data, restrictions: { organizations } } : data;
+    const organizations = joinOrganizations(data.restrictions.organizations);
+    return { ...data, restrictions: { organizations } };
   };
 
   prepareDataBeforeInitialize = (data) => ({
     ...data,
+    restrictions: {
+      organizations: splitOrganizations(data.restrictions.organizations),
+    },
     [ENABLED_KEY]: true,
   });
 
