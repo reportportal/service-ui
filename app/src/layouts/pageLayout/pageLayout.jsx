@@ -17,7 +17,7 @@ PageLayout.defaultProps = {
 export const PageHeader = ({ children, breadcrumbs }) => (
   <div className={cx('page-header')}>
     <PageBreadcrumbs data={breadcrumbs} />
-    <div>{children}</div>
+    <div className={cx('children-container')}>{children}</div>
   </div>
 );
 PageHeader.propTypes = {

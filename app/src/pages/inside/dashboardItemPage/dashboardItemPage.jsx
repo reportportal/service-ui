@@ -22,7 +22,7 @@ import { hideScreenLockAction } from 'controllers/screenLock';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { PageLayout, PageHeader, PageSection } from 'layouts/pageLayout';
 import { DASHBOARD_PAGE_EVENTS } from 'components/main/analytics/events';
-import { AddDashboardButton } from '../common/addDashboardButton';
+import { DashboardPageHeader } from 'pages/inside/common/dashboardPageHeader';
 import AddWidgetIcon from './img/add-inline.svg';
 import AddSharedWidgetIcon from './img/add-shared-inline.svg';
 import EditIcon from './img/edit-inline.svg';
@@ -220,7 +220,7 @@ export class DashboardItemPage extends Component {
     return (
       <PageLayout>
         <PageHeader breadcrumbs={this.getBreadcrumbs()}>
-          <AddDashboardButton />
+          <DashboardPageHeader />
         </PageHeader>
         <PageSection>
           <div className={cx('dashboard-item')}>
