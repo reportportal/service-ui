@@ -2,7 +2,7 @@ import { takeLatest, call, put, all, select } from 'redux-saga/effects';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
 import { showModalAction } from 'controllers/modal';
-import { fetchDataAction, fetchSuccessAction } from 'controllers/fetch';
+import { fetchDataAction } from 'controllers/fetch';
 import { activeProjectSelector } from 'controllers/user';
 import { activeLogIdSelector } from 'controllers/log/selectors';
 import { JSON as JSON_TYPE } from 'common/constants/fileTypes';
@@ -12,7 +12,6 @@ import {
   ATTACHMENT_HAR_FILE_MODAL_ID,
   OPEN_ATTACHMENT_ACTION,
   FETCH_ATTACHMENTS_ACTION,
-  CLEAR_ATTACHMENTS_ACTION,
   ATTACHMENTS_NAMESPACE,
 } from './constants';
 import { getAttachmentModalId, extractExtension } from './utils';
@@ -27,10 +26,6 @@ function* fetchAttachments() {
       },
     }),
   );
-}
-
-function* clearAttachments() {
-  yield put(fetchSuccessAction(ATTACHMENTS_NAMESPACE, { content: [] }));
 }
 
 export function fetchImageData({ binaryId }) {
@@ -83,10 +78,6 @@ function* openAttachment({ payload: { id, contentType } }) {
   }
 }
 
-function* watchClearAttachments() {
-  yield takeLatest(CLEAR_ATTACHMENTS_ACTION, clearAttachments);
-}
-
 function* watchFetchAttachments() {
   yield takeLatest(FETCH_ATTACHMENTS_ACTION, fetchAttachments);
 }
@@ -96,5 +87,5 @@ function* watchOpenAttachment() {
 }
 
 export function* attachmentSagas() {
-  yield all([watchOpenAttachment(), watchFetchAttachments(), watchClearAttachments()]);
+  yield all([watchOpenAttachment(), watchFetchAttachments()]);
 }

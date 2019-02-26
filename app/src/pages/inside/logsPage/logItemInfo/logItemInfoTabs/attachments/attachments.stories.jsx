@@ -2,7 +2,8 @@ import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import { host } from 'storybook-host';
 import { withReadme } from 'storybook-readme';
-import { getFileIconSource } from 'controllers/log/attachments/utils';
+// eslint-disable-next-line import/extensions, import/no-unresolved
+import { WithState } from 'storybook-decorators';
 import { Attachments } from './attachments';
 import README from './README.md';
 
@@ -26,19 +27,24 @@ const ALL_FILETYPES = [
   'application/gzip',
 ];
 
-const MOCK_DATA = ALL_FILETYPES.map((fileType, id) => ({
-  id: String(id),
-  src: getFileIconSource({
-    id: String(id),
-    contentType: fileType,
-  }),
-  alt: fileType,
-  attachment: {
-    id: String(id),
-    contentType: fileType,
+const logsWithAttachments = ALL_FILETYPES.map((contentType, id) => ({
+  binaryContent: {
+    contentType,
+    id,
   },
 }));
-const projectId = 'ProjectXYZ';
+
+const state = {
+  log: {
+    attachments: {
+      logsWithAttachments,
+      loading: false,
+    },
+  },
+  modal: {
+    activeModal: null,
+  },
+};
 
 storiesOf('Pages/Inside/LogsPage/LogItemInfo/LogItemInfoTabs/Attachments', module)
   .addDecorator(
@@ -53,11 +59,7 @@ storiesOf('Pages/Inside/LogsPage/LogItemInfo/LogItemInfoTabs/Attachments', modul
   )
   .addDecorator(withReadme(README))
   .add('With all icon types', () => (
-    <Attachments
-      attachments={MOCK_DATA}
-      projectId={projectId}
-      openBinaryModal={action('open-binary-modal')}
-      openHarModal={action('open-har-modal')}
-      openImageModal={action('open-image-modal')}
-    />
+    <WithState state={state}>
+      <Attachments activeItemId={0} onChangeActiveItem={action('Change active item')} />
+    </WithState>
   ));
