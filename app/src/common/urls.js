@@ -189,8 +189,8 @@ export const URLS = {
   events: (projectId) => `${urlBase}${projectId}/activity`,
   allUsers: () => `${urlBase}user/all`,
   exportUsers: () =>
-    `${urlBase}user/export?${getQueryParams({
-      view: 'view = csv',
+    `${urlBase}user/export${getQueryParams({
+      view: 'csv',
       access_token: getToken(),
     })}`,
 };
