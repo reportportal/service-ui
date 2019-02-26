@@ -5,6 +5,7 @@ import { GhostButton } from 'components/buttons/ghostButton';
 import ExportIcon from 'common/img/export-inline.svg';
 import InviteUserIcon from 'common/img/ic_invite-inline.svg';
 import AddUserIcon from 'common/img/ic-add-user-inline.svg';
+import { URLS } from 'common/urls';
 import { EXPORT, INVITE_USER, ADD_USER } from './constants';
 import styles from './actionPanel.scss';
 
@@ -25,38 +26,41 @@ const messages = defineMessages({
   },
 });
 
-const ACTION_BUTTONS = [
-  {
-    key: EXPORT,
-    icon: ExportIcon,
-    grayBorder: true,
-  },
-  {
-    key: INVITE_USER,
-    icon: InviteUserIcon,
-    grayBorder: false,
-  },
-  {
-    key: ADD_USER,
-    icon: AddUserIcon,
-    grayBorder: false,
-  },
-];
-
 @injectIntl
 export class ActionPanel extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
   };
+  onExportUsers = () => {
+    window.location.href = URLS.exportUsers();
+  };
   renderHeaderButtons = () => {
     const {
       intl: { formatMessage },
     } = this.props;
+    const ACTION_BUTTONS = [
+      {
+        key: EXPORT,
+        icon: ExportIcon,
+        grayBorder: true,
+        onClick: this.onExportUsers,
+      },
+      {
+        key: INVITE_USER,
+        icon: InviteUserIcon,
+        grayBorder: false,
+      },
+      {
+        key: ADD_USER,
+        icon: AddUserIcon,
+        grayBorder: false,
+      },
+    ];
     return (
       <div className={cx('action-buttons')}>
-        {ACTION_BUTTONS.map(({ key, icon, grayBorder }) => (
+        {ACTION_BUTTONS.map(({ key, icon, grayBorder, onClick }) => (
           <div className={cx('action-button')} key={key}>
-            <GhostButton icon={icon} grayBorder={grayBorder}>
+            <GhostButton icon={icon} grayBorder={grayBorder} onClick={onClick}>
               {formatMessage(messages[key])}
             </GhostButton>
           </div>

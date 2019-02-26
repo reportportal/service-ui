@@ -188,4 +188,9 @@ export const URLS = {
   statisticsServerSettings: () => `${urlBase}settings/analytics`,
   events: (projectId) => `${urlBase}${projectId}/activity`,
   allUsers: () => `${urlBase}user/all`,
+  exportUsers: () =>
+    `${urlBase}user/export?${getQueryParams({
+      view: 'view = csv',
+      access_token: getToken(),
+    })}`,
 };
