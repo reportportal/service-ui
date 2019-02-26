@@ -57,7 +57,6 @@ DefectStatistics.propTypes = {
   eventInfo: PropTypes.object,
   tooltipEventInfo: PropTypes.object,
   ownLinkParams: PropTypes.shape({
-    isOtherPage: PropTypes.bool,
     payload: PropTypes.object,
     page: PropTypes.string,
   }),
