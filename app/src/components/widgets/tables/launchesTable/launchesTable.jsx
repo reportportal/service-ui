@@ -47,10 +47,8 @@ import {
 import styles from './launchesTable.scss';
 
 const cx = classNames.bind(styles);
-let formatMessage = null;
-let linkPayload = null;
 
-const NameColumn = ({ className, value }) => {
+const NameColumn = ({ className, value }, name, { linkPayload }) => {
   const { values, attributes } = value;
   const itemPropValue = {
     id: value.id,
@@ -62,7 +60,6 @@ const NameColumn = ({ className, value }) => {
   };
   const ownLinkParams = {
     page: TEST_ITEM_PAGE,
-    isOtherPage: true,
     payload: linkPayload,
   };
   return (
@@ -76,7 +73,7 @@ NameColumn.propTypes = {
   className: PropTypes.string.isRequired,
 };
 
-const StatusColumn = ({ className, value: { values } }) => (
+const StatusColumn = ({ className, value: { values } }, name, { formatMessage }) => (
   <div className={cx('status-col', className)}>
     <span className={cx('mobile-hint')}>{formatMessage(hintMessages.statusHint)}</span>
     {formatStatus(formatMessage, values.status)}
@@ -87,7 +84,7 @@ StatusColumn.propTypes = {
   className: PropTypes.string.isRequired,
 };
 
-const TimeColumn = ({ className, value }, name) => (
+const TimeColumn = ({ className, value }, name, { formatMessage }) => (
   <div className={cx('time-col', className)}>
     <span className={cx('mobile-hint')}>
       {formatMessage(name === START_TIME ? hintMessages.startTimeHint : hintMessages.endTimeHint)}
@@ -102,13 +99,12 @@ TimeColumn.propTypes = {
   className: PropTypes.string.isRequired,
 };
 
-const StatisticsColumn = ({ className, value }, name) => {
+const StatisticsColumn = ({ className, value }, name, { linkPayload }) => {
   const defaultColumnProps = {
     itemId: Number(value.id),
     statuses: getStatisticsStatuses(name),
     ownLinkParams: {
       page: TEST_ITEM_PAGE,
-      isOtherPage: true,
       payload: linkPayload,
     },
   };
@@ -133,7 +129,7 @@ StatisticsColumn.propTypes = {
   className: PropTypes.string.isRequired,
 };
 
-const DefectsColumn = ({ className, value }, name) => {
+const DefectsColumn = ({ className, value }, name, { linkPayload }) => {
   const nameConfig = name.split('$');
   const defectType = nameConfig[2];
   const defectLocator = nameConfig[3];
@@ -142,7 +138,6 @@ const DefectsColumn = ({ className, value }, name) => {
     itemId: Number(value.id),
     ownLinkParams: {
       page: TEST_ITEM_PAGE,
-      isOtherPage: true,
       payload: linkPayload,
     },
   };
@@ -193,26 +188,26 @@ const columnComponentsMap = {
   [STATUS_COLUMN_KEY]: StatusColumn,
 };
 
-const getColumn = (name, columnType) => ({
+const COLUMNS_KEYS_MAP = {
+  [NAME]: NAME_COLUMN_KEY,
+  [STATUS]: STATUS_COLUMN_KEY,
+  [START_TIME]: TIME_COLUMN_KEY,
+  [END_TIME]: TIME_COLUMN_KEY,
+  [STATS_TOTAL]: STATISTICS_COLUMN_KEY,
+  [STATS_PASSED]: STATISTICS_COLUMN_KEY,
+  [STATS_FAILED]: STATISTICS_COLUMN_KEY,
+  [STATS_SKIPPED]: STATISTICS_COLUMN_KEY,
+  [STATS_AB]: DEFECT_COLUMN_KEY,
+  [STATS_PB]: DEFECT_COLUMN_KEY,
+  [STATS_SI]: DEFECT_COLUMN_KEY,
+  [STATS_TI]: DEFECT_COLUMN_KEY,
+};
+
+const getColumn = (name, customProps) => ({
   id: name,
   title: COLUMN_NAMES_MAP[name],
-  component: (data) => columnComponentsMap[columnType](data, name),
+  component: (data) => columnComponentsMap[COLUMNS_KEYS_MAP[name]](data, name, customProps),
 });
-
-const COLUMNS_MAP = {
-  [NAME]: getColumn(NAME, NAME_COLUMN_KEY),
-  [STATUS]: getColumn(STATUS, STATUS_COLUMN_KEY),
-  [START_TIME]: getColumn(START_TIME, TIME_COLUMN_KEY),
-  [END_TIME]: getColumn(END_TIME, TIME_COLUMN_KEY),
-  [STATS_TOTAL]: getColumn(STATS_TOTAL, STATISTICS_COLUMN_KEY),
-  [STATS_PASSED]: getColumn(STATS_PASSED, STATISTICS_COLUMN_KEY),
-  [STATS_FAILED]: getColumn(STATS_FAILED, STATISTICS_COLUMN_KEY),
-  [STATS_SKIPPED]: getColumn(STATS_SKIPPED, STATISTICS_COLUMN_KEY),
-  [STATS_AB]: getColumn(STATS_AB, DEFECT_COLUMN_KEY),
-  [STATS_PB]: getColumn(STATS_PB, DEFECT_COLUMN_KEY),
-  [STATS_SI]: getColumn(STATS_SI, DEFECT_COLUMN_KEY),
-  [STATS_TI]: getColumn(STATS_TI, DEFECT_COLUMN_KEY),
-};
 
 @connect((state) => ({
   projectId: activeProjectSelector(state),
@@ -225,27 +220,26 @@ export class LaunchesTable extends PureComponent {
     projectId: PropTypes.string.isRequired,
   };
 
-  constructor(props) {
-    super(props);
-    formatMessage = props.intl.formatMessage;
-    linkPayload = {
-      projectId: props.projectId,
-      filterId: ALL,
-    };
-    this.columns = this.getColumns();
-  }
-
   getColumns = () => {
     const fieldsMap = this.props.widget.contentParameters.contentFields.reduce(
       (map, item) => ({ ...map, [item]: item }),
       {},
     );
+    const customProps = {
+      formatMessage: this.props.intl.formatMessage,
+      linkPayload: {
+        projectId: this.props.projectId,
+        filterId: ALL,
+      },
+    };
 
-    return Object.keys(COLUMNS_MAP).reduce(
-      (columns, item) => (fieldsMap[item] ? [...columns, COLUMNS_MAP[item]] : columns),
+    return Object.keys(COLUMNS_KEYS_MAP).reduce(
+      (columns, item) => (fieldsMap[item] ? [...columns, getColumn(item, customProps)] : columns),
       [],
     );
   };
+
+  columns = this.getColumns();
 
   render() {
     const { result } = this.props.widget.content;

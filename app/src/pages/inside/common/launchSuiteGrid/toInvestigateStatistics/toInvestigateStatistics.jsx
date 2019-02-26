@@ -36,7 +36,6 @@ ToInvestigateStatistics.propTypes = {
   itemId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   eventInfo: PropTypes.object,
   ownLinkParams: PropTypes.shape({
-    isOtherPage: PropTypes.bool,
     payload: PropTypes.object,
     page: PropTypes.string,
   }),

@@ -28,7 +28,6 @@ ExecutionStatistics.propTypes = {
   itemId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   statuses: PropTypes.arrayOf(PropTypes.string).isRequired,
   ownLinkParams: PropTypes.shape({
-    isOtherPage: PropTypes.bool,
     payload: PropTypes.object,
     page: PropTypes.string,
   }),
