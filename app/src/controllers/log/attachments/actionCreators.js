@@ -1,7 +1,15 @@
-import { FETCH_ATTACHMENTS_ACTION, OPEN_ATTACHMENT_ACTION } from './constants';
+import {
+  FETCH_ATTACHMENTS_ACTION,
+  OPEN_ATTACHMENT_ACTION,
+  CLEAR_ATTACHMENTS_ACTION,
+} from './constants';
 
 export const fetchAttachmentsAction = () => ({
   type: FETCH_ATTACHMENTS_ACTION,
+});
+
+export const clearAttachmentsAction = () => ({
+  type: CLEAR_ATTACHMENTS_ACTION,
 });
 
 export const openAttachmentAction = (payload) => ({

@@ -59,7 +59,18 @@ export class Attachments extends React.Component {
 
   onClickItem = (itemIndex) => this.props.openAttachmentAction(this.props.attachments[itemIndex]);
 
-  getAttachmentsContent = () => {
+  changeHandler = (itemIndex) => {
+    if (itemIndex !== this.props.activeItemId) {
+      this.props.onChangeActiveItem(itemIndex);
+    }
+    if (!this.state.mainAreaVisible) {
+      this.setState({ mainAreaVisible: true });
+    }
+  };
+
+  isOneAttachmentItem = () => this.props.attachments.length === 1;
+
+  renderAttachmentsContent = () => {
     const { intl, activeItemId, loading } = this.props;
 
     if (loading) {
@@ -71,7 +82,13 @@ export class Attachments extends React.Component {
     }
 
     return (
-      <div onClick={this.isOneAttachmentItem() ? () => this.onClickItem(0) : undefined}>
+      <div
+        onClick={
+          this.isOneAttachmentItem() && this.state.mainAreaVisible
+            ? () => this.onClickItem(0)
+            : undefined
+        }
+      >
         <Carousel
           emulateTouch
           showStatus={false}
@@ -79,6 +96,7 @@ export class Attachments extends React.Component {
           showArrows
           selectedItem={activeItemId || 0}
           onChange={this.changeHandler}
+          onClickThumb={this.isOneAttachmentItem() ? this.changeHandler : undefined}
           onClickItem={this.onClickItem}
         >
           {this.props.attachments.map((attachment) => (
@@ -91,22 +109,11 @@ export class Attachments extends React.Component {
     );
   };
 
-  changeHandler = (itemIndex) => {
-    if (itemIndex !== this.props.activeItemId) {
-      this.props.onChangeActiveItem(itemIndex);
-    }
-    if (!this.state.mainAreaVisible) {
-      this.setState({ mainAreaVisible: true });
-    }
-  };
-
-  isOneAttachmentItem = () => this.props.attachments.length === 1 && this.state.mainAreaVisible;
-
   render() {
     return (
       <div className={cx('attachments-wrap')}>
         <div className={cx('log-attachments', { 'hide-main-area': !this.state.mainAreaVisible })}>
-          {this.getAttachmentsContent()}
+          {this.renderAttachmentsContent()}
         </div>
       </div>
     );

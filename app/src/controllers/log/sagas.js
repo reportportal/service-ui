@@ -8,7 +8,7 @@ import {
   pagePropertiesSelector,
   pathnameChangedSelector,
 } from 'controllers/pages';
-import { fetchDataAction, fetchSuccessAction } from 'controllers/fetch';
+import { fetchDataAction } from 'controllers/fetch';
 import {
   ACTIVITY_NAMESPACE,
   DEFAULT_HISTORY_DEPTH,
@@ -21,7 +21,7 @@ import {
   NAMESPACE,
 } from './constants';
 import { activeLogIdSelector, prevActiveLogIdSelector, querySelector } from './selectors';
-import { attachmentSagas, fetchAttachmentsAction, ATTACHMENTS_NAMESPACE } from './attachments';
+import { attachmentSagas, fetchAttachmentsAction, clearAttachmentsAction } from './attachments';
 
 function* fetchActivity() {
   const activeProject = yield select(activeProjectSelector);
@@ -73,11 +73,7 @@ function* fetchHistoryItemData() {
   const activeLogId = yield select(activeLogIdSelector);
   const prevActiveLogId = yield select(prevActiveLogIdSelector);
   if (activeLogId !== prevActiveLogId) {
-    yield all([
-      call(fetchLogItems),
-      call(fetchActivity),
-      put(fetchSuccessAction(ATTACHMENTS_NAMESPACE, { content: [] })),
-    ]);
+    yield all([call(fetchLogItems), call(fetchActivity), put(clearAttachmentsAction())]);
   } else {
     yield call(fetchLogItems);
   }
