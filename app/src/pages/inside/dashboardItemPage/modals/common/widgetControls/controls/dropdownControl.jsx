@@ -7,7 +7,7 @@ import { FIELD_LABEL_WIDTH } from './constants';
 export const DropdownControl = ({ fieldLabel, ...rest }) => (
   <ModalField label={fieldLabel} labelWidth={FIELD_LABEL_WIDTH}>
     <FieldErrorHint hintType={'top'} {...rest}>
-      <InputDropdown />
+      <InputDropdown independentGroupSelection />
     </FieldErrorHint>
   </ModalField>
 );

@@ -52,7 +52,7 @@ export class WidgetInfoBlock extends PureComponent {
       !isEqual(prevData, newData) &&
       (filterIds.length || contentParameters.widgetOptions.launchNameFilter)
     ) {
-      this.fetchWidget();
+      this.fetchWidget(this.props.widgetSettings);
     }
   }
 
@@ -64,21 +64,21 @@ export class WidgetInfoBlock extends PureComponent {
       widgetData: null,
     });
 
-  fetchWidget = () => {
+  fetchWidget = (widgetSettings) => {
     this.setState({
       loading: true,
-      widgetType: this.props.activeWidget.id,
+      widgetData: null,
     });
     fetch(URLS.widgetPreview(this.props.projectId), {
       method: 'post',
-      data: this.props.widgetSettings,
+      data: widgetSettings,
     })
       .then((widget) => {
         this.setState({
           loading: false,
           widgetData: {
             content: widget,
-            ...this.props.widgetSettings,
+            ...widgetSettings,
           },
         });
       })

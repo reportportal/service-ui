@@ -39,6 +39,7 @@ export class InputDropdown extends Component {
     onFocus: PropTypes.func,
     onBlur: PropTypes.func,
     mobileDisabled: PropTypes.bool,
+    independentGroupSelection: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -53,6 +54,7 @@ export class InputDropdown extends Component {
     onFocus: () => {},
     onBlur: () => {},
     mobileDisabled: false,
+    independentGroupSelection: false,
   };
   state = {
     opened: false,
@@ -73,6 +75,15 @@ export class InputDropdown extends Component {
 
   setRef = (node) => {
     this.node = node;
+  };
+
+  getOptionChangeHandler = (option) => {
+    if (option.disabled) {
+      return null;
+    }
+    return option.groupId && !this.props.independentGroupSelection
+      ? this.handleGroupChange
+      : this.handleChange;
   };
 
   handleClickOutside = (e) => {
@@ -152,7 +163,7 @@ export class InputDropdown extends Component {
       this.props.multiple
         ? (selected = this.props.value.indexOf(option.value) > -1)
         : (selected = option.value === this.props.value);
-      if (option.groupId) {
+      if (!this.props.independentGroupSelection && option.groupId) {
         selected = this.isGroupOptionSelected(option.groupId);
       }
       return (
@@ -164,10 +175,7 @@ export class InputDropdown extends Component {
           label={option.label}
           multiple={this.props.multiple}
           subOption={!!option.groupRef}
-          onChange={
-            (!option.disabled && (option.groupId ? this.handleGroupChange : this.handleChange)) ||
-            null
-          }
+          onChange={this.getOptionChangeHandler(option)}
         />
       );
     });
