@@ -23,10 +23,6 @@
   &.type-top {
     bottom: 100%;
   }
-
-  & .type-top {
-    top: -30px;
-  }
 }
 
 .hint-content {
@@ -46,6 +42,7 @@
 
   &.type-top {
     transform: translateY(-100%);
+    top: -30px;
   }
 
   &.static-hint {
