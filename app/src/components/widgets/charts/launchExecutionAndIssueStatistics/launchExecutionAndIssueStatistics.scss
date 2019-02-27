@@ -1,17 +1,19 @@
-:global {
-  .c3-chart-arc {
-    & text {
-      display: none;
+.launch-execution-and-issues-chart {
+  :global {
+    .c3-chart-arc {
+      & text {
+        display: none;
+      }
     }
-  }
-  .c3-legend-background {
-    stroke: none !important;
-    stroke-width: 0;
-  }
+    .c3-legend-background {
+      stroke: none !important;
+      stroke-width: 0;
+    }
 
-  .c3-chart-arcs-title {
-    font-size: 24px !important;
-    font-weight: bold;
+    .c3-chart-arcs-title {
+      font-size: 24px !important;
+      font-weight: bold;
+    }
   }
 }
 

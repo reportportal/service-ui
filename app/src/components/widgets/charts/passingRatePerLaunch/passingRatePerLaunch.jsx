@@ -236,6 +236,7 @@ export class PassingRatePerLaunch extends Component {
       this.chart.flush();
       this.width = newWidth;
     }
+    this.resizeHelper();
   };
 
   customBlock = (

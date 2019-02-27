@@ -79,8 +79,7 @@ export class FlakyTestCasesTableControls extends Component {
     });
   }
 
-  parseItems = (value) =>
-    value.length < 4 ? value : this.props.widgetSettings.contentParameters.itemsCount;
+  normalizeValue = (value) => value && `${value}`.replace(/\D+/g, '');
 
   formatLaunchNameOptions = (values) => values.map((value) => ({ value, label: value }));
   formatLaunchNames = (value) => (value ? { value, label: value } : null);
@@ -97,12 +96,13 @@ export class FlakyTestCasesTableControls extends Component {
         <FieldProvider
           name="contentParameters.itemsCount"
           validate={validators.items(formatMessage)}
-          parse={this.parseItems}
+          format={String}
+          normalize={this.normalizeValue}
         >
           <InputControl
             fieldLabel={formatMessage(messages.ItemsFieldLabel)}
             inputWidth={ITEMS_INPUT_WIDTH}
-            type="number"
+            maxLength="3"
           />
         </FieldProvider>
         <FieldProvider

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import classNames from 'classnames/bind';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { connect } from 'react-redux';
 import { redirect } from 'redux-first-router';
@@ -18,8 +19,9 @@ import {
 import { C3Chart } from '../common/c3chart';
 import { TooltipWrapper, TooltipContent } from '../common/tooltip';
 import { Legend } from '../common/legend';
-import './launchesComparisonChart.scss';
+import styles from './launchesComparisonChart.scss';
 
+const cx = classNames.bind(styles);
 const messages = defineMessages({
   ofTestCases: {
     id: 'Widgets.ofTestCases',
@@ -289,17 +291,19 @@ export class LaunchesComparisonChart extends Component {
   render() {
     return (
       this.state.isConfigReady && (
-        <C3Chart config={this.config} onChartCreated={this.onChartCreated}>
-          {!this.props.isPreview && (
-            <Legend
-              items={this.itemNames}
-              noTotal
-              onClick={this.onClick}
-              onMouseOver={this.onMouseOver}
-              onMouseOut={this.onMouseOut}
-            />
-          )}
-        </C3Chart>
+        <div className={cx('launches-comparison-chart')}>
+          <C3Chart config={this.config} onChartCreated={this.onChartCreated}>
+            {!this.props.isPreview && (
+              <Legend
+                items={this.itemNames}
+                noTotal
+                onClick={this.onClick}
+                onMouseOver={this.onMouseOver}
+                onMouseOut={this.onMouseOut}
+              />
+            )}
+          </C3Chart>
+        </div>
       )
     );
   }
