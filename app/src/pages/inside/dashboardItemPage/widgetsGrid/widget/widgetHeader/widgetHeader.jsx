@@ -29,7 +29,7 @@ const widgetTypesMessages = defineMessages({
   },
   launchStatistics: {
     id: 'WidgetHeader.widgetType.launchStatistics',
-    defaultMessage: 'Launch statistics chart',
+    defaultMessage: 'Launch execution and issue statistic',
   },
   activityStream: {
     id: 'WidgetHeader.widgetType.activityStream',
@@ -57,7 +57,7 @@ const widgetTypesMessages = defineMessages({
   },
   bugTrend: {
     id: 'WidgetHeader.widgetType.bugTrend',
-    defaultMessage: 'Launch execution and issue statistic',
+    defaultMessage: 'Failed cases trend chart',
   },
   notPassed: {
     id: 'WidgetHeader.widgetType.notPassed',
