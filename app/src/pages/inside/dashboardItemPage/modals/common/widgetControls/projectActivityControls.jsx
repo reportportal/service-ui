@@ -106,8 +106,7 @@ export class ProjectActivityControls extends Component {
       .reduce((acc, val) => acc.concat(val), []);
   };
 
-  parseItems = (value) =>
-    value.length < 4 ? value : this.props.widgetSettings.contentParameters.itemsCount;
+  normalizeValue = (value) => value && `${value}`.replace(/\D+/g, '');
 
   formatUsernames = (values) =>
     ((values.length && values.split && values.split(',')) || values || []).map((value) => ({
@@ -141,12 +140,13 @@ export class ProjectActivityControls extends Component {
         <FieldProvider
           name="contentParameters.itemsCount"
           validate={validators.items(formatMessage)}
-          parse={this.parseItems}
+          format={String}
+          normalize={this.normalizeValue}
         >
           <InputControl
             fieldLabel={formatMessage(messages.ItemsFieldLabel)}
             inputWidth={ITEMS_INPUT_WIDTH}
-            type="number"
+            maxLength="3"
           />
         </FieldProvider>
         <FieldProvider

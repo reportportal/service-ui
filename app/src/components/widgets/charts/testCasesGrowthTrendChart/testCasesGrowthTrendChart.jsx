@@ -73,6 +73,10 @@ export class TestCasesGrowthTrendChart extends Component {
     this.getConfig();
   }
 
+  componentDidUpdate() {
+    this.onChartRendered();
+  }
+
   componentWillUnmount() {
     if (!this.props.isPreview) {
       this.node.removeEventListener('mousemove', this.setupCoords);
@@ -97,6 +101,20 @@ export class TestCasesGrowthTrendChart extends Component {
     const defaultParams = this.getDefaultLinkParams(id);
 
     this.props.redirect(Object.assign(statisticsLink, defaultParams));
+  };
+
+  onChartRendered = () => {
+    const barPathSelector = '.c3-bars-bar path';
+    const barPaths = d3.select(this.node).selectAll(barPathSelector);
+    barPaths.each((pathData, i) => {
+      const elem = d3.select(this.node).select(`${barPathSelector}.c3-bar-${i}`);
+      if (pathData.value === 0) {
+        elem
+          .style('stroke-width', '1px')
+          .style('stroke', '#464547')
+          .style('shape-rendering', 'initial');
+      }
+    });
   };
 
   setupCoords = ({ pageX, pageY }) => {
@@ -259,19 +277,7 @@ export class TestCasesGrowthTrendChart extends Component {
         position: this.getTooltipPosition,
         contents: this.renderTooltip,
       },
-      onrendered: () => {
-        const barPathSelector = '.c3-chart-bar.c3-target-bar path';
-        const barPaths = d3.select(this.node).selectAll(barPathSelector);
-        barPaths.each((pathData, i) => {
-          const elem = d3.select(this.node).select(`${barPathSelector}.c3-bar-${i}`);
-          if (pathData.value === 0) {
-            elem
-              .style('stroke-width', '1px')
-              .style('stroke', '#464547')
-              .style('shape-rendering', 'initial');
-          }
-        });
-      },
+      onrendered: this.onChartRendered,
     };
 
     this.setState({

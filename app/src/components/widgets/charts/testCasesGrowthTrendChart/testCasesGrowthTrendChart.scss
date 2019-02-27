@@ -1,5 +1,28 @@
 .test-cases-growth-trend-chart {
   padding-top: 5px;
+
+  :global {
+
+    svg {
+      .c3-xgrid-focus {
+        display: block;
+      }
+
+      .c3-grid line {
+        stroke: $COLOR--gray-80;
+      }
+    }
+
+    .c3-chart-texts {
+      .c3-texts {
+        .c3-text {
+          fill: $COLOR--charcoal-grey !important;
+          font-family: $FONT-REGULAR;
+          font-size: 10px;
+        }
+      }
+    }
+  }
 }
 
 .launch-name {
@@ -36,29 +59,6 @@
     }
     span {
       font-family: $FONT-SEMIBOLD;
-    }
-  }
-}
-
-:global {
-
-  svg {
-    .c3-xgrid-focus {
-      display: block;
-    }
-
-    .c3-grid line {
-      stroke: $COLOR--gray-80;
-    }
-  }
-
-  .c3-chart-texts {
-    .c3-texts {
-      .c3-text {
-        fill: $COLOR--charcoal-grey !important;
-        font-family: $FONT-REGULAR;
-        font-size: 10px;
-      }
     }
   }
 }
