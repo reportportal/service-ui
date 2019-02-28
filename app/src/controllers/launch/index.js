@@ -9,8 +9,8 @@ export {
   compareLaunchesAction,
   fetchLaunchesAction,
   toggleAllLaunchesAction,
-  unselectLaunchesAction,
   setDebugMode,
+  changeLaunchDistinctAction,
   deleteItemsAction,
   fetchLaunchesWithParamsAction,
 } from './actionCreators';
@@ -22,6 +22,7 @@ export {
   launchPaginationSelector,
   loadingSelector,
   debugModeSelector,
+  launchDistinctSelector,
   allLaunchesLikSelector,
   latestLaunchesLinkSelector,
 } from './selectors';

@@ -29,3 +29,8 @@ export function setStorageItem(key, value) {
 export function removeStorageItem(key) {
   localStorage.removeItem(key);
 }
+
+export function updateStorageItem(key, value = {}) {
+  const previousItem = getStorageItem(key) || {};
+  return setStorageItem(key, { ...previousItem, ...value });
+}

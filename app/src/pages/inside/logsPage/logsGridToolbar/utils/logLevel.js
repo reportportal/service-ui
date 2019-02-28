@@ -1,4 +1,4 @@
-import { getStorageItem, setStorageItem } from 'common/utils';
+import { getStorageItem, updateStorageItem } from 'common/utils';
 import * as logLevels from 'common/constants/logLevels';
 import { DEFAULT_LOG_LEVEL, LOG_LEVEL_STORAGE_KEY } from 'controllers/log/constants';
 
@@ -43,11 +43,5 @@ export const getLogLevel = (logLevelId, userId) =>
   getDefaultLogLevel() ||
   LOG_LEVELS[LOG_LEVELS.length - 1];
 
-export const setLogLevel = (logLevel, userId) => {
-  const currentUserSettings = getStorageItem(`${userId}_settings`) || {};
-
-  setStorageItem(`${userId}_settings`, {
-    ...currentUserSettings,
-    [LOG_LEVEL_STORAGE_KEY]: logLevel.id,
-  });
-};
+export const setLogLevel = (logLevel, userId) =>
+  updateStorageItem(`${userId}_settings`, { [LOG_LEVEL_STORAGE_KEY]: logLevel.id });
