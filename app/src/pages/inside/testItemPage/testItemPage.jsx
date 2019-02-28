@@ -209,9 +209,23 @@ export class TestItemPage extends Component {
     });
   };
 
+  isValidData = () => {
+    let result = true;
+    try {
+      const topBreadcrumb = this.props.breadcrumbs.slice(-1)[0];
+      if (topBreadcrumb.error) {
+        result = false;
+      }
+    } catch (e) {
+      result = false;
+    }
+    return result;
+  };
+
   render() {
     const { level, loading, breadcrumbs, restorePath } = this.props;
-    if (!loading && testItemPages[level]) {
+    const isValid = this.isValidData();
+    if (!loading && isValid && testItemPages[level]) {
       const PageComponent = testItemPages[level];
       return (
         <FilterEntitiesURLContainer
