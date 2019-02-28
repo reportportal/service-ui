@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
-import { redirect } from 'redux-first-router';
 import { showModalAction } from 'controllers/modal';
 import {
   updateFilterAction,
@@ -11,12 +10,10 @@ import {
   unsavedFilterIdsSelector,
   createFilterAction,
   saveNewFilterAction,
+  changeActiveFilterAction,
 } from 'controllers/filter';
-import { allLaunchesLikSelector, latestLaunchesLinkSelector } from 'controllers/launch';
-import { ALL, LATEST } from 'common/constants/reservedFilterIds';
+import { changeLaunchDistinctAction, launchDistinctSelector } from 'controllers/launch';
 import { GhostButton } from 'components/buttons/ghostButton';
-import { activeProjectSelector } from 'controllers/user';
-import { filterIdSelector } from 'controllers/pages';
 import { levelSelector } from 'controllers/testItem';
 import { EntitiesGroup } from 'components/filterEntities/entitiesGroup';
 import AddFilterIcon from 'common/img/add-filter-inline.svg';
@@ -31,11 +28,8 @@ const cx = classNames.bind(styles);
 
 @connect(
   (state) => ({
-    activeProject: activeProjectSelector(state),
     unsavedFilterIds: unsavedFilterIdsSelector(state),
-    allLaunchesLink: allLaunchesLikSelector(state),
-    latestLaunchesLink: latestLaunchesLinkSelector(state),
-    filterId: filterIdSelector(state) === LATEST ? LATEST : ALL,
+    launchDistinct: launchDistinctSelector(state),
     level: levelSelector(state),
   }),
   {
@@ -44,12 +38,12 @@ const cx = classNames.bind(styles);
     resetFilter: resetFilterAction,
     createFilter: createFilterAction,
     saveNewFilter: saveNewFilterAction,
-    redirect,
+    changeLaunchDistinct: changeLaunchDistinctAction,
+    redirectToLaunches: changeActiveFilterAction,
   },
 )
 export class LaunchFiltersToolbar extends Component {
   static propTypes = {
-    activeProject: PropTypes.string,
     filters: PropTypes.arrayOf(filterShape),
     activeFilterId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     activeFilter: PropTypes.object,
@@ -68,15 +62,13 @@ export class LaunchFiltersToolbar extends Component {
     onResetFilter: PropTypes.func,
     createFilter: PropTypes.func,
     saveNewFilter: PropTypes.func,
-    redirect: PropTypes.func,
-    allLaunchesLink: PropTypes.object,
-    latestLaunchesLink: PropTypes.object,
-    filterId: PropTypes.string,
+    redirectToLaunches: PropTypes.func,
+    changeLaunchDistinct: PropTypes.func,
+    launchDistinct: PropTypes.string,
     level: PropTypes.string,
   };
 
   static defaultProps = {
-    activeProject: '',
     filters: [],
     activeFilterId: null,
     activeFilter: null,
@@ -95,10 +87,9 @@ export class LaunchFiltersToolbar extends Component {
     onResetFilter: () => {},
     createFilter: () => {},
     saveNewFilter: () => {},
-    redirect: () => {},
-    allLaunchesLink: null,
-    latestLaunchesLink: null,
-    filterId: '',
+    redirectToLaunches: () => {},
+    changeLaunchDistinct: () => {},
+    launchDistinct: '',
     level: '',
   };
 
@@ -132,12 +123,7 @@ export class LaunchFiltersToolbar extends Component {
     onResetFilter();
   };
 
-  handleAllLatestLaunchesSelect = (filterId) => {
-    const link = filterId === LATEST ? this.props.latestLaunchesLink : this.props.allLaunchesLink;
-    this.props.redirect(link);
-  };
-
-  redirectToLaunches = () => this.handleAllLatestLaunchesSelect(this.props.filterId);
+  redirectToLaunches = () => this.props.redirectToLaunches(this.props.launchDistinct);
 
   updateActiveFilter = () => {
     const { activeFilter, updateFilter, activeFilterId, showModal, saveNewFilter } = this.props;
@@ -161,6 +147,7 @@ export class LaunchFiltersToolbar extends Component {
     const {
       filters,
       activeFilterId,
+      launchDistinct,
       activeFilter,
       onSelectFilter,
       onRemoveFilter,
@@ -170,8 +157,8 @@ export class LaunchFiltersToolbar extends Component {
       onFilterValidate,
       onFilterAdd,
       onFilterRemove,
+      changeLaunchDistinct,
       unsavedFilterIds,
-      filterId,
       level,
     } = this.props;
     const isFilterUnsaved = unsavedFilterIds.indexOf(activeFilterId) !== -1;
@@ -182,9 +169,9 @@ export class LaunchFiltersToolbar extends Component {
           <div className={cx('all-latest-switcher')}>
             <AllLatestDropdown
               activeFilterId={activeFilterId}
-              value={filterId}
+              value={launchDistinct}
               onClick={this.redirectToLaunches}
-              onChange={this.handleAllLatestLaunchesSelect}
+              onChange={changeLaunchDistinct}
             />
           </div>
           <div className={cx('separator')} />

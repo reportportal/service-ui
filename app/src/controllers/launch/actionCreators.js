@@ -11,6 +11,7 @@ import {
   FETCH_LAUNCHES,
   NAMESPACE,
   SET_DEBUG_MODE,
+  CHANGE_LAUNCH_DISTINCT,
   FETCH_LAUNCHES_WITH_PARAMS,
   FETCH_LAUNCHES_PAGE_DATA,
 } from './constants';
@@ -24,6 +25,11 @@ import {
 export const setDebugMode = (isDebugMode) => ({
   type: SET_DEBUG_MODE,
   payload: isDebugMode,
+});
+
+export const changeLaunchDistinctAction = (launchDistinct) => ({
+  type: CHANGE_LAUNCH_DISTINCT,
+  payload: launchDistinct,
 });
 
 export const fetchLaunchesAction = (params) => ({

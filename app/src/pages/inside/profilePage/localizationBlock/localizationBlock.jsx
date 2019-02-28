@@ -2,7 +2,8 @@ import { Component } from 'react';
 import track from 'react-tracking';
 import { connect } from 'react-redux';
 import { injectIntl, intlShape, defineMessages } from 'react-intl';
-import { setStorageItem } from 'common/utils';
+import { updateStorageItem } from 'common/utils';
+import { APPLICATION_SETTINGS } from 'common/constants/localStorageKeys';
 import Parser from 'html-react-parser';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
@@ -81,7 +82,7 @@ export class LocalizationBlock extends Component {
 
   onChangeLanguage = (lang) => {
     this.props.tracking.trackEvent(PROFILE_PAGE_EVENTS.CHANGE_LANGUAGE);
-    setStorageItem('application_settings', { appLanguage: lang });
+    updateStorageItem(APPLICATION_SETTINGS, { appLanguage: lang });
     this.props.setLangAction(lang);
   };
 

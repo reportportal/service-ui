@@ -41,11 +41,7 @@ export class GridRow extends Component {
     changeOnlyMobileLayout: false,
     rowClassMapper: null,
     toggleAccordionEventInfo: {},
-    rowHighlightingConfig: PropTypes.shape({
-      onGridRowHighlighted: () => {},
-      isGridRowHighlighted: false,
-      highlightedRowId: null,
-    }),
+    rowHighlightingConfig: {},
   };
 
   state = {

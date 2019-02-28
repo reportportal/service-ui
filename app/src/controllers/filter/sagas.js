@@ -4,9 +4,10 @@ import { fetchDataAction, concatFetchDataAction, FETCH_SUCCESS } from 'controlle
 import { activeProjectSelector } from 'controllers/user';
 import { URLS } from 'common/urls';
 import { userFiltersSelector, updateProjectFilterPreferencesAction } from 'controllers/project';
+import { launchDistinctSelector } from 'controllers/launch';
 import { PROJECT_LAUNCHES_PAGE } from 'controllers/pages';
 import { omit } from 'common/utils/omit';
-import { ALL, NEW_FILTER_PREFIX } from 'common/constants/reservedFilterIds';
+import { NEW_FILTER_PREFIX } from 'common/constants/reservedFilterIds';
 import {
   NAMESPACE,
   FETCH_FILTERS,
@@ -122,7 +123,8 @@ function* watchFetchFiltersConcat() {
 }
 
 function* resetActiveFilter({ payload: filterId }) {
-  yield put(changeActiveFilterAction(ALL));
+  const launchDistinct = yield select(launchDistinctSelector);
+  yield put(changeActiveFilterAction(launchDistinct));
   yield put(removeFilterAction(filterId));
 }
 

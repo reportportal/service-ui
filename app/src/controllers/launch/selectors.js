@@ -6,8 +6,9 @@ import {
 } from 'controllers/groupOperations';
 import {
   createQueryParametersSelector,
-  PROJECT_LAUNCHES_PAGE,
-  projectIdSelector,
+  pagePropertiesSelector,
+  payloadSelector,
+  pageSelector,
 } from 'controllers/pages';
 import { ALL, LATEST } from 'common/constants/reservedFilterIds';
 import { DEFAULT_SORTING, NAMESPACE } from './constants';
@@ -30,15 +31,21 @@ export const queryParametersSelector = createQueryParametersSelector({
 });
 
 export const debugModeSelector = (state) => domainSelector(state).debugMode || false;
+export const launchDistinctSelector = (state) => domainSelector(state).launchDistinct || ALL;
 
 const createLaunchesLinkSelector = (filterId) =>
-  createSelector(projectIdSelector, (projectId) => ({
-    type: PROJECT_LAUNCHES_PAGE,
+  createSelector(pageSelector, payloadSelector, pagePropertiesSelector, (page, payload, query) => ({
+    type: page,
     payload: {
-      projectId,
+      ...payload,
       filterId,
+    },
+    meta: {
+      query,
     },
   }));
 
-export const allLaunchesLikSelector = createLaunchesLinkSelector(ALL);
-export const latestLaunchesLinkSelector = createLaunchesLinkSelector(LATEST);
+export const launchesDistinctLinksSelectorsMap = {
+  [ALL]: createLaunchesLinkSelector(ALL),
+  [LATEST]: createLaunchesLinkSelector(LATEST),
+};

@@ -24,7 +24,6 @@ import {
   NOT_FOUND,
 } from 'controllers/pages';
 import { GENERAL, EMAIL_SERVER } from 'common/constants/settingsTabs';
-import { ALL } from 'common/constants/reservedFilterIds';
 import { SETTINGS, MEMBERS, EVENTS } from 'common/constants/projectSections';
 import { isAuthorizedSelector } from 'controllers/auth';
 import {
@@ -32,7 +31,7 @@ import {
   changeVisibilityTypeAction,
   dashboardItemsSelector,
 } from 'controllers/dashboard';
-import { fetchLaunchesAction, setDebugMode } from 'controllers/launch';
+import { fetchLaunchesAction, setDebugMode, launchDistinctSelector } from 'controllers/launch';
 import { TEST_ITEM_PAGE } from 'controllers/pages/constants';
 import { fetchTestItemsAction, setLevelAction } from 'controllers/testItem';
 import { fetchFiltersAction } from 'controllers/filter';
@@ -46,7 +45,7 @@ const redirectRoute = (path, createNewAction) => ({
   path,
   thunk: (dispatch, getState) => {
     const { location } = getState();
-    const newAction = createNewAction(location.payload);
+    const newAction = createNewAction(location.payload, getState);
     dispatch(redirect(newAction));
   },
 });
@@ -142,9 +141,10 @@ export default {
       }
     },
   },
-  [LAUNCHES_PAGE]: redirectRoute('/:projectId/launches', (payload) => ({
+
+  [LAUNCHES_PAGE]: redirectRoute('/:projectId/launches', (payload, getState) => ({
     type: PROJECT_LAUNCHES_PAGE,
-    payload: { ...payload, filterId: ALL },
+    payload: { ...payload, filterId: launchDistinctSelector(getState()) },
   })),
   [PROJECT_LAUNCHES_PAGE]: {
     path: '/:projectId/launches/:filterId',

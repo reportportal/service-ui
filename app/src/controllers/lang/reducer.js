@@ -1,8 +1,9 @@
 import { getStorageItem } from 'common/utils';
+import { APPLICATION_SETTINGS } from 'common/constants/localStorageKeys';
 import { CHANGE_LANG_ACTION, INITIAL_STATE } from './constants';
 
 const getDefaultState = () =>
-  (getStorageItem('application_settings') && getStorageItem('application_settings').appLanguage) ||
+  (getStorageItem(APPLICATION_SETTINGS) && getStorageItem(APPLICATION_SETTINGS).appLanguage) ||
   INITIAL_STATE;
 
 export const langReducer = (state = getDefaultState(), { type, payload }) => {
