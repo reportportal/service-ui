@@ -33,7 +33,7 @@
   color: $COLOR--gray-47;
   text-decoration: none;
 }
-.active {
+.active-tab {
   color: $COLOR--topaz;
   &:before {
     position: absolute;
@@ -79,13 +79,6 @@
   display: none;
   @media (max-width: $SCREEN_XS_MAX) {
     display: block;
-    span {
-      a {
-        color: $COLOR--topaz;
-        font-family: $FONT-CONDBOLD;
-        font-size: 16px;
-      }
-    }
   }
 }
 .link {
@@ -93,4 +86,9 @@
   text-decoration: none;
   text-transform: uppercase;
   font-size: 13px;
+}
+.active-link {
+  color: $COLOR--topaz;
+  font-family: $FONT-CONDBOLD;
+  font-size: 16px;
 }

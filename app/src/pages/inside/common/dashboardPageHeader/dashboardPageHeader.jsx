@@ -10,7 +10,7 @@ import {
   PROJECT_DASHBOARD_PAGE,
   PROJECT_DASHBOARD_ITEM_PAGE,
 } from 'controllers/pages';
-import { dashboardItemsSelector } from 'controllers/dashboard';
+import { dashboardItemsSelector, dashboardItemPropTypes } from 'controllers/dashboard';
 import { InputDropdown } from 'components/inputs/inputDropdown';
 import { AddDashboardButton } from './addDashboardButton';
 import styles from './dashboardPageHeader.scss';
@@ -36,7 +36,7 @@ export class DashboardPageHeader extends Component {
     intl: intlShape.isRequired,
     projectId: PropTypes.string.isRequired,
     activeItemId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-    dashboards: PropTypes.array,
+    dashboards: PropTypes.arrayOf(dashboardItemPropTypes),
     eventsInfo: PropTypes.object,
   };
 
@@ -49,11 +49,13 @@ export class DashboardPageHeader extends Component {
   dashboardPageItem = {
     label: (
       <NavLink
+        exact
         to={{
           type: PROJECT_DASHBOARD_PAGE,
           payload: { projectId: this.props.projectId },
         }}
         className={cx('link')}
+        activeClassName={cx('active-link')}
       >
         {this.props.intl.formatMessage(messages.allDashboardsTitle)}
       </NavLink>
@@ -70,7 +72,11 @@ export class DashboardPageHeader extends Component {
     [this.dashboardPageItem].concat(
       this.props.dashboards.map((item) => ({
         label: (
-          <NavLink to={this.createDashboardLink(item.id)} className={cx('link')}>
+          <NavLink
+            to={this.createDashboardLink(item.id)}
+            className={cx('link')}
+            activeClassName={cx('active-link')}
+          >
             {item.name}
           </NavLink>
         ),
@@ -87,7 +93,6 @@ export class DashboardPageHeader extends Component {
           <InputDropdown
             options={this.generateOptions()}
             value={activeItemId || DASHBOARD_PAGE_ITEM_VALUE}
-            onChange={this.onChangeTab}
           />
         </div>
         <AddDashboardButton eventsInfo={eventsInfo} />

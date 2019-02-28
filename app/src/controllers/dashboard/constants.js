@@ -1,3 +1,10 @@
+import PropTypes from 'prop-types';
+
+export const dashboardItemPropTypes = PropTypes.shape({
+  id: PropTypes.number.isRequired,
+  name: PropTypes.string.isRequired,
+});
+
 export const INITIAL_STATE = {
   dashboardItems: [],
   gridType: '',

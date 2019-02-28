@@ -36,6 +36,7 @@ export class NavigationTabs extends Component {
       label: (
         <NavLink
           to={this.props.config[item].link}
+          activeClassName={cx('active-link')}
           className={cx('link')}
           onClick={() => {
             this.props.tracking.trackEvent(this.props.config[item].eventInfo);
@@ -65,7 +66,7 @@ export class NavigationTabs extends Component {
                 key={item}
                 className={cx('tab')}
                 to={config[item].link}
-                activeClassName={cx('active')}
+                activeClassName={cx('active-tab')}
                 onClick={() => {
                   this.props.tracking.trackEvent(this.props.config[item].eventInfo);
                 }}

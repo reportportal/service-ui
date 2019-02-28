@@ -13,4 +13,4 @@ export {
   dashboardGridTypeSelector,
   activeDashboardItemSelector,
 } from './selectors';
-export { DASHBOARDS_TABLE_VIEW, DASHBOARDS_GRID_VIEW } from './constants';
+export { DASHBOARDS_TABLE_VIEW, DASHBOARDS_GRID_VIEW, dashboardItemPropTypes } from './constants';
