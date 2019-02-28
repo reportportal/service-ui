@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
-import { destroy, getFormValues, isDirty } from 'redux-form';
+import { destroy, getFormValues, isDirty, isValid } from 'redux-form';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
 import { activeProjectSelector } from 'controllers/user';
@@ -27,7 +27,7 @@ const messages = defineMessages({
   },
   editWidgetSuccess: {
     id: 'EditWidgetModal.editWidgetSuccess',
-    defaultMessage: 'Widget ahs been updated',
+    defaultMessage: 'Widget has been updated',
   },
 });
 
@@ -37,6 +37,7 @@ const messages = defineMessages({
     projectId: activeProjectSelector(state),
     widgetSettings: getFormValues(WIDGET_WIZARD_FORM)(state),
     dirty: isDirty(WIDGET_WIZARD_FORM)(state),
+    valid: isValid(WIDGET_WIZARD_FORM)(state),
   }),
   {
     showScreenLockAction,
@@ -54,6 +55,7 @@ export class EditWidgetModal extends Component {
     showNotification: PropTypes.func.isRequired,
     destroyWizardForm: PropTypes.func.isRequired,
     dirty: PropTypes.bool.isRequired,
+    valid: PropTypes.bool.isRequired,
     widgetSettings: PropTypes.object,
     data: PropTypes.shape({
       onConfirm: PropTypes.func,
@@ -151,6 +153,7 @@ export class EditWidgetModal extends Component {
       intl: { formatMessage },
       projectId,
       widgetSettings,
+      valid,
     } = this.props;
 
     const buttonsMessages = {
@@ -160,7 +163,7 @@ export class EditWidgetModal extends Component {
     const okButton = {
       text: formatMessage(COMMON_LOCALE_KEYS.SAVE),
       onClick: this.onSave,
-      disabled: this.state.formAppearance.isMainControlsLocked,
+      disabled: this.state.formAppearance.isMainControlsLocked || !valid,
     };
     const cancelButton = {
       text: buttonsMessages.cancel,
