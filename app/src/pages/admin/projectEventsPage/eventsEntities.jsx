@@ -6,7 +6,7 @@ import {
   EntityItemName,
   EntityDropdown,
   EntityItemStartTime,
-  EntityLaunchOwner,
+  EntityProjectUsers,
   EntityContains,
 } from 'components/filterEntities';
 import {
@@ -261,6 +261,18 @@ export class EventsEntities extends Component {
               label: 'Finish import',
               value: FINISH_IMPORT,
             },
+            {
+              label: 'Update notifications',
+              value: UPDATE_NOTIFICATIONS,
+            },
+            {
+              label: 'Switch on notifications',
+              value: SWITCH_ON_NOTIFICATIONS,
+            },
+            {
+              label: 'Switch off notifications',
+              value: SWITCH_OFF_NOTIFICATIONS,
+            },
           ],
         },
       },
@@ -346,6 +358,14 @@ export class EventsEntities extends Component {
               label: 'User filter',
               value: USER_FILTER,
             },
+            {
+              label: 'Filter',
+              value: FILTER,
+            },
+            {
+              label: 'Import',
+              value: IMPORT,
+            },
           ],
         },
       },
@@ -366,7 +386,7 @@ export class EventsEntities extends Component {
       },
       {
         id: ENTITY_USER,
-        component: EntityLaunchOwner,
+        component: EntityProjectUsers,
         value:
           ENTITY_USER in filterValues
             ? filterValues[ENTITY_USER]

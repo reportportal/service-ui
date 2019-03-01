@@ -91,7 +91,7 @@ ObjectNameColumn.defaultProps = {
 const ValueColumn = ({ className, value, customProps: { valueType } }) => (
   <div className={cx('value-col', className)}>
     {value.details.history.map((item) => (
-      <React.Fragment key={item.toString()}>
+      <React.Fragment key={`${item.field}__${item.oldValue}__${item.newValue}`}>
         <div className={cx('value-field')}>{item.field}:</div>
         <div className={cx('value')}>{item[valueType]}</div>
       </React.Fragment>

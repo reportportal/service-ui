@@ -64,26 +64,18 @@ export class InputFilter extends Component {
     opened: false,
   };
 
-  handleChangeInput = (e) => {
-    this.props.onFilterStringChange(e.target.value);
-  };
+  handleChangeInput = (e) => this.props.onFilterStringChange(e.target.value);
 
-  handleClickClear = () => {
-    this.props.onFilterStringChange('');
-  };
-
-  handleClickAddFilter = () => {
-    this.setState({ opened: true });
-  };
+  handleClickClear = () => this.props.onFilterStringChange('');
 
   handleApply = () => {
     this.setState({ opened: false });
     this.props.onFilterApply();
   };
 
-  handleCancel = () => {
-    this.setState({ opened: false });
-  };
+  handleCancel = () => this.setState({ opened: false });
+
+  togglePopup = () => this.setState({ opened: !this.state.opened });
 
   render() {
     const {
@@ -105,11 +97,13 @@ export class InputFilter extends Component {
     } = this.props;
     return (
       <React.Fragment>
-        <div className={cx('input-filter', { error, active, disabled })}>
+        <div
+          className={cx('input-filter', { error, active, disabled: disabled || this.state.opened })}
+        >
           <div className={cx('icon', 'search')}>{Parser(SearchIcon)}</div>
           <div
             className={cx('icon', 'add-filter', { inactive: !filterActive })}
-            onClick={this.handleClickAddFilter}
+            onClick={this.togglePopup}
           >
             {Parser(AddFilterIcon)}
           </div>
@@ -121,7 +115,7 @@ export class InputFilter extends Component {
           <input
             className={cx('input', className)}
             value={value}
-            disabled={disabled}
+            disabled={disabled || this.state.opened}
             placeholder={placeholder}
             maxLength={maxLength}
             onChange={this.handleChangeInput}
