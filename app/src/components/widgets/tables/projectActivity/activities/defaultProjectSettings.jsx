@@ -9,15 +9,19 @@ import styles from './common.scss';
 const cx = classNames.bind(styles);
 
 const messages = defineMessages({
-  keepLogs: {
+  'job.keepLogs': {
     id: 'DefaultProjectSettings.keepLogs',
     defaultMessage: 'Keep logs',
   },
-  keepScreenshots: {
+  'job.keepLaunches': {
+    id: 'DefaultProjectSettings.keepLaunches',
+    defaultMessage: 'Keep launches',
+  },
+  'job.keepScreenshots': {
     id: 'DefaultProjectSettings.keepAttachments',
     defaultMessage: 'Keep attachments',
   },
-  launchInactivity: {
+  'job.interruptJobTime': {
     id: 'DefaultProjectSettings.launchInactivity',
     defaultMessage: 'Launch inactivity timeout',
   },
@@ -45,11 +49,13 @@ export class DefaultProjectSettings extends Component {
     const from = this.props.intl.formatMessage(messages.from);
     const to = this.props.intl.formatMessage(messages.to);
     const activities = [];
-    Object.keys(activity.history).forEach((key) => {
-      if (activity.history[key].newValue && activity.history[key].oldValue) {
-        const activityName = messages[key] ? this.props.intl.formatMessage(messages[key]) : '';
-        const oldValue = activity.history[key].oldValue;
-        const newValue = activity.history[key].newValue;
+    activity.details.history.forEach((item) => {
+      if (item.newValue && item.oldValue) {
+        const activityName = messages[item.field]
+          ? this.props.intl.formatMessage(messages[item.field])
+          : '';
+        const oldValue = item.oldValue;
+        const newValue = item.newValue;
         activities.push(`${activityName} ${from} ${oldValue} ${to} ${newValue}`);
       }
     });

@@ -70,13 +70,15 @@ export class AnalysisProperties extends Component {
     const from = this.props.intl.formatMessage(messages.from);
     const to = this.props.intl.formatMessage(messages.to);
     const activities = [];
-    Object.keys(activity.history).forEach((key) => {
-      if (activity.history[key].newValue && activity.history[key].oldValue) {
-        const activityName = messages[key] ? this.props.intl.formatMessage(messages[key]) : '';
+    activity.details.history.forEach((item) => {
+      if (item.newValue && item.oldValue) {
+        const activityName = messages[item.field]
+          ? this.props.intl.formatMessage(messages[item.field])
+          : '';
         const oldValue =
-          this.valueReplacer(activity.history[key].oldValue) || activity.history[key].oldValue;
+          this.valueReplacer(item.oldValue) || item.oldValue;
         const newValue =
-          this.valueReplacer(activity.history[key].newValue) || activity.history[key].newValue;
+          this.valueReplacer(item.newValue) || item.newValue;
         activities.push(`${activityName} ${from} ${oldValue} ${to} ${newValue}`);
       }
     });
