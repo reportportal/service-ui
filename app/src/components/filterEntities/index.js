@@ -7,4 +7,5 @@ export { EntityItemAttributeKeys, EntityItemAttributeValues } from './entityItem
 export { EntityItemStatistics } from './entityItemStatistics';
 export { EntityDropdown } from './entityDropdown';
 export { EntityContains } from './entityContains';
+export { EntityProjectUsers } from './entityProjectUsers';
 export { filterValueShape, filterEntityShape } from './propTypes';
