@@ -222,7 +222,6 @@ export const defectLinkSelector = (state, ownProps) => {
       ...createNamespacedQuery(
         {
           'filter.eq.hasChildren': false,
-          'filter.in.type': LEVEL_STEP,
           'filter.in.issueType': getDefectsString(ownProps.defects),
         },
         getQueryNamespace(levelIndex),
