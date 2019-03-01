@@ -22,9 +22,9 @@ import {
   UPDATE_ANALYZER,
   CREATE_USER,
   UPDATE_PROJECT,
-  UPDATE_EMAIL,
-  OFF_EMAIL,
-  ON_EMAIL,
+  UPDATE_NOTIFICATIONS,
+  SWITCH_OFF_NOTIFICATIONS,
+  SWITCH_ON_NOTIFICATIONS,
 } from 'common/constants/actionTypes';
 import { URLS } from 'common/urls';
 import { AbsRelTime } from 'components/main/absRelTime';
@@ -224,68 +224,24 @@ export class ProjectActivity extends Component {
   };
 
   updateProjectValues = (activity) => {
-    const values = {
-      id: activity.id,
-      history: {},
+    const updatedActivity = {
+      ...activity,
     };
-    const activities = { ...activity };
-    delete activities.id;
 
-    Object.keys(activities).forEach((k) => {
-      let a = k.split('$');
-      let name = a[0];
-      let type = a[1];
-      const obj = {};
-      if (k.indexOf('Value') > 0) {
-        if (k === 'emailEnabled$newValue') {
-          values.actionType = activities[k] === 'false' ? OFF_EMAIL : ON_EMAIL;
-        } else if (k === 'emailCases$newValue') {
-          values.actionType = UPDATE_EMAIL;
-        } else {
-          a = k.split('$');
-          name = a[0];
-          type = a[1];
-          obj[type] = activities[k];
-          if (values.history[name]) {
-            values.history[name] = Object.assign(values.history[name], obj);
-          } else {
-            values.history[name] = obj;
-          }
-        }
+    activity.details.history.forEach((item) => {
+      if (item.field === 'emailCases') {
+        updatedActivity.actionType = UPDATE_NOTIFICATIONS;
       }
-      values[k] = activities[k];
+      if (item.field === 'enabled') {
+        updatedActivity.actionType =
+          item.newValue === 'false' ? SWITCH_OFF_NOTIFICATIONS : SWITCH_ON_NOTIFICATIONS;
+      }
     });
-    return values;
+    return updatedActivity;
   };
 
-  updateAnalyzerOptions = (activity) => {
-    const values = {
-      id: activity.id,
-      history: {},
-    };
-    const activities = { ...activity };
-    delete activities.id;
-
-    Object.keys(activities).forEach((k) => {
-      let a = k.split('$');
-      let name = a[0];
-      let type = a[1];
-      const obj = {};
-      if (k.indexOf('Value') > 0) {
-        a = k.split('$');
-        name = a[0];
-        type = a[1];
-        obj[type] = activities[k];
-        if (values.history[name]) {
-          values.history[name] = Object.assign(values.history[name], obj);
-        } else {
-          values.history[name] = obj;
-        }
-      }
-      values[k] = activities[k];
-    });
-    return values;
-  };
+  // TODO: set the necessary actionType here when it will be supported by backend (as above for notifications)
+  updateAnalyzerOptions = (activity) => activity;
 
   isValidActivity = (activity) =>
     !(
