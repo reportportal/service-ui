@@ -81,10 +81,10 @@ export class GeneralTab extends Component {
   componentDidMount() {
     const { interruptJobTime, keepLogs, keepScreenshots, keepLaunches } = this.props.jobConfig;
     this.props.initialize({
-      interruptJobTime,
-      keepLaunches,
-      keepLogs,
-      keepScreenshots,
+      interruptJobTime: interruptJobTime.toLowerCase(),
+      keepLaunches: keepLaunches.toLowerCase(),
+      keepLogs: keepLogs.toLowerCase(),
+      keepScreenshots: keepScreenshots.toLowerCase(),
     });
   }
 
