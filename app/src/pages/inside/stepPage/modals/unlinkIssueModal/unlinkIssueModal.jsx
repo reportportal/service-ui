@@ -56,7 +56,7 @@ export class UnlinkIssueModal extends Component {
       data: { items, fetchFunc },
     } = this.props;
     const issues = items.map((item) => ({
-      test_item_id: item.id,
+      testItemId: item.id,
       issue: {
         ...item.issue,
         externalSystemIssues: [],

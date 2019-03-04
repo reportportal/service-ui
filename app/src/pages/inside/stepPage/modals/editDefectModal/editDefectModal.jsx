@@ -199,7 +199,7 @@ export class EditDefectModal extends Component {
   };
 
   getItemsToTheNextAction = () =>
-    this.prepareDataToSend().map((item) => ({ ...item, id: item.test_item_id }));
+    this.prepareDataToSend().map((item) => ({ ...item, id: item.testItemId }));
 
   prepareDataToSend = () => {
     const { items } = this.props.data;
@@ -208,7 +208,7 @@ export class EditDefectModal extends Component {
     if (this.isBulkEditOperation()) {
       issues = items.map((item) => {
         const dataToSend = {
-          test_item_id: item.id,
+          testItemId: item.id,
           issue: {
             ...item.issue,
             autoAnalyzed: false,
@@ -225,7 +225,7 @@ export class EditDefectModal extends Component {
     } else {
       issues = [
         {
-          test_item_id: items[0].id,
+          testItemId: items[0].id,
           issue: {
             ...items[0].issue,
             comment: this.state.markdownValue,
