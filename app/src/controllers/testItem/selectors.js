@@ -93,7 +93,7 @@ export const breadcrumbsSelector = createSelector(
     const descriptors = [
       {
         id: filterId,
-        title: filterId,
+        title: String(filterId),
         link: {
           type: debugMode ? PROJECT_USERDEBUG_PAGE : PROJECT_LAUNCHES_PAGE,
           payload: {
