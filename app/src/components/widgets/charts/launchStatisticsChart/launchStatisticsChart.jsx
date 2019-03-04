@@ -11,8 +11,10 @@ import { TEST_ITEM_PAGE } from 'controllers/pages';
 import { defectTypesSelector } from 'controllers/project';
 import { defectLinkSelector, statisticsLinkSelector } from 'controllers/testItem';
 import { activeProjectSelector } from 'controllers/user';
+import { createFilterAction } from 'controllers/filter';
 import { PASSED, FAILED, SKIPPED, INTERRUPTED } from 'common/constants/testStatuses';
 import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
+import { ENTITY_START_TIME, CONDITION_BETWEEN } from 'components/filterEntities/constants';
 import {
   getItemColor,
   getItemName,
@@ -40,6 +42,7 @@ const cx = classNames.bind(styles);
   }),
   {
     redirect,
+    createFilterAction,
   },
 )
 export class LaunchStatisticsChart extends Component {
@@ -52,6 +55,7 @@ export class LaunchStatisticsChart extends Component {
     getDefectLink: PropTypes.func.isRequired,
     getStatisticsLink: PropTypes.func.isRequired,
     container: PropTypes.instanceOf(Element).isRequired,
+    createFilterAction: PropTypes.func,
     isPreview: PropTypes.bool,
     isFullscreen: PropTypes.bool,
     height: PropTypes.number,
@@ -62,6 +66,7 @@ export class LaunchStatisticsChart extends Component {
     redirect: () => {},
     getDefectLink: () => {},
     getStatisticsLink: () => {},
+    createFilterAction: () => {},
     isPreview: false,
     isFullscreen: false,
     height: 0,
@@ -132,7 +137,12 @@ export class LaunchStatisticsChart extends Component {
 
   onChartClick = (data) => {
     if (this.configData.isTimeLine) {
-      return; // TODO: do it when filters will be available on launches page
+      const itemDate = this.configData.itemData[data.index].date;
+      const range = 86400000;
+      const time = moment(itemDate).format('x');
+      const filterEntityValue = `${time},${parseInt(time, 10) + range}`;
+      this.timeLineClickHandler(filterEntityValue);
+      return;
     }
     const { widget, getDefectLink, getStatisticsLink, defectTypes } = this.props;
     const nameConfig = getItemNameConfig(data.id);
@@ -329,9 +339,9 @@ export class LaunchStatisticsChart extends Component {
       };
       delete currentItemData.values;
       itemData.push(currentItemData);
-      Object.keys(item.values).forEach((key) => {
-        const value = item.values[key];
-        chartData[key].push(!Number(value) && isTimeLine ? null : Number(value));
+      contentFields.forEach((contentFieldKey) => {
+        const value = item.values[contentFieldKey] || 0;
+        chartData[contentFieldKey].push(!Number(value) && isTimeLine ? null : Number(value));
       });
     });
 
@@ -350,11 +360,26 @@ export class LaunchStatisticsChart extends Component {
     };
   };
 
+  timeLineClickHandler = (filterEntityValue) => {
+    const chartFitler = this.props.widget.appliedFilters[0];
+    const newCondition = {
+      filteringField: ENTITY_START_TIME,
+      value: filterEntityValue,
+      condition: CONDITION_BETWEEN,
+    };
+    const newFilter = {
+      orders: chartFitler.orders,
+      type: chartFitler.type,
+      conditions: chartFitler.conditions.concat(newCondition),
+    };
+    this.props.createFilterAction(newFilter);
+  };
+
   prepareChartData = () => {
     const {
       container,
       widget: {
-        content,
+        content: { result },
         contentParameters: { widgetOptions },
       },
     } = this.props;
@@ -363,14 +388,14 @@ export class LaunchStatisticsChart extends Component {
     const isTimeLine = widgetOptions.timeline === MODES_VALUES[CHART_MODES.TIMELINE_MODE];
 
     if (isTimeLine) {
-      Object.keys(content).forEach((item) => {
+      Object.keys(result).forEach((item) => {
         data.push({
           date: item,
-          values: content[item].values,
+          values: result[item].values,
         });
       });
     } else {
-      data = content.result;
+      data = result;
     }
 
     this.height = container.offsetHeight;

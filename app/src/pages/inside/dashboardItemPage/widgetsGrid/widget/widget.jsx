@@ -168,7 +168,7 @@ export class Widget extends Component {
     };
 
     return (
-      <div className={cx('widget-container')}>
+      <div className={cx('widget-container', { disabled: this.props.isFullscreen })}>
         <Fragment>
           <div
             className={cx('widget-header', 'draggable-field', {

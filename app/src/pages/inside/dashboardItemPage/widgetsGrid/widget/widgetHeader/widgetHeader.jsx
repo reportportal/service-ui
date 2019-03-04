@@ -160,12 +160,12 @@ export class WidgetHeader extends Component {
     onEdit: PropTypes.func,
   };
   static defaultProps = {
+    data: {},
     userRole: '',
     projectRole: '',
     onRefresh: () => {},
     onDelete: () => {},
     onEdit: () => {},
-    data: {},
   };
 
   render() {
