@@ -46,7 +46,7 @@ export class DashboardPageHeader extends Component {
     eventsInfo: {},
   };
 
-  dashboardPageItem = {
+  getDashboardPageItem = () => ({
     label: (
       <NavLink
         exact
@@ -61,7 +61,7 @@ export class DashboardPageHeader extends Component {
       </NavLink>
     ),
     value: DASHBOARD_PAGE_ITEM_VALUE,
-  };
+  });
 
   createDashboardLink = (dashboardId) => ({
     type: PROJECT_DASHBOARD_ITEM_PAGE,
@@ -69,7 +69,7 @@ export class DashboardPageHeader extends Component {
   });
 
   generateOptions = () =>
-    [this.dashboardPageItem].concat(
+    [this.getDashboardPageItem()].concat(
       this.props.dashboards.map((item) => ({
         label: (
           <NavLink
