@@ -4,5 +4,5 @@ import { activeProjectSelector } from 'controllers/user';
 import { EntityUserSearch } from './entityUserSearch';
 
 export const EntityLaunchOwner = connect((state) => ({
-  ownersSearchUrl: URLS.launchOwnersSearch(activeProjectSelector(state)),
+  usersSearchUrl: URLS.launchOwnersSearch(activeProjectSelector(state)),
 }))(EntityUserSearch);
