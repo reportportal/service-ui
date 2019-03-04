@@ -80,7 +80,9 @@
     opacity: 1;
   }
 
-  .mobile .react-resizable-handle {
-    display: none;
+  .mobile, .full-screen {
+    .react-resizable-handle {
+      display: none;
+    }
   }
 }

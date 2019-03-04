@@ -1,17 +1,19 @@
-.widget {
-  height: calc(100% - 60px);
-  position: relative;
-  transition: opacity 0.5s ease;
-  opacity: 1;
-}
-
-.hidden {
-  opacity: 0;
-}
-
 .widget-container {
+  position: relative;
   height: 100%;
   border: 1px solid $COLOR--gray-91;
+
+  &.disabled {
+    &:before {
+      content: '';
+      position: absolute;
+      z-index: 2;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+    }
+  }
 }
 
 .widget-header {
@@ -24,4 +26,15 @@
   &.modifiable {
     cursor: all-scroll;
   }
+}
+
+.widget {
+  height: calc(100% - 60px);
+  position: relative;
+  transition: opacity 0.5s ease;
+  opacity: 1;
+}
+
+.hidden {
+  opacity: 0;
 }
