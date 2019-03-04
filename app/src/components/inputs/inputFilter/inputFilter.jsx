@@ -34,6 +34,7 @@ export class InputFilter extends Component {
     onFilterApply: PropTypes.func,
     onFilterStringChange: PropTypes.func,
     filterActive: PropTypes.bool,
+    onCancel: PropTypes.func,
   };
 
   static defaultProps = {
@@ -58,6 +59,7 @@ export class InputFilter extends Component {
     onFilterApply: () => {},
     onFilterStringChange: () => {},
     filterActive: false,
+    onCancel: () => {},
   };
 
   state = {
@@ -73,7 +75,10 @@ export class InputFilter extends Component {
     this.props.onFilterApply();
   };
 
-  handleCancel = () => this.setState({ opened: false });
+  handleCancel = () => {
+    this.setState({ opened: false });
+    this.props.onCancel();
+  };
 
   togglePopup = () => this.setState({ opened: !this.state.opened });
 

@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { injectIntl, intlShape, defineMessages } from 'react-intl';
 import moment from 'moment/moment';
 import {
-  EntityItemName,
   EntityDropdown,
   EntityItemStartTime,
   EntityProjectUsers,
@@ -12,9 +11,7 @@ import {
 import {
   ENTITY_ACTION,
   ENTITY_OBJECT_TYPE,
-  ENTITY_OBJECT_NAME,
   ENTITY_USER,
-  CONDITION_CNT,
   CONDITION_IN,
   CONDITION_BETWEEN,
   ENTITY_START_TIME,
@@ -369,21 +366,22 @@ export class EventsEntities extends Component {
           ],
         },
       },
-      {
-        id: ENTITY_OBJECT_NAME,
-        component: EntityItemName,
-        value:
-          ENTITY_OBJECT_NAME in filterValues
-            ? filterValues[ENTITY_OBJECT_NAME]
-            : {
-                filteringField: ENTITY_OBJECT_NAME,
-                value: '',
-                condition: CONDITION_CNT,
-              },
-        title: intl.formatMessage(messages.objectNameCol),
-        active: true,
-        removable: false,
-      },
+      /* TODO EPMRPP-38214 */
+      // {
+      //   id: ENTITY_OBJECT_NAME,
+      //   component: EntityItemName,
+      //   value:
+      //     ENTITY_OBJECT_NAME in filterValues
+      //       ? filterValues[ENTITY_OBJECT_NAME]
+      //       : {
+      //           filteringField: ENTITY_OBJECT_NAME,
+      //           value: '',
+      //           condition: CONDITION_CNT,
+      //         },
+      //   title: intl.formatMessage(messages.objectNameCol),
+      //   active: true,
+      //   removable: false,
+      // },
       {
         id: ENTITY_USER,
         component: EntityProjectUsers,

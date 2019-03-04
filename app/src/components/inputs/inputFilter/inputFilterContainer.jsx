@@ -66,6 +66,8 @@ export class InputFilterContainer extends Component {
     this.setState({ filterString: value }, () => this.debouncedChangeHandler(value));
   };
 
+  handleCancel = () => this.setState({ values: this.state.prevValues });
+
   render() {
     const { entitiesProvider, filterValues } = this.props;
     return (
@@ -81,6 +83,7 @@ export class InputFilterContainer extends Component {
             onFilterApply={this.handleFilterApply}
             onFilterValidate={onFilterValidate}
             onClear={this.handleFilterClear}
+            onCancel={this.handleCancel}
             value={this.state.filterString}
             onFilterStringChange={this.handleFilterStringChange}
             filterActive={Object.keys(filterValues).length > 0}
