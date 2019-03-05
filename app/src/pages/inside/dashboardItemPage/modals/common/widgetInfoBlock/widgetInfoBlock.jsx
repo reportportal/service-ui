@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import isEqual from 'fast-deep-equal';
 import Parser from 'html-react-parser';
-import { fetch } from 'common/utils';
+import { fetch, debounce } from 'common/utils';
 import { URLS } from 'common/urls';
 import EmptyWidgetPreview from 'pages/inside/dashboardItemPage/modals/common/img/wdgt-undefined-inline.svg';
 import { TABLE_WIDGETS_PREVIEWS } from '../widgets';
@@ -66,7 +66,7 @@ export class WidgetInfoBlock extends PureComponent {
       widgetData: null,
     });
 
-  fetchWidget = (widgetSettings) => {
+  fetchWidget = debounce((widgetSettings) => {
     this.setState({
       loading: true,
       widgetData: null,
@@ -90,7 +90,7 @@ export class WidgetInfoBlock extends PureComponent {
           widgetData: null,
         });
       });
-  };
+  }, 300);
 
   render() {
     const { activeWidget } = this.props;
