@@ -23,8 +23,8 @@ export class C3Chart extends React.Component {
     this.updateChart(this.props.config);
   }
 
-  componentDidUpdate(newProps) {
-    this.updateChart(newProps.config);
+  componentDidUpdate() {
+    this.updateChart(this.props.config);
   }
 
   componentWillUnmount() {
