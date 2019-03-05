@@ -57,7 +57,7 @@ InputTextArea.propTypes = {
 InputTextArea.defaultProps = {
   value: '',
   placeholder: '',
-  maxLength: '254',
+  maxLength: '256',
   disabled: false,
   mobileDisabled: false,
   readonly: false,

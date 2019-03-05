@@ -50,7 +50,7 @@ export class InputOutside extends Component {
     value: '',
     icon: '',
     placeholder: '',
-    maxLength: '254',
+    maxLength: '256',
     disabled: false,
     readonly: false,
     onChange: () => {},

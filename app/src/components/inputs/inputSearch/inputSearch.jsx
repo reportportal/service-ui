@@ -85,7 +85,7 @@ InputSearch.defaultProps = {
   type: 'text',
   value: '',
   placeholder: '',
-  maxLength: '254',
+  maxLength: '256',
   className: '',
   iconAtRight: false,
   searchHint: '',
