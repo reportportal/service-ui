@@ -90,7 +90,7 @@ Input.defaultProps = {
   type: 'text',
   value: '',
   placeholder: '',
-  maxLength: '254',
+  maxLength: '256',
   mobileDisabled: false,
   disabled: false,
   readonly: false,

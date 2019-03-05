@@ -39,7 +39,7 @@ export class InputFilter extends Component {
   static defaultProps = {
     value: '',
     placeholder: '',
-    maxLength: '254',
+    maxLength: '256',
     className: '',
     active: false,
     disabled: false,
