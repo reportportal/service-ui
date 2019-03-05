@@ -101,7 +101,7 @@ export const widgetTitles = defineMessages({
   },
   [MOST_FAILED_TEST_CASES_TABLE]: {
     id: 'Widgets.Name.mostFailedTestCases',
-    defaultMessage: 'Most failure test-cases table (TOP-20)',
+    defaultMessage: 'Most failed test-cases table (TOP-20)',
   },
   [FAILED_CASES_TREND]: {
     id: 'Widgets.Name.bugTrend',
