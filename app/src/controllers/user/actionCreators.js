@@ -4,7 +4,7 @@ import {
   FETCH_USER_SUCCESS,
   SET_ACTIVE_PROJECT,
   SET_START_TIME_FORMAT,
-  SET_USER_TOKEN,
+  SET_API_TOKEN,
   SET_PHOTO_TIME_STAMP,
 } from './constants';
 import { userInfoSelector } from './selectors';
@@ -19,6 +19,14 @@ export const setPhotoTimeStampAction = (timeStamp) => ({
   payload: timeStamp,
 });
 
+const setApiTokenAction = (token) => ({
+  type: SET_API_TOKEN,
+  payload: {
+    type: token.token_type,
+    value: token.access_token,
+  },
+});
+
 export const setActiveProjectAction = (project) => (dispatch, getState) => {
   const user = userInfoSelector(getState());
   const currentUserSettings = getStorageItem(`${user.userId}_settings`) || {};
@@ -31,13 +39,13 @@ export const setActiveProjectAction = (project) => (dispatch, getState) => {
 
 export const generateApiTokenAction = () => (dispatch) =>
   fetch(URLS.apiToken(), { method: 'post' }).then((res) => {
-    dispatch({ type: SET_USER_TOKEN, payload: res.access_token });
+    dispatch(setApiTokenAction(res));
   });
 
 export const fetchApiTokenAction = () => (dispatch) =>
   fetch(URLS.apiToken(), { method: 'get' })
     .then((res) => {
-      dispatch({ type: SET_USER_TOKEN, payload: res.access_token });
+      dispatch(setApiTokenAction(res));
     })
     .catch(() => dispatch(generateApiTokenAction()));
 

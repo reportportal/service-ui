@@ -5,15 +5,11 @@ import { showNotification } from 'controllers/notification';
 import { NOTIFICATION_TYPES } from 'controllers/notification/constants';
 import { activeProjectSelector, fetchUserAction } from 'controllers/user';
 import { fetchProjectAction } from 'controllers/project';
-import { authSuccessAction } from 'controllers/auth/actionCreators';
-import { DEFAULT_TOKEN, LOGIN, LOGOUT, TOKEN_KEY, GRANT_TYPES } from './constants';
-
-function setDefaultToken() {
-  localStorage.setItem(TOKEN_KEY, DEFAULT_TOKEN);
-}
+import { authSuccessAction, resetTokenAction, setTokenAction } from './actionCreators';
+import { LOGIN, LOGOUT, TOKEN_KEY, GRANT_TYPES, SET_TOKEN } from './constants';
 
 function* handleLogout() {
-  yield call(setDefaultToken);
+  yield put(resetTokenAction());
 }
 
 function* watchLogout() {
@@ -38,7 +34,12 @@ function* handleLogin({ payload }) {
     return;
   }
 
-  localStorage.setItem(TOKEN_KEY, `${result.token_type} ${result.access_token}`);
+  yield put(
+    setTokenAction({
+      type: result.token_type,
+      value: result.access_token,
+    }),
+  );
   // TODO: Change those calls after project & users actions will be refactored with sagas
   yield put.resolve(fetchUserAction());
   const projectId = yield select(activeProjectSelector);
@@ -50,6 +51,14 @@ function* watchLogin() {
   yield takeEvery(LOGIN, handleLogin);
 }
 
+function* handleSetToken({ payload }) {
+  yield call([localStorage, 'setItem'], TOKEN_KEY, payload);
+}
+
+function* watchSetToken() {
+  yield takeEvery(SET_TOKEN, handleSetToken);
+}
+
 export function* authSagas() {
-  yield all([watchLogin(), watchLogout()]);
+  yield all([watchLogin(), watchLogout(), watchSetToken()]);
 }

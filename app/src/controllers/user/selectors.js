@@ -19,4 +19,9 @@ export const activeProjectRoleSelector = (state) => {
   return assignedProject && assignedProject.projectRole;
 };
 export const isAdminSelector = (state) => userInfoSelector(state).userRole === ADMINISTRATOR;
-export const userTokenSelector = (state) => userSelector(state).token || '';
+
+const apiTokenSelector = (state) => userSelector(state).token || '';
+export const apiTokenValueSelector = (state) => apiTokenSelector(state).value;
+export const apiTokenTypeSelector = (state) => apiTokenSelector(state).type;
+export const apiTokenStringSelector = (state) =>
+  `${apiTokenTypeSelector(state)} ${apiTokenValueSelector(state)}`;

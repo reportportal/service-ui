@@ -11,4 +11,4 @@ export const SETTINGS_INITIAL_STATE = {
   photoTimeStamp: Date.now(),
 };
 
-export const SET_USER_TOKEN = 'setUserToken';
+export const SET_API_TOKEN = 'setApiToken';
