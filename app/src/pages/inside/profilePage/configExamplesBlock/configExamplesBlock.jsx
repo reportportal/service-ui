@@ -24,7 +24,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
 import { ContainerWithTabs } from 'components/main/containerWithTabs';
-import { userTokenSelector } from 'controllers/user';
+import { userTokenSelector, activeProjectSelector } from 'controllers/user';
 import { PROFILE_PAGE_EVENTS } from 'components/main/analytics/events';
 import styles from './configExamplesBlock.scss';
 import { BlockContainerHeader, BlockContainerBody } from '../blockContainer';
@@ -34,38 +34,44 @@ const cx = classNames.bind(styles);
 
 @connect((state) => ({
   token: userTokenSelector(state),
+  activeProject: activeProjectSelector(state),
 }))
 export class ConfigExamplesBlock extends Component {
   static propTypes = {
     token: PropTypes.string,
+    activeProject: PropTypes.string,
   };
   static defaultProps = {
     token: '',
+    activeProject: '',
   };
-  render = () => (
-    <div className={cx('config-example-block')}>
-      <BlockContainerHeader>
-        <span className={cx('header')}>
-          <FormattedMessage
-            id={'ConfigExamplesBlock.header'}
-            defaultMessage={'Configuration examples'}
-          />
-        </span>
-      </BlockContainerHeader>
-      <BlockContainerBody>
-        <div className={cx('content-container')}>
-          <ContainerWithTabs
-            selectTabEventInfo={PROFILE_PAGE_EVENTS.SELECT_CONFIGURATION_TAB}
-            data={[
-              TabsConfig.javaConfig(this.props.token),
-              TabsConfig.rubyConfig(this.props.token),
-              TabsConfig.soapUiConfig(this.props.token),
-              TabsConfig.dotNetConfig,
-              TabsConfig.nodejsConfig(this.props.token),
-            ]}
-          />
-        </div>
-      </BlockContainerBody>
-    </div>
-  );
+  render() {
+    const { token, activeProject } = this.props;
+    return (
+      <div className={cx('config-example-block')}>
+        <BlockContainerHeader>
+          <span className={cx('header')}>
+            <FormattedMessage
+              id={'ConfigExamplesBlock.header'}
+              defaultMessage={'Configuration examples'}
+            />
+          </span>
+        </BlockContainerHeader>
+        <BlockContainerBody>
+          <div className={cx('content-container')}>
+            <ContainerWithTabs
+              selectTabEventInfo={PROFILE_PAGE_EVENTS.SELECT_CONFIGURATION_TAB}
+              data={[
+                TabsConfig.javaConfig(token, activeProject),
+                TabsConfig.rubyConfig(token, activeProject),
+                TabsConfig.soapUiConfig(token, activeProject),
+                TabsConfig.dotNetConfig,
+                TabsConfig.nodejsConfig(token, activeProject),
+              ]}
+            />
+          </div>
+        </BlockContainerBody>
+      </div>
+    );
+  }
 }
