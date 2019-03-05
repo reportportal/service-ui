@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { showModalAction } from 'controllers/modal';
 import classNames from 'classnames/bind';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
-import { userTokenSelector, generateApiTokenAction } from 'controllers/user';
+import { apiTokenValueSelector, generateApiTokenAction } from 'controllers/user';
 import { Input } from 'components/inputs/input/input';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { PROFILE_PAGE_EVENTS } from 'components/main/analytics/events';
@@ -41,7 +41,7 @@ const messages = defineMessages({
 
 @connect(
   (state) => ({
-    token: userTokenSelector(state),
+    token: apiTokenValueSelector(state),
   }),
   { showNotification, showModalAction, generateApiTokenAction },
 )

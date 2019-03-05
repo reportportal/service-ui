@@ -1,6 +1,9 @@
-import { takeEvery, call, all, put } from 'redux-saga/effects';
-import { fetch } from 'common/utils';
+import { takeEvery, call, all, put, select } from 'redux-saga/effects';
+import { fetch, updateToken } from 'common/utils/fetch';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
+import { SET_TOKEN, tokenSelector } from 'controllers/auth';
+import { SET_API_TOKEN } from 'controllers/user';
+import { CHANGE_FULL_SCREEN_MODE, TOGGLE_FULL_SCREEN_MODE } from 'controllers/dashboard';
 import { FETCH_DATA, FETCH_ERROR, BULK_FETCH_DATA, CONCAT_FETCH_DATA } from './constants';
 import {
   fetchSuccessAction,
@@ -48,6 +51,18 @@ function* fetchData({ payload, meta }) {
   }
 }
 
+function* updateTokenWorker() {
+  const token = yield select(tokenSelector);
+  yield call(updateToken, token);
+}
+
+function* watchUpdateToken() {
+  yield takeEvery(
+    [SET_TOKEN, SET_API_TOKEN, CHANGE_FULL_SCREEN_MODE, TOGGLE_FULL_SCREEN_MODE],
+    updateTokenWorker,
+  );
+}
+
 function* watchBulkFetchData() {
   yield takeEvery(BULK_FETCH_DATA, bulkFetchData);
 }
@@ -69,5 +84,11 @@ function* watchFetchError() {
 }
 
 export function* fetchSagas() {
-  yield all([watchFetchData(), watchFetchError(), watchBulkFetchData(), watchConcatFetchData()]);
+  yield all([
+    watchFetchData(),
+    watchFetchError(),
+    watchBulkFetchData(),
+    watchConcatFetchData(),
+    watchUpdateToken(),
+  ]);
 }

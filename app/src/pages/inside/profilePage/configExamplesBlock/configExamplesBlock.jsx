@@ -24,7 +24,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
 import { ContainerWithTabs } from 'components/main/containerWithTabs';
-import { userTokenSelector, activeProjectSelector } from 'controllers/user';
+import { apiTokenValueSelector, activeProjectSelector } from 'controllers/user';
 import { PROFILE_PAGE_EVENTS } from 'components/main/analytics/events';
 import styles from './configExamplesBlock.scss';
 import { BlockContainerHeader, BlockContainerBody } from '../blockContainer';
@@ -33,7 +33,7 @@ import { TabsConfig } from './tabsConfig';
 const cx = classNames.bind(styles);
 
 @connect((state) => ({
-  token: userTokenSelector(state),
+  token: apiTokenValueSelector(state),
   activeProject: activeProjectSelector(state),
 }))
 export class ConfigExamplesBlock extends Component {

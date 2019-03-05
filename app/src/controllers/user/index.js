@@ -1,4 +1,4 @@
-export { START_TIME_FORMAT_ABSOLUTE, START_TIME_FORMAT_RELATIVE } from './constants';
+export { START_TIME_FORMAT_ABSOLUTE, START_TIME_FORMAT_RELATIVE, SET_API_TOKEN } from './constants';
 export {
   fetchUserAction,
   setActiveProjectAction,
@@ -18,6 +18,7 @@ export {
   assignedProjectsSelector,
   activeProjectRoleSelector,
   userAccountRoleSelector,
-  userTokenSelector,
   photoTimeStampSelector,
+  apiTokenValueSelector,
+  apiTokenStringSelector,
 } from './selectors';
