@@ -1,4 +1,6 @@
 import { PASSED, FAILED, MANY, NOT_FOUND } from 'common/constants/launchStatuses';
+import { extractNamespacedQuery, createNamespacedQuery } from 'common/utils/routingUtils';
+import { NAMESPACE } from './constants';
 
 const validForGrowthDuration = (item) =>
   item.status === FAILED.toUpperCase() || item.status === PASSED.toUpperCase();
@@ -62,4 +64,12 @@ export const getNextItem = (testItems = [], currentId) => {
   }
   const itemIndex = testItems.findIndex((item) => item.id === currentId);
   return testItems[itemIndex + 1] || null;
+};
+
+export const getUpdatedLogQuery = (query, itemId) => {
+  const previousLogQuery = extractNamespacedQuery(query, NAMESPACE);
+  if (previousLogQuery.history) {
+    previousLogQuery.history = itemId;
+  }
+  return createNamespacedQuery(previousLogQuery, NAMESPACE);
 };

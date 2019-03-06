@@ -114,7 +114,6 @@ const testItemPages = {
 export class TestItemPage extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
-    parentLaunch: PropTypes.object.isRequired,
     activeProject: PropTypes.string.isRequired,
     userId: PropTypes.string.isRequired,
     deleteItemsAction: PropTypes.func.isRequired,
@@ -123,6 +122,7 @@ export class TestItemPage extends Component {
     hideScreenLockAction: PropTypes.func.isRequired,
     fetchTestItemsAction: PropTypes.func.isRequired,
     showModalAction: PropTypes.func.isRequired,
+    parentLaunch: PropTypes.object,
     level: PropTypes.string,
     loading: PropTypes.bool,
     breadcrumbs: PropTypes.arrayOf(PropTypes.object),
@@ -134,6 +134,7 @@ export class TestItemPage extends Component {
   };
 
   static defaultProps = {
+    parentLaunch: {},
     level: null,
     loading: false,
     breadcrumbs: [],

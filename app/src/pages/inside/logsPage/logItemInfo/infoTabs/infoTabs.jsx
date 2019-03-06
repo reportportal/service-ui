@@ -3,6 +3,7 @@ import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
+import { SCREEN_XS_MAX } from 'common/constants/screenSizeVariables';
 import ArrowDownIcon from 'common/img/arrow-down-inline.svg';
 import styles from './infoTabs.scss';
 
@@ -41,6 +42,8 @@ export class InfoTabs extends Component {
     return activeTab && tab.id === activeTab.id;
   }
 
+  isOnMobile = () => window.matchMedia(SCREEN_XS_MAX).matches;
+
   render() {
     const { tabs, activeTab, setActiveTab, panelContent, tracking } = this.props;
 
@@ -62,14 +65,18 @@ export class InfoTabs extends Component {
                   {Parser(ArrowDownIcon)}
                 </i>
               </button>
-              {this.isActiveTab(tab) && (
-                <div className={cx('tabs-content', 'mobile')}>{tab.content}</div>
-              )}
+              {this.isOnMobile() &&
+                this.isActiveTab(tab) && (
+                  <div className={cx('tabs-content', 'mobile')}>{tab.content}</div>
+                )}
             </Fragment>
           ))}
           {panelContent && <div className={cx('panel-content')}>{panelContent}</div>}
         </div>
-        {activeTab && <div className={cx('tabs-content', 'desktop')}>{activeTab.content}</div>}
+        {activeTab &&
+          !this.isOnMobile() && (
+            <div className={cx('tabs-content', 'desktop')}>{activeTab.content}</div>
+          )}
       </div>
     );
   }

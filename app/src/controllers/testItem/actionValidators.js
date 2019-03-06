@@ -11,7 +11,7 @@ export const validateDeleteItem = (item, items, state) => {
   const user = userInfoSelector(state);
   const userRole = userAccountRoleSelector(state);
   const projectRole = activeProjectRoleSelector(state);
-  const currentLaunch = launchSelector(state);
+  const currentLaunch = launchSelector(state) || {};
   if (!canDeleteTestItem(userRole, projectRole, currentLaunch.owner === user.userId)) {
     return 'notYourOwnLaunch';
   }
