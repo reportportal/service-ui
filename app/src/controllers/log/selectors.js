@@ -18,6 +18,7 @@ import {
   normalizeHistoryItem,
   getPreviousItem,
   getNextItem,
+  getUpdatedLogQuery,
 } from './utils';
 import { NAMESPACE } from './constants';
 
@@ -99,13 +100,14 @@ export const previousLogLinkSelector = createSelector(
     if (!previousItem) {
       return null;
     }
+    const updatedLogQuery = getUpdatedLogQuery(query, previousItem.id);
     return {
       type: debugMode ? PROJECT_USERDEBUG_LOG_PAGE : PROJECT_LOG_PAGE,
       payload: {
         ...payload,
         testItemIds: [...testItemIds.slice(0, testItemIds.length - 1), previousItem.id].join('/'),
       },
-      meta: { query },
+      meta: { query: { ...query, ...updatedLogQuery } },
     };
   },
 );
@@ -122,13 +124,14 @@ export const nextLogLinkSelector = createSelector(
     if (!nextItem) {
       return null;
     }
+    const updatedLogQuery = getUpdatedLogQuery(query, nextItem.id);
     return {
       type: debugMode ? PROJECT_USERDEBUG_LOG_PAGE : PROJECT_LOG_PAGE,
       payload: {
         ...payload,
         testItemIds: [...testItemIds.slice(0, testItemIds.length - 1), nextItem.id].join('/'),
       },
-      meta: { query },
+      meta: { query: { ...query, ...updatedLogQuery } },
     };
   },
 );

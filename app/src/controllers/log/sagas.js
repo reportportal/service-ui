@@ -63,9 +63,9 @@ function* fetchWholePage() {
   yield put(fetchTestItemsAction({ offset: 1 }));
   yield all([
     call(fetchParentItems),
+    call(fetchHistoryEntries),
     call(fetchLogItems),
     call(fetchActivity),
-    call(fetchHistoryEntries),
   ]);
 }
 
@@ -83,9 +83,9 @@ function* fetchLogPageData({ meta = {} }) {
   const isPathNameChanged = yield select(pathnameChangedSelector);
   if (meta.refresh) {
     yield all([
+      call(fetchHistoryEntries),
       call(fetchLogItems),
       call(fetchActivity),
-      call(fetchHistoryEntries),
       put(fetchAttachmentsAction()),
     ]);
     return;

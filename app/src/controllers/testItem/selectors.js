@@ -48,10 +48,10 @@ export const createParentItemsSelector = (offset = 0) =>
   createSelector(parentItemsSelector, defectTypesSelector, (parentItems, defectTypes) =>
     normalizeTestItem(parentItems[parentItems.length - 1 - offset], defectTypes),
   );
-export const parentItemSelector = createParentItemsSelector(0);
-export const launchSelector = (state) => parentItemsSelector(state)[0] || {};
+export const parentItemSelector = createParentItemsSelector();
+export const launchSelector = (state) => parentItemsSelector(state)[0];
 export const isLostLaunchSelector = (state) =>
-  parentItemsSelector(state).length > 1 && !!launchSelector(state);
+  parentItemsSelector(state).length > 1 && !launchSelector(state);
 
 const isListView = (query, namespace) => {
   const namespacedQuery = extractNamespacedQuery(query, namespace);
