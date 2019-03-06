@@ -10,3 +10,4 @@ export const EXTERNAL_SYSTEM = 'externalSystem';
 export const DEFECT_TYPE = 'defectType';
 export const USER = 'user';
 export const EMAIL_CONFIG = 'emailConfig';
+export const ITEM_ISSUE = 'itemIssue';

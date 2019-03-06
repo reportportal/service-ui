@@ -45,7 +45,9 @@ UserColumn.defaultProps = {
 
 const ActionColumn = ({ className, value, customProps: { formatMessage } }) => (
   <div className={cx('action-col', className)}>
-    {value.actionType && formatMessage(actionMessages[value.actionType])}
+    {value.actionType && actionMessages[value.actionType]
+      ? formatMessage(actionMessages[value.actionType])
+      : value.actionType}
   </div>
 );
 ActionColumn.propTypes = {
@@ -62,7 +64,9 @@ ActionColumn.defaultProps = {
 
 const ObjectTypeColumn = ({ className, value, customProps: { formatMessage } }) => (
   <div className={cx('object-type-col', className)}>
-    {value.objectType && formatMessage(objectTypesMessages[value.objectType])}
+    {value.objectType && objectTypesMessages[value.objectType]
+      ? formatMessage(objectTypesMessages[value.objectType])
+      : value.objectType}
   </div>
 );
 ObjectTypeColumn.propTypes = {
