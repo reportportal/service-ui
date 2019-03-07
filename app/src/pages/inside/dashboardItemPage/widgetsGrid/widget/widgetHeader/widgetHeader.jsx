@@ -4,7 +4,12 @@ import classNames from 'classnames/bind';
 import { injectIntl, intlShape, defineMessages } from 'react-intl';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { userIdSelector } from 'controllers/user';
+import {
+  userIdSelector,
+  activeProjectRoleSelector,
+  userAccountRoleSelector,
+} from 'controllers/user';
+import { canDeleteWidget } from 'common/utils/permissions';
 import CrossIcon from 'common/img/cross-icon-inline.svg';
 import PencilIcon from 'common/img/pencil-icon-inline.svg';
 import RefreshIcon from 'common/img/refresh-icon-inline.svg';
@@ -140,17 +145,23 @@ const widgetModeMessages = defineMessages({
 @injectIntl
 @connect((state) => ({
   userId: userIdSelector(state),
+  userRole: userAccountRoleSelector(state),
+  projectRole: activeProjectRoleSelector(state),
 }))
 export class WidgetHeader extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
     userId: PropTypes.string.isRequired,
+    userRole: PropTypes.string,
+    projectRole: PropTypes.string,
     data: PropTypes.object,
     onRefresh: PropTypes.func,
     onDelete: PropTypes.func,
     onEdit: PropTypes.func,
   };
   static defaultProps = {
+    userRole: '',
+    projectRole: '',
     onRefresh: () => {},
     onDelete: () => {},
     onEdit: () => {},
@@ -158,7 +169,7 @@ export class WidgetHeader extends Component {
   };
 
   render() {
-    const { intl, data, userId, onRefresh, onDelete, onEdit } = this.props;
+    const { intl, data, userId, userRole, projectRole, onRefresh, onDelete, onEdit } = this.props;
     return (
       <div className={cx('widget-header')}>
         <div className={cx('info-block')}>
@@ -206,9 +217,11 @@ export class WidgetHeader extends Component {
           <div className={cx('control')} onClick={onRefresh}>
             {Parser(RefreshIcon)}
           </div>
-          <div className={cx('control')} onClick={onDelete}>
-            {Parser(CrossIcon)}
-          </div>
+          {canDeleteWidget(userRole, projectRole, userId === data.owner) && (
+            <div className={cx('control')} onClick={onDelete}>
+              {Parser(CrossIcon)}
+            </div>
+          )}
         </div>
       </div>
     );
