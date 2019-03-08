@@ -5,6 +5,7 @@ export {
   fetchUserFiltersSuccessAction,
   changeActiveFilterAction,
   updateFilterConditionsAction,
+  updateFilterOrdersAction,
   updateFilterAction,
   resetFilterAction,
   createFilterAction,

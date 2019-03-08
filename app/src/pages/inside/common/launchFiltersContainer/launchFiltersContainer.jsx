@@ -5,6 +5,7 @@ import {
   launchFiltersSelector,
   changeActiveFilterAction,
   updateFilterConditionsAction,
+  updateFilterOrdersAction,
   activeFilterSelector,
   removeLaunchesFilterAction,
 } from 'controllers/filter';
@@ -25,6 +26,7 @@ const isEmptyValue = (value) => value === '' || value === null || value === unde
     changeActiveFilterAction,
     fetchLaunchesWithParamsAction,
     updateFilterConditionsAction,
+    updateFilterOrdersAction,
     fetchLaunchesAction,
     hideFilterOnLaunchesAction,
     removeLaunchesFilterAction,
@@ -39,6 +41,7 @@ export class LaunchFiltersContainer extends Component {
     changeActiveFilterAction: PropTypes.func,
     fetchLaunchesWithParamsAction: PropTypes.func,
     updateFilterConditionsAction: PropTypes.func,
+    updateFilterOrdersAction: PropTypes.func,
     fetchLaunchesAction: PropTypes.func,
     hideFilterOnLaunchesAction: PropTypes.func,
     removeLaunchesFilterAction: PropTypes.func,
@@ -51,6 +54,7 @@ export class LaunchFiltersContainer extends Component {
     changeActiveFilterAction: () => {},
     fetchLaunchesWithParamsAction: () => {},
     updateFilterConditionsAction: () => {},
+    updateFilterOrdersAction: () => {},
     fetchLaunchesAction: () => {},
     hideFilterOnLaunchesAction: () => {},
     removeLaunchesFilterAction: () => {},
@@ -104,8 +108,14 @@ export class LaunchFiltersContainer extends Component {
     1000,
   );
 
+  updateFilterOrder = debounce(
+    (filterId, orders) => this.props.updateFilterOrdersAction(filterId, orders),
+    1000,
+  );
+
   render() {
     const { render, launchFilters, activeFilterId, activeFilter } = this.props;
+
     return render({
       launchFilters,
       activeFilterId,
@@ -115,6 +125,7 @@ export class LaunchFiltersContainer extends Component {
       onChangeFilter: this.handleFilterChange,
       activeFilterConditions: this.getConditions(),
       onResetFilter: this.props.fetchLaunchesAction,
+      onUpdateFilterOrder: this.updateFilterOrder,
     });
   }
 }

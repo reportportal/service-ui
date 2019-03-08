@@ -3,6 +3,7 @@ import { FormattedMessage } from 'react-intl';
 import classNames from 'classnames/bind';
 import { SharedMessage } from './sharedMessage';
 import { FilterControls } from './filterControls';
+import { FiltersSorting } from '../../../../inside/dashboardItemPage/modals/common/widgetControls/controls/filtersControl/filtersSorting/filtersSorting';
 import styles from './filtersActionBar.scss';
 
 const cx = classNames.bind(styles);
@@ -18,6 +19,7 @@ export const FiltersActionBar = ({
   onClone,
   onEdit,
   onSave,
+  onChangeSorting,
 }) => (
   <div className={cx('filters-action-bar')}>
     <div className={cx('info-section')}>
@@ -37,6 +39,7 @@ export const FiltersActionBar = ({
       )}
     </div>
     <div className={cx('controls-section')}>
+      <FiltersSorting filter={filter} onChange={onChangeSorting} />
       <FilterControls
         cloneDisabled={cloneDisabled}
         editDisabled={editDisabled}
@@ -62,6 +65,7 @@ FiltersActionBar.propTypes = {
   onClone: PropTypes.func.isRequired,
   onEdit: PropTypes.func.isRequired,
   onSave: PropTypes.func.isRequired,
+  onChangeSorting: PropTypes.func.isRequired,
 };
 FiltersActionBar.defaultProps = {
   filter: {},

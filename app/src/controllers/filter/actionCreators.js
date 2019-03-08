@@ -3,6 +3,7 @@ import {
   FETCH_FILTERS_CONCAT,
   CHANGE_ACTIVE_FILTER,
   UPDATE_FILTER_CONDITIONS,
+  UPDATE_FILTER_ORDERS,
   UPDATE_FILTER,
   UPDATE_FILTER_SUCCESS,
   ADD_FILTER,
@@ -39,6 +40,14 @@ export const updateFilterConditionsAction = (filterId, conditions) => ({
   payload: {
     filterId,
     conditions,
+  },
+});
+
+export const updateFilterOrdersAction = (filterId, orders) => ({
+  type: UPDATE_FILTER_ORDERS,
+  payload: {
+    filterId,
+    orders,
   },
 });
 

@@ -351,6 +351,18 @@ export class LaunchesPage extends Component {
     this.props.toggleLaunchSelectionAction(item);
   };
 
+  handleChangeSorting = (sortingColumn) => {
+    let orderBy = sortingColumn;
+
+    this.onUpdateFilterOrder(this.activeFilterId, sortingColumn);
+
+    if (Array.isArray(sortingColumn)) {
+      orderBy = sortingColumn[0].sortingColumn;
+    }
+
+    this.props.onChangeSorting(orderBy);
+  };
+
   renderPageContent = ({
     launchFilters,
     activeFilterId,
@@ -360,6 +372,7 @@ export class LaunchesPage extends Component {
     onRemoveFilter,
     onChangeFilter,
     onResetFilter,
+    onUpdateFilterOrder,
   }) => {
     const {
       activePage,
@@ -370,12 +383,15 @@ export class LaunchesPage extends Component {
       onChangePageSize,
       sortingColumn,
       sortingDirection,
-      onChangeSorting,
       selectedLaunches,
       launches,
       loading,
       debugMode,
     } = this.props;
+
+    this.onUpdateFilterOrder = onUpdateFilterOrder;
+    this.activeFilterId = activeFilterId;
+
     return (
       <FilterEntitiesContainer
         level={LEVEL_LAUNCH}
@@ -394,6 +410,7 @@ export class LaunchesPage extends Component {
                   onRemoveFilter={onRemoveFilter}
                   onFilterAdd={onFilterAdd}
                   onResetFilter={onResetFilter}
+                  onChangeSorting={this.handleChangeSorting}
                   {...rest}
                 />
               )}
@@ -418,7 +435,7 @@ export class LaunchesPage extends Component {
                 data={launches}
                 sortingColumn={sortingColumn}
                 sortingDirection={sortingDirection}
-                onChangeSorting={onChangeSorting}
+                onChangeSorting={this.handleChangeSorting}
                 onDeleteItem={this.confirmDeleteItem}
                 onMove={this.moveLaunches}
                 onEditItem={this.openEditModal}
