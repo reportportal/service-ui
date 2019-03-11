@@ -30,4 +30,4 @@ export {
   REMOVE_FILTER,
   UPDATE_FILTER_SUCCESS,
 } from './constants';
-export { updateFilter } from './utils';
+export { updateFilter, addFilteringFieldToConditions } from './utils';

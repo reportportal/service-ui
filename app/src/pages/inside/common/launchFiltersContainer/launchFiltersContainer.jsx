@@ -9,16 +9,13 @@ import {
   activeFilterSelector,
   removeLaunchesFilterAction,
   createFilterAction,
+  addFilteringFieldToConditions,
 } from 'controllers/filter';
 import { filterIdSelector } from 'controllers/pages';
 import { fetchLaunchesWithParamsAction, fetchLaunchesAction } from 'controllers/launch';
 import { debounce } from 'common/utils';
 import { hideFilterOnLaunchesAction } from 'controllers/project';
-
-const isEmptyValue = (value) => value === '' || value === null || value === undefined;
-
-const addFilteringFieldToConditions = (conditions = {}) =>
-  Object.keys(conditions).map((key) => ({ ...conditions[key], filteringField: key }));
+import { isEmptyValue } from 'common/utils/isEmptyValue';
 
 @connect(
   (state) => ({
