@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
 import { withPagination, DEFAULT_PAGINATION, SIZE_KEY } from 'controllers/pagination';
 import { URLS } from 'common/urls';
-import { projectIdSelector } from 'controllers/pages';
 import { activeProjectSelector } from 'controllers/user';
 import {
   eventsSelector,
@@ -15,7 +14,6 @@ import { EventsGrid } from './eventsGrid';
 import { EventsToolbar } from './eventsToolbar';
 
 @connect((state) => ({
-  projectId: projectIdSelector(state),
   url: URLS.events(activeProjectSelector(state)),
   events: eventsSelector(state),
   loading: loadingSelector(state),
@@ -34,7 +32,6 @@ export class ProjectEventsPage extends Component {
     showModalAction: PropTypes.func,
     onChangePage: PropTypes.func,
     onChangePageSize: PropTypes.func,
-    projectId: PropTypes.string.isRequired,
     loading: PropTypes.bool,
     events: PropTypes.arrayOf(PropTypes.object),
   };
