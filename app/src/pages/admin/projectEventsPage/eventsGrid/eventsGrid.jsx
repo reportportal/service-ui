@@ -1,10 +1,12 @@
-import React, { PureComponent } from 'react';
+import React, { PureComponent, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { injectIntl, intlShape, defineMessages } from 'react-intl';
 import { Grid } from 'components/main/grid';
 import { AbsRelTime } from 'components/main/absRelTime';
 import { actionMessages, objectTypesMessages } from 'common/constants/eventsLocalization';
+import { NoItemMessage } from 'components/main/noItemMessage';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 
 import styles from './eventsGrid.scss';
 
@@ -33,7 +35,7 @@ TimeColumn.defaultProps = {
 };
 
 const UserColumn = ({ className, value }) => (
-  <div className={cx('user-col', className)}>{value.userRef}</div>
+  <div className={cx('user-col', className)}>{value.user}</div>
 );
 UserColumn.propTypes = {
   className: PropTypes.string.isRequired,
@@ -193,6 +195,13 @@ export class EventsGrid extends PureComponent {
   COLUMNS = this.getColumns();
 
   render() {
-    return <Grid columns={this.COLUMNS} data={this.props.data} loading={this.props.loading} />;
+    const { data, loading, intl } = this.props;
+    return (
+      <Fragment>
+        <Grid columns={this.COLUMNS} data={data} loading={loading} />
+        {!data.length &&
+          !loading && <NoItemMessage message={intl.formatMessage(COMMON_LOCALE_KEYS.NO_RESULTS)} />}
+      </Fragment>
+    );
   }
 }
