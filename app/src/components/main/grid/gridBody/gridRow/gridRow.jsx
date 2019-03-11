@@ -30,6 +30,7 @@ export class GridRow extends Component {
       isGridRowHighlighted: PropTypes.bool,
       highlightedRowId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     }),
+    excludeFromSelection: PropTypes.arrayOf(PropTypes.object),
   };
 
   static defaultProps = {
@@ -42,6 +43,7 @@ export class GridRow extends Component {
     rowClassMapper: null,
     toggleAccordionEventInfo: {},
     rowHighlightingConfig: {},
+    excludeFromSelection: [],
   };
 
   state = {
@@ -57,6 +59,12 @@ export class GridRow extends Component {
     if (this.checkIfTheHighlightNeeded()) {
       this.highLightGridRow();
     }
+  }
+  get isItemSelected() {
+    return this.props.selectedItems.some((item) => item.id === this.props.value.id);
+  }
+  get isItemDisabled() {
+    return this.props.excludeFromSelection.some((item) => item.id === this.props.value.id);
   }
   setupRef = (overflowCell) => {
     this.overflowCell = overflowCell;
@@ -79,7 +87,6 @@ export class GridRow extends Component {
 
   checkIfTheHighlightNeeded = () => {
     const { highlightedRowId, isGridRowHighlighted } = this.props.rowHighlightingConfig;
-
     return (
       this.highlightBlockRef.current &&
       highlightedRowId === this.props.value.id &&
@@ -126,9 +133,6 @@ export class GridRow extends Component {
         : null;
     });
   };
-
-  isItemSelected = () => this.props.selectedItems.some((item) => item.id === this.props.value.id);
-
   render() {
     const { columns, value, selectable, changeOnlyMobileLayout, rowClassMapper } = this.props;
     const { expanded } = this.state;
@@ -137,7 +141,7 @@ export class GridRow extends Component {
     return (
       <div
         className={cx('grid-row-wrapper', {
-          selected: this.isItemSelected(),
+          selected: this.isItemSelected,
           ...customClasses,
         })}
         data-id={value.id}
@@ -185,7 +189,8 @@ export class GridRow extends Component {
               component={CheckboxCell}
               value={value}
               customProps={{
-                selected: this.isItemSelected(),
+                disabled: this.isItemDisabled,
+                selected: this.isItemSelected,
                 onChange: this.props.onToggleSelection,
               }}
             />
