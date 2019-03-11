@@ -1,11 +1,18 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { getStorageItem } from 'common/utils';
 import { fetchInfoAction, analyticsEnabledSelector } from 'controllers/appInfo';
 import { AnalyticsWrapper } from 'components/main/analytics/AnalyticsWrapper';
 import { fetchProjectAction } from 'controllers/project';
 import { fetchUserAction, activeProjectSelector } from 'controllers/user';
-import { authSuccessAction, setTokenAction, resetTokenAction } from 'controllers/auth';
+import {
+  authSuccessAction,
+  setTokenAction,
+  resetTokenAction,
+  TOKEN_KEY,
+  DEFAULT_TOKEN,
+} from 'controllers/auth';
 
 @connect(
   (state) => ({
@@ -44,6 +51,7 @@ export class InitialDataContainer extends Component {
   };
 
   componentDidMount() {
+    this.props.setTokenAction(getStorageItem(TOKEN_KEY) || DEFAULT_TOKEN);
     const infoPromise = this.props.fetchInfoAction();
     const userPromise = this.props
       .fetchUserAction()

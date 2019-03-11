@@ -1,4 +1,4 @@
-import { fetch } from 'common/utils';
+import { fetch, setStorageItem } from 'common/utils';
 import { URLS } from 'common/urls';
 import { all, call, put, select, takeEvery } from 'redux-saga/effects';
 import { showNotification } from 'controllers/notification';
@@ -52,7 +52,7 @@ function* watchLogin() {
 }
 
 function* handleSetToken({ payload }) {
-  yield call([localStorage, 'setItem'], TOKEN_KEY, payload);
+  yield call(setStorageItem, TOKEN_KEY, payload);
 }
 
 function* watchSetToken() {
