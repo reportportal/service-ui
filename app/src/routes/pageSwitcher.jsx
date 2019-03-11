@@ -34,7 +34,7 @@ import { LaunchesPage } from 'pages/inside/launchesPage';
 import { MembersPage } from 'pages/inside/membersPage';
 import { ProfilePage } from 'pages/inside/profilePage';
 import { SandboxPage } from 'pages/inside/sandboxPage';
-import { SettingsPage } from 'pages/inside/settingsPage';
+import { ProjectSettingsPageContainer } from 'pages/inside/projectSettingsPageContainer';
 import { HistoryPage } from 'pages/inside/historyPage';
 import { LoginPage } from 'pages/outside/loginPage';
 import { NotFoundPage } from 'pages/outside/notFoundPage';
@@ -63,8 +63,8 @@ const pageRendering = {
   PROJECT_LAUNCHES_PAGE: { component: LaunchesPage, layout: AppLayout },
   PROJECT_MEMBERS_PAGE: { component: MembersPage, layout: AppLayout },
   PROJECT_SANDBOX_PAGE: { component: SandboxPage, layout: AppLayout },
-  PROJECT_SETTINGS_PAGE: { component: SettingsPage, layout: AppLayout },
-  PROJECT_SETTINGS_TAB_PAGE: { component: SettingsPage, layout: AppLayout },
+  PROJECT_SETTINGS_PAGE: { component: ProjectSettingsPageContainer, layout: AppLayout },
+  PROJECT_SETTINGS_TAB_PAGE: { component: ProjectSettingsPageContainer, layout: AppLayout },
   PROJECT_USERDEBUG_PAGE: { component: LaunchesPage, layout: AppLayout },
   PROJECT_USERDEBUG_TEST_ITEM_PAGE: { component: TestItemPage, layout: AppLayout },
   ADMINISTRATE_PAGE: { component: ProjectsPage, layout: AdminLayout, access: ADMIN_ACCESS },

@@ -67,12 +67,12 @@ export class StatusPageContent extends Component {
       });
   };
 
-  renderWidget = (wdigetData) => (
-    <StatusPageItem title={this.props.intl.formatMessage(wdigetData.title)}>
+  renderWidget = (widgetData) => (
+    <StatusPageItem title={this.props.intl.formatMessage(widgetData.title)}>
       {this.state.loading ? (
         <SpinningPreloader />
       ) : (
-        wdigetData.component(this.state[wdigetData.source])
+        widgetData.component(this.state[widgetData.source])
       )}
     </StatusPageItem>
   );

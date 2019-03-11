@@ -65,52 +65,52 @@ export const SETTINGS_PAGE_EVENTS = {
     action: 'Click on Bttn Add new rule on tab Notifications',
     label: 'Add new rule on tab Notifications',
   },
-  BTS_TAB: {
+  INTEGRATIONS_TAB: {
     category: SETTINGS_PAGE,
-    action: 'Click on tab Bug tracking system in Settings',
-    label: 'Open tab Bug tracking system in Settings',
+    action: 'Click on tab Integrations in Settings',
+    label: 'Open tab Integrations in Settings',
   },
   SELECT_BTS_BTS: {
     // todo add analytics
     category: SETTINGS_PAGE,
-    action: 'Edit input Bug tracking system on tab Bug tracking system',
-    label: 'Change input Bug tracking system on tab Bug tracking system',
+    action: 'Edit input Bug tracking system on tab Integrations',
+    label: 'Change input Bug tracking system on tab Integrations',
   },
   CHANGE_PROJECT_BTS: {
     // todo add analytics
     category: SETTINGS_PAGE,
-    action: 'Change project of BTS Instances on tab Bug tracking system',
-    label: 'Change project of BTS Instances on tab Bug tracking system',
+    action: 'Change project of BTS Instances on tab Integrations',
+    label: 'Change project of BTS Instances on tab Integrations',
   },
   ADD_NEW_BTS_INSTANCE: {
     // todo add analytics
     category: SETTINGS_PAGE,
-    action: 'Click on link Add new instance on tab Bug tracking system',
-    label: 'Arise fields for adding new project on tab Bug tracking system',
+    action: 'Click on link Add new instance on tab Integrations',
+    label: 'Arise fields for adding new project on tab Integrations',
   },
   EDIT_PROJECT_BTS: {
     // todo add analytics
     category: SETTINGS_PAGE,
-    action: 'Click on icon Edit Projects BTS Instance on tab Bug tracking system',
-    label: 'Arise fields for editing Projects BTS Instance on tab Bug tracking system',
+    action: 'Click on icon Edit Projects BTS Instance on tab Integrations',
+    label: 'Arise fields for editing Projects BTS Instance on tab Integrations',
   },
   DELETE_PROJECT_BTS: {
     // todo add analytics
     category: SETTINGS_PAGE,
-    action: 'Click on icon Delete Projects BTS Instance on tab Bug tracking system',
-    label: 'Arise Modal delete Projects BTS Instance on tab Bug tracking system',
+    action: 'Click on icon Delete Projects BTS Instance on tab Integrations',
+    label: 'Arise Modal delete Projects BTS Instance on tab Integrations',
   },
   CANCEL_EDIT_PROJECT_BTS: {
     // todo add analytics
     category: SETTINGS_PAGE,
-    action: 'Click on Bttn Cancel Edit Projects BTS Instance on tab Bug tracking system',
-    label: 'Cancel Change of Projects BTS Instance on tab Bug tracking system',
+    action: 'Click on Bttn Cancel Edit Projects BTS Instance on tab Integrations',
+    label: 'Cancel Change of Projects BTS Instance on tab Integrations',
   },
   SUBMIT_EDIT_PROJECT_BTS: {
     // todo add analytics
     category: SETTINGS_PAGE,
-    action: 'Click on Bttn Submit Edit Projects BTS Instance on tab Bug tracking system',
-    label: 'Submit Change of Projects BTS Instance on tab Bug tracking system',
+    action: 'Click on Bttn Submit Edit Projects BTS Instance on tab Integrations',
+    label: 'Submit Change of Projects BTS Instance on tab Integrations',
   },
   CLOSE_ICON_DELETE_PROJECT_MODAL_BTS: {
     // todo add analytics
@@ -133,20 +133,20 @@ export const SETTINGS_PAGE_EVENTS = {
   EDIT_DEFAULT_PROPS_FOR_ISSUE_BTS: {
     // todo add analytics
     category: SETTINGS_PAGE,
-    action: 'Edit inputs of Default properties for issue form on tab Bug tracking system',
-    label: 'Change inputs of Default properties for issue form on tab Bug tracking system',
+    action: 'Edit inputs of Default properties for issue form on tab Integrations',
+    label: 'Change inputs of Default properties for issue form on tab Integrations',
   },
   UPDATE_BTN_DEFAULT_PROPS_BTS: {
     // todo add analytics
     category: SETTINGS_PAGE,
-    action: 'Click on Bttn Update Default properties for issue form on tab Bug tracking system',
-    label: 'Update Default properties for issue form on tab Bug tracking system',
+    action: 'Click on Bttn Update Default properties for issue form on tab Integrations',
+    label: 'Update Default properties for issue form on tab Integrations',
   },
   SUBMIT_BTN_DEFAULT_PROPS_BTS: {
     // todo add analytics
     category: SETTINGS_PAGE,
-    action: 'Click on Bttn Submit Default properties for issue form on tab Bug tracking system',
-    label: 'Submit Change of Default properties for issue form on tab Bug tracking system',
+    action: 'Click on Bttn Submit Default properties for issue form on tab Integrations',
+    label: 'Submit Change of Default properties for issue form on tab Integrations',
   },
   EDIT_DEFECT_TAG_DEFECT_TYPES: {
     // todo add analytics

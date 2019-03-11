@@ -6,6 +6,7 @@ import {
   removeFilterAction,
   addFilterAction,
 } from 'controllers/filter';
+import { projectIdSelector } from 'controllers/pages';
 import {
   FETCH_PROJECT_SUCCESS,
   FETCH_PROJECT_PREFERENCES_SUCCESS,
@@ -43,7 +44,7 @@ export const updateProjectFilterPreferencesAction = (filterId, method) => (dispa
 export const updateProjectNotificationsConfig = (notificationsConfig) => (dispatch, getState) => {
   const currentConfig = projectNotificationsConfigurationSelector(getState());
   const newConfig = { ...currentConfig, ...notificationsConfig };
-  fetch(URLS.projectNotificationConfiguration(activeProjectSelector(getState())), {
+  fetch(URLS.projectNotificationConfiguration(projectIdSelector(getState())), {
     method: 'PUT',
     data: newConfig,
   }).then(() => {
@@ -70,10 +71,10 @@ const fetchProjectPreferencesAction = (projectId) => (dispatch, getState) =>
     dispatch(fetchUserFiltersSuccessAction(preferences.filters));
   });
 
-export const fetchProjectAction = (projectId) => (dispatch) =>
+export const fetchProjectAction = (projectId, isAdminAccess) => (dispatch) =>
   fetch(URLS.project(projectId)).then((project) => {
     dispatch(fetchProjectSuccessAction(project));
-    dispatch(fetchProjectPreferencesAction(projectId));
+    !isAdminAccess && dispatch(fetchProjectPreferencesAction(projectId));
   });
 
 export const fetchConfigurationAttributesAction = (projectId) => (dispatch) => {
