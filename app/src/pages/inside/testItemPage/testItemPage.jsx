@@ -250,13 +250,14 @@ export class TestItemPage extends Component {
         />
       );
     }
+    const isItemNotFound = breadcrumbs.length > 2 && breadcrumbs[breadcrumbs.length - 1].error;
     return (
       <PageLayout>
         <PageSection>
           <div className={cx('breadcrumbs-container')}>
             {!loading && <Breadcrumbs descriptors={breadcrumbs} onRestorePath={restorePath} />}
           </div>
-          {!loading && <NotFound />}
+          {!loading && <NotFound isItemNotFound={isItemNotFound} />}
           {loading && <SpinningPreloader />}
         </PageSection>
       </PageLayout>

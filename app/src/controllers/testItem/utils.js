@@ -57,6 +57,9 @@ export const getDefectsString = (defects) =>
   defects && defects.filter((k) => k !== 'total').join(',');
 
 export const normalizeTestItem = (testItem, defectTypesConfig = {}) => {
+  if (!testItem) {
+    return null;
+  }
   const testItemDefects = (testItem.statistics && testItem.statistics.defects) || {};
   const defectStatistics = Object.keys(defectTypesConfig).reduce((result, key) => {
     const defectTypeName = key.toLowerCase();

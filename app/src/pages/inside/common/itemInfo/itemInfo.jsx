@@ -128,11 +128,12 @@ export class ItemInfo extends Component {
       userAccountRole,
       userId,
       isStepLevel,
-      launch,
+      launch: launchFromProps,
       tracking,
       onClickRetries,
       customProps,
     } = this.props;
+    const launch = launchFromProps || {}; // launch can be null which is not handled by default props
 
     return (
       <div ref={refFunction} className={cx('item-info')}>
