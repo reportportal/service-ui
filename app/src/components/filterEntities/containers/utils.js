@@ -1,7 +1,7 @@
+import { isEmptyValue } from 'common/utils/isEmptyValue';
+
 const FILTER_PREFIX = 'filter.';
 const PREDEFINED_FILTER_PREFIX = 'predefinedFilter.';
-
-const isEmptyValue = (value) => value === '' || value === null || value === undefined;
 
 const getFilterKey = (entity, key) =>
   entity.condition
