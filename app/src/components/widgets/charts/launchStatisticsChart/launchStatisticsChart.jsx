@@ -135,26 +135,10 @@ export class LaunchStatisticsChart extends Component {
     this.chart.toggle(id);
   };
 
-  onChartClick = (data) => {
-    if (this.configData.isTimeLine) {
-      const itemDate = this.configData.itemData[data.index].date;
-      const range = 86400000;
-      const time = moment(itemDate).format('x');
-      const filterEntityValue = `${time},${parseInt(time, 10) + range}`;
-      this.timeLineClickHandler(filterEntityValue);
-      return;
-    }
-    const { widget, getDefectLink, getStatisticsLink, defectTypes } = this.props;
-    const nameConfig = getItemNameConfig(data.id);
-    const id = widget.content.result[data.index].id;
-    const defaultParams = this.getDefaultLinkParams(id);
-    const locators = getDefectTypeLocators(nameConfig, defectTypes);
-
-    const link = locators
-      ? getDefectLink({ defects: locators, itemId: id })
-      : getStatisticsLink({ statuses: this.getLinkParametersStatuses(nameConfig) });
-    this.props.redirect(Object.assign(link, defaultParams));
-  };
+  onChartClick = (data) =>
+    this.configData.isTimeLine
+      ? this.timeLineModeClickHandler(data)
+      : this.launchModeClickHandler(data);
 
   onItemMouseOver = () => this.tooltip.style('display', 'block');
 
@@ -360,17 +344,34 @@ export class LaunchStatisticsChart extends Component {
     };
   };
 
-  timeLineClickHandler = (filterEntityValue) => {
-    const chartFitler = this.props.widget.appliedFilters[0];
+  launchModeClickHandler = (data) => {
+    const { widget, getDefectLink, getStatisticsLink, defectTypes } = this.props;
+    const nameConfig = getItemNameConfig(data.id);
+    const id = widget.content.result[data.index].id;
+    const defaultParams = this.getDefaultLinkParams(id);
+    const locators = getDefectTypeLocators(nameConfig, defectTypes);
+
+    const link = locators
+      ? getDefectLink({ defects: locators, itemId: id })
+      : getStatisticsLink({ statuses: this.getLinkParametersStatuses(nameConfig) });
+    this.props.redirect(Object.assign(link, defaultParams));
+  };
+
+  timeLineModeClickHandler = (data) => {
+    const itemDate = this.configData.itemData[data.index].date;
+    const range = 86400000;
+    const time = moment(itemDate).valueOf();
+    const filterEntityValue = `${time},${time + range}`;
+    const chartFilter = this.props.widget.appliedFilters[0];
     const newCondition = {
       filteringField: ENTITY_START_TIME,
       value: filterEntityValue,
       condition: CONDITION_BETWEEN,
     };
     const newFilter = {
-      orders: chartFitler.orders,
-      type: chartFitler.type,
-      conditions: chartFitler.conditions.concat(newCondition),
+      orders: chartFilter.orders,
+      type: chartFilter.type,
+      conditions: chartFilter.conditions.concat(newCondition),
     };
     this.props.createFilterAction(newFilter);
   };
