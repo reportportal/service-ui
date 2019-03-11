@@ -181,6 +181,7 @@ export class FiltersPage extends Component {
       onChangePageSize,
       filters,
       loading,
+      activeProject,
       ...rest
     } = this.props;
     return (
@@ -198,6 +199,7 @@ export class FiltersPage extends Component {
             onDelete={this.confirmDelete}
             filters={filters}
             loading={loading}
+            activeProject={activeProject}
             {...rest}
           />
           {!filters.length && !loading && !this.props.filter && <NoFiltersBlock />}

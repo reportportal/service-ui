@@ -5,6 +5,7 @@ import classNames from 'classnames/bind';
 import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-intl';
 import { ALIGN_CENTER, Grid } from 'components/main/grid';
 import { FILTERS_PAGE_EVENTS } from 'components/main/analytics/events';
+import { PROJECT_LAUNCHES_PAGE } from 'controllers/pages';
 import { canDeleteFilter } from 'common/utils/permissions';
 import { FilterName } from './filterName';
 import { FilterOptions } from './filterOptions';
@@ -31,6 +32,11 @@ const NameColumn = ({ className, value, customProps }) => (
       onClickName={customProps.onClickName}
       onEdit={customProps.onEdit}
       userId={customProps.userId}
+      nameLink={{
+        type: PROJECT_LAUNCHES_PAGE,
+        payload: { projectId: customProps.activeProject, filterId: value.id },
+      }}
+      isLink
       noShareIcons
     />
   </div>
@@ -150,6 +156,7 @@ export class FilterGrid extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    activeProject: PropTypes.string,
   };
 
   static defaultProps = {
@@ -163,6 +170,7 @@ export class FilterGrid extends Component {
     onDelete: () => {},
     accountRole: '',
     loading: false,
+    activeProject: null,
   };
 
   getColumns = () => [
@@ -174,12 +182,18 @@ export class FilterGrid extends Component {
       component: NameColumn,
       customProps: {
         userFilters: this.props.userFilters,
-        onClickName: () => {}, // TODO
+        onClickName: (filter) => {
+          const isActiveFilter = this.props.userFilters.find((item) => item.id === filter.id);
+          if (!isActiveFilter) {
+            this.props.showFilterOnLaunchesAction(filter);
+          }
+        },
         onEdit: (filter) => {
           this.props.onEdit(filter);
           this.props.tracking.trackEvent(FILTERS_PAGE_EVENTS.CLICK_EDIT_ICON);
         },
         userId: this.props.userId,
+        activeProject: this.props.activeProject,
       },
     },
     {
