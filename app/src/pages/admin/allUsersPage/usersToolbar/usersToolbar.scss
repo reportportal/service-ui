@@ -1,0 +1,31 @@
+.users-toolbar {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-content: stretch;
+  align-items: center;
+  min-height: 36px;
+  padding: 15px;
+}
+
+.users-bulk-toolbar {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  align-content: stretch;
+  align-items: center;
+  color: $COLOR--charcoal-grey;
+  font-size: 13px;
+  & > * ~ * {
+    margin-left: 20px;
+  }
+}
+
+.users-bulk-button {
+  font-weight: 600;
+  color: $COLOR--topaz;
+  user-select: none;
+  cursor: pointer;
+}
