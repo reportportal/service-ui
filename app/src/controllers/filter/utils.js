@@ -8,3 +8,6 @@ export const updateFilter = (filters, filter, oldId) => {
   newFilters.splice(filterIndex, 1, filter);
   return newFilters;
 };
+
+export const addFilteringFieldToConditions = (conditions = {}) =>
+  Object.keys(conditions).map((key) => ({ ...conditions[key], filteringField: key }));

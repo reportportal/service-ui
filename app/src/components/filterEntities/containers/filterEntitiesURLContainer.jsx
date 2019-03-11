@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import isEqual from 'fast-deep-equal';
 import { namespaceSelector } from 'controllers/testItem';
 import { connectRouter, debounce } from 'common/utils';
+import { isEmptyValue } from 'common/utils/isEmptyValue';
 
 const collectFilterEntities = (query) =>
   Object.keys(query || {}).reduce((result, key) => {
@@ -18,8 +19,6 @@ const collectFilterEntities = (query) =>
       },
     };
   }, {});
-
-const isEmptyValue = (value) => value === '' || value === null || value === undefined;
 
 @connectRouter(
   (query) => ({
