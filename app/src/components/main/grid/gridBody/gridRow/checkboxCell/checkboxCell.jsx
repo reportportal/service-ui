@@ -5,9 +5,13 @@ import styles from './checkboxCell.scss';
 
 const cx = classNames.bind(styles);
 
-export const CheckboxCell = ({ className, value, customProps: { selected, onChange } }) => (
+export const CheckboxCell = ({
+  className,
+  value,
+  customProps: { selected, onChange, disabled },
+}) => (
   <div className={cx('checkbox-cell', className)}>
-    <InputCheckbox value={selected} onChange={() => onChange(value)} />
+    <InputCheckbox value={selected} onChange={() => onChange(value)} disabled={disabled} />
   </div>
 );
 CheckboxCell.propTypes = {
@@ -15,6 +19,7 @@ CheckboxCell.propTypes = {
   value: PropTypes.object.isRequired,
   customProps: PropTypes.shape({
     selected: PropTypes.bool,
+    disabled: PropTypes.bool,
     onChange: PropTypes.func,
   }),
 };

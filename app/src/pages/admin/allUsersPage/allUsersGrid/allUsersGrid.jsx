@@ -81,11 +81,19 @@ export class AllUsersGrid extends PureComponent {
     data: PropTypes.arrayOf(PropTypes.object),
     intl: intlShape.isRequired,
     loading: PropTypes.bool,
+    onToggleSelection: PropTypes.func,
+    onToggleSelectAll: PropTypes.func,
+    selectedItems: PropTypes.arrayOf(PropTypes.object),
+    excludeFromSelection: PropTypes.arrayOf(PropTypes.object),
   };
 
   static defaultProps = {
     data: [],
     loading: false,
+    onToggleSelectAll: () => {},
+    onToggleSelection: () => {},
+    selectedItems: [],
+    excludeFromSelection: [],
   };
 
   getColumns = () => [
@@ -137,13 +145,23 @@ export class AllUsersGrid extends PureComponent {
   COLUMNS = this.getColumns();
 
   render() {
+    const {
+      onToggleSelection,
+      selectedItems,
+      excludeFromSelection,
+      onToggleSelectAll,
+    } = this.props;
     return (
       <Grid
         columns={this.COLUMNS}
         data={this.props.data}
         loading={this.props.loading}
+        onToggleSelection={onToggleSelection}
+        onToggleSelectAll={onToggleSelectAll}
         changeOnlyMobileLayout
+        selectedItems={selectedItems}
         selectable
+        excludeFromSelection={excludeFromSelection}
       />
     );
   }

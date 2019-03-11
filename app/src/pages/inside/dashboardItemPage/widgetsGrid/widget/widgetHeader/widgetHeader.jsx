@@ -51,7 +51,7 @@ const widgetTypesMessages = defineMessages({
     id: 'WidgetHeader.widgetType.uniqueBugTable',
     defaultMessage: 'Unique bugs table',
   },
-  mostFailedTestCases: {
+  topTestCases: {
     id: 'WidgetHeader.widgetType.mostFailedTestCases',
     defaultMessage: 'Most failed test-cases table (TOP-20)',
   },
