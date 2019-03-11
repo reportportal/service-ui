@@ -110,9 +110,9 @@ Grid.defaultProps = {
   groupFunction: () => {},
   grouped: false,
   groupHeader: null,
-  rowHighlightingConfig: PropTypes.shape({
+  rowHighlightingConfig: {
     onGridRowHighlighted: () => {},
     isGridRowHighlighted: false,
     highlightedRowId: null,
-  }),
+  },
 };
