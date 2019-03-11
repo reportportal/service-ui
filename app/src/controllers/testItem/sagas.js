@@ -1,8 +1,8 @@
 import {
-  FETCH_SUCCESS,
   fetchDataAction,
   fetchSuccessAction,
   bulkFetchDataAction,
+  createFetchPredicate,
 } from 'controllers/fetch';
 import { put, select, all, takeEvery, take, call } from 'redux-saga/effects';
 import {
@@ -15,6 +15,7 @@ import {
 } from 'controllers/pages';
 import { URLS } from 'common/urls';
 import { activeProjectSelector } from 'controllers/user';
+import { LEVEL_NOT_FOUND } from 'common/constants/launchLevels';
 import { setLevelAction, setPageLoadingAction } from './actionCreators';
 import { FETCH_TEST_ITEMS, NAMESPACE, PARENT_ITEMS_NAMESPACE, RESTORE_PATH } from './constants';
 import { LEVELS } from './levels';
@@ -23,13 +24,9 @@ import {
   parentItemSelector,
   queryParametersSelector,
   isLostLaunchSelector,
-  levelSelector,
   createParentItemsSelector,
 } from './selectors';
 import { calculateLevel } from './utils';
-
-const createTestItemActionPredicate = (namespace) => (action) =>
-  action.type === FETCH_SUCCESS && action.meta && action.meta.namespace === namespace;
 
 function* updateLaunchId(launchId) {
   const payload = yield select(payloadSelector);
@@ -60,7 +57,7 @@ export function* fetchParentItems() {
     (id, i) => (i === 0 ? URLS.launch(project, id) : URLS.testItem(project, id)),
   );
   yield put(bulkFetchDataAction(PARENT_ITEMS_NAMESPACE, true)(urls));
-  yield take(createTestItemActionPredicate(PARENT_ITEMS_NAMESPACE));
+  yield take(createFetchPredicate(PARENT_ITEMS_NAMESPACE));
 }
 
 function* fetchTestItems({ payload = {} }) {
@@ -106,9 +103,13 @@ function* fetchTestItems({ payload = {} }) {
       },
     }),
   );
-  const dataPayload = yield take(createTestItemActionPredicate(NAMESPACE));
-  const currentLevel = yield select(levelSelector);
-  const level = calculateLevel(dataPayload.payload.content) || currentLevel;
+  const dataPayload = yield take(createFetchPredicate(NAMESPACE));
+  let level;
+  if (dataPayload.error) {
+    level = LEVEL_NOT_FOUND;
+  } else {
+    level = calculateLevel(dataPayload.payload.content) || LEVEL_NOT_FOUND;
+  }
 
   if (LEVELS[level]) {
     yield put(fetchSuccessAction(LEVELS[level].namespace, dataPayload.payload));

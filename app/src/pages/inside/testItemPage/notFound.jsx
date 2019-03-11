@@ -5,19 +5,25 @@ import styles from './notFound.scss';
 
 const cx = classNames.bind(styles);
 const messages = defineMessages({
-  notFound: {
-    id: 'LaunchesPage.notFound',
+  launchNotFound: {
+    id: 'LaunchesPage.launchNotFound',
     defaultMessage: 'Launch is not found',
   },
   notFoundDescription: {
     id: 'LaunchesPage.checkQuery',
     defaultMessage: 'Failed to load data for launches table',
   },
+  itemNotFound: {
+    id: 'LaunchesPage.itemNotFound',
+    defaultMessage: 'Item is not found',
+  },
 });
 
-export const NotFound = injectIntl(({ intl: { formatMessage } }) => (
+export const NotFound = injectIntl(({ intl: { formatMessage }, isItemNotFound }) => (
   <div className={cx('launch-not-found')}>
-    <NoItemMessage message={formatMessage(messages.notFound)} />
+    <NoItemMessage
+      message={formatMessage(isItemNotFound ? messages.itemNotFound : messages.launchNotFound)}
+    />
     <p className={cx('launch-not-found-hint')}>{formatMessage(messages.notFoundDescription)}</p>
   </div>
 ));
