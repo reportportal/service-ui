@@ -58,8 +58,9 @@
   width: 15px;
   height: 15px;
   margin-right: 5px;
+  vertical-align: bottom;
   svg {
-    fill: white; /* stylelint-disable-line color-named */
+    fill: $COLOR--failed;
   }
 }
 

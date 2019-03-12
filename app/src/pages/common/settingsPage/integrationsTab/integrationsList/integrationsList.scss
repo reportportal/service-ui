@@ -1,0 +1,25 @@
+.integrations-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.integrations-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 35px;
+}
+
+.integrations-group-header {
+  margin-bottom: 15px;
+  color: $COLOR--black-2;
+  font-size: 13px;
+  font-family: $FONT-SEMIBOLD;
+}
+
+.integrations-group-items {
+  display: flex;
+  flex-wrap: wrap;
+  @media (max-width: $SCREEN_XS_MAX) {
+    flex-direction: column;
+  }
+}

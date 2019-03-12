@@ -22,6 +22,7 @@ import { GeneralTab } from './generalTab';
 import { AutoAnalysisTab } from './autoAnalysisTab';
 import { NotificationsTab } from './notificationsTab';
 import { DemoDataTab } from './demoDataTab';
+import { IntegrationsTab } from './integrationsTab';
 import styles from './settingsPage.scss';
 
 const cx = classNames.bind(styles);
@@ -34,9 +35,9 @@ const messages = defineMessages({
     id: 'SettingsPage.notifications',
     defaultMessage: 'Notifications',
   },
-  bts: {
-    id: 'SettingsPage.bts',
-    defaultMessage: 'Bug tracking system',
+  integrations: {
+    id: 'SettingsPage.integrations',
+    defaultMessage: 'Integrations',
   },
   defect: {
     id: 'SettingsPage.defect',
@@ -88,12 +89,12 @@ export class SettingsPage extends Component {
       [INTEGRATIONS]: {
         name: (
           <span>
-            {this.props.intl.formatMessage(messages.bts)}
+            {this.props.intl.formatMessage(messages.integrations)}
             <BetaBadge className={cx('beta')} />
           </span>
         ),
         link: this.props.createTabLink(INTEGRATIONS),
-        component: <div>Integrations</div>,
+        component: <IntegrationsTab />,
         eventInfo: SETTINGS_PAGE_EVENTS.INTEGRATIONS_TAB,
       },
       [NOTIFICATIONS]: {

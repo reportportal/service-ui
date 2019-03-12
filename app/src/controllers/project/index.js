@@ -21,13 +21,15 @@ export {
   userFiltersSelector,
   defectColorsSelector,
   defectTypesSelector,
-  notificationIntegrationEnabledSelector,
-  notificationIntegrationNameSelector,
   projectNotificationsConfigurationSelector,
   projectNotificationsCasesSelector,
   projectNotificationsEnabledSelector,
   externalSystemSelector,
   analyzerAttributesSelector,
   jobAttributesSelector,
+  projectIntegrationsSelector,
+  projectIntegrationsSortedSelector,
+  groupedIntegrationsSelector,
+  createTypedIntegrationsSelector,
 } from './selectors';
 export { normalizeAttributesWithPrefix } from './utils';

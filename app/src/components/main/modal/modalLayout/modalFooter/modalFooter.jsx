@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import classNames from 'classnames/bind';
+import Parser from 'html-react-parser';
 import { BigButton } from 'components/buttons/bigButton';
 import { InputCheckbox } from 'components/inputs/inputCheckbox';
-import classNames from 'classnames/bind';
+import warningIcon from 'common/img/error-inline.svg';
 import styles from './modalFooter.scss';
 
 const cx = classNames.bind(styles);
@@ -80,7 +82,7 @@ export class ModalFooter extends Component {
             {confirmationWarning && (
               <div className={cx('warning-block-wrap', confirmationWarningClassName)}>
                 <div className={cx('warning-block')}>
-                  <i className={cx('warning-icon')} />
+                  <i className={cx('warning-icon')}>{Parser(warningIcon)}</i>
                   <span className={cx('warning-message')}>{confirmationWarning}</span>
                 </div>
               </div>
@@ -94,7 +96,7 @@ export class ModalFooter extends Component {
         )}
         {warningMessage && (
           <div className={cx('warning-block')}>
-            <i className={cx('warning-icon')} />
+            <i className={cx('warning-icon')}>{Parser(warningIcon)}</i>
             <span className={cx('warning-message')}>{warningMessage}</span>
           </div>
         )}

@@ -8,5 +8,3 @@ export const UPDATE_CONFIGURATION_ATTRIBUTES = 'updateConfigurationAttributes';
 export const UPDATE_NOTIFICATIONS_CONFIG_SUCCESS = 'updateNotificationsConfigSuccess';
 export const ANALYZER_ATTRIBUTE_PREFIX = 'analyzer';
 export const JOB_ATTRIBUTE_PREFIX = 'job';
-
-export const EMAIL_NOTIFICATION_INTEGRATION_TYPE = 'NOTIFICATION';
