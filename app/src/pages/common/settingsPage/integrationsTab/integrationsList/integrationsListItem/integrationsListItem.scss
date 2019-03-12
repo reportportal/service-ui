@@ -1,0 +1,44 @@
+.integrations-list-item {
+  display: flex;
+  width: 200px;
+  height: 70px;
+  margin: 0 15px 15px 0;
+  padding: 15px;
+  box-sizing: border-box;
+  border: solid 1px $COLOR--gray-91;
+  border-radius: 4px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: $COLOR--tealish-hover;
+  }
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    width: 100%;
+    margin-right: 0;
+  }
+}
+
+.integration-image {
+  width: 30px;
+  height: 30px;
+}
+
+.integration-info-block {
+  display: flex;
+  flex-direction: column;
+  margin-left: 15px;
+}
+
+.integration-name {
+  margin-bottom: 5px;
+  color: $COLOR--black-2;
+  font-size: 13px;
+  font-family: $FONT-SEMIBOLD;
+}
+
+.plugin-author {
+  color: $COLOR--gray-47;
+  font-size: 12px;
+  font-family: $FONT-REGULAR;
+}

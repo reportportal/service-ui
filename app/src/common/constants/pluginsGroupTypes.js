@@ -1,0 +1,2 @@
+export const NOTIFICATION_GROUP_TYPE = 'NOTIFICATION';
+export const BTS_GROUP_TYPE = 'BTS';

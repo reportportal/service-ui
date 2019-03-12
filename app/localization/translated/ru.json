@@ -918,7 +918,7 @@
   "ServiceVersionItem.newVersion": "Доступна новая версия: {newVersion}",
   "ServiceVersionsBlock.currentVersion": "Текущая версия",
   "SettingsPage.analysis": "Авто-анализ",
-  "SettingsPage.bts": "Система отслеживания ошибок",
+  "SettingsPage.integrations": "Интеграции",
   "SettingsPage.defect": "Типы дефектов",
   "SettingsPage.demoData": "Демо данные",
   "SettingsPage.general": "Общее",

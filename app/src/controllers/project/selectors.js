@@ -1,10 +1,6 @@
 import { createSelector } from 'reselect';
 import { OWNER } from 'common/constants/permissions';
-import {
-  ANALYZER_ATTRIBUTE_PREFIX,
-  JOB_ATTRIBUTE_PREFIX,
-  EMAIL_NOTIFICATION_INTEGRATION_TYPE,
-} from './constants';
+import { ANALYZER_ATTRIBUTE_PREFIX, JOB_ATTRIBUTE_PREFIX } from './constants';
 
 const projectSelector = (state) => state.project || {};
 
@@ -48,19 +44,33 @@ export const jobAttributesSelector = createPrefixedAttributesSelector(JOB_ATTRIB
 
 export const externalSystemSelector = (state) => projectConfigSelector(state).externalSystem || [];
 
-const createTypedIntegrationsSelector = (integrationType) =>
+export const projectIntegrationsSortedSelector = createSelector(
+  projectIntegrationsSelector,
+  (integrations) =>
+    integrations.sort((a, b) =>
+      a.integrationType.groupType.localeCompare(b.integrationType.groupType),
+    ),
+);
+
+export const groupedIntegrationsSelector = createSelector(
+  projectIntegrationsSortedSelector,
+  (integrations) =>
+    integrations.reduce((accum, item) => {
+      const integrationGroupType = item.integrationType.groupType;
+      const groupedIntegrations = { ...accum };
+      if (!groupedIntegrations[integrationGroupType]) {
+        groupedIntegrations[integrationGroupType] = [item];
+      } else {
+        groupedIntegrations[integrationGroupType].push(item);
+      }
+      return groupedIntegrations;
+    }, {}),
+);
+
+export const createTypedIntegrationsSelector = (integrationType) =>
   createSelector(projectIntegrationsSelector, (integrations) =>
     integrations.filter((integration) => integration.integrationType.groupType === integrationType),
   );
-
-const notificationIntegrationSelector = (state) =>
-  createTypedIntegrationsSelector(EMAIL_NOTIFICATION_INTEGRATION_TYPE)(state)[0];
-
-export const notificationIntegrationEnabledSelector = (state) =>
-  notificationIntegrationSelector(state).enabled;
-
-export const notificationIntegrationNameSelector = (state) =>
-  notificationIntegrationSelector(state).integrationType.name;
 
 export const projectNotificationsConfigurationSelector = (state) =>
   projectConfigSelector(state).notificationsConfiguration || {};

@@ -24,10 +24,9 @@
     width: 16px;
     height: 16px;
     margin-top: -8px;
-    background-image: url(./img/warning-icon.svg);
-    background-repeat: no-repeat;
-    background-size: 100%;
-    background-position: center;
+    svg {
+      fill: $COLOR--failed;
+    }
   }
   .warning-message {
     display: inline-block;

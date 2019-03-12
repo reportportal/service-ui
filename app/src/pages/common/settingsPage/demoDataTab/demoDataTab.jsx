@@ -12,7 +12,7 @@ import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { BigButton } from 'components/buttons/bigButton';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
-import warningIcon from './img/warning-icon-inline.svg';
+import warningIcon from 'common/img/error-inline.svg';
 import styles from './demoDataTab.scss';
 
 const cx = classNames.bind(styles);
