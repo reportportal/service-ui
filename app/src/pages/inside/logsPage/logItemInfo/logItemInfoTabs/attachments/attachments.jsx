@@ -54,7 +54,7 @@ export class Attachments extends React.Component {
   };
 
   componentDidMount() {
-    !this.props.attachments.length && this.props.fetchAttachmentsAction();
+    !this.props.attachments.length && !this.props.loading && this.props.fetchAttachmentsAction();
   }
 
   onClickItem = (itemIndex) => this.props.openAttachmentAction(this.props.attachments[itemIndex]);

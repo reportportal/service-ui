@@ -1,5 +1,6 @@
 import { PureComponent } from 'react';
 import PropTypes from 'prop-types';
+import { SCREEN_SM_MAX } from 'common/constants/screenSizeVariables';
 import { PageButton } from './pageButton';
 
 const DESKTOP_MAX_VISIBLE_PAGES = 10;
@@ -26,11 +27,11 @@ const createPageNumberButtons = (maxShownPages, activePage, pageCount, onChangeP
   } else {
     range = createPageRange(activePage - (halfShownPages - 1), activePage + halfShownPages);
   }
-  const buttons = range.map(page => (
+  const buttons = range.map((page) => (
     <PageButton
       key={page}
       active={activePage === page}
-      onClick={() => (activePage !== page) && onChangePage(page)}
+      onClick={() => activePage !== page && onChangePage(page)}
     >
       {page}
     </PageButton>
@@ -52,8 +53,7 @@ export class PageNumberButtons extends PureComponent {
   };
 
   static defaultProps = {
-    onChangePage: () => {
-    },
+    onChangePage: () => {},
   };
 
   state = {
@@ -61,7 +61,7 @@ export class PageNumberButtons extends PureComponent {
   };
 
   componentDidMount() {
-    this.match = window.matchMedia('(max-width: 991px)');
+    this.match = window.matchMedia(SCREEN_SM_MAX);
     this.match.addListener(this.setShownPages);
     this.setShownPages(this.match);
   }
@@ -73,11 +73,9 @@ export class PageNumberButtons extends PureComponent {
     this.match.removeListener(this.setShownPages);
   }
 
-  setShownPages = media =>
+  setShownPages = (media) =>
     this.setState({
-      shownPages: media.matches
-        ? MOBILE_MAX_VISIBLE_PAGES
-        : DESKTOP_MAX_VISIBLE_PAGES,
+      shownPages: media.matches ? MOBILE_MAX_VISIBLE_PAGES : DESKTOP_MAX_VISIBLE_PAGES,
     });
 
   render() {

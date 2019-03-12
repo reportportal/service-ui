@@ -36,13 +36,34 @@ export class InfoTabs extends Component {
     panelContent: null,
   };
 
+  state = {
+    isMobileView: false,
+  };
+
+  componentDidMount() {
+    this.match = window.matchMedia(SCREEN_XS_MAX);
+    this.match.addListener(this.setMobileView);
+    this.setMobileView(this.match);
+  }
+
+  componentWillUnmount() {
+    if (!this.match) {
+      return;
+    }
+    this.match.removeListener(this.setMobileView);
+  }
+
+  setMobileView = (media) =>
+    media.matches !== this.state.isMobileView &&
+    this.setState({
+      isMobileView: media.matches,
+    });
+
   isActiveTab(tab) {
     const { activeTab } = this.props;
 
     return activeTab && tab.id === activeTab.id;
   }
-
-  isOnMobile = () => window.matchMedia(SCREEN_XS_MAX).matches;
 
   render() {
     const { tabs, activeTab, setActiveTab, panelContent, tracking } = this.props;
@@ -65,7 +86,7 @@ export class InfoTabs extends Component {
                   {Parser(ArrowDownIcon)}
                 </i>
               </button>
-              {this.isOnMobile() &&
+              {this.state.isMobileView &&
                 this.isActiveTab(tab) && (
                   <div className={cx('tabs-content', 'mobile')}>{tab.content}</div>
                 )}
@@ -74,7 +95,7 @@ export class InfoTabs extends Component {
           {panelContent && <div className={cx('panel-content')}>{panelContent}</div>}
         </div>
         {activeTab &&
-          !this.isOnMobile() && (
+          !this.state.isMobileView && (
             <div className={cx('tabs-content', 'desktop')}>{activeTab.content}</div>
           )}
       </div>
