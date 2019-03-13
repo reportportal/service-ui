@@ -118,10 +118,6 @@ const messages = defineMessages({
     id: 'Common.requiredFieldHint',
     defaultMessage: 'This field is required',
   },
-  portFieldHint: {
-    id: 'EmailServerTab.portFieldHint',
-    defaultMessage: "Only numbers from '1' to '65535' are possible.",
-  },
   attributeKeyLengthHint: {
     id: 'AttributeEditor.attributeKeyLengthHint',
     defaultMessage: 'Attribute key should have size from 1 to 128',

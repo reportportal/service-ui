@@ -1,9 +1,21 @@
 import { JIRA, RALLY, EMAIL, SAUCE_LABS } from 'common/constants/integrationNames';
 import JiraIcon from 'common/img/plugins/jira.svg';
 import RallyIcon from 'common/img/plugins/rally.png';
-import EmailIcon from 'common/img/plugins/email.svg';
+import EmailIcon from 'common/img/plugins/email.png';
 import SauceLabsIcon from 'common/img/plugins/sauce-labs.png';
-import { SauceLabsInfo, SauceLabsSettings } from './integrationProviders';
+import {
+  SauceLabsSettings,
+  SauceLabsFormFields,
+  EmailSettings,
+  EmailFormFields,
+} from './integrationProviders';
+
+export const INTEGRATION_NAMES_TITLES = {
+  [JIRA]: 'JIRA',
+  [RALLY]: 'RALLY',
+  [EMAIL]: 'Email Server',
+  [SAUCE_LABS]: 'Sauce Labs',
+};
 
 export const INTEGRATIONS_IMAGES_MAP = {
   [JIRA]: JiraIcon,
@@ -12,10 +24,12 @@ export const INTEGRATIONS_IMAGES_MAP = {
   [SAUCE_LABS]: SauceLabsIcon,
 };
 
-export const INTEGRATIONS_INFO_COMPONENTS_MAP = {
-  [SAUCE_LABS]: SauceLabsInfo,
+export const INTEGRATIONS_FORM_FIELDS_COMPONENTS_MAP = {
+  [SAUCE_LABS]: SauceLabsFormFields,
+  [EMAIL]: EmailFormFields,
 };
 
 export const INTEGRATIONS_SETTINGS_COMPONENTS_MAP = {
   [SAUCE_LABS]: SauceLabsSettings,
+  [EMAIL]: EmailSettings,
 };

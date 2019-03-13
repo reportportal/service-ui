@@ -1,0 +1,114 @@
+.connection-section {
+  width: 100%;
+  max-width: 375px;
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    max-width: 100%;
+    margin-bottom: 30px;
+  }
+}
+
+.block-header {
+  margin-bottom: 20px;
+  color: $COLOR--black-2;
+  font-size: 20px;
+  font-family: $FONT-SEMIBOLD;
+}
+
+.connection-status-block {
+  display: flex;
+  flex-direction: column;
+  width: 270px;
+  min-height: 40px;
+  box-sizing: border-box;
+  margin-bottom: 20px;
+  padding: 15px;
+  border-radius: 2px;
+  color: $COLOR--passed;
+  background-color: $COLOR--white-four;
+  font-size: 13px;
+  font-family: $FONT-SEMIBOLD;
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    width: 100%;
+  }
+}
+
+.connection-status {
+  display: inline-flex;
+  align-items: center;
+}
+
+.failed-connection-message {
+  margin-top: 10px;
+  margin-left: 25px;
+  color: $COLOR--brownish-grey;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.status-icon {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  margin-right: 10px;
+
+  svg {
+    fill: $COLOR--passed;
+  }
+}
+
+.connection-failed {
+  color: $COLOR--orange-red;
+  background-color: $COLOR--light-red;
+
+  .status-icon {
+    transform: rotate(180deg);
+
+    svg {
+      fill: $COLOR--orange-red;
+    }
+  }
+}
+
+.remove-integration-button {
+  display: flex;
+  align-items: center;
+  padding: 0;
+  border: none;
+  background: none;
+  color: $COLOR--topaz;
+  font-size: 13px;
+  font-family: $FONT-REGULAR;
+  cursor: pointer;
+
+  &.disabled {
+    display: none;
+  }
+
+  &:hover {
+    color: $COLOR--tealish;
+    svg {
+      fill: $COLOR--tealish;
+    }
+  }
+
+  &:focus {
+    outline: none;
+  }
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    display: none;
+  }
+}
+
+.remove-icon {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  margin-right: 10px;
+
+  svg {
+    fill: $COLOR--topaz;
+  }
+}

@@ -1,6 +1,6 @@
 export {
   INTEGRATIONS_IMAGES_MAP,
-  INTEGRATIONS_INFO_COMPONENTS_MAP,
+  INTEGRATION_NAMES_TITLES,
   INTEGRATIONS_SETTINGS_COMPONENTS_MAP,
 } from './constants';
 export { AddProjectIntegrationModal } from './modals/addProjectIntegrationModal';

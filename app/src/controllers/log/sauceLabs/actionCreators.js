@@ -4,9 +4,9 @@ import {
   SET_AUTH_TOKEN_ACTION,
 } from './constants';
 
-export const executeSauceLabsCommandAction = (command, data, integrationId) => ({
+export const executeSauceLabsCommandAction = (command, integrationId, data) => ({
   type: EXECUTE_SAUCE_LABS_COMMAND_ACTION,
-  payload: { command, data, integrationId },
+  payload: { command, integrationId, data },
 });
 
 export const bulkExecuteSauceLabsCommandAction = (commands, data) => ({

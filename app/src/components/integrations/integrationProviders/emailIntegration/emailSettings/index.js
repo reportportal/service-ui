@@ -1,0 +1,1 @@
+export { EmailSettings } from './emailSettings';

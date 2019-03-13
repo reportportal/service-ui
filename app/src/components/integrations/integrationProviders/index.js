@@ -1,1 +1,2 @@
-export { SauceLabsInfo, SauceLabsSettings } from './sauceLabsIntegration';
+export { SauceLabsSettings, SauceLabsFormFields } from './sauceLabsIntegration';
+export { EmailSettings, EmailFormFields } from './emailIntegration';

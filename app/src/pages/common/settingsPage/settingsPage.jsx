@@ -71,7 +71,7 @@ export class SettingsPage extends Component {
     projectId: PropTypes.string.isRequired,
     createTabLink: PropTypes.func.isRequired,
     intl: intlShape.isRequired,
-    changeTab: PropTypes.func.isRequired,
+    onChangeTab: PropTypes.func.isRequired,
     activeTab: PropTypes.string,
     accountRole: PropTypes.string.isRequired,
     userRole: PropTypes.string.isRequired,
@@ -141,7 +141,7 @@ export class SettingsPage extends Component {
         <NavigationTabs
           config={this.createTabsConfig()}
           activeTab={this.props.activeTab}
-          onChangeTab={this.props.changeTab}
+          onChangeTab={this.props.onChangeTab}
         />
       </div>
     );

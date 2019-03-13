@@ -8,6 +8,7 @@ import Parser from 'html-react-parser';
 import { fromNowFormat } from 'common/utils';
 import { canEditLaunch } from 'common/utils/permissions';
 import { LEVEL_STEP } from 'common/constants/launchLevels';
+import { SAUCE_LABS } from 'common/constants/integrationNames';
 import {
   activeProjectRoleSelector,
   userAccountRoleSelector,
@@ -16,7 +17,7 @@ import {
 import { levelSelector, launchSelector } from 'controllers/testItem';
 import { MarkdownViewer } from 'components/main/markdown';
 import { LAUNCHES_PAGE_EVENTS } from 'components/main/analytics/events';
-import { SAUCE_LABS_INTEGRATION_TITLE } from 'components/integrations/integrationProviders/sauceLabsIntegration/constants';
+import { INTEGRATION_NAMES_TITLES } from 'components/integrations';
 import { getSauceLabsConfig } from 'components/integrations/integrationProviders/sauceLabsIntegration/utils';
 import { formatMethodType, formatStatus } from 'common/utils/localizationUtils';
 import TestParamsIcon from 'common/img/test-params-icon-inline.svg';
@@ -109,8 +110,8 @@ export class ItemInfo extends Component {
         <img
           className={cx('sauce-labs-label')}
           src={SauceLabsIcon}
-          alt={SAUCE_LABS_INTEGRATION_TITLE}
-          title={SAUCE_LABS_INTEGRATION_TITLE}
+          alt={INTEGRATION_NAMES_TITLES[SAUCE_LABS]}
+          title={INTEGRATION_NAMES_TITLES[SAUCE_LABS]}
         />
       );
     }

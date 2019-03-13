@@ -25,7 +25,16 @@ import {
   adminPageNames,
   pageSelector,
 } from 'controllers/pages';
-import { GENERAL, EMAIL_SERVER } from 'common/constants/settingsTabs';
+import {
+  GENERAL,
+  DEFECT,
+  DEMO_DATA,
+  INTEGRATIONS,
+  NOTIFICATIONS,
+  ANALYSIS,
+  AUTHORIZATION_CONFIGURATION,
+  STATISTICS,
+} from 'common/constants/settingsTabs';
 import { SETTINGS, MEMBERS, EVENTS } from 'common/constants/projectSections';
 import { isAuthorizedSelector } from 'controllers/auth';
 import {
@@ -107,7 +116,7 @@ export default {
     },
   },
   [PROJECT_DETAILS_PAGE]: {
-    path: `/administrate/projects/:projectId/:projectSection(${SETTINGS}|${MEMBERS}|${EVENTS})?/:settingsTab?`,
+    path: `/administrate/projects/:projectId/:projectSection(${SETTINGS}|${MEMBERS}|${EVENTS})?/:settingsTab(${GENERAL}|${NOTIFICATIONS}|${INTEGRATIONS}|${DEFECT}|${ANALYSIS}|${DEMO_DATA})?`,
     thunk: (dispatch) => {
       dispatch(fetchProjectDataAction());
     },
@@ -118,9 +127,9 @@ export default {
   },
   [SERVER_SETTINGS_PAGE]: redirectRoute('/administrate/settings', () => ({
     type: SERVER_SETTINGS_TAB_PAGE,
-    payload: { settingsTab: EMAIL_SERVER },
+    payload: { settingsTab: AUTHORIZATION_CONFIGURATION },
   })),
-  [SERVER_SETTINGS_TAB_PAGE]: '/administrate/settings/:settingsTab',
+  [SERVER_SETTINGS_TAB_PAGE]: `/administrate/settings/:settingsTab(${AUTHORIZATION_CONFIGURATION}|${STATISTICS})`,
   [PLUGINS_PAGE]: '/administrate/plugins',
 
   [PROJECT_PAGE]: {
@@ -222,7 +231,7 @@ export default {
     type: PROJECT_SETTINGS_TAB_PAGE,
     payload: { ...payload, settingsTab: GENERAL },
   })),
-  PROJECT_SETTINGS_TAB_PAGE: '/:projectId/settings/:settingsTab',
+  PROJECT_SETTINGS_TAB_PAGE: `/:projectId/settings/:settingsTab(${GENERAL}|${NOTIFICATIONS}|${INTEGRATIONS}|${DEFECT}|${ANALYSIS}|${DEMO_DATA})`,
   PROJECT_SANDBOX_PAGE: '/:projectId/sandbox',
   [TEST_ITEM_PAGE]: {
     path: '/:projectId/launches/:filterId/:testItemIds+',
