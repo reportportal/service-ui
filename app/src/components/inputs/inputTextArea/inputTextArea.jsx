@@ -55,6 +55,7 @@ InputTextArea.propTypes = {
   onBlur: PropTypes.func,
   onKeyUp: PropTypes.func,
   refFunction: PropTypes.func,
+  touched: PropTypes.bool,
 };
 
 InputTextArea.defaultProps = {

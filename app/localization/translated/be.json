@@ -454,7 +454,7 @@
   "EventActions.createPattern": "Стварэнне шаблону",
   "EventActions.updatePattern": "Абнаўленне шаблону",
   "EventActions.deletePattern": "Выдаленне шаблону",
-  "EventActions.matchedPattern": "Патэрн-аналіз выявіў адпаведнасць",
+  "EventActions.matchedPattern": "Патэрн-аналіз выявіў адпаведнасць",    
   "EventObjectTypes.dashboard": "Панэль кіравання",
   "EventObjectTypes.defectType": "Тып дэфекта",
   "EventObjectTypes.emailConfig": "Налады электроннай пошты",
