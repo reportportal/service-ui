@@ -32,6 +32,7 @@ export class FilterName extends Component {
     showDesc: PropTypes.bool,
     editable: PropTypes.bool,
     isBold: PropTypes.bool,
+    noShareIcons: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -45,6 +46,7 @@ export class FilterName extends Component {
     showDesc: true,
     editable: true,
     isBold: false,
+    noShareIcons: false,
   };
 
   getHighlightName = () => {
@@ -63,6 +65,8 @@ export class FilterName extends Component {
     );
   };
 
+  getShareIcon = () => (this.props.userId === this.props.filter.owner ? ShareIcon : GlobeIcon);
+
   render() {
     const {
       intl,
@@ -74,6 +78,7 @@ export class FilterName extends Component {
       showDesc,
       editable,
       isBold,
+      noShareIcons,
     } = this.props;
 
     return (
@@ -89,15 +94,9 @@ export class FilterName extends Component {
             {Parser(this.getHighlightName(filter.name))}
           </span>
           {filter.share &&
-            userId === filter.owner && (
+            !noShareIcons && (
               <span className={cx('share-icon')} title={intl.formatMessage(messages.shareFilter)}>
-                {Parser(ShareIcon)}
-              </span>
-            )}
-          {filter.share &&
-            userId !== filter.owner && (
-              <span className={cx('globe-icon')} title={intl.formatMessage(messages.shareFilter)}>
-                {Parser(GlobeIcon)}
+                {Parser(this.getShareIcon())}
               </span>
             )}
           {userId === filter.owner &&
