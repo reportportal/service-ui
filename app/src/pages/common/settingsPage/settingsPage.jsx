@@ -15,7 +15,6 @@ import {
 } from 'common/constants/settingsTabs';
 import { settingsTabSelector } from 'controllers/pages';
 import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
-import { PageLayout, PageHeader } from 'layouts/pageLayout';
 import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { BetaBadge } from 'pages/inside/common/betaBadge';
 import { NavigationTabs } from 'components/main/navigationTabs';
@@ -73,11 +72,9 @@ export class SettingsPage extends Component {
     activeTab: PropTypes.string,
     accountRole: PropTypes.string.isRequired,
     userRole: PropTypes.string.isRequired,
-    breadcrumbs: PropTypes.array,
   };
   static defaultProps = {
     activeTab: GENERAL,
-    breadcrumbs: null,
   };
 
   createTabsConfig = () => {
@@ -132,17 +129,14 @@ export class SettingsPage extends Component {
 
   render() {
     return (
-      <PageLayout>
-        {this.props.breadcrumbs && <PageHeader breadcrumbs={this.props.breadcrumbs} />}
-        <div className={cx('settings-page')}>
-          <NavigationTabs
-            config={this.createTabsConfig()}
-            activeTab={this.props.activeTab}
-            onChangeTab={this.props.changeTab}
-            mobileDisabled
-          />
-        </div>
-      </PageLayout>
+      <div className={cx('settings-page')}>
+        <NavigationTabs
+          config={this.createTabsConfig()}
+          activeTab={this.props.activeTab}
+          onChangeTab={this.props.changeTab}
+          mobileDisabled
+        />
+      </div>
     );
   }
 }

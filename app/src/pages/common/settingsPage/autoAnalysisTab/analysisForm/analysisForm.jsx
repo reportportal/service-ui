@@ -16,8 +16,8 @@ import {
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { ToggleButton } from 'components/buttons/toggleButton';
 import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
-import { StrategyBlock } from './strategyBlock/index';
-import { AccuracyFormBlock } from './accuracyFormBlock/index';
+import { StrategyBlock } from './strategyBlock';
+import { AccuracyFormBlock } from './accuracyFormBlock';
 import {
   NUMBER_OF_LOG_LINES,
   MIN_DOC_FREQ,
