@@ -19,10 +19,10 @@ export const unselectAllUsersAction = unselectAllItemsAction(NAMESPACE);
 export const deleteItemsAction = defineGroupOperation(
   NAMESPACE,
   'deleteUsers',
-  (items, { onConfirm, header, mainContent, userId, warning, eventsInfo }) =>
+  (items, { onConfirm, header, mainContent, eventsInfo }) =>
     showModalAction({
       id: 'deleteItemsModal',
-      data: { items, onConfirm, header, mainContent, userId, warning, eventsInfo },
+      data: { items, onConfirm, header, mainContent, eventsInfo },
     }),
   validateDeleteUser,
 );

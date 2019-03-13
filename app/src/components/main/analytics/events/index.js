@@ -10,3 +10,4 @@ export { STEP_PAGE, STEP_PAGE_EVENTS } from './stepPageEvents';
 export { LOG_PAGE, LOG_PAGE_EVENTS } from './logPageEvents';
 export { DASHBOARD_PAGE, DASHBOARD_PAGE_EVENTS } from './dashboardsPageEvents';
 export { HISTORY_PAGE, HISTORY_PAGE_EVENTS } from './historyPageEvents';
+export { ADMIN_ALL_USERS_PAGE_MODAL_EVENTS } from './adminAllUsersPages';
