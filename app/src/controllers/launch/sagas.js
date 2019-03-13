@@ -9,6 +9,7 @@ import { LATEST } from 'common/constants/reservedFilterIds';
 import { launchFiltersSelector } from 'controllers/filter';
 import { filterIdSelector } from 'controllers/pages';
 import { updateStorageItem } from 'common/utils';
+import { isEmptyValue } from 'common/utils/isEmptyValue';
 import {
   FETCH_LAUNCHES,
   NAMESPACE,
@@ -23,7 +24,7 @@ import {
 
 function* fetchLaunchesWithParams({ payload }) {
   const activeProject = yield select(activeProjectSelector);
-  const params = yield select(queryParametersSelector, NAMESPACE);
+  const params = yield select(queryParametersSelector);
   const isDebugMode = yield select(debugModeSelector);
   const queryParams = { ...params, ...payload };
   const launchDistinct = yield select(launchDistinctSelector);
@@ -36,8 +37,7 @@ function* fetchLaunchesWithParams({ payload }) {
   );
 }
 
-const notEmptyConditionsPredicate = ({ value }) =>
-  value !== '' && value !== null && value !== undefined;
+const notEmptyConditionsPredicate = ({ value }) => !isEmptyValue(value);
 
 function* fetchLaunches() {
   const filterId = yield select(filterIdSelector);

@@ -20,7 +20,7 @@ import {
   getNextItem,
   getUpdatedLogQuery,
 } from './utils';
-import { NAMESPACE } from './constants';
+import { NAMESPACE, DEFAULT_SORTING } from './constants';
 
 const logSelector = (state) => state.log || {};
 
@@ -38,7 +38,7 @@ export const loadingSelector = (state) => logSelector(state).loading || false;
 export const attachmentsSelector = (state) => logSelector(state).attachments || {};
 export const querySelector = createQueryParametersSelector({
   defaultPagination: DEFAULT_PAGINATION,
-  defaultSorting: 'logTime,ASC',
+  defaultSorting: DEFAULT_SORTING,
 });
 
 export const historyItemsSelector = createSelector(

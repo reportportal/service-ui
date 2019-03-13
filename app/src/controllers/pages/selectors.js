@@ -48,7 +48,7 @@ const commonPagePropertiesSelector = (query, namespace, mapping = undefined) => 
   return result;
 };
 
-export const pagePropertiesSelector = ({ location: { query } }, namespace, mapping) =>
+export const pagePropertiesSelector = ({ location: { query } = {} } = {}, namespace, mapping) =>
   commonPagePropertiesSelector(query, namespace, mapping);
 
 export const prevPagePropertiesSelector = (

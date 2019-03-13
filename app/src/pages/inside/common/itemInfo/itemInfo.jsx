@@ -49,7 +49,7 @@ export class ItemInfo extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
     value: PropTypes.object,
-    refFunction: PropTypes.func.isRequired,
+    refFunction: PropTypes.func,
     analyzing: PropTypes.bool,
     customProps: PropTypes.object,
     userProjectRole: PropTypes.string,
@@ -82,6 +82,7 @@ export class ItemInfo extends Component {
     widgetView: false,
     launch: {},
     onClickRetries: () => {},
+    refFunction: null,
   };
 
   handleEditItem = () => {

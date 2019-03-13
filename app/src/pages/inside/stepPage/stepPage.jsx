@@ -29,11 +29,12 @@ import {
   editDefectsAction,
   linkIssueAction,
 } from 'controllers/step';
+import { SORTING_ASC, withSortingURL } from 'controllers/sorting';
+import { ENTITY_START_TIME } from 'components/filterEntities/constants';
 import { withPagination } from 'controllers/pagination';
 import { showModalAction } from 'controllers/modal';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
 import { LaunchFiltersSection } from 'pages/inside/common/launchFiltersSection';
-
 import { StepGrid } from './stepGrid';
 
 @connect(
@@ -61,6 +62,11 @@ import { StepGrid } from './stepGrid';
     linkIssueAction,
   },
 )
+@withSortingURL({
+  defaultFields: [ENTITY_START_TIME],
+  defaultDirection: SORTING_ASC,
+  namespaceSelector,
+})
 @withPagination({
   paginationSelector: stepPaginationSelector,
   namespaceSelector,
@@ -87,8 +93,11 @@ export class StepPage extends Component {
     itemCount: PropTypes.number,
     pageCount: PropTypes.number,
     pageSize: PropTypes.number,
+    sortingColumn: PropTypes.string,
+    sortingDirection: PropTypes.string,
     onChangePage: PropTypes.func,
     onChangePageSize: PropTypes.func,
+    onChangeSorting: PropTypes.func,
     showTestParamsModal: PropTypes.func,
     ignoreInAutoAnalysisAction: PropTypes.func,
     includeInAutoAnalysisAction: PropTypes.func,
@@ -126,8 +135,11 @@ export class StepPage extends Component {
     itemCount: null,
     pageCount: null,
     pageSize: 20,
+    sortingColumn: null,
+    sortingDirection: null,
     onChangePage: () => {},
     onChangePageSize: () => {},
+    onChangeSorting: () => {},
     showTestParamsModal: () => {},
     ignoreInAutoAnalysisAction: () => {},
     includeInAutoAnalysisAction: () => {},
@@ -231,6 +243,9 @@ export class StepPage extends Component {
       filterErrors,
       filterEntities,
       onEditItem,
+      onChangeSorting,
+      sortingColumn,
+      sortingDirection,
     } = this.props;
     return (
       <PageLayout>
@@ -272,6 +287,9 @@ export class StepPage extends Component {
             events={STEP_PAGE_EVENTS}
             onEditItem={onEditItem}
             onFilterClick={onFilterAdd}
+            onChangeSorting={onChangeSorting}
+            sortingColumn={sortingColumn}
+            sortingDirection={sortingDirection}
           />
           {!loading && (
             <PaginationToolbar

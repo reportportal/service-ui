@@ -62,10 +62,6 @@ DefectType.propTypes = {
   issue: PropTypes.object.isRequired,
   onEdit: PropTypes.func,
   editEventInfo: PropTypes.object,
-  tracking: PropTypes.shape({
-    trackEvent: PropTypes.func,
-    getTrackingData: PropTypes.func,
-  }).isRequired,
 };
 DefectType.defaultProps = {
   onEdit: () => {},

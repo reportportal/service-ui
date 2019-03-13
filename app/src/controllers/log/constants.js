@@ -1,4 +1,5 @@
 import { TRACE } from 'common/constants/logLevels';
+import { formatSortingString, SORTING_ASC } from 'controllers/sorting';
 
 export const NAMESPACE = 'log';
 export const LOG_ITEMS_NAMESPACE = `${NAMESPACE}/logItems`;
@@ -11,3 +12,4 @@ export const DEFAULT_LOG_LEVEL = TRACE;
 export const LOG_LEVEL_STORAGE_KEY = 'logFilteringLevel';
 export const DEFAULT_WITH_ATTACHMENTS = false;
 export const WITH_ATTACHMENTS_STORAGE_KEY = 'logFilteringLevelWithAttachments';
+export const DEFAULT_SORTING = formatSortingString(['logTime'], SORTING_ASC);
