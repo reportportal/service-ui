@@ -162,15 +162,10 @@ export class LaunchImportModal extends Component {
       ),
     };
   };
-  get validFiles() {
-    return this.state.files.filter(({ valid }) => valid);
-  }
-  get uploadInProgress() {
-    return this.validFiles.some(({ isLoading }) => isLoading);
-  }
-  get uploadFinished() {
-    return this.validFiles.length ? this.validFiles.every(({ uploaded }) => uploaded) : false;
-  }
+  validFiles = () => this.state.files.filter(({ valid }) => valid);
+  uploadInProgress = () => this.validFiles().some(({ isLoading }) => isLoading);
+  uploadFinished = () =>
+    this.validFiles().length ? this.validFiles().every(({ uploaded }) => uploaded) : false;
   cancelRequests = [];
 
   validateFile = (file) => ({
@@ -316,9 +311,9 @@ export class LaunchImportModal extends Component {
   render() {
     const { intl } = this.props;
     const { files } = this.state;
-    const validFiles = this.validFiles;
-    const loading = this.uploadInProgress;
-    const uploadFinished = this.uploadFinished;
+    const validFiles = this.validFiles();
+    const loading = this.uploadInProgress();
+    const uploadFinished = this.uploadFinished();
     return (
       <ModalLayout
         title={intl.formatMessage(messages.modalTitle)}
