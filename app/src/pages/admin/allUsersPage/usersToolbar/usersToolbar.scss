@@ -22,9 +22,11 @@
     margin-left: 20px;
   }
 }
-
+.users-bulk-toolbar-item {
+  margin-left: 20px;
+}
 .users-bulk-button {
-  font-weight: 600;
+  font-family: $FONT-SEMIBOLD;
   color: $COLOR--topaz;
   user-select: none;
   cursor: pointer;

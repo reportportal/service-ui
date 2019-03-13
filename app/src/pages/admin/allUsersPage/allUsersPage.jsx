@@ -7,6 +7,7 @@ import { PaginationToolbar } from 'components/main/paginationToolbar';
 import { withPagination, DEFAULT_PAGINATION, SIZE_KEY } from 'controllers/pagination';
 import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLock';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
+import { ADMIN_ALL_USERS_PAGE_MODAL_EVENTS } from 'components/main/analytics/events';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
 import {
@@ -195,7 +196,7 @@ export class AllUsersPage extends Component {
       });
   };
   handlerDelete = () => {
-    const { selectedUsers, intl, userId } = this.props;
+    const { selectedUsers, intl } = this.props;
     this.props.deleteItemsAction(this.props.selectedUsers, {
       onConfirm: this.confirmDeleteItems,
       header:
@@ -208,9 +209,11 @@ export class AllUsersPage extends Component {
           : intl.formatMessage(messages.deleteModalMultipleContent, {
               names: this.selectedUsersNames,
             }),
-      userId,
-      warning: '',
-      eventsInfo: {},
+      eventsInfo: {
+        closeIcon: ADMIN_ALL_USERS_PAGE_MODAL_EVENTS.CLOSE_ICON_DELETE_MODAL,
+        cancelBtn: ADMIN_ALL_USERS_PAGE_MODAL_EVENTS.CANCEL_BTN_DELETE_MODAL,
+        deleteBtn: ADMIN_ALL_USERS_PAGE_MODAL_EVENTS.DELETE_BTN_DELETE_MODAL,
+      },
     });
   };
   render() {
@@ -229,7 +232,7 @@ export class AllUsersPage extends Component {
       <PageLayout>
         <PageHeader breadcrumbs={this.getBreadcrumbs()} />
         <PageSection>
-          <UsersToolbar handlerDelete={this.handlerDelete} selectedUsers={selectedUsers} />
+          <UsersToolbar onDelete={this.handlerDelete} selectedUsers={selectedUsers} />
           <AllUsersGrid
             data={users}
             loading={loading}

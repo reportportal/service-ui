@@ -60,12 +60,6 @@ export class GridRow extends Component {
       this.highLightGridRow();
     }
   }
-  get isItemSelected() {
-    return this.props.selectedItems.some((item) => item.id === this.props.value.id);
-  }
-  get isItemDisabled() {
-    return this.props.excludeFromSelection.some((item) => item.id === this.props.value.id);
-  }
   setupRef = (overflowCell) => {
     this.overflowCell = overflowCell;
   };
@@ -84,7 +78,9 @@ export class GridRow extends Component {
 
   getHighlightBlockClasses = () =>
     this.checkIfTheHighlightNeeded() ? this.highLightBlockClasses : '';
-
+  isItemSelected = () => this.props.selectedItems.some((item) => item.id === this.props.value.id);
+  isItemDisabled = () =>
+    this.props.excludeFromSelection.some((item) => item.id === this.props.value.id);
   checkIfTheHighlightNeeded = () => {
     const { highlightedRowId, isGridRowHighlighted } = this.props.rowHighlightingConfig;
     return (
@@ -137,11 +133,10 @@ export class GridRow extends Component {
     const { columns, value, selectable, changeOnlyMobileLayout, rowClassMapper } = this.props;
     const { expanded } = this.state;
     const customClasses = (rowClassMapper && rowClassMapper(value)) || {};
-
     return (
       <div
         className={cx('grid-row-wrapper', {
-          selected: this.isItemSelected,
+          selected: this.isItemSelected(),
           ...customClasses,
         })}
         data-id={value.id}
@@ -189,8 +184,8 @@ export class GridRow extends Component {
               component={CheckboxCell}
               value={value}
               customProps={{
-                disabled: this.isItemDisabled,
-                selected: this.isItemSelected,
+                disabled: this.isItemDisabled(),
+                selected: this.isItemSelected(),
                 onChange: this.props.onToggleSelection,
               }}
             />
