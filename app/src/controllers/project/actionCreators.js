@@ -18,6 +18,7 @@ import {
   ADD_DEFECT_SUBTYPE_SUCCESS,
   DELETE_DEFECT_SUBTYPE,
   DELETE_DEFECT_SUBTYPE_SUCCESS,
+  UPDATE_PROJECT_INTEGRATIONS,
 } from './constants';
 
 const fetchProjectSuccessAction = (project) => ({
@@ -33,6 +34,11 @@ const fetchProjectPreferencesSuccessAction = (preferences) => ({
 export const updateConfigurationAttributesAction = (project) => ({
   type: UPDATE_CONFIGURATION_ATTRIBUTES,
   payload: project.configuration.attributes,
+});
+
+export const updateProjectIntegrationsAction = (project) => ({
+  type: UPDATE_PROJECT_INTEGRATIONS,
+  payload: project.integrations,
 });
 
 export const updateProjectNotificationsConfigAction = (config) => ({
@@ -82,6 +88,12 @@ export const fetchProjectAction = (projectId, isAdminAccess) => (dispatch) =>
 export const fetchConfigurationAttributesAction = (projectId) => (dispatch) => {
   fetch(URLS.project(projectId)).then((project) => {
     dispatch(updateConfigurationAttributesAction(project));
+  });
+};
+// TODO: rewrite this action with saga and write reducers to update & delete
+export const fetchProjectIntegrationsAction = (projectId) => (dispatch) => {
+  fetch(URLS.project(projectId)).then((project) => {
+    dispatch(updateProjectIntegrationsAction(project));
   });
 };
 

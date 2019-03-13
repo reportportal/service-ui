@@ -8,7 +8,11 @@ import classNames from 'classnames/bind';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
 import { projectIdSelector } from 'controllers/pages';
-import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
+import {
+  showNotification,
+  showDefaultErrorNotification,
+  NOTIFICATION_TYPES,
+} from 'controllers/notification';
 import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { BigButton } from 'components/buttons/bigButton';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
@@ -67,6 +71,7 @@ const messages = defineMessages({
   }),
   {
     showNotification,
+    showDefaultErrorNotification,
   },
 )
 @injectIntl
@@ -76,6 +81,7 @@ export class DemoDataTab extends Component {
     intl: intlShape.isRequired,
     projectId: PropTypes.string.isRequired,
     showNotification: PropTypes.func.isRequired,
+    showDefaultErrorNotification: PropTypes.func.isRequired,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
@@ -104,11 +110,7 @@ export class DemoDataTab extends Component {
         });
       })
       .catch((e) => {
-        this.props.showNotification({
-          messageId: 'failureDefault',
-          type: NOTIFICATION_TYPES.ERROR,
-          values: { error: e.message },
-        });
+        this.props.showDefaultErrorNotification(e);
         this.setState({
           isLoading: false,
         });

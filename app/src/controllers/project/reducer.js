@@ -10,6 +10,7 @@ import {
   UPDATE_DEFECT_SUBTYPE_SUCCESS,
   ADD_DEFECT_SUBTYPE_SUCCESS,
   DELETE_DEFECT_SUBTYPE_SUCCESS,
+  UPDATE_PROJECT_INTEGRATIONS,
 } from './constants';
 
 export const projectInfoReducer = (state = PROJECT_INFO_INITIAL_STATE, { type, payload }) => {
@@ -26,6 +27,11 @@ export const projectInfoReducer = (state = PROJECT_INFO_INITIAL_STATE, { type, p
             ...payload,
           },
         },
+      };
+    case UPDATE_PROJECT_INTEGRATIONS:
+      return {
+        ...state,
+        integrations: payload,
       };
     case UPDATE_NOTIFICATIONS_CONFIG_SUCCESS:
       return {

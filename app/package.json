@@ -160,7 +160,7 @@
     ],
     "moduleNameMapper": {
       "^.+\\.(css|scss)$": "identity-obj-proxy",
-      "^.+\\.(svg)$": "<rootDir>/test/__mocks__/svgMock.js",
+      "^.+\\.(svg|jpg|jpeg|png|gif)$": "<rootDir>/test/__mocks__/fileMock.js",
       "^components[/](.+)": "<rootDir>/src/components/$1",
       "^controllers[/](.+)": "<rootDir>/src/controllers/$1",
       "^common[/](.+)": "<rootDir>/src/common/$1",

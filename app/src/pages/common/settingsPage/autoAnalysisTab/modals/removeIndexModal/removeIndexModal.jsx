@@ -6,7 +6,11 @@ import classNames from 'classnames/bind';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
+import {
+  showNotification,
+  showDefaultErrorNotification,
+  NOTIFICATION_TYPES,
+} from 'controllers/notification';
 import { projectIdSelector } from 'controllers/pages';
 import { withModal, ModalLayout } from 'components/main/modal';
 import styles from './removeIndexModal.scss';
@@ -36,19 +40,19 @@ const messages = defineMessages({
   (state) => ({
     projectId: projectIdSelector(state),
   }),
-  { showNotification },
+  { showNotification, showDefaultErrorNotification },
 )
 @injectIntl
 export class RemoveIndexModal extends Component {
   static propTypes = {
     intl: intlShape,
     projectId: PropTypes.string,
-    showNotification: PropTypes.func,
+    showNotification: PropTypes.func.isRequired,
+    showDefaultErrorNotification: PropTypes.func.isRequired,
   };
   static defaultProps = {
     intl: {},
     projectId: '',
-    showNotification: () => {},
   };
 
   onClickRemove = (closeModal) => {
@@ -59,13 +63,7 @@ export class RemoveIndexModal extends Component {
           type: NOTIFICATION_TYPES.SUCCESS,
         });
       })
-      .catch((e) => {
-        this.props.showNotification({
-          messageId: 'failureDefault',
-          type: NOTIFICATION_TYPES.ERROR,
-          values: { error: e.message },
-        });
-      });
+      .catch(this.props.showDefaultErrorNotification);
     closeModal();
   };
 

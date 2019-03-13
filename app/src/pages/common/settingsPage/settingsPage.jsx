@@ -88,6 +88,7 @@ export class SettingsPage extends Component {
         link: this.props.createTabLink(GENERAL),
         component: <GeneralTab />,
         eventInfo: SETTINGS_PAGE_EVENTS.GENERAL_TAB,
+        mobileDisabled: true,
       },
       [INTEGRATIONS]: {
         name: (
@@ -105,24 +106,28 @@ export class SettingsPage extends Component {
         link: this.props.createTabLink(NOTIFICATIONS),
         component: <NotificationsTab />,
         eventInfo: SETTINGS_PAGE_EVENTS.NOTIFICATIONS_TAB,
+        mobileDisabled: true,
       },
       [DEFECT]: {
         name: this.props.intl.formatMessage(messages.defect),
         link: this.props.createTabLink(DEFECT),
         component: <DefectTypesTab />,
         eventInfo: SETTINGS_PAGE_EVENTS.DEFECT_TYPE_TAB,
+        mobileDisabled: true,
       },
       [ANALYSIS]: {
         name: this.props.intl.formatMessage(messages.analysis),
         link: this.props.createTabLink(ANALYSIS),
         component: <AutoAnalysisTab />,
         eventInfo: SETTINGS_PAGE_EVENTS.AUTO_ANALYSIS_TAB,
+        mobileDisabled: true,
       },
       [DEMO_DATA]: {
         name: this.props.intl.formatMessage(messages.demoData),
         link: this.props.createTabLink(DEMO_DATA),
         component: <DemoDataTab />,
         eventInfo: SETTINGS_PAGE_EVENTS.DEMO_DATA_TAB,
+        mobileDisabled: true,
       },
     };
     if (!canSeeDemoData(this.props.accountRole, this.props.userRole)) {
@@ -138,7 +143,6 @@ export class SettingsPage extends Component {
           config={this.createTabsConfig()}
           activeTab={this.props.activeTab}
           onChangeTab={this.props.changeTab}
-          mobileDisabled
         />
       </div>
     );

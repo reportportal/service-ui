@@ -22,7 +22,7 @@ import { formatMethodType, formatStatus } from 'common/utils/localizationUtils';
 import TestParamsIcon from 'common/img/test-params-icon-inline.svg';
 import PencilIcon from 'common/img/pencil-icon-inline.svg';
 import RetryIcon from 'common/img/retry-inline.svg';
-import SauceLabsIcon from 'common/img/plugins/sauce-labs.png';
+import SauceLabsIcon from 'common/img/plugins/sauce-labs-gray.png';
 import { NameLink } from 'pages/inside/common/nameLink';
 import { DurationBlock } from 'pages/inside/common/durationBlock';
 import { AttributesBlock } from './attributesBlock';

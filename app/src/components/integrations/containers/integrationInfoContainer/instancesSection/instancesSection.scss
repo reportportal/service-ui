@@ -1,0 +1,23 @@
+.instances-section {
+  max-width: 600px;
+  margin-left: 145px;
+  margin-top: 30px;
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    margin-left: 0;
+  }
+}
+
+.settings-action-block {
+  @media (max-width: $SCREEN_XS_MAX) {
+    display: none;
+  }
+}
+
+.action-description {
+  margin-top: 10px;
+  color: $COLOR--gray-60;
+  font-size: 13px;
+  font-family: $FONT-REGULAR;
+  line-height: 1.54;
+}

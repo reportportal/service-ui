@@ -18,13 +18,11 @@ export class NavigationTabs extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
-    mobileDisabled: PropTypes.bool,
   };
   static defaultProps = {
     onChangeTab: () => {},
     config: {},
     activeTab: '',
-    mobileDisabled: false,
   };
 
   onChangeTab = (val) => {
@@ -49,7 +47,7 @@ export class NavigationTabs extends Component {
     }));
 
   render = () => {
-    const { config, activeTab, mobileDisabled } = this.props;
+    const { config, activeTab } = this.props;
     return (
       <div className={cx('navigation-tabs')}>
         <div className={cx('tabs-mobile')}>
@@ -75,9 +73,12 @@ export class NavigationTabs extends Component {
               </NavLink>
             ))}
         </div>
-        <div className={cx('content-wrapper')}>
+        <div
+          className={cx('content-wrapper', {
+            'mobile-disabled': activeTab && config[activeTab].mobileDisabled,
+          })}
+        >
           {activeTab && config[activeTab].component}
-          {mobileDisabled && <div className={cx('mobile-disabling-cover')} />}
         </div>
       </div>
     );
