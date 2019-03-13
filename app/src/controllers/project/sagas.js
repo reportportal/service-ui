@@ -234,7 +234,7 @@ function* removeProjectIntegrationsByType({ payload: instanceType }) {
     yield put(removeProjectIntegrationsByTypeSuccessAction(instanceType));
     yield put(
       showNotification({
-        messageId: 'returnToGlobalSuccess',
+        messageId: 'resetToGlobalSuccess',
         type: NOTIFICATION_TYPES.SUCCESS,
       }),
     );
