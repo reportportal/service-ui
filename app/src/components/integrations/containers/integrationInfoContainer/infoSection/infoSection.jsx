@@ -32,7 +32,8 @@ export class InfoSection extends Component {
   };
 
   state = {
-    expanded: null,
+    withShowMore: false,
+    expanded: false,
   };
 
   componentDidMount() {
@@ -45,8 +46,9 @@ export class InfoSection extends Component {
       10,
     );
 
-    if (descriptionHeight >= 60) {
+    if (descriptionHeight > 60) {
       this.setState({
+        withShowMore: true,
         expanded: false,
       });
     }
@@ -67,7 +69,8 @@ export class InfoSection extends Component {
       version,
       description,
     } = this.props;
-    const { expanded } = this.state;
+    const { expanded, withShowMore } = this.state;
+    const isPartiallyShown = withShowMore && !expanded;
 
     return (
       <div className={cx('info-section')}>
@@ -77,15 +80,17 @@ export class InfoSection extends Component {
           {version && (
             <span className={cx('version')}>{`${formatMessage(messages.version)} ${version}`}</span>
           )}
-          <p ref={this.descriptionRef} className={cx('description', { expanded })}>
+          <p
+            ref={this.descriptionRef}
+            className={cx('description', { 'partially-shown': isPartiallyShown })}
+          >
             {description}
           </p>
-          {!expanded &&
-            expanded !== null && (
-              <button className={cx('expand-button')} onClick={this.expandDescription}>
-                {formatMessage(messages.showMore)}
-              </button>
-            )}
+          {isPartiallyShown && (
+            <button className={cx('expand-button')} onClick={this.expandDescription}>
+              {formatMessage(messages.showMore)}
+            </button>
+          )}
         </div>
       </div>
     );

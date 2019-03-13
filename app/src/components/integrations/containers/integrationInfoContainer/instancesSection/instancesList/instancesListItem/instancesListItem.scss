@@ -11,6 +11,10 @@
   background-color: $COLOR--white-two;
   cursor: pointer;
 
+  &:not(:last-child) {
+    margin-bottom: 15px;
+  }
+
   &.disabled {
     .integration-name, .creation-info {
       color: $COLOR--gray-60;

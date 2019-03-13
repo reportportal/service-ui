@@ -15,7 +15,7 @@ import {
 } from 'controllers/pages';
 import { LocalizationSwitcher } from 'components/main/localizationSwitcher';
 import { ScreenLock } from 'components/main/screenLock';
-import { Notifications } from 'components/main/notification';
+import { NotificationContainer } from 'components/main/notification';
 
 import { AdminLayout } from 'layouts/adminLayout';
 import { AppLayout } from 'layouts/appLayout';
@@ -127,7 +127,7 @@ class PageSwitcher extends React.PureComponent {
             <PageComponent />
           </Layout>
           <ModalContainer />
-          <Notifications />
+          <NotificationContainer />
           <ScreenLock />
         </div>
       ),

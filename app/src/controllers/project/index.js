@@ -18,7 +18,10 @@ export {
   addDefectSubTypeSuccessAction,
   deleteDefectSubTypeAction,
   deleteDefectSubTypeSuccessAction,
-  fetchProjectIntegrationsAction,
+  addProjectIntegrationAction,
+  updateProjectIntegrationAction,
+  removeProjectIntegrationAction,
+  removeProjectIntegrationsByTypeAction,
 } from './actionCreators';
 export { projectReducer } from './reducer';
 export {

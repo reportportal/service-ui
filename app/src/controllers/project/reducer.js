@@ -10,7 +10,10 @@ import {
   UPDATE_DEFECT_SUBTYPE_SUCCESS,
   ADD_DEFECT_SUBTYPE_SUCCESS,
   DELETE_DEFECT_SUBTYPE_SUCCESS,
-  UPDATE_PROJECT_INTEGRATIONS,
+  ADD_PROJECT_INTEGRATION_SUCCESS,
+  UPDATE_PROJECT_INTEGRATION_SUCCESS,
+  REMOVE_PROJECT_INTEGRATION_SUCCESS,
+  REMOVE_PROJECT_INTEGRATIONS_BY_TYPE_SUCCESS,
 } from './constants';
 
 export const projectInfoReducer = (state = PROJECT_INFO_INITIAL_STATE, { type, payload }) => {
@@ -28,10 +31,33 @@ export const projectInfoReducer = (state = PROJECT_INFO_INITIAL_STATE, { type, p
           },
         },
       };
-    case UPDATE_PROJECT_INTEGRATIONS:
+    case ADD_PROJECT_INTEGRATION_SUCCESS:
       return {
         ...state,
-        integrations: payload,
+        integrations: [...state.integrations, payload],
+      };
+    case UPDATE_PROJECT_INTEGRATION_SUCCESS:
+      return {
+        ...state,
+        integrations: state.integrations.map((integration) => {
+          if (payload.id === integration.id) {
+            return {
+              ...integration,
+              integrationParameters: payload.data,
+            };
+          }
+          return integration;
+        }),
+      };
+    case REMOVE_PROJECT_INTEGRATION_SUCCESS:
+      return {
+        ...state,
+        integrations: state.integrations.filter((item) => item.id !== payload),
+      };
+    case REMOVE_PROJECT_INTEGRATIONS_BY_TYPE_SUCCESS:
+      return {
+        ...state,
+        integrations: state.integrations.filter((item) => item.integrationType.name !== payload),
       };
     case UPDATE_NOTIFICATIONS_CONFIG_SUCCESS:
       return {
