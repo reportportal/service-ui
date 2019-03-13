@@ -194,4 +194,5 @@ export const URLS = {
       view: 'csv',
       access_token: getToken(),
     })}`,
+  allProjectsSearch: () => `${urlBase}project/list?filter.cnt.name=`,
 };
