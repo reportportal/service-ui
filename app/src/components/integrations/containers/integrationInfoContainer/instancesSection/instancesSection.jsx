@@ -45,22 +45,22 @@ const messages = defineMessages({
     id: 'InstancesSection.globalSettingsDefaultTitle',
     defaultMessage: 'Global settings',
   },
-  returnToGlobalSettingsTitle: {
-    id: 'InstancesSection.returnToGlobalSettingsTitle',
-    defaultMessage: 'Return to Global Settings',
+  resetToGlobalSettingsTitle: {
+    id: 'InstancesSection.resetToGlobalSettingsTitle',
+    defaultMessage: 'Reset to Global Settings',
   },
   unlinkAndSetupManuallyTitle: {
     id: 'InstancesSection.unlinkAndSetupManuallyTitle',
     defaultMessage: 'Unlink & setup manually',
   },
-  returnToGlobalSettingsDescription: {
-    id: 'InstancesSection.returnToGlobalSettingsDescription',
+  resetToGlobalSettingsDescription: {
+    id: 'InstancesSection.resetToGlobalSettingsDescription',
     defaultMessage: 'Activate the global settings. All custom integrations will be removed.',
   },
   unlinkAndSetupManuallyDescription: {
     id: 'InstancesSection.unlinkAndSetupManuallyDescription',
     defaultMessage:
-      'Unlink the current project from the global settings and configure your own integration. You always can return to the global settings.',
+      'Unlink the current project from the global settings and configure your own integration. You always can reset to the global settings.',
   },
   globalIntegrationsDisabledHint: {
     id: 'InstancesSection.globalIntegrationsDisabledHint',
@@ -104,6 +104,7 @@ export class InstancesSection extends Component {
     projectIntegrations: [],
     globalIntegrations: [],
   };
+
   multiple = isIntegrationSupportsMultipleInstances(this.props.instanceType);
 
   removeProjectIntegrations = () =>
@@ -141,9 +142,9 @@ export class InstancesSection extends Component {
     this.props.showModalAction({
       id: 'confirmationModal',
       data: {
-        message: formatMessage(messages.returnToGlobalSettingsDescription),
+        message: formatMessage(messages.resetToGlobalSettingsDescription),
         onConfirm: this.removeProjectIntegrations,
-        title: formatMessage(messages.returnToGlobalSettingsTitle),
+        title: formatMessage(messages.resetToGlobalSettingsTitle),
         confirmText: formatMessage(COMMON_LOCALE_KEYS.CONFIRM),
         cancelText: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
         dangerConfirm: true,
@@ -221,14 +222,14 @@ export class InstancesSection extends Component {
             >
               {formatMessage(
                 isProjectIntegrationsExists
-                  ? messages.returnToGlobalSettingsTitle
+                  ? messages.resetToGlobalSettingsTitle
                   : messages.unlinkAndSetupManuallyTitle,
               )}
             </GhostButton>
             <p className={cx('action-description')}>
               {formatMessage(
                 isProjectIntegrationsExists
-                  ? messages.returnToGlobalSettingsDescription
+                  ? messages.resetToGlobalSettingsDescription
                   : messages.unlinkAndSetupManuallyDescription,
               )}
             </p>

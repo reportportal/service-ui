@@ -17,6 +17,7 @@ export const InputTextArea = ({
   onFocus,
   onBlur,
   onKeyUp,
+  touched,
 }) => (
   <textarea
     ref={refFunction}
@@ -24,6 +25,7 @@ export const InputTextArea = ({
       'mobile-disabled': mobileDisabled,
       disabled,
       error,
+      touched,
     })}
     value={value}
     placeholder={placeholder}
@@ -52,6 +54,7 @@ InputTextArea.propTypes = {
   onBlur: PropTypes.func,
   onKeyUp: PropTypes.func,
   refFunction: PropTypes.func,
+  touched: PropTypes.bool,
 };
 
 InputTextArea.defaultProps = {
@@ -62,6 +65,7 @@ InputTextArea.defaultProps = {
   mobileDisabled: false,
   readonly: false,
   error: '',
+  touched: false,
   onChange: () => {},
   onFocus: () => {},
   onBlur: () => {},
