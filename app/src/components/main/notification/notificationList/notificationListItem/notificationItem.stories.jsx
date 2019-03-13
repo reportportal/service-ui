@@ -3,7 +3,7 @@ import { storiesOf } from '@storybook/react';
 import { host } from 'storybook-host';
 import { action } from '@storybook/addon-actions';
 import { withReadme } from 'storybook-readme';
-import { Notification } from './notification';
+import { NotificationItem } from './notificationItem';
 import README from './README.md';
 
 storiesOf('Components/Main/Notification', module)
@@ -18,12 +18,14 @@ storiesOf('Components/Main/Notification', module)
     }),
   )
   .addDecorator(withReadme(README))
-  .add('default state', () => <Notification uid={1} onMessageClick={action('onMessageClick')} />)
+  .add('default state', () => (
+    <NotificationItem uid={1} onMessageClick={action('onMessageClick')} />
+  ))
   .add('simple message', () => (
-    <Notification uid={1} onMessageClick={action('onMessageClick')} message="Simple message" />
+    <NotificationItem uid={1} onMessageClick={action('onMessageClick')} message="Simple message" />
   ))
   .add('error message', () => (
-    <Notification
+    <NotificationItem
       uid={1}
       onMessageClick={action('onMessageClick')}
       message="Simple message"
@@ -31,7 +33,7 @@ storiesOf('Components/Main/Notification', module)
     />
   ))
   .add('success message', () => (
-    <Notification
+    <NotificationItem
       uid={1}
       onMessageClick={action('onMessageClick')}
       message="Simple message"
@@ -39,7 +41,7 @@ storiesOf('Components/Main/Notification', module)
     />
   ))
   .add('long message', () => (
-    <Notification
+    <NotificationItem
       uid={1}
       onMessageClick={action('onMessageClick')}
       message="It makes perfect sense for us to write our UIs in a declarative manner. The reason is that we need to reuse UI elements and compose them together in different configurations. One can also claim that declarative code reads better, not because it is less syntax, but because you only describe what you want, not how you want it."

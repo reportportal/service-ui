@@ -4,17 +4,17 @@ import classNames from 'classnames/bind';
 import { defineMessages, intlShape, injectIntl } from 'react-intl';
 import Parser from 'html-react-parser';
 import { NOTIFICATION_TYPES } from 'controllers/notification/constants';
-import styles from './notification.scss';
+import styles from './notificationItem.scss';
 
 const cx = classNames.bind(styles);
 
 const messages = defineMessages({
-  successLogin: { id: 'Notification.successLogin', defaultMessage: 'Signed in successfully' },
+  successLogin: { id: 'NotificationItem.successLogin', defaultMessage: 'Signed in successfully' },
   failureDefault: {
-    id: 'Notification.failureDefault',
+    id: 'NotificationItem.failureDefault',
     defaultMessage: 'An error occurred while connecting to server: {error}',
   },
-  infoLogout: { id: 'Notification.infoLogout', defaultMessage: 'You have been logged out' },
+  infoLogout: { id: 'NotificationItem.infoLogout', defaultMessage: 'You have been logged out' },
   assignSuccess: {
     id: 'ProjectsPage.assignSuccess',
     defaultMessage: 'You have been assigned to the project',
@@ -55,11 +55,30 @@ const messages = defineMessages({
     id: 'ProjectsPage.projectExists',
     defaultMessage: "The project '{name}' is already exists",
   },
+  returnToGlobalSuccess: {
+    id: 'InstancesSection.returnToGlobalSuccess',
+    defaultMessage: 'Global integrations successfully applied',
+  },
+  addIntegrationSuccess: {
+    id: 'InstancesSection.addIntegrationSuccess',
+    defaultMessage: 'Integration successfully added',
+  },
+  updateIntegrationSuccess: {
+    id: 'IntegrationSettingsContainer.updateIntegrationSuccess',
+    defaultMessage: 'Integration successfully updated',
+  },
+  removeIntegrationSuccess: {
+    id: 'ConnectionSection.removeIntegrationSuccess',
+    defaultMessage: 'Integration successfully deleted',
+  },
 });
 
 @injectIntl
-export class Notification extends PureComponent {
+export class NotificationItem extends PureComponent {
   static propTypes = {
+    intl: intlShape.isRequired,
+    uid: PropTypes.number.isRequired,
+    onMessageClick: PropTypes.func.isRequired,
     message: PropTypes.string,
     messageId: PropTypes.string,
     type: PropTypes.oneOf([
@@ -68,9 +87,6 @@ export class Notification extends PureComponent {
       NOTIFICATION_TYPES.SUCCESS,
     ]),
     values: PropTypes.object,
-    uid: PropTypes.number.isRequired,
-    onMessageClick: PropTypes.func.isRequired,
-    intl: intlShape.isRequired,
   };
   static defaultProps = {
     message: '',
@@ -84,14 +100,21 @@ export class Notification extends PureComponent {
   };
 
   render() {
-    const { message, type, messageId, intl, values } = this.props;
+    const {
+      intl: { formatMessage },
+      message,
+      type,
+      messageId,
+      values,
+    } = this.props;
+
     if (message === '' && messageId === '') {
       return null;
     }
     return (
       <div key={message} onClick={this.messageClick}>
         <div className={cx('message-container', type)}>
-          <p> {Parser(messageId ? intl.formatMessage(messages[messageId], values) : message)}</p>
+          <p>{Parser(messageId ? formatMessage(messages[messageId], values) : message)}</p>
         </div>
       </div>
     );

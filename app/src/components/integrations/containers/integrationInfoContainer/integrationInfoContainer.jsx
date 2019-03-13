@@ -75,7 +75,6 @@ export class IntegrationInfoContainer extends Component {
               globalIntegrations={this.state.globalIntegrations}
               projectIntegrations={projectIntegrations}
               onItemClick={onItemClick}
-              onConfirm={this.fetchGlobalIntegrations}
               instanceType={name}
             />
           </Fragment>

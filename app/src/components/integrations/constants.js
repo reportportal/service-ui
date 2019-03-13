@@ -8,6 +8,8 @@ import {
   SauceLabsFormFields,
   EmailSettings,
   EmailFormFields,
+  JiraSettings,
+  JiraConnectionFormFields,
 } from './integrationProviders';
 
 export const INTEGRATION_NAMES_TITLES = {
@@ -24,12 +26,19 @@ export const INTEGRATIONS_IMAGES_MAP = {
   [SAUCE_LABS]: SauceLabsIcon,
 };
 
+export const INTEGRATIONS_SUPPORTS_MULTIPLE_INSTANCES = {
+  [JIRA]: true,
+  [RALLY]: true,
+};
+
 export const INTEGRATIONS_FORM_FIELDS_COMPONENTS_MAP = {
   [SAUCE_LABS]: SauceLabsFormFields,
   [EMAIL]: EmailFormFields,
+  [JIRA]: JiraConnectionFormFields,
 };
 
 export const INTEGRATIONS_SETTINGS_COMPONENTS_MAP = {
   [SAUCE_LABS]: SauceLabsSettings,
   [EMAIL]: EmailSettings,
+  [JIRA]: JiraSettings,
 };

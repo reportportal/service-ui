@@ -1,0 +1,1 @@
+export { JiraSettings } from './jiraSettings';

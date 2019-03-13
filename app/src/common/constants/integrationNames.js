@@ -1,4 +1,4 @@
-export const JIRA = 'JIRA';
-export const RALLY = 'RALLY';
+export const JIRA = 'jira';
+export const RALLY = 'rally';
 export const EMAIL = 'email';
 export const SAUCE_LABS = 'saucelabs';

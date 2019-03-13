@@ -1,5 +1,5 @@
 import { FormattedMessage } from 'react-intl';
-import { SAUCE_LABS, EMAIL } from 'common/constants/integrationNames';
+import { SAUCE_LABS, EMAIL, JIRA } from 'common/constants/integrationNames';
 
 export const INTEGRATIONS_DESCRIPTIONS_MAP = {
   [SAUCE_LABS]: (
@@ -12,6 +12,12 @@ export const INTEGRATIONS_DESCRIPTIONS_MAP = {
     <FormattedMessage
       id="Integrations.Email.description"
       defaultMessage="Reinforce your ReportPortal instance with E-mail server integration. Be informed about test result finish in real time and easily configure list of recipients."
+    />
+  ),
+  [JIRA]: (
+    <FormattedMessage
+      id="Integrations.Jira.description"
+      defaultMessage="Integration with JIRA, can be required for projects that collect defects in a separate tracking tool. Integration provides an exchange of information between ReportPortal and JIRA, such as posting issues and linking issues, getting updates on their statuses."
     />
   ),
 };

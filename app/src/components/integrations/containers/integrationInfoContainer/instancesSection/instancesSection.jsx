@@ -1,23 +1,20 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { defineMessages, injectIntl, intlShape } from 'react-intl';
 import { connect } from 'react-redux';
+import PlusIcon from 'common/img/plus-button-inline.svg';
 import { canUpdateSettings } from 'common/utils/permissions';
-import { fetch } from 'common/utils';
-import { URLS } from 'common/urls';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
-import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLock';
 import { projectIdSelector } from 'controllers/pages';
-import { fetchProjectIntegrationsAction } from 'controllers/project';
-import { showModalAction, hideModalAction } from 'controllers/modal';
 import {
-  showNotification,
-  showDefaultErrorNotification,
-  NOTIFICATION_TYPES,
-} from 'controllers/notification';
+  addProjectIntegrationAction,
+  removeProjectIntegrationsByTypeAction,
+} from 'controllers/project';
+import { showModalAction } from 'controllers/modal';
 import { GhostButton } from 'components/buttons/ghostButton';
+import { INTEGRATIONS_SUPPORTS_MULTIPLE_INSTANCES } from '../../../constants';
 import { InstancesList } from './instancesList';
 import styles from './instancesSection.scss';
 
@@ -69,13 +66,9 @@ const messages = defineMessages({
     id: 'InstancesSection.globalIntegrationsDisabledHint',
     defaultMessage: 'Global settings are inactive due to the manual project configuration.',
   },
-  returnToGlobalSuccess: {
-    id: 'InstancesSection.returnToGlobalSuccess',
-    defaultMessage: 'Global integrations successfully applied',
-  },
-  addIntegrationSuccess: {
-    id: 'AddProjectIntegrationModal.addIntegrationSuccess',
-    defaultMessage: 'Integration successfully added',
+  addIntegrationButtonTitle: {
+    id: 'InstancesSection.addIntegrationButtonTitle',
+    defaultMessage: 'Add integration',
   },
 });
 
@@ -87,12 +80,8 @@ const messages = defineMessages({
   }),
   {
     showModalAction,
-    hideModalAction,
-    showScreenLockAction,
-    hideScreenLockAction,
-    showNotification,
-    showDefaultErrorNotification,
-    fetchProjectIntegrationsAction,
+    removeProjectIntegrationsByTypeAction,
+    addProjectIntegrationAction,
   },
 )
 @injectIntl
@@ -102,85 +91,42 @@ export class InstancesSection extends Component {
     instanceType: PropTypes.string.isRequired,
     projectId: PropTypes.string.isRequired,
     onItemClick: PropTypes.func.isRequired,
-    onConfirm: PropTypes.func.isRequired,
     showModalAction: PropTypes.func.isRequired,
-    hideModalAction: PropTypes.func.isRequired,
-    showScreenLockAction: PropTypes.func.isRequired,
-    hideScreenLockAction: PropTypes.func.isRequired,
-    showNotification: PropTypes.func.isRequired,
-    showDefaultErrorNotification: PropTypes.func.isRequired,
-    fetchProjectIntegrationsAction: PropTypes.func.isRequired,
+    removeProjectIntegrationsByTypeAction: PropTypes.func.isRequired,
+    addProjectIntegrationAction: PropTypes.func.isRequired,
     accountRole: PropTypes.string.isRequired,
     userRole: PropTypes.string.isRequired,
     projectIntegrations: PropTypes.array,
     globalIntegrations: PropTypes.array,
-    multiple: PropTypes.bool,
   };
 
   static defaultProps = {
     projectIntegrations: [],
     globalIntegrations: [],
-    multiple: false,
   };
 
-  removeProjectIntegrations = () => {
+  multiple = INTEGRATIONS_SUPPORTS_MULTIPLE_INSTANCES[this.props.instanceType];
+
+  removeProjectIntegrations = () =>
+    this.props.removeProjectIntegrationsByTypeAction(this.props.instanceType);
+
+  navigateToNewIntegration = (data) => {
     const {
       intl: { formatMessage },
-      projectId,
-      instanceType,
-      onConfirm,
     } = this.props;
 
-    this.props.showScreenLockAction();
-    fetch(URLS.removeProjectIntegrationByType(projectId, instanceType), { method: 'delete' })
-      .then(() => {
-        this.props.fetchProjectIntegrationsAction(projectId);
-        this.props.hideScreenLockAction();
-        this.props.showNotification({
-          message: formatMessage(messages.returnToGlobalSuccess),
-          type: NOTIFICATION_TYPES.SUCCESS,
-        });
-        onConfirm();
-      })
-      .catch((error) => {
-        this.props.hideScreenLockAction();
-        this.props.showDefaultErrorNotification(error);
-      });
+    this.props.onItemClick(data, data.name || formatMessage(messages.projectSettingsDefaultTitle));
   };
 
   addProjectIntegration = (formData) => {
-    const {
-      intl: { formatMessage },
-      projectId,
-      instanceType,
-    } = this.props;
-    this.props.showScreenLockAction();
-
     const data = {
       enabled: true,
-      integrationName: instanceType,
+      integrationName: this.props.instanceType,
+      integrationType: { name: this.props.instanceType },
       integrationParameters: formData,
     };
 
-    fetch(URLS.newProjectIntegration(projectId), { method: 'post', data })
-      .then(() => {
-        this.props.fetchProjectIntegrationsAction(projectId);
-        this.props.hideScreenLockAction();
-        this.props.showNotification({
-          message: formatMessage(messages.addIntegrationSuccess),
-          type: NOTIFICATION_TYPES.SUCCESS,
-        });
-        this.props.hideModalAction();
-        // TODO: also put integrationId here when it will be returned from backend
-        this.props.onItemClick(
-          { ...data, integrationType: { name: instanceType } },
-          formatMessage(messages.projectSettingsDefaultTitle),
-        );
-      })
-      .catch((error) => {
-        this.props.hideScreenLockAction();
-        this.props.showDefaultErrorNotification(error);
-      });
+    this.props.addProjectIntegrationAction(data, this.navigateToNewIntegration);
   };
 
   returnToGlobalSettingsClickHandler = () => {
@@ -201,7 +147,7 @@ export class InstancesSection extends Component {
     });
   };
 
-  unlinkAndSetupManuallyClickHandler = () => {
+  addProjectIntegrationClickHandler = () => {
     const { instanceType } = this.props;
 
     this.props.showModalAction({
@@ -219,7 +165,6 @@ export class InstancesSection extends Component {
       onItemClick,
       projectIntegrations,
       globalIntegrations,
-      multiple,
       accountRole,
       userRole,
     } = this.props;
@@ -229,21 +174,30 @@ export class InstancesSection extends Component {
     return (
       <div className={cx('instances-section')}>
         {isProjectIntegrationsExists && (
-          <InstancesList
-            blocked={disabled}
-            title={formatMessage(
-              multiple ? messages.projectIntegrations : messages.projectIntegration,
+          <Fragment>
+            <InstancesList
+              blocked={disabled}
+              title={formatMessage(
+                this.multiple ? messages.projectIntegrations : messages.projectIntegration,
+              )}
+              items={projectIntegrations}
+              onItemClick={onItemClick}
+              defaultItemTitle={formatMessage(messages.projectSettingsDefaultTitle)}
+            />
+            {this.multiple && (
+              <div className={cx('add-integration-button')}>
+                <GhostButton icon={PlusIcon} onClick={this.addProjectIntegrationClickHandler}>
+                  {formatMessage(messages.addIntegrationButtonTitle)}
+                </GhostButton>
+              </div>
             )}
-            items={projectIntegrations}
-            onItemClick={onItemClick}
-            defaultItemTitle={formatMessage(messages.projectSettingsDefaultTitle)}
-          />
+          </Fragment>
         )}
         {!!globalIntegrations.length && (
           <InstancesList
             blocked
             title={formatMessage(
-              multiple ? messages.globalIntegrations : messages.globalIntegration,
+              this.multiple ? messages.globalIntegrations : messages.globalIntegration,
             )}
             items={globalIntegrations}
             onItemClick={onItemClick}
@@ -258,7 +212,7 @@ export class InstancesSection extends Component {
               onClick={
                 isProjectIntegrationsExists
                   ? this.returnToGlobalSettingsClickHandler
-                  : this.unlinkAndSetupManuallyClickHandler
+                  : this.addProjectIntegrationClickHandler
               }
             >
               {formatMessage(

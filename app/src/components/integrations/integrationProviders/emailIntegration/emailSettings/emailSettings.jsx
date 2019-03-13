@@ -12,7 +12,6 @@ const cx = classNames.bind(styles);
 export class EmailSettings extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
-    projectId: PropTypes.string.isRequired,
     data: PropTypes.object.isRequired,
     goToPreviousPage: PropTypes.func.isRequired,
     onUpdate: PropTypes.func.isRequired,

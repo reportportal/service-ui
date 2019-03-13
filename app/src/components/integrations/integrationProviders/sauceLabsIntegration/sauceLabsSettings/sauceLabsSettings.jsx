@@ -1,10 +1,12 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
+import { connect } from 'react-redux';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
-import { SAUCE_LABS_TEST_COMMAND } from 'controllers/log/sauceLabs';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
+import { SAUCE_LABS_TEST_COMMAND } from 'controllers/log/sauceLabs';
+import { projectIdSelector } from 'controllers/pages';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { ConnectionSection, IntegrationForm } from '../../../elements';
 import { SauceLabsFormFields } from '../sauceLabsFormFields';
@@ -19,6 +21,9 @@ const messages = defineMessages({
   },
 });
 
+@connect((state) => ({
+  projectId: projectIdSelector(state),
+}))
 @injectIntl
 export class SauceLabsSettings extends Component {
   static propTypes = {
