@@ -156,11 +156,11 @@ const messages = defineMessages({
     defaultMessage: 'Project with the same name already exists in system',
   },
   btsUrlHint: {
-    id: 'JiraConnectionFormFields.btsUrlHint',
+    id: 'BtsCommonMessages.btsUrlHint',
     defaultMessage: 'Please provide a valid BTS link',
   },
   btsProjectHint: {
-    id: 'JiraConnectionFormFields.btsProjectHint',
+    id: 'BtsCommonMessages.btsProjectHint',
     defaultMessage: 'Project name should have size from 1 to 55',
   },
 });
@@ -168,9 +168,9 @@ const messages = defineMessages({
 @injectIntl
 export class FieldErrorHint extends Component {
   static propTypes = {
+    intl: intlShape,
     hintType: PropTypes.string,
     children: PropTypes.node,
-    intl: intlShape,
     error: PropTypes.string,
     active: PropTypes.bool,
     staticHint: PropTypes.bool,

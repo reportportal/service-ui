@@ -28,7 +28,7 @@
     box-shadow: 0 0 2px 0 rgba($COLOR--topaz, 0.7);
   }
 
-  &.error {
+  &.error.touched {
     border-color: $COLOR--orange-red;
     box-shadow: 0 0 2px 0 rgba($COLOR--orange-red, 0.7);
   }

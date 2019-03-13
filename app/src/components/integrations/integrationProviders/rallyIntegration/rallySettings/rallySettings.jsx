@@ -18,7 +18,7 @@ import { messages } from '../messages';
   hideModalAction,
 })
 @injectIntl
-export class JiraSettings extends Component {
+export class RallySettings extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
     data: PropTypes.object.isRequired,
@@ -47,11 +47,7 @@ export class JiraSettings extends Component {
     },
     {
       value: this.props.data.integrationParameters.project,
-      message: this.props.intl.formatMessage(messages.projectNameLabel),
-    },
-    {
-      value: this.props.data.integrationParameters.username,
-      message: this.props.intl.formatMessage(messages.authorizedByTitle),
+      message: this.props.intl.formatMessage(messages.projectIdLabel),
     },
   ];
 

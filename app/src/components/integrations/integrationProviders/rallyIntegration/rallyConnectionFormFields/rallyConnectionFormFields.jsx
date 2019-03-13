@@ -4,6 +4,7 @@ import { injectIntl, intlShape } from 'react-intl';
 import { validate } from 'common/utils';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { InputDropdown } from 'components/inputs/inputDropdown';
+import { InputTextArea } from 'components/inputs/inputTextArea';
 import { Input } from 'components/inputs/input';
 import { IntegrationFormField } from 'components/integrations/elements';
 import { COMMON_BTS_MESSAGES } from 'components/integrations/elements/bts';
@@ -17,7 +18,7 @@ const validators = {
 };
 
 @injectIntl
-export class JiraConnectionFormFields extends Component {
+export class RallyConnectionFormFields extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
     initialize: PropTypes.func.isRequired,
@@ -38,7 +39,7 @@ export class JiraConnectionFormFields extends Component {
 
   constructor(props) {
     super(props);
-    this.systemAuthTypes = [{ value: 'BASIC', label: 'Basic' }];
+    this.systemAuthTypes = [{ value: 'OAUTH', label: 'ApiKey' }];
   }
 
   componentDidMount() {
@@ -81,7 +82,7 @@ export class JiraConnectionFormFields extends Component {
         </IntegrationFormField>
         <IntegrationFormField
           name="project"
-          label={formatMessage(messages.projectNameLabel)}
+          label={formatMessage(messages.projectIdLabel)}
           required
           disabled={disabled || editAuthMode}
           lineAlign={lineAlign}
@@ -102,27 +103,15 @@ export class JiraConnectionFormFields extends Component {
           </FieldErrorHint>
         </IntegrationFormField>
         <IntegrationFormField
-          name="username"
-          label={formatMessage(messages.usernameLabel)}
+          name="oauthAccessKey"
+          label={formatMessage(messages.accessKeyLabel)}
           required
           disabled={disabled}
           lineAlign={lineAlign}
           validate={validators.requiredField}
         >
           <FieldErrorHint>
-            <Input type="text" mobileDisabled />
-          </FieldErrorHint>
-        </IntegrationFormField>
-        <IntegrationFormField
-          name="password"
-          label={formatMessage(messages.passwordLabel)}
-          required
-          disabled={disabled}
-          lineAlign={lineAlign}
-          validate={validators.requiredField}
-        >
-          <FieldErrorHint>
-            <Input type="password" mobileDisabled />
+            <InputTextArea type="text" mobileDisabled />
           </FieldErrorHint>
         </IntegrationFormField>
       </Fragment>

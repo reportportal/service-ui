@@ -10,6 +10,8 @@ import {
   EmailFormFields,
   JiraSettings,
   JiraConnectionFormFields,
+  RallySettings,
+  RallyConnectionFormFields,
 } from './integrationProviders';
 
 export const INTEGRATION_NAMES_TITLES = {
@@ -32,10 +34,12 @@ export const INTEGRATIONS_FORM_FIELDS_COMPONENTS_MAP = {
   [SAUCE_LABS]: SauceLabsFormFields,
   [EMAIL]: EmailFormFields,
   [JIRA]: JiraConnectionFormFields,
+  [RALLY]: RallyConnectionFormFields,
 };
 
 export const INTEGRATIONS_SETTINGS_COMPONENTS_MAP = {
   [SAUCE_LABS]: SauceLabsSettings,
   [EMAIL]: EmailSettings,
   [JIRA]: JiraSettings,
+  [RALLY]: RallySettings,
 };

@@ -239,21 +239,25 @@ export class BtsPropertiesForIssueForm extends Component {
     this.fetchFieldsSet(issueTypeValue).then((fetchedFields) => {
       const { defectFormFields } = this.props.initialData;
       let fields = normalizeFieldsWithOptions(fetchedFields);
+      let checkedFieldsIds = {};
 
       if (defectFormFields && defectFormFields.length) {
-        const savedIssueType = fields.find((item) => item.id === ISSUE_TYPE_FIELD_KEY);
+        const savedIssueType = defectFormFields.find((item) => item.id === ISSUE_TYPE_FIELD_KEY);
         if (savedIssueType && savedIssueType.value && savedIssueType.value[0] === issueTypeValue) {
           fields = mergeFields(defectFormFields, fields);
+          checkedFieldsIds = this.state.checkedFieldsIds;
         }
       }
 
       this.props.initialize(this.mapFieldsToValues(fields, issueTypeValue));
       this.props.updateMetaData({
         fields,
+        checkedFieldsIds,
       });
       this.setState({
         loading: false,
         fields,
+        checkedFieldsIds,
       });
     });
 
