@@ -10,8 +10,7 @@ import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { Input } from 'components/inputs/input';
 import { InputDropdown } from 'components/inputs/inputDropdown';
 import { InputCheckbox } from 'components/inputs/inputCheckbox';
-import { INTEGRATION_FORM } from '../../../elements/integrationForm/constants';
-import { IntegrationFormField } from '../../../elements';
+import { IntegrationFormField, INTEGRATION_FORM } from 'components/integrations/elements';
 import {
   DEFAULT_FORM_CONFIG,
   AUTH_ENABLED_KEY,

@@ -1,130 +1,112 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import classNames from 'classnames/bind';
+import { defineMessages, injectIntl, intlShape } from 'react-intl';
 import { connect } from 'react-redux';
-import { injectIntl, intlShape, defineMessages } from 'react-intl';
-import { fetch } from 'common/utils';
-import { URLS } from 'common/urls';
-import { projectIdSelector } from 'controllers/pages';
-import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
-import { ConnectionSection, IntegrationForm } from '../../../elements';
-import { JiraIssueFormFields } from '../jiraIssueFormFields';
-import styles from './jiraSettings.scss';
-
-const cx = classNames.bind(styles);
+import { showModalAction, hideModalAction } from 'controllers/modal';
+import {
+  BtsAuthFieldsInfo,
+  BtsPropertiesForIssueForm,
+  BTS_FIELDS_FORM,
+} from 'components/integrations/elements/bts';
+import { IntegrationSettings } from 'components/integrations/elements';
 
 const messages = defineMessages({
-  failedConnectMessage: {
-    id: 'JiraSettings.failedConnectMessage',
-    defaultMessage:
-      'Please, check current authorization settings or general project health status in Jira!',
+  linkToBts: {
+    id: 'BtsAuthFieldsInfo.linkToBts',
+    defaultMessage: 'Link to BTS',
+  },
+  btsProjectName: {
+    id: 'BtsAuthFieldsInfo.btsProjectName',
+    defaultMessage: 'Project name in Jira',
+  },
+  usernameTitle: {
+    id: 'BtsAuthFieldsInfo.usernameTitle',
+    defaultMessage: 'Authorized by username',
   },
 });
 
-@connect((state) => ({
-  projectId: projectIdSelector(state),
-}))
+@connect(null, {
+  showModalAction,
+  hideModalAction,
+})
 @injectIntl
 export class JiraSettings extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
-    projectId: PropTypes.string.isRequired,
     data: PropTypes.object.isRequired,
     goToPreviousPage: PropTypes.func.isRequired,
     onUpdate: PropTypes.func.isRequired,
+    showModalAction: PropTypes.func.isRequired,
+    hideModalAction: PropTypes.func.isRequired,
   };
 
-  state = {
-    connected: false,
-    loading: false,
-    updated: false,
+  onSubmit = (data, callback, metaData) => {
+    const { fields, checkedFieldsIds = {} } = metaData;
+    const defectFormFields = fields
+      .filter((item) => item.required || checkedFieldsIds[item.id])
+      .map((item) => ({ ...item, value: data[item.id] }));
+
+    this.props.onUpdate({ ...data.integrationParameters, defectFormFields }, callback);
   };
 
-  componentDidMount() {
-    this.testIntegrationConnection();
-  }
+  getEditAuthConfig = () => ({
+    content: <BtsAuthFieldsInfo fieldsConfig={this.authFieldsConfig} />,
+    onClick: this.editAuthorizationClickHandler,
+  });
 
-  componentDidUpdate() {
-    if (this.state.updated && !this.state.loading) {
-      this.testIntegrationConnection();
-    }
-  }
+  authFieldsConfig = [
+    {
+      value: this.props.data.integrationParameters.url,
+      message: this.props.intl.formatMessage(messages.linkToBts),
+    },
+    {
+      value: this.props.data.integrationParameters.project,
+      message: this.props.intl.formatMessage(messages.btsProjectName),
+    },
+    {
+      value: this.props.data.integrationParameters.username,
+      message: this.props.intl.formatMessage(messages.usernameTitle),
+    },
+  ];
 
-  testIntegrationConnection = () => {
+  editAuthorizationClickHandler = () => {
     const {
-      data: {
-        id,
-        integrationParameters: { url, project },
-      },
-      projectId,
+      data: { name, integrationParameters, integrationType },
+      onUpdate,
     } = this.props;
 
-    this.setState({
-      loading: true,
-    });
-
-    fetch(URLS.connectToBtsIntegration(projectId, id), {
-      method: 'put',
+    this.props.showModalAction({
+      id: 'addProjectIntegrationModal',
       data: {
-        url,
-        btsProject: project,
+        onConfirm: (data) => onUpdate(data, this.props.hideModalAction),
+        instanceType: integrationType.name,
+        customProps: {
+          initialData: {
+            ...integrationParameters,
+            integrationName: name,
+          },
+          editAuthMode: true,
+        },
       },
-    })
-      .then(() => {
-        this.setState({
-          connected: true,
-          loading: false,
-          updated: false,
-        });
-      })
-      .catch(() => {
-        this.setState({
-          connected: false,
-          loading: false,
-          updated: false,
-        });
-      });
-  };
-
-  updateIntegrationHandler = (data, onConfirm) => {
-    this.props.onUpdate(data, () => {
-      onConfirm();
-      this.setState({
-        updated: true,
-      });
     });
   };
 
   render() {
-    const {
-      intl: { formatMessage },
-      data,
-      goToPreviousPage,
-    } = this.props;
-    const { loading, connected } = this.state;
+    const { data, goToPreviousPage } = this.props;
 
     return (
-      <div className={cx('jira-settings')}>
-        {loading ? (
-          <SpinningPreloader />
-        ) : (
-          <Fragment>
-            <ConnectionSection
-              disabled={data.blocked}
-              failedConnectionMessage={
-                connected ? null : formatMessage(messages.failedConnectMessage)
-              }
-              integrationId={data.id}
-              onRemoveConfirmation={goToPreviousPage}
-            />
-            <IntegrationForm
-              data={data}
-              onSubmit={this.updateIntegrationHandler}
-              formFieldsComponent={JiraIssueFormFields}
-            />
-          </Fragment>
-        )}
-      </div>
+      <IntegrationSettings
+        data={data}
+        onUpdate={this.onSubmit}
+        goToPreviousPage={goToPreviousPage}
+        formFieldsComponent={BtsPropertiesForIssueForm}
+        formKey={BTS_FIELDS_FORM}
+        editAuthConfig={this.getEditAuthConfig()}
+        isEmptyConfiguration={
+          !data.integrationParameters.defectFormFields ||
+          !data.integrationParameters.defectFormFields.length
+        }
+      />
     );
   }
 }

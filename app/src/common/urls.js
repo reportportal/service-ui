@@ -222,12 +222,17 @@ export const URLS = {
     `${urlBase}integration/global/all/${pluginName}`,
   projectIntegrationByIdCommand: (projectId, integrationId, command) =>
     `${urlBase}integration/${projectId}/${integrationId}/${command}`,
-  newProjectIntegration: (projectid) => `${urlBase}integration/${projectid}`,
-  projectIntegration: (projectid, integrationId) =>
-    `${urlBase}integration/${projectid}/${integrationId}`,
-  removeProjectIntegrationByType: (projectid, type) =>
-    `${urlBase}integration/${projectid}/all/${type}`,
+  newProjectIntegration: (projectId, pluginName) =>
+    `${urlBase}integration/${projectId}/${pluginName}`,
+  projectIntegration: (projectId, integrationId) =>
+    `${urlBase}integration/${projectId}/${integrationId}`,
+  removeProjectIntegrationByType: (projectId, type) =>
+    `${urlBase}integration/${projectId}/all/${type}`,
+  testIntegrationConnection: (projectId, integrationId) =>
+    `${urlBase}integration/${projectId}/${integrationId}/connection/test`,
 
-  connectToBtsIntegration: (projectid, integrationId) =>
-    `${urlBase}bts/${projectid}/${integrationId}/connect`,
+  btsIntegrationIssueTypes: (projectId, integrationId) =>
+    `${urlBase}bts/${projectId}/${integrationId}/issue_types`,
+  btsIntegrationFieldsSet: (projectId, integrationId, issueType) =>
+    `${urlBase}bts/${projectId}/${integrationId}/fields-set?issueType=${issueType}`,
 };

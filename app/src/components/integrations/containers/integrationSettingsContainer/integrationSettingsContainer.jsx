@@ -30,41 +30,40 @@ export class IntegrationSettingsContainer extends Component {
 
   updateIntegration = (formData, onConfirm) => {
     const {
-      data: { id, integrationType },
+      data: { id },
     } = this.props;
 
     const data = {
       enabled: true,
-      integrationName: integrationType.name,
       integrationParameters: formData,
     };
+    if (formData.integrationName) {
+      data.name = formData.integrationName;
+    }
 
     this.props.updateProjectIntegrationAction(data, id, () => {
       onConfirm();
       this.setState({
-        updatedParameters: formData,
+        updatedParameters: data,
       });
     });
   };
 
   render() {
-    const { data, title, goToPreviousPage } = this.props;
+    const { data, goToPreviousPage } = this.props;
     const integrationName = data.integrationType.name;
     const image = INTEGRATIONS_IMAGES_MAP[integrationName];
     const IntegrationSettingsComponent = INTEGRATIONS_SETTINGS_COMPONENTS_MAP[integrationName];
     const updatedData = {
       ...data,
-      integrationParameters: {
-        ...data.integrationParameters,
-        ...this.state.updatedParameters,
-      },
+      ...this.state.updatedParameters,
     };
 
     return (
       <div className={cx('integration-settings-container')}>
         <div className={cx('settings-header')}>
-          <img className={cx('logo')} src={image} alt={title} />
-          <h2 className={cx('title')}>{title}</h2>
+          <img className={cx('logo')} src={image} alt={integrationName} />
+          <h2 className={cx('title')}>{updatedData.name}</h2>
         </div>
         <IntegrationSettingsComponent
           data={updatedData}

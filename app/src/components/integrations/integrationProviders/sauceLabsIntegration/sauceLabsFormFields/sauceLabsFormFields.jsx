@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { Input } from 'components/inputs/input';
-import { IntegrationFormField } from '../../../elements';
+import { IntegrationFormField } from 'components/integrations/elements';
 
 const messages = defineMessages({
   userNameTitle: {

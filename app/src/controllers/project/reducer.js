@@ -43,7 +43,11 @@ export const projectInfoReducer = (state = PROJECT_INFO_INITIAL_STATE, { type, p
           if (payload.id === integration.id) {
             return {
               ...integration,
-              integrationParameters: payload.data,
+              ...payload.data,
+              integrationParameters: {
+                ...integration.integrationParameters,
+                ...payload.data.integrationParameters,
+              },
             };
           }
           return integration;

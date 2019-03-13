@@ -133,15 +133,15 @@ function* watchUpdateProjectNotificationsConfig() {
   yield takeEvery(UPDATE_NOTIFICATIONS_CONFIG, updateProjectNotificationsConfig);
 }
 
-function* addProjectIntegration({ payload: { data, callback } }) {
+function* addProjectIntegration({ payload: { data, pluginName, callback } }) {
   yield put(showScreenLockAction());
   try {
     const projectId = yield select(projectIdSelector);
-    const response = yield call(fetch, URLS.newProjectIntegration(projectId), {
+    const response = yield call(fetch, URLS.newProjectIntegration(projectId, pluginName), {
       method: 'post',
       data,
     });
-    const newIntegration = { ...data, id: response.id };
+    const newIntegration = { ...data, id: response.id, integrationType: { name: pluginName } };
     yield put(addProjectIntegrationSuccessAction(newIntegration));
     yield put(
       showNotification({
@@ -170,7 +170,7 @@ function* updateProjectIntegration({ payload: { data, id, callback } }) {
       method: 'put',
       data,
     });
-    yield put(updateProjectIntegrationSuccessAction(data.integrationParameters, id));
+    yield put(updateProjectIntegrationSuccessAction(data, id));
     yield put(
       showNotification({
         messageId: 'updateIntegrationSuccess',

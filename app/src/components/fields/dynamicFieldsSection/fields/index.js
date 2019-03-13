@@ -1,4 +1,4 @@
-export { TextField } from './textField/index';
-export { DateField } from './dateField/index';
-export { DropdownField } from './dropdownField/index';
-export { ArrayField } from './arrayField/index';
+export { TextField } from './textField';
+export { DateField } from './dateField';
+export { DropdownField } from './dropdownField';
+export { ArrayField } from './arrayField';

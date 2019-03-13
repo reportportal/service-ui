@@ -1,6 +1,6 @@
 .integration-form {
   width: 100%;
-  max-width: 375px;
+  max-width: 450px;
 
   @media (max-width: $SCREEN_XS_MAX) {
     max-width: 100%;
@@ -21,6 +21,13 @@
   color: $COLOR--black-2;
   font-size: 20px;
   font-family: $FONT-SEMIBOLD;
+}
+
+.configuration-not-specified-info {
+  color: $COLOR--gray-60;
+  font-size: 13px;
+  font-family: $FONT-REGULAR;
+  line-height: 1.54;
 }
 
 .controls-block {

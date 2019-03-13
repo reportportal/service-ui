@@ -104,7 +104,6 @@ export class InstancesSection extends Component {
     projectIntegrations: [],
     globalIntegrations: [],
   };
-
   multiple = isIntegrationSupportsMultipleInstances(this.props.instanceType);
 
   removeProjectIntegrations = () =>
@@ -121,12 +120,17 @@ export class InstancesSection extends Component {
   addProjectIntegration = (formData) => {
     const data = {
       enabled: true,
-      integrationName: this.props.instanceType,
-      integrationType: { name: this.props.instanceType },
       integrationParameters: formData,
     };
+    if (formData.integrationName) {
+      data.name = formData.integrationName;
+    }
 
-    this.props.addProjectIntegrationAction(data, this.navigateToNewIntegration);
+    this.props.addProjectIntegrationAction(
+      data,
+      this.props.instanceType,
+      this.navigateToNewIntegration,
+    );
   };
 
   returnToGlobalSettingsClickHandler = () => {

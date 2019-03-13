@@ -1,6 +1,7 @@
 .connection-section {
   width: 100%;
   max-width: 375px;
+  margin-right: 10px;
 
   @media (max-width: $SCREEN_XS_MAX) {
     max-width: 100%;
@@ -21,10 +22,8 @@
   width: 270px;
   min-height: 40px;
   box-sizing: border-box;
-  margin-bottom: 20px;
   padding: 15px;
   border-radius: 2px;
-  color: $COLOR--passed;
   background-color: $COLOR--white-four;
   font-size: 13px;
   font-family: $FONT-SEMIBOLD;
@@ -37,6 +36,7 @@
 .connection-status {
   display: inline-flex;
   align-items: center;
+  color: $COLOR--passed;
 }
 
 .failed-connection-message {
@@ -59,8 +59,11 @@
 }
 
 .connection-failed {
-  color: $COLOR--orange-red;
   background-color: $COLOR--light-red;
+
+  .connection-status {
+    color: $COLOR--orange-red;
+  }
 
   .status-icon {
     transform: rotate(180deg);
@@ -71,9 +74,15 @@
   }
 }
 
-.remove-integration-button {
+.auth-info-block {
+  margin-top: 5px;
+}
+
+.connection-block-button {
   display: flex;
   align-items: center;
+  margin-top: 20px;
+  margin-left: 15px;
   padding: 0;
   border: none;
   background: none;
@@ -81,10 +90,6 @@
   font-size: 13px;
   font-family: $FONT-REGULAR;
   cursor: pointer;
-
-  &.disabled {
-    display: none;
-  }
 
   &:hover {
     color: $COLOR--tealish;
@@ -102,7 +107,7 @@
   }
 }
 
-.remove-icon {
+.button-icon {
   display: inline-block;
   width: 14px;
   height: 14px;
