@@ -204,6 +204,7 @@ export class LaunchSuiteGrid extends PureComponent {
     loading: PropTypes.bool,
     onFilterClick: PropTypes.func,
     events: PropTypes.object,
+    onAnalysis: PropTypes.func,
   };
   static defaultProps = {
     data: [],
@@ -221,6 +222,7 @@ export class LaunchSuiteGrid extends PureComponent {
     loading: false,
     onFilterClick: () => {},
     events: {},
+    onAnalysis: () => {},
   };
   getColumns() {
     const hamburgerColumn = {
@@ -229,6 +231,7 @@ export class LaunchSuiteGrid extends PureComponent {
         onDeleteItem: this.props.onDeleteItem,
         onMove: this.props.onMove,
         onForceFinish: this.props.onForceFinish,
+        onAnalysis: this.props.onAnalysis,
       },
     };
     const { events } = this.props;

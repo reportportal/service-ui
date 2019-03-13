@@ -75,7 +75,6 @@ export class Hamburger extends Component {
     onAction: PropTypes.func,
     launch: PropTypes.object.isRequired,
     projectId: PropTypes.string.isRequired,
-    onAnalysis: PropTypes.func,
     customProps: PropTypes.object,
     accountRole: PropTypes.string,
     tracking: PropTypes.shape({
@@ -86,7 +85,6 @@ export class Hamburger extends Component {
 
   static defaultProps = {
     onAction: () => {},
-    onAnalysis: () => {},
     customProps: {},
     accountRole: '',
   };
@@ -178,15 +176,7 @@ export class Hamburger extends Component {
   };
 
   render() {
-    const {
-      intl,
-      projectRole,
-      accountRole,
-      launch,
-      onAnalysis,
-      customProps,
-      tracking,
-    } = this.props;
+    const { intl, projectRole, accountRole, launch, customProps, tracking } = this.props;
     return (
       <div className={cx('hamburger')}>
         <div
@@ -258,7 +248,7 @@ export class Hamburger extends Component {
                 text={intl.formatMessage(messages.analysis)}
                 onClick={() => {
                   tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_ANALYSIS_LAUNCH_MENU);
-                  onAnalysis(launch);
+                  customProps.onAnalysis(launch);
                 }}
               />
             )}

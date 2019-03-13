@@ -40,6 +40,7 @@ import {
   NAMESPACE,
   toggleAllLaunchesAction,
   deleteItemsAction,
+  analysisItemsAction,
 } from 'controllers/launch';
 import { LaunchSuiteGrid } from 'pages/inside/common/launchSuiteGrid';
 import { LaunchFiltersContainer } from 'pages/inside/common/launchFiltersContainer';
@@ -91,6 +92,10 @@ const messages = defineMessages({
     id: 'LaunchesPage.errorMultiple',
     defaultMessage: 'Error when deleting launches',
   },
+  analyseStartSuccess: {
+    id: 'LaunchesPage.analyseStartSuccess',
+    defaultMessage: 'Auto-analyzer has been started.',
+  },
 });
 
 @connect(
@@ -121,6 +126,7 @@ const messages = defineMessages({
     showNotification,
     showScreenLockAction,
     hideScreenLockAction,
+    analysisItemsAction,
   },
 )
 @withSorting({
@@ -172,6 +178,7 @@ export class LaunchesPage extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    analysisItemsAction: PropTypes.func,
   };
 
   static defaultProps = {
@@ -201,11 +208,45 @@ export class LaunchesPage extends Component {
     loading: false,
     fetchLaunchesAction: () => {},
     deleteItemsAction: () => {},
+    analysisItemsAction: () => {},
   };
 
   componentWillUnmount() {
     this.props.unselectAllLaunchesAction();
   }
+
+  onAnalysis = (launch) => {
+    this.props.tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_ANALYSIS_LAUNCH_MENU);
+    this.props.showModalAction({
+      id: 'analysisLaunchModal',
+      data: {
+        item: launch,
+        onConfirm: (data) => this.analyseItem(launch, data),
+      },
+    });
+  };
+  analyseItem = (launch, data) => {
+    const {
+      activeProject,
+      intl: { formatMessage },
+    } = this.props;
+    fetch(URLS.launchAnalyze(activeProject), {
+      method: 'POST',
+      data,
+    })
+      .then(() => {
+        showNotification({
+          message: formatMessage(messages.analyseStartSuccess),
+          type: NOTIFICATION_TYPES.SUCCESS,
+        });
+      })
+      .catch((error) => {
+        this.props.showNotification({
+          message: error.message,
+          type: NOTIFICATION_TYPES.ERROR,
+        });
+      });
+  };
 
   unselectAndFetchLaunches = () => {
     this.props.unselectAllLaunchesAction();
@@ -430,6 +471,7 @@ export class LaunchesPage extends Component {
                 loading={loading}
                 onFilterClick={onFilterAdd}
                 events={LAUNCHES_PAGE_EVENTS}
+                onAnalysis={this.onAnalysis}
               />
               {!!pageCount &&
                 !loading && (
