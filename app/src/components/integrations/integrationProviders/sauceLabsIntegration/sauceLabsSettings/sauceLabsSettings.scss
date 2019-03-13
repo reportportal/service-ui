@@ -1,0 +1,54 @@
+.sauce-labs-settings {
+  display: flex;
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    flex-direction: column;
+  }
+}
+
+.settings-block {
+  width: 100%;
+  max-width: 375px;
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    margin-bottom: 30px;
+  }
+}
+
+.block-header {
+  margin-bottom: 20px;
+  color: $COLOR--black-2;
+  font-size: 20px;
+  font-family: $FONT-SEMIBOLD;
+  font-weight: 600;
+}
+
+.connection-status-block {
+  display: flex;
+  align-items: center;
+  width: 270px;
+  height: 40px;
+  box-sizing: border-box;
+  margin-bottom: 20px;
+  padding: 15px;
+  border-radius: 2px;
+  color: $COLOR--passed;
+  background-color: $COLOR--white-four;
+  font-size: 13px;
+  font-family: $FONT-SEMIBOLD;
+}
+
+.remove-integration-button {
+  padding: 0;
+  border: none;
+  background: none;
+  color: $COLOR--topaz;
+  font-size: 13px;
+  font-family: $FONT-REGULAR;
+  cursor: pointer;
+
+  &.disabled {
+    color: $COLOR--gray-60;
+    pointer-events: none;
+  }
+}

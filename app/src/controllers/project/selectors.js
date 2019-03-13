@@ -1,13 +1,13 @@
 import { createSelector } from 'reselect';
 import { OWNER } from 'common/constants/permissions';
-import { SAUCE_LABS } from 'common/constants/integrationNames';
 import { DEFECT_TYPES_SEQUENCE } from 'common/constants/defectTypes';
+import { JIRA, RALLY, EMAIL, SAUCE_LABS } from 'common/constants/integrationNames';
 import {
   ANALYZER_ATTRIBUTE_PREFIX,
   JOB_ATTRIBUTE_PREFIX,
   PROJECT_ATTRIBUTES_DELIMITER,
 } from './constants';
-import { filterIntegrationsByName } from './utils';
+import { filterIntegrationsByName, sortItemsByGroupType, groupItems } from './utils';
 
 const projectSelector = (state) => state.project || {};
 
@@ -60,43 +60,6 @@ export const jobAttributesSelector = createPrefixedAttributesSelector(JOB_ATTRIB
 
 export const externalSystemSelector = (state) => projectConfigSelector(state).externalSystem || [];
 
-export const projectIntegrationsSortedSelector = createSelector(
-  projectIntegrationsSelector,
-  (integrations) =>
-    integrations.sort((a, b) =>
-      a.integrationType.groupType.localeCompare(b.integrationType.groupType),
-    ),
-);
-
-export const groupedIntegrationsSelector = createSelector(
-  projectIntegrationsSortedSelector,
-  (integrations) =>
-    integrations.reduce((accum, item) => {
-      const integrationGroupType = item.integrationType.groupType;
-      const groupedIntegrations = { ...accum };
-      if (!groupedIntegrations[integrationGroupType]) {
-        groupedIntegrations[integrationGroupType] = [item];
-      } else {
-        groupedIntegrations[integrationGroupType].push(item);
-      }
-      return groupedIntegrations;
-    }, {}),
-);
-
-const createNamedIntegrationsSelector = (integrationName) =>
-  createSelector(projectIntegrationsSelector, (integrations) =>
-    filterIntegrationsByName(integrations, integrationName),
-  );
-
-export const namedIntegrationsSelectorsMap = {
-  [SAUCE_LABS]: createNamedIntegrationsSelector(SAUCE_LABS),
-};
-
-export const createTypedIntegrationsSelector = (integrationType) =>
-  createSelector(projectIntegrationsSelector, (integrations) =>
-    integrations.filter((integration) => integration.integrationType.groupType === integrationType),
-  );
-
 export const projectNotificationsConfigurationSelector = (state) =>
   projectConfigSelector(state).notificationsConfiguration || {};
 
@@ -125,3 +88,27 @@ export const defectColorsSelector = createSelector(projectConfigSelector, (confi
     });
   return colors;
 });
+
+/* INTEGRATIONS */
+
+const createNamedIntegrationsSelector = (integrationName) =>
+  createSelector(projectIntegrationsSelector, (integrations) =>
+    filterIntegrationsByName(integrations, integrationName),
+  );
+
+export const projectIntegrationsSortedSelector = createSelector(
+  projectIntegrationsSelector,
+  sortItemsByGroupType,
+);
+
+export const groupedIntegrationsSelector = createSelector(
+  projectIntegrationsSortedSelector,
+  groupItems,
+);
+
+export const namedIntegrationsSelectorsMap = {
+  [SAUCE_LABS]: createNamedIntegrationsSelector(SAUCE_LABS),
+  [JIRA]: createNamedIntegrationsSelector(JIRA),
+  [RALLY]: createNamedIntegrationsSelector(RALLY),
+  [EMAIL]: createNamedIntegrationsSelector(EMAIL),
+};

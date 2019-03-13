@@ -1,0 +1,30 @@
+.sauce-labs-form-fields {
+
+}
+
+.form-field-label {
+  display: inline-block;
+  margin-bottom: 10px;
+  font-size: 13px;
+  font-family: $FONT-SEMIBOLD;
+  color: $COLOR--black-2;
+}
+
+.form-field {
+  width: 100%;
+  max-width: 400px;
+}
+
+.form-field-wrapper {
+  margin-bottom: 20px;
+
+  &.line-align {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .form-field {
+      max-width: 350px;
+    }
+  }
+}

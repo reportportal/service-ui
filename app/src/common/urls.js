@@ -209,7 +209,13 @@ export const URLS = {
 
   info: () => `${urlBase}info`,
 
+  plugin: () => `${urlBase}plugin`,
   globalIntegrationsByPluginName: (pluginName) => `${urlBase}integration/global/all/${pluginName}`,
   projectIntegrationByIdCommand: (projectId, integrationId, command) =>
     `${urlBase}integration/${projectId}/${integrationId}/${command}`,
+  newProjectIntegration: (projectid) => `${urlBase}integration/${projectid}`,
+  projectIntegration: (projectid, integrationId) =>
+    `${urlBase}integration/${projectid}/${integrationId}`,
+  removeProjectIntegrationByType: (projectid, type) =>
+    `${urlBase}integration/${projectid}/all/${type}`,
 };

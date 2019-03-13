@@ -4,3 +4,4 @@ export { modalReducer } from './reducer';
 export { activeModalSelector } from './selectors';
 export { getModal } from './modalsMap';
 export { confirmSaga } from './sagas';
+export { withModal } from './withModal';

@@ -94,6 +94,18 @@ export class LogItemInfoTabs extends Component {
     activeAttachmentId: null,
   };
 
+  componentDidUpdate() {
+    if (this.props.loading && this.props.isSauceLabsIntegrationView) {
+      this.props.onToggleSauceLabsIntegrationView();
+    }
+  }
+
+  componentWillUnmount() {
+    if (this.props.isSauceLabsIntegrationView) {
+      this.props.onToggleSauceLabsIntegrationView();
+    }
+  }
+
   setActiveTab = (activeTabId) => {
     const { isSauceLabsIntegrationView, onToggleSauceLabsIntegrationView } = this.props;
     if (isSauceLabsIntegrationView && activeTabId) {

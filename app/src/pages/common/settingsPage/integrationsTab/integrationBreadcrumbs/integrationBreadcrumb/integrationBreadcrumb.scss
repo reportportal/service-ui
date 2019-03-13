@@ -1,0 +1,20 @@
+.integration-breadcrumb {
+  display: flex;
+  align-items: center;
+  padding-left: 5px;
+  padding-right: 5px;
+  font-size: 12px;
+  color: $COLOR--charcoal-grey;
+  min-width: 15px;
+  line-height: 18px;
+  word-break: break-all;
+
+  @supports (word-break: break-word) {
+    word-break: break-word;
+  }
+
+  &.active {
+    color: $COLOR--topaz;
+    cursor: pointer;
+  }
+}

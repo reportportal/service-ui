@@ -1,2 +1,4 @@
 export const NOTIFICATION_GROUP_TYPE = 'NOTIFICATION';
+export const AUTHORIZATION_GROUP_TYPE = 'AUTH';
 export const BTS_GROUP_TYPE = 'BTS';
+export const OTHER_GROUP_TYPE = 'OTHER';

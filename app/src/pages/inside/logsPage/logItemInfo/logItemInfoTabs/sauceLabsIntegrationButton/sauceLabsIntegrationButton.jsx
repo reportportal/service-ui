@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import SauceLabsIcon from 'common/img/plugins/sauce-labs.png';
+import SauceLabsIcon from 'common/img/plugins/sauce-labs-gray.png';
 import SauceLabsActiveIcon from 'common/img/plugins/sauce-labs-active.png';
 import { SAUCE_LABS_INTEGRATION_TITLE } from 'components/integrations/integrationProviders/sauceLabsIntegration/constants';
 import styles from './sauceLabsIntegrationButton.scss';

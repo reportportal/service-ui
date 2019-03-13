@@ -7,12 +7,12 @@ import {
 } from './constants';
 import { hideNotification, showNotification } from './actionCreators';
 
-function* showDefaultErrorNotification({ message }) {
+function* showDefaultErrorNotification({ payload: { error } }) {
   yield put(
     showNotification({
       messageId: 'failureDefault',
       type: NOTIFICATION_TYPES.ERROR,
-      values: { message },
+      values: { error },
     }),
   );
 }

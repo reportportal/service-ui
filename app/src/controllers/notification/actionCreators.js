@@ -32,6 +32,6 @@ export const hideNotification = (uid) => ({
 export const showDefaultErrorNotification = ({ message }) => ({
   type: SHOW_DEFAULT_ERROR_NOTIFICATION,
   payload: {
-    message,
+    error: message,
   },
 });

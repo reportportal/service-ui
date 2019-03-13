@@ -10,7 +10,11 @@ import AddUserIcon from 'common/img/add-user-inline.svg';
 import { URLS } from 'common/urls';
 import { showModalAction } from 'controllers/modal';
 import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLock';
-import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
+import {
+  showNotification,
+  showDefaultErrorNotification,
+  NOTIFICATION_TYPES,
+} from 'controllers/notification';
 import { activeProjectSelector } from 'controllers/user';
 import {
   fetchAllUsersAction,
@@ -62,6 +66,7 @@ const messages = defineMessages({
     showScreenLockAction,
     hideScreenLockAction,
     showNotification,
+    showDefaultErrorNotification,
     fetchAllUsersAction,
   },
 )
@@ -70,23 +75,19 @@ export class ActionPanel extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
     users: PropTypes.arrayOf(PropTypes.object),
-    showScreenLockAction: PropTypes.func,
     activeProject: PropTypes.string,
-    showNotification: PropTypes.func,
-    fetchAllUsersAction: PropTypes.func,
-    hideScreenLockAction: PropTypes.func,
-    showModalAction: PropTypes.func,
     filterEnities: PropTypes.object,
+    showScreenLockAction: PropTypes.func.isRequired,
+    showNotification: PropTypes.func.isRequired,
+    showDefaultErrorNotification: PropTypes.func.isRequired,
+    fetchAllUsersAction: PropTypes.func.isRequired,
+    hideScreenLockAction: PropTypes.func.isRequired,
+    showModalAction: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
-    showScreenLockAction: () => {},
     activeProject: '',
     users: [],
-    showNotification: () => {},
-    fetchAllUsersAction: () => {},
-    hideScreenLockAction: () => {},
-    showModalAction: () => {},
     filterEnities: {},
   };
 
@@ -122,13 +123,7 @@ export class ActionPanel extends Component {
           message: this.props.intl.formatMessage(messages.addUserSuccessNotification),
         });
       })
-      .catch((err) => {
-        this.props.showNotification({
-          type: NOTIFICATION_TYPES.ERROR,
-          messageId: 'failureDefault',
-          values: { error: err.message },
-        });
-      });
+      .catch(this.props.showDefaultErrorNotification);
   };
 
   inviteUser = (userData) => {
@@ -154,7 +149,7 @@ export class ActionPanel extends Component {
           return data;
         })
         .catch((err) => {
-          this.props.showNotification({ message: err.msg, type: NOTIFICATION_TYPES.ERROR });
+          this.props.showDefaultErrorNotification(err);
           this.props.fetchAllUsersAction();
           this.props.hideScreenLockAction();
           return err;
@@ -178,7 +173,7 @@ export class ActionPanel extends Component {
         this.props.fetchAllUsersAction();
       })
       .catch((err) => {
-        this.props.showNotification({ message: err.msg, type: NOTIFICATION_TYPES.ERROR });
+        this.props.showDefaultErrorNotification(err);
         this.props.fetchAllUsersAction();
       });
   };

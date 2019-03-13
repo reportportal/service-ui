@@ -52,7 +52,7 @@ export class VideoPlayer extends React.Component {
           {/* eslint-disable jsx-a11y/media-has-caption */}
           <video
             ref={this.videoNode}
-            className="video-js vjs_video_1-dimensions vjs-controls-enabled vjs-workinghover vjs-v7"
+            className="video-js vjs_video_1-dimensions vjs-controls-enabled vjs-workinghover vjs-v7 vjs-default-skin"
           />
         </div>
       </div>

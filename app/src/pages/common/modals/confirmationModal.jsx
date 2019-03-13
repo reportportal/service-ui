@@ -19,13 +19,14 @@ export class ConfirmationModal extends Component {
   };
 
   render() {
-    const { message, onConfirm, title, confirmText, cancelText } = this.props.data;
+    const { message, onConfirm, title, confirmText, cancelText, dangerConfirm } = this.props.data;
     const { confirmModal } = this.props;
     return (
       <ModalLayout
         title={title}
         okButton={{
           text: confirmText,
+          danger: dangerConfirm,
           onClick: (closeModal) => {
             confirmModal();
             closeModal();

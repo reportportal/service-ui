@@ -8,7 +8,11 @@ import { fetch } from 'common/utils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { fetchProjectAction } from 'controllers/project';
 import { projectIdSelector } from 'controllers/pages';
-import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
+import {
+  showNotification,
+  showDefaultErrorNotification,
+  NOTIFICATION_TYPES,
+} from 'controllers/notification';
 import { withModal, ModalLayout } from 'components/main/modal';
 import styles from './generateIndexModal.scss';
 
@@ -48,6 +52,7 @@ const messages = defineMessages({
   {
     fetchProjectAction,
     showNotification,
+    showDefaultErrorNotification,
   },
 )
 @injectIntl
@@ -56,7 +61,8 @@ export class GenerateIndexModal extends Component {
     intl: intlShape,
     projectId: PropTypes.string,
     fetchProjectAction: PropTypes.func.isRequired,
-    showNotification: PropTypes.func,
+    showNotification: PropTypes.func.isRequired,
+    showDefaultErrorNotification: PropTypes.func.isRequired,
   };
   static defaultProps = {
     intl: {},
@@ -74,13 +80,7 @@ export class GenerateIndexModal extends Component {
         });
         this.props.fetchProjectAction(this.props.projectId);
       })
-      .catch((e) => {
-        this.props.showNotification({
-          messageId: 'failureDefault',
-          type: NOTIFICATION_TYPES.ERROR,
-          values: { error: e.message },
-        });
-      });
+      .catch(this.props.showDefaultErrorNotification);
     closeModal();
   };
 
