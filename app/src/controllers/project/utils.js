@@ -39,3 +39,15 @@ export const groupItems = (items) =>
 // TODO: remove check for AUTHORIZATION_GROUP_TYPE when designs and backend implementation will exist
 export const filterAvailablePlugins = (plugins) =>
   plugins.filter((item) => item.enabled && item.groupType !== AUTHORIZATION_GROUP_TYPE);
+
+// TODO: use it for reducer
+export const updateIntegrations = (integrations, { integrationParameters, enabled, id }) => {
+  const integrationIndex = integrations.findIndex((item) => item.id === id);
+  const updatedIntegrations = [...integrations];
+  updatedIntegrations[integrationIndex] = {
+    ...updatedIntegrations[integrationIndex],
+    enabled,
+    integrationParameters,
+  };
+  return updatedIntegrations;
+};

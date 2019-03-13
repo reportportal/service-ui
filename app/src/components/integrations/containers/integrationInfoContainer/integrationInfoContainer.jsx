@@ -6,7 +6,10 @@ import { URLS } from 'common/urls';
 import { namedIntegrationsSelectorsMap } from 'controllers/project';
 import { showDefaultErrorNotification } from 'controllers/notification';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
-import { INTEGRATIONS_INFO_COMPONENTS_MAP } from '../../constants';
+import { INTEGRATIONS_IMAGES_MAP, INTEGRATION_NAMES_TITLES } from '../../constants';
+import { INTEGRATIONS_DESCRIPTIONS_MAP } from '../../messages';
+import { InfoSection } from './infoSection';
+import { InstancesSection } from './instancesSection';
 
 @connect(
   (state, ownProps) => ({
@@ -50,24 +53,32 @@ export class IntegrationInfoContainer extends Component {
   };
 
   render() {
-    const { integrationType, projectIntegrations, onItemClick } = this.props;
-
-    const IntegrationInfoComponent = INTEGRATIONS_INFO_COMPONENTS_MAP[integrationType.name];
+    const {
+      integrationType: { name, details: { version } = {} },
+      projectIntegrations,
+      onItemClick,
+    } = this.props;
 
     return (
       <Fragment>
         {this.state.loading ? (
           <SpinningPreloader />
         ) : (
-          IntegrationInfoComponent && (
-            <IntegrationInfoComponent
-              pluginData={integrationType}
-              onItemClick={onItemClick}
-              projectIntegrations={projectIntegrations}
-              globalIntegrations={this.state.globalIntegrations}
-              onConfirm={this.fetchGlobalIntegrations}
+          <Fragment>
+            <InfoSection
+              image={INTEGRATIONS_IMAGES_MAP[name]}
+              description={INTEGRATIONS_DESCRIPTIONS_MAP[name]}
+              version={version}
+              title={INTEGRATION_NAMES_TITLES[name]}
             />
-          )
+            <InstancesSection
+              globalIntegrations={this.state.globalIntegrations}
+              projectIntegrations={projectIntegrations}
+              onItemClick={onItemClick}
+              onConfirm={this.fetchGlobalIntegrations}
+              instanceType={name}
+            />
+          </Fragment>
         )}
       </Fragment>
     );

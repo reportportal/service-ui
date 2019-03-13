@@ -1,69 +1,24 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { connect } from 'react-redux';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
-import { showModalAction } from 'controllers/modal';
-import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLock';
-import { projectIdSelector } from 'controllers/pages';
-import { fetchProjectIntegrationsAction } from 'controllers/project';
-import {
-  showNotification,
-  showDefaultErrorNotification,
-  NOTIFICATION_TYPES,
-} from 'controllers/notification';
+import { SAUCE_LABS_TEST_COMMAND } from 'controllers/log/sauceLabs';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
-import { SauceLabsSettingsForm } from './sauceLabsSettingsForm';
+import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
+import { ConnectionSection, IntegrationForm } from '../../../elements';
+import { SauceLabsFormFields } from '../sauceLabsFormFields';
 import styles from './sauceLabsSettings.scss';
 
 const cx = classNames.bind(styles);
 
 const messages = defineMessages({
-  connectionTitle: {
-    id: 'SauceLabsSettings.connectionTitle',
-    defaultMessage: 'Connection',
-  },
-  settingsTitle: {
-    id: 'SauceLabsSettings.settingsTitle',
-    defaultMessage: 'Integration settings',
-  },
-  connectedMessage: {
-    id: 'SauceLabsSettings.connectedMessage',
-    defaultMessage: 'Connected',
-  },
-  removeIntegrationTitle: {
-    id: 'SauceLabsSettings.removeIntegrationTitle',
-    defaultMessage: 'Remove Integration',
-  },
-  removeIntegrationMessage: {
-    id: 'SauceLabsSettings.removeIntegrationMessage',
-    defaultMessage: 'Do you really want to remove the integration?',
-  },
-  removeIntegrationSuccess: {
-    id: 'SauceLabsSettings.removeIntegrationSuccess',
-    defaultMessage: 'Integration successfully deleted',
-  },
-  updateIntegrationSuccess: {
-    id: 'SauceLabsSettings.updateIntegrationSuccess',
-    defaultMessage: 'Integration successfully updated',
+  failedConnectMessage: {
+    id: 'SauceLabsSettings.failedConnectMessage',
+    defaultMessage: 'Failed connect to Sauce Labs. Please check your credentials!',
   },
 });
 
-@connect(
-  (state) => ({
-    projectId: projectIdSelector(state),
-  }),
-  {
-    showModalAction,
-    showScreenLockAction,
-    hideScreenLockAction,
-    showNotification,
-    showDefaultErrorNotification,
-    fetchProjectIntegrationsAction,
-  },
-)
 @injectIntl
 export class SauceLabsSettings extends Component {
   static propTypes = {
@@ -71,110 +26,93 @@ export class SauceLabsSettings extends Component {
     projectId: PropTypes.string.isRequired,
     data: PropTypes.object.isRequired,
     goToPreviousPage: PropTypes.func.isRequired,
-    showModalAction: PropTypes.func.isRequired,
-    showScreenLockAction: PropTypes.func.isRequired,
-    hideScreenLockAction: PropTypes.func.isRequired,
-    showNotification: PropTypes.func.isRequired,
-    showDefaultErrorNotification: PropTypes.func.isRequired,
-    fetchProjectIntegrationsAction: PropTypes.func.isRequired,
+    onUpdate: PropTypes.func.isRequired,
   };
 
-  removeIntegration = () => {
+  state = {
+    connected: false,
+    loading: false,
+    updated: false,
+  };
+
+  componentDidMount() {
+    this.testIntegrationConnection();
+  }
+
+  componentDidUpdate() {
+    if (this.state.updated && !this.state.loading) {
+      this.testIntegrationConnection();
+    }
+  }
+
+  testIntegrationConnection = () => {
     const {
-      intl: { formatMessage },
+      data: { id },
       projectId,
-      goToPreviousPage,
-      data,
-    } = this.props;
-    this.props.showScreenLockAction();
-    fetch(URLS.projectIntegration(projectId, data.id), { method: 'delete' })
-      .then(() => {
-        this.props.fetchProjectIntegrationsAction(projectId);
-        this.props.hideScreenLockAction();
-        this.props.showNotification({
-          message: formatMessage(messages.removeIntegrationSuccess),
-          type: NOTIFICATION_TYPES.SUCCESS,
-        });
-        goToPreviousPage();
-      })
-      .catch((error) => {
-        this.props.hideScreenLockAction();
-        this.props.showDefaultErrorNotification(error);
-      });
-  };
-
-  removeIntegrationHandler = () => {
-    const {
-      intl: { formatMessage },
     } = this.props;
 
-    this.props.showModalAction({
-      id: 'confirmationModal',
-      data: {
-        message: formatMessage(messages.removeIntegrationMessage),
-        onConfirm: this.removeIntegration,
-        title: formatMessage(messages.removeIntegrationTitle),
-        confirmText: formatMessage(COMMON_LOCALE_KEYS.DELETE),
-        cancelText: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
-        dangerConfirm: true,
-      },
+    this.setState({
+      loading: true,
     });
+
+    fetch(URLS.projectIntegrationByIdCommand(projectId, id, SAUCE_LABS_TEST_COMMAND), {
+      method: 'put',
+      data: {},
+    })
+      .then((connected) => {
+        this.setState({
+          connected,
+          loading: false,
+          updated: false,
+        });
+      })
+      .catch(() => {
+        this.setState({
+          connected: false,
+          loading: false,
+          updated: false,
+        });
+      });
   };
 
-  updateIntegration = (formData, onConfirm) => {
-    const {
-      intl: { formatMessage },
-      projectId,
-      data: { id, integrationType },
-    } = this.props;
-    this.props.showScreenLockAction();
-
-    const data = {
-      enabled: true,
-      integrationName: integrationType.name,
-      integrationParameters: formData,
-    };
-
-    fetch(URLS.projectIntegration(projectId, id), { method: 'put', data })
-      .then(() => {
-        this.props.fetchProjectIntegrationsAction(projectId);
-        this.props.hideScreenLockAction();
-        this.props.showNotification({
-          message: formatMessage(messages.updateIntegrationSuccess),
-          type: NOTIFICATION_TYPES.SUCCESS,
-        });
-        onConfirm();
-      })
-      .catch((error) => {
-        this.props.hideScreenLockAction();
-        this.props.showDefaultErrorNotification(error);
+  updateIntegrationHandler = (data, onConfirm) => {
+    this.props.onUpdate(data, () => {
+      onConfirm();
+      this.setState({
+        updated: true,
       });
+    });
   };
 
   render() {
     const {
       intl: { formatMessage },
       data,
+      goToPreviousPage,
     } = this.props;
+    const { loading, connected } = this.state;
 
     return (
       <div className={cx('sauce-labs-settings')}>
-        <div className={cx('settings-block')}>
-          <h3 className={cx('block-header')}>{formatMessage(messages.connectionTitle)}</h3>
-          <div className={cx('connection-status-block')}>
-            {formatMessage(messages.connectedMessage)}
-          </div>
-          <button
-            className={cx('remove-integration-button', { disabled: data.blocked })}
-            onClick={this.removeIntegrationHandler}
-          >
-            {formatMessage(messages.removeIntegrationTitle)}
-          </button>
-        </div>
-        <div className={cx('settings-block')}>
-          <h3 className={cx('block-header')}>{formatMessage(messages.settingsTitle)}</h3>
-          <SauceLabsSettingsForm data={data} onSubmit={this.updateIntegration} />
-        </div>
+        {loading ? (
+          <SpinningPreloader />
+        ) : (
+          <Fragment>
+            <ConnectionSection
+              disabled={data.blocked}
+              failedConnectionMessage={
+                connected ? null : formatMessage(messages.failedConnectMessage)
+              }
+              integrationId={data.id}
+              onRemoveConfirmation={goToPreviousPage}
+            />
+            <IntegrationForm
+              data={data}
+              onSubmit={this.updateIntegrationHandler}
+              formFieldsComponent={SauceLabsFormFields}
+            />
+          </Fragment>
+        )}
       </div>
     );
   }

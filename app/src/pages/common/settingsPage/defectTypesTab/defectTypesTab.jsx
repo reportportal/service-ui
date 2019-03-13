@@ -79,29 +79,30 @@ export class DefectTypesTab extends Component {
     Object.values(this.props.subTypes).every((subTypesGroup) => subTypesGroup.length === 1);
 
   render() {
-    const { subTypes, intl } = this.props;
+    const {
+      intl: { formatMessage },
+      subTypes,
+    } = this.props;
     const isResetDisabled = this.isOnlySystemDefectTypes();
 
     return (
       <div className={cx('defect-types-list')}>
         <div className={cx('header')}>
           <div className={cx('header-cell', 'name-cell')}>
-            {intl.formatMessage(messages.defectNameCol)}
+            {formatMessage(messages.defectNameCol)}
           </div>
           <div className={cx('header-cell', 'abbr-cell')}>
-            {intl.formatMessage(messages.abbreviationCol)}
+            {formatMessage(messages.abbreviationCol)}
           </div>
-          <div className={cx('header-cell', 'color-cell')}>
-            {intl.formatMessage(messages.colorCol)}
-          </div>
+          <div className={cx('header-cell', 'color-cell')}>{formatMessage(messages.colorCol)}</div>
           <div className={cx('header-cell', 'buttons-cell')} />
           <div className={cx('header-cell', 'diagram-cell')}>
-            {intl.formatMessage(messages.diagramCol)}
+            {formatMessage(messages.diagramCol)}
           </div>
         </div>
         {this.groupNames.map((groupName) => (
           <React.Fragment key={groupName}>
-            <div className={cx('group-name')}>{intl.formatMessage(messages[groupName])}</div>
+            <div className={cx('group-name')}>{formatMessage(messages[groupName])}</div>
             <div className={cx('group')}>
               <DefectTypesGroup group={subTypes[groupName.toUpperCase()]} />
             </div>
@@ -113,9 +114,9 @@ export class DefectTypesTab extends Component {
             type="button"
             onClick={isResetDisabled ? undefined : this.showResetColorsConfirmationDialog}
             disabled={isResetDisabled}
-            title={isResetDisabled && intl.formatMessage(messages.noColorsToUpdate)}
+            title={isResetDisabled ? formatMessage(messages.noColorsToUpdate) : undefined}
           >
-            {intl.formatMessage(messages.resetColors)}
+            {formatMessage(messages.resetColors)}
           </button>
         </div>
       </div>

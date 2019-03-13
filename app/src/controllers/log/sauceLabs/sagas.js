@@ -14,7 +14,7 @@ import {
 import { generateAuthToken } from './utils';
 import { setAuthTokenAction } from './actionCreators';
 
-function* executeSauceLabsCommand({ command, data, integrationId }) {
+function* executeSauceLabsCommand({ command, integrationId, data = {} }) {
   try {
     const activeProject = yield select(activeProjectSelector);
 
@@ -44,7 +44,7 @@ function* bulkExecuteSauceLabsCommands({ payload: { commands, data } }) {
     yield put(setAuthTokenAction(authToken));
     yield all(
       commands.map((command) =>
-        call(executeSauceLabsCommand, { command, data, integrationId: activeIntegration.id }),
+        call(executeSauceLabsCommand, { command, integrationId: activeIntegration.id, data }),
       ),
     );
   } catch (error) {

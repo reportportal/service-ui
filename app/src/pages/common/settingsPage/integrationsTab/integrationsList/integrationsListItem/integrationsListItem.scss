@@ -1,5 +1,6 @@
 .integrations-list-item {
   display: flex;
+  align-items: center;
   width: 200px;
   height: 70px;
   margin: 0 15px 15px 0;
@@ -33,7 +34,7 @@
 .integration-name {
   margin-bottom: 5px;
   color: $COLOR--black-2;
-  font-size: 13px;
+  font-size: 14px;
   font-family: $FONT-SEMIBOLD;
 }
 

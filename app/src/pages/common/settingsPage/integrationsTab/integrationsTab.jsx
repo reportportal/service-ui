@@ -4,7 +4,6 @@ import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
-import { integrationNamesTitles } from 'common/constants/integrationNamesTitles';
 import {
   IntegrationInfoContainer,
   IntegrationSettingsContainer,
@@ -12,6 +11,7 @@ import {
 import { showDefaultErrorNotification } from 'controllers/notification';
 import { sortItemsByGroupType, groupItems, filterAvailablePlugins } from 'controllers/project';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
+import { INTEGRATION_NAMES_TITLES } from 'components/integrations';
 import { IntegrationsList } from './integrationsList';
 import { IntegrationBreadcrumbs } from './integrationBreadcrumbs';
 import {
@@ -57,18 +57,18 @@ export class IntegrationsTab extends Component {
   };
 
   getPageContent = () => {
-    const { type, data } = this.state.subPage;
+    const { type, data, title } = this.state.subPage;
 
     switch (type) {
       case INTEGRATION_SUBPAGE:
         return (
           <IntegrationInfoContainer
             integrationType={data}
-            onItemClick={(pageData) =>
+            onItemClick={(pageData, pageTitle) =>
               this.changeSubPage({
                 type: INTEGRATION_SETTINGS_SUBPAGE,
                 data: pageData,
-                title: integrationNamesTitles[pageData.name] || pageData.id,
+                title: pageTitle,
               })
             }
           />
@@ -77,6 +77,7 @@ export class IntegrationsTab extends Component {
         return (
           <IntegrationSettingsContainer
             data={data}
+            title={title}
             goToPreviousPage={() => this.changeSubPage(this.subPagesCache[INTEGRATION_SUBPAGE])}
           />
         );
@@ -87,7 +88,7 @@ export class IntegrationsTab extends Component {
               this.changeSubPage({
                 type: INTEGRATION_SUBPAGE,
                 data: pageData,
-                title: integrationNamesTitles[pageData.name] || pageData.name,
+                title: INTEGRATION_NAMES_TITLES[pageData.name] || pageData.name,
               })
             }
             availableIntegrations={this.state.availableIntegrations}

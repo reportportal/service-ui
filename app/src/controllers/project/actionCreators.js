@@ -36,9 +36,9 @@ export const updateConfigurationAttributesAction = (project) => ({
   payload: project.configuration.attributes,
 });
 
-export const updateProjectIntegrationsAction = (project) => ({
+export const updateProjectIntegrationsAction = (integrations) => ({
   type: UPDATE_PROJECT_INTEGRATIONS,
-  payload: project.integrations,
+  payload: integrations,
 });
 
 export const updateProjectNotificationsConfigAction = (config) => ({
@@ -90,10 +90,10 @@ export const fetchConfigurationAttributesAction = (projectId) => (dispatch) => {
     dispatch(updateConfigurationAttributesAction(project));
   });
 };
-// TODO: rewrite this action with saga and write reducers to update & delete
+// TODO: rewrite this action with saga and write reducers to update, edit & delete
 export const fetchProjectIntegrationsAction = (projectId) => (dispatch) => {
-  fetch(URLS.project(projectId)).then((project) => {
-    dispatch(updateProjectIntegrationsAction(project));
+  fetch(URLS.project(projectId)).then(({ integrations }) => {
+    dispatch(updateProjectIntegrationsAction(integrations));
   });
 };
 

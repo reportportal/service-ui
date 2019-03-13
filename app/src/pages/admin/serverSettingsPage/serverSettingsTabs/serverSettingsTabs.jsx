@@ -9,15 +9,10 @@ import {
   STATISTICS,
 } from 'common/constants/settingsTabs';
 import { NavigationTabs } from 'components/main/navigationTabs';
-import { EmailServerTab } from './emailServerTab';
 import { AuthConfigurationTab } from './authConfigurationTab';
 import { StatisticsTab } from './statisticsTab';
 
 const messages = defineMessages({
-  eMailServer: {
-    id: 'ServerSettingsTabs.eMailServer',
-    defaultMessage: 'E-mail server',
-  },
   authConfiguration: {
     id: 'ServerSettingsTabs.authConfiguration',
     defaultMessage: 'Authorization configuration',
@@ -54,11 +49,6 @@ export class ServerSettingsTabs extends Component {
   });
 
   createTabsConfig = () => ({
-    [EMAIL_SERVER]: {
-      name: this.props.intl.formatMessage(messages.eMailServer),
-      link: this.createTabLink(EMAIL_SERVER),
-      component: <EmailServerTab />,
-    },
     [AUTHORIZATION_CONFIGURATION]: {
       name: this.props.intl.formatMessage(messages.authConfiguration),
       link: this.createTabLink(AUTHORIZATION_CONFIGURATION),
