@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
 import { PROJECT_SETTINGS_TAB_PAGE, projectIdSelector } from 'controllers/pages';
 import { SETTINGS_PAGE } from 'components/main/analytics/events';
+import { PageLayout, PageHeader } from 'layouts/pageLayout';
 import { SettingsPage } from 'pages/common/settingsPage';
 
 @connect((state) => ({
@@ -29,11 +30,10 @@ export class ProjectSettingsPageContainer extends Component {
 
   render() {
     return (
-      <SettingsPage
-        projectId={this.props.projectId}
-        createTabLink={this.createTabLink}
-        breadcrumbs={this.getBreadcrumbs()}
-      />
+      <PageLayout>
+        <PageHeader breadcrumbs={this.getBreadcrumbs()} />
+        <SettingsPage projectId={this.props.projectId} createTabLink={this.createTabLink} />
+      </PageLayout>
     );
   }
 }

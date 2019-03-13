@@ -12,7 +12,7 @@ import { GhostButton } from 'components/buttons/ghostButton';
 import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { defaultCase } from 'pages/common/settingsPage/notificationsTab/forms/constants';
 import PlusIcon from 'common/img/plus-button-inline.svg';
-import { NotificationCase } from './notificationCase/index';
+import { NotificationCase } from './notificationCase';
 import styles from './notificationCasesList.scss';
 
 const messages = defineMessages({
