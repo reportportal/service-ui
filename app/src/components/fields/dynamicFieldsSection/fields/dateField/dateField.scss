@@ -1,6 +1,15 @@
+.date-field {
+  :global {
+    .react-datepicker-wrapper,
+    .react-datepicker__input-container {
+      width: 100%;
+    }
+  }
+}
+
 .date-input {
   height: 30px;
-  width: 310px;
+  width: 100%;
   line-height: 25px;
   box-sizing: border-box;
   border: 1px solid $COLOR--gray-80;
@@ -13,6 +22,12 @@
   cursor: pointer;
   transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
 
+  /* stylelint-disable */
+  &[disabled] {
+    background-color: $COLOR--gray-91;
+  }
+  /* stylelint-enable */
+
   &:hover {
     border-color: $COLOR--gray-47;
   }
@@ -23,10 +38,6 @@
   }
 
   @media (max-width: $SCREEN_XS_MAX) {
-    width: calc(97vw - 10%);
-    &.with-custom-block {
-      width: calc(88vw - 10%);
-    }
     background-color: $COLOR--gray-91;
   }
 }

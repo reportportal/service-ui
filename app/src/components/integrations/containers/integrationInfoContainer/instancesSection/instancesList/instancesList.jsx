@@ -26,7 +26,7 @@ export const InstancesList = ({
           data={item}
           title={item.name || defaultItemTitle}
           creationInfo={moment(item.creationDate).format('ll')}
-          onClick={() => onItemClick({ ...item, blocked }, item.name || defaultItemTitle)}
+          onClick={() => onItemClick({ name: defaultItemTitle, ...item, blocked }, title)}
         />
       ))}
     </ul>

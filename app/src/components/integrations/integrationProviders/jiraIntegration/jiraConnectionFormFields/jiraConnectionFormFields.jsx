@@ -5,7 +5,7 @@ import { validate } from 'common/utils';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { InputDropdown } from 'components/inputs/inputDropdown';
 import { Input } from 'components/inputs/input';
-import { IntegrationFormField } from '../../../elements';
+import { IntegrationFormField } from 'components/integrations/elements';
 import { DEFAULT_FORM_CONFIG } from '../constants';
 
 const messages = defineMessages({
@@ -38,8 +38,7 @@ const messages = defineMessages({
 const validators = {
   url: (value) => (!value || !validate.url(value)) && 'btsUrlHint',
   project: (value) => (!value || !validate.btsProject(value)) && 'btsProjectHint',
-  password: (value) => !value && 'requiredFieldHint',
-  username: (value) => !value && 'requiredFieldHint',
+  requiredField: (value) => !value && 'requiredFieldHint',
 };
 
 @injectIntl
@@ -51,6 +50,7 @@ export class JiraConnectionFormFields extends Component {
     disabled: PropTypes.bool,
     lineAlign: PropTypes.bool,
     initialData: PropTypes.object,
+    editAuthMode: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -58,6 +58,7 @@ export class JiraConnectionFormFields extends Component {
     authEnabled: false,
     lineAlign: false,
     initialData: DEFAULT_FORM_CONFIG,
+    editAuthMode: false,
   };
 
   constructor(props) {
@@ -74,6 +75,7 @@ export class JiraConnectionFormFields extends Component {
       intl: { formatMessage },
       disabled,
       lineAlign,
+      editAuthMode,
     } = this.props;
 
     return (
@@ -82,8 +84,9 @@ export class JiraConnectionFormFields extends Component {
           name="integrationName"
           label={formatMessage(messages.integrationNameLabel)}
           required
-          disabled // TODO: switch it on when named integrations will be supported by backend
+          disabled={disabled}
           lineAlign={lineAlign}
+          validate={validators.requiredField}
         >
           <FieldErrorHint>
             <Input mobileDisabled />
@@ -93,7 +96,7 @@ export class JiraConnectionFormFields extends Component {
           name="url"
           label={formatMessage(messages.linkToBtsLabel)}
           required
-          disabled={disabled}
+          disabled={disabled || editAuthMode}
           lineAlign={lineAlign}
           validate={validators.url}
         >
@@ -105,7 +108,7 @@ export class JiraConnectionFormFields extends Component {
           name="project"
           label={formatMessage(messages.projectNameLabel)}
           required
-          disabled={disabled}
+          disabled={disabled || editAuthMode}
           lineAlign={lineAlign}
           validate={validators.project}
         >
@@ -129,7 +132,7 @@ export class JiraConnectionFormFields extends Component {
           required
           disabled={disabled}
           lineAlign={lineAlign}
-          validate={validators.username}
+          validate={validators.requiredField}
         >
           <FieldErrorHint>
             <Input type="text" mobileDisabled />
@@ -141,7 +144,7 @@ export class JiraConnectionFormFields extends Component {
           required
           disabled={disabled}
           lineAlign={lineAlign}
-          validate={validators.password}
+          validate={validators.requiredField}
         >
           <FieldErrorHint>
             <Input type="password" mobileDisabled />

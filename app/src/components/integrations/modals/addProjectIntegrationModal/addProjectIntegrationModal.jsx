@@ -4,13 +4,17 @@ import { defineMessages, injectIntl, intlShape } from 'react-intl';
 import { reduxForm } from 'redux-form';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { ModalLayout, withModal } from 'components/main/modal';
-import { INTEGRATION_FORM } from '../../elements/integrationForm/constants';
+import { INTEGRATION_FORM } from 'components/integrations/elements/integrationSettings';
 import { INTEGRATIONS_FORM_FIELDS_COMPONENTS_MAP } from '../../constants';
 
 const messages = defineMessages({
   createManualTitle: {
     id: 'AddProjectIntegrationModal.createManualTitle',
     defaultMessage: 'Create manual integration',
+  },
+  editAuthTitle: {
+    id: 'AddProjectIntegrationModal.editAuthTitle',
+    defaultMessage: 'Edit authorization',
   },
 });
 
@@ -45,7 +49,7 @@ export class AddProjectIntegrationModal extends Component {
   render() {
     const {
       intl: { formatMessage },
-      data: { onConfirm, instanceType },
+      data: { onConfirm, instanceType, customProps = {} },
       handleSubmit,
       initialize,
       change,
@@ -55,7 +59,11 @@ export class AddProjectIntegrationModal extends Component {
 
     return (
       <ModalLayout
-        title={formatMessage(messages.createManualTitle)}
+        title={
+          customProps.editAuthMode
+            ? formatMessage(messages.editAuthTitle)
+            : formatMessage(messages.createManualTitle)
+        }
         okButton={{
           text: formatMessage(COMMON_LOCALE_KEYS.SAVE),
           onClick: handleSubmit(onConfirm),
@@ -65,7 +73,7 @@ export class AddProjectIntegrationModal extends Component {
         }}
         closeConfirmation={this.getCloseConfirmationConfig()}
       >
-        <FieldsComponent initialize={initialize} change={change} lineAlign />
+        <FieldsComponent initialize={initialize} change={change} lineAlign {...customProps} />
       </ModalLayout>
     );
   }

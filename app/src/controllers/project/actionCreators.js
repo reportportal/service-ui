@@ -103,9 +103,9 @@ export const updateProjectIntegrationSuccessAction = (data, id) => ({
   payload: { data, id },
 });
 
-export const addProjectIntegrationAction = (data, callback) => ({
+export const addProjectIntegrationAction = (data, pluginName, callback) => ({
   type: ADD_PROJECT_INTEGRATION,
-  payload: { data, callback },
+  payload: { data, pluginName, callback },
 });
 
 export const addProjectIntegrationSuccessAction = (integration) => ({

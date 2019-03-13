@@ -1,1 +1,0 @@
-export { JiraIssueFormFields } from './jiraIssueFormFields';

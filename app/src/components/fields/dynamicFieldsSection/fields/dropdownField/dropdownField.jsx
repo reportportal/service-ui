@@ -10,15 +10,26 @@ export class DropdownField extends Component {
   };
 
   static defaultProps = {
-    customBlock: {},
+    customBlock: null,
   };
 
-  getInputOptions = (values = []) => values.map(({ id, label }) => ({ value: id, label }));
+  getInputOptions = (values = []) =>
+    values.map(({ valueId, valueName }) => ({ value: valueId, label: valueName }));
+
+  parseDropdownValue = (value) => value && [value];
+
+  formatDropdownValue = (value) => value && value[0];
 
   render() {
-    const { field, customBlock } = this.props;
+    const { field, customBlock, ...rest } = this.props;
     return (
-      <DynamicField field={field} customBlock={customBlock}>
+      <DynamicField
+        field={field}
+        parse={this.parseDropdownValue}
+        format={this.formatDropdownValue}
+        customBlock={customBlock}
+        {...rest}
+      >
         <InputDropdown mobileDisabled options={this.getInputOptions(field.definedValues)} />
       </DynamicField>
     );
