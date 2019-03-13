@@ -12,6 +12,7 @@ import {
   FETCH_PROJECT_PREFERENCES_SUCCESS,
   UPDATE_CONFIGURATION_ATTRIBUTES,
   UPDATE_NOTIFICATIONS_CONFIG_SUCCESS,
+  UPDATE_PROJECT_INTEGRATIONS,
 } from './constants';
 import { projectNotificationsConfigurationSelector } from './selectors';
 
@@ -28,6 +29,17 @@ const fetchProjectPreferencesSuccessAction = (preferences) => ({
 export const updateConfigurationAttributesAction = (project) => ({
   type: UPDATE_CONFIGURATION_ATTRIBUTES,
   payload: project.configuration.attributes,
+});
+
+export const updateProjectIntegrationsAction = ({ integrationParameters, enabled }, id) => ({
+  type: UPDATE_PROJECT_INTEGRATIONS,
+  payload: { integrationParameters, enabled, id },
+});
+
+export const fetchProjectIntegrationsSuccessAction = (integrations) => ({
+  type: UPDATE_PROJECT_INTEGRATIONS,
+  payload: integrations,
+  meta: { reset: true },
 });
 
 export const updateProjectFilterPreferencesAction = (filterId, method) => (dispatch, getState) =>
@@ -80,5 +92,11 @@ export const fetchProjectAction = (projectId, isAdminAccess) => (dispatch) =>
 export const fetchConfigurationAttributesAction = (projectId) => (dispatch) => {
   fetch(URLS.project(projectId)).then((project) => {
     dispatch(updateConfigurationAttributesAction(project));
+  });
+};
+
+export const fetchProjectIntegrationsAction = (projectId) => (dispatch) => {
+  fetch(URLS.project(projectId)).then(({ integrations = [] }) => {
+    dispatch(fetchProjectIntegrationsSuccessAction(integrations));
   });
 };

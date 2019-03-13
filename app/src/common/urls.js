@@ -172,6 +172,11 @@ export const URLS = {
       'page.sort': 'logTime,ASC',
     })}`,
 
+  integration: (activeProject, integrationId = '') =>
+    `${urlBase}integration/${activeProject}/${integrationId}`,
+  resetIntegrationsByType: (activeProject, type) =>
+    `${urlBase}integration/${activeProject}/all/${type}`,
+
   user: () => `${urlBase}user`,
   userRegistration: () => `${urlBase}user/registration`,
   userPasswordReset: () => `${urlBase}user/password/reset`,

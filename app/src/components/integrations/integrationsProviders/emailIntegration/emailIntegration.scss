@@ -1,0 +1,65 @@
+.email-integration {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.label {
+  min-width: 170px;
+  padding-right: 4px;
+}
+
+.integration-type-message {
+  font-size: 13px;
+  font-family: $FONT-REGULAR;
+}
+
+.submit-button {
+  display: inline-block;
+  width: auto;
+  margin: 15px 130px 0 0;
+  box-sizing: border-box;
+  @media (max-width: $SCREEN_XS_MAX) {
+    display: none;
+  }
+}
+
+.submit-button-title {
+  width: 129px;
+  height: 18px;
+  font-size: 13px;
+}
+
+.error-message-block {
+  margin: 0 auto;
+  padding: 0 5px;
+  @media (max-width: $SCREEN_XS_MAX) {
+    display: none;
+  }
+}
+
+.warning-wrapper {
+  display: flex;
+  align-items: center;
+  margin-top: 15px;
+}
+
+.warning-icon {
+  display: inline-block;
+  width: 17px;
+  height: 17px;
+  margin-right: 5px;
+  fill: $COLOR--failed;
+}
+
+.warning-message {
+  color: $COLOR--failed;
+  font-size: 13px;
+  font-family: $FONT-SEMIBOLD;
+}
+
+.error-message {
+  font-size: 12px;
+  font-family: $FONT-REGULAR;
+  line-height: 1.5;
+}

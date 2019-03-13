@@ -10,3 +10,14 @@ export const normalizeAttributesWithPrefix = (attributes, prefix) => {
     {},
   );
 };
+
+export const updateIntegrations = (integrations, { integrationParameters, enabled, id }) => {
+  const integrationIndex = integrations.findIndex((item) => item.id === id);
+  const updatedIntegrations = [...integrations];
+  updatedIntegrations[integrationIndex] = {
+    ...updatedIntegrations[integrationIndex],
+    enabled,
+    integrationParameters,
+  };
+  return updatedIntegrations;
+};

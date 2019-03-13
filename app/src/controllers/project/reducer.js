@@ -1,5 +1,6 @@
 import { combineReducers } from 'redux';
 import { ADD_FILTER, REMOVE_FILTER, UPDATE_FILTER_SUCCESS, updateFilter } from 'controllers/filter';
+import { updateIntegrations } from './utils';
 import {
   PROJECT_INFO_INITIAL_STATE,
   PROJECT_PREFERENCES_INITIAL_STATE,
@@ -7,9 +8,13 @@ import {
   FETCH_PROJECT_PREFERENCES_SUCCESS,
   UPDATE_CONFIGURATION_ATTRIBUTES,
   UPDATE_NOTIFICATIONS_CONFIG_SUCCESS,
+  UPDATE_PROJECT_INTEGRATIONS,
 } from './constants';
 
-export const projectInfoReducer = (state = PROJECT_INFO_INITIAL_STATE, { type, payload }) => {
+export const projectInfoReducer = (
+  state = PROJECT_INFO_INITIAL_STATE,
+  { type, payload, meta = {} },
+) => {
   switch (type) {
     case FETCH_PROJECT_SUCCESS:
       return { ...state, ...payload };
@@ -31,6 +36,11 @@ export const projectInfoReducer = (state = PROJECT_INFO_INITIAL_STATE, { type, p
           ...state.configuration,
           notificationsConfiguration: payload,
         },
+      };
+    case UPDATE_PROJECT_INTEGRATIONS:
+      return {
+        ...state,
+        integrations: meta.reset ? payload : updateIntegrations(state.integrations, payload),
       };
     default:
       return state;

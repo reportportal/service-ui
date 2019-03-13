@@ -4,6 +4,8 @@ import EmailIcon from 'common/img/plugins/email.svg';
 import { JIRA, RALLY, EMAIL } from 'common/constants/integrationNames';
 import { JiraIntegration, RallyIntegration, EmailIntegration } from './integrationsProviders';
 
+export const INTEGRATION_ENABLED_KEY = 'enabled';
+
 export const INTEGRATIONS_IMAGES_MAP = {
   [JIRA]: JiraIcon,
   [RALLY]: RallyIcon,

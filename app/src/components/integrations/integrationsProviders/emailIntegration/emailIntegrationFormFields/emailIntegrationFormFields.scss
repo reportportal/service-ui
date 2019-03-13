@@ -1,4 +1,4 @@
-.email-server-tab-form-fields {
+.email-integration-form-fields {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -8,8 +8,8 @@
 }
 
 .form-field-wrapper {
-  min-width: 330px;
-  width: 330px;
+  min-width: 186px;
+  width: 186px;
   position: relative;
   @media (max-width: $SCREEN_XS_MAX) {
     width: 100%;
@@ -17,6 +17,7 @@
 }
 
 .label {
+  min-width: 170px;
   padding-right: 4px;
 }
 
@@ -25,9 +26,6 @@
   justify-content: flex-start;
   align-items: center;
   width: 25%;
-  @media (max-width: $SCREEN_SM_MAX) {
-    width: 45%;
-  }
   @media (max-width: $SCREEN_XS_MAX) {
     width: 100%;
   }

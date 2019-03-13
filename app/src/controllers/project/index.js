@@ -12,6 +12,8 @@ export {
   fetchConfigurationAttributesAction,
   updateConfigurationAttributesAction,
   updateProjectNotificationsConfig,
+  updateProjectIntegrationsAction,
+  fetchProjectIntegrationsAction,
 } from './actionCreators';
 export { projectReducer } from './reducer';
 export {
@@ -33,4 +35,4 @@ export {
   uniqueGroupedIntegrationsSelector,
   namedIntegrationsSelectorsMap,
 } from './selectors';
-export { normalizeAttributesWithPrefix } from './utils';
+export { normalizeAttributesWithPrefix, updateIntegrations } from './utils';

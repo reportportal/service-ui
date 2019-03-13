@@ -12,6 +12,7 @@ import { InputDropdown } from 'components/inputs/inputDropdown';
 import { InputCheckbox } from 'components/inputs/inputCheckbox';
 import {
   EMAIL_SERVER_FORM,
+  INTEGRATION_PARAMETERS_KEY,
   AUTH_ENABLED_KEY,
   PROTOCOL_KEY,
   SSL_KEY,
@@ -22,46 +23,49 @@ import {
   USERNAME_KEY,
   PASSWORD_KEY,
 } from '../constants';
-import styles from './emailServerTabFormFields.scss';
+import styles from './emailIntegrationFormFields.scss';
 
 const cx = classNames.bind(styles);
 
 const messages = defineMessages({
   hostLabel: {
-    id: 'EmailServerTabFormFields.hostLabel',
+    id: 'EmailIntegrationFormFields.hostLabel',
     defaultMessage: 'Host',
   },
   protocolLabel: {
-    id: 'EmailServerTabFormFields.protocolLabel',
+    id: 'EmailIntegrationFormFields.protocolLabel',
     defaultMessage: 'Protocol',
   },
   fromLabel: {
-    id: 'EmailServerTabFormFields.fromLabel',
+    id: 'EmailIntegrationFormFields.fromLabel',
     defaultMessage: 'Default sender name',
   },
   portLabel: {
-    id: 'EmailServerTabFormFields.portLabel',
+    id: 'EmailIntegrationFormFields.portLabel',
     defaultMessage: 'Port',
   },
   authLabel: {
-    id: 'EmailServerTabFormFields.authLabel',
+    id: 'EmailIntegrationFormFields.authLabel',
     defaultMessage: 'Authorization',
   },
   usernameLabel: {
-    id: 'EmailServerTabFormFields.usernameLabel',
+    id: 'EmailIntegrationFormFields.usernameLabel',
     defaultMessage: 'Username',
   },
   passwordLabel: {
-    id: 'EmailServerTabFormFields.passwordLabel',
+    id: 'EmailIntegrationFormFields.passwordLabel',
     defaultMessage: 'Password',
   },
 });
 
 @connect((state) => ({
-  authEnabled: formValueSelector(EMAIL_SERVER_FORM)(state, AUTH_ENABLED_KEY),
+  authEnabled: formValueSelector(EMAIL_SERVER_FORM)(
+    state,
+    `${INTEGRATION_PARAMETERS_KEY}.${AUTH_ENABLED_KEY}`,
+  ),
 }))
 @injectIntl
-export class EmailServerTabFormFields extends Component {
+export class EmailIntegrationFormFields extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
     authEnabled: PropTypes.bool,
@@ -81,8 +85,8 @@ export class EmailServerTabFormFields extends Component {
 
   onChangeAuthAvailability = (event, value) => {
     if (!value) {
-      this.props.changeFieldValue(USERNAME_KEY, '');
-      this.props.changeFieldValue(PASSWORD_KEY, '');
+      this.props.changeFieldValue(`${INTEGRATION_PARAMETERS_KEY}.${USERNAME_KEY}`, '');
+      this.props.changeFieldValue(`${INTEGRATION_PARAMETERS_KEY}.${PASSWORD_KEY}`, '');
     }
   };
 
@@ -93,9 +97,9 @@ export class EmailServerTabFormFields extends Component {
     } = this.props;
 
     return (
-      <div className={cx('email-server-tab-form-fields')}>
+      <div className={cx('email-integration-form-fields')}>
         <FormField
-          name={HOST_KEY}
+          name={`${INTEGRATION_PARAMETERS_KEY}.${HOST_KEY}`}
           required
           fieldWrapperClassName={cx('form-field-wrapper')}
           label={formatMessage(messages.hostLabel)}
@@ -106,7 +110,7 @@ export class EmailServerTabFormFields extends Component {
           </FieldErrorHint>
         </FormField>
         <FormField
-          name={PROTOCOL_KEY}
+          name={`${INTEGRATION_PARAMETERS_KEY}.${PROTOCOL_KEY}`}
           fieldWrapperClassName={cx('form-field-wrapper')}
           label={formatMessage(messages.protocolLabel)}
           labelClassName={cx('label')}
@@ -114,7 +118,7 @@ export class EmailServerTabFormFields extends Component {
           <InputDropdown options={this.protocolOptions} mobileDisabled />
         </FormField>
         <FormField
-          name={FROM_KEY}
+          name={`${INTEGRATION_PARAMETERS_KEY}.${FROM_KEY}`}
           fieldWrapperClassName={cx('form-field-wrapper')}
           label={formatMessage(messages.fromLabel)}
           labelClassName={cx('label')}
@@ -124,7 +128,7 @@ export class EmailServerTabFormFields extends Component {
           </FieldErrorHint>
         </FormField>
         <FormField
-          name={PORT_KEY}
+          name={`${INTEGRATION_PARAMETERS_KEY}.${PORT_KEY}`}
           required
           fieldWrapperClassName={cx('form-field-wrapper')}
           label={formatMessage(messages.portLabel)}
@@ -137,7 +141,7 @@ export class EmailServerTabFormFields extends Component {
           </FieldErrorHint>
         </FormField>
         <FormField
-          name={AUTH_ENABLED_KEY}
+          name={`${INTEGRATION_PARAMETERS_KEY}.${AUTH_ENABLED_KEY}`}
           fieldWrapperClassName={cx('form-field-wrapper')}
           label={formatMessage(messages.authLabel)}
           format={Boolean}
@@ -149,7 +153,7 @@ export class EmailServerTabFormFields extends Component {
         {authEnabled && (
           <Fragment>
             <FormField
-              name={USERNAME_KEY}
+              name={`${INTEGRATION_PARAMETERS_KEY}.${USERNAME_KEY}`}
               fieldWrapperClassName={cx('form-field-wrapper')}
               label={formatMessage(messages.usernameLabel)}
               labelClassName={cx('label')}
@@ -159,7 +163,7 @@ export class EmailServerTabFormFields extends Component {
               </FieldErrorHint>
             </FormField>
             <FormField
-              name={PASSWORD_KEY}
+              name={`${INTEGRATION_PARAMETERS_KEY}.${PASSWORD_KEY}`}
               fieldWrapperClassName={cx('form-field-wrapper')}
               label={formatMessage(messages.passwordLabel)}
               labelClassName={cx('label')}
@@ -172,12 +176,12 @@ export class EmailServerTabFormFields extends Component {
         )}
         <div className={cx('checkboxes-container')}>
           <div className={cx('checkbox-wrapper')}>
-            <FieldProvider name={TLS_KEY} format={Boolean}>
+            <FieldProvider name={`${INTEGRATION_PARAMETERS_KEY}.${TLS_KEY}`} format={Boolean}>
               <InputCheckbox>TLS</InputCheckbox>
             </FieldProvider>
           </div>
           <div className={cx('checkbox-wrapper')}>
-            <FieldProvider name={SSL_KEY} format={Boolean}>
+            <FieldProvider name={`${INTEGRATION_PARAMETERS_KEY}.${SSL_KEY}`} format={Boolean}>
               <InputCheckbox>SSL</InputCheckbox>
             </FieldProvider>
           </div>
