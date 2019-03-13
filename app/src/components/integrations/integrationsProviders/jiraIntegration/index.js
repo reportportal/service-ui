@@ -1,0 +1,1 @@
+export { JiraIntegration } from './jiraIntegration';

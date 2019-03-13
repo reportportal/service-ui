@@ -1,0 +1,1 @@
+export { IntegrationModalContent } from './integrationModalContent';

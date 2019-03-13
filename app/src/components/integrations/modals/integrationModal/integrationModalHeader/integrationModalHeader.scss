@@ -1,0 +1,44 @@
+.integration-modal-header {
+  display: flex;
+  align-items: center;
+  padding: 20px 20px 0 20px;
+  position: relative;
+  font-size: 15px;
+}
+
+.close-modal-icon {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  vertical-align: middle;
+  transition: transform 200ms ease-in-out;
+  cursor: pointer;
+
+  svg {
+    fill: $COLOR--charcoal-grey;
+  }
+  &:hover {
+    transform: scale(1.2);
+  }
+}
+
+.integration-block {
+  display: flex;
+  align-items: center;
+  margin-left: 20px;
+}
+
+.integration-image {
+  width: 25px;
+  height: 25px;
+}
+
+.integration-info {
+  margin-left: 15px;
+}
+
+.integration-name {
+  color: $COLOR--charcoal-grey;
+  font-size: 18px;
+  font-family: $FONT-SEMIBOLD;
+}

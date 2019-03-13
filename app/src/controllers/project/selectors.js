@@ -1,5 +1,6 @@
 import { createSelector } from 'reselect';
 import { OWNER } from 'common/constants/permissions';
+import { JIRA, RALLY, EMAIL } from 'common/constants/integrationNames';
 import { ANALYZER_ATTRIBUTE_PREFIX, JOB_ATTRIBUTE_PREFIX } from './constants';
 
 const projectSelector = (state) => state.project || {};
@@ -67,10 +68,32 @@ export const groupedIntegrationsSelector = createSelector(
     }, {}),
 );
 
-export const createTypedIntegrationsSelector = (integrationType) =>
+export const uniqueGroupedIntegrationsSelector = createSelector(
+  groupedIntegrationsSelector,
+  (groupedIntegrations) => {
+    const uniqueGroupedIntegrations = { ...groupedIntegrations };
+    Object.keys(uniqueGroupedIntegrations).forEach((integrationGroupKey) => {
+      uniqueGroupedIntegrations[integrationGroupKey] = uniqueGroupedIntegrations[
+        integrationGroupKey
+      ].filter(
+        (item, index, self) =>
+          index === self.findIndex((el) => el.integrationType.name === item.integrationType.name),
+      );
+    });
+    return uniqueGroupedIntegrations;
+  },
+);
+
+const createNamedIntegrationsSelector = (integrationName) =>
   createSelector(projectIntegrationsSelector, (integrations) =>
-    integrations.filter((integration) => integration.integrationType.groupType === integrationType),
+    integrations.filter((integration) => integration.integrationType.name === integrationName),
   );
+
+export const namedIntegrationsSelectorsMap = {
+  [JIRA]: createNamedIntegrationsSelector(JIRA),
+  [RALLY]: createNamedIntegrationsSelector(RALLY),
+  [EMAIL]: createNamedIntegrationsSelector(EMAIL),
+};
 
 export const projectNotificationsConfigurationSelector = (state) =>
   projectConfigSelector(state).notificationsConfiguration || {};

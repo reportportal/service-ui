@@ -30,6 +30,7 @@ export {
   projectIntegrationsSelector,
   projectIntegrationsSortedSelector,
   groupedIntegrationsSelector,
-  createTypedIntegrationsSelector,
+  uniqueGroupedIntegrationsSelector,
+  namedIntegrationsSelectorsMap,
 } from './selectors';
 export { normalizeAttributesWithPrefix } from './utils';

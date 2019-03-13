@@ -1,4 +1,4 @@
-export { withModal } from 'controllers/modal/withModal';
+export { withModal } from 'controllers/modal';
 export { ModalContainer } from './modalContainer';
 export { ModalLayout } from './modalLayout/modalLayout';
 export { ModalContent } from './modalLayout/modalContent';

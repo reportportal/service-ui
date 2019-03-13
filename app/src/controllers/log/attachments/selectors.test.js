@@ -31,7 +31,7 @@ describe('Attachments Selectors', () => {
         alt: 'text/html',
         contentType: 'text/html',
         id: '1234',
-        src: '**SVG_MOCK**',
+        src: '**FILE_MOCK**',
       },
       {
         alt: 'image/png',

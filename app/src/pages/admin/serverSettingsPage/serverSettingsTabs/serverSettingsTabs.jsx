@@ -64,11 +64,13 @@ export class ServerSettingsTabs extends Component {
       name: this.props.intl.formatMessage(messages.authConfiguration),
       link: this.createTabLink(AUTHORIZATION_CONFIGURATION),
       component: <AuthConfigurationTab />,
+      mobileDisabled: true,
     },
     [STATISTICS]: {
       name: this.props.intl.formatMessage(messages.statistics),
       link: this.createTabLink(STATISTICS),
       component: <StatisticsTab />,
+      mobileDisabled: true,
     },
   });
 

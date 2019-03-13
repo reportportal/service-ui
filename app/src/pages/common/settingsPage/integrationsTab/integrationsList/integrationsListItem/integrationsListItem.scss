@@ -13,6 +13,10 @@
     background-color: $COLOR--tealish-hover;
   }
 
+  &.active {
+    background-color: $COLOR--tealish-hover;
+  }
+
   @media (max-width: $SCREEN_XS_MAX) {
     width: 100%;
     margin-right: 0;

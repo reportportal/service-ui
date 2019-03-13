@@ -3,3 +3,4 @@ export { showModalAction, hideModalAction } from './actionCreators';
 export { modalReducer } from './reducer';
 export { activeModalSelector } from './selectors';
 export { getModal } from './modalsMap';
+export { withModal } from './withModal';

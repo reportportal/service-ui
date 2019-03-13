@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { defineMessages, injectIntl, intlShape } from 'react-intl';
 import classNames from 'classnames/bind';
@@ -24,24 +24,41 @@ export class IntegrationsList extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
     groupedIntegrations: PropTypes.object.isRequired,
+    onItemClick: PropTypes.func,
+    activeItem: PropTypes.object,
+  };
+
+  static defaultProps = {
+    onItemClick: () => {},
+    activeItem: {},
   };
 
   render() {
     const {
       intl: { formatMessage },
+      onItemClick,
+      activeItem,
       groupedIntegrations,
     } = this.props;
 
     return (
       <div className={cx('integrations-list')}>
         {Object.keys(groupedIntegrations).map((key) => (
-          <div className={cx('integrations-group')}>
+          <div key={key} className={cx('integrations-group')}>
             <div className={cx('integrations-group-header')}>
               {messages[key] ? formatMessage(messages[key]) : key}
               {` (${groupedIntegrations[key].length})`}
             </div>
             <div className={cx('integrations-group-items')}>
-              {groupedIntegrations[key].map((item) => <IntegrationsListItem item={item} />)}
+              {groupedIntegrations[key].map((item) => (
+                <Fragment key={item.id}>
+                  <IntegrationsListItem
+                    isActive={item.integrationType.name === activeItem.name}
+                    onClick={onItemClick}
+                    integrationType={item.integrationType}
+                  />
+                </Fragment>
+              ))}
             </div>
           </div>
         ))}

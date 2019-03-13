@@ -1,0 +1,1 @@
+export { EmailIntegration } from './emailIntegration';
