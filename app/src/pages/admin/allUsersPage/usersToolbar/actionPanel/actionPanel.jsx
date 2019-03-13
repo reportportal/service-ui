@@ -12,10 +12,14 @@ import { showModalAction } from 'controllers/modal';
 import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLock';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { activeProjectSelector } from 'controllers/user';
-import { fetchMembersAction } from 'controllers/members';
+import {
+  fetchAllUsersAction,
+  allUsersSelector,
+  querySelector,
+} from 'controllers/administrate/allUsers';
 import { fetch } from 'common/utils';
+import { INTERNAL } from 'common/constants/accountType';
 import { collectFilterEntities } from 'components/filterEntities/containers/utils';
-import { querySelector } from 'controllers/administrate/allUsers';
 
 import { EXPORT, INVITE_USER, ADD_USER } from './constants';
 
@@ -41,11 +45,16 @@ const messages = defineMessages({
     defaultMessage:
       'Invite for member is successfully registered. Confirmation info will be send on provided email. Expiration: 1 day.',
   },
+  addUserSuccessNotification: {
+    id: 'ActionPanel.addUserNotification',
+    defaultMessage: 'New account has been created successfully',
+  },
 });
 
 @connect(
   (state) => ({
     activeProject: activeProjectSelector(state),
+    users: allUsersSelector(state),
     filterEnities: collectFilterEntities(querySelector(state)),
   }),
   {
@@ -53,33 +62,75 @@ const messages = defineMessages({
     showScreenLockAction,
     hideScreenLockAction,
     showNotification,
-    fetchMembersAction,
+    fetchAllUsersAction,
   },
 )
 @injectIntl
 export class ActionPanel extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
+    users: PropTypes.arrayOf(PropTypes.object),
     showScreenLockAction: PropTypes.func,
     activeProject: PropTypes.string,
     showNotification: PropTypes.func,
-    fetchMembersAction: PropTypes.func,
+    fetchAllUsersAction: PropTypes.func,
     hideScreenLockAction: PropTypes.func,
     showModalAction: PropTypes.func,
     filterEnities: PropTypes.object,
   };
+
   static defaultProps = {
     showScreenLockAction: () => {},
     activeProject: '',
+    users: [],
     showNotification: () => {},
-    fetchMembersAction: () => {},
+    fetchAllUsersAction: () => {},
     hideScreenLockAction: () => {},
     showModalAction: () => {},
     filterEnities: {},
   };
+
   onExportUsers = () => {
     window.location.href = URLS.exportUsers(this.props.filterEnities);
   };
+
+  showAddUserModal = () =>
+    this.props.showModalAction({
+      id: 'allUsersAddUserModal',
+      data: {
+        onSubmit: this.addUser,
+      },
+    });
+
+  addUser = (values) => {
+    fetch(URLS.user(), {
+      method: 'post',
+      data: {
+        accountRole: values.accountRole,
+        accountType: INTERNAL,
+        defaultProject: values.defaultProject,
+        email: values.email,
+        fullName: values.fullName,
+        login: values.login,
+        password: values.password,
+        projectRole: values.projectRole,
+      },
+    })
+      .then(() => {
+        this.props.showNotification({
+          type: NOTIFICATION_TYPES.SUCCESS,
+          message: this.props.intl.formatMessage(messages.addUserSuccessNotification),
+        });
+      })
+      .catch((err) => {
+        this.props.showNotification({
+          type: NOTIFICATION_TYPES.ERROR,
+          messageId: 'failureDefault',
+          values: { error: err.message },
+        });
+      });
+  };
+
   inviteUser = (userData) => {
     const data = {};
     if (userData.user.externalUser) {
@@ -97,14 +148,14 @@ export class ActionPanel extends Component {
             message: this.props.intl.formatMessage(messages.inviteExternalMember),
             type: NOTIFICATION_TYPES.SUCCESS,
           });
-          this.props.fetchMembersAction();
+          this.props.fetchAllUsersAction();
           this.props.hideScreenLockAction();
           data.backLink = res.backLink;
           return data;
         })
         .catch((err) => {
           this.props.showNotification({ message: err.msg, type: NOTIFICATION_TYPES.ERROR });
-          this.props.fetchMembersAction();
+          this.props.fetchAllUsersAction();
           this.props.hideScreenLockAction();
           return err;
         });
@@ -124,19 +175,21 @@ export class ActionPanel extends Component {
           }),
           type: NOTIFICATION_TYPES.SUCCESS,
         });
-        this.props.fetchMembersAction();
+        this.props.fetchAllUsersAction();
       })
       .catch((err) => {
         this.props.showNotification({ message: err.msg, type: NOTIFICATION_TYPES.ERROR });
-        this.props.fetchMembersAction();
+        this.props.fetchAllUsersAction();
       });
   };
+
   showInviteUserModal = () => {
     this.props.showModalAction({
       id: 'inviteUserModal',
       data: { onInvite: this.inviteUser, isProjectSelector: true },
     });
   };
+
   renderHeaderButtons = () => {
     const {
       intl: { formatMessage },
@@ -150,12 +203,12 @@ export class ActionPanel extends Component {
       {
         key: INVITE_USER,
         icon: InviteUserIcon,
-        grayBorder: false,
         onClick: this.showInviteUserModal,
       },
       {
         key: ADD_USER,
         icon: AddUserIcon,
+        onClick: this.showAddUserModal,
       },
     ];
     return (
