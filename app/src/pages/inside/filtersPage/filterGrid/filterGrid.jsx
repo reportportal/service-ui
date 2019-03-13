@@ -31,6 +31,7 @@ const NameColumn = ({ className, value, customProps }) => (
       onClickName={customProps.onClickName}
       onEdit={customProps.onEdit}
       userId={customProps.userId}
+      noShareIcons
     />
   </div>
 );
