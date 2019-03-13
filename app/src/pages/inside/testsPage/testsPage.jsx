@@ -2,7 +2,7 @@ import { Component } from 'react';
 import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { SORTING_ASC, withSorting } from 'controllers/sorting';
+import { SORTING_ASC, withSortingURL } from 'controllers/sorting';
 import { PageLayout, PageSection } from 'layouts/pageLayout';
 import { LaunchSuiteGrid } from 'pages/inside/common/launchSuiteGrid';
 import { SuiteTestToolbar } from 'pages/inside/common/suiteTestToolbar';
@@ -26,6 +26,7 @@ import {
   loadingSelector,
 } from 'controllers/testItem';
 import { LaunchFiltersSection } from 'pages/inside/common/launchFiltersSection';
+import { ENTITY_START_TIME } from 'components/filterEntities/constants';
 
 @connect(
   (state) => ({
@@ -43,9 +44,10 @@ import { LaunchFiltersSection } from 'pages/inside/common/launchFiltersSection';
     fetchTestItemsAction,
   },
 )
-@withSorting({
-  defaultSortingColumn: 'startTime',
-  defaultSortingDirection: SORTING_ASC,
+@withSortingURL({
+  defaultFields: [ENTITY_START_TIME],
+  defaultDirection: SORTING_ASC,
+  namespaceSelector,
 })
 @withPagination({
   paginationSelector: testPaginationSelector,

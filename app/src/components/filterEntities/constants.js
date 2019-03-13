@@ -33,3 +33,4 @@ export const ENTITY_DEFECT_COMMENT = 'issue$issue_comment';
 export const ENTITY_BTS_ISSUES = 'issue$externalSystemIssues$ticket_id';
 export const ENTITY_IGNORE_ANALYZER = 'issue$ignore_analyzer';
 export const ENTITY_AUTOANALYZE = 'issue$auto_analyzed';
+export const ENTITY_CREATION_DATE = 'creationDate';

@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { PageLayout, PageSection } from 'layouts/pageLayout';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
-import { SORTING_ASC, withSorting } from 'controllers/sorting';
+import { SORTING_ASC, withSortingURL } from 'controllers/sorting';
 import { withPagination } from 'controllers/pagination';
 import { LaunchSuiteGrid } from 'pages/inside/common/launchSuiteGrid';
 import { debugModeSelector } from 'controllers/launch';
@@ -27,6 +27,7 @@ import {
   loadingSelector,
 } from 'controllers/testItem';
 import { LaunchFiltersSection } from 'pages/inside/common/launchFiltersSection';
+import { ENTITY_START_TIME } from 'components/filterEntities/constants';
 
 @connect(
   (state) => ({
@@ -45,9 +46,10 @@ import { LaunchFiltersSection } from 'pages/inside/common/launchFiltersSection';
     fetchTestItemsAction,
   },
 )
-@withSorting({
-  defaultSortingColumn: 'startTime',
-  defaultSortingDirection: SORTING_ASC,
+@withSortingURL({
+  defaultFields: [ENTITY_START_TIME],
+  defaultDirection: SORTING_ASC,
+  namespaceSelector,
 })
 @withPagination({
   paginationSelector: suitePaginationSelector,

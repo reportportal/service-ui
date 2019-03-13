@@ -16,6 +16,7 @@ import {
   CONDITION_BETWEEN,
   ENTITY_START_TIME,
   ACTIVITIES,
+  ENTITY_CREATION_DATE,
 } from 'components/filterEntities/constants';
 import {
   START_LAUNCH,
@@ -274,7 +275,7 @@ export class EventsEntities extends Component {
         },
       },
       {
-        id: ENTITY_START_TIME,
+        id: ENTITY_CREATION_DATE,
         component: EntityItemStartTime,
         value:
           ENTITY_START_TIME in filterValues

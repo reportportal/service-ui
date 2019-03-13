@@ -13,7 +13,7 @@ import {
 } from 'controllers/log';
 import { withFilter } from 'controllers/filter';
 import { withPagination, PAGE_KEY } from 'controllers/pagination';
-import { withSorting, SORTING_ASC } from 'controllers/sorting';
+import { withSortingURL, SORTING_ASC } from 'controllers/sorting';
 import { userIdSelector } from 'controllers/user';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
 import { LOG_PAGE, LOG_PAGE_EVENTS } from 'components/main/analytics/events';
@@ -34,9 +34,10 @@ import { LogsGridToolbar } from './logsGridToolbar';
     refresh: refreshLogPageData,
   },
 )
-@withSorting({
-  defaultSortingColumn: 'time',
-  defaultSortingDirection: SORTING_ASC,
+@withSortingURL({
+  defaultFields: ['logTime'],
+  defaultDirection: SORTING_ASC,
+  namespace: NAMESPACE,
 })
 @withFilter({
   filterKey: 'filter.cnt.message',

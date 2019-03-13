@@ -133,6 +133,9 @@ export class StepGrid extends Component {
       getTrackingData: PropTypes.func,
     }).isRequired,
     onEditItem: PropTypes.func,
+    onChangeSorting: PropTypes.func,
+    sortingColumn: PropTypes.string,
+    sortingDirection: PropTypes.string,
   };
 
   static defaultProps = {
@@ -147,6 +150,9 @@ export class StepGrid extends Component {
     onEditDefect: () => {},
     onEditItem: () => {},
     events: {},
+    onChangeSorting: () => {},
+    sortingColumn: null,
+    sortingDirection: null,
   };
 
   constructor(props) {
@@ -277,6 +283,9 @@ export class StepGrid extends Component {
       loading,
       listView,
       onFilterClick,
+      onChangeSorting,
+      sortingColumn,
+      sortingDirection,
     } = this.props;
     return (
       <Grid
@@ -292,6 +301,9 @@ export class StepGrid extends Component {
         groupFunction={this.groupStepItems}
         grouped={listView}
         onFilterClick={onFilterClick}
+        onChangeSorting={onChangeSorting}
+        sortingColumn={sortingColumn}
+        sortingDirection={sortingDirection}
       />
     );
   }

@@ -27,7 +27,7 @@ const messages = defineMessages({
     defaultMessage: 'No results found',
   },
 });
-const TIME_COLUMN_ID = 'time';
+const TIME_COLUMN_ID = 'logTime';
 
 const MessageColumn = ({ className, value, ...rest }) => (
   <div

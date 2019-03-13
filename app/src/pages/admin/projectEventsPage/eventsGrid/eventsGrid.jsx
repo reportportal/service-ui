@@ -7,6 +7,13 @@ import { AbsRelTime } from 'components/main/absRelTime';
 import { actionMessages, objectTypesMessages } from 'common/constants/eventsLocalization';
 import { NoItemMessage } from 'components/main/noItemMessage';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import {
+  ENTITY_ACTION,
+  ENTITY_CREATION_DATE,
+  ENTITY_OBJECT_NAME,
+  ENTITY_OBJECT_TYPE,
+  ENTITY_USER,
+} from 'components/filterEntities/constants';
 
 import styles from './eventsGrid.scss';
 
@@ -23,7 +30,7 @@ const messages = defineMessages({
 
 const TimeColumn = ({ className, value }) => (
   <div className={cx('time-col', className)}>
-    <AbsRelTime startTime={value.lastModifiedDate} />
+    <AbsRelTime startTime={value.lastModified} />
   </div>
 );
 TimeColumn.propTypes = {
@@ -121,50 +128,61 @@ export class EventsGrid extends PureComponent {
     data: PropTypes.arrayOf(PropTypes.object),
     intl: intlShape.isRequired,
     loading: PropTypes.bool,
+    sortingColumn: PropTypes.string,
+    sortingDirection: PropTypes.string,
+    onChangeSorting: PropTypes.func,
   };
 
   static defaultProps = {
     data: [],
     loading: false,
+    sortingColumn: null,
+    sortingDirection: null,
+    onChangeSorting: () => {},
   };
+
   getColumns = () => [
     {
-      id: 'time',
+      id: ENTITY_CREATION_DATE,
       title: {
         full: this.props.intl.formatMessage(messages.timeCol),
       },
+      sortable: true,
       maxHeight: 170,
       component: TimeColumn,
     },
     {
-      id: 'user',
+      id: ENTITY_USER,
       title: {
         full: this.props.intl.formatMessage(messages.userCol),
       },
+      sortable: true,
       component: UserColumn,
     },
     {
-      id: 'action',
+      id: ENTITY_ACTION,
       title: {
         full: this.props.intl.formatMessage(messages.actionCol),
       },
+      sortable: true,
       component: ActionColumn,
       customProps: {
         formatMessage: this.props.intl.formatMessage,
       },
     },
     {
-      id: 'objectType',
+      id: ENTITY_OBJECT_TYPE,
       title: {
         full: this.props.intl.formatMessage(messages.objectTypeCol),
       },
+      sortable: true,
       component: ObjectTypeColumn,
       customProps: {
         formatMessage: this.props.intl.formatMessage,
       },
     },
     {
-      id: 'objectName',
+      id: ENTITY_OBJECT_NAME,
       title: {
         full: this.props.intl.formatMessage(messages.objectNameCol),
       },
@@ -195,10 +213,17 @@ export class EventsGrid extends PureComponent {
   COLUMNS = this.getColumns();
 
   render() {
-    const { data, loading, intl } = this.props;
+    const { data, loading, intl, sortingColumn, sortingDirection, onChangeSorting } = this.props;
     return (
       <Fragment>
-        <Grid columns={this.COLUMNS} data={data} loading={loading} />
+        <Grid
+          columns={this.COLUMNS}
+          data={data}
+          loading={loading}
+          sortingColumn={sortingColumn}
+          sortingDirection={sortingDirection}
+          onChangeSorting={onChangeSorting}
+        />
         {!data.length &&
           !loading && <NoItemMessage message={intl.formatMessage(COMMON_LOCALE_KEYS.NO_RESULTS)} />}
       </Fragment>
