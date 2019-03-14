@@ -15,56 +15,56 @@ const cx = classNames.bind(styles);
 
 const messages = defineMessages({
   MODAL_TITLE: {
-    id: 'analysisItemsModal.title',
-    defaultMessage: 'ANALYSE LAUNCHES',
+    id: 'launchAnalysisModal.title',
+    defaultMessage: 'Analyse launches',
   },
   ANALYZE_BUTTON: {
-    id: 'analysisItemsModal.analyse',
+    id: 'launchAnalysisModal.analyse',
     defaultMessage: 'Analyse',
   },
   MOD_TITLE: {
-    id: 'analysisItemsModal.modTitle',
+    id: 'launchAnalysisModal.modTitle',
     defaultMessage: 'Choose the base on which the Auto Analysis will be performed:',
   },
   OPTIONS_TITLE: {
-    id: 'analysisItemsModal.optionsTitle',
+    id: 'launchAnalysisModal.optionsTitle',
     defaultMessage: 'Choose the test items that should be analyzed:',
   },
   ALL: {
-    id: 'analysisItemsModal.baseOptions.allLaunches',
+    id: 'launchAnalysisModal.baseOptions.allLaunches',
     defaultMessage: 'All launches',
   },
   LAUNCH_NAME: {
-    id: 'analysisItemsModal.baseOptions.withSameName',
+    id: 'launchAnalysisModal.baseOptions.withSameName',
     defaultMessage: 'Launches with the same name',
   },
   CURRENT_LAUNCH: {
-    id: 'analysisItemsModal.baseOptions.current',
+    id: 'launchAnalysisModal.baseOptions.current',
     defaultMessage: 'Only current launch',
   },
   TO_INVESTIGATE: {
-    id: 'analysisItemsModal.itemOptions.investigate',
+    id: 'launchAnalysisModal.itemOptions.investigate',
     defaultMessage: 'To investigated items',
   },
   AUTO_ANALYZED: {
-    id: 'analysisItemsModal.itemOptions.byAA',
+    id: 'launchAnalysisModal.itemOptions.byAA',
     defaultMessage: 'Items analyzed automatically (by AA)',
   },
   MANUALLY_ANALYZED: {
-    id: 'analysisItemsModal.itemOptions.manually',
+    id: 'launchAnalysisModal.itemOptions.manually',
     defaultMessage: 'Items analyzed manually',
   },
   VALIDATION_MESSAGE_CHOOSE_OPTION: {
-    id: 'analysisItemsModal.validation.chooseOption',
+    id: 'launchAnalysisModal.validation.chooseOption',
     defaultMessage: 'You can not perform this operation unless at least one item is chosen',
   },
   VALIDATION_MESSAGE_CURRENT_LAUNCH: {
-    id: 'analysisItemsModal.validation.currentLaunch',
+    id: 'launchAnalysisModal.validation.currentLaunch',
     defaultMessage:
       'You can not perform this operation for Auto-analyzed and Manually analyzed items simultaneously. Please choose one of them',
   },
   SUCCESS_MESSAGE: {
-    id: 'analysisItemsModal.successMessage',
+    id: 'launchAnalysisModal.successMessage',
     defaultMessage: 'Auto-analyzer has been started.',
   },
 });
