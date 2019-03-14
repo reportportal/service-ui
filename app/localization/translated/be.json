@@ -858,6 +858,8 @@
   "ProjectStatusPage.oneMonth": "1 месяц",
   "ProjectStatusPage.sixMonths": "6 месяцаў",
   "ProjectStatusPage.threeMonths": "3 месяца",
+  "Projects.export": "Экспартаваць",
+  "Projects.searchPlaceholder": "Пошук",
   "ProjectsPage.addProject": "Дадаць Праект",
   "ProjectsPage.title": "Усе Праекты",
   "RegenerateUuidModal.header": "Стварыць новы UUID",

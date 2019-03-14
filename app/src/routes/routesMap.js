@@ -40,6 +40,7 @@ import { fetchProjectDataAction } from 'controllers/administrate';
 import { fetchAllUsersAction } from 'controllers/administrate/allUsers';
 import { fetchLogPageData } from 'controllers/log';
 import { fetchHistoryPageInfo } from 'controllers/itemsHistory';
+import { fetchProjectsAction } from 'controllers/administrate/projects';
 
 const redirectRoute = (path, createNewAction) => ({
   path,
@@ -88,7 +89,10 @@ export default {
 
   API_PAGE: '/api',
 
-  [PROJECTS_PAGE]: '/administrate/projects',
+  [PROJECTS_PAGE]: {
+    path: '/administrate/projects',
+    thunk: (dispatch) => dispatch(fetchProjectsAction()),
+  },
   [PROJECT_DETAILS_PAGE]: {
     path: `/administrate/projects/:projectId/:projectSection(${SETTINGS}|${MEMBERS}|${EVENTS})?/:settingsTab?`,
     thunk: (dispatch) => {
