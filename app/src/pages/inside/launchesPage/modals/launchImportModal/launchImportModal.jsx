@@ -167,6 +167,7 @@ export class LaunchImportModal extends Component {
   isUploadFinished = () =>
     this.getValidFiles().length ? this.getValidFiles().every(({ uploaded }) => uploaded) : false;
   cancelRequests = [];
+  isDropZoneDisabled = () => this.isUploadFinished() || this.isUploadInProgress();
 
   validateFile = (file) => ({
     incorrectFileFormat: !ACCEPT_FILE_MIME_TYPES.includes(file.type),
@@ -335,7 +336,7 @@ export class LaunchImportModal extends Component {
           accept={ACCEPT_FILE_MIME_TYPES.join(',')}
           onDrop={this.onDrop}
           maxSize={MAX_FILE_SIZE}
-          disabled={loading}
+          disabled={this.isDropZoneDisabled()}
         >
           {files.length === 0 && (
             <div className={cx('dropzone')}>
