@@ -40,7 +40,6 @@ import {
   NAMESPACE,
   toggleAllLaunchesAction,
   deleteItemsAction,
-  analysisItemsAction,
 } from 'controllers/launch';
 import { LaunchSuiteGrid } from 'pages/inside/common/launchSuiteGrid';
 import { LaunchFiltersContainer } from 'pages/inside/common/launchFiltersContainer';
@@ -126,7 +125,6 @@ const messages = defineMessages({
     showNotification,
     showScreenLockAction,
     hideScreenLockAction,
-    analysisItemsAction,
   },
 )
 @withSorting({
@@ -178,7 +176,6 @@ export class LaunchesPage extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
-    analysisItemsAction: PropTypes.func,
   };
 
   static defaultProps = {
@@ -208,7 +205,6 @@ export class LaunchesPage extends Component {
     loading: false,
     fetchLaunchesAction: () => {},
     deleteItemsAction: () => {},
-    analysisItemsAction: () => {},
   };
 
   componentWillUnmount() {
