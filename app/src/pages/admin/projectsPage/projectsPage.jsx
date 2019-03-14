@@ -20,6 +20,7 @@ import ProjectSettingsIcon from 'common/img/project-settings-inline.svg';
 import ProjectEventsIcon from 'common/img/project-events-inline.svg';
 import { ProjectStatusPage } from '../projectStatusPage';
 import { ProjectEventsPage } from '../projectEventsPage';
+import { Projects } from './projects/projects';
 import { AdminProjectSettingsPageContainer } from '../adminProjectSettingsPageContainer';
 
 import styles from './projectsPage.scss';
@@ -166,7 +167,7 @@ export class ProjectsPage extends Component {
     const { projectId, section } = this.props;
 
     if (!projectId) {
-      return <h1>Projects</h1>;
+      return <Projects />;
     }
 
     switch (section) {
