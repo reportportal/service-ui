@@ -1,7 +1,6 @@
 import { Component } from 'react';
 import track from 'react-tracking';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 import { injectIntl, intlShape, defineMessages } from 'react-intl';
 import { withModal, ModalLayout } from 'components/main/modal';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
@@ -9,14 +8,17 @@ import { LAUNCHES_MODAL_EVENTS } from 'components/main/analytics/events';
 import { InputRadio } from 'components/inputs/inputRadio';
 import { InputCheckbox } from 'components/inputs/inputCheckbox';
 import { LAUNCH_ANALYZE_TYPES } from 'common/constants/launchAnalyzeTypes';
-import { activeProjectSelector } from 'controllers/user';
 import classNames from 'classnames/bind';
 import styles from './launchAnalysisModal.scss';
 
 const cx = classNames.bind(styles);
 
 const messages = defineMessages({
-  analyseButton: {
+  MODAL_TITLE: {
+    id: 'analysisItemsModal.title',
+    defaultMessage: 'ANALYSE LAUNCHES',
+  },
+  ANALYZE_BUTTON: {
     id: 'analysisItemsModal.analyse',
     defaultMessage: 'Analyse',
   },
@@ -69,9 +71,6 @@ const messages = defineMessages({
 
 @withModal('analysisLaunchModal')
 @injectIntl
-@connect((state) => ({
-  activeProject: activeProjectSelector(state),
-}))
 @track()
 export class LaunchAnalysisModal extends Component {
   static propTypes = {
@@ -80,7 +79,6 @@ export class LaunchAnalysisModal extends Component {
       item: PropTypes.object.isRequired,
       onConfirm: PropTypes.func.isRequired,
     }),
-    activeProject: PropTypes.string.isRequired,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
@@ -91,24 +89,24 @@ export class LaunchAnalysisModal extends Component {
     data: {},
   };
   state = {
-    ANALYZER_MODE: LAUNCH_ANALYZE_TYPES.ANALYZER_MODE.LAUNCH_NAME,
-    ANALYZE_ITEMS_MODE: [LAUNCH_ANALYZE_TYPES.ANALYZE_ITEMS_MODE.TO_INVESTIGATE],
+    analyzerMode: LAUNCH_ANALYZE_TYPES.ANALYZER_MODE.LAUNCH_NAME,
+    analyzeItemsMode: [LAUNCH_ANALYZE_TYPES.ANALYZE_ITEMS_MODE.TO_INVESTIGATE],
   };
   onChangeRadio = (value) => {
     this.setState({
-      ANALYZER_MODE: value,
+      analyzerMode: value,
     });
   };
   onChangeCheckBox = (value) => {
-    let { ANALYZE_ITEMS_MODE } = this.state;
-    const inState = ANALYZE_ITEMS_MODE.includes(value);
+    let { analyzeItemsMode } = this.state;
+    const inState = analyzeItemsMode.includes(value);
     if (inState) {
-      ANALYZE_ITEMS_MODE = ANALYZE_ITEMS_MODE.filter((item) => item !== value);
+      analyzeItemsMode = analyzeItemsMode.filter((item) => item !== value);
     } else {
-      ANALYZE_ITEMS_MODE = [...ANALYZE_ITEMS_MODE, value];
+      analyzeItemsMode = [...analyzeItemsMode, value];
     }
     this.setState({
-      ANALYZE_ITEMS_MODE,
+      analyzeItemsMode,
     });
   };
   onChange = (value, type) => {
@@ -139,17 +137,17 @@ export class LaunchAnalysisModal extends Component {
         item: { id },
       },
     } = this.props;
-    const { ANALYZER_MODE, ANALYZE_ITEMS_MODE } = this.state;
+    const { analyzerMode, analyzeItemsMode } = this.state;
     const data = {
-      analyzeItemsMode: ANALYZE_ITEMS_MODE,
-      analyzerMode: ANALYZER_MODE,
+      analyzeItemsMode,
+      analyzerMode,
       launchId: id,
     };
     this.props.data.onConfirm(data);
     closeModal();
   };
   isInValid = () => {
-    const { ANALYZER_MODE, ANALYZE_ITEMS_MODE } = this.state;
+    const { analyzerMode, analyzeItemsMode } = this.state;
     const {
       intl: { formatMessage },
     } = this.props;
@@ -157,25 +155,26 @@ export class LaunchAnalysisModal extends Component {
       ANALYZER_MODE: { CURRENT_LAUNCH },
       ANALYZE_ITEMS_MODE: { AUTO_ANALYZED, MANUALLY_ANALYZED },
     } = LAUNCH_ANALYZE_TYPES;
-    if (ANALYZE_ITEMS_MODE.length === 0) {
+    if (analyzeItemsMode.length === 0) {
       return formatMessage(messages.VALIDATION_MESSAGE_CHOOSE_OPTION);
     }
     if (
-      ANALYZER_MODE === CURRENT_LAUNCH &&
-      ANALYZE_ITEMS_MODE.includes(AUTO_ANALYZED) &&
-      ANALYZE_ITEMS_MODE.includes(MANUALLY_ANALYZED)
+      analyzerMode === CURRENT_LAUNCH &&
+      analyzeItemsMode.includes(AUTO_ANALYZED) &&
+      analyzeItemsMode.includes(MANUALLY_ANALYZED)
     ) {
       return formatMessage(messages.VALIDATION_MESSAGE_CURRENT_LAUNCH);
     }
     return null;
   };
-  renderOptions = (object = {}) => {
-    const { ANALYZE_ITEMS_MODE } = this.state;
+  renderOptions = () => {
+    const object = LAUNCH_ANALYZE_TYPES.ANALYZE_ITEMS_MODE;
+    const { analyzeItemsMode } = this.state;
     const {
       intl: { formatMessage },
     } = this.props;
     return Object.keys(object).map((key) => {
-      const checked = ANALYZE_ITEMS_MODE.includes(object[key]);
+      const checked = analyzeItemsMode.includes(object[key]);
       const onChange = () => {
         this.onChange(object[key], 'checkbox');
       };
@@ -186,8 +185,9 @@ export class LaunchAnalysisModal extends Component {
       );
     });
   };
-  renderModes = (object) => {
-    const { ANALYZER_MODE } = this.state;
+  renderModes = () => {
+    const object = LAUNCH_ANALYZE_TYPES.ANALYZER_MODE;
+    const { analyzerMode } = this.state;
     const {
       intl: { formatMessage },
     } = this.props;
@@ -196,7 +196,7 @@ export class LaunchAnalysisModal extends Component {
         this.onChange(object[key], 'radio');
       };
       return (
-        <InputRadio key={key} value={ANALYZER_MODE} ownValue={object[key]} onChange={onChange}>
+        <InputRadio key={key} value={analyzerMode} ownValue={object[key]} onChange={onChange}>
           {formatMessage(messages[key])}
         </InputRadio>
       );
@@ -207,7 +207,7 @@ export class LaunchAnalysisModal extends Component {
       intl: { formatMessage },
     } = this.props;
     const okButton = {
-      text: formatMessage(messages.analyseButton),
+      text: formatMessage(messages.ANALYZE_BUTTON),
       onClick: this.analysisAndClose,
     };
     const cancelButton = {
@@ -217,20 +217,16 @@ export class LaunchAnalysisModal extends Component {
     const { errorMessage } = this.state;
     return (
       <ModalLayout
-        title="ANALYSE LAUNCHES"
+        title={formatMessage(messages.MODAL_TITLE)}
         okButton={okButton}
         cancelButton={cancelButton}
         closeIconEventInfo={LAUNCHES_MODAL_EVENTS.CLOSE_BTN_ANALYSIS_MODAL}
         warningMessage={errorMessage}
       >
         <p className={cx('launch-analysis-modal-text')}>{formatMessage(messages.MOD_TITLE)}</p>
-        <div className={cx('launch-analysis-modal-list')}>
-          {this.renderModes(LAUNCH_ANALYZE_TYPES.ANALYZER_MODE)}
-        </div>
+        <div className={cx('launch-analysis-modal-list')}>{this.renderModes()}</div>
         <p className={cx('launch-analysis-modal-text')}>{formatMessage(messages.OPTIONS_TITLE)}</p>
-        <div className={cx('launch-analysis-modal-list')}>
-          {this.renderOptions(LAUNCH_ANALYZE_TYPES.ANALYZE_ITEMS_MODE)}
-        </div>
+        <div className={cx('launch-analysis-modal-list')}>{this.renderOptions()}</div>
       </ModalLayout>
     );
   }
