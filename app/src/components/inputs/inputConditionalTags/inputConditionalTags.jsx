@@ -3,6 +3,13 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { injectIntl, intlShape, defineMessages } from 'react-intl';
 import { InputTagsSearch } from 'components/inputs/inputTagsSearch';
+import {
+  CONDITION_HAS,
+  CONDITION_NOT_HAS,
+  CONDITION_ANY,
+  CONDITION_NOT_ANY,
+} from 'components/filterEntities/constants';
+import { getInputConditions } from 'common/constants/inputConditions';
 import styles from './inputConditionalTags.scss';
 
 const cx = classNames.bind(styles);
@@ -18,15 +25,10 @@ export class InputConditionalTags extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
     value: PropTypes.object,
-    conditions: PropTypes.arrayOf(
-      PropTypes.shape({
-        value: PropTypes.string.isRequired,
-        label: PropTypes.oneOfType([PropTypes.string, PropTypes.object]).isRequired,
-      }),
-    ),
+    conditions: PropTypes.arrayOf(PropTypes.string),
     inputProps: PropTypes.object,
     placeholder: PropTypes.string,
-    url: PropTypes.string.isRequired,
+    uri: PropTypes.string.isRequired,
     onChange: PropTypes.func,
     onFocus: PropTypes.func,
     onBlur: PropTypes.func,
@@ -34,12 +36,12 @@ export class InputConditionalTags extends Component {
 
   static defaultProps = {
     value: {},
-    conditions: [],
     inputProps: {},
     placeholder: '',
     onChange: () => {},
     onFocus: () => {},
     onBlur: () => {},
+    conditions: [CONDITION_HAS, CONDITION_NOT_HAS, CONDITION_ANY, CONDITION_NOT_ANY],
   };
   state = {
     opened: false,
@@ -71,7 +73,10 @@ export class InputConditionalTags extends Component {
   setConditionsBlockRef = (conditionsBlock) => {
     this.conditionsBlock = conditionsBlock;
   };
-
+  getConditions = () => {
+    const { conditions } = this.props;
+    return getInputConditions(conditions);
+  };
   handleClickOutside = (e) => {
     if (!this.conditionsBlock.contains(e.target)) {
       this.setState({ opened: false });
@@ -84,7 +89,7 @@ export class InputConditionalTags extends Component {
   parseTags = (options) => options.map((option) => option.value).join(',');
 
   render() {
-    const { intl, value, conditions, url, placeholder, inputProps } = this.props;
+    const { intl, value, uri, placeholder, inputProps } = this.props;
     const formattedValue = value.value ? this.formatTags(value.value.split(',')) : [];
     return (
       <div className={cx('input-conditional-tags', { opened: this.state.opened })}>
@@ -93,7 +98,7 @@ export class InputConditionalTags extends Component {
           focusPlaceholder={intl.formatMessage(messages.tagsHint)}
           minLength={1}
           async
-          uri={url}
+          uri={uri}
           makeOptions={this.formatTags}
           creatable
           showNewLabel
@@ -106,15 +111,16 @@ export class InputConditionalTags extends Component {
         <div className={cx('conditions-block')} ref={this.setConditionsBlockRef}>
           <div className={cx('conditions-selector')} onClick={this.onClickConditionBlock}>
             <span className={cx('condition-selected')}>
-              {conditions.length &&
+              {this.getConditions().length &&
                 value.condition &&
-                conditions.filter((condition) => condition.value === value.condition)[0].shortLabel}
+                this.getConditions().filter((condition) => condition.value === value.condition)[0]
+                  .shortLabel}
             </span>
             <i className={cx('arrow', { rotated: this.state.opened })} />
           </div>
           <div className={cx('conditions-list', { visible: this.state.opened })}>
-            {conditions &&
-              conditions.map((condition) => (
+            {this.getConditions() &&
+              this.getConditions().map((condition) => (
                 <div
                   key={condition.value}
                   className={cx('condition', {

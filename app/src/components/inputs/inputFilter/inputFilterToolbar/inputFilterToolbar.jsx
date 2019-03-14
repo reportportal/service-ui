@@ -34,19 +34,21 @@ export class InputFilterToolbar extends PureComponent {
             </span>
           </BigButton>
         </div>
-        <div className={cx('button-container', 'middle')}>
-          <BigButton color="white-two" onClick={onCancel}>
-            <span className={cx('button', 'cancel')}>
-              <FormattedMessage id="Common.cancel" defaultMessage="Cancel" />
-            </span>
-          </BigButton>
-        </div>
-        <div className={cx('button-container', 'right')}>
-          <BigButton color="topaz" roundedCorners onClick={onApply}>
-            <span className={cx('button', 'apply')}>
-              <FormattedMessage id="InputFilterToolbar.apply" defaultMessage="Apply" />
-            </span>
-          </BigButton>
+        <div className={cx('button-splitter')}>
+          <div className={cx('button-container', 'right')}>
+            <BigButton color="white-two" onClick={onCancel}>
+              <span className={cx('button', 'cancel')}>
+                <FormattedMessage id="Common.cancel" defaultMessage="Cancel" />
+              </span>
+            </BigButton>
+          </div>
+          <div className={cx('button-container', 'right')}>
+            <BigButton color="topaz" roundedCorners onClick={onApply}>
+              <span className={cx('button', 'apply')}>
+                <FormattedMessage id="InputFilterToolbar.apply" defaultMessage="Apply" />
+              </span>
+            </BigButton>
+          </div>
         </div>
       </div>
     );

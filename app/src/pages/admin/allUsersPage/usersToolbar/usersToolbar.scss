@@ -18,9 +18,6 @@
   align-items: center;
   color: $COLOR--charcoal-grey;
   font-size: 13px;
-  & > * ~ * {
-    margin-left: 20px;
-  }
 }
 .users-bulk-toolbar-item {
   margin-left: 20px;

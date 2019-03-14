@@ -123,6 +123,9 @@ export const URLS = {
     `${urlBase}project/list/${activeProject}${getQueryParams({
       interval,
     })}`,
+  projectSearch: () => `${urlBase}project/list?filter.cnt.name=`,
+  projectNameSearch: () => `${urlBase}project/names/search?term=`,
+
   exportProjects: () =>
     `${urlBase}project/export${getQueryParams({
       view: CSV,

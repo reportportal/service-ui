@@ -2,7 +2,10 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { InputFilter } from 'components/inputs/inputFilter';
+import { FilterEntitiesURLContainer } from 'components/filterEntities/containers';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { UsersEntities } from './usersEntities';
 import { ActionPanel } from './actionPanel';
 import styles from './usersToolbar.scss';
 
@@ -49,7 +52,18 @@ export class UsersToolbar extends PureComponent {
   render() {
     return (
       <div className={cx('users-toolbar')}>
-        <div />
+        <div>
+          <FilterEntitiesURLContainer
+            debounced={false}
+            render={({ entities, onChange }) => (
+              <InputFilter
+                entitiesProvider={UsersEntities}
+                filterValues={entities}
+                onChange={onChange}
+              />
+            )}
+          />
+        </div>
         {this.renderRightSideComponent()}
       </div>
     );

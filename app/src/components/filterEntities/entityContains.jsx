@@ -16,6 +16,7 @@ export class EntityContains extends Component {
     onChange: PropTypes.func,
     onBlur: PropTypes.func,
     vertical: PropTypes.bool,
+    customProps: PropTypes.object,
   };
   static defaultProps = {
     title: '',
@@ -25,6 +26,7 @@ export class EntityContains extends Component {
     onChange: () => {},
     onBlur: () => {},
     vertical: false,
+    customProps: {},
   };
   onChangeInput = (e) => {
     this.props.onChange({ value: e.target.value });
@@ -34,7 +36,7 @@ export class EntityContains extends Component {
   };
 
   render() {
-    const { intl, onRemove, removable, title, smallSize, vertical, value, ...rest } = this.props;
+    const { onRemove, removable, title, smallSize, vertical, value, customProps } = this.props;
 
     return (
       <FieldFilterEntity
@@ -49,9 +51,9 @@ export class EntityContains extends Component {
           value={value.value}
           maxLength={'128'}
           readOnly
-          {...rest}
           onChange={this.onChangeInput}
           onBlur={this.onBlurInput}
+          {...customProps}
         />
       </FieldFilterEntity>
     );

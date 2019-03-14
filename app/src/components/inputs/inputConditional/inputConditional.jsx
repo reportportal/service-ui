@@ -1,6 +1,13 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
+import {
+  CONDITION_CNT,
+  CONDITION_EQ,
+  CONDITION_NOT_CNT,
+  CONDITION_NOT_EQ,
+} from 'components/filterEntities/constants';
+import { getInputConditions } from 'common/constants/inputConditions';
 import styles from './inputConditional.scss';
 
 const cx = classNames.bind(styles);
@@ -11,12 +18,7 @@ export class InputConditional extends Component {
       value: PropTypes.string,
       condition: PropTypes.string,
     }),
-    conditions: PropTypes.arrayOf(
-      PropTypes.shape({
-        value: PropTypes.string.isRequired,
-        label: PropTypes.oneOfType([PropTypes.string, PropTypes.object]).isRequired,
-      }),
-    ),
+    conditions: PropTypes.arrayOf(PropTypes.string),
     conditionsBlockClassName: PropTypes.string,
     inputClassName: PropTypes.string,
     placeholder: PropTypes.string,
@@ -34,7 +36,6 @@ export class InputConditional extends Component {
 
   static defaultProps = {
     value: {},
-    conditions: [],
     placeholder: '',
     conditionsBlockClassName: '',
     inputClassName: '',
@@ -48,6 +49,7 @@ export class InputConditional extends Component {
     onBlur: () => {},
     onKeyUp: () => {},
     onKeyPress: () => {},
+    conditions: [CONDITION_CNT, CONDITION_NOT_CNT, CONDITION_EQ, CONDITION_NOT_EQ],
   };
   state = {
     opened: false,
@@ -81,6 +83,10 @@ export class InputConditional extends Component {
   setConditionsBlockRef = (conditionsBlock) => {
     this.conditionsBlock = conditionsBlock;
   };
+  getConditions = () => {
+    const { conditions } = this.props;
+    return getInputConditions(conditions);
+  };
   handleClickOutside = (e) => {
     if (!this.conditionsBlock.contains(e.target)) {
       this.setState({ opened: false });
@@ -90,7 +96,6 @@ export class InputConditional extends Component {
   render() {
     const {
       value,
-      conditions,
       placeholder,
       disabled,
       mobileDisabled,
@@ -130,14 +135,15 @@ export class InputConditional extends Component {
         >
           <div className={cx('conditions-selector')} onClick={this.onClickConditionBlock}>
             <span className={cx('condition-selected')}>
-              {conditions.length &&
+              {this.getConditions().length &&
                 value.condition &&
-                conditions.filter((condition) => condition.value === value.condition)[0].shortLabel}
+                this.getConditions().filter((condition) => condition.value === value.condition)[0]
+                  .shortLabel}
             </span>
             <i className={cx('arrow', { rotated: this.state.opened })} />
           </div>
           <div className={cx('conditions-list', { visible: this.state.opened })}>
-            {conditions.map((condition) => (
+            {this.getConditions().map((condition) => (
               <div
                 key={condition.value}
                 className={cx('condition', {

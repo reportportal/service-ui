@@ -1,13 +1,18 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { injectIntl, intlShape, defineMessages } from 'react-intl';
+import { connect } from 'react-redux';
+import { URLS } from 'common/urls';
+import { activeProjectSelector } from 'controllers/user';
+
 import moment from 'moment/moment';
 import {
   EntityDropdown,
   EntityItemStartTime,
-  EntityProjectUsers,
+  EntitySearch,
   EntityContains,
 } from 'components/filterEntities';
+import { bindDefaultValue } from 'components/filterEntities/utils';
 import {
   ENTITY_ACTION,
   ENTITY_OBJECT_TYPE,
@@ -73,14 +78,28 @@ const messages = defineMessages({
   oldValueCol: { id: 'EventsGrid.oldValueCol', defaultMessage: 'Old Value' },
   newValueCol: { id: 'EventsGrid.newValueCol', defaultMessage: 'New Value' },
   contains: { id: 'EventsGrid.contains', defaultMessage: 'Contains' },
+  userSearchPlaceholder: {
+    id: 'EventsGrid.userSearchPlaceholder',
+    defaultMessage: 'Enter username',
+  },
+  focusUserSearchPlaceholder: {
+    id: 'EventsGrid.focusUserSearchPlaceholder',
+    defaultMessage: 'At least 3 symbols required.',
+  },
 });
-
+@connect(
+  (state) => ({
+    usersSearchUrl: URLS.projectUsernamesSearch(activeProjectSelector(state)),
+  }),
+  {},
+)
 @injectIntl
 export class EventsEntities extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
     filterValues: PropTypes.object,
     render: PropTypes.func.isRequired,
+    usersSearchUrl: PropTypes.string.isRequired,
   };
 
   static defaultProps = {
@@ -90,18 +109,12 @@ export class EventsEntities extends Component {
   };
 
   getEntities = () => {
-    const { intl, filterValues } = this.props;
+    const { intl } = this.props;
     return [
       {
         id: ACTIVITIES,
         component: EntityContains,
-        value:
-          ACTIVITIES in filterValues
-            ? filterValues[ACTIVITIES]
-            : {
-                filteringField: ACTIVITIES,
-                value: '',
-              },
+        value: this.bindDefaultValue(ACTIVITIES),
         title: intl.formatMessage(messages.contains),
         active: true,
         removable: false,
@@ -109,7 +122,7 @@ export class EventsEntities extends Component {
       {
         id: ENTITY_ACTION,
         component: EntityDropdown,
-        value: filterValues[ENTITY_ACTION] || {
+        value: this.bindDefaultValue(ENTITY_ACTION, {
           value: [
             START_LAUNCH,
             FINISH_LAUNCH,
@@ -143,11 +156,11 @@ export class EventsEntities extends Component {
             SWITCH_OFF_NOTIFICATIONS,
           ].join(','),
           condition: CONDITION_IN,
-        },
+        }),
         title: intl.formatMessage(messages.actionCol),
         active: true,
         removable: false,
-        meta: {
+        customProps: {
           multiple: true,
           selectAll: true,
           options: [
@@ -277,19 +290,15 @@ export class EventsEntities extends Component {
       {
         id: ENTITY_CREATION_DATE,
         component: EntityItemStartTime,
-        value:
-          ENTITY_START_TIME in filterValues
-            ? filterValues[ENTITY_START_TIME]
-            : {
-                filteringField: ENTITY_START_TIME,
-                value: `${moment()
-                  .startOf('day')
-                  .subtract(1, 'months')
-                  .valueOf()},${moment()
-                  .endOf('day')
-                  .valueOf() + 1}`,
-                condition: CONDITION_BETWEEN,
-              },
+        value: this.bindDefaultValue(ENTITY_START_TIME, {
+          value: `${moment()
+            .startOf('day')
+            .subtract(1, 'months')
+            .valueOf()},${moment()
+            .endOf('day')
+            .valueOf() + 1}`,
+          condition: CONDITION_BETWEEN,
+        }),
         title: intl.formatMessage(messages.timeCol),
         active: true,
         removable: false,
@@ -297,7 +306,7 @@ export class EventsEntities extends Component {
       {
         id: ENTITY_OBJECT_TYPE,
         component: EntityDropdown,
-        value: filterValues[ENTITY_OBJECT_TYPE] || {
+        value: this.bindDefaultValue(ENTITY_OBJECT_TYPE, {
           value: [
             DASHBOARD,
             LAUNCH,
@@ -312,11 +321,11 @@ export class EventsEntities extends Component {
             EXTERNAL_SYSTEM,
           ].join(','),
           condition: CONDITION_IN,
-        },
+        }),
         title: intl.formatMessage(messages.objectTypeCol),
         active: true,
         removable: false,
-        meta: {
+        customProps: {
           multiple: true,
           selectAll: true,
           options: [
@@ -385,24 +394,24 @@ export class EventsEntities extends Component {
       // },
       {
         id: ENTITY_USER,
-        component: EntityProjectUsers,
-        value:
-          ENTITY_USER in filterValues
-            ? filterValues[ENTITY_USER]
-            : {
-                filteringField: ENTITY_USER,
-                value: '',
-                condition: CONDITION_IN,
-              },
+        component: EntitySearch,
+        value: this.bindDefaultValue(ENTITY_USER, {
+          condition: CONDITION_IN,
+        }),
         title: intl.formatMessage(messages.userCol),
         active: true,
         removable: false,
+        customProps: {
+          uri: this.props.usersSearchUrl,
+          placeholder: intl.formatMessage(messages.userSearchPlaceholder),
+          focusPlaceholder: intl.formatMessage(messages.focusUserSearchPlaceholder),
+        },
       },
     ];
   };
+  bindDefaultValue = bindDefaultValue;
   render() {
     const { render, ...rest } = this.props;
-
     return render({
       ...rest,
       filterEntities: this.getEntities(),
