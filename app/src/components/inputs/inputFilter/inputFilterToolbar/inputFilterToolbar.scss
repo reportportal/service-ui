@@ -12,7 +12,14 @@
   background-color: $COLOR--white-two;
   border-top: 1px solid $COLOR--gray-91;
 }
-
+.button-container-splitter {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  align-content: flex-start;
+  align-items: center;
+}
 .button-container {
   display: inline-block;
   margin-top: 10px;

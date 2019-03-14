@@ -6,7 +6,6 @@ import { FieldFilterEntity } from 'components/fields/fieldFilterEntity';
 export class EntityDropdown extends Component {
   static propTypes = {
     value: PropTypes.object,
-    meta: PropTypes.object,
     entityId: PropTypes.string,
     title: PropTypes.string,
     smallSize: PropTypes.bool,
@@ -14,22 +13,26 @@ export class EntityDropdown extends Component {
     onRemove: PropTypes.func,
     onChange: PropTypes.func,
     vertical: PropTypes.bool,
+    customProps: PropTypes.object,
   };
   static defaultProps = {
     entityId: '',
     title: '',
     smallSize: false,
     value: {},
-    meta: {},
     removable: true,
     onRemove: () => {},
     onChange: () => {},
     vertical: false,
+    customProps: {},
   };
 
   getValue = () => {
-    const { value, meta } = this.props;
-    if (!meta.multiple) {
+    const {
+      value,
+      customProps: { multiple },
+    } = this.props;
+    if (!multiple) {
       return value.value;
     } else if (!value.value) {
       return [];
@@ -38,14 +41,17 @@ export class EntityDropdown extends Component {
   };
 
   handleChange = (value) => {
+    const {
+      customProps: { multiple },
+    } = this.props;
     this.props.onChange({
       condition: this.props.value.condition,
-      value: this.props.meta.multiple ? value.join(',') : value,
+      value: multiple ? value.join(',') : value,
     });
   };
 
   render() {
-    const { onRemove, removable, entityId, smallSize, title, meta, vertical } = this.props;
+    const { onRemove, removable, entityId, smallSize, title, vertical, customProps } = this.props;
     return (
       <FieldFilterEntity
         title={title || entityId}
@@ -54,13 +60,7 @@ export class EntityDropdown extends Component {
         onRemove={onRemove}
         vertical={vertical}
       >
-        <InputDropdown
-          options={meta.options}
-          value={this.getValue()}
-          onChange={this.handleChange}
-          multiple={meta.multiple}
-          selectAll={meta.selectAll}
-        />
+        <InputDropdown value={this.getValue()} onChange={this.handleChange} {...customProps} />
       </FieldFilterEntity>
     );
   }
