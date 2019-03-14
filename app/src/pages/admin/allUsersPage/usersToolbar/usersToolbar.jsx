@@ -13,6 +13,7 @@ const messages = defineMessages({
     defaultMessage: '{count} items selected',
   },
 });
+
 @injectIntl
 export class UsersToolbar extends PureComponent {
   static propTypes = {
@@ -24,19 +25,17 @@ export class UsersToolbar extends PureComponent {
     selectedUsers: [],
     onDelete: () => {},
   };
-  get selectedUsersCount() {
-    return this.props.selectedUsers.length;
-  }
-  get showBulkEditPanel() {
-    return this.selectedUsersCount > 0;
-  }
-  get renderRightSideComponent() {
+  getSelectedUsersCount = () => this.props.selectedUsers.length;
+  isShowBulkEditPanel = () => this.getSelectedUsersCount() > 0;
+  renderRightSideComponent = () => {
     const { intl, onDelete } = this.props;
-    if (this.showBulkEditPanel) {
+    if (this.isShowBulkEditPanel()) {
       return (
         <div className={cx('users-bulk-toolbar')}>
           <div className={cx('users-bulk-toolbar-item')}>
-            {intl.formatMessage(messages.deleteModalContent, { count: this.selectedUsersCount })}
+            {intl.formatMessage(messages.deleteModalContent, {
+              count: this.getSelectedUsersCount(),
+            })}
           </div>
           <div className={cx(['users-bulk-button', 'users-bulk-toolbar-item'])} onClick={onDelete}>
             {intl.formatMessage(COMMON_LOCALE_KEYS.DELETE)}
@@ -45,12 +44,13 @@ export class UsersToolbar extends PureComponent {
       );
     }
     return <ActionPanel />;
-  }
+  };
+
   render() {
     return (
       <div className={cx('users-toolbar')}>
         <div />
-        {this.renderRightSideComponent}
+        {this.renderRightSideComponent()}
       </div>
     );
   }
