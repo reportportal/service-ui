@@ -1,15 +1,15 @@
 .launch-analysis-modal-list {
   padding: 15px;
   color: $COLOR--charcoal-grey;
-  &:first-child {
-    padding-top: 0;
-  }
-  &:last-child {
-    padding-bottom: 0;
-  }
-  & > * ~ * {
-    margin-top: 15px;
-  }
+}
+.launch-analysis-modal-list-last {
+  padding-bottom: 0;
+}
+.launch-analysis-modal-list-item {
+  margin-top: 15px;
+}
+.launch-analysis-modal-list-item-first {
+  margin-top: 0;
 }
 .launch-analysis-modal-text {
   color: $COLOR--charcoal-grey;
