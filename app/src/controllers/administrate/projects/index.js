@@ -1,5 +1,10 @@
-export { fetchProjectsAction } from './actionCreators';
+export { fetchProjectsAction, toggleViewAction } from './actionCreators';
 export { projectsReducer } from './reducer';
-export { projectsPaginationSelector, projectsSelector, loadingSelector } from './selectors';
+export {
+  projectsPaginationSelector,
+  projectsSelector,
+  loadingSelector,
+  viewTypeSelector,
+} from './selectors';
 export { projectsSagas } from './sagas';
-export { DEFAULT_PAGE_SIZE, DEFAULT_PAGINATION } from './constants';
+export { DEFAULT_PAGE_SIZE, DEFAULT_PAGINATION, GRID_VIEW, TABLE_VIEW } from './constants';

@@ -14,4 +14,19 @@
 
 .toolbar-button {
   margin-left: 10px;
+
+  svg {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+.toolbar-active-button {
+  button {
+    background-color: $COLOR--topaz;
+
+    path {
+      fill: $COLOR--white-two !important;
+    }
+  }
 }
