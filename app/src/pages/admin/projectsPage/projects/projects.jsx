@@ -7,9 +7,13 @@ import classNames from 'classnames/bind';
 import { SIZE_KEY, withPagination } from 'controllers/pagination';
 import {
   DEFAULT_PAGINATION,
+  TABLE_VIEW,
+  GRID_VIEW,
   loadingSelector,
   projectsPaginationSelector,
   projectsSelector,
+  toggleViewAction,
+  viewTypeSelector,
 } from 'controllers/administrate/projects';
 
 import { GhostButton } from 'components/buttons/ghostButton';
@@ -30,10 +34,16 @@ const messages = defineMessages({
   },
 });
 
-@connect((state) => ({
-  projects: projectsSelector(state),
-  loading: loadingSelector(state),
-}))
+@connect(
+  (state) => ({
+    projects: projectsSelector(state),
+    loading: loadingSelector(state),
+    viewType: viewTypeSelector(state),
+  }),
+  {
+    toggleView: toggleViewAction,
+  },
+)
 @withPagination({
   paginationSelector: projectsPaginationSelector,
 })
@@ -47,6 +57,8 @@ export class Projects extends Component {
     loading: PropTypes.bool,
     projects: PropTypes.arrayOf(PropTypes.object),
     intl: intlShape.isRequired,
+    toggleView: PropTypes.func.isRequired,
+    viewType: PropTypes.string,
   };
 
   static defaultProps = {
@@ -56,10 +68,21 @@ export class Projects extends Component {
     pageSize: DEFAULT_PAGINATION[SIZE_KEY],
     loading: false,
     projects: [],
+    viewType: TABLE_VIEW,
   };
 
   render() {
-    const { intl, activePage, itemCount, pageCount, pageSize, loading, projects } = this.props;
+    const {
+      intl,
+      activePage,
+      itemCount,
+      pageCount,
+      pageSize,
+      loading,
+      projects,
+      toggleView,
+      viewType,
+    } = this.props;
 
     return (
       <React.Fragment>
@@ -76,15 +99,18 @@ export class Projects extends Component {
                 <FormattedMessage id="Projects.export" defaultMessage="Export" />
               </GhostButton>
             </div>
-            <div className={cx('toolbar-button')}>
-              <GhostButton icon={GridViewDashboardIcon} />
+            <div
+              className={cx('toolbar-button', { 'toolbar-active-button': viewType === GRID_VIEW })}
+            >
+              <GhostButton icon={GridViewDashboardIcon} onClick={() => toggleView(GRID_VIEW)} />
             </div>
-            <div className={cx('toolbar-button')}>
-              <GhostButton icon={TableViewDashboardIcon} />
+            <div
+              className={cx('toolbar-button', { 'toolbar-active-button': viewType === TABLE_VIEW })}
+            >
+              <GhostButton icon={TableViewDashboardIcon} onClick={() => toggleView(TABLE_VIEW)} />
             </div>
           </div>
         </div>
-
         {!loading &&
           projects.map(({ projectId, projectName }) => (
             <div key={projectId}>
