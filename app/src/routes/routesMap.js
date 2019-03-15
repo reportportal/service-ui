@@ -25,7 +25,7 @@ import {
 } from 'controllers/pages';
 import { GENERAL, EMAIL_SERVER } from 'common/constants/settingsTabs';
 import { SETTINGS, MEMBERS, EVENTS } from 'common/constants/projectSections';
-import { isAuthorizedSelector } from 'controllers/auth';
+import { isAuthorizedSelector, isAdminAccessSelector } from 'controllers/auth';
 import {
   fetchDashboardsAction,
   changeVisibilityTypeAction,
@@ -64,10 +64,12 @@ export const onBeforeRouteChange = (dispatch, getState, { action }) => {
   const activeProjectId = activeProjectSelector(getState());
   const userInfo = userInfoSelector(getState());
   const userProjects = userInfo ? userInfo.assignedProjects : {};
+  const isAdminAccess = isAdminAccessSelector(getState());
   if (
     userProjects &&
     Object.prototype.hasOwnProperty.call(userProjects, hashProject) &&
-    hashProject !== activeProjectId
+    hashProject !== activeProjectId &&
+    !isAdminAccess
   ) {
     dispatch(setActiveProjectAction(hashProject));
     dispatch(fetchProjectAction(hashProject));
@@ -88,8 +90,10 @@ export default {
 
   [PROJECTS_PAGE]: '/administrate/projects',
   [PROJECT_DETAILS_PAGE]: {
-    path: `/administrate/projects/:projectId/:projectSection(${SETTINGS}|${MEMBERS}|${EVENTS})?`,
-    thunk: (dispatch) => dispatch(fetchProjectDataAction()),
+    path: `/administrate/projects/:projectId/:projectSection(${SETTINGS}|${MEMBERS}|${EVENTS})?/:settingsTab?`,
+    thunk: (dispatch) => {
+      dispatch(fetchProjectDataAction());
+    },
   },
   [ALL_USERS_PAGE]: {
     path: '/administrate/users',

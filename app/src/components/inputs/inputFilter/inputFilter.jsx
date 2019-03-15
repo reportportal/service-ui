@@ -21,9 +21,6 @@ export class InputFilter extends Component {
     disabled: PropTypes.bool,
     error: PropTypes.string,
     onChange: PropTypes.func,
-    onFocus: PropTypes.func,
-    onBlur: PropTypes.func,
-    onKeyUp: PropTypes.func,
     filterEntities: PropTypes.array,
     onAdd: PropTypes.func,
     onRemove: PropTypes.func,
@@ -34,6 +31,10 @@ export class InputFilter extends Component {
     onFilterValidate: PropTypes.func,
     onFilterRemove: PropTypes.func,
     onFilterAdd: PropTypes.func,
+    onFilterApply: PropTypes.func,
+    onFilterStringChange: PropTypes.func,
+    filterActive: PropTypes.bool,
+    onCancel: PropTypes.func,
   };
 
   static defaultProps = {
@@ -45,9 +46,6 @@ export class InputFilter extends Component {
     disabled: false,
     error: '',
     onChange: () => {},
-    onFocus: () => {},
-    onBlur: () => {},
-    onKeyUp: () => {},
     filterEntities: [],
     onAdd: () => {},
     onRemove: () => {},
@@ -58,44 +56,40 @@ export class InputFilter extends Component {
     onFilterValidate: () => {},
     onFilterRemove: () => {},
     onFilterAdd: () => {},
+    onFilterApply: () => {},
+    onFilterStringChange: () => {},
+    filterActive: false,
+    onCancel: () => {},
   };
 
   state = {
     opened: false,
   };
 
-  onChangeInput = (e) => {
-    this.props.onChange({ value: e.target.value });
-  };
+  handleChangeInput = (e) => this.props.onFilterStringChange(e.target.value);
 
-  onClickClear = () => {
-    this.props.onChange({ value: '' });
-  };
+  handleClickClear = () => this.props.onFilterStringChange('');
 
-  onClickAddFilter = () => {
-    this.setState({ opened: true });
-  };
-
-  onApply = () => {
+  handleApply = () => {
     this.setState({ opened: false });
+    this.props.onFilterApply();
   };
 
-  onCancel = () => {
+  handleCancel = () => {
     this.setState({ opened: false });
+    this.props.onCancel();
   };
+
+  togglePopup = () => this.setState({ opened: !this.state.opened });
 
   render() {
     const {
       error,
-      value,
       active,
       disabled,
       className,
       placeholder,
       maxLength,
-      onFocus,
-      onBlur,
-      onKeyUp,
       onFilterChange,
       onFilterValidate,
       onFilterRemove,
@@ -103,27 +97,33 @@ export class InputFilter extends Component {
       filterErrors,
       filterEntities,
       onClear,
+      value,
+      filterActive,
     } = this.props;
     return (
       <React.Fragment>
-        <div className={cx('input-filter', { error, active, disabled })}>
+        <div
+          className={cx('input-filter', { error, active, disabled: disabled || this.state.opened })}
+        >
           <div className={cx('icon', 'search')}>{Parser(SearchIcon)}</div>
-          <div className={cx('icon', 'add-filter')} onClick={this.onClickAddFilter}>
+          <div
+            className={cx('icon', 'add-filter', { inactive: !filterActive })}
+            onClick={this.togglePopup}
+          >
             {Parser(AddFilterIcon)}
           </div>
-          <div className={cx('icon', 'cross')} onClick={this.onClickClear}>
-            {Parser(CrossIcon)}
-          </div>
+          {!!value && (
+            <div className={cx('icon', 'cross')} onClick={this.handleClickClear}>
+              {Parser(CrossIcon)}
+            </div>
+          )}
           <input
             className={cx('input', className)}
             value={value}
-            disabled={disabled}
+            disabled={disabled || this.state.opened}
             placeholder={placeholder}
             maxLength={maxLength}
-            onChange={this.onChangeInput}
-            onFocus={onFocus}
-            onBlur={onBlur}
-            onKeyUp={onKeyUp}
+            onChange={this.handleChangeInput}
           />
         </div>
         {this.state.opened && (
@@ -140,7 +140,12 @@ export class InputFilter extends Component {
                 vertical
               />
             </div>
-            <InputFilterToolbar onApply={this.onApply} onClear={onClear} onCancel={this.onCancel} />
+            <InputFilterToolbar
+              onApply={this.handleApply}
+              onClear={onClear}
+              onCancel={this.handleCancel}
+              entities={filterEntities}
+            />
           </div>
         )}
       </React.Fragment>

@@ -40,6 +40,8 @@
     height: 15px;
     svg {
       fill: $COLOR--gray-60;
+      width: 20px;
+      height: 20px;
     }
   }
 
@@ -47,14 +49,18 @@
     position: absolute;
     right: 10px;
 
-    &.disabled {
-      svg {
+    &.inactive {
+      svg path {
         fill: $COLOR--gray-91;
       }
     }
 
     &:hover {
       cursor: pointer;
+    }
+
+    @media(max-width: $SCREEN_SM_MAX) {
+      display: none;
     }
   }
 
@@ -96,6 +102,7 @@
     margin-top: 4px;
     background-color: $COLOR--white-two;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.09);
+    z-index: 2000;
 }
 .filters {
   padding: 15px;

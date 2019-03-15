@@ -3,6 +3,7 @@ import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
+import Link from 'redux-first-router-link';
 
 import ShareIcon from 'common/img/share-icon-inline.svg';
 import PencilIcon from 'common/img/pencil-icon-inline.svg';
@@ -32,6 +33,9 @@ export class FilterName extends Component {
     showDesc: PropTypes.bool,
     editable: PropTypes.bool,
     isBold: PropTypes.bool,
+    isLink: PropTypes.bool,
+    noShareIcons: PropTypes.bool,
+    nameLink: PropTypes.object,
   };
 
   static defaultProps = {
@@ -45,6 +49,9 @@ export class FilterName extends Component {
     showDesc: true,
     editable: true,
     isBold: false,
+    isLink: false,
+    noShareIcons: false,
+    nameLink: null,
   };
 
   getHighlightName = () => {
@@ -63,6 +70,8 @@ export class FilterName extends Component {
     );
   };
 
+  getShareIcon = () => (this.props.userId === this.props.filter.owner ? ShareIcon : GlobeIcon);
+
   render() {
     const {
       intl,
@@ -74,30 +83,39 @@ export class FilterName extends Component {
       showDesc,
       editable,
       isBold,
+      isLink,
+      noShareIcons,
+      nameLink,
     } = this.props;
+
+    const NameLink = ({ link, children }) =>
+      link ? (
+        <Link className={cx('name-link')} to={link}>
+          {children}
+        </Link>
+      ) : (
+        children
+      );
 
     return (
       <Fragment>
         <span className={cx('name-wrapper')}>
-          <span
-            className={cx('name', {
-              bold: isBold,
-              link: userFilters.find((item) => item.id === filter.id),
-            })}
-            onClick={onClickName}
-          >
-            {Parser(this.getHighlightName(filter.name))}
-          </span>
+          <NameLink link={nameLink}>
+            <span
+              className={cx('name', {
+                bold: isBold,
+                link: isLink || userFilters.find((item) => item.id === filter.id),
+              })}
+              onClick={() => onClickName(filter)}
+            >
+              {Parser(this.getHighlightName(filter.name))}
+            </span>
+          </NameLink>
+
           {filter.share &&
-            userId === filter.owner && (
+            !noShareIcons && (
               <span className={cx('share-icon')} title={intl.formatMessage(messages.shareFilter)}>
-                {Parser(ShareIcon)}
-              </span>
-            )}
-          {filter.share &&
-            userId !== filter.owner && (
-              <span className={cx('globe-icon')} title={intl.formatMessage(messages.shareFilter)}>
-                {Parser(GlobeIcon)}
+                {Parser(this.getShareIcon())}
               </span>
             )}
           {userId === filter.owner &&

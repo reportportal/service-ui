@@ -1,11 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { injectIntl } from 'react-intl';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
 import { withPagination, DEFAULT_PAGINATION, SIZE_KEY } from 'controllers/pagination';
 import { URLS } from 'common/urls';
-import { projectIdSelector } from 'controllers/pages';
 import { activeProjectSelector } from 'controllers/user';
 import {
   eventsSelector,
@@ -13,9 +11,9 @@ import {
   loadingSelector,
 } from 'controllers/administrate/events';
 import { EventsGrid } from './eventsGrid';
+import { EventsToolbar } from './eventsToolbar';
 
 @connect((state) => ({
-  projectId: projectIdSelector(state),
   url: URLS.events(activeProjectSelector(state)),
   events: eventsSelector(state),
   loading: loadingSelector(state),
@@ -23,7 +21,6 @@ import { EventsGrid } from './eventsGrid';
 @withPagination({
   paginationSelector: eventsPaginationSelector,
 })
-@injectIntl
 export class ProjectEventsPage extends Component {
   static propTypes = {
     activePage: PropTypes.number,
@@ -35,7 +32,6 @@ export class ProjectEventsPage extends Component {
     showModalAction: PropTypes.func,
     onChangePage: PropTypes.func,
     onChangePageSize: PropTypes.func,
-    projectId: PropTypes.string.isRequired,
     loading: PropTypes.bool,
     events: PropTypes.arrayOf(PropTypes.object),
   };
@@ -64,8 +60,10 @@ export class ProjectEventsPage extends Component {
       loading,
       events,
     } = this.props;
+
     return (
       <React.Fragment>
+        <EventsToolbar />
         <EventsGrid data={events} loading={loading} />
         {!!pageCount &&
           !loading && (

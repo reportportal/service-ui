@@ -5,23 +5,16 @@ import { omit } from './omit';
 
 const takeAll = (x) => ({ ...x });
 
-const mergeQuery = (oldQuery, paramsToMerge) => {
-  const newQuery = { ...oldQuery, ...paramsToMerge };
-  return Object.keys(newQuery).reduce(
-    (acc, key) => (!newQuery[key] ? acc : { ...acc, [key]: newQuery[key] }),
-    {},
-  );
-};
-
 export const connectRouter = (mapURLParamsToProps = takeAll, queryUpdaters = {}, options = {}) => (
   WrappedComponent,
 ) =>
   connect(
-    (state) => {
+    (state, ownProps) => {
       const pageProperties = pagePropertiesSelector(state);
-      let namespace = options.namespace;
-      if (!options.namespace && options.namespaceSelector) {
-        namespace = options.namespaceSelector(state);
+      let namespace = options.namespace || ownProps.namespace;
+      const namespaceSelector = options.namespaceSelector || ownProps.namespaceSelector;
+      if (!options.namespace && namespaceSelector) {
+        namespace = namespaceSelector(state);
       }
       const namespacedQuery = namespace
         ? extractNamespacedQuery(pageProperties, namespace)
@@ -29,28 +22,27 @@ export const connectRouter = (mapURLParamsToProps = takeAll, queryUpdaters = {},
       return {
         namespace,
         ...mapURLParamsToProps(namespacedQuery),
-        namespacedQuery,
       };
     },
     (dispatch) => {
       const mappedUpdaters = {};
       Object.keys(queryUpdaters).forEach((key) => {
-        mappedUpdaters[key] = (namespace, oldQuery) => (...args) =>
+        mappedUpdaters[key] = (namespace) => (...args) =>
           dispatch(
             updatePagePropertiesAction(
-              createNamespacedQuery(mergeQuery(oldQuery, queryUpdaters[key](...args)), namespace),
+              createNamespacedQuery(queryUpdaters[key](...args), namespace),
             ),
           );
       });
       return mappedUpdaters;
     },
     (stateProps, dispatchProps, ownProps) => ({
-      ...omit(stateProps, ['namespace', 'namespacedQuery']),
+      ...omit(stateProps, ['namespace', 'namespacedQuery', 'namespaceSelector']),
       ...ownProps,
       ...Object.keys(queryUpdaters).reduce(
         (acc, key) => ({
           ...acc,
-          [key]: acc[key](stateProps.namespace, stateProps.namespacedQuery),
+          [key]: acc[key](stateProps.namespace),
         }),
         dispatchProps,
       ),

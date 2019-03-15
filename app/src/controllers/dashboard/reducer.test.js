@@ -7,6 +7,8 @@ import {
   UPDATE_DASHBOARD_ITEM_SUCCESS,
   DASHBOARDS_TABLE_VIEW,
   DASHBOARDS_GRID_VIEW,
+  CHANGE_FULL_SCREEN_MODE,
+  TOGGLE_FULL_SCREEN_MODE,
 } from './constants';
 import { dashboardReducer } from './reducer';
 
@@ -93,5 +95,39 @@ describe('dashboard reducer', () => {
       ...oldState,
       gridType: DASHBOARDS_TABLE_VIEW,
     });
+  });
+
+  test('should handle CHANGE_FULL_SCREEN_MODE', () => {
+    const oldState = {
+      ...INITIAL_STATE,
+      fullScreenMode: false,
+    };
+    const newState = dashboardReducer(oldState, {
+      type: CHANGE_FULL_SCREEN_MODE,
+      payload: true,
+    });
+    expect(newState).toEqual({
+      ...oldState,
+      fullScreenMode: true,
+    });
+  });
+
+  test('should handle TOGGLE_FULL_SCREEN_MODE', () => {
+    const oldState = {
+      ...INITIAL_STATE,
+      fullScreenMode: false,
+    };
+    const newState = dashboardReducer(oldState, {
+      type: TOGGLE_FULL_SCREEN_MODE,
+    });
+    expect(newState).toEqual({
+      ...oldState,
+      fullScreenMode: true,
+    });
+    expect(
+      dashboardReducer(newState, {
+        type: TOGGLE_FULL_SCREEN_MODE,
+      }),
+    ).toEqual(oldState);
   });
 });

@@ -9,6 +9,8 @@ import {
   DEFECT_TYPE,
   USER,
   EMAIL_CONFIG,
+  ITEM_ISSUE,
+  TEST_ITEM,
 } from 'common/constants/eventsObjectTypes';
 import {
   CREATE_DASHBOARD,
@@ -37,6 +39,7 @@ import {
   UPDATE_BTS,
   DELETE_BTS,
   GENERATE_INDEX,
+  UPDATE_ITEM,
 } from 'common/constants/actionTypes';
 
 export const actionMessages = defineMessages({
@@ -144,6 +147,10 @@ export const actionMessages = defineMessages({
     id: 'EventActions.createDefect',
     defaultMessage: 'create defect',
   },
+  [UPDATE_ITEM]: {
+    id: 'EventActions.updateItem',
+    defaultMessage: 'update item',
+  },
 });
 
 export const objectTypesMessages = defineMessages({
@@ -182,5 +189,13 @@ export const objectTypesMessages = defineMessages({
   [EMAIL_CONFIG]: {
     id: 'EventObjectTypes.emailConfig',
     defaultMessage: 'email config',
+  },
+  [ITEM_ISSUE]: {
+    id: 'EventObjectTypes.itemIssue',
+    defaultMessage: 'Test item',
+  },
+  [TEST_ITEM]: {
+    id: 'EventObjectTypes.testItem',
+    defaultMessage: 'Test item',
   },
 });

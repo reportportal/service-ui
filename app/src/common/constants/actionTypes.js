@@ -29,6 +29,7 @@ export const FINISH_IMPORT = 'finishImport';
 export const UPDATE_NOTIFICATIONS = 'updateEmail';
 export const SWITCH_ON_NOTIFICATIONS = 'onEmail';
 export const SWITCH_OFF_NOTIFICATIONS = 'offEmail';
+export const UPDATE_ITEM = 'updateItem';
 
 // grouped actions
 export const ACTIONS_WITH_ISSUES = 'issuesActions';

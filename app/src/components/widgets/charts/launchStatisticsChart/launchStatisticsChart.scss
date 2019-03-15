@@ -18,8 +18,12 @@
       }
       .c3-axis {
         .tick {
+          font-size: 10px;
           font-family: $FONT-REGULAR;
-          fill: $COLOR--charcoal-grey;
+          fill: $COLOR--black-2;
+        }
+        line {
+          stroke: $COLOR--black-2;
         }
         &.c3-axis-y {
           display: none;
@@ -84,6 +88,7 @@
   }
 }
 
+
 .area-view {
   :global {
     svg {
@@ -121,23 +126,30 @@
          }
         }
       }
+      .c3-axis {
+        line {
+          stroke: none;
+        }
+      }
     }
   }
 }
 
 .full-screen {
-  svg {
-    .c3-grid {
-      line {
-        display: inline !important;
+  :global {
+    svg {
+      .c3-grid {
+        line {
+          display: inline !important;
+        }
       }
-    }
-    .c3-axis-y {
-      display: inline !important;
-
-      .domain {
+      .c3-axis-y {
         display: inline !important;
-        stroke: $COLOR--gray-80 !important;
+
+        .domain {
+          display: inline !important;
+          stroke: $COLOR--gray-80 !important;
+        }
       }
     }
   }

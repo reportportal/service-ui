@@ -1,11 +1,18 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { getStorageItem } from 'common/utils';
 import { fetchInfoAction, analyticsEnabledSelector } from 'controllers/appInfo';
 import { AnalyticsWrapper } from 'components/main/analytics/AnalyticsWrapper';
 import { fetchProjectAction } from 'controllers/project';
 import { fetchUserAction, activeProjectSelector } from 'controllers/user';
-import { TOKEN_KEY, DEFAULT_TOKEN, authSuccessAction } from 'controllers/auth';
+import {
+  authSuccessAction,
+  setTokenAction,
+  resetTokenAction,
+  TOKEN_KEY,
+  DEFAULT_TOKEN,
+} from 'controllers/auth';
 
 @connect(
   (state) => ({
@@ -17,6 +24,8 @@ import { TOKEN_KEY, DEFAULT_TOKEN, authSuccessAction } from 'controllers/auth';
     fetchUserAction,
     fetchProjectAction,
     authSuccessAction,
+    setTokenAction,
+    resetTokenAction,
   },
 )
 export class InitialDataContainer extends Component {
@@ -29,6 +38,8 @@ export class InitialDataContainer extends Component {
     children: PropTypes.node,
     initialDispatch: PropTypes.func.isRequired,
     isAnalyticsEnabled: PropTypes.bool.isRequired,
+    setTokenAction: PropTypes.func.isRequired,
+    resetTokenAction: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
@@ -40,18 +51,15 @@ export class InitialDataContainer extends Component {
   };
 
   componentDidMount() {
+    this.props.setTokenAction(getStorageItem(TOKEN_KEY) || DEFAULT_TOKEN);
     const infoPromise = this.props.fetchInfoAction();
-    const token = localStorage.getItem(TOKEN_KEY);
-    if (!token) {
-      localStorage.setItem(TOKEN_KEY, DEFAULT_TOKEN);
-    }
     const userPromise = this.props
       .fetchUserAction()
       .then(({ activeProject }) =>
         this.props.fetchProjectAction(activeProject).then(() => this.props.authSuccessAction()),
       )
       .catch(() => {
-        localStorage.setItem(TOKEN_KEY, DEFAULT_TOKEN);
+        this.props.resetTokenAction();
       });
     Promise.all([infoPromise, userPromise]).then(() => {
       this.props.initialDispatch();

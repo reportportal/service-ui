@@ -13,6 +13,7 @@ export class EntityDropdown extends Component {
     removable: PropTypes.bool,
     onRemove: PropTypes.func,
     onChange: PropTypes.func,
+    vertical: PropTypes.bool,
   };
   static defaultProps = {
     entityId: '',
@@ -23,6 +24,7 @@ export class EntityDropdown extends Component {
     removable: true,
     onRemove: () => {},
     onChange: () => {},
+    vertical: false,
   };
 
   getValue = () => {
@@ -43,14 +45,14 @@ export class EntityDropdown extends Component {
   };
 
   render() {
-    const { onRemove, removable, entityId, smallSize, title, meta } = this.props;
-
+    const { onRemove, removable, entityId, smallSize, title, meta, vertical } = this.props;
     return (
       <FieldFilterEntity
         title={title || entityId}
         smallSize={smallSize}
         removable={removable}
         onRemove={onRemove}
+        vertical={vertical}
       >
         <InputDropdown
           options={meta.options}

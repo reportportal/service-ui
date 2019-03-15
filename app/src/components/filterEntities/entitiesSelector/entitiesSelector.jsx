@@ -3,13 +3,14 @@ import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { InputCheckbox } from 'components/inputs/inputCheckbox';
 import { FormattedMessage } from 'react-intl';
+import { filterEntityShape } from '../propTypes';
 import styles from './entitiesSelector.scss';
 
 const cx = classNames.bind(styles);
 
 export class EntitiesSelector extends Component {
   static propTypes = {
-    entities: PropTypes.array.isRequired,
+    entities: PropTypes.arrayOf(filterEntityShape).isRequired,
     onChange: PropTypes.func,
   };
   static defaultProps = {

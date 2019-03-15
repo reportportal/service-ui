@@ -8,6 +8,7 @@ import {
   SuiteLevelEntities,
   LaunchLevelEntities,
 } from 'pages/inside/common/filterEntitiesGroups';
+import { filterValueShape } from '../propTypes';
 import { FilterEntitiesAddHandlerContainer } from './filterEntitiesAddHandlerContainer';
 
 const ENTITY_PROVIDERS = {
@@ -19,20 +20,24 @@ const ENTITY_PROVIDERS = {
 
 export class FilterEntitiesContainer extends Component {
   static propTypes = {
-    entities: PropTypes.object,
+    entities: PropTypes.objectOf(filterValueShape),
     onChange: PropTypes.func,
     render: PropTypes.func.isRequired,
-    level: PropTypes.string.isRequired,
+    level: PropTypes.string,
+    entitiesProvider: PropTypes.elementType,
   };
 
   static defaultProps = {
     entities: {},
     onChange: () => {},
+    entitiesProvider: null,
+    level: '',
   };
 
   static getDerivedStateFromProps(props, state) {
     if (props.entities !== state.values && !isEqual(props.entities, state.prevEntities)) {
       return {
+        errors: {},
         values: props.entities,
         prevEntities: props.entities,
       };
@@ -95,8 +100,8 @@ export class FilterEntitiesContainer extends Component {
 
   render() {
     const { errors, values } = this.state;
-    const { render, level } = this.props;
-    const EntitiesProvider = ENTITY_PROVIDERS[level];
+    const { render, level, entitiesProvider } = this.props;
+    const EntitiesProvider = entitiesProvider || ENTITY_PROVIDERS[level];
     return (
       <EntitiesProvider
         filterErrors={errors}

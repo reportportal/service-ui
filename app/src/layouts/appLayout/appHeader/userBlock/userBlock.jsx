@@ -89,7 +89,7 @@ export class UserBlock extends PureComponent {
         <div className={cx('avatar-wrapper')}>
           <img
             className={cx('avatar')}
-            src={URLS.dataPhoto(this.props.user.userId, this.props.photoTimeStamp)}
+            src={URLS.dataPhoto(this.props.photoTimeStamp)}
             alt="avatar"
           />
         </div>

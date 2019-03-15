@@ -21,8 +21,6 @@ export class DeleteItemsModal extends Component {
       items: PropTypes.array,
       header: PropTypes.string,
       mainContent: PropTypes.string,
-      warning: PropTypes.string,
-      userId: PropTypes.string,
       namespace: PropTypes.string,
       currentLaunch: PropTypes.object,
       eventsInfo: PropTypes.object,
@@ -46,21 +44,14 @@ export class DeleteItemsModal extends Component {
     closeModal();
   };
 
-  isWarningNeed = () =>
-    this.props.data.items.find(
-      (item) =>
-        (item.owner && item.owner !== this.props.data.userId) ||
-        (this.props.data.currentLaunch &&
-          this.props.data.currentLaunch.owner !== this.props.data.userId),
-    );
-
   render() {
     const { intl } = this.props;
-    const { header, mainContent, warning, eventsInfo } = this.props.data;
+    const { header, mainContent, eventsInfo } = this.props.data;
     const okButton = {
       text: intl.formatMessage(COMMON_LOCALE_KEYS.DELETE),
       danger: true,
       onClick: this.confirmAndClose,
+      eventInfo: eventsInfo.cancelBtn,
     };
     const cancelButton = {
       text: intl.formatMessage(COMMON_LOCALE_KEYS.CANCEL),
@@ -71,7 +62,6 @@ export class DeleteItemsModal extends Component {
         title={header}
         okButton={okButton}
         cancelButton={cancelButton}
-        warningMessage={this.isWarningNeed() ? warning : null}
         closeIconEventInfo={eventsInfo.closeIcon}
       >
         <p className={cx('message')}>{Parser(mainContent)}</p>

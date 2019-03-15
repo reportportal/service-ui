@@ -9,6 +9,8 @@ import {
   DELETE_DASHBOARD_ITEM_SUCCESS,
   UPDATE_DASHBOARD_ITEM_SUCCESS,
   DASHBOARDS_TABLE_VIEW,
+  CHANGE_FULL_SCREEN_MODE,
+  TOGGLE_FULL_SCREEN_MODE,
 } from './constants';
 
 const updateDashboardItemAction = (payload) => (dispatch) =>
@@ -103,3 +105,12 @@ export const addDashboardAction = (item) => (dispatch, getState) => {
     });
   });
 };
+
+export const toggleFullScreenModeAction = () => ({
+  type: TOGGLE_FULL_SCREEN_MODE,
+});
+
+export const changeFullScreenModeAction = (mode) => ({
+  type: CHANGE_FULL_SCREEN_MODE,
+  payload: mode,
+});

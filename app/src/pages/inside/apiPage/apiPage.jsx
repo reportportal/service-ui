@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
 import { defineMessages, injectIntl, intlShape } from 'react-intl';
 import classNames from 'classnames/bind';
-import { PageLayout, PageHeader, PageSection } from 'layouts/pageLayout';
-import { ToggleButton } from 'components/buttons/toggleButton';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 import SwaggerUI from 'swagger-ui';
 import 'swagger-ui/dist/swagger-ui.css';
-import { TOKEN_KEY } from 'controllers/auth';
 import { URLS, DEFAULT_API_URL_PREFIX, UAT_API_URL_PREFIX } from 'common/urls';
+import { tokenSelector } from 'controllers/auth';
+import { PageLayout, PageHeader, PageSection } from 'layouts/pageLayout';
+import { ToggleButton } from 'components/buttons/toggleButton';
 import styles from './apiPage.scss';
 
 const cx = classNames.bind(styles);
@@ -18,10 +20,14 @@ const messages = defineMessages({
   },
 });
 
+@connect((state) => ({
+  token: tokenSelector(state),
+}))
 @injectIntl
 export class ApiPage extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
+    token: PropTypes.string.isRequired,
   };
 
   state = {
@@ -55,7 +61,7 @@ export class ApiPage extends Component {
       showOperationIds: false,
       configs: {
         preFetch: (request) => {
-          request.headers.Authorization = localStorage.getItem(TOKEN_KEY);
+          request.headers.Authorization = this.props.token;
           return request;
         },
       },

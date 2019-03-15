@@ -13,6 +13,9 @@ import {
   activeDashboardItemSelector,
   fetchDashboardAction,
   updateDashboardWidgetsAction,
+  dashboardFullScreenModeSelector,
+  changeFullScreenModeAction,
+  toggleFullScreenModeAction,
 } from 'controllers/dashboard';
 import { userInfoSelector, activeProjectSelector } from 'controllers/user';
 import { PROJECT_DASHBOARD_PAGE } from 'controllers/pages';
@@ -70,6 +73,7 @@ const messages = defineMessages({
     activeProject: activeProjectSelector(state),
     dashboard: activeDashboardItemSelector(state),
     userInfo: userInfoSelector(state),
+    fullScreenMode: dashboardFullScreenModeSelector(state),
   }),
   {
     showModalAction,
@@ -77,6 +81,8 @@ const messages = defineMessages({
     updateDashboardWidgetsAction,
     showNotification,
     hideScreenLockAction,
+    changeFullScreenModeAction,
+    toggleFullScreenModeAction,
   },
 )
 @track()
@@ -95,18 +101,14 @@ export class DashboardItemPage extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    fullScreenMode: PropTypes.bool,
+    changeFullScreenModeAction: PropTypes.func.isRequired,
+    toggleFullScreenModeAction: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
     currentDashboard: {},
-  };
-
-  state = {
-    isFullscreen: false,
-  };
-
-  onChangeFullscreen = (isFullscreen) => {
-    this.setState({ isFullscreen });
+    fullScreenMode: false,
   };
 
   onConfirm = (widget, closeModal) => {
@@ -170,7 +172,7 @@ export class DashboardItemPage extends Component {
 
   toggleFullscreen = () => {
     this.props.tracking.trackEvent(DASHBOARD_PAGE_EVENTS.FULL_SCREEN_BTN);
-    this.setState({ isFullscreen: !this.state.isFullscreen });
+    this.props.toggleFullScreenModeAction();
   };
   showWidgetWizard = () => {
     this.props.tracking.trackEvent(DASHBOARD_PAGE_EVENTS.ADD_NEW_WIDGET_BTN);
@@ -215,6 +217,8 @@ export class DashboardItemPage extends Component {
     const {
       intl: { formatMessage },
       dashboard,
+      fullScreenMode,
+      changeFullScreenModeAction: changeFullScreenMode,
     } = this.props;
 
     return (
@@ -241,14 +245,14 @@ export class DashboardItemPage extends Component {
                 <GhostButton icon={CancelIcon}>{formatMessage(messages.delete)}</GhostButton>
               </div>
             </div>
-            <Fullscreen enabled={this.state.isFullscreen} onChange={this.onChangeFullscreen}>
+            <Fullscreen enabled={fullScreenMode} onChange={changeFullScreenMode}>
               <WidgetsGrid
                 isModifiable={this.checkIfWidgetsModifiable()}
                 dashboard={dashboard}
-                isFullscreen={this.state.isFullscreen}
+                isFullscreen={fullScreenMode}
                 showWidgetWizard={this.showWidgetWizard}
               />
-              {this.state.isFullscreen && (
+              {fullScreenMode && (
                 <i className={cx('icon-close')} onClick={this.toggleFullscreen}>
                   {Parser(CancelIcon)}
                 </i>

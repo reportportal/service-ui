@@ -5,8 +5,9 @@ import {
   SETTINGS_INITIAL_STATE,
   START_TIME_FORMAT_ABSOLUTE,
   SET_PHOTO_TIME_STAMP,
+  SET_API_TOKEN,
 } from './constants';
-import { settingsReducer, userInfoReducer, activeProjectReducer } from './reducer';
+import { settingsReducer, userInfoReducer, activeProjectReducer, apiTokenReducer } from './reducer';
 
 describe('user reducer', () => {
   describe('settingsReducer', () => {
@@ -80,6 +81,26 @@ describe('user reducer', () => {
         payload,
       });
       expect(newState).toEqual(payload);
+    });
+  });
+
+  describe('apiTokenReducer', () => {
+    test('should return initial state', () => {
+      expect(apiTokenReducer(undefined, {})).toEqual({});
+    });
+
+    test('should return old state on unknown action', () => {
+      const oldState = { type: 'bearer', value: 'token' };
+      expect(apiTokenReducer(oldState, { type: 'foo' })).toBe(oldState);
+    });
+
+    test('should handle SET_API_TOKEN', () => {
+      expect(
+        apiTokenReducer(undefined, {
+          type: SET_API_TOKEN,
+          payload: { type: 'bearer', value: 'token' },
+        }),
+      ).toEqual({ type: 'bearer', value: 'token' });
     });
   });
 });

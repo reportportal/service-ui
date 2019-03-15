@@ -1,11 +1,8 @@
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
-import { DEFAULT_TOKEN } from 'controllers/auth';
 import { fetch, ERROR_CANCELED, ERROR_UNAUTHORIZED } from './fetch';
 
 const axiosMock = new MockAdapter(axios);
-
-const MOCK_TOKEN = 'mock token';
 
 describe('fetch', () => {
   beforeAll(() => {
@@ -19,21 +16,6 @@ describe('fetch', () => {
         }),
     );
     axiosMock.onGet('https://api.com/unauthorized').reply(401);
-  });
-
-  it('should send default token in case of no auth', (done) => {
-    fetch('https://api.com/success').then((res) => {
-      expect(res.requestHeaders.Authorization).toEqual(DEFAULT_TOKEN);
-      done();
-    });
-  });
-
-  it('should send correct token after auth', (done) => {
-    localStorage.setItem('token', MOCK_TOKEN);
-    fetch('https://api.com/success').then((res) => {
-      expect(res.requestHeaders.Authorization).toEqual(MOCK_TOKEN);
-      done();
-    });
   });
 
   it(

@@ -162,8 +162,12 @@ export class LaunchImportModal extends Component {
       ),
     };
   };
-
+  getValidFiles = () => this.state.files.filter(({ valid }) => valid);
+  isUploadInProgress = () => this.getValidFiles().some(({ isLoading }) => isLoading);
+  isUploadFinished = () =>
+    this.getValidFiles().length ? this.getValidFiles().every(({ uploaded }) => uploaded) : false;
   cancelRequests = [];
+  isDropZoneDisabled = () => this.isUploadFinished() || this.isUploadInProgress();
 
   validateFile = (file) => ({
     incorrectFileFormat: !ACCEPT_FILE_MIME_TYPES.includes(file.type),
@@ -281,7 +285,6 @@ export class LaunchImportModal extends Component {
   uploadFile = (file) => {
     const { activeProject } = this.props;
     const { id } = file;
-
     return fetch(addTokenToImagePath(URLS.launchImport(activeProject)), {
       method: 'POST',
       headers: { 'Content-Type': 'multipart/form-data;' },
@@ -309,10 +312,9 @@ export class LaunchImportModal extends Component {
   render() {
     const { intl } = this.props;
     const { files } = this.state;
-    const validFiles = files.filter(({ valid }) => valid);
-    const loading = validFiles.some(({ isLoading }) => isLoading);
-    const uploadFinished = validFiles.length ? validFiles.every(({ uploaded }) => uploaded) : false;
-
+    const validFiles = this.getValidFiles();
+    const loading = this.isUploadInProgress();
+    const uploadFinished = this.isUploadFinished();
     return (
       <ModalLayout
         title={intl.formatMessage(messages.modalTitle)}
@@ -334,6 +336,7 @@ export class LaunchImportModal extends Component {
           accept={ACCEPT_FILE_MIME_TYPES.join(',')}
           onDrop={this.onDrop}
           maxSize={MAX_FILE_SIZE}
+          disabled={this.isDropZoneDisabled()}
         >
           {files.length === 0 && (
             <div className={cx('dropzone')}>

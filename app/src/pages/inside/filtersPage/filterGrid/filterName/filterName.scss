@@ -52,12 +52,15 @@
   }
 }
 
-.share-icon,
-.globe-icon {
+.share-icon {
   width: 20px;
   height: 20px;
   margin-left: 10px;
   display: inline-block;
   vertical-align: top;
   fill: $COLOR--gray-60;
+}
+
+.name-link {
+  text-decoration: none;
 }

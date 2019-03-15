@@ -1,4 +1,5 @@
 import { stringify } from 'qs';
+import { getStorageItem } from 'common/utils';
 import { TOKEN_KEY } from 'controllers/auth';
 
 export const DEFAULT_API_URL_PREFIX = '/api/v1/';
@@ -6,14 +7,13 @@ export const UAT_API_URL_PREFIX = '/uat/';
 
 const urlBase = DEFAULT_API_URL_PREFIX;
 const uatBase = UAT_API_URL_PREFIX;
-const getToken = () => (localStorage.getItem(TOKEN_KEY) || '').split(' ')[1];
+const getToken = () => (getStorageItem(TOKEN_KEY) || {}).value;
 const getQueryParams = (paramsObj) => stringify(paramsObj, { addQueryPrefix: true });
 
 export const URLS = {
   apiDocs: (apiType) => `${apiType}api-docs`,
 
-  dataPhoto: (userId, at) =>
-    `${urlBase}data/photo${getQueryParams({ [userId]: null, at, access_token: getToken() })}`,
+  dataPhoto: (at) => `${urlBase}data/photo${getQueryParams({ at, access_token: getToken() })}`,
   dataUserPhoto: (id) =>
     `${urlBase}data/userphoto${getQueryParams({ id, access_token: getToken() })}`,
 
@@ -85,7 +85,7 @@ export const URLS = {
       view: exportType,
       access_token: getToken(),
     })}`,
-
+  launchAnalyze: (activeProject) => `${urlBase}${activeProject}/launch/analyze`,
   login: (grantType, username, password) =>
     `${uatBase}sso/oauth/token${getQueryParams({
       grant_type: grantType,
@@ -194,4 +194,5 @@ export const URLS = {
       view: 'csv',
       access_token: getToken(),
     })}`,
+  usersBulkOperations: (ids) => `${urlBase}user/all${getQueryParams({ ids })}`,
 };

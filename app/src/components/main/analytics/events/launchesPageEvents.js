@@ -309,4 +309,19 @@ export const LAUNCHES_MODAL_EVENTS = {
     action: 'Click on Bttn Deep Merge on Modal "Merge Launches"',
     label: 'Deep Merge',
   },
+  OK_BTN_ANALYSIS_MODAL: {
+    category: LAUNCHES_MODAL,
+    action: 'Click on Bttn Ok on Modal "Analysis Launch"',
+    label: 'Analysis Launch',
+  },
+  CLOSE_BTN_ANALYSIS_MODAL: {
+    category: LAUNCHES_MODAL,
+    action: 'Click on Close Icon on Modal "Analysis Launch"',
+    label: 'Close Analysis Launch Modal',
+  },
+  CANCEL_BTN_ANALYSIS_MODAL: {
+    category: LAUNCHES_MODAL,
+    action: 'Click on Bttn Cancel on Modal "Analysis Launch"',
+    label: 'Cancel Analysis Launch Modal',
+  },
 };

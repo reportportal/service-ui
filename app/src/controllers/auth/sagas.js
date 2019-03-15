@@ -1,19 +1,15 @@
-import { fetch } from 'common/utils';
+import { fetch, setStorageItem } from 'common/utils';
 import { URLS } from 'common/urls';
 import { all, call, put, select, takeEvery } from 'redux-saga/effects';
 import { showNotification } from 'controllers/notification';
 import { NOTIFICATION_TYPES } from 'controllers/notification/constants';
 import { activeProjectSelector, fetchUserAction } from 'controllers/user';
 import { fetchProjectAction } from 'controllers/project';
-import { authSuccessAction } from 'controllers/auth/actionCreators';
-import { DEFAULT_TOKEN, LOGIN, LOGOUT, TOKEN_KEY, GRANT_TYPES } from './constants';
-
-function setDefaultToken() {
-  localStorage.setItem(TOKEN_KEY, DEFAULT_TOKEN);
-}
+import { authSuccessAction, resetTokenAction, setTokenAction } from './actionCreators';
+import { LOGIN, LOGOUT, TOKEN_KEY, GRANT_TYPES, SET_TOKEN, RESET_ADMIN_ACCESS } from './constants';
 
 function* handleLogout() {
-  yield call(setDefaultToken);
+  yield put(resetTokenAction());
 }
 
 function* watchLogout() {
@@ -38,7 +34,12 @@ function* handleLogin({ payload }) {
     return;
   }
 
-  localStorage.setItem(TOKEN_KEY, `${result.token_type} ${result.access_token}`);
+  yield put(
+    setTokenAction({
+      type: result.token_type,
+      value: result.access_token,
+    }),
+  );
   // TODO: Change those calls after project & users actions will be refactored with sagas
   yield put.resolve(fetchUserAction());
   const projectId = yield select(activeProjectSelector);
@@ -50,6 +51,23 @@ function* watchLogin() {
   yield takeEvery(LOGIN, handleLogin);
 }
 
+function* handleSetToken({ payload }) {
+  yield call(setStorageItem, TOKEN_KEY, payload);
+}
+
+function* watchSetToken() {
+  yield takeEvery(SET_TOKEN, handleSetToken);
+}
+
+function* handleResetAdminAccess() {
+  const projectId = yield select(activeProjectSelector);
+  yield put(fetchProjectAction(projectId));
+}
+
+function* watchResetAdminAccess() {
+  yield takeEvery(RESET_ADMIN_ACCESS, handleResetAdminAccess);
+}
+
 export function* authSagas() {
-  yield all([watchLogin(), watchLogout()]);
+  yield all([watchLogin(), watchLogout(), watchSetToken(), watchResetAdminAccess()]);
 }

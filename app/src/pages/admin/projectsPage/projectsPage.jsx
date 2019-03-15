@@ -11,8 +11,8 @@ import {
   projectIdSelector,
   projectSectionSelector,
 } from 'controllers/pages';
-import { fetchProjectAction } from 'controllers/administrate';
 import { SETTINGS, MEMBERS, EVENTS } from 'common/constants/projectSections';
+import { GENERAL } from 'common/constants/settingsTabs';
 import { GhostButton } from 'components/buttons/ghostButton';
 import AddProjectIcon from 'common/img/add-project-inline.svg';
 import ProjectUsersIcon from 'common/img/project-users-inline.svg';
@@ -20,6 +20,7 @@ import ProjectSettingsIcon from 'common/img/project-settings-inline.svg';
 import ProjectEventsIcon from 'common/img/project-events-inline.svg';
 import { ProjectStatusPage } from '../projectStatusPage';
 import { ProjectEventsPage } from '../projectEventsPage';
+import { AdminProjectSettingsPageContainer } from '../adminProjectSettingsPageContainer';
 
 import styles from './projectsPage.scss';
 
@@ -72,9 +73,12 @@ const HEADER_BUTTONS = [
     redirectToSection: (projectId, section) =>
       redirect({
         type: PROJECT_DETAILS_PAGE,
-        payload: { projectId, projectSection: section },
+        payload: {
+          projectId,
+          projectSection: section,
+          settingsTab: section === SETTINGS ? GENERAL : undefined,
+        },
       }),
-    fetchProjectAction,
   },
 )
 @injectIntl
@@ -84,7 +88,6 @@ export class ProjectsPage extends Component {
     section: PropTypes.string,
     projectId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     redirectToSection: PropTypes.func.isRequired,
-    fetchProjectAction: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
@@ -166,10 +169,9 @@ export class ProjectsPage extends Component {
       return <h1>Projects</h1>;
     }
 
-    this.props.fetchProjectAction();
     switch (section) {
       case SETTINGS:
-        return <h1>Project Settings</h1>;
+        return <AdminProjectSettingsPageContainer projectId={projectId} />;
       case MEMBERS:
         return <h1>Project Members</h1>;
       case EVENTS:

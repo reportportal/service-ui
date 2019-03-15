@@ -18,3 +18,5 @@ export const activeDashboardItemSelector = createSelector(
   (dashboardItems, activeDashboardId) =>
     dashboardItems.find((item) => item.id === activeDashboardId) || {},
 );
+
+export const dashboardFullScreenModeSelector = (state) => domainSelector(state).fullScreenMode;

@@ -24,6 +24,7 @@ import {
   deleteItemsAction,
   launchSelector,
   fetchTestItemsAction,
+  namespaceSelector,
 } from 'controllers/testItem';
 import { showModalAction } from 'controllers/modal';
 import { SuitesPage } from 'pages/inside/suitesPage';
@@ -113,7 +114,6 @@ const testItemPages = {
 export class TestItemPage extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
-    parentLaunch: PropTypes.object.isRequired,
     activeProject: PropTypes.string.isRequired,
     userId: PropTypes.string.isRequired,
     deleteItemsAction: PropTypes.func.isRequired,
@@ -122,6 +122,7 @@ export class TestItemPage extends Component {
     hideScreenLockAction: PropTypes.func.isRequired,
     fetchTestItemsAction: PropTypes.func.isRequired,
     showModalAction: PropTypes.func.isRequired,
+    parentLaunch: PropTypes.object,
     level: PropTypes.string,
     loading: PropTypes.bool,
     breadcrumbs: PropTypes.arrayOf(PropTypes.object),
@@ -133,6 +134,7 @@ export class TestItemPage extends Component {
   };
 
   static defaultProps = {
+    parentLaunch: {},
     level: null,
     loading: false,
     breadcrumbs: [],
@@ -215,6 +217,7 @@ export class TestItemPage extends Component {
       const PageComponent = testItemPages[level];
       return (
         <FilterEntitiesURLContainer
+          namespaceSelector={namespaceSelector}
           render={({ entities, onChange }) => (
             <FilterEntitiesContainer
               entities={entities}
