@@ -54,6 +54,8 @@ export class Projects extends Component {
     itemCount: PropTypes.number,
     pageCount: PropTypes.number,
     pageSize: PropTypes.number,
+    onChangePage: PropTypes.func.isRequired,
+    onChangePageSize: PropTypes.func.isRequired,
     loading: PropTypes.bool,
     projects: PropTypes.arrayOf(PropTypes.object),
     intl: intlShape.isRequired,
@@ -78,6 +80,8 @@ export class Projects extends Component {
       itemCount,
       pageCount,
       pageSize,
+      onChangePage,
+      onChangePageSize,
       loading,
       projects,
       toggleView,
@@ -123,6 +127,8 @@ export class Projects extends Component {
           itemCount={itemCount}
           pageCount={pageCount}
           pageSize={pageSize}
+          onChangePage={onChangePage}
+          onChangePageSize={onChangePageSize}
         />
       </React.Fragment>
     );
