@@ -93,6 +93,7 @@ export class LaunchAnalysisModal extends Component {
     analyzeItemsMode: [LAUNCH_ANALYZE_TYPES.ANALYZE_ITEMS_MODE.TO_INVESTIGATE],
   };
   onChangeRadio = (value) => {
+    this.clearErrorMessage();
     this.setState({
       analyzerMode: value,
     });
@@ -100,6 +101,7 @@ export class LaunchAnalysisModal extends Component {
   onChangeCheckBox = (value) => {
     let { analyzeItemsMode } = this.state;
     const inState = analyzeItemsMode.includes(value);
+    this.clearErrorMessage();
     if (inState) {
       analyzeItemsMode = analyzeItemsMode.filter((item) => item !== value);
     } else {
@@ -109,23 +111,17 @@ export class LaunchAnalysisModal extends Component {
       analyzeItemsMode,
     });
   };
-  onChange = (value, type) => {
+  clearErrorMessage = () => {
     const { errorMessage } = this.state;
     if (errorMessage) {
       this.setState({
         errorMessage: '',
       });
     }
-    switch (type) {
-      case 'radio':
-        return this.onChangeRadio(value);
-      default:
-        return this.onChangeCheckBox(value);
-    }
   };
   analysisAndClose = (closeModal) => {
     this.props.tracking.trackEvent(LAUNCHES_MODAL_EVENTS.OK_BTN_ANALYSIS_MODAL);
-    const errorMessage = this.isInValid();
+    const errorMessage = this.validate();
     if (errorMessage) {
       this.setState({
         errorMessage,
@@ -146,7 +142,7 @@ export class LaunchAnalysisModal extends Component {
     this.props.data.onConfirm(data);
     closeModal();
   };
-  isInValid = () => {
+  validate = () => {
     const { analyzerMode, analyzeItemsMode } = this.state;
     const {
       intl: { formatMessage },
@@ -173,15 +169,22 @@ export class LaunchAnalysisModal extends Component {
     const {
       intl: { formatMessage },
     } = this.props;
-    return Object.keys(object).map((key) => {
+    return Object.keys(object).map((key, index) => {
       const checked = analyzeItemsMode.includes(object[key]);
       const onChange = () => {
-        this.onChange(object[key], 'checkbox');
+        this.onChangeCheckBox(object[key], 'checkbox');
       };
       return (
-        <InputCheckbox key={key} value={checked} onChange={onChange}>
-          {formatMessage(messages[key])}
-        </InputCheckbox>
+        <li
+          key={key}
+          className={cx('launch-analysis-modal-list-item', {
+            'launch-analysis-modal-list-item-first': index === 0,
+          })}
+        >
+          <InputCheckbox value={checked} onChange={onChange}>
+            {formatMessage(messages[key])}
+          </InputCheckbox>
+        </li>
       );
     });
   };
@@ -191,17 +194,25 @@ export class LaunchAnalysisModal extends Component {
     const {
       intl: { formatMessage },
     } = this.props;
-    return Object.keys(object).map((key) => {
+    return Object.keys(object).map((key, index) => {
       const onChange = () => {
-        this.onChange(object[key], 'radio');
+        this.onChangeRadio(object[key]);
       };
       return (
-        <InputRadio key={key} value={analyzerMode} ownValue={object[key]} onChange={onChange}>
-          {formatMessage(messages[key])}
-        </InputRadio>
+        <li
+          key={key}
+          className={cx('launch-analysis-modal-list-item', {
+            'launch-analysis-modal-list-item-first': index === 0,
+          })}
+        >
+          <InputRadio value={analyzerMode} ownValue={object[key]} onChange={onChange}>
+            {formatMessage(messages[key])}
+          </InputRadio>
+        </li>
       );
     });
   };
+
   render() {
     const {
       intl: { formatMessage },
@@ -224,9 +235,11 @@ export class LaunchAnalysisModal extends Component {
         warningMessage={errorMessage}
       >
         <p className={cx('launch-analysis-modal-text')}>{formatMessage(messages.MOD_TITLE)}</p>
-        <div className={cx('launch-analysis-modal-list')}>{this.renderModes()}</div>
+        <ul className={cx('launch-analysis-modal-list')}>{this.renderModes()}</ul>
         <p className={cx('launch-analysis-modal-text')}>{formatMessage(messages.OPTIONS_TITLE)}</p>
-        <div className={cx('launch-analysis-modal-list')}>{this.renderOptions()}</div>
+        <ul className={cx(['launch-analysis-modal-list', 'launch-analysis-modal-list-last'])}>
+          {this.renderOptions()}
+        </ul>
       </ModalLayout>
     );
   }
