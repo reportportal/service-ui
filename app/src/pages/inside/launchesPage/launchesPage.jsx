@@ -231,7 +231,7 @@ export class LaunchesPage extends Component {
       data,
     })
       .then(() => {
-        showNotification({
+        this.props.showNotification({
           message: formatMessage(messages.analyseStartSuccess),
           type: NOTIFICATION_TYPES.SUCCESS,
         });
