@@ -257,23 +257,14 @@ export class LaunchesPage extends Component {
     this.props.fetchLaunchesAction();
   };
 
-  deleteItem = (id) => {
-    fetch(URLS.launches(this.props.activeProject, id), {
-      method: 'delete',
-    }).then(this.unselectAndFetchLaunches);
-  };
-  confirmDeleteItem = (item) => {
-    this.props.showModalAction({
-      id: 'launchDeleteModal',
-      data: { item, onConfirm: () => this.deleteItem(item.id) },
-    });
-  };
-
   confirmDeleteItems = (items) => {
-    const ids = items.map((item) => item.id).join(',');
+    const ids = items.map((item) => item.id);
     this.props.showScreenLockAction();
     fetch(URLS.launches(this.props.activeProject, ids), {
       method: 'delete',
+      data: {
+        ids,
+      },
     })
       .then(() => {
         this.unselectAndFetchLaunches();
