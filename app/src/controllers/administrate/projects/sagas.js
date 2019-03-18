@@ -1,7 +1,15 @@
 import { takeEvery, all, put, select } from 'redux-saga/effects';
 import { fetchDataAction } from 'controllers/fetch';
 import { URLS } from 'common/urls';
-import { NAMESPACE, FETCH_PROJECTS } from './constants';
+import { getStorageItem, setStorageItem } from 'common/utils';
+import {
+  NAMESPACE,
+  FETCH_PROJECTS,
+  START_SET_VIEW_MODE,
+  USER_VIEW,
+  TABLE_VIEW,
+  SET_PROJECTS_VIEW_MODE,
+} from './constants';
 import { querySelector } from './selectors';
 
 function* fetchProjects() {
@@ -17,6 +25,18 @@ function* watchFetchProjects() {
   yield takeEvery(FETCH_PROJECTS, fetchProjects);
 }
 
+function* setViewMode(action) {
+  const userView = getStorageItem(USER_VIEW) || TABLE_VIEW;
+  const viewMode = action.payload.viewMode || userView;
+
+  setStorageItem(USER_VIEW, viewMode);
+
+  yield put({ type: SET_PROJECTS_VIEW_MODE, payload: viewMode });
+}
+function* watchSetViewMode() {
+  yield takeEvery(START_SET_VIEW_MODE, setViewMode);
+}
+
 export function* projectsSagas() {
-  yield all([watchFetchProjects()]);
+  yield all([watchFetchProjects(), watchSetViewMode()]);
 }

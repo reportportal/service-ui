@@ -9,5 +9,6 @@ export const DEFAULT_PAGINATION = {
 };
 export const TABLE_VIEW = 'table';
 export const GRID_VIEW = 'grid';
-export const USER_VIEW = 'projects_view_type';
-export const TOGGLE_PROJECTS_VIEW = 'toggleProjectsView';
+export const USER_VIEW = 'projects_view_mode';
+export const SET_PROJECTS_VIEW_MODE = 'setProjectsViewMode';
+export const START_SET_VIEW_MODE = 'startSetProjectsViewMode';
