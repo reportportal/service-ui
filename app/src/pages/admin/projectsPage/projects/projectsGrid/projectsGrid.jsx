@@ -2,8 +2,8 @@ import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import classNames from 'classnames/bind';
-import { ProjectInfo } from './project/projectInfo';
-import styles from './projectsPanelView.scss';
+import { ProjectPanel } from './projectPanel';
+import styles from './projectsGrid.scss';
 
 const cx = classNames.bind(styles);
 
@@ -15,7 +15,7 @@ const messages = defineMessages({
 });
 
 @injectIntl
-export class ProjectPanelView extends Component {
+export class ProjectsGrid extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
     projects: PropTypes.array,
@@ -27,8 +27,8 @@ export class ProjectPanelView extends Component {
 
   getPanelList = (projects) =>
     projects.map((project) => (
-      <div className={cx('panel')}>
-        <ProjectInfo project={project} />
+      <div className={cx('panel')} key={project.projectId}>
+        <ProjectPanel project={project} />
       </div>
     ));
 

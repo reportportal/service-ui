@@ -1,1 +1,0 @@
-export { prjectPanelView } from './projectPanelView';

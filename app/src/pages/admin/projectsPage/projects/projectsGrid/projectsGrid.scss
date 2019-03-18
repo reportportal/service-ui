@@ -4,8 +4,8 @@
   grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
   grid-gap: 30px 30px;
   flex-wrap: wrap;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
-  background-color: $COLOR--white;  
+  background-color: $COLOR--white-two;
+  padding: 15px;
 }
 
 .no-projects{

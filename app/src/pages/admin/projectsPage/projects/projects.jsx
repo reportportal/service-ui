@@ -23,7 +23,7 @@ import { PaginationToolbar } from 'components/main/paginationToolbar';
 import GridViewDashboardIcon from 'common/img/grid-inline.svg';
 import TableViewDashboardIcon from 'common/img/table-inline.svg';
 import ExportIcon from 'common/img/export-inline.svg';
-
+import { ProjectsGrid } from './projectsGrid';
 import styles from './projects.scss';
 
 const cx = classNames.bind(styles);
@@ -116,12 +116,15 @@ export class Projects extends Component {
           </div>
         </div>
         {!loading &&
-          projects.map(({ projectId, projectName }) => (
-            <div key={projectId}>
-              {projectId}: {projectName}
-            </div>
+          (viewMode === GRID_VIEW ? (
+            <ProjectsGrid projects={projects} />
+          ) : (
+            projects.map(({ projectId, projectName }) => (
+              <div key={projectId}>
+                {projectId}: {projectName}
+              </div>
+            ))
           ))}
-
         <PaginationToolbar
           activePage={activePage}
           itemCount={itemCount}

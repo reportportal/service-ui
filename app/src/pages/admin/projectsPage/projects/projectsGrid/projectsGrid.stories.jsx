@@ -1,10 +1,8 @@
 import { storiesOf } from '@storybook/react';
 import { host } from 'storybook-host';
-// import { withReadme } from 'storybook-readme';
 import { WithState } from 'storybook-decorators';
-import { ProjectPanelView } from './projectPanelView';
+import { ProjectsGrid } from './projectsGrid';
 import { state, projects } from './data';
-// import README from './README.md';
 
 storiesOf('Pages/Admin/Projects', module)
   .addDecorator(
@@ -19,11 +17,11 @@ storiesOf('Pages/Admin/Projects', module)
   // .addDecorator(withReadme(README))
   .add('without data', () => (
     <WithState state={state}>
-      <ProjectPanelView projects={[]} />
+      <ProjectsGrid projects={[]} />
     </WithState>
   ))
   .add('with data', () => (
     <WithState state={state}>
-      <ProjectPanelView projects={projects} />
+      <ProjectsGrid projects={projects} />
     </WithState>
   ));

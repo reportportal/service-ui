@@ -11,7 +11,7 @@ import { Icon } from 'components/main/icon/icon';
 import { assignedProjectsSelector } from 'controllers/user';
 import { StatisticsItem } from './statisticsItem';
 import { ProjectTooltipIcon } from './projectTooltipIcon';
-import styles from './projectInfo.scss';
+import styles from './projectPanel.scss';
 import { UPSA_PROJECT, PERSONAL_PROJECT } from './constants';
 
 const messages = defineMessages({
@@ -60,7 +60,7 @@ const cx = classNames.bind(styles);
   isAssigned: !!assignedProjectsSelector(state)[ownProps.project.projectName],
 }))
 @track()
-export class ProjectInfo extends Component {
+export class ProjectPanel extends Component {
   static propTypes = {
     project: PropTypes.object.isRequired,
     intl: intlShape.isRequired,
