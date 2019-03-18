@@ -195,5 +195,4 @@ export const URLS = {
       view: 'csv',
       access_token: getToken(),
     })}`,
-  usersBulkOperations: (ids) => `${urlBase}user/all${getQueryParams({ ids })}`,
 };
