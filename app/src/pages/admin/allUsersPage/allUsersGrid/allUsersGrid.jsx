@@ -106,13 +106,6 @@ export class AllUsersGrid extends PureComponent {
       component: NameColumn,
     },
     {
-      id: 'type',
-      title: {
-        full: this.props.intl.formatMessage(messages.typeCol),
-      },
-      component: TypeColumn,
-    },
-    {
       id: 'login',
       title: {
         full: this.props.intl.formatMessage(messages.loginCol),
@@ -132,6 +125,13 @@ export class AllUsersGrid extends PureComponent {
         full: this.props.intl.formatMessage(messages.lastLoginCol),
       },
       component: LastLoginColumn,
+    },
+    {
+      id: 'type',
+      title: {
+        full: this.props.intl.formatMessage(messages.typeCol),
+      },
+      component: TypeColumn,
     },
     {
       id: 'projectsAndRoles',
