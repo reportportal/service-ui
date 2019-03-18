@@ -2,9 +2,9 @@ import { combineReducers } from 'redux';
 import { fetchReducer } from 'controllers/fetch';
 import { paginationReducer } from 'controllers/pagination';
 import { loadingReducer } from 'controllers/loading';
-import { NAMESPACE, SET_PROJECTS_VIEW_MODE, TABLE_VIEW } from './constants';
+import { NAMESPACE, SET_PROJECTS_VIEW_MODE, GRID_VIEW } from './constants';
 
-const setViewModeReducer = (state = TABLE_VIEW, { type, payload }) => {
+const setViewModeReducer = (state = GRID_VIEW, { type, payload }) => {
   switch (type) {
     case SET_PROJECTS_VIEW_MODE:
       return payload;
