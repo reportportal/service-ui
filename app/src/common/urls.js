@@ -96,6 +96,7 @@ export const URLS = {
   sessionToken: () => `${urlBase}uat/sso/me`,
 
   project: (activeProject) => `${urlBase}project/${activeProject}`,
+  projects: () => `${urlBase}project/list`,
   projectPreferences: (activeProject, userId, filterId = '') =>
     `${urlBase}project/${activeProject}/preference/${userId}/${filterId}`,
   projectUsers: (activeProject) => `${urlBase}project/${activeProject}/users`,
@@ -194,5 +195,4 @@ export const URLS = {
       view: 'csv',
       access_token: getToken(),
     })}`,
-  usersBulkOperations: (ids) => `${urlBase}user/all${getQueryParams({ ids })}`,
 };

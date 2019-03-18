@@ -1,0 +1,32 @@
+.toolbar {
+  padding: 10px 15px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.search {
+  width: 400px;
+}
+
+.buttons {
+  display: flex;
+}
+
+.toolbar-button {
+  margin-left: 10px;
+
+  svg {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+.toolbar-active-button {
+  button {
+    background-color: $COLOR--topaz;
+
+    path {
+      fill: $COLOR--white-two !important;
+    }
+  }
+}
