@@ -41,7 +41,7 @@ import { fetchAllUsersAction } from 'controllers/administrate/allUsers';
 import { fetchLogPageData } from 'controllers/log';
 import { fetchHistoryPageInfo } from 'controllers/itemsHistory';
 import { fetchProjectsAction } from 'controllers/administrate/projects';
-import { toggleViewAction } from 'controllers/administrate/projects/actionCreators';
+import { startSetViewMode } from 'controllers/administrate/projects/actionCreators';
 
 const redirectRoute = (path, createNewAction) => ({
   path,
@@ -94,7 +94,7 @@ export default {
     path: '/administrate/projects',
     thunk: (dispatch) => {
       dispatch(fetchProjectsAction());
-      dispatch(toggleViewAction());
+      dispatch(startSetViewMode());
     },
   },
   [PROJECT_DETAILS_PAGE]: {

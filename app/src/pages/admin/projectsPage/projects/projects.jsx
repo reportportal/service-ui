@@ -12,8 +12,8 @@ import {
   loadingSelector,
   projectsPaginationSelector,
   projectsSelector,
-  toggleViewAction,
-  viewTypeSelector,
+  startSetViewMode,
+  viewModeSelector,
 } from 'controllers/administrate/projects';
 
 import { GhostButton } from 'components/buttons/ghostButton';
@@ -38,10 +38,10 @@ const messages = defineMessages({
   (state) => ({
     projects: projectsSelector(state),
     loading: loadingSelector(state),
-    viewType: viewTypeSelector(state),
+    viewMode: viewModeSelector(state),
   }),
   {
-    toggleView: toggleViewAction,
+    setViewMode: startSetViewMode,
   },
 )
 @withPagination({
@@ -59,8 +59,8 @@ export class Projects extends Component {
     loading: PropTypes.bool,
     projects: PropTypes.arrayOf(PropTypes.object),
     intl: intlShape.isRequired,
-    toggleView: PropTypes.func.isRequired,
-    viewType: PropTypes.string,
+    setViewMode: PropTypes.func.isRequired,
+    viewMode: PropTypes.string,
   };
 
   static defaultProps = {
@@ -70,7 +70,7 @@ export class Projects extends Component {
     pageSize: DEFAULT_PAGINATION[SIZE_KEY],
     loading: false,
     projects: [],
-    viewType: TABLE_VIEW,
+    viewMode: TABLE_VIEW,
   };
 
   render() {
@@ -84,8 +84,8 @@ export class Projects extends Component {
       onChangePageSize,
       loading,
       projects,
-      toggleView,
-      viewType,
+      setViewMode,
+      viewMode,
     } = this.props;
 
     return (
@@ -104,14 +104,14 @@ export class Projects extends Component {
               </GhostButton>
             </div>
             <div
-              className={cx('toolbar-button', { 'toolbar-active-button': viewType === GRID_VIEW })}
+              className={cx('toolbar-button', { 'toolbar-active-button': viewMode === GRID_VIEW })}
             >
-              <GhostButton icon={GridViewDashboardIcon} onClick={() => toggleView(GRID_VIEW)} />
+              <GhostButton icon={GridViewDashboardIcon} onClick={() => setViewMode(GRID_VIEW)} />
             </div>
             <div
-              className={cx('toolbar-button', { 'toolbar-active-button': viewType === TABLE_VIEW })}
+              className={cx('toolbar-button', { 'toolbar-active-button': viewMode === TABLE_VIEW })}
             >
-              <GhostButton icon={TableViewDashboardIcon} onClick={() => toggleView(TABLE_VIEW)} />
+              <GhostButton icon={TableViewDashboardIcon} onClick={() => setViewMode(TABLE_VIEW)} />
             </div>
           </div>
         </div>
