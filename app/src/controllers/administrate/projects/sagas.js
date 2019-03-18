@@ -7,7 +7,7 @@ import {
   FETCH_PROJECTS,
   START_SET_VIEW_MODE,
   USER_VIEW,
-  TABLE_VIEW,
+  GRID_VIEW,
   SET_PROJECTS_VIEW_MODE,
 } from './constants';
 import { querySelector } from './selectors';
@@ -26,7 +26,7 @@ function* watchFetchProjects() {
 }
 
 function* setViewMode(action) {
-  const userView = getStorageItem(USER_VIEW) || TABLE_VIEW;
+  const userView = getStorageItem(USER_VIEW) || GRID_VIEW;
   const viewMode = action.payload.viewMode || userView;
 
   setStorageItem(USER_VIEW, viewMode);

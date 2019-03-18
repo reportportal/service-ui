@@ -1,0 +1,9 @@
+.projects-col {
+  font-size: 13px;
+}
+
+.project-type-col {
+  &:first-letter {
+    text-transform: capitalize;
+  }
+}
