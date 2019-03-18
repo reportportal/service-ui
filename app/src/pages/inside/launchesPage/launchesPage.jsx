@@ -15,6 +15,7 @@ import { LAUNCH_ITEM_TYPES } from 'common/constants/launchItemTypes';
 import { levelSelector } from 'controllers/testItem';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
 import { activeProjectSelector, userIdSelector } from 'controllers/user';
+import { projectConfigSelector } from 'controllers/project';
 import { withPagination } from 'controllers/pagination';
 import { withSorting, SORTING_DESC } from 'controllers/sorting';
 import { showModalAction } from 'controllers/modal';
@@ -109,6 +110,7 @@ const messages = defineMessages({
     lastOperation: lastOperationSelector(state),
     loading: loadingSelector(state),
     level: levelSelector(state),
+    projectSetting: projectConfigSelector(state),
   }),
   {
     showModalAction,
@@ -176,6 +178,7 @@ export class LaunchesPage extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    projectSetting: PropTypes.object.isRequired,
   };
 
   static defaultProps = {
@@ -212,12 +215,17 @@ export class LaunchesPage extends Component {
   }
 
   onAnalysis = (launch) => {
-    this.props.tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_ANALYSIS_LAUNCH_MENU);
+    const {
+      projectSetting: { attributes },
+      tracking: { trackEvent },
+    } = this.props;
+    trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_ANALYSIS_LAUNCH_MENU);
     this.props.showModalAction({
       id: 'analysisLaunchModal',
       data: {
         item: launch,
         onConfirm: (data) => this.analyseItem(launch, data),
+        analyzerMode: attributes['analyzer.autoAnalyzerMode'],
       },
     });
   };

@@ -11,6 +11,13 @@ import { LAUNCH_ANALYZE_TYPES } from 'common/constants/launchAnalyzeTypes';
 import classNames from 'classnames/bind';
 import styles from './launchAnalysisModal.scss';
 
+const {
+  ANALYZER_MODE,
+  ANALYZER_MODE: { ALL, LAUNCH_NAME, CURRENT_LAUNCH },
+  ANALYZE_ITEMS_MODE,
+  ANALYZE_ITEMS_MODE: { TO_INVESTIGATE, AUTO_ANALYZED, MANUALLY_ANALYZED },
+} = LAUNCH_ANALYZE_TYPES;
+
 const cx = classNames.bind(styles);
 
 const messages = defineMessages({
@@ -78,7 +85,8 @@ export class LaunchAnalysisModal extends Component {
     data: PropTypes.shape({
       item: PropTypes.object.isRequired,
       onConfirm: PropTypes.func.isRequired,
-    }),
+      analyzerMode: PropTypes.oneOf([ALL, LAUNCH_NAME, CURRENT_LAUNCH]).isRequired,
+    }).isRequired,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
@@ -86,11 +94,15 @@ export class LaunchAnalysisModal extends Component {
   };
 
   static defaultProps = {
-    data: {},
+    data: {
+      item: {},
+      onConfirm: () => {},
+      analyzerMode: LAUNCH_NAME,
+    },
   };
   state = {
-    analyzerMode: LAUNCH_ANALYZE_TYPES.ANALYZER_MODE.LAUNCH_NAME,
-    analyzeItemsMode: [LAUNCH_ANALYZE_TYPES.ANALYZE_ITEMS_MODE.TO_INVESTIGATE],
+    analyzerMode: this.props.data.analyzerMode,
+    analyzeItemsMode: [TO_INVESTIGATE],
   };
   onChangeRadio = (value) => {
     this.clearErrorMessage();
@@ -147,10 +159,6 @@ export class LaunchAnalysisModal extends Component {
     const {
       intl: { formatMessage },
     } = this.props;
-    const {
-      ANALYZER_MODE: { CURRENT_LAUNCH },
-      ANALYZE_ITEMS_MODE: { AUTO_ANALYZED, MANUALLY_ANALYZED },
-    } = LAUNCH_ANALYZE_TYPES;
     if (analyzeItemsMode.length === 0) {
       return formatMessage(messages.VALIDATION_MESSAGE_CHOOSE_OPTION);
     }
@@ -164,15 +172,14 @@ export class LaunchAnalysisModal extends Component {
     return null;
   };
   renderOptions = () => {
-    const object = LAUNCH_ANALYZE_TYPES.ANALYZE_ITEMS_MODE;
     const { analyzeItemsMode } = this.state;
     const {
       intl: { formatMessage },
     } = this.props;
-    return Object.keys(object).map((key, index) => {
-      const checked = analyzeItemsMode.includes(object[key]);
+    return Object.keys(ANALYZE_ITEMS_MODE).map((key, index) => {
+      const checked = analyzeItemsMode.includes(ANALYZE_ITEMS_MODE[key]);
       const onChange = () => {
-        this.onChangeCheckBox(object[key], 'checkbox');
+        this.onChangeCheckBox(ANALYZE_ITEMS_MODE[key], 'checkbox');
       };
       return (
         <li
@@ -189,14 +196,13 @@ export class LaunchAnalysisModal extends Component {
     });
   };
   renderModes = () => {
-    const object = LAUNCH_ANALYZE_TYPES.ANALYZER_MODE;
     const { analyzerMode } = this.state;
     const {
       intl: { formatMessage },
     } = this.props;
-    return Object.keys(object).map((key, index) => {
+    return Object.keys(ANALYZER_MODE).map((key, index) => {
       const onChange = () => {
-        this.onChangeRadio(object[key]);
+        this.onChangeRadio(ANALYZER_MODE[key]);
       };
       return (
         <li
@@ -205,7 +211,7 @@ export class LaunchAnalysisModal extends Component {
             'launch-analysis-modal-list-item-first': index === 0,
           })}
         >
-          <InputRadio value={analyzerMode} ownValue={object[key]} onChange={onChange}>
+          <InputRadio value={analyzerMode} ownValue={ANALYZER_MODE[key]} onChange={onChange}>
             {formatMessage(messages[key])}
           </InputRadio>
         </li>
