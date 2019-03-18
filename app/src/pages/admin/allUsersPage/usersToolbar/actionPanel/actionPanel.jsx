@@ -42,25 +42,22 @@ export class ActionPanel extends Component {
       {
         key: EXPORT,
         icon: ExportIcon,
-        grayBorder: true,
         onClick: this.onExportUsers,
       },
       {
         key: INVITE_USER,
         icon: InviteUserIcon,
-        grayBorder: false,
       },
       {
         key: ADD_USER,
         icon: AddUserIcon,
-        grayBorder: false,
       },
     ];
     return (
       <div className={cx('action-buttons')}>
-        {ACTION_BUTTONS.map(({ key, icon, grayBorder, onClick }) => (
+        {ACTION_BUTTONS.map(({ key, icon, onClick }) => (
           <div className={cx('action-button')} key={key}>
-            <GhostButton icon={icon} grayBorder={grayBorder} onClick={onClick}>
+            <GhostButton icon={icon} onClick={onClick}>
               {formatMessage(messages[key])}
             </GhostButton>
           </div>
