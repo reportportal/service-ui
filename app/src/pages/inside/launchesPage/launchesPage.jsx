@@ -364,10 +364,7 @@ export class LaunchesPage extends Component {
 
   proceedWithValidItems = () =>
     this.props.proceedWithValidItemsAction(this.props.lastOperation, this.props.selectedLaunches, {
-      fetchFunc: () => {
-        this.props.fetchLaunchesAction();
-        this.props.unselectAllLaunchesAction();
-      },
+      fetchFunc: this.unselectAndFetchLaunches,
     });
 
   mergeLaunches = () => {
