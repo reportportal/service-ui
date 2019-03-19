@@ -779,7 +779,7 @@
   "NoFiltersBlock.message": "Вы можете создать свой первый фильтр на ",
   "NoFiltersBlock.or": "Или",
   "NoFiltersBlock.title": "У Вас нет фильтров",
-  "NoFiltersFound.checkQuery": "Check your query and try again",
+  "NoResultsForFilter.checkQuery": "Check your query and try again",
   "NonPassedTestCasesTrendChart.nonPassedCases": "непрошедших сценариев",
   "Notification.failureDefault": "Во время соединения с сервером возникла ошибка: {error}",
   "Notification.infoLogout": "Вы вышли",

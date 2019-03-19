@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader/spinningPreloader';
-import { NoFiltersFound } from 'pages/inside/common/noFiltersFound';
+import { NoFiltersFound } from 'pages/inside/common/noResultsForFilter';
 import styles from './filtersList.scss';
 import { FiltersItem } from '../filtersItem';
 import { FORM_APPEARANCE_MODE_EDIT } from '../common/constants';

@@ -766,7 +766,7 @@
   "NoFiltersBlock.message": "Вы можаце стварыць свой першы фільтр на ",
   "NoFiltersBlock.or": "Альбо",
   "NoFiltersBlock.title": "Y Вас няма фільтраў",
-  "NoFiltersFound.checkQuery": "Check your query and try again",
+  "NoResultsForFilter.checkQuery": "Check your query and try again",
   "NonPassedTestCasesTrendChart.nonPassedCases": "сцэнарыяў, якія не прайшлі",
   "Notification.failureDefault": "Адбылася памылка пры падключэнні да сервера: {error}",
   "Notification.infoLogout": "Вы выйшлі",

@@ -1,11 +1,11 @@
-.filter-not-found {
-    width: 100%;
-    padding: 26px 10px 20px;
-    text-align: center;
-    border-bottom: 1px solid $COLOR--gray-91;
-    box-sizing: border-box;
+.no-results-for-filter {
+  width: 100%;
+  padding: 26px 10px 20px;
+  text-align: center;
+  border-bottom: 1px solid $COLOR--gray-91;
+  box-sizing: border-box;
 }
-.filter-not-found-icon {
+.no-results-for-filter-icon {
   display: inline-block;
   width: 20px;
   margin-right: 10px;
@@ -20,7 +20,7 @@
   }
 }
 
-.filter-not-found-text {
+.no-results-for-filter-text {
   display: flex;
   margin: 0 0 10px;
   color: $COLOR--gray-47;
@@ -31,13 +31,13 @@
   line-height: 22px;
 }
 
-.filter-not-found-expression {
+.no-results-for-filter-expression {
   max-width: 199px;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.filter-not-found-hint {
+.no-results-for-filter-hint {
   margin: 0 0 10px;
   color: $COLOR--gray-47;
   font-size: 13px;

@@ -11,8 +11,8 @@ import { GhostButton } from 'components/buttons/ghostButton';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { InputSearch } from 'components/inputs/inputSearch';
 import { MEMBERS_PAGE_EVENTS } from 'components/main/analytics/events';
-import PermissionMapIcon from 'common/img/ic_premission-inline.svg';
-import InviteUserIcon from 'common/img/ic_invite-inline.svg';
+import PermissionMapIcon from 'common/img/permission-inline.svg';
+import InviteUserIcon from 'common/img/invite-inline.svg';
 import styles from './membersPageToolbar.scss';
 
 const cx = classNames.bind(styles);
