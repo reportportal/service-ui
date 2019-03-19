@@ -14,5 +14,6 @@ export const FilterTooltipIcon = withTooltip({
     align: ALIGN_LEFT,
     leftOffset: -50,
     noArrow: true,
+    dynamicWidth: true,
   },
 })(() => <div className={cx('filter-tooltip-icon')}>{Parser(TooltipIcon)}</div>);

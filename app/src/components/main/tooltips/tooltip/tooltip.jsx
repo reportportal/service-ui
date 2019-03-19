@@ -36,12 +36,17 @@ export class Tooltip extends Component {
     this.setState({ shown: true });
   }
   setTooltipPosition = () => {
+    const { data } = this.props;
     const hoverRect = this.getBox(this.props.hoverRect);
-    const tooltipWidth = this.props.data.width || DEFAULT_TOOLTIP_WIDTH;
+    const tooltipWidth = data.width || DEFAULT_TOOLTIP_WIDTH;
     let left = 0;
-    this.tooltip.style.width = `${tooltipWidth}px`;
+    if (data.dynamicWidth) {
+      this.tooltip.style.maxWidth = `${tooltipWidth}px`;
+    } else {
+      this.tooltip.style.width = `${tooltipWidth}px`;
+    }
     this.tooltip.style.top = `${hoverRect.top + hoverRect.height}px`;
-    switch (this.props.data.align) {
+    switch (data.align) {
       case ALIGN_LEFT:
         left = hoverRect.left;
         break;
@@ -51,7 +56,7 @@ export class Tooltip extends Component {
       default:
         left = hoverRect.left + (hoverRect.width / 2 - tooltipWidth / 2);
     }
-    this.props.data.leftOffset && (left += this.props.data.leftOffset);
+    data.leftOffset && (left += data.leftOffset);
     this.tooltip.style.left = `${left}px`;
   };
   getBox = (elem) => {
