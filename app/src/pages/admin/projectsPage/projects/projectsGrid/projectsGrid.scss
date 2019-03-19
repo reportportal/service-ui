@@ -1,4 +1,4 @@
-.panel-list {  
+.panel-list {
   height: 100%;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
@@ -8,15 +8,15 @@
   padding: 15px;
 }
 
-.no-projects{
+.no-projects {
   text-align: center;
   height: 100%;
-  font-family: OpenSans;
-  font-size: 12px;    
+  font-family: OpenSans, sans-serif;
+  font-size: 12px;
   color: $COLOR--gray-47;
 }
 
-.no-projects:before{
+.no-projects:before {
   content: '';
   display: inline-block;
   height: 100%;

@@ -4,7 +4,7 @@
   min-width: 200px;
   border-radius: 4px;
   box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.09);
-  background-color: #ffffff;
+  background-color: $COLOR--white-two;
 }
 
 .info-block {
@@ -15,10 +15,10 @@
 .header {
   display: flex;
   flex-wrap: nowrap;
-  line-height: 1.0;
+  line-height: 1;
 }
 
-.header-item{
+.header-item {
   flex: 0 0 auto;
 }
 
@@ -31,16 +31,16 @@
   display: block;
   height: 1px;
   border: 0;
-  border-top: 1px solid $COLOR--gray-91;  
-  padding: 0;  
+  border-top: 1px solid $COLOR--gray-91;
+  padding: 0;
 }
 
 .name {
   display: block;
-  width: 100%;  
-  font-family: OpenSans;
-  font-size: 15px;  
-  line-height: 1.5;  
+  width: 100%;
+  font-family: OpenSans, sans-serif;
+  font-size: 15px;
+  line-height: 1.5;
   text-decoration: none;
   color: $COLOR--topaz;
   white-space: nowrap;
@@ -51,7 +51,7 @@
 .gray-text {
   width: 120px;
   height: 18px;
-  font-family: OpenSans;
+  font-family: OpenSans, sans-serif;
   font-size: 12px;
   line-height: 1.5;
   letter-spacing: normal;
@@ -59,7 +59,7 @@
 }
 
 .statistic-items {
-  display: flex;  
+  display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: flex-end;
