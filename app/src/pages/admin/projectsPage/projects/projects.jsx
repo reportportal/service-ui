@@ -105,7 +105,7 @@ export class Projects extends Component {
           </div>
           <div className={cx('buttons')}>
             <div className={cx('toolbar-button')}>
-              <GhostButton icon={ExportIcon} mobileDisabled onClick={() => this.onExportProjects()}>
+              <GhostButton icon={ExportIcon} mobileDisabled onClick={this.onExportProjects}>
                 <FormattedMessage id="Projects.export" defaultMessage="Export" />
               </GhostButton>
             </div>
