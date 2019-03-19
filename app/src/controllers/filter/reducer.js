@@ -20,7 +20,7 @@ const updateFilterConditions = (filters, filterId, conditions) => {
 export const launchesFiltersReducer = (state = [], { type, payload, meta: { oldId } = {} }) => {
   switch (type) {
     case FETCH_USER_FILTERS_SUCCESS:
-      return [...state, ...payload];
+      return payload;
     case UPDATE_FILTER_CONDITIONS:
       return updateFilterConditions(state, payload.filterId, payload.conditions);
     case UPDATE_FILTER_SUCCESS:
