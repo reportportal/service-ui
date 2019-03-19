@@ -164,6 +164,13 @@ export class FiltersPage extends Component {
     this.props.tracking.trackEvent(FILTERS_PAGE_EVENTS.CLICK_ADD_FILTER_BTN);
   };
 
+  renderNoFiltersBlock = () =>
+    this.props.filter ? (
+      <NoResultsForFilter filter={this.props.filter} notFoundMessage={messages.filtersNotFound} />
+    ) : (
+      <NoFiltersBlock />
+    );
+
   render() {
     const {
       filter,
@@ -198,16 +205,7 @@ export class FiltersPage extends Component {
             activeProject={activeProject}
             {...rest}
           />
-          {!filters.length &&
-            !loading &&
-            (this.props.filter ? (
-              <NoFiltersBlock />
-            ) : (
-              <NoResultsForFilter
-                filter={this.props.filter}
-                notFoundMessage={messages.filtersNotFound}
-              />
-            ))}
+          {!loading && this.renderNoFiltersBlock()}
           {!!filters.length &&
             !loading && (
               <PaginationToolbar
