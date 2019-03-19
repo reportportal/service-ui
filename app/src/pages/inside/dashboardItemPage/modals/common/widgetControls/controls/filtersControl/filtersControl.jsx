@@ -226,7 +226,8 @@ export class FiltersControl extends Component {
       method: 'post',
       data: filter,
     })
-      .then(() => {
+      .then(({ id }) => {
+        this.handleActiveFilterChange(String(id));
         this.fetchFilter({ page: 1 });
         notify({
           message: intl.formatMessage(messages.insertFilterSuccess),
@@ -267,9 +268,9 @@ export class FiltersControl extends Component {
     this.clearFormAppearance();
   };
 
-  handleFilterListChange = (event) => {
-    this.props.changeWizardForm('filterIds', [event.target.value]);
-  };
+  handleFilterListChange = (event) => this.handleActiveFilterChange(event.target.value);
+
+  handleActiveFilterChange = (id) => this.props.changeWizardForm('filterIds', [id]);
 
   handleFiltersListLoad = () => {
     const { page, searchValue } = this.state;
