@@ -47,7 +47,7 @@ function* fetchData({ payload, meta }) {
     const response = yield call(fetch, payload.url, payload.options);
     yield put(fetchSuccessAction(namespace, response));
   } catch (err) {
-    yield put(fetchErrorAction(namespace, err));
+    yield put(fetchErrorAction(namespace, err, meta.silent));
   }
 }
 
@@ -75,7 +75,10 @@ function* watchFetchData() {
   yield takeEvery(FETCH_DATA, fetchData);
 }
 
-function* handleError({ payload }) {
+function* handleError({ payload, meta: { silent } = {} }) {
+  if (silent) {
+    return;
+  }
   yield put(showNotification({ message: payload.message, type: NOTIFICATION_TYPES.ERROR }));
 }
 

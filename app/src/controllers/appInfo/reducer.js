@@ -1,10 +1,4 @@
-import { FETCH_INFO_SUCCESS } from './constants';
+import { fetchReducer } from 'controllers/fetch';
+import { NAMESPACE } from './constants';
 
-export const appInfoReducer = (state = {}, { type, payload }) => {
-  switch (type) {
-    case FETCH_INFO_SUCCESS:
-      return Object.assign({}, payload);
-    default:
-      return state;
-  }
-};
+export const appInfoReducer = fetchReducer(NAMESPACE, { initialState: {} });

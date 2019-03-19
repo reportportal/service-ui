@@ -1,1 +1,1 @@
-export const FETCH_INFO_SUCCESS = 'fetchInfoSuccess';
+export const NAMESPACE = 'appInfo';

@@ -200,4 +200,6 @@ export const URLS = {
       view: 'csv',
       access_token: getToken(),
     })}`,
+
+  info: () => `${urlBase}info`,
 };
