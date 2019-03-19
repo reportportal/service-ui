@@ -20,6 +20,8 @@ import { GhostButton } from 'components/buttons/ghostButton';
 import { InputSearch } from 'components/inputs/inputSearch';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
 
+import { URLS } from 'common/urls';
+
 import GridViewDashboardIcon from 'common/img/grid-inline.svg';
 import TableViewDashboardIcon from 'common/img/table-inline.svg';
 import ExportIcon from 'common/img/export-inline.svg';
@@ -73,6 +75,10 @@ export class Projects extends Component {
     viewMode: TABLE_VIEW,
   };
 
+  onExportProjects = () => {
+    window.location.href = URLS.exportProjects();
+  };
+
   render() {
     const {
       intl,
@@ -99,7 +105,7 @@ export class Projects extends Component {
           </div>
           <div className={cx('buttons')}>
             <div className={cx('toolbar-button')}>
-              <GhostButton icon={ExportIcon} mobileDisabled>
+              <GhostButton icon={ExportIcon} mobileDisabled onClick={() => this.onExportProjects()}>
                 <FormattedMessage id="Projects.export" defaultMessage="Export" />
               </GhostButton>
             </div>
