@@ -161,7 +161,7 @@ export class MembersPage extends Component {
     this.props.onFilterChange(filterQuery);
   };
 
-  render() {
+  renderPageSectionFooter = () => {
     const {
       filter,
       activePage,
@@ -171,8 +171,29 @@ export class MembersPage extends Component {
       onChangePage,
       onChangePageSize,
       members,
-      loading,
     } = this.props;
+
+    if (members.length) {
+      return (
+        <PaginationToolbar
+          activePage={activePage}
+          itemCount={itemCount}
+          pageCount={pageCount}
+          pageSize={pageSize}
+          onChangePage={onChangePage}
+          onChangePageSize={onChangePageSize}
+        />
+      );
+    }
+    return (
+      !!filter && (
+        <NoResultsForFilter filter={this.props.filter} notFoundMessage={messages.membersNotFound} />
+      )
+    );
+  };
+
+  render() {
+    const { filter, members, loading } = this.props;
 
     return (
       <PageLayout>
@@ -184,24 +205,7 @@ export class MembersPage extends Component {
             onInvite={this.inviteUser}
           />
           <MembersGrid data={members} fetchData={this.props.fetchMembersAction} loading={loading} />
-          {!loading &&
-            (members.length ? (
-              <PaginationToolbar
-                activePage={activePage}
-                itemCount={itemCount}
-                pageCount={pageCount}
-                pageSize={pageSize}
-                onChangePage={onChangePage}
-                onChangePageSize={onChangePageSize}
-              />
-            ) : (
-              this.props.filter && (
-                <NoResultsForFilter
-                  filter={this.props.filter}
-                  notFoundMessage={messages.membersNotFound}
-                />
-              )
-            ))}
+          {!loading && this.renderPageSectionFooter()}
         </PageSection>
       </PageLayout>
     );
