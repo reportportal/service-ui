@@ -3,12 +3,12 @@ import track from 'react-tracking';
 import { reduxForm } from 'redux-form';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import AddFilterIcon from 'common/img/add-filter-inline.svg';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { InputSearch } from 'components/inputs/inputSearch';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { FILTERS_PAGE_EVENTS } from 'components/main/analytics/events';
-import AddFilterIcon from './img/ic-add-filter-inline.svg';
 import styles from './filterPageToolbar.scss';
 
 const cx = classNames.bind(styles);

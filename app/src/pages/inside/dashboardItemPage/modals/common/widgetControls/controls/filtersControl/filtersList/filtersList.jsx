@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader/spinningPreloader';
-import { NoFiltersFound } from 'pages/inside/common/noResultsForFilter';
+import { NoResultsForFilter } from 'pages/inside/common/noResultsForFilter';
 import styles from './filtersList.scss';
 import { FiltersItem } from '../filtersItem';
 import { FORM_APPEARANCE_MODE_EDIT } from '../common/constants';
@@ -36,7 +36,7 @@ export const FiltersList = ({
       ))}
       {loading && <SpinningPreloader />}
       {!filters.length &&
-        !loading && <NoFiltersFound filter={search || ''} notFoundMessage={noItemsMessage} />}
+        !loading && <NoResultsForFilter filter={search || ''} notFoundMessage={noItemsMessage} />}
     </ScrollWrapper>
   </div>
 );

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { injectIntl, intlShape } from 'react-intl';
+import { addFilteringFieldToConditions } from 'controllers/filter';
 import { LEVEL_LAUNCH } from 'common/constants/launchLevels';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { BigButton } from 'components/buttons/bigButton';
@@ -53,7 +54,7 @@ export class AddEditFilter extends Component {
 
     onChange({
       ...filter,
-      conditions: Object.values(conditions),
+      conditions: addFilteringFieldToConditions(conditions),
     });
   };
 
