@@ -39,7 +39,6 @@ describe('Password', () => {
     expect(password('1')).toBe(false);
     expect(password('12')).toBe(false);
     expect(password('123')).toBe(false);
-    expect(password('12345678901234567890123456')).toBe(false);
   });
 });
 

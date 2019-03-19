@@ -19,7 +19,7 @@ const messages = defineMessages({
   },
   passwordHint: {
     id: 'RegistrationForm.passwordHint',
-    defaultMessage: 'Password should have size from 4 to 25 symbols.',
+    defaultMessage: 'Password should have size from 4 to 128 symbols.',
   },
   emailHint: {
     id: 'Common.validation.email',
@@ -67,7 +67,7 @@ const messages = defineMessages({
   },
   profilePassword: {
     id: 'ChangePasswordModal.profilePassword',
-    defaultMessage: 'Password should have size from 4 to 25 symbols',
+    defaultMessage: 'Password should have size from 4 to 128 symbols',
   },
   profileConfirmPassword: {
     id: 'ChangePasswordModal.profileConfirmPassword',
