@@ -17,7 +17,7 @@ import {
 } from 'controllers/user';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { MEMBERS_PAGE_EVENTS } from 'components/main/analytics/events';
-import UnassignIcon from 'common/img/ic_unassign-inline.svg';
+import UnassignIcon from 'common/img/unassign-inline.svg';
 
 const messages = defineMessages({
   anassignUser: {

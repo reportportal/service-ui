@@ -22,7 +22,7 @@ import { MEMBERS_PAGE, MEMBERS_PAGE_EVENTS } from 'components/main/analytics/eve
 import { PageLayout, PageHeader, PageSection } from 'layouts/pageLayout';
 import { MembersPageToolbar } from './membersPageToolbar';
 import { MembersGrid } from './membersGrid';
-import { NoFiltersFound } from '../common/noFiltersFound';
+import { NoResultsForFilter } from '../common/noResultsForFilter';
 
 const messages = defineMessages({
   membersPageTitle: {
@@ -40,7 +40,7 @@ const messages = defineMessages({
   },
   membersNotFound: {
     id: 'MembersPage.notFound',
-    defaultMessage: 'No members found for "{filter}".',
+    defaultMessage: 'No members found for "{filter}"',
   },
 });
 @connect(
@@ -105,10 +105,6 @@ export class MembersPage extends Component {
   };
 
   getBreadcrumbs = () => [{ title: this.props.intl.formatMessage(messages.membersPageTitle) }];
-
-  getNoFiltersFound = () => (
-    <NoFiltersFound filter={this.props.filter} notFoundMessage={messages.membersNotFound} />
-  );
 
   inviteUser = (userData) => {
     const data = {};
@@ -188,18 +184,24 @@ export class MembersPage extends Component {
             onInvite={this.inviteUser}
           />
           <MembersGrid data={members} fetchData={this.props.fetchMembersAction} loading={loading} />
-          {this.props.filter !== null && this.props.filter !== ''
-            ? !loading && this.getNoFiltersFound()
-            : !loading && (
-                <PaginationToolbar
-                  activePage={activePage}
-                  itemCount={itemCount}
-                  pageCount={pageCount}
-                  pageSize={pageSize}
-                  onChangePage={onChangePage}
-                  onChangePageSize={onChangePageSize}
+          {!loading &&
+            (members.length ? (
+              <PaginationToolbar
+                activePage={activePage}
+                itemCount={itemCount}
+                pageCount={pageCount}
+                pageSize={pageSize}
+                onChangePage={onChangePage}
+                onChangePageSize={onChangePageSize}
+              />
+            ) : (
+              this.props.filter && (
+                <NoResultsForFilter
+                  filter={this.props.filter}
+                  notFoundMessage={messages.membersNotFound}
                 />
-              )}
+              )
+            ))}
         </PageSection>
       </PageLayout>
     );

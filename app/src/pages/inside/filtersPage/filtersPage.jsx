@@ -31,10 +31,10 @@ import {
   hideFilterOnLaunchesAction,
 } from 'controllers/project';
 import { FILTERS_PAGE, FILTERS_PAGE_EVENTS } from 'components/main/analytics/events';
+import { NoResultsForFilter } from 'pages/inside/common/noResultsForFilter';
 import { NoFiltersBlock } from './noFiltersBlock';
 import { FilterPageToolbar } from './filterPageToolbar';
 import { FilterGrid } from './filterGrid';
-import { NoFiltersFound } from '../common/noFiltersFound';
 
 const messages = defineMessages({
   filtersPageTitle: {
@@ -130,10 +130,6 @@ export class FiltersPage extends Component {
 
   getBreadcrumbs = () => [{ title: this.props.intl.formatMessage(messages.filtersPageTitle) }];
 
-  getNoFiltersFound = () => (
-    <NoFiltersFound filter={this.props.filter} notFoundMessage={messages.filtersNotFound} />
-  );
-
   confirmDelete = (filter) =>
     this.props.showModalAction({
       id: 'filterDeleteModal',
@@ -202,11 +198,17 @@ export class FiltersPage extends Component {
             activeProject={activeProject}
             {...rest}
           />
-          {!filters.length && !loading && !this.props.filter && <NoFiltersBlock />}
-          {!filters.length && !loading && !!this.props.filter && this.getNoFiltersFound()}
-          {filters &&
-            !!filters.length &&
-            !!pageCount &&
+          {!filters.length &&
+            !loading &&
+            (this.props.filter ? (
+              <NoFiltersBlock />
+            ) : (
+              <NoResultsForFilter
+                filter={this.props.filter}
+                notFoundMessage={messages.filtersNotFound}
+              />
+            ))}
+          {!!filters.length &&
             !loading && (
               <PaginationToolbar
                 activePage={activePage}
