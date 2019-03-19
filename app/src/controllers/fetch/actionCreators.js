@@ -15,11 +15,12 @@ export const fetchSuccessAction = (namespace, payload) => ({
     namespace,
   },
 });
-export const fetchErrorAction = (namespace, payload) => ({
+export const fetchErrorAction = (namespace, payload, silent) => ({
   type: FETCH_ERROR,
   payload,
   meta: {
     namespace,
+    silent,
   },
 });
 export const fetchStartAction = (namespace, payload) => ({
@@ -30,7 +31,7 @@ export const fetchStartAction = (namespace, payload) => ({
   },
 });
 
-export const fetchDataAction = (namespace) => (url, options) => ({
+export const fetchDataAction = (namespace, silent) => (url, options) => ({
   type: FETCH_DATA,
   payload: {
     url,
@@ -38,6 +39,7 @@ export const fetchDataAction = (namespace) => (url, options) => ({
   },
   meta: {
     namespace,
+    silent,
   },
 });
 export const bulkFetchDataAction = (namespace, silent) => (urls, options) => ({

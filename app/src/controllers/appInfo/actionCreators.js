@@ -1,11 +1,5 @@
-import { fetch } from 'common/utils';
-import { FETCH_INFO_SUCCESS } from './constants';
+import { fetchDataAction } from 'controllers/fetch';
+import { URLS } from 'common/urls';
+import { NAMESPACE } from './constants';
 
-export const fetchInfoSuccess = info => ({
-  type: FETCH_INFO_SUCCESS,
-  payload: info,
-});
-
-export const fetchInfoAction = () => dispatch =>
-  fetch('/composite/info')
-    .then(info => dispatch(fetchInfoSuccess(info)));
+export const fetchInfoAction = () => fetchDataAction(NAMESPACE, true)(URLS.info());
