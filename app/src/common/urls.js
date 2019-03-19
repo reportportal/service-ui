@@ -1,6 +1,7 @@
 import { stringify } from 'qs';
 import { getStorageItem } from 'common/utils';
 import { TOKEN_KEY } from 'controllers/auth';
+import { CSV } from 'common/constants/fileTypes';
 
 export const DEFAULT_API_URL_PREFIX = '/api/v1/';
 export const UAT_API_URL_PREFIX = '/uat/';
@@ -122,7 +123,11 @@ export const URLS = {
     `${urlBase}project/list/${activeProject}${getQueryParams({
       interval,
     })}`,
-
+  exportProjects: () =>
+    `${urlBase}project/export${getQueryParams({
+      view: CSV,
+      access_token: getToken(),
+    })}`,
   projectNotificationConfiguration: (activeProject) =>
     `${urlBase}project/${activeProject}/notification`,
   suite: (activeProject, suiteId) => `${urlBase}${activeProject}/item/${suiteId}`,
