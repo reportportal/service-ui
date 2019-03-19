@@ -205,7 +205,7 @@ export class FiltersPage extends Component {
             activeProject={activeProject}
             {...rest}
           />
-          {!loading && this.renderNoFiltersBlock()}
+          {!filters.length && !loading && this.renderNoFiltersBlock()}
           {!!filters.length &&
             !loading && (
               <PaginationToolbar

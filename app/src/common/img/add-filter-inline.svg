@@ -1,17 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="20" height="20" viewBox="0 0 20 20">
-  <defs>
-    <path id="search-copy-a" d="M12,9.51619735e-17 L6.97900391,6.05636167 L6.97900391,13.0415039 L4.05078125,10.8123779 L4.0507812,6.00684222 L0,9.51619735e-17 L12,9.51619735e-17 Z M12.8,9.2 L16,9.2 L16,10.8 L12.8,10.8 L12.8,14 L11.2,14 L11.2,10.8 L8,10.8 L8,9.2 L11.2,9.2 L11.2,6 L12.8,6 L12.8,9.2 Z"/>
-  </defs>
-  <g fill="none" fill-rule="evenodd">
-    <!-- <rect width="20" height="20"/> -->
-    <g transform="translate(2 3)">
-      <mask id="search-copy-b" fill="#fff">
-        <use xlink:href="#search-copy-a"/>
-      </mask>
-      <use fill="#309CB2" xlink:href="#search-copy-a"/>
-      <g mask="url(#search-copy-b)">
-        <rect width="30" height="30" transform="translate(-7 -8)"/>
-      </g>
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="14" viewBox="-2 -3 20 20">
+    <g fill-rule="evenodd">
+        <path d="M12 0L6.979 6.056v6.986l-2.928-2.23V6.007L0 0z"/>
+        <path d="M12.8 9.2V6h-1.6v3.2H8v1.6h3.2V14h1.6v-3.2H16V9.2z"/>
     </g>
-  </g>
 </svg>

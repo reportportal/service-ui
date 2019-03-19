@@ -7,10 +7,10 @@ import { connect } from 'react-redux';
 import Link from 'redux-first-router-link';
 import { FormattedMessage } from 'react-intl';
 import { activeProjectSelector } from 'controllers/user';
-import { GhostButton } from 'components/buttons/ghostButton';
 import { PROJECT_LAUNCHES_PAGE } from 'controllers/pages';
+import AddFilterIcon from 'common/img/add-filter-inline.svg';
+import { GhostButton } from 'components/buttons/ghostButton';
 import { ALL } from 'common/constants/reservedFilterIds';
-import AddFilterIcon from './img/ic-add-filter-inline.svg';
 
 import styles from './noFiltersBlock.scss';
 
