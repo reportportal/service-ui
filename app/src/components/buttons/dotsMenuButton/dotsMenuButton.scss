@@ -1,4 +1,4 @@
-.menu-button {  
+.menu-button {
   position: relative;
   height: 16px;
   width: 34px;
@@ -7,32 +7,32 @@
   background-repeat: no-repeat;
   background-position: center;
   background-image: url(common/img/menu.svg);
-  border: 0px;  
+  border: 0px;
   box-sizing: border-box;
   cursor: pointer;
   @media (max-width: $SCREEN_XS_MAX) {
-    height: 24px;   
+    height: 24px;
   }
 
-  &.disabled {    
-    cursor: default;    
+  &.disabled {
+    cursor: default;
   }
 
-  &.opened {    
+  &.opened {
     background-image: url(common/img/menu-hover.svg);
-    @media (max-width: $SCREEN_XS_MAX) {      
+    @media (max-width: $SCREEN_XS_MAX) {
       background-color: $COLOR--white-four;
       border-radius: 2px;
       border: solid 1px $COLOR--gray-91;
-    }    
+    }
   }
 
-  &:not(.disabled) {       
+  &:not(.disabled) {
     &:hover {
-      background-image: url(common/img/menu-hover.svg);            
+      background-image: url(common/img/menu-hover.svg);
     }
 
-    &:active {      
+    &:active {
       background-image: url(common/img/menu-hover.svg);
     }
   }
@@ -51,15 +51,15 @@
   top: 100%;
   left: 0;
   min-width: 160px;
-  margin-top: 3px;  
+  margin-top: 3px;
   padding: 0px;
   border: 1px solid $COLOR--gray-91;
   border-radius: 2px;
-  background-color: #ffffff;
+  background-color: $COLOR--white-two;
   box-sizing: border-box;
   box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.09);
-  z-index: 1;  
-  &.opened{
+  z-index: 1;
+  &.opened {
     display: block;
   }
 }
@@ -90,7 +90,7 @@
     background-color: $COLOR--white-four;
   }
 
-  &.danger {    
+  &.danger {
     color: $COLOR--orange-red;
   }
 }

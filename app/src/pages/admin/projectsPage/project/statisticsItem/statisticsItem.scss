@@ -1,5 +1,5 @@
-.caption {    
-  font-family: OpenSans;
+.caption {
+  font-family: $FONT-REGULAR;
   font-size: 12px;
   font-weight: normal;
   font-style: normal;
@@ -9,13 +9,13 @@
   color: $COLOR--gray-47;
 }
 
-.value {    
-  font-family: OpenSans;
+.value {
+  font-family: $FONT-REGULAR;
   font-size: 15px;
   font-weight: normal;
   font-style: normal;
   font-stretch: normal;
   line-height: 1.33;
   letter-spacing: normal;
-  color: $COLOR--black-2
+  color: $COLOR--black-2;
 }
