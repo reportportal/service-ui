@@ -62,7 +62,7 @@ import CUMULATIVE_TREND_PREVIEW from './img/wdgt-cumulative-trend-chart-inline.s
 import PRODUCT_STATUS_PREVIEW from './img/wdgt-product-satus-inline.svg';
 import MOST_TIME_CONSUMING_PREVIEW from './img/wdgt-most-time-consuming-inline.svg';
 
-export const widgetTitles = defineMessages({
+export const widgetTypesMessages = defineMessages({
   [LAUNCH_STATISTICS]: {
     id: 'Widgets.Name.statisticTrend',
     defaultMessage: 'Launch statistics chart',
@@ -85,7 +85,7 @@ export const widgetTitles = defineMessages({
   },
   [TEST_CASES_GROWTH_TREND]: {
     id: 'Widgets.Name.casesTrend',
-    defaultMessage: 'Test-Cases growth trend chart',
+    defaultMessage: 'Test-cases growth trend chart',
   },
   [INVESTIGATED_PERCENTAGE_OF_LAUNCHES]: {
     id: 'Widgets.Name.investigatedTrend',
@@ -109,7 +109,7 @@ export const widgetTitles = defineMessages({
   },
   [NON_PASSED_TEST_CASES_TREND]: {
     id: 'Widgets.Name.notPassed',
-    defaultMessage: 'Non-Passed test-cases trend chart',
+    defaultMessage: 'Non-passed test-cases trend chart',
   },
   [DIFFERENT_LAUNCHES_COMPARISON]: {
     id: 'Widgets.Name.launchesComparisonChart',
@@ -137,13 +137,13 @@ export const widgetTitles = defineMessages({
   },
   [MOST_TIME_CONSUMING]: {
     id: 'Widgets.Name.mostTimeConsuming',
-    defaultMessage: 'The most time-consuming test cases widget (TOP-20)',
+    defaultMessage: 'Most time-consuming test cases widget (TOP-20)',
   },
 });
 export const getWidgets = (formatMessage) => [
   {
     id: LAUNCH_STATISTICS,
-    title: formatMessage(widgetTitles[LAUNCH_STATISTICS]),
+    title: formatMessage(widgetTypesMessages[LAUNCH_STATISTICS]),
     description: (
       <FormattedHTMLMessage
         id={'Widgets.Description.statisticTrend'}
@@ -157,7 +157,7 @@ export const getWidgets = (formatMessage) => [
   },
   {
     id: OVERALL_STATISTICS,
-    title: formatMessage(widgetTitles[OVERALL_STATISTICS]),
+    title: formatMessage(widgetTypesMessages[OVERALL_STATISTICS]),
     description: (
       <FormattedMessage
         id={'Widgets.Description.overallStatistics'}
@@ -169,7 +169,7 @@ export const getWidgets = (formatMessage) => [
   },
   {
     id: LAUNCH_DURATION,
-    title: formatMessage(widgetTitles[LAUNCH_DURATION]),
+    title: formatMessage(widgetTypesMessages[LAUNCH_DURATION]),
     description: (
       <FormattedMessage
         id={'Widgets.Description.launchesDurationChart'}
@@ -181,7 +181,7 @@ export const getWidgets = (formatMessage) => [
   },
   {
     id: LAUNCH_EXECUTION_AND_ISSUE_STATISTICS,
-    title: formatMessage(widgetTitles[LAUNCH_EXECUTION_AND_ISSUE_STATISTICS]),
+    title: formatMessage(widgetTypesMessages[LAUNCH_EXECUTION_AND_ISSUE_STATISTICS]),
     description: (
       <FormattedHTMLMessage
         id={'Widgets.Description.launchStatistics'}
@@ -195,7 +195,7 @@ export const getWidgets = (formatMessage) => [
   },
   {
     id: PROJECT_ACTIVITY,
-    title: formatMessage(widgetTitles[PROJECT_ACTIVITY]),
+    title: formatMessage(widgetTypesMessages[PROJECT_ACTIVITY]),
     description: (
       <FormattedMessage
         id={'Widgets.Description.activityStream'}
@@ -207,7 +207,7 @@ export const getWidgets = (formatMessage) => [
   },
   {
     id: TEST_CASES_GROWTH_TREND,
-    title: formatMessage(widgetTitles[TEST_CASES_GROWTH_TREND]),
+    title: formatMessage(widgetTypesMessages[TEST_CASES_GROWTH_TREND]),
     description: (
       <FormattedHTMLMessage
         id={'Widgets.Description.casesTrend'}
@@ -221,7 +221,7 @@ export const getWidgets = (formatMessage) => [
   },
   {
     id: INVESTIGATED_PERCENTAGE_OF_LAUNCHES,
-    title: formatMessage(widgetTitles[INVESTIGATED_PERCENTAGE_OF_LAUNCHES]),
+    title: formatMessage(widgetTypesMessages[INVESTIGATED_PERCENTAGE_OF_LAUNCHES]),
     description: (
       <FormattedHTMLMessage
         id={'Widgets.Description.investigatedTrend'}
@@ -235,7 +235,7 @@ export const getWidgets = (formatMessage) => [
   },
   {
     id: LAUNCHES_TABLE,
-    title: formatMessage(widgetTitles[LAUNCHES_TABLE]),
+    title: formatMessage(widgetTypesMessages[LAUNCHES_TABLE]),
     description: (
       <FormattedMessage
         id={'Widgets.Description.launchesTable'}
@@ -247,7 +247,7 @@ export const getWidgets = (formatMessage) => [
   },
   {
     id: UNIQUE_BUGS_TABLE,
-    title: formatMessage(widgetTitles[UNIQUE_BUGS_TABLE]),
+    title: formatMessage(widgetTypesMessages[UNIQUE_BUGS_TABLE]),
     description: (
       <FormattedMessage
         id={'Widgets.Description.uniqueBugTable'}
@@ -261,7 +261,7 @@ export const getWidgets = (formatMessage) => [
   },
   {
     id: MOST_FAILED_TEST_CASES_TABLE,
-    title: formatMessage(widgetTitles[MOST_FAILED_TEST_CASES_TABLE]),
+    title: formatMessage(widgetTypesMessages[MOST_FAILED_TEST_CASES_TABLE]),
     description: (
       <FormattedMessage
         id={'Widgets.Description.mostFailedTestCases'}
@@ -275,7 +275,7 @@ export const getWidgets = (formatMessage) => [
   },
   {
     id: FAILED_CASES_TREND,
-    title: formatMessage(widgetTitles[FAILED_CASES_TREND]),
+    title: formatMessage(widgetTypesMessages[FAILED_CASES_TREND]),
     description: (
       <FormattedMessage
         id={'Widgets.Description.bugTrend'}
@@ -289,7 +289,7 @@ export const getWidgets = (formatMessage) => [
   },
   {
     id: NON_PASSED_TEST_CASES_TREND,
-    title: formatMessage(widgetTitles[NON_PASSED_TEST_CASES_TREND]),
+    title: formatMessage(widgetTypesMessages[NON_PASSED_TEST_CASES_TREND]),
     description: (
       <FormattedMessage
         id={'Widgets.Description.notPassed'}
@@ -303,7 +303,7 @@ export const getWidgets = (formatMessage) => [
   },
   {
     id: DIFFERENT_LAUNCHES_COMPARISON,
-    title: formatMessage(widgetTitles[DIFFERENT_LAUNCHES_COMPARISON]),
+    title: formatMessage(widgetTypesMessages[DIFFERENT_LAUNCHES_COMPARISON]),
     description: (
       <FormattedMessage
         id={'Widgets.Description.launchesComparisonChart'}
@@ -315,7 +315,7 @@ export const getWidgets = (formatMessage) => [
   },
   {
     id: PASSING_RATE_PER_LAUNCH,
-    title: formatMessage(widgetTitles[PASSING_RATE_PER_LAUNCH]),
+    title: formatMessage(widgetTypesMessages[PASSING_RATE_PER_LAUNCH]),
     description: (
       <FormattedMessage
         id={'Widgets.Description.passingRatePerLaunch'}
@@ -329,7 +329,7 @@ export const getWidgets = (formatMessage) => [
   },
   {
     id: PASSING_RATE_SUMMARY,
-    title: formatMessage(widgetTitles[PASSING_RATE_SUMMARY]),
+    title: formatMessage(widgetTypesMessages[PASSING_RATE_SUMMARY]),
     description: (
       <FormattedMessage
         id={'Widgets.Description.passingRateSummary'}
@@ -343,7 +343,7 @@ export const getWidgets = (formatMessage) => [
   },
   {
     id: FLAKY_TEST_CASES_TABLE,
-    title: formatMessage(widgetTitles[FLAKY_TEST_CASES_TABLE]),
+    title: formatMessage(widgetTypesMessages[FLAKY_TEST_CASES_TABLE]),
     description: (
       <FormattedMessage
         id={'Widgets.Description.flakyTestCases'}
@@ -357,7 +357,7 @@ export const getWidgets = (formatMessage) => [
   },
   {
     id: CUMULATIVE_TREND,
-    title: formatMessage(widgetTitles[CUMULATIVE_TREND]),
+    title: formatMessage(widgetTypesMessages[CUMULATIVE_TREND]),
     description: (
       <FormattedMessage
         id={'Widgets.Description.cumulative'}
@@ -371,7 +371,7 @@ export const getWidgets = (formatMessage) => [
   },
   {
     id: PRODUCT_STATUS,
-    title: formatMessage(widgetTitles[PRODUCT_STATUS]),
+    title: formatMessage(widgetTypesMessages[PRODUCT_STATUS]),
     description: (
       <FormattedMessage
         id={'Widgets.Description.productStatus'}
@@ -385,7 +385,7 @@ export const getWidgets = (formatMessage) => [
   },
   {
     id: MOST_TIME_CONSUMING,
-    title: formatMessage(widgetTitles[MOST_TIME_CONSUMING]),
+    title: formatMessage(widgetTypesMessages[MOST_TIME_CONSUMING]),
     description: (
       <FormattedMessage
         id={'Widgets.Description.mostTimeConsuming'}

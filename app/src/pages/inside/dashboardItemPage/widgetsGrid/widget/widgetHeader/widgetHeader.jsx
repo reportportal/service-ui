@@ -15,84 +15,11 @@ import PencilIcon from 'common/img/pencil-icon-inline.svg';
 import RefreshIcon from 'common/img/refresh-icon-inline.svg';
 import GlobeIcon from 'common/img/globe-icon-inline.svg';
 import ShareIcon from 'common/img/share-icon-inline.svg';
+import { widgetTypesMessages } from 'pages/inside/dashboardItemPage/modals/common/widgets';
 import { DescriptionTooltipIcon } from './descriptionTooltipIcon';
 import styles from './widgetHeader.scss';
 
 const cx = classNames.bind(styles);
-const widgetTypesMessages = defineMessages({
-  statisticTrend: {
-    id: 'WidgetHeader.widgetType.statisticTrend',
-    defaultMessage: 'Launch statistics chart',
-  },
-  overallStatistics: {
-    id: 'WidgetHeader.widgetType.overallStatistics',
-    defaultMessage: 'Overall statistics',
-  },
-  launchesDurationChart: {
-    id: 'WidgetHeader.widgetType.launchesDurationChart',
-    defaultMessage: 'Launches duration chart',
-  },
-  launchStatistics: {
-    id: 'WidgetHeader.widgetType.launchStatistics',
-    defaultMessage: 'Launch execution and issue statistic',
-  },
-  activityStream: {
-    id: 'WidgetHeader.widgetType.activityStream',
-    defaultMessage: 'Project activity panel',
-  },
-  casesTrend: {
-    id: 'WidgetHeader.widgetType.casesTrend',
-    defaultMessage: 'Test-cases growth trend chart',
-  },
-  investigatedTrend: {
-    id: 'WidgetHeader.widgetType.investigatedTrend',
-    defaultMessage: 'Investigated percentage of launches',
-  },
-  launchesTable: {
-    id: 'WidgetHeader.widgetType.launchesTable',
-    defaultMessage: 'Launches table',
-  },
-  uniqueBugTable: {
-    id: 'WidgetHeader.widgetType.uniqueBugTable',
-    defaultMessage: 'Unique bugs table',
-  },
-  topTestCases: {
-    id: 'WidgetHeader.widgetType.mostFailedTestCases',
-    defaultMessage: 'Most failed test-cases table (TOP-20)',
-  },
-  bugTrend: {
-    id: 'WidgetHeader.widgetType.bugTrend',
-    defaultMessage: 'Failed cases trend chart',
-  },
-  notPassed: {
-    id: 'WidgetHeader.widgetType.notPassed',
-    defaultMessage: 'Non-passed test-cases trend chart',
-  },
-  launchesComparisonChart: {
-    id: 'WidgetHeader.widgetType.launchesComparisonChart',
-    defaultMessage: 'Different launches comparison chart',
-  },
-  passingRatePerLaunch: {
-    id: 'WidgetHeader.widgetType.passingRatePerLaunch',
-    defaultMessage: 'Passing rate per launch',
-  },
-  passingRateSummary: {
-    id: 'WidgetHeader.widgetType.passingRateSummary',
-    defaultMessage: 'Passing rate summary',
-  },
-  productStatus: {
-    id: 'WidgetHeader.widgetType.productStatus',
-    defaultMessage: 'Product status',
-  },
-  cumulative: {
-    id: 'WidgetHeader.widgetType.cumulative',
-    defaultMessage: 'Cumulative trend chart',
-  },
-  flakyTestCases: {
-    id: 'WidgetHeader.widgetType.flakyTestCases',
-    defaultMessage: 'Flaky test cases table (TOP-20)',
-  },
-});
 const messages = defineMessages({
   widgetIsShared: {
     id: 'WidgetHeader.widgetIsShared',
