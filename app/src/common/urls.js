@@ -69,7 +69,7 @@ export const URLS = {
   launchNameSearch: (activeProject) => `${urlBase}${activeProject}/launch/names?filter.cnt.name=`,
   launchOwnersSearch: (activeProject) =>
     `${urlBase}${activeProject}/launch/owners?filter.cnt.user=`,
-  launches: (activeProject, ids) => `${urlBase}${activeProject}/launch${getQueryParams({ ids })}`,
+  launches: (activeProject) => `${urlBase}${activeProject}/launch`,
   launchesLatest: (activeProject, ids) =>
     `${urlBase}${activeProject}/launch/latest${getQueryParams({ ids })}`,
   launchUpdate: (activeProject) => `${urlBase}${activeProject}/launch/update`,
