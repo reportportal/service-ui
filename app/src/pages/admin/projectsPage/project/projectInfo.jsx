@@ -5,7 +5,7 @@ import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { NavLink } from 'redux-first-router-link';
-import { PROJECT_DETAILS_PAGE } from 'controllers/pages';
+import { PROJECT_PAGE, PROJECT_DETAILS_PAGE } from 'controllers/pages';
 import { DotsMenuButton } from 'components/buttons/dotsMenuButton';
 import { Icon } from 'components/main/icon/icon';
 import { assignedProjectsSelector } from 'controllers/user';
@@ -165,7 +165,7 @@ export class ProjectInfo extends Component {
   render() {
     const {
       project: {
-        projectId,
+        id,
         projectName,
         entryType,
         lastRun,
@@ -189,8 +189,8 @@ export class ProjectInfo extends Component {
           <NavLink
             className={cx('name')}
             to={{
-              type: PROJECT_DETAILS_PAGE,
-              payload: { projectId, projectSection: null },
+              type: PROJECT_PAGE,
+              payload: { projectId: id, projectSection: null },
             }}
             onClick={() => this.props.tracking.trackEvent(this.props.nameEventInfo)}
           >
@@ -215,7 +215,7 @@ export class ProjectInfo extends Component {
               className={cx('statistic-button')}
               to={{
                 type: PROJECT_DETAILS_PAGE,
-                payload: { projectId, projectSection: null },
+                payload: { projectId: id, projectSection: null },
               }}
               onClick={() => this.props.tracking.trackEvent(this.props.statisticEventInfo)}
             >
