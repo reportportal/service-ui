@@ -36,15 +36,8 @@ const newOptionCreator = (option) => ({
   userLogin: option.label,
 });
 const promptTextCreator = (label) => label;
-const makeURL = (input, isAdmin, projectId) => {
-  let url;
-  if (!isAdmin) {
-    url = URLS.projectUserSearchUser(projectId, input);
-  } else {
-    url = URLS.projectAdminSearchUser(input);
-  }
-  return url;
-};
+const makeURL = (input, isAdmin, projectId) =>
+  !isAdmin ? URLS.projectUserSearchUser(projectId, input) : URLS.searchUsers(input);
 const makeOptions = (options, projectId) =>
   options.map((option) => ({
     userName: option.fullName || '',

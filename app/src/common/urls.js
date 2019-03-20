@@ -200,6 +200,10 @@ export const URLS = {
   statisticsServerSettings: () => `${urlBase}settings/analytics`,
   events: (projectId) => `${urlBase}${projectId}/activity`,
   allUsers: () => `${urlBase}user/all`,
+  searchUsers: (term) =>
+    `${urlBase}user/all${getQueryParams({
+      'filter.cnt.email': term,
+    })}`,
   exportUsers: () =>
     `${urlBase}user/export${getQueryParams({
       view: 'csv',
