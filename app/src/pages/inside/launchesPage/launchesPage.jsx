@@ -260,7 +260,7 @@ export class LaunchesPage extends Component {
   confirmDeleteItems = (items) => {
     const ids = items.map((item) => item.id);
     this.props.showScreenLockAction();
-    fetch(URLS.launches(this.props.activeProject, ids), {
+    fetch(URLS.launches(this.props.activeProject), {
       method: 'delete',
       data: {
         ids,
