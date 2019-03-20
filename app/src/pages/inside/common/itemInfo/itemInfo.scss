@@ -13,6 +13,11 @@
   min-height: 20px;
   box-sizing: border-box;
   margin-bottom: 10px;
+  word-break: break-all;
+
+  @supports (word-break: break-word) {
+    word-break: break-word;
+  }
 }
 .name-link {
   font-family: $FONT-SEMIBOLD;
