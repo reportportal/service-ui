@@ -23,3 +23,4 @@ export const attributeKey = (value) => value.length >= 1 && value.length <= 128;
 export const url = (urlValue) => !!/^(ftp|http|https):\/\/[^ "]+$/.exec(urlValue);
 export const issueId = (value) => value.length >= 1 && value.length <= 128;
 export const urlPart = (value) => !!/:\/\/.+/.exec(value);
+export const projectNumericEntity = (value) => value.length >= 1 && !!value.match(/^[0-9]+$/);

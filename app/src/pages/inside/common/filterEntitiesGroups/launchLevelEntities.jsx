@@ -159,6 +159,7 @@ const DEFECT_ENTITY_ID_BASE = 'statistics$defects$';
   defectTypes: defectTypesSelector(state),
   usersSearchUrl: URLS.launchOwnersSearch(activeProjectSelector(state)),
   launchAttributeKeysSearch: URLS.launchAttributeKeysSearch(activeProjectSelector(state)),
+  activeProject: activeProjectSelector(state),
   launchAttributeValuesSearch: URLS.launchAttributeValuesSearch(activeProjectSelector(state)),
 }))
 export class LaunchLevelEntities extends Component {
@@ -169,13 +170,19 @@ export class LaunchLevelEntities extends Component {
     render: PropTypes.func.isRequired,
     usersSearchUrl: PropTypes.string.isRequired,
     launchAttributeKeysSearch: PropTypes.string.isRequired,
-    launchAttributeValuesSearch: PropTypes.string.isRequired,
+    activeProject: PropTypes.string.isRequired,
   };
   static defaultProps = {
     filterValues: {},
   };
   getStaticEntities = () => {
-    const { intl, filterValues } = this.props;
+    const { intl, filterValues, activeProject } = this.props;
+    const attributeKey = (filterValues[ENTITY_ATTRIBUTE_KEYS] || {}).value;
+    const normalizeValue = (value) => (Array.isArray(value) ? value.join(',') : value);
+    const launchAttributeValuesSearch = URLS.launchAttributeValuesSearch(
+      activeProject,
+      normalizeValue(attributeKey),
+    );
     return [
       {
         id: ENTITY_NAME,
@@ -285,7 +292,7 @@ export class LaunchLevelEntities extends Component {
         active: ENTITY_ATTRIBUTE_VALUES in filterValues,
         removable: true,
         customProps: {
-          uri: this.props.launchAttributeValuesSearch,
+          uri: launchAttributeValuesSearch,
           placeholder: intl.formatMessage(messages.ATTRIBUTE_VALUES_PLACEHOLDER),
         },
       },

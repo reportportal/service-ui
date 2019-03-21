@@ -8,3 +8,4 @@ export const PROJECT_ID = 'projectId';
 export const ROLE = 'role';
 export const TYPE = 'type';
 export const USER = 'user';
+export const USERS = 'users';
