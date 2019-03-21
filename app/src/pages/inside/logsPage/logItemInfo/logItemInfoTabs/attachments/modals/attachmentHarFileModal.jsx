@@ -17,20 +17,23 @@ export class AttachmentHarFileModal extends Component {
     intl: intlShape.isRequired,
   };
 
-  renderOkButton = (intl) => ({
-    text: intl.formatMessage(messages.close),
+  renderOkButton = () => ({
+    text: this.props.intl.formatMessage(messages.close),
     onClick: (closeModal) => closeModal(),
   });
 
   render = () => {
     const {
-      intl,
+      intl: { formatMessage },
       data: { harData },
     } = this.props;
     return (
-      <ModalLayout title={intl.formatMessage(messages.title)} okButton={this.renderOkButton(intl)}>
+      <ModalLayout title={formatMessage(messages.title)} okButton={this.renderOkButton()}>
         <WithZipJs>
-          <PerfCascade harData={harData} />
+          <PerfCascade
+            harData={harData}
+            errorMessage={formatMessage(messages.errorFileStructure)}
+          />
         </WithZipJs>
       </ModalLayout>
     );

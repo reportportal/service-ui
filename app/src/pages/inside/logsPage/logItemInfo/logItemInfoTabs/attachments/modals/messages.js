@@ -21,4 +21,8 @@ export const messages = defineMessages({
     id: 'AttachmentDialog.noAttachmentsMessage',
     defaultMessage: 'No attachments to display',
   },
+  errorFileStructure: {
+    id: 'AttachmentDialog.errorFileStructure',
+    defaultMessage: 'Bad file structure',
+  },
 });
