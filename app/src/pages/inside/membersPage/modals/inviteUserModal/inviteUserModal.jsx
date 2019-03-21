@@ -11,10 +11,12 @@ import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { showModalAction } from 'controllers/modal';
 import { InputUserSearch } from 'components/inputs/inputUserSearch';
+import { InputTagsSearch } from 'components/inputs/inputTagsSearch';
 import { InputDropdown } from 'components/inputs/inputDropdown';
 import { MEMBERS_PAGE_EVENTS } from 'components/main/analytics/events';
 import classNames from 'classnames/bind';
 import { activeProjectSelector, isAdminSelector } from 'controllers/user';
+import { URLS } from 'common/urls';
 import styles from './inviteUserModal.scss';
 
 const cx = classNames.bind(styles);
@@ -48,15 +50,17 @@ const messages = defineMessages({
   (state) => ({
     activeProject: activeProjectSelector(state),
     isAdmin: isAdminSelector(state),
+    initialValues: {
+      role: DEFAULT_PROJECT_ROLE,
+      project: activeProjectSelector(state),
+    },
   }),
   { showModalAction },
 )
 @reduxForm({
   form: 'inviteUserForm',
   validate: ({ user }) => ({ user: !user && 'inviteUser' }),
-  initialValues: {
-    role: DEFAULT_PROJECT_ROLE,
-  },
+  enableReinitialize: true,
 })
 @track()
 export class InviteUserModal extends Component {
@@ -64,6 +68,7 @@ export class InviteUserModal extends Component {
     intl: intlShape,
     data: PropTypes.shape({
       onInvite: PropTypes.func,
+      isProjectSelector: PropTypes.bool,
     }).isRequired,
     handleSubmit: PropTypes.func.isRequired,
     showModalAction: PropTypes.func.isRequired,
@@ -80,6 +85,11 @@ export class InviteUserModal extends Component {
     activeProject: '',
     isAdmin: false,
   };
+  constructor(props) {
+    super(props);
+    this.projectSearchUrl = URLS.projectNameSearch();
+  }
+
   inviteUserAndCloseModal = (closeModal) => (data) => {
     this.props.data.onInvite(data).then((res) => {
       closeModal();
@@ -92,8 +102,16 @@ export class InviteUserModal extends Component {
     });
   };
   formatUser = (user) => (user && { value: user.userLogin, label: user.userLogin }) || null;
+
+  formatValueProject = (value) => (value ? { value, label: value } : null);
+
+  parseValueProject = (value) => (value ? value.value : undefined);
+
+  formatValue = (values) => values.map((value) => ({ value, label: value }));
+
   render() {
-    const { intl, handleSubmit, activeProject, isAdmin, tracking } = this.props;
+    const { intl, handleSubmit, activeProject, isAdmin, tracking, data } = this.props;
+
     const okButton = {
       text: intl.formatMessage(COMMON_LOCALE_KEYS.INVITE),
       onClick: (closeModal) => {
@@ -125,6 +143,22 @@ export class InviteUserModal extends Component {
               </FieldErrorHint>
             </FieldProvider>
           </ModalField>
+          {data.isProjectSelector && (
+            <ModalField label="Project" name="project" labelWidth={LABEL_WIDTH}>
+              <FieldProvider
+                name="project"
+                format={this.formatValueProject}
+                parse={this.parseValueProject}
+              >
+                <InputTagsSearch
+                  minLength={1}
+                  async
+                  uri={this.projectSearchUrl}
+                  makeOptions={this.formatValue}
+                />
+              </FieldProvider>
+            </ModalField>
+          )}
           <ModalField label={intl.formatMessage(messages.role)} labelWidth={LABEL_WIDTH}>
             <FieldProvider name="role">
               <InputDropdown options={ROLES_MAP} />
