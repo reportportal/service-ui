@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { FormattedMessage } from 'react-intl';
 import classNames from 'classnames/bind';
 import { AbsRelTime } from 'components/main/absRelTime';
 import styles from './projectsGrid.scss';
@@ -65,7 +66,11 @@ LaunchesColumn.defaultProps = {
 
 export const LastLaunchColumn = ({ className, value }) => (
   <div className={cx('projects-col', className)}>
-    {value.lastRun && <AbsRelTime startTime={value.lastRun} />}
+    {value.lastRun ? (
+      <AbsRelTime startTime={value.lastRun} />
+    ) : (
+      <FormattedMessage id="LastLaunchColumn.noLaunches" defaultMessage="0 days ago" />
+    )}
   </div>
 );
 LastLaunchColumn.propTypes = {

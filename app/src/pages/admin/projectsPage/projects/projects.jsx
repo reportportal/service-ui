@@ -8,9 +8,7 @@ import {
   DEFAULT_PAGINATION,
   TABLE_VIEW,
   GRID_VIEW,
-  loadingSelector,
   projectsPaginationSelector,
-  projectsSelector,
   viewModeSelector,
 } from 'controllers/administrate/projects';
 
@@ -20,8 +18,6 @@ import { ProjectsGrid } from './../projectsGrid';
 import { ProjectsToolbar } from './../projectsToolbar';
 
 @connect((state) => ({
-  projects: projectsSelector(state),
-  loading: loadingSelector(state),
   viewMode: viewModeSelector(state),
 }))
 @withPagination({
@@ -36,8 +32,6 @@ export class Projects extends Component {
     pageSize: PropTypes.number,
     onChangePage: PropTypes.func.isRequired,
     onChangePageSize: PropTypes.func.isRequired,
-    loading: PropTypes.bool,
-    projects: PropTypes.arrayOf(PropTypes.object),
     intl: intlShape.isRequired,
     viewMode: PropTypes.string,
   };
@@ -47,8 +41,6 @@ export class Projects extends Component {
     itemCount: null,
     pageCount: null,
     pageSize: DEFAULT_PAGINATION[SIZE_KEY],
-    loading: false,
-    projects: [],
     viewMode: GRID_VIEW,
   };
 
@@ -60,8 +52,6 @@ export class Projects extends Component {
       pageSize,
       onChangePage,
       onChangePageSize,
-      loading,
-      projects,
       viewMode,
     } = this.props;
 
@@ -69,7 +59,7 @@ export class Projects extends Component {
       <React.Fragment>
         <ProjectsToolbar />
 
-        {viewMode === TABLE_VIEW && <ProjectsGrid data={projects} loading={loading} />}
+        {viewMode === TABLE_VIEW && <ProjectsGrid />}
 
         <PaginationToolbar
           activePage={activePage}

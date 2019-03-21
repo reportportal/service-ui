@@ -1,7 +1,15 @@
 import React, { PureComponent } from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { defineMessages, injectIntl, intlShape } from 'react-intl';
 import { Grid } from 'components/main/grid';
+import {
+  loadingSelector,
+  projectsSelector,
+  selectedProjectsSelector,
+  toggleAllProjectsAction,
+  toggleProjectSelectionAction,
+} from 'controllers/administrate/projects';
 import {
   NameColumn,
   ProjectTypeColumn,
@@ -20,16 +28,31 @@ const messages = defineMessages({
   lastLaunchCol: { id: 'ProjectsGrid.lastLaunchCol', defaultMessage: 'Last Launch date' },
 });
 
+@connect(
+  (state) => ({
+    projects: projectsSelector(state),
+    loading: loadingSelector(state),
+    selectedProjects: selectedProjectsSelector(state),
+  }),
+  {
+    toggleProjectSelectionAction,
+    toggleAllProjectsAction,
+  },
+)
 @injectIntl
 export class ProjectsGrid extends PureComponent {
   static propTypes = {
     intl: intlShape.isRequired,
-    data: PropTypes.arrayOf(PropTypes.object),
+    projects: PropTypes.arrayOf(PropTypes.object),
+    selectedProjects: PropTypes.arrayOf(PropTypes.object),
     loading: PropTypes.bool,
+    toggleProjectSelectionAction: PropTypes.func.isRequired,
+    toggleAllProjectsAction: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
-    data: [],
+    projects: [],
+    selectedProjects: [],
     loading: false,
   };
 
@@ -82,14 +105,18 @@ export class ProjectsGrid extends PureComponent {
   COLUMNS = this.getColumns();
 
   render() {
-    const { data, loading } = this.props;
+    const { projects, loading, selectedProjects } = this.props;
+
     return (
       <Grid
         columns={this.COLUMNS}
-        data={data}
+        data={projects}
         loading={loading}
+        selectedItems={selectedProjects}
         changeOnlyMobileLayout
         selectable
+        onToggleSelection={this.props.toggleProjectSelectionAction}
+        onToggleSelectAll={() => this.props.toggleAllProjectsAction(projects)}
       />
     );
   }
