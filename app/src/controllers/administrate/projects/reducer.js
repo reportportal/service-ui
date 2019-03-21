@@ -2,6 +2,7 @@ import { combineReducers } from 'redux';
 import { fetchReducer } from 'controllers/fetch';
 import { paginationReducer } from 'controllers/pagination';
 import { loadingReducer } from 'controllers/loading';
+import { groupOperationsReducer } from 'controllers/groupOperations';
 import { NAMESPACE, SET_PROJECTS_VIEW_MODE, GRID_VIEW } from './constants';
 
 const setViewModeReducer = (state = GRID_VIEW, { type, payload }) => {
@@ -19,4 +20,5 @@ export const projectsReducer = combineReducers({
   pagination: paginationReducer(NAMESPACE),
   loading: loadingReducer(NAMESPACE),
   viewMode: setViewModeReducer,
+  groupOperations: groupOperationsReducer(NAMESPACE),
 });

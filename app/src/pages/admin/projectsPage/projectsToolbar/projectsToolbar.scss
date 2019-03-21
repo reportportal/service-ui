@@ -10,6 +10,7 @@
 
 .buttons {
   display: flex;
+  align-items: center;
 }
 
 .toolbar-button {
@@ -28,5 +29,24 @@
     path {
       fill: $COLOR--white-two !important;
     }
+  }
+}
+
+.delete-info {
+  color: $COLOR--charcoal-grey;
+  margin-right: 20px;
+  font-size: 13px;
+}
+
+.delete-button {
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-family: $FONT-SEMIBOLD;
+  color: $COLOR--topaz;
+  font-size: 13px;
+  outline: none;
+  &:focus {
+    text-decoration: underline;
   }
 }
