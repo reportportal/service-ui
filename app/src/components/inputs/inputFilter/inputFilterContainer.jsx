@@ -6,20 +6,21 @@ import { filterValueShape } from 'components/filterEntities';
 import { debounce } from 'common/utils/debounce';
 import { InputFilter } from './inputFilter';
 
-const parseFilterString = (value = '') => ({
-  activities: {
+const parseFilterString = (value = '', key) => ({
+  [key]: {
     value,
   },
 });
 
-const formatFilterString = (filterString = {}) =>
-  filterString.activities ? filterString.activities.value : '';
+const formatFilterString = (filterString = {}, key) =>
+  filterString[key] ? filterString[key].value : '';
 
 export class InputFilterContainer extends Component {
   static propTypes = {
     filterValues: PropTypes.objectOf(filterValueShape),
     onChange: PropTypes.func,
     entitiesProvider: PropTypes.elementType,
+    id: PropTypes.string.isRequired,
   };
 
   static defaultProps = {
@@ -30,10 +31,11 @@ export class InputFilterContainer extends Component {
 
   static getDerivedStateFromProps(props, state) {
     if (!isEqual(props.filterValues, state.prevValues)) {
+      const { id } = props;
       return {
         values: props.filterValues,
         prevValues: props.filterValues,
-        filterString: formatFilterString(props.filterValues),
+        filterString: formatFilterString(props.filterValues, id),
       };
     }
     return null;
@@ -45,10 +47,10 @@ export class InputFilterContainer extends Component {
     filterString: '',
   };
 
-  debouncedChangeHandler = debounce(
-    (value) => this.props.onChange({ ...this.props.filterValues, ...parseFilterString(value) }),
-    1000,
-  );
+  debouncedChangeHandler = debounce((value) => {
+    const { id } = this.props;
+    return this.props.onChange({ ...this.props.filterValues, ...parseFilterString(value, id) });
+  }, 1000);
 
   handleFilterChange = (values) => {
     this.setState({ values });

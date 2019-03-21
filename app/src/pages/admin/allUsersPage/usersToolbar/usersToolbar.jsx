@@ -5,6 +5,7 @@ import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { InputFilter } from 'components/inputs/inputFilter';
 import { FilterEntitiesURLContainer } from 'components/filterEntities/containers';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { USERS } from 'common/constants/userObjectTypes';
 import { UsersEntities } from './usersEntities';
 import { ActionPanel } from './actionPanel';
 import styles from './usersToolbar.scss';
@@ -57,6 +58,7 @@ export class UsersToolbar extends PureComponent {
             debounced={false}
             render={({ entities, onChange }) => (
               <InputFilter
+                id={USERS}
                 entitiesProvider={UsersEntities}
                 filterValues={entities}
                 onChange={onChange}

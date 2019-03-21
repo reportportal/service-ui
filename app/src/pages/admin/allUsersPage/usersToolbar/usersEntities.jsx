@@ -13,7 +13,6 @@ import {
 import {
   CONDITION_CNT,
   CONDITION_EQ,
-  ACTIVITIES,
   CONDITION_BETWEEN,
   CONDITION_HAS,
 } from 'components/filterEntities/constants';
@@ -28,6 +27,7 @@ import {
   LAST_LOGIN,
   PROJECT,
   USER as LOGIN,
+  USERS,
 } from 'common/constants/userObjectTypes';
 
 import { URLS } from 'common/urls';
@@ -86,9 +86,9 @@ export class UsersEntities extends Component {
     const { intl, projectSearchUrl } = this.props;
     return [
       {
-        id: ACTIVITIES,
+        id: USERS,
         component: EntityContains,
-        value: this.bindDefaultValue(ACTIVITIES),
+        value: this.bindDefaultValue(USERS),
         title: intl.formatMessage(messages.contains),
         active: true,
         removable: false,
@@ -209,6 +209,7 @@ export class UsersEntities extends Component {
         customProps: {
           uri: projectSearchUrl,
           placeholder: null,
+          creatable: false,
           inputprops: {
             maxlength: 256,
           },
