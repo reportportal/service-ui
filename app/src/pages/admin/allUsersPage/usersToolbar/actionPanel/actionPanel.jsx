@@ -107,7 +107,8 @@ export class ActionPanel extends Component {
     data.userNames = {
       [userData.user.userLogin]: userData.role,
     };
-    return fetch(URLS.userInviteInternal(this.props.activeProject), {
+
+    return fetch(URLS.userInviteInternal(userData.project), {
       method: 'put',
       data,
     })

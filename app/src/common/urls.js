@@ -102,13 +102,6 @@ export const URLS = {
   projectPreferences: (activeProject, userId, filterId = '') =>
     `${urlBase}project/${activeProject}/preference/${userId}/${filterId}`,
   projectUsers: (activeProject) => `${urlBase}project/${activeProject}/users`,
-  projectAdminSearchUser: (input) =>
-    `${urlBase}user/search${getQueryParams({
-      'page.page': 1,
-      'page.size': 10,
-      'page.sort': 'user,ASC',
-      term: input,
-    })}`,
   projectUserSearchUser: (activeProject, input) =>
     `${urlBase}project/${activeProject}/usernames/search${getQueryParams({
       'page.page': 1,
@@ -201,8 +194,8 @@ export const URLS = {
   events: (projectId) => `${urlBase}${projectId}/activity`,
   allUsers: () => `${urlBase}user/all`,
   searchUsers: (term) =>
-    `${urlBase}user/all${getQueryParams({
-      'filter.cnt.email': term,
+    `${urlBase}user/search${getQueryParams({
+      term,
     })}`,
   exportUsers: () =>
     `${urlBase}user/export${getQueryParams({
