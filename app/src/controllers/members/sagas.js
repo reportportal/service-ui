@@ -8,11 +8,13 @@ import { querySelector } from './selectors';
 function* fetchMembers() {
   const projectId = yield select(projectIdSelector);
   const query = yield select(querySelector);
-  yield put(
-    fetchDataAction(NAMESPACE)(URLS.projectUsers(projectId), {
-      params: { ...query },
-    }),
-  );
+  if (projectId) {
+    yield put(
+      fetchDataAction(NAMESPACE)(URLS.projectUsers(projectId), {
+        params: { ...query },
+      }),
+    );
+  }
 }
 
 function* watchFetchMembers() {
