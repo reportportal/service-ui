@@ -48,12 +48,12 @@ export const AttributeList = ({
           disabled={disabled}
         />
       ))}
-    <div
-      className={cx('add-new-button', { disabled: !!editedAttribute || disabled })}
-      onClick={!editedAttribute && !disabled ? onAddNew : undefined}
-    >
-      + <FormattedMessage id="AttributeList.addNew" defaultMessage="Add new" />
-    </div>
+    {!editedAttribute &&
+      (!disabled && (
+        <div className={cx('add-new-button')} onClick={onAddNew}>
+          + <FormattedMessage id="AttributeList.addNew" defaultMessage="Add new" />
+        </div>
+      ))}
   </Fragment>
 );
 AttributeList.propTypes = {

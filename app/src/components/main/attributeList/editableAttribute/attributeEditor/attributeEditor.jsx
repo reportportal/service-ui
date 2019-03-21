@@ -59,6 +59,7 @@ export class AttributeEditor extends Component {
     onConfirm: PropTypes.func,
     onCancel: PropTypes.func,
     handleSubmit: PropTypes.func,
+    invalid: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -67,6 +68,7 @@ export class AttributeEditor extends Component {
     handleSubmit: () => {},
     onConfirm: () => {},
     onCancel: () => {},
+    invalid: false,
   };
 
   byKeyComparator = (attribute, item, key, value) =>
@@ -108,7 +110,10 @@ export class AttributeEditor extends Component {
           />
         </div>
         <div className={cx('control')}>
-          <div className={cx('icon')} onClick={handleSubmit(onConfirm)}>
+          <div
+            className={cx('icon', { disabled: this.props.invalid })}
+            onClick={handleSubmit(onConfirm)}
+          >
             {Parser(CircleCheckIcon)}
           </div>
         </div>

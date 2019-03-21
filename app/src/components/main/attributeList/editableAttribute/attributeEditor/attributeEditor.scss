@@ -45,4 +45,30 @@
   height: 20px;
   width: 20px;
   cursor: pointer;
+
+  svg {
+    fill: $COLOR--gray-80;
+    stroke: $COLOR--gray-80;
+  }
+
+  &.disabled {
+    svg {
+      fill: $COLOR--gray-91;
+      stroke: $COLOR--gray-91;
+    }
+  }
+
+  &:hover:not(.disabled) {
+    svg {
+      fill: $COLOR--gray-60;
+      stroke: $COLOR--gray-60;
+    }
+  }
+
+  &:active:not(.disabled) {
+    svg {
+      fill: $COLOR--tealish;
+      stroke: $COLOR--tealish;
+    }
+  }
 }

@@ -1,8 +1,18 @@
-<svg width="20px" height="20px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <circle stroke="#999" fill-rule="nonzero" cx="10" cy="10" r="9.5"></circle>
-        <g transform="translate(5.000000, 5.000000)" fill="#999" fill-rule="nonzero">
-            <polygon points="1 5.5 4.375 9 10 3.16666667 8.875 2 4.375 6.66666667 2.125 4.33333333"></polygon>
-        </g>
-    </g>
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="0.222222in" height="0.222222in"
+     viewBox="0 0 20 20" fill="black" stroke="black">
+  <path fill="none" fill-rule="evenodd" stroke-width="1"
+        d="M 10.00,0.50
+           C 4.75,0.50 0.50,4.75 0.50,10.00
+             0.50,15.25 4.75,19.50 10.00,19.50
+             15.25,19.50 19.50,15.25 19.50,10.00
+             19.50,4.75 15.25,0.50 10.00,0.50 Z" />
+  <path fill-rule="evenodd" stroke-width="0"
+        d="M 7.13,9.33
+           C 7.13,9.33 9.38,11.67 9.38,11.67
+             9.38,11.67 13.88,7.00 13.88,7.00
+             13.88,7.00 15.00,8.17 15.00,8.17
+             15.00,8.17 9.38,14.00 9.38,14.00
+             9.38,14.00 6.00,10.50 6.00,10.50
+             6.00,10.50 7.13,9.33 7.13,9.33 Z" />
 </svg>
