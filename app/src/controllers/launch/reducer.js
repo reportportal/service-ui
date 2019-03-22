@@ -6,7 +6,12 @@ import { paginationReducer } from 'controllers/pagination';
 import { groupOperationsReducer } from 'controllers/groupOperations';
 import { loadingReducer } from 'controllers/loading';
 import { ALL } from 'common/constants/reservedFilterIds';
-import { NAMESPACE, SET_DEBUG_MODE, CHANGE_LAUNCH_DISTINCT } from './constants';
+import {
+  NAMESPACE,
+  SET_DEBUG_MODE,
+  CHANGE_LAUNCH_DISTINCT,
+  UPDATE_LAUNCH_LOCALLY,
+} from './constants';
 
 const getDefaultLaunchDistinctState = () =>
   (getStorageItem(APPLICATION_SETTINGS) && getStorageItem(APPLICATION_SETTINGS).launchDistinct) ||
@@ -30,8 +35,23 @@ const launchDistinctReducer = (state = getDefaultLaunchDistinctState(), { type, 
   }
 };
 
+const launchReducerWrapper = () => (state, options) => {
+  const { type, payload } = options;
+  switch (type) {
+    case UPDATE_LAUNCH_LOCALLY:
+      return state.map((item) => {
+        if (item.id === payload.id) {
+          return payload;
+        }
+        return item;
+      });
+    default:
+      return fetchReducer(NAMESPACE, { contentPath: 'content' })(state, options);
+  }
+};
+
 export const launchReducer = combineReducers({
-  launches: fetchReducer(NAMESPACE, { contentPath: 'content' }),
+  launches: launchReducerWrapper(),
   pagination: paginationReducer(NAMESPACE),
   groupOperations: groupOperationsReducer(NAMESPACE),
   loading: loadingReducer(NAMESPACE),

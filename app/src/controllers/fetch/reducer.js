@@ -24,7 +24,6 @@ export const fetchReducer = (namespace, options = DEFAULT_OPTIONS) => (
       if (data instanceof Array && concat) {
         return state.concat(data);
       }
-
       return data;
     }
     case FETCH_ERROR:
