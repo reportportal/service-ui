@@ -34,6 +34,8 @@ export const Grid = ({
   groupHeader,
   groupFunction,
   excludeFromSelection,
+  gridRowClassName,
+  headerClassName,
   ...rest
 }) => (
   <Fragment>
@@ -50,6 +52,7 @@ export const Grid = ({
         }
         onToggleSelectAll={onToggleSelectAll}
         hideHeaderForMobile={changeOnlyMobileLayout}
+        headerClassName={headerClassName}
       />
       {!loading && (
         <GridBody
@@ -64,6 +67,7 @@ export const Grid = ({
           groupFunction={groupFunction}
           grouped={grouped}
           excludeFromSelection={excludeFromSelection}
+          gridRowClassName={gridRowClassName}
           {...rest}
         />
       )}
@@ -99,6 +103,8 @@ Grid.propTypes = {
     highlightedRowId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   }),
   excludeFromSelection: PropTypes.arrayOf(PropTypes.object),
+  gridRowClassName: PropTypes.string,
+  headerClassName: PropTypes.string,
 };
 Grid.defaultProps = {
   columns: [],
@@ -120,4 +126,6 @@ Grid.defaultProps = {
   groupHeader: null,
   rowHighlightingConfig: {},
   excludeFromSelection: [],
+  gridRowClassName: '',
+  headerClassName: '',
 };

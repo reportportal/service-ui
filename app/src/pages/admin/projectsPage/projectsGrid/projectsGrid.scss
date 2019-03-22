@@ -1,9 +1,48 @@
 .projects-col {
   font-size: 13px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .project-type-col {
   &:first-letter {
     text-transform: capitalize;
+  }
+}
+
+.projects-grid {
+  @media (max-width: $SCREEN_SM_MAX) {
+    table-layout: fixed;
+  }
+}
+
+.projects-grid-row{
+  @media (max-width: $SCREEN_SM_MAX) {
+    display: table-row;
+    >:nth-child(2),
+    >:nth-child(3) {
+      display: none;
+    }
+  }
+}
+
+.projects-header {
+  @media (max-width: $SCREEN_SM_MAX) {
+    display: table-row;
+
+    >:nth-child(2),
+    >:nth-child(3) {
+      display: none;
+    }
+
+    >:nth-child(4),
+    >:nth-child(5){
+      width: 15%;
+    }
+
+    >:nth-child(6) {
+      width: 25%;
+    }
   }
 }

@@ -31,6 +31,7 @@ export class GridRow extends Component {
       highlightedRowId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     }),
     excludeFromSelection: PropTypes.arrayOf(PropTypes.object),
+    gridRowClassName: PropTypes.string,
   };
 
   static defaultProps = {
@@ -44,6 +45,7 @@ export class GridRow extends Component {
     toggleAccordionEventInfo: {},
     rowHighlightingConfig: {},
     excludeFromSelection: [],
+    gridRowClassName: '',
   };
 
   state = {
@@ -130,7 +132,14 @@ export class GridRow extends Component {
     });
   };
   render() {
-    const { columns, value, selectable, changeOnlyMobileLayout, rowClassMapper } = this.props;
+    const {
+      columns,
+      value,
+      selectable,
+      changeOnlyMobileLayout,
+      rowClassMapper,
+      gridRowClassName,
+    } = this.props;
     const { expanded } = this.state;
     const customClasses = (rowClassMapper && rowClassMapper(value)) || {};
     return (
@@ -157,7 +166,9 @@ export class GridRow extends Component {
             />
           </div>
         )}
-        <div className={cx('grid-row', { 'change-mobile': changeOnlyMobileLayout })}>
+        <div
+          className={cx('grid-row', { 'change-mobile': changeOnlyMobileLayout }, gridRowClassName)}
+        >
           {columns.map((column, i) => {
             if (column.maxHeight) {
               this.overflowCellMaxHeight = column.maxHeight;

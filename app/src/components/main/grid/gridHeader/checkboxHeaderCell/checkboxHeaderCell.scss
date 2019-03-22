@@ -6,4 +6,8 @@
   padding-right: 15px;
   text-align: right;
   vertical-align: middle;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    display: none;
+  }
 }
