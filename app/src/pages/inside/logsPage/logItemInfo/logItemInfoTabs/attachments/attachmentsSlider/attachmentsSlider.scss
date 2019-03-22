@@ -1,0 +1,101 @@
+.slider {
+  width: 80%;
+  height: 300px;
+  margin: 0 auto;
+
+  &~.arrow {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+.thumbs-view {
+  height: 80px;
+
+  &~.arrow {
+    width: 20px;
+    height: 20px;
+  }
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    width: 90%;
+  }
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    width: 100%;
+  }
+}
+
+.preview-container {
+  margin: 15px 0 0 0;
+  img {
+    width: 100px;
+    pointer-events: all;
+    cursor: pointer;
+
+    &.active {
+      border: 1px solid $COLOR--skipped;
+      pointer-events: none;
+      cursor: default;
+    }
+  }
+
+  &.main-area {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 300px;
+
+    img {
+      max-height: 100%;
+      max-width: 100%;
+      min-width: 150px;
+      width: auto;
+      margin: 0 auto;
+      cursor: pointer;
+    }
+  }
+}
+
+:global {
+  .carousel {
+    position: relative;
+  }
+  .carousel__slide {
+    &--focused {
+      .carousel__slide-focus-ring {
+        display: none;
+      }
+    }
+  }
+}
+
+.arrow {
+  position: absolute;
+  top: 50%;
+  padding: 0;
+  border: none;
+  background: none;
+  outline: none;
+
+  svg {
+    fill: $COLOR--gray-60;
+  }
+  /* stylelint-disable */
+  &[disabled] {
+    cursor: default;
+    svg {
+      fill: $COLOR--gray-80;
+    }
+  }
+  /* stylelint-enable */
+}
+
+.prev-arrow {
+  left: 0;
+  transform: rotateY(180deg);
+}
+
+.next-arrow {
+  right: 0;
+}

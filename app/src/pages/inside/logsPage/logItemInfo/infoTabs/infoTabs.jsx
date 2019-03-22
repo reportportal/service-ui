@@ -16,7 +16,8 @@ export class InfoTabs extends Component {
       PropTypes.shape({
         id: PropTypes.string.isRequired,
         label: PropTypes.string,
-        content: PropTypes.node.isRequired,
+        component: PropTypes.func,
+        componentProps: PropTypes.object,
         icon: PropTypes.node,
       }),
     ),
@@ -88,7 +89,9 @@ export class InfoTabs extends Component {
               </button>
               {this.state.isMobileView &&
                 this.isActiveTab(tab) && (
-                  <div className={cx('tabs-content', 'mobile')}>{tab.content}</div>
+                  <div className={cx('tabs-content', 'mobile')}>
+                    <tab.component {...tab.componentProps} isMobileView />
+                  </div>
                 )}
             </Fragment>
           ))}
@@ -96,7 +99,9 @@ export class InfoTabs extends Component {
         </div>
         {activeTab &&
           !this.state.isMobileView && (
-            <div className={cx('tabs-content', 'desktop')}>{activeTab.content}</div>
+            <div className={cx('tabs-content', 'desktop')}>
+              <activeTab.component {...activeTab.componentProps} />
+            </div>
           )}
       </div>
     );

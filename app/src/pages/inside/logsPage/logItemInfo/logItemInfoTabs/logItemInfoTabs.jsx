@@ -53,6 +53,7 @@ export class LogItemInfoTabs extends Component {
     intl: intlShape.isRequired,
     lastActivity: PropTypes.object,
     logItem: PropTypes.object.isRequired,
+    loading: PropTypes.bool.isRequired,
     onChangePage: PropTypes.func.isRequired,
     onChangeLogLevel: PropTypes.func.isRequired,
     onHighlightRow: PropTypes.func.isRequired,
@@ -63,7 +64,7 @@ export class LogItemInfoTabs extends Component {
   };
 
   static getDerivedStateFromProps(props, state) {
-    return state.logItemId !== props.logItem.id
+    return state.logItemId !== props.logItem.id || props.loading
       ? {
           logItemId: props.logItem.id,
           activeTab: null,
@@ -104,44 +105,49 @@ export class LogItemInfoTabs extends Component {
         label: formatMessage(messages.stackTab),
         icon: StackTraceIcon,
         eventInfo: LOG_PAGE_EVENTS.STACK_TRACE_TAB,
-        content: (
-          <StackTrace
-            onHighlightRow={onHighlightRow}
-            onChangePage={onChangePage}
-            onChangeLogLevel={onChangeLogLevel}
-          />
-        ),
+        component: StackTrace,
+        componentProps: {
+          onHighlightRow,
+          onChangePage,
+          onChangeLogLevel,
+        },
       },
       {
         id: 'attachments',
         label: formatMessage(messages.attachmentsTab),
         icon: AttachmentIcon,
-        content: (
-          <Attachments
-            activeItemId={this.state.activeAttachmentId}
-            onChangeActiveItem={this.changeActiveAttachment}
-          />
-        ),
+        component: Attachments,
+        componentProps: {
+          activeItemId: this.state.activeAttachmentId,
+          onChangeActiveItem: this.changeActiveAttachment,
+        },
         eventInfo: LOG_PAGE_EVENTS.ATTACHMENT_TAB,
       },
       {
         id: 'details',
         label: formatMessage(messages.detailsTab),
         icon: InfoIcon,
-        content: <LogItemDetails logItem={logItem} />,
+        component: LogItemDetails,
+        componentProps: {
+          logItem,
+        },
         eventInfo: LOG_PAGE_EVENTS.ITEM_DETAILS_TAB,
       },
       {
         id: 'parameters',
         label: formatMessage(messages.parametersTab),
         icon: TestParamsIcon,
-        content: <Parameters logItem={logItem} />,
+        component: Parameters,
+        componentProps: {
+          logItem,
+        },
       },
       {
         id: 'history',
         label: formatMessage(messages.historyTab),
         icon: ClockIcon,
-        content: <LogItemActivity />,
+        component: LogItemActivity,
+        componentProps: {},
         eventInfo: LOG_PAGE_EVENTS.ACTIONS_TAB,
       },
     ];

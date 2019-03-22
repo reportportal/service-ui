@@ -20,7 +20,7 @@ import {
   NAMESPACE,
 } from './constants';
 import { activeLogIdSelector, prevActiveLogIdSelector, querySelector } from './selectors';
-import { attachmentSagas, fetchAttachmentsAction, clearAttachmentsAction } from './attachments';
+import { attachmentSagas, clearAttachmentsAction } from './attachments';
 import { getWithAttachments, getLogLevel } from './storageUtils';
 
 function* fetchActivity() {
@@ -67,6 +67,7 @@ function* fetchWholePage() {
     call(fetchHistoryEntries),
     call(fetchLogItems),
     call(fetchActivity),
+    put(clearAttachmentsAction()),
   ]);
 }
 
@@ -87,7 +88,7 @@ function* fetchLogPageData({ meta = {} }) {
       call(fetchHistoryEntries),
       call(fetchLogItems),
       call(fetchActivity),
-      put(fetchAttachmentsAction()),
+      put(clearAttachmentsAction()),
     ]);
     return;
   }
