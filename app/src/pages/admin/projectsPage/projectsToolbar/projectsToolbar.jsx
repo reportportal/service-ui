@@ -4,7 +4,8 @@ import { connect } from 'react-redux';
 import { defineMessages, FormattedMessage, injectIntl, intlShape } from 'react-intl';
 import classNames from 'classnames/bind';
 
-import { InputSearch } from 'components/inputs/inputSearch';
+import { InputFilter } from 'components/inputs/inputFilter';
+import { FilterEntitiesURLContainer } from 'components/filterEntities/containers';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { ADMIN_ALL_PROJECTS_PAGE_MODAL_EVENTS } from 'components/main/analytics/events';
 
@@ -26,6 +27,8 @@ import GridViewDashboardIcon from 'common/img/grid-inline.svg';
 import TableViewDashboardIcon from 'common/img/table-inline.svg';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { URLS } from 'common/urls';
+import { PROJECTS } from 'common/constants/projectsObjectTypes';
+import { ProjectEntities } from './projectEntities';
 import { fetch } from 'common/utils';
 
 import styles from './projectsToolbar.scss';
@@ -33,10 +36,6 @@ import styles from './projectsToolbar.scss';
 const cx = classNames.bind(styles);
 
 const messages = defineMessages({
-  searchPlaceholder: {
-    id: 'ProjectsToolbar.searchPlaceholder',
-    defaultMessage: 'Search',
-  },
   deleteProjectsCount: {
     id: 'ProjectsToolbar.deleteProjectsCount',
     defaultMessage: '{count} items selected',
@@ -184,9 +183,16 @@ export class ProjectsToolbar extends Component {
     return (
       <div className={cx('toolbar')}>
         <div className={cx('search')}>
-          <InputSearch
-            maxLength="128"
-            placeholder={intl.formatMessage(messages.searchPlaceholder)}
+          <FilterEntitiesURLContainer
+            debounced={false}
+            render={({ entities, onChange }) => (
+              <InputFilter
+                id={PROJECTS}
+                entitiesProvider={ProjectEntities}
+                filterValues={entities}
+                onChange={onChange}
+              />
+            )}
           />
         </div>
         <div className={cx('buttons')}>

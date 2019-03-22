@@ -1,0 +1,11 @@
+export const PROJECT_TYPE_INTERNAL = 'INTERNAL';
+export const PROJECT_TYPE_PERSONAL = 'PERSONAL';
+export const PROJECT_TYPE_UPSA = 'UPSA';
+export const TYPE = 'type';
+export const NAME = 'name';
+export const ORGANIZATION = 'organization';
+export const CREATION_DATE = 'creationDate';
+export const USERS_QUANTITY = 'usersQuantity';
+export const LAST_RUN = 'lastRun';
+export const LAUNCHES_QUANTITY = 'launchesQuantity';
+export const PROJECTS = 'projects';
