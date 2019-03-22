@@ -1,6 +1,6 @@
 export {
   openAttachmentAction,
-  fetchAttachmentsAction,
+  fetchAttachmentsConcatAction,
   clearAttachmentsAction,
 } from './actionCreators';
 export {
@@ -16,5 +16,6 @@ export {
   attachmentItemsSelector,
   attachmentsLoadingSelector,
   logsWithAttachmentsSelector,
+  attachmentsPaginationSelector,
 } from './selectors';
 export { attachmentSagas } from './sagas';

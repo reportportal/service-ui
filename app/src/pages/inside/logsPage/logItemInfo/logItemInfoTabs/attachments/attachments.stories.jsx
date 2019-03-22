@@ -53,7 +53,7 @@ storiesOf('Pages/Inside/LogsPage/LogItemInfo/LogItemInfoTabs/Attachments', modul
       align: 'center middle',
       backdrop: 'rgba(70, 69, 71, 0.2)',
       background: '#f5f5f5',
-      width: 680,
+      width: 800,
       height: 'auto',
     }),
   )

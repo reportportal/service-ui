@@ -1,90 +1,34 @@
-.attachments-wrap {
+.attachments {
   width: 100%;
   text-align: center;
 }
 
-.log-attachments {
-  :global {
-    .carousel {
-      max-width: 890px;
-      width: 100%;
-      margin: 0 auto;
-      .control-prev.control-arrow:before {
-        border-right: 8px solid $COLOR--gray-60;
-      }
-      .control-next.control-arrow:before {
-        border-left: 8px solid $COLOR--gray-60;
-      }
+.main-carousel {
+  width: 650px;
+  margin: 0 auto 20px auto;
 
-      .thumbs {
-        line-height: 50px;
-
-        .thumb {
-          width: 100px;
-          img {
-            vertical-align: middle;
-          }
-        }
-      }
-
-      .slide {
-        img {
-          vertical-align: middle;
-        }
-      }
-
-      @media (max-width: $SCREEN_SM_MAX) {
-        max-width: 600px;
-      }
-      @media (max-width: $SCREEN_XS_MAX) {
-        max-width: 450px;
-      }
-    }
-    .carousel-slider {
-      width: 80% !important;
-      height: 365px;
-      margin: 0 auto;
-      .control-arrow:hover {
-        background: inherit;
-      }
-    }
-    .slider-wrapper,
-    ul.slider {
-      height: 100%;
-    }
-    li.slide {
-      background-color: initial;
-      height: 100%;
-      & img {
-        cursor: pointer;
-        width: 150px;
-      }
-      div {
-        height: 100%;
-      }
-    }
-
-    li.thumb,
-    li.thumb:hover {
-      margin: 0 19px;
-      border: 1px solid transparent;
-      cursor: pointer;
-    }
-    li.thumb.selected {
-      border: 1px solid $COLOR--skipped;
-    }
+  @media (max-width: $SCREEN_XS_MAX) {
+    width: 100%;
   }
 }
 
-.hide-main-area {
-  :global {
-    .carousel-slider {
-      display: none;
+.thumbs-carousel {
+  width: 95%;
+  margin: 0 auto;
+  &.show-separator {
+    &:before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 30px;
+      right: 30px;
+      height: 1px;
+      background-color: $COLOR--gray-91;
     }
+  }
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    width: 100%;
   }
 }
 
-.preview-container {
-  line-height: 365px;
-  cursor: pointer;
-}

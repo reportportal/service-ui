@@ -76,6 +76,7 @@ export class LogItemInfo extends Component {
     fetchFunc: PropTypes.func.isRequired,
     showModalAction: PropTypes.func.isRequired,
     onHighlightRow: PropTypes.func.isRequired,
+    loading: PropTypes.bool.isRequired,
     logItem: PropTypes.object,
   };
   static defaultProps = {
@@ -175,6 +176,7 @@ export class LogItemInfo extends Component {
   render() {
     const {
       logItem,
+      loading,
       onChangePage,
       onChangeLogLevel,
       onHighlightRow,
@@ -227,6 +229,7 @@ export class LogItemInfo extends Component {
             onChangePage={onChangePage}
             onChangeLogLevel={onChangeLogLevel}
             onHighlightRow={onHighlightRow}
+            loading={loading}
           />
         </div>
       )

@@ -174,6 +174,7 @@ export class LogsPage extends Component {
             onChangePage={onChangePage}
             onHighlightRow={this.onHighlightRow}
             fetchFunc={refresh}
+            loading={loading}
           />
           <LogsGridToolbar
             activePage={activePage}
