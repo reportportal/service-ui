@@ -417,7 +417,6 @@ export class LaunchSuiteGrid extends PureComponent {
       loading,
       onFilterClick,
     } = this.props;
-
     return (
       <Fragment>
         <Grid

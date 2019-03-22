@@ -13,6 +13,7 @@ export {
   changeLaunchDistinctAction,
   deleteItemsAction,
   fetchLaunchesWithParamsAction,
+  updateLaunchLocallyAction,
 } from './actionCreators';
 export {
   selectedLaunchesSelector,

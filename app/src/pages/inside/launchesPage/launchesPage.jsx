@@ -41,6 +41,7 @@ import {
   NAMESPACE,
   toggleAllLaunchesAction,
   deleteItemsAction,
+  updateLaunchLocallyAction,
 } from 'controllers/launch';
 import { LaunchSuiteGrid } from 'pages/inside/common/launchSuiteGrid';
 import { LaunchFiltersContainer } from 'pages/inside/common/launchFiltersContainer';
@@ -127,6 +128,7 @@ const messages = defineMessages({
     showNotification,
     showScreenLockAction,
     hideScreenLockAction,
+    updateLaunchLocallyAction,
   },
 )
 @withSorting({
@@ -179,6 +181,7 @@ export class LaunchesPage extends Component {
       getTrackingData: PropTypes.func,
     }).isRequired,
     projectSetting: PropTypes.object.isRequired,
+    updateLaunchLocallyAction: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
@@ -243,6 +246,11 @@ export class LaunchesPage extends Component {
           message: formatMessage(messages.analyseStartSuccess),
           type: NOTIFICATION_TYPES.SUCCESS,
         });
+        const item = {
+          ...launch,
+          analyzing: true,
+        };
+        this.props.updateLaunchLocallyAction(item);
       })
       .catch((error) => {
         this.props.showNotification({

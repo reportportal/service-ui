@@ -14,6 +14,7 @@ import {
   CHANGE_LAUNCH_DISTINCT,
   FETCH_LAUNCHES_WITH_PARAMS,
   FETCH_LAUNCHES_PAGE_DATA,
+  UPDATE_LAUNCH_LOCALLY,
 } from './constants';
 import {
   validateMergeLaunch,
@@ -44,6 +45,11 @@ export const fetchLaunchesWithParamsAction = (filterId) => ({
 
 export const fetchLaunchesPageData = () => ({
   type: FETCH_LAUNCHES_PAGE_DATA,
+});
+
+export const updateLaunchLocallyAction = (launch) => ({
+  type: UPDATE_LAUNCH_LOCALLY,
+  payload: launch,
 });
 
 export const toggleLaunchSelectionAction = toggleItemSelectionAction(NAMESPACE);
