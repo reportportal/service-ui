@@ -10,4 +10,4 @@ export const authExtensionsSelector = (state) => UATInfoSelector(state).auth_ext
 export const instanceIdSelector = (state) =>
   extensionsSelector(state)['server.details.instance'] || '';
 export const analyticsEnabledSelector = (state) =>
-  !!extensionConfigSelector(state)['server.analytics.all'];
+  extensionConfigSelector(state)['server.analytics.all'] === 'true';
