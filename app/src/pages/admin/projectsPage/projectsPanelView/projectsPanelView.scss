@@ -1,0 +1,24 @@
+.panel-list {
+  height: 100%;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+  grid-gap: 30px 30px;
+  flex-wrap: wrap;
+  background-color: $COLOR--white-two;
+  padding: 15px;
+}
+
+.no-projects {
+  text-align: center;
+  height: 100%;
+  font-family: $FONT-REGULAR;
+  font-size: 12px;
+  color: $COLOR--gray-47;
+}
+
+.no-projects:before {
+  content: '';
+  display: inline-block;
+  height: 100%;
+  vertical-align: middle;
+}

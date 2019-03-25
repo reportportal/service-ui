@@ -18,6 +18,7 @@ import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
 import { NoItemMessage } from 'components/main/noItemMessage';
 
+import { ProjectsPanelView } from './../projectsPanelView';
 import { ProjectsGrid } from './../projectsGrid';
 import { ProjectsToolbar } from './../projectsToolbar';
 
@@ -72,7 +73,7 @@ export class Projects extends Component {
       <React.Fragment>
         <ProjectsToolbar />
 
-        {viewMode === TABLE_VIEW && <ProjectsGrid />}
+        {viewMode === TABLE_VIEW ? <ProjectsGrid /> : <ProjectsPanelView />}
 
         {!!pageCount &&
           !loading && (

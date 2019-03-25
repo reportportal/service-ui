@@ -1,15 +1,13 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
-import { withHoverableTooltip } from 'components/main/tooltips/hoverableTooltip';
+import { withTooltip } from 'components/main/tooltips/tooltip';
 import { TextTooltip } from 'components/main/tooltips/textTooltip';
 
-@withHoverableTooltip({
+@withTooltip({
   TooltipComponent: TextTooltip,
   data: {
-    width: 160,
+    width: 180,
     noArrow: false,
-    desktopOnly: false,
-    noMobile: false,
   },
 })
 export class ProjectTooltipIcon extends Component {
