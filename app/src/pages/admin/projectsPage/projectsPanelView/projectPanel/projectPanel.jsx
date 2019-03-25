@@ -182,15 +182,17 @@ export class ProjectPanel extends Component {
             className={cx('name')}
             to={{
               type: PROJECT_PAGE,
-              payload: { projectId: projectName, projectSection: null },
+              payload: { projectId: projectName },
             }}
             onClick={() => this.props.tracking.trackEvent(this.props.nameEventInfo)}
           >
             {projectName}
           </NavLink>
-          <div className={cx('gray-text')}>
-            <FormattedRelative value={new Date(lastRun).getTime()} />
-          </div>
+          {lastRun && (
+            <div className={cx('gray-text')}>
+              <FormattedRelative value={new Date(lastRun).getTime()} />
+            </div>
+          )}
         </div>
         <hr className={cx('hr')} />
         <div className={cx('info-block')}>
@@ -207,7 +209,7 @@ export class ProjectPanel extends Component {
               className={cx('statistic-button')}
               to={{
                 type: PROJECT_DETAILS_PAGE,
-                payload: { projectId: projectName, projectSection: null },
+                payload: { projectId: projectName },
               }}
               onClick={() => this.props.tracking.trackEvent(this.props.statisticEventInfo)}
             >
