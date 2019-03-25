@@ -2,14 +2,16 @@ import { Component } from 'react';
 import PropTypes from 'prop-types';
 import isEqual from 'fast-deep-equal';
 import { connectRouter, debounce } from 'common/utils';
+import { defaultPaginationSelector, PAGE_KEY } from 'controllers/pagination';
 import { collectFilterEntities, createFilterQuery } from './utils';
 
 @connectRouter(
   (query) => ({
     entities: collectFilterEntities(query),
+    defaultPagination: defaultPaginationSelector(),
   }),
   {
-    updateFilters: (query) => ({ ...query }),
+    updateFilters: (query, page) => ({ ...query, [PAGE_KEY]: page }),
   },
 )
 export class FilterEntitiesURLContainer extends Component {
@@ -18,6 +20,7 @@ export class FilterEntitiesURLContainer extends Component {
     updateFilters: PropTypes.func,
     render: PropTypes.func.isRequired,
     debounced: PropTypes.bool,
+    defaultPagination: PropTypes.any.isRequired,
   };
 
   static defaultProps = {
@@ -25,12 +28,15 @@ export class FilterEntitiesURLContainer extends Component {
     updateFilters: () => {},
     debounced: true,
   };
-
   handleChange = (entities) => {
     if (isEqual(entities, this.props.entities)) {
       return;
     }
-    this.props.updateFilters(createFilterQuery(entities, this.props.entities));
+    const { defaultPagination } = this.props;
+    this.props.updateFilters(
+      createFilterQuery(entities, this.props.entities),
+      defaultPagination[PAGE_KEY],
+    );
   };
 
   debouncedHandleChange = debounce(this.handleChange, 1000);
