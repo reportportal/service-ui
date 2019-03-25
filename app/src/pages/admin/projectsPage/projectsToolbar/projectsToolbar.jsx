@@ -27,10 +27,9 @@ import GridViewDashboardIcon from 'common/img/grid-inline.svg';
 import TableViewDashboardIcon from 'common/img/table-inline.svg';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { URLS } from 'common/urls';
+import { fetch } from 'common/utils';
 import { PROJECTS } from 'common/constants/projectsObjectTypes';
 import { ProjectEntities } from './projectEntities';
-import { fetch } from 'common/utils';
-
 import styles from './projectsToolbar.scss';
 
 const cx = classNames.bind(styles);
