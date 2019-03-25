@@ -80,7 +80,6 @@ export class ProjectEntities extends Component {
 
   static defaultProps = {
     loading: false,
-    events: [],
     filterValues: {},
     projectSearchUrl: URLS.projectNameSearch(),
   };
