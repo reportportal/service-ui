@@ -100,20 +100,22 @@ export class InputFilter extends Component {
       value,
       filterActive,
     } = this.props;
+    const isDisabled = disabled || this.state.opened;
     return (
       <React.Fragment>
-        <div
-          className={cx('input-filter', { error, active, disabled: disabled || this.state.opened })}
-        >
+        <div className={cx('input-filter', { error, active, disabled: isDisabled })}>
           <div className={cx('icon', 'search')}>{Parser(SearchIcon)}</div>
           <div
-            className={cx('icon', 'add-filter', { inactive: !filterActive })}
+            className={cx('icon', 'add-filter', { inactive: !filterActive || !value })}
             onClick={this.togglePopup}
           >
             {Parser(AddFilterIcon)}
           </div>
           {!!value && (
-            <div className={cx('icon', 'cross')} onClick={this.handleClickClear}>
+            <div
+              className={cx('icon', 'cross')}
+              onClick={!isDisabled ? this.handleClickClear : null}
+            >
               {Parser(CrossIcon)}
             </div>
           )}

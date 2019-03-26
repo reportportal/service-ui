@@ -20,14 +20,9 @@
   }
   &.disabled {
     border-color: $COLOR--gray-80;
-
-    .icon {
-      svg {
-        fill: $COLOR--gray-80;
-      }
-    }
   }
 }
+
 .icon {
   margin: auto;
   width: 20px;
@@ -49,8 +44,12 @@
     position: absolute;
     right: 10px;
 
+    svg {
+      fill: $COLOR--topaz;
+    }
+
     &.inactive {
-      svg path {
+      svg {
         fill: $COLOR--gray-91;
       }
     }
@@ -78,6 +77,7 @@
     }
   }
 }
+
 .input {
   flex-grow: 1;
   padding: 6px 10px;
@@ -92,6 +92,7 @@
   color: $COLOR--charcoal-grey;
   box-shadow: none;
 }
+
 .filters-container {
     position: absolute;
     display: inline-block;
@@ -103,6 +104,7 @@
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.09);
     z-index: 2000;
 }
+
 .filters {
   padding: 15px;
 }
