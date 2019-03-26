@@ -18,6 +18,7 @@ import {
   fetchProjectsAction,
   deleteItemsAction,
   unselectAllProjectsAction,
+  querySelector,
 } from 'controllers/administrate/projects';
 import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLock';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
@@ -29,6 +30,7 @@ import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
 import { PROJECTS } from 'common/constants/projectsObjectTypes';
+import { collectFilterEntities } from 'components/filterEntities/containers/utils';
 import { ProjectEntities } from './projectEntities';
 import styles from './projectsToolbar.scss';
 
@@ -75,6 +77,7 @@ const messages = defineMessages({
 
 @connect(
   (state) => ({
+    filterEnities: collectFilterEntities(querySelector(state)),
     selectedProjects: selectedProjectsSelector(state),
     viewMode: viewModeSelector(state),
   }),
@@ -95,6 +98,7 @@ export class ProjectsToolbar extends Component {
     viewMode: PropTypes.string,
     setViewMode: PropTypes.func.isRequired,
     selectedProjects: PropTypes.arrayOf(PropTypes.object),
+    filterEnities: PropTypes.object,
     deleteItemsAction: PropTypes.func.isRequired,
     showScreenLockAction: PropTypes.func.isRequired,
     hideScreenLockAction: PropTypes.func.isRequired,
@@ -106,10 +110,12 @@ export class ProjectsToolbar extends Component {
   static defaultProps = {
     viewMode: GRID_VIEW,
     selectedProjects: [],
+    filterEnities: {},
   };
 
   onExportProjects = () => {
-    window.location.href = URLS.exportProjects();
+    const { filterEnities } = this.props;
+    window.location.href = URLS.exportProjects(filterEnities);
   };
 
   getSelectedProjectsNames = () =>

@@ -2,6 +2,7 @@ import { stringify } from 'qs';
 import { getStorageItem } from 'common/utils';
 import { TOKEN_KEY } from 'controllers/auth';
 import { CSV } from 'common/constants/fileTypes';
+import { createFilterQuery } from 'components/filterEntities/containers/utils';
 
 export const DEFAULT_API_URL_PREFIX = '/api/v1/';
 export const UAT_API_URL_PREFIX = '/uat/';
@@ -126,10 +127,11 @@ export const URLS = {
   projectSearch: () => `${urlBase}project/list?filter.cnt.name=`,
   projectNameSearch: () => `${urlBase}project/names/search?term=`,
 
-  exportProjects: () =>
+  exportProjects: (filterEntities) =>
     `${urlBase}project/export${getQueryParams({
       view: CSV,
       access_token: getToken(),
+      ...createFilterQuery(filterEntities),
     })}`,
   projectNotificationConfiguration: (activeProject) =>
     `${urlBase}project/${activeProject}/notification`,
