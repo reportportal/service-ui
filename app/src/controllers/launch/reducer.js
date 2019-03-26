@@ -6,6 +6,7 @@ import { paginationReducer } from 'controllers/pagination';
 import { groupOperationsReducer } from 'controllers/groupOperations';
 import { loadingReducer } from 'controllers/loading';
 import { ALL } from 'common/constants/reservedFilterIds';
+import { queueReducers } from 'common/utils/queueReducers';
 import {
   NAMESPACE,
   SET_DEBUG_MODE,
@@ -34,9 +35,7 @@ const launchDistinctReducer = (state = getDefaultLaunchDistinctState(), { type, 
       return state;
   }
 };
-
-const launchReducerWrapper = () => (state, options) => {
-  const { type, payload } = options;
+const updateLaunchLocallyReducer = (state, { type, payload }) => {
   switch (type) {
     case UPDATE_LAUNCH_LOCALLY:
       return state.map((item) => {
@@ -46,12 +45,15 @@ const launchReducerWrapper = () => (state, options) => {
         return item;
       });
     default:
-      return fetchReducer(NAMESPACE, { contentPath: 'content' })(state, options);
+      return state;
   }
 };
 
 export const launchReducer = combineReducers({
-  launches: launchReducerWrapper(),
+  launches: queueReducers(
+    fetchReducer(NAMESPACE, { contentPath: 'content' }),
+    updateLaunchLocallyReducer,
+  ),
   pagination: paginationReducer(NAMESPACE),
   groupOperations: groupOperationsReducer(NAMESPACE),
   loading: loadingReducer(NAMESPACE),
