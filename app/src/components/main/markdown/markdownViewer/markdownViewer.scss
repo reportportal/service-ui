@@ -29,6 +29,10 @@
   word-wrap: break-word;
   word-break: break-all;
 
+  @supports (word-break: break-word) {
+    word-break: break-word;
+  }
+
   .CodeMirror {
     .CodeMirror-lines {
       padding: 0;
