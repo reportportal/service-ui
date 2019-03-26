@@ -48,5 +48,6 @@ export {
   PROJECT_LOG_PAGE,
   PROJECT_USERDEBUG_LOG_PAGE,
   pageNames,
+  adminPageNames,
   NOT_FOUND,
 } from './constants';

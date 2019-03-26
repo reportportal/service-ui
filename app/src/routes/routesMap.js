@@ -22,10 +22,12 @@ import {
   PLUGINS_PAGE,
   projectIdSelector,
   NOT_FOUND,
+  adminPageNames,
+  pageSelector,
 } from 'controllers/pages';
 import { GENERAL, EMAIL_SERVER } from 'common/constants/settingsTabs';
 import { SETTINGS, MEMBERS, EVENTS } from 'common/constants/projectSections';
-import { isAuthorizedSelector, isAdminAccessSelector } from 'controllers/auth';
+import { isAuthorizedSelector } from 'controllers/auth';
 import {
   fetchDashboardsAction,
   changeVisibilityTypeAction,
@@ -58,20 +60,27 @@ export const onBeforeRouteChange = (dispatch, getState, { action }) => {
     return;
   }
 
-  const { projectId: hashProject } = action.payload;
+  const {
+    payload: { projectId: hashProject },
+    type: nextPageType,
+  } = action;
   if (!hashProject) {
     return;
   }
 
+  const currentPageType = pageSelector(getState());
   const activeProjectId = activeProjectSelector(getState());
   const userInfo = userInfoSelector(getState());
+
   const userProjects = userInfo ? userInfo.assignedProjects : {};
-  const isAdminAccess = isAdminAccessSelector(getState());
+  const isAdminNewPageType = !!adminPageNames[nextPageType];
+  const isAdminCurrentPageType = !!adminPageNames[currentPageType];
+
   if (
     userProjects &&
     Object.prototype.hasOwnProperty.call(userProjects, hashProject) &&
-    hashProject !== activeProjectId &&
-    !isAdminAccess
+    (hashProject !== activeProjectId || isAdminCurrentPageType) &&
+    !isAdminNewPageType
   ) {
     dispatch(setActiveProjectAction(hashProject));
     dispatch(fetchProjectAction(hashProject));

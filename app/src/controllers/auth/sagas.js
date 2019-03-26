@@ -6,7 +6,7 @@ import { NOTIFICATION_TYPES } from 'controllers/notification/constants';
 import { activeProjectSelector, fetchUserAction } from 'controllers/user';
 import { fetchProjectAction } from 'controllers/project';
 import { authSuccessAction, resetTokenAction, setTokenAction } from './actionCreators';
-import { LOGIN, LOGOUT, TOKEN_KEY, GRANT_TYPES, SET_TOKEN, RESET_ADMIN_ACCESS } from './constants';
+import { LOGIN, LOGOUT, TOKEN_KEY, GRANT_TYPES, SET_TOKEN } from './constants';
 
 function* handleLogout() {
   yield put(resetTokenAction());
@@ -59,15 +59,6 @@ function* watchSetToken() {
   yield takeEvery(SET_TOKEN, handleSetToken);
 }
 
-function* handleResetAdminAccess() {
-  const projectId = yield select(activeProjectSelector);
-  yield put(fetchProjectAction(projectId));
-}
-
-function* watchResetAdminAccess() {
-  yield takeEvery(RESET_ADMIN_ACCESS, handleResetAdminAccess);
-}
-
 export function* authSagas() {
-  yield all([watchLogin(), watchLogout(), watchSetToken(), watchResetAdminAccess()]);
+  yield all([watchLogin(), watchLogout(), watchSetToken()]);
 }

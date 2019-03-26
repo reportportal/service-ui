@@ -5,8 +5,6 @@ export {
   authSuccessAction,
   setTokenAction,
   resetTokenAction,
-  setAdminAccessAction,
-  resetAdminAccessAction,
 } from './actionCreators';
 export { authReducer } from './reducer';
-export { isAuthorizedSelector, tokenSelector, isAdminAccessSelector } from './selectors';
+export { isAuthorizedSelector, tokenSelector } from './selectors';
