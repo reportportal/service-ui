@@ -1,12 +1,5 @@
 import { combineReducers } from 'redux';
-import {
-  AUTH_SUCCESS,
-  LOGOUT,
-  SET_TOKEN,
-  DEFAULT_TOKEN,
-  SET_ADMIN_ACCESS,
-  RESET_ADMIN_ACCESS,
-} from './constants';
+import { AUTH_SUCCESS, LOGOUT, SET_TOKEN, DEFAULT_TOKEN } from './constants';
 
 export const authorizedReducer = (state = false, { type }) => {
   switch (type) {
@@ -28,19 +21,7 @@ export const tokenReducer = (state = DEFAULT_TOKEN, { type, payload }) => {
   }
 };
 
-export const isAdminAccessReducer = (state = false, { type }) => {
-  switch (type) {
-    case SET_ADMIN_ACCESS:
-      return true;
-    case RESET_ADMIN_ACCESS:
-      return false;
-    default:
-      return state;
-  }
-};
-
 export const authReducer = combineReducers({
   authorized: authorizedReducer,
   token: tokenReducer,
-  isAdminAccess: isAdminAccessReducer,
 });
