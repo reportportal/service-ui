@@ -3,6 +3,7 @@ export {
   toggleUserSelectionAction,
   toggleAllUsersAction,
   deleteItemsAction,
+  unselectAllUsersAction,
 } from './actionCreators';
 export { allUsersReducer } from './reducer';
 export {
