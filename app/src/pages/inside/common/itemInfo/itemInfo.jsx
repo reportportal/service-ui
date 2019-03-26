@@ -50,7 +50,6 @@ export class ItemInfo extends Component {
     intl: PropTypes.object.isRequired,
     value: PropTypes.object,
     refFunction: PropTypes.func,
-    analyzing: PropTypes.bool,
     customProps: PropTypes.object,
     userProjectRole: PropTypes.string,
     userAccountRole: PropTypes.string.isRequired,
@@ -68,7 +67,6 @@ export class ItemInfo extends Component {
 
   static defaultProps = {
     value: {},
-    analyzing: false,
     customProps: {
       ownLinkParams: {},
       onEditItem: () => {},
@@ -106,7 +104,6 @@ export class ItemInfo extends Component {
       value,
       editDisabled,
       refFunction,
-      analyzing,
       userProjectRole,
       userAccountRole,
       userId,
@@ -129,7 +126,7 @@ export class ItemInfo extends Component {
             <span className={cx('name')}>{value.name}</span>
             {value.number && <span className={cx('number')}>#{value.number}</span>}
           </NameLink>
-          {analyzing && <div className={cx('analysis-badge')}>Analysis</div>}
+          {value.analyzing && <div className={cx('analysis-badge')}>Analysis</div>}
           {isStepLevel && (
             <div className={cx('test-params-icon')} onClick={this.handleShowTestParams}>
               {Parser(TestParamsIcon)}
