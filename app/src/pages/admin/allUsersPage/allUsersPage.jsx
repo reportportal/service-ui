@@ -8,6 +8,7 @@ import { withPagination, DEFAULT_PAGINATION, SIZE_KEY } from 'controllers/pagina
 import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLock';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { ADMIN_ALL_USERS_PAGE_MODAL_EVENTS } from 'components/main/analytics/events';
+import { NoItemMessage } from 'components/main/noItemMessage';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
 import {
@@ -22,6 +23,7 @@ import {
   fetchAllUsersAction,
 } from 'controllers/administrate/allUsers';
 import { userInfoSelector, userIdSelector } from 'controllers/user';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { UsersToolbar } from './usersToolbar';
 import { AllUsersGrid } from './allUsersGrid';
 
@@ -230,6 +232,7 @@ export class AllUsersPage extends Component {
       loading,
       users,
       selectedUsers,
+      intl,
     } = this.props;
     return (
       <PageLayout>
@@ -254,6 +257,10 @@ export class AllUsersPage extends Component {
                 onChangePage={onChangePage}
                 onChangePageSize={onChangePageSize}
               />
+            )}
+          {!users.length &&
+            !loading && (
+              <NoItemMessage message={intl.formatMessage(COMMON_LOCALE_KEYS.NO_RESULTS)} />
             )}
         </PageSection>
       </PageLayout>

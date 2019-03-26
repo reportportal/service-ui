@@ -10,15 +10,21 @@ import {
   GRID_VIEW,
   projectsPaginationSelector,
   viewModeSelector,
+  loadingSelector,
+  projectsSelector,
 } from 'controllers/administrate/projects';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 
 import { PaginationToolbar } from 'components/main/paginationToolbar';
+import { NoItemMessage } from 'components/main/noItemMessage';
 
 import { ProjectsGrid } from './../projectsGrid';
 import { ProjectsToolbar } from './../projectsToolbar';
 
 @connect((state) => ({
   viewMode: viewModeSelector(state),
+  loading: loadingSelector(state),
+  projects: projectsSelector(state),
 }))
 @withPagination({
   paginationSelector: projectsPaginationSelector,
@@ -34,6 +40,8 @@ export class Projects extends Component {
     onChangePageSize: PropTypes.func.isRequired,
     intl: intlShape.isRequired,
     viewMode: PropTypes.string,
+    loading: PropTypes.bool,
+    projects: PropTypes.arrayOf(PropTypes.object),
   };
 
   static defaultProps = {
@@ -42,6 +50,8 @@ export class Projects extends Component {
     pageCount: null,
     pageSize: DEFAULT_PAGINATION[SIZE_KEY],
     viewMode: GRID_VIEW,
+    loading: false,
+    projects: [],
   };
 
   render() {
@@ -53,6 +63,9 @@ export class Projects extends Component {
       onChangePage,
       onChangePageSize,
       viewMode,
+      loading,
+      intl,
+      projects,
     } = this.props;
 
     return (
@@ -61,14 +74,19 @@ export class Projects extends Component {
 
         {viewMode === TABLE_VIEW && <ProjectsGrid />}
 
-        <PaginationToolbar
-          activePage={activePage}
-          itemCount={itemCount}
-          pageCount={pageCount}
-          pageSize={pageSize}
-          onChangePage={onChangePage}
-          onChangePageSize={onChangePageSize}
-        />
+        {!!pageCount &&
+          !loading && (
+            <PaginationToolbar
+              activePage={activePage}
+              itemCount={itemCount}
+              pageCount={pageCount}
+              pageSize={pageSize}
+              onChangePage={onChangePage}
+              onChangePageSize={onChangePageSize}
+            />
+          )}
+        {!projects.length &&
+          !loading && <NoItemMessage message={intl.formatMessage(COMMON_LOCALE_KEYS.NO_RESULTS)} />}
       </React.Fragment>
     );
   }
