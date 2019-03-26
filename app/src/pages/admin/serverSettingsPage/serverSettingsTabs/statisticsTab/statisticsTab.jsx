@@ -102,12 +102,12 @@ export class StatisticsTab extends Component {
     }));
   };
 
-  submit = (data) => {
+  submit = () => {
     this.setState({
       loading: true,
     });
 
-    this.updateStatisticsConfig(data.enabled);
+    this.updateStatisticsConfig(this.state.statisticsEnabled);
   };
 
   toggleStatistics = () => this.setState({ statisticsEnabled: !this.state.statisticsEnabled });

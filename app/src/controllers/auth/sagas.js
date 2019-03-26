@@ -5,6 +5,7 @@ import { showNotification } from 'controllers/notification';
 import { NOTIFICATION_TYPES } from 'controllers/notification/constants';
 import { activeProjectSelector, fetchUserAction } from 'controllers/user';
 import { fetchProjectAction } from 'controllers/project';
+import { fetchInfoAction } from 'controllers/appInfo';
 import { authSuccessAction, resetTokenAction, setTokenAction } from './actionCreators';
 import { LOGIN, LOGOUT, TOKEN_KEY, GRANT_TYPES, SET_TOKEN } from './constants';
 
@@ -40,6 +41,7 @@ function* handleLogin({ payload }) {
       value: result.access_token,
     }),
   );
+  yield put(fetchInfoAction());
   // TODO: Change those calls after project & users actions will be refactored with sagas
   yield put.resolve(fetchUserAction());
   const projectId = yield select(activeProjectSelector);
