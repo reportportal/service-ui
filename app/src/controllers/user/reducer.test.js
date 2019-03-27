@@ -1,3 +1,4 @@
+import { PROJECT_MANAGER } from 'common/constants/projectRoles';
 import {
   FETCH_USER_SUCCESS,
   SET_ACTIVE_PROJECT,
@@ -6,8 +7,16 @@ import {
   START_TIME_FORMAT_ABSOLUTE,
   SET_PHOTO_TIME_STAMP,
   SET_API_TOKEN,
+  ASSIGN_TO_RROJECT_SUCCESS,
+  UNASSIGN_FROM_PROJECT_SUCCESS,
 } from './constants';
-import { settingsReducer, userInfoReducer, activeProjectReducer, apiTokenReducer } from './reducer';
+import {
+  settingsReducer,
+  userInfoReducer,
+  activeProjectReducer,
+  apiTokenReducer,
+  userAssignedProjectReducer,
+} from './reducer';
 
 describe('user reducer', () => {
   describe('settingsReducer', () => {
@@ -101,6 +110,71 @@ describe('user reducer', () => {
           payload: { type: 'bearer', value: 'token' },
         }),
       ).toEqual({ type: 'bearer', value: 'token' });
+    });
+  });
+
+  describe('userAssignedProjectReducer', () => {
+    const oldState = {
+      admin_personal: {
+        projectRole: 'PROJECT_MANAGER',
+        entryType: 'PERSONAL',
+      },
+    };
+
+    test('should return initial state', () => {
+      expect(userAssignedProjectReducer(undefined, {})).toEqual({});
+    });
+
+    test('should return old state on unknown action', () => {
+      expect(userAssignedProjectReducer(oldState, { type: 'foo' })).toBe(oldState);
+    });
+
+    test('should handle ASSIGN_TO_RROJECT_SUCCESS', () => {
+      const payloadProject = {
+        projectName: 'superadmin_personal',
+        entryType: 'INTERNAL',
+        projectRole: PROJECT_MANAGER,
+      };
+      const assignResult = {
+        admin_personal: {
+          projectRole: 'PROJECT_MANAGER',
+          entryType: 'PERSONAL',
+        },
+        superadmin_personal: {
+          projectRole: 'PROJECT_MANAGER',
+          entryType: 'INTERNAL',
+        },
+      };
+      expect(
+        userAssignedProjectReducer(oldState, {
+          type: ASSIGN_TO_RROJECT_SUCCESS,
+          payload: payloadProject,
+        }),
+      ).toEqual(assignResult);
+    });
+
+    test('should handle UNASSIGN_FROM_PROJECT_SUCCESS', () => {
+      const stateBeforeUnassign = {
+        admin_personal: {
+          projectRole: 'PROJECT_MANAGER',
+          entryType: 'PERSONAL',
+        },
+        superadmin_personal: {
+          projectRole: 'PROJECT_MANAGER',
+          entryType: 'INTERNAL',
+        },
+      };
+      const payloadProject = {
+        projectName: 'superadmin_personal',
+        entryType: 'INTERNAL',
+        projectRole: PROJECT_MANAGER,
+      };
+      expect(
+        userAssignedProjectReducer(stateBeforeUnassign, {
+          type: UNASSIGN_FROM_PROJECT_SUCCESS,
+          payload: payloadProject,
+        }),
+      ).toEqual(oldState);
     });
   });
 });

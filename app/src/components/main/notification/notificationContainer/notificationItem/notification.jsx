@@ -14,6 +14,26 @@ const messages = defineMessages({
     defaultMessage: 'An error occurred while connecting to server: {error}',
   },
   infoLogout: { id: 'Notification.infoLogout', defaultMessage: 'You have been logged out' },
+  assignSuccess: {
+    id: 'ProjectsPage.assignSuccess',
+    defaultMessage: 'You have been assigned to the project',
+  },
+  assignError: {
+    id: 'ProjectsPage.assignError',
+    defaultMessage: 'An error occurred during assigning to the project',
+  },
+  unassignSuccess: {
+    id: 'ProjectsPage.unassignSuccess',
+    defaultMessage: 'You have been unassigned from the project',
+  },
+  unassignError: {
+    id: 'ProjectsPage.unassignError',
+    defaultMessage: 'An error occurred during unassigning from the project',
+  },
+  deleteError: {
+    id: 'ProjectsPage.deleteError',
+    defaultMessage: 'An error occurred during deleting the project',
+  },
 });
 
 @injectIntl

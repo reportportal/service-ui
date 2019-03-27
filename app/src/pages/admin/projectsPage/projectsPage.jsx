@@ -20,7 +20,7 @@ import ProjectSettingsIcon from 'common/img/project-settings-inline.svg';
 import ProjectEventsIcon from 'common/img/project-events-inline.svg';
 import { ProjectStatusPage } from '../projectStatusPage';
 import { ProjectEventsPage } from '../projectEventsPage';
-import { Projects } from './projects/projects';
+import { Projects } from './projects';
 import { AdminProjectSettingsPageContainer } from '../adminProjectSettingsPageContainer';
 
 import styles from './projectsPage.scss';

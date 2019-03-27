@@ -5,6 +5,7 @@ export {
   toggleAllProjectsAction,
   unselectAllProjectsAction,
   deleteItemsAction,
+  deleteProjectAction,
 } from './actionCreators';
 export { projectsReducer } from './reducer';
 export {

@@ -18,6 +18,7 @@ import {
   MembersColumn,
   LaunchesColumn,
   LastLaunchColumn,
+  MenuColumn,
 } from './projectsGridColumns';
 
 import styles from './projectsGrid.scss';
@@ -110,6 +111,10 @@ export class ProjectsGrid extends PureComponent {
         short: this.props.intl.formatMessage(messages.lastLaunchColShort),
       },
       component: LastLaunchColumn,
+    },
+    {
+      id: 'menu',
+      component: MenuColumn,
     },
   ];
 

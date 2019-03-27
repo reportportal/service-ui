@@ -4,6 +4,7 @@ import { FormattedMessage } from 'react-intl';
 import classNames from 'classnames/bind';
 import { AbsRelTime } from 'components/main/absRelTime';
 import styles from './projectsGrid.scss';
+import { ProjectMenu } from '../projectMenu';
 
 const cx = classNames.bind(styles);
 
@@ -78,5 +79,18 @@ LastLaunchColumn.propTypes = {
   value: PropTypes.object,
 };
 LastLaunchColumn.defaultProps = {
+  value: {},
+};
+
+export const MenuColumn = ({ className, value }) => (
+  <div className={cx('projects-col', className)}>
+    <ProjectMenu project={value} />
+  </div>
+);
+MenuColumn.propTypes = {
+  className: PropTypes.string.isRequired,
+  value: PropTypes.object,
+};
+MenuColumn.defaultProps = {
   value: {},
 };

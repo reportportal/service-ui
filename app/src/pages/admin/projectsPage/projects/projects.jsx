@@ -14,7 +14,6 @@ import {
   projectsSelector,
 } from 'controllers/administrate/projects';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-
 import { PaginationToolbar } from 'components/main/paginationToolbar';
 import { NoItemMessage } from 'components/main/noItemMessage';
 
@@ -72,7 +71,6 @@ export class Projects extends Component {
     return (
       <React.Fragment>
         <ProjectsToolbar />
-
         {viewMode === TABLE_VIEW ? <ProjectsGrid /> : <ProjectsPanelView />}
 
         {!!pageCount &&
