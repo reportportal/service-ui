@@ -45,27 +45,27 @@ import {
 export const actionMessages = defineMessages({
   [CREATE_DASHBOARD]: {
     id: 'EventActions.createDashboard',
-    defaultMessage: 'created dashboard',
+    defaultMessage: 'create dashboard',
   },
   [UPDATE_DASHBOARD]: {
     id: 'EventActions.updateDashboard',
-    defaultMessage: 'updated dashboard',
+    defaultMessage: 'update dashboard',
   },
   [DELETE_DASHBOARD]: {
     id: 'EventActions.deleteDashboard',
-    defaultMessage: 'deleted dashboard',
+    defaultMessage: 'delete dashboard',
   },
   [CREATE_WIDGET]: {
     id: 'EventActions.createWidget',
-    defaultMessage: 'created widget',
+    defaultMessage: 'create widget',
   },
   [UPDATE_WIDGET]: {
     id: 'EventActions.updateWidget',
-    defaultMessage: 'updated widget',
+    defaultMessage: 'update widget',
   },
   [DELETE_WIDGET]: {
     id: 'EventActions.deleteWidget',
-    defaultMessage: 'deleted widget',
+    defaultMessage: 'delete widget',
   },
   [CREATE_FILTER]: {
     id: 'EventActions.createFilter',
