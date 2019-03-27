@@ -58,7 +58,7 @@
   background-color: $COLOR--white-two;
   box-sizing: border-box;
   box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.09);
-  z-index: 1;
+  z-index: 2;
   &.opened {
     display: block;
   }

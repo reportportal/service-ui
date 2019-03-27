@@ -5,7 +5,7 @@ import {
   unselectAllItemsAction,
 } from 'controllers/groupOperations';
 import { showModalAction } from 'controllers/modal';
-import { FETCH_PROJECTS, START_SET_VIEW_MODE, NAMESPACE } from './constants';
+import { FETCH_PROJECTS, START_SET_VIEW_MODE, NAMESPACE, DELETE_PROJECT } from './constants';
 
 export const fetchProjectsAction = (params) => ({
   type: FETCH_PROJECTS,
@@ -31,3 +31,8 @@ export const deleteItemsAction = defineGroupOperation(
     }),
   () => {},
 );
+
+export const deleteProjectAction = (project) => ({
+  type: DELETE_PROJECT,
+  payload: project,
+});

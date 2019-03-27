@@ -6,6 +6,10 @@ import {
   SET_START_TIME_FORMAT,
   SET_API_TOKEN,
   SET_PHOTO_TIME_STAMP,
+  ASSIGN_TO_RROJECT,
+  ASSIGN_TO_RROJECT_SUCCESS,
+  UNASSIGN_FROM_PROJECT,
+  UNASSIGN_FROM_PROJECT_SUCCESS,
 } from './constants';
 import { userInfoSelector } from './selectors';
 
@@ -67,4 +71,24 @@ export const fetchUserAction = () => (dispatch) =>
 export const setStartTimeFormatAction = (format) => ({
   type: SET_START_TIME_FORMAT,
   payload: format,
+});
+
+export const assignToProjectAction = (project) => ({
+  type: ASSIGN_TO_RROJECT,
+  payload: project,
+});
+
+export const assignToProjectSuccessAction = (projectInfo) => ({
+  type: ASSIGN_TO_RROJECT_SUCCESS,
+  payload: projectInfo,
+});
+
+export const unassignFromProjectAction = (project) => ({
+  type: UNASSIGN_FROM_PROJECT,
+  payload: project,
+});
+
+export const unassignFromProjectSuccessAction = (project) => ({
+  type: UNASSIGN_FROM_PROJECT_SUCCESS,
+  payload: project,
 });

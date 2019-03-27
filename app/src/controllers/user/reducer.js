@@ -6,6 +6,8 @@ import {
   SETTINGS_INITIAL_STATE,
   SET_PHOTO_TIME_STAMP,
   SET_API_TOKEN,
+  ASSIGN_TO_RROJECT_SUCCESS,
+  UNASSIGN_FROM_PROJECT_SUCCESS,
 } from './constants';
 
 export const settingsReducer = (state = SETTINGS_INITIAL_STATE, { type, payload }) => {
@@ -19,10 +21,46 @@ export const settingsReducer = (state = SETTINGS_INITIAL_STATE, { type, payload 
   }
 };
 
+export const userAssignedProjectReducer = (state = {}, { type, payload }) => {
+  switch (type) {
+    case ASSIGN_TO_RROJECT_SUCCESS: {
+      const { projectName, projectRole, entryType } = payload;
+      return {
+        ...state,
+        [projectName]: {
+          projectRole,
+          entryType,
+        },
+      };
+    }
+    case UNASSIGN_FROM_PROJECT_SUCCESS: {
+      const { projectName } = payload;
+      return Object.keys(state).reduce(
+        (result, assignedProjectName) =>
+          assignedProjectName === projectName
+            ? result
+            : {
+                ...result,
+                [assignedProjectName]: state[assignedProjectName],
+              },
+        {},
+      );
+    }
+    default:
+      return state;
+  }
+};
+
 export const userInfoReducer = (state = {}, { type, payload }) => {
   switch (type) {
     case FETCH_USER_SUCCESS:
       return payload;
+    case ASSIGN_TO_RROJECT_SUCCESS:
+    case UNASSIGN_FROM_PROJECT_SUCCESS:
+      return {
+        ...state,
+        assignedProjects: userAssignedProjectReducer(state.assignedProjects, { type, payload }),
+      };
     default:
       return state;
   }

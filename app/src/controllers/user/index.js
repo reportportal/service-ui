@@ -1,4 +1,10 @@
-export { START_TIME_FORMAT_ABSOLUTE, START_TIME_FORMAT_RELATIVE, SET_API_TOKEN } from './constants';
+export {
+  START_TIME_FORMAT_ABSOLUTE,
+  START_TIME_FORMAT_RELATIVE,
+  SET_API_TOKEN,
+  ASSIGN_TO_RROJECT_SUCCESS,
+  UNASSIGN_FROM_PROJECT_SUCCESS,
+} from './constants';
 export {
   fetchUserAction,
   setActiveProjectAction,
@@ -6,6 +12,8 @@ export {
   generateApiTokenAction,
   fetchApiTokenAction,
   setPhotoTimeStampAction,
+  assignToProjectAction,
+  unassignFromProjectAction,
 } from './actionCreators';
 export { userReducer } from './reducer';
 export {
@@ -22,3 +30,4 @@ export {
   apiTokenValueSelector,
   apiTokenStringSelector,
 } from './selectors';
+export { userSagas } from './sagas';
