@@ -44,10 +44,10 @@ const ValueField = formValues({ attributeKey: 'key' })(
     if (!value) {
       valueError = 'requiredFieldHint';
     } else if (!validate.attributeKey(value)) {
-      valueError = 'attributeLengthHint';
+      valueError = 'attributeValueLengthHint';
     }
     return {
-      key: key && !validate.attributeKey(key) ? 'attributeLengthHint' : undefined,
+      key: key && !validate.attributeKey(key) ? 'attributeKeyLengthHint' : undefined,
       value: valueError,
     };
   },

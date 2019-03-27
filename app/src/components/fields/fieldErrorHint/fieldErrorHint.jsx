@@ -102,10 +102,6 @@ const messages = defineMessages({
     id: 'emailCase.recipientsHint',
     defaultMessage: 'Select at least one recipient or set up “OFF” e-mail notifications',
   },
-  tagsHint: {
-    id: 'emailCase.tagsHint',
-    defaultMessage: 'Tag name should have size from 3 to 256',
-  },
   launchesHint: {
     id: 'emailCase.launchesHint',
     defaultMessage: 'Launch name should have size from 3 to 256',
@@ -125,6 +121,14 @@ const messages = defineMessages({
   portFieldHint: {
     id: 'EmailServerTab.portFieldHint',
     defaultMessage: "Only numbers from '1' to '65535' are possible.",
+  },
+  attributeKeyLengthHint: {
+    id: 'AttributeEditor.attributeKeyLengthHint',
+    defaultMessage: 'Attribute key should have size from 1 to 128',
+  },
+  attributeValueLengthHint: {
+    id: 'AttributeEditor.attributeValueLengthHint',
+    defaultMessage: 'Attribute value should have size from 1 to 128',
   },
 });
 
