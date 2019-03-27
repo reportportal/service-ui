@@ -1,0 +1,55 @@
+.cumulative-trend-chart {
+  :global {
+    svg {
+      .c3-axis {
+        font-family: $FONT-REGULAR, sans-serif;
+        fill: $COLOR--charcoal-grey;
+        .c3-axis-y-label {
+          font-size: 12px;
+        }
+      }
+    }
+
+    .c3-grid line {
+      stroke: $COLOR--gray-80;
+    }
+
+    .c3-xgrid,
+    .c3-ygrid {
+      stroke-dasharray: none;
+    }
+
+    .c3-tooltip-container {
+      width: 215px;
+      background-color: $COLOR--white-two;
+      padding: 0 10px 5px 10px;
+      border: solid 1px $COLOR--gray-80;
+      border-radius: 2px;
+      font-size: 13px;
+
+      &:after {
+        content: '';
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        margin-left: -5px;
+        border-top: 6px solid $COLOR--white-two;
+        border-left: 6px solid transparent;
+        border-right: 6px solid transparent;
+      }
+      
+      &:before {
+        content: '';
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        margin-left: -7px;
+        width: 0;
+        height: 0;
+        border-left: 8px solid transparent;
+        border-right: 8px solid transparent;
+        border-top: 8px solid $COLOR--gray-80;
+      }
+    }
+  }
+}
