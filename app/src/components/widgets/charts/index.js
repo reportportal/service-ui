@@ -6,6 +6,7 @@ import { FailedCasesTrendChart } from './failedCasesTrendChart';
 import { NonPassedTestCasesTrendChart } from './nonPassedTestCasesTrendChart';
 import { PassingRatePerLaunch } from './passingRatePerLaunch';
 import { LaunchExecutionAndIssueStatistics } from './launchExecutionAndIssueStatistics';
+import { CumulativeTrendChart } from './cumulativeTrendChart';
 import { OverallStatisticsChart } from './overallStatisticsChart';
 
 export {
@@ -17,5 +18,6 @@ export {
   NonPassedTestCasesTrendChart,
   PassingRatePerLaunch,
   LaunchExecutionAndIssueStatistics,
+  CumulativeTrendChart,
   OverallStatisticsChart,
 };
