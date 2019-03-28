@@ -186,6 +186,7 @@ export class EventsGrid extends PureComponent {
       title: {
         full: this.props.intl.formatMessage(messages.objectNameCol),
       },
+      sortable: true,
       component: ObjectNameColumn,
     },
     {
