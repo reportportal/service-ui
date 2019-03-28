@@ -37,6 +37,10 @@ export const HeaderCell = track()(
       onFilterClick(id);
       filterEventInfo && tracking.trackEvent(filterEventInfo);
     };
+    const sortingClickHandler = () => {
+      tracking.trackEvent(sortingEventInfo);
+      onChangeSorting(id);
+    };
     const TitleComponent = title.component;
     const titleComponentProps = title.componentProps;
     return title.component ? (
@@ -44,10 +48,7 @@ export const HeaderCell = track()(
     ) : (
       <div
         className={cx('header-cell', computedClassName)}
-        onClick={() => {
-          tracking.trackEvent(sortingEventInfo);
-          onChangeSorting(id);
-        }}
+        onClick={sortable ? sortingClickHandler : null}
       >
         <div className={cx('title-container')}>
           <div className={cx('filter')} onClick={filterClickHandler}>
