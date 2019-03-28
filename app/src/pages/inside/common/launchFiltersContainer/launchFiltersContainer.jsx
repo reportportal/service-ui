@@ -16,6 +16,7 @@ import { fetchLaunchesWithParamsAction, fetchLaunchesAction } from 'controllers/
 import { debounce } from 'common/utils';
 import { hideFilterOnLaunchesAction } from 'controllers/project';
 import { isEmptyValue } from 'common/utils/isEmptyValue';
+import { PAGE_KEY } from 'controllers/pagination';
 
 @connect(
   (state) => ({
@@ -46,6 +47,7 @@ export class LaunchFiltersContainer extends Component {
     hideFilterOnLaunchesAction: PropTypes.func,
     removeLaunchesFilterAction: PropTypes.func,
     createFilter: PropTypes.func,
+    onChange: PropTypes.func,
   };
 
   static defaultProps = {
@@ -59,6 +61,7 @@ export class LaunchFiltersContainer extends Component {
     hideFilterOnLaunchesAction: () => {},
     removeLaunchesFilterAction: () => {},
     createFilter: () => {},
+    onChange: () => {},
   };
 
   getConditions = () => {
@@ -90,16 +93,20 @@ export class LaunchFiltersContainer extends Component {
     const currentFilter = this.createFilterQuery(this.getConditions());
 
     if (!isEqual(currentFilter, newFilter)) {
-      this.fetchLaunches(newFilter);
+      this.fetchLaunches({ [PAGE_KEY]: 1, newFilter });
     }
 
+    const conditionsWithFilteringField = addFilteringFieldToConditions(conditions);
+
     if (this.props.activeFilter) {
-      this.updateFilter(this.props.activeFilterId, addFilteringFieldToConditions(conditions));
+      this.updateFilter(this.props.activeFilterId, conditionsWithFilteringField);
     } else {
       this.props.createFilter({
-        conditions: addFilteringFieldToConditions(conditions),
+        conditions: conditionsWithFilteringField,
       });
     }
+
+    this.props.onChange(conditions);
   };
 
   handleFilterRemove = (filter) => {
