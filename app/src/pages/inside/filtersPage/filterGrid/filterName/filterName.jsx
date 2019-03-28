@@ -16,7 +16,7 @@ const cx = classNames.bind(styles);
 const messages = defineMessages({
   shareFilter: {
     id: 'FiltersPage.shareFilter',
-    defaultMessage: 'Filter is shared',
+    defaultMessage: 'Filter is shared by {owner}',
   },
 });
 
@@ -114,7 +114,10 @@ export class FilterName extends Component {
 
           {filter.share &&
             !noShareIcons && (
-              <span className={cx('share-icon')} title={intl.formatMessage(messages.shareFilter)}>
+              <span
+                className={cx('share-icon')}
+                title={intl.formatMessage(messages.shareFilter, { owner: filter.owner })}
+              >
                 {Parser(this.getShareIcon())}
               </span>
             )}

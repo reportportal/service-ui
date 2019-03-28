@@ -492,7 +492,7 @@
   "FiltersPage.msgFavoriteFilters": "Фільтры - пошукавыя запыты, якія былі ўпадабаны для паўторнага выкарыстання.",
   "FiltersPage.notFound": "No filters found for '{filter}'",
   "FiltersPage.searchByName": "Пошук па назве",
-  "FiltersPage.shareFilter": "Агульны фільтр",
+  "FiltersPage.shareFilter": "Фільтр апублікаваны {owner}",
   "FiltersPage.title": "Фільтры",
   "FiltersWrapper.chooseFilter": "Выберыце фільтр з спісу ніжэй",
   "FlakyTestCasesTableControls.IncludeMethodsControlText": "Include Before and After methods",

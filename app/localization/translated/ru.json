@@ -492,7 +492,7 @@
   "FiltersPage.msgFavoriteFilters": "Фильтры - это поисковые запросы, которые были сохранены для повторного использования.",
   "FiltersPage.notFound": "No filters found for '{filter}'",
   "FiltersPage.searchByName": "Поиск по имени",
-  "FiltersPage.shareFilter": "Общий фильтр",
+  "FiltersPage.shareFilter": "Фильтр предоставлен {owner}",
   "FiltersPage.title": "Фильтры",
   "FiltersWrapper.chooseFilter": "Выберите фильтр из списка ниже",
   "FlakyTestCasesTableControls.IncludeMethodsControlText": "Include Before and After methods",
