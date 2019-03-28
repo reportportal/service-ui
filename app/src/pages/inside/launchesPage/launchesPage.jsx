@@ -351,6 +351,12 @@ export class LaunchesPage extends Component {
     });
   };
 
+  resetPageNumber = () => {
+    if (this.props.activePage !== 1) {
+      this.props.onChangePage(1);
+    }
+  };
+
   handleAllLaunchesSelection = () => {
     this.props.tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_SELECT_ALL_ICON);
     this.props.toggleAllLaunchesAction(this.props.launches);
@@ -497,6 +503,12 @@ export class LaunchesPage extends Component {
   };
 
   render() {
-    return <LaunchFiltersContainer {...this.props} render={this.renderPageContent} />;
+    return (
+      <LaunchFiltersContainer
+        {...this.props}
+        onChange={this.resetPageNumber}
+        render={this.renderPageContent}
+      />
+    );
   }
 }
