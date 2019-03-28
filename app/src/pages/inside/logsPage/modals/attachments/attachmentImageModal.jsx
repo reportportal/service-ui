@@ -4,6 +4,7 @@ import Parser from 'html-react-parser';
 import { injectIntl, intlShape } from 'react-intl';
 import classNames from 'classnames/bind';
 import RotateImage from 'common/img/rotate-inline.svg';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { ModalLayout, withModal } from 'components/main/modal';
 import { ATTACHMENT_IMAGE_MODAL_ID } from 'controllers/log/attachments';
 import { messages } from './messages';
@@ -33,24 +34,26 @@ export class AttachmentImageModal extends Component {
         }
       : null;
 
-  getRotatedImageSize = () => {
+  getRotatedImageStyle = () => {
     const { rotationAmount } = this.state;
     this.initNativeImageSize();
-    const wrapperStyle = {};
+    const imageStyle = {
+      transform: this.generateRotationCommand(rotationAmount),
+    };
 
     if (this.nativeImageSize) {
-      wrapperStyle.height =
+      imageStyle.height =
         (rotationAmount / 90) % 2 === 1
           ? `${this.nativeImageSize.width}px`
           : `${this.nativeImageSize.height}px`;
       if (this.nativeImageSize.width < this.nativeImageSize.height) {
-        wrapperStyle.width =
+        imageStyle.width =
           (rotationAmount / 90) % 2 === 1
             ? `${this.nativeImageSize.height}px`
             : `${this.nativeImageSize.width}px`;
       }
     }
-    return wrapperStyle;
+    return imageStyle;
   };
 
   initNativeImageSize = () => {
@@ -78,7 +81,7 @@ export class AttachmentImageModal extends Component {
   );
 
   renderCancelButton = () => ({
-    text: this.props.intl.formatMessage(messages.close),
+    text: this.props.intl.formatMessage(COMMON_LOCALE_KEYS.CLOSE),
     onClick: (closeModal) => closeModal(),
   });
 
@@ -87,9 +90,7 @@ export class AttachmentImageModal extends Component {
       intl: { formatMessage },
       data: { image },
     } = this.props;
-    const { rotationAmount } = this.state;
-    const imageStyle = { transform: this.generateRotationCommand(rotationAmount) };
-    const wrapperStyle = this.getRotatedImageSize();
+    const imageStyle = this.getRotatedImageStyle();
 
     return (
       <ModalLayout
@@ -99,7 +100,7 @@ export class AttachmentImageModal extends Component {
         className={cx('attachment-image-modal')}
       >
         <div className={cx('attachment-modal-content-wrapper')}>
-          <div className={cx('attachment-image-wrapper')} style={wrapperStyle}>
+          <div className={cx('attachment-image-wrapper')}>
             <a href={image} target="_blank" className={cx('attachment-image')}>
               <img
                 ref={this.imageRef}

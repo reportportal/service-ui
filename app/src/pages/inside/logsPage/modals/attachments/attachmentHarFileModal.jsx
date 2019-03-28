@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { injectIntl, intlShape } from 'react-intl';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { ModalLayout, withModal } from 'components/main/modal';
 import { ATTACHMENT_HAR_FILE_MODAL_ID } from 'controllers/log/attachments';
 import { messages } from './messages';
@@ -18,7 +19,7 @@ export class AttachmentHarFileModal extends Component {
   };
 
   renderOkButton = () => ({
-    text: this.props.intl.formatMessage(messages.close),
+    text: this.props.intl.formatMessage(COMMON_LOCALE_KEYS.CLOSE),
     onClick: (closeModal) => closeModal(),
   });
 
