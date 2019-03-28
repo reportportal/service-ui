@@ -23,6 +23,7 @@ import { AutoAnalysisTab } from './autoAnalysisTab';
 import { NotificationsTab } from './notificationsTab';
 import { DemoDataTab } from './demoDataTab';
 import { IntegrationsTab } from './integrationsTab';
+import { DefectTypesTab } from './defectTypesTab';
 import styles from './settingsPage.scss';
 
 const cx = classNames.bind(styles);
@@ -106,7 +107,7 @@ export class SettingsPage extends Component {
       [DEFECT]: {
         name: this.props.intl.formatMessage(messages.defect),
         link: this.props.createTabLink(DEFECT),
-        component: <div>defect</div>,
+        component: <DefectTypesTab />,
         eventInfo: SETTINGS_PAGE_EVENTS.DEFECT_TYPE_TAB,
       },
       [ANALYSIS]: {

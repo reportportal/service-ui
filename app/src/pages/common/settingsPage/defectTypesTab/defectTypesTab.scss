@@ -1,0 +1,67 @@
+.defect-types-list {
+  font-size: 12px;
+}
+
+.header {
+  display: flex;
+  color: $COLOR--charcoal-grey;
+  border-bottom: 1px solid $COLOR--skipped;
+}
+
+.header-cell {
+  text-transform: uppercase;
+  padding: 10px;
+  font-weight: bold;
+}
+
+.name-cell {
+  text-align: center;
+  width: 33%;
+}
+
+.abbr-cell {
+  text-align: center;
+  width: 17%;
+}
+
+.color-cell {
+  text-align: center;
+  width: 25%;
+}
+
+.diagram-cell {
+  text-align: center;
+  width: 25%;
+}
+
+.group-name {
+  color: $COLOR--gray-47;
+  background-color: $COLOR--white-four;
+  padding: 7px 10px;
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
+.color-marker {
+  display: inline-block;
+  height: 12px;
+  width: 12px;
+  border-radius: 50%;
+}
+
+.defect-type {
+  display: flex;
+  margin: 20px 0;
+}
+
+.defect-type-name-wrap {
+  border: 1px solid $COLOR--gray-80;
+  padding: 2px 7px;
+  border-radius: 100px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.defect-type-name {
+  margin-left: 5px;
+}
