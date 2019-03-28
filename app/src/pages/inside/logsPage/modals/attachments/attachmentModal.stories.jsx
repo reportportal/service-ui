@@ -21,7 +21,7 @@
 
 import { storiesOf } from '@storybook/react';
 import { withReadme } from 'storybook-readme';
-import { AttachmentCodeModal, AttachmentHarFileModal, AttachmentImageModal } from '.';
+import { AttachmentCodeModal, AttachmentHarFileModal, AttachmentImageModal } from './index';
 import README from './README.md';
 import harData from './example.har';
 

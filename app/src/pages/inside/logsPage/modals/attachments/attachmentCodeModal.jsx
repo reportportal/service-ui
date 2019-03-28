@@ -1,9 +1,10 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { injectIntl, intlShape } from 'react-intl';
-import { ModalLayout, withModal } from 'components/main/modal';
 import Highlight from 'react-highlight';
 import 'highlight.js/styles/github.css';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { ModalLayout, withModal } from 'components/main/modal';
 import { ATTACHMENT_CODE_MODAL_ID } from 'controllers/log/attachments';
 import { messages } from './messages';
 
@@ -24,7 +25,7 @@ export class AttachmentCodeModal extends Component {
       data: { extension, content },
     } = this.props;
     const cancelButton = {
-      text: intl.formatMessage(messages.close),
+      text: intl.formatMessage(COMMON_LOCALE_KEYS.CLOSE),
     };
 
     return (

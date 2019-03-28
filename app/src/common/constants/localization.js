@@ -9,6 +9,10 @@ export const COMMON_LOCALE_KEYS = defineMessages({
     id: 'Common.cancel',
     defaultMessage: 'Cancel',
   },
+  CLOSE: {
+    id: 'Common.close',
+    defaultMessage: 'Close',
+  },
   UPDATE: {
     id: 'Common.update',
     defaultMessage: 'Update',

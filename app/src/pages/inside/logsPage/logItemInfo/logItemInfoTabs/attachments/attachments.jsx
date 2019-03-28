@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { injectIntl, intlShape } from 'react-intl';
+import { injectIntl, intlShape, defineMessages } from 'react-intl';
 import { Carousel } from 'react-responsive-carousel';
 import 'react-responsive-carousel/lib/styles/carousel.css';
 import { connect } from 'react-redux';
@@ -13,8 +13,14 @@ import {
 } from 'controllers/log/attachments';
 import { NoItemMessage } from 'components/main/noItemMessage';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
-import { messages } from './modals/messages';
 import styles from './attachments.scss';
+
+export const messages = defineMessages({
+  noAttachmentsMessage: {
+    id: 'Attachments.noAttachmentsMessage',
+    defaultMessage: 'No attachments to display',
+  },
+});
 
 const cx = classNames.bind(styles);
 

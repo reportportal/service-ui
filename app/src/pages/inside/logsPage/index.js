@@ -1,2 +1,7 @@
 export { LogsPage } from './logsPage';
-export { CopySendDefectModal } from './modals/copySendDefectModal';
+export {
+  CopySendDefectModal,
+  AttachmentImageModal,
+  AttachmentCodeModal,
+  AttachmentHarFileModal,
+} from './modals';
