@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { defineMessages, injectIntl, intlShape } from 'react-intl';
+import { injectIntl, intlShape } from 'react-intl';
 import classNames from 'classnames/bind';
 
 import { defectTypesSelector } from 'controllers/project';
@@ -15,49 +15,11 @@ import {
 
 import { DefectTypesGroup } from './defectTypesGroup';
 import { defectTypeShape } from './defectTypeShape';
+import { messages } from './defectTypesMessages';
 
 import styles from './defectTypesTab.scss';
 
 const cx = classNames.bind(styles);
-
-const messages = defineMessages({
-  defectNameCol: {
-    id: 'DefectTypesTab.defectNameCol',
-    defaultMessage: 'Defect Name',
-  },
-  abbreviationCol: {
-    id: 'DefectTypesTab.abbreviationCol',
-    defaultMessage: 'Abbreviation',
-  },
-  colorCol: {
-    id: 'DefectTypesTab.colorCol',
-    defaultMessage: 'Color',
-  },
-  diagramCol: {
-    id: 'DefectTypesTab.diagramCol',
-    defaultMessage: 'Diagram',
-  },
-  [PRODUCT_BUG]: {
-    id: 'DefectTypesTab.productBugsGroup',
-    defaultMessage: 'Product Bugs Group',
-  },
-  [SYSTEM_ISSUE]: {
-    id: 'DefectTypesTab.systemIssuesGroup',
-    defaultMessage: 'System Issues Group',
-  },
-  [AUTOMATION_BUG]: {
-    id: 'DefectTypesTab.automationBugsGroup',
-    defaultMessage: 'Automation Bugs Group',
-  },
-  [NO_DEFECT]: {
-    id: 'DefectTypesTab.noDefectBugsGroup',
-    defaultMessage: 'No Defect Bugs Group',
-  },
-  [TO_INVESTIGATE]: {
-    id: 'DefectTypesTab.toInvestigateBugsGroup',
-    defaultMessage: 'To Investigate Bugs Group',
-  },
-});
 
 @connect((state) => ({
   subTypes: defectTypesSelector(state),

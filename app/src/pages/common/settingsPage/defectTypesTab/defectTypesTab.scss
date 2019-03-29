@@ -1,3 +1,5 @@
+$DEFECT_NAME_PADDING: 120px;
+
 .defect-types-list {
   font-size: 12px;
 }
@@ -14,24 +16,30 @@
   font-weight: bold;
 }
 
+.abbr-cell,
+.color-cell,
+.diagram-cell {
+  padding-left: 10px;
+  box-sizing: border-box;
+}
+
 .name-cell {
-  text-align: center;
-  width: 33%;
+  padding-left: $DEFECT_NAME_PADDING;
+  width: 40%;
+  box-sizing: border-box;
 }
 
 .abbr-cell {
-  text-align: center;
   width: 17%;
 }
 
 .color-cell {
-  text-align: center;
   width: 25%;
 }
 
 .diagram-cell {
-  text-align: center;
   width: 25%;
+  position: relative;
 }
 
 .group-name {
@@ -52,6 +60,7 @@
 .defect-type {
   display: flex;
   margin: 20px 0;
+  align-items: center;
 }
 
 .defect-type-name-wrap {
@@ -64,4 +73,22 @@
 
 .defect-type-name {
   margin-left: 5px;
+}
+
+.defect-type-chart {
+  position: absolute !important;
+  top: -12px;
+  margin-left: -8px;
+}
+
+.defect-type-group-footer {
+  display: flex;
+  align-items: center;
+  padding-left: $DEFECT_NAME_PADDING;
+  margin-bottom: 40px;
+}
+
+.defect-type-count-msg {
+  color: $COLOR--gray-60;
+  margin-left: 11px;
 }
