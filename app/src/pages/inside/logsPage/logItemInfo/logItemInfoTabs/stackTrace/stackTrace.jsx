@@ -11,16 +11,17 @@ import {
   logPaginationSelector,
   NAMESPACE,
   DEFAULT_LOG_LEVEL,
+  getLogLevelById,
+  getLogLevelFromStorage,
 } from 'controllers/log';
 import { pagePropertiesSelector } from 'controllers/pages';
 import ArrowIcon from 'common/img/arrow-down-inline.svg';
-import { activeProjectSelector } from 'controllers/user';
+import { activeProjectSelector, userIdSelector } from 'controllers/user';
 import { FATAL, ERROR } from 'common/constants/logLevels';
 import { fetch } from 'common/utils/fetch';
 import { URLS } from 'common/urls';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { NoItemMessage } from 'components/main/noItemMessage';
-import { getLogLevelById } from 'pages/inside/logsPage/logsGridToolbar/utils/logLevel';
 import styles from './stackTrace.scss';
 
 const cx = classNames.bind(styles);
@@ -42,6 +43,7 @@ const messages = defineMessages({
   pagination: logPaginationSelector(state),
   pageProperties: pagePropertiesSelector(state, NAMESPACE),
   logItems: logItemsSelector(state),
+  userId: userIdSelector(state),
 }))
 @injectIntl
 export class StackTrace extends Component {
@@ -55,6 +57,7 @@ export class StackTrace extends Component {
     pageProperties: PropTypes.object.isRequired,
     logItems: PropTypes.array.isRequired,
     onHighlightRow: PropTypes.func.isRequired,
+    userId: PropTypes.string.isRequired,
   };
 
   static checkIfStackTraceItemOnThisPage = (logItems, stackTraceItem) =>
@@ -87,7 +90,8 @@ export class StackTrace extends Component {
 
   updateFilterLevel = (filterLevel = DEFAULT_LOG_LEVEL) => {
     if (filterLevel === FATAL) {
-      this.props.onChangeLogLevel(getLogLevelById(ERROR));
+      const newLogLevel = getLogLevelById(ERROR);
+      this.props.onChangeLogLevel(newLogLevel, this.props.userId);
       return ERROR;
     }
     return filterLevel;
@@ -144,7 +148,7 @@ export class StackTrace extends Component {
   };
 
   fetchMessageLocation = () => {
-    const { projectId, logItemId, pagination, pageProperties, onChangePage } = this.props;
+    const { projectId, logItemId, pagination, onChangePage, userId } = this.props;
     const { stackTraceItem, isStackTraceItemOnThisPage } = this.state;
     this.setState({
       messageReferenceWasClicked: true,
@@ -152,7 +156,7 @@ export class StackTrace extends Component {
     if (isStackTraceItemOnThisPage) {
       return;
     }
-    const filterLevel = this.updateFilterLevel(pageProperties['filter.gte.level']);
+    const filterLevel = this.updateFilterLevel(getLogLevelFromStorage(userId));
     fetch(
       URLS.logItemStackTraceMessageLocation(
         projectId,
@@ -162,7 +166,7 @@ export class StackTrace extends Component {
         filterLevel,
       ),
     ).then(({ number }) => {
-      onChangePage(number);
+      pagination.number !== number && onChangePage(number);
     });
   };
 

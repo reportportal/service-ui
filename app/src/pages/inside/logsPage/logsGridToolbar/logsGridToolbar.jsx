@@ -4,13 +4,13 @@ import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
 import { defineMessages, injectIntl, intlShape } from 'react-intl';
 import Parser from 'html-react-parser';
+import { MARKDOWN, CONSOLE, DEFAULT } from 'common/constants/logViewModes';
 import { userIdSelector } from 'controllers/user';
+import { getWithAttachments, LOG_LEVELS, getLogViewMode, setLogViewMode } from 'controllers/log';
 import { InputSlider } from 'components/inputs/inputSlider';
 import { InputCheckbox } from 'components/inputs/inputCheckbox';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { Pagination } from './pagination';
-import { setLogLevel, LOG_LEVELS } from './utils/logLevel';
-import { getWithAttachments, setWithAttachments } from './utils/withAttachments';
 import ConsoleIcon from './img/console-inline.svg';
 import MarkdownIcon from './img/markdown-inline.svg';
 import styles from './logsGridToolbar.scss';
@@ -63,42 +63,30 @@ export class LogsGridToolbar extends Component {
   };
 
   state = {
-    markdownMode: false,
-    consoleView: false,
+    logViewMode: getLogViewMode(this.props.userId),
     withAttachments: getWithAttachments(this.props.userId),
   };
 
-  toggleMarkdownMode = () => {
-    const { markdownMode, consoleView } = this.state;
+  toggleLogViewMode = (targetViewMode) => {
+    const { logViewMode } = this.state;
 
-    if (!markdownMode && consoleView) {
-      this.toggleConsoleView();
-    }
+    const newLogViewMode = logViewMode === targetViewMode ? DEFAULT : targetViewMode;
+    setLogViewMode(newLogViewMode, this.props.userId);
 
     this.setState({
-      markdownMode: !markdownMode,
+      logViewMode: newLogViewMode,
     });
   };
 
-  toggleConsoleView = () => {
-    const { markdownMode, consoleView } = this.state;
+  toggleMarkdownMode = () => this.toggleLogViewMode(MARKDOWN);
 
-    if (!consoleView && markdownMode) {
-      this.toggleMarkdownMode();
-    }
-
-    this.setState({
-      consoleView: !consoleView,
-    });
-  };
+  toggleConsoleView = () => this.toggleLogViewMode(CONSOLE);
 
   changeLogLevel = (newLogLevel) => {
     const { onChangeLogLevel, userId, logLevel: activeLogLevel } = this.props;
 
     if (newLogLevel.id !== activeLogLevel.id) {
-      setLogLevel(newLogLevel, userId);
-
-      onChangeLogLevel(newLogLevel);
+      onChangeLogLevel(newLogLevel, userId);
     }
   };
 
@@ -106,18 +94,16 @@ export class LogsGridToolbar extends Component {
     const { withAttachments } = this.state;
     const { onChangeWithAttachments, userId } = this.props;
 
-    onChangeWithAttachments(!withAttachments);
+    onChangeWithAttachments(!withAttachments, userId);
 
     this.setState({
       withAttachments: !withAttachments,
     });
-
-    setWithAttachments(!withAttachments, userId);
   };
 
   render() {
     const { intl, children, activePage, pageCount, onChangePage, logLevel } = this.props;
-    const { markdownMode, consoleView, withAttachments } = this.state;
+    const { logViewMode, withAttachments } = this.state;
 
     return (
       <div className={cx('container')}>
@@ -135,14 +121,14 @@ export class LogsGridToolbar extends Component {
           <div className={cx('aside')}>
             <div className={cx('mode-buttons')}>
               <button
-                className={cx('mode-button', 'markdown', { active: markdownMode })}
+                className={cx('mode-button', 'markdown', { active: logViewMode === MARKDOWN })}
                 onClick={this.toggleMarkdownMode}
                 title={intl.formatMessage(messages.markdownMode)}
               >
                 {Parser(MarkdownIcon)}
               </button>
               <button
-                className={cx('mode-button', 'console', { active: consoleView })}
+                className={cx('mode-button', 'console', { active: logViewMode === CONSOLE })}
                 onClick={this.toggleConsoleView}
                 title={intl.formatMessage(messages.consoleView)}
               >
@@ -165,8 +151,8 @@ export class LogsGridToolbar extends Component {
         </div>
         <div className={cx('children')}>
           {children({
-            markdownMode,
-            consoleView,
+            markdownMode: logViewMode === MARKDOWN,
+            consoleView: logViewMode === CONSOLE,
           })}
         </div>
       </div>
