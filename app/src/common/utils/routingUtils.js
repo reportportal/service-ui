@@ -1,4 +1,5 @@
 import { parse, stringify } from 'qs';
+import { isEmptyValue } from './isEmptyValue';
 
 const LEVEL_PARAMS_SUFFIX = 'Params';
 
@@ -23,3 +24,11 @@ export const copyQuery = (query = {}, namespacesToCopy = []) =>
     }
     return acc;
   }, {});
+
+export const mergeQuery = (oldQuery, paramsToMerge) => {
+  const newQuery = { ...oldQuery, ...paramsToMerge };
+  return Object.keys(newQuery).reduce(
+    (acc, key) => (isEmptyValue(newQuery[key]) ? acc : { ...acc, [key]: newQuery[key] }),
+    {},
+  );
+};
