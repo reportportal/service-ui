@@ -212,14 +212,7 @@ export class NonPassedTestCasesTrendChart extends Component {
       <div className={classes}>
         {this.state.isConfigReady && (
           <C3Chart config={this.config} onChartCreated={this.onChartCreated}>
-            {!isPreview && (
-              <Legend
-                items={[FAILED_SKIPPED_STATISTICS_KEY]}
-                onClick={this.onClick}
-                onMouseOver={this.onMouseOver}
-                onMouseOut={this.onMouseOut}
-              />
-            )}
+            {!isPreview && <Legend items={[FAILED_SKIPPED_STATISTICS_KEY]} disabled />}
           </C3Chart>
         )}
       </div>

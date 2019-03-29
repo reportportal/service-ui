@@ -60,6 +60,8 @@ export class LaunchStatisticsChart extends Component {
     isFullscreen: PropTypes.bool,
     height: PropTypes.number,
     observer: PropTypes.object,
+    uncheckedLegendItems: PropTypes.array,
+    onChangeLegend: PropTypes.func,
   };
 
   static defaultProps = {
@@ -71,6 +73,8 @@ export class LaunchStatisticsChart extends Component {
     isFullscreen: false,
     height: 0,
     observer: {},
+    uncheckedLegendItems: [],
+    onChangeLegend: () => {},
   };
 
   state = {
@@ -98,6 +102,10 @@ export class LaunchStatisticsChart extends Component {
     if (this.props.isPreview) {
       return;
     }
+
+    this.props.uncheckedLegendItems.forEach((id) => {
+      this.chart.toggle(id);
+    });
 
     this.isCustomTooltipNeeded() ? this.onCustomChartCreated() : this.onDefaultChartCreated();
   };
@@ -131,7 +139,8 @@ export class LaunchStatisticsChart extends Component {
     this.chart.focus(id);
   };
 
-  onClick = (id) => {
+  onClickLegendItem = (id) => {
+    this.props.onChangeLegend(id);
     this.chart.toggle(id);
   };
 
@@ -463,22 +472,24 @@ export class LaunchStatisticsChart extends Component {
   };
 
   render() {
+    const { isFullscreen, isPreview, uncheckedLegendItems } = this.props;
     return (
       this.state.isConfigReady && (
         <C3Chart
           className={cx('launch-statistics-chart', {
             'area-view': this.configData.widgetViewMode === MODES_VALUES[CHART_MODES.AREA_VIEW],
-            'full-screen': this.props.isFullscreen,
+            'full-screen': isFullscreen,
             'time-line': this.configData.isTimeLine,
-            preview: this.props.isPreview,
+            preview: isPreview,
           })}
           config={this.config}
           onChartCreated={this.onChartCreated}
         >
-          {!this.props.isPreview && (
+          {!isPreview && (
             <Legend
               items={this.configData.itemNames}
-              onClick={this.onClick}
+              uncheckedLegendItems={uncheckedLegendItems}
+              onClick={this.onClickLegendItem}
               onMouseOver={this.onMouseOver}
               onMouseOut={this.onMouseOut}
             />

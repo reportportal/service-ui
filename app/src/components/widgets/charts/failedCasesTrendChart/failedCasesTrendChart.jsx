@@ -226,14 +226,7 @@ export class FailedCasesTrendChart extends Component {
       <div className={classes}>
         {this.state.isConfigReady && (
           <C3Chart config={this.config} onChartCreated={this.onChartCreated}>
-            {!isPreview && (
-              <Legend
-                items={[STATS_FAILED]}
-                onClick={this.onClick}
-                onMouseOver={this.onMouseOver}
-                onMouseOut={this.onMouseOut}
-              />
-            )}
+            {!isPreview && <Legend items={[STATS_FAILED]} disabled />}
           </C3Chart>
         )}
       </div>

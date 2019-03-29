@@ -20,19 +20,23 @@ export class Legend extends Component {
     defectTypes: PropTypes.object.isRequired,
     items: PropTypes.array,
     noTotal: PropTypes.bool,
+    disabled: PropTypes.bool,
     onClick: PropTypes.func,
     onMouseOver: PropTypes.func,
     onMouseOut: PropTypes.func,
     customBlock: PropTypes.node,
+    uncheckedLegendItems: PropTypes.array,
   };
 
   static defaultProps = {
     items: [],
     noTotal: false,
+    disabled: false,
     onClick: () => {},
     onMouseOver: () => {},
     onMouseOut: () => {},
     customBlock: null,
+    uncheckedLegendItems: [],
   };
 
   onClick = (e) => {
@@ -49,6 +53,8 @@ export class Legend extends Component {
   getElements = () => {
     const {
       items,
+      uncheckedLegendItems,
+      disabled,
       noTotal,
       onMouseOut,
       intl: { formatMessage },
@@ -61,8 +67,11 @@ export class Legend extends Component {
         <span
           key={name}
           data-id={name}
-          className={cx('legend-item')}
-          onClick={this.onClick}
+          className={cx('legend-item', {
+            disabled,
+            unchecked: uncheckedLegendItems.indexOf(name) !== -1,
+          })}
+          onClick={disabled ? null : this.onClick}
           onMouseOver={this.onMouseOver}
           onMouseOut={onMouseOut}
         >

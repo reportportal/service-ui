@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import React, { Component } from 'react';
 import { injectIntl, intlShape } from 'react-intl';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
@@ -16,28 +16,45 @@ export class LaunchExecutionAndIssueStatistics extends Component {
     container: PropTypes.instanceOf(Element).isRequired,
     isPreview: PropTypes.bool,
     observer: PropTypes.object,
+    uncheckedLegendItems: PropTypes.array,
+    onChangeLegend: PropTypes.func,
   };
 
   static defaultProps = {
     isPreview: false,
     height: 0,
     observer: {},
+    uncheckedLegendItems: [],
+    onChangeLegend: () => {},
   };
 
   render() {
+    const {
+      widget,
+      container,
+      observer,
+      isPreview,
+      uncheckedLegendItems,
+      onChangeLegend,
+    } = this.props;
+
     return (
       <div className={cx('launch-execution-and-issues-chart')}>
         <LaunchExecutionChart
-          widget={this.props.widget}
-          container={this.props.container}
-          observer={this.props.observer}
-          isPreview={this.props.isPreview}
+          widget={widget}
+          container={container}
+          observer={observer}
+          isPreview={isPreview}
+          uncheckedLegendItems={uncheckedLegendItems}
+          onChangeLegend={onChangeLegend}
         />
         <IssueStatisticsChart
-          widget={this.props.widget}
-          container={this.props.container}
-          observer={this.props.observer}
-          isPreview={this.props.isPreview}
+          widget={widget}
+          container={container}
+          observer={observer}
+          isPreview={isPreview}
+          uncheckedLegendItems={uncheckedLegendItems}
+          onChangeLegend={onChangeLegend}
         />
       </div>
     );

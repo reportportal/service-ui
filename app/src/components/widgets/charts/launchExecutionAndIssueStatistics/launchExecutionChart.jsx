@@ -33,7 +33,7 @@ import { TEST_ITEM_PAGE } from 'controllers/pages';
 import { TooltipWrapper } from '../common/tooltip';
 import { C3Chart } from '../common/c3chart';
 import chartStyles from './launchExecutionAndIssueStatistics.scss';
-import { Legend } from './launchExecutionAndIssuesChartLegend';
+import { Legend } from '../common/legend';
 import { LaunchExecutionAndIssueStatisticsTooltip } from './launchExecutionAndIssueStatisticsTooltip';
 import { getPercentage, getDefectItems, getChartData } from './chartUtils';
 import { messages } from './messages';
@@ -56,17 +56,20 @@ export class LaunchExecutionChart extends Component {
     intl: intlShape.isRequired,
     widget: PropTypes.object.isRequired,
     isPreview: PropTypes.bool.isRequired,
-    statisticsLink: PropTypes.object.isRequired,
     getStatisticsLink: PropTypes.func.isRequired,
     redirect: PropTypes.func.isRequired,
     project: PropTypes.string.isRequired,
     container: PropTypes.instanceOf(Element).isRequired,
     observer: PropTypes.object,
+    uncheckedLegendItems: PropTypes.array,
+    onChangeLegend: PropTypes.func,
   };
 
   static defaultProps = {
     height: 0,
     observer: {},
+    uncheckedLegendItems: [],
+    onChangeLegend: () => {},
   };
 
   state = {
@@ -85,11 +88,15 @@ export class LaunchExecutionChart extends Component {
   }
 
   onStatusChartCreated = (chart, element) => {
-    this.statusChart = chart;
+    this.chart = chart;
     this.statusNode = element;
     if (!this.props.widget.content.result || this.props.isPreview) {
       return;
     }
+
+    this.props.uncheckedLegendItems.forEach((id) => {
+      this.chart.toggle(id);
+    });
 
     d3
       .select(chart.element)
@@ -104,16 +111,17 @@ export class LaunchExecutionChart extends Component {
     this.statusNode.addEventListener('mousemove', this.setCoords);
   };
 
-  onStatusMouseOut = () => {
-    this.statusChart.revert();
+  onMouseOut = () => {
+    this.chart.revert();
   };
 
-  onStatusMouseOver = (id) => {
-    this.statusChart.focus(id);
+  onMouseOver = (id) => {
+    this.chart.focus(id);
   };
 
-  onStatusClick = (id) => {
-    this.statusChart.toggle(id);
+  onClickLegendItem = (id) => {
+    this.props.onChangeLegend(id);
+    this.chart.toggle(id);
   };
 
   onChartClick = (d) => {
@@ -204,8 +212,8 @@ export class LaunchExecutionChart extends Component {
         contents: this.renderStatusContents,
       },
       onrendered: () => {
-        if (this.statusChart) {
-          const total = this.statusChart.data
+        if (this.chart) {
+          const total = this.chart.data
             .shown()
             .reduce((acc, dataItem) => acc + dataItem.values[0].value, 0);
 
@@ -235,16 +243,18 @@ export class LaunchExecutionChart extends Component {
     };
   };
 
+  statusItems = [];
+
   resizeStatusChart = () => {
     const newHeight = this.props.container.offsetHeight;
     const newWidth = this.props.container.offsetWidth;
     if (this.height !== newHeight) {
-      this.statusChart.resize({
+      this.chart.resize({
         height: newHeight,
       });
       this.height = newHeight;
     } else if (this.width !== newWidth) {
-      this.statusChart.flush();
+      this.chart.flush();
       this.width = newWidth;
     }
   };
@@ -268,8 +278,9 @@ export class LaunchExecutionChart extends Component {
   };
 
   render() {
-    const { isPreview } = this.props;
+    const { isPreview, uncheckedLegendItems } = this.props;
     const classes = chartCx({ 'preview-view': isPreview });
+    const legendItems = this.statusItems.map((item) => item.id);
 
     return (
       <div className={classes}>
@@ -278,10 +289,11 @@ export class LaunchExecutionChart extends Component {
             <div className={chartCx('data-js-launch-execution-chart-container')}>
               {!isPreview && (
                 <Legend
-                  items={this.statusItems}
-                  onClick={this.onStatusClick}
-                  onMouseOver={this.onStatusMouseOver}
-                  onMouseOut={this.onStatusMouseOut}
+                  items={legendItems}
+                  uncheckedLegendItems={uncheckedLegendItems}
+                  onClick={this.onClickLegendItem}
+                  onMouseOver={this.onMouseOver}
+                  onMouseOut={this.onMouseOut}
                 />
               )}
               <C3Chart
