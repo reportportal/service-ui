@@ -1,5 +1,6 @@
 .legend {
   position: absolute;
+  z-index: 1;
   top: 0;
   left: 0;
   right: 0;
@@ -23,6 +24,17 @@
 
 .legend-elements {
   min-width: 17%;
+}
+
+.legend-item {
+  display: inline-block;
+  margin-right: 15px;
+  margin-bottom: 10px;
+  cursor: pointer;
+
+  &.disabled {
+    cursor: default;
+  }
 }
 
 .color-mark {
@@ -56,11 +68,4 @@
 .item-name {
   font-size: 11px;
   letter-spacing: 0.2px;
-}
-
-.legend-item {
-  display: inline-block;
-  margin-right: 15px;
-  margin-bottom: 10px;
-  cursor: pointer;
 }

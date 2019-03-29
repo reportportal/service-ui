@@ -26,15 +26,6 @@
   line-height: 1.5;
 }
 
-.preview-view {
-  & .launch-execution-chart,
-  & .issue-statistics-chart {
-    & .c3 {
-      bottom: 0;
-    }
-  }
-}
-
 .data-js-launch-execution-chart-container,
 .data-js-issue-statistics-chart-container {
   position: relative;
@@ -44,19 +35,6 @@
 
 .launch-execution-chart,
 .issue-statistics-chart {
-  width: 49%;
+  width: 50%;
   float: left;
-
-  .legend-title {
-    position: relative;
-    padding-top: 20px;
-    overflow: hidden;
-    min-height: 40px;
-    text-align: right;
-    z-index: 999;
-  }
-
-  .c3 {
-    bottom: 82px;
-  }
 }

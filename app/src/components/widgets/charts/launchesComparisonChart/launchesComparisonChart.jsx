@@ -54,12 +54,16 @@ export class LaunchesComparisonChart extends Component {
     isPreview: PropTypes.bool,
     height: PropTypes.number,
     observer: PropTypes.object,
+    uncheckedLegendItems: PropTypes.array,
+    onChangeLegend: PropTypes.func,
   };
 
   static defaultProps = {
     isPreview: false,
     height: 0,
     observer: {},
+    uncheckedLegendItems: [],
+    onChangeLegend: () => {},
   };
 
   state = {
@@ -86,6 +90,10 @@ export class LaunchesComparisonChart extends Component {
       return;
     }
 
+    this.props.uncheckedLegendItems.forEach((id) => {
+      this.chart.toggle(id);
+    });
+
     this.node.addEventListener('mousemove', this.setupCoords);
 
     d3.selectAll(document.querySelectorAll('.c3-chart-bar path')).each(function() {
@@ -104,7 +112,8 @@ export class LaunchesComparisonChart extends Component {
     this.chart.focus(id);
   };
 
-  onClick = (id) => {
+  onClickLegendItem = (id) => {
+    this.props.onChangeLegend(id);
     this.chart.toggle(id);
   };
 
@@ -296,8 +305,9 @@ export class LaunchesComparisonChart extends Component {
             {!this.props.isPreview && (
               <Legend
                 items={this.itemNames}
+                uncheckedLegendItems={this.props.uncheckedLegendItems}
                 noTotal
-                onClick={this.onClick}
+                onClick={this.onClickLegendItem}
                 onMouseOver={this.onMouseOver}
                 onMouseOut={this.onMouseOut}
               />

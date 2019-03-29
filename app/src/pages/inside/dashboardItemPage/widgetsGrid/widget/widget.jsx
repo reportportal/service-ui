@@ -16,6 +16,9 @@ import styles from './widget.scss';
 
 const cx = classNames.bind(styles);
 
+const SILENT_UPDATE_TIMEOUT = 60000;
+const SILENT_UPDATE_TIMEOUT_FULLSCREEN = 30000;
+
 @connect(
   (state, ownProps) => ({
     url: URLS.widget(activeProjectSelector(state), ownProps.widgetId),
@@ -59,6 +62,7 @@ export class Widget extends Component {
         content: {},
         contentParameters: {},
       },
+      uncheckedLegendItems: [],
     };
   }
 
@@ -71,7 +75,19 @@ export class Widget extends Component {
   componentWillUnmount() {
     this.props.observer.unsubscribe(`${this.props.widgetId}_resizeStarted`, this.hideWidget);
     this.props.observer.unsubscribe('widgetResized', this.showWidget);
+    this.silentUpdaterId && clearTimeout(this.silentUpdaterId);
   }
+
+  onChangeWidgetLegend = (itemId) => {
+    const uncheckedItemIndex = this.state.uncheckedLegendItems.indexOf(itemId);
+    const uncheckedLegendItems = [...this.state.uncheckedLegendItems];
+    if (uncheckedItemIndex !== -1) {
+      uncheckedLegendItems.splice(uncheckedItemIndex, 1);
+    } else {
+      uncheckedLegendItems.push(itemId);
+    }
+    this.setState({ uncheckedLegendItems });
+  };
 
   getWidgetOptions = () => (this.state.widget.contentParameters || {}).widgetOptions || {};
 
@@ -80,7 +96,7 @@ export class Widget extends Component {
   };
 
   getWidgetContent = () => {
-    const { widget } = this.state;
+    const { widget, uncheckedLegendItems } = this.state;
 
     if (this.state.loading) {
       return <SpinningPreloader />;
@@ -96,6 +112,8 @@ export class Widget extends Component {
       Chart && (
         <Chart
           widget={widget}
+          uncheckedLegendItems={uncheckedLegendItems}
+          onChangeLegend={this.onChangeWidgetLegend}
           isFullscreen={this.props.isFullscreen}
           container={this.node}
           observer={this.props.observer}
@@ -117,16 +135,23 @@ export class Widget extends Component {
   };
 
   fetchWidget = () => {
-    this.props.tracking.trackEvent(DASHBOARD_PAGE_EVENTS.REFRESH_WIDGET);
+    const { isFullscreen, tracking, url } = this.props;
+
+    clearTimeout(this.silentUpdaterId);
+    tracking.trackEvent(DASHBOARD_PAGE_EVENTS.REFRESH_WIDGET);
     this.setState({
       loading: true,
     });
-    fetch(this.props.url)
+    fetch(url)
       .then((widget) => {
         this.setState({
           loading: false,
           widget,
         });
+        this.silentUpdaterId = setTimeout(
+          this.fetchWidget,
+          isFullscreen ? SILENT_UPDATE_TIMEOUT_FULLSCREEN : SILENT_UPDATE_TIMEOUT,
+        );
       })
       .catch(() => {
         this.setState({

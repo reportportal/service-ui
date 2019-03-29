@@ -276,6 +276,7 @@ export class PassingRatePerLaunch extends Component {
           {!this.props.isPreview && (
             <Legend
               items={[STATS_PASSED, NOT_PASSED_STATISTICS_KEY]}
+              disabled
               onMouseOver={this.onMouseOver}
               onMouseOut={this.onMouseOut}
               customBlock={this.customBlock}
