@@ -10,6 +10,11 @@ import {
   logPaginationSelector,
   loadingSelector,
   NAMESPACE,
+  LOG_LEVEL_FILTER_KEY,
+  WITH_ATTACHMENTS_FILTER_KEY,
+  getLogLevel,
+  setLogLevel,
+  setWithAttachments,
 } from 'controllers/log';
 import { withFilter } from 'controllers/filter';
 import { withPagination, PAGE_KEY } from 'controllers/pagination';
@@ -17,7 +22,6 @@ import { withSortingURL, SORTING_ASC } from 'controllers/sorting';
 import { userIdSelector } from 'controllers/user';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
 import { LOG_PAGE, LOG_PAGE_EVENTS } from 'components/main/analytics/events';
-import { getLogLevel } from './logsGridToolbar/utils/logLevel';
 import { LogToolbar } from './logToolbar';
 import { HistoryLine } from './historyLine';
 import { LogItemInfo } from './logItemInfo';
@@ -49,11 +53,17 @@ import { LogsGridToolbar } from './logsGridToolbar';
 })
 @connectRouter(
   (query) => ({
-    logLevelId: query['filter.gte.level'],
+    logLevelId: query[LOG_LEVEL_FILTER_KEY],
   }),
   {
-    onChangeLogLevel: (logLevel) => ({ 'filter.gte.level': logLevel.id, [PAGE_KEY]: 1 }),
-    onChangeWithAttachments: (withAttachments) => ({ 'filter.ex.binaryContent': withAttachments }),
+    onChangeLogLevel: (logLevel, userId) => {
+      setLogLevel(logLevel, userId);
+      return { [LOG_LEVEL_FILTER_KEY]: logLevel.id, [PAGE_KEY]: 1 };
+    },
+    onChangeWithAttachments: (withAttachments, userId) => {
+      setWithAttachments(withAttachments, userId);
+      return { [WITH_ATTACHMENTS_FILTER_KEY]: withAttachments || undefined };
+    },
   },
   { namespace: NAMESPACE },
 )

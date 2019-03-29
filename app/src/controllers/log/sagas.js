@@ -1,8 +1,7 @@
 import { all, call, put, select, takeEvery } from 'redux-saga/effects';
-import { getStorageItem } from 'common/utils';
 import { fetchParentItems, fetchTestItemsAction } from 'controllers/testItem';
 import { URLS } from 'common/urls';
-import { activeProjectSelector } from 'controllers/user';
+import { activeProjectSelector, userIdSelector } from 'controllers/user';
 import {
   logItemIdSelector,
   pagePropertiesSelector,
@@ -17,11 +16,13 @@ import {
   FETCH_LOG_PAGE_DATA,
   HISTORY_NAMESPACE,
   LOG_ITEMS_NAMESPACE,
-  LOG_LEVEL_STORAGE_KEY,
+  LOG_LEVEL_FILTER_KEY,
+  WITH_ATTACHMENTS_FILTER_KEY,
   NAMESPACE,
 } from './constants';
 import { activeLogIdSelector, prevActiveLogIdSelector, querySelector } from './selectors';
 import { attachmentSagas, fetchAttachmentsAction, clearAttachmentsAction } from './attachments';
+import { getWithAttachments, getLogLevelFromStorage } from './storageUtils';
 
 function* fetchActivity() {
   const activeProject = yield select(activeProjectSelector);
@@ -33,16 +34,18 @@ function* fetchActivity() {
 
 function* fetchLogItems() {
   const activeProject = yield select(activeProjectSelector);
+  const userId = yield select(userIdSelector);
   const query = yield select(pagePropertiesSelector, NAMESPACE);
   const filterLevel =
-    query['filter.gte.level'] || getStorageItem(LOG_LEVEL_STORAGE_KEY) || DEFAULT_LOG_LEVEL;
+    query[LOG_LEVEL_FILTER_KEY] || getLogLevelFromStorage(userId) || DEFAULT_LOG_LEVEL;
+  const withAttachments = getWithAttachments(userId) || undefined;
   const params = yield select(querySelector, NAMESPACE);
   const activeLogItemId = yield select(activeLogIdSelector);
   yield put(
     fetchDataAction(LOG_ITEMS_NAMESPACE)(
       URLS.logItems(activeProject, activeLogItemId, filterLevel),
       {
-        params,
+        params: { ...params, [WITH_ATTACHMENTS_FILTER_KEY]: withAttachments },
       },
     ),
   );
