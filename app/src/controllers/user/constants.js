@@ -14,5 +14,6 @@ export const SETTINGS_INITIAL_STATE = {
 export const SET_API_TOKEN = 'setApiToken';
 export const ASSIGN_TO_RROJECT = 'assignToProject';
 export const ASSIGN_TO_RROJECT_SUCCESS = 'assignToProjectSuccess';
+export const ASSIGN_TO_RROJECT_ERROR = 'assignToProjectError';
 export const UNASSIGN_FROM_PROJECT = 'unassignFromProject';
 export const UNASSIGN_FROM_PROJECT_SUCCESS = 'unassignFromProjectSuccess';

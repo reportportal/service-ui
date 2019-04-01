@@ -5,7 +5,11 @@ import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { PROJECT_MANAGER } from 'common/constants/projectRoles';
 import { userIdSelector } from './selectors';
 import { ASSIGN_TO_RROJECT, UNASSIGN_FROM_PROJECT } from './constants';
-import { assignToProjectSuccessAction, unassignFromProjectSuccessAction } from './actionCreators';
+import {
+  assignToProjectSuccessAction,
+  assignToProjectErrorAction,
+  unassignFromProjectSuccessAction,
+} from './actionCreators';
 
 function* assignToProject({ payload: project }) {
   const userId = yield select(userIdSelector);
@@ -35,6 +39,13 @@ function* assignToProject({ payload: project }) {
     );
   } catch (err) {
     const error = err.message;
+    yield put(
+      assignToProjectErrorAction({
+        projectName: project.projectName,
+        projectRole: userRole,
+        entryType: project.entryType,
+      }),
+    );
     yield put(
       showNotification({
         messageId: 'assignError',
