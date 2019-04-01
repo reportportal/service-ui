@@ -21,9 +21,11 @@ import {
   deleteItemsAction,
   unselectAllUsersAction,
   fetchAllUsersAction,
+  DEFAULT_SORT_COLUMN,
 } from 'controllers/administrate/allUsers';
 import { userInfoSelector, userIdSelector } from 'controllers/user';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { SORTING_ASC, withSortingURL } from 'controllers/sorting';
 import { UsersToolbar } from './usersToolbar';
 import { AllUsersGrid } from './allUsersGrid';
 
@@ -86,6 +88,10 @@ const messages = defineMessages({
     fetchAllUsersAction,
   },
 )
+@withSortingURL({
+  defaultFields: [DEFAULT_SORT_COLUMN],
+  defaultDirection: SORTING_ASC,
+})
 @withPagination({
   paginationSelector: allUsersPaginationSelector,
 })
@@ -98,6 +104,7 @@ export class AllUsersPage extends Component {
     pageSize: PropTypes.number,
     sortingColumn: PropTypes.string,
     sortingDirection: PropTypes.string,
+    onChangeSorting: PropTypes.func,
     showModalAction: PropTypes.func,
     onChangePage: PropTypes.func,
     onChangePageSize: PropTypes.func,
@@ -125,6 +132,7 @@ export class AllUsersPage extends Component {
     sortingColumn: null,
     sortingDirection: null,
     userId: '',
+    onChangeSorting: () => {},
     showModalAction: () => {},
     onChangePage: () => {},
     onChangePageSize: () => {},
@@ -233,6 +241,9 @@ export class AllUsersPage extends Component {
       users,
       selectedUsers,
       intl,
+      sortingColumn,
+      sortingDirection,
+      onChangeSorting,
     } = this.props;
     return (
       <PageLayout>
@@ -246,6 +257,9 @@ export class AllUsersPage extends Component {
             onToggleSelection={this.handleOneUserSelection}
             excludeFromSelection={this.excludeFromSelection}
             onToggleSelectAll={this.handleToggleAllUserSelection}
+            sortingColumn={sortingColumn}
+            sortingDirection={sortingDirection}
+            onChangeSorting={onChangeSorting}
           />
           {!!pageCount &&
             !loading && (
