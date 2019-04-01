@@ -85,6 +85,9 @@ export class AllUsersGrid extends PureComponent {
     onToggleSelectAll: PropTypes.func,
     selectedItems: PropTypes.arrayOf(PropTypes.object),
     excludeFromSelection: PropTypes.arrayOf(PropTypes.object),
+    sortingColumn: PropTypes.string,
+    sortingDirection: PropTypes.string,
+    onChangeSorting: PropTypes.func,
   };
 
   static defaultProps = {
@@ -94,30 +97,36 @@ export class AllUsersGrid extends PureComponent {
     onToggleSelection: () => {},
     selectedItems: [],
     excludeFromSelection: [],
+    sortingColumn: null,
+    sortingDirection: null,
+    onChangeSorting: () => {},
   };
 
   getColumns = () => [
     {
-      id: 'name',
+      id: 'fullName',
       title: {
         full: this.props.intl.formatMessage(messages.nameCol),
       },
       maxHeight: 170,
       component: NameColumn,
+      sortable: true,
     },
     {
-      id: 'login',
+      id: 'user',
       title: {
         full: this.props.intl.formatMessage(messages.loginCol),
       },
       component: LoginColumn,
+      sortable: true,
     },
     {
-      id: 'emil',
+      id: 'email',
       title: {
         full: this.props.intl.formatMessage(messages.emailCol),
       },
       component: EmailColumn,
+      sortable: true,
     },
     {
       id: 'lastLogin',
@@ -125,6 +134,7 @@ export class AllUsersGrid extends PureComponent {
         full: this.props.intl.formatMessage(messages.lastLoginCol),
       },
       component: LastLoginColumn,
+      sortable: true,
     },
     {
       id: 'type',
@@ -132,13 +142,15 @@ export class AllUsersGrid extends PureComponent {
         full: this.props.intl.formatMessage(messages.typeCol),
       },
       component: TypeColumn,
+      sortable: true,
     },
     {
-      id: 'projectsAndRoles',
+      id: 'project',
       title: {
         full: this.props.intl.formatMessage(messages.projectsAndRolesCol),
       },
       component: ProjectsAndRolesColumn,
+      sortable: true,
     },
   ];
 
@@ -150,6 +162,9 @@ export class AllUsersGrid extends PureComponent {
       selectedItems,
       excludeFromSelection,
       onToggleSelectAll,
+      sortingColumn,
+      sortingDirection,
+      onChangeSorting,
     } = this.props;
     return (
       <Grid
@@ -158,6 +173,9 @@ export class AllUsersGrid extends PureComponent {
         loading={this.props.loading}
         onToggleSelection={onToggleSelection}
         onToggleSelectAll={onToggleSelectAll}
+        sortingColumn={sortingColumn}
+        sortingDirection={sortingDirection}
+        onChangeSorting={onChangeSorting}
         changeOnlyMobileLayout
         selectedItems={selectedItems}
         selectable
