@@ -16,3 +16,5 @@ export const START_SET_VIEW_MODE = 'startSetProjectsViewMode';
 export const DELETE_PROJECT = 'deleteProject';
 export const DEFAULT_SORT_COLUMN = 'name';
 export const DEFAULT_SORTING = formatSortingString([DEFAULT_SORT_COLUMN], SORTING_ASC);
+export const REDIRECT_TO_PROJECT = 'redirectToProject';
+export const CONFIRM_ASSIGN_TO_PROJECT = 'confirmAssignToProject';

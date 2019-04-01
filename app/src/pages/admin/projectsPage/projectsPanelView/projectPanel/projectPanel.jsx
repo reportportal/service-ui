@@ -4,8 +4,12 @@ import { injectIntl, intlShape, defineMessages, FormattedRelative } from 'react-
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { NavLink } from 'redux-first-router-link';
+import { connect } from 'react-redux';
 import { PROJECT_PAGE, PROJECT_DETAILS_PAGE } from 'controllers/pages';
+import { redirectToProjectAction } from 'controllers/administrate/projects';
+import { showModalAction } from 'controllers/modal';
 import { Icon } from 'components/main/icon/icon';
+import { assignedProjectsSelector } from 'controllers/user';
 import { ProjectMenu } from '../../projectMenu';
 import { StatisticsItem } from './statisticsItem';
 import { ProjectTooltipIcon } from './projectTooltipIcon';
@@ -29,16 +33,44 @@ const messages = defineMessages({
     id: 'ProjectPanel.personalTooltip',
     defaultMessage: 'Personal project',
   },
+  assignModalConfirmationText: {
+    id: 'ProjectsPage.assignModalConfirmationText',
+    defaultMessage: 'You are not a member of this project yet. Would you like to be assigned?',
+  },
+  modalCancelButtonText: {
+    id: 'ProjectsPage.modal.modalCancelButtonText',
+    defaultMessage: 'Cancel',
+  },
+  assignModalTitle: {
+    id: 'ProjectPage.assignModalTitle',
+    defaultMessage: 'Assign to the project',
+  },
+  assignModalButton: {
+    id: 'ProjectPage.assignButton',
+    defaultMessage: 'Assign',
+  },
 });
 
 const cx = classNames.bind(styles);
 
 @injectIntl
+@connect(
+  (state, ownProps) => ({
+    isAssigned: !!assignedProjectsSelector(state)[ownProps.project.projectName],
+  }),
+  {
+    redirectToProject: redirectToProjectAction,
+    showModal: showModalAction,
+  },
+)
 @track()
 export class ProjectPanel extends Component {
   static propTypes = {
     project: PropTypes.object.isRequired,
     intl: intlShape.isRequired,
+    redirectToProject: PropTypes.func.isRequired,
+    showModal: PropTypes.func.isRequired,
+    isAssigned: PropTypes.bool,
     nameEventInfo: PropTypes.object,
     statisticEventInfo: PropTypes.object,
     tracking: PropTypes.shape({
@@ -50,6 +82,27 @@ export class ProjectPanel extends Component {
   static defaultProps = {
     nameEventInfo: {},
     statisticEventInfo: {},
+    isAssigned: false,
+  };
+
+  onProjectClick = (event) => {
+    const { tracking, nameEventInfo, intl } = this.props;
+    const confirmAssignModalOpts = {
+      id: 'confirmModal',
+      data: {
+        message: intl.formatMessage(messages.assignModalConfirmationText),
+        onConfirm: () => {},
+        title: intl.formatMessage(messages.assignModalTitle),
+        confirmText: intl.formatMessage(messages.assignModalButton),
+        cancelText: intl.formatMessage(messages.modalCancelButtonText),
+      },
+    };
+    this.props.redirectToProject({
+      project: this.props.project,
+      confirmModalOptions: confirmAssignModalOpts,
+    });
+    tracking.trackEvent(nameEventInfo);
+    event.preventDefault();
   };
 
   getProjectIcon() {
@@ -101,7 +154,7 @@ export class ProjectPanel extends Component {
               type: PROJECT_PAGE,
               payload: { projectId: projectName },
             }}
-            onClick={() => this.props.tracking.trackEvent(this.props.nameEventInfo)}
+            onClick={this.onProjectClick}
           >
             {projectName}
           </NavLink>

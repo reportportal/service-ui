@@ -8,6 +8,7 @@ import {
   SET_PHOTO_TIME_STAMP,
   ASSIGN_TO_RROJECT,
   ASSIGN_TO_RROJECT_SUCCESS,
+  ASSIGN_TO_RROJECT_ERROR,
   UNASSIGN_FROM_PROJECT,
   UNASSIGN_FROM_PROJECT_SUCCESS,
 } from './constants';
@@ -80,6 +81,11 @@ export const assignToProjectAction = (project) => ({
 
 export const assignToProjectSuccessAction = (projectInfo) => ({
   type: ASSIGN_TO_RROJECT_SUCCESS,
+  payload: projectInfo,
+});
+
+export const assignToProjectErrorAction = (projectInfo) => ({
+  type: ASSIGN_TO_RROJECT_ERROR,
   payload: projectInfo,
 });
 
