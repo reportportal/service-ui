@@ -1,6 +1,6 @@
 import { createQueryParametersSelector } from 'controllers/pages';
 import { createSelectedItemsSelector } from 'controllers/groupOperations';
-import { DEFAULT_PAGINATION } from './constants';
+import { DEFAULT_PAGINATION, DEFAULT_SORTING } from './constants';
 import { administrateDomainSelector } from '../selectors';
 
 const domainSelector = (state) => administrateDomainSelector(state).projects || {};
@@ -15,4 +15,5 @@ export const selectedProjectsSelector = createSelectedItemsSelector(groupOperati
 
 export const querySelector = createQueryParametersSelector({
   defaultPagination: DEFAULT_PAGINATION,
+  defaultSorting: DEFAULT_SORTING,
 });

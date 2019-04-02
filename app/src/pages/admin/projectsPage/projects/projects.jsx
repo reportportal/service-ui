@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { injectIntl, intlShape } from 'react-intl';
 
 import { SIZE_KEY, withPagination } from 'controllers/pagination';
+import { SORTING_ASC, withSortingURL } from 'controllers/sorting';
 import {
   DEFAULT_PAGINATION,
   TABLE_VIEW,
@@ -12,6 +13,7 @@ import {
   viewModeSelector,
   loadingSelector,
   projectsSelector,
+  DEFAULT_SORT_COLUMN,
 } from 'controllers/administrate/projects';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
@@ -26,6 +28,10 @@ import { ProjectsToolbar } from './../projectsToolbar';
   loading: loadingSelector(state),
   projects: projectsSelector(state),
 }))
+@withSortingURL({
+  defaultFields: [DEFAULT_SORT_COLUMN],
+  defaultDirection: SORTING_ASC,
+})
 @withPagination({
   paginationSelector: projectsPaginationSelector,
 })
@@ -38,6 +44,9 @@ export class Projects extends Component {
     pageSize: PropTypes.number,
     onChangePage: PropTypes.func.isRequired,
     onChangePageSize: PropTypes.func.isRequired,
+    sortingColumn: PropTypes.string,
+    sortingDirection: PropTypes.string,
+    onChangeSorting: PropTypes.func,
     intl: intlShape.isRequired,
     viewMode: PropTypes.string,
     loading: PropTypes.bool,
@@ -52,6 +61,9 @@ export class Projects extends Component {
     viewMode: GRID_VIEW,
     loading: false,
     projects: [],
+    sortingColumn: null,
+    sortingDirection: null,
+    onChangeSorting: () => {},
   };
 
   render() {
@@ -66,12 +78,28 @@ export class Projects extends Component {
       loading,
       intl,
       projects,
+      sortingColumn,
+      sortingDirection,
+      onChangeSorting,
     } = this.props;
 
     return (
       <React.Fragment>
         <ProjectsToolbar />
-        {viewMode === TABLE_VIEW ? <ProjectsGrid /> : <ProjectsPanelView />}
+
+        {viewMode === TABLE_VIEW ? (
+          <ProjectsGrid
+            sortingColumn={sortingColumn}
+            sortingDirection={sortingDirection}
+            onChangeSorting={onChangeSorting}
+          />
+        ) : (
+          <ProjectsPanelView
+            sortingColumn={sortingColumn}
+            sortingDirection={sortingDirection}
+            onChangeSorting={onChangeSorting}
+          />
+        )}
 
         {!!pageCount &&
           !loading && (
