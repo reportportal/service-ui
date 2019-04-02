@@ -124,7 +124,7 @@ export class ProjectMenu extends Component {
   };
 
   onDeleteSubmit = () => {
-    this.props.deleteProject(this.project);
+    this.props.deleteProject(this.props.project);
   };
 
   getMenuItems = () => {
@@ -132,12 +132,12 @@ export class ProjectMenu extends Component {
     const isPersonalProject = project.projectName === `${userId}_personal`;
     return [
       {
-        onClick: () => this.redirectToMembers(),
+        onClick: this.redirectToMembers,
         label: intl.formatMessage(messages.members),
         value: 'action-members',
       },
       {
-        onClick: () => this.redirectToSettings(),
+        onClick: this.redirectToSettings,
         label: intl.formatMessage(messages.settings),
         value: 'action-settings',
       },
@@ -145,7 +145,7 @@ export class ProjectMenu extends Component {
         type: SEPARATOR_ITEM,
       },
       {
-        onClick: () => this.onUnassign(),
+        onClick: this.onUnassign,
         label: intl.formatMessage(messages.unassign),
         value: 'action-unassign',
         hidden: !isAssigned,
@@ -153,13 +153,13 @@ export class ProjectMenu extends Component {
         title: isPersonalProject ? intl.formatMessage(messages.unassignFromPersonal) : '',
       },
       {
-        onClick: () => this.onAssign(),
+        onClick: this.onAssign,
         label: intl.formatMessage(messages.assign),
         value: 'action-assign',
         hidden: isAssigned,
       },
       {
-        onClick: () => this.onDelete(),
+        onClick: this.onDelete,
         label: intl.formatMessage(messages.delete),
         value: 'action-delete',
         type: DANGER_ITEM,
