@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { showModalAction } from 'controllers/modal';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { reduxForm } from 'redux-form';
-import { activeProjectRoleSelector, userInfoSelector } from 'controllers/user';
+import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
 import { canInviteInternalUser } from 'common/utils/permissions';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { FieldProvider } from 'components/fields/fieldProvider';
@@ -33,8 +33,8 @@ const messages = defineMessages({
 });
 @connect(
   (state) => ({
-    currentRole: activeProjectRoleSelector(state),
-    userRole: userInfoSelector(state).userRole,
+    projectRole: activeProjectRoleSelector(state),
+    accountRole: userAccountRoleSelector(state),
   }),
   {
     showModalAction,
@@ -58,8 +58,8 @@ export class MembersPageToolbar extends React.Component {
     filter: PropTypes.string,
     showModalAction: PropTypes.func.isRequired,
     onInvite: PropTypes.func,
-    currentRole: PropTypes.string,
-    userRole: PropTypes.string,
+    projectRole: PropTypes.string,
+    accountRole: PropTypes.string,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
@@ -72,8 +72,8 @@ export class MembersPageToolbar extends React.Component {
     change: () => {},
     showModalAction: () => {},
     onInvite: () => {},
-    currentRole: '',
-    userRole: '',
+    projectRole: '',
+    accountRole: '',
   };
 
   componentDidMount() {
@@ -113,7 +113,7 @@ export class MembersPageToolbar extends React.Component {
           <GhostButton
             icon={InviteUserIcon}
             onClick={this.showInviteUserModal}
-            disabled={!canInviteInternalUser(this.props.userRole, this.props.currentRole)}
+            disabled={!canInviteInternalUser(this.props.accountRole, this.props.projectRole)}
           >
             {this.props.intl.formatMessage(messages.inviteUser)}
           </GhostButton>

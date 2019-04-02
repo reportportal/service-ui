@@ -1,11 +1,15 @@
 import React, { Component } from 'react';
 import track from 'react-tracking';
 import PropTypes from 'prop-types';
+import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
 import { defineMessages, injectIntl, intlShape } from 'react-intl';
 import { reduxForm } from 'redux-form';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { DEFAULT_PROJECT_ROLE, ROLES_MAP } from 'common/constants/projectRoles';
+import { URLS } from 'common/urls';
+import { projectIdSelector } from 'controllers/pages';
+import { isAdminSelector } from 'controllers/user';
 import { withModal, ModalLayout, ModalField } from 'components/main/modal';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
@@ -14,9 +18,6 @@ import { InputUserSearch } from 'components/inputs/inputUserSearch';
 import { InputTagsSearch } from 'components/inputs/inputTagsSearch';
 import { InputDropdown } from 'components/inputs/inputDropdown';
 import { MEMBERS_PAGE_EVENTS } from 'components/main/analytics/events';
-import classNames from 'classnames/bind';
-import { activeProjectSelector, isAdminSelector } from 'controllers/user';
-import { URLS } from 'common/urls';
 import styles from './inviteUserModal.scss';
 
 const cx = classNames.bind(styles);
@@ -48,11 +49,11 @@ const messages = defineMessages({
 @injectIntl
 @connect(
   (state) => ({
-    activeProject: activeProjectSelector(state),
+    activeProject: projectIdSelector(state),
     isAdmin: isAdminSelector(state),
     initialValues: {
       role: DEFAULT_PROJECT_ROLE,
-      project: activeProjectSelector(state),
+      project: projectIdSelector(state),
     },
   }),
   { showModalAction },

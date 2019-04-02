@@ -18,6 +18,7 @@ import AddProjectIcon from 'common/img/add-project-inline.svg';
 import ProjectUsersIcon from 'common/img/project-users-inline.svg';
 import ProjectSettingsIcon from 'common/img/project-settings-inline.svg';
 import ProjectEventsIcon from 'common/img/project-events-inline.svg';
+import { MembersPage } from 'pages/common/membersPage';
 import { ProjectStatusPage } from '../projectStatusPage';
 import { ProjectEventsPage } from '../projectEventsPage';
 import { Projects } from './projects';
@@ -174,7 +175,7 @@ export class ProjectsPage extends Component {
       case SETTINGS:
         return <AdminProjectSettingsPageContainer projectId={projectId} />;
       case MEMBERS:
-        return <h1>Project Members</h1>;
+        return <MembersPage />;
       case EVENTS:
         return <ProjectEventsPage />;
       default:

@@ -31,10 +31,10 @@ import { DashboardPage } from 'pages/inside/dashboardPage';
 import { DashboardItemPage } from 'pages/inside/dashboardItemPage';
 import { FiltersPage } from 'pages/inside/filtersPage';
 import { LaunchesPage } from 'pages/inside/launchesPage';
-import { MembersPage } from 'pages/inside/membersPage';
 import { ProfilePage } from 'pages/inside/profilePage';
 import { SandboxPage } from 'pages/inside/sandboxPage';
 import { ProjectSettingsPageContainer } from 'pages/inside/projectSettingsPageContainer';
+import { ProjectMembersPageContainer } from 'pages/inside/projectMembersPageContainer';
 import { HistoryPage } from 'pages/inside/historyPage';
 import { LoginPage } from 'pages/outside/loginPage';
 import { NotFoundPage } from 'pages/outside/notFoundPage';
@@ -61,7 +61,7 @@ const pageRendering = {
   PROJECT_FILTERS_PAGE: { component: FiltersPage, layout: AppLayout },
   [LAUNCHES_PAGE]: { component: LaunchesPage, layout: AppLayout },
   PROJECT_LAUNCHES_PAGE: { component: LaunchesPage, layout: AppLayout },
-  PROJECT_MEMBERS_PAGE: { component: MembersPage, layout: AppLayout },
+  PROJECT_MEMBERS_PAGE: { component: ProjectMembersPageContainer, layout: AppLayout },
   PROJECT_SANDBOX_PAGE: { component: SandboxPage, layout: AppLayout },
   PROJECT_SETTINGS_PAGE: { component: ProjectSettingsPageContainer, layout: AppLayout },
   PROJECT_SETTINGS_TAB_PAGE: { component: ProjectSettingsPageContainer, layout: AppLayout },

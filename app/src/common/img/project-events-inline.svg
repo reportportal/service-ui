@@ -1,15 +1,6 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <svg width="16px" height="17px" viewBox="0 0 16 17" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <!-- Generator: Sketch 52.2 (67145) - http://www.bohemiancoding.com/sketch -->
-    <title>Shape</title>
-    <desc>Created with Sketch.</desc>
-    <g id="#MB_Settings&amp;Members-Page" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="2_Settings_General_MG" transform="translate(-1220.000000, -81.000000)" fill="#1A9CB0" fill-rule="nonzero">
-            <g id="bttn-Settings-Copy" transform="translate(1195.000000, 75.000000)">
-                <g id="ic_event" transform="translate(23.000000, 5.000000)">
-                    <path d="M14,9 L6,9 L6,11 L14,11 L14,9 Z M15,3 L15,1 L13,1 L13,3 L7,3 L7,1 L5,1 L5,3 L4,3 C2.98486901,3 2,3 2,4 L2,16 C2,17.235 2.79111111,18 4,18 L16,18 C17.2,18 18,17.235 18,16 L18,4 C18,3 16.3141729,3 15,3 Z M16,16 L4,16 L4,7 L16,7 L16,16 Z M11,12 L6,12 L6,14 L11,14 L11,12 Z" id="Shape"></path>
-                </g>
-            </g>
-        </g>
+    <g transform="translate(-2, -1)">
+        <path fill="#1A9CB0" fill-rule="evenodd" d="M14,9 L6,9 L6,11 L14,11 L14,9 Z M15,3 L15,1 L13,1 L13,3 L7,3 L7,1 L5,1 L5,3 L4,3 C2.98486901,3 2,3 2,4 L2,16 C2,17.235 2.79111111,18 4,18 L16,18 C17.2,18 18,17.235 18,16 L18,4 C18,3 16.3141729,3 15,3 Z M16,16 L4,16 L4,7 L16,7 L16,16 Z M11,12 L6,12 L6,14 L11,14 L11,12 Z">
+        </path>
     </g>
 </svg>
