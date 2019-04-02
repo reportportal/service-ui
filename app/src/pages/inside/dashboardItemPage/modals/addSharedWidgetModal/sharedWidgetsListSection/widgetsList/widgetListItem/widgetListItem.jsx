@@ -4,7 +4,7 @@ import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import classNames from 'classnames/bind';
 import { InputRadio } from 'components/inputs/inputRadio';
 import { OwnerBlock } from 'pages/inside/common/itemInfo/ownerBlock';
-import { widgetTitles } from 'pages/inside/dashboardItemPage/modals/common/widgets';
+import { widgetTypesMessages } from 'pages/inside/dashboardItemPage/modals/common/widgets';
 import styles from './widgetListItem.scss';
 
 const cx = classNames.bind(styles);
@@ -52,7 +52,7 @@ export class WidgetListItem extends Component {
         >
           <span className={cx('widget-name')}>{widget.name}</span>
           <span className={cx('widget-type')}>
-            {widget.widgetType && formatMessage(widgetTitles[widget.widgetType])}
+            {widget.widgetType && formatMessage(widgetTypesMessages[widget.widgetType])}
           </span>
           <OwnerBlock owner={widget.owner} disabled />
         </InputRadio>
