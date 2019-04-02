@@ -8,8 +8,8 @@ import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
 import { InputDropdown } from 'components/inputs/inputDropdown';
 import { canChangeUserRole } from 'common/utils/permissions';
+import { projectIdSelector } from 'controllers/pages';
 import {
-  activeProjectSelector,
   activeProjectRoleSelector,
   userAccountRoleSelector,
   isAdminSelector,
@@ -39,7 +39,7 @@ const messages = defineMessages({
 @connect(
   (state) => ({
     currentUser: userIdSelector(state),
-    projectId: activeProjectSelector(state),
+    projectId: projectIdSelector(state),
     isAdmin: isAdminSelector(state),
     canChangeRole: canChangeUserRole(
       userAccountRoleSelector(state),

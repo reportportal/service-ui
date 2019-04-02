@@ -8,8 +8,8 @@ import { showModalAction } from 'controllers/modal';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
 import { canAssignUnassignInternalUser } from 'common/utils/permissions';
+import { projectIdSelector } from 'controllers/pages';
 import {
-  activeProjectSelector,
   activeProjectRoleSelector,
   userAccountRoleSelector,
   userIdSelector,
@@ -54,10 +54,10 @@ const messages = defineMessages({
 @connect(
   (state) => ({
     currentUser: userIdSelector(state),
-    projectId: activeProjectSelector(state),
+    projectId: projectIdSelector(state),
     projectRole: activeProjectRoleSelector(state),
     accountRole: userAccountRoleSelector(state),
-    entryType: assignedProjectsSelector(state)[activeProjectSelector(state)].entryType,
+    entryType: assignedProjectsSelector(state)[projectIdSelector(state)].entryType,
   }),
   { showNotification, showModalAction },
 )
@@ -73,7 +73,6 @@ export class UnassignButton extends Component {
     currentUser: PropTypes.string,
     entryType: PropTypes.string,
     showNotification: PropTypes.func,
-    fetchUserAction: PropTypes.func,
     fetchData: PropTypes.func,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
@@ -88,7 +87,6 @@ export class UnassignButton extends Component {
     currentUser: '',
     entryType: '',
     showNotification: () => {},
-    fetchUserAction: () => {},
     fetchData: () => {},
   };
   getUnAssignTitle = () => {

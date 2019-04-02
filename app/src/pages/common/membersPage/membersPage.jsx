@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -15,20 +15,15 @@ import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
 import { withFilter } from 'controllers/filter';
-import { activeProjectSelector } from 'controllers/user';
+import { projectIdSelector } from 'controllers/pages';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
 import { withPagination } from 'controllers/pagination';
 import { MEMBERS_PAGE, MEMBERS_PAGE_EVENTS } from 'components/main/analytics/events';
-import { PageLayout, PageHeader, PageSection } from 'layouts/pageLayout';
+import { NoResultsForFilter } from 'pages/inside/common/noResultsForFilter';
 import { MembersPageToolbar } from './membersPageToolbar';
 import { MembersGrid } from './membersGrid';
-import { NoResultsForFilter } from '../common/noResultsForFilter';
 
 const messages = defineMessages({
-  membersPageTitle: {
-    id: 'MembersPage.title',
-    defaultMessage: 'Project members',
-  },
   memberWasInvited: {
     id: 'MembersPage.memberWasInvited',
     defaultMessage: "Member '<b>{name}</b>' was assigned to the project",
@@ -45,8 +40,8 @@ const messages = defineMessages({
 });
 @connect(
   (state) => ({
-    activeProject: activeProjectSelector(state),
-    url: URLS.projectUsers(activeProjectSelector(state)),
+    activeProject: projectIdSelector(state),
+    url: URLS.projectUsers(projectIdSelector(state)),
     members: membersSelector(state),
     loading: loadingSelector(state),
   }),
@@ -103,8 +98,6 @@ export class MembersPage extends Component {
     members: [],
     loading: false,
   };
-
-  getBreadcrumbs = () => [{ title: this.props.intl.formatMessage(messages.membersPageTitle) }];
 
   inviteUser = (userData) => {
     const data = {};
@@ -196,18 +189,15 @@ export class MembersPage extends Component {
     const { filter, members, loading } = this.props;
 
     return (
-      <PageLayout>
-        <PageHeader breadcrumbs={this.getBreadcrumbs()} />
-        <PageSection>
-          <MembersPageToolbar
-            filter={filter}
-            onFilterChange={this.searchUser}
-            onInvite={this.inviteUser}
-          />
-          <MembersGrid data={members} fetchData={this.props.fetchMembersAction} loading={loading} />
-          {!loading && this.renderPageSectionFooter()}
-        </PageSection>
-      </PageLayout>
+      <Fragment>
+        <MembersPageToolbar
+          filter={filter}
+          onFilterChange={this.searchUser}
+          onInvite={this.inviteUser}
+        />
+        <MembersGrid data={members} fetchData={this.props.fetchMembersAction} loading={loading} />
+        {!loading && this.renderPageSectionFooter()}
+      </Fragment>
     );
   }
 }
