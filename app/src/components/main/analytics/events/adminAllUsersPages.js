@@ -15,4 +15,14 @@ export const ADMIN_ALL_USERS_PAGE_MODAL_EVENTS = {
     action: 'Click on Bttn Ok on Modal "Delete user"',
     label: 'Delete user',
   },
+  UNASSIGN_BTN_CLICK: {
+    category: ADMIN_ALL_USERS_PAGE_MODAL,
+    action: 'Click on Bttn Unassign',
+    label: 'Unassign user',
+  },
+  CHANGE_PROJECT_ROLE: {
+    category: ADMIN_ALL_USERS_PAGE_MODAL,
+    action: 'Edit input Project role',
+    label: 'Change Project role',
+  },
 };

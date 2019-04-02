@@ -4,6 +4,7 @@ export {
   toggleAllUsersAction,
   deleteItemsAction,
   unselectAllUsersAction,
+  toggleUserRoleForm,
 } from './actionCreators';
 export { allUsersReducer } from './reducer';
 export {
