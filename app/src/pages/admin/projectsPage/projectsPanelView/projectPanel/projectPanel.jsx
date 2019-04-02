@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import track from 'react-tracking';
-import { injectIntl, intlShape, defineMessages, FormattedRelative } from 'react-intl';
+import { injectIntl, intlShape, FormattedRelative } from 'react-intl';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { NavLink } from 'redux-first-router-link';
@@ -15,41 +15,7 @@ import { StatisticsItem } from './statisticsItem';
 import { ProjectTooltipIcon } from './projectTooltipIcon';
 import styles from './projectPanel.scss';
 import { UPSA_PROJECT, PERSONAL_PROJECT } from './constants';
-
-const messages = defineMessages({
-  launchesQuantity: {
-    id: 'ProjectPanel.launchesQuantity',
-    defaultMessage: 'Launches',
-  },
-  membersQuantity: {
-    id: 'ProjectPanel.membersQuantity',
-    defaultMessage: 'Members',
-  },
-  linkedTooltip: {
-    id: 'ProjectPanel.linkedTooltip',
-    defaultMessage: 'Synced with UPSA',
-  },
-  personalTooltip: {
-    id: 'ProjectPanel.personalTooltip',
-    defaultMessage: 'Personal project',
-  },
-  assignModalConfirmationText: {
-    id: 'ProjectsPage.assignModalConfirmationText',
-    defaultMessage: 'You are not a member of this project yet. Would you like to be assigned?',
-  },
-  modalCancelButtonText: {
-    id: 'ProjectsPage.modal.modalCancelButtonText',
-    defaultMessage: 'Cancel',
-  },
-  assignModalTitle: {
-    id: 'ProjectPage.assignModalTitle',
-    defaultMessage: 'Assign to the project',
-  },
-  assignModalButton: {
-    id: 'ProjectPage.assignButton',
-    defaultMessage: 'Assign',
-  },
-});
+import { messages } from './../../messages';
 
 const cx = classNames.bind(styles);
 

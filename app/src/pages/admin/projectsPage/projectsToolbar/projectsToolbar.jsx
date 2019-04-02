@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { defineMessages, FormattedMessage, injectIntl, intlShape } from 'react-intl';
+import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
 import classNames from 'classnames/bind';
 
 import { InputFilter } from 'components/inputs/inputFilter';
@@ -34,48 +34,9 @@ import { collectFilterEntities } from 'components/filterEntities/containers/util
 import { ProjectEntities } from './projectEntities';
 import { ProjectsSorting } from './projectsSorting';
 import styles from './projectsToolbar.scss';
+import { messages } from './../messages';
 
 const cx = classNames.bind(styles);
-
-const messages = defineMessages({
-  deleteProjectsCount: {
-    id: 'ProjectsToolbar.deleteProjectsCount',
-    defaultMessage: '{count} items selected',
-  },
-  deleteModalHeader: {
-    id: 'ProjectsToolbar.deleteModalHeader',
-    defaultMessage: 'Delete project',
-  },
-  deleteModalMultipleHeader: {
-    id: 'ProjectsToolbar.deleteModalMultipleHeader',
-    defaultMessage: 'Delete projects',
-  },
-  deleteModalContent: {
-    id: 'ProjectsToolbar.deleteModalContent',
-    defaultMessage: 'Are you sure want to delete the project <b>{name}</b>?',
-  },
-  deleteModalMultipleContent: {
-    id: 'ProjectsToolbar.deleteModalMultipleContent',
-    defaultMessage: 'Are you sure want to delete the projects? <br> <b>{names}</b>',
-  },
-  success: {
-    id: 'ProjectsToolbar.success',
-    defaultMessage: 'Project has been deleted',
-  },
-  successMultiple: {
-    id: 'ProjectsToolbar.successMultiple',
-    defaultMessage: 'Projects have been deleted',
-  },
-  error: {
-    id: 'ProjectsToolbar.error',
-    defaultMessage: 'Error when deleting project',
-  },
-  errorMultiple: {
-    id: 'ProjectsToolbar.errorMultiple',
-    defaultMessage: 'Error when deleting projects',
-  },
-});
-
 @connect(
   (state) => ({
     filterEnities: collectFilterEntities(querySelector(state)),
@@ -146,8 +107,8 @@ export class ProjectsToolbar extends Component {
         this.props.showNotification({
           message:
             projectsToDelete.length === 1
-              ? this.props.intl.formatMessage(messages.success)
-              : this.props.intl.formatMessage(messages.successMultiple),
+              ? this.props.intl.formatMessage(messages.deleteSuccess)
+              : this.props.intl.formatMessage(messages.deleteSuccessMultiple),
           type: NOTIFICATION_TYPES.SUCCESS,
         });
       })
@@ -156,8 +117,8 @@ export class ProjectsToolbar extends Component {
         this.props.showNotification({
           message:
             projectsToDelete.length === 1
-              ? this.props.intl.formatMessage(messages.error)
-              : this.props.intl.formatMessage(messages.errorMultiple),
+              ? this.props.intl.formatMessage(messages.deleteError)
+              : this.props.intl.formatMessage(messages.deleteErrorMultiple),
           type: NOTIFICATION_TYPES.ERROR,
         });
       });
