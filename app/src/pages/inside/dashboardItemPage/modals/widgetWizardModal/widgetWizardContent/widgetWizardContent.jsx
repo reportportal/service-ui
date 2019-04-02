@@ -78,10 +78,7 @@ export class WidgetWizardContent extends Component {
       onConfirm,
     } = this.props;
 
-    const data = {
-      ...formData,
-      filterIds: formData.filterIds.map((item) => (typeof item === 'object' ? item.value : item)),
-    };
+    const data = this.prepareDataForSubmit(formData);
 
     trackEvent(addWidget);
     this.props.showScreenLockAction();
@@ -101,6 +98,11 @@ export class WidgetWizardContent extends Component {
     this.setState({ step: this.state.step + 1 });
   };
 
+  prepareDataForSubmit = (data) => ({
+    ...data,
+    filterIds: (data.filterIds || []).map((item) => item.value),
+  });
+
   render() {
     const {
       formValues: { widgetType },
@@ -111,7 +113,7 @@ export class WidgetWizardContent extends Component {
         <WizardInfoSection
           activeWidget={this.widgets.find((widget) => widgetType === widget.id)}
           projectId={this.props.projectId}
-          widgetSettings={this.props.formValues}
+          widgetSettings={this.prepareDataForSubmit(this.props.formValues)}
           step={this.state.step}
         />
         <WizardControlsSection
