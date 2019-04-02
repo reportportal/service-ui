@@ -5,5 +5,6 @@ export {
   buildVersionSelector,
   instanceIdSelector,
   analyticsEnabledSelector,
+  analyzerExtensionsSelector,
 } from './selectors';
 export { ANALYTICS_ALL_KEY } from './constants';
