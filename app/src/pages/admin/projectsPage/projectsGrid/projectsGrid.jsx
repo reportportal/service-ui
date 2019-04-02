@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { defineMessages, injectIntl, intlShape } from 'react-intl';
+import { injectIntl, intlShape } from 'react-intl';
 import classNames from 'classnames/bind';
 import { Grid } from 'components/main/grid';
 import {
@@ -30,20 +30,9 @@ import {
 } from './projectsGridColumns';
 
 import styles from './projectsGrid.scss';
+import { messages } from '../messages';
 
 const cx = classNames.bind(styles);
-
-const messages = defineMessages({
-  nameCol: { id: 'ProjectsGrid.nameCol', defaultMessage: 'Name' },
-  projectTypeCol: { id: 'ProjectsGrid.projectTypeCol', defaultMessage: 'Project Type' },
-  organizationCol: { id: 'ProjectsGrid.organizationCol', defaultMessage: 'Organization' },
-  membersCol: { id: 'ProjectsGrid.membersCol', defaultMessage: 'Members' },
-  membersColShort: { id: 'ProjectsGrid.membersColShort', defaultMessage: 'Mmbrs' },
-  launchesCol: { id: 'ProjectsGrid.launchesCol', defaultMessage: 'Launches' },
-  launchesColShort: { id: 'ProjectsGrid.launchesColShort', defaultMessage: 'Lnchs' },
-  lastLaunchCol: { id: 'ProjectsGrid.lastLaunchCol', defaultMessage: 'Last Launch date' },
-  lastLaunchColShort: { id: 'ProjectsGrid.lastLaunchColShort', defaultMessage: 'Lnch date' },
-});
 
 @connect(
   (state) => ({

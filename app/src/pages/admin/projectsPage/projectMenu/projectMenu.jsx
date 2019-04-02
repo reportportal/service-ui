@@ -1,7 +1,7 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { injectIntl, intlShape } from 'react-intl';
 import { redirect } from 'redux-first-router';
 
 import {
@@ -16,53 +16,7 @@ import { PROJECT_DETAILS_PAGE } from 'controllers/pages';
 import { SETTINGS, MEMBERS } from 'common/constants/projectSections';
 import { DotsMenuButton, SEPARATOR_ITEM, DANGER_ITEM } from 'components/buttons/dotsMenuButton';
 import { ADMIN_ALL_PROJECTS_PAGE_MODAL_EVENTS } from 'components/main/analytics/events';
-
-const messages = defineMessages({
-  members: {
-    id: 'ProjectPanel.members',
-    defaultMessage: 'Members',
-  },
-  settings: {
-    id: 'ProjectPanel.settings',
-    defaultMessage: 'Settings',
-  },
-  assign: {
-    id: 'ProjectPanel.assign',
-    defaultMessage: 'Assign',
-  },
-  unassign: {
-    id: 'ProjectPanel.unassign',
-    defaultMessage: 'Unassign',
-  },
-  delete: {
-    id: 'ProjectPanel.delete',
-    defaultMessage: 'Delete',
-  },
-  unassignFromPersonal: {
-    id: 'ProjectPanel.unassignFromPersonal',
-    defaultMessage: 'Impossible to unassign user from personal project',
-  },
-  modalCancelButtonText: {
-    id: 'ProjectsPage.modal.modalCancelButtonText',
-    defaultMessage: 'Cancel',
-  },
-  deleteModalTitle: {
-    id: 'ProjectsPage.modal.deleteModalTitle',
-    defaultMessage: 'Delete project',
-  },
-  deleteModalConfirmationText: {
-    id: 'ProjectsPage.modal.deleteModalConfirmationText',
-    defaultMessage: 'Are you sure you want to delete the project <b>{name}</b>?',
-  },
-  deleteModalSubmitButtonText: {
-    id: 'ProjectsPage.modal.deleteModalSubmitButtonText',
-    defaultMessage: 'Delete',
-  },
-  deleteError: {
-    id: 'ProjectsPage.deleteError',
-    defaultMessage: 'An error occurred during deleting the project',
-  },
-});
+import { messages } from '../messages';
 
 @connect(
   (state, ownProps) => ({
@@ -109,8 +63,8 @@ export class ProjectMenu extends Component {
       data: {
         items: [project],
         onConfirm: this.onDeleteSubmit,
-        header: intl.formatMessage(messages.deleteModalTitle),
-        mainContent: intl.formatMessage(messages.deleteModalConfirmationText, {
+        header: intl.formatMessage(messages.deleteModalHeader),
+        mainContent: intl.formatMessage(messages.deleteModalContent, {
           name: projectName,
         }),
         userId,

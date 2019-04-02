@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { redirect } from 'redux-first-router';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { injectIntl, intlShape } from 'react-intl';
 import classNames from 'classnames/bind';
 import { PageLayout, PageHeader, PageSection } from 'layouts/pageLayout';
 import {
@@ -23,33 +23,11 @@ import { ProjectStatusPage } from '../projectStatusPage';
 import { ProjectEventsPage } from '../projectEventsPage';
 import { Projects } from './projects';
 import { AdminProjectSettingsPageContainer } from '../adminProjectSettingsPageContainer';
+import { messages } from './messages';
 
 import styles from './projectsPage.scss';
 
 const cx = classNames.bind(styles);
-
-const messages = defineMessages({
-  pageTitle: {
-    id: 'ProjectsPage.title',
-    defaultMessage: 'All projects',
-  },
-  addProject: {
-    id: 'ProjectsPage.addProject',
-    defaultMessage: 'Add New Project',
-  },
-  [`${SETTINGS}Title`]: {
-    id: 'ProjectDetailsPageSettings.title',
-    defaultMessage: 'Settings',
-  },
-  [`${MEMBERS}Title`]: {
-    id: 'ProjectDetailsPageMembers.title',
-    defaultMessage: 'Members',
-  },
-  [`${EVENTS}Title`]: {
-    id: 'ProjectDetailsPageEvents.title',
-    defaultMessage: 'Events',
-  },
-});
 
 const HEADER_BUTTONS = [
   {
