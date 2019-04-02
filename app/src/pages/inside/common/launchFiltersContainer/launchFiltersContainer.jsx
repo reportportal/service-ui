@@ -93,7 +93,7 @@ export class LaunchFiltersContainer extends Component {
     const currentFilter = this.createFilterQuery(this.getConditions());
 
     if (!isEqual(currentFilter, newFilter)) {
-      this.fetchLaunches({ [PAGE_KEY]: 1, newFilter });
+      this.fetchLaunches({ [PAGE_KEY]: 1, ...newFilter });
     }
 
     const conditionsWithFilteringField = addFilteringFieldToConditions(conditions);
