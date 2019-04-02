@@ -57,12 +57,18 @@ export class ProjectsGrid extends PureComponent {
     loading: PropTypes.bool,
     toggleProjectSelectionAction: PropTypes.func.isRequired,
     toggleAllProjectsAction: PropTypes.func.isRequired,
+    sortingColumn: PropTypes.string,
+    sortingDirection: PropTypes.string,
+    onChangeSorting: PropTypes.func,
   };
 
   static defaultProps = {
     projects: [],
     selectedProjects: [],
     loading: false,
+    sortingColumn: null,
+    sortingDirection: null,
+    onChangeSorting: () => {},
   };
 
   getColumns = () => [
@@ -73,13 +79,15 @@ export class ProjectsGrid extends PureComponent {
       },
       maxHeight: 170,
       component: NameColumn,
+      sortable: true,
     },
     {
-      id: 'projectType',
+      id: 'type',
       title: {
         full: this.props.intl.formatMessage(messages.projectTypeCol),
       },
       component: ProjectTypeColumn,
+      sortable: true,
     },
     {
       id: 'organization',
@@ -87,30 +95,34 @@ export class ProjectsGrid extends PureComponent {
         full: this.props.intl.formatMessage(messages.organizationCol),
       },
       component: OrganizationColumn,
+      sortable: true,
     },
     {
-      id: 'members',
+      id: 'usersQuantity',
       title: {
         full: this.props.intl.formatMessage(messages.membersCol),
         short: this.props.intl.formatMessage(messages.membersColShort),
       },
       component: MembersColumn,
+      sortable: true,
     },
     {
-      id: 'launches',
+      id: 'launchesQuantity',
       title: {
         full: this.props.intl.formatMessage(messages.launchesCol),
         short: this.props.intl.formatMessage(messages.launchesColShort),
       },
       component: LaunchesColumn,
+      sortable: true,
     },
     {
-      id: 'lastLaunch',
+      id: 'lastRun',
       title: {
         full: this.props.intl.formatMessage(messages.lastLaunchCol),
         short: this.props.intl.formatMessage(messages.lastLaunchColShort),
       },
       component: LastLaunchColumn,
+      sortable: true,
     },
     {
       id: 'menu',
@@ -121,7 +133,14 @@ export class ProjectsGrid extends PureComponent {
   COLUMNS = this.getColumns();
 
   render() {
-    const { projects, loading, selectedProjects } = this.props;
+    const {
+      projects,
+      loading,
+      selectedProjects,
+      sortingColumn,
+      sortingDirection,
+      onChangeSorting,
+    } = this.props;
 
     return (
       <Grid
@@ -135,6 +154,9 @@ export class ProjectsGrid extends PureComponent {
         className={cx('projects-grid')}
         gridRowClassName={cx('projects-grid-row')}
         headerClassName={cx('projects-header')}
+        sortingColumn={sortingColumn}
+        sortingDirection={sortingDirection}
+        onChangeSorting={onChangeSorting}
       />
     );
   }

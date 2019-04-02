@@ -17,4 +17,10 @@ export {
   querySelector,
 } from './selectors';
 export { projectsSagas } from './sagas';
-export { DEFAULT_PAGE_SIZE, DEFAULT_PAGINATION, GRID_VIEW, TABLE_VIEW } from './constants';
+export {
+  DEFAULT_PAGE_SIZE,
+  DEFAULT_PAGINATION,
+  GRID_VIEW,
+  TABLE_VIEW,
+  DEFAULT_SORT_COLUMN,
+} from './constants';
