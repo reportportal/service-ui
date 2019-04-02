@@ -31,7 +31,14 @@ import {
 import styles from './filtersControl.scss';
 
 const cx = classNames.bind(styles);
-const selector = formValueSelector(WIDGET_WIZARD_FORM);
+const wizardFormValuesSelector = formValueSelector(WIDGET_WIZARD_FORM);
+const activeFilterIdSelector = (state) =>
+  (
+    (wizardFormValuesSelector(state, 'filterIds') &&
+      wizardFormValuesSelector(state, 'filterIds')[0]) ||
+    {}
+  ).value || '';
+
 const messages = defineMessages({
   insertFilterSuccess: {
     id: 'FiltersControl.insertFilterSuccess',
@@ -59,7 +66,7 @@ const messages = defineMessages({
   (state) => ({
     userId: userIdSelector(state),
     activeProject: activeProjectSelector(state),
-    activeFilterId: (selector(state, 'filterIds') && selector(state, 'filterIds')[0]) || '',
+    activeFilterId: activeFilterIdSelector(state),
     filters: filtersSelector(state),
     pagination: filtersPaginationSelector(state),
     loading: loadingSelector(state),
@@ -164,6 +171,8 @@ export class FiltersControl extends Component {
 
     return <div className={cx('filters-control-form')}>{component}</div>;
   };
+
+  getFilterById = (filterId) => this.props.filters.find((elem) => elem.id === Number(filterId));
 
   fetchFilter = ({ page, size, searchValue }) => {
     const { size: stateSize, page: statePage } = this.state;
@@ -270,7 +279,14 @@ export class FiltersControl extends Component {
 
   handleFilterListChange = (event) => this.handleActiveFilterChange(event.target.value);
 
-  handleActiveFilterChange = (id) => this.props.changeWizardForm('filterIds', [id]);
+  handleActiveFilterChange = (id) => {
+    const filter = this.getFilterById(id);
+    const newActiveFilter = {
+      value: id,
+      name: filter.name,
+    };
+    this.props.changeWizardForm('filterIds', [newActiveFilter]);
+  };
 
   handleFiltersListLoad = () => {
     const { page, searchValue } = this.state;
@@ -289,7 +305,7 @@ export class FiltersControl extends Component {
 
   render() {
     const { activeFilterId, filters, formAppearance } = this.props;
-    const activeFilter = filters.find((elem) => elem.id === Number(activeFilterId));
+    const activeFilter = this.getFilterById(activeFilterId);
 
     if (formAppearance.mode !== false) {
       return this.getFormAppearanceComponent(activeFilter);
