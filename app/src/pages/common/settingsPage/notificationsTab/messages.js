@@ -1,4 +1,5 @@
 import { defineMessages } from 'react-intl';
+import { LAUNCH_CASES } from './constants';
 
 export const messages = defineMessages({
   recipientsLabel: {
@@ -27,11 +28,11 @@ export const messages = defineMessages({
   },
   launchNamesPlaceholder: {
     id: 'NotificationCase.launchNamesPlaceholder',
-    defaultMessage: 'Select launches names',
+    defaultMessage: 'Select launch names',
   },
   launchNamesHint: {
     id: 'NotificationCase.launchNamesHint',
-    defaultMessage: 'At least 3 symbols required for autocomplete.',
+    defaultMessage: 'Launch name should have size from 3 to 256',
   },
   launchNamesNote: {
     id: 'NotificationCase.launchNamesNote',
@@ -45,36 +46,32 @@ export const messages = defineMessages({
     id: 'NotificationCase.attributesNote',
     defaultMessage: 'Send notifications about launches containing specified attributes',
   },
-  dropdownValueAlways: {
+  [LAUNCH_CASES.ALWAYS]: {
     id: 'NotificationCase.dropdownValueAlways',
     defaultMessage: 'Always',
   },
-  dropdownValueMore10: {
+  [LAUNCH_CASES.MORE_10]: {
     id: 'NotificationCase.dropdownValueMore10',
     defaultMessage: '> 10% of items have issues',
   },
-  dropdownValueMore20: {
+  [LAUNCH_CASES.MORE_20]: {
     id: 'NotificationCase.dropdownValueMore20',
     defaultMessage: '> 20% of items have issues',
   },
-  dropdownValueMore50: {
+  [LAUNCH_CASES.MORE_50]: {
     id: 'NotificationCase.dropdownValueMore50',
     defaultMessage: '> 50% of items have issues',
   },
-  dropdownValueFailed: {
+  [LAUNCH_CASES.FAILED]: {
     id: 'NotificationCase.dropdownValueFailed',
     defaultMessage: 'Launch has issues',
   },
-  dropdownValueToInvestigate: {
+  [LAUNCH_CASES.TO_INVESTIGATE]: {
     id: 'NotificationCase.dropdownValueToInvestigate',
     defaultMessage: 'Launch has "To Investigate" items',
   },
   controlPanelName: {
     id: 'NotificationCase.controlPanelName',
     defaultMessage: 'Rule',
-  },
-  duplicationErrorMessage: {
-    id: 'NotificationCase.duplicationErrorMessage',
-    defaultMessage: "Such notification rule already exists. You can't create duplicate.",
   },
 });

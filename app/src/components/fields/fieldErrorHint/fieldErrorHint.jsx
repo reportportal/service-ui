@@ -99,11 +99,11 @@ const messages = defineMessages({
     defaultMessage: 'Postfix should have size from 1 to 90',
   },
   recipientsHint: {
-    id: 'emailCase.recipientsHint',
-    defaultMessage: 'Select at least one recipient or set up “OFF” e-mail notifications',
+    id: 'AddEditNotificationCaseModal.recipientsHint',
+    defaultMessage: 'Select at least one recipient',
   },
   launchesHint: {
-    id: 'emailCase.launchesHint',
+    id: 'AddEditNotificationCaseModal.launchesHint',
     defaultMessage: 'Launch name should have size from 3 to 256',
   },
   urlHint: {

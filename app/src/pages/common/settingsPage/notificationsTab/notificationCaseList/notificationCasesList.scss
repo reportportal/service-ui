@@ -1,0 +1,7 @@
+.notification-form-button {
+  margin-top: 25px;
+  padding-left: 80px;
+  @media (max-width: $SCREEN_XS_MAX) {
+    display: none;
+  }
+}

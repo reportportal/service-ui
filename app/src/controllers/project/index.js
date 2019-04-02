@@ -11,7 +11,7 @@ export {
   hideFilterOnLaunchesAction,
   fetchConfigurationAttributesAction,
   updateConfigurationAttributesAction,
-  updateProjectNotificationsConfig,
+  updateProjectNotificationsConfigAction,
   updateDefectSubTypeAction,
   updateDefectSubTypeSuccessAction,
   addDefectSubTypeAction,

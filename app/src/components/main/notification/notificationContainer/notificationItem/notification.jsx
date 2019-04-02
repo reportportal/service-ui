@@ -38,13 +38,13 @@ const messages = defineMessages({
     id: 'Project.updateDefectSubTypeSuccess',
     defaultMessage: 'Completed successfully!',
   },
-  changeDefectSubTypeError: {
-    id: 'Project.changeDefectSubTypeError',
-    defaultMessage: '{message}',
-  },
   deleteDefectSubTypeSuccess: {
     id: 'Project.deleteDefectSubTypeSuccess',
     defaultMessage: 'Defect type was successfully deleted',
+  },
+  updateProjectNotificationsConfigurationSuccess: {
+    id: 'NotificationsTab.updateProjectNotificationsConfigurationSuccess',
+    defaultMessage: 'Notification settings were successfully updated!',
   },
 });
 

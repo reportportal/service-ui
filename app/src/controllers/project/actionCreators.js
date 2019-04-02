@@ -6,11 +6,11 @@ import {
   removeFilterAction,
   addFilterAction,
 } from 'controllers/filter';
-import { projectIdSelector } from 'controllers/pages';
 import {
   FETCH_PROJECT_SUCCESS,
   FETCH_PROJECT_PREFERENCES_SUCCESS,
   UPDATE_CONFIGURATION_ATTRIBUTES,
+  UPDATE_NOTIFICATIONS_CONFIG,
   UPDATE_NOTIFICATIONS_CONFIG_SUCCESS,
   UPDATE_DEFECT_SUBTYPE,
   UPDATE_DEFECT_SUBTYPE_SUCCESS,
@@ -19,7 +19,6 @@ import {
   DELETE_DEFECT_SUBTYPE,
   DELETE_DEFECT_SUBTYPE_SUCCESS,
 } from './constants';
-import { projectNotificationsConfigurationSelector } from './selectors';
 
 const fetchProjectSuccessAction = (project) => ({
   type: FETCH_PROJECT_SUCCESS,
@@ -36,6 +35,16 @@ export const updateConfigurationAttributesAction = (project) => ({
   payload: project.configuration.attributes,
 });
 
+export const updateProjectNotificationsConfigAction = (config) => ({
+  type: UPDATE_NOTIFICATIONS_CONFIG,
+  payload: config,
+});
+
+export const updateProjectNotificationsConfigSuccessAction = (config) => ({
+  type: UPDATE_NOTIFICATIONS_CONFIG_SUCCESS,
+  payload: config,
+});
+
 export const updateProjectFilterPreferencesAction = (filterId, method) => (dispatch, getState) =>
   fetch(
     URLS.projectPreferences(
@@ -47,19 +56,6 @@ export const updateProjectFilterPreferencesAction = (filterId, method) => (dispa
       method,
     },
   );
-export const updateProjectNotificationsConfig = (notificationsConfig) => (dispatch, getState) => {
-  const currentConfig = projectNotificationsConfigurationSelector(getState());
-  const newConfig = { ...currentConfig, ...notificationsConfig };
-  fetch(URLS.projectNotificationConfiguration(projectIdSelector(getState())), {
-    method: 'PUT',
-    data: newConfig,
-  }).then(() => {
-    dispatch({
-      type: UPDATE_NOTIFICATIONS_CONFIG_SUCCESS,
-      payload: newConfig,
-    });
-  });
-};
 
 export const showFilterOnLaunchesAction = (filter) => (dispatch) => {
   dispatch(addFilterAction(filter));

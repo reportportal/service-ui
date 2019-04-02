@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { injectIntl, intlShape } from 'react-intl';
 import className from 'classnames/bind';
-import Parser from 'html-react-parser';
 import { URLS } from 'common/urls';
 import { validate } from 'common/utils';
 import { projectIdSelector } from 'controllers/pages';
@@ -13,111 +12,74 @@ import { InputTagsSearch } from 'components/inputs/inputTagsSearch';
 import { InputCheckbox } from 'components/inputs/inputCheckbox';
 import { InputDropdown } from 'components/inputs/inputDropdown';
 import { FormField } from 'components/fields/formField';
-import { FieldProvider } from 'components/fields/fieldProvider';
-import {
-  labelWidth,
-  launchStatuses,
-} from 'pages/common/settingsPage/notificationsTab/forms/constants';
 import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
-import IconDelete from 'common/img/circle-cross-icon-inline.svg';
 import { AttributeListField } from 'components/main/attributeList';
-import { PencilCheckbox } from './pencilCheckbox';
-import { messages } from './messages';
-import styles from './notificationCase.scss';
+import {
+  LAUNCH_CASES,
+  labelWidth,
+  ATTRIBUTES_FIELD_KEY,
+  INFORM_OWNER_FIELD_KEY,
+  LAUNCH_NAMES_FIELD_KEY,
+  RECIPIENTS_FIELD_KEY,
+  SEND_CASE_FIELD_KEY,
+} from '../../../constants';
+import { messages } from '../../../messages';
+import styles from './notificationCaseForm.scss';
 
 const cx = className.bind(styles);
+
 @injectIntl
 @connect((state) => ({
   projectUsernamesSearch: URLS.projectUsernamesSearch(projectIdSelector(state)),
   launchNameSearch: URLS.launchNameSearch(projectIdSelector(state)),
 }))
 @track()
-export class NotificationCase extends Component {
+export class NotificationCaseForm extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
-    notificationCase: PropTypes.string,
     projectUsernamesSearch: PropTypes.string,
     launchNameSearch: PropTypes.string,
-    onDelete: PropTypes.func,
-    readOnly: PropTypes.bool,
-    deletable: PropTypes.bool,
-    confirmed: PropTypes.bool,
-    submitted: PropTypes.bool,
-    id: PropTypes.number,
-    numberOfConfirmedRules: PropTypes.number,
-    totalNumberOfFields: PropTypes.number,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
   };
   static defaultProps = {
-    notificationCase: '',
     projectUsernamesSearch: '',
     launchNameSearch: '',
-    onDelete: () => {},
-    readOnly: false,
-    deletable: false,
-    confirmed: false,
-    submitted: false,
-    id: 0,
-    numberOfConfirmedRules: 0,
-    totalNumberOfFields: 0,
-  };
-  state = {
-    isDuplicating: false,
-  };
-
-  onDelete = (index) => () => {
-    const { confirmed, submitted, tracking } = this.props;
-    const showConfirmation = submitted || confirmed;
-    tracking.trackEvent(SETTINGS_PAGE_EVENTS.DELETE_RULE_NOTIFICATIONS);
-    this.props.onDelete(index, showConfirmation);
-  };
-
-  onValidate = (err) => {
-    const message = this.getErrorMessage(err);
-    this.setState({ isDuplicating: message });
   };
 
   getDropdownInputConfig = () => {
-    const { intl } = this.props;
+    const {
+      intl: { formatMessage },
+    } = this.props;
+
     return [
       {
-        value: launchStatuses.ALWAYS,
-        label: intl.formatMessage(messages.dropdownValueAlways),
+        value: LAUNCH_CASES.ALWAYS,
+        label: formatMessage(messages[LAUNCH_CASES.ALWAYS]),
       },
       {
-        value: launchStatuses.MORE_10,
-        label: intl.formatMessage(messages.dropdownValueMore10),
+        value: LAUNCH_CASES.MORE_10,
+        label: formatMessage(messages[LAUNCH_CASES.MORE_10]),
       },
       {
-        value: launchStatuses.MORE_20,
-        label: intl.formatMessage(messages.dropdownValueMore20),
+        value: LAUNCH_CASES.MORE_20,
+        label: formatMessage(messages[LAUNCH_CASES.MORE_20]),
       },
       {
-        value: launchStatuses.MORE_50,
-        label: intl.formatMessage(messages.dropdownValueMore50),
+        value: LAUNCH_CASES.MORE_50,
+        label: formatMessage(messages[LAUNCH_CASES.MORE_50]),
       },
       {
-        value: launchStatuses.FAILED,
-        label: intl.formatMessage(messages.dropdownValueFailed),
+        value: LAUNCH_CASES.FAILED,
+        label: formatMessage(messages[LAUNCH_CASES.FAILED]),
       },
       {
-        value: launchStatuses.TO_INVESTIGATE,
-        label: intl.formatMessage(messages.dropdownValueToInvestigate),
+        value: LAUNCH_CASES.TO_INVESTIGATE,
+        label: formatMessage(messages[LAUNCH_CASES.TO_INVESTIGATE]),
       },
     ];
-  };
-
-  getErrorMessage = (err) => {
-    const { intl } = this.props;
-    switch (err) {
-      case 'hasDuplicates':
-        return intl.formatMessage(messages.duplicationErrorMessage);
-      default:
-        return false;
-    }
   };
 
   formatOptions = (options) =>
@@ -125,58 +87,25 @@ export class NotificationCase extends Component {
   parseOptions = (options) =>
     (Array.isArray(options) && options.map((option) => option.value)) || undefined;
   validateRecipientsNewItem = ({ label }) => label && validate.email(label);
-  validateLaunchNamesNewItem = ({ label }) => label && label.length >= 3;
+  validateLaunchNamesNewItem = ({ label }) => label && validate.launchName(label);
 
   render() {
     const {
       intl: { formatMessage },
       projectUsernamesSearch,
       launchNameSearch,
-      id,
-      notificationCase,
-      confirmed,
-      readOnly,
-      numberOfConfirmedRules,
-      totalNumberOfFields,
       tracking,
     } = this.props;
-    const editMode = !confirmed;
-    const deletable = totalNumberOfFields > 1 && (!confirmed || numberOfConfirmedRules > 1);
-    const { isDuplicating } = this.state;
 
     return (
       <Fragment>
-        <div className={cx('control-panel')}>
-          <span className={cx('control-panel-name')}>
-            {formatMessage(messages.controlPanelName)} {id + 1}
-          </span>
-          {!readOnly && (
-            <div className={cx('control-panel-buttons')}>
-              <div className={cx('control-panel-button')}>
-                <FieldProvider
-                  name={`${notificationCase}.confirmed`}
-                  format={Boolean}
-                  onValidate={this.onValidate}
-                >
-                  <PencilCheckbox />
-                </FieldProvider>
-              </div>
-              {deletable && (
-                <button className={cx('control-panel-button')} onClick={this.onDelete(id)}>
-                  {Parser(IconDelete)}
-                </button>
-              )}
-            </div>
-          )}
-        </div>
-        {isDuplicating && <p className={cx('form-invalid-message')}>{isDuplicating}</p>}
         <FormField
           label={formatMessage(messages.recipientsLabel)}
-          name={`${notificationCase}.recipients`}
+          name={RECIPIENTS_FIELD_KEY}
           format={this.formatOptions}
           parse={this.parseOptions}
-          disabled={!editMode}
           fieldWrapperClassName={cx('form-input')}
+          labelClassName={cx('form-label')}
           onChange={() =>
             tracking.trackEvent(SETTINGS_PAGE_EVENTS.EDIT_RECIPIENTS_INPUT_NOTIFICATIONS)
           }
@@ -194,26 +123,27 @@ export class NotificationCase extends Component {
               removeSelected
               isValidNewOption={this.validateRecipientsNewItem}
               dynamicSearchPromptText
+              autosize={false}
             />
           </FieldErrorHint>
         </FormField>
         <FormField
-          name={`${notificationCase}.informOwner`}
+          name={INFORM_OWNER_FIELD_KEY}
           format={Boolean}
-          disabled={!editMode}
           onChange={() =>
             tracking.trackEvent(SETTINGS_PAGE_EVENTS.CHECKBOX_LAUNCH_OWNER_NOTIFICATIONS)
           }
           fieldWrapperClassName={cx('form-input-checkbox')}
+          labelClassName={cx('form-label')}
         >
           <InputCheckbox>{formatMessage(messages.launchOwnerLabel)}</InputCheckbox>
         </FormField>
         <FormField
           label={formatMessage(messages.inCaseLabel)}
           labelWidth={labelWidth}
-          name={`${notificationCase}.sendCase`}
-          disabled={!editMode}
+          name={SEND_CASE_FIELD_KEY}
           fieldWrapperClassName={cx('form-input')}
+          labelClassName={cx('form-label')}
           onChange={() =>
             tracking.trackEvent(SETTINGS_PAGE_EVENTS.EDIT_IN_CASE_INPUT_NOTIFICATIONS)
           }
@@ -225,11 +155,11 @@ export class NotificationCase extends Component {
           customBlock={{
             node: <p>{formatMessage(messages.launchNamesNote)}</p>,
           }}
-          name={`${notificationCase}.launchNames`}
+          name={LAUNCH_NAMES_FIELD_KEY}
           format={this.formatOptions}
           parse={this.parseOptions}
-          disabled={!editMode}
           fieldWrapperClassName={cx('form-input')}
+          labelClassName={cx('form-label')}
           onChange={() => tracking.trackEvent(SETTINGS_PAGE_EVENTS.LAUNCH_NAME_INPUT_NOTIFICATIONS)}
         >
           <FieldErrorHint hintType="top">
@@ -244,6 +174,7 @@ export class NotificationCase extends Component {
               multi
               removeSelected
               isValidNewOption={this.validateLaunchNamesNewItem}
+              autosize={false}
             />
           </FieldErrorHint>
         </FormField>
@@ -253,8 +184,8 @@ export class NotificationCase extends Component {
             node: <p>{formatMessage(messages.attributesNote)}</p>,
           }}
           fieldWrapperClassName={cx('form-input')}
-          name={`${notificationCase}.attributes`}
-          disabled={!editMode}
+          labelClassName={cx('form-label')}
+          name={ATTRIBUTES_FIELD_KEY}
           onChange={() => tracking.trackEvent(SETTINGS_PAGE_EVENTS.TAGS_INPUT_NOTIFICATIONS)}
         >
           <AttributeListField />
