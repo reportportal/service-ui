@@ -26,11 +26,9 @@ export {
 export {
   getWithAttachments,
   setWithAttachments,
-  setLogLevel,
-  getLogLevelById,
   getLogLevel,
-  getLogLevelFromStorage,
-  getLogViewModeFromStorage,
+  setLogLevel,
   getLogViewMode,
   setLogViewMode,
+  getLogLevelById,
 } from './storageUtils';

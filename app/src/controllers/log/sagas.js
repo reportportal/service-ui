@@ -11,7 +11,6 @@ import { fetchDataAction } from 'controllers/fetch';
 import {
   ACTIVITY_NAMESPACE,
   DEFAULT_HISTORY_DEPTH,
-  DEFAULT_LOG_LEVEL,
   FETCH_HISTORY_ENTRIES,
   FETCH_LOG_PAGE_DATA,
   HISTORY_NAMESPACE,
@@ -22,7 +21,7 @@ import {
 } from './constants';
 import { activeLogIdSelector, prevActiveLogIdSelector, querySelector } from './selectors';
 import { attachmentSagas, fetchAttachmentsAction, clearAttachmentsAction } from './attachments';
-import { getWithAttachments, getLogLevelFromStorage } from './storageUtils';
+import { getWithAttachments, getLogLevel } from './storageUtils';
 
 function* fetchActivity() {
   const activeProject = yield select(activeProjectSelector);
@@ -36,8 +35,7 @@ function* fetchLogItems() {
   const activeProject = yield select(activeProjectSelector);
   const userId = yield select(userIdSelector);
   const query = yield select(pagePropertiesSelector, NAMESPACE);
-  const filterLevel =
-    query[LOG_LEVEL_FILTER_KEY] || getLogLevelFromStorage(userId) || DEFAULT_LOG_LEVEL;
+  const filterLevel = query[LOG_LEVEL_FILTER_KEY] || getLogLevel(userId).id;
   const withAttachments = getWithAttachments(userId) || undefined;
   const params = yield select(querySelector, NAMESPACE);
   const activeLogItemId = yield select(activeLogIdSelector);

@@ -10,9 +10,8 @@ import {
   activeLogIdSelector,
   logPaginationSelector,
   NAMESPACE,
-  DEFAULT_LOG_LEVEL,
   getLogLevelById,
-  getLogLevelFromStorage,
+  getLogLevel,
 } from 'controllers/log';
 import { pagePropertiesSelector } from 'controllers/pages';
 import ArrowIcon from 'common/img/arrow-down-inline.svg';
@@ -88,10 +87,10 @@ export class StackTrace extends Component {
     this.checkIfPageWasChanged(prevProps);
   }
 
-  updateFilterLevel = (filterLevel = DEFAULT_LOG_LEVEL) => {
+  updateFilterLevel = (filterLevel) => {
     if (filterLevel === FATAL) {
       const newLogLevel = getLogLevelById(ERROR);
-      this.props.onChangeLogLevel(newLogLevel, this.props.userId);
+      this.props.onChangeLogLevel(this.props.userId, newLogLevel);
       return ERROR;
     }
     return filterLevel;
@@ -156,7 +155,7 @@ export class StackTrace extends Component {
     if (isStackTraceItemOnThisPage) {
       return;
     }
-    const filterLevel = this.updateFilterLevel(getLogLevelFromStorage(userId));
+    const filterLevel = this.updateFilterLevel(getLogLevel(userId).id);
     fetch(
       URLS.logItemStackTraceMessageLocation(
         projectId,

@@ -71,7 +71,7 @@ export class LogsGridToolbar extends Component {
     const { logViewMode } = this.state;
 
     const newLogViewMode = logViewMode === targetViewMode ? DEFAULT : targetViewMode;
-    setLogViewMode(newLogViewMode, this.props.userId);
+    setLogViewMode(this.props.userId, newLogViewMode);
 
     this.setState({
       logViewMode: newLogViewMode,
@@ -86,7 +86,7 @@ export class LogsGridToolbar extends Component {
     const { onChangeLogLevel, userId, logLevel: activeLogLevel } = this.props;
 
     if (newLogLevel.id !== activeLogLevel.id) {
-      onChangeLogLevel(newLogLevel, userId);
+      onChangeLogLevel(userId, newLogLevel);
     }
   };
 
@@ -94,7 +94,7 @@ export class LogsGridToolbar extends Component {
     const { withAttachments } = this.state;
     const { onChangeWithAttachments, userId } = this.props;
 
-    onChangeWithAttachments(!withAttachments, userId);
+    onChangeWithAttachments(userId, !withAttachments);
 
     this.setState({
       withAttachments: !withAttachments,
