@@ -3,8 +3,8 @@
   vertical-align: middle;
   font-size: 13px;
   line-height: 20px;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  // overflow: hidden;
+  // text-overflow: ellipsis;
   @media (max-width: $SCREEN_SM_MAX) {
     width: 100%;
   }
@@ -23,7 +23,6 @@
   overflow: hidden;
   text-overflow: ellipsis;
   text-transform: lowercase;
-
 }
 .project {
   display: inline-block;
@@ -32,7 +31,9 @@
   background-color: rgba(26, 156, 176, 0.1);
   padding: 2px 10px;
   margin-bottom: 5px;
+  margin-right: 5px;
   border-radius: 2px;
+  cursor: pointer;
   &:first-letter {
     text-transform: capitalize;
   }
@@ -44,14 +45,18 @@
   }
 }
 .show-more-projects {
-  width: 24px;
+  min-width: 24px;
   height: 24px;
   padding: 5px;
   border-radius: 2px;
-  margin-left: 5px;
   color: $COLOR--topaz;
   background-color: rgba($COLOR--topaz, 0.1);
   cursor: pointer;
+  white-space: nowrap;
+  @media (max-width: $SCREEN_XS_MAX) {
+    margin-top: 3px;
+    display: inline-block;
+  }
 }
 .mobile-label {
   margin-left: 5px;
@@ -59,7 +64,6 @@
   display: none;
   text-transform: capitalize;
   vertical-align: top;
-  color: $COLOR--gray-47;
   @media (max-width: $SCREEN_XS_MAX) {
     display: inline-block;
   }
@@ -85,4 +89,48 @@
 }
 .project-role {
   text-transform: capitalize;
+}
+
+.projects-and-roles-popover {
+  width: 385px;
+  padding-top: 15px;
+  border-radius: 2px;
+  box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.09);
+  border: solid 1px $COLOR--gray-91;
+  background-color: $COLOR--white-two;
+}
+
+.projects-and-roles-toolbar {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: flex-end;
+  align-content: stretch;
+  align-items: center;
+  height: 59px;
+  padding: 0 15px;
+  border-top: 1px solid $COLOR--gray-91;
+}
+
+.projects-and-roles-toolbar-item {
+  margin-left: 15px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.projects-and-roles-toolbar-cancel-button {
+  color: $COLOR--gray-60;
+}
+
+.projects-and-roles-toolbar-add-button {
+  color: $COLOR--topaz;
+}
+
+.projects-and-roles-toolbar-add-button-disabled {
+  color: $COLOR--gray-80;
+  pointer-events: none;
+}
+
+.mobile-projects-list {
+  padding: 0 15px 0 5px;
 }
