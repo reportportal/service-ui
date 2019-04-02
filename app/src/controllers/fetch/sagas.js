@@ -1,4 +1,4 @@
-import { takeEvery, takeLatest, call, all, put, select, cancelled } from 'redux-saga/effects';
+import { takeEvery, call, all, put, select, cancelled } from 'redux-saga/effects';
 import { fetch, updateToken } from 'common/utils/fetch';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { SET_TOKEN, tokenSelector } from 'controllers/auth';
@@ -82,7 +82,7 @@ function* watchConcatFetchData() {
 }
 
 function* watchFetchData() {
-  yield takeLatest(FETCH_DATA, fetchData);
+  yield takeEvery(FETCH_DATA, fetchData);
 }
 
 function* handleError({ payload, meta: { silent } = {} }) {
