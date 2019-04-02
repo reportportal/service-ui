@@ -56,12 +56,12 @@ import { LogsGridToolbar } from './logsGridToolbar';
     logLevelId: query[LOG_LEVEL_FILTER_KEY],
   }),
   {
-    onChangeLogLevel: (logLevel, userId) => {
-      setLogLevel(logLevel, userId);
+    onChangeLogLevel: (userId, logLevel) => {
+      setLogLevel(userId, logLevel);
       return { [LOG_LEVEL_FILTER_KEY]: logLevel.id, [PAGE_KEY]: 1 };
     },
-    onChangeWithAttachments: (withAttachments, userId) => {
-      setWithAttachments(withAttachments, userId);
+    onChangeWithAttachments: (userId, withAttachments) => {
+      setWithAttachments(userId, withAttachments);
       return { [WITH_ATTACHMENTS_FILTER_KEY]: withAttachments || undefined };
     },
   },
@@ -179,7 +179,7 @@ export class LogsPage extends Component {
             activePage={activePage}
             pageCount={pageCount}
             onChangePage={onChangePage}
-            logLevel={getLogLevel(logLevelId, userId)}
+            logLevel={getLogLevel(userId, logLevelId)}
             onChangeLogLevel={onChangeLogLevel}
             onChangeWithAttachments={onChangeWithAttachments}
           >

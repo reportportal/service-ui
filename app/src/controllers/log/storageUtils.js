@@ -17,16 +17,16 @@ const updateLogPageUserSettingsInStorage = (userId, data) =>
 const getWithAttachmentsFromStorage = (userId) =>
   getLogPageUserSettingsFromStorage(userId)[WITH_ATTACHMENTS_STORAGE_KEY];
 
-export const getLogLevelFromStorage = (userId) =>
+const getLogLevelFromStorage = (userId) =>
   getLogPageUserSettingsFromStorage(userId)[LOG_LEVEL_STORAGE_KEY];
 
-export const getLogViewModeFromStorage = (userId) =>
+const getLogViewModeFromStorage = (userId) =>
   getLogPageUserSettingsFromStorage(userId)[LOG_VIEW_MODE_STORAGE_KEY];
 
 export const getWithAttachments = (userId) =>
   getWithAttachmentsFromStorage(userId) || DEFAULT_WITH_ATTACHMENTS;
 
-export const setWithAttachments = (withAttachments, userId) =>
+export const setWithAttachments = (userId, withAttachments) =>
   updateLogPageUserSettingsInStorage(userId, { [WITH_ATTACHMENTS_STORAGE_KEY]: withAttachments });
 
 export const getLogLevelById = (logLevelId) =>
@@ -34,16 +34,16 @@ export const getLogLevelById = (logLevelId) =>
 
 const getDefaultLogLevel = () => getLogLevelById(DEFAULT_LOG_LEVEL);
 
-export const getLogLevel = (logLevelId, userId) =>
+export const getLogLevel = (userId, logLevelId) =>
   getLogLevelById(logLevelId) ||
   getLogLevelById(getLogLevelFromStorage(userId)) ||
   getDefaultLogLevel() ||
   LOG_LEVELS[LOG_LEVELS.length - 1];
 
-export const setLogLevel = (logLevel, userId) =>
+export const setLogLevel = (userId, logLevel) =>
   updateLogPageUserSettingsInStorage(userId, { [LOG_LEVEL_STORAGE_KEY]: logLevel.id });
 
 export const getLogViewMode = (userId) => getLogViewModeFromStorage(userId) || DEFAULT;
 
-export const setLogViewMode = (viewMode, userId) =>
+export const setLogViewMode = (userId, viewMode) =>
   updateLogPageUserSettingsInStorage(userId, { [LOG_VIEW_MODE_STORAGE_KEY]: viewMode });
