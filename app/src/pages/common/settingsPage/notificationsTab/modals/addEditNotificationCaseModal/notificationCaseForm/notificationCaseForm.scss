@@ -1,0 +1,13 @@
+.form-input {
+  position: relative;
+  width: 310px;
+  flex-shrink: 0;
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    width: 100%;
+  }
+}
+
+.form-label {
+  min-width: 170px;
+}

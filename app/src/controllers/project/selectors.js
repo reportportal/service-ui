@@ -87,8 +87,6 @@ export const projectNotificationsCasesSelector = createSelector(
     cases.map((notificationCase) => ({
       ...notificationCase,
       informOwner: notificationCase.recipients.includes(OWNER),
-      submitted: true,
-      confirmed: true,
       recipients: notificationCase.recipients.filter((item) => item !== OWNER),
     })),
 );

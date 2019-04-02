@@ -7,6 +7,7 @@ export const PROJECT_ATTRIBUTES_DELIMITER = '$';
 export const FETCH_PROJECT_SUCCESS = 'fetchProjectSuccess';
 export const FETCH_PROJECT_PREFERENCES_SUCCESS = 'fetchProjectPreferencesSuccess';
 export const UPDATE_CONFIGURATION_ATTRIBUTES = 'updateConfigurationAttributes';
+export const UPDATE_NOTIFICATIONS_CONFIG = 'updateNotificationsConfig';
 export const UPDATE_NOTIFICATIONS_CONFIG_SUCCESS = 'updateNotificationsConfigSuccess';
 export const UPDATE_DEFECT_SUBTYPE = 'updateDefectSubType';
 export const UPDATE_DEFECT_SUBTYPE_SUCCESS = 'updateDefectSubTypeSuccess';

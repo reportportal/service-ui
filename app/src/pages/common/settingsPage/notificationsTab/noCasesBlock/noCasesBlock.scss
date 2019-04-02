@@ -1,0 +1,22 @@
+.no-cases-block {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.no-items-message {
+  margin-bottom: 20px;
+  color: $COLOR--charcoal-grey;
+  font-size: 19px;
+  font-family: $FONT-REGULAR;
+  line-height: 0.9;
+  letter-spacing: normal;
+  text-align: center;
+}
+
+.notifications-info {
+  margin-bottom: 20px;
+  color: $COLOR--gray-60;
+  font-size: 12px;
+}

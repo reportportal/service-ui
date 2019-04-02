@@ -1,2 +1,2 @@
 export { NotificationsTab } from './notificationsTab';
-export { DeleteNotificationCaseModal } from './modals';
+export { DeleteNotificationCaseModal, AddEditNotificationCaseModal } from './modals';
