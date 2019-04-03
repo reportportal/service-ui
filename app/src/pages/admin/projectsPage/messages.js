@@ -123,4 +123,6 @@ export const messages = defineMessages({
   launchesColShort: { id: 'ProjectsGrid.launchesColShort', defaultMessage: 'Lnchs' },
   lastLaunchCol: { id: 'ProjectsGrid.lastLaunchCol', defaultMessage: 'Last Launch date' },
   lastLaunchColShort: { id: 'ProjectsGrid.lastLaunchColShort', defaultMessage: 'Lnch date' },
+  sortBy: { id: 'ProjectsPage.sortBy', defaultMessage: 'Sort by' },
+  dateCol: { id: 'ProjectsPage.dateCol', defaultMessage: 'Date' },
 });
