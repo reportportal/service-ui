@@ -12,6 +12,14 @@ import {
   toggleProjectSelectionAction,
 } from 'controllers/administrate/projects';
 import {
+  NAME,
+  TYPE,
+  ORGANIZATION,
+  USERS_QUANTITY,
+  LAST_RUN,
+  LAUNCHES_QUANTITY,
+} from 'common/constants/projectsObjectTypes';
+import {
   NameColumn,
   ProjectTypeColumn,
   OrganizationColumn,
@@ -73,7 +81,7 @@ export class ProjectsGrid extends PureComponent {
 
   getColumns = () => [
     {
-      id: 'name',
+      id: NAME,
       title: {
         full: this.props.intl.formatMessage(messages.nameCol),
       },
@@ -82,7 +90,7 @@ export class ProjectsGrid extends PureComponent {
       sortable: true,
     },
     {
-      id: 'type',
+      id: TYPE,
       title: {
         full: this.props.intl.formatMessage(messages.projectTypeCol),
       },
@@ -90,7 +98,7 @@ export class ProjectsGrid extends PureComponent {
       sortable: true,
     },
     {
-      id: 'organization',
+      id: ORGANIZATION,
       title: {
         full: this.props.intl.formatMessage(messages.organizationCol),
       },
@@ -98,7 +106,7 @@ export class ProjectsGrid extends PureComponent {
       sortable: true,
     },
     {
-      id: 'usersQuantity',
+      id: USERS_QUANTITY,
       title: {
         full: this.props.intl.formatMessage(messages.membersCol),
         short: this.props.intl.formatMessage(messages.membersColShort),
@@ -107,7 +115,7 @@ export class ProjectsGrid extends PureComponent {
       sortable: true,
     },
     {
-      id: 'launchesQuantity',
+      id: LAUNCHES_QUANTITY,
       title: {
         full: this.props.intl.formatMessage(messages.launchesCol),
         short: this.props.intl.formatMessage(messages.launchesColShort),
@@ -116,7 +124,7 @@ export class ProjectsGrid extends PureComponent {
       sortable: true,
     },
     {
-      id: 'lastRun',
+      id: LAST_RUN,
       title: {
         full: this.props.intl.formatMessage(messages.lastLaunchCol),
         short: this.props.intl.formatMessage(messages.lastLaunchColShort),
