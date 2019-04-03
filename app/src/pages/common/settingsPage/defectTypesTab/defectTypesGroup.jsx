@@ -1,26 +1,18 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { injectIntl, intlShape } from 'react-intl';
 
-import { C3Chart } from 'components/widgets/charts/common/c3chart';
 import { GhostButton } from 'components/buttons/ghostButton';
 import PlusIcon from 'common/img/plus-button-inline.svg';
 
+import { DefectSubType } from './defectSubType';
 import { defectTypeShape } from './defectTypeShape';
 import { messages } from './defectTypesMessages';
 
 import styles from './defectTypesTab.scss';
 
 const cx = classNames.bind(styles);
-
-const ColorMarker = ({ color }) => (
-  <span className={cx('color-marker')} style={{ backgroundColor: color }} />
-);
-
-ColorMarker.propTypes = {
-  color: PropTypes.string.isRequired,
-};
 
 @injectIntl
 export class DefectTypesGroup extends Component {
@@ -29,67 +21,37 @@ export class DefectTypesGroup extends Component {
     intl: intlShape.isRequired,
   };
 
-  getChartConfig() {
-    return {
-      data: {
-        columns: this.props.group.map(({ locator }) => [locator, 100]),
-        colors: this.props.group.reduce((acc, { locator, color }) => {
-          acc[locator] = color;
-          return acc;
-        }, {}),
-        type: 'donut',
-      },
-      donut: {
-        expand: false,
-        width: 12,
-        label: {
-          show: false,
-        },
-      },
-      interaction: {
-        enabled: false,
-      },
-      legend: {
-        show: false,
-      },
-      tooltip: {
-        show: false,
-      },
-      size: {
-        width: 56,
-        height: 56,
-      },
-    };
-  }
+  state = {
+    newSubType: false,
+  };
+
+  addSubType = () => {
+    this.setState({ newSubType: true });
+  };
 
   MAX_DEFECT_SUBTYPES_COUNT = 15;
 
   render() {
     const { group, intl } = this.props;
+    const { newSubType } = this.state;
 
     return (
-      <div>
-        {group.map(({ id, longName, shortName, color }, i) => (
-          <div key={id} className={cx('defect-type')}>
-            <div className={cx('name-cell')}>
-              <span className={cx('defect-type-name-wrap')}>
-                <ColorMarker color={color} />
-                <span className={cx('defect-type-name')}>{longName}</span>
-              </span>
-            </div>
-            <div className={cx('abbr-cell')}>{shortName}</div>
-            <div className={cx('color-cell')}>
-              <ColorMarker color={color} />
-            </div>
-            {i === 0 && (
-              <div className={cx('diagram-cell')}>
-                <C3Chart className={cx('defect-type-chart')} config={this.getChartConfig()} />
-              </div>
-            )}
-          </div>
+      <Fragment>
+        {group.map((subType, i) => (
+          <DefectSubType
+            key={subType.id}
+            data={subType}
+            parentType={group[0]}
+            group={i === 0 ? group : null}
+          />
         ))}
+        {newSubType && <DefectSubType parentType={group[0]} />}
         <div className={cx('defect-type-group-footer')}>
-          <GhostButton icon={PlusIcon} disabled={group.length >= this.MAX_DEFECT_SUBTYPES_COUNT}>
+          <GhostButton
+            icon={PlusIcon}
+            disabled={group.length >= this.MAX_DEFECT_SUBTYPES_COUNT}
+            onClick={this.addSubType}
+          >
             {intl.formatMessage(messages.addDefectType)}
           </GhostButton>
 
@@ -103,7 +65,7 @@ export class DefectTypesGroup extends Component {
                 })}
           </div>
         </div>
-      </div>
+      </Fragment>
     );
   }
 }

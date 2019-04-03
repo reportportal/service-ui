@@ -30,15 +30,19 @@ $DEFECT_NAME_PADDING: 120px;
 }
 
 .abbr-cell {
-  width: 17%;
+  width: 15%;
 }
 
 .color-cell {
-  width: 25%;
+  width: 15%;
+}
+
+.buttons-cell {
+  width: 15%;
 }
 
 .diagram-cell {
-  width: 25%;
+  width: 15%;
   position: relative;
 }
 
@@ -91,4 +95,38 @@ $DEFECT_NAME_PADDING: 120px;
 .defect-type-count-msg {
   color: $COLOR--gray-60;
   margin-left: 11px;
+}
+
+.action-button {
+  background: none;
+  border: none;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  margin: 0 10px;
+  cursor: pointer;
+  outline: none;
+}
+
+.confirm-button {
+  svg {
+    stroke: $COLOR--tealish;
+    fill: $COLOR--tealish;
+  }
+  &:focus {
+    svg {
+      stroke: $COLOR--topaz;
+      fill: $COLOR--topaz;
+    }
+  }
+}
+
+.edit-button,
+.delete-button {
+  path {
+    fill: $COLOR--gray-60;
+  }
+  &:focus path {
+    fill: $COLOR--gray-47;
+  }
 }
