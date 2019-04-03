@@ -1,0 +1,17 @@
+.container {
+    display: flex;
+    background-color: $COLOR--light-yellow;
+    height: 100%;
+}
+
+.total {
+    align-self: center;
+    width: 285px;
+    padding: 20px;
+}
+
+.defects {
+    width: 100%;
+    min-height: 300px;
+    background-color: $COLOR--white-two;
+}

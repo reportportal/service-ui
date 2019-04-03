@@ -40,6 +40,7 @@ import { getPercentage, getDefectItems, getChartData } from './chartUtils';
 import { messages } from './messages';
 
 const chartCx = classNames.bind(chartStyles);
+const getResult = (widget) => widget.content.result[0] || widget.content.result;
 
 @injectIntl
 @connect(
@@ -97,6 +98,8 @@ export class IssueStatisticsChart extends Component {
       return;
     }
 
+    this.renderTotalLabel();
+
     this.props.uncheckedLegendItems.forEach((id) => {
       this.chart.toggle(id);
     });
@@ -131,7 +134,7 @@ export class IssueStatisticsChart extends Component {
     const { widget, getDefectLink, defectTypes } = this.props;
 
     const nameConfig = getItemNameConfig(d.id);
-    const id = widget.content.result[0].id;
+    const id = getResult(widget).id;
     const defaultParams = this.getDefaultLinkParams(id);
     const defectLocators = getDefectTypeLocators(nameConfig, defectTypes);
 
@@ -152,7 +155,7 @@ export class IssueStatisticsChart extends Component {
   getConfig = () => {
     const DEFECTS = '$defects$';
     const { widget, container } = this.props;
-    const values = widget.content.result[0].values;
+    const values = getResult(widget).values;
     const defectDataItems = getChartData(values, DEFECTS);
 
     const defectTypesChartData = defectDataItems.itemTypes;
@@ -207,12 +210,7 @@ export class IssueStatisticsChart extends Component {
         contents: this.renderIssuesContents,
       },
       onrendered: () => {
-        if (this.chart) {
-          const total = this.chart.data
-            .shown()
-            .reduce((acc, dataItem) => acc + dataItem.values[0].value, 0);
-          this.issuesNode.querySelector('.c3-chart-arcs-title').childNodes[0].textContent = total;
-        }
+        this.renderTotalLabel();
       },
     };
 
@@ -252,6 +250,15 @@ export class IssueStatisticsChart extends Component {
       this.width = newWidth;
     }
   };
+
+  renderTotalLabel() {
+    if (this.chart) {
+      const total = this.chart.data
+        .shown()
+        .reduce((acc, dataItem) => acc + dataItem.values[0].value, 0);
+      this.issuesNode.querySelector('.c3-chart-arcs-title').childNodes[0].textContent = total;
+    }
+  }
 
   // This function is a reimplementation of its d3 counterpart, and it needs 4 arguments of which 2 are not used here.
   // These two are named a and b in the original implementation.
