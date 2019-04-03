@@ -6,7 +6,7 @@ import { groupOperationsReducer } from 'controllers/groupOperations';
 import { queueReducers } from 'common/utils/queueReducers';
 import { NAMESPACE, TOGGLE_USER_ROLE_FORM } from './constants';
 
-const toggleUserRoleForm = (state, { type, payload = {} }) => {
+const toggleUserRoleFormReducer = (state, { type, payload = {} }) => {
   switch (type) {
     case TOGGLE_USER_ROLE_FORM:
       return state.map((item) => {
@@ -21,7 +21,10 @@ const toggleUserRoleForm = (state, { type, payload = {} }) => {
 };
 
 export const allUsersReducer = combineReducers({
-  allUsers: queueReducers(fetchReducer(NAMESPACE, { contentPath: 'content' }), toggleUserRoleForm),
+  allUsers: queueReducers(
+    fetchReducer(NAMESPACE, { contentPath: 'content' }),
+    toggleUserRoleFormReducer,
+  ),
   pagination: paginationReducer(NAMESPACE),
   loading: loadingReducer(NAMESPACE),
   groupOperations: groupOperationsReducer(NAMESPACE),

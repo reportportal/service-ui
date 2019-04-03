@@ -11,7 +11,7 @@ import { ADMIN_ALL_USERS_PAGE_MODAL_EVENTS } from 'components/main/analytics/eve
 import { showModalAction } from 'controllers/modal';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
-import { fetchAllUsersAction, toggleUserRoleForm } from 'controllers/administrate/allUsers';
+import { fetchAllUsersAction, toggleUserRoleFormAction } from 'controllers/administrate/allUsers';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { SCREEN_XS_MAX } from 'common/constants/screenSizeVariables';
 import { RolesRow } from './rolesRow';
@@ -40,7 +40,12 @@ const messages = defineMessages({
     defaultMessage: '+ Add Project',
   },
 });
-@connect(() => ({}), { showNotification, showModalAction, fetchAllUsersAction, toggleUserRoleForm })
+@connect(() => null, {
+  showNotification,
+  showModalAction,
+  fetchAllUsersAction,
+  toggleUserRoleFormAction,
+})
 @track()
 @injectIntl
 export class ProjectsAndRolesColumn extends Component {
@@ -55,12 +60,12 @@ export class ProjectsAndRolesColumn extends Component {
     showNotification: PropTypes.func.isRequired,
     showModalAction: PropTypes.func.isRequired,
     fetchAllUsersAction: PropTypes.func,
-    toggleUserRoleForm: PropTypes.func,
+    toggleUserRoleFormAction: PropTypes.func,
   };
   static defaultProps = {
     value: {},
     fetchAllUsersAction: () => {},
-    toggleUserRoleForm: () => {},
+    toggleUserRoleFormAction: () => {},
   };
   state = {
     assignRole: false,
@@ -152,7 +157,7 @@ export class ProjectsAndRolesColumn extends Component {
     const {
       value: { userId, expandRoleSelection = false },
     } = this.props;
-    this.props.toggleUserRoleForm(userId, !expandRoleSelection);
+    this.props.toggleUserRoleFormAction(userId, !expandRoleSelection);
   };
   toggleAssignRole = () => {
     this.setState({
