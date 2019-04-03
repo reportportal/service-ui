@@ -12,4 +12,5 @@ export {
   transformCategoryLabel,
   validItemsFilter,
   validStatuses,
+  DEFECTS,
 } from './utils';

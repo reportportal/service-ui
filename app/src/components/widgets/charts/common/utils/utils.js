@@ -1,7 +1,7 @@
 import * as COLORS from 'common/constants/colors';
 import { messages } from '../messages';
 
-const DEFECTS = 'defects';
+export const DEFECTS = 'defects';
 export const STATUSES = {
   FAILED: 'FAILED',
   STOPPED: 'STOPPED',

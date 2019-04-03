@@ -46,14 +46,14 @@ export const ToggleButton = ({ items, value, separated, onChange, mobileDisabled
 ToggleButton.propTypes = {
   items: PropTypes.arrayOf(
     PropTypes.shape({
-      value: PropTypes.string.isRequired,
+      value: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]).isRequired,
       label: PropTypes.string.isRequired,
     }),
   ),
   disabled: PropTypes.bool,
   mobileDisabled: PropTypes.bool,
   separated: PropTypes.bool,
-  value: PropTypes.string,
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]).isRequired,
   onChange: PropTypes.func,
 };
 ToggleButton.defaultProps = {

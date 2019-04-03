@@ -1,0 +1,48 @@
+.total {
+    text-align: center;
+    padding: 10px;
+    text-transform: uppercase;
+    font-family: $FONT-SEMIBOLD;
+    font-size: 12px;
+    line-height: normal;
+}
+
+.details {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    text-transform: uppercase;
+    font-family: $FONT-SEMIBOLD;
+    font-size: 12px;
+    color: $COLOR--gray-47;
+    line-height: normal;
+}
+
+.details-item {
+    padding: 0 10px;
+}
+
+.amount {
+    font-size: 20px;
+}
+
+.label {
+    white-space: nowrap;
+}
+
+.marker {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-right: 2px;
+    background-color:  $COLOR--skipped;
+}
+
+.passed {
+    background-color: $COLOR--passed;
+}
+
+.failed {
+    background-color: $COLOR--failed;
+}
