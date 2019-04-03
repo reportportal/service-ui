@@ -4,6 +4,14 @@ import classNames from 'classnames/bind';
 import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-intl';
 import { Grid } from 'components/main/grid';
 import { AbsRelTime } from 'components/main/absRelTime';
+import {
+  FULL_NAME,
+  USER,
+  EMAIL,
+  LAST_LOGIN,
+  TYPE,
+  PROJECT,
+} from 'common/constants/userObjectTypes';
 import { ProjectsAndRolesColumn } from './projectsAndRolesColumn';
 import { NameColumn } from './nameColumn';
 import styles from './allUsersGrid.scss';
@@ -104,7 +112,7 @@ export class AllUsersGrid extends PureComponent {
 
   getColumns = () => [
     {
-      id: 'fullName',
+      id: FULL_NAME,
       title: {
         full: this.props.intl.formatMessage(messages.nameCol),
       },
@@ -113,7 +121,7 @@ export class AllUsersGrid extends PureComponent {
       sortable: true,
     },
     {
-      id: 'user',
+      id: USER,
       title: {
         full: this.props.intl.formatMessage(messages.loginCol),
       },
@@ -121,7 +129,7 @@ export class AllUsersGrid extends PureComponent {
       sortable: true,
     },
     {
-      id: 'email',
+      id: EMAIL,
       title: {
         full: this.props.intl.formatMessage(messages.emailCol),
       },
@@ -129,7 +137,7 @@ export class AllUsersGrid extends PureComponent {
       sortable: true,
     },
     {
-      id: 'lastLogin',
+      id: LAST_LOGIN,
       title: {
         full: this.props.intl.formatMessage(messages.lastLoginCol),
       },
@@ -137,7 +145,7 @@ export class AllUsersGrid extends PureComponent {
       sortable: true,
     },
     {
-      id: 'type',
+      id: TYPE,
       title: {
         full: this.props.intl.formatMessage(messages.typeCol),
       },
@@ -145,7 +153,7 @@ export class AllUsersGrid extends PureComponent {
       sortable: true,
     },
     {
-      id: 'project',
+      id: PROJECT,
       title: {
         full: this.props.intl.formatMessage(messages.projectsAndRolesCol),
       },
