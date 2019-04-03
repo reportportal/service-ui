@@ -4,12 +4,12 @@ import { connect } from 'react-redux';
 import { ModalLayout, withModal } from 'components/main/modal';
 import { hideModalAction, confirmModalAction } from 'controllers/modal';
 
-@withModal('confirmModal')
+@withModal('confirmationModal')
 @connect(null, {
   confirmModal: confirmModalAction,
   hideModal: hideModalAction,
 })
-export class ConfirmModal extends Component {
+export class ConfirmationModal extends Component {
   static propTypes = {
     data: PropTypes.object,
     confirmModal: PropTypes.func.isRequired,
