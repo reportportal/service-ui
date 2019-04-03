@@ -47,6 +47,7 @@ export class DefectTypesTab extends Component {
           <div className={cx('header-cell', 'color-cell')}>
             {intl.formatMessage(messages.colorCol)}
           </div>
+          <div className={cx('header-cell', 'buttons-cell')} />
           <div className={cx('header-cell', 'diagram-cell')}>
             {intl.formatMessage(messages.diagramCol)}
           </div>

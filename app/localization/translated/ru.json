@@ -135,6 +135,8 @@
   "Charts.skipped": "Пропущено",
   "Charts.ti": "ТА",
   "Charts.total": "Всего {type}",
+  "ColorPicker.pickSwatch": "Выберите образец",
+  "ColorPicker.selectColor": "Выберите свой цвет",
   "Common.add": "Добавить",
   "Common.cancel": "Отменить",
   "Common.clone": "Клонировать",
