@@ -54,7 +54,7 @@ export class ProjectPanel extends Component {
   onProjectClick = (event) => {
     const { tracking, nameEventInfo, intl } = this.props;
     const confirmAssignModalOpts = {
-      id: 'confirmModal',
+      id: 'confirmationModal',
       data: {
         message: intl.formatMessage(messages.assignModalConfirmationText),
         onConfirm: () => {},
