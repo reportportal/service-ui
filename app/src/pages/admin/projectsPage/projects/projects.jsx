@@ -85,7 +85,11 @@ export class Projects extends Component {
 
     return (
       <React.Fragment>
-        <ProjectsToolbar />
+        <ProjectsToolbar
+          sortingColumn={sortingColumn}
+          sortingDirection={sortingDirection}
+          onChangeSorting={onChangeSorting}
+        />
 
         {viewMode === TABLE_VIEW ? (
           <ProjectsGrid
@@ -94,11 +98,7 @@ export class Projects extends Component {
             onChangeSorting={onChangeSorting}
           />
         ) : (
-          <ProjectsPanelView
-            sortingColumn={sortingColumn}
-            sortingDirection={sortingDirection}
-            onChangeSorting={onChangeSorting}
-          />
+          <ProjectsPanelView />
         )}
 
         {!!pageCount &&

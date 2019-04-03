@@ -32,6 +32,7 @@ import { fetch } from 'common/utils';
 import { PROJECTS } from 'common/constants/projectsObjectTypes';
 import { collectFilterEntities } from 'components/filterEntities/containers/utils';
 import { ProjectEntities } from './projectEntities';
+import { ProjectsSorting } from './projectsSorting';
 import styles from './projectsToolbar.scss';
 
 const cx = classNames.bind(styles);
@@ -105,12 +106,18 @@ export class ProjectsToolbar extends Component {
     showNotification: PropTypes.func.isRequired,
     fetchProjectsAction: PropTypes.func.isRequired,
     unselectAllProjectsAction: PropTypes.func.isRequired,
+    sortingColumn: PropTypes.string,
+    sortingDirection: PropTypes.string,
+    onChangeSorting: PropTypes.func,
   };
 
   static defaultProps = {
     viewMode: GRID_VIEW,
     selectedProjects: [],
     filterEnities: {},
+    sortingColumn: null,
+    sortingDirection: null,
+    onChangeSorting: () => {},
   };
 
   onExportProjects = () => {
@@ -182,7 +189,15 @@ export class ProjectsToolbar extends Component {
   };
 
   render() {
-    const { intl, viewMode, setViewMode, selectedProjects } = this.props;
+    const {
+      intl,
+      viewMode,
+      setViewMode,
+      selectedProjects,
+      sortingColumn,
+      sortingDirection,
+      onChangeSorting,
+    } = this.props;
     const selectedProjectsCount = selectedProjects.length;
 
     return (
@@ -214,6 +229,15 @@ export class ProjectsToolbar extends Component {
             </Fragment>
           ) : (
             <Fragment>
+              {viewMode === GRID_VIEW && (
+                <div className={cx('toolbar-button', 'mobile-hide')}>
+                  <ProjectsSorting
+                    sortingColumn={sortingColumn}
+                    sortingDirection={sortingDirection}
+                    onChangeSorting={onChangeSorting}
+                  />
+                </div>
+              )}
               <div className={cx('toolbar-button')}>
                 <GhostButton icon={ExportIcon} mobileDisabled onClick={this.onExportProjects}>
                   <FormattedMessage id="ProjectsToolbar.export" defaultMessage="Export" />
