@@ -16,7 +16,7 @@ export const toggleUserSelectionAction = toggleItemSelectionAction(NAMESPACE);
 export const toggleAllUsersAction = toggleAllItemsAction(NAMESPACE);
 export const unselectAllUsersAction = unselectAllItemsAction(NAMESPACE);
 
-export const toggleUserRoleForm = (userId, value) => ({
+export const toggleUserRoleFormAction = (userId, value) => ({
   type: TOGGLE_USER_ROLE_FORM,
   payload: {
     userId,
