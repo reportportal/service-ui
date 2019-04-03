@@ -1134,6 +1134,8 @@
   "ProjectsToolbar.export": "Экспортировать",
   "ProjectsToolbar.success": "Проект был успешно удален",
   "ProjectsToolbar.successMultiple": "Проекты были успешно удалены",
+  "ProjectsPage.sortBy": "Сортировать по",
+  "ProjectsPage.dateCol": "Дата",
   "RegenerateUuidModal.header": "Создать новый UUID",
   "RegenerateUuidModal.text": "Все настроенные агенты со старыми UUID не будут работать после этого",
   "RegenerateUuidModal.warning": "Внимание!",
