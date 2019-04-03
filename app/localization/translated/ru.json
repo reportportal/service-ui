@@ -1529,5 +1529,12 @@
   "usersGrid.roleAdmin": "Admin",
   "usersGrid.roleNonAdmin": "Non-admin",
   "usersGrid.type": "Type",
-  "usersGrid.user": "Login"
+  "usersGrid.user": "Login",
+  "rolesRow.projectSearchPlaceholder": "Проект",
+  "rolesRow.unAssignFromPersonalProject": "Невозможно вывести пользователя из персонального проекта",
+  "projectsAndRolesColumn.anassignUser": "Пользователь был выведен из проекта!",
+  "projectsAndRolesColumn.updateUserRole": "Пользователь '{user}' обновлен",
+  "projectsAndRolesColumn.anassignBtn": "Вывести",
+  "projectsAndRolesColumn.unAssignTitle": "Вывести пользователя из проекта",
+  "projectsAndRolesColumn.addProject":  "+ Добавить Проект"
 }

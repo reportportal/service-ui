@@ -1529,5 +1529,11 @@
   "usersGrid.roleAdmin": "Admin",
   "usersGrid.roleNonAdmin": "Non-admin",
   "usersGrid.type": "Type",
-  "usersGrid.user": "Login"
+  "usersGrid.user": "Login",
+  "rolesRow.projectSearchPlaceholder": "Проект",
+  "rolesRow.unAssignFromPersonalProject": "Немагчыма вывесці карыстальніка з персанальнага праекта",
+  "projectsAndRolesColumn.updateUserRole": "Карыстальнік '{user}' абноўлены",
+  "projectsAndRolesColumn.anassignBtn": "Вывести",
+  "projectsAndRolesColumn.unAssignTitle": "Вывесці карыстальніка з праекта",
+  "projectsAndRolesColumn.addProject":  "+ Дадаць Праект"
 }
