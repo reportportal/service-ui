@@ -4,7 +4,7 @@
   font-size: 13px;
   text-transform: capitalize;
   @media (max-width: $SCREEN_SM_MAX) {
-    display: none;
+    width: 100%;
   }
 }
 .login-col {
@@ -14,6 +14,7 @@
   text-transform: lowercase;
   @media (max-width: $SCREEN_XS_MAX) {
     margin-left: 55px;
+    width: 100%;
   }
 }
 .email-col {

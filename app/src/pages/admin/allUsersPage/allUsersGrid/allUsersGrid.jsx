@@ -30,7 +30,12 @@ const messages = defineMessages({
 });
 
 const TypeColumn = ({ className, value }) => (
-  <div className={cx('type-col', className)}>{value.accountType.toLowerCase()}</div>
+  <div className={cx('type-col', className)}>
+    <span className={cx('mobile-label')}>
+      <FormattedMessage id={'AllUsersGrid.typeCol'} defaultMessage={'Type'} />
+    </span>
+    {value.accountType.toLowerCase()}
+  </div>
 );
 TypeColumn.propTypes = {
   className: PropTypes.string.isRequired,
