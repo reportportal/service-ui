@@ -931,7 +931,7 @@
   "MoveToDebugModal.moveToDebugSuccessMessage": "Запуск успешно перемещён в Отладку",
   "NameColumn.adminLabel": "администратор",
   "NameColumn.changeAccountRoleNotification": "Роль пользователя для '{name}' изменена",
-  "NameColumn.makeAdminLabel": "сделать администратором",
+  "NameColumn.makeAdminLabel": "сделать админом",
   "NameColumn.youLabel": "вы",
   "NewsBlock.twitterTitle": "Ознакомьтесь с нашими последними твитами",
   "NoDataAvailable.noDataMessage": "No data available.",
