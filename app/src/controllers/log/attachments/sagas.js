@@ -4,7 +4,7 @@ import { fetch } from 'common/utils';
 import { showModalAction } from 'controllers/modal';
 import { concatFetchDataAction } from 'controllers/fetch';
 import { activeProjectSelector } from 'controllers/user';
-import { activeLogIdSelector } from 'controllers/log/selectors';
+import { activeRetryIdSelector } from 'controllers/log/selectors';
 import { JSON as JSON_TYPE } from 'common/constants/fileTypes';
 import {
   ATTACHMENT_IMAGE_MODAL_ID,
@@ -18,7 +18,7 @@ import { getAttachmentModalId, extractExtension } from './utils';
 
 function* fetchAttachmentsConcat({ payload: { params, concat } }) {
   const activeProject = yield select(activeProjectSelector);
-  const activeLogItemId = yield select(activeLogIdSelector);
+  const activeLogItemId = yield select(activeRetryIdSelector);
   yield put(
     concatFetchDataAction(ATTACHMENTS_NAMESPACE, concat)(
       URLS.logItems(activeProject, activeLogItemId),

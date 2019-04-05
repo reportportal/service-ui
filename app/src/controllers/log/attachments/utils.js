@@ -35,3 +35,10 @@ export const getAttachmentModalId = (contentType) => {
     FILE_MODAL_IDS_MAP[extensionFromPattern]
   );
 };
+
+export const createAttachment = (item) => ({
+  id: item.id,
+  src: getFileIconSource(item),
+  alt: item.contentType,
+  contentType: item.contentType,
+});

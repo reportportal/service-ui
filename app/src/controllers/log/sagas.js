@@ -19,7 +19,12 @@ import {
   WITH_ATTACHMENTS_FILTER_KEY,
   NAMESPACE,
 } from './constants';
-import { activeLogIdSelector, prevActiveLogIdSelector, querySelector } from './selectors';
+import {
+  activeLogIdSelector,
+  prevActiveLogIdSelector,
+  querySelector,
+  activeRetryIdSelector,
+} from './selectors';
 import { attachmentSagas, clearAttachmentsAction } from './attachments';
 import { getWithAttachments, getLogLevel } from './storageUtils';
 
@@ -38,7 +43,7 @@ function* fetchLogItems() {
   const filterLevel = query[LOG_LEVEL_FILTER_KEY] || getLogLevel(userId).id;
   const withAttachments = getWithAttachments(userId) || undefined;
   const params = yield select(querySelector, NAMESPACE);
-  const activeLogItemId = yield select(activeLogIdSelector);
+  const activeLogItemId = yield select(activeRetryIdSelector);
   yield put(
     fetchDataAction(LOG_ITEMS_NAMESPACE)(
       URLS.logItems(activeProject, activeLogItemId, filterLevel),
@@ -52,7 +57,6 @@ function* fetchLogItems() {
 function* fetchHistoryEntries() {
   const activeProject = yield select(activeProjectSelector);
   const logItemId = yield select(logItemIdSelector);
-
   yield put(
     fetchDataAction(HISTORY_NAMESPACE)(
       URLS.testItemsHistory(activeProject, logItemId, DEFAULT_HISTORY_DEPTH),

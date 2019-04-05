@@ -7,6 +7,7 @@ export {
   LOG_LEVEL_FILTER_KEY,
   WITH_ATTACHMENTS_FILTER_KEY,
   LOG_LEVELS,
+  RETRY_ID,
 } from './constants';
 export {
   historyItemsSelector,
@@ -22,6 +23,9 @@ export {
   nextLogLinkSelector,
   previousLogLinkSelector,
   retryLinkSelector,
+  activeRetryIdSelector,
+  retriesSelector,
+  activeRetrySelector,
 } from './selectors';
 export {
   getWithAttachments,
