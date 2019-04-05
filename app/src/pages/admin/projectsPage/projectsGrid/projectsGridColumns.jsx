@@ -5,6 +5,7 @@ import classNames from 'classnames/bind';
 import { AbsRelTime } from 'components/main/absRelTime';
 import styles from './projectsGrid.scss';
 import { ProjectMenu } from '../projectMenu';
+import { ProjectStatisticButton } from '../projectStatisticButton';
 
 const cx = classNames.bind(styles);
 
@@ -92,5 +93,18 @@ MenuColumn.propTypes = {
   value: PropTypes.object,
 };
 MenuColumn.defaultProps = {
+  value: {},
+};
+
+export const StatisticColumn = ({ className, value }) => (
+  <div className={cx('projects-col', className)}>
+    <ProjectStatisticButton projectName={value.projectName} />
+  </div>
+);
+StatisticColumn.propTypes = {
+  className: PropTypes.string.isRequired,
+  value: PropTypes.object,
+};
+StatisticColumn.defaultProps = {
   value: {},
 };

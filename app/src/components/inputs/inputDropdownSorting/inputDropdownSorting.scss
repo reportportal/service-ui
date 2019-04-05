@@ -47,7 +47,7 @@
   line-height: 28px;
   text-overflow: ellipsis;
   white-space: nowrap;
-  color: $COLOR--windows-blue;
+  color: $COLOR--topaz;
 }
 .arrow {
   position: absolute;
@@ -58,7 +58,7 @@
   margin-left: 5px;
   align-items: center;
   justify-content: center;
-  fill: $COLOR--windows-blue;
+  fill: $COLOR--topaz;
 
   &.asc {
     transform: rotateZ(180deg);

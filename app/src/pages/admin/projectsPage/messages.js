@@ -102,6 +102,30 @@ export const messages = defineMessages({
     id: 'ProjectPanel.personalTooltip',
     defaultMessage: 'Personal project',
   },
+  personal: {
+    id: 'ProjectPanel.personal',
+    defaultMessage: 'Personal',
+  },
+  internalTooltip: {
+    id: 'ProjectPanel.internalTooltip',
+    defaultMessage: 'Internal project',
+  },
+  internal: {
+    id: 'ProjectPanel.internal',
+    defaultMessage: 'Internal',
+  },
+  noMembers: {
+    id: 'ProjectPanel.noMembers',
+    defaultMessage: 'No members',
+  },
+  noLaunches: {
+    id: 'ProjectPanel.noLaunches',
+    defaultMessage: 'No launches',
+  },
+  lastLaunch: {
+    id: 'ProjectPanel.lastLaunch',
+    defaultMessage: '{date} run',
+  },
   assignModalConfirmationText: {
     id: 'ProjectsPage.assignModalConfirmationText',
     defaultMessage: 'You are not a member of this project yet. Would you like to be assigned?',

@@ -1,7 +1,7 @@
 .menu-button {
   position: relative;
   height: 16px;
-  width: 34px;
+  width: 20px;
   margin: 0 auto;
   display: inline-block;
   background-repeat: no-repeat;
@@ -12,6 +12,7 @@
   cursor: pointer;
   @media (max-width: $SCREEN_XS_MAX) {
     height: 24px;
+    width: 34px;
   }
 
   &.disabled {

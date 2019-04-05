@@ -27,12 +27,16 @@ import {
   LaunchesColumn,
   LastLaunchColumn,
   MenuColumn,
+  StatisticColumn,
 } from './projectsGridColumns';
 
 import styles from './projectsGrid.scss';
 import { messages } from '../messages';
 
 const cx = classNames.bind(styles);
+
+const STATISTIC_COLUMN = 'statistic';
+const MENU_COLUMN = 'menu';
 
 @connect(
   (state) => ({
@@ -69,6 +73,10 @@ export class ProjectsGrid extends PureComponent {
   };
 
   getColumns = () => [
+    {
+      id: STATISTIC_COLUMN,
+      component: StatisticColumn,
+    },
     {
       id: NAME,
       title: {
@@ -122,7 +130,7 @@ export class ProjectsGrid extends PureComponent {
       sortable: true,
     },
     {
-      id: 'menu',
+      id: MENU_COLUMN,
       component: MenuColumn,
     },
   ];
