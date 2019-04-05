@@ -1,13 +1,12 @@
 .tabs-container {
-}
+  .tabs {
+    display: flex;
+    background-color: $COLOR--white;
+    border-top: 1px solid $COLOR--gray-91;
 
-.tabs {
-  display: flex;
-  background-color: $COLOR--white;
-  border-top: 1px solid $COLOR--gray-91;
-
-  @media (max-width: $SCREEN_XS_MAX) {
-    flex-direction: column;
+    @media (max-width: $SCREEN_XS_MAX) {
+      flex-direction: column;
+    }
   }
 }
 
@@ -100,12 +99,6 @@
     border-top: 0;
 
     @media (min-width: $SCREEN_XS_MAX) {
-      display: none;
-    }
-  }
-
-  &.desktop {
-    @media (max-width: $SCREEN_XS_MAX) {
       display: none;
     }
   }

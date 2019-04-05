@@ -78,7 +78,6 @@ export class Attachments extends Component {
 
     this.state = {
       mainAreaVisible: activeItemId !== null,
-      activeItemId,
       currentThumb,
       page: pagination.number ? pagination.number + 1 : 1,
       size: visibleThumbs,
@@ -107,15 +106,14 @@ export class Attachments extends Component {
 
   onClickThumb = (itemIndex) => {
     this.props.onChangeActiveItem(itemIndex);
-    this.setState({ activeItemId: itemIndex, mainAreaVisible: true });
+    this.setState({ mainAreaVisible: true });
   };
 
   changeActiveItem = (activeItemId, thumbConfig) => {
-    const prevActiveItemId = this.state.activeItemId;
+    const prevActiveItemId = this.props.activeItemId;
     this.props.onChangeActiveItem(activeItemId);
     this.setState(
       {
-        activeItemId,
         currentThumb: thumbConfig ? thumbConfig.currentThumb : this.state.currentThumb,
       },
       () => this.loadNewItems(prevActiveItemId, thumbConfig),
@@ -123,7 +121,7 @@ export class Attachments extends Component {
   };
 
   loadNewItems = (prevActiveItemId, thumbConfig) => {
-    if (thumbConfig && this.state.activeItemId > prevActiveItemId) {
+    if (thumbConfig && this.props.activeItemId > prevActiveItemId) {
       const currentPage = Math.floor(thumbConfig.currentThumb / this.state.size) + 1;
       currentPage + 1 >= this.state.page && this.handleNewAttachmentsLoad();
     }
@@ -159,7 +157,7 @@ export class Attachments extends Component {
   };
 
   renderAttachmentsContent = () => {
-    const { intl, loading, attachments, isMobileView } = this.props;
+    const { intl, loading, attachments, isMobileView, activeItemId } = this.props;
 
     if (loading) {
       return <SpinningPreloader />;
@@ -169,7 +167,7 @@ export class Attachments extends Component {
       return <NoItemMessage message={intl.formatMessage(messages.noAttachmentsMessage)} />;
     }
 
-    const { activeItemId, currentThumb, mainAreaVisible } = this.state;
+    const { currentThumb, mainAreaVisible } = this.state;
     const visibleThumbs = Attachments.getVisibleThumbs(isMobileView);
 
     return (
