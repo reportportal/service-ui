@@ -21,7 +21,7 @@ export class InfoTabs extends Component {
         icon: PropTypes.node,
       }),
     ),
-    activeTab: PropTypes.object,
+    activeTabId: PropTypes.string,
     setActiveTab: PropTypes.func,
     panelContent: PropTypes.node,
     tracking: PropTypes.shape({
@@ -32,7 +32,7 @@ export class InfoTabs extends Component {
 
   static defaultProps = {
     tabs: [],
-    activeTab: null,
+    activeTabId: null,
     setActiveTab: () => {},
     panelContent: null,
   };
@@ -60,14 +60,19 @@ export class InfoTabs extends Component {
       isMobileView: media.matches,
     });
 
-  isActiveTab(tab) {
-    const { activeTab } = this.props;
+  isActiveTab = (tab) => this.props.activeTabId === tab.id;
 
-    return activeTab && tab.id === activeTab.id;
-  }
+  renderTabContent = (tabId, isMobileView) => {
+    const tab = this.props.tabs.find((item) => item.id === tabId);
+    return (
+      <div className={cx('tabs-content', { mobile: isMobileView })}>
+        <tab.component {...tab.componentProps} isMobileView={isMobileView} />
+      </div>
+    );
+  };
 
   render() {
-    const { tabs, activeTab, setActiveTab, panelContent, tracking } = this.props;
+    const { tabs, activeTabId, setActiveTab, panelContent, tracking } = this.props;
 
     return (
       <div className={cx('tabs-container')}>
@@ -78,7 +83,7 @@ export class InfoTabs extends Component {
                 className={cx('tab', { active: this.isActiveTab(tab) })}
                 onClick={() => {
                   tracking.trackEvent(tab.eventInfo);
-                  setActiveTab(tab);
+                  setActiveTab(tab.id);
                 }}
               >
                 {tab.icon && <i className={cx('tab-icon')}>{Parser(tab.icon)}</i>}
@@ -88,21 +93,13 @@ export class InfoTabs extends Component {
                 </i>
               </button>
               {this.state.isMobileView &&
-                this.isActiveTab(tab) && (
-                  <div className={cx('tabs-content', 'mobile')}>
-                    <tab.component {...tab.componentProps} isMobileView />
-                  </div>
-                )}
+                this.isActiveTab(tab) &&
+                this.renderTabContent(tab.id, true)}
             </Fragment>
           ))}
           {panelContent && <div className={cx('panel-content')}>{panelContent}</div>}
         </div>
-        {activeTab &&
-          !this.state.isMobileView && (
-            <div className={cx('tabs-content', 'desktop')}>
-              <activeTab.component {...activeTab.componentProps} />
-            </div>
-          )}
+        {activeTabId && !this.state.isMobileView && this.renderTabContent(activeTabId)}
       </div>
     );
   }

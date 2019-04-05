@@ -63,27 +63,27 @@ export class LogItemInfoTabs extends Component {
     lastActivity: null,
   };
 
-  static getDerivedStateFromProps(props, state) {
-    return state.logItemId !== props.logItem.id || props.loading
+  static getDerivedStateFromProps(props) {
+    return props.loading
       ? {
-          logItemId: props.logItem.id,
-          activeTab: null,
+          activeTabId: null,
           activeAttachmentId: null,
         }
       : null;
   }
 
   state = {
-    logItemId: this.props.logItem.id,
-    activeTab: null,
+    activeTabId: null,
     activeAttachmentId: null,
   };
 
-  setActiveTab = (tab = {}) => {
+  setActiveTab = (activeTabId) =>
     this.setState({
-      activeTab: this.state.activeTab && this.state.activeTab.id === tab.id ? null : tab,
+      activeTabId:
+        this.state.activeTabId === activeTabId && this.state.activeTabId !== null
+          ? null
+          : activeTabId,
     });
-  };
 
   changeActiveAttachment = (activeAttachmentId) =>
     this.setState({
@@ -168,7 +168,7 @@ export class LogItemInfoTabs extends Component {
     return (
       <InfoTabs
         tabs={this.makeTabs()}
-        activeTab={this.state.activeTab}
+        activeTabId={this.state.activeTabId}
         setActiveTab={this.setActiveTab}
         panelContent={this.renderPanelContent()}
       />
