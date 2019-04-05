@@ -61,7 +61,7 @@ export class PassingRatePerLaunchControls extends Component {
           launchNameFilter: false,
         },
       },
-      filterIds: [],
+      filters: [],
     });
   }
 

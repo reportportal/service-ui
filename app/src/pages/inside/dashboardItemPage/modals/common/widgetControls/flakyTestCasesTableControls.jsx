@@ -75,7 +75,7 @@ export class FlakyTestCasesTableControls extends Component {
           launchNameFilter: false,
         },
       },
-      filterIds: [],
+      filters: [],
     });
   }
 

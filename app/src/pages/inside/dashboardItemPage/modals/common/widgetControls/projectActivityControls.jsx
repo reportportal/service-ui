@@ -88,7 +88,7 @@ export class ProjectActivityControls extends Component {
           user: '',
         },
       },
-      filterIds: [],
+      filters: [],
     });
   }
 

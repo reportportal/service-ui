@@ -64,11 +64,7 @@ export class TestCasesGrowthTrendControls extends Component {
 
     return (
       <Fragment>
-        <FieldProvider
-          name="filterIds"
-          parse={this.parseFilterValue}
-          format={this.formatFilterValue}
-        >
+        <FieldProvider name="filters" parse={this.parseFilterValue} format={this.formatFilterValue}>
           <FiltersControl
             formAppearance={formAppearance}
             onFormAppearanceChange={onFormAppearanceChange}
