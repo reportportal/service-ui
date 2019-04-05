@@ -1,0 +1,43 @@
+.status-indicator {
+  height: 7px;
+  width: 7px;
+
+  &.status-passed {
+    background-color: $COLOR--passed;
+  }
+
+  &.status-failed {
+    background-color: $COLOR--failed;
+  }
+
+  &.status-skipped {
+    background-color: $COLOR--skipped;
+  }
+}
+
+.retry {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  align-content: flex-start;
+  align-items: center;
+  height: 20px;
+  border: 1px solid $COLOR--gray-91;
+  margin: 2px 5px 2px 0;
+  padding: 0 12px 0 13px;
+  background-color: $COLOR--white-two;
+  cursor: pointer;
+  user-select: none;
+}
+
+
+.selected {
+  background-color: $COLOR--gray-91;
+  color: $COLOR--topaz;
+  cursor: default;
+}
+
+.name {
+  margin-left: 3px;
+}

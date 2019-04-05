@@ -814,6 +814,7 @@
   "LogItemInfo.noDefectTypeToLinkIssue": "Вы не можете прикрепить ошибку, если элемент не имеет дефекта",
   "LogItemInfo.postIssue": "Отправить ошибку",
   "LogItemInfo.sendDefect": "Отправить дефект до {message}",
+  "LogItemInfo.retries": "Повторы",
   "LogItemInfoTabs.attachmentsTab": "Вложения",
   "LogItemInfoTabs.detailsTab": "Описание элемента",
   "LogItemInfoTabs.historyTab": "История действий",

@@ -20,7 +20,7 @@ import {
   getNextItem,
   getUpdatedLogQuery,
 } from './utils';
-import { NAMESPACE, DEFAULT_SORTING } from './constants';
+import { NAMESPACE, DEFAULT_SORTING, RETRY_ID } from './constants';
 
 const logSelector = (state) => state.log || {};
 
@@ -88,6 +88,26 @@ export const activeLogSelector = createSelector(
   (historyItems, logItemId) => historyItems.find((historyItem) => historyItem.id === logItemId),
 );
 
+export const retriesSelector = createSelector(activeLogSelector, (logItem = {}) => {
+  const { retries = [] } = logItem;
+  return [...retries, logItem];
+});
+
+export const activeRetryIdSelector = createSelector(
+  activeLogIdSelector,
+  pagePropertiesSelector,
+  (logItemId, query) => {
+    const namespacedQuery = extractNamespacedQuery(query, NAMESPACE);
+    return parseInt(namespacedQuery[RETRY_ID], 10) || logItemId;
+  },
+);
+
+export const activeRetrySelector = createSelector(
+  retriesSelector,
+  activeRetryIdSelector,
+  (retries, retryId) => retries.filter((retry) => retry.id === retryId)[0],
+);
+
 export const previousLogLinkSelector = createSelector(
   payloadSelector,
   pagePropertiesSelector,
@@ -152,12 +172,12 @@ export const retryLinkSelector = createSelector(
   payloadSelector,
   pagePropertiesSelector,
   debugModeSelector,
-  (state, props) => props.retryId,
-  (payload, query, debugMode, retryId) => ({
+  (state, props) => props,
+  (payload, query, debugMode, { testItemId, retryId }) => ({
     type: debugMode ? PROJECT_USERDEBUG_LOG_PAGE : PROJECT_LOG_PAGE,
     payload: {
       ...payload,
-      testItemIds: [...(payload.testItemIds || '').split('/'), retryId].join('/'),
+      testItemIds: [...(payload.testItemIds || '').split('/'), testItemId].join('/'),
     },
     meta: {
       query: {

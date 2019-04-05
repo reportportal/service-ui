@@ -7,7 +7,7 @@ import isEqual from 'fast-deep-equal';
 import { injectIntl, intlShape, defineMessages } from 'react-intl';
 import {
   logItemsSelector,
-  activeLogIdSelector,
+  activeRetryIdSelector,
   logPaginationSelector,
   NAMESPACE,
   getLogLevelById,
@@ -37,7 +37,7 @@ const messages = defineMessages({
 });
 
 @connect((state) => ({
-  logItemId: activeLogIdSelector(state),
+  logItemId: activeRetryIdSelector(state),
   projectId: activeProjectSelector(state),
   pagination: logPaginationSelector(state),
   pageProperties: pagePropertiesSelector(state, NAMESPACE),

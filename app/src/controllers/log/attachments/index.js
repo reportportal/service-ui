@@ -17,5 +17,6 @@ export {
   attachmentsLoadingSelector,
   logsWithAttachmentsSelector,
   attachmentsPaginationSelector,
+  activeAttachmentItemSelector,
 } from './selectors';
 export { attachmentSagas } from './sagas';

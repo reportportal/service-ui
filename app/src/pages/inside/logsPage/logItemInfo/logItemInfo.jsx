@@ -8,14 +8,23 @@ import { DefectType } from 'pages/inside/stepPage/stepGrid/defectType';
 import { LOG_PAGE_EVENTS } from 'components/main/analytics/events';
 import { linkIssueAction, editDefectsAction } from 'controllers/step';
 import { showModalAction } from 'controllers/modal';
-import { activeLogSelector, historyItemsSelector } from 'controllers/log';
+import {
+  activeLogSelector,
+  historyItemsSelector,
+  activeRetryIdSelector,
+  retriesSelector,
+  RETRY_ID,
+  NAMESPACE,
+} from 'controllers/log';
 import { PASSED, SKIPPED, MANY, NOT_FOUND } from 'common/constants/launchStatuses';
 import { externalSystemSelector } from 'controllers/project';
+import { connectRouter } from 'common/utils';
 import LinkIcon from 'common/img/link-inline.svg';
 import DownLeftArrowIcon from 'common/img/down-left-arrow-inline.svg';
 import UpRightArrowIcon from 'common/img/up-right-arrow-inline.svg';
 import BugIcon from 'common/img/bug-inline.svg';
 import { LogItemInfoTabs } from './logItemInfoTabs';
+import { Retry } from './retry';
 import styles from './logItemInfo.scss';
 
 const cx = classNames.bind(styles);
@@ -49,6 +58,10 @@ const messages = defineMessages({
     id: 'LogItemInfo.noDefectTypeToLinkIssue',
     defaultMessage: "You can't link issue if item has no defect type",
   },
+  retries: {
+    id: 'LogItemInfo.retries',
+    defaultMessage: 'Retries',
+  },
 });
 
 @connect(
@@ -56,12 +69,21 @@ const messages = defineMessages({
     logItem: activeLogSelector(state),
     historyItems: historyItemsSelector(state),
     externalSystems: externalSystemSelector(state),
+    retryItemId: activeRetryIdSelector(state),
+    retries: retriesSelector(state),
   }),
   {
     linkIssueAction,
     editDefectsAction,
     showModalAction,
   },
+)
+@connectRouter(
+  () => {},
+  {
+    updateRetryId: (query) => ({ ...query }),
+  },
+  { namespace: NAMESPACE },
 )
 @injectIntl
 export class LogItemInfo extends Component {
@@ -80,9 +102,15 @@ export class LogItemInfo extends Component {
     isThirdPartyIntegrationView: PropTypes.bool.isRequired,
     loading: PropTypes.bool.isRequired,
     logItem: PropTypes.object,
+    updateRetryId: PropTypes.func,
+    retryItemId: PropTypes.number,
+    retries: PropTypes.arrayOf(PropTypes.object),
   };
   static defaultProps = {
     logItem: null,
+    updateRetryId: () => {},
+    retryItemId: null,
+    retries: [],
   };
 
   getLinkIssueTitle = () => {
@@ -162,7 +190,15 @@ export class LogItemInfo extends Component {
       !this.getLastWithDefect()
     );
   };
-
+  isHasRetries = () => {
+    const { retries } = this.props;
+    return retries.length > 1;
+  };
+  isShowDefectType = () => {
+    const { logItem } = this.props;
+    return logItem.issue && logItem.issue.issueType;
+  };
+  addExtraSpaceTop = () => this.isShowDefectType() && this.isHasRetries();
   handleLinkIssue = () => {
     this.props.linkIssueAction([this.props.logItem], {
       fetchFunc: this.props.fetchFunc,
@@ -175,6 +211,26 @@ export class LogItemInfo extends Component {
     });
   };
 
+  renderRetries = () => {
+    const { retryItemId, retries } = this.props;
+    return retries.map((item, index) => {
+      const selected = item.id === retryItemId;
+      const retryNumber = index + 1;
+      const updateActiveRetry = () => {
+        const { id } = item;
+        this.props.updateRetryId({ [RETRY_ID]: id });
+      };
+      return (
+        <Retry
+          key={item.id}
+          retry={item}
+          index={retryNumber}
+          selected={selected}
+          onClick={updateActiveRetry}
+        />
+      );
+    });
+  };
   render() {
     const {
       logItem,
@@ -186,21 +242,20 @@ export class LogItemInfo extends Component {
       isThirdPartyIntegrationView,
       intl: { formatMessage },
     } = this.props;
-
     return (
       logItem && (
         <div className={cx('container')}>
           <div className={cx('content')}>
             <div className={cx('description')}>
-              {logItem.issue &&
-                logItem.issue.issueType && (
-                  <DefectType
-                    issue={logItem.issue}
-                    onEdit={this.handleEditDefect}
-                    editEventInfo={LOG_PAGE_EVENTS.DEFECT_TYPE_TAG}
-                  />
-                )}
+              {this.isShowDefectType() && (
+                <DefectType
+                  issue={logItem.issue}
+                  onEdit={this.handleEditDefect}
+                  editEventInfo={LOG_PAGE_EVENTS.DEFECT_TYPE_TAG}
+                />
+              )}
             </div>
+
             <div className={cx('actions')}>
               <div className={cx('action')}>
                 <GhostButton
@@ -227,9 +282,18 @@ export class LogItemInfo extends Component {
                 </GhostButton>
               </div>
             </div>
+            {this.isHasRetries() && (
+              <div
+                className={cx('retries', {
+                  'extra-space-top': this.addExtraSpaceTop(),
+                })}
+              >
+                <div className={cx('retries-label')}>{formatMessage(messages.retries)}:</div>
+                {this.renderRetries()}
+              </div>
+            )}
           </div>
           <LogItemInfoTabs
-            logItem={logItem}
             onChangePage={onChangePage}
             onChangeLogLevel={onChangeLogLevel}
             onHighlightRow={onHighlightRow}

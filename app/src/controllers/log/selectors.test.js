@@ -9,7 +9,7 @@ describe('log/selectors', () => {
           { projectId: 'project', filterId: 'all', testItemIds: '1/2/3' },
           { launchParams: 'foo=3' },
           false,
-          5,
+          { testItemId: 5, retryId: 244 },
         ),
       ).toEqual({
         type: PROJECT_LOG_PAGE,
@@ -17,7 +17,7 @@ describe('log/selectors', () => {
         meta: {
           query: {
             launchParams: 'foo=3',
-            logParams: 'retryId=5',
+            logParams: 'retryId=244',
           },
         },
       });

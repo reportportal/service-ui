@@ -3,7 +3,13 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { defineMessages, injectIntl, intlShape } from 'react-intl';
 import classNames from 'classnames/bind';
-import { lastLogActivitySelector } from 'controllers/log';
+import {
+  lastLogActivitySelector,
+  activeRetrySelector,
+  activeLogIdSelector,
+  activeRetryIdSelector,
+  activeLogSelector,
+} from 'controllers/log';
 import { LOG_PAGE_EVENTS } from 'components/main/analytics/events';
 import StackTraceIcon from 'common/img/stack-trace-inline.svg';
 import AttachmentIcon from 'common/img/attachment-inline.svg';
@@ -49,18 +55,25 @@ const messages = defineMessages({
 @injectIntl
 @connect((state) => ({
   lastActivity: lastLogActivitySelector(state),
+  activeRetry: activeRetrySelector(state),
+  logId: activeLogIdSelector(state),
+  retryId: activeRetryIdSelector(state),
+  logItem: activeLogSelector(state),
 }))
 export class LogItemInfoTabs extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
     lastActivity: PropTypes.object,
-    logItem: PropTypes.object.isRequired,
     loading: PropTypes.bool.isRequired,
     onChangePage: PropTypes.func.isRequired,
     onChangeLogLevel: PropTypes.func.isRequired,
     onHighlightRow: PropTypes.func.isRequired,
     onToggleThirdPartyIntegrationView: PropTypes.func.isRequired,
     isThirdPartyIntegrationView: PropTypes.bool.isRequired,
+    activeRetry: PropTypes.object.isRequired,
+    retryId: PropTypes.number.isRequired,
+    logId: PropTypes.number.isRequired,
+    logItem: PropTypes.object.isRequired,
   };
 
   static defaultProps = {
@@ -98,17 +111,27 @@ export class LogItemInfoTabs extends Component {
     this.setState({
       activeAttachmentId,
     });
-
+  isShowHistoryTab = () => {
+    const { retryId, logId } = this.props;
+    return retryId === logId;
+  };
   makeTabs = () => {
     const {
       intl: { formatMessage },
-      logItem,
       onChangePage,
       onChangeLogLevel,
       onHighlightRow,
+      activeRetry,
     } = this.props;
-
-    return [
+    const history = {
+      id: 'history',
+      label: formatMessage(messages.historyTab),
+      icon: ClockIcon,
+      component: LogItemActivity,
+      componentProps: {},
+      eventInfo: LOG_PAGE_EVENTS.ACTIONS_TAB,
+    };
+    const arr = [
       {
         id: 'stack',
         label: formatMessage(messages.stackTab),
@@ -138,7 +161,7 @@ export class LogItemInfoTabs extends Component {
         icon: InfoIcon,
         component: LogItemDetails,
         componentProps: {
-          logItem,
+          logItem: activeRetry,
         },
         eventInfo: LOG_PAGE_EVENTS.ITEM_DETAILS_TAB,
       },
@@ -148,18 +171,14 @@ export class LogItemInfoTabs extends Component {
         icon: TestParamsIcon,
         component: Parameters,
         componentProps: {
-          logItem,
+          logItem: activeRetry,
         },
       },
-      {
-        id: 'history',
-        label: formatMessage(messages.historyTab),
-        icon: ClockIcon,
-        component: LogItemActivity,
-        componentProps: {},
-        eventInfo: LOG_PAGE_EVENTS.ACTIONS_TAB,
-      },
     ];
+    if (this.isShowHistoryTab()) {
+      arr.push(history);
+    }
+    return arr;
   };
 
   toggleThirdPartyIntegrationContent = () => {
