@@ -8,6 +8,14 @@
 .value {
   font-family: $FONT-REGULAR;
   font-size: 15px;
-  line-height: 1.33;
+  line-height: 18px;
+  color: $COLOR--black-2;
+  height: 19px;
+}
+
+.empty-value {
+  font-family: $FONT-REGULAR;
+  font-size: 12px;
+  line-height: 18px;
   color: $COLOR--black-2;
 }

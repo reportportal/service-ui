@@ -1,21 +1,22 @@
 import React, { Component } from 'react';
 import track from 'react-tracking';
-import { injectIntl, intlShape, FormattedRelative } from 'react-intl';
+import { injectIntl, intlShape } from 'react-intl';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { NavLink } from 'redux-first-router-link';
 import { connect } from 'react-redux';
-import { PROJECT_PAGE, PROJECT_DETAILS_PAGE } from 'controllers/pages';
 import { redirectToProjectAction } from 'controllers/administrate/projects';
 import { showModalAction } from 'controllers/modal';
+import { PROJECT_PAGE } from 'controllers/pages';
 import { Icon } from 'components/main/icon/icon';
 import { assignedProjectsSelector } from 'controllers/user';
 import { ProjectMenu } from '../../projectMenu';
 import { StatisticsItem } from './statisticsItem';
 import { ProjectTooltipIcon } from './projectTooltipIcon';
-import styles from './projectPanel.scss';
-import { UPSA_PROJECT, PERSONAL_PROJECT } from './constants';
+import { ProjectStatisticButton } from '../../projectStatisticButton';
+import { UPSA_PROJECT, PERSONAL_PROJECT, INTERNAL_PROJECT } from './constants';
 import { messages } from './../../messages';
+import styles from './projectPanel.scss';
 
 const cx = classNames.bind(styles);
 
@@ -94,13 +95,30 @@ export class ProjectPanel extends Component {
           </span>
         );
       default:
-        return '';
+        return (
+          <span className={cx('header-item')}>
+            <ProjectTooltipIcon tooltipContent={intl.formatMessage(messages.internalTooltip)}>
+              <Icon type="icon-internal" />
+            </ProjectTooltipIcon>
+          </span>
+        );
     }
+  }
+  getOrganization() {
+    const {
+      intl,
+      project: { entryType, organization },
+    } = this.props;
+    return (
+      organization ||
+      (entryType === PERSONAL_PROJECT && intl.formatMessage(messages.personal)) ||
+      (entryType === INTERNAL_PROJECT && intl.formatMessage(messages.internal))
+    );
   }
 
   render() {
     const {
-      project: { projectName, entryType, lastRun, launchesQuantity, usersQuantity, organization },
+      project: { projectName, entryType, lastRun, launchesQuantity, usersQuantity },
       intl,
     } = this.props;
 
@@ -109,7 +127,7 @@ export class ProjectPanel extends Component {
         <div className={cx('info-block')}>
           <div className={cx('header')}>
             {this.getProjectIcon(entryType)}
-            <span className={cx('header-stretch-item', 'gray-text')}>{organization}</span>
+            <span className={cx('header-stretch-item', 'gray-text')}>{this.getOrganization()}</span>
             <span className={cx('header-item')}>
               <ProjectMenu project={this.props.project} />
             </span>
@@ -126,7 +144,9 @@ export class ProjectPanel extends Component {
           </NavLink>
           {lastRun && (
             <div className={cx('gray-text')}>
-              <FormattedRelative value={new Date(lastRun).getTime()} />
+              {intl.formatMessage(messages.lastLaunch, {
+                date: intl.formatRelative(new Date(lastRun).getTime()),
+              })}
             </div>
           )}
         </div>
@@ -136,21 +156,17 @@ export class ProjectPanel extends Component {
             <StatisticsItem
               caption={intl.formatMessage(messages.launchesQuantity)}
               value={launchesQuantity}
+              emptyValueCaption={intl.formatMessage(messages.noLaunches)}
             />
             <StatisticsItem
               caption={intl.formatMessage(messages.membersQuantity)}
               value={usersQuantity}
+              emptyValueCaption={intl.formatMessage(messages.noMembers)}
             />
-            <NavLink
-              className={cx('statistic-button')}
-              to={{
-                type: PROJECT_DETAILS_PAGE,
-                payload: { projectId: projectName },
-              }}
+            <ProjectStatisticButton
+              projectName={projectName}
               onClick={() => this.props.tracking.trackEvent(this.props.statisticEventInfo)}
-            >
-              <Icon type={'icon-statistics'} />
-            </NavLink>
+            />
           </div>
         </div>
       </div>
