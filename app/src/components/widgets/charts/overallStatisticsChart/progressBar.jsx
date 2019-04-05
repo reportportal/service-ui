@@ -9,9 +9,12 @@ export class ProgressBar extends React.PureComponent {
     progressData: PropTypes.object.isRequired,
   };
 
+  static getPercentage = (value, totalVal) => `${value / totalVal * 100}%`;
+
   render() {
     const { total, passed, failed, skipped } = this.props.progressData;
-    const getPercentage = (value, totalVal) => `${value / totalVal * 100}%`;
+    const { getPercentage } = ProgressBar;
+
     return (
       <div className={cx('container')}>
         <div style={{ width: getPercentage(passed, total) }} className={cx('passed')} />
