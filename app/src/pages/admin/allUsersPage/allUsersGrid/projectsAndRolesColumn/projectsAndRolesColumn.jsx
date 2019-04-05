@@ -40,7 +40,7 @@ const messages = defineMessages({
     defaultMessage: '+ Add Project',
   },
 });
-@connect(() => null, {
+@connect(null, {
   showNotification,
   showModalAction,
   fetchAllUsersAction,
