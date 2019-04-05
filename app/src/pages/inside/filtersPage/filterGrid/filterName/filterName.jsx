@@ -14,9 +14,13 @@ import styles from './filterName.scss';
 const cx = classNames.bind(styles);
 
 const messages = defineMessages({
-  shareFilter: {
-    id: 'FiltersPage.shareFilter',
+  sharedByFilter: {
+    id: 'FiltersPage.sharedByFilter',
     defaultMessage: 'Filter is shared by {owner}',
+  },
+  sharedFilter: {
+    id: 'FiltersPage.sharedFilter',
+    defaultMessage: 'Filter is shared',
   },
 });
 
@@ -72,9 +76,15 @@ export class FilterName extends Component {
 
   getShareIcon = () => (this.props.userId === this.props.filter.owner ? ShareIcon : GlobeIcon);
 
+  getIconTitle = () => {
+    const { intl, userId, filter } = this.props;
+    return filter.owner === userId
+      ? intl.formatMessage(messages.sharedFilter)
+      : intl.formatMessage(messages.sharedByFilter, { owner: filter.owner });
+  };
+
   render() {
     const {
-      intl,
       userFilters,
       filter,
       onClickName,
@@ -114,10 +124,7 @@ export class FilterName extends Component {
 
           {filter.share &&
             !noShareIcons && (
-              <span
-                className={cx('share-icon')}
-                title={intl.formatMessage(messages.shareFilter, { owner: filter.owner })}
-              >
+              <span className={cx('share-icon')} title={this.getIconTitle()}>
                 {Parser(this.getShareIcon())}
               </span>
             )}
