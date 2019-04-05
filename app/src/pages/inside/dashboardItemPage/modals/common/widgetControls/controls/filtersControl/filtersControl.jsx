@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { intlShape, injectIntl, defineMessages } from 'react-intl';
-import { change, formValueSelector } from 'redux-form';
+import { change } from 'redux-form';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { userIdSelector, activeProjectSelector } from 'controllers/user/selectors';
@@ -31,13 +31,6 @@ import {
 import styles from './filtersControl.scss';
 
 const cx = classNames.bind(styles);
-const wizardFormValuesSelector = formValueSelector(WIDGET_WIZARD_FORM);
-const activeFilterIdSelector = (state) =>
-  (
-    (wizardFormValuesSelector(state, 'filterIds') &&
-      wizardFormValuesSelector(state, 'filterIds')[0]) ||
-    {}
-  ).value || '';
 
 const messages = defineMessages({
   insertFilterSuccess: {
@@ -66,7 +59,6 @@ const messages = defineMessages({
   (state) => ({
     userId: userIdSelector(state),
     activeProject: activeProjectSelector(state),
-    activeFilterId: activeFilterIdSelector(state),
     filters: filtersSelector(state),
     pagination: filtersPaginationSelector(state),
     loading: loadingSelector(state),
@@ -86,7 +78,10 @@ export class FiltersControl extends Component {
     error: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
     userId: PropTypes.string,
     activeProject: PropTypes.string,
-    activeFilterId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    value: PropTypes.shape({
+      value: PropTypes.string,
+      label: PropTypes.string,
+    }),
     filter: PropTypes.string,
     pagination: PropTypes.object.isRequired,
     formAppearance: PropTypes.object.isRequired,
@@ -103,7 +98,7 @@ export class FiltersControl extends Component {
     touched: false,
     error: '',
     userId: '',
-    activeFilterId: '',
+    value: {},
     filter: '',
     activeProject: '',
     loading: false,
@@ -173,6 +168,8 @@ export class FiltersControl extends Component {
   };
 
   getFilterById = (filterId) => this.props.filters.find((elem) => elem.id === Number(filterId));
+
+  getActiveFilterId = () => this.props.value.value;
 
   fetchFilter = ({ page, size, searchValue }) => {
     const { size: stateSize, page: statePage } = this.state;
@@ -285,7 +282,7 @@ export class FiltersControl extends Component {
       value: id,
       name: filter.name,
     };
-    this.props.changeWizardForm('filterIds', [newActiveFilter]);
+    this.props.changeWizardForm('filters', [newActiveFilter]);
   };
 
   handleFiltersListLoad = () => {
@@ -304,7 +301,8 @@ export class FiltersControl extends Component {
   };
 
   render() {
-    const { activeFilterId, filters, formAppearance } = this.props;
+    const { filters, formAppearance } = this.props;
+    const activeFilterId = this.getActiveFilterId();
     const activeFilter = this.getFilterById(activeFilterId);
 
     if (formAppearance.mode !== false) {

@@ -89,7 +89,7 @@ export class MostFailedTestCasesTableControls extends Component {
           launchNameFilter: false,
         },
       },
-      filterIds: [],
+      filters: [],
     });
   }
 

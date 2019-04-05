@@ -11,6 +11,7 @@ import { showScreenLockAction } from 'controllers/screenLock';
 import { activeProjectSelector } from 'controllers/user';
 import { getWidgets } from 'pages/inside/dashboardItemPage/modals/common/widgets';
 import { DEFAULT_WIDGET_CONFIG, WIDGET_WIZARD_FORM } from '../../common/constants';
+import { prepareWidgetDataForSubmit } from '../../common/utils';
 import { WizardInfoSection } from './wizardInfoSection';
 import { WizardControlsSection } from './wizardControlsSection';
 import styles from './widgetWizardContent.scss';
@@ -78,7 +79,7 @@ export class WidgetWizardContent extends Component {
       onConfirm,
     } = this.props;
 
-    const data = this.prepareDataForSubmit(formData);
+    const data = prepareWidgetDataForSubmit(formData);
 
     trackEvent(addWidget);
     this.props.showScreenLockAction();
@@ -98,11 +99,6 @@ export class WidgetWizardContent extends Component {
     this.setState({ step: this.state.step + 1 });
   };
 
-  prepareDataForSubmit = (data) => ({
-    ...data,
-    filterIds: (data.filterIds || []).map((item) => item.value),
-  });
-
   render() {
     const {
       formValues: { widgetType },
@@ -113,7 +109,7 @@ export class WidgetWizardContent extends Component {
         <WizardInfoSection
           activeWidget={this.widgets.find((widget) => widgetType === widget.id)}
           projectId={this.props.projectId}
-          widgetSettings={this.prepareDataForSubmit(this.props.formValues)}
+          widgetSettings={prepareWidgetDataForSubmit(this.props.formValues)}
           step={this.state.step}
         />
         <WizardControlsSection

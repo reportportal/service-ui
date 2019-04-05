@@ -37,7 +37,7 @@ export const CONTENT_FIELDS = {
 };
 
 export const requestDataShape = PropTypes.shape({
-  filterIds: PropTypes.array,
+  filters: PropTypes.array,
   description: PropTypes.string,
   name: PropTypes.string,
   share: PropTypes.bool,

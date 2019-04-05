@@ -15,6 +15,7 @@ import { getWidgets } from 'pages/inside/dashboardItemPage/modals/common/widgets
 import { EditWidgetControlsSectionForm } from './editWidgetControlsSectionForm';
 import { EditWidgetInfoSection } from './editWidgetInfoSection';
 import { WIDGET_WIZARD_FORM } from '../common/constants';
+import { prepareWidgetDataForSubmit } from '../common/utils';
 import { FORM_APPEARANCE_MODE_LOCKED } from '../common/widgetControls/controls/filtersControl/common/constants';
 import styles from './editWidgetModal.scss';
 
@@ -84,7 +85,7 @@ export class EditWidgetModal extends Component {
 
     this.initialValues = {
       ...widget,
-      filterIds: widget.appliedFilters.map((item) => item.id.toString()),
+      filters: widget.appliedFilters.map(({ id, name }) => ({ value: id.toString(), name })),
     };
     delete this.initialValues.appliedFilters;
     delete this.initialValues.content;
@@ -96,7 +97,7 @@ export class EditWidgetModal extends Component {
         isMainControlsLocked: false,
         filter: {},
       },
-      previousFilter: this.initialValues.filterIds,
+      previousFilter: this.initialValues.filters,
     };
   }
 
@@ -112,10 +113,12 @@ export class EditWidgetModal extends Component {
       projectId,
     } = this.props;
 
+    const data = prepareWidgetDataForSubmit(widgetSettings);
+
     this.props.showScreenLockAction();
     fetch(URLS.widget(projectId, widget.id), {
       method: 'put',
-      data: widgetSettings,
+      data,
     })
       .then(() => {
         this.props.hideScreenLockAction();
@@ -145,7 +148,7 @@ export class EditWidgetModal extends Component {
   handleFormAppearanceChange = (mode, filter) =>
     this.setState({
       formAppearance: { mode, filter, isMainControlsLocked: mode !== FORM_APPEARANCE_MODE_LOCKED },
-      previousFilter: !mode ? this.props.widgetSettings.filterIds : this.state.previousFilter,
+      previousFilter: !mode ? this.props.widgetSettings.filters : this.state.previousFilter,
     });
 
   render() {
@@ -181,7 +184,7 @@ export class EditWidgetModal extends Component {
         <div className={cx('edit-widget-modal-content')}>
           <EditWidgetInfoSection
             projectId={projectId}
-            widgetSettings={widgetSettings}
+            widgetSettings={prepareWidgetDataForSubmit(widgetSettings)}
             activeWidget={this.widgetInfo}
           />
           <EditWidgetControlsSectionForm

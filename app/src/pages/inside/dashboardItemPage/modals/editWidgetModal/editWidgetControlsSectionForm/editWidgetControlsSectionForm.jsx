@@ -15,8 +15,8 @@ const cx = classNames.bind(styles);
   form: WIDGET_WIZARD_FORM,
   destroyOnUnmount: false,
   forceUnregisterOnUnmount: true,
-  validate: ({ filterIds }) => ({
-    filterIds: (!filterIds || !filterIds.length) && 'error',
+  validate: ({ filters }) => ({
+    filters: (!filters || !filters.length) && 'error',
   }),
 })
 @connect(null, {
@@ -42,7 +42,7 @@ export class EditWidgetControlsSectionForm extends Component {
 
   onClickCancel = () => {
     this.props.handleFormAppearanceChange(FORM_APPEARANCE_MODE_LOCKED, {});
-    this.props.change('filterIds', this.props.previousFilter);
+    this.props.change('filters', this.props.previousFilter);
   };
 
   onClickSubmit = () => this.props.handleFormAppearanceChange(FORM_APPEARANCE_MODE_LOCKED, {});

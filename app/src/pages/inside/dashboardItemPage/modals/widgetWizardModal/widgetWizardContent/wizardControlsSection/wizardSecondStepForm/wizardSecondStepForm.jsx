@@ -8,8 +8,8 @@ import { WIDGET_WIZARD_FORM } from '../../../../common/constants';
   form: WIDGET_WIZARD_FORM,
   destroyOnUnmount: false,
   forceUnregisterOnUnmount: true,
-  validate: ({ filterIds }) => ({
-    filterIds: (!filterIds || !filterIds.length) && 'error',
+  validate: ({ filters }) => ({
+    filters: (!filters || !filters.length) && 'error',
   }),
 })
 @connect(
