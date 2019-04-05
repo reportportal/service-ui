@@ -6,7 +6,7 @@ import { groupOperationsReducer } from 'controllers/groupOperations';
 import { queueReducers } from 'common/utils/queueReducers';
 import { NAMESPACE, TOGGLE_USER_ROLE_FORM } from './constants';
 
-const toggleUserRoleFormReducer = (state, { type, payload = {} }) => {
+const toggleUserRoleFormReducer = (state = [], { type, payload = {} }) => {
   switch (type) {
     case TOGGLE_USER_ROLE_FORM:
       return state.map((item) => {
