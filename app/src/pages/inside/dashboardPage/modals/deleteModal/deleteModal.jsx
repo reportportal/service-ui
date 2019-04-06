@@ -3,6 +3,11 @@ import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import { DASHBOARD_PAGE_EVENTS } from 'components/main/analytics/events';
 import { ModalLayout, withModal } from 'components/main/modal';
+import Parser from 'html-react-parser';
+import classNames from 'classnames/bind';
+import styles from './dashboardDeleteModal.scss';
+
+const cx = classNames.bind(styles);
 
 @withModal('dashboardDeleteModal')
 @track()
@@ -51,7 +56,7 @@ export class DeleteModal extends Component {
         }}
         warningMessage={warning}
       >
-        <div>{message}</div>
+        <p className={cx('message')}>{Parser(message)}</p>
       </ModalLayout>
     );
   }
