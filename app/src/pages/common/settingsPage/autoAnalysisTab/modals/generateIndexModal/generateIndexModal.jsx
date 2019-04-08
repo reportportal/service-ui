@@ -38,10 +38,6 @@ const messages = defineMessages({
     id: 'GenerateIndexModal.generateSuccessNotification',
     defaultMessage: 'Index generation is in progress',
   },
-  generateErrorNotification: {
-    id: 'GenerateIndexModal.generateErrorNotification',
-    defaultMessage: 'Index generation was canceled',
-  },
 });
 
 @withModal('generateIndexModal')
@@ -78,10 +74,11 @@ export class GenerateIndexModal extends Component {
         });
         this.props.fetchProjectAction(this.props.projectId);
       })
-      .catch(() => {
+      .catch((e) => {
         this.props.showNotification({
-          message: this.props.intl.formatMessage(messages.generateErrorNotification),
+          messageId: 'failureDefault',
           type: NOTIFICATION_TYPES.ERROR,
+          values: { error: e.message },
         });
       });
     closeModal();
