@@ -122,24 +122,22 @@ export class Attachments extends Component {
 
   loadNewItems = (prevActiveItemId, thumbConfig) => {
     if (thumbConfig && this.props.activeItemId > prevActiveItemId) {
-      const currentPage = Math.floor(thumbConfig.currentThumb / this.state.size) + 1;
-      currentPage + 1 >= this.state.page && this.handleNewAttachmentsLoad();
+      const { page, size } = this.state;
+      const currentPage = Math.floor(thumbConfig.currentThumb / size) + 1;
+      if (currentPage + 1 >= page) {
+        const {
+          attachments,
+          pagination: { totalElements, totalPages },
+          loading,
+        } = this.props;
+
+        if ((attachments.length >= totalElements && page >= totalPages) || loading) {
+          return;
+        }
+
+        this.fetchAttachments({ page });
+      }
     }
-  };
-
-  handleNewAttachmentsLoad = () => {
-    const { page } = this.state;
-    const {
-      attachments,
-      pagination: { totalElements, totalPages },
-      loading,
-    } = this.props;
-
-    if ((attachments.length >= totalElements && page >= totalPages) || loading) {
-      return;
-    }
-
-    this.fetchAttachments({ page });
   };
 
   fetchAttachments = ({ page, size }) => {
