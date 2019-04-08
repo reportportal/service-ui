@@ -34,6 +34,14 @@ const messages = defineMessages({
     id: 'ProjectsPage.deleteError',
     defaultMessage: 'An error occurred during deleting the project',
   },
+  updateDefectSubTypeSuccess: {
+    id: 'Project.updateDefectSubTypeSuccess',
+    defaultMessage: 'Completed successfully!',
+  },
+  updateDefectSubTypeError: {
+    id: 'Project.updateDefectSubTypeError',
+    defaultMessage: '{error}',
+  },
 });
 
 @injectIntl

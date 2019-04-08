@@ -12,6 +12,10 @@ import {
   FETCH_PROJECT_PREFERENCES_SUCCESS,
   UPDATE_CONFIGURATION_ATTRIBUTES,
   UPDATE_NOTIFICATIONS_CONFIG_SUCCESS,
+  UPDATE_DEFECT_SUBTYPE,
+  UPDATE_DEFECT_SUBTYPE_SUCCESS,
+  ADD_DEFECT_SUBTYPE,
+  ADD_DEFECT_SUBTYPE_SUCCESS,
 } from './constants';
 import { projectNotificationsConfigurationSelector } from './selectors';
 
@@ -82,3 +86,23 @@ export const fetchConfigurationAttributesAction = (projectId) => (dispatch) => {
     dispatch(updateConfigurationAttributesAction(project));
   });
 };
+
+export const updateDefectSubTypeAction = (subType) => ({
+  type: UPDATE_DEFECT_SUBTYPE,
+  payload: subType,
+});
+
+export const updateDefectSubTypeSuccessAction = (subType) => ({
+  type: UPDATE_DEFECT_SUBTYPE_SUCCESS,
+  payload: subType,
+});
+
+export const addDefectSubTypeAction = (subType) => ({
+  type: ADD_DEFECT_SUBTYPE,
+  payload: subType,
+});
+
+export const addDefectSubTypeSuccessAction = (subType) => ({
+  type: ADD_DEFECT_SUBTYPE_SUCCESS,
+  payload: subType,
+});
