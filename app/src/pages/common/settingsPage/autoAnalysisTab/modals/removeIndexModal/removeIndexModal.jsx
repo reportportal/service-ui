@@ -29,10 +29,6 @@ const messages = defineMessages({
     id: 'RemoveIndexModal.removeSuccessNotification',
     defaultMessage: 'Index was removed successfully',
   },
-  removeErrorNotification: {
-    id: 'RemoveIndexModal.removeErrorNotification',
-    defaultMessage: 'Something went wrong...',
-  },
 });
 
 @withModal('removeIndexModal')
@@ -63,10 +59,11 @@ export class RemoveIndexModal extends Component {
           type: NOTIFICATION_TYPES.SUCCESS,
         });
       })
-      .catch(() => {
+      .catch((e) => {
         this.props.showNotification({
-          message: this.props.intl.formatMessage(messages.removeErrorNotification),
+          messageId: 'failureDefault',
           type: NOTIFICATION_TYPES.ERROR,
+          values: { error: e.message },
         });
       });
     closeModal();
