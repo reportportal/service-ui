@@ -1,0 +1,39 @@
+.launch-start-time {
+  width: 100%;
+  font-family: $FONT-SEMIBOLD;
+}
+.item-wrapper {
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+
+  .color-mark {
+    width: 12px;
+    height: 12px;
+    display: inline-block;
+    top: 1px;
+    margin-right: 4px;
+    border-radius: 100%;
+    position: relative;
+  }
+  .item-name {
+    display: inline-block;
+    position: relative;
+    top: 3px;
+    max-width: 110px;
+    margin-right: 4px;
+    height: 15px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 14px;
+  }
+  .item-cases {
+    display: inline-block;
+    position: relative;
+    height: 13px;
+
+    span {
+      font-family: $FONT-SEMIBOLD;
+    }
+  }
+}

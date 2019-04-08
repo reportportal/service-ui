@@ -40,7 +40,7 @@ export const getListAverage = (data) => {
   return sum / count;
 };
 
-const range = (start = 0, end = 0, step = 1) => {
+export const range = (start = 0, end = 0, step = 1) => {
   const result = [];
   let index = 0;
   for (let tick = start; tick < end; tick += step) {
@@ -52,6 +52,11 @@ const range = (start = 0, end = 0, step = 1) => {
 
 export const getItemNameConfig = (name) => {
   const nameParts = name.split('$');
+
+  if (nameParts.length === 1) {
+    return {};
+  }
+
   return {
     itemType: nameParts[1],
     defectType: nameParts[2],
