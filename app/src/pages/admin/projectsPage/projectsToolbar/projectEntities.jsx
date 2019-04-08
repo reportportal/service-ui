@@ -15,6 +15,7 @@ import {
   CONDITION_BETWEEN,
   CONDITION_GREATER_EQ,
   CONDITION_LESS_EQ,
+  CONDITION_IN,
 } from 'components/filterEntities/constants';
 import { bindDefaultValue } from 'components/filterEntities/utils';
 import {
@@ -98,7 +99,7 @@ export class ProjectEntities extends Component {
         id: TYPE,
         component: EntityDropdown,
         value: this.bindDefaultValue(TYPE, {
-          condition: CONDITION_EQ,
+          condition: CONDITION_IN,
         }),
         title: intl.formatMessage(messages.type),
         active: true,
@@ -118,6 +119,8 @@ export class ProjectEntities extends Component {
               value: PROJECT_TYPE_UPSA,
             },
           ],
+          multiple: true,
+          selectAll: true,
         },
       },
       {
