@@ -4,6 +4,7 @@ import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
 import { columnPropTypes } from 'components/main/grid/propTypes';
 import { ALIGN_LEFT } from 'components/main/grid';
+import { SORTING_ASC } from 'controllers/sorting';
 import ArrowIcon from './img/arrow-down-inline.svg';
 import FilterIcon from './img/icon-filter-inline.svg';
 import styles from './headerCell.scss';
@@ -25,9 +26,10 @@ export const HeaderCell = track()(
     sortingEventInfo,
     tracking,
   }) => {
+    const displayedDirection = sortingActive ? sortingDirection : SORTING_ASC;
     const computedClassName = {
       [`align-${align}`]: align,
-      [`sorting-${sortingDirection.toLowerCase()}`]: sortingDirection,
+      [`sorting-${displayedDirection.toLowerCase()}`]: displayedDirection,
       sortable,
       'sorting-active': sortingActive,
       'with-filter': withFilter,

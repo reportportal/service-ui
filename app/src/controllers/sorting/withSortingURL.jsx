@@ -39,6 +39,8 @@ export const withSortingURL = ({
       const fields = oldFields.length > 0 ? oldFields : defaultFields;
       if (fields.includes(field)) {
         direction = direction === SORTING_ASC ? SORTING_DESC : SORTING_ASC;
+      } else {
+        direction = oldDirection ? SORTING_ASC : defaultDirection;
       }
       this.props.updateSorting(formatSortingString([field, ...staticFields], direction));
     };
