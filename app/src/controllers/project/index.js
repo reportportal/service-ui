@@ -12,6 +12,10 @@ export {
   fetchConfigurationAttributesAction,
   updateConfigurationAttributesAction,
   updateProjectNotificationsConfig,
+  updateDefectSubTypeAction,
+  updateDefectSubTypeSuccessAction,
+  addDefectSubTypeAction,
+  addDefectSubTypeSuccessAction,
 } from './actionCreators';
 export { projectReducer } from './reducer';
 export {
@@ -33,3 +37,4 @@ export {
   createTypedIntegrationsSelector,
 } from './selectors';
 export { normalizeAttributesWithPrefix } from './utils';
+export { projectSagas } from './sagas';

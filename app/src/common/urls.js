@@ -98,6 +98,7 @@ export const URLS = {
   sessionToken: () => `${urlBase}uat/sso/me`,
 
   project: (activeProject) => `${urlBase}project/${activeProject}`,
+  projectDefectSubType: (activeProject) => `${urlBase}${activeProject}/settings/sub-type`,
   projects: () => `${urlBase}project/list`,
   projectPreferences: (activeProject, userId, filterId = '') =>
     `${urlBase}project/${activeProject}/preference/${userId}/${filterId}`,

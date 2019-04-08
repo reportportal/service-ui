@@ -13,6 +13,7 @@ import { historySagas } from 'controllers/itemsHistory';
 import { logSagas } from 'controllers/log';
 import { administrateSagas } from 'controllers/administrate';
 import { userSagas } from 'controllers/user';
+import { projectSagas } from 'controllers/project';
 
 export function* rootSagas() {
   yield all([
@@ -30,5 +31,6 @@ export function* rootSagas() {
     historySagas(),
     administrateSagas(),
     userSagas(),
+    projectSagas(),
   ]);
 }

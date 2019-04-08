@@ -7,6 +7,8 @@ import {
   UPDATE_CONFIGURATION_ATTRIBUTES,
   FETCH_PROJECT_PREFERENCES_SUCCESS,
   UPDATE_NOTIFICATIONS_CONFIG_SUCCESS,
+  UPDATE_DEFECT_SUBTYPE_SUCCESS,
+  ADD_DEFECT_SUBTYPE_SUCCESS,
 } from './constants';
 
 describe('project reducer', () => {
@@ -65,6 +67,69 @@ describe('project reducer', () => {
         configuration: {
           ...PROJECT_INFO_INITIAL_STATE.configuration,
           notificationsConfiguration: payload,
+        },
+      });
+    });
+
+    test('should handle UPDATE_DEFECT_SUBTYPE_SUCCESS', () => {
+      const payload = {
+        id: 1,
+        typeRef: 'PRODUCT_BUG',
+        longName: 'Product Bug',
+        shortName: 'PB1',
+        color: '#ffffff',
+      };
+      const state = { configuration: { subTypes: { PRODUCT_BUG: [{ id: 1 }, { id: 2 }] } } };
+      const newState = projectInfoReducer(state, {
+        type: UPDATE_DEFECT_SUBTYPE_SUCCESS,
+        payload,
+      });
+      expect(newState).toEqual({
+        configuration: {
+          subTypes: {
+            PRODUCT_BUG: [
+              {
+                id: 1,
+                typeRef: 'PRODUCT_BUG',
+                longName: 'Product Bug',
+                shortName: 'PB1',
+                color: '#ffffff',
+              },
+              { id: 2 },
+            ],
+          },
+        },
+      });
+    });
+
+    test('should handle ADD_DEFECT_SUBTYPE_SUCCESS', () => {
+      const payload = {
+        id: 3,
+        typeRef: 'PRODUCT_BUG',
+        longName: 'Product Bug',
+        shortName: 'PB1',
+        color: '#ffffff',
+      };
+      const state = { configuration: { subTypes: { PRODUCT_BUG: [{ id: 1 }, { id: 2 }] } } };
+      const newState = projectInfoReducer(state, {
+        type: ADD_DEFECT_SUBTYPE_SUCCESS,
+        payload,
+      });
+      expect(newState).toEqual({
+        configuration: {
+          subTypes: {
+            PRODUCT_BUG: [
+              { id: 1 },
+              { id: 2 },
+              {
+                id: 3,
+                typeRef: 'PRODUCT_BUG',
+                longName: 'Product Bug',
+                shortName: 'PB1',
+                color: '#ffffff',
+              },
+            ],
+          },
         },
       });
     });

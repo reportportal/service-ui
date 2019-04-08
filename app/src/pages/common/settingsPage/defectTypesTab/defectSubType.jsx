@@ -1,19 +1,16 @@
-import React, { Component, Fragment } from 'react';
+import React, { PureComponent, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
 import { injectIntl, intlShape } from 'react-intl';
+import C3Chart from 'react-c3js';
 
-import { C3Chart } from 'components/widgets/charts/common/c3chart';
-import { Input } from 'components/inputs/input';
-import { ColorPicker } from 'components/main/colorPicker';
 import CircleCrossIcon from 'common/img/circle-cross-icon-inline.svg';
-import CircleCheckIcon from 'common/img/circle-check-inline.svg';
 import PencilIcon from 'common/img/pencil-icon-inline.svg';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 
 import { defectTypeShape } from './defectTypeShape';
-import { messages } from './defectTypesMessages';
+import { DefectSubTypeForm } from './defectSubTypeForm';
 
 import styles from './defectTypesTab.scss';
 
@@ -28,11 +25,12 @@ ColorMarker.propTypes = {
 };
 
 @injectIntl
-export class DefectSubType extends Component {
+export class DefectSubType extends PureComponent {
   static propTypes = {
     data: defectTypeShape,
     parentType: defectTypeShape.isRequired,
     group: PropTypes.arrayOf(defectTypeShape),
+    closeNewSubTypeForm: PropTypes.func.isRequired,
     intl: intlShape.isRequired,
   };
 
@@ -91,11 +89,17 @@ export class DefectSubType extends Component {
     this.setState({ isEditMode: true });
   };
 
+  stopEditing = () => {
+    this.setState({ isEditMode: false });
+  };
+
   render() {
     const {
+      data,
       data: { color, longName, shortName },
       parentType,
       group,
+      closeNewSubTypeForm,
       intl,
     } = this.props;
 
@@ -104,39 +108,12 @@ export class DefectSubType extends Component {
     return (
       <div className={cx('defect-type')}>
         {isEditMode ? (
-          <Fragment>
-            <div className={cx('name-cell')}>
-              <Input
-                placeholder={intl.formatMessage(messages.defectNameCol)}
-                value={longName || ''}
-              />
-            </div>
-            <div className={cx('abbr-cell')}>
-              <Input
-                placeholder={intl.formatMessage(messages.abbreviationCol)}
-                value={shortName || ''}
-              />
-            </div>
-            <div className={cx('color-cell')}>
-              <ColorPicker color={color || parentType.color} />
-            </div>
-            <div className={cx('buttons-cell')}>
-              <button
-                className={cx('action-button', 'confirm-button')}
-                aria-label={intl.formatMessage(COMMON_LOCALE_KEYS.CONFIRM)}
-                title={intl.formatMessage(COMMON_LOCALE_KEYS.CONFIRM)}
-              >
-                {Parser(CircleCheckIcon)}
-              </button>
-              <button
-                className={cx('action-button', 'delete-button')}
-                aria-label={intl.formatMessage(COMMON_LOCALE_KEYS.DELETE)}
-                title={intl.formatMessage(COMMON_LOCALE_KEYS.DELETE)}
-              >
-                {Parser(CircleCrossIcon)}
-              </button>
-            </div>
-          </Fragment>
+          <DefectSubTypeForm
+            data={data}
+            parentType={parentType}
+            closeNewSubTypeForm={closeNewSubTypeForm}
+            stopEditing={this.stopEditing}
+          />
         ) : (
           <Fragment>
             <div className={cx('name-cell')}>
@@ -175,7 +152,7 @@ export class DefectSubType extends Component {
 
         {group && (
           <div className={cx('diagram-cell')}>
-            <C3Chart className={cx('defect-type-chart')} config={this.getChartConfig()} />
+            <C3Chart className={cx('defect-type-chart')} {...this.getChartConfig()} />
           </div>
         )}
       </div>
