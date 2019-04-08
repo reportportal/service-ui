@@ -1,11 +1,11 @@
 import PropTypes from 'prop-types';
-import { NavLink } from 'redux-first-router-link';
+import Link from 'redux-first-router-link';
 import React from 'react';
 import { PROJECT_DETAILS_PAGE } from 'controllers/pages';
 import { Icon } from 'components/main/icon/icon';
 
 export const ProjectStatisticButton = ({ projectName, onClick }) => (
-  <NavLink
+  <Link
     to={{
       type: PROJECT_DETAILS_PAGE,
       payload: { projectId: projectName },
@@ -13,7 +13,7 @@ export const ProjectStatisticButton = ({ projectName, onClick }) => (
     onClick={onClick}
   >
     <Icon type={'icon-statistics'} />
-  </NavLink>
+  </Link>
 );
 
 ProjectStatisticButton.propTypes = {
