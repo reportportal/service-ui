@@ -19,6 +19,8 @@ export class Legend extends Component {
     intl: intlShape.isRequired,
     defectTypes: PropTypes.object.isRequired,
     items: PropTypes.array,
+    colors: PropTypes.object,
+    messages: PropTypes.object,
     noTotal: PropTypes.bool,
     disabled: PropTypes.bool,
     onClick: PropTypes.func,
@@ -30,6 +32,8 @@ export class Legend extends Component {
 
   static defaultProps = {
     items: [],
+    colors: {},
+    messages: {},
     noTotal: false,
     disabled: false,
     onClick: () => {},
@@ -58,10 +62,13 @@ export class Legend extends Component {
       noTotal,
       onMouseOut,
       intl: { formatMessage },
+      colors,
+      messages,
     } = this.props;
 
     return items.map((name) => {
       const nameConfig = getItemNameConfig(name);
+      const isItemConfig = Object.keys(nameConfig).length > 0;
 
       return (
         <span
@@ -78,11 +85,15 @@ export class Legend extends Component {
           <span
             className={cx('color-mark')}
             style={{
-              backgroundColor: getItemColor(nameConfig, this.props.defectTypes),
+              backgroundColor: isItemConfig
+                ? getItemColor(nameConfig, this.props.defectTypes)
+                : colors[name],
             }}
           />
           <span className={cx('item-name')}>
-            {getItemName(nameConfig, this.props.defectTypes, formatMessage, noTotal)}
+            {isItemConfig
+              ? getItemName(nameConfig, this.props.defectTypes, formatMessage, noTotal)
+              : formatMessage(messages[name])}
           </span>
         </span>
       );

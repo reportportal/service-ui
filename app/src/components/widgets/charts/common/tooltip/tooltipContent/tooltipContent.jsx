@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { dateFormat } from 'common/utils/timeDateUtils';
+import { formatValue } from 'common/utils';
 import styles from './tooltipContent.scss';
 
 const cx = classNames.bind(styles);
@@ -24,7 +25,7 @@ export const TooltipContent = ({
       <span className={cx('color-mark')} style={{ backgroundColor: color }} />
       <span className={cx('item-name')}>{`${itemName}:`}</span>
       <span className={cx('item-cases')}>
-        <span>{itemCases}</span>
+        <span>{formatValue(itemCases)}%</span>
       </span>
     </div>
   </React.Fragment>

@@ -13,4 +13,5 @@ export {
   validItemsFilter,
   validStatuses,
   DEFECTS,
+  range,
 } from './utils';

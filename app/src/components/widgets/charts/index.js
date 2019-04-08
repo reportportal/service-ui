@@ -8,6 +8,7 @@ import { PassingRatePerLaunch } from './passingRatePerLaunch';
 import { LaunchExecutionAndIssueStatistics } from './launchExecutionAndIssueStatistics';
 import { CumulativeTrendChart } from './cumulativeTrendChart';
 import { OverallStatisticsChart } from './overallStatisticsChart';
+import { InvestigatedTrendChart } from './investigatedTrendChart';
 
 export {
   TestCasesGrowthTrendChart,
@@ -20,4 +21,5 @@ export {
   LaunchExecutionAndIssueStatistics,
   CumulativeTrendChart,
   OverallStatisticsChart,
+  InvestigatedTrendChart,
 };
