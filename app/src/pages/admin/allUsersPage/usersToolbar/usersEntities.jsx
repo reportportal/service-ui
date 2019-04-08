@@ -5,14 +5,13 @@ import moment from 'moment';
 import {
   EntityContains,
   EntityInputConditional,
-  EntityRadioGroup,
   EntityDropdown,
   EntityItemStartTime,
   EntitySearch,
 } from 'components/filterEntities';
 import {
   CONDITION_CNT,
-  CONDITION_EQ,
+  CONDITION_IN,
   CONDITION_BETWEEN,
   CONDITION_HAS,
 } from 'components/filterEntities/constants';
@@ -105,32 +104,33 @@ export class UsersEntities extends Component {
       },
       {
         id: ROLE,
-        component: EntityRadioGroup,
+        component: EntityDropdown,
         value: this.bindDefaultValue(ROLE, {
-          condition: CONDITION_EQ,
+          condition: CONDITION_IN,
         }),
         title: intl.formatMessage(messages.role),
         active: true,
         removable: false,
         customProps: {
-          inline: true,
           options: [
             {
-              ownValue: ADMINISTRATOR,
-              label: messages.roleAdmin,
+              value: ADMINISTRATOR,
+              label: intl.formatMessage(messages.roleAdmin),
             },
             {
-              ownValue: USER,
-              label: messages.roleNonAdmin,
+              value: USER,
+              label: intl.formatMessage(messages.roleNonAdmin),
             },
           ],
+          multiple: true,
+          selectAll: true,
         },
       },
       {
         id: TYPE,
         component: EntityDropdown,
         value: this.bindDefaultValue(TYPE, {
-          condition: CONDITION_EQ,
+          condition: CONDITION_IN,
         }),
         title: intl.formatMessage(messages.type),
         active: true,
@@ -154,6 +154,8 @@ export class UsersEntities extends Component {
               value: LDAP,
             },
           ],
+          multiple: true,
+          selectAll: true,
         },
       },
       {
