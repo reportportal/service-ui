@@ -5,6 +5,7 @@ import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { NavLink } from 'redux-first-router-link';
 import { connect } from 'react-redux';
+import { SCREEN_XS_MAX } from 'common/constants/screenSizeVariables';
 import { redirectToProjectAction } from 'controllers/administrate/projects';
 import { showModalAction } from 'controllers/modal';
 import { PROJECT_PAGE } from 'controllers/pages';
@@ -53,7 +54,11 @@ export class ProjectPanel extends Component {
   };
 
   onProjectClick = (event) => {
-    const { tracking, nameEventInfo, intl } = this.props;
+    const { tracking, nameEventInfo, intl, isAssigned } = this.props;
+    if (!isAssigned && window.matchMedia(SCREEN_XS_MAX).matches) {
+      event.preventDefault();
+      return;
+    }
     const confirmAssignModalOpts = {
       id: 'confirmationModal',
       data: {
@@ -120,6 +125,7 @@ export class ProjectPanel extends Component {
     const {
       project: { projectName, entryType, lastRun, launchesQuantity, usersQuantity },
       intl,
+      isAssigned,
     } = this.props;
 
     return (
@@ -133,7 +139,9 @@ export class ProjectPanel extends Component {
             </span>
           </div>
           <NavLink
-            className={cx('name')}
+            className={cx('name', {
+              'mobile-disabled': !isAssigned,
+            })}
             to={{
               type: PROJECT_PAGE,
               payload: { projectId: projectName },
