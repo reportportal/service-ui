@@ -2,7 +2,6 @@ import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { injectIntl, intlShape, defineMessages } from 'react-intl';
 import { validate } from 'common/utils';
-import moment from 'moment';
 import {
   EntityContains,
   EntityInputConditional,
@@ -127,12 +126,7 @@ export class ProjectEntities extends Component {
         id: LAST_RUN,
         component: EntityItemStartTime,
         value: this.bindDefaultValue(LAST_RUN, {
-          value: `${moment()
-            .startOf('day')
-            .subtract(1, 'months')
-            .valueOf()},${moment()
-            .endOf('day')
-            .valueOf() + 1}`,
+          value: ',',
           condition: CONDITION_BETWEEN,
         }),
         title: intl.formatMessage(messages.lastRun),

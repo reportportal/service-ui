@@ -630,6 +630,7 @@
   "InputTimeDateRange.from": "Ад",
   "InputTimeDateRange.time": "Час",
   "InputTimeDateRange.to": "Да",
+  "InputTimeDateRange.anyTime": "Любое",
   "InputUserSearch.inviteNewUser": "Запрасіць {userEmail}",
   "InputUserSearch.inviteNewUserInfo": "Адправіць запрашэнне на гэты адрас",
   "InputUserSearch.noResults": "Нічога не знойдзена",

@@ -1,7 +1,6 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { injectIntl, intlShape, defineMessages } from 'react-intl';
-import moment from 'moment';
 import {
   EntityContains,
   EntityInputConditional,
@@ -188,11 +187,7 @@ export class UsersEntities extends Component {
         id: LAST_LOGIN,
         component: EntityItemStartTime,
         value: this.bindDefaultValue(LAST_LOGIN, {
-          value: `${moment()
-            .startOf('day')
-            .valueOf()},${moment()
-            .endOf('day')
-            .valueOf() + 1}`,
+          value: ',',
           condition: CONDITION_BETWEEN,
         }),
         title: intl.formatMessage(messages.lastLogin),
