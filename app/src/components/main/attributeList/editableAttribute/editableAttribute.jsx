@@ -12,6 +12,8 @@ export class EditableAttribute extends Component {
     onEdit: PropTypes.func,
     onRemove: PropTypes.func,
     onChange: PropTypes.func,
+    keyURLCreator: PropTypes.func.isRequired,
+    valueURLCreator: PropTypes.func.isRequired,
   };
 
   static defaultProps = {

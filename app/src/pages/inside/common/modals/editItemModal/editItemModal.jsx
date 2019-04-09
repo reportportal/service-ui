@@ -98,6 +98,24 @@ export class EditItemModal extends Component {
     };
   };
 
+  getAttributeKeyURLCreator = () => {
+    const {
+      data: { type },
+    } = this.props;
+    return type === LAUNCH_ITEM_TYPES.launch
+      ? URLS.launchAttributeKeysSearch
+      : this.testItemAttributeKeyURLCreator;
+  };
+
+  getAttributeValueURLCreator = () => {
+    const {
+      data: { type },
+    } = this.props;
+    return type === LAUNCH_ITEM_TYPES.launch
+      ? URLS.launchAttributeValuesSearch
+      : this.testItemAttributeValueURLCreator;
+  };
+
   updateItemAndCloseModal = (closeModal) => (formData) => {
     this.props.dirty && this.updateItem(formData);
     closeModal();
@@ -120,6 +138,20 @@ export class EditItemModal extends Component {
       });
       fetchFunc();
     });
+  };
+
+  testItemAttributeKeyURLCreator = (projectId) => {
+    const {
+      data: { item },
+    } = this.props;
+    return URLS.testItemAttributeKeysSearch(projectId, item.launchId || item.id);
+  };
+
+  testItemAttributeValueURLCreator = (projectId, key) => {
+    const {
+      data: { item },
+    } = this.props;
+    return URLS.testItemAttributeValuesSearch(projectId, item.launchId || item.id, key);
   };
 
   render() {
@@ -161,7 +193,10 @@ export class EditItemModal extends Component {
           </ModalField>
           <ModalField label={formatMessage(messages.attributesLabel)}>
             <FieldProvider name="attributes">
-              <AttributeListField />
+              <AttributeListField
+                keyURLCreator={this.getAttributeKeyURLCreator()}
+                valueURLCreator={this.getAttributeValueURLCreator()}
+              />
             </FieldProvider>
           </ModalField>
           <ModalField>

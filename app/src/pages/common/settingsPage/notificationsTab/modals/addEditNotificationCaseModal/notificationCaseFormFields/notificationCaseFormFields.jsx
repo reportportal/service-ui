@@ -188,7 +188,10 @@ export class NotificationCaseFormFields extends Component {
           name={ATTRIBUTES_FIELD_KEY}
           onChange={() => tracking.trackEvent(SETTINGS_PAGE_EVENTS.TAGS_INPUT_NOTIFICATIONS)}
         >
-          <AttributeListField />
+          <AttributeListField
+            keyURLCreator={URLS.launchAttributeKeysSearch}
+            valueURLCreator={URLS.launchAttributeValuesSearch}
+          />
         </FormField>
       </Fragment>
     );
