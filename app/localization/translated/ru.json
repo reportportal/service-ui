@@ -632,6 +632,7 @@
   "InputTimeDateRange.from": "От",
   "InputTimeDateRange.time": "Время",
   "InputTimeDateRange.to": "До",
+  "InputTimeDateRange.anyTime": "Любое",
   "InputUserSearch.inviteNewUser": "Пригласить {userEmail}",
   "InputUserSearch.inviteNewUserInfo": "Отправить приглашение на этот адрес",
   "InputUserSearch.noResults": "Ничего не найдено",
