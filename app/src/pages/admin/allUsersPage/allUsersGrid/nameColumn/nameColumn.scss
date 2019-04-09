@@ -45,9 +45,11 @@
 }
 .you-label {
   background-color: $COLOR--dark-pastel-green;
+  min-width: 20px;
 }
 .admin-label {
   background-color: $COLOR--orange-red;
+  min-width: 35px;
 }
 .make-admin-label {
   background-color: $COLOR--gray-60;
