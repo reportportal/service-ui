@@ -5,7 +5,6 @@ import classNames from 'classnames/bind';
 import { reduxForm, formValues } from 'redux-form';
 import Parser from 'html-react-parser';
 import { FieldProvider } from 'components/fields/fieldProvider';
-import { URLS } from 'common/urls';
 import { activeProjectSelector } from 'controllers/user';
 import { validate } from 'common/utils';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
@@ -17,7 +16,7 @@ import styles from './attributeEditor.scss';
 const cx = classNames.bind(styles);
 
 const ValueField = formValues({ attributeKey: 'key' })(
-  ({ attributeKey, parse, format, attributeComparator, projectId, ...rest }) => (
+  ({ attributeKey, parse, format, attributeComparator, projectId, valueURLCreator, ...rest }) => (
     <FieldProvider name="value" format={format} parse={parse}>
       <FieldErrorHint staticHint>
         <AttributeInput
@@ -25,7 +24,7 @@ const ValueField = formValues({ attributeKey: 'key' })(
           async
           minLength={1}
           attributeComparator={attributeComparator}
-          uri={URLS.launchAttributeValuesSearch(projectId, attributeKey)}
+          uri={valueURLCreator(projectId, attributeKey)}
           creatable
           showNewLabel
           {...rest}
@@ -60,6 +59,8 @@ export class AttributeEditor extends Component {
     onCancel: PropTypes.func,
     handleSubmit: PropTypes.func,
     invalid: PropTypes.bool,
+    keyURLCreator: PropTypes.func.isRequired,
+    valueURLCreator: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
@@ -80,7 +81,15 @@ export class AttributeEditor extends Component {
   parseValue = (value) => (value ? value.value : undefined);
 
   render() {
-    const { projectId, attributes, onConfirm, onCancel, handleSubmit } = this.props;
+    const {
+      projectId,
+      attributes,
+      onConfirm,
+      onCancel,
+      handleSubmit,
+      keyURLCreator,
+      valueURLCreator,
+    } = this.props;
     return (
       <div className={cx('attribute-editor')}>
         <div className={cx('control')}>
@@ -92,7 +101,7 @@ export class AttributeEditor extends Component {
                 async
                 minLength={1}
                 attributeComparator={this.byKeyComparator}
-                uri={URLS.launchAttributeKeysSearch(projectId)}
+                uri={keyURLCreator(projectId)}
                 creatable
                 isClearable
                 showNewLabel
@@ -107,6 +116,7 @@ export class AttributeEditor extends Component {
             projectId={projectId}
             attributeComparator={this.byValueComparator}
             attributes={attributes}
+            valueURLCreator={valueURLCreator}
           />
         </div>
         <div className={cx('control')}>

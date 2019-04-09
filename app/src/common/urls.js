@@ -69,7 +69,6 @@ export const URLS = {
     `${urlBase}${activeProject}/launch/attribute/values?${
       key ? `filter.eq.attributeKey=${key}&` : ''
     }filter.cnt.attributeValue=`,
-  launchTagsSearch: (activeProject) => `${urlBase}${activeProject}/launch/tags?filter.cnt.tags=`,
   launchNameSearch: (activeProject) => `${urlBase}${activeProject}/launch/names?filter.cnt.name=`,
   launchOwnersSearch: (activeProject) =>
     `${urlBase}${activeProject}/launch/owners?filter.cnt.user=`,
@@ -146,6 +145,12 @@ export const URLS = {
       history_depth: historyDepth,
     })}`,
   testItemsAddIssues: (activeProject) => `${urlBase}${activeProject}/item/issue/add`,
+  testItemAttributeKeysSearch: (activeProject, launch = '') =>
+    `${urlBase}${activeProject}/item/attribute/keys?launch=${launch}&filter.cnt.attributeKey=`,
+  testItemAttributeValuesSearch: (activeProject, launch = '', key = '') =>
+    `${urlBase}${activeProject}/item/attribute/values?launch=${launch}${
+      key ? `&filter.eq.attributeKey=${key}` : ''
+    }&filter.cnt.attributeValue=`,
 
   logItem: (activeProject, itemId, level) =>
     `${urlBase}${activeProject}/log${getQueryParams({

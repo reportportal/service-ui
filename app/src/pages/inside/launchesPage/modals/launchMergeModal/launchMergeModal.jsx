@@ -300,7 +300,10 @@ export class LaunchMergeModal extends Component {
               labelWidth={FIELD_LABEL_WIDTH}
             >
               <FieldProvider name="attributes">
-                <AttributeListField />
+                <AttributeListField
+                  keyURLCreator={URLS.launchAttributeKeysSearch}
+                  valueURLCreator={URLS.launchAttributeValuesSearch}
+                />
               </FieldProvider>
             </ModalField>
 

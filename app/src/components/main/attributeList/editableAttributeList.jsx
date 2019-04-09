@@ -9,6 +9,8 @@ export class EditableAttributeList extends Component {
     attributes: PropTypes.arrayOf(PropTypes.object),
     onChange: PropTypes.func,
     disabled: PropTypes.bool,
+    keyURLCreator: PropTypes.func.isRequired,
+    valueURLCreator: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
@@ -47,6 +49,8 @@ export class EditableAttributeList extends Component {
         onEdit={this.changeActiveAttribute}
         onAddNew={this.handleAddNew}
         disabled={this.props.disabled}
+        keyURLCreator={this.props.keyURLCreator}
+        valueURLCreator={this.props.valueURLCreator}
       />
     );
   }

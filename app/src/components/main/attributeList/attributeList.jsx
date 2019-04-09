@@ -32,6 +32,8 @@ export const AttributeList = ({
   onEdit,
   onAddNew,
   disabled,
+  keyURLCreator,
+  valueURLCreator,
 }) => (
   <Fragment>
     {attributes
@@ -46,6 +48,8 @@ export const AttributeList = ({
           onRemove={createRemoveHandler(attributes, i, onChange)}
           onEdit={onEdit}
           disabled={disabled}
+          keyURLCreator={keyURLCreator}
+          valueURLCreator={valueURLCreator}
         />
       ))}
     {!editedAttribute &&
@@ -63,6 +67,8 @@ AttributeList.propTypes = {
   onChange: PropTypes.func,
   onEdit: PropTypes.func,
   onAddNew: PropTypes.func,
+  keyURLCreator: PropTypes.func.isRequired,
+  valueURLCreator: PropTypes.func.isRequired,
 };
 AttributeList.defaultProps = {
   attributes: [],
