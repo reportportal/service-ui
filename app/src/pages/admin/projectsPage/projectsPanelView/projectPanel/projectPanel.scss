@@ -42,18 +42,6 @@
   font-family: $FONT-REGULAR;
   font-size: 15px;
   line-height: 1.5;
-  text-decoration: none;
-  color: $COLOR--topaz;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  cursor: pointer;
-  &.mobile-disabled {
-    @media (max-width: $SCREEN_XS_MAX) {
-      cursor: default;
-      color: $COLOR--black-2;
-    }
-  }
 }
 
 .gray-text {

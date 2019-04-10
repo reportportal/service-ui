@@ -3,18 +3,12 @@ import track from 'react-tracking';
 import { injectIntl, intlShape } from 'react-intl';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
-import { NavLink } from 'redux-first-router-link';
-import { connect } from 'react-redux';
-import { SCREEN_XS_MAX } from 'common/constants/screenSizeVariables';
-import { redirectToProjectAction } from 'controllers/administrate/projects';
-import { showModalAction } from 'controllers/modal';
-import { PROJECT_PAGE } from 'controllers/pages';
 import { Icon } from 'components/main/icon/icon';
-import { assignedProjectsSelector } from 'controllers/user';
 import { ProjectMenu } from '../../projectMenu';
 import { StatisticsItem } from './statisticsItem';
 import { ProjectTooltipIcon } from './projectTooltipIcon';
 import { ProjectStatisticButton } from '../../projectStatisticButton';
+import { ProjectName } from '../../projectName';
 import { UPSA_PROJECT, PERSONAL_PROJECT, INTERNAL_PROJECT } from './constants';
 import { messages } from './../../messages';
 import styles from './projectPanel.scss';
@@ -22,24 +16,11 @@ import styles from './projectPanel.scss';
 const cx = classNames.bind(styles);
 
 @injectIntl
-@connect(
-  (state, ownProps) => ({
-    isAssigned: !!assignedProjectsSelector(state)[ownProps.project.projectName],
-  }),
-  {
-    redirectToProject: redirectToProjectAction,
-    showModal: showModalAction,
-  },
-)
 @track()
 export class ProjectPanel extends Component {
   static propTypes = {
     project: PropTypes.object.isRequired,
     intl: intlShape.isRequired,
-    redirectToProject: PropTypes.func.isRequired,
-    showModal: PropTypes.func.isRequired,
-    isAssigned: PropTypes.bool,
-    nameEventInfo: PropTypes.object,
     statisticEventInfo: PropTypes.object,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
@@ -48,33 +29,7 @@ export class ProjectPanel extends Component {
   };
 
   static defaultProps = {
-    nameEventInfo: {},
     statisticEventInfo: {},
-    isAssigned: false,
-  };
-
-  onProjectClick = (event) => {
-    const { tracking, nameEventInfo, intl, isAssigned } = this.props;
-    if (!isAssigned && window.matchMedia(SCREEN_XS_MAX).matches) {
-      event.preventDefault();
-      return;
-    }
-    const confirmAssignModalOpts = {
-      id: 'confirmationModal',
-      data: {
-        message: intl.formatMessage(messages.assignModalConfirmationText),
-        onConfirm: () => {},
-        title: intl.formatMessage(messages.assignModalTitle),
-        confirmText: intl.formatMessage(messages.assignModalButton),
-        cancelText: intl.formatMessage(messages.modalCancelButtonText),
-      },
-    };
-    this.props.redirectToProject({
-      project: this.props.project,
-      confirmModalOptions: confirmAssignModalOpts,
-    });
-    tracking.trackEvent(nameEventInfo);
-    event.preventDefault();
   };
 
   getProjectIcon() {
@@ -125,7 +80,6 @@ export class ProjectPanel extends Component {
     const {
       project: { projectName, entryType, lastRun, launchesQuantity, usersQuantity },
       intl,
-      isAssigned,
     } = this.props;
 
     return (
@@ -138,18 +92,9 @@ export class ProjectPanel extends Component {
               <ProjectMenu project={this.props.project} />
             </span>
           </div>
-          <NavLink
-            className={cx('name', {
-              'mobile-disabled': !isAssigned,
-            })}
-            to={{
-              type: PROJECT_PAGE,
-              payload: { projectId: projectName },
-            }}
-            onClick={this.onProjectClick}
-          >
-            {projectName}
-          </NavLink>
+          <div className={cx('name')}>
+            <ProjectName project={this.props.project} />
+          </div>
           {lastRun && (
             <div className={cx('gray-text')}>
               {intl.formatMessage(messages.lastLaunch, {

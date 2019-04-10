@@ -24,6 +24,12 @@
   >:last-child {
     padding-top: 22px;
   }
+  >:nth-child(7) {
+    width: 12%;
+    white-space: pre-wrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
   @media (max-width: $SCREEN_SM_MAX) {
     display: table-row;
     >:nth-child(3),
