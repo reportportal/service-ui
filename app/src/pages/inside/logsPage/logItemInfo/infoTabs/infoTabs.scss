@@ -1,5 +1,6 @@
 .tabs-container {
   .tabs {
+    position: relative;
     display: flex;
     background-color: $COLOR--white;
     border-top: 1px solid $COLOR--gray-91;
@@ -107,4 +108,13 @@
 .panel-content {
   display: flex;
   align-items: center;
+}
+
+.third-party-integration-control {
+  position: absolute;
+  right: 0;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    display: none;
+  }
 }

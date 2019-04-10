@@ -1,0 +1,47 @@
+.sauce-labs-integration-button {
+  display: flex;
+  align-items: center;
+  height: 40px;
+  box-sizing: border-box;
+  padding: 0 10px 0 0;
+  color: $COLOR--gray-47;
+  background-color: transparent;
+  transition: color 0.2s;
+  cursor: pointer;
+  border: 0;
+  outline: 0;
+
+  &::before {
+    content: '';
+    width: 5px;
+    height: 41px;
+    box-sizing: border-box;
+    border-right: 1px solid $COLOR--gray-91;
+    border-left: 1px solid $COLOR--gray-91;
+    border-bottom: 1px solid $COLOR--white-two;
+    background-color: $COLOR--white-two;
+    margin-right: 10px;
+  }
+
+  &:hover,
+  &:focus {
+    color: $COLOR--charcoal-grey;
+  }
+
+  &.active,
+  &.active:hover {
+    color: $COLOR--topaz;
+  }
+
+  &--icon {
+    width: 21px;
+    height: 21px;
+    margin-right: 5px;
+  }
+
+  &--label {
+    font-size: 13px;
+    text-transform: uppercase;
+    font-family: $FONT-SEMIBOLD;
+  }
+}

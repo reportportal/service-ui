@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { Component, Fragment } from 'react';
 import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -27,6 +27,7 @@ import { HistoryLine } from './historyLine';
 import { LogItemInfo } from './logItemInfo';
 import { LogsGrid } from './logsGrid/logsGrid';
 import { LogsGridToolbar } from './logsGridToolbar';
+import { SauceLabsSection } from './sauceLabsSection';
 
 @connect(
   (state) => ({
@@ -116,6 +117,7 @@ export class LogsPage extends Component {
   state = {
     highlightedRowId: null,
     isGridRowHighlighted: false,
+    isThirdPartyIntegrationView: false,
   };
 
   onHighlightRow = (highlightedRowId) => {
@@ -130,6 +132,11 @@ export class LogsPage extends Component {
       isGridRowHighlighted: true,
     });
   };
+
+  toggleThirdPartyIntegrationView = () =>
+    this.setState({
+      isThirdPartyIntegrationView: !this.state.isThirdPartyIntegrationView,
+    });
 
   handleRefresh = () => {
     this.props.tracking.trackEvent(LOG_PAGE_EVENTS.REFRESH_BTN);
@@ -173,45 +180,53 @@ export class LogsPage extends Component {
             onChangeLogLevel={onChangeLogLevel}
             onChangePage={onChangePage}
             onHighlightRow={this.onHighlightRow}
+            onToggleThirdPartyIntegrationView={this.toggleThirdPartyIntegrationView}
+            isThirdPartyIntegrationView={this.state.isThirdPartyIntegrationView}
             fetchFunc={refresh}
             loading={loading}
           />
-          <LogsGridToolbar
-            activePage={activePage}
-            pageCount={pageCount}
-            onChangePage={onChangePage}
-            logLevel={getLogLevel(userId, logLevelId)}
-            onChangeLogLevel={onChangeLogLevel}
-            onChangeWithAttachments={onChangeWithAttachments}
-          >
-            {({ markdownMode, consoleView }) => (
-              <LogsGrid
-                logItems={logItems}
-                loading={loading}
-                filter={filter}
-                onFilterChange={onFilterChange}
-                sortingColumn={sortingColumn}
-                sortingDirection={sortingDirection}
-                onChangeSorting={onChangeSorting}
-                rowHighlightingConfig={rowHighlightingConfig}
-                markdownMode={markdownMode}
-                consoleView={consoleView}
-              />
-            )}
-          </LogsGridToolbar>
-          {!!pageCount &&
-            logItems &&
-            !!logItems.length &&
-            !loading && (
-              <PaginationToolbar
+          {this.state.isThirdPartyIntegrationView ? (
+            <SauceLabsSection />
+          ) : (
+            <Fragment>
+              <LogsGridToolbar
                 activePage={activePage}
-                itemCount={itemCount}
                 pageCount={pageCount}
-                pageSize={pageSize}
                 onChangePage={onChangePage}
-                onChangePageSize={onChangePageSize}
-              />
-            )}
+                logLevel={getLogLevel(userId, logLevelId)}
+                onChangeLogLevel={onChangeLogLevel}
+                onChangeWithAttachments={onChangeWithAttachments}
+              >
+                {({ markdownMode, consoleView }) => (
+                  <LogsGrid
+                    logItems={logItems}
+                    loading={loading}
+                    filter={filter}
+                    onFilterChange={onFilterChange}
+                    sortingColumn={sortingColumn}
+                    sortingDirection={sortingDirection}
+                    onChangeSorting={onChangeSorting}
+                    rowHighlightingConfig={rowHighlightingConfig}
+                    markdownMode={markdownMode}
+                    consoleView={consoleView}
+                  />
+                )}
+              </LogsGridToolbar>
+              {!!pageCount &&
+                logItems &&
+                !!logItems.length &&
+                !loading && (
+                  <PaginationToolbar
+                    activePage={activePage}
+                    itemCount={itemCount}
+                    pageCount={pageCount}
+                    pageSize={pageSize}
+                    onChangePage={onChangePage}
+                    onChangePageSize={onChangePageSize}
+                  />
+                )}
+            </Fragment>
+          )}
         </PageSection>
       </PageLayout>
     );
