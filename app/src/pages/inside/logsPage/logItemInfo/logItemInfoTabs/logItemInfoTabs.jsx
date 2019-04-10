@@ -10,6 +10,8 @@ import AttachmentIcon from 'common/img/attachment-inline.svg';
 import InfoIcon from 'common/img/info-inline.svg';
 import TestParamsIcon from 'common/img/test-params-icon-inline.svg';
 import ClockIcon from 'common/img/clock-inline.svg';
+import { getSauceLabsConfig } from 'components/integrations/integrationProviders/sauceLabsIntegration/utils';
+import { SauceLabsIntegrationButton } from './sauceLabsIntegrationButton';
 import { InfoTabs } from '../infoTabs';
 import { LogItemDetails } from './logItemDetails';
 import { LogItemActivity } from './logItemActivity';
@@ -57,6 +59,8 @@ export class LogItemInfoTabs extends Component {
     onChangePage: PropTypes.func.isRequired,
     onChangeLogLevel: PropTypes.func.isRequired,
     onHighlightRow: PropTypes.func.isRequired,
+    onToggleThirdPartyIntegrationView: PropTypes.func.isRequired,
+    isThirdPartyIntegrationView: PropTypes.bool.isRequired,
   };
 
   static defaultProps = {
@@ -77,13 +81,18 @@ export class LogItemInfoTabs extends Component {
     activeAttachmentId: null,
   };
 
-  setActiveTab = (activeTabId) =>
+  setActiveTab = (activeTabId) => {
+    const { isThirdPartyIntegrationView, onToggleThirdPartyIntegrationView } = this.props;
+    if (isThirdPartyIntegrationView && activeTabId) {
+      onToggleThirdPartyIntegrationView();
+    }
     this.setState({
       activeTabId:
         this.state.activeTabId === activeTabId && this.state.activeTabId !== null
           ? null
           : activeTabId,
     });
+  };
 
   changeActiveAttachment = (activeAttachmentId) =>
     this.setState({
@@ -153,7 +162,12 @@ export class LogItemInfoTabs extends Component {
     ];
   };
 
-  renderPanelContent() {
+  toggleThirdPartyIntegrationContent = () => {
+    this.setActiveTab(null);
+    this.props.onToggleThirdPartyIntegrationView();
+  };
+
+  renderPanelContent = () => {
     const { intl, lastActivity } = this.props;
 
     return lastActivity ? (
@@ -162,7 +176,18 @@ export class LogItemInfoTabs extends Component {
         <span className={cx('action')}>{getActionMessage(intl, lastActivity)}</span>
       </div>
     ) : null;
-  }
+  };
+
+  renderThirdPartyIntegrationButton = () => {
+    const { logItem, isThirdPartyIntegrationView } = this.props;
+    const isThirdPartyIntegrationExists = !!getSauceLabsConfig(logItem.attributes);
+    return isThirdPartyIntegrationExists ? (
+      <SauceLabsIntegrationButton
+        active={isThirdPartyIntegrationView}
+        onClick={this.toggleThirdPartyIntegrationContent}
+      />
+    ) : null;
+  };
 
   render() {
     return (
@@ -171,6 +196,7 @@ export class LogItemInfoTabs extends Component {
         activeTabId={this.state.activeTabId}
         setActiveTab={this.setActiveTab}
         panelContent={this.renderPanelContent()}
+        thirdPartyIntegrationControl={this.renderThirdPartyIntegrationButton()}
       />
     );
   }

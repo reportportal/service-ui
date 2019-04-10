@@ -16,10 +16,13 @@ import {
 import { levelSelector, launchSelector } from 'controllers/testItem';
 import { MarkdownViewer } from 'components/main/markdown';
 import { LAUNCHES_PAGE_EVENTS } from 'components/main/analytics/events';
+import { SAUCE_LABS_INTEGRATION_TITLE } from 'components/integrations/integrationProviders/sauceLabsIntegration/constants';
+import { getSauceLabsConfig } from 'components/integrations/integrationProviders/sauceLabsIntegration/utils';
 import { formatMethodType, formatStatus } from 'common/utils/localizationUtils';
 import TestParamsIcon from 'common/img/test-params-icon-inline.svg';
 import PencilIcon from 'common/img/pencil-icon-inline.svg';
 import RetryIcon from 'common/img/retry-inline.svg';
+import SauceLabsIcon from 'common/img/plugins/sauce-labs.png';
 import { NameLink } from 'pages/inside/common/nameLink';
 import { DurationBlock } from 'pages/inside/common/durationBlock';
 import { AttributesBlock } from './attributesBlock';
@@ -98,6 +101,21 @@ export class ItemInfo extends Component {
     }
   };
 
+  renderSauceLabsLabel = () => {
+    const isSauceLabsIdExists = !!getSauceLabsConfig(this.props.value.attributes);
+    if (isSauceLabsIdExists) {
+      return (
+        <img
+          className={cx('sauce-labs-label')}
+          src={SauceLabsIcon}
+          alt={SAUCE_LABS_INTEGRATION_TITLE}
+          title={SAUCE_LABS_INTEGRATION_TITLE}
+        />
+      );
+    }
+    return null;
+  };
+
   render() {
     const {
       intl,
@@ -168,6 +186,7 @@ export class ItemInfo extends Component {
             </div>
           )}
           {value.owner && <OwnerBlock owner={value.owner} />}
+          {isStepLevel && this.renderSauceLabsLabel()}
           {value.attributes &&
             !!value.attributes.length && (
               <AttributesBlock

@@ -150,6 +150,13 @@
   display: inline-block;
 }
 
+.sauce-labs-label {
+  width: 15px;
+  height: 15px;
+  margin-right: 5px;
+  vertical-align: middle;
+}
+
 @keyframes auto-analyze-blink {
   from {
     opacity: 0;

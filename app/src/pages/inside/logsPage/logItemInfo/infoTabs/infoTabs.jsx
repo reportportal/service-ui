@@ -24,6 +24,7 @@ export class InfoTabs extends Component {
     activeTabId: PropTypes.string,
     setActiveTab: PropTypes.func,
     panelContent: PropTypes.node,
+    thirdPartyIntegrationControl: PropTypes.node,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
@@ -35,6 +36,7 @@ export class InfoTabs extends Component {
     activeTabId: null,
     setActiveTab: () => {},
     panelContent: null,
+    thirdPartyIntegrationControl: null,
   };
 
   state = {
@@ -72,7 +74,14 @@ export class InfoTabs extends Component {
   };
 
   render() {
-    const { tabs, activeTabId, setActiveTab, panelContent, tracking } = this.props;
+    const {
+      tabs,
+      activeTabId,
+      setActiveTab,
+      panelContent,
+      thirdPartyIntegrationControl,
+      tracking,
+    } = this.props;
 
     return (
       <div className={cx('tabs-container')}>
@@ -98,6 +107,11 @@ export class InfoTabs extends Component {
             </Fragment>
           ))}
           {panelContent && <div className={cx('panel-content')}>{panelContent}</div>}
+          {thirdPartyIntegrationControl && (
+            <div className={cx('third-party-integration-control')}>
+              {thirdPartyIntegrationControl}
+            </div>
+          )}
         </div>
         {activeTabId && !this.state.isMobileView && this.renderTabContent(activeTabId)}
       </div>
