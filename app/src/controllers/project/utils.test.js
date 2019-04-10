@@ -1,3 +1,4 @@
+import { PROJECT_ATTRIBUTES_DELIMITER } from './constants';
 import { normalizeAttributesWithPrefix } from './utils';
 
 describe('project/utils', () => {
@@ -6,7 +7,7 @@ describe('project/utils', () => {
     numberOfLogLines: '3',
   };
   const normalizedAttributes = {
-    [`${prefix}.numberOfLogLines`]: '3',
+    [`${prefix}${PROJECT_ATTRIBUTES_DELIMITER}numberOfLogLines`]: '3',
   };
   describe('normalizeAttributesWithPrefix', () => {
     test('should return an empty object if case of empty arguments', () => {

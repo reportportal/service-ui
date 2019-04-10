@@ -1,6 +1,10 @@
 import { createSelector } from 'reselect';
 import { OWNER } from 'common/constants/permissions';
-import { ANALYZER_ATTRIBUTE_PREFIX, JOB_ATTRIBUTE_PREFIX } from './constants';
+import {
+  ANALYZER_ATTRIBUTE_PREFIX,
+  JOB_ATTRIBUTE_PREFIX,
+  PROJECT_ATTRIBUTES_DELIMITER,
+} from './constants';
 
 const projectSelector = (state) => state.project || {};
 
@@ -26,10 +30,12 @@ const createPrefixedAttributesSelector = (prefix) =>
   createSelector(attributesSelector, (attributes) =>
     Object.keys(attributes).reduce(
       (result, attribute) =>
-        attribute.match(`${prefix}.`)
+        attribute.match(`${prefix}${PROJECT_ATTRIBUTES_DELIMITER}`)
           ? {
               ...result,
-              [attribute.replace(`${prefix}.`, '')]: attributes[attribute],
+              [attribute.replace(`${prefix}${PROJECT_ATTRIBUTES_DELIMITER}`, '')]: attributes[
+                attribute
+              ],
             }
           : result,
       {},
