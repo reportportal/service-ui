@@ -35,6 +35,7 @@ export class InputFilter extends Component {
     onFilterStringChange: PropTypes.func,
     filterActive: PropTypes.bool,
     onCancel: PropTypes.func,
+    onQuickClear: PropTypes.func,
   };
 
   static defaultProps = {
@@ -60,6 +61,7 @@ export class InputFilter extends Component {
     onFilterStringChange: () => {},
     filterActive: false,
     onCancel: () => {},
+    onQuickClear: () => {},
   };
 
   state = {
@@ -68,7 +70,7 @@ export class InputFilter extends Component {
 
   handleChangeInput = (e) => this.props.onFilterStringChange(e.target.value);
 
-  handleClickClear = () => this.props.onFilterStringChange('');
+  handleClickClear = () => this.props.onQuickClear();
 
   handleApply = () => {
     this.setState({ opened: false });
@@ -106,7 +108,7 @@ export class InputFilter extends Component {
         <div className={cx('input-filter', { error, active, disabled: isDisabled })}>
           <div className={cx('icon', 'search')}>{Parser(SearchIcon)}</div>
           <div
-            className={cx('icon', 'add-filter', { inactive: !filterActive || !value })}
+            className={cx('icon', 'add-filter', { inactive: !filterActive })}
             onClick={this.togglePopup}
           >
             {Parser(AddFilterIcon)}

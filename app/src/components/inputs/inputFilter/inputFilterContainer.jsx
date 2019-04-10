@@ -64,6 +64,10 @@ export class InputFilterContainer extends Component {
     this.setState({ values: {} });
   };
 
+  handleQuickClear = () => {
+    this.setState({ filterString: '', values: {} }, () => this.props.onChange({}));
+  };
+
   handleFilterStringChange = (value) => {
     this.setState({ filterString: value }, () => this.debouncedChangeHandler(value));
   };
@@ -85,6 +89,7 @@ export class InputFilterContainer extends Component {
             onFilterApply={this.handleFilterApply}
             onFilterValidate={onFilterValidate}
             onClear={this.handleFilterClear}
+            onQuickClear={this.handleQuickClear}
             onCancel={this.handleCancel}
             value={this.state.filterString}
             onFilterStringChange={this.handleFilterStringChange}
