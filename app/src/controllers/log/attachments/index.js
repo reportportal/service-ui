@@ -19,4 +19,5 @@ export {
   attachmentsPaginationSelector,
   activeAttachmentItemSelector,
 } from './selectors';
+export { attachmentsReducer } from './reducer';
 export { attachmentSagas } from './sagas';

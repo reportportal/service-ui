@@ -27,6 +27,7 @@ import {
   prevActiveRetryIdSelector,
 } from './selectors';
 import { attachmentSagas, clearAttachmentsAction } from './attachments';
+import { sauceLabsSagas } from './sauceLabs';
 import { getWithAttachments, getLogLevel } from './storageUtils';
 
 function* fetchActivity() {
@@ -115,5 +116,10 @@ function* watchFetchHistoryEntries() {
 }
 
 export function* logSagas() {
-  yield all([watchFetchLogPageData(), watchFetchHistoryEntries(), attachmentSagas()]);
+  yield all([
+    watchFetchLogPageData(),
+    watchFetchHistoryEntries(),
+    attachmentSagas(),
+    sauceLabsSagas(),
+  ]);
 }

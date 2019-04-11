@@ -117,7 +117,7 @@ export class LogsPage extends Component {
   state = {
     highlightedRowId: null,
     isGridRowHighlighted: false,
-    isThirdPartyIntegrationView: false,
+    isSauceLabsIntegrationView: false,
   };
 
   onHighlightRow = (highlightedRowId) => {
@@ -133,13 +133,16 @@ export class LogsPage extends Component {
     });
   };
 
-  toggleThirdPartyIntegrationView = () =>
+  toggleSauceLabsIntegrationView = () =>
     this.setState({
-      isThirdPartyIntegrationView: !this.state.isThirdPartyIntegrationView,
+      isSauceLabsIntegrationView: !this.state.isSauceLabsIntegrationView,
     });
 
   handleRefresh = () => {
     this.props.tracking.trackEvent(LOG_PAGE_EVENTS.REFRESH_BTN);
+    if (this.state.isSauceLabsIntegrationView) {
+      this.toggleSauceLabsIntegrationView();
+    }
     this.props.refresh();
   };
 
@@ -180,12 +183,12 @@ export class LogsPage extends Component {
             onChangeLogLevel={onChangeLogLevel}
             onChangePage={onChangePage}
             onHighlightRow={this.onHighlightRow}
-            onToggleThirdPartyIntegrationView={this.toggleThirdPartyIntegrationView}
-            isThirdPartyIntegrationView={this.state.isThirdPartyIntegrationView}
+            onToggleSauceLabsIntegrationView={this.toggleSauceLabsIntegrationView}
+            isSauceLabsIntegrationView={this.state.isSauceLabsIntegrationView}
             fetchFunc={refresh}
             loading={loading}
           />
-          {this.state.isThirdPartyIntegrationView ? (
+          {this.state.isSauceLabsIntegrationView ? (
             <SauceLabsSection />
           ) : (
             <Fragment>

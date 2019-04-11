@@ -36,6 +36,7 @@ export const logItemsSelector = (state) => logSelector(state).logItems || [];
 export const logPaginationSelector = (state) => logSelector(state).pagination;
 export const loadingSelector = (state) => logSelector(state).loading || false;
 export const attachmentsSelector = (state) => logSelector(state).attachments || {};
+export const sauceLabsSelector = (state) => logSelector(state).sauceLabs || {};
 export const querySelector = createQueryParametersSelector({
   defaultPagination: DEFAULT_PAGINATION,
   defaultSorting: DEFAULT_SORTING,

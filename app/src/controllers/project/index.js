@@ -37,6 +37,7 @@ export {
   projectIntegrationsSortedSelector,
   groupedIntegrationsSelector,
   createTypedIntegrationsSelector,
+  namedIntegrationsSelectorsMap,
 } from './selectors';
-export { normalizeAttributesWithPrefix } from './utils';
+export { normalizeAttributesWithPrefix, filterIntegrationsByName } from './utils';
 export { projectSagas } from './sagas';
