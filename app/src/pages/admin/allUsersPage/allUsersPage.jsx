@@ -150,6 +150,10 @@ export class AllUsersPage extends Component {
     fetchAllUsersAction: () => {},
   };
 
+  componentWillUnmount() {
+    this.props.unselectAllUsersAction();
+  }
+
   getBreadcrumbs = () => [
     {
       title: this.props.intl.formatMessage(messages.pageTitle),
