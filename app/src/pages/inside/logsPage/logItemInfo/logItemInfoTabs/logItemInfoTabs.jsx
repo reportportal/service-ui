@@ -74,6 +74,8 @@ export class LogItemInfoTabs extends Component {
     retryId: PropTypes.number.isRequired,
     logId: PropTypes.number.isRequired,
     logItem: PropTypes.object.isRequired,
+    onToggleSauceLabsIntegrationView: PropTypes.func.isRequired,
+    isSauceLabsIntegrationView: PropTypes.bool.isRequired,
   };
 
   static defaultProps = {
@@ -95,9 +97,9 @@ export class LogItemInfoTabs extends Component {
   };
 
   setActiveTab = (activeTabId) => {
-    const { isThirdPartyIntegrationView, onToggleThirdPartyIntegrationView } = this.props;
-    if (isThirdPartyIntegrationView && activeTabId) {
-      onToggleThirdPartyIntegrationView();
+    const { isSauceLabsIntegrationView, onToggleSauceLabsIntegrationView } = this.props;
+    if (isSauceLabsIntegrationView && activeTabId) {
+      onToggleSauceLabsIntegrationView();
     }
     this.setState({
       activeTabId:
@@ -181,9 +183,9 @@ export class LogItemInfoTabs extends Component {
     return tabs;
   };
 
-  toggleThirdPartyIntegrationContent = () => {
+  toggleSauceLabsIntegrationContent = () => {
     this.setActiveTab(null);
-    this.props.onToggleThirdPartyIntegrationView();
+    this.props.onToggleSauceLabsIntegrationView();
   };
 
   renderPanelContent = () => {
@@ -197,13 +199,13 @@ export class LogItemInfoTabs extends Component {
     ) : null;
   };
 
-  renderThirdPartyIntegrationButton = () => {
-    const { logItem, isThirdPartyIntegrationView } = this.props;
+  renderSauceLabsIntegrationButton = () => {
+    const { logItem, isSauceLabsIntegrationView } = this.props;
     const isThirdPartyIntegrationExists = !!getSauceLabsConfig(logItem.attributes);
     return isThirdPartyIntegrationExists ? (
       <SauceLabsIntegrationButton
-        active={isThirdPartyIntegrationView}
-        onClick={this.toggleThirdPartyIntegrationContent}
+        active={isSauceLabsIntegrationView}
+        onClick={this.toggleSauceLabsIntegrationContent}
       />
     ) : null;
   };
@@ -215,7 +217,7 @@ export class LogItemInfoTabs extends Component {
         activeTabId={this.state.activeTabId}
         setActiveTab={this.setActiveTab}
         panelContent={this.renderPanelContent()}
-        thirdPartyIntegrationControl={this.renderThirdPartyIntegrationButton()}
+        thirdPartyIntegrationControl={this.renderSauceLabsIntegrationButton()}
       />
     );
   }

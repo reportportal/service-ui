@@ -21,7 +21,7 @@ export const SauceLabsIntegrationButton = ({ active, onClick }) => (
 
 SauceLabsIntegrationButton.propTypes = {
   onClick: PropTypes.func,
-  active: PropTypes.func,
+  active: PropTypes.bool,
 };
 
 SauceLabsIntegrationButton.defaultProps = {

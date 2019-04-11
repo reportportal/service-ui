@@ -1,6 +1,10 @@
 import { takeEvery, all, put, select, call } from 'redux-saga/effects';
 import { URLS } from 'common/urls';
-import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
+import {
+  showNotification,
+  showDefaultErrorNotification,
+  NOTIFICATION_TYPES,
+} from 'controllers/notification';
 import { projectIdSelector } from 'controllers/pages';
 import { hideModalAction } from 'controllers/modal';
 import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLock';
@@ -37,14 +41,8 @@ function* updateDefectSubType({ payload: subType }) {
         type: NOTIFICATION_TYPES.SUCCESS,
       }),
     );
-  } catch ({ message: error }) {
-    yield put(
-      showNotification({
-        messageId: 'failureDefault',
-        type: NOTIFICATION_TYPES.ERROR,
-        values: { error },
-      }),
-    );
+  } catch (error) {
+    yield put(showDefaultErrorNotification(error));
   }
 }
 
@@ -66,14 +64,8 @@ function* addDefectSubType({ payload: subType }) {
         type: NOTIFICATION_TYPES.SUCCESS,
       }),
     );
-  } catch ({ message: error }) {
-    yield put(
-      showNotification({
-        messageId: 'failureDefault',
-        type: NOTIFICATION_TYPES.ERROR,
-        values: { error },
-      }),
-    );
+  } catch (error) {
+    yield put(showDefaultErrorNotification(error));
   }
 }
 
@@ -94,14 +86,8 @@ function* deleteDefectSubType({ payload: subType }) {
         type: NOTIFICATION_TYPES.SUCCESS,
       }),
     );
-  } catch ({ message: error }) {
-    yield put(
-      showNotification({
-        messageId: 'failureDefault',
-        type: NOTIFICATION_TYPES.ERROR,
-        values: { error },
-      }),
-    );
+  } catch (error) {
+    yield put(showDefaultErrorNotification(error));
   }
 }
 
@@ -128,14 +114,8 @@ function* updateProjectNotificationsConfig({ payload: notificationsConfig }) {
       }),
     );
     yield put(hideModalAction());
-  } catch ({ message: error }) {
-    yield put(
-      showNotification({
-        messageId: 'failureDefault',
-        type: NOTIFICATION_TYPES.ERROR,
-        values: { error },
-      }),
-    );
+  } catch (error) {
+    yield put(showDefaultErrorNotification(error));
   } finally {
     yield put(hideScreenLockAction());
   }
