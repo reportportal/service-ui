@@ -31,6 +31,7 @@ export class DefectSubTypeForm extends PureComponent {
     parentType: defectTypeShape.isRequired,
     closeNewSubTypeForm: PropTypes.func.isRequired,
     stopEditing: PropTypes.func.isRequired,
+    showDeleteConfirmationDialog: PropTypes.func.isRequired,
     updateDefectSubTypeAction: PropTypes.func.isRequired,
     addDefectSubTypeAction: PropTypes.func.isRequired,
     intl: intlShape.isRequired,
@@ -69,7 +70,7 @@ export class DefectSubTypeForm extends PureComponent {
   };
 
   render() {
-    const { parentType, closeNewSubTypeForm, intl } = this.props;
+    const { parentType, closeNewSubTypeForm, showDeleteConfirmationDialog, intl } = this.props;
 
     const { id, color, longName, shortName } = this.state;
 
@@ -105,7 +106,7 @@ export class DefectSubTypeForm extends PureComponent {
             className={cx('action-button', 'delete-button')}
             aria-label={intl.formatMessage(COMMON_LOCALE_KEYS.DELETE)}
             title={intl.formatMessage(COMMON_LOCALE_KEYS.DELETE)}
-            onClick={closeNewSubTypeForm}
+            onClick={id ? showDeleteConfirmationDialog : closeNewSubTypeForm}
           >
             {Parser(CircleCrossIcon)}
           </button>

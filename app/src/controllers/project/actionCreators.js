@@ -16,6 +16,8 @@ import {
   UPDATE_DEFECT_SUBTYPE_SUCCESS,
   ADD_DEFECT_SUBTYPE,
   ADD_DEFECT_SUBTYPE_SUCCESS,
+  DELETE_DEFECT_SUBTYPE,
+  DELETE_DEFECT_SUBTYPE_SUCCESS,
 } from './constants';
 import { projectNotificationsConfigurationSelector } from './selectors';
 
@@ -104,5 +106,15 @@ export const addDefectSubTypeAction = (subType) => ({
 
 export const addDefectSubTypeSuccessAction = (subType) => ({
   type: ADD_DEFECT_SUBTYPE_SUCCESS,
+  payload: subType,
+});
+
+export const deleteDefectSubTypeAction = (subType) => ({
+  type: DELETE_DEFECT_SUBTYPE,
+  payload: subType,
+});
+
+export const deleteDefectSubTypeSuccessAction = (subType) => ({
+  type: DELETE_DEFECT_SUBTYPE_SUCCESS,
   payload: subType,
 });

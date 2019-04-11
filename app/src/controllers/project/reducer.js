@@ -9,6 +9,7 @@ import {
   UPDATE_NOTIFICATIONS_CONFIG_SUCCESS,
   UPDATE_DEFECT_SUBTYPE_SUCCESS,
   ADD_DEFECT_SUBTYPE_SUCCESS,
+  DELETE_DEFECT_SUBTYPE_SUCCESS,
 } from './constants';
 
 export const projectInfoReducer = (state = PROJECT_INFO_INITIAL_STATE, { type, payload }) => {
@@ -55,6 +56,19 @@ export const projectInfoReducer = (state = PROJECT_INFO_INITIAL_STATE, { type, p
           subTypes: {
             ...state.configuration.subTypes,
             [payload.typeRef]: [...state.configuration.subTypes[payload.typeRef], payload],
+          },
+        },
+      };
+    case DELETE_DEFECT_SUBTYPE_SUCCESS:
+      return {
+        ...state,
+        configuration: {
+          ...state.configuration,
+          subTypes: {
+            ...state.configuration.subTypes,
+            [payload.typeRef]: state.configuration.subTypes[payload.typeRef].filter(
+              (subType) => subType.id !== payload.id,
+            ),
           },
         },
       };

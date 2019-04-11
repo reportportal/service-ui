@@ -16,6 +16,8 @@ export {
   updateDefectSubTypeSuccessAction,
   addDefectSubTypeAction,
   addDefectSubTypeSuccessAction,
+  deleteDefectSubTypeAction,
+  deleteDefectSubTypeSuccessAction,
 } from './actionCreators';
 export { projectReducer } from './reducer';
 export {
