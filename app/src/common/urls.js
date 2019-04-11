@@ -99,6 +99,8 @@ export const URLS = {
 
   project: (activeProject) => `${urlBase}project/${activeProject}`,
   projectDefectSubType: (activeProject) => `${urlBase}${activeProject}/settings/sub-type`,
+  projectDeleteDefectSubType: (activeProject, id) =>
+    `${urlBase}${activeProject}/settings/sub-type/${id}`,
   projects: () => `${urlBase}project/list`,
   projectPreferences: (activeProject, userId, filterId = '') =>
     `${urlBase}project/${activeProject}/preference/${userId}/${filterId}`,

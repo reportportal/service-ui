@@ -1,5 +1,6 @@
-import React, { PureComponent, Fragment } from 'react';
+import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
 import { injectIntl, intlShape } from 'react-intl';
@@ -8,11 +9,15 @@ import C3Chart from 'react-c3js';
 import CircleCrossIcon from 'common/img/circle-cross-icon-inline.svg';
 import PencilIcon from 'common/img/pencil-icon-inline.svg';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { showModalAction } from 'controllers/modal';
+import { deleteDefectSubTypeAction } from 'controllers/project';
+import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 
 import { defectTypeShape } from './defectTypeShape';
 import { DefectSubTypeForm } from './defectSubTypeForm';
 
 import styles from './defectTypesTab.scss';
+import { messages } from './defectTypesMessages';
 
 const cx = classNames.bind(styles);
 
@@ -24,13 +29,19 @@ ColorMarker.propTypes = {
   color: PropTypes.string.isRequired,
 };
 
+@connect(null, {
+  showModal: showModalAction,
+  deleteDefectSubType: deleteDefectSubTypeAction,
+})
 @injectIntl
-export class DefectSubType extends PureComponent {
+export class DefectSubType extends Component {
   static propTypes = {
     data: defectTypeShape,
     parentType: defectTypeShape.isRequired,
     group: PropTypes.arrayOf(defectTypeShape),
     closeNewSubTypeForm: PropTypes.func.isRequired,
+    showModal: PropTypes.func.isRequired,
+    deleteDefectSubType: PropTypes.func.isRequired,
     intl: intlShape.isRequired,
   };
 
@@ -82,6 +93,7 @@ export class DefectSubType extends PureComponent {
         width: 56,
         height: 56,
       },
+      unloadBeforeLoad: true,
     };
   }
 
@@ -91,6 +103,38 @@ export class DefectSubType extends PureComponent {
 
   stopEditing = () => {
     this.setState({ isEditMode: false });
+  };
+
+  showDeleteConfirmationDialog = () => {
+    const {
+      showModal,
+      data: { longName },
+      parentType,
+      intl,
+    } = this.props;
+
+    showModal({
+      id: 'deleteItemsModal',
+      data: {
+        onConfirm: this.deleteSubType,
+        header: intl.formatMessage(messages.deleteModalHeader),
+        mainContent: intl.formatMessage(messages.deleteModalContent, {
+          name: longName,
+          parentName: parentType.longName,
+        }),
+        eventsInfo: {
+          closeIcon: SETTINGS_PAGE_EVENTS.CLOSE_ICON_DELETE_DEFECT_TYPE_MODAL,
+          cancelBtn: SETTINGS_PAGE_EVENTS.CANCEL_BTN_DELETE_DEFECT_TYPE_MODAL,
+          deleteBtn: SETTINGS_PAGE_EVENTS.DELETE_BTN_DELETE_DEFECT_TYPE_MODAL,
+        },
+      },
+    });
+  };
+
+  deleteSubType = () => {
+    const { deleteDefectSubType, data } = this.props;
+
+    deleteDefectSubType(data);
   };
 
   render() {
@@ -113,6 +157,7 @@ export class DefectSubType extends PureComponent {
             parentType={parentType}
             closeNewSubTypeForm={closeNewSubTypeForm}
             stopEditing={this.stopEditing}
+            showDeleteConfirmationDialog={this.showDeleteConfirmationDialog}
           />
         ) : (
           <Fragment>
@@ -141,6 +186,7 @@ export class DefectSubType extends PureComponent {
                     className={cx('action-button', 'delete-button')}
                     aria-label={intl.formatMessage(COMMON_LOCALE_KEYS.DELETE)}
                     title={intl.formatMessage(COMMON_LOCALE_KEYS.DELETE)}
+                    onClick={this.showDeleteConfirmationDialog}
                   >
                     {Parser(CircleCrossIcon)}
                   </button>

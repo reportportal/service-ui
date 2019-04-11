@@ -57,4 +57,13 @@ export const messages = defineMessages({
     id: 'DefectTypesTab.allSubtypesAreAdded',
     defaultMessage: 'All {count} subtypes are already added',
   },
+  deleteModalHeader: {
+    id: 'DefectTypesTab.deleteModalHeader',
+    defaultMessage: 'Delete Defect Type',
+  },
+  deleteModalContent: {
+    id: 'DefectTypesTab.deleteModalContent',
+    defaultMessage:
+      "Are you sure you want to delete the defect type? All Investigated as '<b>{name}</b>' defects will be marked as '<b>{parentName}</b>'.",
+  },
 });

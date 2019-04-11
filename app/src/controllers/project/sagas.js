@@ -4,8 +4,12 @@ import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { projectIdSelector } from 'controllers/pages';
 import { fetch } from 'common/utils';
 
-import { UPDATE_DEFECT_SUBTYPE, ADD_DEFECT_SUBTYPE } from './constants';
-import { updateDefectSubTypeSuccessAction, addDefectSubTypeSuccessAction } from './actionCreators';
+import { UPDATE_DEFECT_SUBTYPE, ADD_DEFECT_SUBTYPE, DELETE_DEFECT_SUBTYPE } from './constants';
+import {
+  updateDefectSubTypeSuccessAction,
+  addDefectSubTypeSuccessAction,
+  deleteDefectSubTypeSuccessAction,
+} from './actionCreators';
 
 function* updateDefectSubType({ payload: subType }) {
   try {
@@ -24,13 +28,12 @@ function* updateDefectSubType({ payload: subType }) {
         type: NOTIFICATION_TYPES.SUCCESS,
       }),
     );
-  } catch (err) {
-    const error = err.message;
+  } catch ({ message }) {
     yield put(
       showNotification({
-        messageId: 'updateDefectSubTypeError',
+        messageId: 'changeDefectSubTypeError',
         type: NOTIFICATION_TYPES.ERROR,
-        values: { error },
+        values: { message },
       }),
     );
   }
@@ -54,13 +57,12 @@ function* addDefectSubType({ payload: subType }) {
         type: NOTIFICATION_TYPES.SUCCESS,
       }),
     );
-  } catch (err) {
-    const error = err.message;
+  } catch ({ message }) {
     yield put(
       showNotification({
-        messageId: 'updateDefectSubTypeError',
+        messageId: 'changeDefectSubTypeError',
         type: NOTIFICATION_TYPES.ERROR,
-        values: { error },
+        values: { message },
       }),
     );
   }
@@ -70,6 +72,34 @@ function* watchAddDefectSubType() {
   yield takeEvery(ADD_DEFECT_SUBTYPE, addDefectSubType);
 }
 
+function* deleteDefectSubType({ payload: subType }) {
+  try {
+    const projectId = yield select(projectIdSelector);
+    yield call(fetch, URLS.projectDeleteDefectSubType(projectId, subType.id), {
+      method: 'delete',
+    });
+    yield put(deleteDefectSubTypeSuccessAction(subType));
+    yield put(
+      showNotification({
+        messageId: 'deleteDefectSubTypeSuccess',
+        type: NOTIFICATION_TYPES.SUCCESS,
+      }),
+    );
+  } catch ({ message }) {
+    yield put(
+      showNotification({
+        messageId: 'changeDefectSubTypeError',
+        type: NOTIFICATION_TYPES.ERROR,
+        values: { message },
+      }),
+    );
+  }
+}
+
+function* watchDeleteDefectSubType() {
+  yield takeEvery(DELETE_DEFECT_SUBTYPE, deleteDefectSubType);
+}
+
 export function* projectSagas() {
-  yield all([watchUpdateDefectSubType(), watchAddDefectSubType()]);
+  yield all([watchUpdateDefectSubType(), watchAddDefectSubType(), watchDeleteDefectSubType()]);
 }

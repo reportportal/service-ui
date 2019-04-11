@@ -190,20 +190,17 @@ export const SETTINGS_PAGE_EVENTS = {
     action: 'Click on icon Cancel defect type change on tab Defect Types',
     label: 'Cancel defect type change on tab Defect Types',
   },
-  CLOSE_ICON_DELETE_DEFECT_TYPE: {
-    // todo add analytics
+  CLOSE_ICON_DELETE_DEFECT_TYPE_MODAL: {
     category: SETTINGS_PAGE,
     action: 'Click on icon Close on Modal Delete Defect type',
     label: 'Close Modal Delete Defect type',
   },
   CANCEL_BTN_DELETE_DEFECT_TYPE_MODAL: {
-    // todo add analytics
     category: SETTINGS_PAGE,
     action: 'Click on Bttn Cancel on Modal Delete Defect type',
     label: 'Close Modal Delete Defect type',
   },
   DELETE_BTN_DELETE_DEFECT_TYPE_MODAL: {
-    // todo add analytics
     category: SETTINGS_PAGE,
     action: 'Click on Bttn Delete on Modal Delete Defect type',
     label: 'Delete Defect type',

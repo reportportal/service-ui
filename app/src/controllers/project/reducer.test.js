@@ -9,6 +9,7 @@ import {
   UPDATE_NOTIFICATIONS_CONFIG_SUCCESS,
   UPDATE_DEFECT_SUBTYPE_SUCCESS,
   ADD_DEFECT_SUBTYPE_SUCCESS,
+  DELETE_DEFECT_SUBTYPE_SUCCESS,
 } from './constants';
 
 describe('project reducer', () => {
@@ -129,6 +130,27 @@ describe('project reducer', () => {
                 color: '#ffffff',
               },
             ],
+          },
+        },
+      });
+    });
+
+    test('should handle DELETE_DEFECT_SUBTYPE_SUCCESS', () => {
+      const payload = {
+        id: 3,
+        typeRef: 'PRODUCT_BUG',
+      };
+      const state = {
+        configuration: { subTypes: { PRODUCT_BUG: [{ id: 1 }, { id: 2 }, { id: 3 }] } },
+      };
+      const newState = projectInfoReducer(state, {
+        type: DELETE_DEFECT_SUBTYPE_SUCCESS,
+        payload,
+      });
+      expect(newState).toEqual({
+        configuration: {
+          subTypes: {
+            PRODUCT_BUG: [{ id: 1 }, { id: 2 }],
           },
         },
       });

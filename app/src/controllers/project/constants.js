@@ -10,5 +10,7 @@ export const UPDATE_DEFECT_SUBTYPE = 'updateDefectSubType';
 export const UPDATE_DEFECT_SUBTYPE_SUCCESS = 'updateDefectSubTypeSuccess';
 export const ADD_DEFECT_SUBTYPE = 'addDefectSubType';
 export const ADD_DEFECT_SUBTYPE_SUCCESS = 'addDefectSubTypeSuccess';
+export const DELETE_DEFECT_SUBTYPE = 'deleteDefectSubType';
+export const DELETE_DEFECT_SUBTYPE_SUCCESS = 'deleteDefectSubTypeSuccess';
 export const ANALYZER_ATTRIBUTE_PREFIX = 'analyzer';
 export const JOB_ATTRIBUTE_PREFIX = 'job';
