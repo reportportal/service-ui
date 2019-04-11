@@ -82,7 +82,7 @@ export class ProjectSelector extends Component {
       >
         <div className={cx('current-project-block')}>
           <div className={cx('current-project-name')}>{this.props.activeProject}</div>
-          <div className={cx({ 'show-list-icon': true, 'turned-over': this.state.opened })} />
+          <div className={cx('show-list-icon', { 'turned-over': this.state.opened })} />
         </div>
         <div className={cx({ 'projects-list': true, shown: this.state.opened })}>
           <ScrollWrapper autoHeight autoHeightMax={600}>

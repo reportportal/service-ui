@@ -68,8 +68,6 @@ export class LogItemInfoTabs extends Component {
     onChangePage: PropTypes.func.isRequired,
     onChangeLogLevel: PropTypes.func.isRequired,
     onHighlightRow: PropTypes.func.isRequired,
-    onToggleThirdPartyIntegrationView: PropTypes.func.isRequired,
-    isThirdPartyIntegrationView: PropTypes.bool.isRequired,
     activeRetry: PropTypes.object.isRequired,
     retryId: PropTypes.number.isRequired,
     logId: PropTypes.number.isRequired,

@@ -4,13 +4,14 @@ import { loadingReducer } from 'controllers/loading';
 import { queueReducers } from 'common/utils';
 import {
   SAUCE_LABS_LOGS_NAMESPACE,
+  SAUCE_LABS_ASSETS_NAMESPACE,
   JOB_INFO_NAMESPACE,
-  SET_INTEGRATION_DATA_ACTION,
+  SET_AUTH_TOKEN_ACTION,
 } from './constants';
 
-export const integrationDataReducer = (state = {}, { type, payload }) => {
+export const authTokenReducer = (state = {}, { type, payload }) => {
   switch (type) {
-    case SET_INTEGRATION_DATA_ACTION:
+    case SET_AUTH_TOKEN_ACTION:
       return payload;
     default:
       return state;
@@ -18,11 +19,13 @@ export const integrationDataReducer = (state = {}, { type, payload }) => {
 };
 
 export const sauceLabsReducer = combineReducers({
-  integrationData: integrationDataReducer,
+  authToken: authTokenReducer,
+  assets: fetchReducer(SAUCE_LABS_ASSETS_NAMESPACE, { initialState: {} }),
   jobInfo: fetchReducer(JOB_INFO_NAMESPACE, { initialState: {} }),
   logs: fetchReducer(SAUCE_LABS_LOGS_NAMESPACE),
   loading: queueReducers(
     loadingReducer(SAUCE_LABS_LOGS_NAMESPACE),
+    loadingReducer(SAUCE_LABS_ASSETS_NAMESPACE),
     loadingReducer(JOB_INFO_NAMESPACE),
   ),
 });
