@@ -1,5 +1,7 @@
 .breadcrumbs {
   display: flex;
+  flex-grow: 1;
+  flex-wrap: wrap;
   align-items: center;
 }
 
@@ -11,6 +13,7 @@
   width: 14px;
   height: 14px;
   fill: $COLOR--charcoal-grey;
+  flex-shrink: 0;
 }
 
 .lost-launch {
