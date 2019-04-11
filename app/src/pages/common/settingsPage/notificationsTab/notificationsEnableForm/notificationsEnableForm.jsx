@@ -4,7 +4,7 @@ import { defineMessages, injectIntl, intlShape } from 'react-intl';
 import { reduxForm } from 'redux-form';
 import { InputBigSwitcher } from 'components/inputs/inputBigSwitcher';
 import { FormField } from 'components/fields/formField';
-import { labelWidth, ENABLED_FIELD_KEY } from '../constants';
+import { LABEL_WIDTH, ENABLED_FIELD_KEY } from '../constants';
 
 const messages = defineMessages({
   toggleNotificationsLabel: {
@@ -59,7 +59,7 @@ export class NotificationsEnableForm extends Component {
       <Fragment>
         <FormField
           label={intl.formatMessage(messages.toggleNotificationsLabel)}
-          labelWidth={labelWidth}
+          labelWidth={LABEL_WIDTH}
           customBlock={this.getCustomBlock()}
           name={ENABLED_FIELD_KEY}
           disabled={readOnly}

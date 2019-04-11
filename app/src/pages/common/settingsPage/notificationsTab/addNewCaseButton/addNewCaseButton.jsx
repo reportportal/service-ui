@@ -42,9 +42,7 @@ export class AddNewCaseButton extends Component {
 
   confirmAddCase = (data) => {
     const { cases: oldCases, updateNotificationCases } = this.props;
-    const updatedCases = [...oldCases];
-    updatedCases.push(data);
-    const cases = updatedCases.map(convertNotificationCaseForSubmission);
+    const cases = [...oldCases, data].map(convertNotificationCaseForSubmission);
     updateNotificationCases({ cases });
   };
 

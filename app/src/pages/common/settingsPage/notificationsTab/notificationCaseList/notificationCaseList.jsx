@@ -32,7 +32,7 @@ export class NotificationCaseList extends Component {
     showModal({
       id: 'deleteNotificationCaseModal',
       data: {
-        id: id + 1,
+        id,
         onConfirm: () => this.confirmDeleteCase(id),
       },
     });
