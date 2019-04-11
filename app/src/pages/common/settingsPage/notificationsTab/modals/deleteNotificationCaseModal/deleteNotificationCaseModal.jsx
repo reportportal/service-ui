@@ -50,7 +50,7 @@ export class DeleteNotificationCaseModal extends Component {
         }}
       >
         <div className={cx('message')}>
-          {Parser(intl.formatMessage(messages.message, { number: id }))}
+          {Parser(intl.formatMessage(messages.message, { number: id + 1 }))}
         </div>
       </ModalLayout>
     );

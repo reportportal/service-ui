@@ -67,9 +67,9 @@ export class CaseListItem extends Component {
 
     const fieldInfo = ruleFieldsConfig[fieldKey];
     const fieldData = item[fieldKey];
-    const shouldBeRender = fieldInfo && fieldData && fieldData.length;
+    const shouldBeRendered = fieldInfo && fieldData && fieldData.length;
 
-    return shouldBeRender ? (
+    return shouldBeRendered ? (
       <div key={fieldKey} className={cx('rule-field-row')}>
         <span className={cx('rule-field-header')}>{formatMessage(fieldInfo.title)}</span>
         <span className={cx('rule-field-content')}>

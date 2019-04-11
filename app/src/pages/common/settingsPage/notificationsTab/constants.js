@@ -1,4 +1,4 @@
-export const labelWidth = 140;
+export const LABEL_WIDTH = 140;
 
 export const RECIPIENTS_FIELD_KEY = 'recipients';
 export const INFORM_OWNER_FIELD_KEY = 'informOwner';

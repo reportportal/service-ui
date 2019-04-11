@@ -16,7 +16,7 @@ import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { AttributeListField } from 'components/main/attributeList';
 import {
   LAUNCH_CASES,
-  labelWidth,
+  LABEL_WIDTH,
   ATTRIBUTES_FIELD_KEY,
   INFORM_OWNER_FIELD_KEY,
   LAUNCH_NAMES_FIELD_KEY,
@@ -140,7 +140,7 @@ export class NotificationCaseForm extends Component {
         </FormField>
         <FormField
           label={formatMessage(messages.inCaseLabel)}
-          labelWidth={labelWidth}
+          labelWidth={LABEL_WIDTH}
           name={SEND_CASE_FIELD_KEY}
           fieldWrapperClassName={cx('form-input')}
           labelClassName={cx('form-label')}
