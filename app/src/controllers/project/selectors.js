@@ -1,10 +1,12 @@
 import { createSelector } from 'reselect';
 import { OWNER } from 'common/constants/permissions';
+import { SAUCE_LABS } from 'common/constants/integrationNames';
 import {
   ANALYZER_ATTRIBUTE_PREFIX,
   JOB_ATTRIBUTE_PREFIX,
   PROJECT_ATTRIBUTES_DELIMITER,
 } from './constants';
+import { filterIntegrationsByName } from './utils';
 
 const projectSelector = (state) => state.project || {};
 
@@ -72,6 +74,15 @@ export const groupedIntegrationsSelector = createSelector(
       return groupedIntegrations;
     }, {}),
 );
+
+const createNamedIntegrationsSelector = (integrationName) =>
+  createSelector(projectIntegrationsSelector, (integrations) =>
+    filterIntegrationsByName(integrations, integrationName),
+  );
+
+export const namedIntegrationsSelectorsMap = {
+  [SAUCE_LABS]: createNamedIntegrationsSelector(SAUCE_LABS),
+};
 
 export const createTypedIntegrationsSelector = (integrationType) =>
   createSelector(projectIntegrationsSelector, (integrations) =>

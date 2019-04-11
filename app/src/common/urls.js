@@ -208,4 +208,8 @@ export const URLS = {
     })}`,
 
   info: () => `${urlBase}info`,
+
+  globalIntegrationsByPluginName: (pluginName) => `${urlBase}integration/global/all/${pluginName}`,
+  projectIntegrationByIdCommand: (projectId, integrationId, command) =>
+    `${urlBase}integration/${projectId}/${integrationId}/${command}`,
 };

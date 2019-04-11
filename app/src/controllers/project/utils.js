@@ -12,3 +12,6 @@ export const normalizeAttributesWithPrefix = (attributes, prefix) => {
     {},
   );
 };
+
+export const filterIntegrationsByName = (integrations, integrationName) =>
+  integrations.filter((integration) => integration.integrationType.name === integrationName);

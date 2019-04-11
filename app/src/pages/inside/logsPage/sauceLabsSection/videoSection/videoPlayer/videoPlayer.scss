@@ -1,0 +1,29 @@
+.video-player {
+  :global {
+    .video-js {
+      .vjs-poster {
+        background: $COLOR--azure;
+        background-size: 40%;
+        background-position: 50%;
+        background-repeat: no-repeat;
+      }
+
+      .vjs-big-play-button {
+        top: 50%;
+        left: 50%;
+        margin-left: -1em;
+        width: 2em;
+        border: none;
+        color: $COLOR--white-two;
+        transition: border-color .4s,outline .4s,background-color .4s;
+        background-color: $COLOR--black-2;
+        font-size: 3.5em;
+        border-radius: 50%;
+        height: 2em!important;
+        line-height: 2em!important;
+        margin-top: -1em!important;
+        opacity: .85;
+      }
+    }
+  }
+}
