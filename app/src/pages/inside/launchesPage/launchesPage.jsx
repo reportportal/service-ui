@@ -16,7 +16,7 @@ import { levelSelector } from 'controllers/testItem';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
 import { activeProjectSelector, userIdSelector } from 'controllers/user';
 import { projectConfigSelector } from 'controllers/project';
-import { withPagination } from 'controllers/pagination';
+import { withPagination, DEFAULT_PAGINATION, SIZE_KEY } from 'controllers/pagination';
 import { withSorting, SORTING_DESC } from 'controllers/sorting';
 import { showModalAction } from 'controllers/modal';
 import { ENTITY_START_TIME } from 'components/filterEntities/constants';
@@ -190,7 +190,7 @@ export class LaunchesPage extends Component {
     activePage: 1,
     itemCount: null,
     pageCount: null,
-    pageSize: 20,
+    pageSize: DEFAULT_PAGINATION[SIZE_KEY],
     sortingColumn: null,
     sortingDirection: null,
     showModalAction: () => {},
