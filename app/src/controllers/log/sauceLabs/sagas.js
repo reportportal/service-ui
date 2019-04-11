@@ -11,7 +11,8 @@ import {
   BULK_EXECUTE_SAUCE_LABS_COMMAND_ACTION,
   SAUCE_LABS_COMMANDS_NAMESPACES_MAP,
 } from './constants';
-import { setIntegrationDataAction } from './actionCreators';
+import { generateAuthToken } from './utils';
+import { setAuthTokenAction } from './actionCreators';
 
 function* executeSauceLabsCommand({ command, data, integrationId }) {
   try {
@@ -37,7 +38,10 @@ function* bulkExecuteSauceLabsCommands({ payload: { commands, data } }) {
       activeIntegration = globalIntegrations[0];
     }
 
-    yield put(setIntegrationDataAction(activeIntegration));
+    const { integrationParameters: { username, accessToken } = {} } = activeIntegration;
+    const authToken = generateAuthToken(username, accessToken, data.jobId);
+
+    yield put(setAuthTokenAction(authToken));
     yield all(
       commands.map((command) =>
         call(executeSauceLabsCommand, { command, data, integrationId: activeIntegration.id }),

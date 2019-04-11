@@ -1,7 +1,7 @@
 import {
   EXECUTE_SAUCE_LABS_COMMAND_ACTION,
   BULK_EXECUTE_SAUCE_LABS_COMMAND_ACTION,
-  SET_INTEGRATION_DATA_ACTION,
+  SET_AUTH_TOKEN_ACTION,
 } from './constants';
 
 export const executeSauceLabsCommandAction = (command, data, integrationId) => ({
@@ -14,7 +14,7 @@ export const bulkExecuteSauceLabsCommandAction = (commands, data) => ({
   payload: { commands, data },
 });
 
-export const setIntegrationDataAction = (payload) => ({
-  type: SET_INTEGRATION_DATA_ACTION,
+export const setAuthTokenAction = (payload) => ({
+  type: SET_AUTH_TOKEN_ACTION,
   payload,
 });

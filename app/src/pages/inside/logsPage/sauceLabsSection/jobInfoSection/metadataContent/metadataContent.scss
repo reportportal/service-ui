@@ -1,0 +1,53 @@
+.metadata-content {
+  display: flex;
+  flex-direction: column;
+  font-size: 13px;
+  font-family: $FONT-REGULAR;
+}
+
+.content-row-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px 15px;
+  border-bottom: 1px solid $COLOR--gray-91;
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.row-item-key {
+  color: $COLOR--gray-60;
+}
+
+.row-item-value {
+  color: $COLOR--charcoal-grey;
+}
+
+.download-assets-block {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50px;
+  border-top: 1px solid $COLOR--gray-91;
+  background-color: $COLOR--white;
+}
+
+.assets-block-item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 30px;
+  color: $COLOR--charcoal-grey;
+  text-decoration: none;
+  cursor: pointer;
+
+  svg {
+    width: 17px;
+    height: 17px;
+    margin-left: 5px;
+  }
+}

@@ -32,6 +32,7 @@ export class ContainerWithTabs extends Component {
   static propTypes = {
     data: PropTypes.arrayOf(PropTypes.object),
     selectTabEventInfo: PropTypes.object,
+    customClass: PropTypes.string,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
@@ -39,7 +40,8 @@ export class ContainerWithTabs extends Component {
   };
   static defaultProps = {
     data: [],
-    selectTabEventInfo: '',
+    customClass: '',
+    selectTabEventInfo: null,
   };
 
   state = {
@@ -65,7 +67,7 @@ export class ContainerWithTabs extends Component {
   render() {
     return (
       <div className={cx('container-with-tabs')}>
-        <div className={cx('tabs-wrapper')}>
+        <div className={cx('tabs-wrapper', this.props.customClass)}>
           {this.props.data.length
             ? this.props.data.map((item, id) => (
                 <div

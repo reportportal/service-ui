@@ -1,0 +1,1 @@
+export { MetadataContent } from './metadataContent';

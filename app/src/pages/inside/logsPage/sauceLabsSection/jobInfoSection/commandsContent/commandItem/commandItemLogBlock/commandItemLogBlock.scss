@@ -1,0 +1,23 @@
+.command-item-log-block {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  color: $COLOR--charcoal-grey;
+  font-size: 12px;
+
+  .command-title {
+    margin-bottom: 5px;
+    color: $COLOR--gray-60;
+    font-family: $FONT-REGULAR;
+  }
+
+  .command-content {
+    max-height: 160px;
+    padding: 7px;
+    background: $COLOR--white-two;
+    font-family: Source Code Pro,Consolas,Monaco,Andale Mono,monospace;
+    word-break: break-all;
+    overflow-y: scroll;
+  }
+}
+
