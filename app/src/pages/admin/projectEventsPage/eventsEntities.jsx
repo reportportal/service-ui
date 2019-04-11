@@ -5,7 +5,6 @@ import { connect } from 'react-redux';
 import { URLS } from 'common/urls';
 import { activeProjectSelector } from 'controllers/user';
 
-import moment from 'moment/moment';
 import {
   EntityDropdown,
   EntityItemStartTime,
@@ -19,7 +18,6 @@ import {
   ENTITY_USER,
   CONDITION_IN,
   CONDITION_BETWEEN,
-  ENTITY_START_TIME,
   ACTIVITIES,
   ENTITY_CREATION_DATE,
 } from 'components/filterEntities/constants';
@@ -290,13 +288,8 @@ export class EventsEntities extends Component {
       {
         id: ENTITY_CREATION_DATE,
         component: EntityItemStartTime,
-        value: this.bindDefaultValue(ENTITY_START_TIME, {
-          value: `${moment()
-            .startOf('day')
-            .subtract(1, 'months')
-            .valueOf()},${moment()
-            .endOf('day')
-            .valueOf() + 1}`,
+        value: this.bindDefaultValue(ENTITY_CREATION_DATE, {
+          value: '',
           condition: CONDITION_BETWEEN,
         }),
         title: intl.formatMessage(messages.timeCol),

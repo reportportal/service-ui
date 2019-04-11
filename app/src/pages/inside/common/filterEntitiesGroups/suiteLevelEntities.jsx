@@ -1,7 +1,6 @@
 import { Component } from 'react';
 import { connect } from 'react-redux';
 import { injectIntl, intlShape, defineMessages } from 'react-intl';
-import moment from 'moment/moment';
 import PropTypes from 'prop-types';
 import { URLS } from 'common/urls';
 import { activeProjectSelector } from 'controllers/user';
@@ -181,12 +180,7 @@ export class SuiteLevelEntities extends Component {
         id: ENTITY_START_TIME,
         component: EntityItemStartTime,
         value: this.bindDefaultValue(ENTITY_START_TIME, {
-          value: `${moment()
-            .startOf('day')
-            .subtract(1, 'months')
-            .valueOf()},${moment()
-            .endOf('day')
-            .valueOf() + 1}`,
+          value: '',
           condition: CONDITION_BETWEEN,
         }),
         title: intl.formatMessage(messages.StartTimeTitle),

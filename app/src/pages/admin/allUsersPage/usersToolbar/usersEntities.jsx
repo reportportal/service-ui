@@ -187,7 +187,7 @@ export class UsersEntities extends Component {
         id: LAST_LOGIN,
         component: EntityItemStartTime,
         value: this.bindDefaultValue(LAST_LOGIN, {
-          value: ',',
+          value: '',
           condition: CONDITION_BETWEEN,
         }),
         title: intl.formatMessage(messages.lastLogin),
