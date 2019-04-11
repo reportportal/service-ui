@@ -126,7 +126,7 @@ export class ProjectEntities extends Component {
         id: LAST_RUN,
         component: EntityItemStartTime,
         value: this.bindDefaultValue(LAST_RUN, {
-          value: ',',
+          value: '',
           condition: CONDITION_BETWEEN,
         }),
         title: intl.formatMessage(messages.lastRun),
