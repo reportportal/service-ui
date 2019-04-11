@@ -90,7 +90,7 @@ export class DefectSubTypeForm extends PureComponent {
             onChange={this.updateShortName}
           />
         </div>
-        <div className={cx('color-cell')}>
+        <div className={cx('color-cell', 'color-picker-cell')}>
           <ColorPicker color={color || parentType.color} onChangeComplete={this.updateColor} />
         </div>
         <div className={cx('buttons-cell')}>

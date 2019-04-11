@@ -55,7 +55,9 @@ export class DefectTypesTab extends Component {
         {this.groupNames.map((groupName) => (
           <React.Fragment key={groupName}>
             <div className={cx('group-name')}>{intl.formatMessage(messages[groupName])}</div>
-            <DefectTypesGroup group={subTypes[groupName.toUpperCase()]} />
+            <div className={cx('group')}>
+              <DefectTypesGroup group={subTypes[groupName.toUpperCase()]} />
+            </div>
           </React.Fragment>
         ))}
       </div>
