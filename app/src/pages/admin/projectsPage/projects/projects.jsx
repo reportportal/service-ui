@@ -14,6 +14,7 @@ import {
   loadingSelector,
   projectsSelector,
   DEFAULT_SORT_COLUMN,
+  unselectAllProjectsAction,
 } from 'controllers/administrate/projects';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
@@ -23,11 +24,16 @@ import { ProjectsPanelView } from './../projectsPanelView';
 import { ProjectsGrid } from './../projectsGrid';
 import { ProjectsToolbar } from './../projectsToolbar';
 
-@connect((state) => ({
-  viewMode: viewModeSelector(state),
-  loading: loadingSelector(state),
-  projects: projectsSelector(state),
-}))
+@connect(
+  (state) => ({
+    viewMode: viewModeSelector(state),
+    loading: loadingSelector(state),
+    projects: projectsSelector(state),
+  }),
+  {
+    unselectAllProjectsAction,
+  },
+)
 @withSortingURL({
   defaultFields: [DEFAULT_SORT_COLUMN],
   defaultDirection: SORTING_ASC,
@@ -51,6 +57,7 @@ export class Projects extends Component {
     viewMode: PropTypes.string,
     loading: PropTypes.bool,
     projects: PropTypes.arrayOf(PropTypes.object),
+    unselectAllProjectsAction: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
@@ -65,6 +72,10 @@ export class Projects extends Component {
     sortingDirection: null,
     onChangeSorting: () => {},
   };
+
+  componentWillUnmount() {
+    this.props.unselectAllProjectsAction();
+  }
 
   render() {
     const {
