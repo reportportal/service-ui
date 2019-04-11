@@ -8,42 +8,74 @@ $DEFECT_NAME_PADDING: 120px;
   display: flex;
   color: $COLOR--charcoal-grey;
   border-bottom: 1px solid $COLOR--skipped;
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    display: none;
+  }
 }
 
 .header-cell {
   text-transform: uppercase;
   padding: 10px;
   font-weight: bold;
+  box-sizing: border-box;
 }
 
+.name-cell,
 .abbr-cell,
 .color-cell,
 .diagram-cell {
   padding-left: 10px;
+  padding-right: 10px;
   box-sizing: border-box;
 }
 
 .name-cell {
   padding-left: $DEFECT_NAME_PADDING;
-  width: 40%;
-  box-sizing: border-box;
+  width: 43%;
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    padding-left: 0;
+    width: 60%;
+  }
 }
 
 .abbr-cell {
   width: 15%;
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    width: 20%;
+  }
 }
 
 .color-cell {
-  width: 15%;
+  padding-left: 21px;
+  width: 12%;
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    width: 20%;
+  }
+}
+
+.color-picker-cell {
+  padding-left: 10px;
 }
 
 .buttons-cell {
   width: 15%;
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    display: none;
+  }
 }
 
 .diagram-cell {
   width: 15%;
   position: relative;
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    display: none;
+  }
 }
 
 .group-name {
@@ -52,6 +84,10 @@ $DEFECT_NAME_PADDING: 120px;
   padding: 7px 10px;
   text-transform: uppercase;
   font-weight: bold;
+}
+
+.group {
+  padding-bottom: 10px;
 }
 
 .color-marker {
@@ -89,7 +125,11 @@ $DEFECT_NAME_PADDING: 120px;
   display: flex;
   align-items: center;
   padding-left: $DEFECT_NAME_PADDING;
-  margin-bottom: 40px;
+  margin-bottom: 30px;
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    display: none;
+  }
 }
 
 .defect-type-count-msg {
