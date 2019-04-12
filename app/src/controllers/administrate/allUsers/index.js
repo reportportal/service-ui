@@ -12,6 +12,7 @@ export {
   allUsersSelector,
   loadingSelector,
   selectedUsersSelector,
+  querySelector,
 } from './selectors';
 export { allUsersSagas } from './sagas';
 export { NAMESPACE, DEFAULT_SORT_COLUMN } from './constants';
