@@ -11,12 +11,7 @@ import {
   STATS_PASSED,
   STATS_SKIPPED,
 } from 'common/constants/statistics';
-import {
-  PRODUCT_BUG,
-  AUTOMATION_BUG,
-  SYSTEM_ISSUE,
-  TO_INVESTIGATE,
-} from 'common/constants/defectTypes';
+import { DEFECT_TYPES_SEQUENCE } from 'common/constants/defectTypes';
 import {
   EntityInputConditional,
   EntityItemStartTime,
@@ -119,6 +114,14 @@ const messages = defineMessages({
     id: 'LaunchLevelEntities.TO_INVESTIGATE_totalTitle',
     defaultMessage: 'Total to investigate',
   },
+  NO_DEFECT_title: {
+    id: 'LaunchLevelEntities.NO_DEFECT_title',
+    defaultMessage: 'No Defect',
+  },
+  NO_DEFECT_totalTitle: {
+    id: 'LaunchLevelEntities.NO_DEFECT_totalTitle',
+    defaultMessage: 'No Defect Total',
+  },
   LAUNCH_NUMBER_PLACEHOLDER: {
     id: 'LaunchLevelEntities.launchNumberPlaceholder',
     defaultMessage: 'Enter number',
@@ -149,12 +152,6 @@ const messages = defineMessages({
   },
 });
 
-const DEFECT_TYPES_SEQUENCE = [
-  PRODUCT_BUG.toUpperCase(),
-  AUTOMATION_BUG.toUpperCase(),
-  SYSTEM_ISSUE.toUpperCase(),
-  TO_INVESTIGATE.toUpperCase(),
-];
 const DEFECT_ENTITY_ID_BASE = 'statistics$defects$';
 
 @injectIntl
@@ -380,6 +377,7 @@ export class LaunchLevelEntities extends Component {
       const defectTypeGroup = this.props.defectTypes[defectTypeRef];
       const hasSubtypes = defectTypeGroup.length > 1;
       const totalEntityId = `${DEFECT_ENTITY_ID_BASE}${defectTypeRef.toLowerCase()}$total`;
+      const defectTitle = `${defectTypeRef}_${hasSubtypes ? 'totalTitle' : 'title'}`;
 
       defectTypeEntities.push({
         id: totalEntityId,
@@ -392,9 +390,7 @@ export class LaunchLevelEntities extends Component {
             !entityObject.value ||
             !validate.launchNumericEntity(entityObject.value)) &&
           'launchNumericEntityHint',
-        title: this.props.intl.formatMessage(
-          messages[`${defectTypeRef}_${hasSubtypes ? 'totalTitle' : 'title'}`],
-        ),
+        title: messages[defectTitle] ? this.props.intl.formatMessage(messages[defectTitle]) : '',
         active: totalEntityId in filterValues,
         removable: true,
         customProps: {

@@ -11,12 +11,7 @@ import {
   STATS_PASSED,
   STATS_SKIPPED,
 } from 'common/constants/statistics';
-import {
-  PRODUCT_BUG,
-  AUTOMATION_BUG,
-  SYSTEM_ISSUE,
-  TO_INVESTIGATE,
-} from 'common/constants/defectTypes';
+import { DEFECT_TYPES_SEQUENCE } from 'common/constants/defectTypes';
 import {
   EntityInputConditional,
   EntityItemStartTime,
@@ -107,6 +102,14 @@ const messages = defineMessages({
     id: 'SuiteLevelEntities.TO_INVESTIGATE_totalTitle',
     defaultMessage: 'Total to investigate',
   },
+  NO_DEFECT_title: {
+    id: 'SuiteLevelEntities.TO_INVESTIGATE_title',
+    defaultMessage: 'To investigate',
+  },
+  NO_DEFECT_totalTitle: {
+    id: 'SuiteLevelEntities.TO_INVESTIGATE_totalTitle',
+    defaultMessage: 'Total to investigate',
+  },
   LAUNCH_NUMBER_PLACEHOLDER: {
     id: 'SuiteLevelEntities.launchNumberPlaceholder',
     defaultMessage: 'Enter number',
@@ -133,12 +136,6 @@ const messages = defineMessages({
   },
 });
 
-const DEFECT_TYPES_SEQUENCE = [
-  PRODUCT_BUG.toUpperCase(),
-  AUTOMATION_BUG.toUpperCase(),
-  SYSTEM_ISSUE.toUpperCase(),
-  TO_INVESTIGATE.toUpperCase(),
-];
 const DEFECT_ENTITY_ID_BASE = 'statistics$defects$';
 
 @injectIntl
@@ -322,6 +319,7 @@ export class SuiteLevelEntities extends Component {
     DEFECT_TYPES_SEQUENCE.forEach((defectTypeRef) => {
       const defectTypeGroup = this.props.defectTypes[defectTypeRef];
       const hasSubtypes = defectTypeGroup.length > 1;
+      const defectTitle = `${defectTypeRef}_${hasSubtypes ? 'totalTitle' : 'title'}`;
 
       defectTypeEntities.push({
         id: `${DEFECT_ENTITY_ID_BASE}${defectTypeRef.toLowerCase()}$total`,
@@ -337,9 +335,7 @@ export class SuiteLevelEntities extends Component {
             !entityObject.value ||
             !validate.launchNumericEntity(entityObject.value)) &&
           'launchNumericEntityHint',
-        title: intl.formatMessage(
-          messages[`${defectTypeRef}_${hasSubtypes ? 'totalTitle' : 'title'}`],
-        ),
+        title: messages[defectTitle] ? intl.formatMessage(messages[defectTitle]) : '',
         active: `${DEFECT_ENTITY_ID_BASE}${defectTypeRef.toLowerCase()}$total` in filterValues,
         removable: true,
         customProps: {

@@ -6,13 +6,7 @@ import { validate } from 'common/utils';
 import { URLS } from 'common/urls';
 import { activeProjectSelector } from 'controllers/user';
 import { FAILED, PASSED, SKIPPED, INTERRUPTED, IN_PROGRESS } from 'common/constants/launchStatuses';
-import {
-  PRODUCT_BUG,
-  AUTOMATION_BUG,
-  SYSTEM_ISSUE,
-  TO_INVESTIGATE,
-  NO_DEFECT,
-} from 'common/constants/defectTypes';
+import { DEFECT_TYPES_SEQUENCE } from 'common/constants/defectTypes';
 import {
   BEFORE_SUITE,
   BEFORE_GROUPS,
@@ -254,14 +248,6 @@ const messages = defineMessages({
     defaultMessage: 'Enter attribute values',
   },
 });
-
-const DEFECT_TYPES_SEQUENCE = [
-  TO_INVESTIGATE.toUpperCase(),
-  PRODUCT_BUG.toUpperCase(),
-  AUTOMATION_BUG.toUpperCase(),
-  SYSTEM_ISSUE.toUpperCase(),
-  NO_DEFECT.toUpperCase(),
-];
 
 @injectIntl
 @connect((state) => ({

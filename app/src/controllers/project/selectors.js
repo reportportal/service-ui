@@ -1,6 +1,7 @@
 import { createSelector } from 'reselect';
 import { OWNER } from 'common/constants/permissions';
 import { SAUCE_LABS } from 'common/constants/integrationNames';
+import { DEFECT_TYPES_SEQUENCE } from 'common/constants/defectTypes';
 import {
   ANALYZER_ATTRIBUTE_PREFIX,
   JOB_ATTRIBUTE_PREFIX,
@@ -24,7 +25,14 @@ export const projectPreferencesSelector = (state) => projectSelector(state).pref
 
 export const userFiltersSelector = (state) => projectPreferencesSelector(state).filters || [];
 
-export const defectTypesSelector = (state) => projectConfigSelector(state).subTypes || {};
+export const subTypesSelector = (state) => projectConfigSelector(state).subTypes || [];
+
+export const defectTypesSelector = createSelector(subTypesSelector, (subTypes) =>
+  DEFECT_TYPES_SEQUENCE.reduce(
+    (types, type) => (subTypes[type] ? { ...types, [type]: subTypes[type] } : types),
+    {},
+  ),
+);
 
 const attributesSelector = (state) => projectConfigSelector(state).attributes || {};
 
