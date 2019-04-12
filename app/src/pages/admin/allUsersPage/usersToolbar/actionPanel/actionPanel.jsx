@@ -14,6 +14,8 @@ import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { activeProjectSelector } from 'controllers/user';
 import { fetchMembersAction } from 'controllers/members';
 import { fetch } from 'common/utils';
+import { collectFilterEntities } from 'components/filterEntities/containers/utils';
+import { querySelector } from 'controllers/administrate/allUsers';
 
 import { EXPORT, INVITE_USER, ADD_USER } from './constants';
 
@@ -44,6 +46,7 @@ const messages = defineMessages({
 @connect(
   (state) => ({
     activeProject: activeProjectSelector(state),
+    filterEnities: collectFilterEntities(querySelector(state)),
   }),
   {
     showModalAction,
@@ -63,6 +66,7 @@ export class ActionPanel extends Component {
     fetchMembersAction: PropTypes.func,
     hideScreenLockAction: PropTypes.func,
     showModalAction: PropTypes.func,
+    filterEnities: PropTypes.object,
   };
   static defaultProps = {
     showScreenLockAction: () => {},
@@ -71,9 +75,10 @@ export class ActionPanel extends Component {
     fetchMembersAction: () => {},
     hideScreenLockAction: () => {},
     showModalAction: () => {},
+    filterEnities: {},
   };
   onExportUsers = () => {
-    window.location.href = URLS.exportUsers();
+    window.location.href = URLS.exportUsers(this.props.filterEnities);
   };
   inviteUser = (userData) => {
     const data = {};
