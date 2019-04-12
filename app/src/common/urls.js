@@ -200,10 +200,11 @@ export const URLS = {
     `${urlBase}user/search${getQueryParams({
       term,
     })}`,
-  exportUsers: () =>
+  exportUsers: (filterEntities) =>
     `${urlBase}user/export${getQueryParams({
       view: 'csv',
       access_token: getToken(),
+      ...createFilterQuery(filterEntities),
     })}`,
 
   info: () => `${urlBase}info`,
