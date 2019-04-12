@@ -16,6 +16,7 @@ import {
   SYSTEM_ISSUE,
   TO_INVESTIGATE,
   NO_DEFECT,
+  DEFECT_TYPES_SEQUENCE,
 } from 'common/constants/defectTypes';
 import {
   START_LAUNCH,
@@ -197,14 +198,6 @@ const messages = defineMessages({
 });
 
 const DEFECT_STATISTICS_BASE = 'statistics$defects$';
-
-const DEFECT_TYPES_SEQUENCE = [
-  PRODUCT_BUG.toUpperCase(),
-  AUTOMATION_BUG.toUpperCase(),
-  SYSTEM_ISSUE.toUpperCase(),
-  NO_DEFECT.toUpperCase(),
-  TO_INVESTIGATE.toUpperCase(),
-];
 
 const getLaunchStatusesOptions = (formatMessage) => [
   { value: STATS_TOTAL, label: formatMessage(messages.CriteriaTotal) },
