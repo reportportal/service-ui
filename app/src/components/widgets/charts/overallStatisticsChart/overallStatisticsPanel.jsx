@@ -17,7 +17,7 @@ export class OverallStatisticsPanel extends React.PureComponent {
   };
   render() {
     const { widget, isPreview } = this.props;
-    const values = widget.content.result.values;
+    const values = widget.content.result[0].values;
 
     return (
       <div className={cx('container')}>
