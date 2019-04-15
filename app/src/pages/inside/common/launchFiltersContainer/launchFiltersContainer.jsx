@@ -17,6 +17,7 @@ import { debounce } from 'common/utils';
 import { hideFilterOnLaunchesAction } from 'controllers/project';
 import { isEmptyValue } from 'common/utils/isEmptyValue';
 import { PAGE_KEY } from 'controllers/pagination';
+import { createFilterQuery } from 'components/filterEntities/containers/utils';
 
 @connect(
   (state) => ({
@@ -77,20 +78,22 @@ export class LaunchFiltersContainer extends Component {
 
   fetchLaunches = debounce((query) => this.props.fetchLaunchesWithParamsAction(query), 1000);
 
-  createFilterQuery = (conditions) =>
-    Object.keys(conditions)
-      .filter((id) => !isEmptyValue(conditions[id].value))
-      .reduce((res, key) => {
-        const condition = conditions[key];
-        return {
-          ...res,
-          [`filter.${condition.condition}.${key}`]: condition.value,
-        };
-      }, {});
+  createQuery = (conditions) =>
+    createFilterQuery(
+      Object.keys(conditions)
+        .filter((id) => !isEmptyValue(conditions[id].value))
+        .reduce((res, key) => {
+          const condition = conditions[key];
+          return {
+            ...res,
+            [condition.filteringField]: condition,
+          };
+        }, {}),
+    );
 
   handleFilterChange = (conditions) => {
-    const newFilter = this.createFilterQuery(conditions);
-    const currentFilter = this.createFilterQuery(this.getConditions());
+    const newFilter = this.createQuery(conditions);
+    const currentFilter = this.createQuery(this.getConditions());
 
     if (!isEqual(currentFilter, newFilter)) {
       this.fetchLaunches({ [PAGE_KEY]: 1, ...newFilter });

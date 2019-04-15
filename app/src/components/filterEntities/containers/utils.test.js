@@ -219,6 +219,104 @@ describe('createFilterQuery', () => {
       'filter.in.role': 'ADMINISTRATOR',
     });
   });
+
+  test('should add "filter.eq.attributeSystem: false" to requests with attributes', () => {
+    const filterWithAttributeKey = {
+      attributeKey: {
+        value: 'foo',
+        condition: 'cnt',
+      },
+    };
+    expect(createFilterQuery(filterWithAttributeKey)).toEqual({
+      'filter.cnt.attributeKey': 'foo',
+      'filter.eq.attributeSystem': false,
+    });
+
+    const filterWithAttributeValue = {
+      attributeValue: {
+        value: 'foo',
+        condition: 'cnt',
+      },
+    };
+    expect(createFilterQuery(filterWithAttributeValue)).toEqual({
+      'filter.cnt.attributeValue': 'foo',
+      'filter.eq.attributeSystem': false,
+    });
+  });
+
+  test('should set "attributeSystem" to null only in case of both empty attribute filters', () => {
+    const oldFilters = {
+      attributeKey: {
+        value: 'key',
+        condition: 'cnt',
+      },
+      attributeValue: {
+        value: 'value',
+        condition: 'cnt',
+      },
+    };
+    const newFiltersWithKey = {
+      name: {
+        value: 'name',
+        condition: 'cnt',
+      },
+      attributeKey: {
+        value: 'key',
+        condition: 'cnt',
+      },
+      attributeValue: {
+        value: '',
+        condition: 'cnt',
+      },
+    };
+    expect(createFilterQuery(newFiltersWithKey, oldFilters)).toEqual({
+      'filter.cnt.name': 'name',
+      'filter.cnt.attributeKey': 'key',
+      'filter.cnt.attributeValue': null,
+      'filter.eq.attributeSystem': false,
+    });
+    const newValuesWithValue = {
+      name: {
+        value: 'name',
+        condition: 'cnt',
+      },
+      attributeKey: {
+        value: '',
+        condition: 'cnt',
+      },
+      attributeValue: {
+        value: 'value',
+        condition: 'cnt',
+      },
+    };
+    expect(createFilterQuery(newValuesWithValue, oldFilters)).toEqual({
+      'filter.cnt.name': 'name',
+      'filter.cnt.attributeKey': null,
+      'filter.cnt.attributeValue': 'value',
+      'filter.eq.attributeSystem': false,
+    });
+
+    const newValuesWithNoAttributes = {
+      name: {
+        value: 'name',
+        condition: 'cnt',
+      },
+      attributeKey: {
+        value: '',
+        condition: 'cnt',
+      },
+      attributeValue: {
+        value: '',
+        condition: 'cnt',
+      },
+    };
+    expect(createFilterQuery(newValuesWithNoAttributes, oldFilters)).toEqual({
+      'filter.cnt.name': 'name',
+      'filter.cnt.attributeKey': null,
+      'filter.cnt.attributeValue': null,
+      'filter.eq.attributeSystem': null,
+    });
+  });
 });
 
 describe('resetOldCondition', () => {
