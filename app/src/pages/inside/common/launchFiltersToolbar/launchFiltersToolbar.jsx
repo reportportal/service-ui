@@ -142,6 +142,14 @@ export class LaunchFiltersToolbar extends Component {
   };
 
   toggleExpand = () => this.setState({ expanded: !this.state.expanded });
+  isFilterUnsaved = () => {
+    const { unsavedFilterIds, activeFilterId } = this.props;
+    return unsavedFilterIds.indexOf(activeFilterId) !== -1;
+  };
+  isSaveDisabled = () => {
+    const { filterErrors } = this.props;
+    return this.isFilterUnsaved() || filterErrors.length > 0;
+  };
 
   render() {
     const {
@@ -161,7 +169,6 @@ export class LaunchFiltersToolbar extends Component {
       unsavedFilterIds,
       level,
     } = this.props;
-    const isFilterUnsaved = unsavedFilterIds.indexOf(activeFilterId) !== -1;
     const isNewFilter = activeFilterId < 0;
     return (
       <div className={cx('launch-filters-toolbar')}>
@@ -209,11 +216,11 @@ export class LaunchFiltersToolbar extends Component {
                 />
               </div>
               <FiltersActionBar
-                unsaved={isFilterUnsaved}
-                discardDisabled={!isFilterUnsaved}
-                saveDisabled={!isFilterUnsaved}
-                cloneDisabled={isFilterUnsaved}
-                editDisabled={isFilterUnsaved || isNewFilter}
+                unsaved={this.isFilterUnsaved()}
+                discardDisabled={!this.isFilterUnsaved()}
+                saveDisabled={this.isSaveDisabled()}
+                cloneDisabled={this.isFilterUnsaved()}
+                editDisabled={this.isFilterUnsaved() || isNewFilter}
                 onDiscard={this.handleFilterReset}
                 onEdit={this.handleFilterEdit}
                 onSave={this.updateActiveFilter}
