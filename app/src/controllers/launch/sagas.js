@@ -21,6 +21,7 @@ import {
   launchDistinctSelector,
   launchesDistinctLinksSelectorsMap,
 } from './selectors';
+import { createFilterQuery } from '../../components/filterEntities/containers/utils';
 
 function* fetchLaunchesWithParams({ payload }) {
   const activeProject = yield select(activeProjectSelector);
@@ -43,15 +44,14 @@ function* fetchLaunches() {
   const filterId = yield select(filterIdSelector);
   const filters = yield select(launchFiltersSelector);
   const activeFilter = filters.find((filter) => filter.id === filterId);
-  const filtersQuery = activeFilter
-    ? activeFilter.conditions.filter(notEmptyConditionsPredicate).reduce(
-        (res, condition) => ({
-          ...res,
-          [`filter.${condition.condition}.${condition.filteringField}`]: condition.value,
-        }),
-        {},
-      )
-    : {};
+  let filtersQuery = {};
+  if (activeFilter) {
+    filtersQuery = createFilterQuery(
+      activeFilter.conditions
+        .filter(notEmptyConditionsPredicate)
+        .reduce((res, condition) => ({ ...res, [condition.filteringField]: condition }), {}),
+    );
+  }
   yield call(fetchLaunchesWithParams, { payload: filtersQuery });
 }
 
