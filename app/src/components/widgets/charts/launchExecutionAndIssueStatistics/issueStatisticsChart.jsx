@@ -94,11 +94,12 @@ export class IssueStatisticsChart extends Component {
   onIssuesChartCreated = (chart, element) => {
     this.chart = chart;
     this.issuesNode = element;
+
+    this.renderTotalLabel();
+
     if (!this.props.widget.content.result || this.props.isPreview) {
       return;
     }
-
-    this.renderTotalLabel();
 
     this.props.uncheckedLegendItems.forEach((id) => {
       this.chart.toggle(id);
@@ -154,7 +155,7 @@ export class IssueStatisticsChart extends Component {
 
   getConfig = () => {
     const DEFECTS = '$defects$';
-    const { widget, container } = this.props;
+    const { widget, container, isPreview } = this.props;
     const values = getResult(widget).values;
     const defectDataItems = getChartData(values, DEFECTS);
 
@@ -189,10 +190,10 @@ export class IssueStatisticsChart extends Component {
         onclick: this.onChartClick,
       },
       interaction: {
-        enabled: !self.isPreview,
+        enabled: !isPreview,
       },
       padding: {
-        top: self.isPreview ? 0 : 85,
+        top: isPreview ? 0 : 85,
       },
       legend: {
         show: false, // we use custom legend

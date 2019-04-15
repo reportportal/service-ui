@@ -91,11 +91,12 @@ export class LaunchExecutionChart extends Component {
   onStatusChartCreated = (chart, element) => {
     this.chart = chart;
     this.statusNode = element;
+
+    this.renderTotalLabel();
+
     if (!this.props.widget.content.result || this.props.isPreview) {
       return;
     }
-
-    this.renderTotalLabel();
 
     this.props.uncheckedLegendItems.forEach((id) => {
       this.chart.toggle(id);
@@ -148,7 +149,7 @@ export class LaunchExecutionChart extends Component {
 
   getConfig = () => {
     const EXECUTIONS = '$executions$';
-    const { widget, container } = this.props;
+    const { widget, container, isPreview } = this.props;
     const values = getResult(widget).values;
     const statusDataItems = getChartData(values, EXECUTIONS);
     const statusChartData = statusDataItems.itemTypes;
@@ -193,10 +194,10 @@ export class LaunchExecutionChart extends Component {
         onclick: this.onChartClick,
       },
       interaction: {
-        enabled: !self.isPreview,
+        enabled: !isPreview,
       },
       padding: {
-        top: self.isPreview ? 0 : 85,
+        top: isPreview ? 0 : 85,
       },
       legend: {
         show: false, // we use custom legend
