@@ -31,8 +31,33 @@ class ColorPickerComponent extends Component {
     intl: intlShape.isRequired,
   };
 
-  state = {
-    opened: false,
+  constructor(props) {
+    super(props);
+    this.state = {
+      opened: false,
+    };
+
+    this.pickerNode = null;
+    this.controlNode = null;
+  }
+
+  componentDidMount() {
+    document.addEventListener('click', this.handleClickOutside);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('click', this.handleClickOutside);
+  }
+
+  handleClickOutside = (e) => {
+    if (
+      this.pickerNode &&
+      !this.pickerNode.contains(e.target) &&
+      this.controlNode &&
+      !this.controlNode.contains(e.target)
+    ) {
+      this.setState({ opened: false });
+    }
   };
 
   toggleColorPicker = () => {
@@ -49,7 +74,10 @@ class ColorPickerComponent extends Component {
           {({ ref }) => (
             <button
               type="button"
-              ref={ref}
+              ref={(node) => {
+                ref(node);
+                this.controlNode = node;
+              }}
               className={cx('control', { 'control-opened': opened })}
               onClick={this.toggleColorPicker}
             >
@@ -59,14 +87,18 @@ class ColorPickerComponent extends Component {
         </Reference>
         {opened &&
           ReactDOM.createPortal(
-            <Popper placement="bottom-start">
+            <Popper
+              innerRef={(node) => {
+                this.pickerNode = node;
+              }}
+              placement="bottom-start"
+            >
               {({ ref, style, placement }) => (
                 <div
                   className={cx('color-picker')}
                   ref={ref}
                   style={style}
                   data-placement={placement}
-                  onClick={(e) => e.stopPropagation()}
                 >
                   <div className={cx('title')}>{intl.formatMessage(messages.pickSwatch)}:</div>
                   <CirclePicker
