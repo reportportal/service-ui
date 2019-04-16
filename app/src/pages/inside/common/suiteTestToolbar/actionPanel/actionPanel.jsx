@@ -3,7 +3,6 @@ import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
-import { redirect } from 'redux-first-router';
 import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
 import {
   breadcrumbsSelector,
@@ -24,6 +23,7 @@ import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import RefreshIcon from 'common/img/refresh-inline.svg';
 import HistoryIcon from 'common/img/history-inline.svg';
 import DeleteIcon from 'common/img/bin-icon-inline.svg';
+import { redirectAction } from 'common/utils/routingUtils';
 import styles from './actionPanel.scss';
 
 const cx = classNames.bind(styles);
@@ -89,7 +89,7 @@ const messages = defineMessages({
   }),
   {
     restorePath: restorePathAction,
-    redirect,
+    redirect: redirectAction,
   },
 )
 @injectIntl

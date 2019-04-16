@@ -1,5 +1,4 @@
 import { takeEvery, all, put, select, take } from 'redux-saga/effects';
-import { redirect } from 'redux-first-router';
 import { fetchDataAction, concatFetchDataAction, FETCH_SUCCESS } from 'controllers/fetch';
 import { activeProjectSelector } from 'controllers/user';
 import { URLS } from 'common/urls';
@@ -62,15 +61,13 @@ function* updateLaunchesFilter({ payload: filter }) {
 
 function* changeActiveFilter({ payload: filterId }) {
   const activeProject = yield select(activeProjectSelector);
-  yield put(
-    redirect({
-      type: PROJECT_LAUNCHES_PAGE,
-      payload: {
-        projectId: activeProject,
-        filterId,
-      },
-    }),
-  );
+  yield put({
+    type: PROJECT_LAUNCHES_PAGE,
+    payload: {
+      projectId: activeProject,
+      filterId,
+    },
+  });
 }
 
 function* resetFilter({ payload: filterId }) {

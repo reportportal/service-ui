@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { redirect } from 'redux-first-router';
 import { defineMessages, injectIntl, intlShape } from 'react-intl';
 import track from 'react-tracking';
 import classNames from 'classnames/bind';
@@ -16,6 +15,7 @@ import {
 } from 'common/constants/settingsTabs';
 import { settingsTabSelector } from 'controllers/pages';
 import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
+import { redirectAction } from 'common/utils/routingUtils';
 import { SETTINGS_PAGE, SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { BetaBadge } from 'pages/inside/common/betaBadge';
 import { NavigationTabs } from 'components/main/navigationTabs';
@@ -62,7 +62,7 @@ const messages = defineMessages({
     userRole: activeProjectRoleSelector(state),
   }),
   {
-    changeTab: (link) => redirect(link),
+    onChangeTab: redirectAction,
   },
 )
 @injectIntl

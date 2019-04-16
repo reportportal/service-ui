@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Responsive, WidthProvider } from 'react-grid-layout';
 import classNames from 'classnames/bind';
-import { redirect } from 'redux-first-router';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import ReactObserver from 'react-event-observer';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
@@ -36,7 +35,6 @@ const messages = defineMessages({
       URLS.dashboardWidget(activeProjectSelector(state), ownProps.dashboard.id, widgetId),
   }),
   {
-    redirect,
     showNotification,
     fetchDashboardAction,
     updateDashboardWidgetsAction,
@@ -48,7 +46,6 @@ export class WidgetsGrid extends Component {
     deleteWidgetUrl: PropTypes.func.isRequired,
     isFullscreen: PropTypes.bool,
     isModifiable: PropTypes.bool,
-    redirect: PropTypes.func.isRequired,
     showNotification: PropTypes.func.isRequired,
     fetchDashboardAction: PropTypes.func.isRequired,
     updateDashboardWidgetsAction: PropTypes.func.isRequired,

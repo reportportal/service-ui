@@ -4,7 +4,6 @@ import { injectIntl, intlShape } from 'react-intl';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
 import moment from 'moment/moment';
-import { redirect } from 'redux-first-router';
 import * as d3 from 'd3-selection';
 import ReactDOMServer from 'react-dom/server';
 import { TEST_ITEM_PAGE } from 'controllers/pages';
@@ -15,6 +14,7 @@ import { createFilterAction } from 'controllers/filter';
 import { PASSED, FAILED, SKIPPED, INTERRUPTED } from 'common/constants/testStatuses';
 import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
 import { ENTITY_START_TIME, CONDITION_BETWEEN } from 'components/filterEntities/constants';
+import { redirectAction } from 'common/utils/routingUtils';
 import {
   getItemColor,
   getItemName,
@@ -41,7 +41,7 @@ const cx = classNames.bind(styles);
     getStatisticsLink: (params) => statisticsLinkSelector(state, params),
   }),
   {
-    redirect,
+    redirect: redirectAction,
     createFilterAction,
   },
 )

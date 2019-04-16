@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { FormattedMessage } from 'react-intl';
-import { redirect as redirectAction } from 'redux-first-router';
 import { LOG_PAGE_EVENTS } from 'components/main/analytics/events';
 import { Breadcrumbs } from 'components/main/breadcrumbs';
 import { GhostButton } from 'components/buttons/ghostButton';
@@ -11,6 +10,7 @@ import LeftArrowIcon from 'common/img/arrow-left-small-inline.svg';
 import RightArrowIcon from 'common/img/arrow-right-small-inline.svg';
 import RefreshIcon from 'common/img/refresh-icon-inline.svg';
 import { breadcrumbsSelector } from 'controllers/testItem';
+import { redirectAction } from 'common/utils/routingUtils';
 import {
   nextLogLinkSelector,
   previousLogLinkSelector,

@@ -2,8 +2,6 @@ import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { injectIntl, intlShape } from 'react-intl';
-import { redirect } from 'redux-first-router';
-
 import {
   assignToProjectAction,
   unassignFromProjectAction,
@@ -11,8 +9,10 @@ import {
   userIdSelector,
 } from 'controllers/user';
 import { showModalAction } from 'controllers/modal';
-import { deleteProjectAction } from 'controllers/administrate/projects';
-import { PROJECT_DETAILS_PAGE } from 'controllers/pages';
+import {
+  deleteProjectAction,
+  redirectToProjectSectionAction,
+} from 'controllers/administrate/projects';
 import { SETTINGS, MEMBERS } from 'common/constants/projectSections';
 import { DotsMenuButton, SEPARATOR_ITEM, DANGER_ITEM } from 'components/buttons/dotsMenuButton';
 import { ADMIN_ALL_PROJECTS_PAGE_MODAL_EVENTS } from 'components/main/analytics/events';
@@ -24,11 +24,11 @@ import { messages } from '../messages';
     userId: userIdSelector(state),
   }),
   {
-    redirect,
     showModal: showModalAction,
     assignToProject: assignToProjectAction,
     unassignFromProject: unassignFromProjectAction,
     deleteProject: deleteProjectAction,
+    redirectToProjectSection: redirectToProjectSectionAction,
   },
 )
 @injectIntl
@@ -38,7 +38,7 @@ export class ProjectMenu extends Component {
     intl: intlShape.isRequired,
     isAssigned: PropTypes.bool.isRequired,
     userId: PropTypes.string.isRequired,
-    redirect: PropTypes.func.isRequired,
+    redirectToProjectSection: PropTypes.func.isRequired,
     assignToProject: PropTypes.func.isRequired,
     unassignFromProject: PropTypes.func.isRequired,
     deleteProject: PropTypes.func.isRequired,
@@ -123,18 +123,12 @@ export class ProjectMenu extends Component {
 
   redirectToMembers = () => {
     const { projectName } = this.props.project;
-    this.props.redirect({
-      type: PROJECT_DETAILS_PAGE,
-      payload: { projectId: projectName, projectSection: MEMBERS },
-    });
+    this.props.redirectToProjectSection(projectName, MEMBERS);
   };
 
   redirectToSettings = () => {
     const { projectName } = this.props.project;
-    this.props.redirect({
-      type: PROJECT_DETAILS_PAGE,
-      payload: { projectId: projectName, projectSection: SETTINGS },
-    });
+    this.props.redirectToProjectSection(projectName, SETTINGS);
   };
 
   render() {

@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { redirect } from 'redux-first-router';
 import { injectIntl, intlShape } from 'react-intl';
 import classNames from 'classnames/bind';
 import { PageLayout, PageHeader, PageSection } from 'layouts/pageLayout';
@@ -12,13 +11,13 @@ import {
   projectSectionSelector,
 } from 'controllers/pages';
 import { SETTINGS, MEMBERS, EVENTS } from 'common/constants/projectSections';
-import { GENERAL } from 'common/constants/settingsTabs';
 import { GhostButton } from 'components/buttons/ghostButton';
 import AddProjectIcon from 'common/img/add-project-inline.svg';
 import ProjectUsersIcon from 'common/img/project-users-inline.svg';
 import ProjectSettingsIcon from 'common/img/project-settings-inline.svg';
 import ProjectEventsIcon from 'common/img/project-events-inline.svg';
 import { MembersPage } from 'pages/common/membersPage';
+import { redirectToProjectSectionAction } from 'controllers/administrate/projects';
 import { ProjectStatusPage } from '../projectStatusPage';
 import { ProjectEventsPage } from '../projectEventsPage';
 import { Projects } from './projects';
@@ -50,15 +49,7 @@ const HEADER_BUTTONS = [
     section: projectSectionSelector(state),
   }),
   {
-    redirectToSection: (projectId, section) =>
-      redirect({
-        type: PROJECT_DETAILS_PAGE,
-        payload: {
-          projectId,
-          projectSection: section,
-          settingsTab: section === SETTINGS ? GENERAL : undefined,
-        },
-      }),
+    redirectToSection: redirectToProjectSectionAction,
   },
 )
 @injectIntl

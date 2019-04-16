@@ -1,5 +1,4 @@
 import { takeEvery, takeLatest, race, take, all, put, select, call } from 'redux-saga/effects';
-import { redirect } from 'redux-first-router';
 import { fetchDataAction } from 'controllers/fetch';
 import { URLS } from 'common/urls';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
@@ -87,12 +86,10 @@ function* redirectToProject({ payload }) {
     }
   }
   if (isAssigned) {
-    yield put(
-      redirect({
-        type: PROJECT_PAGE,
-        payload: { projectId: project.projectName },
-      }),
-    );
+    yield put({
+      type: PROJECT_PAGE,
+      payload: { projectId: project.projectName },
+    });
   }
 }
 
