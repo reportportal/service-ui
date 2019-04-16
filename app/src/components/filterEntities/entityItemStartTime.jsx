@@ -1,13 +1,14 @@
 import PropTypes from 'prop-types';
 import moment from 'moment/moment';
-import { utcOffset, getMinutesFromTimestamp, parseDateTimeRange } from 'common/utils';
+import { FormattedMessage } from 'react-intl';
+import { getMinutesFromTimestamp, parseDateTimeRange, utcOffset } from 'common/utils';
 import { FieldFilterEntity } from 'components/fields/fieldFilterEntity';
 import { InputTimeDateRange } from 'components/inputs/inputTimeDateRange';
 import { CONDITION_BETWEEN } from 'components/filterEntities/constants';
 
 const presets = [
   {
-    label: 'Today',
+    label: <FormattedMessage id="EntityItemStartTime.today" defaultMessage="Today" />,
     value: {
       start: moment()
         .startOf('day')
@@ -20,7 +21,7 @@ const presets = [
     },
   },
   {
-    label: 'Last 2 days',
+    label: <FormattedMessage id="EntityItemStartTime.last2days" defaultMessage="Last 2 days" />,
     value: {
       start: moment()
         .startOf('day')
@@ -34,7 +35,7 @@ const presets = [
     },
   },
   {
-    label: 'Last 7 days',
+    label: <FormattedMessage id="EntityItemStartTime.last7days" defaultMessage="Last 7 days" />,
     value: {
       start: moment()
         .startOf('day')
@@ -48,7 +49,7 @@ const presets = [
     },
   },
   {
-    label: 'Last 30 days',
+    label: <FormattedMessage id="EntityItemStartTime.last30days" defaultMessage="Last 30 days" />,
     value: {
       start: moment()
         .startOf('day')
