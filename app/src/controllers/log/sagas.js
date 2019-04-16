@@ -24,6 +24,7 @@ import {
   prevActiveLogIdSelector,
   querySelector,
   activeRetryIdSelector,
+  prevActiveRetryIdSelector,
 } from './selectors';
 import { attachmentSagas, clearAttachmentsAction } from './attachments';
 import { getWithAttachments, getLogLevel } from './storageUtils';
@@ -78,7 +79,9 @@ function* fetchWholePage() {
 function* fetchHistoryItemData() {
   const activeLogId = yield select(activeLogIdSelector);
   const prevActiveLogId = yield select(prevActiveLogIdSelector);
-  if (activeLogId !== prevActiveLogId) {
+  const activeRetryId = yield select(activeRetryIdSelector);
+  const prevActiveRetryId = yield select(prevActiveRetryIdSelector);
+  if (activeLogId !== prevActiveLogId || activeRetryId !== prevActiveRetryId) {
     yield all([call(fetchLogItems), call(fetchActivity), put(clearAttachmentsAction())]);
   } else {
     yield call(fetchLogItems);

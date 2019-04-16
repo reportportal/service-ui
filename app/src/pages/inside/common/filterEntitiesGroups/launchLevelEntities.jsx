@@ -115,6 +115,10 @@ const messages = defineMessages({
     id: 'LaunchLevelEntities.TO_INVESTIGATE_title',
     defaultMessage: 'To investigate',
   },
+  TO_INVESTIGATE_totalTitle: {
+    id: 'LaunchLevelEntities.TO_INVESTIGATE_totalTitle',
+    defaultMessage: 'Total to investigate',
+  },
   LAUNCH_NUMBER_PLACEHOLDER: {
     id: 'LaunchLevelEntities.launchNumberPlaceholder',
     defaultMessage: 'Enter number',
