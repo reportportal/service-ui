@@ -1,4 +1,3 @@
-import { redirect } from 'redux-first-router';
 import {
   FETCH_SUCCESS,
   fetchDataAction,
@@ -36,16 +35,14 @@ function* updateLaunchId(launchId) {
   const payload = yield select(payloadSelector);
   const query = yield select(pagePropertiesSelector);
   const testItemIdsArray = yield select(testItemIdsArraySelector);
-  yield put(
-    redirect({
-      type: TEST_ITEM_PAGE,
-      payload: {
-        ...payload,
-        testItemIds: [launchId, ...testItemIdsArray.slice(1)].join('/'),
-      },
-      meta: { query },
-    }),
-  );
+  yield put({
+    type: TEST_ITEM_PAGE,
+    payload: {
+      ...payload,
+      testItemIds: [launchId, ...testItemIdsArray.slice(1)].join('/'),
+    },
+    meta: { query },
+  });
 }
 
 function* restorePath() {

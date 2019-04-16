@@ -5,6 +5,9 @@ import {
   unselectAllItemsAction,
 } from 'controllers/groupOperations';
 import { showModalAction } from 'controllers/modal';
+import { PROJECT_DETAILS_PAGE } from 'controllers/pages';
+import { SETTINGS } from 'common/constants/projectSections';
+import { GENERAL } from 'common/constants/settingsTabs';
 import {
   FETCH_PROJECTS,
   START_SET_VIEW_MODE,
@@ -52,4 +55,13 @@ export const redirectToProjectAction = (project) => ({
 export const confirmAssignToProject = (project) => ({
   type: CONFIRM_ASSIGN_TO_PROJECT,
   payload: project,
+});
+
+export const redirectToProjectSectionAction = (projectName, section) => ({
+  type: PROJECT_DETAILS_PAGE,
+  payload: {
+    projectId: projectName,
+    projectSection: section,
+    settingsTab: section === SETTINGS ? GENERAL : undefined,
+  },
 });

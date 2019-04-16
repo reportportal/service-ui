@@ -24,12 +24,12 @@ import { injectIntl, intlShape } from 'react-intl';
 import * as d3 from 'd3-selection';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
-import { redirect } from 'redux-first-router';
 import ReactDOMServer from 'react-dom/server';
 import { defectLinkSelector } from 'controllers/testItem';
 import { defectTypesSelector } from 'controllers/project';
 import { activeProjectSelector } from 'controllers/user';
 import { TEST_ITEM_PAGE } from 'controllers/pages';
+import { redirectAction } from 'common/utils/routingUtils';
 import { TooltipWrapper } from '../common/tooltip';
 import { C3Chart } from '../common/c3chart';
 import chartStyles from './launchExecutionAndIssueStatistics.scss';
@@ -50,7 +50,7 @@ const getResult = (widget) => widget.content.result[0] || widget.content.result;
     getDefectLink: (params) => defectLinkSelector(state, params),
   }),
   {
-    redirect,
+    redirect: redirectAction,
   },
 )
 export class IssueStatisticsChart extends Component {

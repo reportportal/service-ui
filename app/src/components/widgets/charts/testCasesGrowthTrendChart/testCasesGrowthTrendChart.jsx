@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import ReactDOMServer from 'react-dom/server';
 import { connect } from 'react-redux';
-import { redirect } from 'redux-first-router';
 import moment from 'moment';
 import * as d3 from 'd3-selection';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
@@ -14,6 +13,7 @@ import { TEST_ITEM_PAGE } from 'controllers/pages';
 import * as COLORS from 'common/constants/colors';
 import * as STATUSES from 'common/constants/testStatuses';
 import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
+import { redirectAction } from 'common/utils/routingUtils';
 import { messages } from '../common/messages';
 import { C3Chart } from '../common/c3chart';
 import { TooltipWrapper } from '../common/tooltip';
@@ -42,7 +42,7 @@ const localMessages = defineMessages({
     }),
   }),
   {
-    redirect,
+    redirect: redirectAction,
   },
 )
 export class TestCasesGrowthTrendChart extends Component {

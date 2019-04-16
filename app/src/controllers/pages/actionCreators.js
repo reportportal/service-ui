@@ -1,4 +1,3 @@
-import { redirect } from 'redux-first-router';
 import isEqual from 'fast-deep-equal';
 import { mergeQuery } from 'common/utils/routingUtils';
 
@@ -19,5 +18,5 @@ export const updatePagePropertiesAction = (properties) => (dispatch, getState) =
     meta: { query: newQuery },
   };
 
-  dispatch(redirect(updatedAction));
+  dispatch(updatedAction);
 };

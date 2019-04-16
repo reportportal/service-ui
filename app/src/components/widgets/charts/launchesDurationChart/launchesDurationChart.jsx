@@ -3,13 +3,13 @@ import PropTypes from 'prop-types';
 import { injectIntl, intlShape } from 'react-intl';
 import ReactDOMServer from 'react-dom/server';
 import { connect } from 'react-redux';
-import { redirect } from 'redux-first-router';
 import classNames from 'classnames/bind';
 import { activeProjectSelector } from 'controllers/user';
 import { TEST_ITEM_PAGE } from 'controllers/pages';
 import { COLOR_CHART_DURATION, COLOR_FAILED } from 'common/constants/colors';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { ALL } from 'common/constants/reservedFilterIds';
+import { redirectAction } from 'common/utils/routingUtils';
 import { isValueInterrupted, transformCategoryLabel, getLaunchAxisTicks } from '../common/utils';
 import { C3Chart } from '../common/c3chart';
 import { LaunchDurationTooltip } from './launchDurationTooltip';
@@ -25,7 +25,7 @@ const cx = classNames.bind(styles);
     projectId: activeProjectSelector(state),
   }),
   {
-    redirect,
+    redirect: redirectAction,
   },
 )
 export class LaunchesDurationChart extends Component {

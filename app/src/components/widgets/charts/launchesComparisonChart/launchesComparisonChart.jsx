@@ -3,13 +3,13 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { connect } from 'react-redux';
-import { redirect } from 'redux-first-router';
 import * as d3 from 'd3-selection';
 import ReactDOMServer from 'react-dom/server';
 import { TEST_ITEM_PAGE } from 'controllers/pages';
 import { defectTypesSelector } from 'controllers/project';
 import { defectLinkSelector, statisticsLinkSelector } from 'controllers/testItem';
 import { activeProjectSelector } from 'controllers/user';
+import { redirectAction } from 'common/utils/routingUtils';
 import {
   getDefectTypeLocators,
   getItemColor,
@@ -38,7 +38,7 @@ const messages = defineMessages({
     getStatisticsLink: (name) => statisticsLinkSelector(state, { statuses: [name] }),
   }),
   {
-    redirect,
+    redirect: redirectAction,
   },
 )
 export class LaunchesComparisonChart extends Component {

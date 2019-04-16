@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { redirect } from 'redux-first-router';
 import { defineMessages, injectIntl, intlShape } from 'react-intl';
 import { SERVER_SETTINGS_TAB_PAGE, settingsTabSelector } from 'controllers/pages';
 import {
@@ -10,6 +9,7 @@ import {
   STATISTICS,
 } from 'common/constants/settingsTabs';
 import { NavigationTabs } from 'components/main/navigationTabs';
+import { redirectAction } from 'common/utils/routingUtils';
 import { EmailServerTab } from './emailServerTab';
 import { AuthConfigurationTab } from './authConfigurationTab';
 import { StatisticsTab } from './statisticsTab';
@@ -34,7 +34,7 @@ const messages = defineMessages({
     activeTab: settingsTabSelector(state),
   }),
   {
-    onChangeTab: redirect,
+    onChangeTab: redirectAction,
   },
 )
 @injectIntl

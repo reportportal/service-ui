@@ -1,5 +1,4 @@
 import { takeEvery, all, put, select, call } from 'redux-saga/effects';
-import { redirect } from 'redux-first-router';
 import { URLS } from 'common/urls';
 import { APPLICATION_SETTINGS } from 'common/constants/localStorageKeys';
 import { debugModeSelector } from 'controllers/launch';
@@ -60,7 +59,7 @@ function* changeLaunchDistinct({ payload }) {
   const filterId = yield select(filterIdSelector);
   if (launchesDistinctLinksSelectorsMap[filterId]) {
     const launchesLink = yield select(launchesDistinctLinksSelectorsMap[payload]);
-    yield put(redirect(launchesLink));
+    yield put(launchesLink);
   } else {
     yield call(fetchLaunches);
   }
