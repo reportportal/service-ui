@@ -13,7 +13,6 @@ const cx = classNames.bind(styles);
   TooltipComponent: InvalidIconTooltip,
   data: {
     width: 160,
-    noArrow: false,
     desktopOnly: true,
   },
 })

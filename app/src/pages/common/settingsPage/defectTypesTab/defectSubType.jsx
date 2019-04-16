@@ -12,6 +12,7 @@ import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { showModalAction } from 'controllers/modal';
 import { deleteDefectSubTypeAction } from 'controllers/project';
 import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
+import { withHoverableTooltip } from 'components/main/tooltips/hoverableTooltip';
 
 import { defectTypeShape } from './defectTypeShape';
 import { DefectSubTypeForm } from './defectSubTypeForm';
@@ -27,6 +28,24 @@ const ColorMarker = ({ color }) => (
 
 ColorMarker.propTypes = {
   color: PropTypes.string.isRequired,
+};
+
+const DefectTypeName = withHoverableTooltip({
+  TooltipComponent: ({ locator }) => `locator: ${locator}`,
+  data: {
+    placement: 'bottom',
+  },
+})(({ color, longName }) => (
+  <span className={cx('defect-type-name-wrap')}>
+    <ColorMarker color={color} />
+    <span className={cx('defect-type-name')}>{longName}</span>
+  </span>
+));
+
+DefectTypeName.propTypes = {
+  color: PropTypes.string.isRequired,
+  longName: PropTypes.string.isRequired,
+  locator: PropTypes.string.isRequired,
 };
 
 @connect(null, {
@@ -140,7 +159,7 @@ export class DefectSubType extends Component {
   render() {
     const {
       data,
-      data: { color, longName, shortName },
+      data: { color, locator, longName, shortName },
       parentType,
       group,
       closeNewSubTypeForm,
@@ -162,10 +181,7 @@ export class DefectSubType extends Component {
         ) : (
           <Fragment>
             <div className={cx('name-cell')}>
-              <span className={cx('defect-type-name-wrap')}>
-                <ColorMarker color={color} />
-                <span className={cx('defect-type-name')}>{longName}</span>
-              </span>
+              <DefectTypeName color={color} longName={longName} locator={locator} />
             </div>
             <div className={cx('abbr-cell')}>{shortName}</div>
             <div className={cx('color-cell')}>
