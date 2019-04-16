@@ -17,6 +17,7 @@ export const WITH_ATTACHMENTS_FILTER_KEY = 'filter.ex.binaryContent';
 export const LOG_VIEW_MODE_STORAGE_KEY = 'logViewMode';
 export const DEFAULT_SORTING = formatSortingString(['logTime'], SORTING_ASC);
 export const RETRY_ID = 'retryId';
+export const ACTIVE_LOG_ITEM_QUERY_KEY = 'history';
 
 export const LOG_LEVELS = [
   {

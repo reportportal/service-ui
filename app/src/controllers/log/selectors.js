@@ -20,7 +20,7 @@ import {
   getNextItem,
   getUpdatedLogQuery,
 } from './utils';
-import { NAMESPACE, DEFAULT_SORTING, RETRY_ID } from './constants';
+import { NAMESPACE, DEFAULT_SORTING, RETRY_ID, ACTIVE_LOG_ITEM_QUERY_KEY } from './constants';
 
 const logSelector = (state) => state.log || {};
 
@@ -73,10 +73,14 @@ export const historyItemsSelector = createSelector(
   },
 );
 
-const createActiveLogItemIdSelector = (pageQuerySelector) =>
-  createSelector(logItemIdSelector, pageQuerySelector, (logItemId, query) => {
+const createActiveLogItemIdSelector = (
+  pageQuerySelector,
+  itemIdSelector = logItemIdSelector,
+  itemQueryKey = ACTIVE_LOG_ITEM_QUERY_KEY,
+) =>
+  createSelector(itemIdSelector, pageQuerySelector, (logItemId, query) => {
     const namespacedQuery = extractNamespacedQuery(query, NAMESPACE);
-    return Number(namespacedQuery.history) || logItemId;
+    return parseInt(namespacedQuery[itemQueryKey], 10) || logItemId;
   });
 
 export const activeLogIdSelector = createActiveLogItemIdSelector(pagePropertiesSelector);
@@ -93,13 +97,15 @@ export const retriesSelector = createSelector(activeLogSelector, (logItem = {}) 
   return [...retries, logItem];
 });
 
-export const activeRetryIdSelector = createSelector(
-  activeLogIdSelector,
+export const activeRetryIdSelector = createActiveLogItemIdSelector(
   pagePropertiesSelector,
-  (logItemId, query) => {
-    const namespacedQuery = extractNamespacedQuery(query, NAMESPACE);
-    return parseInt(namespacedQuery[RETRY_ID], 10) || logItemId;
-  },
+  activeLogIdSelector,
+  RETRY_ID,
+);
+export const prevActiveRetryIdSelector = createActiveLogItemIdSelector(
+  prevPagePropertiesSelector,
+  activeLogIdSelector,
+  RETRY_ID,
 );
 
 export const activeRetrySelector = createSelector(

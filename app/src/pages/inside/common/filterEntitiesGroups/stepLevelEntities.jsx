@@ -221,6 +221,10 @@ const messages = defineMessages({
     id: 'StepLevelEntities.NO_DEFECT_ALL',
     defaultMessage: 'All no defects',
   },
+  TO_INVESTIGATE_ALL: {
+    id: 'StepLevelEntities.TO_INVESTIGATE_ALL',
+    defaultMessage: 'All to investigate',
+  },
   Defect_Type_AB001: {
     id: 'StepLevelEntities.Defect_Type_AB001',
     defaultMessage: 'Automation bug',

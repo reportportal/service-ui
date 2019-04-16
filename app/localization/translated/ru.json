@@ -693,6 +693,7 @@
   "LaunchLevelEntities.SkippedTitle": "Пропущено",
   "LaunchLevelEntities.StartTimeTitle": "Время запуска",
   "LaunchLevelEntities.TO_INVESTIGATE_title": "Требуется анализ",
+  "LaunchLevelEntities.TO_INVESTIGATE_totalTitle": "Всего требуют анализа",
   "LaunchLevelEntities.TotalTitle": "Всего",
   "LaunchLevelEntities.descriptionPlaceholder": "Enter description",
   "LaunchLevelEntities.entityItemAttributeKeys.placeholder": "Enter attribute keys",
