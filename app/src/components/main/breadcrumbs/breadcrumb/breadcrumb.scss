@@ -5,8 +5,12 @@
   padding-right: 5px;
   font-size: 12px;
   color: $COLOR--charcoal-grey;
-  word-break: break-word;
   line-height: 18px;
+  word-break: break-all;
+
+  @supports (word-break: break-word) {
+    word-break: break-word;
+  }
 
   .list-view-icon {
     display: inline-block;
