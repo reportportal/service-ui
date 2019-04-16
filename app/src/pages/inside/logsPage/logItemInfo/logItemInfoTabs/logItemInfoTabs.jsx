@@ -111,7 +111,7 @@ export class LogItemInfoTabs extends Component {
     this.setState({
       activeAttachmentId,
     });
-  isShowHistoryTab = () => {
+  isHistoryTabVisible = () => {
     const { retryId, logId } = this.props;
     return retryId === logId;
   };
@@ -131,7 +131,7 @@ export class LogItemInfoTabs extends Component {
       componentProps: {},
       eventInfo: LOG_PAGE_EVENTS.ACTIONS_TAB,
     };
-    const arr = [
+    const tabs = [
       {
         id: 'stack',
         label: formatMessage(messages.stackTab),
@@ -175,10 +175,10 @@ export class LogItemInfoTabs extends Component {
         },
       },
     ];
-    if (this.isShowHistoryTab()) {
-      arr.push(history);
+    if (this.isHistoryTabVisible()) {
+      tabs.push(history);
     }
-    return arr;
+    return tabs;
   };
 
   toggleThirdPartyIntegrationContent = () => {

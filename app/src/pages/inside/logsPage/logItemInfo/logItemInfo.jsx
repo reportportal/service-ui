@@ -81,7 +81,7 @@ const messages = defineMessages({
 @connectRouter(
   () => {},
   {
-    updateRetryId: (query) => ({ ...query }),
+    updateRetryId: (id) => ({ [RETRY_ID]: id }),
   },
   { namespace: NAMESPACE },
 )
@@ -190,15 +190,15 @@ export class LogItemInfo extends Component {
       !this.getLastWithDefect()
     );
   };
-  isHasRetries = () => {
+  hasRetries = () => {
     const { retries } = this.props;
     return retries.length > 1;
   };
-  isShowDefectType = () => {
+  isDefectTypeVisible = () => {
     const { logItem } = this.props;
     return logItem.issue && logItem.issue.issueType;
   };
-  addExtraSpaceTop = () => this.isShowDefectType() && this.isHasRetries();
+  addExtraSpaceTop = () => this.isDefectTypeVisible() && this.hasRetries();
   handleLinkIssue = () => {
     this.props.linkIssueAction([this.props.logItem], {
       fetchFunc: this.props.fetchFunc,
@@ -216,10 +216,7 @@ export class LogItemInfo extends Component {
     return retries.map((item, index) => {
       const selected = item.id === retryItemId;
       const retryNumber = index + 1;
-      const updateActiveRetry = () => {
-        const { id } = item;
-        this.props.updateRetryId({ [RETRY_ID]: id });
-      };
+      const updateActiveRetry = () => this.props.updateRetryId(item.id);
       return (
         <Retry
           key={item.id}
@@ -247,7 +244,7 @@ export class LogItemInfo extends Component {
         <div className={cx('container')}>
           <div className={cx('content')}>
             <div className={cx('description')}>
-              {this.isShowDefectType() && (
+              {this.isDefectTypeVisible() && (
                 <DefectType
                   issue={logItem.issue}
                   onEdit={this.handleEditDefect}
@@ -282,7 +279,7 @@ export class LogItemInfo extends Component {
                 </GhostButton>
               </div>
             </div>
-            {this.isHasRetries() && (
+            {this.hasRetries() && (
               <div
                 className={cx('retries', {
                   'extra-space-top': this.addExtraSpaceTop(),
