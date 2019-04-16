@@ -14,10 +14,15 @@ const cx = classNames.bind(styles);
   TooltipComponent: DefectTypeTooltip,
   data: {
     width: 235,
-    align: 'right',
+    placement: 'bottom-end',
     noArrow: true,
     desktopOnly: true,
-    verticalOffset: -10,
+    modifiers: {
+      offset: { offset: '0, -10px' },
+      flip: { enabled: false },
+      preventOverflow: { enabled: false },
+      hide: { enabled: false },
+    },
   },
 })
 @connect((state) => ({

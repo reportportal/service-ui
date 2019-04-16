@@ -22,6 +22,8 @@
 import { storiesOf } from '@storybook/react';
 import { host } from 'storybook-host';
 import { withReadme } from 'storybook-readme';
+// eslint-disable-next-line import/extensions, import/no-unresolved
+import { withTooltipRoot } from 'storybook-decorators';
 import { withHoverableTooltip } from './withHoverableTooltip';
 import README from './README.md';
 
@@ -48,11 +50,91 @@ storiesOf('Components/Main/Tooltips/HoverableTooltip', module)
     }),
   )
   .addDecorator(withReadme(README))
-  .add('with align = right', () => {
+  .addDecorator(withTooltipRoot)
+  .add('with placement = bottom', () => {
     const data = {
-      width: 130,
-      align: 'right',
+      placement: 'bottom',
+    };
+    const Wrapper = withHoverableTooltip({ TooltipComponent: StoryBookTooltip, data })(
+      TargetComponent,
+    );
+    return (
+      <div>
+        <Wrapper />
+      </div>
+    );
+  })
+  .add('with placement = bottom-start', () => {
+    const data = {
+      placement: 'bottom-start',
+    };
+    const Wrapper = withHoverableTooltip({ TooltipComponent: StoryBookTooltip, data })(
+      TargetComponent,
+    );
+    return (
+      <div>
+        <Wrapper />
+      </div>
+    );
+  })
+  .add('with placement = bottom-end', () => {
+    const data = {
+      placement: 'bottom-end',
+    };
+    const Wrapper = withHoverableTooltip({ TooltipComponent: StoryBookTooltip, data })(
+      TargetComponent,
+    );
+    return (
+      <div>
+        <Wrapper />
+      </div>
+    );
+  })
+  .add('with placement = top', () => {
+    const data = {
+      placement: 'top',
+    };
+    const Wrapper = withHoverableTooltip({ TooltipComponent: StoryBookTooltip, data })(
+      TargetComponent,
+    );
+    return (
+      <div>
+        <Wrapper />
+      </div>
+    );
+  })
+  .add('with placement = left', () => {
+    const data = {
+      placement: 'left',
+    };
+    const Wrapper = withHoverableTooltip({ TooltipComponent: StoryBookTooltip, data })(
+      TargetComponent,
+    );
+    return (
+      <div>
+        <Wrapper />
+      </div>
+    );
+  })
+  .add('with placement = right', () => {
+    const data = {
+      placement: 'right',
+    };
+    const Wrapper = withHoverableTooltip({ TooltipComponent: StoryBookTooltip, data })(
+      TargetComponent,
+    );
+    return (
+      <div>
+        <Wrapper />
+      </div>
+    );
+  })
+  .add('with width=300px noArrow = true & desktopOnly = true & noMobile = true', () => {
+    const data = {
+      width: 300,
+      placement: 'right',
       noArrow: true,
+      noMobile: true,
       desktopOnly: true,
     };
     const Wrapper = withHoverableTooltip({ TooltipComponent: StoryBookTooltip, data })(
@@ -64,28 +146,12 @@ storiesOf('Components/Main/Tooltips/HoverableTooltip', module)
       </div>
     );
   })
-  .add('with align = left', () => {
+  .add('with offset modifier', () => {
     const data = {
-      width: 130,
-      align: 'left',
-      noArrow: true,
-      desktopOnly: true,
-    };
-    const Wrapper = withHoverableTooltip({ TooltipComponent: StoryBookTooltip, data })(
-      TargetComponent,
-    );
-    return (
-      <div>
-        <Wrapper />
-      </div>
-    );
-  })
-  .add('with noArrow = false & desktopOnly = false', () => {
-    const data = {
-      width: 130,
-      align: 'left',
-      noArrow: false,
-      desktopOnly: false,
+      placement: 'right',
+      modifiers: {
+        offset: { offset: '50, 50' },
+      },
     };
     const Wrapper = withHoverableTooltip({ TooltipComponent: StoryBookTooltip, data })(
       TargetComponent,

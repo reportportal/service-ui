@@ -6,20 +6,21 @@ Width and height grows with components's content.
 
 > Hoverable when visible
 
+> Takes an object with the following format as an argument: { TooltipComponent: *React Component*, data: *Options*}
+
 > data format:
 
 ```
 {
   width: one of [number, string],
-  align: string,
+  placement: string, // see https://popper.js.org/popper-documentation.html#Popper.placements
+  modifiers: object, // see https://popper.js.org/popper-documentation.html#modifiers
   noArrow: bool,
+  noMobile: bool,
   desktopOnly: bool,
 }
 ```
 
 ### Props :
 
-- **data**: _object_, optional, default = {}
-- **hoverRect**: _object_, optional, default = null
-- **hideTooltip**: _func_, optional, default = () => {}
 - **children**: _node_, optional, default = null
