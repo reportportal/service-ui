@@ -21,6 +21,7 @@ export const SandboxPage = () => (
     {/* /> */}
     <StepLevelEntities
       onChange={(res) => {
+        // eslint-disable-next-line no-console
         console.log(res);
       }}
     />

@@ -28,13 +28,13 @@ export class ExampleModal extends Component {
         cancelButton={{
           text: 'Nope',
         }}
-        warningMessage={'After pushing \'launch\' button nuclear rockets will be launched'}
+        warningMessage="After pushing 'launch' button nuclear rockets will be launched"
       >
         <MarkdownEditor />
         <div>
-          param1: { this.props.data.param1 }
+          param1: {this.props.data.param1}
           <br />
-          param2: { this.props.data.param2 }
+          param2: {this.props.data.param2}
         </div>
       </ModalLayout>
     );

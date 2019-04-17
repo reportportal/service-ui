@@ -60,14 +60,16 @@ export class NewsBlock extends Component {
         <div className={cx('twitter-block')}>
           <div className={cx('twitter-title')}>
             <div className={cx('twitter-icon')} />
-            <FormattedMessage id={'NewsBlock.twitterTitle'} defaultMessage={'Be informed with our latest tweets'} />
+            <FormattedMessage
+              id={'NewsBlock.twitterTitle'}
+              defaultMessage={'Be informed with our latest tweets'}
+            />
           </div>
           <div className={cx('twitter-news')}>
             <ScrollWrapper autoHeight autoHeightMax={this.state.twitterBlockHeight}>
-              {
-                Array.map(this.props.tweets,
-                  tweet => <PostBlock key={tweet.id} tweetData={tweet} />)
-              }
+              {Array.map(this.props.tweets, (tweet) => (
+                <PostBlock key={tweet.id} tweetData={tweet} />
+              ))}
             </ScrollWrapper>
           </div>
         </div>

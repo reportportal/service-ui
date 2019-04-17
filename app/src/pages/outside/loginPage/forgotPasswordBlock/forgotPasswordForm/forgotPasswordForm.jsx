@@ -58,15 +58,12 @@ const notifications = defineMessages({
   },
 });
 
-@connect(
-  null,
-  {
-    showScreenLockAction,
-    hideScreenLockAction,
-    showNotification,
-    redirect,
-  },
-)
+@connect(null, {
+  showScreenLockAction,
+  hideScreenLockAction,
+  showNotification,
+  redirect,
+})
 @reduxForm({
   form: 'forgotPassword',
   validate: ({ email }) => ({

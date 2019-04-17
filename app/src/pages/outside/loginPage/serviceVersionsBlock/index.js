@@ -1,1 +1,3 @@
-export { ServiceVersionsBlockWithData as ServiceVersionsBlock } from './serviceVersionsBlockWithData';
+export {
+  ServiceVersionsBlockWithData as ServiceVersionsBlock,
+} from './serviceVersionsBlockWithData';

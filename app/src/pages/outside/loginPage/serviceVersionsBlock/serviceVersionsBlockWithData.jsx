@@ -5,7 +5,7 @@ import fetchJsonp from 'fetch-jsonp';
 import semverDiff from 'semver-diff';
 import { ServiceVersionsBlock } from './serviceVersionsBlock';
 
-@connect(state => ({
+@connect((state) => ({
   serviceVersions: state.appInfo,
 }))
 export class ServiceVersionsBlockWithData extends Component {
@@ -25,43 +25,37 @@ export class ServiceVersionsBlockWithData extends Component {
     fetchJsonp('http://status.reportportal.io/versions', {
       jsonpCallback: 'jsonp',
     })
-      .then(res => res.json())
-      .then(latestServiceVersions => this.setState({
-        services: this.calculateServices(this.props.serviceVersions, latestServiceVersions),
-      }));
+      .then((res) => res.json())
+      .then((latestServiceVersions) =>
+        this.setState({
+          services: this.calculateServices(this.props.serviceVersions, latestServiceVersions),
+        }),
+      );
   }
 
   calculateServices = (serviceVersions, latestServiceVersions) => {
     const services = {};
 
-    Object.keys(serviceVersions).map(
-      (objKey) => {
-        const value = serviceVersions[objKey];
-        const currentVersion = value.build.version;
-        const latestVersion = latestServiceVersions[value.build.repo];
+    Object.keys(serviceVersions).map((objKey) => {
+      const value = serviceVersions[objKey];
+      const currentVersion = value.build.version;
+      const latestVersion = latestServiceVersions[value.build.repo];
 
-        services[objKey] = {
-          name: value.build.name,
-          version: value.build.version,
-          newVersion: latestVersion || null,
-          repo: value.build.repo || null,
-          isDeprecated:
-          !!value.build.repo
-          && !!latestVersion
-          && !!semverDiff(currentVersion, latestVersion),
-        };
+      services[objKey] = {
+        name: value.build.name,
+        version: value.build.version,
+        newVersion: latestVersion || null,
+        repo: value.build.repo || null,
+        isDeprecated:
+          !!value.build.repo && !!latestVersion && !!semverDiff(currentVersion, latestVersion),
+      };
 
-        return true;
-      },
-    );
+      return true;
+    });
     return services;
   };
 
   render() {
-    return (
-      <ServiceVersionsBlock
-        services={this.state.services}
-      />
-    );
+    return <ServiceVersionsBlock services={this.state.services} />;
   }
 }

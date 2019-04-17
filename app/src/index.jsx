@@ -23,6 +23,7 @@ if (!process.env.production) {
   if (whyDidYouUpdateComponent) {
     const { whyDidYouUpdate } = require('why-did-you-update'); // eslint-disable-line global-require
     whyDidYouUpdate(React, { include: new RegExp(whyDidYouUpdateComponent) });
+    // eslint-disable-next-line no-console
     console.log(
       'Use http://localhost:3000/?whyDidYouUpdateComponent=^Component$# (with regex as query value) to check why certain component rerender.',
     );

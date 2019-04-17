@@ -62,15 +62,22 @@ export class MarkdownViewer extends Component {
       element.innerHTML = elem.textContent;
     });
   };
-  escapeHtml = string => string
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;');
-  indentSpaces = string => string.replace(/^ +/gm, str => str.replace(/ /g, '&nbsp;'));
+  escapeHtml = (string) => string.replace(/&/g, '&amp;').replace(/</g, '&lt;');
+  indentSpaces = (string) => string.replace(/^ +/gm, (str) => str.replace(/ /g, '&nbsp;'));
 
   render() {
     return (
-      <div ref={(container) => { this.container = container; }} className={cx('markdown-viewer')}>
-        { Parser(this.simpleMDE.markdown(this.indentSpaces(this.escapeHtml(this.props.value)).replace('_', '&#95;'))) }
+      <div
+        ref={(container) => {
+          this.container = container;
+        }}
+        className={cx('markdown-viewer')}
+      >
+        {Parser(
+          this.simpleMDE.markdown(
+            this.indentSpaces(this.escapeHtml(this.props.value)).replace('_', '&#95;'),
+          ),
+        )}
       </div>
     );
   }

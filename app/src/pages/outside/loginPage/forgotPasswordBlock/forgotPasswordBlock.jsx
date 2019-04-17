@@ -24,17 +24,22 @@ import { FormattedMessage } from 'react-intl';
 import { ForgotPasswordForm } from './forgotPasswordForm';
 import styles from './forgotPasswordBlock.scss';
 
-
 const cx = classNames.bind(styles);
 
 export const ForgotPasswordBlock = () => (
   <div className={cx('forgot-password-block')}>
     <span className={cx('forgot-password-msg')}>
       <span className={cx('big')}>
-        <FormattedMessage id={'ForgotPasswordBlock.forgotPass'} defaultMessage={'Forgot password?'} />
+        <FormattedMessage
+          id={'ForgotPasswordBlock.forgotPass'}
+          defaultMessage={'Forgot password?'}
+        />
       </span>
       <br />
-      <FormattedMessage id={'ForgotPasswordBlock.enterEmail'} defaultMessage={'enter your email to restore'} />
+      <FormattedMessage
+        id={'ForgotPasswordBlock.enterEmail'}
+        defaultMessage={'enter your email to restore'}
+      />
     </span>
     <ForgotPasswordForm />
   </div>
