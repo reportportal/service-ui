@@ -2,24 +2,24 @@ import { delay } from 'redux-saga';
 import { all, call, takeEvery, put } from 'redux-saga/effects';
 import {
   SHOW_NOTIFICATION,
-  SHOW_DEFAULT_ERROR_NOTIFICATION,
-  NOTIFICATION_TYPES,
+  // SHOW_DEFAULT_ERROR_NOTIFICATION,
+  // NOTIFICATION_TYPES,
 } from './constants';
-import { hideNotification, showNotification } from './actionCreators';
+import { hideNotification } from './actionCreators'; // showNotification
 
-function* showDefaultErrorNotification({ message }) {
-  yield put(
-    showNotification({
-      messageId: 'failureDefault',
-      type: NOTIFICATION_TYPES.ERROR,
-      values: { message },
-    }),
-  );
-}
-
-function* watchShowDefaultErrorNotification() {
-  yield takeEvery(SHOW_DEFAULT_ERROR_NOTIFICATION, showDefaultErrorNotification);
-}
+// function* showDefaultErrorNotification({ message }) {
+//   yield put(
+//     showNotification({
+//       messageId: 'failureDefault',
+//       type: NOTIFICATION_TYPES.ERROR,
+//       values: { message },
+//     }),
+//   );
+// }
+//
+// function* watchShowDefaultErrorNotification() {
+//   yield takeEvery(SHOW_DEFAULT_ERROR_NOTIFICATION, showDefaultErrorNotification);
+// }
 
 function* hideNotificationDelay({ payload }) {
   yield call(delay, 8000);
@@ -31,5 +31,5 @@ function* watchAddNotification() {
 }
 
 export function* notificationSagas() {
-  yield all([watchAddNotification(), watchShowDefaultErrorNotification()]);
+  yield all([watchAddNotification()]); // , watchShowDefaultErrorNotification()
 }

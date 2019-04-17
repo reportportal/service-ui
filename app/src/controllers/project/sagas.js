@@ -2,7 +2,7 @@ import { takeEvery, all, put, select, call } from 'redux-saga/effects';
 import { URLS } from 'common/urls';
 import {
   showNotification,
-  showDefaultErrorNotification,
+  // showDefaultErrorNotification,
   NOTIFICATION_TYPES,
 } from 'controllers/notification';
 import { projectIdSelector } from 'controllers/pages';
@@ -41,8 +41,15 @@ function* updateDefectSubType({ payload: subType }) {
         type: NOTIFICATION_TYPES.SUCCESS,
       }),
     );
-  } catch (error) {
-    yield put(showDefaultErrorNotification(error));
+  } catch ({ message: error }) {
+    yield put(
+      showNotification({
+        messageId: 'failureDefault',
+        type: NOTIFICATION_TYPES.ERROR,
+        values: { error },
+      }),
+    );
+    // yield put(showDefaultErrorNotification(error));
   }
 }
 
@@ -64,8 +71,14 @@ function* addDefectSubType({ payload: subType }) {
         type: NOTIFICATION_TYPES.SUCCESS,
       }),
     );
-  } catch (error) {
-    yield put(showDefaultErrorNotification(error));
+  } catch ({ message: error }) {
+    yield put(
+      showNotification({
+        messageId: 'failureDefault',
+        type: NOTIFICATION_TYPES.ERROR,
+        values: { error },
+      }),
+    );
   }
 }
 
@@ -86,8 +99,14 @@ function* deleteDefectSubType({ payload: subType }) {
         type: NOTIFICATION_TYPES.SUCCESS,
       }),
     );
-  } catch (error) {
-    yield put(showDefaultErrorNotification(error));
+  } catch ({ message: error }) {
+    yield put(
+      showNotification({
+        messageId: 'failureDefault',
+        type: NOTIFICATION_TYPES.ERROR,
+        values: { error },
+      }),
+    );
   }
 }
 
@@ -114,8 +133,14 @@ function* updateProjectNotificationsConfig({ payload: notificationsConfig }) {
       }),
     );
     yield put(hideModalAction());
-  } catch (error) {
-    yield put(showDefaultErrorNotification(error));
+  } catch ({ message: error }) {
+    yield put(
+      showNotification({
+        messageId: 'failureDefault',
+        type: NOTIFICATION_TYPES.ERROR,
+        values: { error },
+      }),
+    );
   } finally {
     yield put(hideScreenLockAction());
   }

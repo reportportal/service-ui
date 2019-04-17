@@ -2,7 +2,7 @@ import { takeEvery, call, put, all, select } from 'redux-saga/effects';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
 import { SAUCE_LABS } from 'common/constants/integrationNames';
-import { showDefaultErrorNotification } from 'controllers/notification';
+import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { namedIntegrationsSelectorsMap } from 'controllers/project';
 import { activeProjectSelector } from 'controllers/user';
 import { fetchDataAction } from 'controllers/fetch';
@@ -23,8 +23,14 @@ function* executeSauceLabsCommand({ command, data, integrationId }) {
         { data, method: 'put' },
       ),
     );
-  } catch (error) {
-    yield put(showDefaultErrorNotification(error));
+  } catch ({ message: error }) {
+    yield put(
+      showNotification({
+        messageId: 'failureDefault',
+        type: NOTIFICATION_TYPES.ERROR,
+        values: { error },
+      }),
+    );
   }
 }
 
@@ -43,8 +49,14 @@ function* bulkExecuteSauceLabsCommands({ payload: { commands, data } }) {
         call(executeSauceLabsCommand, { command, data, integrationId: activeIntegration.id }),
       ),
     );
-  } catch (error) {
-    yield put(showDefaultErrorNotification(error));
+  } catch ({ message: error }) {
+    yield put(
+      showNotification({
+        messageId: 'failureDefault',
+        type: NOTIFICATION_TYPES.ERROR,
+        values: { error },
+      }),
+    );
   }
 }
 

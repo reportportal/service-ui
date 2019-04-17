@@ -1,4 +1,4 @@
-import { HIDE_NOTIFICATION, SHOW_NOTIFICATION, SHOW_DEFAULT_ERROR_NOTIFICATION } from './constants';
+import { HIDE_NOTIFICATION, SHOW_NOTIFICATION } from './constants'; // SHOW_DEFAULT_ERROR_NOTIFICATION
 
 /**
  *
@@ -28,10 +28,10 @@ export const hideNotification = (uid) => ({
   type: HIDE_NOTIFICATION,
   payload: uid,
 });
-
-export const showDefaultErrorNotification = ({ message }) => ({
-  type: SHOW_DEFAULT_ERROR_NOTIFICATION,
-  payload: {
-    message,
-  },
-});
+//
+// export const showDefaultErrorNotification = ({ message }) => ({
+//   type: SHOW_DEFAULT_ERROR_NOTIFICATION,
+//   payload: {
+//     message,
+//   },
+// });
