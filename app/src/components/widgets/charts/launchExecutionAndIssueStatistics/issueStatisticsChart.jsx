@@ -35,7 +35,7 @@ import chartStyles from './launchExecutionAndIssueStatistics.scss';
 import { Legend } from '../common/legend';
 import { getDefectTypeLocators, getItemNameConfig } from '../common/utils';
 import { LaunchExecutionAndIssueStatisticsTooltip } from './launchExecutionAndIssueStatisticsTooltip';
-import { getPercentage, getDefectItems, getChartData } from './chartUtils';
+import { getPercentage, getChartData } from './chartUtils';
 import { messages } from './messages';
 
 const chartCx = classNames.bind(chartStyles);
@@ -152,40 +152,80 @@ export class IssueStatisticsChart extends Component {
     type: TEST_ITEM_PAGE,
   });
 
-  getConfig = () => {
+  getChartColors(columns) {
+    const { defectTypes } = this.props;
+
+    return columns.reduce((colors, column) => {
+      const locator = getItemNameConfig(column[0]).locator;
+      const defectTypesValues = Object.values(defectTypes);
+
+      for (let i = 0; i < defectTypesValues.length; i += 1) {
+        const defect = defectTypesValues[i].find((defectType) => defectType.locator === locator);
+
+        if (defect) {
+          Object.assign(colors, { [column[0]]: defect.color });
+
+          return colors;
+        }
+      }
+
+      return colors;
+    }, {});
+  }
+
+  setDefectItems(columns) {
+    this.defectItems = columns.map((item) => ({
+      id: item[0],
+      count: item[1],
+      name: item[0]
+        .split('$')
+        .slice(0, 3)
+        .join('$'),
+    }));
+  }
+
+  getColumns() {
+    const { widget } = this.props;
     const DEFECTS = '$defects$';
-    const { widget, container, isPreview } = this.props;
     const values = getResult(widget).values;
     const defectDataItems = getChartData(values, DEFECTS);
-
     const defectTypesChartData = defectDataItems.itemTypes;
-    const defectTypesChartColors = defectDataItems.itemColors;
-    const defectTypesChartDataOrdered = [];
-
-    this.height = container.offsetHeight;
-    this.width = container.offsetWidth;
-    this.noAvailableData = false;
+    const columns = [];
 
     widget.contentParameters.contentFields.forEach((field) => {
       Object.keys(defectTypesChartData).forEach((key) => {
         if (field === key) {
-          defectTypesChartDataOrdered.push([field, defectTypesChartData[field]]);
+          columns.push([field, defectTypesChartData[field]]);
         }
       });
     });
 
-    if (!defectTypesChartDataOrdered.length) {
+    return columns;
+  }
+
+  getConfig = () => {
+    const { container, isPreview } = this.props;
+    this.height = container.offsetHeight;
+    this.width = container.offsetWidth;
+    this.noAvailableData = false;
+
+    const columns = this.getColumns();
+
+    if (!columns.length) {
       this.noAvailableData = true;
       return;
     }
 
-    this.defectItems = getDefectItems(defectTypesChartDataOrdered);
+    this.setDefectItems(columns);
+
+    const colors = this.getChartColors(columns);
+
     this.issueConfig = {
       data: {
-        columns: defectTypesChartDataOrdered,
+        columns,
         type: 'donut',
         order: null,
-        colors: defectTypesChartColors,
+        colors,
         onclick: this.onChartClick,
       },
       interaction: {
