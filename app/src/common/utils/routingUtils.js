@@ -1,4 +1,9 @@
 import { parse, stringify } from 'qs';
+import {
+  FILTER_PREFIX,
+  PREDEFINED_FILTER_PREFIX,
+} from 'components/filterEntities/containers/utils';
+
 import { isEmptyValue } from './isEmptyValue';
 
 const LEVEL_PARAMS_SUFFIX = 'Params';
@@ -25,10 +30,30 @@ export const copyQuery = (query = {}, namespacesToCopy = []) =>
     return acc;
   }, {});
 
+const getFilterNameByKey = (key) => {
+  const filterPrefixes = [FILTER_PREFIX, PREDEFINED_FILTER_PREFIX];
+  const isFilterRegExp = new RegExp(filterPrefixes.join('|'));
+  if (isFilterRegExp.test(key)) {
+    return key.split('.').pop();
+  }
+  return key;
+};
+
+const isEqualKeys = (newKey, oldKey) =>
+  newKey === oldKey || getFilterNameByKey(newKey) === getFilterNameByKey(oldKey);
+
+const mergeKeys = (oldQuery = {}, paramsToMerge = {}) =>
+  Object.keys(oldQuery).reduce(
+    (query, oldKey) =>
+      query.some((newKey) => isEqualKeys(newKey, oldKey)) ? query : [...query, oldKey],
+    Object.keys(paramsToMerge),
+  );
+
 export const mergeQuery = (oldQuery, paramsToMerge) => {
-  const newQuery = { ...oldQuery, ...paramsToMerge };
-  return Object.keys(newQuery).reduce(
-    (acc, key) => (isEmptyValue(newQuery[key]) ? acc : { ...acc, [key]: newQuery[key] }),
+  const mixedQuery = { ...oldQuery, ...paramsToMerge };
+  const newKeys = mergeKeys(oldQuery, paramsToMerge);
+  return newKeys.reduce(
+    (acc, key) => (isEmptyValue(mixedQuery[key]) ? acc : { ...acc, [key]: mixedQuery[key] }),
     {},
   );
 };

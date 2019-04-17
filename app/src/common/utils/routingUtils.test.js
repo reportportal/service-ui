@@ -1,4 +1,9 @@
-import { createNamespacedQuery, extractNamespacedQuery, copyQuery } from './routingUtils';
+import {
+  createNamespacedQuery,
+  extractNamespacedQuery,
+  copyQuery,
+  mergeQuery,
+} from './routingUtils';
 
 const QUERY = {
   launchParams: 'page=1&size=2',
@@ -46,5 +51,37 @@ describe('copyQuery', () => {
   test('should return object with namespaces from the second argument only', () => {
     const query = { testParams: 'query', fooParams: 'anotherQuery' };
     expect(copyQuery(query, ['test'])).toEqual({ testParams: 'query' });
+  });
+});
+
+describe('mergeQuery', () => {
+  test('should return an empty object in case of no arguments', () => {
+    expect(mergeQuery()).toEqual({});
+  });
+  test('should return an empty object in case of no arguments', () => {
+    const query = {
+      'page.page': 1,
+      'filter.gte.launchesQuantity': 1,
+    };
+    expect(mergeQuery(undefined, query)).toEqual(query);
+  });
+  test('should return an empty object in case of no arguments', () => {
+    const oldQuery = {
+      'page.page': 1,
+      'filter.gte.launchesQuantity': 1,
+      'filter.cnt.name': 'p',
+    };
+    const newQuery = {
+      'page.page': 2,
+      'filter.lte.launchesQuantity': 3,
+      'filter.gte.usersQuantity': 1,
+    };
+    const resultQuery = {
+      'page.page': 2,
+      'filter.cnt.name': 'p',
+      'filter.lte.launchesQuantity': 3,
+      'filter.gte.usersQuantity': 1,
+    };
+    expect(mergeQuery(oldQuery, newQuery)).toEqual(resultQuery);
   });
 });
