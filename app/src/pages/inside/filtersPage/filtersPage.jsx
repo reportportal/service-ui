@@ -13,6 +13,7 @@ import {
   loadingSelector,
   removeFilterAction,
   DEFAULT_PAGE_SIZE,
+  createFilterAction,
 } from 'controllers/filter';
 import {
   userIdSelector,
@@ -64,6 +65,7 @@ const messages = defineMessages({
     fetchFiltersAction,
     showFilterOnLaunchesAction,
     hideFilterOnLaunchesAction,
+    createFilter: createFilterAction,
   },
 )
 @withSorting({
@@ -103,6 +105,7 @@ export class FiltersPage extends Component {
     removeUserFilter: PropTypes.func,
     showFilterOnLaunchesAction: PropTypes.func,
     hideFilterOnLaunchesAction: PropTypes.func,
+    createFilter: PropTypes.func,
   };
 
   static defaultProps = {
@@ -126,6 +129,7 @@ export class FiltersPage extends Component {
     removeUserFilter: () => {},
     showFilterOnLaunchesAction: () => {},
     hideFilterOnLaunchesAction: () => {},
+    createFilter: () => {},
   };
 
   getBreadcrumbs = () => [{ title: this.props.intl.formatMessage(messages.filtersPageTitle) }];
@@ -160,8 +164,9 @@ export class FiltersPage extends Component {
       .then(this.props.fetchFiltersAction);
   };
 
-  openAddModal = () => {
+  addFilter = () => {
     this.props.tracking.trackEvent(FILTERS_PAGE_EVENTS.CLICK_ADD_FILTER_BTN);
+    this.props.createFilter();
   };
 
   renderNoFiltersBlock = () =>
@@ -195,7 +200,7 @@ export class FiltersPage extends Component {
             filter={filter}
             filters={filters}
             onFilterChange={onFilterChange}
-            onAddFilter={this.openAddModal}
+            onAddFilter={this.addFilter}
           />
           <FilterGrid
             onEdit={this.openEditModal}
