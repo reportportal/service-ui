@@ -98,8 +98,8 @@ export class LogItemInfo extends Component {
     fetchFunc: PropTypes.func.isRequired,
     showModalAction: PropTypes.func.isRequired,
     onHighlightRow: PropTypes.func.isRequired,
-    onToggleThirdPartyIntegrationView: PropTypes.func.isRequired,
-    isThirdPartyIntegrationView: PropTypes.bool.isRequired,
+    onToggleSauceLabsIntegrationView: PropTypes.func.isRequired,
+    isSauceLabsIntegrationView: PropTypes.bool.isRequired,
     loading: PropTypes.bool.isRequired,
     logItem: PropTypes.object,
     updateRetryId: PropTypes.func,
@@ -235,8 +235,8 @@ export class LogItemInfo extends Component {
       onChangePage,
       onChangeLogLevel,
       onHighlightRow,
-      onToggleThirdPartyIntegrationView,
-      isThirdPartyIntegrationView,
+      onToggleSauceLabsIntegrationView,
+      isSauceLabsIntegrationView,
       intl: { formatMessage },
     } = this.props;
     return (
@@ -294,8 +294,8 @@ export class LogItemInfo extends Component {
             onChangePage={onChangePage}
             onChangeLogLevel={onChangeLogLevel}
             onHighlightRow={onHighlightRow}
-            onToggleThirdPartyIntegrationView={onToggleThirdPartyIntegrationView}
-            isThirdPartyIntegrationView={isThirdPartyIntegrationView}
+            onToggleSauceLabsIntegrationView={onToggleSauceLabsIntegrationView}
+            isSauceLabsIntegrationView={isSauceLabsIntegrationView}
             loading={loading}
           />
         </div>

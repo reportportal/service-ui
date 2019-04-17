@@ -9,10 +9,8 @@ export const getSauceLabsConfig = (attributes = []) => {
   if (slidItem) {
     const sldcItem = attributes.find((item) => item.key === SAUCE_LABS_DATA_CENTER_ATTRIBUTE_KEY);
     return {
-      [SAUCE_LABS_ID_ATTRIBUTE_KEY]: slidItem.value,
-      [SAUCE_LABS_DATA_CENTER_ATTRIBUTE_KEY]: sldcItem
-        ? sldcItem.value
-        : SAUCE_LABS_DATA_CENTER_ATTRIBUTE_DEFAULT_VALUE,
+      jobId: slidItem.value,
+      dataCenter: sldcItem ? sldcItem.value : SAUCE_LABS_DATA_CENTER_ATTRIBUTE_DEFAULT_VALUE,
     };
   }
   return null;
