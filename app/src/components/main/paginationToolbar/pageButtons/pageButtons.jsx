@@ -14,24 +14,14 @@ const cx = classNames.bind(styles);
 
 export const PageButtons = ({ activePage, pageCount, onChangePage }) => (
   <ul className={cx('page-buttons')}>
-    <PageButton
-      disabled={activePage === 1}
-      hideOnMobile
-      onClick={() => onChangePage(1)}
-    >
+    <PageButton disabled={activePage === 1} hideOnMobile onClick={() => onChangePage(1)}>
       {Parser(FirstPageArrowIcon)}
     </PageButton>
-    <PageButton
-      disabled={activePage === 1}
-      onClick={() => onChangePage(activePage - 1)}
-    >
+    <PageButton disabled={activePage === 1} onClick={() => onChangePage(activePage - 1)}>
       {Parser(PreviousPageArrowIcon)}
     </PageButton>
     <PageNumberButtons activePage={activePage} pageCount={pageCount} onChangePage={onChangePage} />
-    <PageButton
-      disabled={activePage === pageCount}
-      onClick={() => onChangePage(activePage + 1)}
-    >
+    <PageButton disabled={activePage === pageCount} onClick={() => onChangePage(activePage + 1)}>
       {Parser(NextPageArrowIcon)}
     </PageButton>
     <PageButton
@@ -49,6 +39,5 @@ PageButtons.propTypes = {
   onChangePage: PropTypes.func,
 };
 PageButtons.defaultProps = {
-  onChangePage: () => {
-  },
+  onChangePage: () => {},
 };

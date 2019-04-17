@@ -30,27 +30,26 @@ const cx = classNames.bind(styles);
 export const ServiceVersionsBlock = ({ services }) => (
   <div className={cx('service-versions-block')}>
     <span className={cx('current-version')}>
-      <FormattedMessage id={'ServiceVersionsBlock.currentVersion'} defaultMessage={'Current version'} />:
+      <FormattedMessage
+        id={'ServiceVersionsBlock.currentVersion'}
+        defaultMessage={'Current version'}
+      />:
     </span>
     <span className={cx('versions-list')}>
-      {
-        Object.keys(services).map(
-          (objKey) => {
-            const value = services[objKey];
+      {Object.keys(services).map((objKey) => {
+        const value = services[objKey];
 
-            return (
-              <ServiceVersionItem
-                // eslint-disable-next-line react/no-array-index-key
-                key={objKey}
-                serviceName={value.name}
-                serviceVersion={value.version}
-                serviceNewVersion={value.newVersion}
-                isDeprecated={value.isDeprecated}
-              />
-            );
-          },
-        )
-      }
+        return (
+          <ServiceVersionItem
+            // eslint-disable-next-line react/no-array-index-key
+            key={objKey}
+            serviceName={value.name}
+            serviceVersion={value.version}
+            serviceNewVersion={value.newVersion}
+            isDeprecated={value.isDeprecated}
+          />
+        );
+      })}
     </span>
   </div>
 );

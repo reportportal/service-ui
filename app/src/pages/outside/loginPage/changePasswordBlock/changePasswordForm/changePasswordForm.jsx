@@ -63,15 +63,12 @@ const notifications = defineMessages({
 });
 
 @connectRouter(({ reset: resetQueryParam }) => ({ resetQueryParam }))
-@connect(
-  null,
-  {
-    redirect,
-    showScreenLockAction,
-    hideScreenLockAction,
-    showNotification,
-  },
-)
+@connect(null, {
+  redirect,
+  showScreenLockAction,
+  hideScreenLockAction,
+  showNotification,
+})
 @reduxForm({
   form: 'changePassword',
   validate: ({ password, passwordRepeat }) => ({

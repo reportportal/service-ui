@@ -95,6 +95,7 @@ export class LaunchesComparisonChart extends Component {
 
     this.node.addEventListener('mousemove', this.setupCoords);
 
+    // eslint-disable-next-line func-names
     d3.selectAll(document.querySelectorAll('.c3-chart-bar path')).each(function() {
       const elem = d3.select(this);
       if (elem.datum().value === 0) {

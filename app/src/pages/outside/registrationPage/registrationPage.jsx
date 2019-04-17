@@ -44,35 +44,34 @@ export const RegistrationPage = ({ tokenActive, tokenProvided, email, onRegistra
           <div className={cx('logo')} />
         </a>
         <RegistrationPageSection left>
-          {
-            tokenProvided && tokenActive &&
-            <div className={cx('couple-minutes')}>
-              <FormattedMessage
-                id={'RegistrationPage.coupleMinutes'}
-                defaultMessage={'It should only take a couple of minutes to get started'}
-              />
-            </div>
-          }
+          {tokenProvided &&
+            tokenActive && (
+              <div className={cx('couple-minutes')}>
+                <FormattedMessage
+                  id={'RegistrationPage.coupleMinutes'}
+                  defaultMessage={'It should only take a couple of minutes to get started'}
+                />
+              </div>
+            )}
         </RegistrationPageSection>
         <RegistrationPageSection failed={!tokenActive || !tokenProvided}>
-          {
-            tokenProvided && tokenActive
-              ?
-                <div>
-                  <span className={cx('welcome-msg')}>
-                    <span className={cx('big')}>
-                      <FormattedMessage id={'RegistrationPage.welcome'} defaultMessage={'Welcome,'} />
-                    </span>
-                    <br />
-                    <FormattedMessage
-                      id={'RegistrationPage.registration'}
-                      defaultMessage={'complete the registration form'}
-                    />
-                  </span>
-                  <RegistrationForm email={email} submitForm={onRegistrationSubmit} />
-                </div>
-              : <TokenErrorSection tokenProvided={tokenProvided} />
-          }
+          {tokenProvided && tokenActive ? (
+            <div>
+              <span className={cx('welcome-msg')}>
+                <span className={cx('big')}>
+                  <FormattedMessage id={'RegistrationPage.welcome'} defaultMessage={'Welcome,'} />
+                </span>
+                <br />
+                <FormattedMessage
+                  id={'RegistrationPage.registration'}
+                  defaultMessage={'complete the registration form'}
+                />
+              </span>
+              <RegistrationForm email={email} submitForm={onRegistrationSubmit} />
+            </div>
+          ) : (
+            <TokenErrorSection tokenProvided={tokenProvided} />
+          )}
         </RegistrationPageSection>
       </div>
     </div>
@@ -89,8 +88,7 @@ RegistrationPage.defaultProps = {
   tokenActive: false,
   tokenProvided: false,
   email: '',
-  onRegistrationSubmit: () => {
-  },
+  onRegistrationSubmit: () => {},
 };
 
 const TokenErrorSection = ({ tokenProvided }) => (
@@ -100,21 +98,23 @@ const TokenErrorSection = ({ tokenProvided }) => (
         <FormattedMessage id={'RegistrationPage.oops'} defaultMessage={'Oops,'} />
       </span>
       <br />
-      {
-        tokenProvided
-          ? <FormattedMessage
-            id={'RegistrationPage.tokenExpired'}
-            defaultMessage={'this invitation has expired or already used'}
-          />
-          : <FormattedMessage
-            id={'RegistrationPage.tokenNotProvided'}
-            defaultMessage={'invitation token was not provided in URL parameters'}
-          />
-      }
+      {tokenProvided ? (
+        <FormattedMessage
+          id={'RegistrationPage.tokenExpired'}
+          defaultMessage={'this invitation has expired or already used'}
+        />
+      ) : (
+        <FormattedMessage
+          id={'RegistrationPage.tokenNotProvided'}
+          defaultMessage={'invitation token was not provided in URL parameters'}
+        />
+      )}
     </span>
     <div className={cx('visit-rp')}>
       <FormattedMessage id={'RegistrationPage.visit'} defaultMessage={'Visit '} />
-      <a className={cx('backlink')} href={referenceDictionary.rpLanding}>ReportPortal.io</a>
+      <a className={cx('backlink')} href={referenceDictionary.rpLanding}>
+        ReportPortal.io
+      </a>
     </div>
   </RegistrationFailBlock>
 );

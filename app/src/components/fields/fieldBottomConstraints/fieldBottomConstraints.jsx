@@ -28,14 +28,10 @@ const cx = classNames.bind(styles);
 
 export const FieldBottomConstraints = ({ text, children, ...rest }) => (
   <div className={cx('field-bottom-constraints')}>
-    <div className={cx('container')}>
-      {children && cloneElement(children, rest)}
-    </div>
-    <div className={cx('text')}>
-      {text}
-    </div>
+    <div className={cx('container')}>{children && cloneElement(children, rest)}</div>
+    <div className={cx('text')}>{text}</div>
   </div>
-  );
+);
 
 FieldBottomConstraints.propTypes = {
   text: PropTypes.node,
