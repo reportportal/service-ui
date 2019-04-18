@@ -80,12 +80,6 @@ export class MembersPageToolbar extends React.Component {
     this.props.change('filter', this.props.filter);
   }
 
-  componentWillReceiveProps({ filter }) {
-    if (filter !== this.props.filter) {
-      this.props.change('filter', filter);
-    }
-  }
-
   showInviteUserModal = () => {
     this.props.tracking.trackEvent(MEMBERS_PAGE_EVENTS.INVITE_USER_CLICK);
     this.props.showModalAction({ id: 'inviteUserModal', data: { onInvite: this.props.onInvite } });

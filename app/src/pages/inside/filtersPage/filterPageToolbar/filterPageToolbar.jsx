@@ -64,12 +64,6 @@ export class FilterPageToolbar extends React.Component {
     this.props.change('filter', this.props.filter);
   }
 
-  componentWillReceiveProps({ filter, invalid }) {
-    if (filter !== this.props.filter && !invalid) {
-      this.props.change('filter', filter);
-    }
-  }
-
   render() {
     return (
       <div className={cx('filter-page-toolbar')}>
