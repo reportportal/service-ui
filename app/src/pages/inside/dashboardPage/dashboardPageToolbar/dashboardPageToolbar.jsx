@@ -66,12 +66,6 @@ export class DashboardPageToolbar extends Component {
     this.props.change('dashboardName', this.props.filter);
   }
 
-  componentWillReceiveProps({ filter, invalid }) {
-    if (filter !== this.props.filter && !invalid) {
-      this.props.change('dashboardName', filter);
-    }
-  }
-
   render() {
     const {
       onGridViewToggle,
