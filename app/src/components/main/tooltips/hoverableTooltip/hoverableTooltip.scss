@@ -19,7 +19,7 @@
   padding-top: 5px;
   opacity: 0;
   transition: visibility 0ms, opacity 300ms ease;
-  z-index: $Z-INDEX-TOOLTIP;
+  z-index: $Z-INDEX-POPUP;
 
   &::before {
     content: '';

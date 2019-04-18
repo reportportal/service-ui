@@ -38,7 +38,7 @@
   font-family: $FONT-REGULAR;
   font-size: 14px;
   color: $COLOR--charcoal-grey;
-  z-index: 1;
+  z-index: $Z-INDEX-POPUP;
 
   &.shown {
     display: block;
