@@ -17,10 +17,10 @@ const getItemLevel = (type) => {
 
 export const calculateLevel = (data) =>
   data.reduce((acc, item) => {
-    if (!acc) {
-      return item.type;
-    }
     const itemLevel = getItemLevel(item.type);
+    if (!acc) {
+      return itemLevel;
+    }
     const prevLevel = getItemLevel(acc);
     return LEVELS[prevLevel] && LEVELS[prevLevel].order > LEVELS[itemLevel].order
       ? itemLevel
