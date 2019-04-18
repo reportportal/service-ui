@@ -13,6 +13,7 @@ import {
   changeActiveFilterAction,
 } from 'controllers/filter';
 import { changeLaunchDistinctAction, launchDistinctSelector } from 'controllers/launch';
+import { isEmptyObject } from 'common/utils';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { levelSelector } from 'controllers/testItem';
 import { EntitiesGroup } from 'components/filterEntities/entitiesGroup';
@@ -148,7 +149,7 @@ export class LaunchFiltersToolbar extends Component {
   };
   isSaveDisabled = () => {
     const { filterErrors } = this.props;
-    return this.isFilterUnsaved() || filterErrors.length > 0;
+    return !this.isFilterUnsaved() || !isEmptyObject(filterErrors);
   };
 
   render() {
