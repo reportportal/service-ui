@@ -14,6 +14,8 @@ import {
   ENTITY_ATTRIBUTE_KEYS,
   ENTITY_ATTRIBUTE_VALUES,
   CONDITION_HAS,
+  CONDITION_IN,
+  ENTITY_USER,
 } from 'components/filterEntities/constants';
 import { NoItemMessage } from 'components/main/noItemMessage';
 import {
@@ -248,6 +250,7 @@ export class LaunchSuiteGrid extends PureComponent {
         customProps: {
           onEditItem: this.props.onEditItem,
           onClickAttribute: this.handleAttributeFilterClick,
+          onOwnerClick: this.handleOwnerFilterClick,
           events,
         },
         sortingEventInfo: events.NAME_SORTING,
@@ -401,6 +404,16 @@ export class LaunchSuiteGrid extends PureComponent {
       },
     });
   };
+
+  handleOwnerFilterClick = (owner) =>
+    this.props.onFilterClick({
+      id: ENTITY_USER,
+      value: {
+        filteringField: ENTITY_NAME,
+        condition: CONDITION_IN,
+        value: owner || '',
+      },
+    });
 
   COLUMNS = this.getColumns();
 
