@@ -61,7 +61,7 @@
   box-sizing: border-box;
   font-family: $FONT-CONDBOLD;
   cursor: pointer;
-  z-index: $Z-INDEX-TOOLTIP;
+  z-index: $Z-INDEX-POPUP;
   box-shadow: 0 6px 12px $COLOR--gray-80;
   overflow: hidden;
 

@@ -3,7 +3,7 @@
     position: relative;
     height: 28px;
     width: inherit;
-    z-index: 10;
+    z-index: $Z-INDEX-POPUP;
     background-color: $COLOR--white-two;
     .error {
       &.Select {
@@ -61,7 +61,7 @@
       left: 12px;
       line-height: 30px;
       font-size: 13px;
-      z-index: 10;
+      z-index: $Z-INDEX-POPUP;
     }
     .Select-noresults {
       position: relative;
