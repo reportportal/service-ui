@@ -75,6 +75,7 @@ export class ItemInfo extends Component {
       onEditItem: () => {},
       onShowTestParams: () => {},
       onClickAttribute: () => {},
+      onOwnerClick: () => {},
     },
     userId: '',
     userProjectRole: '',
@@ -185,7 +186,7 @@ export class ItemInfo extends Component {
               {Parser(RetryIcon)}
             </div>
           )}
-          {value.owner && <OwnerBlock owner={value.owner} />}
+          {value.owner && <OwnerBlock owner={value.owner} onClick={customProps.onOwnerClick} />}
           {isStepLevel && this.renderSauceLabsLabel()}
           {value.attributes &&
             !!value.attributes.length && (
