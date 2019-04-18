@@ -1,11 +1,9 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { buildAssetLink } from '../utils';
 import { CommandItem } from './commandItem';
 
-@connect(null)
 export class CommandsContent extends Component {
   static propTypes = {
     commands: PropTypes.array,

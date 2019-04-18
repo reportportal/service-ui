@@ -9,7 +9,7 @@ import {
   SET_AUTH_TOKEN_ACTION,
 } from './constants';
 
-export const authTokenReducer = (state = {}, { type, payload }) => {
+export const authTokenReducer = (state = '', { type, payload }) => {
   switch (type) {
     case SET_AUTH_TOKEN_ACTION:
       return payload;
