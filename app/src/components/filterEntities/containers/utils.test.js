@@ -1,4 +1,4 @@
-import { collectFilterEntities, createFilterQuery } from './utils';
+import { collectFilterEntities, createFilterQuery, resetOldCondition } from './utils';
 
 describe('collectFilterEntities', () => {
   test('should return an empty object in case of no arguments', () => {
@@ -176,5 +176,89 @@ describe('createFilterQuery', () => {
       'filter.eq.number': null,
       'predefinedFilter.predefined': null,
     });
+  });
+
+  test('should reset olf query if conditional change', () => {
+    const newValues = {
+      user: {
+        value: 'personal',
+        condition: 'cnt',
+      },
+    };
+    const oldValues = {
+      user: {
+        value: 'personal',
+        condition: '!cnt',
+      },
+    };
+    expect(createFilterQuery(newValues, oldValues)).toEqual({
+      'filter.cnt.user': 'personal',
+      'filter.!cnt.user': null,
+    });
+  });
+  test('should reset olf query if conditional change', () => {
+    const newValues = {
+      user: {
+        value: 'personal',
+        condition: 'cnt',
+      },
+      role: {
+        value: 'ADMINISTRATOR',
+        condition: 'in',
+      },
+    };
+    const oldValues = {
+      user: {
+        value: 'personal',
+        condition: '!cnt',
+      },
+    };
+    expect(createFilterQuery(newValues, oldValues)).toEqual({
+      'filter.cnt.user': 'personal',
+      'filter.!cnt.user': null,
+      'filter.in.role': 'ADMINISTRATOR',
+    });
+  });
+});
+
+describe('resetOldCondition', () => {
+  test('should return an empty object in case of no arguments', () => {
+    expect(resetOldCondition()).toEqual({});
+  });
+
+  test('should return an empty object if no first argument', () => {
+    const newValues = undefined;
+    const oldValues = {
+      user: {
+        value: 'personal',
+        condition: '!cnt',
+      },
+    };
+    expect(resetOldCondition(newValues, oldValues)).toEqual({});
+  });
+  test('should return an empty object if no second argument', () => {
+    const newValues = {
+      user: {
+        value: 'personal',
+        condition: '!cnt',
+      },
+    };
+    const oldValues = undefined;
+    expect(resetOldCondition(newValues, oldValues)).toEqual({});
+  });
+  test('should return an empty object conditions same', () => {
+    const newValues = {
+      user: {
+        value: 'personal',
+        condition: 'cnt',
+      },
+    };
+    const oldValues = {
+      user: {
+        value: 'personal1',
+        condition: '!cnt',
+      },
+    };
+    expect(resetOldCondition(newValues, oldValues)).toEqual({});
   });
 });

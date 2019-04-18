@@ -8,6 +8,15 @@ const getFilterKey = (entity, key) =>
     ? `${FILTER_PREFIX}${entity.condition}.${key}`
     : `${PREDEFINED_FILTER_PREFIX}${key}`;
 
+export const resetOldCondition = (entity, oldEntity, key) => {
+  if (entity && oldEntity) {
+    if (entity.condition !== oldEntity.condition) {
+      return { [getFilterKey(oldEntity, key)]: null };
+    }
+  }
+  return {};
+};
+
 export const collectFilterEntities = (query = {}) =>
   Object.keys(query).reduce((result, key) => {
     if (key.indexOf(PREDEFINED_FILTER_PREFIX) === 0) {
@@ -38,10 +47,13 @@ export const createFilterQuery = (entities = {}, oldEntities = {}) => {
     if (!entity && oldEntity) {
       return { ...res, [getFilterKey(oldEntity, key)]: null };
     }
+
+    const resetOldConditions = resetOldCondition(entity, oldEntity, key);
     const filterValue = !isEmptyValue(entity.value) ? entity.value : null;
     return {
       ...res,
       [getFilterKey(entity, key)]: filterValue,
+      ...resetOldConditions,
     };
   }, {});
 };
