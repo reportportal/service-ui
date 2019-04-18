@@ -15,9 +15,9 @@ import {
   DASHBOARDS_GRID_VIEW,
 } from 'controllers/dashboard';
 import { DASHBOARD_PAGE, DASHBOARD_PAGE_EVENTS } from 'components/main/analytics/events';
+import { NoItemMessage } from 'components/main/noItemMessage';
 import { userInfoSelector } from 'controllers/user';
 import { showModalAction } from 'controllers/modal';
-import { withFilter } from 'controllers/filter';
 import { DashboardPageHeader } from 'pages/inside/common/dashboardPageHeader';
 import { DashboardList } from './dashboardList';
 import { DashboardPageToolbar } from './dashboardPageToolbar';
@@ -26,6 +26,10 @@ const messages = defineMessages({
   pageTitle: {
     id: 'DashboardPage.title',
     defaultMessage: 'All Dashboards',
+  },
+  noResults: {
+    id: 'DashboardPage.noResults',
+    defaultMessage: 'No results found',
   },
   modalCancelButtonText: {
     id: 'DashboardPage.modal.modalCancelButtonText',
@@ -64,7 +68,6 @@ const messages = defineMessages({
     addDashboard: addDashboardAction,
   },
 )
-@withFilter()
 @injectIntl
 @track({ page: DASHBOARD_PAGE })
 export class DashboardPage extends Component {
@@ -75,10 +78,8 @@ export class DashboardPage extends Component {
     editDashboard: PropTypes.func,
     addDashboard: PropTypes.func,
     userInfo: PropTypes.object,
-    filter: PropTypes.string,
     dashboardItems: PropTypes.array,
     gridType: PropTypes.string,
-    onFilterChange: PropTypes.func,
     changeVisibilityType: PropTypes.func,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
@@ -92,11 +93,14 @@ export class DashboardPage extends Component {
     editDashboard: () => {},
     addDashboard: () => {},
     userInfo: {},
-    filter: '',
     dashboardItems: [],
     gridType: '',
     onFilterChange: () => {},
     changeVisibilityType: () => {},
+  };
+
+  state = {
+    filter: '',
   };
 
   onDeleteDashboardItem = (item) => {
@@ -162,6 +166,8 @@ export class DashboardPage extends Component {
     });
   };
 
+  onFilterChange = (filter) => this.setState({ filter });
+
   getBreadcrumbs = () => [
     {
       title: this.props.intl.formatMessage(messages.pageTitle),
@@ -170,7 +176,8 @@ export class DashboardPage extends Component {
   ];
 
   getFilteredDashboardItems = () => {
-    const { filter, dashboardItems } = this.props;
+    const { filter } = this.state;
+    const { dashboardItems } = this.props;
 
     if (!filter) {
       return dashboardItems;
@@ -190,7 +197,8 @@ export class DashboardPage extends Component {
   };
 
   render() {
-    const { gridType, userInfo, onFilterChange, filter } = this.props;
+    const { filter } = this.state;
+    const { gridType, userInfo, intl } = this.props;
     const dashboardItems = this.getFilteredDashboardItems();
     const eventsInfo = {
       closeIcon: DASHBOARD_PAGE_EVENTS.CLOSE_ICON_ADD_NEW_DASHBOARD_MODAL,
@@ -211,16 +219,20 @@ export class DashboardPage extends Component {
             onTableViewToggle={this.toggleTableView}
             gridType={gridType}
             filter={filter}
-            onFilterChange={onFilterChange}
+            onFilterChange={this.onFilterChange}
           />
-          <DashboardList
-            dashboardItems={dashboardItems}
-            gridType={gridType}
-            userInfo={userInfo}
-            onDeleteItem={this.onDeleteDashboardItem}
-            onEditItem={this.onEditDashboardItem}
-            onAddItem={this.onAddDashboardItem}
-          />
+          {dashboardItems.length > 0 ? (
+            <DashboardList
+              dashboardItems={dashboardItems}
+              gridType={gridType}
+              userInfo={userInfo}
+              onDeleteItem={this.onDeleteDashboardItem}
+              onEditItem={this.onEditDashboardItem}
+              onAddItem={this.onAddDashboardItem}
+            />
+          ) : (
+            <NoItemMessage message={intl.formatMessage(messages.noResults)} />
+          )}
         </PageSection>
       </PageLayout>
     );
