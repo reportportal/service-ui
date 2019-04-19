@@ -28,10 +28,11 @@
     "array.findindex": "1.0.4",
     "axios": "0.17.1",
     "babel-plugin-add-module-exports": "0.2.1",
-    "c3": "0.6.7",
+    "c3": "0.7.0",
     "classnames": "2.2.5",
     "core-js": "2.5.7",
-    "d3": "5.7.0",
+    "crypto-js": "3.1.9-1",
+    "d3": "5.9.2",
     "d3-selection": "1.3.2",
     "dotenv": "5.0.1",
     "fast-deep-equal": "2.0.1",
@@ -81,8 +82,7 @@
     "semver-diff": "2.1.0",
     "simplemde": "1.11.2",
     "swagger-ui": "3.10.0",
-    "video.js": "7.4.1",
-    "crypto-js": "3.1.9-1"
+    "video.js": "7.4.1"
   },
   "devDependencies": {
     "@storybook/addon-actions": "3.4.3",
