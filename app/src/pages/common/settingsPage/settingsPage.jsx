@@ -15,7 +15,6 @@ import {
 } from 'common/constants/settingsTabs';
 import { settingsTabSelector } from 'controllers/pages';
 import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
-import { redirectAction } from 'common/utils/routingUtils';
 import { SETTINGS_PAGE, SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { BetaBadge } from 'pages/inside/common/betaBadge';
 import { NavigationTabs } from 'components/main/navigationTabs';
@@ -62,7 +61,7 @@ const messages = defineMessages({
     userRole: activeProjectRoleSelector(state),
   }),
   {
-    onChangeTab: redirectAction,
+    onChangeTab: (linkAction) => linkAction,
   },
 )
 @injectIntl

@@ -11,7 +11,7 @@ import {
 import { showModalAction } from 'controllers/modal';
 import {
   deleteProjectAction,
-  redirectToProjectSectionAction,
+  navigateToProjectSectionAction,
 } from 'controllers/administrate/projects';
 import { SETTINGS, MEMBERS } from 'common/constants/projectSections';
 import { DotsMenuButton, SEPARATOR_ITEM, DANGER_ITEM } from 'components/buttons/dotsMenuButton';
@@ -28,7 +28,7 @@ import { messages } from '../messages';
     assignToProject: assignToProjectAction,
     unassignFromProject: unassignFromProjectAction,
     deleteProject: deleteProjectAction,
-    redirectToProjectSection: redirectToProjectSectionAction,
+    navigateToProjectSection: navigateToProjectSectionAction,
   },
 )
 @injectIntl
@@ -38,7 +38,7 @@ export class ProjectMenu extends Component {
     intl: intlShape.isRequired,
     isAssigned: PropTypes.bool.isRequired,
     userId: PropTypes.string.isRequired,
-    redirectToProjectSection: PropTypes.func.isRequired,
+    navigateToProjectSection: PropTypes.func.isRequired,
     assignToProject: PropTypes.func.isRequired,
     unassignFromProject: PropTypes.func.isRequired,
     deleteProject: PropTypes.func.isRequired,
@@ -86,12 +86,12 @@ export class ProjectMenu extends Component {
     const isPersonalProject = project.projectName === `${userId}_personal`;
     return [
       {
-        onClick: this.redirectToMembers,
+        onClick: this.navigateToMembers,
         label: intl.formatMessage(messages.members),
         value: 'action-members',
       },
       {
-        onClick: this.redirectToSettings,
+        onClick: this.navigateToSettings,
         label: intl.formatMessage(messages.settings),
         value: 'action-settings',
       },
@@ -121,14 +121,14 @@ export class ProjectMenu extends Component {
     ];
   };
 
-  redirectToMembers = () => {
+  navigateToMembers = () => {
     const { projectName } = this.props.project;
-    this.props.redirectToProjectSection(projectName, MEMBERS);
+    this.props.navigateToProjectSection(projectName, MEMBERS);
   };
 
-  redirectToSettings = () => {
+  navigateToSettings = () => {
     const { projectName } = this.props.project;
-    this.props.redirectToProjectSection(projectName, SETTINGS);
+    this.props.navigateToProjectSection(projectName, SETTINGS);
   };
 
   render() {

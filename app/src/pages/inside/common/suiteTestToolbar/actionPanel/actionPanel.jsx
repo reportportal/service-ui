@@ -23,7 +23,6 @@ import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import RefreshIcon from 'common/img/refresh-inline.svg';
 import HistoryIcon from 'common/img/history-inline.svg';
 import DeleteIcon from 'common/img/bin-icon-inline.svg';
-import { redirectAction } from 'common/utils/routingUtils';
 import styles from './actionPanel.scss';
 
 const cx = classNames.bind(styles);
@@ -89,7 +88,7 @@ const messages = defineMessages({
   }),
   {
     restorePath: restorePathAction,
-    redirect: redirectAction,
+    navigate: (linkAction) => linkAction,
   },
 )
 @injectIntl
@@ -118,7 +117,7 @@ export class ActionPanel extends Component {
     listView: PropTypes.bool,
     externalSystems: PropTypes.array,
     deleteDisabled: PropTypes.bool,
-    redirect: PropTypes.func.isRequired,
+    navigate: PropTypes.func.isRequired,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
@@ -162,7 +161,7 @@ export class ActionPanel extends Component {
         ? STEP_PAGE_EVENTS.HISTORY_BTN
         : SUITES_PAGE_EVENTS.HISTORY_BTN,
     );
-    this.props.redirect({ type: HISTORY_PAGE, payload: this.props.payload });
+    this.props.navigate({ type: HISTORY_PAGE, payload: this.props.payload });
   };
 
   onClickRefresh = () => {

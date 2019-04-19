@@ -29,7 +29,6 @@ import { defectLinkSelector } from 'controllers/testItem';
 import { defectTypesSelector } from 'controllers/project';
 import { activeProjectSelector } from 'controllers/user';
 import { TEST_ITEM_PAGE } from 'controllers/pages';
-import { redirectAction } from 'common/utils/routingUtils';
 import { TooltipWrapper } from '../common/tooltip';
 import { C3Chart } from '../common/c3chart';
 import chartStyles from './launchExecutionAndIssueStatistics.scss';
@@ -50,7 +49,7 @@ const getResult = (widget) => widget.content.result[0] || widget.content.result;
     getDefectLink: (params) => defectLinkSelector(state, params),
   }),
   {
-    redirect: redirectAction,
+    navigate: (linkAction) => linkAction,
   },
 )
 export class IssueStatisticsChart extends Component {
@@ -60,7 +59,7 @@ export class IssueStatisticsChart extends Component {
     isPreview: PropTypes.bool,
     defectTypes: PropTypes.object.isRequired,
     getDefectLink: PropTypes.func.isRequired,
-    redirect: PropTypes.func.isRequired,
+    navigate: PropTypes.func.isRequired,
     project: PropTypes.string.isRequired,
     container: PropTypes.instanceOf(Element).isRequired,
     observer: PropTypes.object,
@@ -140,7 +139,7 @@ export class IssueStatisticsChart extends Component {
 
     const link = getDefectLink({ defects: defectLocators, itemId: id });
 
-    this.props.redirect(Object.assign(link, defaultParams));
+    this.props.navigate(Object.assign(link, defaultParams));
   };
 
   getDefaultLinkParams = (testItemIds) => ({

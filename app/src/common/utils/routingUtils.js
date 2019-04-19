@@ -32,5 +32,3 @@ export const mergeQuery = (oldQuery, paramsToMerge) => {
     {},
   );
 };
-
-export const redirectAction = (linkAction) => linkAction;

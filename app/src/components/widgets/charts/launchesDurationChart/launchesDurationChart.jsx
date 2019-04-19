@@ -9,7 +9,6 @@ import { TEST_ITEM_PAGE } from 'controllers/pages';
 import { COLOR_CHART_DURATION, COLOR_FAILED } from 'common/constants/colors';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { ALL } from 'common/constants/reservedFilterIds';
-import { redirectAction } from 'common/utils/routingUtils';
 import { isValueInterrupted, transformCategoryLabel, getLaunchAxisTicks } from '../common/utils';
 import { C3Chart } from '../common/c3chart';
 import { LaunchDurationTooltip } from './launchDurationTooltip';
@@ -25,13 +24,13 @@ const cx = classNames.bind(styles);
     projectId: activeProjectSelector(state),
   }),
   {
-    redirect: redirectAction,
+    navigate: (linkAction) => linkAction,
   },
 )
 export class LaunchesDurationChart extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
-    redirect: PropTypes.func.isRequired,
+    navigate: PropTypes.func.isRequired,
     projectId: PropTypes.string.isRequired,
     widget: PropTypes.object.isRequired,
     container: PropTypes.instanceOf(Element).isRequired,
@@ -65,7 +64,7 @@ export class LaunchesDurationChart extends Component {
   onChartClick = (data) => {
     const { projectId } = this.props;
 
-    this.props.redirect({
+    this.props.navigate({
       type: TEST_ITEM_PAGE,
       payload: {
         projectId,

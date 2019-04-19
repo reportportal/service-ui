@@ -13,7 +13,7 @@ import {
   START_SET_VIEW_MODE,
   NAMESPACE,
   DELETE_PROJECT,
-  REDIRECT_TO_PROJECT,
+  NAVIGATE_TO_PROJECT,
   CONFIRM_ASSIGN_TO_PROJECT,
 } from './constants';
 
@@ -47,8 +47,8 @@ export const deleteProjectAction = (project) => ({
   payload: project,
 });
 
-export const redirectToProjectAction = (project) => ({
-  type: REDIRECT_TO_PROJECT,
+export const navigateToProjectAction = (project) => ({
+  type: NAVIGATE_TO_PROJECT,
   payload: project,
 });
 
@@ -57,7 +57,7 @@ export const confirmAssignToProject = (project) => ({
   payload: project,
 });
 
-export const redirectToProjectSectionAction = (projectName, section) => ({
+export const navigateToProjectSectionAction = (projectName, section) => ({
   type: PROJECT_DETAILS_PAGE,
   payload: {
     projectId: projectName,
