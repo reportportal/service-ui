@@ -10,7 +10,7 @@ import CircleCrossIcon from 'common/img/circle-cross-icon-inline.svg';
 import PencilIcon from 'common/img/pencil-icon-inline.svg';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { showModalAction } from 'controllers/modal';
-import { deleteDefectSubTypeAction } from 'controllers/project';
+import { deleteDefectSubTypeAction, updateDefectSubTypeAction } from 'controllers/project';
 import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { withHoverableTooltip } from 'components/main/tooltips/hoverableTooltip';
 
@@ -50,7 +50,8 @@ DefectTypeName.propTypes = {
 
 @connect(null, {
   showModal: showModalAction,
-  deleteDefectSubType: deleteDefectSubTypeAction,
+  deleteDefectSubTypeAction,
+  updateDefectSubTypeAction,
 })
 @injectIntl
 export class DefectSubType extends Component {
@@ -58,9 +59,9 @@ export class DefectSubType extends Component {
     data: defectTypeShape,
     parentType: defectTypeShape.isRequired,
     group: PropTypes.arrayOf(defectTypeShape),
-    closeNewSubTypeForm: PropTypes.func.isRequired,
     showModal: PropTypes.func.isRequired,
-    deleteDefectSubType: PropTypes.func.isRequired,
+    deleteDefectSubTypeAction: PropTypes.func.isRequired,
+    updateDefectSubTypeAction: PropTypes.func.isRequired,
     intl: intlShape.isRequired,
   };
 
@@ -68,15 +69,6 @@ export class DefectSubType extends Component {
     data: {},
     group: null,
   };
-
-  static getDerivedStateFromProps(props) {
-    if (!props.data.id) {
-      return {
-        isEditMode: true,
-      };
-    }
-    return null;
-  }
 
   state = {
     isEditMode: false,
@@ -135,7 +127,7 @@ export class DefectSubType extends Component {
     showModal({
       id: 'deleteItemsModal',
       data: {
-        onConfirm: this.deleteSubType,
+        onConfirm: this.deleteDefectSubType,
         header: intl.formatMessage(messages.deleteModalHeader),
         mainContent: intl.formatMessage(messages.deleteModalContent, {
           name: longName,
@@ -150,19 +142,25 @@ export class DefectSubType extends Component {
     });
   };
 
-  deleteSubType = () => {
-    const { deleteDefectSubType, data } = this.props;
+  deleteDefectSubType = () => {
+    this.props.deleteDefectSubTypeAction(this.props.data);
+  };
 
-    deleteDefectSubType(data);
+  updateDefectSubType = (values, dispatch, props) => {
+    props.dirty &&
+      this.props.updateDefectSubTypeAction({
+        ...values,
+        shortName: values.shortName.toUpperCase(),
+      });
+
+    this.stopEditing();
   };
 
   render() {
     const {
       data,
       data: { color, locator, longName, shortName },
-      parentType,
       group,
-      closeNewSubTypeForm,
       intl,
     } = this.props;
 
@@ -172,11 +170,10 @@ export class DefectSubType extends Component {
       <div className={cx('defect-type')}>
         {isEditMode ? (
           <DefectSubTypeForm
-            data={data}
-            parentType={parentType}
-            closeNewSubTypeForm={closeNewSubTypeForm}
-            stopEditing={this.stopEditing}
-            showDeleteConfirmationDialog={this.showDeleteConfirmationDialog}
+            form={data.locator}
+            initialValues={data}
+            onDelete={this.showDeleteConfirmationDialog}
+            onConfirm={this.updateDefectSubType}
           />
         ) : (
           <Fragment>
