@@ -14,7 +14,6 @@ import { createFilterAction } from 'controllers/filter';
 import { PASSED, FAILED, SKIPPED, INTERRUPTED } from 'common/constants/testStatuses';
 import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
 import { ENTITY_START_TIME, CONDITION_BETWEEN } from 'components/filterEntities/constants';
-import { redirectAction } from 'common/utils/routingUtils';
 import {
   getItemColor,
   getItemName,
@@ -41,14 +40,14 @@ const cx = classNames.bind(styles);
     getStatisticsLink: (params) => statisticsLinkSelector(state, params),
   }),
   {
-    redirect: redirectAction,
+    navigate: (linkAction) => linkAction,
     createFilterAction,
   },
 )
 export class LaunchStatisticsChart extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
-    redirect: PropTypes.func,
+    navigate: PropTypes.func,
     widget: PropTypes.object.isRequired,
     project: PropTypes.string.isRequired,
     defectTypes: PropTypes.object.isRequired,
@@ -65,7 +64,7 @@ export class LaunchStatisticsChart extends Component {
   };
 
   static defaultProps = {
-    redirect: () => {},
+    navigate: () => {},
     getDefectLink: () => {},
     getStatisticsLink: () => {},
     createFilterAction: () => {},
@@ -363,7 +362,7 @@ export class LaunchStatisticsChart extends Component {
     const link = locators
       ? getDefectLink({ defects: locators, itemId: id })
       : getStatisticsLink({ statuses: this.getLinkParametersStatuses(nameConfig) });
-    this.props.redirect(Object.assign(link, defaultParams));
+    this.props.navigate(Object.assign(link, defaultParams));
   };
 
   timeLineModeClickHandler = (data) => {

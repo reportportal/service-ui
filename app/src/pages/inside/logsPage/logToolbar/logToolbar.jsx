@@ -10,7 +10,6 @@ import LeftArrowIcon from 'common/img/arrow-left-small-inline.svg';
 import RightArrowIcon from 'common/img/arrow-right-small-inline.svg';
 import RefreshIcon from 'common/img/refresh-icon-inline.svg';
 import { breadcrumbsSelector } from 'controllers/testItem';
-import { redirectAction } from 'common/utils/routingUtils';
 import {
   nextLogLinkSelector,
   previousLogLinkSelector,
@@ -30,7 +29,7 @@ const cx = classNames.bind(styles);
     nextItem: nextItemSelector(state),
   }),
   {
-    redirect: redirectAction,
+    navigate: (linkAction) => linkAction,
   },
 )
 export class LogToolbar extends Component {
@@ -41,7 +40,7 @@ export class LogToolbar extends Component {
     nextItem: PropTypes.object,
     nextLink: PropTypes.object,
     previousLink: PropTypes.object,
-    redirect: PropTypes.func,
+    navigate: PropTypes.func,
   };
 
   static defaultProps = {
@@ -51,16 +50,16 @@ export class LogToolbar extends Component {
     nextItem: null,
     nextLink: null,
     previousLink: null,
-    redirect: () => {},
+    navigate: () => {},
   };
 
   handleBackClick = () => {
-    const { redirect, previousLink } = this.props;
-    redirect(previousLink);
+    const { navigate, previousLink } = this.props;
+    navigate(previousLink);
   };
   handleForwardClick = () => {
-    const { redirect, nextLink } = this.props;
-    redirect(nextLink);
+    const { navigate, nextLink } = this.props;
+    navigate(nextLink);
   };
 
   render() {

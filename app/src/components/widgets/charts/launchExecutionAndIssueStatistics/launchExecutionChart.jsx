@@ -29,7 +29,6 @@ import ReactDOMServer from 'react-dom/server';
 import { statisticsLinkSelector } from 'controllers/testItem';
 import { activeProjectSelector } from 'controllers/user';
 import { TEST_ITEM_PAGE } from 'controllers/pages';
-import { redirectAction } from 'common/utils/routingUtils';
 import { TooltipWrapper } from '../common/tooltip';
 import { C3Chart } from '../common/c3chart';
 import chartStyles from './launchExecutionAndIssueStatistics.scss';
@@ -49,7 +48,7 @@ const getResult = (widget) => widget.content.result[0] || widget.content.result;
     getStatisticsLink: (name) => statisticsLinkSelector(state, { statuses: [name] }),
   }),
   {
-    redirect: redirectAction,
+    navigate: (linkAction) => linkAction,
   },
 )
 export class LaunchExecutionChart extends Component {
@@ -58,7 +57,7 @@ export class LaunchExecutionChart extends Component {
     widget: PropTypes.object.isRequired,
     isPreview: PropTypes.bool.isRequired,
     getStatisticsLink: PropTypes.func.isRequired,
-    redirect: PropTypes.func.isRequired,
+    navigate: PropTypes.func.isRequired,
     project: PropTypes.string.isRequired,
     container: PropTypes.instanceOf(Element).isRequired,
     observer: PropTypes.object,
@@ -135,7 +134,7 @@ export class LaunchExecutionChart extends Component {
     const nameConfig = getItemNameConfig(d.id);
 
     const link = getStatisticsLink(nameConfig.defectType.toUpperCase());
-    this.props.redirect(Object.assign(link, defaultParams));
+    this.props.navigate(Object.assign(link, defaultParams));
   };
 
   getDefaultLinkParams = (testItemIds) => ({

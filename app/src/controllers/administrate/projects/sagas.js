@@ -19,7 +19,7 @@ import {
   GRID_VIEW,
   SET_PROJECTS_VIEW_MODE,
   DELETE_PROJECT,
-  REDIRECT_TO_PROJECT,
+  NAVIGATE_TO_PROJECT,
 } from './constants';
 import { querySelector } from './selectors';
 
@@ -70,7 +70,7 @@ function* watchDeleteProject() {
   yield takeLatest(DELETE_PROJECT, deleteProject);
 }
 
-function* redirectToProject({ payload }) {
+function* navigateToProject({ payload }) {
   const { project, confirmModalOptions } = payload;
   const assignedProjects = yield select(assignedProjectsSelector);
   let isAssigned = !!assignedProjects[project.projectName];
@@ -93,8 +93,8 @@ function* redirectToProject({ payload }) {
   }
 }
 
-function* watchRedirectToProject() {
-  yield takeEvery(REDIRECT_TO_PROJECT, redirectToProject);
+function* watchNavigateToProject() {
+  yield takeEvery(NAVIGATE_TO_PROJECT, navigateToProject);
 }
 
 export function* projectsSagas() {
@@ -102,6 +102,6 @@ export function* projectsSagas() {
     watchFetchProjects(),
     watchSetViewMode(),
     watchDeleteProject(),
-    watchRedirectToProject(),
+    watchNavigateToProject(),
   ]);
 }

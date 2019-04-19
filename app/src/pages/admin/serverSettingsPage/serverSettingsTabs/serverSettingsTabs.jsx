@@ -9,7 +9,6 @@ import {
   STATISTICS,
 } from 'common/constants/settingsTabs';
 import { NavigationTabs } from 'components/main/navigationTabs';
-import { redirectAction } from 'common/utils/routingUtils';
 import { EmailServerTab } from './emailServerTab';
 import { AuthConfigurationTab } from './authConfigurationTab';
 import { StatisticsTab } from './statisticsTab';
@@ -34,7 +33,7 @@ const messages = defineMessages({
     activeTab: settingsTabSelector(state),
   }),
   {
-    onChangeTab: redirectAction,
+    onChangeTab: (linkAction) => linkAction,
   },
 )
 @injectIntl

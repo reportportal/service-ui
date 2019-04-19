@@ -6,8 +6,8 @@ export {
   unselectAllProjectsAction,
   deleteItemsAction,
   deleteProjectAction,
-  redirectToProjectAction,
-  redirectToProjectSectionAction,
+  navigateToProjectAction,
+  navigateToProjectSectionAction,
 } from './actionCreators';
 export { projectsReducer } from './reducer';
 export {

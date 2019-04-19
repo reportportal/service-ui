@@ -13,7 +13,6 @@ import { TEST_ITEM_PAGE } from 'controllers/pages';
 import * as COLORS from 'common/constants/colors';
 import * as STATUSES from 'common/constants/testStatuses';
 import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
-import { redirectAction } from 'common/utils/routingUtils';
 import { messages } from '../common/messages';
 import { C3Chart } from '../common/c3chart';
 import { TooltipWrapper } from '../common/tooltip';
@@ -42,7 +41,7 @@ const localMessages = defineMessages({
     }),
   }),
   {
-    redirect: redirectAction,
+    navigate: (linkAction) => linkAction,
   },
 )
 export class TestCasesGrowthTrendChart extends Component {
@@ -52,7 +51,7 @@ export class TestCasesGrowthTrendChart extends Component {
     container: PropTypes.instanceOf(Element).isRequired,
     project: PropTypes.string.isRequired,
     statisticsLink: PropTypes.object.isRequired,
-    redirect: PropTypes.func.isRequired,
+    navigate: PropTypes.func.isRequired,
     isPreview: PropTypes.bool,
     height: PropTypes.number,
     observer: PropTypes.object,
@@ -100,7 +99,7 @@ export class TestCasesGrowthTrendChart extends Component {
     const id = widget.content.result[d.index].id;
     const defaultParams = this.getDefaultLinkParams(id);
 
-    this.props.redirect(Object.assign(statisticsLink, defaultParams));
+    this.props.navigate(Object.assign(statisticsLink, defaultParams));
   };
 
   onChartRendered = () => {

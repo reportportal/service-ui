@@ -17,7 +17,7 @@ import ProjectUsersIcon from 'common/img/project-users-inline.svg';
 import ProjectSettingsIcon from 'common/img/project-settings-inline.svg';
 import ProjectEventsIcon from 'common/img/project-events-inline.svg';
 import { MembersPage } from 'pages/common/membersPage';
-import { redirectToProjectSectionAction } from 'controllers/administrate/projects';
+import { navigateToProjectSectionAction } from 'controllers/administrate/projects';
 import { ProjectStatusPage } from '../projectStatusPage';
 import { ProjectEventsPage } from '../projectEventsPage';
 import { Projects } from './projects';
@@ -49,7 +49,7 @@ const HEADER_BUTTONS = [
     section: projectSectionSelector(state),
   }),
   {
-    redirectToSection: redirectToProjectSectionAction,
+    navigateToSection: navigateToProjectSectionAction,
   },
 )
 @injectIntl
@@ -58,7 +58,7 @@ export class ProjectsPage extends Component {
     intl: intlShape.isRequired,
     section: PropTypes.string,
     projectId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-    redirectToSection: PropTypes.func.isRequired,
+    navigateToSection: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
@@ -67,7 +67,7 @@ export class ProjectsPage extends Component {
   };
 
   onHeaderButtonClick = (section) => () => {
-    this.props.redirectToSection(this.props.projectId, section);
+    this.props.navigateToSection(this.props.projectId, section);
   };
 
   getBreadcrumbs = () => {

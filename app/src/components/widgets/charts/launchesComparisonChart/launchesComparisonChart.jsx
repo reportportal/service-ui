@@ -9,7 +9,6 @@ import { TEST_ITEM_PAGE } from 'controllers/pages';
 import { defectTypesSelector } from 'controllers/project';
 import { defectLinkSelector, statisticsLinkSelector } from 'controllers/testItem';
 import { activeProjectSelector } from 'controllers/user';
-import { redirectAction } from 'common/utils/routingUtils';
 import {
   getDefectTypeLocators,
   getItemColor,
@@ -38,13 +37,13 @@ const messages = defineMessages({
     getStatisticsLink: (name) => statisticsLinkSelector(state, { statuses: [name] }),
   }),
   {
-    redirect: redirectAction,
+    navigate: (linkAction) => linkAction,
   },
 )
 export class LaunchesComparisonChart extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
-    redirect: PropTypes.func.isRequired,
+    navigate: PropTypes.func.isRequired,
     widget: PropTypes.object.isRequired,
     project: PropTypes.string.isRequired,
     defectTypes: PropTypes.object.isRequired,
@@ -128,7 +127,7 @@ export class LaunchesComparisonChart extends Component {
     const link = defectLocators
       ? getDefectLink({ defects: defectLocators, itemId: id })
       : getStatisticsLink(nameConfig.defectType.toUpperCase());
-    this.props.redirect(Object.assign(link, defaultParams));
+    this.props.navigate(Object.assign(link, defaultParams));
   };
 
   getDefaultLinkParams = (testItemIds) => ({

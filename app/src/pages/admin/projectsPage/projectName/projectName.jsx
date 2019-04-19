@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import Link from 'redux-first-router-link';
 import { connect } from 'react-redux';
 import { SCREEN_XS_MAX } from 'common/constants/screenSizeVariables';
-import { redirectToProjectAction } from 'controllers/administrate/projects';
+import { navigateToProjectAction } from 'controllers/administrate/projects';
 import { showModalAction } from 'controllers/modal';
 import { PROJECT_PAGE } from 'controllers/pages';
 import { assignedProjectsSelector } from 'controllers/user';
@@ -21,7 +21,7 @@ const cx = classNames.bind(styles);
     isAssigned: !!assignedProjectsSelector(state)[ownProps.project.projectName],
   }),
   {
-    redirectToProject: redirectToProjectAction,
+    navigateToProject: navigateToProjectAction,
     showModal: showModalAction,
   },
 )
@@ -30,7 +30,7 @@ export class ProjectName extends Component {
   static propTypes = {
     project: PropTypes.object.isRequired,
     intl: intlShape.isRequired,
-    redirectToProject: PropTypes.func.isRequired,
+    navigateToProject: PropTypes.func.isRequired,
     showModal: PropTypes.func.isRequired,
     isAssigned: PropTypes.bool,
     nameEventInfo: PropTypes.object,
@@ -62,7 +62,7 @@ export class ProjectName extends Component {
         cancelText: intl.formatMessage(messages.modalCancelButtonText),
       },
     };
-    this.props.redirectToProject({
+    this.props.navigateToProject({
       project: this.props.project,
       confirmModalOptions: confirmAssignModalOpts,
     });
