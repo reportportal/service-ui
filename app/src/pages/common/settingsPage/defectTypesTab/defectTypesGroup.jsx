@@ -1,23 +1,30 @@
-import React, { PureComponent, Fragment } from 'react';
+import React, { Component, Fragment } from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { injectIntl, intlShape } from 'react-intl';
 
 import { GhostButton } from 'components/buttons/ghostButton';
 import PlusIcon from 'common/img/plus-button-inline.svg';
+import { addDefectSubTypeAction } from 'controllers/project';
 
 import { DefectSubType } from './defectSubType';
 import { defectTypeShape } from './defectTypeShape';
 import { messages } from './defectTypesMessages';
+import { DefectSubTypeForm } from './defectSubTypeForm';
 
 import styles from './defectTypesTab.scss';
 
 const cx = classNames.bind(styles);
 
+@connect(null, {
+  addDefectSubTypeAction,
+})
 @injectIntl
-export class DefectTypesGroup extends PureComponent {
+export class DefectTypesGroup extends Component {
   static propTypes = {
     group: PropTypes.arrayOf(defectTypeShape).isRequired,
+    addDefectSubTypeAction: PropTypes.func.isRequired,
     intl: intlShape.isRequired,
   };
 
@@ -25,12 +32,17 @@ export class DefectTypesGroup extends PureComponent {
     newSubType: false,
   };
 
-  addNewSubType = () => {
+  showNewSubTypeForm = () => {
     this.setState({ newSubType: true });
   };
 
   closeNewSubTypeForm = () => {
     this.setState({ newSubType: false });
+  };
+
+  addDefectSubType = (values) => {
+    this.props.addDefectSubTypeAction(values);
+    this.closeNewSubTypeForm();
   };
 
   MAX_DEFECT_SUBTYPES_COUNT = 15;
@@ -47,17 +59,28 @@ export class DefectTypesGroup extends PureComponent {
             data={subType}
             parentType={group[0]}
             group={i === 0 ? group : null}
-            closeNewSubTypeForm={this.closeNewSubTypeForm}
           />
         ))}
         {newSubType && (
-          <DefectSubType parentType={group[0]} closeNewSubTypeForm={this.closeNewSubTypeForm} />
+          <div className={cx('defect-type')}>
+            <DefectSubTypeForm
+              form={group[0].locator}
+              initialValues={{
+                longName: '',
+                shortName: '',
+                color: group[0].color,
+                typeRef: group[0].typeRef,
+              }}
+              onDelete={this.closeNewSubTypeForm}
+              onConfirm={this.addDefectSubType}
+            />
+          </div>
         )}
         <div className={cx('defect-type-group-footer')}>
           <GhostButton
             icon={PlusIcon}
             disabled={group.length >= this.MAX_DEFECT_SUBTYPES_COUNT}
-            onClick={this.addNewSubType}
+            onClick={this.showNewSubTypeForm}
           >
             {intl.formatMessage(messages.addDefectType)}
           </GhostButton>

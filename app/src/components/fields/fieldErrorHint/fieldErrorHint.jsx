@@ -130,6 +130,14 @@ const messages = defineMessages({
     id: 'AttributeEditor.attributeValueLengthHint',
     defaultMessage: 'Attribute value should have size from 1 to 128',
   },
+  defectLongNameHint: {
+    id: 'DefectTypesTab.defectLongNameHint',
+    defaultMessage: "Full name should have size from '3' to '55'",
+  },
+  defectShortNameHint: {
+    id: 'DefectTypesTab.defectShortNameHint',
+    defaultMessage: "Short name should have size from '1' to '4'",
+  },
 });
 
 @injectIntl
