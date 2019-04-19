@@ -178,7 +178,7 @@ describe('createFilterQuery', () => {
     });
   });
 
-  test('should reset olf query if conditional change', () => {
+  test('should reset old query if conditional change', () => {
     const newValues = {
       user: {
         value: 'personal',
@@ -196,7 +196,7 @@ describe('createFilterQuery', () => {
       'filter.!cnt.user': null,
     });
   });
-  test('should reset olf query if conditional change', () => {
+  test('should reset old query if conditional change', () => {
     const newValues = {
       user: {
         value: 'personal',
@@ -246,7 +246,7 @@ describe('resetOldCondition', () => {
     const oldValues = undefined;
     expect(resetOldCondition(newValues, oldValues)).toEqual({});
   });
-  test('should return an empty object conditions same', () => {
+  test('should return an empty object if old and new values have same conditions', () => {
     const newValues = {
       user: {
         value: 'personal',
@@ -256,7 +256,7 @@ describe('resetOldCondition', () => {
     const oldValues = {
       user: {
         value: 'personal1',
-        condition: '!cnt',
+        condition: 'cnt',
       },
     };
     expect(resetOldCondition(newValues, oldValues)).toEqual({});
