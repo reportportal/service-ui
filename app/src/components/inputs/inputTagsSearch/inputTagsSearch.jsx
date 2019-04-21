@@ -78,7 +78,7 @@ export class InputTagsSearch extends Component {
     minLength: 1,
     showNewLabel: false,
     dynamicSearchPromptText: false,
-    isClearable: false,
+    isClearable: true,
     disabled: false,
     mobileDisabled: false,
     customClass: null,
@@ -137,6 +137,7 @@ export class InputTagsSearch extends Component {
     }
     return label;
   };
+
   render() {
     const {
       touched,
@@ -192,7 +193,7 @@ export class InputTagsSearch extends Component {
           multi={multi}
           isValidNewOption={isValidNewOption}
           removeSelected={removeSelected}
-          isClearable={isClearable}
+          clearable={isClearable}
           disabled={disabled}
           isOptionUnique={isOptionUnique || undefined}
           inputProps={inputProps}

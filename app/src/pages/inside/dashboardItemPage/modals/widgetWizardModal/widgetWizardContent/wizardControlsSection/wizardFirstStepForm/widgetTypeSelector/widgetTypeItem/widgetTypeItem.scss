@@ -18,4 +18,8 @@
 .widget-type-item-name {
   white-space: pre-wrap;
   word-break: normal;
+
+  &.active {
+    font-family: $FONT-SEMIBOLD;
+  }
 }
