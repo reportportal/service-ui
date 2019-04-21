@@ -15,6 +15,7 @@ import {
   DASHBOARDS_GRID_VIEW,
 } from 'controllers/dashboard';
 import { DASHBOARD_PAGE, DASHBOARD_PAGE_EVENTS } from 'components/main/analytics/events';
+import { NoItemMessage } from 'components/main/noItemMessage';
 import { userInfoSelector } from 'controllers/user';
 import { showModalAction } from 'controllers/modal';
 import { withFilter } from 'controllers/filter';
@@ -26,6 +27,10 @@ const messages = defineMessages({
   pageTitle: {
     id: 'DashboardPage.title',
     defaultMessage: 'All Dashboards',
+  },
+  noResults: {
+    id: 'DashboardPage.noResults',
+    defaultMessage: 'No results found',
   },
   modalCancelButtonText: {
     id: 'DashboardPage.modal.modalCancelButtonText',
@@ -190,7 +195,7 @@ export class DashboardPage extends Component {
   };
 
   render() {
-    const { gridType, userInfo, onFilterChange, filter } = this.props;
+    const { intl, gridType, userInfo, onFilterChange, filter } = this.props;
     const dashboardItems = this.getFilteredDashboardItems();
     const eventsInfo = {
       closeIcon: DASHBOARD_PAGE_EVENTS.CLOSE_ICON_ADD_NEW_DASHBOARD_MODAL,
@@ -213,14 +218,18 @@ export class DashboardPage extends Component {
             filter={filter}
             onFilterChange={onFilterChange}
           />
-          <DashboardList
-            dashboardItems={dashboardItems}
-            gridType={gridType}
-            userInfo={userInfo}
-            onDeleteItem={this.onDeleteDashboardItem}
-            onEditItem={this.onEditDashboardItem}
-            onAddItem={this.onAddDashboardItem}
-          />
+          {dashboardItems.length > 0 ? (
+            <DashboardList
+              dashboardItems={dashboardItems}
+              gridType={gridType}
+              userInfo={userInfo}
+              onDeleteItem={this.onDeleteDashboardItem}
+              onEditItem={this.onEditDashboardItem}
+              onAddItem={this.onAddDashboardItem}
+            />
+          ) : (
+            <NoItemMessage message={intl.formatMessage(messages.noResults)} />
+          )}
         </PageSection>
       </PageLayout>
     );

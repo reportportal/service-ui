@@ -272,6 +272,7 @@
   "DashboardPage.modal.deleteModalTitle": "Выдаліць панэль кіравання",
   "DashboardPage.modal.deleteModalWarningMessage": "Вы збіраецеся выдаліць не вашу панэль кіравання. Гэта можа паўплываць на інфармацыю іншых карыстальнікаў праекта.",
   "DashboardPage.modal.modalCancelButtonText": "Адмяніць",
+  "DashboardPage.noResults": "Нічога не знойдзена",
   "DashboardPage.title": "Усе панэлі кіравання",
   "DashboardPageHeader.allDashboardsTitle": "All dashboards",
   "DashboardPageToolbar.searchPlaceholder": "Пошук па назве",
