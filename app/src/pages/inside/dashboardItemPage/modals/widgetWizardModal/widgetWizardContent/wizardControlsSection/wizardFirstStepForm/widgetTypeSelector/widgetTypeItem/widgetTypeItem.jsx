@@ -14,7 +14,9 @@ export const WidgetTypeItem = ({ widget, activeWidgetId, onChange }) => (
       onChange={onChange}
       circleAtTop
     >
-      <span className={cx('widget-type-item-name')}>{widget.title}</span>
+      <span className={cx('widget-type-item-name', { active: widget.id === activeWidgetId })}>
+        {widget.title}
+      </span>
     </InputRadio>
   </div>
 );
