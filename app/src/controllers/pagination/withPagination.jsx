@@ -50,6 +50,12 @@ export const withPagination = ({
       updatePagination: () => {},
     };
 
+    componentDidUpdate() {
+      const totalPages = this.props.totalPages || 1;
+      if (this.props.page > totalPages) {
+        this.changePaginationOptions({ page: totalPages });
+      }
+    }
     changePageHandler = (page) => this.changePaginationOptions({ page });
 
     changeSizeHandler = (size) => this.changePaginationOptions({ size, page: 1 });
