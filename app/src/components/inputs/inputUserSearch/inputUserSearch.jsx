@@ -46,6 +46,7 @@ const makeOptions = (options, projectId) =>
     disabled: !!option.assignedProjects[projectId],
     isAssigned: !!option.assignedProjects[projectId],
     userAvatar: getPhoto(option.userId),
+    assignedProjects: option.assignedProjects || {},
   }));
 const getUsers = (input, isAdmin, projectId) => {
   if (input) {

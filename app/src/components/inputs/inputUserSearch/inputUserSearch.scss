@@ -3,7 +3,6 @@
     position: relative;
     height: 28px;
     width: inherit;
-    z-index: $Z-INDEX-POPUP;
     background-color: $COLOR--white-two;
     .error {
       &.Select {
@@ -99,6 +98,7 @@
     }
     .is-focused {
       border-color: $COLOR--topaz;
+      z-index: $Z-INDEX-POPUP;
       &:hover {
         border-color: $COLOR--topaz;
       }

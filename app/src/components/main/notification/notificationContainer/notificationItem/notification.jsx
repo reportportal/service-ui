@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { defineMessages, intlShape, injectIntl } from 'react-intl';
+import Parser from 'html-react-parser';
 import { NOTIFICATION_TYPES } from 'controllers/notification/constants';
 import styles from './notification.scss';
 
@@ -82,7 +83,7 @@ export class Notification extends PureComponent {
     return (
       <div key={message} onClick={this.messageClick}>
         <div className={cx('message-container', type)}>
-          <p> {messageId ? intl.formatMessage(messages[messageId], values) : message}</p>
+          <p> {Parser(messageId ? intl.formatMessage(messages[messageId], values) : message)}</p>
         </div>
       </div>
     );
