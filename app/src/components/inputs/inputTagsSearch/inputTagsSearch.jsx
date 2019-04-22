@@ -55,6 +55,7 @@ export class InputTagsSearch extends Component {
     customClass: PropTypes.string,
     isOptionUnique: PropTypes.func,
     inputProps: PropTypes.object,
+    filterOption: PropTypes.func,
   };
   static defaultProps = {
     uri: '',
@@ -84,6 +85,7 @@ export class InputTagsSearch extends Component {
     customClass: null,
     isOptionUnique: null,
     inputProps: {},
+    filterOption: () => true,
   };
   state = {
     searchPromptText: this.props.nothingFound,
@@ -161,6 +163,7 @@ export class InputTagsSearch extends Component {
       customClass,
       isOptionUnique,
       inputProps,
+      filterOption,
     } = this.props;
     const SelectComponent = selectType(async, creatable);
 
@@ -197,6 +200,7 @@ export class InputTagsSearch extends Component {
           disabled={disabled}
           isOptionUnique={isOptionUnique || undefined}
           inputProps={inputProps}
+          filterOption={filterOption}
         />
       </div>
     );

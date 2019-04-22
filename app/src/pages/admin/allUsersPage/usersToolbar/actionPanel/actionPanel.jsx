@@ -53,6 +53,10 @@ const messages = defineMessages({
     id: 'ActionPanel.addUserNotification',
     defaultMessage: 'New account has been created successfully',
   },
+  memberWasInvited: {
+    id: 'MembersPage.memberWasInvited',
+    defaultMessage: "Member '<b>{name}</b>' has assigned to the project",
+  },
 });
 
 @connect(
@@ -152,7 +156,10 @@ export class ActionPanel extends Component {
           this.props.showDefaultErrorNotification(err);
           this.props.fetchAllUsersAction();
           this.props.hideScreenLockAction();
-          return err;
+          return {
+            errorOccurred: true,
+            ...err,
+          };
         });
     }
     data.userNames = {
@@ -175,6 +182,10 @@ export class ActionPanel extends Component {
       .catch((err) => {
         this.props.showDefaultErrorNotification(err);
         this.props.fetchAllUsersAction();
+        return {
+          errorOccurred: true,
+          ...err,
+        };
       });
   };
 
