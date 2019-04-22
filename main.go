@@ -56,15 +56,12 @@ func main() {
 				"status.reportportal.io",
 				"www.google-analytics.com",
 				"stats.g.doubleclick.net",
-				"fonts.googleapis.com",
-				"fonts.gstatic.com",
 				"*.saucelabs.com",
 				"*.epam.com",
 				"*.uservoice.com",
 			},
 			"img-src":    {"'self'", "data:", "www.google-analytics.com", "stats.g.doubleclick.net", "*.epam.com", "*.uservoice.com", "*.saucelabs.com"},
-			"video-src":  {"'self'", "*.saucelabs.com"},
-			"object-src": {"'self'", "*.saucelabs.com"},
+			"object-src": {"'self'", "*.saucelabs.com", "fonts.googleapis.com", "fonts.gstatic.com"},
 		}
 
 		//apply content security policies
