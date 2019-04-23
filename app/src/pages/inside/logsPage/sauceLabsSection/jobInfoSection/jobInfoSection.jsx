@@ -9,10 +9,10 @@ import {
   sauceLabsAssetsSelector,
 } from 'controllers/log/sauceLabs';
 import { ContainerWithTabs } from 'components/main/containerWithTabs';
-import { COMMANDS_TAB, LOGS_TAB, METADATA_TAB } from './constants';
+import { COMMANDS_TAB, METADATA_TAB } from './constants'; // LOGS_TAB
 import { messages } from './messages';
 import { CommandsContent } from './commandsContent';
-import { LogsContent } from './logsContent';
+// import { LogsContent } from './logsContent';
 import { MetadataContent } from './metadataContent';
 import styles from './jobInfoSection.scss';
 
@@ -61,10 +61,10 @@ export class JobInfoSection extends Component {
           />
         ),
       },
-      {
-        name: formatMessage(messages[LOGS_TAB]),
-        content: <LogsContent logs={logs} />,
-      },
+      // {
+      //   name: formatMessage(messages[LOGS_TAB]),
+      //   content: <LogsContent logs={logs} />,
+      // },
       {
         name: formatMessage(messages[METADATA_TAB]),
         content: <MetadataContent assets={assets} authToken={authToken} />,

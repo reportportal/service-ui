@@ -40,7 +40,7 @@ export class CommandsContent extends Component {
           <CommandItem
             key={item.start_time}
             command={item}
-            onItemClick={this.onCommandItemClick(item.in_video_timeline)}
+            onItemClick={this.onCommandItemClick(item.in_video_timeline + item.duration)}
             screenShotLink={this.buildScreenShotLink(item)}
           />
         ))}

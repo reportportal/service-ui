@@ -33,6 +33,7 @@ export {
   updateStorageItem,
 } from './storageUtils';
 export {
+  getTimeUnits,
   getDuration,
   approximateTimeFormat,
   dateFormat,
