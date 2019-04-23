@@ -97,6 +97,10 @@ const messages = defineMessages({
     id: 'WidgetCriteriaOption.SYSTEM_ISSUE_TOTAL',
     defaultMessage: 'Total system issues',
   },
+  TO_INVESTIGATE_TOTAL: {
+    id: 'WidgetCriteriaOption.TO_INVESTIGATE_TOTAL',
+    defaultMessage: 'Total to investigate',
+  },
   NO_DEFECT_TOTAL: {
     id: 'WidgetCriteriaOption.NO_DEFECT_TOTAL',
     defaultMessage: 'Total no defects',

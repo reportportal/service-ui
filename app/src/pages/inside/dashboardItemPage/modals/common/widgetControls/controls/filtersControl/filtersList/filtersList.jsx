@@ -44,7 +44,7 @@ export const FiltersList = ({
 FiltersList.propTypes = {
   userId: PropTypes.string,
   search: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
-  activeId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+  activeId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   loading: PropTypes.bool,
   filters: PropTypes.array.isRequired,
   onChange: PropTypes.func,
@@ -54,6 +54,7 @@ FiltersList.propTypes = {
 };
 
 FiltersList.defaultProps = {
+  activeId: '',
   userId: '',
   search: '',
   loading: false,

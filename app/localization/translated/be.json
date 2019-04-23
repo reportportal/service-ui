@@ -1436,6 +1436,7 @@
   "WidgetCriteriaOption.SYSTEM_ISSUE": "System issue",
   "WidgetCriteriaOption.SYSTEM_ISSUE_TOTAL": "Total system issues",
   "WidgetCriteriaOption.TO_INVESTIGATE": "To investigate",
+  "WidgetCriteriaOption.TO_INVESTIGATE_TOTAL": "Total to investigate",
   "WidgetCriteriaOption.aa_settings_actions": "Update Auto-Analysis settings",
   "WidgetCriteriaOption.attributes": "Attributes",
   "WidgetCriteriaOption.bts_actions": "Update BTS",
