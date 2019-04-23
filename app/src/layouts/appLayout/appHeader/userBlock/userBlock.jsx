@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import track from 'react-tracking';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
@@ -11,6 +11,7 @@ import { connect } from 'react-redux';
 import { NavLink } from 'redux-first-router-link';
 import { ADMINISTRATOR } from 'common/constants/accountRoles';
 import { URLS } from 'common/urls';
+import { Image } from 'components/main/image';
 import styles from './userBlock.scss';
 
 const cx = classNames.bind(styles);
@@ -25,7 +26,7 @@ const cx = classNames.bind(styles);
   },
 )
 @track()
-export class UserBlock extends PureComponent {
+export class UserBlock extends Component {
   static propTypes = {
     logout: PropTypes.func.isRequired,
     user: PropTypes.object,
@@ -87,7 +88,7 @@ export class UserBlock extends PureComponent {
           <div className={cx('username')}>{this.props.user.userId}</div>
         </div>
         <div className={cx('avatar-wrapper')}>
-          <img
+          <Image
             className={cx('avatar')}
             src={URLS.dataPhoto(this.props.photoTimeStamp)}
             alt="avatar"

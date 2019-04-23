@@ -6,6 +6,7 @@ import { FormattedMessage } from 'react-intl';
 import { URLS } from 'common/urls';
 import { ADMINISTRATOR } from 'common/constants/accountRoles';
 import { userIdSelector } from 'controllers/user';
+import { Image } from 'components/main/image';
 
 import styles from './personalInfo.scss';
 
@@ -33,10 +34,7 @@ export class PersonalInfo extends Component {
     const { name, login, userRole, currentUser } = this.props;
     return (
       <Fragment>
-        <div
-          className={cx('member-avatar')}
-          style={{ backgroundImage: `url(${getPhotoURL(login)})` }}
-        />
+        <Image className={cx('member-avatar')} src={getPhotoURL(login)} />
         <div className={cx('member-info')}>
           <p className={cx('member-name')}>
             {name}

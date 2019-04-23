@@ -19,7 +19,7 @@ const handleError = (error) => {
 
 const handleResponse = (res) => res.data;
 
-export const fetch = (url, params = {}) => {
+export const fetch = (url, params = {}, isRawResponse) => {
   const cancelToken = params && params.abort ? new CancelToken(params.abort) : null;
   const headersFromParams = params && params.headers;
   const headers = Object.assign({}, headersFromParams || {});
@@ -31,7 +31,7 @@ export const fetch = (url, params = {}) => {
   };
   return axios(requestParams)
     .catch(handleError)
-    .then(handleResponse);
+    .then(!isRawResponse ? handleResponse : (response) => response);
 };
 
 export const updateToken = (newToken) => {
