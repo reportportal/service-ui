@@ -6,8 +6,7 @@ import { defineMessages } from 'react-intl';
 import { SAUCE_LABS } from 'common/constants/integrationNames';
 import { integrationNamesTitles } from 'common/constants/integrationNamesTitles';
 import { showModalAction } from 'controllers/modal';
-import { InfoSection } from '../../../containers/integrationInfoContainer/infoSection';
-import { InstancesSection } from '../../../containers/integrationInfoContainer/instancesSection';
+import { InfoSection, InstancesSection } from '../../../sections';
 import { INTEGRATIONS_IMAGES_MAP } from '../../../constants';
 import styles from './sauceLabsInfo.scss';
 
