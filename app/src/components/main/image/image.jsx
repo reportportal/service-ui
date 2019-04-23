@@ -32,13 +32,11 @@ export class Image extends Component {
   }
 
   componentDidMount() {
-    this.fetchImage();
-  }
-
-  componentDidUpdate(prevProps) {
-    if (prevProps.src !== this.props.src) {
-      this.fetchImage();
-    }
+    fetch(this.props.src, { responseType: 'blob' })
+      .then(this.createURL)
+      .catch(() => {
+        this.setState({ error: true, loading: false });
+      });
   }
 
   componentWillUnmount() {
@@ -62,22 +60,7 @@ export class Image extends Component {
     return url;
   };
 
-  fetchImage = () => {
-    if (!this.props.isStatic) {
-      this.setState({
-        loading: true,
-      });
-
-      fetch(this.props.src, { responseType: 'blob' })
-        .then(this.createURL)
-        .catch(() => {
-          this.setState({ error: true, loading: false });
-        });
-    }
-  };
-
-  createURL = (file) =>
-    this.setState({ loading: false, fileURL: URL.createObjectURL(file), error: false });
+  createURL = (file) => this.setState({ loading: false, fileURL: URL.createObjectURL(file) });
 
   revokeURL = () => {
     if (!this.state.fileURL) {

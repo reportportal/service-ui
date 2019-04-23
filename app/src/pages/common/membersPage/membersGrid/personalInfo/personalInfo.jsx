@@ -33,14 +33,8 @@ export class PersonalInfo extends Component {
   render() {
     const { name, login, userRole, currentUser } = this.props;
     return (
-      <div className={cx('personal-info')}>
-        <div className={cx('avatar-wrapper')}>
-          <Image
-            className={cx('member-avatar')}
-            src={URLS.dataUserPhoto(login)}
-            fallback={DefaultUserImage}
-          />
-        </div>
+      <Fragment>
+        <Image className={cx('member-avatar')} src={getPhotoURL(login)} />
         <div className={cx('member-info')}>
           <p className={cx('member-name')}>
             {name}

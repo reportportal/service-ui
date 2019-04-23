@@ -26,7 +26,6 @@ import { URLS } from 'common/urls';
 import { AbsRelTime } from 'components/main/absRelTime';
 import { externalSystemSelector } from 'controllers/project';
 import { Image } from 'components/main/image';
-import DefaultUserImage from 'common/img/default-user-avatar.png';
 import { DefaultProjectSettings } from './activities/defaultProjectSettings';
 import { AnalysisProperties } from './activities/analysisProperties';
 import { AnalysisConfigurations } from './activities/analysisConfigurations';
@@ -211,9 +210,24 @@ export class ProjectActivity extends Component {
 
   getUserAvatar = (activity) => {
     const avatarUrl = URLS.dataUserPhoto(activity.user);
-    return (
-      <Image className={cx('avatar')} src={avatarUrl} alt="avatar" fallback={DefaultUserImage} />
-    );
+    return <Image className={cx('avatar')} src={avatarUrl} alt="avatar" />;
+  };
+
+  updateProjectValues = (activity) => {
+    const updatedActivity = {
+      ...activity,
+    };
+
+    activity.details.history.forEach((item) => {
+      if (item.field === 'emailCases') {
+        updatedActivity.actionType = UPDATE_NOTIFICATIONS;
+      }
+      if (item.field === 'enabled') {
+        updatedActivity.actionType =
+          item.newValue === 'false' ? SWITCH_OFF_NOTIFICATIONS : SWITCH_ON_NOTIFICATIONS;
+      }
+    });
+    return updatedActivity;
   };
 
   isValidActivity = (activity) =>
