@@ -263,12 +263,14 @@ export class StepLevelEntities extends Component {
     render: PropTypes.func.isRequired,
     launchAttributeKeysSearch: PropTypes.string.isRequired,
     launchAttributeValuesSearch: PropTypes.string.isRequired,
+    visibleFilters: PropTypes.array,
   };
   static defaultProps = {
     filterValues: {},
+    visibleFilters: [],
   };
   getDefectTypeEntity = () => {
-    const { intl, defectTypes, filterValues } = this.props;
+    const { intl, defectTypes, filterValues, visibleFilters } = this.props;
     let initChecked = [];
     let options = [];
     DEFECT_TYPES_SEQUENCE.forEach((defectTypeId) => {
@@ -309,7 +311,7 @@ export class StepLevelEntities extends Component {
         condition: CONDITION_IN,
       },
       title: intl.formatMessage(messages.DefectTypeTitle),
-      active: ENTITY_DEFECT_TYPE in filterValues,
+      active: visibleFilters.includes(ENTITY_DEFECT_TYPE),
       removable: true,
       customProps: {
         options,
@@ -319,7 +321,7 @@ export class StepLevelEntities extends Component {
     };
   };
   getEntities = () => {
-    const { intl, filterValues } = this.props;
+    const { intl, visibleFilters } = this.props;
     return [
       {
         id: ENTITY_NAME,
@@ -357,7 +359,7 @@ export class StepLevelEntities extends Component {
           condition: CONDITION_IN,
         }),
         title: intl.formatMessage(messages.MethodTypeTitle),
-        active: ENTITY_METHOD_TYPE in filterValues,
+        active: visibleFilters.includes(ENTITY_METHOD_TYPE),
         removable: true,
         customProps: {
           options: [
@@ -426,7 +428,7 @@ export class StepLevelEntities extends Component {
             !entityObject.value ||
             !validate.launchDescriptionEntity(entityObject.value)) &&
           'launchDescriptionEntityHint',
-        active: ENTITY_DESCRIPTION in filterValues,
+        active: visibleFilters.includes(ENTITY_DESCRIPTION),
         removable: true,
         customProps: {
           placeholder: intl.formatMessage(messages.DescriptionPlaceholder),
@@ -435,14 +437,14 @@ export class StepLevelEntities extends Component {
       {
         id: ENTITY_STATUS,
         component: EntityDropdown,
-        value: filterValues[ENTITY_STATUS] || {
+        value: this.bindDefaultValue(ENTITY_STATUS, {
           value: [FAILED, PASSED, SKIPPED, INTERRUPTED, IN_PROGRESS]
             .map((item) => item.toUpperCase())
             .join(','),
           condition: CONDITION_IN,
-        },
+        }),
         title: intl.formatMessage(messages.StatusTitle),
-        active: ENTITY_STATUS in filterValues,
+        active: visibleFilters.includes(ENTITY_STATUS),
         removable: true,
         customProps: {
           options: [
@@ -474,12 +476,11 @@ export class StepLevelEntities extends Component {
       {
         id: ENTITY_START_TIME,
         component: EntityItemStartTime,
-        value: filterValues[ENTITY_START_TIME] || {
-          value: '',
-          condition: CONDITION_BETWEEN,
-        },
+        value: this.bindDefaultValue(ENTITY_START_TIME, {
+          CONDITION_BETWEEN,
+        }),
         title: intl.formatMessage(messages.StartTimeTitle),
-        active: ENTITY_START_TIME in filterValues,
+        active: visibleFilters.includes(ENTITY_START_TIME),
         removable: true,
       },
       this.getDefectTypeEntity(),
@@ -495,7 +496,7 @@ export class StepLevelEntities extends Component {
             !entityObject.value ||
             !validate.launchDescriptionEntity(entityObject.value)) &&
           'launchDescriptionEntityHint',
-        active: ENTITY_DEFECT_COMMENT in filterValues,
+        active: visibleFilters.includes(ENTITY_DEFECT_COMMENT),
         removable: true,
         customProps: {
           placeholder: intl.formatMessage(messages.DefectCommentPlaceholder),
@@ -508,7 +509,7 @@ export class StepLevelEntities extends Component {
           condition: CONDITION_HAS,
         }),
         title: intl.formatMessage(messages.AttributeKeysTitle),
-        active: ENTITY_ATTRIBUTE_KEYS in filterValues,
+        active: visibleFilters.includes(ENTITY_ATTRIBUTE_KEYS),
         removable: true,
         customProps: {
           uri: this.props.launchAttributeKeysSearch,
@@ -522,7 +523,7 @@ export class StepLevelEntities extends Component {
           condition: CONDITION_HAS,
         }),
         title: intl.formatMessage(messages.AttributeValuesTitle),
-        active: ENTITY_ATTRIBUTE_VALUES in filterValues,
+        active: visibleFilters.includes(ENTITY_ATTRIBUTE_VALUES),
         removable: true,
         customProps: {
           uri: this.props.launchAttributeValuesSearch,
@@ -536,7 +537,7 @@ export class StepLevelEntities extends Component {
           condition: CONDITION_IN,
         }),
         title: intl.formatMessage(messages.AnalyseTitle),
-        active: ENTITY_AUTOANALYZE in filterValues,
+        active: visibleFilters.includes(ENTITY_AUTOANALYZE),
         removable: true,
         customProps: {
           options: [
@@ -558,7 +559,7 @@ export class StepLevelEntities extends Component {
           condition: CONDITION_IN,
         }),
         title: intl.formatMessage(messages.IgnoreAATitle),
-        active: ENTITY_IGNORE_ANALYZER in filterValues,
+        active: visibleFilters.includes(ENTITY_IGNORE_ANALYZER),
         removable: true,
         customProps: {
           options: [
@@ -580,7 +581,7 @@ export class StepLevelEntities extends Component {
           condition: CONDITION_EX,
         }),
         title: intl.formatMessage(messages.BtsIssueTitle),
-        active: ENTITY_BTS_ISSUES in filterValues,
+        active: visibleFilters.includes(ENTITY_BTS_ISSUES),
         removable: true,
         customProps: {
           options: [
