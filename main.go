@@ -61,7 +61,7 @@ func main() {
 				"*.uservoice.com",
 			},
             "font-src": {"'self'", "fonts.googleapis.com", "fonts.gstatic.com"},
-            "media-src": {"'self'", "*.saucelabs.com"}
+            "media-src": {"'self'", "*.saucelabs.com"},
 			"img-src":    {"'self'", "data:", "www.google-analytics.com", "stats.g.doubleclick.net", "*.epam.com", "*.uservoice.com", "*.saucelabs.com"},
 			"object-src": {"'self'"},
 		}
