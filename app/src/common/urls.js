@@ -1,6 +1,4 @@
 import { stringify } from 'qs';
-import { getStorageItem } from 'common/utils';
-import { TOKEN_KEY } from 'controllers/auth';
 import { CSV } from 'common/constants/fileTypes';
 import { createFilterQuery } from 'components/filterEntities/containers/utils';
 
@@ -9,15 +7,13 @@ export const UAT_API_URL_PREFIX = '/uat/';
 
 const urlBase = DEFAULT_API_URL_PREFIX;
 const uatBase = UAT_API_URL_PREFIX;
-const getToken = () => (getStorageItem(TOKEN_KEY) || {}).value;
 const getQueryParams = (paramsObj) => stringify(paramsObj, { addQueryPrefix: true });
 
 export const URLS = {
   apiDocs: (apiType) => `${apiType}api-docs`,
 
-  dataPhoto: (at) => `${urlBase}data/photo${getQueryParams({ at, access_token: getToken() })}`,
-  dataUserPhoto: (id) =>
-    `${urlBase}data/userphoto${getQueryParams({ id, access_token: getToken() })}`,
+  dataPhoto: (at) => `${urlBase}data/photo${getQueryParams({ at })}`,
+  dataUserPhoto: (id) => `${urlBase}data/userphoto${getQueryParams({ id })}`,
 
   dashboard: (activeProject, id) => `${urlBase}${activeProject}/dashboard/${id}`,
   dashboards: (activeProject) => `${urlBase}${activeProject}/dashboard`,
@@ -84,7 +80,6 @@ export const URLS = {
   exportLaunch: (projectId, launchId, exportType) =>
     `${urlBase}${projectId}/launch/${launchId}/report${getQueryParams({
       view: exportType,
-      access_token: getToken(),
     })}`,
   launchAnalyze: (activeProject) => `${urlBase}${activeProject}/launch/analyze`,
   login: (grantType, username, password) =>
@@ -128,7 +123,6 @@ export const URLS = {
   exportProjects: (filterEntities) =>
     `${urlBase}project/export${getQueryParams({
       view: CSV,
-      access_token: getToken(),
       ...createFilterQuery(filterEntities),
     })}`,
   projectNotificationConfiguration: (activeProject) =>
@@ -196,8 +190,7 @@ export const URLS = {
   userUnasign: (activeProject) => `${urlBase}project/${activeProject}/unassign`,
 
   generateDemoData: (projectId) => `${urlBase}demo/${projectId}`,
-  getFileById: (dataId) =>
-    `${urlBase}data/${dataId}${getQueryParams({ access_token: getToken() })}`,
+  getFileById: (dataId) => `${urlBase}data/${dataId}`,
 
   serverSettings: () => `${urlBase}settings`,
   emailServerSettings: () => `${urlBase}settings/email`,
@@ -213,7 +206,6 @@ export const URLS = {
   exportUsers: (filterEntities) =>
     `${urlBase}user/export${getQueryParams({
       view: 'csv',
-      access_token: getToken(),
       ...createFilterQuery(filterEntities),
     })}`,
 

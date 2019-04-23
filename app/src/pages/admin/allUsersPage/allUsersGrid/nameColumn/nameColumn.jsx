@@ -10,6 +10,7 @@ import { URLS } from 'common/urls';
 import { fetchAllUsersAction } from 'controllers/administrate/allUsers';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { showModalAction } from 'controllers/modal';
+import { Image } from 'components/main/image';
 import styles from './nameColumn.scss';
 
 const cx = classNames.bind(styles);
@@ -86,7 +87,7 @@ export class NameColumn extends Component {
       <div className={cx('name-col', className)}>
         {value.photoLoaded && (
           <div className={cx('avatar-wrapper')}>
-            <img className={cx('avatar')} src={URLS.dataUserPhoto(value.userId)} alt="avatar" />
+            <Image className={cx('avatar')} src={URLS.dataUserPhoto(value.userId)} alt="avatar" />
           </div>
         )}
         <span className={cx('name')}>{value.fullName}</span>
