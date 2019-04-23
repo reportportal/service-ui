@@ -95,16 +95,15 @@ function* fetchTestItems({ payload = {} }) {
   const uniqueIdFilterKey = 'filter.eq.uniqueId';
 
   const noChildFilter = 'filter.eq.hasChildren' in query;
-
+  const underPathItemsIds = itemIds.filter((item) => item !== launchId);
   yield put(
     fetchDataAction(NAMESPACE)(URLS.testItems(project), {
       params: {
         'filter.eq.launchId': launchId,
         'filter.eq.parentId': !noChildFilter ? parentId : undefined,
         'filter.level.path': !parentId && !noChildFilter ? 1 : undefined,
-        'filter.under.path': noChildFilter
-          ? itemIds.filter((item) => item !== launchId).join('.')
-          : undefined,
+        'filter.under.path':
+          noChildFilter && underPathItemsIds.length > 0 ? underPathItemsIds.join('.') : undefined,
         [uniqueIdFilterKey]: pageQuery[uniqueIdFilterKey],
         ...query,
       },
