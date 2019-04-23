@@ -11,7 +11,7 @@ import {
 export const messages = defineMessages({
   defectNameCol: {
     id: 'DefectTypesTab.defectNameCol',
-    defaultMessage: 'Defect Name',
+    defaultMessage: 'Defect name',
   },
   abbreviationCol: {
     id: 'DefectTypesTab.abbreviationCol',
@@ -39,11 +39,11 @@ export const messages = defineMessages({
   },
   [NO_DEFECT]: {
     id: 'DefectTypesTab.noDefectBugsGroup',
-    defaultMessage: 'No Defect Bugs Group',
+    defaultMessage: 'No Defect Group',
   },
   [TO_INVESTIGATE]: {
     id: 'DefectTypesTab.toInvestigateBugsGroup',
-    defaultMessage: 'To Investigate Bugs Group',
+    defaultMessage: 'To Investigate Group',
   },
   addDefectType: {
     id: 'DefectTypesTab.addDefectType',
@@ -65,5 +65,21 @@ export const messages = defineMessages({
     id: 'DefectTypesTab.deleteModalContent',
     defaultMessage:
       "Are you sure you want to delete the defect type? All Investigated as '<b>{name}</b>' defects will be marked as '<b>{parentName}</b>'.",
+  },
+  resetColorsModalHeader: {
+    id: 'DefectTypesTab.resetColorsModalHeader',
+    defaultMessage: 'Reset Defect Colors',
+  },
+  resetColorsModalContent: {
+    id: 'DefectTypesTab.resetColorsModalContent',
+    defaultMessage: "Are you sure you want to reset custom defect's colors to default?",
+  },
+  noColorsToUpdate: {
+    id: 'DefectTypesTab.noColorsToUpdate',
+    defaultMessage: 'No colors to update',
+  },
+  resetColors: {
+    id: 'DefectTypesTab.resetColors',
+    defaultMessage: 'Reset to default colors',
   },
 });
