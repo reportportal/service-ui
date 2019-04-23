@@ -60,7 +60,7 @@ export class LogItemActivity extends Component {
           </span>
         </div>
         <div className={cx('history-column', 'column')}>
-          {activityItem.history.map((historyItem) => (
+          {activityItem.details.history.map((historyItem) => (
             <HistoryItem
               key={historyItem.field}
               historyItem={historyItem}
