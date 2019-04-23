@@ -155,13 +155,15 @@ export class SuiteLevelEntities extends Component {
     render: PropTypes.func.isRequired,
     launchAttributeKeysSearch: PropTypes.string.isRequired,
     launchAttributeValuesSearch: PropTypes.string.isRequired,
+    visibleFilters: PropTypes.array,
   };
   static defaultProps = {
     filterValues: {},
+    visibleFilters: [],
   };
 
   getStaticEntities = () => {
-    const { intl, filterValues } = this.props;
+    const { intl, filterValues, visibleFilters } = this.props;
     return [
       {
         id: ENTITY_NAME,
@@ -188,7 +190,7 @@ export class SuiteLevelEntities extends Component {
           condition: CONDITION_BETWEEN,
         }),
         title: intl.formatMessage(messages.StartTimeTitle),
-        active: ENTITY_START_TIME in filterValues,
+        active: visibleFilters.includes(ENTITY_START_TIME),
         removable: true,
       },
       {
@@ -203,7 +205,7 @@ export class SuiteLevelEntities extends Component {
             !entityObject.value ||
             !validate.launchDescriptionEntity(entityObject.value)) &&
           'launchDescriptionEntityHint',
-        active: ENTITY_DESCRIPTION in filterValues,
+        active: visibleFilters.includes(ENTITY_DESCRIPTION),
         removable: true,
         customProps: {
           placeholder: intl.formatMessage(messages.DESCRIPTION_PLACEHOLDER),
@@ -216,7 +218,7 @@ export class SuiteLevelEntities extends Component {
           condition: CONDITION_HAS,
         }),
         title: intl.formatMessage(messages.AttributeKeysTitle),
-        active: ENTITY_ATTRIBUTE_KEYS in filterValues,
+        active: visibleFilters.includes(ENTITY_ATTRIBUTE_KEYS),
         removable: true,
         customProps: {
           uri: this.props.launchAttributeKeysSearch,
@@ -230,7 +232,7 @@ export class SuiteLevelEntities extends Component {
           condition: CONDITION_HAS,
         }),
         title: intl.formatMessage(messages.AttributeValuesTitle),
-        active: ENTITY_ATTRIBUTE_VALUES in filterValues,
+        active: visibleFilters.includes(ENTITY_ATTRIBUTE_VALUES),
         removable: true,
         customProps: {
           uri: this.props.launchAttributeValuesSearch,
@@ -249,7 +251,7 @@ export class SuiteLevelEntities extends Component {
             !validate.launchNumericEntity(entityObject.value)) &&
           'launchNumericEntityHint',
         title: intl.formatMessage(messages.TotalTitle),
-        active: STATS_TOTAL in filterValues,
+        active: visibleFilters.includes(STATS_TOTAL),
         removable: true,
         customProps: {
           conditions: [CONDITION_GREATER_EQ, CONDITION_LESS_EQ, CONDITION_EQ],
@@ -268,7 +270,7 @@ export class SuiteLevelEntities extends Component {
             !validate.launchNumericEntity(entityObject.value)) &&
           'launchNumericEntityHint',
         title: intl.formatMessage(messages.PassedTitle),
-        active: STATS_PASSED in filterValues,
+        active: visibleFilters.includes(STATS_PASSED),
         removable: true,
         customProps: {
           conditions: [CONDITION_GREATER_EQ, CONDITION_LESS_EQ, CONDITION_EQ],
@@ -287,7 +289,7 @@ export class SuiteLevelEntities extends Component {
             !validate.launchNumericEntity(entityObject.value)) &&
           'launchNumericEntityHint',
         title: intl.formatMessage(messages.FailedTitle),
-        active: STATS_FAILED in filterValues,
+        active: visibleFilters.includes(STATS_FAILED),
         removable: true,
         customProps: {
           conditions: [CONDITION_GREATER_EQ, CONDITION_LESS_EQ, CONDITION_EQ],
@@ -306,7 +308,7 @@ export class SuiteLevelEntities extends Component {
             !validate.launchNumericEntity(entityObject.value)) &&
           'launchNumericEntityHint',
         title: intl.formatMessage(messages.SkippedTitle),
-        active: STATS_SKIPPED in filterValues,
+        active: visibleFilters.includes(STATS_SKIPPED),
         removable: true,
         customProps: {
           conditions: [CONDITION_GREATER_EQ, CONDITION_LESS_EQ, CONDITION_EQ],
@@ -317,7 +319,7 @@ export class SuiteLevelEntities extends Component {
   };
 
   getDynamicEntities = () => {
-    const { intl, filterValues } = this.props;
+    const { intl, visibleFilters } = this.props;
     let defectTypeEntities = [];
     DEFECT_TYPES_SEQUENCE.forEach((defectTypeRef) => {
       const defectTypeGroup = this.props.defectTypes[defectTypeRef];
@@ -340,7 +342,9 @@ export class SuiteLevelEntities extends Component {
         title: intl.formatMessage(
           messages[`${defectTypeRef}_${hasSubtypes ? 'totalTitle' : 'title'}`],
         ),
-        active: `${DEFECT_ENTITY_ID_BASE}${defectTypeRef.toLowerCase()}$total` in filterValues,
+        active: visibleFilters.includes(
+          `${DEFECT_ENTITY_ID_BASE}${defectTypeRef.toLowerCase()}$total`,
+        ),
         removable: true,
         customProps: {
           conditions: [CONDITION_GREATER_EQ, CONDITION_LESS_EQ, CONDITION_EQ],
@@ -366,9 +370,9 @@ export class SuiteLevelEntities extends Component {
             title: `${intl.formatMessage(messages[`${defectTypeRef}_title`])} ${
               defectType.shortName
             }`,
-            active:
-              `${DEFECT_ENTITY_ID_BASE}${defectType.typeRef.toLowerCase()}$${defectType.locator}` in
-              filterValues,
+            active: visibleFilters.includes(
+              `${DEFECT_ENTITY_ID_BASE}${defectType.typeRef.toLowerCase()}$${defectType.locator}`,
+            ),
             removable: true,
             meta: {
               longName: defectType.longName,
