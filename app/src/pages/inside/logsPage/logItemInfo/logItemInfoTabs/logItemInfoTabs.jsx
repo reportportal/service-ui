@@ -10,6 +10,9 @@ import {
   activeRetryIdSelector,
   activeLogSelector,
 } from 'controllers/log';
+import { URLS } from 'common/urls';
+import { fetch } from 'common/utils';
+import { SAUCE_LABS } from 'common/constants/integrationNames';
 import { LOG_PAGE_EVENTS } from 'components/main/analytics/events';
 import StackTraceIcon from 'common/img/stack-trace-inline.svg';
 import AttachmentIcon from 'common/img/attachment-inline.svg';
@@ -17,6 +20,7 @@ import InfoIcon from 'common/img/info-inline.svg';
 import TestParamsIcon from 'common/img/test-params-icon-inline.svg';
 import ClockIcon from 'common/img/clock-inline.svg';
 import { getSauceLabsConfig } from 'components/integrations/integrationProviders/sauceLabsIntegration/utils';
+import { namedIntegrationsSelectorsMap } from 'controllers/project';
 import { SauceLabsIntegrationButton } from './sauceLabsIntegrationButton';
 import { InfoTabs } from '../infoTabs';
 import { LogItemDetails } from './logItemDetails';
@@ -59,6 +63,7 @@ const messages = defineMessages({
   logId: activeLogIdSelector(state),
   retryId: activeRetryIdSelector(state),
   logItem: activeLogSelector(state),
+  sauceLabsIntegrations: namedIntegrationsSelectorsMap[SAUCE_LABS](state),
 }))
 export class LogItemInfoTabs extends Component {
   static propTypes = {
@@ -74,6 +79,7 @@ export class LogItemInfoTabs extends Component {
     logItem: PropTypes.object.isRequired,
     onToggleSauceLabsIntegrationView: PropTypes.func.isRequired,
     isSauceLabsIntegrationView: PropTypes.bool.isRequired,
+    sauceLabsIntegrations: PropTypes.array.isRequired,
   };
 
   static defaultProps = {
@@ -93,6 +99,10 @@ export class LogItemInfoTabs extends Component {
     activeTabId: null,
     activeAttachmentId: null,
   };
+
+  componentDidMount() {
+    this.fetchGlobalIntegrations();
+  }
 
   componentDidUpdate() {
     if (this.props.loading && this.props.isSauceLabsIntegrationView) {
@@ -117,6 +127,20 @@ export class LogItemInfoTabs extends Component {
           ? null
           : activeTabId,
     });
+  };
+
+  fetchGlobalIntegrations = () => {
+    fetch(URLS.globalIntegrationsByPluginName(SAUCE_LABS))
+      .then((globalIntegrations) => {
+        this.setState({
+          isGlobalIntegrationsExists: !!globalIntegrations.length,
+        });
+      })
+      .catch(() => {
+        this.setState({
+          isGlobalIntegrationsExists: false,
+        });
+      });
   };
 
   changeActiveAttachment = (activeAttachmentId) =>
@@ -210,8 +234,10 @@ export class LogItemInfoTabs extends Component {
   };
 
   renderSauceLabsIntegrationButton = () => {
-    const { logItem, isSauceLabsIntegrationView } = this.props;
-    const isThirdPartyIntegrationExists = !!getSauceLabsConfig(logItem.attributes);
+    const { logItem, isSauceLabsIntegrationView, sauceLabsIntegrations } = this.props;
+    const isThirdPartyIntegrationExists =
+      !!getSauceLabsConfig(logItem.attributes) &&
+      (sauceLabsIntegrations.length || this.state.isGlobalIntegrationsExists);
     return isThirdPartyIntegrationExists ? (
       <SauceLabsIntegrationButton
         active={isSauceLabsIntegrationView}

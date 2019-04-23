@@ -74,7 +74,7 @@ export class CommandItem extends Component {
     } = this.props;
     const commandTime = inVideoTimeLine + duration;
     const { minutes, seconds, milliseconds } = getTimeUnits(commandTime > 0 ? commandTime : 0);
-    console.log(milliseconds);
+
     return `${this.getFormattedUnit(minutes)}:${this.getFormattedUnit(
       Math.trunc(seconds),
     )}:${this.getFormattedUnit(milliseconds)}`;
