@@ -24,8 +24,8 @@ export const sauceLabsReducer = combineReducers({
   jobInfo: fetchReducer(JOB_INFO_NAMESPACE, { initialState: {} }),
   logs: fetchReducer(SAUCE_LABS_LOGS_NAMESPACE),
   loading: queueReducers(
+    loadingReducer(JOB_INFO_NAMESPACE),
     loadingReducer(SAUCE_LABS_LOGS_NAMESPACE),
     loadingReducer(SAUCE_LABS_ASSETS_NAMESPACE),
-    loadingReducer(JOB_INFO_NAMESPACE),
   ),
 });
