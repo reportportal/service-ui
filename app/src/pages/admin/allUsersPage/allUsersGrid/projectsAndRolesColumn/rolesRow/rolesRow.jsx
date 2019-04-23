@@ -12,6 +12,7 @@ import { isEmptyValue } from 'common/utils/isEmptyValue';
 import Parser from 'html-react-parser';
 import CrossIcon from 'common/img/cross-icon-inline.svg';
 import CheckIcon from 'common/img/check-inline.svg';
+import { ProjectName } from 'pages/admin/projectsPage/projectName';
 import styles from './rolesRow.scss';
 
 const cx = classNames.bind(styles);
@@ -152,7 +153,7 @@ export class RolesRow extends Component {
     );
   };
   render() {
-    const { createNew, intl } = this.props;
+    const { createNew, intl, entryType } = this.props;
     const { value, project } = this.state;
     const uri = URLS.projectNameSearch();
     return (
@@ -170,7 +171,14 @@ export class RolesRow extends Component {
               removeSelected
             />
           ) : (
-            <div className={cx('roles-row-label')}>{project}</div>
+            <div className={cx('roles-row-label')}>
+              <ProjectName
+                project={{
+                  projectName: project,
+                  entryType,
+                }}
+              />
+            </div>
           )}
         </div>
         <div className={cx('roles-row-item', 'roles-row-item-last')}>
