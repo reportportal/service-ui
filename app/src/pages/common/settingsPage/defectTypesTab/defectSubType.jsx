@@ -148,10 +148,12 @@ export class DefectSubType extends Component {
 
   updateDefectSubType = (values, dispatch, props) => {
     props.dirty &&
-      this.props.updateDefectSubTypeAction({
-        ...values,
-        shortName: values.shortName.toUpperCase(),
-      });
+      this.props.updateDefectSubTypeAction([
+        {
+          ...values,
+          shortName: values.shortName.toUpperCase(),
+        },
+      ]);
 
     this.stopEditing();
   };

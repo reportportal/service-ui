@@ -46,12 +46,16 @@ export const projectInfoReducer = (state = PROJECT_INFO_INITIAL_STATE, { type, p
         ...state,
         configuration: {
           ...state.configuration,
-          subTypes: {
-            ...state.configuration.subTypes,
-            [payload.typeRef]: state.configuration.subTypes[payload.typeRef].map(
-              (subType) => (subType.id === payload.id ? payload : subType),
-            ),
-          },
+          subTypes: Object.keys(state.configuration.subTypes).reduce(
+            (result, typeRef) => ({
+              ...result,
+              [typeRef]: state.configuration.subTypes[typeRef].map((subType) => {
+                const newSubType = payload.find(({ id }) => id === subType.id);
+                return newSubType || subType;
+              }),
+            }),
+            {},
+          ),
         },
       };
     case ADD_DEFECT_SUBTYPE_SUCCESS:

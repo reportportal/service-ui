@@ -24,17 +24,17 @@ import {
 } from './actionCreators';
 import { projectNotificationsConfigurationSelector } from './selectors';
 
-function* updateDefectSubType({ payload: subType }) {
+function* updateDefectSubType({ payload: subTypes }) {
   try {
     const projectId = yield select(projectIdSelector);
     const data = {
-      ids: [subType],
+      ids: subTypes,
     };
     yield call(fetch, URLS.projectDefectSubType(projectId), {
       method: 'put',
       data,
     });
-    yield put(updateDefectSubTypeSuccessAction(subType));
+    yield put(updateDefectSubTypeSuccessAction(subTypes));
     yield put(
       showNotification({
         messageId: 'updateDefectSubTypeSuccess',

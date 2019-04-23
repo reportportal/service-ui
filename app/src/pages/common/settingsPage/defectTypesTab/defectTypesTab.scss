@@ -170,3 +170,30 @@ $DEFECT_NAME_PADDING: 120px;
     fill: $COLOR--gray-47;
   }
 }
+
+.reset-button-wrap {
+  text-align: right;
+}
+
+.reset-button {
+  background: none;
+  border: none;
+  outline: none;
+  color: $COLOR--windows-blue;
+  font-size: 13px;
+  font-family: inherit;
+  cursor: pointer;
+
+  &:hover,
+  &:focus {
+    text-decoration: underline;
+  }
+
+  &:disabled {
+    color: $COLOR--gray-60;
+    &:hover {
+      text-decoration: none;
+      cursor: auto;
+    }
+  }
+}

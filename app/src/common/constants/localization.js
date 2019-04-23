@@ -77,4 +77,8 @@ export const COMMON_LOCALE_KEYS = defineMessages({
     id: 'Common.noResults',
     defaultMessage: 'No results found',
   },
+  RESET: {
+    id: 'Common.reset',
+    defaultMessage: 'Reset',
+  },
 });

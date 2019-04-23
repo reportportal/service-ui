@@ -73,13 +73,15 @@ describe('project reducer', () => {
     });
 
     test('should handle UPDATE_DEFECT_SUBTYPE_SUCCESS', () => {
-      const payload = {
-        id: 1,
-        typeRef: 'PRODUCT_BUG',
-        longName: 'Product Bug',
-        shortName: 'PB1',
-        color: '#ffffff',
-      };
+      const payload = [
+        {
+          id: 1,
+          typeRef: 'PRODUCT_BUG',
+          longName: 'Product Bug',
+          shortName: 'PB1',
+          color: '#ffffff',
+        },
+      ];
       const state = { configuration: { subTypes: { PRODUCT_BUG: [{ id: 1 }, { id: 2 }] } } };
       const newState = projectInfoReducer(state, {
         type: UPDATE_DEFECT_SUBTYPE_SUCCESS,
