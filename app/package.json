@@ -126,7 +126,7 @@
     "identity-obj-proxy": "3.0.0",
     "jest": "21.2.1",
     "lint-staged": "7.1.0",
-    "node-sass": "4.9.0",
+    "node-sass": "4.11.0",
     "postcss-loader": "2.1.5",
     "prettier": "1.12.1",
     "raw-loader": "0.5.1",
