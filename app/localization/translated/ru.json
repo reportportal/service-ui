@@ -276,6 +276,7 @@
   "DashboardItemPage.editDashboard": "Редактировать",
   "DashboardItemPage.fullscreen": "Полноэкранный режим",
   "DashboardItemPage.notMyDashboardEmptyHeader": "На этой Панели управления нет виджетов",
+  "DashboardItemPage.sharedWidgetCaption": "Dashboard has been shared by",
   "DashboardPage.modal.deleteModalConfirmationText": "Вы уверены, что хотите удалить панель управления '<b>{name}</b>'? Вы потеряете доступ к ней. Это действие нельзя отменить.",
   "DashboardPage.modal.deleteModalSubmitButtonText": "Удалить",
   "DashboardPage.modal.deleteModalTitle": "удаление панели управления",

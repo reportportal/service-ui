@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -26,6 +26,7 @@ import { GhostButton } from 'components/buttons/ghostButton';
 import { PageLayout, PageHeader, PageSection } from 'layouts/pageLayout';
 import { DASHBOARD_PAGE_EVENTS } from 'components/main/analytics/events';
 import { DashboardPageHeader } from 'pages/inside/common/dashboardPageHeader';
+import GlobeIcon from 'common/img/globe-icon-inline.svg';
 import AddWidgetIcon from './img/add-inline.svg';
 import AddSharedWidgetIcon from './img/add-shared-inline.svg';
 import EditIcon from './img/edit-inline.svg';
@@ -64,6 +65,10 @@ const messages = defineMessages({
   addWidgetSuccess: {
     id: 'DashboardItemPage.addWidgetSuccess',
     defaultMessage: 'Widget has been added',
+  },
+  sharedWidgetCaption: {
+    id: 'DashboardItemPage.sharedWidgetCaption',
+    defaultMessage: 'Dashboard has been shared by',
   },
 });
 
@@ -213,6 +218,12 @@ export class DashboardItemPage extends Component {
     return canResizeAndDragWidgets(userInfo.userRole, projectRole, isOwner);
   };
 
+  hasOwnerActions() {
+    const { dashboard, userInfo } = this.props;
+
+    return dashboard.owner === userInfo.userId;
+  }
+
   render() {
     const {
       intl: { formatMessage },
@@ -220,6 +231,8 @@ export class DashboardItemPage extends Component {
       fullScreenMode,
       changeFullScreenModeAction: changeFullScreenMode,
     } = this.props;
+
+    const isOwner = this.hasOwnerActions();
 
     return (
       <PageLayout>
@@ -230,19 +243,35 @@ export class DashboardItemPage extends Component {
           <div className={cx('dashboard-item')}>
             <div className={cx('buttons-container')}>
               <div className={cx('nav-left')}>
-                <GhostButton icon={AddWidgetIcon} onClick={this.showWidgetWizard}>
-                  {formatMessage(messages.addNewWidget)}
-                </GhostButton>
-                <GhostButton icon={AddSharedWidgetIcon} onClick={this.showAddSharedWidgetModal}>
-                  {formatMessage(messages.addSharedWidget)}
-                </GhostButton>
+                {isOwner ? (
+                  <Fragment>
+                    <GhostButton icon={AddWidgetIcon} onClick={this.showWidgetWizard}>
+                      {formatMessage(messages.addNewWidget)}
+                    </GhostButton>
+
+                    <GhostButton icon={AddSharedWidgetIcon} onClick={this.showAddSharedWidgetModal}>
+                      {formatMessage(messages.addSharedWidget)}
+                    </GhostButton>
+                  </Fragment>
+                ) : (
+                  <div className={cx('shared-caption')}>
+                    <span className={cx('globe-icon')}>{Parser(GlobeIcon)}</span>
+                    {formatMessage(messages.sharedWidgetCaption)} {dashboard.owner}
+                  </div>
+                )}
               </div>
               <div className={cx('nav-right')}>
-                <GhostButton icon={EditIcon}>{formatMessage(messages.editDashboard)}</GhostButton>
+                {isOwner && (
+                  <GhostButton icon={EditIcon}>{formatMessage(messages.editDashboard)}</GhostButton>
+                )}
+
                 <GhostButton icon={FullscreenIcon} onClick={this.toggleFullscreen}>
                   {formatMessage(messages.fullscreen)}
                 </GhostButton>
-                <GhostButton icon={CancelIcon}>{formatMessage(messages.delete)}</GhostButton>
+
+                {isOwner && (
+                  <GhostButton icon={CancelIcon}>{formatMessage(messages.delete)}</GhostButton>
+                )}
               </div>
             </div>
             <Fullscreen enabled={fullScreenMode} onChange={changeFullScreenMode}>
