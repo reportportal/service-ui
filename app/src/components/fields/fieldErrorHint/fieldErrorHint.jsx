@@ -138,6 +138,14 @@ const messages = defineMessages({
     id: 'DefectTypesTab.defectShortNameHint',
     defaultMessage: "Short name should have size from '1' to '4'",
   },
+  projectNameLengthHint: {
+    id: 'ProjectsPage.projectNameLengthHint',
+    defaultMessage: "Project name should have size from '3' to '256'",
+  },
+  projectDuplicateHint: {
+    id: 'ProjectsPage.projectDuplicateHint',
+    defaultMessage: 'Project with the same name already exists in system',
+  },
 });
 
 @injectIntl

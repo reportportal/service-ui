@@ -7,18 +7,3 @@
   background-color: $COLOR--white-two;
   padding: 15px;
 }
-
-.no-projects {
-  text-align: center;
-  height: 100%;
-  font-family: $FONT-REGULAR;
-  font-size: 12px;
-  color: $COLOR--gray-47;
-}
-
-.no-projects:before {
-  content: '';
-  display: inline-block;
-  height: 100%;
-  vertical-align: middle;
-}

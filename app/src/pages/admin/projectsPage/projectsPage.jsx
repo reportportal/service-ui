@@ -10,6 +10,7 @@ import {
   projectIdSelector,
   projectSectionSelector,
 } from 'controllers/pages';
+import { showModalAction } from 'controllers/modal';
 import { SETTINGS, MEMBERS, EVENTS } from 'common/constants/projectSections';
 import { GhostButton } from 'components/buttons/ghostButton';
 import AddProjectIcon from 'common/img/add-project-inline.svg';
@@ -17,7 +18,10 @@ import ProjectUsersIcon from 'common/img/project-users-inline.svg';
 import ProjectSettingsIcon from 'common/img/project-settings-inline.svg';
 import ProjectEventsIcon from 'common/img/project-events-inline.svg';
 import { MembersPage } from 'pages/common/membersPage';
-import { navigateToProjectSectionAction } from 'controllers/administrate/projects';
+import {
+  addProjectAction,
+  navigateToProjectSectionAction,
+} from 'controllers/administrate/projects';
 import { ProjectStatusPage } from '../projectStatusPage';
 import { ProjectEventsPage } from '../projectEventsPage';
 import { Projects } from './projects';
@@ -49,6 +53,8 @@ const HEADER_BUTTONS = [
     section: projectSectionSelector(state),
   }),
   {
+    addProject: addProjectAction,
+    showModal: showModalAction,
     navigateToSection: navigateToProjectSectionAction,
   },
 )
@@ -59,6 +65,8 @@ export class ProjectsPage extends Component {
     section: PropTypes.string,
     projectId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     navigateToSection: PropTypes.func.isRequired,
+    addProject: PropTypes.func.isRequired,
+    showModal: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
@@ -105,6 +113,14 @@ export class ProjectsPage extends Component {
     return breadcrumbs;
   };
 
+  showAddProjectModal = () =>
+    this.props.showModal({
+      id: 'addProjectModal',
+      data: {
+        onSubmit: (values) => this.props.addProject(values.projectName),
+      },
+    });
+
   renderHeaderButtons = () => {
     const {
       intl: { formatMessage },
@@ -113,7 +129,11 @@ export class ProjectsPage extends Component {
     } = this.props;
 
     if (!projectId) {
-      return <GhostButton icon={AddProjectIcon}>{formatMessage(messages.addProject)}</GhostButton>;
+      return (
+        <GhostButton icon={AddProjectIcon} onClick={this.showAddProjectModal}>
+          {formatMessage(messages.addProject)}
+        </GhostButton>
+      );
     }
 
     return (

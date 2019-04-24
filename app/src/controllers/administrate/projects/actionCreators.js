@@ -15,6 +15,7 @@ import {
   DELETE_PROJECT,
   NAVIGATE_TO_PROJECT,
   CONFIRM_ASSIGN_TO_PROJECT,
+  ADD_PROJECT,
 } from './constants';
 
 export const fetchProjectsAction = (params) => ({
@@ -41,6 +42,11 @@ export const deleteItemsAction = defineGroupOperation(
     }),
   () => {},
 );
+
+export const addProjectAction = (projectName) => ({
+  type: ADD_PROJECT,
+  payload: projectName,
+});
 
 export const deleteProjectAction = (project) => ({
   type: DELETE_PROJECT,
