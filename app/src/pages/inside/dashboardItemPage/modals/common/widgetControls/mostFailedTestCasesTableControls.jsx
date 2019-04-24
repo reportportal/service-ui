@@ -101,7 +101,12 @@ export class MostFailedTestCasesTableControls extends Component {
 
   formatLaunchNameOptions = (values) => values.map((value) => ({ value, label: value }));
   formatLaunchNames = (value) => (value ? { value, label: value } : null);
-  parseLaunchNames = (value) => (value ? value.value : undefined);
+  parseLaunchNames = (value) => {
+    if (value === null) return null;
+    if (value && value.value) return value.value;
+
+    return undefined;
+  };
 
   formatFilterValue = (value) => value && value[0];
   parseFilterValue = (value) => value && [value];
