@@ -4,6 +4,7 @@ export {
   toggleProjectSelectionAction,
   toggleAllProjectsAction,
   unselectAllProjectsAction,
+  addProjectAction,
   deleteItemsAction,
   deleteProjectAction,
   navigateToProjectAction,

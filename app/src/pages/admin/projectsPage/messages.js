@@ -10,6 +10,18 @@ export const messages = defineMessages({
     id: 'ProjectsPage.addProject',
     defaultMessage: 'Add New Project',
   },
+  addProjectTitle: {
+    id: 'ProjectsPage.addProjectTitle',
+    defaultMessage: 'Add project',
+  },
+  projectNameLabel: {
+    id: 'ProjectsPage.projectNameLabel',
+    defaultMessage: 'Project name',
+  },
+  projectLengthHint: {
+    id: 'ProjectsPage.projectLengthHint',
+    defaultMessage: 'Project name ',
+  },
   [`${SETTINGS}Title`]: {
     id: 'ProjectDetailsPageSettings.title',
     defaultMessage: 'Settings',

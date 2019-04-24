@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { injectIntl, intlShape } from 'react-intl';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
 import { loadingSelector, projectsSelector } from 'controllers/administrate/projects';
@@ -10,12 +10,6 @@ import styles from './projectsPanelView.scss';
 
 const cx = classNames.bind(styles);
 
-const messages = defineMessages({
-  noProjects: {
-    id: 'ProjectsPage.noProjects',
-    defaultMessage: 'No projects',
-  },
-});
 @connect((state) => ({
   projects: projectsSelector(state),
   loading: loadingSelector(state),
@@ -58,7 +52,7 @@ export class ProjectsPanelView extends Component {
     ));
 
   render() {
-    const { intl, projects, loading } = this.props;
+    const { projects, loading } = this.props;
     return (
       <Fragment>
         {loading && (
@@ -70,7 +64,7 @@ export class ProjectsPanelView extends Component {
           (projects.length ? (
             <div className={cx('panel-list')}>{this.getPanelList(projects)}</div>
           ) : (
-            <div className={cx('no-projects')}>{intl.formatMessage(messages.noProjects)}</div>
+            ''
           ))}
       </Fragment>
     );

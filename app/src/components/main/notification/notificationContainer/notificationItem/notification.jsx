@@ -46,6 +46,14 @@ const messages = defineMessages({
     id: 'NotificationsTab.updateProjectNotificationsConfigurationSuccess',
     defaultMessage: 'Notification settings were successfully updated!',
   },
+  addProjectSuccess: {
+    id: 'ProjectsPage.addProjectSuccess',
+    defaultMessage: "The project '{name}' was successfully created",
+  },
+  projectExists: {
+    id: 'ProjectsPage.projectExists',
+    defaultMessage: "The project '{name}' is already exists",
+  },
 });
 
 @injectIntl

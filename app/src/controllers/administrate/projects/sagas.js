@@ -8,9 +8,11 @@ import {
   ASSIGN_TO_RROJECT_SUCCESS,
   ASSIGN_TO_RROJECT_ERROR,
 } from 'controllers/user';
+import { PROJECT_TYPE_INTERNAL } from 'common/constants/projectsObjectTypes';
+import { SETTINGS } from 'common/constants/projectSections';
 import { fetch, getStorageItem, setStorageItem } from 'common/utils';
 import { PROJECT_PAGE } from 'controllers/pages';
-import { confirmSaga } from 'controllers/modal';
+import { confirmSaga, hideModalAction } from 'controllers/modal';
 import {
   NAMESPACE,
   FETCH_PROJECTS,
@@ -18,9 +20,12 @@ import {
   USER_VIEW,
   GRID_VIEW,
   SET_PROJECTS_VIEW_MODE,
+  ADD_PROJECT,
   DELETE_PROJECT,
   NAVIGATE_TO_PROJECT,
+  ERROR_CODES,
 } from './constants';
+import { navigateToProjectSectionAction } from './actionCreators';
 import { querySelector } from './selectors';
 
 function* fetchProjects() {
@@ -46,6 +51,49 @@ function* setViewMode(action) {
 }
 function* watchSetViewMode() {
   yield takeEvery(START_SET_VIEW_MODE, setViewMode);
+}
+
+function* addProject({ payload: projectName }) {
+  try {
+    yield call(fetch, URLS.addProject(), {
+      method: 'post',
+      data: {
+        entryType: PROJECT_TYPE_INTERNAL,
+        projectName,
+      },
+    });
+    yield put(hideModalAction());
+    yield put(
+      showNotification({
+        messageId: 'addProjectSuccess',
+        type: NOTIFICATION_TYPES.SUCCESS,
+        values: { name: projectName },
+      }),
+    );
+    yield put(navigateToProjectSectionAction(projectName, SETTINGS));
+  } catch (err) {
+    if (err.errorCode === ERROR_CODES.PROJECT_EXISTS) {
+      yield put(
+        showNotification({
+          messageId: 'projectExists',
+          type: NOTIFICATION_TYPES.ERROR,
+          values: { name: projectName },
+        }),
+      );
+    } else {
+      yield put(
+        showNotification({
+          messageId: 'failureDefault',
+          type: NOTIFICATION_TYPES.ERROR,
+          values: { error: err.message },
+        }),
+      );
+    }
+  }
+}
+
+function* watchAddProject() {
+  yield takeEvery(ADD_PROJECT, addProject);
 }
 
 function* deleteProject({ payload: project }) {
@@ -101,6 +149,7 @@ export function* projectsSagas() {
   yield all([
     watchFetchProjects(),
     watchSetViewMode(),
+    watchAddProject(),
     watchDeleteProject(),
     watchNavigateToProject(),
   ]);

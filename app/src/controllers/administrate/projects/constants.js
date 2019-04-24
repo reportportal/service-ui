@@ -13,8 +13,12 @@ export const GRID_VIEW = 'grid';
 export const USER_VIEW = 'projects_view_mode';
 export const SET_PROJECTS_VIEW_MODE = 'setProjectsViewMode';
 export const START_SET_VIEW_MODE = 'startSetProjectsViewMode';
+export const ADD_PROJECT = 'addProject';
 export const DELETE_PROJECT = 'deleteProject';
 export const DEFAULT_SORT_COLUMN = 'name';
 export const DEFAULT_SORTING = formatSortingString([DEFAULT_SORT_COLUMN], SORTING_ASC);
 export const NAVIGATE_TO_PROJECT = 'navigateToProject';
 export const CONFIRM_ASSIGN_TO_PROJECT = 'confirmAssignToProject';
+export const ERROR_CODES = {
+  PROJECT_EXISTS: 4095,
+};
