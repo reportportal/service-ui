@@ -114,7 +114,7 @@ export class ProjectActivityControls extends Component {
       label: value,
     }));
   parseUsernames = (values) =>
-    (values && values.map((value) => value.value).join(',')) || undefined;
+    values.length > 0 ? values && values.map((value) => value.value).join(',') : '';
 
   render() {
     const {
