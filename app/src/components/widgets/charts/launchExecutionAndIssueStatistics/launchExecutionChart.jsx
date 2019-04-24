@@ -292,7 +292,7 @@ export class LaunchExecutionChart extends Component {
   render() {
     const { isConfigReady } = this.state;
     const { isPreview, uncheckedLegendItems } = this.props;
-    const classes = chartCx({ 'preview-view': isPreview });
+    const classes = chartCx('container', { 'preview-view': isPreview });
     const chartClasses = chartCx('c3', { 'small-view': this.height <= 250 });
     const legendItems = this.statusItems.map((item) => item.id);
 
