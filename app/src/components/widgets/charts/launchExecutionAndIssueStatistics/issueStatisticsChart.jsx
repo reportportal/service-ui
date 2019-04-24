@@ -324,7 +324,7 @@ export class IssueStatisticsChart extends Component {
 
   render() {
     const { isPreview, uncheckedLegendItems } = this.props;
-    const classes = chartCx({ 'preview-view': isPreview });
+    const classes = chartCx('container', { 'preview-view': isPreview });
     const chartClasses = chartCx('c3', { 'small-view': this.height <= 250 });
     const { isConfigReady } = this.state;
     const legendItems = this.defectItems.map((item) => item.id);

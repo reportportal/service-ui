@@ -1,4 +1,10 @@
+.container {
+  width: 50%;
+  height: 100%;
+}
+
 .launch-execution-and-issues-chart {
+  display: flex;
   height: 100%;
   
   :global {
@@ -29,6 +35,7 @@
 
 .launch-execution-chart {
   background-color: $COLOR--light-yellow;
+  height: 100%;
 }
 
 .issue-statistics-chart .legend {
@@ -40,11 +47,8 @@
 .data-js-issue-statistics-chart-container {
   position: relative;
   width: 100%;
-  height: 100%;
 }
 
-.launch-execution-chart,
 .issue-statistics-chart {
-  width: 50%;
-  float: left;
+  height: 100%;
 }
