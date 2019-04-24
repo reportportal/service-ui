@@ -21,6 +21,7 @@ import {
   activeProjectRoleSelector,
   userAccountRoleSelector,
 } from 'controllers/user';
+import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { withPagination } from 'controllers/pagination';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
 import { PageLayout, PageHeader, PageSection } from 'layouts/pageLayout';
@@ -46,6 +47,14 @@ const messages = defineMessages({
     id: 'FiltersPage.notFound',
     defaultMessage: "No filters found for '{filter}'",
   },
+  filterUpdated: {
+    id: 'FiltersPage.filterUpdated',
+    defaultMessage: 'Filter has been updated!',
+  },
+  filterDeleted: {
+    id: 'FiltersPage.filterDeleted',
+    defaultMessage: 'Filter has been deleted!',
+  },
 });
 
 @connect(
@@ -66,6 +75,7 @@ const messages = defineMessages({
     showFilterOnLaunchesAction,
     hideFilterOnLaunchesAction,
     createFilter: createFilterAction,
+    showNotification,
   },
 )
 @withSorting({
@@ -106,6 +116,7 @@ export class FiltersPage extends Component {
     showFilterOnLaunchesAction: PropTypes.func,
     hideFilterOnLaunchesAction: PropTypes.func,
     createFilter: PropTypes.func,
+    showNotification: PropTypes.func,
   };
 
   static defaultProps = {
@@ -130,6 +141,7 @@ export class FiltersPage extends Component {
     showFilterOnLaunchesAction: () => {},
     hideFilterOnLaunchesAction: () => {},
     createFilter: () => {},
+    showNotification: () => {},
   };
 
   getBreadcrumbs = () => [{ title: this.props.intl.formatMessage(messages.filtersPageTitle) }];
@@ -150,7 +162,14 @@ export class FiltersPage extends Component {
     fetch(URLS.filter(this.props.activeProject, filter.id), {
       method: 'put',
       data: filter,
-    }).then(this.props.fetchFiltersAction);
+    })
+      .then(this.props.fetchFiltersAction())
+      .then(() => {
+        this.props.showNotification({
+          type: NOTIFICATION_TYPES.SUCCESS,
+          message: this.props.intl.formatMessage(messages.filterUpdated),
+        });
+      });
 
   deleteFilter = (filter) => {
     fetch(URLS.filter(this.props.activeProject, filter.id), {
@@ -161,7 +180,13 @@ export class FiltersPage extends Component {
           this.props.removeUserFilter(filter.id);
         }
       })
-      .then(this.props.fetchFiltersAction);
+      .then(this.props.fetchFiltersAction)
+      .then(() => {
+        this.props.showNotification({
+          type: NOTIFICATION_TYPES.SUCCESS,
+          message: this.props.intl.formatMessage(messages.filterDeleted),
+        });
+      });
   };
 
   addFilter = () => {
