@@ -125,7 +125,7 @@ export class ProductStatusControls extends Component {
     values.content.map((value) => ({ value: value.id, label: value.name }));
   formatFilters = (values) => values.map((value) => ({ value, label: value.name }));
   parseFilters = (values) =>
-    (values && values.map((value) => ({ value: value.value, name: value.label }))) || undefined;
+    values.length > 0 ? values && values.map((value) => value.value).join(',') : '';
 
   formatBasicColumns = (values) =>
     values.filter((value) => STATIC_BASE_COLUMNS.indexOf(value) === -1);
