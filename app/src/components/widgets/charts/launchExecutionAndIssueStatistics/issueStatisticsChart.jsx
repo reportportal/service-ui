@@ -355,7 +355,7 @@ export class IssueStatisticsChart extends Component {
   };
 
   render() {
-    const { isPreview, uncheckedLegendItems, onStatusPageMode } = this.props;
+    const { isPreview, uncheckedLegendItems } = this.props;
     const classes = chartCx('container', { 'preview-view': isPreview });
     const chartClasses = chartCx('c3', { 'small-view': this.height <= 250 });
     const { isConfigReady } = this.state;
