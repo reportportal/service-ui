@@ -199,7 +199,9 @@ export class LaunchFiltersToolbar extends Component {
           </div>
           {!!activeFilter &&
             !level && (
-              <ExpandToggler expanded={this.state.expanded} onToggleExpand={this.toggleExpand} />
+              <div className={cx('expand-toggle-container')}>
+                <ExpandToggler expanded={this.state.expanded} onToggleExpand={this.toggleExpand} />
+              </div>
             )}
         </div>
         {this.state.expanded &&
