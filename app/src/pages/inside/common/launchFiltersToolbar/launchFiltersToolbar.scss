@@ -30,6 +30,10 @@
   margin: 0 15px;
 }
 
+.expand-toggle-container {
+  flex-shrink: 0;
+}
+
 .filter-controls-container {
   background-color: $COLOR--white-four;
   border: 1px solid $COLOR--gray-91;
