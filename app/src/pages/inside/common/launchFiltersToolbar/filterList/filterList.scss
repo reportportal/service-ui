@@ -1,8 +1,9 @@
 .filter-list {
-  display: flex;
-  flex-wrap: wrap;
+  display: inline;
 }
 
 .item {
+  display: inline-block;
+  vertical-align: top;
   margin: 5px 10px 5px 0;
 }
