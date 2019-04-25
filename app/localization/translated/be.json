@@ -1598,6 +1598,7 @@
   "projectsAndRolesColumn.anassignUser": "User has been unassigned from project!",
   "projectsAndRolesColumn.unAssignTitle": "Вывесці карыстальніка з праекта",
   "projectsAndRolesColumn.updateUserRole": "Карыстальнік '{user}' абноўлены",
+  "projectsAndRolesColumn.assignToProject" : "Прызначыць на праект",
   "projectsGrid.contains": "Змяшчае",
   "projectsGrid.lastRun": "Апошні запуск",
   "projectsGrid.numberOfLaunches": "Запускі",

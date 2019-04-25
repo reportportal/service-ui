@@ -1598,6 +1598,7 @@
   "projectsAndRolesColumn.anassignUser": "Пользователь был выведен из проекта!",
   "projectsAndRolesColumn.unAssignTitle": "Вывести пользователя из проекта",
   "projectsAndRolesColumn.updateUserRole": "Пользователь '{user}' обновлен",
+  "projectsAndRolesColumn.assignToProject" : "Назначить на проект",
   "projectsGrid.contains": "Содержит",
   "projectsGrid.lastRun": "Последний запуск",
   "projectsGrid.numberOfLaunches": "Запуски",
