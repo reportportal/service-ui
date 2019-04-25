@@ -14,6 +14,7 @@ import { fetch } from 'common/utils';
 import { fetchAllUsersAction, toggleUserRoleFormAction } from 'controllers/administrate/allUsers';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { SCREEN_XS_MAX } from 'common/constants/screenSizeVariables';
+import { GhostButton } from 'components/buttons/ghostButton';
 import { RolesRow } from './rolesRow';
 import styles from './projectsAndRolesColumn.scss';
 
@@ -38,6 +39,10 @@ const messages = defineMessages({
   addProject: {
     id: 'projectsAndRolesColumn.addProject',
     defaultMessage: '+ Add Project',
+  },
+  assignToProject: {
+    id: 'projectsAndRolesColumn.assignToProject',
+    defaultMessage: 'Assign to project',
   },
 });
 @connect(null, {
@@ -151,6 +156,7 @@ export class ProjectsAndRolesColumn extends Component {
     } = this.props;
     return Object.keys(assignedProjects);
   };
+
   getVisibleProjects = () => this.getProjectsList().slice(0, 2);
   getHiddenProjects = () => this.getProjectsList().slice(2);
   toggleExpand = () => {
@@ -179,7 +185,10 @@ export class ProjectsAndRolesColumn extends Component {
       },
     });
   };
-
+  handleAssignToProject = () => {
+    this.toggleExpand();
+    this.toggleAssignRole();
+  };
   unassignAction = (projectId, userId) => {
     const { intl } = this.props;
     fetch(URLS.userUnasign(projectId), {
@@ -201,6 +210,11 @@ export class ProjectsAndRolesColumn extends Component {
         });
       });
   };
+  renderAssignToProjectButton = () => (
+    <GhostButton tiny onClick={this.handleAssignToProject}>
+      + {this.props.intl.formatMessage(messages.assignToProject)}
+    </GhostButton>
+  );
   renderVisibleProjectsList = () => {
     const arr = this.getVisibleProjects();
     return arr.map((project) => (
@@ -285,8 +299,14 @@ export class ProjectsAndRolesColumn extends Component {
             <Reference>
               {({ ref }) => (
                 <div ref={ref}>
-                  {this.renderVisibleProjectsList()}
-                  {this.showHiddenCounter() && this.renderHiddenProjectsCounter()}
+                  {this.getProjectsList().length ? (
+                    <React.Fragment>
+                      {this.renderVisibleProjectsList()}
+                      {this.showHiddenCounter() && this.renderHiddenProjectsCounter()}
+                    </React.Fragment>
+                  ) : (
+                    this.renderAssignToProjectButton()
+                  )}
                 </div>
               )}
             </Reference>
