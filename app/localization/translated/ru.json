@@ -146,6 +146,7 @@
   "Charts.failed": "Неудачно",
   "Charts.failedSkippedTotal": "% (Неудачных+Пропущенных)/Всего",
   "Charts.launchName": "Launch name:",
+  "Charts.filterLabel": "Filter:",
   "Charts.nd": "БД",
   "Charts.notPassed": "Not passed",
   "Charts.passed": "Успешно",

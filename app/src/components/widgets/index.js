@@ -29,6 +29,7 @@ const CHARTS = {
   [widgetTypes.TEST_CASES_GROWTH_TREND]: TestCasesGrowthTrendChart,
   [widgetTypes.LAUNCH_DURATION]: LaunchesDurationChart,
   [widgetTypes.PASSING_RATE_PER_LAUNCH]: PassingRatePerLaunch,
+  [widgetTypes.PASSING_RATE_SUMMARY]: PassingRatePerLaunch,
   [widgetTypes.LAUNCH_EXECUTION_AND_ISSUE_STATISTICS]: LaunchExecutionAndIssueStatistics,
   [widgetTypes.LAUNCHES_TABLE]: LaunchesTable,
   [widgetTypes.UNIQUE_BUGS_TABLE]: UniqueBugsTable,

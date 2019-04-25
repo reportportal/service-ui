@@ -49,6 +49,10 @@ export const messages = defineMessages({
     id: 'Charts.launchName',
     defaultMessage: 'Launch name:',
   },
+  filterLabel: {
+    id: 'Charts.filterLabel',
+    defaultMessage: 'Filter:',
+  },
   failedSkippedTotal: {
     id: 'Charts.failedSkippedTotal',
     defaultMessage: '% (Failed+Skipped)/Total',
