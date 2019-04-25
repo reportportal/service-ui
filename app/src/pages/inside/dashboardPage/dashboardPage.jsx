@@ -218,7 +218,9 @@ export class DashboardPage extends Component {
             filter={filter}
             onFilterChange={onFilterChange}
           />
-          {dashboardItems.length > 0 ? (
+          {filter && dashboardItems.length === 0 ? (
+            <NoItemMessage message={intl.formatMessage(messages.noResults)} />
+          ) : (
             <DashboardList
               dashboardItems={dashboardItems}
               gridType={gridType}
@@ -227,8 +229,6 @@ export class DashboardPage extends Component {
               onEditItem={this.onEditDashboardItem}
               onAddItem={this.onAddDashboardItem}
             />
-          ) : (
-            <NoItemMessage message={intl.formatMessage(messages.noResults)} />
           )}
         </PageSection>
       </PageLayout>
