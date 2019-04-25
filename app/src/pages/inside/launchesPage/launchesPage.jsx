@@ -265,6 +265,8 @@ export class LaunchesPage extends Component {
     this.props.fetchLaunchesAction();
   };
 
+  deleteItem = (item) => this.deleteItems([item]);
+
   confirmDeleteItems = (items) => {
     const ids = items.map((item) => item.id);
     this.props.showScreenLockAction();
@@ -297,10 +299,11 @@ export class LaunchesPage extends Component {
       });
   };
 
-  deleteItems = () => {
+  deleteItems = (launches) => {
     this.props.tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_DELETE_ACTION);
-    const { selectedLaunches, intl, userId } = this.props;
-    this.props.deleteItemsAction(this.props.selectedLaunches, {
+    const { intl, userId } = this.props;
+    const selectedLaunches = launches || this.props.selectedLaunches;
+    this.props.deleteItemsAction(selectedLaunches, {
       onConfirm: this.confirmDeleteItems,
       header:
         selectedLaunches.length === 1
@@ -471,7 +474,7 @@ export class LaunchesPage extends Component {
                 sortingColumn={sortingColumn}
                 sortingDirection={sortingDirection}
                 onChangeSorting={onChangeSorting}
-                onDeleteItem={this.confirmDeleteItem}
+                onDeleteItem={this.deleteItem}
                 onMove={this.moveLaunches}
                 onEditItem={this.openEditModal}
                 onForceFinish={this.finishForceLaunches}
