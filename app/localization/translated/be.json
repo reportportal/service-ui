@@ -146,6 +146,7 @@
   "Charts.failed": "Няўдала",
   "Charts.failedSkippedTotal": "% (Няўдалых+Прапушчаных)/Усяго",
   "Charts.launchName": "Launch name:",
+  "Charts.filterLabel": "Filter:",
   "Charts.nd": "бд",
   "Charts.notPassed": "Not passed",
   "Charts.passed": "Паспяхова",

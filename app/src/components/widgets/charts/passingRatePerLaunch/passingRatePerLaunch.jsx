@@ -7,6 +7,7 @@ import classNames from 'classnames/bind';
 import * as COLORS from 'common/constants/colors';
 import { STATS_PASSED } from 'common/constants/statistics';
 import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
+import { PASSING_RATE_PER_LAUNCH } from 'common/constants/widgetTypes';
 import { C3Chart } from '../common/c3chart';
 import { Legend } from '../common/legend';
 import { messages } from '../common/messages';
@@ -202,7 +203,43 @@ export class PassingRatePerLaunch extends Component {
 
   getPercentage = (value) => (value / this.totalItems * 100).toFixed(2);
 
-  resizeHelper = () => {
+  getCustomTitle() {
+    const { intl } = this.props;
+    const message = this.isRatePerLaunchType() ? messages.launchName : messages.filterLabel;
+
+    return intl.formatMessage(message);
+  }
+
+  getCustomValue() {
+    const { widget } = this.props;
+
+    return this.isRatePerLaunchType()
+      ? widget.contentParameters.widgetOptions.launchNameFilter
+      : widget.appliedFilters && widget.appliedFilters[0].name;
+  }
+
+  isRatePerLaunchType() {
+    const { widget } = this.props;
+
+    return widget.widgetType === PASSING_RATE_PER_LAUNCH;
+  }
+
+  resizeChart() {
+    const newHeight = this.props.container.offsetHeight;
+    const newWidth = this.props.container.offsetWidth;
+    if (this.height !== newHeight) {
+      this.chart.resize({
+        height: newHeight,
+      });
+      this.height = newHeight;
+    } else if (this.width !== newWidth) {
+      this.chart.flush();
+      this.width = newWidth;
+    }
+    this.resizeHelper();
+  }
+
+  resizeHelper() {
     const nodeElement = this.node;
     if (!nodeElement) {
       return;
@@ -222,29 +259,12 @@ export class PassingRatePerLaunch extends Component {
         x = barBox.x + barBox.width - textBox.width - 5;
       textElement.setAttribute('x', `${x}`);
     });
-  };
-
-  resizeChart = () => {
-    const newHeight = this.props.container.offsetHeight;
-    const newWidth = this.props.container.offsetWidth;
-    if (this.height !== newHeight) {
-      this.chart.resize({
-        height: newHeight,
-      });
-      this.height = newHeight;
-    } else if (this.width !== newWidth) {
-      this.chart.flush();
-      this.width = newWidth;
-    }
-    this.resizeHelper();
-  };
+  }
 
   customBlock = (
     <div className={cx('launch-info-block')}>
-      <span className={cx('launch-name-title')}>
-        {this.props.intl.formatMessage(messages.launchName)}
-      </span>
-      <span className={cx('launch-name')}>{this.props.widget.name}</span>
+      <span className={cx('launch-name-title')}>{this.getCustomTitle()}</span>
+      <span className={cx('launch-name')}>{this.getCustomValue()}</span>
     </div>
   );
 
