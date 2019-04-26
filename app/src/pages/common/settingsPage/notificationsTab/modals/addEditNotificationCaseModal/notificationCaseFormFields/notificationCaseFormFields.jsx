@@ -24,7 +24,7 @@ import {
   SEND_CASE_FIELD_KEY,
 } from '../../../constants';
 import { messages } from '../../../messages';
-import styles from './notificationCaseForm.scss';
+import styles from './notificationCaseFormFields.scss';
 
 const cx = className.bind(styles);
 
@@ -34,7 +34,7 @@ const cx = className.bind(styles);
   launchNameSearch: URLS.launchNameSearch(projectIdSelector(state)),
 }))
 @track()
-export class NotificationCaseForm extends Component {
+export class NotificationCaseFormFields extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
     projectUsernamesSearch: PropTypes.string,

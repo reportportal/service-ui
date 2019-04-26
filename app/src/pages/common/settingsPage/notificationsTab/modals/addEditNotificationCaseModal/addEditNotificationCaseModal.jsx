@@ -6,7 +6,7 @@ import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { ModalLayout, withModal } from 'components/main/modal';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { validate } from 'common/utils';
-import { NotificationCaseForm } from './notificationCaseForm';
+import { NotificationCaseFormFields } from './notificationCaseFormFields';
 import styles from './addEditNotificationCaseModal.scss';
 
 const cx = className.bind(styles);
@@ -93,7 +93,7 @@ export class AddEditNotificationCaseModal extends Component {
         closeConfirmation={this.getCloseConfirmationConfig()}
         className={cx('add-edit-notification-case-modal')}
       >
-        <NotificationCaseForm />
+        <NotificationCaseFormFields />
       </ModalLayout>
     );
   }
