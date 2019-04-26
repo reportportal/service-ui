@@ -52,6 +52,8 @@
   }
 
   &.disabled {
+    cursor: default;
+
     svg {
       fill: $COLOR--gray-91;
       stroke: $COLOR--gray-91;
@@ -69,6 +71,27 @@
     svg {
       fill: $COLOR--tealish;
       stroke: $COLOR--tealish;
+    }
+  }
+}
+
+.check-icon {
+  svg {
+    fill: $COLOR--tealish;
+    stroke: $COLOR--tealish;
+  }
+
+  &:hover:not(.disabled) {
+    svg {
+      fill: $COLOR--tealish;
+      stroke: $COLOR--tealish;
+    }
+  }
+
+  &:active:not(.disabled) {
+    svg {
+      fill: $COLOR--topaz;
+      stroke: $COLOR--topaz;
     }
   }
 }
