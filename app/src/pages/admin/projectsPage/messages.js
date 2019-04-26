@@ -52,11 +52,11 @@ export const messages = defineMessages({
   },
   deleteModalContent: {
     id: 'ProjectsPage.deleteModalContent',
-    defaultMessage: 'Are you sure want to delete the project <b>{name}</b>?',
+    defaultMessage: 'Are you sure to delete the project {name}?',
   },
   deleteModalMultipleContent: {
     id: 'ProjectsPage.deleteModalMultipleContent',
-    defaultMessage: 'Are you sure want to delete the projects? <br> <b>{names}</b>',
+    defaultMessage: 'Are you sure to delete the projects {names}?',
   },
   deleteError: {
     id: 'ProjectsPage.deleteError',

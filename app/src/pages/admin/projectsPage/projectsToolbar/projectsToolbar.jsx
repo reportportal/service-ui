@@ -87,7 +87,7 @@ export class ProjectsToolbar extends Component {
   };
 
   getSelectedProjectsNames = () =>
-    this.props.selectedProjects.map(({ projectName }) => projectName).join(', ');
+    this.props.selectedProjects.map(({ projectName }) => `'<b>${projectName}</b>'`).join(', ');
 
   confirmDeleteItems = (projectsToDelete) => {
     const ids = projectsToDelete.map((project) => project.id);

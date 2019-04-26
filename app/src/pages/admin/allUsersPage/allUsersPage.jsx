@@ -44,11 +44,11 @@ const messages = defineMessages({
   },
   deleteModalContent: {
     id: 'administrateUsersPage.deleteModalContent',
-    defaultMessage: "Are you sure to delete user <b>'{name}'</b>?",
+    defaultMessage: 'Are you sure to delete user {name}?',
   },
   deleteModalMultipleContent: {
     id: 'administrateUsersPage.deleteModalMultipleContent',
-    defaultMessage: 'Are you sure to delete users? <br> <b>{names}</b>',
+    defaultMessage: 'Are you sure to delete users {names}?',
   },
   success: {
     id: 'administrateUsersPage.success',
@@ -164,7 +164,7 @@ export class AllUsersPage extends Component {
     return [userInfo];
   }
   get selectedUsersNames() {
-    return this.props.selectedUsers.map((user) => `"${user.fullName}"`).join(', ');
+    return this.props.selectedUsers.map((user) => `'<b>${user.fullName}</b>'`).join(', ');
   }
   get usersAvailableForSelection() {
     const {
