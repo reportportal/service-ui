@@ -19,6 +19,7 @@
       position: absolute;
       width: inherit;
       border: 1px solid $COLOR--gray-80;
+      box-sizing: border-box;
       &:hover {
         border: 1px solid $COLOR--gray-47;
       }
