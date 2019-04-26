@@ -176,13 +176,8 @@ export class AddEditModal extends Component {
             label={intl.formatMessage(messages.dashboardShareLabel)}
             labelWidth={labelWidth}
           >
-            <FieldProvider
-              name="share"
-              format={Boolean}
-              parse={Boolean}
-              onChange={() => this.props.tracking.trackEvent(eventsInfo.shareSwitcher)}
-            >
-              <InputBigSwitcher />
+            <FieldProvider name="share" type="checkbox" format={Boolean} parse={Boolean}>
+              <InputBigSwitcher onChangeEventInfo={eventsInfo.shareSwitcher} />
             </FieldProvider>
           </ModalField>
         </form>

@@ -91,6 +91,7 @@ export class InputBigSwitcher extends Component {
           <input
             className={cx('input')}
             type="checkbox"
+            checked={value}
             disabled={disabled}
             onFocus={onFocus}
             onChange={handlerOnChange}
