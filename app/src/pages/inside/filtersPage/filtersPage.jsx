@@ -163,7 +163,7 @@ export class FiltersPage extends Component {
       method: 'put',
       data: filter,
     })
-      .then(this.props.fetchFiltersAction())
+      .then(this.props.fetchFiltersAction)
       .then(() => {
         this.props.showNotification({
           type: NOTIFICATION_TYPES.SUCCESS,
