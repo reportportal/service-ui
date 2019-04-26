@@ -139,6 +139,11 @@ export const LAUNCHES_PAGE_EVENTS = {
     action: 'Click on Tooltip "Total System Issue"',
     label: 'Transition to inner level of launch with System Issue',
   },
+  TI_TOOLTIP: {
+    category: LAUNCHES_PAGE,
+    action: 'Click on Tooltip "To Investigate"',
+    label: 'Transition to inner level of launch with To Investigate',
+  },
   CLICK_SELECT_ALL_ICON: {
     category: LAUNCHES_PAGE,
     action: 'Click on item icon "select all launches"',

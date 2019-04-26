@@ -17,7 +17,6 @@ import { AbsRelTime } from 'components/main/absRelTime';
 import { ItemInfo } from 'pages/inside/common/itemInfo';
 import { ExecutionStatistics } from 'pages/inside/common/launchSuiteGrid/executionStatistics';
 import { DefectStatistics } from 'pages/inside/common/launchSuiteGrid/defectStatistics';
-import { ToInvestigateStatistics } from 'pages/inside/common/launchSuiteGrid/toInvestigateStatistics';
 import { StatisticsLink } from 'pages/inside/common/statisticsLink';
 import { DefectLink } from 'pages/inside/common/defectLink';
 import { formatStatus } from 'common/utils/localizationUtils';
@@ -144,25 +143,11 @@ const DefectsColumn = ({ className, value }, name, { linkPayload }) => {
   return (
     <div className={cx('defect-col', className)}>
       <div className={cx('desktop-block')}>
-        {!!Number(itemValue) &&
-          (name === STATS_TI ? (
-            <ToInvestigateStatistics
-              value={{
-                [defectLocator]: itemValue,
-                total: itemValue,
-              }}
-              {...defaultColumnProps}
-            />
-          ) : (
-            <DefectStatistics
-              type={defectType}
-              data={{
-                [defectLocator]: itemValue,
-                total: itemValue,
-              }}
-              {...defaultColumnProps}
-            />
-          ))}
+        <DefectStatistics
+          type={defectType}
+          data={{ [defectLocator]: itemValue, total: itemValue }}
+          {...defaultColumnProps}
+        />
       </div>
       <div className={cx('mobile-block', `defect-${defectType}`)}>
         <div className={cx('block-content')}>

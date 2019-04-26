@@ -23,7 +23,6 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
 import { defectTypesSelector } from 'controllers/project';
-import { TO_INVESTIGATE } from 'common/constants/defectTypes';
 import { DEFECT_TYPE_CONFIGURATION } from './constants';
 import styles from './defectTypeSelector.scss';
 import { DefectTypeItem } from '../defectTypeItem';
@@ -101,18 +100,9 @@ export class DefectTypeSelector extends Component {
 
   renderOptions() {
     const { defectTypes, value } = this.props;
-    const toInvestigate = defectTypes[TO_INVESTIGATE.toUpperCase()][0];
 
     return (
       <Fragment>
-        <div className={cx('to-investigate-option')}>
-          <DefectTypeItem
-            type={toInvestigate.locator}
-            noBorder={toInvestigate.locator !== value}
-            lesserFont={toInvestigate.locator === value}
-            onClick={() => this.handleChange(toInvestigate.locator)}
-          />
-        </div>
         <div className={cx('defect-options')}>
           {DEFECT_TYPE_CONFIGURATION.map((option) => (
             <div key={option} className={cx('select-option-group')}>
