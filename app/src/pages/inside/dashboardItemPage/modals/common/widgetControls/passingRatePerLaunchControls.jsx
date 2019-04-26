@@ -21,7 +21,7 @@ const messages = defineMessages({
   },
   LaunchNameFocusPlaceholder: {
     id: 'PassingRatePerLaunchControls.LaunchNameFocusPlaceholder',
-    defaultMessage: 'At least 3 symbols required.',
+    defaultMessage: 'Please enter 3 or more characters',
   },
   LaunchNameNoMatches: {
     id: 'PassingRatePerLaunchControls.LaunchNameNoMatches',
