@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import { DefectTypeTooltip } from 'pages/inside/common/defectTypeTooltip';
 import { withHoverableTooltip } from 'components/main/tooltips/hoverableTooltip';
 import { defectColorsSelector } from 'controllers/project';
+import { TO_INVESTIGATE } from 'common/constants/defectTypes';
 import { DefectLink } from 'pages/inside/common/defectLink';
 import styles from './donutChart.scss';
 
@@ -124,7 +125,10 @@ export class DonutChart extends Component {
             ))}
           </svg>
         </div>
-        <div className={cx('total')} style={{ borderColor: this.props.defectColors[type] }}>
+        <div
+          className={cx('total', { 'total-to-investigate': type === TO_INVESTIGATE })}
+          style={{ borderColor: this.props.defectColors[type] }}
+        >
           {data.total}
         </div>
       </DefectLink>

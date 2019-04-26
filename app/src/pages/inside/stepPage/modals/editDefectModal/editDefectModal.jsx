@@ -358,6 +358,7 @@ export class EditDefectModal extends Component {
         cancelButton={cancelButton}
         closeConfirmation={this.getCloseConfirmationConfig()}
         closeIconEventInfo={STEP_PAGE_EVENTS.CLOSE_ICON_EDIT_DEFECT_MODAL}
+        className={cx('modal-window')}
       >
         <div className={cx('edit-defect-content')}>
           <div className={cx('defect-type')}>

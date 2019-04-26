@@ -124,47 +124,19 @@
 .defect-options {
   display: flex;
   flex-wrap: wrap;
-
-  &:before {
-    content: '';
-    width: 100%;
-    height: 1px;
-    margin: 9px 0;
-    overflow: hidden;
-    background-color: $COLOR--gray-91;
-    @media (max-width: $SCREEN_XS_MAX) {
-      display: none;
-    }
-  }
 }
 
 .select-option-group {
   display: flex;
   flex-direction: column;
-  flex-wrap: wrap;
-  width: 25%;
-  @media (max-width: $SCREEN_SM_MAX) {
-    width: 50%;
-    &:nth-last-child(-n + 2) {
-      &:before {
-        content: '';
-        width: 100%;
-        height: 1px;
-        margin: 9px 0;
-        overflow: hidden;
-        background-color: $COLOR--gray-91;
-      }
-    }
-  }
+  width: 20%;
+
   @media (max-width: $SCREEN_XS_MAX) {
-    width: 100%;
-    &:before {
-      content: '';
-      width: 100%;
-      height: 1px;
-      margin: 9px 0;
-      overflow: hidden;
-      background-color: $COLOR--gray-91;
+    &:nth-child(-n+4) {
+      width: 50%;
+      border-bottom: 1px solid $COLOR--gray-91;
+      padding-bottom: 5px;
+      margin-bottom: 9px;
     }
   }
 }

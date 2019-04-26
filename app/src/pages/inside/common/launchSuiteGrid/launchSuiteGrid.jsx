@@ -2,7 +2,12 @@ import React, { PureComponent, Fragment } from 'react';
 import { injectIntl, intlShape } from 'react-intl';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
-import { PRODUCT_BUG, AUTOMATION_BUG, SYSTEM_ISSUE } from 'common/constants/defectTypes';
+import {
+  PRODUCT_BUG,
+  AUTOMATION_BUG,
+  SYSTEM_ISSUE,
+  TO_INVESTIGATE,
+} from 'common/constants/defectTypes';
 import { FAILED, INTERRUPTED, PASSED, SKIPPED } from 'common/constants/launchStatuses';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { Grid } from 'components/main/grid';
@@ -31,7 +36,6 @@ import {
 import { Hamburger } from './hamburger';
 import { ExecutionStatistics } from './executionStatistics';
 import { DefectStatistics } from './defectStatistics';
-import { ToInvestigateStatistics } from './toInvestigateStatistics';
 import styles from './launchSuiteGrid.scss';
 
 const cx = classNames.bind(styles);
@@ -175,11 +179,13 @@ SiColumn.propTypes = {
 
 const TiColumn = ({ className, ...rest }) => (
   <div className={cx('ti-col', className)}>
-    <ToInvestigateStatistics
+    <DefectStatistics
+      type={TO_INVESTIGATE}
       customProps={rest.customProps}
-      value={rest.value.statistics.defects && rest.value.statistics.defects.to_investigate}
+      data={rest.value.statistics.defects && rest.value.statistics.defects.to_investigate}
       itemId={rest.value.id}
       eventInfo={rest.customProps.events.TI_CHART}
+      tooltipEventInfo={rest.customProps.events.TI_TOOLTIP}
     />
   </div>
 );
