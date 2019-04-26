@@ -30,7 +30,7 @@ const messages = defineMessages({
   },
   LaunchNameFocusPlaceholder: {
     id: 'MostTimeConsumingTestCasesControls.LaunchNameFocusPlaceholder',
-    defaultMessage: 'At least 3 symbols required.',
+    defaultMessage: 'Please enter 3 or more characters',
   },
   LaunchNameNoMatches: {
     id: 'MostTimeConsumingTestCasesControls.LaunchNameNoMatches',

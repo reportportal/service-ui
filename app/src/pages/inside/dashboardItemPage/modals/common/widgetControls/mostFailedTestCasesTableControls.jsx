@@ -34,7 +34,7 @@ const messages = defineMessages({
   },
   LaunchNameFocusPlaceholder: {
     id: 'MostFailedTestCasesTableControls.LaunchNameFocusPlaceholder',
-    defaultMessage: 'At least 3 symbols required.',
+    defaultMessage: 'Please enter 3 or more characters',
   },
   LaunchNameNoMatches: {
     id: 'MostFailedTestCasesTableControls.LaunchNameNoMatches',

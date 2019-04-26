@@ -45,7 +45,7 @@ const messages = defineMessages({
   },
   FiltersFocusPlaceholder: {
     id: 'ProductStatusControls.FiltersFocusPlaceholder',
-    defaultMessage: 'At least 3 symbols required.',
+    defaultMessage: 'Please enter 3 or more characters',
   },
   FiltersNoMatches: {
     id: 'ProductStatusControls.FiltersNoMatches',
