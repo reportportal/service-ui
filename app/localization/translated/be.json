@@ -322,6 +322,7 @@
   "DefectTypesTab.toInvestigateBugsGroup": "Група неабходны аналіз",
   "DeleteFilterDialog.deleteFilter": "Вы ўпэўнены, што хочаце выдаліць фільтр '<b>{name}</b>'? Ён больш не будзе існаваць.",
   "DeleteFilterDialog.deleteFilterHeader": "ВЫДАЛІЦЬ ФІЛЬТР",
+  "DeleteFilterDialog.deleteFilterOwnerWarning": "Вы збіраецеся выдаліць не свой фільтр. Гэта можа паўплываць на інфармацыю іншых карыстальнікаў праекта.",
   "DeleteImageModal.header": "Выдаліць фота",
   "DeleteImageModal.text": "Вы ўпэўненыя, што жадаеце выдаліць фота профілю?",
   "DeleteLaunchDialog.deleteLaunch": "Вы ўпэўнены, што хочаце выдаліць запуск '<b>{name} #{number}</b>'? Ён больш не будзе існаваць..",

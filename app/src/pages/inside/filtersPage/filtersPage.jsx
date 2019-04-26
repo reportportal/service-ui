@@ -149,7 +149,11 @@ export class FiltersPage extends Component {
   confirmDelete = (filter) =>
     this.props.showModalAction({
       id: 'filterDeleteModal',
-      data: { filter, onConfirm: () => this.deleteFilter(filter) },
+      data: {
+        filter,
+        onConfirm: () => this.deleteFilter(filter),
+        userId: this.props.userId,
+      },
     });
 
   openEditModal = (filter) =>
