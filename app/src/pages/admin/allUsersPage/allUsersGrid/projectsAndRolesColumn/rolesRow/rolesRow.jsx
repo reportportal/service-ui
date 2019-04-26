@@ -46,6 +46,10 @@ const messages = defineMessages({
     id: 'rolesRow.unAssignFromPersonalProject',
     defaultMessage: 'Impossible to unassign user from personal project',
   },
+  unAssignFromProject: {
+    id: 'UnassignButton.unAssignTitle',
+    defaultMessage: 'Unassign user from project',
+  },
 });
 
 @injectIntl
@@ -129,19 +133,24 @@ export class RolesRow extends Component {
     const different = this.isDifferentFromInitial() || createNew;
     const clickHandler = different ? this.onChange : this.onDelete;
     const icon = different ? CheckIcon : CrossIcon;
-
-    if (this.isPersonalProject() && !different) {
-      const Tooltip = () => (
-        <TextTooltip tooltipContent={intl.formatMessage(messages.unAssignFromPersonalProject)} />
-      );
+    if (this.isProjectEmpty()) {
+      return <IconComponent different={different} disable clickHandler={null} icon={CheckIcon} />;
+    }
+    if (!different) {
+      const tooltipMessage = this.isPersonalProject()
+        ? intl.formatMessage(messages.unAssignFromPersonalProject)
+        : intl.formatMessage(messages.unAssignFromProject);
+      const Tooltip = () => <TextTooltip tooltipContent={tooltipMessage} />;
       const WrappedComponent = () => (
-        <IconComponent different={different} disable clickHandler={null} icon={CrossIcon} />
+        <IconComponent
+          different={different}
+          disable={this.isPersonalProject()}
+          clickHandler={!this.isPersonalProject() ? clickHandler : null}
+          icon={CrossIcon}
+        />
       );
       const Wrapper = withTooltip({ TooltipComponent: Tooltip })(WrappedComponent);
       return <Wrapper />;
-    }
-    if (this.isProjectEmpty()) {
-      return <IconComponent different={different} disable clickHandler={null} icon={CheckIcon} />;
     }
     return (
       <IconComponent
