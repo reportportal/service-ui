@@ -60,7 +60,10 @@ const messages = defineMessages({
     id: 'AddUserForm.addUserTitle',
     defaultMessage: 'Add user',
   },
-  generatePassword: { id: 'AddUserForm.generatePassword', defaultMessage: 'Generate Password' },
+  generatePassword: {
+    id: 'AddUserForm.generatePassword',
+    defaultMessage: 'Generate Password',
+  },
   projectNamePlaceholder: {
     id: 'AddUserForm.projectNamePlaceholder',
     defaultMessage: 'Enter project name',
@@ -129,9 +132,14 @@ export class AddUserModal extends Component {
 
   formatProjectNameOptions = (values) => values.map((value) => ({ value, label: value }));
 
-  formatValue = (value) => (value ? { value, label: value } : null);
+  formatValueProject = (value) => (value ? { value, label: value } : null);
 
-  parseValue = (value) => (value ? value.value : undefined);
+  parseValueProject = (value) => {
+    if (value === null) return null;
+    if (value && value.value) return value.value;
+
+    return undefined;
+  };
 
   render() {
     const { onSubmit } = this.props.data;
@@ -198,8 +206,8 @@ export class AddUserModal extends Component {
             <FieldProvider
               name="defaultProject"
               type="text"
-              format={this.formatValue}
-              parse={this.parseValue}
+              format={this.formatValueProject}
+              parse={this.parseValueProject}
             >
               <FieldErrorHint>
                 <InputTagsSearch
