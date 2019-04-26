@@ -65,7 +65,7 @@ export class ProjectMenu extends Component {
         onConfirm: this.onDeleteSubmit,
         header: intl.formatMessage(messages.deleteModalHeader),
         mainContent: intl.formatMessage(messages.deleteModalContent, {
-          name: projectName,
+          name: `'<b>${projectName}</b>'`,
         }),
         userId,
         eventsInfo: {
