@@ -60,6 +60,8 @@
       left: 12px;
       line-height: 30px;
       font-size: 13px;
+      width: calc(100% - 40px);
+      overflow: hidden;
       z-index: $Z-INDEX-POPUP;
     }
     .Select-noresults {
