@@ -13,6 +13,7 @@ import { SETTINGS } from 'common/constants/projectSections';
 import { fetch, getStorageItem, setStorageItem } from 'common/utils';
 import { PROJECT_PAGE } from 'controllers/pages';
 import { confirmSaga, hideModalAction } from 'controllers/modal';
+import { PROJECT_MANAGER } from 'common/constants/projectRoles';
 import {
   NAMESPACE,
   FETCH_PROJECTS,
@@ -21,6 +22,7 @@ import {
   GRID_VIEW,
   SET_PROJECTS_VIEW_MODE,
   ADD_PROJECT,
+  ADD_PROJECT_SUCCESS,
   DELETE_PROJECT,
   NAVIGATE_TO_PROJECT,
   ERROR_CODES,
@@ -60,6 +62,14 @@ function* addProject({ payload: projectName }) {
       data: {
         entryType: PROJECT_TYPE_INTERNAL,
         projectName,
+      },
+    });
+    yield put({
+      type: ADD_PROJECT_SUCCESS,
+      payload: {
+        projectName,
+        projectRole: PROJECT_MANAGER,
+        entryType: PROJECT_TYPE_INTERNAL,
       },
     });
     yield put(hideModalAction());
