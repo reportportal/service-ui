@@ -44,11 +44,11 @@ const messages = defineMessages({
   },
   deleteModalContent: {
     id: 'administrateUsersPage.deleteModalContent',
-    defaultMessage: 'Are you sure to delete user {name}?',
+    defaultMessage: 'Are you sure you want to delete user {name}?',
   },
   deleteModalMultipleContent: {
     id: 'administrateUsersPage.deleteModalMultipleContent',
-    defaultMessage: 'Are you sure to delete users {names}?',
+    defaultMessage: 'Are you sure you want to delete users {names}?',
   },
   success: {
     id: 'administrateUsersPage.success',

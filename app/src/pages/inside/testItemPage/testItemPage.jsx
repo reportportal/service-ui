@@ -50,11 +50,12 @@ const messages = defineMessages({
   },
   deleteModalContent: {
     id: 'TestItemsPage.deleteModalContent',
-    defaultMessage: "Are you sure to delete item <b>'{name}'</b>? It will no longer exist.",
+    defaultMessage:
+      "Are you sure you want to delete item <b>'{name}'</b>? It will no longer exist.",
   },
   deleteModalMultipleContent: {
     id: 'TestItemsPage.deleteModalMultipleContent',
-    defaultMessage: 'Are you sure to delete items? They will no longer exist.',
+    defaultMessage: 'Are you sure you want to delete items? They will no longer exist.',
   },
   warning: {
     id: 'TestItemsPage.warning',
