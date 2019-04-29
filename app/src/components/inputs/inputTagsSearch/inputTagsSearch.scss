@@ -10,16 +10,6 @@
       }
     }
   }
-  &.error {
-    :global {
-      .Select {
-        .Select-control {
-          border-color: $COLOR--orange-red;
-          box-shadow: 00 0 2px 0 rgba($COLOR--orange-red, 0.7);
-        }
-      }
-    }
-  }
   :global {
     .Select.is-focused {
       .Select-control {

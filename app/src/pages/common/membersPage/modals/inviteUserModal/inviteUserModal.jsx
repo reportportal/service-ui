@@ -65,7 +65,10 @@ const inviteFormSelector = formValueSelector('inviteUserForm');
 )
 @reduxForm({
   form: 'inviteUserForm',
-  validate: ({ user }) => ({ user: !user && 'inviteUser' }),
+  validate: ({ user, project }) => ({
+    user: !user && 'requiredFieldHint',
+    project: !project && 'requiredFieldHint',
+  }),
   enableReinitialize: true,
 })
 @track()
