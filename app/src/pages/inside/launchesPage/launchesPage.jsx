@@ -61,11 +61,12 @@ const messages = defineMessages({
   },
   deleteModalContent: {
     id: 'LaunchesPage.deleteModalContent',
-    defaultMessage: "Are you sure to delete launch <b>'{name}'</b>? It will no longer exist.",
+    defaultMessage:
+      "Are you sure you want to delete launch <b>'{name}'</b>? It will no longer exist.",
   },
   deleteModalMultipleContent: {
     id: 'LaunchesPage.deleteModalMultipleContent',
-    defaultMessage: 'Are you sure to delete launches? They will no longer exist.',
+    defaultMessage: 'Are you sure you want to delete launches? They will no longer exist.',
   },
   warning: {
     id: 'LaunchesPage.warning',
