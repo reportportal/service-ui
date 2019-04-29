@@ -32,3 +32,6 @@ export const mergeQuery = (oldQuery, paramsToMerge) => {
     {},
   );
 };
+
+export const mergeNamespacedQuery = (oldQuery, paramsToMerge, namespace) =>
+  namespace ? mergeQuery(oldQuery, paramsToMerge) : paramsToMerge;

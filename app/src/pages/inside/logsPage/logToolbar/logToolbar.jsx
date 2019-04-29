@@ -9,13 +9,22 @@ import { GhostButton } from 'components/buttons/ghostButton';
 import LeftArrowIcon from 'common/img/arrow-left-small-inline.svg';
 import RightArrowIcon from 'common/img/arrow-right-small-inline.svg';
 import RefreshIcon from 'common/img/refresh-icon-inline.svg';
-import { breadcrumbsSelector } from 'controllers/testItem';
+import {
+  breadcrumbsSelector,
+  namespaceSelector,
+  fetchTestItemsFromLogPageAction,
+} from 'controllers/testItem';
+import { withPagination } from 'controllers/pagination';
 import {
   nextLogLinkSelector,
   previousLogLinkSelector,
   previousItemSelector,
   nextItemSelector,
+  disablePrevItemLinkSelector,
+  disableNextItemLinkSelector,
 } from 'controllers/log';
+
+import { stepPaginationSelector } from 'controllers/step';
 import styles from './logToolbar.scss';
 
 const cx = classNames.bind(styles);
@@ -27,11 +36,19 @@ const cx = classNames.bind(styles);
     previousLink: previousLogLinkSelector(state),
     previousItem: previousItemSelector(state),
     nextItem: nextItemSelector(state),
+    previousLinkDisable: disablePrevItemLinkSelector(state),
+    nextLinkDisable: disableNextItemLinkSelector(state),
   }),
   {
     navigate: (linkAction) => linkAction,
+    fetchTestItems: fetchTestItemsFromLogPageAction,
   },
 )
+@withPagination({
+  paginationSelector: stepPaginationSelector,
+  namespaceSelector,
+  offset: 1,
+})
 export class LogToolbar extends Component {
   static propTypes = {
     breadcrumbs: PropTypes.array,
@@ -41,6 +58,11 @@ export class LogToolbar extends Component {
     nextLink: PropTypes.object,
     previousLink: PropTypes.object,
     navigate: PropTypes.func,
+    previousLinkDisable: PropTypes.bool,
+    nextLinkDisable: PropTypes.bool,
+    onChangePage: PropTypes.func,
+    activePage: PropTypes.number,
+    fetchTestItems: PropTypes.func,
   };
 
   static defaultProps = {
@@ -51,19 +73,37 @@ export class LogToolbar extends Component {
     nextLink: null,
     previousLink: null,
     navigate: () => {},
+    previousLinkDisable: false,
+    nextLinkDisable: false,
+    onChangePage: () => {},
+    activePage: 1,
+    fetchTestItems: () => {},
   };
 
   handleBackClick = () => {
-    const { navigate, previousLink } = this.props;
-    navigate(previousLink);
+    const { navigate, previousLink, fetchTestItems } = this.props;
+    if (previousLink) {
+      return navigate(previousLink);
+    }
+    return fetchTestItems();
   };
   handleForwardClick = () => {
-    const { navigate, nextLink } = this.props;
-    navigate(nextLink);
+    const { fetchTestItems, nextLink, navigate } = this.props;
+    if (nextLink) {
+      return navigate(nextLink);
+    }
+    return fetchTestItems({ next: true });
   };
 
   render() {
-    const { breadcrumbs, previousLink, nextLink, previousItem, nextItem, onRefresh } = this.props;
+    const {
+      breadcrumbs,
+      previousItem,
+      nextItem,
+      onRefresh,
+      previousLinkDisable,
+      nextLinkDisable,
+    } = this.props;
     return (
       <div className={cx('log-toolbar')}>
         <Breadcrumbs
@@ -77,14 +117,14 @@ export class LogToolbar extends Component {
             <div className={cx('left-arrow-button')}>
               <GhostButton
                 icon={LeftArrowIcon}
-                disabled={!previousLink}
+                disabled={previousLinkDisable}
                 title={previousItem && previousItem.name}
                 onClick={this.handleBackClick}
               />
             </div>
             <GhostButton
               icon={RightArrowIcon}
-              disabled={!nextLink}
+              disabled={nextLinkDisable}
               title={nextItem && nextItem.name}
               onClick={this.handleForwardClick}
             />

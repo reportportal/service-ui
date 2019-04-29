@@ -12,6 +12,7 @@ import {
 import { DEFAULT_PAGINATION } from 'controllers/pagination';
 import { itemsSelector } from 'controllers/testItem';
 import { debugModeSelector } from 'controllers/launch';
+import { stepPaginationSelector } from 'controllers/step';
 import { extractNamespacedQuery, createNamespacedQuery } from 'common/utils/routingUtils';
 import {
   calculateGrowthDuration,
@@ -193,4 +194,26 @@ export const retryLinkSelector = createSelector(
       },
     },
   }),
+);
+
+export const disablePrevItemLinkSelector = createSelector(
+  stepPaginationSelector,
+  logItemIdSelector,
+  itemsSelector,
+  ({ number }, id, items) => {
+    const isNoPreviousItem = getPreviousItem(items, id) === null;
+    const isFirstPage = number === 1;
+    return isNoPreviousItem && isFirstPage;
+  },
+);
+
+export const disableNextItemLinkSelector = createSelector(
+  stepPaginationSelector,
+  logItemIdSelector,
+  itemsSelector,
+  ({ number, totalPages }, id, items) => {
+    const isNoNextItem = getNextItem(items, id) === null;
+    const isLastPage = number === totalPages;
+    return isNoNextItem && isLastPage;
+  },
 );

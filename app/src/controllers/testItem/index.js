@@ -4,6 +4,7 @@ export {
   restorePathAction,
   setLevelAction,
   deleteItemsAction,
+  fetchTestItemsFromLogPageAction,
 } from './actionCreators';
 export { fetchParentItems, testItemsSagas } from './sagas';
 export { SET_PAGE_LOADING } from './constants';

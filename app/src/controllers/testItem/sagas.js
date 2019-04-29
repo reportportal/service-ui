@@ -1,3 +1,4 @@
+import { redirect } from 'redux-first-router';
 import {
   FETCH_SUCCESS,
   fetchDataAction,
@@ -12,11 +13,22 @@ import {
   payloadSelector,
   TEST_ITEM_PAGE,
   pathnameChangedSelector,
+  PROJECT_LOG_PAGE,
+  filterIdSelector,
+  updatePagePropertiesAction,
 } from 'controllers/pages';
+import { PAGE_KEY } from 'controllers/pagination';
 import { URLS } from 'common/urls';
+import { createNamespacedQuery, mergeNamespacedQuery } from 'common/utils/routingUtils';
 import { activeProjectSelector } from 'controllers/user';
 import { setLevelAction, setPageLoadingAction } from './actionCreators';
-import { FETCH_TEST_ITEMS, NAMESPACE, PARENT_ITEMS_NAMESPACE, RESTORE_PATH } from './constants';
+import {
+  FETCH_TEST_ITEMS,
+  NAMESPACE,
+  PARENT_ITEMS_NAMESPACE,
+  RESTORE_PATH,
+  FETCH_TEST_ITEMS_LOG_PAGE,
+} from './constants';
 import { LEVELS } from './levels';
 import {
   namespaceSelector,
@@ -25,6 +37,7 @@ import {
   isLostLaunchSelector,
   levelSelector,
   createParentItemsSelector,
+  itemsSelector,
 } from './selectors';
 import { calculateLevel } from './utils';
 
@@ -90,9 +103,9 @@ function* fetchTestItems({ payload = {} }) {
   const query = yield select(queryParametersSelector, namespace);
   const pageQuery = yield select(pagePropertiesSelector);
   const uniqueIdFilterKey = 'filter.eq.uniqueId';
-
   const noChildFilter = 'filter.eq.hasChildren' in query;
   const underPathItemsIds = itemIds.filter((item) => item !== launchId);
+
   yield put(
     fetchDataAction(NAMESPACE)(URLS.testItems(project), {
       params: {
@@ -125,6 +138,57 @@ function* watchFetchTestItems() {
   yield takeEvery(FETCH_TEST_ITEMS, fetchTestItems);
 }
 
+function* updateStepPagination(next = false) {
+  const namespace = yield select(namespaceSelector, 1);
+  const namespaceQuery = yield select(queryParametersSelector, namespace);
+  let page = parseInt(namespaceQuery[PAGE_KEY], 10) - 1;
+  if (next) {
+    page = parseInt(namespaceQuery[PAGE_KEY], 10) + 1;
+  }
+  yield put(
+    updatePagePropertiesAction(
+      createNamespacedQuery(
+        mergeNamespacedQuery(
+          namespaceQuery,
+          {
+            [PAGE_KEY]: page,
+          },
+          namespace,
+        ),
+        namespace,
+      ),
+    ),
+  );
+}
+export function* fetchTestItemsFromLogPage({ payload = {} }) {
+  const { next = false } = payload;
+  yield call(updateStepPagination, next);
+  const namespace = yield select(namespaceSelector, 1);
+  const namespaceQuery = yield select(queryParametersSelector, namespace);
+  yield call(fetchTestItems, { payload: { offset: 1 } });
+  const parentsItemsIds = yield select(testItemIdsArraySelector);
+  const testItems = yield select(itemsSelector);
+  const projectId = yield select(activeProjectSelector);
+  const testItem = next ? testItems[0] : testItems[testItems.length - 1];
+  const testItemIds = [...parentsItemsIds.slice(0, -1), testItem.id].join('/');
+  const filterId = yield select(filterIdSelector);
+  const query = createNamespacedQuery(namespaceQuery, namespace);
+  const link = {
+    type: PROJECT_LOG_PAGE,
+    payload: {
+      filterId,
+      projectId,
+      testItemIds,
+    },
+    query,
+  };
+  yield put(redirect(link));
+}
+
+function* watchTestItemsFromLogPage() {
+  yield takeEvery(FETCH_TEST_ITEMS_LOG_PAGE, fetchTestItemsFromLogPage);
+}
+
 export function* testItemsSagas() {
-  yield all([watchFetchTestItems(), watchRestorePath()]);
+  yield all([watchFetchTestItems(), watchRestorePath(), watchTestItemsFromLogPage()]);
 }

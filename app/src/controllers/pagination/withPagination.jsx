@@ -9,10 +9,10 @@ export const withPagination = ({
   paginationSelector = defaultPaginationSelector,
   namespace,
   namespaceSelector,
+  offset,
 } = {}) => (WrappedComponent) => {
   const getTotalElements = totalElementsSelector(paginationSelector);
   const getTotalPages = totalPagesSelector(paginationSelector);
-
   @connectRouter(
     (query) => ({
       page: query[PAGE_KEY] && Number(query[PAGE_KEY]),
@@ -21,7 +21,7 @@ export const withPagination = ({
     {
       updatePagination: (page, size) => ({ [PAGE_KEY]: page, [SIZE_KEY]: size }),
     },
-    { namespace, namespaceSelector },
+    { namespace, namespaceSelector, offset },
   )
   @connect((state) => ({
     totalElements: getTotalElements(state),
@@ -56,7 +56,9 @@ export const withPagination = ({
         this.changePaginationOptions({ page: totalPages });
       }
     }
-    changePageHandler = (page) => this.changePaginationOptions({ page });
+    changePageHandler = (page) => {
+      this.changePaginationOptions({ page });
+    };
 
     changeSizeHandler = (size) => this.changePaginationOptions({ size, page: 1 });
 

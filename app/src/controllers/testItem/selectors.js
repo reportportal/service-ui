@@ -29,8 +29,8 @@ import {
   createLink,
   getQueryNamespace,
   getDefectsString,
-  getNextPage,
   normalizeTestItem,
+  getNextPage,
 } from './utils';
 
 const domainSelector = (state) => state.testItem || {};
