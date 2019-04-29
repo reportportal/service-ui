@@ -1,5 +1,10 @@
 import { takeEvery, all, put, select, take } from 'redux-saga/effects';
-import { fetchDataAction, concatFetchDataAction, FETCH_SUCCESS } from 'controllers/fetch';
+import {
+  fetchDataAction,
+  concatFetchDataAction,
+  FETCH_SUCCESS,
+  FETCH_ERROR,
+} from 'controllers/fetch';
 import { activeProjectSelector } from 'controllers/user';
 import { URLS } from 'common/urls';
 import { userFiltersSelector, updateProjectFilterPreferencesAction } from 'controllers/project';
@@ -102,8 +107,13 @@ function* saveNewFilter({ payload: filter }) {
   );
   const response = yield take(
     ({ type, meta }) =>
-      type === FETCH_SUCCESS && meta && meta.namespace === LAUNCHES_FILTERS_UPDATE_NAMESPACE,
+      (type === FETCH_SUCCESS || type === FETCH_ERROR) &&
+      meta &&
+      meta.namespace === LAUNCHES_FILTERS_UPDATE_NAMESPACE,
   );
+  if (response.type === FETCH_ERROR) {
+    return;
+  }
   const newId = response.payload.id;
   const newFilter = { ...filter, id: newId };
   yield put(updateFilterSuccessAction(newFilter, filter.id));
