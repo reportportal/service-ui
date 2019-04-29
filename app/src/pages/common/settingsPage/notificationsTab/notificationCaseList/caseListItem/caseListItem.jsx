@@ -36,7 +36,10 @@ const ruleFieldsConfig = {
   [ATTRIBUTES_FIELD_KEY]: {
     title: messages.attributesLabel,
     dataFormatter: (data) =>
-      data.reduce((acc, item) => `${acc.length ? `${acc}, ` : ''}${item.key}: ${item.value}`, ''),
+      data.reduce(
+        (acc, { key, value }) => `${acc.length ? `${acc}, ` : ''}${key ? `${key}:` : ''}${value}`,
+        '',
+      ),
   },
 };
 
