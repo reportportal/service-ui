@@ -21,12 +21,14 @@ import {
   GRID_VIEW,
   SET_PROJECTS_VIEW_MODE,
   ADD_PROJECT,
+  ADD_PROJECT_SUCCESS,
   DELETE_PROJECT,
   NAVIGATE_TO_PROJECT,
   ERROR_CODES,
 } from './constants';
 import { navigateToProjectSectionAction } from './actionCreators';
 import { querySelector } from './selectors';
+import { PROJECT_MANAGER } from '../../../common/constants/projectRoles';
 
 function* fetchProjects() {
   const query = yield select(querySelector);
@@ -60,6 +62,14 @@ function* addProject({ payload: projectName }) {
       data: {
         entryType: PROJECT_TYPE_INTERNAL,
         projectName,
+      },
+    });
+    yield put({
+      type: ADD_PROJECT_SUCCESS,
+      payload: {
+        projectName,
+        projectRole: PROJECT_MANAGER,
+        entryType: PROJECT_TYPE_INTERNAL,
       },
     });
     yield put(hideModalAction());
