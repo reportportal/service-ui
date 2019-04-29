@@ -52,16 +52,7 @@ export class RegistrationPageContainer extends Component {
     };
     return fetch(URLS.userRegistration(), { method: 'post', data, params: { uuid } })
       .then(() => this.props.loginAction({ login, password }))
-      .catch((err) => {
-        let message;
-        const responseData = err.response && err.response.data && err.response.data;
-
-        // TODO remove condition after merging PR #773 (message will be always in err.message)
-        if (data && responseData.message) {
-          message = responseData.message;
-        } else {
-          message = err.message;
-        }
+      .catch(({ message }) => {
         this.props.showNotification({
           type: NOTIFICATION_TYPES.ERROR,
           message,
