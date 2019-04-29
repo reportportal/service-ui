@@ -47,6 +47,7 @@ import {
   ENTITY_BTS_ISSUES,
   ENTITY_IGNORE_ANALYZER,
   ENTITY_AUTOANALYZE,
+  CONDITION_EQ,
 } from 'components/filterEntities/constants';
 import { defectTypesSelector } from 'controllers/project';
 
@@ -307,7 +308,6 @@ export class StepLevelEntities extends Component {
       id: ENTITY_DEFECT_TYPE,
       component: EntityDropdown,
       value: filterValues[ENTITY_DEFECT_TYPE] || {
-        value: initChecked.join(','),
         condition: CONDITION_IN,
       },
       title: intl.formatMessage(messages.DefectTypeTitle),
@@ -342,20 +342,6 @@ export class StepLevelEntities extends Component {
         id: ENTITY_METHOD_TYPE,
         component: EntityDropdown,
         value: this.bindDefaultValue(ENTITY_METHOD_TYPE, {
-          value: [
-            BEFORE_SUITE,
-            BEFORE_GROUPS,
-            BEFORE_CLASS,
-            BEFORE_TEST,
-            TEST,
-            BEFORE_METHOD,
-            STEP,
-            AFTER_METHOD,
-            AFTER_TEST,
-            AFTER_CLASS,
-            AFTER_GROUPS,
-            AFTER_SUITE,
-          ].join(','),
           condition: CONDITION_IN,
         }),
         title: intl.formatMessage(messages.MethodTypeTitle),
@@ -438,9 +424,6 @@ export class StepLevelEntities extends Component {
         id: ENTITY_STATUS,
         component: EntityDropdown,
         value: this.bindDefaultValue(ENTITY_STATUS, {
-          value: [FAILED, PASSED, SKIPPED, INTERRUPTED, IN_PROGRESS]
-            .map((item) => item.toUpperCase())
-            .join(','),
           condition: CONDITION_IN,
         }),
         title: intl.formatMessage(messages.StatusTitle),
@@ -534,7 +517,7 @@ export class StepLevelEntities extends Component {
         id: ENTITY_AUTOANALYZE,
         component: EntityDropdown,
         value: this.bindDefaultValue(ENTITY_AUTOANALYZE, {
-          condition: CONDITION_IN,
+          condition: CONDITION_EQ,
         }),
         title: intl.formatMessage(messages.AnalyseTitle),
         active: visibleFilters.includes(ENTITY_AUTOANALYZE),
