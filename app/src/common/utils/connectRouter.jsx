@@ -3,14 +3,11 @@ import { pagePropertiesSelector, updatePagePropertiesAction } from 'controllers/
 import {
   createNamespacedQuery,
   extractNamespacedQuery,
-  mergeQuery,
+  mergeNamespacedQuery,
 } from 'common/utils/routingUtils';
 import { omit } from './omit';
 
 const takeAll = (x) => ({ ...x });
-
-const mergeNamespacedQuery = (oldQuery, paramsToMerge, namespace) =>
-  namespace ? mergeQuery(oldQuery, paramsToMerge) : paramsToMerge;
 
 export const connectRouter = (mapURLParamsToProps = takeAll, queryUpdaters = {}, options = {}) => (
   WrappedComponent,
@@ -20,8 +17,9 @@ export const connectRouter = (mapURLParamsToProps = takeAll, queryUpdaters = {},
       const pageProperties = pagePropertiesSelector(state);
       let namespace = options.namespace || ownProps.namespace;
       const namespaceSelector = options.namespaceSelector || ownProps.namespaceSelector;
+      const offset = options.offset;
       if (!options.namespace && namespaceSelector) {
-        namespace = namespaceSelector(state);
+        namespace = namespaceSelector(state, offset);
       }
       const namespacedQuery = namespace
         ? extractNamespacedQuery(pageProperties, namespace)
@@ -35,7 +33,7 @@ export const connectRouter = (mapURLParamsToProps = takeAll, queryUpdaters = {},
     (dispatch) => {
       const mappedUpdaters = {};
       Object.keys(queryUpdaters).forEach((key) => {
-        mappedUpdaters[key] = (namespace, oldQuery) => (...args) =>
+        mappedUpdaters[key] = (namespace, oldQuery) => (...args) => {
           dispatch(
             updatePagePropertiesAction(
               createNamespacedQuery(
@@ -44,6 +42,7 @@ export const connectRouter = (mapURLParamsToProps = takeAll, queryUpdaters = {},
               ),
             ),
           );
+        };
       });
       return mappedUpdaters;
     },

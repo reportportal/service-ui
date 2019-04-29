@@ -7,6 +7,7 @@ import {
   RESTORE_PATH,
   SET_PAGE_LOADING,
   NAMESPACE,
+  FETCH_TEST_ITEMS_LOG_PAGE,
 } from './constants';
 
 export const setLevelAction = (level) => ({
@@ -27,6 +28,12 @@ export const setPageLoadingAction = (isLoading) => ({
   type: SET_PAGE_LOADING,
   payload: isLoading,
 });
+
+export const fetchTestItemsFromLogPageAction = (payload) => ({
+  type: FETCH_TEST_ITEMS_LOG_PAGE,
+  payload,
+});
+
 
 export const deleteItemsAction = defineGroupOperation(
   NAMESPACE,
