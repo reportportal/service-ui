@@ -226,15 +226,20 @@ export const defectLinkSelector = (state, ownProps) => {
     (ownProps.ownLinkParams && ownProps.ownLinkParams.payload) || payloadSelector(state);
   const testItemIds = testItemIdsSelector(state);
   const isDebugMode = debugModeSelector(state);
-  const level = levelSelector(state);
   let levelIndex = 0;
   if (testItemIdsArraySelector(state).length >= 0) {
     levelIndex = !ownProps.itemId
       ? testItemIdsArraySelector(state).length - 1
       : testItemIdsArraySelector(state).length;
   }
-  const page =
-    (ownProps.ownLinkParams && ownProps.ownLinkParams.page) || getNextPage(level, isDebugMode);
+  let nextPage;
+  if (ownProps.itemId) {
+    const level = levelSelector(state);
+    nextPage = getNextPage(level, isDebugMode);
+  } else {
+    nextPage = isDebugMode ? PROJECT_USERDEBUG_TEST_ITEM_PAGE : TEST_ITEM_PAGE;
+  }
+  const page = (ownProps.ownLinkParams && ownProps.ownLinkParams.page) || nextPage;
 
   return createLink(
     testItemIds,
