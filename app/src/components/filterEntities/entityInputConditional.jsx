@@ -28,6 +28,7 @@ export class EntityInputConditional extends Component {
     }),
     maxLength: PropTypes.number,
     customProps: PropTypes.object,
+    error: PropTypes.string,
   };
   static defaultProps = {
     title: '',
@@ -38,6 +39,7 @@ export class EntityInputConditional extends Component {
     placeholder: messages.placeholder,
     maxLength: 128,
     customProps: {},
+    error: null,
   };
 
   render() {
@@ -52,10 +54,11 @@ export class EntityInputConditional extends Component {
       onChange,
       maxLength,
       placeholder,
+      error,
       ...rest
     } = this.props;
     return (
-      <FieldErrorHint {...rest}>
+      <FieldErrorHint error={error} {...rest}>
         <FieldFilterEntity
           title={title}
           smallSize={smallSize}
@@ -63,10 +66,12 @@ export class EntityInputConditional extends Component {
           onRemove={onRemove}
         >
           <InputConditional
+            error={error}
             maxLength={maxLength}
             placeholder={intl.formatMessage(messages.placeholder)}
             onChange={onChange}
             value={value}
+            touched
             {...customProps}
           />
         </FieldFilterEntity>
