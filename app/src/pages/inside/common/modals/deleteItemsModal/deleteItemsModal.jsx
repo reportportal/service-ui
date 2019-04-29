@@ -24,6 +24,7 @@ export class DeleteItemsModal extends Component {
       namespace: PropTypes.string,
       currentLaunch: PropTypes.object,
       eventsInfo: PropTypes.object,
+      warningMessage: PropTypes.string,
     }),
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
@@ -46,7 +47,7 @@ export class DeleteItemsModal extends Component {
 
   render() {
     const { intl } = this.props;
-    const { header, mainContent, eventsInfo } = this.props.data;
+    const { header, mainContent, eventsInfo, warningMessage } = this.props.data;
     const okButton = {
       text: intl.formatMessage(COMMON_LOCALE_KEYS.DELETE),
       danger: true,
@@ -63,6 +64,7 @@ export class DeleteItemsModal extends Component {
         okButton={okButton}
         cancelButton={cancelButton}
         closeIconEventInfo={eventsInfo.closeIcon}
+        warningMessage={warningMessage}
       >
         <p className={cx('message')}>{Parser(mainContent)}</p>
       </ModalLayout>

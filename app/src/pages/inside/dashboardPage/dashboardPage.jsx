@@ -113,18 +113,24 @@ export class DashboardPage extends Component {
       intl,
       tracking,
     } = this.props;
+    const warningMessage =
+      item.owner === userId ? '' : intl.formatMessage(messages.deleteModalWarningMessage);
     tracking.trackEvent(DASHBOARD_PAGE_EVENTS.DELETE_ICON_DASHBOARD_TILE);
     showModal({
-      id: 'dashboardDeleteModal',
+      id: 'deleteItemsModal',
       data: {
-        message: intl.formatMessage(messages.deleteModalConfirmationText, { name: item.name }),
-        dashboardItem: item,
-        onSubmit: deleteDashboard,
-        title: intl.formatMessage(messages.deleteModalTitle),
-        isCurrentUser: item.owner === userId,
-        submitText: intl.formatMessage(messages.deleteModalSubmitButtonText),
-        warningMessage: intl.formatMessage(messages.deleteModalWarningMessage),
-        cancelText: intl.formatMessage(messages.modalCancelButtonText),
+        items: [item],
+        onConfirm: () => deleteDashboard(item),
+        header: intl.formatMessage(messages.deleteModalTitle),
+        mainContent: intl.formatMessage(messages.deleteModalConfirmationText, {
+          name: `'<b>${item.name}</b>'`,
+        }),
+        warningMessage,
+        eventsInfo: {
+          closeIcon: DASHBOARD_PAGE_EVENTS.CLOSE_ICON_DELETE_DASHBOARD_MODAL,
+          cancelBtn: DASHBOARD_PAGE_EVENTS.CANCEL_BTN_DELETE_DASHBOARD_MODAL,
+          deleteBtn: DASHBOARD_PAGE_EVENTS.DELETE_BTN_DELETE_DASHBOARD_MODAL,
+        },
       },
     });
   };
