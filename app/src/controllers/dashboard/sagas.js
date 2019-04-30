@@ -1,9 +1,17 @@
 import { all, call, put, select, takeEvery } from 'redux-saga/effects';
+import { redirect } from 'redux-first-router';
 import { URLS } from 'common/urls';
 import { fetchDataAction } from 'controllers/fetch';
 import { activeProjectSelector, userIdSelector } from 'controllers/user';
 import { hideModalAction } from 'controllers/modal';
 import { fetch, setStorageItem } from 'common/utils';
+import {
+  PROJECT_DASHBOARD_ITEM_PAGE,
+  PROJECT_DASHBOARD_PAGE,
+  activeDashboardIdSelector,
+  pageSelector,
+  projectIdSelector,
+} from 'controllers/pages';
 import {
   ADD_DASHBOARD,
   CHANGE_VISIBILITY_TYPE,
@@ -14,6 +22,7 @@ import {
   REMOVE_DASHBOARD,
   UPDATE_DASHBOARD,
   UPDATE_DASHBOARD_WIDGETS,
+  REMOVE_DASHBOARD_SUCCESS,
 } from './constants';
 import { querySelector } from './selectors';
 import {
@@ -21,7 +30,6 @@ import {
   deleteDashboardSuccessAction,
   updateDashboardItemSuccessAction,
 } from './actionCreators';
-import { PROJECT_DASHBOARD_ITEM_PAGE, activeDashboardIdSelector } from '../pages';
 
 function* fetchDashboards({ payload: params }) {
   const activeProject = yield select(activeProjectSelector);
@@ -93,6 +101,23 @@ function* removeDashboard({ payload: id }) {
   yield put(deleteDashboardSuccessAction(id));
 }
 
+function* redirectAfterDelete({ payload: dashboardId }) {
+  const activePage = yield select(pageSelector);
+  if (activePage === PROJECT_DASHBOARD_ITEM_PAGE) {
+    const activeDashboardId = yield select(activeDashboardIdSelector);
+    if (activeDashboardId === dashboardId) {
+      const activeProject = yield select(projectIdSelector);
+      yield put(hideModalAction());
+      yield put(
+        redirect({
+          type: PROJECT_DASHBOARD_PAGE,
+          payload: { projectId: activeProject },
+        }),
+      );
+    }
+  }
+}
+
 function changeVisibilityType({ payload: visibilityType }) {
   setStorageItem(DASHBOARDS_VISIBILITY_TYPE_STORAGE_KEY, visibilityType);
 }
@@ -106,5 +131,6 @@ export function* dashboardSagas() {
     yield takeEvery(UPDATE_DASHBOARD_WIDGETS, updateDashboardWidgets),
     yield takeEvery(REMOVE_DASHBOARD, removeDashboard),
     yield takeEvery(CHANGE_VISIBILITY_TYPE, changeVisibilityType),
+    yield takeEvery(REMOVE_DASHBOARD_SUCCESS, redirectAfterDelete),
   ]);
 }
