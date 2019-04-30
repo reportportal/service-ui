@@ -1,8 +1,13 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import Parser from 'html-react-parser';
+import classNames from 'classnames/bind';
 import { ModalLayout, withModal } from 'components/main/modal';
 import { confirmModalAction } from 'controllers/modal';
+import styles from './confirmationModal.scss';
+
+const cx = classNames.bind(styles);
 
 @withModal('confirmationModal')
 @connect(null, {
@@ -37,7 +42,7 @@ export class ConfirmationModal extends Component {
           text: cancelText,
         }}
       >
-        <div>{message}</div>
+        <p className={cx('message')}>{Parser(message)}</p>
       </ModalLayout>
     );
   }

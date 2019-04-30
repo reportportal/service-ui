@@ -35,6 +35,11 @@ const messages = defineMessages({
     id: 'projectsAndRolesColumn.unAssignTitle',
     defaultMessage: 'Unassign user from the project',
   },
+  unassignModalText: {
+    id: 'UnassignModal.modalText',
+    defaultMessage:
+      "Are you sure you want to unassign user '<b>{user}</b>' from the project '<b>{project}</b>'?",
+  },
   addProject: {
     id: 'projectsAndRolesColumn.addProject',
     defaultMessage: '+ Add Project',
@@ -167,15 +172,21 @@ export class ProjectsAndRolesColumn extends Component {
   countHiddenProjects = () => this.getHiddenProjects().length;
   showHiddenCounter = () => this.countHiddenProjects() > 0;
   showUnassignModal = (project, user) => {
-    const { tracking } = this.props;
+    const { tracking, intl } = this.props;
     tracking.trackEvent(ADMIN_ALL_USERS_PAGE_MODAL_EVENTS.UNASSIGN_BTN_CLICK);
     const unassignAction = () => this.unassignAction(project, user);
     this.props.showModalAction({
-      id: 'unassignModal',
+      id: 'confirmationModal',
       data: {
-        unassignAction,
-        user,
-        project,
+        message: intl.formatMessage(messages.unassignModalText, {
+          user,
+          project,
+        }),
+        onConfirm: unassignAction,
+        title: intl.formatMessage(messages.unAssignTitle),
+        confirmText: intl.formatMessage(messages.btnTitle),
+        cancelText: intl.formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+        dangerConfirm: true,
       },
     });
   };
