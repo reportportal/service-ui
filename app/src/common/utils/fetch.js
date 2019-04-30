@@ -1,4 +1,5 @@
 import axios, { CancelToken } from 'axios';
+import { logoutAction } from 'controllers/auth';
 
 export const ERROR_CANCELED = 'REQUEST_CANCELED';
 export const ERROR_UNAUTHORIZED = 'UNAUTHORIZED';
@@ -35,4 +36,16 @@ export const fetch = (url, params = {}) => {
 
 export const updateToken = (newToken) => {
   axios.defaults.headers.common.Authorization = newToken;
+};
+
+export const initAuthInterceptor = (store) => {
+  axios.interceptors.response.use(
+    (response) => response,
+    (error) => {
+      if (error.response && error.response.status === 401) {
+        store.dispatch(logoutAction());
+      }
+      return Promise.reject(error);
+    },
+  );
 };
