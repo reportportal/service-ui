@@ -28,6 +28,7 @@ export class Legend extends Component {
     onMouseOut: PropTypes.func,
     customBlock: PropTypes.node,
     uncheckedLegendItems: PropTypes.array,
+    className: PropTypes.string,
   };
 
   static defaultProps = {
@@ -41,6 +42,7 @@ export class Legend extends Component {
     onMouseOut: () => {},
     customBlock: null,
     uncheckedLegendItems: [],
+    className: null,
   };
 
   onClick = (e) => {
@@ -103,10 +105,10 @@ export class Legend extends Component {
   getTarget = ({ target }) => (target.getAttribute('data-id') ? target : target.parentElement);
 
   render() {
-    const { customBlock } = this.props;
+    const { customBlock, className } = this.props;
 
     return (
-      <div className={cx('legend')}>
+      <div className={className || cx('legend')}>
         <ScrollWrapper autoHide autoHeight autoHeightMax={65} hideTracksWhenNotNeeded>
           <div className={cx('content-wrapper')}>
             {customBlock ? (
