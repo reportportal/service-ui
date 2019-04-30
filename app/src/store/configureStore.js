@@ -5,6 +5,7 @@ import createSagaMiddleware from 'redux-saga';
 import queryString from 'qs';
 import reduxThunk from 'redux-thunk';
 
+import { initAuthInterceptor } from 'common/utils/fetch';
 import routesMap, { onBeforeRouteChange } from 'routes/routesMap';
 import reducers from './reducers';
 import { rootSagas } from './rootSaga';
@@ -24,6 +25,8 @@ export const configureStore = (history, preloadedState) => {
   const middlewares = applyMiddleware(reduxThunk, saga, middleware);
   const enhancers = composeEnhancers(enhancer, middlewares);
   const store = createStore(rootReducer, preloadedState, enhancers);
+
+  initAuthInterceptor(store);
 
   if (module.hot && process.env.NODE_ENV === 'development') {
     module.hot.accept('./reducers', () => {
