@@ -5,7 +5,7 @@ import ReactDOMServer from 'react-dom/server';
 import classNames from 'classnames/bind';
 import { C3Chart } from 'components/widgets/charts/common/c3chart';
 import { messages as commonMessages } from '../common/messages';
-import { Legend } from '../common/legend';
+import { CumulativeChartLegend } from './cumulativeChartLegend';
 import styles from './cumulativeTrendChart.scss';
 import { CumulativeTrendTooltip } from './tooltip';
 import { generateChartDataParams, generateChartColors, getColorForKey } from './generateConfig';
@@ -46,6 +46,9 @@ export class CumulativeTrendChart extends Component {
 
   state = {
     isConfigReady: false,
+    defectTypes: false,
+    separate: false,
+    percentage: false,
   };
 
   componentDidMount() {
@@ -99,17 +102,68 @@ export class CumulativeTrendChart extends Component {
     this.chart.toggle(id);
   };
 
-  getConfig = () => {
+  onChangeFocusType = (value) => {
+    this.setState({
+      isConfigReady: false,
+      defectTypes: value,
+    });
+
+    this.getConfig({ defectTypes: value });
+  };
+
+  onChangeTotals = () => {
+    // to be implemented
+  };
+
+  onChangeSeparate = (value) => {
+    this.setState({
+      isConfigReady: false,
+      separate: value,
+    });
+
+    this.getConfig({ separate: value });
+  };
+
+  onChangePercentage = (value) => {
+    this.setState({
+      isConfigReady: false,
+      percentage: value,
+    });
+
+    this.getConfig({ percentage: value });
+  };
+
+  getPosition = (d, width, height) => {
+    const rect = this.node.getBoundingClientRect();
+    const top = this.y - rect.top - height;
+    let left = this.x - rect.left - width / 2;
+
+    if (left < 0) {
+      left = 0;
+    } else if (left + width > rect.width) {
+      left = rect.width - width;
+    }
+
+    return {
+      top: top - 8,
+      left,
+    };
+  };
+
+  getConfig = (options = {}) => {
     const { widget, isPreview, container } = this.props;
 
     if (!widget || !widget.content || !widget.content.result) {
       return;
     }
 
-    const { chartDataColumns, dataGroupNames } = generateChartDataParams(widget);
+    const { chartDataColumns, categoryNames, columnGroups } = generateChartDataParams(widget, {
+      ...this.state,
+      ...options,
+    });
     const colors = generateChartColors(widget);
 
-    this.dataGroupNames = dataGroupNames;
+    this.categoryNames = categoryNames;
     this.height = container.offsetHeight;
     this.width = container.offsetWidth;
 
@@ -119,12 +173,13 @@ export class CumulativeTrendChart extends Component {
         type: 'bar',
         onclick: this.onChartClick,
         colors,
+        groups: columnGroups,
       },
       axis: {
         x: {
           show: !isPreview,
           type: 'category',
-          categories: this.dataGroupNames.map((category) => {
+          categories: this.categoryNames.map((category) => {
             const prefix = widget.contentParameters.widgetOptions.prefix;
             return category.indexOf(prefix) > -1 ? category.split(`${prefix}:`)[1] : category;
           }),
@@ -166,23 +221,6 @@ export class CumulativeTrendChart extends Component {
     });
   };
 
-  getPosition = (d, width, height) => {
-    const rect = this.node.getBoundingClientRect();
-    const top = this.y - rect.top - height;
-    let left = this.x - rect.left - width / 2;
-
-    if (left < 0) {
-      left = 0;
-    } else if (left + width > rect.width) {
-      left = rect.width - width;
-    }
-
-    return {
-      top: top - 8,
-      left,
-    };
-  };
-
   getCoords = ({ pageX, pageY }) => {
     this.x = pageX;
     this.y = pageY;
@@ -205,17 +243,17 @@ export class CumulativeTrendChart extends Component {
 
   renderContents = (d) => {
     const index = d[0].index;
-    const groupName = this.dataGroupNames[index];
+    const groupName = this.categoryNames[index];
     const columns = this.config.data.columns;
     const itemsData = columns.map((column) => {
       const id = column[0];
       const message = messages[id];
-      const value = column[index + 1] || 0;
+      const value = (column[index + 1] || 0) + (this.state.percentage ? '%' : '');
 
       return {
         id,
         color: getColorForKey(id),
-        name: this.props.intl.formatMessage(message),
+        name: message ? this.props.intl.formatMessage(message) : id,
         value,
       };
     });
@@ -230,17 +268,22 @@ export class CumulativeTrendChart extends Component {
     const classes = cx('cumulative-trend-chart', {
       'preview-view': isPreview,
     });
+
     return (
       <div className={classes}>
         {this.state.isConfigReady && (
           <C3Chart config={this.config} onChartCreated={this.onChartCreated}>
             {!isPreview && (
-              <Legend
-                items={Object.getOwnPropertyNames(this.config.data.colors)}
+              <CumulativeChartLegend
+                items={this.config.data.columns.map((item) => item[0])}
                 uncheckedLegendItems={uncheckedLegendItems}
                 onClick={this.onClickLegendItem}
                 onMouseOver={this.onMouseOver}
                 onMouseOut={this.onMouseOut}
+                onChangeFocusType={this.onChangeFocusType}
+                onChangeTotals={this.onChangeTotals}
+                onChangeSeparate={this.onChangeSeparate}
+                onChangePercentage={this.onChangePercentage}
               />
             )}
           </C3Chart>

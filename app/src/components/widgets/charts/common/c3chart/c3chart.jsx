@@ -49,10 +49,8 @@ export class C3Chart extends React.Component {
   }
 
   updateChart(config) {
-    if (!this.chart) {
-      this.chart = this.generateChart(this.node, config);
-      this.props.onChartCreated(this.chart, this.node);
-    }
+    this.chart = this.generateChart(this.node, config);
+    this.props.onChartCreated(this.chart, this.node);
 
     if (config.unloadBeforeLoad) {
       this.unloadData();
