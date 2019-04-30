@@ -5,6 +5,7 @@ import { injectIntl, intlShape } from 'react-intl';
 import classNames from 'classnames/bind';
 import IconDelete from 'common/img/circle-cross-icon-inline.svg';
 import IconEdit from 'common/img/pencil-icon-inline.svg';
+import { formatAttribute } from 'common/utils/attributeUtils';
 import {
   DEFAULT_CASE_CONFIG,
   ATTRIBUTES_FIELD_KEY,
@@ -36,10 +37,7 @@ const ruleFieldsConfig = {
   [ATTRIBUTES_FIELD_KEY]: {
     title: messages.attributesLabel,
     dataFormatter: (data) =>
-      data.reduce(
-        (acc, { key, value }) => `${acc.length ? `${acc}, ` : ''}${key ? `${key}:` : ''}${value}`,
-        '',
-      ),
+      data.reduce((acc, item) => `${acc.length ? `${acc}, ` : ''}${formatAttribute(item)}`, ''),
   },
 };
 
