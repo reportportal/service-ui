@@ -17,9 +17,9 @@ export const LAUNCH_CASES = {
 };
 
 export const DEFAULT_CASE_CONFIG = {
-  recipients: [],
-  informOwner: true,
-  sendCase: LAUNCH_CASES.ALWAYS,
-  launchNames: [],
-  attributes: [],
+  [RECIPIENTS_FIELD_KEY]: [],
+  [INFORM_OWNER_FIELD_KEY]: true,
+  [SEND_CASE_FIELD_KEY]: LAUNCH_CASES.ALWAYS,
+  [LAUNCH_NAMES_FIELD_KEY]: [],
+  [ATTRIBUTES_FIELD_KEY]: [],
 };
