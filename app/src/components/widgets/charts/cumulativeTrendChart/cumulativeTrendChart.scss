@@ -1,4 +1,13 @@
 .cumulative-trend-chart {
+  display: flex;
+  top: 0;
+  justify-content: flex-end;
+  width: 100%;
+
+  &:not(.preview-view) {
+    position: absolute;
+  }
+
   :global {
     svg {
       .c3-axis {
@@ -37,7 +46,7 @@
         border-left: 6px solid transparent;
         border-right: 6px solid transparent;
       }
-      
+
       &:before {
         content: '';
         position: absolute;
@@ -51,5 +60,28 @@
         border-top: 8px solid $COLOR--gray-80;
       }
     }
+
+    .c3-target-narrow {
+      width: 15px;
+      margin-left: 10px;
+
+      .c3-bars {
+        width: 15px;
+        margin-left: 10px;
+      }
+    }
   }
+
+  .controls {
+    padding-right: 30px;
+    display: flex;
+  }
+
+  .control {
+    margin-left: 20px;
+  }
+}
+
+.legend {
+  padding-top: 8px;
 }
