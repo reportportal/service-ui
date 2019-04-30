@@ -81,7 +81,7 @@ export class WidgetsGrid extends Component {
   }
 
   componentDidUpdate({ dashboard }) {
-    if (this.props.dashboard.id !== dashboard.id) {
+    if (this.props.dashboard.id && this.props.dashboard.id !== dashboard.id) {
       this.props.fetchDashboardAction();
     }
   }

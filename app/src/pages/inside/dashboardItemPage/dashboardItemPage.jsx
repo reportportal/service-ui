@@ -16,6 +16,8 @@ import {
   dashboardFullScreenModeSelector,
   changeFullScreenModeAction,
   toggleFullScreenModeAction,
+  deleteDashboardAction,
+  updateDashboardAction,
 } from 'controllers/dashboard';
 import { userInfoSelector, activeProjectSelector } from 'controllers/user';
 import { PROJECT_DASHBOARD_PAGE } from 'controllers/pages';
@@ -70,6 +72,20 @@ const messages = defineMessages({
     id: 'DashboardItemPage.sharedWidgetCaption',
     defaultMessage: 'Dashboard has been shared by',
   },
+  deleteModalWarningMessage: {
+    id: 'DashboardPage.modal.deleteModalWarningMessage',
+    defaultMessage:
+      'You are going to delete not your own dashboard. This may affect other users information on the project.',
+  },
+  deleteModalTitle: {
+    id: 'DashboardPage.modal.deleteModalTitle',
+    defaultMessage: 'Delete Dashboard',
+  },
+  deleteModalConfirmationText: {
+    id: 'DashboardPage.modal.deleteModalConfirmationText',
+    defaultMessage:
+      "Are you sure you want to delete dashboard '<b>{name}</b>'? It will no longer exist.",
+  },
 });
 
 @injectIntl
@@ -88,6 +104,8 @@ const messages = defineMessages({
     hideScreenLockAction,
     changeFullScreenModeAction,
     toggleFullScreenModeAction,
+    deleteDashboard: deleteDashboardAction,
+    editDashboard: updateDashboardAction,
   },
 )
 @track()
@@ -109,6 +127,8 @@ export class DashboardItemPage extends Component {
     fullScreenMode: PropTypes.bool,
     changeFullScreenModeAction: PropTypes.func.isRequired,
     toggleFullScreenModeAction: PropTypes.func.isRequired,
+    deleteDashboard: PropTypes.func.isRequired,
+    editDashboard: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
@@ -155,6 +175,53 @@ export class DashboardItemPage extends Component {
         this.props.hideScreenLockAction();
         this.props.showNotification({ message: err.message, type: NOTIFICATION_TYPES.ERROR });
       });
+  };
+
+  onDeleteDashboard = () => {
+    const {
+      deleteDashboard,
+      userInfo: { userId },
+      intl,
+      dashboard,
+    } = this.props;
+    const warningMessage =
+      dashboard.owner === userId ? '' : intl.formatMessage(messages.deleteModalWarningMessage);
+    this.props.showModalAction({
+      id: 'deleteItemsModal',
+      data: {
+        items: [dashboard],
+        onConfirm: () => deleteDashboard(dashboard),
+        header: intl.formatMessage(messages.deleteModalTitle),
+        mainContent: intl.formatMessage(messages.deleteModalConfirmationText, {
+          name: `'<b>${dashboard.name}</b>'`,
+        }),
+        warningMessage,
+        eventsInfo: {
+          closeIcon: DASHBOARD_PAGE_EVENTS.CLOSE_ICON_DELETE_DASHBOARD_MODAL,
+          cancelBtn: DASHBOARD_PAGE_EVENTS.CANCEL_BTN_DELETE_DASHBOARD_MODAL,
+          deleteBtn: DASHBOARD_PAGE_EVENTS.DELETE_BTN_DELETE_DASHBOARD_MODAL,
+        },
+      },
+    });
+  };
+
+  onEditDashboardItem = () => {
+    const { showModalAction: showModal, editDashboard, dashboard } = this.props;
+    showModal({
+      id: 'dashboardAddEditModal',
+      data: {
+        dashboardItem: dashboard,
+        onSubmit: editDashboard,
+        type: 'edit',
+        eventsInfo: {
+          closeIcon: DASHBOARD_PAGE_EVENTS.CLOSE_ICON_EDIT_DASHBOARD_MODAL,
+          changeDescription: DASHBOARD_PAGE_EVENTS.ENTER_DESCRIPTION_EDIT_DASHBOARD_MODAL,
+          shareSwitcher: DASHBOARD_PAGE_EVENTS.SHARE_SWITCHER_EDIT_DASHBOARD_MODAL,
+          cancelBtn: DASHBOARD_PAGE_EVENTS.CANCEL_BTN_EDIT_DASHBOARD_MODAL,
+          submitBtn: DASHBOARD_PAGE_EVENTS.UPDATE_BTN_EDIT_DASHBOARD_MODAL,
+        },
+      },
+    });
   };
 
   getBreadcrumbs = () => {
@@ -262,7 +329,9 @@ export class DashboardItemPage extends Component {
               </div>
               <div className={cx('nav-right')}>
                 {isOwner && (
-                  <GhostButton icon={EditIcon}>{formatMessage(messages.editDashboard)}</GhostButton>
+                  <GhostButton icon={EditIcon} onClick={this.onEditDashboardItem}>
+                    {formatMessage(messages.editDashboard)}
+                  </GhostButton>
                 )}
 
                 <GhostButton icon={FullscreenIcon} onClick={this.toggleFullscreen}>
@@ -270,7 +339,9 @@ export class DashboardItemPage extends Component {
                 </GhostButton>
 
                 {isOwner && (
-                  <GhostButton icon={CancelIcon}>{formatMessage(messages.delete)}</GhostButton>
+                  <GhostButton icon={CancelIcon} onClick={this.onDeleteDashboard}>
+                    {formatMessage(messages.delete)}
+                  </GhostButton>
                 )}
               </div>
             </div>
