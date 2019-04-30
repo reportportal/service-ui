@@ -123,7 +123,7 @@ export class DashboardPage extends Component {
         onConfirm: () => deleteDashboard(item),
         header: intl.formatMessage(messages.deleteModalTitle),
         mainContent: intl.formatMessage(messages.deleteModalConfirmationText, {
-          name: `'<b>${item.name}</b>'`,
+          name: item.name,
         }),
         warningMessage,
         eventsInfo: {

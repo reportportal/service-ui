@@ -7,6 +7,7 @@ import { GhostButton } from 'components/buttons/ghostButton';
 import { showModalAction } from 'controllers/modal';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { canAssignUnassignInternalUser } from 'common/utils/permissions';
 import { projectIdSelector } from 'controllers/pages';
 import {
@@ -47,6 +48,19 @@ const messages = defineMessages({
   unAssignTitle: {
     id: 'UnassignButton.unAssignTitle',
     defaultMessage: 'Unassign user from the project',
+  },
+  unassign: {
+    id: 'UnassignModal.unassign',
+    defaultMessage: 'Unassign',
+  },
+  modalHeader: {
+    id: 'UnassignModal.modalHeader',
+    defaultMessage: 'Unassign user',
+  },
+  modalText: {
+    id: 'UnassignModal.modalText',
+    defaultMessage:
+      "Are you sure you want to unassign user '<b>{user}</b>' from the project '<b>{project}</b>'?",
   },
 });
 
@@ -103,14 +117,20 @@ export class UnassignButton extends Component {
     this.props.entryType === 'PERSONAL' &&
     this.props.projectId === `${this.props.userId.replace('.', '_')}_personal`;
   showUnassignModal = () => {
-    const { tracking } = this.props;
+    const { tracking, intl, userId, projectId } = this.props;
     tracking.trackEvent(MEMBERS_PAGE_EVENTS.UNASSIGN_BTN_CLICK);
     this.props.showModalAction({
-      id: 'unassignModal',
+      id: 'confirmationModal',
       data: {
-        unassignAction: this.unassignAction,
-        user: this.props.userId,
-        project: this.props.projectId,
+        message: intl.formatMessage(messages.modalText, {
+          user: userId,
+          project: projectId,
+        }),
+        onConfirm: this.unassignAction,
+        title: intl.formatMessage(messages.modalHeader),
+        confirmText: intl.formatMessage(messages.unassign),
+        cancelText: intl.formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+        dangerConfirm: true,
       },
     });
   };
