@@ -143,6 +143,14 @@ const messages = defineMessages({
     id: 'ProjectsPage.projectDuplicateHint',
     defaultMessage: 'Project with the same name already exists in system',
   },
+  btsUrlHint: {
+    id: 'JiraConnectionFormFields.btsUrlHint',
+    defaultMessage: 'Please provide a valid BTS link',
+  },
+  btsProjectHint: {
+    id: 'JiraConnectionFormFields.btsProjectHint',
+    defaultMessage: 'Project name should have size from 1 to 55',
+  },
 });
 
 @injectIntl
