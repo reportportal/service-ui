@@ -1,0 +1,7 @@
+.jira-settings {
+  display: flex;
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    flex-direction: column;
+  }
+}

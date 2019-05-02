@@ -225,4 +225,7 @@ export const URLS = {
     `${urlBase}integration/${projectid}/${integrationId}`,
   removeProjectIntegrationByType: (projectid, type) =>
     `${urlBase}integration/${projectid}/all/${type}`,
+
+  connectToBtsIntegration: (projectid, integrationId) =>
+    `${urlBase}bts/${projectid}/${integrationId}/connect`,
 };

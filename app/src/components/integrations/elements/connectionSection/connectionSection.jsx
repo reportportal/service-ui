@@ -45,7 +45,6 @@ const messages = defineMessages({
 export class ConnectionSection extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
-    projectId: PropTypes.string.isRequired,
     integrationId: PropTypes.number.isRequired,
     onRemoveConfirmation: PropTypes.func.isRequired,
     showModalAction: PropTypes.func.isRequired,
