@@ -208,6 +208,7 @@ export class Widget extends Component {
               onRefresh={this.fetchWidget}
               onDelete={this.showDeleteWidgetModal}
               onEdit={this.showEditWidgetModal}
+              customClass={cx('common-control')}
             />
           </div>
           <div ref={this.getWidgetNode} className={cx('widget', { hidden: !visible })}>

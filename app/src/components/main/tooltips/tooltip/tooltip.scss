@@ -26,7 +26,8 @@
   }
 
   &.no-arrow {
-    &::before, &::after  {
+    &::before,
+    &::after {
       display: none;
     }
   }
@@ -54,10 +55,10 @@
   padding: 15px;
   border: 1px solid $COLOR--gray-80;
   background-color: $COLOR--white-two;
-  box-shadow: 0 1px 3px 0 rgba(0,0,0,.2);
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .2);
   font-family: $FONT-REGULAR;
   font-size: 13px;
   color: $COLOR--charcoal-grey;
   word-wrap: break-word;
+  white-space: pre-wrap;
 }
-
