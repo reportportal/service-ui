@@ -85,6 +85,7 @@ export class WidgetHeader extends Component {
     onRefresh: PropTypes.func,
     onDelete: PropTypes.func,
     onEdit: PropTypes.func,
+    customClass: PropTypes.string,
   };
   static defaultProps = {
     data: {},
@@ -93,10 +94,21 @@ export class WidgetHeader extends Component {
     onRefresh: () => {},
     onDelete: () => {},
     onEdit: () => {},
+    customClass: null,
   };
 
   render() {
-    const { intl, data, userId, userRole, projectRole, onRefresh, onDelete, onEdit } = this.props;
+    const {
+      intl,
+      data,
+      userId,
+      userRole,
+      projectRole,
+      onRefresh,
+      onDelete,
+      onEdit,
+      customClass,
+    } = this.props;
     return (
       <div className={cx('widget-header')}>
         <div className={cx('info-block')}>
@@ -137,18 +149,20 @@ export class WidgetHeader extends Component {
             </div>
           </div>
         </div>
-        <div className={cx('controls-block')}>
-          <div className={cx('control')} onClick={onEdit}>
-            {data.owner === userId && Parser(PencilIcon)}
-          </div>
-          <div className={cx('control')} onClick={onRefresh}>
-            {Parser(RefreshIcon)}
-          </div>
-          {canDeleteWidget(userRole, projectRole, userId === data.owner) && (
-            <div className={cx('control')} onClick={onDelete}>
-              {Parser(CrossIcon)}
+        <div className={customClass}>
+          <div className={cx('controls-block')}>
+            <div className={cx('control')} onClick={onEdit}>
+              {data.owner === userId && Parser(PencilIcon)}
             </div>
-          )}
+            <div className={cx('control')} onClick={onRefresh}>
+              {Parser(RefreshIcon)}
+            </div>
+            {canDeleteWidget(userRole, projectRole, userId === data.owner) && (
+              <div className={cx('control')} onClick={onDelete}>
+                {Parser(CrossIcon)}
+              </div>
+            )}
+          </div>
         </div>
       </div>
     );
