@@ -24,7 +24,6 @@ import { suitesSelector, suitePaginationSelector } from 'controllers/suite';
 import { testsSelector, testPaginationSelector } from 'controllers/test';
 import { stepsSelector, stepPaginationSelector } from 'controllers/step';
 import { defectTypesSelector } from 'controllers/project';
-
 import { DEFAULT_SORTING } from './constants';
 import {
   createLink,
@@ -70,6 +69,10 @@ export const itemsSelector = (state) => {
     default:
       return [];
   }
+};
+const testItemSelector = (state, id) => {
+  const items = itemsSelector(state);
+  return items.find((item) => item.id === id);
 };
 
 
@@ -164,14 +167,18 @@ export const breadcrumbsSelector = createSelector(
 export const nameLinkSelector = (state, ownProps) => {
   const payload =
     (ownProps.ownLinkParams && ownProps.ownLinkParams.payload) || payloadSelector(state);
-  const testItemIds =
-    (ownProps.ownLinkParams && ownProps.testItemIds) || testItemIdsSelector(state);
+  let testItemIds = ownProps.testItemIds || testItemIdsSelector(state);
   const isDebugMode = debugModeSelector(state);
   const level = levelSelector(state);
   let query = pagePropertiesSelector(state);
   const page =
     (ownProps.ownLinkParams && ownProps.ownLinkParams.page) || getNextPage(level, isDebugMode);
-
+  const test = testItemSelector(state, ownProps.itemId);
+  if (test && test.path) {
+    testItemIds = [
+      ...new Set([...testItemIds.split('/'), ...test.path.split('.').slice(0, -1)]),
+    ].join('/');
+  }
   if (ownProps.uniqueId) {
     query = {
       ...query,
