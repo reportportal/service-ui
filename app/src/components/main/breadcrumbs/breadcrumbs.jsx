@@ -44,13 +44,41 @@ export class Breadcrumbs extends Component {
     );
   };
 
+  getListViewIndex = () => {
+    const { descriptors } = this.props;
+    return descriptors.findIndex((item) => item.listView);
+  };
+  isListView = () => this.getListViewIndex() >= 0;
+  isLostLaunch = () => {
+    const { descriptors } = this.props;
+    return descriptors[1] && descriptors[1].lost;
+  };
   toggleExpand = () => {
     this.props.togglerEventInfo && this.props.tracking.trackEvent(this.props.togglerEventInfo);
     this.setState({ expanded: !this.state.expanded });
   };
-
+  renderSeparator = (index) => {
+    const listViewIndex = this.getListViewIndex();
+    const isOpenListView = index - 1 === listViewIndex;
+    if (this.isListView() && isOpenListView) {
+      return <div className={cx('bracket')}>(</div>;
+    }
+    if (index > 0) {
+      return <div className={cx('separator')}>{Parser(RightArrowIcon)}</div>;
+    }
+    return null;
+  };
+  renderCloseListView = (index) => {
+    const { descriptors } = this.props;
+    const listViewIndex = this.getListViewIndex();
+    const isBeforeLastItem = descriptors.length - 2 === index && listViewIndex < index;
+    if (this.isListView() && isBeforeLastItem) {
+      return <div className={cx('bracket', 'bracket-close')}>)</div>;
+    }
+    return null;
+  };
   render() {
-    const isLostLaunch = this.props.descriptors[1] && this.props.descriptors[1].lost;
+    const isLostLaunch = this.isLostLaunch();
     return (
       <div className={cx('breadcrumbs')}>
         <div className={cx('toggler-container')}>
@@ -63,11 +91,12 @@ export class Breadcrumbs extends Component {
         {!isLostLaunch ? (
           this.props.descriptors.map((descriptor, i) => (
             <Fragment key={descriptor.id}>
-              {i > 0 && <div className={cx('separator')}>{Parser(RightArrowIcon)}</div>}
+              {this.renderSeparator(i)}
               <Breadcrumb
                 descriptor={descriptor}
                 onClick={(idx) => this.onClickBreadcrumbItem(idx)}
               />
+              {this.renderCloseListView(i)}
             </Fragment>
           ))
         ) : (
