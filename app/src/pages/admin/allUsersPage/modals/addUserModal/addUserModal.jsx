@@ -91,11 +91,12 @@ const generatePassword = () => {
 @reduxForm({
   form: 'addUserForm',
   initialValues: { accountRole: USER, projectRole: MEMBER },
-  validate: ({ login, fullName, email, password }) => ({
+  validate: ({ login, fullName, email, password, defaultProject }) => ({
     login: (!login || !validate.login(login)) && 'loginHint',
     fullName: (!fullName || !validate.name(fullName)) && 'nameHint',
     email: (!email || !validate.email(email)) && 'emailHint',
     password: (!password || !validate.password(password)) && 'passwordHint',
+    defaultProject: !defaultProject && 'requiredFieldHint',
   }),
 })
 @connect((state) => ({
@@ -168,7 +169,7 @@ export class AddUserModal extends Component {
           <ModalField label={intl.formatMessage(messages.userLoginLabel)} labelWidth={LABEL_WIDTH}>
             <FieldProvider name="login" type="text">
               <FieldErrorHint>
-                <Input maxLength={128} />
+                <Input maxLength={'128'} />
               </FieldErrorHint>
             </FieldProvider>
           </ModalField>
@@ -178,14 +179,14 @@ export class AddUserModal extends Component {
           >
             <FieldProvider name="fullName" type="text">
               <FieldErrorHint>
-                <Input maxLength={128} />
+                <Input maxLength={'256'} />
               </FieldErrorHint>
             </FieldProvider>
           </ModalField>
           <ModalField label={intl.formatMessage(messages.userEmailLabel)} labelWidth={LABEL_WIDTH}>
             <FieldProvider name="email" type="email">
               <FieldErrorHint>
-                <Input maxLength={128} />
+                <Input maxLength={'128'} />
               </FieldErrorHint>
             </FieldProvider>
           </ModalField>
@@ -209,16 +210,14 @@ export class AddUserModal extends Component {
               format={this.formatValueProject}
               parse={this.parseValueProject}
             >
-              <FieldErrorHint>
-                <InputTagsSearch
-                  placeholder={intl.formatMessage(messages.projectNamePlaceholder)}
-                  focusPlaceholder={intl.formatMessage(messages.projectNameFocusPlaceholder)}
-                  uri={URLS.projectNameSearch()}
-                  makeOptions={this.formatProjectNameOptions}
-                  async
-                  minLength={1}
-                />
-              </FieldErrorHint>
+              <InputTagsSearch
+                placeholder={intl.formatMessage(messages.projectNamePlaceholder)}
+                focusPlaceholder={intl.formatMessage(messages.projectNameFocusPlaceholder)}
+                uri={URLS.projectNameSearch()}
+                makeOptions={this.formatProjectNameOptions}
+                async
+                minLength={1}
+              />
             </FieldProvider>
           </ModalField>
           <ModalField
@@ -237,7 +236,7 @@ export class AddUserModal extends Component {
           >
             <FieldProvider name="password" type="text">
               <FieldErrorHint>
-                <Input maxLength={128} />
+                <Input maxLength={'128'} />
               </FieldErrorHint>
             </FieldProvider>
             <span className={cx('generate-password-link')} onClick={this.onGeneratePassword}>
