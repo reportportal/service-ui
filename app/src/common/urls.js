@@ -99,6 +99,7 @@ export const URLS = {
   project: (activeProject) => `${urlBase}project/${activeProject}`,
   addProject: () => `${urlBase}project`,
   projectNames: () => `${urlBase}project/names`,
+  searchProjectNames: () => `${urlBase}project/names/search`,
   projectDefectSubType: (activeProject) => `${urlBase}${activeProject}/settings/sub-type`,
   projectDeleteDefectSubType: (activeProject, id) =>
     `${urlBase}${activeProject}/settings/sub-type/${id}`,
@@ -183,6 +184,7 @@ export const URLS = {
 
   user: () => `${urlBase}user`,
   userRegistration: () => `${urlBase}user/registration`,
+  userValidateRegistrationInfo: () => `${urlBase}user/registration/info`,
   userPasswordReset: () => `${urlBase}user/password/reset`,
   userPasswordResetToken: (token) => `${urlBase}user/password/reset/${token}`,
   userPasswordRestore: () => `${urlBase}user/password/restore`,

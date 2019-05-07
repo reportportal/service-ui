@@ -43,6 +43,7 @@ export const Input = ({
   onKeyUp,
   onKeyPress,
   touched,
+  asyncValidating,
 }) => (
   <input
     ref={refFunction}
@@ -53,6 +54,7 @@ export const Input = ({
       error,
       touched,
       readonly,
+      asyncValidating,
     })}
     value={value}
     placeholder={placeholder}
@@ -84,6 +86,7 @@ Input.propTypes = {
   onKeyPress: PropTypes.func,
   refFunction: PropTypes.func,
   touched: PropTypes.bool,
+  asyncValidating: PropTypes.bool,
 };
 
 Input.defaultProps = {
@@ -97,6 +100,7 @@ Input.defaultProps = {
   className: '',
   error: '',
   touched: false,
+  asyncValidating: false,
   onChange: () => {},
   onFocus: () => {},
   onBlur: () => {},

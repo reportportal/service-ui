@@ -8,7 +8,7 @@ import { reduxForm, formValueSelector } from 'redux-form';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { Input } from 'components/inputs/input';
-import { validate } from 'common/utils';
+import { validate, validateAsync } from 'common/utils';
 import { URLS } from 'common/urls';
 import { ROLES_MAP, MEMBER, PROJECT_MANAGER } from 'common/constants/projectRoles';
 import { ACCOUNT_ROLES_MAP, USER, ADMINISTRATOR } from 'common/constants/accountRoles';
@@ -98,6 +98,36 @@ const generatePassword = () => {
     password: (!password || !validate.password(password)) && 'passwordHint',
     defaultProject: !defaultProject && 'requiredFieldHint',
   }),
+  asyncValidate: ({ login, email }, dispatch, { asyncErrors }, currentField) => {
+    switch (currentField) {
+      case 'login':
+        return validateAsync.loginUnique(login).then(({ is: isExists }) => {
+          const errors = {
+            ...asyncErrors,
+            login: undefined,
+          };
+          if (isExists) {
+            errors.login = 'loginDuplicateHint';
+          }
+          throw errors;
+        });
+      case 'email':
+        return validateAsync.emailUnique(email).then(({ is: isExists }) => {
+          const errors = {
+            ...asyncErrors,
+            email: undefined,
+          };
+          if (isExists) {
+            errors.email = 'emailDuplicateHint';
+          }
+          throw errors;
+        });
+      default:
+        return Promise.resolve();
+    }
+  },
+  asyncChangeFields: ['login', 'email'],
+  asyncBlurFields: ['login', 'email'], // validate on blur in case of copy-paste value
 })
 @connect((state) => ({
   userRole: formValueSelector('addUserForm')(state, 'accountRole'),
