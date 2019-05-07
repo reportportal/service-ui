@@ -548,6 +548,8 @@
   "FiltersControl.insertFilterError": "Filter don't created",
   "FiltersControl.insertFilterSuccess": "Filter has been created",
   "FiltersControl.notFound": "No filters found for \"{filter}\".",
+  "FiltersControl.notFoundOnProject": "Няма фільтры для праекта",
+  "FiltersControl.notFoundAdditionalInfo": "Дадайце новы фільтр першым",
   "FiltersControl.updateFilterError": "Filter don't updated",
   "FiltersControl.updateFilterSuccess": "Filter has been updated",
   "FiltersPage.addFilter": "Дадаць фільтр",

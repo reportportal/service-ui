@@ -53,6 +53,14 @@ const messages = defineMessages({
     id: 'FiltersControl.notFound',
     defaultMessage: `No filters found for "{filter}".`,
   },
+  filtersNotFoundOnProject: {
+    id: 'FiltersControl.notFoundOnProject',
+    defaultMessage: `No filters on a project`,
+  },
+  filtersNotFoundAdditional: {
+    id: 'FiltersControl.notFoundAdditionalInfo',
+    defaultMessage: `Be the first to add a new filter`,
+  },
 });
 
 @connect(
@@ -331,7 +339,10 @@ export class FiltersControl extends Component {
           onChange={this.handleFilterListChange}
           onEdit={this.handleFormAppearanceMode}
           onLazyLoad={this.handleFiltersListLoad}
-          noItemsMessage={messages.filtersNotFound}
+          noItemsMessage={
+            searchValue ? messages.filtersNotFound : messages.filtersNotFoundOnProject
+          }
+          noItemsAdditionalMessage={searchValue ? null : messages.filtersNotFoundAdditional}
         />
       </div>
     );
