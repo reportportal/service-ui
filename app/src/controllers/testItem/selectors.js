@@ -20,10 +20,11 @@ import {
 } from 'common/utils/routingUtils';
 import { LEVEL_SUITE, LEVEL_TEST, LEVEL_STEP } from 'common/constants/launchLevels';
 import { ALL } from 'common/constants/reservedFilterIds';
-import { suitesSelector } from 'controllers/suite';
-import { testsSelector } from 'controllers/test';
-import { stepsSelector } from 'controllers/step';
+import { suitesSelector, suitePaginationSelector } from 'controllers/suite';
+import { testsSelector, testPaginationSelector } from 'controllers/test';
+import { stepsSelector, stepPaginationSelector } from 'controllers/step';
 import { defectTypesSelector } from 'controllers/project';
+
 import { DEFAULT_SORTING } from './constants';
 import {
   createLink,
@@ -70,6 +71,21 @@ export const itemsSelector = (state) => {
       return [];
   }
 };
+
+
+export const paginationSelector = (state) => {
+  switch (levelSelector(state)) {
+    case LEVEL_SUITE:
+      return suitePaginationSelector(state);
+    case LEVEL_TEST:
+      return testPaginationSelector(state);
+    case LEVEL_STEP:
+      return stepPaginationSelector(state);
+    default:
+      return {};
+  }
+};
+
 
 export const isListViewSelector = (state, namespace) =>
   isListView(pagePropertiesSelector(state), namespace);

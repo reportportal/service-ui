@@ -25,4 +25,5 @@ export {
   queryParametersSelector,
   itemsSelector,
   testCaseNameLinkSelector,
+  paginationSelector,
 } from './selectors';

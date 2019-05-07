@@ -10,13 +10,9 @@ import {
   prevPagePropertiesSelector,
 } from 'controllers/pages';
 import { DEFAULT_PAGINATION } from 'controllers/pagination';
-import { itemsSelector, levelSelector } from 'controllers/testItem';
+import { itemsSelector, paginationSelector } from 'controllers/testItem';
 import { debugModeSelector } from 'controllers/launch';
-import { suitePaginationSelector } from 'controllers/suite';
-import { stepPaginationSelector } from 'controllers/step';
-import { testPaginationSelector } from 'controllers/test';
 import { extractNamespacedQuery, createNamespacedQuery } from 'common/utils/routingUtils';
-import { LEVEL_SUITE, LEVEL_TEST, LEVEL_STEP } from 'common/constants/launchLevels';
 import {
   calculateGrowthDuration,
   normalizeHistoryItem,
@@ -198,19 +194,6 @@ export const retryLinkSelector = createSelector(
     },
   }),
 );
-
-export const paginationSelector = (state) => {
-  switch (levelSelector(state)) {
-    case LEVEL_SUITE:
-      return suitePaginationSelector(state);
-    case LEVEL_TEST:
-      return testPaginationSelector(state);
-    case LEVEL_STEP:
-      return stepPaginationSelector(state);
-    default:
-      return {};
-  }
-};
 
 export const disablePrevItemLinkSelector = createSelector(
   paginationSelector,
