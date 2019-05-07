@@ -29,6 +29,8 @@ export class EntityInputConditional extends Component {
     maxLength: PropTypes.number,
     customProps: PropTypes.object,
     error: PropTypes.string,
+    onBlur: PropTypes.func,
+    onFocus: PropTypes.func,
   };
   static defaultProps = {
     title: '',
@@ -36,12 +38,13 @@ export class EntityInputConditional extends Component {
     removable: true,
     onChange: () => {},
     onRemove: () => {},
+    onBlur: () => {},
+    onFocus: () => {},
     placeholder: messages.placeholder,
     maxLength: 128,
     customProps: {},
     error: null,
   };
-
   render() {
     const {
       intl,
@@ -72,6 +75,8 @@ export class EntityInputConditional extends Component {
             onChange={onChange}
             value={value}
             touched
+            onBlur={this.props.onBlur}
+            onFocus={this.props.onFocus}
             {...customProps}
           />
         </FieldFilterEntity>

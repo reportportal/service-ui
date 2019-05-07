@@ -84,7 +84,7 @@ export class EntitiesGroup extends Component {
       <div className={cx('entities-group')}>
         {this.getActiveEntities().map((entity) => {
           const EntityComponent = entity.component;
-          const { id, removable, title, value, customProps = {}, active } = entity;
+          const { id, removable, title, value, customProps = {} } = entity;
           return (
             <div key={id} className={cx('entity-item', { vertical })}>
               <EntityComponent
@@ -99,7 +99,7 @@ export class EntitiesGroup extends Component {
                 onFocus={() => this.handleFocus(id)}
                 onBlur={() => this.handleBlur(id)}
                 value={value}
-                active={this.state.activeField === id || active}
+                active={this.state.activeField === id}
                 error={errors[id]}
                 vertical={vertical}
                 customProps={customProps}
