@@ -10,6 +10,7 @@ import {
   EntityItemStartTime,
   EntitySearch,
   EntityContains,
+  EntityInputConditional,
 } from 'components/filterEntities';
 import { bindDefaultValue } from 'components/filterEntities/utils';
 import {
@@ -20,6 +21,8 @@ import {
   CONDITION_BETWEEN,
   ACTIVITIES,
   ENTITY_CREATION_DATE,
+  CONDITION_CNT,
+  ENTITY_OBJECT_NAME,
 } from 'components/filterEntities/constants';
 import {
   START_LAUNCH,
@@ -324,22 +327,16 @@ export class EventsEntities extends Component {
           ],
         },
       },
-      /* TODO EPMRPP-38214 */
-      // {
-      //   id: ENTITY_OBJECT_NAME,
-      //   component: EntityItemName,
-      //   value:
-      //     ENTITY_OBJECT_NAME in filterValues
-      //       ? filterValues[ENTITY_OBJECT_NAME]
-      //       : {
-      //           filteringField: ENTITY_OBJECT_NAME,
-      //           value: '',
-      //           condition: CONDITION_CNT,
-      //         },
-      //   title: intl.formatMessage(messages.objectNameCol),
-      //   active: true,
-      //   removable: false,
-      // },
+      {
+        id: ENTITY_OBJECT_NAME,
+        component: EntityInputConditional,
+        value: this.bindDefaultValue(ENTITY_OBJECT_NAME, {
+          condition: CONDITION_CNT,
+        }),
+        title: intl.formatMessage(messages.objectNameCol),
+        active: true,
+        removable: false,
+      },
       {
         id: ENTITY_USER,
         component: EntitySearch,
