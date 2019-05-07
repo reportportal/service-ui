@@ -14,7 +14,7 @@ const messages = defineMessages({
 });
 
 export const NoResultsForFilter = injectIntl(
-  ({ intl: { formatMessage }, filter, notFoundMessage }) => (
+  ({ intl: { formatMessage }, filter, notFoundMessage, notFoundAdditionalMessage }) => (
     <div className={cx('no-results-for-filter')}>
       <p className={cx('no-results-for-filter-text')}>
         <i className={cx('no-results-for-filter-icon')}>{Parser(ErrorIcon)}</i>
@@ -24,7 +24,9 @@ export const NoResultsForFilter = injectIntl(
           }),
         )}
       </p>
-      <p className={cx('no-results-for-filter-hint')}>{formatMessage(messages.checkQuery)}</p>
+      <p className={cx('no-results-for-filter-hint')}>
+        {formatMessage(notFoundAdditionalMessage || messages.checkQuery)}
+      </p>
     </div>
   ),
 );
@@ -32,4 +34,5 @@ export const NoResultsForFilter = injectIntl(
 NoResultsForFilter.propTypes = {
   filter: PropTypes.string.isRequired,
   notFoundMessage: PropTypes.object.isRequired,
+  noItemsAdditionalMessage: PropTypes.object,
 };
