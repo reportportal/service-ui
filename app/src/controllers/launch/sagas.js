@@ -5,9 +5,9 @@ import { debugModeSelector } from 'controllers/launch';
 import { fetchDataAction } from 'controllers/fetch';
 import { activeProjectSelector } from 'controllers/user';
 import { LATEST } from 'common/constants/reservedFilterIds';
-import { launchFiltersSelector } from 'controllers/filter';
+import { activeFilterSelector } from 'controllers/filter';
 import { filterIdSelector } from 'controllers/pages';
-import { updateStorageItem } from 'common/utils';
+import { updateStorageItem, waitForSelector } from 'common/utils';
 import { isEmptyValue } from 'common/utils/isEmptyValue';
 import {
   FETCH_LAUNCHES,
@@ -41,8 +41,10 @@ const notEmptyConditionsPredicate = ({ value }) => !isEmptyValue(value);
 
 function* fetchLaunches() {
   const filterId = yield select(filterIdSelector);
-  const filters = yield select(launchFiltersSelector);
-  const activeFilter = filters.find((filter) => filter.id === filterId);
+  if (Number.isInteger(filterId)) {
+    yield call(waitForSelector, activeFilterSelector);
+  }
+  const activeFilter = yield select(activeFilterSelector);
   let filtersQuery = {};
   if (activeFilter) {
     filtersQuery = createFilterQuery(
