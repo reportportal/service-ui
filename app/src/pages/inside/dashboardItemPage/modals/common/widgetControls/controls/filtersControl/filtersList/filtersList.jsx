@@ -20,6 +20,7 @@ export const FiltersList = ({
   onEdit,
   onLazyLoad,
   noItemsMessage,
+  noItemsAdditionalMessage,
 }) => (
   <div className={cx('filter-list')}>
     <ScrollWrapper onLazyLoad={onLazyLoad}>
@@ -36,7 +37,13 @@ export const FiltersList = ({
       ))}
       {loading && <SpinningPreloader />}
       {!filters.length &&
-        !loading && <NoResultsForFilter filter={search || ''} notFoundMessage={noItemsMessage} />}
+        !loading && (
+          <NoResultsForFilter
+            filter={search || ''}
+            notFoundMessage={noItemsMessage}
+            notFoundAdditionalMessage={noItemsAdditionalMessage}
+          />
+        )}
     </ScrollWrapper>
   </div>
 );
@@ -51,6 +58,7 @@ FiltersList.propTypes = {
   onEdit: PropTypes.func,
   onLazyLoad: PropTypes.func,
   noItemsMessage: PropTypes.object,
+  noItemsAdditionalMessage: PropTypes.object,
 };
 
 FiltersList.defaultProps = {
@@ -62,4 +70,5 @@ FiltersList.defaultProps = {
   onEdit: () => {},
   onLazyLoad: null,
   noItemsMessage: {},
+  noItemsAdditionalMessage: null,
 };
