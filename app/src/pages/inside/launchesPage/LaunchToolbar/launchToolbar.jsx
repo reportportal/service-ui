@@ -21,7 +21,7 @@ export const LaunchToolbar = ({
   onRefresh,
   onDelete,
 }) => (
-  <div className={cx('launch-toolbar')}>
+  <div className={cx('launch-toolbar', { 'sticky-toolbar': selectedLaunches.length })}>
     {!!selectedLaunches.length && (
       <SelectedItems
         selectedItems={selectedLaunches}

@@ -796,7 +796,7 @@
   "LaunchesPage.launchIsProcessing": "Запуск не должен обрабатываться Автоанализатором!",
   "LaunchesPage.launchNotInProgress": "Запуск не должен быть в состоянии В ПРОЦЕССЕ!",
   "LaunchesPage.multiSelectError": "Вы не можете выполнить операцию с недействительными элементами",
-  "LaunchesPage.multipleSelectHeader": "Вы можете выполнять действия с выбранными элементами:",
+  "LaunchesPage.multipleSelectHeader": "Выбранные элементы:",
   "LaunchesPage.noDefectType": "Элемент не имеет дефекта",
   "LaunchesPage.noDefectTypeToLinkIssue": "Вы не можете прикрепить ошибку, если элемент не имеет дефекта",
   "LaunchesPage.noIssue": "У элемента нет дефекта для редактирования",
