@@ -26,6 +26,7 @@ import {
   fetchTestItemsAction,
   namespaceSelector,
 } from 'controllers/testItem';
+import { getPageSize, setPageSize, TEST_PAGE_SIZE_STORAGE_KEY } from 'controllers/log';
 import { showModalAction } from 'controllers/modal';
 import { SuitesPage } from 'pages/inside/suitesPage';
 import { TestsPage } from 'pages/inside/testsPage';
@@ -117,6 +118,7 @@ export class TestItemPage extends Component {
     intl: intlShape.isRequired,
     activeProject: PropTypes.string.isRequired,
     userId: PropTypes.string.isRequired,
+    onChangePageSize: PropTypes.func,
     deleteItemsAction: PropTypes.func.isRequired,
     showNotification: PropTypes.func.isRequired,
     showScreenLockAction: PropTypes.func.isRequired,
@@ -140,6 +142,19 @@ export class TestItemPage extends Component {
     loading: false,
     breadcrumbs: [],
     restorePath: () => {},
+    onChangePageSize: () => {},
+  };
+
+  state = {
+    testPageSize: getPageSize(this.props.userId, TEST_PAGE_SIZE_STORAGE_KEY),
+  };
+
+  onChangeTestPageSize = (newPageSize) => {
+    const { userId, onChangePageSize } = this.props;
+
+    setPageSize(userId, newPageSize, TEST_PAGE_SIZE_STORAGE_KEY);
+    onChangePageSize(newPageSize);
+    this.setState({ testPageSize: newPageSize });
   };
 
   onEditItem = (launch) => {
@@ -243,6 +258,8 @@ export class TestItemPage extends Component {
                   onFilterAdd={onFilterAdd}
                   onFilterRemove={onFilterRemove}
                   filterEntities={filterEntities}
+                  testPageSize={this.state.testPageSize}
+                  onChangeTestPageSize={this.onChangeTestPageSize}
                 />
               )}
             />

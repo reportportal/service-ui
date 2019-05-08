@@ -65,12 +65,12 @@ export class TestsPage extends Component {
     activePage: PropTypes.number,
     itemCount: PropTypes.number,
     pageCount: PropTypes.number,
-    pageSize: PropTypes.number,
+    testPageSize: PropTypes.number,
     sortingColumn: PropTypes.string,
     sortingDirection: PropTypes.string,
     fetchTestItemsAction: PropTypes.func,
     onChangePage: PropTypes.func,
-    onChangePageSize: PropTypes.func,
+    onChangeTestPageSize: PropTypes.func,
     onChangeSorting: PropTypes.func,
     toggleTestSelectionAction: PropTypes.func,
     unselectAllTestsAction: PropTypes.func,
@@ -97,12 +97,12 @@ export class TestsPage extends Component {
     activePage: 1,
     itemCount: null,
     pageCount: null,
-    pageSize: 20,
+    testPageSize: 20,
     sortingColumn: null,
     sortingDirection: null,
     fetchTestItemsAction: () => {},
     onChangePage: () => {},
-    onChangePageSize: () => {},
+    onChangeTestPageSize: () => {},
     onChangeSorting: () => {},
     toggleTestSelectionAction: () => {},
     unselectAllTestsAction: () => {},
@@ -151,9 +151,9 @@ export class TestsPage extends Component {
       activePage,
       itemCount,
       pageCount,
-      pageSize,
       onChangePage,
-      onChangePageSize,
+      testPageSize,
+      onChangeTestPageSize,
       parentItem,
       loading,
       debugMode,
@@ -207,9 +207,9 @@ export class TestsPage extends Component {
               activePage={activePage}
               itemCount={itemCount}
               pageCount={pageCount}
-              pageSize={pageSize}
+              pageSize={testPageSize}
               onChangePage={onChangePage}
-              onChangePageSize={onChangePageSize}
+              onChangePageSize={onChangeTestPageSize}
             />
           )}
         </PageSection>

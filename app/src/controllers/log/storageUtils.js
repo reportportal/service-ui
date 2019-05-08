@@ -7,6 +7,9 @@ import {
   LOG_LEVELS,
   DEFAULT_LOG_LEVEL,
   LOG_VIEW_MODE_STORAGE_KEY,
+  DEFAULT_PAGE_SIZE,
+  MIN_PAGE_SIZE,
+  MAX_PAGE_SIZE,
 } from './constants';
 
 const getLogPageUserSettingsFromStorage = (userId) => getStorageItem(`${userId}_settings`) || {};
@@ -47,3 +50,21 @@ export const getLogViewMode = (userId) => getLogViewModeFromStorage(userId) || D
 
 export const setLogViewMode = (userId, viewMode) =>
   updateLogPageUserSettingsInStorage(userId, { [LOG_VIEW_MODE_STORAGE_KEY]: viewMode });
+
+const normalizePageSize = (size) => {
+  if (size < MIN_PAGE_SIZE) {
+    return MIN_PAGE_SIZE;
+  } else if (size > MAX_PAGE_SIZE) {
+    return MAX_PAGE_SIZE;
+  }
+
+  return size;
+};
+
+export const getPageSize = (userId, storageKey) =>
+  getLogPageUserSettingsFromStorage(userId)[storageKey] || DEFAULT_PAGE_SIZE;
+
+export const setPageSize = (userId, pageSize, storageKey) =>
+  updateLogPageUserSettingsInStorage(userId, {
+    [storageKey]: normalizePageSize(pageSize),
+  });

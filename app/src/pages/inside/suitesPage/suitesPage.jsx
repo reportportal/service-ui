@@ -19,7 +19,6 @@ import {
 } from 'controllers/suite';
 import { SUITE_PAGE, SUITES_PAGE_EVENTS } from 'components/main/analytics/events';
 import { SuiteTestToolbar } from 'pages/inside/common/suiteTestToolbar';
-import { userIdSelector } from 'controllers/user';
 import {
   namespaceSelector,
   fetchTestItemsAction,
@@ -32,7 +31,6 @@ import { ENTITY_START_TIME } from 'components/filterEntities/constants';
 @connect(
   (state) => ({
     debugMode: debugModeSelector(state),
-    userId: userIdSelector(state),
     suites: suitesSelector(state),
     selectedSuites: selectedSuitesSelector(state),
     parentItem: parentItemSelector(state),
@@ -66,12 +64,12 @@ export class SuitesPage extends Component {
     activePage: PropTypes.number,
     itemCount: PropTypes.number,
     pageCount: PropTypes.number,
-    pageSize: PropTypes.number,
+    testPageSize: PropTypes.number,
     sortingColumn: PropTypes.string,
     sortingDirection: PropTypes.string,
     fetchTestItemsAction: PropTypes.func,
     onChangePage: PropTypes.func,
-    onChangePageSize: PropTypes.func,
+    onChangeTestPageSize: PropTypes.func,
     onChangeSorting: PropTypes.func,
     toggleSuiteSelectionAction: PropTypes.func,
     unselectAllSuitesAction: PropTypes.func,
@@ -99,12 +97,12 @@ export class SuitesPage extends Component {
     activePage: 1,
     itemCount: null,
     pageCount: null,
-    pageSize: 20,
+    testPageSize: 20,
     sortingColumn: null,
     sortingDirection: null,
     fetchTestItemsAction: () => {},
     onChangePage: () => {},
-    onChangePageSize: () => {},
+    onChangeTestPageSize: () => {},
     onChangeSorting: () => {},
     toggleSuiteSelectionAction: () => {},
     unselectAllSuitesAction: () => {},
@@ -150,9 +148,9 @@ export class SuitesPage extends Component {
       activePage,
       itemCount,
       pageCount,
-      pageSize,
       onChangePage,
-      onChangePageSize,
+      testPageSize,
+      onChangeTestPageSize,
       sortingColumn,
       sortingDirection,
       onChangeSorting,
@@ -210,9 +208,9 @@ export class SuitesPage extends Component {
               activePage={activePage}
               itemCount={itemCount}
               pageCount={pageCount}
-              pageSize={pageSize}
+              pageSize={testPageSize}
               onChangePage={onChangePage}
-              onChangePageSize={onChangePageSize}
+              onChangePageSize={onChangeTestPageSize}
             />
           )}
         </PageSection>

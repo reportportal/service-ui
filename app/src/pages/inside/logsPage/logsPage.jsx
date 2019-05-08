@@ -15,6 +15,9 @@ import {
   getLogLevel,
   setLogLevel,
   setWithAttachments,
+  getPageSize,
+  setPageSize,
+  LOG_PAGE_SIZE_STORAGE_KEY,
 } from 'controllers/log';
 import { withFilter } from 'controllers/filter';
 import { withPagination, PAGE_KEY } from 'controllers/pagination';
@@ -118,6 +121,7 @@ export class LogsPage extends Component {
     highlightedRowId: null,
     isGridRowHighlighted: false,
     isSauceLabsIntegrationView: false,
+    logPageSize: getPageSize(this.props.userId, LOG_PAGE_SIZE_STORAGE_KEY),
   };
 
   onHighlightRow = (highlightedRowId) => {
@@ -131,6 +135,14 @@ export class LogsPage extends Component {
     this.setState({
       isGridRowHighlighted: true,
     });
+  };
+
+  onChangeLogPageSize = (newPageSize) => {
+    const { userId, onChangePageSize } = this.props;
+
+    setPageSize(userId, newPageSize, LOG_PAGE_SIZE_STORAGE_KEY);
+    onChangePageSize(newPageSize);
+    this.setState({ logPageSize: newPageSize });
   };
 
   toggleSauceLabsIntegrationView = () =>
@@ -154,9 +166,7 @@ export class LogsPage extends Component {
       activePage,
       itemCount,
       pageCount,
-      pageSize,
       onChangePage,
-      onChangePageSize,
       loading,
       filter,
       logLevelId,
@@ -223,9 +233,9 @@ export class LogsPage extends Component {
                     activePage={activePage}
                     itemCount={itemCount}
                     pageCount={pageCount}
-                    pageSize={pageSize}
+                    pageSize={this.state.logPageSize}
                     onChangePage={onChangePage}
-                    onChangePageSize={onChangePageSize}
+                    onChangePageSize={this.onChangeLogPageSize}
                   />
                 )}
             </Fragment>

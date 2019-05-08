@@ -92,11 +92,11 @@ export class StepPage extends Component {
     activePage: PropTypes.number,
     itemCount: PropTypes.number,
     pageCount: PropTypes.number,
-    pageSize: PropTypes.number,
+    testPageSize: PropTypes.number,
     sortingColumn: PropTypes.string,
     sortingDirection: PropTypes.string,
     onChangePage: PropTypes.func,
-    onChangePageSize: PropTypes.func,
+    onChangeTestPageSize: PropTypes.func,
     onChangeSorting: PropTypes.func,
     showTestParamsModal: PropTypes.func,
     ignoreInAutoAnalysisAction: PropTypes.func,
@@ -134,11 +134,11 @@ export class StepPage extends Component {
     activePage: 1,
     itemCount: null,
     pageCount: null,
-    pageSize: 20,
+    testPageSize: 20,
     sortingColumn: null,
     sortingDirection: null,
     onChangePage: () => {},
-    onChangePageSize: () => {},
+    onChangeTestPageSize: () => {},
     onChangeSorting: () => {},
     showTestParamsModal: () => {},
     ignoreInAutoAnalysisAction: () => {},
@@ -231,9 +231,9 @@ export class StepPage extends Component {
       activePage,
       itemCount,
       pageCount,
-      pageSize,
       onChangePage,
-      onChangePageSize,
+      testPageSize,
+      onChangeTestPageSize,
       showTestParamsModal,
       debugMode,
       onFilterAdd,
@@ -296,9 +296,9 @@ export class StepPage extends Component {
               activePage={activePage}
               itemCount={itemCount}
               pageCount={pageCount}
-              pageSize={pageSize}
+              pageSize={testPageSize}
               onChangePage={onChangePage}
-              onChangePageSize={onChangePageSize}
+              onChangePageSize={onChangeTestPageSize}
             />
           )}
         </PageSection>

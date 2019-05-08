@@ -43,6 +43,7 @@ import {
   deleteItemsAction,
   updateLaunchLocallyAction,
 } from 'controllers/launch';
+import { getPageSize, setPageSize, LAUNCH_PAGE_SIZE_STORAGE_KEY } from 'controllers/log';
 import { LaunchSuiteGrid } from 'pages/inside/common/launchSuiteGrid';
 import { LaunchFiltersContainer } from 'pages/inside/common/launchFiltersContainer';
 import { LEVEL_LAUNCH } from 'common/constants/launchLevels';
@@ -214,9 +215,21 @@ export class LaunchesPage extends Component {
     deleteItemsAction: () => {},
   };
 
+  state = {
+    launchPageSize: getPageSize(this.props.userId, LAUNCH_PAGE_SIZE_STORAGE_KEY),
+  };
+
   componentWillUnmount() {
     this.props.unselectAllLaunchesAction();
   }
+
+  onChangeLaunchPageSize = (newPageSize) => {
+    const { userId, onChangePageSize } = this.props;
+
+    setPageSize(userId, newPageSize, LAUNCH_PAGE_SIZE_STORAGE_KEY);
+    onChangePageSize(newPageSize);
+    this.setState({ launchPageSize: newPageSize });
+  };
 
   onAnalysis = (launch) => {
     const {
@@ -233,6 +246,7 @@ export class LaunchesPage extends Component {
       },
     });
   };
+
   analyseItem = (launch, data) => {
     const {
       activeProject,
@@ -345,6 +359,7 @@ export class LaunchesPage extends Component {
       },
     });
   };
+
   openImportModal = () => {
     this.props.tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_IMPORT_BTN);
     this.props.showModalAction({
@@ -421,9 +436,7 @@ export class LaunchesPage extends Component {
       activePage,
       itemCount,
       pageCount,
-      pageSize,
       onChangePage,
-      onChangePageSize,
       sortingColumn,
       sortingDirection,
       onChangeSorting,
@@ -494,9 +507,9 @@ export class LaunchesPage extends Component {
                     activePage={activePage}
                     itemCount={itemCount}
                     pageCount={pageCount}
-                    pageSize={pageSize}
+                    pageSize={this.state.launchPageSize}
                     onChangePage={onChangePage}
-                    onChangePageSize={onChangePageSize}
+                    onChangePageSize={this.onChangeLaunchPageSize}
                   />
                 )}
             </PageSection>

@@ -18,6 +18,12 @@ export const LOG_VIEW_MODE_STORAGE_KEY = 'logViewMode';
 export const DEFAULT_SORTING = formatSortingString(['logTime'], SORTING_ASC);
 export const RETRY_ID = 'retryId';
 export const ACTIVE_LOG_ITEM_QUERY_KEY = 'history';
+export const LAUNCH_PAGE_SIZE_STORAGE_KEY = 'launchLandingPageCount';
+export const TEST_PAGE_SIZE_STORAGE_KEY = 'launchTestPageCount';
+export const LOG_PAGE_SIZE_STORAGE_KEY = 'launchLogPageCount';
+export const DEFAULT_PAGE_SIZE = 250;
+export const MIN_PAGE_SIZE = 1;
+export const MAX_PAGE_SIZE = 300;
 
 export const LOG_LEVELS = [
   {
