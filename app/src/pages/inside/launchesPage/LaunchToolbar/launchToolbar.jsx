@@ -20,8 +20,15 @@ export const LaunchToolbar = ({
   debugMode,
   onRefresh,
   onDelete,
+  getToolbarRef,
+  sticky,
+  style,
 }) => (
-  <div className={cx('launch-toolbar')}>
+  <div
+    className={cx('launch-toolbar', { 'sticky-toolbar': sticky })}
+    ref={getToolbarRef}
+    style={style}
+  >
     {!!selectedLaunches.length && (
       <SelectedItems
         selectedItems={selectedLaunches}
@@ -61,6 +68,9 @@ LaunchToolbar.propTypes = {
   onImportLaunch: PropTypes.func,
   debugMode: PropTypes.bool,
   onRefresh: PropTypes.func,
+  getToolbarRef: PropTypes.func.isRequired,
+  sticky: PropTypes.bool,
+  style: PropTypes.object,
 };
 LaunchToolbar.defaultProps = {
   selectedLaunches: [],
@@ -76,4 +86,6 @@ LaunchToolbar.defaultProps = {
   onImportLaunch: () => {},
   debugMode: false,
   onRefresh: () => {},
+  sticky: false,
+  style: {},
 };

@@ -24,6 +24,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { Footer } from '../footer';
+import { SCROLLING_CONTENT_ELEM_ID } from './constants';
 import styles from './layout.scss';
 
 const cx = classNames.bind(styles);
@@ -76,7 +77,10 @@ export class Layout extends Component {
             />
           </div>
           <div className={cx('content')}>
-            <ScrollWrapper withBackToTop>
+            <ScrollWrapper
+              renderView={(props) => <div id={SCROLLING_CONTENT_ELEM_ID} {...props} />}
+              withBackToTop
+            >
               <div className={cx('scrolling-content')}>
                 <div className={cx('header-container')}>
                   <Header

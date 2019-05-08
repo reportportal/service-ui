@@ -43,6 +43,7 @@ import {
   deleteItemsAction,
   updateLaunchLocallyAction,
 } from 'controllers/launch';
+import { SCROLLING_CONTENT_ELEM_ID } from 'layouts/common/layout/constants';
 import { LaunchSuiteGrid } from 'pages/inside/common/launchSuiteGrid';
 import { LaunchFiltersContainer } from 'pages/inside/common/launchFiltersContainer';
 import { LEVEL_LAUNCH } from 'common/constants/launchLevels';
@@ -214,8 +215,40 @@ export class LaunchesPage extends Component {
     deleteItemsAction: () => {},
   };
 
+  static getDerivedStateFromProps(props) {
+    if (!props.selectedLaunches.length) {
+      return {
+        stickyToolbar: false,
+        toolbarStyle: {},
+        gridStyle: {},
+      };
+    }
+    return null;
+  }
+
+  constructor(props) {
+    super(props);
+    this.state = { stickyToolbar: false };
+    this.toolbarNode = null;
+    this.gridNode = null;
+  }
+
+  componentDidMount() {
+    this.toolbarOffsetTop = this.toolbarNode.getBoundingClientRect().top;
+    this.scrollingContentNode = document.getElementById(SCROLLING_CONTENT_ELEM_ID);
+
+    this.scrollingContentNode.addEventListener('scroll', this.debouncedScroll);
+    window.addEventListener('resize', this.debouncedResize);
+  }
+
   componentWillUnmount() {
     this.props.unselectAllLaunchesAction();
+
+    this.scrollingContentNode.removeEventListener('scroll', this.debouncedScroll);
+    window.removeEventListener('resize', this.debouncedResize);
+
+    this.scrollFrameId && cancelAnimationFrame(this.scrollFrameId);
+    this.resizeFrameId && cancelAnimationFrame(this.resizeFrameId);
   }
 
   onAnalysis = (launch) => {
@@ -407,7 +440,53 @@ export class LaunchesPage extends Component {
     this.props.toggleLaunchSelectionAction(item);
   };
 
-  renderPageContent = ({
+  handleScroll = () => {
+    this.scrollFrameId = 0;
+    const toolbarRect = this.toolbarNode.getBoundingClientRect();
+    const gridRect = this.gridNode.getBoundingClientRect();
+
+    if (
+      this.props.selectedLaunches.length &&
+      this.scrollingContentNode.scrollTop >= this.toolbarOffsetTop
+    ) {
+      this.setState({
+        stickyToolbar: true,
+        toolbarStyle: { width: `${gridRect.width}px` },
+        gridStyle: { paddingTop: `${toolbarRect.height}px` },
+      });
+    } else {
+      this.setState({
+        stickyToolbar: false,
+        toolbarStyle: {},
+        gridStyle: {},
+      });
+    }
+  };
+
+  handleResize = () => {
+    this.resizeFrameId = 0;
+
+    const gridRect = this.gridNode.getBoundingClientRect();
+    if (this.state.stickyToolbar) {
+      this.setState({
+        toolbarStyle: { width: `${gridRect.width}px` },
+      });
+    }
+  };
+
+  debouncedScroll = () => {
+    if (!this.scrollFrameId) {
+      this.scrollFrameId = requestAnimationFrame(this.handleScroll);
+    }
+  };
+
+  debouncedResize = () => {
+    if (!this.resizeFrameId) {
+      this.resizeFrameId = requestAnimationFrame(this.handleResize);
+    }
+  };
+
+  renderPageContent = ({ stickyToolbar, toolbarStyle, gridStyle }) => ({
     launchFilters,
     activeFilterId,
     activeFilter,
@@ -469,6 +548,11 @@ export class LaunchesPage extends Component {
                 onImportLaunch={this.openImportModal}
                 debugMode={debugMode}
                 onDelete={this.deleteItems}
+                getToolbarRef={(ref) => {
+                  this.toolbarNode = ref;
+                }}
+                sticky={stickyToolbar}
+                style={toolbarStyle}
               />
               <LaunchSuiteGrid
                 data={launches}
@@ -487,6 +571,10 @@ export class LaunchesPage extends Component {
                 onFilterClick={onFilterAdd}
                 events={LAUNCHES_PAGE_EVENTS}
                 onAnalysis={this.onAnalysis}
+                getGridRef={(ref) => {
+                  this.gridNode = ref;
+                }}
+                style={gridStyle}
               />
               {!!pageCount &&
                 !loading && (
@@ -511,7 +599,7 @@ export class LaunchesPage extends Component {
       <LaunchFiltersContainer
         {...this.props}
         onChange={this.resetPageNumber}
-        render={this.renderPageContent}
+        render={this.renderPageContent(this.state)}
       />
     );
   }

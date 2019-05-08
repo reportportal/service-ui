@@ -1,4 +1,4 @@
-import React, { PureComponent, Fragment } from 'react';
+import React, { PureComponent } from 'react';
 import { injectIntl, intlShape } from 'react-intl';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
@@ -213,6 +213,8 @@ export class LaunchSuiteGrid extends PureComponent {
     onFilterClick: PropTypes.func,
     events: PropTypes.object,
     onAnalysis: PropTypes.func,
+    getGridRef: PropTypes.func.isRequired,
+    style: PropTypes.object,
   };
   static defaultProps = {
     data: [],
@@ -231,6 +233,7 @@ export class LaunchSuiteGrid extends PureComponent {
     onFilterClick: () => {},
     events: {},
     onAnalysis: () => {},
+    style: {},
   };
   getColumns() {
     const hamburgerColumn = {
@@ -435,9 +438,11 @@ export class LaunchSuiteGrid extends PureComponent {
       onAllItemsSelect,
       loading,
       onFilterClick,
+      getGridRef,
+      style,
     } = this.props;
     return (
-      <Fragment>
+      <div ref={getGridRef} style={style}>
         <Grid
           columns={this.COLUMNS}
           data={data}
@@ -453,7 +458,7 @@ export class LaunchSuiteGrid extends PureComponent {
         />
         {!data.length &&
           !loading && <NoItemMessage message={formatMessage(COMMON_LOCALE_KEYS.NO_RESULTS)} />}
-      </Fragment>
+      </div>
     );
   }
 }
