@@ -796,7 +796,7 @@
   "LaunchesPage.launchIsProcessing": "Запуск не павінны апрацоўвацца Аўтааналізатарам!",
   "LaunchesPage.launchNotInProgress": "Запуск не павінны быць у статусе У ПРАЦЭССЕ!",
   "LaunchesPage.multiSelectError": "Вы не можаце выканаць аперацыю з няправільнымі элементамі",
-  "LaunchesPage.multipleSelectHeader": "Вы можаце выконваць дзеянні з абранымі элементамі:",
+  "LaunchesPage.multipleSelectHeader": "Выбраныя элементы:",
   "LaunchesPage.noDefectType": "Элемент не мае дэфекту",
   "LaunchesPage.noDefectTypeToLinkIssue": "Вы не можаце прымацаваць памылку, калі элемент не мае дэфекту",
   "LaunchesPage.noIssue": "У элемента няма дэфекту для рэдагавання",

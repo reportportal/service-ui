@@ -2,3 +2,9 @@
   background-color: $COLOR--white-two;
   border-bottom: 1px solid $COLOR--gray-91;
 }
+
+.sticky-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: $Z_INDEX-STICKY-TOOLBAR;
+}
