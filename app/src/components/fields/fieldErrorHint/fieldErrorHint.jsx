@@ -136,7 +136,8 @@ const messages = defineMessages({
   },
   projectNameLengthHint: {
     id: 'ProjectsPage.projectNameLengthHint',
-    defaultMessage: "Project name should have size from '3' to '256'",
+    defaultMessage:
+      "Project name should have size from '3' to '256', latin, numeric characters, hyphen, underscore.",
   },
   projectDuplicateHint: {
     id: 'ProjectsPage.projectDuplicateHint',

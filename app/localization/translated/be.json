@@ -1211,7 +1211,7 @@
   "ProjectsPage.projectExists": "Праект '{name}' ўжо існуе",
   "ProjectsPage.projectLengthHint": "Project name",
   "ProjectsPage.projectNameLabel": "Назва праекта",
-  "ProjectsPage.projectNameLengthHint": "Назва праекта павінна быць памерам ад 3 да 256",
+  "ProjectsPage.projectNameLengthHint": "Назва праекта павінна быць памерам ад 3 да 256, уключаючы лацінку, лічбы, злучок, ніжняе падкрэсліванне.",
   "ProjectsPage.sortBy": "Сартаваць па",
   "ProjectsPage.title": "Усе Праекты",
   "ProjectsPage.unassignError": "Адбылася памылка падчас адмяняеце ад праекта",

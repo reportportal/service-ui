@@ -26,3 +26,4 @@ export const urlPart = (value) => !!/:\/\/.+/.exec(value);
 export const projectNumericEntity = (value) => value.length >= 1 && !!value.match(/^[0-9]+$/);
 export const defectTypeLongName = (value) => value.length >= 3 && value.length <= 55;
 export const defectTypeShortName = (value) => value.length >= 1 && value.length <= 4;
+export const projectName = (value) => !!/^[0-9a-zA-Z-_]{3,256}$/.exec(value);
