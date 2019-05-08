@@ -1,7 +1,7 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
 import isEqual from 'fast-deep-equal';
-import { connectRouter, debounce } from 'common/utils';
+import { connectRouter, debounce, isEmptyObject } from 'common/utils';
 import { defaultPaginationSelector, PAGE_KEY } from 'controllers/pagination';
 import { collectFilterEntities, createFilterQuery } from './utils';
 
@@ -33,10 +33,10 @@ export class FilterEntitiesURLContainer extends Component {
       return;
     }
     const { defaultPagination } = this.props;
-    this.props.updateFilters(
-      createFilterQuery(entities, this.props.entities),
-      defaultPagination[PAGE_KEY],
-    );
+    const filterQuery = createFilterQuery(entities, this.props.entities);
+    if (!isEmptyObject(filterQuery)) {
+      this.props.updateFilters(filterQuery, defaultPagination[PAGE_KEY]);
+    }
   };
 
   debouncedHandleChange = debounce(this.handleChange, 1000);
