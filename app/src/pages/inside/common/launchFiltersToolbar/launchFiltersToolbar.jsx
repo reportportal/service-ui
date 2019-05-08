@@ -56,6 +56,7 @@ export class LaunchFiltersToolbar extends Component {
     onFilterValidate: PropTypes.func,
     onFilterChange: PropTypes.func,
     filterErrors: PropTypes.object,
+    filterValues: PropTypes.object,
     filterEntities: PropTypes.array,
     showModal: PropTypes.func,
     updateFilter: PropTypes.func,
@@ -81,6 +82,7 @@ export class LaunchFiltersToolbar extends Component {
     onFilterValidate: () => {},
     onFilterChange: () => {},
     filterErrors: {},
+    filterValues: {},
     filterEntities: [],
     showModal: () => {},
     updateFilter: () => {},
@@ -157,8 +159,12 @@ export class LaunchFiltersToolbar extends Component {
     return unsavedFilterIds.indexOf(activeFilterId) !== -1;
   };
   isSaveDisabled = () => {
-    const { filterErrors } = this.props;
-    return !this.isFilterUnsaved() || !isEmptyObject(filterErrors) || this.isNoFilterValues();
+    const { filterErrors, filterValues: newFilterValues } = this.props;
+    const newFilterFields = Object.values(newFilterValues);
+    const isFieldsNotEmpty =
+      newFilterFields.length && newFilterFields.every((field) => field.value);
+
+    return !this.isFilterUnsaved() || !isEmptyObject(filterErrors) || !isFieldsNotEmpty || this.isNoFilterValues();
   };
   isDiscardDisabled = () =>
     !this.isFilterUnsaved() || (this.isNoFilterValues() && this.isNewFilter());
