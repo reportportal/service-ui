@@ -63,6 +63,12 @@ const createEmptyAttributesQuery = (newEntities, oldEntities) => {
   return result;
 };
 
+const isConditionChangeWithEmptyValue = (entity = {}, oldEntity = {}) => {
+  const entityValue = entity.value || null;
+  const oldEntityValue = oldEntity.value || null;
+  return isEmptyValue(entityValue) && isEmptyValue(oldEntityValue);
+};
+
 export const createFilterQuery = (entities = {}, oldEntities = {}) => {
   const mergedEntities = { ...oldEntities, ...entities };
   const keys = Object.keys(mergedEntities);
@@ -75,6 +81,9 @@ export const createFilterQuery = (entities = {}, oldEntities = {}) => {
     }
     const entity = entities[key];
     const oldEntity = oldEntities[key];
+    if (isConditionChangeWithEmptyValue(entity, oldEntity)) {
+      return res;
+    }
     if (!entity && oldEntity) {
       return { ...res, [getFilterKey(oldEntity, key)]: null };
     }
