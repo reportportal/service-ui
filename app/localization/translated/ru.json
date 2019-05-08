@@ -1211,7 +1211,7 @@
   "ProjectsPage.projectExists": "Проект '{name}' уже существует",
   "ProjectsPage.projectLengthHint": "Project name",
   "ProjectsPage.projectNameLabel": "Название проекта",
-  "ProjectsPage.projectNameLengthHint": "Название проекта должно быть размером от 3 до 256",
+  "ProjectsPage.projectNameLengthHint": "Название проекта должно быть размером от 3 до 256, включая латинские буквы, цифры, дефис и нижнее подчеркивание.",
   "ProjectsPage.sortBy": "Сортировать по",
   "ProjectsPage.title": "Все Проекты",
   "ProjectsPage.unassignError": "В процессе выведения из проекта произошла ошибка",

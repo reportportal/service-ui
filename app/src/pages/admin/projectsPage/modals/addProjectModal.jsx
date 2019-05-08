@@ -19,7 +19,7 @@ const LABEL_WIDTH = 105;
 @reduxForm({
   form: 'addProjectForm',
   validate: ({ projectName }) => ({
-    projectName: (!projectName || !validate.itemNameEntity(projectName)) && 'projectNameLengthHint',
+    projectName: (!projectName || !validate.projectName(projectName)) && 'projectNameLengthHint',
   }),
 })
 @track()
