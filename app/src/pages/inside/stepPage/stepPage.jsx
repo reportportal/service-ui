@@ -291,16 +291,17 @@ export class StepPage extends Component {
             sortingColumn={sortingColumn}
             sortingDirection={sortingDirection}
           />
-          {!loading && (
-            <PaginationToolbar
-              activePage={activePage}
-              itemCount={itemCount}
-              pageCount={pageCount}
-              pageSize={pageSize}
-              onChangePage={onChangePage}
-              onChangePageSize={onChangePageSize}
-            />
-          )}
+          {!!pageCount &&
+            !loading && (
+              <PaginationToolbar
+                activePage={activePage}
+                itemCount={itemCount}
+                pageCount={pageCount}
+                pageSize={pageSize}
+                onChangePage={onChangePage}
+                onChangePageSize={onChangePageSize}
+              />
+            )}
         </PageSection>
       </PageLayout>
     );
