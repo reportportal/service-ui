@@ -1,10 +1,11 @@
-import { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import { injectIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import { Grid } from 'components/main/grid';
 import { AbsRelTime } from 'components/main/absRelTime';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { formatMethodType, formatStatus } from 'common/utils/localizationUtils';
 import { FAILED } from 'common/constants/testStatuses';
 import {
@@ -16,6 +17,7 @@ import {
   ENTITY_ATTRIBUTE_KEYS,
   ENTITY_ATTRIBUTE_VALUES,
 } from 'components/filterEntities/constants';
+import { NoItemMessage } from 'components/main/noItemMessage';
 import { STEP_PAGE_EVENTS } from 'components/main/analytics/events';
 import { PredefinedFilterSwitcher } from './predefinedFilterSwitcher';
 import { DefectType } from './defectType';
@@ -277,6 +279,7 @@ export class StepGrid extends Component {
 
   render() {
     const {
+      intl: { formatMessage },
       data,
       onItemSelect,
       onAllItemsSelect,
@@ -289,23 +292,27 @@ export class StepGrid extends Component {
       sortingDirection,
     } = this.props;
     return (
-      <Grid
-        columns={this.columns}
-        data={data}
-        onToggleSelection={onItemSelect}
-        onToggleSelectAll={onAllItemsSelect}
-        selectedItems={selectedItems}
-        selectable
-        rowClassMapper={this.highlightFailedItems}
-        loading={loading}
-        groupHeader={GroupHeader}
-        groupFunction={this.groupStepItems}
-        grouped={listView}
-        onFilterClick={onFilterClick}
-        onChangeSorting={onChangeSorting}
-        sortingColumn={sortingColumn}
-        sortingDirection={sortingDirection}
-      />
+      <Fragment>
+        <Grid
+          columns={this.columns}
+          data={data}
+          onToggleSelection={onItemSelect}
+          onToggleSelectAll={onAllItemsSelect}
+          selectedItems={selectedItems}
+          selectable
+          rowClassMapper={this.highlightFailedItems}
+          loading={loading}
+          groupHeader={GroupHeader}
+          groupFunction={this.groupStepItems}
+          grouped={listView}
+          onFilterClick={onFilterClick}
+          onChangeSorting={onChangeSorting}
+          sortingColumn={sortingColumn}
+          sortingDirection={sortingDirection}
+        />
+        {!data.length &&
+          !loading && <NoItemMessage message={formatMessage(COMMON_LOCALE_KEYS.NO_RESULTS)} />}
+      </Fragment>
     );
   }
 }
