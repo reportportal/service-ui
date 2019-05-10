@@ -28,6 +28,7 @@ import { FormattedMessage } from 'react-intl';
 import { SpringSystem } from 'rebound';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { FOOTER_EVENTS } from 'components/main/analytics/events';
+import { forceCheck } from 'react-lazyload';
 import TopIcon from './img/top-inline.svg';
 import styles from './scrollWrapper.scss';
 
@@ -141,6 +142,7 @@ export class ScrollWrapper extends Component {
     if (scrollLeft !== lastViewScrollLeft) {
       this.scrollbars.thumbHorizontal.style.opacity = 1;
     }
+    forceCheck();
   };
 
   handleScrollStop = () => {
