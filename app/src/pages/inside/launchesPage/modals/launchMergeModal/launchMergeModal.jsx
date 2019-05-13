@@ -171,7 +171,7 @@ export class LaunchMergeModal extends Component {
             return [...acc, attribute];
           }
           return acc;
-        }, []);
+        }, commonObject.attributes);
       }
     });
     commonObject.description = commonObject.description.join(DESCRIPTION_SEPARATOR);
