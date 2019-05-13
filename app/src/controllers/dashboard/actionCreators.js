@@ -1,110 +1,64 @@
-import { fetch, getStorageItem, setStorageItem } from 'common/utils';
-import { URLS } from 'common/urls';
-import { activeProjectSelector, userIdSelector } from 'controllers/user';
-import { PROJECT_DASHBOARD_PAGE, activeDashboardIdSelector } from 'controllers/pages';
+import { getStorageItem } from 'common/utils';
 import {
-  FETCH_DASHBOARD_SUCCESS,
-  CHANGE_VISIBILITY_TYPE,
-  ADD_DASHBOARD_ITEM_SUCCESS,
-  DELETE_DASHBOARD_ITEM_SUCCESS,
-  UPDATE_DASHBOARD_ITEM_SUCCESS,
-  DASHBOARDS_TABLE_VIEW,
+  ADD_DASHBOARD,
+  ADD_DASHBOARD_SUCCESS,
   CHANGE_FULL_SCREEN_MODE,
+  CHANGE_VISIBILITY_TYPE,
+  DASHBOARDS_TABLE_VIEW,
+  DASHBOARDS_VISIBILITY_TYPE_STORAGE_KEY,
+  FETCH_DASHBOARD,
+  FETCH_DASHBOARDS,
+  REMOVE_DASHBOARD,
+  REMOVE_DASHBOARD_SUCCESS,
   TOGGLE_FULL_SCREEN_MODE,
+  UPDATE_DASHBOARD,
+  UPDATE_DASHBOARD_SUCCESS,
+  UPDATE_DASHBOARD_WIDGETS,
 } from './constants';
 
-const updateDashboardItemAction = (payload) => (dispatch) =>
-  dispatch({
-    type: UPDATE_DASHBOARD_ITEM_SUCCESS,
-    payload,
-  });
+export const fetchDashboardsAction = (params) => ({
+  type: FETCH_DASHBOARDS,
+  payload: params,
+});
 
-export const fetchDashboardsAction = (projectId) => (dispatch, getState) => {
-  const activeProject = projectId || activeProjectSelector(getState());
+export const fetchDashboardAction = () => ({
+  type: FETCH_DASHBOARD,
+});
 
-  fetch(URLS.dashboards(activeProject)).then((dashboards = {}) => {
-    dispatch({
-      type: FETCH_DASHBOARD_SUCCESS,
-      payload: dashboards.content,
-    });
-  });
-};
+export const addDashboardAction = (item) => ({
+  type: ADD_DASHBOARD,
+  payload: item,
+});
 
-export const fetchDashboardAction = () => (dispatch, getState) => {
-  const activeProject = activeProjectSelector(getState());
-  const activeDashboard = activeDashboardIdSelector(getState());
+export const addDashboardSuccessAction = (item) => ({
+  type: ADD_DASHBOARD_SUCCESS,
+  payload: item,
+});
 
-  fetch(URLS.dashboard(activeProject, activeDashboard))
-    .then((dashboard) => {
-      updateDashboardItemAction(dashboard)(dispatch);
-    })
-    .catch(() => {
-      this.props.redirect({ type: PROJECT_DASHBOARD_PAGE, payload: { projectId: activeProject } });
-    });
-};
+export const updateDashboardAction = (item) => ({
+  type: UPDATE_DASHBOARD,
+  payload: item,
+});
 
-export const updateDashboardWidgetsAction = (dashboard) => (dispatch, getState) => {
-  const activeProject = activeProjectSelector(getState());
+export const updateDashboardWidgetsAction = (dashboard) => ({
+  type: UPDATE_DASHBOARD_WIDGETS,
+  payload: dashboard,
+});
 
-  return fetch(URLS.dashboard(activeProject, dashboard.id), {
-    method: 'PUT',
-    data: {
-      updateWidgets: dashboard.widgets,
-    },
-  }).then(() => {
-    updateDashboardItemAction(dashboard)(dispatch);
-  });
-};
+export const updateDashboardItemSuccessAction = (payload) => ({
+  type: UPDATE_DASHBOARD_SUCCESS,
+  payload,
+});
 
-export const changeVisibilityTypeAction = (type) => (dispatch) => {
-  const storedVisibilityType = getStorageItem('dashboard_type') || DASHBOARDS_TABLE_VIEW;
-  const visibilityType = type || storedVisibilityType;
+export const deleteDashboardAction = ({ id }) => ({
+  type: REMOVE_DASHBOARD,
+  payload: id,
+});
 
-  setStorageItem('dashboard_type', visibilityType);
-
-  dispatch({ type: CHANGE_VISIBILITY_TYPE, payload: visibilityType });
-};
-
-export const deleteDashboardAction = ({ id }) => (dispatch, getState) => {
-  const activeProject = activeProjectSelector(getState());
-
-  fetch(URLS.dashboard(activeProject, id), {
-    method: 'DELETE',
-  }).then(() => {
-    dispatch({
-      type: DELETE_DASHBOARD_ITEM_SUCCESS,
-      payload: id,
-    });
-  });
-};
-
-export const editDashboardAction = (item) => (dispatch, getState) => {
-  const activeProject = activeProjectSelector(getState());
-
-  const { name, description, share, id } = item;
-
-  fetch(URLS.dashboard(activeProject, id), {
-    method: 'PUT',
-    data: { name, description, share },
-  }).then((response) => {
-    const payload = { ...item, ...response };
-    updateDashboardItemAction(payload)(dispatch);
-  });
-};
-
-export const addDashboardAction = (item) => (dispatch, getState) => {
-  fetch(URLS.dashboards(activeProjectSelector(getState())), {
-    method: 'POST',
-    data: item,
-  }).then((response) => {
-    const payload = { ...item, ...response, ...{ owner: userIdSelector(getState()) } };
-
-    dispatch({
-      type: ADD_DASHBOARD_ITEM_SUCCESS,
-      payload,
-    });
-  });
-};
+export const deleteDashboardSuccessAction = (id) => ({
+  type: REMOVE_DASHBOARD_SUCCESS,
+  payload: id,
+});
 
 export const toggleFullScreenModeAction = () => ({
   type: TOGGLE_FULL_SCREEN_MODE,
@@ -114,3 +68,14 @@ export const changeFullScreenModeAction = (mode) => ({
   type: CHANGE_FULL_SCREEN_MODE,
   payload: mode,
 });
+
+export const changeVisibilityTypeAction = (type) => {
+  const storedVisibilityType =
+    getStorageItem(DASHBOARDS_VISIBILITY_TYPE_STORAGE_KEY) || DASHBOARDS_TABLE_VIEW;
+  const visibilityType = type || storedVisibilityType;
+
+  return {
+    type: CHANGE_VISIBILITY_TYPE,
+    payload: visibilityType,
+  };
+};

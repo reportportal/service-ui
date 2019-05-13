@@ -53,6 +53,7 @@ import { fetchLogPageData } from 'controllers/log';
 import { fetchHistoryPageInfo } from 'controllers/itemsHistory';
 import { fetchProjectsAction } from 'controllers/administrate/projects';
 import { startSetViewMode } from 'controllers/administrate/projects/actionCreators';
+import { SIZE_KEY } from 'controllers/pagination';
 
 const redirectRoute = (path, createNewAction) => ({
   path,
@@ -152,8 +153,11 @@ export default {
       if (!authorized) {
         return;
       }
-      const projectId = projectIdSelector(getState());
-      dispatch(fetchDashboardsAction(projectId));
+      dispatch(
+        fetchDashboardsAction({
+          [SIZE_KEY]: 300,
+        }),
+      );
       dispatch(changeVisibilityTypeAction());
     },
   },

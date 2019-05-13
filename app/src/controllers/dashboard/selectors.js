@@ -1,9 +1,9 @@
 import { createSelector } from 'reselect';
-import { activeDashboardIdSelector } from 'controllers/pages';
+import { activeDashboardIdSelector, createQueryParametersSelector } from 'controllers/pages';
 
-const domainSelector = (state) => state.dashboard || {};
+const domainSelector = (state) => state.dashboards || {};
 
-export const dashboardItemsUnsortedSelector = (state) => domainSelector(state).dashboardItems;
+export const dashboardItemsUnsortedSelector = (state) => domainSelector(state).dashboards;
 
 export const dashboardItemsSelector = createSelector(
   dashboardItemsUnsortedSelector,
@@ -20,3 +20,5 @@ export const activeDashboardItemSelector = createSelector(
 );
 
 export const dashboardFullScreenModeSelector = (state) => domainSelector(state).fullScreenMode;
+
+export const querySelector = createQueryParametersSelector();

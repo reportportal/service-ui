@@ -6,15 +6,22 @@ export const dashboardItemPropTypes = PropTypes.shape({
 });
 
 export const INITIAL_STATE = {
-  dashboardItems: [],
+  dashboards: [],
   gridType: '',
   fullScreenMode: false,
 };
-export const FETCH_DASHBOARD_SUCCESS = 'fetchDashboardSuccess';
+export const NAMESPACE = 'dashboards';
+export const FETCH_DASHBOARDS = 'fetchDashboards';
+export const FETCH_DASHBOARD = 'fetchDashboard';
+export const ADD_DASHBOARD = 'addDashboard';
+export const ADD_DASHBOARD_SUCCESS = 'addDashboardSuccess';
+export const UPDATE_DASHBOARD = 'updateDashboard';
+export const UPDATE_DASHBOARD_WIDGETS = 'updateDashboardWidgets';
+export const UPDATE_DASHBOARD_SUCCESS = 'updateDashboardSuccess';
+export const REMOVE_DASHBOARD = 'removeDashboard';
+export const REMOVE_DASHBOARD_SUCCESS = 'removeDashboardSuccess';
 export const CHANGE_VISIBILITY_TYPE = 'changeVisibilityType';
-export const UPDATE_DASHBOARD_ITEM_SUCCESS = 'UpdateDashboardItemInitialize';
-export const ADD_DASHBOARD_ITEM_SUCCESS = 'AddDashboardItemSuccess';
-export const DELETE_DASHBOARD_ITEM_SUCCESS = 'DeleteDashboardItemSuccess';
+export const DASHBOARDS_VISIBILITY_TYPE_STORAGE_KEY = 'dashboard_type';
 export const DASHBOARDS_TABLE_VIEW = 'table';
 export const DASHBOARDS_GRID_VIEW = 'grid';
 export const CHANGE_FULL_SCREEN_MODE = 'changeFullScreenMode';
