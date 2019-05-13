@@ -30,11 +30,16 @@ NameColumn.defaultProps = {
   value: {},
 };
 
-const LastLoginColumn = ({ className, value }) => (
-  <div className={cx('last-login-col', className)}>
-    <LastLogin time={value.lastLogin} />
-  </div>
-);
+const LastLoginColumn = ({ className, value }) => {
+  const {
+    metadata: { last_login: lastLogin = 0 },
+  } = value;
+  return (
+    <div className={cx('last-login-col', className)}>
+      <LastLogin time={lastLogin} />
+    </div>
+  );
+};
 LastLoginColumn.propTypes = {
   className: PropTypes.string.isRequired,
   value: PropTypes.object,
