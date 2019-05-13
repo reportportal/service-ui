@@ -29,7 +29,7 @@ export default {
   project: projectReducer,
   notifications: notificationReducer,
   screenLock: screenLockReducer,
-  dashboard: dashboardReducer,
+  dashboards: dashboardReducer,
   launches: launchReducer,
   suites: suiteReducer,
   filters: filterReducer,

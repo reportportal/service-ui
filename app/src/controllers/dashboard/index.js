@@ -2,7 +2,7 @@ export {
   fetchDashboardsAction,
   changeVisibilityTypeAction,
   deleteDashboardAction,
-  editDashboardAction,
+  updateDashboardAction,
   addDashboardAction,
   fetchDashboardAction,
   updateDashboardWidgetsAction,
@@ -23,3 +23,4 @@ export {
   CHANGE_FULL_SCREEN_MODE,
   TOGGLE_FULL_SCREEN_MODE,
 } from './constants';
+export { dashboardSagas } from './sagas';

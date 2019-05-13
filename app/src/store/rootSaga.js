@@ -5,6 +5,7 @@ import { fetchSagas } from 'controllers/fetch';
 import { launchSagas } from 'controllers/launch';
 import { groupOperationsSagas } from 'controllers/groupOperations';
 import { suiteSagas } from 'controllers/suite';
+import { dashboardSagas } from 'controllers/dashboard';
 import { filterSagas } from 'controllers/filter';
 import { testSagas } from 'controllers/test';
 import { membersSagas } from 'controllers/members';
@@ -23,6 +24,7 @@ export function* rootSagas() {
     launchSagas(),
     groupOperationsSagas(),
     suiteSagas(),
+    dashboardSagas(),
     filterSagas(),
     testSagas(),
     membersSagas(),

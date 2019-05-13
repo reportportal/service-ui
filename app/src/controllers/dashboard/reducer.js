@@ -1,41 +1,46 @@
+import { combineReducers } from 'redux';
+import { fetchReducer } from 'controllers/fetch/reducer';
+import { queueReducers } from 'common/utils/queueReducers';
 import {
-  INITIAL_STATE,
-  FETCH_DASHBOARD_SUCCESS,
-  CHANGE_VISIBILITY_TYPE,
-  ADD_DASHBOARD_ITEM_SUCCESS,
-  DELETE_DASHBOARD_ITEM_SUCCESS,
-  UPDATE_DASHBOARD_ITEM_SUCCESS,
+  ADD_DASHBOARD_SUCCESS,
   CHANGE_FULL_SCREEN_MODE,
+  CHANGE_VISIBILITY_TYPE,
+  INITIAL_STATE,
+  NAMESPACE,
+  REMOVE_DASHBOARD_SUCCESS,
   TOGGLE_FULL_SCREEN_MODE,
+  UPDATE_DASHBOARD_SUCCESS,
 } from './constants';
 
-export const dashboardReducer = (state = INITIAL_STATE, { type, payload }) => {
+const dashboardsReducer = (state = INITIAL_STATE.dashboards, { type, payload }) => {
   switch (type) {
-    case FETCH_DASHBOARD_SUCCESS:
-      return { ...state, ...{ dashboardItems: payload } };
-    case CHANGE_VISIBILITY_TYPE:
-      return { ...state, ...{ gridType: payload } };
-    case ADD_DASHBOARD_ITEM_SUCCESS:
-      return { ...state, ...{ dashboardItems: [...state.dashboardItems, payload] } };
-    case DELETE_DASHBOARD_ITEM_SUCCESS:
-      return {
-        ...state,
-        ...{ dashboardItems: state.dashboardItems.filter((item) => item.id !== payload) },
-      };
-    case UPDATE_DASHBOARD_ITEM_SUCCESS:
-      return {
-        ...state,
-        ...{
-          dashboardItems: state.dashboardItems.map(
-            (item) => (item.id === payload.id ? payload : item),
-          ),
-        },
-      };
-    case CHANGE_FULL_SCREEN_MODE:
-      return { ...state, ...{ fullScreenMode: payload } };
-    case TOGGLE_FULL_SCREEN_MODE:
-      return { ...state, ...{ fullScreenMode: !state.fullScreenMode } };
+    case ADD_DASHBOARD_SUCCESS:
+      return [...state, payload];
+    case UPDATE_DASHBOARD_SUCCESS:
+      return state.map((item) => (item.id === payload.id ? payload : item));
+    case REMOVE_DASHBOARD_SUCCESS:
+      return state.filter((item) => item.id !== payload);
     default:
       return state;
   }
 };
+
+const gridTypeReducer = (state = INITIAL_STATE.gridType, { type, payload }) =>
+  type === CHANGE_VISIBILITY_TYPE ? payload : state;
+
+const fullScreenModeReducer = (state = INITIAL_STATE.fullScreenMode, { type, payload }) => {
+  switch (type) {
+    case CHANGE_FULL_SCREEN_MODE:
+      return payload;
+    case TOGGLE_FULL_SCREEN_MODE:
+      return !state;
+    default:
+      return state;
+  }
+};
+
+export const dashboardReducer = combineReducers({
+  dashboards: queueReducers(fetchReducer(NAMESPACE, { contentPath: 'content' }), dashboardsReducer),
+  gridType: gridTypeReducer,
+  fullScreenMode: fullScreenModeReducer,
+});

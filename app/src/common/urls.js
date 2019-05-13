@@ -20,10 +20,7 @@ export const URLS = {
     `${urlBase}data/userphoto${getQueryParams({ id, access_token: getToken() })}`,
 
   dashboard: (activeProject, id) => `${urlBase}${activeProject}/dashboard/${id}`,
-  dashboards: (activeProject) =>
-    `${urlBase}${activeProject}/dashboard${getQueryParams({
-      'page.size': 300,
-    })}`,
+  dashboards: (activeProject) => `${urlBase}${activeProject}/dashboard`,
   dashboardsShared: (activeProject) =>
     `${urlBase}${activeProject}/dashboard/shared${getQueryParams({
       'page.page': 1,

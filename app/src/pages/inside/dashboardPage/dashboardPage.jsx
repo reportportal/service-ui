@@ -7,7 +7,7 @@ import { PageLayout, PageHeader, PageSection } from 'layouts/pageLayout';
 import {
   changeVisibilityTypeAction,
   deleteDashboardAction,
-  editDashboardAction,
+  updateDashboardAction,
   addDashboardAction,
   dashboardItemsSelector,
   dashboardGridTypeSelector,
@@ -66,7 +66,7 @@ const messages = defineMessages({
     changeVisibilityType: changeVisibilityTypeAction,
     showModal: showModalAction,
     deleteDashboard: deleteDashboardAction,
-    editDashboard: editDashboardAction,
+    editDashboard: updateDashboardAction,
     addDashboard: addDashboardAction,
   },
 )
@@ -181,18 +181,6 @@ export class DashboardPage extends Component {
     },
   ];
 
-  getFilteredDashboardItems = () => {
-    const { filter, dashboardItems } = this.props;
-
-    if (!filter) {
-      return dashboardItems;
-    }
-
-    const filterRule = new RegExp(filter.toLowerCase());
-
-    return dashboardItems.filter((item) => filterRule.test(item.name.toLowerCase()));
-  };
-
   toggleGridView = () => {
     this.props.changeVisibilityType(DASHBOARDS_GRID_VIEW);
   };
@@ -202,8 +190,7 @@ export class DashboardPage extends Component {
   };
 
   render() {
-    const { intl, gridType, userInfo, onFilterChange, filter } = this.props;
-    const dashboardItems = this.getFilteredDashboardItems();
+    const { intl, gridType, userInfo, onFilterChange, filter, dashboardItems } = this.props;
     const eventsInfo = {
       closeIcon: DASHBOARD_PAGE_EVENTS.CLOSE_ICON_ADD_NEW_DASHBOARD_MODAL,
       changeDescription: DASHBOARD_PAGE_EVENTS.ENTER_DESCRIPTION_ADD_NEW_DASHBOARD_MODAL,
