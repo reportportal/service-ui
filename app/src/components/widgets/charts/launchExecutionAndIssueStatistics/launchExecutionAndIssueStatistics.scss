@@ -17,6 +17,14 @@
       font-weight: bold;
     }
   }
+
+  .small-view {
+    :global {
+      .c3-chart-arcs-title {
+        font-size: 16px !important;
+      }
+    }
+  }
 }
 
 .launch-execution-chart {

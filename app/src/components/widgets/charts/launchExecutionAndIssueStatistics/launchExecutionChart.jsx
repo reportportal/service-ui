@@ -80,6 +80,7 @@ export class LaunchExecutionChart extends Component {
     !this.props.isPreview && this.props.observer.subscribe('widgetResized', this.resizeStatusChart);
     this.getConfig();
   }
+
   componentWillUnmount() {
     if (!this.props.isPreview) {
       this.statusNode.removeEventListener('mousemove', this.setCoords);
@@ -96,6 +97,10 @@ export class LaunchExecutionChart extends Component {
     if (!this.props.widget.content.result || this.props.isPreview) {
       return;
     }
+
+    this.chart.resize({
+      height: this.height,
+    });
 
     this.props.uncheckedLegendItems.forEach((id) => {
       this.chart.toggle(id);
@@ -285,13 +290,15 @@ export class LaunchExecutionChart extends Component {
   };
 
   render() {
+    const { isConfigReady } = this.state;
     const { isPreview, uncheckedLegendItems } = this.props;
     const classes = chartCx({ 'preview-view': isPreview });
+    const chartClasses = chartCx('c3', { 'small-view': this.height <= 250 });
     const legendItems = this.statusItems.map((item) => item.id);
 
     return (
       <div className={classes}>
-        {this.state.isConfigReady && (
+        {isConfigReady && (
           <div className={chartCx('launch-execution-chart')}>
             <div className={chartCx('data-js-launch-execution-chart-container')}>
               {!isPreview && (
@@ -306,7 +313,7 @@ export class LaunchExecutionChart extends Component {
               <C3Chart
                 config={this.statusConfig}
                 onChartCreated={this.onStatusChartCreated}
-                className={chartCx('c3')}
+                className={chartClasses}
               />
             </div>
           </div>
