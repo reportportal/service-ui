@@ -57,6 +57,7 @@ export default (env = defaultEnv) => ({
     new webpack.NamedModulesPlugin(),
     new webpack.HotModuleReplacementPlugin(),
     new HtmlWebpackPlugin({
+      favicon: 'src/common/img/favicon.ico',
       template: path.resolve('src', 'index.tpl.html'),
       filename: 'index.html',
     }),
