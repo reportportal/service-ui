@@ -16,23 +16,24 @@
 
 require('babel-register');
 const path = require('path');
-const config = require('../webpack.config.babel.js').default({
-  dev: true,
-  production: false,
-  storybook: true,
-});
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const getConfig = require('../webpack.config');
+const baseConfig = getConfig();
 
 module.exports = {
-  plugins: config.plugins.filter((plugin) =>
-    ['DefinePlugin', 'ProvidePlugin', 'ExtractTextPlugin'].includes(plugin.constructor.name)
+  plugins: baseConfig.plugins.filter((plugin) =>
+    ['DefinePlugin', 'ProvidePlugin', 'MiniCssExtractPlugin'].includes(plugin.constructor.name),
   ),
   devtool: 'cheap-module-source-map',
-  resolve: Object.assign({}, config.resolve, {
-    alias: Object.assign({}, config.resolve.alias, {
+  resolve: Object.assign({}, baseConfig.resolve, {
+    alias: Object.assign({}, baseConfig.resolve.alias, {
       'storybook-decorators': path.resolve(__dirname, 'decorators'),
     }),
   }),
   module: {
-    rules: config.module.loaders,
+    rules: baseConfig.module.rules,
+  },
+  optimization: {
+    minimizer: [new UglifyJsPlugin()],
   },
 };
