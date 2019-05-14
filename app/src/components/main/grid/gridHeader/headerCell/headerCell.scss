@@ -1,7 +1,7 @@
 .header-cell {
   position: sticky;
   top: 0;
-  z-index: $Z_INDEX-GRID_HEADER;
+  z-index: 2;
   display: table-cell;
   color: $COLOR--gray-47;
   background-color: $COLOR--white;
