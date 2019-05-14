@@ -14,7 +14,7 @@ import {
 } from 'controllers/project';
 import { showModalAction } from 'controllers/modal';
 import { GhostButton } from 'components/buttons/ghostButton';
-import { INTEGRATIONS_SUPPORTS_MULTIPLE_INSTANCES } from '../../../constants';
+import { isIntegrationSupportsMultipleInstances } from 'components/integrations/utils';
 import { InstancesList } from './instancesList';
 import styles from './instancesSection.scss';
 
@@ -105,7 +105,7 @@ export class InstancesSection extends Component {
     globalIntegrations: [],
   };
 
-  multiple = INTEGRATIONS_SUPPORTS_MULTIPLE_INSTANCES[this.props.instanceType];
+  multiple = isIntegrationSupportsMultipleInstances(this.props.instanceType);
 
   removeProjectIntegrations = () =>
     this.props.removeProjectIntegrationsByTypeAction(this.props.instanceType);
