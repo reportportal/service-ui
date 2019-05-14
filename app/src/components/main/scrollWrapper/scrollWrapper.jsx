@@ -130,7 +130,10 @@ export class ScrollWrapper extends Component {
     const { lastViewScrollTop, lastViewScrollLeft } = this.scrollbars;
     const { withBackToTop, onLazyLoad } = this.props;
 
-    this.setState({ showButton: withBackToTop && scrollTop > 100 });
+    const isBackToTopVisible = withBackToTop && scrollTop > 100;
+    if (isBackToTopVisible !== this.state.showButton) {
+      this.setState({ showButton: isBackToTopVisible });
+    }
 
     if (onLazyLoad !== false && top > 0.9) {
       onLazyLoad();
