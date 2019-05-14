@@ -22,8 +22,8 @@
 import React, { Component } from 'react';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
-import { getDuration, dateFormat, approximateTimeFormat } from 'common/utils';
-import { injectIntl, intlShape, defineMessages } from 'react-intl';
+import { approximateTimeFormat, dateFormat, getDuration } from 'common/utils';
+import { defineMessages, injectIntl, intlShape } from 'react-intl';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import InProgressGif from 'common/img/item-in-progress.gif';
@@ -64,6 +64,10 @@ const messages = defineMessages({
   overApproximate: {
     id: 'DurationBlock.overApproximate',
     defaultMessage: 'Average executions time - { end }, current overlap - { over }',
+  },
+  left: {
+    id: 'DurationBlock.left',
+    defaultMessage: 'left',
   },
 });
 
@@ -116,10 +120,7 @@ export class DurationBlock extends Component {
     const time = this.getApproximateTime();
     const end = approximateTimeFormat(this.props.timing.approxTime / 1000);
     const over = approximateTimeFormat(-time);
-    if (time > 0) {
-      return '';
-    }
-    return formatMessage(messages.overApproximate, { end, over });
+    return time > 0 ? '' : formatMessage(messages.overApproximate, { end, over });
   };
 
   getApproximateTime = () => {
@@ -146,21 +147,36 @@ export class DurationBlock extends Component {
     return this.isInProgress() && isLaunch;
   };
 
+  renderInProgressDuration = () => {
+    const { timing, intl } = this.props;
+    const approxTimeIsOver = Date.now() > timing.start + timing.approxTime * 1000;
+
+    return timing.approxTime > 0 && !approxTimeIsOver ? (
+      <span className={cx('duration')}>
+        <span className={cx('approx-in-progress')} />
+        ~{getDuration(Date.now(), Date.now() + timing.approxTime * 1000)}{' '}
+        {intl.formatMessage(messages.left)}
+      </span>
+    ) : (
+      <span className={cx('in-progress')}>
+        <img src={InProgressGif} alt="In progress" />
+      </span>
+    );
+  };
+
   render() {
+    const { timing } = this.props;
+
     return (
       <div
-        className={cx({ 'duration-block': true, error: this.isStopped() || this.isInterrupted() })}
+        className={cx('duration-block', { error: this.isStopped() || this.isInterrupted() })}
         title={this.getStatusTitle()}
       >
         <div className={cx('icon')}>{Parser(ClockIcon)}</div>
         {this.isInProgress() ? (
-          <span className={cx('in-progress')}>
-            <img src={InProgressGif} alt="In progress" />
-          </span>
+          this.renderInProgressDuration()
         ) : (
-          <span className={cx('duration')}>
-            {getDuration(this.props.timing.start, this.props.timing.end)}
-          </span>
+          <span className={cx('duration')}>{getDuration(timing.start, timing.end)}</span>
         )}
       </div>
     );
