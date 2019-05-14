@@ -18,7 +18,6 @@
   width: 20%;
   vertical-align: top;
   font-size: 13px;
-  text-transform: lowercase;
 }
 .object-type-col {
   width: 15%;
@@ -29,10 +28,6 @@
     overflow: hidden;
     text-overflow: ellipsis;
   }
-}
-.action-col:first-letter,
-.object-type-col:first-letter {
-  text-transform: uppercase;
 }
 .object-name-col {
   width: 15%;
