@@ -33,21 +33,21 @@ export class LogItemActivity extends Component {
   isAnalyzerActivity = ({ actionType }) =>
     actionType === 'analyze_item' || actionType === 'link_issue_aa';
 
-  renderActivityItem(activityItem) {
+  renderActivityItem = (activityItem) => {
     const { intl } = this.props;
     const isAnalyzerActivity = this.isAnalyzerActivity(activityItem);
 
     return (
-      <div className={cx('activity-item')} key={activityItem.activityId}>
+      <div className={cx('activity-item')} key={activityItem.id}>
         {isAnalyzerActivity ? (
           <div className={cx('analyzer-user-column', 'column')}>
-            <span className={cx('analyzer-user')}>{activityItem.userRef}</span>{' '}
+            <span className={cx('analyzer-user')}>{activityItem.user}</span>{' '}
             <span className={cx('action')}>{getActionMessage(intl, activityItem)}</span>
           </div>
         ) : (
           <Fragment>
             <div className={cx('user-column', 'column')}>
-              <OwnerBlock owner={activityItem.userRef} />
+              <OwnerBlock owner={activityItem.user} />
             </div>
             <div className={cx('action-column', 'column')}>
               <span className={cx('action')}>{getActionMessage(intl, activityItem)}</span>
@@ -56,7 +56,7 @@ export class LogItemActivity extends Component {
         )}
         <div className={cx('time-column', 'column')}>
           <span className={cx('time')}>
-            <AbsRelTime startTime={activityItem.lastModifiedDate} />
+            <AbsRelTime startTime={activityItem.lastModified} />
           </span>
         </div>
         <div className={cx('history-column', 'column')}>
@@ -64,13 +64,13 @@ export class LogItemActivity extends Component {
             <HistoryItem
               key={historyItem.field}
               historyItem={historyItem}
-              projectRef={activityItem.projectRef}
+              projectId={activityItem.projectId}
             />
           ))}
         </div>
       </div>
     );
-  }
+  };
 
   render() {
     const { intl, activity } = this.props;
@@ -78,7 +78,7 @@ export class LogItemActivity extends Component {
     return (
       <div className={cx('container')}>
         {activity.length ? (
-          activity.map((activityItem) => this.renderActivityItem(activityItem))
+          activity.map(this.renderActivityItem)
         ) : (
           <NoItemMessage message={intl.formatMessage(messages.noActivities)} />
         )}
