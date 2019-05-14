@@ -28,7 +28,9 @@ import { connect } from 'react-redux';
 import ReactDOMServer from 'react-dom/server';
 import { statisticsLinkSelector } from 'controllers/testItem';
 import { activeProjectSelector } from 'controllers/user';
-import { TEST_ITEM_PAGE } from 'controllers/pages';
+import { launchFiltersSelector } from 'controllers/filter';
+import { TEST_ITEM_PAGE, PROJECT_LAUNCHES_PAGE } from 'controllers/pages';
+import { ALL } from 'common/constants/reservedFilterIds';
 import { TooltipWrapper } from '../common/tooltip';
 import { C3Chart } from '../common/c3chart';
 import chartStyles from './launchExecutionAndIssueStatistics.scss';
@@ -46,6 +48,7 @@ const getResult = (widget) => widget.content.result[0] || widget.content.result;
   (state) => ({
     project: activeProjectSelector(state),
     getStatisticsLink: (name) => statisticsLinkSelector(state, { statuses: [name] }),
+    launchFilters: launchFiltersSelector(state),
   }),
   {
     navigate: (linkAction) => linkAction,
@@ -63,6 +66,7 @@ export class LaunchExecutionChart extends Component {
     observer: PropTypes.object,
     uncheckedLegendItems: PropTypes.array,
     onChangeLegend: PropTypes.func,
+    launchFilters: PropTypes.array,
   };
 
   static defaultProps = {
@@ -70,6 +74,7 @@ export class LaunchExecutionChart extends Component {
     observer: {},
     uncheckedLegendItems: [],
     onChangeLegend: () => {},
+    launchFilters: [],
   };
 
   state = {
@@ -128,20 +133,38 @@ export class LaunchExecutionChart extends Component {
   };
 
   onChartClick = (d) => {
-    const { widget, getStatisticsLink } = this.props;
-    const id = getResult(widget).id;
-    const defaultParams = this.getDefaultLinkParams(id);
-    const nameConfig = getItemNameConfig(d.id);
+    const { widget, launchFilters, getStatisticsLink } = this.props;
 
-    const link = getStatisticsLink(nameConfig.defectType.toUpperCase());
-    this.props.navigate(Object.assign(link, defaultParams));
+    const nameConfig = getItemNameConfig(d.id);
+    const id = getResult(widget).id;
+    let navigationParams;
+
+    if (!id) {
+      const appliedWidgetFilterId = widget.appliedFilters[0].id;
+      const activeFilter = launchFilters.filter((filter) => filter.id === appliedWidgetFilterId)[0];
+      const activeFilterId = activeFilter && activeFilter.id;
+      navigationParams = this.getDefaultParamsOverallStatisticsWidget(activeFilterId);
+    } else {
+      const link = getStatisticsLink(nameConfig.defectType.toUpperCase());
+      navigationParams = Object.assign(link, this.getDefaultParamsLaunchExecutionWidget(id));
+    }
+
+    this.props.navigate(navigationParams);
   };
 
-  getDefaultLinkParams = (testItemIds) => ({
+  getDefaultParamsOverallStatisticsWidget = (activeFilterId) => ({
     payload: {
       projectId: this.props.project,
-      filterId: 'all',
-      testItemIds,
+      filterId: activeFilterId || ALL,
+    },
+    type: PROJECT_LAUNCHES_PAGE,
+  });
+
+  getDefaultParamsLaunchExecutionWidget = (id) => ({
+    payload: {
+      projectId: this.props.project,
+      filterId: ALL,
+      testItemIds: id,
     },
     type: TEST_ITEM_PAGE,
   });
