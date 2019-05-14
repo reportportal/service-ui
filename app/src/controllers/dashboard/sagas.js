@@ -2,6 +2,7 @@ import { all, call, put, select, takeEvery } from 'redux-saga/effects';
 import { URLS } from 'common/urls';
 import { fetchDataAction } from 'controllers/fetch';
 import { activeProjectSelector, userIdSelector } from 'controllers/user';
+import { hideModalAction } from 'controllers/modal';
 import { fetch, setStorageItem } from 'common/utils';
 import {
   ADD_DASHBOARD,
@@ -20,7 +21,7 @@ import {
   deleteDashboardSuccessAction,
   updateDashboardItemSuccessAction,
 } from './actionCreators';
-import { activeDashboardIdSelector } from '../pages';
+import { PROJECT_DASHBOARD_ITEM_PAGE, activeDashboardIdSelector } from '../pages';
 
 function* fetchDashboards({ payload: params }) {
   const activeProject = yield select(activeProjectSelector);
@@ -53,6 +54,11 @@ function* addDashboard({ payload: dashboard }) {
   });
 
   yield put(addDashboardSuccessAction({ id, owner, ...dashboard }));
+  yield put(hideModalAction());
+  yield put({
+    type: PROJECT_DASHBOARD_ITEM_PAGE,
+    payload: { projectId: activeProject, dashboardId: id },
+  });
 }
 
 function* updateDashboard({ payload: dashboard }) {
