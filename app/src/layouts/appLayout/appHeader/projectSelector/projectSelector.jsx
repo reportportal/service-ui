@@ -80,7 +80,7 @@ export class ProjectSelector extends Component {
         </div>
         <div className={cx({ 'projects-list': true, shown: this.state.opened })}>
           <ScrollWrapper autoHeight autoHeightMax={600}>
-            {Array.map(this.props.projects, (project) => (
+            {this.props.projects.map((project) => (
               <NavLink
                 to={{ type: PROJECT_PAGE, payload: { projectId: project } }}
                 key={project}

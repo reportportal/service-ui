@@ -22,7 +22,7 @@
   display: inline-block;
   background-repeat: no-repeat;
   background-position: center;
-  background-image: url(common/img/menu.svg);
+  background-image: url(~common/img/menu.svg);
   border: 0px;
   box-sizing: border-box;
   cursor: pointer;
@@ -36,7 +36,7 @@
   }
 
   &.opened {
-    background-image: url(common/img/menu-hover.svg);
+    background-image: url(~common/img/menu-hover.svg);
     @media (max-width: $SCREEN_XS_MAX) {
       background-color: $COLOR--white-four;
       border-radius: 2px;
@@ -46,11 +46,11 @@
 
   &:not(.disabled) {
     &:hover {
-      background-image: url(common/img/menu-hover.svg);
+      background-image: url(~common/img/menu-hover.svg);
     }
 
     &:active {
-      background-image: url(common/img/menu-hover.svg);
+      background-image: url(~common/img/menu-hover.svg);
     }
   }
 }
