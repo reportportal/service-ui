@@ -30,6 +30,12 @@ export const UPDATE_NOTIFICATIONS = 'updateEmail';
 export const SWITCH_ON_NOTIFICATIONS = 'onEmail';
 export const SWITCH_OFF_NOTIFICATIONS = 'offEmail';
 export const UPDATE_ITEM = 'updateItem';
+export const LINK_ISSUE_AA = 'linkIssueAa';
+export const ANALYZE_ITEM = 'analyzeItem';
+export const CREATE_PATTERN = 'createPattern';
+export const UPDATE_PATTERN = 'updatePattern';
+export const DELETE_PATTERN = 'deletePattern';
+export const MATCHED_PATTERN = 'patternMatched';
 
 // grouped actions
 export const ACTIONS_WITH_ISSUES = 'issuesActions';
