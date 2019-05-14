@@ -67,7 +67,6 @@ export class IssueStatisticsChart extends Component {
     observer: PropTypes.object,
     uncheckedLegendItems: PropTypes.array,
     onChangeLegend: PropTypes.func,
-    onStatusPageMode: PropTypes.bool,
     launchFilters: PropTypes.array,
   };
 
@@ -77,7 +76,6 @@ export class IssueStatisticsChart extends Component {
     observer: {},
     uncheckedLegendItems: [],
     onChangeLegend: () => {},
-    onStatusPageMode: false,
     launchFilters: [],
   };
 

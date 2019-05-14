@@ -66,7 +66,6 @@ export class LaunchExecutionChart extends Component {
     observer: PropTypes.object,
     uncheckedLegendItems: PropTypes.array,
     onChangeLegend: PropTypes.func,
-    onStatusPageMode: PropTypes.bool,
     launchFilters: PropTypes.array,
   };
 
@@ -75,7 +74,6 @@ export class LaunchExecutionChart extends Component {
     observer: {},
     uncheckedLegendItems: [],
     onChangeLegend: () => {},
-    onStatusPageMode: false,
     launchFilters: [],
   };
 
