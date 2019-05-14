@@ -27,8 +27,10 @@ import { connect } from 'react-redux';
 import ReactDOMServer from 'react-dom/server';
 import { defectLinkSelector } from 'controllers/testItem';
 import { defectTypesSelector } from 'controllers/project';
+import { launchFiltersSelector } from 'controllers/filter';
 import { activeProjectSelector } from 'controllers/user';
-import { TEST_ITEM_PAGE } from 'controllers/pages';
+import { TEST_ITEM_PAGE, PROJECT_LAUNCHES_PAGE } from 'controllers/pages';
+import { ALL } from 'common/constants/reservedFilterIds';
 import { TooltipWrapper } from '../common/tooltip';
 import { C3Chart } from '../common/c3chart';
 import chartStyles from './launchExecutionAndIssueStatistics.scss';
@@ -46,6 +48,7 @@ const getResult = (widget) => widget.content.result[0] || widget.content.result;
     project: activeProjectSelector(state),
     defectTypes: defectTypesSelector(state),
     getDefectLink: (params) => defectLinkSelector(state, params),
+    launchFilters: launchFiltersSelector(state),
   }),
   {
     navigate: (linkAction) => linkAction,
@@ -64,6 +67,7 @@ export class IssueStatisticsChart extends Component {
     observer: PropTypes.object,
     uncheckedLegendItems: PropTypes.array,
     onChangeLegend: PropTypes.func,
+    launchFilters: PropTypes.array,
   };
 
   static defaultProps = {
@@ -72,6 +76,7 @@ export class IssueStatisticsChart extends Component {
     observer: {},
     uncheckedLegendItems: [],
     onChangeLegend: () => {},
+    launchFilters: [],
   };
 
   state = {
@@ -135,23 +140,39 @@ export class IssueStatisticsChart extends Component {
   };
 
   onChartClick = (d) => {
-    const { widget, getDefectLink, defectTypes } = this.props;
+    const { widget, launchFilters, getDefectLink, defectTypes } = this.props;
 
     const nameConfig = getItemNameConfig(d.id);
     const id = getResult(widget).id;
-    const defaultParams = this.getDefaultLinkParams(id);
-    const defectLocators = getDefectTypeLocators(nameConfig, defectTypes);
+    let navigationParams;
 
-    const link = getDefectLink({ defects: defectLocators, itemId: id });
+    if (!id) {
+      const appliedWidgetFilterId = widget.appliedFilters[0].id;
+      const activeFilter = launchFilters.filter((filter) => filter.id === appliedWidgetFilterId)[0];
+      const activeFilterId = activeFilter && activeFilter.id;
+      navigationParams = this.getDefaultParamsOverallStatisticsWidget(activeFilterId);
+    } else {
+      const defectLocators = getDefectTypeLocators(nameConfig, defectTypes);
+      const link = getDefectLink({ defects: defectLocators, itemId: id });
+      navigationParams = Object.assign(link, this.getDefaultParamsLaunchExecutionWidget(id));
+    }
 
-    this.props.navigate(Object.assign(link, defaultParams));
+    this.props.navigate(navigationParams);
   };
 
-  getDefaultLinkParams = (testItemIds) => ({
+  getDefaultParamsOverallStatisticsWidget = (activeFilterId) => ({
     payload: {
       projectId: this.props.project,
-      filterId: 'all',
-      testItemIds,
+      filterId: activeFilterId || ALL,
+    },
+    type: PROJECT_LAUNCHES_PAGE,
+  });
+
+  getDefaultParamsLaunchExecutionWidget = (id) => ({
+    payload: {
+      projectId: this.props.project,
+      filterId: ALL,
+      testItemIds: id,
     },
     type: TEST_ITEM_PAGE,
   });
