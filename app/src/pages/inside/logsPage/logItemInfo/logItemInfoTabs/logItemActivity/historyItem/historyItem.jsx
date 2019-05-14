@@ -41,7 +41,7 @@ export class HistoryItem extends Component {
       newValue: PropTypes.string.isRequired,
       field: PropTypes.string.isRequired,
     }).isRequired,
-    projectRef: PropTypes.string.isRequired,
+    projectId: PropTypes.number.isRequired,
     activity: PropTypes.array.isRequired,
     filterId: PropTypes.string.isRequired,
   };
@@ -67,14 +67,14 @@ export class HistoryItem extends Component {
   }
 
   renderRelevantValue(value) {
-    const { projectRef, filterId, intl } = this.props;
+    const { projectId, filterId, intl } = this.props;
 
     try {
       const relevantItem = JSON.parse(value);
       const itemLink = {
         type: TEST_ITEM_PAGE,
         payload: {
-          projectId: projectRef,
+          projectId,
           filterId,
           testItemIds: [
             relevantItem.launchId,
