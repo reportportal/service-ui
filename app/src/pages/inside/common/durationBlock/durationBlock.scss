@@ -44,3 +44,31 @@
     font-size: 15px;
   }
 }
+.approx-in-progress {
+  display: inline-block;
+  position: relative;
+  margin: 0 16px;
+
+  &,
+  &:before,
+  &:after {
+    border: 2px solid $COLOR--charcoal-grey;
+    border-radius: 50%;
+  }
+
+  &:before,
+  &:after {
+    display: inline-block;
+    position: absolute;
+    content: '';
+    top: -2px;
+  }
+
+  &:before {
+    left: -10px;
+  }
+
+  &:after {
+    right: -10px;
+  }
+}

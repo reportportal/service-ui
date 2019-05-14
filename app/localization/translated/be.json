@@ -370,6 +370,7 @@
   "DurationBlock.inProgress": "У працэсе",
   "DurationBlock.inProgressWithEnd": "Няправільны статус: 'У працэсе' мае час заканчэння",
   "DurationBlock.interrupted": "Выкананне ПЕРАПЫНЕНА пасля: {durationTime}. Спынены в: {endTime}",
+  "DurationBlock.left": "засталося",
   "DurationBlock.notInProgressWithoutEnd": "Няправільны статус: элемент не 'У працэсе', але не мае часу заканчэння",
   "DurationBlock.overApproximate": "Сярэдні час выканання - {end}, цяперашняе перакрыццё - {over}",
   "DurationBlock.skipped": "ПРАПУШЧАНА. Працягласць: {durationTime}",
