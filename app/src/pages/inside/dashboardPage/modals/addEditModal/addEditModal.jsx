@@ -157,7 +157,10 @@ export class AddEditModal extends Component {
           >
             <FieldProvider name="name" type="text">
               <FieldErrorHint>
-                <Input placeholder={intl.formatMessage(messages.dashboardNamePlaceholder)} />
+                <Input
+                  maxLength={'128'}
+                  placeholder={intl.formatMessage(messages.dashboardNamePlaceholder)}
+                />
               </FieldErrorHint>
             </FieldProvider>
           </ModalField>
