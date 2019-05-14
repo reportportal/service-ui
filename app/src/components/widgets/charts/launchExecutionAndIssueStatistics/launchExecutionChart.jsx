@@ -28,7 +28,8 @@ import { connect } from 'react-redux';
 import ReactDOMServer from 'react-dom/server';
 import { statisticsLinkSelector } from 'controllers/testItem';
 import { activeProjectSelector } from 'controllers/user';
-import { TEST_ITEM_PAGE } from 'controllers/pages';
+import { launchFiltersSelector } from 'controllers/filter';
+import { PROJECT_LAUNCHES_PAGE } from 'controllers/pages';
 import { TooltipWrapper } from '../common/tooltip';
 import { C3Chart } from '../common/c3chart';
 import chartStyles from './launchExecutionAndIssueStatistics.scss';
@@ -46,6 +47,7 @@ const getResult = (widget) => widget.content.result[0] || widget.content.result;
   (state) => ({
     project: activeProjectSelector(state),
     getStatisticsLink: (name) => statisticsLinkSelector(state, { statuses: [name] }),
+    launchFilters: launchFiltersSelector(state),
   }),
   {
     navigate: (linkAction) => linkAction,
@@ -63,6 +65,7 @@ export class LaunchExecutionChart extends Component {
     observer: PropTypes.object,
     uncheckedLegendItems: PropTypes.array,
     onChangeLegend: PropTypes.func,
+    launchFilters: PropTypes.array,
   };
 
   static defaultProps = {
@@ -70,6 +73,7 @@ export class LaunchExecutionChart extends Component {
     observer: {},
     uncheckedLegendItems: [],
     onChangeLegend: () => {},
+    launchFilters: [],
   };
 
   state = {
@@ -128,22 +132,23 @@ export class LaunchExecutionChart extends Component {
   };
 
   onChartClick = (d) => {
-    const { widget, getStatisticsLink } = this.props;
-    const id = getResult(widget).id;
-    const defaultParams = this.getDefaultLinkParams(id);
+    const { widget, launchFilters, getStatisticsLink } = this.props;
+    const appliedWidgetFilterId = widget.appliedFilters[0].id;
+    const activeFilter =
+      launchFilters.filter((filter) => filter.id === appliedWidgetFilterId)[0] || {};
+    const defaultParams = this.getDefaultLinkParams(activeFilter.id);
     const nameConfig = getItemNameConfig(d.id);
 
     const link = getStatisticsLink(nameConfig.defectType.toUpperCase());
     this.props.navigate(Object.assign(link, defaultParams));
   };
 
-  getDefaultLinkParams = (testItemIds) => ({
+  getDefaultLinkParams = (activeFilterId = 'all') => ({
     payload: {
       projectId: this.props.project,
-      filterId: 'all',
-      testItemIds,
+      filterId: activeFilterId,
     },
-    type: TEST_ITEM_PAGE,
+    type: PROJECT_LAUNCHES_PAGE,
   });
 
   getConfig = () => {

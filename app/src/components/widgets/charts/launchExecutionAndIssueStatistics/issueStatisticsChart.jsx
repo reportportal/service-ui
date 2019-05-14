@@ -27,8 +27,9 @@ import { connect } from 'react-redux';
 import ReactDOMServer from 'react-dom/server';
 import { defectLinkSelector } from 'controllers/testItem';
 import { defectTypesSelector } from 'controllers/project';
+import { launchFiltersSelector } from 'controllers/filter';
 import { activeProjectSelector } from 'controllers/user';
-import { TEST_ITEM_PAGE } from 'controllers/pages';
+import { PROJECT_LAUNCHES_PAGE } from 'controllers/pages';
 import { TooltipWrapper } from '../common/tooltip';
 import { C3Chart } from '../common/c3chart';
 import chartStyles from './launchExecutionAndIssueStatistics.scss';
@@ -47,6 +48,7 @@ const getResult = (widget) => widget.content.result[0] || widget.content.result;
     project: activeProjectSelector(state),
     defectTypes: defectTypesSelector(state),
     getDefectLink: (params) => defectLinkSelector(state, params),
+    launchFilters: launchFiltersSelector(state),
   }),
   {
     navigate: (linkAction) => linkAction,
@@ -65,6 +67,7 @@ export class IssueStatisticsChart extends Component {
     observer: PropTypes.object,
     uncheckedLegendItems: PropTypes.array,
     onChangeLegend: PropTypes.func,
+    launchFilters: PropTypes.array,
   };
 
   static defaultProps = {
@@ -73,6 +76,7 @@ export class IssueStatisticsChart extends Component {
     observer: {},
     uncheckedLegendItems: [],
     onChangeLegend: () => {},
+    launchFilters: [],
   };
 
   state = {
@@ -83,6 +87,7 @@ export class IssueStatisticsChart extends Component {
     !this.props.isPreview && this.props.observer.subscribe('widgetResized', this.resizeIssuesChart);
     this.getConfig();
   }
+
   componentWillUnmount() {
     if (!this.props.isPreview) {
       this.issuesNode.removeEventListener('mousemove', this.setCoords);
@@ -131,25 +136,26 @@ export class IssueStatisticsChart extends Component {
   };
 
   onChartClick = (d) => {
-    const { widget, getDefectLink, defectTypes } = this.props;
+    const { widget, launchFilters, getDefectLink, defectTypes } = this.props;
 
     const nameConfig = getItemNameConfig(d.id);
     const id = getResult(widget).id;
-    const defaultParams = this.getDefaultLinkParams(id);
+    const appliedWidgetFilterId = widget.appliedFilters[0].id;
+    const activeFilter =
+      launchFilters.filter((filter) => filter.id === appliedWidgetFilterId)[0] || {};
+    const defaultParams = this.getDefaultLinkParams(activeFilter.id);
     const defectLocators = getDefectTypeLocators(nameConfig, defectTypes);
-
     const link = getDefectLink({ defects: defectLocators, itemId: id });
 
     this.props.navigate(Object.assign(link, defaultParams));
   };
 
-  getDefaultLinkParams = (testItemIds) => ({
+  getDefaultLinkParams = (activeFilterId = 'all') => ({
     payload: {
       projectId: this.props.project,
-      filterId: 'all',
-      testItemIds,
+      filterId: activeFilterId,
     },
-    type: TEST_ITEM_PAGE,
+    type: PROJECT_LAUNCHES_PAGE,
   });
 
   getChartColors(columns) {
