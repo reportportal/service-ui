@@ -71,7 +71,6 @@ export const STEP_PAGE_EVENTS = {
     label: 'Sort items by Defect type',
   },
   EDIT_ICON_CLICK: {
-    // todo
     category: STEP_PAGE,
     action: 'Click on item icon "edit"',
     label: 'Arise Modal "Edit Item"',

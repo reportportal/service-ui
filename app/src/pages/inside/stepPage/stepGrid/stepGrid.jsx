@@ -192,6 +192,7 @@ export class StepGrid extends Component {
           onShowTestParams: props.onShowTestParams,
           onEditItem: props.onEditItem,
           onClickAttribute: this.handleAttributeFilterClick,
+          events,
         },
         withFilter: true,
         filterEventInfo: events.NAME_FILTER,
