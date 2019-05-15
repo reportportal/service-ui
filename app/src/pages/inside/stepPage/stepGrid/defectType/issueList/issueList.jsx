@@ -7,8 +7,8 @@ const cx = classNames.bind(styles);
 
 export const IssueList = ({ issues }) =>
   issues.map((issue) => (
-    <div className={cx('issue-list-item')} key={`${issue.systemId}_${issue.ticketId}`}>
-      <Issue ticketId={issue.ticketId} url={issue.url} systemId={issue.systemId} />
+    <div className={cx('issue-list-item')} key={`${issue.btsProject}_${issue.ticketId}`}>
+      <Issue {...issue} />
     </div>
   ));
 
@@ -17,6 +17,8 @@ IssueList.propTypes = {
     PropTypes.shape({
       ticketId: PropTypes.string,
       url: PropTypes.string,
+      btsProject: PropTypes.string,
+      btsUrl: PropTypes.string,
     }),
   ),
 };

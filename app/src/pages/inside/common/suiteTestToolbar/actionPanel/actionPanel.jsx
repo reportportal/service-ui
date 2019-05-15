@@ -12,7 +12,7 @@ import {
   namespaceSelector,
 } from 'controllers/testItem';
 import { HISTORY_PAGE, payloadSelector } from 'controllers/pages';
-import { externalSystemSelector } from 'controllers/project';
+import { availableBtsIntegrationsSelector, isPostIssueActionAvailable } from 'controllers/project';
 import { Breadcrumbs, breadcrumbDescriptorShape } from 'components/main/breadcrumbs';
 import { SUITES_PAGE_EVENTS } from 'components/main/analytics/events/suitesPageEvents';
 import { STEP_PAGE_EVENTS } from 'components/main/analytics/events';
@@ -84,7 +84,7 @@ const messages = defineMessages({
     level: levelSelector(state),
     listView: isListViewSelector(state, namespaceSelector(state)),
     payload: payloadSelector(state),
-    externalSystems: externalSystemSelector(state),
+    btsIntegrations: availableBtsIntegrationsSelector(state),
   }),
   {
     restorePath: restorePathAction,
@@ -115,7 +115,7 @@ export class ActionPanel extends Component {
     onIncludeInAA: PropTypes.func,
     onDelete: PropTypes.func,
     listView: PropTypes.bool,
-    externalSystems: PropTypes.array,
+    btsIntegrations: PropTypes.array,
     deleteDisabled: PropTypes.bool,
     navigate: PropTypes.func.isRequired,
     tracking: PropTypes.shape({
@@ -146,7 +146,7 @@ export class ActionPanel extends Component {
     onIncludeInAA: () => {},
     onDelete: () => {},
     listView: false,
-    externalSystems: [],
+    btsIntegrations: [],
     deleteDisabled: false,
   };
 
@@ -173,71 +173,71 @@ export class ActionPanel extends Component {
     this.props.onRefresh();
   };
 
-  checkIfThePostIssueUnavailable = () =>
-    !this.props.externalSystems.length ||
-    !this.props.externalSystems.every((item) => item.fields && item.fields.length);
+  createActionDescriptors = () => {
+    const isPostIssueUnavailable = !isPostIssueActionAvailable(this.props.btsIntegrations);
 
-  createActionDescriptors = () => [
-    {
-      label: this.props.intl.formatMessage(messages.editDefects),
-      value: 'action-edit-defects',
-      onClick: (data) => {
-        this.props.tracking.trackEvent(STEP_PAGE_EVENTS.EDIT_DEFECT_ACTION);
-        this.props.onEditDefects(data);
+    return [
+      {
+        label: this.props.intl.formatMessage(messages.editDefects),
+        value: 'action-edit-defects',
+        onClick: (data) => {
+          this.props.tracking.trackEvent(STEP_PAGE_EVENTS.EDIT_DEFECT_ACTION);
+          this.props.onEditDefects(data);
+        },
       },
-    },
-    {
-      label: this.props.intl.formatMessage(messages.postIssue),
-      value: 'action-post-issue',
-      hidden: this.props.debugMode,
-      disabled: this.checkIfThePostIssueUnavailable(),
-      title:
-        (this.checkIfThePostIssueUnavailable() &&
-          this.props.intl.formatMessage(messages.noBugTrackingSystemToPostIssue)) ||
-        '',
-      onClick: () => {
-        this.props.tracking.trackEvent(STEP_PAGE_EVENTS.POST_BUG_ACTION);
-        this.props.onPostIssue();
+      {
+        label: this.props.intl.formatMessage(messages.postIssue),
+        value: 'action-post-issue',
+        hidden: this.props.debugMode,
+        disabled: isPostIssueUnavailable,
+        title:
+          (isPostIssueUnavailable &&
+            this.props.intl.formatMessage(messages.noBugTrackingSystemToPostIssue)) ||
+          '',
+        onClick: () => {
+          this.props.tracking.trackEvent(STEP_PAGE_EVENTS.POST_BUG_ACTION);
+          this.props.onPostIssue();
+        },
       },
-    },
-    {
-      label: this.props.intl.formatMessage(messages.linkIssue),
-      value: 'action-link-issue',
-      hidden: this.props.debugMode,
-      disabled: !this.props.externalSystems.length,
-      title:
-        (!this.props.externalSystems.length &&
-          this.props.intl.formatMessage(messages.noBugTrackingSystemToLinkIssue)) ||
-        '',
-      onClick: () => {
-        this.props.tracking.trackEvent(STEP_PAGE_EVENTS.LOAD_BUG_ACTION);
-        this.props.onLinkIssue();
+      {
+        label: this.props.intl.formatMessage(messages.linkIssue),
+        value: 'action-link-issue',
+        hidden: this.props.debugMode,
+        disabled: !this.props.btsIntegrations.length,
+        title:
+          (!this.props.btsIntegrations.length &&
+            this.props.intl.formatMessage(messages.noBugTrackingSystemToLinkIssue)) ||
+          '',
+        onClick: () => {
+          this.props.tracking.trackEvent(STEP_PAGE_EVENTS.LOAD_BUG_ACTION);
+          this.props.onLinkIssue();
+        },
       },
-    },
-    {
-      label: this.props.intl.formatMessage(messages.unlinkIssue),
-      value: 'action-unlink-issue',
-      hidden: this.props.debugMode,
-      onClick: this.props.onUnlinkIssue,
-    },
-    {
-      label: this.props.intl.formatMessage(messages.ignoreInAA),
-      value: 'action-ignore-in-AA',
-      hidden: this.props.debugMode,
-      onClick: this.props.onIgnoreInAA,
-    },
-    {
-      label: this.props.intl.formatMessage(messages.includeInAA),
-      value: 'action-include-into-AA',
-      hidden: this.props.debugMode,
-      onClick: this.props.onIncludeInAA,
-    },
-    {
-      label: this.props.intl.formatMessage(COMMON_LOCALE_KEYS.DELETE),
-      value: 'action-delete',
-      onClick: this.props.onDelete,
-    },
-  ];
+      {
+        label: this.props.intl.formatMessage(messages.unlinkIssue),
+        value: 'action-unlink-issue',
+        hidden: this.props.debugMode,
+        onClick: this.props.onUnlinkIssue,
+      },
+      {
+        label: this.props.intl.formatMessage(messages.ignoreInAA),
+        value: 'action-ignore-in-AA',
+        hidden: this.props.debugMode,
+        onClick: this.props.onIgnoreInAA,
+      },
+      {
+        label: this.props.intl.formatMessage(messages.includeInAA),
+        value: 'action-include-into-AA',
+        hidden: this.props.debugMode,
+        onClick: this.props.onIncludeInAA,
+      },
+      {
+        label: this.props.intl.formatMessage(COMMON_LOCALE_KEYS.DELETE),
+        value: 'action-delete',
+        onClick: this.props.onDelete,
+      },
+    ];
+  };
 
   checkVisibility = (levels) => levels.some((level) => this.props.level === level);
 

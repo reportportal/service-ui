@@ -20,8 +20,9 @@ const isResolved = (status) => status.toUpperCase() === STATUS_RESOLVED;
 export class IssueInfoTooltip extends Component {
   static propTypes = {
     activeProject: PropTypes.string.isRequired,
-    systemId: PropTypes.string.isRequired,
     ticketId: PropTypes.string.isRequired,
+    btsProject: PropTypes.string.isRequired,
+    btsUrl: PropTypes.string.isRequired,
   };
 
   constructor(props) {
@@ -44,12 +45,14 @@ export class IssueInfoTooltip extends Component {
   }
 
   fetchData = () => {
-    const { activeProject, systemId, ticketId } = this.props;
+    const { activeProject, ticketId, btsProject, btsUrl } = this.props;
     const cancelRequestFunc = (cancel) => {
       this.cancelRequest = cancel;
     };
     this.setState({ loading: true });
-    fetch(URLS.externalSystemIssue(activeProject, systemId, ticketId), { abort: cancelRequestFunc })
+    fetch(URLS.externalSystemIssue(activeProject, ticketId, btsProject, btsUrl), {
+      abort: cancelRequestFunc,
+    })
       .then((issue) => this.setState({ loading: false, issue }))
       .catch((err) => {
         if (err.message === ERROR_CANCELED) {

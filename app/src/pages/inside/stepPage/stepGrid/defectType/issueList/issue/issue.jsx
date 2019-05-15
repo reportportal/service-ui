@@ -21,7 +21,8 @@ export const Issue = withTooltip({
 Issue.propTypes = {
   ticketId: PropTypes.string.isRequired,
   url: PropTypes.string.isRequired,
-  systemId: PropTypes.string.isRequired,
+  btsProject: PropTypes.string.isRequired,
+  btsUrl: PropTypes.string.isRequired,
   onRemove: PropTypes.func,
 };
 Issue.defaultProps = {

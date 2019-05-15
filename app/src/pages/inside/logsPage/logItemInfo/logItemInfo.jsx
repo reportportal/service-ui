@@ -17,7 +17,7 @@ import {
   NAMESPACE,
 } from 'controllers/log';
 import { PASSED, SKIPPED, MANY, NOT_FOUND } from 'common/constants/launchStatuses';
-import { externalSystemSelector } from 'controllers/project';
+import { availableBtsIntegrationsSelector } from 'controllers/project';
 import { connectRouter } from 'common/utils';
 import LinkIcon from 'common/img/link-inline.svg';
 import DownLeftArrowIcon from 'common/img/down-left-arrow-inline.svg';
@@ -68,7 +68,7 @@ const messages = defineMessages({
   (state) => ({
     logItem: activeLogSelector(state),
     historyItems: historyItemsSelector(state),
-    externalSystems: externalSystemSelector(state),
+    btsIntegrations: availableBtsIntegrationsSelector(state),
     retryItemId: activeRetryIdSelector(state),
     retries: retriesSelector(state),
   }),
@@ -94,7 +94,7 @@ export class LogItemInfo extends Component {
     editDefectsAction: PropTypes.func.isRequired,
     linkIssueAction: PropTypes.func.isRequired,
     historyItems: PropTypes.array.isRequired,
-    externalSystems: PropTypes.array.isRequired,
+    btsIntegrations: PropTypes.array.isRequired,
     fetchFunc: PropTypes.func.isRequired,
     showModalAction: PropTypes.func.isRequired,
     onHighlightRow: PropTypes.func.isRequired,
@@ -116,14 +116,14 @@ export class LogItemInfo extends Component {
   getLinkIssueTitle = () => {
     const {
       logItem,
-      externalSystems,
+      btsIntegrations,
       intl: { formatMessage },
     } = this.props;
     let title = '';
 
     if (!logItem.issue) {
       title = formatMessage(messages.noDefectTypeToLinkIssue);
-    } else if (!externalSystems.length) {
+    } else if (!btsIntegrations.length) {
       title = formatMessage(messages.noBugTrackingSystemToLinkIssue);
     }
 
@@ -272,7 +272,7 @@ export class LogItemInfo extends Component {
                 <GhostButton
                   onClick={this.handleLinkIssue}
                   icon={LinkIcon}
-                  disabled={!logItem.issue || !this.props.externalSystems.length}
+                  disabled={!logItem.issue || !this.props.btsIntegrations.length}
                   title={this.getLinkIssueTitle()}
                 >
                   {formatMessage(messages.linkIssue)}
