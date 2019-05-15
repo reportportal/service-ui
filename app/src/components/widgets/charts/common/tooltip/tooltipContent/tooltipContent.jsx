@@ -14,6 +14,7 @@ export const TooltipContent = ({
   itemCases,
   color,
   itemName,
+  withVerboseItemCases,
 }) => (
   <React.Fragment>
     <div className={cx('launch-name')}>
@@ -25,7 +26,7 @@ export const TooltipContent = ({
       <span className={cx('color-mark')} style={{ backgroundColor: color }} />
       <span className={cx('item-name')}>{`${itemName}:`}</span>
       <span className={cx('item-cases')}>
-        <span>{formatValue(itemCases)}%</span>
+        {withVerboseItemCases ? <span>{itemCases}</span> : <span>{formatValue(itemCases)}%</span>}
       </span>
     </div>
   </React.Fragment>
@@ -38,6 +39,7 @@ TooltipContent.propTypes = {
   itemCases: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   itemName: PropTypes.string,
   color: PropTypes.string.isRequired,
+  withVerboseItemCases: PropTypes.bool,
 };
 
 TooltipContent.defaultProps = {
@@ -46,4 +48,5 @@ TooltipContent.defaultProps = {
   startTime: 0,
   itemCases: 0,
   itemName: '',
+  withVerboseItemCases: false,
 };
