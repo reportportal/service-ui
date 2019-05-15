@@ -50,6 +50,7 @@ export class RegistrationPageContainer extends Component {
       password,
       email,
     };
+
     return fetch(URLS.userRegistration(), { method: 'post', data, params: { uuid } })
       .then(() => this.props.loginAction({ login, password }))
       .catch(({ message }) => {

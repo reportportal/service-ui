@@ -92,7 +92,7 @@ RegistrationPage.defaultProps = {
 };
 
 const TokenErrorSection = ({ tokenProvided }) => (
-  <RegistrationFailBlock>
+  <RegistrationFailBlock withRedirect={tokenProvided}>
     <span className={cx('fail-msg')}>
       <span className={cx('big')}>
         <FormattedMessage id={'RegistrationPage.oops'} defaultMessage={'Oops,'} />
