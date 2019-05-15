@@ -1,1 +1,1 @@
-export const formatValue = (value) => +value.toFixed(2);
+export const formatValue = (value) => Number(value).toFixed(2);

@@ -325,7 +325,7 @@ export class LaunchStatisticsChart extends Component {
       colors[key] = getItemColor(keyConfig, defectTypes);
     });
 
-    data.forEach((item) => {
+    data.sort((a, b) => a.startTime - b.startTime).forEach((item) => {
       const currentItemData = {
         ...item,
       };
@@ -463,6 +463,7 @@ export class LaunchStatisticsChart extends Component {
           launchNumber={this.configData.isTimeLine ? null : number}
           startTime={this.configData.isTimeLine ? null : Number(startTime)}
           itemCases={`${data[0].value} ${formatMessage(messages.cases)}`}
+          withVerboseItemCases
           color={color(id)}
           itemName={getItemName(getItemNameConfig(id), defectTypes, formatMessage)}
         />
