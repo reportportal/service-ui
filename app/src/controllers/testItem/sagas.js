@@ -20,6 +20,7 @@ import {
 import { PAGE_KEY } from 'controllers/pagination';
 import { URLS } from 'common/urls';
 import { createNamespacedQuery, mergeNamespacedQuery } from 'common/utils/routingUtils';
+import { LEVEL_SUITE } from 'common/constants/launchLevels';
 import { activeProjectSelector } from 'controllers/user';
 import { LEVEL_NOT_FOUND } from 'common/constants/launchLevels';
 import { setLevelAction, setPageLoadingAction } from './actionCreators';
