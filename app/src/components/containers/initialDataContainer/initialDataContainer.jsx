@@ -6,6 +6,7 @@ import { fetchInfoAction, analyticsEnabledSelector } from 'controllers/appInfo';
 import { AnalyticsWrapper } from 'components/main/analytics/AnalyticsWrapper';
 import { fetchProjectAction } from 'controllers/project';
 import { fetchUserAction, activeProjectSelector } from 'controllers/user';
+import { fetchPluginsAction, fetchGlobalIntegrationsAction } from 'controllers/plugins';
 import {
   authSuccessAction,
   setTokenAction,
@@ -26,6 +27,8 @@ import {
     authSuccessAction,
     setTokenAction,
     resetTokenAction,
+    fetchPluginsAction,
+    fetchGlobalIntegrationsAction,
   },
 )
 export class InitialDataContainer extends Component {
@@ -40,6 +43,8 @@ export class InitialDataContainer extends Component {
     isAnalyticsEnabled: PropTypes.bool.isRequired,
     setTokenAction: PropTypes.func.isRequired,
     resetTokenAction: PropTypes.func.isRequired,
+    fetchPluginsAction: PropTypes.func.isRequired,
+    fetchGlobalIntegrationsAction: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
@@ -56,7 +61,11 @@ export class InitialDataContainer extends Component {
     const userPromise = this.props
       .fetchUserAction()
       .then(({ activeProject }) =>
-        this.props.fetchProjectAction(activeProject).then(() => this.props.authSuccessAction()),
+        this.props.fetchProjectAction(activeProject).then(() => {
+          this.props.fetchPluginsAction();
+          this.props.fetchGlobalIntegrationsAction();
+          this.props.authSuccessAction();
+        }),
       )
       .catch(() => {
         this.props.resetTokenAction();

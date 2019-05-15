@@ -47,8 +47,8 @@ export const URLS = {
   projectWidget: (activeProject, widgetId = '', interval = '') =>
     `${urlBase}project/${activeProject}/widget/${widgetId}${getQueryParams({ interval })}`,
 
-  externalSystemIssue: (activeProject, systemId, issueId) =>
-    `${urlBase}${activeProject}/external-system/${systemId}/ticket/${issueId}`,
+  externalSystemIssue: (activeProject, issueId, btsProject, btsUrl) =>
+    `${urlBase}bts/${activeProject}/ticket/${issueId}${getQueryParams({ btsProject, btsUrl })}`,
 
   filter: (activeProject, id = '') => `${urlBase}${activeProject}/filter/${id}`,
   filters: (activeProject) => `${urlBase}${activeProject}/filter`,
@@ -141,7 +141,8 @@ export const URLS = {
       ids,
       history_depth: historyDepth,
     })}`,
-  testItemsAddIssues: (activeProject) => `${urlBase}${activeProject}/item/issue/add`,
+  testItemsLinkIssues: (activeProject) => `${urlBase}${activeProject}/item/issue/link`,
+  testItemsUnlinkIssues: (activeProject) => `${urlBase}${activeProject}/item/issue/unlink`,
   testItemAttributeKeysSearch: (activeProject, launch = '') =>
     `${urlBase}${activeProject}/item/attribute/keys?launch=${launch}&filter.cnt.attributeKey=`,
   testItemAttributeValuesSearch: (activeProject, launch = '', key = '') =>
@@ -217,7 +218,8 @@ export const URLS = {
   info: () => `${urlBase}info`,
 
   plugin: () => `${urlBase}plugin`,
-  globalIntegrationsByPluginName: (pluginName) => `${urlBase}integration/global/all/${pluginName}`,
+  globalIntegrationsByPluginName: (pluginName = '') =>
+    `${urlBase}integration/global/all/${pluginName}`,
   projectIntegrationByIdCommand: (projectId, integrationId, command) =>
     `${urlBase}integration/${projectId}/${integrationId}/${command}`,
   newProjectIntegration: (projectid) => `${urlBase}integration/${projectid}`,

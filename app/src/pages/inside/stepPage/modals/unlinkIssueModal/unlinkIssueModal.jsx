@@ -4,7 +4,11 @@ import { connect } from 'react-redux';
 import { injectIntl, defineMessages } from 'react-intl';
 import { activeProjectSelector } from 'controllers/user';
 import { ModalLayout, withModal } from 'components/main/modal';
-import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
+import {
+  showNotification,
+  showDefaultErrorNotification,
+  NOTIFICATION_TYPES,
+} from 'controllers/notification';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
@@ -32,7 +36,7 @@ const messages = defineMessages({
 @injectIntl
 @connect(
   (state) => ({
-    url: URLS.testItems(activeProjectSelector(state)),
+    url: URLS.testItemsUnlinkIssues(activeProjectSelector(state)),
   }),
   {
     showNotification,
@@ -55,26 +59,33 @@ export class UnlinkIssueModal extends Component {
       url,
       data: { items, fetchFunc },
     } = this.props;
-    const issues = items.map((item) => ({
-      testItemId: item.id,
-      issue: {
-        ...item.issue,
-        externalSystemIssues: [],
+    const dataToSend = items.reduce(
+      (acc, item) => {
+        acc.testItemIds.push(item.id);
+        acc.ticketIds = acc.ticketIds.concat(
+          item.issue.externalSystemIssues.map((issue) => issue.ticketId),
+        );
+        return acc;
       },
-    }));
+      {
+        ticketIds: [],
+        testItemIds: [],
+      },
+    );
+
     fetch(url, {
       method: 'put',
-      data: {
-        issues,
-      },
-    }).then(() => {
-      fetchFunc();
-      this.props.showNotification({
-        message: intl.formatMessage(messages.unlinkSuccessMessage),
-        type: NOTIFICATION_TYPES.SUCCESS,
-      });
-    });
-    closeModal();
+      data: dataToSend,
+    })
+      .then(() => {
+        fetchFunc();
+        closeModal();
+        this.props.showNotification({
+          message: intl.formatMessage(messages.unlinkSuccessMessage),
+          type: NOTIFICATION_TYPES.SUCCESS,
+        });
+      })
+      .catch(showDefaultErrorNotification);
   };
 
   render() {
