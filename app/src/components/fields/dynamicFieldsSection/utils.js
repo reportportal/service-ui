@@ -1,16 +1,15 @@
-export const normalizeFieldsWithOptions = (fields) => {
-  const updatedFields = [...fields];
-  return updatedFields.map((field, index) => {
-    if (field.definedValues && field.definedValues.length) {
-      if (!field.definedValues[0].valueId) {
-        field.definedValues.forEach((item, itemIndex) => {
-          updatedFields[index].definedValues[itemIndex].valueId = item.valueName;
-        });
-      }
-      if (!field.value || !field.value.length) {
-        updatedFields[index].value = [field.definedValues[0].valueId];
-      }
+const normalizeDefinedValue = (item) =>
+  !item.valueId ? { ...item, valueId: item.valueName } : item;
+
+export const normalizeFieldsWithOptions = (fields) =>
+  fields.map((field) => {
+    if (!field.definedValues || !field.definedValues.length) {
+      return field;
     }
-    return field;
+    const definedValues = field.definedValues.map(normalizeDefinedValue);
+    let value = field.value;
+    if (!value || !value.length) {
+      value = definedValues[0].valueId;
+    }
+    return { ...field, definedValues, value };
   });
-};
