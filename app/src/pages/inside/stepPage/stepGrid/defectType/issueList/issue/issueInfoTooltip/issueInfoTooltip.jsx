@@ -1,6 +1,7 @@
 import { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
+import { defineMessages, injectIntl, intlShape } from 'react-intl';
 import { connect } from 'react-redux';
 import { URLS } from 'common/urls';
 import { fetch, ERROR_CANCELED } from 'common/utils/fetch';
@@ -12,13 +13,34 @@ const cx = classNames.bind(styles);
 
 const STATUS_RESOLVED = 'RESOLVED';
 
+const messages = defineMessages({
+  issueSummaryTitle: {
+    id: 'IssueInfoTooltip.issueSummaryTitle',
+    defaultMessage: 'Summary',
+  },
+  issueStatusTitle: {
+    id: 'IssueInfoTooltip.issueStatusTitle',
+    defaultMessage: 'Status',
+  },
+  issueNotFoundTitle: {
+    id: 'IssueInfoTooltip.issueNotFoundTitle',
+    defaultMessage: 'Issue not found',
+  },
+  issueNotFoundDescription: {
+    id: 'IssueInfoTooltip.issueNotFoundDescription',
+    defaultMessage: "Issue doesn't exist or no connection to the BTS integration",
+  },
+});
+
 const isResolved = (status) => status.toUpperCase() === STATUS_RESOLVED;
 
 @connect((state) => ({
   activeProject: activeProjectSelector(state),
 }))
+@injectIntl
 export class IssueInfoTooltip extends Component {
   static propTypes = {
+    intl: intlShape.isRequired,
     activeProject: PropTypes.string.isRequired,
     ticketId: PropTypes.string.isRequired,
     btsProject: PropTypes.string.isRequired,
@@ -62,31 +84,42 @@ export class IssueInfoTooltip extends Component {
       });
   };
 
-  render() {
+  renderTooltipContent = () => {
+    const {
+      intl: { formatMessage },
+    } = this.props;
     const { loading, issue } = this.state;
-    return (
-      <div className={cx('issue-tooltip')}>
-        {loading && (
-          <div className={cx('progressbar')}>
-            <img src={InProgressGif} alt="Loading" />
-          </div>
-        )}
-        {!loading &&
-          issue && (
-            <Fragment>
-              <div className={cx('header')}>Summary:</div>
-              <div className={cx('content')}>{issue.summary}</div>
-              <div className={cx('header')}>Status:</div>
-              <div
-                className={cx('content', {
-                  resolved: isResolved(issue.status),
-                })}
-              >
-                {issue.status}
-              </div>
-            </Fragment>
-          )}
-      </div>
+
+    if (loading) {
+      return (
+        <div className={cx('progressbar')}>
+          <img src={InProgressGif} alt="Loading" />
+        </div>
+      );
+    }
+
+    return issue ? (
+      <Fragment>
+        <h4 className={cx('header')}>{formatMessage(messages.issueSummaryTitle)}</h4>
+        <p className={cx('content')}>{issue.summary}</p>
+        <h4 className={cx('header')}>{formatMessage(messages.issueStatusTitle)}</h4>
+        <p
+          className={cx('content', {
+            resolved: isResolved(issue.status),
+          })}
+        >
+          {issue.status}
+        </p>
+      </Fragment>
+    ) : (
+      <Fragment>
+        <h4 className={cx('header')}>{formatMessage(messages.issueNotFoundTitle)}</h4>
+        <p className={cx('content')}>{formatMessage(messages.issueNotFoundDescription)}</p>
+      </Fragment>
     );
+  };
+
+  render() {
+    return <div className={cx('issue-tooltip')}>{this.renderTooltipContent()}</div>;
   }
 }
