@@ -41,6 +41,7 @@
   "ActiveDirectoryAuthFormFields.photoAttributeLabel": "Photo attribute",
   "ActiveDirectoryAuthFormFields.urlLabel": "Url",
   "AddEditDashboard.dashboardNameHint": "Назва панэлі кіравання павінна мець памер ад 3 да 128.",
+  "AddEditDashboard.dashboardNameExistsHint": "Гэтае iмя ўжо выкарыстоўваецца.",
   "AddEditNotificationCaseModal.editRuleMessage": "Змяніць",
   "AddEditNotificationCaseModal.launchesHint": "Назву запуску павінна мець памер ад 3 да 256",
   "AddEditNotificationCaseModal.newRuleMessage": "Дадаць",
