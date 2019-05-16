@@ -15,7 +15,6 @@ import { logSagas } from 'controllers/log';
 import { administrateSagas } from 'controllers/administrate';
 import { userSagas } from 'controllers/user';
 import { projectSagas } from 'controllers/project';
-import { pluginsSagas } from 'controllers/plugins';
 
 export function* rootSagas() {
   yield all([
@@ -35,6 +34,5 @@ export function* rootSagas() {
     administrateSagas(),
     userSagas(),
     projectSagas(),
-    pluginsSagas(),
   ]);
 }

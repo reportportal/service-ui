@@ -205,9 +205,6 @@ export class LinkIssueModal extends Component {
       eventInfo: STEP_PAGE_EVENTS.CANCEL_BTN_LOAD_BUG_MODAL,
     };
 
-    console.log(this.isMultipleBtsPlugins());
-    console.log(this.isMultipleBtsIntegrations());
-
     return (
       <ModalLayout
         title={
