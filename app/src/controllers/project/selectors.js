@@ -153,5 +153,3 @@ export const namedAvailableBtsIntegrationsSelector = namedAvailableIntegrationsB
 /* PATTERN-ANALYSIS */
 
 export const patternsSelector = (state) => projectConfigSelector(state).patterns || [];
-export const PAStateSelector = (state) =>
-  !!(attributesSelector(state)[PA_ATTRIBUTE_ENABLED_KEY].toString() === 'true');

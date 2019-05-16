@@ -2,18 +2,18 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { injectIntl, intlShape, defineMessages } from 'react-intl';
 import classNames from 'classnames/bind';
-import { REGEX_PATTERN, STRING_PATTERN } from 'common/constants/patternTypes';
 import { PatternControlPanel } from './patternControlPanel';
+import { PATTERN_TYPES } from '../../constants';
 import styles from './patternListItem.scss';
 
 const cx = classNames.bind(styles);
 
 export const messages = defineMessages({
-  [REGEX_PATTERN]: {
+  [PATTERN_TYPES.REGEXP]: {
     id: 'PatternAnalysis.RegExp',
     defaultMessage: 'RegExp',
   },
-  [STRING_PATTERN]: {
+  [PATTERN_TYPES.STRING]: {
     id: 'PatternAnalysis.String',
     defaultMessage: 'String',
   },
@@ -25,21 +25,19 @@ export class PatternListItem extends Component {
     intl: intlShape.isRequired,
     pattern: PropTypes.object,
     id: PropTypes.number,
-    readOnly: PropTypes.bool,
   };
 
   static defaultProps = {
     pattern: {},
     id: 0,
-    readOnly: false,
   };
 
   render() {
-    const { pattern, id, intl, readOnly } = this.props;
+    const { pattern, id, intl } = this.props;
 
     return (
       <div className={cx('pattern-list-item')}>
-        <PatternControlPanel pattern={pattern} id={id} readOnly={readOnly} />
+        <PatternControlPanel pattern={pattern} id={id} />
         <div className={cx('pattern-rule-data')}>
           <span className={cx('pattern-data-name')}>
             {intl.formatMessage(messages[pattern.type.toUpperCase()])}

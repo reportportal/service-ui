@@ -51,7 +51,6 @@ export {
   availableBtsIntegrationsSelector,
   namedAvailableBtsIntegrationsSelector,
   patternsSelector,
-  PAStateSelector,
 } from './selectors';
 export { normalizeAttributesWithPrefix, isPostIssueActionAvailable } from './utils';
 export { projectSagas } from './sagas';

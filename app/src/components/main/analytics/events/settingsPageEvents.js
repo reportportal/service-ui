@@ -295,19 +295,4 @@ export const SETTINGS_PAGE_EVENTS = {
     action: 'Click on tab Pattern-analysis in Settings',
     label: 'Open tab Pattern-analysis in Settings',
   },
-  CLOSE_ICON_DELETE_PATTERN_MODAL: {
-    category: SETTINGS_PAGE,
-    action: 'Click on icon Close on Modal Delete Pattern',
-    label: 'Close Modal Delete Pattern',
-  },
-  CANCEL_BTN_DELETE_PATTERN_MODAL: {
-    category: SETTINGS_PAGE,
-    action: 'Click on Bttn Cancel on Modal Delete Pattern',
-    label: 'Close Modal Delete Pattern',
-  },
-  DELETE_BTN_DELETE_PATTERN_MODAL: {
-    category: SETTINGS_PAGE,
-    action: 'Click on Bttn Delete on Modal Delete Pattern',
-    label: 'Delete Pattern',
-  },
 };

@@ -1,6 +1,6 @@
 .pattern-control-panel {
   padding: 7px 15px;
-  margin: 0px 1px 20px 1px;
+  margin: 20px 0px;
   background-color: $COLOR--white-four;
   line-height: 25px;
   border-radius: 5px;
@@ -10,7 +10,6 @@
   font-family: $FONT-REGULAR;
   display: flex;
   justify-content: stretch;
-  align-items: center;
 }
 .pattern-number {
   flex: 40px 0 0;
@@ -19,12 +18,6 @@
 .switcher {
   flex: 20px 0 0;
   padding-right: 15px;
-  &:hover {
-    cursor: pointer;
-  }
-  &.disabled:hover {
-    cursor: default;
-  }
 }
 .pattern-name {
   font-size: 13px;
@@ -34,11 +27,8 @@
   text-overflow: ellipsis;
 }
 .panel-buttons {
-  flex: 100px 0 0;
+  flex: 120px 0 0;
   text-align: right;
-  @media (max-width: $SCREEN_XS_MAX) {
-    display: none;
-  }
 }
 .panel-button {
   height: 16px;
