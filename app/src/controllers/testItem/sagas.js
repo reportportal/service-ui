@@ -20,7 +20,6 @@ import {
 import { PAGE_KEY } from 'controllers/pagination';
 import { URLS } from 'common/urls';
 import { createNamespacedQuery, mergeNamespacedQuery } from 'common/utils/routingUtils';
-import { LEVEL_SUITE } from 'common/constants/launchLevels';
 import { activeProjectSelector } from 'controllers/user';
 import { LEVEL_NOT_FOUND } from 'common/constants/launchLevels';
 import { setLevelAction, setPageLoadingAction } from './actionCreators';
@@ -86,11 +85,11 @@ function* fetchTestItems({ payload = {} }) {
   let launchId = yield select(launchIdSelector);
   const isLostLaunch = yield select(isLostLaunchSelector);
   let parentId;
+  let parentItem;
+  try {
+    parentItem = yield select(createParentItemsSelector(offset));
+  } catch (e) {} // eslint-disable-line no-empty
   if (isLostLaunch) {
-    let parentItem;
-    try {
-      parentItem = yield select(createParentItemsSelector(offset));
-    } catch (e) {} // eslint-disable-line no-empty
     launchId = parentItem ? parentItem.launchId : launchId;
   }
   if (itemIds.length > 1) {
@@ -119,10 +118,10 @@ function* fetchTestItems({ payload = {} }) {
   );
   const dataPayload = yield take(createFetchPredicate(NAMESPACE));
   let level;
-  if (dataPayload.error) {
+  if (!parentItem) {
     level = LEVEL_NOT_FOUND;
   } else {
-    level = calculateLevel(dataPayload.payload.content) || LEVEL_NOT_FOUND;
+    level = calculateLevel(dataPayload.payload.content);
   }
 
   if (LEVELS[level]) {
