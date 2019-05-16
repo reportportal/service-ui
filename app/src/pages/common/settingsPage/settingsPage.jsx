@@ -12,6 +12,7 @@ import {
   DEFECT,
   ANALYSIS,
   DEMO_DATA,
+  PATTERN_ANALYSIS,
 } from 'common/constants/settingsTabs';
 import { settingsTabSelector } from 'controllers/pages';
 import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
@@ -24,6 +25,7 @@ import { NotificationsTab } from './notificationsTab';
 import { DemoDataTab } from './demoDataTab';
 import { IntegrationsTab } from './integrationsTab';
 import { DefectTypesTab } from './defectTypesTab';
+import { PatternAnalysisTab } from './patternAnalysisTab';
 import styles from './settingsPage.scss';
 
 const cx = classNames.bind(styles);
@@ -51,6 +53,10 @@ const messages = defineMessages({
   demoData: {
     id: 'SettingsPage.demoData',
     defaultMessage: 'Demo data',
+  },
+  patternAnalysis: {
+    id: 'SettingsPage.patternAnalysis',
+    defaultMessage: 'Pattern-analysis',
   },
 });
 
@@ -119,6 +125,13 @@ export class SettingsPage extends Component {
         link: this.props.createTabLink(ANALYSIS),
         component: <AutoAnalysisTab />,
         eventInfo: SETTINGS_PAGE_EVENTS.AUTO_ANALYSIS_TAB,
+        mobileDisabled: true,
+      },
+      [PATTERN_ANALYSIS]: {
+        name: this.props.intl.formatMessage(messages.patternAnalysis),
+        link: this.props.createTabLink(PATTERN_ANALYSIS),
+        component: <PatternAnalysisTab />,
+        eventInfo: SETTINGS_PAGE_EVENTS.PATTERN_ANALYSIS_TAB,
         mobileDisabled: true,
       },
       [DEMO_DATA]: {

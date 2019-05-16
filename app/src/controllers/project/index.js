@@ -43,6 +43,7 @@ export {
   namedIntegrationsSelectorsMap,
   availableBtsIntegrationsSelector,
   namedAvailableBtsIntegrationsSelector,
+  patternsSelector,
 } from './selectors';
 export { normalizeAttributesWithPrefix, isPostIssueActionAvailable } from './utils';
 export { projectSagas } from './sagas';

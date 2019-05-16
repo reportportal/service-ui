@@ -34,6 +34,7 @@ import {
   ANALYSIS,
   AUTHORIZATION_CONFIGURATION,
   STATISTICS,
+  PATTERN_ANALYSIS,
 } from 'common/constants/settingsTabs';
 import { SETTINGS, MEMBERS, EVENTS } from 'common/constants/projectSections';
 import { isAuthorizedSelector } from 'controllers/auth';
@@ -117,7 +118,7 @@ export default {
     },
   },
   [PROJECT_DETAILS_PAGE]: {
-    path: `/administrate/projects/:projectId/:projectSection(${SETTINGS}|${MEMBERS}|${EVENTS})?/:settingsTab(${GENERAL}|${NOTIFICATIONS}|${INTEGRATIONS}|${DEFECT}|${ANALYSIS}|${DEMO_DATA})?`,
+    path: `/administrate/projects/:projectId/:projectSection(${SETTINGS}|${MEMBERS}|${EVENTS})?/:settingsTab(${GENERAL}|${NOTIFICATIONS}|${INTEGRATIONS}|${DEFECT}|${ANALYSIS}|${PATTERN_ANALYSIS}|${DEMO_DATA})?`,
     thunk: (dispatch) => {
       dispatch(fetchProjectDataAction());
     },
@@ -235,7 +236,7 @@ export default {
     type: PROJECT_SETTINGS_TAB_PAGE,
     payload: { ...payload, settingsTab: GENERAL },
   })),
-  PROJECT_SETTINGS_TAB_PAGE: `/:projectId/settings/:settingsTab(${GENERAL}|${NOTIFICATIONS}|${INTEGRATIONS}|${DEFECT}|${ANALYSIS}|${DEMO_DATA})`,
+  PROJECT_SETTINGS_TAB_PAGE: `/:projectId/settings/:settingsTab(${GENERAL}|${NOTIFICATIONS}|${INTEGRATIONS}|${DEFECT}|${ANALYSIS}|${PATTERN_ANALYSIS}|${DEMO_DATA})`,
   PROJECT_SANDBOX_PAGE: '/:projectId/sandbox',
   [TEST_ITEM_PAGE]: {
     path: '/:projectId/launches/:filterId/:testItemIds+',
