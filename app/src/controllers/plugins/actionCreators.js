@@ -1,9 +1,8 @@
-import { FETCH_PLUGINS, FETCH_GLOBAL_INTEGRATIONS } from './constants';
+import { URLS } from 'common/urls';
+import { fetchDataAction } from 'controllers/fetch';
+import { NAMESPACE, GLOBAL_INTEGRATIONS_NAMESPACE } from './constants';
 
-export const fetchPluginsAction = () => ({
-  type: FETCH_PLUGINS,
-});
+export const fetchPluginsAction = () => fetchDataAction(NAMESPACE)(URLS.plugin());
 
-export const fetchGlobalIntegrationsAction = () => ({
-  type: FETCH_GLOBAL_INTEGRATIONS,
-});
+export const fetchGlobalIntegrationsAction = () =>
+  fetchDataAction(GLOBAL_INTEGRATIONS_NAMESPACE)(URLS.globalIntegrationsByPluginName());
