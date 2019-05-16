@@ -202,6 +202,7 @@
   "CommonWidgetControls.namePlaceholder": "Enter widget name",
   "CommonWidgetControls.shareLabel": "Share",
   "CommonWidgetControls.widgetNameHint": "Widget name should have size from 3 to 128",
+  "CommonWidgetControls.widgetNameExistsHint": "Это название уже используется",
   "CompareLaunchDialog.compareLaunchHeader": "Сравнить запуски",
   "CompareLaunchDialog.yAxisTitle": "% тестовых сценариев",
   "Conditions.all": "Все",

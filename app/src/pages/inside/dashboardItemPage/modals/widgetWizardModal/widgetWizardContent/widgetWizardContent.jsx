@@ -89,6 +89,7 @@ export class WidgetWizardContent extends Component {
     }).then(({ id }) => {
       const newWidget = {
         widgetId: id,
+        widgetName: data.name,
         ...DEFAULT_WIDGET_CONFIG,
       };
       onConfirm(newWidget, this.props.closeModal);
