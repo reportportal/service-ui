@@ -1,0 +1,31 @@
+.pattern-list-header {
+  display: flex;
+  justify-content: stretch;
+  margin-bottom: 15px;
+  color: $COLOR--gray-47;
+  font-size: 12px;
+  font-family: $FONT-REGULAR;
+  line-height: 27px;
+}
+
+.caption {
+  flex: 110px 0 0;
+  padding-right: 15px;
+  padding-left: 90px;
+  font-size: 13px;
+  color: $COLOR--charcoal-grey;
+}
+
+.switcher {
+  flex: 100px 0 0;
+  padding: 0px 15px;
+}
+
+.description {
+  flex: 300px 1 0;
+  padding: 0px 15px;
+}
+
+.create-button {
+  flex: 100px 0 0;
+}

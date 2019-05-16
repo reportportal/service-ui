@@ -2,6 +2,7 @@ import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
+import { injectIntl, intlShape, defineMessages } from 'react-intl';
 import { canConfigreEmailNotifications } from 'common/utils/permissions';
 import {
   updateProjectNotificationsConfigAction,
@@ -11,11 +12,23 @@ import {
 import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
 import { NotificationsEnableForm } from './notificationsEnableForm';
 import { NotificationCaseList } from './notificationCaseList';
-import { NoCasesBlock } from './noCasesBlock';
+import { NoCasesBlock } from './../noCasesBlock';
+import { AddNewCaseButton } from './addNewCaseButton';
 import styles from './notificationsTab.scss';
 
-const cx = classNames.bind(styles);
+const messages = defineMessages({
+  noItemsMessage: {
+    id: 'NoCasesBlock.noItemsMessage',
+    defaultMessage: 'No Email Notification Rules',
+  },
+  notificationsInfo: {
+    id: 'NoCasesBlock.notificationsInfo',
+    defaultMessage: 'After launches finish, system will notify selected people by email.',
+  },
+});
 
+const cx = classNames.bind(styles);
+@injectIntl
 @connect(
   (state) => ({
     projectRole: activeProjectRoleSelector(state),
@@ -27,6 +40,7 @@ const cx = classNames.bind(styles);
 )
 export class NotificationsTab extends Component {
   static propTypes = {
+    intl: intlShape.isRequired,
     enabled: PropTypes.bool,
     cases: PropTypes.array,
     updateNotificationsConfig: PropTypes.func,
@@ -48,7 +62,7 @@ export class NotificationsTab extends Component {
     formProps.dirty && this.props.updateNotificationsConfig({ enabled });
 
   render() {
-    const { enabled, cases, updateNotificationsConfig } = this.props;
+    const { enabled, cases, updateNotificationsConfig, intl } = this.props;
     const readOnly = !this.isAbleToEditForm();
 
     return (
@@ -67,7 +81,12 @@ export class NotificationsTab extends Component {
             />
           </Fragment>
         ) : (
-          <NoCasesBlock readOnly={readOnly} updateNotificationCases={updateNotificationsConfig} />
+          <NoCasesBlock
+            noItemsMessage={intl.formatMessage(messages.noItemsMessage)}
+            notificationsInfo={intl.formatMessage(messages.notificationsInfo)}
+          >
+            {!readOnly && <AddNewCaseButton updateNotificationCases={updateNotificationsConfig} />}
+          </NoCasesBlock>
         )}
       </div>
     );
