@@ -68,16 +68,12 @@ const messages = defineMessages({
 }))
 @reduxForm({
   form: 'addEditDashboard',
-  validate: ({ name }, { dashboardItems = [], data: { dashboardItem = {} } }) => {
+  validate: ({ name }, { dashboardItems = [] }) => {
     let validationMessage = null;
 
     if (!name || !validate.dashboardName(name)) {
       validationMessage = 'dashboardNameHint';
-    } else if (
-      dashboardItems.some(
-        (dashboard) => dashboard.name === name && dashboard.id !== dashboardItem.id,
-      )
-    ) {
+    } else if (dashboardItems.some((dashboard) => dashboard.name === name)) {
       validationMessage = 'dashboardNameExistsHint';
     }
 
