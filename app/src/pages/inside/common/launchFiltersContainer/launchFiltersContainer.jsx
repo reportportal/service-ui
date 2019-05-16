@@ -92,15 +92,12 @@ export class LaunchFiltersContainer extends Component {
     );
 
   handleFilterChange = (conditions) => {
-    const newFilter = this.createQuery(conditions);
+    const conditionsWithFilteringField = addFilteringFieldToConditions(conditions);
+    const newFilter = this.createQuery(conditionsWithFilteringField);
     const currentFilter = this.createQuery(this.getConditions());
-
     if (!isEqual(currentFilter, newFilter)) {
       this.fetchLaunches({ [PAGE_KEY]: 1, ...newFilter });
     }
-
-    const conditionsWithFilteringField = addFilteringFieldToConditions(conditions);
-
     if (this.props.activeFilter) {
       this.updateFilter(this.props.activeFilterId, conditionsWithFilteringField);
     } else {
@@ -123,8 +120,9 @@ export class LaunchFiltersContainer extends Component {
     this.props.changeActiveFilterAction(filterId);
   };
 
-  updateFilter = (filterId, conditions) =>
+  updateFilter = (filterId, conditions) => {
     this.props.updateFilterConditionsAction(filterId, conditions);
+  };
 
   render() {
     const { render, launchFilters, activeFilterId, activeFilter } = this.props;
