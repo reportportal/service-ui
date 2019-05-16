@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { FieldProvider } from 'components/fields/fieldProvider';
@@ -8,12 +9,17 @@ import { InputBigSwitcher } from 'components/inputs/inputBigSwitcher';
 import { Input } from 'components/inputs/input';
 import { InputTextArea } from 'components/inputs/inputTextArea';
 import { ModalField } from 'components/main/modal';
+import { activeDashboardItemSelector } from 'controllers/dashboard';
 import { FIELD_LABEL_WIDTH } from './controls/constants';
 
 const messages = defineMessages({
   widgetNameHint: {
     id: 'CommonWidgetControls.widgetNameHint',
     defaultMessage: 'Widget name should have size from 3 to 128',
+  },
+  widgetNameExistsHint: {
+    id: 'CommonWidgetControls.widgetNameExistsHint',
+    defaultMessage: 'This name is already in use',
   },
   nameLabel: {
     id: 'CommonWidgetControls.nameLabel',
@@ -36,11 +42,21 @@ const messages = defineMessages({
     defaultMessage: 'Share',
   },
 });
+
 const validators = {
-  name: (formatMessage) => (value) =>
-    !validate.widgetName(value) && formatMessage(messages.widgetNameHint),
+  name: (formatMessage, widgets = []) => (value) => {
+    if (!validate.widgetName(value)) {
+      return formatMessage(messages.widgetNameHint);
+    } else if (widgets.some((widget) => widget.widgetName === value)) {
+      return formatMessage(messages.widgetNameExistsHint);
+    }
+    return false;
+  },
 };
 
+@connect((state) => ({
+  activeDashboardItem: activeDashboardItemSelector(state),
+}))
 @injectIntl
 export class CommonWidgetControls extends Component {
   static propTypes = {
@@ -48,6 +64,7 @@ export class CommonWidgetControls extends Component {
     initializeControlsForm: PropTypes.func,
     eventsInfo: PropTypes.object,
     trackEvent: PropTypes.func,
+    activeDashboardItem: PropTypes.object.isRequired,
   };
 
   static defaultProps = {
@@ -66,6 +83,7 @@ export class CommonWidgetControls extends Component {
       intl: { formatMessage },
       trackEvent,
       eventsInfo,
+      activeDashboardItem: { widgets },
     } = this.props;
 
     return (
@@ -73,7 +91,7 @@ export class CommonWidgetControls extends Component {
         <ModalField label={formatMessage(messages.nameLabel)} labelWidth={FIELD_LABEL_WIDTH}>
           <FieldProvider
             name="name"
-            validate={validators.name(formatMessage)}
+            validate={validators.name(formatMessage, widgets)}
             placeholder={formatMessage(messages.namePlaceholder)}
           >
             <FieldErrorHint>
