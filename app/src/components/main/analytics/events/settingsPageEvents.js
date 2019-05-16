@@ -290,4 +290,9 @@ export const SETTINGS_PAGE_EVENTS = {
     action: 'Click on Bttn Generate index in Auto-Analysis tab',
     label: 'Generate index in Auto-Analysis tab',
   },
+  PATTERN_ANALYSIS_TAB: {
+    category: SETTINGS_PAGE,
+    action: 'Click on tab Pattern-analysis in Settings',
+    label: 'Open tab Pattern-analysis in Settings',
+  },
 };

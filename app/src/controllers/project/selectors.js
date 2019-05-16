@@ -148,3 +148,7 @@ const namedAvailableIntegrationsByGroupTypeSelector = (groupType) => (state) => 
 export const namedAvailableBtsIntegrationsSelector = namedAvailableIntegrationsByGroupTypeSelector(
   BTS_GROUP_TYPE,
 );
+
+/* PATTERN-ANALYSIS */
+
+export const patternsSelector = (state) => projectConfigSelector(state).patterns || [];

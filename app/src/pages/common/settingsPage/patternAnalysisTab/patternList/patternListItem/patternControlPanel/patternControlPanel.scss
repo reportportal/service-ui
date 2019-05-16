@@ -1,0 +1,57 @@
+.pattern-control-panel {
+  padding: 7px 15px;
+  margin: 20px 0px;
+  background-color: $COLOR--white-four;
+  line-height: 25px;
+  border-radius: 5px;
+  box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.1);
+  color: $COLOR--gray-47;
+  font-size: 12px;
+  font-family: $FONT-REGULAR;
+  display: flex;
+  justify-content: stretch;
+}
+.pattern-number {
+  flex: 40px 0 0;
+  font-size: 13px;
+}
+.switcher {
+  flex: 20px 0 0;
+  padding-right: 15px;
+}
+.pattern-name {
+  font-size: 13px;
+  font-weight: 600;
+  flex: 300px 1 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.panel-buttons {
+  flex: 120px 0 0;
+  text-align: right;
+}
+.panel-button {
+  height: 16px;
+  width: 16px;
+  padding: 0;
+  margin-left: 15px;
+  outline: none;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  vertical-align: middle;
+  svg {
+    stroke: $COLOR--gray-60;
+    &:hover {
+      stroke: $COLOR--black-2;
+    }
+  }
+  &.filled {
+    svg {
+      fill: $COLOR--gray-60;
+      &:hover {
+        fill: $COLOR--black-2;
+      }
+    }
+  }
+}

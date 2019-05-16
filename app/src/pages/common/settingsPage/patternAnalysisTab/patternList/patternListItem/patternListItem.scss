@@ -1,0 +1,18 @@
+.pattern-rule-data {
+  display: flex;
+  flex-direction: row;
+  margin: 8px 15px 8px 90px;
+  font-size: 13px;
+  font-family: $FONT-REGULAR;
+}
+
+.pattern-data-name {
+  flex: 80px 0 0;
+  margin-right: 20px;
+  color: $COLOR--gray-60;
+}
+
+.pattern-data-value {
+  flex: 300px 1 1;
+  color: $COLOR--charcoal-grey;
+}
