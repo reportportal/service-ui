@@ -49,6 +49,10 @@ const messages = defineMessages({
     id: 'AddEditDashboard.dashboardNameHint',
     defaultMessage: 'Dashboard name should have size  from 3 to 128.',
   },
+  dashboardNameExistsHint: {
+    id: 'AddEditDashboard.dashboardNameExistsHint',
+    defaultMessage: 'This name is already in use.',
+  },
   dashboardNameSearchHint: {
     id: 'SearchDashboardForm.dashboardNameSearchHint',
     defaultMessage: 'Dashboard name should have size from 3 to 128',

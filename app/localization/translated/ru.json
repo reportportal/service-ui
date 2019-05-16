@@ -41,6 +41,7 @@
   "ActiveDirectoryAuthFormFields.photoAttributeLabel": "Photo attribute",
   "ActiveDirectoryAuthFormFields.urlLabel": "Url",
   "AddEditDashboard.dashboardNameHint": "Имя панели управления должно быть длиной от 3 до 128.",
+  "AddEditDashboard.dashboardNameExistsHint": "Это название уже используется.",
   "AddEditNotificationCaseModal.editRuleMessage": "Изменить",
   "AddEditNotificationCaseModal.launchesHint": "Имя запуска должно иметь размер от 3 до 256",
   "AddEditNotificationCaseModal.newRuleMessage": "Добавить",
