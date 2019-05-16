@@ -2,7 +2,6 @@ import { Component } from 'react';
 import PropTypes from 'prop-types';
 import isEqual from 'fast-deep-equal';
 import { omit } from 'common/utils/omit';
-import { isEmptyValue } from 'common/utils/isEmptyValue';
 import { LEVEL_STEP, LEVEL_SUITE, LEVEL_TEST, LEVEL_LAUNCH } from 'common/constants/launchLevels';
 import {
   StepLevelEntities,
@@ -90,9 +89,7 @@ export class FilterEntitiesContainer extends Component {
         values: { ...prevState.values, [entity.id]: entity.value },
         visibleFilters: [...prevState.visibleFilters, entity.id],
       }),
-      () =>
-        !isEmptyValue(entity.value.value) &&
-        this.props.onChange(this.collectEntities(this.state.values)),
+      () => this.props.onChange(this.collectEntities(this.state.values)),
     );
   };
 
