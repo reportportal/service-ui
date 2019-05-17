@@ -23,8 +23,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
+import { NavLink } from 'redux-first-router-link';
 import { injectIntl, defineMessages, intlShape, FormattedMessage } from 'react-intl';
-import { NavLink } from 'components/main/navLink';
 import { ALL } from 'common/constants/reservedFilterIds';
 import { logoutAction } from 'controllers/auth';
 import {
@@ -81,7 +81,7 @@ export class AdminHeader extends Component {
     currentPage: PropTypes.string,
     logout: PropTypes.func,
     intl: intlShape.isRequired,
-    projectId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    projectId: PropTypes.string,
   };
 
   static defaultProps = {
