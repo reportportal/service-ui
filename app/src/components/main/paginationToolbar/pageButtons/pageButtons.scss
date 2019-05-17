@@ -1,9 +1,9 @@
 .page-buttons {
-  display: inline-block;
-
-  @media (max-width: $SCREEN_SM_MAX) {
+  display: inline-block;  
+  @media (max-width: $SCREEN_XXS_MAX) {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    margin: 0px 15px;
   }
 }

@@ -2,6 +2,9 @@
   button {
     margin-left: 10px;
   }
+}
+
+.mobile-hide {
   @media (max-width: $SCREEN_XS_MAX) {
     display: none;
   }

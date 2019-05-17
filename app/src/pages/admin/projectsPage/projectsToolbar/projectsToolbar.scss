@@ -5,7 +5,10 @@
 }
 
 .search {
-  width: 400px;
+  flex: 0 1 400px;
+  > :first-child {
+    width: 100%;
+  }
 }
 
 .buttons {

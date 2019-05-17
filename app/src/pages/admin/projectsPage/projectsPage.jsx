@@ -130,14 +130,16 @@ export class ProjectsPage extends Component {
 
     if (!projectId) {
       return (
-        <GhostButton icon={AddProjectIcon} onClick={this.showAddProjectModal}>
-          {formatMessage(messages.addProject)}
-        </GhostButton>
+        <div className={cx('mobile-hide')}>
+          <GhostButton icon={AddProjectIcon} onClick={this.showAddProjectModal}>
+            {formatMessage(messages.addProject)}
+          </GhostButton>
+        </div>
       );
     }
 
     return (
-      <div className={cx('header-buttons')}>
+      <div className={cx('header-buttons', 'mobile-hide')}>
         {HEADER_BUTTONS.map(({ key, icon }) => (
           <GhostButton
             key={key}

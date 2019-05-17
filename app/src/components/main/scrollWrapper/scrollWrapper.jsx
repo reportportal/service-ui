@@ -29,6 +29,7 @@ import { SpringSystem } from 'rebound';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { FOOTER_EVENTS } from 'components/main/analytics/events';
 import { forceCheck } from 'react-lazyload';
+import { Footer } from 'layouts/common/footer';
 import TopIcon from './img/top-inline.svg';
 import styles from './scrollWrapper.scss';
 
@@ -52,6 +53,7 @@ export class ScrollWrapper extends Component {
     hideTracksWhenNotNeeded: PropTypes.bool,
     thumbMinSize: PropTypes.number,
     withBackToTop: PropTypes.bool,
+    withFooter: PropTypes.bool,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
@@ -68,11 +70,14 @@ export class ScrollWrapper extends Component {
     renderTrackVertical: (props) => <div {...props} className={cx('track-vertical')} />,
     renderThumbHorizontal: (props) => <div {...props} className={cx('thumb-horizontal')} />,
     renderThumbVertical: (props) => <div {...props} className={cx('thumb-vertical')} />,
-    renderView: (props) => <div {...props} className={cx('scrolling-content')} />,
+    renderView: ({ withFooter, ...props }) => (
+      <div {...props} className={cx('scrolling-content', { 'with-footer': withFooter })} />
+    ),
     onLazyLoad: false,
     hideTracksWhenNotNeeded: false,
     thumbMinSize: 30,
     withBackToTop: false,
+    withFooter: false,
   };
   state = {
     showButton: false,
@@ -153,6 +158,8 @@ export class ScrollWrapper extends Component {
     this.scrollbars.thumbHorizontal.style.opacity = '';
   };
 
+  renderView = (props) => this.props.renderView({ withFooter: this.props.withFooter, ...props });
+
   render() {
     return (
       // base props are defined. For more info see https://github.com/malte-wessel/react-custom-scrollbars/blob/master/docs/API.md
@@ -168,7 +175,7 @@ export class ScrollWrapper extends Component {
         renderTrackVertical={this.props.renderTrackVertical}
         renderThumbHorizontal={this.props.renderThumbHorizontal}
         renderThumbVertical={this.props.renderThumbVertical}
-        renderView={this.props.renderView}
+        renderView={this.renderView}
         hideTracksWhenNotNeeded={this.props.hideTracksWhenNotNeeded}
         thumbMinSize={this.props.thumbMinSize}
         onScrollFrame={this.handleScrollFrame}
@@ -176,11 +183,14 @@ export class ScrollWrapper extends Component {
       >
         {this.props.children}
         {this.state.showButton && (
-          <button className={cx('back-to-top')} onClick={this.scrollTop}>
-            <i className={cx('top-icon')}>{Parser(TopIcon)}</i>
-            <FormattedMessage id="ScrollWrapper.backToTop" defaultMessage="Back to top" />
-          </button>
+          <div className={cx('back-to-top')}>
+            <button className={cx('back-to-top-button')} onClick={this.scrollTop}>
+              <i className={cx('top-icon')}>{Parser(TopIcon)}</i>
+              <FormattedMessage id="ScrollWrapper.backToTop" defaultMessage="Back to top" />
+            </button>
+          </div>
         )}
+        {this.props.withFooter && <Footer />}
       </Scrollbars>
     );
   }

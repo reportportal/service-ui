@@ -104,15 +104,6 @@
 }
 .scrolling-content {
   position: relative;
-  min-height: 100%;
-  padding-bottom: 35px;
   box-sizing: border-box;
-
-  @media (max-width: $SCREEN_MD_MAX) {
-    padding-bottom: 50px;
-  }
-
-  @media (max-width: $SCREEN_XS_MAX) {
-    padding-bottom: 156px;
-  }
+  flex-grow: 1;
 }

@@ -199,7 +199,7 @@ export class ProjectsToolbar extends Component {
                   />
                 </div>
               )}
-              <div className={cx('toolbar-button')}>
+              <div className={cx('toolbar-button', 'mobile-hide')}>
                 <GhostButton icon={ExportIcon} mobileDisabled onClick={this.onExportProjects}>
                   <FormattedMessage id="ProjectsToolbar.export" defaultMessage="Export" />
                 </GhostButton>
