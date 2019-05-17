@@ -16,20 +16,11 @@ export const normalizeFieldsWithOptions = (fields) =>
     return { ...field, definedValues, value };
   });
 
-export const mergeFields = (savedFields, fetchedFields) => {
-  const updatedFields = [...fetchedFields];
-  savedFields.forEach((field) => {
-    const currentFieldIndexFromProps = updatedFields.findIndex((item) => item.id === field.id);
-    if (currentFieldIndexFromProps !== -1) {
-      updatedFields[currentFieldIndexFromProps] = {
-        ...updatedFields[currentFieldIndexFromProps],
-        ...field,
-      };
-    }
+export const mergeFields = (savedFields, fetchedFields) =>
+  fetchedFields.map((field) => {
+    const savedField = savedFields.find((item) => item.id === field.id);
+    return savedField ? { ...field, ...savedField } : field;
   });
-
-  return updatedFields;
-};
 
 export const getFieldComponent = (field) => {
   let fieldType = null;

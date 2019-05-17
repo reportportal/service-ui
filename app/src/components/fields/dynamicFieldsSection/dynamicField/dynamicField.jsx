@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { FormField } from 'components/fields/formField';
+import { dynamicFieldShape } from '../dynamicFieldShape';
 import styles from './dynamicField.scss';
 
 const cx = classNames.bind(styles);
@@ -40,7 +41,7 @@ export const DynamicField = ({
   );
 
 DynamicField.propTypes = {
-  field: PropTypes.object,
+  field: dynamicFieldShape,
   customBlock: PropTypes.object,
   customFieldWrapper: PropTypes.func,
   children: PropTypes.any,
