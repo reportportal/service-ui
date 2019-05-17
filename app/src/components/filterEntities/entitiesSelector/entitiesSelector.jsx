@@ -2,6 +2,7 @@ import { Component } from 'react';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { InputCheckbox } from 'components/inputs/inputCheckbox';
+import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { FormattedMessage } from 'react-intl';
 import { filterEntityShape } from '../propTypes';
 import styles from './entitiesSelector.scss';
@@ -52,25 +53,29 @@ export class EntitiesSelector extends Component {
           <FormattedMessage id={'EntitiesSelector.more'} defaultMessage={'More'} />
         </div>
         <div className={cx('entities-list')}>
-          {entities.map(
-            (entity) =>
-              !entity.static && (
-                <div
-                  key={entity.id}
-                  className={cx('entity-item', { 'sub-item': entity.meta && entity.meta.subItem })}
-                >
-                  <InputCheckbox
-                    value={entity.active}
-                    onChange={() => {
-                      this.setState({ opened: !this.state.opened });
-                      onChange(entity.id);
-                    }}
+          <ScrollWrapper autoHeight autoHeightMax={400}>
+            {entities.map(
+              (entity) =>
+                !entity.static && (
+                  <div
+                    key={entity.id}
+                    className={cx('entity-item', {
+                      'sub-item': entity.meta && entity.meta.subItem,
+                    })}
                   >
-                    {(entity.meta && entity.meta.longName) || entity.title}
-                  </InputCheckbox>
-                </div>
-              ),
-          )}
+                    <InputCheckbox
+                      value={entity.active}
+                      onChange={() => {
+                        this.setState({ opened: !this.state.opened });
+                        onChange(entity.id);
+                      }}
+                    >
+                      {(entity.meta && entity.meta.longName) || entity.title}
+                    </InputCheckbox>
+                  </div>
+                ),
+            )}
+          </ScrollWrapper>
         </div>
       </div>
     );
