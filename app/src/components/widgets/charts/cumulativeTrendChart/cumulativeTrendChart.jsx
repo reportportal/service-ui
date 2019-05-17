@@ -1,105 +1,52 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import { PureComponent } from 'react';
 import { injectIntl, intlShape } from 'react-intl';
-import ReactDOMServer from 'react-dom/server';
+import PropTypes from 'prop-types';
+import { ChartJS } from 'components/widgets/charts/common/chartjs';
 import classNames from 'classnames/bind';
-import { C3Chart } from 'components/widgets/charts/common/c3chart';
-import { messages as commonMessages } from '../common/messages';
-import { CumulativeChartLegend } from './cumulativeChartLegend';
 import styles from './cumulativeTrendChart.scss';
-import { CumulativeTrendTooltip } from './tooltip';
-import { generateChartDataParams, generateChartColors, getColorForKey } from './generateConfig';
+import { getChartData } from './chartjsConfig';
+import { CumulativeChartLegend } from './cumulativeChartLegend';
 
 const cx = classNames.bind(styles);
 
-const messages = {
-  statistics$executions$failed: commonMessages.failed,
-  statistics$executions$skipped: commonMessages.skipped,
-  statistics$executions$passed: commonMessages.passed,
-  statistics$defects$product_bug$total: commonMessages.pb,
-  statistics$defects$automation_bug$total: commonMessages.ab,
-  statistics$defects$system_issue$total: commonMessages.si,
-  statistics$defects$no_defect$total: commonMessages.nd,
-  statistics$defects$to_investigate$total: commonMessages.ti,
-};
-
 @injectIntl
-export class CumulativeTrendChart extends Component {
+export class CumulativeTrendChart extends PureComponent {
   static propTypes = {
     intl: intlShape.isRequired,
     widget: PropTypes.object.isRequired,
     isPreview: PropTypes.bool,
-    height: PropTypes.number,
-    container: PropTypes.instanceOf(Element).isRequired,
     observer: PropTypes.object,
-    uncheckedLegendItems: PropTypes.array,
-    onChangeLegend: PropTypes.func,
+    fetchWidget: PropTypes.func,
+    clearQueryParams: PropTypes.func,
+    queryParameters: PropTypes.object,
   };
 
   static defaultProps = {
     isPreview: false,
-    height: 0,
     observer: null,
-    uncheckedLegendItems: [],
-    onChangeLegend: () => {},
+    defectTypes: false,
+    fetchWidget: () => {},
+    clearQueryParams: () => {},
+    queryParameters: {},
   };
 
+  constructor(args) {
+    super(args);
+    const { queryParameters } = this.props;
+    if (queryParameters && queryParameters.attributes) {
+      this.state.activeAttribute = queryParameters.attributes[0];
+    }
+  }
+
   state = {
-    isConfigReady: false,
     defectTypes: false,
     separate: false,
     percentage: false,
+    activeAttribute: null,
   };
 
-  componentDidMount() {
-    if (!this.props.isPreview) {
-      this.props.observer.subscribe('widgetResized', this.resizeChart);
-    }
+  componentDidMount = () => {
     this.getConfig();
-  }
-
-  componentWillUnmount() {
-    if (!this.props.isPreview) {
-      if (this.node && this.node.removeEventListener) {
-        this.node.removeEventListener('mousemove', this.getCoords);
-      }
-      this.props.observer.unsubscribe('widgetResized', this.resizeChart);
-    }
-  }
-
-  onChartCreated = (chart, element) => {
-    this.chart = chart;
-    this.node = element;
-
-    if (!this.props.widget.content.result || this.props.isPreview) {
-      return;
-    }
-
-    this.props.uncheckedLegendItems.forEach((id) => {
-      this.chart.toggle(id);
-    });
-
-    this.resizeChart();
-
-    this.node.addEventListener('mousemove', this.getCoords);
-  };
-
-  onChartClick = () => {
-    // TODO: to implement redux+store filtered navigation
-    // (not based on URL construction as in other chart examples)
-  };
-
-  onMouseOut = () => {
-    this.chart.revert();
-  };
-
-  onMouseOver = (id) => {
-    this.chart.focus(id);
-  };
-
-  onClickLegendItem = (id) => {
-    this.props.onChangeLegend(id);
-    this.chart.toggle(id);
   };
 
   onChangeFocusType = (value) => {
@@ -112,7 +59,7 @@ export class CumulativeTrendChart extends Component {
   };
 
   onChangeTotals = () => {
-    // to be implemented
+    // TODO
   };
 
   onChangeSeparate = (value) => {
@@ -133,162 +80,78 @@ export class CumulativeTrendChart extends Component {
     this.getConfig({ percentage: value });
   };
 
-  getPosition = (d, width, height) => {
-    const rect = this.node.getBoundingClientRect();
-    const top = this.y - rect.top - height;
-    let left = this.x - rect.left - width / 2;
-
-    if (left < 0) {
-      left = 0;
-    } else if (left + width > rect.width) {
-      left = rect.width - width;
-    }
-
-    return {
-      top: top - 8,
-      left,
-    };
-  };
-
-  getConfig = (options = {}) => {
-    const { widget, isPreview, container } = this.props;
-
-    if (!widget || !widget.content || !widget.content.result) {
+  onChartElementClick = (element) => {
+    if (this.state.activeAttribute) {
       return;
     }
-
-    const { chartDataColumns, categoryNames, columnGroups } = generateChartDataParams(widget, {
-      ...this.state,
-      ...options,
-    });
-    const colors = generateChartColors(widget);
-
-    this.categoryNames = categoryNames;
-    this.height = container.offsetHeight;
-    this.width = container.offsetWidth;
-
-    this.config = {
-      data: {
-        columns: chartDataColumns,
-        type: 'bar',
-        onclick: this.onChartClick,
-        colors,
-        groups: columnGroups,
-      },
-      axis: {
-        x: {
-          show: !isPreview,
-          type: 'category',
-          categories: this.categoryNames.map((category) => {
-            const prefix = widget.contentParameters.widgetOptions.prefix;
-            return category.indexOf(prefix) > -1 ? category.split(`${prefix}:`)[1] : category;
-          }),
-          tick: {
-            centered: true,
-            inner: true,
-          },
-        },
-        y: {
-          show: !isPreview,
-        },
-      },
-      grid: {
-        y: {
-          show: !isPreview,
-        },
-      },
-      size: {
-        height: this.height,
-      },
-      interaction: {
-        enabled: !isPreview,
-      },
-      padding: {
-        top: isPreview ? 0 : 85,
-      },
-      legend: {
-        show: false, // we use custom legend
-      },
-      tooltip: {
-        grouped: false,
-        position: this.getPosition,
-        contents: this.renderContents,
-      },
+    /* eslint no-underscore-dangle: ["error", { "allow": ["_model"] }] */
+    const attributeLevel1 = element._model.label;
+    const activeAttribute = {
+      key: this.getAttributes()[0],
+      value: attributeLevel1,
     };
 
     this.setState({
-      isConfigReady: true,
+      activeAttribute,
+    });
+
+    this.props.fetchWidget({
+      attributes: [activeAttribute],
     });
   };
 
-  getCoords = ({ pageX, pageY }) => {
-    this.x = pageX;
-    this.y = pageY;
-  };
-
-  resizeChart = () => {
-    const newHeight = this.props.container.offsetHeight;
-    const newWidth = this.props.container.offsetWidth;
-
-    if (this.height !== newHeight) {
-      this.chart.resize({
-        height: newHeight,
-      });
-      this.height = newHeight;
-    } else if (this.width !== newWidth) {
-      this.chart.flush();
-      this.width = newWidth;
-    }
-  };
-
-  renderContents = (d) => {
-    const index = d[0].index;
-    const groupName = this.categoryNames[index];
-    const columns = this.config.data.columns;
-    const itemsData = columns.map((column) => {
-      const id = column[0];
-      const message = messages[id];
-      const value = (column[index + 1] || 0) + (this.state.percentage ? '%' : '');
-
-      return {
-        id,
-        color: getColorForKey(id),
-        name: message ? this.props.intl.formatMessage(message) : id,
-        value,
-      };
+  getConfig = (options = {}) => {
+    const { labels, datasets, chartOptions } = getChartData(this.props.widget, {
+      ...this.state,
+      options,
     });
 
-    return ReactDOMServer.renderToStaticMarkup(
-      <CumulativeTrendTooltip groupName={groupName} itemsData={itemsData} />,
-    );
+    this.setState({
+      chartData: {
+        labels,
+        datasets,
+      },
+      chartOptions,
+    });
+  };
+
+  getAttributes = () => this.props.widget.contentParameters.widgetOptions.attributes;
+
+  clearAttributes = () => {
+    this.setState({
+      activeAttribute: null,
+    });
+
+    this.props.clearQueryParams();
   };
 
   render() {
-    const { isPreview, uncheckedLegendItems } = this.props;
+    const { isPreview } = this.props;
     const classes = cx('cumulative-trend-chart', {
       'preview-view': isPreview,
     });
 
-    return (
+    return this.state && this.state.chartData ? (
       <div className={classes}>
-        {this.state.isConfigReady && (
-          <C3Chart config={this.config} onChartCreated={this.onChartCreated}>
-            {!isPreview && (
-              <CumulativeChartLegend
-                items={this.config.data.columns.map((item) => item[0])}
-                uncheckedLegendItems={uncheckedLegendItems}
-                onClick={this.onClickLegendItem}
-                onMouseOver={this.onMouseOver}
-                onMouseOut={this.onMouseOut}
-                onChangeFocusType={this.onChangeFocusType}
-                onChangeTotals={this.onChangeTotals}
-                onChangeSeparate={this.onChangeSeparate}
-                onChangePercentage={this.onChangePercentage}
-              />
-            )}
-          </C3Chart>
-        )}
+        <ChartJS
+          chartData={this.state.chartData}
+          chartOptions={this.state.chartOptions}
+          onChartElementClick={this.onChartElementClick}
+        >
+          <CumulativeChartLegend
+            items={this.state.chartData.datasets
+              .map((item) => item.label)
+              .filter((field) => /executions/.test(field))}
+            attributes={this.getAttributes()}
+            activeAttribute={this.state.activeAttribute}
+            clearAttributes={this.clearAttributes}
+            onChangeFocusType={this.onChangeFocusType}
+            onChangeTotals={this.onChangeTotals}
+            onChangeSeparate={this.onChangeSeparate}
+            onChangePercentage={this.onChangePercentage}
+          />
+        </ChartJS>
       </div>
-    );
+    ) : null;
   }
 }

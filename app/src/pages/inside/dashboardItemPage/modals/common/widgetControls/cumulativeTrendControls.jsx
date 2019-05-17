@@ -79,14 +79,18 @@ export class CumulativeTrendControls extends Component {
 
   formatContentFields = (criteries) =>
     criteries.filter((criteria) => STATIC_CONTENT_FIELDS.indexOf(criteria) === -1);
-  parseContentFields = (criteries) =>
-    criteries
-      ? STATIC_CONTENT_FIELDS.concat(
-          criteries
-            .map((criteria) => criteria.value || criteria)
-            .reduce((acc, val) => acc.concat(val), []),
-        )
-      : this.props.widgetSettings.contentParameters.contentFields;
+
+  parseContentFields = (criteries) => {
+    const data =
+      criteries &&
+      STATIC_CONTENT_FIELDS.concat(
+        criteries
+          .map((criteria) => criteria.value || criteria)
+          .reduce((acc, val) => acc.concat(val), []),
+      );
+
+    return criteries ? data : this.props.widgetSettings.contentParameters.contentFields;
+  };
 
   normalizeValue = (value) => value && `${value}`.replace(/\D+/g, '');
 
@@ -106,7 +110,7 @@ export class CumulativeTrendControls extends Component {
         {!formAppearance.isMainControlsLocked && (
           <Fragment>
             <FieldProvider
-              name="contentParameters.widgetOptions.attributeKey"
+              name="contentParameters.widgetOptions.attributes.0"
               validate={validators.attributeKey(intl.formatMessage)}
             >
               <InputControl
@@ -115,6 +119,18 @@ export class CumulativeTrendControls extends Component {
                 tip={intl.formatMessage(messages.attributeKeyFieldTip)}
               />
             </FieldProvider>
+
+            <FieldProvider
+              name="contentParameters.widgetOptions.attributes.1"
+              validate={validators.attributeKey(intl.formatMessage)}
+            >
+              <InputControl
+                fieldLabel={intl.formatMessage(messages.attributeKeyFieldLabel)}
+                placeholder={intl.formatMessage(messages.attributeKeyFieldPlaceholder)}
+                tip={intl.formatMessage(messages.attributeKeyFieldTip)}
+              />
+            </FieldProvider>
+
             <FieldProvider
               name="contentParameters.contentFields"
               parse={this.parseContentFields}
