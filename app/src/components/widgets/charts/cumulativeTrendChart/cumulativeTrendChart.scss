@@ -1,11 +1,12 @@
 .cumulative-trend-chart {
   display: flex;
-  top: 0;
   justify-content: flex-end;
   width: 100%;
+  padding-top: 40px;
 
   &:not(.preview-view) {
     position: absolute;
+    top: -15px;
   }
 
   :global {
@@ -79,6 +80,28 @@
 
   .control {
     margin-left: 20px;
+  }
+
+  .separate {
+    background-image: url(common/img/toggle-stacked.svg);
+    background-position-y: center;
+    background-repeat: no-repeat;
+    cursor: pointer;
+
+    input, label {
+      visibility: hidden;
+    }
+  }
+
+  .percentage {
+    background-image: url(common/img/toggle-absolute.svg);
+    background-position-y: center;
+    background-repeat: no-repeat;
+    cursor: pointer;
+
+    input, label {
+      visibility: hidden;
+    }
   }
 }
 
