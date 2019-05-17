@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { injectIntl, intlShape } from 'react-intl';
 import classNames from 'classnames/bind';
+import { dynamicFieldShape } from './dynamicFieldShape';
 import { getFieldComponent } from './utils';
 import styles from './dynamicFieldsSection.scss';
 
@@ -11,22 +12,7 @@ const cx = classNames.bind(styles);
 export class DynamicFieldsSection extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
-    fields: PropTypes.arrayOf(
-      PropTypes.shape({
-        id: PropTypes.string.isRequired,
-        fieldType: PropTypes.string.isRequired,
-        fieldName: PropTypes.string.isRequired,
-        definedValues: PropTypes.arrayOf(
-          PropTypes.shape({
-            valueId: PropTypes.string,
-            valueName: PropTypes.string,
-          }),
-        ),
-        required: PropTypes.bool,
-        value: PropTypes.array,
-        disabled: PropTypes.bool,
-      }),
-    ),
+    fields: PropTypes.arrayOf(dynamicFieldShape),
     customBlockCreator: PropTypes.func,
     customFieldWrapper: PropTypes.func,
   };
