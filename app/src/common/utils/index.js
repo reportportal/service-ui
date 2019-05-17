@@ -59,3 +59,4 @@ export { arrayDiffer } from './arrayDiffer';
 export { queueReducers } from './queueReducers';
 export { waitForSelector } from './waitForSelector';
 export { isEmptyValue } from './isEmptyValue';
+export { formatAttribute } from './attributeUtils';

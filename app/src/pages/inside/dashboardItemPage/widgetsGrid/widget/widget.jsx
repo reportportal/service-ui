@@ -17,8 +17,8 @@ import styles from './widget.scss';
 
 const cx = classNames.bind(styles);
 
-const SILENT_UPDATE_TIMEOUT = 60000;
-const SILENT_UPDATE_TIMEOUT_FULLSCREEN = 30000;
+// const SILENT_UPDATE_TIMEOUT = 60000;
+// const SILENT_UPDATE_TIMEOUT_FULLSCREEN = 30000;
 
 @connect(
   (state) => ({
@@ -127,6 +127,7 @@ export class Widget extends Component {
           observer={this.props.observer}
           fetchWidget={this.fetchWidget}
           queryParameters={queryParameters}
+          clearQueryParams={this.clearQueryParams}
         />
       )
     );
@@ -140,6 +141,7 @@ export class Widget extends Component {
       const {
         queryParameters: { attributes = [] },
       } = this.state;
+
       const attributesString = (params.attributes || attributes).map(formatAttribute).join(',');
 
       url = URLS.widgetMultilevel(activeProject, widgetId, attributesString);
@@ -159,8 +161,17 @@ export class Widget extends Component {
     });
   };
 
+  clearQueryParams = () => {
+    this.setState(
+      {
+        queryParameters: {},
+      },
+      this.fetchWidget,
+    );
+  };
+
   fetchWidget = (params = {}) => {
-    const { isFullscreen, tracking } = this.props;
+    const { tracking } = this.props;
     const url = this.getWidgetUrl(params);
 
     clearTimeout(this.silentUpdaterId);
@@ -178,10 +189,10 @@ export class Widget extends Component {
           },
           widget,
         });
-        this.silentUpdaterId = setTimeout(
-          this.fetchWidget,
-          isFullscreen ? SILENT_UPDATE_TIMEOUT_FULLSCREEN : SILENT_UPDATE_TIMEOUT,
-        );
+        // this.silentUpdaterId = setTimeout(
+        //   this.fetchWidget,
+        //   isFullscreen ? SILENT_UPDATE_TIMEOUT_FULLSCREEN : SILENT_UPDATE_TIMEOUT,
+        // );
       })
       .catch(() => {
         this.setState({

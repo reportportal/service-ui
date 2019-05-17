@@ -9,7 +9,8 @@ import {
   NonPassedTestCasesTrendChart,
   PassingRatePerLaunch,
   LaunchExecutionAndIssueStatistics,
-  CumulativeTrendChart,
+  // CumulativeTrendChart,
+  CumulativeTrendChartJs,
   OverallStatisticsChart,
   InvestigatedTrendChart,
 } from './charts';
@@ -37,7 +38,8 @@ const CHARTS = {
   [widgetTypes.FLAKY_TEST_CASES_TABLE]: FlakyTests,
   [widgetTypes.MOST_FAILED_TEST_CASES_TABLE]: MostFailedTests,
   [widgetTypes.PROJECT_ACTIVITY]: ProjectActivity,
-  [widgetTypes.CUMULATIVE_TREND]: CumulativeTrendChart,
+  // [widgetTypes.CUMULATIVE_TREND]: CumulativeTrendChart,
+  [widgetTypes.CUMULATIVE_TREND]: CumulativeTrendChartJs,
   [widgetTypes.OVERALL_STATISTICS]: OverallStatisticsChart,
   [widgetTypes.INVESTIGATED_PERCENTAGE_OF_LAUNCHES]: InvestigatedTrendChart,
 };
