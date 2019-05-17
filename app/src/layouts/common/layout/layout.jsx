@@ -23,7 +23,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
-import { Footer } from '../footer';
 import styles from './layout.scss';
 
 const cx = classNames.bind(styles);
@@ -76,7 +75,7 @@ export class Layout extends Component {
             />
           </div>
           <div className={cx('content')}>
-            <ScrollWrapper withBackToTop>
+            <ScrollWrapper withBackToTop withFooter>
               <div className={cx('scrolling-content')}>
                 <div className={cx('header-container')}>
                   <Header
@@ -85,7 +84,6 @@ export class Layout extends Component {
                   />
                 </div>
                 <div className={cx('page-container')}>{this.props.children}</div>
-                <Footer />
               </div>
             </ScrollWrapper>
             <div

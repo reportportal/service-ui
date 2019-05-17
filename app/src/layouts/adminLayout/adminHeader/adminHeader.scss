@@ -29,6 +29,9 @@
   line-height: 22px;
   letter-spacing: 1px;
   text-transform: uppercase;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   @media (max-width: $SCREEN_XS_MAX) {
     font-size: 14px;
   }

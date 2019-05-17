@@ -7,6 +7,15 @@
   line-height: 19px;
   font-family: $FONT-SEMIBOLD;
 
+  @media (max-width: $SCREEN_SM_MAX) {
+    margin-right: 11px;
+    margin-left: 11px;
+  }
+
+  @media (max-width: $SCREEN_XXS_MAX) {
+    margin: 0px;
+  }
+
   svg {
     width: 19px;
     height: 19px;
