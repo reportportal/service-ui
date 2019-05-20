@@ -69,12 +69,10 @@ export class TestItem extends Component {
     return obj;
   };
 
-  getTickets = (activity) => {
-    const newTickets = activity.ticketId$newValue
-      ? activity.ticketId$newValue.split(',').filter((val) => val)
-      : [];
-    const oldTickets = activity.ticketId$oldValue ? activity.ticketId$oldValue.split(',') : [];
-    return activity.actionType === [UNLINK_ISSUE]
+  getTickets = ({ details: { history = [{ newValue: '', oldValue: '' }] }, actionType }) => {
+    const newTickets = history[0].newValue.split(',').filter((val) => val);
+    const oldTickets = history[0].oldValue.split(',').filter((val) => val);
+    return actionType === UNLINK_ISSUE
       ? arrayDiffer(oldTickets, newTickets)
       : arrayDiffer(newTickets, oldTickets);
   };
@@ -83,9 +81,10 @@ export class TestItem extends Component {
     const { activity, intl } = this.props;
     const pathToTestItem =
       this.state.testItem &&
-      `${this.state.testItem.launchId}/${Object.keys(this.state.testItem.path_names).join('/')}/${
+      `${this.state.testItem.launchId}/${this.state.testItem.path.replace('.', '/')}/${
         activity.loggedObjectId
       }`;
+
     return (
       <Fragment>
         <span className={cx('user-name')}>{activity.user}</span>
@@ -100,7 +99,7 @@ export class TestItem extends Component {
             </a>
           );
         })}{' '}
-        {activity.actionType === [UNLINK_ISSUE]
+        {activity.actionType === UNLINK_ISSUE
           ? intl.formatMessage(messages.fromItem)
           : intl.formatMessage(messages.toItem)}
         <Link
