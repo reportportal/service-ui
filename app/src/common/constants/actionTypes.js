@@ -26,9 +26,6 @@ export const UPDATE_DEFECT = 'updateDefect';
 export const DELETE_DEFECT = 'deleteDefect';
 export const START_IMPORT = 'startImport';
 export const FINISH_IMPORT = 'finishImport';
-export const UPDATE_NOTIFICATIONS = 'updateEmail';
-export const SWITCH_ON_NOTIFICATIONS = 'onEmail';
-export const SWITCH_OFF_NOTIFICATIONS = 'offEmail';
 export const UPDATE_ITEM = 'updateItem';
 export const LINK_ISSUE_AA = 'linkIssueAa';
 export const ANALYZE_ITEM = 'analyzeItem';
@@ -46,7 +43,6 @@ export const ACTIONS_WITH_BTS = 'btsActions';
 export const ACTIONS_WITH_AA_SETTINGS = 'aaSettingsActions';
 export const ACTIONS_WITH_DEFECTS = 'defectsActions';
 export const ACTIONS_WITH_IMPORT = 'importActions';
-export const ACTIONS_WITH_NOTIFICATIONS = 'notificationsActions';
 export const ACTIONS_WITH_LAUNCH = 'launchActions';
 
 export const GROUP_TO_ACTION_MAP = {
@@ -58,11 +54,6 @@ export const GROUP_TO_ACTION_MAP = {
   [ACTIONS_WITH_AA_SETTINGS]: [UPDATE_ANALYZER, GENERATE_INDEX, DELETE_INDEX],
   [ACTIONS_WITH_DEFECTS]: [UPDATE_DEFECT, DELETE_DEFECT],
   [ACTIONS_WITH_IMPORT]: [START_IMPORT, FINISH_IMPORT],
-  [ACTIONS_WITH_NOTIFICATIONS]: [
-    UPDATE_NOTIFICATIONS,
-    SWITCH_ON_NOTIFICATIONS,
-    SWITCH_OFF_NOTIFICATIONS,
-  ],
 };
 
 export const ACTION_TO_GROUP_MAP = {
@@ -95,8 +86,4 @@ export const ACTION_TO_GROUP_MAP = {
 
   [START_IMPORT]: ACTIONS_WITH_IMPORT,
   [FINISH_IMPORT]: ACTIONS_WITH_IMPORT,
-
-  [UPDATE_NOTIFICATIONS]: ACTIONS_WITH_NOTIFICATIONS,
-  [SWITCH_ON_NOTIFICATIONS]: ACTIONS_WITH_NOTIFICATIONS,
-  [SWITCH_OFF_NOTIFICATIONS]: ACTIONS_WITH_NOTIFICATIONS,
 };
