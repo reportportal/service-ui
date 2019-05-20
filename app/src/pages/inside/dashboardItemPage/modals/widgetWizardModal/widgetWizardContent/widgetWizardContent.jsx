@@ -7,7 +7,8 @@ import { getFormValues, submit } from 'redux-form';
 import { connect } from 'react-redux';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
-import { showScreenLockAction } from 'controllers/screenLock';
+import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLock';
+import { showDefaultErrorNotification } from 'controllers/notification';
 import { activeProjectSelector } from 'controllers/user';
 import { getWidgets } from 'pages/inside/dashboardItemPage/modals/common/widgets';
 import { DEFAULT_WIDGET_CONFIG, WIDGET_WIZARD_FORM } from '../../common/constants';
@@ -27,6 +28,8 @@ const cx = classNames.bind(styles);
   {
     submitWidgetWizardForm: () => submit(WIDGET_WIZARD_FORM),
     showScreenLockAction,
+    hideScreenLockAction,
+    showDefaultErrorNotification,
   },
 )
 @track()
@@ -37,6 +40,8 @@ export class WidgetWizardContent extends Component {
     submitWidgetWizardForm: PropTypes.func.isRequired,
     projectId: PropTypes.string.isRequired,
     showScreenLockAction: PropTypes.func.isRequired,
+    hideScreenLockAction: PropTypes.func.isRequired,
+    showDefaultErrorNotification: PropTypes.func.isRequired,
     closeModal: PropTypes.func.isRequired,
     onConfirm: PropTypes.func,
     eventsInfo: PropTypes.object,
@@ -86,14 +91,19 @@ export class WidgetWizardContent extends Component {
     fetch(URLS.widget(projectId), {
       method: 'post',
       data,
-    }).then(({ id }) => {
-      const newWidget = {
-        widgetId: id,
-        widgetName: data.name,
-        ...DEFAULT_WIDGET_CONFIG,
-      };
-      onConfirm(newWidget, this.props.closeModal);
-    });
+    })
+      .then(({ id }) => {
+        const newWidget = {
+          widgetId: id,
+          widgetName: data.name,
+          ...DEFAULT_WIDGET_CONFIG,
+        };
+        onConfirm(newWidget, this.props.closeModal);
+      })
+      .catch((err) => {
+        this.props.hideScreenLockAction();
+        this.props.showDefaultErrorNotification(err);
+      });
   };
 
   nextStep = () => {
