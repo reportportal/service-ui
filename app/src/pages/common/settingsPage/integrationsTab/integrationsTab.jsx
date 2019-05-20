@@ -2,15 +2,12 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
-import { fetch } from 'common/utils';
-import { URLS } from 'common/urls';
 import {
   IntegrationInfoContainer,
   IntegrationSettingsContainer,
 } from 'components/integrations/containers';
 import { showDefaultErrorNotification } from 'controllers/notification';
-import { sortItemsByGroupType, groupItems, filterAvailablePlugins } from 'controllers/project';
-import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
+import { availableGroupedPluginsSelector } from 'controllers/plugins';
 import { INTEGRATION_NAMES_TITLES } from 'components/integrations';
 import { IntegrationsList } from './integrationsList';
 import { IntegrationBreadcrumbs } from './integrationBreadcrumbs';
@@ -24,23 +21,23 @@ import styles from './integrationsTab.scss';
 
 const cx = classNames.bind(styles);
 
-@connect(null, {
-  showDefaultErrorNotification,
-})
+@connect(
+  (state) => ({
+    availablePlugins: availableGroupedPluginsSelector(state),
+  }),
+  {
+    showDefaultErrorNotification,
+  },
+)
 export class IntegrationsTab extends Component {
   static propTypes = {
     showDefaultErrorNotification: PropTypes.func.isRequired,
+    availablePlugins: PropTypes.object.isRequired,
   };
 
   state = {
-    loading: true,
     subPage: DEFAULT_BREADCRUMB,
-    availableIntegrations: {},
   };
-
-  componentDidMount() {
-    this.fetchAvailableIntegrations();
-  }
 
   getBreadcrumbs = () => {
     const { subPage } = this.state;
@@ -91,30 +88,10 @@ export class IntegrationsTab extends Component {
                 title: INTEGRATION_NAMES_TITLES[pageData.name] || pageData.name,
               })
             }
-            availableIntegrations={this.state.availableIntegrations}
+            availableIntegrations={this.props.availablePlugins}
           />
         );
     }
-  };
-
-  fetchAvailableIntegrations = () => {
-    fetch(URLS.plugin())
-      .then((plugins) => {
-        let availableIntegrations = filterAvailablePlugins(plugins);
-        availableIntegrations = sortItemsByGroupType(availableIntegrations);
-        availableIntegrations = groupItems(availableIntegrations);
-
-        this.setState({
-          availableIntegrations,
-          loading: false,
-        });
-      })
-      .catch((error) => {
-        this.props.showDefaultErrorNotification(error);
-        this.setState({
-          loading: false,
-        });
-      });
   };
 
   subPagesCache = {};
@@ -125,7 +102,7 @@ export class IntegrationsTab extends Component {
   };
 
   render() {
-    const { subPage, loading } = this.state;
+    const { subPage } = this.state;
 
     return (
       <div className={cx('integrations-tab')}>
@@ -135,7 +112,7 @@ export class IntegrationsTab extends Component {
             onClickItem={this.changeSubPage}
           />
         )}
-        {loading ? <SpinningPreloader /> : this.getPageContent()}
+        {this.getPageContent()}
       </div>
     );
   }

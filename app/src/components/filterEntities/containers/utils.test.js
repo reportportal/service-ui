@@ -171,10 +171,15 @@ describe('createFilterQuery', () => {
         value: '',
       },
     };
-    expect(createFilterQuery(newValues)).toEqual({
+    const oldValues = {
+      number: {
+        value: 'test',
+        condition: 'eq',
+      },
+    };
+    expect(createFilterQuery(newValues, oldValues)).toEqual({
       'filter.cnt.name': 'foo',
       'filter.eq.number': null,
-      'predefinedFilter.predefined': null,
     });
   });
 

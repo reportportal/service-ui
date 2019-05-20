@@ -48,13 +48,18 @@ import {
   UPDATE_ANALYZER,
   GENERATE_INDEX,
   DELETE_INDEX,
+  CREATE_DEFECT,
   UPDATE_DEFECT,
   DELETE_DEFECT,
   START_IMPORT,
   FINISH_IMPORT,
-  UPDATE_NOTIFICATIONS,
-  SWITCH_ON_NOTIFICATIONS,
-  SWITCH_OFF_NOTIFICATIONS,
+  UPDATE_ITEM,
+  LINK_ISSUE_AA,
+  ANALYZE_ITEM,
+  CREATE_PATTERN,
+  UPDATE_PATTERN,
+  DELETE_PATTERN,
+  MATCHED_PATTERN,
 } from 'common/constants/actionTypes';
 import {
   DASHBOARD,
@@ -65,10 +70,15 @@ import {
   PROJECT,
   DEFECT_TYPE,
   USER,
-  USER_FILTER,
+  TICKET,
   TEST_ITEM,
-  EXTERNAL_SYSTEM,
+  INTEGRATION,
+  EMAIL_CONFIG,
+  ITEM_ISSUE,
+  PATTERN_RULE,
 } from 'common/constants/eventsObjectTypes';
+
+import { actionMessages, objectTypesMessages } from 'common/constants/eventsLocalization';
 
 const messages = defineMessages({
   timeCol: { id: 'EventsGrid.timeCol', defaultMessage: 'Time' },
@@ -134,124 +144,144 @@ export class EventsEntities extends Component {
           selectAll: true,
           options: [
             {
-              label: 'Create dashboard',
+              label: intl.formatMessage(actionMessages[CREATE_DASHBOARD]),
               value: CREATE_DASHBOARD,
             },
             {
-              label: 'Update Dashboard',
+              label: intl.formatMessage(actionMessages[UPDATE_DASHBOARD]),
               value: UPDATE_DASHBOARD,
             },
             {
-              label: 'Delete dashboard',
+              label: intl.formatMessage(actionMessages[DELETE_DASHBOARD]),
               value: DELETE_DASHBOARD,
             },
             {
-              label: 'Create widget',
+              label: intl.formatMessage(actionMessages[CREATE_WIDGET]),
               value: CREATE_WIDGET,
             },
             {
-              label: 'Update widget',
+              label: intl.formatMessage(actionMessages[UPDATE_WIDGET]),
               value: UPDATE_WIDGET,
             },
             {
-              label: 'Delete widget',
+              label: intl.formatMessage(actionMessages[DELETE_WIDGET]),
               value: DELETE_WIDGET,
             },
             {
-              label: 'Create filter',
+              label: intl.formatMessage(actionMessages[CREATE_FILTER]),
               value: CREATE_FILTER,
             },
             {
-              label: 'Update filter',
+              label: intl.formatMessage(actionMessages[UPDATE_FILTER]),
               value: UPDATE_FILTER,
             },
             {
-              label: 'Delete filter',
+              label: intl.formatMessage(actionMessages[DELETE_FILTER]),
               value: DELETE_FILTER,
             },
             {
-              label: 'Update defect',
+              label: intl.formatMessage(actionMessages[CREATE_DEFECT]),
+              value: CREATE_DEFECT,
+            },
+            {
+              label: intl.formatMessage(actionMessages[UPDATE_DEFECT]),
               value: UPDATE_DEFECT,
             },
             {
-              label: 'Delete defect',
+              label: intl.formatMessage(actionMessages[DELETE_DEFECT]),
               value: DELETE_DEFECT,
             },
             {
-              label: 'Create BTS',
+              label: intl.formatMessage(actionMessages[CREATE_BTS]),
               value: CREATE_BTS,
             },
             {
-              label: 'Update BTS',
+              label: intl.formatMessage(actionMessages[UPDATE_BTS]),
               value: UPDATE_BTS,
             },
             {
-              label: 'Delete BTS',
+              label: intl.formatMessage(actionMessages[DELETE_BTS]),
               value: DELETE_BTS,
             },
             {
-              label: 'Start launch',
+              label: intl.formatMessage(actionMessages[START_LAUNCH]),
               value: START_LAUNCH,
             },
             {
-              label: 'Finish launch',
+              label: intl.formatMessage(actionMessages[FINISH_LAUNCH]),
               value: FINISH_LAUNCH,
             },
             {
-              label: 'Delete launch',
+              label: intl.formatMessage(actionMessages[DELETE_LAUNCH]),
               value: DELETE_LAUNCH,
             },
             {
-              label: 'Update project',
+              label: intl.formatMessage(actionMessages[UPDATE_PROJECT]),
               value: UPDATE_PROJECT,
             },
             {
-              label: 'Update Auto-Analysis',
+              label: intl.formatMessage(actionMessages[UPDATE_ANALYZER]),
               value: UPDATE_ANALYZER,
             },
             {
-              label: 'Post issue',
+              label: intl.formatMessage(actionMessages[POST_ISSUE]),
               value: POST_ISSUE,
             },
             {
-              label: 'Link issue',
+              label: intl.formatMessage(actionMessages[LINK_ISSUE]),
               value: LINK_ISSUE,
             },
             {
-              label: 'Unlink issue',
+              label: intl.formatMessage(actionMessages[UNLINK_ISSUE]),
               value: UNLINK_ISSUE,
             },
             {
-              label: 'Create user',
+              label: intl.formatMessage(actionMessages[CREATE_USER]),
               value: CREATE_USER,
             },
             {
-              label: 'Remove index',
-              value: DELETE_INDEX,
-            },
-            {
-              label: 'Generate index',
+              label: intl.formatMessage(actionMessages[GENERATE_INDEX]),
               value: GENERATE_INDEX,
             },
             {
-              label: 'Start import',
+              label: intl.formatMessage(actionMessages[DELETE_INDEX]),
+              value: DELETE_INDEX,
+            },
+            {
+              label: intl.formatMessage(actionMessages[START_IMPORT]),
               value: START_IMPORT,
             },
             {
-              label: 'Finish import',
+              label: intl.formatMessage(actionMessages[FINISH_IMPORT]),
               value: FINISH_IMPORT,
             },
             {
-              label: 'Update notifications',
-              value: UPDATE_NOTIFICATIONS,
+              label: intl.formatMessage(actionMessages[UPDATE_ITEM]),
+              value: UPDATE_ITEM,
             },
             {
-              label: 'Switch on notifications',
-              value: SWITCH_ON_NOTIFICATIONS,
+              label: intl.formatMessage(actionMessages[LINK_ISSUE_AA]),
+              value: LINK_ISSUE_AA,
             },
             {
-              label: 'Switch off notifications',
-              value: SWITCH_OFF_NOTIFICATIONS,
+              label: intl.formatMessage(actionMessages[ANALYZE_ITEM]),
+              value: ANALYZE_ITEM,
+            },
+            {
+              label: intl.formatMessage(actionMessages[CREATE_PATTERN]),
+              value: CREATE_PATTERN,
+            },
+            {
+              label: intl.formatMessage(actionMessages[UPDATE_PATTERN]),
+              value: UPDATE_PATTERN,
+            },
+            {
+              label: intl.formatMessage(actionMessages[DELETE_PATTERN]),
+              value: DELETE_PATTERN,
+            },
+            {
+              label: intl.formatMessage(actionMessages[MATCHED_PATTERN]),
+              value: MATCHED_PATTERN,
             },
           ],
         },
@@ -281,48 +311,60 @@ export class EventsEntities extends Component {
           selectAll: true,
           options: [
             {
-              label: 'Project',
+              label: intl.formatMessage(objectTypesMessages[PROJECT]),
               value: PROJECT,
             },
             {
-              label: 'Defect type',
+              label: intl.formatMessage(objectTypesMessages[DEFECT_TYPE]),
               value: DEFECT_TYPE,
             },
             {
-              label: 'Test item',
+              label: intl.formatMessage(objectTypesMessages[TEST_ITEM]),
               value: TEST_ITEM,
             },
             {
-              label: 'Launch',
+              label: intl.formatMessage(objectTypesMessages[LAUNCH]),
               value: LAUNCH,
             },
             {
-              label: 'External system',
-              value: EXTERNAL_SYSTEM,
+              label: intl.formatMessage(objectTypesMessages[INTEGRATION]),
+              value: INTEGRATION,
             },
             {
-              label: 'Dashboard',
+              label: intl.formatMessage(objectTypesMessages[DASHBOARD]),
               value: DASHBOARD,
             },
             {
-              label: 'User',
+              label: intl.formatMessage(objectTypesMessages[USER]),
               value: USER,
             },
             {
-              label: 'Widget',
+              label: intl.formatMessage(objectTypesMessages[WIDGET]),
               value: WIDGET,
             },
             {
-              label: 'User filter',
-              value: USER_FILTER,
-            },
-            {
-              label: 'Filter',
+              label: intl.formatMessage(objectTypesMessages[FILTER]),
               value: FILTER,
             },
             {
-              label: 'Import',
+              label: intl.formatMessage(objectTypesMessages[IMPORT]),
               value: IMPORT,
+            },
+            {
+              label: intl.formatMessage(objectTypesMessages[TICKET]),
+              value: TICKET,
+            },
+            {
+              label: intl.formatMessage(objectTypesMessages[ITEM_ISSUE]),
+              value: ITEM_ISSUE,
+            },
+            {
+              label: intl.formatMessage(objectTypesMessages[EMAIL_CONFIG]),
+              value: EMAIL_CONFIG,
+            },
+            {
+              label: intl.formatMessage(objectTypesMessages[PATTERN_RULE]),
+              value: PATTERN_RULE,
             },
           ],
         },

@@ -29,6 +29,14 @@ const messages = defineMessages({
     id: 'RegistrationForm.confirmPasswordHint',
     defaultMessage: 'Passwords do not match.',
   },
+  loginDuplicateHint: {
+    id: 'RegistrationForm.loginDuplicateHint',
+    defaultMessage: 'Entered login already exists in the system.',
+  },
+  emailDuplicateHint: {
+    id: 'RegistrationForm.emailDuplicateHint',
+    defaultMessage: 'Entered email already exists in the system.',
+  },
   filterNameError: {
     id: 'FiltersPage.filterNameLength',
     defaultMessage: 'Filter name length should have size from 3 to 128 characters.',
@@ -142,6 +150,14 @@ const messages = defineMessages({
   projectDuplicateHint: {
     id: 'ProjectsPage.projectDuplicateHint',
     defaultMessage: 'Project with the same name already exists in system',
+  },
+  btsUrlHint: {
+    id: 'JiraConnectionFormFields.btsUrlHint',
+    defaultMessage: 'Please provide a valid BTS link',
+  },
+  btsProjectHint: {
+    id: 'JiraConnectionFormFields.btsProjectHint',
+    defaultMessage: 'Project name should have size from 1 to 55',
   },
 });
 

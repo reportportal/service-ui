@@ -18,7 +18,10 @@ export {
   addDefectSubTypeSuccessAction,
   deleteDefectSubTypeAction,
   deleteDefectSubTypeSuccessAction,
-  fetchProjectIntegrationsAction,
+  addProjectIntegrationAction,
+  updateProjectIntegrationAction,
+  removeProjectIntegrationAction,
+  removeProjectIntegrationsByTypeAction,
 } from './actionCreators';
 export { projectReducer } from './reducer';
 export {
@@ -38,12 +41,8 @@ export {
   projectIntegrationsSortedSelector,
   groupedIntegrationsSelector,
   namedIntegrationsSelectorsMap,
+  availableBtsIntegrationsSelector,
+  namedAvailableBtsIntegrationsSelector,
 } from './selectors';
-export {
-  normalizeAttributesWithPrefix,
-  filterIntegrationsByName,
-  sortItemsByGroupType,
-  groupItems,
-  filterAvailablePlugins,
-} from './utils';
+export { normalizeAttributesWithPrefix, isPostIssueActionAvailable } from './utils';
 export { projectSagas } from './sagas';

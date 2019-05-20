@@ -41,6 +41,16 @@ export class DefectTypeTooltip extends Component {
     tooltipEventInfo: {},
   };
 
+  getFilteredBodyData = (config) => {
+    const { data = [] } = this.props;
+
+    return Object.keys(data)
+      .map((key) => config.find((item) => item.locator === key))
+      .filter((item) => item)
+      .sort((a, b) => a.id - b.id)
+      .filter(({ locator }, i) => i === 0 || data[locator] > 0);
+  };
+
   render() {
     const {
       data,
@@ -53,22 +63,29 @@ export class DefectTypeTooltip extends Component {
 
     const defectConfig = projectConfig.subTypes && projectConfig.subTypes[type.toUpperCase()];
 
+    const filteredBodyData = this.getFilteredBodyData(defectConfig);
+
     return (
       <div className={cx('defect-type-tooltip')}>
         {defectConfig && (
           <Fragment>
-            <DefectLink
-              itemId={itemId}
-              defects={Object.keys(data)}
-              className={cx('total-item')}
-              eventInfo={tooltipEventInfo}
-            >
-              <div className={cx('name')}>
-                <div className={cx('circle')} style={{ backgroundColor: defectConfig[0].color }} />
-                {formatMessage(messages[`${type}_total`])}
-              </div>
-              <span className={cx('value')}>{data.total}</span>
-            </DefectLink>
+            {filteredBodyData.length > 1 && (
+              <DefectLink
+                itemId={itemId}
+                defects={Object.keys(data)}
+                className={cx('total-item')}
+                eventInfo={tooltipEventInfo}
+              >
+                <div className={cx('name')}>
+                  <div
+                    className={cx('circle')}
+                    style={{ backgroundColor: defectConfig[0].color }}
+                  />
+                  {formatMessage(messages[`${type}_total`])}
+                </div>
+                <span className={cx('value')}>{data.total}</span>
+              </DefectLink>
+            )}
             {/**
              * Display defect types in a proper order,
              * the first is the system type (Product Bug, To investigate, etc.)
@@ -76,25 +93,15 @@ export class DefectTypeTooltip extends Component {
              * Don't display defect sub types with zero defect's amount,
              * except system types (i.e. with index=0)
              */
-            Object.keys(data)
-              .map((key) => defectConfig.find((item) => item.locator === key))
-              .filter((item) => item)
-              .sort((a, b) => a.id - b.id)
-              .filter(({ locator }, i) => i === 0 || data[locator] > 0)
-              .map(({ locator, color, longName }) => (
-                <DefectLink
-                  key={locator}
-                  itemId={itemId}
-                  defects={[locator]}
-                  className={cx('item')}
-                >
-                  <div className={cx('name')}>
-                    <div className={cx('circle')} style={{ backgroundColor: color }} />
-                    {longName}
-                  </div>
-                  <span className={cx('value')}>{data[locator]}</span>
-                </DefectLink>
-              ))}
+            filteredBodyData.map(({ locator, color, longName }) => (
+              <DefectLink key={locator} itemId={itemId} defects={[locator]} className={cx('item')}>
+                <div className={cx('name')}>
+                  <div className={cx('circle')} style={{ backgroundColor: color }} />
+                  {longName}
+                </div>
+                <span className={cx('value')}>{data[locator]}</span>
+              </DefectLink>
+            ))}
           </Fragment>
         )}
       </div>

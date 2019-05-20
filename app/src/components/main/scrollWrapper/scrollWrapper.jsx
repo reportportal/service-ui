@@ -28,6 +28,7 @@ import { FormattedMessage } from 'react-intl';
 import { SpringSystem } from 'rebound';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { FOOTER_EVENTS } from 'components/main/analytics/events';
+import { forceCheck } from 'react-lazyload';
 import TopIcon from './img/top-inline.svg';
 import styles from './scrollWrapper.scss';
 
@@ -130,7 +131,10 @@ export class ScrollWrapper extends Component {
     const { lastViewScrollTop, lastViewScrollLeft } = this.scrollbars;
     const { withBackToTop, onLazyLoad } = this.props;
 
-    this.setState({ showButton: withBackToTop && scrollTop > 100 });
+    const isBackToTopVisible = withBackToTop && scrollTop > 100;
+    if (isBackToTopVisible !== this.state.showButton) {
+      this.setState({ showButton: isBackToTopVisible });
+    }
 
     if (onLazyLoad !== false && top > 0.9) {
       onLazyLoad();
@@ -141,6 +145,7 @@ export class ScrollWrapper extends Component {
     if (scrollLeft !== lastViewScrollLeft) {
       this.scrollbars.thumbHorizontal.style.opacity = 1;
     }
+    forceCheck();
   };
 
   handleScrollStop = () => {

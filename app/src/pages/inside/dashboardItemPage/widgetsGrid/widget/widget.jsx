@@ -2,6 +2,7 @@ import React, { Component, Fragment } from 'react';
 import track from 'react-tracking';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
+import { lazyload } from 'react-lazyload';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
 import { DASHBOARD_PAGE_EVENTS } from 'components/main/analytics/events';
@@ -28,6 +29,11 @@ const SILENT_UPDATE_TIMEOUT_FULLSCREEN = 30000;
   },
 )
 @track()
+@lazyload({
+  resize: true,
+  offset: 1000,
+  unmountIfInvisible: true,
+})
 export class Widget extends Component {
   static propTypes = {
     url: PropTypes.string.isRequired,
@@ -208,6 +214,7 @@ export class Widget extends Component {
               onRefresh={this.fetchWidget}
               onDelete={this.showDeleteWidgetModal}
               onEdit={this.showEditWidgetModal}
+              customClass={cx('common-control')}
             />
           </div>
           <div ref={this.getWidgetNode} className={cx('widget', { hidden: !visible })}>

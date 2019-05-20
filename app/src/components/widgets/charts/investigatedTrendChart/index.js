@@ -1,0 +1,1 @@
+export { InvestigatedTrendChart } from './investigatedTrendChart';

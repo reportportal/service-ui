@@ -15,7 +15,7 @@ const getItemLevel = (type) => {
   return type;
 };
 
-export const calculateLevel = (data) =>
+export const calculateLevel = (data = []) =>
   data.reduce((acc, item) => {
     const itemLevel = getItemLevel(item.type);
     if (!acc) {
@@ -25,7 +25,7 @@ export const calculateLevel = (data) =>
     return LEVELS[prevLevel] && LEVELS[prevLevel].order > LEVELS[itemLevel].order
       ? itemLevel
       : prevLevel;
-  }, '');
+  }, '') || launchLevels.LEVEL_SUITE;
 
 export const getQueryNamespace = (levelIndex) => `item${levelIndex}`;
 
@@ -57,6 +57,9 @@ export const getDefectsString = (defects) =>
   defects && defects.filter((k) => k !== 'total').join(',');
 
 export const normalizeTestItem = (testItem, defectTypesConfig = {}) => {
+  if (!testItem) {
+    return null;
+  }
   const testItemDefects = (testItem.statistics && testItem.statistics.defects) || {};
   const defectStatistics = Object.keys(defectTypesConfig).reduce((result, key) => {
     const defectTypeName = key.toLowerCase();

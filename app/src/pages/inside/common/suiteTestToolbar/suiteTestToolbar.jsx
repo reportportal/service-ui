@@ -1,8 +1,13 @@
+import { Fragment } from 'react';
+import PropTypes from 'prop-types';
+import classNames from 'classnames/bind';
 import { InfoLine } from 'pages/inside/common/infoLine';
 import { SelectedItems } from 'pages/inside/common/selectedItems';
-import PropTypes from 'prop-types';
 import { ActionPanel } from './actionPanel';
 import { RefineFiltersPanel } from './refineFiltersPanel';
+import styles from './suiteTestToolbar.scss';
+
+const cx = classNames.bind(styles);
 
 export const SuiteTestToolbar = ({
   parentItem,
@@ -27,31 +32,33 @@ export const SuiteTestToolbar = ({
   filterErrors,
   filterEntities,
 }) => (
-  <div>
-    {!!selectedItems.length && (
-      <SelectedItems
+  <Fragment>
+    <div className={cx({ 'sticky-toolbar': selectedItems.length })}>
+      {!!selectedItems.length && (
+        <SelectedItems
+          selectedItems={selectedItems}
+          errors={errors}
+          onUnselect={onUnselect}
+          onClose={onUnselectAll}
+        />
+      )}
+      <ActionPanel
+        debugMode={debugMode}
+        hasErrors={selectedItems.some((item) => !!errors[item.id])}
+        hasValidItems={selectedItems.length > Object.keys(errors).length}
+        onProceedValidItems={onProceedValidItems}
+        showBreadcrumbs={selectedItems.length === 0}
+        onRefresh={onRefresh}
         selectedItems={selectedItems}
-        errors={errors}
-        onUnselect={onUnselect}
-        onClose={onUnselectAll}
+        onIgnoreInAA={onIgnoreInAA}
+        onIncludeInAA={onIncludeInAA}
+        onUnlinkIssue={onUnlinkIssue}
+        onLinkIssue={onLinkIssue}
+        onEditDefects={onEditDefects}
+        onDelete={onDelete}
+        deleteDisabled={!selectedItems.length}
       />
-    )}
-    <ActionPanel
-      debugMode={debugMode}
-      hasErrors={selectedItems.some((item) => !!errors[item.id])}
-      hasValidItems={selectedItems.length > Object.keys(errors).length}
-      onProceedValidItems={onProceedValidItems}
-      showBreadcrumbs={selectedItems.length === 0}
-      onRefresh={onRefresh}
-      selectedItems={selectedItems}
-      onIgnoreInAA={onIgnoreInAA}
-      onIncludeInAA={onIncludeInAA}
-      onUnlinkIssue={onUnlinkIssue}
-      onLinkIssue={onLinkIssue}
-      onEditDefects={onEditDefects}
-      onDelete={onDelete}
-      deleteDisabled={!selectedItems.length}
-    />
+    </div>
     {parentItem && <InfoLine data={parentItem} events={events} />}
     <RefineFiltersPanel
       onFilterAdd={onFilterAdd}
@@ -61,7 +68,7 @@ export const SuiteTestToolbar = ({
       filterErrors={filterErrors}
       filterEntities={filterEntities}
     />
-  </div>
+  </Fragment>
 );
 SuiteTestToolbar.propTypes = {
   selectedItems: PropTypes.arrayOf(PropTypes.object),

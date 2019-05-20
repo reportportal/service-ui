@@ -17,21 +17,23 @@ export class DateField extends Component {
   };
 
   static defaultProps = {
-    customBlock: {},
+    customBlock: null,
   };
 
   parseDateValue = (value) => value && moment(value).format(DATE_FORMAT);
 
   render() {
-    const { field, customBlock } = this.props;
+    const { field, customBlock, ...rest } = this.props;
     return (
-      <DynamicField field={field} customBlock={customBlock} parse={this.parseDateValue}>
-        <DatePicker
-          className={cx('date-input', { 'with-custom-block': customBlock })}
-          fixedHeight
-          dateFormat={DATE_FORMAT}
-        />
-      </DynamicField>
+      <div className={cx('date-field')}>
+        <DynamicField field={field} customBlock={customBlock} parse={this.parseDateValue} {...rest}>
+          <DatePicker
+            className={cx('date-input', { 'with-custom-block': customBlock })}
+            fixedHeight
+            dateFormat={DATE_FORMAT}
+          />
+        </DynamicField>
+      </div>
     );
   }
 }

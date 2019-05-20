@@ -11,6 +11,7 @@ import {
   LaunchExecutionAndIssueStatistics,
   CumulativeTrendChart,
   OverallStatisticsChart,
+  InvestigatedTrendChart,
 } from './charts';
 import {
   LaunchesTable,
@@ -38,6 +39,7 @@ const CHARTS = {
   [widgetTypes.PROJECT_ACTIVITY]: ProjectActivity,
   [widgetTypes.CUMULATIVE_TREND]: CumulativeTrendChart,
   [widgetTypes.OVERALL_STATISTICS]: OverallStatisticsChart,
+  [widgetTypes.INVESTIGATED_PERCENTAGE_OF_LAUNCHES]: InvestigatedTrendChart,
 };
 
 export { CHARTS, NoDataAvailable };

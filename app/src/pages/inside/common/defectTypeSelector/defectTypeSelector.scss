@@ -75,6 +75,7 @@
   cursor: pointer;
   @media (max-width: $SCREEN_XS_MAX) {
     width: 100%;
+    padding: 0;
   }
 }
 .select-all-block {
@@ -132,12 +133,9 @@
   width: 20%;
 
   @media (max-width: $SCREEN_XS_MAX) {
-    &:nth-child(-n+4) {
-      width: 50%;
-      border-bottom: 1px solid $COLOR--gray-91;
-      padding-bottom: 5px;
-      margin-bottom: 9px;
-    }
+    width: 100%;
+    border-bottom: 1px solid $COLOR--gray-91;
+    padding: 10px;
   }
 }
 

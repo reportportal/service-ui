@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -16,6 +16,8 @@ import {
   dashboardFullScreenModeSelector,
   changeFullScreenModeAction,
   toggleFullScreenModeAction,
+  deleteDashboardAction,
+  updateDashboardAction,
 } from 'controllers/dashboard';
 import { userInfoSelector, activeProjectSelector } from 'controllers/user';
 import { PROJECT_DASHBOARD_PAGE } from 'controllers/pages';
@@ -26,6 +28,7 @@ import { GhostButton } from 'components/buttons/ghostButton';
 import { PageLayout, PageHeader, PageSection } from 'layouts/pageLayout';
 import { DASHBOARD_PAGE_EVENTS } from 'components/main/analytics/events';
 import { DashboardPageHeader } from 'pages/inside/common/dashboardPageHeader';
+import GlobeIcon from 'common/img/globe-icon-inline.svg';
 import AddWidgetIcon from './img/add-inline.svg';
 import AddSharedWidgetIcon from './img/add-shared-inline.svg';
 import EditIcon from './img/edit-inline.svg';
@@ -65,6 +68,24 @@ const messages = defineMessages({
     id: 'DashboardItemPage.addWidgetSuccess',
     defaultMessage: 'Widget has been added',
   },
+  sharedWidgetCaption: {
+    id: 'DashboardItemPage.sharedWidgetCaption',
+    defaultMessage: 'Dashboard has been shared by',
+  },
+  deleteModalWarningMessage: {
+    id: 'DashboardPage.modal.deleteModalWarningMessage',
+    defaultMessage:
+      'You are going to delete not your own dashboard. This may affect other users information on the project.',
+  },
+  deleteModalTitle: {
+    id: 'DashboardPage.modal.deleteModalTitle',
+    defaultMessage: 'Delete Dashboard',
+  },
+  deleteModalConfirmationText: {
+    id: 'DashboardPage.modal.deleteModalConfirmationText',
+    defaultMessage:
+      "Are you sure you want to delete dashboard '<b>{name}</b>'? It will no longer exist.",
+  },
 });
 
 @injectIntl
@@ -83,6 +104,8 @@ const messages = defineMessages({
     hideScreenLockAction,
     changeFullScreenModeAction,
     toggleFullScreenModeAction,
+    deleteDashboard: deleteDashboardAction,
+    editDashboard: updateDashboardAction,
   },
 )
 @track()
@@ -104,6 +127,8 @@ export class DashboardItemPage extends Component {
     fullScreenMode: PropTypes.bool,
     changeFullScreenModeAction: PropTypes.func.isRequired,
     toggleFullScreenModeAction: PropTypes.func.isRequired,
+    deleteDashboard: PropTypes.func.isRequired,
+    editDashboard: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
@@ -150,6 +175,53 @@ export class DashboardItemPage extends Component {
         this.props.hideScreenLockAction();
         this.props.showNotification({ message: err.message, type: NOTIFICATION_TYPES.ERROR });
       });
+  };
+
+  onDeleteDashboard = () => {
+    const {
+      deleteDashboard,
+      userInfo: { userId },
+      intl,
+      dashboard,
+    } = this.props;
+    const warningMessage =
+      dashboard.owner === userId ? '' : intl.formatMessage(messages.deleteModalWarningMessage);
+    this.props.showModalAction({
+      id: 'deleteItemsModal',
+      data: {
+        items: [dashboard],
+        onConfirm: () => deleteDashboard(dashboard),
+        header: intl.formatMessage(messages.deleteModalTitle),
+        mainContent: intl.formatMessage(messages.deleteModalConfirmationText, {
+          name: `'<b>${dashboard.name}</b>'`,
+        }),
+        warningMessage,
+        eventsInfo: {
+          closeIcon: DASHBOARD_PAGE_EVENTS.CLOSE_ICON_DELETE_DASHBOARD_MODAL,
+          cancelBtn: DASHBOARD_PAGE_EVENTS.CANCEL_BTN_DELETE_DASHBOARD_MODAL,
+          deleteBtn: DASHBOARD_PAGE_EVENTS.DELETE_BTN_DELETE_DASHBOARD_MODAL,
+        },
+      },
+    });
+  };
+
+  onEditDashboardItem = () => {
+    const { showModalAction: showModal, editDashboard, dashboard } = this.props;
+    showModal({
+      id: 'dashboardAddEditModal',
+      data: {
+        dashboardItem: dashboard,
+        onSubmit: editDashboard,
+        type: 'edit',
+        eventsInfo: {
+          closeIcon: DASHBOARD_PAGE_EVENTS.CLOSE_ICON_EDIT_DASHBOARD_MODAL,
+          changeDescription: DASHBOARD_PAGE_EVENTS.ENTER_DESCRIPTION_EDIT_DASHBOARD_MODAL,
+          shareSwitcher: DASHBOARD_PAGE_EVENTS.SHARE_SWITCHER_EDIT_DASHBOARD_MODAL,
+          cancelBtn: DASHBOARD_PAGE_EVENTS.CANCEL_BTN_EDIT_DASHBOARD_MODAL,
+          submitBtn: DASHBOARD_PAGE_EVENTS.UPDATE_BTN_EDIT_DASHBOARD_MODAL,
+        },
+      },
+    });
   };
 
   getBreadcrumbs = () => {
@@ -213,6 +285,12 @@ export class DashboardItemPage extends Component {
     return canResizeAndDragWidgets(userInfo.userRole, projectRole, isOwner);
   };
 
+  hasOwnerActions() {
+    const { dashboard, userInfo } = this.props;
+
+    return dashboard.owner === userInfo.userId;
+  }
+
   render() {
     const {
       intl: { formatMessage },
@@ -220,6 +298,8 @@ export class DashboardItemPage extends Component {
       fullScreenMode,
       changeFullScreenModeAction: changeFullScreenMode,
     } = this.props;
+
+    const isOwner = this.hasOwnerActions();
 
     return (
       <PageLayout>
@@ -230,19 +310,39 @@ export class DashboardItemPage extends Component {
           <div className={cx('dashboard-item')}>
             <div className={cx('buttons-container')}>
               <div className={cx('nav-left')}>
-                <GhostButton icon={AddWidgetIcon} onClick={this.showWidgetWizard}>
-                  {formatMessage(messages.addNewWidget)}
-                </GhostButton>
-                <GhostButton icon={AddSharedWidgetIcon} onClick={this.showAddSharedWidgetModal}>
-                  {formatMessage(messages.addSharedWidget)}
-                </GhostButton>
+                {isOwner ? (
+                  <Fragment>
+                    <GhostButton icon={AddWidgetIcon} onClick={this.showWidgetWizard}>
+                      {formatMessage(messages.addNewWidget)}
+                    </GhostButton>
+
+                    <GhostButton icon={AddSharedWidgetIcon} onClick={this.showAddSharedWidgetModal}>
+                      {formatMessage(messages.addSharedWidget)}
+                    </GhostButton>
+                  </Fragment>
+                ) : (
+                  <div className={cx('shared-caption')}>
+                    <span className={cx('globe-icon')}>{Parser(GlobeIcon)}</span>
+                    {formatMessage(messages.sharedWidgetCaption)} {dashboard.owner}
+                  </div>
+                )}
               </div>
               <div className={cx('nav-right')}>
-                <GhostButton icon={EditIcon}>{formatMessage(messages.editDashboard)}</GhostButton>
+                {isOwner && (
+                  <GhostButton icon={EditIcon} onClick={this.onEditDashboardItem}>
+                    {formatMessage(messages.editDashboard)}
+                  </GhostButton>
+                )}
+
                 <GhostButton icon={FullscreenIcon} onClick={this.toggleFullscreen}>
                   {formatMessage(messages.fullscreen)}
                 </GhostButton>
-                <GhostButton icon={CancelIcon}>{formatMessage(messages.delete)}</GhostButton>
+
+                {isOwner && (
+                  <GhostButton icon={CancelIcon} onClick={this.onDeleteDashboard}>
+                    {formatMessage(messages.delete)}
+                  </GhostButton>
+                )}
               </div>
             </div>
             <Fullscreen enabled={fullScreenMode} onChange={changeFullScreenMode}>

@@ -18,6 +18,7 @@ import { stepReducer } from 'controllers/step';
 import { itemsHistoryReducer } from 'controllers/itemsHistory';
 import { logReducer } from 'controllers/log';
 import { administrateReducer } from 'controllers/administrate';
+import { pluginsReducer } from 'controllers/plugins';
 
 export default {
   appInfo: appInfoReducer,
@@ -40,4 +41,5 @@ export default {
   log: logReducer,
   itemsHistory: itemsHistoryReducer,
   administrate: administrateReducer,
+  plugins: pluginsReducer,
 };

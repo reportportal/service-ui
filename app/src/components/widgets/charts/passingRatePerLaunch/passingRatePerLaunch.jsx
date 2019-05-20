@@ -224,7 +224,7 @@ export class PassingRatePerLaunch extends Component {
     return widget.widgetType === PASSING_RATE_PER_LAUNCH;
   }
 
-  resizeChart() {
+  resizeChart = () => {
     const newHeight = this.props.container.offsetHeight;
     const newWidth = this.props.container.offsetWidth;
     if (this.height !== newHeight) {
@@ -237,7 +237,7 @@ export class PassingRatePerLaunch extends Component {
       this.width = newWidth;
     }
     this.resizeHelper();
-  }
+  };
 
   resizeHelper() {
     const nodeElement = this.node;

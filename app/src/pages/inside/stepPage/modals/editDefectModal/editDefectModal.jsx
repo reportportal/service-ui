@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { activeProjectSelector } from 'controllers/user';
-import { externalSystemSelector } from 'controllers/project';
+import { availableBtsIntegrationsSelector, isPostIssueActionAvailable } from 'controllers/project';
 import { fetchTestItemsAction } from 'controllers/testItem';
 import { unlinkIssueAction, linkIssueAction } from 'controllers/step';
 import { hideModalAction } from 'controllers/modal';
@@ -87,7 +87,7 @@ const messages = defineMessages({
 @injectIntl
 @connect(
   (state) => ({
-    externalSystems: externalSystemSelector(state),
+    btsIntegrations: availableBtsIntegrationsSelector(state),
     url: URLS.testItems(activeProjectSelector(state)),
   }),
   {
@@ -103,7 +103,7 @@ export class EditDefectModal extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
     url: PropTypes.string.isRequired,
-    externalSystems: PropTypes.array.isRequired,
+    btsIntegrations: PropTypes.array.isRequired,
     data: PropTypes.shape({
       items: PropTypes.array,
       fetchFunc: PropTypes.func,
@@ -124,7 +124,7 @@ export class EditDefectModal extends Component {
     super(props);
     const {
       intl,
-      externalSystems,
+      btsIntegrations,
       data: { items },
     } = props;
     const initialState = {};
@@ -144,15 +144,13 @@ export class EditDefectModal extends Component {
         label: intl.formatMessage(messages.saveAndPostIssueMessage),
         value: 'Post',
         onClick: () => this.onEditDefects(this.handlePostIssue, true),
-        disabled:
-          !externalSystems.length ||
-          !externalSystems.every((item) => item.fields && item.fields.length),
+        disabled: !isPostIssueActionAvailable(btsIntegrations),
       },
       {
         label: intl.formatMessage(messages.saveAndLinkIssueMessage),
         value: 'Link',
         onClick: () => this.onEditDefects(this.handleLinkIssue, true),
-        disabled: !externalSystems.length,
+        disabled: !btsIntegrations.length,
       },
       {
         label: intl.formatMessage(messages.saveAndUnlinkIssueMessage),

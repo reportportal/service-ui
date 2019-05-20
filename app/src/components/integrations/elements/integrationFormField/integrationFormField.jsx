@@ -17,7 +17,7 @@ export const IntegrationFormField = ({ lineAlign, children, ...rest }) => (
 );
 
 IntegrationFormField.propTypes = {
-  children: PropTypes.func.isRequired,
+  children: PropTypes.node.isRequired,
   lineAlign: PropTypes.bool,
 };
 

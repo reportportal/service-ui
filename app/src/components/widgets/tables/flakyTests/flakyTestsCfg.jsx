@@ -26,7 +26,7 @@ const columns = {
     header: (
       <FormattedMessage id="FlakyTests.table.header.lastSwitch" defaultMessage="Last switch" />
     ),
-    dateKey: 'endTime',
+    dateKey: 'startTime',
   },
 };
 

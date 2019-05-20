@@ -11,6 +11,9 @@ import {
   EMAIL_CONFIG,
   ITEM_ISSUE,
   TEST_ITEM,
+  INTEGRATION,
+  TICKET,
+  PATTERN_RULE,
 } from 'common/constants/eventsObjectTypes';
 import {
   CREATE_DASHBOARD,
@@ -34,168 +37,220 @@ import {
   DELETE_DEFECT,
   POST_ISSUE,
   LINK_ISSUE,
+  UNLINK_ISSUE,
   UPDATE_ANALYZER,
   CREATE_BTS,
   UPDATE_BTS,
   DELETE_BTS,
   GENERATE_INDEX,
+  DELETE_INDEX,
   UPDATE_ITEM,
+  ANALYZE_ITEM,
+  LINK_ISSUE_AA,
+  CREATE_PATTERN,
+  UPDATE_PATTERN,
+  DELETE_PATTERN,
+  MATCHED_PATTERN,
 } from 'common/constants/actionTypes';
 
 export const actionMessages = defineMessages({
   [CREATE_DASHBOARD]: {
     id: 'EventActions.createDashboard',
-    defaultMessage: 'create dashboard',
+    defaultMessage: 'Create dashboard',
   },
   [UPDATE_DASHBOARD]: {
     id: 'EventActions.updateDashboard',
-    defaultMessage: 'update dashboard',
+    defaultMessage: 'Update dashboard',
   },
   [DELETE_DASHBOARD]: {
     id: 'EventActions.deleteDashboard',
-    defaultMessage: 'delete dashboard',
+    defaultMessage: 'Delete dashboard',
   },
   [CREATE_WIDGET]: {
     id: 'EventActions.createWidget',
-    defaultMessage: 'create widget',
+    defaultMessage: 'Create widget',
   },
   [UPDATE_WIDGET]: {
     id: 'EventActions.updateWidget',
-    defaultMessage: 'update widget',
+    defaultMessage: 'Update widget',
   },
   [DELETE_WIDGET]: {
     id: 'EventActions.deleteWidget',
-    defaultMessage: 'delete widget',
+    defaultMessage: 'Delete widget',
   },
   [CREATE_FILTER]: {
     id: 'EventActions.createFilter',
-    defaultMessage: 'create filter',
+    defaultMessage: 'Create filter',
   },
   [UPDATE_FILTER]: {
     id: 'EventActions.updateFilter',
-    defaultMessage: 'update filter',
+    defaultMessage: 'Update filter',
   },
   [DELETE_FILTER]: {
     id: 'EventActions.deleteFilter',
-    defaultMessage: 'delete filter',
+    defaultMessage: 'Delete filter',
   },
   [START_LAUNCH]: {
     id: 'EventActions.startLaunch',
-    defaultMessage: 'start launch',
+    defaultMessage: 'Start launch',
   },
   [FINISH_LAUNCH]: {
     id: 'EventActions.finishLaunch',
-    defaultMessage: 'finish launch',
+    defaultMessage: 'Finish launch',
   },
   [DELETE_LAUNCH]: {
     id: 'EventActions.deleteLaunch',
-    defaultMessage: 'delete launch',
+    defaultMessage: 'Delete launch',
   },
   [START_IMPORT]: {
     id: 'EventActions.startImport',
-    defaultMessage: 'start import',
+    defaultMessage: 'Start import',
   },
   [FINISH_IMPORT]: {
     id: 'EventActions.finishImport',
-    defaultMessage: 'finish import',
+    defaultMessage: 'Finish import',
   },
   [CREATE_USER]: {
     id: 'EventActions.createUser',
-    defaultMessage: 'create user',
+    defaultMessage: 'Create user',
   },
   [UPDATE_PROJECT]: {
     id: 'EventActions.updateProject',
-    defaultMessage: 'update project',
+    defaultMessage: 'Update project',
   },
   [UPDATE_DEFECT]: {
     id: 'EventActions.updateDefect',
-    defaultMessage: 'update defect',
+    defaultMessage: 'Update defect',
   },
   [DELETE_DEFECT]: {
     id: 'EventActions.deleteDefect',
-    defaultMessage: 'delete defect',
+    defaultMessage: 'Delete defect',
   },
   [POST_ISSUE]: {
     id: 'EventActions.postIssue',
-    defaultMessage: 'post issue',
+    defaultMessage: 'Post issue',
   },
   [LINK_ISSUE]: {
     id: 'EventActions.linkIssue',
-    defaultMessage: 'link issue',
+    defaultMessage: 'Link issue',
+  },
+  [UNLINK_ISSUE]: {
+    id: 'EventActions.unlinkIssue',
+    defaultMessage: 'Unlink issue',
   },
   [CREATE_BTS]: {
     id: 'EventActions.createBts',
-    defaultMessage: 'create bts',
+    defaultMessage: 'Create BTS',
   },
   [UPDATE_BTS]: {
     id: 'EventActions.updateBts',
-    defaultMessage: 'update bts',
+    defaultMessage: 'Update BTS',
   },
   [DELETE_BTS]: {
     id: 'EventActions.deleteBts',
-    defaultMessage: 'delete bts',
+    defaultMessage: 'Delete BTS',
   },
   [UPDATE_ANALYZER]: {
     id: 'EventActions.updateAnalyzer',
-    defaultMessage: 'update analizer',
+    defaultMessage: 'Update analizer',
   },
   [GENERATE_INDEX]: {
     id: 'EventActions.generateIndex',
-    defaultMessage: 'generate index',
+    defaultMessage: 'Generate index',
+  },
+  [DELETE_INDEX]: {
+    id: 'EventActions.deleteIndex',
+    defaultMessage: 'Delete index',
   },
   [CREATE_DEFECT]: {
     id: 'EventActions.createDefect',
-    defaultMessage: 'create defect',
+    defaultMessage: 'Create custom defect type',
   },
   [UPDATE_ITEM]: {
     id: 'EventActions.updateItem',
-    defaultMessage: 'update item',
+    defaultMessage: 'Update item',
+  },
+  [ANALYZE_ITEM]: {
+    id: 'EventActions.analyzeItem',
+    defaultMessage: 'AA changed defect type',
+  },
+  [LINK_ISSUE_AA]: {
+    id: 'EventActions.linkIssueAA',
+    defaultMessage: 'AA linked issue',
+  },
+  [CREATE_PATTERN]: {
+    id: 'EventActions.createPattern',
+    defaultMessage: 'Create pattern rule',
+  },
+  [UPDATE_PATTERN]: {
+    id: 'EventActions.updatePattern',
+    defaultMessage: 'Update pattern rule',
+  },
+  [DELETE_PATTERN]: {
+    id: 'EventActions.deletePattern',
+    defaultMessage: 'Delete pattern rule',
+  },
+  [MATCHED_PATTERN]: {
+    id: 'EventActions.matchedPattern',
+    defaultMessage: 'PA find pattern',
   },
 });
 
 export const objectTypesMessages = defineMessages({
   [DASHBOARD]: {
     id: 'EventObjectTypes.dashboard',
-    defaultMessage: 'dashboard',
+    defaultMessage: 'Dashboard',
   },
   [LAUNCH]: {
     id: 'EventObjectTypes.launch',
-    defaultMessage: 'launch',
+    defaultMessage: 'Launch',
   },
   [WIDGET]: {
     id: 'EventObjectTypes.widget',
-    defaultMessage: 'widget',
+    defaultMessage: 'Widget',
   },
   [FILTER]: {
     id: 'EventObjectTypes.filter',
-    defaultMessage: 'filter',
+    defaultMessage: 'Filter',
   },
   [IMPORT]: {
     id: 'EventObjectTypes.import',
-    defaultMessage: 'import',
+    defaultMessage: 'Import',
   },
   [PROJECT]: {
     id: 'EventObjectTypes.project',
-    defaultMessage: 'project',
+    defaultMessage: 'Project',
   },
   [DEFECT_TYPE]: {
     id: 'EventObjectTypes.defectType',
-    defaultMessage: 'defectType',
+    defaultMessage: 'Custom defect type',
   },
   [USER]: {
     id: 'EventObjectTypes.user',
-    defaultMessage: 'user',
+    defaultMessage: 'User',
   },
   [EMAIL_CONFIG]: {
     id: 'EventObjectTypes.emailConfig',
-    defaultMessage: 'email config',
+    defaultMessage: 'Notification rule',
   },
   [ITEM_ISSUE]: {
     id: 'EventObjectTypes.itemIssue',
-    defaultMessage: 'Test item',
+    defaultMessage: 'Defect',
   },
   [TEST_ITEM]: {
     id: 'EventObjectTypes.testItem',
     defaultMessage: 'Test item',
+  },
+  [INTEGRATION]: {
+    id: 'EventObjectTypes.itegration',
+    defaultMessage: 'Integration',
+  },
+  [TICKET]: {
+    id: 'EventObjectTypes.ticket',
+    defaultMessage: 'Link to BTS',
+  },
+  [PATTERN_RULE]: {
+    id: 'EventObjectTypes.patternRule',
+    defaultMessage: 'Pattern rule',
   },
 });

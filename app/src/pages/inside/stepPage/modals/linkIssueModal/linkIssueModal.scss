@@ -14,13 +14,8 @@
   box-sizing: border-box;
 }
 
-.multiple-systems-title {
-  display: inline;
-  min-width: 140px;
-  padding-right: 10px;
-  font-size: 13px;
-  font-family: $FONT-REGULAR;
-  text-align: right;
+.field-container {
+  margin-bottom: 20px;
 }
 
 .field-wrapper {
@@ -29,6 +24,15 @@
   padding: 0;
   margin-left: 20px;
   margin-right: 25px;
+}
+
+.systems-dropdown-title {
+  display: inline;
+  min-width: 140px;
+  padding-right: 10px;
+  font-size: 13px;
+  font-family: $FONT-REGULAR;
+  text-align: right;
 }
 
 .link-issue-title {

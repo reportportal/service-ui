@@ -5,7 +5,7 @@ import { Field } from 'redux-form';
 const InnerComponent = ({
   children,
   input: { onChange, onBlur, onFocus, value, name },
-  meta: { error, active, touched },
+  meta: { error, active, touched, asyncValidating },
   ...rest
 }) =>
   cloneElement(children, {
@@ -17,6 +17,7 @@ const InnerComponent = ({
     error,
     active,
     touched,
+    asyncValidating,
     ...rest,
   });
 

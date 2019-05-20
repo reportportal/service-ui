@@ -48,3 +48,20 @@
     background: $COLOR--white-two;
   }
 }
+
+.globe-icon {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  margin: auto 5px;
+  vertical-align: text-bottom;
+
+  svg {
+    fill: $COLOR--gray-47;
+  }
+}
+
+.shared-caption {
+  font-size: 13px;
+  line-height: 30px;
+}
