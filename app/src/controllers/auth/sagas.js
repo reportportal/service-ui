@@ -12,6 +12,12 @@ import { LOGIN, LOGOUT, TOKEN_KEY, GRANT_TYPES, SET_TOKEN } from './constants';
 
 function* handleLogout() {
   yield put(resetTokenAction());
+  yield put(
+    showNotification({
+      messageId: 'infoLogout',
+      type: NOTIFICATION_TYPES.INFO,
+    }),
+  );
 }
 
 function* watchLogout() {
@@ -24,6 +30,12 @@ function* handleLogin({ payload }) {
     result = yield call(fetch, URLS.login(GRANT_TYPES.PASSWORD, payload.login, payload.password), {
       method: 'POST',
     });
+    yield put(
+      showNotification({
+        messageId: 'successLogin',
+        type: NOTIFICATION_TYPES.SUCCESS,
+      }),
+    );
   } catch (e) {
     const error = (e.response && e.response.data && e.response.data.message) || e.message;
     yield put(
