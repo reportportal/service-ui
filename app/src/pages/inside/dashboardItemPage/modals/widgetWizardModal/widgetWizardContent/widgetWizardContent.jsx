@@ -28,7 +28,6 @@ const cx = classNames.bind(styles);
   {
     submitWidgetWizardForm: () => submit(WIDGET_WIZARD_FORM),
     showScreenLockAction,
-    fetchDashboards: fetchDashboardsAction,
     hideScreenLockAction,
     showDefaultErrorNotification,
   },
@@ -98,17 +97,19 @@ export class WidgetWizardContent extends Component {
     fetch(URLS.widget(projectId), {
       method: 'post',
       data,
-    }).then(({ id }) => {
-      const newWidget = {
-        widgetId: id,
-        widgetName: data.name,
-        ...DEFAULT_WIDGET_CONFIG,
-      };
-      onConfirm(newWidget, this.props.closeModal, selectedDashboard);
-    }).catch((err) => {
-      this.props.hideScreenLockAction();
-      this.props.showDefaultErrorNotification(err);
-    });
+    })
+      .then(({ id }) => {
+        const newWidget = {
+          widgetId: id,
+          widgetName: data.name,
+          ...DEFAULT_WIDGET_CONFIG,
+        };
+        onConfirm(newWidget, this.props.closeModal);
+      })
+      .catch((err) => {
+        this.props.hideScreenLockAction();
+        this.props.showDefaultErrorNotification(err);
+      });
   };
 
   nextStep = () => {
