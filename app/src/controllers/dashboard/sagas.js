@@ -1,4 +1,6 @@
 import { all, call, put, select, takeEvery } from 'redux-saga/effects';
+import { showNotification } from 'controllers/notification';
+import { NOTIFICATION_TYPES } from 'controllers/notification/constants';
 import { redirect } from 'redux-first-router';
 import { URLS } from 'common/urls';
 import { fetchDataAction } from 'controllers/fetch';
@@ -62,6 +64,12 @@ function* addDashboard({ payload: dashboard }) {
   });
 
   yield put(addDashboardSuccessAction({ id, owner, ...dashboard }));
+  yield put(
+    showNotification({
+      messageId: 'addDashboardSuccess',
+      type: NOTIFICATION_TYPES.SUCCESS,
+    }),
+  );
   yield put(hideModalAction());
   yield put({
     type: PROJECT_DASHBOARD_ITEM_PAGE,

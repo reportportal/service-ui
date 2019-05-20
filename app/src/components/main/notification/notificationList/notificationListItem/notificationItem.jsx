@@ -71,6 +71,10 @@ const messages = defineMessages({
     id: 'ConnectionSection.removeIntegrationSuccess',
     defaultMessage: 'Integration successfully deleted',
   },
+  addDashboardSuccess: {
+    id: 'DashboardPage.addDashboardSuccess',
+    defaultMessage: 'Dashboard has been added',
+  },
 });
 
 @injectIntl
