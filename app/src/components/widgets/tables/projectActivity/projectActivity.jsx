@@ -213,23 +213,6 @@ export class ProjectActivity extends Component {
     return <Image className={cx('avatar')} src={avatarUrl} alt="avatar" />;
   };
 
-  updateProjectValues = (activity) => {
-    const updatedActivity = {
-      ...activity,
-    };
-
-    activity.details.history.forEach((item) => {
-      if (item.field === 'emailCases') {
-        updatedActivity.actionType = UPDATE_NOTIFICATIONS;
-      }
-      if (item.field === 'enabled') {
-        updatedActivity.actionType =
-          item.newValue === 'false' ? SWITCH_OFF_NOTIFICATIONS : SWITCH_ON_NOTIFICATIONS;
-      }
-    });
-    return updatedActivity;
-  };
-
   isValidActivity = (activity) =>
     !(
       !this.props.hasBts &&
