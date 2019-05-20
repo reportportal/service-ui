@@ -286,6 +286,7 @@
   "DashboardPage.modal.modalCancelButtonText": "Адмяніць",
   "DashboardPage.noResults": "Нічога не знойдзена",
   "DashboardPage.title": "Усе панэлі кіравання",
+  "DashboardPage.addDashboardSuccess": "Панэль кіравання была дададзеная",
   "DashboardPageHeader.allDashboardsTitle": "All dashboards",
   "DashboardPageToolbar.searchPlaceholder": "Пошук па назве",
   "DashboardTable.dashboardName": "Назва панэлі кіравання",
