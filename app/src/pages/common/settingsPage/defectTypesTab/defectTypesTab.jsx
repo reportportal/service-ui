@@ -42,7 +42,7 @@ export class DefectTypesTab extends Component {
     intl: intlShape.isRequired,
   };
 
-  groupNames = [PRODUCT_BUG, SYSTEM_ISSUE, AUTOMATION_BUG, NO_DEFECT, TO_INVESTIGATE];
+  groupNames = [PRODUCT_BUG, AUTOMATION_BUG, SYSTEM_ISSUE, NO_DEFECT, TO_INVESTIGATE];
 
   showResetColorsConfirmationDialog = () => {
     const { showModal, intl } = this.props;
