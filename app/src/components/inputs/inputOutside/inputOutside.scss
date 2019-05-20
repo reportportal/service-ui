@@ -30,6 +30,7 @@
       background-repeat: no-repeat;
       background-size: 60%;
       background-position: center;
+      z-index: 2;
 
       &.opened {
         background-image: url(./img/password-visible.svg);
@@ -50,6 +51,7 @@
   font-size: 13px;
   color: $COLOR--charcoal-grey;
   line-height: 13px;
+  z-index: 1;
 
   &:-webkit-autofill {
     box-shadow: 0 0 0 1000px #fdffeb inset; /* stylelint-disable-line color-no-hex */
