@@ -202,7 +202,7 @@ export class FiltersPage extends Component {
     this.props.filter ? (
       <NoResultsForFilter filter={this.props.filter} notFoundMessage={messages.filtersNotFound} />
     ) : (
-      <NoFiltersBlock />
+      <NoFiltersBlock onAddFilter={this.addFilter} />
     );
 
   render() {

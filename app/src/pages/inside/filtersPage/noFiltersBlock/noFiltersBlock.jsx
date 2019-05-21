@@ -27,9 +27,14 @@ export class NoFiltersBlock extends PureComponent {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    onAddFilter: PropTypes.func,
+  };
+  static defaultProps = {
+    onAddFilter: () => {},
   };
   onClickAddFilter = () => {
     this.props.tracking.trackEvent(FILTERS_PAGE_EVENTS.CLICK_ADD_BTN_EMPTY_FILTER_PAGE);
+    this.props.onAddFilter();
   };
   render() {
     return (
