@@ -167,10 +167,17 @@ export const URLS = {
       'filter.in.level': 'ERROR',
       'page.sort': 'logTime,DESC',
     })}`,
-  logItemStackTraceMessageLocation: (activeProject, itemId, stackTraceItemId, pageSize, level) =>
+  logItemStackTraceMessageLocation: (
+    activeProject,
+    itemId,
+    stackTraceItemId,
+    pageSize,
+    pagePage,
+    level,
+  ) =>
     `${urlBase}${activeProject}/log/${stackTraceItemId}/page${getQueryParams({
       'filter.eq.item': itemId,
-      'page.page': 1,
+      'page.page': pagePage,
       'page.size': pageSize,
       'filter.gte.level': level,
       'page.sort': 'logTime,ASC',

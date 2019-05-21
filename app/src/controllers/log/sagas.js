@@ -1,13 +1,20 @@
 import { all, call, put, select, takeEvery } from 'redux-saga/effects';
 import { fetchParentItems, fetchTestItemsAction } from 'controllers/testItem';
 import { URLS } from 'common/urls';
+import { fetch } from 'common/utils';
 import { activeProjectSelector, userIdSelector } from 'controllers/user';
 import {
   logItemIdSelector,
   pagePropertiesSelector,
   pathnameChangedSelector,
+  updatePagePropertiesAction,
 } from 'controllers/pages';
 import { fetchDataAction } from 'controllers/fetch';
+import { SIZE_KEY, PAGE_KEY } from 'controllers/pagination';
+import { ERROR } from 'common/constants/logLevels';
+import { createNamespacedQuery, mergeNamespacedQuery } from 'common/utils/routingUtils';
+import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
+
 import {
   ACTIVITY_NAMESPACE,
   DEFAULT_HISTORY_DEPTH,
@@ -18,6 +25,8 @@ import {
   LOG_LEVEL_FILTER_KEY,
   WITH_ATTACHMENTS_FILTER_KEY,
   NAMESPACE,
+  LOG_ERROR_ITEMS_NAMESPACE,
+  FETCH_NEXT_ERROR,
 } from './constants';
 import {
   activeLogIdSelector,
@@ -25,6 +34,7 @@ import {
   querySelector,
   activeRetryIdSelector,
   prevActiveRetryIdSelector,
+  nextErrorLogItemIdSelector,
 } from './selectors';
 import { attachmentSagas, clearAttachmentsAction } from './attachments';
 import { sauceLabsSagas } from './sauceLabs';
@@ -37,23 +47,88 @@ function* fetchActivity() {
     fetchDataAction(ACTIVITY_NAMESPACE)(URLS.logItemActivity(activeProject, activeLogItemId)),
   );
 }
-
-function* fetchLogItems() {
+function* collectLogPayload() {
   const activeProject = yield select(activeProjectSelector);
   const userId = yield select(userIdSelector);
-  const query = yield select(pagePropertiesSelector, NAMESPACE);
+  const query = yield select(querySelector, NAMESPACE);
   const filterLevel = query[LOG_LEVEL_FILTER_KEY] || getLogLevel(userId).id;
   const withAttachments = getWithAttachments(userId) || undefined;
-  const params = yield select(querySelector, NAMESPACE);
   const activeLogItemId = yield select(activeRetryIdSelector);
-  yield put(
-    fetchDataAction(LOG_ITEMS_NAMESPACE)(
-      URLS.logItems(activeProject, activeLogItemId, filterLevel),
-      {
-        params: { ...params, [WITH_ATTACHMENTS_FILTER_KEY]: withAttachments },
-      },
-    ),
+  const errorId = yield select(nextErrorLogItemIdSelector);
+  const params = yield select(pagePropertiesSelector, NAMESPACE);
+  return {
+    activeProject,
+    userId,
+    params,
+    filterLevel,
+    withAttachments,
+    activeLogItemId,
+    errorId,
+    query,
+  };
+}
+
+function* fetchLogItems(payload = {}) {
+  const { activeProject, params, filterLevel, withAttachments, activeLogItemId } = yield call(
+    collectLogPayload,
   );
+  const namespace = payload.namespace || LOG_ITEMS_NAMESPACE;
+  const logLevel = payload.level || filterLevel;
+  yield put(
+    fetchDataAction(namespace)(URLS.logItems(activeProject, activeLogItemId, logLevel), {
+      params: { ...params, ...payload.params, [WITH_ATTACHMENTS_FILTER_KEY]: withAttachments },
+    }),
+  );
+}
+function* fetchErrorLogItems() {
+  yield call(fetchLogItems, {
+    namespace: LOG_ERROR_ITEMS_NAMESPACE,
+    level: ERROR,
+    params: {
+      [SIZE_KEY]: 100,
+    },
+  });
+}
+function* fetchNextError() {
+  const { activeProject, query, params, filterLevel, activeLogItemId, errorId } = yield call(
+    collectLogPayload,
+  );
+  try {
+    const pageNumber = yield call(
+      fetch,
+      URLS.logItemStackTraceMessageLocation(
+        activeProject,
+        activeLogItemId,
+        errorId,
+        query[SIZE_KEY],
+        query[PAGE_KEY],
+        filterLevel,
+      ),
+    );
+    yield put(
+      updatePagePropertiesAction(
+        createNamespacedQuery(
+          mergeNamespacedQuery(
+            params,
+            {
+              [PAGE_KEY]: pageNumber.number,
+            },
+            NAMESPACE,
+          ),
+          NAMESPACE,
+        ),
+      ),
+    );
+    yield call(fetchLogItems);
+  } catch (error) {
+    yield put(
+      showNotification({
+        messageId: 'failureDefault',
+        type: NOTIFICATION_TYPES.ERROR,
+        values: { error: error.message },
+      }),
+    );
+  }
 }
 
 function* fetchHistoryEntries() {
@@ -72,6 +147,7 @@ function* fetchWholePage() {
     call(fetchParentItems),
     call(fetchHistoryEntries),
     call(fetchLogItems),
+    call(fetchErrorLogItems),
     call(fetchActivity),
     put(clearAttachmentsAction()),
   ]);
@@ -115,11 +191,16 @@ function* watchFetchHistoryEntries() {
   yield takeEvery(FETCH_HISTORY_ENTRIES, fetchHistoryEntries);
 }
 
+function* watchFetchNextError() {
+  yield takeEvery(FETCH_NEXT_ERROR, fetchNextError);
+}
+
 export function* logSagas() {
   yield all([
     watchFetchLogPageData(),
     watchFetchHistoryEntries(),
     attachmentSagas(),
     sauceLabsSagas(),
+    watchFetchNextError(),
   ]);
 }
