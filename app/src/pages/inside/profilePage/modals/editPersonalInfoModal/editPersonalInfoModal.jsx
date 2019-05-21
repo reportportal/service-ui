@@ -50,21 +50,33 @@ const messages = defineMessages({
 @track()
 export class EditPersonalInformationModal extends Component {
   static propTypes = {
-    handleSubmit: PropTypes.func.isRequired,
+    intl: intlShape.isRequired,
     data: PropTypes.shape({
       onEdit: PropTypes.func,
       info: PropTypes.object,
     }).isRequired,
+    handleSubmit: PropTypes.func.isRequired,
     initialize: PropTypes.func.isRequired,
-    intl: intlShape.isRequired,
+    dirty: PropTypes.bool.isRequired,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
   };
+
   componentDidMount() {
     this.props.initialize(this.props.data.info);
   }
+
+  getCloseConfirmationConfig = () => {
+    if (!this.props.dirty) {
+      return null;
+    }
+    return {
+      confirmationWarning: this.props.intl.formatMessage(COMMON_LOCALE_KEYS.CLOSE_MODAL_WARNING),
+    };
+  };
+
   editAndCloseModal = (closeModal) => (formData) => {
     this.props.data.info.email !== formData.email &&
       this.props.tracking.trackEvent(PROFILE_PAGE_EVENTS.EDIT_EMAIL_EDIT_PERSONAL_INFO_MODAL);
@@ -73,6 +85,7 @@ export class EditPersonalInformationModal extends Component {
     this.props.data.onEdit(formData);
     closeModal();
   };
+
   render() {
     const { intl, handleSubmit, tracking } = this.props;
     const okButton = {
@@ -92,6 +105,7 @@ export class EditPersonalInformationModal extends Component {
         okButton={okButton}
         cancelButton={cancelButton}
         closeIconEventInfo={PROFILE_PAGE_EVENTS.CLOSE_ICON_EDIT_PERSONAL_INFO_MODAL}
+        closeConfirmation={this.getCloseConfirmationConfig()}
       >
         <form className={cx('form')}>
           <ModalField label={intl.formatMessage(messages.nameLabel)} labelWidth={LABEL_WIDTH}>

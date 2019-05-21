@@ -142,6 +142,7 @@ export class AddUserModal extends Component {
     intl: intlShape.isRequired,
     handleSubmit: PropTypes.func,
     change: PropTypes.func,
+    dirty: PropTypes.bool,
     userRole: PropTypes.string,
   };
 
@@ -149,6 +150,7 @@ export class AddUserModal extends Component {
     data: {},
     handleSubmit: () => {},
     change: () => {},
+    dirty: false,
     userRole: '',
   };
 
@@ -159,6 +161,15 @@ export class AddUserModal extends Component {
   onChangeAccountRole = (event, value) => {
     const role = value === ADMINISTRATOR ? PROJECT_MANAGER : MEMBER;
     this.props.change('projectRole', role);
+  };
+
+  getCloseConfirmationConfig = () => {
+    if (!this.props.dirty) {
+      return null;
+    }
+    return {
+      confirmationWarning: this.props.intl.formatMessage(COMMON_LOCALE_KEYS.CLOSE_MODAL_WARNING),
+    };
   };
 
   formatProjectNameOptions = (values) => values.map((value) => ({ value, label: value }));
@@ -191,6 +202,7 @@ export class AddUserModal extends Component {
         cancelButton={{
           text: intl.formatMessage(COMMON_LOCALE_KEYS.CANCEL),
         }}
+        closeConfirmation={this.getCloseConfirmationConfig()}
       >
         <form>
           <ModalField>

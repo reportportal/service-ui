@@ -124,6 +124,7 @@ export class LaunchMergeModal extends Component {
     initialize: PropTypes.func.isRequired,
     syncErrors: PropTypes.object.isRequired,
     fields: PropTypes.object.isRequired,
+    dirty: PropTypes.bool,
     mergeType: PropTypes.string,
     startTime: PropTypes.number,
     endTime: PropTypes.number,
@@ -140,6 +141,7 @@ export class LaunchMergeModal extends Component {
     mergeType: '',
     endTime: 0,
     startTime: Number.POSITIVE_INFINITY,
+    dirty: false,
   };
 
   componentDidMount() {
@@ -177,6 +179,15 @@ export class LaunchMergeModal extends Component {
     commonObject.description = commonObject.description.join(DESCRIPTION_SEPARATOR);
     this.props.initialize(commonObject);
   }
+
+  getCloseConfirmationConfig = () => {
+    if (!this.props.dirty) {
+      return null;
+    }
+    return {
+      confirmationWarning: this.props.intl.formatMessage(COMMON_LOCALE_KEYS.CLOSE_MODAL_WARNING),
+    };
+  };
 
   mergeAndCloseModal = (closeModal) => (values) => {
     this.props.showScreenLockAction();
@@ -220,6 +231,7 @@ export class LaunchMergeModal extends Component {
         okButton={okButton}
         cancelButton={cancelButton}
         closeIconEventInfo={LAUNCHES_MODAL_EVENTS.CLOSE_ICON_MERGE_MODAL}
+        closeConfirmation={this.getCloseConfirmationConfig()}
       >
         <form>
           <ModalField>

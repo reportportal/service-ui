@@ -204,10 +204,9 @@ export class ActionPanel extends Component {
         value: 'action-link-issue',
         hidden: this.props.debugMode,
         disabled: !this.props.btsIntegrations.length,
-        title:
-          (!this.props.btsIntegrations.length &&
-            this.props.intl.formatMessage(messages.noBugTrackingSystemToLinkIssue)) ||
-          '',
+        title: this.props.btsIntegrations.length
+          ? ''
+          : this.props.intl.formatMessage(messages.noBugTrackingSystemToLinkIssue),
         onClick: () => {
           this.props.tracking.trackEvent(STEP_PAGE_EVENTS.LOAD_BUG_ACTION);
           this.props.onLinkIssue();
