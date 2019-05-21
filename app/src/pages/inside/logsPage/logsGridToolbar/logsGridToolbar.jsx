@@ -154,11 +154,7 @@ export class LogsGridToolbar extends Component {
               </button>
             </div>
             <div className={cx('action-buttons')}>
-              <GhostButton
-                disabled={disableNextErrorButton}
-                onClick={onNextError}
-                title={intl.formatMessage(messages.nextError)}
-              >
+              <GhostButton disabled={disableNextErrorButton} onClick={onNextError}>
                 {intl.formatMessage(messages.nextError)}
               </GhostButton>
             </div>

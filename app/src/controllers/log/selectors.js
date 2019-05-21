@@ -239,8 +239,6 @@ export const nextErrorLogItemIdSelector = createSelector(
   (item = {}) => item.id,
 );
 
-export const disableNextErrorButtonSelector = createSelector(
-  nextErrorLogItemIdSelector,
-  logItemsSelector,
-  (id, items) => isEmptyValue(id) || items.length === 0,
+export const disableNextErrorButtonSelector = createSelector(nextErrorLogItemIdSelector, (id) =>
+  isEmptyValue(id),
 );
