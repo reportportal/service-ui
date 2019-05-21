@@ -14,3 +14,5 @@ export const COLOR_ORANGE_RED = '#ff3222';
 export const COLOR_DARK_PASTEL_GREEN = '#5cb755';
 export const COLOR_NOTPASSED = COLOR_FAILED;
 export const COLOR_INVESTIGATED = '#87B87F';
+export const COLOR_BLACK_2 = '#393939';
+export const COLOR_WHITE_TWO = '#ffffff';
