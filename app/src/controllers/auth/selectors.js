@@ -14,3 +14,5 @@ export const tokenSelector = (state) =>
   dashboardFullScreenModeSelector(state)
     ? apiTokenStringSelector(state)
     : tokenStringSelector(state);
+
+export const lastFailedLoginTimeSelector = (state) => authSelector(state).lastFailedLoginTime;
