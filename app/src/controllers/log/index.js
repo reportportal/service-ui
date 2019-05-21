@@ -1,5 +1,10 @@
 export { logSagas } from './sagas';
-export { fetchLogPageData, refreshLogPageData, fetchHistoryEntriesAction } from './actionCreators';
+export {
+  fetchLogPageData,
+  refreshLogPageData,
+  fetchHistoryEntriesAction,
+  fetchNextErrorAction,
+} from './actionCreators';
 export { logReducer } from './reducer';
 export {
   NAMESPACE,
@@ -28,6 +33,8 @@ export {
   activeRetrySelector,
   disablePrevItemLinkSelector,
   disableNextItemLinkSelector,
+  disableNextErrorButtonSelector,
+  nextErrorLogItemIdSelector,
 } from './selectors';
 export {
   getWithAttachments,
