@@ -8,6 +8,7 @@ import { LOG_PAGE_EVENTS } from 'components/main/analytics/events';
 import { payloadSelector, PROJECT_LOG_PAGE, PROJECT_USERDEBUG_LOG_PAGE } from 'controllers/pages';
 import { MANY, NOT_FOUND } from 'common/constants/launchStatuses';
 import { debugModeSelector } from 'controllers/launch';
+import { defectTypesSelector } from 'controllers/project';
 import { HistoryLineItemContent } from './historyLineItemContent';
 import styles from './historyLineItem.scss';
 
@@ -16,6 +17,7 @@ const cx = classNames.bind(styles);
 @connect((state) => ({
   pagePayload: payloadSelector(state),
   debugMode: debugModeSelector(state),
+  defectTypes: defectTypesSelector(state),
 }))
 @track()
 export class HistoryLineItem extends Component {
@@ -35,6 +37,7 @@ export class HistoryLineItem extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    defectTypes: PropTypes.object.isRequired,
   };
 
   static defaultProps = {
