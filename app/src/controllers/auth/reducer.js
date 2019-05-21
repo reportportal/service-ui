@@ -1,5 +1,13 @@
 import { combineReducers } from 'redux';
-import { AUTH_SUCCESS, LOGOUT, SET_TOKEN, DEFAULT_TOKEN } from './constants';
+import { getStorageItem } from 'common/utils/storageUtils';
+import { APPLICATION_SETTINGS } from 'common/constants/localStorageKeys';
+import {
+  AUTH_SUCCESS,
+  LOGOUT,
+  SET_TOKEN,
+  DEFAULT_TOKEN,
+  SET_LAST_FAILED_LOGIN_TIME,
+} from './constants';
 
 export const authorizedReducer = (state = false, { type }) => {
   switch (type) {
@@ -21,7 +29,25 @@ export const tokenReducer = (state = DEFAULT_TOKEN, { type, payload }) => {
   }
 };
 
+const getLastFailedLoginDefaultState = () =>
+  (getStorageItem(APPLICATION_SETTINGS) &&
+    getStorageItem(APPLICATION_SETTINGS).lastFailedLoginTime) ||
+  null;
+
+export const lastFailedLoginTimeReducer = (
+  state = getLastFailedLoginDefaultState(),
+  { type, payload },
+) => {
+  switch (type) {
+    case SET_LAST_FAILED_LOGIN_TIME:
+      return payload;
+    default:
+      return state;
+  }
+};
+
 export const authReducer = combineReducers({
   authorized: authorizedReducer,
   token: tokenReducer,
+  lastFailedLoginTime: lastFailedLoginTimeReducer,
 });

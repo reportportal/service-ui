@@ -7,4 +7,4 @@ export {
   resetTokenAction,
 } from './actionCreators';
 export { authReducer } from './reducer';
-export { isAuthorizedSelector, tokenSelector } from './selectors';
+export { isAuthorizedSelector, tokenSelector, lastFailedLoginTimeSelector } from './selectors';
