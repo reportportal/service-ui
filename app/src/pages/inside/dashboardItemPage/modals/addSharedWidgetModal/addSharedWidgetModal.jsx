@@ -68,6 +68,16 @@ export class AddSharedWidgetModal extends Component {
     onConfirm(widget, closeModal);
   };
 
+  getCloseConfirmationConfig = () => {
+    if (!this.state.selectedWidget) {
+      return null;
+    }
+    return {
+      confirmationWarning: this.props.intl.formatMessage(COMMON_LOCALE_KEYS.CLOSE_MODAL_WARNING),
+      confirmationWarningClassName: cx('confirmation-wrapper'),
+    };
+  };
+
   render() {
     const {
       intl: { formatMessage },
@@ -89,6 +99,7 @@ export class AddSharedWidgetModal extends Component {
         okButton={okButton}
         cancelButton={cancelButton}
         className={cx('add-shared-widget-modal')}
+        closeConfirmation={this.getCloseConfirmationConfig()}
       >
         <div className={cx('shared-widget-modal-content')}>
           <SharedWidgetInfoSection

@@ -95,7 +95,10 @@ export class LinkIssueFields extends Component {
               labelClassName={cx('multiple-systems-title')}
             >
               <FieldErrorHint>
-                <Input placeholder={this.props.intl.formatMessage(messages.issueIdLabel)} />
+                <Input
+                  maxLength="128"
+                  placeholder={this.props.intl.formatMessage(messages.issueIdLabel)}
+                />
               </FieldErrorHint>
             </FormField>
           </li>

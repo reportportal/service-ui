@@ -69,6 +69,7 @@ const messages = defineMessages({
 )
 export class EditItemModal extends Component {
   static propTypes = {
+    intl: intlShape.isRequired,
     data: PropTypes.shape({
       item: PropTypes.object,
       type: PropTypes.string,
@@ -79,7 +80,6 @@ export class EditItemModal extends Component {
     handleSubmit: PropTypes.func.isRequired,
     currentProject: PropTypes.string.isRequired,
     showNotification: PropTypes.func.isRequired,
-    intl: intlShape.isRequired,
   };
 
   componentDidMount() {
