@@ -42,6 +42,7 @@
     "intl": "1.2.5",
     "moment": "2.22.1",
     "perf-cascade": "2.5.4",
+    "polyfill-array-includes": "2.0.0",
     "promise-polyfill": "8.1.0",
     "prop-types": "15.7.2",
     "pure-react-carousel": "1.19.0",
