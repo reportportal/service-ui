@@ -44,10 +44,12 @@ const messages = defineMessages({
 });
 
 const validators = {
-  name: (formatMessage, widgets = []) => (value) => {
+  name: (formatMessage, widgets = [], widgetId) => (value) => {
     if (!validate.widgetName(value)) {
       return formatMessage(messages.widgetNameHint);
-    } else if (widgets.some((widget) => widget.widgetName === value)) {
+    } else if (
+      widgets.some((widget) => widget.widgetName === value && widget.widgetId !== widgetId)
+    ) {
       return formatMessage(messages.widgetNameExistsHint);
     }
     return false;
@@ -61,14 +63,16 @@ const validators = {
 export class CommonWidgetControls extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
+    activeDashboardItem: PropTypes.object.isRequired,
     initializeControlsForm: PropTypes.func,
+    widgetId: PropTypes.number,
     eventsInfo: PropTypes.object,
     trackEvent: PropTypes.func,
-    activeDashboardItem: PropTypes.object.isRequired,
   };
 
   static defaultProps = {
     initializeControlsForm: null,
+    widgetId: null,
     eventsInfo: {},
     trackEvent: () => {},
   };
@@ -81,6 +85,7 @@ export class CommonWidgetControls extends Component {
   render() {
     const {
       intl: { formatMessage },
+      widgetId,
       trackEvent,
       eventsInfo,
       activeDashboardItem: { widgets },
@@ -91,7 +96,7 @@ export class CommonWidgetControls extends Component {
         <ModalField label={formatMessage(messages.nameLabel)} labelWidth={FIELD_LABEL_WIDTH}>
           <FieldProvider
             name="name"
-            validate={validators.name(formatMessage, widgets)}
+            validate={validators.name(formatMessage, widgets, widgetId)}
             placeholder={formatMessage(messages.namePlaceholder)}
           >
             <FieldErrorHint>

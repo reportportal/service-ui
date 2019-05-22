@@ -26,6 +26,7 @@ const cx = classNames.bind(styles);
 export class EditWidgetControlsSectionForm extends Component {
   static propTypes = {
     widget: PropTypes.object.isRequired,
+    widgetId: PropTypes.number.isRequired,
     initializeWidgetControls: PropTypes.func.isRequired,
     widgetSettings: PropTypes.object.isRequired,
     previousFilter: PropTypes.array,
@@ -50,6 +51,7 @@ export class EditWidgetControlsSectionForm extends Component {
   render() {
     const {
       widget,
+      widgetId,
       initializeWidgetControls,
       widgetSettings,
       formAppearance,
@@ -69,7 +71,7 @@ export class EditWidgetControlsSectionForm extends Component {
         />
         {!formAppearance.isMainControlsLocked && (
           <div className={cx('common-controls-wrapper')}>
-            <CommonWidgetControls />
+            <CommonWidgetControls widgetId={widgetId} />
           </div>
         )}
         {formAppearance.isMainControlsLocked &&

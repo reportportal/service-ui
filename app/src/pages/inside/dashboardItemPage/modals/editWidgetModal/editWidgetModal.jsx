@@ -154,6 +154,7 @@ export class EditWidgetModal extends Component {
   render() {
     const {
       intl: { formatMessage },
+      data: { widget },
       projectId,
       widgetSettings,
       valid,
@@ -191,6 +192,7 @@ export class EditWidgetModal extends Component {
             initialValues={this.initialValues}
             previousFilter={this.state.previousFilter}
             widget={this.widgetInfo}
+            widgetId={widget.id}
             widgetSettings={widgetSettings}
             formAppearance={this.state.formAppearance}
             handleFormAppearanceChange={this.handleFormAppearanceChange}
