@@ -131,15 +131,15 @@ export class DurationBlock extends Component {
   getOverApproximateTitle = () => {
     const { intl, timing } = this.props;
     const time = this.getApproximateTime();
-    const end = getDuration(timing.start, timing.start + timing.approxTime * 1000);
+    const end = approximateTimeFormat(timing.approxTime);
     const over = approximateTimeFormat(-time);
 
-    return intl.formatMessage(messages.overApproximate, { end, over });
+    return time > 0 ? '' : intl.formatMessage(messages.overApproximate, { end, over });
   };
 
   getApproximateTime = () => {
     const { timing } = this.props;
-    const approxTime = Math.round(timing.approxTime * 1000);
+    const approxTime = Math.round(timing.approxTime);
 
     return Math.round((timing.start + approxTime - moment().unix() * 1000) / 1000);
   };
@@ -165,8 +165,7 @@ export class DurationBlock extends Component {
 
   renderInProgressDuration = () => {
     const { timing, intl } = this.props;
-    const approxTime = this.getApproximateTime();
-    const approxTimeIsOver = approxTime < 0;
+    const approxTimeIsOver = Date.now() > timing.start + timing.approxTime * 1000;
 
     return (
       <Fragment>
@@ -177,7 +176,7 @@ export class DurationBlock extends Component {
         {timing.approxTime > 0 &&
           !approxTimeIsOver && (
             <span className={cx('duration')}>
-              ~{getDuration(Date.now(), timing.start + timing.approxTime * 1000)}{' '}
+              ~{getDuration(Date.now(), Date.now() + timing.approxTime * 1000)}{' '}
               {intl.formatMessage(messages.left)}
             </span>
           )}
