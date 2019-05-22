@@ -251,7 +251,7 @@ export class LaunchStatisticsChart extends Component {
         y: {
           show: !isPreview && this.props.isFullscreen,
           padding: {
-            top: this.configData.widgetViewMode === MODES_VALUES[CHART_MODES.AREA_VIEW] ? 3 : 0,
+            top: this.configData.widgetViewMode === MODES_VALUES[CHART_MODES.AREA_VIEW] ? 16 : 3,
           },
         },
       },
