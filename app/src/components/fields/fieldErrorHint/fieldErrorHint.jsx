@@ -159,6 +159,14 @@ const messages = defineMessages({
     id: 'JiraConnectionFormFields.btsProjectHint',
     defaultMessage: 'Project name should have size from 1 to 55',
   },
+  patternNameLengthHint: {
+    id: 'PatternAnalysis.patternNameLengthHint',
+    defaultMessage: 'Pattern name should have size from 1 to 55',
+  },
+  patternNameDuplicateHint: {
+    id: 'PatternAnalysis.patternNameDuplicateHint',
+    defaultMessage: 'Pattern with the same name already exists in the project',
+  },
 });
 
 @injectIntl

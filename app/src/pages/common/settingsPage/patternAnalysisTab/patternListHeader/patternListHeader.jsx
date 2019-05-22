@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { injectIntl, intlShape, defineMessages } from 'react-intl';
 import classNames from 'classnames/bind';
 import { InputBigSwitcher } from 'components/inputs/inputBigSwitcher';
@@ -27,16 +28,19 @@ export const messages = defineMessages({
 export class PatternListHeader extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
+    onAddPattern: PropTypes.func,
   };
 
   static defaultProps = {
     pattern: {},
     id: 0,
+    onAddPattern: () => {},
   };
 
   render() {
     const {
       intl: { formatMessage },
+      onAddPattern,
     } = this.props;
     return (
       <div className={cx('pattern-list-header')}>
@@ -46,7 +50,7 @@ export class PatternListHeader extends Component {
         </span>
         <span className={cx('description')}>{formatMessage(messages.enablePA)}</span>
         <span className={cx('create-button')}>
-          <GhostButton mobileDisabled icon={PlusIcon}>
+          <GhostButton mobileDisabled icon={PlusIcon} onClick={onAddPattern}>
             {formatMessage(messages.createPattern)}
           </GhostButton>
         </span>

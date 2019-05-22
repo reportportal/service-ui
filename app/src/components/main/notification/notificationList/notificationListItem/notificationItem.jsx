@@ -75,6 +75,10 @@ const messages = defineMessages({
     id: 'DashboardPage.addDashboardSuccess',
     defaultMessage: 'Dashboard has been added',
   },
+  addPatternSuccess: {
+    id: 'PatternAnalysis.addPatternSuccess',
+    defaultMessage: 'Pattern rule has been created',
+  },
 });
 
 @injectIntl

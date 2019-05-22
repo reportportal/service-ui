@@ -18,6 +18,9 @@
 .switcher {
   flex: 20px 0 0;
   padding-right: 15px;
+  &:hover {
+    cursor: pointer;
+  }
 }
 .pattern-name {
   font-size: 13px;

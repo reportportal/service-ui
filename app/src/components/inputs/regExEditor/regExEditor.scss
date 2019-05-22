@@ -1,0 +1,63 @@
+.code-editor {
+  width: 100%;
+  height: 60px;
+  font-family: monospace;
+  color: $COLOR--charcoal-grey;
+  font-size: 14px;
+  border: 1px solid $COLOR--gray-80;
+  &.error.touched {
+    border: 1px solid $COLOR--orange-red;
+    box-shadow: 0 0 2px 0 rgba(255, 50, 34, 0.7);
+  }
+
+  :global {
+    .CodeMirror {
+      width: 100%;
+      min-height: 30px;
+      height: 100%;
+      padding: 5px;
+      box-sizing: border-box;
+      border: none;
+    }
+    .CodeMirror-scroll,
+    .CodeMirror {
+      min-height: 30px;
+    }
+    span ::selection {
+      background: $COLOR--REGEXP-selection;
+    }
+    .cm-s-default span.cm-simbol {
+      color: $COLOR--REGEXP-symbol;
+    }
+    .cm-s-default span.cm-range {
+      color: $COLOR--REGEXP-range;
+    }
+    .cm-s-default span.cm-quantifier {
+      color: $COLOR--REGEXP-quantifier;
+    }
+    .cm-s-default span.cm-spec {
+      color: $COLOR--REGEXP-spec;
+    }
+    .cm-s-default span.cm-escaped {
+      color: $COLOR--REGEXP-escaped;
+    }
+    .cm-s-default span.cm-group1 {
+      color: $COLOR--REGEXP-group1;
+    }
+    .cm-s-default span.cm-group2 {
+      color: $COLOR--REGEXP-group2;
+    }
+    .cm-s-default span.cm-group3 {
+      color: $COLOR--REGEXP-group3;
+    }
+    .cm-s-default span.cm-group4 {
+      color: $COLOR--REGEXP-group4;
+    }
+    .cm-s-default span.cm-group5 {
+      color: $COLOR--REGEXP-group5;
+    }
+    .cm-s-default span.cm-err {
+      color: $COLOR--REGEXP-err;
+    }
+  }
+}

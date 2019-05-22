@@ -1,0 +1,1 @@
+export { RegExEditor } from './regExEditor';
