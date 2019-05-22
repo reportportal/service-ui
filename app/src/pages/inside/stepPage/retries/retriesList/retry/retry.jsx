@@ -25,7 +25,7 @@ export const Retry = injectIntl(({ intl, retry, selected, index, onClick }) => (
       />
     </div>
     <div className={cx('column', 'status')}>{formatStatus(intl.formatMessage, retry.status)}</div>
-    <div className={cx('column', 'date')}>{dateFormat(retry.endTime)}</div>
+    <div className={cx('column', 'date')}>{dateFormat(retry.startTime)}</div>
   </div>
 ));
 Retry.propTypes = {
