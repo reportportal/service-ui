@@ -29,7 +29,7 @@ import { PageLayout, PageHeader, PageSection } from 'layouts/pageLayout';
 import { DASHBOARD_PAGE_EVENTS } from 'components/main/analytics/events';
 import { DashboardPageHeader } from 'pages/inside/common/dashboardPageHeader';
 import GlobeIcon from 'common/img/globe-icon-inline.svg';
-import AddWidgetIcon from './img/add-inline.svg';
+import AddWidgetIcon from 'common/img/add-widget-inline.svg';
 import AddSharedWidgetIcon from './img/add-shared-inline.svg';
 import EditIcon from './img/edit-inline.svg';
 import CancelIcon from './img/cancel-inline.svg';

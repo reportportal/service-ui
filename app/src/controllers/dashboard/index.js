@@ -15,6 +15,7 @@ export {
   dashboardGridTypeSelector,
   activeDashboardItemSelector,
   dashboardFullScreenModeSelector,
+  loadingSelector,
 } from './selectors';
 export {
   DASHBOARDS_TABLE_VIEW,

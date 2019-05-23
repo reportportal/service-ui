@@ -1,16 +1,15 @@
 import React, { Component, Fragment } from 'react';
-import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
-import { validate } from 'common/utils';
+import { validate, isEmptyObject } from 'common/utils';
 import { InputBigSwitcher } from 'components/inputs/inputBigSwitcher';
 import { Input } from 'components/inputs/input';
 import { InputTextArea } from 'components/inputs/inputTextArea';
 import { ModalField } from 'components/main/modal';
-import { activeDashboardItemSelector } from 'controllers/dashboard';
 import { FIELD_LABEL_WIDTH } from './controls/constants';
+import { DashboardControl } from './controls/dashboardControl';
 
 const messages = defineMessages({
   widgetNameHint: {
@@ -56,18 +55,17 @@ const validators = {
   },
 };
 
-@connect((state) => ({
-  activeDashboardItem: activeDashboardItemSelector(state),
-}))
 @injectIntl
 export class CommonWidgetControls extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
-    activeDashboardItem: PropTypes.object.isRequired,
+    intl: intlShape,
     initializeControlsForm: PropTypes.func,
     widgetId: PropTypes.number,
     eventsInfo: PropTypes.object,
     trackEvent: PropTypes.func,
+    dashboards: PropTypes.arrayOf(PropTypes.object),
+    activeDashboard: PropTypes.object,
+    onChange: PropTypes.func,
   };
 
   static defaultProps = {
@@ -75,20 +73,29 @@ export class CommonWidgetControls extends Component {
     widgetId: null,
     eventsInfo: {},
     trackEvent: () => {},
+    dashboards: [],
+    activeDashboard: null,
+    onChange: () => {},
+    intl: {},
   };
 
   constructor(props) {
     super(props);
     props.initializeControlsForm && props.initializeControlsForm();
   }
-
+  isShowDashboardsList = () => {
+    const { activeDashboard } = this.props;
+    return activeDashboard && isEmptyObject(activeDashboard);
+  };
   render() {
     const {
       intl: { formatMessage },
       widgetId,
       trackEvent,
       eventsInfo,
-      activeDashboardItem: { widgets },
+      dashboards,
+      onChange,
+      activeDashboard: { widgets },
     } = this.props;
 
     return (
@@ -123,6 +130,11 @@ export class CommonWidgetControls extends Component {
             <InputBigSwitcher />
           </FieldProvider>
         </ModalField>
+        {this.isShowDashboardsList() && (
+          <FieldProvider name="selectedDashboard" dashboards={dashboards} onChange={onChange}>
+            <DashboardControl />
+          </FieldProvider>
+        )}
       </Fragment>
     );
   }

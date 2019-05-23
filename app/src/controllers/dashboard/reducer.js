@@ -1,6 +1,7 @@
 import { combineReducers } from 'redux';
 import { fetchReducer } from 'controllers/fetch/reducer';
 import { queueReducers } from 'common/utils/queueReducers';
+import { loadingReducer } from 'controllers/loading';
 import {
   ADD_DASHBOARD_SUCCESS,
   CHANGE_FULL_SCREEN_MODE,
@@ -43,4 +44,5 @@ export const dashboardReducer = combineReducers({
   dashboards: queueReducers(fetchReducer(NAMESPACE, { contentPath: 'content' }), dashboardsReducer),
   gridType: gridTypeReducer,
   fullScreenMode: fullScreenModeReducer,
+  loading: loadingReducer(NAMESPACE),
 });
