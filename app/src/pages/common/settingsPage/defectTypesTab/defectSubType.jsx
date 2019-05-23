@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
 import { injectIntl, intlShape } from 'react-intl';
-import C3Chart from 'react-c3js';
 
 import CircleCrossIcon from 'common/img/circle-cross-icon-inline.svg';
 import PencilIcon from 'common/img/pencil-icon-inline.svg';
@@ -14,6 +13,7 @@ import { deleteDefectSubTypeAction, updateDefectSubTypeAction } from 'controller
 import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { withHoverableTooltip } from 'components/main/tooltips/hoverableTooltip';
 
+import { C3Chart } from '../../../../components/widgets/charts/common/c3chart';
 import { defectTypeShape } from './defectTypeShape';
 import { DefectSubTypeForm } from './defectSubTypeForm';
 
@@ -74,39 +74,36 @@ export class DefectSubType extends Component {
     isEditMode: false,
   };
 
-  getChartConfig() {
-    return {
-      data: {
-        columns: this.props.group.map(({ locator }) => [locator, 100]),
-        colors: this.props.group.reduce((acc, { locator, color }) => {
-          acc[locator] = color;
-          return acc;
-        }, {}),
-        type: 'donut',
-      },
-      donut: {
-        expand: false,
-        width: 12,
-        label: {
-          show: false,
-        },
-      },
-      interaction: {
-        enabled: false,
-      },
-      legend: {
+  getChartConfig = () => ({
+    data: {
+      columns: this.props.group.map(({ locator }) => [locator, 100]),
+      colors: this.props.group.reduce((acc, { locator, color }) => {
+        acc[locator] = color;
+        return acc;
+      }, {}),
+      type: 'donut',
+    },
+    donut: {
+      expand: false,
+      width: 12,
+      label: {
         show: false,
       },
-      tooltip: {
-        show: false,
-      },
-      size: {
-        width: 56,
-        height: 56,
-      },
-      unloadBeforeLoad: true,
-    };
-  }
+    },
+    interaction: {
+      enabled: false,
+    },
+    legend: {
+      show: false,
+    },
+    tooltip: {
+      show: false,
+    },
+    size: {
+      width: 56,
+      height: 56,
+    },
+  });
 
   setEditMode = () => {
     this.setState({ isEditMode: true });
@@ -213,7 +210,7 @@ export class DefectSubType extends Component {
 
         {group && (
           <div className={cx('diagram-cell')}>
-            <C3Chart className={cx('defect-type-chart')} {...this.getChartConfig()} />
+            <C3Chart className={cx('defect-type-chart')} config={this.getChartConfig()} />
           </div>
         )}
       </div>
