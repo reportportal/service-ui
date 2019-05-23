@@ -19,7 +19,7 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
 import { approximateTimeFormat, dateFormat, getDuration } from 'common/utils';
@@ -84,11 +84,13 @@ export class DurationBlock extends Component {
     status: PropTypes.string,
     itemNumber: PropTypes.number,
   };
+
   static defaultProps = {
     type: '',
     status: '',
     itemNumber: null,
   };
+
   getStatusTitle = () => {
     const { formatMessage } = this.props.intl;
     const durationTime = getDuration(this.props.timing.start, this.props.timing.end);
@@ -112,20 +114,24 @@ export class DurationBlock extends Component {
     } else if (this.isInterrupted()) {
       return formatMessage(messages.interrupted, { durationTime, endTime });
     }
+
     return formatMessage(messages.finished, { durationTime, endTime });
   };
 
   getOverApproximateTitle = () => {
-    const { formatMessage } = this.props.intl;
+    const { intl, timing } = this.props;
     const time = this.getApproximateTime();
-    const end = approximateTimeFormat(this.props.timing.approxTime / 1000);
+    const end = approximateTimeFormat(timing.approxTime);
     const over = approximateTimeFormat(-time);
-    return time > 0 ? '' : formatMessage(messages.overApproximate, { end, over });
+
+    return time > 0 ? '' : intl.formatMessage(messages.overApproximate, { end, over });
   };
 
   getApproximateTime = () => {
-    const approxTime = Math.round(this.props.timing.approxTime);
-    return Math.round((this.props.timing.start + approxTime - moment().unix() * 1000) / 1000);
+    const { timing } = this.props;
+    const approxTime = Math.round(timing.approxTime);
+
+    return Math.round((timing.start + approxTime - moment().unix() * 1000) / 1000);
   };
 
   isInvalidDuration = () =>
@@ -151,16 +157,20 @@ export class DurationBlock extends Component {
     const { timing, intl } = this.props;
     const approxTimeIsOver = Date.now() > timing.start + timing.approxTime * 1000;
 
-    return timing.approxTime > 0 && !approxTimeIsOver ? (
-      <span className={cx('duration')}>
-        <span className={cx('approx-in-progress')} />
-        ~{getDuration(Date.now(), Date.now() + timing.approxTime * 1000)}{' '}
-        {intl.formatMessage(messages.left)}
-      </span>
-    ) : (
-      <span className={cx('in-progress')}>
-        <img src={InProgressGif} alt="In progress" />
-      </span>
+    return (
+      <Fragment>
+        <span className={cx('in-progress')}>
+          <img src={InProgressGif} alt="In progress" />
+        </span>
+
+        {timing.approxTime > 0 &&
+          !approxTimeIsOver && (
+            <span className={cx('duration')}>
+              ~{getDuration(Date.now(), Date.now() + timing.approxTime * 1000)}{' '}
+              {intl.formatMessage(messages.left)}
+            </span>
+          )}
+      </Fragment>
     );
   };
 

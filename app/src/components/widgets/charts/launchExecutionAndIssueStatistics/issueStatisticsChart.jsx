@@ -65,6 +65,7 @@ export class IssueStatisticsChart extends Component {
     observer: PropTypes.object,
     uncheckedLegendItems: PropTypes.array,
     onChangeLegend: PropTypes.func,
+    isOnStatusPageMode: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -73,6 +74,7 @@ export class IssueStatisticsChart extends Component {
     observer: {},
     uncheckedLegendItems: [],
     onChangeLegend: () => {},
+    isOnStatusPageMode: false,
   };
 
   state = {
@@ -95,26 +97,30 @@ export class IssueStatisticsChart extends Component {
     this.chart = chart;
     this.issuesNode = element;
 
+    const { isOnStatusPageMode, widget, isPreview, uncheckedLegendItems } = this.props;
+
     this.renderTotalLabel();
 
-    if (!this.props.widget.content.result || this.props.isPreview) {
+    if (!widget.content.result || isPreview) {
       return;
     }
 
-    this.chart.resize({
-      height: this.height,
-    });
+    if (!isOnStatusPageMode) {
+      this.chart.resize({
+        height: this.height,
+      });
+    }
 
-    this.props.uncheckedLegendItems.forEach((id) => {
+    uncheckedLegendItems.forEach((id) => {
       this.chart.toggle(id);
     });
 
     d3
       .select(chart.element)
       .select('.c3-chart-arcs-title')
-      .attr('dy', -15)
+      .attr('dy', isOnStatusPageMode ? -5 : -15)
       .append('tspan')
-      .attr('dy', 30)
+      .attr('dy', isOnStatusPageMode ? 15 : 30)
       .attr('x', 0)
       .attr('fill', '#666')
       .text('ISSUES');
@@ -323,8 +329,8 @@ export class IssueStatisticsChart extends Component {
   };
 
   render() {
-    const { isPreview, uncheckedLegendItems } = this.props;
-    const classes = chartCx({ 'preview-view': isPreview });
+    const { isPreview, uncheckedLegendItems, isOnStatusPageMode } = this.props;
+    const classes = chartCx('container', { 'preview-view': isPreview });
     const chartClasses = chartCx('c3', { 'small-view': this.height <= 250 });
     const { isConfigReady } = this.state;
     const legendItems = this.defectItems.map((item) => item.id);
@@ -332,17 +338,22 @@ export class IssueStatisticsChart extends Component {
     return (
       <div className={classes}>
         {isConfigReady && (
-          <div className={chartCx('issue-statistics-chart')}>
+          <div
+            className={chartCx('issue-statistics-chart', {
+              'status-page-mode': isOnStatusPageMode,
+            })}
+          >
             <div className={chartCx('data-js-issue-statistics-chart-container')}>
-              {!isPreview && (
-                <Legend
-                  items={legendItems}
-                  uncheckedLegendItems={uncheckedLegendItems}
-                  onClick={this.onClickLegendItem}
-                  onMouseOver={this.onMouseOver}
-                  onMouseOut={this.onMouseOut}
-                />
-              )}
+              {!isPreview &&
+                !isOnStatusPageMode && (
+                  <Legend
+                    items={legendItems}
+                    uncheckedLegendItems={uncheckedLegendItems}
+                    onClick={this.onClickLegendItem}
+                    onMouseOver={this.onMouseOver}
+                    onMouseOut={this.onMouseOut}
+                  />
+                )}
               <C3Chart
                 config={this.issueConfig}
                 onChartCreated={this.onIssuesChartCreated}

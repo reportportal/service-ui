@@ -13,6 +13,7 @@ import { DEFAULT_PAGINATION } from 'controllers/pagination';
 import { itemsSelector, paginationSelector } from 'controllers/testItem';
 import { debugModeSelector } from 'controllers/launch';
 import { extractNamespacedQuery, createNamespacedQuery } from 'common/utils/routingUtils';
+import { isEmptyValue } from 'common/utils';
 import {
   calculateGrowthDuration,
   normalizeHistoryItem,
@@ -33,6 +34,7 @@ export const lastLogActivitySelector = createSelector(
 
 const historyEntriesSelector = (state) => logSelector(state).historyEntries || [];
 export const logItemsSelector = (state) => logSelector(state).logItems || [];
+export const logErrorItemsSelector = (state) => logSelector(state).errorLogItems || [];
 export const logPaginationSelector = (state) => logSelector(state).pagination;
 export const loadingSelector = (state) => logSelector(state).loading || false;
 export const attachmentsSelector = (state) => logSelector(state).attachments || {};
@@ -215,4 +217,28 @@ export const disableNextItemLinkSelector = createSelector(
     const isLastPage = number === totalPages;
     return isNoNextItem && isLastPage;
   },
+);
+
+const nextErrorLogItemSelector = createSelector(
+  logItemsSelector,
+  logErrorItemsSelector,
+  (items, errorItems) => {
+    let newErrorItems = errorItems;
+    const errorItemInItemsIndex = errorItems.findIndex((errorItem) =>
+      items.find((item) => item.id === errorItem.id),
+    );
+    if (errorItemInItemsIndex > 0) {
+      newErrorItems = newErrorItems.slice(errorItemInItemsIndex + 1);
+    }
+    return newErrorItems.find((errorItem) => items.every((item) => item.id !== errorItem.id));
+  },
+);
+
+export const nextErrorLogItemIdSelector = createSelector(
+  nextErrorLogItemSelector,
+  (item = {}) => item.id,
+);
+
+export const disableNextErrorButtonSelector = createSelector(nextErrorLogItemIdSelector, (id) =>
+  isEmptyValue(id),
 );

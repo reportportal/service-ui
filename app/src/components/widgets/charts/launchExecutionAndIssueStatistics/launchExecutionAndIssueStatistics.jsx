@@ -18,14 +18,19 @@ export class LaunchExecutionAndIssueStatistics extends Component {
     observer: PropTypes.object,
     uncheckedLegendItems: PropTypes.array,
     onChangeLegend: PropTypes.func,
+    isOnStatusPageMode: PropTypes.bool,
   };
 
   static defaultProps = {
     isPreview: false,
     height: 0,
-    observer: {},
+    observer: {
+      subscribe: () => {},
+      unsubscribe: () => {},
+    },
     uncheckedLegendItems: [],
     onChangeLegend: () => {},
+    isOnStatusPageMode: false,
   };
 
   render() {
@@ -36,6 +41,7 @@ export class LaunchExecutionAndIssueStatistics extends Component {
       isPreview,
       uncheckedLegendItems,
       onChangeLegend,
+      isOnStatusPageMode,
     } = this.props;
 
     return (
@@ -47,6 +53,7 @@ export class LaunchExecutionAndIssueStatistics extends Component {
           isPreview={isPreview}
           uncheckedLegendItems={uncheckedLegendItems}
           onChangeLegend={onChangeLegend}
+          isOnStatusPageMode={isOnStatusPageMode}
         />
         <IssueStatisticsChart
           widget={widget}
@@ -55,6 +62,7 @@ export class LaunchExecutionAndIssueStatistics extends Component {
           isPreview={isPreview}
           uncheckedLegendItems={uncheckedLegendItems}
           onChangeLegend={onChangeLegend}
+          isOnStatusPageMode={isOnStatusPageMode}
         />
       </div>
     );

@@ -77,6 +77,7 @@ export class WidgetsGrid extends Component {
   }
 
   componentDidMount() {
+    this.isFirefox = typeof InstallTrigger !== 'undefined';
     this.props.fetchDashboardAction();
   }
 
@@ -153,6 +154,7 @@ export class WidgetsGrid extends Component {
     const { widgets = [] } = this.props.dashboard;
     let Items = null;
     let height = 0; // we need to set large height to avoid double scroll
+
     if (widgets.length) {
       Items = widgets.map(
         ({
@@ -211,12 +213,12 @@ export class WidgetsGrid extends Component {
               isDraggable={this.props.isModifiable}
               isResizable={this.props.isModifiable}
               draggableHandle=".draggable-field"
+              useCSSTransforms={!this.isFirefox}
             >
               {Items}
             </ResponsiveGridLayout>
           </ScrollWrapper>
         )}
-
         {!this.props.loading &&
           !widgets.length && (
             <EmptyWidgetGrid

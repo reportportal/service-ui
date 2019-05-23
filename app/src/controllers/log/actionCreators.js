@@ -1,4 +1,4 @@
-import { FETCH_LOG_PAGE_DATA, FETCH_HISTORY_ENTRIES } from './constants';
+import { FETCH_LOG_PAGE_DATA, FETCH_HISTORY_ENTRIES, FETCH_NEXT_ERROR } from './constants';
 
 export const fetchLogPageData = () => ({
   type: FETCH_LOG_PAGE_DATA,
@@ -13,4 +13,8 @@ export const refreshLogPageData = () => ({
 
 export const fetchHistoryEntriesAction = () => ({
   type: FETCH_HISTORY_ENTRIES,
+});
+
+export const fetchNextErrorAction = () => ({
+  type: FETCH_NEXT_ERROR,
 });

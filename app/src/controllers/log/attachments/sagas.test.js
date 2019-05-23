@@ -11,11 +11,9 @@ const mockParams = {
 
 describe('Attachments Sagas', () => {
   test('fetchImageData resolves image', () => {
-    const expected = {
-      image: '/api/v1/data/abcd',
-    };
     expect.assertions(1);
-    return expect(fetchImageData(mockParams)).resolves.toEqual(expected);
+    fetchImageData(mockParams);
+    expect(utils.fetch).toBeCalledWith('/api/v1/data/abcd', { responseType: 'blob' });
   });
 
   test('fetchData resolves data', () => {

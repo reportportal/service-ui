@@ -10,6 +10,7 @@ import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-i
 import PropTypes from 'prop-types';
 import { canDeleteLaunch, canForceFinishLaunch, canMoveToDebug } from 'common/utils/permissions';
 import { URLS } from 'common/urls';
+import { downloadFile } from 'common/utils/downloadFile';
 import {
   activeProjectRoleSelector,
   userIdSelector,
@@ -103,7 +104,7 @@ export class Hamburger extends Component {
   }
 
   onExportLaunch = (type) => {
-    window.location.href = URLS.exportLaunch(this.props.projectId, this.props.launch.id, type);
+    downloadFile(URLS.exportLaunch(this.props.projectId, this.props.launch.id, type));
   };
 
   getForceFinishTooltip = () => {

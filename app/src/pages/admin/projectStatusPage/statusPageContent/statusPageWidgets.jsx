@@ -1,5 +1,5 @@
 import { URLS } from 'common/urls';
-import { GeneralInfo, OwnersInfo } from './widgets';
+import { GeneralInfo, OwnersInfo, LastLaunch } from './widgets';
 import { WIDGETS_IDS } from '../constants';
 import { messages } from './messages';
 
@@ -21,7 +21,7 @@ export const statusPageWidgets = [
     title: messages.lastLaunch,
     id: WIDGETS_IDS.lastLaunch,
     source: WIDGETS_IDS.lastLaunch,
-    component: () => <div />,
+    component: (data) => <LastLaunch data={data} />,
     getUrl: (projectId, interval) =>
       URLS.projectWidget(projectId, WIDGETS_IDS.lastLaunch, interval),
   },

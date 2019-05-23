@@ -1,0 +1,14 @@
+.last-launch {
+  height: 180px;
+  padding-top: 10px;
+  display: flex;
+  justify-content: center;
+
+  & > div {
+    margin-top: -100px;
+    height: 300px;
+    overflow: hidden;
+    max-width: 400px;
+    width: 100%;
+  }
+}

@@ -12,6 +12,7 @@ import { URLS } from 'common/urls';
 import { INTERNAL, LDAP } from 'common/constants/accountType';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { PROFILE_PAGE_EVENTS } from 'components/main/analytics/events';
+import { Image } from 'components/main/image';
 import styles from './personalInfoBlock.scss';
 import { BlockContainerBody, BlockContainerHeader } from '../blockContainer';
 import { PhotoControls } from './photoControls';
@@ -144,7 +145,7 @@ export class PersonalInfoBlock extends Component {
         <BlockContainerBody>
           <div className={cx('block-content')}>
             <div className={cx('avatar-wrapper')}>
-              <img className={cx('avatar')} src={this.state.avatarSource} alt="Profile avatar" />
+              <Image className={cx('avatar')} src={this.state.avatarSource} alt="Profile avatar" />
             </div>
             <div className={cx('info')}>
               <UserInfo accountType={accountType} userId={userId} />

@@ -32,12 +32,14 @@ describe('Attachments Selectors', () => {
         contentType: 'text/html',
         id: '1234',
         src: '**FILE_MOCK**',
+        isImage: false,
       },
       {
         alt: 'image/png',
         contentType: 'image/png',
         id: '5678',
         src: '/api/v1/data/5678',
+        isImage: true,
       },
     ];
     expect(selected).toEqual(expected);

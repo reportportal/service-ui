@@ -41,4 +41,5 @@ export const createAttachment = (item) => ({
   src: getFileIconSource(item),
   alt: item.contentType,
   contentType: item.contentType,
+  isImage: getAttachmentTypeConfig(item.contentType)[0] === IMAGE,
 });
