@@ -1712,5 +1712,6 @@
   "usersGrid.roleAdmin": "Admin",
   "usersGrid.roleNonAdmin": "Non-admin",
   "usersGrid.type": "Тып",
-  "usersGrid.user": "Лагiн"
+  "usersGrid.user": "Лагiн",
+  "dashboardControl.title": "Захаваць віджэт на панэлі маніторынгу"
 }

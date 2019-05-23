@@ -1712,5 +1712,6 @@
   "usersGrid.roleAdmin": "Admin",
   "usersGrid.roleNonAdmin": "Non-admin",
   "usersGrid.type": "Тип",
-  "usersGrid.user": "Логин"
+  "usersGrid.user": "Логин",
+  "dashboardControl.title": "Сохранить виджет на дашборд"
 }

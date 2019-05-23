@@ -8,7 +8,7 @@ import {
   activeDashboardItemSelector,
   loadingSelector,
 } from 'controllers/dashboard';
-import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
+import { SpinningPreloader } from 'components/preloaders/spinningPreloader/spinningPreloader';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { CommonWidgetControls } from '../../../../common/widgetControls';
 import { WIDGET_WIZARD_FORM } from '../../../../common/constants';
@@ -112,7 +112,7 @@ export class WizardThirdStepForm extends Component {
   };
   handleChange = (event, value) => {
     const { formValues, change } = this.props;
-    const share = value.share || formValues.share;
+    const share = value.share ? value.share : formValues.share;
     change('share', share);
   };
   render() {
@@ -127,9 +127,8 @@ export class WizardThirdStepForm extends Component {
     } = this.props;
     return (
       <form onSubmit={handleSubmit(onSubmit)}>
-        {loading ? (
-          <SpinningPreloader />
-        ) : (
+        {loading && <SpinningPreloader />}
+        {!loading && (
           <CommonWidgetControls
             initializeControlsForm={this.initializeControlsForm}
             trackEvent={tracking.trackEvent}
