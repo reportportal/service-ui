@@ -85,6 +85,7 @@ export class WizardThirdStepForm extends Component {
           initializeControlsForm={this.initializeControlsForm}
           trackEvent={tracking.trackEvent}
           eventsInfo={eventsInfo}
+          addWidgetMode
         />
       </form>
     );
