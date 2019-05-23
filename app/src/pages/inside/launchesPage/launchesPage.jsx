@@ -99,6 +99,10 @@ const messages = defineMessages({
     id: 'LaunchesPage.analyseStartSuccess',
     defaultMessage: 'Auto-analyzer has been started.',
   },
+  addWidgetSuccess: {
+    id: 'LaunchesPage.addWidgetSuccess',
+    defaultMessage: 'Widget has been added',
+  },
 });
 
 @connect(
@@ -260,6 +264,61 @@ export class LaunchesPage extends Component {
         item: launch,
         onConfirm: (data) => this.analyseItem(launch, data),
         analyzerMode: attributes['analyzer.autoAnalyzerMode'],
+      },
+    });
+  };
+  onAddDashBoard = (dashboard) => {
+    const { activeProject } = this.props;
+    if (dashboard.id) {
+      return Promise.resolve(dashboard);
+    }
+    return fetch(URLS.dashboards(activeProject), {
+      method: 'post',
+      data: dashboard,
+    });
+  };
+  onAddWidget = (widget, closeModal, dashboard) => {
+    const {
+      activeProject,
+      intl: { formatMessage },
+    } = this.props;
+    this.onAddDashBoard(dashboard).then(({ id }) => {
+      fetch(URLS.addDashboardWidget(activeProject, id), {
+        method: 'put',
+        data: { addWidget: widget },
+      })
+        .then(() => {
+          this.props.hideScreenLockAction();
+          closeModal();
+          this.props.showNotification({
+            message: formatMessage(messages.addWidgetSuccess),
+            type: NOTIFICATION_TYPES.SUCCESS,
+          });
+        })
+        .catch((err) => {
+          this.props.hideScreenLockAction();
+          this.props.showNotification({ message: err.message, type: NOTIFICATION_TYPES.ERROR });
+        });
+    });
+  };
+  showWidgetWizard = () => {
+    const {
+      tracking: { trackEvent },
+    } = this.props;
+    trackEvent(LAUNCHES_PAGE.ADD_NEW_WIDGET_BTN);
+    this.props.showModalAction({
+      id: 'widgetWizardModal',
+      data: {
+        onConfirm: this.onAddWidget,
+        eventsInfo: {
+          closeIcon: LAUNCHES_MODAL_EVENTS.CLOSE_ICON_ADD_WIDGET_MODAL,
+          chooseWidgetType: LAUNCHES_MODAL_EVENTS.CHOOSE_WIDGET_TYPE_ADD_WIDGET_MODAL,
+          nextStep: LAUNCHES_MODAL_EVENTS.NEXT_STEP_ADD_WIDGET_MODAL,
+          prevStep: LAUNCHES_MODAL_EVENTS.PREVIOUS_STEP_ADD_WIDGET_MODAL,
+          changeDescription: LAUNCHES_MODAL_EVENTS.ENTER_WIDGET_DESCRIPTION_ADD_WIDGET_MODAL,
+          shareWidget: LAUNCHES_MODAL_EVENTS.SHARE_WIDGET_ADD_WIDGET_MODAL,
+          addWidget: LAUNCHES_MODAL_EVENTS.ADD_BTN_ADD_WIDGET_MODAL,
+        },
       },
     });
   };
@@ -506,6 +565,8 @@ export class LaunchesPage extends Component {
                 onImportLaunch={this.openImportModal}
                 debugMode={debugMode}
                 onDelete={this.deleteItems}
+                activeFilterId={activeFilterId}
+                onAddNewWidget={this.showWidgetWizard}
               />
               <LaunchSuiteGrid
                 data={launches}

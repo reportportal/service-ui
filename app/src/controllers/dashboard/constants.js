@@ -9,6 +9,7 @@ export const INITIAL_STATE = {
   dashboards: [],
   gridType: '',
   fullScreenMode: false,
+  loading: false,
 };
 export const NAMESPACE = 'dashboards';
 export const FETCH_DASHBOARDS = 'fetchDashboards';

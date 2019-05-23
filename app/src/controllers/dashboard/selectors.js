@@ -2,7 +2,7 @@ import { createSelector } from 'reselect';
 import { activeDashboardIdSelector, createQueryParametersSelector } from 'controllers/pages';
 
 const domainSelector = (state) => state.dashboards || {};
-
+export const loadingSelector = (state) => domainSelector(state).loading || false;
 export const dashboardItemsUnsortedSelector = (state) => domainSelector(state).dashboards;
 
 export const dashboardItemsSelector = createSelector(

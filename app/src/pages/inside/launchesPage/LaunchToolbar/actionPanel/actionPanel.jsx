@@ -9,6 +9,7 @@ import { GhostMenuButton } from 'components/buttons/ghostMenuButton';
 import { Breadcrumbs, breadcrumbDescriptorShape } from 'components/main/breadcrumbs';
 import { breadcrumbsSelector, restorePathAction } from 'controllers/testItem';
 import { LAUNCHES_PAGE_EVENTS } from 'components/main/analytics/events';
+import AddWidgetIcon from 'common/img/add-widget-inline.svg';
 import ImportIcon from './img/import-inline.svg';
 import RefreshIcon from './img/refresh-inline.svg';
 import styles from './actionPanel.scss';
@@ -85,6 +86,8 @@ export class ActionPanel extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    activeFilterId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    onAddNewWidget: PropTypes.func,
   };
 
   static defaultProps = {
@@ -103,6 +106,8 @@ export class ActionPanel extends Component {
     onDelete: () => {},
     breadcrumbs: [],
     restorePath: () => {},
+    activeFilterId: null,
+    onAddNewWidget: () => {},
   };
 
   constructor(props) {
@@ -150,7 +155,14 @@ export class ActionPanel extends Component {
       onClick: this.props.onDelete,
     },
   ];
-
+  isShowImportButton = () => {
+    const { debugMode, activeFilterId } = this.props;
+    return !debugMode && !Number.isInteger(activeFilterId);
+  };
+  isShowWidgetButton = () => {
+    const { activeFilterId } = this.props;
+    return Number.isInteger(activeFilterId);
+  };
   render() {
     const {
       intl,
@@ -163,7 +175,7 @@ export class ActionPanel extends Component {
       onImportLaunch,
       breadcrumbs,
       restorePath,
-      debugMode,
+      onAddNewWidget,
     } = this.props;
     return (
       <div className={cx('action-panel', { 'right-buttons-only': !showBreadcrumb && !hasErrors })}>
@@ -174,10 +186,17 @@ export class ActionPanel extends Component {
           </GhostButton>
         )}
         <div className={cx('action-buttons')}>
-          {!debugMode && (
+          {this.isShowImportButton() && (
             <div className={cx('action-button', 'mobile-hidden')}>
               <GhostButton icon={ImportIcon} onClick={onImportLaunch}>
                 <FormattedMessage id="LaunchesPage.import" defaultMessage="Import" />
+              </GhostButton>
+            </div>
+          )}
+          {this.isShowWidgetButton() && (
+            <div className={cx('action-button', 'mobile-hidden')}>
+              <GhostButton icon={AddWidgetIcon} onClick={onAddNewWidget}>
+                <FormattedMessage id="LaunchesPage.addNewWidget" defaultMessage="Add new widget" />
               </GhostButton>
             </div>
           )}

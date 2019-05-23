@@ -10,6 +10,7 @@ import { fetch } from 'common/utils';
 import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLock';
 import { showDefaultErrorNotification } from 'controllers/notification';
 import { activeProjectSelector } from 'controllers/user';
+import { fetchDashboardsAction } from 'controllers/dashboard';
 import { getWidgets } from 'pages/inside/dashboardItemPage/modals/common/widgets';
 import { DEFAULT_WIDGET_CONFIG, WIDGET_WIZARD_FORM } from '../../common/constants';
 import { prepareWidgetDataForSubmit } from '../../common/utils';
@@ -28,6 +29,7 @@ const cx = classNames.bind(styles);
   {
     submitWidgetWizardForm: () => submit(WIDGET_WIZARD_FORM),
     showScreenLockAction,
+    fetchDashboards: fetchDashboardsAction,
     hideScreenLockAction,
     showDefaultErrorNotification,
   },
@@ -49,6 +51,7 @@ export class WidgetWizardContent extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    fetchDashboards: PropTypes.func,
   };
   static defaultProps = {
     formValues: {
@@ -56,6 +59,7 @@ export class WidgetWizardContent extends Component {
     },
     eventsInfo: {},
     onConfirm: () => {},
+    fetchDashboards: () => {},
   };
 
   constructor(props) {
@@ -63,6 +67,8 @@ export class WidgetWizardContent extends Component {
     this.state = {
       step: 0,
     };
+    const { fetchDashboards } = this.props;
+    fetchDashboards();
     this.widgets = getWidgets(props.intl.formatMessage);
   }
 
@@ -83,27 +89,26 @@ export class WidgetWizardContent extends Component {
       projectId,
       onConfirm,
     } = this.props;
+    const { selectedDashboard, ...rest } = formData;
 
-    const data = prepareWidgetDataForSubmit(formData);
+    const data = prepareWidgetDataForSubmit(rest);
 
     trackEvent(addWidget);
     this.props.showScreenLockAction();
     fetch(URLS.widget(projectId), {
       method: 'post',
       data,
-    })
-      .then(({ id }) => {
-        const newWidget = {
-          widgetId: id,
-          widgetName: data.name,
-          ...DEFAULT_WIDGET_CONFIG,
-        };
-        onConfirm(newWidget, this.props.closeModal);
-      })
-      .catch((err) => {
-        this.props.hideScreenLockAction();
-        this.props.showDefaultErrorNotification(err);
-      });
+    }).then(({ id }) => {
+      const newWidget = {
+        widgetId: id,
+        widgetName: data.name,
+        ...DEFAULT_WIDGET_CONFIG,
+      };
+      onConfirm(newWidget, this.props.closeModal, selectedDashboard);
+    }).catch((err) => {
+      this.props.hideScreenLockAction();
+      this.props.showDefaultErrorNotification(err);
+    });
   };
 
   nextStep = () => {
