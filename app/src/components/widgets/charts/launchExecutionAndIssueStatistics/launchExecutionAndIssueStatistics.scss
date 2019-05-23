@@ -31,9 +31,19 @@
       }
     }
   }
+
+  & .status-page-mode {
+    .small-view {
+      :global {
+        .c3-chart-arcs-title > tspan {
+          font-size: 12px !important;
+        }
+      }
+    }
+  }
 }
 
-.launch-execution-chart {
+.launch-execution-chart.with-background-color {
   background-color: $COLOR--light-yellow;
   height: 100%;
 }
