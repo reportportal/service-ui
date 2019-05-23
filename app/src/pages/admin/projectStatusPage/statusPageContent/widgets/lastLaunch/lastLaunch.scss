@@ -4,18 +4,12 @@
   display: flex;
   justify-content: center;
 
-  & > div:not(.no-data-wrapper) {
+  & > div {
     display: flex;
     margin-top: -100px;
     height: 300px;
+    overflow: hidden;
     max-width: 400px;
     width: 100%;
   }
-}
-
-.no-data-wrapper {
-  display: flex;
-  justify-content: center;
-  height: 100%;
-  padding: 0 10px;
 }

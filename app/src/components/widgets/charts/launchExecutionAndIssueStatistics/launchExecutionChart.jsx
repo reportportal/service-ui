@@ -66,6 +66,7 @@ export class LaunchExecutionChart extends Component {
     observer: PropTypes.object,
     uncheckedLegendItems: PropTypes.array,
     onChangeLegend: PropTypes.func,
+    isOnStatusPageMode: PropTypes.bool,
     launchFilters: PropTypes.array,
   };
 
@@ -74,6 +75,7 @@ export class LaunchExecutionChart extends Component {
     observer: {},
     uncheckedLegendItems: [],
     onChangeLegend: () => {},
+    isOnStatusPageMode: false,
     launchFilters: [],
   };
 
@@ -97,7 +99,7 @@ export class LaunchExecutionChart extends Component {
     this.chart = chart;
     this.statusNode = element;
 
-    const { onStatusPageMode, widget, isPreview, uncheckedLegendItems } = this.props;
+    const { isOnStatusPageMode, widget, isPreview, uncheckedLegendItems } = this.props;
 
     this.renderTotalLabel();
 
@@ -105,7 +107,7 @@ export class LaunchExecutionChart extends Component {
       return;
     }
 
-    if (!onStatusPageMode) {
+    if (!isOnStatusPageMode) {
       this.chart.resize({
         height: this.height,
       });
@@ -118,9 +120,9 @@ export class LaunchExecutionChart extends Component {
     d3
       .select(chart.element)
       .select('.c3-chart-arcs-title')
-      .attr('dy', onStatusPageMode ? -5 : -15)
+      .attr('dy', isOnStatusPageMode ? -5 : -15)
       .append('tspan')
-      .attr('dy', onStatusPageMode ? 15 : 30)
+      .attr('dy', isOnStatusPageMode ? 15 : 30)
       .attr('x', 0)
       .attr('fill', '#666')
       .text('SUM');
@@ -322,7 +324,7 @@ export class LaunchExecutionChart extends Component {
 
   render() {
     const { isConfigReady } = this.state;
-    const { isPreview, uncheckedLegendItems } = this.props;
+    const { isPreview, uncheckedLegendItems, isOnStatusPageMode } = this.props;
     const classes = chartCx('container', { 'preview-view': isPreview });
     const chartClasses = chartCx('c3', { 'small-view': this.height <= 250 });
     const legendItems = this.statusItems.map((item) => item.id);
@@ -332,12 +334,12 @@ export class LaunchExecutionChart extends Component {
         {isConfigReady && (
           <div
             className={chartCx('launch-execution-chart', {
-              'status-page-mode': onStatusPageMode,
+              'status-page-mode': isOnStatusPageMode,
             })}
           >
             <div className={chartCx('data-js-launch-execution-chart-container')}>
               {!isPreview &&
-                !onStatusPageMode && (
+                !isOnStatusPageMode && (
                   <Legend
                     items={legendItems}
                     uncheckedLegendItems={uncheckedLegendItems}
