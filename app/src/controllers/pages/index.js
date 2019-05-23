@@ -16,7 +16,6 @@ export {
   settingsTabSelector,
   prevPagePropertiesSelector,
   prevTestItemSelector,
-  searchStringSelector,
 } from './selectors';
 export { updatePagePropertiesAction } from './actionCreators';
 
