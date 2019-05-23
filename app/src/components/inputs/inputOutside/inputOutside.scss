@@ -22,6 +22,7 @@
     }
     .eye-icon {
       position: absolute;
+      z-index: 2;
       top: 0;
       right: 5px;
       height: 38px;
@@ -30,7 +31,6 @@
       background-repeat: no-repeat;
       background-size: 60%;
       background-position: center;
-      z-index: 2;
 
       &.opened {
         background-image: url(./img/password-visible.svg);
@@ -39,6 +39,7 @@
   }
 }
 .input {
+  z-index: 1;
   display: inline-block;
   flex-grow: 1;
   height: 100%;
@@ -51,7 +52,6 @@
   font-size: 13px;
   color: $COLOR--charcoal-grey;
   line-height: 13px;
-  z-index: 1;
 
   &:-webkit-autofill {
     box-shadow: 0 0 0 1000px #fdffeb inset; /* stylelint-disable-line color-no-hex */
