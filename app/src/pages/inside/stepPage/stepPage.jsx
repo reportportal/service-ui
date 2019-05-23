@@ -32,6 +32,7 @@ import {
 import { SORTING_ASC, withSortingURL } from 'controllers/sorting';
 import { ENTITY_START_TIME } from 'components/filterEntities/constants';
 import { withPagination, DEFAULT_PAGINATION, SIZE_KEY } from 'controllers/pagination';
+import { prevTestItemSelector } from 'controllers/pages';
 import { showModalAction } from 'controllers/modal';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
 import { LaunchFiltersSection } from 'pages/inside/common/launchFiltersSection';
@@ -47,6 +48,7 @@ import { StepGrid } from './stepGrid';
     validationErrors: validationErrorsSelector(state),
     loading: loadingSelector(state),
     listView: isListViewSelector(state, namespaceSelector(state)),
+    highlightItemId: prevTestItemSelector(state),
   }),
   {
     unselectAllSteps: unselectAllStepsAction,
@@ -114,6 +116,7 @@ export class StepPage extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    highlightItemId: PropTypes.number,
   };
 
   static defaultProps = {
@@ -151,11 +154,37 @@ export class StepPage extends Component {
     onFilterChange: () => {},
     filterErrors: {},
     filterEntities: [],
+    highlightItemId: null,
   };
 
+  state = {
+    highlightedRowId: null,
+    isGridRowHighlighted: false,
+    isSauceLabsIntegrationView: false,
+  };
+
+  componentDidMount() {
+    const { highlightItemId } = this.props;
+    if (highlightItemId) {
+      this.onHighlightRow(highlightItemId);
+    }
+  }
   componentWillUnmount() {
     this.props.unselectAllSteps();
   }
+
+  onHighlightRow = (highlightedRowId) => {
+    this.setState({
+      highlightedRowId,
+      isGridRowHighlighted: false,
+    });
+  };
+
+  onGridRowHighlighted = () => {
+    this.setState({
+      isGridRowHighlighted: true,
+    });
+  };
 
   handleAllStepsSelection = () => {
     const { selectedItems, steps } = this.props;
@@ -247,6 +276,12 @@ export class StepPage extends Component {
       sortingColumn,
       sortingDirection,
     } = this.props;
+    const rowHighlightingConfig = {
+      onGridRowHighlighted: this.onGridRowHighlighted,
+      isGridRowHighlighted: this.state.isGridRowHighlighted,
+      highlightedRowId: this.state.highlightedRowId,
+    };
+
     return (
       <PageLayout>
         <PageSection>
@@ -290,6 +325,7 @@ export class StepPage extends Component {
             onChangeSorting={onChangeSorting}
             sortingColumn={sortingColumn}
             sortingDirection={sortingDirection}
+            rowHighlightingConfig={rowHighlightingConfig}
           />
           {!!pageCount &&
             !loading && (
