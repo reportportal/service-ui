@@ -22,6 +22,7 @@
     }
     .eye-icon {
       position: absolute;
+      z-index: 2;
       top: 0;
       right: 5px;
       height: 38px;
@@ -38,6 +39,7 @@
   }
 }
 .input {
+  z-index: 1;
   display: inline-block;
   flex-grow: 1;
   height: 100%;
