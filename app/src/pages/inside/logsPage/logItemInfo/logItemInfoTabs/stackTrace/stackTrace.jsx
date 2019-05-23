@@ -161,6 +161,7 @@ export class StackTrace extends Component {
         projectId,
         logItemId,
         stackTraceItem.id,
+        pagination.page,
         pagination.size,
         filterLevel,
       ),
