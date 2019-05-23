@@ -25,6 +25,7 @@ import {
   parentItemSelector,
   loadingSelector,
 } from 'controllers/testItem';
+import { prevTestItemSelector } from 'controllers/pages';
 import { LaunchFiltersSection } from 'pages/inside/common/launchFiltersSection';
 import { ENTITY_START_TIME } from 'components/filterEntities/constants';
 
@@ -36,6 +37,7 @@ import { ENTITY_START_TIME } from 'components/filterEntities/constants';
     selectedTests: selectedTestsSelector(state),
     parentItem: parentItemSelector(state),
     loading: loadingSelector(state),
+    highlightItemId: prevTestItemSelector(state),
   }),
   {
     toggleTestSelectionAction,
@@ -87,6 +89,7 @@ export class TestsPage extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    highlightItemId: PropTypes.number,
   };
 
   static defaultProps = {
@@ -115,11 +118,38 @@ export class TestsPage extends Component {
     onFilterChange: () => {},
     filterErrors: {},
     filterEntities: [],
+    highlightItemId: null,
   };
+
+  state = {
+    highlightedRowId: null,
+    isGridRowHighlighted: false,
+    isSauceLabsIntegrationView: false,
+  };
+
+  componentDidMount() {
+    const { highlightItemId } = this.props;
+    if (highlightItemId) {
+      this.onHighlightRow(highlightItemId);
+    }
+  }
 
   componentWillUnmount() {
     this.props.unselectAllTestsAction();
   }
+
+  onHighlightRow = (highlightedRowId) => {
+    this.setState({
+      highlightedRowId,
+      isGridRowHighlighted: false,
+    });
+  };
+
+  onGridRowHighlighted = () => {
+    this.setState({
+      isGridRowHighlighted: true,
+    });
+  };
 
   handleAllTestsSelection = () => {
     this.props.tracking.trackEvent(SUITES_PAGE_EVENTS.SELECT_ALL_ITEMS);
@@ -140,7 +170,6 @@ export class TestsPage extends Component {
     this.props.tracking.trackEvent(SUITES_PAGE_EVENTS.CLOSE_ICON_SELECTED_ITEM);
     this.props.toggleTestSelectionAction(item);
   };
-
   render() {
     const {
       tests,
@@ -166,6 +195,13 @@ export class TestsPage extends Component {
       filterErrors,
       filterEntities,
     } = this.props;
+
+    const rowHighlightingConfig = {
+      onGridRowHighlighted: this.onGridRowHighlighted,
+      isGridRowHighlighted: this.state.isGridRowHighlighted,
+      highlightedRowId: this.state.highlightedRowId,
+    };
+
     return (
       <PageLayout>
         <PageSection>
@@ -201,6 +237,7 @@ export class TestsPage extends Component {
             events={SUITES_PAGE_EVENTS}
             onFilterClick={onFilterAdd}
             onEditItem={onEditItem}
+            rowHighlightingConfig={rowHighlightingConfig}
           />
           {!!pageCount &&
             !loading && (

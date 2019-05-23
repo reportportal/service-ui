@@ -26,6 +26,7 @@ import {
   parentItemSelector,
   loadingSelector,
 } from 'controllers/testItem';
+import { prevTestItemSelector } from 'controllers/pages';
 import { LaunchFiltersSection } from 'pages/inside/common/launchFiltersSection';
 import { ENTITY_START_TIME } from 'components/filterEntities/constants';
 
@@ -38,6 +39,7 @@ import { ENTITY_START_TIME } from 'components/filterEntities/constants';
     parentItem: parentItemSelector(state),
     loading: loadingSelector(state),
     validationErrors: validationErrorsSelector(state),
+    highlightItemId: prevTestItemSelector(state),
   }),
   {
     toggleSuiteSelectionAction,
@@ -89,6 +91,7 @@ export class SuitesPage extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    highlightItemId: PropTypes.number,
   };
 
   static defaultProps = {
@@ -118,11 +121,38 @@ export class SuitesPage extends Component {
     onFilterChange: () => {},
     filterErrors: {},
     filterEntities: [],
+    highlightItemId: null,
   };
+
+  state = {
+    highlightedRowId: null,
+    isGridRowHighlighted: false,
+    isSauceLabsIntegrationView: false,
+  };
+
+  componentDidMount() {
+    const { highlightItemId } = this.props;
+    if (highlightItemId) {
+      this.onHighlightRow(highlightItemId);
+    }
+  }
 
   componentWillUnmount() {
     this.props.unselectAllSuitesAction();
   }
+
+  onHighlightRow = (highlightedRowId) => {
+    this.setState({
+      highlightedRowId,
+      isGridRowHighlighted: false,
+    });
+  };
+
+  onGridRowHighlighted = () => {
+    this.setState({
+      isGridRowHighlighted: true,
+    });
+  };
 
   handleAllSuitesSelection = () => {
     this.props.tracking.trackEvent(SUITES_PAGE_EVENTS.SELECT_ALL_ITEMS);
@@ -169,6 +199,13 @@ export class SuitesPage extends Component {
       filterErrors,
       filterEntities,
     } = this.props;
+
+    const rowHighlightingConfig = {
+      onGridRowHighlighted: this.onGridRowHighlighted,
+      isGridRowHighlighted: this.state.isGridRowHighlighted,
+      highlightedRowId: this.state.highlightedRowId,
+    };
+
     return (
       <PageLayout>
         <PageSection>
@@ -204,6 +241,7 @@ export class SuitesPage extends Component {
             events={SUITES_PAGE_EVENTS}
             onFilterClick={onFilterAdd}
             onEditItem={onEditItem}
+            rowHighlightingConfig={rowHighlightingConfig}
           />
           {!!pageCount &&
             !loading && (

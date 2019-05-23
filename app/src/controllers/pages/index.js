@@ -15,6 +15,7 @@ export {
   logItemIdSelector,
   settingsTabSelector,
   prevPagePropertiesSelector,
+  prevTestItemSelector,
 } from './selectors';
 export { updatePagePropertiesAction } from './actionCreators';
 

@@ -43,6 +43,7 @@ import {
   deleteItemsAction,
   updateLaunchLocallyAction,
 } from 'controllers/launch';
+import { prevTestItemSelector } from 'controllers/pages';
 import { LaunchSuiteGrid } from 'pages/inside/common/launchSuiteGrid';
 import { LaunchFiltersContainer } from 'pages/inside/common/launchFiltersContainer';
 import { LEVEL_LAUNCH } from 'common/constants/launchLevels';
@@ -113,6 +114,7 @@ const messages = defineMessages({
     loading: loadingSelector(state),
     level: levelSelector(state),
     projectSetting: projectConfigSelector(state),
+    highlightItemId: prevTestItemSelector(state),
   }),
   {
     showModalAction,
@@ -183,6 +185,7 @@ export class LaunchesPage extends Component {
     }).isRequired,
     projectSetting: PropTypes.object.isRequired,
     updateLaunchLocallyAction: PropTypes.func.isRequired,
+    highlightItemId: PropTypes.number,
   };
 
   static defaultProps = {
@@ -212,11 +215,38 @@ export class LaunchesPage extends Component {
     loading: false,
     fetchLaunchesAction: () => {},
     deleteItemsAction: () => {},
+    highlightItemId: null,
   };
+
+  state = {
+    highlightedRowId: null,
+    isGridRowHighlighted: false,
+    isSauceLabsIntegrationView: false,
+  };
+
+  componentDidMount() {
+    const { highlightItemId } = this.props;
+    if (highlightItemId) {
+      this.onHighlightRow(highlightItemId);
+    }
+  }
 
   componentWillUnmount() {
     this.props.unselectAllLaunchesAction();
   }
+
+  onHighlightRow = (highlightedRowId) => {
+    this.setState({
+      highlightedRowId,
+      isGridRowHighlighted: false,
+    });
+  };
+
+  onGridRowHighlighted = () => {
+    this.setState({
+      isGridRowHighlighted: true,
+    });
+  };
 
   onAnalysis = (launch) => {
     const {
@@ -432,6 +462,13 @@ export class LaunchesPage extends Component {
       loading,
       debugMode,
     } = this.props;
+
+    const rowHighlightingConfig = {
+      onGridRowHighlighted: this.onGridRowHighlighted,
+      isGridRowHighlighted: this.state.isGridRowHighlighted,
+      highlightedRowId: this.state.highlightedRowId,
+    };
+
     return (
       <FilterEntitiesContainer
         level={LEVEL_LAUNCH}
@@ -487,6 +524,7 @@ export class LaunchesPage extends Component {
                 onFilterClick={onFilterAdd}
                 events={LAUNCHES_PAGE_EVENTS}
                 onAnalysis={this.onAnalysis}
+                rowHighlightingConfig={rowHighlightingConfig}
               />
               {!!pageCount &&
                 !loading && (
