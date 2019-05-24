@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import classNames from 'classnames/bind';
 import { fetch } from 'common/utils';
+import DefaultUserImage from 'common/img/default-user-avatar.png';
 import { ADMINISTRATOR, USER } from 'common/constants/accountRoles';
 import { userIdSelector } from 'controllers/user';
 import { URLS } from 'common/urls';
@@ -87,7 +88,12 @@ export class NameColumn extends Component {
       <div className={cx('name-col', className)}>
         {value.photoLoaded && (
           <div className={cx('avatar-wrapper')}>
-            <Image className={cx('avatar')} src={URLS.dataUserPhoto(value.userId)} alt="avatar" />
+            <Image
+              className={cx('avatar')}
+              src={URLS.dataUserPhoto(value.userId)}
+              alt="avatar"
+              fallback={DefaultUserImage}
+            />
           </div>
         )}
         <span className={cx('name')}>{value.fullName}</span>

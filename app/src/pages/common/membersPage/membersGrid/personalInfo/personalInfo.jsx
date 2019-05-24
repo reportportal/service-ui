@@ -1,9 +1,10 @@
-import { Fragment, Component } from 'react';
+import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
 import { FormattedMessage } from 'react-intl';
 import { URLS } from 'common/urls';
+import DefaultUserImage from 'common/img/default-user-avatar.png';
 import { ADMINISTRATOR } from 'common/constants/accountRoles';
 import { userIdSelector } from 'controllers/user';
 import { Image } from 'components/main/image';
@@ -33,8 +34,14 @@ export class PersonalInfo extends Component {
   render() {
     const { name, login, userRole, currentUser } = this.props;
     return (
-      <Fragment>
-        <Image className={cx('member-avatar')} src={getPhotoURL(login)} />
+      <div className={cx('personal-info')}>
+        <div className={cx('avatar-wrapper')}>
+          <Image
+            className={cx('member-avatar')}
+            src={getPhotoURL(login)}
+            fallback={DefaultUserImage}
+          />
+        </div>
         <div className={cx('member-info')}>
           <p className={cx('member-name')}>
             {name}
@@ -51,7 +58,7 @@ export class PersonalInfo extends Component {
           </p>
           <p className={cx('member-login')}>{login}</p>
         </div>
-      </Fragment>
+      </div>
     );
   }
 }
