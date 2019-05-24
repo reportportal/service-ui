@@ -11,7 +11,7 @@ import {
   STATS_PASSED,
   STATS_SKIPPED,
 } from 'common/constants/statistics';
-import { DEFECT_TYPES_SEQUENCE } from 'common/constants/defectTypes';
+import { DEFECT_TYPES_SEQUENCE, NO_DEFECT } from 'common/constants/defectTypes';
 import {
   EntityInputConditional,
   EntityItemStartTime,
@@ -104,12 +104,12 @@ const messages = defineMessages({
     defaultMessage: 'Total to investigate',
   },
   NO_DEFECT_title: {
-    id: 'SuiteLevelEntities.TO_INVESTIGATE_title',
-    defaultMessage: 'To investigate',
+    id: 'SuiteLevelEntities.NO_DEFECT_title',
+    defaultMessage: 'No defects',
   },
   NO_DEFECT_totalTitle: {
-    id: 'SuiteLevelEntities.TO_INVESTIGATE_totalTitle',
-    defaultMessage: 'Total to investigate',
+    id: 'SuiteLevelEntities.NO_DEFECT_totalTitle',
+    defaultMessage: 'Total no defects',
   },
   LAUNCH_NUMBER_PLACEHOLDER: {
     id: 'SuiteLevelEntities.launchNumberPlaceholder',
@@ -324,6 +324,9 @@ export class SuiteLevelEntities extends Component {
     const { intl, visibleFilters } = this.props;
     let defectTypeEntities = [];
     DEFECT_TYPES_SEQUENCE.forEach((defectTypeRef) => {
+      if (defectTypeRef.toLowerCase() === NO_DEFECT) {
+        return;
+      }
       const defectTypeGroup = this.props.defectTypes[defectTypeRef];
       const hasSubtypes = defectTypeGroup.length > 1;
       const defectTitle = `${defectTypeRef}_${hasSubtypes ? 'totalTitle' : 'title'}`;
