@@ -30,11 +30,7 @@ export const ENTITY_STATUS = 'status';
 export const ENTITY_METHOD_TYPE = 'type';
 export const ENTITY_DEFECT_TYPE = 'issueType';
 export const ENTITY_DEFECT_COMMENT = 'issueComment';
-<<<<<<< HEAD
-export const ENTITY_BTS_ISSUES = 'ticketId';
-=======
 export const ENTITY_BTS_ISSUES = 'issue$externalSystemIssues$ticket_id';
->>>>>>> EPMRPP-39004 - REACT: Launches: The using filter 'Defect comment' generates the error 40011
 export const ENTITY_IGNORE_ANALYZER = 'ignoreAnalyzer';
 export const ENTITY_AUTOANALYZE = 'autoAnalyzed';
 export const ENTITY_CREATION_DATE = 'creationDate';
