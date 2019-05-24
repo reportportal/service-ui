@@ -1,5 +1,7 @@
 import { fetchDataAction } from 'controllers/fetch';
 import { URLS } from 'common/urls';
-import { NAMESPACE } from './constants';
+import { API_INFO_NAMESPACE, UAT_INFO_NAMESPACE } from './constants';
 
-export const fetchInfoAction = () => fetchDataAction(NAMESPACE, true)(URLS.info());
+export const fetchApiInfoAction = () => fetchDataAction(API_INFO_NAMESPACE, true)(URLS.apiInfo());
+
+export const fetchUatInfoAction = () => fetchDataAction(UAT_INFO_NAMESPACE, true)(URLS.uatInfo());

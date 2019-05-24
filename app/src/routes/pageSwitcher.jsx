@@ -12,6 +12,7 @@ import {
   LAUNCHES_PAGE,
   HISTORY_PAGE,
   PROJECT_DETAILS_PAGE,
+  OAUTH_SUCCESS,
 } from 'controllers/pages';
 import { LocalizationSwitcher } from 'components/main/localizationSwitcher';
 import { ScreenLock } from 'components/main/screenLock';
@@ -54,6 +55,7 @@ const pageRendering = {
 
   LOGIN_PAGE: { component: LoginPage, layout: EmptyLayout, access: ANONYMOUS_ACCESS },
   REGISTRATION_PAGE: { component: RegistrationPage, layout: EmptyLayout, access: ANONYMOUS_ACCESS },
+  [OAUTH_SUCCESS]: { component: EmptyLayout, layout: EmptyLayout, access: ANONYMOUS_ACCESS },
   USER_PROFILE_PAGE: { component: ProfilePage, layout: AppLayout },
   API_PAGE: { component: ApiPage, layout: AppLayout },
   PROJECT_DASHBOARD_PAGE: { component: DashboardPage, layout: AppLayout },

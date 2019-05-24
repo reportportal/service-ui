@@ -21,6 +21,7 @@ import {
   PROJECT_LAUNCHES_PAGE,
   PLUGINS_PAGE,
   NOT_FOUND,
+  OAUTH_SUCCESS,
   adminPageNames,
   pageSelector,
 } from 'controllers/pages';
@@ -101,6 +102,7 @@ export default {
 
   [LOGIN_PAGE]: '/login',
   [REGISTRATION_PAGE]: '/registration',
+  [OAUTH_SUCCESS]: '/authSuccess',
   [NOT_FOUND]: '/notfound',
 
   ADMINISTRATE_PAGE: redirectRoute('/administrate', () => ({ type: PROJECTS_PAGE })),
