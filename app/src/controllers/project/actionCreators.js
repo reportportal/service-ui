@@ -30,6 +30,8 @@ import {
   ADD_PATTERN_SUCCESS,
   UPDATE_PATTERN,
   UPDATE_PATTERN_SUCCESS,
+  DELETE_PATTERN,
+  DELETE_PATTERN_SUCCESS,
 } from './constants';
 
 const fetchProjectSuccessAction = (project) => ({
@@ -184,5 +186,15 @@ export const updatePatternAction = (pattern) => ({
 
 export const updatePatternSuccessAction = (pattern) => ({
   type: UPDATE_PATTERN_SUCCESS,
+  payload: pattern,
+});
+
+export const deletePatternAction = (pattern) => ({
+  type: DELETE_PATTERN,
+  payload: pattern,
+});
+
+export const deletePatternSuccessAction = (pattern) => ({
+  type: DELETE_PATTERN_SUCCESS,
   payload: pattern,
 });

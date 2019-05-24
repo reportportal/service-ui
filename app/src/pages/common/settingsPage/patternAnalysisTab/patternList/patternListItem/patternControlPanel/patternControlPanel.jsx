@@ -2,27 +2,44 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Parser from 'html-react-parser';
+import { injectIntl, intlShape, defineMessages } from 'react-intl';
 import IconEdit from 'common/img/pencil-empty-inline.svg';
 import IconDuplicate from 'common/img/duplicate-inline.svg';
 import IconDelete from 'common/img/trashcan-inline.svg';
 import { InputSwitcher } from 'components/inputs/inputSwitcher';
-import { updatePatternAction } from 'controllers/project';
+import { updatePatternAction, deletePatternAction } from 'controllers/project';
 import { showModalAction } from 'controllers/modal';
+import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import classNames from 'classnames/bind';
 import styles from './patternControlPanel.scss';
 
 const cx = classNames.bind(styles);
 
+export const messages = defineMessages({
+  deleteModalHeader: {
+    id: 'PatternAnalysis.deleteModalHeader',
+    defaultMessage: 'Delete Pattern Rule',
+  },
+  deleteModalContent: {
+    id: 'PatternAnalysis.deleteModalContent',
+    defaultMessage: 'Are you sure you want to delete pattern rule {name}?',
+  },
+});
+
 @connect(null, {
   updatePattern: updatePatternAction,
+  deletePattern: deletePatternAction,
   showModal: showModalAction,
 })
+@injectIntl
 export class PatternControlPanel extends Component {
   static propTypes = {
     pattern: PropTypes.object,
     id: PropTypes.number,
     updatePattern: PropTypes.func.isRequired,
+    deletePattern: PropTypes.func.isRequired,
     showModal: PropTypes.func.isRequired,
+    intl: intlShape.isRequired,
   };
 
   static defaultProps = {
@@ -50,6 +67,29 @@ export class PatternControlPanel extends Component {
     });
   };
 
+  onDeletePattern = () => {
+    this.props.deletePattern(this.props.pattern);
+  };
+
+  showDeleteConfirmationDialog = () => {
+    const { pattern, showModal, intl } = this.props;
+    showModal({
+      id: 'deleteItemsModal',
+      data: {
+        onConfirm: this.onDeletePattern,
+        header: intl.formatMessage(messages.deleteModalHeader),
+        mainContent: intl.formatMessage(messages.deleteModalContent, {
+          name: `'<b>${pattern.name}</b>'`,
+        }),
+        eventsInfo: {
+          closeIcon: SETTINGS_PAGE_EVENTS.CLOSE_ICON_DELETE_PATTERN_MODAL,
+          cancelBtn: SETTINGS_PAGE_EVENTS.CANCEL_BTN_DELETE_PATTERN_MODAL,
+          deleteBtn: SETTINGS_PAGE_EVENTS.DELETE_BTN_DELETE_PATTERN_MODAL,
+        },
+      },
+    });
+  };
+
   render() {
     const { id, pattern } = this.props;
     return (
@@ -64,7 +104,12 @@ export class PatternControlPanel extends Component {
             {Parser(IconEdit)}
           </button>
           <button className={cx('panel-button')}>{Parser(IconDuplicate)}</button>
-          <button className={cx('panel-button', 'filled')}>{Parser(IconDelete)}</button>
+          <button
+            className={cx('panel-button', 'filled')}
+            onClick={this.showDeleteConfirmationDialog}
+          >
+            {Parser(IconDelete)}
+          </button>
         </div>
       </div>
     );

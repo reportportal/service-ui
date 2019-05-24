@@ -26,6 +26,8 @@ export {
   addPatternActionSuccess,
   updatePatternAction,
   updatePatternSuccessAction,
+  deletePatternAction,
+  deletePatternSuccessAction,
 } from './actionCreators';
 export { projectReducer } from './reducer';
 export {

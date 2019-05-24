@@ -22,6 +22,7 @@ import {
   REMOVE_PROJECT_INTEGRATIONS_BY_TYPE,
   ADD_PATTERN,
   UPDATE_PATTERN,
+  DELETE_PATTERN,
 } from './constants';
 import {
   updateDefectSubTypeSuccessAction,
@@ -34,6 +35,7 @@ import {
   removeProjectIntegrationsByTypeSuccessAction,
   addPatternSuccessAction,
   updatePatternSuccessAction,
+  deletePatternSuccessAction,
 } from './actionCreators';
 import { projectNotificationsConfigurationSelector } from './selectors';
 
@@ -298,6 +300,26 @@ function* watchUpdatePattern() {
   yield takeEvery(UPDATE_PATTERN, updatePattern);
 }
 
+function* deletePattern({ payload: pattern }) {
+  try {
+    const projectId = yield select(projectIdSelector);
+    yield call(fetch, URLS.projectUpdatePattern(projectId, pattern.id), { method: 'delete' });
+    yield put(deletePatternSuccessAction(pattern));
+    yield put(
+      showNotification({
+        messageId: 'deletePatternSuccess',
+        type: NOTIFICATION_TYPES.SUCCESS,
+      }),
+    );
+  } catch (error) {
+    yield put(showDefaultErrorNotification(error));
+  }
+}
+
+function* watchDeletePattern() {
+  yield takeEvery(DELETE_PATTERN, deletePattern);
+}
+
 export function* projectSagas() {
   yield all([
     watchUpdateDefectSubType(),
@@ -310,5 +332,6 @@ export function* projectSagas() {
     watchRemoveProjectIntegrationsByType(),
     watchAddPattern(),
     watchUpdatePattern(),
+    watchDeletePattern(),
   ]);
 }

@@ -12,6 +12,7 @@ import {
   DELETE_DEFECT_SUBTYPE_SUCCESS,
   ADD_PATTERN_SUCCESS,
   UPDATE_PATTERN_SUCCESS,
+  DELETE_PATTERN_SUCCESS,
 } from './constants';
 
 describe('project reducer', () => {
@@ -311,6 +312,35 @@ describe('project reducer', () => {
       expect(newState).toEqual({
         configuration: {
           patterns: [payload, { id: 2 }],
+        },
+      });
+    });
+
+    test('should handle DELETE_PATTERN_SUCCESS', () => {
+      const oldState = {
+        ...PROJECT_INFO_INITIAL_STATE,
+        configuration: {
+          ...PROJECT_INFO_INITIAL_STATE.configuration,
+          patterns: [
+            {
+              id: 1,
+              name: 'pattern name',
+              type: 'STRING',
+              value: 'pattern condition',
+              enabled: true,
+            },
+            { id: 2 },
+          ],
+        },
+      };
+      const payload = { id: 1 };
+      const newState = projectInfoReducer(oldState, {
+        type: DELETE_PATTERN_SUCCESS,
+        payload,
+      });
+      expect(newState).toEqual({
+        configuration: {
+          patterns: [{ id: 2 }],
         },
       });
     });
