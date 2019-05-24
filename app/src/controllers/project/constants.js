@@ -32,3 +32,5 @@ export const ADD_PATTERN = 'addPattern';
 export const ADD_PATTERN_SUCCESS = 'addPatternSuccess';
 export const UPDATE_PATTERN = 'updatePattern';
 export const UPDATE_PATTERN_SUCCESS = 'updatePatternSuccess';
+export const DELETE_PATTERN = 'deletePattern';
+export const DELETE_PATTERN_SUCCESS = 'deletePatternSuccess';
