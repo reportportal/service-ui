@@ -88,7 +88,12 @@ export class NameColumn extends Component {
       <div className={cx('name-col', className)}>
         {value.photoLoaded && (
           <div className={cx('avatar-wrapper')}>
-            <Image className={cx('avatar')} src={URLS.dataUserPhoto(value.userId)} alt="avatar" />
+            <Image
+              className={cx('avatar')}
+              src={URLS.dataUserPhoto(value.userId)}
+              alt="avatar"
+              fallback={DefaultUserImage}
+            />
           </div>
         )}
         <span className={cx('name')}>{value.fullName}</span>

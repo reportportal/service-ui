@@ -146,7 +146,12 @@ export class PersonalInfoBlock extends Component {
         <BlockContainerBody>
           <div className={cx('block-content')}>
             <div className={cx('avatar-wrapper')}>
-              <Image className={cx('avatar')} src={this.state.avatarSource} alt="Profile avatar" />
+              <Image
+                className={cx('avatar')}
+                src={this.state.avatarSource}
+                alt="Profile avatar"
+                fallback={DefaultUserImage}
+              />
             </div>
             <div className={cx('info')}>
               <UserInfo accountType={accountType} userId={userId} />
