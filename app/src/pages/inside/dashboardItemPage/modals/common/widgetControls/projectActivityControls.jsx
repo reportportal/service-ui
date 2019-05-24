@@ -116,7 +116,7 @@ export class ProjectActivityControls extends Component {
 
   parseUsernames = (values) => {
     if (values === null) return null;
-    if (values && values.length) {
+    if (values && Array.isArray(values)) {
       return values.map((value) => value.value).join(',');
     }
 
