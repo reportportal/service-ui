@@ -8,6 +8,7 @@ export const SET_LAST_FAILED_LOGIN_TIME = 'setLastFailedLoginTime';
 export const AUTH_ERROR = 'authErrorAction';
 export const LOGOUT = 'logoutAction';
 export const LOGIN = 'loginAction';
+export const LOGIN_SUCCESS = 'loginSuccessAction';
 export const SET_TOKEN = 'setToken';
 export const GRANT_TYPES = {
   PASSWORD: 'password',

@@ -1,4 +1,8 @@
+import { combineReducers } from 'redux';
 import { fetchReducer } from 'controllers/fetch';
-import { NAMESPACE } from './constants';
+import { API_INFO_NAMESPACE, UAT_INFO_NAMESPACE } from './constants';
 
-export const appInfoReducer = fetchReducer(NAMESPACE, { initialState: {} });
+export const appInfoReducer = combineReducers({
+  apiInfo: fetchReducer(API_INFO_NAMESPACE, { initialState: {} }),
+  uatInfo: fetchReducer(UAT_INFO_NAMESPACE, { initialState: {} }),
+});

@@ -90,8 +90,8 @@ export class PersonalInfoBlock extends Component {
   };
 
   onForceUpdate = () => {
-    const { accountType, intl } = this.props;
-    fetch(URLS.userSynchronize(accountType), { method: 'post' })
+    const { accountType = '', intl } = this.props;
+    fetch(URLS.userSynchronize(accountType.toLowerCase()), { method: 'post' })
       .then(() => {
         this.props.showNotification({
           message: intl.formatMessage(messages.synchronize),
