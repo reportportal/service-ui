@@ -3,6 +3,7 @@ import track from 'react-tracking';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { FormattedMessage } from 'react-intl';
+import DefaultUserImage from 'common/img/default-user-avatar.png';
 import { userInfoSelector, photoTimeStampSelector } from 'controllers/user';
 import { logoutAction } from 'controllers/auth';
 import { API_PAGE, ADMINISTRATE_PAGE, USER_PROFILE_PAGE } from 'controllers/pages/constants';
@@ -92,6 +93,7 @@ export class UserBlock extends Component {
             className={cx('avatar')}
             src={URLS.dataPhoto(this.props.photoTimeStamp)}
             alt="avatar"
+            fallback={DefaultUserImage}
           />
         </div>
         <div className={cx('menu-icon', { flipped: this.state.menuOpened })} />

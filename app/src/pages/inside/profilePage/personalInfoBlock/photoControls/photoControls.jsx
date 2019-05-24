@@ -145,6 +145,7 @@ export class PhotoControls extends Component {
     fetch(URLS.dataPhoto(), { method: 'delete' })
       .then(() => {
         this.props.removeImage();
+        this.props.setPhotoTimeStampAction(Date.now());
         this.props.showNotification({
           message: this.props.intl.formatMessage(messages.wasDeleted),
           type: NOTIFICATION_TYPES.SUCCESS,

@@ -4,12 +4,13 @@ import classNames from 'classnames/bind';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { defineMessages, injectIntl, intlShape } from 'react-intl';
-import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
-import { showModalAction } from 'controllers/modal';
-import { userInfoSelector } from 'controllers/user';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
 import { INTERNAL, LDAP } from 'common/constants/accountType';
+import DefaultUserImage from 'common/img/default-user-avatar.png';
+import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
+import { showModalAction } from 'controllers/modal';
+import { userInfoSelector } from 'controllers/user';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { PROFILE_PAGE_EVENTS } from 'components/main/analytics/events';
 import { Image } from 'components/main/image';
@@ -139,13 +140,19 @@ export class PersonalInfoBlock extends Component {
 
   render() {
     const { intl, accountType, userId } = this.props;
+
     return (
       <div className={cx('personal-info-block')}>
         <BlockContainerHeader>{intl.formatMessage(messages.header)}</BlockContainerHeader>
         <BlockContainerBody>
           <div className={cx('block-content')}>
             <div className={cx('avatar-wrapper')}>
-              <Image className={cx('avatar')} src={this.state.avatarSource} alt="Profile avatar" />
+              <Image
+                className={cx('avatar')}
+                src={this.state.avatarSource}
+                alt="Profile avatar"
+                fallback={DefaultUserImage}
+              />
             </div>
             <div className={cx('info')}>
               <UserInfo accountType={accountType} userId={userId} />
