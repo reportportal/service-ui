@@ -21,9 +21,13 @@
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { intlShape, injectIntl } from 'react-intl';
+import { connect } from 'react-redux';
 import { Component } from 'react';
 import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
 import { Legend } from 'components/widgets/charts/common/legend/legend';
+import { activeProjectSelector } from 'controllers/user';
+import { TEST_ITEM_PAGE } from 'controllers/pages';
+import { ALL } from 'common/constants/reservedFilterIds';
 import styles from './investigatedTrendChart.scss';
 import { C3Chart } from '../common/c3chart';
 import { getTimelineConfig } from './timelineConfig';
@@ -34,9 +38,19 @@ import { MESSAGES } from './common/constants';
 const cx = classNames.bind(styles);
 
 @injectIntl
+@connect(
+  (state) => ({
+    projectId: activeProjectSelector(state),
+  }),
+  {
+    navigate: (linkAction) => linkAction,
+  },
+)
 export class InvestigatedTrendChart extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
+    navigate: PropTypes.func.isRequired,
+    projectId: PropTypes.string.isRequired,
     widget: PropTypes.object.isRequired,
     isPreview: PropTypes.bool,
     container: PropTypes.instanceOf(Element).isRequired,
@@ -69,6 +83,18 @@ export class InvestigatedTrendChart extends Component {
     this.props.observer.unsubscribe &&
       this.props.observer.unsubscribe('widgetResized', this.resizeChart);
   }
+
+  onChartClick = () => {
+    const { projectId } = this.props;
+
+    this.props.navigate({
+      type: TEST_ITEM_PAGE,
+      payload: {
+        projectId,
+        filterId: ALL,
+      },
+    });
+  };
 
   onChartCreated = (chart, element) => {
     this.chart = chart;
@@ -136,6 +162,7 @@ export class InvestigatedTrendChart extends Component {
     } else {
       this.config = getLaunchModeConfig(params);
     }
+    this.config.data.onclick = this.onChartClick;
 
     this.setState({
       isConfigReady: true,
