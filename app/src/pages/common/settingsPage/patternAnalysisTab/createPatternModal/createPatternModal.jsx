@@ -42,14 +42,6 @@ const messages = defineMessages({
     id: 'PatternAnalysis.inactive',
     defaultMessage: 'Inactive',
   },
-  createPatternMessage: {
-    id: 'PatternAnalysis.createPatternMessage',
-    defaultMessage: 'Create pattern rule',
-  },
-  editPatternMessage: {
-    id: 'PatternAnalysis.editPatternMessage',
-    defaultMessage: 'Edit pattern rule',
-  },
 });
 
 const createPatternFormSelector = formValueSelector('createPatternForm');
@@ -82,6 +74,7 @@ export class CreatePatternModal extends Component {
       pattern: PropTypes.object,
       isNewPattern: PropTypes.bool,
       onSave: PropTypes.func,
+      modalTitle: PropTypes.string,
     }),
     handleSubmit: PropTypes.func.isRequired,
     initialize: PropTypes.func.isRequired,
@@ -118,16 +111,14 @@ export class CreatePatternModal extends Component {
   render() {
     const {
       intl: { formatMessage },
-      data: { isNewPattern },
+      data: { isNewPattern, modalTitle },
       handleSubmit,
       selectedType,
     } = this.props;
 
     return (
       <ModalLayout
-        title={formatMessage(
-          isNewPattern ? messages.createPatternMessage : messages.editPatternMessage,
-        )}
+        title={modalTitle}
         okButton={{
           text: formatMessage(COMMON_LOCALE_KEYS.SAVE),
           onClick: (closeModal) => handleSubmit(this.saveAndClose(closeModal))(),
