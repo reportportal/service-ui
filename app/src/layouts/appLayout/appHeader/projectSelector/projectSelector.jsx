@@ -55,9 +55,8 @@ export class ProjectSelector extends Component {
     document.removeEventListener('click', this.handleOutsideClick, false);
   }
 
-  onClickProjectName = (e) => {
+  onClickProjectName = () => {
     this.props.tracking.trackEvent(HEADER_EVENTS.CLICK_PROJECT_NAME_LINK);
-    e.stopPropagation();
   };
 
   toggleShowList = () => {
