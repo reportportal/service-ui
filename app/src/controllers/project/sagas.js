@@ -23,6 +23,8 @@ import {
   ADD_PATTERN,
   UPDATE_PATTERN,
   DELETE_PATTERN,
+  PA_ATTRIBUTE_ENABLED_KEY,
+  UPDATE_PA_STATE,
 } from './constants';
 import {
   updateDefectSubTypeSuccessAction,
@@ -36,6 +38,7 @@ import {
   addPatternSuccessAction,
   updatePatternSuccessAction,
   deletePatternSuccessAction,
+  updateConfigurationAttributesAction,
 } from './actionCreators';
 import { projectNotificationsConfigurationSelector } from './selectors';
 
@@ -320,6 +323,40 @@ function* watchDeletePattern() {
   yield takeEvery(DELETE_PATTERN, deletePattern);
 }
 
+function* updatePAState({ payload: PAEnabled }) {
+  yield put(showScreenLockAction());
+  try {
+    const projectId = yield select(projectIdSelector);
+    const updatedConfig = {
+      configuration: {
+        attributes: {
+          [PA_ATTRIBUTE_ENABLED_KEY]: PAEnabled.toString(),
+        },
+      },
+    };
+
+    yield call(fetch, URLS.project(projectId), {
+      method: 'put',
+      data: updatedConfig,
+    });
+    yield put(updateConfigurationAttributesAction(updatedConfig));
+    yield put(
+      showNotification({
+        messageId: 'updatePAStateSuccess',
+        type: NOTIFICATION_TYPES.SUCCESS,
+      }),
+    );
+  } catch (error) {
+    yield put(showDefaultErrorNotification(error));
+  } finally {
+    yield put(hideScreenLockAction());
+  }
+}
+
+function* watchUpdatePAState() {
+  yield takeEvery(UPDATE_PA_STATE, updatePAState);
+}
+
 export function* projectSagas() {
   yield all([
     watchUpdateDefectSubType(),
@@ -332,6 +369,7 @@ export function* projectSagas() {
     watchRemoveProjectIntegrationsByType(),
     watchAddPattern(),
     watchUpdatePattern(),
+    watchUpdatePAState(),
     watchDeletePattern(),
   ]);
 }
