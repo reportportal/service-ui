@@ -21,6 +21,7 @@ import {
   ANALYZER_ATTRIBUTE_PREFIX,
   JOB_ATTRIBUTE_PREFIX,
   PROJECT_ATTRIBUTES_DELIMITER,
+  PA_ATTRIBUTE_ENABLED_KEY,
 } from './constants';
 
 const projectSelector = (state) => state.project || {};
@@ -48,7 +49,7 @@ export const defectTypesSelector = createSelector(subTypesSelector, (subTypes) =
   ),
 );
 
-const attributesSelector = (state) => projectConfigSelector(state).attributes || {};
+export const attributesSelector = (state) => projectConfigSelector(state).attributes || {};
 
 const createPrefixedAttributesSelector = (prefix) =>
   createSelector(attributesSelector, (attributes) =>
@@ -152,3 +153,5 @@ export const namedAvailableBtsIntegrationsSelector = namedAvailableIntegrationsB
 /* PATTERN-ANALYSIS */
 
 export const patternsSelector = (state) => projectConfigSelector(state).patterns || [];
+export const PAStateSelector = (state) =>
+  !!(attributesSelector(state)[PA_ATTRIBUTE_ENABLED_KEY].toString() === 'true');

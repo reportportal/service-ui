@@ -87,6 +87,10 @@ const messages = defineMessages({
     id: 'PatternAnalysis.deletePatternSuccess',
     defaultMessage: 'Pattern rule deleted successfully',
   },
+  updatePAStateSuccess: {
+    id: 'PatternAnalysis.updatePAStateSuccess',
+    defaultMessage: 'Pattern analysis settings were successfully updated',
+  },
 });
 
 @injectIntl
