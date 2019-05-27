@@ -7,11 +7,13 @@ import IconEdit from 'common/img/pencil-empty-inline.svg';
 import IconDuplicate from 'common/img/duplicate-inline.svg';
 import IconDelete from 'common/img/trashcan-inline.svg';
 import { InputSwitcher } from 'components/inputs/inputSwitcher';
-import { updatePatternAction, deletePatternAction } from 'controllers/project';
+import { addPatternAction, updatePatternAction, deletePatternAction } from 'controllers/project';
 import { showModalAction } from 'controllers/modal';
 import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import classNames from 'classnames/bind';
 import styles from './patternControlPanel.scss';
+
+const COPY_POSTFIX = '_copy';
 
 const cx = classNames.bind(styles);
 
@@ -24,9 +26,18 @@ export const messages = defineMessages({
     id: 'PatternAnalysis.deleteModalContent',
     defaultMessage: 'Are you sure you want to delete pattern rule {name}?',
   },
+  editPatternMessage: {
+    id: 'PatternAnalysis.editPatternMessage',
+    defaultMessage: 'Edit pattern rule',
+  },
+  clonePatternMessage: {
+    id: 'PatternAnalysis.clonePatternMessage',
+    defaultMessage: 'Clone pattern rule',
+  },
 });
 
 @connect(null, {
+  addPattern: addPatternAction,
   updatePattern: updatePatternAction,
   deletePattern: deletePatternAction,
   showModal: showModalAction,
@@ -36,6 +47,7 @@ export class PatternControlPanel extends Component {
   static propTypes = {
     pattern: PropTypes.object,
     id: PropTypes.number,
+    addPattern: PropTypes.func.isRequired,
     updatePattern: PropTypes.func.isRequired,
     deletePattern: PropTypes.func.isRequired,
     showModal: PropTypes.func.isRequired,
@@ -48,13 +60,32 @@ export class PatternControlPanel extends Component {
   };
 
   onEditPattern = () => {
-    const { showModal, updatePattern, pattern } = this.props;
+    const { intl, showModal, updatePattern, pattern } = this.props;
     showModal({
       id: 'createPatternModal',
       data: {
         onSave: updatePattern,
         pattern,
         isNewPattern: false,
+        modalTitle: intl.formatMessage(messages.editPatternMessage),
+      },
+    });
+  };
+
+  onClonePattern = () => {
+    const { intl, showModal, addPattern, pattern } = this.props;
+    const newPattern = {
+      ...pattern,
+      name: pattern.name + COPY_POSTFIX,
+    };
+    delete newPattern.id;
+    showModal({
+      id: 'createPatternModal',
+      data: {
+        onSave: addPattern,
+        pattern: newPattern,
+        isNewPattern: true,
+        modalTitle: intl.formatMessage(messages.clonePatternMessage),
       },
     });
   };
@@ -103,7 +134,9 @@ export class PatternControlPanel extends Component {
           <button className={cx('panel-button')} onClick={this.onEditPattern}>
             {Parser(IconEdit)}
           </button>
-          <button className={cx('panel-button')}>{Parser(IconDuplicate)}</button>
+          <button className={cx('panel-button')} onClick={this.onClonePattern}>
+            {Parser(IconDuplicate)}
+          </button>
           <button
             className={cx('panel-button', 'filled')}
             onClick={this.showDeleteConfirmationDialog}

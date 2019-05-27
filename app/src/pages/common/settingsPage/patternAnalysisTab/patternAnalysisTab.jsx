@@ -27,6 +27,10 @@ const messages = defineMessages({
     id: 'PatternAnalysis.createPattern',
     defaultMessage: 'Create pattern',
   },
+  createPatternTitle: {
+    id: 'PatternAnalysis.createPatternMessage',
+    defaultMessage: 'Create pattern rule',
+  },
 });
 
 const cx = classNames.bind(styles);
@@ -53,7 +57,7 @@ export class PatternAnalysisTab extends Component {
   };
 
   onAddPattern = () => {
-    const { showModal, addPattern } = this.props;
+    const { intl, showModal, addPattern } = this.props;
     showModal({
       id: 'createPatternModal',
       data: {
@@ -62,6 +66,7 @@ export class PatternAnalysisTab extends Component {
           type: STRING_PATTERN,
           enabled: true,
         },
+        modalTitle: intl.formatMessage(messages.createPatternTitle),
         isNewPattern: true,
       },
     });

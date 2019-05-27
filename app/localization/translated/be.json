@@ -1117,6 +1117,7 @@
   "PatternAnalysis.inactive": "Неактыўны",
   "PatternAnalysis.createPatternMessage": "Стварэнне патэрна",
   "PatternAnalysis.editPatternMessage": "Рэдагаванне патэрна",
+  "PatternAnalysis.clonePatternMessage": "Капіяванне патэрна",
   "PatternAnalysis.patternNameLengthHint": "Назва патэрна павінна быць памерам ад 1 да 55.",
   "PatternAnalysis.patternNameDuplicateHint": "Патэрн з такой назвай ужо існуе ў праекце.",
   "PatternAnalysis.addPatternSuccess": "Патэрн створаны.",
