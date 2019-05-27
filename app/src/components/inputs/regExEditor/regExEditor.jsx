@@ -15,7 +15,6 @@ export class RegExEditor extends Component {
     value: PropTypes.string,
     error: PropTypes.string,
     touched: PropTypes.bool,
-    readonly: PropTypes.bool,
     onChange: PropTypes.func,
     onBlur: PropTypes.func,
   };
@@ -28,7 +27,6 @@ export class RegExEditor extends Component {
     value: '',
     error: '',
     touched: false,
-    readonly: false,
     onChange: () => {},
     onBlur: () => {},
   };
@@ -42,11 +40,7 @@ export class RegExEditor extends Component {
   }
 
   componentDidMount() {
-    const { options, readonly } = this.props;
-    this.codeMirror = CodeMirror.fromTextArea(this.textareaNode.current, {
-      ...options,
-      readOnly: readonly,
-    });
+    this.codeMirror = CodeMirror.fromTextArea(this.textareaNode.current, this.props.options);
     this.codeMirror.on('change', this.onChangeHandler);
     this.codeMirror.on('blur', this.onBlurHandler);
     this.codeMirror.setValue(this.state.value);
