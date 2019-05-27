@@ -38,6 +38,7 @@ import {
   isLostLaunchSelector,
   createParentItemsSelector,
   itemsSelector,
+  breadcrumbsSelector,
 } from './selectors';
 import { calculateLevel } from './utils';
 
@@ -74,24 +75,31 @@ export function* fetchParentItems() {
 }
 
 function* fetchTestItems({ payload = {} }) {
-  const offset = payload.offset || 0;
+  let offset = payload.offset || 0;
   const isPathNameChanged = yield select(pathnameChangedSelector);
   if (isPathNameChanged && !payload.offset) {
     yield put(setPageLoadingAction(true));
     yield call(fetchParentItems);
   }
   const itemIdsArray = yield select(testItemIdsArraySelector);
+  const breadcrumbs = yield select(breadcrumbsSelector);
+  const parentFromBreadcrumbs = breadcrumbs.find((item) => item.listView);
+  if (parentFromBreadcrumbs) {
+    const { id } = parentFromBreadcrumbs;
+    offset = [...itemIdsArray].reverse().indexOf(id);
+  }
   const itemIds = offset ? itemIdsArray.slice(0, itemIdsArray.length - offset) : itemIdsArray;
   let launchId = yield select(launchIdSelector);
   const isLostLaunch = yield select(isLostLaunchSelector);
   let parentId;
-  let parentItem;
-  try {
-    parentItem = yield select(createParentItemsSelector(offset));
-  } catch (e) {} // eslint-disable-line no-empty
   if (isLostLaunch) {
+    let parentItem;
+    try {
+      parentItem = yield select(createParentItemsSelector(offset));
+    } catch (e) {} // eslint-disable-line no-empty
     launchId = parentItem ? parentItem.launchId : launchId;
   }
+
   if (itemIds.length > 1) {
     parentId = itemIds[itemIds.length - 1];
   }
@@ -102,7 +110,6 @@ function* fetchTestItems({ payload = {} }) {
   const uniqueIdFilterKey = 'filter.eq.uniqueId';
   const noChildFilter = 'filter.eq.hasChildren' in query;
   const underPathItemsIds = itemIds.filter((item) => item !== launchId);
-
   yield put(
     fetchDataAction(NAMESPACE)(URLS.testItems(project), {
       params: {
@@ -118,10 +125,10 @@ function* fetchTestItems({ payload = {} }) {
   );
   const dataPayload = yield take(createFetchPredicate(NAMESPACE));
   let level;
-  if (!parentItem) {
+  if (dataPayload.error) {
     level = LEVEL_NOT_FOUND;
   } else {
-    level = calculateLevel(dataPayload.payload.content);
+    level = calculateLevel(dataPayload.payload.content) || LEVEL_NOT_FOUND;
   }
 
   if (LEVELS[level]) {
