@@ -24,7 +24,8 @@ export const GroupHeader = connect((state) => ({
   filterId: filterIdSelector(state),
 }))(({ data, activeProject, launchId, filterId }) => (
   <div className={cx('group-header-row')}>
-    <div className={cx('group-header-content')}>
+    {/* td inside of div because of EPMRPP-36916 */}
+    <td className={cx('group-header-content')} colSpan={100}>
       {Object.keys(data[0].pathNames || {}).map((key, i, array) => (
         <Fragment key={key}>
           <Link
@@ -36,7 +37,7 @@ export const GroupHeader = connect((state) => ({
           {i < array.length - 1 && <span className={cx('separator')}> / </span>}
         </Fragment>
       ))}
-    </div>
+    </td>
   </div>
 ));
 GroupHeader.propTypes = {
