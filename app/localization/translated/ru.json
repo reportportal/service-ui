@@ -1129,6 +1129,7 @@
   "PatternAnalysis.inactive": "Неактивный",
   "PatternAnalysis.createPatternMessage": "Создание паттерна",
   "PatternAnalysis.editPatternMessage": "Редактирование паттерна",
+  "PatternAnalysis.clonePatternMessage": "Копирование паттерна",
   "PatternAnalysis.patternNameLengthHint": "Название паттерна должно быть размером от 1 до 55.",
   "PatternAnalysis.patternNameDuplicateHint": "Паттерн с таким названием уже существует в проекте.",
   "PatternAnalysis.addPatternSuccess": "Паттерн создан",
