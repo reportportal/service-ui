@@ -125,6 +125,7 @@ export class ActionPanel extends Component {
           type: NOTIFICATION_TYPES.SUCCESS,
           message: this.props.intl.formatMessage(messages.addUserSuccessNotification),
         });
+        this.props.fetchAllUsersAction();
       })
       .catch(this.props.showDefaultErrorNotification);
   };
