@@ -188,7 +188,10 @@ export class PassingRatePerLaunch extends Component {
       size: {
         height: this.height,
       },
-      onrendered: this.props.isPreview ? this.resizeHelper : undefined,
+      onrendered: () => this.resizeHelper(),
+      transition: {
+        duration: 0,
+      },
     };
 
     this.setState({
