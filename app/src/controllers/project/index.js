@@ -28,6 +28,7 @@ export {
   updatePatternSuccessAction,
   deletePatternAction,
   deletePatternSuccessAction,
+  updatePAStateAction,
 } from './actionCreators';
 export { projectReducer } from './reducer';
 export {
@@ -50,6 +51,7 @@ export {
   availableBtsIntegrationsSelector,
   namedAvailableBtsIntegrationsSelector,
   patternsSelector,
+  PAStateSelector,
 } from './selectors';
 export { normalizeAttributesWithPrefix, isPostIssueActionAvailable } from './utils';
 export { projectSagas } from './sagas';
