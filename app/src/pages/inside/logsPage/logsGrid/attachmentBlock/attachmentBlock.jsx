@@ -5,6 +5,7 @@ import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
 import { connect } from 'react-redux';
 import AttachIcon from 'common/img/attachment-inline.svg';
+import { Image } from 'components/main/image';
 import { LOG_PAGE_EVENTS } from 'components/main/analytics/events';
 import { openAttachmentAction, getFileIconSource } from 'controllers/log/attachments';
 import styles from './attachmentBlock.scss';
@@ -46,7 +47,7 @@ export class AttachmentBlock extends Component {
         {consoleView ? (
           <div className={cx('image', 'console-view')}>{Parser(AttachIcon)}</div>
         ) : (
-          <img className={cx('image')} src={getFileIconSource(value)} alt={value.contentType} />
+          <Image className={cx('image')} src={getFileIconSource(value)} alt={value.contentType} />
         )}
       </div>
     );
