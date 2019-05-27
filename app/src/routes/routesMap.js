@@ -20,7 +20,6 @@ import {
   LAUNCHES_PAGE,
   PROJECT_LAUNCHES_PAGE,
   PLUGINS_PAGE,
-  projectIdSelector,
   NOT_FOUND,
   adminPageNames,
   pageSelector,
@@ -170,8 +169,7 @@ export default {
       }
       const dashboardItems = dashboardItemsSelector(getState());
       if (dashboardItems.length === 0) {
-        const projectId = projectIdSelector(getState());
-        dispatch(fetchDashboardsAction(projectId));
+        dispatch(fetchDashboardsAction({}));
       }
     },
   },
