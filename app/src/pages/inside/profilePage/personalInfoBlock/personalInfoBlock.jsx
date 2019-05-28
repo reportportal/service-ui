@@ -20,7 +20,6 @@ import { PhotoControls } from './photoControls';
 import { UserInfo } from './userInfo/userInfo';
 
 const cx = classNames.bind(styles);
-const getPhoto = (userId) => URLS.dataUserPhoto(userId);
 
 const messages = defineMessages({
   header: {
@@ -80,7 +79,7 @@ export class PersonalInfoBlock extends Component {
   };
 
   state = {
-    avatarSource: getPhoto(this.props.userId),
+    avatarSource: URLS.dataPhoto(),
   };
   onChangePassword = () => {
     this.props.tracking.trackEvent(PROFILE_PAGE_EVENTS.CHANGE_PASSWORD_CLICK);
@@ -135,7 +134,7 @@ export class PersonalInfoBlock extends Component {
     this.setState({ avatarSource: image });
   };
   removeImage = () => {
-    this.setState({ avatarSource: getPhoto(this.props.userId) });
+    this.setState({ avatarSource: URLS.dataPhoto(Date.now()) });
   };
 
   render() {

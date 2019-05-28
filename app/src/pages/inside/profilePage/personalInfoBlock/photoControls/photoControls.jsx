@@ -182,7 +182,13 @@ export class PhotoControls extends Component {
                 accept="image/gif, image/jpeg, image/png"
               />
             </div>
-            {!this.state.newPhotoLoaded && (
+            {this.state.newPhotoLoaded ? (
+              <div className={cx('photo-btn')}>
+                <GhostButton onClick={this.onSave}>
+                  {intl.formatMessage(messages.savePhoto)}
+                </GhostButton>
+              </div>
+            ) : (
               <Fragment>
                 <div className={cx('photo-btn')}>
                   <GhostButton onClick={this.onClickUploadPhoto}>
@@ -195,13 +201,6 @@ export class PhotoControls extends Component {
                   </button>
                 </div>
               </Fragment>
-            )}
-            {this.state.newPhotoLoaded && (
-              <div className={cx('photo-btn')}>
-                <GhostButton onClick={this.onSave}>
-                  {intl.formatMessage(messages.savePhoto)}
-                </GhostButton>
-              </div>
             )}
           </div>
         )}
