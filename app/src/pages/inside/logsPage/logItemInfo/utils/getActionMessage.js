@@ -2,19 +2,19 @@ import { messages } from '../translations';
 
 export const getActionMessage = (intl, activityItem) => {
   switch (activityItem.actionType) {
-    case 'update_item':
+    case 'updateItem':
       return intl.formatMessage(
-        activityItem.history.length > 1 ? messages.updateItemIssue : messages.updateItem,
+        activityItem.details.history.length > 1 ? messages.updateItemIssue : messages.updateItem,
       );
-    case 'post_issue':
+    case 'postIssue':
       return intl.formatMessage(messages.postIssue);
-    case 'link_issue':
+    case 'linkIssue':
       return intl.formatMessage(messages.linkIssue);
-    case 'unlink_issue':
+    case 'unlinkIssue':
       return intl.formatMessage(messages.unlinkIssue);
-    case 'analyze_item':
+    case 'analyzeItem':
       return intl.formatMessage(messages.changedByAnalyzer);
-    case 'link_issue_aa':
+    case 'linkIssueAa':
       return intl.formatMessage(messages.issueLoadByAnalyzer);
     default:
       return activityItem.actionType;
