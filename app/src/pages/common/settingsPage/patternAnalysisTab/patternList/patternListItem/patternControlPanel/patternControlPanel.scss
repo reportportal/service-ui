@@ -22,6 +22,9 @@
   &:hover {
     cursor: pointer;
   }
+  &.disabled:hover {
+    cursor: default;
+  }
 }
 .pattern-name {
   font-size: 13px;

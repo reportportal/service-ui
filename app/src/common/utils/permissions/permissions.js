@@ -50,3 +50,4 @@ export const canDeleteDashboard = checkPermission(ACTIONS.DELETE_DASHBOARD);
 export const canDeleteFilter = checkPermission(ACTIONS.DELETE_FILTER);
 export const canSeeDemoData = checkPermission(ACTIONS.SEE_DEMO_DATA);
 export const canConfigreEmailNotifications = checkPermission(ACTIONS.CONFIGURE_EMAIL_NOTIFICATION);
+export const canConfigurePatternAnalysis = checkPermission(ACTIONS.CONFIGURE_PATTERN_ANALYSIS);
