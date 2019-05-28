@@ -25,19 +25,21 @@ export class PatternListItem extends Component {
     intl: intlShape.isRequired,
     pattern: PropTypes.object,
     id: PropTypes.number,
+    readOnly: PropTypes.bool,
   };
 
   static defaultProps = {
     pattern: {},
     id: 0,
+    readOnly: false,
   };
 
   render() {
-    const { pattern, id, intl } = this.props;
+    const { pattern, id, intl, readOnly } = this.props;
 
     return (
       <div className={cx('pattern-list-item')}>
-        <PatternControlPanel pattern={pattern} id={id} />
+        <PatternControlPanel pattern={pattern} id={id} readOnly={readOnly} />
         <div className={cx('pattern-rule-data')}>
           <span className={cx('pattern-data-name')}>
             {intl.formatMessage(messages[pattern.type.toUpperCase()])}

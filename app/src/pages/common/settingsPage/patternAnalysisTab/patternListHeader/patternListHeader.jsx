@@ -41,6 +41,7 @@ export class PatternListHeader extends Component {
     onAddPattern: PropTypes.func,
     PAState: PropTypes.bool.isRequired,
     updatePAState: PropTypes.func,
+    readOnly: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -48,6 +49,7 @@ export class PatternListHeader extends Component {
     id: 0,
     onAddPattern: () => {},
     updatePAState: () => {},
+    readOnly: false,
   };
 
   render() {
@@ -56,16 +58,22 @@ export class PatternListHeader extends Component {
       onAddPattern,
       PAState,
       updatePAState,
+      readOnly,
     } = this.props;
     return (
       <div className={cx('pattern-list-header')}>
         <span className={cx('caption')}>{formatMessage(messages.patternAnalysis)}</span>
         <span className={cx('switcher')}>
-          <InputBigSwitcher mobileDisabled value={PAState} onChange={updatePAState} />
+          <InputBigSwitcher
+            disabled={readOnly}
+            mobileDisabled
+            value={PAState}
+            onChange={updatePAState}
+          />
         </span>
         <span className={cx('description')}>{formatMessage(messages.enablePA)}</span>
         <span className={cx('create-button')}>
-          <GhostButton mobileDisabled icon={PlusIcon} onClick={onAddPattern}>
+          <GhostButton disabled={readOnly} mobileDisabled icon={PlusIcon} onClick={onAddPattern}>
             {formatMessage(messages.createPattern)}
           </GhostButton>
         </span>
