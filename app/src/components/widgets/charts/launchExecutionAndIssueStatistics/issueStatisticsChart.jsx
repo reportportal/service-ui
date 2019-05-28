@@ -36,7 +36,6 @@ import { Legend } from '../common/legend';
 import { getDefectTypeLocators, getItemNameConfig } from '../common/utils';
 import { LaunchExecutionAndIssueStatisticsTooltip } from './launchExecutionAndIssueStatisticsTooltip';
 import { getPercentage, getChartData } from './chartUtils';
-import { messages } from './messages';
 
 const chartCx = classNames.bind(chartStyles);
 const getResult = (widget) => widget.content.result[0] || widget.content.result;
@@ -309,6 +308,9 @@ export class IssueStatisticsChart extends Component {
   // These two are named a and b in the original implementation.
   renderIssuesContents = (data, a, b, color) => {
     const launchData = this.defectItems.find((item) => item.id === data[0].id);
+    const itemName = Object.values(this.props.defectTypes)
+      .flat()
+      .find((defectType) => defectType.locator === launchData.id.split('$')[3]).longName;
 
     return ReactDOMServer.renderToStaticMarkup(
       <TooltipWrapper>
@@ -316,7 +318,7 @@ export class IssueStatisticsChart extends Component {
           launchNumber={data[0].value}
           duration={getPercentage(data[0].ratio)}
           color={color(data[0].name)}
-          itemName={this.props.intl.formatMessage(messages[launchData.name.split('$total')[0]])}
+          itemName={itemName}
         />
       </TooltipWrapper>,
     );
