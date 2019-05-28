@@ -23,6 +23,7 @@ import {
   SYSTEM_ISSUE,
   TO_INVESTIGATE,
 } from 'common/constants/defectTypes';
+
 import { DefectBadge } from './defectBadge/defectBadge';
 import { MessageBadge } from './messageBadge/messageBadge';
 import styles from './historyItem.scss';
@@ -119,14 +120,14 @@ export class HistoryItem extends Component {
 
   render() {
     const { status, issue } = this.props;
-
     return (
-      <div className={cx('history-item-wrapper', `history-item-status-${status}`)}>
+      <div className={cx('item-content-wrapper')}>
         {status.toLowerCase() === (FAILED || SKIPPED || INTERRUPTED) && this.mapDefectsToBadges()}
         {issue.comment && <MessageBadge data={[{ ticketId: issue.comment }]} icon={CommentIcon} />}
-        {issue.externalSystemIssues && (
-          <MessageBadge data={issue.externalSystemIssues} icon={TagIcon} />
-        )}
+        {issue.externalSystemIssues &&
+          issue.externalSystemIssues.length > 0 && (
+            <MessageBadge data={issue.externalSystemIssues} icon={TagIcon} />
+          )}
         <div className={cx('item-text-content')}>{this.renderTextContent()}</div>
       </div>
     );

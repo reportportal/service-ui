@@ -3,16 +3,22 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
 import { defineMessages, injectIntl, intlShape } from 'react-intl';
+import { redirect } from 'redux-first-router';
 import {
   itemsHistorySelector,
   historySelector,
-  OPTIMAL_HISTORY_DEPTH_FOR_RENDER,
   visibleItemsCountSelector,
   fetchItemsHistoryAction,
 } from 'controllers/itemsHistory';
+import { nameLinkSelector } from 'controllers/testItem';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
-import { HistoryNamesGrid } from './historyNamesGrid';
-import { HistoryItemsGrid } from './historyItemsGrid';
+import { ScrollWrapper } from 'components/main/scrollWrapper';
+import { MANY, NOT_FOUND, RESETED } from 'common/constants/launchStatuses';
+import { PROJECT_LOG_PAGE, TEST_ITEM_PAGE } from 'controllers/pages';
+import { ItemNameBlock } from './itemNameBlock';
+import { HistoryItem } from './historyItem';
+import { HistoryCell } from './historyCell';
+
 import styles from './historyTable.scss';
 
 const cx = classNames.bind(styles);
@@ -30,6 +36,14 @@ const messages = defineMessages({
     id: 'HistoryTable.loadMoreHistoryItemsTitle',
     defaultMessage: 'Click here to load more items',
   },
+  itemNamesHeaderTitle: {
+    id: 'HistoryTable.itemNamesHeaderTitle',
+    defaultMessage: 'Name',
+  },
+  launchNumberTitle: {
+    id: 'HistoryTable.launchNumberTitle',
+    defaultMessage: 'Launch #',
+  },
 });
 
 @connect(
@@ -37,8 +51,12 @@ const messages = defineMessages({
     items: itemsHistorySelector(state),
     history: historySelector(state),
     visibleItemsCount: visibleItemsCountSelector(state),
+    link: (ownProps) => nameLinkSelector(state, ownProps),
   }),
-  { fetchItemsHistoryAction },
+  {
+    fetchItemsHistoryAction,
+    redirectToTestItem: redirect,
+  },
 )
 @injectIntl
 export class HistoryTable extends Component {
@@ -49,6 +67,8 @@ export class HistoryTable extends Component {
     history: PropTypes.array,
     visibleItemsCount: PropTypes.number,
     fetchItemsHistoryAction: PropTypes.func,
+    link: PropTypes.func,
+    redirectToTestItem: PropTypes.func,
   };
 
   static defaultProps = {
@@ -56,9 +76,102 @@ export class HistoryTable extends Component {
     history: [],
     visibleItemsCount: 0,
     fetchItemsHistoryAction: () => {},
+    link: () => {},
+    redirectToTestItem: () => {},
   };
 
-  isTheBigDepth = () => this.props.history.length > OPTIMAL_HISTORY_DEPTH_FOR_RENDER;
+  getItems = () => {
+    const { items, visibleItemsCount } = this.props;
+    return items.slice(0, visibleItemsCount);
+  };
+
+  getHistoryItemProps = (filteredLaunchHistoryItem) => {
+    let itemProps = {};
+
+    if (!filteredLaunchHistoryItem.length) {
+      itemProps = {
+        status: NOT_FOUND.toUpperCase(),
+        defects: {},
+      };
+    } else if (filteredLaunchHistoryItem.length > 1) {
+      const itemIdsArray = filteredLaunchHistoryItem[0].path.split('.');
+      const itemIds = itemIdsArray.slice(0, itemIdsArray.length - 1).join('/');
+      itemProps = {
+        status: MANY.toUpperCase(),
+        defects: {},
+        itemIds,
+      };
+    } else {
+      const itemIdsArray = filteredLaunchHistoryItem[0].path.split('.');
+      const itemIds = itemIdsArray.slice(0, itemIdsArray.length - 1).join('/');
+      itemProps = {
+        status: filteredLaunchHistoryItem[0].status,
+        issue: filteredLaunchHistoryItem[0].issue,
+        defects: filteredLaunchHistoryItem[0].statistics.defects,
+        itemIds,
+      };
+    }
+    return itemProps;
+  };
+
+  getCorrespondHistoryItem = (historyItemProps, currentHistoryItem, launchId) => {
+    const { redirectToTestItem, link } = this.props;
+    switch (historyItemProps.status) {
+      case NOT_FOUND.toUpperCase():
+      case RESETED.toUpperCase():
+        return (
+          <HistoryCell status={historyItemProps.status} key={launchId}>
+            <HistoryItem {...historyItemProps} />
+          </HistoryCell>
+        );
+      case MANY.toUpperCase(): {
+        const clickHandler = () => {
+          const ownProps = {
+            ownLinkParams: {
+              page: TEST_ITEM_PAGE,
+              testItemIds: historyItemProps.itemIds
+                ? `${launchId}/${historyItemProps.itemIds}`
+                : launchId,
+            },
+            itemId: currentHistoryItem.id,
+          };
+          redirectToTestItem(link(ownProps));
+        };
+        return (
+          <HistoryCell
+            status={historyItemProps.status}
+            onClick={clickHandler}
+            key={currentHistoryItem.id}
+          >
+            <HistoryItem {...historyItemProps} />
+          </HistoryCell>
+        );
+      }
+      default: {
+        const clickHandler = () => {
+          const ownProps = {
+            ownLinkParams: {
+              page: currentHistoryItem.hasChildren ? null : PROJECT_LOG_PAGE,
+              testItemIds: historyItemProps.itemIds
+                ? `${launchId}/${historyItemProps.itemIds}`
+                : launchId,
+            },
+            itemId: currentHistoryItem.id,
+          };
+          redirectToTestItem(link(ownProps));
+        };
+        return (
+          <HistoryCell
+            status={historyItemProps.status}
+            onClick={clickHandler}
+            key={currentHistoryItem.id}
+          >
+            <HistoryItem {...historyItemProps} />
+          </HistoryCell>
+        );
+      }
+    }
+  };
 
   loadMoreHistoryItems = () => {
     this.props.fetchItemsHistoryAction({
@@ -67,30 +180,63 @@ export class HistoryTable extends Component {
     });
   };
 
+  renderHeader = () => {
+    const { history, intl } = this.props;
+    return history.map((historyItem) => (
+      <HistoryCell status={historyItem.launchStatus} key={historyItem.launchId} header>
+        {`${intl.formatMessage(messages.launchNumberTitle)}${historyItem.launchNumber}`}
+      </HistoryCell>
+    ));
+  };
+  renderBody = () => {
+    const { history } = this.props;
+    return this.getItems().map((launch) => (
+      <tr key={launch.uniqueId}>
+        <HistoryCell first>
+          <div className={cx('history-grid-name')}>
+            <ItemNameBlock data={launch} />
+          </div>
+        </HistoryCell>
+        {history.map((historyItem) => {
+          const currentLaunchHistoryItem = historyItem.resources.filter(
+            (item) => item.uniqueId === launch.uniqueId,
+          );
+          const historyItemProps = this.getHistoryItemProps(currentLaunchHistoryItem);
+          return this.getCorrespondHistoryItem(
+            historyItemProps,
+            currentLaunchHistoryItem[0],
+            historyItem.launchId,
+          );
+        })}
+      </tr>
+    ));
+  };
   render() {
     const { intl, history, items, visibleItemsCount } = this.props;
 
     return (
       <Fragment>
-        <div className={cx('history-table-wrapper')}>
-          {!history.length ? (
-            <div className={cx('spinner-wrapper')}>
-              <SpinningPreloader />
-            </div>
-          ) : (
-            <Fragment>
-              <HistoryNamesGrid
-                items={items.slice(0, visibleItemsCount)}
-                customClass={this.isTheBigDepth() ? cx('many-items') : ''}
-              />
-              <HistoryItemsGrid
-                items={items.slice(0, visibleItemsCount)}
-                itemsHistory={history}
-                customClass={this.isTheBigDepth() ? cx('large-items-history') : ''}
-              />
-            </Fragment>
-          )}
-        </div>
+        {!history.length ? (
+          <div className={cx('spinner-wrapper')}>
+            <SpinningPreloader />
+          </div>
+        ) : (
+          <ScrollWrapper autoHeight>
+            <table>
+              <thead>
+                <tr>
+                  <HistoryCell header first>
+                    <div className={cx('history-grid-name')}>
+                      {intl.formatMessage(messages.itemNamesHeaderTitle)}
+                    </div>
+                  </HistoryCell>
+                  {this.renderHeader()}
+                </tr>
+              </thead>
+              <tbody>{this.renderBody()}</tbody>
+            </table>
+          </ScrollWrapper>
+        )}
         {!!history.length &&
           visibleItemsCount < items.length && (
             <div className={cx('load-more-container')}>

@@ -1,1 +1,0 @@
-export { HistoryNamesGrid } from './historyNamesGrid';
