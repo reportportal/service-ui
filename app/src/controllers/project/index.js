@@ -22,6 +22,8 @@ export {
   updateProjectIntegrationAction,
   removeProjectIntegrationAction,
   removeProjectIntegrationsByTypeAction,
+  addPatternAction,
+  addPatternActionSuccess,
 } from './actionCreators';
 export { projectReducer } from './reducer';
 export {
