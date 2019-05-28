@@ -28,6 +28,7 @@ import styles from './investigatedTrendChart.scss';
 import { C3Chart } from '../common/c3chart';
 import { getTimelineConfig } from './timelineConfig';
 import { getLaunchModeConfig } from './launchModeConfig';
+import { getStatusPageModeConfig } from './statusPageModeConfig';
 import { MESSAGES } from './common/constants';
 
 const cx = classNames.bind(styles);
@@ -41,12 +42,16 @@ export class InvestigatedTrendChart extends Component {
     container: PropTypes.instanceOf(Element).isRequired,
     observer: PropTypes.object,
     height: PropTypes.number,
+    onStatusPageMode: PropTypes.bool,
+    interval: PropTypes.string,
   };
 
   static defaultProps = {
     isPreview: false,
     height: 0,
     observer: {},
+    onStatusPageMode: false,
+    interval: null,
   };
 
   state = {
@@ -105,7 +110,7 @@ export class InvestigatedTrendChart extends Component {
   };
 
   getConfig = () => {
-    const { widget, intl, isPreview, container } = this.props;
+    const { widget, intl, isPreview, container, interval } = this.props;
     const params = {
       content: widget.content,
       isPreview,
@@ -124,7 +129,13 @@ export class InvestigatedTrendChart extends Component {
       widget.contentParameters &&
       widget.contentParameters.widgetOptions.timeline === MODES_VALUES[CHART_MODES.TIMELINE_MODE];
 
-    this.config = this.isTimeline ? getTimelineConfig(params) : getLaunchModeConfig(params);
+    if (this.props.onStatusPageMode) {
+      this.config = getStatusPageModeConfig({ ...params, interval });
+    } else if (this.isTimeline) {
+      this.config = getTimelineConfig(params);
+    } else {
+      this.config = getLaunchModeConfig(params);
+    }
 
     this.setState({
       isConfigReady: true,
@@ -156,16 +167,17 @@ export class InvestigatedTrendChart extends Component {
             onChartCreated={this.onChartCreated}
             className={cx('widget-wrapper')}
           >
-            {!this.props.isPreview && (
-              <Legend
-                items={this.config.data.groups[0]}
-                colors={this.config.data.colors}
-                messages={MESSAGES}
-                onClick={this.onLegendClick}
-                onMouseOver={this.onLegendMouseOver}
-                onMouseOut={this.onLegendMouseOut}
-              />
-            )}
+            {!this.props.isPreview &&
+              !this.props.onStatusPageMode && (
+                <Legend
+                  items={this.config.data.groups[0]}
+                  colors={this.config.data.colors}
+                  messages={MESSAGES}
+                  onClick={this.onLegendClick}
+                  onMouseOver={this.onLegendMouseOver}
+                  onMouseOut={this.onLegendMouseOut}
+                />
+              )}
           </C3Chart>
         </div>
       )

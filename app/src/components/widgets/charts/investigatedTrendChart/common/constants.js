@@ -15,6 +15,14 @@ export const MESSAGES = defineMessages({
     id: 'InvestigatedTrendChart.yAxisTitle',
     defaultMessage: '% of investigations',
   },
+  xAxisWeeksTitle: {
+    id: 'InvestigatedTrendChart.xAxisWeeksTitle',
+    defaultMessage: 't, weeks',
+  },
+  xAxisDaysTitle: {
+    id: 'InvestigatedTrendChart.xAxisDaysTitle',
+    defaultMessage: 't, days',
+  },
   [TO_INVESTIGATE]: {
     id: `InvestigatedTrendChart.label.${TO_INVESTIGATE}`,
     defaultMessage: 'To Investigate',
