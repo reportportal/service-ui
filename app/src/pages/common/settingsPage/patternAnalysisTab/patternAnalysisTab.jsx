@@ -1,9 +1,11 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import classNames from 'classnames/bind';
-import { patternsSelector } from 'controllers/project';
 import { injectIntl, intlShape, defineMessages } from 'react-intl';
+import classNames from 'classnames/bind';
+import { patternsSelector, addPatternAction } from 'controllers/project';
+import { STRING_PATTERN } from 'common/constants/patternTypes';
+import { showModalAction } from 'controllers/modal';
 import { GhostButton } from 'components/buttons/ghostButton';
 import PlusIcon from 'common/img/plus-button-inline.svg';
 import { PatternListHeader } from './patternListHeader';
@@ -30,16 +32,39 @@ const messages = defineMessages({
 const cx = classNames.bind(styles);
 
 @injectIntl
-@connect((state) => ({
-  patterns: patternsSelector(state),
-}))
+@connect(
+  (state) => ({
+    patterns: patternsSelector(state),
+  }),
+  {
+    addPattern: addPatternAction,
+    showModal: showModalAction,
+  },
+)
 export class PatternAnalysisTab extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
     patterns: PropTypes.array,
+    addPattern: PropTypes.func.isRequired,
+    showModal: PropTypes.func.isRequired,
   };
   static defaultProps = {
     patterns: [],
+  };
+
+  onAddPattern = () => {
+    const { showModal, addPattern } = this.props;
+    showModal({
+      id: 'createPatternModal',
+      data: {
+        onSave: addPattern,
+        pattern: {
+          type: STRING_PATTERN,
+          enabled: true,
+        },
+        isNewPattern: true,
+      },
+    });
   };
 
   render() {
@@ -48,7 +73,7 @@ export class PatternAnalysisTab extends Component {
       <div className={cx('pattern-analysis-tab')}>
         {patterns.length ? (
           <Fragment>
-            <PatternListHeader />
+            <PatternListHeader onAddPattern={this.onAddPattern} />
             <PatternList patterns={patterns} />
           </Fragment>
         ) : (
@@ -56,7 +81,7 @@ export class PatternAnalysisTab extends Component {
             noItemsMessage={intl.formatMessage(messages.noItemsMessage)}
             notificationsInfo={intl.formatMessage(messages.notificationsInfo)}
           >
-            <GhostButton mobileDisabled icon={PlusIcon}>
+            <GhostButton mobileDisabled icon={PlusIcon} onClick={this.onAddPattern}>
               {intl.formatMessage(messages.createPattern)}
             </GhostButton>
           </NoCasesBlock>

@@ -114,6 +114,9 @@ export const URLS = {
       'page.sort': 'user,ASC',
       term: input,
     })}`,
+  projectAddPattern: (activeProject) => `${urlBase}${activeProject}/settings/pattern`,
+  projectUpdatePattern: (activeProject, patternId) =>
+    `${urlBase}${activeProject}/settings/pattern/${patternId}`,
   projectUsernamesSearch: (activeProject) =>
     `${urlBase}project/${activeProject}/usernames?filter.cnt.users=`,
   projectIndex: (activeProject) => `${urlBase}project/${activeProject}/index`,

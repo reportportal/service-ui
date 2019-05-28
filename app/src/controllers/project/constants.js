@@ -27,3 +27,6 @@ export const REMOVE_PROJECT_INTEGRATION_SUCCESS = 'removeProjectIntegrationSucce
 
 export const ANALYZER_ATTRIBUTE_PREFIX = 'analyzer';
 export const JOB_ATTRIBUTE_PREFIX = 'job';
+
+export const ADD_PATTERN = 'addPattern';
+export const ADD_PATTERN_SUCCESS = 'addPatternSuccess';

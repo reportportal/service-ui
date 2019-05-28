@@ -26,6 +26,8 @@ import {
   UPDATE_PROJECT_INTEGRATION_SUCCESS,
   REMOVE_PROJECT_INTEGRATION,
   REMOVE_PROJECT_INTEGRATION_SUCCESS,
+  ADD_PATTERN,
+  ADD_PATTERN_SUCCESS,
 } from './constants';
 
 const fetchProjectSuccessAction = (project) => ({
@@ -161,4 +163,14 @@ export const deleteDefectSubTypeAction = (subType) => ({
 export const deleteDefectSubTypeSuccessAction = (subType) => ({
   type: DELETE_DEFECT_SUBTYPE_SUCCESS,
   payload: subType,
+});
+
+export const addPatternAction = (pattern) => ({
+  type: ADD_PATTERN,
+  payload: pattern,
+});
+
+export const addPatternSuccessAction = (pattern) => ({
+  type: ADD_PATTERN_SUCCESS,
+  payload: pattern,
 });

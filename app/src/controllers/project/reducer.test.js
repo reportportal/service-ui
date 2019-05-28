@@ -10,6 +10,7 @@ import {
   UPDATE_DEFECT_SUBTYPE_SUCCESS,
   ADD_DEFECT_SUBTYPE_SUCCESS,
   DELETE_DEFECT_SUBTYPE_SUCCESS,
+  ADD_PATTERN_SUCCESS,
 } from './constants';
 
 describe('project reducer', () => {
@@ -236,6 +237,43 @@ describe('project reducer', () => {
       expect(updatedState).toEqual({
         ...oldState,
         filters: [],
+      });
+    });
+
+    test('should handle ADD_PATTERN_SUCCESS', () => {
+      const oldState = {
+        ...PROJECT_INFO_INITIAL_STATE,
+        configuration: {
+          ...PROJECT_INFO_INITIAL_STATE.configuration,
+          patterns: [
+            {
+              id: 1,
+            },
+          ],
+        },
+      };
+      const payload = {
+        id: 2,
+        name: 'pattern 2',
+        type: 'STRING',
+        value: 'pattern condition - 2',
+      };
+      const newState = projectInfoReducer(oldState, {
+        type: ADD_PATTERN_SUCCESS,
+        payload,
+      });
+      expect(newState).toEqual({
+        configuration: {
+          patterns: [
+            { id: 1 },
+            {
+              id: 2,
+              name: 'pattern 2',
+              type: 'STRING',
+              value: 'pattern condition - 2',
+            },
+          ],
+        },
       });
     });
   });
