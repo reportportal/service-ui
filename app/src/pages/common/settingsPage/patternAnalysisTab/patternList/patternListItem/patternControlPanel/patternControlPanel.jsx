@@ -52,11 +52,13 @@ export class PatternControlPanel extends Component {
     deletePattern: PropTypes.func.isRequired,
     showModal: PropTypes.func.isRequired,
     intl: intlShape.isRequired,
+    readOnly: PropTypes.bool,
   };
 
   static defaultProps = {
     pattern: {},
     id: 0,
+    readOnly: false,
   };
 
   onEditPattern = () => {
@@ -122,28 +124,34 @@ export class PatternControlPanel extends Component {
   };
 
   render() {
-    const { id, pattern } = this.props;
+    const { id, pattern, readOnly } = this.props;
     return (
       <div className={cx('pattern-control-panel')}>
         <span className={cx('pattern-number')}>{id + 1}</span>
-        <span className={cx('switcher')}>
-          <InputSwitcher value={pattern.enabled} onChange={this.onToggleActive} />
+        <span className={cx('switcher', { disabled: readOnly })}>
+          <InputSwitcher
+            value={pattern.enabled}
+            readOnly={readOnly}
+            onChange={this.onToggleActive}
+          />
         </span>
         <span className={cx('pattern-name')}>{pattern.name}</span>
-        <div className={cx('panel-buttons')}>
-          <button className={cx('panel-button')} onClick={this.onEditPattern}>
-            {Parser(IconEdit)}
-          </button>
-          <button className={cx('panel-button')} onClick={this.onClonePattern}>
-            {Parser(IconDuplicate)}
-          </button>
-          <button
-            className={cx('panel-button', 'filled')}
-            onClick={this.showDeleteConfirmationDialog}
-          >
-            {Parser(IconDelete)}
-          </button>
-        </div>
+        {!readOnly && (
+          <div className={cx('panel-buttons')}>
+            <button className={cx('panel-button')} onClick={this.onEditPattern}>
+              {Parser(IconEdit)}
+            </button>
+            <button className={cx('panel-button')} onClick={this.onClonePattern}>
+              {Parser(IconDuplicate)}
+            </button>
+            <button
+              className={cx('panel-button', 'filled')}
+              onClick={this.showDeleteConfirmationDialog}
+            >
+              {Parser(IconDelete)}
+            </button>
+          </div>
+        )}
       </div>
     );
   }

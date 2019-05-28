@@ -25,5 +25,6 @@ export {
   canDeleteFilter,
   canResizeAndDragWidgets,
   canConfigreEmailNotifications,
+  canConfigurePatternAnalysis,
   canSeeDemoData,
 } from './permissions';

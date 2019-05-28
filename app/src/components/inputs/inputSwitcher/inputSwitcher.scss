@@ -13,6 +13,9 @@
     }
   }
 }
+.readonly span {
+  cursor: default;
+}
 .input {
   display: none;
 }

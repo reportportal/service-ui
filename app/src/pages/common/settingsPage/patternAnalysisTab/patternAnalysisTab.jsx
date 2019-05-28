@@ -8,6 +8,8 @@ import { STRING_PATTERN } from 'common/constants/patternTypes';
 import { showModalAction } from 'controllers/modal';
 import { GhostButton } from 'components/buttons/ghostButton';
 import PlusIcon from 'common/img/plus-button-inline.svg';
+import { canConfigurePatternAnalysis } from 'common/utils/permissions';
+import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
 import { PatternListHeader } from './patternListHeader';
 import { PatternList } from './patternList';
 import { NoCasesBlock } from '../noCasesBlock';
@@ -39,6 +41,8 @@ const cx = classNames.bind(styles);
 @connect(
   (state) => ({
     patterns: patternsSelector(state),
+    projectRole: activeProjectRoleSelector(state),
+    userRole: userAccountRoleSelector(state),
   }),
   {
     addPattern: addPatternAction,
@@ -51,9 +55,13 @@ export class PatternAnalysisTab extends Component {
     patterns: PropTypes.array,
     addPattern: PropTypes.func.isRequired,
     showModal: PropTypes.func.isRequired,
+    userRole: PropTypes.string,
+    projectRole: PropTypes.string,
   };
   static defaultProps = {
     patterns: [],
+    userRole: '',
+    projectRole: '',
   };
 
   onAddPattern = () => {
@@ -72,14 +80,18 @@ export class PatternAnalysisTab extends Component {
     });
   };
 
+  isAbleToEditForm = () => canConfigurePatternAnalysis(this.props.userRole, this.props.projectRole);
+
   render() {
     const { intl, patterns } = this.props;
+    const readOnly = !this.isAbleToEditForm();
+
     return (
       <div className={cx('pattern-analysis-tab')}>
         {patterns.length ? (
           <Fragment>
-            <PatternListHeader onAddPattern={this.onAddPattern} />
-            <PatternList patterns={patterns} />
+            <PatternListHeader readOnly={readOnly} onAddPattern={this.onAddPattern} />
+            <PatternList readOnly={readOnly} patterns={patterns} />
           </Fragment>
         ) : (
           <NoCasesBlock
@@ -87,7 +99,7 @@ export class PatternAnalysisTab extends Component {
             notificationsInfo={intl.formatMessage(messages.notificationsInfo)}
           >
             <div className={cx('create-pattern-button')}>
-              <GhostButton icon={PlusIcon} onClick={this.onAddPattern}>
+              <GhostButton disabled={readOnly} icon={PlusIcon} onClick={this.onAddPattern}>
                 {intl.formatMessage(messages.createPattern)}
               </GhostButton>
             </div>
