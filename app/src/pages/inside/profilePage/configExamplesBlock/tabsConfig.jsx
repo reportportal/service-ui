@@ -19,7 +19,7 @@ const javaConfig = (token, activeProject) => ({
       <div className={cx('options')}>
         <p>rp.enable = true</p>
         <p>rp.description = My awesome launch</p>
-        <p>rp.tags = TAG1;TAG2</p>
+        <p>rp.attributes = key:value; value;</p>
         <p>rp.convertimage = true</p>
         <p>rp.mode = DEFAULT</p>
         <p>rp.skipped.issue = true</p>
@@ -41,7 +41,7 @@ const rubyConfig = (token, activeProject) => ({
         <p>endpoint: {window.location.origin}/api/v1</p>
         <p>project: {activeProject}</p>
         <p>launch: superadmin_TEST_EXAMPLE</p>
-        <p>tags: [tag1, tag2]</p>
+        <p>attributes: [key:value, value]</p>
       </div>
     </div>
   ),
@@ -60,7 +60,7 @@ const soapUiConfig = (token, activeProject) => ({
         <br />
         <p>rp.launch = superadmin_TEST_EXAMPLE</p>
         <p>rp.project = {activeProject}</p>
-        <p>rp.tags = TAG1;TAG2</p>
+        <p>rp.attributes = key:value; value;</p>
         <p>rp.description = My awesome launch</p>
       </div>
     </div>
