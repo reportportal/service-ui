@@ -72,7 +72,7 @@ export class StatusPageContent extends Component {
       {this.state.loading ? (
         <SpinningPreloader />
       ) : (
-        widgetData.component(this.state[widgetData.source])
+        widgetData.component(this.state[widgetData.source], this.props.interval)
       )}
     </StatusPageItem>
   );
