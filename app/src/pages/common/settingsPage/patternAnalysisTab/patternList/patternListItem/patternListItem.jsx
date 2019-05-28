@@ -2,18 +2,18 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { injectIntl, intlShape, defineMessages } from 'react-intl';
 import classNames from 'classnames/bind';
+import { REGEX_PATTERN, STRING_PATTERN } from 'common/constants/patternTypes';
 import { PatternControlPanel } from './patternControlPanel';
-import { PATTERN_TYPES } from '../../constants';
 import styles from './patternListItem.scss';
 
 const cx = classNames.bind(styles);
 
 export const messages = defineMessages({
-  [PATTERN_TYPES.REGEXP]: {
+  [REGEX_PATTERN]: {
     id: 'PatternAnalysis.RegExp',
     defaultMessage: 'RegExp',
   },
-  [PATTERN_TYPES.STRING]: {
+  [STRING_PATTERN]: {
     id: 'PatternAnalysis.String',
     defaultMessage: 'String',
   },

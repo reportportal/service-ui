@@ -28,11 +28,6 @@ import {
   REMOVE_PROJECT_INTEGRATION_SUCCESS,
   ADD_PATTERN,
   ADD_PATTERN_SUCCESS,
-  UPDATE_PATTERN,
-  UPDATE_PATTERN_SUCCESS,
-  DELETE_PATTERN,
-  DELETE_PATTERN_SUCCESS,
-  UPDATE_PA_STATE,
 } from './constants';
 
 const fetchProjectSuccessAction = (project) => ({
@@ -178,29 +173,4 @@ export const addPatternAction = (pattern) => ({
 export const addPatternSuccessAction = (pattern) => ({
   type: ADD_PATTERN_SUCCESS,
   payload: pattern,
-});
-
-export const updatePatternAction = (pattern) => ({
-  type: UPDATE_PATTERN,
-  payload: pattern,
-});
-
-export const updatePatternSuccessAction = (pattern) => ({
-  type: UPDATE_PATTERN_SUCCESS,
-  payload: pattern,
-});
-
-export const deletePatternAction = (pattern) => ({
-  type: DELETE_PATTERN,
-  payload: pattern,
-});
-
-export const deletePatternSuccessAction = (pattern) => ({
-  type: DELETE_PATTERN_SUCCESS,
-  payload: pattern,
-});
-
-export const updatePAStateAction = (PAState) => ({
-  type: UPDATE_PA_STATE,
-  payload: PAState,
 });

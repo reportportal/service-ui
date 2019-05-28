@@ -27,12 +27,6 @@ export const REMOVE_PROJECT_INTEGRATION_SUCCESS = 'removeProjectIntegrationSucce
 
 export const ANALYZER_ATTRIBUTE_PREFIX = 'analyzer';
 export const JOB_ATTRIBUTE_PREFIX = 'job';
-export const PA_ATTRIBUTE_ENABLED_KEY = 'pattern.analysis.enabled';
 
 export const ADD_PATTERN = 'addPattern';
 export const ADD_PATTERN_SUCCESS = 'addPatternSuccess';
-export const UPDATE_PATTERN = 'updatePattern';
-export const UPDATE_PATTERN_SUCCESS = 'updatePatternSuccess';
-export const DELETE_PATTERN = 'deletePattern';
-export const DELETE_PATTERN_SUCCESS = 'deletePatternSuccess';
-export const UPDATE_PA_STATE = 'updatePAState';

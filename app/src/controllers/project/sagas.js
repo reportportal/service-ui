@@ -21,10 +21,6 @@ import {
   REMOVE_PROJECT_INTEGRATION,
   REMOVE_PROJECT_INTEGRATIONS_BY_TYPE,
   ADD_PATTERN,
-  UPDATE_PATTERN,
-  DELETE_PATTERN,
-  PA_ATTRIBUTE_ENABLED_KEY,
-  UPDATE_PA_STATE,
 } from './constants';
 import {
   updateDefectSubTypeSuccessAction,
@@ -36,9 +32,6 @@ import {
   removeProjectIntegrationSuccessAction,
   removeProjectIntegrationsByTypeSuccessAction,
   addPatternSuccessAction,
-  updatePatternSuccessAction,
-  deletePatternSuccessAction,
-  updateConfigurationAttributesAction,
 } from './actionCreators';
 import { projectNotificationsConfigurationSelector } from './selectors';
 
@@ -277,86 +270,6 @@ function* watchAddPattern() {
   yield takeEvery(ADD_PATTERN, addPattern);
 }
 
-function* updatePattern({ payload: pattern }) {
-  try {
-    const projectId = yield select(projectIdSelector);
-    yield call(fetch, URLS.projectUpdatePattern(projectId, pattern.id), {
-      method: 'put',
-      data: {
-        name: pattern.name,
-        enabled: pattern.enabled,
-      },
-    });
-    yield put(updatePatternSuccessAction(pattern));
-    yield put(
-      showNotification({
-        messageId: 'updatePatternSuccess',
-        type: NOTIFICATION_TYPES.SUCCESS,
-      }),
-    );
-  } catch (error) {
-    yield put(showDefaultErrorNotification(error));
-  }
-}
-
-function* watchUpdatePattern() {
-  yield takeEvery(UPDATE_PATTERN, updatePattern);
-}
-
-function* deletePattern({ payload: pattern }) {
-  try {
-    const projectId = yield select(projectIdSelector);
-    yield call(fetch, URLS.projectUpdatePattern(projectId, pattern.id), { method: 'delete' });
-    yield put(deletePatternSuccessAction(pattern));
-    yield put(
-      showNotification({
-        messageId: 'deletePatternSuccess',
-        type: NOTIFICATION_TYPES.SUCCESS,
-      }),
-    );
-  } catch (error) {
-    yield put(showDefaultErrorNotification(error));
-  }
-}
-
-function* watchDeletePattern() {
-  yield takeEvery(DELETE_PATTERN, deletePattern);
-}
-
-function* updatePAState({ payload: PAEnabled }) {
-  yield put(showScreenLockAction());
-  try {
-    const projectId = yield select(projectIdSelector);
-    const updatedConfig = {
-      configuration: {
-        attributes: {
-          [PA_ATTRIBUTE_ENABLED_KEY]: PAEnabled.toString(),
-        },
-      },
-    };
-
-    yield call(fetch, URLS.project(projectId), {
-      method: 'put',
-      data: updatedConfig,
-    });
-    yield put(updateConfigurationAttributesAction(updatedConfig));
-    yield put(
-      showNotification({
-        messageId: 'updatePAStateSuccess',
-        type: NOTIFICATION_TYPES.SUCCESS,
-      }),
-    );
-  } catch (error) {
-    yield put(showDefaultErrorNotification(error));
-  } finally {
-    yield put(hideScreenLockAction());
-  }
-}
-
-function* watchUpdatePAState() {
-  yield takeEvery(UPDATE_PA_STATE, updatePAState);
-}
-
 export function* projectSagas() {
   yield all([
     watchUpdateDefectSubType(),
@@ -368,8 +281,5 @@ export function* projectSagas() {
     watchRemoveProjectIntegration(),
     watchRemoveProjectIntegrationsByType(),
     watchAddPattern(),
-    watchUpdatePattern(),
-    watchUpdatePAState(),
-    watchDeletePattern(),
   ]);
 }
