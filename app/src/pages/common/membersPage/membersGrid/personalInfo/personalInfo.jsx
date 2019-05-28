@@ -12,7 +12,6 @@ import { Image } from 'components/main/image';
 import styles from './personalInfo.scss';
 
 const cx = classNames.bind(styles);
-const getPhotoURL = (userId) => URLS.dataUserPhoto(userId);
 
 @connect((state) => ({
   currentUser: userIdSelector(state),
@@ -38,7 +37,7 @@ export class PersonalInfo extends Component {
         <div className={cx('avatar-wrapper')}>
           <Image
             className={cx('member-avatar')}
-            src={getPhotoURL(login)}
+            src={URLS.dataUserPhoto(login)}
             fallback={DefaultUserImage}
           />
         </div>
