@@ -28,3 +28,6 @@ export const defectTypeLongName = (value) => value.length >= 3 && value.length <
 export const defectTypeShortName = (value) => value.length >= 1 && value.length <= 4;
 export const projectName = (value) => !!/^[0-9a-zA-Z-_]{3,256}$/.exec(value);
 export const btsProject = (value) => value.length >= 1 && value.length <= 55;
+export const patternNameLength = (value) => value.length >= 1 && value.length <= 55;
+export const patternNameUnique = (value, patterns) =>
+  !patterns.some(({ name: patternName }) => patternName === value);

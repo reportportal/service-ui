@@ -48,6 +48,7 @@ export class ModalLayout extends Component {
       confirmationWarning: PropTypes.string,
     }),
     closeIconEventInfo: PropTypes.object,
+    renderHeaderElements: PropTypes.func,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
@@ -64,6 +65,7 @@ export class ModalLayout extends Component {
     stopOutsideClose: false,
     closeConfirmation: null,
     closeIconEventInfo: {},
+    renderHeaderElements: () => {},
   };
   state = {
     shown: false,
@@ -183,7 +185,11 @@ export class ModalLayout extends Component {
                   }}
                   className={cx('modal-window', this.props.className)}
                 >
-                  <ModalHeader text={title} onClose={this.onClickCloseIcon} />
+                  <ModalHeader
+                    text={title}
+                    onClose={this.onClickCloseIcon}
+                    renderHeaderElements={this.props.renderHeaderElements}
+                  />
                   <ModalContent>{status !== 'exited' ? children : null}</ModalContent>
 
                   <ModalFooter
