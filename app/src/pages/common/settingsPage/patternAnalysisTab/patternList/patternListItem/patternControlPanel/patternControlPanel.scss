@@ -10,6 +10,7 @@
   font-family: $FONT-REGULAR;
   display: flex;
   justify-content: stretch;
+  align-items: center;
 }
 .pattern-number {
   flex: 40px 0 0;
@@ -30,8 +31,11 @@
   text-overflow: ellipsis;
 }
 .panel-buttons {
-  flex: 120px 0 0;
+  flex: 100px 0 0;
   text-align: right;
+  @media (max-width: $SCREEN_XS_MAX) {
+    display: none;
+  }
 }
 .panel-button {
   height: 16px;

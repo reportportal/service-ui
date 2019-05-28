@@ -3,6 +3,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  text-align: center;
 }
 
 .no-items-message {
@@ -12,7 +13,6 @@
   font-family: $FONT-REGULAR;
   line-height: 0.9;
   letter-spacing: normal;
-  text-align: center;
 }
 
 .notifications-info {
