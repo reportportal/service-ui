@@ -86,9 +86,11 @@ export class PatternAnalysisTab extends Component {
             noItemsMessage={intl.formatMessage(messages.noItemsMessage)}
             notificationsInfo={intl.formatMessage(messages.notificationsInfo)}
           >
-            <GhostButton mobileDisabled icon={PlusIcon} onClick={this.onAddPattern}>
-              {intl.formatMessage(messages.createPattern)}
-            </GhostButton>
+            <div className={cx('create-pattern-button')}>
+              <GhostButton icon={PlusIcon} onClick={this.onAddPattern}>
+                {intl.formatMessage(messages.createPattern)}
+              </GhostButton>
+            </div>
           </NoCasesBlock>
         )}
       </div>
