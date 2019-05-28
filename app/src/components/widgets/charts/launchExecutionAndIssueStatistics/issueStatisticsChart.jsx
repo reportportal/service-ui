@@ -309,7 +309,7 @@ export class IssueStatisticsChart extends Component {
   renderIssuesContents = (data, a, b, color) => {
     const launchData = this.defectItems.find((item) => item.id === data[0].id);
     const itemName = Object.values(this.props.defectTypes)
-      .flat()
+      .reduce((result, defectTypes) => [...result, ...defectTypes], [])
       .find((defectType) => defectType.locator === launchData.id.split('$')[3]).longName;
 
     return ReactDOMServer.renderToStaticMarkup(
