@@ -3,9 +3,8 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { defineMessages, injectIntl } from 'react-intl';
 import { InvestigatedTrendChart } from 'components/widgets/charts/investigatedTrendChart';
-import { NoDataAvailable } from 'components/widgets/noDataAvailable';
-import { PERIOD_VALUES, PERIOD_VALUES_LENGTH } from 'common/constants/statusPeriodValues';
-import { getWeekRange } from 'common/utils/getWeekRange';
+import { NoItemMessage } from 'components/main/noItemMessage';
+import { mapMinListLength } from 'components/widgets/charts/investigatedTrendChart/statusPageModeConfig';
 import styles from './investigated.scss';
 
 const cx = classNames.bind(styles);
@@ -26,38 +25,23 @@ export class Investigated extends Component {
   };
 
   static defaultProps = {
-    interval: PERIOD_VALUES.THREE_MONTHS,
+    interval: '3M',
   };
 
   state = {
-    isContainerRefReady: false,
+    containerEl: null,
   };
 
   componentDidMount() {
-    if (this.containerRef.current) {
-      // eslint-disable-next-line react/no-did-mount-set-state
-      this.setState({ isContainerRefReady: true });
-    }
+    // eslint-disable-next-line react/no-did-mount-set-state
+    this.setState({ containerEl: this.myRef.current });
   }
 
-  containerRef = React.createRef();
+  myRef = React.createRef();
 
   prepareData = (rawData, interval) => {
-    const minListLength = PERIOD_VALUES_LENGTH[interval];
-    const data = Object.keys(rawData).map((key) => {
-      const {
-        values: { investigated, toInvestigate },
-      } = rawData[key][0];
-
-      return {
-        date: key,
-        name: interval === PERIOD_VALUES.ONE_MONTH ? key : getWeekRange(key),
-        values: {
-          investigated,
-          toInvestigate,
-        },
-      };
-    });
+    const minListLength = mapMinListLength[interval];
+    const data = Object.keys(rawData).map((key) => rawData[key][0]);
 
     while (data.length < minListLength) {
       data.unshift({
@@ -74,21 +58,22 @@ export class Investigated extends Component {
 
   render() {
     const { data, interval, intl } = this.props;
-    const { isContainerRefReady } = this.state;
+    const { containerEl } = this.state;
     const isDataEmpty = !Object.keys(data).length;
 
     return (
-      <div ref={this.containerRef} className={cx('investigated')}>
-        {isContainerRefReady && !isDataEmpty ? (
+      <div ref={this.myRef} className={cx('investigated')}>
+        {containerEl && !isDataEmpty ? (
           <InvestigatedTrendChart
             widget={this.prepareData(data, interval)}
             interval={interval}
-            container={this.containerRef.current}
+            container={containerEl}
+            withoutBackground
             onStatusPageMode
           />
         ) : (
           <div className={cx('no-data-wrapper')}>
-            <NoDataAvailable message={intl.formatMessage(messages.noDataMessage)} />
+            <NoItemMessage message={intl.formatMessage(messages.noDataMessage)} />
           </div>
         )}
       </div>

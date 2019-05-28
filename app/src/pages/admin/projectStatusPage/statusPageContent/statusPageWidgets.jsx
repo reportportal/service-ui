@@ -1,12 +1,5 @@
 import { URLS } from 'common/urls';
-import {
-  GeneralInfo,
-  OwnersInfo,
-  LastLaunch,
-  Investigated,
-  AutoBugs,
-  LaunchesQuantity
-} from './widgets';
+import { GeneralInfo, OwnersInfo, Investigated } from './widgets';
 import { WIDGETS_IDS } from '../constants';
 import { messages } from './messages';
 

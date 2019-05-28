@@ -43,7 +43,7 @@ import styles from './investigatedTrendChart.scss';
 import { C3Chart } from '../common/c3chart';
 import { getTimelineConfig } from './timelineConfig';
 import { getLaunchModeConfig } from './launchModeConfig';
-import { getConfig as getStatusPageModeConfig } from '../common/XYChartStatusPageConfig';
+import { getStatusPageModeConfig } from './statusPageModeConfig';
 import { MESSAGES } from './common/constants';
 import { getUpdatedFilterWithTime } from '../common/utils';
 
@@ -79,8 +79,6 @@ export class InvestigatedTrendChart extends Component {
     height: PropTypes.number,
     onStatusPageMode: PropTypes.bool,
     interval: PropTypes.string,
-    createFilterAction: PropTypes.func,
-    integerValueType: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -92,7 +90,6 @@ export class InvestigatedTrendChart extends Component {
     observer: {},
     onStatusPageMode: false,
     interval: null,
-    integerValueType: false,
   };
 
   state = {
@@ -177,16 +174,7 @@ export class InvestigatedTrendChart extends Component {
   };
 
   getConfig = () => {
-    const {
-      widget,
-      intl,
-      isPreview,
-      container,
-      interval,
-      onStatusPageMode,
-      integerValueType
-    } = this.props;
-
+    const { widget, intl, isPreview, container, interval } = this.props;
     const params = {
       content: widget.content,
       isPreview,
@@ -206,21 +194,12 @@ export class InvestigatedTrendChart extends Component {
       widget.contentParameters &&
       widget.contentParameters.widgetOptions.timeline === MODES_VALUES[CHART_MODES.TIMELINE_MODE];
 
-    if (onStatusPageMode) {
-      this.config = getStatusPageModeConfig({
-        ...params,
-        interval,
-        chartType: MODES_VALUES[CHART_MODES.BAR_VIEW],
-        messages: MESSAGES,
-      });
+    if (this.props.onStatusPageMode) {
+      this.config = getStatusPageModeConfig({ ...params, interval });
     } else if (this.isTimeline) {
       this.config = getTimelineConfig(params);
     } else {
       this.config = getLaunchModeConfig(params);
-    }
-
-    if (!onStatusPageMode) {
-      this.config.data.onclick = this.onChartClick;
     }
 
     this.setState({
