@@ -2,3 +2,9 @@
   max-width: 970px;
   margin: 0 auto;
 }
+
+.create-pattern-button {
+  @media (max-width: $SCREEN_XS_MAX) {
+    display: none;
+  }
+}

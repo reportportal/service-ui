@@ -1,31 +1,45 @@
 .pattern-list-header {
   display: flex;
-  justify-content: stretch;
+  flex-direction: row;
+  justify-content: flex-start;
   margin-bottom: 15px;
   color: $COLOR--gray-47;
   font-size: 12px;
   font-family: $FONT-REGULAR;
   line-height: 27px;
+  @media (max-width: $SCREEN_XS_MAX) {
+    flex-direction: column;
+  }
 }
 
 .caption {
-  flex: 110px 0 0;
+  width: 110px;
   padding-right: 15px;
   padding-left: 90px;
   font-size: 13px;
   color: $COLOR--charcoal-grey;
+  @media (max-width: $SCREEN_SM_MAX) {
+    padding-left: 15px;
+  }
 }
 
 .switcher {
-  flex: 100px 0 0;
-  padding: 0px 15px;
+  width: 100px;
+  @media (max-width: $SCREEN_XS_MAX) {
+    padding-left: 15px;
+  }
 }
 
 .description {
-  flex: 300px 1 0;
+  width: 220px;
+  flex-grow: 1;
+  flex-shrink: 1;
   padding: 0px 15px;
 }
 
 .create-button {
-  flex: 100px 0 0;
+  flex: 100px 0 1;
+  @media (max-width: $SCREEN_XS_MAX) {
+    display: none;
+  }
 }
