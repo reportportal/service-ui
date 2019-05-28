@@ -4,43 +4,36 @@ import { connect } from 'react-redux';
 import { reduxForm } from 'redux-form';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { fetch, updateStorageItem, getStorageItem } from 'common/utils';
+import { URLS } from 'common/urls';
 import { JIRA, RALLY } from 'common/constants/integrationNames';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { activeProjectSelector, userIdSelector } from 'controllers/user';
 import { namedAvailableBtsIntegrationsSelector } from 'controllers/project';
 import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLock';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
+import { btsIntegrationBackLinkSelector } from 'controllers/testItem';
 import { ModalLayout, withModal } from 'components/main/modal';
-import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { DynamicFieldsSection } from 'components/fields/dynamicFieldsSection';
 import {
   normalizeFieldsWithOptions,
   mapFieldsToValues,
 } from 'components/fields/dynamicFieldsSection/utils';
-import { URLS } from 'common/urls';
 import { FieldProvider } from 'components/fields/fieldProvider';
-import { fetch } from 'common/utils';
-import { BetaBadge } from 'pages/inside/common/betaBadge';
 import { InputBigSwitcher } from 'components/inputs/inputBigSwitcher';
 import { INTEGRATION_NAMES_TITLES } from 'components/integrations';
-import { BtsIntegrationSelector } from 'pages/inside/common/btsIntegrationSelector';
 import { ISSUE_TYPE_FIELD_KEY } from 'components/integrations/elements/bts/constants';
+import { BetaBadge } from 'pages/inside/common/betaBadge';
+import { BtsIntegrationSelector } from 'pages/inside/common/btsIntegrationSelector';
 import { JiraCredentials } from './jiraCredentials';
 import { RallyCredentials } from './rallyCredentials';
 import {
   INCLUDE_ATTACHMENTS_KEY,
   INCLUDE_LOGS_KEY,
   INCLUDE_COMMENTS_KEY,
-  DEFAULT_INCLUDE_DATA_CONFIG,
-  BULK_INCLUDE_DATA_CONFIG,
   LOG_QUANTITY,
-  SAVED_BTS_CREDENTIALS_KEY,
 } from './constants';
-import {
-  validate,
-  createFieldsValidationConfig,
-  getSessionStorageItem,
-  setSessionStorageItem,
-} from './utils';
+import { validate, createFieldsValidationConfig, getDataSectionConfig } from './utils';
 import styles from './postIssueModal.scss';
 
 const cx = classNames.bind(styles);
@@ -109,6 +102,7 @@ const messages = defineMessages({
     activeProject: activeProjectSelector(state),
     namedBtsIntegrations: namedAvailableBtsIntegrationsSelector(state),
     userId: userIdSelector(state),
+    getBtsIntegrationBackLink: (itemId) => btsIntegrationBackLinkSelector(state, itemId),
   }),
   {
     showScreenLockAction,
@@ -129,6 +123,7 @@ export class PostIssueModal extends Component {
     initialize: PropTypes.func.isRequired,
     handleSubmit: PropTypes.func.isRequired,
     change: PropTypes.func.isRequired,
+    getBtsIntegrationBackLink: PropTypes.func.isRequired,
     dirty: PropTypes.bool.isRequired,
     data: PropTypes.shape({
       items: PropTypes.array,
@@ -146,27 +141,22 @@ export class PostIssueModal extends Component {
     const pluginName = this.pluginNamesOptions[0].value;
     const {
       id,
-      integrationParameters: { username, defectFormFields },
+      integrationParameters: { defectFormFields },
     } = props.namedBtsIntegrations[pluginName][0];
     const systemAuthConfig = {};
-    const sessionConfig = getSessionStorageItem(SAVED_BTS_CREDENTIALS_KEY) || {};
 
     if (this.isJiraIntegration(pluginName)) {
-      systemAuthConfig.password =
-        (sessionConfig.user === props.userId && sessionConfig.password) || '';
-      systemAuthConfig.username =
-        (sessionConfig.user === props.userId && sessionConfig.username) || username;
-    } else {
-      systemAuthConfig.oauthAccessKey =
-        (sessionConfig.user === props.userId && sessionConfig.oauthAccessKey) || '';
+      const storedConfig = getStorageItem(`${props.userId}_settings`) || {};
+      systemAuthConfig.username = storedConfig.username;
     }
+
     const fields = this.initIntegrationFields(defectFormFields, systemAuthConfig);
 
     this.state = {
       fields,
       pluginName,
       integrationId: id,
-      expanded: !(sessionConfig.user === props.userId),
+      expanded: true,
       wasExpanded: false,
     };
   }
@@ -177,44 +167,34 @@ export class PostIssueModal extends Component {
   };
 
   onChangePlugin = (pluginName) => {
-    if (pluginName !== this.state.pluginName) {
-      const { id, integrationParameters } = this.props.namedBtsIntegrations[pluginName][0];
-      const defaultConfig = {};
-      if (this.isJiraIntegration(pluginName)) {
-        defaultConfig.username = integrationParameters.username;
-      }
-      const fields = this.initIntegrationFields(
-        integrationParameters.defectFormFields,
-        defaultConfig,
-      );
-
-      this.setState({
-        pluginName,
-        fields,
-        integrationId: id,
-      });
+    if (pluginName === this.state.pluginName) {
+      return;
     }
+
+    const { id, integrationParameters } = this.props.namedBtsIntegrations[pluginName][0];
+    const fields = this.initIntegrationFields(integrationParameters.defectFormFields);
+
+    this.setState({
+      pluginName,
+      fields,
+      integrationId: id,
+    });
   };
 
   onChangeIntegration = (integrationId) => {
-    if (integrationId !== this.state.integrationId) {
-      const { integrationParameters } = this.props.namedBtsIntegrations[this.state.pluginName].find(
-        (item) => item.id === integrationId,
-      );
-      const defaultConfig = {};
-      if (this.isJiraIntegration()) {
-        defaultConfig.username = integrationParameters.username;
-      }
-      const fields = this.initIntegrationFields(
-        integrationParameters.defectFormFields,
-        defaultConfig,
-      );
-
-      this.setState({
-        fields,
-        integrationId,
-      });
+    if (integrationId === this.state.integrationId) {
+      return;
     }
+
+    const { integrationParameters } = this.props.namedBtsIntegrations[this.state.pluginName].find(
+      (item) => item.id === integrationId,
+    );
+    const fields = this.initIntegrationFields(integrationParameters.defectFormFields);
+
+    this.setState({
+      fields,
+      integrationId,
+    });
   };
 
   getCloseConfirmationConfig = () => {
@@ -225,9 +205,6 @@ export class PostIssueModal extends Component {
       confirmationWarning: this.props.intl.formatMessage(COMMON_LOCALE_KEYS.CLOSE_MODAL_WARNING),
     };
   };
-
-  getDataSectionConfig = () =>
-    this.isBulkOperation ? BULK_INCLUDE_DATA_CONFIG : DEFAULT_INCLUDE_DATA_CONFIG;
 
   dataFieldsConfig = [
     {
@@ -251,7 +228,7 @@ export class PostIssueModal extends Component {
     validationConfig = createFieldsValidationConfig(fields);
     this.props.initialize({
       ...defaultConfig,
-      ...this.getDataSectionConfig(),
+      ...getDataSectionConfig(!this.isBulkOperation),
       ...mapFieldsToValues(fields),
     });
 
@@ -261,11 +238,12 @@ export class PostIssueModal extends Component {
   prepareDataToSend = (formData) => {
     const {
       data: { items },
+      getBtsIntegrationBackLink,
     } = this.props;
 
     const fields = this.state.fields.map((field) => ({ ...field, value: formData[field.id] }));
     const backLinks = items.reduce(
-      (acc, item) => ({ ...acc, [item.id]: `${window.location.toString()}/${item.id}/log` }),
+      (acc, item) => ({ ...acc, [item.id]: getBtsIntegrationBackLink(item) }),
       {},
     );
     const data = {
@@ -326,16 +304,14 @@ export class PostIssueModal extends Component {
         fetchFunc();
         this.props.hideScreenLockAction();
         this.closeModal();
-        const sessionConfig = {
-          user: userId,
-        };
+
         if (this.isJiraIntegration()) {
-          sessionConfig.password = data.password;
-          sessionConfig.username = data.username;
-        } else {
-          sessionConfig.oauthAccessKey = data.oauthAccessKey;
+          const sessionConfig = {
+            username: data.username,
+          };
+          updateStorageItem(`${userId}_settings`, sessionConfig);
         }
-        setSessionStorageItem(SAVED_BTS_CREDENTIALS_KEY, sessionConfig);
+
         this.props.showNotification({
           message: formatMessage(messages.postIssueSuccess),
           type: NOTIFICATION_TYPES.SUCCESS,

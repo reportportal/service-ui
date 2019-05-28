@@ -198,8 +198,12 @@ export class EditDefectModal extends Component {
     };
   };
 
-  getItemsToTheNextAction = () =>
-    this.prepareDataToSend().map((item) => ({ ...item, id: item.testItemId }));
+  getItemsToTheNextAction = () => {
+    const { items } = this.props.data;
+    const updatedItems = this.prepareDataToSend();
+
+    return items.map((item, index) => ({ ...item, ...updatedItems[index] }));
+  };
 
   prepareDataToSend = () => {
     const { items } = this.props.data;

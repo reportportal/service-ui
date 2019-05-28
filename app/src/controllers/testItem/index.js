@@ -27,4 +27,5 @@ export {
   itemsSelector,
   testCaseNameLinkSelector,
   paginationSelector,
+  btsIntegrationBackLinkSelector,
 } from './selectors';
