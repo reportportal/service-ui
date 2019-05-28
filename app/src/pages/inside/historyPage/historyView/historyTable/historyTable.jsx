@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
 import { defineMessages, injectIntl, intlShape } from 'react-intl';
+import { redirect } from 'redux-first-router';
 import {
   itemsHistorySelector,
   historySelector,
@@ -54,7 +55,7 @@ const messages = defineMessages({
   }),
   {
     fetchItemsHistoryAction,
-    navigate: (linkAction) => linkAction,
+    redirectToTestItem: redirect,
   },
 )
 @injectIntl
@@ -67,7 +68,7 @@ export class HistoryTable extends Component {
     visibleItemsCount: PropTypes.number,
     fetchItemsHistoryAction: PropTypes.func,
     link: PropTypes.func,
-    navigate: PropTypes.func,
+    redirectToTestItem: PropTypes.func,
   };
 
   static defaultProps = {
@@ -76,7 +77,7 @@ export class HistoryTable extends Component {
     visibleItemsCount: 0,
     fetchItemsHistoryAction: () => {},
     link: () => {},
-    navigate: () => {},
+    redirectToTestItem: () => {},
   };
 
   getItems = () => {
@@ -113,8 +114,8 @@ export class HistoryTable extends Component {
     return itemProps;
   };
 
-  getCorrespondingHistoryItem = (historyItemProps, currentHistoryItem, launchId) => {
-    const { navigate, link } = this.props;
+  getCorrespondHistoryItem = (historyItemProps, currentHistoryItem, launchId) => {
+    const { redirectToTestItem, link } = this.props;
     switch (historyItemProps.status) {
       case NOT_FOUND.toUpperCase():
       case RESETED.toUpperCase():
@@ -134,7 +135,7 @@ export class HistoryTable extends Component {
             },
             itemId: currentHistoryItem.id,
           };
-          navigate(link(ownProps));
+          redirectToTestItem(link(ownProps));
         };
         return (
           <HistoryCell
@@ -157,7 +158,7 @@ export class HistoryTable extends Component {
             },
             itemId: currentHistoryItem.id,
           };
-          navigate(link(ownProps));
+          redirectToTestItem(link(ownProps));
         };
         return (
           <HistoryCell
@@ -201,7 +202,7 @@ export class HistoryTable extends Component {
             (item) => item.uniqueId === launch.uniqueId,
           );
           const historyItemProps = this.getHistoryItemProps(currentLaunchHistoryItem);
-          return this.getCorrespondingHistoryItem(
+          return this.getCorrespondHistoryItem(
             historyItemProps,
             currentLaunchHistoryItem[0],
             historyItem.launchId,
