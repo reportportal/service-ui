@@ -26,7 +26,11 @@ import { reduxForm } from 'redux-form';
 import { redirect } from 'redux-first-router';
 import { FormattedMessage, injectIntl, intlShape, defineMessages } from 'react-intl';
 import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLock';
-import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
+import {
+  showNotification,
+  showDefaultErrorNotification,
+  NOTIFICATION_TYPES,
+} from 'controllers/notification';
 import Link from 'redux-first-router-link';
 import PropTypes from 'prop-types';
 import { FieldProvider } from 'components/fields/fieldProvider';
@@ -52,16 +56,13 @@ const notifications = defineMessages({
     id: 'ForgotPasswordForm.successSendEmail',
     defaultMessage: 'Password recovery instructions have been sent to email { email }',
   },
-  errorSendEmail: {
-    id: 'ForgotPasswordForm.errorSendEmail',
-    defaultMessage: 'User with entered email address is not found',
-  },
 });
 
 @connect(null, {
   showScreenLockAction,
   hideScreenLockAction,
   showNotification,
+  showDefaultErrorNotification,
   redirect,
 })
 @reduxForm({
@@ -77,6 +78,7 @@ export class ForgotPasswordForm extends PureComponent {
     showScreenLockAction: PropTypes.func.isRequired,
     hideScreenLockAction: PropTypes.func.isRequired,
     showNotification: PropTypes.func.isRequired,
+    showDefaultErrorNotification: PropTypes.func.isRequired,
     handleSubmit: PropTypes.func.isRequired,
     redirect: PropTypes.func.isRequired,
   };
@@ -100,12 +102,7 @@ export class ForgotPasswordForm extends PureComponent {
         });
         this.props.redirect({ type: LOGIN_PAGE });
       })
-      .catch(() => {
-        this.props.showNotification({
-          type: NOTIFICATION_TYPES.ERROR,
-          message: this.props.intl.formatMessage(notifications.errorSendEmail),
-        });
-      })
+      .catch(this.props.showDefaultErrorNotification)
       .then(() => {
         this.props.hideScreenLockAction();
       });
