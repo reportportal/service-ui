@@ -88,7 +88,13 @@ StartTimeColumn.defaultProps = {
 const DefectTypeColumn = ({ className, value, customProps: { onEdit } }) => (
   <div className={cx('defect-type-col', className)}>
     {value.issue &&
-      value.issue.issueType && <DefectType issue={value.issue} onEdit={() => onEdit(value)} />}
+      value.issue.issueType && (
+        <DefectType
+          issue={value.issue}
+          patternTemplates={value.patternTemplates}
+          onEdit={() => onEdit(value)}
+        />
+      )}
   </div>
 );
 DefectTypeColumn.propTypes = {
