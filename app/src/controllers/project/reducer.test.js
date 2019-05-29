@@ -11,6 +11,7 @@ import {
   ADD_DEFECT_SUBTYPE_SUCCESS,
   DELETE_DEFECT_SUBTYPE_SUCCESS,
   ADD_PATTERN_SUCCESS,
+  UPDATE_PATTERN_SUCCESS,
 } from './constants';
 
 describe('project reducer', () => {
@@ -257,6 +258,7 @@ describe('project reducer', () => {
         name: 'pattern 2',
         type: 'STRING',
         value: 'pattern condition - 2',
+        enabled: true,
       };
       const newState = projectInfoReducer(oldState, {
         type: ADD_PATTERN_SUCCESS,
@@ -271,8 +273,44 @@ describe('project reducer', () => {
               name: 'pattern 2',
               type: 'STRING',
               value: 'pattern condition - 2',
+              enabled: true,
             },
           ],
+        },
+      });
+    });
+
+    test('should handle UPDATE_PATTERN_SUCCESS', () => {
+      const oldState = {
+        ...PROJECT_INFO_INITIAL_STATE,
+        configuration: {
+          ...PROJECT_INFO_INITIAL_STATE.configuration,
+          patterns: [
+            {
+              id: 1,
+              name: 'pattern name',
+              type: 'STRING',
+              value: 'pattern condition',
+              enabled: true,
+            },
+            { id: 2 },
+          ],
+        },
+      };
+      const payload = {
+        id: 1,
+        name: 'edited pattern name',
+        type: 'STRING',
+        value: 'pattern condition',
+        enabled: false,
+      };
+      const newState = projectInfoReducer(oldState, {
+        type: UPDATE_PATTERN_SUCCESS,
+        payload,
+      });
+      expect(newState).toEqual({
+        configuration: {
+          patterns: [payload, { id: 2 }],
         },
       });
     });

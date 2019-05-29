@@ -55,14 +55,18 @@ const messages = defineMessages({
 const createPatternFormSelector = formValueSelector('createPatternForm');
 
 @withModal('createPatternModal')
-@connect((state) => ({
+@connect((state, ownProps) => ({
   selectedType: createPatternFormSelector(state, 'type'),
   validate: ({ name, value }) => ({
     name:
       ((!name || !validate.patternNameLength(name, patternsSelector(state))) &&
         'patternNameLengthHint') ||
       (name &&
-        !validate.patternNameUnique(name, patternsSelector(state)) &&
+        !validate.patternNameUnique(
+          name,
+          ownProps.data.pattern && ownProps.data.pattern.id,
+          patternsSelector(state),
+        ) &&
         'patternNameDuplicateHint'),
     value: !value && 'requiredFieldHint',
   }),
@@ -143,14 +147,18 @@ export class CreatePatternModal extends Component {
         <ModalField label={formatMessage(messages.patternType)} labelWidth={LABEL_WIDTH}>
           <FieldProvider name="type" type="text">
             <FieldErrorHint>
-              <InputDropdown options={PATTERN_TYPES} />
+              <InputDropdown options={PATTERN_TYPES} disabled={!isNewPattern} />
             </FieldErrorHint>
           </FieldProvider>
         </ModalField>
         <ModalField label={formatMessage(messages.patternCondition)} labelWidth={LABEL_WIDTH}>
           <FieldProvider name="value" type="text">
             <FieldErrorHint>
-              {selectedType === REGEX_PATTERN ? <RegExEditor /> : <InputTextArea />}
+              {selectedType === REGEX_PATTERN ? (
+                <RegExEditor readonly={!isNewPattern} />
+              ) : (
+                <InputTextArea readonly={!isNewPattern} />
+              )}
             </FieldErrorHint>
           </FieldProvider>
         </ModalField>
