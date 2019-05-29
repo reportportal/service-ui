@@ -20,46 +20,38 @@ export class TotalStatistics extends React.PureComponent {
 
     return (
       <div className={cx('container')}>
-        {total && (
-          <div className={cx('total')}>
-            <div className={cx('amount')}>{total}</div>
+        <div className={cx('total')}>
+          <div className={cx('amount')}>{total || 0}</div>
 
-            <div>Total</div>
-          </div>
-        )}
+          <div>Total</div>
+        </div>
 
-        {total && <ProgressBar progressData={progressData} />}
+        <ProgressBar progressData={progressData} />
 
         <div className={cx('details')}>
-          {passed && (
-            <div className={cx('details-item')}>
-              <div className={cx('amount')}>{passed}</div>
+          <div className={cx('details-item')}>
+            <div className={cx('amount')}>{passed || 0}</div>
 
-              <div className={cx('label')}>
-                <div className={cx('marker', 'passed')} /> Passed
-              </div>
+            <div className={cx('label')}>
+              <div className={cx('marker', 'passed')} /> Passed
             </div>
-          )}
+          </div>
 
-          {failed && (
-            <div className={cx('details-item')}>
-              <div className={cx('amount')}>{failed}</div>
+          <div className={cx('details-item')}>
+            <div className={cx('amount')}>{failed || 0}</div>
 
-              <div className={cx('label')}>
-                <div className={cx('marker', 'failed')} /> Failed
-              </div>
+            <div className={cx('label')}>
+              <div className={cx('marker', 'failed')} /> Failed
             </div>
-          )}
+          </div>
 
-          {skipped && (
-            <div className={cx('details-item')}>
-              <div className={cx('amount')}>{skipped}</div>
+          <div className={cx('details-item')}>
+            <div className={cx('amount')}>{skipped || 0}</div>
 
-              <div className={cx('label')}>
-                <div className={cx('marker')} /> Skipped
-              </div>
+            <div className={cx('label')}>
+              <div className={cx('marker')} /> Skipped
             </div>
-          )}
+          </div>
         </div>
       </div>
     );

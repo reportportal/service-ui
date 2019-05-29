@@ -22,7 +22,7 @@ export class OverallStatisticsPanel extends React.PureComponent {
     const order = widget.contentParameters.contentFields.reverse();
 
     return order
-      .map((key) => (values[key] ? { key, value: values[key] } : null))
+      .map((key) => ({ key, value: values[key] || 0 }))
       .filter((item) => item);
   };
 
