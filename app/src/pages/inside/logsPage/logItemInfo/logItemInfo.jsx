@@ -266,6 +266,7 @@ export class LogItemInfo extends Component {
                   issue={logItem.issue}
                   onEdit={this.handleEditDefect}
                   editEventInfo={LOG_PAGE_EVENTS.DEFECT_TYPE_TAG}
+                  patternTemplates={logItem.patternTemplates}
                 />
               )}
             </div>

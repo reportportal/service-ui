@@ -1,0 +1,1 @@
+export { PatternAnalyzedLabel } from './patternAnalyzedLabel';

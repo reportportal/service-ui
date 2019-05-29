@@ -1,0 +1,1 @@
+export { PatternAnalyzedTooltip } from './patternAnalyzedTooltip';
