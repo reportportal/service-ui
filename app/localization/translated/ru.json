@@ -1120,6 +1120,7 @@
   "PatternAnalysis.patternNameLengthHint": "Название паттерна должно быть размером от 1 до 55.",
   "PatternAnalysis.patternNameDuplicateHint": "Паттерн с таким названием уже существует в проекте.",
   "PatternAnalysis.addPatternSuccess": "Паттерн создан",
+  "PatternAnalysis.updatePatternSuccess": "Паттерн успешно обновлен",
   "PermissionMap.actionsWithItem": "Действия с элементом (изменить, удалить)",
   "PermissionMap.actionsWithLaunch": "Действия с запусками (изменить, принудительно завершить, объединить, удалить)",
   "PermissionMap.actionsWithMembers": "Действия с участниками (пригласить, назначить/отменить назначение, обновить роли)",
