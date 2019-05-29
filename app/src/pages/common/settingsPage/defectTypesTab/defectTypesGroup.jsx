@@ -6,7 +6,9 @@ import { injectIntl, intlShape } from 'react-intl';
 
 import { GhostButton } from 'components/buttons/ghostButton';
 import PlusIcon from 'common/img/plus-button-inline.svg';
+import { canUpdateSettings } from 'common/utils/permissions';
 import { addDefectSubTypeAction } from 'controllers/project';
+import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
 
 import { DefectSubType } from './defectSubType';
 import { defectTypeShape } from './defectTypeShape';
@@ -17,20 +19,35 @@ import styles from './defectTypesTab.scss';
 
 const cx = classNames.bind(styles);
 
-@connect(null, {
-  addDefectSubTypeAction,
-})
+@connect(
+  (state) => ({
+    accountRole: userAccountRoleSelector(state),
+    userRole: activeProjectRoleSelector(state),
+  }),
+  {
+    addDefectSubTypeAction,
+  },
+)
 @injectIntl
 export class DefectTypesGroup extends Component {
   static propTypes = {
     group: PropTypes.arrayOf(defectTypeShape).isRequired,
     addDefectSubTypeAction: PropTypes.func.isRequired,
     intl: intlShape.isRequired,
+    accountRole: PropTypes.string.isRequired,
+    userRole: PropTypes.string.isRequired,
   };
 
-  state = {
-    newSubType: false,
-  };
+  constructor(props) {
+    super(props);
+    const { accountRole, userRole } = this.props;
+
+    this.state = {
+      newSubType: false,
+    };
+
+    this.isPossibleUpdateSettings = canUpdateSettings(accountRole, userRole);
+  }
 
   showNewSubTypeForm = () => {
     this.setState({ newSubType: true });
@@ -59,6 +76,7 @@ export class DefectTypesGroup extends Component {
             data={subType}
             parentType={group[0]}
             group={i === 0 ? group : null}
+            isPossibleUpdateSettings={this.isPossibleUpdateSettings}
           />
         ))}
         {newSubType && (
@@ -76,25 +94,27 @@ export class DefectTypesGroup extends Component {
             />
           </div>
         )}
-        <div className={cx('defect-type-group-footer')}>
-          <GhostButton
-            icon={PlusIcon}
-            disabled={group.length >= this.MAX_DEFECT_SUBTYPES_COUNT}
-            onClick={this.showNewSubTypeForm}
-          >
-            {intl.formatMessage(messages.addDefectType)}
-          </GhostButton>
+        {this.isPossibleUpdateSettings && (
+          <div className={cx('defect-type-group-footer')}>
+            <GhostButton
+              icon={PlusIcon}
+              disabled={group.length >= this.MAX_DEFECT_SUBTYPES_COUNT}
+              onClick={this.showNewSubTypeForm}
+            >
+              {intl.formatMessage(messages.addDefectType)}
+            </GhostButton>
 
-          <div className={cx('defect-type-count-msg')}>
-            {group.length < this.MAX_DEFECT_SUBTYPES_COUNT
-              ? `${this.MAX_DEFECT_SUBTYPES_COUNT - group.length} ${intl.formatMessage(
-                  messages.subtypesCanBeAdded,
-                )}`
-              : intl.formatMessage(messages.allSubtypesAreAdded, {
-                  count: this.MAX_DEFECT_SUBTYPES_COUNT,
-                })}
+            <div className={cx('defect-type-count-msg')}>
+              {group.length < this.MAX_DEFECT_SUBTYPES_COUNT
+                ? `${this.MAX_DEFECT_SUBTYPES_COUNT - group.length} ${intl.formatMessage(
+                    messages.subtypesCanBeAdded,
+                  )}`
+                : intl.formatMessage(messages.allSubtypesAreAdded, {
+                    count: this.MAX_DEFECT_SUBTYPES_COUNT,
+                  })}
+            </div>
           </div>
-        </div>
+        )}
       </Fragment>
     );
   }
