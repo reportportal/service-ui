@@ -1132,6 +1132,7 @@
   "PatternAnalysis.patternNameLengthHint": "Назва патэрна павінна быць памерам ад 1 да 55.",
   "PatternAnalysis.patternNameDuplicateHint": "Патэрн з такой назвай ужо існуе ў праекце.",
   "PatternAnalysis.addPatternSuccess": "Патэрн створаны.",
+  "PatternAnalysis.updatePatternSuccess": "Патэрн паспяхова абноўлены",
   "PermissionMap.actionsWithItem": "Дзеянні з элементам (змяніць, выдаліць)",
   "PermissionMap.actionsWithLaunch": "Дзеянні з запускамі (змяніць, прымусова завяршыць, аб'яднаць, выдаліць)",
   "PermissionMap.actionsWithMembers": "Дзеянні з удзельнікамі (запрасіць, прызначыць / адмяніць прызначэнне, абнавіць ролі)",
