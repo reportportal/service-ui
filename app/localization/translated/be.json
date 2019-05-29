@@ -1126,6 +1126,7 @@
   "PatternAnalysis.deleteModalHeader": "Выдаленне патэрна",
   "PatternAnalysis.deleteModalContent": "Вы ўпэўненыя, што хочаце выдаліць {name}?",
   "PatternAnalysis.updatePAStateSuccess": "Налады патэрн-аналізу былі паспяхова абноўленыя",
+  "PatternAnalyzedTooltip.patternAnalysisRecommendation": "Рэкамендацыі патэрн-аналізу",
   "PermissionMap.actionsWithItem": "Дзеянні з элементам (змяніць, выдаліць)",
   "PermissionMap.actionsWithLaunch": "Дзеянні з запускамі (змяніць, прымусова завяршыць, аб'яднаць, выдаліць)",
   "PermissionMap.actionsWithMembers": "Дзеянні з удзельнікамі (запрасіць, прызначыць / адмяніць прызначэнне, абнавіць ролі)",

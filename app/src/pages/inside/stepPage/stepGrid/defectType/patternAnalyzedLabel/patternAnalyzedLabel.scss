@@ -1,13 +1,14 @@
-.aa-label {
+.pa-label {
   display: inline-block;
   border-radius: 9px;
   background-color: $COLOR--white-two;
-  border: solid 1px $COLOR--orange-red;
+  border: solid 1px $COLOR--gray-80;
   height: 18px;
   width: 30px;
-  color: $COLOR--orange-red;
+  color: $COLOR--charcoal-grey;
   font-family: $FONT-SEMIBOLD;
   font-size: 13px;
   line-height: 18px;
   text-align: center;
+  cursor: pointer;
 }
