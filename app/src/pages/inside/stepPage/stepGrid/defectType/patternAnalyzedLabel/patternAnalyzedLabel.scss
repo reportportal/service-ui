@@ -1,9 +1,14 @@
 .pa-label {
   display: inline-block;
-  svg {
-    fill: $COLOR--white-two;
-  }
-  height: 20px;
+  border-radius: 9px;
+  background-color: $COLOR--white-two;
+  border: solid 1px $COLOR--gray-80;
+  height: 18px;
   width: 30px;
+  color: $COLOR--charcoal-grey;
+  font-family: $FONT-SEMIBOLD;
+  font-size: 13px;
+  line-height: 18px;
+  text-align: center;
   cursor: pointer;
 }
