@@ -21,6 +21,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
+import { ScrollWrapper } from 'components/main/scrollWrapper';
 import styles from './inputDropdown.scss';
 import { DropdownOption } from './inputDropdownOption/inputDropdownOption';
 
@@ -64,12 +65,15 @@ export class InputDropdown extends Component {
   state = {
     opened: false,
   };
+
   componentDidMount() {
     document.addEventListener('click', this.handleClickOutside);
   }
+
   componentWillUnmount() {
     document.removeEventListener('click', this.handleClickOutside);
   }
+
   onClickSelectBlock = (e) => {
     if (!this.props.disabled) {
       this.setState({ opened: !this.state.opened });
@@ -209,7 +213,9 @@ export class InputDropdown extends Component {
                 <span className={cx('select-all')}>All</span>
               </div>
             )}
-          {this.renderOptions()}
+          <ScrollWrapper autoHeight autoHeightMax={300}>
+            {this.renderOptions()}
+          </ScrollWrapper>
         </div>
       </div>
     );
