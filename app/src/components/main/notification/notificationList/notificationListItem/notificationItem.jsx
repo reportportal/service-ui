@@ -79,6 +79,10 @@ const messages = defineMessages({
     id: 'PatternAnalysis.addPatternSuccess',
     defaultMessage: 'Pattern rule has been created',
   },
+  updatePatternSuccess: {
+    id: 'PatternAnalysis.updatePatternSuccess',
+    defaultMessage: 'Pattern rule updated successfully',
+  },
 });
 
 @injectIntl

@@ -15,6 +15,7 @@ import {
   REMOVE_PROJECT_INTEGRATION_SUCCESS,
   REMOVE_PROJECT_INTEGRATIONS_BY_TYPE_SUCCESS,
   ADD_PATTERN_SUCCESS,
+  UPDATE_PATTERN_SUCCESS,
 } from './constants';
 
 export const projectInfoReducer = (state = PROJECT_INFO_INITIAL_STATE, { type, payload }) => {
@@ -119,6 +120,17 @@ export const projectInfoReducer = (state = PROJECT_INFO_INITIAL_STATE, { type, p
         configuration: {
           ...state.configuration,
           patterns: [...state.configuration.patterns, payload],
+        },
+      };
+    case UPDATE_PATTERN_SUCCESS:
+      return {
+        ...state,
+        configuration: {
+          ...state.configuration,
+          patterns: state.configuration.patterns.map((pattern) => {
+            if (pattern.id === payload.id) return payload;
+            return pattern;
+          }),
         },
       };
     default:
