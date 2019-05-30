@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { defineMessages, injectIntl } from 'react-intl';
 import { InvestigatedTrendChart } from 'components/widgets/charts/investigatedTrendChart';
-import { NoItemMessage } from 'components/main/noItemMessage';
-import { mapMinListLength } from 'components/widgets/charts/investigatedTrendChart/statusPageModeConfig';
+import { NoDataAvailable } from 'components/widgets/noDataAvailable';
+import { PERIOD_VALUES_LENGTH } from 'common/constants/statusPeriodValues';
 import styles from './investigated.scss';
 
 const cx = classNames.bind(styles);
@@ -29,18 +29,18 @@ export class Investigated extends Component {
   };
 
   state = {
-    containerEl: null,
+    container: null,
   };
 
   componentDidMount() {
     // eslint-disable-next-line react/no-did-mount-set-state
-    this.setState({ containerEl: this.myRef.current });
+    this.setState({ container: this.containerRef.current });
   }
 
-  myRef = React.createRef();
+  containerRef = React.createRef();
 
   prepareData = (rawData, interval) => {
-    const minListLength = mapMinListLength[interval];
+    const minListLength = PERIOD_VALUES_LENGTH[interval];
     const data = Object.keys(rawData).map((key) => rawData[key][0]);
 
     while (data.length < minListLength) {
@@ -58,22 +58,21 @@ export class Investigated extends Component {
 
   render() {
     const { data, interval, intl } = this.props;
-    const { containerEl } = this.state;
+    const { container } = this.state;
     const isDataEmpty = !Object.keys(data).length;
 
     return (
-      <div ref={this.myRef} className={cx('investigated')}>
-        {containerEl && !isDataEmpty ? (
+      <div ref={this.containerRef} className={cx('investigated')}>
+        {container && !isDataEmpty ? (
           <InvestigatedTrendChart
             widget={this.prepareData(data, interval)}
             interval={interval}
-            container={containerEl}
-            withoutBackground
+            container={container}
             onStatusPageMode
           />
         ) : (
           <div className={cx('no-data-wrapper')}>
-            <NoItemMessage message={intl.formatMessage(messages.noDataMessage)} />
+            <NoDataAvailable message={intl.formatMessage(messages.noDataMessage)} />
           </div>
         )}
       </div>
