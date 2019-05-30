@@ -4,7 +4,7 @@ import classNames from 'classnames/bind';
 import { defineMessages, injectIntl } from 'react-intl';
 import { InvestigatedTrendChart } from 'components/widgets/charts/investigatedTrendChart';
 import { NoDataAvailable } from 'components/widgets/noDataAvailable';
-import { PERIOD_VALUES_LENGTH } from 'common/constants/statusPeriodValues';
+import { PERIOD_VALUES, PERIOD_VALUES_LENGTH } from 'common/constants/statusPeriodValues';
 import styles from './investigated.scss';
 
 const cx = classNames.bind(styles);
@@ -25,16 +25,18 @@ export class Investigated extends Component {
   };
 
   static defaultProps = {
-    interval: '3M',
+    interval: PERIOD_VALUES.THREE_MONTHS,
   };
 
   state = {
-    container: null,
+    isContainerRefReady: false,
   };
 
   componentDidMount() {
-    // eslint-disable-next-line react/no-did-mount-set-state
-    this.setState({ container: this.containerRef.current });
+    if (this.containerRef.current) {
+      // eslint-disable-next-line react/no-did-mount-set-state
+      this.setState({ isContainerRefReady: true });
+    }
   }
 
   containerRef = React.createRef();
@@ -58,16 +60,16 @@ export class Investigated extends Component {
 
   render() {
     const { data, interval, intl } = this.props;
-    const { container } = this.state;
+    const { isContainerRefReady } = this.state;
     const isDataEmpty = !Object.keys(data).length;
 
     return (
       <div ref={this.containerRef} className={cx('investigated')}>
-        {container && !isDataEmpty ? (
+        {isContainerRefReady && !isDataEmpty ? (
           <InvestigatedTrendChart
             widget={this.prepareData(data, interval)}
             interval={interval}
-            container={container}
+            container={this.containerRef.current}
             onStatusPageMode
           />
         ) : (
