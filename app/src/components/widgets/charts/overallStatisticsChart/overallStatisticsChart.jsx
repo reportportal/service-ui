@@ -6,6 +6,7 @@ export class OverallStatisticsChart extends React.Component {
   static propTypes = {
     widget: PropTypes.object.isRequired,
   };
+
   views = {
     panel: (props) => <OverallStatisticsPanel {...props} />,
     donut: (props) => <OverallStatisticsDonut {...props} />,
