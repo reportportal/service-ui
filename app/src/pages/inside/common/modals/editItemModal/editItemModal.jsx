@@ -52,6 +52,11 @@ const messages = defineMessages({
     id: 'EditItemModal.itemUpdateSuccess',
     defaultMessage: 'Completed successfully!',
   },
+  launchWarning: {
+    id: 'EditItemModal.launchWarning',
+    defaultMessage:
+      'Change of description and attributes can affect your filtering results, widgets, trends',
+  },
 });
 
 @withModal('editItemModal')
@@ -176,6 +181,7 @@ export class EditItemModal extends Component {
         okButton={okButton}
         cancelButton={cancelButton}
         closeConfirmation={this.getCloseConfirmationConfig()}
+        warningMessage={type === LAUNCH_ITEM_TYPES.launch && formatMessage(messages.launchWarning)}
       >
         <form>
           <ModalField>

@@ -391,6 +391,7 @@
   "EditItemModal.itemUpdateSuccess": "Завершено успешно",
   "EditItemModal.launch": "запуск",
   "EditItemModal.launchUpdateSuccess": "Запуск успешно обновлён",
+  "EditItemModal.launchWarning": "Змена апісання і атрыбутаў можа паўплываць на вынікі фільтрацыі, фішкі, трэнды",
   "EditItemModal.modalHeader": "Рэдагаваць {type}",
   "EditPersonalInformationModal.emailLabel": "Электронны адрас",
   "EditPersonalInformationModal.emailPlaceholder": "Калі ласка, увядзіце электронны адрас",
