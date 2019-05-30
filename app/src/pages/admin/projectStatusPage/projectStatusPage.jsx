@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import classNames from 'classnames/bind';
 import { ToggleButton } from 'components/buttons/toggleButton';
+import { PERIOD_VALUES } from 'common/constants/statusPeriodValues';
 import { StatusPageContent } from './statusPageContent';
-import { PERIOD_VALUES } from './constants';
 import styles from './projectStatusPage.scss';
 
 const cx = classNames.bind(styles);
@@ -32,18 +32,18 @@ export class ProjectStatusPage extends Component {
   };
 
   state = {
-    selectedPeriod: PERIOD_VALUES.threeMonths,
+    selectedPeriod: PERIOD_VALUES.THREE_MONTHS,
   };
 
   onPeriodChange = (selectedPeriod) => this.setState({ selectedPeriod });
 
   periods = [
-    { value: PERIOD_VALUES.sixMonths, label: this.props.intl.formatMessage(messages.sixMonths) },
+    { value: PERIOD_VALUES.SIX_MONTHS, label: this.props.intl.formatMessage(messages.sixMonths) },
     {
-      value: PERIOD_VALUES.threeMonths,
+      value: PERIOD_VALUES.THREE_MONTHS,
       label: this.props.intl.formatMessage(messages.threeMonths),
     },
-    { value: PERIOD_VALUES.oneMonth, label: this.props.intl.formatMessage(messages.oneMonth) },
+    { value: PERIOD_VALUES.ONE_MONTH, label: this.props.intl.formatMessage(messages.oneMonth) },
   ];
 
   render() {

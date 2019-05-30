@@ -1,32 +1,12 @@
-import ReactDOMServer from 'react-dom/server';
 import { getItemColor } from 'components/widgets/charts/common/utils';
-import { TimelineTooltip } from './timelineTooltip';
+import { PERIOD_VALUES_LENGTH } from 'common/constants/statusPeriodValues';
 import { MESSAGES } from './common/constants';
-
-export const mapMinListLength = {
-  '1M': 30,
-  '3M': 12,
-  '6M': 24,
-};
-
-const renderTooltip = (itemData, intl) => (d, defaultTitleFormat, defaultValueFormat, color) => {
-  const { date } = itemData[d[0].index];
-  const id = d[0].id;
-
-  return ReactDOMServer.renderToStaticMarkup(
-    <TimelineTooltip
-      date={date}
-      itemCases={d[0].value}
-      color={color(id)}
-      itemName={intl.formatMessage(MESSAGES[id])}
-    />,
-  );
-};
+import { Tooltip } from './common/tooltip';
 
 const formatYAxisText = (value) => `${value}%`;
 
 const getCategories = (itemData, interval) => {
-  const ticksToShowPeriod = Math.floor(mapMinListLength[interval] / 4);
+  const ticksToShowPeriod = Math.floor(PERIOD_VALUES_LENGTH[interval] / 4);
 
   return itemData.reduce((acc, el, index) => {
     if (!((index - 1) % ticksToShowPeriod)) {
@@ -133,7 +113,7 @@ export const getStatusPageModeConfig = ({
     tooltip: {
       grouped: false,
       position: positionCallback,
-      contents: renderTooltip(itemData, intl),
+      contents: Tooltip(itemData, intl),
     },
     size: {
       height,

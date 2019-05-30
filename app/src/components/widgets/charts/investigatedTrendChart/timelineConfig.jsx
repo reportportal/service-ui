@@ -1,22 +1,7 @@
-import ReactDOMServer from 'react-dom/server';
 import moment from 'moment';
 import { getTimelineAxisTicks, getItemColor } from 'components/widgets/charts/common/utils';
-import { TimelineTooltip } from './timelineTooltip';
 import { MESSAGES } from './common/constants';
-
-const renderTooltip = (itemData, intl) => (d, defaultTitleFormat, defaultValueFormat, color) => {
-  const { date } = itemData[d[0].index];
-  const id = d[0].id;
-
-  return ReactDOMServer.renderToStaticMarkup(
-    <TimelineTooltip
-      date={date}
-      itemCases={d[0].value}
-      color={color(id)}
-      itemName={intl.formatMessage(MESSAGES[id])}
-    />,
-  );
-};
+import { Tooltip } from './common/tooltip';
 
 export const getTimelineConfig = ({ content, isPreview, intl, positionCallback, height }) => {
   const chartData = {};
@@ -107,7 +92,7 @@ export const getTimelineConfig = ({ content, isPreview, intl, positionCallback, 
     tooltip: {
       grouped: false,
       position: positionCallback,
-      contents: renderTooltip(itemData, intl),
+      contents: Tooltip(itemData, intl),
     },
     size: {
       height,
