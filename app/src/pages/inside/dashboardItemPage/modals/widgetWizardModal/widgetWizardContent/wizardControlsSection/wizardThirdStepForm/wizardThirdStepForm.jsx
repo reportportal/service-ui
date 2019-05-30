@@ -8,7 +8,7 @@ import {
   activeDashboardItemSelector,
   loadingSelector,
 } from 'controllers/dashboard';
-import { SpinningPreloader } from 'components/preloaders/spinningPreloader/spinningPreloader';
+import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { CommonWidgetControls } from '../../../../common/widgetControls';
 import { WIDGET_WIZARD_FORM } from '../../../../common/constants';
