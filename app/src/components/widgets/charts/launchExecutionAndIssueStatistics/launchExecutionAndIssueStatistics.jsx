@@ -20,17 +20,12 @@ LaunchExecutionAndIssueStatistics.propTypes = {
   observer: PropTypes.object,
   uncheckedLegendItems: PropTypes.array,
   onChangeLegend: PropTypes.func,
-  isOnStatusPageMode: PropTypes.bool,
 };
 
 LaunchExecutionAndIssueStatistics.defaultProps = {
   isPreview: false,
   height: 0,
-  observer: {
-    subscribe: () => {},
-    unsubscribe: () => {},
-  },
+  observer: {},
   uncheckedLegendItems: [],
   onChangeLegend: () => {},
-  isOnStatusPageMode: false,
 };
