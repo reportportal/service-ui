@@ -243,9 +243,12 @@ export class LaunchesPage extends Component {
   };
 
   onGridRowHighlighted = () => {
-    this.setState({
-      isGridRowHighlighted: true,
-    });
+    this.setState(
+      {
+        isGridRowHighlighted: true,
+      },
+      this.forceUpdate,
+    );
   };
 
   onAnalysis = (launch) => {
