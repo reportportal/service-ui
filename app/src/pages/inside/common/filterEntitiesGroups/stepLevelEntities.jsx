@@ -35,6 +35,7 @@ import {
   CONDITION_HAS,
   CONDITION_IN,
   CONDITION_EX,
+  CONDITION_ANY,
   ENTITY_NAME,
   ENTITY_START_TIME,
   ENTITY_DESCRIPTION,
@@ -48,8 +49,9 @@ import {
   ENTITY_IGNORE_ANALYZER,
   ENTITY_AUTOANALYZE,
   CONDITION_EQ,
+  ENTITY_PATTERN_NAME,
 } from 'components/filterEntities/constants';
-import { defectTypesSelector } from 'controllers/project';
+import { defectTypesSelector, patternsSelector } from 'controllers/project';
 import { launchIdSelector } from 'controllers/pages';
 
 const messages = defineMessages({
@@ -249,6 +251,10 @@ const messages = defineMessages({
     id: 'StepLevelEntities.entityItemAttributeValues.placeholder',
     defaultMessage: 'Enter attribute values',
   },
+  PatternNameTitle: {
+    id: 'StepLevelEntities.PatternNameTitle',
+    defaultMessage: 'Pattern name',
+  },
 });
 
 @injectIntl
@@ -256,6 +262,7 @@ const messages = defineMessages({
   defectTypes: defectTypesSelector(state),
   projectId: activeProjectSelector(state),
   launchId: launchIdSelector(state),
+  patterns: patternsSelector(state),
 }))
 export class StepLevelEntities extends Component {
   static propTypes = {
@@ -266,10 +273,12 @@ export class StepLevelEntities extends Component {
     projectId: PropTypes.string.isRequired,
     launchId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
     visibleFilters: PropTypes.array,
+    patterns: PropTypes.array,
   };
   static defaultProps = {
     filterValues: {},
     visibleFilters: [],
+    patterns: [],
   };
   getDefectTypeEntity = () => {
     const { intl, defectTypes, filterValues, visibleFilters } = this.props;
@@ -320,6 +329,32 @@ export class StepLevelEntities extends Component {
         selectAll: true,
       },
     };
+  };
+
+  getPatternNameEntity = () => {
+    const { intl, patterns, filterValues, visibleFilters } = this.props;
+    if (!patterns.length) return [];
+    const options = patterns.map((pattern) => ({
+      value: pattern.name,
+      label: pattern.name,
+    }));
+    return [
+      {
+        id: ENTITY_PATTERN_NAME,
+        component: EntityDropdown,
+        value: filterValues[ENTITY_PATTERN_NAME] || {
+          condition: CONDITION_ANY,
+        },
+        title: intl.formatMessage(messages.PatternNameTitle),
+        active: visibleFilters.includes(ENTITY_PATTERN_NAME),
+        removable: true,
+        customProps: {
+          options,
+          multiple: true,
+          selectAll: true,
+        },
+      },
+    ];
   };
   getEntities = () => {
     const { intl, filterValues, projectId, launchId, visibleFilters } = this.props;
@@ -584,6 +619,7 @@ export class StepLevelEntities extends Component {
           ],
         },
       },
+      ...this.getPatternNameEntity(),
     ];
   };
   bindDefaultValue = bindDefaultValue;

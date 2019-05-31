@@ -34,3 +34,4 @@ export const ENTITY_BTS_ISSUES = 'ticketId';
 export const ENTITY_IGNORE_ANALYZER = 'ignoreAnalyzer';
 export const ENTITY_AUTOANALYZE = 'autoAnalyzed';
 export const ENTITY_CREATION_DATE = 'creationDate';
+export const ENTITY_PATTERN_NAME = 'patternName';
