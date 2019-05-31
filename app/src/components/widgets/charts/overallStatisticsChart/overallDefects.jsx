@@ -9,20 +9,21 @@ const cx = classNames.bind(styles);
 
 export class OverallDefects extends React.Component {
   static propTypes = {
-    values: PropTypes.object.isRequired,
+    valuesArray: PropTypes.array.isRequired,
   };
 
   render() {
-    const { values } = this.props;
+    const { valuesArray } = this.props;
+
     return (
       <ScrollWrapper>
         <div className={cx('container')}>
-          {Object.keys(values).map((value) => {
-            const defectItem = getItemNameConfig(value);
+          {valuesArray.map((item) => {
+            const defectItem = getItemNameConfig(item.key);
 
             return (
               defectItem.itemType === DEFECTS && (
-                <DefectTypeItem key={value} item={defectItem} value={values[value]} />
+                <DefectTypeItem key={item.key} item={defectItem} value={item.value} />
               )
             );
           })}
