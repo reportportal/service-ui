@@ -4,7 +4,7 @@
   display: flex;
   justify-content: center;
 
-  & > div {
+  & > div:not(.no-data-wrapper) {
     display: flex;
     margin-top: -100px;
     height: 300px;
@@ -12,4 +12,11 @@
     max-width: 400px;
     width: 100%;
   }
+}
+
+.no-data-wrapper {
+  display: flex;
+  justify-content: center;
+  height: 100%;
+  padding: 0 10px;
 }
