@@ -55,7 +55,14 @@ function* collectLogPayload() {
   const withAttachments = getWithAttachments(userId) || undefined;
   const activeLogItemId = yield select(activeRetryIdSelector);
   const errorId = yield select(nextErrorLogItemIdSelector);
-  const params = yield select(pagePropertiesSelector, NAMESPACE);
+  const fullParams = yield select(pagePropertiesSelector, NAMESPACE);
+  // prevent duplication of level params in query
+  const params = Object.keys(fullParams).reduce((acc, key) => {
+    if (key === LOG_LEVEL_FILTER_KEY) {
+      return acc;
+    }
+    return { ...acc, [key]: fullParams[key] };
+  }, {});
   return {
     activeProject,
     userId,
@@ -74,21 +81,31 @@ function* fetchLogItems(payload = {}) {
   );
   const namespace = payload.namespace || LOG_ITEMS_NAMESPACE;
   const logLevel = payload.level || filterLevel;
-  yield put(
-    fetchDataAction(namespace)(URLS.logItems(activeProject, activeLogItemId, logLevel), {
-      params: { ...params, ...payload.params, [WITH_ATTACHMENTS_FILTER_KEY]: withAttachments },
-    }),
-  );
+  const fetchParams = {
+    ...params,
+    ...payload.params,
+    [WITH_ATTACHMENTS_FILTER_KEY]: withAttachments,
+  };
+  yield all([
+    put(
+      fetchDataAction(namespace)(URLS.logItems(activeProject, activeLogItemId, logLevel), {
+        params: fetchParams,
+      }),
+    ),
+    put(
+      fetchDataAction(LOG_ERROR_ITEMS_NAMESPACE)(
+        URLS.logItems(activeProject, activeLogItemId, ERROR),
+        {
+          params: {
+            ...fetchParams,
+            [SIZE_KEY]: 100,
+          },
+        },
+      ),
+    ),
+  ]);
 }
-function* fetchErrorLogItems() {
-  yield call(fetchLogItems, {
-    namespace: LOG_ERROR_ITEMS_NAMESPACE,
-    level: ERROR,
-    params: {
-      [SIZE_KEY]: 100,
-    },
-  });
-}
+
 function* fetchNextError() {
   const { activeProject, query, params, filterLevel, activeLogItemId, errorId } = yield call(
     collectLogPayload,
@@ -147,7 +164,6 @@ function* fetchWholePage() {
     call(fetchParentItems),
     call(fetchHistoryEntries),
     call(fetchLogItems),
-    call(fetchErrorLogItems),
     call(fetchActivity),
     put(clearAttachmentsAction()),
   ]);
