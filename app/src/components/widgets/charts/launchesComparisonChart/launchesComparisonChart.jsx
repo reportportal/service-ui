@@ -189,6 +189,8 @@ export class LaunchesComparisonChart extends Component {
       chartDataOrdered.push(chartData[key]);
     });
 
+    chartDataOrdered.reverse();
+
     this.itemNames = chartDataOrdered.map((item) => item[0]);
 
     this.config = {

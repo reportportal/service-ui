@@ -343,7 +343,7 @@ export class LaunchStatisticsChart extends Component {
 
     this.configData = {
       itemData,
-      chartDataOrdered,
+      chartDataOrdered: chartDataOrdered.reverse(),
       itemNames: chartDataOrdered.map((item) => item[0]),
       colors,
       isTimeLine,

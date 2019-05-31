@@ -15,6 +15,17 @@ export class OverallStatisticsPanel extends React.PureComponent {
   static defaultProps = {
     isPreview: false,
   };
+
+  getOrderedValues = () => {
+    const { widget } = this.props;
+    const values = widget.content.result[0].values;
+    const order = widget.contentParameters.contentFields.reverse();
+
+    return order
+      .map((key) => (values[key] ? { key, value: values[key] } : null))
+      .filter((item) => item);
+  };
+
   render() {
     const { widget, isPreview } = this.props;
     const values = widget.content.result[0].values;
@@ -27,7 +38,7 @@ export class OverallStatisticsPanel extends React.PureComponent {
 
         {!isPreview && (
           <div className={cx('defects')}>
-            <OverallDefects values={values} />
+            <OverallDefects valuesArray={this.getOrderedValues()} />
           </div>
         )}
       </div>

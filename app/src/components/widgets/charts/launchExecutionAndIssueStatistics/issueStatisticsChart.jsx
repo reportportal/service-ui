@@ -225,7 +225,7 @@ export class IssueStatisticsChart extends Component {
       });
     });
 
-    return columns;
+    return columns.reverse();
   }
 
   getConfig = () => {
