@@ -189,13 +189,14 @@ export class InstancesSection extends Component {
               onItemClick={onItemClick}
               defaultItemTitle={formatMessage(messages.projectSettingsDefaultTitle)}
             />
-            {this.multiple && (
-              <div className={cx('add-integration-button')}>
-                <GhostButton icon={PlusIcon} onClick={this.addProjectIntegrationClickHandler}>
-                  {formatMessage(messages.addIntegrationButtonTitle)}
-                </GhostButton>
-              </div>
-            )}
+            {this.multiple &&
+              !disabled && (
+                <div className={cx('add-integration-button')}>
+                  <GhostButton icon={PlusIcon} onClick={this.addProjectIntegrationClickHandler}>
+                    {formatMessage(messages.addIntegrationButtonTitle)}
+                  </GhostButton>
+                </div>
+              )}
           </Fragment>
         )}
         {!!globalIntegrations.length && (
