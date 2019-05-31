@@ -67,7 +67,7 @@ export class IssueStatisticsChart extends Component {
     observer: PropTypes.object,
     uncheckedLegendItems: PropTypes.array,
     onChangeLegend: PropTypes.func,
-    isOnStatusPageMode: PropTypes.bool,
+    onStatusPageMode: PropTypes.bool,
     launchFilters: PropTypes.array,
   };
 
@@ -77,7 +77,7 @@ export class IssueStatisticsChart extends Component {
     observer: {},
     uncheckedLegendItems: [],
     onChangeLegend: () => {},
-    isOnStatusPageMode: false,
+    onStatusPageMode: false,
     launchFilters: [],
   };
 
@@ -101,7 +101,7 @@ export class IssueStatisticsChart extends Component {
     this.chart = chart;
     this.issuesNode = element;
 
-    const { isOnStatusPageMode, widget, isPreview, uncheckedLegendItems } = this.props;
+    const { onStatusPageMode, widget, isPreview, uncheckedLegendItems } = this.props;
 
     this.renderTotalLabel();
 
@@ -109,7 +109,7 @@ export class IssueStatisticsChart extends Component {
       return;
     }
 
-    if (!isOnStatusPageMode) {
+    if (!onStatusPageMode) {
       this.chart.resize({
         height: this.height,
       });
@@ -122,9 +122,9 @@ export class IssueStatisticsChart extends Component {
     d3
       .select(chart.element)
       .select('.c3-chart-arcs-title')
-      .attr('dy', isOnStatusPageMode ? -5 : -15)
+      .attr('dy', onStatusPageMode ? -5 : -15)
       .append('tspan')
-      .attr('dy', isOnStatusPageMode ? 15 : 30)
+      .attr('dy', onStatusPageMode ? 15 : 30)
       .attr('x', 0)
       .attr('fill', '#666')
       .text('ISSUES');
@@ -146,7 +146,9 @@ export class IssueStatisticsChart extends Component {
   };
 
   onChartClick = (d) => {
-    const { widget, launchFilters, getDefectLink, defectTypes } = this.props;
+    const { widget, launchFilters, getDefectLink, defectTypes, onStatusPageMode } = this.props;
+
+    if (onStatusPageMode) return;
 
     const nameConfig = getItemNameConfig(d.id);
     const id = getResult(widget).id;
@@ -352,7 +354,7 @@ export class IssueStatisticsChart extends Component {
   };
 
   render() {
-    const { isPreview, uncheckedLegendItems, isOnStatusPageMode } = this.props;
+    const { isPreview, uncheckedLegendItems, onStatusPageMode } = this.props;
     const classes = chartCx('container', { 'preview-view': isPreview });
     const chartClasses = chartCx('c3', { 'small-view': this.height <= 250 });
     const { isConfigReady } = this.state;
@@ -363,12 +365,12 @@ export class IssueStatisticsChart extends Component {
         {isConfigReady && (
           <div
             className={chartCx('issue-statistics-chart', {
-              'status-page-mode': isOnStatusPageMode,
+              'status-page-mode': onStatusPageMode,
             })}
           >
             <div className={chartCx('data-js-issue-statistics-chart-container')}>
               {!isPreview &&
-                !isOnStatusPageMode && (
+                !onStatusPageMode && (
                   <Legend
                     items={legendItems}
                     uncheckedLegendItems={uncheckedLegendItems}

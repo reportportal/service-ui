@@ -24,12 +24,14 @@ export class LastLaunch extends Component {
   };
 
   state = {
-    containerEl: null,
+    isContainerRefReady: false,
   };
 
   componentDidMount() {
-    // eslint-disable-next-line react/no-did-mount-set-state
-    this.setState({ containerEl: this.myRef.current });
+    if (this.containerRef.current) {
+      // eslint-disable-next-line react/no-did-mount-set-state
+      this.setState({ isContainerRefReady: true });
+    }
   }
 
   getStatisticsData = (statistics) => {
@@ -67,7 +69,7 @@ export class LastLaunch extends Component {
   };
 
   prepareWidgetData = ({ result: rawResult }) => {
-    if (!this.state.containerEl || !rawResult) return null;
+    if (!rawResult) return null;
 
     const { id, name, number, startTime, statistics } = rawResult;
     const adaptedData = this.getStatisticsData(statistics);
@@ -88,20 +90,20 @@ export class LastLaunch extends Component {
     };
   };
 
-  myRef = React.createRef();
+  containerRef = React.createRef();
 
   render() {
     const { data, intl } = this.props;
+    const { isContainerRefReady } = this.state;
     const widgetData = this.prepareWidgetData(data);
-    const { containerEl } = this.state;
 
     return (
-      <div ref={this.myRef} className={cx('last-launch')}>
-        {widgetData && containerEl ? (
+      <div ref={this.containerRef} className={cx('last-launch')}>
+        {widgetData && isContainerRefReady ? (
           <LaunchExecutionAndIssueStatistics
             widget={widgetData}
-            container={containerEl}
-            isOnStatusPageMode
+            container={this.containerRef.current}
+            onStatusPageMode
           />
         ) : (
           <div className={cx('no-data-wrapper')}>
