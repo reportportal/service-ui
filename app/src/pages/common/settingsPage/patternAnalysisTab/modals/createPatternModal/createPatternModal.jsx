@@ -38,27 +38,19 @@ const messages = defineMessages({
     id: 'PatternAnalysis.active',
     defaultMessage: 'Active',
   },
-  inactive: {
-    id: 'PatternAnalysis.inactive',
-    defaultMessage: 'Inactive',
-  },
 });
 
 const createPatternFormSelector = formValueSelector('createPatternForm');
 
 @withModal('createPatternModal')
-@connect((state, ownProps) => ({
+@connect((state) => ({
   selectedType: createPatternFormSelector(state, 'type'),
   validate: ({ name, value }) => ({
     name:
       ((!name || !validate.patternNameLength(name, patternsSelector(state))) &&
         'patternNameLengthHint') ||
       (name &&
-        !validate.patternNameUnique(
-          name,
-          ownProps.data.pattern && ownProps.data.pattern.id,
-          patternsSelector(state),
-        ) &&
+        !validate.patternNameUnique(name, undefined, patternsSelector(state)) &&
         'patternNameDuplicateHint'),
     value: !value && 'requiredFieldHint',
   }),
@@ -72,7 +64,6 @@ export class CreatePatternModal extends Component {
     intl: intlShape.isRequired,
     data: PropTypes.shape({
       pattern: PropTypes.object,
-      isNewPattern: PropTypes.bool,
       onSave: PropTypes.func,
       modalTitle: PropTypes.string,
     }),
@@ -111,7 +102,7 @@ export class CreatePatternModal extends Component {
   render() {
     const {
       intl: { formatMessage },
-      data: { isNewPattern, modalTitle },
+      data: { modalTitle },
       handleSubmit,
       selectedType,
     } = this.props;
@@ -138,18 +129,14 @@ export class CreatePatternModal extends Component {
         <ModalField label={formatMessage(messages.patternType)} labelWidth={LABEL_WIDTH}>
           <FieldProvider name="type" type="text">
             <FieldErrorHint>
-              <InputDropdown options={PATTERN_TYPES} disabled={!isNewPattern} />
+              <InputDropdown options={PATTERN_TYPES} />
             </FieldErrorHint>
           </FieldProvider>
         </ModalField>
         <ModalField label={formatMessage(messages.patternCondition)} labelWidth={LABEL_WIDTH}>
           <FieldProvider name="value" type="text">
             <FieldErrorHint>
-              {selectedType === REGEX_PATTERN ? (
-                <RegExEditor readonly={!isNewPattern} />
-              ) : (
-                <InputTextArea readonly={!isNewPattern} />
-              )}
+              {selectedType === REGEX_PATTERN ? <RegExEditor /> : <InputTextArea />}
             </FieldErrorHint>
           </FieldProvider>
         </ModalField>
