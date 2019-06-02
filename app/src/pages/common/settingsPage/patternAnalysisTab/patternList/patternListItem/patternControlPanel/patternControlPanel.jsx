@@ -26,10 +26,6 @@ export const messages = defineMessages({
     id: 'PatternAnalysis.deleteModalContent',
     defaultMessage: 'Are you sure you want to delete pattern rule {name}?',
   },
-  editPatternMessage: {
-    id: 'PatternAnalysis.editPatternMessage',
-    defaultMessage: 'Edit pattern rule',
-  },
   clonePatternMessage: {
     id: 'PatternAnalysis.clonePatternMessage',
     defaultMessage: 'Clone pattern rule',
@@ -61,15 +57,13 @@ export class PatternControlPanel extends Component {
     readOnly: false,
   };
 
-  onEditPattern = () => {
-    const { intl, showModal, updatePattern, pattern } = this.props;
+  onRenamePattern = () => {
+    const { showModal, updatePattern, pattern } = this.props;
     showModal({
-      id: 'createPatternModal',
+      id: 'renamePatternModal',
       data: {
         onSave: updatePattern,
         pattern,
-        isNewPattern: false,
-        modalTitle: intl.formatMessage(messages.editPatternMessage),
       },
     });
   };
@@ -86,7 +80,6 @@ export class PatternControlPanel extends Component {
       data: {
         onSave: addPattern,
         pattern: newPattern,
-        isNewPattern: true,
         modalTitle: intl.formatMessage(messages.clonePatternMessage),
       },
     });
@@ -138,7 +131,7 @@ export class PatternControlPanel extends Component {
         <span className={cx('pattern-name')}>{pattern.name}</span>
         {!readOnly && (
           <div className={cx('panel-buttons')}>
-            <button className={cx('panel-button')} onClick={this.onEditPattern}>
+            <button className={cx('panel-button')} onClick={this.onRenamePattern}>
               {Parser(IconEdit)}
             </button>
             <button className={cx('panel-button')} onClick={this.onClonePattern}>
