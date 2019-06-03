@@ -144,9 +144,7 @@ export class LaunchExecutionChart extends Component {
   };
 
   onChartClick = (d) => {
-    const { widget, launchFilters, getStatisticsLink, onStatusPageMode } = this.props;
-
-    if (onStatusPageMode) return;
+    const { widget, launchFilters, getStatisticsLink } = this.props;
 
     const nameConfig = getItemNameConfig(d.id);
     const id = getResult(widget).id;
@@ -184,7 +182,7 @@ export class LaunchExecutionChart extends Component {
 
   getConfig = () => {
     const EXECUTIONS = '$executions$';
-    const { widget, container, isPreview } = this.props;
+    const { widget, container, isPreview, onStatusPageMode } = this.props;
     const values = getResult(widget).values;
     const statusDataItems = getChartData(values, EXECUTIONS);
     const statusChartData = statusDataItems.itemTypes;
@@ -220,13 +218,13 @@ export class LaunchExecutionChart extends Component {
     }
 
     this.statusItems = getDefectItems(statusChartDataOrdered);
+
     this.statusConfig = {
       data: {
         columns: statusChartDataOrdered,
         type: 'donut',
         order: null,
         colors: statusChartColors,
-        onclick: this.onChartClick,
       },
       interaction: {
         enabled: !isPreview,
@@ -254,6 +252,10 @@ export class LaunchExecutionChart extends Component {
         this.renderTotalLabel();
       },
     };
+
+    if (!onStatusPageMode) {
+      this.statusConfig.data.onclick = this.onChartClick;
+    }
 
     this.setState({
       isConfigReady: true,
