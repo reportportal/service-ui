@@ -14,7 +14,7 @@ const cx = classNames.bind(styles);
 export class StatusPageContent extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
-    projectId: PropTypes.string.isRequired,
+    projectId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
     interval: PropTypes.string,
   };
 

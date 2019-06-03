@@ -81,7 +81,7 @@ export class AdminHeader extends Component {
     currentPage: PropTypes.string,
     logout: PropTypes.func,
     intl: intlShape.isRequired,
-    projectId: PropTypes.string,
+    projectId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   };
 
   static defaultProps = {

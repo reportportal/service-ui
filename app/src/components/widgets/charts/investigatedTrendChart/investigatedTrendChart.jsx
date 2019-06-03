@@ -43,7 +43,7 @@ import styles from './investigatedTrendChart.scss';
 import { C3Chart } from '../common/c3chart';
 import { getTimelineConfig } from './timelineConfig';
 import { getLaunchModeConfig } from './launchModeConfig';
-import { getStatusPageModeConfig } from './statusPageModeConfig';
+import { getConfig as getStatusPageModeConfig } from '../common/XYChartStatusPageConfig';
 import { MESSAGES } from './common/constants';
 import { getUpdatedFilterWithTime } from '../common/utils';
 
@@ -195,7 +195,12 @@ export class InvestigatedTrendChart extends Component {
       widget.contentParameters.widgetOptions.timeline === MODES_VALUES[CHART_MODES.TIMELINE_MODE];
 
     if (this.props.onStatusPageMode) {
-      this.config = getStatusPageModeConfig({ ...params, interval });
+      this.config = getStatusPageModeConfig({
+        ...params,
+        interval,
+        chartType: MODES_VALUES[CHART_MODES.BAR_VIEW],
+        messages: MESSAGES,
+      });
     } else if (this.isTimeline) {
       this.config = getTimelineConfig(params);
     } else {
