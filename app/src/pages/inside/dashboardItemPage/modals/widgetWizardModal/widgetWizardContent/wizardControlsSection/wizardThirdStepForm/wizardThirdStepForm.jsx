@@ -112,7 +112,7 @@ export class WizardThirdStepForm extends Component {
   };
   handleChange = (event, value) => {
     const { formValues, change } = this.props;
-    const share = value.share ? value.share : formValues.share;
+    const share = value.share || formValues.share;
     change('share', share);
   };
   render() {
@@ -127,8 +127,9 @@ export class WizardThirdStepForm extends Component {
     } = this.props;
     return (
       <form onSubmit={handleSubmit(onSubmit)}>
-        {loading && <SpinningPreloader />}
-        {!loading && (
+        {loading ? (
+          <SpinningPreloader />
+        ) : (
           <CommonWidgetControls
             initializeControlsForm={this.initializeControlsForm}
             trackEvent={tracking.trackEvent}
