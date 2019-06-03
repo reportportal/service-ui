@@ -1,7 +1,7 @@
 import moment from 'moment';
 import { getTimelineAxisTicks, getItemColor } from 'components/widgets/charts/common/utils';
 import { MESSAGES } from './common/constants';
-import { Tooltip } from './common/tooltip';
+import { TimelineTooltip } from '../common/timelineTooltip';
 
 export const getTimelineConfig = ({ content, isPreview, intl, positionCallback, height }) => {
   const chartData = {};
@@ -92,7 +92,7 @@ export const getTimelineConfig = ({ content, isPreview, intl, positionCallback, 
     tooltip: {
       grouped: false,
       position: positionCallback,
-      contents: Tooltip(itemData, intl),
+      contents: TimelineTooltip(itemData, MESSAGES, intl),
     },
     size: {
       height,
