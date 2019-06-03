@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { injectIntl, intlShape, defineMessages } from 'react-intl';
 import track from 'react-tracking';
+import isEqual from 'fast-deep-equal';
 import {
   LAUNCHES_PAGE,
   LAUNCHES_PAGE_EVENTS,
@@ -218,10 +219,23 @@ export class LaunchesPage extends Component {
     highlightItemId: null,
   };
 
+  static getDerivedStateFromProps(nextProps, prevState) {
+    return prevState.prevLaunches !== nextProps.launches
+      ? {
+          prevLaunches: nextProps.launches,
+          launchesInProgress: nextProps.launches
+            .filter((item) => item.status === 'IN_PROGRESS')
+            .map((item) => item.id),
+        }
+      : null;
+  }
+
   state = {
     highlightedRowId: null,
     isGridRowHighlighted: false,
     isSauceLabsIntegrationView: false,
+    prevLaunches: [],
+    launchesInProgress: [],
   };
 
   componentDidMount() {
@@ -231,7 +245,22 @@ export class LaunchesPage extends Component {
     }
   }
 
+  componentDidUpdate() {
+    if (!this.state.launchesInProgress.length && this.intervalId) {
+      clearInterval(this.intervalId);
+      this.intervalId = null;
+    }
+
+    if (this.state.launchesInProgress.length && !this.intervalId) {
+      this.intervalId = setInterval(
+        () => this.fetchLaunchStatus(this.state.launchesInProgress),
+        5000,
+      );
+    }
+  }
+
   componentWillUnmount() {
+    clearInterval(this.intervalId);
     this.props.unselectAllLaunchesAction();
   }
 
@@ -362,6 +391,23 @@ export class LaunchesPage extends Component {
     const launches = eventData && eventData.id ? [eventData] : this.props.selectedLaunches;
     this.props.forceFinishLaunchesAction(launches, {
       fetchFunc: this.unselectAndFetchLaunches,
+    });
+  };
+
+  fetchLaunchStatus = (launchesInProgress) => {
+    fetch(URLS.launchStatus(this.props.activeProject, launchesInProgress), {
+      method: 'get',
+    }).then((launchesWithStatus) => {
+      const newLaunchesInProgress = this.state.launchesInProgress.filter(
+        (item) => launchesWithStatus[item] === 'IN_PROGRESS',
+      );
+
+      if (!isEqual(this.state.launchesInProgress, newLaunchesInProgress)) {
+        this.setState({
+          launchesInProgress: newLaunchesInProgress,
+        });
+      }
+      // todo update status, add notification on just finished launch over 'Refresh' button
     });
   };
 
