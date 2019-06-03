@@ -144,9 +144,7 @@ export class LaunchExecutionChart extends Component {
   };
 
   onChartClick = (d) => {
-    const { widget, launchFilters, getStatisticsLink, onStatusPageMode } = this.props;
-
-    if (onStatusPageMode) return;
+    const { widget, launchFilters, getStatisticsLink } = this.props;
 
     const nameConfig = getItemNameConfig(d.id);
     const id = getResult(widget).id;

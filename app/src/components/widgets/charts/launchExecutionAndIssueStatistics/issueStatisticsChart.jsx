@@ -146,9 +146,7 @@ export class IssueStatisticsChart extends Component {
   };
 
   onChartClick = (d) => {
-    const { widget, launchFilters, getDefectLink, defectTypes, onStatusPageMode } = this.props;
-
-    if (onStatusPageMode) return;
+    const { widget, launchFilters, getDefectLink, defectTypes } = this.props;
 
     const nameConfig = getItemNameConfig(d.id);
     const id = getResult(widget).id;
