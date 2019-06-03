@@ -146,9 +146,7 @@ export class IssueStatisticsChart extends Component {
   };
 
   onChartClick = (d) => {
-    const { widget, launchFilters, getDefectLink, defectTypes, onStatusPageMode } = this.props;
-
-    if (onStatusPageMode) return;
+    const { widget, launchFilters, getDefectLink, defectTypes } = this.props;
 
     const nameConfig = getItemNameConfig(d.id);
     const id = getResult(widget).id;
@@ -237,7 +235,7 @@ export class IssueStatisticsChart extends Component {
   }
 
   getConfig = () => {
-    const { container, isPreview } = this.props;
+    const { container, isPreview, onStatusPageMode } = this.props;
     this.height = container.offsetHeight;
     this.width = container.offsetWidth;
     this.noAvailableData = false;
@@ -259,7 +257,6 @@ export class IssueStatisticsChart extends Component {
         type: 'donut',
         order: null,
         colors,
-        onclick: this.onChartClick,
       },
       interaction: {
         enabled: !isPreview,
@@ -286,6 +283,10 @@ export class IssueStatisticsChart extends Component {
         this.renderTotalLabel();
       },
     };
+
+    if (!onStatusPageMode) {
+      this.issueConfig.data.onclick = this.onChartClick;
+    }
 
     this.setState({
       isConfigReady: true,
