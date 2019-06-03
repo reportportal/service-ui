@@ -175,7 +175,7 @@ export class InvestigatedTrendChart extends Component {
   };
 
   getConfig = () => {
-    const { widget, intl, isPreview, container, interval } = this.props;
+    const { widget, intl, isPreview, container, interval, onStatusPageMode } = this.props;
     const params = {
       content: widget.content,
       isPreview,
@@ -194,7 +194,7 @@ export class InvestigatedTrendChart extends Component {
       widget.contentParameters &&
       widget.contentParameters.widgetOptions.timeline === MODES_VALUES[CHART_MODES.TIMELINE_MODE];
 
-    if (this.props.onStatusPageMode) {
+    if (onStatusPageMode) {
       this.config = getStatusPageModeConfig({
         ...params,
         interval,
@@ -206,7 +206,10 @@ export class InvestigatedTrendChart extends Component {
     } else {
       this.config = getLaunchModeConfig(params);
     }
-    this.config.data.onclick = this.onChartClick;
+
+    if (!onStatusPageMode) {
+      this.config.data.onclick = this.onChartClick;
+    }
 
     this.setState({
       isConfigReady: true,
