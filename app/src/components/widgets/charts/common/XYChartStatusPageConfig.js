@@ -1,7 +1,6 @@
 import { getItemColor } from 'components/widgets/charts/common/utils';
-import { PERIOD_VALUES_LENGTH } from 'common/constants/statusPeriodValues';
-import { MESSAGES } from './common/constants';
-import { Tooltip } from './common/tooltip';
+import { PERIOD_VALUES_LENGTH, PERIOD_VALUES } from 'common/constants/statusPeriodValues';
+import { TimelineTooltip } from '../common/timelineTooltip';
 
 const formatYAxisText = (value) => `${value}%`;
 
@@ -16,12 +15,16 @@ const getCategories = (itemData, interval) => {
   }, []);
 };
 
-export const getStatusPageModeConfig = ({
+export const getConfig = ({
   content,
   intl,
   positionCallback,
   size: { height },
   interval,
+  messages: MESSAGES,
+  chartType = 'bar',
+  isPointsShow = true,
+  isCustomTooltip,
 }) => {
   const chartData = {};
   const colors = {};
@@ -57,7 +60,7 @@ export const getStatusPageModeConfig = ({
   return {
     data: {
       columns: [chartData[itemNames[0]], chartData[itemNames[1]]],
-      type: 'bar',
+      type: chartType,
       order: null,
       groups: [itemNames],
       colors,
@@ -81,7 +84,7 @@ export const getStatusPageModeConfig = ({
         },
         label: {
           text:
-            interval === '1M'
+            interval === PERIOD_VALUES.ONE_MONTH
               ? intl.formatMessage(MESSAGES.xAxisDaysTitle)
               : intl.formatMessage(MESSAGES.xAxisWeeksTitle),
           position: 'outer-center',
@@ -111,12 +114,16 @@ export const getStatusPageModeConfig = ({
       show: false,
     },
     tooltip: {
+      show: !isCustomTooltip,
       grouped: false,
       position: positionCallback,
-      contents: Tooltip(itemData, intl),
+      contents: TimelineTooltip(itemData, MESSAGES, intl),
     },
     size: {
       height,
+    },
+    point: {
+      show: isPointsShow,
     },
   };
 };

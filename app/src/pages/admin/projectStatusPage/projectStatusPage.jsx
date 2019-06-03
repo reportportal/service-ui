@@ -28,7 +28,7 @@ const messages = defineMessages({
 export class ProjectStatusPage extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
-    projectId: PropTypes.string.isRequired,
+    projectId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   };
 
   state = {

@@ -1,5 +1,5 @@
 import { URLS } from 'common/urls';
-import { GeneralInfo, OwnersInfo, Investigated } from './widgets';
+import { GeneralInfo, OwnersInfo, Investigated, AutoBugs } from './widgets';
 import { WIDGETS_IDS } from '../constants';
 import { messages } from './messages';
 
@@ -65,7 +65,7 @@ export const statusPageWidgets = [
     title: messages.autoBugs,
     id: WIDGETS_IDS.autoBugs,
     source: WIDGETS_IDS.issuesChart,
-    component: () => <div />,
+    component: (data, interval) => <AutoBugs data={data} interval={interval} />,
   },
 ];
 
