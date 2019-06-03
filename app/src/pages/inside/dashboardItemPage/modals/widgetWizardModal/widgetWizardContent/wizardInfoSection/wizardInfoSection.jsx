@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import Parser from 'html-react-parser';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import WarningIcon from 'common/img/error-inline.svg';
 import { WidgetInfoBlock } from '../../../common/widgetInfoBlock';
 import { StepLabelItem } from './stepLabelItem';
 import styles from './wizardInfoSection.scss';
@@ -31,15 +34,24 @@ export class WizardInfoSection extends Component {
     step: PropTypes.number,
     activeWidget: PropTypes.object,
     widgetSettings: PropTypes.object,
+    showConfirmation: PropTypes.bool,
   };
   static defaultProps = {
     step: 0,
     activeWidget: {},
     widgetSettings: {},
+    showConfirmation: false,
   };
 
   render() {
-    const { intl, step, activeWidget, widgetSettings, projectId } = this.props;
+    const {
+      intl: { formatMessage },
+      step,
+      activeWidget,
+      widgetSettings,
+      projectId,
+      showConfirmation,
+    } = this.props;
 
     return (
       <div className={cx('wizard-info-section')}>
@@ -48,7 +60,7 @@ export class WizardInfoSection extends Component {
             <StepLabelItem
               key={value}
               step={index}
-              label={intl.formatMessage(messages[`${value}StepLabel`])}
+              label={formatMessage(messages[`${value}StepLabel`])}
               active={step === index}
               completed={step > index}
             />
@@ -60,6 +72,14 @@ export class WizardInfoSection extends Component {
           activeWidget={activeWidget}
           customCondition={step === 1}
         />
+        {showConfirmation && (
+          <div className={cx('confirmation-warning-block')}>
+            <i className={cx('warning-icon')}>{Parser(WarningIcon)}</i>
+            <span className={cx('warning-message')}>
+              {formatMessage(COMMON_LOCALE_KEYS.CLOSE_MODAL_WARNING)}
+            </span>
+          </div>
+        )}
       </div>
     );
   }

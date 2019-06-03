@@ -3,7 +3,7 @@ import track from 'react-tracking';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { injectIntl, intlShape } from 'react-intl';
-import { getFormValues, submit } from 'redux-form';
+import { submit } from 'redux-form';
 import { connect } from 'react-redux';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
@@ -23,7 +23,6 @@ const cx = classNames.bind(styles);
 @injectIntl
 @connect(
   (state) => ({
-    formValues: getFormValues(WIDGET_WIZARD_FORM)(state),
     projectId: activeProjectSelector(state),
   }),
   {
@@ -45,6 +44,7 @@ export class WidgetWizardContent extends Component {
     hideScreenLockAction: PropTypes.func.isRequired,
     showDefaultErrorNotification: PropTypes.func.isRequired,
     closeModal: PropTypes.func.isRequired,
+    showConfirmation: PropTypes.bool.isRequired,
     onConfirm: PropTypes.func,
     eventsInfo: PropTypes.object,
     tracking: PropTypes.shape({
@@ -118,6 +118,7 @@ export class WidgetWizardContent extends Component {
   render() {
     const {
       formValues: { widgetType },
+      showConfirmation,
     } = this.props;
 
     return (
@@ -127,6 +128,7 @@ export class WidgetWizardContent extends Component {
           projectId={this.props.projectId}
           widgetSettings={prepareWidgetDataForSubmit(this.props.formValues)}
           step={this.state.step}
+          showConfirmation={showConfirmation}
         />
         <WizardControlsSection
           eventsInfo={this.props.eventsInfo}
