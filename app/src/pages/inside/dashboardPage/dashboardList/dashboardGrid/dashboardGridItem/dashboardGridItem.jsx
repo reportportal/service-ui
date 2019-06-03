@@ -4,11 +4,11 @@ import { injectIntl, intlShape, defineMessages } from 'react-intl';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { NavLink } from 'redux-first-router-link';
-import { Icon } from 'components/main/icon';
+import { canDeleteDashboard } from 'common/utils/permissions';
 import { PROJECT_DASHBOARD_ITEM_PAGE } from 'controllers/pages';
 import { activeProjectSelector, activeProjectRoleSelector } from 'controllers/user';
-import { canDeleteDashboard } from 'common/utils/permissions';
+import { Icon } from 'components/main/icon';
+import { NavLink } from 'components/main/navLink';
 import styles from './dashboardGridItem.scss';
 
 const cx = classNames.bind(styles);

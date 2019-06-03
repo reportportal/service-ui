@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { NavLink } from 'redux-first-router-link';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import classNames from 'classnames/bind';
 import { activeProjectSelector } from 'controllers/user';
@@ -12,6 +11,7 @@ import {
 } from 'controllers/pages';
 import { dashboardItemsSelector, dashboardItemPropTypes } from 'controllers/dashboard';
 import { InputDropdown } from 'components/inputs/inputDropdown';
+import { NavLink } from 'components/main/navLink';
 import { AddDashboardButton } from './addDashboardButton';
 import styles from './dashboardPageHeader.scss';
 
