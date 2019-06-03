@@ -153,7 +153,7 @@ export class DotsMenuButton extends Component {
                 );
               }}
             </Popper>,
-            document.querySelector('#dots-menu-root'),
+            document.querySelector('#popover-root'),
           )}
         </div>
       </Manager>
