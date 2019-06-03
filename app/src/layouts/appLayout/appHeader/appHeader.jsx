@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import track from 'react-tracking';
 import { connect } from 'react-redux';
-import { NavLink } from 'redux-first-router-link';
 import classNames from 'classnames/bind';
 import { HEADER_EVENTS } from 'components/main/analytics/events';
 import {
@@ -14,6 +13,7 @@ import {
 } from 'controllers/user';
 import { canSeeMembers } from 'common/utils/permissions';
 import { PROJECT_MEMBERS_PAGE, PROJECT_SETTINGS_PAGE } from 'controllers/pages/constants';
+import { NavLink } from 'components/main/navLink';
 import { MobileHeader } from 'layouts/common/mobileHeader';
 import { ProjectSelector } from './projectSelector';
 import { UserBlock } from './userBlock';

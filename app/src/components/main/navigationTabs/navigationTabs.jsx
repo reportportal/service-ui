@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import track from 'react-tracking';
-import { NavLink } from 'redux-first-router-link';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { InputDropdown } from 'components/inputs/inputDropdown';
+import { NavLink } from 'components/main/navLink';
 import styles from './navigationTabs.scss';
 
 const cx = classNames.bind(styles);
