@@ -276,12 +276,9 @@ export class LaunchesPage extends Component {
   };
 
   onGridRowHighlighted = () => {
-    this.setState(
-      {
-        isGridRowHighlighted: true,
-      },
-      this.forceUpdate,
-    );
+    this.setState({
+      isGridRowHighlighted: true,
+    });
   };
 
   onAnalysis = (launch) => {
@@ -576,7 +573,6 @@ export class LaunchesPage extends Component {
       isGridRowHighlighted: this.state.isGridRowHighlighted,
       highlightedRowId: this.state.highlightedRowId,
     };
-
     return (
       <FilterEntitiesContainer
         level={LEVEL_LAUNCH}
@@ -655,9 +651,11 @@ export class LaunchesPage extends Component {
   };
 
   render() {
+    const { isGridRowHighlighted } = this.state;
     return (
       <LaunchFiltersContainer
         {...this.props}
+        isGridRowHighlighted={isGridRowHighlighted}
         onChange={this.resetPageNumber}
         render={this.renderPageContent}
       />
