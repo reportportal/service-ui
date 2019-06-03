@@ -22,7 +22,6 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { intlShape, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import moment from 'moment/moment';
 import { Component } from 'react';
 import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
 import { Legend } from 'components/widgets/charts/common/legend/legend';
@@ -32,13 +31,13 @@ import { TEST_ITEM_PAGE } from 'controllers/pages';
 import { createFilterAction } from 'controllers/filter';
 import { ALL } from 'common/constants/reservedFilterIds';
 import * as STATUSES from 'common/constants/testStatuses';
-import { ENTITY_START_TIME, CONDITION_BETWEEN } from 'components/filterEntities/constants';
 import styles from './investigatedTrendChart.scss';
 import { C3Chart } from '../common/c3chart';
 import { getTimelineConfig } from './timelineConfig';
 import { getLaunchModeConfig } from './launchModeConfig';
 import { getStatusPageModeConfig } from './statusPageModeConfig';
 import { MESSAGES } from './common/constants';
+import { getUpdatedFilterWithTime } from '../common/utils';
 
 const cx = classNames.bind(styles);
 
@@ -183,24 +182,11 @@ export class InvestigatedTrendChart extends Component {
   };
 
   timeLineModeClickHandler = (data) => {
-    const { widget } = this.props;
-
-    const arrResult = Object.keys(widget.content.result).map((item) => item);
-    const itemDate = arrResult[data.index];
-    const range = 86400000;
-    const time = moment(itemDate).valueOf();
-    const filterEntityValue = `${time},${time + range}`;
     const chartFilter = this.props.widget.appliedFilters[0];
-    const newCondition = {
-      filteringField: ENTITY_START_TIME,
-      value: filterEntityValue,
-      condition: CONDITION_BETWEEN,
-    };
-    const newFilter = {
-      orders: chartFilter.orders,
-      type: chartFilter.type,
-      conditions: chartFilter.conditions.concat(newCondition),
-    };
+    const arrResult = Object.keys(this.props.widget.content.result).map((item) => item);
+    const itemDate = arrResult[data.index];
+    const newFilter = getUpdatedFilterWithTime(chartFilter, itemDate);
+
     this.props.createFilterAction(newFilter);
   };
 
