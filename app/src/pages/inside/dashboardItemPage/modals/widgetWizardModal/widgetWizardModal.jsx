@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { destroy } from 'redux-form';
+import { destroy, getFormValues } from 'redux-form';
 import { CSSTransition } from 'react-transition-group';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { withModal, ModalHeader } from 'components/main/modal';
@@ -24,10 +24,15 @@ const messages = defineMessages({
 
 @withModal('widgetWizardModal')
 @injectIntl
-@connect(null, {
-  destroyWizardForm: () => destroy(WIDGET_WIZARD_FORM),
-  hideModalAction,
-})
+@connect(
+  (state) => ({
+    formValues: getFormValues(WIDGET_WIZARD_FORM)(state),
+  }),
+  {
+    destroyWizardForm: () => destroy(WIDGET_WIZARD_FORM),
+    hideModalAction,
+  },
+)
 @track()
 export class WidgetWizardModal extends Component {
   static propTypes = {
@@ -38,6 +43,7 @@ export class WidgetWizardModal extends Component {
     }),
     hideModalAction: PropTypes.func.isRequired,
     destroyWizardForm: PropTypes.func.isRequired,
+    formValues: PropTypes.object,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
@@ -49,24 +55,37 @@ export class WidgetWizardModal extends Component {
       onConfirm: () => {},
       eventsInfo: {},
     },
+    formValues: undefined,
   };
 
   state = {
     shown: false,
+    showConfirmation: false,
   };
+
   componentDidMount() {
     document.addEventListener('keydown', this.onKeydown, false);
     this.onMount();
   }
+
   componentWillUnmount() {
     document.removeEventListener('keydown', this.onKeydown, false);
   }
+
   onMount() {
     this.setState({ shown: true });
   }
+
   onClickModal = (e) => {
-    !this.modal.contains(e.target) && this.closeModal();
+    if (!this.modal.contains(e.target)) {
+      if (this.props.formValues) {
+        this.setState({ showConfirmation: true });
+      } else {
+        this.closeModal();
+      }
+    }
   };
+
   onKeydown = (e) => {
     if (e.keyCode === 27) {
       this.closeModal();
@@ -85,16 +104,10 @@ export class WidgetWizardModal extends Component {
   };
 
   render() {
-    const { intl, data } = this.props;
+    const { intl, data, formValues } = this.props;
+
     return (
       <div className={cx('widget-wizard')}>
-        <CSSTransition
-          timeout={300}
-          in={this.state.shown}
-          classNames={cx('modal-backdrop-animation')}
-        >
-          <div className={cx('backdrop')} onClick={this.closeModal} />
-        </CSSTransition>
         <div className={cx('scrolling-content')} onClick={this.onClickModal}>
           <ScrollWrapper>
             <CSSTransition
@@ -120,6 +133,8 @@ export class WidgetWizardModal extends Component {
                       closeModal={this.onClosed}
                       onConfirm={data.onConfirm}
                       eventsInfo={data.eventsInfo}
+                      formValues={formValues}
+                      showConfirmation={this.state.showConfirmation}
                     />
                   ) : (
                     <SpinningPreloader />
@@ -129,6 +144,13 @@ export class WidgetWizardModal extends Component {
             </CSSTransition>
           </ScrollWrapper>
         </div>
+        <CSSTransition
+          timeout={300}
+          in={this.state.shown}
+          classNames={cx('modal-backdrop-animation')}
+        >
+          <div className={cx('backdrop')} onClick={this.closeModal} />
+        </CSSTransition>
       </div>
     );
   }
