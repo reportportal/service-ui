@@ -21,32 +21,58 @@
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { intlShape, injectIntl } from 'react-intl';
+import { connect } from 'react-redux';
 import { Component } from 'react';
 import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
 import { Legend } from 'components/widgets/charts/common/legend/legend';
+import { statisticsLinkSelector } from 'controllers/testItem';
+import { activeProjectSelector } from 'controllers/user';
+import { TEST_ITEM_PAGE } from 'controllers/pages';
+import { createFilterAction } from 'controllers/filter';
+import { ALL } from 'common/constants/reservedFilterIds';
+import * as STATUSES from 'common/constants/testStatuses';
 import styles from './investigatedTrendChart.scss';
 import { C3Chart } from '../common/c3chart';
 import { getTimelineConfig } from './timelineConfig';
 import { getLaunchModeConfig } from './launchModeConfig';
 import { getStatusPageModeConfig } from './statusPageModeConfig';
 import { MESSAGES } from './common/constants';
+import { getUpdatedFilterWithTime } from '../common/utils';
 
 const cx = classNames.bind(styles);
 
 @injectIntl
+@connect(
+  (state) => ({
+    projectId: activeProjectSelector(state),
+    statisticsLink: statisticsLinkSelector(state, {
+      statuses: [STATUSES.PASSED, STATUSES.FAILED, STATUSES.SKIPPED, STATUSES.INTERRUPTED],
+    }),
+  }),
+  {
+    navigate: (linkAction) => linkAction,
+    createFilterAction,
+  },
+)
 export class InvestigatedTrendChart extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
+    navigate: PropTypes.func.isRequired,
+    projectId: PropTypes.string.isRequired,
     widget: PropTypes.object.isRequired,
+    statisticsLink: PropTypes.object.isRequired,
     isPreview: PropTypes.bool,
     container: PropTypes.instanceOf(Element).isRequired,
     observer: PropTypes.object,
     height: PropTypes.number,
     onStatusPageMode: PropTypes.bool,
     interval: PropTypes.string,
+    createFilterAction: PropTypes.func,
   };
 
   static defaultProps = {
+    navigate: () => {},
+    createFilterAction: () => {},
     isPreview: false,
     height: 0,
     observer: {},
@@ -70,6 +96,9 @@ export class InvestigatedTrendChart extends Component {
       this.props.observer.unsubscribe('widgetResized', this.resizeChart);
   }
 
+  onChartClick = (data) =>
+    this.isTimeline ? this.timeLineModeClickHandler(data) : this.launchModeClickHandler(data);
+
   onChartCreated = (chart, element) => {
     this.chart = chart;
     this.node = element;
@@ -92,6 +121,15 @@ export class InvestigatedTrendChart extends Component {
   onLegendClick = (id) => {
     this.chart.toggle(id);
   };
+
+  getDefaultLinkParams = (testItemIds) => ({
+    payload: {
+      projectId: this.props.projectId,
+      filterId: ALL,
+      testItemIds,
+    },
+    type: TEST_ITEM_PAGE,
+  });
 
   getCoords = ({ pageX, pageY }) => {
     this.x = pageX;
@@ -136,10 +174,28 @@ export class InvestigatedTrendChart extends Component {
     } else {
       this.config = getLaunchModeConfig(params);
     }
+    this.config.data.onclick = this.onChartClick;
 
     this.setState({
       isConfigReady: true,
     });
+  };
+
+  timeLineModeClickHandler = (data) => {
+    const chartFilter = this.props.widget.appliedFilters[0];
+    const arrResult = Object.keys(this.props.widget.content.result).map((item) => item);
+    const itemDate = arrResult[data.index];
+    const newFilter = getUpdatedFilterWithTime(chartFilter, itemDate);
+
+    this.props.createFilterAction(newFilter);
+  };
+
+  launchModeClickHandler = (data) => {
+    const { widget, statisticsLink } = this.props;
+    const id = widget.content.result[data.index].id;
+    const defaultParams = this.getDefaultLinkParams(id);
+
+    this.props.navigate(Object.assign(statisticsLink, defaultParams));
   };
 
   resizeChart = () => {

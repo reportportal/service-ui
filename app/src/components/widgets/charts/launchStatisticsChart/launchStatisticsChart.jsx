@@ -13,7 +13,6 @@ import { activeProjectSelector } from 'controllers/user';
 import { createFilterAction } from 'controllers/filter';
 import { PASSED, FAILED, SKIPPED, INTERRUPTED } from 'common/constants/testStatuses';
 import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
-import { ENTITY_START_TIME, CONDITION_BETWEEN } from 'components/filterEntities/constants';
 import {
   getItemColor,
   getItemName,
@@ -21,6 +20,7 @@ import {
   getTimelineAxisTicks,
   getItemNameConfig,
   getDefectTypeLocators,
+  getUpdatedFilterWithTime,
 } from '../common/utils';
 import { C3Chart } from '../common/c3chart';
 import { Legend } from '../common/legend';
@@ -366,21 +366,10 @@ export class LaunchStatisticsChart extends Component {
   };
 
   timeLineModeClickHandler = (data) => {
-    const itemDate = this.configData.itemData[data.index].date;
-    const range = 86400000;
-    const time = moment(itemDate).valueOf();
-    const filterEntityValue = `${time},${time + range}`;
     const chartFilter = this.props.widget.appliedFilters[0];
-    const newCondition = {
-      filteringField: ENTITY_START_TIME,
-      value: filterEntityValue,
-      condition: CONDITION_BETWEEN,
-    };
-    const newFilter = {
-      orders: chartFilter.orders,
-      type: chartFilter.type,
-      conditions: chartFilter.conditions.concat(newCondition),
-    };
+    const itemDate = this.configData.itemData[data.index].date;
+    const newFilter = getUpdatedFilterWithTime(chartFilter, itemDate);
+
     this.props.createFilterAction(newFilter);
   };
 
