@@ -3,7 +3,6 @@ import { extractNamespacedQuery } from 'common/utils/routingUtils';
 import { DEFAULT_PAGINATION } from 'controllers/pagination';
 import { SORTING_KEY } from 'controllers/sorting';
 import { ALL } from 'common/constants/reservedFilterIds';
-import { isEmptyValue } from 'common/utils';
 import { pageNames, NO_PAGE } from './constants';
 import { stringToArray } from './utils';
 
@@ -93,9 +92,4 @@ export const prevTestItemSelector = ({ location }) => {
   const prevPath = stringToArray(location.prev.payload.testItemIds, '/');
   if (currentPath.length >= prevPath.length) return null;
   return parseInt(prevPath[currentPath.length], 10);
-};
-
-export const firstTimeLoad = ({ location: { prev } }) => {
-  const { pathname } = prev;
-  return isEmptyValue(pathname);
 };

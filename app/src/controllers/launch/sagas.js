@@ -6,7 +6,7 @@ import { fetchDataAction } from 'controllers/fetch';
 import { activeProjectSelector } from 'controllers/user';
 import { ALL, LATEST } from 'common/constants/reservedFilterIds';
 import { activeFilterSelector, changeActiveFilterAction } from 'controllers/filter';
-import { filterIdSelector, firstTimeLoad } from 'controllers/pages';
+import { filterIdSelector } from 'controllers/pages';
 import { updateStorageItem, waitForSelector } from 'common/utils';
 import { isEmptyValue } from 'common/utils/isEmptyValue';
 import {
@@ -40,12 +40,8 @@ function* fetchLaunchesWithParams({ payload }) {
 const notEmptyConditionsPredicate = ({ value }) => !isEmptyValue(value);
 
 function* fetchLaunches() {
-  const firstLoad = yield select(firstTimeLoad);
   const filterId = yield select(filterIdSelector);
-  if (firstLoad && filterId < 0) {
-    yield put(changeActiveFilterAction(ALL));
-    return;
-  }
+  let activeFilter = yield select(activeFilterSelector);
   if (Number.isInteger(filterId)) {
     if (!activeFilter && filterId < 0) {
       yield put(changeActiveFilterAction(ALL));
