@@ -223,16 +223,43 @@ export class LaunchesPage extends Component {
     highlightItemId: null,
   };
 
+  static getDerivedStateFromProps(nextProps, prevState) {
+    return prevState.prevLaunches !== nextProps.launches
+      ? {
+          prevLaunches: nextProps.launches,
+          launchesInProgress: nextProps.launches
+            .filter((item) => item.status === 'IN_PROGRESS')
+            .map((item) => item.id),
+        }
+      : null;
+  }
+
   state = {
     highlightedRowId: null,
     isGridRowHighlighted: false,
     isSauceLabsIntegrationView: false,
+    prevLaunches: [],
+    launchesInProgress: [],
   };
 
   componentDidMount() {
     const { highlightItemId } = this.props;
     if (highlightItemId) {
       this.onHighlightRow(highlightItemId);
+    }
+  }
+
+  componentDidUpdate() {
+    if (!this.state.launchesInProgress.length && this.intervalId) {
+      clearInterval(this.intervalId);
+      this.intervalId = null;
+    }
+
+    if (this.state.launchesInProgress.length && !this.intervalId) {
+      this.intervalId = setInterval(
+        () => this.fetchLaunchStatus(this.state.launchesInProgress),
+        5000,
+      );
     }
   }
 
