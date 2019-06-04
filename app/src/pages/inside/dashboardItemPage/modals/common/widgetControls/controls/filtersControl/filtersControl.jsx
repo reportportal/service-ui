@@ -241,7 +241,7 @@ export class FiltersControl extends Component {
       data: filter,
     })
       .then(({ id }) => {
-        this.handleActiveFilterChange(String(id));
+        this.handleActiveFilterChange(String(id), filter);
         this.fetchFilter({ page: 1 });
         notify({
           message: intl.formatMessage(messages.insertFilterSuccess),
@@ -284,11 +284,12 @@ export class FiltersControl extends Component {
 
   handleFilterListChange = (event) => this.handleActiveFilterChange(event.target.value);
 
-  handleActiveFilterChange = (id) => {
+  handleActiveFilterChange = (id, newFilter) => {
     const filter = this.getFilterById(id);
+    const name = filter ? filter.name : newFilter.name;
     const newActiveFilter = {
       value: id,
-      name: filter.name,
+      name,
     };
     this.props.changeWizardForm('filters', [newActiveFilter]);
   };
