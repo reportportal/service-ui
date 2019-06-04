@@ -14,7 +14,7 @@ import {
   userAccountRoleSelector,
   userIdSelector,
 } from 'controllers/user';
-import { levelSelector, launchSelector } from 'controllers/testItem';
+import { levelSelector, launchSelector, formatItemName } from 'controllers/testItem';
 import { MarkdownViewer } from 'components/main/markdown';
 import { LAUNCHES_PAGE_EVENTS } from 'components/main/analytics/events';
 import { INTEGRATION_NAMES_TITLES } from 'components/integrations';
@@ -144,7 +144,9 @@ export class ItemInfo extends Component {
             className={cx('name-link')}
             onClick={() => tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_ITEM_NAME)}
           >
-            <span className={cx('name')}>{value.name}</span>
+            <span title={value.name} className={cx('name')}>
+              {formatItemName(value.name)}
+            </span>
             {value.number && <span className={cx('number')}>#{value.number}</span>}
           </NameLink>
           {value.analyzing && <div className={cx('analysis-badge')}>Analysis</div>}

@@ -1,4 +1,4 @@
-import { normalizeTestItem } from './utils';
+import { normalizeTestItem, formatItemName } from './utils';
 
 describe('controllers/testItem/utils', () => {
   describe('normalizeTestItem', () => {
@@ -36,6 +36,23 @@ describe('controllers/testItem/utils', () => {
           },
         },
       });
+    });
+  });
+
+  describe('formatItemName', () => {
+    test('should return unchanged item name value', () => {
+      const itemName = 'Short test item name';
+
+      expect(formatItemName(itemName)).toBe(itemName);
+    });
+
+    test('should return shorten item name value with dots in the end', () => {
+      const longItemName =
+        'Long test item nameLong test item nameLong test item nameLong test item nameLong test item nameLong test item nameLong test item nameLong test item nameLong test item nameLong test item nameLong test item nameLong test item nameLong test item nameLong test item nameLong test item nameLong test item nameLong test item nameLong test item nameLong test item nameLong test item nameLong test item nameLong test item nameLong test item nameLong test item nameLong test item nameLong test item nameLong test item nameLong test item nameLong test item nameLong test item nameLong test item nameLong test item name';
+      const shortenItemName =
+        'Long test item nameLong test item nameLong test item nameLong test item nameLong test item nameLong test item nameLong test item nameLong test item nameLong test item nameLong test item nameLong test item nameLong test item nameLong test item nameLong test...';
+
+      expect(formatItemName(longItemName)).toBe(shortenItemName);
     });
   });
 });

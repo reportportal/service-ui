@@ -81,3 +81,5 @@ export const normalizeTestItem = (testItem, defectTypesConfig = {}) => {
     },
   };
 };
+
+export const formatItemName = (name) => (name.length > 256 ? `${name.substr(0, 256)}...` : name);
