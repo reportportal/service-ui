@@ -100,17 +100,19 @@ export class WidgetsGrid extends Component {
     );
 
     if (itemChanged) {
-      if (this.state.isMobile) {
-        const oldWidgets = this.props.dashboard.widgets;
+      const oldWidgets = this.props.dashboard.widgets;
 
+      if (this.state.isMobile) {
         newWidgets = newLayout.map(({ i, y, h }, index) => ({
           widgetId: i,
+          widgetType: oldWidgets[index].widgetType,
           widgetPosition: { positionX: oldWidgets[index].widgetPosition.positionX, positionY: y },
           widgetSize: { width: oldWidgets[index].widgetSize.width, height: h },
         }));
       } else {
-        newWidgets = newLayout.map(({ i, x, y, w, h }) => ({
+        newWidgets = newLayout.map(({ i, x, y, w, h }, index) => ({
           widgetId: i,
+          widgetType: oldWidgets[index].widgetType,
           widgetPosition: { positionX: x, positionY: y },
           widgetSize: { width: w, height: h },
         }));
@@ -161,6 +163,7 @@ export class WidgetsGrid extends Component {
           widgetPosition: { positionX: x, positionY: y },
           widgetSize: { width: w, height: h },
           widgetId,
+          widgetType,
         }) => {
           height += h * (rowHeight + 20);
           return (
@@ -171,6 +174,7 @@ export class WidgetsGrid extends Component {
             >
               <Widget
                 widgetId={widgetId}
+                widgetType={widgetType}
                 isFullscreen={this.props.isFullscreen}
                 isModifiable={this.props.isModifiable}
                 observer={this.observer}

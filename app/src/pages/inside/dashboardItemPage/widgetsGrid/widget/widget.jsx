@@ -3,14 +3,14 @@ import track from 'react-tracking';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { lazyload } from 'react-lazyload';
-import { fetch } from 'common/utils';
+import { fetch, formatAttribute } from 'common/utils';
 import { URLS } from 'common/urls';
 import { DASHBOARD_PAGE_EVENTS } from 'components/main/analytics/events';
 import { connect } from 'react-redux';
 import { activeProjectSelector } from 'controllers/user';
 import { showModalAction } from 'controllers/modal';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
-import { CHARTS, NoDataAvailable } from 'components/widgets';
+import { CHARTS, MULTI_LEVEL_WIDGETS, NoDataAvailable } from 'components/widgets';
 import { isWidgetDataAvailable } from '../../modals/common/utils';
 import { WidgetHeader } from './widgetHeader';
 import styles from './widget.scss';
@@ -21,8 +21,8 @@ const SILENT_UPDATE_TIMEOUT = 60000;
 const SILENT_UPDATE_TIMEOUT_FULLSCREEN = 30000;
 
 @connect(
-  (state, ownProps) => ({
-    url: URLS.widget(activeProjectSelector(state), ownProps.widgetId),
+  (state) => ({
+    activeProject: activeProjectSelector(state),
   }),
   {
     showModalAction,
@@ -36,8 +36,9 @@ const SILENT_UPDATE_TIMEOUT_FULLSCREEN = 30000;
 })
 export class Widget extends Component {
   static propTypes = {
-    url: PropTypes.string.isRequired,
+    activeProject: PropTypes.string.isRequired,
     widgetId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+    widgetType: PropTypes.string.isRequired,
     showModalAction: PropTypes.func.isRequired,
     switchDraggable: PropTypes.func,
     onDelete: PropTypes.func,
@@ -64,6 +65,7 @@ export class Widget extends Component {
     this.state = {
       loading: true,
       visible: true,
+      queryParameters: {},
       widget: {
         content: {},
         contentParameters: {},
@@ -102,7 +104,7 @@ export class Widget extends Component {
   };
 
   getWidgetContent = () => {
-    const { widget, uncheckedLegendItems } = this.state;
+    const { widget, uncheckedLegendItems, queryParameters } = this.state;
 
     if (this.state.loading) {
       return <SpinningPreloader />;
@@ -123,9 +125,26 @@ export class Widget extends Component {
           isFullscreen={this.props.isFullscreen}
           container={this.node}
           observer={this.props.observer}
+          fetchWidget={this.fetchWidget}
+          queryParameters={queryParameters}
         />
       )
     );
+  };
+
+  getWidgetUrl = (params) => {
+    const { activeProject, widgetId, widgetType } = this.props;
+    let url = URLS.widget(activeProject, widgetId);
+
+    if (MULTI_LEVEL_WIDGETS.indexOf(widgetType) !== -1) {
+      const {
+        queryParameters: { attributes = [] },
+      } = this.state;
+      const attributesString = (params.attributes || attributes).map(formatAttribute).join(',');
+
+      url = URLS.widgetMultilevel(activeProject, widgetId, attributesString);
+    }
+    return url;
   };
 
   showWidget = () => {
@@ -140,8 +159,9 @@ export class Widget extends Component {
     });
   };
 
-  fetchWidget = () => {
-    const { isFullscreen, tracking, url } = this.props;
+  fetchWidget = (params = {}) => {
+    const { isFullscreen, tracking } = this.props;
+    const url = this.getWidgetUrl(params);
 
     clearTimeout(this.silentUpdaterId);
     tracking.trackEvent(DASHBOARD_PAGE_EVENTS.REFRESH_WIDGET);
@@ -152,6 +172,10 @@ export class Widget extends Component {
       .then((widget) => {
         this.setState({
           loading: false,
+          queryParameters: {
+            ...this.state.queryParameters,
+            ...params,
+          },
           widget,
         });
         this.silentUpdaterId = setTimeout(

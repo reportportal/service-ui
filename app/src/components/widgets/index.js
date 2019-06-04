@@ -42,4 +42,6 @@ const CHARTS = {
   [widgetTypes.INVESTIGATED_PERCENTAGE_OF_LAUNCHES]: InvestigatedTrendChart,
 };
 
-export { CHARTS, NoDataAvailable };
+const MULTI_LEVEL_WIDGETS = [widgetTypes.CUMULATIVE_TREND];
+
+export { CHARTS, MULTI_LEVEL_WIDGETS, NoDataAvailable };
