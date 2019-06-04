@@ -18,12 +18,12 @@ export class OverallDefects extends React.Component {
     return (
       <ScrollWrapper>
         <div className={cx('container')}>
-          {valuesArray.map((item) => {
-            const defectItem = getItemNameConfig(item.key);
+          {Object.keys(values).map((value) => {
+            const defectItem = getItemNameConfig(value);
 
             return (
               defectItem.itemType === DEFECTS && (
-                <DefectTypeItem key={item.key} item={defectItem} value={item.value} />
+                <DefectTypeItem key={value} item={defectItem} value={values[value]} />
               )
             );
           })}
