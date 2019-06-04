@@ -98,6 +98,7 @@ function* fetchLogItems(payload = {}) {
         {
           params: {
             ...fetchParams,
+            [PAGE_KEY]: 1,
             [SIZE_KEY]: 100,
           },
         },
