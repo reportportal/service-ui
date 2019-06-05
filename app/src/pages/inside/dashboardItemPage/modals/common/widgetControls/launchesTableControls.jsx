@@ -159,6 +159,7 @@ export class LaunchesTableControls extends Component {
                 fieldLabel={formatMessage(messages.ItemsFieldLabel)}
                 inputWidth={ITEMS_INPUT_WIDTH}
                 maxLength="3"
+                hintType={'top'}
               />
             </FieldProvider>
           </Fragment>
