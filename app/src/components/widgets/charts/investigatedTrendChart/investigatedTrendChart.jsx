@@ -24,6 +24,13 @@ import { intlShape, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { Component } from 'react';
 import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
+import {
+  PRODUCT_BUG,
+  AUTOMATION_BUG,
+  SYSTEM_ISSUE,
+  NO_DEFECT,
+  TO_INVESTIGATE,
+} from 'common/constants/defectTypes';
 import { Legend } from 'components/widgets/charts/common/legend/legend';
 import { defectLinkSelector, statisticsLinkSelector } from 'controllers/testItem';
 import { activeProjectSelector } from 'controllers/user';
@@ -48,7 +55,7 @@ const cx = classNames.bind(styles);
     projectId: activeProjectSelector(state),
     defectTypes: defectTypesSelector(state),
     getDefectLink: (params) => defectLinkSelector(state, params),
-    getStatisticsLink: statisticsLinkSelector(state, {
+    statisticsLink: statisticsLinkSelector(state, {
       statuses: [STATUSES.PASSED, STATUSES.FAILED, STATUSES.SKIPPED, STATUSES.INTERRUPTED],
     }),
   }),
@@ -65,7 +72,7 @@ export class InvestigatedTrendChart extends Component {
     widget: PropTypes.object.isRequired,
     defectTypes: PropTypes.object.isRequired,
     getDefectLink: PropTypes.func.isRequired,
-    getStatisticsLink: PropTypes.object.isRequired,
+    statisticsLink: PropTypes.object.isRequired,
     isPreview: PropTypes.bool,
     container: PropTypes.instanceOf(Element).isRequired,
     observer: PropTypes.object,
@@ -78,7 +85,6 @@ export class InvestigatedTrendChart extends Component {
   static defaultProps = {
     navigate: () => {},
     getDefectLink: () => {},
-    getStatisticsLink: () => {},
     createFilterAction: () => {},
     isPreview: false,
     height: 0,
@@ -131,12 +137,15 @@ export class InvestigatedTrendChart extends Component {
 
   getDefectTypeLocators = (id) => {
     const { defectTypes } = this.props;
-    const investigatedDefectType = ['AUTOMATION_BUG', 'NO_DEFECT', 'PRODUCT_BUG', 'SYSTEM_ISSUE'];
-    const toInvestigateDefectType = ['TO_INVESTIGATE'];
+    const investigatedDefectType = [PRODUCT_BUG, AUTOMATION_BUG, SYSTEM_ISSUE, NO_DEFECT];
+    const toInvestigateDefectType = [TO_INVESTIGATE];
     const defectType = id === 'toInvestigate' ? toInvestigateDefectType : investigatedDefectType;
 
     return defectType
-      .reduce((accumulator, currentValue) => accumulator.concat(defectTypes[currentValue]), [])
+      .reduce(
+        (accumulator, currentValue) => accumulator.concat(defectTypes[currentValue.toUpperCase()]),
+        [],
+      )
       .map((item) => item.locator);
   };
 
@@ -209,14 +218,14 @@ export class InvestigatedTrendChart extends Component {
   };
 
   launchModeClickHandler = (data) => {
-    const { widget, getDefectLink, getStatisticsLink } = this.props;
+    const { widget, getDefectLink, statisticsLink } = this.props;
     const id = widget.content.result[data.index].id;
     const defaultParams = this.getDefaultLinkParams(id);
     const defectTypeLocators = this.getDefectTypeLocators(data.id);
 
     const link = defectTypeLocators
       ? getDefectLink({ defects: defectTypeLocators, itemId: id })
-      : getStatisticsLink;
+      : statisticsLink;
     this.props.navigate(Object.assign(link, defaultParams));
   };
 
