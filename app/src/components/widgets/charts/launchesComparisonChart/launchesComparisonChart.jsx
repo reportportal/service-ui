@@ -181,6 +181,7 @@ export class LaunchesComparisonChart extends Component {
         chartData[key].push(val);
       });
     });
+    this.itemData.reverse();
 
     contentFields.forEach((key) => {
       if (key === 'statistics$executions$total') {
@@ -294,6 +295,7 @@ export class LaunchesComparisonChart extends Component {
           itemCases={`${d[0].value}%`}
           color={color(id)}
           itemName={getItemName(getItemNameConfig(id), defectTypes, formatMessage, true)}
+          withVerboseItemCases
         />
       </TooltipWrapper>,
     );

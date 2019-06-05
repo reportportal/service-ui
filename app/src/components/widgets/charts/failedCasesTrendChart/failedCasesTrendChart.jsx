@@ -212,6 +212,7 @@ export class FailedCasesTrendChart extends Component {
           itemCases={`${d[0].value} ${this.props.intl.formatMessage(messages.cases)}`}
           color={color(id)}
           itemName={this.props.intl.formatMessage(statusLocalization[FAILED])}
+          withVerboseItemCases
         />
       </TooltipWrapper>,
     );
