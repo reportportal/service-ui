@@ -1,10 +1,10 @@
 import React, { PureComponent } from 'react';
 import { injectIntl, intlShape } from 'react-intl';
-import Link from 'redux-first-router-link';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { Grid } from 'components/main/grid';
 import { AbsRelTime } from 'components/main/absRelTime';
+import { ScrollWrapper } from 'components/main/scrollWrapper';
 import styles from './uniqueBugsTable.scss';
 import {
   BUG_ID_COLUMN_KEY,
@@ -22,31 +22,32 @@ const ColumnProps = {
   className: PropTypes.string.isRequired,
 };
 
-const BugIDColumn = ({ className, value }) => (
+const BugIDColumn = ({ className, value: { items = [], id } }) => (
   <div className={cx('bug-id-col', className)}>
-    {value.url ? (
-      <Link to={value.url} target="_blank" className={cx('bug-link')}>
-        {value.bugID}
-      </Link>
+    {items[0] && items[0].url ? (
+      <a href={items[0].url} target="_blank" className={cx('bug-link')}>
+        {id}
+      </a>
     ) : (
-      value.bugID
+      id
     )}
   </div>
 );
 BugIDColumn.propTypes = ColumnProps;
 
-const FoundInColumn = (props) => <FoundIn {...props} />;
+const FoundInColumn = ({ className, value }) => <FoundIn className={className} {...value} />;
+FoundInColumn.propTypes = ColumnProps;
 
-const SubmitDateColumn = ({ className, value }, name, formatMessage) => (
+const SubmitDateColumn = ({ className, value: { items = [{ submitDate: 0 }] } }, formatMessage) => (
   <div className={cx('submit-date-col', className)}>
     <span className={cx('mobile-hint')}>{formatMessage(hintMessages.submitDateHint)}</span>
-    <AbsRelTime startTime={Number(value.submitDate)} />
+    <AbsRelTime startTime={Number(items[0].submitDate)} />
   </div>
 );
 SubmitDateColumn.propTypes = ColumnProps;
 
-const SubmitterColumn = ({ className, value }) => (
-  <div className={cx('submitter-col', className)}>{value.submitter}</div>
+const SubmitterColumn = ({ className, value: { items = [{ submitter: '' }] } }) => (
+  <div className={cx('submitter-col', className)}>{items[0].submitter}</div>
 );
 SubmitterColumn.propTypes = ColumnProps;
 
@@ -57,20 +58,20 @@ const columnComponentsMap = {
   [SUBMITTER_COLUMN_KEY]: SubmitterColumn,
 };
 
-const getColumn = (name, columnType, formatMessage) => ({
-  id: name,
+const getColumn = (columnType, formatMessage) => ({
+  id: columnType,
   title: {
-    full: formatMessage(COLUMN_NAMES_MAP[name]),
+    full: formatMessage(COLUMN_NAMES_MAP[columnType]),
   },
-  component: (data) => columnComponentsMap[columnType](data, name, formatMessage),
+  component: (data) => columnComponentsMap[columnType](data, formatMessage),
 });
 
-const COLUMNS_MAP = {
-  [BUG_ID_COLUMN_KEY]: BUG_ID_COLUMN_KEY,
-  [FOUND_IN_COLUMN_KEY]: FOUND_IN_COLUMN_KEY,
-  [SUBMIT_DATE_COLUMN_KEY]: SUBMIT_DATE_COLUMN_KEY,
-  [SUBMITTER_COLUMN_KEY]: SUBMITTER_COLUMN_KEY,
-};
+const COLUMNS = [
+  BUG_ID_COLUMN_KEY,
+  FOUND_IN_COLUMN_KEY,
+  SUBMIT_DATE_COLUMN_KEY,
+  SUBMITTER_COLUMN_KEY,
+];
 
 @injectIntl
 export class UniqueBugsTable extends PureComponent {
@@ -84,22 +85,16 @@ export class UniqueBugsTable extends PureComponent {
     this.columns = this.getColumns(props.intl.formatMessage);
   }
 
-  getColumns = (formatMessage) => {
-    const { widget } = this.props;
-    const fieldsFromProps = widget.contentParameters.contentFields;
-
-    return fieldsFromProps.reduce(
-      (columns, item) =>
-        COLUMNS_MAP[item]
-          ? [...columns, getColumn(item, COLUMNS_MAP[item], formatMessage)]
-          : columns,
-      [],
-    );
-  };
+  getColumns = (formatMessage) => COLUMNS.map((item) => getColumn(item, formatMessage));
 
   render() {
     const { result } = this.props.widget.content;
+    const data = Object.keys(result).map((key) => ({ id: key, items: result[key] }));
 
-    return <Grid columns={this.columns} data={result} />;
+    return (
+      <ScrollWrapper hideTracksWhenNotNeeded>
+        <Grid columns={this.columns} data={data} />
+      </ScrollWrapper>
+    );
   }
 }
