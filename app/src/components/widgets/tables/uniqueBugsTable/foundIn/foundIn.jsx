@@ -1,12 +1,12 @@
 import { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
+import Link from 'redux-first-router-link';
 import PropTypes from 'prop-types';
 import { ALL } from 'common/constants/reservedFilterIds';
 import { PROJECT_LOG_PAGE } from 'controllers/pages';
 import { activeProjectSelector } from 'controllers/user';
 import { AttributesBlock } from 'pages/inside/common/itemInfo/attributesBlock';
-import { NavLink } from 'components/main/navLink';
 import styles from './foundIn.scss';
 
 export const cx = classNames.bind(styles);
@@ -16,13 +16,19 @@ export const cx = classNames.bind(styles);
 }))
 export class FoundIn extends Component {
   static propTypes = {
-    value: PropTypes.object.isRequired,
-    className: PropTypes.string.isRequired,
     projectId: PropTypes.string.isRequired,
+    id: PropTypes.string.isRequired,
+    className: PropTypes.string.isRequired,
+    items: PropTypes.array,
   };
 
-  getItemFragent = (item) => {
-    const path = [item.launchId].concat(Object.keys(item.pathNames), item.id).join('/');
+  static defaultProps = {
+    items: [],
+  };
+
+  getItemFragment = (item) => {
+    const pathToItem = item.path || '';
+    const path = `${item.launchId}/${pathToItem.replace(/\./g, '/')}`;
     const link = {
       type: PROJECT_LOG_PAGE,
       payload: {
@@ -33,11 +39,11 @@ export class FoundIn extends Component {
     };
 
     return (
-      <Fragment key={item.id}>
-        <div className={cx('item')} title={item.name}>
-          <NavLink to={link} className={cx('found-link')}>
-            {item.name}
-          </NavLink>
+      <Fragment key={item.itemId}>
+        <div className={cx('item')} title={item.itemName}>
+          <Link to={link} className={cx('found-link')}>
+            {item.itemName}
+          </Link>
         </div>
         {item.attributes && <AttributesBlock attributes={item.attributes} />}
       </Fragment>
@@ -45,10 +51,11 @@ export class FoundIn extends Component {
   };
 
   render() {
-    const { value, className } = this.props;
+    const { items, className } = this.props;
+
     return (
       <div className={cx('found-in-col', className)}>
-        {value.foundIn && value.foundIn.map(this.getItemFragent)}
+        {items.length && items.map(this.getItemFragment)}
       </div>
     );
   }
