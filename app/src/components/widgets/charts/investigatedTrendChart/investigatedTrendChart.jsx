@@ -80,6 +80,7 @@ export class InvestigatedTrendChart extends Component {
     onStatusPageMode: PropTypes.bool,
     interval: PropTypes.string,
     createFilterAction: PropTypes.func,
+    integerValueType: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -91,6 +92,7 @@ export class InvestigatedTrendChart extends Component {
     observer: {},
     onStatusPageMode: false,
     interval: null,
+    integerValueType: false,
   };
 
   state = {
@@ -175,7 +177,16 @@ export class InvestigatedTrendChart extends Component {
   };
 
   getConfig = () => {
-    const { widget, intl, isPreview, container, interval, onStatusPageMode } = this.props;
+    const {
+      widget,
+      intl,
+      isPreview,
+      container,
+      interval,
+      onStatusPageMode,
+      integerValueType
+    } = this.props;
+
     const params = {
       content: widget.content,
       isPreview,
@@ -185,6 +196,7 @@ export class InvestigatedTrendChart extends Component {
         height: container.offsetHeight,
         width: container.offsetWidth,
       },
+      integerValueType,
     };
 
     this.size = params.size;

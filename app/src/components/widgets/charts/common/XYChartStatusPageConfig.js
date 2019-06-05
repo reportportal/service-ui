@@ -2,8 +2,6 @@ import { getItemColor } from 'components/widgets/charts/common/utils';
 import { PERIOD_VALUES_LENGTH, PERIOD_VALUES } from 'common/constants/statusPeriodValues';
 import { TimelineTooltip } from '../common/timelineTooltip';
 
-const formatYAxisText = (value) => `${value}%`;
-
 const getCategories = (itemData, interval) => {
   const ticksToShowPeriod = Math.floor(PERIOD_VALUES_LENGTH[interval] / 4);
 
@@ -13,6 +11,25 @@ const getCategories = (itemData, interval) => {
     }
     return [...acc, ''];
   }, []);
+};
+
+const getYTicksValues = (columns) => {
+  const allValues = columns.reduce((acc, column) => {
+    const valuesList = column.slice(1);
+
+    return [...acc, ...valuesList.map((value) => +value)];
+  }, []);
+
+  const max = allValues.sort((a, b) => b - a)[0] || 1;
+  const numberOfLines = max > 10 ? 10 : Math.ceil(max);
+  const lineStep = Math.ceil(max / numberOfLines);
+  const tickValues = [];
+
+  for (let i = 0; i <= max; i += lineStep) {
+    tickValues.push(i);
+  }
+
+  return tickValues;
 };
 
 export const getConfig = ({
@@ -25,6 +42,7 @@ export const getConfig = ({
   chartType = 'bar',
   isPointsShow = true,
   isCustomTooltip,
+  integerValueType,
 }) => {
   const chartData = {};
   const colors = {};
@@ -56,10 +74,13 @@ export const getConfig = ({
   });
 
   const itemNames = Object.keys(chartData);
+  const columns = Object.values(chartData);
+  const formatYAxisText = (value) => (integerValueType ? value : `${value}%`);
+  const yTicksValues = integerValueType ? getYTicksValues(columns) : null;
 
   return {
     data: {
-      columns: [chartData[itemNames[0]], chartData[itemNames[1]]],
+      columns,
       type: chartType,
       order: null,
       groups: [itemNames],
@@ -92,12 +113,13 @@ export const getConfig = ({
       },
       y: {
         show: true,
-        max: 100,
+        max: integerValueType ? null : 100,
         padding: {
           top: 0,
         },
         tick: {
           format: formatYAxisText,
+          values: integerValueType ? yTicksValues : null,
         },
       },
     },
@@ -117,7 +139,7 @@ export const getConfig = ({
       show: !isCustomTooltip,
       grouped: false,
       position: positionCallback,
-      contents: TimelineTooltip(itemData, MESSAGES, intl),
+      contents: TimelineTooltip(itemData, MESSAGES, intl, integerValueType),
     },
     size: {
       height,
