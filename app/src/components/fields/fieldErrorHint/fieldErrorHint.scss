@@ -23,6 +23,13 @@
   &.type-top {
     bottom: 100%;
   }
+
+  &.type-top-right {
+    left: auto;
+    right: 0;
+    bottom: 100%;
+    width: 193%;
+  }
 }
 
 .hint-content {
@@ -40,9 +47,9 @@
   border: 1px solid rgba(0, 0, 0, 0.2);
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
 
-  &.type-top {
+  &.type-top,
+  &.type-top-right {
     transform: translateY(-100%);
-    top: -30px;
   }
 
   &.static-hint {

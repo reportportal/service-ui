@@ -200,7 +200,12 @@ export class FieldErrorHint extends Component {
     return (
       <div className={classes}>
         {children && cloneElement(children, { error, active, ...rest })}
-        <div className={cx('hint', { 'static-hint': staticHint, visible: this.isHintVisible() })}>
+        <div
+          className={cx('hint', `type-${hintType}`, {
+            'static-hint': staticHint,
+            visible: this.isHintVisible(),
+          })}
+        >
           <div className={cx('hint-content', `type-${hintType}`, { 'static-hint': staticHint })}>
             {error && messages[error] ? intl.formatMessage(messages[error]) : error}
           </div>

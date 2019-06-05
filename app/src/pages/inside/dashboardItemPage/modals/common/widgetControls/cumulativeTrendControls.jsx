@@ -137,7 +137,7 @@ export class CumulativeTrendControls extends Component {
                 fieldLabel={intl.formatMessage(messages.ItemsFieldLabel)}
                 inputWidth={ITEMS_INPUT_WIDTH}
                 maxLength="3"
-                hintType={'top'}
+                hintType={'top-right'}
               />
             </FieldProvider>
           </Fragment>
