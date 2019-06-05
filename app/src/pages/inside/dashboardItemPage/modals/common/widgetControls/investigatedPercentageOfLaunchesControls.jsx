@@ -94,7 +94,7 @@ export class InvestigatedPercentageOfLaunchesControls extends Component {
                 fieldLabel={formatMessage(messages.ItemsFieldLabel)}
                 inputWidth={ITEMS_INPUT_WIDTH}
                 maxLength="3"
-                hintType={'top-right'}
+                hintType={'top'}
               />
             </FieldProvider>
             <FieldProvider name="contentParameters.widgetOptions.timeline">
