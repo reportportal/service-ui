@@ -17,14 +17,14 @@ const Tooltip = ({ date, itemCases, color, itemName, integerValueType }) => {
         <span className={cx('color-mark')} style={{ backgroundColor: color }} />
         <span className={cx('item-name')}>{`${itemName}:`}</span>
         <span className={cx('item-cases')}>
-        <span>{itemCasesText}</span>
-      </span>
+          <span>{itemCasesText}</span>
+        </span>
       </div>
     </React.Fragment>
   );
 };
 
-export const TimelineTooltip = (itemData, messages, intl) => (
+export const TimelineTooltip = (itemData, messages, intl, integerValueType) => (
   d,
   defaultTitleFormat,
   defaultValueFormat,
@@ -41,6 +41,7 @@ export const TimelineTooltip = (itemData, messages, intl) => (
       itemCases={d[0].value}
       color={color(id)}
       itemName={intl.formatMessage(messages[id])}
+      integerValueType={integerValueType}
     />,
   );
 };
@@ -53,11 +54,16 @@ Tooltip.propTypes = {
   integerValueType: PropTypes.bool,
 };
 
-TimelineTooltip.defaultProps = {
+Tooltip.defaultProps = {
   integerValueType: false,
 };
 
 TimelineTooltip.propTypes = {
   itemData: PropTypes.object.isRequired,
   intl: PropTypes.object.isRequired,
+  integerValueType: PropTypes.bool,
+};
+
+TimelineTooltip.defaultProps = {
+  integerValueType: false,
 };

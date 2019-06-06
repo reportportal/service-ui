@@ -6,6 +6,8 @@ import { defineMessages, injectIntl } from 'react-intl';
 import { AutoBugsStatusPageChart } from 'components/widgets/charts/autoBugsStatusPageChart';
 import { NoDataAvailable } from 'components/widgets/noDataAvailable';
 import { PERIOD_VALUES, PERIOD_VALUES_LENGTH } from 'common/constants/statusPeriodValues';
+import { DEFAULT_DATE_FORMAT } from 'common/constants/dateFormats';
+import { getWeekRange } from 'common/utils/getWeekRange';
 import styles from './autoBugs.scss';
 
 const cx = classNames.bind(styles);
@@ -52,7 +54,8 @@ export class AutoBugs extends Component {
       const total = +automationBug + +toInvestigate + +systemIssue + +productBug;
 
       return {
-        name: key,
+        date: key,
+        name: interval === PERIOD_VALUES.ONE_MONTH ? key : getWeekRange(key),
         values: {
           automationBug: (automationBug / total * 100).toFixed(2),
           toInvestigate: (toInvestigate / total * 100).toFixed(2),
@@ -69,20 +72,22 @@ export class AutoBugs extends Component {
 
   prefillDataGap = (data, minListLength, interval) => {
     // prefill date in before last element
-    const lastElementDate = data[0].name;
+    const lastElementDate = data[0].date;
     let lastEmptyElementDate;
 
     switch (interval) {
       case PERIOD_VALUES.THREE_MONTHS:
       case PERIOD_VALUES.SIX_MONTHS:
-        lastEmptyElementDate = moment(lastElementDate)
-          .subtract(1, 'week')
-          .format('YYYY-[W]w');
+        lastEmptyElementDate = getWeekRange(
+          moment(lastElementDate)
+            .subtract(1, 'week')
+            .format(),
+        );
         break;
       case PERIOD_VALUES.ONE_MONTH:
         lastEmptyElementDate = moment(lastElementDate)
           .subtract(1, 'day')
-          .format('YYYY-MM-DD');
+          .format(DEFAULT_DATE_FORMAT);
         break;
       default:
         return;
