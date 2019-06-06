@@ -16,7 +16,7 @@ For development, you need a [node.js](https://nodejs.org).
     _You can use our inner dev instance. To get the link, visit our Knowledge Base from the "Links" section._
 
 1.  run the command `npm run dev`
-1.  visit `http://localhost:8000`
+1.  visit `http://localhost:3000`
 1.  enjoy the development
 
 ## npm commands
@@ -25,7 +25,7 @@ For development, you need a [node.js](https://nodejs.org).
 
 `npm run format` - reformat js, scss and md using eslint and prettier
 
-`npm run dev` - launch the development environment (default url is `http://localhost:8000`)
+`npm run dev` - launch the development environment (default url is `http://localhost:3000`)
 
 `npm run build` - build the product version in the `dist` folder
 
