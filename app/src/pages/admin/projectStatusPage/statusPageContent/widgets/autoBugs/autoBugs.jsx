@@ -6,7 +6,7 @@ import { defineMessages, injectIntl } from 'react-intl';
 import { AutoBugsStatusPageChart } from 'components/widgets/charts/autoBugsStatusPageChart';
 import { NoDataAvailable } from 'components/widgets/noDataAvailable';
 import { PERIOD_VALUES, PERIOD_VALUES_LENGTH } from 'common/constants/statusPeriodValues';
-import { DEFAULT_DATE_FORMAT } from 'common/constants/dateFormats';
+import { DATE_FORMAT_TOOLTIP } from 'common/constants/timeDateFormat';
 import { getWeekRange } from 'common/utils/getWeekRange';
 import styles from './autoBugs.scss';
 
@@ -87,7 +87,7 @@ export class AutoBugs extends Component {
       case PERIOD_VALUES.ONE_MONTH:
         lastEmptyElementDate = moment(lastElementDate)
           .subtract(1, 'day')
-          .format(DEFAULT_DATE_FORMAT);
+          .format(DATE_FORMAT_TOOLTIP);
         break;
       default:
         return;
