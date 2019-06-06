@@ -50,15 +50,12 @@ export class DashboardControl extends Component {
         <div className={cx('dashboardControl-list')}>
           {newDashboards.map((dashboard, index) => {
             const active = value.id ? value.id === dashboard.id : index === 0;
-            const onClick = () => {
-              onChange(dashboard);
-            };
             return (
               <DashboardItem
                 key={dashboard.name}
                 active={active}
                 dashboard={dashboard}
-                onClick={onClick}
+                onClick={() => onChange(dashboard)}
               />
             );
           })}
