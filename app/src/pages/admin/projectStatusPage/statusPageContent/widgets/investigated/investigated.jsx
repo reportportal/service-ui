@@ -5,6 +5,7 @@ import { defineMessages, injectIntl } from 'react-intl';
 import { InvestigatedTrendChart } from 'components/widgets/charts/investigatedTrendChart';
 import { NoDataAvailable } from 'components/widgets/noDataAvailable';
 import { PERIOD_VALUES, PERIOD_VALUES_LENGTH } from 'common/constants/statusPeriodValues';
+import { getWeekRange } from 'common/utils/getWeekRange';
 import styles from './investigated.scss';
 
 const cx = classNames.bind(styles);
@@ -43,7 +44,20 @@ export class Investigated extends Component {
 
   prepareData = (rawData, interval) => {
     const minListLength = PERIOD_VALUES_LENGTH[interval];
-    const data = Object.keys(rawData).map((key) => rawData[key][0]);
+    const data = Object.keys(rawData).map((key) => {
+      const {
+        values: { investigated, toInvestigate },
+      } = rawData[key][0];
+
+      return {
+        date: key,
+        name: interval === PERIOD_VALUES.ONE_MONTH ? key : getWeekRange(key),
+        values: {
+          investigated,
+          toInvestigate,
+        },
+      };
+    });
 
     while (data.length < minListLength) {
       data.unshift({
