@@ -85,8 +85,8 @@ export class CommonWidgetControls extends Component {
   }
 
   isShowDashboardsList = () => {
-    const { activeDashboard } = this.props;
-    return activeDashboard && !isEmptyObject(activeDashboard);
+    const { activeDashboard, widgetId } = this.props;
+    return activeDashboard && isEmptyObject(activeDashboard) && !widgetId;
   };
 
   render() {
