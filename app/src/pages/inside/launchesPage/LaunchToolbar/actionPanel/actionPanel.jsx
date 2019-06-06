@@ -88,6 +88,7 @@ export class ActionPanel extends Component {
     }).isRequired,
     activeFilterId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     onAddNewWidget: PropTypes.func,
+    counter: PropTypes.number,
   };
 
   static defaultProps = {
@@ -108,6 +109,7 @@ export class ActionPanel extends Component {
     restorePath: () => {},
     activeFilterId: null,
     onAddNewWidget: () => {},
+    counter: null,
   };
 
   constructor(props) {
@@ -155,14 +157,19 @@ export class ActionPanel extends Component {
       onClick: this.props.onDelete,
     },
   ];
+
   isShowImportButton = () => {
     const { debugMode, activeFilterId } = this.props;
     return !debugMode && !Number.isInteger(activeFilterId);
   };
+
   isShowWidgetButton = () => {
     const { activeFilterId } = this.props;
     return Number.isInteger(activeFilterId);
   };
+
+  renderCounterNotification = (number) => <span className={cx('counter')}>{number}</span>;
+
   render() {
     const {
       intl,
@@ -176,7 +183,9 @@ export class ActionPanel extends Component {
       breadcrumbs,
       restorePath,
       onAddNewWidget,
+      counter,
     } = this.props;
+
     return (
       <div className={cx('action-panel', { 'right-buttons-only': !showBreadcrumb && !hasErrors })}>
         {showBreadcrumb && <Breadcrumbs descriptors={breadcrumbs} onRestorePath={restorePath} />}
@@ -218,6 +227,7 @@ export class ActionPanel extends Component {
               onClick={onRefresh}
             >
               <FormattedMessage id="LaunchesPage.refresh" defaultMessage="Refresh" />
+              {counter && this.renderCounterNotification(counter)}
             </GhostButton>
           </div>
         </div>

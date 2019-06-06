@@ -218,6 +218,7 @@ export class LaunchSuiteGrid extends PureComponent {
       isGridRowHighlighted: PropTypes.bool,
       highlightedRowId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     }),
+    id: PropTypes.number,
   };
   static defaultProps = {
     data: [],
@@ -241,6 +242,7 @@ export class LaunchSuiteGrid extends PureComponent {
       isGridRowHighlighted: false,
       highlightedRowId: null,
     }),
+    id: null,
   };
   getColumns() {
     const hamburgerColumn = {
@@ -252,7 +254,7 @@ export class LaunchSuiteGrid extends PureComponent {
         onAnalysis: this.props.onAnalysis,
       },
     };
-    const { events } = this.props;
+    const { events, id } = this.props;
     const columns = [
       {
         id: ENTITY_NAME,
@@ -268,6 +270,7 @@ export class LaunchSuiteGrid extends PureComponent {
           onClickAttribute: this.handleAttributeFilterClick,
           onOwnerClick: this.handleOwnerFilterClick,
           events,
+          id,
         },
         sortingEventInfo: events.NAME_SORTING,
       },
@@ -446,7 +449,9 @@ export class LaunchSuiteGrid extends PureComponent {
       loading,
       onFilterClick,
       rowHighlightingConfig,
+      id,
     } = this.props;
+
     return (
       <Fragment>
         <Grid
@@ -462,6 +467,7 @@ export class LaunchSuiteGrid extends PureComponent {
           loading={loading}
           onFilterClick={onFilterClick}
           rowHighlightingConfig={rowHighlightingConfig}
+          id={id}
         />
         {!data.length &&
           !loading && <NoItemMessage message={formatMessage(COMMON_LOCALE_KEYS.NO_RESULTS)} />}

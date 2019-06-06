@@ -43,6 +43,7 @@ import {
   toggleAllLaunchesAction,
   deleteItemsAction,
   updateLaunchLocallyAction,
+  toggleLaunchCounterAction,
 } from 'controllers/launch';
 import { prevTestItemSelector } from 'controllers/pages';
 import { LaunchSuiteGrid } from 'pages/inside/common/launchSuiteGrid';
@@ -137,6 +138,7 @@ const messages = defineMessages({
     showScreenLockAction,
     hideScreenLockAction,
     updateLaunchLocallyAction,
+    toggleLaunchCounterAction,
   },
 )
 @withSorting({
@@ -177,6 +179,7 @@ export class LaunchesPage extends Component {
     mergeLaunchesAction: PropTypes.func,
     compareLaunchesAction: PropTypes.func,
     moveLaunchesAction: PropTypes.func,
+    toggleLaunchCounterAction: PropTypes.func,
     lastOperation: PropTypes.string,
     loading: PropTypes.bool,
     fetchLaunchesAction: PropTypes.func,
@@ -216,6 +219,7 @@ export class LaunchesPage extends Component {
     mergeLaunchesAction: () => {},
     compareLaunchesAction: () => {},
     moveLaunchesAction: () => {},
+    toggleLaunchCounterAction: () => {},
     lastOperation: '',
     loading: false,
     fetchLaunchesAction: () => {},
@@ -237,9 +241,10 @@ export class LaunchesPage extends Component {
   state = {
     highlightedRowId: null,
     isGridRowHighlighted: false,
-    isSauceLabsIntegrationView: false,
     prevLaunches: [],
     launchesInProgress: [],
+    counter: null,
+    id: null,
   };
 
   componentDidMount() {
@@ -453,8 +458,8 @@ export class LaunchesPage extends Component {
     });
   };
 
-  fetchLaunchStatus = (launchesInProgress) => {
-    fetch(URLS.launchStatus(this.props.activeProject, launchesInProgress), {
+  fetchLaunchStatus = (launches) => {
+    fetch(URLS.launchStatus(this.props.activeProject, launches), {
       method: 'get',
     }).then((launchesWithStatus) => {
       const newLaunchesInProgress = this.state.launchesInProgress.filter(
@@ -462,11 +467,17 @@ export class LaunchesPage extends Component {
       );
 
       if (!isEqual(this.state.launchesInProgress, newLaunchesInProgress)) {
+        const { counter, launchesInProgress } = this.state;
+        const newCounterValue = counter
+          ? counter + 1
+          : launchesInProgress.length - newLaunchesInProgress.length;
+
         this.setState({
           launchesInProgress: newLaunchesInProgress,
+          counter: newCounterValue,
+          id: newCounterValue,
         });
       }
-      // todo update status, add notification on just finished launch over 'Refresh' button
     });
   };
 
@@ -494,6 +505,13 @@ export class LaunchesPage extends Component {
     if (this.props.activePage !== 1) {
       this.props.onChangePage(1);
     }
+  };
+
+  refreshLaunch = () => {
+    this.setState({
+      counter: null,
+    });
+    this.props.fetchLaunchesAction();
   };
 
   handleAllLaunchesSelection = () => {
@@ -573,6 +591,8 @@ export class LaunchesPage extends Component {
       isGridRowHighlighted: this.state.isGridRowHighlighted,
       highlightedRowId: this.state.highlightedRowId,
     };
+    const { counter, id } = this.state;
+
     return (
       <FilterEntitiesContainer
         level={LEVEL_LAUNCH}
@@ -598,7 +618,7 @@ export class LaunchesPage extends Component {
             <PageSection>
               <LaunchToolbar
                 errors={this.props.validationErrors}
-                onRefresh={this.props.fetchLaunchesAction}
+                onRefresh={this.refreshLaunch}
                 selectedLaunches={selectedLaunches}
                 onUnselect={this.unselectItem}
                 onUnselectAll={this.unselectAllItems}
@@ -612,6 +632,7 @@ export class LaunchesPage extends Component {
                 onDelete={this.deleteItems}
                 activeFilterId={activeFilterId}
                 onAddNewWidget={this.showWidgetWizard}
+                counter={counter}
               />
               <LaunchSuiteGrid
                 data={launches}
@@ -630,6 +651,7 @@ export class LaunchesPage extends Component {
                 onFilterClick={onFilterAdd}
                 events={LAUNCHES_PAGE_EVENTS}
                 onAnalysis={this.onAnalysis}
+                id={id}
                 rowHighlightingConfig={rowHighlightingConfig}
               />
               {!!pageCount &&
@@ -651,10 +673,13 @@ export class LaunchesPage extends Component {
   };
 
   render() {
-    const { isGridRowHighlighted } = this.state;
+    const { isGridRowHighlighted, counter, id } = this.state;
+
     return (
       <LaunchFiltersContainer
         {...this.props}
+        id={id}
+        counter={counter}
         isGridRowHighlighted={isGridRowHighlighted}
         onChange={this.resetPageNumber}
         render={this.renderPageContent}
