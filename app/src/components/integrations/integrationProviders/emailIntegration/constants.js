@@ -1,4 +1,3 @@
-// export const INTEGRATION_PARAMETERS_KEY = 'integrationParameters'; /* TODO: move it to the common integration constants */
 export const AUTH_ENABLED_KEY = 'authEnabled';
 export const PROTOCOL_KEY = 'protocol';
 export const SSL_KEY = 'sslEnabled';

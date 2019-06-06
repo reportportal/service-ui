@@ -56,16 +56,19 @@ const messages = defineMessages({
     id: 'EmailFormFields.passwordLabel',
     defaultMessage: 'Password',
   },
-  portFieldHint: {
-    id: 'EmailFormFields.portFieldHint',
-    defaultMessage: "Only numbers from '1' to '65535' are possible.",
-  },
 });
 
 const validators = {
   host: (value) => (!value && 'requiredFieldHint') || undefined,
-  port: (value, formatMessage) =>
-    (!value || !validate.inRangeValidate(value, 1, 65535)) && formatMessage(messages.portFieldHint),
+  port: (value) => {
+    if (!value) {
+      return 'requiredFieldHint';
+    }
+    if (!validate.inRangeValidate(value, 1, 65535)) {
+      return 'portFieldHint';
+    }
+    return undefined;
+  },
 };
 
 @connect((state) => ({
@@ -106,6 +109,9 @@ export class EmailFormFields extends Component {
       this.props.change(PASSWORD_KEY, '');
     }
   };
+
+  formatPortValue = (value) => value && String(value);
+  normalizeValue = (value) => `${value}`.replace(/\D+/g, '');
 
   render() {
     const {
@@ -150,13 +156,13 @@ export class EmailFormFields extends Component {
           required
           disabled={disabled}
           label={formatMessage(messages.portLabel)}
-          format={String}
-          parse={(value) => value && Number(value)}
+          format={this.formatPortValue}
+          normalize={this.normalizeValue}
           lineAlign={lineAlign}
-          validate={(value) => validators.port(value, formatMessage)}
+          validate={validators.port}
         >
           <FieldErrorHint>
-            <Input type="number" maxLength="5" mobileDisabled />
+            <Input maxLength="5" mobileDisabled />
           </FieldErrorHint>
         </IntegrationFormField>
         <IntegrationFormField

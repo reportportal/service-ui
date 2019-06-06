@@ -70,6 +70,10 @@ const messages = defineMessages({
     id: 'InstancesSection.addIntegrationButtonTitle',
     defaultMessage: 'Add integration',
   },
+  noGlobalIntegrationMessage: {
+    id: 'InstancesSection.noGlobalIntegrationMessage',
+    defaultMessage: 'No global integration',
+  },
 });
 
 @connect(
@@ -199,18 +203,21 @@ export class InstancesSection extends Component {
               )}
           </Fragment>
         )}
-        {!!globalIntegrations.length && (
-          <InstancesList
-            blocked
-            title={formatMessage(
-              this.multiple ? messages.globalIntegrations : messages.globalIntegration,
-            )}
-            items={globalIntegrations}
-            onItemClick={onItemClick}
-            disabled={isProjectIntegrationsExists}
-            disabledHint={formatMessage(messages.globalIntegrationsDisabledHint)}
-            defaultItemTitle={formatMessage(messages.globalSettingsDefaultTitle)}
-          />
+        <InstancesList
+          blocked
+          title={formatMessage(
+            this.multiple ? messages.globalIntegrations : messages.globalIntegration,
+          )}
+          items={globalIntegrations}
+          onItemClick={onItemClick}
+          disabled={isProjectIntegrationsExists}
+          disabledHint={formatMessage(messages.globalIntegrationsDisabledHint)}
+          defaultItemTitle={formatMessage(messages.globalSettingsDefaultTitle)}
+        />
+        {!globalIntegrations.length && (
+          <p className={cx('no-items-message')}>
+            {formatMessage(messages.noGlobalIntegrationMessage)}
+          </p>
         )}
         {!disabled && (
           <div className={cx('settings-action-block')}>
