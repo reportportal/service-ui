@@ -3,7 +3,7 @@ import { getTimelineAxisTicks, getItemColor } from 'components/widgets/charts/co
 import { MESSAGES } from '../common/constants';
 import { TimelineTooltip } from '../common/timelineTooltip';
 
-export const getTimelineConfig = ({ content, isPreview, intl, positionCallback, height }) => {
+export const getTimelineConfig = ({ content, isPreview, intl, positionCallback, size }) => {
   const chartData = {};
   const colors = {};
   const itemData = [];
@@ -94,8 +94,6 @@ export const getTimelineConfig = ({ content, isPreview, intl, positionCallback, 
       position: positionCallback,
       contents: TimelineTooltip(itemData, MESSAGES, intl),
     },
-    size: {
-      height,
-    },
+    size,
   };
 };
