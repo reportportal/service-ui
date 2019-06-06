@@ -17,3 +17,4 @@ export const COLOR_NOTPASSED = COLOR_FAILED;
 export const COLOR_INVESTIGATED = '#87B87F';
 export const COLOR_BLACK_2 = '#393939';
 export const COLOR_WHITE_TWO = '#ffffff';
+export const COLOR_LAUNCHESQUANTITY = '#0f55ff';
