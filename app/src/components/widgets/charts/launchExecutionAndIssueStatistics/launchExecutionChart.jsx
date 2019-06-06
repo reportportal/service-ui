@@ -90,7 +90,7 @@ export class LaunchExecutionChart extends Component {
 
   componentWillUnmount() {
     if (!this.props.isPreview) {
-      this.statusNode.removeEventListener('mousemove', this.setCoords);
+      this.statusNode && this.statusNode.removeEventListener('mousemove', this.setCoords);
       this.props.observer.unsubscribe('widgetResized', this.resizeStatusChart);
     }
   }

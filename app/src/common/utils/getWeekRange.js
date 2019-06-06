@@ -1,12 +1,12 @@
 import moment from 'moment';
 import PropTypes from 'prop-types';
-import { DEFAULT_DATE_FORMAT } from 'common/constants/dateFormats';
+import { DATE_FORMAT_TOOLTIP } from 'common/constants/timeDateFormat';
 
 export const getWeekRange = (date = '') => {
-  const endDate = moment(date).format(DEFAULT_DATE_FORMAT);
+  const endDate = moment(date).format(DATE_FORMAT_TOOLTIP);
   const startDate = moment(date)
     .subtract(1, 'week')
-    .format(DEFAULT_DATE_FORMAT);
+    .format(DATE_FORMAT_TOOLTIP);
 
   return `${startDate} - ${endDate}`;
 };
