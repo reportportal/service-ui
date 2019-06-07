@@ -80,6 +80,7 @@ export class UniqueBugsTableControls extends Component {
                 fieldLabel={formatMessage(messages.ItemsFieldLabel)}
                 inputWidth={ITEMS_INPUT_WIDTH}
                 maxLength="3"
+                hintType={'top-right'}
               />
             </FieldProvider>
             <FieldProvider name="contentParameters.widgetOptions.latest">

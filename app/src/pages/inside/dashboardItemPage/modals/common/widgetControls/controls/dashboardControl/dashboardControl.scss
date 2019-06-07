@@ -1,0 +1,16 @@
+.dashboardControl-list {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-content: flex-start;
+  align-items: center;
+  padding: 5px;
+  background-color: $COLOR--white-four;
+}
+
+.dashboardControl-title {
+  margin: 10px 0;
+  color: $COLOR--charcoal-grey;
+  font-size: 13px;
+}

@@ -18,10 +18,15 @@
   }
 }
 
-.action-description {
+.action-description,
+.no-items-message {
   margin-top: 10px;
   color: $COLOR--gray-60;
   font-size: 13px;
   font-family: $FONT-REGULAR;
   line-height: 1.54;
+}
+
+.no-items-message {
+  margin-bottom: 25px;
 }

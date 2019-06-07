@@ -22,6 +22,8 @@
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { defineMessages, injectIntl, intlShape } from 'react-intl';
+import DefaultUserImage from 'common/img/default-user-avatar.png';
+import { Image } from 'components/main/image';
 import styles from './userItem.scss';
 
 const cx = classNames.bind(styles);
@@ -39,7 +41,7 @@ export const UserItem = injectIntl(
       className={cx({ 'user-search-result-wrap': true, 'disabled-item': isAssigned })}
       onClick={onClick}
     >
-      <div className={cx('user-avatar')} style={{ backgroundImage: `url(${userAvatar})` }} />
+      <Image className={cx('user-avatar')} src={userAvatar} fallback={DefaultUserImage} />
       <div className={cx('user-search-info')}>
         <p className={cx('user-search-name')}>{userName}</p>
         <p className={cx('user-search-login')}>{userLogin}</p>

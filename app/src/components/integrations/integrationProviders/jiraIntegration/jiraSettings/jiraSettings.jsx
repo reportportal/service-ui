@@ -1,29 +1,17 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { defineMessages, injectIntl, intlShape } from 'react-intl';
+import { injectIntl, intlShape } from 'react-intl';
 import { connect } from 'react-redux';
 import { showModalAction, hideModalAction } from 'controllers/modal';
 import {
   BtsAuthFieldsInfo,
   BtsPropertiesForIssueForm,
   BTS_FIELDS_FORM,
+  COMMON_BTS_MESSAGES,
+  getDefectFormFields,
 } from 'components/integrations/elements/bts';
 import { IntegrationSettings } from 'components/integrations/elements';
-
-const messages = defineMessages({
-  linkToBts: {
-    id: 'BtsAuthFieldsInfo.linkToBts',
-    defaultMessage: 'Link to BTS',
-  },
-  btsProjectName: {
-    id: 'BtsAuthFieldsInfo.btsProjectName',
-    defaultMessage: 'Project name in Jira',
-  },
-  usernameTitle: {
-    id: 'BtsAuthFieldsInfo.usernameTitle',
-    defaultMessage: 'Authorized by username',
-  },
-});
+import { messages } from '../messages';
 
 @connect(null, {
   showModalAction,
@@ -42,11 +30,9 @@ export class JiraSettings extends Component {
 
   onSubmit = (data, callback, metaData) => {
     const { fields, checkedFieldsIds = {} } = metaData;
-    const defectFormFields = fields
-      .filter((item) => item.required || checkedFieldsIds[item.id])
-      .map((item) => ({ ...item, value: data[item.id] }));
+    const defectFormFields = getDefectFormFields(fields, checkedFieldsIds, data);
 
-    this.props.onUpdate({ ...data.integrationParameters, defectFormFields }, callback);
+    this.props.onUpdate({ defectFormFields }, callback);
   };
 
   getEditAuthConfig = () => ({
@@ -57,15 +43,15 @@ export class JiraSettings extends Component {
   authFieldsConfig = [
     {
       value: this.props.data.integrationParameters.url,
-      message: this.props.intl.formatMessage(messages.linkToBts),
+      message: this.props.intl.formatMessage(COMMON_BTS_MESSAGES.linkToBtsLabel),
     },
     {
       value: this.props.data.integrationParameters.project,
-      message: this.props.intl.formatMessage(messages.btsProjectName),
+      message: this.props.intl.formatMessage(messages.projectNameLabel),
     },
     {
       value: this.props.data.integrationParameters.username,
-      message: this.props.intl.formatMessage(messages.usernameTitle),
+      message: this.props.intl.formatMessage(messages.authorizedByTitle),
     },
   ];
 

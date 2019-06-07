@@ -3,12 +3,14 @@ import track from 'react-tracking';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { injectIntl, intlShape } from 'react-intl';
-import { getFormValues, submit } from 'redux-form';
+import { submit } from 'redux-form';
 import { connect } from 'react-redux';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
-import { showScreenLockAction } from 'controllers/screenLock';
+import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLock';
+import { showDefaultErrorNotification } from 'controllers/notification';
 import { activeProjectSelector } from 'controllers/user';
+import { fetchDashboardsAction } from 'controllers/dashboard';
 import { getWidgets } from 'pages/inside/dashboardItemPage/modals/common/widgets';
 import { DEFAULT_WIDGET_CONFIG, WIDGET_WIZARD_FORM } from '../../common/constants';
 import { prepareWidgetDataForSubmit } from '../../common/utils';
@@ -21,12 +23,14 @@ const cx = classNames.bind(styles);
 @injectIntl
 @connect(
   (state) => ({
-    formValues: getFormValues(WIDGET_WIZARD_FORM)(state),
     projectId: activeProjectSelector(state),
   }),
   {
     submitWidgetWizardForm: () => submit(WIDGET_WIZARD_FORM),
     showScreenLockAction,
+    fetchDashboards: fetchDashboardsAction,
+    hideScreenLockAction,
+    showDefaultErrorNotification,
   },
 )
 @track()
@@ -37,13 +41,17 @@ export class WidgetWizardContent extends Component {
     submitWidgetWizardForm: PropTypes.func.isRequired,
     projectId: PropTypes.string.isRequired,
     showScreenLockAction: PropTypes.func.isRequired,
+    hideScreenLockAction: PropTypes.func.isRequired,
+    showDefaultErrorNotification: PropTypes.func.isRequired,
     closeModal: PropTypes.func.isRequired,
+    showConfirmation: PropTypes.bool.isRequired,
     onConfirm: PropTypes.func,
     eventsInfo: PropTypes.object,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    fetchDashboards: PropTypes.func,
   };
   static defaultProps = {
     formValues: {
@@ -51,6 +59,7 @@ export class WidgetWizardContent extends Component {
     },
     eventsInfo: {},
     onConfirm: () => {},
+    fetchDashboards: () => {},
   };
 
   constructor(props) {
@@ -58,6 +67,8 @@ export class WidgetWizardContent extends Component {
     this.state = {
       step: 0,
     };
+    const { fetchDashboards } = this.props;
+    fetchDashboards();
     this.widgets = getWidgets(props.intl.formatMessage);
   }
 
@@ -78,22 +89,29 @@ export class WidgetWizardContent extends Component {
       projectId,
       onConfirm,
     } = this.props;
+    const { selectedDashboard, ...rest } = formData;
 
-    const data = prepareWidgetDataForSubmit(formData);
+    const data = prepareWidgetDataForSubmit(rest);
 
     trackEvent(addWidget);
     this.props.showScreenLockAction();
     fetch(URLS.widget(projectId), {
       method: 'post',
       data,
-    }).then(({ id }) => {
-      const newWidget = {
-        widgetId: id,
-        widgetType: data.widgetType,
-        ...DEFAULT_WIDGET_CONFIG,
-      };
-      onConfirm(newWidget, this.props.closeModal);
-    });
+    })
+      .then(({ id }) => {
+        const newWidget = {
+          widgetId: id,
+          widgetName: data.name,
+          widgetType: data.widgetType,
+          ...DEFAULT_WIDGET_CONFIG,
+        };
+        onConfirm(newWidget, this.props.closeModal, selectedDashboard);
+      })
+      .catch((err) => {
+        this.props.hideScreenLockAction();
+        this.props.showDefaultErrorNotification(err);
+      });
   };
 
   nextStep = () => {
@@ -103,6 +121,7 @@ export class WidgetWizardContent extends Component {
   render() {
     const {
       formValues: { widgetType },
+      showConfirmation,
     } = this.props;
 
     return (
@@ -112,6 +131,7 @@ export class WidgetWizardContent extends Component {
           projectId={this.props.projectId}
           widgetSettings={prepareWidgetDataForSubmit(this.props.formValues)}
           step={this.state.step}
+          showConfirmation={showConfirmation}
         />
         <WizardControlsSection
           eventsInfo={this.props.eventsInfo}

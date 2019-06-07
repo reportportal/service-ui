@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { Manager, Reference, Popper } from 'react-popper';
@@ -130,22 +131,30 @@ export class DotsMenuButton extends Component {
               />
             )}
           </Reference>
-          <Popper>
-            {({ ref, style, scheduleUpdate }) => {
-              this.updateMenuPosition = scheduleUpdate;
-              return (
-                <div
-                  ref={ref}
-                  style={style}
-                  className={cx('menu', {
-                    opened: this.state.opened,
-                  })}
-                >
-                  {this.renderMenuItems(items)}
-                </div>
-              );
-            }}
-          </Popper>
+          {ReactDOM.createPortal(
+            <Popper
+              modifiers={{
+                preventOverflow: { enabled: false },
+                hide: { enabled: false },
+              }}
+            >
+              {({ ref, style, scheduleUpdate }) => {
+                this.updateMenuPosition = scheduleUpdate;
+                return (
+                  <div
+                    ref={ref}
+                    style={style}
+                    className={cx('menu', {
+                      opened: this.state.opened,
+                    })}
+                  >
+                    {this.renderMenuItems(items)}
+                  </div>
+                );
+              }}
+            </Popper>,
+            document.querySelector('#popover-root'),
+          )}
         </div>
       </Manager>
     );

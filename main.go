@@ -48,7 +48,7 @@ func main() {
 
 		//content security policy
 		csp := map[string][]string{
-			"default-src": {"'self'", "'unsafe-inline'", "*.uservoice.com"},
+			"default-src": {"'self'", "data:", "'unsafe-inline'", "*.uservoice.com"},
 			"script-src": {
 				"'self'",
 				"'unsafe-inline'",
@@ -60,9 +60,11 @@ func main() {
 				"*.epam.com",
 				"*.uservoice.com",
 			},
+			"worker-src": {"'self'", "blob:"},
             "font-src": {"'self'", "data:", "fonts.googleapis.com", "fonts.gstatic.com"},
+            "style-src-elem": {"'self'", "data:", "*.googleapis.com"},
             "media-src": {"'self'", "*.saucelabs.com"},
-			"img-src": {"*", "'self'", "data:"},
+			"img-src": {"*", "'self'", "data:", "blob:"},
 			"object-src": {"'self'"},
 		}
 

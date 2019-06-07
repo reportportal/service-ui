@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import React, { Component } from 'react';
 import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import { injectIntl, intlShape, defineMessages } from 'react-intl';
@@ -49,6 +49,7 @@ const messages = defineMessages({
 @track()
 export class FilterEditModal extends Component {
   static propTypes = {
+    intl: intlShape.isRequired,
     data: PropTypes.shape({
       filter: PropTypes.object,
       onEdit: PropTypes.func,
@@ -56,7 +57,7 @@ export class FilterEditModal extends Component {
     }).isRequired,
     initialize: PropTypes.func.isRequired,
     handleSubmit: PropTypes.func.isRequired,
-    intl: intlShape.isRequired,
+    dirty: PropTypes.bool.isRequired,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
@@ -66,6 +67,15 @@ export class FilterEditModal extends Component {
   componentDidMount() {
     this.props.initialize(this.props.data.filter);
   }
+
+  getCloseConfirmationConfig = () => {
+    if (!this.props.dirty) {
+      return null;
+    }
+    return {
+      confirmationWarning: this.props.intl.formatMessage(COMMON_LOCALE_KEYS.CLOSE_MODAL_WARNING),
+    };
+  };
 
   getOkButtonTitle = () => {
     const {
@@ -109,6 +119,7 @@ export class FilterEditModal extends Component {
         okButton={okButton}
         cancelButton={cancelButton}
         closeIconEventInfo={FILTERS_PAGE_EVENTS.CLICK_CLOSE_ICON_MODAL_EDIT_FILTER}
+        closeConfirmation={this.getCloseConfirmationConfig()}
       >
         <form>
           <ModalField label={intl.formatMessage(messages.name)}>

@@ -1,5 +1,6 @@
 import { takeEvery, all, put, select, call } from 'redux-saga/effects';
 import { URLS } from 'common/urls';
+import { BTS_GROUP_TYPE } from 'common/constants/pluginsGroupTypes';
 import {
   showNotification,
   showDefaultErrorNotification,
@@ -150,7 +151,11 @@ function* addProjectIntegration({ payload: { data, pluginName, callback } }) {
       method: 'post',
       data,
     });
-    const newIntegration = { ...data, id: response.id, integrationType: { name: pluginName } };
+    const newIntegration = {
+      ...data,
+      id: response.id,
+      integrationType: { name: pluginName, groupType: BTS_GROUP_TYPE },
+    };
     yield put(addProjectIntegrationSuccessAction(newIntegration));
     yield put(
       showNotification({
@@ -234,7 +239,7 @@ function* removeProjectIntegrationsByType({ payload: instanceType }) {
     yield put(removeProjectIntegrationsByTypeSuccessAction(instanceType));
     yield put(
       showNotification({
-        messageId: 'returnToGlobalSuccess',
+        messageId: 'resetToGlobalSuccess',
         type: NOTIFICATION_TYPES.SUCCESS,
       }),
     );

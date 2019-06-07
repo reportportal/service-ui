@@ -27,8 +27,10 @@ import { connect } from 'react-redux';
 import ReactDOMServer from 'react-dom/server';
 import { defectLinkSelector } from 'controllers/testItem';
 import { defectTypesSelector } from 'controllers/project';
+import { launchFiltersSelector } from 'controllers/filter';
 import { activeProjectSelector } from 'controllers/user';
-import { TEST_ITEM_PAGE } from 'controllers/pages';
+import { TEST_ITEM_PAGE, PROJECT_LAUNCHES_PAGE } from 'controllers/pages';
+import { ALL } from 'common/constants/reservedFilterIds';
 import { TooltipWrapper } from '../common/tooltip';
 import { C3Chart } from '../common/c3chart';
 import chartStyles from './launchExecutionAndIssueStatistics.scss';
@@ -36,7 +38,6 @@ import { Legend } from '../common/legend';
 import { getDefectTypeLocators, getItemNameConfig } from '../common/utils';
 import { LaunchExecutionAndIssueStatisticsTooltip } from './launchExecutionAndIssueStatisticsTooltip';
 import { getPercentage, getChartData } from './chartUtils';
-import { messages } from './messages';
 
 const chartCx = classNames.bind(chartStyles);
 const getResult = (widget) => widget.content.result[0] || widget.content.result;
@@ -47,6 +48,7 @@ const getResult = (widget) => widget.content.result[0] || widget.content.result;
     project: activeProjectSelector(state),
     defectTypes: defectTypesSelector(state),
     getDefectLink: (params) => defectLinkSelector(state, params),
+    launchFilters: launchFiltersSelector(state),
   }),
   {
     navigate: (linkAction) => linkAction,
@@ -65,6 +67,8 @@ export class IssueStatisticsChart extends Component {
     observer: PropTypes.object,
     uncheckedLegendItems: PropTypes.array,
     onChangeLegend: PropTypes.func,
+    onStatusPageMode: PropTypes.bool,
+    launchFilters: PropTypes.array,
   };
 
   static defaultProps = {
@@ -73,6 +77,8 @@ export class IssueStatisticsChart extends Component {
     observer: {},
     uncheckedLegendItems: [],
     onChangeLegend: () => {},
+    onStatusPageMode: false,
+    launchFilters: [],
   };
 
   state = {
@@ -95,26 +101,30 @@ export class IssueStatisticsChart extends Component {
     this.chart = chart;
     this.issuesNode = element;
 
+    const { onStatusPageMode, widget, isPreview, uncheckedLegendItems } = this.props;
+
     this.renderTotalLabel();
 
-    if (!this.props.widget.content.result || this.props.isPreview) {
+    if (!widget.content.result || isPreview) {
       return;
     }
 
-    this.chart.resize({
-      height: this.height,
-    });
+    if (!onStatusPageMode) {
+      this.chart.resize({
+        height: this.height,
+      });
+    }
 
-    this.props.uncheckedLegendItems.forEach((id) => {
+    uncheckedLegendItems.forEach((id) => {
       this.chart.toggle(id);
     });
 
     d3
       .select(chart.element)
       .select('.c3-chart-arcs-title')
-      .attr('dy', -15)
+      .attr('dy', onStatusPageMode ? -5 : -15)
       .append('tspan')
-      .attr('dy', 30)
+      .attr('dy', onStatusPageMode ? 15 : 30)
       .attr('x', 0)
       .attr('fill', '#666')
       .text('ISSUES');
@@ -136,23 +146,39 @@ export class IssueStatisticsChart extends Component {
   };
 
   onChartClick = (d) => {
-    const { widget, getDefectLink, defectTypes } = this.props;
+    const { widget, launchFilters, getDefectLink, defectTypes } = this.props;
 
     const nameConfig = getItemNameConfig(d.id);
     const id = getResult(widget).id;
-    const defaultParams = this.getDefaultLinkParams(id);
-    const defectLocators = getDefectTypeLocators(nameConfig, defectTypes);
+    let navigationParams;
 
-    const link = getDefectLink({ defects: defectLocators, itemId: id });
+    if (!id) {
+      const appliedWidgetFilterId = widget.appliedFilters[0].id;
+      const activeFilter = launchFilters.filter((filter) => filter.id === appliedWidgetFilterId)[0];
+      const activeFilterId = activeFilter && activeFilter.id;
+      navigationParams = this.getDefaultParamsOverallStatisticsWidget(activeFilterId);
+    } else {
+      const defectLocators = getDefectTypeLocators(nameConfig, defectTypes);
+      const link = getDefectLink({ defects: defectLocators, itemId: id });
+      navigationParams = Object.assign(link, this.getDefaultParamsLaunchExecutionWidget(id));
+    }
 
-    this.props.navigate(Object.assign(link, defaultParams));
+    this.props.navigate(navigationParams);
   };
 
-  getDefaultLinkParams = (testItemIds) => ({
+  getDefaultParamsOverallStatisticsWidget = (activeFilterId) => ({
     payload: {
       projectId: this.props.project,
-      filterId: 'all',
-      testItemIds,
+      filterId: activeFilterId || ALL,
+    },
+    type: PROJECT_LAUNCHES_PAGE,
+  });
+
+  getDefaultParamsLaunchExecutionWidget = (id) => ({
+    payload: {
+      projectId: this.props.project,
+      filterId: ALL,
+      testItemIds: id,
     },
     type: TEST_ITEM_PAGE,
   });
@@ -205,11 +231,11 @@ export class IssueStatisticsChart extends Component {
       });
     });
 
-    return columns;
+    return columns.reverse();
   }
 
   getConfig = () => {
-    const { container, isPreview } = this.props;
+    const { container, isPreview, onStatusPageMode } = this.props;
     this.height = container.offsetHeight;
     this.width = container.offsetWidth;
     this.noAvailableData = false;
@@ -231,7 +257,6 @@ export class IssueStatisticsChart extends Component {
         type: 'donut',
         order: null,
         colors,
-        onclick: this.onChartClick,
       },
       interaction: {
         enabled: !isPreview,
@@ -258,6 +283,10 @@ export class IssueStatisticsChart extends Component {
         this.renderTotalLabel();
       },
     };
+
+    if (!onStatusPageMode) {
+      this.issueConfig.data.onclick = this.onChartClick;
+    }
 
     this.setState({
       isConfigReady: true,
@@ -309,6 +338,9 @@ export class IssueStatisticsChart extends Component {
   // These two are named a and b in the original implementation.
   renderIssuesContents = (data, a, b, color) => {
     const launchData = this.defectItems.find((item) => item.id === data[0].id);
+    const itemName = Object.values(this.props.defectTypes)
+      .reduce((result, defectTypes) => [...result, ...defectTypes], [])
+      .find((defectType) => defectType.locator === launchData.id.split('$')[3]).longName;
 
     return ReactDOMServer.renderToStaticMarkup(
       <TooltipWrapper>
@@ -316,15 +348,15 @@ export class IssueStatisticsChart extends Component {
           launchNumber={data[0].value}
           duration={getPercentage(data[0].ratio)}
           color={color(data[0].name)}
-          itemName={this.props.intl.formatMessage(messages[launchData.name.split('$total')[0]])}
+          itemName={itemName}
         />
       </TooltipWrapper>,
     );
   };
 
   render() {
-    const { isPreview, uncheckedLegendItems } = this.props;
-    const classes = chartCx({ 'preview-view': isPreview });
+    const { isPreview, uncheckedLegendItems, onStatusPageMode } = this.props;
+    const classes = chartCx('container', { 'preview-view': isPreview });
     const chartClasses = chartCx('c3', { 'small-view': this.height <= 250 });
     const { isConfigReady } = this.state;
     const legendItems = this.defectItems.map((item) => item.id);
@@ -332,17 +364,22 @@ export class IssueStatisticsChart extends Component {
     return (
       <div className={classes}>
         {isConfigReady && (
-          <div className={chartCx('issue-statistics-chart')}>
+          <div
+            className={chartCx('issue-statistics-chart', {
+              'status-page-mode': onStatusPageMode,
+            })}
+          >
             <div className={chartCx('data-js-issue-statistics-chart-container')}>
-              {!isPreview && (
-                <Legend
-                  items={legendItems}
-                  uncheckedLegendItems={uncheckedLegendItems}
-                  onClick={this.onClickLegendItem}
-                  onMouseOver={this.onMouseOver}
-                  onMouseOut={this.onMouseOut}
-                />
-              )}
+              {!isPreview &&
+                !onStatusPageMode && (
+                  <Legend
+                    items={legendItems}
+                    uncheckedLegendItems={uncheckedLegendItems}
+                    onClick={this.onClickLegendItem}
+                    onMouseOver={this.onMouseOver}
+                    onMouseOut={this.onMouseOut}
+                  />
+                )}
               <C3Chart
                 config={this.issueConfig}
                 onChartCreated={this.onIssuesChartCreated}

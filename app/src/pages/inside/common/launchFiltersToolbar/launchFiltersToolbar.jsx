@@ -13,7 +13,7 @@ import {
   changeActiveFilterAction,
 } from 'controllers/filter';
 import { changeLaunchDistinctAction, launchDistinctSelector } from 'controllers/launch';
-import { isEmptyObject } from 'common/utils';
+import { isEmptyObject, isEmptyValue } from 'common/utils';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { levelSelector } from 'controllers/testItem';
 import { EntitiesGroup } from 'components/filterEntities/entitiesGroup';
@@ -56,6 +56,7 @@ export class LaunchFiltersToolbar extends Component {
     onFilterValidate: PropTypes.func,
     onFilterChange: PropTypes.func,
     filterErrors: PropTypes.object,
+    filterValues: PropTypes.object,
     filterEntities: PropTypes.array,
     showModal: PropTypes.func,
     updateFilter: PropTypes.func,
@@ -81,6 +82,7 @@ export class LaunchFiltersToolbar extends Component {
     onFilterValidate: () => {},
     onFilterChange: () => {},
     filterErrors: {},
+    filterValues: {},
     filterEntities: [],
     showModal: () => {},
     updateFilter: () => {},
@@ -141,17 +143,37 @@ export class LaunchFiltersToolbar extends Component {
       updateFilter(activeFilter);
     }
   };
-
+  isNoFilterValues = () => {
+    const {
+      activeFilter: { conditions = [] },
+    } = this.props;
+    return !conditions.some((filter) => !isEmptyValue(filter.value));
+  };
   toggleExpand = () => this.setState({ expanded: !this.state.expanded });
+  isNewFilter = () => {
+    const { activeFilterId } = this.props;
+    return activeFilterId < 0;
+  };
   isFilterUnsaved = () => {
     const { unsavedFilterIds, activeFilterId } = this.props;
     return unsavedFilterIds.indexOf(activeFilterId) !== -1;
   };
   isSaveDisabled = () => {
-    const { filterErrors } = this.props;
-    return !this.isFilterUnsaved() || !isEmptyObject(filterErrors);
-  };
+    const { filterErrors, filterValues: newFilterValues } = this.props;
+    const newFilterFields = Object.values(newFilterValues);
+    const isFieldsNotEmpty =
+      newFilterFields.length && newFilterFields.every((field) => field.value);
 
+    return (
+      !this.isFilterUnsaved() ||
+      !isEmptyObject(filterErrors) ||
+      !isFieldsNotEmpty ||
+      this.isNoFilterValues()
+    );
+  };
+  isDiscardDisabled = () =>
+    !this.isFilterUnsaved() || (this.isNoFilterValues() && this.isNewFilter());
+  isEditDisabled = () => this.isFilterUnsaved() || this.isNewFilter();
   render() {
     const {
       filters,
@@ -170,7 +192,6 @@ export class LaunchFiltersToolbar extends Component {
       unsavedFilterIds,
       level,
     } = this.props;
-    const isNewFilter = activeFilterId < 0;
     return (
       <div className={cx('launch-filters-toolbar')}>
         <div className={cx('filter-tickets-row')}>
@@ -220,10 +241,10 @@ export class LaunchFiltersToolbar extends Component {
               </div>
               <FiltersActionBar
                 unsaved={this.isFilterUnsaved()}
-                discardDisabled={!this.isFilterUnsaved()}
+                discardDisabled={this.isDiscardDisabled()}
                 saveDisabled={this.isSaveDisabled()}
-                cloneDisabled={this.isFilterUnsaved()}
-                editDisabled={this.isFilterUnsaved() || isNewFilter}
+                cloneDisabled={this.isNoFilterValues()}
+                editDisabled={this.isEditDisabled()}
                 onDiscard={this.handleFilterReset}
                 onEdit={this.handleFilterEdit}
                 onSave={this.updateActiveFilter}

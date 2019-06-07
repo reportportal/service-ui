@@ -1,14 +1,27 @@
-import { fetch, setStorageItem } from 'common/utils';
-import { URLS } from 'common/urls';
 import { all, call, put, select, takeEvery } from 'redux-saga/effects';
+import { fetch, setStorageItem, updateStorageItem } from 'common/utils';
+import { URLS } from 'common/urls';
+import { APPLICATION_SETTINGS } from 'common/constants/localStorageKeys';
 import { showNotification } from 'controllers/notification';
 import { NOTIFICATION_TYPES } from 'controllers/notification/constants';
 import { activeProjectSelector, fetchUserAction } from 'controllers/user';
 import { fetchProjectAction } from 'controllers/project';
 import { fetchPluginsAction, fetchGlobalIntegrationsAction } from 'controllers/plugins';
 import { fetchInfoAction } from 'controllers/appInfo';
-import { authSuccessAction, resetTokenAction, setTokenAction } from './actionCreators';
-import { LOGIN, LOGOUT, TOKEN_KEY, GRANT_TYPES, SET_TOKEN } from './constants';
+import {
+  authSuccessAction,
+  resetTokenAction,
+  setTokenAction,
+  setLastFailedLoginTimeAction,
+} from './actionCreators';
+import {
+  LOGIN,
+  LOGOUT,
+  TOKEN_KEY,
+  GRANT_TYPES,
+  SET_TOKEN,
+  ERROR_CODE_LOGIN_MAX_LIMIT,
+} from './constants';
 
 function* handleLogout() {
   yield put(resetTokenAction());
@@ -36,8 +49,7 @@ function* handleLogin({ payload }) {
         type: NOTIFICATION_TYPES.SUCCESS,
       }),
     );
-  } catch (e) {
-    const error = (e.response && e.response.data && e.response.data.message) || e.message;
+  } catch ({ message: error, errorCode }) {
     yield put(
       showNotification({
         messageId: 'failureDefault',
@@ -45,6 +57,11 @@ function* handleLogin({ payload }) {
         values: { error },
       }),
     );
+    if (errorCode === ERROR_CODE_LOGIN_MAX_LIMIT) {
+      const lastFailedLoginTime = Date.now();
+      updateStorageItem(APPLICATION_SETTINGS, { lastFailedLoginTime });
+      yield put(setLastFailedLoginTimeAction(lastFailedLoginTime));
+    }
     return;
   }
 

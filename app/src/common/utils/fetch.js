@@ -1,5 +1,5 @@
 import axios, { CancelToken } from 'axios';
-import { logoutAction } from 'controllers/auth';
+import { isAuthorizedSelector, logoutAction } from 'controllers/auth';
 
 export const ERROR_CANCELED = 'REQUEST_CANCELED';
 export const ERROR_UNAUTHORIZED = 'UNAUTHORIZED';
@@ -19,7 +19,7 @@ const handleError = (error) => {
 
 const handleResponse = (res) => res.data;
 
-export const fetch = (url, params = {}) => {
+export const fetch = (url, params = {}, isRawResponse) => {
   const cancelToken = params && params.abort ? new CancelToken(params.abort) : null;
   const headersFromParams = params && params.headers;
   const headers = Object.assign({}, headersFromParams || {});
@@ -31,7 +31,7 @@ export const fetch = (url, params = {}) => {
   };
   return axios(requestParams)
     .catch(handleError)
-    .then(handleResponse);
+    .then(!isRawResponse ? handleResponse : (response) => response);
 };
 
 export const updateToken = (newToken) => {
@@ -43,7 +43,8 @@ export const initAuthInterceptor = (store) => {
     (response) => response,
     (error) => {
       if (error.response && error.response.status === 401) {
-        store.dispatch(logoutAction());
+        const isAuthorized = isAuthorizedSelector(store.getState());
+        isAuthorized && store.dispatch(logoutAction());
       }
       return Promise.reject(error);
     },

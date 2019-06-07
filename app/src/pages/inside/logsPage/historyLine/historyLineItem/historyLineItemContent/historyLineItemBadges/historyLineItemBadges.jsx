@@ -1,14 +1,8 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import {
-  AUTOMATION_BUG,
-  NO_DEFECT,
-  PRODUCT_BUG,
-  SYSTEM_ISSUE,
-  TO_INVESTIGATE,
-} from 'common/constants/defectTypes';
 import { SKIPPED, RESETED, FAILED, MANY, NOT_FOUND } from 'common/constants/launchStatuses';
+import { COLOR_BLACK_2, COLOR_WHITE_TWO } from 'common/constants/colors';
 import Parser from 'html-react-parser';
 import styles from './historyLineItemBadges.scss';
 import NoItemIcon from './img/noItem-inline.svg';
@@ -19,14 +13,6 @@ import InfoIcon from './img/info-icon-inline.svg';
 
 const cx = classNames.bind(styles);
 
-const defectsTitleMap = {
-  [AUTOMATION_BUG]: 'ab',
-  [NO_DEFECT]: 'nd',
-  [PRODUCT_BUG]: 'pb',
-  [SYSTEM_ISSUE]: 'si',
-  [TO_INVESTIGATE]: 'ti',
-};
-
 export class HistoryLineItemBadges extends Component {
   static propTypes = {
     active: PropTypes.bool,
@@ -34,6 +20,7 @@ export class HistoryLineItemBadges extends Component {
     issue: PropTypes.object,
     growthDuration: PropTypes.string,
     defects: PropTypes.object,
+    defectTypes: PropTypes.object.isRequired,
   };
 
   static defaultProps = {
@@ -45,13 +32,30 @@ export class HistoryLineItemBadges extends Component {
   };
 
   getDefectBadge = () => {
-    const { defects } = this.props;
+    const {
+      defects,
+      defectTypes,
+      issue: { issueType: issueLocator },
+    } = this.props;
+
     const defectType = Object.keys(defects).find((key) => defects[key].total);
+    const allDefectsList = Object.values(defectTypes).reduce(
+      (allDefects, nextGroup) => [...allDefects, ...nextGroup],
+      [],
+    );
+    const { shortName, color: defectColor = COLOR_WHITE_TWO } = allDefectsList.find(
+      (el) => el.locator === issueLocator,
+    );
+    const fontColor = this.calculateFontColor(defectColor);
 
     return (
       defectType && (
-        <div key={defectType} className={cx('defect-badge', `type-${defectsTitleMap[defectType]}`)}>
-          <span>{defectsTitleMap[defectType]}</span>
+        <div
+          key={defectType}
+          style={{ backgroundColor: defectColor }}
+          className={cx('defect-badge')}
+        >
+          <span style={{ color: fontColor }}>{shortName}</span>
         </div>
       )
     );
@@ -102,6 +106,18 @@ export class HistoryLineItemBadges extends Component {
       );
 
     return badges;
+  };
+
+  // calculate contrast of background - foreground colors using algorithm recommended by w3c.org
+  calculateFontColor = (color = '') => {
+    const hexcolor = color.slice(1);
+
+    const r = parseInt(hexcolor.substr(0, 2), 16);
+    const g = parseInt(hexcolor.substr(2, 2), 16);
+    const b = parseInt(hexcolor.substr(4, 2), 16);
+    const bgBrightnessLevel = (r * 299 + g * 587 + b * 114) / 1000;
+
+    return bgBrightnessLevel >= 125 ? COLOR_BLACK_2 : COLOR_WHITE_TWO;
   };
 
   render() {

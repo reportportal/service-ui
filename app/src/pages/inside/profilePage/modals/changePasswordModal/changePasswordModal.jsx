@@ -64,27 +64,41 @@ const messages = defineMessages({
 @track()
 export class ChangePasswordModal extends Component {
   static propTypes = {
+    intl: intlShape.isRequired,
     handleSubmit: PropTypes.func.isRequired,
     data: PropTypes.shape({
       onChangePassword: PropTypes.func,
     }).isRequired,
-    intl: intlShape.isRequired,
     invalid: PropTypes.bool.isRequired,
+    dirty: PropTypes.bool.isRequired,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
   };
+
   state = {
     showPassword: false,
   };
+
   onChangeShowPassword = () => {
     this.setState({ showPassword: !this.state.showPassword });
   };
+
+  getCloseConfirmationConfig = () => {
+    if (!this.props.dirty) {
+      return null;
+    }
+    return {
+      confirmationWarning: this.props.intl.formatMessage(COMMON_LOCALE_KEYS.CLOSE_MODAL_WARNING),
+    };
+  };
+
   changePasswordAndCloseModal = (closeModal) => (formData) => {
     this.props.data.onChangePassword(formData);
     closeModal();
   };
+
   render() {
     const { intl, invalid, handleSubmit, tracking } = this.props;
     const okButton = {
@@ -105,6 +119,7 @@ export class ChangePasswordModal extends Component {
         okButton={okButton}
         cancelButton={cancelButton}
         closeIconEventInfo={PROFILE_PAGE_EVENTS.CLOSE_ICON_CHANGE_PASSWORD_MODAL}
+        closeConfirmation={this.getCloseConfirmationConfig()}
       >
         <form className={cx('form')}>
           <ModalField

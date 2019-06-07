@@ -220,6 +220,11 @@ export const LAUNCHES_PAGE_EVENTS = {
     action: 'Click on Bttn Import',
     label: 'Arise Modul Import Launch',
   },
+  ADD_NEW_WIDGET_BTN: {
+    category: LAUNCHES_PAGE,
+    action: 'Click on Bttn Add New Widget on Dashboard',
+    label: 'Arise Modal Add New Widget',
+  },
 };
 
 const LAUNCHES_MODAL = 'Modal launches';
@@ -328,5 +333,40 @@ export const LAUNCHES_MODAL_EVENTS = {
     category: LAUNCHES_MODAL,
     action: 'Click on Bttn Cancel on Modal "Analysis Launch"',
     label: 'Cancel Analysis Launch Modal',
+  },
+  CLOSE_ICON_ADD_WIDGET_MODAL: {
+    category: LAUNCHES_MODAL,
+    action: 'Click on icon Close on Modal Add New Widget',
+    label: 'Close Modal Add New Widget',
+  },
+  CHOOSE_WIDGET_TYPE_ADD_WIDGET_MODAL: {
+    category: LAUNCHES_MODAL,
+    action: 'Choose radio bttn of Widget type in Modal Add New Widget',
+    label: 'Choose Widget type in Modal Add New Widget',
+  },
+  NEXT_STEP_ADD_WIDGET_MODAL: {
+    category: LAUNCHES_MODAL,
+    action: 'Click on Bttn Next Step on Modal Add New Widget',
+    label: 'Transition to Next Step on Modal Add New Widget',
+  },
+  PREVIOUS_STEP_ADD_WIDGET_MODAL: {
+    category: LAUNCHES_MODAL,
+    action: 'Click on Bttn Previous Step on Modal Add New Widget',
+    label: 'Transition to Previous Step in Modal Add New Widget',
+  },
+  ENTER_WIDGET_DESCRIPTION_ADD_WIDGET_MODAL: {
+    category: LAUNCHES_MODAL,
+    action: 'Enter Widget description in Modal Add New Widget',
+    label: 'Widget description in Modal Add New Widget',
+  },
+  SHARE_WIDGET_ADD_WIDGET_MODAL: {
+    category: LAUNCHES_MODAL,
+    action: 'Click on Share Widget on/off in Modal Add New Widget',
+    label: 'Share/unshare Widget',
+  },
+  ADD_BTN_ADD_WIDGET_MODAL: {
+    category: LAUNCHES_MODAL,
+    action: 'Click on Bttn Add in Modal Add New Widget',
+    label: 'Submit changes in filter in Modal Add New Widget',
   },
 };

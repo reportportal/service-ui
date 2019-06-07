@@ -496,7 +496,7 @@ export class StepLevelEntities extends Component {
         id: ENTITY_START_TIME,
         component: EntityItemStartTime,
         value: this.bindDefaultValue(ENTITY_START_TIME, {
-          CONDITION_BETWEEN,
+          condition: CONDITION_BETWEEN,
         }),
         title: intl.formatMessage(messages.StartTimeTitle),
         active: visibleFilters.includes(ENTITY_START_TIME),
@@ -507,7 +507,7 @@ export class StepLevelEntities extends Component {
         id: ENTITY_DEFECT_COMMENT,
         component: EntityInputConditional,
         value: this.bindDefaultValue(ENTITY_DEFECT_COMMENT, {
-          CONDITION_CNT,
+          condition: CONDITION_CNT,
         }),
         title: intl.formatMessage(messages.DefectCommentTitle),
         validationFunc: (entityObject) =>

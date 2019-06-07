@@ -15,20 +15,18 @@ import {
   ACTIONS_WITH_AA_SETTINGS,
   ACTIONS_WITH_DEFECTS,
   ACTIONS_WITH_IMPORT,
-  ACTIONS_WITH_NOTIFICATIONS,
   START_LAUNCH,
   FINISH_LAUNCH,
   DELETE_LAUNCH,
   UPDATE_ANALYZER,
   CREATE_USER,
   UPDATE_PROJECT,
-  UPDATE_NOTIFICATIONS,
-  SWITCH_OFF_NOTIFICATIONS,
-  SWITCH_ON_NOTIFICATIONS,
 } from 'common/constants/actionTypes';
 import { URLS } from 'common/urls';
 import { AbsRelTime } from 'components/main/absRelTime';
 import { externalSystemSelector } from 'controllers/project';
+import { Image } from 'components/main/image';
+import DefaultUserImage from 'common/img/default-user-avatar.png';
 import { DefaultProjectSettings } from './activities/defaultProjectSettings';
 import { AnalysisProperties } from './activities/analysisProperties';
 import { AnalysisConfigurations } from './activities/analysisConfigurations';
@@ -38,7 +36,6 @@ import { TestItem } from './activities/testItem';
 import { CreateUser } from './activities/createUser';
 import { CommonEntity } from './activities/commonEntity';
 import { DefectType } from './activities/defectType';
-import { Notifications } from './activities/notifications';
 import styles from './projectActivity.scss';
 
 const cx = classNames.bind(styles);
@@ -173,13 +170,7 @@ export class ProjectActivity extends Component {
       let contains;
       let values;
       if (this.isValidActivity(activity)) {
-        if (activity.actionType === UPDATE_PROJECT) {
-          values = this.updateProjectValues(activity);
-        } else if (activity.actionType === UPDATE_ANALYZER) {
-          values = this.updateAnalyzerOptions(activity);
-        } else {
-          values = activity;
-        }
+        values = activity;
         dateKey = this.getDayKey(values.lastModified);
         contains = dates.find((item) => item.day === dateKey);
         if (contains) {
@@ -220,28 +211,10 @@ export class ProjectActivity extends Component {
 
   getUserAvatar = (activity) => {
     const avatarUrl = URLS.dataUserPhoto(activity.user);
-    return <img className={cx('avatar')} src={avatarUrl} alt="avatar" />;
+    return (
+      <Image className={cx('avatar')} src={avatarUrl} alt="avatar" fallback={DefaultUserImage} />
+    );
   };
-
-  updateProjectValues = (activity) => {
-    const updatedActivity = {
-      ...activity,
-    };
-
-    activity.details.history.forEach((item) => {
-      if (item.field === 'emailCases') {
-        updatedActivity.actionType = UPDATE_NOTIFICATIONS;
-      }
-      if (item.field === 'enabled') {
-        updatedActivity.actionType =
-          item.newValue === 'false' ? SWITCH_OFF_NOTIFICATIONS : SWITCH_ON_NOTIFICATIONS;
-      }
-    });
-    return updatedActivity;
-  };
-
-  // TODO: set the necessary actionType here when it will be supported by backend (as above for notifications)
-  updateAnalyzerOptions = (activity) => activity;
 
   isValidActivity = (activity) =>
     !(
@@ -278,8 +251,6 @@ export class ProjectActivity extends Component {
         return <DefaultProjectSettings activity={activity} />;
       case CREATE_USER:
         return <CreateUser activity={activity} />;
-      case ACTIONS_WITH_NOTIFICATIONS:
-        return <Notifications activity={activity} />;
       default:
         return null;
     }
@@ -303,7 +274,7 @@ export class ProjectActivity extends Component {
             ) : (
               <Fragment>
                 {this.getUserAvatar(activity)}
-                <div className={cx('clearfix')}>
+                <div className={cx('activity-wrapper')}>
                   {ActivityComponent}
                   <AbsRelTime
                     setStartTimeFormatAction={START_TIME_FORMAT_ABSOLUTE}

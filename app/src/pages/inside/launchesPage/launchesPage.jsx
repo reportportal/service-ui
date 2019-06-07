@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { injectIntl, intlShape, defineMessages } from 'react-intl';
 import track from 'react-tracking';
+import isEqual from 'fast-deep-equal';
 import {
   LAUNCHES_PAGE,
   LAUNCHES_PAGE_EVENTS,
@@ -43,6 +44,7 @@ import {
   deleteItemsAction,
   updateLaunchLocallyAction,
 } from 'controllers/launch';
+import { prevTestItemSelector } from 'controllers/pages';
 import { LaunchSuiteGrid } from 'pages/inside/common/launchSuiteGrid';
 import { LaunchFiltersContainer } from 'pages/inside/common/launchFiltersContainer';
 import { LEVEL_LAUNCH } from 'common/constants/launchLevels';
@@ -98,6 +100,10 @@ const messages = defineMessages({
     id: 'LaunchesPage.analyseStartSuccess',
     defaultMessage: 'Auto-analyzer has been started.',
   },
+  addWidgetSuccess: {
+    id: 'LaunchesPage.addWidgetSuccess',
+    defaultMessage: 'Widget has been added',
+  },
 });
 
 @connect(
@@ -113,6 +119,7 @@ const messages = defineMessages({
     loading: loadingSelector(state),
     level: levelSelector(state),
     projectSetting: projectConfigSelector(state),
+    highlightItemId: prevTestItemSelector(state),
   }),
   {
     showModalAction,
@@ -183,6 +190,7 @@ export class LaunchesPage extends Component {
     }).isRequired,
     projectSetting: PropTypes.object.isRequired,
     updateLaunchLocallyAction: PropTypes.func.isRequired,
+    highlightItemId: PropTypes.number,
   };
 
   static defaultProps = {
@@ -212,11 +220,66 @@ export class LaunchesPage extends Component {
     loading: false,
     fetchLaunchesAction: () => {},
     deleteItemsAction: () => {},
+    highlightItemId: null,
   };
 
+  static getDerivedStateFromProps(nextProps, prevState) {
+    return prevState.prevLaunches !== nextProps.launches
+      ? {
+          prevLaunches: nextProps.launches,
+          launchesInProgress: nextProps.launches
+            .filter((item) => item.status === 'IN_PROGRESS')
+            .map((item) => item.id),
+        }
+      : null;
+  }
+
+  state = {
+    highlightedRowId: null,
+    isGridRowHighlighted: false,
+    isSauceLabsIntegrationView: false,
+    prevLaunches: [],
+    launchesInProgress: [],
+  };
+
+  componentDidMount() {
+    const { highlightItemId } = this.props;
+    if (highlightItemId) {
+      this.onHighlightRow(highlightItemId);
+    }
+  }
+
+  componentDidUpdate() {
+    if (!this.state.launchesInProgress.length && this.intervalId) {
+      clearInterval(this.intervalId);
+      this.intervalId = null;
+    }
+
+    if (this.state.launchesInProgress.length && !this.intervalId) {
+      this.intervalId = setInterval(
+        () => this.fetchLaunchStatus(this.state.launchesInProgress),
+        5000,
+      );
+    }
+  }
+
   componentWillUnmount() {
+    clearInterval(this.intervalId);
     this.props.unselectAllLaunchesAction();
   }
+
+  onHighlightRow = (highlightedRowId) => {
+    this.setState({
+      highlightedRowId,
+      isGridRowHighlighted: false,
+    });
+  };
+
+  onGridRowHighlighted = () => {
+    this.setState({
+      isGridRowHighlighted: true,
+    });
+  };
 
   onAnalysis = (launch) => {
     const {
@@ -230,6 +293,61 @@ export class LaunchesPage extends Component {
         item: launch,
         onConfirm: (data) => this.analyseItem(launch, data),
         analyzerMode: attributes['analyzer.autoAnalyzerMode'],
+      },
+    });
+  };
+  onAddDashBoard = (dashboard) => {
+    const { activeProject } = this.props;
+    if (dashboard.id) {
+      return Promise.resolve(dashboard);
+    }
+    return fetch(URLS.dashboards(activeProject), {
+      method: 'post',
+      data: dashboard,
+    });
+  };
+  onAddWidget = (widget, closeModal, dashboard) => {
+    const {
+      activeProject,
+      intl: { formatMessage },
+    } = this.props;
+    this.onAddDashBoard(dashboard).then(({ id }) => {
+      fetch(URLS.addDashboardWidget(activeProject, id), {
+        method: 'put',
+        data: { addWidget: widget },
+      })
+        .then(() => {
+          this.props.hideScreenLockAction();
+          closeModal();
+          this.props.showNotification({
+            message: formatMessage(messages.addWidgetSuccess),
+            type: NOTIFICATION_TYPES.SUCCESS,
+          });
+        })
+        .catch((err) => {
+          this.props.hideScreenLockAction();
+          this.props.showNotification({ message: err.message, type: NOTIFICATION_TYPES.ERROR });
+        });
+    });
+  };
+  showWidgetWizard = () => {
+    const {
+      tracking: { trackEvent },
+    } = this.props;
+    trackEvent(LAUNCHES_PAGE.ADD_NEW_WIDGET_BTN);
+    this.props.showModalAction({
+      id: 'widgetWizardModal',
+      data: {
+        onConfirm: this.onAddWidget,
+        eventsInfo: {
+          closeIcon: LAUNCHES_MODAL_EVENTS.CLOSE_ICON_ADD_WIDGET_MODAL,
+          chooseWidgetType: LAUNCHES_MODAL_EVENTS.CHOOSE_WIDGET_TYPE_ADD_WIDGET_MODAL,
+          nextStep: LAUNCHES_MODAL_EVENTS.NEXT_STEP_ADD_WIDGET_MODAL,
+          prevStep: LAUNCHES_MODAL_EVENTS.PREVIOUS_STEP_ADD_WIDGET_MODAL,
+          changeDescription: LAUNCHES_MODAL_EVENTS.ENTER_WIDGET_DESCRIPTION_ADD_WIDGET_MODAL,
+          shareWidget: LAUNCHES_MODAL_EVENTS.SHARE_WIDGET_ADD_WIDGET_MODAL,
+          addWidget: LAUNCHES_MODAL_EVENTS.ADD_BTN_ADD_WIDGET_MODAL,
+        },
       },
     });
   };
@@ -335,6 +453,23 @@ export class LaunchesPage extends Component {
     });
   };
 
+  fetchLaunchStatus = (launchesInProgress) => {
+    fetch(URLS.launchStatus(this.props.activeProject, launchesInProgress), {
+      method: 'get',
+    }).then((launchesWithStatus) => {
+      const newLaunchesInProgress = this.state.launchesInProgress.filter(
+        (item) => launchesWithStatus[item] === 'IN_PROGRESS',
+      );
+
+      if (!isEqual(this.state.launchesInProgress, newLaunchesInProgress)) {
+        this.setState({
+          launchesInProgress: newLaunchesInProgress,
+        });
+      }
+      // todo update status, add notification on just finished launch over 'Refresh' button
+    });
+  };
+
   openEditModal = (launch) => {
     this.props.showModalAction({
       id: 'editItemModal',
@@ -432,6 +567,12 @@ export class LaunchesPage extends Component {
       loading,
       debugMode,
     } = this.props;
+
+    const rowHighlightingConfig = {
+      onGridRowHighlighted: this.onGridRowHighlighted,
+      isGridRowHighlighted: this.state.isGridRowHighlighted,
+      highlightedRowId: this.state.highlightedRowId,
+    };
     return (
       <FilterEntitiesContainer
         level={LEVEL_LAUNCH}
@@ -469,6 +610,8 @@ export class LaunchesPage extends Component {
                 onImportLaunch={this.openImportModal}
                 debugMode={debugMode}
                 onDelete={this.deleteItems}
+                activeFilterId={activeFilterId}
+                onAddNewWidget={this.showWidgetWizard}
               />
               <LaunchSuiteGrid
                 data={launches}
@@ -487,6 +630,7 @@ export class LaunchesPage extends Component {
                 onFilterClick={onFilterAdd}
                 events={LAUNCHES_PAGE_EVENTS}
                 onAnalysis={this.onAnalysis}
+                rowHighlightingConfig={rowHighlightingConfig}
               />
               {!!pageCount &&
                 !loading && (
@@ -507,9 +651,11 @@ export class LaunchesPage extends Component {
   };
 
   render() {
+    const { isGridRowHighlighted } = this.state;
     return (
       <LaunchFiltersContainer
         {...this.props}
+        isGridRowHighlighted={isGridRowHighlighted}
         onChange={this.resetPageNumber}
         render={this.renderPageContent}
       />

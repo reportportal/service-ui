@@ -10,6 +10,7 @@ import {
   PROJECT_USERDEBUG_PAGE,
   payloadSelector,
   testItemIdsSelector,
+  searchStringSelector,
 } from 'controllers/pages';
 import { activeProjectSelector } from 'controllers/user';
 import { NAMESPACE as LAUNCH_NAMESPACE, debugModeSelector } from 'controllers/launch';
@@ -75,7 +76,6 @@ const testItemSelector = (state, id) => {
   return items.find((item) => item.id === id);
 };
 
-
 export const paginationSelector = (state) => {
   switch (levelSelector(state)) {
     case LEVEL_SUITE:
@@ -88,7 +88,6 @@ export const paginationSelector = (state) => {
       return {};
   }
 };
-
 
 export const isListViewSelector = (state, namespace) =>
   isListView(pagePropertiesSelector(state), namespace);
@@ -281,4 +280,24 @@ export const testCaseNameLinkSelector = (state, ownProps) => {
     },
     TEST_ITEM_PAGE,
   );
+};
+
+const btsBackLinkBaseSelector = createSelector(payloadSelector, (payload) => {
+  const { origin, pathname: pathPrefix } = window.location;
+  const { projectId, filterId } = payload;
+
+  return `${origin}${pathPrefix}#${projectId}/launches/${filterId}`;
+});
+
+export const btsIntegrationBackLinkSelector = (state, { path = '', launchId } = {}) => {
+  const testLevel = levelSelector(state);
+
+  if (testLevel !== LEVEL_STEP) {
+    return window.location.toString();
+  }
+
+  const btsLinkBase = btsBackLinkBaseSelector(state);
+  const searchString = searchStringSelector(state);
+
+  return `${btsLinkBase}/${launchId}/${path.split('.').join('/')}/log?${searchString}`;
 };

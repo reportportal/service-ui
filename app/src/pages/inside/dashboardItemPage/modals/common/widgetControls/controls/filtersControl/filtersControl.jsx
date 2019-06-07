@@ -53,6 +53,14 @@ const messages = defineMessages({
     id: 'FiltersControl.notFound',
     defaultMessage: `No filters found for "{filter}".`,
   },
+  filtersNotFoundOnProject: {
+    id: 'FiltersControl.notFoundOnProject',
+    defaultMessage: `No filters on a project`,
+  },
+  filtersNotFoundAdditional: {
+    id: 'FiltersControl.notFoundAdditionalInfo',
+    defaultMessage: `Be the first to add a new filter`,
+  },
 });
 
 @connect(
@@ -233,7 +241,7 @@ export class FiltersControl extends Component {
       data: filter,
     })
       .then(({ id }) => {
-        this.handleActiveFilterChange(String(id));
+        this.handleActiveFilterChange(String(id), filter);
         this.fetchFilter({ page: 1 });
         notify({
           message: intl.formatMessage(messages.insertFilterSuccess),
@@ -276,11 +284,12 @@ export class FiltersControl extends Component {
 
   handleFilterListChange = (event) => this.handleActiveFilterChange(event.target.value);
 
-  handleActiveFilterChange = (id) => {
+  handleActiveFilterChange = (id, newFilter) => {
     const filter = this.getFilterById(id);
+    const name = filter ? filter.name : newFilter.name;
     const newActiveFilter = {
       value: id,
-      name: filter.name,
+      name,
     };
     this.props.changeWizardForm('filters', [newActiveFilter]);
   };
@@ -331,7 +340,10 @@ export class FiltersControl extends Component {
           onChange={this.handleFilterListChange}
           onEdit={this.handleFormAppearanceMode}
           onLazyLoad={this.handleFiltersListLoad}
-          noItemsMessage={messages.filtersNotFound}
+          noItemsMessage={
+            searchValue ? messages.filtersNotFound : messages.filtersNotFoundOnProject
+          }
+          noItemsAdditionalMessage={searchValue ? null : messages.filtersNotFoundAdditional}
         />
       </div>
     );

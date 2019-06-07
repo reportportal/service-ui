@@ -3,17 +3,18 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { injectIntl, intlShape, defineMessages } from 'react-intl';
 import { reduxForm } from 'redux-form';
-import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
-import { activeProjectSelector } from 'controllers/user';
-import { SectionHeader } from 'components/main/sectionHeader';
-import { ModalLayout, withModal, ModalField } from 'components/main/modal';
-import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { LAUNCH_ITEM_TYPES } from 'common/constants/launchItemTypes';
-import { FieldProvider } from 'components/fields/fieldProvider';
-import { MarkdownEditor } from 'components/main/markdown';
 import { connect } from 'react-redux';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { LAUNCH_ITEM_TYPES } from 'common/constants/launchItemTypes';
+import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
+import { activeProjectSelector } from 'controllers/user';
+import { formatItemName } from 'controllers/testItem';
+import { SectionHeader } from 'components/main/sectionHeader';
+import { ModalLayout, withModal, ModalField } from 'components/main/modal';
+import { FieldProvider } from 'components/fields/fieldProvider';
+import { MarkdownEditor } from 'components/main/markdown';
 import { AttributeListField } from 'components/main/attributeList';
 import styles from './editItemModal.scss';
 
@@ -52,6 +53,11 @@ const messages = defineMessages({
     id: 'EditItemModal.itemUpdateSuccess',
     defaultMessage: 'Completed successfully!',
   },
+  launchWarning: {
+    id: 'EditItemModal.launchWarning',
+    defaultMessage:
+      'Change of description and attributes can affect your filtering results, widgets, trends',
+  },
 });
 
 @withModal('editItemModal')
@@ -69,6 +75,7 @@ const messages = defineMessages({
 )
 export class EditItemModal extends Component {
   static propTypes = {
+    intl: intlShape.isRequired,
     data: PropTypes.shape({
       item: PropTypes.object,
       type: PropTypes.string,
@@ -79,7 +86,6 @@ export class EditItemModal extends Component {
     handleSubmit: PropTypes.func.isRequired,
     currentProject: PropTypes.string.isRequired,
     showNotification: PropTypes.func.isRequired,
-    intl: intlShape.isRequired,
   };
 
   componentDidMount() {
@@ -176,6 +182,7 @@ export class EditItemModal extends Component {
         okButton={okButton}
         cancelButton={cancelButton}
         closeConfirmation={this.getCloseConfirmationConfig()}
+        warningMessage={type === LAUNCH_ITEM_TYPES.launch && formatMessage(messages.launchWarning)}
       >
         <form>
           <ModalField>
@@ -186,8 +193,8 @@ export class EditItemModal extends Component {
             />
           </ModalField>
           <ModalField>
-            <div className={cx('item-name')}>
-              {item.name}
+            <div title={item.name} className={cx('item-name')}>
+              {formatItemName(item.name)}
               {type === LAUNCH_ITEM_TYPES.launch && ` #${item.number}`}
             </div>
           </ModalField>

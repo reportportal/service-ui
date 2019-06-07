@@ -24,6 +24,7 @@ import {
 import { fetch } from 'common/utils';
 import { INTERNAL } from 'common/constants/accountType';
 import { collectFilterEntities } from 'components/filterEntities/containers/utils';
+import { downloadFile } from 'common/utils/downloadFile';
 
 import { EXPORT, INVITE_USER, ADD_USER } from './constants';
 
@@ -95,9 +96,7 @@ export class ActionPanel extends Component {
     filterEnities: {},
   };
 
-  onExportUsers = () => {
-    window.location.href = URLS.exportUsers(this.props.filterEnities);
-  };
+  onExportUsers = () => downloadFile(URLS.exportUsers(this.props.filterEnities));
 
   showAddUserModal = () =>
     this.props.showModalAction({
@@ -126,6 +125,7 @@ export class ActionPanel extends Component {
           type: NOTIFICATION_TYPES.SUCCESS,
           message: this.props.intl.formatMessage(messages.addUserSuccessNotification),
         });
+        this.props.fetchAllUsersAction();
       })
       .catch(this.props.showDefaultErrorNotification);
   };

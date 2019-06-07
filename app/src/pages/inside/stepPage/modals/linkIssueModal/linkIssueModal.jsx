@@ -12,11 +12,9 @@ import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { STEP_PAGE_EVENTS } from 'components/main/analytics/events';
 import { URLS } from 'common/urls';
-import { InputDropdown } from 'components/inputs/inputDropdown';
-import { FormField } from 'components/fields/formField';
 import { validate, fetch } from 'common/utils';
 import { BetaBadge } from 'pages/inside/common/betaBadge';
-import { INTEGRATION_NAMES_TITLES } from 'components/integrations';
+import { BtsIntegrationSelector } from 'pages/inside/common/btsIntegrationSelector';
 import { LinkIssueFields } from './linkIssueFields';
 import styles from './linkIssueModal.scss';
 
@@ -34,14 +32,6 @@ const messages = defineMessages({
   addIssueIdTitle: {
     id: 'LinkIssueModal.addIssueIdTitle',
     defaultMessage: 'Add issue id',
-  },
-  btsTitle: {
-    id: 'LinkIssueModal.btsTitle',
-    defaultMessage: 'BTS',
-  },
-  integrationNameTitle: {
-    id: 'LinkIssueModal.integrationNameTitle',
-    defaultMessage: 'Integration name',
   },
   linkIssueSuccess: {
     id: 'LinkIssueModal.linkIssueSuccess',
@@ -98,11 +88,7 @@ export class LinkIssueModal extends Component {
 
   constructor(props) {
     super(props);
-    this.pluginNamesOptions = Object.keys(props.namedBtsIntegrations).map((key) => ({
-      value: key,
-      label: INTEGRATION_NAMES_TITLES[key],
-    }));
-    const pluginName = this.pluginNamesOptions[0].value;
+    const pluginName = Object.keys(props.namedBtsIntegrations)[0];
 
     this.props.initialize({
       issues: [{}],
@@ -162,16 +148,20 @@ export class LinkIssueModal extends Component {
   };
 
   onChangePlugin = (pluginName) => {
-    this.setState({
-      pluginName,
-      integrationId: this.props.namedBtsIntegrations[pluginName][0].id,
-    });
+    if (pluginName !== this.state.pluginName) {
+      this.setState({
+        pluginName,
+        integrationId: this.props.namedBtsIntegrations[pluginName][0].id,
+      });
+    }
   };
 
-  onChangeIntegrationName = (integrationId) => {
-    this.setState({
-      integrationId,
-    });
+  onChangeIntegration = (integrationId) => {
+    if (integrationId !== this.state.integrationId) {
+      this.setState({
+        integrationId,
+      });
+    }
   };
 
   getCloseConfirmationConfig = () => {
@@ -183,19 +173,8 @@ export class LinkIssueModal extends Component {
     };
   };
 
-  getIntegrationNamesOptions = () =>
-    this.props.namedBtsIntegrations[this.state.pluginName].map((item) => ({
-      value: item.id,
-      label: item.name,
-    }));
-
-  isMultipleBtsPlugins = () => Object.keys(this.props.namedBtsIntegrations).length > 1;
-
-  isMultipleBtsIntegrations = () =>
-    this.props.namedBtsIntegrations[this.state.pluginName].length > 1;
-
   render() {
-    const { intl } = this.props;
+    const { intl, namedBtsIntegrations } = this.props;
     const okButton = {
       text: intl.formatMessage(messages.linkButton),
       onClick: this.onLink(),
@@ -221,34 +200,13 @@ export class LinkIssueModal extends Component {
         <h4 className={cx('add-issue-id-title')}>{intl.formatMessage(messages.addIssueIdTitle)}</h4>
         <div className={cx('link-issue-form-wrapper')}>
           <form>
-            <FormField
-              containerClassName={cx('field-container')}
-              fieldWrapperClassName={cx('field-wrapper')}
-              label={intl.formatMessage(messages.btsTitle)}
-              labelClassName={cx('systems-dropdown-title')}
-              withoutProvider
-            >
-              <InputDropdown
-                value={this.state.pluginName}
-                options={this.pluginNamesOptions}
-                onChange={this.onChangePlugin}
-                disabled={!this.isMultipleBtsPlugins()}
-              />
-            </FormField>
-            <FormField
-              containerClassName={cx('field-container')}
-              fieldWrapperClassName={cx('field-wrapper')}
-              label={intl.formatMessage(messages.integrationNameTitle)}
-              labelClassName={cx('systems-dropdown-title')}
-              withoutProvider
-            >
-              <InputDropdown
-                value={this.state.integrationId}
-                options={this.getIntegrationNamesOptions()}
-                onChange={this.onChangeIntegrationName}
-                disabled={!this.isMultipleBtsIntegrations()}
-              />
-            </FormField>
+            <BtsIntegrationSelector
+              namedBtsIntegrations={namedBtsIntegrations}
+              pluginName={this.state.pluginName}
+              integrationId={this.state.integrationId}
+              onChangeIntegration={this.onChangeIntegration}
+              onChangePluginName={this.onChangePlugin}
+            />
             <FieldArray
               name="issues"
               change={this.props.change}

@@ -28,19 +28,30 @@ const LABEL_WIDTH = 105;
 @track()
 export class AddProjectModal extends Component {
   static propTypes = {
-    data: PropTypes.object,
+    intl: intlShape.isRequired,
     tracking: PropTypes.shape({
       getTrackingData: PropTypes.func,
     }).isRequired,
-    intl: intlShape.isRequired,
+    data: PropTypes.object,
+    dirty: PropTypes.bool,
     handleSubmit: PropTypes.func,
     change: PropTypes.func,
   };
 
   static defaultProps = {
     data: {},
+    dirty: false,
     handleSubmit: () => {},
     change: () => {},
+  };
+
+  getCloseConfirmationConfig = () => {
+    if (!this.props.dirty) {
+      return null;
+    }
+    return {
+      confirmationWarning: this.props.intl.formatMessage(COMMON_LOCALE_KEYS.CLOSE_MODAL_WARNING),
+    };
   };
 
   render() {
@@ -61,6 +72,7 @@ export class AddProjectModal extends Component {
         cancelButton={{
           text: intl.formatMessage(COMMON_LOCALE_KEYS.CANCEL),
         }}
+        closeConfirmation={this.getCloseConfirmationConfig()}
       >
         <form>
           <ModalField>

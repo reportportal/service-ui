@@ -55,13 +55,20 @@ function* fetchFiltersConcat({ payload: { params, concat } }) {
 
 function* updateLaunchesFilter({ payload: filter }) {
   const activeProject = yield select(activeProjectSelector);
+  const shallowFilter = {
+    ...filter,
+    conditions: filter.conditions.filter((item) => item.value.trim()),
+  };
   yield put(
-    fetchDataAction(LAUNCHES_FILTERS_UPDATE_NAMESPACE)(URLS.filter(activeProject, filter.id), {
-      method: 'put',
-      data: omit(filter, ['id']),
-    }),
+    fetchDataAction(LAUNCHES_FILTERS_UPDATE_NAMESPACE)(
+      URLS.filter(activeProject, shallowFilter.id),
+      {
+        method: 'put',
+        data: omit(shallowFilter, ['id']),
+      },
+    ),
   );
-  yield put(updateFilterSuccessAction(filter));
+  yield put(updateFilterSuccessAction(shallowFilter));
 }
 
 function* changeActiveFilter({ payload: filterId }) {
@@ -99,10 +106,14 @@ function* createFilter({ payload: filter = {} }) {
 
 function* saveNewFilter({ payload: filter }) {
   const activeProject = yield select(activeProjectSelector);
+  const shallowFilter = {
+    ...filter,
+    conditions: filter.conditions.filter((item) => item.value.trim()),
+  };
   yield put(
     fetchDataAction(LAUNCHES_FILTERS_UPDATE_NAMESPACE)(URLS.filter(activeProject), {
       method: 'post',
-      data: omit(filter, ['id']),
+      data: omit(shallowFilter, ['id']),
     }),
   );
   const response = yield take(
@@ -115,7 +126,7 @@ function* saveNewFilter({ payload: filter }) {
     return;
   }
   const newId = response.payload.id;
-  const newFilter = { ...filter, id: newId };
+  const newFilter = { ...shallowFilter, id: newId };
   yield put(updateFilterSuccessAction(newFilter, filter.id));
   yield put(updateProjectFilterPreferencesAction(newFilter.id, 'PUT'));
   yield put(changeActiveFilterAction(newId));

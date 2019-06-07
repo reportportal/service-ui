@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
 import { injectIntl, intlShape } from 'react-intl';
-import C3Chart from 'react-c3js';
 
 import CircleCrossIcon from 'common/img/circle-cross-icon-inline.svg';
 import PencilIcon from 'common/img/pencil-icon-inline.svg';
@@ -14,6 +13,7 @@ import { deleteDefectSubTypeAction, updateDefectSubTypeAction } from 'controller
 import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { withHoverableTooltip } from 'components/main/tooltips/hoverableTooltip';
 
+import { C3Chart } from '../../../../components/widgets/charts/common/c3chart';
 import { defectTypeShape } from './defectTypeShape';
 import { DefectSubTypeForm } from './defectSubTypeForm';
 
@@ -60,6 +60,7 @@ export class DefectSubType extends Component {
     parentType: defectTypeShape.isRequired,
     group: PropTypes.arrayOf(defectTypeShape),
     showModal: PropTypes.func.isRequired,
+    isPossibleUpdateSettings: PropTypes.bool.isRequired,
     deleteDefectSubTypeAction: PropTypes.func.isRequired,
     updateDefectSubTypeAction: PropTypes.func.isRequired,
     intl: intlShape.isRequired,
@@ -74,39 +75,36 @@ export class DefectSubType extends Component {
     isEditMode: false,
   };
 
-  getChartConfig() {
-    return {
-      data: {
-        columns: this.props.group.map(({ locator }) => [locator, 100]),
-        colors: this.props.group.reduce((acc, { locator, color }) => {
-          acc[locator] = color;
-          return acc;
-        }, {}),
-        type: 'donut',
-      },
-      donut: {
-        expand: false,
-        width: 12,
-        label: {
-          show: false,
-        },
-      },
-      interaction: {
-        enabled: false,
-      },
-      legend: {
+  getChartConfig = () => ({
+    data: {
+      columns: this.props.group.map(({ locator }) => [locator, 100]),
+      colors: this.props.group.reduce((acc, { locator, color }) => {
+        acc[locator] = color;
+        return acc;
+      }, {}),
+      type: 'donut',
+    },
+    donut: {
+      expand: false,
+      width: 12,
+      label: {
         show: false,
       },
-      tooltip: {
-        show: false,
-      },
-      size: {
-        width: 56,
-        height: 56,
-      },
-      unloadBeforeLoad: true,
-    };
-  }
+    },
+    interaction: {
+      enabled: false,
+    },
+    legend: {
+      show: false,
+    },
+    tooltip: {
+      show: false,
+    },
+    size: {
+      width: 56,
+      height: 56,
+    },
+  });
 
   setEditMode = () => {
     this.setState({ isEditMode: true });
@@ -164,6 +162,7 @@ export class DefectSubType extends Component {
       data: { color, locator, longName, shortName },
       group,
       intl,
+      isPossibleUpdateSettings,
     } = this.props;
 
     const { isEditMode } = this.state;
@@ -187,33 +186,34 @@ export class DefectSubType extends Component {
               <ColorMarker color={color} />
             </div>
             <div className={cx('buttons-cell')}>
-              {!group && (
-                <Fragment>
-                  <button
-                    className={cx('action-button', 'edit-button')}
-                    aria-label={intl.formatMessage(COMMON_LOCALE_KEYS.EDIT)}
-                    title={intl.formatMessage(COMMON_LOCALE_KEYS.EDIT)}
-                    onClick={this.setEditMode}
-                  >
-                    {Parser(PencilIcon)}
-                  </button>
-                  <button
-                    className={cx('action-button', 'delete-button')}
-                    aria-label={intl.formatMessage(COMMON_LOCALE_KEYS.DELETE)}
-                    title={intl.formatMessage(COMMON_LOCALE_KEYS.DELETE)}
-                    onClick={this.showDeleteConfirmationDialog}
-                  >
-                    {Parser(CircleCrossIcon)}
-                  </button>
-                </Fragment>
-              )}
+              {!group &&
+                (isPossibleUpdateSettings && (
+                  <Fragment>
+                    <button
+                      className={cx('action-button', 'edit-button')}
+                      aria-label={intl.formatMessage(COMMON_LOCALE_KEYS.EDIT)}
+                      title={intl.formatMessage(COMMON_LOCALE_KEYS.EDIT)}
+                      onClick={this.setEditMode}
+                    >
+                      {Parser(PencilIcon)}
+                    </button>
+                    <button
+                      className={cx('action-button', 'delete-button')}
+                      aria-label={intl.formatMessage(COMMON_LOCALE_KEYS.DELETE)}
+                      title={intl.formatMessage(COMMON_LOCALE_KEYS.DELETE)}
+                      onClick={this.showDeleteConfirmationDialog}
+                    >
+                      {Parser(CircleCrossIcon)}
+                    </button>
+                  </Fragment>
+                ))}
             </div>
           </Fragment>
         )}
 
         {group && (
           <div className={cx('diagram-cell')}>
-            <C3Chart className={cx('defect-type-chart')} {...this.getChartConfig()} />
+            <C3Chart className={cx('defect-type-chart')} config={this.getChartConfig()} />
           </div>
         )}
       </div>

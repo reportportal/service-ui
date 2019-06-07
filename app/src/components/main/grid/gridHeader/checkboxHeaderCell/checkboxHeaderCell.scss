@@ -1,11 +1,14 @@
 .checkbox-header-cell {
   display: table-cell;
-  position: relative;
+  position: sticky;
+  top: 0;
+  z-index: $Z_INDEX-GRID_HEADER;
   height: 50px;
   padding-left: 10px;
   padding-right: 15px;
   text-align: right;
   vertical-align: middle;
+  background-color: $COLOR--white;
 
   @media (max-width: $SCREEN_SM_MAX) {
     display: none;

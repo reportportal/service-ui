@@ -6,7 +6,13 @@ import { defineMessages, injectIntl, intlShape } from 'react-intl';
 import Parser from 'html-react-parser';
 import { MARKDOWN, CONSOLE, DEFAULT } from 'common/constants/logViewModes';
 import { userIdSelector } from 'controllers/user';
-import { getWithAttachments, LOG_LEVELS, getLogViewMode, setLogViewMode } from 'controllers/log';
+import {
+  getWithAttachments,
+  LOG_LEVELS,
+  getLogViewMode,
+  setLogViewMode,
+  disableNextErrorButtonSelector,
+} from 'controllers/log';
 import { InputSlider } from 'components/inputs/inputSlider';
 import { InputCheckbox } from 'components/inputs/inputCheckbox';
 import { GhostButton } from 'components/buttons/ghostButton';
@@ -39,6 +45,7 @@ const messages = defineMessages({
 @injectIntl
 @connect((state) => ({
   userId: userIdSelector(state),
+  disableNextErrorButton: disableNextErrorButtonSelector(state),
 }))
 export class LogsGridToolbar extends Component {
   static propTypes = {
@@ -54,12 +61,16 @@ export class LogsGridToolbar extends Component {
     children: PropTypes.func,
     onChangeLogLevel: PropTypes.func,
     onChangeWithAttachments: PropTypes.func,
+    disableNextErrorButton: PropTypes.bool,
+    onNextError: PropTypes.func,
   };
 
   static defaultProps = {
     children: () => {},
     onChangeLogLevel: () => {},
     onChangeWithAttachments: () => {},
+    disableNextErrorButton: true,
+    onNextError: () => {},
   };
 
   state = {
@@ -100,11 +111,18 @@ export class LogsGridToolbar extends Component {
       withAttachments: !withAttachments,
     });
   };
-
   render() {
-    const { intl, children, activePage, pageCount, onChangePage, logLevel } = this.props;
+    const {
+      intl,
+      children,
+      activePage,
+      pageCount,
+      onChangePage,
+      logLevel,
+      disableNextErrorButton,
+      onNextError,
+    } = this.props;
     const { logViewMode, withAttachments } = this.state;
-
     return (
       <div className={cx('container')}>
         <div className={cx('panel')}>
@@ -136,7 +154,13 @@ export class LogsGridToolbar extends Component {
               </button>
             </div>
             <div className={cx('action-buttons')}>
-              <GhostButton disabled>{intl.formatMessage(messages.nextError)}</GhostButton>
+              <GhostButton
+                disabled={disableNextErrorButton}
+                onClick={onNextError}
+                title={intl.formatMessage(messages.nextError)}
+              >
+                {intl.formatMessage(messages.nextError)}
+              </GhostButton>
             </div>
             {pageCount !== 0 && (
               <div className={cx('pagination')}>

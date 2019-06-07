@@ -84,22 +84,35 @@ export class InviteUserModal extends Component {
     selectedProject: PropTypes.string,
     selectedUser: PropTypes.object,
     isAdmin: PropTypes.bool,
+    dirty: PropTypes.bool,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
   };
+
   static defaultProps = {
     intl: {},
     showModalAction: () => {},
     selectedProject: '',
     selectedUser: {},
     isAdmin: false,
+    dirty: false,
   };
+
   constructor(props) {
     super(props);
     this.projectSearchUrl = URLS.projectNameSearch();
   }
+
+  getCloseConfirmationConfig = () => {
+    if (!this.props.dirty) {
+      return null;
+    }
+    return {
+      confirmationWarning: this.props.intl.formatMessage(COMMON_LOCALE_KEYS.CLOSE_MODAL_WARNING),
+    };
+  };
 
   inviteUserAndCloseModal = (closeModal) => (data) => {
     this.props.data.onInvite(data).then((res) => {
@@ -154,6 +167,7 @@ export class InviteUserModal extends Component {
         okButton={okButton}
         cancelButton={cancelButton}
         closeIconEventInfo={MEMBERS_PAGE_EVENTS.CLOSE_ICON_INVITE_USER_MODAL}
+        closeConfirmation={this.getCloseConfirmationConfig()}
       >
         <p className={cx('modal-description')}>{intl.formatMessage(messages.description)}</p>
         <form className={cx('invite-form')}>

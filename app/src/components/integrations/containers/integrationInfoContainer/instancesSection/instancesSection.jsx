@@ -45,22 +45,22 @@ const messages = defineMessages({
     id: 'InstancesSection.globalSettingsDefaultTitle',
     defaultMessage: 'Global settings',
   },
-  returnToGlobalSettingsTitle: {
-    id: 'InstancesSection.returnToGlobalSettingsTitle',
-    defaultMessage: 'Return to Global Settings',
+  resetToGlobalSettingsTitle: {
+    id: 'InstancesSection.resetToGlobalSettingsTitle',
+    defaultMessage: 'Reset to Global Settings',
   },
   unlinkAndSetupManuallyTitle: {
     id: 'InstancesSection.unlinkAndSetupManuallyTitle',
     defaultMessage: 'Unlink & setup manually',
   },
-  returnToGlobalSettingsDescription: {
-    id: 'InstancesSection.returnToGlobalSettingsDescription',
+  resetToGlobalSettingsDescription: {
+    id: 'InstancesSection.resetToGlobalSettingsDescription',
     defaultMessage: 'Activate the global settings. All custom integrations will be removed.',
   },
   unlinkAndSetupManuallyDescription: {
     id: 'InstancesSection.unlinkAndSetupManuallyDescription',
     defaultMessage:
-      'Unlink the current project from the global settings and configure your own integration. You always can return to the global settings.',
+      'Unlink the current project from the global settings and configure your own integration. You always can reset to the global settings.',
   },
   globalIntegrationsDisabledHint: {
     id: 'InstancesSection.globalIntegrationsDisabledHint',
@@ -69,6 +69,10 @@ const messages = defineMessages({
   addIntegrationButtonTitle: {
     id: 'InstancesSection.addIntegrationButtonTitle',
     defaultMessage: 'Add integration',
+  },
+  noGlobalIntegrationMessage: {
+    id: 'InstancesSection.noGlobalIntegrationMessage',
+    defaultMessage: 'No global integration',
   },
 });
 
@@ -104,6 +108,7 @@ export class InstancesSection extends Component {
     projectIntegrations: [],
     globalIntegrations: [],
   };
+
   multiple = isIntegrationSupportsMultipleInstances(this.props.instanceType);
 
   removeProjectIntegrations = () =>
@@ -141,9 +146,9 @@ export class InstancesSection extends Component {
     this.props.showModalAction({
       id: 'confirmationModal',
       data: {
-        message: formatMessage(messages.returnToGlobalSettingsDescription),
+        message: formatMessage(messages.resetToGlobalSettingsDescription),
         onConfirm: this.removeProjectIntegrations,
-        title: formatMessage(messages.returnToGlobalSettingsTitle),
+        title: formatMessage(messages.resetToGlobalSettingsTitle),
         confirmText: formatMessage(COMMON_LOCALE_KEYS.CONFIRM),
         cancelText: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
         dangerConfirm: true,
@@ -188,27 +193,31 @@ export class InstancesSection extends Component {
               onItemClick={onItemClick}
               defaultItemTitle={formatMessage(messages.projectSettingsDefaultTitle)}
             />
-            {this.multiple && (
-              <div className={cx('add-integration-button')}>
-                <GhostButton icon={PlusIcon} onClick={this.addProjectIntegrationClickHandler}>
-                  {formatMessage(messages.addIntegrationButtonTitle)}
-                </GhostButton>
-              </div>
-            )}
+            {this.multiple &&
+              !disabled && (
+                <div className={cx('add-integration-button')}>
+                  <GhostButton icon={PlusIcon} onClick={this.addProjectIntegrationClickHandler}>
+                    {formatMessage(messages.addIntegrationButtonTitle)}
+                  </GhostButton>
+                </div>
+              )}
           </Fragment>
         )}
-        {!!globalIntegrations.length && (
-          <InstancesList
-            blocked
-            title={formatMessage(
-              this.multiple ? messages.globalIntegrations : messages.globalIntegration,
-            )}
-            items={globalIntegrations}
-            onItemClick={onItemClick}
-            disabled={isProjectIntegrationsExists}
-            disabledHint={formatMessage(messages.globalIntegrationsDisabledHint)}
-            defaultItemTitle={formatMessage(messages.globalSettingsDefaultTitle)}
-          />
+        <InstancesList
+          blocked
+          title={formatMessage(
+            this.multiple ? messages.globalIntegrations : messages.globalIntegration,
+          )}
+          items={globalIntegrations}
+          onItemClick={onItemClick}
+          disabled={isProjectIntegrationsExists}
+          disabledHint={formatMessage(messages.globalIntegrationsDisabledHint)}
+          defaultItemTitle={formatMessage(messages.globalSettingsDefaultTitle)}
+        />
+        {!globalIntegrations.length && (
+          <p className={cx('no-items-message')}>
+            {formatMessage(messages.noGlobalIntegrationMessage)}
+          </p>
         )}
         {!disabled && (
           <div className={cx('settings-action-block')}>
@@ -221,14 +230,14 @@ export class InstancesSection extends Component {
             >
               {formatMessage(
                 isProjectIntegrationsExists
-                  ? messages.returnToGlobalSettingsTitle
+                  ? messages.resetToGlobalSettingsTitle
                   : messages.unlinkAndSetupManuallyTitle,
               )}
             </GhostButton>
             <p className={cx('action-description')}>
               {formatMessage(
                 isProjectIntegrationsExists
-                  ? messages.returnToGlobalSettingsDescription
+                  ? messages.resetToGlobalSettingsDescription
                   : messages.unlinkAndSetupManuallyDescription,
               )}
             </p>

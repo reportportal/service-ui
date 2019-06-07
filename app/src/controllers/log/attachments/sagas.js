@@ -1,7 +1,7 @@
-import { takeLatest, call, put, all, select } from 'redux-saga/effects';
+import { takeLatest, call, put, all, select, take } from 'redux-saga/effects';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
-import { showModalAction } from 'controllers/modal';
+import { showModalAction, HIDE_MODAL } from 'controllers/modal';
 import { concatFetchDataAction } from 'controllers/fetch';
 import { activeProjectSelector } from 'controllers/user';
 import { activeRetryIdSelector } from 'controllers/log/selectors';
@@ -28,7 +28,7 @@ function* fetchAttachmentsConcat({ payload: { params, concat } }) {
 }
 
 export function fetchImageData({ binaryId }) {
-  return Promise.resolve({ image: URLS.getFileById(binaryId) });
+  return fetch(URLS.getFileById(binaryId), { responseType: 'blob' });
 }
 
 export function fetchData({ binaryId }) {
@@ -38,7 +38,10 @@ export function fetchData({ binaryId }) {
 /* IMAGE */
 function* openImageModalsWorker({ binaryId }) {
   const data = yield call(fetchImageData, { binaryId });
-  yield put(showModalAction({ id: ATTACHMENT_IMAGE_MODAL_ID, data }));
+  const imageURL = URL.createObjectURL(data);
+  yield put(showModalAction({ id: ATTACHMENT_IMAGE_MODAL_ID, data: { image: imageURL } }));
+  yield take(HIDE_MODAL);
+  URL.revokeObjectURL(imageURL);
 }
 
 /* HAR */
@@ -73,7 +76,10 @@ function* openAttachment({ payload: { id, contentType } }) {
       yield call(ATTACHMENT_MODAL_WORKERS[modalId], data);
     } catch (e) {} // eslint-disable-line no-empty
   } else {
-    window.open(URLS.getFileById(id));
+    const data = yield call(fetch, URLS.getFileById(id), { responseType: 'blob' });
+    const url = URL.createObjectURL(data);
+    window.open(url);
+    URL.revokeObjectURL(url);
   }
 }
 

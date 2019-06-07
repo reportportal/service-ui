@@ -23,50 +23,97 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
-import { NavLink } from 'redux-first-router-link';
-import { FormattedMessage } from 'react-intl';
+import { injectIntl, defineMessages, intlShape, FormattedMessage } from 'react-intl';
+import { NavLink } from 'components/main/navLink';
 import { ALL } from 'common/constants/reservedFilterIds';
 import { logoutAction } from 'controllers/auth';
-import { PROJECT_LAUNCHES_PAGE } from 'controllers/pages/constants';
+import {
+  PROJECT_LAUNCHES_PAGE,
+  PROJECTS_PAGE,
+  PROJECT_DETAILS_PAGE,
+  ALL_USERS_PAGE,
+  SERVER_SETTINGS_PAGE,
+  SERVER_SETTINGS_TAB_PAGE,
+  PLUGINS_PAGE,
+  pageSelector,
+  projectIdSelector,
+} from 'controllers/pages';
 import { activeProjectSelector } from 'controllers/user';
 import { MobileHeader } from 'layouts/common/mobileHeader';
 import styles from './adminHeader.scss';
 
 const cx = classNames.bind(styles);
 
+const pageTitles = defineMessages({
+  [PROJECTS_PAGE]: {
+    id: 'ProjectsPage.title',
+    defaultMessage: 'All projects',
+  },
+  [ALL_USERS_PAGE]: {
+    id: 'administrateUsersPage.allUsers',
+    defaultMessage: 'All users',
+  },
+  [SERVER_SETTINGS_PAGE]: {
+    id: 'ServerSettingsPage.title',
+    defaultMessage: 'Server settings',
+  },
+  [PLUGINS_PAGE]: {
+    id: 'PluginsPage.title',
+    defaultMessage: 'Plugins',
+  },
+});
 @connect(
   (state) => ({
     activeProject: activeProjectSelector(state),
+    currentPage: pageSelector(state),
+    projectId: projectIdSelector(state),
   }),
   {
     logout: logoutAction,
   },
 )
+@injectIntl
 export class AdminHeader extends Component {
   static propTypes = {
     activeProject: PropTypes.string.isRequired,
     sideMenuOpened: PropTypes.bool,
     toggleSideMenu: PropTypes.func,
-    adminHeaderCrumb: PropTypes.string,
+    currentPage: PropTypes.string,
     logout: PropTypes.func,
+    intl: intlShape.isRequired,
+    projectId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   };
 
   static defaultProps = {
-    adminHeaderCrumb: '',
+    currentPage: '',
     sideMenuOpened: false,
     logout: () => {},
     toggleSideMenu: () => {},
+    projectId: '',
+  };
+
+  getHeaderCrumbs = () => {
+    const { currentPage, intl, projectId } = this.props;
+    switch (currentPage) {
+      case PROJECT_DETAILS_PAGE:
+        return projectId;
+      case SERVER_SETTINGS_TAB_PAGE:
+        return intl.formatMessage(pageTitles[SERVER_SETTINGS_PAGE]);
+      default:
+        return pageTitles[currentPage] ? intl.formatMessage(pageTitles[currentPage]) : '';
+    }
   };
 
   render() {
-    const { activeProject, sideMenuOpened, adminHeaderCrumb, toggleSideMenu, logout } = this.props;
+    const { activeProject, sideMenuOpened, toggleSideMenu, logout } = this.props;
+    const headerCrumbs = this.getHeaderCrumbs();
     return (
       <header className={cx('header')}>
         <MobileHeader opened={sideMenuOpened} toggleSideMenu={toggleSideMenu} />
         <div className={cx('container')}>
           <h3 className={cx('header-name')}>
             <FormattedMessage id={'AdminHeader.header'} defaultMessage={'Management board'} />
-            <span className={cx('header-crumb')}>{adminHeaderCrumb}</span>
+            <span className={cx('header-crumb')}>{headerCrumbs ? ` / ${headerCrumbs}` : ''}</span>
           </h3>
           <div className={cx('admin-header-controls')}>
             <NavLink

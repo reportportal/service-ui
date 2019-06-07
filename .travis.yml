@@ -20,6 +20,7 @@ install:
   - go get -u github.com/Masterminds/glide
 
 before_script:
+  - export NODE_OPTIONS=--max_old_space_size=4096
   - export DISPLAY=:99.0
   - export NODE_OPTIONS=--max_old_space_size=4096
   - sh -e /etc/init.d/xvfb start

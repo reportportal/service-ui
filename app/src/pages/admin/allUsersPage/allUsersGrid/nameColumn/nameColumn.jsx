@@ -4,12 +4,14 @@ import { connect } from 'react-redux';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import classNames from 'classnames/bind';
 import { fetch } from 'common/utils';
+import DefaultUserImage from 'common/img/default-user-avatar.png';
 import { ADMINISTRATOR, USER } from 'common/constants/accountRoles';
 import { userIdSelector } from 'controllers/user';
 import { URLS } from 'common/urls';
 import { fetchAllUsersAction } from 'controllers/administrate/allUsers';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { showModalAction } from 'controllers/modal';
+import { Image } from 'components/main/image';
 import styles from './nameColumn.scss';
 
 const cx = classNames.bind(styles);
@@ -86,7 +88,12 @@ export class NameColumn extends Component {
       <div className={cx('name-col', className)}>
         {value.photoLoaded && (
           <div className={cx('avatar-wrapper')}>
-            <img className={cx('avatar')} src={URLS.dataUserPhoto(value.userId)} alt="avatar" />
+            <Image
+              className={cx('avatar')}
+              src={URLS.dataUserPhoto(value.userId)}
+              alt="avatar"
+              fallback={DefaultUserImage}
+            />
           </div>
         )}
         <span className={cx('name')}>{value.fullName}</span>

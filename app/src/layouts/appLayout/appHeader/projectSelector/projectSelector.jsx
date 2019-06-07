@@ -22,11 +22,11 @@
 import classNames from 'classnames/bind';
 import track from 'react-tracking';
 import React, { Component } from 'react';
-import { NavLink } from 'redux-first-router-link';
 import PropTypes from 'prop-types';
+import { PROJECT_PAGE } from 'controllers/pages/constants';
 import { HEADER_EVENTS } from 'components/main/analytics/events';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
-import { PROJECT_PAGE } from 'controllers/pages/constants';
+import { NavLink } from 'components/main/navLink';
 import styles from './projectSelector.scss';
 
 const cx = classNames.bind(styles);
@@ -55,9 +55,8 @@ export class ProjectSelector extends Component {
     document.removeEventListener('click', this.handleOutsideClick, false);
   }
 
-  onClickProjectName = (e) => {
+  onClickProjectName = () => {
     this.props.tracking.trackEvent(HEADER_EVENTS.CLICK_PROJECT_NAME_LINK);
-    e.stopPropagation();
   };
 
   toggleShowList = () => {

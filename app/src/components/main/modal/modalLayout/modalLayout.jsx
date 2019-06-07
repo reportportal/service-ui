@@ -172,35 +172,37 @@ export class ModalLayout extends Component {
       <div className={cx('modal-layout')}>
         <div className={cx('scrolling-content')} onClick={this.onClickModal}>
           <Scrollbars>
-            <CSSTransition
-              timeout={300}
-              in={this.state.shown}
-              classNames={cx('modal-window-animation')}
-              onExited={this.props.hideModalAction}
-            >
-              {(status) => (
-                <div
-                  ref={(modal) => {
-                    this.modal = modal;
-                  }}
-                  className={cx('modal-window', this.props.className)}
-                >
-                  <ModalHeader
-                    text={title}
-                    onClose={this.onClickCloseIcon}
-                    renderHeaderElements={this.props.renderHeaderElements}
-                  />
-                  <ModalContent>{status !== 'exited' ? children : null}</ModalContent>
+            <span>
+              <CSSTransition
+                timeout={300}
+                in={this.state.shown}
+                classNames={cx('modal-window-animation')}
+                onExited={this.props.hideModalAction}
+              >
+                {(status) => (
+                  <div
+                    ref={(modal) => {
+                      this.modal = modal;
+                    }}
+                    className={cx('modal-window', this.props.className)}
+                  >
+                    <ModalHeader
+                      text={title}
+                      onClose={this.onClickCloseIcon}
+                      renderHeaderElements={this.props.renderHeaderElements}
+                    />
+                    <ModalContent>{status !== 'exited' ? children : null}</ModalContent>
 
-                  <ModalFooter
-                    {...footerProps}
-                    onClickOk={this.closeModalWithOk}
-                    closeHandler={this.onClickCancelButton}
-                    className={this.props.className}
-                  />
-                </div>
-              )}
-            </CSSTransition>
+                    <ModalFooter
+                      {...footerProps}
+                      onClickOk={this.closeModalWithOk}
+                      closeHandler={this.onClickCancelButton}
+                      className={this.props.className}
+                    />
+                  </div>
+                )}
+              </CSSTransition>
+            </span>
           </Scrollbars>
         </div>
         <CSSTransition

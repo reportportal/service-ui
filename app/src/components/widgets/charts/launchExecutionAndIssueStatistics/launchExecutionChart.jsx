@@ -28,7 +28,9 @@ import { connect } from 'react-redux';
 import ReactDOMServer from 'react-dom/server';
 import { statisticsLinkSelector } from 'controllers/testItem';
 import { activeProjectSelector } from 'controllers/user';
-import { TEST_ITEM_PAGE } from 'controllers/pages';
+import { launchFiltersSelector } from 'controllers/filter';
+import { TEST_ITEM_PAGE, PROJECT_LAUNCHES_PAGE } from 'controllers/pages';
+import { ALL } from 'common/constants/reservedFilterIds';
 import { TooltipWrapper } from '../common/tooltip';
 import { C3Chart } from '../common/c3chart';
 import chartStyles from './launchExecutionAndIssueStatistics.scss';
@@ -46,6 +48,7 @@ const getResult = (widget) => widget.content.result[0] || widget.content.result;
   (state) => ({
     project: activeProjectSelector(state),
     getStatisticsLink: (name) => statisticsLinkSelector(state, { statuses: [name] }),
+    launchFilters: launchFiltersSelector(state),
   }),
   {
     navigate: (linkAction) => linkAction,
@@ -63,6 +66,8 @@ export class LaunchExecutionChart extends Component {
     observer: PropTypes.object,
     uncheckedLegendItems: PropTypes.array,
     onChangeLegend: PropTypes.func,
+    onStatusPageMode: PropTypes.bool,
+    launchFilters: PropTypes.array,
   };
 
   static defaultProps = {
@@ -70,6 +75,8 @@ export class LaunchExecutionChart extends Component {
     observer: {},
     uncheckedLegendItems: [],
     onChangeLegend: () => {},
+    onStatusPageMode: false,
+    launchFilters: [],
   };
 
   state = {
@@ -83,7 +90,7 @@ export class LaunchExecutionChart extends Component {
 
   componentWillUnmount() {
     if (!this.props.isPreview) {
-      this.statusNode.removeEventListener('mousemove', this.setCoords);
+      this.statusNode && this.statusNode.removeEventListener('mousemove', this.setCoords);
       this.props.observer.unsubscribe('widgetResized', this.resizeStatusChart);
     }
   }
@@ -92,26 +99,30 @@ export class LaunchExecutionChart extends Component {
     this.chart = chart;
     this.statusNode = element;
 
+    const { onStatusPageMode, widget, isPreview, uncheckedLegendItems } = this.props;
+
     this.renderTotalLabel();
 
-    if (!this.props.widget.content.result || this.props.isPreview) {
+    if (!widget.content.result || isPreview) {
       return;
     }
 
-    this.chart.resize({
-      height: this.height,
-    });
+    if (!onStatusPageMode) {
+      this.chart.resize({
+        height: this.height,
+      });
+    }
 
-    this.props.uncheckedLegendItems.forEach((id) => {
+    uncheckedLegendItems.forEach((id) => {
       this.chart.toggle(id);
     });
 
     d3
       .select(chart.element)
       .select('.c3-chart-arcs-title')
-      .attr('dy', -15)
+      .attr('dy', onStatusPageMode ? -5 : -15)
       .append('tspan')
-      .attr('dy', 30)
+      .attr('dy', onStatusPageMode ? 15 : 30)
       .attr('x', 0)
       .attr('fill', '#666')
       .text('SUM');
@@ -133,27 +144,45 @@ export class LaunchExecutionChart extends Component {
   };
 
   onChartClick = (d) => {
-    const { widget, getStatisticsLink } = this.props;
-    const id = getResult(widget).id;
-    const defaultParams = this.getDefaultLinkParams(id);
-    const nameConfig = getItemNameConfig(d.id);
+    const { widget, launchFilters, getStatisticsLink } = this.props;
 
-    const link = getStatisticsLink(nameConfig.defectType.toUpperCase());
-    this.props.navigate(Object.assign(link, defaultParams));
+    const nameConfig = getItemNameConfig(d.id);
+    const id = getResult(widget).id;
+    let navigationParams;
+
+    if (!id) {
+      const appliedWidgetFilterId = widget.appliedFilters[0].id;
+      const activeFilter = launchFilters.filter((filter) => filter.id === appliedWidgetFilterId)[0];
+      const activeFilterId = activeFilter && activeFilter.id;
+      navigationParams = this.getDefaultParamsOverallStatisticsWidget(activeFilterId);
+    } else {
+      const link = getStatisticsLink(nameConfig.defectType.toUpperCase());
+      navigationParams = Object.assign(link, this.getDefaultParamsLaunchExecutionWidget(id));
+    }
+
+    this.props.navigate(navigationParams);
   };
 
-  getDefaultLinkParams = (testItemIds) => ({
+  getDefaultParamsOverallStatisticsWidget = (activeFilterId) => ({
     payload: {
       projectId: this.props.project,
-      filterId: 'all',
-      testItemIds,
+      filterId: activeFilterId || ALL,
+    },
+    type: PROJECT_LAUNCHES_PAGE,
+  });
+
+  getDefaultParamsLaunchExecutionWidget = (id) => ({
+    payload: {
+      projectId: this.props.project,
+      filterId: ALL,
+      testItemIds: id,
     },
     type: TEST_ITEM_PAGE,
   });
 
   getConfig = () => {
     const EXECUTIONS = '$executions$';
-    const { widget, container, isPreview } = this.props;
+    const { widget, container, isPreview, onStatusPageMode } = this.props;
     const values = getResult(widget).values;
     const statusDataItems = getChartData(values, EXECUTIONS);
     const statusChartData = statusDataItems.itemTypes;
@@ -189,13 +218,13 @@ export class LaunchExecutionChart extends Component {
     }
 
     this.statusItems = getDefectItems(statusChartDataOrdered);
+
     this.statusConfig = {
       data: {
         columns: statusChartDataOrdered,
         type: 'donut',
         order: null,
         colors: statusChartColors,
-        onclick: this.onChartClick,
       },
       interaction: {
         enabled: !isPreview,
@@ -223,6 +252,10 @@ export class LaunchExecutionChart extends Component {
         this.renderTotalLabel();
       },
     };
+
+    if (!onStatusPageMode) {
+      this.statusConfig.data.onclick = this.onChartClick;
+    }
 
     this.setState({
       isConfigReady: true,
@@ -291,25 +324,30 @@ export class LaunchExecutionChart extends Component {
 
   render() {
     const { isConfigReady } = this.state;
-    const { isPreview, uncheckedLegendItems } = this.props;
-    const classes = chartCx({ 'preview-view': isPreview });
+    const { isPreview, uncheckedLegendItems, onStatusPageMode } = this.props;
+    const classes = chartCx('container', { 'preview-view': isPreview });
     const chartClasses = chartCx('c3', { 'small-view': this.height <= 250 });
     const legendItems = this.statusItems.map((item) => item.id);
 
     return (
       <div className={classes}>
         {isConfigReady && (
-          <div className={chartCx('launch-execution-chart')}>
+          <div
+            className={chartCx('launch-execution-chart', {
+              'status-page-mode': onStatusPageMode,
+            })}
+          >
             <div className={chartCx('data-js-launch-execution-chart-container')}>
-              {!isPreview && (
-                <Legend
-                  items={legendItems}
-                  uncheckedLegendItems={uncheckedLegendItems}
-                  onClick={this.onClickLegendItem}
-                  onMouseOver={this.onMouseOver}
-                  onMouseOut={this.onMouseOut}
-                />
-              )}
+              {!isPreview &&
+                !onStatusPageMode && (
+                  <Legend
+                    items={legendItems}
+                    uncheckedLegendItems={uncheckedLegendItems}
+                    onClick={this.onClickLegendItem}
+                    onMouseOver={this.onMouseOver}
+                    onMouseOut={this.onMouseOut}
+                  />
+                )}
               <C3Chart
                 config={this.statusConfig}
                 onChartCreated={this.onStatusChartCreated}

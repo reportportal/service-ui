@@ -19,7 +19,7 @@ const messages = defineMessages({
   },
   passwordHint: {
     id: 'RegistrationForm.passwordHint',
-    defaultMessage: 'Password should have size from 4 to 128 symbols.',
+    defaultMessage: 'Password should have size from 4 to 256 symbols.',
   },
   emailHint: {
     id: 'Common.validation.email',
@@ -57,6 +57,10 @@ const messages = defineMessages({
     id: 'AddEditDashboard.dashboardNameHint',
     defaultMessage: 'Dashboard name should have size  from 3 to 128.',
   },
+  dashboardNameExistsHint: {
+    id: 'AddEditDashboard.dashboardNameExistsHint',
+    defaultMessage: 'This name is already in use.',
+  },
   dashboardNameSearchHint: {
     id: 'SearchDashboardForm.dashboardNameSearchHint',
     defaultMessage: 'Dashboard name should have size from 3 to 128',
@@ -75,7 +79,7 @@ const messages = defineMessages({
   },
   profilePassword: {
     id: 'ChangePasswordModal.profilePassword',
-    defaultMessage: 'Password should have size from 4 to 128 symbols',
+    defaultMessage: 'Password should have size from 4 to 256 symbols',
   },
   profileConfirmPassword: {
     id: 'ChangePasswordModal.profileConfirmPassword',
@@ -152,12 +156,16 @@ const messages = defineMessages({
     defaultMessage: 'Project with the same name already exists in system',
   },
   btsUrlHint: {
-    id: 'JiraConnectionFormFields.btsUrlHint',
+    id: 'BtsCommonMessages.btsUrlHint',
     defaultMessage: 'Please provide a valid BTS link',
   },
   btsProjectHint: {
-    id: 'JiraConnectionFormFields.btsProjectHint',
+    id: 'BtsCommonMessages.btsProjectHint',
     defaultMessage: 'Project name should have size from 1 to 55',
+  },
+  portFieldHint: {
+    id: 'EmailFormFields.portFieldHint',
+    defaultMessage: "Only numbers from '1' to '65535' are possible.",
   },
   patternNameLengthHint: {
     id: 'PatternAnalysis.patternNameLengthHint',
@@ -172,9 +180,9 @@ const messages = defineMessages({
 @injectIntl
 export class FieldErrorHint extends Component {
   static propTypes = {
+    intl: intlShape,
     hintType: PropTypes.string,
     children: PropTypes.node,
-    intl: intlShape,
     error: PropTypes.string,
     active: PropTypes.bool,
     staticHint: PropTypes.bool,
@@ -204,7 +212,12 @@ export class FieldErrorHint extends Component {
     return (
       <div className={classes}>
         {children && cloneElement(children, { error, active, ...rest })}
-        <div className={cx('hint', { 'static-hint': staticHint, visible: this.isHintVisible() })}>
+        <div
+          className={cx('hint', `type-${hintType}`, {
+            'static-hint': staticHint,
+            visible: this.isHintVisible(),
+          })}
+        >
           <div className={cx('hint-content', `type-${hintType}`, { 'static-hint': staticHint })}>
             {error && messages[error] ? intl.formatMessage(messages[error]) : error}
           </div>

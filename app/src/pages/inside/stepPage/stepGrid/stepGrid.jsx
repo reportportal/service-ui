@@ -144,6 +144,11 @@ export class StepGrid extends Component {
     onChangeSorting: PropTypes.func,
     sortingColumn: PropTypes.string,
     sortingDirection: PropTypes.string,
+    rowHighlightingConfig: PropTypes.shape({
+      onGridRowHighlighted: PropTypes.func,
+      isGridRowHighlighted: PropTypes.bool,
+      highlightedRowId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    }),
   };
 
   static defaultProps = {
@@ -161,6 +166,11 @@ export class StepGrid extends Component {
     onChangeSorting: () => {},
     sortingColumn: null,
     sortingDirection: null,
+    rowHighlightingConfig: PropTypes.shape({
+      onGridRowHighlighted: () => {},
+      isGridRowHighlighted: false,
+      highlightedRowId: null,
+    }),
   };
 
   constructor(props) {
@@ -296,7 +306,9 @@ export class StepGrid extends Component {
       onChangeSorting,
       sortingColumn,
       sortingDirection,
+      rowHighlightingConfig,
     } = this.props;
+
     return (
       <Fragment>
         <Grid
@@ -315,6 +327,7 @@ export class StepGrid extends Component {
           onChangeSorting={onChangeSorting}
           sortingColumn={sortingColumn}
           sortingDirection={sortingDirection}
+          rowHighlightingConfig={rowHighlightingConfig}
         />
         {!data.length &&
           !loading && <NoItemMessage message={formatMessage(COMMON_LOCALE_KEYS.NO_RESULTS)} />}

@@ -13,7 +13,6 @@ import { activeProjectSelector } from 'controllers/user';
 import { createFilterAction } from 'controllers/filter';
 import { PASSED, FAILED, SKIPPED, INTERRUPTED } from 'common/constants/testStatuses';
 import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
-import { ENTITY_START_TIME, CONDITION_BETWEEN } from 'components/filterEntities/constants';
 import {
   getItemColor,
   getItemName,
@@ -21,6 +20,7 @@ import {
   getTimelineAxisTicks,
   getItemNameConfig,
   getDefectTypeLocators,
+  getUpdatedFilterWithTime,
 } from '../common/utils';
 import { C3Chart } from '../common/c3chart';
 import { Legend } from '../common/legend';
@@ -251,7 +251,7 @@ export class LaunchStatisticsChart extends Component {
         y: {
           show: !isPreview && this.props.isFullscreen,
           padding: {
-            top: this.configData.widgetViewMode === MODES_VALUES[CHART_MODES.AREA_VIEW] ? 3 : 0,
+            top: this.configData.widgetViewMode === MODES_VALUES[CHART_MODES.AREA_VIEW] ? 16 : 3,
           },
         },
       },
@@ -325,7 +325,7 @@ export class LaunchStatisticsChart extends Component {
       colors[key] = getItemColor(keyConfig, defectTypes);
     });
 
-    data.forEach((item) => {
+    data.sort((a, b) => a.startTime - b.startTime).forEach((item) => {
       const currentItemData = {
         ...item,
       };
@@ -343,7 +343,7 @@ export class LaunchStatisticsChart extends Component {
 
     this.configData = {
       itemData,
-      chartDataOrdered,
+      chartDataOrdered: chartDataOrdered.reverse(),
       itemNames: chartDataOrdered.map((item) => item[0]),
       colors,
       isTimeLine,
@@ -366,21 +366,10 @@ export class LaunchStatisticsChart extends Component {
   };
 
   timeLineModeClickHandler = (data) => {
-    const itemDate = this.configData.itemData[data.index].date;
-    const range = 86400000;
-    const time = moment(itemDate).valueOf();
-    const filterEntityValue = `${time},${time + range}`;
     const chartFilter = this.props.widget.appliedFilters[0];
-    const newCondition = {
-      filteringField: ENTITY_START_TIME,
-      value: filterEntityValue,
-      condition: CONDITION_BETWEEN,
-    };
-    const newFilter = {
-      orders: chartFilter.orders,
-      type: chartFilter.type,
-      conditions: chartFilter.conditions.concat(newCondition),
-    };
+    const itemDate = this.configData.itemData[data.index].date;
+    const newFilter = getUpdatedFilterWithTime(chartFilter, itemDate);
+
     this.props.createFilterAction(newFilter);
   };
 
@@ -463,6 +452,7 @@ export class LaunchStatisticsChart extends Component {
           launchNumber={this.configData.isTimeLine ? null : number}
           startTime={this.configData.isTimeLine ? null : Number(startTime)}
           itemCases={`${data[0].value} ${formatMessage(messages.cases)}`}
+          withVerboseItemCases
           color={color(id)}
           itemName={getItemName(getItemNameConfig(id), defectTypes, formatMessage)}
         />

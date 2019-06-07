@@ -7,7 +7,7 @@ import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { activeProjectSelector } from 'controllers/user';
 import { availableBtsIntegrationsSelector, isPostIssueActionAvailable } from 'controllers/project';
 import { fetchTestItemsAction } from 'controllers/testItem';
-import { unlinkIssueAction, linkIssueAction } from 'controllers/step';
+import { unlinkIssueAction, linkIssueAction, postIssueAction } from 'controllers/step';
 import { hideModalAction } from 'controllers/modal';
 import { STEP_PAGE_EVENTS } from 'components/main/analytics/events';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
@@ -96,6 +96,7 @@ const messages = defineMessages({
     fetchTestItemsAction,
     unlinkIssueAction,
     linkIssueAction,
+    postIssueAction,
   },
 )
 @track()
@@ -114,6 +115,7 @@ export class EditDefectModal extends Component {
     fetchTestItemsAction: PropTypes.func.isRequired,
     unlinkIssueAction: PropTypes.func.isRequired,
     linkIssueAction: PropTypes.func.isRequired,
+    postIssueAction: PropTypes.func.isRequired,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
@@ -196,8 +198,12 @@ export class EditDefectModal extends Component {
     };
   };
 
-  getItemsToTheNextAction = () =>
-    this.prepareDataToSend().map((item) => ({ ...item, id: item.testItemId }));
+  getItemsToTheNextAction = () => {
+    const { items } = this.props.data;
+    const updatedItems = this.prepareDataToSend();
+
+    return items.map((item, index) => ({ ...item, ...updatedItems[index] }));
+  };
 
   prepareDataToSend = () => {
     const { items } = this.props.data;
@@ -247,7 +253,10 @@ export class EditDefectModal extends Component {
       fetchFunc: this.props.data.fetchFunc,
     });
 
-  handlePostIssue = () => {}; // TODO
+  handlePostIssue = () =>
+    this.props.postIssueAction(this.getItemsToTheNextAction(), {
+      fetchFunc: this.props.data.fetchFunc,
+    });
 
   checkIfTheDataWasChanged = () => {
     const { items } = this.props.data;

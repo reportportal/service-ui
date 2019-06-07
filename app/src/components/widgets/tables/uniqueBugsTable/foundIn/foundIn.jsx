@@ -1,12 +1,12 @@
 import { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
-import { NavLink } from 'redux-first-router-link';
 import PropTypes from 'prop-types';
-import { activeProjectSelector } from 'controllers/user';
 import { ALL } from 'common/constants/reservedFilterIds';
 import { PROJECT_LOG_PAGE } from 'controllers/pages';
+import { activeProjectSelector } from 'controllers/user';
 import { AttributesBlock } from 'pages/inside/common/itemInfo/attributesBlock';
+import { NavLink } from 'components/main/navLink';
 import styles from './foundIn.scss';
 
 export const cx = classNames.bind(styles);

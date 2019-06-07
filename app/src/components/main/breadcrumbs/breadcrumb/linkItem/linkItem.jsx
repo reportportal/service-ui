@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { NavLink } from 'redux-first-router-link';
+import { NavLink } from 'components/main/navLink';
 
 import styles from './linkItem.scss';
 

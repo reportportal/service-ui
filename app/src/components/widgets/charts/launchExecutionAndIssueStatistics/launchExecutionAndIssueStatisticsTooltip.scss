@@ -16,3 +16,13 @@
   margin-right: 4px;
   text-transform: uppercase;
 }
+
+.status-page-mode {
+  .small-view {
+    :global {
+      .c3-chart-arcs-title > tspan {
+        font-size: 12px !important;
+      }
+    }
+  }
+}

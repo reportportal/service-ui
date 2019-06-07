@@ -14,7 +14,7 @@ const cx = classNames.bind(styles);
 export class StatusPageContent extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
-    projectId: PropTypes.string.isRequired,
+    projectId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
     interval: PropTypes.string,
   };
 
@@ -72,7 +72,7 @@ export class StatusPageContent extends Component {
       {this.state.loading ? (
         <SpinningPreloader />
       ) : (
-        widgetData.component(this.state[widgetData.source])
+        widgetData.component(this.state[widgetData.source], this.props.interval)
       )}
     </StatusPageItem>
   );

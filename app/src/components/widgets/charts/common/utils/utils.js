@@ -1,3 +1,5 @@
+import moment from 'moment/moment';
+import { ENTITY_START_TIME, CONDITION_BETWEEN } from 'components/filterEntities/constants';
 import * as COLORS from 'common/constants/colors';
 import { messages } from '../messages';
 
@@ -116,3 +118,20 @@ export const getTimelineAxisTicks = (itemsLength) =>
     itemsLength,
     itemsLength > 5 ? (itemsLength / 5).toFixed() : 1,
   );
+
+export const getUpdatedFilterWithTime = (chartFilter, itemDate) => {
+  const rangeMillisecond = 86400000;
+  const time = moment(itemDate).valueOf();
+  const filterEntityValue = `${time},${time + rangeMillisecond}`;
+  const newCondition = {
+    filteringField: ENTITY_START_TIME,
+    value: filterEntityValue,
+    condition: CONDITION_BETWEEN,
+  };
+
+  return {
+    orders: chartFilter.orders,
+    type: chartFilter.type,
+    conditions: chartFilter.conditions.concat(newCondition),
+  };
+};

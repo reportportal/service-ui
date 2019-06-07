@@ -4,21 +4,22 @@ import classNames from 'classnames/bind';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { defineMessages, injectIntl, intlShape } from 'react-intl';
-import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
-import { showModalAction } from 'controllers/modal';
-import { userInfoSelector } from 'controllers/user';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
 import { INTERNAL, LDAP } from 'common/constants/accountType';
+import DefaultUserImage from 'common/img/default-user-avatar.png';
+import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
+import { showModalAction } from 'controllers/modal';
+import { userInfoSelector } from 'controllers/user';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { PROFILE_PAGE_EVENTS } from 'components/main/analytics/events';
+import { Image } from 'components/main/image';
 import styles from './personalInfoBlock.scss';
 import { BlockContainerBody, BlockContainerHeader } from '../blockContainer';
 import { PhotoControls } from './photoControls';
 import { UserInfo } from './userInfo/userInfo';
 
 const cx = classNames.bind(styles);
-const getPhoto = (userId) => URLS.dataUserPhoto(userId);
 
 const messages = defineMessages({
   header: {
@@ -78,7 +79,7 @@ export class PersonalInfoBlock extends Component {
   };
 
   state = {
-    avatarSource: getPhoto(this.props.userId),
+    avatarSource: URLS.dataPhoto(),
   };
   onChangePassword = () => {
     this.props.tracking.trackEvent(PROFILE_PAGE_EVENTS.CHANGE_PASSWORD_CLICK);
@@ -133,18 +134,24 @@ export class PersonalInfoBlock extends Component {
     this.setState({ avatarSource: image });
   };
   removeImage = () => {
-    this.setState({ avatarSource: getPhoto(this.props.userId) });
+    this.setState({ avatarSource: URLS.dataPhoto(Date.now()) });
   };
 
   render() {
     const { intl, accountType, userId } = this.props;
+
     return (
       <div className={cx('personal-info-block')}>
         <BlockContainerHeader>{intl.formatMessage(messages.header)}</BlockContainerHeader>
         <BlockContainerBody>
           <div className={cx('block-content')}>
             <div className={cx('avatar-wrapper')}>
-              <img className={cx('avatar')} src={this.state.avatarSource} alt="Profile avatar" />
+              <Image
+                className={cx('avatar')}
+                src={this.state.avatarSource}
+                alt="Profile avatar"
+                fallback={DefaultUserImage}
+              />
             </div>
             <div className={cx('info')}>
               <UserInfo accountType={accountType} userId={userId} />

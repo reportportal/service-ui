@@ -16,12 +16,10 @@ export class IntegrationSettingsContainer extends Component {
     goToPreviousPage: PropTypes.func.isRequired,
     updateProjectIntegrationAction: PropTypes.func.isRequired,
     data: PropTypes.object,
-    title: PropTypes.string,
   };
 
   static defaultProps = {
     data: {},
-    title: '',
   };
 
   state = {

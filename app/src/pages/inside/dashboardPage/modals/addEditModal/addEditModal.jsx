@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import { ModalLayout, withModal, ModalField } from 'components/main/modal';
@@ -12,6 +13,7 @@ import { Input } from 'components/inputs/input';
 import { InputTextArea } from 'components/inputs/inputTextArea';
 import { InputBigSwitcher } from 'components/inputs/inputBigSwitcher';
 import { validate } from 'common/utils';
+import { dashboardItemsSelector } from 'controllers/dashboard';
 import styles from './addEditModal.scss';
 
 const cx = classNames.bind(styles);
@@ -60,13 +62,28 @@ const messages = defineMessages({
 
 @withModal('dashboardAddEditModal')
 @injectIntl
+@track()
+@connect((state) => ({
+  dashboardItems: dashboardItemsSelector(state),
+}))
 @reduxForm({
   form: 'addEditDashboard',
-  validate: ({ name }) => ({
-    name: (!name || !validate.dashboardName(name)) && 'dashboardNameHint',
-  }),
+  validate: ({ name }, { dashboardItems = [], data: { dashboardItem = {} } }) => {
+    let validationMessage = null;
+
+    if (!name || !validate.dashboardName(name)) {
+      validationMessage = 'dashboardNameHint';
+    } else if (
+      dashboardItems.some(
+        (dashboard) => dashboard.name === name && dashboard.id !== dashboardItem.id,
+      )
+    ) {
+      validationMessage = 'dashboardNameExistsHint';
+    }
+
+    return { name: validationMessage };
+  },
 })
-@track()
 export class AddEditModal extends Component {
   static propTypes = {
     data: PropTypes.shape({
@@ -83,6 +100,7 @@ export class AddEditModal extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    dashboardItems: PropTypes.array.isRequired,
   };
 
   static defaultProps = {

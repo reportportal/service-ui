@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import track from 'react-tracking';
 import classNames from 'classnames/bind';
-import { NavLink } from 'redux-first-router-link';
+import { NavLink } from 'components/main/navLink';
 import styles from './pageBreadcrumbs.scss';
 
 const cx = classNames.bind(styles);

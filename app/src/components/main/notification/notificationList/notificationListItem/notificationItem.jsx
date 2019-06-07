@@ -55,8 +55,8 @@ const messages = defineMessages({
     id: 'ProjectsPage.projectExists',
     defaultMessage: "The project '{name}' is already exists",
   },
-  returnToGlobalSuccess: {
-    id: 'InstancesSection.returnToGlobalSuccess',
+  resetToGlobalSuccess: {
+    id: 'InstancesSection.resetToGlobalSuccess',
     defaultMessage: 'Global integrations successfully applied',
   },
   addIntegrationSuccess: {

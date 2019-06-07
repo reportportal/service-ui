@@ -11,7 +11,7 @@ import {
   STATS_PASSED,
   STATS_SKIPPED,
 } from 'common/constants/statistics';
-import { DEFECT_TYPES_SEQUENCE } from 'common/constants/defectTypes';
+import { DEFECT_TYPES_SEQUENCE, NO_DEFECT } from 'common/constants/defectTypes';
 import {
   EntityInputConditional,
   EntityItemStartTime,
@@ -374,6 +374,9 @@ export class LaunchLevelEntities extends Component {
     const { filterValues, intl } = this.props;
     let defectTypeEntities = [];
     DEFECT_TYPES_SEQUENCE.forEach((defectTypeRef) => {
+      if (defectTypeRef.toLowerCase() === NO_DEFECT) {
+        return;
+      }
       const defectTypeGroup = this.props.defectTypes[defectTypeRef];
       const hasSubtypes = defectTypeGroup.length > 1;
       const totalEntityId = `${DEFECT_ENTITY_ID_BASE}${defectTypeRef.toLowerCase()}$total`;

@@ -25,6 +25,11 @@ export const validateUnlinkIssue = (item) => {
   return null;
 };
 
-export const validateLinkIssue = (item) => (!item.issue ? 'noDefectTypeToLinkIssue' : null);
+export const validateLinkIssue = (item) =>
+  !item.issue || !item.issue.issueType ? 'noDefectTypeToLinkIssue' : null;
 
-export const validateEditDefect = (item) => (!item.issue ? 'noIssue' : null);
+export const validateEditDefect = (item) =>
+  !item.issue || !item.issue.issueType ? 'noIssue' : null;
+
+export const validatePostIssue = (item) =>
+  !item.issue || !item.issue.issueType ? 'noDefectTypeToPostIssue' : null;

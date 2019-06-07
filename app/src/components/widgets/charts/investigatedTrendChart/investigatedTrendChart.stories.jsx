@@ -32,7 +32,7 @@ const mockObserver = {
   unsubscribe: () => {},
 };
 
-storiesOf('Components/Widgets/Charts/InvestigatedTrendChart', module)
+storiesOf('Components/Widgets/Charts/investigatedTrendChart', module)
   .addDecorator(
     host({
       title: 'Investigated Trend Chart (Investigated Percentage of Launches)',

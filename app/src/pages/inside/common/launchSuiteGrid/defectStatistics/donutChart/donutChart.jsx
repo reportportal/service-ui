@@ -2,9 +2,9 @@ import { Component } from 'react';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { defectColorsSelector } from 'controllers/project';
 import { DefectTypeTooltip } from 'pages/inside/common/defectTypeTooltip';
 import { withHoverableTooltip } from 'components/main/tooltips/hoverableTooltip';
-import { defectColorsSelector } from 'controllers/project';
 import { TO_INVESTIGATE } from 'common/constants/defectTypes';
 import { DefectLink } from 'pages/inside/common/defectLink';
 import styles from './donutChart.scss';
@@ -32,6 +32,7 @@ const cx = classNames.bind(styles);
 export class DonutChart extends Component {
   static propTypes = {
     type: PropTypes.string,
+    defects: PropTypes.array,
     data: PropTypes.object.isRequired,
     viewBox: PropTypes.number.isRequired,
     strokeWidth: PropTypes.number.isRequired,
@@ -46,6 +47,7 @@ export class DonutChart extends Component {
   };
   static defaultProps = {
     type: '',
+    defects: [],
     eventInfo: {},
     ownLinkParams: {},
   };
@@ -78,6 +80,7 @@ export class DonutChart extends Component {
     const {
       data,
       type,
+      defects,
       viewBox,
       strokeWidth,
       itemId,
@@ -94,7 +97,7 @@ export class DonutChart extends Component {
 
     return (
       <DefectLink
-        defects={Object.keys(data)}
+        defects={defects}
         itemId={itemId}
         eventInfo={eventInfo}
         ownLinkParams={ownLinkParams}
