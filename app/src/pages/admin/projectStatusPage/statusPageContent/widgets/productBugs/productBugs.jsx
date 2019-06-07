@@ -8,19 +8,19 @@ import { NoDataAvailable } from 'components/widgets/noDataAvailable';
 import { PERIOD_VALUES, PERIOD_VALUES_LENGTH } from 'common/constants/statusPeriodValues';
 import { DATE_FORMAT_TOOLTIP } from 'common/constants/timeDateFormat';
 import { getWeekRange } from 'common/utils/getWeekRange';
-import styles from './autoBugs.scss';
+import styles from './productBugs.scss';
 
 const cx = classNames.bind(styles);
 
 const messages = defineMessages({
   noDataMessage: {
-    id: 'AutoBugs.noDataMessage',
+    id: 'ProductBugs.noDataMessage',
     defaultMessage: 'No launches were performed',
   },
 });
 
 @injectIntl
-export class AutoBugs extends Component {
+export class ProductBugs extends Component {
   static propTypes = {
     data: PropTypes.object.isRequired,
     intl: PropTypes.object.isRequired,
@@ -57,7 +57,7 @@ export class AutoBugs extends Component {
         date: key,
         name: interval === PERIOD_VALUES.ONE_MONTH ? key : getWeekRange(key),
         values: {
-          automationBug: (automationBug / total * 100).toFixed(2),
+          productBug: (productBug / total * 100).toFixed(2),
           toInvestigate: (toInvestigate / total * 100).toFixed(2),
         },
       };
@@ -97,7 +97,7 @@ export class AutoBugs extends Component {
       data.unshift({
         name: lastEmptyElementDate,
         values: {
-          automationBug: 0,
+          productBug: 0,
           toInvestigate: 0,
         },
       });
@@ -110,7 +110,7 @@ export class AutoBugs extends Component {
     const isDataEmpty = !Object.keys(data).length;
 
     return (
-      <div ref={this.containerRef} className={cx('auto-bugs')}>
+      <div ref={this.containerRef} className={cx('product-bugs')}>
         {isContainerRefReady && !isDataEmpty ? (
           <IssuesStatusPageChart
             widget={this.prepareData(data, interval)}

@@ -21,12 +21,11 @@
   box-sizing: border-box;
   padding: 0 15px;
   margin-bottom: 20px;
-  flex: 1 9 28%;
+  width: 32%;
 
   @media (max-width: $SCREEN_SM_MAX) {
     width: 100%;
     padding: 0 5px;
-    flex: none;
   }
 }
 
@@ -39,4 +38,10 @@
     width: 100%;
     padding: 0 5px;
   }
+}
+
+.status-page-spinner-wrapper {
+  display: flex;
+  align-items: center;
+  min-height: 180px;
 }

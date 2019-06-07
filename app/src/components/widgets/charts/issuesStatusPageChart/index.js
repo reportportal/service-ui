@@ -1,0 +1,1 @@
+export { IssuesStatusPageChart } from './issuesStatusPageChart';
