@@ -11,9 +11,17 @@ import {
 } from 'common/constants/statistics';
 import { ALL } from 'common/constants/reservedFilterIds';
 import { activeProjectSelector } from 'controllers/user';
-import { TEST_ITEM_PAGE } from 'controllers/pages';
+import { TEST_ITEM_PAGE, LAUNCHES_PAGE } from 'controllers/pages';
+import { createFilterAction } from 'controllers/filter';
 import { Grid } from 'components/main/grid';
 import { AbsRelTime } from 'components/main/absRelTime';
+import {
+  ENTITY_ATTRIBUTE_KEYS,
+  ENTITY_ATTRIBUTE_VALUES,
+  CONDITION_HAS,
+  CONDITION_IN,
+  ENTITY_USER,
+} from 'components/filterEntities/constants';
 import { ItemInfo } from 'pages/inside/common/itemInfo';
 import { ExecutionStatistics } from 'pages/inside/common/launchSuiteGrid/executionStatistics';
 import { DefectStatistics } from 'pages/inside/common/launchSuiteGrid/defectStatistics';
@@ -47,7 +55,11 @@ import styles from './launchesTable.scss';
 
 const cx = classNames.bind(styles);
 
-const NameColumn = ({ className, value }, name, { linkPayload }) => {
+const NameColumn = (
+  { className, value },
+  name,
+  { linkPayload, onOwnerClick, onClickAttribute },
+) => {
   const { values, attributes } = value;
   const itemPropValue = {
     id: value.id,
@@ -61,9 +73,14 @@ const NameColumn = ({ className, value }, name, { linkPayload }) => {
     page: TEST_ITEM_PAGE,
     payload: linkPayload,
   };
+
   return (
     <div className={cx('name-col', className)}>
-      <ItemInfo customProps={{ ownLinkParams }} value={itemPropValue} editDisabled />
+      <ItemInfo
+        customProps={{ ownLinkParams, onOwnerClick, onClickAttribute }}
+        value={itemPropValue}
+        editDisabled
+      />
     </div>
   );
 };
@@ -194,15 +211,21 @@ const getColumn = (name, customProps) => ({
   component: (data) => columnComponentsMap[COLUMNS_KEYS_MAP[name]](data, name, customProps),
 });
 
-@connect((state) => ({
-  projectId: activeProjectSelector(state),
-}))
+@connect(
+  (state) => ({
+    projectId: activeProjectSelector(state),
+  }),
+  {
+    createFilterAction,
+  },
+)
 @injectIntl
 export class LaunchesTable extends PureComponent {
   static propTypes = {
     intl: intlShape.isRequired,
     widget: PropTypes.object.isRequired,
     projectId: PropTypes.string.isRequired,
+    createFilterAction: PropTypes.func.isRequired,
   };
 
   getColumns = () => {
@@ -216,12 +239,49 @@ export class LaunchesTable extends PureComponent {
         projectId: this.props.projectId,
         filterId: ALL,
       },
+      onOwnerClick: this.handleOwnerFilterClick,
+      onClickAttribute: this.handleAttributeFilterClick,
     };
 
     return Object.keys(COLUMNS_KEYS_MAP).reduce(
       (columns, item) => (fieldsMap[item] ? [...columns, getColumn(item, customProps)] : columns),
       [],
     );
+  };
+
+  handleAttributeFilterClick = (attribute) => {
+    const filter = {
+      type: LAUNCHES_PAGE,
+      conditions: [
+        {
+          condition: CONDITION_HAS,
+          filteringField: ENTITY_ATTRIBUTE_KEYS,
+          value: attribute.key || '',
+        },
+        {
+          condition: CONDITION_HAS,
+          filteringField: ENTITY_ATTRIBUTE_VALUES,
+          value: attribute.value || '',
+        },
+      ],
+    };
+
+    this.props.createFilterAction(filter);
+  };
+
+  handleOwnerFilterClick = (owner) => {
+    const filter = {
+      type: LAUNCHES_PAGE,
+      conditions: [
+        {
+          condition: CONDITION_IN,
+          filteringField: ENTITY_USER,
+          value: owner || '',
+        },
+      ],
+    };
+
+    this.props.createFilterAction(filter);
   };
 
   columns = this.getColumns();
