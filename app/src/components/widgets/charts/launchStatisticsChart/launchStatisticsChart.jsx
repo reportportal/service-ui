@@ -7,7 +7,7 @@ import moment from 'moment/moment';
 import * as d3 from 'd3-selection';
 import ReactDOMServer from 'react-dom/server';
 import { TEST_ITEM_PAGE } from 'controllers/pages';
-import { defectTypesSelector } from 'controllers/project';
+import { defectTypesSelector, orderedContentFieldsSelector } from 'controllers/project';
 import { defectLinkSelector, statisticsLinkSelector } from 'controllers/testItem';
 import { activeProjectSelector } from 'controllers/user';
 import { createFilterAction } from 'controllers/filter';
@@ -36,6 +36,7 @@ const cx = classNames.bind(styles);
   (state) => ({
     project: activeProjectSelector(state),
     defectTypes: defectTypesSelector(state),
+    orderedContentFields: orderedContentFieldsSelector(state),
     getDefectLink: (params) => defectLinkSelector(state, params),
     getStatisticsLink: (params) => statisticsLinkSelector(state, params),
   }),
@@ -51,6 +52,7 @@ export class LaunchStatisticsChart extends Component {
     widget: PropTypes.object.isRequired,
     project: PropTypes.string.isRequired,
     defectTypes: PropTypes.object.isRequired,
+    orderedContentFields: PropTypes.array.isRequired,
     getDefectLink: PropTypes.func.isRequired,
     getStatisticsLink: PropTypes.func.isRequired,
     container: PropTypes.instanceOf(Element).isRequired,
@@ -310,6 +312,7 @@ export class LaunchStatisticsChart extends Component {
   setupConfigData = (data, isTimeLine) => {
     const {
       defectTypes,
+      orderedContentFields,
       widget: {
         contentParameters: { contentFields, widgetOptions },
       },
@@ -341,10 +344,13 @@ export class LaunchStatisticsChart extends Component {
       chartDataOrdered.push(chartData[key]);
     });
 
+    const itemNames = chartDataOrdered.map((item) => item[0]);
+    const orderedItemNames = orderedContentFields.filter((name) => itemNames.indexOf(name) !== -1);
+
     this.configData = {
       itemData,
       chartDataOrdered: chartDataOrdered.reverse(),
-      itemNames: chartDataOrdered.map((item) => item[0]),
+      itemNames: orderedItemNames,
       colors,
       isTimeLine,
       isZoomEnabled: widgetOptions.zoom,
