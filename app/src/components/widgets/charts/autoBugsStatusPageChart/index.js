@@ -1,1 +1,0 @@
-export { AutoBugsStatusPageChart } from './autoBugsStatusPageChart';

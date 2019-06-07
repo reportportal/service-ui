@@ -5,7 +5,8 @@ import {
   LastLaunch,
   Investigated,
   AutoBugs,
-  LaunchesQuantity
+  LaunchesQuantity,
+  ProductBugs,
 } from './widgets';
 import { WIDGETS_IDS } from '../constants';
 import { messages } from './messages';
@@ -58,7 +59,7 @@ export const statusPageWidgets = [
     title: messages.issuesChart,
     id: WIDGETS_IDS.issuesChart,
     source: WIDGETS_IDS.issuesChart,
-    component: () => <div />,
+    component: (data, interval) => <ProductBugs data={data} interval={interval} />,
     getUrl: (projectId, interval) =>
       URLS.projectWidget(projectId, WIDGETS_IDS.issuesChart, interval),
   },

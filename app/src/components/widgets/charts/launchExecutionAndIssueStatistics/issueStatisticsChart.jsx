@@ -86,14 +86,20 @@ export class IssueStatisticsChart extends Component {
   };
 
   componentDidMount() {
-    !this.props.isPreview && this.props.observer.subscribe('widgetResized', this.resizeIssuesChart);
+    const { observer, isPreview } = this.props;
+
+    !isPreview && observer.subscribe && observer.subscribe('widgetResized', this.resizeIssuesChart);
+
     this.getConfig();
   }
 
   componentWillUnmount() {
-    if (!this.props.isPreview) {
+    const { observer, isPreview } = this.props;
+
+    if (!isPreview) {
       this.issuesNode.removeEventListener('mousemove', this.setCoords);
-      this.props.observer.unsubscribe('widgetResized', this.resizeIssuesChart);
+
+      observer.unsubscribe && observer.unsubscribe('widgetResized', this.resizeIssuesChart);
     }
   }
 
