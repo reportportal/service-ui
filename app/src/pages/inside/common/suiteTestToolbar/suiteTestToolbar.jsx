@@ -23,6 +23,7 @@ export const SuiteTestToolbar = ({
   onLinkIssue,
   onPostIssue,
   onEditDefects,
+  onEditItems,
   debugMode,
   onDelete,
   events,
@@ -57,6 +58,7 @@ export const SuiteTestToolbar = ({
         onLinkIssue={onLinkIssue}
         onPostIssue={onPostIssue}
         onEditDefects={onEditDefects}
+        onEditItems={onEditItems}
         onDelete={onDelete}
         deleteDisabled={!selectedItems.length}
       />
@@ -86,6 +88,7 @@ SuiteTestToolbar.propTypes = {
   onLinkIssue: PropTypes.func,
   onPostIssue: PropTypes.func,
   onEditDefects: PropTypes.func,
+  onEditItems: PropTypes.func,
   debugMode: PropTypes.bool,
   onDelete: PropTypes.func,
   events: PropTypes.object,
@@ -110,6 +113,7 @@ SuiteTestToolbar.defaultProps = {
   onLinkIssue: () => {},
   onPostIssue: PropTypes.func,
   onEditDefects: () => {},
+  onEditItems: () => {},
   onDelete: () => {},
   debugMode: false,
   updateFilters: () => {},

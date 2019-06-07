@@ -60,6 +60,7 @@ export class TestsPage extends Component {
   static propTypes = {
     deleteItems: PropTypes.func,
     onEditItem: PropTypes.func,
+    onEditItems: PropTypes.func,
     validationErrors: PropTypes.object.isRequired,
     debugMode: PropTypes.bool.isRequired,
     tests: PropTypes.arrayOf(PropTypes.object),
@@ -95,6 +96,7 @@ export class TestsPage extends Component {
   static defaultProps = {
     deleteItems: () => {},
     onEditItem: () => {},
+    onEditItems: () => {},
     tests: [],
     selectedTests: [],
     activePage: 1,
@@ -188,6 +190,7 @@ export class TestsPage extends Component {
       debugMode,
       deleteItems,
       onEditItem,
+      onEditItems,
       onFilterAdd,
       onFilterRemove,
       onFilterValidate,
@@ -217,6 +220,7 @@ export class TestsPage extends Component {
             debugMode={debugMode}
             errors={this.props.validationErrors}
             onDelete={() => deleteItems(selectedTests)}
+            onEditItems={() => onEditItems(selectedTests)}
             filterEntities={filterEntities}
             filterErrors={filterErrors}
             onFilterChange={onFilterChange}

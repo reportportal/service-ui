@@ -153,6 +153,17 @@ export class TestItemPage extends Component {
     });
   };
 
+  onEditItems = (launches) => {
+    this.props.showModalAction({
+      id: 'editItemsModal',
+      data: {
+        items: launches,
+        type: LAUNCH_ITEM_TYPES.item,
+        fetchFunc: this.props.fetchTestItemsAction,
+      },
+    });
+  };
+
   confirmDeleteItems = (items, selectedItems) => {
     const ids = items.map((item) => item.id).join(',');
     this.props.showScreenLockAction();
@@ -236,6 +247,7 @@ export class TestItemPage extends Component {
                 <PageComponent
                   deleteItems={this.deleteItems}
                   onEditItem={this.onEditItem}
+                  onEditItems={this.onEditItems}
                   filterErrors={filterErrors}
                   filterValues={filterValues}
                   onFilterChange={onFilterChange}

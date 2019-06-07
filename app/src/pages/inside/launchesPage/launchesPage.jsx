@@ -480,6 +480,18 @@ export class LaunchesPage extends Component {
       },
     });
   };
+
+  openEditItemsModal = (launches) => {
+    this.props.showModalAction({
+      id: 'editItemsModal',
+      data: {
+        items: launches,
+        type: LAUNCH_ITEM_TYPES.launch,
+        fetchFunc: this.props.fetchLaunchesAction,
+      },
+    });
+  };
+
   openImportModal = () => {
     this.props.tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_IMPORT_BTN);
     this.props.showModalAction({
@@ -604,6 +616,8 @@ export class LaunchesPage extends Component {
                 onUnselectAll={this.unselectAllItems}
                 onProceedValidItems={this.proceedWithValidItems}
                 onMove={this.moveLaunches}
+                onEditItem={this.openEditModal}
+                onEditItems={this.openEditItemsModal}
                 onMerge={this.mergeLaunches}
                 onForceFinish={this.finishForceLaunches}
                 onCompare={this.compareLaunches}
