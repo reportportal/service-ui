@@ -12,6 +12,8 @@ export const LaunchToolbar = ({
   onUnselect,
   onUnselectAll,
   onMove,
+  onEditItem,
+  onEditItems,
   onMerge,
   onCompare,
   onForceFinish,
@@ -39,6 +41,8 @@ export const LaunchToolbar = ({
       hasValidItems={selectedLaunches.length > Object.keys(errors).length}
       onProceedValidItems={onProceedValidItems}
       onMove={onMove}
+      onEditItem={onEditItem}
+      onEditItems={onEditItems}
       onMerge={onMerge}
       onCompare={onCompare}
       onForceFinish={onForceFinish}
@@ -57,6 +61,8 @@ LaunchToolbar.propTypes = {
   onUnselectAll: PropTypes.func,
   errors: PropTypes.object,
   onProceedValidItems: PropTypes.func,
+  onEditItem: PropTypes.func,
+  onEditItems: PropTypes.func,
   onMerge: PropTypes.func,
   onCompare: PropTypes.func,
   onMove: PropTypes.func,
@@ -74,6 +80,8 @@ LaunchToolbar.defaultProps = {
   onUnselectAll: () => {},
   errors: {},
   onProceedValidItems: () => {},
+  onEditItem: () => {},
+  onEditItems: () => {},
   onMerge: () => {},
   onCompare: () => {},
   onMove: () => {},

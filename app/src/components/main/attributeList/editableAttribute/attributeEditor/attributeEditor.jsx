@@ -2,6 +2,7 @@ import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
+import { defineMessages, injectIntl, intlShape } from 'react-intl';
 import { reduxForm, formValues } from 'redux-form';
 import Parser from 'html-react-parser';
 import { FieldProvider } from 'components/fields/fieldProvider';
@@ -14,6 +15,17 @@ import { AttributeInput } from './attributeInput';
 import styles from './attributeEditor.scss';
 
 const cx = classNames.bind(styles);
+
+const messages = defineMessages({
+  keyLabel: {
+    id: 'AttributeEditor.keyLabel',
+    defaultMessage: 'Key',
+  },
+  valueLabel: {
+    id: 'AttributeEditor.valueLabel',
+    defaultMessage: 'Value',
+  },
+});
 
 const ValueField = formValues({ attributeKey: 'key' })(
   ({ attributeKey, parse, format, attributeComparator, projectId, valueURLCreator, ...rest }) => (
@@ -51,6 +63,7 @@ const ValueField = formValues({ attributeKey: 'key' })(
     };
   },
 })
+@injectIntl
 export class AttributeEditor extends Component {
   static propTypes = {
     projectId: PropTypes.string,
@@ -61,6 +74,7 @@ export class AttributeEditor extends Component {
     invalid: PropTypes.bool,
     keyURLCreator: PropTypes.func.isRequired,
     valueURLCreator: PropTypes.func.isRequired,
+    intl: intlShape.isRequired,
   };
 
   static defaultProps = {
@@ -89,6 +103,7 @@ export class AttributeEditor extends Component {
       handleSubmit,
       keyURLCreator,
       valueURLCreator,
+      intl,
     } = this.props;
     return (
       <div className={cx('attribute-editor')}>
@@ -105,6 +120,7 @@ export class AttributeEditor extends Component {
                 creatable
                 isClearable
                 showNewLabel
+                placeholder={intl.formatMessage(messages.keyLabel)}
               />
             </FieldErrorHint>
           </FieldProvider>
@@ -117,6 +133,7 @@ export class AttributeEditor extends Component {
             attributeComparator={this.byValueComparator}
             attributes={attributes}
             valueURLCreator={valueURLCreator}
+            placeholder={intl.formatMessage(messages.valueLabel)}
           />
         </div>
         <div className={cx('control')}>

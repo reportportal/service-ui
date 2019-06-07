@@ -80,6 +80,7 @@ export class StepPage extends Component {
   static propTypes = {
     deleteItems: PropTypes.func,
     onEditItem: PropTypes.func,
+    onEditItems: PropTypes.func,
     debugMode: PropTypes.bool.isRequired,
     steps: PropTypes.arrayOf(PropTypes.object),
     parentItem: PropTypes.object,
@@ -125,6 +126,7 @@ export class StepPage extends Component {
   static defaultProps = {
     deleteItems: () => {},
     onEditItem: () => {},
+    onEditItems: () => {},
     steps: [],
     parentItem: {},
     selectedItems: [],
@@ -281,6 +283,7 @@ export class StepPage extends Component {
       filterErrors,
       filterEntities,
       onEditItem,
+      onEditItems,
       onChangeSorting,
       sortingColumn,
       sortingDirection,
@@ -299,6 +302,7 @@ export class StepPage extends Component {
         <PageSection>
           <SuiteTestToolbar
             onDelete={this.deleteItems}
+            onEditItems={() => onEditItems(selectedItems)}
             errors={validationErrors}
             selectedItems={selectedItems}
             parentItem={parentItem}

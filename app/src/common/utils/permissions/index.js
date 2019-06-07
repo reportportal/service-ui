@@ -13,6 +13,7 @@ export {
   canEditOwnAccount,
   canDeleteLaunch,
   canEditLaunch,
+  canBulkEditLaunches,
   canForceFinishLaunch,
   canStartAnalysis,
   canDeleteTestItem,

@@ -12,9 +12,13 @@
 
   &.disabled {
     cursor: default;
+
+    & .label {
+      color: $COLOR--gray-60;
+    }
   }
 
-  &:hover {
+  &:hover:not(.disabled) {
     background-color: $COLOR--gray-91;
   }
 }

@@ -6,12 +6,13 @@ import { connect } from 'react-redux';
 import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
 import {
   breadcrumbsSelector,
-  restorePathAction,
-  levelSelector,
   isListViewSelector,
+  levelSelector,
   namespaceSelector,
+  restorePathAction,
 } from 'controllers/testItem';
 import { HISTORY_PAGE, payloadSelector } from 'controllers/pages';
+import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
 import { availableBtsIntegrationsSelector, isPostIssueActionAvailable } from 'controllers/project';
 import { Breadcrumbs, breadcrumbDescriptorShape } from 'components/main/breadcrumbs';
 import { SUITES_PAGE_EVENTS } from 'components/main/analytics/events/suitesPageEvents';
@@ -19,10 +20,10 @@ import { STEP_PAGE_EVENTS } from 'components/main/analytics/events';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { GhostMenuButton } from 'components/buttons/ghostMenuButton';
 import { LEVEL_STEP, LEVEL_SUITE, LEVEL_TEST } from 'common/constants/launchLevels';
+import { canBulkEditLaunches } from 'common/utils/permissions';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import RefreshIcon from 'common/img/refresh-inline.svg';
 import HistoryIcon from 'common/img/history-inline.svg';
-import DeleteIcon from 'common/img/bin-icon-inline.svg';
 import styles from './actionPanel.scss';
 
 const cx = classNames.bind(styles);
@@ -35,6 +36,10 @@ const messages = defineMessages({
   editDefects: {
     id: 'ActionPanel.editDefects',
     defaultMessage: 'Edit defects',
+  },
+  editItems: {
+    id: 'ActionPanel.editItems',
+    defaultMessage: 'Edit items',
   },
   postIssue: {
     id: 'ActionPanel.postIssue',
@@ -64,10 +69,6 @@ const messages = defineMessages({
     id: 'ActionPanel.actionsBtnTooltip',
     defaultMessage: ' Select several items to processing',
   },
-  deleteBtnTooltip: {
-    id: 'ActionPanel.deleteBtnTooltip',
-    defaultMessage: 'Delete test items in bulk',
-  },
   noBugTrackingSystemToLinkIssue: {
     id: 'ActionPanel.noBugTrackingSystemToLinkIssue',
     defaultMessage: 'Configure bug tracking system to link issue',
@@ -85,6 +86,8 @@ const messages = defineMessages({
     listView: isListViewSelector(state, namespaceSelector(state)),
     payload: payloadSelector(state),
     btsIntegrations: availableBtsIntegrationsSelector(state),
+    accountRole: userAccountRoleSelector(state),
+    projectRole: activeProjectRoleSelector(state),
   }),
   {
     restorePath: restorePathAction,
@@ -99,6 +102,8 @@ export class ActionPanel extends Component {
     debugMode: PropTypes.bool,
     onRefresh: PropTypes.func,
     breadcrumbs: PropTypes.arrayOf(breadcrumbDescriptorShape),
+    accountRole: PropTypes.string,
+    projectRole: PropTypes.string.isRequired,
     restorePath: PropTypes.func,
     showBreadcrumbs: PropTypes.bool,
     hasErrors: PropTypes.bool,
@@ -107,6 +112,7 @@ export class ActionPanel extends Component {
     level: PropTypes.string,
     onProceedValidItems: PropTypes.func,
     selectedItems: PropTypes.array,
+    onEditItems: PropTypes.func,
     onEditDefects: PropTypes.func,
     onPostIssue: PropTypes.func,
     onLinkIssue: PropTypes.func,
@@ -128,16 +134,17 @@ export class ActionPanel extends Component {
     debugMode: false,
     onRefresh: () => {},
     breadcrumbs: [],
+    accountRole: '',
     errors: {},
     restorePath: () => {},
     level: '',
     showBreadcrumbs: true,
     hasErrors: false,
-    actionDescriptors: [],
     actionsMenuDisabled: false,
     hasValidItems: false,
     onProceedValidItems: () => {},
     selectedItems: [],
+    onEditItems: () => {},
     onEditDefects: () => {},
     onPostIssue: () => {},
     onLinkIssue: () => {},
@@ -149,11 +156,6 @@ export class ActionPanel extends Component {
     btsIntegrations: [],
     deleteDisabled: false,
   };
-
-  constructor(props) {
-    super(props);
-    this.actionDescriptors = this.createActionDescriptors();
-  }
 
   onClickHistory = () => {
     this.props.tracking.trackEvent(
@@ -173,67 +175,107 @@ export class ActionPanel extends Component {
     this.props.onRefresh();
   };
 
-  createActionDescriptors = () => {
-    const isPostIssueUnavailable = !isPostIssueActionAvailable(this.props.btsIntegrations);
+  createStepActionDescriptors = () => {
+    const {
+      intl,
+      tracking,
+      debugMode,
+      onEditDefects,
+      onEditItems,
+      onPostIssue,
+      onLinkIssue,
+      onUnlinkIssue,
+      onIgnoreInAA,
+      onIncludeInAA,
+      onDelete,
+      btsIntegrations,
+      accountRole,
+      projectRole,
+    } = this.props;
+    const isPostIssueUnavailable = !isPostIssueActionAvailable(btsIntegrations);
 
     return [
       {
-        label: this.props.intl.formatMessage(messages.editDefects),
+        label: intl.formatMessage(messages.editItems),
+        value: 'action-edit',
+        hidden: !canBulkEditLaunches(accountRole, projectRole),
+        onClick: onEditItems,
+      },
+      {
+        label: intl.formatMessage(messages.editDefects),
         value: 'action-edit-defects',
         onClick: (data) => {
-          this.props.tracking.trackEvent(STEP_PAGE_EVENTS.EDIT_DEFECT_ACTION);
-          this.props.onEditDefects(data);
+          tracking.trackEvent(STEP_PAGE_EVENTS.EDIT_DEFECT_ACTION);
+          onEditDefects(data);
         },
       },
       {
-        label: this.props.intl.formatMessage(messages.postIssue),
+        label: intl.formatMessage(messages.postIssue),
         value: 'action-post-issue',
-        hidden: this.props.debugMode,
+        hidden: debugMode,
         disabled: isPostIssueUnavailable,
         title:
-          (isPostIssueUnavailable &&
-            this.props.intl.formatMessage(messages.noBugTrackingSystemToPostIssue)) ||
+          (isPostIssueUnavailable && intl.formatMessage(messages.noBugTrackingSystemToPostIssue)) ||
           '',
         onClick: () => {
-          this.props.tracking.trackEvent(STEP_PAGE_EVENTS.POST_BUG_ACTION);
-          this.props.onPostIssue();
+          tracking.trackEvent(STEP_PAGE_EVENTS.POST_BUG_ACTION);
+          onPostIssue();
         },
       },
       {
-        label: this.props.intl.formatMessage(messages.linkIssue),
+        label: intl.formatMessage(messages.linkIssue),
         value: 'action-link-issue',
-        hidden: this.props.debugMode,
-        disabled: !this.props.btsIntegrations.length,
-        title: this.props.btsIntegrations.length
+        hidden: debugMode,
+        disabled: !btsIntegrations.length,
+        title: btsIntegrations.length
           ? ''
-          : this.props.intl.formatMessage(messages.noBugTrackingSystemToLinkIssue),
+          : intl.formatMessage(messages.noBugTrackingSystemToLinkIssue),
         onClick: () => {
-          this.props.tracking.trackEvent(STEP_PAGE_EVENTS.LOAD_BUG_ACTION);
-          this.props.onLinkIssue();
+          tracking.trackEvent(STEP_PAGE_EVENTS.LOAD_BUG_ACTION);
+          onLinkIssue();
         },
       },
       {
-        label: this.props.intl.formatMessage(messages.unlinkIssue),
+        label: intl.formatMessage(messages.unlinkIssue),
         value: 'action-unlink-issue',
-        hidden: this.props.debugMode,
-        onClick: this.props.onUnlinkIssue,
+        hidden: debugMode,
+        onClick: onUnlinkIssue,
       },
       {
-        label: this.props.intl.formatMessage(messages.ignoreInAA),
+        label: intl.formatMessage(messages.ignoreInAA),
         value: 'action-ignore-in-AA',
-        hidden: this.props.debugMode,
-        onClick: this.props.onIgnoreInAA,
+        hidden: debugMode,
+        onClick: onIgnoreInAA,
       },
       {
-        label: this.props.intl.formatMessage(messages.includeInAA),
+        label: intl.formatMessage(messages.includeInAA),
         value: 'action-include-into-AA',
-        hidden: this.props.debugMode,
-        onClick: this.props.onIncludeInAA,
+        hidden: debugMode,
+        onClick: onIncludeInAA,
       },
       {
-        label: this.props.intl.formatMessage(COMMON_LOCALE_KEYS.DELETE),
+        label: intl.formatMessage(COMMON_LOCALE_KEYS.DELETE),
         value: 'action-delete',
-        onClick: this.props.onDelete,
+        onClick: onDelete,
+      },
+    ];
+  };
+
+  createSuiteActionDescriptors = () => {
+    const { intl, deleteDisabled, onDelete, onEditItems, accountRole, projectRole } = this.props;
+
+    return [
+      {
+        label: intl.formatMessage(messages.editItems),
+        value: 'action-edit',
+        hidden: !canBulkEditLaunches(accountRole, projectRole),
+        onClick: onEditItems,
+      },
+      {
+        label: intl.formatMessage(COMMON_LOCALE_KEYS.DELETE),
+        value: 'action-delete',
+        hidden: deleteDisabled,
+        onClick: onDelete,
       },
     ];
   };
@@ -254,6 +296,9 @@ export class ActionPanel extends Component {
       debugMode,
       level,
     } = this.props;
+    const stepActionDescriptors = this.createStepActionDescriptors();
+    const suiteActionDescriptors = this.createSuiteActionDescriptors();
+
     return (
       <div className={cx('action-panel', { 'right-buttons-only': !showBreadcrumbs && !hasErrors })}>
         {showBreadcrumbs && (
@@ -277,25 +322,18 @@ export class ActionPanel extends Component {
             <div className={cx('action-button', 'mobile-hidden')}>
               <GhostMenuButton
                 title={intl.formatMessage(messages.actionsBtn)}
-                items={this.actionDescriptors}
+                items={stepActionDescriptors}
                 disabled={!selectedItems.length}
               />
             </div>
           )}
           {this.checkVisibility([LEVEL_SUITE, LEVEL_TEST]) && (
-            <div className={cx('action-button')}>
-              <GhostButton
-                icon={DeleteIcon}
-                onClick={this.props.onDelete}
-                disabled={this.props.deleteDisabled}
-                title={
-                  this.props.deleteDisabled
-                    ? this.props.intl.formatMessage(messages.actionsBtnTooltip)
-                    : this.props.intl.formatMessage(messages.deleteBtnTooltip)
-                }
-              >
-                <FormattedMessage id="Common.delete" defaultMessage="Delete" />
-              </GhostButton>
+            <div className={cx('action-button', 'mobile-hidden')}>
+              <GhostMenuButton
+                title={intl.formatMessage(messages.actionsBtn)}
+                items={suiteActionDescriptors}
+                disabled={!selectedItems.length}
+              />
             </div>
           )}
           {!listView &&

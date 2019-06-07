@@ -63,6 +63,7 @@ export class SuitesPage extends Component {
     debugMode: PropTypes.bool.isRequired,
     deleteItems: PropTypes.func,
     onEditItem: PropTypes.func,
+    onEditItems: PropTypes.func,
     suites: PropTypes.arrayOf(PropTypes.object),
     selectedSuites: PropTypes.arrayOf(PropTypes.object),
     activePage: PropTypes.number,
@@ -97,6 +98,7 @@ export class SuitesPage extends Component {
   static defaultProps = {
     deleteItems: () => {},
     onEditItem: () => {},
+    onEditItems: () => {},
     suites: [],
     selectedSuites: [],
     activePage: 1,
@@ -192,6 +194,7 @@ export class SuitesPage extends Component {
       debugMode,
       deleteItems,
       onEditItem,
+      onEditItems,
       onFilterAdd,
       onFilterRemove,
       onFilterValidate,
@@ -214,6 +217,7 @@ export class SuitesPage extends Component {
         <PageSection>
           <SuiteTestToolbar
             onDelete={() => deleteItems(selectedSuites)}
+            onEditItems={() => onEditItems(selectedSuites)}
             errors={this.props.validationErrors}
             selectedItems={selectedSuites}
             onUnselect={this.unselectItem}
