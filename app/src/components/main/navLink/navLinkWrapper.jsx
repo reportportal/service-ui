@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import { NavLink } from 'redux-first-router-link';
 import { actionToPath, getOptions, history, selectLocationState } from 'redux-first-router';
 import matchPath from 'rudy-match-path';
-// eslint-disable-next-line
 import { stripBasename } from 'rudy-history/PathUtils';
 
 @connect((state) => ({
