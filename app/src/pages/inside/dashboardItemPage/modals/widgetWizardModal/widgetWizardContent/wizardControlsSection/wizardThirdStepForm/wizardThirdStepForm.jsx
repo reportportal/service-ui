@@ -83,9 +83,10 @@ export class WizardThirdStepForm extends Component {
       },
     } = this.props.formValues;
     const filterBasedName =
-      (filters.length &&
-        filters.reduce((acc, item) => `${acc}${acc.length ? '.' : ''}${item.name}`, '')) ||
-      '';
+      ((filters && (Array.isArray(filters) ? filters : JSON.parse(filters))) || []).reduce(
+        (acc, item) => `${acc}${acc.length ? '.' : ''}${item.name}`,
+        '',
+      ) || '';
     let generatedName = filterBasedName || launchNameFilter || this.props.widgetTitle;
     if (generatedName.length > WIDGET_NAME_PART_LIMIT) {
       generatedName = generatedName.substring(0, WIDGET_NAME_PART_LIMIT);

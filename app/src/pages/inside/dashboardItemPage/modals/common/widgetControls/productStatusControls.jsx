@@ -122,13 +122,34 @@ export class ProductStatusControls extends Component {
   }
 
   formatFilterOptions = (values) =>
-    values.content.map((value) => ({ value: value.id, label: value.name }));
-  formatFilters = (values) => values.map((value) => ({ value, label: value.name }));
-  parseFilters = (values) =>
-    values.length > 0 ? values && values.map((value) => value.value).join(',') : '';
+    values.content.map((item) => ({
+      value: item.id,
+      label: item.name,
+    }));
+
+  formatFilters = (values) =>
+    (values && values.length ? JSON.parse(values) : []).map((item) => ({
+      value: item.value,
+      label: item.name,
+    }));
+
+  parseFilters = (values) => {
+    if (values === null) return null;
+    if (values && Array.isArray(values)) {
+      return JSON.stringify(
+        values.map((item) => ({
+          value: item.value,
+          name: item.label,
+        })),
+      );
+    }
+
+    return undefined;
+  };
 
   formatBasicColumns = (values) =>
     values.filter((value) => STATIC_BASE_COLUMNS.indexOf(value) === -1);
+
   parseBasicColumns = (values) => {
     if (!values) {
       return this.props.widgetSettings.contentParameters.widgetOptions.basicColumns;
