@@ -1,6 +1,6 @@
 import moment from 'moment';
 import { getTimelineAxisTicks, getItemColor } from 'components/widgets/charts/common/utils';
-import { MESSAGES } from './common/constants';
+import { MESSAGES } from '../common/constants';
 import { TimelineTooltip } from '../common/timelineTooltip';
 
 export const getTimelineConfig = ({ content, isPreview, intl, positionCallback, height }) => {
@@ -72,7 +72,7 @@ export const getTimelineConfig = ({ content, isPreview, intl, positionCallback, 
           top: 0,
         },
         label: {
-          text: intl.formatMessage(MESSAGES.yAxisTitle),
+          text: intl.formatMessage(MESSAGES.yAxisInvestigationsTitle),
           position: 'outer-middle',
         },
       },

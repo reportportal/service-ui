@@ -6,3 +6,4 @@ export { AutoBugs } from './autoBugs';
 export { LaunchesQuantity } from './launchesQuantity';
 export { ProductBugs } from './productBugs';
 export { LaunchStatistics } from './launchStatistics';
+export { SystemIssues } from './systemIssues';

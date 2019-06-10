@@ -8,7 +8,7 @@ import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
 import styles from './issuesStatusPageChart.scss';
 import { C3Chart } from '../common/c3chart';
 import { getConfig } from '../common/XYChartStatusPageConfig';
-import { MESSAGES } from './constants';
+import { MESSAGES } from '../common/constants';
 import { messages } from '../common/messages';
 import { CHART_OFFSET } from '../launchStatisticsChart/constants';
 import { TooltipContent } from '../common/tooltip/tooltipContent';

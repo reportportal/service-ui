@@ -1,7 +1,7 @@
 import ReactDOMServer from 'react-dom/server';
 import { getLaunchAxisTicks } from 'components/widgets/charts/common/utils';
 import { TooltipContent } from '../common/tooltip';
-import { DEFECT_TYPES, COLORS, MESSAGES } from './common/constants';
+import { DEFECT_TYPES, COLORS, MESSAGES } from '../common/constants';
 
 const renderTooltip = (itemData, intl) => (d, defaultTitleFormat, defaultValueFormat, color) => {
   const { name, number, startTime } = itemData[d[0].index];
@@ -71,7 +71,7 @@ export const getLaunchModeConfig = ({ content, isPreview, intl, positionCallback
           top: 0,
         },
         label: {
-          text: intl.formatMessage(MESSAGES.yAxisTitle),
+          text: intl.formatMessage(MESSAGES.yAxisInvestigationsTitle),
           position: 'outer-middle',
         },
       },
