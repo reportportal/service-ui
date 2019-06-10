@@ -28,5 +28,6 @@ export {
   testCaseNameLinkSelector,
   paginationSelector,
   btsIntegrationBackLinkSelector,
+  logPageOffsetSelector,
 } from './selectors';
 export { formatItemName } from './utils';

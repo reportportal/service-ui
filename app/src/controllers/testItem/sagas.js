@@ -38,7 +38,7 @@ import {
   isLostLaunchSelector,
   createParentItemsSelector,
   itemsSelector,
-  breadcrumbsSelector,
+  logPageOffsetSelector,
 } from './selectors';
 import { calculateLevel } from './utils';
 
@@ -75,19 +75,13 @@ export function* fetchParentItems() {
 }
 
 function* fetchTestItems({ payload = {} }) {
-  let offset = payload.offset || 0;
+  const { offset = 0 } = payload;
   const isPathNameChanged = yield select(pathnameChangedSelector);
   if (isPathNameChanged && !payload.offset) {
     yield put(setPageLoadingAction(true));
     yield call(fetchParentItems);
   }
   const itemIdsArray = yield select(testItemIdsArraySelector);
-  const breadcrumbs = yield select(breadcrumbsSelector);
-  const parentFromBreadcrumbs = breadcrumbs.find((item) => item.listView);
-  if (parentFromBreadcrumbs) {
-    const { id } = parentFromBreadcrumbs;
-    offset = [...itemIdsArray].reverse().indexOf(id);
-  }
   const itemIds = offset ? itemIdsArray.slice(0, itemIdsArray.length - offset) : itemIdsArray;
   let launchId = yield select(launchIdSelector);
   const isLostLaunch = yield select(isLostLaunchSelector);
@@ -146,8 +140,8 @@ function* watchFetchTestItems() {
   yield takeEvery(FETCH_TEST_ITEMS, fetchTestItems);
 }
 
-function* updateStepPagination(next = false) {
-  const namespace = yield select(namespaceSelector, 1);
+function* updateStepPagination({ next = false, offset = 1 }) {
+  const namespace = yield select(namespaceSelector, offset);
   const namespaceQuery = yield select(queryParametersSelector, namespace);
   let page = parseInt(namespaceQuery[PAGE_KEY], 10) - 1;
   if (next) {
@@ -168,17 +162,20 @@ function* updateStepPagination(next = false) {
     ),
   );
 }
+
 export function* fetchTestItemsFromLogPage({ payload = {} }) {
   const { next = false } = payload;
-  yield call(updateStepPagination, next);
-  const namespace = yield select(namespaceSelector, 1);
+  const offset = yield select(logPageOffsetSelector);
+  yield call(updateStepPagination, { next, offset });
+  const namespace = yield select(namespaceSelector, offset);
   const namespaceQuery = yield select(queryParametersSelector, namespace);
-  yield call(fetchTestItems, { payload: { offset: 1 } });
-  const parentsItemsIds = yield select(testItemIdsArraySelector);
+  yield call(fetchTestItems, { payload: { offset } });
   const testItems = yield select(itemsSelector);
   const projectId = yield select(activeProjectSelector);
   const testItem = next ? testItems[0] : testItems[testItems.length - 1];
-  const testItemIds = [...parentsItemsIds.slice(0, -1), testItem.id].join('/');
+  const { launchId, path } = testItem;
+  const testItemIds = [launchId, ...path.split('.')].join('/');
+
   const filterId = yield select(filterIdSelector);
   const query = createNamespacedQuery(namespaceQuery, namespace);
   const link = {

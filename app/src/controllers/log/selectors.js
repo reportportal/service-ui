@@ -5,7 +5,6 @@ import {
   createQueryParametersSelector,
   PROJECT_LOG_PAGE,
   PROJECT_USERDEBUG_LOG_PAGE,
-  testItemIdsArraySelector,
   payloadSelector,
   prevPagePropertiesSelector,
 } from 'controllers/pages';
@@ -120,16 +119,17 @@ export const activeRetrySelector = createSelector(
 export const previousLogLinkSelector = createSelector(
   payloadSelector,
   pagePropertiesSelector,
-  testItemIdsArraySelector,
   logItemIdSelector,
   debugModeSelector,
   itemsSelector,
-  (payload, query, testItemIds, logId, debugMode, testItems) => {
+  (payload, query, logId, debugMode, testItems) => {
     const previousItem = getPreviousItem(testItems, logId);
     if (!previousItem) {
       return null;
     }
     const updatedLogQuery = getUpdatedLogQuery(query, previousItem.id);
+    const { launchId, path } = previousItem;
+    const testItemIds = [launchId, ...path.split('.')].join('/');
     return {
       type: debugMode ? PROJECT_USERDEBUG_LOG_PAGE : PROJECT_LOG_PAGE,
       payload: {
@@ -144,21 +144,22 @@ export const previousLogLinkSelector = createSelector(
 export const nextLogLinkSelector = createSelector(
   payloadSelector,
   pagePropertiesSelector,
-  testItemIdsArraySelector,
   logItemIdSelector,
   debugModeSelector,
   itemsSelector,
-  (payload, query, testItemIds, logId, debugMode, testItems) => {
+  (payload, query, logId, debugMode, testItems) => {
     const nextItem = getNextItem(testItems, logId);
     if (!nextItem) {
       return null;
     }
     const updatedLogQuery = getUpdatedLogQuery(query, nextItem.id);
+    const { launchId, path } = nextItem;
+    const testItemIds = [launchId, ...path.split('.')].join('/');
     return {
       type: debugMode ? PROJECT_USERDEBUG_LOG_PAGE : PROJECT_LOG_PAGE,
       payload: {
         ...payload,
-        testItemIds: [...testItemIds.slice(0, testItemIds.length - 1), nextItem.id].join('/'),
+        testItemIds,
       },
       meta: { query: { ...query, ...updatedLogQuery } },
     };
