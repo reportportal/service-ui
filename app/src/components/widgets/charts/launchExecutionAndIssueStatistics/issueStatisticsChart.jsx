@@ -97,7 +97,7 @@ export class IssueStatisticsChart extends Component {
     const { observer, isPreview } = this.props;
 
     if (!isPreview) {
-      this.issuesNode.removeEventListener('mousemove', this.setCoords);
+      this.issuesNode && this.issuesNode.removeEventListener('mousemove', this.setCoords);
 
       observer.unsubscribe && observer.unsubscribe('widgetResized', this.resizeIssuesChart);
     }
