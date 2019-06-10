@@ -5,3 +5,4 @@ export { Investigated } from './investigated';
 export { AutoBugs } from './autoBugs';
 export { LaunchesQuantity } from './launchesQuantity';
 export { ProductBugs } from './productBugs';
+export { SystemIssues } from './systemIssues';
