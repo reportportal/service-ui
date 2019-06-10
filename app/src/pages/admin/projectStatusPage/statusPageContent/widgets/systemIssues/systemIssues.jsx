@@ -1,23 +1,26 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import moment from 'moment';
 import classNames from 'classnames/bind';
 import { defineMessages, injectIntl } from 'react-intl';
-import { InvestigatedTrendChart } from 'components/widgets/charts/investigatedTrendChart';
+import { IssuesStatusPageChart } from 'components/widgets/charts/issuesStatusPageChart';
 import { NoDataAvailable } from 'components/widgets/noDataAvailable';
 import { PERIOD_VALUES, PERIOD_VALUES_LENGTH } from 'common/constants/statusPeriodValues';
-import styles from './launchesQuantity.scss';
+import { DATE_FORMAT_TOOLTIP } from 'common/constants/timeDateFormat';
+import { getWeekRange } from 'common/utils/getWeekRange';
+import styles from './systemIssues.scss';
 
 const cx = classNames.bind(styles);
 
 const messages = defineMessages({
   noDataMessage: {
-    id: 'LaunchesQuantity.noDataMessage',
+    id: 'SystemIssues.noDataMessage',
     defaultMessage: 'No launches were performed',
   },
 });
 
 @injectIntl
-export class LaunchesQuantity extends Component {
+export class SystemIssues extends Component {
   static propTypes = {
     data: PropTypes.object.isRequired,
     intl: PropTypes.object.isRequired,
@@ -43,29 +46,62 @@ export class LaunchesQuantity extends Component {
 
   prepareData = (rawData, interval) => {
     const minListLength = PERIOD_VALUES_LENGTH[interval];
+
     const data = Object.keys(rawData).map((key) => {
-      const { values = {} } = rawData[key][0] || {};
-      const { count = 0, start, end } = values;
-      const dateRange = end ? `${start} - ${end}` : start;
+      const {
+        values: { automationBug, toInvestigate, systemIssue, productBug },
+      } = rawData[key][0];
+      const total = +automationBug + +toInvestigate + +systemIssue + +productBug;
 
       return {
-        name: dateRange,
+        date: key,
+        name: interval === PERIOD_VALUES.ONE_MONTH ? key : getWeekRange(key),
         values: {
-          launchesQuantity: +count,
+          systemIssue: (automationBug / total * 100).toFixed(2),
+          toInvestigate: (toInvestigate / total * 100).toFixed(2),
         },
       };
     });
 
-    while (data.length < minListLength) {
-      data.unshift({
-        name: '',
-        values: {
-          launchesQuantity: 0,
-        },
-      });
+    if (data.length < minListLength) {
+      this.prefillDataGap(data, minListLength, interval);
     }
 
     return { content: data };
+  };
+
+  prefillDataGap = (data, minListLength, interval) => {
+    // prefill date in before last element
+    const lastElementDate = data[0].date;
+    let lastEmptyElementDate;
+
+    switch (interval) {
+      case PERIOD_VALUES.THREE_MONTHS:
+      case PERIOD_VALUES.SIX_MONTHS:
+        lastEmptyElementDate = getWeekRange(
+          moment(lastElementDate)
+            .subtract(1, 'week')
+            .format(),
+        );
+        break;
+      case PERIOD_VALUES.ONE_MONTH:
+        lastEmptyElementDate = moment(lastElementDate)
+          .subtract(1, 'day')
+          .format(DATE_FORMAT_TOOLTIP);
+        break;
+      default:
+        return;
+    }
+
+    while (data.length < minListLength) {
+      data.unshift({
+        name: lastEmptyElementDate,
+        values: {
+          systemIssue: 0,
+          toInvestigate: 0,
+        },
+      });
+    }
   };
 
   render() {
@@ -74,14 +110,13 @@ export class LaunchesQuantity extends Component {
     const isDataEmpty = !Object.keys(data).length;
 
     return (
-      <div ref={this.containerRef} className={cx('launches-quantity')}>
+      <div ref={this.containerRef} className={cx('system-issues')}>
         {isContainerRefReady && !isDataEmpty ? (
-          <InvestigatedTrendChart
+          <IssuesStatusPageChart
             widget={this.prepareData(data, interval)}
             interval={interval}
             container={this.containerRef.current}
             onStatusPageMode
-            integerValueType
           />
         ) : (
           <div className={cx('no-data-wrapper')}>
