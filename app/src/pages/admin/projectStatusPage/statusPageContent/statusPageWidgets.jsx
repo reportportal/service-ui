@@ -7,6 +7,7 @@ import {
   AutoBugs,
   LaunchesQuantity,
   ProductBugs,
+  LaunchStatistics,
 } from './widgets';
 import { WIDGETS_IDS } from '../constants';
 import { messages } from './messages';
@@ -44,8 +45,8 @@ export const statusPageWidgets = [
   {
     title: messages.launchStatistics,
     id: WIDGETS_IDS.launchStatistics,
-    source: WIDGETS_IDS.investigated,
-    component: () => <div />,
+    source: WIDGETS_IDS.issuesChart,
+    component: (data, interval) => <LaunchStatistics data={data} interval={interval} />,
   },
   {
     title: messages.investigated,
