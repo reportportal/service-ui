@@ -108,6 +108,7 @@ export const breadcrumbsSelector = createSelector(
   debugModeSelector,
   (projectId, filterId, parentItems, testItemIds, query, debugMode) => {
     const queryNamespacesToCopy = [LAUNCH_NAMESPACE];
+    let isListViewExist = false;
     const descriptors = [
       {
         id: filterId,
@@ -139,6 +140,11 @@ export const breadcrumbsSelector = createSelector(
           };
         }
         queryNamespacesToCopy.push(getQueryNamespace(i));
+        const listView = isListView(query, getQueryNamespace(i));
+        const itemQuery = isListViewExist ? {} : copyQuery(query, queryNamespacesToCopy);
+        if (listView) {
+          isListViewExist = true;
+        }
         return {
           id: item.id,
           title: itemTitleFormatter(item),
@@ -150,13 +156,11 @@ export const breadcrumbsSelector = createSelector(
               testItemIds: testItemIds && testItemIds.slice(0, i + 1).join('/'),
             },
             meta: {
-              query: {
-                ...copyQuery(query, queryNamespacesToCopy),
-              },
+              query: itemQuery,
             },
           },
           active: i === parentItems.length - 1,
-          listView: isListView(query, getQueryNamespace(i)),
+          listView,
         };
       }),
     ];
@@ -174,9 +178,8 @@ export const nameLinkSelector = (state, ownProps) => {
     (ownProps.ownLinkParams && ownProps.ownLinkParams.page) || getNextPage(level, isDebugMode);
   const test = testItemSelector(state, ownProps.itemId);
   if (test && test.path) {
-    testItemIds = [
-      ...new Set([...testItemIds.split('/'), ...test.path.split('.').slice(0, -1)]),
-    ].join('/');
+    const testItemPath = test.path.split('.').slice(0, -1);
+    testItemIds = [test.launchId, ...testItemPath].join('/');
   }
   if (ownProps.uniqueId) {
     query = {
@@ -301,3 +304,17 @@ export const btsIntegrationBackLinkSelector = (state, { path = '', launchId } = 
 
   return `${btsLinkBase}/${launchId}/${path.split('.').join('/')}/log?${searchString}`;
 };
+
+export const logPageOffsetSelector = createSelector(
+  breadcrumbsSelector,
+  testItemIdsArraySelector,
+  (breadcrumbs, testItems) => {
+    let offset = 1;
+    const parentFromBreadcrumbs = breadcrumbs.find((item) => item.listView);
+    if (parentFromBreadcrumbs) {
+      const { id } = parentFromBreadcrumbs;
+      offset = [...testItems].reverse().indexOf(id);
+    }
+    return offset;
+  },
+);
