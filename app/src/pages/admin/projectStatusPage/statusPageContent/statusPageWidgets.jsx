@@ -9,6 +9,7 @@ import {
   ProductBugs,
   LaunchStatistics,
   SystemIssues,
+  ActivityPanel,
 } from './widgets';
 import { WIDGETS_IDS } from '../constants';
 import { messages } from './messages';
@@ -85,6 +86,6 @@ export const activityItem = {
   title: messages.activities,
   id: WIDGETS_IDS.activities,
   source: WIDGETS_IDS.activities,
-  component: () => <div />,
+  component: (data) => <ActivityPanel data={data} />,
   getUrl: (projectId, interval) => URLS.projectWidget(projectId, WIDGETS_IDS.activities, interval),
 };
