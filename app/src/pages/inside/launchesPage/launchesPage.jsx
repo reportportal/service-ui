@@ -44,6 +44,7 @@ import {
   toggleAllLaunchesAction,
   deleteItemsAction,
   updateLaunchLocallyAction,
+  updateArrOfLaunchesLocallyAction,
 } from 'controllers/launch';
 import { prevTestItemSelector } from 'controllers/pages';
 import { LaunchSuiteGrid } from 'pages/inside/common/launchSuiteGrid';
@@ -138,6 +139,7 @@ const messages = defineMessages({
     showScreenLockAction,
     hideScreenLockAction,
     updateLaunchLocallyAction,
+    updateArrOfLaunchesLocallyAction,
   },
 )
 @withSorting({
@@ -191,6 +193,7 @@ export class LaunchesPage extends Component {
     }).isRequired,
     projectSetting: PropTypes.object.isRequired,
     updateLaunchLocallyAction: PropTypes.func.isRequired,
+    updateArrOfLaunchesLocallyAction: PropTypes.func.isRequired,
     highlightItemId: PropTypes.number,
   };
 
@@ -240,7 +243,7 @@ export class LaunchesPage extends Component {
     isGridRowHighlighted: false,
     prevLaunches: [],
     launchesInProgress: [],
-    counter: null,
+    finishedLaunchesCount: null,
   };
 
   componentDidMount() {
@@ -463,25 +466,25 @@ export class LaunchesPage extends Component {
       );
 
       if (!isEqual(this.state.launchesInProgress, newLaunchesInProgress)) {
-        const { counter, launchesInProgress } = this.state;
+        const { finishedLaunchesCount, launchesInProgress } = this.state;
         const diff = launchesInProgress.length - newLaunchesInProgress.length;
-        const newCounterValue = counter ? counter + diff : diff;
-        const newLaunchesData = this.props.launches.filter((item) => {
-          const newItem = item;
+        const newFinishedLaunchesCount = finishedLaunchesCount
+          ? finishedLaunchesCount + diff
+          : diff;
 
-          if (!newItem.endTime && !newLaunchesInProgress.includes(newItem.id)) {
-            newItem.endTime = Date.now();
-            newItem.status = launchesWithStatus[newItem.id];
-            return newItem;
-          }
-          return false;
-        });
+        const newLaunchesData = this.props.launches
+          .filter((item) => !item.endTime && !newLaunchesInProgress.includes(item.id))
+          .map((item) => ({
+            ...item,
+            endTime: Date.now(),
+            status: launchesWithStatus[item.id],
+          }));
 
-        newLaunchesData.forEach((item) => this.props.updateLaunchLocallyAction(item));
+        this.props.updateArrOfLaunchesLocallyAction(newLaunchesData);
 
         this.setState({
           launchesInProgress: newLaunchesInProgress,
-          counter: newCounterValue,
+          finishedLaunchesCount: newFinishedLaunchesCount,
         });
       }
     });
@@ -515,7 +518,7 @@ export class LaunchesPage extends Component {
 
   refreshLaunch = () => {
     this.setState({
-      counter: null,
+      finishedLaunchesCount: null,
     });
     this.props.fetchLaunchesAction();
   };
@@ -597,7 +600,7 @@ export class LaunchesPage extends Component {
       isGridRowHighlighted: this.state.isGridRowHighlighted,
       highlightedRowId: this.state.highlightedRowId,
     };
-    const { counter } = this.state;
+    const { finishedLaunchesCount } = this.state;
 
     return (
       <FilterEntitiesContainer
@@ -638,7 +641,7 @@ export class LaunchesPage extends Component {
                 onDelete={this.deleteItems}
                 activeFilterId={activeFilterId}
                 onAddNewWidget={this.showWidgetWizard}
-                counter={counter}
+                finishedLaunchesCount={finishedLaunchesCount}
               />
               <LaunchSuiteGrid
                 data={launches}
@@ -678,12 +681,12 @@ export class LaunchesPage extends Component {
   };
 
   render() {
-    const { isGridRowHighlighted, counter } = this.state;
+    const { isGridRowHighlighted, finishedLaunchesCount } = this.state;
 
     return (
       <LaunchFiltersContainer
         {...this.props}
-        counter={counter}
+        finishedLaunchesCount={finishedLaunchesCount}
         isGridRowHighlighted={isGridRowHighlighted}
         onChange={this.resetPageNumber}
         render={this.renderPageContent}

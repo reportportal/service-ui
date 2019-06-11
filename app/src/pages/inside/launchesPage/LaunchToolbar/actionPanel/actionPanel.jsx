@@ -88,7 +88,7 @@ export class ActionPanel extends Component {
     }).isRequired,
     activeFilterId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     onAddNewWidget: PropTypes.func,
-    counter: PropTypes.number,
+    finishedLaunchesCount: PropTypes.number,
   };
 
   static defaultProps = {
@@ -109,7 +109,7 @@ export class ActionPanel extends Component {
     restorePath: () => {},
     activeFilterId: null,
     onAddNewWidget: () => {},
-    counter: null,
+    finishedLaunchesCount: null,
   };
 
   constructor(props) {
@@ -183,7 +183,7 @@ export class ActionPanel extends Component {
       breadcrumbs,
       restorePath,
       onAddNewWidget,
-      counter,
+      finishedLaunchesCount,
     } = this.props;
 
     return (
@@ -227,7 +227,7 @@ export class ActionPanel extends Component {
               onClick={onRefresh}
             >
               <FormattedMessage id="LaunchesPage.refresh" defaultMessage="Refresh" />
-              {counter && this.renderCounterNotification(counter)}
+              {finishedLaunchesCount && this.renderCounterNotification(finishedLaunchesCount)}
             </GhostButton>
           </div>
         </div>
