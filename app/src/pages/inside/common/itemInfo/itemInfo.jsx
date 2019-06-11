@@ -147,20 +147,18 @@ export class ItemInfo extends Component {
             <span title={value.name} className={cx('name')}>
               {`${formatItemName(value.name)} `}
             </span>
-            <span className={cx('edit-number-box')}>
-              {value.number && <span className={cx('number')}>#{value.number}</span>}
-              {canEditLaunch(
-                userAccountRole,
-                userProjectRole,
-                value.owner ? userId === value.owner : userId === launch.owner,
-              ) &&
-                !editDisabled && (
-                  <span className={cx('edit-icon')} onClick={this.handleEditItem}>
-                    {Parser(PencilIcon)}
-                  </span>
-                )}
-            </span>
+            {value.number && <span className={cx('number')}>#{value.number}</span>}
           </NameLink>
+          {canEditLaunch(
+            userAccountRole,
+            userProjectRole,
+            value.owner ? userId === value.owner : userId === launch.owner,
+          ) &&
+            !editDisabled && (
+              <span className={cx('edit-icon')} onClick={this.handleEditItem}>
+                {Parser(PencilIcon)}
+              </span>
+            )}
           {value.analyzing && <div className={cx('analysis-badge')}>Analysis</div>}
           {isStepLevel && (
             <div className={cx('test-params-icon')} onClick={this.handleShowTestParams}>
