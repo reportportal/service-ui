@@ -14,6 +14,7 @@ export {
   deleteItemsAction,
   fetchLaunchesWithParamsAction,
   updateLaunchLocallyAction,
+  updateArrOfLaunchesLocallyAction,
 } from './actionCreators';
 export {
   selectedLaunchesSelector,
