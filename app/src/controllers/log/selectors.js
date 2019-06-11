@@ -134,7 +134,7 @@ export const previousLogLinkSelector = createSelector(
       type: debugMode ? PROJECT_USERDEBUG_LOG_PAGE : PROJECT_LOG_PAGE,
       payload: {
         ...payload,
-        testItemIds: [...testItemIds.slice(0, testItemIds.length - 1), previousItem.id].join('/'),
+        testItemIds,
       },
       meta: { query: { ...query, ...updatedLogQuery } },
     };
