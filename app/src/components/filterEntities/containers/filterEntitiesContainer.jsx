@@ -50,6 +50,9 @@ export class FilterEntitiesContainer extends Component {
     prevEntities: this.props.entities,
     visibleFilters: Object.keys(this.props.entities),
   };
+
+  initialLevel = this.props.level;
+
   collectEntities = (values) =>
     Object.keys(values).reduce((acc, entityId) => {
       const value = values[entityId];
@@ -103,8 +106,8 @@ export class FilterEntitiesContainer extends Component {
 
   render() {
     const { errors, values, visibleFilters } = this.state;
-    const { render, level, entitiesProvider } = this.props;
-    const EntitiesProvider = entitiesProvider || ENTITY_PROVIDERS[level];
+    const { render, entitiesProvider } = this.props;
+    const EntitiesProvider = entitiesProvider || ENTITY_PROVIDERS[this.initialLevel];
     return (
       <EntitiesProvider
         visibleFilters={visibleFilters}
