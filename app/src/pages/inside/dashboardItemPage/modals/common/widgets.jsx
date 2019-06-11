@@ -17,9 +17,11 @@ import {
   PASSING_RATE_PER_LAUNCH,
   PASSING_RATE_SUMMARY,
   FLAKY_TEST_CASES_TABLE,
+  /*
   CUMULATIVE_TREND,
   PRODUCT_STATUS,
   MOST_TIME_CONSUMING,
+  */
 } from 'common/constants/widgetTypes';
 import {
   LaunchStatisticsControls,
@@ -38,9 +40,11 @@ import {
   PassingRatePerLaunchControls,
   PassingRateSummaryControls,
   FlakyTestCasesTableControls,
+  /*
   CumulativeTrendControls,
   ProductStatusControls,
   MostTimeConsumingTestCasesControls,
+  */
 } from './widgetControls';
 import LAUNCH_STATISTICS_PREVIEW from './img/wdgt-launch-statistics-line-chart-inline.svg';
 import OVERALL_STATISTICS_PREVIEW from './img/wdgt-overall-statistics-panel-inline.svg';
@@ -58,9 +62,11 @@ import DIFFERENT_LAUNCHES_COMPARISON_PREVIEW from './img/wdgt-different-launches
 import PASSING_RATE_PER_LAUNCH_PREVIEW from './img/wdgt-passing-rate-launch-inline.svg';
 import PASSING_RATE_SUMMARY_PREVIEW from './img/wdgt-passing-rate-summery-inline.svg';
 import FLAKY_TEST_CASES_TABLE_PREVIEW from './img/wdgt-flaky-test-cases-table-inline.svg';
+/*
 import CUMULATIVE_TREND_PREVIEW from './img/wdgt-cumulative-trend-chart-inline.svg';
 import PRODUCT_STATUS_PREVIEW from './img/wdgt-product-satus-inline.svg';
 import MOST_TIME_CONSUMING_PREVIEW from './img/wdgt-most-time-consuming-inline.svg';
+*/
 
 export const widgetTypesMessages = defineMessages({
   [LAUNCH_STATISTICS]: {
@@ -127,6 +133,7 @@ export const widgetTypesMessages = defineMessages({
     id: 'Widgets.Name.flakyTestCases',
     defaultMessage: 'Flaky test cases table (TOP-20)',
   },
+  /*
   [CUMULATIVE_TREND]: {
     id: 'Widgets.Name.cumulative',
     defaultMessage: 'Cumulative trend chart',
@@ -139,6 +146,7 @@ export const widgetTypesMessages = defineMessages({
     id: 'Widgets.Name.mostTimeConsuming',
     defaultMessage: 'Most time-consuming test cases widget (TOP-20)',
   },
+  */
 });
 export const getWidgets = (formatMessage) => [
   {
@@ -355,6 +363,7 @@ export const getWidgets = (formatMessage) => [
     preview: Parser(FLAKY_TEST_CASES_TABLE_PREVIEW),
     controls: FlakyTestCasesTableControls,
   },
+  /*
   {
     id: CUMULATIVE_TREND,
     title: formatMessage(widgetTypesMessages[CUMULATIVE_TREND]),
@@ -397,6 +406,7 @@ export const getWidgets = (formatMessage) => [
     preview: Parser(MOST_TIME_CONSUMING_PREVIEW),
     controls: MostTimeConsumingTestCasesControls,
   },
+  */
 ];
 
 export const TABLE_WIDGETS_PREVIEWS = {

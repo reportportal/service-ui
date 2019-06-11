@@ -11,7 +11,8 @@
   &:nth-child(odd) {
     padding-right: 0;
   }
-  &:nth-last-child(1) {
+  &:nth-last-child(1),
+  &:nth-last-child(2) {
     border: none;
   }
 }
