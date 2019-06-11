@@ -39,6 +39,7 @@ import {
   createParentItemsSelector,
   itemsSelector,
   logPageOffsetSelector,
+  levelSelector,
 } from './selectors';
 import { calculateLevel } from './utils';
 
@@ -122,7 +123,8 @@ function* fetchTestItems({ payload = {} }) {
   if (dataPayload.error) {
     level = LEVEL_NOT_FOUND;
   } else {
-    level = calculateLevel(dataPayload.payload.content) || LEVEL_NOT_FOUND;
+    const previousLevel = yield select(levelSelector);
+    level = calculateLevel(dataPayload.payload.content, previousLevel);
   }
 
   if (LEVELS[level]) {
