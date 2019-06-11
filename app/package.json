@@ -10,7 +10,7 @@
     "format:js": "npm run eslint -- --fix",
     "format:scss": "npm run stylelint -- --fix",
     "format": "npm run format:js && npm run format:scss && prettier --write */**/*.md",
-    "dev": "NODE_ENV=development webpack-dev-server --port 3000",
+    "dev": "set NODE_ENV=development && webpack-dev-server  --port 3000",
     "build": "webpack -p",
     "test": "jest --notify",
     "test:watch": "jest --watch",
@@ -20,7 +20,7 @@
     "manage:translations:test": "webpack --display none --env.dev && babel-node ./localization/translatorRunnerCheck.js",
     "precommit": "lint-staged",
     "postcommit": "git update-index --again",
-    "storybook": "NODE_ENV=development start-storybook -p 9001 -c .storybook",
+    "storybook": "set NODE_ENV=development && start-storybook -p 9001 -c .storybook",
     "storybook:build": "build-storybook -c .storybook -o .storybook_app"
   },
   "dependencies": {
