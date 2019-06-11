@@ -25,6 +25,12 @@ export const unsavedFilterIdsSelector = createSelector(
   userFiltersSelector,
   (filters, savedFilters) =>
     filters
+      .map((filter) => ({
+        ...filter,
+        conditions: filter.conditions.filter(
+          (condition) => !(condition.filteringField === 'name' && condition.value === ''),
+        ),
+      }))
       .filter((filter) => {
         if (filter.id >= 0) {
           const savedFilter = savedFilters.find((item) => item.id === filter.id);
