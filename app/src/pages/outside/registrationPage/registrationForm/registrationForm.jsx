@@ -66,7 +66,7 @@ const messages = defineMessages({
   },
   passwordConstraint: {
     id: 'RegistrationForm.passwordConstraints',
-    defaultMessage: '4-128 symbols',
+    defaultMessage: '4-256 symbols',
   },
 });
 
@@ -155,7 +155,7 @@ export class RegistrationForm extends Component {
                 <InputOutside
                   type={'password'}
                   icon={PasswordIcon}
-                  maxLength="128"
+                  maxLength="256"
                   placeholder={formatMessage(messages.password)}
                 />
               </FieldErrorHint>
@@ -168,7 +168,7 @@ export class RegistrationForm extends Component {
               <InputOutside
                 type={'password'}
                 icon={PasswordIcon}
-                maxLength="128"
+                maxLength="256"
                 placeholder={formatMessage(messages.confirmPassword)}
               />
             </FieldErrorHint>

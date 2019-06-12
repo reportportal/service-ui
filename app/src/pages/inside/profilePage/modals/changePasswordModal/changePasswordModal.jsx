@@ -131,7 +131,7 @@ export class ChangePasswordModal extends Component {
                 <Input
                   placeholder={intl.formatMessage(messages.oldPasswordPlaceholder)}
                   type={this.state.showPassword ? 'text' : 'password'}
-                  maxLength="128"
+                  maxLength="256"
                 />
               </FieldErrorHint>
             </FieldProvider>
@@ -145,7 +145,7 @@ export class ChangePasswordModal extends Component {
                 <Input
                   placeholder={intl.formatMessage(messages.newPasswordPlaceholder)}
                   type={this.state.showPassword ? 'text' : 'password'}
-                  maxLength="128"
+                  maxLength="256"
                 />
               </FieldErrorHint>
             </FieldProvider>
@@ -156,7 +156,7 @@ export class ChangePasswordModal extends Component {
                 <Input
                   placeholder={intl.formatMessage(messages.confirmPlaceholder)}
                   type={this.state.showPassword ? 'text' : 'password'}
-                  maxLength="128"
+                  maxLength="256"
                 />
               </FieldErrorHint>
             </FieldProvider>
