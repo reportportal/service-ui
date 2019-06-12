@@ -13,9 +13,9 @@ import {
   STATS_SI_TOTAL,
   STATS_TI_TOTAL,
 } from 'common/constants/statistics';
+import { SORTING_ASC } from 'controllers/sorting';
 import { ENTITY_START_TIME, ENTITY_NAME, ENTITY_NUMBER } from 'components/filterEntities/constants';
 import styles from './filtersSorting.scss';
-import { getOrdersWithDefault } from '../common/constants';
 
 const cx = classNames.bind(styles);
 const messages = defineMessages({
@@ -83,10 +83,12 @@ export class FiltersSorting extends Component {
     intl: intlShape,
     filter: PropTypes.object.isRequired,
     onChange: PropTypes.func.isRequired,
+    sortingString: PropTypes.string,
   };
 
   static defaultProps = {
     intl: {},
+    sortingString: '',
   };
 
   getFilterOptions = () => {
@@ -103,7 +105,13 @@ export class FiltersSorting extends Component {
   };
 
   getFilterOrder = () => {
-    const { filter } = this.props;
+    const { filter, sortingString } = this.props;
+
+    if (sortingString) {
+      const parsed = sortingString.split(',');
+      return { sortingColumn: parsed[0], isAsc: parsed[1] === SORTING_ASC };
+    }
+
     let defaultValue = {
       isAsc: false,
       sortingColumn: ENTITY_START_TIME,
@@ -126,23 +134,25 @@ export class FiltersSorting extends Component {
 
     const newOrders = hasOrder
       ? orders.map((order) => ({ ...order, isAsc: !order.isAsc }))
-      : getOrdersWithDefault(sortingColumn);
+      : [{ sortingColumn, isAsc: false }, { sortingColumn: ENTITY_NUMBER, isAsc: false }];
 
     onChange(newOrders);
   };
 
   render() {
-    const { intl } = this.props;
+    const { intl, sortingString } = this.props;
     const order = this.getFilterOrder();
+    const prefix = sortingString ? 'launches' : 'filter';
 
     return (
-      <div className={cx('filter-sort')}>
-        <span className={cx('filter-sort-text')}>{intl.formatMessage(messages.sortBy)}:</span>
+      <div className={cx('sort', `${prefix}-sort`)}>
+        <span className={cx(`${prefix}-sort-text`)}>{intl.formatMessage(messages.sortBy)}:</span>
         <InputDropdownSorting
           value={order.sortingColumn}
           sortingMode={order.isAsc}
           options={this.getFilterOptions()}
           onChange={this.handleChange}
+          transparent={Boolean(sortingString)}
         />
       </div>
     );
