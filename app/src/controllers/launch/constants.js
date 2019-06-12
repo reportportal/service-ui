@@ -6,7 +6,7 @@ export const CHANGE_LAUNCH_DISTINCT = 'changeLaunchDistinct';
 export const FETCH_LAUNCHES_WITH_PARAMS = 'fetchLaunchesWithParamsAction';
 export const FETCH_LAUNCHES_PAGE_DATA = 'fetchLaunchesPageData';
 export const UPDATE_LAUNCH_LOCALLY = 'updateLaunchLocally';
-export const UPDATE_ARR_OF_LAUNCHES_LOCALLY = 'updateArrOfLaunchesLocally';
+export const UPDATE_LAUNCHES_LOCALLY = 'updateLaunchesLocally';
 
 export const NAMESPACE = 'launches';
 

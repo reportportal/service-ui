@@ -12,7 +12,7 @@ import {
   SET_DEBUG_MODE,
   CHANGE_LAUNCH_DISTINCT,
   UPDATE_LAUNCH_LOCALLY,
-  UPDATE_ARR_OF_LAUNCHES_LOCALLY,
+  UPDATE_LAUNCHES_LOCALLY,
 } from './constants';
 
 const getDefaultLaunchDistinctState = () =>
@@ -49,18 +49,10 @@ const updateLaunchLocallyReducer = (state, { type, payload }) => {
       return state;
   }
 };
-const updateArrOfLaunchesLocallyReducer = (state, { type, payload }) => {
+const updateLaunchesLocallyReducer = (state, { type, payload }) => {
   switch (type) {
-    case UPDATE_ARR_OF_LAUNCHES_LOCALLY:
-      return state.map((item) => {
-        let newItem = item;
-        payload.forEach((itemPayload) => {
-          if (item.id === itemPayload.id) {
-            newItem = itemPayload;
-          }
-        });
-        return newItem;
-      });
+    case UPDATE_LAUNCHES_LOCALLY:
+      return state.map((item) => payload.find((newItem) => newItem.id === item.id) || item);
     default:
       return state;
   }
@@ -70,7 +62,7 @@ export const launchReducer = combineReducers({
   launches: queueReducers(
     fetchReducer(NAMESPACE, { contentPath: 'content' }),
     updateLaunchLocallyReducer,
-    updateArrOfLaunchesLocallyReducer,
+    updateLaunchesLocallyReducer,
   ),
   pagination: paginationReducer(NAMESPACE),
   groupOperations: groupOperationsReducer(NAMESPACE),
