@@ -256,7 +256,6 @@ export class InvestigatedTrendChart extends Component {
     if (this.height !== newHeight) {
       this.chart.resize({
         height: newHeight,
-        width: newWidth,
       });
       this.height = newHeight;
     } else if (this.width !== newWidth) {
