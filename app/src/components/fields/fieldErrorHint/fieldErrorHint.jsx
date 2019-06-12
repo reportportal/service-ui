@@ -10,7 +10,7 @@ const messages = defineMessages({
   loginHint: {
     id: 'RegistrationForm.loginHint',
     defaultMessage:
-      'Login should have size from 1 to 256 symbols, latin, numeric characters, hyphen, underscore, dot.',
+      'Login should have size from 1 to 128 symbols, latin, numeric characters, hyphen, underscore, dot.',
   },
   nameHint: {
     id: 'RegistrationForm.nameHint',
