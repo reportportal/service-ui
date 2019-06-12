@@ -1,12 +1,17 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { STATS_FAILED, STATS_PASSED, STATS_SKIPPED } from 'common/constants/statistics';
+import { URLS } from 'common/urls';
 import { validate } from 'common/utils';
+import { InputTagsSearch } from 'components/inputs/inputTagsSearch';
+import { ModalField } from 'components/main/modal';
+import { activeProjectSelector } from 'controllers/user';
 import { getWidgetCriteriaOptions } from './utils/getWidgetCriteriaOptions';
 import { DEFECT_STATISTICS_OPTIONS, TO_INVESTIGATE_OPTION, ITEMS_INPUT_WIDTH } from './constants';
-import { FiltersControl, DropdownControl, InputControl } from './controls';
+import { FiltersControl, InputControl } from './controls';
 
 const DEFAULT_ITEMS_COUNT = '10';
 const STATIC_CONTENT_FIELDS = [STATS_FAILED, STATS_SKIPPED, STATS_PASSED];
@@ -19,9 +24,9 @@ const messages = defineMessages({
     id: 'CumulativeTrendControls.ItemsFieldLabel',
     defaultMessage: 'Items',
   },
-  attributeKeyFieldLabel: {
-    id: 'CumulativeTrendControls.attributeKeyFieldLabel',
-    defaultMessage: 'Attribute key',
+  attributesArrayLabel: {
+    id: 'CumulativeTrendControls.attributesArrayLabel',
+    defaultMessage: 'Attributes',
   },
   attributeKeyFieldPlaceholder: {
     id: 'CumulativeTrendControls.attributeKeyFieldPlaceholder',
@@ -35,21 +40,24 @@ const messages = defineMessages({
     id: 'LaunchStatisticsControls.ItemsValidationError',
     defaultMessage: 'Items count should have value from 1 to 10',
   },
-  attributeKeyValidationError: {
-    id: 'LaunchStatisticsControls.attributeKeyValidationError',
-    defaultMessage: 'Value should have size from 1 to 128',
+  attributesArrayValidationError: {
+    id: 'CumulativeTrendControls.attributesArrayValidationError',
+    defaultMessage: 'Select at least 1 attribute key',
   },
 });
 const validators = {
   items: (formatMessage) => (value) =>
     (!value || !validate.inRangeValidate(value, 1, 10)) &&
     formatMessage(messages.ItemsValidationError),
-  attributeKey: (formatMessage) => (value) =>
-    (!value || !validate.attributeKey(value)) &&
-    formatMessage(messages.attributeKeyValidationError),
+  attributesArray: (formatMessage) => (value) =>
+    (!value || !validate.attributesArray(value)) &&
+    formatMessage(messages.attributesArrayValidationError),
 };
 
 @injectIntl
+@connect((state) => ({
+  launchAttributeKeysSearch: URLS.launchAttributeKeysSearch(activeProjectSelector(state)),
+}))
 export class CumulativeTrendControls extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
@@ -57,21 +65,24 @@ export class CumulativeTrendControls extends Component {
     initializeControlsForm: PropTypes.func.isRequired,
     formAppearance: PropTypes.object.isRequired,
     onFormAppearanceChange: PropTypes.func.isRequired,
+    launchAttributeKeysSearch: PropTypes.string.isRequired,
   };
 
   constructor(props) {
     super(props);
     const { intl, widgetSettings, initializeControlsForm } = props;
+
     this.criteria = getWidgetCriteriaOptions(
       [DEFECT_STATISTICS_OPTIONS, TO_INVESTIGATE_OPTION],
       intl.formatMessage,
     );
+
     initializeControlsForm({
       contentParameters: widgetSettings.contentParameters || {
         itemsCount: DEFAULT_ITEMS_COUNT,
         contentFields: this.parseContentFields(this.criteria),
         widgetOptions: {
-          attributeKey: '',
+          attributes: [],
         },
       },
     });
@@ -97,8 +108,14 @@ export class CumulativeTrendControls extends Component {
   formatFilterValue = (value) => value && value[0];
   parseFilterValue = (value) => value && [value];
 
+  formatAttributes = (attributes) =>
+    attributes ? attributes.map((attribute) => ({ value: attribute, label: attribute })) : null;
+  parseAttributes = (attributes) =>
+    attributes ? attributes.map((attribute) => attribute.value) : undefined;
+
   render() {
-    const { intl, formAppearance, onFormAppearanceChange } = this.props;
+    const { intl, formAppearance, onFormAppearanceChange, launchAttributeKeysSearch } = this.props;
+
     return (
       <Fragment>
         <FieldProvider name="filters" parse={this.parseFilterValue} format={this.formatFilterValue}>
@@ -109,40 +126,32 @@ export class CumulativeTrendControls extends Component {
         </FieldProvider>
         {!formAppearance.isMainControlsLocked && (
           <Fragment>
-            <FieldProvider
-              name="contentParameters.widgetOptions.attributes.0"
-              validate={validators.attributeKey(intl.formatMessage)}
+            <ModalField
+              label={intl.formatMessage(messages.attributesArrayLabel)}
+              labelWidth={145}
+              tip={intl.formatMessage(messages.attributeKeyFieldTip)}
             >
-              <InputControl
-                fieldLabel={intl.formatMessage(messages.attributeKeyFieldLabel)}
-                placeholder={intl.formatMessage(messages.attributeKeyFieldPlaceholder)}
-                tip={intl.formatMessage(messages.attributeKeyFieldTip)}
-              />
-            </FieldProvider>
+              <div style={{ width: '100%' }}>
+                <FieldProvider
+                  parse={this.parseAttributes}
+                  format={this.formatAttributes}
+                  name="contentParameters.widgetOptions.attributes"
+                  validate={validators.attributesArray(intl.formatMessage)}
+                >
+                  <InputTagsSearch
+                    uri={launchAttributeKeysSearch}
+                    minLength={1}
+                    async
+                    creatable
+                    showNewLabel
+                    multi
+                    removeSelected
+                    makeOptions={this.formatAttributes}
+                  />
+                </FieldProvider>
+              </div>
+            </ModalField>
 
-            <FieldProvider
-              name="contentParameters.widgetOptions.attributes.1"
-              validate={validators.attributeKey(intl.formatMessage)}
-            >
-              <InputControl
-                fieldLabel={intl.formatMessage(messages.attributeKeyFieldLabel)}
-                placeholder={intl.formatMessage(messages.attributeKeyFieldPlaceholder)}
-                tip={intl.formatMessage(messages.attributeKeyFieldTip)}
-              />
-            </FieldProvider>
-
-            <FieldProvider
-              name="contentParameters.contentFields"
-              parse={this.parseContentFields}
-              format={this.formatContentFields}
-            >
-              <DropdownControl
-                fieldLabel={intl.formatMessage(messages.CriteriaFieldLabel)}
-                multiple
-                selectAll
-                options={this.criteria}
-              />
-            </FieldProvider>
             <FieldProvider
               name="contentParameters.itemsCount"
               validate={validators.items(intl.formatMessage)}
