@@ -4,6 +4,10 @@
   width: 100%;
   padding-top: 40px;
 
+  &.preview-view {
+    display: none;
+  }
+
   &:not(.preview-view) {
     position: absolute;
     top: -15px;
