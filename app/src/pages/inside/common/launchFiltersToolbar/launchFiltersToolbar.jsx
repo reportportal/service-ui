@@ -55,6 +55,8 @@ export class LaunchFiltersToolbar extends Component {
     onFilterRemove: PropTypes.func,
     onFilterValidate: PropTypes.func,
     onFilterChange: PropTypes.func,
+    onChangeSorting: PropTypes.func,
+    sortingString: PropTypes.string,
     filterErrors: PropTypes.object,
     filterEntities: PropTypes.array,
     showModal: PropTypes.func,
@@ -80,6 +82,8 @@ export class LaunchFiltersToolbar extends Component {
     onFilterRemove: () => {},
     onFilterValidate: () => {},
     onFilterChange: () => {},
+    onChangeSorting: () => {},
+    sortingString: '',
     filterErrors: {},
     filterEntities: [],
     showModal: () => {},
@@ -174,6 +178,8 @@ export class LaunchFiltersToolbar extends Component {
       filterEntities,
       filterErrors,
       onFilterChange,
+      onChangeSorting,
+      sortingString,
       onFilterValidate,
       onFilterAdd,
       onFilterRemove,
@@ -239,6 +245,8 @@ export class LaunchFiltersToolbar extends Component {
                 onSave={this.updateActiveFilter}
                 onClone={this.handleFilterClone}
                 filter={activeFilter}
+                onChangeSorting={onChangeSorting}
+                sortingString={sortingString}
               />
             </div>
           )}

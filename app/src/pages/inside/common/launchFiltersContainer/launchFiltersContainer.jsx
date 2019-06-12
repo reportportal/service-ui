@@ -17,6 +17,7 @@ import { debounce } from 'common/utils';
 import { hideFilterOnLaunchesAction } from 'controllers/project';
 import { isEmptyValue } from 'common/utils/isEmptyValue';
 import { PAGE_KEY } from 'controllers/pagination';
+import { SORTING_KEY } from 'controllers/sorting';
 import { createFilterQuery } from 'components/filterEntities/containers/utils';
 
 @connect(
@@ -49,6 +50,7 @@ export class LaunchFiltersContainer extends Component {
     removeLaunchesFilterAction: PropTypes.func,
     createFilter: PropTypes.func,
     onChange: PropTypes.func,
+    sortingString: PropTypes.string,
   };
 
   static defaultProps = {
@@ -63,6 +65,7 @@ export class LaunchFiltersContainer extends Component {
     removeLaunchesFilterAction: () => {},
     createFilter: () => {},
     onChange: () => {},
+    sortingString: '',
   };
 
   getConditions = () => {
@@ -124,6 +127,11 @@ export class LaunchFiltersContainer extends Component {
     this.props.updateFilterConditionsAction(filterId, conditions);
   };
 
+  updateFilterOrder = (filterId, sortingString) => {
+    const currentFilter = this.createQuery(this.getConditions());
+    this.fetchLaunches({ [PAGE_KEY]: 1, [SORTING_KEY]: sortingString, ...currentFilter });
+  };
+
   render() {
     const { render, launchFilters, activeFilterId, activeFilter } = this.props;
     return render({
@@ -135,6 +143,7 @@ export class LaunchFiltersContainer extends Component {
       onChangeFilter: this.handleFilterChange,
       activeFilterConditions: this.getConditions(),
       onResetFilter: this.props.fetchLaunchesAction,
+      onUpdateFilterOrder: this.updateFilterOrder,
     });
   }
 }

@@ -42,6 +42,7 @@ export class InputDropdownSorting extends Component {
     onFocus: PropTypes.func,
     onBlur: PropTypes.func,
     mobileDisabled: PropTypes.bool,
+    transparent: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -56,6 +57,7 @@ export class InputDropdownSorting extends Component {
     onFocus: () => {},
     onBlur: () => {},
     mobileDisabled: false,
+    transparent: false,
   };
   state = {
     opened: false,
@@ -126,7 +128,7 @@ export class InputDropdownSorting extends Component {
   }
 
   render() {
-    const { error, touched, disabled, mobileDisabled, sortingMode } = this.props;
+    const { error, touched, disabled, mobileDisabled, transparent, sortingMode } = this.props;
     const { opened } = this.state;
 
     return (
@@ -137,6 +139,7 @@ export class InputDropdownSorting extends Component {
             error,
             touched,
             'mobile-disabled': mobileDisabled,
+            transparent,
           })}
           onClick={this.onClickSelectBlock}
         >

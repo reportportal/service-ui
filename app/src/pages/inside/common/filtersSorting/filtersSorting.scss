@@ -1,0 +1,22 @@
+.sort {
+  display: flex;
+  width: 100%;
+  align-items: center;
+}
+
+.filter-sort {
+  margin: 10px 0 0;
+}
+
+.filter-sort-text {
+  font-size: 14px;
+}
+
+.launches-sort {
+  position: relative;
+  z-index: 10;
+}
+
+.launches-sort-text {
+  font-size: 13px;
+}
