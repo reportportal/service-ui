@@ -15,7 +15,7 @@ import {
   FETCH_LAUNCHES_WITH_PARAMS,
   FETCH_LAUNCHES_PAGE_DATA,
   UPDATE_LAUNCH_LOCALLY,
-  UPDATE_ARR_OF_LAUNCHES_LOCALLY,
+  UPDATE_LAUNCHES_LOCALLY,
 } from './constants';
 import {
   validateMergeLaunch,
@@ -53,8 +53,8 @@ export const updateLaunchLocallyAction = (launch) => ({
   payload: launch,
 });
 
-export const updateArrOfLaunchesLocallyAction = (launches) => ({
-  type: UPDATE_ARR_OF_LAUNCHES_LOCALLY,
+export const updateLaunchesLocallyAction = (launches) => ({
+  type: UPDATE_LAUNCHES_LOCALLY,
   payload: launches,
 });
 

@@ -44,7 +44,7 @@ import {
   toggleAllLaunchesAction,
   deleteItemsAction,
   updateLaunchLocallyAction,
-  updateArrOfLaunchesLocallyAction,
+  updateLaunchesLocallyAction,
 } from 'controllers/launch';
 import { prevTestItemSelector } from 'controllers/pages';
 import { LaunchSuiteGrid } from 'pages/inside/common/launchSuiteGrid';
@@ -139,7 +139,7 @@ const messages = defineMessages({
     showScreenLockAction,
     hideScreenLockAction,
     updateLaunchLocallyAction,
-    updateArrOfLaunchesLocallyAction,
+    updateLaunchesLocallyAction,
   },
 )
 @withSorting({
@@ -193,7 +193,7 @@ export class LaunchesPage extends Component {
     }).isRequired,
     projectSetting: PropTypes.object.isRequired,
     updateLaunchLocallyAction: PropTypes.func.isRequired,
-    updateArrOfLaunchesLocallyAction: PropTypes.func.isRequired,
+    updateLaunchesLocallyAction: PropTypes.func.isRequired,
     highlightItemId: PropTypes.number,
   };
 
@@ -480,7 +480,7 @@ export class LaunchesPage extends Component {
             status: launchesWithStatus[item.id],
           }));
 
-        this.props.updateArrOfLaunchesLocallyAction(newLaunchesData);
+        this.props.updateLaunchesLocallyAction(newLaunchesData);
 
         this.setState({
           launchesInProgress: newLaunchesInProgress,
