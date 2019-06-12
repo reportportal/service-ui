@@ -182,6 +182,7 @@ export class LoginForm extends React.Component {
                 disabled={isLoginLimitExceeded}
                 icon={LoginIcon}
                 placeholder={formatMessage(messages.login)}
+                maxLength="128"
               />
             </FieldErrorHint>
           </FieldProvider>
