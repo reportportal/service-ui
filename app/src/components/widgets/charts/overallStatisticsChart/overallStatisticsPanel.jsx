@@ -26,9 +26,7 @@ export class OverallStatisticsPanel extends React.PureComponent {
     const { widget, orderedContentFields } = this.props;
     const values = widget.content.result[0].values;
 
-    return orderedContentFields
-      .map((key) => (values[key] ? { key, value: values[key] } : null))
-      .filter((item) => item);
+    return orderedContentFields.map((key) => ({ key, value: values[key] || 0 }));
   };
 
   render() {
