@@ -14,7 +14,7 @@ import {
   updatePagePropertiesAction,
 } from 'controllers/pages';
 import { fetchDataAction } from 'controllers/fetch';
-import { SIZE_KEY, PAGE_KEY } from 'controllers/pagination';
+import { SIZE_KEY, PAGE_KEY, getPageSize, getStorageKey } from 'controllers/pagination';
 import { ERROR } from 'common/constants/logLevels';
 import { createNamespacedQuery, mergeNamespacedQuery } from 'common/utils/routingUtils';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
@@ -80,9 +80,14 @@ function* collectLogPayload() {
 }
 
 function* fetchLogItems(payload = {}) {
-  const { activeProject, params, filterLevel, withAttachments, activeLogItemId } = yield call(
-    collectLogPayload,
-  );
+  const {
+    activeProject,
+    userId,
+    params,
+    filterLevel,
+    withAttachments,
+    activeLogItemId,
+  } = yield call(collectLogPayload);
   const namespace = payload.namespace || LOG_ITEMS_NAMESPACE;
   const logLevel = payload.level || filterLevel;
   const fetchParams = {
@@ -90,6 +95,10 @@ function* fetchLogItems(payload = {}) {
     ...payload.params,
     [WITH_ATTACHMENTS_FILTER_KEY]: withAttachments,
   };
+  if (!fetchParams[SIZE_KEY]) {
+    fetchParams[PAGE_KEY] = 1;
+    fetchParams[SIZE_KEY] = getPageSize(userId, getStorageKey(NAMESPACE));
+  }
   yield all([
     put(
       fetchDataAction(namespace)(URLS.logItems(activeProject, activeLogItemId, logLevel), {

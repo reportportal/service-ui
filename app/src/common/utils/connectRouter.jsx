@@ -1,5 +1,7 @@
 import { connect } from 'react-redux';
 import { pagePropertiesSelector, updatePagePropertiesAction } from 'controllers/pages';
+import { userIdSelector } from 'controllers/user';
+import { checkPageSize } from 'controllers/pagination';
 import {
   createNamespacedQuery,
   extractNamespacedQuery,
@@ -24,6 +26,7 @@ export const connectRouter = (mapURLParamsToProps = takeAll, queryUpdaters = {},
       const namespacedQuery = namespace
         ? extractNamespacedQuery(pageProperties, namespace)
         : pageProperties;
+      checkPageSize(namespacedQuery, userIdSelector(state), namespace);
       return {
         namespace,
         ...mapURLParamsToProps(namespacedQuery),

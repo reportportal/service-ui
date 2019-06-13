@@ -1,6 +1,7 @@
 import { createSelector } from 'reselect';
 import { extractNamespacedQuery } from 'common/utils/routingUtils';
-import { DEFAULT_PAGINATION } from 'controllers/pagination';
+import { getPageSize, getStorageKey, PAGE_KEY, SIZE_KEY } from 'controllers/pagination';
+import { userIdSelector } from 'controllers/user';
 import { SORTING_KEY } from 'controllers/sorting';
 import { ALL } from 'common/constants/reservedFilterIds';
 import { pageNames, NO_PAGE } from './constants';
@@ -70,7 +71,10 @@ export const createQueryParametersSelector = ({
 } = {}) => (state, namespace) => {
   const query = pagePropertiesSelector(state, staticNamespace || namespace);
   return {
-    ...(defaultPagination || DEFAULT_PAGINATION),
+    ...(defaultPagination || {
+      [PAGE_KEY]: 1,
+      [SIZE_KEY]: getPageSize(userIdSelector(state), getStorageKey(staticNamespace || namespace)),
+    }),
     [SORTING_KEY]: defaultSorting || '',
     ...query,
   };
