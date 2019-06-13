@@ -1,3 +1,4 @@
+import { Fragment } from 'react';
 import { PropTypes } from 'prop-types';
 import classNames from 'classnames/bind';
 import { ProgressBar } from './progressBar';
@@ -20,13 +21,15 @@ export class TotalStatistics extends React.PureComponent {
 
     return (
       <div className={cx('container')}>
-        <div className={cx('total')}>
-          <div className={cx('amount')}>{total || 0}</div>
-
-          <div>Total</div>
-        </div>
-
-        <ProgressBar progressData={progressData} />
+        {typeof total !== 'undefined' && (
+          <Fragment>
+            <div className={cx('total')}>
+              <div className={cx('amount')}>{total || 0}</div>
+              <div>Total</div>
+            </div>
+            <ProgressBar progressData={progressData} />
+          </Fragment>
+        )}
 
         <div className={cx('details')}>
           <div className={cx('details-item')}>
