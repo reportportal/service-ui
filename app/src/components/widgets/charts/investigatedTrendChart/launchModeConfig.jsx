@@ -32,7 +32,7 @@ export const getLaunchModeConfig = ({ content, isPreview, intl, positionCallback
   }));
 
   const columns = DEFECT_TYPES.map((type) => {
-    const values = sortedResult.map((item) => item.values[type]);
+    const values = sortedResult.map((item) => item.values[type] || 0);
 
     return [type, ...values];
   });
