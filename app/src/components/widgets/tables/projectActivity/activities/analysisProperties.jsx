@@ -10,27 +10,27 @@ import styles from './common.scss';
 const cx = classNames.bind(styles);
 
 const messages = defineMessages({
-  isAutoAnalyzerEnabled: {
+  'analyzer.isAutoAnalyzerEnabled': {
     id: 'UpdateAnalysisSettings.autoAnalyze',
     defaultMessage: 'switch Auto Analysis',
   },
-  numberOfLogLines: {
+  'analyzer.numberOfLogLines': {
     id: 'UpdateAnalysisSettings.numberOfLogLines',
     defaultMessage: 'Number of log lines',
   },
-  minDocFreq: {
+  'analyzer.minDocFreq': {
     id: 'UpdateAnalysisSettings.minDocFreq',
     defaultMessage: 'Minimum document frequency',
   },
-  minShouldMatch: {
+  'analyzer.minShouldMatch': {
     id: 'UpdateAnalysisSettings.minShouldMatch',
     defaultMessage: 'Minimum should match',
   },
-  minTermFreq: {
+  'analyzer.minTermFreq': {
     id: 'UpdateAnalysisSettings.minTermFreq',
     defaultMessage: 'Minimum term frequency',
   },
-  autoAnalyzerMode: {
+  'analyzer.autoAnalyzerMode': {
     id: 'UpdateAnalysisSettings.analyzeMode',
     defaultMessage: 'Base for Auto Analysis',
   },
@@ -62,6 +62,7 @@ export class AnalysisProperties extends Component {
     intl: intlShape.isRequired,
     activity: PropTypes.object,
   };
+
   static defaultProps = {
     activity: {},
   };
@@ -70,18 +71,19 @@ export class AnalysisProperties extends Component {
     const from = this.props.intl.formatMessage(messages.from);
     const to = this.props.intl.formatMessage(messages.to);
     const activities = [];
+
     activity.details.history.forEach((item) => {
       if (item.newValue && item.oldValue) {
         const activityName = messages[item.field]
           ? this.props.intl.formatMessage(messages[item.field])
           : '';
-        const oldValue =
-          this.valueReplacer(item.oldValue) || item.oldValue;
-        const newValue =
-          this.valueReplacer(item.newValue) || item.newValue;
+        const oldValue = this.valueReplacer(item.oldValue) || item.oldValue;
+        const newValue = this.valueReplacer(item.newValue) || item.newValue;
+
         activities.push(`${activityName} ${from} ${oldValue} ${to} ${newValue}`);
       }
     });
+
     return `${activities.join(', ')}.`;
   };
 
@@ -100,6 +102,7 @@ export class AnalysisProperties extends Component {
 
   render() {
     const { activity } = this.props;
+
     return (
       <Fragment>
         <span className={cx('user-name')}>{activity.user}</span>
