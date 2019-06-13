@@ -8,7 +8,7 @@ import { canBulkEditLaunches } from 'common/utils/permissions';
 import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { GhostMenuButton } from 'components/buttons/ghostMenuButton';
-import { breadcrumbDescriptorShape, Breadcrumbs } from 'components/main/breadcrumbs';
+import { Breadcrumbs, breadcrumbDescriptorShape } from 'components/main/breadcrumbs';
 import { breadcrumbsSelector, restorePathAction } from 'controllers/testItem';
 import { LAUNCHES_PAGE_EVENTS } from 'components/main/analytics/events';
 import AddWidgetIcon from 'common/img/add-widget-inline.svg';
@@ -100,6 +100,7 @@ export class ActionPanel extends Component {
     }).isRequired,
     activeFilterId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     onAddNewWidget: PropTypes.func,
+    finishedLaunchesCount: PropTypes.number,
   };
 
   static defaultProps = {
@@ -122,6 +123,7 @@ export class ActionPanel extends Component {
     restorePath: () => {},
     activeFilterId: null,
     onAddNewWidget: () => {},
+    finishedLaunchesCount: null,
     accountRole: '',
   };
 
@@ -191,7 +193,6 @@ export class ActionPanel extends Component {
       },
     ];
   };
-
   isShowImportButton = () => {
     const { debugMode, activeFilterId } = this.props;
     return !debugMode && !Number.isInteger(activeFilterId);
@@ -201,6 +202,8 @@ export class ActionPanel extends Component {
     const { activeFilterId } = this.props;
     return Number.isInteger(activeFilterId);
   };
+
+  renderCounterNotification = (number) => <span className={cx('counter')}>{number}</span>;
 
   render() {
     const {
@@ -215,6 +218,7 @@ export class ActionPanel extends Component {
       breadcrumbs,
       restorePath,
       onAddNewWidget,
+      finishedLaunchesCount,
     } = this.props;
     const actionDescriptors = this.createActionDescriptors();
 
@@ -259,6 +263,7 @@ export class ActionPanel extends Component {
               onClick={onRefresh}
             >
               <FormattedMessage id="LaunchesPage.refresh" defaultMessage="Refresh" />
+              {finishedLaunchesCount && this.renderCounterNotification(finishedLaunchesCount)}
             </GhostButton>
           </div>
         </div>

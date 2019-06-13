@@ -1,14 +1,20 @@
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
+import { orderedContentFieldsSelector } from 'controllers/project';
 import { TotalStatistics } from './totalStatistics';
 import { OverallDefects } from './overallDefects';
 import styles from './overallStatistics.scss';
 
 const cx = classNames.bind(styles);
 
+@connect((state) => ({
+  orderedContentFields: orderedContentFieldsSelector(state),
+}))
 export class OverallStatisticsPanel extends React.PureComponent {
   static propTypes = {
     widget: PropTypes.object.isRequired,
+    orderedContentFields: PropTypes.array.isRequired,
     isPreview: PropTypes.bool,
   };
 
@@ -17,11 +23,10 @@ export class OverallStatisticsPanel extends React.PureComponent {
   };
 
   getOrderedValues = () => {
-    const { widget } = this.props;
+    const { widget, orderedContentFields } = this.props;
     const values = widget.content.result[0].values;
-    const order = widget.contentParameters.contentFields.reverse();
 
-    return order
+    return orderedContentFields
       .map((key) => (values[key] ? { key, value: values[key] } : null))
       .filter((item) => item);
   };

@@ -145,26 +145,35 @@ export class ItemInfo extends Component {
             onClick={() => tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_ITEM_NAME)}
           >
             <span title={value.name} className={cx('name')}>
-              {formatItemName(value.name)}
+              {`${formatItemName(value.name)} `}
             </span>
-            {value.number && <span className={cx('number')}>#{value.number}</span>}
           </NameLink>
+          <span className={cx('edit-number-box')}>
+            <NameLink
+              itemId={value.id}
+              ownLinkParams={customProps.ownLinkParams}
+              className={cx('name-link')}
+              onClick={() => tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_ITEM_NAME)}
+            >
+              {value.number && <span className={cx('number')}>#{value.number}</span>}
+            </NameLink>
+            {canEditLaunch(
+              userAccountRole,
+              userProjectRole,
+              value.owner ? userId === value.owner : userId === launch.owner,
+            ) &&
+              !editDisabled && (
+                <span className={cx('edit-icon')} onClick={this.handleEditItem}>
+                  {Parser(PencilIcon)}
+                </span>
+              )}
+          </span>
           {value.analyzing && <div className={cx('analysis-badge')}>Analysis</div>}
           {isStepLevel && (
             <div className={cx('test-params-icon')} onClick={this.handleShowTestParams}>
               {Parser(TestParamsIcon)}
             </div>
           )}
-          {canEditLaunch(
-            userAccountRole,
-            userProjectRole,
-            value.owner ? userId === value.owner : userId === launch.owner,
-          ) &&
-            !editDisabled && (
-              <div className={cx('edit-icon')} onClick={this.handleEditItem}>
-                {Parser(PencilIcon)}
-              </div>
-            )}
         </div>
 
         <div className={cx('additional-info')}>

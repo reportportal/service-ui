@@ -2,7 +2,11 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { getStorageItem } from 'common/utils';
-import { fetchInfoAction, analyticsEnabledSelector } from 'controllers/appInfo';
+import {
+  fetchUatInfoAction,
+  fetchApiInfoAction,
+  analyticsEnabledSelector,
+} from 'controllers/appInfo';
 import { AnalyticsWrapper } from 'components/main/analytics/AnalyticsWrapper';
 import { fetchProjectAction } from 'controllers/project';
 import { fetchUserAction, activeProjectSelector } from 'controllers/user';
@@ -21,7 +25,8 @@ import {
     isAnalyticsEnabled: analyticsEnabledSelector(state),
   }),
   {
-    fetchInfoAction,
+    fetchUatInfoAction,
+    fetchApiInfoAction,
     fetchUserAction,
     fetchProjectAction,
     authSuccessAction,
@@ -33,7 +38,8 @@ import {
 )
 export class InitialDataContainer extends Component {
   static propTypes = {
-    fetchInfoAction: PropTypes.func.isRequired,
+    fetchUatInfoAction: PropTypes.func.isRequired,
+    fetchApiInfoAction: PropTypes.func.isRequired,
     fetchProjectAction: PropTypes.func.isRequired,
     fetchUserAction: PropTypes.func.isRequired,
     activeProject: PropTypes.string.isRequired,
@@ -57,11 +63,12 @@ export class InitialDataContainer extends Component {
 
   componentDidMount() {
     this.props.setTokenAction(getStorageItem(TOKEN_KEY) || DEFAULT_TOKEN);
-    const infoPromise = this.props.fetchInfoAction();
+    const infoPromise = this.props.fetchUatInfoAction();
     const userPromise = this.props
       .fetchUserAction()
       .then(({ activeProject }) =>
         this.props.fetchProjectAction(activeProject).then(() => {
+          this.props.fetchApiInfoAction();
           this.props.fetchPluginsAction();
           this.props.fetchGlobalIntegrationsAction();
           this.props.authSuccessAction();

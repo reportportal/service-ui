@@ -44,7 +44,7 @@ import { C3Chart } from '../common/c3chart';
 import { getTimelineConfig } from './timelineConfig';
 import { getLaunchModeConfig } from './launchModeConfig';
 import { getConfig as getStatusPageModeConfig } from '../common/XYChartStatusPageConfig';
-import { MESSAGES } from './common/constants';
+import { MESSAGES } from '../common/constants';
 import { getUpdatedFilterWithTime } from '../common/utils';
 
 const cx = classNames.bind(styles);
@@ -256,7 +256,6 @@ export class InvestigatedTrendChart extends Component {
     if (this.height !== newHeight) {
       this.chart.resize({
         height: newHeight,
-        width: newWidth,
       });
       this.height = newHeight;
     } else if (this.width !== newWidth) {

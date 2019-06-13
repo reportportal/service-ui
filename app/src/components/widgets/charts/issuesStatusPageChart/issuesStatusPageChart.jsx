@@ -5,10 +5,10 @@ import * as d3 from 'd3-selection';
 import classNames from 'classnames/bind';
 import { intlShape, injectIntl } from 'react-intl';
 import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
-import styles from './autoBugsStatusPageChart.scss';
+import styles from './issuesStatusPageChart.scss';
 import { C3Chart } from '../common/c3chart';
 import { getConfig } from '../common/XYChartStatusPageConfig';
-import { MESSAGES } from './constants';
+import { MESSAGES } from '../common/constants';
 import { messages } from '../common/messages';
 import { CHART_OFFSET } from '../launchStatisticsChart/constants';
 import { TooltipContent } from '../common/tooltip/tooltipContent';
@@ -16,7 +16,7 @@ import { TooltipContent } from '../common/tooltip/tooltipContent';
 const cx = classNames.bind(styles);
 
 @injectIntl
-export class AutoBugsStatusPageChart extends Component {
+export class IssuesStatusPageChart extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
     widget: PropTypes.object.isRequired,

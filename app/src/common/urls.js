@@ -92,7 +92,7 @@ export const URLS = {
       password,
     })}`,
   apiToken: () => `${uatBase}sso/me/apitoken`,
-  sessionToken: () => `${urlBase}uat/sso/me`,
+  sessionToken: () => `${uatBase}sso/me`,
 
   project: (activeProject) => `${urlBase}project/${activeProject}`,
   addProject: () => `${urlBase}project`,
@@ -197,7 +197,7 @@ export const URLS = {
   userPasswordResetToken: (token) => `${urlBase}user/password/reset/${token}`,
   userPasswordRestore: () => `${urlBase}user/password/restore`,
   userChangePassword: () => `${urlBase}user/password/change`,
-  userSynchronize: (type) => `${urlBase}uat/sso/me/${type}/synchronize`,
+  userSynchronize: (type) => `${uatBase}sso/me/${type}/synchronize`,
   userInfo: (userId) => `${urlBase}user/${userId}`,
   userInviteInternal: (activeProject) => `${urlBase}project/${activeProject}/assign`,
   userInviteExternal: () => `${urlBase}user/bid`,
@@ -223,7 +223,8 @@ export const URLS = {
       ...createFilterQuery(filterEntities),
     })}`,
 
-  info: () => `${urlBase}info`,
+  apiInfo: () => `${urlBase}info`,
+  uatInfo: () => `${uatBase}info`,
 
   plugin: () => `${urlBase}plugin`,
   globalIntegrationsByPluginName: (pluginName = '') =>

@@ -1,5 +1,9 @@
 import { all, call, put, select, takeEvery } from 'redux-saga/effects';
-import { fetchParentItems, fetchTestItemsAction } from 'controllers/testItem';
+import {
+  fetchParentItems,
+  fetchTestItemsAction,
+  logPageOffsetSelector,
+} from 'controllers/testItem';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
 import { activeProjectSelector, userIdSelector } from 'controllers/user';
@@ -160,9 +164,10 @@ function* fetchHistoryEntries() {
 }
 
 function* fetchWholePage() {
-  yield put(fetchTestItemsAction({ offset: 1 }));
+  yield call(fetchParentItems);
+  const offset = yield select(logPageOffsetSelector);
   yield all([
-    call(fetchParentItems),
+    put(fetchTestItemsAction({ offset })),
     call(fetchHistoryEntries),
     call(fetchLogItems),
     call(fetchActivity),

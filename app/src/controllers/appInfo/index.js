@@ -1,5 +1,5 @@
 export { appInfoReducer } from './reducer';
-export { fetchInfoAction } from './actionCreators';
+export { fetchApiInfoAction, fetchUatInfoAction } from './actionCreators';
 export {
   authExtensionsSelector,
   buildVersionSelector,

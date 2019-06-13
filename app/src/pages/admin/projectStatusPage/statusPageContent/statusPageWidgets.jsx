@@ -6,6 +6,10 @@ import {
   Investigated,
   AutoBugs,
   LaunchesQuantity,
+  ProductBugs,
+  LaunchStatistics,
+  SystemIssues,
+  ActivityPanel,
 } from './widgets';
 import { WIDGETS_IDS } from '../constants';
 import { messages } from './messages';
@@ -43,8 +47,8 @@ export const statusPageWidgets = [
   {
     title: messages.launchStatistics,
     id: WIDGETS_IDS.launchStatistics,
-    source: WIDGETS_IDS.investigated,
-    component: () => <div />,
+    source: WIDGETS_IDS.issuesChart,
+    component: (data, interval) => <LaunchStatistics data={data} interval={interval} />,
   },
   {
     title: messages.investigated,
@@ -58,7 +62,7 @@ export const statusPageWidgets = [
     title: messages.issuesChart,
     id: WIDGETS_IDS.issuesChart,
     source: WIDGETS_IDS.issuesChart,
-    component: () => <div />,
+    component: (data, interval) => <ProductBugs data={data} interval={interval} />,
     getUrl: (projectId, interval) =>
       URLS.projectWidget(projectId, WIDGETS_IDS.issuesChart, interval),
   },
@@ -66,7 +70,9 @@ export const statusPageWidgets = [
     title: messages.systemIssues,
     id: WIDGETS_IDS.systemIssues,
     source: WIDGETS_IDS.issuesChart,
-    component: () => <div />,
+    component: (data, interval) => <SystemIssues data={data} interval={interval} />,
+    getUrl: (projectId, interval) =>
+      URLS.projectWidget(projectId, WIDGETS_IDS.issuesChart, interval),
   },
   {
     title: messages.autoBugs,
@@ -80,6 +86,6 @@ export const activityItem = {
   title: messages.activities,
   id: WIDGETS_IDS.activities,
   source: WIDGETS_IDS.activities,
-  component: () => <div />,
+  component: (data) => <ActivityPanel data={data} />,
   getUrl: (projectId, interval) => URLS.projectWidget(projectId, WIDGETS_IDS.activities, interval),
 };

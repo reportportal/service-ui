@@ -12,7 +12,11 @@ import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { InputCheckbox } from 'components/inputs/inputCheckbox';
 import { BigButton } from 'components/buttons/bigButton';
 import ArrowRightIcon from 'common/img/arrow-right-inline.svg';
-import { analyticsEnabledSelector, fetchInfoAction, ANALYTICS_ALL_KEY } from 'controllers/appInfo';
+import {
+  analyticsEnabledSelector,
+  fetchApiInfoAction,
+  ANALYTICS_ALL_KEY,
+} from 'controllers/appInfo';
 import styles from './statisticsTab.scss';
 
 const cx = classNames.bind(styles);
@@ -56,7 +60,7 @@ const messages = defineMessages({
   }),
   {
     showNotification,
-    fetchInfo: fetchInfoAction,
+    fetchInfo: fetchApiInfoAction,
   },
 )
 @injectIntl

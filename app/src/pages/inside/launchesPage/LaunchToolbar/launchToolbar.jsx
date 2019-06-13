@@ -24,6 +24,7 @@ export const LaunchToolbar = ({
   onDelete,
   onAddNewWidget,
   activeFilterId,
+  finishedLaunchesCount,
 }) => (
   <div className={cx('launch-toolbar', { 'sticky-toolbar': selectedLaunches.length })}>
     {!!selectedLaunches.length && (
@@ -52,6 +53,7 @@ export const LaunchToolbar = ({
       onDelete={onDelete}
       activeFilterId={activeFilterId}
       onAddNewWidget={onAddNewWidget}
+      finishedLaunchesCount={finishedLaunchesCount}
     />
   </div>
 );
@@ -73,6 +75,7 @@ LaunchToolbar.propTypes = {
   onRefresh: PropTypes.func,
   activeFilterId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   onAddNewWidget: PropTypes.func,
+  finishedLaunchesCount: PropTypes.number,
 };
 LaunchToolbar.defaultProps = {
   selectedLaunches: [],
@@ -92,4 +95,5 @@ LaunchToolbar.defaultProps = {
   onRefresh: () => {},
   activeFilterId: null,
   onAddNewWidget: () => {},
+  finishedLaunchesCount: null,
 };

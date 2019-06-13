@@ -1,6 +1,6 @@
 import { createSelector } from 'reselect';
 import { OWNER } from 'common/constants/permissions';
-import { DEFECT_TYPES_SEQUENCE } from 'common/constants/defectTypes';
+import { DEFECT_TYPES_SEQUENCE, DEFECT_TYPES_LEGEND_SEQUENCE } from 'common/constants/defectTypes';
 import { BTS_GROUP_TYPE } from 'common/constants/pluginsGroupTypes';
 import {
   JIRA,
@@ -49,7 +49,23 @@ export const defectTypesSelector = createSelector(subTypesSelector, (subTypes) =
   ),
 );
 
-export const attributesSelector = (state) => projectConfigSelector(state).attributes || {};
+export const orderedContentFieldsSelector = createSelector(subTypesSelector, (subTypes) => {
+  const PREFIX = 'statistics$defects$';
+  const result = [
+    'statistics$executions$total',
+    'statistics$executions$passed',
+    'statistics$executions$failed',
+    'statistics$executions$skipped',
+  ];
+  DEFECT_TYPES_LEGEND_SEQUENCE.forEach((type) => {
+    subTypes[type].forEach((item) => {
+      result.push(`${PREFIX}${type.toLowerCase()}$${item.locator}`);
+    });
+  });
+  return result;
+});
+
+const attributesSelector = (state) => projectConfigSelector(state).attributes || {};
 
 const createPrefixedAttributesSelector = (prefix) =>
   createSelector(attributesSelector, (attributes) =>

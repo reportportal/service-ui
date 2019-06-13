@@ -13,6 +13,7 @@ import { PageLayout, PageSection } from 'layouts/pageLayout';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
 import { LAUNCH_ITEM_TYPES } from 'common/constants/launchItemTypes';
+import { IN_PROGRESS } from 'common/constants/testStatuses';
 import { levelSelector } from 'controllers/testItem';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
 import { activeProjectSelector, userIdSelector } from 'controllers/user';
@@ -43,6 +44,7 @@ import {
   toggleAllLaunchesAction,
   deleteItemsAction,
   updateLaunchLocallyAction,
+  updateLaunchesLocallyAction,
 } from 'controllers/launch';
 import { prevTestItemSelector } from 'controllers/pages';
 import { LaunchSuiteGrid } from 'pages/inside/common/launchSuiteGrid';
@@ -137,6 +139,7 @@ const messages = defineMessages({
     showScreenLockAction,
     hideScreenLockAction,
     updateLaunchLocallyAction,
+    updateLaunchesLocallyAction,
   },
 )
 @withSorting({
@@ -190,6 +193,7 @@ export class LaunchesPage extends Component {
     }).isRequired,
     projectSetting: PropTypes.object.isRequired,
     updateLaunchLocallyAction: PropTypes.func.isRequired,
+    updateLaunchesLocallyAction: PropTypes.func.isRequired,
     highlightItemId: PropTypes.number,
   };
 
@@ -228,7 +232,7 @@ export class LaunchesPage extends Component {
       ? {
           prevLaunches: nextProps.launches,
           launchesInProgress: nextProps.launches
-            .filter((item) => item.status === 'IN_PROGRESS')
+            .filter((item) => item.status === IN_PROGRESS)
             .map((item) => item.id),
         }
       : null;
@@ -237,9 +241,9 @@ export class LaunchesPage extends Component {
   state = {
     highlightedRowId: null,
     isGridRowHighlighted: false,
-    isSauceLabsIntegrationView: false,
     prevLaunches: [],
     launchesInProgress: [],
+    finishedLaunchesCount: null,
   };
 
   componentDidMount() {
@@ -453,20 +457,36 @@ export class LaunchesPage extends Component {
     });
   };
 
-  fetchLaunchStatus = (launchesInProgress) => {
-    fetch(URLS.launchStatus(this.props.activeProject, launchesInProgress), {
+  fetchLaunchStatus = (launches) => {
+    fetch(URLS.launchStatus(this.props.activeProject, launches), {
       method: 'get',
     }).then((launchesWithStatus) => {
       const newLaunchesInProgress = this.state.launchesInProgress.filter(
-        (item) => launchesWithStatus[item] === 'IN_PROGRESS',
+        (item) => launchesWithStatus[item] === IN_PROGRESS,
       );
 
       if (!isEqual(this.state.launchesInProgress, newLaunchesInProgress)) {
+        const { finishedLaunchesCount, launchesInProgress } = this.state;
+        const diff = launchesInProgress.length - newLaunchesInProgress.length;
+        const newFinishedLaunchesCount = finishedLaunchesCount
+          ? finishedLaunchesCount + diff
+          : diff;
+
+        const newLaunchesData = this.props.launches
+          .filter((item) => !item.endTime && !newLaunchesInProgress.includes(item.id))
+          .map((item) => ({
+            ...item,
+            endTime: Date.now(),
+            status: launchesWithStatus[item.id],
+          }));
+
+        this.props.updateLaunchesLocallyAction(newLaunchesData);
+
         this.setState({
           launchesInProgress: newLaunchesInProgress,
+          finishedLaunchesCount: newFinishedLaunchesCount,
         });
       }
-      // todo update status, add notification on just finished launch over 'Refresh' button
     });
   };
 
@@ -506,6 +526,13 @@ export class LaunchesPage extends Component {
     if (this.props.activePage !== 1) {
       this.props.onChangePage(1);
     }
+  };
+
+  refreshLaunch = () => {
+    this.setState({
+      finishedLaunchesCount: null,
+    });
+    this.props.fetchLaunchesAction();
   };
 
   handleAllLaunchesSelection = () => {
@@ -585,6 +612,8 @@ export class LaunchesPage extends Component {
       isGridRowHighlighted: this.state.isGridRowHighlighted,
       highlightedRowId: this.state.highlightedRowId,
     };
+    const { finishedLaunchesCount } = this.state;
+
     return (
       <FilterEntitiesContainer
         level={LEVEL_LAUNCH}
@@ -610,7 +639,7 @@ export class LaunchesPage extends Component {
             <PageSection>
               <LaunchToolbar
                 errors={this.props.validationErrors}
-                onRefresh={this.props.fetchLaunchesAction}
+                onRefresh={this.refreshLaunch}
                 selectedLaunches={selectedLaunches}
                 onUnselect={this.unselectItem}
                 onUnselectAll={this.unselectAllItems}
@@ -626,6 +655,7 @@ export class LaunchesPage extends Component {
                 onDelete={this.deleteItems}
                 activeFilterId={activeFilterId}
                 onAddNewWidget={this.showWidgetWizard}
+                finishedLaunchesCount={finishedLaunchesCount}
               />
               <LaunchSuiteGrid
                 data={launches}
@@ -665,10 +695,12 @@ export class LaunchesPage extends Component {
   };
 
   render() {
-    const { isGridRowHighlighted } = this.state;
+    const { isGridRowHighlighted, finishedLaunchesCount } = this.state;
+
     return (
       <LaunchFiltersContainer
         {...this.props}
+        finishedLaunchesCount={finishedLaunchesCount}
         isGridRowHighlighted={isGridRowHighlighted}
         onChange={this.resetPageNumber}
         render={this.renderPageContent}

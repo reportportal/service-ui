@@ -278,7 +278,7 @@ export class AddUserModal extends Component {
           >
             <FieldProvider name="password" type="text">
               <FieldErrorHint>
-                <Input maxLength={'128'} />
+                <Input maxLength={'256'} />
               </FieldErrorHint>
             </FieldProvider>
             <span className={cx('generate-password-link')} onClick={this.onGeneratePassword}>

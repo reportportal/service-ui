@@ -3,16 +3,18 @@ import { fetch, setStorageItem, updateStorageItem } from 'common/utils';
 import { URLS } from 'common/urls';
 import { APPLICATION_SETTINGS } from 'common/constants/localStorageKeys';
 import { showNotification } from 'controllers/notification';
+import { OAUTH_SUCCESS, pagePropertiesSelector } from 'controllers/pages';
 import { NOTIFICATION_TYPES } from 'controllers/notification/constants';
 import { activeProjectSelector, fetchUserAction } from 'controllers/user';
 import { fetchProjectAction } from 'controllers/project';
 import { fetchPluginsAction, fetchGlobalIntegrationsAction } from 'controllers/plugins';
-import { fetchInfoAction } from 'controllers/appInfo';
+import { fetchApiInfoAction, fetchUatInfoAction } from 'controllers/appInfo';
 import {
   authSuccessAction,
   resetTokenAction,
   setTokenAction,
   setLastFailedLoginTimeAction,
+  loginSuccessAction,
 } from './actionCreators';
 import {
   LOGIN,
@@ -20,6 +22,7 @@ import {
   TOKEN_KEY,
   GRANT_TYPES,
   SET_TOKEN,
+  LOGIN_SUCCESS,
   ERROR_CODE_LOGIN_MAX_LIMIT,
 } from './constants';
 
@@ -37,18 +40,50 @@ function* watchLogout() {
   yield takeEvery(LOGOUT, handleLogout);
 }
 
+function* loginSuccessHandler({ payload }) {
+  yield put(
+    showNotification({
+      messageId: 'successLogin',
+      type: NOTIFICATION_TYPES.SUCCESS,
+    }),
+  );
+
+  yield put(
+    setTokenAction({
+      type: payload.type,
+      value: payload.value,
+    }),
+  );
+  yield put(fetchUatInfoAction());
+  // TODO: Change those calls after project & users actions will be refactored with sagas
+  yield put.resolve(fetchUserAction());
+  const projectId = yield select(activeProjectSelector);
+  yield put(fetchProjectAction(projectId));
+  yield put(fetchApiInfoAction());
+  yield put(fetchPluginsAction());
+  yield put(fetchGlobalIntegrationsAction());
+  yield put(authSuccessAction());
+}
+
+function* watchLoginSuccess() {
+  yield takeEvery(LOGIN_SUCCESS, loginSuccessHandler);
+}
+
 function* handleLogin({ payload }) {
-  let result;
   try {
-    result = yield call(fetch, URLS.login(GRANT_TYPES.PASSWORD, payload.login, payload.password), {
-      method: 'POST',
-    });
-    yield put(
-      showNotification({
-        messageId: 'successLogin',
-        type: NOTIFICATION_TYPES.SUCCESS,
-      }),
+    const result = yield call(
+      fetch,
+      URLS.login(GRANT_TYPES.PASSWORD, payload.login, payload.password),
+      {
+        method: 'POST',
+      },
     );
+    const token = {
+      type: result.token_type,
+      value: result.access_token,
+    };
+
+    yield put(loginSuccessAction(token));
   } catch ({ message: error, errorCode }) {
     yield put(
       showNotification({
@@ -62,23 +97,16 @@ function* handleLogin({ payload }) {
       updateStorageItem(APPLICATION_SETTINGS, { lastFailedLoginTime });
       yield put(setLastFailedLoginTimeAction(lastFailedLoginTime));
     }
-    return;
   }
+}
 
-  yield put(
-    setTokenAction({
-      type: result.token_type,
-      value: result.access_token,
-    }),
-  );
-  yield put(fetchInfoAction());
-  // TODO: Change those calls after project & users actions will be refactored with sagas
-  yield put.resolve(fetchUserAction());
-  const projectId = yield select(activeProjectSelector);
-  yield put(fetchProjectAction(projectId));
-  yield put(fetchPluginsAction());
-  yield put(fetchGlobalIntegrationsAction());
-  yield put(authSuccessAction());
+function* handleOauthSuccess() {
+  const { token: value, token_type: type } = yield select(pagePropertiesSelector);
+  yield put(loginSuccessAction({ value, type }));
+}
+
+function* watchOauthSuccess() {
+  yield takeEvery(OAUTH_SUCCESS, handleOauthSuccess);
 }
 
 function* watchLogin() {
@@ -94,5 +122,11 @@ function* watchSetToken() {
 }
 
 export function* authSagas() {
-  yield all([watchLogin(), watchLogout(), watchSetToken()]);
+  yield all([
+    watchLogin(),
+    watchLogout(),
+    watchSetToken(),
+    watchOauthSuccess(),
+    watchLoginSuccess(),
+  ]);
 }

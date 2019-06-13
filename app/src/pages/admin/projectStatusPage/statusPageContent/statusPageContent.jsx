@@ -70,7 +70,9 @@ export class StatusPageContent extends Component {
   renderWidget = (widgetData) => (
     <StatusPageItem title={this.props.intl.formatMessage(widgetData.title)}>
       {this.state.loading ? (
-        <SpinningPreloader />
+        <div className={cx('status-page-spinner-wrapper')}>
+          <SpinningPreloader />
+        </div>
       ) : (
         widgetData.component(this.state[widgetData.source], this.props.interval)
       )}

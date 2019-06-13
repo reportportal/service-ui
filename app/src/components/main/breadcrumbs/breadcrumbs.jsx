@@ -57,10 +57,10 @@ export class Breadcrumbs extends Component {
     this.props.togglerEventInfo && this.props.tracking.trackEvent(this.props.togglerEventInfo);
     this.setState({ expanded: !this.state.expanded });
   };
-  renderSeparator = (index) => {
+  renderSeparator = (item, index) => {
     const listViewIndex = this.getListViewIndex();
     const isOpenListView = index - 1 === listViewIndex;
-    if (this.isListView() && isOpenListView) {
+    if (this.isListView() && isOpenListView && !item.active) {
       return <div className={cx('bracket')}>(</div>;
     }
     if (index > 0) {
@@ -68,10 +68,12 @@ export class Breadcrumbs extends Component {
     }
     return null;
   };
-  renderCloseListView = (index) => {
+  renderCloseListView = (item, index) => {
     const { descriptors } = this.props;
+    const { id } = item;
     const listViewIndex = this.getListViewIndex();
-    const isBeforeLastItem = descriptors.length - 2 === index && listViewIndex < index;
+    const closestNonActivePage = [...descriptors].reverse().find((page) => !page.active) || {};
+    const isBeforeLastItem = closestNonActivePage.id === id && listViewIndex < index;
     if (this.isListView() && isBeforeLastItem) {
       return <div className={cx('bracket', 'bracket-close')}>)</div>;
     }
@@ -91,12 +93,12 @@ export class Breadcrumbs extends Component {
         {!isLostLaunch ? (
           this.props.descriptors.map((descriptor, i) => (
             <Fragment key={descriptor.id}>
-              {this.renderSeparator(i)}
+              {this.renderSeparator(descriptor, i)}
               <Breadcrumb
                 descriptor={descriptor}
                 onClick={(idx) => this.onClickBreadcrumbItem(idx)}
               />
-              {this.renderCloseListView(i)}
+              {this.renderCloseListView(descriptor, i)}
             </Fragment>
           ))
         ) : (

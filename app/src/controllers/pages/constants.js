@@ -29,6 +29,7 @@ export const USER_PROFILE_PAGE = 'USER_PROFILE_PAGE';
 export const HISTORY_PAGE = 'HISTORY_PAGE';
 export const TEST_ITEM_PAGE = 'TEST_ITEM_PAGE';
 export const LAUNCHES_PAGE = 'LAUNCHES_PAGE';
+export const OAUTH_SUCCESS = 'OAUTH_SUCCESS';
 // outside
 export const LOGIN_PAGE = 'LOGIN_PAGE';
 export const REGISTRATION_PAGE = 'REGISTRATION_PAGE';
@@ -61,6 +62,7 @@ export const pageNames = {
   HISTORY_PAGE,
   PROJECT_LOG_PAGE,
   PROJECT_USERDEBUG_LOG_PAGE,
+  OAUTH_SUCCESS,
 };
 
 export const adminPageNames = {

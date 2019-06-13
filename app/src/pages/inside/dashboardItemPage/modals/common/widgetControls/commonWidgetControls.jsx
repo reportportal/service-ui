@@ -58,7 +58,7 @@ const validators = {
 @injectIntl
 export class CommonWidgetControls extends Component {
   static propTypes = {
-    intl: intlShape,
+    intl: intlShape.isRequired,
     initializeControlsForm: PropTypes.func,
     widgetId: PropTypes.number,
     eventsInfo: PropTypes.object,
@@ -74,7 +74,7 @@ export class CommonWidgetControls extends Component {
     eventsInfo: {},
     trackEvent: () => {},
     dashboards: [],
-    activeDashboard: null,
+    activeDashboard: {},
     onChange: () => {},
     intl: {},
   };
@@ -83,10 +83,12 @@ export class CommonWidgetControls extends Component {
     super(props);
     props.initializeControlsForm && props.initializeControlsForm();
   }
+
   isShowDashboardsList = () => {
-    const { activeDashboard } = this.props;
-    return activeDashboard && isEmptyObject(activeDashboard);
+    const { activeDashboard, widgetId } = this.props;
+    return activeDashboard && isEmptyObject(activeDashboard) && !widgetId;
   };
+
   render() {
     const {
       intl: { formatMessage },
@@ -95,7 +97,7 @@ export class CommonWidgetControls extends Component {
       eventsInfo,
       dashboards,
       onChange,
-      activeDashboard: { widgets },
+      activeDashboard: { widgets = [] },
     } = this.props;
 
     return (

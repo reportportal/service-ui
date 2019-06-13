@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import moment from 'moment';
 import classNames from 'classnames/bind';
 import { defineMessages, injectIntl } from 'react-intl';
-import { AutoBugsStatusPageChart } from 'components/widgets/charts/autoBugsStatusPageChart';
+import { IssuesStatusPageChart } from 'components/widgets/charts/issuesStatusPageChart';
 import { NoDataAvailable } from 'components/widgets/noDataAvailable';
 import { PERIOD_VALUES, PERIOD_VALUES_LENGTH } from 'common/constants/statusPeriodValues';
 import { DATE_FORMAT_TOOLTIP } from 'common/constants/timeDateFormat';
@@ -112,7 +112,7 @@ export class AutoBugs extends Component {
     return (
       <div ref={this.containerRef} className={cx('auto-bugs')}>
         {isContainerRefReady && !isDataEmpty ? (
-          <AutoBugsStatusPageChart
+          <IssuesStatusPageChart
             widget={this.prepareData(data, interval)}
             interval={interval}
             container={this.containerRef.current}

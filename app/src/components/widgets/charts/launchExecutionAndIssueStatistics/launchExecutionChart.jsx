@@ -84,14 +84,20 @@ export class LaunchExecutionChart extends Component {
   };
 
   componentDidMount() {
-    !this.props.isPreview && this.props.observer.subscribe('widgetResized', this.resizeStatusChart);
+    const { observer, isPreview } = this.props;
+
+    !isPreview && observer.subscribe && observer.subscribe('widgetResized', this.resizeStatusChart);
+
     this.getConfig();
   }
 
   componentWillUnmount() {
-    if (!this.props.isPreview) {
+    const { observer, isPreview } = this.props;
+
+    if (!isPreview) {
       this.statusNode && this.statusNode.removeEventListener('mousemove', this.setCoords);
-      this.props.observer.unsubscribe('widgetResized', this.resizeStatusChart);
+
+      observer.unsubscribe && observer.unsubscribe('widgetResized', this.resizeStatusChart);
     }
   }
 

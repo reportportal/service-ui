@@ -11,7 +11,7 @@ const cx = classNames.bind(styles);
 
 const messages = defineMessages({
   noDataMessage: {
-    id: 'LastLaunch.noDataMessage',
+    id: 'LaunchesQuantity.noDataMessage',
     defaultMessage: 'No launches were performed',
   },
 });

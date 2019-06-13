@@ -26,7 +26,7 @@ import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
 import ReactDOMServer from 'react-dom/server';
 import { defectLinkSelector } from 'controllers/testItem';
-import { defectTypesSelector } from 'controllers/project';
+import { defectTypesSelector, orderedContentFieldsSelector } from 'controllers/project';
 import { launchFiltersSelector } from 'controllers/filter';
 import { activeProjectSelector } from 'controllers/user';
 import { TEST_ITEM_PAGE, PROJECT_LAUNCHES_PAGE } from 'controllers/pages';
@@ -47,6 +47,7 @@ const getResult = (widget) => widget.content.result[0] || widget.content.result;
   (state) => ({
     project: activeProjectSelector(state),
     defectTypes: defectTypesSelector(state),
+    orderedContentFields: orderedContentFieldsSelector(state),
     getDefectLink: (params) => defectLinkSelector(state, params),
     launchFilters: launchFiltersSelector(state),
   }),
@@ -60,6 +61,7 @@ export class IssueStatisticsChart extends Component {
     widget: PropTypes.object.isRequired,
     isPreview: PropTypes.bool,
     defectTypes: PropTypes.object.isRequired,
+    orderedContentFields: PropTypes.array.isRequired,
     getDefectLink: PropTypes.func.isRequired,
     navigate: PropTypes.func.isRequired,
     project: PropTypes.string.isRequired,
@@ -86,14 +88,20 @@ export class IssueStatisticsChart extends Component {
   };
 
   componentDidMount() {
-    !this.props.isPreview && this.props.observer.subscribe('widgetResized', this.resizeIssuesChart);
+    const { observer, isPreview } = this.props;
+
+    !isPreview && observer.subscribe && observer.subscribe('widgetResized', this.resizeIssuesChart);
+
     this.getConfig();
   }
 
   componentWillUnmount() {
-    if (!this.props.isPreview) {
-      this.issuesNode.removeEventListener('mousemove', this.setCoords);
-      this.props.observer.unsubscribe('widgetResized', this.resizeIssuesChart);
+    const { observer, isPreview } = this.props;
+
+    if (!isPreview) {
+      this.issuesNode && this.issuesNode.removeEventListener('mousemove', this.setCoords);
+
+      observer.unsubscribe && observer.unsubscribe('widgetResized', this.resizeIssuesChart);
     }
   }
 
@@ -216,17 +224,27 @@ export class IssueStatisticsChart extends Component {
   }
 
   getColumns() {
-    const { widget } = this.props;
+    const { widget, orderedContentFields } = this.props;
     const DEFECTS = '$defects$';
     const values = getResult(widget).values;
     const defectDataItems = getChartData(values, DEFECTS);
     const defectTypesChartData = defectDataItems.itemTypes;
     const columns = [];
 
+    const orderedData = orderedContentFields
+      .map((type) => {
+        if (!defectTypesChartData[type]) return null;
+        return {
+          key: type,
+          value: defectTypesChartData[type],
+        };
+      })
+      .filter((item) => item);
+
     widget.contentParameters.contentFields.forEach((field) => {
-      Object.keys(defectTypesChartData).forEach((key) => {
-        if (field === key) {
-          columns.push([field, defectTypesChartData[field]]);
+      orderedData.forEach((item) => {
+        if (field === item.key) {
+          columns.push([field, item.value]);
         }
       });
     });

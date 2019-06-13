@@ -431,8 +431,6 @@ export class LaunchSuiteGrid extends PureComponent {
       },
     });
 
-  COLUMNS = this.getColumns();
-
   render() {
     const {
       intl: { formatMessage },
@@ -447,10 +445,11 @@ export class LaunchSuiteGrid extends PureComponent {
       onFilterClick,
       rowHighlightingConfig,
     } = this.props;
+
     return (
       <Fragment>
         <Grid
-          columns={this.COLUMNS}
+          columns={this.getColumns()}
           data={data}
           sortingColumn={sortingColumn}
           sortingDirection={sortingDirection}
