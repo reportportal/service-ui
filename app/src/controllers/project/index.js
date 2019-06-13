@@ -32,6 +32,7 @@ export {
   defectColorsSelector,
   defectTypesSelector,
   orderedContentFieldsSelector,
+  orderedDefectFieldsSelector,
   projectNotificationsConfigurationSelector,
   projectNotificationsCasesSelector,
   projectNotificationsEnabledSelector,
