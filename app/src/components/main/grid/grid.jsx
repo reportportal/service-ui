@@ -36,6 +36,8 @@ export const Grid = ({
   excludeFromSelection,
   gridRowClassName,
   headerClassName,
+  nestedStepHeader,
+  nestedView,
   ...rest
 }) => (
   <Fragment>
@@ -68,6 +70,8 @@ export const Grid = ({
           grouped={grouped}
           excludeFromSelection={excludeFromSelection}
           gridRowClassName={gridRowClassName}
+          nestedStepHeader={nestedStepHeader}
+          nestedView={nestedView}
           {...rest}
         />
       )}
@@ -97,6 +101,7 @@ Grid.propTypes = {
   grouped: PropTypes.bool,
   groupFunction: PropTypes.func,
   groupHeader: PropTypes.oneOfType([PropTypes.node, PropTypes.func]),
+  nestedStepHeader: PropTypes.oneOfType([PropTypes.node, PropTypes.func]),
   rowHighlightingConfig: PropTypes.shape({
     onGridRowHighlighted: PropTypes.func,
     isGridRowHighlighted: PropTypes.bool,
@@ -105,6 +110,7 @@ Grid.propTypes = {
   excludeFromSelection: PropTypes.arrayOf(PropTypes.object),
   gridRowClassName: PropTypes.string,
   headerClassName: PropTypes.string,
+  nestedView: PropTypes.bool,
 };
 Grid.defaultProps = {
   columns: [],
@@ -128,4 +134,6 @@ Grid.defaultProps = {
   excludeFromSelection: [],
   gridRowClassName: '',
   headerClassName: '',
+  nestedStepHeader: null,
+  nestedView: false,
 };

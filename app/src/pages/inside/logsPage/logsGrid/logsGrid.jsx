@@ -84,6 +84,47 @@ TimeColumn.defaultProps = {
   value: {},
 };
 
+export const getTestColumns = () => [
+  {
+    id: 'logMessage',
+    title: {
+      component: LogMessageSearch,
+      componentProps: {
+        onFilterChange: () => {},
+      },
+    },
+    sortable: true,
+    maxHeight: 200,
+    component: MessageColumn,
+    customProps: {
+      markdownMode: false,
+    },
+  },
+  {
+    id: 'attachment',
+    component: AttachmentColumn,
+  },
+  {
+    id: TIME_COLUMN_ID,
+    title: {
+      full: 'time',
+    },
+    sortable: true,
+    component: TimeColumn,
+    sortingEventInfo: LOG_PAGE_EVENTS.TIME_SORTING,
+  },
+  {
+    id: 'mobileAttachment',
+    title: {
+      component: () => <div className={cx('no-header')} />,
+    },
+    component: AttachmentColumn,
+    customProps: {
+      mobile: true,
+    },
+  },
+];
+
 @injectIntl
 export class LogsGrid extends Component {
   static propTypes = {
