@@ -1,3 +1,51 @@
+$LEVEL_OFFSET_STEP: 20px;
+
+@mixin levels-desktop {
+  @for $level from 1 to 20 {
+    &.level-#{$level} {
+      border-left-width: $level * $LEVEL_OFFSET_STEP;
+      @media (max-width: $SCREEN_SM_MAX) {
+        border-left-width: 0;
+      }
+      &.change-mobile {
+        @media (max-width: $SCREEN_SM_MAX) {
+          border-left-width: $level * $LEVEL_OFFSET_STEP;
+        }
+        @media (max-width: $SCREEN_XS_MAX) {
+          border-left-width: 0;
+        }
+      }
+    }
+  }
+}
+
+@mixin levels-mobile {
+  @for $level from 1 to 20 {
+    &.level-#{$level} {
+      border-left-width: 0;
+      @media (max-width: $SCREEN_SM_MAX) {
+        border-left-width: $level * $LEVEL_OFFSET_STEP;
+      }
+      &.change-mobile {
+        @media (max-width: $SCREEN_SM_MAX) {
+          border-left-width: 0;
+        }
+        @media (max-width: $SCREEN_XS_MAX) {
+          border-left-width: $level * $LEVEL_OFFSET_STEP;
+        }
+      }
+    }
+  }
+}
+
+@mixin levels-accordion {
+  @for $level from 1 to 20 {
+    &.level-#{$level} {
+      left: $level * $LEVEL_OFFSET_STEP;
+    }
+  }
+}
+
 .grid-row-wrapper {
   display: table-row-group;
   border-bottom: 1px solid $COLOR--gray-91;
@@ -42,6 +90,9 @@
 .grid-row {
   position: relative;
   display: table-row;
+  border-left-color: $COLOR--gray-91;
+  border-left-style: solid;
+  border-left-width: 0px;
   @media (max-width: $SCREEN_SM_MAX) {
     display: flex;
     flex-wrap: wrap;
@@ -49,17 +100,20 @@
   &.change-mobile {
     @media (max-width: $SCREEN_SM_MAX) {
       display: table-row;
+      border-left-width: 0px;
     }
     @media (max-width: $SCREEN_XS_MAX) {
       display: flex;
       flex-wrap: wrap;
     }
   }
+  @include levels-mobile;
 }
 .accordion-wrapper {
   position: absolute;
   right: 0;
   left: 0;
+  @include levels-accordion;
 }
 .accordion-block {
   position: absolute;
@@ -125,6 +179,12 @@
 }
 
 .log {
+  .grid-row {
+    @media (max-width: $SCREEN_XS_MAX) {
+      padding-right: 20px;
+    }
+  }
+
   .accordion-block {
     @media (max-width: $SCREEN_SM_MAX) {
       bottom: 0;
@@ -232,4 +292,11 @@
   &:before {
     opacity: 0;
   }
+}
+
+.first-col-wrapper {
+  display: table-cell;
+  border-left-color: $COLOR--gray-91;
+  border-left-style: solid;
+  @include levels-desktop;
 }

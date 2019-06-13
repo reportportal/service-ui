@@ -9,7 +9,7 @@ import { CheckboxCell } from './checkboxCell';
 import styles from './gridRow.scss';
 
 const cx = classNames.bind(styles);
-
+const LEVEL_OFFSET = 20;
 @track()
 export class GridRow extends Component {
   static propTypes = {
@@ -32,6 +32,7 @@ export class GridRow extends Component {
     }),
     excludeFromSelection: PropTypes.arrayOf(PropTypes.object),
     gridRowClassName: PropTypes.string,
+    level: PropTypes.number,
   };
 
   static defaultProps = {
@@ -46,6 +47,7 @@ export class GridRow extends Component {
     rowHighlightingConfig: {},
     excludeFromSelection: [],
     gridRowClassName: '',
+    level: 0,
   };
 
   state = {
@@ -73,8 +75,9 @@ export class GridRow extends Component {
   getHighLightBlockSize = () =>
     this.rowRef && this.rowRef.current
       ? {
+          left: LEVEL_OFFSET * this.props.level,
           height: `${this.rowRef.current.clientHeight}px`,
-          width: `${this.rowRef.current.clientWidth}px`,
+          width: `${this.rowRef.current.clientWidth - LEVEL_OFFSET * this.props.level}px`,
         }
       : {};
 
@@ -131,6 +134,7 @@ export class GridRow extends Component {
         : null;
     });
   };
+
   render() {
     const {
       columns,
@@ -139,6 +143,7 @@ export class GridRow extends Component {
       changeOnlyMobileLayout,
       rowClassMapper,
       gridRowClassName,
+      level,
     } = this.props;
     const { expanded } = this.state;
     const customClasses = (rowClassMapper && rowClassMapper(value)) || {};
@@ -167,13 +172,17 @@ export class GridRow extends Component {
           </div>
         )}
         <div
-          className={cx('grid-row', { 'change-mobile': changeOnlyMobileLayout }, gridRowClassName)}
+          className={cx(
+            'grid-row',
+            { 'change-mobile': changeOnlyMobileLayout, [`level-${level}`]: level !== 0 },
+            gridRowClassName,
+          )}
         >
           {columns.map((column, i) => {
             if (column.maxHeight) {
               this.overflowCellMaxHeight = column.maxHeight;
             }
-            return (
+            const cell = (
               <GridCell
                 key={column.id || i}
                 refFunction={column.maxHeight ? this.setupRef : null}
@@ -188,6 +197,20 @@ export class GridRow extends Component {
                 toggleExpand={this.toggleAccordion}
               />
             );
+            if (level && i === 0) {
+              return (
+                <div
+                  key={column.id || i}
+                  className={cx('first-col-wrapper', {
+                    'change-mobile': changeOnlyMobileLayout,
+                    [`level-${level}`]: level !== 0,
+                  })}
+                >
+                  {cell}
+                </div>
+              );
+            }
+            return cell;
           })}
           {selectable && (
             <GridCell
@@ -204,7 +227,7 @@ export class GridRow extends Component {
         </div>
         {this.state.withAccordion && (
           <div className={cx('grid-row')}>
-            <div className={cx('accordion-wrapper')}>
+            <div className={cx('accordion-wrapper', { [`level-${level}`]: level !== 0 })}>
               <div className={cx('accordion-block', { expanded: this.state.expanded })}>
                 <div
                   className={cx('accordion-toggler', { rotated: this.state.expanded })}

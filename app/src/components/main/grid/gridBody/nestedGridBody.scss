@@ -1,0 +1,8 @@
+.row-separator {
+  position: absolute;
+  z-index: 1;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background-color: $COLOR--gray-91;
+}
