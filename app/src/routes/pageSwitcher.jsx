@@ -125,7 +125,7 @@ class PageSwitcher extends React.PureComponent {
       () => (
         <div className={styles.pageSwitcher}>
           <Layout>
-            <LocalizationSwitcher />
+            {!process.env.production && <LocalizationSwitcher />}
             <PageComponent />
           </Layout>
           <ModalContainer />
