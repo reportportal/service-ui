@@ -240,9 +240,6 @@ export class Widget extends Component {
             className={cx('widget-header', 'draggable-field', {
               modifiable: this.props.isModifiable,
             })}
-            onMouseOver={this.onHeaderMouseOver}
-            onMouseUp={this.onHeaderMouseUp}
-            onMouseDown={this.onHeaderMouseDown}
           >
             <WidgetHeader
               data={headerData}

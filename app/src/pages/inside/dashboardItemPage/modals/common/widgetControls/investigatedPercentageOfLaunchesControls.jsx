@@ -45,6 +45,7 @@ export class InvestigatedPercentageOfLaunchesControls extends Component {
   constructor(props) {
     super(props);
     const { widgetSettings, initializeControlsForm } = props;
+
     initializeControlsForm({
       contentParameters: widgetSettings.contentParameters || {
         contentFields: [
@@ -57,6 +58,8 @@ export class InvestigatedPercentageOfLaunchesControls extends Component {
         itemsCount: DEFAULT_ITEMS_COUNT,
         widgetOptions: {
           timeline: MODES_VALUES[CHART_MODES.LAUNCH_MODE],
+          viewMode: getWidgetModeOptions([CHART_MODES.TIMELINE_MODE], props.intl.formatMessage)[0]
+            .label,
         },
       },
     });
