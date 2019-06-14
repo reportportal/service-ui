@@ -172,14 +172,15 @@ export const nameLinkSelector = (state, ownProps) => {
     (ownProps.ownLinkParams && ownProps.ownLinkParams.payload) || payloadSelector(state);
   let testItemIds = ownProps.testItemIds || testItemIdsSelector(state);
   const isDebugMode = debugModeSelector(state);
-  const level = levelSelector(state);
   let query = pagePropertiesSelector(state);
+  const testItem = testItemSelector(state, ownProps.itemId);
+  const hasChildren = testItem && testItem.hasChildren;
   const page =
-    (ownProps.ownLinkParams && ownProps.ownLinkParams.page) || getNextPage(level, isDebugMode);
-  const test = testItemSelector(state, ownProps.itemId);
-  if (test && test.path) {
-    const testItemPath = test.path.split('.').slice(0, -1);
-    testItemIds = [test.launchId, ...testItemPath].join('/');
+    (ownProps.ownLinkParams && ownProps.ownLinkParams.page) ||
+    getNextPage(isDebugMode, hasChildren);
+  if (testItem) {
+    const testItemPath = testItem.path.split('.').slice(0, -1);
+    testItemIds = [testItem.launchId, ...testItemPath].join('/');
   }
   if (ownProps.uniqueId) {
     query = {
@@ -197,10 +198,8 @@ export const statisticsLinkSelector = (state, ownProps) => {
     (ownProps.ownLinkParams && ownProps.ownLinkParams.payload) || payloadSelector(state);
   const testItemIds = testItemIdsSelector(state);
   const isDebugMode = debugModeSelector(state);
-  const level = levelSelector(state);
   const page =
-    (ownProps.ownLinkParams && ownProps.ownLinkParams.page) || getNextPage(level, isDebugMode);
-
+    (ownProps.ownLinkParams && ownProps.ownLinkParams.page) || getNextPage(isDebugMode, true);
   return createLink(
     testItemIds,
     ownProps.itemId,
@@ -236,8 +235,7 @@ export const defectLinkSelector = (state, ownProps) => {
   }
   let nextPage;
   if (ownProps.itemId) {
-    const level = levelSelector(state);
-    nextPage = getNextPage(level, isDebugMode);
+    nextPage = getNextPage(isDebugMode, true);
   } else {
     nextPage = isDebugMode ? PROJECT_USERDEBUG_TEST_ITEM_PAGE : TEST_ITEM_PAGE;
   }
