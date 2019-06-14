@@ -33,11 +33,11 @@ export const calculateLevel = (data = [], previousLevel) => {
 
 export const getQueryNamespace = (levelIndex) => `item${levelIndex}`;
 
-export const getNextPage = (currentLevel, debugMode) => {
-  if (currentLevel === launchLevels.LEVEL_STEP) {
-    return debugMode ? PROJECT_USERDEBUG_LOG_PAGE : PROJECT_LOG_PAGE;
+export const getNextPage = (debugMode, hasChildren = true) => {
+  if (hasChildren) {
+    return debugMode ? PROJECT_USERDEBUG_TEST_ITEM_PAGE : TEST_ITEM_PAGE;
   }
-  return debugMode ? PROJECT_USERDEBUG_TEST_ITEM_PAGE : TEST_ITEM_PAGE;
+  return debugMode ? PROJECT_USERDEBUG_LOG_PAGE : PROJECT_LOG_PAGE;
 };
 
 export const createLink = (testItemIds, itemId, payload, query, nextPage) => {
