@@ -43,11 +43,19 @@ const widgetModeMessages = defineMessages({
     id: 'WidgetHeader.widgetMode.panelMode',
     defaultMessage: 'Panel view',
   },
+  panel: {
+    id: 'WidgetHeader.widgetMode.panelMode',
+    defaultMessage: 'Panel view',
+  },
   chartMode: {
     id: 'WidgetHeader.widgetMode.chartMode',
     defaultMessage: 'Pie chart view',
   },
   barMode: {
+    id: 'WidgetHeader.widgetMode.barMode',
+    defaultMessage: 'Bar view',
+  },
+  bar: {
     id: 'WidgetHeader.widgetMode.barMode',
     defaultMessage: 'Bar view',
   },
@@ -64,6 +72,10 @@ const widgetModeMessages = defineMessages({
     defaultMessage: 'Trend view',
   },
   areaChartMode: {
+    id: 'WidgetHeader.widgetMode.areaChartMode',
+    defaultMessage: 'Area view',
+  },
+  'area-spline': {
     id: 'WidgetHeader.widgetMode.areaChartMode',
     defaultMessage: 'Area view',
   },
