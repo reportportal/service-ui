@@ -44,6 +44,7 @@ export default (env = defaultEnv) => ({
     new webpack.DefinePlugin({
       JEST: false,
       STORYBOOK: JSON.stringify(env.storybook),
+      'process.env.production': JSON.stringify(env.production),
     }),
     new webpack.ProvidePlugin({
       React: 'react',
