@@ -283,8 +283,7 @@ export class IssueStatisticsChart extends Component {
       donut: {
         title: 0,
         label: {
-          show: false,
-          threshold: 0.05,
+          show: !isPreview,
         },
       },
       tooltip: {
