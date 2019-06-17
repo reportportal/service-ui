@@ -1115,8 +1115,6 @@
   "Notifications.updateEmail": "абнавіў",
   "NotificationsEnableForm.toggleNotificationsLabel": "Апавяшчэнні па электроннай пошце",
   "NotificationsEnableForm.toggleNotificationsNote": "Дасылаць апавяшчэнні электроннай пошты пра скончаныя запускі",
-  "NotificationsEnableForm.turnOff": "ВЫКЛ",
-  "NotificationsEnableForm.turnOn": "УКЛ",
   "NotificationsTab.updateProjectNotificationsConfigurationSuccess": "Налады апавяшчэнняў былі паспяхова абноўлены!",
   "OverallStatisticsControls.ContentFieldsValidationError": "You must select at least one item",
   "OverallStatisticsControls.CriteriaFieldLabel": "Criteria for widget",

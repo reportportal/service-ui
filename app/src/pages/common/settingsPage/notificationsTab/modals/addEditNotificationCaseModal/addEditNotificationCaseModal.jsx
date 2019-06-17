@@ -28,7 +28,6 @@ const messages = defineMessages({
 
 @withModal('addEditNotificationCaseModal')
 @reduxForm({
-  destroyOnUnmount: false,
   form: 'notificationCaseForm',
   validate: ({ recipients, informOwner, launchNames }) => ({
     recipients: (recipients && !recipients.length && !informOwner && 'recipientsHint') || undefined,
