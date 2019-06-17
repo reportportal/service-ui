@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="63px" height="20px" viewBox="0 0 63 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 55 (78076) - https://sketchapp.com -->
+    <title>toggle/count_percentage</title>
+    <desc>Created with Sketch.</desc>
+    <g id="toggle/count_percentage" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <path d="M31,0 L61,0 C62.1045695,-2.02906125e-16 63,0.8954305 63,2 L63,18 C63,19.1045695 62.1045695,20 61,20 L31,20 L31,0 Z" id="Rectangle" fill="#199CB0"></path>
+        <path d="M31.5,19.5 L31.5,0.5 L2,0.5 C1.17157288,0.5 0.5,1.17157288 0.5,2 L0.5,18 C0.5,18.8284271 1.17157288,19.5 2,19.5 L31.5,19.5 Z" id="Rectangle-Copy-28" stroke="#199CB0"></path>
+        <text id="N" font-family="OpenSans-Bold, Open Sans" font-size="11" font-weight="bold" letter-spacing="-0.2132654" fill="#199CB0">
+            <tspan x="12" y="14">N</tspan>
+        </text>
+        <text id="%" font-family="OpenSans-Bold, Open Sans" font-size="11" font-weight="bold" letter-spacing="-0.2132654" fill="#FFFFFF">
+            <tspan x="42" y="14">%</tspan>
+        </text>
+    </g>
+</svg>

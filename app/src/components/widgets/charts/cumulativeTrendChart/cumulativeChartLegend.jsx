@@ -46,36 +46,36 @@ export class CumulativeChartLegend extends PureComponent {
   };
 
   onChangeTotals = () => {
-    const newVal = !this.state.totals;
-    const { onChangeTotals } = this.props;
-
-    this.setState({
-      totals: newVal,
-    });
-
-    onChangeTotals(newVal);
+    this.setState(
+      {
+        totals: !this.state.totals,
+      },
+      () => {
+        this.props.onChangeTotals(this.state.totals);
+      },
+    );
   };
 
   onChangeSeparate = () => {
-    const newVal = !this.state.separate;
-    const { onChangeSeparate } = this.props;
-
-    this.setState({
-      separate: newVal,
-    });
-
-    onChangeSeparate(newVal);
+    this.setState(
+      {
+        separate: !this.state.separate,
+      },
+      () => {
+        this.props.onChangeSeparate(this.state.separate);
+      },
+    );
   };
 
   onChangePercentage = () => {
-    const newVal = !this.state.percentage;
-    const { onChangePercentage } = this.props;
-
-    this.setState({
-      percentage: newVal,
-    });
-
-    onChangePercentage(newVal);
+    this.setState(
+      {
+        percentage: !this.state.percentage,
+      },
+      () => {
+        this.props.onChangePercentage(this.state.percentage);
+      },
+    );
   };
 
   render() {
@@ -104,22 +104,20 @@ export class CumulativeChartLegend extends PureComponent {
             </InputCheckbox>
           </div>
 
-          <div className={cx('control', 'separate')}>
-            <InputCheckbox
-              className={cx('control')}
-              value={separate}
-              onChange={this.onChangeSeparate}
-            >
+          <div
+            className={cx('control', 'separate', { 'separate-active': separate })}
+            onClick={this.onChangeSeparate}
+          >
+            <InputCheckbox className={cx('control')} value={separate}>
               Separate
             </InputCheckbox>
           </div>
 
-          <div className={cx('control', 'percentage')}>
-            <InputCheckbox
-              className={cx('control')}
-              value={percentage}
-              onChange={this.onChangePercentage}
-            >
+          <div
+            className={cx('control', 'percentage', { 'percentage-active': percentage })}
+            onClick={this.onChangePercentage}
+          >
+            <InputCheckbox className={cx('control')} value={percentage}>
               Percentage
             </InputCheckbox>
           </div>

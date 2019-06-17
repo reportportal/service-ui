@@ -96,6 +96,9 @@
       visibility: hidden;
     }
   }
+  .separate-active {
+    background-image: url(common/img/toggle_separated.svg);
+  }
 
   .percentage {
     background-image: url(common/img/toggle-absolute.svg);
@@ -106,6 +109,10 @@
     input, label {
       visibility: hidden;
     }
+  }
+  
+  .percentage-active {
+    background-image: url(common/img/toggle_percentage.svg);
   }
 }
 

@@ -1,6 +1,5 @@
 import * as COLORS from 'common/constants/colors';
-// import { injectIntl } from 'react-intl';
-// import { messages as commonMessages } from '../common/messages';
+import { messages } from 'components/widgets/charts/launchExecutionAndIssueStatistics/messages';
 
 const Color = require('color');
 
@@ -15,43 +14,21 @@ const getExecutions = () => [
   'statistics$executions$passed',
 ];
 
-// const messages = {
-//   statistics$executions$failed: commonMessages.failed,
-//   statistics$executions$skipped: commonMessages.skipped,
-//   statistics$executions$passed: commonMessages.passed,
-//   statistics$defects$product_bug$total: commonMessages.pb,
-//   statistics$defects$automation_bug$total: commonMessages.ab,
-//   statistics$defects$system_issue$total: commonMessages.si,
-//   statistics$defects$no_defect$total: commonMessages.nd,
-//   statistics$defects$to_investigate$total: commonMessages.ti,
-// };
+const getTotal = () => ['statistics$executions$total'];
 
-const convertIntoPercents = (columns) => {
-  const percentageColumns = [];
+const convertIntoPercents = (datasets) => {
+  const totalDataset = Object.assign({}, datasets[0]);
 
-  columns.forEach((column) => {
-    const newColumn = [];
-
-    newColumn.push(column[0]);
-
-    for (let i = 1; i < column.length; i += 1) {
-      const total = columns.reduce((acc, item) => acc + item[i], 0);
-
-      newColumn[i] = -(-column[i] / total * 100).toFixed(2);
-    }
-
-    percentageColumns.push(newColumn);
-  });
-
-  return percentageColumns;
+  return datasets.map((dataset) =>
+    Object.assign({}, dataset, {
+      data: dataset.data.map(
+        (value, index) => -(-value / totalDataset.data[index] * 100).toFixed(2),
+      ),
+    }),
+  );
 };
 
-// const getColumnGroups = (fields, defectTypes) => [
-//   defectTypes ? getDefects(fields) : getExecutions(fields),
-// ];
-
-// const getTypeSum = (items) =>
-//   Object.values(items.content.statistics).reduce((acc, item) => acc + item);
+const firstCapital = (string) => string.charAt(0).toUpperCase() + string.slice(1);
 
 export const getColorForKey = (key) => COLORS[`COLOR_${key.split('$')[2].toUpperCase()}`];
 
@@ -64,131 +41,153 @@ export const generateChartColors = (widget) => {
   return colors;
 };
 /* eslint func-names: ["error", "never" ] */
-const DataSet = function(label, group) {
-  this.label = label;
-  this.data = [];
-  const color = getColorForKey(label);
-  this.borderColor = color;
-  this.backgroundColor =
-    group === DEFECTS
-      ? Color(color)
-          .alpha(0.3)
-          .string()
-      : color;
-  this.stack = group;
-  this.datalabels = {
-    display: /passed/.test(label),
-    // align: 90,
-    align: 'end',
-    anchor: 'end',
-    offset: -5,
+const createDataSet = (field, group, options) => {
+  const { defectTypes, separate, showTotal, disabledFields } = options;
+  const isTotalDataset = /executions\$total/.test(field);
+  const color = isTotalDataset ? 'transparent' : getColorForKey(field);
+
+  return {
+    label: field,
+    hidden: disabledFields.includes(field) || (isTotalDataset && !showTotal),
+    data: [],
+    borderColor: isTotalDataset ? '#000000' : color,
+    borderWidth: isTotalDataset ? { left: 0, top: 0, right: 1, bottom: 0 } : 0,
+    backgroundColor:
+      group === DEFECTS && !defectTypes
+        ? Color(color)
+            .alpha(0.3)
+            .string()
+        : color,
+    stack: separate ? field : group,
+    datalabels: {
+      display: isTotalDataset,
+      align: 'end',
+      anchor: 'end',
+      offset: -5,
+    },
   };
-  // this.xAxisID = group;
-  // this.type = 'bar';
 };
 
-const getChartOptions = () => ({
-  legend: {
-    display: false,
-  },
-  layout: {
-    padding: {
-      left: 0,
-      right: 0,
-      top: 50,
-      bottom: 0,
+const getScaleName = (widget, options) => {
+  const { attributes } = widget.contentParameters.widgetOptions;
+  const { activeAttribute } = options;
+  return activeAttribute ? attributes[1] : attributes[0];
+};
+
+const getChartOptions = (widget, options) => {
+  const { percentage, formatMessage, tooltipContents } = options;
+
+  return {
+    legend: {
+      display: false,
     },
-  },
-  scales: {
-    yAxes: [
-      {
-        stacked: true,
-        ticks: {
-          // max: 160,
+    layout: {
+      padding: {
+        left: 0,
+        right: 0,
+        top: 50,
+        bottom: 0,
+      },
+    },
+    scales: {
+      yAxes: [
+        {
+          stacked: true,
+          ticks: {
+            max: percentage ? 100 : undefined,
+            callback: (value) => `${value}${percentage ? '%' : ''}`,
+          },
+        },
+      ],
+      xAxes: [
+        {
+          id: DEFECTS,
+          categoryPercentage: 0.4,
+          gridLines: {
+            display: false,
+            offsetGridLines: true,
+          },
+          scaleLabel: {
+            display: true,
+            labelString: firstCapital(getScaleName(widget, options)),
+            fontSize: 15,
+          },
+        },
+      ],
+    },
+    tooltips: {
+      intersect: true,
+      mode: 'x',
+      callbacks: {
+        title(tooltipItem, data) {
+          const titleName = getScaleName(widget, options);
+          return `${firstCapital(titleName)} ${data.labels[tooltipItem[0].index]}`;
+        },
+        afterTitle(tooltipItem, data) {
+          const dataset = data.datasets[tooltipItem[0].index];
+          if (!dataset) {
+            return '';
+          }
+          return tooltipContents[tooltipItem[0].index];
+        },
+        label(tooltipItem, data) {
+          const dataset = data.datasets[tooltipItem.datasetIndex];
+          const totalDataset = data.datasets[0];
+          const label = messages[dataset.label]
+            ? formatMessage(messages[dataset.label])
+            : dataset.label;
+          const value = dataset.data[tooltipItem.index];
+          const totalValue = totalDataset.data[tooltipItem.index];
+          const percentageValue = -(-value / totalValue * 100).toFixed(2);
+          if (percentage) {
+            return ` ${label}: ${percentageValue}%`;
+          }
+          return ` ${label}: ${value}  (${percentageValue}%)`;
         },
       },
-    ],
-    xAxes: [
-      {
-        // display: false,
-        id: DEFECTS,
-        // type: 'category',
-        categoryPercentage: 0.4,
-        // barPercentage: 1,
-        // barThickness: 6,
-        gridLines: {
-          display: false,
-          offsetGridLines: true,
-        },
-        // stacked: true,
-      },
-      // {
-      //   id: EXECUTIONS,
-      //   // type: 'category',
-      //   // stacked: true,
-      //   // categoryPercentage: 0.4,
-      //   // barPercentage: 1,
-      //   // barThickness: 12,
-      //   // gridLines: {
-      //   //   display: true,
-      //   //   offsetGridLines: true,
-      //   // },
-      // },
-    ],
-  },
-  // tooltips: {
-  //   callbacks: {
-  //     label(tooltipItem, data) {
-  //       console.log(tooltipItem);
-  //       console.log(data);
-
-  //       let label = data.datasets[tooltipItem.datasetIndex].label || '';
-
-  //       if (label) {
-  //         const message = messages[label];
-  //         label = injectIntl(({ intl }) => intl.formatMessage(message));
-  //         debugger;
-  //         console.log(label);
-
-  //         label = `${label} :  ${tooltipItem.value}`;
-  //       }
-  //       // label += Math.round(tooltipItem.yLabel * 100) / 100;
-  //       return label;
-  //     },
-  //   },
-  // },
-});
-
-const setTotalLabels = (result, executions, datasets) => {
-  const targetDataset = datasets.find((entry) => /passed/.test(entry.label));
-
-  targetDataset.datalabels.formatter = (value, context) =>
-    executions.reduce((acc, field) => {
-      const dataset = datasets.find((entry) => entry.label === field);
-      return acc + dataset.data[context.dataIndex];
-    }, 0);
+      backgroundColor: '#FFF',
+      titleFontSize: 14,
+      titleFontColor: '#464547',
+      bodyFontColor: '#464547',
+      bodyFontSize: 13,
+      displayColors: true,
+      borderColor: '#d4d4d4',
+      borderWidth: 1,
+      bodySpacing: 5,
+    },
+    hover: {
+      mode: 'nearest',
+      intersect: true,
+    },
+  };
 };
 
 export const getChartData = (widget, options) => {
-  const { percentage } = options;
+  const { percentage, defectTypes } = options;
   const labels = widget.content.result.map((item) => item.attributeValue);
-
   const contentFields = widget.contentParameters.contentFields;
-  // const columnGroups = separate ? [] : getColumnGroups(contentFields, defectTypes);
   const executions = getExecutions(contentFields);
-
   const defects = getDefects(contentFields);
-  const filteredContentFields = Array.prototype.concat(defects, executions);
+  const total = getTotal();
+  const legendItems = defectTypes ? defects : executions;
+  const filteredContentFields = Array.prototype.concat(
+    total,
+    defects,
+    defectTypes ? [] : executions,
+  );
+  const tooltipContents = [];
 
   let datasets = Array.prototype.concat(
-    executions.map((field) => new DataSet(field, EXECUTIONS)),
-    defects.map((field) => new DataSet(field, DEFECTS)),
+    total.map((field) => createDataSet(field, null, options)),
+    executions.map((field) => createDataSet(field, EXECUTIONS, options)),
+    defects.map((field) => createDataSet(field, DEFECTS, options)),
   );
 
   Object.keys(widget.content.result)
     .sort()
     .map((resultId) => {
       const items = widget.content.result[resultId];
+      tooltipContents.push(items.content.tooltipContent);
 
       filteredContentFields.forEach((field) => {
         const totals = items.content.statistics[field] || 0;
@@ -198,8 +197,6 @@ export const getChartData = (widget, options) => {
         column.data.push(totals);
       });
 
-      setTotalLabels(widget.content.result, executions, datasets);
-
       return resultId;
     });
 
@@ -207,6 +204,7 @@ export const getChartData = (widget, options) => {
     datasets = convertIntoPercents(datasets);
   }
 
-  const chartOptions = getChartOptions();
-  return { labels, datasets, chartOptions };
+  const chartOptions = getChartOptions(widget, { tooltipContents, ...options });
+
+  return { labels, datasets, chartOptions, legendItems };
 };
