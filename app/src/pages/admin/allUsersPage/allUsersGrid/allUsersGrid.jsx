@@ -163,7 +163,7 @@ export class AllUsersGrid extends PureComponent {
         full: this.props.intl.formatMessage(messages.projectsAndRolesCol),
       },
       component: ProjectsAndRolesColumn,
-      sortable: true,
+      sortable: false,
     },
   ];
 
