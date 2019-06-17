@@ -26,7 +26,7 @@ import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
 import ReactDOMServer from 'react-dom/server';
 import { defectLinkSelector } from 'controllers/testItem';
-import { defectTypesSelector, orderedContentFieldsSelector } from 'controllers/project';
+import { defectTypesSelector, orderedDefectFieldsSelector } from 'controllers/project';
 import { launchFiltersSelector } from 'controllers/filter';
 import { activeProjectSelector } from 'controllers/user';
 import { TEST_ITEM_PAGE, PROJECT_LAUNCHES_PAGE } from 'controllers/pages';
@@ -47,7 +47,7 @@ const getResult = (widget) => widget.content.result[0] || widget.content.result;
   (state) => ({
     project: activeProjectSelector(state),
     defectTypes: defectTypesSelector(state),
-    orderedContentFields: orderedContentFieldsSelector(state),
+    orderedContentFields: orderedDefectFieldsSelector(state),
     getDefectLink: (params) => defectLinkSelector(state, params),
     launchFilters: launchFiltersSelector(state),
   }),
@@ -231,25 +231,20 @@ export class IssueStatisticsChart extends Component {
     const defectTypesChartData = defectDataItems.itemTypes;
     const columns = [];
 
-    const orderedData = orderedContentFields
-      .map((type) => {
-        if (!defectTypesChartData[type]) return null;
-        return {
-          key: type,
-          value: defectTypesChartData[type],
-        };
-      })
-      .filter((item) => item);
+    const orderedData = orderedContentFields.map((type) => ({
+      key: type,
+      value: defectTypesChartData[type] || 0,
+    }));
 
-    widget.contentParameters.contentFields.forEach((field) => {
-      orderedData.forEach((item) => {
+    orderedData.forEach((item) => {
+      widget.contentParameters.contentFields.forEach((field) => {
         if (field === item.key) {
           columns.push([field, item.value]);
         }
       });
     });
 
-    return columns.reverse();
+    return columns;
   }
 
   getConfig = () => {

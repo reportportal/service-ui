@@ -19,7 +19,7 @@ import { PaginationToolbar } from 'components/main/paginationToolbar';
 import { activeProjectSelector, userIdSelector } from 'controllers/user';
 import { projectConfigSelector } from 'controllers/project';
 import { withPagination, DEFAULT_PAGINATION, SIZE_KEY } from 'controllers/pagination';
-import { withSorting, SORTING_DESC } from 'controllers/sorting';
+import { withSorting, SORTING_ASC } from 'controllers/sorting';
 import { showModalAction } from 'controllers/modal';
 import { ENTITY_START_TIME } from 'components/filterEntities/constants';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
@@ -144,7 +144,7 @@ const messages = defineMessages({
 )
 @withSorting({
   defaultSortingColumn: ENTITY_START_TIME,
-  defaultSortingDirection: SORTING_DESC,
+  defaultSortingDirection: SORTING_ASC,
 })
 @withPagination({
   paginationSelector: launchPaginationSelector,
@@ -169,6 +169,7 @@ export class LaunchesPage extends Component {
     onChangePage: PropTypes.func,
     onChangePageSize: PropTypes.func,
     onChangeSorting: PropTypes.func,
+    sortingString: PropTypes.string,
     activeProject: PropTypes.string.isRequired,
     selectedLaunches: PropTypes.arrayOf(PropTypes.object),
     validationErrors: PropTypes.object,
@@ -210,6 +211,7 @@ export class LaunchesPage extends Component {
     onChangePage: () => {},
     onChangePageSize: () => {},
     onChangeSorting: () => {},
+    sortingString: '',
     selectedLaunches: [],
     validationErrors: {},
     toggleAllLaunchesAction: () => {},
@@ -581,6 +583,18 @@ export class LaunchesPage extends Component {
     this.props.toggleLaunchSelectionAction(item);
   };
 
+  handleChangeSorting = (sortingColumn) => {
+    let orderBy = sortingColumn;
+
+    this.onUpdateFilterOrder(this.activeFilterId, this.props.sortingString);
+
+    if (Array.isArray(sortingColumn)) {
+      orderBy = sortingColumn[0].sortingColumn;
+    }
+
+    this.props.onChangeSorting(orderBy);
+  };
+
   renderPageContent = ({
     launchFilters,
     activeFilterId,
@@ -590,6 +604,7 @@ export class LaunchesPage extends Component {
     onRemoveFilter,
     onChangeFilter,
     onResetFilter,
+    onUpdateFilterOrder,
   }) => {
     const {
       activePage,
@@ -600,11 +615,11 @@ export class LaunchesPage extends Component {
       onChangePageSize,
       sortingColumn,
       sortingDirection,
-      onChangeSorting,
       selectedLaunches,
       launches,
       loading,
       debugMode,
+      sortingString,
     } = this.props;
 
     const rowHighlightingConfig = {
@@ -612,6 +627,10 @@ export class LaunchesPage extends Component {
       isGridRowHighlighted: this.state.isGridRowHighlighted,
       highlightedRowId: this.state.highlightedRowId,
     };
+
+    this.onUpdateFilterOrder = onUpdateFilterOrder;
+    this.activeFilterId = activeFilterId;
+
     const { finishedLaunchesCount } = this.state;
 
     return (
@@ -632,6 +651,8 @@ export class LaunchesPage extends Component {
                   onRemoveFilter={onRemoveFilter}
                   onFilterAdd={onFilterAdd}
                   onResetFilter={onResetFilter}
+                  onChangeSorting={this.handleChangeSorting}
+                  sortingString={sortingString}
                   {...rest}
                 />
               )}
@@ -661,7 +682,7 @@ export class LaunchesPage extends Component {
                 data={launches}
                 sortingColumn={sortingColumn}
                 sortingDirection={sortingDirection}
-                onChangeSorting={onChangeSorting}
+                onChangeSorting={this.handleChangeSorting}
                 onDeleteItem={this.deleteItem}
                 onMove={this.moveLaunches}
                 onEditItem={this.openEditModal}

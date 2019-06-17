@@ -49,14 +49,9 @@ export const defectTypesSelector = createSelector(subTypesSelector, (subTypes) =
   ),
 );
 
-export const orderedContentFieldsSelector = createSelector(subTypesSelector, (subTypes) => {
+export const orderedDefectFieldsSelector = createSelector(subTypesSelector, (subTypes) => {
   const PREFIX = 'statistics$defects$';
-  const result = [
-    'statistics$executions$total',
-    'statistics$executions$passed',
-    'statistics$executions$failed',
-    'statistics$executions$skipped',
-  ];
+  const result = [];
   DEFECT_TYPES_LEGEND_SEQUENCE.forEach((type) => {
     subTypes[type].forEach((item) => {
       result.push(`${PREFIX}${type.toLowerCase()}$${item.locator}`);
@@ -64,6 +59,17 @@ export const orderedContentFieldsSelector = createSelector(subTypesSelector, (su
   });
   return result;
 });
+
+export const orderedContentFieldsSelector = createSelector(
+  orderedDefectFieldsSelector,
+  (orderedDefectFields) => [
+    'statistics$executions$total',
+    'statistics$executions$passed',
+    'statistics$executions$failed',
+    'statistics$executions$skipped',
+    ...orderedDefectFields,
+  ],
+);
 
 const attributesSelector = (state) => projectConfigSelector(state).attributes || {};
 
