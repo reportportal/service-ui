@@ -8,7 +8,7 @@ node {
 
         stage('Checkout') {
             checkout scm
-            sh 'git checkout v5'
+            sh 'git checkout v5-kronos'
             sh 'git pull'
         }
 
