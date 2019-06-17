@@ -1115,8 +1115,6 @@
   "Notifications.updateEmail": "обновил",
   "NotificationsEnableForm.toggleNotificationsLabel": "Оповещения по электронной почте",
   "NotificationsEnableForm.toggleNotificationsNote": "Отправлять почтовые оповещения о завершенных запусках",
-  "NotificationsEnableForm.turnOff": "Выкл",
-  "NotificationsEnableForm.turnOn": "Вкл",
   "NotificationsTab.updateProjectNotificationsConfigurationSuccess": "Настройки уведомлений были успешно обновлены!",
   "OverallStatisticsControls.ContentFieldsValidationError": "You must select at least one item",
   "OverallStatisticsControls.CriteriaFieldLabel": "Criteria for widget",
