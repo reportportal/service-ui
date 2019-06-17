@@ -16,9 +16,7 @@ import { GhostButton } from 'components/buttons/ghostButton';
 import AddProjectIcon from 'common/img/add-project-inline.svg';
 import ProjectUsersIcon from 'common/img/project-users-inline.svg';
 import ProjectSettingsIcon from 'common/img/project-settings-inline.svg';
-/*
 import ProjectEventsIcon from 'common/img/project-events-inline.svg';
-*/
 import { MembersPage } from 'pages/common/membersPage';
 import {
   addProjectAction,
@@ -43,12 +41,10 @@ const HEADER_BUTTONS = [
     key: SETTINGS,
     icon: ProjectSettingsIcon,
   },
-  /*
   {
     key: EVENTS,
     icon: ProjectEventsIcon,
   },
-  */
 ];
 
 @connect(
