@@ -1071,7 +1071,7 @@
   "MoveToDebugModal.moveToDebugMultipleFailedMessage": "Немагчыма перамясціць запускі ў Адладку: {message}",
   "MoveToDebugModal.moveToDebugMultipleSuccessMessage": "Запускі паспяхова перамешчаныя ў Адладку",
   "MoveToDebugModal.moveToDebugSuccessMessage": "Запуск паспяхова перамешчаны ў Адладку",
-  "NameColumn.adminLabel": "адмiнiстратар",
+  "NameColumn.adminLabel": "адмiн",
   "NameColumn.changeAccountRoleNotification": "Роля карыстальніка для '{name}' зменена",
   "NameColumn.makeAdminLabel": "зрабіць адмінам",
   "NameColumn.youLabel": "вы",
