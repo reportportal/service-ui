@@ -263,8 +263,8 @@ export class ActionPanel extends Component {
               onClick={onRefresh}
             >
               <FormattedMessage id="LaunchesPage.refresh" defaultMessage="Refresh" />
-              {finishedLaunchesCount && this.renderCounterNotification(finishedLaunchesCount)}
             </GhostButton>
+            {finishedLaunchesCount && this.renderCounterNotification(finishedLaunchesCount)}
           </div>
         </div>
       </div>
