@@ -3,12 +3,18 @@ import { fetch, setStorageItem, updateStorageItem } from 'common/utils';
 import { URLS } from 'common/urls';
 import { APPLICATION_SETTINGS } from 'common/constants/localStorageKeys';
 import { showNotification } from 'controllers/notification';
-import { OAUTH_SUCCESS, pagePropertiesSelector } from 'controllers/pages';
+import {
+  OAUTH_SUCCESS,
+  pagePropertiesSelector,
+  PROJECT_DASHBOARD_PAGE,
+  LOGIN_PAGE,
+} from 'controllers/pages';
 import { NOTIFICATION_TYPES } from 'controllers/notification/constants';
 import { activeProjectSelector, fetchUserAction } from 'controllers/user';
 import { fetchProjectAction } from 'controllers/project';
 import { fetchPluginsAction, fetchGlobalIntegrationsAction } from 'controllers/plugins';
 import { fetchApiInfoAction, fetchUatInfoAction } from 'controllers/appInfo';
+import { redirect } from 'redux-first-router';
 import {
   authSuccessAction,
   resetTokenAction,
@@ -28,6 +34,11 @@ import {
 
 function* handleLogout() {
   yield put(resetTokenAction());
+  yield put(
+    redirect({
+      type: LOGIN_PAGE,
+    }),
+  );
   yield put(
     showNotification({
       messageId: 'infoLogout',
@@ -63,6 +74,12 @@ function* loginSuccessHandler({ payload }) {
   yield put(fetchPluginsAction());
   yield put(fetchGlobalIntegrationsAction());
   yield put(authSuccessAction());
+  yield put(
+    redirect({
+      type: PROJECT_DASHBOARD_PAGE,
+      payload: { projectId },
+    }),
+  );
 }
 
 function* watchLoginSuccess() {

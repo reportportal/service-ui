@@ -1,5 +1,10 @@
 import { redirect } from 'redux-first-router';
-import { userInfoSelector, activeProjectSelector, setActiveProjectAction } from 'controllers/user';
+import {
+  activeProjectSelector,
+  userAccountRoleSelector,
+  userInfoSelector,
+  setActiveProjectAction,
+} from 'controllers/user';
 import { fetchProjectAction } from 'controllers/project';
 import {
   LOGIN_PAGE,
@@ -22,8 +27,6 @@ import {
   PLUGINS_PAGE,
   NOT_FOUND,
   OAUTH_SUCCESS,
-  adminPageNames,
-  pageSelector,
 } from 'controllers/pages';
 import {
   GENERAL,
@@ -36,6 +39,7 @@ import {
   STATISTICS,
   PATTERN_ANALYSIS,
 } from 'common/constants/settingsTabs';
+import { ADMINISTRATOR } from 'common/constants/accountRoles';
 import { SETTINGS, MEMBERS, EVENTS } from 'common/constants/projectSections';
 import { isAuthorizedSelector } from 'controllers/auth';
 import {
@@ -55,6 +59,7 @@ import { fetchHistoryPageInfo } from 'controllers/itemsHistory';
 import { fetchProjectsAction } from 'controllers/administrate/projects';
 import { startSetViewMode } from 'controllers/administrate/projects/actionCreators';
 import { SIZE_KEY } from 'controllers/pagination';
+import { pageRendering, ANONYMOUS_ACCESS, ADMIN_ACCESS } from './constants';
 
 const redirectRoute = (path, createNewAction) => ({
   path,
@@ -66,35 +71,50 @@ const redirectRoute = (path, createNewAction) => ({
 });
 
 export const onBeforeRouteChange = (dispatch, getState, { action }) => {
-  const authorized = isAuthorizedSelector(getState());
-  if (!authorized) {
-    return;
-  }
-
   const {
-    payload: { projectId: hashProject },
     type: nextPageType,
+    payload: { projectId: hashProject },
   } = action;
-  if (!hashProject) {
-    return;
-  }
 
-  const currentPageType = pageSelector(getState());
-  const activeProjectId = activeProjectSelector(getState());
+  const authorized = isAuthorizedSelector(getState());
+  let projectId = activeProjectSelector(getState());
+  const accountRole = userAccountRoleSelector(getState());
   const userInfo = userInfoSelector(getState());
 
   const userProjects = userInfo ? userInfo.assignedProjects : {};
-  const isAdminNewPageType = !!adminPageNames[nextPageType];
-  const isAdminCurrentPageType = !!adminPageNames[currentPageType];
 
-  if (
-    userProjects &&
-    Object.prototype.hasOwnProperty.call(userProjects, hashProject) &&
-    (hashProject !== activeProjectId || isAdminCurrentPageType) &&
-    !isAdminNewPageType
-  ) {
+  if (userProjects && hashProject in userProjects && projectId !== hashProject) {
     dispatch(setActiveProjectAction(hashProject));
     dispatch(fetchProjectAction(hashProject));
+    projectId = hashProject;
+  }
+
+  const page = pageRendering[nextPageType];
+  if (page) {
+    const { access } = page;
+    switch (access) {
+      case ANONYMOUS_ACCESS:
+        if (authorized) {
+          dispatch(
+            redirect({
+              type: PROJECT_DASHBOARD_PAGE,
+              payload: {
+                projectId,
+              },
+            }),
+          );
+        }
+        break;
+      case ADMIN_ACCESS:
+        if (authorized && accountRole !== ADMINISTRATOR) {
+          dispatch(redirect({ type: PROJECT_DASHBOARD_PAGE, payload: { projectId } }));
+        }
+        break;
+      default:
+        if (!authorized) {
+          dispatch(redirect({ type: LOGIN_PAGE }));
+        }
+    }
   }
 };
 
