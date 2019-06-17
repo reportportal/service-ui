@@ -25,30 +25,45 @@ export class ChartJS extends PureComponent {
   };
 
   componentDidMount() {
+    this.createChart();
+  }
+
+  componentDidUpdate() {
+    this.createChart();
+  }
+
+  componentWillUnmount() {
+    this.chart.destroy();
+    this.chart = null;
+  }
+
+  createChart() {
     const { chartData, chartOptions } = this.props;
-    this.createChart({
+    const config = {
       type: 'bar',
       data: chartData,
       options: chartOptions,
       plugins: [ChartDataLabels],
-    });
-  }
+    };
 
-  createChart(config) {
-    this.chart = this.generateChart(config);
-    this.props.onChartCreated(this.chart, this.node);
-
-    if (config.unloadBeforeLoad) {
-      this.unloadData();
+    if (this.chart) {
+      this.chart.data = chartData;
+      this.chart.options = chartOptions;
+      this.chart.update(config);
+    } else {
+      this.chart = this.generateChart(config);
+      this.props.onChartCreated(this.chart, this.canvas);
     }
   }
 
   generateChart = (config) => {
-    if (!this.canvas) {
+    const { canvas } = this;
+    if (!canvas) {
       return false;
     }
 
-    const ctx = this.canvas.getContext('2d');
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
     const chartObj = new Chart(ctx, config);
 
     this.canvas.onclick = (event) => {

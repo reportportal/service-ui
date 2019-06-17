@@ -21,7 +21,15 @@ export const messages = defineMessages({
     id: 'FilterNameById.statistics$defects$product_bug',
     defaultMessage: 'Product bug',
   },
+  statistics$defects$product_bug$total: {
+    id: 'FilterNameById.statistics$defects$product_bug',
+    defaultMessage: 'Product bug',
+  },
   statistics$defects$automation_bug: {
+    id: 'FilterNameById.statistics$defects$automation_bug',
+    defaultMessage: 'Automation bug',
+  },
+  statistics$defects$automation_bug$total: {
     id: 'FilterNameById.statistics$defects$automation_bug',
     defaultMessage: 'Automation bug',
   },
@@ -29,11 +37,23 @@ export const messages = defineMessages({
     id: 'FilterNameById.statistics$defects$system_issue',
     defaultMessage: 'System issue',
   },
+  statistics$defects$system_issue$total: {
+    id: 'FilterNameById.statistics$defects$system_issue',
+    defaultMessage: 'System issue',
+  },
   statistics$defects$no_defect: {
     id: 'FilterNameById.statistics$defects$no_defect',
     defaultMessage: 'No defect',
   },
+  statistics$defects$no_defect$total: {
+    id: 'FilterNameById.statistics$defects$no_defect',
+    defaultMessage: 'No defect',
+  },
   statistics$defects$to_investigate: {
+    id: 'FilterNameById.statistics$defects$to_investigate',
+    defaultMessage: 'To investigate',
+  },
+  statistics$defects$to_investigate$total: {
     id: 'FilterNameById.statistics$defects$to_investigate',
     defaultMessage: 'To investigate',
   },

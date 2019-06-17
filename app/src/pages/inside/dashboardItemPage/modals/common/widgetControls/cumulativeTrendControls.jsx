@@ -9,11 +9,15 @@ import { validate } from 'common/utils';
 import { InputTagsSearch } from 'components/inputs/inputTagsSearch';
 import { ModalField } from 'components/main/modal';
 import { activeProjectSelector } from 'controllers/user';
+import classNames from 'classnames/bind';
+import { FiltersControl, InputControl, TogglerControl } from './controls';
 import { getWidgetCriteriaOptions } from './utils/getWidgetCriteriaOptions';
 import { DEFECT_STATISTICS_OPTIONS, TO_INVESTIGATE_OPTION, ITEMS_INPUT_WIDTH } from './constants';
-import { FiltersControl, InputControl } from './controls';
+import styles from './widgetControls.scss';
 
-const DEFAULT_ITEMS_COUNT = '10';
+const cx = classNames.bind(styles);
+
+const DEFAULT_ITEMS_COUNT = '15';
 const STATIC_CONTENT_FIELDS = [STATS_FAILED, STATS_SKIPPED, STATS_PASSED];
 const messages = defineMessages({
   CriteriaFieldLabel: {
@@ -28,6 +32,22 @@ const messages = defineMessages({
     id: 'CumulativeTrendControls.attributesArrayLabel',
     defaultMessage: 'Attributes',
   },
+  attributesTitle: {
+    id: 'CumulativeTrendControls.attributesTitle',
+    defaultMessage: 'Add attributes',
+  },
+  attributeKeyFieldLabel: {
+    id: 'CumulativeTrendControls.attributeKeyFieldLabel',
+    defaultMessage: 'Attribute key',
+  },
+  attributeKeyFieldLabel1: {
+    id: 'CumulativeTrendControls.attributeKeyFieldLabel1',
+    defaultMessage: 'Level 1 (overview)',
+  },
+  attributeKeyFieldLabel2: {
+    id: 'CumulativeTrendControls.attributeKeyFieldLabel2',
+    defaultMessage: 'Level 2 (detailed view)',
+  },
   attributeKeyFieldPlaceholder: {
     id: 'CumulativeTrendControls.attributeKeyFieldPlaceholder',
     defaultMessage: 'Enter an attribute key',
@@ -38,7 +58,11 @@ const messages = defineMessages({
   },
   ItemsValidationError: {
     id: 'LaunchStatisticsControls.ItemsValidationError',
-    defaultMessage: 'Items count should have value from 1 to 10',
+    defaultMessage: 'Items count should have value from 1 to 15',
+  },
+  attributeKeyValidationError: {
+    id: 'LaunchStatisticsControls.attributeKeyValidationError',
+    defaultMessage: 'Value should have size from 1 to 128',
   },
   attributesArrayValidationError: {
     id: 'CumulativeTrendControls.attributesArrayValidationError',
@@ -47,8 +71,11 @@ const messages = defineMessages({
 });
 const validators = {
   items: (formatMessage) => (value) =>
-    (!value || !validate.inRangeValidate(value, 1, 10)) &&
+    (!value || !validate.inRangeValidate(value, 1, 15)) &&
     formatMessage(messages.ItemsValidationError),
+  attributeKey: (formatMessage) => (value) =>
+    (!value || !validate.attributeKey(value)) &&
+    formatMessage(messages.attributeKeyValidationError),
   attributesArray: (formatMessage) => (value) =>
     (!value || !validate.attributesArray(value)) &&
     formatMessage(messages.attributesArrayValidationError),
@@ -108,14 +135,30 @@ export class CumulativeTrendControls extends Component {
   formatFilterValue = (value) => value && value[0];
   parseFilterValue = (value) => value && [value];
 
-  formatAttributes = (attributes) =>
+  makeAttributes = (attributes) =>
     attributes ? attributes.map((attribute) => ({ value: attribute, label: attribute })) : null;
-  parseAttributes = (attributes) =>
-    attributes ? attributes.map((attribute) => attribute.value) : undefined;
+
+  formatAttributes = (attribute) => (attribute ? { value: attribute, label: attribute } : null);
+
+  parseAttributes = (attribute) => {
+    if (attribute === null) return null;
+    if (attribute && attribute.value) return attribute.value;
+
+    return undefined;
+  };
 
   render() {
     const { intl, formAppearance, onFormAppearanceChange, launchAttributeKeysSearch } = this.props;
-
+    const tabItems = [
+      {
+        value: '1',
+        label: 'All launches',
+      },
+      {
+        value: '2',
+        label: 'Latest Launches',
+      },
+    ];
     return (
       <Fragment>
         <FieldProvider name="filters" parse={this.parseFilterValue} format={this.formatFilterValue}>
@@ -124,18 +167,35 @@ export class CumulativeTrendControls extends Component {
             onFormAppearanceChange={onFormAppearanceChange}
           />
         </FieldProvider>
+
+        <TogglerControl fieldLabel=" " items={tabItems} value={'2'} />
+
+        <FieldProvider
+          name="contentParameters.itemsCount"
+          validate={validators.items(intl.formatMessage)}
+          format={String}
+          normalize={this.normalizeValue}
+        >
+          <InputControl
+            fieldLabel={intl.formatMessage(messages.ItemsFieldLabel)}
+            inputWidth={ITEMS_INPUT_WIDTH}
+            maxLength="3"
+            hintType={'top-right'}
+          />
+        </FieldProvider>
+
         {!formAppearance.isMainControlsLocked && (
           <Fragment>
+            <div className={cx('attr-header')}>{intl.formatMessage(messages.attributesTitle)}</div>
             <ModalField
-              label={intl.formatMessage(messages.attributesArrayLabel)}
+              label={intl.formatMessage(messages.attributeKeyFieldLabel1)}
               labelWidth={145}
-              tip={intl.formatMessage(messages.attributeKeyFieldTip)}
             >
               <div style={{ width: '100%' }}>
                 <FieldProvider
                   parse={this.parseAttributes}
                   format={this.formatAttributes}
-                  name="contentParameters.widgetOptions.attributes"
+                  name="contentParameters.widgetOptions.attributes.0"
                   validate={validators.attributesArray(intl.formatMessage)}
                 >
                   <InputTagsSearch
@@ -144,27 +204,35 @@ export class CumulativeTrendControls extends Component {
                     async
                     creatable
                     showNewLabel
-                    multi
                     removeSelected
-                    makeOptions={this.formatAttributes}
+                    makeOptions={this.makeAttributes}
                   />
                 </FieldProvider>
               </div>
             </ModalField>
 
-            <FieldProvider
-              name="contentParameters.itemsCount"
-              validate={validators.items(intl.formatMessage)}
-              format={String}
-              normalize={this.normalizeValue}
+            <ModalField
+              label={intl.formatMessage(messages.attributeKeyFieldLabel2)}
+              labelWidth={145}
             >
-              <InputControl
-                fieldLabel={intl.formatMessage(messages.ItemsFieldLabel)}
-                inputWidth={ITEMS_INPUT_WIDTH}
-                maxLength="3"
-                hintType={'top-right'}
-              />
-            </FieldProvider>
+              <div style={{ width: '100%' }}>
+                <FieldProvider
+                  parse={this.parseAttributes}
+                  format={this.formatAttributes}
+                  name="contentParameters.widgetOptions.attributes.1"
+                >
+                  <InputTagsSearch
+                    uri={launchAttributeKeysSearch}
+                    minLength={1}
+                    async
+                    creatable
+                    showNewLabel
+                    removeSelected
+                    makeOptions={this.makeAttributes}
+                  />
+                </FieldProvider>
+              </div>
+            </ModalField>
           </Fragment>
         )}
       </Fragment>

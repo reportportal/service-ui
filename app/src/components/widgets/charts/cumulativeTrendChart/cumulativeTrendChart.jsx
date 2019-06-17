@@ -40,9 +40,12 @@ export class CumulativeTrendChart extends PureComponent {
 
   state = {
     defectTypes: false,
+    showTotal: false,
     separate: false,
     percentage: false,
     activeAttribute: null,
+    disabledFields: [],
+    legendItems: [],
   };
 
   componentDidMount = () => {
@@ -50,34 +53,43 @@ export class CumulativeTrendChart extends PureComponent {
   };
 
   onChangeFocusType = (value) => {
-    this.setState({
-      isConfigReady: false,
-      defectTypes: value,
-    });
-
-    this.getConfig({ defectTypes: value });
+    this.setState(
+      {
+        isConfigReady: false,
+        defectTypes: value,
+      },
+      this.getConfig,
+    );
   };
 
-  onChangeTotals = () => {
-    // TODO
+  onChangeTotals = (value) => {
+    this.setState(
+      {
+        isConfigReady: false,
+        showTotal: value,
+      },
+      this.getConfig,
+    );
   };
 
   onChangeSeparate = (value) => {
-    this.setState({
-      isConfigReady: false,
-      separate: value,
-    });
-
-    this.getConfig({ separate: value });
+    this.setState(
+      {
+        isConfigReady: false,
+        separate: value,
+      },
+      this.getConfig,
+    );
   };
 
   onChangePercentage = (value) => {
-    this.setState({
-      isConfigReady: false,
-      percentage: value,
-    });
-
-    this.getConfig({ percentage: value });
+    this.setState(
+      {
+        isConfigReady: false,
+        percentage: value,
+      },
+      this.getConfig,
+    );
   };
 
   onChartElementClick = (element) => {
@@ -100,10 +112,16 @@ export class CumulativeTrendChart extends PureComponent {
     });
   };
 
+  onLegendClick = (fieldName) => {
+    this.toggleField(fieldName, this.getConfig);
+  };
+
   getConfig = (options = {}) => {
-    const { labels, datasets, chartOptions } = getChartData(this.props.widget, {
+    const { labels, datasets, chartOptions, legendItems } = getChartData(this.props.widget, {
       ...this.state,
       options,
+      formatMessage: this.props.intl.formatMessage,
+      activeAttribute: this.state.activeAttribute,
     });
 
     this.setState({
@@ -112,10 +130,24 @@ export class CumulativeTrendChart extends PureComponent {
         datasets,
       },
       chartOptions,
+      legendItems,
     });
   };
 
   getAttributes = () => this.props.widget.contentParameters.widgetOptions.attributes;
+
+  toggleField = (fieldName, callback) => {
+    const { disabledFields } = this.state;
+
+    this.setState(
+      {
+        disabledFields: disabledFields.includes(fieldName)
+          ? disabledFields.filter((field) => field !== fieldName)
+          : disabledFields.concat([fieldName]),
+      },
+      callback,
+    );
+  };
 
   clearAttributes = () => {
     this.setState({
@@ -127,24 +159,22 @@ export class CumulativeTrendChart extends PureComponent {
 
   render() {
     const { isPreview } = this.props;
-    const classes = cx('cumulative-trend-chart', {
-      'preview-view': isPreview,
-    });
+    const { legendItems, chartData } = this.state;
+    const classes = cx('cumulative-trend-chart', { 'preview-view': isPreview });
 
     return this.state && this.state.chartData ? (
       <div className={classes}>
         <ChartJS
-          chartData={this.state.chartData}
+          chartData={chartData}
           chartOptions={this.state.chartOptions}
           onChartElementClick={this.onChartElementClick}
         >
           <CumulativeChartLegend
-            items={this.state.chartData.datasets
-              .map((item) => item.label)
-              .filter((field) => /executions/.test(field))}
+            items={legendItems}
             attributes={this.getAttributes()}
             activeAttribute={this.state.activeAttribute}
             clearAttributes={this.clearAttributes}
+            onClick={this.onLegendClick}
             onChangeFocusType={this.onChangeFocusType}
             onChangeTotals={this.onChangeTotals}
             onChangeSeparate={this.onChangeSeparate}
