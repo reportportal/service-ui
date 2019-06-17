@@ -106,6 +106,7 @@ export class LogItemInfo extends Component {
     onHighlightRow: PropTypes.func.isRequired,
     onToggleSauceLabsIntegrationView: PropTypes.func.isRequired,
     isSauceLabsIntegrationView: PropTypes.bool.isRequired,
+    debugMode: PropTypes.bool.isRequired,
     loading: PropTypes.bool.isRequired,
     logItem: PropTypes.object,
     updateRetryId: PropTypes.func,
@@ -221,6 +222,7 @@ export class LogItemInfo extends Component {
   handleEditDefect = () => {
     this.props.editDefectsAction([this.props.logItem], {
       fetchFunc: this.props.fetchFunc,
+      debugMode: this.props.debugMode,
     });
   };
 
@@ -251,6 +253,7 @@ export class LogItemInfo extends Component {
       onHighlightRow,
       onToggleSauceLabsIntegrationView,
       isSauceLabsIntegrationView,
+      debugMode,
       intl: { formatMessage },
     } = this.props;
 
@@ -271,41 +274,43 @@ export class LogItemInfo extends Component {
               )}
             </div>
 
-            <div className={cx('actions')}>
-              <div className={cx('action')}>
-                <GhostButton
-                  icon={this.checkIfTheLastItemIsActive() ? DownLeftArrowIcon : UpRightArrowIcon}
-                  disabled={this.isCopySendButtonDisabled()}
-                  onClick={this.showCopySendDefectModal}
-                >
-                  {this.getCopySendDefectButtonText()}
-                </GhostButton>
+            {!debugMode && (
+              <div className={cx('actions')}>
+                <div className={cx('action')}>
+                  <GhostButton
+                    icon={this.checkIfTheLastItemIsActive() ? DownLeftArrowIcon : UpRightArrowIcon}
+                    disabled={this.isCopySendButtonDisabled()}
+                    onClick={this.showCopySendDefectModal}
+                  >
+                    {this.getCopySendDefectButtonText()}
+                  </GhostButton>
+                </div>
+                <div className={cx('action')}>
+                  <GhostButton
+                    icon={BugIcon}
+                    disabled={!logItem.issue || isPostIssueUnavailable}
+                    onClick={this.handlePostIssue}
+                    title={
+                      (isPostIssueUnavailable &&
+                        this.props.intl.formatMessage(messages.noBugTrackingSystemToPostIssue)) ||
+                      ''
+                    }
+                  >
+                    {formatMessage(messages.postIssue)}
+                  </GhostButton>
+                </div>
+                <div className={cx('action')}>
+                  <GhostButton
+                    icon={LinkIcon}
+                    disabled={!logItem.issue || !btsIntegrations.length}
+                    onClick={this.handleLinkIssue}
+                    title={this.getLinkIssueTitle()}
+                  >
+                    {formatMessage(messages.linkIssue)}
+                  </GhostButton>
+                </div>
               </div>
-              <div className={cx('action')}>
-                <GhostButton
-                  icon={BugIcon}
-                  disabled={!logItem.issue || isPostIssueUnavailable}
-                  onClick={this.handlePostIssue}
-                  title={
-                    (isPostIssueUnavailable &&
-                      this.props.intl.formatMessage(messages.noBugTrackingSystemToPostIssue)) ||
-                    ''
-                  }
-                >
-                  {formatMessage(messages.postIssue)}
-                </GhostButton>
-              </div>
-              <div className={cx('action')}>
-                <GhostButton
-                  icon={LinkIcon}
-                  disabled={!logItem.issue || !btsIntegrations.length}
-                  onClick={this.handleLinkIssue}
-                  title={this.getLinkIssueTitle()}
-                >
-                  {formatMessage(messages.linkIssue)}
-                </GhostButton>
-              </div>
-            </div>
+            )}
             {this.hasRetries() && (
               <div
                 className={cx('retries', {

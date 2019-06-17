@@ -19,6 +19,7 @@ import {
   nextErrorLogItemIdSelector,
 } from 'controllers/log';
 import { withFilter } from 'controllers/filter';
+import { debugModeSelector } from 'controllers/launch';
 import { withPagination, PAGE_KEY } from 'controllers/pagination';
 import { withSortingURL, SORTING_ASC } from 'controllers/sorting';
 import { userIdSelector } from 'controllers/user';
@@ -37,6 +38,7 @@ import { SauceLabsSection } from './sauceLabsSection';
     loading: loadingSelector(state),
     userId: userIdSelector(state),
     nextErrorId: nextErrorLogItemIdSelector(state),
+    debugMode: debugModeSelector(state),
   }),
   {
     refresh: refreshLogPageData,
@@ -80,8 +82,9 @@ export class LogsPage extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
-    logItems: PropTypes.array,
     userId: PropTypes.string.isRequired,
+    debugMode: PropTypes.bool.isRequired,
+    logItems: PropTypes.array,
     activePage: PropTypes.number,
     itemCount: PropTypes.number,
     pageCount: PropTypes.number,
@@ -164,6 +167,7 @@ export class LogsPage extends Component {
       refresh,
       logItems,
       userId,
+      debugMode,
       activePage,
       itemCount,
       pageCount,
@@ -191,7 +195,7 @@ export class LogsPage extends Component {
       <PageLayout>
         <PageSection>
           <LogToolbar onRefresh={this.handleRefresh} />
-          <HistoryLine />
+          {!debugMode && <HistoryLine />}
           <LogItemInfo
             onChangeLogLevel={onChangeLogLevel}
             onChangePage={onChangePage}
@@ -199,6 +203,7 @@ export class LogsPage extends Component {
             onToggleSauceLabsIntegrationView={this.toggleSauceLabsIntegrationView}
             isSauceLabsIntegrationView={this.state.isSauceLabsIntegrationView}
             fetchFunc={refresh}
+            debugMode={debugMode}
             loading={loading}
           />
           {this.state.isSauceLabsIntegrationView ? (
