@@ -56,7 +56,7 @@ const messages = defineMessages({
   },
   successMultiple: {
     id: 'administrateUsersPage.successMultiple',
-    defaultMessage: "User's were deleted",
+    defaultMessage: 'Users were deleted',
   },
   error: {
     id: 'administrateUsersPage.error',
