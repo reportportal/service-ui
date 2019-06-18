@@ -85,12 +85,7 @@ export const URLS = {
       view: exportType,
     })}`,
   launchAnalyze: (activeProject) => `${urlBase}${activeProject}/launch/analyze`,
-  login: (grantType, username, password) =>
-    `${uatBase}sso/oauth/token${getQueryParams({
-      grant_type: grantType,
-      username,
-      password,
-    })}`,
+  login: () => `${uatBase}sso/oauth/token`,
   apiToken: () => `${uatBase}sso/me/apitoken`,
   sessionToken: () => `${uatBase}sso/me`,
 
