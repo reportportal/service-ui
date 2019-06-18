@@ -63,6 +63,10 @@ const widgetModeMessages = defineMessages({
     id: 'WidgetHeader.widgetMode.pieChartMode',
     defaultMessage: 'Pie chart view',
   },
+  pie: {
+    id: 'WidgetHeader.widgetMode.pieChartMode',
+    defaultMessage: 'Pie chart view',
+  },
   donut: {
     id: 'WidgetHeader.widgetMode.donutChartMode',
     defaultMessage: 'Donut view',
