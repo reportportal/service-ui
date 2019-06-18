@@ -109,6 +109,9 @@ export const onBeforeRouteChange = (dispatch, getState, { action }) => {
         if (authorized && accountRole !== ADMINISTRATOR) {
           dispatch(redirect({ type: PROJECT_DASHBOARD_PAGE, payload: { projectId } }));
         }
+        if (!authorized) {
+          dispatch(redirect({ type: LOGIN_PAGE }));
+        }
         break;
       default:
         if (!authorized) {
