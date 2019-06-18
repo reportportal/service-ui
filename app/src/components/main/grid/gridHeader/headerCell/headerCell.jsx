@@ -48,11 +48,8 @@ export const HeaderCell = track()(
     return title.component ? (
       <TitleComponent className={cx('header-cell', computedClassName)} {...titleComponentProps} />
     ) : (
-      <div
-        className={cx('header-cell', computedClassName)}
-        onClick={sortable ? sortingClickHandler : null}
-      >
-        <div className={cx('title-container')}>
+      <div className={cx('header-cell', computedClassName)}>
+        <div className={cx('title-container')} onClick={sortable ? sortingClickHandler : null}>
           <div className={cx('filter')} onClick={filterClickHandler}>
             {Parser(FilterIcon)}
           </div>
