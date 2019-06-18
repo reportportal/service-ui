@@ -15,6 +15,7 @@ import { fetchProjectAction } from 'controllers/project';
 import { fetchPluginsAction, fetchGlobalIntegrationsAction } from 'controllers/plugins';
 import { fetchApiInfoAction, fetchUatInfoAction } from 'controllers/appInfo';
 import { redirect } from 'redux-first-router';
+import { stringify } from 'qs';
 import {
   authSuccessAction,
   resetTokenAction,
@@ -88,13 +89,17 @@ function* watchLoginSuccess() {
 
 function* handleLogin({ payload }) {
   try {
-    const result = yield call(
-      fetch,
-      URLS.login(GRANT_TYPES.PASSWORD, payload.login, payload.password),
-      {
-        method: 'POST',
+    const result = yield call(fetch, URLS.login(), {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
       },
-    );
+      data: stringify({
+        grant_type: GRANT_TYPES.PASSWORD,
+        username: payload.login,
+        password: payload.password,
+      }),
+    });
     const token = {
       type: result.token_type,
       value: result.access_token,
