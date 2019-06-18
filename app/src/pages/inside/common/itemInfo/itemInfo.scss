@@ -30,15 +30,15 @@
     font-size: 16px;
   }
 }
-.name{
-  word-break: break-all;
+.name {
+  word-break: break-word;
 }
-.edit-number-box{
+.edit-number-box {
   white-space: nowrap;
 }
 .number {
   margin-right: 5px;
-  white-space:nowrap;
+  white-space: nowrap;
 }
 .analysis-badge {
   display: inline-block;
