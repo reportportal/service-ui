@@ -22,7 +22,7 @@ import { LoginPage } from 'pages/outside/loginPage';
 import { NotFoundPage } from 'pages/outside/notFoundPage';
 import { RegistrationPage } from 'pages/outside/registrationPage';
 import { TestItemPage } from 'pages/inside/testItemPage';
-import { LogsPage } from 'pages/inside/logsPage/index';
+import { LogsPage } from 'pages/inside/logsPage';
 import {
   TEST_ITEM_PAGE,
   PROJECT_LOG_PAGE,

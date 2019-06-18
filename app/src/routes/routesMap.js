@@ -27,6 +27,8 @@ import {
   PLUGINS_PAGE,
   NOT_FOUND,
   OAUTH_SUCCESS,
+  pageSelector,
+  adminPageNames,
 } from 'controllers/pages';
 import {
   GENERAL,
@@ -75,20 +77,25 @@ export const onBeforeRouteChange = (dispatch, getState, { action }) => {
     type: nextPageType,
     payload: { projectId: hashProject },
   } = action;
-
+  const currentPageType = pageSelector(getState());
   const authorized = isAuthorizedSelector(getState());
   let projectId = activeProjectSelector(getState());
   const accountRole = userAccountRoleSelector(getState());
   const userInfo = userInfoSelector(getState());
-
   const userProjects = userInfo ? userInfo.assignedProjects : {};
+  const isAdminNewPageType = !!adminPageNames[nextPageType];
+  const isAdminCurrentPageType = !!adminPageNames[currentPageType];
 
-  if (userProjects && hashProject in userProjects && projectId !== hashProject) {
+  if (
+    userProjects &&
+    hashProject in userProjects &&
+    (hashProject !== projectId || isAdminCurrentPageType) &&
+    !isAdminNewPageType
+  ) {
     dispatch(setActiveProjectAction(hashProject));
     dispatch(fetchProjectAction(hashProject));
     projectId = hashProject;
   }
-
   const page = pageRendering[nextPageType];
   if (page) {
     const { access } = page;
@@ -109,14 +116,10 @@ export const onBeforeRouteChange = (dispatch, getState, { action }) => {
         if (authorized && accountRole !== ADMINISTRATOR) {
           dispatch(redirect({ type: PROJECT_DASHBOARD_PAGE, payload: { projectId } }));
         }
-        if (!authorized) {
-          dispatch(redirect({ type: LOGIN_PAGE }));
-        }
+        !authorized && dispatch(redirect({ type: LOGIN_PAGE }));
         break;
       default:
-        if (!authorized) {
-          dispatch(redirect({ type: LOGIN_PAGE }));
-        }
+        !authorized && dispatch(redirect({ type: LOGIN_PAGE }));
     }
   }
 };
@@ -173,11 +176,7 @@ export default {
   },
   [PROJECT_DASHBOARD_PAGE]: {
     path: '/:projectId/dashboard',
-    thunk: (dispatch, getState) => {
-      const authorized = isAuthorizedSelector(getState());
-      if (!authorized) {
-        return;
-      }
+    thunk: (dispatch) => {
       dispatch(
         fetchDashboardsAction({
           [SIZE_KEY]: 300,
@@ -189,10 +188,6 @@ export default {
   [PROJECT_DASHBOARD_ITEM_PAGE]: {
     path: '/:projectId/dashboard/:dashboardId',
     thunk: (dispatch, getState) => {
-      const authorized = isAuthorizedSelector(getState());
-      if (!authorized) {
-        return;
-      }
       const dashboardItems = dashboardItemsSelector(getState());
       if (dashboardItems.length === 0) {
         dispatch(fetchDashboardsAction({}));
