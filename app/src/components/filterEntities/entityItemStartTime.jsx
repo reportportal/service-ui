@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import moment from 'moment/moment';
 import { FormattedMessage } from 'react-intl';
-import { getMinutesFromTimestamp, parseDateTimeRange, utcOffset } from 'common/utils';
+import { getMinutesFromTimestamp, parseDateTimeRange } from 'common/utils';
 import { FieldFilterEntity } from 'components/fields/fieldFilterEntity';
 import { InputTimeDateRange } from 'components/inputs/inputTimeDateRange';
 import { CONDITION_BETWEEN } from 'components/filterEntities/constants';
@@ -13,10 +13,7 @@ const presets = [
       start: moment()
         .startOf('day')
         .valueOf(),
-      end:
-        moment()
-          .endOf('day')
-          .valueOf() + 1,
+      end: moment(),
       dynamic: true,
     },
   },
@@ -27,10 +24,7 @@ const presets = [
         .startOf('day')
         .subtract(1, 'days')
         .valueOf(),
-      end:
-        moment()
-          .endOf('day')
-          .valueOf() + 1,
+      end: moment(),
       dynamic: true,
     },
   },
@@ -39,12 +33,9 @@ const presets = [
     value: {
       start: moment()
         .startOf('day')
-        .subtract(1, 'weeks')
+        .subtract(7, 'days')
         .valueOf(),
-      end:
-        moment()
-          .endOf('day')
-          .valueOf() + 1,
+      end: moment(),
       dynamic: true,
     },
   },
@@ -53,18 +44,15 @@ const presets = [
     value: {
       start: moment()
         .startOf('day')
-        .subtract(1, 'months')
+        .subtract(30, 'days')
         .valueOf(),
-      end:
-        moment()
-          .endOf('day')
-          .valueOf() + 1,
+      end: moment(),
       dynamic: true,
     },
   },
 ];
 
-const utcString = `${utcOffset > -1 ? `+${utcOffset}` : utcOffset}`;
+const utcString = moment().format('ZZ');
 
 const formatValue = ({ start, end, dynamic }) => {
   if (!dynamic) {
