@@ -15,7 +15,6 @@ import { fetchAllUsersAction, toggleUserRoleFormAction } from 'controllers/admin
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { SCREEN_XS_MAX } from 'common/constants/screenSizeVariables';
 import { GhostButton } from 'components/buttons/ghostButton';
-import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { RolesRow } from './rolesRow';
 import styles from './projectsAndRolesColumn.scss';
 
@@ -337,7 +336,7 @@ export class ProjectsAndRolesColumn extends Component {
                       data-placement={placement}
                       className={cx('projects-and-roles-popover')}
                     >
-                      <ScrollWrapper autoHeight autoHeightMax={300}>
+                      <div>
                         {this.renderDropdown()}
                         {assignRole && (
                           <RolesRow
@@ -346,7 +345,7 @@ export class ProjectsAndRolesColumn extends Component {
                             createNew
                           />
                         )}
-                      </ScrollWrapper>
+                      </div>
                       <div className={cx('projects-and-roles-toolbar')}>
                         <div
                           className={cx(
