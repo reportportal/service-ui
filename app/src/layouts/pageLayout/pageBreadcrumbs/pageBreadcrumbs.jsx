@@ -25,7 +25,7 @@ export class PageBreadcrumbs extends Component {
         {data.map(({ title, link, eventInfo }, i) => (
           <li key={title} className={cx('page-breadcrumbs-item')}>
             {i === data.length - 1 ? (
-              <span>{title}</span>
+              <span title={title}>{title}</span>
             ) : (
               <NavLink
                 to={link}
