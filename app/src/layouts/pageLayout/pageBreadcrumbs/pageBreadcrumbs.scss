@@ -1,5 +1,5 @@
 .page-breadcrumbs {
-  padding-left: 15px;
+  padding: 0 15px;
   min-height: 30px;
   margin-bottom: 15px;
   font-family: $FONT-CONDBOLD;
@@ -8,6 +8,9 @@
   line-height: 30px;
   color: $COLOR--charcoal-grey;
   text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   @media (max-width: $SCREEN_XS_MAX) {
     display: none;
   }
