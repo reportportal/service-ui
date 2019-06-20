@@ -54,6 +54,7 @@ export class NonPassedTestCasesTrendChart extends Component {
       this.node.removeEventListener('mousemove', this.setupCoords);
       this.props.observer.unsubscribe('widgetResized', this.resizeChart);
     }
+    this.chart = null;
   }
 
   onChartCreated = (chart, element) => {

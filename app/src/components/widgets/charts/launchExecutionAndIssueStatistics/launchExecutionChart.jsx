@@ -99,6 +99,7 @@ export class LaunchExecutionChart extends Component {
 
       observer.unsubscribe && observer.unsubscribe('widgetResized', this.resizeStatusChart);
     }
+    this.chart = null;
   }
 
   onStatusChartCreated = (chart, element) => {
@@ -253,9 +254,7 @@ export class LaunchExecutionChart extends Component {
         position: this.getStatusPosition,
         contents: this.renderStatusContents,
       },
-      onrendered: () => {
-        this.renderTotalLabel();
-      },
+      onrendered: this.renderTotalLabel,
     };
 
     if (!onStatusPageMode) {
@@ -299,7 +298,7 @@ export class LaunchExecutionChart extends Component {
     }
   };
 
-  renderTotalLabel() {
+  renderTotalLabel = () => {
     if (this.chart) {
       const total = this.chart.data
         .shown()
@@ -307,7 +306,7 @@ export class LaunchExecutionChart extends Component {
 
       this.statusNode.querySelector('.c3-chart-arcs-title').childNodes[0].textContent = total;
     }
-  }
+  };
 
   // This function is a reimplementation of its d3 counterpart, and it needs 4 arguments of which 2 are not used here.
   // These two are named a and b in the original implementation.

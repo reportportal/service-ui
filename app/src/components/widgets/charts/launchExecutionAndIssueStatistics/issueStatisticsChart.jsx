@@ -103,6 +103,7 @@ export class IssueStatisticsChart extends Component {
 
       observer.unsubscribe && observer.unsubscribe('widgetResized', this.resizeIssuesChart);
     }
+    this.chart = null;
   }
 
   onIssuesChartCreated = (chart, element) => {
@@ -291,9 +292,7 @@ export class IssueStatisticsChart extends Component {
         position: this.getIssuesPosition,
         contents: this.renderIssuesContents,
       },
-      onrendered: () => {
-        this.renderTotalLabel();
-      },
+      onrendered: this.renderTotalLabel,
     };
 
     if (!onStatusPageMode) {
@@ -337,14 +336,14 @@ export class IssueStatisticsChart extends Component {
     }
   };
 
-  renderTotalLabel() {
+  renderTotalLabel = () => {
     if (this.chart) {
       const total = this.chart.data
         .shown()
         .reduce((acc, dataItem) => acc + dataItem.values[0].value, 0);
       this.issuesNode.querySelector('.c3-chart-arcs-title').childNodes[0].textContent = total;
     }
-  }
+  };
 
   // This function is a reimplementation of its d3 counterpart, and it needs 4 arguments of which 2 are not used here.
   // These two are named a and b in the original implementation.

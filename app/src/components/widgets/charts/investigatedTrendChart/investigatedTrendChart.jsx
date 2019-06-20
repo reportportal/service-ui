@@ -109,6 +109,7 @@ export class InvestigatedTrendChart extends Component {
     this.node && this.node.removeEventListener('mousemove', this.getCoords);
     this.props.observer.unsubscribe &&
       this.props.observer.unsubscribe('widgetResized', this.resizeChart);
+    this.chart = null;
   }
 
   onChartClick = (data) =>
