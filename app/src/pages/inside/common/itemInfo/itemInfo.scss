@@ -31,7 +31,11 @@
   }
 }
 .name {
-  overflow-wrap: break-word;
+  word-break: break-all;
+
+  @supports (word-break: break-word) {
+    word-break: break-word;
+  }
 }
 .edit-number-box {
   white-space: nowrap;
