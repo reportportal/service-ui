@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="160" height="135" viewBox="0 0 160 135">
+    <defs>
+        <path id="a" d="M40.782 48.811C36.446 51.57 29.055 55.575 14.109 55c-1 10 5 17 12 15 8.03-2.008 14.27-.433 17.518.829 3.836 13.625 13.12 30.617 13.12 30.617S53.651 77.449 79.97 85.964C84.62 87.544 97 101.446 97 101.446l-8.66-25.98L95 65l-9.864 6.576c-6.472.996-28.717 3.063-39.027-13.359V46l-.109.039V39l-10 4 6.5 1-1.718 4.811z"/>
+        <filter id="b" width="103.6%" height="104.8%" x="-1.8%" y="-2.4%" filterUnits="objectBoundingBox">
+            <feOffset dx="-2" dy="-3" in="SourceAlpha" result="shadowOffsetInner1"/>
+            <feComposite in="shadowOffsetInner1" in2="SourceAlpha" k2="-1" k3="1" operator="arithmetic" result="shadowInnerInner1"/>
+            <feColorMatrix in="shadowInnerInner1" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.145125679 0"/>
+        </filter>
+        <path id="c" d="M.11 9c15.371.591 22.752-3.662 27.035-6.421C30.107.67 32.11 0 32.11 0v26s-8-5-20-2c-7 2-13-5-12-15z"/>
+    </defs>
+    <g fill="none" fill-rule="evenodd" transform="rotate(-16 138.41 20.304)">
+        <circle cx="32" cy="55" r="24" fill="#FFF" fill-opacity=".302"/>
+        <use fill="#B1BAB4" xlink:href="#a"/>
+        <use fill="#000" filter="url(#b)" xlink:href="#a"/>
+        <g transform="translate(14 46)">
+            <mask id="d" fill="#fff">
+                <use xlink:href="#c"/>
+            </mask>
+            <ellipse cx="-1" cy="8.5" fill="#393939" mask="url(#d)" rx="7" ry="5.5"/>
+            <path stroke="#777" d="M9 25.5s6.5-2 7.5-8" mask="url(#d)"/>
+        </g>
+        <circle cx="36" cy="56" r="2" fill="#464547"/>
+        <path fill="#FFF" fill-opacity=".104" stroke="#F5F5F5" d="M32 79c13.255 0 24-10.745 24-24S45.255 31 32 31 8 41.745 8 55s10.745 24 24 24z"/>
+        <path stroke="#F5F5F5" stroke-width="5" d="M45.127 75.095a24.1 24.1 0 0 0 8.707-10.118"/>
+    </g>
+</svg>

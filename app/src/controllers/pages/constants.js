@@ -33,6 +33,7 @@ export const OAUTH_SUCCESS = 'OAUTH_SUCCESS';
 // outside
 export const LOGIN_PAGE = 'LOGIN_PAGE';
 export const REGISTRATION_PAGE = 'REGISTRATION_PAGE';
+export const HOME_PAGE = 'HOME_PAGE';
 
 export const pageNames = {
   [NOT_FOUND]: NOT_FOUND,

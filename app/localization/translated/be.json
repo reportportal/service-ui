@@ -769,7 +769,6 @@
   "IssueInfoTooltip.issueStatusTitle": "Статус",
   "IssueInfoTooltip.issueNotFoundTitle": "Памылка не знойдзена",
   "IssueInfoTooltip.issueNotFoundDescription": "Памылка не існуе ці няма злучэння з САХ-інтэграцыяй",
-  "JiraSettings.failedConnectMessage": "Калі ласка, праверце бягучыя налады аўтарызацыі або агульны статус праекта ў Jira!",
   "JiraConnectionFormFields.authorizedByTitle": "Аўтарызавана па імені карыстальніка",
   "JiraConnectionFormFields.passwordLabel": "Пароль у САХ",
   "JiraConnectionFormFields.projectNameLabel": "Імя проекту ў Jira",
@@ -1733,5 +1732,8 @@
   "usersGrid.roleNonAdmin": "Non-admin",
   "usersGrid.type": "Тып",
   "usersGrid.user": "Лагiн",
-  "dashboardControl.title": "Захаваць віджэт на панэлі маніторынгу"
+  "dashboardControl.title": "Захаваць віджэт на панэлі маніторынгу",
+  "notFoundPage.toHome": "Забярыце мяне адсюль",
+  "notFoundPage.pageNotExist": "Старонка, якую Вы шукаеце, не існуе.",
+  "notFoundPage.oops": "Упс. Здаецца, Вы згубіліся."
 }
