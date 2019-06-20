@@ -56,6 +56,7 @@ export class TestItemDetailsModal extends Component {
     intl: intlShape.isRequired,
     data: PropTypes.shape({
       item: PropTypes.object,
+      content: PropTypes.array,
     }).isRequired,
     activeProject: PropTypes.string.isRequired,
   };

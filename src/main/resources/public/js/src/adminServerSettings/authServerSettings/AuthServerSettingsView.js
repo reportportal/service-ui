@@ -28,6 +28,7 @@ define(function (require) {
     var GithubAuthServerSettingsView = require('adminServerSettings/authServerSettings/GithubAuthServerSettingsView');
     var LdapAuthServerSettingsView = require('adminServerSettings/authServerSettings/LdapAuthServerSettingsView');
     var AdAuthServerSettingsView = require('adminServerSettings/authServerSettings/AdAuthServerSettingsView');
+    var SamlAuthServerSettingsView = require('adminServerSettings/authServerSettings/SamlAuthServerSettingsView');
 
     var AuthServerSettingsView = Epoxy.View.extend({
 
@@ -39,6 +40,7 @@ define(function (require) {
             this.githubAuthServerSettingsView = new GithubAuthServerSettingsView();
             this.adAuthServerSettingsView = new AdAuthServerSettingsView();
             this.ldapAuthServerSettingsView = new LdapAuthServerSettingsView();
+            this.samlAuthServerSettingsView = new SamlAuthServerSettingsView();
             this.render();
         },
 
@@ -47,11 +49,13 @@ define(function (require) {
             $('[data-js-github-auth-config-container]', this.$el).html(this.githubAuthServerSettingsView.el);
             $('[data-js-ad-auth-config-container]', this.$el).html(this.adAuthServerSettingsView.el);
             $('[data-js-ldap-auth-config-container]', this.$el).html(this.ldapAuthServerSettingsView.el);
+            $('[data-js-saml-auth-config-container]', this.$el).html(this.samlAuthServerSettingsView.el);
         },
         onDestroy: function () {
             this.githubAuthServerSettingsView && this.githubAuthServerSettingsView.destroy();
             this.adAuthServerSettingsView && this.adAuthServerSettingsView.destroy();
             this.ldapAuthServerSettingsView && this.ldapAuthServerSettingsView.destroy();
+            this.samlAuthServerSettingsView && this.samlAuthServerSettingsView.destroy();
             this.remove();
             delete this;
         }

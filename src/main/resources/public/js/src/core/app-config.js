@@ -324,7 +324,8 @@ define(function (require) {
             authTypes: {
                 gitHub: 'github',
                 activeDirectory: 'ad',
-                ldap: 'ldap'
+                ldap: 'ldap',
+                saml: 'saml'
             }
         };
     };
