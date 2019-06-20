@@ -27,6 +27,7 @@ import {
   PLUGINS_PAGE,
   NOT_FOUND,
   OAUTH_SUCCESS,
+  HOME_PAGE,
   pageSelector,
   adminPageNames,
 } from 'controllers/pages';
@@ -125,7 +126,7 @@ export const onBeforeRouteChange = (dispatch, getState, { action }) => {
 };
 
 export default {
-  HOME_PAGE: redirectRoute('/', (payload) => ({ type: LOGIN_PAGE, payload })),
+  [HOME_PAGE]: redirectRoute('/', (payload) => ({ type: LOGIN_PAGE, payload })),
 
   [LOGIN_PAGE]: '/login',
   [REGISTRATION_PAGE]: '/registration',

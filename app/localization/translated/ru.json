@@ -775,7 +775,6 @@
   "JiraConnectionFormFields.passwordLabel": "Пароль в СОД",
   "JiraConnectionFormFields.projectNameLabel": "Имя проекта в Jira",
   "JiraConnectionFormFields.usernameLabel": "Имя пользователя в СОД",
-  "JiraSettings.failedConnectMessage": "Пожалуйста, проверьте текущие настройки авторизации или общий статус проекта в Jira!",
   "JobInfoSection.commands": "Команды",
   "JobInfoSection.logs": "Логи",
   "JobInfoSection.metadata": "Метаданные",
@@ -1734,5 +1733,8 @@
   "usersGrid.roleNonAdmin": "Non-admin",
   "usersGrid.type": "Тип",
   "usersGrid.user": "Логин",
-  "dashboardControl.title": "Сохранить виджет на дашборд"
+  "dashboardControl.title": "Сохранить виджет на дашборд",
+  "notFoundPage.toHome": "Заберите меня отсюда",
+  "notFoundPage.pageNotExist": "Страница, которую Вы ищете, не существует.",
+  "notFoundPage.oops": "Упс. Кажется, Вы потерялись."
 }

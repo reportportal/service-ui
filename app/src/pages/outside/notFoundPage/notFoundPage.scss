@@ -1,0 +1,381 @@
+$RING_COUNT: 7;
+$RING_MIN_WIDTH: 416px;
+$RING_MOBILE_MIN_WIDTH: 258px;
+$RING_BASE_STEP_WIDTH: 164px;
+$RING_MOBILE_BASE_STEP_WIDTH: 102px;
+$RING_DELTA_STEP_WIDTH: 11px;
+$RING_MOBILE_DELTA_STEP_WIDTH: 12px;
+
+@mixin rounds {
+  @for $ring from 0 to $RING_COUNT {
+    $width: $RING_MIN_WIDTH + ($RING_BASE_STEP_WIDTH + $RING_DELTA_STEP_WIDTH * $ring) * $ring;
+
+    $mobile-width: $RING_MOBILE_MIN_WIDTH +
+      ($RING_MOBILE_BASE_STEP_WIDTH + $RING_MOBILE_DELTA_STEP_WIDTH * $ring) *
+      $ring;
+
+    $shadow: 2px + $ring * 2px;
+
+    .round-#{$ring + 1} {
+      width: $width;
+      height: $width;
+      margin-top: -$width/2;
+      margin-left: -$width/2;
+      box-shadow: rgba(255, 255, 255, 0.4) 0 0 $shadow;
+      @media (max-width: $SCREEN_XS_MAX) {
+        width: $mobile-width;
+        height: $mobile-width;
+        margin-top: -$mobile-width/2;
+        margin-left: -$mobile-width/2;
+      }
+    }
+  }
+}
+
+.content-err-wrapper {
+  position: relative;
+  width: 320px;
+  height: 320px;
+  top: 95px;
+  left: 50%;
+  margin-left: -160px;
+}
+
+.round {
+  border-radius: 50%;
+  opacity: 0.3;
+  position: absolute;
+  background: $COLOR--booger;
+  top: 50%;
+  left: 50%;
+}
+
+.round-center {
+  position: absolute;
+  width: 320px;
+  height: 320px;
+}
+
+@include rounds;
+
+.content-err {
+  position: relative;
+  top: -320px;
+  &::after {
+    background-repeat: no-repeat;
+    position: absolute;
+    top: 170px;
+    left: 50%;
+    margin-left: -152px;
+    content: '';
+    background-image: url('common/img/404/404.svg');
+    width: 294px;
+    height: 119px;
+    background-size: contain;
+  }
+}
+.content-err-txt {
+  position: relative;
+  padding-top: 318px;
+  text-align: center;
+  font-family: $FONT-REGULAR;
+  font-size: 13px;
+  color: $COLOR--charcoal-grey;
+  p {
+    margin-top: 16px;
+    margin-bottom: 20px;
+  }
+}
+.content-err-greeting {
+  font-family: $FONT-REGULAR;
+  font-size: 16px;
+  line-height: 16px;
+  font-weight: 600;
+  color: $COLOR--charcoal-grey;
+}
+
+.content-action {
+  position: relative;
+  text-align: center;
+}
+
+.wrapper {
+  width: 100%;
+  height: 100%;
+  min-height: 520px;
+  overflow: hidden;
+  background-color: $COLOR--light-yellow;
+}
+
+.header {
+  position: absolute;
+  display: block;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 60px;
+  background-color: $COLOR--black-2;
+}
+
+.logo {
+  position: absolute;
+  display: block;
+  z-index: 2;
+  top: 13px;
+  left: 22px;
+  width: 46px;
+  height: 39px;
+  background: $COLOR--black-2 url('layouts/common/img/rp_logo.png') no-repeat 50% 60%;
+  background-position: center center;
+  cursor: pointer;
+  @media (max-width: $SCREEN_XS_MAX) {
+    background-image: url('layouts/common/img/rp-mobile-logo.svg');
+    background-position: center;
+    left: 0;
+    top: 10px;
+    width: 100%;
+  }
+}
+
+.red-planet div {
+  background-image: url('common/img/404/red-planet.svg');
+  width: 50px;
+  height: 45px;
+  position: absolute;
+  top: -20px;
+}
+.saturn div {
+  background-image: url('common/img/404/saturn.svg');
+  width: 90px;
+  height: 60px;
+  position: absolute;
+  margin-left: -170px;
+  margin-top: 183px;
+}
+.orange-planet div {
+  background-image: url('common/img/404/yellow-planet.svg');
+  width: 100px;
+  height: 90px;
+  position: absolute;
+  right: -264px;
+  top: 193px;
+}
+
+.orbit-rotation {
+  animation: OrbitRotation 40s linear infinite;
+  transform-origin: center;
+}
+
+.rocket {
+  background-image: url('common/img/404/rocket.svg');
+  width: 70px;
+  height: 25px;
+  position: absolute;
+  left: -900px;
+  top: 400px;
+  animation: Rocket 8s ease-in infinite;
+}
+
+@keyframes Rocket {
+  0% {
+    opacity: 0;
+  }
+  1% {
+    opacity: 1;
+    transform: rotate(-35deg) translateX(0);
+  }
+  99% {
+    opacity: 1;
+    transform: rotate(-35deg) translateX(800px);
+  }
+  100% {
+    opacity: 0;
+    transform: rotate(-35deg) translateX(800px);
+  }
+}
+@keyframes Rocket-mobile {
+  0% {
+    opacity: 0;
+  }
+  1% {
+    opacity: 1;
+    transform: translateX(220px) scale(-1, 1);
+  }
+  99% {
+    opacity: 1;
+    transform: translateX(-550px) scale(-1, 1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(-550px) scale(-1, 1);
+  }
+}
+@keyframes OrbitRotation {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+.self-rotation {
+  animation: SelfRotation 40s linear infinite;
+  transform-origin: center;
+}
+@keyframes SelfRotation {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(-360deg);
+  }
+}
+
+.bones {
+  background-image: url(common/img/404/bones.svg);
+  width: 210px;
+  height: 90px;
+  position: absolute;
+  right: -1070px;
+  top: -200px;
+  animation: Bones 17s linear infinite;
+}
+@keyframes Bones {
+  0% {
+    opacity: 0;
+  }
+  1% {
+    opacity: 1;
+    transform: rotate(-35deg) translateX(0);
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: rotate(-35deg) translateX(-2000px);
+  }
+}
+
+.dog {
+  background-image: url(common/img/404/dog.svg);
+  width: 150px;
+  height: 120px;
+  position: absolute;
+  right: -1600px;
+  top: -600px;
+  animation: Dog 17s ease-in-out infinite;
+}
+@keyframes Dog {
+  0% {
+    opacity: 0;
+  }
+  1% {
+    opacity: 1;
+    transform: rotate(-35deg) translateX(0);
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: rotate(-35deg) translateX(-2400px);
+  }
+}
+.stars {
+  position: absolute;
+  left: 50%;
+}
+.layer-1 {
+  top: -38px;
+  background-image: url('common/img/404/stars1.svg');
+  width: 1083px;
+  height: 488px;
+  margin-left: -543px;
+  animation: Stars 2s linear infinite;
+}
+.layer-2 {
+  top: -22px;
+  background-image: url('common/img/404/stars2.svg');
+  width: 1155px;
+  height: 464px;
+  margin-left: -577px;
+  animation: Stars 3s ease-in infinite;
+}
+@keyframes Stars {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@media (max-width: $SCREEN_XS_MAX) {
+  .content-err-txt {
+    padding-top: 300px;
+  }
+
+  .content-err ::after {
+    width: 192px;
+    height: 78px;
+    margin-left: -91px;
+    top: 176px;
+  }
+
+  .red-planet div {
+    top: 5px;
+    left: 25px;
+    width: 40px;
+    height: 40px;
+    background-size: cover;
+  }
+  .bones,
+  .dog,
+  .orange-planet,
+  .saturn,
+  .orange-planet div,
+  .saturn div {
+    animation: unset;
+    display: none;
+  }
+  .content-err-txt .content-err-greeting {
+    margin-bottom: 17px;
+  }
+  .rocket {
+    top: 360px;
+    transform: scale(-1, 1);
+    left: 220px;
+    width: 60px;
+    height: 20px;
+    background-size: cover;
+    animation: Rocket-mobile 6s ease-in infinite;
+  }
+  .layer-1 {
+    top: -93px;
+    background-image: url(common/img/404/Mobile_404_stars1.svg);
+  }
+  .stars {
+    width: 320px;
+    height: 568px;
+    margin-left: 0;
+    left: 0;
+  }
+  .layer-2 {
+    top: -93px;
+    background-image: url(common/img/404/Mobile_404_stars2.svg);
+  }
+  .content-logotip .logo {
+    position: relative;
+    background-image: url(common/img/404/mobile-logo.svg);
+    margin: 0 auto;
+    left: 0;
+    width: 150px;
+    top: 0;
+    height: 60px;
+  }
+}
