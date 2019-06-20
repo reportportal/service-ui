@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
@@ -336,7 +336,7 @@ export class ProjectsAndRolesColumn extends Component {
                       data-placement={placement}
                       className={cx('projects-and-roles-popover')}
                     >
-                      <div>
+                      <Fragment>
                         {this.renderDropdown()}
                         {assignRole && (
                           <RolesRow
@@ -345,7 +345,7 @@ export class ProjectsAndRolesColumn extends Component {
                             createNew
                           />
                         )}
-                      </div>
+                      </Fragment>
                       <div className={cx('projects-and-roles-toolbar')}>
                         <div
                           className={cx(
