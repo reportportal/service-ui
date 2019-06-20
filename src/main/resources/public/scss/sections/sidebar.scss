@@ -293,31 +293,35 @@
         a {
           &.active {
             .new-year-dashboard {
+              color: $COLOR--light-red;
+
               &:before {
                 background-image: url("../../img/newYear/dashboard-active.svg");
               }
             }
 
             .new-year-launches {
+              color: $COLOR--light-red;
+
               &:before {
                 background-image: url("../../img/newYear/launches-active.svg");
               }
             }
 
             .new-year-filters {
+              color: $COLOR--light-red;
+
               &:before {
                 background-image: url("../../img/newYear/filters-active.svg");
               }
             }
 
             .new-year-debug {
+              color: $COLOR--light-red;
+
               &:before {
                 background-image: url("../../img/newYear/debug-active.svg");
               }
-            }
-
-            span {
-              color: $COLOR--light-red;
             }
           }
         }
