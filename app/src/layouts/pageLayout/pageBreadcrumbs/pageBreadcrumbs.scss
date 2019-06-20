@@ -20,7 +20,7 @@
   text-decoration: none;
 }
 .page-breadcrumbs-item {
-  display: inline-block;
+  display: inline;
   + .page-breadcrumbs-item:before {
     content: '/';
     margin: 0 3px;
