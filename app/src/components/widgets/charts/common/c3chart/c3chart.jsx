@@ -32,7 +32,9 @@ export class C3Chart extends React.Component {
   }
 
   destroyChart() {
-    this.chart && this.chart.destroy();
+    if (this.chart) {
+      this.chart = this.chart.destroy();
+    }
   }
 
   generateChart = (mountNode, config) => {

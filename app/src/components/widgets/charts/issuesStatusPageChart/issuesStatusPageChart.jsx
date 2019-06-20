@@ -49,6 +49,7 @@ export class IssuesStatusPageChart extends Component {
     this.node && this.node.removeEventListener('mousemove', this.getCoords);
     observer.unsubscribe && observer.unsubscribe('widgetResized', this.resizeChart);
     this.interactElems && this.interactElems.on('click mousemove mouseover mouseout', null);
+    this.chart = null;
   }
 
   onChartCreated = (chart, element) => {
