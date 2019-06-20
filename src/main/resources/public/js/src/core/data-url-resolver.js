@@ -290,9 +290,12 @@ define(['app'], function (App) {
         return config.apiVersion + 'settings/' + id + '/email';
     };
 
-    var adminAuthSettings = function (type) {
+    var adminAuthSettings = function (type, id) {
         if (type === 'github') {
             return '/uat/settings/default/oauth/' + type;
+        }
+        if (type === 'saml') {
+            return '/uat/settings/default/saml/' + (id || '');
         }
         return '/uat/settings/auth/' + type;
     };

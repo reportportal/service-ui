@@ -13,6 +13,7 @@ export class ModalFooter extends Component {
     okButton: PropTypes.shape({
       text: PropTypes.string.isRequired,
       danger: PropTypes.bool,
+      disabled: PropTypes.bool,
     }),
     cancelButton: PropTypes.shape({
       text: PropTypes.string.isRequired,
