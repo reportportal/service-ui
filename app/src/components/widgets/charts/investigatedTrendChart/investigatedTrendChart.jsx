@@ -258,6 +258,8 @@ export class InvestigatedTrendChart extends Component {
         height: newHeight,
       });
       this.height = newHeight;
+      this.config.size.height = newHeight;
+      this.config.size.width = newWidth;
     } else if (this.width !== newWidth) {
       this.chart.flush();
       this.width = newWidth;
