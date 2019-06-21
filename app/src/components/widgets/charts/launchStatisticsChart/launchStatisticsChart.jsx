@@ -321,8 +321,11 @@ export class LaunchStatisticsChart extends Component {
     const chartData = {};
     const chartDataOrdered = [];
     const colors = {};
+    const pattern = /.*defects.*total$/;
 
-    contentFields.forEach((key) => {
+    const filteredContentFields = contentFields.filter((item) => !pattern.test(item));
+
+    filteredContentFields.forEach((key) => {
       const keyConfig = getItemNameConfig(key);
       chartData[key] = [key];
       colors[key] = getItemColor(keyConfig, defectTypes);
@@ -334,13 +337,13 @@ export class LaunchStatisticsChart extends Component {
       };
       delete currentItemData.values;
       itemData.push(currentItemData);
-      contentFields.forEach((contentFieldKey) => {
+      filteredContentFields.forEach((contentFieldKey) => {
         const value = item.values[contentFieldKey] || 0;
         chartData[contentFieldKey].push(!Number(value) && isTimeLine ? null : Number(value));
       });
     });
 
-    contentFields.forEach((key) => {
+    filteredContentFields.forEach((key) => {
       chartDataOrdered.push(chartData[key]);
     });
 
