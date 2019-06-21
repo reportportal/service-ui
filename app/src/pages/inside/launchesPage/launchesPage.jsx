@@ -620,6 +620,7 @@ export class LaunchesPage extends Component {
       loading,
       debugMode,
       sortingString,
+      userId,
     } = this.props;
 
     const rowHighlightingConfig = {
@@ -632,7 +633,6 @@ export class LaunchesPage extends Component {
     this.activeFilterId = activeFilterId;
 
     const { finishedLaunchesCount } = this.state;
-
     return (
       <FilterEntitiesContainer
         level={LEVEL_LAUNCH}
@@ -653,6 +653,7 @@ export class LaunchesPage extends Component {
                   onResetFilter={onResetFilter}
                   onChangeSorting={this.handleChangeSorting}
                   sortingString={sortingString}
+                  userId={userId}
                   {...rest}
                 />
               )}

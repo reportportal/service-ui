@@ -2,8 +2,12 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
 import CrossIcon from 'common/img/cross-icon-inline.svg';
-import ShareIcon from 'common/img/share-icon-inline.svg';
-import { FilterTooltipIcon } from './filterTooltipIcon';
+import { connect } from 'react-redux';
+import { userIdSelector } from 'controllers/user';
+import { defineMessages, intlShape } from 'react-intl';
+import { FilterDescriptionTooltipIcon } from './filterDescriptionTooltipIcon';
+import { FilterSharedTooltipIcon } from './filterSharedToolTipIcon';
+import { FilterSharedByMeToolTipIcon } from './filterSharedByMeToolTipIcon';
 import styles from './filterItem.scss';
 
 const cx = classNames.bind(styles);
@@ -13,16 +17,54 @@ const stopPropagation = (func) => (e) => {
   func(e);
 };
 
-export const FilterItem = ({ name, active, share, description, unsaved, onClick, onRemove }) => (
+const localMessages = defineMessages({
+  filterSharedBy: {
+    id: 'filterItem.sharedBy',
+    defaultMessage: 'Filter is shared by {owner}',
+  },
+  filterIsShared: {
+    id: 'filterItem.isShared',
+    defaultMessage: 'Filter is shared.',
+  },
+});
+
+const FilterItemBase = ({
+  name,
+  active,
+  share,
+  description,
+  unsaved,
+  onClick,
+  onRemove,
+  owner,
+  userId,
+  intl,
+}) => (
   <div className={cx('filter-item', { active })} onClick={onClick}>
-    {share && <div className={cx('icon')}>{Parser(ShareIcon)}</div>}
+    {share &&
+      userId === owner && (
+        <div className={cx('icon-holder')}>
+          <FilterSharedByMeToolTipIcon
+            tooltipContent={intl.formatMessage(localMessages.filterIsShared)}
+          />
+        </div>
+      )}
+    {share &&
+      userId !== owner && (
+        <div className={cx('icon-holder')}>
+          <FilterSharedTooltipIcon
+            tooltipContent={intl.formatMessage(localMessages.filterSharedBy, { owner })}
+          />
+        </div>
+      )}
+
     <span className={cx('name')}>
       {name}
       {unsaved && <span className={cx('unsaved')}>*</span>}
     </span>
     {description && (
       <div className={cx('icon')}>
-        <FilterTooltipIcon tooltipContent={description} />
+        <FilterDescriptionTooltipIcon tooltipContent={description} />
       </div>
     )}
     {active && (
@@ -32,7 +74,10 @@ export const FilterItem = ({ name, active, share, description, unsaved, onClick,
     )}
   </div>
 );
-FilterItem.propTypes = {
+
+export const FilterItem = connect((state) => ({ userId: userIdSelector(state) }))(FilterItemBase);
+
+FilterItemBase.propTypes = {
   name: PropTypes.string.isRequired,
   active: PropTypes.bool,
   description: PropTypes.string,
@@ -40,8 +85,11 @@ FilterItem.propTypes = {
   unsaved: PropTypes.bool,
   onClick: PropTypes.func,
   onRemove: PropTypes.func,
+  owner: PropTypes.string.isRequired,
+  userId: PropTypes.string.isRequired,
+  intl: intlShape.isRequired,
 };
-FilterItem.defaultProps = {
+FilterItemBase.defaultProps = {
   active: false,
   description: null,
   share: false,
