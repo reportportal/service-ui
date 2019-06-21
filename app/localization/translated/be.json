@@ -1,4 +1,5 @@
 {
+  "AALabel.investigatedByAA": "Прааналізавана Аўта-аналізам",
   "AccuracyFormBlock.minDocFreqHint": "Параметр прымае значэння ад 1 да 10",
   "AccuracyFormBlock.minShouldMatchHint": "Параметр прымае значэння ад 50 да 100",
   "AccuracyFormBlock.minTermFreqHint": "Параметр прымае значэння ад 1 да 10",
