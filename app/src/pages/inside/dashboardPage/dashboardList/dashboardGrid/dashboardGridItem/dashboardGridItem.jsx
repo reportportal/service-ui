@@ -107,16 +107,17 @@ export class DashboardGridItem extends Component {
           </div>
           <div className={cx('grid-cell', 'owner')}>{owner}</div>
           <div className={cx('grid-cell', 'shared')}>
-            {share && (
-              <Fragment>
-                <div className={cx('icon-holder')}>
-                  <Icon type="icon-tables" />
-                </div>
-                <span className={cx('shared-text')}>
-                  {intl.formatMessage(messages.dashboardIsShared)}
-                </span>
-              </Fragment>
-            )}
+            {share &&
+              userId === owner && (
+                <Fragment>
+                  <div className={cx('icon-holder')}>
+                    <Icon type="icon-tables" />
+                  </div>
+                  <span className={cx('shared-text')}>
+                    {intl.formatMessage(messages.dashboardIsShared)}
+                  </span>
+                </Fragment>
+              )}
             {userId !== owner && (
               <Fragment>
                 <div className={cx('icon-holder')}>
