@@ -620,7 +620,6 @@ export class LaunchesPage extends Component {
       loading,
       debugMode,
       sortingString,
-      userId,
     } = this.props;
 
     const rowHighlightingConfig = {
@@ -653,7 +652,6 @@ export class LaunchesPage extends Component {
                   onResetFilter={onResetFilter}
                   onChangeSorting={this.handleChangeSorting}
                   sortingString={sortingString}
-                  userId={userId}
                   {...rest}
                 />
               )}

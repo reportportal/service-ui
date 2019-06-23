@@ -13,7 +13,6 @@ export const FilterList = ({
   unsavedFilterIds,
   onSelectFilter,
   onRemoveFilter,
-  // userId,
   intl,
 }) => (
   <div className={cx('filter-list')}>
@@ -29,7 +28,6 @@ export const FilterList = ({
           onRemove={() => onRemoveFilter(filter)}
           owner={filter.owner}
           intl={intl}
-          // userId={userId}
         />
       </div>
     ))}
@@ -42,7 +40,6 @@ FilterList.propTypes = {
   onSelectFilter: PropTypes.func,
   onRemoveFilter: PropTypes.func,
   intl: intlShape.isRequired,
-  // userId:PropTypes.string.isRequired
 };
 FilterList.defaultProps = {
   filters: [],
