@@ -42,7 +42,7 @@ const FilterItemBase = ({
 }) => (
   <div className={cx('filter-item', { active })} onClick={onClick}>
     {share &&
-      userId === owner && (
+      (userId === owner || owner === undefined) && (
         <div className={cx('icon-holder')}>
           <FilterSharedByMeToolTipIcon
             tooltipContent={intl.formatMessage(localMessages.filterIsShared)}
@@ -50,6 +50,7 @@ const FilterItemBase = ({
         </div>
       )}
     {share &&
+      owner !== undefined &&
       userId !== owner && (
         <div className={cx('icon-holder')}>
           <FilterSharedTooltipIcon
