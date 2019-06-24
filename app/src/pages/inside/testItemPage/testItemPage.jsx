@@ -158,6 +158,7 @@ export class TestItemPage extends Component {
       id: 'editItemsModal',
       data: {
         items: launches,
+        parentLaunch: this.props.parentLaunch,
         type: LAUNCH_ITEM_TYPES.item,
         fetchFunc: this.props.fetchTestItemsAction,
       },
