@@ -509,7 +509,10 @@ export class LaunchesPage extends Component {
       data: {
         items: launches,
         type: LAUNCH_ITEM_TYPES.launch,
-        fetchFunc: this.props.fetchLaunchesAction,
+        fetchFunc: () => {
+          this.props.fetchLaunchesAction();
+          this.props.unselectAllLaunchesAction();
+        },
       },
     });
   };
