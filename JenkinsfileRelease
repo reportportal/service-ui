@@ -13,7 +13,7 @@ node {
             }
 
             stage('Build') {
-                docker.image('node:10').inside('-u root') {
+                docker.image('node:10').inside() {
                     sh 'make build-statics'
                 }
             }
