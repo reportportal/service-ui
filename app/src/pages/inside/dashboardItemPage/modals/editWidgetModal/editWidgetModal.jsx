@@ -82,11 +82,11 @@ export class EditWidgetModal extends Component {
     } = props;
 
     this.widgetInfo = getWidgets(formatMessage).find((item) => item.id === widget.widgetType);
-
     this.initialValues = {
       ...widget,
       filters: widget.appliedFilters.map(({ id, name }) => ({ value: id.toString(), name })),
     };
+    this.initialValues = this.preprocessInputData(this.initialValues);
     delete this.initialValues.appliedFilters;
     delete this.initialValues.content;
     delete this.initialValues.id;
@@ -113,7 +113,7 @@ export class EditWidgetModal extends Component {
       projectId,
     } = this.props;
 
-    const data = prepareWidgetDataForSubmit(widgetSettings);
+    const data = prepareWidgetDataForSubmit(this.preprocessOutputData(widgetSettings));
 
     this.props.showScreenLockAction();
     fetch(URLS.widget(projectId, widget.id), {
@@ -143,6 +143,20 @@ export class EditWidgetModal extends Component {
       confirmationWarning: this.props.intl.formatMessage(COMMON_LOCALE_KEYS.CLOSE_MODAL_WARNING),
       confirmationWarningClassName: cx('confirmation-warning-wrapper'),
     };
+  };
+
+  preprocessInputData = (data) => {
+    if (this.widgetInfo && this.widgetInfo.convertInput) {
+      return this.widgetInfo.convertInput(data);
+    }
+    return data;
+  };
+
+  preprocessOutputData = (data) => {
+    if (this.widgetInfo && this.widgetInfo.convertOutput) {
+      return this.widgetInfo.convertOutput(data);
+    }
+    return data;
   };
 
   handleFormAppearanceChange = (mode, filter) =>
@@ -185,7 +199,7 @@ export class EditWidgetModal extends Component {
         <div className={cx('edit-widget-modal-content')}>
           <EditWidgetInfoSection
             projectId={projectId}
-            widgetSettings={prepareWidgetDataForSubmit(widgetSettings)}
+            widgetSettings={prepareWidgetDataForSubmit(this.preprocessOutputData(widgetSettings))}
             activeWidget={this.widgetInfo}
           />
           <EditWidgetControlsSectionForm

@@ -1285,6 +1285,7 @@
   "ProductStatusControls.GroupControlText": "Group launches by filter",
   "ProductStatusControls.StartTimeCriteria": "Старт",
   "ProductStatusControls.StatusCriteria": "Status",
+  "ProductStatusControls.customColumnsDuplicationHint": "Дубляваныя імёны слупкоў забароненыя",
   "ProfilePage.title": "Профіль карыстальніка",
   "Project.deleteDefectSubTypeSuccess": "Тып дэфекту быў паспяхова выдалены",
   "Project.updateDefectSubTypeSuccess": "Паспяхова завершана!",

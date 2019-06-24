@@ -1241,6 +1241,7 @@
   "ProductStatusControls.GroupControlText": "Group launches by filter",
   "ProductStatusControls.StartTimeCriteria": "Старт",
   "ProductStatusControls.StatusCriteria": "Status",
+  "ProductStatusControls.customColumnsDuplicationHint": "Дублированные имена столбцов запрещены",
   "PostIssueModal.attachmentsHeader": "Вложения",
   "PostIssueModal.commentsHeader": "Комментарии",
   "PostIssueModal.credentialsHeader": "Учётные данные {system}:",

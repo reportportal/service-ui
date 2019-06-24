@@ -91,7 +91,7 @@ export class WidgetWizardContent extends Component {
     } = this.props;
     const { selectedDashboard, ...rest } = formData;
 
-    const data = prepareWidgetDataForSubmit(rest);
+    const data = prepareWidgetDataForSubmit(this.preprocessOutputData(rest));
 
     trackEvent(addWidget);
     this.props.showScreenLockAction();
@@ -114,6 +114,14 @@ export class WidgetWizardContent extends Component {
       });
   };
 
+  preprocessOutputData = (data) => {
+    const widgetInfo = this.widgets.find((widget) => widget.id === data.widgetType);
+    if (widgetInfo && widgetInfo.convertOutput) {
+      return widgetInfo.convertOutput(data);
+    }
+    return data;
+  };
+
   nextStep = () => {
     this.setState({ step: this.state.step + 1 });
   };
@@ -129,7 +137,9 @@ export class WidgetWizardContent extends Component {
         <WizardInfoSection
           activeWidget={this.widgets.find((widget) => widgetType === widget.id)}
           projectId={this.props.projectId}
-          widgetSettings={prepareWidgetDataForSubmit(this.props.formValues)}
+          widgetSettings={prepareWidgetDataForSubmit(
+            this.preprocessOutputData(this.props.formValues),
+          )}
           step={this.state.step}
           showConfirmation={showConfirmation}
         />
