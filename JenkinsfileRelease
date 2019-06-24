@@ -13,7 +13,8 @@ node {
             }
 
             stage('Build') {
-                docker.image('node:10').inside('-u node') {
+                docker.image('node:10').inside('-u root') {
+                    sh 'npm config set unsafe-perm=true'
                     sh 'make build-statics'
                 }
             }
