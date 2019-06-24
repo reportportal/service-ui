@@ -2,21 +2,21 @@ import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { connect } from 'react-redux';
+import { defectTypesSelector } from 'controllers/project';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { URLS } from 'common/urls';
-import { FAILED, PASSED, SKIPPED } from 'common/constants/launchStatuses';
 import {
-  PRODUCT_BUG,
-  AUTOMATION_BUG,
-  SYSTEM_ISSUE,
-  NO_DEFECT,
-  TO_INVESTIGATE,
-} from 'common/constants/defectTypes';
+  STATS_TOTAL,
+  STATS_PASSED,
+  STATS_FAILED,
+  STATS_SKIPPED,
+} from 'common/constants/statistics';
+import { ENTITY_START_TIME, ENTITY_STATUS } from 'components/filterEntities/constants';
 import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
 import { activeProjectSelector } from 'controllers/user';
 import { getWidgetCriteriaOptions } from './utils/getWidgetCriteriaOptions';
 import { getWidgetModeOptions } from './utils/getWidgetModeOptions';
-import { DEFECT_TYPES_GROUPS_OPTIONS } from './constants';
+import { GROUPED_DEFECT_TYPES_OPTIONS } from './constants';
 import {
   DropdownControl,
   TogglerControl,
@@ -64,37 +64,44 @@ const messages = defineMessages({
     defaultMessage: 'You must select at least one item',
   },
 });
-const PASSING_RATE = 'passingRate';
-const TOTAL = 'total';
-const START_TIME = 'startTime';
-const STATUS = 'status';
-const STATIC_BASE_COLUMNS = [TOTAL, PASSED, FAILED, SKIPPED, PASSING_RATE];
+
+const PRODUCT_BUG = 'statistics$defects$product_bug$pb001';
+const AUTOMATION_BUG = 'statistics$defects$automation_bug$ab001';
+const SYSTEM_ISSUE = 'statistics$defects$system_issue$si001';
+const NO_DEFECT = 'statistics$defects$no_defect$nd001';
+const TO_INVESTIGATE = 'statistics$defects$to_investigate$ti001';
+const STATIC_BASE_COLUMNS = [STATS_TOTAL, STATS_PASSED, STATS_FAILED, STATS_SKIPPED];
 const BASE_COLUMNS_ORDER = [
-  START_TIME,
-  STATUS,
-  TOTAL,
-  PASSED,
-  FAILED,
-  SKIPPED,
+  ENTITY_START_TIME,
+  ENTITY_STATUS,
+  STATS_TOTAL,
+  STATS_PASSED,
+  STATS_FAILED,
+  STATS_SKIPPED,
   PRODUCT_BUG,
   AUTOMATION_BUG,
   SYSTEM_ISSUE,
   NO_DEFECT,
   TO_INVESTIGATE,
-  PASSING_RATE,
 ];
 const validators = {
   filters: (formatMessage) => (value) =>
     (!value || !value.length) && formatMessage(messages.FiltersValidationError),
+  customColumns: (value = []) =>
+    new Set(value.map((item) => item.name)).size !== value.length
+      ? 'customColumnsDuplicationHint'
+      : undefined,
 };
 
 @injectIntl
 @connect((state) => ({
+  defectTypes: defectTypesSelector(state),
   filtersSearchUrl: URLS.filtersSearch(activeProjectSelector(state)),
 }))
 export class ProductStatusControls extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
+    defectTypes: PropTypes.object.isRequired,
     widgetSettings: PropTypes.object.isRequired,
     filtersSearchUrl: PropTypes.string.isRequired,
     initializeControlsForm: PropTypes.func.isRequired,
@@ -102,19 +109,22 @@ export class ProductStatusControls extends Component {
 
   constructor(props) {
     super(props);
-    const { intl, widgetSettings, initializeControlsForm } = props;
+    const { intl, defectTypes, widgetSettings, initializeControlsForm } = props;
     this.criteria = [
-      { value: START_TIME, label: props.intl.formatMessage(messages.StartTimeCriteria) },
-      { value: STATUS, label: props.intl.formatMessage(messages.StatusCriteria) },
-    ].concat(getWidgetCriteriaOptions([DEFECT_TYPES_GROUPS_OPTIONS], intl.formatMessage));
+      { value: ENTITY_START_TIME, label: props.intl.formatMessage(messages.StartTimeCriteria) },
+      { value: ENTITY_STATUS, label: props.intl.formatMessage(messages.StatusCriteria) },
+    ].concat(
+      getWidgetCriteriaOptions([GROUPED_DEFECT_TYPES_OPTIONS], intl.formatMessage, { defectTypes }),
+    );
     initializeControlsForm({
       contentParameters: widgetSettings.contentParameters || {
         itemsCount: DEFAULT_ITEMS_COUNT,
+        contentFields: this.parseBasicColumns(this.criteria.map((criteria) => criteria.value)),
         widgetOptions: {
-          basicColumns: this.parseBasicColumns(this.criteria.map((criteria) => criteria.value)),
           customColumns: [{ name: '', value: '' }],
           latest: MODES_VALUES[CHART_MODES.ALL_LAUNCHES],
           group: false,
+          strategy: 'filter',
         },
       },
       filters: [],
@@ -123,15 +133,20 @@ export class ProductStatusControls extends Component {
 
   formatFilterOptions = (values) =>
     values.content.map((value) => ({ value: value.id, label: value.name }));
-  formatFilters = (values) => values.map((value) => ({ value, label: value.name }));
+
+  formatFilters = (values) => values.map((value) => ({ value: value.value, label: value.name }));
+
   parseFilters = (values) =>
-    values.length > 0 ? values && values.map((value) => value.value).join(',') : '';
+    values.length > 0
+      ? values && values.map((value) => ({ value: value.value, name: value.label }))
+      : [];
 
   formatBasicColumns = (values) =>
     values.filter((value) => STATIC_BASE_COLUMNS.indexOf(value) === -1);
+
   parseBasicColumns = (values) => {
     if (!values) {
-      return this.props.widgetSettings.contentParameters.widgetOptions.basicColumns;
+      return this.props.widgetSettings.contentParameters.contentFields;
     }
     return BASE_COLUMNS_ORDER.filter(
       (column) => STATIC_BASE_COLUMNS.indexOf(column) !== -1 || values.indexOf(column) !== -1,
@@ -151,6 +166,7 @@ export class ProductStatusControls extends Component {
           format={this.formatFilters}
           parse={this.parseFilters}
           validate={validators.filters(formatMessage)}
+          dumbOnBlur
         >
           <TagsControl
             fieldLabel={formatMessage(messages.FiltersFieldLabel)}
@@ -166,7 +182,7 @@ export class ProductStatusControls extends Component {
           />
         </FieldProvider>
         <FieldProvider
-          name="contentParameters.widgetOptions.basicColumns"
+          name="contentParameters.contentFields"
           format={this.formatBasicColumns}
           parse={this.parseBasicColumns}
         >
@@ -177,7 +193,10 @@ export class ProductStatusControls extends Component {
             options={this.criteria}
           />
         </FieldProvider>
-        <FieldProvider name="contentParameters.widgetOptions.customColumns">
+        <FieldProvider
+          name="contentParameters.widgetOptions.customColumns"
+          validate={validators.customColumns}
+        >
           <CustomColumnsControl />
         </FieldProvider>
         <FieldProvider name="contentParameters.widgetOptions.latest">

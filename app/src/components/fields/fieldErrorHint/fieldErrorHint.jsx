@@ -175,6 +175,10 @@ const messages = defineMessages({
     id: 'PatternAnalysis.patternNameDuplicateHint',
     defaultMessage: 'Pattern with the same name already exists in the project',
   },
+  customColumnsDuplicationHint: {
+    id: 'ProductStatusControls.customColumnsDuplicationHint',
+    defaultMessage: 'Duplicated column names are prohibited',
+  },
 });
 
 @injectIntl
