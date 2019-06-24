@@ -108,6 +108,7 @@ export class EditItemsModal extends Component {
   static propTypes = {
     data: PropTypes.shape({
       items: PropTypes.array,
+      parentLaunch: PropTypes.object,
       type: PropTypes.string,
       fetchFunc: PropTypes.func,
     }).isRequired,
@@ -179,9 +180,25 @@ export class EditItemsModal extends Component {
     }
   };
 
-  getAttributeKeyURLCreator = () => URLS.launchAttributeKeysSearch;
+  getAttributeKeyURLCreator = () => (activeProject) => {
+    const {
+      data: { type, parentLaunch },
+    } = this.props;
 
-  getAttributeValueURLCreator = () => URLS.launchAttributeValuesSearch;
+    return type === LAUNCH_ITEM_TYPES.launch
+      ? URLS.launchAttributeKeysSearch(activeProject)
+      : URLS.testItemAttributeKeysSearch(activeProject, parentLaunch.id);
+  };
+
+  getAttributeValueURLCreator = () => (activeProject, key) => {
+    const {
+      data: { type, parentLaunch },
+    } = this.props;
+
+    return type === LAUNCH_ITEM_TYPES.launch
+      ? URLS.launchAttributeValuesSearch(activeProject, key)
+      : URLS.testItemAttributeValuesSearch(activeProject, parentLaunch.id, key);
+  };
 
   removeUniqueAttribute = (attribute) => {
     const { change, uniqueAttributes } = this.props;
