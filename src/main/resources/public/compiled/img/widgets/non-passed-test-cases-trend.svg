@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="250" height="126" viewBox="0 0 250 126">
+  <defs>
+    <circle id="wdgt-non-passed_test-cases_trend-copy-2-a" cx="6" cy="6" r="6"/>
+  </defs>
+  <g fill="none" fill-rule="evenodd">
+    <rect width="250" height="125"/>
+    <g stroke="#F5F5F5" transform="translate(1 16)">
+      <path d="M-2.84217094e-14 87.5L248 87.5M-2.84217094e-14 65.5L248 65.5M-2.84217094e-14 44.5L248 44.5M-2.84217094e-14 22.5L248 22.5M-2.84217094e-14.5L248 .5"/>
+    </g>
+    <polyline stroke="#F19586" stroke-width="2" points=".227 81.99 31.33 81.99 56.996 64.981 81.682 79.666 136.996 25.834 196.756 104.129 217.014 90.611 249.607 90.611"/>
+    <g transform="translate(131 21)">
+      <path stroke="#FFF" stroke-linecap="square" stroke-width="2" d="M6,6.99482249 L6,103.568945"/>
+      <use fill="#EE9583" xlink:href="#wdgt-non-passed_test-cases_trend-copy-2-a"/>
+      <circle cx="6" cy="6" r="5" stroke="#FFF" stroke-opacity=".6" stroke-width="2"/>
+    </g>
+  </g>
+</svg>

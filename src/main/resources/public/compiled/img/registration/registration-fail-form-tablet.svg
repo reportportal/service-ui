@@ -1,0 +1,103 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="674" height="712" viewBox="0 0 674 712" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <defs>
+    <rect id="b" width="668" height="706" x="3" y="2"/>
+    <filter id="a" width="101.5%" height="101.4%" x="-.7%" y="-.6%" filterUnits="objectBoundingBox">
+      <feOffset dy="1" in="SourceAlpha" result="shadowOffsetOuter1"/>
+      <feGaussianBlur stdDeviation="1.5" in="shadowOffsetOuter1" result="shadowBlurOuter1"/>
+      <feColorMatrix values="0 0 0 0 0.741176471 0 0 0 0 0.780392157 0 0 0 0 0.8 0 0 0 1 0" in="shadowBlurOuter1"/>
+    </filter>
+    <rect id="c" width="160" height="40" rx="3"/>
+    <rect id="d" width="160" height="40" rx="3"/>
+    <rect id="e" width="380" height="40"/>
+    <rect id="f" width="380" height="40"/>
+    <rect id="g" width="380" height="40"/>
+    <rect id="h" width="380" height="40"/>
+    <rect id="i" width="380" height="40"/>
+  </defs>
+  <g fill="none" fill-rule="evenodd">
+    <use fill="black" filter="url(#a)" xlink:href="#b"/>
+    <use fill="#FFFFFF" xlink:href="#b"/>
+    <text fill="#6F898D" font-family="OpenSans, Open Sans" font-size="32">
+      <tspan x="251.563" y="83.469">Welcome</tspan> <tspan x="392.175" y="86" font-size="26">,</tspan> <tspan x="169.549" y="124" font-size="24">complete the registration form</tspan>
+    </text>
+    <g transform="translate(352 618)">
+      <use fill="#F36C4A" xlink:href="#c"/>
+      <use fill="#FFFFFF" fill-opacity=".015" xlink:href="#c"/>
+      <text fill="#FFFFFF" font-family="OpenSans, Open Sans" font-size="16">
+        <tspan x="50" y="26">Register</tspan>
+      </text>
+    </g>
+    <g transform="translate(162 618)">
+      <use fill="#999999" xlink:href="#d"/>
+      <use fill="#FFFFFF" fill-opacity=".015" xlink:href="#d"/>
+      <text fill="#FFFFFF" font-family="OpenSans, Open Sans" font-size="16">
+        <tspan x="59.438" y="26">Reset</tspan>
+      </text>
+    </g>
+    <g transform="translate(147 178)">
+      <use fill="#FFFFFF" xlink:href="#e"/>
+      <rect width="379" height="39" x=".5" y=".5" stroke="#CCCCCC"/>
+      <path fill="#F6F6F6" d="M1,3.99765987 C1,2.34209804 2.34230941,1 4.0065012,1 L41,1 L41,39 L4.0065012,39 C2.34605644,39 1,37.6475599 1,36.0023401 L1,3.99765987 Z"/>
+      <text fill="#464547" font-family="OpenSans, Open Sans" font-size="14">
+        <tspan x="56" y="26">Buuren</tspan>
+      </text>
+      <g fill="#9ADBE6" transform="translate(12 12)">
+        <path d="M9,2 C10.1047619,2 11,2.8952381 11,4 C11,5.1047619 10.1047619,6 9,6 C7.8952381,6 7,5.1047619 7,4 C7,2.8952381 7.8952381,2 9,2 L9,2 Z M9,11 C11.9262295,11 15,12.3640625 15,12.96875 L15,14 L3,14 L3,12.96875 C3,12.3640625 6.07377049,11 9,11 L9,11 Z M9,-1.77635684e-15 C6.79,-1.77635684e-15 5,1.79 5,4 C5,6.205 6.79,8 9,8 C11.21,8 13,6.205 13,4 C13,1.79 11.21,-1.77635684e-15 9,-1.77635684e-15 Z M9,9 C6.335,9 1,10.335 1,13 L1,16 L17,16 L17,13 C17,10.335 11.665,9 9,9 Z"/>
+      </g>
+    </g>
+    <g transform="translate(147 277)">
+      <use fill="#FFFFFF" xlink:href="#f"/>
+      <rect width="379" height="39" x=".5" y=".5" stroke="#CCCCCC"/>
+      <text fill="#999999" font-family="OpenSans, Open Sans" font-size="12">
+        <tspan x="0" y="58">3-256 symbols, Latin, Cyrillic, numeric characters, symbols: hyphen, </tspan> <tspan x="0" y="75">underscore, dot, space</tspan>
+      </text>
+      <path fill="#F6F6F6" d="M1,3.99765987 C1,2.34209804 2.34230941,1 4.0065012,1 L41,1 L41,39 L4.0065012,39 C2.34605644,39 1,37.6475599 1,36.0023401 L1,3.99765987 Z"/>
+      <text fill="#464547" font-family="OpenSans, Open Sans" font-size="14">
+        <tspan x="56" y="26">Armin van Buuren</tspan>
+      </text>
+      <g fill="#9ADBE6" transform="translate(12 12)">
+        <path d="M9,0 C6.79,0 5,1.79 5,4 C5,6.205 6.79,8 9,8 C11.21,8 13,6.205 13,4 C13,1.79 11.21,0 9,0 Z M9,9 C6.335,9 1,10.335 1,13 L1,16 L17,16 L17,13 C17,10.335 11.665,9 9,9 Z"/>
+      </g>
+    </g>
+    <g transform="translate(147 376)">
+      <g opacity=".8">
+        <use fill="#E9E9E9" xlink:href="#g"/>
+        <rect width="379" height="39" x=".5" y=".5" stroke="#CCCCCC"/>
+      </g>
+      <path fill="#F6F6F6" d="M1,3.99765987 C1,2.34209804 2.34230941,1 4.0065012,1 L41,1 L41,39 L4.0065012,39 C2.34605644,39 1,37.6475599 1,36.0023401 L1,3.99765987 Z"/>
+      <text fill="#464547" font-family="OpenSans, Open Sans" font-size="14">
+        <tspan x="56" y="26">example@epam.com</tspan>
+      </text>
+    </g>
+    <g transform="translate(147 446)">
+      <use fill="#FFFFFF" xlink:href="#h"/>
+      <rect width="379" height="39" x=".5" y=".5" stroke="#CCCCCC"/>
+      <path fill="#E9E9E9" d="M1,3.99765987 C1,2.34209804 2.34230941,1 4.0065012,1 L41,1 L41,39 L4.0065012,39 C2.34605644,39 1,37.6475599 1,36.0023401 L1,3.99765987 Z" opacity=".4"/>
+      <text fill="#464547" font-family="OpenSans, Open Sans" font-size="14">
+        <tspan x="56" y="26">111222333</tspan>
+      </text>
+      <g fill="#9ADBE6" transform="translate(13 12)">
+        <path d="M9,11.5 C9,10.675 8.325,10 7.5,10 C6.675,10 6,10.675 6,11.5 C6,12.325 6.675,13 7.5,13 C8.325,13 9,12.325 9,11.5 Z M12.0143433,6.01159321 L12.0143433,3.97721278 C12.0143433,1.87104538 10.008606,4.33210202e-16 7.5,0 C4.57045814,4.26979671e-16 3.03666378,2.38118114 3.0075332,4.46626847 C3.00710813,4.49669428 3,5.95239273 3,5.98268413 L4.95135498,5.98268413 C4.95135498,5.95068024 4.95850502,4.49334931 4.95902265,4.46138153 C4.97961071,3.18991361 5.91872438,2 7.5,2 C8.58380127,2 10.036377,2.67230472 10.036377,3.97721278 L10.036377,6.01159321 L1.5,6.01159338 C0.675,6.01159338 8.8817842e-16,6.6983871 8.8817842e-16,7.53780164 L8.8817842e-16,15.4737917 C8.8817842e-16,16.3132063 0.675,17 1.5,17 L13.5,17 C14.325,17 15,16.3132063 15,15.4737917 L15,7.53780164 C15,6.6983871 14.325,6.01159338 13.5,6.01159338 L12.0143433,6.01159321 Z M2,15 L2,8 L13,8 L13,15 L2,15 Z"/>
+      </g>
+    </g>
+    <text fill="#999999" font-family="OpenSans, Open Sans" font-size="12">
+      <tspan x="148" y="504">4-25 symbols</tspan>
+    </text>
+    <g transform="translate(147 528)">
+      <use fill="#FFFFFF" xlink:href="#i"/>
+      <rect width="379" height="39" x=".5" y=".5" stroke="#CCCCCC"/>
+      <text fill="#777777" font-family="AppleSymbols, Apple Symbols" font-size="22">
+        <tspan x="56" y="31">⦁⦁⦁⦁⦁⦁⦁⦁⦁</tspan>
+      </text>
+      <path fill="#E9E9E9" d="M1,3.99765987 C1,2.34209804 2.34230941,1 4.0065012,1 L41,1 L41,39 L4.0065012,39 C2.34605644,39 1,37.6475599 1,36.0023401 L1,3.99765987 Z" opacity=".4"/>
+      <g fill="#39C2D7" fill-opacity=".5" transform="translate(13 12)">
+        <path d="M9,11.5 C9,10.675 8.325,10 7.5,10 C6.675,10 6,10.675 6,11.5 C6,12.325 6.675,13 7.5,13 C8.325,13 9,12.325 9,11.5 Z M12.0143433,6.01159321 L12.0143433,3.97721278 C12.0143433,1.87104538 10.008606,4.33210202e-16 7.5,0 C4.57045814,4.26979671e-16 3.03666378,2.38118114 3.0075332,4.46626847 C3.00710813,4.49669428 3,5.95239273 3,5.98268413 L4.95135498,5.98268413 C4.95135498,5.95068024 4.95850502,4.49334931 4.95902265,4.46138153 C4.97961071,3.18991361 5.91872438,2 7.5,2 C8.58380127,2 10.036377,2.67230472 10.036377,3.97721278 L10.036377,6.01159321 L1.5,6.01159338 C0.675,6.01159338 8.8817842e-16,6.6983871 8.8817842e-16,7.53780164 L8.8817842e-16,15.4737917 C8.8817842e-16,16.3132063 0.675,17 1.5,17 L13.5,17 C14.325,17 15,16.3132063 15,15.4737917 L15,7.53780164 C15,6.6983871 14.325,6.01159338 13.5,6.01159338 L12.0143433,6.01159321 Z M2,15 L2,8 L13,8 L13,15 L2,15 Z"/>
+      </g>
+    </g>
+    <text fill="#999999" font-family="OpenSans, Open Sans" font-size="12">
+      <tspan x="147" y="236">1-128 symbols, Latin, numeric characters, symbols: hyphen, </tspan> <tspan x="147" y="253">underscore</tspan>
+    </text>
+    <path fill="#9ADBE6" d="M16,0 L2,0 C0.8055,0 0.009,0.783125 0,2 L0,12 C0,13.2168746 0.8055,14 2,14 L16,14 C17.1945,14 18,13.2168746 18,12 L18,2 C18,0.783125 17.1945,0 16,0 Z M16,4 L9,8 L2,4 L2,2 L9,6 L16,2 L16,4 Z" transform="translate(159 389)"/>
+    <rect width="668" height="706" x="3" y="2" fill="#FFFFFF" opacity=".95"/>
+  </g>
+</svg>

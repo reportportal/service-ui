@@ -1,0 +1,45 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" >
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1">
+<metadata>
+Created by FontForge 20150824 at Sun May 22 22:36:52 2016
+ By Everything Fonts
+</metadata>
+<defs>
+<font id="Slick" horiz-adv-x="512" >
+  <font-face 
+    font-family="Slick"
+    font-weight="400"
+    font-stretch="normal"
+    units-per-em="512"
+    panose-1="2 0 5 9 0 0 0 0 0 0"
+    ascent="480"
+    descent="-32"
+    bbox="37 37 475 475"
+    underline-thickness="0"
+    underline-position="0"
+    unicode-range="U+0061-2192"
+  />
+<missing-glyph 
+ />
+    <glyph glyph-name=".notdef" 
+ />
+    <glyph glyph-name=".notdef" 
+ />
+    <glyph glyph-name=".null" horiz-adv-x="0" 
+ />
+    <glyph glyph-name="nonmarkingreturn" 
+ />
+    <glyph glyph-name="a" unicode="a" 
+d="M475 439v-128q0 -8 -5 -13t-13 -5h-128q-11 0 -17 11q-5 11 4 20l40 39q-42 39 -100 39q-29 0 -57 -11q-28 -12 -46 -32q-20 -18 -32 -46q-11 -28 -11 -57t11 -57q12 -28 32 -46q18 -20 46 -32q28 -11 57 -11q34 0 64 15q32 14 51 42q6 3 7 3q4 0 7 -3l39 -39q3 -3 3 -6
+q0 -2 -2 -6q-33 -39 -76 -59q-41 -20 -93 -20q-47 0 -85 17q-44 20 -70 47q-27 26 -47 70q-17 38 -17 85t17 85q20 44 47 70q26 27 70 47q38 17 85 17q42 0 81 -15q41 -17 70 -45l37 37q8 8 20 4q11 -6 11 -17z" />
+    <glyph glyph-name="bullet" unicode="&#x2022;" 
+d="M475 256q0 -62 -29 -110q-30 -50 -80 -80q-48 -29 -110 -29t-110 29q-50 30 -80 80q-29 48 -29 110t29 110q30 50 80 80q48 29 110 29t110 -29q50 -30 80 -80q29 -48 29 -110z" />
+    <glyph glyph-name="arrowleft" unicode="&#x2190;" 
+d="M296 113l29 30q6 5 6 12q0 9 -6 13l-87 88l87 88q6 4 6 13q0 7 -6 12l-29 30q-5 5 -13 5q-7 0 -12 -5l-130 -130q-6 -6 -6 -13t6 -13l130 -130q5 -5 12 -5q8 0 13 5zM475 256q0 -62 -29 -110q-30 -50 -80 -80q-48 -29 -110 -29t-110 29q-50 30 -80 80q-29 48 -29 110
+t29 110q30 50 80 80q48 29 110 29t110 -29q50 -30 80 -80q29 -48 29 -110z" />
+    <glyph glyph-name="arrowright" unicode="&#x2192;" 
+d="M241 113l130 130q6 6 6 13t-6 13l-130 130q-5 5 -12 5q-8 0 -13 -5l-29 -30q-6 -5 -6 -12q0 -9 6 -13l87 -88l-87 -88q-6 -4 -6 -13q0 -7 6 -12l29 -30q5 -5 13 -5q7 0 12 5zM475 256q0 -62 -29 -110q-30 -50 -80 -80q-48 -29 -110 -29t-110 29q-50 30 -80 80
+q-29 48 -29 110t29 110q30 50 80 80q48 29 110 29t110 -29q50 -30 80 -80q29 -48 29 -110z" />
+  </font>
+</defs></svg>

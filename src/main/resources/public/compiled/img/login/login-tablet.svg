@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="768" height="1024" viewBox="0 0 768 1024" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <defs>
+    <circle id="a" cx="23" cy="23" r="23"/>
+    <circle id="b" cx="23" cy="23" r="15"/>
+    <circle id="c" cx="23" cy="23" r="23"/>
+    <circle id="e" cx="23" cy="23" r="23"/>
+    <circle id="g" cx="23" cy="23" r="23"/>
+    <circle id="i" cx="23" cy="23" r="23"/>
+    <circle id="k" cx="23" cy="23" r="23"/>
+    <circle id="m" cx="23" cy="23" r="23"/>
+    <circle id="o" cx="23" cy="23" r="23"/>
+    <circle id="p" cx="23" cy="23" r="15"/>
+  </defs>
+  <g fill="none" fill-rule="evenodd" opacity=".4">
+    <g transform="translate(595 717)">
+      <use fill="#D0F0F1" xlink:href="#a"/>
+      <circle cx="23" cy="23" r="3.5"/>
+    </g>
+    <g transform="translate(23 425)">
+      <mask id="d" fill="white">
+        <use xlink:href="#c"/>
+      </mask>
+      <use fill="#D0F0F1" xlink:href="#c"/>
+      <polyline stroke="#FFFFFF" stroke-width="2" points="41.5 31.5 33 19 27 24 16 10 4.5 32" mask="url(#d)"/>
+      <polyline stroke="#FFFFFF" stroke-width="2" points="42 32 33 26 26 30 17 20 4.5 32" mask="url(#d)"/>
+    </g>
+    <g transform="translate(437 7)">
+      <mask id="f" fill="white">
+        <use xlink:href="#e"/>
+      </mask>
+      <use fill="#D0F0F1" xlink:href="#e"/>
+      <polyline stroke="#FFFFFF" stroke-width="2" points="41.5 31.5 33 19 27 24 16 10 4.5 32" mask="url(#f)"/>
+      <polyline stroke="#FFFFFF" stroke-width="2" points="42 32 33 26 26 30 17 20 4.5 32" mask="url(#f)"/>
+    </g>
+    <g transform="translate(-21 869)">
+      <mask id="h" fill="white">
+        <use xlink:href="#g"/>
+      </mask>
+      <use fill="#D0F0F1" xlink:href="#g"/>
+      <rect width="3" height="30" x="22" y="7" fill="#FFFFFF" mask="url(#h)" rx="1.5"/>
+      <rect width="3" height="20" x="28" y="17" fill="#FFFFFF" mask="url(#h)" rx="1.5"/>
+      <rect width="3" height="10" x="34" y="27" fill="#FFFFFF" mask="url(#h)" rx="1.5"/>
+    </g>
+    <g transform="translate(693 226)">
+      <mask id="j" fill="white">
+        <use xlink:href="#i"/>
+      </mask>
+      <use fill="#D0F0F1" xlink:href="#i"/>
+      <rect width="3" height="25" x="16" y="12" fill="#FFFFFF" mask="url(#j)" rx="1.5"/>
+      <rect width="3" height="15" x="10" y="22" fill="#FFFFFF" mask="url(#j)" rx="1.5"/>
+      <rect width="3" height="30" x="22" y="7" fill="#FFFFFF" mask="url(#j)" rx="1.5"/>
+      <rect width="3" height="20" x="28" y="17" fill="#FFFFFF" mask="url(#j)" rx="1.5"/>
+      <rect width="3" height="10" x="34" y="27" fill="#FFFFFF" mask="url(#j)" rx="1.5"/>
+    </g>
+    <g transform="translate(749 967)">
+      <mask id="l" fill="white">
+        <use xlink:href="#k"/>
+      </mask>
+      <use fill="#D0F0F1" xlink:href="#k"/>
+      <polyline fill="#FFFFFF" points="5 29 18 17 22 22 29 12 41 29" mask="url(#l)"/>
+    </g>
+    <g transform="translate(172 610)">
+      <mask id="n" fill="white">
+        <use xlink:href="#m"/>
+      </mask>
+      <use fill="#D0F0F1" xlink:href="#m"/>
+      <polyline fill="#FFFFFF" points="5 29 18 17 22 22 29 12 41 29" mask="url(#n)"/>
+    </g>
+    <g transform="translate(-23 114)">
+      <use fill="#D0F0F1" xlink:href="#o"/>
+      <circle cx="23" cy="23" r="3.5"/>
+    </g>
+  </g>
+</svg>

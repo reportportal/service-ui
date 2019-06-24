@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="250" height="125" viewBox="0 0 250 125">
+  <g fill="none" fill-rule="evenodd" transform="matrix(-1 0 0 1 250 0)">
+    <rect width="250" height="125"/>
+    <g stroke="#F5F5F5" transform="translate(1 16)">
+      <path d="M-2.84217094e-14 87.5L248 87.5M-2.84217094e-14 65.5L248 65.5M-2.84217094e-14 44.5L248 44.5M-2.84217094e-14 22.5L248 22.5M-2.84217094e-14.5L248 .5"/>
+    </g>
+    <rect width="131" height="13" x="89" y="20" fill="#B6E4E3"/>
+    <rect width="190" height="13" x="30" y="38" fill="#B6E4E3"/>
+    <rect width="152" height="13" x="68" y="56" fill="#B6E4E3"/>
+    <rect width="114" height="13" x="106" y="74" fill="#B6E4E3"/>
+    <rect width="76" height="13" x="144" y="92" fill="#B6E4E3"/>
+  </g>
+</svg>
