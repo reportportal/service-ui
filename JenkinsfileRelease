@@ -13,8 +13,7 @@ node {
             }
 
             stage('Build') {
-                docker.image('node:10').inside() {
-                    sh 'npm config set user root'
+                docker.image('node:10').inside('-u node') {
                     sh 'make build-statics'
                 }
             }
