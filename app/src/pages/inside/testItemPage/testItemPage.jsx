@@ -16,6 +16,7 @@ import { LEVEL_SUITE, LEVEL_TEST, LEVEL_STEP } from 'common/constants/launchLeve
 import { SUITES_PAGE_EVENTS } from 'components/main/analytics/events/suitesPageEvents';
 import { STEP_PAGE_EVENTS } from 'components/main/analytics/events';
 import { userIdSelector, activeProjectSelector } from 'controllers/user';
+import { unselectAllItemsAction } from 'controllers/groupOperations';
 import {
   levelSelector,
   pageLoadingSelector,
@@ -99,6 +100,7 @@ const testItemPages = {
     parentLaunch: launchSelector(state),
     userId: userIdSelector(state),
     activeProject: activeProjectSelector(state),
+    namespace: namespaceSelector(state),
   }),
   {
     restorePath: restorePathAction,
@@ -108,6 +110,7 @@ const testItemPages = {
     hideScreenLockAction,
     fetchTestItemsAction,
     showModalAction,
+    unselectAllItemsAction,
   },
 )
 @injectIntl
@@ -116,12 +119,14 @@ export class TestItemPage extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
     activeProject: PropTypes.string.isRequired,
+    namespace: PropTypes.string.isRequired,
     userId: PropTypes.string.isRequired,
     deleteItemsAction: PropTypes.func.isRequired,
     showNotification: PropTypes.func.isRequired,
     showScreenLockAction: PropTypes.func.isRequired,
     hideScreenLockAction: PropTypes.func.isRequired,
     fetchTestItemsAction: PropTypes.func.isRequired,
+    unselectAllItemsAction: PropTypes.func.isRequired,
     showModalAction: PropTypes.func.isRequired,
     parentLaunch: PropTypes.object,
     level: PropTypes.string,
@@ -160,7 +165,10 @@ export class TestItemPage extends Component {
         items: launches,
         parentLaunch: this.props.parentLaunch,
         type: LAUNCH_ITEM_TYPES.item,
-        fetchFunc: this.props.fetchTestItemsAction,
+        fetchFunc: () => {
+          this.props.fetchTestItemsAction();
+          this.props.unselectAllItemsAction(this.props.namespace)();
+        },
       },
     });
   };
