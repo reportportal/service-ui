@@ -224,10 +224,10 @@ export class EditItemsModal extends Component {
       attributes,
     };
 
-    if (description && descriptionAction !== DESCRIPTION_LEAVE) {
+    if (descriptionAction !== DESCRIPTION_LEAVE) {
       data.description = {
         action: descriptionAction,
-        comment: description,
+        comment: description || '',
       };
     }
 
