@@ -86,6 +86,7 @@ export const state = {
       },
       SERVER_SETTINGS_TAB_PAGE: '/administrate/settings/:settingsTab',
       PLUGINS_PAGE: '/administrate/plugins',
+      PLUGINS_TAB_PAGE: '/administrate/plugins/:pluginsTab',
       PROJECT_PAGE: {
         path: '/:projectId',
       },

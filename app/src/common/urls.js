@@ -222,6 +222,7 @@ export const URLS = {
   uatInfo: () => `${uatBase}info`,
 
   plugin: () => `${urlBase}plugin`,
+  pluginUpdate: (pluginId) => `${urlBase}plugin/${pluginId}`,
   globalIntegrationsByPluginName: (pluginName = '') =>
     `${urlBase}integration/global/all/${pluginName}`,
   projectIntegrationByIdCommand: (projectId, integrationId, command) =>

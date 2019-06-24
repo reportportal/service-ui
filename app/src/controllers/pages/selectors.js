@@ -25,6 +25,7 @@ export const logItemIdSelector = createSelector(
 );
 
 export const settingsTabSelector = (state) => payloadSelector(state).settingsTab;
+export const pluginsTabSelector = (state) => payloadSelector(state).pluginsTab;
 
 export const pageSelector = (state) => pageNames[state.location.type] || NO_PAGE;
 export const projectSectionSelector = (state) => payloadSelector(state).projectSection || '';

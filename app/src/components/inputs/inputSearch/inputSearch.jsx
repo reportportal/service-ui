@@ -44,7 +44,13 @@ export const InputSearch = ({
   onKeyUp,
   active,
 }) => (
-  <div className={cx('input-search', { error, active, disabled })}>
+  <div
+    className={cx(
+      'input-search',
+      { error, active, disabled },
+      { [`input-search-${className}`]: className },
+    )}
+  >
     <div className={cx('icon', { 'at-right': iconAtRight })}>{Parser(SearchIcon)}</div>
     <input
       ref={refFunction}

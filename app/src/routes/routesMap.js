@@ -25,6 +25,7 @@ import {
   LAUNCHES_PAGE,
   PROJECT_LAUNCHES_PAGE,
   PLUGINS_PAGE,
+  PLUGINS_TAB_PAGE,
   NOT_FOUND,
   OAUTH_SUCCESS,
   HOME_PAGE,
@@ -43,6 +44,7 @@ import {
   PATTERN_ANALYSIS,
 } from 'common/constants/settingsTabs';
 import { ADMINISTRATOR } from 'common/constants/accountRoles';
+import { INSTALLED, STORE } from 'common/constants/pluginsTabs';
 import { SETTINGS, MEMBERS, EVENTS } from 'common/constants/projectSections';
 import { isAuthorizedSelector } from 'controllers/auth';
 import {
@@ -160,7 +162,11 @@ export default {
     payload: { settingsTab: AUTHORIZATION_CONFIGURATION },
   })),
   [SERVER_SETTINGS_TAB_PAGE]: `/administrate/settings/:settingsTab(${AUTHORIZATION_CONFIGURATION}|${STATISTICS})`,
-  [PLUGINS_PAGE]: '/administrate/plugins',
+  [PLUGINS_PAGE]: redirectRoute('/administrate/plugins', () => ({
+    type: PLUGINS_TAB_PAGE,
+    payload: { pluginsTab: INSTALLED },
+  })),
+  [PLUGINS_TAB_PAGE]: `/administrate/plugins/:pluginsTab(${INSTALLED}|${STORE})`,
 
   [PROJECT_PAGE]: {
     path: '/:projectId',

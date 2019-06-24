@@ -1,0 +1,16 @@
+.plugins-toolbar {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-content: stretch;
+  align-items: center;
+  min-height: 36px;
+  width: 50%;
+  padding: 15px;
+}
+.plugins-search {
+  width: 100%;
+  margin: 0 50px 0 40px;
+  visibility: hidden;
+}

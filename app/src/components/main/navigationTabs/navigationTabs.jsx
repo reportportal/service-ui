@@ -18,11 +18,13 @@ export class NavigationTabs extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    customBlock: PropTypes.element,
   };
   static defaultProps = {
     onChangeTab: () => {},
     config: {},
     activeTab: '',
+    customBlock: null,
   };
 
   onChangeTab = (val) => {
@@ -47,7 +49,7 @@ export class NavigationTabs extends Component {
     }));
 
   render = () => {
-    const { config, activeTab } = this.props;
+    const { config, activeTab, customBlock } = this.props;
     return (
       <div className={cx('navigation-tabs')}>
         <div className={cx('tabs-mobile')}>
@@ -57,21 +59,24 @@ export class NavigationTabs extends Component {
             onChange={this.onChangeTab}
           />
         </div>
-        <div className={cx('tabs-wrapper')}>
-          {config &&
-            Object.keys(config).map((item) => (
-              <NavLink
-                key={item}
-                className={cx('tab')}
-                to={config[item].link}
-                activeClassName={cx('active-tab')}
-                onClick={() => {
-                  this.props.tracking.trackEvent(this.props.config[item].eventInfo);
-                }}
-              >
-                {config[item].name}
-              </NavLink>
-            ))}
+        <div className={cx({ 'panel-wrapper': customBlock })}>
+          <div className={cx('tabs-wrapper', { 'custom-tabs-wrapper': customBlock })}>
+            {config &&
+              Object.keys(config).map((item) => (
+                <NavLink
+                  key={item}
+                  className={cx('tab')}
+                  to={config[item].link}
+                  activeClassName={cx('active-tab')}
+                  onClick={() => {
+                    this.props.tracking.trackEvent(this.props.config[item].eventInfo);
+                  }}
+                >
+                  {config[item].name}
+                </NavLink>
+              ))}
+          </div>
+          {customBlock}
         </div>
         <div
           className={cx('content-wrapper', {
