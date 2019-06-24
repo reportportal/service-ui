@@ -190,7 +190,10 @@ export class EditItemsModal extends Component {
       'uniqueAttributes',
       uniqueAttributes.filter(
         (uniqueAttribute) =>
-          !(uniqueAttribute.key === attribute.key && uniqueAttribute.value === attribute.value),
+          !(
+            (uniqueAttribute.key === attribute.key || (!uniqueAttribute.key && !attribute.key)) &&
+            uniqueAttribute.value === attribute.value
+          ),
       ),
     );
   };
