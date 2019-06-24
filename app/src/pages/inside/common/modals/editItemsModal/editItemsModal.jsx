@@ -65,6 +65,10 @@ const messages = defineMessages({
     id: 'EditItemsModal.itemUpdateSuccess',
     defaultMessage: 'Completed successfully!',
   },
+  warningMessage: {
+    id: 'EditItemsModal.warningMessage',
+    defaultMessage: 'The attribute will be deleted for all launches after applying changes',
+  },
 });
 
 const ATTRIBUTE_CREATE = 'CREATE';
@@ -122,6 +126,10 @@ export class EditItemsModal extends Component {
   static defaultProps = {
     descriptionAction: DESCRIPTION_LEAVE,
     uniqueAttributes: [],
+  };
+
+  state = {
+    warningMessageShown: false,
   };
 
   componentDidMount() {
@@ -185,17 +193,19 @@ export class EditItemsModal extends Component {
 
   removeUniqueAttribute = (attribute) => {
     const { change, uniqueAttributes } = this.props;
-
-    change(
-      'uniqueAttributes',
-      uniqueAttributes.filter(
-        (uniqueAttribute) =>
-          !(
-            (uniqueAttribute.key === attribute.key || (!uniqueAttribute.key && !attribute.key)) &&
-            uniqueAttribute.value === attribute.value
-          ),
-      ),
+    const updatedUniqueAttributes = uniqueAttributes.filter(
+      (uniqueAttribute) =>
+        !(
+          (uniqueAttribute.key === attribute.key || (!uniqueAttribute.key && !attribute.key)) &&
+          uniqueAttribute.value === attribute.value
+        ),
     );
+
+    if (uniqueAttributes.length !== updatedUniqueAttributes.length) {
+      this.showWarningMessage();
+
+      change('uniqueAttributes', updatedUniqueAttributes);
+    }
   };
 
   findAttribute = (sourceAttributes, targetAttributes) =>
@@ -243,7 +253,10 @@ export class EditItemsModal extends Component {
     });
   };
 
+  showWarningMessage = () => this.setState({ warningMessageShown: true });
+
   render() {
+    const { warningMessageShown } = this.state;
     const {
       intl: { formatMessage },
       descriptionAction,
@@ -268,6 +281,7 @@ export class EditItemsModal extends Component {
         })}
         okButton={okButton}
         cancelButton={cancelButton}
+        warningMessage={warningMessageShown && formatMessage(messages.warningMessage)}
       >
         <form>
           <ModalField label={formatMessage(messages.commonAttributesLabel)}>

@@ -416,6 +416,7 @@
   "EditItemsModal.launches": "запускі",
   "EditItemsModal.modalHeader": "Рэдагаваць {type}",
   "EditItemsModal.uniqueAttributesLabel": "Унікальныя атрыбуты",
+  "EditItemsModal.warningMessage": "Атрыбут будзе выдалены для ўсіх запускаў пасля прымянення змяненняў",
   "EditPersonalInformationModal.emailLabel": "Электронны адрас",
   "EditPersonalInformationModal.emailPlaceholder": "Калі ласка, увядзіце электронны адрас",
   "EditPersonalInformationModal.header": "Рэдагаваць асабістую інфармацыю",
