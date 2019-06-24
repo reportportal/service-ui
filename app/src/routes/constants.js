@@ -70,6 +70,7 @@ export const pageRendering = {
     access: ADMIN_ACCESS,
   },
   PLUGINS_PAGE: { component: PluginsPage, layout: AdminLayout, access: ADMIN_ACCESS },
+  PLUGINS_TAB_PAGE: { component: PluginsPage, layout: AdminLayout, access: ADMIN_ACCESS },
   [TEST_ITEM_PAGE]: { component: TestItemPage, layout: AppLayout },
   [PROJECT_LOG_PAGE]: { component: LogsPage, layout: AppLayout },
   [PROJECT_USERDEBUG_LOG_PAGE]: { component: LogsPage, layout: AppLayout },

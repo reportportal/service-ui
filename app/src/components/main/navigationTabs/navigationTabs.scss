@@ -61,7 +61,26 @@
   width: 100%;
   padding: 30px 0 40px 0;
 }
+.panel-wrapper {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-content: stretch;
+  align-items: center;
+  min-height: 36px;
+  border-bottom: 1px solid $COLOR--gray-91;
+}
+.custom-tabs-wrapper {
+  width: auto;
+  padding-top: 25px;
+  text-align: left;
+  border-bottom: none;
 
+  .tab {
+    height: 42px;
+  }
+}
 .mobile-disabled {
   &:after {
     content: '';

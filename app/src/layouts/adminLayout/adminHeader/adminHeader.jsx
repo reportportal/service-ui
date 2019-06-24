@@ -35,6 +35,7 @@ import {
   SERVER_SETTINGS_PAGE,
   SERVER_SETTINGS_TAB_PAGE,
   PLUGINS_PAGE,
+  PLUGINS_TAB_PAGE,
   pageSelector,
   projectIdSelector,
 } from 'controllers/pages';
@@ -99,6 +100,8 @@ export class AdminHeader extends Component {
         return projectId;
       case SERVER_SETTINGS_TAB_PAGE:
         return intl.formatMessage(pageTitles[SERVER_SETTINGS_PAGE]);
+      case PLUGINS_TAB_PAGE:
+        return intl.formatMessage(pageTitles[PLUGINS_PAGE]);
       default:
         return pageTitles[currentPage] ? intl.formatMessage(pageTitles[currentPage]) : '';
     }

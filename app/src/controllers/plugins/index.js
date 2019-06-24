@@ -1,5 +1,9 @@
 export { pluginsReducer } from './reducer';
-export { fetchPluginsAction, fetchGlobalIntegrationsAction } from './actionCreators';
+export {
+  fetchPluginsAction,
+  fetchGlobalIntegrationsAction,
+  updatePluginLocallyAction,
+} from './actionCreators';
 export {
   filterAvailablePlugins,
   filterIntegrationsByGroupType,
@@ -8,6 +12,7 @@ export {
   sortItemsByGroupType,
 } from './utils';
 export {
+  pluginsSelector,
   availableGroupedPluginsSelector,
   globalBtsIntegrationsSelector,
   createNamedIntegrationsSelector,
