@@ -163,14 +163,14 @@ export class WidgetHeader extends Component {
         </div>
         <div className={customClass}>
           <div className={cx('controls-block')}>
-            <div className={cx('control')} onClick={onEdit}>
+            <div className={cx('control', 'mobile-hide')} onClick={onEdit}>
               {data.owner === userId && Parser(PencilIcon)}
             </div>
             <div className={cx('control')} onClick={onRefresh}>
               {Parser(RefreshIcon)}
             </div>
             {canDeleteWidget(userRole, projectRole, userId === data.owner) && (
-              <div className={cx('control')} onClick={onDelete}>
+              <div className={cx('control', 'mobile-hide')} onClick={onDelete}>
                 {Parser(CrossIcon)}
               </div>
             )}

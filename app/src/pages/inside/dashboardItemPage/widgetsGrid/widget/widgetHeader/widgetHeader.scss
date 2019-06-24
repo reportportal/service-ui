@@ -95,3 +95,9 @@
     }
   }
 }
+
+.mobile-hide {
+  @media (max-width: $SCREEN_XS_MAX) {
+    display: none;
+  }
+}
