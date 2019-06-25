@@ -259,7 +259,7 @@ export class PostIssueModal extends Component {
       data.password = formData.password;
       data.username = formData.username;
     } else {
-      data.oauthAccessKey = formData.oauthAccessKey;
+      data.token = formData.token;
     }
 
     this.sendRequest(data);

@@ -6,13 +6,7 @@ import classNames from 'classnames/bind';
 
 import { defectTypesSelector, updateDefectSubTypeAction } from 'controllers/project';
 import { showModalAction } from 'controllers/modal';
-import {
-  PRODUCT_BUG,
-  AUTOMATION_BUG,
-  SYSTEM_ISSUE,
-  TO_INVESTIGATE,
-  NO_DEFECT,
-} from 'common/constants/defectTypes';
+import { DEFECT_TYPES_SEQUENCE } from 'common/constants/defectTypes';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 
 import { DefectTypesGroup } from './defectTypesGroup';
@@ -41,8 +35,6 @@ export class DefectTypesTab extends Component {
     updateDefectSubTypeAction: PropTypes.func.isRequired,
     intl: intlShape.isRequired,
   };
-
-  groupNames = [PRODUCT_BUG, AUTOMATION_BUG, SYSTEM_ISSUE, NO_DEFECT, TO_INVESTIGATE];
 
   showResetColorsConfirmationDialog = () => {
     const { showModal, intl } = this.props;
@@ -100,11 +92,13 @@ export class DefectTypesTab extends Component {
             {formatMessage(messages.diagramCol)}
           </div>
         </div>
-        {this.groupNames.map((groupName) => (
+        {DEFECT_TYPES_SEQUENCE.map((groupName) => (
           <React.Fragment key={groupName}>
-            <div className={cx('group-name')}>{formatMessage(messages[groupName])}</div>
+            <div className={cx('group-name')}>
+              {formatMessage(messages[groupName.toLowerCase()])}
+            </div>
             <div className={cx('group')}>
-              <DefectTypesGroup group={subTypes[groupName.toUpperCase()]} />
+              <DefectTypesGroup group={subTypes[groupName]} />
             </div>
           </React.Fragment>
         ))}

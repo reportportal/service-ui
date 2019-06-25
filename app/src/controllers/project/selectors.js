@@ -1,6 +1,6 @@
 import { createSelector } from 'reselect';
 import { OWNER } from 'common/constants/permissions';
-import { DEFECT_TYPES_SEQUENCE, DEFECT_TYPES_LEGEND_SEQUENCE } from 'common/constants/defectTypes';
+import { DEFECT_TYPES_SEQUENCE } from 'common/constants/defectTypes';
 import { BTS_GROUP_TYPE } from 'common/constants/pluginsGroupTypes';
 import {
   JIRA,
@@ -52,7 +52,8 @@ export const defectTypesSelector = createSelector(subTypesSelector, (subTypes) =
 export const orderedDefectFieldsSelector = createSelector(subTypesSelector, (subTypes) => {
   const PREFIX = 'statistics$defects$';
   const result = [];
-  DEFECT_TYPES_LEGEND_SEQUENCE.forEach((type) => {
+  DEFECT_TYPES_SEQUENCE.forEach((type) => {
+    result.push(`${PREFIX}${type.toLowerCase()}$total`);
     subTypes[type].forEach((item) => {
       result.push(`${PREFIX}${type.toLowerCase()}$${item.locator}`);
     });
