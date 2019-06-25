@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
+import { intlShape } from 'react-intl';
 import { FilterItem } from './filterItem';
 import { filterShape } from '../propTypes';
 import styles from './filterList.scss';
@@ -12,6 +13,7 @@ export const FilterList = ({
   unsavedFilterIds,
   onSelectFilter,
   onRemoveFilter,
+  intl,
 }) => (
   <div className={cx('filter-list')}>
     {filters.map((filter) => (
@@ -24,6 +26,8 @@ export const FilterList = ({
           unsaved={unsavedFilterIds.indexOf(filter.id) > -1}
           onClick={() => onSelectFilter(filter.id)}
           onRemove={() => onRemoveFilter(filter)}
+          owner={filter.owner}
+          intl={intl}
         />
       </div>
     ))}
@@ -35,6 +39,7 @@ FilterList.propTypes = {
   unsavedFilterIds: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.string, PropTypes.number])),
   onSelectFilter: PropTypes.func,
   onRemoveFilter: PropTypes.func,
+  intl: intlShape.isRequired,
 };
 FilterList.defaultProps = {
   filters: [],

@@ -4,11 +4,11 @@ import { ALIGN_LEFT } from 'components/main/tooltips/constants';
 import { withTooltip } from 'components/main/tooltips/tooltip';
 import { TextTooltip } from 'components/main/tooltips/textTooltip';
 import TooltipIcon from 'common/img/tooltip-icon-inline.svg';
-import styles from './filterTooltipIcon.scss';
+import styles from './filterDescriptionTooltipIcon.scss';
 
 const cx = classNames.bind(styles);
 
-export const FilterTooltipIcon = withTooltip({
+export const FilterDescriptionTooltipIcon = withTooltip({
   TooltipComponent: TextTooltip,
   data: {
     align: ALIGN_LEFT,

@@ -1,6 +1,6 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, intlShape } from 'react-intl';
 import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
 import { showModalAction } from 'controllers/modal';
@@ -69,6 +69,7 @@ export class LaunchFiltersToolbar extends Component {
     changeLaunchDistinct: PropTypes.func,
     launchDistinct: PropTypes.string,
     level: PropTypes.string,
+    intl: intlShape.isRequired,
   };
 
   static defaultProps = {
@@ -186,6 +187,7 @@ export class LaunchFiltersToolbar extends Component {
       changeLaunchDistinct,
       unsavedFilterIds,
       level,
+      intl,
     } = this.props;
     return (
       <div className={cx('launch-filters-toolbar')}>
@@ -211,6 +213,7 @@ export class LaunchFiltersToolbar extends Component {
               unsavedFilterIds={unsavedFilterIds}
               onSelectFilter={onSelectFilter}
               onRemoveFilter={onRemoveFilter}
+              intl={intl}
             />
           </div>
           {!!activeFilter &&

@@ -1,1 +1,0 @@
-export { FilterTooltipIcon } from './filterTooltipIcon';
