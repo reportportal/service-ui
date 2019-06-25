@@ -196,7 +196,6 @@ export class AddEditModal extends Component {
           <ModalField
             label={intl.formatMessage(messages.dashboardShareLabel)}
             labelWidth={labelWidth}
-            className={cx('share-switcher-wrapper')}
           >
             <FieldProvider name="share" type="checkbox" format={Boolean} parse={Boolean}>
               <InputBigSwitcher onChangeEventInfo={eventsInfo.shareSwitcher} />
