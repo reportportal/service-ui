@@ -32,7 +32,7 @@ export const messages = defineMessages({
   },
   launchNamesHint: {
     id: 'NotificationCase.launchNamesHint',
-    defaultMessage: 'Launch name should have size from 3 to 256',
+    defaultMessage: 'Launch name should have size from 1 to 256',
   },
   launchNamesNote: {
     id: 'NotificationCase.launchNamesNote',

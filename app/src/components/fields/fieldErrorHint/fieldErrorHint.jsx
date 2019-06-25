@@ -47,7 +47,7 @@ const messages = defineMessages({
   },
   launchNameHint: {
     id: '  LaunchMergeModal.launchNameHint',
-    defaultMessage: 'Launch name should have size from 3 to 256.',
+    defaultMessage: 'Launch name should have size from 1 to 256.',
   },
   launchDescriptionHint: {
     id: '  LaunchMergeModal.launchDescriptionHint',
@@ -116,7 +116,7 @@ const messages = defineMessages({
   },
   launchesHint: {
     id: 'AddEditNotificationCaseModal.launchesHint',
-    defaultMessage: 'Launch name should have size from 3 to 256',
+    defaultMessage: 'Launch name should have size from 1 to 256',
   },
   urlHint: {
     id: 'LinkIssueModal.urlHint',
