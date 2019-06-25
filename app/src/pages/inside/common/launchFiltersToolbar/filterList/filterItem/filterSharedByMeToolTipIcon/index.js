@@ -1,0 +1,1 @@
+export { FilterSharedByMeToolTipIcon } from './filterSharedByMeToolTipIcon';
