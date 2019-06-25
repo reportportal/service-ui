@@ -1,6 +1,8 @@
-$DEFECT_NAME_PADDING: 120px;
+$DEFECT_NAME_PADDING: 70px;
 
 .defect-types-list {
+  max-width: 800px;
+  margin: 0 auto;
   font-size: 12px;
 }
 

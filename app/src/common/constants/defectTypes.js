@@ -8,14 +8,6 @@ export const DEFECT_TYPES_SEQUENCE = [
   PRODUCT_BUG.toUpperCase(),
   AUTOMATION_BUG.toUpperCase(),
   SYSTEM_ISSUE.toUpperCase(),
-  TO_INVESTIGATE.toUpperCase(),
-  NO_DEFECT.toUpperCase(),
-];
-
-export const DEFECT_TYPES_LEGEND_SEQUENCE = [
-  PRODUCT_BUG.toUpperCase(),
-  AUTOMATION_BUG.toUpperCase(),
-  SYSTEM_ISSUE.toUpperCase(),
   NO_DEFECT.toUpperCase(),
   TO_INVESTIGATE.toUpperCase(),
 ];

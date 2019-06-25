@@ -170,8 +170,8 @@ export class LaunchStatisticsChart extends Component {
           (id) => this.configData.colors[id],
         ),
       )
-      .style('left', `${currentMousePosition[0] - 90}px`)
-      .style('top', `${currentMousePosition[1] - 116}px`);
+      .style('left', `${currentMousePosition[0] - 85}px`)
+      .style('top', `${currentMousePosition[1] - 75}px`);
   };
 
   getLinkParametersStatuses = ({ defectType }) => {
@@ -322,11 +322,8 @@ export class LaunchStatisticsChart extends Component {
     const chartData = {};
     const chartDataOrdered = [];
     const colors = {};
-    const pattern = /.*defects.*total$/;
 
-    const filteredContentFields = contentFields.filter((item) => !pattern.test(item));
-
-    filteredContentFields.forEach((key) => {
+    contentFields.forEach((key) => {
       const keyConfig = getItemNameConfig(key);
       chartData[key] = [key];
       colors[key] = getItemColor(keyConfig, defectTypes);
@@ -338,13 +335,13 @@ export class LaunchStatisticsChart extends Component {
       };
       delete currentItemData.values;
       itemData.push(currentItemData);
-      filteredContentFields.forEach((contentFieldKey) => {
+      contentFields.forEach((contentFieldKey) => {
         const value = item.values[contentFieldKey] || 0;
         chartData[contentFieldKey].push(!Number(value) && isTimeLine ? null : Number(value));
       });
     });
 
-    filteredContentFields.forEach((key) => {
+    contentFields.forEach((key) => {
       chartDataOrdered.push(chartData[key]);
     });
 

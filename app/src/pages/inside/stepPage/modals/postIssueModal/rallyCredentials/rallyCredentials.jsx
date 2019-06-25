@@ -26,7 +26,7 @@ export class RallyCredentials extends Component {
     return (
       <div className={cx('rally-credentials')}>
         <FormField
-          name="oauthAccessKey"
+          name="token"
           containerClassName={cx('text-area-container')}
           fieldWrapperClassName={cx('field-wrapper')}
           label={intl.formatMessage(messages.apiKeyLabel)}
