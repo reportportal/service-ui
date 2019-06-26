@@ -2,6 +2,14 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { defineMessages, injectIntl, intlShape } from 'react-intl';
+import {
+  NOTIFICATION_GROUP_TYPE,
+  BTS_GROUP_TYPE,
+  OTHER_GROUP_TYPE,
+  AUTHORIZATION_GROUP_TYPE,
+  ANALYZER_GROUP_TYPE,
+} from 'common/constants/pluginsGroupTypes';
+import { InputSwitcher } from 'components/inputs/inputSwitcher';
 import styles from './infoSection.scss';
 
 const cx = classNames.bind(styles);
@@ -15,30 +23,70 @@ const messages = defineMessages({
     id: 'InfoSection.version',
     defaultMessage: 'version',
   },
+  titleBts: {
+    id: 'PluginItem.titleBts',
+    defaultMessage:
+      'will be hidden on project settings. RP users won`t be able to post or link issue in BTS',
+  },
+  titleNotification: {
+    id: 'PluginItem.titleNotification',
+    defaultMessage:
+      'will be hidden on project settings. RP users won`t be able to receive notification about test results',
+  },
+  titleOthers: {
+    id: 'PluginItem.titleOthers',
+    defaultMessage: 'will be hidden on project settings',
+  },
 });
+
+const titleMessagesMap = {
+  [BTS_GROUP_TYPE]: messages.titleBts,
+  [NOTIFICATION_GROUP_TYPE]: messages.titleNotification,
+  [OTHER_GROUP_TYPE]: messages.titleOthers,
+  [AUTHORIZATION_GROUP_TYPE]: messages.titleOthers,
+  [ANALYZER_GROUP_TYPE]: messages.titleOthers,
+};
 
 @injectIntl
 export class InfoSection extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
-    title: PropTypes.string.isRequired,
     image: PropTypes.string.isRequired,
     description: PropTypes.object.isRequired,
+    title: PropTypes.string.isRequired,
     version: PropTypes.string,
+    data: PropTypes.object.isRequired,
+    onToggleActive: PropTypes.func,
+    pluginPageType: PropTypes.bool,
   };
 
   static defaultProps = {
     version: '',
+    onToggleActive: () => {},
+    pluginPageType: false,
   };
 
   state = {
     withShowMore: false,
     expanded: false,
+    isEnabled: this.props.data.enabled,
   };
 
   componentDidMount() {
     this.checkIfTheExpandButtonNeeded();
   }
+
+  onToggleActiveHandler = () => {
+    this.setState({
+      isEnabled: !this.props.data.enabled,
+    });
+
+    this.props.onToggleActive(this.props.data).catch(() => {
+      this.setState({
+        isEnabled: this.props.data.enabled,
+      });
+    });
+  };
 
   checkIfTheExpandButtonNeeded = () => {
     const descriptionHeight = parseInt(
@@ -64,12 +112,14 @@ export class InfoSection extends Component {
   render() {
     const {
       intl: { formatMessage },
+      data: { groupType },
       title,
       image,
       version,
       description,
+      pluginPageType,
     } = this.props;
-    const { expanded, withShowMore } = this.state;
+    const { expanded, withShowMore, isEnabled } = this.state;
     const isPartiallyShown = withShowMore && !expanded;
 
     return (
@@ -79,6 +129,17 @@ export class InfoSection extends Component {
           <h2 className={cx('title')}>{title}</h2>
           {version && (
             <span className={cx('version')}>{`${formatMessage(messages.version)} ${version}`}</span>
+          )}
+          {pluginPageType && (
+            <div className={cx('switcher-block')}>
+              <span className={cx('switcher-status')}>{isEnabled ? 'On' : 'Off'}</span>
+              <div
+                className={cx('switcher')}
+                title={!isEnabled ? `${title} ${formatMessage(titleMessagesMap[groupType])}` : ''}
+              >
+                <InputSwitcher value={isEnabled} onChange={this.onToggleActiveHandler} />
+              </div>
+            </div>
           )}
           <p
             ref={this.descriptionRef}

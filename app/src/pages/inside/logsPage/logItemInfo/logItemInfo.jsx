@@ -17,7 +17,7 @@ import {
   NAMESPACE,
 } from 'controllers/log';
 import { MANY } from 'common/constants/launchStatuses';
-import { availableBtsIntegrationsSelector, isPostIssueActionAvailable } from 'controllers/project';
+import { availableBtsIntegrationsSelector, isPostIssueActionAvailable } from 'controllers/plugins';
 import { connectRouter } from 'common/utils';
 import LinkIcon from 'common/img/link-inline.svg';
 import DownLeftArrowIcon from 'common/img/down-left-arrow-inline.svg';

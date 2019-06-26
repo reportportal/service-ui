@@ -48,18 +48,23 @@ export class PluginsListItems extends Component {
     intl: intlShape.isRequired,
     title: PropTypes.string.isRequired,
     items: PropTypes.array.isRequired,
+    onToggleActive: PropTypes.func.isRequired,
+    onItemClick: PropTypes.func,
     filterMobileBlock: PropTypes.element,
   };
 
   static defaultProps = {
     filterMobileBlock: null,
+    onItemClick: () => {},
   };
 
   render() {
     const {
       intl: { formatMessage },
       title,
+      onItemClick,
       items,
+      onToggleActive,
       filterMobileBlock,
     } = this.props;
 
@@ -70,7 +75,7 @@ export class PluginsListItems extends Component {
         <div className={cx('plugins-content-list')}>
           {items.map((item) => (
             <Fragment key={item.type}>
-              <PluginsItem data={item} />
+              <PluginsItem onClick={onItemClick} data={item} onToggleActive={onToggleActive} />
             </Fragment>
           ))}
         </div>

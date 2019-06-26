@@ -18,7 +18,7 @@ import InfoIcon from 'common/img/info-inline.svg';
 import TestParamsIcon from 'common/img/test-params-icon-inline.svg';
 import ClockIcon from 'common/img/clock-inline.svg';
 import { getSauceLabsConfig } from 'components/integrations/integrationProviders/sauceLabsIntegration/utils';
-import { availableIntegrationsByPluginNameSelector } from 'controllers/project';
+import { availableIntegrationsByPluginNameSelector } from 'controllers/plugins';
 import { SauceLabsIntegrationButton } from './sauceLabsIntegrationButton';
 import { InfoTabs } from '../infoTabs';
 import { LogItemDetails } from './logItemDetails';

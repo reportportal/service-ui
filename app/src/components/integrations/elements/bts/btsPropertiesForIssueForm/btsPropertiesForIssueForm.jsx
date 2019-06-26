@@ -62,6 +62,7 @@ export class BtsPropertiesForIssueForm extends Component {
     change: PropTypes.func,
     disabled: PropTypes.bool.isRequired,
     updateMetaData: PropTypes.func,
+    pluginPageType: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -74,6 +75,7 @@ export class BtsPropertiesForIssueForm extends Component {
     initialize: () => {},
     reset: () => {},
     change: () => {},
+    pluginPageType: false,
   };
 
   constructor(props) {
@@ -251,10 +253,13 @@ export class BtsPropertiesForIssueForm extends Component {
       });
     });
 
-  fetchFieldsSet = (issueTypeValue) =>
-    fetch(
-      URLS.btsIntegrationFieldsSet(this.props.projectId, this.props.instanceId, issueTypeValue),
-    );
+  fetchFieldsSet = (issueTypeValue) => {
+    const url = this.props.pluginPageType
+      ? URLS.btsGlobalIntegrationFieldsSet(this.props.instanceId, issueTypeValue)
+      : URLS.btsIntegrationFieldsSet(this.props.projectId, this.props.instanceId, issueTypeValue);
+
+    return fetch(url);
+  };
 
   catchError = (error) => {
     this.props.showNotification({
@@ -266,8 +271,13 @@ export class BtsPropertiesForIssueForm extends Component {
     });
   };
 
-  fetchIssueType = () =>
-    fetch(URLS.btsIntegrationIssueTypes(this.props.projectId, this.props.instanceId));
+  fetchIssueType = () => {
+    const url = this.props.pluginPageType
+      ? URLS.btsGlobalIntegrationIssueTypes(this.props.instanceId)
+      : URLS.btsIntegrationIssueTypes(this.props.projectId, this.props.instanceId);
+
+    return fetch(url);
+  };
 
   changeIssueTypeConfig = (issueTypes, selectedIssueType) => {
     this.issueTypeDropdownOptions = issueTypes.map((item) => ({ value: item, label: item }));

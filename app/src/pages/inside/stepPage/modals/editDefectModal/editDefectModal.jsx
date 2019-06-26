@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { activeProjectSelector } from 'controllers/user';
-import { availableBtsIntegrationsSelector, isPostIssueActionAvailable } from 'controllers/project';
+import { availableBtsIntegrationsSelector, isPostIssueActionAvailable } from 'controllers/plugins';
 import { fetchTestItemsAction } from 'controllers/testItem';
 import { unlinkIssueAction, linkIssueAction, postIssueAction } from 'controllers/step';
 import { hideModalAction } from 'controllers/modal';

@@ -1,9 +1,11 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { namedIntegrationsSelectorsMap } from 'controllers/project';
 import { showDefaultErrorNotification } from 'controllers/notification';
-import { namedGlobalIntegrationsSelectorsMap } from 'controllers/plugins';
+import {
+  namedProjectIntegrationsSelectorsMap,
+  namedGlobalIntegrationsSelectorsMap,
+} from 'controllers/plugins';
 import { INTEGRATIONS_IMAGES_MAP, INTEGRATION_NAMES_TITLES } from '../../constants';
 import { INTEGRATIONS_DESCRIPTIONS_MAP } from '../../messages';
 import { InfoSection } from './infoSection';
@@ -11,10 +13,12 @@ import { InstancesSection } from './instancesSection';
 
 @connect(
   (state, ownProps) => ({
-    projectIntegrations: namedIntegrationsSelectorsMap[ownProps.integrationType.name](state),
+    projectIntegrations: namedProjectIntegrationsSelectorsMap[ownProps.integrationType.name](state),
     globalIntegrations: namedGlobalIntegrationsSelectorsMap[ownProps.integrationType.name](state),
   }),
-  { showDefaultErrorNotification },
+  {
+    showDefaultErrorNotification,
+  },
 )
 export class IntegrationInfoContainer extends Component {
   static propTypes = {
@@ -23,14 +27,24 @@ export class IntegrationInfoContainer extends Component {
     projectIntegrations: PropTypes.array.isRequired,
     globalIntegrations: PropTypes.array.isRequired,
     showDefaultErrorNotification: PropTypes.func.isRequired,
+    onToggleActive: PropTypes.func,
+    pluginPageType: PropTypes.bool,
+  };
+
+  static defaultProps = {
+    onToggleActive: () => {},
+    pluginPageType: false,
   };
 
   render() {
     const {
       integrationType: { name, details: { version } = {} },
+      integrationType,
       projectIntegrations,
       globalIntegrations,
       onItemClick,
+      onToggleActive,
+      pluginPageType,
     } = this.props;
 
     return (
@@ -38,14 +52,19 @@ export class IntegrationInfoContainer extends Component {
         <InfoSection
           image={INTEGRATIONS_IMAGES_MAP[name]}
           description={INTEGRATIONS_DESCRIPTIONS_MAP[name]}
-          version={version}
           title={INTEGRATION_NAMES_TITLES[name]}
+          version={version}
+          data={integrationType}
+          onToggleActive={onToggleActive}
+          pluginPageType={pluginPageType}
         />
         <InstancesSection
           globalIntegrations={globalIntegrations}
           projectIntegrations={projectIntegrations}
           onItemClick={onItemClick}
           instanceType={name}
+          pluginPageType={pluginPageType}
+          title={INTEGRATION_NAMES_TITLES[name]}
         />
       </Fragment>
     );

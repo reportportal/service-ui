@@ -237,8 +237,10 @@ export const URLS = {
     `${urlBase}integration/${projectId}/${integrationId}/${command}`,
   newProjectIntegration: (projectId, pluginName) =>
     `${urlBase}integration/${projectId}/${pluginName}`,
+  newGlobalIntegration: (pluginName) => `${urlBase}integration/${pluginName}`,
   projectIntegration: (projectId, integrationId) =>
     `${urlBase}integration/${projectId}/${integrationId}`,
+  globalIntegration: (integrationId) => `${urlBase}integration/${integrationId}`,
   removeProjectIntegrationByType: (projectId, type) =>
     `${urlBase}integration/${projectId}/all/${type}`,
   testIntegrationConnection: (projectId, integrationId) =>
@@ -246,8 +248,11 @@ export const URLS = {
 
   btsIntegrationIssueTypes: (projectId, integrationId) =>
     `${urlBase}bts/${projectId}/${integrationId}/issue_types`,
+  btsGlobalIntegrationIssueTypes: (integrationId) => `${urlBase}bts/${integrationId}/issue_types`,
   btsIntegrationFieldsSet: (projectId, integrationId, issueType) =>
     `${urlBase}bts/${projectId}/${integrationId}/fields-set?issueType=${issueType}`,
+  btsGlobalIntegrationFieldsSet: (integrationId, issueType) =>
+    `${urlBase}bts/${integrationId}/fields-set?issueType=${issueType}`,
   btsIntegrationPostTicket: (projectId, integrationId) =>
     `${urlBase}bts/${projectId}/${integrationId}/ticket`,
   btsTicket: (activeProject, issueId, btsProject, btsUrl) =>
