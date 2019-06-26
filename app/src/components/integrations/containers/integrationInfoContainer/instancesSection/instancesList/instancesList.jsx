@@ -25,6 +25,7 @@ export const InstancesList = ({
           disabled={disabled}
           data={item}
           title={item.name || defaultItemTitle}
+          creator={item.creator}
           creationInfo={moment(item.creationDate).format('ll')}
           onClick={() => onItemClick({ name: defaultItemTitle, ...item, blocked }, title)}
         />

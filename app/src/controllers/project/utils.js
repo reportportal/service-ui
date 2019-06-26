@@ -12,11 +12,3 @@ export const normalizeAttributesWithPrefix = (attributes, prefix) => {
     {},
   );
 };
-
-export const isPostIssueActionAvailable = (integrations) =>
-  integrations.length &&
-  integrations.some(
-    (item) =>
-      item.integrationParameters.defectFormFields &&
-      item.integrationParameters.defectFormFields.length,
-  );

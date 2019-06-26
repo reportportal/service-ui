@@ -8,6 +8,13 @@
   display: flex;
   justify-content: space-between;
   width: 830px;
+  @media (max-width: $SCREEN_SM_MAX) {
+    width: 100%;
+  }
+}
+
+.plugins-sub-content-wrapper {
+  width: 830px;
 }
 
 .plugins-content {

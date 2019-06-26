@@ -1,7 +1,51 @@
 import { combineReducers } from 'redux';
 import { fetchReducer } from 'controllers/fetch';
 import { queueReducers } from 'common/utils/queueReducers';
-import { NAMESPACE, GLOBAL_INTEGRATIONS_NAMESPACE, UPDATE_PLUGIN_LOCALLY } from './constants';
+import {
+  NAMESPACE,
+  SET_PROJECT_INTEGRATIONS,
+  FETCH_GLOBAL_INTEGRATIONS_SUCCESS,
+  UPDATE_PLUGIN_LOCALLY,
+  ADD_GLOBAL_INTEGRATION_SUCCESS,
+  UPDATE_GLOBAL_INTEGRATION_SUCCESS,
+  REMOVE_GLOBAL_INTEGRATION_SUCCESS,
+  ADD_PROJECT_INTEGRATION_SUCCESS,
+  UPDATE_PROJECT_INTEGRATION_SUCCESS,
+  REMOVE_PROJECT_INTEGRATION_SUCCESS,
+  REMOVE_PROJECT_INTEGRATIONS_BY_TYPE_SUCCESS,
+} from './constants';
+
+const addIntegration = (state, type, payload) => ({
+  ...state,
+  [type]: [...state[type], payload],
+});
+
+const updateIntegration = (state, type, payload) => ({
+  ...state,
+  [type]: state[type].map((integration) => {
+    if (payload.id === integration.id) {
+      return {
+        ...integration,
+        ...payload.data,
+        integrationParameters: {
+          ...integration.integrationParameters,
+          ...payload.data.integrationParameters,
+        },
+      };
+    }
+    return integration;
+  }),
+});
+
+const removeIntegration = (state, type, payload) => ({
+  ...state,
+  [type]: state[type].filter((item) => item.id !== payload),
+});
+
+const removeIntegrationByType = (state, type, payload) => ({
+  ...state,
+  [type]: state[type].filter((item) => item.integrationType.name !== payload),
+});
 
 export const updatePluginLocallyReducer = (state, { type, payload }) => {
   switch (type) {
@@ -17,7 +61,38 @@ export const updatePluginLocallyReducer = (state, { type, payload }) => {
   }
 };
 
+export const integrationsReducer = (state = {}, { type, payload }) => {
+  switch (type) {
+    case FETCH_GLOBAL_INTEGRATIONS_SUCCESS:
+      return {
+        ...state,
+        globalIntegrations: payload,
+      };
+    case SET_PROJECT_INTEGRATIONS:
+      return {
+        ...state,
+        projectIntegrations: payload,
+      };
+    case ADD_GLOBAL_INTEGRATION_SUCCESS:
+      return addIntegration(state, 'globalIntegrations', payload);
+    case UPDATE_GLOBAL_INTEGRATION_SUCCESS:
+      return updateIntegration(state, 'globalIntegrations', payload);
+    case REMOVE_GLOBAL_INTEGRATION_SUCCESS:
+      return removeIntegration(state, 'globalIntegrations', payload);
+    case ADD_PROJECT_INTEGRATION_SUCCESS:
+      return addIntegration(state, 'projectIntegrations', payload);
+    case UPDATE_PROJECT_INTEGRATION_SUCCESS:
+      return updateIntegration(state, 'projectIntegrations', payload);
+    case REMOVE_PROJECT_INTEGRATION_SUCCESS:
+      return removeIntegration(state, 'projectIntegrations', payload);
+    case REMOVE_PROJECT_INTEGRATIONS_BY_TYPE_SUCCESS:
+      return removeIntegrationByType(state, 'projectIntegrations', payload);
+    default:
+      return state;
+  }
+};
+
 export const pluginsReducer = combineReducers({
   plugins: queueReducers(fetchReducer(NAMESPACE), updatePluginLocallyReducer),
-  globalIntegrations: fetchReducer(GLOBAL_INTEGRATIONS_NAMESPACE),
+  integrations: integrationsReducer,
 });

@@ -62,6 +62,7 @@ export class RallyConnectionFormFields extends Component {
           required
           disabled={disabled}
           lineAlign={lineAlign}
+          maxLength="55"
           validate={validators.requiredField}
         >
           <FieldErrorHint>
@@ -86,6 +87,7 @@ export class RallyConnectionFormFields extends Component {
           required
           disabled={disabled || editAuthMode}
           lineAlign={lineAlign}
+          maxLength="55"
           validate={validators.project}
         >
           <FieldErrorHint>

@@ -1,22 +1,6 @@
 import { createSelector } from 'reselect';
 import { OWNER } from 'common/constants/permissions';
 import { DEFECT_TYPES_SEQUENCE } from 'common/constants/defectTypes';
-import { BTS_GROUP_TYPE } from 'common/constants/pluginsGroupTypes';
-import {
-  JIRA,
-  RALLY,
-  EMAIL,
-  SAUCE_LABS,
-  INTEGRATION_NAMES_BY_GROUP_TYPES_MAP,
-} from 'common/constants/integrationNames';
-import {
-  sortItemsByGroupType,
-  groupItems,
-  filterIntegrationsByGroupType,
-  createNamedIntegrationsSelector,
-  globalBtsIntegrationsSelector,
-  namedGlobalIntegrationsSelectorsMap,
-} from 'controllers/plugins';
 import {
   ANALYZER_ATTRIBUTE_PREFIX,
   JOB_ATTRIBUTE_PREFIX,
@@ -33,8 +17,6 @@ export const projectConfigSelector = (state) => projectInfoSelector(state).confi
 export const projectMembersSelector = (state) => projectInfoSelector(state).users || [];
 
 export const projectCreationDateSelector = (state) => projectInfoSelector(state).creationDate || 0;
-
-export const projectIntegrationsSelector = (state) => projectInfoSelector(state).integrations || [];
 
 export const projectPreferencesSelector = (state) => projectSelector(state).preferences || {};
 
@@ -126,57 +108,6 @@ export const defectColorsSelector = createSelector(projectConfigSelector, (confi
     });
   return colors;
 });
-
-/* INTEGRATIONS */
-
-const btsIntegrationsSelector = createSelector(projectIntegrationsSelector, (integrations) =>
-  filterIntegrationsByGroupType(integrations, BTS_GROUP_TYPE),
-);
-
-export const projectIntegrationsSortedSelector = createSelector(
-  projectIntegrationsSelector,
-  sortItemsByGroupType,
-);
-
-export const groupedIntegrationsSelector = createSelector(
-  projectIntegrationsSortedSelector,
-  groupItems,
-);
-
-export const namedIntegrationsSelectorsMap = {
-  [SAUCE_LABS]: createNamedIntegrationsSelector(SAUCE_LABS, projectIntegrationsSelector),
-  [JIRA]: createNamedIntegrationsSelector(JIRA, projectIntegrationsSelector),
-  [RALLY]: createNamedIntegrationsSelector(RALLY, projectIntegrationsSelector),
-  [EMAIL]: createNamedIntegrationsSelector(EMAIL, projectIntegrationsSelector),
-};
-
-export const availableIntegrationsByPluginNameSelector = (state, pluginName) => {
-  let availableIntegrations = namedIntegrationsSelectorsMap[pluginName](state);
-  if (!availableIntegrations.length) {
-    availableIntegrations = namedGlobalIntegrationsSelectorsMap[pluginName](state);
-  }
-  return availableIntegrations;
-};
-
-export const availableBtsIntegrationsSelector = (state) => {
-  const projectBtsIntegrations = btsIntegrationsSelector(state);
-  return projectBtsIntegrations.length
-    ? projectBtsIntegrations
-    : globalBtsIntegrationsSelector(state);
-};
-
-const namedAvailableIntegrationsByGroupTypeSelector = (groupType) => (state) => {
-  const availablePluginNames = INTEGRATION_NAMES_BY_GROUP_TYPES_MAP[groupType];
-
-  return availablePluginNames.reduce((acc, pluginName) => {
-    const availableIntegrations = availableIntegrationsByPluginNameSelector(state, pluginName);
-    return availableIntegrations.length ? { ...acc, [pluginName]: availableIntegrations } : acc;
-  }, {});
-};
-
-export const namedAvailableBtsIntegrationsSelector = namedAvailableIntegrationsByGroupTypeSelector(
-  BTS_GROUP_TYPE,
-);
 
 /* PATTERN-ANALYSIS */
 

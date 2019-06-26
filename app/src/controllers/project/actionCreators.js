@@ -10,14 +10,6 @@ import {
   ADD_DEFECT_SUBTYPE_SUCCESS,
   DELETE_DEFECT_SUBTYPE,
   DELETE_DEFECT_SUBTYPE_SUCCESS,
-  REMOVE_PROJECT_INTEGRATIONS_BY_TYPE,
-  REMOVE_PROJECT_INTEGRATIONS_BY_TYPE_SUCCESS,
-  ADD_PROJECT_INTEGRATION,
-  ADD_PROJECT_INTEGRATION_SUCCESS,
-  UPDATE_PROJECT_INTEGRATION,
-  UPDATE_PROJECT_INTEGRATION_SUCCESS,
-  REMOVE_PROJECT_INTEGRATION,
-  REMOVE_PROJECT_INTEGRATION_SUCCESS,
   ADD_PATTERN,
   ADD_PATTERN_SUCCESS,
   UPDATE_PATTERN,
@@ -86,46 +78,6 @@ export const fetchProjectAction = (projectId, isAdminAccess) => ({
 export const fetchConfigurationAttributesAction = (projectId) => ({
   type: FETCH_CONFIGURATION_ATTRIBUTES,
   payload: projectId,
-});
-
-export const updateProjectIntegrationAction = (data, id, callback) => ({
-  type: UPDATE_PROJECT_INTEGRATION,
-  payload: { data, id, callback },
-});
-
-export const updateProjectIntegrationSuccessAction = (data, id) => ({
-  type: UPDATE_PROJECT_INTEGRATION_SUCCESS,
-  payload: { data, id },
-});
-
-export const addProjectIntegrationAction = (data, pluginName, callback) => ({
-  type: ADD_PROJECT_INTEGRATION,
-  payload: { data, pluginName, callback },
-});
-
-export const addProjectIntegrationSuccessAction = (integration) => ({
-  type: ADD_PROJECT_INTEGRATION_SUCCESS,
-  payload: integration,
-});
-
-export const removeProjectIntegrationAction = (id, callback) => ({
-  type: REMOVE_PROJECT_INTEGRATION,
-  payload: { id, callback },
-});
-
-export const removeProjectIntegrationSuccessAction = (id) => ({
-  type: REMOVE_PROJECT_INTEGRATION_SUCCESS,
-  payload: id,
-});
-
-export const removeProjectIntegrationsByTypeAction = (instanceType) => ({
-  type: REMOVE_PROJECT_INTEGRATIONS_BY_TYPE,
-  payload: instanceType,
-});
-
-export const removeProjectIntegrationsByTypeSuccessAction = (instanceType) => ({
-  type: REMOVE_PROJECT_INTEGRATIONS_BY_TYPE_SUCCESS,
-  payload: instanceType,
 });
 
 export const updateDefectSubTypeAction = (subType) => ({

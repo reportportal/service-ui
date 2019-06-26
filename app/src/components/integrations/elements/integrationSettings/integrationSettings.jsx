@@ -6,7 +6,8 @@ import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
 import { projectIdSelector } from 'controllers/pages';
-import { removeProjectIntegrationAction } from 'controllers/project';
+import { activeProjectSelector } from 'controllers/user';
+import { removeProjectIntegrationAction, removeGlobalIntegrationAction } from 'controllers/plugins';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { INTEGRATION_NAMES_TITLES } from '../../constants';
 import { INTEGRATION_FORM } from './integrationForm/constants';
@@ -26,27 +27,36 @@ const messages = defineMessages({
 @connect(
   (state) => ({
     projectId: projectIdSelector(state),
+    activeProject: activeProjectSelector(state),
   }),
-  { removeProjectIntegrationAction },
+  {
+    removeProjectIntegrationAction,
+    removeGlobalIntegrationAction,
+  },
 )
 @injectIntl
 export class IntegrationSettings extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
-    projectId: PropTypes.string.isRequired,
+    projectId: PropTypes.string,
+    activeProject: PropTypes.string.isRequired,
     data: PropTypes.object.isRequired,
     formFieldsComponent: PropTypes.func.isRequired,
     goToPreviousPage: PropTypes.func.isRequired,
     onUpdate: PropTypes.func.isRequired,
     removeProjectIntegrationAction: PropTypes.func.isRequired,
+    removeGlobalIntegrationAction: PropTypes.func.isRequired,
     editAuthConfig: PropTypes.object,
     isEmptyConfiguration: PropTypes.bool,
+    pluginPageType: PropTypes.bool,
     formKey: PropTypes.string,
   };
 
   static defaultProps = {
+    projectId: '',
     editAuthConfig: null,
     isEmptyConfiguration: false,
+    pluginPageType: false,
     formKey: INTEGRATION_FORM,
   };
 
@@ -70,13 +80,14 @@ export class IntegrationSettings extends Component {
     const {
       data: { id },
       projectId,
+      activeProject,
     } = this.props;
 
     this.setState({
       loading: true,
     });
 
-    fetch(URLS.testIntegrationConnection(projectId, id))
+    fetch(URLS.testIntegrationConnection(projectId || activeProject, id))
       .then(() => {
         this.setState({
           connected: true,
@@ -107,8 +118,17 @@ export class IntegrationSettings extends Component {
     );
   };
 
-  removeIntegration = () =>
-    this.props.removeProjectIntegrationAction(this.props.data.id, this.props.goToPreviousPage);
+  removeIntegration = () => {
+    const {
+      data: { id },
+      pluginPageType,
+      goToPreviousPage,
+    } = this.props;
+
+    return pluginPageType
+      ? this.props.removeGlobalIntegrationAction(id, pluginPageType, goToPreviousPage)
+      : this.props.removeProjectIntegrationAction(id, pluginPageType, goToPreviousPage);
+  };
 
   render() {
     const {
@@ -118,6 +138,7 @@ export class IntegrationSettings extends Component {
       editAuthConfig,
       isEmptyConfiguration,
       formKey,
+      pluginPageType,
     } = this.props;
     const { loading, connected, errorMessage } = this.state;
     const pluginName = data.integrationType.name;
@@ -130,6 +151,7 @@ export class IntegrationSettings extends Component {
           <Fragment>
             <ConnectionSection
               blocked={data.blocked}
+              pluginPageType={pluginPageType}
               failedConnectionMessage={
                 connected
                   ? null
@@ -145,6 +167,7 @@ export class IntegrationSettings extends Component {
               form={formKey}
               data={data}
               connected={connected}
+              pluginPageType={pluginPageType}
               onSubmit={this.updateIntegrationHandler}
               formFieldsComponent={formFieldsComponent}
               isEmptyConfiguration={isEmptyConfiguration}

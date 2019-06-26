@@ -3,6 +3,14 @@ export {
   fetchPluginsAction,
   fetchGlobalIntegrationsAction,
   updatePluginLocallyAction,
+  addProjectIntegrationAction,
+  updateProjectIntegrationAction,
+  removeProjectIntegrationAction,
+  removeProjectIntegrationsByTypeAction,
+  addGlobalIntegrationAction,
+  updateGlobalIntegrationAction,
+  removeGlobalIntegrationAction,
+  setProjectIntegrationsAction,
 } from './actionCreators';
 export {
   filterAvailablePlugins,
@@ -10,6 +18,7 @@ export {
   filterIntegrationsByName,
   groupItems,
   sortItemsByGroupType,
+  isPostIssueActionAvailable,
 } from './utils';
 export {
   pluginsSelector,
@@ -17,4 +26,11 @@ export {
   globalBtsIntegrationsSelector,
   createNamedIntegrationsSelector,
   namedGlobalIntegrationsSelectorsMap,
+  projectIntegrationsSelector,
+  projectIntegrationsSortedSelector,
+  groupedIntegrationsSelector,
+  namedProjectIntegrationsSelectorsMap,
+  availableBtsIntegrationsSelector,
+  namedAvailableBtsIntegrationsSelector,
 } from './selectors';
+export { pluginSagas } from './sagas';

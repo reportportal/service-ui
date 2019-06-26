@@ -2,7 +2,7 @@ import { takeEvery, put, call, all, select, take } from 'redux-saga/effects';
 import { URLS } from 'common/urls';
 import { SAUCE_LABS } from 'common/constants/integrationNames';
 import { showDefaultErrorNotification } from 'controllers/notification';
-import { availableIntegrationsByPluginNameSelector } from 'controllers/project';
+import { availableIntegrationsByPluginNameSelector } from 'controllers/plugins';
 import { activeProjectSelector } from 'controllers/user';
 import { fetchDataAction, createFetchPredicate } from 'controllers/fetch';
 import {

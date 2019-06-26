@@ -25,6 +25,14 @@ export const groupItems = (items) =>
     return groupedItems;
   }, {});
 
+export const isPostIssueActionAvailable = (integrations) =>
+  integrations.length &&
+  integrations.some(
+    (item) =>
+      item.integrationParameters.defectFormFields &&
+      item.integrationParameters.defectFormFields.length,
+  );
+
 // TODO: remove check for AUTHORIZATION_GROUP_TYPE when designs and backend implementation will exist
 export const filterAvailablePlugins = (plugins) =>
   plugins.filter((item) => item.enabled && item.groupType !== AUTHORIZATION_GROUP_TYPE);

@@ -41,10 +41,15 @@ export class IntegrationForm extends Component {
     formFieldsComponent: PropTypes.func.isRequired,
     connected: PropTypes.bool.isRequired,
     isEmptyConfiguration: PropTypes.bool.isRequired,
+    pluginPageType: PropTypes.bool,
+  };
+
+  static defaultProps = {
+    pluginPageType: false,
   };
 
   state = {
-    disabled: !this.props.isEmptyConfiguration,
+    disabled: !this.props.isEmptyConfiguration || !this.props.pluginPageType,
     metaData: {},
   };
 
@@ -80,9 +85,10 @@ export class IntegrationForm extends Component {
       connected,
       formFieldsComponent: FieldsComponent,
       isEmptyConfiguration,
+      pluginPageType,
     } = this.props;
     const { disabled } = this.state;
-    const isConfigurationNotSpecified = blocked && isEmptyConfiguration;
+    const isConfigurationNotSpecified = blocked && isEmptyConfiguration && !pluginPageType;
     const shouldFieldsBeHidden = !connected && this.isSupportsMultipleInstances;
 
     return (
@@ -102,11 +108,12 @@ export class IntegrationForm extends Component {
                 initialData={integrationParameters}
                 disabled={disabled}
                 updateMetaData={this.updateMetaData}
+                pluginPageType={pluginPageType}
               />
             )}
           </div>
         )}
-        {!blocked && (
+        {(!blocked || pluginPageType) && (
           <div className={cx('controls-block')}>
             {disabled ? (
               <GhostButton

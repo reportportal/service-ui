@@ -107,6 +107,7 @@ export class JiraConnectionFormFields extends Component {
           required
           disabled={disabled}
           lineAlign={lineAlign}
+          maxLength="55"
           validate={validators.requiredField}
         >
           <FieldErrorHint>
@@ -119,6 +120,7 @@ export class JiraConnectionFormFields extends Component {
           required
           disabled={disabled}
           lineAlign={lineAlign}
+          maxLength="55"
           validate={validators.requiredField}
         >
           <FieldErrorHint>

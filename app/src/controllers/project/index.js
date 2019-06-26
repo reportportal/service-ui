@@ -18,10 +18,6 @@ export {
   addDefectSubTypeSuccessAction,
   deleteDefectSubTypeAction,
   deleteDefectSubTypeSuccessAction,
-  addProjectIntegrationAction,
-  updateProjectIntegrationAction,
-  removeProjectIntegrationAction,
-  removeProjectIntegrationsByTypeAction,
   addPatternAction,
   addPatternActionSuccess,
   updatePatternAction,
@@ -46,15 +42,8 @@ export {
   externalSystemSelector,
   analyzerAttributesSelector,
   jobAttributesSelector,
-  projectIntegrationsSelector,
-  projectIntegrationsSortedSelector,
-  groupedIntegrationsSelector,
-  namedIntegrationsSelectorsMap,
-  availableIntegrationsByPluginNameSelector,
-  availableBtsIntegrationsSelector,
-  namedAvailableBtsIntegrationsSelector,
   patternsSelector,
   PAStateSelector,
 } from './selectors';
-export { normalizeAttributesWithPrefix, isPostIssueActionAvailable } from './utils';
+export { normalizeAttributesWithPrefix } from './utils';
 export { projectSagas } from './sagas';

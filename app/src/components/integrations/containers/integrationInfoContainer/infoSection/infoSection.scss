@@ -47,3 +47,19 @@
   font-family: $FONT-REGULAR;
   cursor: pointer;
 }
+
+.switcher-block {
+  display: flex;
+  justify-content: space-between;
+  padding: 17px 0;
+  border-bottom: 1px solid $COLOR--gray-91;
+}
+
+.switcher-status {
+  font-size: 13px;
+}
+
+.switcher {
+  height: 14px;
+  width: 20px;
+}

@@ -1,6 +1,5 @@
 import { takeEvery, all, put, select, call } from 'redux-saga/effects';
 import { URLS } from 'common/urls';
-import { BTS_GROUP_TYPE } from 'common/constants/pluginsGroupTypes';
 import {
   showNotification,
   showDefaultErrorNotification,
@@ -22,10 +21,6 @@ import {
   ADD_DEFECT_SUBTYPE,
   DELETE_DEFECT_SUBTYPE,
   UPDATE_NOTIFICATIONS_CONFIG,
-  ADD_PROJECT_INTEGRATION,
-  UPDATE_PROJECT_INTEGRATION,
-  REMOVE_PROJECT_INTEGRATION,
-  REMOVE_PROJECT_INTEGRATIONS_BY_TYPE,
   ADD_PATTERN,
   UPDATE_PATTERN,
   DELETE_PATTERN,
@@ -43,10 +38,6 @@ import {
   addDefectSubTypeSuccessAction,
   deleteDefectSubTypeSuccessAction,
   updateProjectNotificationsConfigSuccessAction,
-  addProjectIntegrationSuccessAction,
-  updateProjectIntegrationSuccessAction,
-  removeProjectIntegrationSuccessAction,
-  removeProjectIntegrationsByTypeSuccessAction,
   addPatternSuccessAction,
   updatePatternSuccessAction,
   deletePatternSuccessAction,
@@ -157,117 +148,6 @@ function* updateProjectNotificationsConfig({ payload: notificationsConfig }) {
 
 function* watchUpdateProjectNotificationsConfig() {
   yield takeEvery(UPDATE_NOTIFICATIONS_CONFIG, updateProjectNotificationsConfig);
-}
-
-function* addProjectIntegration({ payload: { data, pluginName, callback } }) {
-  yield put(showScreenLockAction());
-  try {
-    const projectId = yield select(projectIdSelector);
-    const response = yield call(fetch, URLS.newProjectIntegration(projectId, pluginName), {
-      method: 'post',
-      data,
-    });
-    const newIntegration = {
-      ...data,
-      id: response.id,
-      integrationType: { name: pluginName, groupType: BTS_GROUP_TYPE },
-    };
-    yield put(addProjectIntegrationSuccessAction(newIntegration));
-    yield put(
-      showNotification({
-        messageId: 'addIntegrationSuccess',
-        type: NOTIFICATION_TYPES.SUCCESS,
-      }),
-    );
-    yield put(hideModalAction());
-    yield call(callback, newIntegration);
-  } catch (error) {
-    yield put(showDefaultErrorNotification(error));
-  } finally {
-    yield put(hideScreenLockAction());
-  }
-}
-
-function* watchAddProjectIntegration() {
-  yield takeEvery(ADD_PROJECT_INTEGRATION, addProjectIntegration);
-}
-
-function* updateProjectIntegration({ payload: { data, id, callback } }) {
-  yield put(showScreenLockAction());
-  try {
-    const projectId = yield select(projectIdSelector);
-    yield call(fetch, URLS.projectIntegration(projectId, id), {
-      method: 'put',
-      data,
-    });
-    yield put(updateProjectIntegrationSuccessAction(data, id));
-    yield put(
-      showNotification({
-        messageId: 'updateIntegrationSuccess',
-        type: NOTIFICATION_TYPES.SUCCESS,
-      }),
-    );
-    yield call(callback);
-  } catch (error) {
-    yield put(showDefaultErrorNotification(error));
-  } finally {
-    yield put(hideScreenLockAction());
-  }
-}
-
-function* watchUpdateProjectIntegration() {
-  yield takeEvery(UPDATE_PROJECT_INTEGRATION, updateProjectIntegration);
-}
-
-function* removeProjectIntegration({ payload: { id, callback } }) {
-  yield put(showScreenLockAction());
-  try {
-    const projectId = yield select(projectIdSelector);
-    yield call(fetch, URLS.projectIntegration(projectId, id), {
-      method: 'delete',
-    });
-    yield put(removeProjectIntegrationSuccessAction(id));
-    yield put(
-      showNotification({
-        messageId: 'removeIntegrationSuccess',
-        type: NOTIFICATION_TYPES.SUCCESS,
-      }),
-    );
-    yield call(callback);
-  } catch (error) {
-    yield put(showDefaultErrorNotification(error));
-  } finally {
-    yield put(hideScreenLockAction());
-  }
-}
-
-function* watchRemoveProjectIntegration() {
-  yield takeEvery(REMOVE_PROJECT_INTEGRATION, removeProjectIntegration);
-}
-
-function* removeProjectIntegrationsByType({ payload: instanceType }) {
-  yield put(showScreenLockAction());
-  try {
-    const projectId = yield select(projectIdSelector);
-    yield call(fetch, URLS.removeProjectIntegrationByType(projectId, instanceType), {
-      method: 'delete',
-    });
-    yield put(removeProjectIntegrationsByTypeSuccessAction(instanceType));
-    yield put(
-      showNotification({
-        messageId: 'resetToGlobalSuccess',
-        type: NOTIFICATION_TYPES.SUCCESS,
-      }),
-    );
-  } catch (error) {
-    yield put(showDefaultErrorNotification(error));
-  } finally {
-    yield put(hideScreenLockAction());
-  }
-}
-
-function* watchRemoveProjectIntegrationsByType() {
-  yield takeEvery(REMOVE_PROJECT_INTEGRATIONS_BY_TYPE, removeProjectIntegrationsByType);
 }
 
 function* addPattern({ payload: pattern }) {
@@ -440,10 +320,6 @@ export function* projectSagas() {
     watchAddDefectSubType(),
     watchDeleteDefectSubType(),
     watchUpdateProjectNotificationsConfig(),
-    watchAddProjectIntegration(),
-    watchUpdateProjectIntegration(),
-    watchRemoveProjectIntegration(),
-    watchRemoveProjectIntegrationsByType(),
     watchAddPattern(),
     watchUpdatePattern(),
     watchUpdatePAState(),
