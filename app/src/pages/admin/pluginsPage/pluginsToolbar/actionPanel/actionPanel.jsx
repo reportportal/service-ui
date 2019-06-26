@@ -23,7 +23,7 @@ export class ActionPanel extends Component {
     intl: intlShape.isRequired,
   };
 
-  renderHeaderButtons = () => {
+  render() {
     const {
       intl: { formatMessage },
     } = this.props;
@@ -50,7 +50,5 @@ export class ActionPanel extends Component {
         ))}
       </div>
     );
-  };
-
-  render = () => this.renderHeaderButtons();
+  }
 }
