@@ -46,6 +46,7 @@ export class CumulativeTrendChart extends PureComponent {
     activeAttribute: null,
     disabledFields: [],
     legendItems: [],
+    chartType: 'bar',
   };
 
   componentDidMount = () => {
@@ -159,12 +160,13 @@ export class CumulativeTrendChart extends PureComponent {
 
   render() {
     const { isPreview } = this.props;
-    const { legendItems, chartData } = this.state;
+    const { legendItems, chartData, chartType } = this.state;
     const classes = cx('cumulative-trend-chart', { 'preview-view': isPreview });
 
-    return this.state && this.state.chartData ? (
+    return chartType && chartData ? (
       <div className={classes}>
         <ChartJS
+          type={chartType}
           chartData={chartData}
           chartOptions={this.state.chartOptions}
           onChartElementClick={this.onChartElementClick}

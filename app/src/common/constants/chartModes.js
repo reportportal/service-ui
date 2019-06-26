@@ -7,6 +7,7 @@ export const CHART_MODES = {
 
   AREA_VIEW: 'areaView',
   BAR_VIEW: 'barView',
+  LINE_VIEW: 'lineView',
   TABLE_VIEW: 'tableView',
   PANEL_VIEW: 'panelView',
   DONUT_VIEW: 'donutView',
@@ -19,6 +20,7 @@ export const MODES_VALUES = {
   [CHART_MODES.AREA_VIEW]: 'area-spline',
   [CHART_MODES.PIE_VIEW]: 'pie',
   [CHART_MODES.BAR_VIEW]: 'bar',
+  [CHART_MODES.LINE_VIEW]: 'line',
   [CHART_MODES.LAUNCH_MODE]: 'launch',
   [CHART_MODES.TIMELINE_MODE]: 'day',
   [CHART_MODES.TABLE_VIEW]: 'table',

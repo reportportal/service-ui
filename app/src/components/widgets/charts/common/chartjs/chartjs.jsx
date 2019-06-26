@@ -8,6 +8,7 @@ import ChartDataLabels from 'chartjs-plugin-datalabels';
 export class ChartJS extends PureComponent {
   static propTypes = {
     data: PropTypes.object,
+    type: PropTypes.string.isRequired,
     chartData: PropTypes.object.isRequired,
     chartOptions: PropTypes.object.isRequired,
     config: PropTypes.object,
@@ -33,14 +34,14 @@ export class ChartJS extends PureComponent {
   }
 
   componentWillUnmount() {
-    this.chart.destroy();
+    this.chart && this.chart.destroy();
     this.chart = null;
   }
 
   createChart() {
-    const { chartData, chartOptions } = this.props;
+    const { chartData, chartOptions, type } = this.props;
     const config = {
-      type: 'bar',
+      type,
       data: chartData,
       options: chartOptions,
       plugins: [ChartDataLabels],
@@ -49,6 +50,7 @@ export class ChartJS extends PureComponent {
     if (this.chart) {
       this.chart.data = chartData;
       this.chart.options = chartOptions;
+      this.chart.type = type;
       this.chart.update(config);
     } else {
       this.chart = this.generateChart(config);
@@ -73,7 +75,11 @@ export class ChartJS extends PureComponent {
 
       const chartElement = chartObj.getElementAtEvent(event);
       if (chartElement.length) {
-        this.props.onChartElementClick(chartElement[0]);
+        this.props.onChartElementClick(
+          chartElement[0],
+          /* eslint no-underscore-dangle: ["error", { "allow": ["_datasetIndex"] }] */
+          config.data.datasets[chartElement[0]._datasetIndex],
+        );
       }
     };
 
