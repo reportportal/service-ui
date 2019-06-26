@@ -24,7 +24,7 @@ export class PluginsToolbar extends PureComponent {
         <div className={cx('plugins-search')}>
           <FieldErrorHint>
             <InputSearch
-              className={'plugins'}
+              customClassName={cx('plugins-input-search')}
               maxLength="128"
               placeholder={this.props.intl.formatMessage(messages.searchInputPlaceholder)}
             />

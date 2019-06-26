@@ -8,6 +8,7 @@ import {
   AUTHORIZATION_GROUP_TYPE,
   BTS_GROUP_TYPE,
   ANALYZER_GROUP_TYPE,
+  OTHER_GROUP_TYPE,
 } from 'common/constants/pluginsGroupTypes';
 import styles from './pluginsListItems.scss';
 import { PluginsItem } from './pluginsItem/index';
@@ -34,6 +35,10 @@ const pluginTitle = defineMessages({
   [ANALYZER_GROUP_TYPE]: {
     id: 'PluginsList.analyzer',
     defaultMessage: 'Analyzer',
+  },
+  [OTHER_GROUP_TYPE]: {
+    id: 'PluginsList.other',
+    defaultMessage: 'Other',
   },
 });
 

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
-import { fetchPluginsAction, pluginsSelector } from 'controllers/plugins';
+import { pluginsSelector } from 'controllers/plugins';
 import { AUTHORIZATION_GROUP_TYPE } from 'common/constants/pluginsGroupTypes';
 import { PageLayout, PageHeader, PageSection } from 'layouts/pageLayout';
 import { PluginsTabs } from './pluginsTabs';
@@ -14,25 +14,15 @@ const messages = defineMessages({
   },
 });
 
-@connect(
-  (state) => ({
-    plugins: pluginsSelector(state),
-  }),
-  {
-    fetchPluginsAction,
-  },
-)
+@connect((state) => ({
+  plugins: pluginsSelector(state),
+}))
 @injectIntl
 export class PluginsPage extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
     plugins: PropTypes.array.isRequired,
-    fetchPluginsAction: PropTypes.func.isRequired,
   };
-
-  componentDidMount() {
-    this.props.fetchPluginsAction();
-  }
 
   getBreadcrumbs = () => [
     {

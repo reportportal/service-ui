@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { defineMessages, injectIntl, intlShape } from 'react-intl';
@@ -19,7 +19,6 @@ const messages = defineMessages({
     defaultMessage: 'Store',
   },
 });
-const pluginsToolbar = <PluginsToolbar />;
 
 @connect(
   (state) => ({
@@ -64,13 +63,11 @@ export class PluginsTabs extends Component {
   });
 
   render = () => (
-    <Fragment>
-      <NavigationTabs
-        config={this.createTabsConfig()}
-        activeTab={this.props.activeTab}
-        onChangeTab={this.props.onChangeTab}
-        customBlock={pluginsToolbar}
-      />
-    </Fragment>
+    <NavigationTabs
+      config={this.createTabsConfig()}
+      activeTab={this.props.activeTab}
+      onChangeTab={this.props.onChangeTab}
+      customBlock={<PluginsToolbar />}
+    />
   );
 }
