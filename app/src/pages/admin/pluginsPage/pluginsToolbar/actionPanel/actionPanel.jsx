@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import classNames from 'classnames/bind';
 import { GhostButton } from 'components/buttons/ghostButton';
-import UploadIcon from 'common/img/upload-inline.svg';
+import ImportIcon from 'common/img/import-inline.svg';
 
 import { UPLOAD } from './constants';
 
@@ -30,7 +30,7 @@ export class ActionPanel extends Component {
     const ACTION_BUTTONS = [
       {
         key: UPLOAD,
-        icon: UploadIcon,
+        icon: ImportIcon,
         onClick: () => {},
       },
     ];
@@ -52,7 +52,5 @@ export class ActionPanel extends Component {
     );
   };
 
-  render() {
-    return this.renderHeaderButtons();
-  }
+  render = () => this.renderHeaderButtons();
 }

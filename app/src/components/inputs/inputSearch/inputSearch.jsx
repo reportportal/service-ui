@@ -37,6 +37,7 @@ export const InputSearch = ({
   refFunction,
   onChange,
   className,
+  customClassName,
   iconAtRight,
   searchHint,
   onFocus,
@@ -44,13 +45,7 @@ export const InputSearch = ({
   onKeyUp,
   active,
 }) => (
-  <div
-    className={cx(
-      'input-search',
-      { error, active, disabled },
-      { [`input-search-${className}`]: className },
-    )}
-  >
+  <div className={cx('input-search', { error, active, disabled }, customClassName)}>
     <div className={cx('icon', { 'at-right': iconAtRight })}>{Parser(SearchIcon)}</div>
     <input
       ref={refFunction}
@@ -75,6 +70,7 @@ InputSearch.propTypes = {
   placeholder: PropTypes.string,
   maxLength: PropTypes.string,
   className: PropTypes.string,
+  customClassName: PropTypes.string,
   iconAtRight: PropTypes.bool,
   searchHint: PropTypes.string,
   active: PropTypes.bool,
@@ -93,6 +89,7 @@ InputSearch.defaultProps = {
   placeholder: '',
   maxLength: '256',
   className: '',
+  customClassName: '',
   iconAtRight: false,
   searchHint: '',
   active: false,

@@ -12,7 +12,7 @@ import { Breadcrumbs, breadcrumbDescriptorShape } from 'components/main/breadcru
 import { breadcrumbsSelector, restorePathAction } from 'controllers/testItem';
 import { LAUNCHES_PAGE_EVENTS } from 'components/main/analytics/events';
 import AddWidgetIcon from 'common/img/add-widget-inline.svg';
-import ImportIcon from './img/import-inline.svg';
+import ImportIcon from 'common/img/import-inline.svg';
 import RefreshIcon from './img/refresh-inline.svg';
 import styles from './actionPanel.scss';
 

@@ -5,12 +5,17 @@ import {
   NOTIFICATION_GROUP_TYPE,
   AUTHORIZATION_GROUP_TYPE,
   ANALYZER_GROUP_TYPE,
+  OTHER_GROUP_TYPE,
 } from './pluginsGroupTypes';
 
 const PLUGINS_FILTER_LIST = [
   {
     value: ALL_GROUP_TYPE,
     label: <FormattedMessage id={'PluginsFilter.all'} defaultMessage={'All'} />,
+  },
+  {
+    value: OTHER_GROUP_TYPE,
+    label: <FormattedMessage id={'PluginsFilter.other'} defaultMessage={'Other'} />,
   },
   {
     value: ANALYZER_GROUP_TYPE,
