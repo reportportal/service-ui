@@ -11,6 +11,7 @@ import { URLS } from 'common/urls';
 import {
   fetchFiltersConcatAction,
   filtersSelector,
+  activeFilterSelector,
   loadingSelector,
   filtersPaginationSelector,
 } from 'controllers/filter';
@@ -68,6 +69,7 @@ const messages = defineMessages({
     userId: userIdSelector(state),
     activeProject: activeProjectSelector(state),
     filters: filtersSelector(state),
+    activeLaunchFilter: activeFilterSelector(state),
     pagination: filtersPaginationSelector(state),
     loading: loadingSelector(state),
   }),
@@ -94,6 +96,7 @@ export class FiltersControl extends Component {
     pagination: PropTypes.object.isRequired,
     formAppearance: PropTypes.object.isRequired,
     filters: PropTypes.array.isRequired,
+    activeLaunchFilter: PropTypes.object,
     changeWizardForm: PropTypes.func,
     fetchFiltersConcatAction: PropTypes.func,
     onFormAppearanceChange: PropTypes.func.isRequired,
@@ -111,6 +114,7 @@ export class FiltersControl extends Component {
     activeProject: '',
     loading: false,
     filters: [],
+    activeLaunchFilter: null,
     pagination: {},
     changeWizardForm: () => {},
     fetchFiltersConcatAction: () => {},
@@ -130,7 +134,10 @@ export class FiltersControl extends Component {
 
   componentDidMount() {
     const { page } = this.state;
+    const { activeLaunchFilter } = this.props;
+
     this.fetchFilter({ page });
+    activeLaunchFilter && this.handleActiveFilterChange(activeLaunchFilter.id.toString());
   }
 
   getFormAppearanceComponent = (activeFilter) => {
@@ -181,6 +188,20 @@ export class FiltersControl extends Component {
     ...filter,
     conditions: filter.conditions.filter((item) => item.value.trim()),
   });
+
+  getFiltersList = (filters) => {
+    if (!filters.length) return [];
+
+    const { activeLaunchFilter } = this.props;
+
+    if (!activeLaunchFilter) return filters;
+
+    const filtersList = filters.filter((el) => el.id !== activeLaunchFilter.id);
+
+    filtersList.unshift(activeLaunchFilter);
+
+    return filtersList;
+  };
 
   fetchFilter = ({ page, size, searchValue }) => {
     const { size: stateSize, page: statePage } = this.state;
@@ -246,6 +267,7 @@ export class FiltersControl extends Component {
       .then(({ id }) => {
         this.handleActiveFilterChange(String(id), filter);
         this.fetchFilter({ page: 1 });
+
         notify({
           message: intl.formatMessage(messages.insertFilterSuccess),
           type: NOTIFICATION_TYPES.SUCCESS,
@@ -270,6 +292,7 @@ export class FiltersControl extends Component {
     })
       .then(() => {
         this.fetchFilter({ page: 1 });
+
         notify({
           message: intl.formatMessage(messages.updateFilterSuccess),
           type: NOTIFICATION_TYPES.SUCCESS,
@@ -289,7 +312,7 @@ export class FiltersControl extends Component {
 
   handleActiveFilterChange = (id, newFilter) => {
     const filter = this.getFilterById(id);
-    const name = filter ? filter.name : newFilter.name;
+    const name = filter ? filter.name : newFilter && newFilter.name;
     const newActiveFilter = {
       value: id,
       name,
@@ -316,6 +339,7 @@ export class FiltersControl extends Component {
     const { filters, formAppearance } = this.props;
     const activeFilterId = this.getActiveFilterId();
     const activeFilter = this.getFilterById(activeFilterId);
+    const filtersList = this.getFiltersList(filters);
 
     if (formAppearance.mode !== false) {
       return this.getFormAppearanceComponent(activeFilter);
@@ -328,7 +352,7 @@ export class FiltersControl extends Component {
       <div className={cx('filters-control')}>
         <FiltersActionPanel
           filter={filter}
-          filters={filters}
+          filters={filtersList}
           value={searchValue}
           onFilterChange={this.handleSearchValueChange}
           onAdd={this.handleFormAppearanceMode}
@@ -337,7 +361,7 @@ export class FiltersControl extends Component {
         <FiltersList
           search={searchValue}
           userId={userId}
-          filters={filters}
+          filters={filtersList}
           loading={loading}
           activeId={activeFilterId}
           onChange={this.handleFilterListChange}
