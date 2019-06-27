@@ -11,6 +11,7 @@ import DefaultUserImage from 'common/img/default-user-avatar.png';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { showModalAction } from 'controllers/modal';
 import { userInfoSelector } from 'controllers/user';
+import { logoutAction } from 'controllers/auth';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { PROFILE_PAGE_EVENTS } from 'components/main/analytics/events';
 import { Image } from 'components/main/image';
@@ -40,7 +41,7 @@ const messages = defineMessages({
   },
   forceUpdate: {
     id: 'PersonalInfoBlock.forceUpdate',
-    defaultMessage: 'ForceUpdate',
+    defaultMessage: 'Force update',
   },
   synchronize: {
     id: 'PersonalInfoBlock.synchronize',
@@ -57,7 +58,11 @@ const messages = defineMessages({
     userId: userInfoSelector(state).userId,
     accountType: userInfoSelector(state).accountType,
   }),
-  { showNotification, showModalAction },
+  {
+    showNotification,
+    showModalAction,
+    logoutAction,
+  },
 )
 @injectIntl
 @track()
@@ -68,6 +73,7 @@ export class PersonalInfoBlock extends Component {
     intl: intlShape.isRequired,
     showModalAction: PropTypes.func.isRequired,
     showNotification: PropTypes.func.isRequired,
+    logoutAction: PropTypes.func.isRequired,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
@@ -99,7 +105,7 @@ export class PersonalInfoBlock extends Component {
         });
         this.props.showModalAction({
           id: 'forceUpdateModal',
-          data: { onForceUpdate: this.forceUpdateHandler },
+          data: { onForceUpdate: this.props.logoutAction },
         });
       })
       .catch(() => {
@@ -126,9 +132,6 @@ export class PersonalInfoBlock extends Component {
           type: NOTIFICATION_TYPES.ERROR,
         });
       });
-  };
-  forceUpdateHandler = () => {
-    fetch(URLS.sessionToken(), { method: 'delete' });
   };
   uploadNewImage = (image) => {
     this.setState({ avatarSource: image });
