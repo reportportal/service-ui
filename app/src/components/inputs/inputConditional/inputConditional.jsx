@@ -88,7 +88,7 @@ export class InputConditional extends Component {
     return getInputConditions(conditions);
   };
   handleClickOutside = (e) => {
-    if (!this.conditionsBlock.contains(e.target)) {
+    if (!this.conditionsBlock.contains(e.target) && this.state.opened) {
       this.setState({ opened: false });
     }
   };

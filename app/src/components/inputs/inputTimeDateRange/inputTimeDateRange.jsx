@@ -119,7 +119,7 @@ export class InputTimeDateRange extends Component {
   }
 
   handleClickOutside = (e) => {
-    if (!this.node.contains(e.target)) {
+    if (!this.node.contains(e.target) && this.state.opened) {
       this.setState({ opened: false });
       this.props.onBlur();
     }
