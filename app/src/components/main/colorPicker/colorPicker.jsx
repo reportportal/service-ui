@@ -54,7 +54,8 @@ class ColorPickerComponent extends Component {
       this.pickerNode &&
       !this.pickerNode.contains(e.target) &&
       this.controlNode &&
-      !this.controlNode.contains(e.target)
+      !this.controlNode.contains(e.target) &&
+      this.state.opened
     ) {
       this.setState({ opened: false });
     }
