@@ -85,7 +85,7 @@ function* watchFetchData() {
   yield takeEvery(FETCH_DATA, fetchData);
 }
 
-function* handleError({ payload, meta: { silent } = {} }) {
+export function* handleError({ payload, meta: { silent } = {} }) {
   if (silent) {
     return;
   }

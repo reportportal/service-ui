@@ -112,9 +112,10 @@
 }
 
 .time-column {
-  width: 14%;
+  width: 1%;
   font-family: $FONT-MENLO;
   font-size: 12px;
+  white-space: nowrap;
   @media (max-width: $SCREEN_XS_MAX) {
     width: 75%;
     font-family: $FONT-REGULAR;

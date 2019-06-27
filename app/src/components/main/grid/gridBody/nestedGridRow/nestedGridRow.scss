@@ -1,0 +1,51 @@
+$LEVEL_OFFSET_STEP: 20px;
+
+@mixin levels($noMobile) {
+  @for $level from 1 to 20 {
+    &.level-#{$level} {
+      border-left-width: $level * $LEVEL_OFFSET_STEP;
+      @if ($noMobile) {
+        @media (max-width: $SCREEN_SM_MAX) {
+          border-left-width: 0;
+        }
+      }
+    }
+  }
+}
+
+.row-more {
+  padding-left: 18px;
+  border-left-color: $COLOR--gray-91;
+  border-left-style: solid;
+  border-left-width: 0;
+  background-color: $COLOR--gray-91;
+  color: $COLOR--topaz;
+  font-size: 13px;
+  @include levels(false);
+}
+
+.row-more-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  align-content: flex-start;
+  align-items: center;
+  height: 32px;
+  cursor: pointer;
+}
+
+.loading-icon {
+  width: 24px;
+  height: 24px;
+}
+
+.row-more-label {
+  margin-right: 13px;
+}
+.row-more-container.loading {
+  pointer-events: none;
+}
+.row-more-container.loading .row-more-label {
+  color: $COLOR--gray-80;
+}

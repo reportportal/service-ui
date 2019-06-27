@@ -1,4 +1,4 @@
-export { fetchSagas } from './sagas';
+export { fetchSagas, handleError } from './sagas';
 export {
   fetchDataAction,
   fetchErrorAction,

@@ -156,8 +156,7 @@ export const URLS = {
       'page.sort': 'logTime,DESC',
     })}`,
   logItems: (activeProject, itemId, level) =>
-    `${urlBase}${activeProject}/log${getQueryParams({
-      'filter.eq.item': itemId,
+    `${urlBase}${activeProject}/log/nested/${itemId}${getQueryParams({
       'filter.gte.level': level,
     })}`,
   logItemActivity: (activeProject, itemId) => `${urlBase}${activeProject}/activity/item/${itemId}`,

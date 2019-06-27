@@ -1,4 +1,4 @@
-export { logSagas } from './sagas';
+export { logSagas, collectLogPayload } from './sagas';
 export {
   fetchLogPageData,
   refreshLogPageData,
@@ -43,5 +43,4 @@ export {
   setLogLevel,
   getLogViewMode,
   setLogViewMode,
-  getLogLevelById,
 } from './storageUtils';

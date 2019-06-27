@@ -1,10 +1,11 @@
-import { Component } from 'react';
+import { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import Parser from 'html-react-parser';
 import { DurationBlock } from 'pages/inside/common/durationBlock';
 import ArrowIcon from 'common/img/arrow-right-inline.svg';
 import AttachmentIcon from 'common/img/attachment-inline.svg';
 import classNames from 'classnames/bind';
+import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import styles from './nestedStepHeader.scss';
 
 const cx = classNames.bind(styles);
@@ -28,55 +29,81 @@ export class NestedStepHeader extends Component {
   static propTypes = {
     data: PropTypes.object,
     collapsed: PropTypes.bool,
-    onExpand: PropTypes.func,
     onToggle: PropTypes.func,
     level: PropTypes.number,
+    loading: PropTypes.bool,
   };
 
   static defaultProps = {
     data: {},
     collapsed: false,
-    onExpand: () => {},
     onToggle: () => {},
     level: 0,
+    loading: false,
   };
 
   onToggle = () => {
-    const { data, collapsed, onExpand, onToggle } = this.props;
-    if (collapsed) {
-      onExpand(data);
-    }
+    const { onToggle } = this.props;
     onToggle();
   };
-
+  isShowAttachmentsCount = () => {
+    const {
+      data: { attachmentsCount = 0 },
+    } = this.props;
+    return attachmentsCount > 0;
+  };
+  renderName = () => {
+    const {
+      data,
+      data: { hasContent = false },
+      loading,
+      collapsed,
+    } = this.props;
+    if (hasContent) {
+      return (
+        <div className={cx('step-name')} onClick={this.onToggle}>
+          <div className={cx('arrow-icon', { expanded: !collapsed })}>
+            {loading ? <SpinningPreloader /> : Parser(ArrowIcon)}
+          </div>
+          <div>{data.name}</div>
+        </div>
+      );
+    }
+    return (
+      <div className={cx('step-name', 'step-name-static')}>
+        <div>{data.name}</div>
+      </div>
+    );
+  };
   render() {
-    const { data, collapsed, level } = this.props;
+    const { data, level } = this.props;
     return (
       <div className={cx('header-container')}>
-        <div className={cx('separator')} />
         <div
           className={cx('row', {
             [`level-${level}`]: level !== 0,
           })}
         >
           <div
-            className={cx('first-col-wrapper', {
+            className={cx('first-col-wrapper', 'row-cell', {
               [`level-${level}`]: level !== 0,
             })}
           >
-            <div className={cx('step-name')} onClick={this.onToggle}>
-              <div className={cx('arrow-icon', { expanded: !collapsed })}>{Parser(ArrowIcon)}</div>
-              <div>{data.name}</div>
-            </div>
+            {this.renderName()}
           </div>
+          <div className={cx('row-cell')} />
           <div className={cx('row-cell')}>
             <StatusLabel status={data.status} />
           </div>
           <div className={cx('row-cell')}>
             <div className={cx('statistics')}>
               <div className={cx('attachments')}>
-                <div className={cx('attachment-icon')}>{Parser(AttachmentIcon)}</div>
-                <div className={cx('attachment-count')}>{data.attachmentCount}</div>
+                {this.isShowAttachmentsCount() && (
+                  <Fragment>
+                    <div className={cx('attachment-icon')}>{Parser(AttachmentIcon)}</div>
+                    <div className={cx('attachment-count')}>{data.attachmentsCount}</div>
+                  </Fragment>
+                )}
               </div>
               <div>
                 <DurationBlock
@@ -93,7 +120,6 @@ export class NestedStepHeader extends Component {
             </div>
           </div>
         </div>
-        <div className={cx('separator')} />
       </div>
     );
   }

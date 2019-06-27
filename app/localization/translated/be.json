@@ -970,6 +970,7 @@
   "LoginForm.passwordPlaceholder": "Пароль",
   "LogsGrid.noResults": "Вынікаў не знойдзена",
   "LogsGrid.timeColumnTitle": "Час",
+  "LogsGrid.statusColumnTitle": "Статус",
   "LogsGridToolbar.consoleView": "Кансольны выгляд",
   "LogsGridToolbar.markdownMode": "Рэжым разметкі",
   "LogsGridToolbar.nextError": "Наступная памылка",
@@ -1737,5 +1738,6 @@
   "dashboardControl.title": "Захаваць віджэт на панэлі маніторынгу",
   "notFoundPage.toHome": "Забярыце мяне адсюль",
   "notFoundPage.pageNotExist": "Старонка, якую Вы шукаеце, не існуе.",
-  "notFoundPage.oops": "Упс. Здаецца, Вы згубіліся."
+  "notFoundPage.oops": "Упс. Здаецца, Вы згубіліся.",
+  "NestedGridRow.loadLabel": "Загрузіць яшчэ 10"
 }

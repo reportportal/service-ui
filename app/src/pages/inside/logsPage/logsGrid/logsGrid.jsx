@@ -13,6 +13,7 @@ import { NoItemMessage } from 'components/main/noItemMessage';
 import { LogMessageSearch } from './logMessageSearch';
 import { LogMessageBlock } from './logMessageBlock';
 import { AttachmentBlock } from './attachmentBlock';
+import { NestedStepHeader } from './nestedStepHeader';
 import styles from './logsGrid.scss';
 
 const cx = classNames.bind(styles);
@@ -22,12 +23,17 @@ const messages = defineMessages({
     id: 'LogsGrid.timeColumnTitle',
     defaultMessage: 'Time',
   },
+  statusColumnTitle: {
+    id: 'LogsGrid.statusColumnTitle',
+    defaultMessage: 'Status',
+  },
   noResults: {
     id: 'LogsGrid.noResults',
     defaultMessage: 'No results found',
   },
 });
 const TIME_COLUMN_ID = 'logTime';
+const STATUS_COLUMN_ID = 'status';
 
 const MessageColumn = ({ className, value, ...rest }) => (
   <div
@@ -83,47 +89,6 @@ TimeColumn.defaultProps = {
   customProps: {},
   value: {},
 };
-
-export const getTestColumns = () => [
-  {
-    id: 'logMessage',
-    title: {
-      component: LogMessageSearch,
-      componentProps: {
-        onFilterChange: () => {},
-      },
-    },
-    sortable: true,
-    maxHeight: 200,
-    component: MessageColumn,
-    customProps: {
-      markdownMode: false,
-    },
-  },
-  {
-    id: 'attachment',
-    component: AttachmentColumn,
-  },
-  {
-    id: TIME_COLUMN_ID,
-    title: {
-      full: 'time',
-    },
-    sortable: true,
-    component: TimeColumn,
-    sortingEventInfo: LOG_PAGE_EVENTS.TIME_SORTING,
-  },
-  {
-    id: 'mobileAttachment',
-    title: {
-      component: () => <div className={cx('no-header')} />,
-    },
-    component: AttachmentColumn,
-    customProps: {
-      mobile: true,
-    },
-  },
-];
 
 @injectIntl
 export class LogsGrid extends Component {
@@ -182,6 +147,15 @@ export class LogsGrid extends Component {
       component: MessageColumn,
     },
     {
+      id: STATUS_COLUMN_ID,
+      title: {
+        full: this.props.intl.formatMessage(messages.statusColumnTitle),
+      },
+      sortable: true,
+      component: () => <div />,
+      sortingEventInfo: LOG_PAGE_EVENTS.TIME_SORTING,
+    },
+    {
       id: 'mobileTime',
       component: TimeColumn,
       customProps: {
@@ -220,6 +194,15 @@ export class LogsGrid extends Component {
     {
       id: 'attachment',
       component: AttachmentColumn,
+    },
+    {
+      id: STATUS_COLUMN_ID,
+      title: {
+        full: this.props.intl.formatMessage(messages.statusColumnTitle),
+      },
+      sortable: true,
+      component: () => <div />,
+      sortingEventInfo: LOG_PAGE_EVENTS.TIME_SORTING,
     },
     {
       id: TIME_COLUMN_ID,
@@ -306,6 +289,8 @@ export class LogsGrid extends Component {
           sortingDirection={sortingDirection}
           onChangeSorting={onChangeSorting}
           toggleAccordionEventInfo={LOG_PAGE_EVENTS.EXPAND_LOG_MSG}
+          nestedStepHeader={NestedStepHeader}
+          nestedView
         />
         {!logItems.length &&
           !loading && <NoItemMessage message={intl.formatMessage(COMMON_LOCALE_KEYS.NO_RESULTS)} />}
