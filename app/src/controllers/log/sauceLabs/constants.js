@@ -6,6 +6,7 @@ export const SAUCE_LABS_ASSETS_NAMESPACE = `${SAUCE_LABS_NAMESPACE}/assets`;
 export const EXECUTE_SAUCE_LABS_COMMAND_ACTION = 'executeSauceLabsCommandAction';
 export const BULK_EXECUTE_SAUCE_LABS_COMMAND_ACTION = 'bulkExecuteSauceLabsCommandAction';
 export const SET_AUTH_TOKEN_ACTION = 'setAuthTokenAction';
+export const UPDATE_LOADING_ACTION = 'updateLoadingAction';
 
 export const SAUCE_LABS_JOB_INFO_COMMAND = 'jobInfo';
 export const SAUCE_LABS_LOGS_COMMAND = 'logs';
