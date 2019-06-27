@@ -970,6 +970,7 @@
   "LoginForm.passwordPlaceholder": "Пароль",
   "LogsGrid.noResults": "Результатов не найдено",
   "LogsGrid.timeColumnTitle": "Время",
+  "LogsGrid.statusColumnTitle": "Статус",
   "LogsGridToolbar.consoleView": "Консольный вид",
   "LogsGridToolbar.markdownMode": "Режим разметки",
   "LogsGridToolbar.nextError": "Следующая ошибка",
@@ -1737,5 +1738,6 @@
   "dashboardControl.title": "Сохранить виджет на дашборд",
   "notFoundPage.toHome": "Заберите меня отсюда",
   "notFoundPage.pageNotExist": "Страница, которую Вы ищете, не существует.",
-  "notFoundPage.oops": "Упс. Кажется, Вы потерялись."
+  "notFoundPage.oops": "Упс. Кажется, Вы потерялись.",
+  "NestedGridRow.loadLabel": "Загрузить еще 10"
 }

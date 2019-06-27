@@ -5,19 +5,13 @@ import {
   logPageOffsetSelector,
 } from 'controllers/testItem';
 import { URLS } from 'common/urls';
-import { fetch } from 'common/utils';
 import { activeProjectSelector, userIdSelector } from 'controllers/user';
 import {
   logItemIdSelector,
   pagePropertiesSelector,
   pathnameChangedSelector,
-  updatePagePropertiesAction,
 } from 'controllers/pages';
 import { fetchDataAction } from 'controllers/fetch';
-import { SIZE_KEY, PAGE_KEY } from 'controllers/pagination';
-import { ERROR } from 'common/constants/logLevels';
-import { createNamespacedQuery, mergeNamespacedQuery } from 'common/utils/routingUtils';
-import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 
 import {
   ACTIVITY_NAMESPACE,
@@ -29,9 +23,8 @@ import {
   LOG_LEVEL_FILTER_KEY,
   WITH_ATTACHMENTS_FILTER_KEY,
   NAMESPACE,
-  LOG_ERROR_ITEMS_NAMESPACE,
-  FETCH_NEXT_ERROR,
 } from './constants';
+
 import {
   activeLogIdSelector,
   prevActiveLogIdSelector,
@@ -42,6 +35,7 @@ import {
 } from './selectors';
 import { attachmentSagas, clearAttachmentsAction } from './attachments';
 import { sauceLabsSagas } from './sauceLabs';
+import { nestedStepSagas, CLEAR_NESTED_STEPS } from './nestedSteps';
 import { getWithAttachments, getLogLevel } from './storageUtils';
 
 function* fetchActivity() {
@@ -51,7 +45,7 @@ function* fetchActivity() {
     fetchDataAction(ACTIVITY_NAMESPACE)(URLS.logItemActivity(activeProject, activeLogItemId)),
   );
 }
-function* collectLogPayload() {
+export function* collectLogPayload() {
   const activeProject = yield select(activeProjectSelector);
   const userId = yield select(userIdSelector);
   const query = yield select(querySelector, NAMESPACE);
@@ -90,67 +84,11 @@ function* fetchLogItems(payload = {}) {
     ...payload.params,
     [WITH_ATTACHMENTS_FILTER_KEY]: withAttachments,
   };
-  yield all([
-    put(
-      fetchDataAction(namespace)(URLS.logItems(activeProject, activeLogItemId, logLevel), {
-        params: fetchParams,
-      }),
-    ),
-    put(
-      fetchDataAction(LOG_ERROR_ITEMS_NAMESPACE)(
-        URLS.logItems(activeProject, activeLogItemId, ERROR),
-        {
-          params: {
-            ...fetchParams,
-            [PAGE_KEY]: 1,
-            [SIZE_KEY]: 100,
-          },
-        },
-      ),
-    ),
-  ]);
-}
-
-function* fetchNextError() {
-  const { activeProject, query, params, filterLevel, activeLogItemId, errorId } = yield call(
-    collectLogPayload,
+  yield put(
+    fetchDataAction(namespace)(URLS.logItems(activeProject, activeLogItemId, logLevel), {
+      params: fetchParams,
+    }),
   );
-  try {
-    const pageNumber = yield call(
-      fetch,
-      URLS.logItemStackTraceMessageLocation(
-        activeProject,
-        activeLogItemId,
-        errorId,
-        query[SIZE_KEY],
-        query[PAGE_KEY],
-        filterLevel,
-      ),
-    );
-    yield put(
-      updatePagePropertiesAction(
-        createNamespacedQuery(
-          mergeNamespacedQuery(
-            params,
-            {
-              [PAGE_KEY]: pageNumber.number,
-            },
-            NAMESPACE,
-          ),
-          NAMESPACE,
-        ),
-      ),
-    );
-    yield call(fetchLogItems);
-  } catch (error) {
-    yield put(
-      showNotification({
-        messageId: 'failureDefault',
-        type: NOTIFICATION_TYPES.ERROR,
-        values: { error: error.message },
-      }),
-    );
-  }
 }
 
 function* fetchHistoryEntries() {
@@ -189,6 +127,7 @@ function* fetchHistoryItemData() {
 
 function* fetchLogPageData({ meta = {} }) {
   const isPathNameChanged = yield select(pathnameChangedSelector);
+  yield put({ type: CLEAR_NESTED_STEPS });
   if (meta.refresh) {
     yield all([
       call(fetchHistoryEntries),
@@ -213,16 +152,12 @@ function* watchFetchHistoryEntries() {
   yield takeEvery(FETCH_HISTORY_ENTRIES, fetchHistoryEntries);
 }
 
-function* watchFetchNextError() {
-  yield takeEvery(FETCH_NEXT_ERROR, fetchNextError);
-}
-
 export function* logSagas() {
   yield all([
     watchFetchLogPageData(),
     watchFetchHistoryEntries(),
     attachmentSagas(),
     sauceLabsSagas(),
-    watchFetchNextError(),
+    nestedStepSagas(),
   ]);
 }

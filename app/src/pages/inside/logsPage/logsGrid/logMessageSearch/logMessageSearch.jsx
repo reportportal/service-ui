@@ -31,7 +31,6 @@ export class LogMessageSearch extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
-    className: PropTypes.string.isRequired,
   };
 
   static defaultProps = {
@@ -74,25 +73,23 @@ export class LogMessageSearch extends Component {
   };
 
   render() {
-    const { intl, className } = this.props;
+    const { intl } = this.props;
 
     return (
-      <div className={cx(className)}>
-        <div className={cx('log-message-search')}>
-          <span className={cx('search-title')}>{intl.formatMessage(messages.searchTitle)}</span>
-          <div className={cx('input-search-wrapper')}>
-            <InputSearch
-              className={cx('input-search')}
-              value={this.state.inputValue}
-              onChange={this.handleInputChange}
-              onFocus={this.onFocus}
-              onBlur={this.onBlur}
-              searchHint={
-                (this.state.isSearchHintRequired && intl.formatMessage(messages.searchHint)) || ''
-              }
-              iconAtRight
-            />
-          </div>
+      <div className={cx('log-message-search')}>
+        <span className={cx('search-title')}>{intl.formatMessage(messages.searchTitle)}</span>
+        <div className={cx('input-search-wrapper')}>
+          <InputSearch
+            className={cx('input-search')}
+            value={this.state.inputValue}
+            onChange={this.handleInputChange}
+            onFocus={this.onFocus}
+            onBlur={this.onBlur}
+            searchHint={
+              (this.state.isSearchHintRequired && intl.formatMessage(messages.searchHint)) || ''
+            }
+            iconAtRight
+          />
         </div>
       </div>
     );

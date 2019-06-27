@@ -60,3 +60,4 @@ export { queueReducers } from './queueReducers';
 export { waitForSelector } from './waitForSelector';
 export { isEmptyValue } from './isEmptyValue';
 export { formatAttribute } from './attributeUtils';
+export { omit } from './omit';

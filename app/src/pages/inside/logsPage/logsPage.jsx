@@ -15,8 +15,6 @@ import {
   getLogLevel,
   setLogLevel,
   setWithAttachments,
-  fetchNextErrorAction,
-  nextErrorLogItemIdSelector,
 } from 'controllers/log';
 import { withFilter } from 'controllers/filter';
 import { debugModeSelector } from 'controllers/launch';
@@ -37,12 +35,10 @@ import { SauceLabsSection } from './sauceLabsSection';
     logItems: logItemsSelector(state),
     loading: loadingSelector(state),
     userId: userIdSelector(state),
-    nextErrorId: nextErrorLogItemIdSelector(state),
     debugMode: debugModeSelector(state),
   }),
   {
     refresh: refreshLogPageData,
-    fetchNextError: fetchNextErrorAction,
   },
 )
 @withSortingURL({
@@ -100,8 +96,6 @@ export class LogsPage extends Component {
     onChangeSorting: PropTypes.func,
     onChangeLogLevel: PropTypes.func,
     onChangeWithAttachments: PropTypes.func,
-    fetchNextError: PropTypes.func,
-    nextErrorId: PropTypes.number,
   };
 
   static defaultProps = {
@@ -121,8 +115,6 @@ export class LogsPage extends Component {
     onChangeSorting: () => {},
     onChangeLogLevel: () => {},
     onChangeWithAttachments: () => {},
-    fetchNextError: () => {},
-    nextErrorId: null,
   };
 
   state = {
@@ -157,11 +149,6 @@ export class LogsPage extends Component {
     this.props.refresh();
   };
 
-  handleNextError = () => {
-    const { fetchNextError, nextErrorId } = this.props;
-    fetchNextError();
-    this.onHighlightRow(nextErrorId);
-  };
   render() {
     const {
       refresh,
@@ -217,7 +204,6 @@ export class LogsPage extends Component {
                 logLevel={getLogLevel(userId, logLevelId)}
                 onChangeLogLevel={onChangeLogLevel}
                 onChangeWithAttachments={onChangeWithAttachments}
-                onNextError={this.handleNextError}
               >
                 {({ markdownMode, consoleView }) => (
                   <LogsGrid
