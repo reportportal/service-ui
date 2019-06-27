@@ -56,7 +56,6 @@ export class SauceLabsSection extends Component {
 
   render() {
     const { loading } = this.props;
-
     return (
       <div className={cx('sauce-labs-section')}>
         {loading || !this.slIntegrationConfig ? (

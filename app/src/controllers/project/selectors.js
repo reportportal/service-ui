@@ -150,6 +150,14 @@ export const namedIntegrationsSelectorsMap = {
   [EMAIL]: createNamedIntegrationsSelector(EMAIL, projectIntegrationsSelector),
 };
 
+export const availableIntegrationsByPluginNameSelector = (state, pluginName) => {
+  let availableIntegrations = namedIntegrationsSelectorsMap[pluginName](state);
+  if (!availableIntegrations.length) {
+    availableIntegrations = namedGlobalIntegrationsSelectorsMap[pluginName](state);
+  }
+  return availableIntegrations;
+};
+
 export const availableBtsIntegrationsSelector = (state) => {
   const projectBtsIntegrations = btsIntegrationsSelector(state);
   return projectBtsIntegrations.length
@@ -161,10 +169,7 @@ const namedAvailableIntegrationsByGroupTypeSelector = (groupType) => (state) => 
   const availablePluginNames = INTEGRATION_NAMES_BY_GROUP_TYPES_MAP[groupType];
 
   return availablePluginNames.reduce((acc, pluginName) => {
-    let availableIntegrations = namedIntegrationsSelectorsMap[pluginName](state);
-    if (!availableIntegrations.length) {
-      availableIntegrations = namedGlobalIntegrationsSelectorsMap[pluginName](state);
-    }
+    const availableIntegrations = availableIntegrationsByPluginNameSelector(state, pluginName);
     return availableIntegrations.length ? { ...acc, [pluginName]: availableIntegrations } : acc;
   }, {});
 };

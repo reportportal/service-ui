@@ -50,6 +50,7 @@ export {
   projectIntegrationsSortedSelector,
   groupedIntegrationsSelector,
   namedIntegrationsSelectorsMap,
+  availableIntegrationsByPluginNameSelector,
   availableBtsIntegrationsSelector,
   namedAvailableBtsIntegrationsSelector,
   patternsSelector,

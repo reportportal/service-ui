@@ -1,20 +1,19 @@
-import { takeEvery, call, put, all, select } from 'redux-saga/effects';
+import { takeEvery, put, call, all, select, take } from 'redux-saga/effects';
 import { URLS } from 'common/urls';
-import { fetch } from 'common/utils';
 import { SAUCE_LABS } from 'common/constants/integrationNames';
 import { showDefaultErrorNotification } from 'controllers/notification';
-import { namedIntegrationsSelectorsMap } from 'controllers/project';
+import { availableIntegrationsByPluginNameSelector } from 'controllers/project';
 import { activeProjectSelector } from 'controllers/user';
-import { fetchDataAction } from 'controllers/fetch';
+import { fetchDataAction, createFetchPredicate } from 'controllers/fetch';
 import {
   EXECUTE_SAUCE_LABS_COMMAND_ACTION,
   BULK_EXECUTE_SAUCE_LABS_COMMAND_ACTION,
   SAUCE_LABS_COMMANDS_NAMESPACES_MAP,
 } from './constants';
 import { generateAuthToken } from './utils';
-import { setAuthTokenAction } from './actionCreators';
+import { setAuthTokenAction, updateLoadingAction } from './actionCreators';
 
-function* executeSauceLabsCommand({ command, integrationId, data = {} }) {
+function* executeSauceLabsCommand({ payload: { command, integrationId, data = {} } }) {
   try {
     const activeProject = yield select(activeProjectSelector);
 
@@ -30,25 +29,29 @@ function* executeSauceLabsCommand({ command, integrationId, data = {} }) {
 }
 
 function* bulkExecuteSauceLabsCommands({ payload: { commands, data } }) {
-  const projectIntegrations = yield select(namedIntegrationsSelectorsMap[SAUCE_LABS]);
-  let activeIntegration = projectIntegrations[0];
+  const activeIntegration = (yield select((state) =>
+    availableIntegrationsByPluginNameSelector(state, SAUCE_LABS),
+  ))[0];
+
   try {
-    if (!activeIntegration) {
-      const globalIntegrations = yield call(fetch, URLS.globalIntegrationsByPluginName(SAUCE_LABS));
-      activeIntegration = globalIntegrations[0];
-    }
-
-    const { integrationParameters: { username, accessToken } = {} } = activeIntegration;
+    const { integrationParameters: { username, accessToken } = {}, id } = activeIntegration;
     const authToken = generateAuthToken(username, accessToken, data.jobId);
-
+    yield put(updateLoadingAction(true));
     yield put(setAuthTokenAction(authToken));
-    yield all(
-      commands.map((command) =>
-        call(executeSauceLabsCommand, { command, integrationId: activeIntegration.id, data }),
-      ),
+
+    const commandsSagas = commands.reduce(
+      (acc, command) => [
+        ...acc,
+        call(executeSauceLabsCommand, { payload: { command, integrationId: id, data } }),
+        take(createFetchPredicate(SAUCE_LABS_COMMANDS_NAMESPACES_MAP[command])),
+      ],
+      [],
     );
+    yield all(commandsSagas);
   } catch (error) {
     yield put(showDefaultErrorNotification(error));
+  } finally {
+    yield put(updateLoadingAction(false));
   }
 }
 
