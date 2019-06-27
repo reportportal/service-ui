@@ -11,6 +11,7 @@ import { URLS } from 'common/urls';
 import {
   fetchFiltersConcatAction,
   filtersSelector,
+  activeFilterSelector,
   loadingSelector,
   filtersPaginationSelector,
 } from 'controllers/filter';
@@ -68,6 +69,7 @@ const messages = defineMessages({
     userId: userIdSelector(state),
     activeProject: activeProjectSelector(state),
     filters: filtersSelector(state),
+    activeFilter: activeFilterSelector(state),
     pagination: filtersPaginationSelector(state),
     loading: loadingSelector(state),
   }),
@@ -94,6 +96,7 @@ export class FiltersControl extends Component {
     pagination: PropTypes.object.isRequired,
     formAppearance: PropTypes.object.isRequired,
     filters: PropTypes.array.isRequired,
+    activeFilter: PropTypes.object,
     changeWizardForm: PropTypes.func,
     fetchFiltersConcatAction: PropTypes.func,
     onFormAppearanceChange: PropTypes.func.isRequired,
@@ -111,6 +114,7 @@ export class FiltersControl extends Component {
     activeProject: '',
     loading: false,
     filters: [],
+    activeFilter: null,
     pagination: {},
     changeWizardForm: () => {},
     fetchFiltersConcatAction: () => {},
@@ -130,7 +134,24 @@ export class FiltersControl extends Component {
 
   componentDidMount() {
     const { page } = this.state;
+    const { filters, activeFilter } = this.props;
+
     this.fetchFilter({ page });
+
+    if (filters.length && activeFilter) {
+      this.applyDefaultFilter();
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    const { filters, activeFilter } = this.props;
+
+    if (
+      prevProps.filters.length !== filters.length ||
+      (prevProps.activeFilter.id !== activeFilter.id && activeFilter)
+    ) {
+      this.applyDefaultFilter();
+    }
   }
 
   getFormAppearanceComponent = (activeFilter) => {
@@ -178,6 +199,13 @@ export class FiltersControl extends Component {
   getFilterById = (filterId) => this.props.filters.find((elem) => elem.id === Number(filterId));
 
   getActiveFilterId = () => this.props.value.value;
+
+  applyDefaultFilter = () => {
+    const { filters, activeFilter } = this.props;
+    const { id: activeFilterId = 0 } = filters.find((el) => el.id === activeFilter.id) || {};
+
+    activeFilterId && this.handleActiveFilterChange(activeFilterId.toString());
+  };
 
   fetchFilter = ({ page, size, searchValue }) => {
     const { size: stateSize, page: statePage } = this.state;
@@ -243,6 +271,7 @@ export class FiltersControl extends Component {
       .then(({ id }) => {
         this.handleActiveFilterChange(String(id), filter);
         this.fetchFilter({ page: 1 });
+
         notify({
           message: intl.formatMessage(messages.insertFilterSuccess),
           type: NOTIFICATION_TYPES.SUCCESS,
@@ -267,6 +296,7 @@ export class FiltersControl extends Component {
     })
       .then(() => {
         this.fetchFilter({ page: 1 });
+
         notify({
           message: intl.formatMessage(messages.updateFilterSuccess),
           type: NOTIFICATION_TYPES.SUCCESS,
