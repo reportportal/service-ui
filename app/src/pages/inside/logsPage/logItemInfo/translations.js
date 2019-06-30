@@ -3,23 +3,23 @@ import { defineMessages } from 'react-intl';
 export const messages = defineMessages({
   updateItemIssue: {
     id: 'LogItemActivity.updateItemIssue',
-    defaultMessage: 'updated item issue',
+    defaultMessage: '{name} updated item issue',
   },
   updateItem: {
     id: 'LogItemActivity.updateItem',
-    defaultMessage: 'updated item',
+    defaultMessage: '{name} updated item',
   },
   linkIssue: {
     id: 'LogItemActivity.linkIssue',
-    defaultMessage: 'linked issue',
+    defaultMessage: '{name} linked issue',
   },
   unlinkIssue: {
     id: 'LogItemActivity.unlinkIssue',
-    defaultMessage: 'unlinked issue',
+    defaultMessage: '{name} unlinked issue',
   },
   postIssue: {
     id: 'LogItemActivity.postIssue',
-    defaultMessage: 'posted issue',
+    defaultMessage: '{name} posted issue',
   },
   changedByAnalyzer: {
     id: 'LogItemActivity.changedByAnalyzer',
