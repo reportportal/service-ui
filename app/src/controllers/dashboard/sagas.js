@@ -94,6 +94,7 @@ function* updateDashboardWidgets({ payload: dashboard }) {
   yield call(fetch, URLS.dashboard(activeProject, dashboard.id), {
     method: 'put',
     data: {
+      name: dashboard.name,
       updateWidgets: dashboard.widgets,
     },
   });
