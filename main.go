@@ -62,7 +62,7 @@ func main() {
 			},
 			"worker-src": {"'self'", "blob:"},
             "font-src": {"'self'", "data:", "fonts.googleapis.com", "fonts.gstatic.com"},
-            "style-src-elem": {"'self'", "data:", "*.googleapis.com"},
+            "style-src-elem": {"'self'", "data:", "'unsafe-inline'", "*.googleapis.com"},
             "media-src": {"'self'", "*.saucelabs.com"},
 			"img-src": {"*", "'self'", "data:", "blob:"},
 			"object-src": {"'self'"},
