@@ -42,9 +42,8 @@ export class HistoryLineItemBadges extends Component {
       (allDefects, nextGroup) => [...allDefects, ...nextGroup],
       [],
     );
-    const { shortName, color: defectColor = COLOR_WHITE_TWO } = allDefectsList.find(
-      (el) => el.locator === issueLocator || {},
-    );
+    const { shortName, color: defectColor = COLOR_WHITE_TWO } =
+      allDefectsList.find((el) => el.locator === issueLocator) || {};
     const fontColor = this.calculateFontColor(defectColor);
 
     return (

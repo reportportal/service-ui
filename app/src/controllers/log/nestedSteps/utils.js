@@ -1,6 +1,6 @@
 import { isEmptyObject } from 'common/utils';
 
-export const isLoadMoreButton = (step) => {
+export const isLoadMoreButtonVisible = (step) => {
   if (!step || isEmptyObject(step.page)) {
     return false;
   }
