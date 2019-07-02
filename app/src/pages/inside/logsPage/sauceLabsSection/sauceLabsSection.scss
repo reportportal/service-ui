@@ -16,6 +16,14 @@
     border-top: 1px solid $COLOR--gray-91;
   }
 
+  :global {
+    .fullscreen {
+      display: flex;
+      width: 100%;
+      background-color: $COLOR--white;
+    }
+  }
+
   @media (max-width: $SCREEN_SM_MAX) {
     flex-direction: column;
   }

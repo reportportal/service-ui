@@ -1,8 +1,9 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import ReactObserver from 'react-event-observer';
+import Fullscreen from 'react-full-screen';
 import { activeLogSelector } from 'controllers/log';
 import {
   bulkExecuteSauceLabsCommandAction,
@@ -44,6 +45,9 @@ export class SauceLabsSection extends Component {
   constructor(props) {
     super(props);
     this.observer = ReactObserver();
+    this.state = {
+      isFullscreenMode: false,
+    };
   }
 
   componentDidMount() {
@@ -54,6 +58,12 @@ export class SauceLabsSection extends Component {
     );
   }
 
+  toggleFullscreenMode = () => {
+    this.setState({
+      isFullscreenMode: !this.state.isFullscreenMode,
+    });
+  };
+
   render() {
     const { loading } = this.props;
     return (
@@ -61,10 +71,14 @@ export class SauceLabsSection extends Component {
         {loading || !this.slIntegrationConfig ? (
           <SpinningPreloader />
         ) : (
-          <Fragment>
-            <VideoSection observer={this.observer} />
+          <Fullscreen enabled={this.state.isFullscreenMode}>
+            <VideoSection
+              observer={this.observer}
+              isFullscreenMode={this.state.isFullscreenMode}
+              onToggleFullscreen={this.toggleFullscreenMode}
+            />
             <JobInfoSection observer={this.observer} />
-          </Fragment>
+          </Fullscreen>
         )}
       </div>
     );

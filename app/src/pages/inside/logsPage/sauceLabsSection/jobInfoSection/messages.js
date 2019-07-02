@@ -20,7 +20,7 @@ export const messages = defineMessages({
   },
   [LOGS_TAB]: {
     id: 'JobInfoSection.logs',
-    defaultMessage: 'Logs',
+    defaultMessage: 'View Log',
   },
   [METADATA_TAB]: {
     id: 'JobInfoSection.metadata',

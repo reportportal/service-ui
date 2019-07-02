@@ -798,7 +798,7 @@
   "JiraCredentials.passwordLabel": "Пароль у САХ",
   "JiraCredentials.usernameLabel": "Имя карыстальніка ў САХ",
   "JobInfoSection.commands": "Каманды",
-  "JobInfoSection.logs": "Логі",
+  "JobInfoSection.logs": "Прагледзець Журнал",
   "JobInfoSection.metadata": "Метададзеныя",
   "LastLaunch.noDataMessage": "No launches were performed",
   "LastLaunchColumn.noLaunches": "0 гадзін таму",

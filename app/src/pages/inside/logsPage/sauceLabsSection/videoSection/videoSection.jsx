@@ -7,6 +7,8 @@ import moment from 'moment';
 import { getDuration } from 'common/utils';
 import CalendarIcon from 'common/img/calendar-icon-inline.svg';
 import TimeIcon from 'common/img/time-icon-inline.svg';
+import FullscreenIcon from 'common/img/fullscreen-inline.svg';
+import FullscreenExitIcon from 'common/img/fullscreen-exit-inline.svg';
 import { jobInfoSelector, sauceLabsAuthTokenSelector } from 'controllers/log/sauceLabs';
 import { VideoPlayer } from './videoPlayer';
 import styles from './videoSection.scss';
@@ -22,12 +24,16 @@ export class VideoSection extends Component {
     jobInfo: PropTypes.object,
     authToken: PropTypes.string,
     observer: PropTypes.object,
+    isFullscreenMode: PropTypes.bool,
+    onToggleFullscreen: PropTypes.func,
   };
 
   static defaultProps = {
     jobInfo: {},
     authToken: '',
     observer: {},
+    isFullscreenMode: false,
+    onToggleFullscreen: () => {},
   };
 
   getVideoOptions = () => ({
@@ -49,13 +55,15 @@ export class VideoSection extends Component {
   getFormattedDate = (data) => moment.unix(data).format('MMMM DD, Y [at] HH:mm:ss ');
 
   render() {
-    const { jobInfo, observer } = this.props;
+    const { jobInfo, observer, isFullscreenMode, onToggleFullscreen } = this.props;
 
     return (
       <div className={cx('video-section')}>
         <div className={cx('section-header')}>
           <div className={cx('session-name')}>{jobInfo.name}</div>
-          <div className={cx('full-screen-button')} />
+          <div className={cx('full-screen-button')} onClick={onToggleFullscreen}>
+            {Parser(isFullscreenMode ? FullscreenExitIcon : FullscreenIcon)}
+          </div>
         </div>
         <div className={cx('section-content')}>
           <VideoPlayer observer={observer} {...this.getVideoOptions()} />

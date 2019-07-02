@@ -12,6 +12,7 @@
 
 .section-header {
   display: flex;
+  justify-content: space-between;
   align-items: center;
   height: 50px;
   padding-left: 15px;
@@ -53,7 +54,14 @@
   display: flex;
   align-items: center;
   margin-right: 15px;
+}
 
+.full-screen-button {
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+.full-screen-button, .info-item {
   svg {
     width: 17px;
     height: 17px;

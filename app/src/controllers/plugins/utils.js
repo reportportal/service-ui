@@ -3,9 +3,6 @@ import { AUTHORIZATION_GROUP_TYPE } from 'common/constants/pluginsGroupTypes';
 export const filterIntegrationsByName = (integrations, integrationName) =>
   integrations.filter((integration) => integration.integrationType.name === integrationName);
 
-export const filterIntegrationsByGroupType = (integrations, groupType) =>
-  integrations.filter((integration) => integration.integrationType.groupType === groupType);
-
 export const sortItemsByGroupType = (items) =>
   items.sort((a, b) => {
     const groupTypeA = a.groupType || a.integrationType.groupType;

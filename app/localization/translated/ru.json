@@ -773,7 +773,7 @@
   "JiraCredentials.passwordLabel": "Пароль в СОД",
   "JiraCredentials.usernameLabel": "Имя пользователя в СОД",
   "JobInfoSection.commands": "Команды",
-  "JobInfoSection.logs": "Логи",
+  "JobInfoSection.logs": "Просмотреть Журнал",
   "JobInfoSection.metadata": "Метаданные",
   "LastLaunch.noDataMessage": "No launches were performed",
   "LastLaunchColumn.noLaunches": "0 дней назад",
