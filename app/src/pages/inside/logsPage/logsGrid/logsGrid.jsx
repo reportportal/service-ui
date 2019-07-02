@@ -2,13 +2,11 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
-import Parser from 'html-react-parser';
 import { Grid } from 'components/main/grid';
 import { dateFormat } from 'common/utils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { LOG_PAGE_EVENTS } from 'components/main/analytics/events';
 import { ERROR, FATAL } from 'common/constants/logLevels';
-import ArrowIcon from 'common/img/arrow-down-inline.svg';
 import { NoItemMessage } from 'components/main/noItemMessage';
 import { LogMessageSearch } from './logMessageSearch';
 import { LogMessageBlock } from './logMessageBlock';
@@ -36,11 +34,7 @@ const TIME_COLUMN_ID = 'logTime';
 const STATUS_COLUMN_ID = 'status';
 
 const MessageColumn = ({ className, value, ...rest }) => (
-  <div
-    className={cx('message-column', `level-${value.level}`, className, {
-      console: rest.customProps.consoleView,
-    })}
-  >
+  <div className={cx('message-column', `level-${value.level}`, className)}>
     <LogMessageBlock value={value} {...rest} />
   </div>
 );
@@ -58,7 +52,6 @@ const AttachmentColumn = ({ className, value, customProps }) => (
   <div
     className={cx('attachment-column', className, {
       mobile: customProps.mobile,
-      console: customProps.consoleView,
     })}
   >
     {value.binaryContent &&
@@ -101,7 +94,6 @@ export class LogsGrid extends Component {
     sortingColumn: PropTypes.string,
     sortingDirection: PropTypes.string,
     onChangeSorting: PropTypes.func,
-    consoleView: PropTypes.bool,
     markdownMode: PropTypes.bool,
     rowHighlightingConfig: PropTypes.shape({
       onGridRowHighlighted: PropTypes.func,
@@ -118,7 +110,6 @@ export class LogsGrid extends Component {
     sortingColumn: '',
     sortingDirection: '',
     onChangeSorting: () => {},
-    consoleView: false,
     markdownMode: false,
     rowHighlightingConfig: PropTypes.shape({
       onGridRowHighlighted: () => {},
@@ -126,53 +117,6 @@ export class LogsGrid extends Component {
       highlightedRowId: null,
     }),
   };
-
-  getConsoleViewColumns = () => [
-    {
-      id: 'attachment',
-      component: AttachmentColumn,
-      customProps: {
-        consoleView: true,
-      },
-    },
-    {
-      id: TIME_COLUMN_ID,
-      sortable: true,
-      title: {
-        component: this.renderConsoleViewHeader,
-      },
-      customProps: {
-        consoleView: true,
-      },
-      component: MessageColumn,
-    },
-    {
-      id: STATUS_COLUMN_ID,
-      title: {
-        full: this.props.intl.formatMessage(messages.statusColumnTitle),
-      },
-      sortable: true,
-      component: () => <div />,
-      sortingEventInfo: LOG_PAGE_EVENTS.TIME_SORTING,
-    },
-    {
-      id: 'mobileTime',
-      component: TimeColumn,
-      customProps: {
-        mobile: true,
-      },
-    },
-    {
-      id: 'mobileAttachment',
-      component: AttachmentColumn,
-      title: {
-        component: () => <div className={cx('no-header')} />,
-      },
-      customProps: {
-        mobile: true,
-      },
-    },
-  ];
 
   getDefaultViewColumns = () => [
     {
@@ -225,45 +169,10 @@ export class LogsGrid extends Component {
     },
   ];
 
-  getColumns = () =>
-    this.props.consoleView ? this.getConsoleViewColumns() : this.getDefaultViewColumns();
-
-  getLogRowClasses = (value) => {
-    const { consoleView } = this.props;
-
-    return {
-      log: true,
-      'error-row': !consoleView && (value.level === ERROR || value.level === FATAL),
-      'row-console': consoleView,
-    };
-  };
-
-  renderConsoleViewHeader = () => {
-    const {
-      intl,
-      sortingColumn,
-      sortingDirection,
-      onChangeSorting,
-      filter,
-      onFilterChange,
-    } = this.props;
-
-    return (
-      <div className={cx('console-view-header')}>
-        <div
-          className={cx('time-header', {
-            [`sorting-${sortingDirection.toLowerCase()}`]: sortingDirection,
-            'sorting-active': sortingColumn === TIME_COLUMN_ID,
-          })}
-          onClick={() => onChangeSorting(TIME_COLUMN_ID)}
-        >
-          {intl.formatMessage(messages.timeColumnTitle)}
-          <div className={cx('arrow')}>{Parser(ArrowIcon)}</div>
-        </div>
-        <LogMessageSearch filter={filter} onFilterChange={onFilterChange} />
-      </div>
-    );
-  };
+  getLogRowClasses = (value) => ({
+    log: true,
+    'error-row': value.level === ERROR || value.level === FATAL,
+  });
 
   render() {
     const {
@@ -279,7 +188,7 @@ export class LogsGrid extends Component {
     return (
       <div className={cx('logs-grid')}>
         <Grid
-          columns={this.getColumns()}
+          columns={this.getDefaultViewColumns()}
           data={logItems}
           rowHighlightingConfig={rowHighlightingConfig}
           rowClassMapper={this.getLogRowClasses}

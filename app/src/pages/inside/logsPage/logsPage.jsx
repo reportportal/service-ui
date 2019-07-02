@@ -12,9 +12,13 @@ import {
   NAMESPACE,
   LOG_LEVEL_FILTER_KEY,
   WITH_ATTACHMENTS_FILTER_KEY,
+  HIDE_PASSED_LOGS,
+  HIDE_EMPTY_STEPS,
   getLogLevel,
   setLogLevel,
   setWithAttachments,
+  setHideEmptySteps,
+  setHidePassedLogs,
 } from 'controllers/log';
 import { withFilter } from 'controllers/filter';
 import { debugModeSelector } from 'controllers/launch';
@@ -67,6 +71,14 @@ import { SauceLabsSection } from './sauceLabsSection';
       setWithAttachments(userId, withAttachments);
       return { [WITH_ATTACHMENTS_FILTER_KEY]: withAttachments || undefined };
     },
+    onChangeHideEmptySteps: (userId, hideEmptySteps) => {
+      setHideEmptySteps(userId, hideEmptySteps);
+      return { [HIDE_EMPTY_STEPS]: hideEmptySteps || undefined };
+    },
+    onChangeHidePassedLogs: (userId, hidePassedLogs) => {
+      setHidePassedLogs(userId, hidePassedLogs);
+      return { [HIDE_PASSED_LOGS]: hidePassedLogs || undefined };
+    },
   },
   { namespace: NAMESPACE },
 )
@@ -96,6 +108,8 @@ export class LogsPage extends Component {
     onChangeSorting: PropTypes.func,
     onChangeLogLevel: PropTypes.func,
     onChangeWithAttachments: PropTypes.func,
+    onChangeHideEmptySteps: PropTypes.func,
+    onChangeHidePassedLogs: PropTypes.func,
   };
 
   static defaultProps = {
@@ -115,6 +129,8 @@ export class LogsPage extends Component {
     onChangeSorting: () => {},
     onChangeLogLevel: () => {},
     onChangeWithAttachments: () => {},
+    onChangeHideEmptySteps: () => {},
+    onChangeHidePassedLogs: () => {},
   };
 
   state = {
@@ -170,6 +186,8 @@ export class LogsPage extends Component {
       onChangeSorting,
       onChangeLogLevel,
       onChangeWithAttachments,
+      onChangeHideEmptySteps,
+      onChangeHidePassedLogs,
     } = this.props;
 
     const rowHighlightingConfig = {
@@ -204,8 +222,10 @@ export class LogsPage extends Component {
                 logLevel={getLogLevel(userId, logLevelId)}
                 onChangeLogLevel={onChangeLogLevel}
                 onChangeWithAttachments={onChangeWithAttachments}
+                onHideEmptySteps={onChangeHideEmptySteps}
+                onHidePassedLogs={onChangeHidePassedLogs}
               >
-                {({ markdownMode, consoleView }) => (
+                {({ markdownMode }) => (
                   <LogsGrid
                     logItems={logItems}
                     loading={loading}
@@ -216,7 +236,6 @@ export class LogsPage extends Component {
                     onChangeSorting={onChangeSorting}
                     rowHighlightingConfig={rowHighlightingConfig}
                     markdownMode={markdownMode}
-                    consoleView={consoleView}
                   />
                 )}
               </LogsGridToolbar>

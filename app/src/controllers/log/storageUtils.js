@@ -1,5 +1,5 @@
 import { getStorageItem, updateStorageItem } from 'common/utils';
-import { DEFAULT } from 'common/constants/logViewModes';
+import { MARKDOWN } from 'common/constants/logViewModes';
 import {
   DEFAULT_WITH_ATTACHMENTS,
   WITH_ATTACHMENTS_STORAGE_KEY,
@@ -7,6 +7,8 @@ import {
   LOG_LEVELS,
   DEFAULT_LOG_LEVEL,
   LOG_VIEW_MODE_STORAGE_KEY,
+  HIDE_PASSED_LOGS,
+  HIDE_EMPTY_STEPS,
 } from './constants';
 
 const getLogPageUserSettingsFromStorage = (userId) => getStorageItem(`${userId}_settings`) || {};
@@ -43,7 +45,21 @@ export const getLogLevel = (userId, logLevelId) =>
 export const setLogLevel = (userId, logLevel) =>
   updateLogPageUserSettingsInStorage(userId, { [LOG_LEVEL_STORAGE_KEY]: logLevel.id });
 
-export const getLogViewMode = (userId) => getLogViewModeFromStorage(userId) || DEFAULT;
+export const getLogViewMode = (userId) => getLogViewModeFromStorage(userId) || MARKDOWN;
 
 export const setLogViewMode = (userId, viewMode) =>
   updateLogPageUserSettingsInStorage(userId, { [LOG_VIEW_MODE_STORAGE_KEY]: viewMode });
+
+export const setHidePassedLogs = (userId, hidePassedLogs) => {
+  updateLogPageUserSettingsInStorage(userId, { [HIDE_PASSED_LOGS]: hidePassedLogs });
+};
+
+export const getHidePassedLogs = (userId) =>
+  getLogPageUserSettingsFromStorage(userId)[HIDE_PASSED_LOGS];
+
+export const setHideEmptySteps = (userId, hideEmptySteps) => {
+  updateLogPageUserSettingsInStorage(userId, { [HIDE_EMPTY_STEPS]: hideEmptySteps });
+};
+
+export const getHideEmptySteps = (userId) =>
+  getLogPageUserSettingsFromStorage(userId)[HIDE_EMPTY_STEPS];

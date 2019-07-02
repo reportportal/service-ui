@@ -4,13 +4,19 @@ import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
 import { defineMessages, injectIntl, intlShape } from 'react-intl';
 import Parser from 'html-react-parser';
-import { MARKDOWN, CONSOLE, DEFAULT } from 'common/constants/logViewModes';
+import { MARKDOWN, DEFAULT } from 'common/constants/logViewModes';
 import { userIdSelector } from 'controllers/user';
-import { getWithAttachments, LOG_LEVELS, getLogViewMode, setLogViewMode } from 'controllers/log';
+import {
+  getWithAttachments,
+  LOG_LEVELS,
+  getLogViewMode,
+  setLogViewMode,
+  getHidePassedLogs,
+  getHideEmptySteps,
+} from 'controllers/log';
 import { InputSlider } from 'components/inputs/inputSlider';
 import { InputCheckbox } from 'components/inputs/inputCheckbox';
 import { Pagination } from './pagination';
-import ConsoleIcon from './img/console-inline.svg';
 import MarkdownIcon from './img/markdown-inline.svg';
 import styles from './logsGridToolbar.scss';
 
@@ -25,9 +31,13 @@ const messages = defineMessages({
     id: 'LogsGridToolbar.markdownMode',
     defaultMessage: 'Markdown Mode',
   },
-  consoleView: {
-    id: 'LogsGridToolbar.consoleView',
-    defaultMessage: 'Console View',
+  hideEmptySteps: {
+    id: 'LogsGridToolbar.hideEmptySteps',
+    defaultMessage: 'Hide Empty Steps',
+  },
+  hidePassedLogs: {
+    id: 'LogsGridToolbar.hidePassedLogs',
+    defaultMessage: 'Hide All Passed Logs',
   },
 });
 
@@ -49,17 +59,23 @@ export class LogsGridToolbar extends Component {
     children: PropTypes.func,
     onChangeLogLevel: PropTypes.func,
     onChangeWithAttachments: PropTypes.func,
+    onHideEmptySteps: PropTypes.func,
+    onHidePassedLogs: PropTypes.func,
   };
 
   static defaultProps = {
     children: () => {},
     onChangeLogLevel: () => {},
     onChangeWithAttachments: () => {},
+    onHideEmptySteps: () => {},
+    onHidePassedLogs: () => {},
   };
 
   state = {
     logViewMode: getLogViewMode(this.props.userId),
     withAttachments: getWithAttachments(this.props.userId),
+    hidePassedLogs: getHidePassedLogs(this.props.userId),
+    hideEmptySteps: getHideEmptySteps(this.props.userId),
   };
 
   toggleLogViewMode = (targetViewMode) => {
@@ -74,8 +90,6 @@ export class LogsGridToolbar extends Component {
   };
 
   toggleMarkdownMode = () => this.toggleLogViewMode(MARKDOWN);
-
-  toggleConsoleView = () => this.toggleLogViewMode(CONSOLE);
 
   changeLogLevel = (newLogLevel) => {
     const { onChangeLogLevel, userId, logLevel: activeLogLevel } = this.props;
@@ -95,9 +109,31 @@ export class LogsGridToolbar extends Component {
       withAttachments: !withAttachments,
     });
   };
+
+  toggleHidePassedLogs = () => {
+    const { hidePassedLogs } = this.state;
+    const { onHidePassedLogs, userId } = this.props;
+
+    onHidePassedLogs(userId, !hidePassedLogs);
+
+    this.setState({
+      hidePassedLogs: !hidePassedLogs,
+    });
+  };
+
+  toggleHideEmptySteps = () => {
+    const { hideEmptySteps } = this.state;
+    const { onHideEmptySteps, userId } = this.props;
+
+    onHideEmptySteps(userId, !hideEmptySteps);
+
+    this.setState({
+      hideEmptySteps: !hideEmptySteps,
+    });
+  };
   render() {
     const { intl, children, activePage, pageCount, onChangePage, logLevel } = this.props;
-    const { logViewMode, withAttachments } = this.state;
+    const { logViewMode, withAttachments, hideEmptySteps, hidePassedLogs } = this.state;
     return (
       <div className={cx('container')}>
         <div className={cx('panel')}>
@@ -105,9 +141,19 @@ export class LogsGridToolbar extends Component {
             <div className={cx('log-level')}>
               <InputSlider options={LOG_LEVELS} value={logLevel} onChange={this.changeLogLevel} />
             </div>
-            <div className={cx('with-attachments')}>
+            <div className={cx('aside-element')}>
               <InputCheckbox value={withAttachments} onChange={this.toggleWithAttachments}>
                 {intl.formatMessage(messages.withAttachments)}
+              </InputCheckbox>
+            </div>
+            <div className={cx('aside-element')}>
+              <InputCheckbox value={hidePassedLogs} onChange={this.toggleHidePassedLogs}>
+                {intl.formatMessage(messages.hidePassedLogs)}
+              </InputCheckbox>
+            </div>
+            <div className={cx('aside-element')}>
+              <InputCheckbox value={hideEmptySteps} onChange={this.toggleHideEmptySteps}>
+                {intl.formatMessage(messages.hideEmptySteps)}
               </InputCheckbox>
             </div>
           </div>
@@ -119,13 +165,6 @@ export class LogsGridToolbar extends Component {
                 title={intl.formatMessage(messages.markdownMode)}
               >
                 {Parser(MarkdownIcon)}
-              </button>
-              <button
-                className={cx('mode-button', 'console', { active: logViewMode === CONSOLE })}
-                onClick={this.toggleConsoleView}
-                title={intl.formatMessage(messages.consoleView)}
-              >
-                {Parser(ConsoleIcon)}
               </button>
             </div>
             {pageCount !== 0 && (
@@ -142,7 +181,6 @@ export class LogsGridToolbar extends Component {
         <div className={cx('children')}>
           {children({
             markdownMode: logViewMode === MARKDOWN,
-            consoleView: logViewMode === CONSOLE,
           })}
         </div>
       </div>

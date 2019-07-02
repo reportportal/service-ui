@@ -13,6 +13,8 @@ export {
   WITH_ATTACHMENTS_FILTER_KEY,
   LOG_LEVELS,
   RETRY_ID,
+  HIDE_PASSED_LOGS,
+  HIDE_EMPTY_STEPS,
 } from './constants';
 export {
   historyItemsSelector,
@@ -43,4 +45,8 @@ export {
   setLogLevel,
   getLogViewMode,
   setLogViewMode,
+  setHidePassedLogs,
+  getHidePassedLogs,
+  setHideEmptySteps,
+  getHideEmptySteps,
 } from './storageUtils';

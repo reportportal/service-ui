@@ -23,6 +23,8 @@ import {
   LOG_LEVEL_FILTER_KEY,
   WITH_ATTACHMENTS_FILTER_KEY,
   NAMESPACE,
+  HIDE_PASSED_LOGS,
+  HIDE_EMPTY_STEPS,
 } from './constants';
 
 import {
@@ -36,7 +38,12 @@ import {
 import { attachmentSagas, clearAttachmentsAction } from './attachments';
 import { sauceLabsSagas } from './sauceLabs';
 import { nestedStepSagas, CLEAR_NESTED_STEPS } from './nestedSteps';
-import { getWithAttachments, getLogLevel } from './storageUtils';
+import {
+  getWithAttachments,
+  getLogLevel,
+  getHidePassedLogs,
+  getHideEmptySteps,
+} from './storageUtils';
 
 function* fetchActivity() {
   const activeProject = yield select(activeProjectSelector);
@@ -51,16 +58,24 @@ export function* collectLogPayload() {
   const query = yield select(querySelector, NAMESPACE);
   const filterLevel = query[LOG_LEVEL_FILTER_KEY] || getLogLevel(userId).id;
   const withAttachments = getWithAttachments(userId) || undefined;
+  const hidePassedLogs = getHidePassedLogs(userId) || undefined;
+  const hideEmptySteps = getHideEmptySteps(userId) || undefined;
   const activeLogItemId = yield select(activeRetryIdSelector);
   const errorId = yield select(nextErrorLogItemIdSelector);
   const fullParams = yield select(pagePropertiesSelector, NAMESPACE);
   // prevent duplication of level params in query
-  const params = Object.keys(fullParams).reduce((acc, key) => {
+  let params = Object.keys(fullParams).reduce((acc, key) => {
     if (key === LOG_LEVEL_FILTER_KEY) {
       return acc;
     }
     return { ...acc, [key]: fullParams[key] };
   }, {});
+  params = {
+    ...params,
+    [WITH_ATTACHMENTS_FILTER_KEY]: withAttachments,
+    [HIDE_PASSED_LOGS]: hidePassedLogs,
+    [HIDE_EMPTY_STEPS]: hideEmptySteps,
+  };
   return {
     activeProject,
     userId,
@@ -70,19 +85,18 @@ export function* collectLogPayload() {
     activeLogItemId,
     errorId,
     query,
+    hidePassedLogs,
+    hideEmptySteps,
   };
 }
 
 function* fetchLogItems(payload = {}) {
-  const { activeProject, params, filterLevel, withAttachments, activeLogItemId } = yield call(
-    collectLogPayload,
-  );
+  const { activeProject, params, filterLevel, activeLogItemId } = yield call(collectLogPayload);
   const namespace = payload.namespace || LOG_ITEMS_NAMESPACE;
   const logLevel = payload.level || filterLevel;
   const fetchParams = {
     ...params,
     ...payload.params,
-    [WITH_ATTACHMENTS_FILTER_KEY]: withAttachments,
   };
   yield put(
     fetchDataAction(namespace)(URLS.logItems(activeProject, activeLogItemId, logLevel), {
