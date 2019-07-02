@@ -1,6 +1,6 @@
 import { takeEvery, all, put, select, call } from 'redux-saga/effects';
 import { URLS } from 'common/urls';
-import { BTS_GROUP_TYPE } from 'common/constants/pluginsGroupTypes';
+import { GROUP_TYPES_BY_INTEGRATION_NAMES_MAP } from 'common/constants/integrationNames';
 import {
   showNotification,
   showDefaultErrorNotification,
@@ -45,7 +45,10 @@ function* addIntegration({ payload: { data, isGlobal, pluginName, callback } }) 
     const newIntegration = {
       ...data,
       id: response.id,
-      integrationType: { name: pluginName, groupType: BTS_GROUP_TYPE },
+      integrationType: {
+        name: pluginName,
+        groupType: GROUP_TYPES_BY_INTEGRATION_NAMES_MAP[pluginName],
+      },
     };
     const addIntegrationSuccessAction = isGlobal
       ? addGlobalIntegrationSuccessAction(newIntegration)

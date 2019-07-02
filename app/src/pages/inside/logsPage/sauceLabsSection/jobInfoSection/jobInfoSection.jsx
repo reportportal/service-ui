@@ -63,7 +63,7 @@ export class JobInfoSection extends Component {
       },
       {
         name: formatMessage(messages[LOGS_TAB]),
-        content: <LogsContent logs={logs} />,
+        content: <LogsContent logs={logs} assets={assets} authToken={authToken} />,
       },
       {
         name: formatMessage(messages[METADATA_TAB]),

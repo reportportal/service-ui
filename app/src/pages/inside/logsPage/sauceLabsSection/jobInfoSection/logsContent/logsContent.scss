@@ -1,3 +1,47 @@
 .logs-content {
+  .log-item-options {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    box-sizing: border-box;
+    height: 40px;
+    padding: 8px;
+    color: $COLOR--charcoal-grey;
+    background-color: $COLOR--white-four;
+    font-size: 13px;
+    font-family: $FONT-REGULAR;
+  }
+}
 
+.highlight-wrapper {
+  font-size: 12px;
+  max-height: 570px;
+  overflow: auto;
+}
+
+.log-name {
+  margin-left: 10px;
+}
+
+.log-item-control {
+  display: flex;
+  flex: 0 0 130px;
+  padding-left: 10px;
+}
+
+.download-item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 25px;
+  color: $COLOR--charcoal-grey;
+  text-decoration: none;
+  cursor: pointer;
+
+  svg {
+    width: 17px;
+    height: 17px;
+    margin-left: 5px;
+  }
 }

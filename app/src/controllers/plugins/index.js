@@ -11,7 +11,6 @@ export {
 } from './actionCreators';
 export {
   filterAvailablePlugins,
-  filterIntegrationsByGroupType,
   filterIntegrationsByName,
   groupItems,
   sortItemsByGroupType,
@@ -19,13 +18,10 @@ export {
 } from './utils';
 export {
   pluginsSelector,
+  availablePluginsSelector,
   availableGroupedPluginsSelector,
-  globalBtsIntegrationsSelector,
   createNamedIntegrationsSelector,
   namedGlobalIntegrationsSelectorsMap,
-  projectIntegrationsSelector,
-  projectIntegrationsSortedSelector,
-  groupedIntegrationsSelector,
   namedProjectIntegrationsSelectorsMap,
   availableBtsIntegrationsSelector,
   namedAvailableBtsIntegrationsSelector,

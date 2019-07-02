@@ -15,6 +15,7 @@ import {
   userIdSelector,
 } from 'controllers/user';
 import { levelSelector, launchSelector, formatItemName } from 'controllers/testItem';
+import { availableIntegrationsByPluginNameSelector } from 'controllers/plugins';
 import { MarkdownViewer } from 'components/main/markdown';
 import { LAUNCHES_PAGE_EVENTS } from 'components/main/analytics/events';
 import { INTEGRATION_NAMES_TITLES } from 'components/integrations';
@@ -41,6 +42,7 @@ const messages = defineMessages({
 
 @injectIntl
 @connect((state) => ({
+  sauceLabsIntegrations: availableIntegrationsByPluginNameSelector(state, SAUCE_LABS),
   userAccountRole: userAccountRoleSelector(state),
   userProjectRole: activeProjectRoleSelector(state),
   userId: userIdSelector(state),
@@ -51,12 +53,13 @@ const messages = defineMessages({
 export class ItemInfo extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
+    sauceLabsIntegrations: PropTypes.array.isRequired,
+    userAccountRole: PropTypes.string.isRequired,
+    userProjectRole: PropTypes.string,
+    userId: PropTypes.string,
     value: PropTypes.object,
     refFunction: PropTypes.func,
     customProps: PropTypes.object,
-    userProjectRole: PropTypes.string,
-    userAccountRole: PropTypes.string.isRequired,
-    userId: PropTypes.string,
     isStepLevel: PropTypes.bool,
     launch: PropTypes.object,
     editDisabled: PropTypes.bool,
@@ -95,8 +98,8 @@ export class ItemInfo extends Component {
   };
 
   renderSauceLabsLabel = () => {
-    const isSauceLabsIdExists = !!getSauceLabsConfig(this.props.value.attributes);
-    if (isSauceLabsIdExists) {
+    const isSauceLabsIntegrationAvailable = !!getSauceLabsConfig(this.props.value.attributes);
+    if (isSauceLabsIntegrationAvailable && this.props.sauceLabsIntegrations.length) {
       return (
         <img
           className={cx('sauce-labs-label')}

@@ -11,29 +11,28 @@ import {
   filterAvailablePlugins,
   sortItemsByGroupType,
   groupItems,
-  filterIntegrationsByGroupType,
   filterIntegrationsByName,
 } from './utils';
 
 const domainSelector = (state) => state.plugins || {};
 
 export const pluginsSelector = (state) => domainSelector(state).plugins;
-export const globalIntegrationsSelector = (state) =>
+const globalIntegrationsSelector = (state) =>
   domainSelector(state).integrations.globalIntegrations || [];
-export const projectIntegrationsSelector = (state) =>
+const projectIntegrationsSelector = (state) =>
   domainSelector(state).integrations.projectIntegrations || [];
 
-export const availableGroupedPluginsSelector = createSelector(pluginsSelector, (plugins) => {
-  let availableGroupedPlugins = filterAvailablePlugins(plugins);
-  availableGroupedPlugins = sortItemsByGroupType(availableGroupedPlugins);
-  availableGroupedPlugins = groupItems(availableGroupedPlugins);
+export const availablePluginsSelector = createSelector(pluginsSelector, filterAvailablePlugins);
 
-  return availableGroupedPlugins || {};
-});
+export const availableGroupedPluginsSelector = createSelector(
+  availablePluginsSelector,
+  (availablePlugins) => {
+    let availableGroupedPlugins = availablePlugins;
+    availableGroupedPlugins = sortItemsByGroupType(availableGroupedPlugins);
+    availableGroupedPlugins = groupItems(availableGroupedPlugins);
 
-export const globalBtsIntegrationsSelector = createSelector(
-  globalIntegrationsSelector,
-  (integrations) => filterIntegrationsByGroupType(integrations, BTS_GROUP_TYPE),
+    return availableGroupedPlugins || {};
+  },
 );
 
 export const createNamedIntegrationsSelector = (integrationName, integrationsSelector) =>
@@ -55,33 +54,17 @@ export const namedProjectIntegrationsSelectorsMap = {
   [EMAIL]: createNamedIntegrationsSelector(EMAIL, projectIntegrationsSelector),
 };
 
-const btsIntegrationsSelector = createSelector(projectIntegrationsSelector, (integrations) =>
-  filterIntegrationsByGroupType(integrations, BTS_GROUP_TYPE),
-);
-
-export const projectIntegrationsSortedSelector = createSelector(
-  projectIntegrationsSelector,
-  sortItemsByGroupType,
-);
-
-export const groupedIntegrationsSelector = createSelector(
-  projectIntegrationsSortedSelector,
-  groupItems,
-);
-
 export const availableIntegrationsByPluginNameSelector = (state, pluginName) => {
+  const availablePlugins = availablePluginsSelector(state);
+  const selectedPlugin = availablePlugins.find((item) => item.name === pluginName);
+  if (!selectedPlugin) {
+    return [];
+  }
   let availableIntegrations = namedProjectIntegrationsSelectorsMap[pluginName](state);
   if (!availableIntegrations.length) {
     availableIntegrations = namedGlobalIntegrationsSelectorsMap[pluginName](state);
   }
-  return availableIntegrations;
-};
-
-export const availableBtsIntegrationsSelector = (state) => {
-  const projectBtsIntegrations = btsIntegrationsSelector(state);
-  return projectBtsIntegrations.length
-    ? projectBtsIntegrations
-    : globalBtsIntegrationsSelector(state);
+  return availableIntegrations.filter((item) => item.enabled);
 };
 
 const namedAvailableIntegrationsByGroupTypeSelector = (groupType) => (state) => {
@@ -96,3 +79,15 @@ const namedAvailableIntegrationsByGroupTypeSelector = (groupType) => (state) => 
 export const namedAvailableBtsIntegrationsSelector = namedAvailableIntegrationsByGroupTypeSelector(
   BTS_GROUP_TYPE,
 );
+
+export const availableBtsIntegrationsSelector = (state) => {
+  const namedAvailableBtsIntegrations = namedAvailableBtsIntegrationsSelector(state);
+
+  return Object.keys(namedAvailableBtsIntegrations).reduce(
+    (acc, pluginName) =>
+      namedAvailableBtsIntegrations[pluginName]
+        ? acc.concat(namedAvailableBtsIntegrations[pluginName])
+        : acc,
+    [],
+  );
+};
