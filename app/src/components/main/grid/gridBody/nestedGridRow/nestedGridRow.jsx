@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import {
   nestedStepSelector,
   requestNestedStepAction,
-  isLoadMoreButton,
+  isLoadMoreButtonVisible,
   loadMoreNestedStepAction,
 } from 'controllers/log/nestedSteps';
 import classNames from 'classnames/bind';
@@ -24,8 +24,8 @@ const messages = defineMessages({
 
 export const NestedGridRow = injectIntl(
   connect(
-    (state) => ({
-      nestedStep: (id) => nestedStepSelector(state, id),
+    (state, ownProps) => ({
+      nestedStep: nestedStepSelector(state, ownProps.data.id),
     }),
     {
       requestNestedStep: requestNestedStepAction,
@@ -43,9 +43,8 @@ export const NestedGridRow = injectIntl(
       intl,
       ...rest
     }) => {
-      const step = nestedStep(id);
-      const showMoreButton = isLoadMoreButton(step);
-      const { collapsed, loading, content } = step;
+      const showMoreButton = isLoadMoreButtonVisible(nestedStep);
+      const { collapsed, loading, content } = nestedStep;
       const requestStep = () => {
         requestNestedStep({ id });
       };
@@ -106,7 +105,7 @@ NestedGridRow.propTypes = {
   nestedStep: PropTypes.func,
   requestNestedStep: PropTypes.func,
   level: PropTypes.number,
-  nestedStepHeader: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
+  nestedStepHeader: PropTypes.elementType.isRequired,
 };
 NestedGridRow.defaultProps = {
   data: {},

@@ -46,7 +46,7 @@ export class NestedStepHeader extends Component {
     const { onToggle } = this.props;
     onToggle();
   };
-  isShowAttachmentsCount = () => {
+  isAttachmentCountVisible = () => {
     const {
       data: { attachmentsCount = 0 },
     } = this.props;
@@ -98,7 +98,7 @@ export class NestedStepHeader extends Component {
           <div className={cx('row-cell')}>
             <div className={cx('statistics')}>
               <div className={cx('attachments')}>
-                {this.isShowAttachmentsCount() && (
+                {this.isAttachmentCountVisible() && (
                   <Fragment>
                     <div className={cx('attachment-icon')}>{Parser(AttachmentIcon)}</div>
                     <div className={cx('attachment-count')}>{data.attachmentsCount}</div>
