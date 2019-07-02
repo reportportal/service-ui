@@ -1,6 +1,6 @@
 import { all, call, put, select, takeEvery, cancelled } from 'redux-saga/effects';
 
-import { WITH_ATTACHMENTS_FILTER_KEY, collectLogPayload } from 'controllers/log';
+import { collectLogPayload } from 'controllers/log';
 import { handleError } from 'controllers/fetch';
 
 import { PAGE_KEY, SIZE_KEY } from 'controllers/pagination';
@@ -22,7 +22,7 @@ import { nestedStepSelector } from './selectors';
 
 function* fetchNestedStep({ payload = {} }) {
   const { id } = payload;
-  const { activeProject, params, filterLevel, withAttachments } = yield call(collectLogPayload);
+  const { activeProject, params, filterLevel } = yield call(collectLogPayload);
   const logLevel = filterLevel;
   const paramsExcludingPagination = omit(params, [PAGE_KEY, SIZE_KEY]);
   const { page } = yield select(nestedStepSelector, id);
@@ -35,7 +35,6 @@ function* fetchNestedStep({ payload = {} }) {
     ...paramsExcludingPagination,
     [PAGE_KEY]: 1,
     [SIZE_KEY]: pageSize,
-    [WITH_ATTACHMENTS_FILTER_KEY]: withAttachments,
   };
 
   let cancelRequest = () => {};
