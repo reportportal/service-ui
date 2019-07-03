@@ -43,7 +43,7 @@ PALabel.propTypes = {
 };
 
 export const DefectType = track()(
-  ({ issue, onEdit, tracking, editEventInfo, patternTemplates }) => (
+  ({ issue, onEdit, onRemove, tracking, editEventInfo, patternTemplates }) => (
     <div className={cx('defect-type')}>
       <div className={cx('defect-type-labels')}>
         {issue.ignoreAnalyzer && <IgnoredInAALabel />}
@@ -63,7 +63,7 @@ export const DefectType = track()(
         </div>
       </div>
       <div className={cx('issues')}>
-        <IssueList issues={issue.externalSystemIssues} />
+        <IssueList issues={issue.externalSystemIssues} onRemove={onRemove} />
       </div>
       <div className={cx('comment')}>
         <MarkdownViewer value={issue.comment} />
@@ -75,11 +75,13 @@ export const DefectType = track()(
 DefectType.propTypes = {
   issue: PropTypes.object.isRequired,
   onEdit: PropTypes.func,
+  onRemove: PropTypes.func,
   editEventInfo: PropTypes.object,
   patternTemplates: PropTypes.array,
 };
 DefectType.defaultProps = {
   onEdit: () => {},
+  onRemove: () => {},
   editEventInfo: {},
   patternTemplates: [],
 };

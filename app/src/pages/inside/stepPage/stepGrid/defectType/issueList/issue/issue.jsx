@@ -13,7 +13,13 @@ export const Issue = withTooltip({
 })(({ ticketId, url, onRemove }) => (
   <a href={url} className={cx('issue')}>
     <div className={cx('title')}>{ticketId}</div>
-    <div className={cx('cross')} onClick={onRemove}>
+    <div
+      className={cx('cross')}
+      onClick={(event) => {
+        event.preventDefault();
+        onRemove(ticketId);
+      }}
+    >
       {Parser(CrossIcon)}
     </div>
   </a>

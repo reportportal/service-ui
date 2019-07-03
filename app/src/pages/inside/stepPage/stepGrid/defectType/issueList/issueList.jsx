@@ -5,10 +5,10 @@ import styles from './issueList.scss';
 
 const cx = classNames.bind(styles);
 
-export const IssueList = ({ issues }) =>
+export const IssueList = ({ issues, onRemove }) =>
   issues.map((issue) => (
     <div className={cx('issue-list-item')} key={`${issue.btsProject}_${issue.ticketId}`}>
-      <Issue {...issue} />
+      <Issue {...issue} onRemove={onRemove} />
     </div>
   ));
 
@@ -21,7 +21,9 @@ IssueList.propTypes = {
       btsUrl: PropTypes.string,
     }),
   ),
+  onRemove: PropTypes.func,
 };
 IssueList.defaultProps = {
   issues: [],
+  onRemove: () => {},
 };
