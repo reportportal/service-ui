@@ -207,7 +207,7 @@ export class LogItemInfoTabs extends Component {
 
     return lastActivity ? (
       <div className={cx('panel-content')}>
-        <span className={cx('user')}>{lastActivity.userRef}</span>{' '}
+        <span className={cx('user')}>{lastActivity.user}</span>{' '}
         <span className={cx('action')}>{getActionMessage(intl, lastActivity)}</span>
       </div>
     ) : null;
