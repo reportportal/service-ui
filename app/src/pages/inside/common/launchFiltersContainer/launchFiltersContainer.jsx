@@ -129,6 +129,7 @@ export class LaunchFiltersContainer extends Component {
 
   updateFilterOrder = (filterId, sortingString) => {
     const currentFilter = this.createQuery(this.getConditions());
+
     this.fetchLaunches({ [PAGE_KEY]: 1, [SORTING_KEY]: sortingString, ...currentFilter });
   };
 

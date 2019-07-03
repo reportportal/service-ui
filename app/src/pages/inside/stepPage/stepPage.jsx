@@ -222,6 +222,24 @@ export class StepPage extends Component {
       fetchFunc: this.props.fetchTestItemsAction,
     });
 
+  handleUnlinkSingleTicket = (testItem) => (ticketId) => {
+    const items = [
+      {
+        ...testItem,
+        issue: {
+          ...testItem.issue,
+          externalSystemIssues: testItem.issue.externalSystemIssues.filter(
+            (issue) => issue.ticketId === ticketId,
+          ),
+        },
+      },
+    ];
+
+    this.props.unlinkIssueAction(items, {
+      fetchFunc: this.props.fetchTestItemsAction,
+    });
+  };
+
   handleLinkIssue = () =>
     this.props.linkIssueAction(this.props.selectedItems, {
       fetchFunc: this.props.fetchTestItemsAction,
@@ -335,6 +353,7 @@ export class StepPage extends Component {
             listView={listView}
             onShowTestParams={showTestParamsModal}
             onEditDefect={this.handleEditDefects}
+            onUnlinkSingleTicket={this.handleUnlinkSingleTicket}
             events={STEP_PAGE_EVENTS}
             onEditItem={onEditItem}
             onFilterClick={onFilterAdd}

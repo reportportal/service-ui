@@ -85,7 +85,7 @@ StartTimeColumn.defaultProps = {
   value: {},
 };
 
-const DefectTypeColumn = ({ className, value, customProps: { onEdit } }) => (
+const DefectTypeColumn = ({ className, value, customProps: { onEdit, onUnlinkSingleTicket } }) => (
   <div className={cx('defect-type-col', className)}>
     {value.issue &&
       value.issue.issueType && (
@@ -93,6 +93,7 @@ const DefectTypeColumn = ({ className, value, customProps: { onEdit } }) => (
           issue={value.issue}
           patternTemplates={value.patternTemplates}
           onEdit={() => onEdit(value)}
+          onRemove={onUnlinkSingleTicket(value)}
         />
       )}
   </div>
@@ -102,6 +103,7 @@ DefectTypeColumn.propTypes = {
   value: PropTypes.object,
   customProps: PropTypes.shape({
     onEdit: PropTypes.func.isRequired,
+    onUnlinkSingleTicket: PropTypes.func.isRequired,
   }).isRequired,
 };
 DefectTypeColumn.defaultProps = {
@@ -135,6 +137,7 @@ export class StepGrid extends Component {
     onShowTestParams: PropTypes.func,
     onFilterClick: PropTypes.func,
     onEditDefect: PropTypes.func,
+    onUnlinkSingleTicket: PropTypes.func,
     events: PropTypes.object,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
@@ -161,6 +164,7 @@ export class StepGrid extends Component {
     onShowTestParams: () => {},
     onFilterClick: () => {},
     onEditDefect: () => {},
+    onUnlinkSingleTicket: () => {},
     onEditItem: () => {},
     events: {},
     onChangeSorting: () => {},
@@ -175,7 +179,7 @@ export class StepGrid extends Component {
 
   constructor(props) {
     super(props);
-    const { events } = this.props;
+    const { events, onUnlinkSingleTicket } = this.props;
     this.columns = [
       {
         id: 'predefinedFilterSwitcher',
@@ -253,6 +257,7 @@ export class StepGrid extends Component {
             props.tracking.trackEvent(STEP_PAGE_EVENTS.EDIT_DEFECT_TYPE_ICON);
             props.onEditDefect(data);
           },
+          onUnlinkSingleTicket,
         },
         withFilter: true,
         filterEventInfo: events.DEFECT_TYPE_FILTER,
