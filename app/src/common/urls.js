@@ -160,11 +160,11 @@ export const URLS = {
       'filter.gte.level': level,
     })}`,
   logItemActivity: (activeProject, itemId) => `${urlBase}${activeProject}/activity/item/${itemId}`,
-  logItemStackTrace: (activeProject, itemId) =>
+  logItemStackTrace: (activeProject, itemId, pageSize) =>
     `${urlBase}${activeProject}/log${getQueryParams({
       'filter.eq.item': itemId,
       'page.page': 1,
-      'page.size': 1,
+      'page.size': pageSize,
       'filter.in.level': 'ERROR',
       'page.sort': 'logTime,DESC',
     })}`,
