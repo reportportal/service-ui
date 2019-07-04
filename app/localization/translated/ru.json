@@ -743,7 +743,7 @@
   "InstancesSection.unlinkAndSetupManuallyTitle": "Отсоединиться и настроить вручную",
   "IntegrationForm.configureTitle": "Конфигурировать",
   "IntegrationSettingsContainer.updateIntegrationSuccess": "Интеграция успешно обновлена",
-  "Integrations.Email.description": "Укрепите свой экземпляр ReportPortal с помощью интеграции с сервером электронной почты. Получайте информацию о результатах тестов в реальном времени и легко настраивайте список получателей.",
+  "Integrations.Email.description": "Добавьте к вашему ReportPortal интеграцию с сервером электронной почты. Получайте информацию о результатах тестов в реальном времени и легко настраивайте список получателей.",
   "Integrations.Jira.description": "Integration with JIRA, can be required for projects that collect defects in a separate tracking tool. Integration provides an exchange of information between ReportPortal and JIRA, such as posting issues and linking issues, getting updates on their statuses.",
   "Integrations.SauceLabs.description": "Сконфигурируйте интеграцию с Sauce Labs и смотрите видео о выполнении тестов прямо в приложении ReportPortal. Для этого выполните три простых шага: 1. Настройте интеграцию с Sauce Labs 2. Добавьте атрибуты для тестовых элементов SLID: N (где N - количество заданий в Sauce Labs) и SLDC: M (где M - US или EU) 3. Смотрите видео на лог уровне.",
   "IntegrationsList.authorization": "Авторизация",
