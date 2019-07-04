@@ -3,10 +3,10 @@ import track from 'react-tracking';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { lazyload } from 'react-lazyload';
+import { connect } from 'react-redux';
 import { fetch, formatAttribute } from 'common/utils';
 import { URLS } from 'common/urls';
 import { DASHBOARD_PAGE_EVENTS } from 'components/main/analytics/events';
-import { connect } from 'react-redux';
 import { activeProjectSelector } from 'controllers/user';
 import { showModalAction } from 'controllers/modal';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
@@ -224,14 +224,18 @@ export class Widget extends Component {
 
   render() {
     const { widget, visible } = this.state;
+    const widgetOptions = this.getWidgetOptions();
     const headerData = {
       owner: widget.owner,
       shared: widget.share,
       name: widget.name,
       description: widget.description,
       type: widget.widgetType,
-      meta: this.getWidgetOptions().viewMode,
+      meta: [widgetOptions.viewMode],
     };
+    if (widgetOptions.latest) {
+      headerData.meta.push(widgetOptions.latest);
+    }
 
     return (
       <div className={cx('widget-container', { disabled: this.props.isFullscreen })}>
