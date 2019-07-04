@@ -16,6 +16,10 @@ import RefreshIcon from 'common/img/refresh-icon-inline.svg';
 import GlobeIcon from 'common/img/globe-icon-inline.svg';
 import ShareIcon from 'common/img/share-icon-inline.svg';
 import { widgetTypesMessages } from 'pages/inside/dashboardItemPage/modals/common/widgets';
+import {
+  widgetModeMessages,
+  getWidgetModeByValue,
+} from 'pages/inside/dashboardItemPage/modals/common/widgetControls/utils/getWidgetModeOptions';
 import { DescriptionTooltipIcon } from './descriptionTooltipIcon';
 import styles from './widgetHeader.scss';
 
@@ -28,56 +32,6 @@ const messages = defineMessages({
   sharedWidget: {
     id: 'WidgetHeader.sharedWidget',
     defaultMessage: 'Widget was created by { owner }',
-  },
-});
-const widgetModeMessages = defineMessages({
-  trendChart: {
-    id: 'WidgetHeader.widgetMode.trendChart',
-    defaultMessage: 'Trend chart',
-  },
-  lineChart: {
-    id: 'WidgetHeader.widgetMode.lineChart',
-    defaultMessage: 'Line chart',
-  },
-  panelMode: {
-    id: 'WidgetHeader.widgetMode.panelMode',
-    defaultMessage: 'Panel view',
-  },
-  panel: {
-    id: 'WidgetHeader.widgetMode.panelMode',
-    defaultMessage: 'Panel view',
-  },
-  chartMode: {
-    id: 'WidgetHeader.widgetMode.chartMode',
-    defaultMessage: 'Pie chart view',
-  },
-  barMode: {
-    id: 'WidgetHeader.widgetMode.barMode',
-    defaultMessage: 'Bar view',
-  },
-  bar: {
-    id: 'WidgetHeader.widgetMode.barMode',
-    defaultMessage: 'Bar view',
-  },
-  pie: {
-    id: 'WidgetHeader.widgetMode.pieChartMode',
-    defaultMessage: 'Pie chart view',
-  },
-  donut: {
-    id: 'WidgetHeader.widgetMode.donutChartMode',
-    defaultMessage: 'Donut view',
-  },
-  trendChartMode: {
-    id: 'WidgetHeader.widgetMode.trendChartMode',
-    defaultMessage: 'Trend view',
-  },
-  areaChartMode: {
-    id: 'WidgetHeader.widgetMode.areaChartMode',
-    defaultMessage: 'Area view',
-  },
-  'area-spline': {
-    id: 'WidgetHeader.widgetMode.areaChartMode',
-    defaultMessage: 'Area view',
   },
 });
 
@@ -108,6 +62,18 @@ export class WidgetHeader extends Component {
     onEdit: () => {},
     customClass: null,
   };
+
+  renderMetaInfo = () =>
+    this.props.data.meta.map((item) => {
+      const widgetMode = getWidgetModeByValue(item);
+      return (
+        <div key={widgetMode} className={cx('meta-info')}>
+          {widgetModeMessages[widgetMode]
+            ? this.props.intl.formatMessage(widgetModeMessages[widgetMode])
+            : widgetMode}
+        </div>
+      );
+    });
 
   render() {
     const {
@@ -154,11 +120,7 @@ export class WidgetHeader extends Component {
             {widgetTypesMessages[data.type]
               ? intl.formatMessage(widgetTypesMessages[data.type])
               : data.type}
-            <div className={cx('meta-info')}>
-              {widgetModeMessages[data.meta]
-                ? intl.formatMessage(widgetModeMessages[data.meta])
-                : data.meta}
-            </div>
+            {this.renderMetaInfo()}
           </div>
         </div>
         <div className={customClass}>

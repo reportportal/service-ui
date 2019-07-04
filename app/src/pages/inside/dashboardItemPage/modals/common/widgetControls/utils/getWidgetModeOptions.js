@@ -1,7 +1,7 @@
 import { defineMessages } from 'react-intl';
 import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
 
-const messages = defineMessages({
+export const widgetModeMessages = defineMessages({
   [CHART_MODES.LAUNCH_MODE]: {
     id: 'WidgetModes.launchMode',
     defaultMessage: 'Launch mode',
@@ -44,8 +44,11 @@ const messages = defineMessages({
   },
 });
 
-export const getWidgetModeOptions = (viewModes, formatMessage) =>
-  viewModes.map((viewMode) => ({
-    value: MODES_VALUES[viewMode],
-    label: formatMessage(messages[`${viewMode}`]),
+export const getWidgetModeByValue = (modeValue) =>
+  Object.keys(MODES_VALUES).find((mode) => MODES_VALUES[mode] === modeValue);
+
+export const getWidgetModeOptions = (widgetModes, formatMessage) =>
+  widgetModes.map((widgetMode) => ({
+    value: MODES_VALUES[widgetMode],
+    label: formatMessage(widgetModeMessages[`${widgetMode}`]),
   }));
