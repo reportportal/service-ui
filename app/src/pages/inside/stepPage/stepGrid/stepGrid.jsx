@@ -134,7 +134,6 @@ export class StepGrid extends Component {
     onAllItemsSelect: PropTypes.func,
     loading: PropTypes.bool,
     listView: PropTypes.bool,
-    onShowTestParams: PropTypes.func,
     onFilterClick: PropTypes.func,
     onEditDefect: PropTypes.func,
     onUnlinkSingleTicket: PropTypes.func,
@@ -161,7 +160,6 @@ export class StepGrid extends Component {
     onAllItemsSelect: () => {},
     loading: false,
     listView: false,
-    onShowTestParams: () => {},
     onFilterClick: () => {},
     onEditDefect: () => {},
     onUnlinkSingleTicket: () => {},
@@ -211,7 +209,6 @@ export class StepGrid extends Component {
         component: NameColumn,
         maxHeight: 170,
         customProps: {
-          onShowTestParams: props.onShowTestParams,
           onEditItem: props.onEditItem,
           onClickAttribute: this.handleAttributeFilterClick,
           events,

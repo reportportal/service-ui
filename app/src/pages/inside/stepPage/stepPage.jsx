@@ -37,6 +37,7 @@ import { prevTestItemSelector } from 'controllers/pages';
 import { showModalAction } from 'controllers/modal';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
 import { LaunchFiltersSection } from 'pages/inside/common/launchFiltersSection';
+import { LAUNCH_ITEM_TYPES } from 'common/constants/launchItemTypes';
 import { StepGrid } from './stepGrid';
 
 @connect(
@@ -57,7 +58,7 @@ import { StepGrid } from './stepGrid';
     proceedWithValidItemsAction,
     selectStepsAction,
     fetchTestItemsAction,
-    showTestParamsModal: (item) => showModalAction({ id: 'testItemDetails', data: { item } }),
+    showModalAction,
     ignoreInAutoAnalysisAction,
     includeInAutoAnalysisAction,
     unlinkIssueAction,
@@ -103,7 +104,7 @@ export class StepPage extends Component {
     onChangePage: PropTypes.func,
     onChangePageSize: PropTypes.func,
     onChangeSorting: PropTypes.func,
-    showTestParamsModal: PropTypes.func,
+    showModalAction: PropTypes.func,
     ignoreInAutoAnalysisAction: PropTypes.func,
     includeInAutoAnalysisAction: PropTypes.func,
     unlinkIssueAction: PropTypes.func,
@@ -148,7 +149,7 @@ export class StepPage extends Component {
     onChangePage: () => {},
     onChangePageSize: () => {},
     onChangeSorting: () => {},
-    showTestParamsModal: () => {},
+    showModalAction: () => {},
     ignoreInAutoAnalysisAction: () => {},
     includeInAutoAnalysisAction: () => {},
     unlinkIssueAction: () => {},
@@ -189,6 +190,17 @@ export class StepPage extends Component {
   onGridRowHighlighted = () => {
     this.setState({
       isGridRowHighlighted: true,
+    });
+  };
+
+  onEditItem = (launch) => {
+    this.props.showModalAction({
+      id: 'testItemDetails',
+      data: {
+        item: launch,
+        type: LAUNCH_ITEM_TYPES.item,
+        fetchFunc: this.props.fetchTestItemsAction,
+      },
     });
   };
 
@@ -294,7 +306,6 @@ export class StepPage extends Component {
       pageSize,
       onChangePage,
       onChangePageSize,
-      showTestParamsModal,
       debugMode,
       onFilterAdd,
       onFilterRemove,
@@ -302,7 +313,6 @@ export class StepPage extends Component {
       onFilterChange,
       filterErrors,
       filterEntities,
-      onEditItem,
       onEditItems,
       onChangeSorting,
       sortingColumn,
@@ -351,11 +361,10 @@ export class StepPage extends Component {
             onItemSelect={this.handleOneItemSelection}
             loading={loading}
             listView={listView}
-            onShowTestParams={showTestParamsModal}
             onEditDefect={this.handleEditDefects}
             onUnlinkSingleTicket={this.handleUnlinkSingleTicket}
             events={STEP_PAGE_EVENTS}
-            onEditItem={onEditItem}
+            onEditItem={this.onEditItem}
             onFilterClick={onFilterAdd}
             onChangeSorting={onChangeSorting}
             sortingColumn={sortingColumn}

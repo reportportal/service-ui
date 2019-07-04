@@ -4,26 +4,12 @@ import Parser from 'html-react-parser';
 import { DurationBlock } from 'pages/inside/common/durationBlock';
 import ArrowIcon from 'common/img/arrow-right-inline.svg';
 import AttachmentIcon from 'common/img/attachment-inline.svg';
+import { TestItemStatus } from 'pages/inside/common/testItemStatus';
 import classNames from 'classnames/bind';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import styles from './nestedStepHeader.scss';
 
 const cx = classNames.bind(styles);
-
-const StatusLabel = ({ status }) => (
-  <div className={cx('status-container')}>
-    <div className={cx('indicator', status.toLowerCase())} />
-    <div className={cx('status')}>{status}</div>
-  </div>
-);
-
-StatusLabel.propTypes = {
-  status: PropTypes.string,
-};
-
-StatusLabel.defaultProps = {
-  status: '',
-};
 
 export class NestedStepHeader extends Component {
   static propTypes = {
@@ -92,8 +78,8 @@ export class NestedStepHeader extends Component {
             {this.renderName()}
           </div>
           <div className={cx('row-cell')} />
-          <div className={cx('row-cell')}>
-            <StatusLabel status={data.status} />
+          <div className={cx('row-cell', 'status-container')}>
+            <TestItemStatus status={data.status} />
           </div>
           <div className={cx('row-cell')}>
             <div className={cx('statistics')}>

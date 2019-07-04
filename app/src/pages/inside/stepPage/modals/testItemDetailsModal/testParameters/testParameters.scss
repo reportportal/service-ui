@@ -1,20 +1,22 @@
-.test-parameters {
-  width: 100%;
-}
-
 .row {
   box-sizing: border-box;
   border-bottom: 1px solid $COLOR--gray-91;
-  height: 25px;
+  height: 30px;
+}
+
+.test-parameters {
+  width: 100%;
+  background-color: $COLOR--white;
 }
 
 .header-cell {
-  color: $COLOR--gray-47;
+  color: $COLOR--charcoal-grey;
   font-size: 12px;
   font-family: $FONT-SEMIBOLD;
   height: 17px;
   text-transform: uppercase;
   vertical-align: middle;
+  padding-left: 10px;
 }
 
 .cell {
@@ -22,4 +24,15 @@
   font-size: 12px;
   line-height: 1.67;
   vertical-align: middle;
+  padding-left: 10px;
+}
+
+.no-parameters {
+  color: $COLOR--gray-47;
+  font-size: 12px;
+  font-family: $FONT-SEMIBOLD;
+  line-height: 30px;
+  text-transform: uppercase;
+  background-color: $COLOR--gray-91;
+  text-align: center;
 }
