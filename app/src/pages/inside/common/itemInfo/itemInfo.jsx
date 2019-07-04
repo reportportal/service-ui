@@ -20,7 +20,6 @@ import { LAUNCHES_PAGE_EVENTS } from 'components/main/analytics/events';
 import { INTEGRATION_NAMES_TITLES } from 'components/integrations';
 import { getSauceLabsConfig } from 'components/integrations/integrationProviders/sauceLabsIntegration/utils';
 import { formatMethodType, formatStatus } from 'common/utils/localizationUtils';
-import TestParamsIcon from 'common/img/test-params-icon-inline.svg';
 import PencilIcon from 'common/img/pencil-icon-inline.svg';
 import RetryIcon from 'common/img/retry-inline.svg';
 import SauceLabsIcon from 'common/img/plugins/sauce-labs-gray.png';
@@ -74,7 +73,6 @@ export class ItemInfo extends Component {
     customProps: {
       ownLinkParams: {},
       onEditItem: () => {},
-      onShowTestParams: () => {},
       onClickAttribute: () => {},
       onOwnerClick: () => {},
     },
@@ -93,13 +91,6 @@ export class ItemInfo extends Component {
     if (onEditItem) {
       onEditItem(this.props.value);
       this.props.tracking.trackEvent(events.EDIT_ICON_CLICK);
-    }
-  };
-
-  handleShowTestParams = () => {
-    const { onShowTestParams } = this.props.customProps;
-    if (onShowTestParams) {
-      onShowTestParams(this.props.value);
     }
   };
 
@@ -134,6 +125,14 @@ export class ItemInfo extends Component {
       customProps,
     } = this.props;
     const launch = launchFromProps || {}; // launch can be null which is not handled by default props
+    const isEditVisible =
+      isStepLevel ||
+      (canEditLaunch(
+        userAccountRole,
+        userProjectRole,
+        value.owner ? userId === value.owner : userId === launch.owner,
+      ) &&
+        !editDisabled);
 
     return (
       <div ref={refFunction} className={cx('item-info')}>
@@ -157,23 +156,13 @@ export class ItemInfo extends Component {
             >
               {value.number && <span className={cx('number')}>#{value.number}</span>}
             </NameLink>
-            {canEditLaunch(
-              userAccountRole,
-              userProjectRole,
-              value.owner ? userId === value.owner : userId === launch.owner,
-            ) &&
-              !editDisabled && (
-                <span className={cx('edit-icon')} onClick={this.handleEditItem}>
-                  {Parser(PencilIcon)}
-                </span>
-              )}
+            {isEditVisible && (
+              <span className={cx('edit-icon')} onClick={this.handleEditItem}>
+                {Parser(PencilIcon)}
+              </span>
+            )}
           </span>
           {value.analyzing && <div className={cx('analysis-badge')}>Analysis</div>}
-          {isStepLevel && (
-            <div className={cx('test-params-icon')} onClick={this.handleShowTestParams}>
-              {Parser(TestParamsIcon)}
-            </div>
-          )}
         </div>
 
         <div className={cx('additional-info')}>

@@ -1,16 +1,26 @@
 .name {
   color: $COLOR--charcoal-grey;
-  font-family: $FONT-SEMIBOLD;
-  font-size: 14px;
-  padding-bottom: 10px;
 }
 
-.row {
+.name-row {
   display: flex;
-  justify-content: flex-start;
+  justify-content: space-between;
   padding-top: 10px;
   padding-bottom: 10px;
-  position: relative;
+  font-family: $FONT-SEMIBOLD;
+  font-size: 14px;
+}
+
+.id {
+  word-wrap: break-word;
+}
+
+.location {
+  display: flex;
+  justify-content: space-between;
+  white-space: pre-line;
+  word-break: break-word;
+  padding-right: 10px;
 }
 
 .tags {
@@ -20,4 +30,21 @@
 .tag {
   padding-left: 8px;
   padding-right: 5px;
+}
+.copy {
+  flex-grow: 0;
+  flex-shrink: 0;
+  float: right;
+  height: 16px;
+  width: 16px;
+  padding: 0;  
+  outline: none;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  vertical-align: middle;
+  stroke: $COLOR--gray-60;
+  &:hover {
+    stroke: $COLOR--black-2;
+  }
 }
