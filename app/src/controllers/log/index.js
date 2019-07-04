@@ -3,7 +3,7 @@ export {
   fetchLogPageData,
   refreshLogPageData,
   fetchHistoryEntriesAction,
-  fetchNextErrorAction,
+  fetchLogPageStackTrace,
 } from './actionCreators';
 export { logReducer } from './reducer';
 export {
@@ -37,6 +37,10 @@ export {
   disableNextItemLinkSelector,
   disableNextErrorButtonSelector,
   nextErrorLogItemIdSelector,
+  logStackTraceItemsSelector,
+  logStackTracePaginationSelector,
+  logStackTraceLoadingSelector,
+  isLoadMoreStackTraceVisible,
 } from './selectors';
 export {
   getWithAttachments,

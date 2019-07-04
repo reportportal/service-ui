@@ -12,6 +12,7 @@ import {
   pathnameChangedSelector,
 } from 'controllers/pages';
 import { fetchDataAction } from 'controllers/fetch';
+import { isEmptyObject } from 'common/utils';
 
 import {
   ACTIVITY_NAMESPACE,
@@ -25,6 +26,9 @@ import {
   NAMESPACE,
   HIDE_PASSED_LOGS,
   HIDE_EMPTY_STEPS,
+  FETCH_LOG_PAGE_STACK_TRACE,
+  STACK_TRACE_NAMESPACE,
+  STACK_TRACE_PAGINATION_OFFSET,
 } from './constants';
 
 import {
@@ -33,7 +37,7 @@ import {
   querySelector,
   activeRetryIdSelector,
   prevActiveRetryIdSelector,
-  nextErrorLogItemIdSelector,
+  logStackTracePaginationSelector,
 } from './selectors';
 import { attachmentSagas, clearAttachmentsAction } from './attachments';
 import { sauceLabsSagas } from './sauceLabs';
@@ -44,6 +48,7 @@ import {
   getHidePassedLogs,
   getHideEmptySteps,
 } from './storageUtils';
+import { clearLogPageStackTrace } from './actionCreators';
 
 function* fetchActivity() {
   const activeProject = yield select(activeProjectSelector);
@@ -61,7 +66,6 @@ export function* collectLogPayload() {
   const hidePassedLogs = getHidePassedLogs(userId) || undefined;
   const hideEmptySteps = getHideEmptySteps(userId) || undefined;
   const activeLogItemId = yield select(activeRetryIdSelector);
-  const errorId = yield select(nextErrorLogItemIdSelector);
   const fullParams = yield select(pagePropertiesSelector, NAMESPACE);
   // prevent duplication of level params in query
   let params = Object.keys(fullParams).reduce((acc, key) => {
@@ -83,7 +87,6 @@ export function* collectLogPayload() {
     filterLevel,
     withAttachments,
     activeLogItemId,
-    errorId,
     query,
     hidePassedLogs,
     hideEmptySteps,
@@ -102,6 +105,21 @@ function* fetchLogItems(payload = {}) {
     fetchDataAction(namespace)(URLS.logItems(activeProject, activeLogItemId, logLevel), {
       params: fetchParams,
     }),
+  );
+}
+
+function* fetchStackTrace() {
+  const { activeProject, activeLogItemId } = yield call(collectLogPayload);
+  const page = yield select(logStackTracePaginationSelector);
+  let pageSize = STACK_TRACE_PAGINATION_OFFSET;
+  if (!isEmptyObject(page)) {
+    const { totalElements, size } = page;
+    pageSize = size >= totalElements ? totalElements : size + STACK_TRACE_PAGINATION_OFFSET;
+  }
+  yield put(
+    fetchDataAction(STACK_TRACE_NAMESPACE)(
+      URLS.logItemStackTrace(activeProject, activeLogItemId, pageSize),
+    ),
   );
 }
 
@@ -124,6 +142,7 @@ function* fetchWholePage() {
     call(fetchLogItems),
     call(fetchActivity),
     put(clearAttachmentsAction()),
+    put(clearLogPageStackTrace()),
   ]);
 }
 
@@ -133,7 +152,12 @@ function* fetchHistoryItemData() {
   const activeRetryId = yield select(activeRetryIdSelector);
   const prevActiveRetryId = yield select(prevActiveRetryIdSelector);
   if (activeLogId !== prevActiveLogId || activeRetryId !== prevActiveRetryId) {
-    yield all([call(fetchLogItems), call(fetchActivity), put(clearAttachmentsAction())]);
+    yield all([
+      call(fetchLogItems),
+      call(fetchActivity),
+      put(clearAttachmentsAction()),
+      put(clearLogPageStackTrace()),
+    ]);
   } else {
     yield call(fetchLogItems);
   }
@@ -148,6 +172,7 @@ function* fetchLogPageData({ meta = {} }) {
       call(fetchLogItems),
       call(fetchActivity),
       put(clearAttachmentsAction()),
+      put(clearLogPageStackTrace()),
     ]);
     return;
   }
@@ -166,10 +191,15 @@ function* watchFetchHistoryEntries() {
   yield takeEvery(FETCH_HISTORY_ENTRIES, fetchHistoryEntries);
 }
 
+function* watchFetchLogPageStackTrace() {
+  yield takeEvery(FETCH_LOG_PAGE_STACK_TRACE, fetchStackTrace);
+}
+
 export function* logSagas() {
   yield all([
     watchFetchLogPageData(),
     watchFetchHistoryEntries(),
+    watchFetchLogPageStackTrace(),
     attachmentSagas(),
     sauceLabsSagas(),
     nestedStepSagas(),

@@ -38,6 +38,12 @@ export const logPaginationSelector = (state) => logSelector(state).pagination;
 export const loadingSelector = (state) => logSelector(state).loading || false;
 export const attachmentsSelector = (state) => logSelector(state).attachments || {};
 export const sauceLabsSelector = (state) => logSelector(state).sauceLabs || {};
+
+export const logStackTraceSelector = (state) => logSelector(state).stackTrace || {};
+export const logStackTraceItemsSelector = (state) => logStackTraceSelector(state).content;
+export const logStackTracePaginationSelector = (state) => logStackTraceSelector(state).pagination;
+export const logStackTraceLoadingSelector = (state) => logStackTraceSelector(state).loading;
+
 export const querySelector = createQueryParametersSelector({
   defaultPagination: DEFAULT_PAGINATION,
   defaultSorting: DEFAULT_SORTING,
@@ -244,4 +250,9 @@ export const disableNextErrorButtonSelector = createSelector(
   nextErrorLogItemIdSelector,
   logItemsSelector,
   (id, items) => isEmptyValue(id) || items.length === 0,
+);
+
+export const isLoadMoreStackTraceVisible = createSelector(
+  logStackTracePaginationSelector,
+  ({ size, totalElements }) => size < totalElements,
 );
