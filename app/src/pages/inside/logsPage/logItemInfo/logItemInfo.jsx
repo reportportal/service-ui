@@ -16,7 +16,7 @@ import {
   RETRY_ID,
   NAMESPACE,
 } from 'controllers/log';
-import { PASSED, SKIPPED, MANY, NOT_FOUND } from 'common/constants/launchStatuses';
+import { MANY } from 'common/constants/launchStatuses';
 import { availableBtsIntegrationsSelector, isPostIssueActionAvailable } from 'controllers/project';
 import { connectRouter } from 'common/utils';
 import LinkIcon from 'common/img/link-inline.svg';
@@ -160,13 +160,7 @@ export class LogItemInfo extends Component {
     reversedHistoryItems.pop();
     reversedHistoryItems.reverse();
 
-    return reversedHistoryItems.find(
-      (item) =>
-        item.status !== PASSED.toUpperCase() &&
-        item.status !== SKIPPED.toUpperCase() &&
-        item.status !== NOT_FOUND.toUpperCase() &&
-        item.status !== MANY.toUpperCase(),
-    );
+    return reversedHistoryItems.find((item) => item.issue && item.status !== MANY.toUpperCase());
   };
 
   getLastHistoryItem = () => this.props.historyItems[this.props.historyItems.length - 1];
@@ -190,10 +184,9 @@ export class LogItemInfo extends Component {
   isCopySendButtonDisabled = () => {
     const lastHistoryItem = this.getLastHistoryItem();
     return (
-      this.props.logItem.status === SKIPPED.toUpperCase() ||
-      this.props.logItem.status === PASSED.toUpperCase() ||
-      lastHistoryItem.status === PASSED.toUpperCase() ||
-      lastHistoryItem.status === SKIPPED.toUpperCase() ||
+      !this.props.logItem.issue ||
+      this.props.logItem.status === MANY.toUpperCase() ||
+      !lastHistoryItem.issue ||
       !this.getLastWithDefect()
     );
   };
