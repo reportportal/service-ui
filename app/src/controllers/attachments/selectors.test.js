@@ -1,4 +1,5 @@
-import { attachmentItemsSelector } from './selectors';
+import { attachmentsSelector } from 'controllers/log/selectors';
+import { createAttachmentItemsSelector } from './selectors';
 
 const mockState = {
   log: {
@@ -23,6 +24,7 @@ const mockState = {
 
 describe('Attachments Selectors', () => {
   test('attachmentsSelector works', () => {
+    const attachmentItemsSelector = createAttachmentItemsSelector(attachmentsSelector);
     const selected = attachmentItemsSelector.resultFunc(
       mockState.log.attachments.logsWithAttachments,
     );

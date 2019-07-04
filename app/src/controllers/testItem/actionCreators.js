@@ -3,11 +3,13 @@ import { showModalAction } from 'controllers/modal';
 import { validateDeleteItem } from './actionValidators';
 import {
   FETCH_TEST_ITEMS,
+  FETCH_TEST_ITEMS_SUCCESS,
   SET_LEVEL,
   RESTORE_PATH,
   SET_PAGE_LOADING,
   NAMESPACE,
   FETCH_TEST_ITEMS_LOG_PAGE,
+  SET_VIEW_MODE,
 } from './constants';
 
 export const setLevelAction = (level) => ({
@@ -34,7 +36,6 @@ export const fetchTestItemsFromLogPageAction = (payload) => ({
   payload,
 });
 
-
 export const deleteItemsAction = defineGroupOperation(
   NAMESPACE,
   'deleteTestItems',
@@ -45,3 +46,12 @@ export const deleteItemsAction = defineGroupOperation(
     }),
   validateDeleteItem,
 );
+
+export const setViewModeAction = (viewMode) => ({
+  type: SET_VIEW_MODE,
+  payload: viewMode,
+});
+
+export const fetchTestItemsSuccessAction = () => ({
+  type: FETCH_TEST_ITEMS_SUCCESS,
+});

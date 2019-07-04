@@ -31,6 +31,8 @@ import {
   HISTORY_PAGE,
   PROJECT_DETAILS_PAGE,
   OAUTH_SUCCESS,
+  TEST_ITEM_LOG_PAGE,
+  PROJECT_USERDEBUG_TEST_ITEM_LOG_PAGE,
 } from 'controllers/pages';
 
 export const ANONYMOUS_ACCESS = 'anonymous';
@@ -75,4 +77,6 @@ export const pageRendering = {
   [PROJECT_LOG_PAGE]: { component: LogsPage, layout: AppLayout },
   [PROJECT_USERDEBUG_LOG_PAGE]: { component: LogsPage, layout: AppLayout },
   [HISTORY_PAGE]: { component: HistoryPage, layout: AppLayout },
+  [TEST_ITEM_LOG_PAGE]: { component: TestItemPage, layout: AppLayout },
+  [PROJECT_USERDEBUG_TEST_ITEM_LOG_PAGE]: { component: TestItemPage, layout: AppLayout },
 };

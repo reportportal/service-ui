@@ -14,6 +14,11 @@ import { debugModeSelector } from 'controllers/launch';
 import { extractNamespacedQuery, createNamespacedQuery } from 'common/utils/routingUtils';
 import { isEmptyValue } from 'common/utils';
 import {
+  createAttachmentsLoadingSelector,
+  createAttachmentItemsSelector,
+  createAttachmentsPaginationSelector,
+} from 'controllers/attachments';
+import {
   calculateGrowthDuration,
   normalizeHistoryItem,
   getPreviousItem,
@@ -244,4 +249,12 @@ export const disableNextErrorButtonSelector = createSelector(
   nextErrorLogItemIdSelector,
   logItemsSelector,
   (id, items) => isEmptyValue(id) || items.length === 0,
+);
+
+export const attachmentsLoadingSelector = createAttachmentsLoadingSelector(attachmentsSelector);
+
+export const attachmentItemsSelector = createAttachmentItemsSelector(attachmentsSelector);
+
+export const attachmentsPaginationSelector = createAttachmentsPaginationSelector(
+  attachmentsSelector,
 );

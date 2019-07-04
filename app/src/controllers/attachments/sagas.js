@@ -1,10 +1,8 @@
-import { takeLatest, call, put, all, select, take } from 'redux-saga/effects';
+import { takeLatest, call, put, all, take } from 'redux-saga/effects';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
 import { showModalAction, HIDE_MODAL } from 'controllers/modal';
 import { concatFetchDataAction } from 'controllers/fetch';
-import { activeProjectSelector } from 'controllers/user';
-import { activeRetryIdSelector } from 'controllers/log/selectors';
 import { JSON as JSON_TYPE } from 'common/constants/fileTypes';
 import {
   ATTACHMENT_IMAGE_MODAL_ID,
@@ -12,20 +10,8 @@ import {
   ATTACHMENT_HAR_FILE_MODAL_ID,
   OPEN_ATTACHMENT_ACTION,
   FETCH_ATTACHMENTS_CONCAT_ACTION,
-  ATTACHMENTS_NAMESPACE,
 } from './constants';
 import { getAttachmentModalId, extractExtension } from './utils';
-
-function* fetchAttachmentsConcat({ payload: { params, concat } }) {
-  const activeProject = yield select(activeProjectSelector);
-  const activeLogItemId = yield select(activeRetryIdSelector);
-  yield put(
-    concatFetchDataAction(ATTACHMENTS_NAMESPACE, concat)(
-      URLS.logItems(activeProject, activeLogItemId),
-      { params },
-    ),
-  );
-}
 
 export function fetchImageData({ binaryId }) {
   return fetch(URLS.getFileById(binaryId), { responseType: 'blob' });
@@ -81,6 +67,10 @@ function* openAttachment({ payload: { id, contentType } }) {
     window.open(url);
     URL.revokeObjectURL(url);
   }
+}
+
+function* fetchAttachmentsConcat({ payload: { url, params, concat }, meta: { namespace } }) {
+  yield put(concatFetchDataAction(namespace, concat)(url, { params }));
 }
 
 function* watchFetchAttachments() {

@@ -9,7 +9,12 @@ import {
   activeLogIdSelector,
   activeRetryIdSelector,
   activeLogSelector,
+  attachmentItemsSelector,
+  attachmentsLoadingSelector,
+  attachmentsPaginationSelector,
+  fetchLogAttachmentsConcatAction,
 } from 'controllers/log';
+import { openAttachmentAction } from 'controllers/attachments';
 import { SAUCE_LABS } from 'common/constants/integrationNames';
 import { LOG_PAGE_EVENTS } from 'components/main/analytics/events';
 import StackTraceIcon from 'common/img/stack-trace-inline.svg';
@@ -55,14 +60,23 @@ const messages = defineMessages({
 });
 
 @injectIntl
-@connect((state) => ({
-  lastActivity: lastLogActivitySelector(state),
-  activeRetry: activeRetrySelector(state),
-  logId: activeLogIdSelector(state),
-  retryId: activeRetryIdSelector(state),
-  logItem: activeLogSelector(state),
-  sauceLabsIntegrations: availableIntegrationsByPluginNameSelector(state, SAUCE_LABS),
-}))
+@connect(
+  (state) => ({
+    lastActivity: lastLogActivitySelector(state),
+    activeRetry: activeRetrySelector(state),
+    logId: activeLogIdSelector(state),
+    retryId: activeRetryIdSelector(state),
+    logItem: activeLogSelector(state),
+    sauceLabsIntegrations: availableIntegrationsByPluginNameSelector(state, SAUCE_LABS),
+    attachments: attachmentItemsSelector(state),
+    attachmentsLoading: attachmentsLoadingSelector(state),
+    attachmentsPagination: attachmentsPaginationSelector(state),
+  }),
+  {
+    fetchLogAttachmentsConcatAction,
+    openAttachmentAction,
+  },
+)
 export class LogItemInfoTabs extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
@@ -78,10 +92,20 @@ export class LogItemInfoTabs extends Component {
     onToggleSauceLabsIntegrationView: PropTypes.func.isRequired,
     isSauceLabsIntegrationView: PropTypes.bool.isRequired,
     sauceLabsIntegrations: PropTypes.array.isRequired,
+    attachments: PropTypes.array,
+    attachmentsPagination: PropTypes.object,
+    attachmentsLoading: PropTypes.bool,
+    fetchLogAttachmentsConcatAction: PropTypes.func,
+    openAttachmentAction: PropTypes.func,
   };
 
   static defaultProps = {
     lastActivity: null,
+    attachments: [],
+    attachmentsPagination: {},
+    attachmentsLoading: false,
+    fetchLogAttachmentsConcatAction: () => {},
+    openAttachmentAction: () => {},
   };
 
   static getDerivedStateFromProps(props) {
@@ -168,6 +192,11 @@ export class LogItemInfoTabs extends Component {
         componentProps: {
           activeItemId: this.state.activeAttachmentId,
           onChangeActiveItem: this.changeActiveAttachment,
+          attachments: this.props.attachments,
+          loading: this.props.attachmentsLoading,
+          pagination: this.props.attachmentsPagination,
+          fetchAttachmentsConcatAction: this.props.fetchLogAttachmentsConcatAction,
+          openAttachmentAction: this.props.openAttachmentAction,
         },
         eventInfo: LOG_PAGE_EVENTS.ATTACHMENT_TAB,
       },

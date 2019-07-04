@@ -22,7 +22,11 @@ import { URLS } from 'common/urls';
 import { createNamespacedQuery, mergeNamespacedQuery } from 'common/utils/routingUtils';
 import { activeProjectSelector } from 'controllers/user';
 import { LEVEL_NOT_FOUND } from 'common/constants/launchLevels';
-import { setLevelAction, setPageLoadingAction } from './actionCreators';
+import {
+  setLevelAction,
+  setPageLoadingAction,
+  fetchTestItemsSuccessAction,
+} from './actionCreators';
 import {
   FETCH_TEST_ITEMS,
   NAMESPACE,
@@ -42,6 +46,7 @@ import {
   levelSelector,
 } from './selectors';
 import { calculateLevel } from './utils';
+import { testItemLogsSagas } from './log';
 
 function* updateLaunchId(launchId) {
   const payload = yield select(payloadSelector);
@@ -132,6 +137,7 @@ function* fetchTestItems({ payload = {} }) {
   }
   yield put(setLevelAction(level));
   yield put(setPageLoadingAction(false));
+  yield put(fetchTestItemsSuccessAction());
 }
 
 function* watchRestorePath() {
@@ -197,5 +203,10 @@ function* watchTestItemsFromLogPage() {
 }
 
 export function* testItemsSagas() {
-  yield all([watchFetchTestItems(), watchRestorePath(), watchTestItemsFromLogPage()]);
+  yield all([
+    watchFetchTestItems(),
+    watchRestorePath(),
+    watchTestItemsFromLogPage(),
+    testItemLogsSagas(),
+  ]);
 }

@@ -12,7 +12,8 @@ import {
   pathnameChangedSelector,
 } from 'controllers/pages';
 import { fetchDataAction } from 'controllers/fetch';
-
+import { fetchAttachmentsConcatAction } from 'controllers/attachments';
+import { clearLogAttachmentsAction } from './actionCreators';
 import {
   ACTIVITY_NAMESPACE,
   DEFAULT_HISTORY_DEPTH,
@@ -25,6 +26,8 @@ import {
   NAMESPACE,
   HIDE_PASSED_LOGS,
   HIDE_EMPTY_STEPS,
+  ATTACHMENTS_NAMESPACE,
+  FETCH_LOG_ATTACHMENTS_CONCAT_ACTION,
 } from './constants';
 
 import {
@@ -35,7 +38,6 @@ import {
   prevActiveRetryIdSelector,
   nextErrorLogItemIdSelector,
 } from './selectors';
-import { attachmentSagas, clearAttachmentsAction } from './attachments';
 import { sauceLabsSagas } from './sauceLabs';
 import { nestedStepSagas, CLEAR_NESTED_STEPS } from './nestedSteps';
 import {
@@ -44,6 +46,16 @@ import {
   getHidePassedLogs,
   getHideEmptySteps,
 } from './storageUtils';
+
+function* fetchAttachmentsConcat({ payload }) {
+  const activeProject = yield select(activeProjectSelector);
+  const activeLogItemId = yield select(activeRetryIdSelector);
+  yield put(
+    fetchAttachmentsConcatAction(ATTACHMENTS_NAMESPACE)(
+      URLS.logItems(activeProject, activeLogItemId),
+    )(payload),
+  );
+}
 
 function* fetchActivity() {
   const activeProject = yield select(activeProjectSelector);
@@ -123,7 +135,7 @@ function* fetchWholePage() {
     call(fetchHistoryEntries),
     call(fetchLogItems),
     call(fetchActivity),
-    put(clearAttachmentsAction()),
+    put(clearLogAttachmentsAction()),
   ]);
 }
 
@@ -133,7 +145,7 @@ function* fetchHistoryItemData() {
   const activeRetryId = yield select(activeRetryIdSelector);
   const prevActiveRetryId = yield select(prevActiveRetryIdSelector);
   if (activeLogId !== prevActiveLogId || activeRetryId !== prevActiveRetryId) {
-    yield all([call(fetchLogItems), call(fetchActivity), put(clearAttachmentsAction())]);
+    yield all([call(fetchLogItems), call(fetchActivity), put(clearLogAttachmentsAction())]);
   } else {
     yield call(fetchLogItems);
   }
@@ -147,7 +159,7 @@ function* fetchLogPageData({ meta = {} }) {
       call(fetchHistoryEntries),
       call(fetchLogItems),
       call(fetchActivity),
-      put(clearAttachmentsAction()),
+      put(clearLogAttachmentsAction()),
     ]);
     return;
   }
@@ -166,12 +178,16 @@ function* watchFetchHistoryEntries() {
   yield takeEvery(FETCH_HISTORY_ENTRIES, fetchHistoryEntries);
 }
 
+function* watchFetchAttachmentsConcat() {
+  yield takeEvery(FETCH_LOG_ATTACHMENTS_CONCAT_ACTION, fetchAttachmentsConcat);
+}
+
 export function* logSagas() {
   yield all([
     watchFetchLogPageData(),
     watchFetchHistoryEntries(),
-    attachmentSagas(),
     sauceLabsSagas(),
     nestedStepSagas(),
+    watchFetchAttachmentsConcat(),
   ]);
 }

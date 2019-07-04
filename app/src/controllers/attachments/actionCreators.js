@@ -4,13 +4,22 @@ import {
   CLEAR_ATTACHMENTS_ACTION,
 } from './constants';
 
-export const fetchAttachmentsConcatAction = (payload) => ({
+export const fetchAttachmentsConcatAction = (namespace) => (url) => (payload) => ({
   type: FETCH_ATTACHMENTS_CONCAT_ACTION,
-  payload,
+  payload: {
+    url,
+    ...payload,
+  },
+  meta: {
+    namespace,
+  },
 });
 
-export const clearAttachmentsAction = () => ({
+export const createClearAttachmentsAction = (namespace) => () => ({
   type: CLEAR_ATTACHMENTS_ACTION,
+  meta: {
+    namespace,
+  },
 });
 
 export const openAttachmentAction = (payload) => ({

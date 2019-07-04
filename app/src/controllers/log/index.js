@@ -4,6 +4,8 @@ export {
   refreshLogPageData,
   fetchHistoryEntriesAction,
   fetchNextErrorAction,
+  fetchLogAttachmentsConcatAction,
+  clearLogAttachmentsAction,
 } from './actionCreators';
 export { logReducer } from './reducer';
 export {
@@ -15,6 +17,7 @@ export {
   RETRY_ID,
   HIDE_PASSED_LOGS,
   HIDE_EMPTY_STEPS,
+  FETCH_LOG_ATTACHMENTS_CONCAT_ACTION,
 } from './constants';
 export {
   historyItemsSelector,
@@ -37,6 +40,9 @@ export {
   disableNextItemLinkSelector,
   disableNextErrorButtonSelector,
   nextErrorLogItemIdSelector,
+  attachmentItemsSelector,
+  attachmentsLoadingSelector,
+  attachmentsPaginationSelector,
 } from './selectors';
 export {
   getWithAttachments,

@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { Component, Fragment } from 'react';
 import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -6,6 +6,7 @@ import { SORTING_ASC, withSortingURL } from 'controllers/sorting';
 import { PageLayout, PageSection } from 'layouts/pageLayout';
 import { LaunchSuiteGrid } from 'pages/inside/common/launchSuiteGrid';
 import { SuiteTestToolbar } from 'pages/inside/common/suiteTestToolbar';
+import { LIST_VIEW } from 'pages/inside/common/suiteTestToolbar/logViewSwitcher';
 import { debugModeSelector } from 'controllers/launch';
 import { SUITES_PAGE_EVENTS } from 'components/main/analytics/events';
 import {
@@ -24,10 +25,13 @@ import {
   fetchTestItemsAction,
   parentItemSelector,
   loadingSelector,
+  LOG_VIEW,
 } from 'controllers/testItem';
+import { fetchTestItemLogDataAction } from 'controllers/testItem/log';
 import { prevTestItemSelector } from 'controllers/pages';
 import { LaunchFiltersSection } from 'pages/inside/common/launchFiltersSection';
 import { ENTITY_START_TIME } from 'components/filterEntities/constants';
+import { TestItemLogsPage } from 'pages/inside/testItemLogsPage';
 
 @connect(
   (state) => ({
@@ -44,6 +48,7 @@ import { ENTITY_START_TIME } from 'components/filterEntities/constants';
     unselectAllTestsAction,
     toggleAllTestsAction,
     fetchTestItemsAction,
+    fetchTestItemLog: fetchTestItemLogDataAction,
   },
 )
 @withSortingURL({
@@ -91,6 +96,9 @@ export class TestsPage extends Component {
       getTrackingData: PropTypes.func,
     }).isRequired,
     highlightItemId: PropTypes.number,
+    viewMode: PropTypes.string,
+    onToggleView: PropTypes.func,
+    fetchTestItemLog: PropTypes.func,
   };
 
   static defaultProps = {
@@ -121,6 +129,9 @@ export class TestsPage extends Component {
     filterErrors: {},
     filterEntities: [],
     highlightItemId: null,
+    viewMode: LIST_VIEW,
+    onToggleView: () => {},
+    fetchTestItemLog: () => {},
   };
 
   state = {
@@ -197,6 +208,8 @@ export class TestsPage extends Component {
       onFilterChange,
       filterErrors,
       filterEntities,
+      viewMode,
+      onToggleView,
     } = this.props;
 
     const rowHighlightingConfig = {
@@ -216,7 +229,9 @@ export class TestsPage extends Component {
             parentItem={parentItem}
             onUnselect={this.unselectItem}
             onUnselectAll={this.unselectAllItems}
-            onRefresh={this.props.fetchTestItemsAction}
+            onRefresh={
+              viewMode === LOG_VIEW ? this.props.fetchTestItemLog : this.props.fetchTestItemsAction
+            }
             debugMode={debugMode}
             errors={this.props.validationErrors}
             onDelete={() => deleteItems(selectedTests)}
@@ -228,32 +243,40 @@ export class TestsPage extends Component {
             onFilterRemove={onFilterRemove}
             onFilterAdd={onFilterAdd}
             events={SUITES_PAGE_EVENTS}
+            viewMode={viewMode}
+            onToggleView={onToggleView}
           />
-          <LaunchSuiteGrid
-            data={tests}
-            sortingColumn={sortingColumn}
-            sortingDirection={sortingDirection}
-            onChangeSorting={onChangeSorting}
-            selectedItems={selectedTests}
-            onItemSelect={this.handleOneItemSelection}
-            onAllItemsSelect={this.handleAllTestsSelection}
-            loading={loading}
-            events={SUITES_PAGE_EVENTS}
-            onFilterClick={onFilterAdd}
-            onEditItem={onEditItem}
-            rowHighlightingConfig={rowHighlightingConfig}
-          />
-          {!!pageCount &&
-            !loading && (
-              <PaginationToolbar
-                activePage={activePage}
-                itemCount={itemCount}
-                pageCount={pageCount}
-                pageSize={pageSize}
-                onChangePage={onChangePage}
-                onChangePageSize={onChangePageSize}
+          {viewMode === LIST_VIEW ? (
+            <Fragment>
+              <LaunchSuiteGrid
+                data={tests}
+                sortingColumn={sortingColumn}
+                sortingDirection={sortingDirection}
+                onChangeSorting={onChangeSorting}
+                selectedItems={selectedTests}
+                onItemSelect={this.handleOneItemSelection}
+                onAllItemsSelect={this.handleAllTestsSelection}
+                loading={loading}
+                events={SUITES_PAGE_EVENTS}
+                onFilterClick={onFilterAdd}
+                onEditItem={onEditItem}
+                rowHighlightingConfig={rowHighlightingConfig}
               />
-            )}
+              {!!pageCount &&
+                !loading && (
+                  <PaginationToolbar
+                    activePage={activePage}
+                    itemCount={itemCount}
+                    pageCount={pageCount}
+                    pageSize={pageSize}
+                    onChangePage={onChangePage}
+                    onChangePageSize={onChangePageSize}
+                  />
+                )}
+            </Fragment>
+          ) : (
+            <TestItemLogsPage />
+          )}
         </PageSection>
       </PageLayout>
     );

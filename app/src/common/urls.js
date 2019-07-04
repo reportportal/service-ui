@@ -159,6 +159,16 @@ export const URLS = {
     `${urlBase}${activeProject}/log/nested/${itemId}${getQueryParams({
       'filter.gte.level': level,
     })}`,
+  launchLogs: (activeProject, itemId, level) =>
+    `${urlBase}${activeProject}/log${getQueryParams({
+      'filter.eq.launch': itemId,
+      'filter.gte.level': level,
+    })}`,
+  testItemLogs: (activeProject, itemId, level) =>
+    `${urlBase}${activeProject}/log/nested/${itemId}${getQueryParams({
+      'filter.eq.item': itemId,
+      'filter.gte.level': level,
+    })}`,
   logItemActivity: (activeProject, itemId) => `${urlBase}${activeProject}/activity/item/${itemId}`,
   logItemStackTrace: (activeProject, itemId) =>
     `${urlBase}${activeProject}/log${getQueryParams({

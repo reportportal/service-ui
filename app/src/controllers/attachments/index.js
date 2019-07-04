@@ -1,7 +1,7 @@
 export {
   openAttachmentAction,
   fetchAttachmentsConcatAction,
-  clearAttachmentsAction,
+  createClearAttachmentsAction,
 } from './actionCreators';
 export {
   FILE_PREVIEWS_MAP,
@@ -13,11 +13,10 @@ export {
 } from './constants';
 export { getFileIconSource, getAttachmentModalId, extractExtension } from './utils';
 export {
-  attachmentItemsSelector,
-  attachmentsLoadingSelector,
-  logsWithAttachmentsSelector,
-  attachmentsPaginationSelector,
-  activeAttachmentItemSelector,
+  createAttachmentItemsSelector,
+  createAttachmentsLoadingSelector,
+  createLogsWithAttachmentsSelector,
+  createAttachmentsPaginationSelector,
 } from './selectors';
 export { attachmentsReducer } from './reducer';
 export { attachmentSagas } from './sagas';

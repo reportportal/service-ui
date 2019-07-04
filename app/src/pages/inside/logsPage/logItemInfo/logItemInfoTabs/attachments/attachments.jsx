@@ -2,16 +2,8 @@ import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { injectIntl, intlShape, defineMessages } from 'react-intl';
-import { connect } from 'react-redux';
 import 'pure-react-carousel/dist/react-carousel.es.css';
 import { CarouselProvider } from 'pure-react-carousel';
-import {
-  attachmentItemsSelector,
-  attachmentsLoadingSelector,
-  openAttachmentAction,
-  fetchAttachmentsConcatAction,
-  attachmentsPaginationSelector,
-} from 'controllers/log/attachments';
 import { PAGE_KEY, SIZE_KEY } from 'controllers/pagination';
 import { NoItemMessage } from 'components/main/noItemMessage';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
@@ -27,18 +19,6 @@ export const messages = defineMessages({
 });
 
 const cx = classNames.bind(styles);
-
-@connect(
-  (state) => ({
-    attachments: attachmentItemsSelector(state),
-    loading: attachmentsLoadingSelector(state),
-    pagination: attachmentsPaginationSelector(state),
-  }),
-  {
-    fetchAttachmentsConcatAction,
-    openAttachmentAction,
-  },
-)
 @injectIntl
 export class Attachments extends Component {
   static propTypes = {

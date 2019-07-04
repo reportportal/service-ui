@@ -1,16 +1,19 @@
-import { Component } from 'react';
+import { Component, Fragment } from 'react';
 import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { PageLayout, PageSection } from 'layouts/pageLayout';
 import { SuiteTestToolbar } from 'pages/inside/common/suiteTestToolbar';
+import { LIST_VIEW } from 'pages/inside/common/suiteTestToolbar/logViewSwitcher';
 import {
   parentItemSelector,
   loadingSelector,
   fetchTestItemsAction,
   isListViewSelector,
   namespaceSelector,
+  LOG_VIEW,
 } from 'controllers/testItem';
+import { fetchTestItemLogDataAction } from 'controllers/testItem/log';
 import { debugModeSelector } from 'controllers/launch';
 import { STEP_PAGE_EVENTS, STEP_PAGE } from 'components/main/analytics/events';
 import {
@@ -37,6 +40,7 @@ import { prevTestItemSelector } from 'controllers/pages';
 import { showModalAction } from 'controllers/modal';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
 import { LaunchFiltersSection } from 'pages/inside/common/launchFiltersSection';
+import { TestItemLogsPage } from 'pages/inside/testItemLogsPage';
 import { StepGrid } from './stepGrid';
 
 @connect(
@@ -64,6 +68,7 @@ import { StepGrid } from './stepGrid';
     editDefectsAction,
     linkIssueAction,
     postIssueAction,
+    fetchTestItemLog: fetchTestItemLogDataAction,
   },
 )
 @withSortingURL({
@@ -121,6 +126,9 @@ export class StepPage extends Component {
       getTrackingData: PropTypes.func,
     }).isRequired,
     highlightItemId: PropTypes.number,
+    viewMode: PropTypes.string,
+    onToggleView: PropTypes.func,
+    fetchTestItemLog: PropTypes.func,
   };
 
   static defaultProps = {
@@ -161,6 +169,9 @@ export class StepPage extends Component {
     filterErrors: {},
     filterEntities: [],
     highlightItemId: null,
+    viewMode: LIST_VIEW,
+    onToggleView: () => {},
+    fetchTestItemLog: () => {},
   };
 
   state = {
@@ -289,6 +300,8 @@ export class StepPage extends Component {
       onChangeSorting,
       sortingColumn,
       sortingDirection,
+      viewMode,
+      onToggleView,
     } = this.props;
     const rowHighlightingConfig = {
       onGridRowHighlighted: this.onGridRowHighlighted,
@@ -311,7 +324,9 @@ export class StepPage extends Component {
             onUnselect={this.unselectItem}
             onUnselectAll={this.unselectAllItems}
             onProceedValidItems={this.proceedWithValidItems}
-            onRefresh={this.props.fetchTestItemsAction}
+            onRefresh={
+              viewMode === LOG_VIEW ? this.props.fetchTestItemLog : this.props.fetchTestItemsAction
+            }
             debugMode={debugMode}
             onEditDefects={this.handleEditDefects}
             onIgnoreInAA={this.handleIgnoreInAA}
@@ -325,35 +340,43 @@ export class StepPage extends Component {
             onFilterValidate={onFilterValidate}
             onFilterRemove={onFilterRemove}
             onFilterAdd={onFilterAdd}
+            viewMode={viewMode}
+            onToggleView={onToggleView}
           />
-          <StepGrid
-            data={steps}
-            selectedItems={selectedItems}
-            onAllItemsSelect={this.handleAllStepsSelection}
-            onItemSelect={this.handleOneItemSelection}
-            loading={loading}
-            listView={listView}
-            onShowTestParams={showTestParamsModal}
-            onEditDefect={this.handleEditDefects}
-            events={STEP_PAGE_EVENTS}
-            onEditItem={onEditItem}
-            onFilterClick={onFilterAdd}
-            onChangeSorting={onChangeSorting}
-            sortingColumn={sortingColumn}
-            sortingDirection={sortingDirection}
-            rowHighlightingConfig={rowHighlightingConfig}
-          />
-          {!!pageCount &&
-            !loading && (
-              <PaginationToolbar
-                activePage={activePage}
-                itemCount={itemCount}
-                pageCount={pageCount}
-                pageSize={pageSize}
-                onChangePage={onChangePage}
-                onChangePageSize={onChangePageSize}
+          {viewMode === LIST_VIEW ? (
+            <Fragment>
+              <StepGrid
+                data={steps}
+                selectedItems={selectedItems}
+                onAllItemsSelect={this.handleAllStepsSelection}
+                onItemSelect={this.handleOneItemSelection}
+                loading={loading}
+                listView={listView}
+                onShowTestParams={showTestParamsModal}
+                onEditDefect={this.handleEditDefects}
+                events={STEP_PAGE_EVENTS}
+                onEditItem={onEditItem}
+                onFilterClick={onFilterAdd}
+                onChangeSorting={onChangeSorting}
+                sortingColumn={sortingColumn}
+                sortingDirection={sortingDirection}
+                rowHighlightingConfig={rowHighlightingConfig}
               />
-            )}
+              {!!pageCount &&
+                !loading && (
+                  <PaginationToolbar
+                    activePage={activePage}
+                    itemCount={itemCount}
+                    pageCount={pageCount}
+                    pageSize={pageSize}
+                    onChangePage={onChangePage}
+                    onChangePageSize={onChangePageSize}
+                  />
+                )}
+            </Fragment>
+          ) : (
+            <TestItemLogsPage />
+          )}
         </PageSection>
       </PageLayout>
     );

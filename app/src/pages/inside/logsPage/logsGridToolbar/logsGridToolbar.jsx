@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
@@ -16,6 +16,7 @@ import {
 } from 'controllers/log';
 import { InputSlider } from 'components/inputs/inputSlider';
 import { InputCheckbox } from 'components/inputs/inputCheckbox';
+import { viewModeSelector, LOG_VIEW } from 'controllers/testItem';
 import { Pagination } from './pagination';
 import MarkdownIcon from './img/markdown-inline.svg';
 import styles from './logsGridToolbar.scss';
@@ -44,6 +45,7 @@ const messages = defineMessages({
 @injectIntl
 @connect((state) => ({
   userId: userIdSelector(state),
+  testItemViewMode: viewModeSelector(state),
 }))
 export class LogsGridToolbar extends Component {
   static propTypes = {
@@ -61,6 +63,7 @@ export class LogsGridToolbar extends Component {
     onChangeWithAttachments: PropTypes.func,
     onHideEmptySteps: PropTypes.func,
     onHidePassedLogs: PropTypes.func,
+    testItemViewMode: PropTypes.string,
   };
 
   static defaultProps = {
@@ -69,6 +72,7 @@ export class LogsGridToolbar extends Component {
     onChangeWithAttachments: () => {},
     onHideEmptySteps: () => {},
     onHidePassedLogs: () => {},
+    testItemViewMode: null,
   };
 
   state = {
@@ -132,7 +136,15 @@ export class LogsGridToolbar extends Component {
     });
   };
   render() {
-    const { intl, children, activePage, pageCount, onChangePage, logLevel } = this.props;
+    const {
+      intl,
+      children,
+      activePage,
+      pageCount,
+      onChangePage,
+      logLevel,
+      testItemViewMode,
+    } = this.props;
     const { logViewMode, withAttachments, hideEmptySteps, hidePassedLogs } = this.state;
     return (
       <div className={cx('container')}>
@@ -141,21 +153,25 @@ export class LogsGridToolbar extends Component {
             <div className={cx('log-level')}>
               <InputSlider options={LOG_LEVELS} value={logLevel} onChange={this.changeLogLevel} />
             </div>
-            <div className={cx('aside-element')}>
-              <InputCheckbox value={withAttachments} onChange={this.toggleWithAttachments}>
-                {intl.formatMessage(messages.withAttachments)}
-              </InputCheckbox>
-            </div>
-            <div className={cx('aside-element')}>
-              <InputCheckbox value={hidePassedLogs} onChange={this.toggleHidePassedLogs}>
-                {intl.formatMessage(messages.hidePassedLogs)}
-              </InputCheckbox>
-            </div>
-            <div className={cx('aside-element')}>
-              <InputCheckbox value={hideEmptySteps} onChange={this.toggleHideEmptySteps}>
-                {intl.formatMessage(messages.hideEmptySteps)}
-              </InputCheckbox>
-            </div>
+            {testItemViewMode !== LOG_VIEW && (
+              <Fragment>
+                <div className={cx('aside-element')}>
+                  <InputCheckbox value={withAttachments} onChange={this.toggleWithAttachments}>
+                    {intl.formatMessage(messages.withAttachments)}
+                  </InputCheckbox>
+                </div>
+                <div className={cx('aside-element')}>
+                  <InputCheckbox value={hidePassedLogs} onChange={this.toggleHidePassedLogs}>
+                    {intl.formatMessage(messages.hidePassedLogs)}
+                  </InputCheckbox>
+                </div>
+                <div className={cx('aside-element')}>
+                  <InputCheckbox value={hideEmptySteps} onChange={this.toggleHideEmptySteps}>
+                    {intl.formatMessage(messages.hideEmptySteps)}
+                  </InputCheckbox>
+                </div>
+              </Fragment>
+            )}
           </div>
           <div className={cx('aside')}>
             <div className={cx('mode-buttons')}>

@@ -6,7 +6,7 @@ import classNames from 'classnames/bind';
 import RotateImage from 'common/img/rotate-inline.svg';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { ModalLayout, withModal } from 'components/main/modal';
-import { ATTACHMENT_IMAGE_MODAL_ID } from 'controllers/log/attachments';
+import { ATTACHMENT_IMAGE_MODAL_ID } from 'controllers/attachments';
 import { messages } from './messages';
 import styles from './attachmentImageModal.scss';
 

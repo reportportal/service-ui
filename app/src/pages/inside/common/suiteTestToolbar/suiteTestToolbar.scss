@@ -6,3 +6,8 @@
   border-bottom: 1px solid $COLOR--gray-91;
   margin-bottom: -1px;
 }
+
+.info-panel {
+  display: flex;
+  justify-content: start;
+}

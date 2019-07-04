@@ -10,6 +10,7 @@ import {
   levelSelector,
   namespaceSelector,
   restorePathAction,
+  LOG_VIEW,
 } from 'controllers/testItem';
 import { HISTORY_PAGE, payloadSelector } from 'controllers/pages';
 import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
@@ -124,6 +125,7 @@ export class ActionPanel extends Component {
     btsIntegrations: PropTypes.array,
     deleteDisabled: PropTypes.bool,
     navigate: PropTypes.func.isRequired,
+    viewMode: PropTypes.string,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
@@ -155,6 +157,7 @@ export class ActionPanel extends Component {
     listView: false,
     btsIntegrations: [],
     deleteDisabled: false,
+    viewMode: null,
   };
 
   onClickHistory = () => {
@@ -295,6 +298,7 @@ export class ActionPanel extends Component {
       listView,
       debugMode,
       level,
+      viewMode,
     } = this.props;
     const stepActionDescriptors = this.createStepActionDescriptors();
     const suiteActionDescriptors = this.createSuiteActionDescriptors();
@@ -318,26 +322,29 @@ export class ActionPanel extends Component {
           </GhostButton>
         )}
         <div className={cx('action-buttons')}>
-          {this.checkVisibility([LEVEL_STEP]) && (
-            <div className={cx('action-button', 'mobile-hidden')}>
-              <GhostMenuButton
-                title={intl.formatMessage(messages.actionsBtn)}
-                items={stepActionDescriptors}
-                disabled={!selectedItems.length}
-              />
-            </div>
-          )}
-          {this.checkVisibility([LEVEL_SUITE, LEVEL_TEST]) && (
-            <div className={cx('action-button', 'mobile-hidden')}>
-              <GhostMenuButton
-                title={intl.formatMessage(messages.actionsBtn)}
-                items={suiteActionDescriptors}
-                disabled={!selectedItems.length}
-              />
-            </div>
-          )}
+          {this.checkVisibility([LEVEL_STEP]) &&
+            viewMode !== LOG_VIEW && (
+              <div className={cx('action-button', 'mobile-hidden')}>
+                <GhostMenuButton
+                  title={intl.formatMessage(messages.actionsBtn)}
+                  items={stepActionDescriptors}
+                  disabled={!selectedItems.length}
+                />
+              </div>
+            )}
+          {this.checkVisibility([LEVEL_SUITE, LEVEL_TEST]) &&
+            viewMode !== LOG_VIEW && (
+              <div className={cx('action-button', 'mobile-hidden')}>
+                <GhostMenuButton
+                  title={intl.formatMessage(messages.actionsBtn)}
+                  items={suiteActionDescriptors}
+                  disabled={!selectedItems.length}
+                />
+              </div>
+            )}
           {!listView &&
-            !debugMode && (
+            !debugMode &&
+            viewMode !== LOG_VIEW && (
               <div className={cx('action-button')}>
                 <GhostButton icon={HistoryIcon} onClick={this.onClickHistory}>
                   <FormattedMessage id="ActionPanel.history" defaultMessage="History" />

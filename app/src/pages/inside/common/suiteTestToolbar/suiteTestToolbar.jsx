@@ -5,6 +5,7 @@ import { InfoLine } from 'pages/inside/common/infoLine';
 import { SelectedItems } from 'pages/inside/common/selectedItems';
 import { ActionPanel } from './actionPanel';
 import { RefineFiltersPanel } from './refineFiltersPanel';
+import { LogViewSwitcher, LIST_VIEW } from './logViewSwitcher';
 import styles from './suiteTestToolbar.scss';
 
 const cx = classNames.bind(styles);
@@ -33,6 +34,8 @@ export const SuiteTestToolbar = ({
   onFilterChange,
   filterErrors,
   filterEntities,
+  viewMode,
+  onToggleView,
 }) => (
   <Fragment>
     <div className={cx({ 'sticky-toolbar': selectedItems.length })}>
@@ -61,17 +64,25 @@ export const SuiteTestToolbar = ({
         onEditItems={onEditItems}
         onDelete={onDelete}
         deleteDisabled={!selectedItems.length}
+        viewMode={viewMode}
       />
     </div>
-    {parentItem && <InfoLine data={parentItem} events={events} />}
-    <RefineFiltersPanel
-      onFilterAdd={onFilterAdd}
-      onFilterRemove={onFilterRemove}
-      onFilterValidate={onFilterValidate}
-      onFilterChange={onFilterChange}
-      filterErrors={filterErrors}
-      filterEntities={filterEntities}
-    />
+    {parentItem && (
+      <div className={cx('info-panel')}>
+        <LogViewSwitcher viewMode={viewMode} onToggleView={onToggleView} />
+        <InfoLine data={parentItem} events={events} />
+      </div>
+    )}
+    {viewMode === LIST_VIEW && (
+      <RefineFiltersPanel
+        onFilterAdd={onFilterAdd}
+        onFilterRemove={onFilterRemove}
+        onFilterValidate={onFilterValidate}
+        onFilterChange={onFilterChange}
+        filterErrors={filterErrors}
+        filterEntities={filterEntities}
+      />
+    )}
   </Fragment>
 );
 SuiteTestToolbar.propTypes = {
@@ -98,6 +109,8 @@ SuiteTestToolbar.propTypes = {
   onFilterChange: PropTypes.func,
   filterErrors: PropTypes.object,
   filterEntities: PropTypes.array,
+  viewMode: PropTypes.string,
+  onToggleView: PropTypes.func,
 };
 SuiteTestToolbar.defaultProps = {
   selectedItems: [],
@@ -124,4 +137,6 @@ SuiteTestToolbar.defaultProps = {
   filterErrors: {},
   filterEntities: [],
   events: {},
+  viewMode: LIST_VIEW,
+  onToggleView: () => {},
 };

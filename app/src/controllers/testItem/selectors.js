@@ -8,6 +8,8 @@ import {
   PROJECT_LAUNCHES_PAGE,
   PROJECT_USERDEBUG_TEST_ITEM_PAGE,
   PROJECT_USERDEBUG_PAGE,
+  TEST_ITEM_LOG_PAGE,
+  PROJECT_USERDEBUG_TEST_ITEM_LOG_PAGE,
   payloadSelector,
   testItemIdsSelector,
   searchStringSelector,
@@ -34,17 +36,17 @@ import {
   getNextPage,
 } from './utils';
 
-const domainSelector = (state) => state.testItem || {};
+export const testItemDomainSelector = (state) => state.testItem || {};
 
-export const levelSelector = (state) => domainSelector(state).level;
-export const loadingSelector = (state) => domainSelector(state).loading;
-export const pageLoadingSelector = (state) => domainSelector(state).pageLoading;
+export const levelSelector = (state) => testItemDomainSelector(state).level;
+export const loadingSelector = (state) => testItemDomainSelector(state).loading;
+export const pageLoadingSelector = (state) => testItemDomainSelector(state).pageLoading;
 export const namespaceSelector = (state, offset = 0) =>
   getQueryNamespace(testItemIdsArraySelector(state).length - 1 - offset);
 export const queryParametersSelector = createQueryParametersSelector({
   defaultSorting: DEFAULT_SORTING,
 });
-export const parentItemsSelector = (state) => domainSelector(state).parentItems || [];
+export const parentItemsSelector = (state) => testItemDomainSelector(state).parentItems || [];
 export const createParentItemsSelector = (offset = 0) =>
   createSelector(parentItemsSelector, defectTypesSelector, (parentItems, defectTypes) =>
     normalizeTestItem(parentItems[parentItems.length - 1 - offset], defectTypes),
@@ -316,3 +318,32 @@ export const logPageOffsetSelector = createSelector(
     return offset;
   },
 );
+
+export const viewModeSelector = (state) => testItemDomainSelector(state).viewMode;
+
+export const listViewLinkSelector = (state) => {
+  const query = pagePropertiesSelector(state);
+  const isDebugMode = debugModeSelector(state);
+  const payload = payloadSelector(state);
+  return {
+    type: isDebugMode ? PROJECT_USERDEBUG_TEST_ITEM_PAGE : TEST_ITEM_PAGE,
+    payload,
+    meta: {
+      query,
+    },
+  };
+};
+
+export const logViewLinkSelector = (state) => {
+  const query = pagePropertiesSelector(state);
+  const payload = payloadSelector(state);
+  const isDebugMode = debugModeSelector(state);
+  const page = isDebugMode ? PROJECT_USERDEBUG_TEST_ITEM_LOG_PAGE : TEST_ITEM_LOG_PAGE;
+  return {
+    type: page,
+    payload,
+    meta: {
+      query,
+    },
+  };
+};

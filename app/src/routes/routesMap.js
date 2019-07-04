@@ -31,6 +31,8 @@ import {
   HOME_PAGE,
   pageSelector,
   adminPageNames,
+  TEST_ITEM_LOG_PAGE,
+  PROJECT_USERDEBUG_TEST_ITEM_LOG_PAGE,
 } from 'controllers/pages';
 import {
   GENERAL,
@@ -54,7 +56,14 @@ import {
 } from 'controllers/dashboard';
 import { fetchLaunchesAction, setDebugMode, launchDistinctSelector } from 'controllers/launch';
 import { TEST_ITEM_PAGE } from 'controllers/pages/constants';
-import { fetchTestItemsAction, setLevelAction } from 'controllers/testItem';
+import {
+  fetchTestItemsAction,
+  setLevelAction,
+  LOG_VIEW,
+  LIST_VIEW,
+  setViewModeAction,
+} from 'controllers/testItem';
+import { fetchTestItemLogDataAction } from 'controllers/testItem/log';
 import { fetchFiltersAction } from 'controllers/filter';
 import { fetchMembersAction } from 'controllers/members';
 import { fetchProjectDataAction } from 'controllers/administrate';
@@ -227,6 +236,7 @@ export default {
   [PROJECT_LOG_PAGE]: {
     path: '/:projectId/launches/:filterId/:testItemIds+/log',
     thunk: (dispatch) => {
+      dispatch(setViewModeAction(LIST_VIEW));
       dispatch(setDebugMode(false));
       dispatch(fetchLogPageData());
     },
@@ -236,6 +246,21 @@ export default {
     thunk: (dispatch) => {
       dispatch(setDebugMode(true));
       dispatch(fetchLogPageData());
+    },
+  },
+  [TEST_ITEM_LOG_PAGE]: {
+    path: '/:projectId/launches/:filterId/:testItemIds+/itemLog',
+    thunk: (dispatch) => {
+      dispatch(setViewModeAction(LOG_VIEW));
+      dispatch(fetchTestItemLogDataAction());
+    },
+  },
+  [PROJECT_USERDEBUG_TEST_ITEM_LOG_PAGE]: {
+    path: '/:projectId/userdebug/:filterId/:testItemIds+/itemLog',
+    thunk: (dispatch) => {
+      dispatch(setDebugMode(true));
+      dispatch(setViewModeAction(LOG_VIEW));
+      dispatch(fetchTestItemLogDataAction());
     },
   },
   [PROJECT_USERDEBUG_PAGE]: {
@@ -249,6 +274,7 @@ export default {
   PROJECT_USERDEBUG_TEST_ITEM_PAGE: {
     path: '/:projectId/userdebug/:filterId/:testItemIds+',
     thunk: (dispatch) => {
+      dispatch(setViewModeAction(LIST_VIEW));
       dispatch(setDebugMode(true));
       dispatch(fetchTestItemsAction());
     },
@@ -266,6 +292,7 @@ export default {
   [TEST_ITEM_PAGE]: {
     path: '/:projectId/launches/:filterId/:testItemIds+',
     thunk: (dispatch) => {
+      dispatch(setViewModeAction(LIST_VIEW));
       dispatch(setDebugMode(false));
       dispatch(fetchTestItemsAction());
     },

@@ -26,6 +26,10 @@ import {
   launchSelector,
   fetchTestItemsAction,
   namespaceSelector,
+  viewModeSelector,
+  LOG_VIEW,
+  listViewLinkSelector,
+  logViewLinkSelector,
 } from 'controllers/testItem';
 import { showModalAction } from 'controllers/modal';
 import { SuitesPage } from 'pages/inside/suitesPage';
@@ -35,6 +39,8 @@ import {
   FilterEntitiesURLContainer,
   FilterEntitiesContainer,
 } from 'components/filterEntities/containers';
+import { LIST_VIEW } from 'pages/inside/common/suiteTestToolbar/logViewSwitcher';
+import { payloadSelector } from 'controllers/pages';
 import { NotFound } from './notFound';
 
 import styles from './testItemPage.scss';
@@ -101,6 +107,10 @@ const testItemPages = {
     userId: userIdSelector(state),
     activeProject: activeProjectSelector(state),
     namespace: namespaceSelector(state),
+    viewMode: viewModeSelector(state),
+    payload: payloadSelector(state),
+    listViewLink: listViewLinkSelector(state),
+    logViewLink: logViewLinkSelector(state),
   }),
   {
     restorePath: restorePathAction,
@@ -111,6 +121,7 @@ const testItemPages = {
     fetchTestItemsAction,
     showModalAction,
     unselectAllItemsAction,
+    navigate: (linkAction) => linkAction,
   },
 )
 @injectIntl
@@ -133,6 +144,12 @@ export class TestItemPage extends Component {
     loading: PropTypes.bool,
     breadcrumbs: PropTypes.arrayOf(PropTypes.object),
     restorePath: PropTypes.func,
+    viewMode: PropTypes.string,
+    setViewModeAction: PropTypes.func,
+    navigate: PropTypes.func.isRequired,
+    payload: PropTypes.object,
+    listViewLink: PropTypes.object,
+    logViewLink: PropTypes.object,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
@@ -145,6 +162,11 @@ export class TestItemPage extends Component {
     loading: false,
     breadcrumbs: [],
     restorePath: () => {},
+    viewMode: LIST_VIEW,
+    setViewModeAction: () => {},
+    payload: {},
+    listViewLink: {},
+    logViewLink: {},
   };
 
   onEditItem = (launch) => {
@@ -171,6 +193,11 @@ export class TestItemPage extends Component {
         },
       },
     });
+  };
+
+  onToggleView = (viewMode) => {
+    const link = viewMode === LOG_VIEW ? this.props.logViewLink : this.props.listViewLink;
+    this.props.navigate(link);
   };
 
   confirmDeleteItems = (items, selectedItems) => {
@@ -233,7 +260,7 @@ export class TestItemPage extends Component {
   };
 
   render() {
-    const { level, loading, breadcrumbs, restorePath } = this.props;
+    const { level, loading, breadcrumbs, restorePath, viewMode } = this.props;
     if (!loading && testItemPages[level]) {
       const PageComponent = testItemPages[level];
       return (
@@ -264,6 +291,8 @@ export class TestItemPage extends Component {
                   onFilterAdd={onFilterAdd}
                   onFilterRemove={onFilterRemove}
                   filterEntities={filterEntities}
+                  viewMode={viewMode}
+                  onToggleView={this.onToggleView}
                 />
               )}
             />

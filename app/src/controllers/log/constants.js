@@ -6,6 +6,7 @@ export const LOG_ITEMS_NAMESPACE = `${NAMESPACE}/logItems`;
 export const ACTIVITY_NAMESPACE = `${NAMESPACE}/activity`;
 export const HISTORY_NAMESPACE = `${NAMESPACE}/history`;
 export const FETCH_LOG_PAGE_DATA = 'fetchLogPageData';
+export const FETCH_LOG_ATTACHMENTS_CONCAT_ACTION = 'fetchLogAttachmentsConcatAction';
 export const FETCH_HISTORY_ENTRIES = 'fetchHistoryEntries';
 export const DEFAULT_HISTORY_DEPTH = 10;
 export const DEFAULT_LOG_LEVEL = logLevels.TRACE;
@@ -20,6 +21,7 @@ export const HIDE_EMPTY_STEPS = 'excludeEmptySteps';
 export const DEFAULT_SORTING = formatSortingString(['logTime'], SORTING_ASC);
 export const RETRY_ID = 'retryId';
 export const ACTIVE_LOG_ITEM_QUERY_KEY = 'history';
+export const ATTACHMENTS_NAMESPACE = 'log/attachments';
 
 export const LOG_LEVELS = [
   {
