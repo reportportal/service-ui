@@ -22,6 +22,7 @@ import {
   nextItemSelector,
   disablePrevItemLinkSelector,
   disableNextItemLinkSelector,
+  DETAILED_LOG_VIEW,
 } from 'controllers/log';
 
 import { stepPaginationSelector } from 'controllers/step';
@@ -63,6 +64,7 @@ export class LogToolbar extends Component {
     onChangePage: PropTypes.func,
     activePage: PropTypes.number,
     fetchTestItems: PropTypes.func,
+    logViewMode: PropTypes.string,
   };
 
   static defaultProps = {
@@ -78,6 +80,7 @@ export class LogToolbar extends Component {
     onChangePage: () => {},
     activePage: 1,
     fetchTestItems: () => {},
+    logViewMode: DETAILED_LOG_VIEW,
   };
 
   handleBackClick = () => {
@@ -103,9 +106,10 @@ export class LogToolbar extends Component {
       onRefresh,
       previousLinkDisable,
       nextLinkDisable,
+      logViewMode,
     } = this.props;
     return (
-      <div className={cx('log-toolbar')}>
+      <div className={cx('log-toolbar', { 'with-border': logViewMode === DETAILED_LOG_VIEW })}>
         <Breadcrumbs
           descriptors={breadcrumbs}
           togglerEventInfo={LOG_PAGE_EVENTS.PLUS_MINUS_BREADCRUMB}
@@ -113,22 +117,24 @@ export class LogToolbar extends Component {
           allEventClick={LOG_PAGE_EVENTS.ALL_LABEL_BREADCRUMB}
         />
         <div className={cx('action-buttons')}>
-          <div className={cx('action-button')}>
-            <div className={cx('left-arrow-button')}>
+          {logViewMode === DETAILED_LOG_VIEW && (
+            <div className={cx('action-button')}>
+              <div className={cx('left-arrow-button')}>
+                <GhostButton
+                  icon={LeftArrowIcon}
+                  disabled={previousLinkDisable}
+                  title={previousItem && previousItem.name}
+                  onClick={this.handleBackClick}
+                />
+              </div>
               <GhostButton
-                icon={LeftArrowIcon}
-                disabled={previousLinkDisable}
-                title={previousItem && previousItem.name}
-                onClick={this.handleBackClick}
+                icon={RightArrowIcon}
+                disabled={nextLinkDisable}
+                title={nextItem && nextItem.name}
+                onClick={this.handleForwardClick}
               />
             </div>
-            <GhostButton
-              icon={RightArrowIcon}
-              disabled={nextLinkDisable}
-              title={nextItem && nextItem.name}
-              onClick={this.handleForwardClick}
-            />
-          </div>
+          )}
           <div className={cx('action-button')}>
             <GhostButton icon={RefreshIcon} onClick={onRefresh}>
               <FormattedMessage id="Common.refresh" defaultMessage="Refresh" />

@@ -1,9 +1,7 @@
 .log-toolbar {
   display: flex;
   align-items: center;
-  border-bottom: 1px solid $COLOR--gray-91;
   justify-content: space-between;
-  margin-bottom: 10px;
   padding: 10px 15px;
 }
 
@@ -18,4 +16,9 @@
 
 .left-arrow-button {
   margin-right: -1px;
+}
+
+.with-border {
+  margin-bottom: 10px;
+  border-bottom: 1px solid $COLOR--gray-91;
 }
