@@ -127,14 +127,24 @@ export class FiltersSorting extends Component {
   };
 
   handleChange = (sortingColumn) => {
-    const { filter, onChange } = this.props;
+    const { filter, onChange, sortingString } = this.props;
     const { orders } = filter;
 
     const hasOrder = orders.find((order) => order.sortingColumn === sortingColumn);
+    const parsed = sortingString.split(',');
+    let isAsc = true;
+    if (sortingColumn === parsed[0]) isAsc = !(parsed[1] === SORTING_ASC);
 
     const newOrders = hasOrder
       ? orders.map((order) => ({ ...order, isAsc: !order.isAsc }))
-      : [{ sortingColumn, isAsc: false }, { sortingColumn: ENTITY_NUMBER, isAsc: false }];
+      : [
+          { sortingColumn, isAsc },
+          {
+            sortingColumn: ENTITY_NUMBER,
+            isAsc:
+              sortingColumn === ENTITY_NAME || sortingColumn === ENTITY_START_TIME ? isAsc : false,
+          },
+        ];
 
     onChange(newOrders);
   };

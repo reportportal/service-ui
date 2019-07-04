@@ -19,9 +19,9 @@ import { PaginationToolbar } from 'components/main/paginationToolbar';
 import { activeProjectSelector, userIdSelector } from 'controllers/user';
 import { projectConfigSelector } from 'controllers/project';
 import { withPagination, DEFAULT_PAGINATION, SIZE_KEY } from 'controllers/pagination';
-import { withSorting, SORTING_ASC } from 'controllers/sorting';
+import { withSorting, SORTING_ASC, SORTING_DESC } from 'controllers/sorting';
 import { showModalAction } from 'controllers/modal';
-import { ENTITY_START_TIME } from 'components/filterEntities/constants';
+import { ENTITY_NUMBER, ENTITY_START_TIME, ENTITY_NAME } from 'components/filterEntities/constants';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLock';
 import {
@@ -144,7 +144,7 @@ const messages = defineMessages({
 )
 @withSorting({
   defaultSortingColumn: ENTITY_START_TIME,
-  defaultSortingDirection: SORTING_ASC,
+  defaultSortingDirection: SORTING_DESC,
 })
 @withPagination({
   paginationSelector: launchPaginationSelector,
@@ -169,7 +169,6 @@ export class LaunchesPage extends Component {
     onChangePage: PropTypes.func,
     onChangePageSize: PropTypes.func,
     onChangeSorting: PropTypes.func,
-    sortingString: PropTypes.string,
     activeProject: PropTypes.string.isRequired,
     selectedLaunches: PropTypes.arrayOf(PropTypes.object),
     validationErrors: PropTypes.object,
@@ -211,7 +210,6 @@ export class LaunchesPage extends Component {
     onChangePage: () => {},
     onChangePageSize: () => {},
     onChangeSorting: () => {},
-    sortingString: '',
     selectedLaunches: [],
     validationErrors: {},
     toggleAllLaunchesAction: () => {},
@@ -586,16 +584,28 @@ export class LaunchesPage extends Component {
     this.props.toggleLaunchSelectionAction(item);
   };
 
-  handleChangeSorting = (sortingColumn) => {
-    let orderBy = sortingColumn;
+  handleChangeSorting = (sortingParams) => {
+    const { sortingColumn, sortingDirection } = this.props;
+    let orderBy = sortingParams;
+    let direction = SORTING_ASC;
 
-    this.onUpdateFilterOrder(this.activeFilterId, this.props.sortingString);
-
-    if (Array.isArray(sortingColumn)) {
-      orderBy = sortingColumn[0].sortingColumn;
+    if (Array.isArray(sortingParams)) {
+      const filtered = sortingParams.filter((item) => item.sortingColumn !== ENTITY_NUMBER);
+      orderBy = filtered ? filtered[0].sortingColumn : ENTITY_START_TIME;
+      if (orderBy === sortingColumn) {
+        direction = filtered[0].isAsc ? SORTING_ASC : SORTING_DESC;
+      }
+    } else if (typeof sortingParams === 'string' && orderBy === sortingColumn) {
+      direction = sortingDirection === SORTING_DESC ? SORTING_ASC : SORTING_DESC;
     }
 
     this.props.onChangeSorting(orderBy);
+    this.onUpdateFilterOrder(
+      this.activeFilterId,
+      `${orderBy},${
+        orderBy === ENTITY_NAME || orderBy === ENTITY_START_TIME ? `${ENTITY_NUMBER},` : ''
+      }${direction}`,
+    );
   };
 
   renderPageContent = ({
@@ -622,7 +632,6 @@ export class LaunchesPage extends Component {
       launches,
       loading,
       debugMode,
-      sortingString,
     } = this.props;
 
     const rowHighlightingConfig = {
@@ -655,7 +664,7 @@ export class LaunchesPage extends Component {
                   onFilterAdd={onFilterAdd}
                   onResetFilter={onResetFilter}
                   onChangeSorting={this.handleChangeSorting}
-                  sortingString={sortingString}
+                  sortingString={`${sortingColumn},${sortingDirection}`}
                   {...rest}
                 />
               )}
