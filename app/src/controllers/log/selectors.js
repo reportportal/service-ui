@@ -9,7 +9,12 @@ import {
   prevPagePropertiesSelector,
 } from 'controllers/pages';
 import { DEFAULT_PAGINATION } from 'controllers/pagination';
-import { itemsSelector, paginationSelector } from 'controllers/testItem';
+import {
+  itemsSelector,
+  paginationSelector,
+  parentItemSelector,
+  parentItemsSelector,
+} from 'controllers/testItem';
 import { debugModeSelector } from 'controllers/launch';
 import { extractNamespacedQuery, createNamespacedQuery } from 'common/utils/routingUtils';
 import { isEmptyValue } from 'common/utils';
@@ -20,7 +25,14 @@ import {
   getNextItem,
   getUpdatedLogQuery,
 } from './utils';
-import { NAMESPACE, DEFAULT_SORTING, RETRY_ID, ACTIVE_LOG_ITEM_QUERY_KEY } from './constants';
+import {
+  NAMESPACE,
+  DEFAULT_SORTING,
+  RETRY_ID,
+  ACTIVE_LOG_ITEM_QUERY_KEY,
+  DETAILED_LOG_VIEW,
+  LAUNCH_LOG_VIEW,
+} from './constants';
 
 const logSelector = (state) => state.log || {};
 
@@ -256,3 +268,11 @@ export const isLoadMoreStackTraceVisible = createSelector(
   logStackTracePaginationSelector,
   ({ size, totalElements }) => size < totalElements,
 );
+export const isLaunchLogSelector = (state) => parentItemsSelector(state).length === 1;
+
+export const logViewModeSelector = (state) => {
+  const parentTestItem = parentItemSelector(state);
+  const hasChildren = parentTestItem && parentTestItem.hasChildren;
+  const isLaunchLog = isLaunchLogSelector(state);
+  return hasChildren || isLaunchLog ? LAUNCH_LOG_VIEW : DETAILED_LOG_VIEW;
+};

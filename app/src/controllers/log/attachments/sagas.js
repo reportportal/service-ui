@@ -2,9 +2,9 @@ import { takeLatest, call, put, all, select, take } from 'redux-saga/effects';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
 import { showModalAction, HIDE_MODAL } from 'controllers/modal';
-import { concatFetchDataAction } from 'controllers/fetch';
+import { fetchDataAction, concatFetchDataAction } from 'controllers/fetch';
 import { activeProjectSelector } from 'controllers/user';
-import { activeRetryIdSelector } from 'controllers/log/selectors';
+import { activeRetryIdSelector, isLaunchLogSelector } from 'controllers/log/selectors';
 import { JSON as JSON_TYPE } from 'common/constants/fileTypes';
 import {
   ATTACHMENT_IMAGE_MODAL_ID,
@@ -19,12 +19,15 @@ import { getAttachmentModalId, extractExtension } from './utils';
 function* fetchAttachmentsConcat({ payload: { params, concat } }) {
   const activeProject = yield select(activeProjectSelector);
   const activeLogItemId = yield select(activeRetryIdSelector);
-  yield put(
-    concatFetchDataAction(ATTACHMENTS_NAMESPACE, concat)(
-      URLS.logItems(activeProject, activeLogItemId),
-      { params },
-    ),
-  );
+  const isLaunchLog = yield select(isLaunchLogSelector);
+  const url = isLaunchLog
+    ? URLS.launchLogs(activeProject, activeLogItemId)
+    : URLS.logItems(activeProject, activeLogItemId);
+  if (concat) {
+    yield put(concatFetchDataAction(ATTACHMENTS_NAMESPACE, concat)(url, { params }));
+  } else {
+    yield put(fetchDataAction(ATTACHMENTS_NAMESPACE)(url, { params }));
+  }
 }
 
 export function fetchImageData({ binaryId }) {

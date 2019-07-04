@@ -8,6 +8,8 @@ import {
   PROJECT_LAUNCHES_PAGE,
   PROJECT_USERDEBUG_TEST_ITEM_PAGE,
   PROJECT_USERDEBUG_PAGE,
+  PROJECT_USERDEBUG_LOG_PAGE,
+  PROJECT_LOG_PAGE,
   payloadSelector,
   testItemIdsSelector,
   searchStringSelector,
@@ -316,3 +318,30 @@ export const logPageOffsetSelector = createSelector(
     return offset;
   },
 );
+
+export const listViewLinkSelector = (state) => {
+  const query = pagePropertiesSelector(state);
+  const isDebugMode = debugModeSelector(state);
+  const payload = payloadSelector(state);
+  return {
+    type: isDebugMode ? PROJECT_USERDEBUG_TEST_ITEM_PAGE : TEST_ITEM_PAGE,
+    payload,
+    meta: {
+      query,
+    },
+  };
+};
+
+export const logViewLinkSelector = (state) => {
+  const query = pagePropertiesSelector(state);
+  const payload = payloadSelector(state);
+  const isDebugMode = debugModeSelector(state);
+  const page = isDebugMode ? PROJECT_USERDEBUG_LOG_PAGE : PROJECT_LOG_PAGE;
+  return {
+    type: page,
+    payload,
+    meta: {
+      query,
+    },
+  };
+};

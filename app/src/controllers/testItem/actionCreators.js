@@ -34,7 +34,6 @@ export const fetchTestItemsFromLogPageAction = (payload) => ({
   payload,
 });
 
-
 export const deleteItemsAction = defineGroupOperation(
   NAMESPACE,
   'deleteTestItems',

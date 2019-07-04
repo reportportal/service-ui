@@ -8,3 +8,5 @@ export const NAMESPACE = 'testItem';
 export const PARENT_ITEMS_NAMESPACE = `${NAMESPACE}/parentItems`;
 export const SET_PAGE_LOADING = `${NAMESPACE}/setPageLoading`;
 export const DEFAULT_SORTING = formatSortingString(['startTime'], SORTING_ASC);
+export const LIST_VIEW = 'LIST_VIEW';
+export const LOG_VIEW = 'LOG_VIEW';

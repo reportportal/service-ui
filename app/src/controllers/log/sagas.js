@@ -13,7 +13,7 @@ import {
 } from 'controllers/pages';
 import { fetchDataAction } from 'controllers/fetch';
 import { isEmptyObject } from 'common/utils';
-
+import { PAGE_KEY, SIZE_KEY } from 'controllers/pagination';
 import {
   ACTIVITY_NAMESPACE,
   DEFAULT_HISTORY_DEPTH,
@@ -29,6 +29,7 @@ import {
   FETCH_LOG_PAGE_STACK_TRACE,
   STACK_TRACE_NAMESPACE,
   STACK_TRACE_PAGINATION_OFFSET,
+  DETAILED_LOG_VIEW,
 } from './constants';
 
 import {
@@ -38,8 +39,15 @@ import {
   activeRetryIdSelector,
   prevActiveRetryIdSelector,
   logStackTracePaginationSelector,
+  logViewModeSelector,
+  isLaunchLogSelector,
 } from './selectors';
-import { attachmentSagas, clearAttachmentsAction } from './attachments';
+import {
+  attachmentSagas,
+  clearAttachmentsAction,
+  fetchAttachmentsConcatAction,
+  attachmentsPaginationSelector,
+} from './attachments';
 import { sauceLabsSagas } from './sauceLabs';
 import { nestedStepSagas, CLEAR_NESTED_STEPS } from './nestedSteps';
 import {
@@ -101,8 +109,12 @@ function* fetchLogItems(payload = {}) {
     ...params,
     ...payload.params,
   };
+  const isLaunchLog = yield select(isLaunchLogSelector);
+  const url = isLaunchLog
+    ? URLS.launchLogs(activeProject, activeLogItemId, logLevel)
+    : URLS.logItems(activeProject, activeLogItemId, logLevel);
   yield put(
-    fetchDataAction(namespace)(URLS.logItems(activeProject, activeLogItemId, logLevel), {
+    fetchDataAction(namespace)(url, {
       params: fetchParams,
     }),
   );
@@ -133,17 +145,44 @@ function* fetchHistoryEntries() {
   );
 }
 
-function* fetchWholePage() {
-  yield call(fetchParentItems);
-  const offset = yield select(logPageOffsetSelector);
+function* fetchDetailsLog(offset = 0) {
   yield all([
+    put(clearAttachmentsAction),
     put(fetchTestItemsAction({ offset })),
     call(fetchHistoryEntries),
     call(fetchLogItems),
     call(fetchActivity),
-    put(clearAttachmentsAction()),
     put(clearLogPageStackTrace()),
   ]);
+}
+
+function* fetchLaunchLog(offset = 0) {
+  const attachmentPageSize = yield select(attachmentsPaginationSelector);
+  const params = {
+    'filter.ex.binaryContent': true,
+    [PAGE_KEY]: 1,
+    [SIZE_KEY]: attachmentPageSize,
+  };
+  yield all([
+    put(fetchAttachmentsConcatAction({ params })),
+    put(fetchTestItemsAction({ offset })),
+    call(fetchLogItems),
+  ]);
+}
+
+function* fetchLogs(offset = 0) {
+  const logViewMode = yield select(logViewModeSelector);
+  if (logViewMode === DETAILED_LOG_VIEW) {
+    yield call(fetchDetailsLog, offset);
+  } else {
+    yield call(fetchLaunchLog, offset);
+  }
+}
+
+function* fetchWholePage() {
+  const offset = yield select(logPageOffsetSelector);
+  yield call(fetchParentItems);
+  yield call(fetchLogs, offset);
 }
 
 function* fetchHistoryItemData() {
@@ -174,12 +213,18 @@ function* fetchLogPageData({ meta = {} }) {
       put(clearAttachmentsAction()),
       put(clearLogPageStackTrace()),
     ]);
+    yield call(fetchLogs);
     return;
   }
   if (isPathNameChanged) {
     yield call(fetchWholePage);
   } else {
-    yield call(fetchHistoryItemData);
+    const logViewMode = yield select(logViewModeSelector);
+    if (logViewMode === DETAILED_LOG_VIEW) {
+      yield call(fetchHistoryItemData);
+    } else {
+      yield call(fetchLogItems);
+    }
   }
 }
 

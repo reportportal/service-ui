@@ -19,7 +19,10 @@ import {
   setWithAttachments,
   setHideEmptySteps,
   setHidePassedLogs,
+  DETAILED_LOG_VIEW,
+  logViewModeSelector,
 } from 'controllers/log';
+import { parentItemSelector } from 'controllers/testItem';
 import { withFilter } from 'controllers/filter';
 import { debugModeSelector } from 'controllers/launch';
 import { withPagination, PAGE_KEY } from 'controllers/pagination';
@@ -27,6 +30,7 @@ import { withSortingURL, SORTING_ASC } from 'controllers/sorting';
 import { userIdSelector } from 'controllers/user';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
 import { LOG_PAGE, LOG_PAGE_EVENTS } from 'components/main/analytics/events';
+import { TestItemLogsToolbar } from 'pages/inside/testItemLogsToolbar';
 import { LogToolbar } from './logToolbar';
 import { HistoryLine } from './historyLine';
 import { LogItemInfo } from './logItemInfo';
@@ -40,6 +44,8 @@ import { SauceLabsSection } from './sauceLabsSection';
     loading: loadingSelector(state),
     userId: userIdSelector(state),
     debugMode: debugModeSelector(state),
+    logViewMode: logViewModeSelector(state),
+    parentItem: parentItemSelector(state),
   }),
   {
     refresh: refreshLogPageData,
@@ -110,6 +116,8 @@ export class LogsPage extends Component {
     onChangeWithAttachments: PropTypes.func,
     onChangeHideEmptySteps: PropTypes.func,
     onChangeHidePassedLogs: PropTypes.func,
+    logViewMode: PropTypes.string,
+    parentItem: PropTypes.object,
   };
 
   static defaultProps = {
@@ -131,6 +139,8 @@ export class LogsPage extends Component {
     onChangeWithAttachments: () => {},
     onChangeHideEmptySteps: () => {},
     onChangeHidePassedLogs: () => {},
+    logViewMode: DETAILED_LOG_VIEW,
+    parentItem: {},
   };
 
   state = {
@@ -188,6 +198,8 @@ export class LogsPage extends Component {
       onChangeWithAttachments,
       onChangeHideEmptySteps,
       onChangeHidePassedLogs,
+      logViewMode,
+      parentItem,
     } = this.props;
 
     const rowHighlightingConfig = {
@@ -199,18 +211,24 @@ export class LogsPage extends Component {
     return (
       <PageLayout>
         <PageSection>
-          <LogToolbar onRefresh={this.handleRefresh} />
-          {!debugMode && <HistoryLine />}
-          <LogItemInfo
-            onChangeLogLevel={onChangeLogLevel}
-            onChangePage={onChangePage}
-            onHighlightRow={this.onHighlightRow}
-            onToggleSauceLabsIntegrationView={this.toggleSauceLabsIntegrationView}
-            isSauceLabsIntegrationView={this.state.isSauceLabsIntegrationView}
-            fetchFunc={refresh}
-            debugMode={debugMode}
-            loading={loading}
-          />
+          <LogToolbar onRefresh={this.handleRefresh} logViewMode={logViewMode} />
+          {logViewMode === DETAILED_LOG_VIEW ? (
+            <Fragment>
+              {!debugMode && <HistoryLine />}
+              <LogItemInfo
+                onChangeLogLevel={onChangeLogLevel}
+                onChangePage={onChangePage}
+                onHighlightRow={this.onHighlightRow}
+                onToggleSauceLabsIntegrationView={this.toggleSauceLabsIntegrationView}
+                isSauceLabsIntegrationView={this.state.isSauceLabsIntegrationView}
+                fetchFunc={refresh}
+                debugMode={debugMode}
+                loading={loading}
+              />
+            </Fragment>
+          ) : (
+            <TestItemLogsToolbar parentItem={parentItem} />
+          )}
           {this.state.isSauceLabsIntegrationView ? (
             <SauceLabsSection />
           ) : (
@@ -224,6 +242,7 @@ export class LogsPage extends Component {
                 onChangeWithAttachments={onChangeWithAttachments}
                 onHideEmptySteps={onChangeHideEmptySteps}
                 onHidePassedLogs={onChangeHidePassedLogs}
+                logPageMode={logViewMode}
               >
                 {({ markdownMode }) => (
                   <LogsGrid

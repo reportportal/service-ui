@@ -1,8 +1,9 @@
 import { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { InfoLine } from 'pages/inside/common/infoLine';
+import { InfoPanel } from 'pages/inside/common/infoPanel';
 import { SelectedItems } from 'pages/inside/common/selectedItems';
+import { LIST_VIEW } from 'controllers/testItem';
 import { ActionPanel } from './actionPanel';
 import { RefineFiltersPanel } from './refineFiltersPanel';
 import styles from './suiteTestToolbar.scss';
@@ -63,7 +64,7 @@ export const SuiteTestToolbar = ({
         deleteDisabled={!selectedItems.length}
       />
     </div>
-    {parentItem && <InfoLine data={parentItem} events={events} />}
+    {parentItem && <InfoPanel viewMode={LIST_VIEW} data={parentItem} events={events} />}
     <RefineFiltersPanel
       onFilterAdd={onFilterAdd}
       onFilterRemove={onFilterRemove}
