@@ -52,7 +52,6 @@ export class PluginsTabs extends Component {
       name: this.props.intl.formatMessage(messages.installed),
       link: this.createTabLink(INSTALLED),
       component: <InstalledTab plugins={this.props.plugins} filterItems={this.props.filterItems} />,
-      mobileDisabled: true,
     },
     [STORE]: {
       name: this.props.intl.formatMessage(messages.store),

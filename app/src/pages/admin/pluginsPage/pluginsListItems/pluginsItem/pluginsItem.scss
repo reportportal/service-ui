@@ -14,9 +14,13 @@
     background-color: $COLOR--tealish-hover;
   }
 
-  @media (max-width: $SCREEN_XS_MAX) {
+  @media (max-width: $SCREEN_SM_MAX) {
     width: 100%;
     margin-right: 0;
+  }
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    height: 70px;
   }
 }
 
@@ -25,6 +29,11 @@
   align-items: flex-start;
   width: 100%;
   height: 50%;
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    align-items: center;
+    height: 100%;
+  }
 }
 
 .plugins-image {
@@ -40,6 +49,10 @@
   align-content: space-between;
   height: 40px;
   width: 100%;
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    height: 34px;
+  }
 }
 
 .plugins-name {
@@ -48,6 +61,10 @@
   font-size: 15px;
   font-family: $FONT-SEMIBOLD;
   cursor: pointer;
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    margin-bottom: 5px;
+  }
 }
 
 .plugins-author {
@@ -73,4 +90,8 @@
 .plugins-switcher {
   height: 14px;
   width: 20px;
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    display: none;
+  }
 }

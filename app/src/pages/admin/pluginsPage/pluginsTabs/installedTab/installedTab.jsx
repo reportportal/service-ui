@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { ALL_GROUP_TYPE } from 'common/constants/pluginsGroupTypes';
+import { getPluginsFilter } from 'common/constants/pluginsFilter';
+import { InputDropdown } from 'components/inputs/inputDropdown';
 import styles from './installedTab.scss';
 import { PluginsFilter } from './../../pluginsFilter';
 import { PluginsListItems } from './../../pluginsListItems';
@@ -34,6 +36,22 @@ export class InstalledTab extends Component {
     });
   };
 
+  generateOptions = () =>
+    getPluginsFilter(this.props.filterItems).map((item) => ({
+      label: item.label,
+      value: item.value,
+    }));
+
+  renderFilterMobileBlock = () => (
+    <div className={cx('plugins-filter-mobile')}>
+      <InputDropdown
+        options={this.generateOptions()}
+        value={this.state.activeFilterItem}
+        onChange={this.handleFilterChange}
+      />
+    </div>
+  );
+
   render() {
     const { filterItems } = this.props;
     const { activeFilterItem } = this.state;
@@ -50,6 +68,7 @@ export class InstalledTab extends Component {
             <PluginsListItems
               title={activeFilterItem}
               items={this.getFilterPluginsList(activeFilterItem)}
+              filterMobileBlock={this.renderFilterMobileBlock()}
             />
           </div>
         </div>
