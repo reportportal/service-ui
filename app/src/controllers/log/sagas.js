@@ -147,7 +147,7 @@ function* fetchHistoryEntries() {
 
 function* fetchDetailsLog(offset = 0) {
   yield all([
-    put(clearAttachmentsAction),
+    put(clearAttachmentsAction()),
     put(fetchTestItemsAction({ offset })),
     call(fetchHistoryEntries),
     call(fetchLogItems),

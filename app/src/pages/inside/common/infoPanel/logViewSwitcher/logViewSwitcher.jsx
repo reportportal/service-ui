@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import LogIcon from 'common/img/log-view-inline.svg';
 import ListIcon from 'common/img/list-view-tiny-inline.svg';
-import { LIST_VIEW, LOG_VIEW } from 'controllers/testItem/constants';
+import { LIST_VIEW, LOG_VIEW } from 'controllers/testItem';
 import styles from './logViewSwitcher.scss';
 
 const cx = classNames.bind(styles);
