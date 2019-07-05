@@ -20,7 +20,7 @@ import {
   mapFieldsToValues,
 } from 'components/fields/dynamicFieldsSection/utils';
 import { FieldProvider } from 'components/fields/fieldProvider';
-import { InputBigSwitcher } from 'components/inputs/inputBigSwitcher';
+import { InputCheckbox } from 'components/inputs/inputCheckbox';
 import { INTEGRATION_NAMES_TITLES } from 'components/integrations';
 import { ISSUE_TYPE_FIELD_KEY } from 'components/integrations/elements/bts/constants';
 import { BetaBadge } from 'pages/inside/common/betaBadge';
@@ -388,12 +388,11 @@ export class PostIssueModal extends Component {
               </h4>
               <div className={cx('include-data-block')}>
                 {this.dataFieldsConfig.map((item) => (
-                  <div key={item.name} className={cx('switch-field-block')}>
-                    <span className={cx('switch-field-header')}>{item.title}</span>
-                    <FieldProvider name={item.name} format={Boolean} parse={Boolean}>
-                      <InputBigSwitcher />
-                    </FieldProvider>
-                  </div>
+                  <FieldProvider key={item.name} name={item.name} format={Boolean}>
+                    <InputCheckbox>
+                      <span className={cx('switch-field-label')}>{item.title}</span>
+                    </InputCheckbox>
+                  </FieldProvider>
                 ))}
               </div>
             </Fragment>
