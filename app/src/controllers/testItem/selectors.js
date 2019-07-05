@@ -319,29 +319,31 @@ export const logPageOffsetSelector = createSelector(
   },
 );
 
-export const listViewLinkSelector = (state) => {
-  const query = pagePropertiesSelector(state);
-  const isDebugMode = debugModeSelector(state);
-  const payload = payloadSelector(state);
-  return {
+export const listViewLinkSelector = createSelector(
+  pagePropertiesSelector,
+  debugModeSelector,
+  payloadSelector,
+  (query, isDebugMode, payload) => ({
     type: isDebugMode ? PROJECT_USERDEBUG_TEST_ITEM_PAGE : TEST_ITEM_PAGE,
     payload,
     meta: {
       query,
     },
-  };
-};
+  }),
+);
 
-export const logViewLinkSelector = (state) => {
-  const query = pagePropertiesSelector(state);
-  const payload = payloadSelector(state);
-  const isDebugMode = debugModeSelector(state);
-  const page = isDebugMode ? PROJECT_USERDEBUG_LOG_PAGE : PROJECT_LOG_PAGE;
-  return {
-    type: page,
-    payload,
-    meta: {
-      query,
-    },
-  };
-};
+export const logViewLinkSelector = createSelector(
+  pagePropertiesSelector,
+  debugModeSelector,
+  payloadSelector,
+  (query, isDebugMode, payload) => {
+    const page = isDebugMode ? PROJECT_USERDEBUG_LOG_PAGE : PROJECT_LOG_PAGE;
+    return {
+      type: page,
+      payload,
+      meta: {
+        query,
+      },
+    };
+  },
+);

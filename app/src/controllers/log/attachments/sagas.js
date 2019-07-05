@@ -2,7 +2,7 @@ import { takeLatest, call, put, all, select, take } from 'redux-saga/effects';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
 import { showModalAction, HIDE_MODAL } from 'controllers/modal';
-import { fetchDataAction, concatFetchDataAction } from 'controllers/fetch';
+import { concatFetchDataAction } from 'controllers/fetch';
 import { activeProjectSelector } from 'controllers/user';
 import { activeRetryIdSelector, isLaunchLogSelector } from 'controllers/log/selectors';
 import { JSON as JSON_TYPE } from 'common/constants/fileTypes';
@@ -23,11 +23,7 @@ function* fetchAttachmentsConcat({ payload: { params, concat } }) {
   const url = isLaunchLog
     ? URLS.launchLogs(activeProject, activeLogItemId)
     : URLS.logItems(activeProject, activeLogItemId);
-  if (concat) {
-    yield put(concatFetchDataAction(ATTACHMENTS_NAMESPACE, concat)(url, { params }));
-  } else {
-    yield put(fetchDataAction(ATTACHMENTS_NAMESPACE)(url, { params }));
-  }
+  yield put(concatFetchDataAction(ATTACHMENTS_NAMESPACE, concat)(url, { params }));
 }
 
 export function fetchImageData({ binaryId }) {
