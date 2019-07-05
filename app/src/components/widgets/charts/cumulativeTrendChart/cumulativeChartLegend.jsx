@@ -17,70 +17,19 @@ export class CumulativeChartLegend extends PureComponent {
     attributes: PropTypes.array,
     activeAttribute: PropTypes.object,
     clearAttributes: PropTypes.func,
+    userSettings: PropTypes.object,
   };
+
   static defaultProps = {
     attributes: [],
     activeAttribute: null,
     clearAttributes: () => {},
-  };
-  constructor() {
-    super();
-
-    this.state = {
-      defectTypes: false,
-      totals: false,
-      separate: false,
-      percentage: false,
-    };
-  }
-
-  onChangeFocusType = () => {
-    const newVal = !this.state.defectTypes;
-    const { onChangeFocusType } = this.props;
-
-    this.setState({
-      defectTypes: newVal,
-    });
-
-    onChangeFocusType(newVal);
-  };
-
-  onChangeTotals = () => {
-    this.setState(
-      {
-        totals: !this.state.totals,
-      },
-      () => {
-        this.props.onChangeTotals(this.state.totals);
-      },
-    );
-  };
-
-  onChangeSeparate = () => {
-    this.setState(
-      {
-        separate: !this.state.separate,
-      },
-      () => {
-        this.props.onChangeSeparate(this.state.separate);
-      },
-    );
-  };
-
-  onChangePercentage = () => {
-    this.setState(
-      {
-        percentage: !this.state.percentage,
-      },
-      () => {
-        this.props.onChangePercentage(this.state.percentage);
-      },
-    );
+    userSettings: {},
   };
 
   render() {
-    const { defectTypes, totals, separate, percentage } = this.state;
-    const { attributes, activeAttribute, clearAttributes } = this.props;
+    const { attributes, activeAttribute, clearAttributes, userSettings } = this.props;
+    const { defectTypes, showTotal, separate, percentage } = userSettings;
     return (
       <div className={cx('cumulative-trend-chart')}>
         <CumulativeChartBreadcrumbs
@@ -93,20 +42,33 @@ export class CumulativeChartLegend extends PureComponent {
 
         <div className={cx('controls')}>
           <div className={cx('control')}>
-            <InputCheckbox value={defectTypes} onChange={this.onChangeFocusType}>
+            <InputCheckbox
+              value={defectTypes}
+              onChange={(e) => {
+                this.props.onChangeFocusType(e.target.checked);
+              }}
+            >
               Focus on Defect Types
             </InputCheckbox>
           </div>
 
           <div className={cx('control')}>
-            <InputCheckbox className={cx('control')} value={totals} onChange={this.onChangeTotals}>
+            <InputCheckbox
+              className={cx('control')}
+              value={showTotal}
+              onChange={(e) => {
+                this.props.onChangeTotals(e.target.checked);
+              }}
+            >
               Totals
             </InputCheckbox>
           </div>
 
           <div
             className={cx('control', 'separate', { 'separate-active': separate })}
-            onClick={this.onChangeSeparate}
+            onClick={(e) => {
+              this.props.onChangeSeparate(e.currentTarget.querySelector('input').checked);
+            }}
           >
             <InputCheckbox className={cx('control')} value={separate}>
               Separate
@@ -115,7 +77,9 @@ export class CumulativeChartLegend extends PureComponent {
 
           <div
             className={cx('control', 'percentage', { 'percentage-active': percentage })}
-            onClick={this.onChangePercentage}
+            onClick={(e) => {
+              this.props.onChangePercentage(e.currentTarget.querySelector('input').checked);
+            }}
           >
             <InputCheckbox className={cx('control')} value={percentage}>
               Percentage
