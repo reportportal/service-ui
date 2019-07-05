@@ -93,7 +93,7 @@
     cursor: pointer;
 
     input, label {
-      visibility: hidden;
+      opacity: 0;
     }
   }
   .separate-active {
@@ -107,7 +107,7 @@
     cursor: pointer;
 
     input, label {
-      visibility: hidden;
+      opacity: 0;
     }
   }
   

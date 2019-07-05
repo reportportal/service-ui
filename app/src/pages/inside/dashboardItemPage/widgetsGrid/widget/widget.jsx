@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 import { fetch, formatAttribute } from 'common/utils';
 import { URLS } from 'common/urls';
 import { DASHBOARD_PAGE_EVENTS } from 'components/main/analytics/events';
+import isEqual from 'fast-deep-equal';
 import { activeProjectSelector } from 'controllers/user';
 import { showModalAction } from 'controllers/modal';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
@@ -71,6 +72,7 @@ export class Widget extends Component {
         contentParameters: {},
       },
       uncheckedLegendItems: [],
+      userSettings: {},
     };
   }
 
@@ -86,7 +88,11 @@ export class Widget extends Component {
     this.silentUpdaterId && clearTimeout(this.silentUpdaterId);
   }
 
-  onChangeWidgetLegend = (itemId) => {
+  onChangeUserSettings = (settings, callback = () => {}) => {
+    this.setState({ userSettings: { ...this.state.userSettings, ...settings } }, callback);
+  };
+
+  onChangeWidgetLegend = (itemId, callback = () => {}) => {
     const uncheckedItemIndex = this.state.uncheckedLegendItems.indexOf(itemId);
     const uncheckedLegendItems = [...this.state.uncheckedLegendItems];
     if (uncheckedItemIndex !== -1) {
@@ -94,7 +100,7 @@ export class Widget extends Component {
     } else {
       uncheckedLegendItems.push(itemId);
     }
-    this.setState({ uncheckedLegendItems });
+    this.setState({ uncheckedLegendItems }, callback);
   };
 
   getWidgetOptions = () => (this.state.widget.contentParameters || {}).widgetOptions || {};
@@ -104,7 +110,7 @@ export class Widget extends Component {
   };
 
   getWidgetContent = () => {
-    const { widget, uncheckedLegendItems, queryParameters } = this.state;
+    const { widget, uncheckedLegendItems, queryParameters, userSettings } = this.state;
 
     if (this.state.loading) {
       return <SpinningPreloader />;
@@ -128,6 +134,8 @@ export class Widget extends Component {
           fetchWidget={this.fetchWidget}
           queryParameters={queryParameters}
           clearQueryParams={this.clearQueryParams}
+          userSettings={userSettings}
+          onChangeUserSettings={this.onChangeUserSettings}
         />
       )
     );
@@ -170,25 +178,46 @@ export class Widget extends Component {
     );
   };
 
+  isContentLoaded = () => {
+    const { widget } = this.state;
+
+    return widget && widget.content && widget.content.result && widget.content.result.length;
+  };
+
   fetchWidget = (params = {}) => {
     const { tracking, isFullscreen } = this.props;
     const url = this.getWidgetUrl(params);
 
     clearTimeout(this.silentUpdaterId);
     tracking.trackEvent(DASHBOARD_PAGE_EVENTS.REFRESH_WIDGET);
-    this.setState({
-      loading: true,
-    });
+
+    if (!this.isContentLoaded()) {
+      this.setState({
+        loading: true,
+      });
+    }
+
     fetch(url)
       .then((widget) => {
-        this.setState({
-          loading: false,
-          queryParameters: {
-            ...this.state.queryParameters,
-            ...params,
-          },
-          widget,
-        });
+        const queryParameters = {
+          ...this.state.queryParameters,
+          ...params,
+        };
+
+        if (
+          !isEqual(widget, this.state.widget) ||
+          !isEqual(queryParameters, this.state.queryParameters) ||
+          this.state.loading
+        ) {
+          this.setState({
+            ...{
+              queryParameters,
+              widget,
+            },
+            ...(this.state.loading ? { loading: false } : {}),
+          });
+        }
+
         this.silentUpdaterId = setTimeout(
           this.fetchWidget,
           isFullscreen ? SILENT_UPDATE_TIMEOUT_FULLSCREEN : SILENT_UPDATE_TIMEOUT,

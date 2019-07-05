@@ -19,19 +19,27 @@ export class CumulativeTrendChart extends PureComponent {
     fetchWidget: PropTypes.func,
     clearQueryParams: PropTypes.func,
     queryParameters: PropTypes.object,
+    onChangeLegend: PropTypes.func,
+    uncheckedLegendItems: PropTypes.array,
+    userSettings: PropTypes.object,
+    onChangeUserSettings: PropTypes.func,
   };
 
   static defaultProps = {
     isPreview: false,
     observer: null,
-    defectTypes: false,
     fetchWidget: () => {},
     clearQueryParams: () => {},
     queryParameters: {},
+    onChangeLegend: () => {},
+    uncheckedLegendItems: [],
+    userSettings: {},
+    onChangeUserSettings: () => {},
   };
 
   constructor(args) {
     super(args);
+
     const { queryParameters } = this.props;
     if (queryParameters && queryParameters.attributes) {
       this.state.activeAttribute = queryParameters.attributes[0];
@@ -39,12 +47,6 @@ export class CumulativeTrendChart extends PureComponent {
   }
 
   state = {
-    defectTypes: false,
-    showTotal: false,
-    separate: false,
-    percentage: false,
-    activeAttribute: null,
-    disabledFields: [],
     legendItems: [],
   };
 
@@ -53,43 +55,19 @@ export class CumulativeTrendChart extends PureComponent {
   };
 
   onChangeFocusType = (value) => {
-    this.setState(
-      {
-        isConfigReady: false,
-        defectTypes: value,
-      },
-      this.getConfig,
-    );
+    this.props.onChangeUserSettings({ defectTypes: value }, this.getConfig);
   };
 
   onChangeTotals = (value) => {
-    this.setState(
-      {
-        isConfigReady: false,
-        showTotal: value,
-      },
-      this.getConfig,
-    );
+    this.props.onChangeUserSettings({ showTotal: value }, this.getConfig);
   };
 
   onChangeSeparate = (value) => {
-    this.setState(
-      {
-        isConfigReady: false,
-        separate: value,
-      },
-      this.getConfig,
-    );
+    this.props.onChangeUserSettings({ separate: value }, this.getConfig);
   };
 
   onChangePercentage = (value) => {
-    this.setState(
-      {
-        isConfigReady: false,
-        percentage: value,
-      },
-      this.getConfig,
-    );
+    this.props.onChangeUserSettings({ percentage: value }, this.getConfig);
   };
 
   onChartElementClick = (element) => {
@@ -113,13 +91,18 @@ export class CumulativeTrendChart extends PureComponent {
   };
 
   onLegendClick = (fieldName) => {
-    this.toggleField(fieldName, this.getConfig);
+    this.props.onChangeLegend(fieldName, () => {
+      this.getConfig();
+    });
   };
 
   getConfig = (options = {}) => {
-    const { labels, datasets, chartOptions, legendItems } = getChartData(this.props.widget, {
-      ...this.state,
+    const { uncheckedLegendItems, widget, userSettings } = this.props;
+
+    const { labels, datasets, chartOptions, legendItems } = getChartData(widget, {
+      ...userSettings,
       options,
+      uncheckedLegendItems,
       formatMessage: this.props.intl.formatMessage,
       activeAttribute: this.state.activeAttribute,
     });
@@ -136,19 +119,6 @@ export class CumulativeTrendChart extends PureComponent {
 
   getAttributes = () => this.props.widget.contentParameters.widgetOptions.attributes;
 
-  toggleField = (fieldName, callback) => {
-    const { disabledFields } = this.state;
-
-    this.setState(
-      {
-        disabledFields: disabledFields.includes(fieldName)
-          ? disabledFields.filter((field) => field !== fieldName)
-          : disabledFields.concat([fieldName]),
-      },
-      callback,
-    );
-  };
-
   clearAttributes = () => {
     this.setState({
       activeAttribute: null,
@@ -158,7 +128,7 @@ export class CumulativeTrendChart extends PureComponent {
   };
 
   render() {
-    const { isPreview } = this.props;
+    const { isPreview, uncheckedLegendItems, userSettings } = this.props;
     const { legendItems, chartData } = this.state;
     const classes = cx('cumulative-trend-chart', { 'preview-view': isPreview });
 
@@ -179,6 +149,8 @@ export class CumulativeTrendChart extends PureComponent {
             onChangeTotals={this.onChangeTotals}
             onChangeSeparate={this.onChangeSeparate}
             onChangePercentage={this.onChangePercentage}
+            uncheckedLegendItems={uncheckedLegendItems}
+            userSettings={userSettings}
           />
         </ChartJS>
       </div>
