@@ -144,7 +144,7 @@ export class LogsGridToolbar extends Component {
       logLevel,
       logPageMode,
     } = this.props;
-    const { logViewMode, withAttachments, hideEmptySteps, hidePassedLogs } = this.state;
+    const { logViewMode, withAttachments, hidePassedLogs } = this.state;
     return (
       <div className={cx('container')}>
         <div className={cx('panel')}>
@@ -164,11 +164,11 @@ export class LogsGridToolbar extends Component {
                     {intl.formatMessage(messages.hidePassedLogs)}
                   </InputCheckbox>
                 </div>
-                <div className={cx('aside-element')}>
+                {/* <div className={cx('aside-element')}>
                   <InputCheckbox value={hideEmptySteps} onChange={this.toggleHideEmptySteps}>
                     {intl.formatMessage(messages.hideEmptySteps)}
                   </InputCheckbox>
-                </div>
+                </div> */}
               </Fragment>
             )}
           </div>
