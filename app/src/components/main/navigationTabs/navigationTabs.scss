@@ -61,6 +61,12 @@
   width: 100%;
   padding: 30px 0 40px 0;
 }
+.custom-content-wrapper {
+  @media (max-width: $SCREEN_XS_MAX) {
+    padding-top: 10px;
+  }
+}
+
 .panel-wrapper {
   display: flex;
   flex-direction: row;
@@ -70,6 +76,9 @@
   align-items: center;
   min-height: 36px;
   border-bottom: 1px solid $COLOR--gray-91;
+  @media (max-width: $SCREEN_XS_MAX) {
+    display: none;
+  }
 }
 .custom-tabs-wrapper {
   width: auto;
@@ -101,6 +110,11 @@
   display: none;
   @media (max-width: $SCREEN_XS_MAX) {
     display: block;
+  }
+}
+.custom-tabs-mobile-wrapper {
+  @media (max-width: $SCREEN_XS_MAX) {
+    display: none;
   }
 }
 .link {

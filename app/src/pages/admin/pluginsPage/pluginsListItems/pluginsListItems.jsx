@@ -48,6 +48,11 @@ export class PluginsListItems extends Component {
     intl: intlShape.isRequired,
     title: PropTypes.string.isRequired,
     items: PropTypes.array.isRequired,
+    filterMobileBlock: PropTypes.element,
+  };
+
+  static defaultProps = {
+    filterMobileBlock: null,
   };
 
   render() {
@@ -55,11 +60,13 @@ export class PluginsListItems extends Component {
       intl: { formatMessage },
       title,
       items,
+      filterMobileBlock,
     } = this.props;
 
     return (
       <Fragment>
         <h2 className={cx('plugins-content-title')}>{formatMessage(pluginTitle[title])}</h2>
+        {filterMobileBlock}
         <div className={cx('plugins-content-list')}>
           {items.map((item) => (
             <Fragment key={item.type}>

@@ -3,6 +3,9 @@
   color: $COLOR--black-2;
   font-size: 22px;
   font-family: $FONT-SEMIBOLD;
+  @media (max-width: $SCREEN_XS_MAX) {
+    font-size: 20px;
+  }
 }
 
 .plugins-content-list {

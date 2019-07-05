@@ -3,6 +3,9 @@
   flex-direction: column;
   min-width: 160px;
   margin-right: 80px;
+  @media (max-width: $SCREEN_XS_MAX) {
+    display: none;
+  }
 }
 .plugins-filter-button {
   height: 26px;

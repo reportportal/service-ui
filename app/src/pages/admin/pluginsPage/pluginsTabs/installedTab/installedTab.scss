@@ -13,3 +13,11 @@
 .plugins-content {
   width: 100%;
 }
+
+.plugins-filter-mobile {
+  display: none;
+  @media (max-width: $SCREEN_XS_MAX) {
+    display: block;
+    margin-bottom: 15px;
+  }
+}

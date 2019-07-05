@@ -52,7 +52,7 @@ export class NavigationTabs extends Component {
     const { config, activeTab, customBlock } = this.props;
     return (
       <div className={cx('navigation-tabs')}>
-        <div className={cx('tabs-mobile')}>
+        <div className={cx('tabs-mobile', { 'custom-tabs-mobile-wrapper': customBlock })}>
           <InputDropdown
             options={this.generateOptions()}
             value={activeTab}
@@ -81,6 +81,7 @@ export class NavigationTabs extends Component {
         <div
           className={cx('content-wrapper', {
             'mobile-disabled': activeTab && config[activeTab].mobileDisabled,
+            'custom-content-wrapper': customBlock,
           })}
         >
           {activeTab && config[activeTab].component}
