@@ -42,13 +42,13 @@ export const generateChartColors = (widget) => {
 };
 /* eslint func-names: ["error", "never" ] */
 const createDataSet = (field, group, options) => {
-  const { defectTypes, separate, showTotal, disabledFields } = options;
+  const { defectTypes, separate, showTotal, uncheckedLegendItems } = options;
   const isTotalDataset = /executions\$total/.test(field);
   const color = isTotalDataset ? 'transparent' : getColorForKey(field);
 
   return {
     label: field,
-    hidden: disabledFields.includes(field) || (isTotalDataset && !showTotal),
+    hidden: uncheckedLegendItems.includes(field) || (isTotalDataset && !showTotal),
     data: [],
     borderColor: isTotalDataset ? '#000000' : color,
     borderWidth: isTotalDataset ? { left: 0, top: 0, right: 1, bottom: 0 } : 0,
