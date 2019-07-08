@@ -18,6 +18,7 @@ import {
   PASSING_RATE_SUMMARY,
   FLAKY_TEST_CASES_TABLE,
   CUMULATIVE_TREND,
+  MOST_POPULAR_PATTERNS,
   /*
   PRODUCT_STATUS,
   MOST_TIME_CONSUMING,
@@ -41,6 +42,7 @@ import {
   PassingRateSummaryControls,
   FlakyTestCasesTableControls,
   CumulativeTrendControls,
+  MostPopularPatternsControls,
   /*
   ProductStatusControls,
   MostTimeConsumingTestCasesControls,
@@ -136,6 +138,10 @@ export const widgetTypesMessages = defineMessages({
   [CUMULATIVE_TREND]: {
     id: 'Widgets.Name.cumulative',
     defaultMessage: 'Cumulative trend chart',
+  },
+  [MOST_POPULAR_PATTERNS]: {
+    id: 'Widget.Name.mostPopularPatterns',
+    defaultMessage: 'Most popular pattern table (TOP-20)',
   },
   /*
   [PRODUCT_STATUS]: {
@@ -376,6 +382,20 @@ export const getWidgets = (formatMessage) => [
     ),
     preview: Parser(CUMULATIVE_TREND_PREVIEW),
     controls: CumulativeTrendControls,
+  },
+  {
+    id: MOST_POPULAR_PATTERNS,
+    title: formatMessage(widgetTypesMessages[MOST_POPULAR_PATTERNS]),
+    description: (
+      <FormattedMessage
+        id={'Widgets.Description.mostPopularPatterns'}
+        defaultMessage={
+          'Shows information about TOP-15 most popular patterns within the specified previous launches.'
+        }
+      />
+    ),
+    preview: null,
+    controls: MostPopularPatternsControls,
   },
   /*
   {
