@@ -1,7 +1,7 @@
 .widget-type-item {
   display: inline-block;
   width: 50%;
-  height: 55px;
+  height: 56px;
   box-sizing: border-box;
   padding-right: 20px;
   padding-top: 10px;
@@ -17,6 +17,7 @@
   }
 }
 .widget-type-item-name {
+  line-height: 15px;
   white-space: pre-wrap;
   word-break: normal;
 

@@ -6,9 +6,9 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { initialize, touch } from 'redux-form';
 import { injectIntl, intlShape, defineMessages } from 'react-intl';
-import styles from './widgetTypeSelector.scss';
 import { WidgetTypeItem } from './widgetTypeItem';
 import { WIDGET_WIZARD_FORM } from '../../../../../common/constants';
+import styles from './widgetTypeSelector.scss';
 
 const cx = classNames.bind(styles);
 const messages = defineMessages({
