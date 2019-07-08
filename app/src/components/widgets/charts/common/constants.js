@@ -1,5 +1,5 @@
 import { defineMessages } from 'react-intl';
-import { getItemColor } from 'components/widgets/charts/common/utils';
+import { getItemColor } from './utils';
 
 export const TO_INVESTIGATE = 'toInvestigate';
 export const INVESTIGATED = 'investigated';

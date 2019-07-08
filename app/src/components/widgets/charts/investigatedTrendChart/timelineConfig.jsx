@@ -1,6 +1,6 @@
 import moment from 'moment';
-import { getTimelineAxisTicks, getItemColor } from 'components/widgets/charts/common/utils';
-import { MESSAGES } from '../common/constants';
+import { getTimelineAxisTicks } from 'components/widgets/charts/common/utils';
+import { MESSAGES, COLORS } from '../common/constants';
 import { TimelineTooltip } from '../common/timelineTooltip';
 
 export const getTimelineConfig = ({ content, isPreview, intl, positionCallback, size }) => {
@@ -16,7 +16,7 @@ export const getTimelineConfig = ({ content, isPreview, intl, positionCallback, 
   // prepare columns array and fill it witch field names
   Object.keys(data[0].values).forEach((key) => {
     const shortKey = key.split('$').pop();
-    colors[shortKey] = getItemColor({ defectType: shortKey });
+    colors[shortKey] = COLORS[shortKey];
     chartData[shortKey] = [shortKey];
   });
   // fill columns arrays with values

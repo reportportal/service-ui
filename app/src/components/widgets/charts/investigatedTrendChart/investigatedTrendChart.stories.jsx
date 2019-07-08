@@ -23,7 +23,7 @@ import { storiesOf } from '@storybook/react';
 import { host } from 'storybook-host';
 import { withReadme } from 'storybook-readme';
 import { InvestigatedTrendChart } from './investigatedTrendChart';
-import { TEST_DATA } from './common/test-data';
+import { TEST_DATA } from './test-data';
 import README from './README.md';
 
 const mockNode = document.createElement('node');

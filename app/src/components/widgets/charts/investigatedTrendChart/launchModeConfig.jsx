@@ -1,7 +1,7 @@
 import ReactDOMServer from 'react-dom/server';
 import { getLaunchAxisTicks } from 'components/widgets/charts/common/utils';
 import { TooltipContent } from '../common/tooltip';
-import { DEFECT_TYPES, COLORS, MESSAGES } from '../common/constants';
+import { COLORS, MESSAGES } from '../common/constants';
 
 const renderTooltip = (itemData, intl) => (d, defaultTitleFormat, defaultValueFormat, color) => {
   const { name, number, startTime } = itemData[d[0].index];
@@ -14,25 +14,27 @@ const renderTooltip = (itemData, intl) => (d, defaultTitleFormat, defaultValueFo
       startTime={+startTime}
       itemCases={d[0].value}
       color={color(id)}
-      itemName={intl.formatMessage(MESSAGES[id])}
+      itemName={MESSAGES[id] ? intl.formatMessage(MESSAGES[id]) : id}
     />,
   );
 };
 
 export const getLaunchModeConfig = ({ content, isPreview, intl, positionCallback, size }) => {
   const { result } = content;
+  const colors = {};
 
   const sortedResult = result.sort((item) => -item.number);
-
   const itemData = sortedResult.map((item) => ({
     id: item.id,
     name: item.name,
     number: item.number,
     startTime: item.startTime,
   }));
+  const groups = Object.keys(sortedResult[0].values);
 
-  const columns = DEFECT_TYPES.map((type) => {
+  const columns = groups.map((type) => {
     const values = sortedResult.map((item) => item.values[type] || 0);
+    colors[type] = COLORS[type];
 
     return [type, ...values];
   });
@@ -42,8 +44,8 @@ export const getLaunchModeConfig = ({ content, isPreview, intl, positionCallback
       columns,
       type: 'bar',
       order: null,
-      groups: [DEFECT_TYPES],
-      colors: COLORS,
+      groups: [groups],
+      colors,
     },
     grid: {
       y: {
