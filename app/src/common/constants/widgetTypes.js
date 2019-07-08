@@ -17,3 +17,4 @@ export const FLAKY_TEST_CASES_TABLE = 'flakyTestCases';
 export const CUMULATIVE_TREND = 'cumulative';
 export const PRODUCT_STATUS = 'productStatus';
 export const MOST_TIME_CONSUMING = 'mostTimeConsuming';
+export const MOST_POPULAR_PATTERNS = 'topPatternTemplates';
