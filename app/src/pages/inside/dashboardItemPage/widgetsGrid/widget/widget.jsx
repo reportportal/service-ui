@@ -2,15 +2,16 @@ import React, { Component, Fragment } from 'react';
 import track from 'react-tracking';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
+import isEqual from 'fast-deep-equal';
 import { lazyload } from 'react-lazyload';
 import { connect } from 'react-redux';
 import { fetch, formatAttribute } from 'common/utils';
 import { URLS } from 'common/urls';
-import { DASHBOARD_PAGE_EVENTS } from 'components/main/analytics/events';
-import isEqual from 'fast-deep-equal';
+import { CUMULATIVE_TREND } from 'common/constants/widgetTypes';
 import { activeProjectSelector } from 'controllers/user';
 import { showModalAction } from 'controllers/modal';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
+import { DASHBOARD_PAGE_EVENTS } from 'components/main/analytics/events';
 import { CHARTS, MULTI_LEVEL_WIDGETS, NoDataAvailable } from 'components/widgets';
 import { isWidgetDataAvailable } from '../../modals/common/utils';
 import { WidgetHeader } from './widgetHeader';
@@ -61,8 +62,6 @@ export class Widget extends Component {
 
   constructor(props) {
     super(props);
-    this.isDragging = false;
-
     this.state = {
       loading: true,
       visible: true,
@@ -178,12 +177,6 @@ export class Widget extends Component {
     );
   };
 
-  isContentLoaded = () => {
-    const { widget } = this.state;
-
-    return widget && widget.content && widget.content.result && widget.content.result.length;
-  };
-
   fetchWidget = (params = {}) => {
     const { tracking, isFullscreen } = this.props;
     const url = this.getWidgetUrl(params);
@@ -191,7 +184,7 @@ export class Widget extends Component {
     clearTimeout(this.silentUpdaterId);
     tracking.trackEvent(DASHBOARD_PAGE_EVENTS.REFRESH_WIDGET);
 
-    if (!this.isContentLoaded()) {
+    if (!isWidgetDataAvailable(this.state.widget)) {
       this.setState({
         loading: true,
       });
@@ -205,16 +198,14 @@ export class Widget extends Component {
         };
 
         if (
-          !isEqual(widget, this.state.widget) ||
+          this.state.loading ||
           !isEqual(queryParameters, this.state.queryParameters) ||
-          this.state.loading
+          !isEqual(widget, this.state.widget)
         ) {
           this.setState({
-            ...{
-              queryParameters,
-              widget,
-            },
-            ...(this.state.loading ? { loading: false } : {}),
+            queryParameters,
+            widget,
+            loading: false,
           });
         }
 
@@ -253,6 +244,7 @@ export class Widget extends Component {
 
   render() {
     const { widget, visible } = this.state;
+    const { isFullscreen, widgetType, isModifiable } = this.props;
     const widgetOptions = this.getWidgetOptions();
     const headerData = {
       owner: widget.owner,
@@ -262,16 +254,16 @@ export class Widget extends Component {
       type: widget.widgetType,
       meta: [widgetOptions.viewMode],
     };
-    if (widgetOptions.latest) {
-      headerData.meta.push(widgetOptions.latest);
+    if (widgetOptions.latest || widgetType === CUMULATIVE_TREND) {
+      headerData.meta.push(widgetOptions.latest || true);
     }
 
     return (
-      <div className={cx('widget-container', { disabled: this.props.isFullscreen })}>
+      <div className={cx('widget-container', { disabled: isFullscreen })}>
         <Fragment>
           <div
             className={cx('widget-header', 'draggable-field', {
-              modifiable: this.props.isModifiable,
+              modifiable: isModifiable,
             })}
           >
             <WidgetHeader

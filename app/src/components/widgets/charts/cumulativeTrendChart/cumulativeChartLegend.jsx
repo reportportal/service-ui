@@ -10,10 +10,7 @@ const cx = classNames.bind(styles);
 
 export class CumulativeChartLegend extends PureComponent {
   static propTypes = {
-    onChangeFocusType: PropTypes.func.isRequired,
-    onChangeTotals: PropTypes.func.isRequired,
-    onChangeSeparate: PropTypes.func.isRequired,
-    onChangePercentage: PropTypes.func.isRequired,
+    onChangeUserSettings: PropTypes.func.isRequired,
     attributes: PropTypes.array,
     activeAttribute: PropTypes.object,
     clearAttributes: PropTypes.func,
@@ -25,6 +22,22 @@ export class CumulativeChartLegend extends PureComponent {
     activeAttribute: null,
     clearAttributes: () => {},
     userSettings: {},
+  };
+
+  onChangeFocusType = (e) => {
+    this.props.onChangeUserSettings({ defectTypes: e.target.checked });
+  };
+
+  onChangeTotals = (e) => {
+    this.props.onChangeUserSettings({ showTotal: e.target.checked });
+  };
+
+  onChangeSeparate = (e) => {
+    this.props.onChangeUserSettings({ separate: e.currentTarget.querySelector('input').checked });
+  };
+
+  onChangePercentage = (e) => {
+    this.props.onChangeUserSettings({ percentage: e.currentTarget.querySelector('input').checked });
   };
 
   render() {
@@ -42,12 +55,7 @@ export class CumulativeChartLegend extends PureComponent {
 
         <div className={cx('controls')}>
           <div className={cx('control')}>
-            <InputCheckbox
-              value={defectTypes}
-              onChange={(e) => {
-                this.props.onChangeFocusType(e.target.checked);
-              }}
-            >
+            <InputCheckbox value={defectTypes} onChange={this.onChangeFocusType}>
               Focus on Defect Types
             </InputCheckbox>
           </div>
@@ -56,9 +64,7 @@ export class CumulativeChartLegend extends PureComponent {
             <InputCheckbox
               className={cx('control')}
               value={showTotal}
-              onChange={(e) => {
-                this.props.onChangeTotals(e.target.checked);
-              }}
+              onChange={this.onChangeTotals}
             >
               Totals
             </InputCheckbox>
@@ -66,9 +72,7 @@ export class CumulativeChartLegend extends PureComponent {
 
           <div
             className={cx('control', 'separate', { 'separate-active': separate })}
-            onClick={(e) => {
-              this.props.onChangeSeparate(e.currentTarget.querySelector('input').checked);
-            }}
+            onClick={this.onChangeSeparate}
           >
             <InputCheckbox className={cx('control')} value={separate}>
               Separate
@@ -77,9 +81,7 @@ export class CumulativeChartLegend extends PureComponent {
 
           <div
             className={cx('control', 'percentage', { 'percentage-active': percentage })}
-            onClick={(e) => {
-              this.props.onChangePercentage(e.currentTarget.querySelector('input').checked);
-            }}
+            onClick={this.onChangePercentage}
           >
             <InputCheckbox className={cx('control')} value={percentage}>
               Percentage
