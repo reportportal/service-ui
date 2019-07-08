@@ -168,7 +168,7 @@ export class CumulativeTrendControls extends Component {
           />
         </FieldProvider>
 
-        <TogglerControl fieldLabel=" " items={tabItems} value={'2'} />
+        <TogglerControl disabled fieldLabel=" " items={tabItems} value={'2'} />
 
         <FieldProvider
           name="contentParameters.itemsCount"

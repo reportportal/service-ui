@@ -3,9 +3,9 @@ import { injectIntl, intlShape } from 'react-intl';
 import PropTypes from 'prop-types';
 import { ChartJS } from 'components/widgets/charts/common/chartjs';
 import classNames from 'classnames/bind';
-import styles from './cumulativeTrendChart.scss';
 import { getChartData } from './chartjsConfig';
 import { CumulativeChartLegend } from './cumulativeChartLegend';
+import styles from './cumulativeTrendChart.scss';
 
 const cx = classNames.bind(styles);
 
@@ -54,22 +54,6 @@ export class CumulativeTrendChart extends PureComponent {
     this.getConfig();
   };
 
-  onChangeFocusType = (value) => {
-    this.props.onChangeUserSettings({ defectTypes: value }, this.getConfig);
-  };
-
-  onChangeTotals = (value) => {
-    this.props.onChangeUserSettings({ showTotal: value }, this.getConfig);
-  };
-
-  onChangeSeparate = (value) => {
-    this.props.onChangeUserSettings({ separate: value }, this.getConfig);
-  };
-
-  onChangePercentage = (value) => {
-    this.props.onChangeUserSettings({ percentage: value }, this.getConfig);
-  };
-
   onChartElementClick = (element) => {
     if (this.state.activeAttribute) {
       return;
@@ -91,9 +75,7 @@ export class CumulativeTrendChart extends PureComponent {
   };
 
   onLegendClick = (fieldName) => {
-    this.props.onChangeLegend(fieldName, () => {
-      this.getConfig();
-    });
+    this.props.onChangeLegend(fieldName, this.getConfig);
   };
 
   getConfig = (options = {}) => {
@@ -119,6 +101,8 @@ export class CumulativeTrendChart extends PureComponent {
 
   getAttributes = () => this.props.widget.contentParameters.widgetOptions.attributes;
 
+  userSettingsChangeHandler = (data) => this.props.onChangeUserSettings(data, this.getConfig);
+
   clearAttributes = () => {
     this.setState({
       activeAttribute: null,
@@ -139,19 +123,18 @@ export class CumulativeTrendChart extends PureComponent {
           chartOptions={this.state.chartOptions}
           onChartElementClick={this.onChartElementClick}
         >
-          <CumulativeChartLegend
-            items={legendItems}
-            attributes={this.getAttributes()}
-            activeAttribute={this.state.activeAttribute}
-            clearAttributes={this.clearAttributes}
-            onClick={this.onLegendClick}
-            onChangeFocusType={this.onChangeFocusType}
-            onChangeTotals={this.onChangeTotals}
-            onChangeSeparate={this.onChangeSeparate}
-            onChangePercentage={this.onChangePercentage}
-            uncheckedLegendItems={uncheckedLegendItems}
-            userSettings={userSettings}
-          />
+          {!isPreview && (
+            <CumulativeChartLegend
+              items={legendItems}
+              attributes={this.getAttributes()}
+              activeAttribute={this.state.activeAttribute}
+              clearAttributes={this.clearAttributes}
+              onClick={this.onLegendClick}
+              onChangeUserSettings={this.userSettingsChangeHandler}
+              uncheckedLegendItems={uncheckedLegendItems}
+              userSettings={userSettings}
+            />
+          )}
         </ChartJS>
       </div>
     ) : null;
