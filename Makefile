@@ -50,6 +50,7 @@ build-server: checkstyle test
 # Builds the project
 build-statics:
 	npm --prefix $(UI_BUILD_REACT) ci
+	npm --prefix $(UI_BUILD_REACT) install
 	npm --prefix $(UI_BUILD_REACT) run lint
 	npm --prefix $(UI_BUILD_REACT) run test
 	npm --prefix $(UI_BUILD_REACT) run storybook:build
@@ -57,6 +58,7 @@ build-statics:
 
 build-react:
 	npm --prefix $(UI_BUILD_REACT) ci
+	npm --prefix $(UI_BUILD_REACT) install
 	npm --prefix $(UI_BUILD_REACT) run lint
 	npm --prefix $(UI_BUILD_REACT) run test
 	npm --prefix $(UI_BUILD_REACT) run build
