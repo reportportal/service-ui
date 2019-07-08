@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 EPAM Systems
+ * Copyright 2019 EPAM Systems
  *
  *
  * This file is part of EPAM Report Portal.
@@ -31,7 +31,7 @@ import {
   NO_DEFECT,
   TO_INVESTIGATE,
 } from 'common/constants/defectTypes';
-import { Legend } from 'components/widgets/charts/common/legend/legend';
+import { Legend } from 'components/widgets/charts/common/legend';
 import { defectLinkSelector, statisticsLinkSelector } from 'controllers/testItem';
 import { activeProjectSelector } from 'controllers/user';
 import { TEST_ITEM_PAGE } from 'controllers/pages';

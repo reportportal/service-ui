@@ -40,7 +40,7 @@ export const TimelineTooltip = (itemData, messages, intl, integerValueType) => (
       date={date}
       itemCases={d[0].value}
       color={color(id)}
-      itemName={intl.formatMessage(messages[id])}
+      itemName={messages[id] ? intl.formatMessage(messages[id]) : id}
       integerValueType={integerValueType}
     />,
   );
