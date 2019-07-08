@@ -8,8 +8,9 @@ ENV APP_DOWNLOAD_URL https://dl.bintray.com/epam/reportportal/{{.version}}
 ADD ${APP_DOWNLOAD_URL}/service-ui_linux_amd64 /service-ui
 ADD ${APP_DOWNLOAD_URL}/ui.tar.gz /
 
+RUN mkdir /public
 RUN chmod +x /service-ui
-RUN tar -zxvf ui.tar.gz -C / && rm -f ui.tar.gz
+RUN tar -zxvf ui.tar.gz -C /public && rm -f ui.tar.gz
 
 ENV RP_STATICS_PATH=/public
 

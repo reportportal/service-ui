@@ -8,12 +8,13 @@ node {
 
         stage('Checkout'){
                 checkout scm
-                sh 'git checkout master'
+                sh 'git checkout v5-kronos'
                 sh 'git pull'
             }
 
             stage('Build') {
-                docker.image('node:6').inside('-u root') {
+                docker.image('node:10').inside('-u root') {
+                    sh 'npm config set unsafe-perm=true'
                     sh 'make build-statics'
                 }
             }

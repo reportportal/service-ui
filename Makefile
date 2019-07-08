@@ -75,7 +75,7 @@ build-release: checkstyle test
 	#gox -output "release/{{.Dir}}_{{.OS}}_{{.Arch}}" -os "linux windows" -arch "amd64" ${BUILD_INFO_LDFLAGS}
 
 	$(eval wd := $(shell pwd))
-	cd build/resources/main && tar -czvf "${wd}/${RELEASE_DIR}/ui.tar.gz" ./
+	cd ${UI_BUILD_REACT}/build && tar -czvf "${wd}/${RELEASE_DIR}/ui.tar.gz" ./
 
 # Builds the image
 build-image:
