@@ -1,7 +1,3 @@
-import { fetch } from 'common/utils';
-import { URLS } from 'common/urls';
-import { userIdSelector, activeProjectSelector } from 'controllers/user';
-import { removeFilterAction, addFilterAction } from 'controllers/filter';
 import {
   FETCH_PROJECT_SUCCESS,
   FETCH_PROJECT_PREFERENCES_SUCCESS,
@@ -31,6 +27,10 @@ import {
   UPDATE_PA_STATE,
   FETCH_PROJECT,
   FETCH_PROJECT_PREFERENCES,
+  FETCH_CONFIGURATION_ATTRIBUTES,
+  SHOW_FILTER_ON_LAUNCHES,
+  HIDE_FILTER_ON_LAUNCHES,
+  UPDATE_PROJECT_FILTER_PREFERENCES,
 } from './constants';
 
 export const fetchProjectSuccessAction = (project) => ({
@@ -58,27 +58,20 @@ export const updateProjectNotificationsConfigSuccessAction = (config) => ({
   payload: config,
 });
 
-export const updateProjectFilterPreferencesAction = (filterId, method) => (dispatch, getState) =>
-  fetch(
-    URLS.projectPreferences(
-      activeProjectSelector(getState()),
-      userIdSelector(getState()),
-      filterId,
-    ),
-    {
-      method,
-    },
-  );
+export const updateProjectFilterPreferencesAction = (filterId, method) => ({
+  type: UPDATE_PROJECT_FILTER_PREFERENCES,
+  payload: { filterId, method },
+});
 
-export const showFilterOnLaunchesAction = (filter) => (dispatch) => {
-  dispatch(addFilterAction(filter));
-  dispatch(updateProjectFilterPreferencesAction(filter.id, 'PUT'));
-};
+export const showFilterOnLaunchesAction = (filter) => ({
+  type: SHOW_FILTER_ON_LAUNCHES,
+  payload: filter,
+});
 
-export const hideFilterOnLaunchesAction = (filter) => (dispatch) => {
-  dispatch(removeFilterAction(filter.id));
-  dispatch(updateProjectFilterPreferencesAction(filter.id, 'DELETE'));
-};
+export const hideFilterOnLaunchesAction = (filter) => ({
+  type: HIDE_FILTER_ON_LAUNCHES,
+  payload: filter,
+});
 
 export const fetchProjectPreferencesAction = (projectId) => ({
   type: FETCH_PROJECT_PREFERENCES,
@@ -90,11 +83,10 @@ export const fetchProjectAction = (projectId, isAdminAccess) => ({
   payload: { projectId, isAdminAccess },
 });
 
-export const fetchConfigurationAttributesAction = (projectId) => (dispatch) => {
-  fetch(URLS.project(projectId)).then((project) => {
-    dispatch(updateConfigurationAttributesAction(project));
-  });
-};
+export const fetchConfigurationAttributesAction = (projectId) => ({
+  type: FETCH_CONFIGURATION_ATTRIBUTES,
+  payload: projectId,
+});
 
 export const updateProjectIntegrationAction = (data, id, callback) => ({
   type: UPDATE_PROJECT_INTEGRATION,
