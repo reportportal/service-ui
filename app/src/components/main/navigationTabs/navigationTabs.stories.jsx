@@ -54,9 +54,9 @@ const config = {
     component: <div>Notification</div>,
   },
   bts: {
-    name: 'Bts',
-    link: '/bts',
-    component: <div>Bts</div>,
+    name: 'Integration',
+    link: '/integrations',
+    component: <div>Integration</div>,
   },
   defect: {
     name: 'Defects',
