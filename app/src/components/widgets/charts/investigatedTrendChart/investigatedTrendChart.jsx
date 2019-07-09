@@ -254,16 +254,15 @@ export class InvestigatedTrendChart extends Component {
     const newHeight = this.props.container.offsetHeight;
     const newWidth = this.props.container.offsetWidth;
 
-    if (this.height !== newHeight) {
+    if (this.height !== newHeight || this.width !== newWidth) {
       this.chart.resize({
         height: newHeight,
+        width: newWidth,
       });
       this.height = newHeight;
+      this.width = newWidth;
       this.config.size.height = newHeight;
       this.config.size.width = newWidth;
-    } else if (this.width !== newWidth) {
-      this.chart.flush();
-      this.width = newWidth;
     }
   };
 
