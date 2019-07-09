@@ -1,11 +1,7 @@
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
 import { userIdSelector, activeProjectSelector } from 'controllers/user';
-import {
-  fetchUserFiltersSuccessAction,
-  removeFilterAction,
-  addFilterAction,
-} from 'controllers/filter';
+import { removeFilterAction, addFilterAction } from 'controllers/filter';
 import {
   FETCH_PROJECT_SUCCESS,
   FETCH_PROJECT_PREFERENCES_SUCCESS,
@@ -33,14 +29,16 @@ import {
   DELETE_PATTERN,
   DELETE_PATTERN_SUCCESS,
   UPDATE_PA_STATE,
+  FETCH_PROJECT,
+  FETCH_PROJECT_PREFERENCES,
 } from './constants';
 
-const fetchProjectSuccessAction = (project) => ({
+export const fetchProjectSuccessAction = (project) => ({
   type: FETCH_PROJECT_SUCCESS,
   payload: project,
 });
 
-const fetchProjectPreferencesSuccessAction = (preferences) => ({
+export const fetchProjectPreferencesSuccessAction = (preferences) => ({
   type: FETCH_PROJECT_PREFERENCES_SUCCESS,
   payload: preferences,
 });
@@ -82,17 +80,15 @@ export const hideFilterOnLaunchesAction = (filter) => (dispatch) => {
   dispatch(updateProjectFilterPreferencesAction(filter.id, 'DELETE'));
 };
 
-const fetchProjectPreferencesAction = (projectId) => (dispatch, getState) =>
-  fetch(URLS.projectPreferences(projectId, userIdSelector(getState()))).then((preferences) => {
-    dispatch(fetchProjectPreferencesSuccessAction(preferences));
-    dispatch(fetchUserFiltersSuccessAction(preferences.filters));
-  });
+export const fetchProjectPreferencesAction = (projectId) => ({
+  type: FETCH_PROJECT_PREFERENCES,
+  payload: projectId,
+});
 
-export const fetchProjectAction = (projectId, isAdminAccess) => (dispatch) =>
-  fetch(URLS.project(projectId)).then((project) => {
-    dispatch(fetchProjectSuccessAction(project));
-    !isAdminAccess && dispatch(fetchProjectPreferencesAction(projectId));
-  });
+export const fetchProjectAction = (projectId, isAdminAccess) => ({
+  type: FETCH_PROJECT,
+  payload: { projectId, isAdminAccess },
+});
 
 export const fetchConfigurationAttributesAction = (projectId) => (dispatch) => {
   fetch(URLS.project(projectId)).then((project) => {

@@ -19,6 +19,7 @@ import { itemsHistoryReducer } from 'controllers/itemsHistory';
 import { logReducer } from 'controllers/log';
 import { administrateReducer } from 'controllers/administrate';
 import { pluginsReducer } from 'controllers/plugins';
+import { initialDataReadyReducer } from 'controllers/initialData';
 
 export default {
   appInfo: appInfoReducer,
@@ -42,4 +43,5 @@ export default {
   itemsHistory: itemsHistoryReducer,
   administrate: administrateReducer,
   plugins: pluginsReducer,
+  initialDataReady: initialDataReadyReducer,
 };

@@ -1,7 +1,6 @@
 import { combineReducers } from 'redux';
 import { ADD_PROJECT_SUCCESS } from 'controllers/administrate/projects/constants';
 import {
-  FETCH_USER_SUCCESS,
   SET_ACTIVE_PROJECT,
   SET_START_TIME_FORMAT,
   SETTINGS_INITIAL_STATE,
@@ -9,6 +8,7 @@ import {
   SET_API_TOKEN,
   ASSIGN_TO_RROJECT_SUCCESS,
   UNASSIGN_FROM_PROJECT_SUCCESS,
+  FETCH_USER_SUCCESS,
 } from './constants';
 
 export const settingsReducer = (state = SETTINGS_INITIAL_STATE, { type, payload }) => {

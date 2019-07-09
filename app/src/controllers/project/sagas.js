@@ -10,6 +10,8 @@ import { projectIdSelector } from 'controllers/pages';
 import { hideModalAction } from 'controllers/modal';
 import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLock';
 import { fetch } from 'common/utils';
+import { userIdSelector } from 'controllers/user';
+import { fetchUserFiltersSuccessAction } from 'controllers/filter';
 
 import {
   UPDATE_DEFECT_SUBTYPE,
@@ -25,6 +27,8 @@ import {
   DELETE_PATTERN,
   PA_ATTRIBUTE_ENABLED_KEY,
   UPDATE_PA_STATE,
+  FETCH_PROJECT,
+  FETCH_PROJECT_PREFERENCES,
 } from './constants';
 import {
   updateDefectSubTypeSuccessAction,
@@ -39,6 +43,9 @@ import {
   updatePatternSuccessAction,
   deletePatternSuccessAction,
   updateConfigurationAttributesAction,
+  fetchProjectPreferencesAction,
+  fetchProjectSuccessAction,
+  fetchProjectPreferencesSuccessAction,
 } from './actionCreators';
 import { projectNotificationsConfigurationSelector } from './selectors';
 
@@ -357,6 +364,29 @@ function* watchUpdatePAState() {
   yield takeEvery(UPDATE_PA_STATE, updatePAState);
 }
 
+function* fetchProject({ payload: { projectId, isAdminAccess } }) {
+  const project = yield call(fetch, URLS.project(projectId));
+  yield put(fetchProjectSuccessAction(project));
+  if (!isAdminAccess) {
+    yield put(fetchProjectPreferencesAction(projectId));
+  }
+}
+
+function* watchFetchProject() {
+  yield takeEvery(FETCH_PROJECT, fetchProject);
+}
+
+function* fetchProjectPreferences({ payload: projectId }) {
+  const userId = yield select(userIdSelector);
+  const preferences = yield call(fetch, URLS.projectPreferences(projectId, userId));
+  yield put(fetchProjectPreferencesSuccessAction(preferences));
+  yield put(fetchUserFiltersSuccessAction(preferences.filters));
+}
+
+function* watchFetchProjectPreferences() {
+  yield takeEvery(FETCH_PROJECT_PREFERENCES, fetchProjectPreferences);
+}
+
 export function* projectSagas() {
   yield all([
     watchUpdateDefectSubType(),
@@ -371,5 +401,7 @@ export function* projectSagas() {
     watchUpdatePattern(),
     watchUpdatePAState(),
     watchDeletePattern(),
+    watchFetchProject(),
+    watchFetchProjectPreferences(),
   ]);
 }

@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { showModalAction } from 'controllers/modal';
 import classNames from 'classnames/bind';
-import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { apiTokenValueSelector, generateApiTokenAction } from 'controllers/user';
 import { Input } from 'components/inputs/input/input';
 import { GhostButton } from 'components/buttons/ghostButton';
@@ -43,7 +42,7 @@ const messages = defineMessages({
   (state) => ({
     token: apiTokenValueSelector(state),
   }),
-  { showNotification, showModalAction, generateApiTokenAction },
+  { showModalAction, generateApiTokenAction },
 )
 @injectIntl
 @track()
@@ -52,13 +51,13 @@ export class UuidBlock extends Component {
     intl: intlShape.isRequired,
     showModalAction: PropTypes.func.isRequired,
     generateApiTokenAction: PropTypes.func.isRequired,
-    showNotification: PropTypes.func.isRequired,
     token: PropTypes.string,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
   };
+
   static defaultProps = {
     token: '',
   };
@@ -74,25 +73,18 @@ export class UuidBlock extends Component {
   setupRef = (node) => {
     this.inputLink = node;
   };
+
   selectUuid = () => {
     this.inputLink.select();
   };
+
   regenerateHandler = () => {
-    this.props
-      .generateApiTokenAction()
-      .then(() => {
-        this.props.showNotification({
-          message: this.props.intl.formatMessage(messages.regenerateSuccess),
-          type: NOTIFICATION_TYPES.SUCCESS,
-        });
-      })
-      .catch(() => {
-        this.props.showNotification({
-          message: this.props.intl.formatMessage(messages.regenerateError),
-          type: NOTIFICATION_TYPES.ERROR,
-        });
-      });
+    this.props.generateApiTokenAction({
+      successMessage: this.props.intl.formatMessage(messages.regenerateSuccess),
+      errorMessage: this.props.intl.formatMessage(messages.regenerateError),
+    });
   };
+
   render = () => {
     const { intl } = this.props;
     return (
