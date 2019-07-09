@@ -13,11 +13,12 @@ node {
             }
 
         stage('Build') {
-                docker.image('node:11').inside('-u root') {
-                    sh 'node -v'
-                    sh 'export NODE_OPTIONS=--max_old_space_size=4096'
-                    sh 'npm config set unsafe-perm=true'
-                    sh 'make build-statics'
+                withEnv(["NODE_OPTIONS=--max_old_space_size=4096"]) {
+                        docker.image('node:11').inside('-u root') {
+                            sh 'node -v'
+                            sh 'npm config set unsafe-perm=true'
+                            sh 'make build-statics'
+                        }
                 }
             }
 
