@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="160" height="135" viewBox="0 0 160 135" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <defs>
+    <path id="a" d="M40.7816156,48.8114762 C36.446421,51.5697406 29.0547602,55.5748202 14.1094365,55 C13.1094365,65 19.1094361,72 26.109436,70 C34.1394543,67.9924955 40.3783287,69.5672793 43.6274822,70.8289772 C47.4627692,84.4540056 56.7472026,101.445535 56.7472026,101.445535 C56.7472026,101.445535 53.6508328,77.4486755 79.9699683,85.9636903 C84.6204524,87.5431 97,101.445535 97,101.445535 L88.340038,75.4656546 L95,65 L85.136263,71.5758247 C78.6642909,72.5719593 56.4193938,74.6385299 46.109437,58.2170422 L46.1094365,46 C46.1094365,46 46.072071,46.0125203 46,46.0390022 L46,39 L36,43 L42.5,44 L40.7816156,48.8114762 Z"/>
+    <filter id="b" width="200%" height="200%" x="-50%" y="-50%" filterUnits="objectBoundingBox">
+      <feOffset dx="-2" dy="-3" in="SourceAlpha" result="shadowOffsetInner1"/>
+      <feComposite in="shadowOffsetInner1" in2="SourceAlpha" operator="arithmetic" k2="-1" k3="1" result="shadowInnerInner1"/>
+      <feColorMatrix values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.145125679 0" in="shadowInnerInner1"/>
+    </filter>
+    <path id="c" d="M0.109436475,9 C15.4810934,9.59121761 22.8619862,5.33751433 27.1452583,2.57860687 C30.106818,0.671030423 32.1094365,0 32.1094365,0 L32.1094376,26 C32.1094376,26 24.1094364,21 12.109436,24 C5.10943607,26 -0.890563495,19 0.109436475,9 Z"/>
+  </defs>
+  <g fill="none" fill-rule="evenodd" transform="rotate(-16 138.41 20.304)">
+    <circle cx="32" cy="55" r="24" fill="#FFFFFF" fill-opacity=".302"/>
+    <use fill="#B1BBB4" xlink:href="#a"/>
+    <use fill="black" filter="url(#b)" xlink:href="#a"/>
+    <g transform="translate(14 46)">
+      <mask id="d" fill="white">
+        <use xlink:href="#c"/>
+      </mask>
+      <ellipse cx="-1" cy="8.5" fill="#393939" mask="url(#d)" rx="7" ry="5.5"/>
+      <path stroke="#777777" d="M9,25.5 C9,25.5 15.5,23.5 16.5,17.5" mask="url(#d)"/>
+    </g>
+    <circle cx="36" cy="56" r="2" fill="#464547"/>
+    <path fill="#FFFFFF" fill-opacity=".104" stroke="#F5F5F5" d="M32,79 C45.254834,79 56,68.254834 56,55 C56,41.745166 45.254834,31 32,31 C18.745166,31 8,41.745166 8,55 C8,68.254834 18.745166,79 32,79 Z"/>
+    <path stroke="#F5F5F5" stroke-width="5" d="M45.127086,75.0950623 C48.9030615,72.6233828 51.940001,69.1161474 53.8344671,64.9767934"/>
+  </g>
+</svg>

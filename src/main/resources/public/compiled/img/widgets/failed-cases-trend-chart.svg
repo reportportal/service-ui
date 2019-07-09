@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="252" height="126" viewBox="0 0 252 126">
+  <defs>
+    <circle id="wdgt-failed-cases_trend_chart-a" cx="6" cy="46" r="6"/>
+    <circle id="wdgt-failed-cases_trend_chart-b" cx="6" cy="6" r="6"/>
+  </defs>
+  <g fill="none" fill-rule="evenodd">
+    <rect width="250" height="125" x="1"/>
+    <g stroke="#F5F5F5" transform="translate(2 16)">
+      <path d="M-2.84217094e-14 87.5L248 87.5M-2.84217094e-14 65.5L248 65.5M-2.84217094e-14 44.5L248 44.5M-2.84217094e-14 22.5L248 22.5M-2.84217094e-14.5L248 .5"/>
+    </g>
+    <polyline stroke="#F19586" stroke-width="2" points="1 125 81 65.98 111 86.541 171 28.082 251 125" transform="matrix(-1 0 0 1 252 0)"/>
+    <polyline stroke="#F5CC90" stroke-width="2" points="1 125 81.093 103.958 110.937 109.039 171 68.388 251 125" transform="matrix(-1 0 0 1 252 0)"/>
+    <polyline stroke="#F19586" stroke-width="2" points="1 125 81 65.98 111 86.541 171 28.082 251 125" transform="matrix(-1 0 0 1 252 0)"/>
+    <polyline stroke="#F5CC90" stroke-width="2" points="1 125 81.093 103.958 110.937 109.039 171 68.388 251 125" transform="matrix(-1 0 0 1 252 0)"/>
+    <polyline stroke="#F19586" stroke-width="2" points="1 125 81 65.98 111 86.541 171 28.082 251 125" transform="matrix(-1 0 0 1 252 0)"/>
+    <polyline stroke="#F5CC90" stroke-width="2" points="1 125 81.093 103.958 110.937 109.039 171 68.388 251 125" transform="matrix(-1 0 0 1 252 0)"/>
+    <g transform="translate(75 24)">
+      <path stroke="#FFF" stroke-linecap="square" stroke-width="2" d="M6,2.99482249 L6,99.568945"/>
+      <use fill="#F7CC90" xlink:href="#wdgt-failed-cases_trend_chart-a"/>
+      <circle cx="6" cy="46" r="5" stroke="#FFF" stroke-opacity=".602" stroke-width="2"/>
+      <g>
+        <use fill="#EE9583" xlink:href="#wdgt-failed-cases_trend_chart-b"/>
+        <circle cx="6" cy="6" r="5" stroke="#FFF" stroke-opacity=".6" stroke-width="2"/>
+      </g>
+    </g>
+  </g>
+</svg>

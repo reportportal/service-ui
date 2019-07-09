@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="250" height="125" viewBox="0 0 250 125">
+  <defs>
+    <rect id="wdgt-different-launches-comparison-chart-a" width="30" height="75" x="30" y="30"/>
+    <filter id="wdgt-different-launches-comparison-chart-b" width="106.7%" height="102.7%" x="-3.3%" y="-1.3%" filterUnits="objectBoundingBox">
+      <feOffset dx="2" in="SourceAlpha" result="shadowOffsetInner1"/>
+      <feComposite in="shadowOffsetInner1" in2="SourceAlpha" k2="-1" k3="1" operator="arithmetic" result="shadowInnerInner1"/>
+      <feColorMatrix in="shadowInnerInner1" values="0 0 0 0 1   0 0 0 0 1   0 0 0 0 1  0 0 0 0.4 0"/>
+    </filter>
+    <rect id="wdgt-different-launches-comparison-chart-c" width="30" height="35" x="60" y="70"/>
+    <filter id="wdgt-different-launches-comparison-chart-d" width="106.7%" height="105.7%" x="-3.3%" y="-2.9%" filterUnits="objectBoundingBox">
+      <feOffset dx="2" in="SourceAlpha" result="shadowOffsetInner1"/>
+      <feComposite in="shadowOffsetInner1" in2="SourceAlpha" k2="-1" k3="1" operator="arithmetic" result="shadowInnerInner1"/>
+      <feColorMatrix in="shadowInnerInner1" values="0 0 0 0 1   0 0 0 0 1   0 0 0 0 1  0 0 0 0.3 0"/>
+    </filter>
+    <rect id="wdgt-different-launches-comparison-chart-e" width="30" height="105" x="100"/>
+    <filter id="wdgt-different-launches-comparison-chart-f" width="106.7%" height="101.9%" x="-3.3%" y="-1%" filterUnits="objectBoundingBox">
+      <feOffset dx="2" in="SourceAlpha" result="shadowOffsetInner1"/>
+      <feComposite in="shadowOffsetInner1" in2="SourceAlpha" k2="-1" k3="1" operator="arithmetic" result="shadowInnerInner1"/>
+      <feColorMatrix in="shadowInnerInner1" values="0 0 0 0 1   0 0 0 0 1   0 0 0 0 1  0 0 0 0.4 0"/>
+    </filter>
+    <rect id="wdgt-different-launches-comparison-chart-g" width="30" height="85" x="130" y="20"/>
+    <filter id="wdgt-different-launches-comparison-chart-h" width="106.7%" height="102.4%" x="-3.3%" y="-1.2%" filterUnits="objectBoundingBox">
+      <feOffset dx="2" in="SourceAlpha" result="shadowOffsetInner1"/>
+      <feComposite in="shadowOffsetInner1" in2="SourceAlpha" k2="-1" k3="1" operator="arithmetic" result="shadowInnerInner1"/>
+      <feColorMatrix in="shadowInnerInner1" values="0 0 0 0 1   0 0 0 0 1   0 0 0 0 1  0 0 0 0.3 0"/>
+    </filter>
+    <rect id="wdgt-different-launches-comparison-chart-i" width="30" height="20" x="160" y="85"/>
+    <filter id="wdgt-different-launches-comparison-chart-j" width="106.7%" height="110%" x="-3.3%" y="-5%" filterUnits="objectBoundingBox">
+      <feOffset dx="2" in="SourceAlpha" result="shadowOffsetInner1"/>
+      <feComposite in="shadowOffsetInner1" in2="SourceAlpha" k2="-1" k3="1" operator="arithmetic" result="shadowInnerInner1"/>
+      <feColorMatrix in="shadowInnerInner1" values="0 0 0 0 1   0 0 0 0 1   0 0 0 0 1  0 0 0 0.4 0"/>
+    </filter>
+  </defs>
+  <g fill="none" fill-rule="evenodd">
+    <rect width="250" height="125"/>
+    <g stroke="#F5F5F5" transform="translate(1 16)">
+      <path d="M-2.84217094e-14 87.5L248 87.5M-2.84217094e-14 65.5L248 65.5M-2.84217094e-14 44.5L248 44.5M-2.84217094e-14 22.5L248 22.5M-2.84217094e-14.5L248 .5"/>
+    </g>
+    <g transform="translate(30 20)">
+      <rect width="30" height="55" y="50" fill="#D6E4AA"/>
+      <use fill="#B6E4E3" xlink:href="#wdgt-different-launches-comparison-chart-a"/>
+      <use fill="#000" filter="url(#wdgt-different-launches-comparison-chart-b)" xlink:href="#wdgt-different-launches-comparison-chart-a"/>
+      <use fill="#EE9583" xlink:href="#wdgt-different-launches-comparison-chart-c"/>
+      <use fill="#000" filter="url(#wdgt-different-launches-comparison-chart-d)" xlink:href="#wdgt-different-launches-comparison-chart-c"/>
+      <use fill="#D6E4AA" xlink:href="#wdgt-different-launches-comparison-chart-e"/>
+      <use fill="#000" filter="url(#wdgt-different-launches-comparison-chart-f)" xlink:href="#wdgt-different-launches-comparison-chart-e"/>
+      <g>
+        <use fill="#B6E4E3" xlink:href="#wdgt-different-launches-comparison-chart-g"/>
+        <use fill="#000" filter="url(#wdgt-different-launches-comparison-chart-h)" xlink:href="#wdgt-different-launches-comparison-chart-g"/>
+      </g>
+      <g>
+        <use fill="#EE9583" xlink:href="#wdgt-different-launches-comparison-chart-i"/>
+        <use fill="#000" filter="url(#wdgt-different-launches-comparison-chart-j)" xlink:href="#wdgt-different-launches-comparison-chart-i"/>
+      </g>
+    </g>
+  </g>
+</svg>

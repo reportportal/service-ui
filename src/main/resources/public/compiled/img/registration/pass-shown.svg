@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="18" height="12" viewBox="0 0 18 12" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <defs>
+    <path id="a" d="M9,0.6 C4.90909091,0.6 1.41545455,3.088 0,6.6 C1.41545455,10.112 4.90909091,12.6 9,12.6 C13.0909091,12.6 16.5845455,10.112 18,6.6 C16.5845455,3.088 13.095,0.6 9,0.6 Z"/>
+    <mask id="b" width="18" height="12" x="0" y="0" fill="white">
+      <use xlink:href="#a"/>
+    </mask>
+  </defs>
+  <g fill="none" fill-rule="evenodd" transform="translate(0 -.6)">
+    <use stroke="#979797" stroke-width="4" mask="url(#b)" xlink:href="#a"/>
+    <ellipse cx="9" cy="6.6" fill="#999999" rx="2" ry="2"/>
+  </g>
+</svg>
