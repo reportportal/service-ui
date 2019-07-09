@@ -1,7 +1,4 @@
-import { fetch, getStorageItem, setStorageItem } from 'common/utils';
-import { URLS } from 'common/urls';
 import {
-  FETCH_USER_SUCCESS,
   SET_ACTIVE_PROJECT,
   SET_START_TIME_FORMAT,
   SET_API_TOKEN,
@@ -11,12 +8,21 @@ import {
   ASSIGN_TO_RROJECT_ERROR,
   UNASSIGN_FROM_PROJECT,
   UNASSIGN_FROM_PROJECT_SUCCESS,
+  FETCH_API_TOKEN,
+  GENERATE_API_TOKEN,
+  FETCH_USER_SUCCESS,
+  FETCH_USER,
+  FETCH_USER_ERROR,
 } from './constants';
-import { userInfoSelector } from './selectors';
 
-const fetchUserSuccessAction = (user) => ({
+export const fetchUserSuccessAction = (user) => ({
   type: FETCH_USER_SUCCESS,
   payload: user,
+});
+
+export const fetchUserErrorAction = () => ({
+  type: FETCH_USER_ERROR,
+  error: true,
 });
 
 export const setPhotoTimeStampAction = (timeStamp) => ({
@@ -24,7 +30,7 @@ export const setPhotoTimeStampAction = (timeStamp) => ({
   payload: timeStamp,
 });
 
-const setApiTokenAction = (token) => ({
+export const setApiTokenAction = (token) => ({
   type: SET_API_TOKEN,
   payload: {
     type: token.token_type,
@@ -32,42 +38,19 @@ const setApiTokenAction = (token) => ({
   },
 });
 
-export const setActiveProjectAction = (project) => (dispatch, getState) => {
-  const user = userInfoSelector(getState());
-  const currentUserSettings = getStorageItem(`${user.userId}_settings`) || {};
-  setStorageItem(`${user.userId}_settings`, { ...currentUserSettings, activeProject: project });
-  dispatch({
-    type: SET_ACTIVE_PROJECT,
-    payload: project,
-  });
-};
+export const setActiveProjectAction = (project) => ({
+  type: SET_ACTIVE_PROJECT,
+  payload: project,
+});
 
-export const generateApiTokenAction = () => (dispatch) =>
-  fetch(URLS.apiToken(), { method: 'post' }).then((res) => {
-    dispatch(setApiTokenAction(res));
-  });
+export const generateApiTokenAction = ({ successMessage, errorMessage }) => ({
+  type: GENERATE_API_TOKEN,
+  payload: { successMessage, errorMessage },
+});
 
-export const fetchApiTokenAction = () => (dispatch) =>
-  fetch(URLS.apiToken(), { method: 'get' })
-    .then((res) => {
-      dispatch(setApiTokenAction(res));
-    })
-    .catch(() => dispatch(generateApiTokenAction()));
+export const fetchApiTokenAction = () => ({ type: FETCH_API_TOKEN });
 
-export const fetchUserAction = () => (dispatch) =>
-  fetch(URLS.user()).then((user) => {
-    const userSettings = getStorageItem(`${user.userId}_settings`) || {};
-    const savedActiveProject = userSettings.activeProject;
-    const activeProject =
-      savedActiveProject &&
-      Object.prototype.hasOwnProperty.call(user.assignedProjects, savedActiveProject)
-        ? savedActiveProject
-        : Object.keys(user.assignedProjects)[0];
-    dispatch(fetchApiTokenAction());
-    dispatch(fetchUserSuccessAction(user));
-    dispatch(setActiveProjectAction(activeProject));
-    return { user, activeProject };
-  });
+export const fetchUserAction = () => ({ type: FETCH_USER });
 
 export const setStartTimeFormatAction = (format) => ({
   type: SET_START_TIME_FORMAT,

@@ -1,4 +1,4 @@
-import { all, call, put, select, takeEvery } from 'redux-saga/effects';
+import { all, call, put, select, takeEvery, take } from 'redux-saga/effects';
 import { fetch, setStorageItem, updateStorageItem } from 'common/utils';
 import { URLS } from 'common/urls';
 import { APPLICATION_SETTINGS } from 'common/constants/localStorageKeys';
@@ -10,7 +10,13 @@ import {
   LOGIN_PAGE,
 } from 'controllers/pages';
 import { NOTIFICATION_TYPES } from 'controllers/notification/constants';
-import { activeProjectSelector, fetchUserAction } from 'controllers/user';
+import {
+  activeProjectSelector,
+  FETCH_USER_ERROR,
+  FETCH_USER_SUCCESS,
+  fetchUserAction,
+  SET_ACTIVE_PROJECT,
+} from 'controllers/user';
 import { fetchProjectAction } from 'controllers/project';
 import { fetchPluginsAction, fetchGlobalIntegrationsAction } from 'controllers/plugins';
 import { fetchApiInfoAction, fetchUatInfoAction } from 'controllers/appInfo';
@@ -67,8 +73,9 @@ function* loginSuccessHandler({ payload }) {
     }),
   );
   yield put(fetchUatInfoAction());
-  // TODO: Change those calls after project & users actions will be refactored with sagas
-  yield put.resolve(fetchUserAction());
+  yield put(fetchUserAction());
+  yield take([FETCH_USER_SUCCESS, FETCH_USER_ERROR]);
+  yield take(SET_ACTIVE_PROJECT);
   const projectId = yield select(activeProjectSelector);
   yield put(fetchProjectAction(projectId));
   yield put(fetchApiInfoAction());

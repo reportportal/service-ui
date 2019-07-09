@@ -1,3 +1,5 @@
+export const FETCH_USER = 'FETCH_USER';
+export const FETCH_USER_ERROR = 'fetchUserError';
 export const FETCH_USER_SUCCESS = 'fetchUserSuccess';
 export const SET_ACTIVE_PROJECT = 'setActiveProject';
 export const SET_START_TIME_FORMAT = 'setStartTimeFormat';
@@ -17,3 +19,6 @@ export const ASSIGN_TO_RROJECT_SUCCESS = 'assignToProjectSuccess';
 export const ASSIGN_TO_RROJECT_ERROR = 'assignToProjectError';
 export const UNASSIGN_FROM_PROJECT = 'unassignFromProject';
 export const UNASSIGN_FROM_PROJECT_SUCCESS = 'unassignFromProjectSuccess';
+
+export const GENERATE_API_TOKEN = 'generateApiToken';
+export const FETCH_API_TOKEN = 'fetchApiToken';
