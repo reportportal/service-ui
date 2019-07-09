@@ -28,7 +28,7 @@ import {
   ACTIONS_WITH_DASHBOARDS,
   ACTIONS_WITH_WIDGETS,
   ACTIONS_WITH_FILTERS,
-  ACTIONS_WITH_BTS,
+  ACTIONS_WITH_INTEGRATIONS,
   ACTIONS_WITH_AA_SETTINGS,
   ACTIONS_WITH_DEFECTS,
   ACTIONS_WITH_IMPORT,
@@ -158,9 +158,9 @@ const messages = defineMessages({
     id: 'WidgetCriteriaOption.filters_actions',
     defaultMessage: 'Update filter',
   },
-  [ACTIONS_WITH_BTS]: {
-    id: 'WidgetCriteriaOption.bts_actions',
-    defaultMessage: 'Update BTS',
+  [ACTIONS_WITH_INTEGRATIONS]: {
+    id: 'WidgetCriteriaOption.integration_actions',
+    defaultMessage: 'Update integration',
   },
   [UPDATE_PROJECT]: {
     id: 'WidgetCriteriaOption.update_project',
@@ -295,7 +295,7 @@ const getUserActionOptions = (formatMessage) => [
   { value: ACTIONS_WITH_DASHBOARDS, label: formatMessage(messages[ACTIONS_WITH_DASHBOARDS]) },
   { value: ACTIONS_WITH_WIDGETS, label: formatMessage(messages[ACTIONS_WITH_WIDGETS]) },
   { value: ACTIONS_WITH_FILTERS, label: formatMessage(messages[ACTIONS_WITH_FILTERS]) },
-  { value: ACTIONS_WITH_BTS, label: formatMessage(messages[ACTIONS_WITH_BTS]) },
+  { value: ACTIONS_WITH_INTEGRATIONS, label: formatMessage(messages[ACTIONS_WITH_INTEGRATIONS]) },
   { value: UPDATE_PROJECT, label: formatMessage(messages[UPDATE_PROJECT]) },
   { value: ACTIONS_WITH_AA_SETTINGS, label: formatMessage(messages[ACTIONS_WITH_AA_SETTINGS]) },
   { value: ACTIONS_WITH_DEFECTS, label: formatMessage(messages[ACTIONS_WITH_DEFECTS]) },

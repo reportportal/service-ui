@@ -3,24 +3,28 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { injectIntl, intlShape, defineMessages } from 'react-intl';
 import Link from 'redux-first-router-link';
-import { BTS } from 'common/constants/settingsTabs';
-import { UPDATE_BTS, CREATE_BTS, DELETE_BTS } from 'common/constants/actionTypes';
+import { INTEGRATIONS } from 'common/constants/settingsTabs';
+import {
+  UPDATE_INTEGRATION,
+  CREATE_INTEGRATION,
+  DELETE_INTEGRATION,
+} from 'common/constants/actionTypes';
 import { getProjectSettingTabPageLink } from './utils';
 import styles from './common.scss';
 
 const cx = classNames.bind(styles);
 
 const messages = defineMessages({
-  [CREATE_BTS]: {
-    id: 'ExternalSystems.creteBTs',
+  [CREATE_INTEGRATION]: {
+    id: 'ExternalSystems.createIntegration',
     defaultMessage: 'configured',
   },
-  [UPDATE_BTS]: {
-    id: 'ExternalSystems.updateBts',
+  [UPDATE_INTEGRATION]: {
+    id: 'ExternalSystems.updateIntegration',
     defaultMessage: 'updated',
   },
-  [DELETE_BTS]: {
-    id: 'ExternalSystems.deleteBts',
+  [DELETE_INTEGRATION]: {
+    id: 'ExternalSystems.deleteIntegration',
     defaultMessage: 'removed',
   },
   properties: {
@@ -34,7 +38,7 @@ const messages = defineMessages({
 });
 
 @injectIntl
-export class Bts extends Component {
+export class Integration extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
     activity: PropTypes.object,
@@ -43,7 +47,7 @@ export class Bts extends Component {
     activity: {},
   };
 
-  btsName = (val) => {
+  integrationName = (val) => {
     const [type, name] = val.split(':');
     return { type, name: name && name !== 'null' ? name : null };
   };
@@ -53,28 +57,30 @@ export class Bts extends Component {
       activity,
       intl: { formatMessage },
     } = this.props;
-    const bts = this.btsName(activity.details.objectName);
+    const integration = this.integrationName(activity.details.objectName);
     const linksParams = {
       target: '_blank',
-      to: getProjectSettingTabPageLink(activity.projectName, BTS),
+      to: getProjectSettingTabPageLink(activity.projectName, INTEGRATIONS),
       className: cx('link'),
     };
     return (
       <Fragment>
         <span className={cx('user-name')}>{activity.user}</span>
         {`${messages[activity.actionType] && formatMessage(messages[activity.actionType])} ${
-          bts.type
+          integration.type
         }`}
-        {activity.actionType === UPDATE_BTS && (
+        {activity.actionType === UPDATE_INTEGRATION && (
           <Fragment>
-            {` ${bts.name}`}
+            {` ${integration.name}`}
             <Link {...linksParams}>{formatMessage(messages.properties)}.</Link>
           </Fragment>
         )}
-        {activity.actionType === CREATE_BTS && <Link {...linksParams}>{bts.name}.</Link>}
-        {activity.actionType === DELETE_BTS && (
+        {activity.actionType === CREATE_INTEGRATION && (
+          <Link {...linksParams}>{integration.name}.</Link>
+        )}
+        {activity.actionType === DELETE_INTEGRATION && (
           <Fragment>
-            <Link {...linksParams}>{bts.name}</Link>
+            <Link {...linksParams}>{integration.name}</Link>
             {formatMessage(messages.fromProject)}.
           </Fragment>
         )}

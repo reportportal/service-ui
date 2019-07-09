@@ -39,9 +39,9 @@ import {
   LINK_ISSUE,
   UNLINK_ISSUE,
   UPDATE_ANALYZER,
-  CREATE_BTS,
-  UPDATE_BTS,
-  DELETE_BTS,
+  CREATE_INTEGRATION,
+  UPDATE_INTEGRATION,
+  DELETE_INTEGRATION,
   GENERATE_INDEX,
   DELETE_INDEX,
   UPDATE_ITEM,
@@ -138,17 +138,17 @@ export const actionMessages = defineMessages({
     id: 'EventActions.unlinkIssue',
     defaultMessage: 'Unlink issue',
   },
-  [CREATE_BTS]: {
-    id: 'EventActions.createBts',
-    defaultMessage: 'Create BTS',
+  [CREATE_INTEGRATION]: {
+    id: 'EventActions.createIntegration',
+    defaultMessage: 'Create integration',
   },
-  [UPDATE_BTS]: {
-    id: 'EventActions.updateBts',
-    defaultMessage: 'Update BTS',
+  [UPDATE_INTEGRATION]: {
+    id: 'EventActions.updateIntegration',
+    defaultMessage: 'Update integration',
   },
-  [DELETE_BTS]: {
-    id: 'EventActions.deleteBts',
-    defaultMessage: 'Delete BTS',
+  [DELETE_INTEGRATION]: {
+    id: 'EventActions.deleteIntegration',
+    defaultMessage: 'Delete integration',
   },
   [UPDATE_ANALYZER]: {
     id: 'EventActions.updateAnalyzer',

@@ -234,7 +234,7 @@ export const data = [
     id: '5bd977819daec2000132df87',
   },
   {
-    actionType: 'updateBts',
+    actionType: 'updateIntegration',
     userRef: 'default',
     name: 'JIRA:EPMRPP',
     loggedObjectRef: '5bd96dd69daec2000132dd02',
@@ -384,7 +384,7 @@ export const data = [
     id: '5bd96e8f9daec2000132dd05',
   },
   {
-    actionType: 'createBts',
+    actionType: 'createIntegration',
     userRef: 'default',
     name$oldValue: '',
     name: 'JIRA:EPMRPP',
@@ -396,7 +396,7 @@ export const data = [
     id: '5bd96dd69daec2000132dd03',
   },
   {
-    actionType: 'deleteBts',
+    actionType: 'deleteIntegration',
     userRef: 'default',
     name$oldValue: 'RALLY:37655118707',
     name: 'RALLY:37655118707',
@@ -408,7 +408,7 @@ export const data = [
     id: '5bd968459daec2000132db77',
   },
   {
-    actionType: 'updateBts',
+    actionType: 'updateIntegration',
     userRef: 'default',
     name: 'RALLY:37655118707',
     loggedObjectRef: '5bd960ee9daec2000132db70',
@@ -418,7 +418,7 @@ export const data = [
     id: '5bd961089daec2000132db73',
   },
   {
-    actionType: 'updateBts',
+    actionType: 'updateIntegration',
     userRef: 'default',
     name: 'RALLY:37655118707',
     loggedObjectRef: '5bd960ee9daec2000132db70',
@@ -428,7 +428,7 @@ export const data = [
     id: '5bd960f89daec2000132db72',
   },
   {
-    actionType: 'createBts',
+    actionType: 'createIntegration',
     userRef: 'default',
     name$oldValue: '',
     name: 'RALLY:37655118707',
@@ -525,7 +525,7 @@ export const data = [
     id: '5bd71d609daec2000132c7a0',
   },
   {
-    actionType: 'deleteBts',
+    actionType: 'deleteIntegration',
     userRef: 'default',
     name$oldValue: 'RALLY:37655118707',
     name: 'RALLY:37655118707',

@@ -11,7 +11,7 @@ import {
   ACTIONS_WITH_DASHBOARDS,
   ACTIONS_WITH_WIDGETS,
   ACTIONS_WITH_FILTERS,
-  ACTIONS_WITH_BTS,
+  ACTIONS_WITH_INTEGRATIONS,
   ACTIONS_WITH_AA_SETTINGS,
   ACTIONS_WITH_DEFECTS,
   ACTIONS_WITH_IMPORT,
@@ -30,7 +30,7 @@ import DefaultUserImage from 'common/img/default-user-avatar.png';
 import { DefaultProjectSettings } from './activities/defaultProjectSettings';
 import { AnalysisProperties } from './activities/analysisProperties';
 import { AnalysisConfigurations } from './activities/analysisConfigurations';
-import { Bts } from './activities/bts';
+import { Integration } from './activities/integration';
 import { Launch } from './activities/launch';
 import { TestItem } from './activities/testItem';
 import { CreateUser } from './activities/createUser';
@@ -232,8 +232,8 @@ export class ProjectActivity extends Component {
       case ACTIONS_WITH_WIDGETS:
       case ACTIONS_WITH_FILTERS:
         return <CommonEntity activity={activity} />;
-      case ACTIONS_WITH_BTS:
-        return <Bts activity={activity} />;
+      case ACTIONS_WITH_INTEGRATIONS:
+        return <Integration activity={activity} />;
       case ACTIONS_WITH_AA_SETTINGS:
         return activity.actionType === UPDATE_ANALYZER ? (
           <AnalysisProperties activity={activity} />
