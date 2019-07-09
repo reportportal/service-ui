@@ -10,8 +10,12 @@ import { projectIdSelector } from 'controllers/pages';
 import { hideModalAction } from 'controllers/modal';
 import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLock';
 import { fetch } from 'common/utils';
-import { userIdSelector } from 'controllers/user';
-import { fetchUserFiltersSuccessAction } from 'controllers/filter';
+import { activeProjectSelector, userIdSelector } from 'controllers/user';
+import {
+  addFilterAction,
+  fetchUserFiltersSuccessAction,
+  removeFilterAction,
+} from 'controllers/filter';
 
 import {
   UPDATE_DEFECT_SUBTYPE,
@@ -29,6 +33,10 @@ import {
   UPDATE_PA_STATE,
   FETCH_PROJECT,
   FETCH_PROJECT_PREFERENCES,
+  FETCH_CONFIGURATION_ATTRIBUTES,
+  HIDE_FILTER_ON_LAUNCHES,
+  SHOW_FILTER_ON_LAUNCHES,
+  UPDATE_PROJECT_FILTER_PREFERENCES,
 } from './constants';
 import {
   updateDefectSubTypeSuccessAction,
@@ -46,6 +54,7 @@ import {
   fetchProjectPreferencesAction,
   fetchProjectSuccessAction,
   fetchProjectPreferencesSuccessAction,
+  updateProjectFilterPreferencesAction,
 } from './actionCreators';
 import { projectNotificationsConfigurationSelector } from './selectors';
 
@@ -387,6 +396,44 @@ function* watchFetchProjectPreferences() {
   yield takeEvery(FETCH_PROJECT_PREFERENCES, fetchProjectPreferences);
 }
 
+function* fetchConfigurationAttributes({ payload: projectId }) {
+  const project = yield call(fetch, URLS.project(projectId));
+  yield put(updateConfigurationAttributesAction(project));
+}
+
+function* watchFetchConfigurationAttributes() {
+  yield takeEvery(FETCH_CONFIGURATION_ATTRIBUTES, fetchConfigurationAttributes);
+}
+
+function* hideFilterOnLaunches({ payload: filter }) {
+  yield put(removeFilterAction(filter.id));
+  yield put(updateProjectFilterPreferencesAction(filter.id, 'DELETE'));
+}
+
+function* watchHideFilterOnLaunches() {
+  yield takeEvery(HIDE_FILTER_ON_LAUNCHES, hideFilterOnLaunches);
+}
+
+function* showFilterOnLaunches({ payload: filter }) {
+  yield put(addFilterAction(filter));
+  yield put(updateProjectFilterPreferencesAction(filter.id, 'PUT'));
+}
+
+function* watchShowFilterOnLaunches() {
+  yield takeEvery(SHOW_FILTER_ON_LAUNCHES, showFilterOnLaunches);
+}
+
+function* updateProjectFilterPreferences({ payload = {} }) {
+  const { filterId, method } = payload;
+  const activeProject = yield select(activeProjectSelector);
+  const userId = yield select(userIdSelector);
+  yield call(fetch, URLS.projectPreferences(activeProject, userId, filterId), { method });
+}
+
+function* watchUpdateProjectFilterPreferences() {
+  yield takeEvery(UPDATE_PROJECT_FILTER_PREFERENCES, updateProjectFilterPreferences);
+}
+
 export function* projectSagas() {
   yield all([
     watchUpdateDefectSubType(),
@@ -403,5 +450,9 @@ export function* projectSagas() {
     watchDeletePattern(),
     watchFetchProject(),
     watchFetchProjectPreferences(),
+    watchFetchConfigurationAttributes(),
+    watchHideFilterOnLaunches(),
+    watchShowFilterOnLaunches(),
+    watchUpdateProjectFilterPreferences(),
   ]);
 }
