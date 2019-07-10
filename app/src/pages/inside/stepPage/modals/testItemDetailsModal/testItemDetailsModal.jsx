@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
@@ -44,10 +44,6 @@ const messages = defineMessages({
     id: 'TestItemDetailsModal.duration',
     defaultMessage: 'Duration:',
   },
-  tags: {
-    id: 'TestItemDetailsModal.tags',
-    defaultMessage: 'Tags:',
-  },
   description: {
     id: 'TestItemDetailsModal.description',
     defaultMessage: 'Description:',
@@ -63,6 +59,10 @@ const messages = defineMessages({
   attributesLabel: {
     id: 'EditItemModal.attributesLabel',
     defaultMessage: 'Attributes',
+  },
+  parametersLabel: {
+    id: 'TestItemDetailsModal.parametersLabel',
+    defaultMessage: 'Parameters:',
   },
   descriptionPlaceholder: {
     id: 'EditItemModal.descriptionPlaceholder',
@@ -227,16 +227,6 @@ export class TestItemDetailsModal extends Component {
             )}
           </div>
         </ModalField>
-        {item.tags &&
-          item.tags.length > 0 && (
-            <ModalField className={cx('tags')} label={intl.formatMessage(messages.tags)}>
-              {item.tags.map((tag) => (
-                <span key={tag} className={cx('tag')}>
-                  {tag}
-                </span>
-              ))}
-            </ModalField>
-          )}
         <ModalField label={intl.formatMessage(messages.attributesLabel)}>
           <FieldProvider name="attributes">
             <AttributeListField
@@ -247,12 +237,16 @@ export class TestItemDetailsModal extends Component {
           </FieldProvider>
         </ModalField>
         {item.parameters && (
-          <ModalField>
-            <ScrollWrapper autoHeight autoHeightMax={210}>
-              <TestParameters parameters={item.parameters} />
-            </ScrollWrapper>
-          </ModalField>
+          <Fragment>
+            <div className={cx('label')}>{intl.formatMessage(messages.parametersLabel)}</div>
+            <ModalField>
+              <ScrollWrapper autoHeight autoHeightMax={210}>
+                <TestParameters parameters={item.parameters} />
+              </ScrollWrapper>
+            </ModalField>
+          </Fragment>
         )}
+        <div className={cx('label')}>{intl.formatMessage(messages.description)}</div>
         {editable ? (
           <ModalField>
             <FieldProvider name="description">
@@ -264,7 +258,7 @@ export class TestItemDetailsModal extends Component {
             <AccordionContainer maxHeight={170}>
               {({ setupRef, className }) => (
                 <div ref={setupRef} className={className}>
-                  <ModalField label={intl.formatMessage(messages.description)} vertical>
+                  <ModalField>
                     <MarkdownViewer value={item.description} />
                   </ModalField>
                 </div>
