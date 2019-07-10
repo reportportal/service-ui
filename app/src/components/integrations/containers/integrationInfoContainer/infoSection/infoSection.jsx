@@ -31,7 +31,7 @@ const messages = defineMessages({
   titleNotification: {
     id: 'PluginItem.titleNotification',
     defaultMessage:
-      'will be hidden on project settings. RP users won`t be able to receive notification about test results',
+      'will be hidden on project settings. RP users can not get notifications and send invitations for new users',
   },
   titleOthers: {
     id: 'PluginItem.titleOthers',
