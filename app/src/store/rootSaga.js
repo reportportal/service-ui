@@ -16,6 +16,7 @@ import { administrateSagas } from 'controllers/administrate';
 import { userSagas } from 'controllers/user';
 import { projectSagas } from 'controllers/project';
 import { initialDataSagas } from 'controllers/initialData';
+import { pageSagas } from 'controllers/pages';
 
 export function* rootSagas() {
   yield all([
@@ -36,5 +37,6 @@ export function* rootSagas() {
     userSagas(),
     projectSagas(),
     initialDataSagas(),
+    pageSagas(),
   ]);
 }

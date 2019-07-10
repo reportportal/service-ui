@@ -3,7 +3,6 @@ import { composeWithDevTools } from 'redux-devtools-extension/logOnlyInProductio
 import { connectRoutes } from 'redux-first-router';
 import createSagaMiddleware from 'redux-saga';
 import queryString from 'qs';
-import reduxThunk from 'redux-thunk';
 
 import { initAuthInterceptor } from 'common/utils/fetch';
 import routesMap, { onBeforeRouteChange } from 'routes/routesMap';
@@ -22,7 +21,7 @@ export const configureStore = (history, preloadedState) => {
 
   const rootReducer = combineReducers({ ...reducers, location: reducer });
   const saga = createSagaMiddleware();
-  const middlewares = applyMiddleware(reduxThunk, saga, middleware);
+  const middlewares = applyMiddleware(saga, middleware);
   const enhancers = composeEnhancers(enhancer, middlewares);
   const store = createStore(rootReducer, preloadedState, enhancers);
 

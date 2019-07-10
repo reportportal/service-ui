@@ -1,22 +1,6 @@
-import isEqual from 'fast-deep-equal';
-import { mergeQuery } from 'common/utils/routingUtils';
+import { UPDATE_PAGE_PROPERTIES } from './constants';
 
-export const updatePagePropertiesAction = (properties) => (dispatch, getState) => {
-  const {
-    location: { type, payload, query },
-  } = getState();
-
-  const newQuery = mergeQuery(query, properties);
-
-  if (isEqual(query, newQuery)) {
-    return;
-  }
-
-  const updatedAction = {
-    type,
-    payload,
-    meta: { query: newQuery },
-  };
-
-  dispatch(updatedAction);
-};
+export const updatePagePropertiesAction = (properties) => ({
+  type: UPDATE_PAGE_PROPERTIES,
+  payload: properties,
+});

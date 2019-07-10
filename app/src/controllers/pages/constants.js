@@ -1,5 +1,7 @@
 import { NOT_FOUND } from 'redux-first-router';
 
+export const UPDATE_PAGE_PROPERTIES = 'updatePagePropertiesAction';
+
 // undefined page
 export const NO_PAGE = undefined;
 // admin

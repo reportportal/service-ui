@@ -6,8 +6,9 @@ import { ALL } from 'common/constants/reservedFilterIds';
 import { pageNames, NO_PAGE } from './constants';
 import { stringToArray } from './utils';
 
-export const payloadSelector = (state) => state.location.payload || {};
-export const searchStringSelector = (state) => state.location.search || '';
+export const locationSelector = (state) => state.location || {};
+export const payloadSelector = (state) => locationSelector(state).payload || {};
+export const searchStringSelector = (state) => locationSelector(state).search || '';
 
 export const activeDashboardIdSelector = (state) => payloadSelector(state).dashboardId;
 export const projectIdSelector = (state) => payloadSelector(state).projectId;
