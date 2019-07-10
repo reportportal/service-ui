@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { defineMessages, injectIntl, intlShape } from 'react-intl';
+import { defineMessages, injectIntl, intlShape, FormattedMessage } from 'react-intl';
 import {
   NOTIFICATION_GROUP_TYPE,
   BTS_GROUP_TYPE,
@@ -57,13 +57,13 @@ export class InfoSection extends Component {
     version: PropTypes.string,
     data: PropTypes.object.isRequired,
     onToggleActive: PropTypes.func,
-    pluginPageType: PropTypes.bool,
+    isGlobal: PropTypes.bool,
   };
 
   static defaultProps = {
     version: '',
     onToggleActive: () => {},
-    pluginPageType: false,
+    isGlobal: false,
   };
 
   state = {
@@ -117,7 +117,7 @@ export class InfoSection extends Component {
       image,
       version,
       description,
-      pluginPageType,
+      isGlobal,
     } = this.props;
     const { expanded, withShowMore, isEnabled } = this.state;
     const isPartiallyShown = withShowMore && !expanded;
@@ -130,9 +130,15 @@ export class InfoSection extends Component {
           {version && (
             <span className={cx('version')}>{`${formatMessage(messages.version)} ${version}`}</span>
           )}
-          {pluginPageType && (
+          {isGlobal && (
             <div className={cx('switcher-block')}>
-              <span className={cx('switcher-status')}>{isEnabled ? 'On' : 'Off'}</span>
+              <span className={cx('switcher-status')}>
+                {isEnabled ? (
+                  <FormattedMessage id={'Common.on'} defaultMessage={'On'} />
+                ) : (
+                  <FormattedMessage id={'Common.off'} defaultMessage={'Off'} />
+                )}
+              </span>
               <div
                 className={cx('switcher')}
                 title={!isEnabled ? `${title} ${formatMessage(titleMessagesMap[groupType])}` : ''}

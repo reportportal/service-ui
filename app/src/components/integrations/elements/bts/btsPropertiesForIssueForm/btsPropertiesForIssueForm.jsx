@@ -62,7 +62,7 @@ export class BtsPropertiesForIssueForm extends Component {
     change: PropTypes.func,
     disabled: PropTypes.bool.isRequired,
     updateMetaData: PropTypes.func,
-    pluginPageType: PropTypes.bool,
+    isGlobal: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -75,7 +75,7 @@ export class BtsPropertiesForIssueForm extends Component {
     initialize: () => {},
     reset: () => {},
     change: () => {},
-    pluginPageType: false,
+    isGlobal: false,
   };
 
   constructor(props) {
@@ -254,7 +254,7 @@ export class BtsPropertiesForIssueForm extends Component {
     });
 
   fetchFieldsSet = (issueTypeValue) => {
-    const url = this.props.pluginPageType
+    const url = this.props.isGlobal
       ? URLS.btsGlobalIntegrationFieldsSet(this.props.instanceId, issueTypeValue)
       : URLS.btsIntegrationFieldsSet(this.props.projectId, this.props.instanceId, issueTypeValue);
 
@@ -272,7 +272,7 @@ export class BtsPropertiesForIssueForm extends Component {
   };
 
   fetchIssueType = () => {
-    const url = this.props.pluginPageType
+    const url = this.props.isGlobal
       ? URLS.btsGlobalIntegrationIssueTypes(this.props.instanceId)
       : URLS.btsIntegrationIssueTypes(this.props.projectId, this.props.instanceId);
 

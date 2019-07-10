@@ -26,11 +26,11 @@ export class RallySettings extends Component {
     onUpdate: PropTypes.func.isRequired,
     showModalAction: PropTypes.func.isRequired,
     hideModalAction: PropTypes.func.isRequired,
-    pluginPageType: PropTypes.bool,
+    isGlobal: PropTypes.bool,
   };
 
   static defaultProps = {
-    pluginPageType: false,
+    isGlobal: false,
   };
 
   onSubmit = (data, callback, metaData) => {
@@ -79,7 +79,7 @@ export class RallySettings extends Component {
   };
 
   render() {
-    const { data, goToPreviousPage, pluginPageType } = this.props;
+    const { data, goToPreviousPage, isGlobal } = this.props;
 
     return (
       <IntegrationSettings
@@ -89,7 +89,7 @@ export class RallySettings extends Component {
         formFieldsComponent={BtsPropertiesForIssueForm}
         formKey={BTS_FIELDS_FORM}
         editAuthConfig={this.getEditAuthConfig()}
-        pluginPageType={pluginPageType}
+        isGlobal={isGlobal}
         isEmptyConfiguration={
           !data.integrationParameters.defectFormFields ||
           !data.integrationParameters.defectFormFields.length

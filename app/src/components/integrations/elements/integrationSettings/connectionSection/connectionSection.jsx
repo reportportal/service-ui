@@ -51,7 +51,6 @@ export class ConnectionSection extends Component {
     showModalAction: PropTypes.func.isRequired,
     onRemoveIntegration: PropTypes.func.isRequired,
     blocked: PropTypes.bool,
-    pluginPageType: PropTypes.bool,
     failedConnectionMessage: PropTypes.string,
     editAuthConfig: PropTypes.object,
   };
@@ -60,7 +59,6 @@ export class ConnectionSection extends Component {
     blocked: false,
     failedConnectionMessage: null,
     editAuthConfig: null,
-    pluginPageType: false,
   };
 
   removeIntegrationHandler = () => {
@@ -87,7 +85,6 @@ export class ConnectionSection extends Component {
       blocked,
       editAuthConfig,
       failedConnectionMessage,
-      pluginPageType,
     } = this.props;
     const isConnectionFailed = !!failedConnectionMessage;
 
@@ -112,7 +109,7 @@ export class ConnectionSection extends Component {
             <div className={cx('connection-status-block', 'auth-info-block')}>
               {editAuthConfig.content}
             </div>
-            {(!blocked || pluginPageType) && (
+            {!blocked && (
               <button className={cx('connection-block-button')} onClick={editAuthConfig.onClick}>
                 <span className={cx('button-icon')}>{Parser(EditIcon)}</span>
                 {formatMessage(messages.editAuthorizationTitle)}
@@ -120,7 +117,7 @@ export class ConnectionSection extends Component {
             )}
           </Fragment>
         )}
-        {(!blocked || pluginPageType) && (
+        {!blocked && (
           <button className={cx('connection-block-button')} onClick={this.removeIntegrationHandler}>
             <span className={cx('button-icon')}>{Parser(TrashIcon)}</span>
             {formatMessage(messages.removeIntegrationTitle)}
