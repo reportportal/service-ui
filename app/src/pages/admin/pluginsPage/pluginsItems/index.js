@@ -1,1 +1,0 @@
-export { PluginsItems } from './pluginsItems';

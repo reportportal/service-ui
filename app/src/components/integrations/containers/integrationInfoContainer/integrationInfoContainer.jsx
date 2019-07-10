@@ -28,12 +28,12 @@ export class IntegrationInfoContainer extends Component {
     globalIntegrations: PropTypes.array.isRequired,
     showDefaultErrorNotification: PropTypes.func.isRequired,
     onToggleActive: PropTypes.func,
-    pluginPageType: PropTypes.bool,
+    isGlobal: PropTypes.bool,
   };
 
   static defaultProps = {
     onToggleActive: () => {},
-    pluginPageType: false,
+    isGlobal: false,
   };
 
   render() {
@@ -44,7 +44,7 @@ export class IntegrationInfoContainer extends Component {
       globalIntegrations,
       onItemClick,
       onToggleActive,
-      pluginPageType,
+      isGlobal,
     } = this.props;
 
     return (
@@ -56,14 +56,14 @@ export class IntegrationInfoContainer extends Component {
           version={version}
           data={integrationType}
           onToggleActive={onToggleActive}
-          pluginPageType={pluginPageType}
+          isGlobal={isGlobal}
         />
         <InstancesSection
           globalIntegrations={globalIntegrations}
           projectIntegrations={projectIntegrations}
           onItemClick={onItemClick}
           instanceType={name}
-          pluginPageType={pluginPageType}
+          isGlobal={isGlobal}
           title={INTEGRATION_NAMES_TITLES[name]}
         />
       </Fragment>

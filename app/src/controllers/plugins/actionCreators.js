@@ -1,38 +1,34 @@
-import { fetch } from 'common/utils';
-import { URLS } from 'common/urls';
-import { fetchDataAction } from 'controllers/fetch';
 import {
-  NAMESPACE,
   SET_PROJECT_INTEGRATIONS,
   UPDATE_PLUGIN_LOCALLY,
+  UPDATE_INTEGRATION,
+  REMOVE_INTEGRATION,
+  ADD_INTEGRATION,
   REMOVE_PROJECT_INTEGRATIONS_BY_TYPE,
   REMOVE_PROJECT_INTEGRATIONS_BY_TYPE_SUCCESS,
-  ADD_PROJECT_INTEGRATION,
   ADD_PROJECT_INTEGRATION_SUCCESS,
-  UPDATE_PROJECT_INTEGRATION,
   UPDATE_PROJECT_INTEGRATION_SUCCESS,
-  REMOVE_PROJECT_INTEGRATION,
   REMOVE_PROJECT_INTEGRATION_SUCCESS,
-  UPDATE_GLOBAL_INTEGRATION,
-  UPDATE_GLOBAL_INTEGRATION_SUCCESS,
-  ADD_GLOBAL_INTEGRATION,
   ADD_GLOBAL_INTEGRATION_SUCCESS,
-  REMOVE_GLOBAL_INTEGRATION,
+  UPDATE_GLOBAL_INTEGRATION_SUCCESS,
   REMOVE_GLOBAL_INTEGRATION_SUCCESS,
+  FETCH_PLUGINS,
+  FETCH_GLOBAL_INTEGRATIONS,
   FETCH_GLOBAL_INTEGRATIONS_SUCCESS,
 } from './constants';
 
-export const fetchPluginsAction = () => fetchDataAction(NAMESPACE)(URLS.plugin());
+export const fetchPluginsAction = () => ({
+  type: FETCH_PLUGINS,
+});
+
+export const fetchGlobalIntegrationsAction = () => ({
+  type: FETCH_GLOBAL_INTEGRATIONS,
+});
 
 export const fetchGlobalIntegrationsSuccessAction = (globalIntegrations) => ({
   type: FETCH_GLOBAL_INTEGRATIONS_SUCCESS,
   payload: globalIntegrations,
 });
-
-export const fetchGlobalIntegrationsAction = () => (dispatch) =>
-  fetch(URLS.globalIntegrationsByPluginName()).then((globalIntegrations) =>
-    dispatch(fetchGlobalIntegrationsSuccessAction(globalIntegrations)),
-  );
 
 export const setProjectIntegrationsAction = (projectIntegrations) => ({
   type: SET_PROJECT_INTEGRATIONS,
@@ -44,9 +40,14 @@ export const updatePluginLocallyAction = (plugin) => ({
   payload: plugin,
 });
 
-export const updateGlobalIntegrationAction = (data, isPluginPage, id, callback) => ({
-  type: UPDATE_GLOBAL_INTEGRATION,
-  payload: { data, isPluginPage, id, callback },
+export const updateIntegrationAction = (data, isGlobal, id, callback) => ({
+  type: UPDATE_INTEGRATION,
+  payload: { data, isGlobal, id, callback },
+});
+
+export const addIntegrationAction = (data, isGlobal, pluginName, callback) => ({
+  type: ADD_INTEGRATION,
+  payload: { data, isGlobal, pluginName, callback },
 });
 
 export const updateGlobalIntegrationSuccessAction = (data, id) => ({
@@ -54,19 +55,9 @@ export const updateGlobalIntegrationSuccessAction = (data, id) => ({
   payload: { data, id },
 });
 
-export const addGlobalIntegrationAction = (data, isPluginPage, pluginName, callback) => ({
-  type: ADD_GLOBAL_INTEGRATION,
-  payload: { data, isPluginPage, pluginName, callback },
-});
-
 export const addGlobalIntegrationSuccessAction = (integration) => ({
   type: ADD_GLOBAL_INTEGRATION_SUCCESS,
   payload: integration,
-});
-
-export const removeGlobalIntegrationAction = (id, isPluginPage, callback) => ({
-  type: REMOVE_GLOBAL_INTEGRATION,
-  payload: { id, isPluginPage, callback },
 });
 
 export const removeGlobalIntegrationSuccessAction = (id) => ({
@@ -74,19 +65,9 @@ export const removeGlobalIntegrationSuccessAction = (id) => ({
   payload: id,
 });
 
-export const updateProjectIntegrationAction = (data, isPluginPage, id, callback) => ({
-  type: UPDATE_PROJECT_INTEGRATION,
-  payload: { data, isPluginPage, id, callback },
-});
-
 export const updateProjectIntegrationSuccessAction = (data, id) => ({
   type: UPDATE_PROJECT_INTEGRATION_SUCCESS,
   payload: { data, id },
-});
-
-export const addProjectIntegrationAction = (data, isPluginPage, pluginName, callback) => ({
-  type: ADD_PROJECT_INTEGRATION,
-  payload: { data, isPluginPage, pluginName, callback },
 });
 
 export const addProjectIntegrationSuccessAction = (integration) => ({
@@ -94,9 +75,9 @@ export const addProjectIntegrationSuccessAction = (integration) => ({
   payload: integration,
 });
 
-export const removeProjectIntegrationAction = (id, isPluginPage, callback) => ({
-  type: REMOVE_PROJECT_INTEGRATION,
-  payload: { id, isPluginPage, callback },
+export const removeIntegrationAction = (id, isGlobal, callback) => ({
+  type: REMOVE_INTEGRATION,
+  payload: { id, isGlobal, callback },
 });
 
 export const removeProjectIntegrationSuccessAction = (id) => ({

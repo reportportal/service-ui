@@ -7,18 +7,18 @@ import {
   NOTIFICATION_TYPES,
 } from 'controllers/notification';
 import { projectIdSelector } from 'controllers/pages';
+import { fetchDataAction } from 'controllers/fetch';
 import { hideModalAction } from 'controllers/modal';
 import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLock';
 import { fetch } from 'common/utils';
-
 import {
-  ADD_PROJECT_INTEGRATION,
-  UPDATE_PROJECT_INTEGRATION,
-  REMOVE_PROJECT_INTEGRATION,
+  NAMESPACE,
   REMOVE_PROJECT_INTEGRATIONS_BY_TYPE,
-  ADD_GLOBAL_INTEGRATION,
-  UPDATE_GLOBAL_INTEGRATION,
-  REMOVE_GLOBAL_INTEGRATION,
+  ADD_INTEGRATION,
+  UPDATE_INTEGRATION,
+  REMOVE_INTEGRATION,
+  FETCH_PLUGINS,
+  FETCH_GLOBAL_INTEGRATIONS,
 } from './constants';
 import {
   addProjectIntegrationSuccessAction,
@@ -28,13 +28,14 @@ import {
   addGlobalIntegrationSuccessAction,
   removeGlobalIntegrationSuccessAction,
   updateGlobalIntegrationSuccessAction,
+  fetchGlobalIntegrationsSuccessAction,
 } from './actionCreators';
 
-function* addIntegration({ payload: { data, isPluginPage, pluginName, callback } }) {
+function* addIntegration({ payload: { data, isGlobal, pluginName, callback } }) {
   yield put(showScreenLockAction());
   try {
     const projectId = yield select(projectIdSelector);
-    const url = isPluginPage
+    const url = isGlobal
       ? URLS.newGlobalIntegration(pluginName)
       : URLS.newProjectIntegration(projectId, pluginName);
     const response = yield call(fetch, url, {
@@ -46,7 +47,7 @@ function* addIntegration({ payload: { data, isPluginPage, pluginName, callback }
       id: response.id,
       integrationType: { name: pluginName, groupType: BTS_GROUP_TYPE },
     };
-    const addIntegrationSuccessAction = isPluginPage
+    const addIntegrationSuccessAction = isGlobal
       ? addGlobalIntegrationSuccessAction(newIntegration)
       : addProjectIntegrationSuccessAction(newIntegration);
     yield put(addIntegrationSuccessAction);
@@ -66,21 +67,21 @@ function* addIntegration({ payload: { data, isPluginPage, pluginName, callback }
 }
 
 function* watchAddIntegration() {
-  yield takeEvery([ADD_PROJECT_INTEGRATION, ADD_GLOBAL_INTEGRATION], addIntegration);
+  yield takeEvery(ADD_INTEGRATION, addIntegration);
 }
 
-function* updateIntegration({ payload: { data, isPluginPage, id, callback } }) {
+function* updateIntegration({ payload: { data, isGlobal, id, callback } }) {
   yield put(showScreenLockAction());
   try {
     const projectId = yield select(projectIdSelector);
-    const url = isPluginPage ? URLS.globalIntegration(id) : URLS.projectIntegration(projectId, id);
+    const url = isGlobal ? URLS.globalIntegration(id) : URLS.projectIntegration(projectId, id);
 
     yield call(fetch, url, {
       method: 'put',
       data,
     });
 
-    const updateIntegrationSuccessAction = isPluginPage
+    const updateIntegrationSuccessAction = isGlobal
       ? updateGlobalIntegrationSuccessAction(data, id)
       : updateProjectIntegrationSuccessAction(data, id);
     yield put(updateIntegrationSuccessAction);
@@ -99,20 +100,20 @@ function* updateIntegration({ payload: { data, isPluginPage, id, callback } }) {
 }
 
 function* watchUpdateIntegration() {
-  yield takeEvery([UPDATE_PROJECT_INTEGRATION, UPDATE_GLOBAL_INTEGRATION], updateIntegration);
+  yield takeEvery(UPDATE_INTEGRATION, updateIntegration);
 }
 
-function* removeIntegration({ payload: { id, isPluginPage, callback } }) {
+function* removeIntegration({ payload: { id, isGlobal, callback } }) {
   yield put(showScreenLockAction());
   try {
     const projectId = yield select(projectIdSelector);
-    const url = isPluginPage ? URLS.globalIntegration(id) : URLS.projectIntegration(projectId, id);
+    const url = isGlobal ? URLS.globalIntegration(id) : URLS.projectIntegration(projectId, id);
 
     yield call(fetch, url, {
       method: 'delete',
     });
 
-    const removeIntegrationSuccessAction = isPluginPage
+    const removeIntegrationSuccessAction = isGlobal
       ? removeGlobalIntegrationSuccessAction(id)
       : removeProjectIntegrationSuccessAction(id);
     yield put(removeIntegrationSuccessAction);
@@ -131,7 +132,7 @@ function* removeIntegration({ payload: { id, isPluginPage, callback } }) {
 }
 
 function* watchRemoveIntegration() {
-  yield takeEvery([REMOVE_PROJECT_INTEGRATION, REMOVE_GLOBAL_INTEGRATION], removeIntegration);
+  yield takeEvery(REMOVE_INTEGRATION, removeIntegration);
 }
 
 function* removeIntegrationsByType({ payload: instanceType }) {
@@ -159,11 +160,34 @@ function* watchRemoveIntegrationsByType() {
   yield takeEvery(REMOVE_PROJECT_INTEGRATIONS_BY_TYPE, removeIntegrationsByType);
 }
 
+function* fetchPlugins() {
+  yield put(fetchDataAction(NAMESPACE)(URLS.plugin()));
+}
+
+function* watchFetchPlugins() {
+  yield takeEvery(FETCH_PLUGINS, fetchPlugins);
+}
+
+function* fetchGlobalIntegrations() {
+  try {
+    const globalIntegrations = yield call(fetch, URLS.globalIntegrationsByPluginName());
+    yield put(fetchGlobalIntegrationsSuccessAction(globalIntegrations));
+  } catch (error) {
+    yield put(showDefaultErrorNotification(error));
+  }
+}
+
+function* watchFetchGlobalIntegrations() {
+  yield takeEvery(FETCH_GLOBAL_INTEGRATIONS, fetchGlobalIntegrations);
+}
+
 export function* pluginSagas() {
   yield all([
     watchAddIntegration(),
     watchUpdateIntegration(),
     watchRemoveIntegration(),
     watchRemoveIntegrationsByType(),
+    watchFetchPlugins(),
+    watchFetchGlobalIntegrations(),
   ]);
 }

@@ -12,6 +12,10 @@ const messages = defineMessages({
     id: 'AddProjectIntegrationModal.createManualTitle',
     defaultMessage: 'Create manual integration',
   },
+  createGlobalTitle: {
+    id: 'AddProjectIntegrationModal.createGlobalTitle',
+    defaultMessage: 'Create global integration',
+  },
   editAuthTitle: {
     id: 'AddProjectIntegrationModal.editAuthTitle',
     defaultMessage: 'Edit authorization',
@@ -49,21 +53,20 @@ export class AddProjectIntegrationModal extends Component {
   render() {
     const {
       intl: { formatMessage },
-      data: { onConfirm, instanceType, customProps = {} },
+      data: { onConfirm, instanceType, isGlobal, customProps = {} },
       handleSubmit,
       initialize,
       change,
     } = this.props;
 
+    const createTitle = isGlobal
+      ? formatMessage(messages.createGlobalTitle)
+      : formatMessage(messages.createManualTitle);
     const FieldsComponent = INTEGRATIONS_FORM_FIELDS_COMPONENTS_MAP[instanceType];
 
     return (
       <ModalLayout
-        title={
-          customProps.editAuthMode
-            ? formatMessage(messages.editAuthTitle)
-            : formatMessage(messages.createManualTitle)
-        }
+        title={customProps.editAuthMode ? formatMessage(messages.editAuthTitle) : createTitle}
         okButton={{
           text: formatMessage(COMMON_LOCALE_KEYS.SAVE),
           onClick: handleSubmit(onConfirm),

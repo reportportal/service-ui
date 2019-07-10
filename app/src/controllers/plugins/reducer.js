@@ -6,6 +6,8 @@ import {
   SET_PROJECT_INTEGRATIONS,
   FETCH_GLOBAL_INTEGRATIONS_SUCCESS,
   UPDATE_PLUGIN_LOCALLY,
+  GLOBAL_INTEGRATIONS,
+  PROJECT_INTEGRATIONS,
   ADD_GLOBAL_INTEGRATION_SUCCESS,
   UPDATE_GLOBAL_INTEGRATION_SUCCESS,
   REMOVE_GLOBAL_INTEGRATION_SUCCESS,
@@ -74,19 +76,19 @@ export const integrationsReducer = (state = {}, { type, payload }) => {
         projectIntegrations: payload,
       };
     case ADD_GLOBAL_INTEGRATION_SUCCESS:
-      return addIntegration(state, 'globalIntegrations', payload);
+      return addIntegration(state, GLOBAL_INTEGRATIONS, payload);
     case UPDATE_GLOBAL_INTEGRATION_SUCCESS:
-      return updateIntegration(state, 'globalIntegrations', payload);
+      return updateIntegration(state, GLOBAL_INTEGRATIONS, payload);
     case REMOVE_GLOBAL_INTEGRATION_SUCCESS:
-      return removeIntegration(state, 'globalIntegrations', payload);
+      return removeIntegration(state, GLOBAL_INTEGRATIONS, payload);
     case ADD_PROJECT_INTEGRATION_SUCCESS:
-      return addIntegration(state, 'projectIntegrations', payload);
+      return addIntegration(state, PROJECT_INTEGRATIONS, payload);
     case UPDATE_PROJECT_INTEGRATION_SUCCESS:
-      return updateIntegration(state, 'projectIntegrations', payload);
+      return updateIntegration(state, PROJECT_INTEGRATIONS, payload);
     case REMOVE_PROJECT_INTEGRATION_SUCCESS:
-      return removeIntegration(state, 'projectIntegrations', payload);
+      return removeIntegration(state, PROJECT_INTEGRATIONS, payload);
     case REMOVE_PROJECT_INTEGRATIONS_BY_TYPE_SUCCESS:
-      return removeIntegrationByType(state, 'projectIntegrations', payload);
+      return removeIntegrationByType(state, PROJECT_INTEGRATIONS, payload);
     default:
       return state;
   }

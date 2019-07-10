@@ -8,11 +8,7 @@ import { canUpdateSettings } from 'common/utils/permissions';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
 import { projectIdSelector } from 'controllers/pages';
-import {
-  addGlobalIntegrationAction,
-  addProjectIntegrationAction,
-  removeProjectIntegrationsByTypeAction,
-} from 'controllers/plugins';
+import { addIntegrationAction, removeProjectIntegrationsByTypeAction } from 'controllers/plugins';
 import { showModalAction } from 'controllers/modal';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { isIntegrationSupportsMultipleInstances } from 'components/integrations/utils';
@@ -90,8 +86,7 @@ const messages = defineMessages({
   {
     showModalAction,
     removeProjectIntegrationsByTypeAction,
-    addProjectIntegrationAction,
-    addGlobalIntegrationAction,
+    addIntegrationAction,
   },
 )
 @injectIntl
@@ -103,13 +98,12 @@ export class InstancesSection extends Component {
     onItemClick: PropTypes.func.isRequired,
     showModalAction: PropTypes.func.isRequired,
     removeProjectIntegrationsByTypeAction: PropTypes.func.isRequired,
-    addProjectIntegrationAction: PropTypes.func.isRequired,
-    addGlobalIntegrationAction: PropTypes.func.isRequired,
+    addIntegrationAction: PropTypes.func.isRequired,
     accountRole: PropTypes.string.isRequired,
     userRole: PropTypes.string.isRequired,
     projectIntegrations: PropTypes.array,
     globalIntegrations: PropTypes.array,
-    pluginPageType: PropTypes.bool,
+    isGlobal: PropTypes.bool,
     title: PropTypes.string,
   };
 
@@ -117,7 +111,7 @@ export class InstancesSection extends Component {
     projectIntegrations: [],
     globalIntegrations: [],
     projectId: '',
-    pluginPageType: false,
+    isGlobal: false,
     title: '',
   };
 
@@ -139,25 +133,13 @@ export class InstancesSection extends Component {
       enabled: true,
       integrationParameters: formData,
     };
-    const { pluginPageType, instanceType } = this.props;
+    const { isGlobal, instanceType } = this.props;
 
     if (formData.integrationName) {
       data.name = formData.integrationName;
     }
 
-    pluginPageType
-      ? this.props.addGlobalIntegrationAction(
-          data,
-          pluginPageType,
-          instanceType,
-          this.navigateToNewIntegration,
-        )
-      : this.props.addProjectIntegrationAction(
-          data,
-          pluginPageType,
-          instanceType,
-          this.navigateToNewIntegration,
-        );
+    this.props.addIntegrationAction(data, isGlobal, instanceType, this.navigateToNewIntegration);
   };
 
   returnToGlobalSettingsClickHandler = () => {
@@ -179,13 +161,14 @@ export class InstancesSection extends Component {
   };
 
   addProjectIntegrationClickHandler = () => {
-    const { instanceType } = this.props;
+    const { instanceType, isGlobal } = this.props;
 
     this.props.showModalAction({
       id: 'addProjectIntegrationModal',
       data: {
         onConfirm: this.addProjectIntegration,
         instanceType,
+        isGlobal,
       },
     });
   };
@@ -198,18 +181,18 @@ export class InstancesSection extends Component {
       globalIntegrations,
       accountRole,
       userRole,
-      pluginPageType,
+      isGlobal,
     } = this.props;
     const isProjectIntegrationsExists = !!projectIntegrations.length;
     const disabled = !canUpdateSettings(accountRole, userRole);
-    const projectIntegrationMessage = this.multiple
+    const globalIntegrationMessage = this.multiple
       ? messages.globalIntegrations
       : messages.globalIntegration;
 
     return (
       <div className={cx('instances-section')}>
         {isProjectIntegrationsExists &&
-          !pluginPageType && (
+          !isGlobal && (
             <Fragment>
               <InstancesList
                 blocked={disabled}
@@ -230,65 +213,60 @@ export class InstancesSection extends Component {
                 )}
             </Fragment>
           )}
-        <Fragment>
-          <InstancesList
-            blocked
-            title={formatMessage(
-              pluginPageType ? messages.allGlobalProjects : projectIntegrationMessage,
-              {
-                pluginName: this.props.title,
-              },
-            )}
-            items={globalIntegrations}
-            onItemClick={onItemClick}
-            {...(pluginPageType
-              ? {}
-              : {
-                  disabled: isProjectIntegrationsExists,
-                  disabledHint: formatMessage(messages.globalIntegrationsDisabledHint),
-                })}
-            defaultItemTitle={formatMessage(messages.globalSettingsDefaultTitle)}
-          />
-          {!globalIntegrations.length && (
-            <p className={cx('no-items-message')}>
-              {formatMessage(messages.noGlobalIntegrationMessage)}
-            </p>
+        <InstancesList
+          blocked={!isGlobal}
+          title={formatMessage(isGlobal ? messages.allGlobalProjects : globalIntegrationMessage, {
+            pluginName: this.props.title,
+          })}
+          items={globalIntegrations}
+          onItemClick={onItemClick}
+          {...(isGlobal
+            ? {}
+            : {
+                disabled: isProjectIntegrationsExists,
+                disabledHint: formatMessage(messages.globalIntegrationsDisabledHint),
+              })}
+          defaultItemTitle={formatMessage(messages.globalSettingsDefaultTitle)}
+        />
+        {!globalIntegrations.length && (
+          <p className={cx('no-items-message')}>
+            {formatMessage(messages.noGlobalIntegrationMessage)}
+          </p>
+        )}
+        {this.multiple &&
+          !disabled &&
+          isGlobal && (
+            <div className={cx('add-integration-button')}>
+              <GhostButton icon={PlusIcon} onClick={this.addProjectIntegrationClickHandler}>
+                {formatMessage(messages.addIntegrationButtonTitle)}
+              </GhostButton>
+            </div>
           )}
-          {this.multiple &&
-            !disabled &&
-            pluginPageType && (
-              <div className={cx('add-integration-button')}>
-                <GhostButton icon={PlusIcon} onClick={this.addProjectIntegrationClickHandler}>
-                  {formatMessage(messages.addIntegrationButtonTitle)}
-                </GhostButton>
-              </div>
-            )}
-          {!disabled &&
-            !pluginPageType && (
-              <div className={cx('settings-action-block')}>
-                <GhostButton
-                  onClick={
-                    isProjectIntegrationsExists
-                      ? this.returnToGlobalSettingsClickHandler
-                      : this.addProjectIntegrationClickHandler
-                  }
-                >
-                  {formatMessage(
-                    isProjectIntegrationsExists
-                      ? messages.resetToGlobalSettingsTitle
-                      : messages.unlinkAndSetupManuallyTitle,
-                  )}
-                </GhostButton>
-                <p className={cx('action-description')}>
-                  {formatMessage(
-                    isProjectIntegrationsExists
-                      ? messages.resetToGlobalSettingsDescription
-                      : messages.unlinkAndSetupManuallyDescription,
-                  )}
-                </p>
-              </div>
-            )}
-        </Fragment>
+        {!disabled &&
+          !isGlobal && (
+            <div className={cx('settings-action-block')}>
+              <GhostButton
+                onClick={
+                  isProjectIntegrationsExists
+                    ? this.returnToGlobalSettingsClickHandler
+                    : this.addProjectIntegrationClickHandler
+                }
+              >
+                {formatMessage(
+                  isProjectIntegrationsExists
+                    ? messages.resetToGlobalSettingsTitle
+                    : messages.unlinkAndSetupManuallyTitle,
+                )}
+              </GhostButton>
+              <p className={cx('action-description')}>
+                {formatMessage(
+                  isProjectIntegrationsExists
+                    ? messages.resetToGlobalSettingsDescription
+                    : messages.unlinkAndSetupManuallyDescription,
+                )}
+              </p>
+            </div>
+          )}
       </div>
     );
   }

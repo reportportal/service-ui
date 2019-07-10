@@ -102,15 +102,9 @@ export class InstalledTab extends Component {
         return (
           <IntegrationInfoContainer
             integrationType={newData}
-            pluginPageType
+            isGlobal
             onToggleActive={(itemData) => this.onToggleActive(itemData)}
-            onItemClick={(pageData, pageTitle) =>
-              this.changeSubPage({
-                type: INSTALLED_PLUGINS_SETTINGS_SUBPAGE,
-                data: pageData,
-                title: pageTitle,
-              })
-            }
+            onItemClick={this.installedPluginsSettingsSubPageHandler}
           />
         );
       case INSTALLED_PLUGINS_SETTINGS_SUBPAGE:
@@ -118,10 +112,8 @@ export class InstalledTab extends Component {
           <IntegrationSettingsContainer
             data={data}
             title={title}
-            pluginPageType
-            goToPreviousPage={() =>
-              this.changeSubPage(this.subPagesCache[INSTALLED_PLUGINS_SUBPAGE])
-            }
+            isGlobal
+            goToPreviousPage={this.goToPreviousPageHandler}
           />
         );
       default:
@@ -138,13 +130,7 @@ export class InstalledTab extends Component {
                 items={this.getFilterPluginsList(activeFilterItem)}
                 filterMobileBlock={this.renderFilterMobileBlock()}
                 onToggleActive={(itemData) => this.onToggleActive(itemData)}
-                onItemClick={(pageData) =>
-                  this.changeSubPage({
-                    type: INSTALLED_PLUGINS_SUBPAGE,
-                    data: pageData,
-                    title: INTEGRATION_NAMES_TITLES[pageData.name] || pageData.name,
-                  })
-                }
+                onItemClick={this.installedPluginsSubPageHandler}
               />
             </div>
           </div>
@@ -182,6 +168,8 @@ export class InstalledTab extends Component {
       value: item.value,
     }));
 
+  goToPreviousPageHandler = () => this.changeSubPage(this.subPagesCache[INSTALLED_PLUGINS_SUBPAGE]);
+
   changeSubPage = (subPage) => {
     this.subPagesCache[subPage.type] = subPage;
     this.setState({ subPage });
@@ -194,6 +182,20 @@ export class InstalledTab extends Component {
       activeFilterItem: value,
     });
   };
+
+  installedPluginsSettingsSubPageHandler = (pageData, pageTitle) =>
+    this.changeSubPage({
+      type: INSTALLED_PLUGINS_SETTINGS_SUBPAGE,
+      data: pageData,
+      title: pageTitle,
+    });
+
+  installedPluginsSubPageHandler = (pageData) =>
+    this.changeSubPage({
+      type: INSTALLED_PLUGINS_SUBPAGE,
+      data: pageData,
+      title: INTEGRATION_NAMES_TITLES[pageData.name] || pageData.name,
+    });
 
   renderFilterMobileBlock = () => (
     <div className={cx('plugins-filter-mobile')}>

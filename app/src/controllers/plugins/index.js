@@ -3,13 +3,10 @@ export {
   fetchPluginsAction,
   fetchGlobalIntegrationsAction,
   updatePluginLocallyAction,
-  addProjectIntegrationAction,
-  updateProjectIntegrationAction,
-  removeProjectIntegrationAction,
+  addIntegrationAction,
+  removeIntegrationAction,
   removeProjectIntegrationsByTypeAction,
-  addGlobalIntegrationAction,
-  updateGlobalIntegrationAction,
-  removeGlobalIntegrationAction,
+  updateIntegrationAction,
   setProjectIntegrationsAction,
 } from './actionCreators';
 export {
@@ -32,5 +29,6 @@ export {
   namedProjectIntegrationsSelectorsMap,
   availableBtsIntegrationsSelector,
   namedAvailableBtsIntegrationsSelector,
+  availableIntegrationsByPluginNameSelector,
 } from './selectors';
 export { pluginSagas } from './sagas';

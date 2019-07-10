@@ -10,6 +10,7 @@ import { hideModalAction } from 'controllers/modal';
 import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLock';
 import { fetch } from 'common/utils';
 import { activeProjectSelector, userIdSelector } from 'controllers/user';
+import { setProjectIntegrationsAction } from 'controllers/plugins';
 import {
   addFilterAction,
   fetchUserFiltersSuccessAction,
@@ -256,6 +257,7 @@ function* watchUpdatePAState() {
 function* fetchProject({ payload: { projectId, isAdminAccess } }) {
   const project = yield call(fetch, URLS.project(projectId));
   yield put(fetchProjectSuccessAction(project));
+  yield put(setProjectIntegrationsAction(project.integrations));
   if (!isAdminAccess) {
     yield put(fetchProjectPreferencesAction(projectId));
   }

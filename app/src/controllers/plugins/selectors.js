@@ -88,10 +88,7 @@ const namedAvailableIntegrationsByGroupTypeSelector = (groupType) => (state) => 
   const availablePluginNames = INTEGRATION_NAMES_BY_GROUP_TYPES_MAP[groupType];
 
   return availablePluginNames.reduce((acc, pluginName) => {
-    let availableIntegrations = namedProjectIntegrationsSelectorsMap[pluginName](state);
-    if (!availableIntegrations.length) {
-      availableIntegrations = namedGlobalIntegrationsSelectorsMap[pluginName](state);
-    }
+    const availableIntegrations = availableIntegrationsByPluginNameSelector(state, pluginName);
     return availableIntegrations.length ? { ...acc, [pluginName]: availableIntegrations } : acc;
   }, {});
 };
