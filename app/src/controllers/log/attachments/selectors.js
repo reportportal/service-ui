@@ -10,5 +10,8 @@ export const attachmentsLoadingSelector = (state) => attachmentsSelector(state).
 export const attachmentsPaginationSelector = (state) => attachmentsSelector(state).pagination || {};
 
 export const attachmentItemsSelector = createSelector(logsWithAttachmentsSelector, (logItems) =>
-  logItems.map((item) => item.binaryContent).map((attachment) => createAttachment(attachment)),
+  logItems
+    .filter((item) => !!item.binaryContent)
+    .map((item) => item.binaryContent)
+    .map((attachment) => createAttachment(attachment)),
 );
