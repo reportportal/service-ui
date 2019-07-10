@@ -1,5 +1,5 @@
 import { createSelector } from 'reselect';
-import { BTS_GROUP_TYPE } from 'common/constants/pluginsGroupTypes';
+import { BTS_GROUP_TYPE, NOTIFICATION_GROUP_TYPE } from 'common/constants/pluginsGroupTypes';
 import {
   JIRA,
   RALLY,
@@ -33,6 +33,12 @@ export const availableGroupedPluginsSelector = createSelector(
 
     return availableGroupedPlugins || {};
   },
+);
+
+export const emailPluginSelector = createSelector(
+  pluginsSelector,
+  (plugins) =>
+    plugins.filter((item) => item.groupType === NOTIFICATION_GROUP_TYPE && item.name === EMAIL)[0],
 );
 
 export const createNamedIntegrationsSelector = (integrationName, integrationsSelector) =>
