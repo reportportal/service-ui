@@ -11,16 +11,10 @@ export const TestParameters = ({ parameters }) =>
       <thead className={cx('header')}>
         <tr className={cx('row')}>
           <td className={cx('header-cell')}>
-            <FormattedMessage
-              id="TestItemDetailsModal.parameterKey"
-              defaultMessage="Parameter key"
-            />
+            <FormattedMessage id="TestItemDetailsModal.parameterKey" defaultMessage="Key" />
           </td>
           <td className={cx('header-cell')}>
-            <FormattedMessage
-              id="TestItemDetailsModal.parameterValue"
-              defaultMessage="Parameter value"
-            />
+            <FormattedMessage id="TestItemDetailsModal.parameterValue" defaultMessage="Value" />
           </td>
         </tr>
       </thead>

@@ -1,7 +1,7 @@
 .row {
   box-sizing: border-box;
   border-bottom: 1px solid $COLOR--gray-91;
-  height: 30px;
+  height: 35px;
 }
 
 .test-parameters {
@@ -17,6 +17,7 @@
   text-transform: uppercase;
   vertical-align: middle;
   padding-left: 10px;
+  text-align: center;
 }
 
 .cell {
@@ -25,6 +26,11 @@
   line-height: 1.67;
   vertical-align: middle;
   padding-left: 10px;
+  word-break: break-all;
+  width: 50%;
+  @supports (word-break: break-word) {
+    word-break: break-word;
+  }
 }
 
 .no-parameters {

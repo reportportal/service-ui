@@ -1,5 +1,8 @@
 .name {
   color: $COLOR--charcoal-grey;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  padding-right: 10px;
 }
 
 .name-row {
@@ -12,14 +15,22 @@
 }
 
 .id {
-  word-wrap: break-word;
+  word-break: break-all;
+
+  @supports (word-break: break-word) {
+    word-break: break-word;
+  }
 }
 
 .location {
   display: flex;
   justify-content: space-between;
   white-space: pre-line;
-  word-break: break-word;
+  word-break: break-all;
+
+  @supports (word-break: break-word) {
+    word-break: break-word;
+  }
   padding-right: 10px;
 }
 
@@ -47,4 +58,12 @@
   &:hover {
     stroke: $COLOR--black-2;
   }
+}
+
+.label {    
+  font-family: $FONT-REGULAR;
+  font-size: 13px;
+  line-height: 1.2;
+  color: $COLOR--charcoal-grey;
+  padding-bottom: 10px;
 }
