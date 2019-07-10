@@ -22,6 +22,7 @@ const renderTooltip = (itemData, intl) => (d, defaultTitleFormat, defaultValueFo
 export const getLaunchModeConfig = ({ content, isPreview, intl, positionCallback, size }) => {
   const { result } = content;
   const colors = {};
+  const columns = [];
 
   const sortedResult = result.sort((item) => -item.number);
   const itemData = sortedResult.map((item) => ({
@@ -32,11 +33,10 @@ export const getLaunchModeConfig = ({ content, isPreview, intl, positionCallback
   }));
   const groups = Object.keys(sortedResult[0].values);
 
-  const columns = groups.map((type) => {
+  groups.forEach((type) => {
     const values = sortedResult.map((item) => item.values[type] || 0);
     colors[type] = COLORS[type];
-
-    return [type, ...values];
+    columns.push([type, ...values]);
   });
 
   return {
