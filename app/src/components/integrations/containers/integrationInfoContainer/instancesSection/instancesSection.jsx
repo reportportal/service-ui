@@ -233,7 +233,7 @@ export class InstancesSection extends Component {
             {formatMessage(messages.noGlobalIntegrationMessage)}
           </p>
         )}
-        {this.multiple &&
+        {(this.multiple || !globalIntegrations.length) &&
           !disabled &&
           isGlobal && (
             <div className={cx('add-integration-button')}>

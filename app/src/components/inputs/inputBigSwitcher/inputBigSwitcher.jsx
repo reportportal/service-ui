@@ -41,6 +41,7 @@ export class InputBigSwitcher extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    title: PropTypes.string,
   };
 
   static defaultProps = {
@@ -52,6 +53,7 @@ export class InputBigSwitcher extends Component {
     onFocus: () => {},
     onBlur: () => {},
     onChangeEventInfo: {},
+    title: '',
   };
   render() {
     const {
@@ -64,6 +66,7 @@ export class InputBigSwitcher extends Component {
       onBlur,
       children,
       value,
+      title,
     } = this.props;
     const classes = cx({
       'switcher-wrapper': true,
@@ -81,7 +84,7 @@ export class InputBigSwitcher extends Component {
     return (
       // eslint-disable-next-line
       <label className={cx('input-big-switcher')} tabIndex="1">
-        <div className={classes}>
+        <div className={classes} title={title}>
           <div className={cx('on')}>
             <FormattedMessage id={'Common.on'} defaultMessage={'ON'} />
           </div>

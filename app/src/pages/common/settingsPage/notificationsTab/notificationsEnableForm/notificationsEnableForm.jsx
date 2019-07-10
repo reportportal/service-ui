@@ -15,6 +15,10 @@ const messages = defineMessages({
     id: 'NotificationsEnableForm.toggleNotificationsNote',
     defaultMessage: 'Send e-mail notifications about launches finished',
   },
+  title: {
+    id: 'NotificationsEnableForm.title',
+    defaultMessage: 'No integrations with E-mail',
+  },
 });
 
 @reduxForm({
@@ -27,11 +31,13 @@ export class NotificationsEnableForm extends Component {
     initialize: PropTypes.func.isRequired,
     initialValues: PropTypes.object,
     readOnly: PropTypes.bool,
+    isEmailPlugin: PropTypes.bool,
   };
 
   static defaultProps = {
     initialValues: {},
     readOnly: true,
+    isEmailPlugin: true,
   };
 
   componentDidMount() {
@@ -43,7 +49,8 @@ export class NotificationsEnableForm extends Component {
   });
 
   render() {
-    const { intl, readOnly } = this.props;
+    const { intl, readOnly, isEmailPlugin } = this.props;
+    const titleMessage = !isEmailPlugin ? intl.formatMessage(messages.title) : '';
 
     return (
       <Fragment>
@@ -56,7 +63,7 @@ export class NotificationsEnableForm extends Component {
           format={Boolean}
           parse={Boolean}
         >
-          <InputBigSwitcher mobileDisabled />
+          <InputBigSwitcher title={titleMessage} mobileDisabled />
         </FormField>
       </Fragment>
     );
