@@ -57,3 +57,4 @@ export {
   HOME_PAGE,
 } from './constants';
 export { NOT_FOUND } from 'redux-first-router';
+export { pageSagas } from './sagas';
