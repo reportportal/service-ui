@@ -4,8 +4,14 @@ import { fetch } from 'common/utils';
 import { showModalAction, HIDE_MODAL } from 'controllers/modal';
 import { concatFetchDataAction } from 'controllers/fetch';
 import { activeProjectSelector } from 'controllers/user';
-import { activeRetryIdSelector, isLaunchLogSelector } from 'controllers/log/selectors';
+import {
+  activeRetryIdSelector,
+  isLaunchLogSelector,
+  logViewModeSelector,
+} from 'controllers/log/selectors';
+import { DETAILED_LOG_VIEW } from 'controllers/log/constants';
 import { JSON as JSON_TYPE } from 'common/constants/fileTypes';
+import { testItemIdsArraySelector } from 'controllers/pages';
 import {
   ATTACHMENT_IMAGE_MODAL_ID,
   ATTACHMENT_CODE_MODAL_ID,
@@ -16,13 +22,24 @@ import {
 } from './constants';
 import { getAttachmentModalId, extractExtension } from './utils';
 
-function* fetchAttachmentsConcat({ payload: { params, concat } }) {
+function* getAttachmentURL() {
   const activeProject = yield select(activeProjectSelector);
-  const activeLogItemId = yield select(activeRetryIdSelector);
   const isLaunchLog = yield select(isLaunchLogSelector);
-  const url = isLaunchLog
-    ? URLS.launchLogs(activeProject, activeLogItemId)
-    : URLS.logItems(activeProject, activeLogItemId);
+  const activeLogItemId = yield select(activeRetryIdSelector);
+  if (isLaunchLog) {
+    return URLS.launchLogs(activeProject, activeLogItemId);
+  }
+  const logViewMode = yield select(logViewModeSelector);
+  if (logViewMode === DETAILED_LOG_VIEW) {
+    const itemIdsArray = yield select(testItemIdsArraySelector);
+    const underPathItemsIds = itemIdsArray.slice(1).join('.');
+    return URLS.logsUnderPath(activeProject, underPathItemsIds);
+  }
+  return URLS.logItems(activeProject, activeLogItemId);
+}
+
+function* fetchAttachmentsConcat({ payload: { params, concat } }) {
+  const url = yield call(getAttachmentURL);
   yield put(concatFetchDataAction(ATTACHMENTS_NAMESPACE, concat)(url, { params }));
 }
 
