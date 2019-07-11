@@ -6,7 +6,7 @@
 
 .test-parameters {
   width: 100%;
-  background-color: $COLOR--white;
+  background-color: $COLOR--white-two;
 }
 
 .header-cell {
@@ -16,8 +16,7 @@
   height: 17px;
   text-transform: uppercase;
   vertical-align: middle;
-  padding-left: 10px;
-  text-align: center;
+  padding-right: 10px;
 }
 
 .cell {
@@ -25,9 +24,9 @@
   font-size: 12px;
   line-height: 1.67;
   vertical-align: middle;
-  padding-left: 10px;
   word-break: break-all;
   width: 50%;
+  padding-right: 10px;
   @supports (word-break: break-word) {
     word-break: break-word;
   }
@@ -39,6 +38,6 @@
   font-family: $FONT-SEMIBOLD;
   line-height: 30px;
   text-transform: uppercase;
-  background-color: $COLOR--gray-91;
+  background-color: $COLOR--white-two;
   text-align: center;
 }
