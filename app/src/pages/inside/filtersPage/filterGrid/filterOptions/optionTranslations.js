@@ -17,22 +17,6 @@ export const messages = defineMessages({
     id: 'FilterOptions.total',
     defaultMessage: 'Total',
   },
-  AB: {
-    id: 'FilterOptions.AB',
-    defaultMessage: 'AB',
-  },
-  SI: {
-    id: 'FilterOptions.SI',
-    defaultMessage: 'SI',
-  },
-  PB: {
-    id: 'FilterOptions.PB',
-    defaultMessage: 'PB',
-  },
-  TI: {
-    id: 'FilterOptions.TI',
-    defaultMessage: 'TI',
-  },
   and: {
     id: 'FilterOptions.and',
     defaultMessage: 'AND',

@@ -104,7 +104,7 @@ export const getItemName = (
   return (
     (defectTypeConfig.find((item) => item.locator === locator) || {}).longName ||
     formatMessage(messages.total, {
-      type: formatMessage(messages[defectTypeConfig[0].shortName.toLowerCase()]),
+      type: defectTypeConfig[0].shortName,
     })
   );
 };
