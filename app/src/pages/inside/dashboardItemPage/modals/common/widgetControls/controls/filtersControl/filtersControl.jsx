@@ -179,6 +179,11 @@ export class FiltersControl extends Component {
 
   getActiveFilterId = () => this.props.value.value;
 
+  getFilterForSubmit = (filter) => ({
+    ...filter,
+    conditions: filter.conditions.filter((item) => item.value.trim()),
+  });
+
   fetchFilter = ({ page, size, searchValue }) => {
     const { size: stateSize, page: statePage } = this.state;
 
@@ -238,7 +243,7 @@ export class FiltersControl extends Component {
 
     fetch(URLS.filters(activeProject), {
       method: 'post',
-      data: filter,
+      data: this.getFilterForSubmit(filter),
     })
       .then(({ id }) => {
         this.handleActiveFilterChange(String(id), filter);
@@ -263,7 +268,7 @@ export class FiltersControl extends Component {
 
     fetch(URLS.filter(activeProject, filter.id), {
       method: 'put',
-      data: filter,
+      data: this.getFilterForSubmit(filter),
     })
       .then(() => {
         this.fetchFilter({ page: 1 });
