@@ -39,7 +39,7 @@ const messages = defineMessages({
   },
   ItemsValidationError: {
     id: 'ProjectActivityControls.ItemsValidationError',
-    defaultMessage: 'Items count should have value from 1 to 150',
+    defaultMessage: 'Items count should have value from 1 to 600',
   },
   ActionTypesValidationError: {
     id: 'ProjectActivityControls.ActionTypesValidationError',
@@ -48,7 +48,7 @@ const messages = defineMessages({
 });
 const validators = {
   items: (formatMessage) => (value) =>
-    (!value || !validate.inRangeValidate(value, 1, 150)) &&
+    (!value || !validate.inRangeValidate(value, 1, 600)) &&
     formatMessage(messages.ItemsValidationError),
   actionType: (formatMessage) => (value) =>
     (!value || !value.length) && formatMessage(messages.ActionTypesValidationError),
