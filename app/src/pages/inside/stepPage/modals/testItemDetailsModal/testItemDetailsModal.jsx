@@ -26,7 +26,7 @@ import { canEditLaunch } from 'common/utils/permissions';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { TestItemStatus } from 'pages/inside/common/testItemStatus';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
-import { TestParameters } from './testParameters';
+import { TestParameters } from 'pages/inside/common/testParameters';
 import styles from './testItemDetailsModal.scss';
 
 const cx = classNames.bind(styles);

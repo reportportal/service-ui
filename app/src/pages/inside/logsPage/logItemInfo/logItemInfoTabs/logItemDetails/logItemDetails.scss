@@ -38,6 +38,14 @@
   overflow-wrap: break-word;
 }
 
+.info-line {
+  display: flex;
+  justify-content: flex-start;
+  :first-child {
+    flex: 0 0 100px;
+  }
+}
+
 .attributes {
   margin-bottom: 14px;
   pointer-events: none;
@@ -54,21 +62,15 @@
   margin-right: 10px;
 }
 
-.description {
-}
-
-.status-column {
-  width: 9%;
-}
-
 .status {
   font: 14px $FONT-SEMIBOLD;
   color: $COLOR--charcoal-grey;
   text-transform: uppercase;
 }
 
-.time-column {
-  width: 11%;
+.parameters-column {
+  width: 43%;
+  padding-left: 10px;
 }
 
 .time {
@@ -80,4 +82,48 @@
     width: auto;
     margin-bottom: 12px;
   }
+}
+
+.location {
+  display: flex;
+  justify-content: flex-start;
+  white-space: pre-line;
+  word-break: break-all;
+
+  @supports (word-break: break-word) {
+    word-break: break-word;
+  }
+  padding-right: 10px;
+}
+
+.location-label {
+  padding-right: 10px;
+  flex-shrink: 0;
+}
+
+.copy {
+  flex-grow: 0;
+  flex-shrink: 0;
+  float: right;
+  margin-left: 10px;
+  height: 16px;
+  width: 16px;
+  padding: 0;  
+  outline: none;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  vertical-align: middle;
+  stroke: $COLOR--gray-60;
+  &:hover {
+    stroke: $COLOR--black-2;
+  }
+}
+
+.label {
+  font-family: $FONT-REGULAR;
+  font-size: 13px;
+  line-height: 1.2;
+  color: $COLOR--charcoal-grey;
+  padding-bottom: 10px;
 }
