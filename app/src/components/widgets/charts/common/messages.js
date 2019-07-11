@@ -5,26 +5,6 @@ export const messages = defineMessages({
     id: 'Charts.total',
     defaultMessage: 'Total {type}',
   },
-  si: {
-    id: 'Charts.si',
-    defaultMessage: 'SI',
-  },
-  ab: {
-    id: 'Charts.ab',
-    defaultMessage: 'AB',
-  },
-  ti: {
-    id: 'Charts.ti',
-    defaultMessage: 'TI',
-  },
-  pb: {
-    id: 'Charts.pb',
-    defaultMessage: 'PB',
-  },
-  nd: {
-    id: 'Charts.nd',
-    defaultMessage: 'ND',
-  },
   passed: {
     id: 'Charts.passed',
     defaultMessage: 'Passed',

@@ -55,9 +55,7 @@ export class FilterOptions extends Component {
     if (defectTypes[defectTypeTotal.toUpperCase()]) {
       const currentDefectType = defectTypes[defectTypeTotal.toUpperCase()][0];
       if (defectTypes[defectTypeTotal.toUpperCase()].length !== 1) {
-        return `${intl.formatMessage(messages.total)} ${intl.formatMessage(
-          messages[currentDefectType.shortName],
-        )}`;
+        return `${intl.formatMessage(messages.total)} ${currentDefectType.shortName}`;
       }
       return currentDefectType.longName;
     }

@@ -1,1 +1,1 @@
-export const FIELD_LABEL_WIDTH = 145;
+export const FIELD_LABEL_WIDTH = 120;

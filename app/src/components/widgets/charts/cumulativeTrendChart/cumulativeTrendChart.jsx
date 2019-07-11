@@ -1,6 +1,7 @@
 import { PureComponent } from 'react';
 import { injectIntl, intlShape } from 'react-intl';
 import PropTypes from 'prop-types';
+import isEqual from 'fast-deep-equal';
 import { ChartJS } from 'components/widgets/charts/common/chartjs';
 import classNames from 'classnames/bind';
 import { getChartData } from './chartjsConfig';
@@ -53,6 +54,12 @@ export class CumulativeTrendChart extends PureComponent {
   componentDidMount = () => {
     this.getConfig();
   };
+
+  componentDidUpdate(prevProps) {
+    if (!isEqual(prevProps.widget.content, this.props.widget.content)) {
+      this.getConfig();
+    }
+  }
 
   onChartElementClick = (element) => {
     if (this.state.activeAttribute) {
