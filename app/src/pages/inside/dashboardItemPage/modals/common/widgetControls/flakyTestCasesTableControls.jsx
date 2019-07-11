@@ -37,7 +37,7 @@ const messages = defineMessages({
   },
   ItemsValidationError: {
     id: 'FlakyTestCasesTableControls.ItemsValidationError',
-    defaultMessage: 'Items count should have value from 2 to 150',
+    defaultMessage: 'Items count should have value from 2 to 600',
   },
   LaunchNamesValidationError: {
     id: 'FlakyTestCasesTableControls.LaunchNamesValidationError',
@@ -46,7 +46,7 @@ const messages = defineMessages({
 });
 const validators = {
   items: (formatMessage) => (value) =>
-    (!value || !validate.inRangeValidate(value, 2, 150)) &&
+    (!value || !validate.inRangeValidate(value, 2, 600)) &&
     formatMessage(messages.ItemsValidationError),
   launchNames: (formatMessage) => (value) =>
     (!value || !value.length) && formatMessage(messages.LaunchNamesValidationError),
