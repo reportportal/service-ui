@@ -94,7 +94,7 @@ export class FilterAdd extends Component {
         onCancel={onCancel}
         onSubmit={onSave}
         onChange={this.handleFilterChange}
-        canSubmit={valid}
+        isValid={valid}
         blockTitle={messages.addTitle}
         customBlock={this.getCustomBlock()}
       />

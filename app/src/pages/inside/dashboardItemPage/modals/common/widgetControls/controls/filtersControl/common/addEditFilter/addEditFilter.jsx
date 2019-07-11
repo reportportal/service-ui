@@ -18,7 +18,7 @@ export class AddEditFilter extends Component {
   static propTypes = {
     intl: intlShape,
     filter: PropTypes.object.isRequired,
-    canSubmit: PropTypes.bool,
+    isValid: PropTypes.bool,
     blockTitle: PropTypes.object,
     onSubmit: PropTypes.func.isRequired,
     onCancel: PropTypes.func.isRequired,
@@ -28,7 +28,7 @@ export class AddEditFilter extends Component {
 
   static defaultProps = {
     intl: {},
-    canSubmit: true,
+    isValid: true,
     blockTitle: null,
     customBlock: null,
     onSubmit: () => {},
@@ -67,8 +67,19 @@ export class AddEditFilter extends Component {
     });
   };
 
+  checkIfTheAbleToSubmit = () => {
+    const {
+      filter: { conditions = [] },
+      isValid,
+    } = this.props;
+    const filteredConditions = conditions.filter((item) => item.value.trim());
+
+    return isValid && filteredConditions.length;
+  };
+
   render() {
-    const { intl, onCancel, filter, onSubmit, canSubmit, customBlock, blockTitle } = this.props;
+    const { intl, onCancel, filter, onSubmit, customBlock, blockTitle } = this.props;
+    const isAbleToSubmit = this.checkIfTheAbleToSubmit();
 
     return (
       <div className={cx('add-edit-filter')}>
@@ -103,7 +114,11 @@ export class AddEditFilter extends Component {
             <BigButton color={'gray-60'} onClick={onCancel} className={cx('button-inline')}>
               {intl.formatMessage(COMMON_LOCALE_KEYS.CANCEL)}
             </BigButton>
-            <BigButton className={cx('button-inline')} onClick={onSubmit} disabled={!canSubmit}>
+            <BigButton
+              className={cx('button-inline')}
+              onClick={onSubmit}
+              disabled={!isAbleToSubmit}
+            >
               {intl.formatMessage(COMMON_LOCALE_KEYS.SUBMIT)}
             </BigButton>
           </div>
