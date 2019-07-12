@@ -210,6 +210,7 @@ export const statisticsLinkSelector = (state, ownProps) => {
       ...query,
       ...createNamespacedQuery(
         {
+          'filter.eq.hasStats': true,
           'filter.eq.hasChildren': false,
           'filter.in.type': LEVEL_STEP,
           'filter.in.status': ownProps.statuses && ownProps.statuses.join(','),
@@ -251,6 +252,7 @@ export const defectLinkSelector = (state, ownProps) => {
       ...query,
       ...createNamespacedQuery(
         {
+          'filter.eq.hasStats': true,
           'filter.eq.hasChildren': false,
           'filter.in.issueType': getDefectsString(ownProps.defects),
         },
@@ -275,6 +277,7 @@ export const testCaseNameLinkSelector = (state, ownProps) => {
     {
       ...createNamespacedQuery(
         {
+          'filter.eq.hasStats': true,
           'filter.eq.uniqueId': ownProps.uniqueId,
           'filter.eq.hasChildren': false,
         },
