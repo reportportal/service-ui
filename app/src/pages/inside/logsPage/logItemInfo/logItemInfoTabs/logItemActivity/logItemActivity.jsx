@@ -61,11 +61,7 @@ export class LogItemActivity extends Component {
         </div>
         <div className={cx('history-column', 'column')}>
           {activityItem.details.history.map((historyItem) => (
-            <HistoryItem
-              key={historyItem.field}
-              historyItem={historyItem}
-              projectId={activityItem.projectId}
-            />
+            <HistoryItem key={historyItem.field} historyItem={historyItem} />
           ))}
         </div>
       </div>

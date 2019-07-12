@@ -6,9 +6,10 @@ import Parser from 'html-react-parser';
 import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
 import { logActivitySelector } from 'controllers/log/index';
-import { filterIdSelector, TEST_ITEM_PAGE } from 'controllers/pages/index';
+import { projectIdSelector, filterIdSelector, PROJECT_LOG_PAGE } from 'controllers/pages/index';
 import { getTicketUrlId } from 'common/utils/index';
 import RightArrowIcon from 'common/img/arrow-right-small-inline.svg';
+import { normalizeAndParse } from './utils';
 import styles from './historyItem.scss';
 
 const cx = classNames.bind(styles);
@@ -30,6 +31,7 @@ const messages = defineMessages({
 
 @injectIntl
 @connect((state) => ({
+  projectId: projectIdSelector(state),
   activity: logActivitySelector(state),
   filterId: filterIdSelector(state),
 }))
@@ -37,11 +39,11 @@ export class HistoryItem extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
     historyItem: PropTypes.shape({
-      oldValue: PropTypes.string.isRequired,
-      newValue: PropTypes.string.isRequired,
+      oldValue: PropTypes.string,
+      newValue: PropTypes.string,
       field: PropTypes.string.isRequired,
     }).isRequired,
-    projectId: PropTypes.number.isRequired,
+    projectId: PropTypes.string.isRequired,
     activity: PropTypes.array.isRequired,
     filterId: PropTypes.string.isRequired,
   };
@@ -70,17 +72,13 @@ export class HistoryItem extends Component {
     const { projectId, filterId, intl } = this.props;
 
     try {
-      const relevantItem = JSON.parse(value);
+      const relevantItem = normalizeAndParse(value);
       const itemLink = {
-        type: TEST_ITEM_PAGE,
+        type: PROJECT_LOG_PAGE,
         payload: {
           projectId,
           filterId,
-          testItemIds: [
-            relevantItem.launchId,
-            ...Object.keys(relevantItem.path_names),
-            relevantItem.id,
-          ].join('/'),
+          testItemIds: [relevantItem.launchId, ...relevantItem.path.split('.')].join('/'),
         },
       };
 
