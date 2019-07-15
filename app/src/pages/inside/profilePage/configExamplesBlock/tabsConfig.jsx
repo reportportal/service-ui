@@ -3,7 +3,7 @@ import styles from './configExamplesBlock.scss';
 
 const cx = classNames.bind(styles);
 
-const javaConfig = (token, activeProject) => ({
+const javaConfig = (token, activeProject, login) => ({
   name: 'Java',
   content: (
     <div className={cx('content-wrapper')}>
@@ -12,7 +12,7 @@ const javaConfig = (token, activeProject) => ({
       <div className={cx('options')}>
         <p>rp.endpoint = {window.location.origin}</p>
         <p>rp.uuid = {token}</p>
-        <p>rp.launch = superadmin_TEST_EXAMPLE</p>
+        <p>rp.launch = {login}_TEST_EXAMPLE</p>
         <p>rp.project = {activeProject}</p>
       </div>
       <h1 className={cx('h1')}>NOT REQUIRED</h1>
@@ -30,7 +30,7 @@ const javaConfig = (token, activeProject) => ({
     </div>
   ),
 });
-const rubyConfig = (token, activeProject) => ({
+const rubyConfig = (token, activeProject, login) => ({
   name: 'Ruby',
   content: (
     <div className={cx('content-wrapper')}>
@@ -40,13 +40,13 @@ const rubyConfig = (token, activeProject) => ({
         <p>uuid: {token}</p>
         <p>endpoint: {window.location.origin}/api/v1</p>
         <p>project: {activeProject}</p>
-        <p>launch: superadmin_TEST_EXAMPLE</p>
+        <p>launch: {login}_TEST_EXAMPLE</p>
         <p>attributes: [key:value, value]</p>
       </div>
     </div>
   ),
 });
-const soapUiConfig = (token, activeProject) => ({
+const soapUiConfig = (token, activeProject, login) => ({
   name: 'SoupUI',
   content: (
     <div className={cx('content-wrapper')}>
@@ -58,7 +58,7 @@ const soapUiConfig = (token, activeProject) => ({
         <p>rp.uuid = {token}</p>
         <p>rp.endpoint = {window.location.origin}</p>
         <br />
-        <p>rp.launch = superadmin_TEST_EXAMPLE</p>
+        <p>rp.launch = {login}_TEST_EXAMPLE</p>
         <p>rp.project = {activeProject}</p>
         <p>rp.attributes = key:value; value;</p>
         <p>rp.description = My awesome launch</p>
@@ -74,7 +74,7 @@ const dotNetConfig = {
     </div>
   ),
 };
-const nodejsConfig = (token, activeProject) => ({
+const nodejsConfig = (token, activeProject, login) => ({
   name: 'NodeJS',
   content: (
     <div className={cx('content-wrapper')}>
@@ -89,7 +89,7 @@ const nodejsConfig = (token, activeProject) => ({
       <div className={cx('options')}>
         <p>uuid: {token}</p>
         <p>endpoint: {window.location.origin}/api/v1</p>
-        <p>launch: superadmin_TEST_EXAMPLE</p>
+        <p>launch: {login}_TEST_EXAMPLE</p>
         <p>project: {activeProject}</p>
       </div>
     </div>
