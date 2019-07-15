@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { formValueSelector } from 'redux-form';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { STATS_FAILED, STATS_PASSED, STATS_SKIPPED } from 'common/constants/statistics';
@@ -14,11 +15,13 @@ import { FiltersControl, InputControl, TogglerControl } from './controls';
 import { getWidgetCriteriaOptions } from './utils/getWidgetCriteriaOptions';
 import { DEFECT_STATISTICS_OPTIONS, TO_INVESTIGATE_OPTION, ITEMS_INPUT_WIDTH } from './constants';
 import styles from './widgetControls.scss';
+import { WIDGET_WIZARD_FORM, WIDGET_WIZARD_WIDGET_OPTIONS_ATTRIBUTES_KEY } from '../constants';
 
 const cx = classNames.bind(styles);
 
 const DEFAULT_ITEMS_COUNT = '15';
 const STATIC_CONTENT_FIELDS = [STATS_FAILED, STATS_SKIPPED, STATS_PASSED];
+
 const messages = defineMessages({
   CriteriaFieldLabel: {
     id: 'CumulativeTrendControls.CriteriaFieldLabel',
@@ -80,9 +83,11 @@ const validators = {
     (!value || !validate.attributesArray(value)) &&
     formatMessage(messages.attributesArrayValidationError),
 };
+const valueSelector = formValueSelector(WIDGET_WIZARD_FORM);
 
 @injectIntl
 @connect((state) => ({
+  levelsAttributes: valueSelector(state, WIDGET_WIZARD_WIDGET_OPTIONS_ATTRIBUTES_KEY),
   launchAttributeKeysSearch: URLS.launchAttributeKeysSearch(activeProjectSelector(state)),
 }))
 export class CumulativeTrendControls extends Component {
@@ -93,6 +98,11 @@ export class CumulativeTrendControls extends Component {
     formAppearance: PropTypes.object.isRequired,
     onFormAppearanceChange: PropTypes.func.isRequired,
     launchAttributeKeysSearch: PropTypes.string.isRequired,
+    levelsAttributes: PropTypes.array,
+  };
+
+  static defaultProps = {
+    levelsAttributes: [],
   };
 
   constructor(props) {
@@ -115,9 +125,6 @@ export class CumulativeTrendControls extends Component {
     });
   }
 
-  formatContentFields = (criteries) =>
-    criteries.filter((criteria) => STATIC_CONTENT_FIELDS.indexOf(criteria) === -1);
-
   parseContentFields = (criteries) => {
     const data =
       criteries &&
@@ -135,8 +142,11 @@ export class CumulativeTrendControls extends Component {
   formatFilterValue = (value) => value && value[0];
   parseFilterValue = (value) => value && [value];
 
-  makeAttributes = (attributes) =>
-    attributes ? attributes.map((attribute) => ({ value: attribute, label: attribute })) : null;
+  makeAttributes = (items) => {
+    const filteredItems = items.filter((item) => !this.props.levelsAttributes.includes(item));
+
+    return filteredItems ? filteredItems.map((item) => ({ value: item, label: item })) : null;
+  };
 
   formatAttributes = (attribute) => (attribute ? { value: attribute, label: attribute } : null);
 
@@ -146,6 +156,8 @@ export class CumulativeTrendControls extends Component {
 
     return undefined;
   };
+
+  isOptionUnique = ({ option }) => !this.props.levelsAttributes.includes(option.value);
 
   render() {
     const { intl, formAppearance, onFormAppearanceChange, launchAttributeKeysSearch } = this.props;
@@ -195,7 +207,7 @@ export class CumulativeTrendControls extends Component {
                 <FieldProvider
                   parse={this.parseAttributes}
                   format={this.formatAttributes}
-                  name="contentParameters.widgetOptions.attributes.0"
+                  name={`${WIDGET_WIZARD_WIDGET_OPTIONS_ATTRIBUTES_KEY}.0`}
                   validate={validators.attributesArray(intl.formatMessage)}
                 >
                   <InputTagsSearch
@@ -206,6 +218,7 @@ export class CumulativeTrendControls extends Component {
                     showNewLabel
                     removeSelected
                     makeOptions={this.makeAttributes}
+                    isOptionUnique={this.isOptionUnique}
                   />
                 </FieldProvider>
               </div>
@@ -219,7 +232,7 @@ export class CumulativeTrendControls extends Component {
                 <FieldProvider
                   parse={this.parseAttributes}
                   format={this.formatAttributes}
-                  name="contentParameters.widgetOptions.attributes.1"
+                  name={`${WIDGET_WIZARD_WIDGET_OPTIONS_ATTRIBUTES_KEY}.1`}
                 >
                   <InputTagsSearch
                     uri={launchAttributeKeysSearch}
@@ -229,6 +242,7 @@ export class CumulativeTrendControls extends Component {
                     showNewLabel
                     removeSelected
                     makeOptions={this.makeAttributes}
+                    isOptionUnique={this.isOptionUnique}
                   />
                 </FieldProvider>
               </div>

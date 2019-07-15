@@ -92,6 +92,7 @@ export class InputTagsSearch extends Component {
   };
   onInputChange = (input) => {
     const diff = this.props.minLength - input.length;
+
     if (this.props.dynamicSearchPromptText && this.props.minLength && diff > 0) {
       const dynamicSearchPromptText = (
         <FormattedMessage
