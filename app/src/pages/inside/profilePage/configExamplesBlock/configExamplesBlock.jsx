@@ -24,7 +24,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
 import { ContainerWithTabs } from 'components/main/containerWithTabs';
-import { apiTokenValueSelector, activeProjectSelector } from 'controllers/user';
+import { apiTokenValueSelector, activeProjectSelector, userIdSelector } from 'controllers/user';
 import { PROFILE_PAGE_EVENTS } from 'components/main/analytics/events';
 import styles from './configExamplesBlock.scss';
 import { BlockContainerHeader, BlockContainerBody } from '../blockContainer';
@@ -35,18 +35,21 @@ const cx = classNames.bind(styles);
 @connect((state) => ({
   token: apiTokenValueSelector(state),
   activeProject: activeProjectSelector(state),
+  login: userIdSelector(state),
 }))
 export class ConfigExamplesBlock extends Component {
   static propTypes = {
     token: PropTypes.string,
+    login: PropTypes.string,
     activeProject: PropTypes.string,
   };
   static defaultProps = {
     token: '',
+    login: '',
     activeProject: '',
   };
   render() {
-    const { token, activeProject } = this.props;
+    const { token, activeProject, login } = this.props;
     return (
       <div className={cx('config-example-block')}>
         <BlockContainerHeader>
@@ -62,11 +65,11 @@ export class ConfigExamplesBlock extends Component {
             <ContainerWithTabs
               selectTabEventInfo={PROFILE_PAGE_EVENTS.SELECT_CONFIGURATION_TAB}
               data={[
-                TabsConfig.javaConfig(token, activeProject),
-                TabsConfig.rubyConfig(token, activeProject),
-                TabsConfig.soapUiConfig(token, activeProject),
+                TabsConfig.javaConfig(token, activeProject, login),
+                TabsConfig.rubyConfig(token, activeProject, login),
+                TabsConfig.soapUiConfig(token, activeProject, login),
                 TabsConfig.dotNetConfig,
-                TabsConfig.nodejsConfig(token, activeProject),
+                TabsConfig.nodejsConfig(token, activeProject, login),
               ]}
             />
           </div>
