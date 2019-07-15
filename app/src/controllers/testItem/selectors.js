@@ -3,7 +3,6 @@ import {
   testItemIdsArraySelector,
   createQueryParametersSelector,
   pagePropertiesSelector,
-  filterIdSelector,
   TEST_ITEM_PAGE,
   PROJECT_LAUNCHES_PAGE,
   PROJECT_USERDEBUG_TEST_ITEM_PAGE,
@@ -15,6 +14,7 @@ import {
   searchStringSelector,
 } from 'controllers/pages';
 import { activeProjectSelector } from 'controllers/user';
+import { activeFilterSelector } from 'controllers/filter';
 import { NAMESPACE as LAUNCH_NAMESPACE, debugModeSelector } from 'controllers/launch';
 import {
   copyQuery,
@@ -103,18 +103,20 @@ const itemTitleFormatter = (item) => {
 
 export const breadcrumbsSelector = createSelector(
   activeProjectSelector,
-  filterIdSelector,
+  activeFilterSelector,
   parentItemsSelector,
   testItemIdsArraySelector,
   pagePropertiesSelector,
   debugModeSelector,
-  (projectId, filterId, parentItems, testItemIds, query, debugMode) => {
+  (projectId, filter, parentItems, testItemIds, query, debugMode) => {
     const queryNamespacesToCopy = [LAUNCH_NAMESPACE];
     let isListViewExist = false;
+    const filterId = (filter && filter.id) || ALL;
+    const filterName = (filter && filter.name) || ALL;
     const descriptors = [
       {
         id: filterId,
-        title: String(filterId),
+        title: filterName,
         link: {
           type: debugMode ? PROJECT_USERDEBUG_PAGE : PROJECT_LAUNCHES_PAGE,
           payload: {
