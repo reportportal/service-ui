@@ -151,7 +151,7 @@ function* generateApiToken({ payload = {} }) {
 
 function* fetchApiToken() {
   try {
-    const response = yield call(fetch, URLS.apiToken(), { method: 'post' });
+    const response = yield call(fetch, URLS.apiToken());
     yield put(setApiTokenAction(response));
   } catch (err) {
     yield put(generateApiTokenAction());
