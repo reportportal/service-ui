@@ -169,30 +169,14 @@ export const URLS = {
       'filter.gte.level': level,
     })}`,
   logItemActivity: (activeProject, itemId) => `${urlBase}${activeProject}/activity/item/${itemId}`,
-  logItemStackTrace: (activeProject, itemId, pageSize) =>
+  logItemStackTrace: (activeProject, path, pageSize) =>
     `${urlBase}${activeProject}/log${getQueryParams({
-      'filter.eq.item': itemId,
+      'filter.under.path': path,
       'page.page': 1,
       'page.size': pageSize,
-      'filter.in.level': 'ERROR',
+      'filter.gte.level': 'ERROR',
       'page.sort': 'logTime,DESC',
     })}`,
-  logItemStackTraceMessageLocation: (
-    activeProject,
-    itemId,
-    stackTraceItemId,
-    pageSize,
-    pagePage,
-    level,
-  ) =>
-    `${urlBase}${activeProject}/log/${stackTraceItemId}/page${getQueryParams({
-      'filter.eq.item': itemId,
-      'page.page': pagePage,
-      'page.size': pageSize,
-      'filter.gte.level': level,
-      'page.sort': 'logTime,ASC',
-    })}`,
-
   user: () => `${urlBase}user`,
   userRegistration: () => `${urlBase}user/registration`,
   userValidateRegistrationInfo: () => `${urlBase}user/registration/info`,

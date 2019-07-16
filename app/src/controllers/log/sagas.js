@@ -41,6 +41,7 @@ import {
   logStackTracePaginationSelector,
   logViewModeSelector,
   isLaunchLogSelector,
+  activeLogSelector,
 } from './selectors';
 import {
   attachmentSagas,
@@ -121,17 +122,17 @@ function* fetchLogItems(payload = {}) {
 }
 
 function* fetchStackTrace() {
-  const { activeProject, activeLogItemId } = yield call(collectLogPayload);
+  const { activeProject } = yield call(collectLogPayload);
   const page = yield select(logStackTracePaginationSelector);
+  const item = yield select(activeLogSelector);
+  const { path } = item;
   let pageSize = STACK_TRACE_PAGINATION_OFFSET;
-  if (!isEmptyObject(page)) {
+  if (!isEmptyObject(page) && page.totalElements > 0) {
     const { totalElements, size } = page;
     pageSize = size >= totalElements ? totalElements : size + STACK_TRACE_PAGINATION_OFFSET;
   }
   yield put(
-    fetchDataAction(STACK_TRACE_NAMESPACE)(
-      URLS.logItemStackTrace(activeProject, activeLogItemId, pageSize),
-    ),
+    fetchDataAction(STACK_TRACE_NAMESPACE)(URLS.logItemStackTrace(activeProject, path, pageSize)),
   );
 }
 
