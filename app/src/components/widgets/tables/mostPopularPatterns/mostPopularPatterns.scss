@@ -1,0 +1,57 @@
+.popular-patterns {
+  height: 100%;
+  overflow: hidden;
+}
+.attribute-selector {
+  padding: 10px 20px;
+  display: flex;
+  justify-content: flex-start;
+  font-family: $FONT-REGULAR;
+  font-size: 13px;
+  color: $COLOR--black-2;
+}
+
+.attribute-label {
+  padding-right: 10px;
+  line-height: 30px;
+}
+
+.attribute-input {
+  flex-grow: 1;
+}
+
+.second-level-panel {
+  display: flex;
+  justify-content: flex-start;
+  font-family: $FONT-REGULAR;
+  font-size: 13px;
+  line-height: 20px;
+  color: $COLOR--black-2;
+  padding: 0 15px 10px 15px;  
+}
+
+.back {
+  display: flex;
+  border-right: 1px solid $COLOR--gray-91;
+  padding-right: 15px;
+  color: $COLOR--topaz;
+  cursor: pointer;
+}
+
+.pattern {
+  font-family: $FONT-SEMIBOLD;
+  padding-left: 15px;
+}
+
+.patterns-grid {
+  height: calc(100% - 51px);
+}
+
+.icon {
+  display: inline-block;
+  position: relative;
+  width: 20px;
+  height: 20px;
+  margin: auto 0;
+  fill: $COLOR--topaz;
+}

@@ -1,0 +1,58 @@
+.patterns-table {
+  width: 100%;
+  font-size: 13px;
+  color: $COLOR--black-2;
+}
+
+.patterns-header {
+  font-family: $FONT-SEMIBOLD;
+  color: $COLOR--gray-47;
+  line-height: 1.8;
+  height: 34px;
+  background-color: $COLOR--white-two;
+  border-top: 1px solid $COLOR--gray-91;
+  border-bottom: 1px solid $COLOR--gray-91;
+}
+
+.patterns-row {
+  font-family: $FONT-SEMIBOLD;
+  line-height: 1.8;
+  vertical-align: middle;
+  height: 47px;
+  border-bottom: 1px solid $COLOR--gray-91;
+  background-color: $COLOR--white-two;
+  transition: background-color 0.2s ease 0s;
+  &:hover {
+    background-color: $COLOR--tealish-hover;
+  }
+}
+
+.cell {
+  vertical-align: middle;
+  padding: 0 20px;
+}
+
+.pattern-col {
+  width: 70%;
+  text-align: left;
+}
+
+.launch-col {
+  width: 70%;
+  text-align: left;
+}
+
+.test-cases-col {
+  width: 30%;
+  text-align: right;
+}
+
+.pattern-link {
+  color: $COLOR--windows-blue;
+  cursor: pointer;
+}
+
+.test-cases-link {
+  color: $COLOR--windows-blue; 
+  text-decoration: none;
+}

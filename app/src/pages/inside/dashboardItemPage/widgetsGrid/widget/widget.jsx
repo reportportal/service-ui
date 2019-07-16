@@ -5,14 +5,14 @@ import PropTypes from 'prop-types';
 import isEqual from 'fast-deep-equal';
 import { lazyload } from 'react-lazyload';
 import { connect } from 'react-redux';
-import { fetch, formatAttribute } from 'common/utils';
+import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
-import { CUMULATIVE_TREND } from 'common/constants/widgetTypes';
+import { CUMULATIVE_TREND, MOST_POPULAR_PATTERNS } from 'common/constants/widgetTypes';
 import { activeProjectSelector } from 'controllers/user';
 import { showModalAction } from 'controllers/modal';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { DASHBOARD_PAGE_EVENTS } from 'components/main/analytics/events';
-import { CHARTS, MULTI_LEVEL_WIDGETS, NoDataAvailable } from 'components/widgets';
+import { CHARTS, MULTI_LEVEL_WIDGETS_MAP, NoDataAvailable } from 'components/widgets';
 import { isWidgetDataAvailable } from '../../modals/common/utils';
 import { WidgetHeader } from './widgetHeader';
 import styles from './widget.scss';
@@ -144,14 +144,14 @@ export class Widget extends Component {
     const { activeProject, widgetId, widgetType } = this.props;
     let url = URLS.widget(activeProject, widgetId);
 
-    if (MULTI_LEVEL_WIDGETS.indexOf(widgetType) !== -1) {
-      const {
-        queryParameters: { attributes = [] },
-      } = this.state;
+    if (MULTI_LEVEL_WIDGETS_MAP[widgetType]) {
+      const { queryParameters } = this.state;
+      const queryParamsString = MULTI_LEVEL_WIDGETS_MAP[widgetType].formatter({
+        ...queryParameters,
+        ...params,
+      });
 
-      const attributesString = (params.attributes || attributes).map(formatAttribute).join(',');
-
-      url = URLS.widgetMultilevel(activeProject, widgetId, attributesString);
+      url = URLS.widgetMultilevel(activeProject, widgetId, queryParamsString);
     }
     return url;
   };
@@ -178,13 +178,13 @@ export class Widget extends Component {
   };
 
   fetchWidget = (params = {}) => {
-    const { tracking, isFullscreen } = this.props;
+    const { tracking, isFullscreen, widgetType } = this.props;
     const url = this.getWidgetUrl(params);
 
     clearTimeout(this.silentUpdaterId);
     tracking.trackEvent(DASHBOARD_PAGE_EVENTS.REFRESH_WIDGET);
 
-    if (!isWidgetDataAvailable(this.state.widget)) {
+    if (!isWidgetDataAvailable(this.state.widget) || widgetType === MOST_POPULAR_PATTERNS) {
       this.setState({
         loading: true,
       });
