@@ -15,7 +15,6 @@ import { LOG_PAGE_EVENTS } from 'components/main/analytics/events';
 import StackTraceIcon from 'common/img/stack-trace-inline.svg';
 import AttachmentIcon from 'common/img/attachment-inline.svg';
 import InfoIcon from 'common/img/info-inline.svg';
-import TestParamsIcon from 'common/img/test-params-icon-inline.svg';
 import ClockIcon from 'common/img/clock-inline.svg';
 import { getSauceLabsConfig } from 'components/integrations/integrationProviders/sauceLabsIntegration/utils';
 import { availableIntegrationsByPluginNameSelector } from 'controllers/plugins';
@@ -23,7 +22,6 @@ import { SauceLabsIntegrationButton } from './sauceLabsIntegrationButton';
 import { InfoTabs } from '../infoTabs';
 import { LogItemDetails } from './logItemDetails';
 import { LogItemActivity } from './logItemActivity';
-import { Parameters } from './parameters';
 import { Attachments } from './attachments';
 import { StackTrace } from './stackTrace';
 import { getActionMessage } from '../utils/getActionMessage';
@@ -43,10 +41,6 @@ const messages = defineMessages({
   detailsTab: {
     id: 'LogItemInfoTabs.detailsTab',
     defaultMessage: 'Item details',
-  },
-  parametersTab: {
-    id: 'LogItemInfoTabs.parametersTab',
-    defaultMessage: 'Parameters',
   },
   historyTab: {
     id: 'LogItemInfoTabs.historyTab',
@@ -180,15 +174,6 @@ export class LogItemInfoTabs extends Component {
           logItem: activeRetry,
         },
         eventInfo: LOG_PAGE_EVENTS.ITEM_DETAILS_TAB,
-      },
-      {
-        id: 'parameters',
-        label: formatMessage(messages.parametersTab),
-        icon: TestParamsIcon,
-        component: Parameters,
-        componentProps: {
-          logItem: activeRetry,
-        },
       },
     ];
     if (this.isHistoryTabVisible()) {
