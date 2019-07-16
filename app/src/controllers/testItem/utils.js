@@ -6,13 +6,15 @@ import {
 } from 'controllers/pages';
 import * as launchLevels from 'common/constants/launchLevels';
 import * as methodTypes from 'common/constants/methodTypes';
+import { TEST_ITEM_TYPES_MAP } from './constants';
 import { LEVELS } from './levels';
 
 const getItemLevel = (type) => {
-  if (!launchLevels[`LEVEL_${type}`] && methodTypes[type]) {
+  const level = TEST_ITEM_TYPES_MAP[type] || type;
+  if (!launchLevels[`LEVEL_${level}`] && methodTypes[level]) {
     return launchLevels.LEVEL_STEP;
   }
-  return type;
+  return level;
 };
 
 export const calculateLevel = (data = [], previousLevel) => {
