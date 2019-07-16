@@ -44,7 +44,11 @@ export class GridRow extends Component {
     changeOnlyMobileLayout: false,
     rowClassMapper: null,
     toggleAccordionEventInfo: {},
-    rowHighlightingConfig: {},
+    rowHighlightingConfig: {
+      onGridRowHighlighted: () => {},
+      isGridRowHighlighted: false,
+      highlightedRowId: '',
+    },
     excludeFromSelection: [],
     gridRowClassName: '',
     level: 0,

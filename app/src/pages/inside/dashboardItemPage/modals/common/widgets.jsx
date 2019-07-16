@@ -140,7 +140,7 @@ export const widgetTypesMessages = defineMessages({
     defaultMessage: 'Cumulative trend chart',
   },
   [MOST_POPULAR_PATTERNS]: {
-    id: 'Widget.Name.mostPopularPatterns',
+    id: 'Widgets.Name.mostPopularPatterns',
     defaultMessage: 'Most popular pattern table (TOP-20)',
   },
   /*

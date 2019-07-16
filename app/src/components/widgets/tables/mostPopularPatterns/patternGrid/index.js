@@ -1,0 +1,1 @@
+export { PatternGrid } from './patternGrid';
