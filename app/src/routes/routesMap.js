@@ -52,7 +52,12 @@ import {
   changeVisibilityTypeAction,
   dashboardItemsSelector,
 } from 'controllers/dashboard';
-import { fetchLaunchesAction, setDebugMode, launchDistinctSelector } from 'controllers/launch';
+import {
+  fetchLaunchesAction,
+  setDebugMode,
+  unselectAllLaunchesAction,
+  launchDistinctSelector,
+} from 'controllers/launch';
 import { TEST_ITEM_PAGE } from 'controllers/pages/constants';
 import { fetchTestItemsAction, setLevelAction } from 'controllers/testItem';
 import { fetchFiltersAction } from 'controllers/filter';
@@ -211,6 +216,7 @@ export default {
     thunk: (dispatch) => {
       dispatch(setDebugMode(false));
       dispatch(setLevelAction(''));
+      dispatch(unselectAllLaunchesAction());
       dispatch(fetchLaunchesAction());
     },
   },

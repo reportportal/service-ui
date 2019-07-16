@@ -509,10 +509,7 @@ export class LaunchesPage extends Component {
       data: {
         items: launches,
         type: LAUNCH_ITEM_TYPES.launch,
-        fetchFunc: () => {
-          this.props.fetchLaunchesAction();
-          this.props.unselectAllLaunchesAction();
-        },
+        fetchFunc: this.unselectAndFetchLaunches,
       },
     });
   };
@@ -645,20 +642,21 @@ export class LaunchesPage extends Component {
         render={({ onFilterAdd, ...rest }) => (
           <PageLayout>
             <PageSection>
-              {!debugMode && (
-                <LaunchFiltersToolbar
-                  filters={launchFilters}
-                  activeFilterId={activeFilterId}
-                  activeFilter={activeFilter}
-                  onSelectFilter={onSelectFilter}
-                  onRemoveFilter={onRemoveFilter}
-                  onFilterAdd={onFilterAdd}
-                  onResetFilter={onResetFilter}
-                  onChangeSorting={this.handleChangeSorting}
-                  sortingString={sortingString}
-                  {...rest}
-                />
-              )}
+              {!debugMode &&
+                !selectedLaunches.length && (
+                  <LaunchFiltersToolbar
+                    filters={launchFilters}
+                    activeFilterId={activeFilterId}
+                    activeFilter={activeFilter}
+                    onSelectFilter={onSelectFilter}
+                    onRemoveFilter={onRemoveFilter}
+                    onFilterAdd={onFilterAdd}
+                    onResetFilter={onResetFilter}
+                    onChangeSorting={this.handleChangeSorting}
+                    sortingString={sortingString}
+                    {...rest}
+                  />
+                )}
             </PageSection>
             <PageSection>
               <LaunchToolbar
