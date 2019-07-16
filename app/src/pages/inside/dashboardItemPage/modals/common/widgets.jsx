@@ -65,6 +65,7 @@ import PASSING_RATE_PER_LAUNCH_PREVIEW from './img/wdgt-passing-rate-launch-inli
 import PASSING_RATE_SUMMARY_PREVIEW from './img/wdgt-passing-rate-summery-inline.svg';
 import FLAKY_TEST_CASES_TABLE_PREVIEW from './img/wdgt-flaky-test-cases-table-inline.svg';
 import CUMULATIVE_TREND_PREVIEW from './img/wdgt-cumulative-trend-chart-inline.svg';
+import MOST_POPULAR_PATTERNS_PREVIEW from './img/wdgt-most-popular-patterns-inline.svg';
 /*
 import PRODUCT_STATUS_PREVIEW from './img/wdgt-product-satus-inline.svg';
 import MOST_TIME_CONSUMING_PREVIEW from './img/wdgt-most-time-consuming-inline.svg';
@@ -394,7 +395,7 @@ export const getWidgets = (formatMessage) => [
         }
       />
     ),
-    preview: null,
+    preview: Parser(MOST_POPULAR_PATTERNS_PREVIEW),
     controls: MostPopularPatternsControls,
   },
   /*
@@ -435,4 +436,5 @@ export const TABLE_WIDGETS_PREVIEWS = {
   [MOST_FAILED_TEST_CASES_TABLE]: Parser(MOST_FAILED_TEST_CASES_TABLE_PREVIEW),
   [PROJECT_ACTIVITY]: Parser(PROJECT_ACTIVITY_PREVIEW),
   [UNIQUE_BUGS_TABLE]: Parser(UNIQUE_BUGS_TABLE_PREVIEW),
+  [MOST_POPULAR_PATTERNS]: Parser(MOST_POPULAR_PATTERNS_PREVIEW),
 };
