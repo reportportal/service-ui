@@ -1,4 +1,19 @@
+.duration-block {
+  display: inline;
+  line-height: 15px;
+}
+
+.icon {
+  @media (max-width: $SCREEN_SM_MAX) {
+    height: 15px;
+    width: 15px;
+    vertical-align: middle;
+  }
+}
+
 .duration {
-  color: $COLOR--topaz;
-  text-decoration: underline;
+  @media (max-width: $SCREEN_SM_MAX) {
+    font-size: 12px;
+    line-height: 15px;
+  }
 }

@@ -725,6 +725,7 @@
   "IndexActionsBlock.removeIndexButtonCaption": "Выдаліць індэкс",
   "IndexActionsBlock.removeIndexDescription": "Уся інфармацыя будзе выдалена з ElasticSearch. Для генерацыі дадзеных зноў Вы можаце пачаць аналізаваць тэставыя вынікі ўручную, або згенераваць дадзеныя аўтаматычна",
   "IndexActionsBlock.title": "Деянні з індексам",
+  "InfoLine.parent": "Бацька",
   "InfoLine.duration": "Працягласць",
   "InfoLine.passed": "Паспяховы {value}%",
   "InfoLine.total": "Усяго {value}",

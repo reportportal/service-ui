@@ -83,12 +83,16 @@ export class DurationBlock extends Component {
     }).isRequired,
     status: PropTypes.string,
     itemNumber: PropTypes.number,
+    iconClass: PropTypes.string,
+    durationClass: PropTypes.string,
   };
 
   static defaultProps = {
     type: '',
     status: '',
     itemNumber: null,
+    iconClass: '',
+    durationClass: '',
   };
 
   getStatusTitle = () => {
@@ -186,18 +190,20 @@ export class DurationBlock extends Component {
   };
 
   render() {
-    const { timing } = this.props;
+    const { timing, iconClass, durationClass } = this.props;
 
     return (
       <div
         className={cx('duration-block', { error: this.isStopped() || this.isInterrupted() })}
         title={this.getStatusTitle()}
       >
-        <div className={cx('icon')}>{Parser(ClockIcon)}</div>
+        <div className={cx('icon', iconClass)}>{Parser(ClockIcon)}</div>
         {this.isInProgress() ? (
           this.renderInProgressDuration()
         ) : (
-          <span className={cx('duration')}>{getDuration(timing.start, timing.end)}</span>
+          <span className={cx('duration', durationClass)}>
+            {getDuration(timing.start, timing.end)}
+          </span>
         )}
       </div>
     );

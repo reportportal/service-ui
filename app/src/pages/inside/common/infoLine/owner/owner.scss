@@ -1,0 +1,14 @@
+.owner-block {
+  display: inline;
+}
+.owner-icon {
+  display: inline-block;
+  width: 15px;
+  height: 15px;
+  box-sizing: border-box;
+  background-image: url(common/img/owner-icon.svg);
+  background-position: center;
+  background-size: 100%;
+  background-repeat: no-repeat;
+  vertical-align: middle;
+}
