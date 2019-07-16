@@ -7,7 +7,7 @@ import { lazyload } from 'react-lazyload';
 import { connect } from 'react-redux';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
-import { CUMULATIVE_TREND, MOST_POPULAR_PATTERNS } from 'common/constants/widgetTypes';
+import { CUMULATIVE_TREND } from 'common/constants/widgetTypes';
 import { activeProjectSelector } from 'controllers/user';
 import { showModalAction } from 'controllers/modal';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
@@ -168,23 +168,23 @@ export class Widget extends Component {
     });
   };
 
-  clearQueryParams = () => {
+  clearQueryParams = (showLoading = false) => {
     this.setState(
       {
         queryParameters: {},
       },
-      this.fetchWidget,
+      () => this.fetchWidget(null, showLoading),
     );
   };
 
-  fetchWidget = (params = {}) => {
-    const { tracking, isFullscreen, widgetType } = this.props;
+  fetchWidget = (params = {}, showLoading = false) => {
+    const { tracking, isFullscreen } = this.props;
     const url = this.getWidgetUrl(params);
 
     clearTimeout(this.silentUpdaterId);
     tracking.trackEvent(DASHBOARD_PAGE_EVENTS.REFRESH_WIDGET);
 
-    if (!isWidgetDataAvailable(this.state.widget) || widgetType === MOST_POPULAR_PATTERNS) {
+    if (showLoading || !isWidgetDataAvailable(this.state.widget)) {
       this.setState({
         loading: true,
       });

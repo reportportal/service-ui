@@ -33,5 +33,5 @@ export {
   listViewLinkSelector,
   logViewLinkSelector,
 } from './selectors';
-export { formatItemName } from './utils';
+export { formatItemName, getQueryNamespace } from './utils';
 export { LOG_VIEW, LIST_VIEW } from './constants';
