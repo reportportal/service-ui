@@ -3,14 +3,13 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
 import { injectIntl, intlShape, defineMessages } from 'react-intl';
-import { EMAIL } from 'common/constants/integrationNames';
 import { canConfigreEmailNotifications } from 'common/utils/permissions';
 import {
   updateProjectNotificationsConfigAction,
   projectNotificationsCasesSelector,
   projectNotificationsEnabledSelector,
 } from 'controllers/project';
-import { emailPluginSelector, namedGlobalIntegrationsSelectorsMap } from 'controllers/plugins';
+import { isEmailIntegrationAvailableSelector } from 'controllers/plugins';
 import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
 import { NotificationsEnableForm } from './notificationsEnableForm';
 import { NotificationCaseList } from './notificationCaseList';
@@ -37,8 +36,7 @@ const cx = classNames.bind(styles);
     userRole: userAccountRoleSelector(state),
     enabled: projectNotificationsEnabledSelector(state),
     cases: projectNotificationsCasesSelector(state),
-    emailPlugin: emailPluginSelector(state),
-    emailGlobalIntegrations: namedGlobalIntegrationsSelectorsMap[EMAIL](state),
+    isEmailIntegrationAvailable: isEmailIntegrationAvailableSelector(state),
   }),
   { updateNotificationsConfig: updateProjectNotificationsConfigAction },
 )
@@ -50,8 +48,7 @@ export class NotificationsTab extends Component {
     updateNotificationsConfig: PropTypes.func,
     projectRole: PropTypes.string,
     userRole: PropTypes.string,
-    emailPlugin: PropTypes.object,
-    emailGlobalIntegrations: PropTypes.array,
+    isEmailIntegrationAvailable: PropTypes.bool,
   };
   static defaultProps = {
     enabled: false,
@@ -59,8 +56,7 @@ export class NotificationsTab extends Component {
     updateNotificationsConfig: () => {},
     projectRole: '',
     userRole: '',
-    emailPlugin: {},
-    emailGlobalIntegrations: [],
+    isEmailIntegrationAvailable: true,
   };
 
   isAbleToEditNotificationCaseList = () =>
@@ -68,8 +64,7 @@ export class NotificationsTab extends Component {
 
   isAbleToEditNotificationsEnableForm = () =>
     canConfigreEmailNotifications(this.props.userRole, this.props.projectRole) &&
-    this.props.emailPlugin.enabled &&
-    this.props.emailGlobalIntegrations.length;
+    this.props.isEmailIntegrationAvailable;
 
   toggleNotificationsEnabled = ({ enabled } = {}, dispatch, formProps) =>
     formProps.dirty && this.props.updateNotificationsConfig({ enabled });
@@ -80,8 +75,7 @@ export class NotificationsTab extends Component {
       cases,
       updateNotificationsConfig,
       intl,
-      emailPlugin,
-      emailGlobalIntegrations,
+      isEmailIntegrationAvailable,
     } = this.props;
     const readOnlyNotificationsEnableForm = !this.isAbleToEditNotificationsEnableForm();
     const readOnlyNotificationCaseList = !this.isAbleToEditNotificationCaseList;
@@ -94,7 +88,7 @@ export class NotificationsTab extends Component {
               initialValues={{ enabled }}
               onChange={this.toggleNotificationsEnabled}
               readOnly={readOnlyNotificationsEnableForm}
-              isEmailPlugin={emailPlugin.enabled && emailGlobalIntegrations.length}
+              isEmailIntegrationAvailable={isEmailIntegrationAvailable}
             />
             <NotificationCaseList
               updateNotificationCases={updateNotificationsConfig}

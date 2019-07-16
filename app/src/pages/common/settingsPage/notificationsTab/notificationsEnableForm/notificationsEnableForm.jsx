@@ -31,13 +31,13 @@ export class NotificationsEnableForm extends Component {
     initialize: PropTypes.func.isRequired,
     initialValues: PropTypes.object,
     readOnly: PropTypes.bool,
-    isEmailPlugin: PropTypes.bool,
+    isEmailIntegrationAvailable: PropTypes.bool,
   };
 
   static defaultProps = {
     initialValues: {},
     readOnly: true,
-    isEmailPlugin: true,
+    isEmailIntegrationAvailable: true,
   };
 
   componentDidMount() {
@@ -49,8 +49,8 @@ export class NotificationsEnableForm extends Component {
   });
 
   render() {
-    const { intl, readOnly, isEmailPlugin } = this.props;
-    const titleMessage = !isEmailPlugin ? intl.formatMessage(messages.title) : '';
+    const { intl, readOnly, isEmailIntegrationAvailable } = this.props;
+    const titleMessage = !isEmailIntegrationAvailable ? intl.formatMessage(messages.title) : '';
 
     return (
       <Fragment>

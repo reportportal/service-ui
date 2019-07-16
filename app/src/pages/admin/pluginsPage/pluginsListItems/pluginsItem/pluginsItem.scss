@@ -49,6 +49,7 @@
   align-content: space-between;
   height: 40px;
   width: 100%;
+  overflow: hidden;
 
   @media (max-width: $SCREEN_XS_MAX) {
     height: 34px;
@@ -57,6 +58,7 @@
 
 .plugins-name {
   margin-bottom: 10px;
+  margin-right: 10px;
   color: $COLOR--black-2;
   font-size: 15px;
   font-family: $FONT-SEMIBOLD;
