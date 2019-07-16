@@ -22,12 +22,13 @@
 .login-page {
   position: relative;
   width: 1000px;
-  height: 764px;
+  min-height: 764px;
   margin: 0 auto;
   padding-top: 20px;
 
   .login-content {
     position: relative;
+    display: flex;
     width: 100%;
     height: 100%;
     border-radius: 2px;
@@ -55,8 +56,7 @@
 
   .left-block {
     width: 50%;
-    height: 100%;
-    float: left;
+    height: auto;
     padding: 30px 60px;
     background-image: url(../../img/login/login.svg);
     background-color: $COLOR--light-blue;
@@ -207,29 +207,25 @@
   }
 
   .right-block {
-    position: relative;
     width: 50%;
     height: 100%;
-    float: left;
     padding: 60px;
     background-color: $COLOR--white-default;
 
     @media (min-width: $SCREEN_SM_MIN) and (max-width: $SCREEN_SM_MAX) {
-      float: none;
       position: absolute;
       height: auto;
       width: 668px;
       top: 83px;
       left: 50px;
       padding: 0;
-      max-height: 640px;
       overflow-y: hidden;
       box-shadow: 0 1px 3px 0 $COLOR--skipped;
     }
 
     @media (max-width: $SCREEN_XS_MAX) {
       width: 100%;
-      padding: 0 0 146px 0;
+      padding: 0 0 25px 0;
     }
 
     .subpage-container {
@@ -246,18 +242,13 @@
     }
 
     .service-versions {
-      position: absolute;
       width: 380px;
-      padding-bottom: 60px;
-      bottom: 0;
 
       @media (min-width: $SCREEN_SM_MIN) and (max-width: $SCREEN_SM_MAX) {
-        position: static;
-        margin: 0;
         width: 100%;
-        background-color: $COLOR--white-default;
         padding: 30px 30px 50px;
-        bottom: initial;
+        margin: 0;
+        background-color: $COLOR--white-default;
       }
 
       @media (max-width: $SCREEN_XS_MAX) {
