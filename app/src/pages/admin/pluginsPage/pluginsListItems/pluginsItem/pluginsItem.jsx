@@ -30,6 +30,10 @@ const messages = defineMessages({
     id: 'PluginItem.titleOthers',
     defaultMessage: 'will be hidden on project settings',
   },
+  titleVersion: {
+    id: 'PluginItem.titleVersion',
+    defaultMessage: '{version}',
+  },
 });
 
 const titleMessagesMap = {
@@ -39,6 +43,8 @@ const titleMessagesMap = {
   [AUTHORIZATION_GROUP_TYPE]: messages.titleOthers,
   [ANALYZER_GROUP_TYPE]: messages.titleOthers,
 };
+
+const maxVersionLengthForTitle = 17;
 
 @injectIntl
 export class PluginsItem extends Component {
@@ -97,7 +103,14 @@ export class PluginsItem extends Component {
               {INTEGRATION_NAMES_TITLES[name] || name}
             </span>
             <span className={cx('plugins-author')}>{`by ${uploadedBy || 'Report Portal'}`}</span>
-            <span className={cx('plugins-version')}>{`${version || ''}`}</span>
+            <span
+              className={cx('plugins-version')}
+              title={
+                version && version.length > maxVersionLengthForTitle
+                  ? formatMessage(messages.titleVersion, { version })
+                  : ''
+              }
+            >{`${version || ''}`}</span>
           </div>
         </div>
         <div className={cx('plugins-additional-block')}>

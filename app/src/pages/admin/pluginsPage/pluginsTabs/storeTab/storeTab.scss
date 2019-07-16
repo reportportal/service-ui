@@ -12,11 +12,19 @@
 
 .plugins-content {
   width: 100%;
+  text-align: center;
 }
 
 .plugins-content-title {
   color: $COLOR--black-2;
   font-size: 22px;
   font-family: $FONT-SEMIBOLD;
-  text-align: center;
+}
+
+.plugins-content-message {
+  margin-top: 40px;
+  color: $COLOR--charcoal-grey;
+  font-size: 19px;
+  line-height: .9;
+  letter-spacing: normal;
 }
