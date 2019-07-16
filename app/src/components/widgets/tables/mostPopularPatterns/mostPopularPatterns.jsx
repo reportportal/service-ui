@@ -1,13 +1,8 @@
 import React, { Component } from 'react';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { activeProjectSelector } from 'controllers/user';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { InputDropdown } from 'components/inputs/inputDropdown';
-import { TEST_ITEM_PAGE } from 'controllers/pages';
-import { getQueryNamespace } from 'controllers/testItem/utils';
-import { createNamespacedQuery } from 'common/utils/routingUtils';
 import { PatternGrid } from './patternGrid';
 import { SecondLevelPanel } from './secondLevelPanel';
 import styles from './mostPopularPatterns.scss';
@@ -15,16 +10,12 @@ import styles from './mostPopularPatterns.scss';
 const PATTERN_FILTER_PARAM = 'patternTemplateName';
 const cx = classNames.bind(styles);
 
-@connect((state) => ({
-  projectId: activeProjectSelector(state),
-}))
 export class MostPopularPatterns extends Component {
   static propTypes = {
     widget: PropTypes.object,
     fetchWidget: PropTypes.func,
     queryParameters: PropTypes.object,
     clearQueryParams: PropTypes.func,
-    projectId: PropTypes.string,
   };
 
   static defaultProps = {
@@ -46,7 +37,6 @@ export class MostPopularPatterns extends Component {
     fetchWidget: () => {},
     queryParameters: {},
     clearQueryParams: () => {},
-    projectId: '',
   };
 
   constructor(props) {
@@ -61,16 +51,19 @@ export class MostPopularPatterns extends Component {
     this.setState({
       selectedPattern: null,
     });
-    this.props.clearQueryParams();
+    this.props.clearQueryParams(true);
   };
 
   onPatternClick = (pattern) => {
     this.setState({
       selectedPattern: pattern,
     });
-    this.props.fetchWidget({
-      [PATTERN_FILTER_PARAM]: pattern,
-    });
+    this.props.fetchWidget(
+      {
+        [PATTERN_FILTER_PARAM]: pattern,
+      },
+      true,
+    );
   };
 
   onChangeAttribute = (newAttribute) =>
@@ -85,34 +78,6 @@ export class MostPopularPatterns extends Component {
     }));
 
   getDefaultAttribute = (data) => (this.getAttributes(data) || [{}]).pop().value;
-
-  getDataByAttribute = (data, attribute) =>
-    (data.find((group) => group.attributeValue === attribute) || {}).patterns;
-
-  getLinkToLaunch = (launchId) => {
-    const {
-      projectId,
-      widget: { appliedFilters },
-    } = this.props;
-    const filterId = appliedFilters && appliedFilters.length ? appliedFilters[0].id : 'all';
-    return {
-      type: TEST_ITEM_PAGE,
-      payload: {
-        projectId,
-        filterId,
-        testItemIds: launchId,
-      },
-      meta: {
-        query: createNamespacedQuery(
-          {
-            'filter.eq.hasChildren': false,
-            'filter.any.patternName': this.state.selectedPattern,
-          },
-          getQueryNamespace(0),
-        ),
-      },
-    };
-  };
 
   render() {
     const {
@@ -142,10 +107,10 @@ export class MostPopularPatterns extends Component {
         <div className={cx('patterns-grid')}>
           <ScrollWrapper>
             <PatternGrid
-              data={this.getDataByAttribute(result, selectedAttribute)}
+              widget={this.props.widget}
               selectedPattern={selectedPattern}
+              selectedAttribute={selectedAttribute}
               onPatternClick={this.onPatternClick}
-              getLinkToLaunch={this.getLinkToLaunch}
             />
           </ScrollWrapper>
         </div>

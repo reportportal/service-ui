@@ -1,6 +1,12 @@
 import React, { PureComponent, Fragment } from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import { injectIntl, intlShape, defineMessages } from 'react-intl';
+import { activeProjectSelector } from 'controllers/user';
+import { TEST_ITEM_PAGE } from 'controllers/pages';
+import { getQueryNamespace } from 'controllers/testItem';
+import { createNamespacedQuery } from 'common/utils/routingUtils';
+import { ALL } from 'common/constants/reservedFilterIds';
 
 import classNames from 'classnames/bind';
 import {
@@ -38,21 +44,40 @@ const LAUNCH_NAME_COLUMN = 'launch';
 const TEST_CASES_COLUMN = 'testCases';
 const TEST_CASES_LINK_COLUMN = 'testCasesLink';
 
+@connect((state) => ({
+  projectId: activeProjectSelector(state),
+}))
 @injectIntl
 export class PatternGrid extends PureComponent {
   static propTypes = {
     intl: intlShape.isRequired,
-    data: PropTypes.arrayOf(PropTypes.object),
+    widget: PropTypes.object,
     selectedPattern: PropTypes.string,
+    selectedAttribute: PropTypes.string,
+    projectId: PropTypes.string,
     onPatternClick: PropTypes.func,
-    getLinkToLaunch: PropTypes.func,
   };
 
   static defaultProps = {
-    data: [],
+    widget: {
+      appliedFilters: [
+        {
+          id: 'all',
+        },
+      ],
+      content: {
+        result: [],
+      },
+      contentParameters: {
+        widgetOptions: {
+          attributeKey: '',
+        },
+      },
+    },
     selectedPattern: null,
+    selectedAttribute: null,
+    projectId: '',
     onPatternClick: () => {},
-    getLinkToLaunch: () => {},
   };
 
   getColumns = () => {
@@ -89,10 +114,39 @@ export class PatternGrid extends PureComponent {
         component: TestCasesLinkColumn,
         className: 'test-cases-col',
         columnProps: {
-          getLinkToLaunch: this.props.getLinkToLaunch,
+          getLinkToLaunch: this.getLinkToLaunch,
         },
       },
     ];
+  };
+
+  getDataByAttribute = (data, attribute) =>
+    (data.find((group) => group.attributeValue === attribute) || {}).patterns;
+
+  getLinkToLaunch = (launchId) => {
+    const {
+      projectId,
+      widget: { appliedFilters },
+      selectedPattern,
+    } = this.props;
+    const filterId = appliedFilters && appliedFilters.length ? appliedFilters[0].id : ALL;
+    return {
+      type: TEST_ITEM_PAGE,
+      payload: {
+        projectId,
+        filterId,
+        testItemIds: launchId,
+      },
+      meta: {
+        query: createNamespacedQuery(
+          {
+            'filter.eq.hasChildren': false,
+            'filter.any.patternName': selectedPattern,
+          },
+          getQueryNamespace(0),
+        ),
+      },
+    };
   };
 
   renderHeader = (columns) => (
@@ -128,8 +182,14 @@ export class PatternGrid extends PureComponent {
   );
 
   render() {
-    const { data } = this.props;
+    const {
+      widget: {
+        content: { result },
+      },
+      selectedAttribute,
+    } = this.props;
     const columns = this.getColumns();
+    const data = this.getDataByAttribute(result, selectedAttribute);
 
     return (
       <Fragment>
