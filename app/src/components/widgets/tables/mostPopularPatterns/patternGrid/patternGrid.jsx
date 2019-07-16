@@ -1,4 +1,4 @@
-import React, { PureComponent, Fragment } from 'react';
+import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { injectIntl, intlShape, defineMessages } from 'react-intl';
@@ -48,7 +48,7 @@ const TEST_CASES_LINK_COLUMN = 'testCasesLink';
   projectId: activeProjectSelector(state),
 }))
 @injectIntl
-export class PatternGrid extends PureComponent {
+export class PatternGrid extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
     widget: PropTypes.object,
