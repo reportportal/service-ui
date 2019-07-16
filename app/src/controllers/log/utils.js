@@ -66,10 +66,11 @@ export const getNextItem = (testItems = [], currentId) => {
   return testItems[itemIndex + 1] || null;
 };
 
-export const getUpdatedLogQuery = (query, itemId) => {
+export const getUpdatedLogQuery = (query, itemId, params = {}) => {
   const previousLogQuery = extractNamespacedQuery(query, NAMESPACE);
   if (previousLogQuery.history) {
     previousLogQuery.history = itemId;
   }
-  return createNamespacedQuery(previousLogQuery, NAMESPACE);
+  const newLogQuery = { ...previousLogQuery, ...params };
+  return createNamespacedQuery(newLogQuery, NAMESPACE);
 };

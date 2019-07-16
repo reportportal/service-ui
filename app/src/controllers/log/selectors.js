@@ -8,7 +8,7 @@ import {
   payloadSelector,
   prevPagePropertiesSelector,
 } from 'controllers/pages';
-import { DEFAULT_PAGINATION } from 'controllers/pagination';
+import { DEFAULT_PAGINATION, PAGE_KEY } from 'controllers/pagination';
 import {
   itemsSelector,
   paginationSelector,
@@ -17,7 +17,6 @@ import {
 } from 'controllers/testItem';
 import { debugModeSelector } from 'controllers/launch';
 import { extractNamespacedQuery, createNamespacedQuery } from 'common/utils/routingUtils';
-import { isEmptyValue } from 'common/utils';
 import {
   calculateGrowthDuration,
   normalizeHistoryItem,
@@ -145,7 +144,9 @@ export const previousLogLinkSelector = createSelector(
     if (!previousItem) {
       return null;
     }
-    const updatedLogQuery = getUpdatedLogQuery(query, previousItem.id);
+    const updatedLogQuery = getUpdatedLogQuery(query, previousItem.id, {
+      [PAGE_KEY]: 1,
+    });
     const { launchId, path } = previousItem;
     const testItemIds = [launchId, ...path.split('.')].join('/');
     return {
@@ -170,7 +171,9 @@ export const nextLogLinkSelector = createSelector(
     if (!nextItem) {
       return null;
     }
-    const updatedLogQuery = getUpdatedLogQuery(query, nextItem.id);
+    const updatedLogQuery = getUpdatedLogQuery(query, nextItem.id, {
+      [PAGE_KEY]: 1,
+    });
     const { launchId, path } = nextItem;
     const testItemIds = [launchId, ...path.split('.')].join('/');
     return {
@@ -236,32 +239,6 @@ export const disableNextItemLinkSelector = createSelector(
     const isLastPage = number === totalPages;
     return isNoNextItem && isLastPage;
   },
-);
-
-const nextErrorLogItemSelector = createSelector(
-  logItemsSelector,
-  logErrorItemsSelector,
-  (items, errorItems) => {
-    let newErrorItems = errorItems;
-    const errorItemInItemsIndex = errorItems.findIndex((errorItem) =>
-      items.find((item) => item.id === errorItem.id),
-    );
-    if (errorItemInItemsIndex > 0) {
-      newErrorItems = newErrorItems.slice(errorItemInItemsIndex + 1);
-    }
-    return newErrorItems.find((errorItem) => items.every((item) => item.id !== errorItem.id));
-  },
-);
-
-export const nextErrorLogItemIdSelector = createSelector(
-  nextErrorLogItemSelector,
-  (item = {}) => item.id,
-);
-
-export const disableNextErrorButtonSelector = createSelector(
-  nextErrorLogItemIdSelector,
-  logItemsSelector,
-  (id, items) => isEmptyValue(id) || items.length === 0,
 );
 
 export const isLoadMoreStackTraceVisible = createSelector(

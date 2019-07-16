@@ -169,16 +169,15 @@ export function* fetchTestItemsFromLogPage({ payload = {} }) {
   const { next = false } = payload;
   const offset = yield select(logPageOffsetSelector);
   yield call(updateStepPagination, { next, offset });
-  const namespace = yield select(namespaceSelector, offset);
-  const namespaceQuery = yield select(queryParametersSelector, namespace);
   yield call(fetchTestItems, { payload: { offset } });
   const testItems = yield select(itemsSelector);
   const projectId = yield select(activeProjectSelector);
   const testItem = next ? testItems[0] : testItems[testItems.length - 1];
   const { launchId, path } = testItem;
   const testItemIds = [launchId, ...path.split('.')].join('/');
-
   const filterId = yield select(filterIdSelector);
+  const namespace = yield select(namespaceSelector, offset);
+  const namespaceQuery = yield select(queryParametersSelector, namespace);
   const query = createNamespacedQuery(namespaceQuery, namespace);
   const link = {
     type: PROJECT_LOG_PAGE,
