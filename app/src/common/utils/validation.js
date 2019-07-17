@@ -19,8 +19,12 @@ export const launchNumericEntity = (value) =>
   value.length >= 1 && value.length <= 18 && !!value.match(/^[0-9]+$/);
 export const launchDescriptionEntity = (value) => value.length >= 3 && value.length <= 18;
 export const inRangeValidate = (value, min, max) => Number(value) >= min && Number(value) <= max;
-export const attributeKey = (value) => value.length >= 1 && value.length <= 128;
-export const attributesArray = (value) => value && value.length;
+export const attributeKey = (value) => value && value.length >= 1 && value.length <= 128;
+export const attributesArray = (value) =>
+  !value ||
+  !value.length ||
+  value.every((attribute) => attributeKey(attribute.value) && !attribute.edited);
+export const attributesArrayRequired = (value) => value && value.length;
 export const url = (urlValue) => !!/^(ftp|http|https):\/\/[^ "]+$/.exec(urlValue);
 export const issueId = (value) => value.length >= 1 && value.length <= 128;
 export const urlPart = (value) => !!/:\/\/.+/.exec(value);
