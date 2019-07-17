@@ -164,7 +164,7 @@ export class InstancesSection extends Component {
     const { instanceType, isGlobal } = this.props;
 
     this.props.showModalAction({
-      id: 'addProjectIntegrationModal',
+      id: 'addIntegrationModal',
       data: {
         onConfirm: this.addProjectIntegration,
         instanceType,

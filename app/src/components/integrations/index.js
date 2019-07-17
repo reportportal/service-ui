@@ -3,4 +3,4 @@ export {
   INTEGRATION_NAMES_TITLES,
   INTEGRATIONS_SETTINGS_COMPONENTS_MAP,
 } from './constants';
-export { AddProjectIntegrationModal } from './modals/addProjectIntegrationModal';
+export { AddIntegrationModal } from './modals/addIntegrationModal';

@@ -63,7 +63,7 @@ export class RallySettings extends Component {
     } = this.props;
 
     this.props.showModalAction({
-      id: 'addProjectIntegrationModal',
+      id: 'addIntegrationModal',
       data: {
         onConfirm: (data) => onUpdate(data, this.props.hideModalAction),
         instanceType: integrationType.name,
