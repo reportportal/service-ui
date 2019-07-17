@@ -18,6 +18,10 @@
   font-size: 12px;
   max-height: 570px;
   overflow: auto;
+
+  &.full-screen {
+    max-height: 100%;
+  }
 }
 
 .log-name {

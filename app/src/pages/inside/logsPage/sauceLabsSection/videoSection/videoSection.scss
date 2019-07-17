@@ -48,6 +48,10 @@
   font-size: 12px;
   font-family: $FONT-REGULAR;
   color:  $COLOR--gray-60;
+
+  &.full-screen {
+    border-bottom: 1px solid $COLOR--gray-91;
+  }
 }
 
 .info-item {

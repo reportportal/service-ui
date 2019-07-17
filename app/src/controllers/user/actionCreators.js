@@ -43,7 +43,7 @@ export const setActiveProjectAction = (project) => ({
   payload: project,
 });
 
-export const generateApiTokenAction = ({ successMessage, errorMessage }) => ({
+export const generateApiTokenAction = ({ successMessage, errorMessage } = {}) => ({
   type: GENERATE_API_TOKEN,
   payload: { successMessage, errorMessage },
 });

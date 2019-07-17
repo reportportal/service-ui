@@ -16,12 +16,14 @@ export class LogsContent extends Component {
     logs: PropTypes.array,
     assets: PropTypes.object,
     authToken: PropTypes.string,
+    isFullscreenMode: PropTypes.bool,
   };
 
   static defaultProps = {
     logs: [],
     assets: {},
     authToken: '',
+    isFullscreenMode: false,
   };
 
   constructor(props) {
@@ -41,7 +43,8 @@ export class LogsContent extends Component {
   };
 
   render() {
-    const content = JSON.stringify(this.props.logs, null, 4);
+    const { logs, isFullscreenMode } = this.props;
+    const content = JSON.stringify(logs, null, 4);
 
     return (
       <div className={cx('logs-content')}>
@@ -51,7 +54,7 @@ export class LogsContent extends Component {
             {Parser(DownloadIcon)}
           </a>
         </div>
-        <div className={cx('highlight-wrapper')}>
+        <div className={cx('highlight-wrapper', { 'full-screen': isFullscreenMode })}>
           <SyntaxHighlighter
             language="json"
             style={atomOneDarkReasonable}
