@@ -9,25 +9,25 @@ import { INTEGRATIONS_FORM_FIELDS_COMPONENTS_MAP } from '../../constants';
 
 const messages = defineMessages({
   createManualTitle: {
-    id: 'AddProjectIntegrationModal.createManualTitle',
+    id: 'AddIntegrationModal.createManualTitle',
     defaultMessage: 'Create manual integration',
   },
   createGlobalTitle: {
-    id: 'AddProjectIntegrationModal.createGlobalTitle',
+    id: 'AddIntegrationModal.createGlobalTitle',
     defaultMessage: 'Create global integration',
   },
   editAuthTitle: {
-    id: 'AddProjectIntegrationModal.editAuthTitle',
+    id: 'AddIntegrationModal.editAuthTitle',
     defaultMessage: 'Edit authorization',
   },
 });
 
-@withModal('addProjectIntegrationModal')
+@withModal('addIntegrationModal')
 @reduxForm({
   form: INTEGRATION_FORM,
 })
 @injectIntl
-export class AddProjectIntegrationModal extends Component {
+export class AddIntegrationModal extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
     data: PropTypes.object,
