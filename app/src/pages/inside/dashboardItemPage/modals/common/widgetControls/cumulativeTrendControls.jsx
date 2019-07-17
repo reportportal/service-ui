@@ -77,7 +77,7 @@ const validators = {
     (!value || !validate.attributeKey(value)) &&
     formatMessage(messages.attributeKeyValidationError),
   attributesArray: (formatMessage) => (value) =>
-    (!value || !validate.attributesArray(value)) &&
+    (!value || !validate.attributesArrayRequired(value)) &&
     formatMessage(messages.attributesArrayValidationError),
 };
 

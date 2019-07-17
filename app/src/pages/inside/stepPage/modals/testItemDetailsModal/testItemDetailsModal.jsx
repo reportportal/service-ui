@@ -27,6 +27,7 @@ import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { TestItemStatus } from 'pages/inside/common/testItemStatus';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { TestParameters } from 'pages/inside/common/testParameters';
+import { validate } from 'common/utils';
 import styles from './testItemDetailsModal.scss';
 
 const cx = classNames.bind(styles);
@@ -82,6 +83,9 @@ const messages = defineMessages({
 @withModal('testItemDetails')
 @reduxForm({
   form: 'testItemDetails',
+  validate: ({ attributes }) => ({
+    attributes: !validate.attributesArray(attributes),
+  }),
 })
 @connect(
   (state) => ({

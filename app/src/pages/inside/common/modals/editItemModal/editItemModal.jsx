@@ -4,7 +4,7 @@ import classNames from 'classnames/bind';
 import { injectIntl, intlShape, defineMessages } from 'react-intl';
 import { reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
-import { fetch } from 'common/utils';
+import { fetch, validate } from 'common/utils';
 import { URLS } from 'common/urls';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { LAUNCH_ITEM_TYPES } from 'common/constants/launchItemTypes';
@@ -64,6 +64,9 @@ const messages = defineMessages({
 @injectIntl
 @reduxForm({
   form: 'editItemForm',
+  validate: ({ attributes }) => ({
+    attributes: !validate.attributesArray(attributes),
+  }),
 })
 @connect(
   (state) => ({

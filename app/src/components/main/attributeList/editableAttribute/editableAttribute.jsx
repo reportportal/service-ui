@@ -12,6 +12,7 @@ export class EditableAttribute extends Component {
     onEdit: PropTypes.func,
     onRemove: PropTypes.func,
     onChange: PropTypes.func,
+    onCancelEdit: PropTypes.func,
     keyURLCreator: PropTypes.func.isRequired,
     valueURLCreator: PropTypes.func.isRequired,
   };
@@ -24,11 +25,12 @@ export class EditableAttribute extends Component {
     onEdit: () => {},
     onRemove: () => {},
     onChange: () => {},
+    onCancelEdit: () => {},
   };
 
   enterEditMode = () => this.props.onEdit(this.props.attribute);
 
-  exitEditMode = () => this.props.onEdit(null);
+  exitEditMode = () => this.props.onCancelEdit(this.props.attribute);
 
   calculateFormName = (attribute) =>
     attribute && attribute.key && attribute.value

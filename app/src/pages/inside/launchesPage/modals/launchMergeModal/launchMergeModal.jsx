@@ -91,10 +91,11 @@ const formSyncErrorsSelector = getFormSyncErrors(MERGE_FORM);
 @injectIntl
 @reduxForm({
   form: MERGE_FORM,
-  validate: ({ name, description, mergeType }) => ({
+  validate: ({ name, description, mergeType, attributes }) => ({
     mergeType: !mergeType,
     name: (!name || !validate.launchName(name)) && 'launchNameHint',
     description: !validate.launchDescription(description) && 'launchDescriptionHint',
+    attributes: !validate.attributesArray(attributes),
   }),
 })
 @connect(

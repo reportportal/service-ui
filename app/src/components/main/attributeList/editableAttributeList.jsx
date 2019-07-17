@@ -2,7 +2,10 @@ import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { AttributeList } from './attributeList';
 
-const NEW_ATTRIBUTE = { system: false };
+const NEW_ATTRIBUTE = {
+  system: false,
+  edited: true,
+};
 
 export class EditableAttributeList extends Component {
   static propTypes = {
@@ -19,34 +22,21 @@ export class EditableAttributeList extends Component {
     disabled: false,
   };
 
-  state = {
-    activeAttribute: null,
-    isNew: false,
+  handleAddNew = () => {
+    const { attributes, onChange } = this.props;
+    onChange([...attributes, NEW_ATTRIBUTE]);
   };
 
-  getAttributes = () => {
-    const { isNew, activeAttribute } = this.state;
-    const { attributes } = this.props;
-    return isNew ? [...attributes, activeAttribute] : attributes;
-  };
-
-  changeActiveAttribute = (attribute, isNew = false) =>
-    this.setState({ activeAttribute: attribute, isNew });
-
-  handleAddNew = () => this.changeActiveAttribute(NEW_ATTRIBUTE, true);
-
-  handleChange = (newAttribute) => {
-    this.changeActiveAttribute(null);
-    this.props.onChange(newAttribute);
+  handleChange = (attributes) => {
+    this.props.onChange(attributes);
   };
 
   render() {
     return (
       <AttributeList
-        attributes={this.getAttributes()}
-        editedAttribute={this.state.activeAttribute}
+        attributes={this.props.attributes}
         onChange={this.handleChange}
-        onEdit={this.changeActiveAttribute}
+        onRemove={this.handleChange}
         onAddNew={this.handleAddNew}
         disabled={this.props.disabled}
         keyURLCreator={this.props.keyURLCreator}
