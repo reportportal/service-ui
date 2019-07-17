@@ -22,25 +22,27 @@ export class TestsTableBody extends React.Component {
   constructor(props) {
     super(props);
 
-    this.matrixComponent = matrixFactory(this.props.columns.count.renderAsBool);
+    this.matrixComponent = props.columns.count && matrixFactory(props.columns.count.renderAsBool);
   }
 
   renderRow = (test) => {
     const { columns, launchId } = this.props;
-    const { count, name, date } = columns;
+    const { name, date, count, status, duration } = columns;
 
-    return (
-      <TestsTableRow
-        key={`row-${test.uniqueId}`}
-        launchId={launchId}
-        data={test}
-        name={test[name.nameKey]}
-        count={test[count.countKey]}
-        matrixData={test[count.matrixKey]}
-        time={test[date.dateKey]}
-        matrixComponent={this.matrixComponent}
-      />
-    );
+    const rowProps = {
+      key: `row-${test.uniqueId}-${test.id}`,
+      launchId,
+      data: test,
+      name: test[name.nameKey],
+      time: test[date.dateKey],
+      count: count && test[count.countKey],
+      matrixData: count && test[count.matrixKey],
+      matrixComponent: this.matrixComponent,
+      status: status && test[status.statusKey],
+      duration: duration && test[duration.durationKey],
+    };
+
+    return <TestsTableRow {...rowProps} />;
   };
 
   render() {

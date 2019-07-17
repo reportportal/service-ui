@@ -1,0 +1,24 @@
+.time-consuming {
+  padding-top: 5px;
+}
+
+.launch-name-block {
+  display: inline-flex;
+  align-items: center;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  line-height: 17px;
+  margin: 0 20px;
+  font-size: 13px;
+  cursor: pointer;
+
+  .launch-name-text {
+    color: $COLOR--gray-47;
+    margin-right: 5px;
+  }
+
+  .launch-name {
+    font-family: $FONT-SEMIBOLD;
+    color: $COLOR--charcoal-grey;
+  }
+}

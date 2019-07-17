@@ -30,7 +30,9 @@
         }
       }
     }
-    &.col-percents {
+    &.col-percents,
+    &.col-status,
+    &.col-duration {
       width: 20%;
       .short {
         display: none;
