@@ -20,12 +20,14 @@ export class MetadataContent extends Component {
     metadata: PropTypes.object,
     assets: PropTypes.object,
     authToken: PropTypes.string,
+    isFullscreenMode: PropTypes.bool,
   };
 
   static defaultProps = {
     metadata: {},
     assets: {},
     authToken: '',
+    isFullscreenMode: false,
   };
 
   getScreenShotsCount = () => {
@@ -44,11 +46,16 @@ export class MetadataContent extends Component {
   getVideoLink = () => `${this.props.metadata.video_url}?auth=${this.props.authToken}`;
 
   render() {
-    const { metadata } = this.props;
+    const { metadata, isFullscreenMode } = this.props;
 
     return (
       <div className={cx('metadata-content')}>
-        <ScrollWrapper autoHeight autoHeightMax={558} hideTracksWhenNotNeeded autoHide>
+        <ScrollWrapper
+          autoHeight
+          autoHeightMax={isFullscreenMode ? '100%' : 558}
+          hideTracksWhenNotNeeded
+          autoHide
+        >
           {METADATA_FIELDS_CONFIG.map(({ key, message, dataFormatter }) => (
             <div key={key} className={cx('content-row-item')}>
               <div className={cx('row-item-key')}>{message}</div>
@@ -56,7 +63,7 @@ export class MetadataContent extends Component {
             </div>
           ))}
         </ScrollWrapper>
-        <div className={cx('download-assets-block')}>
+        <div className={cx('download-assets-block', { 'full-screen': isFullscreenMode })}>
           <a className={cx('assets-block-item')} href={this.getScreenShotsLink()} target="_blank">
             {`${this.getScreenShotsCount()} Screenshots`}
             {Parser(DownloadIcon)}

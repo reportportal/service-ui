@@ -34,6 +34,10 @@
   height: 50px;
   border-top: 1px solid $COLOR--gray-91;
   background-color: $COLOR--white;
+
+  &.full-screen {
+    border-bottom: 1px solid $COLOR--gray-91;
+  }
 }
 
 .assets-block-item {

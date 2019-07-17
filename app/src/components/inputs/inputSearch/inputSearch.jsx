@@ -22,8 +22,8 @@
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
+import SearchIcon from 'common/img/search-icon-inline.svg';
 import styles from './inputSearch.scss';
-import SearchIcon from './img/search-icon-inline.svg';
 
 const cx = classNames.bind(styles);
 

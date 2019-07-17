@@ -68,7 +68,7 @@ export class VideoSection extends Component {
         <div className={cx('section-content')}>
           <VideoPlayer observer={observer} {...this.getVideoOptions()} />
         </div>
-        <div className={cx('section-info')}>
+        <div className={cx('section-info', { 'full-screen': isFullscreenMode })}>
           <div className={cx('info-item')}>
             {Parser(CalendarIcon)}
             {this.getFormattedDate(jobInfo.start_time)}

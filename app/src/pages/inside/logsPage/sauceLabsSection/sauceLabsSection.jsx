@@ -14,6 +14,7 @@ import {
 } from 'controllers/log/sauceLabs';
 import { getSauceLabsConfig } from 'components/integrations/integrationProviders/sauceLabsIntegration/utils';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
+import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { VideoSection } from './videoSection';
 import { JobInfoSection } from './jobInfoSection';
 import styles from './sauceLabsSection.scss';
@@ -58,26 +59,43 @@ export class SauceLabsSection extends Component {
     );
   }
 
-  toggleFullscreenMode = () => {
+  toggleFullscreenMode = (isFullscreenModeNewValue) => {
+    const isFullscreenMode =
+      typeof isFullscreenModeNewValue === 'boolean'
+        ? isFullscreenModeNewValue
+        : !this.state.isFullscreenMode;
     this.setState({
-      isFullscreenMode: !this.state.isFullscreenMode,
+      isFullscreenMode,
     });
   };
 
   render() {
     const { loading } = this.props;
+    const { isFullscreenMode } = this.state;
+    const Content = (
+      <div className={cx('section-content-wrapper')}>
+        <VideoSection
+          observer={this.observer}
+          isFullscreenMode={isFullscreenMode}
+          onToggleFullscreen={this.toggleFullscreenMode}
+        />
+        <JobInfoSection observer={this.observer} isFullscreenMode={isFullscreenMode} />
+      </div>
+    );
+
     return (
       <div className={cx('sauce-labs-section')}>
         {loading || !this.slIntegrationConfig ? (
           <SpinningPreloader />
         ) : (
-          <Fullscreen enabled={this.state.isFullscreenMode}>
-            <VideoSection
-              observer={this.observer}
-              isFullscreenMode={this.state.isFullscreenMode}
-              onToggleFullscreen={this.toggleFullscreenMode}
-            />
-            <JobInfoSection observer={this.observer} />
+          <Fullscreen enabled={isFullscreenMode} onChange={this.toggleFullscreenMode}>
+            {isFullscreenMode ? (
+              <ScrollWrapper hideTracksWhenNotNeeded autoHide>
+                {Content}
+              </ScrollWrapper>
+            ) : (
+              Content
+            )}
           </Fullscreen>
         )}
       </div>

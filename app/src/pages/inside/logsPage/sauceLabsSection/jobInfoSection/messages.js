@@ -26,4 +26,8 @@ export const messages = defineMessages({
     id: 'JobInfoSection.metadata',
     defaultMessage: 'Metadata',
   },
+  hasScreenshot: {
+    id: 'FiltersBlock.hasScreenshot',
+    defaultMessage: 'Has screenshot',
+  },
 });

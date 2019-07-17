@@ -31,6 +31,7 @@ export class JobInfoSection extends Component {
     assets: PropTypes.object,
     authToken: PropTypes.string,
     observer: PropTypes.object,
+    isFullscreenMode: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -38,6 +39,7 @@ export class JobInfoSection extends Component {
     assets: {},
     authToken: '',
     observer: {},
+    isFullscreenMode: false,
   };
 
   getTabsConfig = () => {
@@ -47,6 +49,7 @@ export class JobInfoSection extends Component {
       logs,
       assets,
       observer,
+      isFullscreenMode,
     } = this.props;
 
     return [
@@ -58,16 +61,30 @@ export class JobInfoSection extends Component {
             commands={logs}
             assets={assets}
             observer={observer}
+            isFullscreenMode={isFullscreenMode}
           />
         ),
       },
       {
         name: formatMessage(messages[LOGS_TAB]),
-        content: <LogsContent logs={logs} assets={assets} authToken={authToken} />,
+        content: (
+          <LogsContent
+            logs={logs}
+            assets={assets}
+            authToken={authToken}
+            isFullscreenMode={isFullscreenMode}
+          />
+        ),
       },
       {
         name: formatMessage(messages[METADATA_TAB]),
-        content: <MetadataContent assets={assets} authToken={authToken} />,
+        content: (
+          <MetadataContent
+            assets={assets}
+            authToken={authToken}
+            isFullscreenMode={isFullscreenMode}
+          />
+        ),
       },
     ];
   };

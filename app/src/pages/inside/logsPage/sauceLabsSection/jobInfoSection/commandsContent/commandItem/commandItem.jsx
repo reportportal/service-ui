@@ -6,7 +6,7 @@ import classNames from 'classnames/bind';
 import ArrowIcon from 'common/img/arrow-down-inline.svg';
 import ScreenShotIcon from 'common/img/screenshot-icon-inline.svg';
 import { getTimeUnits } from 'common/utils';
-import { messages } from '../../messages';
+import { getCommandBlockConfig } from '../../utils';
 import { CommandItemLogBlock } from './commandItemLogBlock';
 import styles from './commandItem.scss';
 
@@ -23,44 +23,12 @@ export class CommandItem extends Component {
 
   static defaultProps = {
     command: {},
-    screenShotLink: '',
+    screenShotLink: null,
     onItemClick: () => {},
   };
 
   state = {
     opened: false,
-  };
-
-  getCommandBlockConfig = () => {
-    const {
-      intl: { formatMessage },
-      command: { method, path, request, result, HTTPStatus },
-    } = this.props;
-
-    const response = (
-      <div>
-        <div>HTTP status: {HTTPStatus}</div>
-        {JSON.stringify(result)}
-      </div>
-    );
-
-    return [
-      {
-        id: 'command',
-        title: formatMessage(messages.commandTitle),
-        content: `${method} ${path}`,
-      },
-      {
-        id: 'parameters',
-        title: formatMessage(messages.parametersTitle),
-        content: `${JSON.stringify(request)}`,
-      },
-      {
-        id: 'response',
-        title: formatMessage(messages.responseTitle),
-        content: response,
-      },
-    ];
   };
 
   getFormattedUnit = (item) => {
@@ -100,8 +68,10 @@ export class CommandItem extends Component {
 
   render() {
     const {
+      intl: { formatMessage },
       command: { method, path, request },
       screenShotLink,
+      command,
     } = this.props;
     const isUrlRequest = request && request.url;
 
@@ -122,15 +92,18 @@ export class CommandItem extends Component {
           </div>
           <div className={cx('content-part-wrapper')}>
             <a target="_blank" href={screenShotLink} className={cx('screenshot-column')}>
-              {Parser(ScreenShotIcon)}
+              {screenShotLink && Parser(ScreenShotIcon)}
             </a>
           </div>
         </div>
         {this.state.opened && (
           <div className={cx('command-item--content')}>
-            {this.getCommandBlockConfig().map((item) => (
+            {getCommandBlockConfig(command).map((item) => (
               <div key={item.id} className={cx('log-block-wrapper')}>
-                <CommandItemLogBlock commandTitle={item.title} content={item.content} />
+                <CommandItemLogBlock
+                  commandTitle={formatMessage(item.title)}
+                  content={item.content}
+                />
               </div>
             ))}
           </div>

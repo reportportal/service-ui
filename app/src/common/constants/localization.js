@@ -81,4 +81,8 @@ export const COMMON_LOCALE_KEYS = defineMessages({
     id: 'Common.reset',
     defaultMessage: 'Reset',
   },
+  SEARCH: {
+    id: 'Common.search',
+    defaultMessage: 'Search',
+  },
 });
