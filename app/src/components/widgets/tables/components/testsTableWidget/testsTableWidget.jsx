@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { object, element } from 'prop-types';
+import { object, element, bool } from 'prop-types';
 import classNames from 'classnames/bind';
 import { LaunchInfoBlock } from './launchInfoBlock';
 import { TestsTable } from './testsTable';
@@ -8,10 +8,10 @@ import styles from './testsTableWidget.scss';
 
 const cx = classNames.bind(styles);
 
-export const TestsTableWidget = ({ launch, tests, issueType, columns }) => (
+export const TestsTableWidget = ({ launch, tests, issueType, columns, hideInfoBlock }) => (
   <div className={cx('tests-table-widget')}>
     <div className={cx('widget-wrapper')}>
-      <LaunchInfoBlock launchName={launch.name} issueType={issueType} />
+      {!hideInfoBlock && <LaunchInfoBlock launchName={launch.name} issueType={issueType} />}
       <TestsTable columns={columns} tests={tests} launchId={launch.id} />
     </div>
   </div>
@@ -22,8 +22,10 @@ TestsTableWidget.propTypes = {
   tests: PTTests.isRequired,
   issueType: element,
   columns: PTColumns.isRequired,
+  hideInfoBlock: bool,
 };
 
 TestsTableWidget.defaultProps = {
   issueType: null,
+  hideInfoBlock: false,
 };

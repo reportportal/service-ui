@@ -1,0 +1,31 @@
+.item-wrapper {
+  line-height: 18px;
+  font-size: 12px;
+  color: $COLOR--gray-47;
+  overflow: hidden;
+  white-space: nowrap;
+  -ms-text-overflow: ellipsis;
+  text-overflow: ellipsis;
+}
+
+.test-case-name {
+  font-size: 12px;
+  color: $COLOR--charcoal-grey;
+  white-space: nowrap;
+  font-weight: 900;
+}
+
+.time-wrapper {
+  display: flex;
+  align-items: center;
+
+  .time-icon {
+    display: inline-flex;
+    margin-right: 5px;
+
+    svg {
+      width: 11px;
+      height: 11px;
+    }
+  }
+}

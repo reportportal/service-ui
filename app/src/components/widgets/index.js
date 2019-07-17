@@ -22,6 +22,7 @@ import {
   MostPopularPatterns,
 } from './tables';
 import { cumulativeFormatParams, topPatternsFormatParams } from './utils';
+import { TimeConsumingTestCases } from './timeConsumingTestCases';
 
 const CHARTS = {
   [widgetTypes.DIFFERENT_LAUNCHES_COMPARISON]: LaunchesComparisonChart,
@@ -43,6 +44,7 @@ const CHARTS = {
   [widgetTypes.OVERALL_STATISTICS]: OverallStatisticsChart,
   [widgetTypes.INVESTIGATED_PERCENTAGE_OF_LAUNCHES]: InvestigatedTrendChart,
   [widgetTypes.MOST_POPULAR_PATTERNS]: MostPopularPatterns,
+  [widgetTypes.MOST_TIME_CONSUMING]: TimeConsumingTestCases,
 };
 
 const MULTI_LEVEL_WIDGETS_MAP = {

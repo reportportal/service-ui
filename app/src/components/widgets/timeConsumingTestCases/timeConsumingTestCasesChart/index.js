@@ -1,0 +1,1 @@
+export { TimeConsumingTestCasesChart } from './timeConsumingTestCasesChart';
