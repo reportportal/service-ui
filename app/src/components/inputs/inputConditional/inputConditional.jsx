@@ -68,7 +68,7 @@ export class InputConditional extends Component {
   onClickConditionItem = (condition) => {
     if (condition.value !== this.props.value.condition) {
       this.setState({ opened: false });
-      this.props.onChange({ value: this.props.value.value, condition: condition.value });
+      this.props.onChange({ value: this.props.value.value, condition: condition.value }, true);
     }
   };
   onChangeInput = (e) => {

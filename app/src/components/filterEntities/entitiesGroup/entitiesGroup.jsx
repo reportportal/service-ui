@@ -49,9 +49,11 @@ export class EntitiesGroup extends Component {
 
   getActiveEntities = () => this.props.entities.filter((entity) => entity.active);
 
-  handleChange = (entity, value) => {
+  handleChange = (entity, value, isConditionChange = false) => {
     this.props.tracking.trackEvent(entity.eventInfo);
-    this.validateEntity(entity, value.value);
+    if (!isConditionChange) {
+      this.validateEntity(entity, value.value);
+    }
     this.props.onChange(entity.id, value);
   };
 
@@ -95,7 +97,7 @@ export class EntitiesGroup extends Component {
                 onRemove={() => {
                   this.toggleEntity(id);
                 }}
-                onChange={(newValue) => this.handleChange(entity, newValue)}
+                onChange={(newValue, condition) => this.handleChange(entity, newValue, condition)}
                 onFocus={() => this.handleFocus(id)}
                 onBlur={() => this.handleBlur(id)}
                 value={value}
