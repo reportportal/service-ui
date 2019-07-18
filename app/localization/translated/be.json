@@ -433,6 +433,7 @@
   "EditItemsModal.descriptionPlaceholder": "Увядзіце апісанне",
   "EditItemsModal.descriptionReplaceLabel": "Замяніць для ўсіх элементаў",
   "EditItemsModal.itemUpdateSuccess": "Завершана паспяхова",
+  "EditItemsModal.itemUpdateError": "Завершана з памылкай",
   "EditItemsModal.items": "элементы",
   "EditItemsModal.launches": "запускі",
   "EditItemsModal.modalHeader": "Рэдагаваць {type}",

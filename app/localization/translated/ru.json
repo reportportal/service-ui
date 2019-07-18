@@ -409,6 +409,7 @@
   "EditItemsModal.descriptionPlaceholder": "Введите описание",
   "EditItemsModal.descriptionReplaceLabel": "Заменить для всех элементов",
   "EditItemsModal.itemUpdateSuccess": "Завершено успешно",
+  "EditItemsModal.itemUpdateError": "Завершено с ошибкой",
   "EditItemsModal.items": "элементы",
   "EditItemsModal.launches": "запуски",
   "EditItemsModal.modalHeader": "Редактировать {type}",
