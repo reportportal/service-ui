@@ -174,7 +174,7 @@ export class Widget extends Component {
         queryParameters: {},
       },
       () => {
-        this.fetchWidget(null).then(onClearParams);
+        this.fetchWidget().then(onClearParams);
       },
     );
   };
