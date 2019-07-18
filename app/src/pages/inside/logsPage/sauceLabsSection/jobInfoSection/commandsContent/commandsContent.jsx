@@ -103,7 +103,7 @@ export class CommandsContent extends Component {
         {filteredCommands.length ? (
           <ScrollWrapper
             autoHeight
-            autoHeightMax={isFullscreenMode ? '100%' : 610}
+            autoHeightMax={isFullscreenMode ? '100%' : 570}
             hideTracksWhenNotNeeded
             autoHide
           >

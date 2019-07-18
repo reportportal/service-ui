@@ -4,6 +4,8 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import ReactObserver from 'react-event-observer';
 import Fullscreen from 'react-full-screen';
+import { ReflexContainer, ReflexSplitter, ReflexElement } from 'react-reflex/dist/commonjs';
+import 'react-reflex/styles.css';
 import { activeLogSelector } from 'controllers/log';
 import {
   bulkExecuteSauceLabsCommandAction,
@@ -73,14 +75,19 @@ export class SauceLabsSection extends Component {
     const { loading } = this.props;
     const { isFullscreenMode } = this.state;
     const Content = (
-      <div className={cx('section-content-wrapper')}>
-        <VideoSection
-          observer={this.observer}
-          isFullscreenMode={isFullscreenMode}
-          onToggleFullscreen={this.toggleFullscreenMode}
-        />
-        <JobInfoSection observer={this.observer} isFullscreenMode={isFullscreenMode} />
-      </div>
+      <ReflexContainer orientation="vertical" windowResizeAware>
+        <ReflexElement minSize="300" className={cx('video-container')}>
+          <VideoSection
+            observer={this.observer}
+            isFullscreenMode={isFullscreenMode}
+            onToggleFullscreen={this.toggleFullscreenMode}
+          />
+        </ReflexElement>
+        <ReflexSplitter className={cx('elements-splitter')} />
+        <ReflexElement minSize="320" className={cx('job-info-container')}>
+          <JobInfoSection observer={this.observer} isFullscreenMode={isFullscreenMode} />
+        </ReflexElement>
+      </ReflexContainer>
     );
 
     return (
