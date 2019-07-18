@@ -1,4 +1,5 @@
 [![Build Status](https://semaphoreci.com/api/v1/lexecon/rp_service-ui/branches/develop/badge.svg)](http://reportportal.io/service-ui/index.html)
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Freportportal%2Fservice-ui.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Freportportal%2Fservice-ui?ref=badge_shield)
 
 1. Install nodejs
 
@@ -25,3 +26,7 @@ module.exports = {
 9. run the command `npm run server`
 
 10. open `https://localhost:8080/` in browser
+
+
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Freportportal%2Fservice-ui.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Freportportal%2Fservice-ui?ref=badge_large)
