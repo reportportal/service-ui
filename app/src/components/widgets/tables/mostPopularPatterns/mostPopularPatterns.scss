@@ -1,6 +1,9 @@
 .popular-patterns {
   height: 100%;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: stretch;
 }
 .attribute-selector {
   padding: 10px 20px;
@@ -44,7 +47,7 @@
 }
 
 .patterns-grid {
-  height: calc(100% - 51px);
+  flex-grow: 1;
 }
 
 .icon {
