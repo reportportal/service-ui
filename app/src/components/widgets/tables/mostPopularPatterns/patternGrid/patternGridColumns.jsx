@@ -22,16 +22,18 @@ PatternNameColumn.defaultProps = {
   onPatternClick: () => {},
 };
 
-export const LaunchNameColumn = ({ value }) => (
-  <div className={cx('launch-name')}>{`${value.name}${
-    value.number ? `#${value.number}` : ''
-  }`}</div>
+export const LaunchNameColumn = ({ value, getLinkToLaunch }) => (
+  <Link to={getLinkToLaunch(value.id)} className={cx('launches-link')}>
+    {`${value.name}${value.number ? ` #${value.number}` : ''}`}
+  </Link>
 );
 LaunchNameColumn.propTypes = {
   value: PropTypes.object,
+  getLinkToLaunch: PropTypes.func,
 };
 LaunchNameColumn.defaultProps = {
   value: {},
+  getLinkToLaunch: () => {},
 };
 
 export const TestCasesColumn = ({ value }) => <div className={cx('test-cases')}>{value.count}</div>;
@@ -40,19 +42,4 @@ TestCasesColumn.propTypes = {
 };
 TestCasesColumn.defaultProps = {
   value: {},
-};
-
-export const TestCasesLinkColumn = ({ value, getLinkToLaunch }) => (
-  <Link to={getLinkToLaunch(value.id)} className={cx('test-cases-link')}>
-    {value.count}
-  </Link>
-);
-
-TestCasesLinkColumn.propTypes = {
-  value: PropTypes.object,
-  getLinkToLaunch: PropTypes.func,
-};
-TestCasesLinkColumn.defaultProps = {
-  value: {},
-  getLinkToLaunch: () => {},
 };

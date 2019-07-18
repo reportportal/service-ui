@@ -9,12 +9,7 @@ import { createNamespacedQuery } from 'common/utils/routingUtils';
 import { ALL } from 'common/constants/reservedFilterIds';
 
 import classNames from 'classnames/bind';
-import {
-  PatternNameColumn,
-  LaunchNameColumn,
-  TestCasesColumn,
-  TestCasesLinkColumn,
-} from './patternGridColumns';
+import { PatternNameColumn, LaunchNameColumn, TestCasesColumn } from './patternGridColumns';
 
 import styles from './patternGrid.scss';
 
@@ -42,7 +37,6 @@ const messages = defineMessages({
 const PATTERN_NAME_COLUMN = 'pattern';
 const LAUNCH_NAME_COLUMN = 'launch';
 const TEST_CASES_COLUMN = 'testCases';
-const TEST_CASES_LINK_COLUMN = 'testCasesLink';
 
 @connect((state) => ({
   projectId: activeProjectSelector(state),
@@ -107,15 +101,15 @@ export class PatternGrid extends Component {
         component: LaunchNameColumn,
         title: this.props.intl.formatMessage(messages.launchName),
         className: 'launch-col',
-      },
-      {
-        id: TEST_CASES_LINK_COLUMN,
-        title: this.props.intl.formatMessage(messages.testCases),
-        component: TestCasesLinkColumn,
-        className: 'test-cases-col',
         columnProps: {
           getLinkToLaunch: this.getLinkToLaunch,
         },
+      },
+      {
+        id: TEST_CASES_COLUMN,
+        title: this.props.intl.formatMessage(messages.testCases),
+        component: TestCasesColumn,
+        className: 'test-cases-col',
       },
     ];
   };

@@ -168,29 +168,31 @@ export class Widget extends Component {
     });
   };
 
-  clearQueryParams = (showLoading = false) => {
+  clearQueryParams = (onClearParams = () => {}) => {
     this.setState(
       {
         queryParameters: {},
       },
-      () => this.fetchWidget(null, showLoading),
+      () => {
+        this.fetchWidget(null).then(onClearParams);
+      },
     );
   };
 
-  fetchWidget = (params = {}, showLoading = false) => {
+  fetchWidget = (params = {}) => {
     const { tracking, isFullscreen } = this.props;
     const url = this.getWidgetUrl(params);
 
     clearTimeout(this.silentUpdaterId);
     tracking.trackEvent(DASHBOARD_PAGE_EVENTS.REFRESH_WIDGET);
 
-    if (showLoading || !isWidgetDataAvailable(this.state.widget)) {
+    if (!isWidgetDataAvailable(this.state.widget)) {
       this.setState({
         loading: true,
       });
     }
 
-    fetch(url)
+    return fetch(url)
       .then((widget) => {
         const queryParameters = {
           ...this.state.queryParameters,

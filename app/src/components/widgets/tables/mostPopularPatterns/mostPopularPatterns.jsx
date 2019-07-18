@@ -48,22 +48,19 @@ export class MostPopularPatterns extends Component {
   }
 
   onBackClick = () => {
-    this.setState({
-      selectedPattern: null,
+    this.props.clearQueryParams(() => {
+      this.setState({
+        selectedPattern: null,
+      });
     });
-    this.props.clearQueryParams(true);
   };
 
   onPatternClick = (pattern) => {
-    this.setState({
-      selectedPattern: pattern,
+    this.props.fetchWidget({ [PATTERN_FILTER_PARAM]: pattern }).then(() => {
+      this.setState({
+        selectedPattern: pattern,
+      });
     });
-    this.props.fetchWidget(
-      {
-        [PATTERN_FILTER_PARAM]: pattern,
-      },
-      true,
-    );
   };
 
   onChangeAttribute = (newAttribute) =>
@@ -77,7 +74,7 @@ export class MostPopularPatterns extends Component {
       value: group.attributeValue,
     }));
 
-  getDefaultAttribute = (data) => (this.getAttributes(data) || [{}]).pop().value;
+  getDefaultAttribute = (data) => (this.getAttributes(data) || [{}])[0].value;
 
   render() {
     const {
