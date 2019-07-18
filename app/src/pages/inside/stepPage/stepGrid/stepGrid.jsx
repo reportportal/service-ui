@@ -6,7 +6,7 @@ import classNames from 'classnames/bind';
 import { Grid } from 'components/main/grid';
 import { AbsRelTime } from 'components/main/absRelTime';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { formatMethodType, formatStatus } from 'common/utils/localizationUtils';
+import { formatMethodType } from 'common/utils/localizationUtils';
 import { FAILED } from 'common/constants/testStatuses';
 import {
   ENTITY_METHOD_TYPE,
@@ -19,6 +19,7 @@ import {
 } from 'components/filterEntities/constants';
 import { NoItemMessage } from 'components/main/noItemMessage';
 import { STEP_PAGE_EVENTS } from 'components/main/analytics/events';
+import { StatusDropdown } from '../../common/statusDropdown/statusDropdown';
 import { PredefinedFilterSwitcher } from './predefinedFilterSwitcher';
 import { DefectType } from './defectType';
 import { GroupHeader } from './groupHeader';
@@ -56,9 +57,19 @@ NameColumn.defaultProps = {
   className: null,
 };
 
-const StatusColumn = ({ className, value, customProps: { formatMessage } }) => (
-  <div className={cx('status-col', className)}>{formatStatus(formatMessage, value.status)}</div>
-);
+const StatusColumn = ({ className, value }) => {
+  const { id, status, attributes, description } = value;
+  return (
+    <div className={cx('status-col', className)}>
+      <StatusDropdown
+        itemId={id}
+        status={status}
+        attributes={attributes}
+        description={description}
+      />
+    </div>
+  );
+};
 StatusColumn.propTypes = {
   className: PropTypes.string,
   value: PropTypes.object,

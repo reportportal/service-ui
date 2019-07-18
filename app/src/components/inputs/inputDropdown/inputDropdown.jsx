@@ -46,6 +46,7 @@ export class InputDropdown extends Component {
     onBlur: PropTypes.func,
     mobileDisabled: PropTypes.bool,
     independentGroupSelection: PropTypes.bool,
+    customClasses: PropTypes.object,
   };
 
   static defaultProps = {
@@ -61,6 +62,13 @@ export class InputDropdown extends Component {
     onBlur: () => {},
     mobileDisabled: false,
     independentGroupSelection: false,
+    customClasses: {
+      dropdown: '',
+      selectBlock: '',
+      value: '',
+      arrow: '',
+      selectList: '',
+    },
   };
   state = {
     opened: false,
@@ -191,11 +199,22 @@ export class InputDropdown extends Component {
   }
 
   render() {
-    const { error, touched, disabled, mobileDisabled, multiple, selectAll } = this.props;
+    const {
+      error,
+      touched,
+      disabled,
+      mobileDisabled,
+      multiple,
+      selectAll,
+      customClasses,
+    } = this.props;
     return (
-      <div ref={this.setRef} className={cx('dropdown', { opened: this.state.opened })}>
+      <div
+        ref={this.setRef}
+        className={cx('dropdown', customClasses.dropdown, { opened: this.state.opened })}
+      >
         <div
-          className={cx('select-block', {
+          className={cx('select-block', customClasses.selectBlock, {
             disabled,
             error,
             touched,
@@ -203,10 +222,10 @@ export class InputDropdown extends Component {
           })}
           onClick={this.onClickSelectBlock}
         >
-          <span className={cx('value')}>{this.displayedValue()}</span>
-          <span className={cx('arrow')} />
+          <span className={cx('value', customClasses.value)}>{this.displayedValue()}</span>
+          <span className={cx('arrow', customClasses.arrow)} />
         </div>
-        <div className={cx('select-list')}>
+        <div className={cx('select-list', customClasses.selectList)}>
           {multiple &&
             selectAll && (
               <div className={cx('select-all-block')} onClick={this.handleAllClick}>
