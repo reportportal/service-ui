@@ -69,10 +69,12 @@ export class MostPopularPatterns extends Component {
     });
 
   getAttributes = (data) =>
-    data.map((group) => ({
-      label: group.attributeValue,
-      value: group.attributeValue,
-    }));
+    data
+      .map((group) => ({
+        label: group.attributeValue,
+        value: group.attributeValue,
+      }))
+      .reverse();
 
   getDefaultAttribute = (data) => (this.getAttributes(data) || [{}])[0].value;
 
