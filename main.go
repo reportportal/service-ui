@@ -44,7 +44,9 @@ func main() {
 
 		//apply compression
 		router.Use(middleware.DefaultCompress)
-		router.Use(middleware.Logger)
+
+		// disabled in order to prevent sharing creds in access logs
+		//router.Use(middleware.Logger)
 
 		//content security policy
 		csp := map[string][]string{
