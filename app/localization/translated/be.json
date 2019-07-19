@@ -1792,5 +1792,10 @@
   "usersGrid.roleAdmin": "Admin",
   "usersGrid.roleNonAdmin": "Non-admin",
   "usersGrid.type": "Тып",
-  "usersGrid.user": "Лагiн"
+  "usersGrid.user": "Лагiн",
+  "LogStatusBlock.statusPassed": "Пройдзены",
+  "LogStatusBlock.statusFailed": "Проваленные",
+  "LogStatusBlock.statusSkipped": "Праваленыя",
+  "LogStatusBlock.statusLabel": "Усе статусы",
+  "LogStatusBlock.statusAllLabel": "Усе"
 }

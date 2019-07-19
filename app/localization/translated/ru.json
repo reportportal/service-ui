@@ -1758,5 +1758,9 @@
   "notFoundPage.toHome": "Заберите меня отсюда",
   "notFoundPage.pageNotExist": "Страница, которую Вы ищете, не существует.",
   "notFoundPage.oops": "Упс. Страница не найдена.",
-  "NestedGridRow.loadLabel": "Загрузить еще 10"
+  "LogStatusBlock.statusPassed": "Пройденные",
+  "LogStatusBlock.statusFailed": "Проваленные",
+  "LogStatusBlock.statusSkipped": "Пропущенные",
+  "LogStatusBlock.statusLabel": "Все статусы",
+  "LogStatusBlock.statusAllLabel": "Все"
 }

@@ -13,6 +13,7 @@ export const DEFAULT_HISTORY_DEPTH = 10;
 export const DEFAULT_LOG_LEVEL = logLevels.TRACE;
 export const LOG_LEVEL_STORAGE_KEY = 'logFilteringLevel';
 export const LOG_LEVEL_FILTER_KEY = 'filter.gte.level';
+export const LOG_STATUS_FILTER_KEY = 'filter.in.status';
 export const DEFAULT_WITH_ATTACHMENTS = false;
 export const WITH_ATTACHMENTS_STORAGE_KEY = 'logFilteringLevelWithAttachments';
 export const WITH_ATTACHMENTS_FILTER_KEY = 'filter.ex.binaryContent';
