@@ -87,6 +87,7 @@ const getChartOptions = (widget, options) => {
     legend: {
       display: false,
     },
+    maintainAspectRatio: false,
     layout: {
       padding: {
         left: 0,

@@ -12,6 +12,7 @@ import PropTypes from 'prop-types';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { activeProjectSelector } from 'controllers/user';
 import { fetchDashboardAction, updateDashboardWidgetsAction } from 'controllers/dashboard';
+import { STATIC_CHARTS } from 'components/widgets';
 import { EmptyWidgetGrid } from './emptyWidgetGrid';
 import styles from './widgetsGrid.scss';
 import { Widget } from './widget';
@@ -152,6 +153,8 @@ export class WidgetsGrid extends Component {
     });
   };
 
+  isStaticWidget = (widgetType) => STATIC_CHARTS[widgetType];
+
   render() {
     const { widgets = [] } = this.props.dashboard;
     let Items = null;
@@ -170,7 +173,16 @@ export class WidgetsGrid extends Component {
             <div
               key={widgetId}
               className={cx('widget-view')}
-              data-grid={{ x, y, w, h, minW: 4, minH: 4, i: String(widgetId) }}
+              data-grid={{
+                x,
+                y,
+                w,
+                h,
+                minW: 4,
+                minH: 4,
+                i: String(widgetId),
+                isResizable: !this.isStaticWidget(widgetType),
+              }}
             >
               <Widget
                 widgetId={widgetId}
