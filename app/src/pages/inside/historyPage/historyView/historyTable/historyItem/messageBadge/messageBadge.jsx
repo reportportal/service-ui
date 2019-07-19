@@ -27,7 +27,7 @@ MessageBadgeToolTip.defaultProps = {
   TooltipComponent: MessageBadgeToolTip,
   data: {
     width: 235,
-    align: 'right',
+    placement: 'right',
     noArrow: true,
     desktopOnly: true,
   },

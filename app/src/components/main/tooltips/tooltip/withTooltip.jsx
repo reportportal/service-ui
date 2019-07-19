@@ -1,7 +1,12 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
-import { Tooltip } from './tooltip';
+import classNames from 'classnames/bind';
+import { Manager, Reference, Popper } from 'react-popper';
+import styles from './tooltip.scss';
+
+const cx = classNames.bind(styles);
+const DEFAULT_TOOLTIP_WIDTH = 300;
 
 export const withTooltip = ({ TooltipComponent, data }) => (WrappedComponent) =>
   class Wrapper extends Component {
@@ -13,42 +18,64 @@ export const withTooltip = ({ TooltipComponent, data }) => (WrappedComponent) =>
     };
     state = {
       shown: false,
-      hoverRect: null,
     };
-    componentDidMount() {
-      this.hoverRect.addEventListener('mouseenter', this.mouseEnterHandler, false);
-    }
-    componentWillUnmount() {
-      this.hoverRect.removeEventListener('mouseenter', this.mouseEnterHandler, false);
-    }
+
     tooltipRoot = document.getElementById('tooltip-root');
-    mouseEnterHandler = () => {
+    showTooltip = () => {
       this.setState({ shown: true });
     };
     hideTooltip = () => {
       this.setState({ shown: false });
     };
     render() {
+      const { shown } = this.state;
+      const styleWidth = data.dynamicWidth ? null : { width: data.width || DEFAULT_TOOLTIP_WIDTH };
       return (
-        <Fragment>
-          {this.state.shown &&
+        <Manager>
+          <Reference>
+            {({ ref }) => (
+              <div
+                ref={ref}
+                className={cx('tooltip-trigger')}
+                onMouseEnter={this.showTooltip}
+                onMouseLeave={this.hideTooltip}
+              >
+                <WrappedComponent {...this.props}>{this.props.children}</WrappedComponent>
+              </div>
+            )}
+          </Reference>
+          {shown &&
             ReactDOM.createPortal(
-              <Tooltip data={data} hoverRect={this.hoverRect} hideTooltip={this.hideTooltip}>
-                <TooltipComponent {...this.props} />
-              </Tooltip>,
+              <Popper placement={data.placement} modifiers={data.modifiers}>
+                {({ placement, ref, style, arrowProps }) => (
+                  <div
+                    className={cx('tooltip', {
+                      'no-mobile': data.noMobile,
+                      'desktop-only': data.desktopOnly,
+                    })}
+                    ref={ref}
+                    style={{ ...style, ...styleWidth }}
+                    data-placement={placement}
+                    onMouseEnter={data.hoverable ? this.showTooltip : null}
+                    onMouseLeave={data.hoverable ? this.hideTooltip : null}
+                  >
+                    <div className={cx('tooltip-content')}>
+                      <TooltipComponent {...this.props} />
+                      {!data.noArrow && (
+                        <div
+                          className={cx('tooltip-arrow')}
+                          data-placement={placement}
+                          ref={arrowProps.ref}
+                          style={arrowProps.style}
+                        />
+                      )}
+                    </div>
+                  </div>
+                )}
+              </Popper>,
               this.tooltipRoot,
             )}
-          {
-            <div
-              style={{ width: '100%', height: '100%' }}
-              ref={(hoverRect) => {
-                this.hoverRect = hoverRect;
-              }}
-            >
-              <WrappedComponent {...this.props}>{this.props.children}</WrappedComponent>
-            </div>
-          }
-        </Fragment>
+        </Manager>
       );
     }
   };

@@ -15,7 +15,7 @@ const cx = classNames.bind(styles);
   TooltipComponent: ItemInfoToolTip,
   data: {
     width: 'auto',
-    align: 'left',
+    placement: 'left',
     noArrow: true,
     desktopOnly: true,
   },

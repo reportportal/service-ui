@@ -7,8 +7,7 @@ import { Icon } from 'components/main/icon';
 export const FilterSharedTooltipIcon = withTooltip({
   TooltipComponent: TextTooltip,
   data: {
-    align: ALIGN_LEFT,
-    leftOffset: -50,
+    placement: ALIGN_LEFT,
     noArrow: true,
     dynamicWidth: true,
   },

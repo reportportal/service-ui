@@ -11,7 +11,7 @@ const cx = classNames.bind(styles);
 export const PatternAnalyzedLabel = withTooltip({
   TooltipComponent: PatternAnalyzedTooltip,
   data: {
-    width: 280,
+    dynamicWidth: true,
   },
 })(() => <div className={cx('pa-label')}>{Parser(PAIcon)}</div>);
 

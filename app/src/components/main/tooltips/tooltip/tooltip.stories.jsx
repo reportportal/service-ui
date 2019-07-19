@@ -42,7 +42,7 @@ storiesOf('Components/Main/Tooltips/Tooltip', module)
   .addDecorator(
     host({
       title: 'Tooltip component',
-      align: 'center middle',
+      placement: 'center middle',
       backdrop: 'rgba(70, 69, 71, 0.2)',
       background: '#fff',
       height: 200,
@@ -51,10 +51,10 @@ storiesOf('Components/Main/Tooltips/Tooltip', module)
   )
   .addDecorator(withReadme(README))
   .addDecorator(withTooltipRoot)
-  .add('with align = right', () => {
+  .add('with placement = right', () => {
     const data = {
       width: 130,
-      align: 'right',
+      placement: 'right',
       noArrow: true,
       desktopOnly: true,
     };
@@ -65,10 +65,10 @@ storiesOf('Components/Main/Tooltips/Tooltip', module)
       </div>
     );
   })
-  .add('with align = left', () => {
+  .add('with placement = left', () => {
     const data = {
       width: 130,
-      align: 'left',
+      placement: 'left',
       noArrow: true,
       desktopOnly: true,
     };
@@ -82,7 +82,7 @@ storiesOf('Components/Main/Tooltips/Tooltip', module)
   .add('with noArrow = false & desktopOnly = false', () => {
     const data = {
       width: 130,
-      align: 'left',
+      placement: 'left',
       noArrow: false,
       desktopOnly: false,
     };
