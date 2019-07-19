@@ -24,6 +24,7 @@ export class CumulativeTrendChart extends PureComponent {
     uncheckedLegendItems: PropTypes.array,
     userSettings: PropTypes.object,
     onChangeUserSettings: PropTypes.func,
+    container: PropTypes.instanceOf(Element).isRequired,
   };
 
   static defaultProps = {
@@ -119,9 +120,11 @@ export class CumulativeTrendChart extends PureComponent {
   };
 
   render() {
-    const { isPreview, uncheckedLegendItems, userSettings } = this.props;
+    const { isPreview, uncheckedLegendItems, userSettings, container } = this.props;
     const { legendItems, chartData } = this.state;
     const classes = cx('cumulative-trend-chart', { 'preview-view': isPreview });
+    const legendHeight = isPreview ? 0 : 30;
+    const chartHeight = container.offsetHeight - legendHeight;
 
     return this.state && this.state.chartData ? (
       <div className={classes}>
@@ -129,6 +132,7 @@ export class CumulativeTrendChart extends PureComponent {
           chartData={chartData}
           chartOptions={this.state.chartOptions}
           onChartElementClick={this.onChartElementClick}
+          height={chartHeight}
         >
           {!isPreview && (
             <CumulativeChartLegend
