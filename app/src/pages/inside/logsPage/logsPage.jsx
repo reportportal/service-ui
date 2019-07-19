@@ -21,6 +21,7 @@ import {
   setHidePassedLogs,
   DETAILED_LOG_VIEW,
   logViewModeSelector,
+  LOG_STATUS_FILTER_KEY,
 } from 'controllers/log';
 import { parentItemSelector } from 'controllers/testItem';
 import { withFilter } from 'controllers/filter';
@@ -67,6 +68,7 @@ import { SauceLabsSection } from './sauceLabsSection';
 @connectRouter(
   (query) => ({
     logLevelId: query[LOG_LEVEL_FILTER_KEY],
+    logStatus: query[LOG_STATUS_FILTER_KEY],
   }),
   {
     onChangeLogLevel: (userId, logLevel) => {
@@ -85,6 +87,9 @@ import { SauceLabsSection } from './sauceLabsSection';
       setHidePassedLogs(userId, hidePassedLogs);
       return { [HIDE_PASSED_LOGS]: hidePassedLogs || undefined };
     },
+    onChangeLogStatusFilter: (status) => ({
+      [LOG_STATUS_FILTER_KEY]: status || undefined,
+    }),
   },
   { namespace: NAMESPACE },
 )
@@ -118,6 +123,8 @@ export class LogsPage extends Component {
     onChangeHidePassedLogs: PropTypes.func,
     logViewMode: PropTypes.string,
     parentItem: PropTypes.object,
+    logStatus: PropTypes.string,
+    onChangeLogStatusFilter: PropTypes.func,
   };
 
   static defaultProps = {
@@ -141,6 +148,8 @@ export class LogsPage extends Component {
     onChangeHidePassedLogs: () => {},
     logViewMode: DETAILED_LOG_VIEW,
     parentItem: {},
+    logStatus: null,
+    onChangeLogStatusFilter: () => {},
   };
 
   state = {
@@ -200,6 +209,8 @@ export class LogsPage extends Component {
       onChangeHidePassedLogs,
       logViewMode,
       parentItem,
+      logStatus,
+      onChangeLogStatusFilter,
     } = this.props;
 
     const rowHighlightingConfig = {
@@ -255,6 +266,8 @@ export class LogsPage extends Component {
                     onChangeSorting={onChangeSorting}
                     rowHighlightingConfig={rowHighlightingConfig}
                     markdownMode={markdownMode}
+                    logStatus={logStatus}
+                    onChangeLogStatusFilter={onChangeLogStatusFilter}
                   />
                 )}
               </LogsGridToolbar>

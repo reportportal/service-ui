@@ -12,6 +12,7 @@ import { LogMessageSearch } from './logMessageSearch';
 import { LogMessageBlock } from './logMessageBlock';
 import { AttachmentBlock } from './attachmentBlock';
 import { NestedStepHeader } from './nestedStepHeader';
+import { LogStatusBlock } from './logStatusBlock';
 import styles from './logsGrid.scss';
 
 const cx = classNames.bind(styles);
@@ -100,6 +101,8 @@ export class LogsGrid extends Component {
       isGridRowHighlighted: PropTypes.bool,
       highlightedRowId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     }),
+    logStatus: PropTypes.string,
+    onChangeLogStatusFilter: PropTypes.func,
   };
 
   static defaultProps = {
@@ -116,6 +119,8 @@ export class LogsGrid extends Component {
       isGridRowHighlighted: false,
       highlightedRowId: null,
     }),
+    logStatus: null,
+    onChangeLogStatusFilter: () => {},
   };
 
   getDefaultViewColumns = () => [
@@ -143,10 +148,14 @@ export class LogsGrid extends Component {
       id: STATUS_COLUMN_ID,
       title: {
         full: this.props.intl.formatMessage(messages.statusColumnTitle),
+        component: LogStatusBlock,
+        componentProps: {
+          logStatus: this.props.logStatus,
+          onChangeLogStatusFilter: this.props.onChangeLogStatusFilter,
+        },
       },
       sortable: true,
       component: () => <div />,
-      sortingEventInfo: LOG_PAGE_EVENTS.TIME_SORTING,
     },
     {
       id: TIME_COLUMN_ID,
