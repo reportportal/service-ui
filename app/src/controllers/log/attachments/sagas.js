@@ -8,10 +8,10 @@ import {
   activeRetryIdSelector,
   isLaunchLogSelector,
   logViewModeSelector,
+  activeRetrySelector,
 } from 'controllers/log/selectors';
 import { DETAILED_LOG_VIEW } from 'controllers/log/constants';
 import { JSON as JSON_TYPE } from 'common/constants/fileTypes';
-import { testItemIdsArraySelector } from 'controllers/pages';
 import {
   ATTACHMENT_IMAGE_MODAL_ID,
   ATTACHMENT_CODE_MODAL_ID,
@@ -31,9 +31,8 @@ function* getAttachmentURL() {
   }
   const logViewMode = yield select(logViewModeSelector);
   if (logViewMode === DETAILED_LOG_VIEW) {
-    const itemIdsArray = yield select(testItemIdsArraySelector);
-    const underPathItemsIds = itemIdsArray.slice(1).join('.');
-    return URLS.logsUnderPath(activeProject, underPathItemsIds);
+    const activeRetry = yield select(activeRetrySelector);
+    return URLS.logsUnderPath(activeProject, activeRetry.path);
   }
   return URLS.logItems(activeProject, activeLogItemId);
 }
