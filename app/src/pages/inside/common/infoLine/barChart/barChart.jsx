@@ -9,7 +9,7 @@ const cx = classNames.bind(styles);
 
 @withTooltip({
   TooltipComponent: BarChartTooltip,
-  data: { width: 170, align: 'left', noArrow: true },
+  data: { width: 170, placement: 'left', noArrow: true },
 })
 export class BarChart extends Component {
   static propTypes = {

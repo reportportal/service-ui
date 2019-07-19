@@ -11,7 +11,7 @@ const cx = classNames.bind(styles);
   TooltipComponent: DefectTypeTooltip,
   data: {
     width: 235,
-    align: 'right',
+    placement: 'right',
     noArrow: true,
     desktopOnly: true,
   },
