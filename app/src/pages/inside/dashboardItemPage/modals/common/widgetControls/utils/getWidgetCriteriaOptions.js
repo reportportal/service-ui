@@ -32,6 +32,10 @@ import {
   ACTIONS_WITH_AA_SETTINGS,
   ACTIONS_WITH_DEFECTS,
   ACTIONS_WITH_IMPORT,
+  CREATE_PATTERN,
+  UPDATE_PATTERN,
+  DELETE_PATTERN,
+  MATCHED_PATTERN,
 } from 'common/constants/actionTypes';
 import {
   LAUNCH_STATUSES_OPTIONS,
@@ -178,6 +182,22 @@ const messages = defineMessages({
     id: 'WidgetCriteriaOption.import_actions',
     defaultMessage: 'Import',
   },
+  [CREATE_PATTERN]: {
+    id: 'WidgetCriteriaOption.create_pattern',
+    defaultMessage: 'Create pattern',
+  },
+  [UPDATE_PATTERN]: {
+    id: 'WidgetCriteriaOption.update_pattern',
+    defaultMessage: 'Update pattern',
+  },
+  [DELETE_PATTERN]: {
+    id: 'WidgetCriteriaOption.delete_pattern',
+    defaultMessage: 'Delete pattern',
+  },
+  [MATCHED_PATTERN]: {
+    id: 'WidgetCriteriaOption.matched_pattern',
+    defaultMessage: 'Pattern matched',
+  },
 
   attributes: {
     id: 'WidgetCriteriaOption.attributes',
@@ -300,6 +320,10 @@ const getUserActionOptions = (formatMessage) => [
   { value: ACTIONS_WITH_AA_SETTINGS, label: formatMessage(messages[ACTIONS_WITH_AA_SETTINGS]) },
   { value: ACTIONS_WITH_DEFECTS, label: formatMessage(messages[ACTIONS_WITH_DEFECTS]) },
   { value: ACTIONS_WITH_IMPORT, label: formatMessage(messages[ACTIONS_WITH_IMPORT]) },
+  { value: CREATE_PATTERN, label: formatMessage(messages[CREATE_PATTERN]) },
+  { value: UPDATE_PATTERN, label: formatMessage(messages[UPDATE_PATTERN]) },
+  { value: DELETE_PATTERN, label: formatMessage(messages[DELETE_PATTERN]) },
+  { value: MATCHED_PATTERN, label: formatMessage(messages[MATCHED_PATTERN]) },
 ];
 
 const getLaunchGridColumnsOptions = (formatMessage) => [

@@ -12,6 +12,10 @@ import {
   CREATE_FILTER,
   UPDATE_FILTER,
   DELETE_FILTER,
+  CREATE_PATTERN,
+  UPDATE_PATTERN,
+  DELETE_PATTERN,
+  MATCHED_PATTERN,
 } from 'common/constants/actionTypes';
 import styles from './common.scss';
 
@@ -53,6 +57,22 @@ const messages = defineMessages({
   [DELETE_FILTER]: {
     id: 'CommonEntityChanges.deleteFilter',
     defaultMessage: 'deleted filter',
+  },
+  [CREATE_PATTERN]: {
+    id: 'CommonEntityChanges.createPattern',
+    defaultMessage: 'created pattern',
+  },
+  [UPDATE_PATTERN]: {
+    id: 'CommonEntityChanges.updatePattern',
+    defaultMessage: 'updated pattern',
+  },
+  [DELETE_PATTERN]: {
+    id: 'CommonEntityChanges.deletePattern',
+    defaultMessage: 'deleted pattern',
+  },
+  [MATCHED_PATTERN]: {
+    id: 'CommonEntityChanges.matchedPattern',
+    defaultMessage: 'matched pattern',
   },
 });
 
