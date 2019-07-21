@@ -21,6 +21,10 @@ import {
   UPDATE_ANALYZER,
   CREATE_USER,
   UPDATE_PROJECT,
+  CREATE_PATTERN,
+  UPDATE_PATTERN,
+  DELETE_PATTERN,
+  MATCHED_PATTERN,
 } from 'common/constants/actionTypes';
 import { URLS } from 'common/urls';
 import { AbsRelTime } from 'components/main/absRelTime';
@@ -231,6 +235,10 @@ export class ProjectActivity extends Component {
       case ACTIONS_WITH_DASHBOARDS:
       case ACTIONS_WITH_WIDGETS:
       case ACTIONS_WITH_FILTERS:
+      case CREATE_PATTERN:
+      case DELETE_PATTERN:
+      case UPDATE_PATTERN:
+      case MATCHED_PATTERN:
         return <CommonEntity activity={activity} />;
       case ACTIONS_WITH_INTEGRATIONS:
         return <Integration activity={activity} />;
