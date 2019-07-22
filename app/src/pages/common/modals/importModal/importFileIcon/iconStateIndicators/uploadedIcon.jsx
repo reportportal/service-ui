@@ -1,8 +1,8 @@
 import React from 'react';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
+import SuccessIcon from 'common/img/ic-success-inline.svg';
 import styles from './iconStateIndicators.scss';
-import SuccessIcon from './img/ic-success-inline.svg';
 
 const cx = classNames.bind(styles);
 

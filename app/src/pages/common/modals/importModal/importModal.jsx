@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import track from 'react-tracking';
 import classNames from 'classnames/bind';
 import Dropzone from 'react-dropzone';
@@ -7,75 +7,41 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { injectIntl, intlShape, defineMessages } from 'react-intl';
 import { ModalLayout, withModal } from 'components/main/modal';
-import { activeProjectSelector } from 'controllers/user';
-import { addTokenToImagePath, uniqueId, fetch } from 'common/utils';
-import { URLS } from 'common/urls';
+import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { LAUNCHES_MODAL_EVENTS } from 'components/main/analytics/events';
-import { LaunchIcon } from './launchIcon';
-import styles from './launchImportModal.scss';
-import DropZoneIcon from './img/shape-inline.svg';
-import { ACCEPT_FILE_MIME_TYPES, MAX_FILE_SIZE } from './constants';
+import { addTokenToImagePath, uniqueId, fetch } from 'common/utils';
+import DropZoneIcon from 'common/img/shape-inline.svg';
+import { ImportFileIcon } from './importFileIcon';
+import styles from './importModal.scss';
+import { ACCEPT_FILE_MIME_TYPES, MAX_FILE_SIZES } from './constants';
 
 const cx = classNames.bind(styles);
 
 const messages = defineMessages({
-  modalTitle: {
-    id: 'LaunchImportModal.modalTitle',
-    defaultMessage: 'Import Launch',
-  },
-  importButton: {
-    id: 'LaunchImportModal.importButton',
-    defaultMessage: 'Import',
-  },
-  okButton: {
-    id: 'LaunchImportModal.okButton',
-    defaultMessage: 'Ok',
-  },
-  cancelButton: {
-    id: 'LaunchImportModal.cancelButton',
-    defaultMessage: 'Cancel',
-  },
-  importTip: {
-    id: 'LaunchImportModal.tip',
-    defaultMessage:
-      'Drop only <b>.zip</b> file under 32 MB to upload or <span>click</span> to add it',
-  },
   note: {
-    id: 'LaunchImportModal.note',
+    id: 'ImportModal.note',
     defaultMessage: 'Note:',
   },
-  noteMessage: {
-    id: 'LaunchImportModal.noteMessage',
-    defaultMessage:
-      'If your runner does not write the test start time in .xml file, then the current server time will be used.',
-  },
-  importConfirmationWarning: {
-    id: 'LaunchImportModal.importConfirmationWarning',
-    defaultMessage: 'Are you sure you want to interrupt import launches?',
-  },
   importConfirmation: {
-    id: 'LaunchImportModal.importConfirmation',
+    id: 'ImportModal.importConfirmation',
     defaultMessage: 'Confirm cancel',
   },
   incorrectFileFormat: {
-    id: 'LaunchImportModal.incorrectFileFormat',
+    id: 'ImportModal.incorrectFileFormat',
     defaultMessage: 'Incorrect file format',
-  },
-  incorrectFileSize: {
-    id: 'LaunchImportModal.incorrectFileSize',
-    defaultMessage: 'File size is more than 32 Mb',
   },
 });
 
-@withModal('launchImportModal')
+@withModal('importModal')
 @injectIntl
-@connect((state) => ({ activeProject: activeProjectSelector(state) }))
+@connect(null, {
+  showNotification,
+})
 @track()
-export class LaunchImportModal extends Component {
+export class ImportModal extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
-    activeProject: PropTypes.string,
+    showNotification: PropTypes.func.isRequired,
     data: PropTypes.object,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
@@ -84,7 +50,6 @@ export class LaunchImportModal extends Component {
   };
 
   static defaultProps = {
-    activeProject: '',
     data: {},
   };
 
@@ -127,18 +92,20 @@ export class LaunchImportModal extends Component {
   };
 
   getOkButtonConfig = (isLoading, uploadFinished) => {
-    const { intl, tracking } = this.props;
+    const {
+      intl,
+      tracking,
+      data: { importButton, eventsInfo },
+    } = this.props;
     const text =
-      isLoading || uploadFinished
-        ? intl.formatMessage(messages.okButton)
-        : intl.formatMessage(messages.importButton);
+      isLoading || uploadFinished ? intl.formatMessage(COMMON_LOCALE_KEYS.OK) : importButton;
 
     return {
       text,
       disabled: isLoading,
       onClick: (closeModal) => {
         if (uploadFinished) {
-          tracking.trackEvent(LAUNCHES_MODAL_EVENTS.OK_BTN_IMPORT_MODAL);
+          tracking.trackEvent(eventsInfo.okBtn);
           closeModal();
         } else {
           this.uploadFilesOnOkClick();
@@ -148,7 +115,13 @@ export class LaunchImportModal extends Component {
   };
 
   getCloseConfirmationConfig = (isValidFilesExists, loading, uploadFinished) => {
-    const { intl } = this.props;
+    const {
+      intl,
+      data: { importConfirmationWarning },
+    } = this.props;
+    const confirmationWarning = loading
+      ? importConfirmationWarning
+      : intl.formatMessage(COMMON_LOCALE_KEYS.CLOSE_MODAL_WARNING);
 
     if (!isValidFilesExists || uploadFinished) {
       return null;
@@ -157,9 +130,7 @@ export class LaunchImportModal extends Component {
       withCheckbox: loading,
       closeConfirmedCallback: this.closeConfirmedCallback,
       confirmationMessage: intl.formatMessage(messages.importConfirmation),
-      confirmationWarning: intl.formatMessage(
-        loading ? messages.importConfirmationWarning : COMMON_LOCALE_KEYS.CLOSE_MODAL_WARNING,
-      ),
+      confirmationWarning,
     };
   };
   getValidFiles = () => this.state.files.filter(({ valid }) => valid);
@@ -169,16 +140,23 @@ export class LaunchImportModal extends Component {
   cancelRequests = [];
   isDropZoneDisabled = () => this.isUploadFinished() || this.isUploadInProgress();
 
-  validateFile = (file) => ({
-    incorrectFileFormat: !ACCEPT_FILE_MIME_TYPES.includes(file.type),
-    incorrectFileSize: file.size > MAX_FILE_SIZE,
-  });
+  validateFile = (file) => {
+    const { type } = this.props.data;
+
+    return {
+      incorrectFileFormat: !ACCEPT_FILE_MIME_TYPES[type].includes(file.type),
+      incorrectFileSize: file.size > MAX_FILE_SIZES[type],
+    };
+  };
 
   formValidationMessage = (validationProperties) => {
-    const { intl } = this.props;
+    const {
+      intl,
+      data: { incorrectFileSize },
+    } = this.props;
     const validationMessages = {
       incorrectFileFormat: intl.formatMessage(messages.incorrectFileFormat),
-      incorrectFileSize: intl.formatMessage(messages.incorrectFileSize),
+      incorrectFileSize,
     };
     const validationMessage = [];
 
@@ -239,6 +217,11 @@ export class LaunchImportModal extends Component {
 
   failedUploadHandler = (id, err) => {
     const { files } = this.state;
+
+    this.props.showNotification({
+      message: err.message,
+      type: NOTIFICATION_TYPES.ERROR,
+    });
     this.setState({
       files: files.map((item) => {
         if (item.id !== id) {
@@ -283,9 +266,12 @@ export class LaunchImportModal extends Component {
   };
 
   uploadFile = (file) => {
-    const { activeProject } = this.props;
+    const {
+      data: { url },
+    } = this.props;
     const { id } = file;
-    return fetch(addTokenToImagePath(URLS.launchImport(activeProject)), {
+
+    return fetch(addTokenToImagePath(url), {
       method: 'POST',
       headers: { 'Content-Type': 'multipart/form-data;' },
       data: file.data,
@@ -310,48 +296,59 @@ export class LaunchImportModal extends Component {
   };
 
   render() {
-    const { intl } = this.props;
+    const {
+      intl,
+      data: { type, title, tip, noteMessage, eventsInfo },
+    } = this.props;
     const { files } = this.state;
     const validFiles = this.getValidFiles();
     const loading = this.isUploadInProgress();
     const uploadFinished = this.isUploadFinished();
+    const acceptFile = ACCEPT_FILE_MIME_TYPES[type].join(',');
+
     return (
       <ModalLayout
-        title={intl.formatMessage(messages.modalTitle)}
+        title={title}
         okButton={this.getOkButtonConfig(loading, uploadFinished)}
         cancelButton={{
-          text: intl.formatMessage(messages.cancelButton),
-          eventInfo: LAUNCHES_MODAL_EVENTS.CANCEL_BTN_IMPORT_MODAL,
+          text: intl.formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+          eventInfo: eventsInfo.cancelBtn,
         }}
         closeConfirmation={this.getCloseConfirmationConfig(
           validFiles.length,
           loading,
           uploadFinished,
         )}
-        closeIconEventInfo={LAUNCHES_MODAL_EVENTS.CLOSE_ICON_IMPORT_MODAL}
+        closeIconEventInfo={eventsInfo.closeIcon}
       >
         <Dropzone
           className={cx('dropzone-wrapper')}
           activeClassName={cx('dropzone-wrapper-active')}
-          accept={ACCEPT_FILE_MIME_TYPES.join(',')}
+          accept={acceptFile}
           onDrop={this.onDrop}
-          maxSize={MAX_FILE_SIZE}
+          maxSize={MAX_FILE_SIZES[type]}
           disabled={this.isDropZoneDisabled()}
         >
           {files.length === 0 && (
             <div className={cx('dropzone')}>
               <div className={cx('icon')}>{Parser(DropZoneIcon)}</div>
-              <p className={cx('message')}>{Parser(intl.formatMessage(messages.importTip))}</p>
+              <p className={cx('message')}>{Parser(tip)}</p>
             </div>
           )}
           {files.length > 0 && (
             <div className={cx('files-list')}>
-              {files.map((item) => <LaunchIcon {...item} onDelete={this.onDelete} key={item.id} />)}
+              {files.map((item) => (
+                <ImportFileIcon {...item} onDelete={this.onDelete} key={item.id} fileType={type} />
+              ))}
             </div>
           )}
         </Dropzone>
-        <p className={cx('note-label')}>{intl.formatMessage(messages.note)}</p>
-        <p className={cx('note-message')}>{intl.formatMessage(messages.noteMessage)}</p>
+        {noteMessage && (
+          <Fragment>
+            <p className={cx('note-label')}>{intl.formatMessage(messages.note)}</p>
+            <p className={cx('note-message')}>{Parser(noteMessage)}</p>
+          </Fragment>
+        )}
       </ModalLayout>
     );
   }

@@ -3,21 +3,22 @@ import PropTypes from 'prop-types';
 import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
 import { fileSizeConverter } from 'common/utils';
+import SheetIcon from 'common/img/file-icon-inline.svg';
+import DeleteIcon from 'common/img/icon-delete-inline.svg';
 import { ProgressLoader } from './progressLoader';
 import { InvalidIcon, UploadIndicator } from './iconStateIndicators';
-import SheetIcon from './img/launch-icon-inline.svg';
-import DeleteIcon from './img/icon-delete-inline.svg';
-import styles from './launcIcon.scss';
+import styles from './importFileIcon.scss';
 
 const cx = classNames.bind(styles);
 
-export const LaunchIcon = ({
+export const ImportFileIcon = ({
   file,
   valid,
   uploaded,
   isLoading,
   id,
   onDelete,
+  fileType,
   uploadingProgress,
   rejectMessage,
   uploadFailed,
@@ -42,7 +43,7 @@ export const LaunchIcon = ({
           <p className={cx('file-size')}>{fileSizeConverter(file.size)}</p>
           <div className={cx('file-state-holder')}>
             {valid ? (
-              <UploadIndicator {...uploadedProps} />
+              <UploadIndicator {...uploadedProps} fileType={fileType} />
             ) : (
               <InvalidIcon rejectMessage={rejectMessage} />
             )}
@@ -63,20 +64,21 @@ export const LaunchIcon = ({
   );
 };
 
-LaunchIcon.propTypes = {
+ImportFileIcon.propTypes = {
   file: PropTypes.object,
   valid: PropTypes.bool,
   uploaded: PropTypes.bool,
   isLoading: PropTypes.bool,
   id: PropTypes.string,
   onDelete: PropTypes.func,
+  fileType: PropTypes.string,
   uploadingProgress: PropTypes.number,
   rejectMessage: PropTypes.string,
   uploadFailed: PropTypes.bool,
   uploadFailReason: PropTypes.object,
 };
 
-LaunchIcon.defaultProps = {
+ImportFileIcon.defaultProps = {
   file: {},
   valid: false,
   uploaded: false,
@@ -84,6 +86,7 @@ LaunchIcon.defaultProps = {
   id: '',
   rejectMessage: '',
   onDelete: () => {},
+  fileType: '',
   uploadingProgress: 0,
   uploadFailed: false,
   uploadFailReason: {},
