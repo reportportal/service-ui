@@ -253,8 +253,9 @@ define(function (require, exports, module) {
             var self = this;
             this.trigger('login::loader::show');
             return Service.userLogin({
-                login: login,
-                password: pass
+                username: login,
+                password: pass,
+                grant_type: 'password'
             })
                 .done(function (responce) {
                     self.set({ token: responce.token_type + ' ' + responce.access_token });
