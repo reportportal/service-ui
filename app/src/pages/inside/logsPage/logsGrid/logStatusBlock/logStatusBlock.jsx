@@ -58,14 +58,12 @@ export class LogStatusBlock extends Component {
     document.removeEventListener('click', this.handleClickOutside);
   }
 
-  setRef = (node) => {
-    this.node = node;
-  };
-
   getLogStatusArray = () => {
     const { logStatus } = this.props;
     return logStatus ? logStatus.split(',') : [];
   };
+
+  node = React.createRef();
 
   statusArray = [PASSED, FAILED, SKIPPED];
 
@@ -100,10 +98,11 @@ export class LogStatusBlock extends Component {
   isCheckboxActive = (value) => this.getLogStatusArray().includes(value);
 
   handleClickOutside = (e) => {
-    if (!this.node.contains(e.target) && this.state.opened) {
+    if (!this.node.current.contains(e.target) && this.state.opened) {
       this.setState({ opened: false });
     }
   };
+
   renderStatusList = () => {
     const { intl } = this.props;
     return this.statusArray.map((status) => (
@@ -114,16 +113,17 @@ export class LogStatusBlock extends Component {
             this.toggleCheckbox(status);
           }}
         >
-          {intl.formatMessage(messages[[`status${status}`]])}
+          {intl.formatMessage(messages[`status${status}`])}
         </InputCheckbox>
       </div>
     ));
   };
+
   render() {
     const { opened } = this.state;
     const { intl } = this.props;
     return (
-      <div className={cx('status-cell')} ref={this.setRef}>
+      <div className={cx('status-cell')} ref={this.node}>
         <div
           className={cx('status-label', {
             opened,
