@@ -39,7 +39,7 @@ define([
         return call('DELETE', urls.userLogout());
     };
     var userLogin = function (data) {
-        return call('POST', urls.userLogin(data));
+        return call('POST', urls.userLogin(), data, true, false, 'application/x-www-form-urlencoded; charset=UTF-8');
     };
 
 
