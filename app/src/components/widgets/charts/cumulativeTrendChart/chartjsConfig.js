@@ -20,11 +20,17 @@ const convertIntoPercents = (datasets) => {
   const totalDataset = Object.assign({}, datasets[0]);
 
   return datasets.map((dataset) =>
-    Object.assign({}, dataset, {
-      data: dataset.data.map(
-        (value, index) => -(-value / totalDataset.data[index] * 100).toFixed(2),
-      ),
-    }),
+    Object.assign(
+      {
+        absData: dataset.data,
+      },
+      dataset,
+      {
+        data: dataset.data.map(
+          (value, index) => -(-value / totalDataset.data[index] * 100).toFixed(2),
+        ),
+      },
+    ),
   );
 };
 
@@ -75,7 +81,7 @@ const getScaleName = (widget, options) => {
 };
 
 const getChartOptions = (widget, options) => {
-  const { percentage, formatMessage, tooltipContents } = options;
+  const { percentage, formatMessage, tooltipContents, showTotal } = options;
 
   return {
     legend: {
@@ -158,6 +164,12 @@ const getChartOptions = (widget, options) => {
     hover: {
       mode: 'nearest',
       intersect: true,
+    },
+    plugins: {
+      datalabels: {
+        formatter: (value, context) =>
+          showTotal && percentage ? context.dataset.absData[context.dataIndex] : value,
+      },
     },
   };
 };
