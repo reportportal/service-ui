@@ -1,5 +1,5 @@
 import { put, takeEvery, take, all } from 'redux-saga/effects';
-import { fetchUatInfoAction, fetchApiInfoAction } from 'controllers/appInfo';
+import { fetchCompositeInfoAction, fetchApiInfoAction } from 'controllers/appInfo';
 import {
   FETCH_USER_ERROR,
   FETCH_USER_SUCCESS,
@@ -21,7 +21,7 @@ import { FETCH_INITIAL_DATA } from './constants';
 
 function* fetchInitialData() {
   yield put(setTokenAction(getStorageItem(TOKEN_KEY) || DEFAULT_TOKEN));
-  yield put(fetchUatInfoAction());
+  yield put(fetchCompositeInfoAction());
   yield put(fetchUserAction());
   const userResult = yield take([FETCH_USER_SUCCESS, FETCH_USER_ERROR]);
   if (!userResult.error) {
