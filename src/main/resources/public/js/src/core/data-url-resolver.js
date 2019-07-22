@@ -31,8 +31,8 @@ define(['app'], function (App) {
     var userLogout = function () {
         return '/uat/sso/me';
     };
-    var userLogin = function (data) {
-        return '/uat/sso/oauth/token?grant_type=password&password=' + data.password + '&username=' + data.login;
+    var userLogin = function () {
+        return '/uat/sso/oauth/token';
     };
 
     var getRegistryInfo = function () {
