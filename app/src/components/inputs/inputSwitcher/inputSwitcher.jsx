@@ -29,7 +29,8 @@ export const InputSwitcher = ({ children, value, onChange, onFocus, onBlur, read
   const sliderClasses = cx({
     'switcher-slider': true,
     centered: !children,
-    enabled: value,
+    on: value,
+    readonly: readOnly,
   });
   const onChangeHandler = (e) => {
     if (!readOnly) onChange(e.target.checked);
@@ -37,7 +38,7 @@ export const InputSwitcher = ({ children, value, onChange, onFocus, onBlur, read
 
   return (
     // eslint-disable-next-line
-    <label className={cx('input-switcher', { readonly: readOnly })} onFocus={onFocus} onBlur={onBlur} tabIndex="1">
+    <label className={cx('input-switcher')} onFocus={onFocus} onBlur={onBlur} tabIndex="1">
       <input
         type="checkbox"
         className={cx('input')}
@@ -46,7 +47,7 @@ export const InputSwitcher = ({ children, value, onChange, onFocus, onBlur, read
         onChange={onChangeHandler}
       />
       <span className={sliderClasses} />
-      <span className={cx('children-container')}>{children}</span>
+      <span className={cx('children-container', { readonly: readOnly })}>{children}</span>
     </label>
   );
 };
