@@ -11,6 +11,7 @@ import { InputTagsSearch } from 'components/inputs/inputTagsSearch';
 import { ModalField } from 'components/main/modal';
 import { activeProjectSelector } from 'controllers/user';
 import classNames from 'classnames/bind';
+import { FIELD_LABEL_WIDTH } from './controls/constants';
 import { FiltersControl, InputControl, TogglerControl } from './controls';
 import { getWidgetCriteriaOptions } from './utils/getWidgetCriteriaOptions';
 import { DEFECT_STATISTICS_OPTIONS, TO_INVESTIGATE_OPTION, ITEMS_INPUT_WIDTH } from './constants';
@@ -201,7 +202,7 @@ export class CumulativeTrendControls extends Component {
             <div className={cx('attr-header')}>{intl.formatMessage(messages.attributesTitle)}</div>
             <ModalField
               label={intl.formatMessage(messages.attributeKeyFieldLabel1)}
-              labelWidth={145}
+              labelWidth={FIELD_LABEL_WIDTH}
             >
               <div style={{ width: '100%' }}>
                 <FieldProvider
@@ -226,7 +227,7 @@ export class CumulativeTrendControls extends Component {
 
             <ModalField
               label={intl.formatMessage(messages.attributeKeyFieldLabel2)}
-              labelWidth={145}
+              labelWidth={FIELD_LABEL_WIDTH}
             >
               <div style={{ width: '100%' }}>
                 <FieldProvider

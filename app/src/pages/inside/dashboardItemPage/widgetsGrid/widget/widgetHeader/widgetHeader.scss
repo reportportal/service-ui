@@ -58,13 +58,20 @@
   font-size: 12px;
   line-height: 12px;
   cursor: default;
+
+  .type {
+    margin-right: 10px;
+  }
 }
 .meta-info {
   display: inline-block;
-  margin-left: 10px;
   color: $COLOR--gray-60;
   font-family: $FONT-SEMIBOLD;
   font-size: 12px;
+
+  &:not(:last-child) {
+    margin-right: 10px;
+  }
 }
 .controls-block {
   position: absolute;

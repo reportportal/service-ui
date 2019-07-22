@@ -117,9 +117,11 @@ export class WidgetHeader extends Component {
           </div>
           <br />
           <div className={cx('widget-type')}>
-            {widgetTypesMessages[data.type]
-              ? intl.formatMessage(widgetTypesMessages[data.type])
-              : data.type}
+            <span className={cx('type')}>
+              {widgetTypesMessages[data.type]
+                ? intl.formatMessage(widgetTypesMessages[data.type])
+                : data.type}
+            </span>
             {this.renderMetaInfo()}
           </div>
         </div>
