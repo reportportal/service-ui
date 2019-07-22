@@ -36,22 +36,38 @@ export class ServiceVersionsBlockWithData extends Component {
   calculateServices = (serviceVersions, latestServiceVersions) => {
     const services = {};
 
-    Object.keys(serviceVersions).map((objKey) => {
-      const value = serviceVersions[objKey];
-      const currentVersion = value.build.version;
-      const latestVersion = latestServiceVersions[value.build.repo];
+    Object.keys(serviceVersions).map((serviceKey) => {
+      const component = serviceVersions[serviceKey];
+      const componentKeys = Object.keys(component);
 
-      services[objKey] = {
-        name: value.build.name,
-        version: value.build.version,
-        newVersion: latestVersion || null,
-        repo: value.build.repo || null,
-        isDeprecated:
-          !!value.build.repo && !!latestVersion && !!semverDiff(currentVersion, latestVersion),
-      };
+      if (!componentKeys.length) return false;
+
+      componentKeys.map((objKey) => {
+        const value = component[objKey];
+
+        if (!value.build) return false;
+
+        const currentVersion = value.build.version;
+
+        if (!currentVersion) return false;
+
+        const latestVersion = latestServiceVersions[value.build.repo];
+
+        services[objKey] = {
+          name: value.build.name,
+          version: value.build.version,
+          newVersion: latestVersion || null,
+          repo: value.build.repo || null,
+          isDeprecated:
+            value.build.repo && latestVersion && semverDiff(currentVersion, latestVersion),
+        };
+
+        return true;
+      });
 
       return true;
     });
+
     return services;
   };
 
