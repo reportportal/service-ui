@@ -1,8 +1,15 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
+import { showModalAction } from 'controllers/modal';
+import { fetchPluginsAction } from 'controllers/plugins';
 import { GhostButton } from 'components/buttons/ghostButton';
+import { PLUGINS_PAGE_EVENTS } from 'components/main/analytics/events';
 import ImportIcon from 'common/img/import-inline.svg';
+import { URLS } from 'common/urls';
+import { MODAL_TYPE_UPLOAD_PLUGIN } from 'pages/common/modals/importModal/constants';
 
 import { UPLOAD } from './constants';
 
@@ -12,15 +19,70 @@ const cx = classNames.bind(styles);
 
 const messages = defineMessages({
   [UPLOAD]: {
-    id: 'AllUsersPage.upload',
+    id: 'PluginsPage.upload',
     defaultMessage: 'Upload',
+  },
+  modalTitle: {
+    id: 'PluginsPage.modalTitle',
+    defaultMessage: 'Upload plugin',
+  },
+  uploadButton: {
+    id: 'PluginsPage.uploadButton',
+    defaultMessage: 'Upload',
+  },
+  uploadTip: {
+    id: 'PluginsPage.tip',
+    defaultMessage:
+      'Drop only <b>.jar</b> file under 128 MB to upload or <span>click</span> to add it',
+  },
+  incorrectFileSize: {
+    id: 'PluginsPage.incorrectFileSize',
+    defaultMessage: 'File size is more than 128 Mb',
+  },
+  incorrectFileVersion: {
+    id: 'PluginsPage.incorrectFileVersion',
+    defaultMessage: 'Plugin version should be specified',
+  },
+  incorrectFileManifest: {
+    id: 'PluginsPage.incorrectFileManifest',
+    defaultMessage: 'Cannot find the manifest path',
   },
 });
 
+@connect(null, {
+  showModalAction,
+  fetchPluginsAction,
+})
 @injectIntl
 export class ActionPanel extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
+    showModalAction: PropTypes.func.isRequired,
+    fetchPluginsAction: PropTypes.func.isRequired,
+  };
+
+  openUploadModal = () => {
+    const {
+      intl: { formatMessage },
+    } = this.props;
+
+    this.props.showModalAction({
+      id: 'importModal',
+      data: {
+        type: MODAL_TYPE_UPLOAD_PLUGIN,
+        onImport: this.props.fetchPluginsAction,
+        title: formatMessage(messages.modalTitle),
+        importButton: formatMessage(messages.uploadButton),
+        tip: formatMessage(messages.uploadTip),
+        incorrectFileSize: formatMessage(messages.incorrectFileSize),
+        url: URLS.plugin(),
+        eventsInfo: {
+          okBtn: PLUGINS_PAGE_EVENTS.OK_BTN_UPLOAD_MODAL,
+          cancelBtn: PLUGINS_PAGE_EVENTS.CANCEL_BTN_UPLOAD_MODAL,
+          closeIcon: PLUGINS_PAGE_EVENTS.CLOSE_ICON_UPLOAD_MODAL,
+        },
+      },
+    });
   };
 
   render() {
@@ -31,19 +93,14 @@ export class ActionPanel extends Component {
       {
         key: UPLOAD,
         icon: ImportIcon,
-        onClick: () => {},
+        onClick: this.openUploadModal,
       },
     ];
     return (
       <div className={cx('action-buttons')}>
         {ACTION_BUTTONS.map(({ key, icon, onClick }) => (
           <div className={cx('action-button')} key={key}>
-            <GhostButton
-              icon={icon}
-              onClick={onClick}
-              title={'Waiting for implementation'}
-              disabled
-            >
+            <GhostButton icon={icon} onClick={onClick}>
               {formatMessage(messages[key])}
             </GhostButton>
           </div>

@@ -7,6 +7,12 @@
   height: auto;
   width: 100%;
   background-color: $COLOR--white-four;
+  cursor: pointer;
+
+  /* stylelint-disable selector-max-attribute */
+  &[aria-disabled='true'] {
+    cursor: default;
+  }
 }
 
 .dropzone-wrapper-active {

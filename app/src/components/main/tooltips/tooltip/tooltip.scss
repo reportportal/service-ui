@@ -10,6 +10,7 @@ $ARROW_WIDTH: 16px;
   transition: opacity 300ms ease;
   &[data-placement*='bottom'] {
     padding-top: $ARROW_HEIGHT;
+    z-index: 2;
   }
 
   &[data-placement*='top'] {

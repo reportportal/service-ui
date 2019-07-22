@@ -15,3 +15,4 @@ export const TAR = 'tar';
 export const GZIP = 'gzip';
 export const PLAIN = 'plain';
 export const IMAGE = 'image';
+export const JAR = 'jar';
