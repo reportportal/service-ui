@@ -121,7 +121,7 @@ const getChartOptions = (widget, options) => {
       callbacks: {
         title(tooltipItem, data) {
           const titleName = getScaleName(widget, options);
-          return `${firstCapital(titleName)} ${data.labels[tooltipItem[0].index]}`;
+          return `${firstCapital(titleName)}: ${data.labels[tooltipItem[0].index]}`;
         },
         afterTitle(tooltipItem, data) {
           const dataset = data.datasets[tooltipItem[0].index];
