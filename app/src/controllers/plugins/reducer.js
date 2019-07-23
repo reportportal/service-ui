@@ -5,7 +5,8 @@ import {
   NAMESPACE,
   SET_PROJECT_INTEGRATIONS,
   FETCH_GLOBAL_INTEGRATIONS_SUCCESS,
-  UPDATE_PLUGIN_LOCALLY,
+  UPDATE_PLUGIN_SUCCESS,
+  REMOVE_PLUGIN_SUCCESS,
   GLOBAL_INTEGRATIONS,
   PROJECT_INTEGRATIONS,
   ADD_GLOBAL_INTEGRATION_SUCCESS,
@@ -51,13 +52,15 @@ const removeIntegrationByType = (state, type, payload) => ({
 
 export const updatePluginLocallyReducer = (state, { type, payload }) => {
   switch (type) {
-    case UPDATE_PLUGIN_LOCALLY:
+    case UPDATE_PLUGIN_SUCCESS:
       return state.map((item) => {
         if (item.type === payload.type) {
           return payload;
         }
         return item;
       });
+    case REMOVE_PLUGIN_SUCCESS:
+      return state.filter((item) => item.type !== payload);
     default:
       return state;
   }

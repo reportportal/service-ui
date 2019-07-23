@@ -1,10 +1,12 @@
 export const NAMESPACE = 'plugins';
 export const SET_PROJECT_INTEGRATIONS = 'setProjectIntegrations';
-export const FETCH_PLUGINS = 'fetchPlugins';
 export const FETCH_GLOBAL_INTEGRATIONS = 'fetchGlobalIntegrations';
 export const FETCH_GLOBAL_INTEGRATIONS_SUCCESS = 'fetchGlobalIntegrationsSuccess';
 
-export const UPDATE_PLUGIN_LOCALLY = 'updatePluginLocally';
+export const FETCH_PLUGINS = 'fetchPlugins';
+export const REMOVE_PLUGIN = 'removePlugin';
+export const UPDATE_PLUGIN_SUCCESS = 'updatePluginSuccess';
+export const REMOVE_PLUGIN_SUCCESS = 'removePluginSuccess';
 
 export const UPDATE_INTEGRATION = 'updateIntegration';
 export const REMOVE_INTEGRATION = 'removeIntegration';

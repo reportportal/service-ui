@@ -35,6 +35,8 @@ export const INTEGRATIONS_IMAGES_MAP = {
 
 export const INTEGRATIONS_SUPPORTS_MULTIPLE_INSTANCES = [JIRA, RALLY, SAML];
 
+export const BUILTIN_PLUGINS = [EMAIL];
+
 export const INTEGRATIONS_FORM_FIELDS_COMPONENTS_MAP = {
   [SAUCE_LABS]: SauceLabsFormFields,
   [EMAIL]: EmailFormFields,

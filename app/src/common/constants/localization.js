@@ -85,4 +85,8 @@ export const COMMON_LOCALE_KEYS = defineMessages({
     id: 'Common.search',
     defaultMessage: 'Search',
   },
+  UNINSTALL: {
+    id: 'Common.uninstall',
+    defaultMessage: 'Uninstall',
+  },
 });
