@@ -163,9 +163,7 @@ export class FiltersControl extends Component {
           );
         }
         case FORM_APPEARANCE_MODE_LOCKED: {
-          return activeFilter ? (
-            <LockedActiveFilter filter={activeFilter} onEdit={this.clearFormAppearance} />
-          ) : null;
+          return <LockedActiveFilter filter={activeFilter} onEdit={this.clearFormAppearance} />;
         }
         default:
           return null;

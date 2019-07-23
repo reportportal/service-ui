@@ -6,7 +6,6 @@
 
   .pencil-icon {
     position: absolute;
-    top: 16px;
     right: 0;
     display: inline-block;
     width: 20px;
@@ -17,6 +16,10 @@
     &:hover {
       fill: $COLOR--gray-47;
     }
+  }
+
+  .not-found { 
+    font-family: $FONT-SEMIBOLD;
   }
 }
 
