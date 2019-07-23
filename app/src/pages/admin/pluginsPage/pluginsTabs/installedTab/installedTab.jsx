@@ -7,7 +7,7 @@ import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
 import { getPluginsFilter } from 'common/constants/pluginsFilter';
 import { ALL_GROUP_TYPE } from 'common/constants/pluginsGroupTypes';
-import { updatePluginLocallyAction } from 'controllers/plugins';
+import { updatePluginSuccessAction } from 'controllers/plugins';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { IntegrationBreadcrumbs } from 'pages/common/settingsPage/integrationsTab/integrationBreadcrumbs';
 import {
@@ -42,14 +42,14 @@ const messages = defineMessages({
 @injectIntl
 @connect(null, {
   showNotification,
-  updatePluginLocallyAction,
+  updatePluginSuccessAction,
 })
 export class InstalledTab extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
     filterItems: PropTypes.array.isRequired,
     plugins: PropTypes.array.isRequired,
-    updatePluginLocallyAction: PropTypes.func.isRequired,
+    updatePluginSuccessAction: PropTypes.func.isRequired,
     showNotification: PropTypes.func,
   };
 
@@ -79,7 +79,7 @@ export class InstalledTab extends Component {
         enabled: toggleActive,
       };
 
-      this.props.updatePluginLocallyAction(plugin);
+      this.props.updatePluginSuccessAction(plugin);
       this.props.showNotification({
         type: NOTIFICATION_TYPES.SUCCESS,
         message: toggleActive
@@ -103,8 +103,9 @@ export class InstalledTab extends Component {
           <IntegrationInfoContainer
             integrationType={newData}
             isGlobal
-            onToggleActive={(itemData) => this.onToggleActive(itemData)}
+            onToggleActive={this.onToggleActive}
             onItemClick={this.installedPluginsSettingsSubPageHandler}
+            removePluginSuccessCallback={this.goToMainPageHandler}
           />
         );
       case INSTALLED_PLUGINS_SETTINGS_SUBPAGE:
@@ -113,7 +114,7 @@ export class InstalledTab extends Component {
             data={data}
             title={title}
             isGlobal
-            goToPreviousPage={this.goToPreviousPageHandler}
+            goToPreviousPage={this.goToCachedSubPageHandler}
           />
         );
       default:
@@ -129,7 +130,7 @@ export class InstalledTab extends Component {
                 title={activeFilterItem}
                 items={this.getFilterPluginsList(activeFilterItem)}
                 filterMobileBlock={this.renderFilterMobileBlock()}
-                onToggleActive={(itemData) => this.onToggleActive(itemData)}
+                onToggleActive={this.onToggleActive}
                 onItemClick={this.installedPluginsSubPageHandler}
               />
             </div>
@@ -168,7 +169,10 @@ export class InstalledTab extends Component {
       value: item.value,
     }));
 
-  goToPreviousPageHandler = () => this.changeSubPage(this.subPagesCache[INSTALLED_PLUGINS_SUBPAGE]);
+  goToMainPageHandler = () => this.changeSubPage(DEFAULT_BREADCRUMB);
+
+  goToCachedSubPageHandler = () =>
+    this.changeSubPage(this.subPagesCache[INSTALLED_PLUGINS_SUBPAGE]);
 
   changeSubPage = (subPage) => {
     this.subPagesCache[subPage.type] = subPage;

@@ -13,14 +13,16 @@ import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLo
 import { fetch } from 'common/utils';
 import {
   NAMESPACE,
+  FETCH_PLUGINS,
+  REMOVE_PLUGIN,
   REMOVE_PROJECT_INTEGRATIONS_BY_TYPE,
   ADD_INTEGRATION,
   UPDATE_INTEGRATION,
   REMOVE_INTEGRATION,
-  FETCH_PLUGINS,
   FETCH_GLOBAL_INTEGRATIONS,
 } from './constants';
 import {
+  removePluginSuccessAction,
   addProjectIntegrationSuccessAction,
   updateProjectIntegrationSuccessAction,
   removeProjectIntegrationSuccessAction,
@@ -163,14 +165,6 @@ function* watchRemoveIntegrationsByType() {
   yield takeEvery(REMOVE_PROJECT_INTEGRATIONS_BY_TYPE, removeIntegrationsByType);
 }
 
-function* fetchPlugins() {
-  yield put(fetchDataAction(NAMESPACE)(URLS.plugin()));
-}
-
-function* watchFetchPlugins() {
-  yield takeEvery(FETCH_PLUGINS, fetchPlugins);
-}
-
 function* fetchGlobalIntegrations() {
   try {
     const globalIntegrations = yield call(fetch, URLS.globalIntegrationsByPluginName());
@@ -184,13 +178,47 @@ function* watchFetchGlobalIntegrations() {
   yield takeEvery(FETCH_GLOBAL_INTEGRATIONS, fetchGlobalIntegrations);
 }
 
+function* fetchPlugins() {
+  yield put(fetchDataAction(NAMESPACE)(URLS.plugin()));
+}
+
+function* watchFetchPlugins() {
+  yield takeEvery(FETCH_PLUGINS, fetchPlugins);
+}
+
+function* removePlugin({ payload: { id, callback } }) {
+  yield put(showScreenLockAction());
+  try {
+    yield call(fetch, URLS.pluginUpdate(id), {
+      method: 'delete',
+    });
+    yield put(removePluginSuccessAction(id));
+    yield put(
+      showNotification({
+        messageId: 'removePluginSuccess',
+        type: NOTIFICATION_TYPES.SUCCESS,
+      }),
+    );
+    yield call(callback);
+  } catch (error) {
+    yield put(showDefaultErrorNotification(error));
+  } finally {
+    yield put(hideScreenLockAction());
+  }
+}
+
+function* watchRemovePlugin() {
+  yield takeEvery(REMOVE_PLUGIN, removePlugin);
+}
+
 export function* pluginSagas() {
   yield all([
     watchAddIntegration(),
     watchUpdateIntegration(),
     watchRemoveIntegration(),
     watchRemoveIntegrationsByType(),
-    watchFetchPlugins(),
     watchFetchGlobalIntegrations(),
+    watchFetchPlugins(),
+    watchRemovePlugin(),
   ]);
 }

@@ -1,9 +1,12 @@
 import {
-  SET_PROJECT_INTEGRATIONS,
-  UPDATE_PLUGIN_LOCALLY,
+  FETCH_PLUGINS,
+  REMOVE_PLUGIN,
+  UPDATE_PLUGIN_SUCCESS,
+  REMOVE_PLUGIN_SUCCESS,
   UPDATE_INTEGRATION,
   REMOVE_INTEGRATION,
   ADD_INTEGRATION,
+  SET_PROJECT_INTEGRATIONS,
   REMOVE_PROJECT_INTEGRATIONS_BY_TYPE,
   REMOVE_PROJECT_INTEGRATIONS_BY_TYPE_SUCCESS,
   ADD_PROJECT_INTEGRATION_SUCCESS,
@@ -12,13 +15,27 @@ import {
   ADD_GLOBAL_INTEGRATION_SUCCESS,
   UPDATE_GLOBAL_INTEGRATION_SUCCESS,
   REMOVE_GLOBAL_INTEGRATION_SUCCESS,
-  FETCH_PLUGINS,
   FETCH_GLOBAL_INTEGRATIONS,
   FETCH_GLOBAL_INTEGRATIONS_SUCCESS,
 } from './constants';
 
 export const fetchPluginsAction = () => ({
   type: FETCH_PLUGINS,
+});
+
+export const removePluginAction = (id, callback) => ({
+  type: REMOVE_PLUGIN,
+  payload: { id, callback },
+});
+
+export const removePluginSuccessAction = (id) => ({
+  type: REMOVE_PLUGIN_SUCCESS,
+  payload: id,
+});
+
+export const updatePluginSuccessAction = (plugin) => ({
+  type: UPDATE_PLUGIN_SUCCESS,
+  payload: plugin,
 });
 
 export const fetchGlobalIntegrationsAction = () => ({
@@ -33,11 +50,6 @@ export const fetchGlobalIntegrationsSuccessAction = (globalIntegrations) => ({
 export const setProjectIntegrationsAction = (projectIntegrations) => ({
   type: SET_PROJECT_INTEGRATIONS,
   payload: projectIntegrations,
-});
-
-export const updatePluginLocallyAction = (plugin) => ({
-  type: UPDATE_PLUGIN_LOCALLY,
-  payload: plugin,
 });
 
 export const updateIntegrationAction = (data, isGlobal, id, callback) => ({
