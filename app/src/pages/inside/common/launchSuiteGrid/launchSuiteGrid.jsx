@@ -263,6 +263,8 @@ export class LaunchSuiteGrid extends PureComponent {
         maxHeight: 170,
         component: NameColumn,
         sortable: true,
+        withFilter: true,
+        filterEventInfo: events.NAME_FILTER,
         customProps: {
           onEditItem: this.props.onEditItem,
           onClickAttribute: this.handleAttributeFilterClick,
