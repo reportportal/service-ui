@@ -221,16 +221,16 @@ export class TestItemDetailsModal extends Component {
         <ModalField label={intl.formatMessage(messages.duration)}>
           {getDuration(item.startTime, item.endTime)}
         </ModalField>
-        <ModalField label={intl.formatMessage(messages.codeRef)}>
-          <div className={cx('code-ref')} title={item.codeRef}>
-            {item.codeRef}
-            {item.codeRef && (
+        {item.codeRef && (
+          <ModalField label={intl.formatMessage(messages.codeRef)}>
+            <div className={cx('code-ref')} title={item.codeRef}>
+              {item.codeRef}
               <CopyToClipboard text={item.codeRef} className={cx('copy')}>
                 {Parser(IconDuplicate)}
               </CopyToClipboard>
-            )}
-          </div>
-        </ModalField>
+            </div>
+          </ModalField>
+        )}
         <ModalField label={intl.formatMessage(messages.attributesLabel)}>
           <FieldProvider name="attributes">
             <AttributeListField
