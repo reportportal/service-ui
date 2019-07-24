@@ -5,4 +5,8 @@
   white-space: pre-line;
   overflow: hidden;
   word-break: break-all;
+
+  @supports (word-break: break-word) {
+    word-break: break-word;
+  }
 }
