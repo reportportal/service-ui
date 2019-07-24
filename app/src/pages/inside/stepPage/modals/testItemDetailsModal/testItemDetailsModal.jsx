@@ -53,9 +53,9 @@ const messages = defineMessages({
     id: 'TestItemDetailsModal.stacktrace',
     defaultMessage: 'Stacktrace:',
   },
-  location: {
-    id: 'TestItemDetailsModal.location',
-    defaultMessage: 'Location:',
+  codeRef: {
+    id: 'TestItemDetailsModal.codeRef',
+    defaultMessage: 'Code reference:',
   },
   attributesLabel: {
     id: 'EditItemModal.attributesLabel',
@@ -221,11 +221,11 @@ export class TestItemDetailsModal extends Component {
         <ModalField label={intl.formatMessage(messages.duration)}>
           {getDuration(item.startTime, item.endTime)}
         </ModalField>
-        <ModalField label={intl.formatMessage(messages.location)}>
-          <div className={cx('location')} title={item.location}>
-            {item.location}
-            {item.location && (
-              <CopyToClipboard text={item.location} className={cx('copy')}>
+        <ModalField label={intl.formatMessage(messages.codeRef)}>
+          <div className={cx('code-ref')} title={item.codeRef}>
+            {item.codeRef}
+            {item.codeRef && (
+              <CopyToClipboard text={item.codeRef} className={cx('copy')}>
                 {Parser(IconDuplicate)}
               </CopyToClipboard>
             )}

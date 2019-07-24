@@ -1563,7 +1563,7 @@
   "TestItemChanges.unlinkIssue": "адмацаваў памылку",
   "TestItemDetailsModal.description": "Апісанне.:",
   "TestItemDetailsModal.duration": "Працягласць.:",
-  "TestItemDetailsModal.location": "Месцазнаходжанне:",
+  "TestItemDetailsModal.codeRef": "Месцазнаходжанне:",
   "TestItemDetailsModal.parametersLabel": "Параметры:",
   "TestItemDetailsModal.noParameters": "Няма параметраў",
   "TestItemDetailsModal.parameterKey": "Ключ",
