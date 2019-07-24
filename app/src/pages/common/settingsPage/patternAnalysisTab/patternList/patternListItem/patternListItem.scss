@@ -1,0 +1,22 @@
+.pattern-rule-data {
+  display: flex;
+  flex-direction: row;
+  margin: 8px 15px 15px 90px;
+  font-size: 13px;
+  font-family: $FONT-REGULAR;
+  @media (max-width: $SCREEN_SM_MAX) {
+    margin-left: 15px;
+  }
+}
+
+.pattern-data-name {
+  flex: 50px 0 0;
+  margin-right: 20px;
+  color: $COLOR--gray-60;
+}
+
+.pattern-data-value {
+  flex: 300px 1 1;
+  color: $COLOR--charcoal-grey;
+  word-break: break-word;
+}

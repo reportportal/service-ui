@@ -1,0 +1,47 @@
+.spinner-wrapper {
+  width: 100%;
+  margin-top: 20px;
+}
+
+.load-more-container {
+  margin-top: 15px;
+  padding: 0 15px;
+}
+
+.load-more {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 6px 12px;
+  border: 2px dashed $COLOR--gray-91;
+  outline: none;
+  cursor: pointer;
+  background: inherit;
+  color: $COLOR--gray-47;
+  &:hover,
+  &:focus {
+    background-color: inherit;
+    color: $COLOR--charcoal-grey;
+  }
+  &:active {
+    background-color: inherit;
+    border: 2px dashed $COLOR--gray-60;
+    color: $COLOR--charcoal-grey;
+  }
+}
+
+.load-more-title {
+  margin: 5px 0;
+  font-size: 24px;
+  font-family: $FONT-REGULAR;
+}
+
+.history-grid-name {
+  border-right: 1px solid $COLOR--gray-91;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  align-content: flex-start;
+  align-items: center;
+}

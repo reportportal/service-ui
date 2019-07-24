@@ -1,0 +1,49 @@
+.attribute {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  margin-bottom: 10px;
+  margin-right: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
+  background-color: $COLOR--white;
+  border-radius: 2px;
+  cursor: pointer;
+
+  &.disabled {
+    cursor: default;
+
+    & .label {
+      color: $COLOR--gray-60;
+    }
+  }
+
+  &:hover:not(.disabled) {
+    background-color: $COLOR--gray-91;
+  }
+}
+
+.label {
+  display: inline-block;
+  color: $COLOR--black-2;
+  font-family: $FONT-REGULAR;
+  font-size: 13px;
+  line-height: 18px;
+  word-break: break-all;
+
+  @supports (word-break: break-word) {
+    word-break: break-word;
+  }
+}
+
+.remove-icon {
+  display: inline-block;
+  height: 10px;
+  width: 10px;
+  padding-right: 10px;
+  line-height: 8px;
+
+  svg {
+    fill: $COLOR--gray-60;
+  }
+}

@@ -1,0 +1,18 @@
+.filters-wrapper {
+  width: calc(100% - 20px);
+  min-height: 18px;
+  margin: 1px 0 0;
+  padding: 10px 10px;
+  background: $COLOR--white;
+}
+
+.filters-text {
+  color: $COLOR--gray-47;
+  font-family: $FONT-SEMIBOLD;
+  font-size: 12px;
+  text-transform: uppercase;
+
+  &.error {
+    color: $COLOR--orange-red;
+  }
+}

@@ -1,0 +1,43 @@
+.plugins-filter-list {
+  display: flex;
+  flex-direction: column;
+  min-width: 160px;
+  margin-right: 80px;
+  @media (max-width: $SCREEN_XS_MAX) {
+    display: none;
+  }
+}
+.plugins-filter-button {
+  height: 26px;
+  width: 100%;
+  margin: 2px 0;
+  padding: 4px 10px;
+  border: none;
+  background: transparent;
+  color: $COLOR--black-2;
+  font-size: 13px;
+  font-family: $FONT-REGULAR;
+  border-radius: 2px;
+  box-sizing: border-box;
+  text-align: left;
+  cursor: pointer;
+
+  &:hover,
+  &:focus {
+    background-color: $COLOR--topaz;
+    color: $COLOR--white-two;
+    font-family: $FONT-SEMIBOLD;
+    letter-spacing: 0;
+  }
+
+  &:focus {
+    outline: none;
+  }
+}
+
+.active {
+  background-color: $COLOR--topaz;
+  color: $COLOR--white-two;
+  font-family: $FONT-SEMIBOLD;
+  letter-spacing: 0;
+}

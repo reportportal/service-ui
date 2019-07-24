@@ -8,6 +8,10 @@
   font-family: $FONT-SEMIBOLD;
   text-transform: uppercase;
   padding-bottom: 5px;
+
+  &:after {
+    content: ':';
+  }
 }
 
 .content {

@@ -1,10 +1,11 @@
-import { Component } from 'react';
+import React, { Component, Fragment } from 'react';
+import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import { injectIntl } from 'react-intl';
 import classNames from 'classnames/bind';
 import { Grid } from 'components/main/grid';
-import { ItemInfo } from 'pages/inside/common/itemInfo';
 import { AbsRelTime } from 'components/main/absRelTime';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { formatMethodType, formatStatus } from 'common/utils/localizationUtils';
 import { FAILED } from 'common/constants/testStatuses';
 import {
@@ -12,10 +13,16 @@ import {
   ENTITY_STATUS,
   ENTITY_START_TIME,
   ENTITY_DEFECT_TYPE,
+  CONDITION_HAS,
+  ENTITY_ATTRIBUTE_KEYS,
+  ENTITY_ATTRIBUTE_VALUES,
 } from 'components/filterEntities/constants';
+import { NoItemMessage } from 'components/main/noItemMessage';
+import { STEP_PAGE_EVENTS } from 'components/main/analytics/events';
 import { PredefinedFilterSwitcher } from './predefinedFilterSwitcher';
 import { DefectType } from './defectType';
 import { GroupHeader } from './groupHeader';
+import { ItemInfoWithRetries } from './itemInfoWithRetries';
 import styles from './stepGrid.scss';
 
 const cx = classNames.bind(styles);
@@ -39,7 +46,7 @@ MethodTypeColumn.defaultProps = {
 
 const NameColumn = ({ className, ...rest }) => (
   <div className={cx('name-col', className)}>
-    <ItemInfo {...rest} />
+    <ItemInfoWithRetries {...rest} />
   </div>
 );
 NameColumn.propTypes = {
@@ -66,7 +73,7 @@ StatusColumn.defaultProps = {
 
 const StartTimeColumn = ({ className, value }) => (
   <div className={cx('start-time-col', className)}>
-    <AbsRelTime startTime={value.start_time} />
+    <AbsRelTime startTime={value.startTime} />
   </div>
 );
 StartTimeColumn.propTypes = {
@@ -78,14 +85,26 @@ StartTimeColumn.defaultProps = {
   value: {},
 };
 
-const DefectTypeColumn = ({ className, value }) => (
+const DefectTypeColumn = ({ className, value, customProps: { onEdit, onUnlinkSingleTicket } }) => (
   <div className={cx('defect-type-col', className)}>
-    {value.issue && <DefectType issue={value.issue} />}
+    {value.issue &&
+      value.issue.issueType && (
+        <DefectType
+          issue={value.issue}
+          patternTemplates={value.patternTemplates}
+          onEdit={() => onEdit(value)}
+          onRemove={onUnlinkSingleTicket(value)}
+        />
+      )}
   </div>
 );
 DefectTypeColumn.propTypes = {
   className: PropTypes.string,
   value: PropTypes.object,
+  customProps: PropTypes.shape({
+    onEdit: PropTypes.func.isRequired,
+    onUnlinkSingleTicket: PropTypes.func.isRequired,
+  }).isRequired,
 };
 DefectTypeColumn.defaultProps = {
   className: null,
@@ -105,6 +124,7 @@ PredefinedFilterSwitcherCell.defaultProps = {
 };
 
 @injectIntl
+@track()
 export class StepGrid extends Component {
   static propTypes = {
     data: PropTypes.array,
@@ -114,8 +134,23 @@ export class StepGrid extends Component {
     onAllItemsSelect: PropTypes.func,
     loading: PropTypes.bool,
     listView: PropTypes.bool,
-    onShowTestParams: PropTypes.func,
     onFilterClick: PropTypes.func,
+    onEditDefect: PropTypes.func,
+    onUnlinkSingleTicket: PropTypes.func,
+    events: PropTypes.object,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
+    onEditItem: PropTypes.func,
+    onChangeSorting: PropTypes.func,
+    sortingColumn: PropTypes.string,
+    sortingDirection: PropTypes.string,
+    rowHighlightingConfig: PropTypes.shape({
+      onGridRowHighlighted: PropTypes.func,
+      isGridRowHighlighted: PropTypes.bool,
+      highlightedRowId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    }),
   };
 
   static defaultProps = {
@@ -125,12 +160,24 @@ export class StepGrid extends Component {
     onAllItemsSelect: () => {},
     loading: false,
     listView: false,
-    onShowTestParams: () => {},
     onFilterClick: () => {},
+    onEditDefect: () => {},
+    onUnlinkSingleTicket: () => {},
+    onEditItem: () => {},
+    events: {},
+    onChangeSorting: () => {},
+    sortingColumn: null,
+    sortingDirection: null,
+    rowHighlightingConfig: PropTypes.shape({
+      onGridRowHighlighted: () => {},
+      isGridRowHighlighted: false,
+      highlightedRowId: null,
+    }),
   };
 
   constructor(props) {
     super(props);
+    const { events, onUnlinkSingleTicket } = this.props;
     this.columns = [
       {
         id: 'predefinedFilterSwitcher',
@@ -150,6 +197,8 @@ export class StepGrid extends Component {
           formatMessage: props.intl.formatMessage,
         },
         withFilter: true,
+        filterEventInfo: events.METHOD_TYPE_FILTER,
+        sortingEventInfo: events.METHOD_TYPE_SORTING,
       },
       {
         id: 'name',
@@ -160,9 +209,13 @@ export class StepGrid extends Component {
         component: NameColumn,
         maxHeight: 170,
         customProps: {
-          onShowTestParams: props.onShowTestParams,
+          onEditItem: props.onEditItem,
+          onClickAttribute: this.handleAttributeFilterClick,
+          events,
         },
         withFilter: true,
+        filterEventInfo: events.NAME_FILTER,
+        sortingEventInfo: events.NAME_SORTING,
       },
       {
         id: ENTITY_STATUS,
@@ -175,6 +228,8 @@ export class StepGrid extends Component {
           formatMessage: props.intl.formatMessage,
         },
         withFilter: true,
+        filterEventInfo: events.STATUS_FILTER,
+        sortingEventInfo: events.STATUS_SORTING,
       },
       {
         id: ENTITY_START_TIME,
@@ -184,6 +239,8 @@ export class StepGrid extends Component {
         sortable: true,
         component: StartTimeColumn,
         withFilter: true,
+        filterEventInfo: events.START_TIME_FILTER,
+        sortingEventInfo: events.START_TIME_SORTING,
       },
       {
         id: ENTITY_DEFECT_TYPE,
@@ -192,10 +249,38 @@ export class StepGrid extends Component {
         },
         sortable: true,
         component: DefectTypeColumn,
+        customProps: {
+          onEdit: (data) => {
+            props.tracking.trackEvent(STEP_PAGE_EVENTS.EDIT_DEFECT_TYPE_ICON);
+            props.onEditDefect(data);
+          },
+          onUnlinkSingleTicket,
+        },
         withFilter: true,
+        filterEventInfo: events.DEFECT_TYPE_FILTER,
+        sortingEventInfo: events.DEFECT_TYPE_SORTING,
       },
     ];
   }
+
+  handleAttributeFilterClick = (attribute) => {
+    this.props.onFilterClick({
+      id: ENTITY_ATTRIBUTE_KEYS,
+      value: {
+        filteringField: ENTITY_ATTRIBUTE_KEYS,
+        condition: CONDITION_HAS,
+        value: attribute.key || '',
+      },
+    });
+    this.props.onFilterClick({
+      id: ENTITY_ATTRIBUTE_VALUES,
+      value: {
+        filteringField: ENTITY_ATTRIBUTE_VALUES,
+        condition: CONDITION_HAS,
+        value: attribute.value || '',
+      },
+    });
+  };
 
   highlightFailedItems = (value) => ({
     [cx('failed')]: value.status === FAILED,
@@ -212,6 +297,7 @@ export class StepGrid extends Component {
 
   render() {
     const {
+      intl: { formatMessage },
       data,
       onItemSelect,
       onAllItemsSelect,
@@ -219,22 +305,35 @@ export class StepGrid extends Component {
       loading,
       listView,
       onFilterClick,
+      onChangeSorting,
+      sortingColumn,
+      sortingDirection,
+      rowHighlightingConfig,
     } = this.props;
+
     return (
-      <Grid
-        columns={this.columns}
-        data={data}
-        onToggleSelection={onItemSelect}
-        onToggleSelectAll={onAllItemsSelect}
-        selectedItems={selectedItems}
-        selectable
-        rowClassMapper={this.highlightFailedItems}
-        loading={loading}
-        groupHeader={GroupHeader}
-        groupFunction={this.groupStepItems}
-        grouped={listView}
-        onFilterClick={onFilterClick}
-      />
+      <Fragment>
+        <Grid
+          columns={this.columns}
+          data={data}
+          onToggleSelection={onItemSelect}
+          onToggleSelectAll={onAllItemsSelect}
+          selectedItems={selectedItems}
+          selectable
+          rowClassMapper={this.highlightFailedItems}
+          loading={loading}
+          groupHeader={GroupHeader}
+          groupFunction={this.groupStepItems}
+          grouped={listView}
+          onFilterClick={onFilterClick}
+          onChangeSorting={onChangeSorting}
+          sortingColumn={sortingColumn}
+          sortingDirection={sortingDirection}
+          rowHighlightingConfig={rowHighlightingConfig}
+        />
+        {!data.length &&
+          !loading && <NoItemMessage message={formatMessage(COMMON_LOCALE_KEYS.NO_RESULTS)} />}
+      </Fragment>
     );
   }
 }

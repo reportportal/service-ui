@@ -6,7 +6,7 @@ go:
   - 1.9.2
 
 env:
-  - TRAVIS_NODE_VERSION="7"
+  - TRAVIS_NODE_VERSION="10.13.0"
 
 addons:
   apt:
@@ -21,6 +21,7 @@ install:
 
 before_script:
   - export DISPLAY=:99.0
+  - export NODE_OPTIONS=--max_old_space_size=4096
   - sh -e /etc/init.d/xvfb start
 
 script: make build

@@ -2,8 +2,7 @@ import { Component } from 'react';
 import { URLS } from 'common/urls';
 import ReactDOMServer from 'react-dom/server';
 import PropTypes from 'prop-types';
-import C3Chart from 'react-c3js';
-import d3 from 'd3';
+import * as d3 from 'd3-selection';
 import classNames from 'classnames/bind';
 import { fetch, dateFormat } from 'common/utils';
 import {
@@ -32,6 +31,7 @@ import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { defectColorsSelector } from 'controllers/project';
 import { activeProjectSelector } from 'controllers/user';
+import { C3Chart } from 'components/widgets/charts/common/c3chart';
 import styles from './launchCompareModal.scss';
 
 const cx = classNames.bind(styles);
@@ -157,6 +157,30 @@ export class LaunchCompareModal extends Component {
     });
   }
 
+  componentWillUnmount() {
+    this.chartContainer && this.chartContainer.removeEventListener('mousemove', this.getCoords);
+  }
+
+  onChartCreated = () => {
+    this.chartContainer.addEventListener('mousemove', this.getCoords);
+  };
+
+  getCoords = ({ pageX, pageY }) => {
+    this.x = pageX;
+    this.y = pageY;
+  };
+
+  getPosition = (d, width, height) => {
+    const rect = this.chartContainer.getBoundingClientRect();
+    const left = this.x - rect.left - width / 2;
+    const top = this.y - rect.top - height;
+
+    return {
+      top: top - 8,
+      left,
+    };
+  };
+
   setChartContainerRef = (chartContainer) => {
     this.chartContainer = chartContainer;
   };
@@ -184,20 +208,14 @@ export class LaunchCompareModal extends Component {
     this.chartConfig.onrendered = () => {
       const barPaths = d3.select(this.chartContainer).selectAll('.c3-chart-bar path');
       barPaths.each((d, i) => {
-        const elem = d3.select(barPaths[0][i]);
+        // eslint-disable-next-line no-underscore-dangle
+        const elem = d3.select(barPaths._groups[0][i]);
         if (elem.datum().value === 0) {
           elem.style('stroke-width', '3px');
         }
       });
     };
-    this.chartConfig.tooltip.position = (d, width, height) => {
-      const left = d3.mouse(this.chartContainer)[0] - width / 2;
-      const top = d3.mouse(this.chartContainer)[1] - height;
-      return {
-        top: top - 8, // 8 - offset for tooltip arrow
-        left,
-      };
-    };
+    this.chartConfig.tooltip.position = this.getPosition;
     this.chartConfig.tooltip.contents = (d, defaultTitleFormat, defaultValueFormat, color) => {
       const launchData = itemsData[d[0].index];
       const id = d[0].id;
@@ -257,7 +275,11 @@ export class LaunchCompareModal extends Component {
         cancelButton={cancelButton}
       >
         <div ref={this.setChartContainerRef} className={cx('chart-container')}>
-          {this.state.loaded ? <C3Chart {...this.chartConfig} /> : <SpinningPreloader />}
+          {this.state.loaded ? (
+            <C3Chart config={this.chartConfig} onChartCreated={this.onChartCreated} />
+          ) : (
+            <SpinningPreloader />
+          )}
         </div>
       </ModalLayout>
     );

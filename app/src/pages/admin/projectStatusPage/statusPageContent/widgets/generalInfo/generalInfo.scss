@@ -1,0 +1,22 @@
+.general-info {
+  height: 180px;
+  padding-top: 10px;
+}
+
+.info-row {
+  padding: 5px 10px;
+  color: $COLOR--charcoal-grey;
+}
+
+.data-value {
+  margin-right: 8px;
+  font-size: 16px;
+  font-family: $FONT-SEMIBOLD;
+  line-height: 18px;
+}
+
+.data-text {
+  font-size: 14px;
+  font-family: $FONT-REGULAR;
+  line-height: 18px;
+}

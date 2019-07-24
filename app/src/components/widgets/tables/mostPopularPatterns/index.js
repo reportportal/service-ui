@@ -1,0 +1,1 @@
+export { MostPopularPatterns } from './mostPopularPatterns';

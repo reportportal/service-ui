@@ -1,0 +1,1 @@
+export { RenamePatternModal } from './renamePatternModal';

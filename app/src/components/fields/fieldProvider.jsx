@@ -4,19 +4,21 @@ import { Field } from 'redux-form';
 
 const InnerComponent = ({
   children,
+  dumbOnBlur = false,
   input: { onChange, onBlur, onFocus, value, name },
-  meta: { error, active, touched },
+  meta: { error, active, touched, asyncValidating },
   ...rest
 }) =>
   cloneElement(children, {
     onChange,
-    onBlur,
+    onBlur: dumbOnBlur ? () => {} : onBlur,
     onFocus,
     value,
     name,
     error,
     active,
     touched,
+    asyncValidating,
     ...rest,
   });
 

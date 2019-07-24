@@ -1,6 +1,8 @@
 import React, { Component, Fragment } from 'react';
+import track from 'react-tracking';
 import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
+import { LAUNCHES_PAGE_EVENTS } from 'components/main/analytics/events';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { CUSTOMER } from 'common/constants/projectRoles';
 import { IN_PROGRESS } from 'common/constants/launchStatuses';
@@ -8,6 +10,7 @@ import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-i
 import PropTypes from 'prop-types';
 import { canDeleteLaunch, canForceFinishLaunch, canMoveToDebug } from 'common/utils/permissions';
 import { URLS } from 'common/urls';
+import { downloadFile } from 'common/utils/downloadFile';
 import {
   activeProjectRoleSelector,
   userIdSelector,
@@ -64,6 +67,7 @@ const messages = defineMessages({
   accountRole: userAccountRoleSelector(state),
   projectId: activeProjectSelector(state),
 }))
+@track()
 export class Hamburger extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
@@ -72,20 +76,23 @@ export class Hamburger extends Component {
     onAction: PropTypes.func,
     launch: PropTypes.object.isRequired,
     projectId: PropTypes.string.isRequired,
-    onAnalysis: PropTypes.func,
     customProps: PropTypes.object,
     accountRole: PropTypes.string,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
 
   static defaultProps = {
     onAction: () => {},
-    onAnalysis: () => {},
     customProps: {},
     accountRole: '',
   };
 
   state = {
     menuShown: false,
+    disableEventTrack: false,
   };
 
   componentDidMount() {
@@ -97,7 +104,7 @@ export class Hamburger extends Component {
   }
 
   onExportLaunch = (type) => {
-    window.location.href = URLS.exportLaunch(this.props.projectId, this.props.launch.id, type);
+    downloadFile(URLS.exportLaunch(this.props.projectId, this.props.launch.id, type));
   };
 
   getForceFinishTooltip = () => {
@@ -140,24 +147,37 @@ export class Hamburger extends Component {
 
   isInProgress = () => this.props.launch.status === IN_PROGRESS.toUpperCase();
 
-  exportAsPDF = () => this.onExportLaunch('pdf');
+  exportAsPDF = () => {
+    this.onExportLaunch('pdf');
+    this.props.tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_EXPORT_PDF);
+  };
 
-  exportAsXLS = () => this.onExportLaunch('xls');
+  exportAsXLS = () => {
+    this.onExportLaunch('xls');
+    this.props.tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_EXPORT_XLS);
+  };
 
-  exportAsHTML = () => this.onExportLaunch('html');
+  exportAsHTML = () => {
+    this.onExportLaunch('html');
+    this.props.tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_EXPORT_HTML);
+  };
 
   handleOutsideClick = (e) => {
-    if (!this.icon.contains(e.target) && this.state.menuShown) {
+    if (this.icon && !this.icon.contains(e.target) && this.state.menuShown) {
       this.setState({ menuShown: false });
     }
   };
 
   toggleMenu = () => {
     this.setState({ menuShown: !this.state.menuShown });
+    if (!this.state.disableEventTrack) {
+      this.props.tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_HAMBURGER_MENU);
+      this.setState({ disableEventTrack: true });
+    }
   };
 
   render() {
-    const { intl, projectRole, accountRole, launch, onAnalysis, customProps } = this.props;
+    const { intl, projectRole, accountRole, launch, customProps, tracking } = this.props;
     return (
       <div className={cx('hamburger')}>
         <div
@@ -187,6 +207,7 @@ export class Hamburger extends Component {
                       )
                     }
                     onClick={() => {
+                      tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_MOVE_TO_DEBUG_LAUNCH_MENU);
                       customProps.onMove(launch);
                     }}
                   />
@@ -219,6 +240,7 @@ export class Hamburger extends Component {
                 ) || !this.isInProgress()
               }
               onClick={() => {
+                tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_FORCE_FINISH_LAUNCH_MENU);
                 customProps.onForceFinish(launch);
               }}
             />
@@ -226,7 +248,8 @@ export class Hamburger extends Component {
               <HamburgerMenuItem
                 text={intl.formatMessage(messages.analysis)}
                 onClick={() => {
-                  onAnalysis(launch);
+                  tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_ANALYSIS_LAUNCH_MENU);
+                  customProps.onAnalysis(launch);
                 }}
               />
             )}
@@ -240,6 +263,7 @@ export class Hamburger extends Component {
                 ) || this.isInProgress()
               }
               onClick={() => {
+                tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_DELETE_LAUNCH_MENU);
                 customProps.onDeleteItem(launch);
               }}
               title={this.getDeleteItemTooltip()}

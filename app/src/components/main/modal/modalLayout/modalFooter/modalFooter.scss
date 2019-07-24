@@ -7,7 +7,7 @@
   position: relative;
 
   .warning-block {
-    padding-right: 10px;
+    padding-right: 5px;
   }
 }
 .warning-block {
@@ -24,10 +24,9 @@
     width: 16px;
     height: 16px;
     margin-top: -8px;
-    background-image: url(./img/warning-icon.svg);
-    background-repeat: no-repeat;
-    background-size: 100%;
-    background-position: center;
+    svg {
+      fill: $COLOR--failed;
+    }
   }
   .warning-message {
     display: inline-block;
@@ -43,7 +42,20 @@
   float: right;
   white-space: nowrap;
 }
+.left {
+  position: absolute;
+  left: 0;
+  width: 20px;
+  height: 20px;
+}
 .button-container {
+  &.left {
+    min-width: 20px;
+    height: 20px;
+    display: inline-block;
+    user-select: none;
+    cursor: pointer;
+  }
   display: inline-block;
   height: 30px;
   min-width: 70px;
@@ -62,6 +74,8 @@
 }
 .confirmation-block {
   display: flex;
+  flex-wrap: wrap;
+  max-width: 380px;
   float: left;
 }
 .confirmation-label {

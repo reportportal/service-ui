@@ -82,7 +82,7 @@
   background-color: $COLOR--white-two;
   box-sizing: border-box;
   box-shadow: 0 6px 12px $COLOR--gray-80;
-  z-index: 1;
+  z-index: $Z-INDEX-POPUP;
   cursor: pointer;
 }
 .select-all-block {
@@ -95,7 +95,7 @@
     content: '';
     display: block;
     height: 1px;
-    background: #e9e9e9;
+    background: $COLOR--gray-91;
     margin: 3px 10px;
     box-sizing: border-box;
   }

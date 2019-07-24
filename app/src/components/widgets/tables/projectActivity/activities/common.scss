@@ -1,0 +1,25 @@
+.user-name {
+  margin-right: 5px;
+  text-transform: capitalize;
+  font-size: 15px;
+  line-height: 15px;
+  font-family: $FONT-SEMIBOLD;
+}
+.link {
+  margin: 0 5px;
+  text-decoration: none;
+  color: $COLOR--windows-blue;
+  &:hover {
+    color: $COLOR--black-2;
+  }
+}
+.new-user-name,
+.activity-name {
+  color: $COLOR--charcoal-grey;
+  font-family: $FONT-SEMIBOLD;
+  word-break: break-all;
+
+  @supports (word-break: break-word) {
+    word-break: break-word;
+  }
+}

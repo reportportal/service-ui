@@ -2,7 +2,7 @@ import { storiesOf } from '@storybook/react';
 import { host } from 'storybook-host';
 import { withReadme } from 'storybook-readme';
 // eslint-disable-next-line import/extensions, import/no-unresolved
-import { WithState } from 'storybook-decorators/withState';
+import { WithState } from 'storybook-decorators';
 import { HistoryLine } from './historyLine';
 import { mockEntries } from './data';
 import README from './README.md';
@@ -20,8 +20,6 @@ const defaultState = {
   },
   log: {
     logEntries: [],
-    activeItemId: '',
-    itemToGetHistory: '',
   },
 };
 
@@ -39,11 +37,10 @@ const state = {
   },
   log: {
     historyEntries: mockEntries,
-    activeItemId: '5b75a36397a1c00001ea3d4f',
   },
 };
 
-storiesOf('Pages/inside/LogsPage/HistoryLine', module)
+storiesOf('Pages/Inside/LogsPage/HistoryLine', module)
   .addDecorator(
     host({
       title: 'History Line component',

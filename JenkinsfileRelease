@@ -8,16 +8,21 @@ node {
 
         stage('Checkout'){
                 checkout scm
-                sh 'git checkout master'
+                sh 'git checkout v5-kronos'
                 sh 'git pull'
             }
 
-            stage('Build') {
-                docker.image('node:6').inside('-u root') {
-                    sh 'make build-statics'
+        stage('Build') {
+                withEnv(["NODE_OPTIONS=--max_old_space_size=4096"]) {
+                        docker.image('node:11').inside('-u root') {
+                            sh 'node -v'
+                            sh 'npm config set unsafe-perm=true'
+                            sh 'make build-statics'
+                        }
                 }
             }
-            stage ('Build Server') {
+
+        stage ('Build Server') {
                 withEnv(["GOPATH=${JENKINS_HOME}/workspace/${JOB_NAME}", "BINTRAY_TOKEN=${BINTRAY_TOKEN}", "RELEASE_VERSION=${RELEASE_VERSION}"]) {
                         env.PATH="${GOPATH}/bin:$PATH"
                         sh 'go version'
@@ -27,7 +32,6 @@ node {
                 }
 
             }
-
 
         }
 }

@@ -1,0 +1,64 @@
+.link-issue-fields {
+  .issue-fields-list-item {
+    position: relative;
+    margin-bottom: 18px;
+  }
+}
+.field-wrapper {
+  width: 280px;
+  padding: 0;
+  margin: 0;
+  @media (max-width: $SCREEN_XS_MAX) {
+    max-width: 100%;
+    margin-bottom: 8px;
+  }
+}
+
+.label {
+  width: 140px;
+  min-width: 182px;
+  padding-right: 30px;
+  font-size: 13px;
+  font-family: $FONT-REGULAR;
+  text-align: right;
+  @media (max-width: $SCREEN_XS_MAX) {
+    width: 100%;
+    margin-bottom: 8px;
+    padding: 0;
+    text-align: left;
+  }
+}
+
+.remove-issue-fields-button {
+  position: absolute;
+  right: -4px;
+  top: 25px;
+  width: 17px;
+  height: 17px;
+  vertical-align: middle;
+  transition: transform 200ms ease-in-out;
+  cursor: pointer;
+
+  svg {
+    fill: $COLOR--gray-60;
+  }
+  &:hover {
+    transform: scale(1.2);
+
+    svg {
+      fill: $COLOR--gray-47;
+    }
+  }
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    right: -27px;
+    top: 56px;
+  }
+}
+
+.add-issue-button {
+  margin-left: 180px;
+  @media (max-width: $SCREEN_XS_MAX) {
+    margin-left: 0;
+  }
+}

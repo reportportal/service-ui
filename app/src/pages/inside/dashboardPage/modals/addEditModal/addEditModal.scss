@@ -9,7 +9,7 @@
   justify-content: flex-start;
 
   input {
-    border: 1px solid black;
+    border: 1px solid $COLOR--gray-80;
   }
 }
 
@@ -29,7 +29,7 @@
   padding-right: 15px;
   font-size: 13px;
   font-family: $FONT-REGULAR;
-  color: #333;
+  color: $COLOR--charcoal-grey;
 }
 
 .input-wrap {

@@ -1,0 +1,11 @@
+.caption {
+  font-family: $FONT-REGULAR;
+  color: $COLOR--black-2;
+  font-size: 13px;
+  padding-top: 3px;
+}
+.sorting-block {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}

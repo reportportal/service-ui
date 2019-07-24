@@ -1,56 +1,146 @@
-import { fetch } from 'common/utils';
-import { URLS } from 'common/urls';
-import { userIdSelector, activeProjectSelector } from 'controllers/user';
 import {
   FETCH_PROJECT_SUCCESS,
   FETCH_PROJECT_PREFERENCES_SUCCESS,
-  TOGGLE_DISPLAY_FILTER_ON_LAUNCHES,
-  UPDATE_AUTO_ANALYSIS_CONFIGURATION,
+  UPDATE_CONFIGURATION_ATTRIBUTES,
+  UPDATE_NOTIFICATIONS_CONFIG,
+  UPDATE_NOTIFICATIONS_CONFIG_SUCCESS,
+  UPDATE_DEFECT_SUBTYPE,
+  UPDATE_DEFECT_SUBTYPE_SUCCESS,
+  ADD_DEFECT_SUBTYPE,
+  ADD_DEFECT_SUBTYPE_SUCCESS,
+  DELETE_DEFECT_SUBTYPE,
+  DELETE_DEFECT_SUBTYPE_SUCCESS,
+  ADD_PATTERN,
+  ADD_PATTERN_SUCCESS,
+  UPDATE_PATTERN,
+  UPDATE_PATTERN_SUCCESS,
+  DELETE_PATTERN,
+  DELETE_PATTERN_SUCCESS,
+  UPDATE_PA_STATE,
+  FETCH_PROJECT,
+  FETCH_PROJECT_PREFERENCES,
+  FETCH_CONFIGURATION_ATTRIBUTES,
+  SHOW_FILTER_ON_LAUNCHES,
+  HIDE_FILTER_ON_LAUNCHES,
+  UPDATE_PROJECT_FILTER_PREFERENCES,
 } from './constants';
-import { projectPreferencesSelector } from './selectors';
 
-const fetchProjectSuccessAction = (project) => ({
+export const fetchProjectSuccessAction = (project) => ({
   type: FETCH_PROJECT_SUCCESS,
   payload: project,
 });
 
-const fetchProjectPreferencesSuccessAction = (projectId) => ({
+export const fetchProjectPreferencesSuccessAction = (preferences) => ({
   type: FETCH_PROJECT_PREFERENCES_SUCCESS,
+  payload: preferences,
+});
+
+export const updateConfigurationAttributesAction = (project) => ({
+  type: UPDATE_CONFIGURATION_ATTRIBUTES,
+  payload: project.configuration.attributes,
+});
+
+export const updateProjectNotificationsConfigAction = (config) => ({
+  type: UPDATE_NOTIFICATIONS_CONFIG,
+  payload: config,
+});
+
+export const updateProjectNotificationsConfigSuccessAction = (config) => ({
+  type: UPDATE_NOTIFICATIONS_CONFIG_SUCCESS,
+  payload: config,
+});
+
+export const updateProjectFilterPreferencesAction = (filterId, method) => ({
+  type: UPDATE_PROJECT_FILTER_PREFERENCES,
+  payload: { filterId, method },
+});
+
+export const showFilterOnLaunchesAction = (filter) => ({
+  type: SHOW_FILTER_ON_LAUNCHES,
+  payload: filter,
+});
+
+export const hideFilterOnLaunchesAction = (filter) => ({
+  type: HIDE_FILTER_ON_LAUNCHES,
+  payload: filter,
+});
+
+export const fetchProjectPreferencesAction = (projectId) => ({
+  type: FETCH_PROJECT_PREFERENCES,
   payload: projectId,
 });
 
-export const updateAutoAnalysisConfigurationAction = (project) => ({
-  type: UPDATE_AUTO_ANALYSIS_CONFIGURATION,
-  payload: project.configuration.analyzerConfiguration,
+export const fetchProjectAction = (projectId, isAdminAccess) => ({
+  type: FETCH_PROJECT,
+  payload: { projectId, isAdminAccess },
 });
 
-const updateProjectPreferencesAction = (settings) => (dispatch, getState) =>
-  fetch(URLS.projectPreferences(activeProjectSelector(getState()), userIdSelector(getState())), {
-    method: 'PUT',
-    data: settings,
-  });
+export const fetchConfigurationAttributesAction = (projectId) => ({
+  type: FETCH_CONFIGURATION_ATTRIBUTES,
+  payload: projectId,
+});
 
-export const toggleDisplayFilterOnLaunchesAction = (filter) => (dispatch, getState) => {
-  dispatch({
-    type: TOGGLE_DISPLAY_FILTER_ON_LAUNCHES,
-    payload: filter,
-  });
-  dispatch(updateProjectPreferencesAction(projectPreferencesSelector(getState())));
-};
+export const updateDefectSubTypeAction = (subType) => ({
+  type: UPDATE_DEFECT_SUBTYPE,
+  payload: subType,
+});
 
-const fetchProjectPreferencesAction = (projectId) => (dispatch, getState) =>
-  fetch(URLS.projectPreferences(projectId, userIdSelector(getState()))).then((project) => {
-    dispatch(fetchProjectPreferencesSuccessAction(project));
-  });
+export const updateDefectSubTypeSuccessAction = (subType) => ({
+  type: UPDATE_DEFECT_SUBTYPE_SUCCESS,
+  payload: subType,
+});
 
-export const fetchProjectAction = (projectId) => (dispatch) =>
-  fetch(URLS.project(projectId)).then((project) => {
-    dispatch(fetchProjectSuccessAction(project));
-    dispatch(fetchProjectPreferencesAction(projectId));
-  });
+export const addDefectSubTypeAction = (subType) => ({
+  type: ADD_DEFECT_SUBTYPE,
+  payload: subType,
+});
 
-export const fetchAutoAnalysisConfigurationAction = (projectId) => (dispatch) => {
-  fetch(URLS.project(projectId)).then((project) => {
-    dispatch(updateAutoAnalysisConfigurationAction(project));
-  });
-};
+export const addDefectSubTypeSuccessAction = (subType) => ({
+  type: ADD_DEFECT_SUBTYPE_SUCCESS,
+  payload: subType,
+});
+
+export const deleteDefectSubTypeAction = (subType) => ({
+  type: DELETE_DEFECT_SUBTYPE,
+  payload: subType,
+});
+
+export const deleteDefectSubTypeSuccessAction = (subType) => ({
+  type: DELETE_DEFECT_SUBTYPE_SUCCESS,
+  payload: subType,
+});
+
+export const addPatternAction = (pattern) => ({
+  type: ADD_PATTERN,
+  payload: pattern,
+});
+
+export const addPatternSuccessAction = (pattern) => ({
+  type: ADD_PATTERN_SUCCESS,
+  payload: pattern,
+});
+
+export const updatePatternAction = (pattern) => ({
+  type: UPDATE_PATTERN,
+  payload: pattern,
+});
+
+export const updatePatternSuccessAction = (pattern) => ({
+  type: UPDATE_PATTERN_SUCCESS,
+  payload: pattern,
+});
+
+export const deletePatternAction = (pattern) => ({
+  type: DELETE_PATTERN,
+  payload: pattern,
+});
+
+export const deletePatternSuccessAction = (pattern) => ({
+  type: DELETE_PATTERN_SUCCESS,
+  payload: pattern,
+});
+
+export const updatePAStateAction = (PAState) => ({
+  type: UPDATE_PA_STATE,
+  payload: PAState,
+});

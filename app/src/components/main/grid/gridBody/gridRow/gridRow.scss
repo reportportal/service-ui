@@ -1,3 +1,51 @@
+$LEVEL_OFFSET_STEP: 20px;
+
+@mixin levels-desktop {
+  @for $level from 1 to 20 {
+    &.level-#{$level} {
+      border-left-width: $level * $LEVEL_OFFSET_STEP;
+      @media (max-width: $SCREEN_SM_MAX) {
+        border-left-width: 0;
+      }
+      &.change-mobile {
+        @media (max-width: $SCREEN_SM_MAX) {
+          border-left-width: $level * $LEVEL_OFFSET_STEP;
+        }
+        @media (max-width: $SCREEN_XS_MAX) {
+          border-left-width: 0;
+        }
+      }
+    }
+  }
+}
+
+@mixin levels-mobile {
+  @for $level from 1 to 20 {
+    &.level-#{$level} {
+      border-left-width: 0;
+      @media (max-width: $SCREEN_SM_MAX) {
+        border-left-width: $level * $LEVEL_OFFSET_STEP;
+      }
+      &.change-mobile {
+        @media (max-width: $SCREEN_SM_MAX) {
+          border-left-width: 0;
+        }
+        @media (max-width: $SCREEN_XS_MAX) {
+          border-left-width: $level * $LEVEL_OFFSET_STEP;
+        }
+      }
+    }
+  }
+}
+
+@mixin levels-accordion {
+  @for $level from 1 to 20 {
+    &.level-#{$level} {
+      left: $level * $LEVEL_OFFSET_STEP;
+    }
+  }
+}
+
 .grid-row-wrapper {
   display: table-row-group;
   border-bottom: 1px solid $COLOR--gray-91;
@@ -10,6 +58,10 @@
     .accordion-block {
       background-color: $COLOR--gray-91;
       box-shadow: 0 -15px 20px 0px $COLOR--gray-91;
+
+      &.expanded {
+        box-shadow: none;
+      }
     }
   }
 
@@ -19,11 +71,16 @@
     .accordion-block {
       background-color: $COLOR--tealish-hover;
       box-shadow: 0 -15px 20px 0px $COLOR--tealish-hover;
+
+      &.expanded {
+        box-shadow: none;
+      }
     }
   }
   &::after {
     content: '';
     position: absolute;
+    z-index: 1;
     left: 0;
     right: 0;
     height: 1px;
@@ -33,6 +90,9 @@
 .grid-row {
   position: relative;
   display: table-row;
+  border-left-color: $COLOR--gray-91;
+  border-left-style: solid;
+  border-left-width: 0px;
   @media (max-width: $SCREEN_SM_MAX) {
     display: flex;
     flex-wrap: wrap;
@@ -40,17 +100,20 @@
   &.change-mobile {
     @media (max-width: $SCREEN_SM_MAX) {
       display: table-row;
+      border-left-width: 0px;
     }
     @media (max-width: $SCREEN_XS_MAX) {
       display: flex;
       flex-wrap: wrap;
     }
   }
+  @include levels-mobile;
 }
 .accordion-wrapper {
   position: absolute;
   right: 0;
   left: 0;
+  @include levels-accordion;
 }
 .accordion-block {
   position: absolute;
@@ -62,6 +125,10 @@
   background-color: $COLOR--white-two;
   box-shadow: 0 -15px 20px 0px $COLOR--white-two;
   transition: background-color 0.2s ease 0s, box-shadow 0.2s ease 0s;
+
+  &.expanded {
+    box-shadow: none;
+  }
 
   @media (max-width: $SCREEN_SM_MAX) {
     bottom: 120px;
@@ -109,4 +176,127 @@
   &.rotated {
     transform: scaleY(-1);
   }
+}
+
+.log {
+  .grid-row {
+    @media (max-width: $SCREEN_XS_MAX) {
+      padding-right: 20px;
+    }
+  }
+
+  .accordion-block {
+    @media (max-width: $SCREEN_SM_MAX) {
+      bottom: 0;
+    }
+    @media (max-width: $SCREEN_XS_MAX) {
+      bottom: 64px;
+    }
+  }
+
+  .accordion-toggler {
+    @media (max-width: $SCREEN_SM_MAX) {
+      display: block;
+    }
+    @media (max-width: $SCREEN_XS_MAX) {
+      display: none;
+    }
+  }
+
+  .accordion-wrapper-mobile {
+    @media (max-width: $SCREEN_SM_MAX) {
+      display: none;
+    }
+    @media (max-width: $SCREEN_XS_MAX) {
+      display: block;
+    }
+  }
+}
+
+.error-row {
+  background-color: $COLOR--light-red;
+
+  .accordion-block {
+    background-color: $COLOR--light-red;
+    box-shadow: 0 -15px 20px 0px $COLOR--light-red;
+    &.expanded {
+      box-shadow: none;
+    }
+  }
+
+  &:hover {
+    background-color: $COLOR--light-red;
+    .accordion-block {
+      background-color: $COLOR--light-red;
+      box-shadow: 0 -15px 20px 0px $COLOR--light-red;
+      &.expanded {
+        box-shadow: none;
+      }
+    }
+  }
+}
+
+.row-console {
+  background: none;
+
+  &::after {
+    display: none;
+  }
+
+  .accordion-block {
+    display: none;
+  }
+  .accordion-toggler {
+    display: none;
+  }
+  .accordion-toggler-mobile {
+    display: none;
+  }
+  .accordion-wrapper-mobile {
+    display: none;
+  }
+
+  &:hover {
+    background: none;
+  }
+}
+
+.highlight-block {
+  position: absolute;
+  right: 0;
+  left: 0;
+  z-index: -1;
+
+  &:before {
+    content: '';
+    display: block;
+  }
+}
+
+.highlight {
+  z-index: 1;
+  &:before {
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: $COLOR--go-to-stack-trace;
+    opacity: 0.6;
+    transition: opacity 3s ease;
+  }
+}
+
+.hide-highlight {
+  &:before {
+    opacity: 0;
+  }
+}
+
+.first-col-wrapper {
+  display: table-cell;
+  border-left-color: $COLOR--gray-91;
+  border-left-style: solid;
+  @include levels-desktop;
 }

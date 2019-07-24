@@ -2,9 +2,8 @@
   overflow: hidden;
 
   &:hover {
-    .edit-icon,
-    .test-params-icon {
-      display: inline-block;
+    .edit-icon {
+      visibility: visible;
     }
   }
 }
@@ -13,6 +12,11 @@
   min-height: 20px;
   box-sizing: border-box;
   margin-bottom: 10px;
+  word-break: break-all;
+
+  @supports (word-break: break-word) {
+    word-break: break-word;
+  }
 }
 .name-link {
   font-family: $FONT-SEMIBOLD;
@@ -25,26 +29,46 @@
     font-size: 16px;
   }
 }
-.name,
+.name {
+  word-break: break-all;
+
+  @supports (word-break: break-word) {
+    word-break: break-word;
+  }
+}
+.edit-number-box {
+  white-space: nowrap;
+}
 .number {
   margin-right: 5px;
+  white-space: nowrap;
 }
-.analysis-badge {
+
+.item-badge {
   display: inline-block;
-  width: 55px;
-  height: 15px;
+  padding: 3px 8px;
+  margin-right: 5px;
   border-radius: 100px;
-  background-color: $COLOR--orange-red;
-  font-family: $FONT-SEMIBOLD;
-  font-size: 10px;
   color: $COLOR--white-two;
-  line-height: 15px;
-  text-align: center;
-  vertical-align: middle;
-  animation: auto-analyze-blink 1s linear reverse infinite;
+  font-size: 10px;
+  font-family: $FONT-SEMIBOLD;
+
+  &:nth-last-child(2) {
+    margin-right: 0;
+  }
+
+  &.analysis {
+    background-color: $COLOR--orange-red;
+    animation: auto-analyze-blink 1s linear reverse infinite;
+  }
+
+  &.rerun {
+    background-color: $COLOR--booger;
+  }
 }
 .edit-icon {
-  display: none;
+  display: inline-block;
+  visibility: hidden;
   width: 20px;
   height: 20px;
   margin-left: 10px;
@@ -78,28 +102,18 @@
   width: 100%;
   box-sizing: border-box;
 }
+.duration-block {
+  margin-right: 20px;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    margin-right: 15px;
+  }
+}
 .item-description {
   width: 100%;
   margin-top: 10px;
   margin-bottom: 10px;
   word-break: break-word;
-}
-.test-params-icon {
-  display: none;
-  width: 20px;
-  height: 20px;
-  margin-left: 10px;
-  vertical-align: top;
-  fill: $COLOR--gray-60;
-  cursor: pointer;
-
-  &:hover {
-    fill: $COLOR--black-2;
-  }
-
-  @media (max-width: $SCREEN_SM_MAX) {
-    display: inline-block;
-  }
 }
 .mobile-info {
   display: none;
@@ -121,6 +135,28 @@
       vertical-align: top;
     }
   }
+}
+
+.retry-icon {
+  display: inline-block;
+  height: 15px;
+  width: 18px;
+  padding-right: 20px;
+}
+
+.retries {
+  display: inline-block;
+}
+
+.retries-counter {
+  display: inline-block;
+}
+
+.sauce-labs-label {
+  width: 15px;
+  height: 15px;
+  margin-right: 5px;
+  vertical-align: middle;
 }
 
 @keyframes auto-analyze-blink {

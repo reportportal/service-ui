@@ -1,5 +1,5 @@
 import axios, { CancelToken } from 'axios';
-import { DEFAULT_TOKEN, TOKEN_KEY } from 'controllers/auth';
+import { isAuthorizedSelector, logoutAction } from 'controllers/auth';
 
 export const ERROR_CANCELED = 'REQUEST_CANCELED';
 export const ERROR_UNAUTHORIZED = 'UNAUTHORIZED';
@@ -19,11 +19,10 @@ const handleError = (error) => {
 
 const handleResponse = (res) => res.data;
 
-export const fetch = (url, params = {}) => {
+export const fetch = (url, params = {}, isRawResponse) => {
   const cancelToken = params && params.abort ? new CancelToken(params.abort) : null;
-  const token = localStorage.getItem(TOKEN_KEY) || DEFAULT_TOKEN;
   const headersFromParams = params && params.headers;
-  const headers = Object.assign({}, headersFromParams || {}, { Authorization: token });
+  const headers = Object.assign({}, headersFromParams || {});
   const requestParams = {
     ...params,
     cancelToken,
@@ -32,5 +31,22 @@ export const fetch = (url, params = {}) => {
   };
   return axios(requestParams)
     .catch(handleError)
-    .then(handleResponse);
+    .then(!isRawResponse ? handleResponse : (response) => response);
+};
+
+export const updateToken = (newToken) => {
+  axios.defaults.headers.common.Authorization = newToken;
+};
+
+export const initAuthInterceptor = (store) => {
+  axios.interceptors.response.use(
+    (response) => response,
+    (error) => {
+      if (error.response && error.response.status === 401) {
+        const isAuthorized = isAuthorizedSelector(store.getState());
+        isAuthorized && store.dispatch(logoutAction());
+      }
+      return Promise.reject(error);
+    },
+  );
 };

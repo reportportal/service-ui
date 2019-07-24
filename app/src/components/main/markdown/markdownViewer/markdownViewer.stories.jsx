@@ -44,17 +44,13 @@ const linkMock = '[Report portal](http://reportportal.io/)';
 const quoteMock = '> This is a quote.';
 const codeMock = '`var example = "hello!";`';
 const imageMock = `![Yes](${TestImage})`;
-const combinationMock = '# Intro\n' +
-  'Go ahead, play around with the editor! Be sure to check out **bold** and *italic* styling, or even [links](https://google.com). You can type the Markdown syntax, use the toolbar, or use shortcuts like `cmd-b` or `ctrl-b`.\n' +
-  '\n' +
+const combinationMock =
   '## Lists\n' +
   'Unordered lists can be started using the toolbar or by typing `* `, `- `, or `+ `. Ordered lists can be started by typing `1. `.\n' +
   '\n' +
   '### Unordered\n' +
   '* Lists are a piece of cake\n' +
   '* They even auto continue as you type\n' +
-  '* A double enter will end them\n' +
-  '* Tabs and shift-tabs work too\n' +
   '\n' +
   '#### Ordered\n' +
   '1. Numbered lists...\n' +
@@ -63,47 +59,28 @@ const combinationMock = '# Intro\n' +
   '## What about images?\n' +
   `![Yes](${TestImage})\n`;
 
-storiesOf('Components/Main/markdown/markdownViewer', module)
-  .addDecorator(host({
-    title: 'Markdown viewer component',
-    align: 'center middle',
-    backdrop: 'rgba(70, 69, 71, 0.2)',
-    background: '#fff',
-    height: 'auto',
-    width: '70%',
-  }))
+storiesOf('Components/Main/Markdown/MarkdownViewer', module)
+  .addDecorator(
+    host({
+      title: 'Markdown viewer component',
+      align: 'center middle',
+      backdrop: 'rgba(70, 69, 71, 0.2)',
+      background: '#fff',
+      height: 'auto',
+      width: '70%',
+    }),
+  )
   .addDecorator(withReadme(README))
-  .add('default state', () => (
-    <MarkdownViewer />
-  ))
-  .add('with bold markdown text', () => (
-    <MarkdownViewer value={boldMock} />
-  ))
-  .add('with italic markdown text', () => (
-    <MarkdownViewer value={italicMock} />
-  ))
-  .add('with strikethrough text', () => (
-    <MarkdownViewer value={strikethroughMock} />
-  ))
-  .add('with unordered list', () => (
-    <MarkdownViewer value={unorderedListMock} />
-  ))
-  .add('with ordered list', () => (
-    <MarkdownViewer value={orderedListMock} />
-  ))
-  .add('with link', () => (
-    <MarkdownViewer value={linkMock} />
-  ))
-  .add('with quote block', () => (
-    <MarkdownViewer value={quoteMock} />
-  ))
-  .add('with code block', () => (
-    <MarkdownViewer value={codeMock} />
-  ))
-  .add('with image', () => (
-    <MarkdownViewer value={imageMock} onResize={action('block resized!')} />
-  ))
+  .add('default state', () => <MarkdownViewer />)
+  .add('with bold markdown text', () => <MarkdownViewer value={boldMock} />)
+  .add('with italic markdown text', () => <MarkdownViewer value={italicMock} />)
+  .add('with strikethrough text', () => <MarkdownViewer value={strikethroughMock} />)
+  .add('with unordered list', () => <MarkdownViewer value={unorderedListMock} />)
+  .add('with ordered list', () => <MarkdownViewer value={orderedListMock} />)
+  .add('with link', () => <MarkdownViewer value={linkMock} />)
+  .add('with quote block', () => <MarkdownViewer value={quoteMock} />)
+  .add('with code block', () => <MarkdownViewer value={codeMock} />)
+  .add('with image', () => <MarkdownViewer value={imageMock} onResize={action('block resized!')} />)
   .add('different types of markdown', () => (
     <MarkdownViewer value={combinationMock} onResize={action('block resized!')} />
-  ))
-;
+  ));

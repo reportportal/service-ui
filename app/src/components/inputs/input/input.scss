@@ -36,12 +36,19 @@
   }
 
   &:-webkit-autofill {
-    -webkit-box-shadow: 0 0 0 1000px #fdffeb inset;
+    box-shadow: 0 0 0 1000px #fdffeb inset; /* stylelint-disable-line color-no-hex */
   }
-  &[type='number']::-webkit-inner-spin-button,
-  &[type='number']::-webkit-outer-spin-button {
-    -webkit-appearance: none;
+  &.type-number::-webkit-inner-spin-button,
+  &.type-number::-webkit-outer-spin-button {
+    appearance: none;
     margin: 0;
+  }
+
+  &.asyncValidating {
+    padding-right: 20px;
+    background-position: right 5px center;
+    background-repeat: no-repeat;
+    background-image: url(common/img/spinner.gif);
   }
 }
 .disabled {

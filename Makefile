@@ -10,17 +10,15 @@ RELEASE_DIR=release
 BUILD_DEPS:= github.com/alecthomas/gometalinter github.com/avarabyeu/releaser
 GODIRS_NOVENDOR = $(shell go list ./... | grep -v /vendor/)
 GOFILES_NOVENDOR = $(shell find . -type f -name '*.go' -not -path "./vendor/*")
-PACKAGE_COMMONS=github.com/reportportal/service-ui/vendor/gopkg.in/reportportal/commons-go.v1
+PACKAGE_COMMONS=github.com/reportportal/service-ui/vendor/gopkg.in/reportportal/commons-go.v5
 REPO_NAME=reportportal/service-ui
 
-UI_BUILD_ROOT=src/main/resources/public/
 UI_BUILD_REACT=app/
 
 BUILD_INFO_LDFLAGS=-ldflags "-extldflags '"-static"' -X ${PACKAGE_COMMONS}/commons.repo=${REPO_NAME} -X ${PACKAGE_COMMONS}/commons.branch=${COMMIT_HASH} -X ${PACKAGE_COMMONS}/commons.buildDate=${BUILD_DATE} -X ${PACKAGE_COMMONS}/commons.version=${v}"
-IMAGE_NAME=reportportal/service-ui$(IMAGE_POSTFIX)
-IMAGE_NAME_REACT=reportportal/service-ui-react$(IMAGE_POSTFIX)
+IMAGE_NAME=reportportal-dev-5/service-ui$(IMAGE_POSTFIX)
 
-.PHONY: vendor test build
+.PHONY: vendor get-build-deps test build
 
 help:
 	@echo "build      - go build"
@@ -51,9 +49,7 @@ build-server: checkstyle test
 
 # Builds the project
 build-statics:
-	npm --prefix $(UI_BUILD_ROOT) install
-	npm --prefix $(UI_BUILD_ROOT) run build
-	npm --prefix $(UI_BUILD_ROOT) run test
+	npm --prefix $(UI_BUILD_REACT) ci
 	npm --prefix $(UI_BUILD_REACT) install
 	npm --prefix $(UI_BUILD_REACT) run lint
 	npm --prefix $(UI_BUILD_REACT) run test
@@ -61,6 +57,7 @@ build-statics:
 	npm --prefix $(UI_BUILD_REACT) run build
 
 build-react:
+	npm --prefix $(UI_BUILD_REACT) ci
 	npm --prefix $(UI_BUILD_REACT) install
 	npm --prefix $(UI_BUILD_REACT) run lint
 	npm --prefix $(UI_BUILD_REACT) run test
@@ -80,15 +77,11 @@ build-release: checkstyle test
 	#gox -output "release/{{.Dir}}_{{.OS}}_{{.Arch}}" -os "linux windows" -arch "amd64" ${BUILD_INFO_LDFLAGS}
 
 	$(eval wd := $(shell pwd))
-	cd build/resources/main && tar -czvf "${wd}/${RELEASE_DIR}/ui.tar.gz" ./
+	cd ${UI_BUILD_REACT}/build && tar -czvf "${wd}/${RELEASE_DIR}/ui.tar.gz" ./
 
 # Builds the image
 build-image:
-	docker build -t "$(IMAGE_NAME)" -f docker/Dockerfile .
-
-# Builds the image
-build-image-react:
-	docker build -t "$(IMAGE_NAME_REACT)" -f docker/DockerfileReact .
+	docker build -t "$(IMAGE_NAME_REACT)" -f Dockerfile-full .
 
 release: build-release
 	releaser release --bintray.token ${BINTRAY_TOKEN}
@@ -105,3 +98,7 @@ clean:
 	if [ -d ${RELEASE_DIR} ] ; then rm -r ${RELEASE_DIR} ; fi
 	if [ -d 'node_modules' ] ; then rm -r 'node_modules' ; fi
 	if [ -d 'build' ] ; then rm -r 'build' ; fi
+
+# Builds the container
+build-image-dev:
+	docker build -t "$(IMAGE_NAME)" --build-arg version=${v} -f Dockerfile-full .

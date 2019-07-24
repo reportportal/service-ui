@@ -1,0 +1,74 @@
+.video-section {
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+  height: auto;
+  border-right: 1px solid $COLOR--gray-91;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    width: 100%;
+  }
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 50px;
+  padding-left: 15px;
+  background-color: $COLOR--white;
+}
+
+.session-name {
+  color: $COLOR--charcoal-grey;
+  font-size: 13px;
+  font-family: $FONT-SEMIBOLD;
+}
+
+.section-content {
+  width: 100%;
+  border-top: 1px solid $COLOR--gray-91;
+  border-bottom: 1px solid $COLOR--gray-91;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    display: flex;
+    justify-content: center;
+  }
+}
+
+.section-info {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  flex-wrap: wrap;
+  min-height: 95px;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  padding: 15px 60px 20px 60px;
+  font-size: 12px;
+  font-family: $FONT-REGULAR;
+  color:  $COLOR--gray-60;
+
+  &.full-screen {
+    border-bottom: 1px solid $COLOR--gray-91;
+  }
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+  margin-right: 15px;
+}
+
+.full-screen-button {
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+.full-screen-button, .info-item {
+  svg {
+    width: 17px;
+    height: 17px;
+    margin-right: 5px;
+  }
+}

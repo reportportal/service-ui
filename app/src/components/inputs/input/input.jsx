@@ -43,16 +43,18 @@ export const Input = ({
   onKeyUp,
   onKeyPress,
   touched,
+  asyncValidating,
 }) => (
   <input
     ref={refFunction}
     type={type}
-    className={cx('input', className, {
+    className={cx('input', `type-${type}`, className, {
       'mobile-disabled': mobileDisabled,
       disabled,
       error,
       touched,
       readonly,
+      asyncValidating,
     })}
     value={value}
     placeholder={placeholder}
@@ -84,19 +86,21 @@ Input.propTypes = {
   onKeyPress: PropTypes.func,
   refFunction: PropTypes.func,
   touched: PropTypes.bool,
+  asyncValidating: PropTypes.bool,
 };
 
 Input.defaultProps = {
   type: 'text',
   value: '',
   placeholder: '',
-  maxLength: '254',
+  maxLength: '256',
   mobileDisabled: false,
   disabled: false,
   readonly: false,
   className: '',
   error: '',
   touched: false,
+  asyncValidating: false,
   onChange: () => {},
   onFocus: () => {},
   onBlur: () => {},

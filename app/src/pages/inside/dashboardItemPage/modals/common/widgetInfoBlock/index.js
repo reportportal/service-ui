@@ -1,0 +1,1 @@
+export { WidgetInfoBlock } from './widgetInfoBlock';

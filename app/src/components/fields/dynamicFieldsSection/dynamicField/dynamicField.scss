@@ -1,0 +1,23 @@
+.form-group-label {
+  min-width: 182px;
+  padding-right: 30px;
+  font-size: 13px;
+  font-family: $FONT-REGULAR;
+  text-align: right;
+  @media (max-width: $SCREEN_XS_MAX) {
+    width: 100%;
+    margin-bottom: 8px;
+    padding: 0;
+    text-align: left;
+  }
+}
+
+.field-wrapper {
+  width: 280px;
+  padding: 0;
+  margin: 0;
+  @media (max-width: $SCREEN_XS_MAX) {
+    max-width: 100%;
+    margin-bottom: 8px;
+  }
+}

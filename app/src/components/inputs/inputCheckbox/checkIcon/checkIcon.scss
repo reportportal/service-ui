@@ -23,20 +23,21 @@
       opacity: 1;
       transform: scale(1);
     }
-    &:hover {
+    &:hover:not(.disabled) {
       border-color: $COLOR--topaz;
     }
   }
   &.disabled {
     background-color: $COLOR--white;
     border-color: $COLOR--gray-91;
+    cursor: default;
   }
 }
 .icon {
   position: absolute;
   left: 1px;
   top: 1px;
-  transition: opacity .2s, transform .2s;
+  transition: opacity 0.2s, transform 0.2s;
   opacity: 0;
   transform: scale(0);
 }

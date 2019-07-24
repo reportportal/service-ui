@@ -1,139 +1,115 @@
 import { Component } from 'react';
-import { connect } from 'react-redux';
-import { reduxForm, getFormValues, getFormSyncErrors, clearFields } from 'redux-form';
+import track from 'react-tracking';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
-import { debounce } from 'common/utils';
-import { FieldProvider } from 'components/fields/fieldProvider';
 import { EntitiesSelector } from 'components/filterEntities/entitiesSelector';
-import { ENTITIES_FORM_NAME } from 'controllers/filterEntities';
+import { filterEntityShape } from '../propTypes';
 import styles from './entitiesGroup.scss';
 
 const cx = classNames.bind(styles);
-
-const isEntityActive = (item, activeItems) => item.active || activeItems.indexOf(item.id) > -1;
-
-const formChangeHandler = debounce((values, dispatch, props) => {
-  const entities = {};
-  const { formSyncErrors, onChangeOwn, activeEntities } = props;
-  activeEntities.forEach((entityId) => {
-    const isValid = !formSyncErrors[entityId];
-    const entity = values[entityId];
-    if (isValid && entity && entity.value) {
-      entities[entityId] = {
-        filtering_field: entityId,
-        condition: entity.condition,
-        value: entity.value,
-      };
-    }
-  });
-  onChangeOwn({
-    entities,
-  });
-}, 1000);
-
-@connect(
-  (state, ownProps) => {
-    const entityValues = getFormValues(ENTITIES_FORM_NAME)(state) || {};
-    const activeEntities = Object.keys(getFormValues(ENTITIES_FORM_NAME)(state) || []);
-    return {
-      entityValues,
-      entities: ownProps.entitiesSet.reduce(
-        (acc, entity) => ({
-          ...acc,
-          [entity.id]: {
-            ...entity,
-            active: isEntityActive(entity, activeEntities),
-            value: entityValues[entity.id] || entity.value,
-          },
-        }),
-        {},
-      ),
-      formSyncErrors: getFormSyncErrors(ENTITIES_FORM_NAME)(state),
-      initialValues: ownProps.entitiesSet.reduce(
-        (acc, item) =>
-          isEntityActive(item, activeEntities) ? { ...acc, [item.id]: item.value } : acc,
-        {},
-      ),
-      activeEntities,
-    };
-  },
-  {
-    clearField: (name) => clearFields(ENTITIES_FORM_NAME, false, false, [name]),
-  },
-)
-@reduxForm({
-  form: ENTITIES_FORM_NAME,
-  validate: (entities, { entitiesSet }) => {
-    const validationObject = {};
-    entitiesSet.filter((entity) => entity.active).forEach((entity) => {
-      entity.validationFunc &&
-        (validationObject[entity.id] = entity.validationFunc(entities[entity.id]));
-    });
-    return validationObject;
-  },
-  enableReinitialize: true,
-  keepDirtyOnReinitialize: true,
-  updateUnregisteredFields: true,
-  onChange: formChangeHandler,
-})
+@track()
 export class EntitiesGroup extends Component {
   static propTypes = {
-    initialize: PropTypes.func.isRequired,
-    change: PropTypes.func.isRequired,
-    onChangeOwn: PropTypes.func.isRequired,
-    formSyncErrors: PropTypes.object.isRequired,
-    entitiesSet: PropTypes.array.isRequired,
-    entities: PropTypes.object,
-    entityValues: PropTypes.object,
-    activeEntities: PropTypes.array,
-    clearField: PropTypes.func.isRequired,
-  };
-  static defaultProps = {
-    entities: {},
-    activeEntities: [],
-    entityValues: {},
+    entities: PropTypes.arrayOf(filterEntityShape),
+    onAdd: PropTypes.func,
+    onRemove: PropTypes.func,
+    onChange: PropTypes.func,
+    onValidate: PropTypes.func,
+    errors: PropTypes.object,
+    entitySmallSize: PropTypes.bool,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
+    staticMode: PropTypes.bool,
+    vertical: PropTypes.bool,
   };
 
-  toggleEntity = (entityId) => {
-    const entity = this.props.entities[entityId];
-    const value = this.props.entityValues[entityId];
-    if (!value) {
-      this.props.change(entityId, entity.value);
-    } else {
-      this.props.clearField(entityId);
+  static defaultProps = {
+    entities: [],
+    errors: {},
+    onAdd: () => {},
+    onRemove: () => {},
+    onChange: () => {},
+    onValidate: () => {},
+    entitySmallSize: false,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
+    staticMode: false,
+    vertical: false,
+  };
+
+  state = {
+    activeField: null,
+  };
+
+  getEntity = (id) => this.props.entities.find((entity) => entity.id === id);
+
+  getActiveEntities = () => this.props.entities.filter((entity) => entity.active);
+
+  handleChange = (entity, value, isConditionChange = false) => {
+    this.props.tracking.trackEvent(entity.eventInfo);
+    if (!isConditionChange) {
+      this.validateEntity(entity, value.value);
     }
+    this.props.onChange(entity.id, value);
+  };
+
+  handleFocus = (entityId) => this.setState({ activeField: entityId });
+
+  handleBlur = (entityId) =>
+    this.state.activeField === entityId ? this.setState({ activeField: null }) : null;
+
+  toggleEntity = (entityId) => {
+    const entity = this.getEntity(entityId);
+    if (entity.active) {
+      this.props.onRemove(entityId);
+    } else {
+      this.props.onAdd(entity);
+    }
+  };
+
+  validateEntity = (entity, value) => {
+    if (!entity.validationFunc) {
+      return null;
+    }
+    const result = entity.validationFunc({ ...entity, value });
+    this.props.onValidate(entity.id, result);
+    return result;
   };
 
   render() {
-    const { entities, entityValues } = this.props;
+    const { entities, entitySmallSize, errors, staticMode, vertical } = this.props;
     return (
       <div className={cx('entities-group')}>
-        <form>
-          {this.props.activeEntities.map((entityId) => {
-            const entity = entities[entityId];
-            const EntityComponent = entity && entity.component;
-            return (
-              entity &&
-              entityValues[entityId] && (
-                <div key={entityId} className={cx('entity-item')}>
-                  <FieldProvider name={entityId}>
-                    <EntityComponent
-                      entityId={entityId}
-                      removable={entity.removable}
-                      title={entity.title}
-                      meta={entity.meta}
-                      onRemove={() => {
-                        this.toggleEntity(entityId);
-                      }}
-                    />
-                  </FieldProvider>
-                </div>
-              )
-            );
-          })}
-          <EntitiesSelector entities={entities} onChange={this.toggleEntity} />
-        </form>
+        {this.getActiveEntities().map((entity) => {
+          const EntityComponent = entity.component;
+          const { id, removable, title, value, customProps = {} } = entity;
+          return (
+            <div key={id} className={cx('entity-item', { vertical })}>
+              <EntityComponent
+                entityId={id}
+                smallSize={entitySmallSize}
+                removable={removable}
+                title={title}
+                onRemove={() => {
+                  this.toggleEntity(id);
+                }}
+                onChange={(newValue, condition) => this.handleChange(entity, newValue, condition)}
+                onFocus={() => this.handleFocus(id)}
+                onBlur={() => this.handleBlur(id)}
+                value={value}
+                active={this.state.activeField === id}
+                error={errors[id]}
+                vertical={vertical}
+                customProps={customProps}
+              />
+            </div>
+          );
+        })}
+        {!staticMode && <EntitiesSelector entities={entities} onChange={this.toggleEntity} />}
       </div>
     );
   }

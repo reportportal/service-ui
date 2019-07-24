@@ -1,7 +1,10 @@
 .header-cell {
-  position: relative;
+  position: sticky;
+  top: 0;
+  z-index: $Z_INDEX-GRID_HEADER;
   display: table-cell;
   color: $COLOR--gray-47;
+  background-color: $COLOR--white;
   font-family: $FONT-SEMIBOLD;
   font-size: 12px;
   height: 50px;
@@ -21,9 +24,11 @@
   &.align-left {
     text-align: left;
   }
+
   &.align-center {
     text-align: center;
   }
+
   &.align-right {
     text-align: right;
   }
@@ -66,12 +71,13 @@
         }
       }
     }
+    .title-container {
+      &:hover {
+        cursor: pointer;
 
-    &:hover {
-      cursor: pointer;
-
-      .arrow {
-        display: inline-block;
+        .arrow {
+          display: inline-block;
+        }
       }
     }
   }

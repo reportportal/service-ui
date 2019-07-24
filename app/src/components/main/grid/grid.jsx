@@ -9,8 +9,11 @@ import styles from './grid.scss';
 
 const cx = classNames.bind(styles);
 
-const isAllItemsSelected = (items, selectedItems) =>
-  items.every((item) => selectedItems.some((selectedItem) => selectedItem.id === item.id));
+const isAllItemsSelected = (items, selectedItems, excludeFromSelection) => {
+  const excludedIds = excludeFromSelection.map((item) => item.id);
+  const selectedIds = selectedItems.map((item) => item.id);
+  return items.every((item) => selectedIds.includes(item.id) || excludedIds.includes(item.id));
+};
 
 export const Grid = ({
   columns,
@@ -30,6 +33,12 @@ export const Grid = ({
   grouped,
   groupHeader,
   groupFunction,
+  excludeFromSelection,
+  gridRowClassName,
+  headerClassName,
+  nestedStepHeader,
+  nestedView,
+  ...rest
 }) => (
   <Fragment>
     <div className={cx('grid', className)}>
@@ -40,9 +49,12 @@ export const Grid = ({
         onChangeSorting={onChangeSorting}
         onFilterClick={onFilterClick}
         selectable={selectable}
-        allSelected={!!selectedItems.length && isAllItemsSelected(data, selectedItems)}
+        allSelected={
+          !!selectedItems.length && isAllItemsSelected(data, selectedItems, excludeFromSelection)
+        }
         onToggleSelectAll={onToggleSelectAll}
         hideHeaderForMobile={changeOnlyMobileLayout}
+        headerClassName={headerClassName}
       />
       {!loading && (
         <GridBody
@@ -56,6 +68,11 @@ export const Grid = ({
           groupHeader={groupHeader}
           groupFunction={groupFunction}
           grouped={grouped}
+          excludeFromSelection={excludeFromSelection}
+          gridRowClassName={gridRowClassName}
+          nestedStepHeader={nestedStepHeader}
+          nestedView={nestedView}
+          {...rest}
         />
       )}
     </div>
@@ -84,6 +101,16 @@ Grid.propTypes = {
   grouped: PropTypes.bool,
   groupFunction: PropTypes.func,
   groupHeader: PropTypes.oneOfType([PropTypes.node, PropTypes.func]),
+  nestedStepHeader: PropTypes.oneOfType([PropTypes.node, PropTypes.func]),
+  rowHighlightingConfig: PropTypes.shape({
+    onGridRowHighlighted: PropTypes.func,
+    isGridRowHighlighted: PropTypes.bool,
+    highlightedRowId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  }),
+  excludeFromSelection: PropTypes.arrayOf(PropTypes.object),
+  gridRowClassName: PropTypes.string,
+  headerClassName: PropTypes.string,
+  nestedView: PropTypes.bool,
 };
 Grid.defaultProps = {
   columns: [],
@@ -99,8 +126,14 @@ Grid.defaultProps = {
   className: '',
   changeOnlyMobileLayout: false,
   loading: false,
-  rowClassMapper: () => {},
+  rowClassMapper: null,
   groupFunction: () => {},
   grouped: false,
   groupHeader: null,
+  rowHighlightingConfig: {},
+  excludeFromSelection: [],
+  gridRowClassName: '',
+  headerClassName: '',
+  nestedStepHeader: null,
+  nestedView: false,
 };

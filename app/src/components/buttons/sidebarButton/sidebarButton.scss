@@ -71,7 +71,7 @@
 .btn-title {
   display: inline-block;
   width: 100%;
-  max-width: 145px;
+  max-width: 75px;
   overflow: hidden;
   vertical-align: middle;
   text-transform: uppercase;
@@ -84,6 +84,7 @@
 
   @media (max-width: $SCREEN_XS_MAX) {
     display: inline-block;
+    max-width: 145px;
   }
 }
 .at-bottom {

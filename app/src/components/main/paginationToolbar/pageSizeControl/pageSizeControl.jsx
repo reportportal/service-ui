@@ -1,17 +1,25 @@
 import { Component } from 'react';
+import track from 'react-tracking';
 import PropTypes from 'prop-types';
+import { FormattedMessage } from 'react-intl';
 import classNames from 'classnames/bind';
 import { Input } from 'components/inputs/input';
+import { FOOTER_EVENTS } from 'components/main/analytics/events';
 import styles from './pageSizeControl.scss';
 
 const cx = classNames.bind(styles);
 
 const MAX_SIZE = 300;
 
+@track()
 export class PageSizeControl extends Component {
   static propTypes = {
     pageSize: PropTypes.number.isRequired,
     onChangePageSize: PropTypes.func,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
 
   static defaultProps = {
@@ -32,7 +40,10 @@ export class PageSizeControl extends Component {
       this.inputNode.focus();
     });
 
-  handleChange = (e) => this.setState({ inputValue: e.target.value });
+  handleChange = (e) => {
+    this.props.tracking.trackEvent(FOOTER_EVENTS.EDIT_NUMBER_PER_PAGE);
+    this.setState({ inputValue: e.target.value });
+  };
 
   normalizeInput = (value) => {
     if (Number(value) < 0 || isNaN(Number(value))) {
@@ -75,7 +86,7 @@ export class PageSizeControl extends Component {
             {this.props.pageSize}
           </span>
         )}{' '}
-        per page
+        <FormattedMessage id="PageSizeControl.perPage" defaultMessage="per page" />
       </div>
     );
   }

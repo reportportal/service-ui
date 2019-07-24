@@ -12,10 +12,7 @@ const cx = classNames.bind(styles);
 export const SelectedItems = ({ selectedItems, errors, onClose, onUnselect }) => (
   <div className={cx('selected-items')}>
     <div className={cx('header')}>
-      <FormattedMessage
-        id="LaunchesPage.multipleSelectHeader"
-        defaultMessage="You can perform actions with selected items:"
-      />
+      <FormattedMessage id="LaunchesPage.multipleSelectHeader" defaultMessage="Selected items:" />
       <div className={cx('close-icon')} onClick={onClose}>
         {Parser(CrossIcon)}
       </div>

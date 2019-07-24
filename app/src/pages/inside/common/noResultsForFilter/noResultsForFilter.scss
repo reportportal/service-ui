@@ -1,0 +1,44 @@
+.no-results-for-filter {
+  width: 100%;
+  padding: 26px 10px 20px;
+  text-align: center;
+  border-bottom: 1px solid $COLOR--gray-91;
+  box-sizing: border-box;
+}
+.no-results-for-filter-icon {
+  display: inline-block;
+  width: 20px;
+  margin-right: 10px;
+
+  svg {
+    position: relative;
+    top: 3px;
+
+    path {
+      fill: $COLOR--gray-80;
+    }
+  }
+}
+
+.no-results-for-filter-text {
+  display: flex;
+  margin: 0 0 10px;
+  color: $COLOR--gray-47;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-family: $FONT-SEMIBOLD;
+  line-height: 22px;
+}
+
+.no-results-for-filter-expression {
+  max-width: 199px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.no-results-for-filter-hint {
+  margin: 0 0 10px;
+  color: $COLOR--gray-47;
+  font-size: 13px;
+}

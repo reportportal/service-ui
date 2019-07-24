@@ -1,0 +1,19 @@
+.add-shared-widget-modal {
+  width: 800px;
+  margin-left: -400px;
+}
+
+.shared-widget-modal-content {
+  position: relative;
+  top: -10px;
+  display: flex;
+  flex-grow: 1;
+  width: 100%;
+}
+
+.confirmation-wrapper {
+  bottom: 10px;
+  max-width: 270px;
+  margin-left: 30px;
+}
+

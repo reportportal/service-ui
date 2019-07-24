@@ -1,15 +1,19 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import { ModalLayout, withModal, ModalField } from 'components/main/modal';
 import { reduxForm } from 'redux-form';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { Input } from 'components/inputs/input';
 import { InputTextArea } from 'components/inputs/inputTextArea';
 import { InputBigSwitcher } from 'components/inputs/inputBigSwitcher';
 import { validate } from 'common/utils';
+import { dashboardItemsSelector } from 'controllers/dashboard';
 import styles from './addEditModal.scss';
 
 const cx = classNames.bind(styles);
@@ -55,24 +59,57 @@ const messages = defineMessages({
     defaultMessage: 'Cancel',
   },
 });
+
 @withModal('dashboardAddEditModal')
 @injectIntl
+@track()
+@connect((state) => ({
+  dashboardItems: dashboardItemsSelector(state),
+}))
 @reduxForm({
   form: 'addEditDashboard',
-  validate: ({ name }) => ({
-    name: (!name || !validate.dashboardName(name)) && 'dashboardNameHint',
-  }),
+  validate: ({ name }, { dashboardItems = [], data: { dashboardItem = {} } }) => {
+    let validationMessage = null;
+
+    if (!name || !validate.dashboardName(name)) {
+      validationMessage = 'dashboardNameHint';
+    } else if (
+      dashboardItems.some(
+        (dashboard) => dashboard.name === name && dashboard.id !== dashboardItem.id,
+      )
+    ) {
+      validationMessage = 'dashboardNameExistsHint';
+    }
+
+    return { name: validationMessage };
+  },
 })
 export class AddEditModal extends Component {
   static propTypes = {
-    data: PropTypes.object,
+    data: PropTypes.shape({
+      dashboardItem: PropTypes.object,
+      onSubmit: PropTypes.func,
+      type: PropTypes.string,
+      eventsInfo: PropTypes.object,
+    }),
     intl: intlShape.isRequired,
     initialize: PropTypes.func,
+    dirty: PropTypes.bool.isRequired,
     handleSubmit: PropTypes.func,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
+    dashboardItems: PropTypes.array.isRequired,
   };
 
   static defaultProps = {
-    data: {},
+    data: {
+      dashboardItem: {},
+      onSubmit: () => {},
+      type: '',
+      eventsInfo: {},
+    },
     initialize: () => {},
     handleSubmit: () => {},
   };
@@ -81,8 +118,25 @@ export class AddEditModal extends Component {
     this.props.initialize(this.props.data.dashboardItem);
   }
 
-  submitFormAndCloseModal = (closeModal) => (dashboardItem) => {
-    this.props.data.onSubmit(dashboardItem);
+  getCloseConfirmationConfig = () => {
+    if (!this.props.dirty) {
+      return null;
+    }
+    return {
+      confirmationWarning: this.props.intl.formatMessage(COMMON_LOCALE_KEYS.CLOSE_MODAL_WARNING),
+    };
+  };
+
+  submitFormAndCloseModal = (closeModal) => (item) => {
+    const {
+      tracking,
+      data: { dashboardItem, eventsInfo },
+      dirty,
+    } = this.props;
+    if (dirty) {
+      !dashboardItem && item.description && tracking.trackEvent(eventsInfo.changeDescription);
+      this.props.data.onSubmit(item);
+    }
     closeModal();
   };
 
@@ -90,7 +144,7 @@ export class AddEditModal extends Component {
     const {
       intl,
       handleSubmit,
-      data: { type },
+      data: { type, eventsInfo },
     } = this.props;
     const submitText = intl.formatMessage(messages[`${type}ModalSubmitButtonText`]);
     const title = intl.formatMessage(messages[`${type}ModalTitle`]);
@@ -103,21 +157,28 @@ export class AddEditModal extends Component {
         okButton={{
           text: submitText,
           onClick: (closeModal) => {
+            this.props.tracking.trackEvent(eventsInfo.submitBtn);
             handleSubmit(this.submitFormAndCloseModal(closeModal))();
           },
         }}
         cancelButton={{
           text: cancelText,
+          eventInfo: eventsInfo.cancelBtn,
         }}
+        closeConfirmation={this.getCloseConfirmationConfig()}
+        closeIconEventInfo={eventsInfo.closeIcon}
       >
-        <form className={cx('add-dashboard-form')}>
+        <form onSubmit={(event) => event.preventDefault()} className={cx('add-dashboard-form')}>
           <ModalField
             label={intl.formatMessage(messages.dashboardNameLabel)}
             labelWidth={labelWidth}
           >
             <FieldProvider name="name" type="text">
               <FieldErrorHint>
-                <Input placeholder={intl.formatMessage(messages.dashboardNamePlaceholder)} />
+                <Input
+                  maxLength={'128'}
+                  placeholder={intl.formatMessage(messages.dashboardNamePlaceholder)}
+                />
               </FieldErrorHint>
             </FieldProvider>
           </ModalField>
@@ -136,8 +197,8 @@ export class AddEditModal extends Component {
             label={intl.formatMessage(messages.dashboardShareLabel)}
             labelWidth={labelWidth}
           >
-            <FieldProvider name="share" format={Boolean} parse={Boolean}>
-              <InputBigSwitcher />
+            <FieldProvider name="share" type="checkbox" format={Boolean} parse={Boolean}>
+              <InputBigSwitcher onChangeEventInfo={eventsInfo.shareSwitcher} />
             </FieldProvider>
           </ModalField>
         </form>

@@ -28,7 +28,7 @@ import styles from './inputUserSearch.scss';
 import { UsersList } from './usersList';
 
 const cx = classNames.bind(styles);
-const getPhoto = (userId) => URLS.dataUserPhoto(new Date().getTime(), userId);
+const getPhoto = (userId) => URLS.dataUserPhoto(userId);
 const isValidNewOption = ({ label }) => validate.email(label);
 const newOptionCreator = (option) => ({
   externalUser: true,
@@ -36,23 +36,17 @@ const newOptionCreator = (option) => ({
   userLogin: option.label,
 });
 const promptTextCreator = (label) => label;
-const makeURL = (input, isAdmin, projectId) => {
-  let url;
-  if (!isAdmin) {
-    url = URLS.projectUserSearchUser(projectId, input);
-  } else {
-    url = URLS.projectAdminSearchUser(input);
-  }
-  return url;
-};
+const makeURL = (input, isAdmin, projectId) =>
+  !isAdmin ? URLS.projectUserSearchUser(projectId, input) : URLS.searchUsers(input);
 const makeOptions = (options, projectId) =>
   options.map((option) => ({
-    userName: option.full_name || '',
+    userName: option.fullName || '',
     userLogin: option.userId,
     email: option.email || '',
-    disabled: !!option.assigned_projects[projectId],
-    isAssigned: !!option.assigned_projects[projectId],
+    disabled: !!option.assignedProjects[projectId],
+    isAssigned: !!option.assignedProjects[projectId],
     userAvatar: getPhoto(option.userId),
+    assignedProjects: option.assignedProjects || {},
   }));
 const getUsers = (input, isAdmin, projectId) => {
   if (input) {

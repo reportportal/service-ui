@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
+import track from 'react-tracking';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { injectIntl, intlShape } from 'react-intl';
 import Link from 'redux-first-router-link';
 import classNames from 'classnames/bind';
+import { LOG_PAGE_EVENTS } from 'components/main/analytics/events';
 import { payloadSelector, PROJECT_LOG_PAGE, PROJECT_USERDEBUG_LOG_PAGE } from 'controllers/pages';
 import { MANY, NOT_FOUND } from 'common/constants/launchStatuses';
 import { debugModeSelector } from 'controllers/launch';
+import { defectTypesSelector } from 'controllers/project';
 import { HistoryLineItemContent } from './historyLineItemContent';
 import styles from './historyLineItem.scss';
 
@@ -15,28 +17,33 @@ const cx = classNames.bind(styles);
 @connect((state) => ({
   pagePayload: payloadSelector(state),
   debugMode: debugModeSelector(state),
+  defectTypes: defectTypesSelector(state),
 }))
-@injectIntl
+@track()
 export class HistoryLineItem extends Component {
   static propTypes = {
-    intl: intlShape.isRequired,
     projectId: PropTypes.string.isRequired,
     launchNumber: PropTypes.string.isRequired,
     pathNames: PropTypes.object,
-    launchId: PropTypes.string,
-    id: PropTypes.string,
+    launchId: PropTypes.number,
+    id: PropTypes.number,
     status: PropTypes.string,
     active: PropTypes.bool,
     isFirstItem: PropTypes.bool,
     isLastItem: PropTypes.bool,
     pagePayload: PropTypes.object,
     debugMode: PropTypes.bool,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
+    defectTypes: PropTypes.object.isRequired,
   };
 
   static defaultProps = {
     pathNames: {},
-    launchId: '',
-    id: '',
+    launchId: 0,
+    id: 0,
     status: '',
     active: false,
     isFirstItem: false,
@@ -75,6 +82,7 @@ export class HistoryLineItem extends Component {
             'active-link': this.checkIfTheLinkIsActive(),
           })}
           to={this.checkIfTheLinkIsActive() ? this.createHistoryLineItemLink() : ''}
+          onClick={() => this.props.tracking.trackEvent(LOG_PAGE_EVENTS.HISTORY_LINE_ITEM)}
         >
           <span className={cx('launch-title')}>{'launch '}</span>
           <span>#{launchNumber}</span>
@@ -82,9 +90,9 @@ export class HistoryLineItem extends Component {
         <HistoryLineItemContent
           active={active}
           launchNumber={launchNumber}
-          hasChilds={rest.has_childs}
-          startTime={rest.start_time}
-          endTime={rest.end_time}
+          hasChildren={rest.hasChildren}
+          startTime={rest.startTime}
+          endTime={rest.endTime}
           {...rest}
         />
       </div>

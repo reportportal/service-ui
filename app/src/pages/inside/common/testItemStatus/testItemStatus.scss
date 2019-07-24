@@ -1,0 +1,40 @@
+.status-container {
+  display: flex;
+  align-items: center;
+  height: 20px;
+  box-sizing: border-box;
+  line-height: 18px;
+}
+
+.status {
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+.indicator {
+  display: inline-block;
+  min-width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  margin-right: 5px;
+  background-color: $COLOR--gray-47;
+  &.failed {
+    background-color: $COLOR--failed;
+  }
+  &.passed {
+    background-color: $COLOR--passed;
+  }
+  &.skipped {
+    background-color: $COLOR--skipped;
+  }
+  &.interrupted,
+  &.stopped {
+    background-color: $COLOR--blush;
+  }
+  &.in_progress {
+    background-color: $COLOR--violet;
+  }
+  &.many {
+    background-color: $COLOR--light-yellow;
+  }
+}

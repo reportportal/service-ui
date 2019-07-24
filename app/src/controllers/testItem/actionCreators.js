@@ -7,6 +7,7 @@ import {
   RESTORE_PATH,
   SET_PAGE_LOADING,
   NAMESPACE,
+  FETCH_TEST_ITEMS_LOG_PAGE,
 } from './constants';
 
 export const setLevelAction = (level) => ({
@@ -14,8 +15,9 @@ export const setLevelAction = (level) => ({
   payload: level,
 });
 
-export const fetchTestItemsAction = () => ({
+export const fetchTestItemsAction = (options) => ({
   type: FETCH_TEST_ITEMS,
+  payload: options,
 });
 
 export const restorePathAction = () => ({
@@ -27,13 +29,18 @@ export const setPageLoadingAction = (isLoading) => ({
   payload: isLoading,
 });
 
+export const fetchTestItemsFromLogPageAction = (payload) => ({
+  type: FETCH_TEST_ITEMS_LOG_PAGE,
+  payload,
+});
+
 export const deleteItemsAction = defineGroupOperation(
   NAMESPACE,
   'deleteTestItems',
-  (items, { onConfirm, header, mainContent, userId, currentLaunch, warning }) =>
+  (items, { onConfirm, header, mainContent, userId, currentLaunch, warning, eventsInfo }) =>
     showModalAction({
       id: 'deleteItemsModal',
-      data: { items, onConfirm, header, mainContent, userId, currentLaunch, warning },
+      data: { items, onConfirm, header, mainContent, userId, currentLaunch, warning, eventsInfo },
     }),
   validateDeleteItem,
 );

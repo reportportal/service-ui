@@ -1,0 +1,66 @@
+{
+  "share": false,
+  "id": 4,
+  "name": "start1",
+  "contentParameters": {
+    "widgetType": "notPassed",
+    "contentFields": [],
+    "itemsCount": 10,
+    "widgetOptions": {}
+  },
+  "appliedFilters": [
+    {
+      "share": false,
+      "id": 1,
+      "name": "launch name",
+      "conditions": [],
+      "orders": [
+        {
+          "sortingColumn": "statistics$defects$no_defect$nd001",
+          "isAsc": false
+        }
+      ],
+      "type": "Launch"
+    }
+  ],
+  "content": {
+    "result": [
+      {
+        "id": 3,
+        "number": 3,
+        "name": "test launch",
+        "startTime": 1541397081305,
+        "values": {
+          "% (Failed+Skipped)/Total": "66.67"
+        }
+      },
+      {
+        "id": 4,
+        "number": 1,
+        "name": "launch name test",
+        "startTime": 1541397081305,
+        "values": {
+          "% (Failed+Skipped)/Total": "75.0"
+        }
+      },
+      {
+        "id": 2,
+        "number": 2,
+        "name": "test launch",
+        "startTime": 1541397081305,
+        "values": {
+          "% (Failed+Skipped)/Total": "81.82"
+        }
+      },
+      {
+        "id": 1,
+        "number": 1,
+        "name": "test launch",
+        "startTime": 1541397081305,
+        "values": {
+          "% (Failed+Skipped)/Total": "70.0"
+        }
+      }
+    ]
+  }
+}

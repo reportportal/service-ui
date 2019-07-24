@@ -9,9 +9,12 @@ export {
   compareLaunchesAction,
   fetchLaunchesAction,
   toggleAllLaunchesAction,
-  unselectLaunchesAction,
   setDebugMode,
+  changeLaunchDistinctAction,
   deleteItemsAction,
+  fetchLaunchesWithParamsAction,
+  updateLaunchLocallyAction,
+  updateLaunchesLocallyAction,
 } from './actionCreators';
 export {
   selectedLaunchesSelector,
@@ -21,6 +24,9 @@ export {
   launchPaginationSelector,
   loadingSelector,
   debugModeSelector,
+  launchDistinctSelector,
+  allLaunchesLikSelector,
+  latestLaunchesLinkSelector,
 } from './selectors';
 export { launchReducer } from './reducer';
 export { launchSagas } from './sagas';

@@ -1,0 +1,1 @@
+export { SharedMessage } from './sharedMessage';

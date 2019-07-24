@@ -1,0 +1,54 @@
+.container {
+  margin: 0 15px;
+  border: 1px solid $COLOR--gray-91;
+}
+
+.content {
+  padding: 10px;
+  background-color: $COLOR--white-four;
+  &:after {
+    content: '';
+    display: block;
+    clear: both;
+  }
+}
+
+.description {
+  float: left;
+  clear: left;
+}
+
+.actions {
+  display: flex;
+  float: right;
+  clear: right;
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    display: none;
+  }
+}
+
+.retries {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-content: flex-start;
+  align-items: center;
+  margin: -2px 0;
+  color: $COLOR--gray-47;
+  font-size: 12px;
+  clear: left;
+}
+.retries-label {
+  margin: 2px 10px 2px 0;
+  text-transform: uppercase;
+}
+
+.action {
+  margin-left: 10px;
+}
+
+.extra-space-top {
+  padding-top: 12px;
+}

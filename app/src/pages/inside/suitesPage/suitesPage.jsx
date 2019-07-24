@@ -1,9 +1,10 @@
 import { Component } from 'react';
+import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { PageLayout, PageSection } from 'layouts/pageLayout';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
-import { SORTING_ASC, withSorting } from 'controllers/sorting';
+import { SORTING_ASC, withSortingURL } from 'controllers/sorting';
 import { withPagination } from 'controllers/pagination';
 import { LaunchSuiteGrid } from 'pages/inside/common/launchSuiteGrid';
 import { debugModeSelector } from 'controllers/launch';
@@ -16,6 +17,7 @@ import {
   toggleAllSuitesAction,
   validationErrorsSelector,
 } from 'controllers/suite';
+import { SUITE_PAGE, SUITES_PAGE_EVENTS } from 'components/main/analytics/events';
 import { SuiteTestToolbar } from 'pages/inside/common/suiteTestToolbar';
 import { userIdSelector } from 'controllers/user';
 import {
@@ -24,7 +26,9 @@ import {
   parentItemSelector,
   loadingSelector,
 } from 'controllers/testItem';
-import { toggleFilter } from 'controllers/filterEntities';
+import { prevTestItemSelector } from 'controllers/pages';
+import { LaunchFiltersSection } from 'pages/inside/common/launchFiltersSection';
+import { ENTITY_START_TIME } from 'components/filterEntities/constants';
 
 @connect(
   (state) => ({
@@ -35,27 +39,31 @@ import { toggleFilter } from 'controllers/filterEntities';
     parentItem: parentItemSelector(state),
     loading: loadingSelector(state),
     validationErrors: validationErrorsSelector(state),
+    highlightItemId: prevTestItemSelector(state),
   }),
   {
     toggleSuiteSelectionAction,
     unselectAllSuitesAction,
     toggleAllSuitesAction,
     fetchTestItemsAction,
-    changeFilter: (id) => toggleFilter(id),
   },
 )
-@withSorting({
-  defaultSortingColumn: 'start_time',
-  defaultSortingDirection: SORTING_ASC,
+@withSortingURL({
+  defaultFields: [ENTITY_START_TIME],
+  defaultDirection: SORTING_ASC,
+  namespaceSelector,
 })
 @withPagination({
   paginationSelector: suitePaginationSelector,
   namespaceSelector,
 })
+@track({ page: SUITE_PAGE })
 export class SuitesPage extends Component {
   static propTypes = {
     debugMode: PropTypes.bool.isRequired,
     deleteItems: PropTypes.func,
+    onEditItem: PropTypes.func,
+    onEditItems: PropTypes.func,
     suites: PropTypes.arrayOf(PropTypes.object),
     selectedSuites: PropTypes.arrayOf(PropTypes.object),
     activePage: PropTypes.number,
@@ -74,11 +82,23 @@ export class SuitesPage extends Component {
     parentItem: PropTypes.object,
     loading: PropTypes.bool,
     validationErrors: PropTypes.object,
-    changeFilter: PropTypes.func,
+    onFilterAdd: PropTypes.func,
+    onFilterRemove: PropTypes.func,
+    onFilterValidate: PropTypes.func,
+    onFilterChange: PropTypes.func,
+    filterErrors: PropTypes.object,
+    filterEntities: PropTypes.array,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
+    highlightItemId: PropTypes.number,
   };
 
   static defaultProps = {
     deleteItems: () => {},
+    onEditItem: () => {},
+    onEditItems: () => {},
     suites: [],
     selectedSuites: [],
     activePage: 1,
@@ -96,11 +116,65 @@ export class SuitesPage extends Component {
     toggleAllSuitesAction: () => {},
     parentItem: null,
     loading: false,
-    changeFilter: () => {},
     validationErrors: {},
+    onFilterAdd: () => {},
+    onFilterRemove: () => {},
+    onFilterValidate: () => {},
+    onFilterChange: () => {},
+    filterErrors: {},
+    filterEntities: [],
+    highlightItemId: null,
   };
 
-  handleAllSuitesSelection = () => this.props.toggleAllSuitesAction(this.props.suites);
+  state = {
+    highlightedRowId: null,
+    isGridRowHighlighted: false,
+    isSauceLabsIntegrationView: false,
+  };
+
+  componentDidMount() {
+    const { highlightItemId } = this.props;
+    if (highlightItemId) {
+      this.onHighlightRow(highlightItemId);
+    }
+  }
+
+  componentWillUnmount() {
+    this.props.unselectAllSuitesAction();
+  }
+
+  onHighlightRow = (highlightedRowId) => {
+    this.setState({
+      highlightedRowId,
+      isGridRowHighlighted: false,
+    });
+  };
+
+  onGridRowHighlighted = () => {
+    this.setState({
+      isGridRowHighlighted: true,
+    });
+  };
+
+  handleAllSuitesSelection = () => {
+    this.props.tracking.trackEvent(SUITES_PAGE_EVENTS.SELECT_ALL_ITEMS);
+    this.props.toggleAllSuitesAction(this.props.suites);
+  };
+
+  handleOneItemSelection = (value) => {
+    this.props.tracking.trackEvent(SUITES_PAGE_EVENTS.SELECT_ONE_ITEM);
+    this.props.toggleSuiteSelectionAction(value);
+  };
+
+  unselectAllItems = () => {
+    this.props.tracking.trackEvent(SUITES_PAGE_EVENTS.CLOSE_ICON_FOR_ALL_SELECTIONS);
+    this.props.unselectAllSuitesAction();
+  };
+
+  unselectItem = (item) => {
+    this.props.tracking.trackEvent(SUITES_PAGE_EVENTS.CLOSE_ICON_SELECTED_ITEM);
+    this.props.toggleSuiteSelectionAction(item);
+  };
 
   render() {
     const {
@@ -118,21 +192,46 @@ export class SuitesPage extends Component {
       parentItem,
       loading,
       debugMode,
-      changeFilter,
       deleteItems,
+      onEditItem,
+      onEditItems,
+      onFilterAdd,
+      onFilterRemove,
+      onFilterValidate,
+      onFilterChange,
+      filterErrors,
+      filterEntities,
     } = this.props;
+
+    const rowHighlightingConfig = {
+      onGridRowHighlighted: this.onGridRowHighlighted,
+      isGridRowHighlighted: this.state.isGridRowHighlighted,
+      highlightedRowId: this.state.highlightedRowId,
+    };
+
     return (
       <PageLayout>
         <PageSection>
+          <LaunchFiltersSection />
+        </PageSection>
+        <PageSection>
           <SuiteTestToolbar
             onDelete={() => deleteItems(selectedSuites)}
+            onEditItems={() => onEditItems(selectedSuites)}
             errors={this.props.validationErrors}
             selectedItems={selectedSuites}
-            onUnselect={this.props.toggleSuiteSelectionAction}
-            onUnselectAll={this.props.unselectAllSuitesAction}
+            onUnselect={this.unselectItem}
+            onUnselectAll={this.unselectAllItems}
             parentItem={parentItem}
             onRefresh={this.props.fetchTestItemsAction}
             debugMode={debugMode}
+            events={SUITES_PAGE_EVENTS}
+            filterErrors={filterErrors}
+            onFilterChange={onFilterChange}
+            onFilterValidate={onFilterValidate}
+            onFilterRemove={onFilterRemove}
+            onFilterAdd={onFilterAdd}
+            filterEntities={filterEntities}
           />
           <LaunchSuiteGrid
             data={suites}
@@ -140,19 +239,25 @@ export class SuitesPage extends Component {
             sortingDirection={sortingDirection}
             onChangeSorting={onChangeSorting}
             selectedItems={selectedSuites}
-            onItemSelect={this.props.toggleSuiteSelectionAction}
+            onItemSelect={this.handleOneItemSelection}
             onAllItemsSelect={this.handleAllSuitesSelection}
             loading={loading}
-            onFilterClick={changeFilter}
+            events={SUITES_PAGE_EVENTS}
+            onFilterClick={onFilterAdd}
+            onEditItem={onEditItem}
+            rowHighlightingConfig={rowHighlightingConfig}
           />
-          <PaginationToolbar
-            activePage={activePage}
-            itemCount={itemCount}
-            pageCount={pageCount}
-            pageSize={pageSize}
-            onChangePage={onChangePage}
-            onChangePageSize={onChangePageSize}
-          />
+          {!!pageCount &&
+            !loading && (
+              <PaginationToolbar
+                activePage={activePage}
+                itemCount={itemCount}
+                pageCount={pageCount}
+                pageSize={pageSize}
+                onChangePage={onChangePage}
+                onChangePageSize={onChangePageSize}
+              />
+            )}
         </PageSection>
       </PageLayout>
     );

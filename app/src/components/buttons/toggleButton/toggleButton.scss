@@ -19,13 +19,12 @@
   cursor: pointer;
 
   &.active {
-    cursor: default;
     background-color: $COLOR--gray-91;
     border-color: $COLOR--gray-91;
     pointer-events: none;
   }
 
-  span {
+  .item-label {
     display: table-cell;
     vertical-align: middle;
     overflow: hidden;
@@ -51,5 +50,37 @@
 
   @media (max-width: $SCREEN_XS_MAX) {
     background: $COLOR--gray-91;
+  }
+}
+
+.separated {
+  display: flex;
+  height: 23px;
+
+  .button-item {
+    display: inline-block;
+    float: none;
+    height: 100%;
+    border: none;
+    border-radius: 100px;
+    margin: 0 6px;
+    padding: 5px 15px;
+    color: $COLOR--gray-47;
+    background-color: $COLOR--white-four;
+    font-family: $FONT-SEMIBOLD;
+    font-size: 12px;
+    opacity: 0.5;
+
+    &.active {
+      color: $COLOR--black-2;
+      background-color: $COLOR--white-two;
+      box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2);
+      opacity: 1;
+      cursor: default;
+    }
+
+    .item-label {
+      display: inline;
+    }
   }
 }

@@ -71,8 +71,9 @@ export const validationErrorsReducer = (namespace) => (
       return { ...payload };
     case REMOVE_VALIDATION_ERRORS: {
       const errorIds = Object.keys(state);
+      const payloadIds = payload.map(String);
       return errorIds
-        .filter((id) => payload.indexOf(id) === -1)
+        .filter((id) => payloadIds.indexOf(id) === -1)
         .reduce(
           (result, key) => ({ ...result, [key]: state[key] }),
           VALIDATION_ERRORS_INITIAL_STATE,

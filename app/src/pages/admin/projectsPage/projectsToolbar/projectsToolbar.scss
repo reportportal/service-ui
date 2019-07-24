@@ -1,0 +1,61 @@
+.toolbar {
+  padding: 10px 15px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.search {
+  flex: 0 1 400px;
+  > :first-child {
+    width: 100%;
+  }
+}
+
+.buttons {
+  display: flex;
+  align-items: center;
+}
+
+.toolbar-button {
+  margin-left: 10px;
+
+  svg {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+.toolbar-active-button {
+  button {
+    background-color: $COLOR--topaz;
+
+    path {
+      fill: $COLOR--white-two !important;
+    }
+  }
+}
+
+.delete-info {
+  color: $COLOR--charcoal-grey;
+  margin-right: 20px;
+  font-size: 13px;
+}
+
+.delete-button {
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-family: $FONT-SEMIBOLD;
+  color: $COLOR--topaz;
+  font-size: 13px;
+  outline: none;
+  &:focus {
+    text-decoration: underline;
+  }
+}
+
+.mobile-hide{
+  @media (max-width: $SCREEN_XS_MAX) {
+    display:none;
+  }
+}

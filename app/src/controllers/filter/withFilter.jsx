@@ -1,5 +1,6 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
+import { PAGE_KEY } from 'controllers/pagination';
 import { connectRouter } from 'common/utils';
 
 const FILTER_KEY = 'filter.cnt.name';
@@ -15,14 +16,15 @@ const debounce = (callback, time) => {
   };
 };
 
-export const withFilter = (WrappedComponent) =>
+export const withFilter = ({ filterKey = FILTER_KEY, namespace } = {}) => (WrappedComponent) =>
   connectRouter(
     (query) => ({
-      filter: query[FILTER_KEY],
+      filter: query[filterKey],
     }),
     {
-      updateFilter: (filter) => ({ [FILTER_KEY]: filter }),
+      updateFilter: (filter) => ({ [filterKey]: filter, [PAGE_KEY]: 1 }),
     },
+    { namespace },
   )(
     class FilterWrapper extends Component {
       static displayName = `withFilter(${WrappedComponent.displayName || WrappedComponent.name})`;

@@ -1,0 +1,65 @@
+.info-section {
+  display: flex;
+  padding-left: 5px;
+}
+
+.logo {
+  width: 100px;
+  height: 100px;
+  margin-right: 40px;
+}
+
+.description-block {
+  max-width: 600px;
+}
+
+.title {
+  padding: 5px 0;
+  color: $COLOR--black-2;
+  font-size: 22px;
+  font-family: $FONT-SEMIBOLD;
+}
+
+.version, .description {
+  color: $COLOR--black-2;
+  font-size: 13px;
+  font-family: $FONT-REGULAR;
+}
+
+.description {
+  height: auto;
+  margin-top: 15px;
+  margin-bottom: 5px;
+  overflow: hidden;
+  line-height: 1.54;
+
+  &.partially-shown {
+    max-height: 60px;
+  }
+}
+
+.expand-button {
+  padding: 0;
+  border: none;
+  background: none;
+  color: $COLOR--topaz;
+  font-size: 13px;
+  font-family: $FONT-REGULAR;
+  cursor: pointer;
+}
+
+.switcher-block {
+  display: flex;
+  justify-content: space-between;
+  padding: 17px 0;
+  border-bottom: 1px solid $COLOR--gray-91;
+}
+
+.switcher-status {
+  font-size: 13px;
+}
+
+.switcher {
+  height: 14px;
+  width: 20px;
+}

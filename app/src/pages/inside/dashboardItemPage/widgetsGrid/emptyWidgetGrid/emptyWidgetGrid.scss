@@ -12,14 +12,6 @@
   color: $COLOR--gray-47;
 }
 
-.empty-widget-text {
-  margin-top: 20px;
-  margin-bottom: 5px;
-  font-size: 13px;
-  text-align: center;
-  color: $COLOR--gray-47;
-}
-
 .empty-widget-img {
   width: 140px;
   height: 98px;
@@ -28,7 +20,23 @@
   background-repeat: no-repeat;
 }
 
+.empty-widget-text {
+  margin-top: 20px;
+  margin-bottom: 5px;
+  font-size: 13px;
+  text-align: center;
+  color: $COLOR--gray-47;
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    display: none;
+  }
+}
+
 .empty-widget-content {
   padding: 15px 0;
   text-align: center;
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    display: none;
+  }
 }

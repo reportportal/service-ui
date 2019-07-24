@@ -1,7 +1,6 @@
 .log-toolbar {
   display: flex;
   align-items: center;
-  border-bottom: 1px solid $COLOR--gray-91;
   justify-content: space-between;
   padding: 10px 15px;
 }
@@ -12,9 +11,14 @@
 
 .action-button {
   padding-left: 10px;
+  display: flex;
 }
 
 .left-arrow-button {
-  display: inline-block;
   margin-right: -1px;
+}
+
+.with-border {
+  margin-bottom: 10px;
+  border-bottom: 1px solid $COLOR--gray-91;
 }

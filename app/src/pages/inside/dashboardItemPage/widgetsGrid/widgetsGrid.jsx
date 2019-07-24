@@ -2,17 +2,16 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Responsive, WidthProvider } from 'react-grid-layout';
 import classNames from 'classnames/bind';
-import { redirect } from 'redux-first-router';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
-import { PROJECT_DASHBOARD_PAGE, activeDashboardIdSelector } from 'controllers/pages';
+import ReactObserver from 'react-event-observer';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { fetch } from 'common/utils';
+import { URLS } from 'common/urls';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import PropTypes from 'prop-types';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
-import { userInfoSelector, activeProjectSelector } from 'controllers/user';
-import { canResizeAndDragWidgets } from 'common/utils/permissions';
-import { URLS } from 'common/urls';
+import { activeProjectSelector } from 'controllers/user';
+import { fetchDashboardAction, updateDashboardWidgetsAction } from 'controllers/dashboard';
 import { EmptyWidgetGrid } from './emptyWidgetGrid';
 import styles from './widgetsGrid.scss';
 import { Widget } from './widget';
@@ -31,47 +30,60 @@ const messages = defineMessages({
 
 @injectIntl
 @connect(
-  (state) => ({
-    url: URLS.dashboard(activeProjectSelector(state), activeDashboardIdSelector(state)),
-    userInfo: userInfoSelector(state),
-    project: activeProjectSelector(state),
+  (state, ownProps) => ({
+    deleteWidgetUrl: (widgetId) =>
+      URLS.dashboardWidget(activeProjectSelector(state), ownProps.dashboard.id, widgetId),
   }),
   {
-    redirect,
     showNotification,
+    fetchDashboardAction,
+    updateDashboardWidgetsAction,
   },
 )
 export class WidgetsGrid extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
-    url: PropTypes.string.isRequired,
+    deleteWidgetUrl: PropTypes.func.isRequired,
     isFullscreen: PropTypes.bool,
-    project: PropTypes.string.isRequired,
-    userInfo: PropTypes.object.isRequired,
-    redirect: PropTypes.func.isRequired,
+    isModifiable: PropTypes.bool,
     showNotification: PropTypes.func.isRequired,
-    dashboard: PropTypes.object,
+    fetchDashboardAction: PropTypes.func.isRequired,
+    updateDashboardWidgetsAction: PropTypes.func.isRequired,
+    showWidgetWizard: PropTypes.func.isRequired,
+    loading: PropTypes.bool, // TODO: add from state when action logic will migrate to sagas
+    dashboard: PropTypes.shape({
+      widgets: PropTypes.array,
+      id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    }),
   };
 
   static defaultProps = {
     isFullscreen: false,
-    dashboard: {},
+    isModifiable: true,
+    loading: false,
+    dashboard: {
+      widgets: [],
+      id: '',
+    },
   };
 
-  state = {
-    widgets: [],
-    isFetching: true,
-    isMobile: false,
-    isModifiable: false,
-  };
+  constructor(props) {
+    super(props);
+    this.observer = ReactObserver();
 
-  componentDidMount() {
-    this.fetchWidgets();
+    this.state = {
+      isMobile: false,
+    };
   }
 
-  componentDidUpdate({ url }) {
-    if (this.props.url !== url) {
-      this.fetchWidgets();
+  componentDidMount() {
+    this.isFirefox = typeof InstallTrigger !== 'undefined';
+    this.props.fetchDashboardAction();
+  }
+
+  componentDidUpdate({ dashboard }) {
+    if (this.props.dashboard.id && this.props.dashboard.id !== dashboard.id) {
+      this.props.fetchDashboardAction();
     }
   }
 
@@ -88,35 +100,51 @@ export class WidgetsGrid extends Component {
     );
 
     if (itemChanged) {
-      if (this.state.isMobile) {
-        const oldWidgets = this.state.widgets;
+      const oldWidgets = this.props.dashboard.widgets;
 
+      if (this.state.isMobile) {
         newWidgets = newLayout.map(({ i, y, h }, index) => ({
           widgetId: i,
-          widgetPosition: [oldWidgets[index].widgetPosition[0], y],
-          widgetSize: [oldWidgets[index].widgetSize[0], h],
+          widgetType: oldWidgets[index].widgetType,
+          widgetPosition: { positionX: oldWidgets[index].widgetPosition.positionX, positionY: y },
+          widgetSize: { width: oldWidgets[index].widgetSize.width, height: h },
         }));
       } else {
-        newWidgets = newLayout.map(({ i, x, y, w, h }) => ({
+        newWidgets = newLayout.map(({ i, x, y, w, h }, index) => ({
           widgetId: i,
-          widgetPosition: [x, y],
-          widgetSize: [w, h],
+          widgetType: oldWidgets[index].widgetType,
+          widgetPosition: { positionX: x, positionY: y },
+          widgetSize: { width: w, height: h },
         }));
       }
-      this.setState({ widgets: newWidgets });
-      this.updateWidgets(newWidgets);
+
+      this.props.updateDashboardWidgetsAction({
+        ...this.props.dashboard,
+        widgets: newWidgets,
+      });
     }
   };
 
-  onResizeStop = (newLayout) => {
-    this.onGridItemChange(newLayout);
+  onResizeStart = (layout, oldItem) => {
+    this.observer.publish(`${oldItem.i}_resizeStarted`);
   };
 
-  onDeleteWidget = (id) => {
-    const newWidgets = this.state.widgets.filter((widget) => widget.widgetId !== id);
-    this.deleteWidget(id).then(() => {
-      this.updateWidgets(newWidgets);
-      this.setState({ widgets: newWidgets });
+  onResizeStop = (newLayout, oldWidgetPosition, newWidgetPosition) => {
+    this.onGridItemChange(newLayout, oldWidgetPosition, newWidgetPosition);
+    this.observer.publish('widgetResized');
+  };
+
+  onDeleteWidget = (widgetId) => {
+    const newWidgets = this.props.dashboard.widgets.filter(
+      (widget) => widget.widgetId !== widgetId,
+    );
+    fetch(this.props.deleteWidgetUrl(widgetId), {
+      method: 'DELETE',
+    }).then(() => {
+      this.props.updateDashboardWidgetsAction({
+        ...this.props.dashboard,
+        widgets: newWidgets,
+      });
       this.props.showNotification({
         type: NOTIFICATION_TYPES.SUCCESS,
         message: this.props.intl.formatMessage(messages.deleteWidgetSuccess),
@@ -124,80 +152,50 @@ export class WidgetsGrid extends Component {
     });
   };
 
-  onWidgetsReady = (dashboard) => {
-    const { userInfo, project } = this.props;
-    const isOwner = dashboard.owner === userInfo.userId;
-    const projectRole =
-      userInfo.assigned_projects[project] && userInfo.assigned_projects[project].projectRole;
-    this.setState({
-      widgets: dashboard.widgets,
-      isFetching: false,
-      isModifiable: canResizeAndDragWidgets(userInfo.userRole, projectRole, isOwner),
-    });
-  };
-
-  deleteWidget = (widget) =>
-    fetch(this.props.url, {
-      method: 'PUT',
-      data: {
-        deleteWidget: widget,
-      },
-    });
-
-  fetchWidgets = () => {
-    const { project, dashboard } = this.props;
-    if (!dashboard) {
-      return;
-    }
-    if (dashboard.widgets) {
-      this.onWidgetsReady(dashboard);
-    } else {
-      fetch(this.props.url)
-        .then(this.onWidgetsReady)
-        .catch(() => {
-          this.props.redirect({ type: PROJECT_DASHBOARD_PAGE, payload: { projectId: project } });
-        });
-    }
-  };
-
-  updateWidgets = (widgets) => {
-    fetch(this.props.url, {
-      method: 'PUT',
-      data: {
-        updateWidgets: widgets,
-      },
-    });
-  };
-
   render() {
-    const { widgets } = this.state;
+    const { widgets = [] } = this.props.dashboard;
     let Items = null;
     let height = 0; // we need to set large height to avoid double scroll
 
     if (widgets.length) {
-      Items = widgets.map(({ widgetPosition: [x, y], widgetSize: [w, h], widgetId }) => {
-        height += h * (rowHeight + 20);
-        return (
-          <div
-            key={widgetId}
-            className={cx('widget-view')}
-            data-grid={{ x, y, w, h, minW: 4, minH: 4, i: widgetId }}
-          >
-            <Widget
-              widgetId={widgetId}
-              isModifiable={this.state.isModifiable}
-              onDelete={() => {
-                this.onDeleteWidget(widgetId);
-              }}
-            />
-          </div>
-        );
-      });
+      Items = widgets.map(
+        ({
+          widgetPosition: { positionX: x, positionY: y },
+          widgetSize: { width: w, height: h },
+          widgetId,
+          widgetType,
+        }) => {
+          height += h * (rowHeight + 20);
+          return (
+            <div
+              key={widgetId}
+              className={cx('widget-view')}
+              data-grid={{ x, y, w, h, minW: 4, minH: 4, i: String(widgetId) }}
+            >
+              <Widget
+                widgetId={widgetId}
+                widgetType={widgetType}
+                isFullscreen={this.props.isFullscreen}
+                isModifiable={this.props.isModifiable}
+                observer={this.observer}
+                onDelete={() => {
+                  this.onDeleteWidget(widgetId);
+                }}
+              />
+            </div>
+          );
+        },
+      );
     }
 
     return (
-      <div className={this.state.isMobile ? 'mobile ' : ''}>
-        {this.state.isFetching && (
+      <div
+        className={cx('widgets-grid', {
+          mobile: this.state.isMobile,
+          'full-screen': this.props.isFullscreen,
+        })}
+      >
+        {this.props.loading && (
           <div className={cx('preloader-container')}>
             <SpinningPreloader />
           </div>
@@ -213,19 +211,25 @@ export class WidgetsGrid extends Component {
               breakpoints={breakpoints}
               onBreakpointChange={this.onBreakpointChange}
               onDragStop={this.onGridItemChange}
-              onResizeStop={this.onGridItemChange}
+              onResizeStart={this.onResizeStart}
+              onResizeStop={this.onResizeStop}
               cols={cols}
-              isDraggable={this.state.isModifiable}
-              isResizable={this.state.isModifiable}
+              isDraggable={this.props.isModifiable}
+              isResizable={this.props.isModifiable}
               draggableHandle=".draggable-field"
+              useCSSTransforms={!this.isFirefox}
             >
               {Items}
             </ResponsiveGridLayout>
           </ScrollWrapper>
         )}
-
-        {!this.state.isFetching &&
-          !widgets.length && <EmptyWidgetGrid isFullscreen={this.props.isFullscreen} />}
+        {!this.props.loading &&
+          !widgets.length && (
+            <EmptyWidgetGrid
+              action={this.props.showWidgetWizard}
+              isFullscreen={this.props.isFullscreen}
+            />
+          )}
       </div>
     );
   }

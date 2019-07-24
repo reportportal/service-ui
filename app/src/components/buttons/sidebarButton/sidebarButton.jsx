@@ -22,8 +22,8 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import classNames from 'classnames/bind';
-import { NavLink } from 'redux-first-router-link';
 import Parser from 'html-react-parser';
+import { NavLink } from 'components/main/navLink';
 import styles from './sidebarButton.scss';
 
 const cx = classNames.bind(styles);
@@ -33,6 +33,7 @@ export const SidebarButton = ({ onClick, icon, children, link, bottom }) => {
     'sidebar-nav-btn': true,
     'at-bottom': bottom,
   });
+
   return (
     <div className={classes}>
       <NavLink

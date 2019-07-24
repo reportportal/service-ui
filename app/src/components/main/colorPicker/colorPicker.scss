@@ -1,0 +1,66 @@
+.control {
+  background: $COLOR--white-two;
+  border: 1px solid $COLOR--gray-80;
+  padding: 6px 10px;
+  outline: none;
+  font-size: 13px;
+  cursor: pointer;
+
+  &:focus {
+    border-color: $COLOR--topaz;
+  }
+
+  &::after {
+    display: inline-block;
+    content: '';
+    width: 0;
+    height: 0;
+    border: 6px solid;
+    border-color: $COLOR--gray-60 transparent transparent;
+    position: relative;
+    top: 3px;
+    margin-left: 10px;
+  }
+}
+
+.control-opened {
+  &::after {
+    border-color: transparent transparent $COLOR--gray-60;
+    top: -3px;
+  }
+}
+
+.color-marker {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.color-picker {
+  margin: 3px 0;
+  padding: 0 10px;
+  z-index: 1;
+  background-color: $COLOR--white-two;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2);
+  border: 1px solid $COLOR--gray-80;
+}
+
+.chrome-picker {
+  box-shadow: none !important;
+  width: 210px !important;
+}
+
+.title {
+  color: $COLOR--gray-47;
+  text-transform: uppercase;
+  font-size: 12px;
+  font-weight: bold;
+  margin: 10px 0;
+}
+
+.separator {
+  border-top: solid $COLOR--gray-91;
+  border-width: 1px 0 0;
+  margin: 10px 0;
+}

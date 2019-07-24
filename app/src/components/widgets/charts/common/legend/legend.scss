@@ -1,0 +1,71 @@
+.legend {
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 85px;
+  width: 100%;
+  padding: 20px 20px 0;
+  box-sizing: border-box;
+}
+
+.content-wrapper {
+  height: 100%;
+  overflow: hidden;
+  text-align: right;
+}
+
+.with-custom-block {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.legend-elements {
+  min-width: 17%;
+}
+
+.legend-item {
+  display: inline-block;
+  margin-right: 15px;
+  margin-bottom: 10px;
+  cursor: pointer;
+
+  &.disabled {
+    cursor: default;
+  }
+}
+
+.color-mark {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  margin-right: 4px;
+  border-radius: 6px;
+  position: relative;
+  top: 2px;
+
+  &:before {
+    position: absolute;
+    display: none;
+    left: 2px;
+    top: 2px;
+    width: 8px;
+    height: 8px;
+    border-radius: 100%;
+    background-color: $COLOR--white-two;
+    content: '';
+  }
+}
+
+.unchecked {
+  .color-mark:before {
+    display: block;
+  }
+}
+
+.item-name {
+  font-size: 11px;
+  letter-spacing: 0.2px;
+}

@@ -1,0 +1,30 @@
+.stack-trace {
+  display: flex;
+  flex-direction: column;
+}
+
+.title {
+  padding-bottom: 5px;
+  color: $COLOR--gray-47;
+  font-family: $FONT-CONDBOLD;
+}
+
+.description {
+  height: 120px;
+  padding: 10px 15px;
+  background-color: $COLOR--light-red;
+
+  &.empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: $COLOR--white-four;
+  }
+}
+
+.link {
+  padding-top: 5px;
+  color: $COLOR--windows-blue;
+  font-family: $FONT-REGULAR;
+  font-size: 12px;
+}

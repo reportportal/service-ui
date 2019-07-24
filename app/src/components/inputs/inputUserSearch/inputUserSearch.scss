@@ -3,7 +3,6 @@
     position: relative;
     height: 28px;
     width: inherit;
-    z-index: 10;
     background-color: $COLOR--white-two;
     .error {
       &.Select {
@@ -20,6 +19,7 @@
       position: absolute;
       width: inherit;
       border: 1px solid $COLOR--gray-80;
+      box-sizing: border-box;
       &:hover {
         border: 1px solid $COLOR--gray-47;
       }
@@ -61,7 +61,9 @@
       left: 12px;
       line-height: 30px;
       font-size: 13px;
-      z-index: 10;
+      width: calc(100% - 40px);
+      overflow: hidden;
+      z-index: $Z-INDEX-POPUP;
     }
     .Select-noresults {
       position: relative;
@@ -99,6 +101,7 @@
     }
     .is-focused {
       border-color: $COLOR--topaz;
+      z-index: $Z-INDEX-POPUP;
       &:hover {
         border-color: $COLOR--topaz;
       }

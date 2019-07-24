@@ -1,0 +1,65 @@
+.name-col {
+  display: flex;
+  align-items: center;
+  width: 250px;
+  height: 70px;
+  font-size: 13px;
+  font-family: $FONT-SEMIBOLD;
+  &:hover {
+    .make-admin-label {
+      cursor: pointer;
+      opacity: 1;
+    }
+    .admin-label {
+      cursor: pointer;
+    }
+  }
+  @media (max-width: $SCREEN_SM_MAX) {
+    width: 100%;
+    height: 20px;
+    margin-top: 15px;
+  }
+}
+.name {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  @media (max-width: $SCREEN_SM_MAX) {
+    max-width: 200px;
+    height: 20px;
+    margin-top: 15px;
+  }
+}
+.label {
+  display: inline-block;
+  height: 15px;
+  margin-left: 10px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-radius: 100px;
+  color: $COLOR--white-two;
+  font-size: 10px;
+  text-align: center;
+  line-height: 15px;
+  text-transform: lowercase;
+}
+.you-label {
+  background-color: $COLOR--dark-pastel-green;
+  min-width: 20px;
+}
+.admin-label {
+  background-color: $COLOR--orange-red;
+  min-width: 35px;
+}
+.make-admin-label {
+  background-color: $COLOR--gray-60;
+  opacity: 0;
+  white-space: nowrap;
+}
+.avatar-wrapper {
+  margin-right: 10px;
+}
+.avatar {
+  width: 40px;
+  height: 40px;
+}

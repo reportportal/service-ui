@@ -1,0 +1,162 @@
+{
+  "share": false,
+  "id": 1,
+  "name": "start",
+  "contentParameters": {
+      "widgetType": "bugTrend",
+      "contentFields": [
+          "statistics$defects$product_bug$total",
+          "statistics$defects$no_defect$total",
+          "statistics$defects$automation_bug$total",
+          "statistics$defects$system_issue$total",
+          "statistics$defects$to_investigate$total"
+      ],
+      "itemsCount": 10,
+      "widgetOptions": {}
+  },
+  "appliedFilters": [],
+  "content": {
+      "result": [
+          {
+              "id": 1,
+              "number": 1,
+              "name": "launch name 1",
+              "startTime": 1541662237750,
+              "values": {
+                  "total": "11",
+                  "statistics$defects$product_bug$total": "0",
+                  "statistics$defects$no_defect$total": "0",
+                  "statistics$defects$automation_bug$total": "0",
+                  "statistics$defects$system_issue$total": "0",
+                  "statistics$defects$to_investigate$total": "1"
+              }
+          },
+          {
+              "id": 2,
+              "number": 2,
+              "name": "launch name 1",
+              "startTime": 1541662237750,
+              "values": {
+                  "total": "10",
+                  "statistics$defects$product_bug$total": "0",
+                  "statistics$defects$no_defect$total": "0",
+                  "statistics$defects$automation_bug$total": "0",
+                  "statistics$defects$system_issue$total": "0",
+                  "statistics$defects$to_investigate$total": "1"
+              }
+          },
+          {
+              "id": 3,
+              "number": 3,
+              "name": "launch name 1",
+              "startTime": 1541662237750,
+              "values": {
+                  "total": "9",
+                  "statistics$defects$product_bug$total": "0",
+                  "statistics$defects$no_defect$total": "0",
+                  "statistics$defects$automation_bug$total": "0",
+                  "statistics$defects$system_issue$total": "0",
+                  "statistics$defects$to_investigate$total": "1"
+              }
+          },
+          {
+              "id": 4,
+              "number": 4,
+              "name": "launch name 1",
+              "startTime": 1541662237750,
+              "values": {
+                  "total": "9",
+                  "statistics$defects$product_bug$total": "0",
+                  "statistics$defects$no_defect$total": "0",
+                  "statistics$defects$automation_bug$total": "0",
+                  "statistics$defects$system_issue$total": "0",
+                  "statistics$defects$to_investigate$total": "1"
+              }
+          },
+          {
+              "id": 5,
+              "number": 1,
+              "name": "launch name 2",
+              "startTime": 1541662237750,
+              "values": {
+                  "total": "8",
+                  "statistics$defects$product_bug$total": "0",
+                  "statistics$defects$no_defect$total": "0",
+                  "statistics$defects$automation_bug$total": "0",
+                  "statistics$defects$system_issue$total": "0",
+                  "statistics$defects$to_investigate$total": "1"
+              }
+          },
+          {
+              "id": 6,
+              "number": 2,
+              "name": "launch name 2",
+              "startTime": 1541662237750,
+              "values": {
+                  "total": "8",
+                  "statistics$defects$product_bug$total": "0",
+                  "statistics$defects$no_defect$total": "0",
+                  "statistics$defects$automation_bug$total": "0",
+                  "statistics$defects$system_issue$total": "0",
+                  "statistics$defects$to_investigate$total": "1"
+              }
+          },
+          {
+              "id": 7,
+              "number": 3,
+              "name": "launch name 2",
+              "startTime": 1541662237750,
+              "values": {
+                  "total": "2",
+                  "statistics$defects$product_bug$total": "0",
+                  "statistics$defects$no_defect$total": "0",
+                  "statistics$defects$automation_bug$total": "0",
+                  "statistics$defects$system_issue$total": "0",
+                  "statistics$defects$to_investigate$total": "1"
+              }
+          },
+          {
+              "id": 8,
+              "number": 4,
+              "name": "launch name 2",
+              "startTime": 1541662237750,
+              "values": {
+                  "total": "2",
+                  "statistics$defects$product_bug$total": "0",
+                  "statistics$defects$no_defect$total": "0",
+                  "statistics$defects$automation_bug$total": "0",
+                  "statistics$defects$system_issue$total": "0",
+                  "statistics$defects$to_investigate$total": "1"
+              }
+          },
+          {
+              "id": 9,
+              "number": 1,
+              "name": "launch name 3",
+              "startTime": 1541662237750,
+              "values": {
+                  "total": "3",
+                  "statistics$defects$product_bug$total": "0",
+                  "statistics$defects$no_defect$total": "0",
+                  "statistics$defects$automation_bug$total": "0",
+                  "statistics$defects$system_issue$total": "0",
+                  "statistics$defects$to_investigate$total": "1"
+              }
+          },
+          {
+              "id": 10,
+              "number": 2,
+              "name": "launch name 3",
+              "startTime": 1541662237750,
+              "values": {
+                  "total": "4",
+                  "statistics$defects$product_bug$total": "0",
+                  "statistics$defects$no_defect$total": "0",
+                  "statistics$defects$automation_bug$total": "0",
+                  "statistics$defects$system_issue$total": "0",
+                  "statistics$defects$to_investigate$total": "1"
+              }
+          }
+      ]
+  }
+}

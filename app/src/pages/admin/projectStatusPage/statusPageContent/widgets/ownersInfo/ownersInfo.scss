@@ -1,0 +1,26 @@
+.owners-info {
+  height: 180px;
+  padding-top: 10px;
+}
+
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 10px;
+  color: $COLOR--charcoal-grey;
+
+  &:not(:first-child) {
+    border-top: 1px solid $COLOR--gray-91;
+  }
+}
+
+.info-item {
+  padding-right: 10px;
+  font-size: 14px;
+  font-family: $FONT-REGULAR;
+  line-height: 18px;
+}
+
+.no-data-wrapper {
+  padding: 0 10px;
+}

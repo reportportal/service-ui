@@ -26,7 +26,8 @@ import { withReadme } from 'storybook-readme';
 import { MarkdownEditor } from '../';
 import README from './README.md';
 
-const testMarkdown = '# Intro\n' +
+const testMarkdown =
+  '# Intro\n' +
   'Go ahead, play around with the editor! Be sure to check out **bold** and *italic* styling, or even [links](https://google.com). You can type the Markdown syntax, use the toolbar, or use shortcuts like `cmd-b` or `ctrl-b`.\n' +
   '\n' +
   '## Lists\n' +
@@ -36,7 +37,7 @@ const testMarkdown = '# Intro\n' +
   '> quote\n' +
   '\n' +
   '\n' +
-  '`var bla = \'bar\';`\n' +
+  "`var bla = 'bar';`\n" +
   '\n' +
   '* Lists are a piece of cake\n' +
   '* They even auto continue as you type\n' +
@@ -50,23 +51,22 @@ const testMarkdown = '# Intro\n' +
   '## What about images?\n' +
   '![Yes](https://i.imgur.com/sZlktY7.png)\n';
 
-storiesOf('Components/Main/markdown/markdownEditor', module)
-  .addDecorator(host({
-    title: 'Markdown editor component',
-    align: 'center middle',
-    backdrop: 'rgba(70, 69, 71, 0.2)',
-    background: '#fff',
-    height: 'auto',
-    width: '70%',
-  }))
+storiesOf('Components/Main/Markdown/MarkdownEditor', module)
+  .addDecorator(
+    host({
+      title: 'Markdown editor component',
+      align: 'center middle',
+      backdrop: 'rgba(70, 69, 71, 0.2)',
+      background: '#fff',
+      height: 'auto',
+      width: '70%',
+    }),
+  )
   .addDecorator(withReadme(README))
-  .add('default state', () => (
-    <MarkdownEditor />
-  ))
+  .add('default state', () => <MarkdownEditor />)
   .add('with placeholder', () => (
     <MarkdownEditor placeholder="Some placeholder for markdown editor..." />
   ))
   .add('with provided markdown text', () => (
     <MarkdownEditor value={testMarkdown} onChange={action('changed')} />
-  ))
-;
+  ));

@@ -1,3 +1,9 @@
 export { StepPage } from './stepPage';
-export { TestItemDetailsModal } from './modals';
-export { IgnoreInAAModal, IncludeInAAModal } from './modals';
+export {
+  IgnoreInAAModal,
+  IncludeInAAModal,
+  TestItemDetailsModal,
+  EditDefectModal,
+  LinkIssueModal,
+  UnlinkIssueModal,
+} from './modals';

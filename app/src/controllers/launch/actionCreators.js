@@ -7,12 +7,21 @@ import {
   createProceedWithValidItemsAction,
   toggleAllItemsAction,
 } from 'controllers/groupOperations';
-import { FETCH_LAUNCHES, NAMESPACE, SET_DEBUG_MODE } from './constants';
+import {
+  FETCH_LAUNCHES,
+  NAMESPACE,
+  SET_DEBUG_MODE,
+  CHANGE_LAUNCH_DISTINCT,
+  FETCH_LAUNCHES_WITH_PARAMS,
+  FETCH_LAUNCHES_PAGE_DATA,
+  UPDATE_LAUNCH_LOCALLY,
+  UPDATE_LAUNCHES_LOCALLY,
+} from './constants';
 import {
   validateMergeLaunch,
   validateFinishForceLaunch,
   validateMoveLaunch,
-  validateDeleteLaunch
+  validateDeleteLaunch,
 } from './actionValidators';
 
 export const setDebugMode = (isDebugMode) => ({
@@ -20,9 +29,33 @@ export const setDebugMode = (isDebugMode) => ({
   payload: isDebugMode,
 });
 
+export const changeLaunchDistinctAction = (launchDistinct) => ({
+  type: CHANGE_LAUNCH_DISTINCT,
+  payload: launchDistinct,
+});
+
 export const fetchLaunchesAction = (params) => ({
   type: FETCH_LAUNCHES,
   payload: params,
+});
+
+export const fetchLaunchesWithParamsAction = (filterId) => ({
+  type: FETCH_LAUNCHES_WITH_PARAMS,
+  payload: filterId,
+});
+
+export const fetchLaunchesPageData = () => ({
+  type: FETCH_LAUNCHES_PAGE_DATA,
+});
+
+export const updateLaunchLocallyAction = (launch) => ({
+  type: UPDATE_LAUNCH_LOCALLY,
+  payload: launch,
+});
+
+export const updateLaunchesLocallyAction = (launches) => ({
+  type: UPDATE_LAUNCHES_LOCALLY,
+  payload: launches,
 });
 
 export const toggleLaunchSelectionAction = toggleItemSelectionAction(NAMESPACE);
@@ -78,10 +111,10 @@ export const moveLaunchesAction = defineGroupOperation(
 export const deleteItemsAction = defineGroupOperation(
   NAMESPACE,
   'deleteLaunches',
-  (items, { onConfirm, header, mainContent, userId, warning }) =>
+  (items, { onConfirm, header, mainContent, userId, warning, eventsInfo }) =>
     showModalAction({
       id: 'deleteItemsModal',
-      data: { items, onConfirm, header, mainContent, userId, warning },
+      data: { items, onConfirm, header, mainContent, userId, warning, eventsInfo },
     }),
   validateDeleteLaunch,
 );

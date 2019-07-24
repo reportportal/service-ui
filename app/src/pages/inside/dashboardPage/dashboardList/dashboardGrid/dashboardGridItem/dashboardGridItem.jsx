@@ -1,13 +1,14 @@
 import React, { Component, Fragment } from 'react';
+import track from 'react-tracking';
 import { injectIntl, intlShape, defineMessages } from 'react-intl';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { NavLink } from 'redux-first-router-link';
-import { Icon } from 'components/main/icon';
+import { canDeleteDashboard } from 'common/utils/permissions';
 import { PROJECT_DASHBOARD_ITEM_PAGE } from 'controllers/pages';
 import { activeProjectSelector, activeProjectRoleSelector } from 'controllers/user';
-import { canDeleteDashboard } from 'common/utils/permissions';
+import { Icon } from 'components/main/icon';
+import { NavLink } from 'components/main/navLink';
 import styles from './dashboardGridItem.scss';
 
 const cx = classNames.bind(styles);
@@ -27,12 +28,10 @@ const messages = defineMessages({
   projectId: activeProjectSelector(state),
   projectRole: activeProjectRoleSelector(state),
 }))
+@track()
 export class DashboardGridItem extends Component {
   static calculateGridPreviewBaseOnWidgetId(id) {
-    const idChars = id.split('');
-    const result = idChars.reduce((memo, char, idx) => memo + id.charCodeAt(idx), 0);
-
-    return result % 14;
+    return id % 14;
   }
 
   static propTypes = {
@@ -43,6 +42,11 @@ export class DashboardGridItem extends Component {
     onEdit: PropTypes.func,
     onDelete: PropTypes.func,
     projectRole: PropTypes.string,
+    nameEventInfo: PropTypes.object,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
 
   static defaultProps = {
@@ -52,6 +56,7 @@ export class DashboardGridItem extends Component {
     onEdit: () => {},
     onDelete: () => {},
     projectRole: '',
+    nameEventInfo: {},
   };
 
   editItem = (e) => {
@@ -81,11 +86,12 @@ export class DashboardGridItem extends Component {
     const { name, description, owner, share, id } = item;
 
     return (
-      <NavLink
-        to={{ type: PROJECT_DASHBOARD_ITEM_PAGE, payload: { projectId, dashboardId: id } }}
-        className={cx('grid-view')}
-      >
-        <div className={cx('grid-view__inner')}>
+      <div className={cx('grid-view')}>
+        <NavLink
+          to={{ type: PROJECT_DASHBOARD_ITEM_PAGE, payload: { projectId, dashboardId: id } }}
+          className={cx('grid-view-inner')}
+          onClick={() => this.props.tracking.trackEvent(this.props.nameEventInfo)}
+        >
           <div className={cx('grid-cell', 'name')}>
             <h3 className={cx('dashboard-link')}>{name}</h3>
           </div>
@@ -101,16 +107,17 @@ export class DashboardGridItem extends Component {
           </div>
           <div className={cx('grid-cell', 'owner')}>{owner}</div>
           <div className={cx('grid-cell', 'shared')}>
-            {share && (
-              <Fragment>
-                <div className={cx('icon-holder')}>
-                  <Icon type="icon-tables" />
-                </div>
-                <span className={cx('shared-text')}>
-                  {intl.formatMessage(messages.dashboardIsShared)}
-                </span>
-              </Fragment>
-            )}
+            {share &&
+              userId === owner && (
+                <Fragment>
+                  <div className={cx('icon-holder')}>
+                    <Icon type="icon-tables" />
+                  </div>
+                  <span className={cx('shared-text')}>
+                    {intl.formatMessage(messages.dashboardIsShared)}
+                  </span>
+                </Fragment>
+              )}
             {userId !== owner && (
               <Fragment>
                 <div className={cx('icon-holder')}>
@@ -133,8 +140,8 @@ export class DashboardGridItem extends Component {
               <Icon type="icon-close" />
             </div>
           )}
-        </div>
-      </NavLink>
+        </NavLink>
+      </div>
     );
   }
 }

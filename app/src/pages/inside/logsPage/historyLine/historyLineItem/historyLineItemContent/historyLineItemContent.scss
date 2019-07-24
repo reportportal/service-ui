@@ -61,7 +61,8 @@
   }
 }
 
-.status-FAILED {
+.status-FAILED,
+.status-INTERRUPTED {
   &:before {
     background-color: $COLOR--blush;
   }
@@ -124,6 +125,17 @@
   }
 }
 
+.status-IN_PROGRESS {
+  cursor: default;
+  &:before {
+    background-color: $COLOR--violet;
+  }
+  .item-block-bg:before,
+  .item-block-bg:after {
+    border-color: $COLOR--violet;
+  }
+}
+
 .active {
   cursor: default;
   &:before {
@@ -141,7 +153,8 @@
     }
   }
 
-  &.status-FAILED {
+  &.status-FAILED,
+  &.status-INTERRUPTED {
     &:before {
       background-color: $COLOR--orangish;
     }

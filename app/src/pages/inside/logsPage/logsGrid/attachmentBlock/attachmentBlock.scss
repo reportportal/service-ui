@@ -1,0 +1,21 @@
+.attachment-block {
+  float: right;
+}
+
+.image {
+  display: inline-block;
+  width: 100%;
+  min-width: 60px;
+  min-height: 35px;
+  max-width: 65px;
+  max-height: 100%;
+  cursor: pointer;
+}
+
+.console-view {
+  min-width: 7px;
+  min-height: 7px;
+  svg {
+    fill: $COLOR--gray-60;
+  }
+}

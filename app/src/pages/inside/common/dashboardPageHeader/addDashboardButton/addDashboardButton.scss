@@ -1,0 +1,7 @@
+.add-dashboard-btn {
+  background-color: $COLOR--white-two;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    display: none;
+  }
+}

@@ -6,9 +6,12 @@ import styles from './modalHeader.scss';
 
 const cx = classNames.bind(styles);
 
-export const ModalHeader = ({ text, onClose }) => (
+export const ModalHeader = ({ text, onClose, renderHeaderElements }) => (
   <div className={cx('modal-header')}>
-    <span className={cx('modal-title')}>{text}</span>
+    <div className={cx('modal-header-content')}>
+      <span className={cx('modal-title')}>{text}</span>
+      <div className={cx('modal-header-elements')}>{renderHeaderElements()}</div>
+    </div>
     <div className={cx('close-modal-icon')} onClick={onClose}>
       {Parser(CloseIcon)}
     </div>
@@ -16,10 +19,12 @@ export const ModalHeader = ({ text, onClose }) => (
   </div>
 );
 ModalHeader.propTypes = {
-  text: PropTypes.string,
+  text: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
   onClose: PropTypes.func,
+  renderHeaderElements: PropTypes.func,
 };
 ModalHeader.defaultProps = {
   text: '',
   onClose: () => {},
+  renderHeaderElements: () => {},
 };

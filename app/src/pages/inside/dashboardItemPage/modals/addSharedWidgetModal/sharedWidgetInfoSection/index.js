@@ -1,0 +1,1 @@
+export { SharedWidgetInfoSection } from './sharedWidgetInfoSection';

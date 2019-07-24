@@ -1,0 +1,97 @@
+.attribute-editor {
+  display: flex;
+  align-items: center;
+  padding-bottom: 10px;
+
+  .input {
+    width: 130px;
+    cursor: text;
+
+    :global {
+      .Select {
+        .Select-control {
+          border-top: none;
+          border-left: none;
+          border-right: none;
+          box-shadow: none;
+        }
+
+        .Select-value {
+          background-color: inherit;
+          background-image: none;
+          border: none;
+          box-shadow: none;
+        }
+
+        .Select-clear-zone {
+          display: none;
+        }
+      }
+
+      .Select.is-focused {
+        .Select-control {
+          box-shadow: none;
+        }
+      }
+    }
+  }
+}
+
+.control {
+  padding-right: 10px;
+}
+
+.icon {
+  height: 20px;
+  width: 20px;
+  cursor: pointer;
+
+  svg {
+    fill: $COLOR--gray-80;
+    stroke: $COLOR--gray-80;
+  }
+
+  &.disabled {
+    cursor: default;
+
+    svg {
+      fill: $COLOR--gray-91;
+      stroke: $COLOR--gray-91;
+    }
+  }
+
+  &:hover:not(.disabled) {
+    svg {
+      fill: $COLOR--gray-60;
+      stroke: $COLOR--gray-60;
+    }
+  }
+
+  &:active:not(.disabled) {
+    svg {
+      fill: $COLOR--tealish;
+      stroke: $COLOR--tealish;
+    }
+  }
+}
+
+.check-icon {
+  svg {
+    fill: $COLOR--tealish;
+    stroke: $COLOR--tealish;
+  }
+
+  &:hover:not(.disabled) {
+    svg {
+      fill: $COLOR--tealish;
+      stroke: $COLOR--tealish;
+    }
+  }
+
+  &:active:not(.disabled) {
+    svg {
+      fill: $COLOR--topaz;
+      stroke: $COLOR--topaz;
+    }
+  }
+}

@@ -1,0 +1,13 @@
+.job-info-section {
+  width: 50%;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    width: 100%;
+  }
+}
+
+.section-header {
+  height: 50px;
+  margin-bottom: 0;
+  background-color: $COLOR--white;
+}

@@ -16,6 +16,7 @@ export const InputRadio = ({
   onBlur,
   mobileDisabled,
 }) => (
+  // eslint-disable-next-line
   <label
     className={cx('input-radio', { disabled, 'mobile-disabled': mobileDisabled })}
     onFocus={onFocus}
@@ -37,8 +38,8 @@ export const InputRadio = ({
 );
 InputRadio.propTypes = {
   children: PropTypes.node,
-  value: PropTypes.string,
-  ownValue: PropTypes.string,
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  ownValue: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   name: PropTypes.string,
   disabled: PropTypes.bool,
   mobileDisabled: PropTypes.bool,

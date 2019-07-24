@@ -16,6 +16,5 @@ CheckboxHeaderCell.propTypes = {
 };
 CheckboxHeaderCell.defaultProps = {
   value: false,
-  onChange: () => {
-  },
+  onChange: () => {},
 };

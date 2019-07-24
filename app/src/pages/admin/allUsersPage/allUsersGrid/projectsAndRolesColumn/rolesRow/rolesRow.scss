@@ -1,0 +1,56 @@
+.roles-row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  align-content: stretch;
+  align-items: center;
+  padding: 0 15px 15px 15px;
+}
+
+.roles-row-label {
+  overflow: hidden;
+  color: $COLOR--windows-blue;
+  text-overflow: ellipsis;
+  font-size: 13px;
+}
+
+.roles-row-item {
+  width: 150px;
+  flex-shrink: 0;
+  flex-grow: 1;
+}
+
+.roles-row-item-first {
+  margin-right: 10px;
+}
+.roles-row-item-last {
+  margin-left: 10px;
+}
+
+.roles-row-icon {
+  flex-shrink: 0;
+  flex-grow: 0;
+  margin-left: 15px;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  svg {
+    margin: 2px;
+    display: block;
+    fill: $COLOR--gray-60;
+  }
+}
+
+.roles-row-icon-check {
+  svg {
+    fill: $COLOR--tealish;
+  }
+}
+
+.roles-row-icon-disable {
+  cursor: default;
+  svg {
+    opacity: 0.3;
+  }
+}

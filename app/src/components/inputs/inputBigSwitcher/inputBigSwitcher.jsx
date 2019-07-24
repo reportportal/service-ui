@@ -18,75 +18,92 @@
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
-
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import track from 'react-tracking';
 import { FormattedMessage } from 'react-intl';
 import classNames from 'classnames/bind';
 import styles from './inputBigSwitcher.scss';
 
 const cx = classNames.bind(styles);
-
-export const InputBigSwitcher = ({
-  children,
-  disabled,
-  value,
-  onChange,
-  onFocus,
-  onBlur,
-  mobileDisabled,
-}) => {
-  const classes = cx({
-    'switcher-wrapper': true,
-    'mobile-disabled': mobileDisabled,
-    disabled,
-  });
-  const sliderClasses = cx({
-    slider: true,
-    'turned-on': !!value,
-  });
-  const handlerOnChange = (e) => {
-    onChange(e.target.checked);
+@track()
+export class InputBigSwitcher extends Component {
+  static propTypes = {
+    children: PropTypes.node,
+    value: PropTypes.bool,
+    mobileDisabled: PropTypes.bool,
+    disabled: PropTypes.bool,
+    onChange: PropTypes.func,
+    onFocus: PropTypes.func,
+    onBlur: PropTypes.func,
+    onChangeEventInfo: PropTypes.object,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
+    title: PropTypes.string,
   };
-  return (
-    <label className={cx('input-big-switcher')} tabIndex="1">
-      <div className={classes}>
-        <div className={cx('on')}>
-          <FormattedMessage id={'Common.on'} defaultMessage={'ON'} />
-        </div>
-        <div className={cx('off')}>
-          <FormattedMessage id={'Common.off'} defaultMessage={'OFF'} />
-        </div>
-        <input
-          className={cx('input')}
-          type="checkbox"
-          disabled={disabled}
-          onFocus={onFocus}
-          onChange={handlerOnChange}
-          onBlur={onBlur}
-        />
-        <div className={sliderClasses} />
-      </div>
-      {children && <span className={cx('children-container')}>{children}</span>}
-    </label>
-  );
-};
 
-InputBigSwitcher.propTypes = {
-  children: PropTypes.node,
-  value: PropTypes.bool,
-  mobileDisabled: PropTypes.bool,
-  disabled: PropTypes.bool,
-  onChange: PropTypes.func,
-  onFocus: PropTypes.func,
-  onBlur: PropTypes.func,
-};
-
-InputBigSwitcher.defaultProps = {
-  children: '',
-  value: false,
-  mobileDisabled: false,
-  disabled: false,
-  onChange: () => {},
-  onFocus: () => {},
-  onBlur: () => {},
-};
+  static defaultProps = {
+    children: '',
+    value: false,
+    mobileDisabled: false,
+    disabled: false,
+    onChange: () => {},
+    onFocus: () => {},
+    onBlur: () => {},
+    onChangeEventInfo: {},
+    title: '',
+  };
+  render() {
+    const {
+      mobileDisabled,
+      onChangeEventInfo,
+      tracking,
+      onChange,
+      disabled,
+      onFocus,
+      onBlur,
+      children,
+      value,
+      title,
+    } = this.props;
+    const classes = cx({
+      'switcher-wrapper': true,
+      'mobile-disabled': mobileDisabled,
+      disabled,
+    });
+    const sliderClasses = cx({
+      slider: true,
+      'turned-on': !!value,
+    });
+    const handlerOnChange = (e) => {
+      onChange(e.target.checked);
+      onChangeEventInfo && tracking.trackEvent(onChangeEventInfo);
+    };
+    return (
+      // eslint-disable-next-line
+      <label className={cx('input-big-switcher')} tabIndex="1">
+        <div className={classes} title={title}>
+          <div className={cx('on')}>
+            <FormattedMessage id={'Common.on'} defaultMessage={'ON'} />
+          </div>
+          <div className={cx('off')}>
+            <FormattedMessage id={'Common.off'} defaultMessage={'OFF'} />
+          </div>
+          <input
+            className={cx('input')}
+            type="checkbox"
+            checked={value}
+            disabled={disabled}
+            onFocus={onFocus}
+            onChange={handlerOnChange}
+            onBlur={onBlur}
+          />
+          <div className={sliderClasses} />
+        </div>
+        {children && <span className={cx('children-container')}>{children}</span>}
+      </label>
+    );
+  }
+}

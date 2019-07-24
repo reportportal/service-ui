@@ -39,6 +39,7 @@ export class MultiActionButton extends Component {
         onClick: PropTypes.func,
       }),
     ),
+    menuAtRight: PropTypes.bool,
     onClick: PropTypes.func,
     disabled: PropTypes.bool,
     color: PropTypes.string,
@@ -46,6 +47,7 @@ export class MultiActionButton extends Component {
   static defaultProps = {
     title: '',
     items: [],
+    menuAtRight: false,
     disabled: false,
     color: 'booger',
     onClick: () => {},
@@ -74,7 +76,7 @@ export class MultiActionButton extends Component {
   };
 
   render() {
-    const { title, items, disabled, color, onClick } = this.props;
+    const { title, items, disabled, color, menuAtRight, onClick } = this.props;
     return (
       <div
         className={cx('multi-action-button', {
@@ -92,7 +94,7 @@ export class MultiActionButton extends Component {
         <div className={cx('menu-part')} onClick={this.toggleMenu}>
           <i className={cx('toggle-icon')}>{Parser(ArrowIcon)}</i>
         </div>
-        <div className={cx('menu')}>
+        <div className={cx('menu', { 'at-right': menuAtRight })}>
           {items.map((item) => (
             <div
               key={item.value}

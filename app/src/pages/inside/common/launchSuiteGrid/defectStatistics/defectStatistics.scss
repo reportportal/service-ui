@@ -35,6 +35,9 @@
   &.type-system_issue {
     background-color: $COLOR--system-issue;
   }
+  &.type-to_investigate {
+    background-color: $COLOR--to-investigate;
+  }
 }
 .value {
   display: inline-block;

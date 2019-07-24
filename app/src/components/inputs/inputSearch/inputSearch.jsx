@@ -22,8 +22,8 @@
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
+import SearchIcon from 'common/img/search-icon-inline.svg';
 import styles from './inputSearch.scss';
-import SearchIcon from './img/search-icon-inline.svg';
 
 const cx = classNames.bind(styles);
 
@@ -36,17 +36,21 @@ export const InputSearch = ({
   disabled,
   refFunction,
   onChange,
+  className,
+  customClassName,
+  iconAtRight,
+  searchHint,
   onFocus,
   onBlur,
   onKeyUp,
   active,
 }) => (
-  <div className={cx('input-search', { error, active, disabled })}>
-    <div className={cx('icon')}>{Parser(SearchIcon)}</div>
+  <div className={cx('input-search', { error, active, disabled }, customClassName)}>
+    <div className={cx('icon', { 'at-right': iconAtRight })}>{Parser(SearchIcon)}</div>
     <input
       ref={refFunction}
       type={type}
-      className={cx('input')}
+      className={cx('input', `type-${type}`, className)}
       value={value}
       disabled={disabled}
       placeholder={placeholder}
@@ -56,6 +60,7 @@ export const InputSearch = ({
       onBlur={onBlur}
       onKeyUp={onKeyUp}
     />
+    {searchHint && <div className={cx('search-hint')}>{searchHint}</div>}
   </div>
 );
 
@@ -64,6 +69,10 @@ InputSearch.propTypes = {
   value: PropTypes.string,
   placeholder: PropTypes.string,
   maxLength: PropTypes.string,
+  className: PropTypes.string,
+  customClassName: PropTypes.string,
+  iconAtRight: PropTypes.bool,
+  searchHint: PropTypes.string,
   active: PropTypes.bool,
   disabled: PropTypes.bool,
   error: PropTypes.string,
@@ -78,7 +87,11 @@ InputSearch.defaultProps = {
   type: 'text',
   value: '',
   placeholder: '',
-  maxLength: '254',
+  maxLength: '256',
+  className: '',
+  customClassName: '',
+  iconAtRight: false,
+  searchHint: '',
   active: false,
   disabled: false,
   error: '',

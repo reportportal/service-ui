@@ -22,51 +22,33 @@
 import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import { host } from 'storybook-host';
+import { withReadme } from 'storybook-readme';
 import { PaginationToolbar } from './paginationToolbar';
+import README from './README.md';
 
 storiesOf('Components/Main/PaginationToolbar', module)
-  .addDecorator(host({
-    title: 'Pagination toolbar component',
-    align: 'center middle',
-    backdrop: 'rgba(70, 69, 71, 0.2)',
-    background: '#fff',
-    height: 60,
-    width: '100%',
-  }))
-  .add('default state', () => (
-    <PaginationToolbar />
-  ))
+  .addDecorator(
+    host({
+      title: 'Pagination toolbar component',
+      align: 'center middle',
+      backdrop: 'rgba(70, 69, 71, 0.2)',
+      background: '#fff',
+      height: 80,
+      width: '100%',
+    }),
+  )
+  .addDecorator(withReadme(README))
   .add('with pages', () => (
-    <PaginationToolbar
-      itemCount={470}
-      activePage={1}
-      pageCount={10}
-      pageSize={50}
-    />
+    <PaginationToolbar itemCount={50} activePage={1} pageCount={5} pageSize={10} />
   ))
   .add('with many pages at start', () => (
-    <PaginationToolbar
-      itemCount={470}
-      activePage={1}
-      pageCount={20}
-      pageSize={50}
-    />
+    <PaginationToolbar itemCount={470} activePage={1} pageCount={20} pageSize={50} />
   ))
   .add('with many pages at the middle', () => (
-    <PaginationToolbar
-      itemCount={470}
-      activePage={7}
-      pageCount={20}
-      pageSize={50}
-    />
+    <PaginationToolbar itemCount={470} activePage={7} pageCount={20} pageSize={50} />
   ))
   .add('with many pages at the end', () => (
-    <PaginationToolbar
-      itemCount={470}
-      activePage={20}
-      pageCount={20}
-      pageSize={50}
-    />
+    <PaginationToolbar itemCount={470} activePage={20} pageCount={20} pageSize={50} />
   ))
   .add('with actions', () => (
     <PaginationToolbar
@@ -77,4 +59,7 @@ storiesOf('Components/Main/PaginationToolbar', module)
       onChangePage={action('onChangePage')}
       onChangePageSize={action('onChangePageSize')}
     />
+  ))
+  .add('with no items', () => (
+    <PaginationToolbar itemCount={0} activePage={1} pageCount={0} pageSize={50} />
   ));

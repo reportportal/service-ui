@@ -1,0 +1,65 @@
+.container {
+  width: 50%;
+  height: 100%;
+}
+
+.launch-execution-and-issues-chart {
+  display: flex;
+  height: 100%;
+
+  :global {
+    .c3-legend-background {
+      stroke: none !important;
+      stroke-width: 0;
+    }
+
+    .c3-chart-arcs-title {
+      font-size: 24px !important;
+      font-weight: bold;
+    }
+  }
+
+  .small-view {
+    :global {
+      .c3-chart-arc {
+        & text {
+          display: none;
+        }
+      }
+
+      .c3-chart-arcs-title {
+        font-size: 16px !important;
+      }
+    }
+  }
+
+  & .status-page-mode {
+    .small-view {
+      :global {
+        .c3-chart-arcs-title > tspan {
+          font-size: 12px !important;
+        }
+      }
+    }
+  }
+}
+
+.launch-execution-chart.with-background-color {
+  background-color: $COLOR--light-yellow;
+  height: 100%;
+}
+
+.issue-statistics-chart .legend {
+  top: -4px;
+  line-height: 1.5;
+}
+
+.data-js-launch-execution-chart-container,
+.data-js-issue-statistics-chart-container {
+  position: relative;
+  width: 100%;
+}
+
+.issue-statistics-chart {
+  height: 100%;
+}

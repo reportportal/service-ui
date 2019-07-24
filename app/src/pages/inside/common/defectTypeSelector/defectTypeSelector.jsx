@@ -23,7 +23,6 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
 import { defectTypesSelector } from 'controllers/project';
-import { TO_INVESTIGATE } from 'common/constants/defectTypes';
 import { DEFECT_TYPE_CONFIGURATION } from './constants';
 import styles from './defectTypeSelector.scss';
 import { DefectTypeItem } from '../defectTypeItem';
@@ -70,7 +69,7 @@ export class DefectTypeSelector extends Component {
   };
 
   handleClickOutside = (e) => {
-    if (!this.node.contains(e.target)) {
+    if (!this.node.contains(e.target) && this.state.opened) {
       this.setState({ opened: false });
       this.props.onBlur();
     }
@@ -90,13 +89,7 @@ export class DefectTypeSelector extends Component {
       return foundDefectType;
     });
 
-    return (
-      formattedValue && (
-        <div className={cx('selected-option')}>
-          <DefectTypeItem type={formattedValue.locator} />
-        </div>
-      )
-    );
+    return formattedValue && <DefectTypeItem type={formattedValue.locator} />;
   }
 
   handleChange = (selectedValue) => {
@@ -107,17 +100,9 @@ export class DefectTypeSelector extends Component {
 
   renderOptions() {
     const { defectTypes, value } = this.props;
-    const toInvestigate = defectTypes[TO_INVESTIGATE.toUpperCase()][0];
 
     return (
       <Fragment>
-        <div className={cx('to-investigate-option')}>
-          <DefectTypeItem
-            type={toInvestigate.locator}
-            noBorder={toInvestigate.locator !== value}
-            onClick={this.handleChange}
-          />
-        </div>
         <div className={cx('defect-options')}>
           {DEFECT_TYPE_CONFIGURATION.map((option) => (
             <div key={option} className={cx('select-option-group')}>
@@ -126,7 +111,8 @@ export class DefectTypeSelector extends Component {
                   <DefectTypeItem
                     type={defectType.locator}
                     noBorder={defectType.locator !== value}
-                    onClick={this.handleChange}
+                    lesserFont={defectType.locator === value}
+                    onClick={() => this.handleChange(defectType.locator)}
                   />
                 </div>
               ))}

@@ -1,18 +1,20 @@
 import { takeEvery, all, put, select } from 'redux-saga/effects';
 import { fetchDataAction } from 'controllers/fetch';
-import { activeProjectSelector } from 'controllers/user';
+import { projectIdSelector } from 'controllers/pages';
 import { URLS } from 'common/urls';
 import { NAMESPACE, FETCH_MEMBERS } from './constants';
 import { querySelector } from './selectors';
 
 function* fetchMembers() {
-  const activeProject = yield select(activeProjectSelector);
+  const projectId = yield select(projectIdSelector);
   const query = yield select(querySelector);
-  yield put(
-    fetchDataAction(NAMESPACE)(URLS.projectUsers(activeProject), {
-      params: { ...query },
-    }),
-  );
+  if (projectId) {
+    yield put(
+      fetchDataAction(NAMESPACE)(URLS.projectUsers(projectId), {
+        params: { ...query },
+      }),
+    );
+  }
 }
 
 function* watchFetchMembers() {

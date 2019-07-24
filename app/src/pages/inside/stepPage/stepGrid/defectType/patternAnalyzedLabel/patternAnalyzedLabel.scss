@@ -1,0 +1,9 @@
+.pa-label {
+  display: inline-block;
+  svg {
+    fill: $COLOR--white-two;
+  }
+  height: 20px;
+  width: 30px;
+  cursor: pointer;
+}

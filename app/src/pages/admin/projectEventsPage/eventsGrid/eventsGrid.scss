@@ -1,0 +1,50 @@
+.time-col {
+  width: 10%;
+  height: 70px;
+  vertical-align: top;
+  font-size: 12px;
+}
+.user-col {
+  width: 10%;
+  vertical-align: top;
+  font-size: 13px;
+  font-family: $FONT-SEMIBOLD;
+  @media (max-width: $SCREEN_XS_MAX) {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+.action-col {
+  width: 20%;
+  vertical-align: top;
+  font-size: 13px;
+}
+.object-type-col {
+  width: 15%;
+  vertical-align: top;
+  font-size: 13px;
+  font-family: $FONT-SEMIBOLD;
+  @media (max-width: $SCREEN_XS_MAX) {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+.object-name-col {
+  width: 15%;
+  vertical-align: top;
+  font-size: 13px;
+  font-family: $FONT-SEMIBOLD;
+  @media (max-width: $SCREEN_XS_MAX) {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+.value-col {
+  width: 15%;
+  vertical-align: top;
+  font-size: 13px;
+}
+.value-field {
+  font-family: $FONT-SEMIBOLD;
+}

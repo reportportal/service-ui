@@ -1,0 +1,1 @@
+export { ProjectsGrid } from './projectsGrid';

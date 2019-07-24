@@ -1,7 +1,7 @@
 .icon {
-  margin: 0 auto;
   height: 20px;
   width: 20px;
+  margin: 0 auto;
   display: inline-block;
   background-repeat: no-repeat;
   background-position: center;
@@ -48,14 +48,36 @@
 
 .icon-grid {
   background-image: url(./img/grid.svg);
-  &-active {
+  &:active {
     background-image: url(./img/grid-active.svg);
   }
 }
 
 .icon-table {
   background-image: url(./img/table.svg);
-  &-active {
+  &:active {
     background-image: url(./img/table-active.svg);
   }
+}
+
+.icon-statistics {
+  background-image: url(./img/stat.svg);
+  &:hover {
+    background-image: url(./img/stat-hover.svg);
+  }
+}
+
+.icon-linked {
+  background-image: url(./img/linked.svg);
+  background-position: left;
+}
+
+.icon-person {
+  background-image: url(./img/person.svg);
+  background-position: left;
+}
+
+.icon-internal {
+  background-image: url(./img/internal.svg);
+  background-position: left;
 }

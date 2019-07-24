@@ -1,0 +1,63 @@
+.attachment-image-modal {
+  max-width: 1000px;
+  width: 1000px;
+  margin-left: -500px;
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    width: auto;
+    margin-left: 0;
+  }
+}
+
+.attachment-modal-content-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.attachment-image-wrapper {
+  display: table;
+  text-align: center;
+}
+
+.attachment-image {
+  display: table-cell;
+  vertical-align: middle;
+  width: 100%;
+  height: 100%;
+}
+
+.image-item {
+  max-width: 100%;
+}
+
+.rotate-button {
+  display: inline-block;
+  cursor: pointer;
+
+  .icon {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    padding-right: 8px;
+    margin-top: -1px;
+    vertical-align: middle;
+    fill: $COLOR--gray-60;
+  }
+
+  .text {
+    color: $COLOR--gray-60;
+    font-size: 17px;
+    vertical-align: middle;
+  }
+
+  &:hover {
+    .icon {
+      fill: $COLOR--gray-47;
+    }
+
+    .text {
+      color: $COLOR--gray-47;
+    }
+  }
+}

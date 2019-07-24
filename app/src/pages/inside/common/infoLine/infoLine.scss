@@ -26,18 +26,25 @@
 }
 .passed,
 .total,
-.duration {
+.parent-holder,
+.icon-holder {
   display: inline-block;
-  margin-right: 15px;
   font-family: $FONT-REGULAR;
   font-size: 12px;
   text-transform: capitalize;
-  color: $COLOR--charcoal-grey;
-  vertical-align: top;
+  vertical-align: middle;
   line-height: 28px;
+}
+.parent-holder,
+.icon-holder {
+  margin-right: 10px;
+  color: $COLOR--gray-60;
 }
 .passed,
 .total {
+  margin-right: 15px;
+  color: $COLOR--charcoal-grey;
+
   @media (max-width: $SCREEN_SM_MAX) {
     &::after {
       content: '';
@@ -47,11 +54,11 @@
     }
   }
 }
-.duration-value {
-  display: inline-block;
-  margin-left: 5px;
+.parent-holder {
+  font-family: $FONT-SEMIBOLD;
+  margin-left: 10px;
+  text-transform: uppercase;
 }
-
 .defect-types {
   display: inline-block;
 

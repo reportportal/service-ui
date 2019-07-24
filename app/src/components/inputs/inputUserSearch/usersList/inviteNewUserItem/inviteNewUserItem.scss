@@ -1,34 +1,40 @@
-.invite-new-user{
+.invite-new-user {
   padding: 12px 20px 12px 15px;
   overflow: hidden;
   white-space: normal;
-  &:hover{
+  display: flex;
+  justify-content: flex-start;
+  &:hover {
     cursor: pointer;
     background: rgba(57, 194, 215, 0.2);
   }
 }
-.msg-icon{
+.msg-icon {
+  flex: 0 0 24px;
   width: 24px;
   height: 34px;
   display: block;
   float: left;
   background-size: contain;
-  background: url('./img/ic_mail.svg');
+  background-image: url('./img/ic_mail.svg');
   background-repeat: no-repeat;
   background-position: center;
 }
-.invite-info{
+.invite-info {
   display: inline-block;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
-.action-info{
+.action-info {
   margin: -1px 0 0 20px;
   font-size: 13px;
   padding-right: 20px;
   position: relative;
   color: $COLOR--charcoal-grey;
   line-height: 20px;
+  white-space: nowrap;
 }
-.user-info{
+.user-info {
   margin: -1px 0 0 20px;
   font-size: 13px;
   padding-right: 20px;

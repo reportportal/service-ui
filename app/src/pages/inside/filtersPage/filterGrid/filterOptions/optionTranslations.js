@@ -17,22 +17,6 @@ export const messages = defineMessages({
     id: 'FilterOptions.total',
     defaultMessage: 'Total',
   },
-  AB: {
-    id: 'FilterOptions.AB',
-    defaultMessage: 'AB',
-  },
-  SI: {
-    id: 'FilterOptions.SI',
-    defaultMessage: 'SI',
-  },
-  PB: {
-    id: 'FilterOptions.PB',
-    defaultMessage: 'PB',
-  },
-  TI: {
-    id: 'FilterOptions.TI',
-    defaultMessage: 'TI',
-  },
   and: {
     id: 'FilterOptions.and',
     defaultMessage: 'AND',
@@ -61,8 +45,8 @@ export const messages = defineMessages({
     id: 'FilterOptions.cnt',
     defaultMessage: 'contains',
   },
-  start_time: {
-    id: 'FilterOptions.start_time',
+  startTime: {
+    id: 'FilterOptions.startTime',
     defaultMessage: 'Start time',
   },
   from: {
@@ -96,6 +80,14 @@ export const messages = defineMessages({
   not_has: {
     id: 'FilterOptions.not_has',
     defaultMessage: 'without any of',
+  },
+  attributeValue: {
+    id: 'FilterOptions.attributeValue',
+    defaultMessage: 'Attribute value',
+  },
+  attributeKey: {
+    id: 'FilterOptions.attributeKey',
+    defaultMessage: 'Attribute key',
   },
   sort: {
     id: 'FilterOptions.sort',

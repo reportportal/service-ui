@@ -1,4 +1,15 @@
 .select-container {
+  &.mobile-disabled {
+    :global {
+      .Select {
+        .Select-control {
+          @media (max-width: $SCREEN_XS_MAX) {
+            background-color: $COLOR--gray-91;
+          }
+        }
+      }
+    }
+  }
   :global {
     .Select.is-focused {
       .Select-control {
@@ -41,6 +52,17 @@
         border-color: $COLOR--gray-47;
       }
     }
+    .Select.is-disabled {
+      &:hover {
+        .Select-control {
+          border-color: $COLOR--gray-80;
+        }
+      }
+      .Select-control {
+        min-height: 30px;
+        background-color: $COLOR--gray-91;
+      }
+    }
     .new {
       float: right;
     }
@@ -50,11 +72,11 @@
 
       .Select-control,
       .Select-menu-outer {
-        position: relative;
         margin-top: -1px;
-        background: white;
+        background: white; /* stylelint-disable-line color-named */
       }
       .Select-value {
+        display: inline-block;
         padding: 3px 5px 3px 5px;
         margin: 3px;
         position: relative;
@@ -73,6 +95,11 @@
           darken($COLOR--gray-91, 2%) 52%,
           $COLOR--gray-91 100%
         );
+        word-break: break-all;
+
+        @supports (word-break: break-word) {
+          word-break: break-word;
+        }
       }
       .Select-value-label {
         max-width: 100%;
@@ -83,6 +110,8 @@
         font-family: $FONT-REGULAR;
       }
       .Select-control {
+        position: relative;
+        overflow: hidden;
         box-sizing: border-box;
         border: 1px solid $COLOR--gray-80;
       }
@@ -90,7 +119,7 @@
         position: absolute;
         left: 0;
         right: 0;
-        z-index: 10;
+        z-index: $Z-INDEX-POPUP;
         border: 1px solid $COLOR--topaz;
         border-top: none;
       }
@@ -106,16 +135,14 @@
         position: absolute;
         display: inline-block;
         height: 100%;
-        line-height: 28px;
-        margin-left: 10px;
-        font-family: $FONT-REGULAR;
-        font-size: 13px;
+        margin-left: 5px;
         color: $COLOR--gray-47;
+        line-height: 28px;
+        font-size: 13px;
+        font-family: $FONT-REGULAR;
+        white-space: nowrap;
       }
 
-      .Select-value {
-        display: inline-block;
-      }
       .Select-value-icon {
         margin-right: 5px;
         font-weight: bold;
@@ -125,7 +152,6 @@
         background: lighten($COLOR--gray-91, 5%);
         position: absolute;
         z-index: 1;
-        bottom: -28px;
         left: -1px;
         right: -1px;
         box-sizing: border-box;
@@ -143,16 +169,17 @@
       }
       .Select-input {
         input {
-          width: 100%;
+          max-width: 100%;
           margin: 4px 5px;
           line-height: 13px;
           font-family: $FONT-REGULAR, sans-serif;
-          height: auto;
+          height: 20px;
           outline: 0;
           font-size: 13px;
           border: none;
           border-radius: 0;
           box-sizing: border-box !important;
+          background-color: transparent;
         }
       }
       .select2-item {

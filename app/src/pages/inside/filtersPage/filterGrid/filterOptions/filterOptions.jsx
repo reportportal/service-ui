@@ -17,6 +17,7 @@ import {
   CONDITION_IN,
   CONDITION_NOT_IN,
   CONDITION_NOT_EQ,
+  ENTITY_NUMBER,
 } from 'components/filterEntities/constants';
 import { TIME_DATE_FORMAT } from 'common/constants/timeDateFormat';
 import { messages } from './optionTranslations';
@@ -26,7 +27,7 @@ const cx = classNames.bind(styles);
 const OPTIONS = {
   STATISTICS: 'statistics',
   EXECUTIONS: 'executions',
-  START_TIME: 'start_time',
+  START_TIME: 'startTime',
   TOTAL: 'total',
 };
 
@@ -40,9 +41,11 @@ export class FilterOptions extends Component {
     sort: PropTypes.array,
     defectTypes: PropTypes.object.isRequired,
     intl: intlShape.isRequired,
+    children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node]),
   };
 
   static defaultProps = {
+    children: null,
     entities: [],
     sort: [],
   };
@@ -52,9 +55,7 @@ export class FilterOptions extends Component {
     if (defectTypes[defectTypeTotal.toUpperCase()]) {
       const currentDefectType = defectTypes[defectTypeTotal.toUpperCase()][0];
       if (defectTypes[defectTypeTotal.toUpperCase()].length !== 1) {
-        return `${intl.formatMessage(messages.total)} ${intl.formatMessage(
-          messages[currentDefectType.shortName],
-        )}`;
+        return `${intl.formatMessage(messages.total)} ${currentDefectType.shortName}`;
       }
       return currentDefectType.longName;
     }
@@ -63,7 +64,7 @@ export class FilterOptions extends Component {
 
   statisticsOptions = (entity) => {
     const { intl, defectTypes } = this.props;
-    const splitKey = entity.filtering_field.split('$');
+    const splitKey = entity.filteringField.split('$');
     const locator = splitKey.pop();
     const defectTypeTotal = splitKey.pop();
     if (defectTypeTotal === OPTIONS.EXECUTIONS) {
@@ -84,7 +85,7 @@ export class FilterOptions extends Component {
     const { intl } = this.props;
     const time = parseDateTimeRange(entity);
     const dynamic = time.dynamic ? intl.formatMessage(messages.dynamic) : '';
-    const optionName = intl.formatMessage(messages[entity.filtering_field]);
+    const optionName = intl.formatMessage(messages[entity.filteringField]);
     const condition = `${this.fotmatTime(time.start)} ${intl.formatMessage(
       messages.to,
     )} ${this.fotmatTime(time.end)} ${dynamic}`;
@@ -96,14 +97,14 @@ export class FilterOptions extends Component {
     let optionName;
     let condition;
     const result = this.props.entities.map((entity) => {
-      const splitKey = entity.filtering_field.split('$');
+      const splitKey = entity.filteringField.split('$');
       const type = splitKey[0];
       if (type === OPTIONS.START_TIME) {
         return this.startTimeOption(entity);
       } else if (type === OPTIONS.STATISTICS) {
         optionName = this.statisticsOptions(entity);
       } else {
-        optionName = intl.formatMessage(messages[entity.filtering_field]);
+        optionName = intl.formatMessage(messages[entity.filteringField]);
       }
       switch (entity.condition) {
         case CONDITION_GREATER_EQ:
@@ -147,18 +148,27 @@ export class FilterOptions extends Component {
   };
 
   sortingToString = () => {
-    const { intl } = this.props;
-    const sort = this.props.sort[0].sorting_column;
-    const splitKey = this.props.sort[0].sorting_column.split('$');
+    const { intl, sort } = this.props;
+    const nonDefaultOrders = sort.filter((order) => order.sortingColumn !== ENTITY_NUMBER);
+    const sortingColumn = nonDefaultOrders.length
+      ? nonDefaultOrders[0].sortingColumn
+      : sort[0].sortingColumn;
+    const splitKey = sortingColumn.split('$');
     const type = splitKey[0];
     if (type === OPTIONS.STATISTICS) {
       const defectTypeTotal = splitKey[2];
       return this.getTotalStatistics(defectTypeTotal);
     }
-    return `${intl.formatMessage(messages[sort])}`;
+    return `${intl.formatMessage(messages[sortingColumn])}`;
   };
 
   render() {
-    return <p className={cx('filter-options')}>{this.optionsToString()}</p>;
+    const { children } = this.props;
+
+    return (
+      <p className={cx('filter-options')}>
+        {this.optionsToString()} {children}
+      </p>
+    );
   }
 }

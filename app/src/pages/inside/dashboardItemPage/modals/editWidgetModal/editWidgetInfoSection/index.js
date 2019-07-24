@@ -1,0 +1,1 @@
+export { EditWidgetInfoSection } from './editWidgetInfoSection';

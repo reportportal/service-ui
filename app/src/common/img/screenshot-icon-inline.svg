@@ -1,0 +1,7 @@
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+        <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" transform="translate(0.000000, 1.000000)">
+            <path d="M2,0.5 C1.17157288,0.5 0.5,1.17157288 0.5,2 L0.5,12 C0.5,12.8284271 1.17157288,13.5 2,13.5 L14,13.5 C14.8284271,13.5 15.5,12.8284271 15.5,12 L15.5,2 C15.5,1.17157288 14.8284271,0.5 14,0.5 L2,0.5 Z" id="Rectangle-Copy-37" stroke="#999999" />
+            <path d="M0.5,11.4336089 L15.5,9.55860889 L15.5,9.20710678 L11,4.70710678 L6.53710798,9.1699988 L4.05833103,7.18697725 L0.5,11.1900997 L0.5,11.4336089 Z" id="Path" stroke="#999999" />
+            <circle id="Oval-Copy-2" fill="#999999" cx="6" cy="4" r="1" />
+        </g>
+</svg>

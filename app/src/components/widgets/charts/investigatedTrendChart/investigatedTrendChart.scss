@@ -1,0 +1,79 @@
+.investigated-trend-chart {
+  .widget-wrapper {
+    :global svg {
+      .c3-xgrid-focus {
+        display: none;
+      }
+      .c3-grid {
+        line {
+          stroke: $COLOR--gray-80;
+          stroke-dasharray: none;
+        }
+      }
+      .c3-axis {
+        .c3-axis-y-label {
+          font-family: $FONT-REGULAR;
+          fill: $COLOR--charcoal-grey;
+          font-size: 12px;
+        }
+        .tick {
+          font-family: $FONT-REGULAR;
+          fill: $COLOR--charcoal-grey;
+        }
+        &.c3-axis-y {
+          .domain {
+            display: none;
+          }
+          .tick {
+            line {
+              stroke: $COLOR--gray-80;
+            }
+          }
+        }
+        &.c3-axis-x {
+          .domain {
+            stroke: $COLOR--gray-80;
+          }
+          .tick {
+            line {
+              display: none;
+            }
+          }
+        }
+      }
+    }
+
+    :global .c3-tooltip-container {
+      max-width: 215px;
+      background-color: $COLOR--white;
+      padding: 5px 10px 5px 10px;
+      border: solid 1px $COLOR--gray-80;
+      border-radius: 2px;
+      font-size: 13px;
+      white-space: nowrap;
+      font-family: $FONT-REGULAR;
+      &:after {
+        content: '';
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        margin-left: -5px;
+        border-top: 6px solid $COLOR--white;
+        border-left: 6px solid transparent;
+        border-right: 6px solid transparent;
+      }
+      &:before {
+        content: '';
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        margin-left: -7px;
+        width: 0;
+        height: 0;
+        border-left: 8px solid transparent;
+        border-right: 8px solid transparent;
+        border-top: 8px solid $COLOR--gray-80;
+      }
+    }
+  }
+}

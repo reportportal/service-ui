@@ -32,25 +32,53 @@ const getPostContent = (text, entities) => {
   let currentReplaceObject;
 
   const parseEntitie = (curEntities, getHtml) => {
-    Object.keys(curEntities).map(
-      (objKentityey) => {
-        const entity = curEntities[objKentityey];
-        if (entity.indices[0] !== entity.indices[1]) {
-          replaceObjects.push({
-            start: entity.indices[0],
-            end: entity.indices[1],
-            html: getHtml(entity),
-          });
-        }
-        return true;
-      },
-    );
+    Object.keys(curEntities).map((objKentityey) => {
+      const entity = curEntities[objKentityey];
+      if (entity.indices[0] !== entity.indices[1]) {
+        replaceObjects.push({
+          start: entity.indices[0],
+          end: entity.indices[1],
+          html: getHtml(entity),
+        });
+      }
+      return true;
+    });
   };
 
-  entities.urls && parseEntitie(entities.urls, entity => `<a class=${cx('twit-link')} target="_blank" href="${entity.url}">${entity.display_url}</a>`);
-  entities.user_mentions && parseEntitie(entities.user_mentions, entity => `<a class=${cx('twit-link')} target="_blank" href="https://twitter.com/intent/user?user_id=${entity.id}">@${entity.screen_name}</a>`);
-  entities.hashtags && parseEntitie(entities.hashtags, entity => `<a class=${cx('twit-link')} target="_blank" href="https://twitter.com/hashtag/${entity.text}">#${entity.text}</a>`);
-  entities.media && parseEntitie(entities.media, entity => `<a class=${cx('twit-link')} target="_blank" href="${entity.url}">${entity.display_url}</a>`);
+  entities.urls &&
+    parseEntitie(
+      entities.urls,
+      (entity) =>
+        `<a class=${cx('twit-link')} target="_blank" href="${entity.url}">${
+          entity.display_url
+        }</a>`,
+    );
+  entities.user_mentions &&
+    parseEntitie(
+      entities.user_mentions,
+      (entity) =>
+        `<a class=${cx(
+          'twit-link',
+        )} target="_blank" href="https://twitter.com/intent/user?user_id=${entity.id}">@${
+          entity.screen_name
+        }</a>`,
+    );
+  entities.hashtags &&
+    parseEntitie(
+      entities.hashtags,
+      (entity) =>
+        `<a class=${cx('twit-link')} target="_blank" href="https://twitter.com/hashtag/${
+          entity.text
+        }">#${entity.text}</a>`,
+    );
+  entities.media &&
+    parseEntitie(
+      entities.media,
+      (entity) =>
+        `<a class=${cx('twit-link')} target="_blank" href="${entity.url}">${
+          entity.display_url
+        }</a>`,
+    );
   replaceObjects.sort((a, b) => a.start - b.start);
   currentReplaceObject = replaceObjects.shift();
 
@@ -80,8 +108,7 @@ export const PostBlock = ({ tweetData }) => (
   <div className={cx('post-block')}>
     {Parser(getPostContent(tweetData.text, tweetData.entities))}
   </div>
-  );
-
+);
 
 PostBlock.propTypes = {
   tweetData: PropTypes.object,

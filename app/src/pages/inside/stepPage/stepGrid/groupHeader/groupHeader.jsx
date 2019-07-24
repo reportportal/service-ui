@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
 import Link from 'redux-first-router-link';
-import { TEST_ITEM_PAGE, launchIdSelector } from 'controllers/pages';
+import { TEST_ITEM_PAGE, launchIdSelector, filterIdSelector } from 'controllers/pages';
 import { activeProjectSelector } from 'controllers/user';
 import styles from './groupHeader.scss';
 
@@ -13,7 +13,7 @@ const createLink = (projectId, filterId, launchId, testItemIds) => ({
   type: TEST_ITEM_PAGE,
   payload: {
     projectId,
-    filterId: 'all',
+    filterId,
     testItemIds: [launchId, ...testItemIds].join('/'),
   },
 });
@@ -21,21 +21,23 @@ const createLink = (projectId, filterId, launchId, testItemIds) => ({
 export const GroupHeader = connect((state) => ({
   activeProject: activeProjectSelector(state),
   launchId: launchIdSelector(state),
-}))(({ data, activeProject, launchId }) => (
+  filterId: filterIdSelector(state),
+}))(({ data, activeProject, launchId, filterId }) => (
   <div className={cx('group-header-row')}>
-    <div className={cx('group-header-content')}>
-      {Object.keys(data[0].path_names || {}).map((key, i, array) => (
+    {/* td inside of div because of EPMRPP-36916 */}
+    <td className={cx('group-header-content')} colSpan={100}>
+      {Object.keys(data[0].pathNames || {}).map((key, i, array) => (
         <Fragment key={key}>
           <Link
             className={cx('link')}
-            to={createLink(activeProject, 'all', launchId, array.slice(0, i + 1))}
+            to={createLink(activeProject, filterId, launchId, array.slice(0, i + 1))}
           >
-            {data[0].path_names[key]}
+            {data[0].pathNames[key]}
           </Link>
           {i < array.length - 1 && <span className={cx('separator')}> / </span>}
         </Fragment>
       ))}
-    </div>
+    </td>
   </div>
 ));
 GroupHeader.propTypes = {

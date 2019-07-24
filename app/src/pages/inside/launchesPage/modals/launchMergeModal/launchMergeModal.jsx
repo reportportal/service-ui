@@ -1,4 +1,5 @@
 import { Component } from 'react';
+import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { fetch, validate } from 'common/utils';
@@ -8,15 +9,18 @@ import { reduxForm, formValueSelector, getFormSyncErrors, getFormMeta } from 're
 import { connect } from 'react-redux';
 import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLock';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
-import { ModalLayout, withModal, ModalField, ModalContentHeading } from 'components/main/modal';
+import { SectionHeader } from 'components/main/sectionHeader';
+import { ModalLayout, withModal, ModalField } from 'components/main/modal';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { Input } from 'components/inputs/input';
 import { InputTextArea } from 'components/inputs/inputTextArea';
 import { InputRadio } from 'components/inputs/inputRadio';
-import { InputTagsSearch } from 'components/inputs/inputTagsSearch';
 import { InputCheckbox } from 'components/inputs/inputCheckbox';
 import { activeProjectSelector, userInfoSelector } from 'controllers/user';
+import { LAUNCHES_MODAL_EVENTS } from 'components/main/analytics/events';
+import { compareAttributes } from 'common/utils/attributeUtils';
+import { AttributeListField } from 'components/main/attributeList';
 import { MergeTypeScheme } from './mergeTypeScheme';
 import { StartEndTime } from './startEndTime';
 import styles from './launchMergeModal.scss';
@@ -64,17 +68,9 @@ const messages = defineMessages({
     id: 'MergeLaunchDialog.launchDescriptionLabel',
     defaultMessage: 'Description',
   },
-  launchTagsLabel: {
-    id: 'MergeLaunchDialog.launchTagsLabel',
-    defaultMessage: 'Tags',
-  },
-  launchTagsPlaceholder: {
-    id: 'MergeLaunchDialog.launchTagsPlaceholder',
-    defaultMessage: 'Enter tag name',
-  },
-  launchTagsHint: {
-    id: 'MergeLaunchDialog.launchTagsHint',
-    defaultMessage: 'Please enter 1 or more characters',
+  launchAttributesLabel: {
+    id: 'MergeLaunchDialog.launchAttributesLabel',
+    defaultMessage: 'Attributes',
   },
   launchTimeLabel: {
     id: 'MergeLaunchDialog.launchTimeLabel',
@@ -87,33 +83,37 @@ const messages = defineMessages({
   },
 });
 
+const valueSelector = formValueSelector(MERGE_FORM);
+const formMetaSelector = getFormMeta(MERGE_FORM);
+const formSyncErrorsSelector = getFormSyncErrors(MERGE_FORM);
+
 @withModal('launchMergeModal')
 @injectIntl
 @reduxForm({
   form: MERGE_FORM,
-  validate: ({ name, description, merge_type }) => ({
-    merge_type: !merge_type, // eslint-disable-line camelcase
+  validate: ({ name, description, mergeType, attributes }) => ({
+    mergeType: !mergeType,
     name: (!name || !validate.launchName(name)) && 'launchNameHint',
-    description:
-      (!description || !validate.launchDescription(description)) && 'launchDescriptionHint',
+    description: !validate.launchDescription(description) && 'launchDescriptionHint',
+    attributes: !validate.attributesArray(attributes),
   }),
 })
 @connect(
   (state) => ({
     user: userInfoSelector(state),
-    syncErrors: getFormSyncErrors(MERGE_FORM)(state),
-    fields: getFormMeta(MERGE_FORM)(state),
+    syncErrors: formSyncErrorsSelector(state),
+    fields: formMetaSelector(state),
     activeProject: activeProjectSelector(state),
-    mergeType: formValueSelector(MERGE_FORM)(state, 'merge_type'),
-    startTime: formValueSelector(MERGE_FORM)(state, 'start_time'),
-    endTime: formValueSelector(MERGE_FORM)(state, 'end_time'),
-    tagsSearchUrl: URLS.launchTagsSearch(activeProjectSelector(state)),
+    mergeType: valueSelector(state, 'mergeType'),
+    startTime: valueSelector(state, 'startTime'),
+    endTime: valueSelector(state, 'endTime'),
   }),
   {
     showScreenLockAction,
     hideScreenLockAction,
   },
 )
+@track()
 export class LaunchMergeModal extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
@@ -121,11 +121,11 @@ export class LaunchMergeModal extends Component {
     hideScreenLockAction: PropTypes.func.isRequired,
     handleSubmit: PropTypes.func.isRequired,
     activeProject: PropTypes.string.isRequired,
-    tagsSearchUrl: PropTypes.string.isRequired,
     user: PropTypes.object.isRequired,
     initialize: PropTypes.func.isRequired,
     syncErrors: PropTypes.object.isRequired,
     fields: PropTypes.object.isRequired,
+    dirty: PropTypes.bool,
     mergeType: PropTypes.string,
     startTime: PropTypes.number,
     endTime: PropTypes.number,
@@ -133,50 +133,62 @@ export class LaunchMergeModal extends Component {
       launches: PropTypes.array,
       fetchFunc: PropTypes.func,
     }).isRequired,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
   static defaultProps = {
     mergeType: '',
     endTime: 0,
     startTime: Number.POSITIVE_INFINITY,
+    dirty: false,
   };
 
   componentDidMount() {
     const launches = this.props.data.launches;
     const commonObject = {
       launches: [],
-      merge_type: this.props.mergeType,
+      mergeType: this.props.mergeType,
       name: launches[0].name,
       description: [],
-      end_time: this.props.endTime,
-      start_time: this.props.startTime,
-      tags: {},
+      endTime: this.props.endTime,
+      startTime: this.props.startTime,
+      attributes: [],
       extendSuitesDescription: false,
     };
     launches.forEach((launch) => {
       commonObject.launches.push(launch.id);
-      if (launch.start_time < commonObject.start_time) {
-        commonObject.start_time = launch.start_time;
+      if (launch.startTime < commonObject.startTime) {
+        commonObject.startTime = launch.startTime;
       }
-      if (launch.end_time > commonObject.end_time) {
-        commonObject.end_time = launch.end_time;
+      if (launch.endTime > commonObject.endTime) {
+        commonObject.endTime = launch.endTime;
       }
       if (launch.description) {
         commonObject.description.push(launch.description.trim());
       }
-      if (launch.tags) {
-        launch.tags.forEach((tag) => {
-          commonObject.tags[tag] = true;
-        });
+      if (launch.attributes && launch.attributes.length > 0) {
+        commonObject.attributes = launch.attributes.reduce((acc, attribute) => {
+          if (!commonObject.attributes.find((attr) => compareAttributes(attr, attribute))) {
+            return [...acc, attribute];
+          }
+          return acc;
+        }, commonObject.attributes);
       }
     });
     commonObject.description = commonObject.description.join(DESCRIPTION_SEPARATOR);
-    commonObject.tags = Object.keys(commonObject.tags);
     this.props.initialize(commonObject);
   }
 
-  formatTags = (tags) => tags.map((tag) => ({ value: tag, label: tag }));
-
-  parseTags = (options) => options.map((option) => option.value);
+  getCloseConfirmationConfig = () => {
+    if (!this.props.dirty) {
+      return null;
+    }
+    return {
+      confirmationWarning: this.props.intl.formatMessage(COMMON_LOCALE_KEYS.CLOSE_MODAL_WARNING),
+    };
+  };
 
   mergeAndCloseModal = (closeModal) => (values) => {
     this.props.showScreenLockAction();
@@ -196,20 +208,22 @@ export class LaunchMergeModal extends Component {
       handleSubmit,
       mergeType,
       user,
-      tagsSearchUrl,
       startTime,
       endTime,
       syncErrors,
       fields,
+      tracking,
     } = this.props;
     const okButton = {
       text: intl.formatMessage(COMMON_LOCALE_KEYS.MERGE),
       onClick: (closeModal) => {
+        tracking.trackEvent(LAUNCHES_MODAL_EVENTS.MERGE_BTN_MERGE_MODAL);
         handleSubmit(this.mergeAndCloseModal(closeModal))();
       },
     };
     const cancelButton = {
       text: intl.formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+      eventInfo: LAUNCHES_MODAL_EVENTS.CANCEL_BTN_MERGE_MODAL,
     };
     return (
       <ModalLayout
@@ -217,11 +231,13 @@ export class LaunchMergeModal extends Component {
         className={cx('launch-merge-modal')}
         okButton={okButton}
         cancelButton={cancelButton}
+        closeIconEventInfo={LAUNCHES_MODAL_EVENTS.CLOSE_ICON_MERGE_MODAL}
+        closeConfirmation={this.getCloseConfirmationConfig()}
       >
         <form>
           <ModalField>
-            <ModalContentHeading
-              error={syncErrors.merge_type && fields.merge_type && !fields.merge_type.visited}
+            <SectionHeader
+              error={syncErrors.mergeType && fields.mergeType && !fields.mergeType.visited}
               text={intl.formatMessage(messages.mergeTypeHeading)}
             />
           </ModalField>
@@ -229,12 +245,22 @@ export class LaunchMergeModal extends Component {
           <ModalField>
             <div className={cx('merge-type-section')}>
               <div className={cx('merge-type-options')}>
-                <FieldProvider name={'merge_type'}>
+                <FieldProvider
+                  name="mergeType"
+                  onChange={() =>
+                    tracking.trackEvent(LAUNCHES_MODAL_EVENTS.LINEAR_MERGE_BTN_MERGE_MODAL)
+                  }
+                >
                   <InputRadio ownValue={MERGE_TYPE_BASIC}>
                     {intl.formatMessage(messages.mergeTypeLinear)}
                   </InputRadio>
                 </FieldProvider>
-                <FieldProvider name={'merge_type'}>
+                <FieldProvider
+                  name="mergeType"
+                  onChange={() =>
+                    tracking.trackEvent(LAUNCHES_MODAL_EVENTS.DEEP_MERGE_BTN_MERGE_MODAL)
+                  }
+                >
                   <InputRadio ownValue={MERGE_TYPE_DEEP}>
                     {intl.formatMessage(messages.mergeTypeDeep)}
                   </InputRadio>
@@ -247,7 +273,7 @@ export class LaunchMergeModal extends Component {
           </ModalField>
 
           <ModalField>
-            <ModalContentHeading text={intl.formatMessage(messages.launchInfoHeading)} />
+            <SectionHeader text={intl.formatMessage(messages.launchInfoHeading)} />
           </ModalField>
 
           <div className={cx('launch-info-section', { unavailable: !mergeType })}>
@@ -255,7 +281,7 @@ export class LaunchMergeModal extends Component {
               label={intl.formatMessage(messages.launchNameLabel)}
               labelWidth={FIELD_LABEL_WIDTH}
             >
-              <FieldProvider name={'name'} maxLength={'256'}>
+              <FieldProvider name="name" maxLength={'256'}>
                 <FieldErrorHint>
                   <Input placeholder={intl.formatMessage(messages.launchNamePlaceholder)} />
                 </FieldErrorHint>
@@ -275,7 +301,7 @@ export class LaunchMergeModal extends Component {
               label={intl.formatMessage(messages.launchDescriptionLabel)}
               labelWidth={FIELD_LABEL_WIDTH}
             >
-              <FieldProvider name={'description'} maxLength={'1024'}>
+              <FieldProvider name="description" maxLength={'1024'}>
                 <FieldErrorHint>
                   <InputTextArea />
                 </FieldErrorHint>
@@ -283,21 +309,13 @@ export class LaunchMergeModal extends Component {
             </ModalField>
 
             <ModalField
-              label={intl.formatMessage(messages.launchTagsLabel)}
+              label={intl.formatMessage(messages.launchAttributesLabel)}
               labelWidth={FIELD_LABEL_WIDTH}
             >
-              <FieldProvider name="tags" format={this.formatTags} parse={this.parseTags}>
-                <InputTagsSearch
-                  placeholder={intl.formatMessage(messages.launchTagsPlaceholder)}
-                  focusPlaceholder={intl.formatMessage(messages.launchTagsHint)}
-                  minLength={1}
-                  async
-                  uri={tagsSearchUrl}
-                  makeOptions={this.formatTags}
-                  creatable
-                  showNewLabel
-                  multi
-                  removeSelected
+              <FieldProvider name="attributes">
+                <AttributeListField
+                  keyURLCreator={URLS.launchAttributeKeysSearch}
+                  valueURLCreator={URLS.launchAttributeValuesSearch}
                 />
               </FieldProvider>
             </ModalField>

@@ -1,0 +1,22 @@
+.retries-block {
+  position: relative;
+
+  @media(max-width: $SCREEN_SM_MAX) {
+    display: none;
+  }
+}
+
+.retries-hidden-block {
+  visibility: hidden;
+}
+
+.retries-visible-block {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: calc(-100% + 12px);
+
+  @media(max-width: $SCREEN_MD_MAX) {
+    right: calc(-100% + 55px);
+  }
+}
