@@ -1,1 +1,0 @@
-export { Issue } from './issue';

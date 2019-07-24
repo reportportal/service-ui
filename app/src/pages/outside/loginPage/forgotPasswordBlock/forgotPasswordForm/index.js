@@ -1,1 +1,0 @@
-export { ForgotPasswordForm } from './forgotPasswordForm';

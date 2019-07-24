@@ -1,1 +1,0 @@
-export { DefectTypeItem } from './defectTypeItem';

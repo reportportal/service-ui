@@ -1,1 +1,0 @@
-export { DefectStatistics } from './defectStatistics';

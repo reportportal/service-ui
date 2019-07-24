@@ -1,1 +1,0 @@
-export { InputUserSearch } from './inputUserSearch';

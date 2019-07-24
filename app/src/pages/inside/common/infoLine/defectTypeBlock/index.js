@@ -1,1 +1,0 @@
-export { DefectTypeBlock } from './defectTypeBlock';

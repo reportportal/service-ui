@@ -1,1 +1,0 @@
-export { PermissionMapModal } from './permissionMapModal';

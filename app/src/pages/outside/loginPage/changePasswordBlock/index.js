@@ -1,1 +1,0 @@
-export { ChangePasswordBlock } from './changePasswordBlock';

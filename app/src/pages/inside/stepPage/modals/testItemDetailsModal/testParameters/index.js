@@ -1,1 +1,0 @@
-export { TestParameters } from './testParameters';

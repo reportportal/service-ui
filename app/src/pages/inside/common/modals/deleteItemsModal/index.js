@@ -1,1 +1,0 @@
-export { DeleteItemsModal } from './deleteItemsModal';

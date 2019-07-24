@@ -1,1 +1,0 @@
-export { ExternalUserInvitationModal } from './externalUserInvitationModal';

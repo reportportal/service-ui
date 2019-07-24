@@ -1,1 +1,0 @@
-export { ForgotPasswordBlock } from './forgotPasswordBlock';

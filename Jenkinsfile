@@ -8,7 +8,7 @@ node {
 
         stage('Checkout') {
             checkout scm
-            sh 'git checkout master'
+            sh 'git checkout v4'
             sh 'git pull'
         }
 
@@ -34,12 +34,8 @@ node {
                     sh 'make build-image'
                 }
 
-                stage('Build React Docker Image') {
-                    sh 'make build-image-react'
-                }
-
                 stage('Deploy container') {
-                    sh "docker-compose -p reportportal -f $COMPOSE_FILE up -d --force-recreate ui ui-react"
+                    sh "docker-compose -p reportportal -f $COMPOSE_FILE up -d --force-recreate ui"
                 }
             }
         }

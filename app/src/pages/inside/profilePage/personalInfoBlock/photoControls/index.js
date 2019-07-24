@@ -1,1 +1,0 @@
-export { PhotoControls } from './photoControls';

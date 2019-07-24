@@ -14,11 +14,9 @@ PACKAGE_COMMONS=github.com/reportportal/service-ui/vendor/gopkg.in/reportportal/
 REPO_NAME=reportportal/service-ui
 
 UI_BUILD_ROOT=src/main/resources/public/
-UI_BUILD_REACT=app/
 
 BUILD_INFO_LDFLAGS=-ldflags "-extldflags '"-static"' -X ${PACKAGE_COMMONS}/commons.repo=${REPO_NAME} -X ${PACKAGE_COMMONS}/commons.branch=${COMMIT_HASH} -X ${PACKAGE_COMMONS}/commons.buildDate=${BUILD_DATE} -X ${PACKAGE_COMMONS}/commons.version=${v}"
 IMAGE_NAME=reportportal/service-ui$(IMAGE_POSTFIX)
-IMAGE_NAME_REACT=reportportal/service-ui-react$(IMAGE_POSTFIX)
 
 .PHONY: vendor test build
 
@@ -52,19 +50,8 @@ build-server: checkstyle test
 # Builds the project
 build-statics:
 	npm --prefix $(UI_BUILD_ROOT) install
-	npm --prefix $(UI_BUILD_ROOT) run build
 	npm --prefix $(UI_BUILD_ROOT) run test
-	npm --prefix $(UI_BUILD_REACT) install
-	npm --prefix $(UI_BUILD_REACT) run lint
-	npm --prefix $(UI_BUILD_REACT) run test
-	npm --prefix $(UI_BUILD_REACT) run storybook:build
-	npm --prefix $(UI_BUILD_REACT) run build
-
-build-react:
-	npm --prefix $(UI_BUILD_REACT) install
-	npm --prefix $(UI_BUILD_REACT) run lint
-	npm --prefix $(UI_BUILD_REACT) run test
-	npm --prefix $(UI_BUILD_REACT) run build
+	npm --prefix $(UI_BUILD_ROOT) run build
 
 # Builds the project
 build: build-statics build-server
@@ -85,10 +72,6 @@ build-release: checkstyle test
 # Builds the image
 build-image:
 	docker build -t "$(IMAGE_NAME)" -f docker/Dockerfile .
-
-# Builds the image
-build-image-react:
-	docker build -t "$(IMAGE_NAME_REACT)" -f docker/DockerfileReact .
 
 release: build-release
 	releaser release --bintray.token ${BINTRAY_TOKEN}

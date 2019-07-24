@@ -1,1 +1,0 @@
-export { GridHeader } from './gridHeader';

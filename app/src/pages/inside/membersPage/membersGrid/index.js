@@ -1,1 +1,0 @@
-export { MembersGrid } from './membersGrid';

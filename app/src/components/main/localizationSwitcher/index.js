@@ -1,1 +1,0 @@
-export { LocalizationSwitcher } from './localizationSwitcher';

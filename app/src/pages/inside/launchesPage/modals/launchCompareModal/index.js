@@ -1,1 +1,0 @@
-export { LaunchCompareModal } from './launchCompareModal';

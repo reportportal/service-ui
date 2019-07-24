@@ -1,1 +1,0 @@
-export { ItemCounter } from './itemCounter';

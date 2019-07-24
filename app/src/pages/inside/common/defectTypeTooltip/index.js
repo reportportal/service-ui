@@ -1,1 +1,0 @@
-export { DefectTypeTooltip } from './defectTypeTooltip';

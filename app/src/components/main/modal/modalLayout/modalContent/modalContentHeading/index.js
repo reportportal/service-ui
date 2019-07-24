@@ -1,1 +1,0 @@
-export { ModalContentHeading } from './modalContentHeading';

@@ -1,1 +1,0 @@
-export { DashboardGridList } from './dashboardGridList';

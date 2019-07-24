@@ -1,1 +1,0 @@
-export { FiltersControl } from './filtersControl';

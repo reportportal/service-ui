@@ -1,1 +1,0 @@
-export { PredefinedFilterSwitcher } from './predefinedFilterSwitcher';

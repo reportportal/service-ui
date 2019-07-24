@@ -1,1 +1,0 @@
-export { ShareFilter } from './shareFilter';

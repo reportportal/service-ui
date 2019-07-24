@@ -1,1 +1,0 @@
-export { withTooltip } from './withTooltip';

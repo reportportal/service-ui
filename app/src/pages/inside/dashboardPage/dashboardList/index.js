@@ -1,1 +1,0 @@
-export { DashboardList } from './dashboardList';

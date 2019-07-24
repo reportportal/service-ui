@@ -1,1 +1,0 @@
-export { AccuracyFormBlock } from './accuracyFormBlock';

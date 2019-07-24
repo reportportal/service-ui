@@ -1,1 +1,0 @@
-export { withHoverableTooltip } from './withHoverableTooltip';

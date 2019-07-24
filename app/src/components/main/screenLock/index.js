@@ -1,1 +1,0 @@
-export { ScreenLock } from './screenLock';

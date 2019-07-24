@@ -1,1 +1,0 @@
-export { RegistrationPageSection } from './registrationPageSection';

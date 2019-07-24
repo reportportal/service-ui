@@ -1,1 +1,0 @@
-export { InputRadio } from './inputRadio';

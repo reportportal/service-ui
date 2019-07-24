@@ -1,1 +1,0 @@
-export { FilterName } from './filterName';

@@ -1,1 +1,0 @@
-export { DescriptionTooltipIcon } from './descriptionTooltipIcon';

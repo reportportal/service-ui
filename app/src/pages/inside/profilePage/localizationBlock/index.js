@@ -1,1 +1,0 @@
-export { LocalizationBlock } from './localizationBlock';

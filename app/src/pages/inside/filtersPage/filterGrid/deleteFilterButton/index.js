@@ -1,1 +1,0 @@
-export { DeleteFilterButton } from './deleteFilterButton';

@@ -1,1 +1,0 @@
-export { BigButton } from './bigButton';

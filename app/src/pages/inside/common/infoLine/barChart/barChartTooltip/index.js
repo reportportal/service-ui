@@ -1,1 +1,0 @@
-export { BarChartTooltip } from './barChartTooltip';

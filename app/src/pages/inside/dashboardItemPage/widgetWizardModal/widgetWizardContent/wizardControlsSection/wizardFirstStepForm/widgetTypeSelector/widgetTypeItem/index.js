@@ -1,1 +1,0 @@
-export { WidgetTypeItem } from './widgetTypeItem';

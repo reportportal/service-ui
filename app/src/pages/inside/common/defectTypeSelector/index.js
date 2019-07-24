@@ -1,1 +1,0 @@
-export { DefectTypeSelector } from './defectTypeSelector';

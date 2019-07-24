@@ -1,1 +1,0 @@
-export { PageSizeControl } from './pageSizeControl';
