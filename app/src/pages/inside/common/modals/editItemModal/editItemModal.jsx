@@ -216,16 +216,16 @@ export class EditItemModal extends Component {
               />
             </FieldProvider>
           </ModalField>
-          <ModalField label={formatMessage(messages.codeRef)}>
-            <div className={cx('code-ref')} title={item.codeRef}>
-              {item.codeRef}
-              {item.codeRef && (
+          {item.codeRef && (
+            <ModalField label={formatMessage(messages.codeRef)}>
+              <div className={cx('code-ref')} title={item.codeRef}>
+                {item.codeRef}
                 <CopyToClipboard text={item.codeRef} className={cx('copy')}>
                   {Parser(IconDuplicate)}
                 </CopyToClipboard>
-              )}
-            </div>
-          </ModalField>
+              </div>
+            </ModalField>
+          )}
           <ModalField>
             <FieldProvider name="description">
               <MarkdownEditor
