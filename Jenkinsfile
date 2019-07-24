@@ -15,7 +15,9 @@ node {
 
             docker.withServer("$DOCKER_HOST") {
                 stage('Build Docker Image') {
-                    sh 'make build-image-dev'
+                    withEnv(["NODE_OPTIONS=--max_old_space_size=4096"]) {
+                        sh 'make build-image-dev'
+                    }
                 }
 
                 stage('Deploy container') {
