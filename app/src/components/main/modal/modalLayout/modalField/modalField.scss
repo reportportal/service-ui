@@ -25,6 +25,10 @@
   &.no-min-height {
     min-height: unset;
   }
+
+  &.align-left {
+    justify-content: flex-start;
+  }
 }
 .modal-field-tip {
   display: inline-block;
