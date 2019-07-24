@@ -1529,7 +1529,7 @@
   "TestItemChanges.unlinkIssue": "открепил ошибку",
   "TestItemDetailsModal.description": "Описание:",
   "TestItemDetailsModal.duration": "Длительность:",
-  "TestItemDetailsModal.location": "Местоположение:",
+  "TestItemDetailsModal.codeRef": "Местоположение:",
   "TestItemDetailsModal.parametersLabel": "Параметры:",
   "TestItemDetailsModal.noParameters": "Нет параметров",
   "TestItemDetailsModal.parameterKey": "Ключ",

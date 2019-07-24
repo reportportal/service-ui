@@ -21,9 +21,9 @@ const messages = defineMessages({
     id: 'TestItemDetailsModal.description',
     defaultMessage: 'Description:',
   },
-  location: {
-    id: 'TestItemDetailsModal.location',
-    defaultMessage: 'Location:',
+  codeRef: {
+    id: 'TestItemDetailsModal.codeRef',
+    defaultMessage: 'Code reference:',
   },
   parametersLabel: {
     id: 'TestItemDetailsModal.parametersLabel',
@@ -81,13 +81,13 @@ export class LogItemDetails extends Component {
                 </span>
               )}
           </div>
-          <div className={cx('location')} title={logItem.location}>
-            <span className={cx('label', 'location-label')}>
-              {intl.formatMessage(messages.location)}
+          <div className={cx('code-ref')} title={logItem.codeRef}>
+            <span className={cx('label', 'code-ref-label')}>
+              {intl.formatMessage(messages.codeRef)}
             </span>
-            <span className={cx('label')}>{logItem.location}</span>
-            {logItem.location && (
-              <CopyToClipboard text={logItem.location} className={cx('copy')}>
+            <span className={cx('label')}>{logItem.codeRef}</span>
+            {logItem.codeRef && (
+              <CopyToClipboard text={logItem.codeRef} className={cx('copy')}>
                 {Parser(IconDuplicate)}
               </CopyToClipboard>
             )}

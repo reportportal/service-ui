@@ -4,6 +4,9 @@ import classNames from 'classnames/bind';
 import { injectIntl, intlShape, defineMessages } from 'react-intl';
 import { reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
+import Parser from 'html-react-parser';
+import IconDuplicate from 'common/img/duplicate-inline.svg';
 import { fetch, validate } from 'common/utils';
 import { URLS } from 'common/urls';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
@@ -57,6 +60,10 @@ const messages = defineMessages({
     id: 'EditItemModal.launchWarning',
     defaultMessage:
       'Change of description and attributes can affect your filtering results, widgets, trends',
+  },
+  codeRef: {
+    id: 'TestItemDetailsModal.codeRef',
+    defaultMessage: 'Code reference:',
   },
 });
 
@@ -208,6 +215,16 @@ export class EditItemModal extends Component {
                 valueURLCreator={this.getAttributeValueURLCreator()}
               />
             </FieldProvider>
+          </ModalField>
+          <ModalField label={formatMessage(messages.codeRef)}>
+            <div className={cx('code-ref')} title={item.codeRef}>
+              {item.codeRef}
+              {item.codeRef && (
+                <CopyToClipboard text={item.codeRef} className={cx('copy')}>
+                  {Parser(IconDuplicate)}
+                </CopyToClipboard>
+              )}
+            </div>
           </ModalField>
           <ModalField>
             <FieldProvider name="description">
