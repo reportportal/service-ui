@@ -10,7 +10,11 @@ import { getUniqueAndCommonAttributes } from 'common/utils/attributeUtils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { LAUNCH_ITEM_TYPES } from 'common/constants/launchItemTypes';
 import { activeProjectSelector } from 'controllers/user';
-import { NOTIFICATION_TYPES, showNotification } from 'controllers/notification';
+import {
+  NOTIFICATION_TYPES,
+  showNotification,
+  showDefaultErrorNotification,
+} from 'controllers/notification';
 import { ModalField, ModalLayout, withModal } from 'components/main/modal';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { MarkdownEditor } from 'components/main/markdown';
@@ -79,6 +83,8 @@ const DESCRIPTION_LEAVE = 'LEAVE';
 const DESCRIPTION_UPDATE = 'UPDATE';
 const DESCRIPTION_CREATE = 'CREATE';
 
+const FIELD_LABEL_WIDTH = 120;
+
 const makeDescriptionOptions = (formatMessage) => [
   {
     value: DESCRIPTION_LEAVE,
@@ -106,6 +112,7 @@ const makeDescriptionOptions = (formatMessage) => [
   }),
   {
     showNotification,
+    showDefaultErrorNotification,
   },
 )
 export class EditItemsModal extends Component {
@@ -261,13 +268,15 @@ export class EditItemsModal extends Component {
       };
     }
 
-    fetch(fetchUrl, { method: 'put', data }).then(() => {
-      this.props.showNotification({
-        message: formatMessage(messages.itemUpdateSuccess),
-        type: NOTIFICATION_TYPES.SUCCESS,
-      });
-      fetchFunc();
-    });
+    fetch(fetchUrl, { method: 'put', data })
+      .then(() => {
+        this.props.showNotification({
+          message: formatMessage(messages.itemUpdateSuccess),
+          type: NOTIFICATION_TYPES.SUCCESS,
+        });
+        fetchFunc();
+      })
+      .catch(this.props.showDefaultErrorNotification);
   };
 
   showWarningMessage = () => this.setState({ warningMessageShown: true });
@@ -301,7 +310,11 @@ export class EditItemsModal extends Component {
         warningMessage={warningMessageShown && formatMessage(messages.warningMessage)}
       >
         <form>
-          <ModalField label={formatMessage(messages.commonAttributesLabel)}>
+          <ModalField
+            label={formatMessage(messages.commonAttributesLabel)}
+            labelWidth={FIELD_LABEL_WIDTH}
+            alignLeft
+          >
             <FieldProvider name="commonAttributes" onChange={this.onChangeCommonAttributes}>
               <AttributeListField
                 keyURLCreator={this.getAttributeKeyURLCreator()}
@@ -310,7 +323,11 @@ export class EditItemsModal extends Component {
             </FieldProvider>
           </ModalField>
           {uniqueAttributes.length > 0 && (
-            <ModalField label={formatMessage(messages.uniqueAttributesLabel)}>
+            <ModalField
+              label={formatMessage(messages.uniqueAttributesLabel)}
+              labelWidth={FIELD_LABEL_WIDTH}
+              alignLeft
+            >
               <FieldProvider name="uniqueAttributes">
                 <AttributeListField
                   disabled
@@ -320,7 +337,11 @@ export class EditItemsModal extends Component {
               </FieldProvider>
             </ModalField>
           )}
-          <ModalField label={formatMessage(messages.descriptionLabel)}>
+          <ModalField
+            label={formatMessage(messages.descriptionLabel)}
+            labelWidth={FIELD_LABEL_WIDTH}
+            alignLeft
+          >
             <div className={cx('description-dropdown-wrapper')}>
               <FieldProvider name="descriptionAction">
                 <InputDropdown options={makeDescriptionOptions(formatMessage)} />
