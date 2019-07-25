@@ -5,7 +5,7 @@ import { defineMessages, injectIntl, intlShape } from 'react-intl';
 import classNames from 'classnames/bind';
 import { reduxForm, formPropTypes, formValues } from 'redux-form';
 import { URLS } from 'common/urls';
-import { fetch } from 'common/utils';
+import { fetch, validate } from 'common/utils';
 import { getUniqueAndCommonAttributes } from 'common/utils/attributeUtils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { LAUNCH_ITEM_TYPES } from 'common/constants/launchItemTypes';
@@ -104,6 +104,10 @@ const makeDescriptionOptions = (formatMessage) => [
 @injectIntl
 @reduxForm({
   form: 'editItemsForm',
+  validate: ({ commonAttributes, uniqueAttributes }) => ({
+    commonAttributes: !validate.attributesArray(commonAttributes),
+    uniqueAttributes: !validate.attributesArray(uniqueAttributes),
+  }),
 })
 @formValues('descriptionAction', 'uniqueAttributes')
 @connect(
