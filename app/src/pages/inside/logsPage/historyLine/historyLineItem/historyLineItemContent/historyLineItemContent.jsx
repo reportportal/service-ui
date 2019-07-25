@@ -1,7 +1,18 @@
 import React, { Component } from 'react';
+import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import { defineMessages, injectIntl, intlShape } from 'react-intl';
-import { PASSED, FAILED, SKIPPED, MANY, NOT_FOUND, RESETED } from 'common/constants/launchStatuses';
+import {
+  PASSED,
+  FAILED,
+  SKIPPED,
+  MANY,
+  NOT_FOUND,
+  RESETED,
+  INTERRUPTED,
+  IN_PROGRESS,
+} from 'common/constants/launchStatuses';
+import { LOG_PAGE_EVENTS } from 'components/main/analytics/events';
 import { getDuration } from 'common/utils';
 import classNames from 'classnames/bind';
 import { HistoryLineItemBadges } from './historyLineItemBadges';
@@ -26,6 +37,10 @@ const messages = defineMessages({
     id: 'HistoryLineItemContent.launchNotFound',
     defaultMessage: 'No item in launch',
   },
+  launchInterrupted: {
+    id: 'HistoryLineItemContent.launchInterrupted',
+    defaultMessage: 'Interrupted',
+  },
   launchSkipped: {
     id: 'HistoryLineItemContent.launchSkipped',
     defaultMessage: 'Skipped',
@@ -34,6 +49,10 @@ const messages = defineMessages({
     id: 'HistoryLineItemContent.launchSameItems',
     defaultMessage: "There're several items with the same UID meaning.",
   },
+  launchInProgress: {
+    id: 'HistoryLineItemContent.launchInProgress',
+    defaultMessage: 'In progress',
+  },
 });
 
 const blockTitleMessagesMap = {
@@ -41,11 +60,14 @@ const blockTitleMessagesMap = {
   [FAILED]: messages.launchFailed,
   [SKIPPED]: messages.launchSkipped,
   [RESETED]: messages.launchReseted,
+  [INTERRUPTED]: messages.launchInterrupted,
   [MANY]: messages.launchSameItems,
   [NOT_FOUND]: messages.launchNotFound,
+  [IN_PROGRESS]: messages.launchInProgress,
 };
 
 @injectIntl
+@track()
 export class HistoryLineItemContent extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
@@ -54,19 +76,23 @@ export class HistoryLineItemContent extends Component {
     statistics: PropTypes.shape({
       defects: PropTypes.object,
     }),
-    hasChilds: PropTypes.bool,
+    hasChildren: PropTypes.bool,
     active: PropTypes.bool,
     isFirstItem: PropTypes.bool,
     isLastItem: PropTypes.bool,
     startTime: PropTypes.number,
     endTime: PropTypes.number,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
 
   static defaultProps = {
     onClick: () => {},
     status: '',
     statistics: {},
-    hasChilds: false,
+    hasChildren: false,
     active: false,
     isFirstItem: false,
     isLastItem: false,
@@ -78,7 +104,11 @@ export class HistoryLineItemContent extends Component {
     const { intl, status, startTime, endTime } = this.props;
     let itemTitle = intl.formatMessage(blockTitleMessagesMap[status.toLowerCase()]);
     const isThreeDecimalPlaces = true;
-    if (status.toLowerCase() !== MANY && status.toLowerCase() !== NOT_FOUND) {
+    if (
+      status.toLowerCase() !== MANY &&
+      status.toLowerCase() !== NOT_FOUND &&
+      status.toLowerCase() !== IN_PROGRESS
+    ) {
       itemTitle = itemTitle.concat(`; ${getDuration(startTime, endTime, isThreeDecimalPlaces)}`);
     }
     return itemTitle;
@@ -93,6 +123,7 @@ export class HistoryLineItemContent extends Component {
       isLastItem,
       statistics,
       onClick,
+      tracking,
       ...rest
     } = this.props;
 
@@ -104,13 +135,16 @@ export class HistoryLineItemContent extends Component {
           'last-item': isLastItem,
         })}
         title={this.getItemTitle()}
-        onClick={onClick}
+        onClick={() => {
+          tracking.trackEvent(LOG_PAGE_EVENTS.HISTORY_LINE_ITEM);
+          onClick();
+        }}
       >
         <div className={cx('item-block-bg')} />
         <HistoryLineItemBadges
           active={active}
           status={status}
-          defects={!this.props.hasChilds ? statistics.defects : {}}
+          defects={!this.props.hasChildren ? statistics.defects : {}}
           {...rest}
         />
       </div>

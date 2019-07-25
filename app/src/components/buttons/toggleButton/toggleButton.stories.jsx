@@ -33,8 +33,8 @@ storiesOf('Components/Buttons/ToggleButton', module)
       align: 'center middle',
       backdrop: 'rgba(70, 69, 71, 0.2)',
       background: '#fff',
-      height: 30,
-      width: 220,
+      height: 50,
+      width: 300,
     }),
   )
   .addDecorator(withReadme(README))
@@ -70,7 +70,7 @@ storiesOf('Components/Buttons/ToggleButton', module)
         { value: 'second', label: 'second' },
         { value: 'third', label: 'third' },
       ]}
-      value={'second'}
+      value="second"
     />
   ))
   .add('with disabled', () => (
@@ -90,8 +90,20 @@ storiesOf('Components/Buttons/ToggleButton', module)
         { value: 'second', label: 'second' },
         { value: 'third', label: 'third' },
       ]}
-      value={'second'}
+      value="second"
       disabled
+    />
+  ))
+  .add('with separated', () => (
+    <ToggleButton
+      items={[
+        { value: 'first', label: 'first' },
+        { value: 'second', label: 'second' },
+        { value: 'third', label: 'third' },
+      ]}
+      value="second"
+      separated
+      onChange={action('itemClicked')}
     />
   ))
   .add('with actions', () => (
@@ -101,7 +113,7 @@ storiesOf('Components/Buttons/ToggleButton', module)
         { value: 'second', label: 'second' },
         { value: 'third', label: 'third' },
       ]}
-      value={'second'}
+      value="second"
       onChange={action('itemClicked')}
     />
   ));

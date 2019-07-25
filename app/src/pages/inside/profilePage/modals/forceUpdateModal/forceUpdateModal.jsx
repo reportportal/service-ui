@@ -27,7 +27,7 @@ const messages = defineMessages({
 
 @withModal('forceUpdateModal')
 @connect((state) => ({
-  accountType: userInfoSelector(state).account_type,
+  accountType: userInfoSelector(state).accountType,
   user: userIdSelector(state),
 }))
 @injectIntl

@@ -1,0 +1,84 @@
+.form-controller {
+  position: relative;
+  width: 100%;
+  box-sizing: border-box;
+  padding-left: 65px;
+  @media (max-width: $SCREEN_XS_MAX) {
+    padding-left: 0;
+  }
+}
+
+.heading-wrapper {
+  box-sizing: border-box;
+  margin: 20px 0;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-end;
+  width: 600px;
+  @media (max-width: $SCREEN_XS_MAX) {
+    width: 100%;
+  }
+}
+
+.label {
+  width: 210px;
+  padding-right: 4px;
+}
+
+.submit-button {
+  display: inline-block;
+  width: auto;
+  margin: 10px 48px 15px 0;
+  box-sizing: border-box;
+  @media (max-width: $SCREEN_SM_MAX) {
+    margin-right: 106px;
+  }
+  @media (max-width: $SCREEN_XS_MAX) {
+    display: none;
+  }
+}
+
+.submit-button-title {
+  width: 129px;
+  height: 18px;
+  font-size: 13px;
+}
+
+.error-message-block {
+  margin-left: 225px;
+  @media (max-width: $SCREEN_SM_MAX) {
+    margin-left: 165px;
+  }
+  @media (max-width: $SCREEN_XS_MAX) {
+    display: none;
+  }
+}
+
+.warning-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.warning-icon {
+  display: inline-block;
+  width: 17px;
+  height: 17px;
+  margin-right: 5px;
+  fill: $COLOR--failed;
+}
+
+.warning-message {
+  color: $COLOR--failed;
+  font-size: 13px;
+  font-family: $FONT-SEMIBOLD;
+}
+
+.error-message {
+  font-size: 12px;
+  font-family: $FONT-REGULAR;
+  line-height: 1.5;
+}

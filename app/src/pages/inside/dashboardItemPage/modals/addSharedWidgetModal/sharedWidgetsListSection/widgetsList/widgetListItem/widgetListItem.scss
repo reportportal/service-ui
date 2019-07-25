@@ -1,0 +1,23 @@
+.widget-list-item {
+  padding: 15px 10px 15px 0;
+  border-bottom: 1px solid $COLOR--gray-91;
+
+  &.already-added {
+    background: $COLOR--white;
+  }
+}
+
+.widget-name {
+  display: inline-block;
+  width: 100%;
+  margin-bottom: 7px;
+  color: $COLOR--charcoal-grey;
+  font-family: $FONT-SEMIBOLD;
+}
+
+.widget-type {
+  display: inline-block;
+  width: 100%;
+  margin-bottom: 7px;
+  color: $COLOR--gray-47;
+}

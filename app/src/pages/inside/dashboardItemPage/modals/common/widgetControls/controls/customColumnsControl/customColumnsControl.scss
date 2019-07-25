@@ -1,0 +1,29 @@
+.custom-columns-control {
+}
+.tip-field {
+  padding-bottom: 15px;
+}
+.tip {
+  font-family: $FONT-REGULAR;
+  font-size: 12px;
+  line-height: 14px;
+  color: $COLOR--gray-60;
+}
+.add-column-field {
+  padding-bottom: 25px;
+}
+.add-column {
+  font-family: $FONT-REGULAR;
+  font-size: 13px;
+  color: $COLOR--topaz;
+  cursor: pointer;
+}
+.warning-field {
+  margin-top: -20px;
+}
+.warning {
+  font-family: $FONT-REGULAR;
+  font-size: 12px;
+  line-height: 14px;
+  color: $COLOR--fatal;
+}

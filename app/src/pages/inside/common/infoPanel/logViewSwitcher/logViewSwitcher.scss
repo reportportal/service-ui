@@ -1,0 +1,69 @@
+.icon {
+  display: inline-block;
+  position: relative;
+  width: 20px;
+  height: 20px;
+  line-height: 20px;
+  margin: 5px auto; 
+}
+
+.view-switcher {
+  display: inline-flex;
+}
+
+.switcher-button {
+  position: relative;
+  display: inline-block;
+  height: 100%;
+  width: 30px;
+  padding: 0;
+  border: none;
+  background-color: $COLOR--white-two;
+  min-height: 30px;
+  border-top: 1px solid $COLOR--gray-91;
+  border-bottom: 1px solid $COLOR--gray-91;
+  border-right: 1px solid $COLOR--gray-91;
+  box-sizing: border-box;
+  font-family: $FONT-REGULAR;
+  white-space: nowrap;
+  text-shadow: none;
+  vertical-align: middle;
+  cursor: pointer;
+  outline: none;
+}
+
+.log-view svg {
+  fill: $COLOR--gray-80;
+  stroke: $COLOR--gray-80;
+  &:hover {
+    fill: lighten($COLOR--topaz, 10%);
+    stroke: lighten($COLOR--topaz, 10%);
+  }
+}
+
+.log-view-active svg {
+  fill: $COLOR--topaz;
+  stroke: $COLOR--topaz;
+  &:hover {
+    fill: lighten($COLOR--topaz, 10%);
+    stroke: lighten($COLOR--topaz, 10%);
+  }
+}
+
+.list-view svg path {
+  fill: $COLOR--gray-80;
+  stroke: $COLOR--gray-80;
+  &:hover {
+    fill: lighten($COLOR--topaz, 10%);
+    stroke: lighten($COLOR--topaz, 10%);
+  }
+}
+
+.list-view-active svg path {
+  fill: $COLOR--topaz;
+  stroke: $COLOR--topaz;
+  &:hover {
+    fill: lighten($COLOR--topaz, 10%);
+    stroke: lighten($COLOR--topaz, 10%);
+  }
+}

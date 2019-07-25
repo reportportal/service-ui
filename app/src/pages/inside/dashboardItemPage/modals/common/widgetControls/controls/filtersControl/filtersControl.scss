@@ -1,0 +1,14 @@
+.filters-control {
+  display: flex;
+  width: 100%;
+  max-height: 420px;
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  align-items: center;
+  justify-content: flex-start;
+  flex-direction: column;
+}
+
+.filters-control-form {
+  width: 100%;
+}

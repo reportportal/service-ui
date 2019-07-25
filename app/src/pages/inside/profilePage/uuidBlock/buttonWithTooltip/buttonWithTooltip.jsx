@@ -5,7 +5,7 @@ import { WarningTooltip } from './warningTooltip';
 
 @withTooltip({
   TooltipComponent: WarningTooltip,
-  data: { width: 450, align: 'right', noArrow: true, leftOffset: 45 },
+  data: { width: 450, placement: 'right', noArrow: true },
 })
 export class ButtonWithTooltip extends Component {
   static propTypes = {

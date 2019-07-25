@@ -1,0 +1,62 @@
+.container {
+  margin-top: 15px;
+}
+
+.panel {
+  display: flex;
+  justify-content: space-between;
+  padding: 15px;
+  @media (max-width: $SCREEN_XS_MAX) {
+    display: none;
+  }
+}
+
+.aside {
+  display: flex;
+}
+
+.log-level {
+  width: 280px;
+}
+
+.aside-element {
+  margin-left: 20px;
+}
+
+.mode-buttons {
+  display: flex;
+  align-items: center;
+}
+
+.mode-button {
+  border: 0;
+  padding: 0;
+  background-color: $COLOR--gray-91;
+  height: 16px;
+  margin-right: 10px;
+  border-radius: 2px;
+  overflow: hidden;
+  cursor: pointer;
+
+  &.markdown {
+    width: 26px;
+  }
+
+  &.console {
+    width: 18px;
+  }
+
+  &.active {
+    background-color: $COLOR--topaz;
+  }
+}
+
+.action-buttons {
+  margin-left: 20px;
+}
+
+.pagination {
+  margin-left: 30px;
+  display: flex;
+  align-items: center;
+}

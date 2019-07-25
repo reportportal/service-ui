@@ -1,13 +1,15 @@
 import { Component } from 'react';
+import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { activeProjectSelector } from 'controllers/user';
-import { externalSystemSelector } from 'controllers/project';
+import { availableBtsIntegrationsSelector, isPostIssueActionAvailable } from 'controllers/plugins';
 import { fetchTestItemsAction } from 'controllers/testItem';
-import { unlinkIssueAction, linkIssueAction } from 'controllers/step';
+import { unlinkIssueAction, linkIssueAction, postIssueAction } from 'controllers/step';
 import { hideModalAction } from 'controllers/modal';
+import { STEP_PAGE_EVENTS } from 'components/main/analytics/events';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { fetch, setStorageItem, getStorageItem } from 'common/utils';
 import { URLS } from 'common/urls';
@@ -85,7 +87,7 @@ const messages = defineMessages({
 @injectIntl
 @connect(
   (state) => ({
-    externalSystem: externalSystemSelector(state),
+    btsIntegrations: availableBtsIntegrationsSelector(state),
     url: URLS.testItems(activeProjectSelector(state)),
   }),
   {
@@ -94,29 +96,37 @@ const messages = defineMessages({
     fetchTestItemsAction,
     unlinkIssueAction,
     linkIssueAction,
+    postIssueAction,
   },
 )
+@track()
 export class EditDefectModal extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
     url: PropTypes.string.isRequired,
-    externalSystem: PropTypes.array.isRequired,
+    btsIntegrations: PropTypes.array.isRequired,
     data: PropTypes.shape({
       items: PropTypes.array,
       fetchFunc: PropTypes.func,
+      debugMode: PropTypes.bool,
     }).isRequired,
     showNotification: PropTypes.func.isRequired,
     hideModalAction: PropTypes.func.isRequired,
     fetchTestItemsAction: PropTypes.func.isRequired,
     unlinkIssueAction: PropTypes.func.isRequired,
     linkIssueAction: PropTypes.func.isRequired,
+    postIssueAction: PropTypes.func.isRequired,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
 
   constructor(props) {
     super(props);
     const {
       intl,
-      externalSystem,
+      btsIntegrations,
       data: { items },
     } = props;
     const initialState = {};
@@ -128,7 +138,7 @@ export class EditDefectModal extends Component {
     } else {
       initialState.ignoreAnalyzer = items[0].issue.ignoreAnalyzer;
       initialState.markdownValue = items[0].issue.comment || '';
-      initialState.defectType = items[0].issue.issue_type;
+      initialState.defectType = items[0].issue.issueType;
     }
 
     this.multiActionButtonItems = [
@@ -136,20 +146,20 @@ export class EditDefectModal extends Component {
         label: intl.formatMessage(messages.saveAndPostIssueMessage),
         value: 'Post',
         onClick: () => this.onEditDefects(this.handlePostIssue, true),
-        disabled: !externalSystem.length,
+        disabled: !isPostIssueActionAvailable(btsIntegrations),
       },
       {
         label: intl.formatMessage(messages.saveAndLinkIssueMessage),
         value: 'Link',
         onClick: () => this.onEditDefects(this.handleLinkIssue, true),
-        disabled: !externalSystem.length,
+        disabled: !btsIntegrations.length,
       },
       {
         label: intl.formatMessage(messages.saveAndUnlinkIssueMessage),
         value: 'Unlink',
         onClick: () => this.onEditDefects(this.handleUnlinkIssue, true),
         disabled: this.isBulkEditOperation()
-          ? !externalSystem.length
+          ? false
           : !items[0].issue.externalSystemIssues || !items[0].issue.externalSystemIssues.length,
       },
     ];
@@ -161,8 +171,10 @@ export class EditDefectModal extends Component {
 
   onEditDefects = (nextAction, issueAction) => {
     if (this.checkIfTheDataWasChanged()) {
+      this.props.tracking.trackEvent(STEP_PAGE_EVENTS.EDIT_DESCRIPTION_EDIT_DEFECT_MODAL);
       this.fetchEditDefects(this.prepareDataToSend());
     }
+    !issueAction && this.props.tracking.trackEvent(STEP_PAGE_EVENTS.SAVE_BTN_EDIT_DEFECT_MODAL);
     issueAction && this.props.hideModalAction();
     nextAction();
   };
@@ -186,8 +198,12 @@ export class EditDefectModal extends Component {
     };
   };
 
-  getItemsToTheNextAction = () =>
-    this.prepareDataToSend().map((item) => ({ ...item, id: item.test_item_id }));
+  getItemsToTheNextAction = () => {
+    const { items } = this.props.data;
+    const updatedItems = this.prepareDataToSend();
+
+    return items.map((item, index) => ({ ...item, ...updatedItems[index] }));
+  };
 
   prepareDataToSend = () => {
     const { items } = this.props.data;
@@ -196,14 +212,14 @@ export class EditDefectModal extends Component {
     if (this.isBulkEditOperation()) {
       issues = items.map((item) => {
         const dataToSend = {
-          test_item_id: item.id,
+          testItemId: item.id,
           issue: {
             ...item.issue,
             autoAnalyzed: false,
           },
         };
         if (this.state.defectType) {
-          dataToSend.issue.issue_type = this.state.defectType;
+          dataToSend.issue.issueType = this.state.defectType;
         }
         if (this.state.markdownValue) {
           dataToSend.issue.comment = this.state.markdownValue;
@@ -213,11 +229,11 @@ export class EditDefectModal extends Component {
     } else {
       issues = [
         {
-          test_item_id: items[0].id,
+          testItemId: items[0].id,
           issue: {
             ...items[0].issue,
             comment: this.state.markdownValue,
-            issue_type: this.state.defectType,
+            issueType: this.state.defectType,
             ignoreAnalyzer: this.state.ignoreAnalyzer,
             autoAnalyzed: false,
           },
@@ -237,7 +253,10 @@ export class EditDefectModal extends Component {
       fetchFunc: this.props.data.fetchFunc,
     });
 
-  handlePostIssue = () => {}; // TODO
+  handlePostIssue = () =>
+    this.props.postIssueAction(this.getItemsToTheNextAction(), {
+      fetchFunc: this.props.data.fetchFunc,
+    });
 
   checkIfTheDataWasChanged = () => {
     const { items } = this.props.data;
@@ -253,7 +272,7 @@ export class EditDefectModal extends Component {
         (!items[0].issue.comment && this.state.markdownValue) ||
         (items[0].issue.comment && this.state.markdownValue !== items[0].issue.comment) ||
         this.state.ignoreAnalyzer !== items[0].issue.ignoreAnalyzer ||
-        this.state.defectType !== items[0].issue.issue_type;
+        this.state.defectType !== items[0].issue.issueType;
     }
     return isDataChanged;
   };
@@ -318,7 +337,10 @@ export class EditDefectModal extends Component {
   };
 
   render() {
-    const { intl } = this.props;
+    const {
+      intl,
+      data: { debugMode },
+    } = this.props;
     const customButton = {
       onClick: this.onEditDefects,
       buttonProps: {
@@ -327,15 +349,23 @@ export class EditDefectModal extends Component {
       },
       component: MultiActionButton,
     };
+    const okButton = {
+      onClick: this.onEditDefects,
+      text: intl.formatMessage(COMMON_LOCALE_KEYS.SAVE),
+    };
     const cancelButton = {
       text: intl.formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+      eventInfo: STEP_PAGE_EVENTS.CANCEL_BTN_EDIT_DEFECT_MODAL,
     };
     return (
       <ModalLayout
         title={intl.formatMessage(messages.title)}
-        customButton={customButton}
+        customButton={debugMode ? null : customButton}
+        okButton={debugMode ? okButton : null}
         cancelButton={cancelButton}
         closeConfirmation={this.getCloseConfirmationConfig()}
+        closeIconEventInfo={STEP_PAGE_EVENTS.CLOSE_ICON_EDIT_DEFECT_MODAL}
+        className={cx('modal-window')}
       >
         <div className={cx('edit-defect-content')}>
           <div className={cx('defect-type')}>

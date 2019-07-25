@@ -1,0 +1,12 @@
+.add-new-button {
+  display: inline-block;
+  color: $COLOR--topaz;
+  cursor: pointer;
+  font-family: $FONT-SEMIBOLD;
+  font-size: 13px;
+
+  &.disabled {
+    color: $COLOR--gray-80;
+    cursor: default;
+  }
+}

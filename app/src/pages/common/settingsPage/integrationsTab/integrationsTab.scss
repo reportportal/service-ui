@@ -1,0 +1,6 @@
+.integrations-tab {
+  margin-left: 100px;
+  @media (max-width: $SCREEN_XS_MAX) {
+    margin-left: 0;
+  }
+}

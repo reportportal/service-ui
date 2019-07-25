@@ -88,7 +88,7 @@ export class LaunchFinishForceModal extends Component {
       (acc, item) => ({
         ...acc,
         [item.id]: {
-          end_time: Date.now(),
+          endTime: Date.now(),
           status: STOPPED.toUpperCase(),
         },
       }),
@@ -120,8 +120,10 @@ export class LaunchFinishForceModal extends Component {
           }),
           type: NOTIFICATION_TYPES.ERROR,
         });
+      })
+      .then(() => {
+        closeModal();
       });
-    closeModal();
   };
 
   render() {

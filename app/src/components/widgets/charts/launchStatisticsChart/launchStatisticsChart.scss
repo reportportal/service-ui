@@ -1,0 +1,156 @@
+.launch-statistics-chart {
+  :global {
+    .c3-shape {
+      &.c3-bar {
+        stroke-width: 0 !important;
+      }
+    }
+
+    svg {
+      .c3-xgrid-focus {
+        display: none;
+      }
+      .c3-grid {
+        line {
+          stroke: $COLOR--gray-80;
+          stroke-dasharray: none;
+        }
+      }
+      .c3-axis {
+        .tick {
+          font-size: 10px;
+          font-family: $FONT-REGULAR;
+          fill: $COLOR--black-2;
+        }
+        line {
+          stroke: $COLOR--black-2;
+        }
+        &.c3-axis-y {
+          display: none;
+
+          @media print {
+            display: inline;
+            .domain {
+              stroke: $COLOR--gray-80 !important;
+              display: inline !important;
+            }
+          }
+
+          .domain {
+            display: none;
+          }
+          .tick {
+            line {
+              stroke: $COLOR--gray-80;
+            }
+          }
+        }
+        &.c3-axis-x {
+          .domain {
+            display: block;
+            stroke: $COLOR--gray-80;
+          }
+        }
+      }
+      .c3-brush {
+        .background {
+          cursor: crosshair !important;
+        }
+        .extent {
+          cursor: ew-resize !important;
+        }
+        .resize {
+          cursor: col-resize !important;
+        }
+      }
+    }
+  }
+}
+
+.preview {
+  :global {
+    svg {
+      .c3-chart {
+        .c3-chart-line {
+          .c3-areas {
+            .c3-area {
+              pointer-events: none !important;
+            }
+          }
+        }
+        .c3-chart-bars {
+          .c3-chart-bar {
+            pointer-events: none !important;
+          }
+        }
+      }
+    }
+  }
+}
+
+
+.area-view {
+  :global {
+    svg {
+      .c3-chart {
+        .c3-chart-line {
+          .c3-lines {
+            display: none;
+          }
+          .c3-areas {
+            .c3-area {
+              pointer-events: auto;
+              opacity: 1;
+              cursor: pointer;
+
+              &:hover {
+                opacity: 0.8 !important;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.time-line {
+  :global {
+    svg {
+      .c3-chart {
+        .c3-chart-line {
+         .c3-shapes {
+           .c3-shape.c3-circle {
+             opacity: 1 !important;
+           }
+         }
+        }
+      }
+      .c3-axis {
+        line {
+          stroke: none;
+        }
+      }
+    }
+  }
+}
+
+.full-screen {
+  :global {
+    svg {
+      .c3-grid {
+        line {
+          display: inline !important;
+        }
+      }
+      .c3-axis-y {
+        display: inline !important;
+
+        .domain {
+          display: inline !important;
+          stroke: $COLOR--gray-80 !important;
+        }
+      }
+    }
+  }
+}

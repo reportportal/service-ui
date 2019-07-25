@@ -1,0 +1,32 @@
+.instances-section {
+  max-width: 600px;
+  margin-left: 145px;
+  margin-top: 25px;
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    margin-left: 0;
+  }
+}
+
+.add-integration-button {
+  margin-bottom: 25px;
+}
+
+.settings-action-block, .add-integration-button {
+  @media (max-width: $SCREEN_XS_MAX) {
+    display: none;
+  }
+}
+
+.action-description,
+.no-items-message {
+  margin-top: 10px;
+  color: $COLOR--gray-60;
+  font-size: 13px;
+  font-family: $FONT-REGULAR;
+  line-height: 1.54;
+}
+
+.no-items-message {
+  margin-bottom: 25px;
+}

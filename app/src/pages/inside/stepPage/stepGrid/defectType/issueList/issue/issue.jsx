@@ -13,7 +13,13 @@ export const Issue = withTooltip({
 })(({ ticketId, url, onRemove }) => (
   <a href={url} className={cx('issue')}>
     <div className={cx('title')}>{ticketId}</div>
-    <div className={cx('cross')} onClick={onRemove}>
+    <div
+      className={cx('cross')}
+      onClick={(event) => {
+        event.preventDefault();
+        onRemove(ticketId);
+      }}
+    >
       {Parser(CrossIcon)}
     </div>
   </a>
@@ -21,7 +27,8 @@ export const Issue = withTooltip({
 Issue.propTypes = {
   ticketId: PropTypes.string.isRequired,
   url: PropTypes.string.isRequired,
-  systemId: PropTypes.string.isRequired,
+  btsProject: PropTypes.string.isRequired,
+  btsUrl: PropTypes.string.isRequired,
   onRemove: PropTypes.func,
 };
 Issue.defaultProps = {

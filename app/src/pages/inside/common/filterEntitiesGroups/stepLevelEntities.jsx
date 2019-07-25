@@ -1,17 +1,12 @@
 import { Component } from 'react';
 import { connect } from 'react-redux';
 import { injectIntl, intlShape, defineMessages } from 'react-intl';
-import moment from 'moment/moment';
 import PropTypes from 'prop-types';
 import { validate } from 'common/utils';
+import { URLS } from 'common/urls';
+import { activeProjectSelector } from 'controllers/user';
 import { FAILED, PASSED, SKIPPED, INTERRUPTED, IN_PROGRESS } from 'common/constants/launchStatuses';
-import {
-  PRODUCT_BUG,
-  AUTOMATION_BUG,
-  SYSTEM_ISSUE,
-  TO_INVESTIGATE,
-  NO_DEFECT,
-} from 'common/constants/defectTypes';
+import { DEFECT_TYPES_SEQUENCE } from 'common/constants/defectTypes';
 import {
   BEFORE_SUITE,
   BEFORE_GROUPS,
@@ -26,24 +21,26 @@ import {
   AFTER_GROUPS,
   AFTER_SUITE,
 } from 'common/constants/methodTypes';
+import { STEP_PAGE_EVENTS } from 'components/main/analytics/events';
 import {
-  EntityItemName,
-  EntityItemDescription,
+  EntityInputConditional,
   EntityItemStartTime,
-  EntityItemTags,
+  EntityInputConditionalTags,
   EntityDropdown,
 } from 'components/filterEntities';
-import { EntitiesGroup } from 'components/filterEntities/entitiesGroup';
+import { bindDefaultValue } from 'components/filterEntities/utils';
 import {
   CONDITION_CNT,
   CONDITION_BETWEEN,
   CONDITION_HAS,
   CONDITION_IN,
   CONDITION_EX,
+  CONDITION_ANY,
   ENTITY_NAME,
   ENTITY_START_TIME,
   ENTITY_DESCRIPTION,
-  ENTITY_TAGS,
+  ENTITY_ATTRIBUTE_KEYS,
+  ENTITY_ATTRIBUTE_VALUES,
   ENTITY_STATUS,
   ENTITY_DEFECT_TYPE,
   ENTITY_METHOD_TYPE,
@@ -51,8 +48,11 @@ import {
   ENTITY_BTS_ISSUES,
   ENTITY_IGNORE_ANALYZER,
   ENTITY_AUTOANALYZE,
+  CONDITION_EQ,
+  ENTITY_PATTERN_NAME,
 } from 'components/filterEntities/constants';
-import { defectTypesSelector } from 'controllers/project';
+import { defectTypesSelector, patternsSelector } from 'controllers/project';
+import { launchIdSelector } from 'controllers/pages';
 
 const messages = defineMessages({
   NameTitle: {
@@ -83,9 +83,13 @@ const messages = defineMessages({
     id: 'StepLevelEntities.DefectCommentPlaceholder',
     defaultMessage: 'Enter comment',
   },
-  TagsTitle: {
-    id: 'StepLevelEntities.TagsTitle',
-    defaultMessage: 'Tags',
+  AttributeKeysTitle: {
+    id: 'LaunchLevelEntities.AttributeKeysTitle',
+    defaultMessage: 'Attribute keys',
+  },
+  AttributeValuesTitle: {
+    id: 'LaunchLevelEntities.AttributeValuesTitle',
+    defaultMessage: 'Attribute values',
   },
   BtsIssueTitle: {
     id: 'StepLevelEntities.BtsIssueTitle',
@@ -215,6 +219,10 @@ const messages = defineMessages({
     id: 'StepLevelEntities.NO_DEFECT_ALL',
     defaultMessage: 'All no defects',
   },
+  TO_INVESTIGATE_ALL: {
+    id: 'StepLevelEntities.TO_INVESTIGATE_ALL',
+    defaultMessage: 'All to investigate',
+  },
   Defect_Type_AB001: {
     id: 'StepLevelEntities.Defect_Type_AB001',
     defaultMessage: 'Automation bug',
@@ -235,33 +243,45 @@ const messages = defineMessages({
     id: 'StepLevelEntities.Defect_Type_ND001',
     defaultMessage: 'No defect',
   },
+  ATTRIBUTE_KEYS_PLACEHOLDER: {
+    id: 'StepLevelEntities.entityItemAttributeKeys.placeholder',
+    defaultMessage: 'Enter attribute keys',
+  },
+  ATTRIBUTE_VALUES_PLACEHOLDER: {
+    id: 'StepLevelEntities.entityItemAttributeValues.placeholder',
+    defaultMessage: 'Enter attribute values',
+  },
+  PatternNameTitle: {
+    id: 'StepLevelEntities.PatternNameTitle',
+    defaultMessage: 'Pattern name',
+  },
 });
-
-const DEFECT_TYPES_SEQUENCE = [
-  TO_INVESTIGATE.toUpperCase(),
-  PRODUCT_BUG.toUpperCase(),
-  AUTOMATION_BUG.toUpperCase(),
-  SYSTEM_ISSUE.toUpperCase(),
-  NO_DEFECT.toUpperCase(),
-];
 
 @injectIntl
 @connect((state) => ({
   defectTypes: defectTypesSelector(state),
+  projectId: activeProjectSelector(state),
+  launchId: launchIdSelector(state),
+  patterns: patternsSelector(state),
 }))
 export class StepLevelEntities extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
     defectTypes: PropTypes.object.isRequired,
-    onChange: PropTypes.func,
-    entities: PropTypes.object,
+    filterValues: PropTypes.object,
+    render: PropTypes.func.isRequired,
+    projectId: PropTypes.string.isRequired,
+    launchId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+    visibleFilters: PropTypes.array,
+    patterns: PropTypes.array,
   };
   static defaultProps = {
-    onChange: () => {},
-    entities: {},
+    filterValues: {},
+    visibleFilters: [],
+    patterns: [],
   };
   getDefectTypeEntity = () => {
-    const { intl, defectTypes, entities } = this.props;
+    const { intl, defectTypes, filterValues, visibleFilters } = this.props;
     let initChecked = [];
     let options = [];
     DEFECT_TYPES_SEQUENCE.forEach((defectTypeId) => {
@@ -297,30 +317,54 @@ export class StepLevelEntities extends Component {
     return {
       id: ENTITY_DEFECT_TYPE,
       component: EntityDropdown,
-      value: entities[ENTITY_DEFECT_TYPE] || {
-        value: initChecked.join(','),
+      value: filterValues[ENTITY_DEFECT_TYPE] || {
         condition: CONDITION_IN,
       },
       title: intl.formatMessage(messages.DefectTypeTitle),
-      active: ENTITY_DEFECT_TYPE in entities,
+      active: visibleFilters.includes(ENTITY_DEFECT_TYPE),
       removable: true,
-      meta: {
+      customProps: {
         options,
         multiple: true,
         selectAll: true,
       },
     };
   };
+
+  getPatternNameEntity = () => {
+    const { intl, patterns, filterValues, visibleFilters } = this.props;
+    if (!patterns.length) return [];
+    const options = patterns.map((pattern) => ({
+      value: pattern.name,
+      label: pattern.name,
+    }));
+    return [
+      {
+        id: ENTITY_PATTERN_NAME,
+        component: EntityDropdown,
+        value: filterValues[ENTITY_PATTERN_NAME] || {
+          condition: CONDITION_ANY,
+        },
+        title: intl.formatMessage(messages.PatternNameTitle),
+        active: visibleFilters.includes(ENTITY_PATTERN_NAME),
+        removable: true,
+        customProps: {
+          options,
+          multiple: true,
+          selectAll: true,
+        },
+      },
+    ];
+  };
   getEntities = () => {
-    const { intl, entities } = this.props;
+    const { intl, filterValues, projectId, launchId, visibleFilters } = this.props;
     return [
       {
         id: ENTITY_NAME,
-        component: EntityItemName,
-        value: entities[ENTITY_NAME] || {
-          value: '',
+        component: EntityInputConditional,
+        value: this.bindDefaultValue(ENTITY_NAME, {
           condition: CONDITION_CNT,
-        },
+        }),
         validationFunc: (entityObject) =>
           (!entityObject || !entityObject.value || !validate.itemNameEntity(entityObject.value)) &&
           'itemNameEntityHint',
@@ -328,31 +372,18 @@ export class StepLevelEntities extends Component {
         active: true,
         removable: false,
         static: true,
+        eventInfo: STEP_PAGE_EVENTS.REFINE_BY_NAME,
       },
       {
         id: ENTITY_METHOD_TYPE,
         component: EntityDropdown,
-        value: entities[ENTITY_METHOD_TYPE] || {
-          value: [
-            BEFORE_SUITE,
-            BEFORE_GROUPS,
-            BEFORE_CLASS,
-            BEFORE_TEST,
-            TEST,
-            BEFORE_METHOD,
-            STEP,
-            AFTER_METHOD,
-            AFTER_TEST,
-            AFTER_CLASS,
-            AFTER_GROUPS,
-            AFTER_SUITE,
-          ].join(','),
+        value: this.bindDefaultValue(ENTITY_METHOD_TYPE, {
           condition: CONDITION_IN,
-        },
+        }),
         title: intl.formatMessage(messages.MethodTypeTitle),
-        active: ENTITY_METHOD_TYPE in entities,
+        active: visibleFilters.includes(ENTITY_METHOD_TYPE),
         removable: true,
-        meta: {
+        customProps: {
           options: [
             {
               label: intl.formatMessage(messages.TypeBeforeSuite),
@@ -409,36 +440,32 @@ export class StepLevelEntities extends Component {
       },
       {
         id: ENTITY_DESCRIPTION,
-        component: EntityItemDescription,
-        value: entities[ENTITY_DESCRIPTION] || {
-          value: '',
+        component: EntityInputConditional,
+        value: this.bindDefaultValue(ENTITY_DESCRIPTION, {
           condition: CONDITION_CNT,
-        },
+        }),
         title: intl.formatMessage(messages.DescriptionTitle),
         validationFunc: (entityObject) =>
           (!entityObject ||
             !entityObject.value ||
             !validate.launchDescriptionEntity(entityObject.value)) &&
           'launchDescriptionEntityHint',
-        active: ENTITY_DESCRIPTION in entities,
+        active: visibleFilters.includes(ENTITY_DESCRIPTION),
         removable: true,
-        meta: {
+        customProps: {
           placeholder: intl.formatMessage(messages.DescriptionPlaceholder),
         },
       },
       {
         id: ENTITY_STATUS,
         component: EntityDropdown,
-        value: entities[ENTITY_STATUS] || {
-          value: [FAILED, PASSED, SKIPPED, INTERRUPTED, IN_PROGRESS]
-            .map((item) => item.toUpperCase())
-            .join(','),
+        value: this.bindDefaultValue(ENTITY_STATUS, {
           condition: CONDITION_IN,
-        },
+        }),
         title: intl.formatMessage(messages.StatusTitle),
-        active: ENTITY_STATUS in entities,
+        active: visibleFilters.includes(ENTITY_STATUS),
         removable: true,
-        meta: {
+        customProps: {
           options: [
             {
               label: intl.formatMessage(messages.LaunchStatusPassed),
@@ -468,61 +495,74 @@ export class StepLevelEntities extends Component {
       {
         id: ENTITY_START_TIME,
         component: EntityItemStartTime,
-        value: entities[ENTITY_START_TIME] || {
-          value: `${moment()
-            .startOf('day')
-            .subtract(1, 'months')
-            .valueOf()},${moment()
-            .endOf('day')
-            .valueOf() + 1}`,
+        value: this.bindDefaultValue(ENTITY_START_TIME, {
           condition: CONDITION_BETWEEN,
-        },
+        }),
         title: intl.formatMessage(messages.StartTimeTitle),
-        active: ENTITY_START_TIME in entities,
+        active: visibleFilters.includes(ENTITY_START_TIME),
         removable: true,
       },
       this.getDefectTypeEntity(),
       {
         id: ENTITY_DEFECT_COMMENT,
-        component: EntityItemDescription,
-        value: entities[ENTITY_DEFECT_COMMENT] || {
-          value: '',
+        component: EntityInputConditional,
+        value: this.bindDefaultValue(ENTITY_DEFECT_COMMENT, {
           condition: CONDITION_CNT,
-        },
+        }),
         title: intl.formatMessage(messages.DefectCommentTitle),
         validationFunc: (entityObject) =>
           (!entityObject ||
             !entityObject.value ||
             !validate.launchDescriptionEntity(entityObject.value)) &&
           'launchDescriptionEntityHint',
-        active: ENTITY_DEFECT_COMMENT in entities,
+        active: visibleFilters.includes(ENTITY_DEFECT_COMMENT),
         removable: true,
-        meta: {
+        customProps: {
           placeholder: intl.formatMessage(messages.DefectCommentPlaceholder),
         },
       },
       {
-        id: ENTITY_TAGS,
-        component: EntityItemTags,
-        value: entities[ENTITY_TAGS] || {
-          value: '',
+        id: ENTITY_ATTRIBUTE_KEYS,
+        component: EntityInputConditionalTags,
+        value: this.bindDefaultValue(ENTITY_ATTRIBUTE_KEYS, {
           condition: CONDITION_HAS,
-        },
-        title: intl.formatMessage(messages.TagsTitle),
-        active: ENTITY_TAGS in entities,
+        }),
+        title: intl.formatMessage(messages.AttributeKeysTitle),
+        active: visibleFilters.includes(ENTITY_ATTRIBUTE_KEYS),
         removable: true,
+        customProps: {
+          uri: URLS.testItemAttributeKeysSearch(projectId, launchId),
+          placeholder: intl.formatMessage(messages.ATTRIBUTE_KEYS_PLACEHOLDER),
+        },
+      },
+      {
+        id: ENTITY_ATTRIBUTE_VALUES,
+        component: EntityInputConditionalTags,
+        value: this.bindDefaultValue(ENTITY_ATTRIBUTE_VALUES, {
+          condition: CONDITION_HAS,
+        }),
+        title: intl.formatMessage(messages.AttributeValuesTitle),
+        active: visibleFilters.includes(ENTITY_ATTRIBUTE_VALUES),
+        removable: true,
+        customProps: {
+          uri: URLS.testItemAttributeValuesSearch(
+            projectId,
+            launchId,
+            (filterValues[ENTITY_ATTRIBUTE_KEYS] || {}).value || '',
+          ),
+          placeholder: intl.formatMessage(messages.ATTRIBUTE_VALUES_PLACEHOLDER),
+        },
       },
       {
         id: ENTITY_AUTOANALYZE,
         component: EntityDropdown,
-        value: entities[ENTITY_AUTOANALYZE] || {
-          value: '',
-          condition: CONDITION_IN,
-        },
+        value: this.bindDefaultValue(ENTITY_AUTOANALYZE, {
+          condition: CONDITION_EQ,
+        }),
         title: intl.formatMessage(messages.AnalyseTitle),
-        active: ENTITY_AUTOANALYZE in entities,
+        active: visibleFilters.includes(ENTITY_AUTOANALYZE),
         removable: true,
-        meta: {
+        customProps: {
           options: [
             {
               label: intl.formatMessage(messages.AnalyseOption1),
@@ -538,14 +578,13 @@ export class StepLevelEntities extends Component {
       {
         id: ENTITY_IGNORE_ANALYZER,
         component: EntityDropdown,
-        value: entities[ENTITY_IGNORE_ANALYZER] || {
-          value: '',
+        value: this.bindDefaultValue(ENTITY_IGNORE_ANALYZER, {
           condition: CONDITION_IN,
-        },
+        }),
         title: intl.formatMessage(messages.IgnoreAATitle),
-        active: ENTITY_IGNORE_ANALYZER in entities,
+        active: visibleFilters.includes(ENTITY_IGNORE_ANALYZER),
         removable: true,
-        meta: {
+        customProps: {
           options: [
             {
               label: intl.formatMessage(messages.IgnoreAAOption1),
@@ -561,14 +600,13 @@ export class StepLevelEntities extends Component {
       {
         id: ENTITY_BTS_ISSUES,
         component: EntityDropdown,
-        value: entities[ENTITY_BTS_ISSUES] || {
-          value: '',
+        value: this.bindDefaultValue(ENTITY_BTS_ISSUES, {
           condition: CONDITION_EX,
-        },
+        }),
         title: intl.formatMessage(messages.BtsIssueTitle),
-        active: ENTITY_BTS_ISSUES in entities,
+        active: visibleFilters.includes(ENTITY_BTS_ISSUES),
         removable: true,
-        meta: {
+        customProps: {
           options: [
             {
               label: intl.formatMessage(messages.BtsIssueOption1),
@@ -581,10 +619,16 @@ export class StepLevelEntities extends Component {
           ],
         },
       },
+      ...this.getPatternNameEntity(),
     ];
   };
-
+  bindDefaultValue = bindDefaultValue;
   render() {
-    return <EntitiesGroup entitiesSet={this.getEntities()} onChangeOwn={this.props.onChange} />;
+    const { render, ...rest } = this.props;
+
+    return render({
+      ...rest,
+      filterEntities: this.getEntities(),
+    });
   }
 }

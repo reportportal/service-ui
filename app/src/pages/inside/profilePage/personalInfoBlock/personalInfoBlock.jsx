@@ -1,22 +1,26 @@
 import PropTypes from 'prop-types';
+import track from 'react-tracking';
 import classNames from 'classnames/bind';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { defineMessages, injectIntl, intlShape } from 'react-intl';
-import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
-import { showModalAction } from 'controllers/modal';
-import { userInfoSelector } from 'controllers/user';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
 import { INTERNAL, LDAP } from 'common/constants/accountType';
+import DefaultUserImage from 'common/img/default-user-avatar.png';
+import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
+import { showModalAction } from 'controllers/modal';
+import { userInfoSelector } from 'controllers/user';
+import { logoutAction } from 'controllers/auth';
 import { GhostButton } from 'components/buttons/ghostButton';
+import { PROFILE_PAGE_EVENTS } from 'components/main/analytics/events';
+import { Image } from 'components/main/image';
 import styles from './personalInfoBlock.scss';
 import { BlockContainerBody, BlockContainerHeader } from '../blockContainer';
 import { PhotoControls } from './photoControls';
 import { UserInfo } from './userInfo/userInfo';
 
 const cx = classNames.bind(styles);
-const getPhoto = (userId) => URLS.dataUserPhoto(new Date().getTime(), userId);
 
 const messages = defineMessages({
   header: {
@@ -37,7 +41,7 @@ const messages = defineMessages({
   },
   forceUpdate: {
     id: 'PersonalInfoBlock.forceUpdate',
-    defaultMessage: 'ForceUpdate',
+    defaultMessage: 'Force update',
   },
   synchronize: {
     id: 'PersonalInfoBlock.synchronize',
@@ -52,11 +56,16 @@ const messages = defineMessages({
 @connect(
   (state) => ({
     userId: userInfoSelector(state).userId,
-    accountType: userInfoSelector(state).account_type,
+    accountType: userInfoSelector(state).accountType,
   }),
-  { showNotification, showModalAction },
+  {
+    showNotification,
+    showModalAction,
+    logoutAction,
+  },
 )
 @injectIntl
+@track()
 export class PersonalInfoBlock extends Component {
   static propTypes = {
     userId: PropTypes.string,
@@ -64,6 +73,11 @@ export class PersonalInfoBlock extends Component {
     intl: intlShape.isRequired,
     showModalAction: PropTypes.func.isRequired,
     showNotification: PropTypes.func.isRequired,
+    logoutAction: PropTypes.func.isRequired,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
   static defaultProps = {
     userId: '',
@@ -71,16 +85,19 @@ export class PersonalInfoBlock extends Component {
   };
 
   state = {
-    avatarSource: getPhoto(this.props.userId),
+    avatarSource: URLS.dataPhoto(),
   };
-  onChangePassword = () =>
+  onChangePassword = () => {
+    this.props.tracking.trackEvent(PROFILE_PAGE_EVENTS.CHANGE_PASSWORD_CLICK);
     this.props.showModalAction({
       id: 'changePasswordModal',
       data: { onChangePassword: this.changePasswordHandler },
     });
+  };
+
   onForceUpdate = () => {
-    const { accountType, intl } = this.props;
-    fetch(URLS.userSynchronize(accountType), { method: 'post' })
+    const { accountType = '', intl } = this.props;
+    fetch(URLS.userSynchronize(accountType.toLowerCase()), { method: 'post' })
       .then(() => {
         this.props.showNotification({
           message: intl.formatMessage(messages.synchronize),
@@ -88,7 +105,7 @@ export class PersonalInfoBlock extends Component {
         });
         this.props.showModalAction({
           id: 'forceUpdateModal',
-          data: { onForceUpdate: this.forceUpdateHandler },
+          data: { onForceUpdate: this.props.logoutAction },
         });
       })
       .catch(() => {
@@ -116,25 +133,28 @@ export class PersonalInfoBlock extends Component {
         });
       });
   };
-  forceUpdateHandler = () => {
-    fetch(URLS.sessionToken(), { method: 'delete' });
-  };
   uploadNewImage = (image) => {
     this.setState({ avatarSource: image });
   };
   removeImage = () => {
-    this.setState({ avatarSource: getPhoto(this.props.userId) });
+    this.setState({ avatarSource: URLS.dataPhoto(Date.now()) });
   };
 
   render() {
     const { intl, accountType, userId } = this.props;
+
     return (
       <div className={cx('personal-info-block')}>
         <BlockContainerHeader>{intl.formatMessage(messages.header)}</BlockContainerHeader>
         <BlockContainerBody>
           <div className={cx('block-content')}>
             <div className={cx('avatar-wrapper')}>
-              <img className={cx('avatar')} src={this.state.avatarSource} alt="Profile avatar" />
+              <Image
+                className={cx('avatar')}
+                src={this.state.avatarSource}
+                alt="Profile avatar"
+                fallback={DefaultUserImage}
+              />
             </div>
             <div className={cx('info')}>
               <UserInfo accountType={accountType} userId={userId} />

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { GhostButton } from 'components/buttons/ghostButton';
-import styles from './emptyDashbaords.scss';
+import styles from './emptyDashboards.scss';
 import AddDashboardIcon from './img/ic-add-dash-inline.svg';
 
 const cx = classNames.bind(styles);

@@ -1,0 +1,1 @@
+export { InputRadioGroup } from './inputRadioGroup';

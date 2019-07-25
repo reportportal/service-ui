@@ -11,15 +11,11 @@ export class NewsBlockWithData extends Component {
     fetchJsonp('http://status.reportportal.io/twitter', {
       jsonpCallback: 'jsonp',
     })
-      .then(res => res.json())
-      .then(tweets => this.setState({ tweets }));
+      .then((res) => res.json())
+      .then((tweets) => this.setState({ tweets }));
   }
 
   render() {
-    return (
-      <NewsBlock
-        tweets={this.state.tweets}
-      />
-    );
+    return <NewsBlock tweets={this.state.tweets} />;
   }
 }

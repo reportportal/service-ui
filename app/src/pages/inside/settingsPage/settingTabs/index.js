@@ -1,1 +1,0 @@
-export { SettingTabs } from './settingTabs';

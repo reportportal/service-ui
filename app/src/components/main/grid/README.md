@@ -21,6 +21,7 @@ Height & width grows with it's content.
 - **columns**: _array_, optional, default = []
 - **data**: _array_ of _object_, optional, default = []
 - **selectedItems**: _array_ of _object_, optional, default = []
+- **excludeFromSelection**: _array_ of _object_, optional, default = []
 - **sortingDirection**: _string_, optional, default = 'DESC'
 - **sortingColumn**: _string_, optional, default = null
 - **loading**: _bool_, optional, default = false

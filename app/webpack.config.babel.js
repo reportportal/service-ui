@@ -44,6 +44,7 @@ export default (env = defaultEnv) => ({
     new webpack.DefinePlugin({
       JEST: false,
       STORYBOOK: JSON.stringify(env.storybook),
+      'process.env.production': JSON.stringify(env.production),
     }),
     new webpack.ProvidePlugin({
       React: 'react',
@@ -57,6 +58,7 @@ export default (env = defaultEnv) => ({
     new webpack.NamedModulesPlugin(),
     new webpack.HotModuleReplacementPlugin(),
     new HtmlWebpackPlugin({
+      favicon: 'src/common/img/favicon.ico',
       template: path.resolve('src', 'index.tpl.html'),
       filename: 'index.html',
     }),

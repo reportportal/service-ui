@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import track from 'react-tracking';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { CSSTransition } from 'react-transition-group';
 import { connect } from 'react-redux';
@@ -10,12 +11,10 @@ import styles from './modalLayout.scss';
 
 const cx = classNames.bind(styles);
 
-@connect(
-  null,
-  {
-    hideModalAction,
-  },
-)
+@connect(null, {
+  hideModalAction,
+})
+@track()
 export class ModalLayout extends Component {
   static propTypes = {
     className: PropTypes.string,
@@ -25,11 +24,13 @@ export class ModalLayout extends Component {
     warningMessage: PropTypes.string, // footer props
     okButton: PropTypes.shape({
       text: PropTypes.string.isRequired,
+      disabled: PropTypes.bool,
       danger: PropTypes.bool,
       onClick: PropTypes.func,
     }),
     cancelButton: PropTypes.shape({
       text: PropTypes.string.isRequired,
+      eventInfo: PropTypes.object,
     }),
     customButton: PropTypes.oneOfType([
       PropTypes.node,
@@ -43,8 +44,15 @@ export class ModalLayout extends Component {
       closeConfirmedCallback: PropTypes.func,
       withCheckbox: PropTypes.bool,
       confirmationMessage: PropTypes.string,
+      confirmationWarningClassName: PropTypes.string,
       confirmationWarning: PropTypes.string,
     }),
+    closeIconEventInfo: PropTypes.object,
+    renderHeaderElements: PropTypes.func,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
   static defaultProps = {
     className: '',
@@ -56,6 +64,8 @@ export class ModalLayout extends Component {
     customButton: null,
     stopOutsideClose: false,
     closeConfirmation: null,
+    closeIconEventInfo: {},
+    renderHeaderElements: () => {},
   };
   state = {
     shown: false,
@@ -84,7 +94,6 @@ export class ModalLayout extends Component {
   };
   onClickModal = (e) => {
     const { closeConfirmation } = this.props;
-
     if (!this.modal.contains(e.target)) {
       if (!closeConfirmation) {
         this.closeModal();
@@ -98,9 +107,21 @@ export class ModalLayout extends Component {
       closeConfirmed,
     });
   };
+
+  onClickCancelButton = () => {
+    this.closeModal();
+    this.props.tracking.trackEvent(this.props.cancelButton.eventInfo);
+  };
+
+  onClickCloseIcon = () => {
+    this.closeModal();
+    this.props.tracking.trackEvent(this.props.closeIconEventInfo);
+  };
+
   closeModalWithOk = () => {
     this.setState({ shown: false });
   };
+
   closeModal = () => {
     const { closeConfirmation } = this.props;
 
@@ -121,6 +142,7 @@ export class ModalLayout extends Component {
 
     withCheckbox ? this.setState({ showConfirmation: true }) : this.setState({ shown: false });
   };
+
   render() {
     const {
       title,
@@ -138,6 +160,8 @@ export class ModalLayout extends Component {
       customButton,
       confirmationMessage: closeConfirmation && closeConfirmation.confirmationMessage,
       confirmationWarning: closeConfirmation && closeConfirmation.confirmationWarning,
+      confirmationWarningClassName:
+        closeConfirmation && closeConfirmation.confirmationWarningClassName,
       showConfirmation: this.state.showConfirmation,
       closeConfirmed: this.state.closeConfirmed,
       onCloseConfirm: this.onCloseConfirm,
@@ -148,31 +172,37 @@ export class ModalLayout extends Component {
       <div className={cx('modal-layout')}>
         <div className={cx('scrolling-content')} onClick={this.onClickModal}>
           <Scrollbars>
-            <CSSTransition
-              timeout={300}
-              in={this.state.shown}
-              classNames={cx('modal-window-animation')}
-              onExited={this.props.hideModalAction}
-            >
-              {(status) => (
-                <div
-                  ref={(modal) => {
-                    this.modal = modal;
-                  }}
-                  className={cx('modal-window', this.props.className)}
-                >
-                  <ModalHeader text={title} onClose={this.closeModal} />
-                  <ModalContent>{status !== 'exited' ? children : null}</ModalContent>
+            <span>
+              <CSSTransition
+                timeout={300}
+                in={this.state.shown}
+                classNames={cx('modal-window-animation')}
+                onExited={this.props.hideModalAction}
+              >
+                {(status) => (
+                  <div
+                    ref={(modal) => {
+                      this.modal = modal;
+                    }}
+                    className={cx('modal-window', this.props.className)}
+                  >
+                    <ModalHeader
+                      text={title}
+                      onClose={this.onClickCloseIcon}
+                      renderHeaderElements={this.props.renderHeaderElements}
+                    />
+                    <ModalContent>{status !== 'exited' ? children : null}</ModalContent>
 
-                  <ModalFooter
-                    {...footerProps}
-                    onClickOk={this.closeModalWithOk}
-                    closeHandler={this.closeModal}
-                    className={this.props.className}
-                  />
-                </div>
-              )}
-            </CSSTransition>
+                    <ModalFooter
+                      {...footerProps}
+                      onClickOk={this.closeModalWithOk}
+                      closeHandler={this.onClickCancelButton}
+                      className={this.props.className}
+                    />
+                  </div>
+                )}
+              </CSSTransition>
+            </span>
           </Scrollbars>
         </div>
         <CSSTransition

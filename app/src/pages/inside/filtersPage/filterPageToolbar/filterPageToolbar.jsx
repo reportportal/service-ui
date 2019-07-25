@@ -1,12 +1,14 @@
 import PropTypes from 'prop-types';
+import track from 'react-tracking';
 import { reduxForm } from 'redux-form';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import AddFilterIcon from 'common/img/add-filter-inline.svg';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { InputSearch } from 'components/inputs/inputSearch';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
-import AddFilterIcon from './img/ic-add-filter-inline.svg';
+import { FILTERS_PAGE_EVENTS } from 'components/main/analytics/events';
 import styles from './filterPageToolbar.scss';
 
 const cx = classNames.bind(styles);
@@ -22,44 +24,44 @@ const messages = defineMessages({
   },
   searchInputPlaceholder: { id: 'FiltersPage.searchByName', defaultMessage: 'Search by name' },
 });
+@track()
 @reduxForm({
   form: 'filterSearch',
   validate: ({ filter }) => ({
     filter: filter && filter.length < 3 ? 'filterNameError' : undefined,
   }),
-  onChange: (vals, dispatch, props) => {
-    if (vals.filter && vals.filter.length < 3) {
+  onChange: (values, dispatch, props, previousValues) => {
+    if (typeof previousValues.filter === 'undefined') {
       return;
     }
-    props.onFilterChange(vals.filter || undefined);
+    if (!values.filter || values.filter.length >= 3) {
+      props.tracking.trackEvent(FILTERS_PAGE_EVENTS.SEARCH_FILTER);
+      props.onFilterChange(values.filter);
+    }
   },
 })
 @injectIntl
 export class FilterPageToolbar extends React.Component {
   static propTypes = {
+    intl: intlShape,
     change: PropTypes.func,
     invalid: PropTypes.bool,
     filter: PropTypes.string,
     filters: PropTypes.array,
-    intl: intlShape,
+    onAddFilter: PropTypes.func,
   };
 
   static defaultProps = {
+    intl: {},
     invalid: false,
     filter: null,
     filters: [],
-    intl: {},
     change: () => {},
+    onAddFilter: () => {},
   };
 
   componentDidMount() {
     this.props.change('filter', this.props.filter);
-  }
-
-  componentWillReceiveProps({ filter, invalid }) {
-    if (filter !== this.props.filter && !invalid) {
-      this.props.change('filter', filter);
-    }
   }
 
   render() {
@@ -77,7 +79,7 @@ export class FilterPageToolbar extends React.Component {
           </FieldProvider>
         </div>
         <div className={cx('label')}>{this.props.intl.formatMessage(messages.favoriteFilters)}</div>
-        <GhostButton icon={AddFilterIcon}>
+        <GhostButton icon={AddFilterIcon} onClick={this.props.onAddFilter}>
           {this.props.intl.formatMessage(messages.addFilter)}
         </GhostButton>
       </div>

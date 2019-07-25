@@ -1,0 +1,55 @@
+.retries-counter {
+  display: flex;
+}
+
+.retries-statuses {
+  display: inline-block;
+  line-height: 12px;
+}
+
+.status-indicator {
+  display: inline-block;
+  height: 7px;
+  width: 7px;
+  margin-right: 3px;
+  vertical-align: middle;
+
+  &.status-passed {
+    background-color: $COLOR--passed;
+  }
+
+  &.status-failed {
+    background-color: $COLOR--failed;
+  }
+
+  &.status-skipped {
+    background-color: $COLOR--skipped;
+  }
+}
+
+.retries-label {
+  display: inline-block;
+  padding-left: 2px;
+  color: $COLOR--windows-blue;
+  cursor: pointer;
+  font-family: $FONT-REGULAR;
+  font-size: 12px;
+}
+
+.desktop-label {
+  display: inline-block;
+
+  @media(max-width: $SCREEN_SM_MAX) {
+    display: none;
+  }
+}
+
+.mobile-label {
+  display: none;
+  color: $COLOR--charcoal-grey;
+  cursor: default;
+
+  @media(max-width: $SCREEN_SM_MAX) {
+    display: inline-block;
+  }
+}

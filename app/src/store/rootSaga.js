@@ -5,12 +5,19 @@ import { fetchSagas } from 'controllers/fetch';
 import { launchSagas } from 'controllers/launch';
 import { groupOperationsSagas } from 'controllers/groupOperations';
 import { suiteSagas } from 'controllers/suite';
+import { dashboardSagas } from 'controllers/dashboard';
 import { filterSagas } from 'controllers/filter';
 import { testSagas } from 'controllers/test';
 import { membersSagas } from 'controllers/members';
-import { testItemsSaga } from 'controllers/testItem';
-import { filterEntitiesSagas } from 'controllers/filterEntities';
+import { testItemsSagas } from 'controllers/testItem';
+import { historySagas } from 'controllers/itemsHistory';
 import { logSagas } from 'controllers/log';
+import { administrateSagas } from 'controllers/administrate';
+import { userSagas } from 'controllers/user';
+import { projectSagas } from 'controllers/project';
+import { initialDataSagas } from 'controllers/initialData';
+import { pageSagas } from 'controllers/pages';
+import { pluginSagas } from 'controllers/plugins';
 
 export function* rootSagas() {
   yield all([
@@ -20,11 +27,18 @@ export function* rootSagas() {
     launchSagas(),
     groupOperationsSagas(),
     suiteSagas(),
+    dashboardSagas(),
     filterSagas(),
     testSagas(),
     membersSagas(),
-    testItemsSaga(),
-    filterEntitiesSagas(),
+    testItemsSagas(),
     logSagas(),
+    historySagas(),
+    administrateSagas(),
+    userSagas(),
+    projectSagas(),
+    initialDataSagas(),
+    pageSagas(),
+    pluginSagas(),
   ]);
 }

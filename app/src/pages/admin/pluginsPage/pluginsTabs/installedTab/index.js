@@ -1,0 +1,1 @@
+export { InstalledTab } from './installedTab';

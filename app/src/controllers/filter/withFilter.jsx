@@ -1,5 +1,6 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
+import { PAGE_KEY } from 'controllers/pagination';
 import { connectRouter } from 'common/utils';
 
 const FILTER_KEY = 'filter.cnt.name';
@@ -21,7 +22,7 @@ export const withFilter = ({ filterKey = FILTER_KEY, namespace } = {}) => (Wrapp
       filter: query[filterKey],
     }),
     {
-      updateFilter: (filter) => ({ [filterKey]: filter }),
+      updateFilter: (filter) => ({ [filterKey]: filter, [PAGE_KEY]: 1 }),
     },
     { namespace },
   )(

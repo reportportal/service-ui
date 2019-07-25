@@ -12,7 +12,7 @@
   height: 15px;
   box-sizing: border-box;
   margin-right: 5px;
-  background-image: url(./img/owner-icon.svg);
+  background-image: url(common/img/owner-icon.svg);
   background-position: center;
   background-size: 100%;
   background-repeat: no-repeat;
@@ -31,6 +31,7 @@
   color: $COLOR--gray-60;
   text-decoration: none;
   margin-right: 3px;
+  cursor: pointer;
 
   &:hover {
     color: $COLOR--charcoal-grey;
@@ -38,5 +39,11 @@
 
   @media (max-width: $SCREEN_SM_MAX) {
     font-size: 14px;
+  }
+}
+
+.disabled {
+  .owner:hover {
+    color: $COLOR--gray-60;
   }
 }

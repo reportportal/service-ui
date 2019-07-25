@@ -1,4 +1,5 @@
 import { Component } from 'react';
+import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
@@ -6,12 +7,16 @@ import { fetch } from 'common/utils';
 import { injectIntl, intlShape, defineMessages } from 'react-intl';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { URLS } from 'common/urls';
+import { LAUNCH_ITEM_TYPES } from 'common/constants/launchItemTypes';
 import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLock';
 import { PageLayout, PageSection } from 'layouts/pageLayout';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { Breadcrumbs } from 'components/main/breadcrumbs';
 import { LEVEL_SUITE, LEVEL_TEST, LEVEL_STEP } from 'common/constants/launchLevels';
+import { SUITES_PAGE_EVENTS } from 'components/main/analytics/events/suitesPageEvents';
+import { STEP_PAGE_EVENTS } from 'components/main/analytics/events';
 import { userIdSelector, activeProjectSelector } from 'controllers/user';
+import { unselectAllItemsAction } from 'controllers/groupOperations';
 import {
   levelSelector,
   pageLoadingSelector,
@@ -20,10 +25,18 @@ import {
   deleteItemsAction,
   launchSelector,
   fetchTestItemsAction,
+  namespaceSelector,
 } from 'controllers/testItem';
+import { showModalAction } from 'controllers/modal';
 import { SuitesPage } from 'pages/inside/suitesPage';
 import { TestsPage } from 'pages/inside/testsPage';
 import { StepPage } from 'pages/inside/stepPage';
+import {
+  FilterEntitiesURLContainer,
+  FilterEntitiesContainer,
+} from 'components/filterEntities/containers';
+import { NotFound } from './notFound';
+
 import styles from './testItemPage.scss';
 
 const cx = classNames.bind(styles);
@@ -38,11 +51,12 @@ const messages = defineMessages({
   },
   deleteModalContent: {
     id: 'TestItemsPage.deleteModalContent',
-    defaultMessage: "Are you sure to delete item <b>'{name}'</b>? It will no longer exist.",
+    defaultMessage:
+      "Are you sure you want to delete item <b>'{name}'</b>? It will no longer exist.",
   },
   deleteModalMultipleContent: {
     id: 'TestItemsPage.deleteModalMultipleContent',
-    defaultMessage: 'Are you sure to delete items? They will no longer exist.',
+    defaultMessage: 'Are you sure you want to delete items? They will no longer exist.',
   },
   warning: {
     id: 'TestItemsPage.warning',
@@ -86,6 +100,7 @@ const testItemPages = {
     parentLaunch: launchSelector(state),
     userId: userIdSelector(state),
     activeProject: activeProjectSelector(state),
+    namespace: namespaceSelector(state),
   }),
   {
     restorePath: restorePathAction,
@@ -94,31 +109,68 @@ const testItemPages = {
     showScreenLockAction,
     hideScreenLockAction,
     fetchTestItemsAction,
+    showModalAction,
+    unselectAllItemsAction,
   },
 )
 @injectIntl
+@track()
 export class TestItemPage extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
-    parentLaunch: PropTypes.object.isRequired,
     activeProject: PropTypes.string.isRequired,
+    namespace: PropTypes.string.isRequired,
     userId: PropTypes.string.isRequired,
     deleteItemsAction: PropTypes.func.isRequired,
     showNotification: PropTypes.func.isRequired,
     showScreenLockAction: PropTypes.func.isRequired,
     hideScreenLockAction: PropTypes.func.isRequired,
     fetchTestItemsAction: PropTypes.func.isRequired,
+    unselectAllItemsAction: PropTypes.func.isRequired,
+    showModalAction: PropTypes.func.isRequired,
+    parentLaunch: PropTypes.object,
     level: PropTypes.string,
     loading: PropTypes.bool,
     breadcrumbs: PropTypes.arrayOf(PropTypes.object),
     restorePath: PropTypes.func,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
 
   static defaultProps = {
+    parentLaunch: {},
     level: null,
     loading: false,
     breadcrumbs: [],
     restorePath: () => {},
+  };
+
+  onEditItem = (launch) => {
+    this.props.showModalAction({
+      id: 'editItemModal',
+      data: {
+        item: launch,
+        type: LAUNCH_ITEM_TYPES.item,
+        fetchFunc: this.props.fetchTestItemsAction,
+      },
+    });
+  };
+
+  onEditItems = (launches) => {
+    this.props.showModalAction({
+      id: 'editItemsModal',
+      data: {
+        items: launches,
+        parentLaunch: this.props.parentLaunch,
+        type: LAUNCH_ITEM_TYPES.item,
+        fetchFunc: () => {
+          this.props.fetchTestItemsAction();
+          this.props.unselectAllItemsAction(this.props.namespace)();
+        },
+      },
+    });
   };
 
   confirmDeleteItems = (items, selectedItems) => {
@@ -151,7 +203,11 @@ export class TestItemPage extends Component {
   };
 
   deleteItems = (selectedItems) => {
-    const { intl, userId } = this.props;
+    const { intl, userId, tracking, level } = this.props;
+    tracking.trackEvent(
+      LEVEL_STEP === level ? STEP_PAGE_EVENTS.DELETE_ACTION : SUITES_PAGE_EVENTS.DELETE_BTN,
+    );
+
     this.props.deleteItemsAction(selectedItems, {
       onConfirm: (items) => this.confirmDeleteItems(items, selectedItems),
       header:
@@ -168,6 +224,11 @@ export class TestItemPage extends Component {
         selectedItems.length === 1
           ? intl.formatMessage(messages.warning)
           : intl.formatMessage(messages.warningMultiple),
+      eventsInfo: {
+        closeIcon: LEVEL_STEP === level ? STEP_PAGE_EVENTS.CLOSE_ICON_DELETE_ITEM_MODAL : {},
+        cancelBtn: LEVEL_STEP === level ? STEP_PAGE_EVENTS.CANCEL_BTN_DELETE_ITEM_MODAL : {},
+        deleteBtn: LEVEL_STEP === level ? STEP_PAGE_EVENTS.DELETE_BTN_DELETE_ITEM_MODAL : {},
+      },
     });
   };
 
@@ -175,14 +236,49 @@ export class TestItemPage extends Component {
     const { level, loading, breadcrumbs, restorePath } = this.props;
     if (!loading && testItemPages[level]) {
       const PageComponent = testItemPages[level];
-      return <PageComponent deleteItems={this.deleteItems} />;
+      return (
+        <FilterEntitiesURLContainer
+          namespaceSelector={namespaceSelector}
+          render={({ entities, onChange }) => (
+            <FilterEntitiesContainer
+              entities={entities}
+              onChange={onChange}
+              level={level}
+              render={({
+                filterErrors,
+                filterValues,
+                onFilterChange,
+                onFilterValidate,
+                onFilterAdd,
+                onFilterRemove,
+                filterEntities,
+              }) => (
+                <PageComponent
+                  deleteItems={this.deleteItems}
+                  onEditItem={this.onEditItem}
+                  onEditItems={this.onEditItems}
+                  filterErrors={filterErrors}
+                  filterValues={filterValues}
+                  onFilterChange={onFilterChange}
+                  onFilterValidate={onFilterValidate}
+                  onFilterAdd={onFilterAdd}
+                  onFilterRemove={onFilterRemove}
+                  filterEntities={filterEntities}
+                />
+              )}
+            />
+          )}
+        />
+      );
     }
+    const isItemNotFound = breadcrumbs.length > 2 && breadcrumbs[breadcrumbs.length - 1].error;
     return (
       <PageLayout>
         <PageSection>
           <div className={cx('breadcrumbs-container')}>
             {!loading && <Breadcrumbs descriptors={breadcrumbs} onRestorePath={restorePath} />}
           </div>
+          {!loading && <NotFound isItemNotFound={isItemNotFound} />}
           {loading && <SpinningPreloader />}
         </PageSection>
       </PageLayout>

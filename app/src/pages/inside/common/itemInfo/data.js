@@ -85,13 +85,13 @@ export const state = {
       userId: 'default',
       email: 'examle@mail.com',
       photoId: '5b7584da97a1c00001e7fd1f',
-      full_name: 'SuperTester',
-      account_type: 'INTERNAL',
+      fullName: 'SuperTester',
+      accountType: 'INTERNAL',
       userRole: 'ADMINISTRATOR',
-      last_login: 1534867405428,
-      photo_loaded: true,
-      default_project: 'default_personal',
-      assigned_projects: {
+      lastLogin: 1534867405428,
+      photoLoaded: true,
+      defaultProject: 'default_personal',
+      assignedProjects: {
         '11111': {
           projectRole: 'PROJECT_MANAGER',
           proposedRole: 'PROJECT_MANAGER',
@@ -510,7 +510,7 @@ export const mockData = {
   approximateDuration: 0,
   description:
     'This is a `suite` level. Here you can handle *the aggregated information* per  `suite`.',
-  end_time: 1534436199669,
+  endTime: 1534436199669,
   hasRetries: false,
   id: '5b75a36397a1c00001ea3d4c',
   isProcessing: false,
@@ -551,5 +551,5 @@ export const mockData = {
   },
   status: 'FAILED',
   tags: ['desktop', 'demo', 'build:3.0.1.10'],
-  start_time: 1534436195270,
+  startTime: 1534436195270,
 };

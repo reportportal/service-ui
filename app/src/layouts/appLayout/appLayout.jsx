@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 EPAM Systems
+ * Copyright 2018 EPAM Systems
  *
  *
  * This file is part of EPAM Report Portal.
@@ -19,77 +19,20 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import classNames from 'classnames/bind';
-import { ScrollWrapper } from 'components/main/scrollWrapper';
-import { Sidebar } from './sidebar';
-import { Header } from './header';
-import { Footer } from './footer';
-import styles from './appLayout.scss';
+import { Layout } from 'layouts/common/layout';
+import { AppHeader } from './appHeader';
+import { AppSidebar } from './appSidebar';
 
-const cx = classNames.bind(styles);
+export const AppLayout = ({ children }) => (
+  <Layout Header={AppHeader} Sidebar={AppSidebar}>
+    {children}
+  </Layout>
+);
 
-export class AppLayout extends PureComponent {
-  static propTypes = {
-    children: PropTypes.node,
-  };
-  static defaultProps = {
-    children: null,
-  };
-  constructor(props) {
-    super(props);
-    window.addEventListener('resize', this.windowResizeHandler, false);
-  }
-  state = {
-    sideMenuOpened: false,
-  };
-  componentWillUnmount() {
-    window.removeEventListener('resize', this.windowResizeHandler, false);
-  }
-  windowResizeHandler = () => {
-    if (this.state.sideMenuOpened && window.innerWidth > 767) {
-      this.setState({ sideMenuOpened: false });
-    }
-  };
-  toggleSideMenu = () => {
-    this.setState({ sideMenuOpened: !this.state.sideMenuOpened });
-  };
-
-  render() {
-    return (
-      <div className={cx('app-container')}>
-        <div
-          className={cx({ 'slide-container': true, 'side-menu-opened': this.state.sideMenuOpened })}
-        >
-          <div className={cx('sidebar-container')}>
-            <div className={cx('corner-area')} />
-            <Sidebar
-              onClickNavBtn={() => {
-                this.state.sideMenuOpened && this.setState({ sideMenuOpened: false });
-              }}
-            />
-          </div>
-          <div className={cx('content')}>
-            <ScrollWrapper withBackToTop>
-              <div className={cx('scrolling-content')}>
-                <div className={cx('header-container')}>
-                  <Header
-                    isSideMenuOpened={this.state.sideMenuOpened}
-                    toggleSideMenu={this.toggleSideMenu}
-                  />
-                </div>
-                <div className={cx('page-container')}>{this.props.children}</div>
-                <Footer />
-              </div>
-            </ScrollWrapper>
-            <div
-              className={cx({ 'sidebar-close-area': true, visible: this.state.sideMenuOpened })}
-              onClick={this.toggleSideMenu}
-            />
-          </div>
-        </div>
-      </div>
-    );
-  }
-}
+AppLayout.propTypes = {
+  children: PropTypes.node,
+};
+AppLayout.defaultProps = {
+  children: null,
+};

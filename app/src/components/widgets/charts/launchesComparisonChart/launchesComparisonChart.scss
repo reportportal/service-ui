@@ -1,0 +1,17 @@
+.launches-comparison-chart {
+  :global {
+    .c3-grid .c3-ygrid {
+      stroke-dasharray: none;
+      stroke: $COLOR--gray-80;
+    }
+
+    .c3-axis path,
+    .tick line {
+      display: none;
+    }
+
+    .c3-xgrid-focus {
+      display: none;
+    }
+  }
+}

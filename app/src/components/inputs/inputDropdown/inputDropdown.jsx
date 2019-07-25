@@ -21,6 +21,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
+import { ScrollWrapper } from 'components/main/scrollWrapper';
 import styles from './inputDropdown.scss';
 import { DropdownOption } from './inputDropdownOption/inputDropdownOption';
 
@@ -28,7 +29,12 @@ const cx = classNames.bind(styles);
 
 export class InputDropdown extends Component {
   static propTypes = {
-    value: PropTypes.oneOfType([PropTypes.string, PropTypes.array, PropTypes.bool]),
+    value: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.array,
+      PropTypes.bool,
+      PropTypes.number,
+    ]),
     options: PropTypes.array,
     multiple: PropTypes.bool,
     selectAll: PropTypes.bool,
@@ -39,6 +45,7 @@ export class InputDropdown extends Component {
     onFocus: PropTypes.func,
     onBlur: PropTypes.func,
     mobileDisabled: PropTypes.bool,
+    independentGroupSelection: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -53,16 +60,20 @@ export class InputDropdown extends Component {
     onFocus: () => {},
     onBlur: () => {},
     mobileDisabled: false,
+    independentGroupSelection: false,
   };
   state = {
     opened: false,
   };
+
   componentDidMount() {
     document.addEventListener('click', this.handleClickOutside);
   }
+
   componentWillUnmount() {
     document.removeEventListener('click', this.handleClickOutside);
   }
+
   onClickSelectBlock = (e) => {
     if (!this.props.disabled) {
       this.setState({ opened: !this.state.opened });
@@ -75,8 +86,17 @@ export class InputDropdown extends Component {
     this.node = node;
   };
 
+  getOptionChangeHandler = (option) => {
+    if (option.disabled) {
+      return null;
+    }
+    return option.groupId && !this.props.independentGroupSelection
+      ? this.handleGroupChange
+      : this.handleChange;
+  };
+
   handleClickOutside = (e) => {
-    if (!this.node.contains(e.target)) {
+    if (!this.node.contains(e.target) && this.state.opened) {
       this.setState({ opened: false });
       this.props.onBlur();
     }
@@ -152,7 +172,7 @@ export class InputDropdown extends Component {
       this.props.multiple
         ? (selected = this.props.value.indexOf(option.value) > -1)
         : (selected = option.value === this.props.value);
-      if (option.groupId) {
+      if (!this.props.independentGroupSelection && option.groupId) {
         selected = this.isGroupOptionSelected(option.groupId);
       }
       return (
@@ -164,10 +184,7 @@ export class InputDropdown extends Component {
           label={option.label}
           multiple={this.props.multiple}
           subOption={!!option.groupRef}
-          onChange={
-            (!option.disabled && (option.groupId ? this.handleGroupChange : this.handleChange)) ||
-            null
-          }
+          onChange={this.getOptionChangeHandler(option)}
         />
       );
     });
@@ -196,7 +213,9 @@ export class InputDropdown extends Component {
                 <span className={cx('select-all')}>All</span>
               </div>
             )}
-          {this.renderOptions()}
+          <ScrollWrapper autoHeight autoHeightMax={300}>
+            {this.renderOptions()}
+          </ScrollWrapper>
         </div>
       </div>
     );

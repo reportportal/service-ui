@@ -12,7 +12,7 @@ import localeBE from '../../../../localization/translated/be.json';
 
 addLocaleData([...en, ...ru, ...be]);
 
-@connect(state => ({
+@connect((state) => ({
   lang: langSelector(state),
 }))
 export class LocalizationContainer extends React.Component {
@@ -32,18 +32,21 @@ export class LocalizationContainer extends React.Component {
     };
     if (!window.Intl) {
       this.state = { ready: false };
-      require.ensure([
-        'intl',
-        'intl/locale-data/jsonp/en.js',
-        'intl/locale-data/jsonp/ru.js',
-        'intl/locale-data/jsonp/be.js',
-      ], (require) => {
-        require('intl');
-        require('intl/locale-data/jsonp/en.js');
-        require('intl/locale-data/jsonp/ru.js');
-        require('intl/locale-data/jsonp/be.js');
-        this.setState({ ready: true });
-      });
+      require.ensure(
+        [
+          'intl',
+          'intl/locale-data/jsonp/en.js',
+          'intl/locale-data/jsonp/ru.js',
+          'intl/locale-data/jsonp/be.js',
+        ],
+        (require) => {
+          require('intl');
+          require('intl/locale-data/jsonp/en.js');
+          require('intl/locale-data/jsonp/ru.js');
+          require('intl/locale-data/jsonp/be.js');
+          this.setState({ ready: true });
+        },
+      );
     } else {
       this.state = { ready: true };
     }

@@ -5,6 +5,11 @@
   vertical-align: top;
   color: $COLOR--charcoal-grey;
   font-family: $FONT-REGULAR;
+  word-break: break-all;
+
+  @supports (word-break: break-word) {
+    word-break: break-word;
+  }
 
   &:first-child {
     padding-left: 15px;

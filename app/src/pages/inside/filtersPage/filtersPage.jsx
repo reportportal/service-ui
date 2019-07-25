@@ -1,14 +1,19 @@
 import React, { Component } from 'react';
+import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { fetch } from 'common/utils';
+import { URLS } from 'common/urls';
 import {
   withFilter,
   filtersPaginationSelector,
   fetchFiltersAction,
   filtersSelector,
   loadingSelector,
+  removeFilterAction,
   DEFAULT_PAGE_SIZE,
+  createFilterAction,
 } from 'controllers/filter';
 import {
   userIdSelector,
@@ -16,14 +21,19 @@ import {
   activeProjectRoleSelector,
   userAccountRoleSelector,
 } from 'controllers/user';
+import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { withPagination } from 'controllers/pagination';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
 import { PageLayout, PageHeader, PageSection } from 'layouts/pageLayout';
 import { showModalAction } from 'controllers/modal';
 import { withSorting, SORTING_ASC } from 'controllers/sorting';
-import { userFiltersSelector, toggleDisplayFilterOnLaunchesAction } from 'controllers/project';
-import { fetch } from 'common/utils';
-import { URLS } from 'common/urls';
+import {
+  userFiltersSelector,
+  showFilterOnLaunchesAction,
+  hideFilterOnLaunchesAction,
+} from 'controllers/project';
+import { FILTERS_PAGE, FILTERS_PAGE_EVENTS } from 'components/main/analytics/events';
+import { NoResultsForFilter } from 'pages/inside/common/noResultsForFilter';
 import { NoFiltersBlock } from './noFiltersBlock';
 import { FilterPageToolbar } from './filterPageToolbar';
 import { FilterGrid } from './filterGrid';
@@ -32,6 +42,18 @@ const messages = defineMessages({
   filtersPageTitle: {
     id: 'FiltersPage.title',
     defaultMessage: 'Filters',
+  },
+  filtersNotFound: {
+    id: 'FiltersPage.notFound',
+    defaultMessage: "No filters found for '{filter}'",
+  },
+  filterUpdated: {
+    id: 'FiltersPage.filterUpdated',
+    defaultMessage: 'Filter has been updated!',
+  },
+  filterDeleted: {
+    id: 'FiltersPage.filterDeleted',
+    defaultMessage: 'Filter has been deleted!',
   },
 });
 
@@ -48,8 +70,12 @@ const messages = defineMessages({
   }),
   {
     showModalAction,
-    toggleDisplayFilterOnLaunches: toggleDisplayFilterOnLaunchesAction,
+    removeUserFilter: removeFilterAction,
     fetchFiltersAction,
+    showFilterOnLaunchesAction,
+    hideFilterOnLaunchesAction,
+    createFilter: createFilterAction,
+    showNotification,
   },
 )
 @withSorting({
@@ -61,6 +87,7 @@ const messages = defineMessages({
   paginationSelector: filtersPaginationSelector,
 })
 @injectIntl
+@track({ page: FILTERS_PAGE })
 export class FiltersPage extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
@@ -78,9 +105,18 @@ export class FiltersPage extends Component {
     fetchFiltersAction: PropTypes.func,
     showModalAction: PropTypes.func,
     projectRole: PropTypes.string,
-    userFilters: PropTypes.arrayOf(PropTypes.string),
+    userFilters: PropTypes.arrayOf(PropTypes.object),
     accountRole: PropTypes.string,
     loading: PropTypes.bool,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
+    removeUserFilter: PropTypes.func,
+    showFilterOnLaunchesAction: PropTypes.func,
+    hideFilterOnLaunchesAction: PropTypes.func,
+    createFilter: PropTypes.func,
+    showNotification: PropTypes.func,
   };
 
   static defaultProps = {
@@ -101,6 +137,11 @@ export class FiltersPage extends Component {
     userFilters: [],
     accountRole: '',
     loading: false,
+    removeUserFilter: () => {},
+    showFilterOnLaunchesAction: () => {},
+    hideFilterOnLaunchesAction: () => {},
+    createFilter: () => {},
+    showNotification: () => {},
   };
 
   getBreadcrumbs = () => [{ title: this.props.intl.formatMessage(messages.filtersPageTitle) }];
@@ -108,7 +149,11 @@ export class FiltersPage extends Component {
   confirmDelete = (filter) =>
     this.props.showModalAction({
       id: 'filterDeleteModal',
-      data: { filter, onConfirm: () => this.deleteFilter(filter.id) },
+      data: {
+        filter,
+        onConfirm: () => this.deleteFilter(filter),
+        userId: this.props.userId,
+      },
     });
 
   openEditModal = (filter) =>
@@ -121,13 +166,44 @@ export class FiltersPage extends Component {
     fetch(URLS.filter(this.props.activeProject, filter.id), {
       method: 'put',
       data: filter,
-    }).then(this.props.fetchFiltersAction);
+    })
+      .then(this.props.fetchFiltersAction)
+      .then(() => {
+        this.props.showNotification({
+          type: NOTIFICATION_TYPES.SUCCESS,
+          message: this.props.intl.formatMessage(messages.filterUpdated),
+        });
+      });
 
-  deleteFilter = (id) => {
-    fetch(URLS.filter(this.props.activeProject, id), {
+  deleteFilter = (filter) => {
+    fetch(URLS.filter(this.props.activeProject, filter.id), {
       method: 'delete',
-    }).then(this.props.fetchFiltersAction);
+    })
+      .then(() => {
+        if (this.props.userFilters.find((item) => item.id === filter.id)) {
+          this.props.removeUserFilter(filter.id);
+        }
+      })
+      .then(this.props.fetchFiltersAction)
+      .then(() => {
+        this.props.showNotification({
+          type: NOTIFICATION_TYPES.SUCCESS,
+          message: this.props.intl.formatMessage(messages.filterDeleted),
+        });
+      });
   };
+
+  addFilter = () => {
+    this.props.tracking.trackEvent(FILTERS_PAGE_EVENTS.CLICK_ADD_FILTER_BTN);
+    this.props.createFilter();
+  };
+
+  renderNoFiltersBlock = () =>
+    this.props.filter ? (
+      <NoResultsForFilter filter={this.props.filter} notFoundMessage={messages.filtersNotFound} />
+    ) : (
+      <NoFiltersBlock onAddFilter={this.addFilter} />
+    );
 
   render() {
     const {
@@ -142,23 +218,30 @@ export class FiltersPage extends Component {
       onChangePageSize,
       filters,
       loading,
+      activeProject,
       ...rest
     } = this.props;
     return (
       <PageLayout title={intl.formatMessage(messages.filtersPageTitle)}>
         <PageHeader breadcrumbs={this.getBreadcrumbs()} />
         <PageSection>
-          <FilterPageToolbar filter={filter} filters={filters} onFilterChange={onFilterChange} />
+          <FilterPageToolbar
+            filter={filter}
+            filters={filters}
+            onFilterChange={onFilterChange}
+            onAddFilter={this.addFilter}
+          />
           <FilterGrid
             onEdit={this.openEditModal}
             onDelete={this.confirmDelete}
             filters={filters}
             loading={loading}
+            activeProject={activeProject}
             {...rest}
           />
-          {!filters.length && !loading && <NoFiltersBlock />}
-          {filters &&
-            !!filters.length && (
+          {!filters.length && !loading && this.renderNoFiltersBlock()}
+          {!!filters.length &&
+            !loading && (
               <PaginationToolbar
                 activePage={activePage}
                 itemCount={itemCount}

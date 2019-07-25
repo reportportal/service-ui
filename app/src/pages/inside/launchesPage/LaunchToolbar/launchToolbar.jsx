@@ -12,6 +12,8 @@ export const LaunchToolbar = ({
   onUnselect,
   onUnselectAll,
   onMove,
+  onEditItem,
+  onEditItems,
   onMerge,
   onCompare,
   onForceFinish,
@@ -20,8 +22,11 @@ export const LaunchToolbar = ({
   debugMode,
   onRefresh,
   onDelete,
+  onAddNewWidget,
+  activeFilterId,
+  finishedLaunchesCount,
 }) => (
-  <div className={cx('launch-toolbar')}>
+  <div className={cx('launch-toolbar', { 'sticky-toolbar': selectedLaunches.length })}>
     {!!selectedLaunches.length && (
       <SelectedItems
         selectedItems={selectedLaunches}
@@ -37,6 +42,8 @@ export const LaunchToolbar = ({
       hasValidItems={selectedLaunches.length > Object.keys(errors).length}
       onProceedValidItems={onProceedValidItems}
       onMove={onMove}
+      onEditItem={onEditItem}
+      onEditItems={onEditItems}
       onMerge={onMerge}
       onCompare={onCompare}
       onForceFinish={onForceFinish}
@@ -44,6 +51,9 @@ export const LaunchToolbar = ({
       onImportLaunch={onImportLaunch}
       onRefresh={onRefresh}
       onDelete={onDelete}
+      activeFilterId={activeFilterId}
+      onAddNewWidget={onAddNewWidget}
+      finishedLaunchesCount={finishedLaunchesCount}
     />
   </div>
 );
@@ -53,6 +63,8 @@ LaunchToolbar.propTypes = {
   onUnselectAll: PropTypes.func,
   errors: PropTypes.object,
   onProceedValidItems: PropTypes.func,
+  onEditItem: PropTypes.func,
+  onEditItems: PropTypes.func,
   onMerge: PropTypes.func,
   onCompare: PropTypes.func,
   onMove: PropTypes.func,
@@ -61,6 +73,9 @@ LaunchToolbar.propTypes = {
   onImportLaunch: PropTypes.func,
   debugMode: PropTypes.bool,
   onRefresh: PropTypes.func,
+  activeFilterId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  onAddNewWidget: PropTypes.func,
+  finishedLaunchesCount: PropTypes.number,
 };
 LaunchToolbar.defaultProps = {
   selectedLaunches: [],
@@ -68,6 +83,8 @@ LaunchToolbar.defaultProps = {
   onUnselectAll: () => {},
   errors: {},
   onProceedValidItems: () => {},
+  onEditItem: () => {},
+  onEditItems: () => {},
   onMerge: () => {},
   onCompare: () => {},
   onMove: () => {},
@@ -76,4 +93,7 @@ LaunchToolbar.defaultProps = {
   onImportLaunch: () => {},
   debugMode: false,
   onRefresh: () => {},
+  activeFilterId: null,
+  onAddNewWidget: () => {},
+  finishedLaunchesCount: null,
 };

@@ -1,4 +1,4 @@
-import { FETCH_SUCCESS, DEFAULT_OPTIONS, FETCH_ERROR } from './constants';
+import { FETCH_SUCCESS, DEFAULT_OPTIONS, FETCH_ERROR, CONCAT_FETCH_SUCCESS } from './constants';
 
 const computeInitialState = (options) => {
   if (!Object.prototype.hasOwnProperty.call(options, 'initialState')) {
@@ -9,7 +9,7 @@ const computeInitialState = (options) => {
 
 export const fetchReducer = (namespace, options = DEFAULT_OPTIONS) => (
   state = computeInitialState(options),
-  { type, payload, meta },
+  { type, payload, meta, concat },
 ) => {
   if (meta && meta.namespace && meta.namespace !== namespace) {
     return state;
@@ -18,6 +18,14 @@ export const fetchReducer = (namespace, options = DEFAULT_OPTIONS) => (
   switch (type) {
     case FETCH_SUCCESS:
       return contentPath ? payload[contentPath] : payload;
+    case CONCAT_FETCH_SUCCESS: {
+      const data = contentPath ? payload[contentPath] : payload;
+
+      if (data instanceof Array && concat) {
+        return state.concat(data);
+      }
+      return data;
+    }
     case FETCH_ERROR:
       return computeInitialState(options);
     default:

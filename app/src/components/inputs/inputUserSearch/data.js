@@ -6,13 +6,13 @@ export const mockData = {
     {
       userId: '.elogin.new',
       email: 'elogin@gmaile.com',
-      full_name: 'test',
-      account_type: 'INTERNAL',
+      fullName: 'test',
+      accountType: 'INTERNAL',
       userRole: ADMINISTRATOR,
-      last_login: 1506685504247,
-      photo_loaded: true,
-      default_project: 'last',
-      assigned_projects: {
+      lastLogin: 1506685504247,
+      photoLoaded: true,
+      defaultProject: 'last',
+      assignedProjects: {
         _elogin_new_personal: {
           projectRole: PROJECT_MANAGER,
           proposedRole: PROJECT_MANAGER,
@@ -29,13 +29,13 @@ export const mockData = {
     {
       userId: 'autotest',
       email: 'autotest@example.com',
-      full_name: 'autotest',
-      account_type: 'INTERNAL',
+      fullName: 'autotest',
+      accountType: 'INTERNAL',
       userRole: USER,
-      last_login: 1467362347319,
-      photo_loaded: true,
-      default_project: 'autotest_personal',
-      assigned_projects: {
+      lastLogin: 1467362347319,
+      photoLoaded: true,
+      defaultProject: 'autotest_personal',
+      assignedProjects: {
         autotest_personal: {
           projectRole: PROJECT_MANAGER,
           proposedRole: PROJECT_MANAGER,
@@ -56,13 +56,13 @@ export const mockData = {
     {
       userId: 'customer-krns',
       email: 'customer-krns@yandex.by',
-      full_name: 'TEST USER',
-      account_type: 'INTERNAL',
+      fullName: 'TEST USER',
+      accountType: 'INTERNAL',
       userRole: USER,
-      last_login: 1500458177511,
-      photo_loaded: true,
-      default_project: 'gnu',
-      assigned_projects: {
+      lastLogin: 1500458177511,
+      photoLoaded: true,
+      defaultProject: 'gnu',
+      assignedProjects: {
         'customer-krns_personal': {
           projectRole: PROJECT_MANAGER,
           proposedRole: PROJECT_MANAGER,
@@ -80,13 +80,13 @@ export const mockData = {
       userId: 'default',
       email: 'string000@gmale.com',
       photoId: '59c375979194be0001795d1f',
-      full_name: 'tester',
-      account_type: 'INTERNAL',
+      fullName: 'tester',
+      accountType: 'INTERNAL',
       userRole: USER,
-      last_login: 1519033663525,
-      photo_loaded: true,
-      default_project: 'uservcevkjblbk_personal',
-      assigned_projects: {
+      lastLogin: 1519033663525,
+      photoLoaded: true,
+      defaultProject: 'uservcevkjblbk_personal',
+      assignedProjects: {
         11111: {
           projectRole: PROJECT_MANAGER,
           proposedRole: PROJECT_MANAGER,
@@ -343,13 +343,13 @@ export const mockData = {
     {
       userId: 'demo-3',
       email: 'frmp.test@gmaile.com',
-      full_name: 'DME',
-      account_type: 'INTERNAL',
+      fullName: 'DME',
+      accountType: 'INTERNAL',
       userRole: USER,
-      last_login: 1509011649245,
-      photo_loaded: true,
-      default_project: 'demo-3_personal',
-      assigned_projects: {
+      lastLogin: 1509011649245,
+      photoLoaded: true,
+      defaultProject: 'demo-3_personal',
+      assignedProjects: {
         'demo-3_personal': {
           projectRole: PROJECT_MANAGER,
           proposedRole: PROJECT_MANAGER,
@@ -360,13 +360,13 @@ export const mockData = {
     {
       userId: 'mac',
       email: 'test.gmail.com@gmail.com',
-      full_name: 'MaCi',
-      account_type: 'INTERNAL',
+      fullName: 'MaCi',
+      accountType: 'INTERNAL',
       userRole: USER,
-      last_login: 1496666014716,
-      photo_loaded: true,
-      default_project: 'gnu',
-      assigned_projects: {
+      lastLogin: 1496666014716,
+      photoLoaded: true,
+      defaultProject: 'gnu',
+      assignedProjects: {
         gnu: { projectRole: MEMBER, proposedRole: MEMBER, entryType: 'INTERNAL' },
         mac_personal: {
           projectRole: PROJECT_MANAGER,
@@ -378,13 +378,13 @@ export const mockData = {
     {
       userId: 'member-01',
       email: 'member.test@gmail.com',
-      full_name: MEMBER,
-      account_type: 'INTERNAL',
+      fullName: MEMBER,
+      accountType: 'INTERNAL',
       userRole: USER,
-      last_login: 1515768434280,
-      photo_loaded: true,
-      default_project: 'member-01_personal',
-      assigned_projects: {
+      lastLogin: 1515768434280,
+      photoLoaded: true,
+      defaultProject: 'member-01_personal',
+      assignedProjects: {
         default_project: {
           projectRole: MEMBER,
           proposedRole: MEMBER,
@@ -400,13 +400,13 @@ export const mockData = {
     {
       userId: 'member-user1',
       email: 'test.stop@gmail.com',
-      full_name: 'Member-user1',
-      account_type: 'INTERNAL',
+      fullName: 'Member-user1',
+      accountType: 'INTERNAL',
       userRole: USER,
-      last_login: 1507539222051,
-      photo_loaded: true,
-      default_project: 'member-user1_personal',
-      assigned_projects: {
+      lastLogin: 1507539222051,
+      photoLoaded: true,
+      defaultProject: 'member-user1_personal',
+      assignedProjects: {
         default_project: {
           projectRole: MEMBER,
           proposedRole: MEMBER,
@@ -422,13 +422,13 @@ export const mockData = {
     {
       userId: 'new-user10',
       email: 'testuser0@gmail.com',
-      full_name: 'User0',
-      account_type: 'INTERNAL',
+      fullName: 'User0',
+      accountType: 'INTERNAL',
       userRole: USER,
-      last_login: 1475678006576,
-      photo_loaded: true,
-      default_project: 'new-user10_personal',
-      assigned_projects: {
+      lastLogin: 1475678006576,
+      photoLoaded: true,
+      defaultProject: 'new-user10_personal',
+      assignedProjects: {
         'new-user10_personal': {
           projectRole: PROJECT_MANAGER,
           proposedRole: PROJECT_MANAGER,
@@ -439,13 +439,13 @@ export const mockData = {
     {
       userId: 'new-user3',
       email: 'test.new.user@gmail.com',
-      full_name: 'NEW-USER3',
-      account_type: 'INTERNAL',
+      fullName: 'NEW-USER3',
+      accountType: 'INTERNAL',
       userRole: USER,
-      last_login: 1477575142558,
-      photo_loaded: true,
-      default_project: 'new-user3_personal',
-      assigned_projects: {
+      lastLogin: 1477575142558,
+      photoLoaded: true,
+      defaultProject: 'new-user3_personal',
+      assignedProjects: {
         aircraft: {
           projectRole: PROJECT_MANAGER,
           proposedRole: PROJECT_MANAGER,

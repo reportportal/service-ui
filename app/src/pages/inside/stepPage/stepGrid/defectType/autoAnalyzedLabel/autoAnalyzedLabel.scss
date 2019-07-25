@@ -1,13 +1,8 @@
 .aa-label {
   display: inline-block;
-  border-radius: 100px;
-  background-color: $COLOR--white-two;
-  border: solid 1px $COLOR--orange-red;
   height: 20px;
-  width: 30px;
-  color: $COLOR--orange-red;
-  font-family: $FONT-SEMIBOLD;
-  font-size: 13px;
-  line-height: 18px;
-  text-align: center;
+  width: 43px;
+  svg {
+    fill: $COLOR--white-two;
+  }
 }

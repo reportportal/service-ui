@@ -1,0 +1,26 @@
+.expand-toggler {
+  color: $COLOR--windows-blue;
+  font-family: $FONT-REGULAR;
+  font-size: 11px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.icon {
+  position: relative;
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  padding-left: 2px;
+
+  svg {
+    fill: $COLOR--windows-blue;
+  }
+
+  &.expanded {
+    top: 9px;
+    padding-left: 0;
+    padding-right: 2px;
+    transform: rotate(180deg);
+  }
+}

@@ -69,8 +69,6 @@
   width: 270px;
   max-width: 270px;
   box-sizing: border-box;
-  @media (max-width: $SCREEN_XS_MAX) {
-  }
 }
 
 .input-switcher-wrapper {
@@ -85,5 +83,17 @@
     position: static;
     max-width: 100%;
     margin-top: 10px;
+  }
+}
+
+.modal-window {
+  width: 770px;
+  margin-left: -385px;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    right: 10px;
+    left: 10px;
+    width: auto;
+    margin-left: 0;
   }
 }

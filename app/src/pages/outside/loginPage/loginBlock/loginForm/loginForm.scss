@@ -88,3 +88,33 @@
     margin-bottom: 30px;
   }
 }
+
+.attempts-exceeded-block {
+  display: flex;
+  margin-bottom: 20px;
+  color: $COLOR--charcoal-grey;
+  font-size: 12px;
+  font-family: $FONT-REGULAR;
+  line-height: 16px;
+
+  b {
+    font-family: $FONT-SEMIBOLD;
+  }
+
+  .warning {
+    display: inline-flex;
+    margin-right: 5px;
+    color: $COLOR--failed;
+  }
+
+  .warning-icon {
+    display: inline-block;
+    width: 15px;
+    height: 15px;
+    margin-right: 5px;
+    vertical-align: middle;
+    svg {
+      fill: $COLOR--failed;
+    }
+  }
+}

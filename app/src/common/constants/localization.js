@@ -9,6 +9,10 @@ export const COMMON_LOCALE_KEYS = defineMessages({
     id: 'Common.cancel',
     defaultMessage: 'Cancel',
   },
+  CLOSE: {
+    id: 'Common.close',
+    defaultMessage: 'Close',
+  },
   UPDATE: {
     id: 'Common.update',
     defaultMessage: 'Update',
@@ -48,5 +52,37 @@ export const COMMON_LOCALE_KEYS = defineMessages({
   CLOSE_MODAL_WARNING: {
     id: 'Common.closeModalWarning',
     defaultMessage: 'You have to save changes or cancel them before closing the window',
+  },
+  DISCARD: {
+    id: 'Common.discard',
+    defaultMessage: 'Discard',
+  },
+  EDIT: {
+    id: 'Common.edit',
+    defaultMessage: 'Edit',
+  },
+  CLONE: {
+    id: 'Common.clone',
+    defaultMessage: 'Clone',
+  },
+  ADD: {
+    id: 'Common.add',
+    defaultMessage: 'Add',
+  },
+  SECONDS: {
+    id: 'Common.seconds',
+    defaultMessage: 'seconds',
+  },
+  NO_RESULTS: {
+    id: 'Common.noResults',
+    defaultMessage: 'No results found',
+  },
+  RESET: {
+    id: 'Common.reset',
+    defaultMessage: 'Reset',
+  },
+  SEARCH: {
+    id: 'Common.search',
+    defaultMessage: 'Search',
   },
 });

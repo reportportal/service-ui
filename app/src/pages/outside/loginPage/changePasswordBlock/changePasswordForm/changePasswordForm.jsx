@@ -63,15 +63,12 @@ const notifications = defineMessages({
 });
 
 @connectRouter(({ reset: resetQueryParam }) => ({ resetQueryParam }))
-@connect(
-  null,
-  {
-    redirect,
-    showScreenLockAction,
-    hideScreenLockAction,
-    showNotification,
-  },
-)
+@connect(null, {
+  redirect,
+  showScreenLockAction,
+  hideScreenLockAction,
+  showNotification,
+})
 @reduxForm({
   form: 'changePassword',
   validate: ({ password, passwordRepeat }) => ({
@@ -135,7 +132,7 @@ export class ChangePasswordForm extends PureComponent {
               text={
                 <FormattedMessage
                   id={'ChangePasswordForm.passwordConstraints'}
-                  defaultMessage={'4-25 symbols'}
+                  defaultMessage={'4-256 symbols'}
                 />
               }
             >
@@ -143,7 +140,7 @@ export class ChangePasswordForm extends PureComponent {
                 <InputOutside
                   type={'password'}
                   icon={PasswordIcon}
-                  maxLength={'25'}
+                  maxLength={'256'}
                   placeholder={formatMessage(placeholders.newPassword)}
                 />
               </FieldErrorHint>
@@ -156,7 +153,7 @@ export class ChangePasswordForm extends PureComponent {
               <InputOutside
                 type={'password'}
                 icon={PasswordIcon}
-                maxLength={'25'}
+                maxLength={'256'}
                 placeholder={formatMessage(placeholders.confirmNewPassword)}
               />
             </FieldErrorHint>

@@ -1,0 +1,1 @@
+export { MessageBadge } from './messageBadge';

@@ -59,3 +59,25 @@
     background-image: url(./img/table-active.svg);
   }
 }
+
+.icon-statistics {
+  background-image: url(./img/stat.svg);
+  &:hover {
+    background-image: url(./img/stat-hover.svg);
+  }
+}
+
+.icon-linked {
+  background-image: url(./img/linked.svg);
+  background-position: left;
+}
+
+.icon-person {
+  background-image: url(./img/person.svg);
+  background-position: left;
+}
+
+.icon-internal {
+  background-image: url(./img/internal.svg);
+  background-position: left;
+}

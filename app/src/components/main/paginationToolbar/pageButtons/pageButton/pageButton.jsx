@@ -26,6 +26,5 @@ PageButton.defaultProps = {
   disabled: false,
   active: false,
   hideOnMobile: false,
-  onClick: () => {
-  },
+  onClick: () => {},
 };

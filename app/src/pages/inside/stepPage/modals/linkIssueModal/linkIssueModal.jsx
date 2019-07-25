@@ -1,21 +1,22 @@
 import { Component } from 'react';
+import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { reduxForm, FieldArray } from 'redux-form';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { activeProjectSelector } from 'controllers/user';
-import { externalSystemSelector } from 'controllers/project';
+import { namedAvailableBtsIntegrationsSelector } from 'controllers/plugins';
 import { ModalLayout, withModal } from 'components/main/modal';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
+import { STEP_PAGE_EVENTS } from 'components/main/analytics/events';
 import { URLS } from 'common/urls';
-import { InputDropdown } from 'components/inputs/inputDropdown';
-import { FormField } from 'components/fields/formField';
 import { validate, fetch } from 'common/utils';
 import { BetaBadge } from 'pages/inside/common/betaBadge';
-import styles from './linkIssueModal.scss';
+import { BtsIntegrationSelector } from 'pages/inside/common/btsIntegrationSelector';
 import { LinkIssueFields } from './linkIssueFields';
+import styles from './linkIssueModal.scss';
 
 const cx = classNames.bind(styles);
 
@@ -31,10 +32,6 @@ const messages = defineMessages({
   addIssueIdTitle: {
     id: 'LinkIssueModal.addIssueIdTitle',
     defaultMessage: 'Add issue id',
-  },
-  projectInBtsTitle: {
-    id: 'LinkIssueModal.projectInBtsTitle',
-    defaultMessage: 'Project name in BTS',
   },
   linkIssueSuccess: {
     id: 'LinkIssueModal.linkIssueSuccess',
@@ -60,20 +57,21 @@ const messages = defineMessages({
 })
 @connect(
   (state) => ({
-    url: URLS.testItemsAddIssues(activeProjectSelector(state)),
-    externalSystems: externalSystemSelector(state),
+    requestUrl: URLS.testItemsLinkIssues(activeProjectSelector(state)),
+    namedBtsIntegrations: namedAvailableBtsIntegrationsSelector(state),
   }),
   {
     showNotification,
   },
 )
 @injectIntl
+@track()
 export class LinkIssueModal extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
-    url: PropTypes.string.isRequired,
+    requestUrl: PropTypes.string.isRequired,
     showNotification: PropTypes.func.isRequired,
-    externalSystems: PropTypes.array.isRequired,
+    namedBtsIntegrations: PropTypes.object.isRequired,
     initialize: PropTypes.func.isRequired,
     handleSubmit: PropTypes.func.isRequired,
     change: PropTypes.func.isRequired,
@@ -82,42 +80,53 @@ export class LinkIssueModal extends Component {
       items: PropTypes.array,
       fetchFunc: PropTypes.func,
     }).isRequired,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
 
   constructor(props) {
     super(props);
-    this.dropdownOptions = props.externalSystems.map((item) => ({
-      value: item.id,
-      label: item.project,
-    }));
+    const pluginName = Object.keys(props.namedBtsIntegrations)[0];
 
     this.props.initialize({
-      systemId: this.dropdownOptions[0].value,
       issues: [{}],
     });
+    this.state = {
+      pluginName,
+      integrationId: props.namedBtsIntegrations[pluginName][0].id,
+    };
   }
 
   onFormSubmit = (formData) => {
     const {
       intl,
-      url,
+      requestUrl,
       data: { items, fetchFunc },
+      namedBtsIntegrations,
     } = this.props;
+    const { pluginName, integrationId } = this.state;
+    const {
+      integrationParameters: { project, url },
+    } = namedBtsIntegrations[pluginName].find((item) => item.id === integrationId);
     const testItemIds = items.map((item) => item.id);
     const issues = formData.issues.map((issue) => ({
       ticketId: issue.issueId,
       url: issue.issueLink,
+      btsProject: project,
+      btsUrl: url,
     }));
 
-    fetch(url, {
+    fetch(requestUrl, {
       method: 'put',
       data: {
         issues,
-        systemId: formData.systemId,
         testItemIds,
       },
     })
       .then(() => {
+        this.closeModal();
         fetchFunc();
         this.props.showNotification({
           message: intl.formatMessage(messages.linkIssueSuccess),
@@ -130,12 +139,29 @@ export class LinkIssueModal extends Component {
           type: NOTIFICATION_TYPES.ERROR,
         });
       });
-    this.closeModal();
   };
 
   onLink = () => (closeModal) => {
+    this.props.tracking.trackEvent(STEP_PAGE_EVENTS.LOAD_BTN_LOAD_BUG_MODAL);
     this.closeModal = closeModal;
     this.props.handleSubmit(this.onFormSubmit)();
+  };
+
+  onChangePlugin = (pluginName) => {
+    if (pluginName !== this.state.pluginName) {
+      this.setState({
+        pluginName,
+        integrationId: this.props.namedBtsIntegrations[pluginName][0].id,
+      });
+    }
+  };
+
+  onChangeIntegration = (integrationId) => {
+    if (integrationId !== this.state.integrationId) {
+      this.setState({
+        integrationId,
+      });
+    }
   };
 
   getCloseConfirmationConfig = () => {
@@ -147,16 +173,15 @@ export class LinkIssueModal extends Component {
     };
   };
 
-  isMultipleExternalSystems = () => this.props.externalSystems.length > 1;
-
   render() {
-    const { intl } = this.props;
+    const { intl, namedBtsIntegrations } = this.props;
     const okButton = {
       text: intl.formatMessage(messages.linkButton),
       onClick: this.onLink(),
     };
     const cancelButton = {
       text: intl.formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+      eventInfo: STEP_PAGE_EVENTS.CANCEL_BTN_LOAD_BUG_MODAL,
     };
 
     return (
@@ -164,27 +189,30 @@ export class LinkIssueModal extends Component {
         title={
           <span className={cx('link-issue-title')}>
             {intl.formatMessage(messages.title)}
-            <BetaBadge className={cx('beta')} />
+            <BetaBadge />
           </span>
         }
         okButton={okButton}
         cancelButton={cancelButton}
         closeConfirmation={this.getCloseConfirmationConfig()}
+        closeIconEventInfo={STEP_PAGE_EVENTS.CLOSE_ICON_LOAD_BUG_MODAL}
       >
         <h4 className={cx('add-issue-id-title')}>{intl.formatMessage(messages.addIssueIdTitle)}</h4>
         <div className={cx('link-issue-form-wrapper')}>
           <form>
-            {this.isMultipleExternalSystems() && (
-              <FormField
-                name="systemId"
-                fieldWrapperClassName={cx('field-wrapper')}
-                label={intl.formatMessage(messages.projectInBtsTitle)}
-                labelClassName={cx('multiple-systems-title')}
-              >
-                <InputDropdown options={this.dropdownOptions} />
-              </FormField>
-            )}
-            <FieldArray name="issues" change={this.props.change} component={LinkIssueFields} />
+            <BtsIntegrationSelector
+              namedBtsIntegrations={namedBtsIntegrations}
+              pluginName={this.state.pluginName}
+              integrationId={this.state.integrationId}
+              onChangeIntegration={this.onChangeIntegration}
+              onChangePluginName={this.onChangePlugin}
+            />
+            <FieldArray
+              name="issues"
+              change={this.props.change}
+              component={LinkIssueFields}
+              addEventInfo={STEP_PAGE_EVENTS.ADD_NEW_ISSUE_BTN_LOAD_BUG_MODAL}
+            />
           </form>
         </div>
       </ModalLayout>

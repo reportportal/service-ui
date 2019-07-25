@@ -1,0 +1,1 @@
+export { IntegrationsTab } from './integrationsTab';

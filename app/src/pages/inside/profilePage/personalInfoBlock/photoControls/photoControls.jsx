@@ -1,14 +1,17 @@
 import PropTypes from 'prop-types';
+import track from 'react-tracking';
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
 import { defineMessages, injectIntl, intlShape } from 'react-intl';
-import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
-import { showModalAction } from 'controllers/modal';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
 import { INTERNAL } from 'common/constants/accountType';
+import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
+import { showModalAction } from 'controllers/modal';
+import { setPhotoTimeStampAction } from 'controllers/user';
 import { GhostButton } from 'components/buttons/ghostButton';
+import { PROFILE_PAGE_EVENTS } from 'components/main/analytics/events';
 import styles from './photoControls.scss';
 
 const cx = classNames.bind(styles);
@@ -48,8 +51,9 @@ const messages = defineMessages({
   },
 });
 
-@connect(null, { showNotification, showModalAction })
+@connect(null, { showNotification, showModalAction, setPhotoTimeStampAction })
 @injectIntl
+@track()
 export class PhotoControls extends Component {
   static propTypes = {
     accountType: PropTypes.string,
@@ -58,6 +62,11 @@ export class PhotoControls extends Component {
     intl: intlShape.isRequired,
     showModalAction: PropTypes.func.isRequired,
     showNotification: PropTypes.func.isRequired,
+    setPhotoTimeStampAction: PropTypes.func.isRequired,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
   static defaultProps = {
     accountType: '',
@@ -71,11 +80,14 @@ export class PhotoControls extends Component {
     image: null,
   };
 
-  onRemove = () =>
+  onRemove = () => {
+    this.props.tracking.trackEvent(PROFILE_PAGE_EVENTS.REMOVE_PHOTO_BTN);
     this.props.showModalAction({
       id: 'deleteImageModal',
       data: { onRemove: this.removeImageHandler },
     });
+  };
+
   onSave = () => {
     const formData = new FormData();
     formData.append('file', this.state.image);
@@ -85,6 +97,7 @@ export class PhotoControls extends Component {
           message: this.props.intl.formatMessage(messages.submitUpload),
           type: NOTIFICATION_TYPES.SUCCESS,
         });
+        this.props.setPhotoTimeStampAction(Date.now());
       })
       .catch(() => {
         this.props.showNotification({
@@ -95,6 +108,7 @@ export class PhotoControls extends Component {
     this.setState({ newPhotoLoaded: false });
   };
   onClickUploadPhoto = () => {
+    this.props.tracking.trackEvent(PROFILE_PAGE_EVENTS.UPLOAD_PHOTO_BTN);
     this.fileSelector.click();
   };
   onLoadFile = (file) => {
@@ -131,6 +145,7 @@ export class PhotoControls extends Component {
     fetch(URLS.dataPhoto(), { method: 'delete' })
       .then(() => {
         this.props.removeImage();
+        this.props.setPhotoTimeStampAction(Date.now());
         this.props.showNotification({
           message: this.props.intl.formatMessage(messages.wasDeleted),
           type: NOTIFICATION_TYPES.SUCCESS,
@@ -167,7 +182,13 @@ export class PhotoControls extends Component {
                 accept="image/gif, image/jpeg, image/png"
               />
             </div>
-            {!this.state.newPhotoLoaded && (
+            {this.state.newPhotoLoaded ? (
+              <div className={cx('photo-btn')}>
+                <GhostButton onClick={this.onSave}>
+                  {intl.formatMessage(messages.savePhoto)}
+                </GhostButton>
+              </div>
+            ) : (
               <Fragment>
                 <div className={cx('photo-btn')}>
                   <GhostButton onClick={this.onClickUploadPhoto}>
@@ -180,13 +201,6 @@ export class PhotoControls extends Component {
                   </button>
                 </div>
               </Fragment>
-            )}
-            {this.state.newPhotoLoaded && (
-              <div className={cx('photo-btn')}>
-                <GhostButton onClick={this.onSave}>
-                  {intl.formatMessage(messages.savePhoto)}
-                </GhostButton>
-              </div>
             )}
           </div>
         )}

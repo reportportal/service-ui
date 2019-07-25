@@ -1,0 +1,21 @@
+.pattern-list {
+  max-width: 85vw;
+}
+
+.pattern-list-label {
+  font-size: 13px;
+  font-family: $FONT-REGULAR;
+  color: $COLOR--gray-60;
+  padding-top: 15px;
+}
+
+.pattern-name {
+  font-family: $FONT-REGULAR;
+  color: $COLOR--charcoal-grey;
+  font-size: 14px;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  line-height: 22px;
+}

@@ -1,12 +1,15 @@
 import { Component } from 'react';
+import track from 'react-tracking';
 import { connect } from 'react-redux';
 import { injectIntl, intlShape, defineMessages } from 'react-intl';
-import { setStorageItem } from 'common/utils';
+import { updateStorageItem } from 'common/utils';
+import { APPLICATION_SETTINGS } from 'common/constants/localStorageKeys';
 import Parser from 'html-react-parser';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { langSelector, setLangAction } from 'controllers/lang';
 import { InputDropdown } from 'components/inputs/inputDropdown';
+import { PROFILE_PAGE_EVENTS } from 'components/main/analytics/events';
 import styles from './localizationBlock.scss';
 import EnglishFlagIcon from './img/en-flag-inline.svg';
 import RussianFlagIcon from './img/ru-flag-inline.svg';
@@ -37,7 +40,7 @@ const messages = defineMessages({
   },
   contribute: {
     id: 'LocalizationBlock.contribute',
-    defaultMessage: `Ru lang in beta. Please help us to translate it, send your PR to this <a target='_blank' href='https://github.com/reportportal/service-ui/blob/develop/src/main/resources/public/js/src/localizations/ru-RU.js' >file.</a>`,
+    defaultMessage: `Ru lang in beta. Please help us to translate it, send your PR to this <a target='_blank' href='https://github.com/reportportal/service-ui/blob/v5/app/localization/translated/ru.json' >file.</a>`,
   },
 });
 
@@ -65,15 +68,21 @@ LanguageOption.defaultProps = {
   },
 )
 @injectIntl
+@track()
 export class LocalizationBlock extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
     lang: PropTypes.string.isRequired,
     setLangAction: PropTypes.func.isRequired,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
 
   onChangeLanguage = (lang) => {
-    setStorageItem('application_settings', { appLanguage: lang });
+    this.props.tracking.trackEvent(PROFILE_PAGE_EVENTS.CHANGE_LANGUAGE);
+    updateStorageItem(APPLICATION_SETTINGS, { appLanguage: lang });
     this.props.setLangAction(lang);
   };
 

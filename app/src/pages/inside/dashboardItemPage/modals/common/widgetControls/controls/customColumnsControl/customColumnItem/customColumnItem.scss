@@ -1,0 +1,30 @@
+.custom-column-item {
+  display: flex;
+  justify-content: space-between;
+}
+.last-custom-column-field {
+  padding-bottom: 20px;
+}
+.name-input {
+  flex-grow: unset;
+  width: 117px;
+}
+.attribute-key-input {
+  flex-grow: unset;
+  width: 97px;
+}
+.remove-icon {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  margin: auto 0;
+  cursor: pointer;
+
+  svg {
+    vertical-align: top;
+  }
+
+  &.no-remove {
+    cursor: default;
+  }
+}

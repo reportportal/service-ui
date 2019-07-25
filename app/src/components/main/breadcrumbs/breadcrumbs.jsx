@@ -1,4 +1,5 @@
 import { Fragment, Component } from 'react';
+import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import { FormattedMessage } from 'react-intl';
 import Parser from 'html-react-parser';
@@ -12,24 +13,74 @@ import styles from './breadcrumbs.scss';
 
 const cx = classNames.bind(styles);
 
+@track()
 export class Breadcrumbs extends Component {
   static propTypes = {
     descriptors: PropTypes.arrayOf(breadcrumbDescriptorShape),
     onRestorePath: PropTypes.func,
+    togglerEventInfo: PropTypes.object,
+    breadcrumbEventInfo: PropTypes.object,
+    allEventClick: PropTypes.object,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
   static defaultProps = {
     descriptors: [],
     onRestorePath: () => {},
+    togglerEventInfo: {},
+    breadcrumbEventInfo: {},
+    allEventClick: {},
   };
 
   state = {
     expanded: false,
   };
 
-  toggleExpand = () => this.setState({ expanded: !this.state.expanded });
+  onClickBreadcrumbItem = (idx) => {
+    this.props.tracking.trackEvent(
+      idx === 0 ? this.props.allEventClick : this.props.breadcrumbEventInfo,
+    );
+  };
 
+  getListViewIndex = () => {
+    const { descriptors } = this.props;
+    return descriptors.findIndex((item) => item.listView);
+  };
+  isListView = () => this.getListViewIndex() >= 0;
+  isLostLaunch = () => {
+    const { descriptors } = this.props;
+    return descriptors[1] && descriptors[1].lost;
+  };
+  toggleExpand = () => {
+    this.props.togglerEventInfo && this.props.tracking.trackEvent(this.props.togglerEventInfo);
+    this.setState({ expanded: !this.state.expanded });
+  };
+  renderSeparator = (item, index) => {
+    const listViewIndex = this.getListViewIndex();
+    const isOpenListView = index - 1 === listViewIndex;
+    if (this.isListView() && isOpenListView && !item.active) {
+      return <div className={cx('bracket')}>(</div>;
+    }
+    if (index > 0) {
+      return <div className={cx('separator')}>{Parser(RightArrowIcon)}</div>;
+    }
+    return null;
+  };
+  renderCloseListView = (item, index) => {
+    const { descriptors } = this.props;
+    const { id } = item;
+    const listViewIndex = this.getListViewIndex();
+    const closestNonActivePage = [...descriptors].reverse().find((page) => !page.active) || {};
+    const isBeforeLastItem = closestNonActivePage.id === id && listViewIndex < index;
+    if (this.isListView() && isBeforeLastItem) {
+      return <div className={cx('bracket', 'bracket-close')}>)</div>;
+    }
+    return null;
+  };
   render() {
-    const isLostLaunch = this.props.descriptors[1] && this.props.descriptors[1].lost;
+    const isLostLaunch = this.isLostLaunch();
     return (
       <div className={cx('breadcrumbs')}>
         <div className={cx('toggler-container')}>
@@ -42,8 +93,12 @@ export class Breadcrumbs extends Component {
         {!isLostLaunch ? (
           this.props.descriptors.map((descriptor, i) => (
             <Fragment key={descriptor.id}>
-              {i > 0 && <div className={cx('separator')}>{Parser(RightArrowIcon)}</div>}
-              <Breadcrumb descriptor={descriptor} />
+              {this.renderSeparator(descriptor, i)}
+              <Breadcrumb
+                descriptor={descriptor}
+                onClick={(idx) => this.onClickBreadcrumbItem(idx)}
+              />
+              {this.renderCloseListView(descriptor, i)}
             </Fragment>
           ))
         ) : (

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="63px" height="20px" viewBox="0 0 63 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 55 (78076) - https://sketchapp.com -->
+    <title>toggle/count_amount</title>
+    <desc>Created with Sketch.</desc>
+    <g id="toggle/count_amount" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <path d="M31.5,0.5 L31.5,19.5 L61,19.5 C61.8284271,19.5 62.5,18.8284271 62.5,18 L62.5,2 C62.5,1.17157288 61.8284271,0.5 61,0.5 L31.5,0.5 Z" id="Rectangle" stroke="#199CB0"></path>
+        <path d="M2,0 L32,0 L32,20 L2,20 C0.8954305,20 1.3527075e-16,19.1045695 0,18 L0,2 C-1.3527075e-16,0.8954305 0.8954305,2.02906125e-16 2,0 Z" id="Rectangle-Copy-28" fill="#199CB0"></path>
+        <text id="N" font-family="OpenSans-Bold, Open Sans" font-size="11" font-weight="bold" letter-spacing="-0.2132654" fill="#FFFFFF">
+            <tspan x="12" y="14">N</tspan>
+        </text>
+        <text id="%" font-family="OpenSans-Bold, Open Sans" font-size="11" font-weight="bold" letter-spacing="-0.2132654" fill="#199CB0">
+            <tspan x="42" y="14">%</tspan>
+        </text>
+    </g>
+</svg>

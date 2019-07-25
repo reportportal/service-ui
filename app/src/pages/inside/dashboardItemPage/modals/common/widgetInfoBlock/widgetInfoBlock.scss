@@ -1,0 +1,24 @@
+.widget-info-block {
+  width: 100%;
+  box-sizing: border-box;
+  padding-top: 20px;
+}
+.widget-title {
+  display: inline-block;
+  width: 100%;
+  margin-bottom: 10px;
+  font-family: $FONT-SEMIBOLD;
+  font-size: 14px;
+  line-height: 17px;
+  color: $COLOR--charcoal-grey;
+  text-align: center;
+}
+.widget-description {
+  display: inline-block;
+  box-sizing: border-box;
+  width: 100%;
+  font-family: $FONT-REGULAR;
+  font-size: 13px;
+  line-height: 22px;
+  color: $COLOR--gray-47;
+}

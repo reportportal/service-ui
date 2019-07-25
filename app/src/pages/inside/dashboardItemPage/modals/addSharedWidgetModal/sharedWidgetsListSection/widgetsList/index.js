@@ -1,0 +1,1 @@
+export { WidgetsList } from './widgetsList';

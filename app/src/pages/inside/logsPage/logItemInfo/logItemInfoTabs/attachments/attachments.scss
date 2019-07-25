@@ -1,0 +1,34 @@
+.attachments {
+  width: 100%;
+  text-align: center;
+}
+
+.main-carousel {
+  width: 650px;
+  margin: 0 auto 20px auto;
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    width: 100%;
+  }
+}
+
+.thumbs-carousel {
+  width: 95%;
+  margin: 0 auto;
+  &.show-separator {
+    &:before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 30px;
+      right: 30px;
+      height: 1px;
+      background-color: $COLOR--gray-91;
+    }
+  }
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    width: 100%;
+  }
+}
+

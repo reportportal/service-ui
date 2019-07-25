@@ -2,7 +2,6 @@ import React, { Component, Fragment } from 'react';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { TO_INVESTIGATE } from 'common/constants/defectTypes';
 import { projectConfigSelector } from 'controllers/project';
 import { injectIntl, intlShape, defineMessages } from 'react-intl';
 import { DefectLink } from 'pages/inside/common/defectLink';
@@ -17,6 +16,10 @@ const messages = defineMessages({
   },
   system_issue_total: { id: 'DefectTypeTooltip.si-total', defaultMessage: 'Total system issues' },
   no_defect_total: { id: 'DefectTypeTooltip.nd-total', defaultMessage: 'Total no defects' },
+  to_investigate_total: {
+    id: 'DefectTypeTooltip.ti-total',
+    defaultMessage: 'Total to investigate',
+  },
 });
 
 @injectIntl
@@ -29,58 +32,76 @@ export class DefectTypeTooltip extends Component {
     data: PropTypes.object.isRequired,
     projectConfig: PropTypes.object.isRequired,
     intl: intlShape.isRequired,
-    itemId: PropTypes.string,
+    tooltipEventInfo: PropTypes.object,
+    itemId: PropTypes.number,
   };
 
   static defaultProps = {
     itemId: null,
+    tooltipEventInfo: {},
+  };
+
+  getFilteredBodyData = (config) => {
+    const { data = [] } = this.props;
+
+    return Object.keys(data)
+      .map((key) => config.find((item) => item.locator === key))
+      .filter((item) => item)
+      .sort((a, b) => a.id - b.id)
+      .filter(({ locator }, i) => i === 0 || data[locator] > 0);
   };
 
   render() {
-    const { formatMessage } = this.props.intl;
-    const defectConfig =
-      this.props.projectConfig.subTypes &&
-      this.props.projectConfig.subTypes[this.props.type.toUpperCase()];
+    const {
+      data,
+      itemId,
+      tooltipEventInfo,
+      type,
+      projectConfig,
+      intl: { formatMessage },
+    } = this.props;
+
+    const defectConfig = projectConfig.subTypes && projectConfig.subTypes[type.toUpperCase()];
+
+    const filteredBodyData = this.getFilteredBodyData(defectConfig);
 
     return (
       <div className={cx('defect-type-tooltip')}>
         {defectConfig && (
           <Fragment>
-            {this.props.type !== TO_INVESTIGATE && (
+            {filteredBodyData.length > 1 && (
               <DefectLink
-                itemId={this.props.itemId}
-                defects={Object.keys(this.props.data)}
+                itemId={itemId}
+                defects={Object.keys(data)}
                 className={cx('total-item')}
+                eventInfo={tooltipEventInfo}
               >
                 <div className={cx('name')}>
                   <div
                     className={cx('circle')}
                     style={{ backgroundColor: defectConfig[0].color }}
                   />
-                  {formatMessage(messages[`${this.props.type}_total`])}
+                  {formatMessage(messages[`${type}_total`])}
                 </div>
-                <span className={cx('value')}>{this.props.data.total}</span>
+                <span className={cx('value')}>{data.total}</span>
               </DefectLink>
             )}
-            {Object.keys(this.props.data).map((key) => {
-              const defectType = defectConfig.find((item) => item.locator === key);
-              return (
-                defectType && (
-                  <DefectLink
-                    key={key}
-                    itemId={this.props.itemId}
-                    defects={[key]}
-                    className={cx('item')}
-                  >
-                    <div className={cx('name')}>
-                      <div className={cx('circle')} style={{ backgroundColor: defectType.color }} />
-                      {defectType.longName}
-                    </div>
-                    <span className={cx('value')}>{this.props.data[defectType.locator]}</span>
-                  </DefectLink>
-                )
-              );
-            })}
+            {/**
+             * Display defect types in a proper order,
+             * the first is the system type (Product Bug, To investigate, etc.)
+             * that is way they are sorted by ID
+             * Don't display defect sub types with zero defect's amount,
+             * except system types (i.e. with index=0)
+             */
+            filteredBodyData.map(({ locator, color, longName }) => (
+              <DefectLink key={locator} itemId={itemId} defects={[locator]} className={cx('item')}>
+                <div className={cx('name')}>
+                  <div className={cx('circle')} style={{ backgroundColor: color }} />
+                  {longName}
+                </div>
+                <span className={cx('value')}>{data[locator]}</span>
+              </DefectLink>
+            ))}
           </Fragment>
         )}
       </div>

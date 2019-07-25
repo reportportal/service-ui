@@ -14,11 +14,57 @@
 }
 
 .action-button {
+  position: relative;
   padding-left: 10px;
 }
 
 .mobile-hidden {
   @media (max-width: $SCREEN_XS_MAX) {
     display: none;
+  }
+}
+
+.counter {
+  position: absolute;
+  right: 3px;
+  bottom: 50%;
+  box-sizing: border-box;
+  min-width: 15px;
+  height: 15px;
+  padding: 2px 4px;
+  margin: 0 0 5px 1px;
+  border: 1px solid $COLOR--white-two;
+  border-radius: 100px;
+  background-color: $COLOR--orange-red;
+  color: $COLOR--white-two;
+  font-size: 10px;
+  line-height: 10px;
+  text-align: center;
+  animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+  0%,
+  100%,
+  20%,
+  53%,
+  80% {
+    transition-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+    transform: translate3d(0, 0, 0);
+  }
+
+  40%,
+  43% {
+    transition-timing-function: cubic-bezier(0.755, 0.05, 0.855, 0.06);
+    transform: translate3d(0, -30px, 0);
+  }
+
+  70% {
+    transition-timing-function: cubic-bezier(0.755, 0.05, 0.855, 0.06);
+    transform: translate3d(0, -15px, 0);
+  }
+
+  90% {
+    transform: translate3d(0, -4px, 0);
   }
 }

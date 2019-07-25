@@ -51,11 +51,16 @@ export class InputTagsSearch extends Component {
     dynamicSearchPromptText: PropTypes.bool,
     isClearable: PropTypes.bool,
     disabled: PropTypes.bool,
+    mobileDisabled: PropTypes.bool,
+    customClass: PropTypes.string,
+    isOptionUnique: PropTypes.func,
+    inputProps: PropTypes.object,
+    filterOption: PropTypes.func,
   };
   static defaultProps = {
     uri: '',
     options: [],
-    value: {},
+    value: null,
     placeholder: '',
     focusPlaceholder: '',
     loadingPlaceholder: '',
@@ -74,14 +79,20 @@ export class InputTagsSearch extends Component {
     minLength: 1,
     showNewLabel: false,
     dynamicSearchPromptText: false,
-    isClearable: false,
+    isClearable: true,
     disabled: false,
+    mobileDisabled: false,
+    customClass: null,
+    isOptionUnique: null,
+    inputProps: {},
+    filterOption: () => true,
   };
   state = {
     searchPromptText: this.props.nothingFound,
   };
   onInputChange = (input) => {
     const diff = this.props.minLength - input.length;
+
     if (this.props.dynamicSearchPromptText && this.props.minLength && diff > 0) {
       const dynamicSearchPromptText = (
         <FormattedMessage
@@ -129,6 +140,7 @@ export class InputTagsSearch extends Component {
     }
     return label;
   };
+
   render() {
     const {
       touched,
@@ -148,10 +160,22 @@ export class InputTagsSearch extends Component {
       onFocus,
       isValidNewOption,
       onBlur,
+      mobileDisabled,
+      customClass,
+      isOptionUnique,
+      inputProps,
+      filterOption,
     } = this.props;
     const SelectComponent = selectType(async, creatable);
+
     return (
-      <div className={cx('select-container', { error, touched })}>
+      <div
+        className={cx(
+          'select-container',
+          { error, touched, 'mobile-disabled': mobileDisabled },
+          customClass,
+        )}
+      >
         <SelectComponent
           loadOptions={this.getItems}
           placeholder={placeholder}
@@ -173,8 +197,11 @@ export class InputTagsSearch extends Component {
           multi={multi}
           isValidNewOption={isValidNewOption}
           removeSelected={removeSelected}
-          isClearable={isClearable}
+          clearable={isClearable}
           disabled={disabled}
+          isOptionUnique={isOptionUnique || undefined}
+          inputProps={inputProps}
+          filterOption={filterOption}
         />
       </div>
     );

@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import { FormattedMessage } from 'react-intl';
 import classNames from 'classnames/bind';
 
 import styles from './itemCounter.scss';
@@ -10,7 +11,8 @@ export const ItemCounter = ({ activePage, pageSize, itemCount }) => {
   const startIndex = endIndex - pageSize;
   return (
     <div className={cx('item-counter')}>
-      {`${startIndex + 1} - ${endIndex < itemCount ? endIndex : itemCount}`} of {itemCount}
+      {`${startIndex + 1} - ${endIndex < itemCount ? endIndex : itemCount}`}{' '}
+      <FormattedMessage id="Common.of" defaultMessage="of" /> {itemCount}
     </div>
   );
 };

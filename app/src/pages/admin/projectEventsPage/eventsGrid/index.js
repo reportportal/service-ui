@@ -1,0 +1,1 @@
+export { EventsGrid } from './eventsGrid';

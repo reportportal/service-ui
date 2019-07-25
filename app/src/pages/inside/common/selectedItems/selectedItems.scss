@@ -3,6 +3,11 @@
   padding-top: 15px;
   padding-left: 15px;
   padding-right: 15px;
+  word-break: break-all;
+
+  @supports (word-break: break-word) {
+    word-break: break-word;
+  }
 }
 
 .header {

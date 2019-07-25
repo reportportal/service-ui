@@ -1,0 +1,26 @@
+.locked-active-filter {
+  position: relative;
+  margin-bottom: 20px;
+  padding: 10px 0;
+  border-bottom: 1px solid $COLOR--gray-91;
+
+  .pencil-icon {
+    position: absolute;
+    right: 0;
+    display: inline-block;
+    width: 20px;
+    height: 18px;
+    cursor: pointer;
+    fill: $COLOR--gray-60;
+
+    &:hover {
+      fill: $COLOR--gray-47;
+    }
+  }
+
+  .not-found { 
+    font-family: $FONT-SEMIBOLD;
+  }
+}
+
+

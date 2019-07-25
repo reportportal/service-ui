@@ -19,11 +19,7 @@ Page.defaultProps = {
   children: null,
 };
 
-const PageTitle = ({ title }) => (
-  <div className={cx('page-title')}>
-    {title}
-  </div>
-);
+const PageTitle = ({ title }) => <div className={cx('page-title')}>{title}</div>;
 PageTitle.propTypes = {
   title: PropTypes.node,
 };

@@ -1,0 +1,50 @@
+.item-content-wrapper {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-content: flex-start;
+  align-items: center;
+  padding: 4px;
+}
+
+.item-text-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.icon {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  margin: 0 10px;
+  padding-bottom: 4px;
+  vertical-align: middle;
+
+  svg {
+    fill: $COLOR--white-two;
+  }
+}
+
+.no-item-icon {
+  width: 17px;
+  height: 17px;
+  padding-bottom: 3px;
+}
+
+.same-names-icon {
+  width: 22px;
+  height: 22px;
+  padding-bottom: 0;
+}
+
+@keyframes progress-stripes-large {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: -60px 0;
+  }
+}

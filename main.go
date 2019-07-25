@@ -2,16 +2,16 @@ package main
 
 import (
 	"github.com/go-chi/chi"
+	"github.com/go-chi/chi/middleware"
 	"github.com/unrolled/secure"
-	"gopkg.in/reportportal/commons-go.v1/commons"
-	"gopkg.in/reportportal/commons-go.v1/conf"
-	"gopkg.in/reportportal/commons-go.v1/server"
+	"gopkg.in/reportportal/commons-go.v5/commons"
+	"gopkg.in/reportportal/commons-go.v5/conf"
+	"gopkg.in/reportportal/commons-go.v5/server"
 	"log"
 	"net/http"
 	"os"
 	"path/filepath"
 	"strings"
-	"github.com/go-chi/chi/middleware"
 )
 
 func main() {
@@ -22,12 +22,9 @@ func main() {
 	}
 
 	cfg := conf.EmptyConfig()
-	cfg.Consul.Tags = []string{
-		"urlprefix-/ui/ opts strip=/ui",
-		"traefik.frontend.rule=PathPrefixStrip:/ui/",
-	}
+
 	rpConf := struct {
-		Cfg         *conf.RpConfig
+		Cfg         *conf.ServerConfig
 		StaticsPath string `env:"RP_STATICS_PATH"`
 	}{
 		Cfg:         cfg,
@@ -37,10 +34,6 @@ func main() {
 	err := conf.LoadConfig(&rpConf)
 	if nil != err {
 		log.Fatalf("Cannot log app config")
-	}
-
-	if "goRP" == rpConf.Cfg.AppName {
-		rpConf.Cfg.AppName = "ui"
 	}
 
 	info := commons.GetBuildInfo()
@@ -55,7 +48,7 @@ func main() {
 
 		//content security policy
 		csp := map[string][]string{
-			"default-src": {"'self'", "'unsafe-inline'", "*.uservoice.com"},
+			"default-src": {"'self'", "data:", "'unsafe-inline'", "*.uservoice.com"},
 			"script-src": {
 				"'self'",
 				"'unsafe-inline'",
@@ -63,10 +56,16 @@ func main() {
 				"status.reportportal.io",
 				"www.google-analytics.com",
 				"stats.g.doubleclick.net",
+				"*.saucelabs.com",
 				"*.epam.com",
 				"*.uservoice.com",
+				"*.rawgit.com",
 			},
-			"img-src":    {"'self'", "data:", "www.google-analytics.com", "stats.g.doubleclick.net", "*.epam.com", "*.uservoice.com"},
+			"worker-src": {"'self'", "blob:"},
+            "font-src": {"'self'", "data:", "fonts.googleapis.com", "fonts.gstatic.com", "*.rawgit.com"},
+            "style-src-elem": {"'self'", "data:", "'unsafe-inline'", "*.googleapis.com", "*.rawgit.com"},
+            "media-src": {"'self'", "*.saucelabs.com"},
+			"img-src": {"*", "'self'", "data:", "blob:"},
 			"object-src": {"'self'"},
 		}
 
@@ -135,7 +134,7 @@ func (hrw *redirectingRW) Header() http.Header {
 func (hrw *redirectingRW) WriteHeader(status int) {
 	if status == 404 {
 		hrw.ignore = true
-		http.Redirect(hrw.ResponseWriter, hrw.Request, "/ui/404.html", http.StatusTemporaryRedirect)
+		http.Redirect(hrw.ResponseWriter, hrw.Request, "/ui/#notfound", http.StatusTemporaryRedirect)
 	} else {
 		hrw.ResponseWriter.WriteHeader(status)
 	}

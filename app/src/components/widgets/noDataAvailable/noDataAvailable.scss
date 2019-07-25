@@ -1,0 +1,23 @@
+.no-data-available {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  background: $COLOR--white-two;
+  color: $COLOR--gray-47;
+  font-family: $FONT-SEMIBOLD;
+  font-size: 14px;
+  line-height: 18px;
+  text-align: center;
+
+  &:before {
+    content: '';
+    display: block;
+    width: 130px;
+    height: 31px;
+    margin: 0 auto 10px;
+    background-image: url(./img/noDataAvailable.png);
+  }
+}

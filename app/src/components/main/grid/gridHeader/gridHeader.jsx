@@ -17,8 +17,9 @@ export const GridHeader = ({
   onFilterClick,
   onToggleSelectAll,
   hideHeaderForMobile,
+  headerClassName,
 }) => (
-  <div className={cx('grid-header', { 'mobile-hide': hideHeaderForMobile })}>
+  <div className={cx('grid-header', { 'mobile-hide': hideHeaderForMobile }, headerClassName)}>
     {columns.map((column, i) => (
       <HeaderCell
         key={column.id || i}
@@ -27,6 +28,8 @@ export const GridHeader = ({
         sortable={column.sortable}
         id={column.id}
         withFilter={column.withFilter}
+        filterEventInfo={column.filterEventInfo}
+        sortingEventInfo={column.sortingEventInfo}
         sortingDirection={sortingDirection}
         sortingActive={sortingColumn === column.id}
         onChangeSorting={onChangeSorting}
@@ -46,6 +49,7 @@ GridHeader.propTypes = {
   onChangeSorting: PropTypes.func,
   onFilterClick: PropTypes.func,
   onToggleSelectAll: PropTypes.func,
+  headerClassName: PropTypes.string,
 };
 GridHeader.defaultProps = {
   columns: [],
@@ -57,4 +61,5 @@ GridHeader.defaultProps = {
   onChangeSorting: () => {},
   onFilterClick: () => {},
   onToggleSelectAll: () => {},
+  headerClassName: '',
 };

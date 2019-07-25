@@ -14,6 +14,15 @@ import {
 } from 'common/constants/timeDateFormat';
 import styles from './inputTimeDateRange.scss';
 
+const DEFAULT_DISPLAY_START_DATE = moment()
+  .startOf('day')
+  .valueOf();
+
+const DEFAULT_DISPLAY_END_DATE =
+  moment()
+    .endOf('day')
+    .valueOf() + 1;
+
 const cx = classNames.bind(styles);
 const messages = defineMessages({
   customRange: {
@@ -40,6 +49,10 @@ const messages = defineMessages({
     id: 'InputTimeDateRange.dynamicUpdateHint',
     defaultMessage: 'Your time range will be updated every day',
   },
+  anyTime: {
+    id: 'InputTimeDateRange.anyTime',
+    defaultMessage: 'Any',
+  },
 });
 
 @injectIntl
@@ -51,6 +64,7 @@ export class InputTimeDateRange extends Component {
     onChange: PropTypes.func,
     onFocus: PropTypes.func,
     onBlur: PropTypes.func,
+    withoutDynamic: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -59,6 +73,7 @@ export class InputTimeDateRange extends Component {
     onChange: () => {},
     onFocus: () => {},
     onBlur: () => {},
+    withoutDynamic: false,
   };
 
   state = {
@@ -94,8 +109,17 @@ export class InputTimeDateRange extends Component {
     this.node = node;
   };
 
+  getDateRangeString() {
+    const { value, intl } = this.props;
+    return value && value.start && value.end
+      ? `${moment(value.start).format(TIME_DATE_FORMAT)} - ${moment(value.end).format(
+          TIME_DATE_FORMAT,
+        )}`
+      : intl.formatMessage(messages.anyTime);
+  }
+
   handleClickOutside = (e) => {
-    if (!this.node.contains(e.target)) {
+    if (!this.node.contains(e.target) && this.state.opened) {
       this.setState({ opened: false });
       this.props.onBlur();
     }
@@ -126,15 +150,14 @@ export class InputTimeDateRange extends Component {
   };
 
   render() {
-    const { intl, presets, value } = this.props;
-
+    const { intl, presets, value, withoutDynamic } = this.props;
+    const displayStartDate = (value && value.start) || DEFAULT_DISPLAY_START_DATE;
+    const displayEndDate = (value && value.end) || DEFAULT_DISPLAY_END_DATE;
     return (
       <div className={cx('input-time-date-range')} ref={this.setRef}>
         <input
           readOnly
-          value={`${moment(value.start).format(TIME_DATE_FORMAT)} - ${moment(value.end).format(
-            TIME_DATE_FORMAT,
-          )}`}
+          value={this.getDateRangeString()}
           className={cx('current-value')}
           onClick={this.onClickValueBlock}
         />
@@ -166,9 +189,9 @@ export class InputTimeDateRange extends Component {
                 className={cx('from-input')}
                 fixedHeight
                 selectsStart
-                selected={moment(value.start)}
-                startDate={moment(value.start)}
-                endDate={moment(value.end)}
+                selected={moment(displayStartDate)}
+                startDate={moment(displayStartDate)}
+                endDate={moment(displayEndDate)}
                 onChange={this.handleChangeFrom}
                 showTimeSelect
                 timeFormat={TIME_FORMAT}
@@ -190,9 +213,9 @@ export class InputTimeDateRange extends Component {
                 className={cx('to-input')}
                 fixedHeight
                 selectsEnd
-                selected={moment(value.end)}
-                startDate={moment(value.start)}
-                endDate={moment(value.end)}
+                selected={moment(displayEndDate)}
+                startDate={moment(displayStartDate)}
+                endDate={moment(displayEndDate)}
                 onChange={this.handleChangeTo}
                 showTimeSelect
                 timeFormat={TIME_FORMAT}
@@ -209,16 +232,18 @@ export class InputTimeDateRange extends Component {
               />
             </div>
           </div>
-          <div className={cx('dynamic-update')}>
-            <InputCheckbox value={value.dynamic} onChange={this.handleChangeDynamic}>
-              {intl.formatMessage(messages.dynamicUpdate)}
-            </InputCheckbox>
-            {value.dynamic && (
-              <span className={cx('dynamic-update-hint')}>
-                {intl.formatMessage(messages.dynamicUpdateHint)}
-              </span>
-            )}
-          </div>
+          {!withoutDynamic && (
+            <div className={cx('dynamic-update')}>
+              <InputCheckbox value={value.dynamic} onChange={this.handleChangeDynamic}>
+                {intl.formatMessage(messages.dynamicUpdate)}
+              </InputCheckbox>
+              {value.dynamic && (
+                <span className={cx('dynamic-update-hint')}>
+                  {intl.formatMessage(messages.dynamicUpdateHint)}
+                </span>
+              )}
+            </div>
+          )}
         </div>
       </div>
     );

@@ -21,25 +21,41 @@
 
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
+import { defineMessages, injectIntl, intlShape } from 'react-intl';
+import DefaultUserImage from 'common/img/default-user-avatar.png';
+import { Image } from 'components/main/image';
 import styles from './userItem.scss';
 
 const cx = classNames.bind(styles);
 
-export const UserItem = ({ userName, userLogin, userAvatar, isAssigned, onClick }) => (
-  <div
-    className={cx({ 'user-search-result-wrap': true, 'disabled-item': isAssigned })}
-    onClick={onClick}
-  >
-    <div className={cx('user-avatar')} style={{ backgroundImage: `url(${userAvatar})` }} />
-    <div className={cx('user-search-info')}>
-      <p className={cx('user-search-name')}>{userName}</p>
-      <p className={cx('user-search-login')}>{userLogin}</p>
+const messages = defineMessages({
+  isAssigned: {
+    id: 'InputUserSearch.isAssigned',
+    defaultMessage: 'User has already assigned to the project',
+  },
+});
+
+export const UserItem = injectIntl(
+  ({ intl, userName, userLogin, userAvatar, isAssigned, onClick }) => (
+    <div
+      className={cx({ 'user-search-result-wrap': true, 'disabled-item': isAssigned })}
+      onClick={onClick}
+    >
+      <Image className={cx('user-avatar')} src={userAvatar} fallback={DefaultUserImage} />
+      <div className={cx('user-search-info')}>
+        <p className={cx('user-search-name')}>{userName}</p>
+        <p className={cx('user-search-login')}>{userLogin}</p>
+      </div>
+      <button
+        className={cx({ 'assign-btn': true, 'assigned-user': isAssigned })}
+        title={isAssigned ? intl.formatMessage(messages.isAssigned) : ''}
+      />
     </div>
-    <button className={cx({ 'assign-btn': true, 'assigned-user': isAssigned })} />
-  </div>
+  ),
 );
 
 UserItem.propTypes = {
+  intl: intlShape,
   userName: PropTypes.string,
   userLogin: PropTypes.string,
   userAvatar: PropTypes.string,
@@ -48,6 +64,7 @@ UserItem.propTypes = {
 };
 
 UserItem.defaultProps = {
+  intl: {},
   userName: '',
   userLogin: '',
   userAvatar: '',

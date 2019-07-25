@@ -1,0 +1,50 @@
+{
+  "share": false,
+  "id": 2,
+  "name": "start",
+  "contentParameters": {
+    "widgetType": "launchesDurationChart",
+    "contentFields": [],
+    "itemsCount": 10,
+    "widgetOptions": {
+      "mode": "latestLaunches"
+    }
+  },
+  "appliedFilters": [
+    {
+      "share": false,
+      "id": 1,
+      "name": "launch name",
+      "conditions": [],
+      "orders": [
+        {
+          "sortingColumn": "statistics$defects$no_defect$nd001",
+          "isAsc": false
+        }
+      ],
+      "type": "Launch"
+    }
+  ],
+  "content": {
+    "result": [
+      {
+        "id": 3,
+        "number": 3,
+        "name": "test launch",
+        "startTime": 1541397081305,
+        "status": "FAILED",
+        "endTime": 1541397083306,
+        "duration": 2000
+      },
+      {
+        "id": 4,
+        "number": 1,
+        "name": "launch name test",
+        "startTime": 1541397081305,
+        "status": "FAILED",
+        "endTime": 1541397083306,
+        "duration": 2000
+      }
+    ]
+  }
+}

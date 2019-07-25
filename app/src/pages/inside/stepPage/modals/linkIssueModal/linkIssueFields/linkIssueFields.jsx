@@ -1,4 +1,5 @@
 import { Component } from 'react';
+import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import Parser from 'html-react-parser';
 import CloseIcon from 'common/img/cross-icon-inline.svg';
@@ -33,16 +34,26 @@ const messages = defineMessages({
 });
 
 @injectIntl
+@track()
 export class LinkIssueFields extends Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
     change: PropTypes.func.isRequired,
     fields: PropTypes.object.isRequired,
+    addEventInfo: PropTypes.object,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
+  };
+
+  static defaultProps = {
+    addEventInfo: {},
   };
 
   parseValue = (value, name) => {
     const issueIndex = /\d+/.exec(name)[0];
-    if (!this.props.fields.get(issueIndex).issueId) {
+    if (value.indexOf('/') !== -1 && !this.props.fields.get(issueIndex).issueId) {
       let issueIdAutoValue = value.split('/');
       issueIdAutoValue = issueIdAutoValue[issueIdAutoValue.length - 1];
       this.props.change(`issues[${issueIndex}].issueId`, issueIdAutoValue);
@@ -51,8 +62,7 @@ export class LinkIssueFields extends Component {
   };
 
   render() {
-    const { fields } = this.props;
-
+    const { fields, addEventInfo, tracking } = this.props;
     return (
       <ul className={cx('link-issue-fields')}>
         {fields.map((issue, index) => (
@@ -67,11 +77,10 @@ export class LinkIssueFields extends Component {
             )}
             <FormField
               name={`${issue}.issueLink`}
-              containerClassName={cx('inputs-group-block')}
               fieldWrapperClassName={cx('field-wrapper')}
               label={this.props.intl.formatMessage(messages.issueLinkLabel)}
               parse={this.parseValue}
-              labelClassName={cx('multiple-systems-title')}
+              labelClassName={cx('label')}
             >
               <FieldErrorHint>
                 <Input placeholder={this.props.intl.formatMessage(messages.issueLinkPlaceholder)} />
@@ -79,19 +88,29 @@ export class LinkIssueFields extends Component {
             </FormField>
             <FormField
               name={`${issue}.issueId`}
-              containerClassName={cx('inputs-group-block')}
               fieldWrapperClassName={cx('field-wrapper')}
               label={this.props.intl.formatMessage(messages.issueIdLabel)}
-              labelClassName={cx('multiple-systems-title')}
+              labelClassName={cx('label')}
             >
               <FieldErrorHint>
-                <Input placeholder={this.props.intl.formatMessage(messages.issueIdLabel)} />
+                <Input
+                  maxLength="128"
+                  placeholder={this.props.intl.formatMessage(messages.issueIdLabel)}
+                />
               </FieldErrorHint>
             </FormField>
           </li>
         ))}
         <li className={cx('add-issue-button')}>
-          <GhostButton type="button" onClick={() => fields.push({})} icon={PlusIcon}>
+          <GhostButton
+            type="button"
+            notMinified
+            onClick={() => {
+              tracking.trackEvent(addEventInfo);
+              fields.push({});
+            }}
+            icon={PlusIcon}
+          >
             {this.props.intl.formatMessage(messages.addIssueButtonTitle)}
           </GhostButton>
         </li>

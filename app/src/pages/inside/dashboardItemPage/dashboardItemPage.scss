@@ -11,6 +11,10 @@
   margin: 0;
   padding: 20px 10px;
   border-bottom: 1px solid $COLOR--gray-91;
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    display: none;
+  }
 }
 
 .icon-close {
@@ -43,4 +47,21 @@
   .fullscreen {
     background: $COLOR--white-two;
   }
+}
+
+.globe-icon {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  margin: auto 5px;
+  vertical-align: text-bottom;
+
+  svg {
+    fill: $COLOR--gray-47;
+  }
+}
+
+.shared-caption {
+  font-size: 13px;
+  line-height: 30px;
 }

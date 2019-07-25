@@ -37,7 +37,7 @@
   &:before {
     content: '';
     position: absolute;
-    z-index: 1;
+    z-index: 0;
     top: 0;
     bottom: 0;
     left: 0;
@@ -112,27 +112,16 @@
 }
 
 .time-column {
-  width: 14%;
+  width: 1%;
   font-family: $FONT-MENLO;
   font-size: 12px;
+  white-space: nowrap;
   @media (max-width: $SCREEN_XS_MAX) {
     width: 75%;
     font-family: $FONT-REGULAR;
     font-size: 14px;
     line-height: 31px;
     word-spacing: 12px;
-  }
-}
-
-.row-console {
-  &:after {
-    display: none;
-  }
-}
-
-.error-row-console {
-  &:hover {
-    background: none;
   }
 }
 

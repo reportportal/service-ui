@@ -1,12 +1,18 @@
+import { UPDATE_FILTER_SUCCESS, ADD_FILTER, REMOVE_FILTER } from 'controllers/filter';
 import { projectInfoReducer, projectPreferencesReducer } from './reducer';
 import {
   PROJECT_INFO_INITIAL_STATE,
   PROJECT_PREFERENCES_INITIAL_STATE,
   FETCH_PROJECT_SUCCESS,
-  UPDATE_AUTO_ANALYSIS_CONFIGURATION,
+  UPDATE_CONFIGURATION_ATTRIBUTES,
   FETCH_PROJECT_PREFERENCES_SUCCESS,
-  TOGGLE_DISPLAY_FILTER_ON_LAUNCHES,
-  UPDATE_EMAIL_CONFIG_SUCCESS,
+  UPDATE_NOTIFICATIONS_CONFIG_SUCCESS,
+  UPDATE_DEFECT_SUBTYPE_SUCCESS,
+  ADD_DEFECT_SUBTYPE_SUCCESS,
+  DELETE_DEFECT_SUBTYPE_SUCCESS,
+  ADD_PATTERN_SUCCESS,
+  UPDATE_PATTERN_SUCCESS,
+  DELETE_PATTERN_SUCCESS,
 } from './constants';
 
 describe('project reducer', () => {
@@ -29,24 +35,27 @@ describe('project reducer', () => {
       expect(newState).toEqual(payload);
     });
 
-    test('should handle UPDATE_AUTO_ANALYSIS_CONFIGURATION', () => {
+    test('should handle UPDATE_CONFIGURATION_ATTRIBUTES', () => {
       const oldState = {
         ...PROJECT_INFO_INITIAL_STATE,
         configuration: {
           ...PROJECT_INFO_INITIAL_STATE.configuration,
-          analyzerConfiguration: {},
+          attributes: {},
         },
       };
       const payload = { foo: 'bar' };
       const newState = projectInfoReducer(PROJECT_INFO_INITIAL_STATE, {
-        type: UPDATE_AUTO_ANALYSIS_CONFIGURATION,
+        type: UPDATE_CONFIGURATION_ATTRIBUTES,
         payload,
       });
       expect(newState).toEqual({
         ...oldState,
         configuration: {
           ...oldState.configuration,
-          analyzerConfiguration: payload,
+          attributes: {
+            ...oldState.configuration.attributes,
+            ...payload,
+          },
         },
       });
     });
@@ -54,12 +63,101 @@ describe('project reducer', () => {
     test('should handle UPDATE_EMAIL_CONFIG_SUCCESS', () => {
       const payload = { foo: 'bar' };
       const newState = projectInfoReducer(PROJECT_INFO_INITIAL_STATE, {
-        type: UPDATE_EMAIL_CONFIG_SUCCESS,
+        type: UPDATE_NOTIFICATIONS_CONFIG_SUCCESS,
         payload,
       });
       expect(newState).toEqual({
         ...PROJECT_INFO_INITIAL_STATE,
-        configuration: { ...PROJECT_INFO_INITIAL_STATE.configuration, emailConfiguration: payload },
+        configuration: {
+          ...PROJECT_INFO_INITIAL_STATE.configuration,
+          notificationsConfiguration: payload,
+        },
+      });
+    });
+
+    test('should handle UPDATE_DEFECT_SUBTYPE_SUCCESS', () => {
+      const payload = [
+        {
+          id: 1,
+          typeRef: 'PRODUCT_BUG',
+          longName: 'Product Bug',
+          shortName: 'PB1',
+          color: '#ffffff',
+        },
+      ];
+      const state = { configuration: { subTypes: { PRODUCT_BUG: [{ id: 1 }, { id: 2 }] } } };
+      const newState = projectInfoReducer(state, {
+        type: UPDATE_DEFECT_SUBTYPE_SUCCESS,
+        payload,
+      });
+      expect(newState).toEqual({
+        configuration: {
+          subTypes: {
+            PRODUCT_BUG: [
+              {
+                id: 1,
+                typeRef: 'PRODUCT_BUG',
+                longName: 'Product Bug',
+                shortName: 'PB1',
+                color: '#ffffff',
+              },
+              { id: 2 },
+            ],
+          },
+        },
+      });
+    });
+
+    test('should handle ADD_DEFECT_SUBTYPE_SUCCESS', () => {
+      const payload = {
+        id: 3,
+        typeRef: 'PRODUCT_BUG',
+        longName: 'Product Bug',
+        shortName: 'PB1',
+        color: '#ffffff',
+      };
+      const state = { configuration: { subTypes: { PRODUCT_BUG: [{ id: 1 }, { id: 2 }] } } };
+      const newState = projectInfoReducer(state, {
+        type: ADD_DEFECT_SUBTYPE_SUCCESS,
+        payload,
+      });
+      expect(newState).toEqual({
+        configuration: {
+          subTypes: {
+            PRODUCT_BUG: [
+              { id: 1 },
+              { id: 2 },
+              {
+                id: 3,
+                typeRef: 'PRODUCT_BUG',
+                longName: 'Product Bug',
+                shortName: 'PB1',
+                color: '#ffffff',
+              },
+            ],
+          },
+        },
+      });
+    });
+
+    test('should handle DELETE_DEFECT_SUBTYPE_SUCCESS', () => {
+      const payload = {
+        id: 3,
+        typeRef: 'PRODUCT_BUG',
+      };
+      const state = {
+        configuration: { subTypes: { PRODUCT_BUG: [{ id: 1 }, { id: 2 }, { id: 3 }] } },
+      };
+      const newState = projectInfoReducer(state, {
+        type: DELETE_DEFECT_SUBTYPE_SUCCESS,
+        payload,
+      });
+      expect(newState).toEqual({
+        configuration: {
+          subTypes: {
+            PRODUCT_BUG: [{ id: 1 }, { id: 2 }],
+          },
+        },
       });
     });
   });
@@ -83,25 +181,168 @@ describe('project reducer', () => {
       expect(newState).toEqual(payload);
     });
 
-    test('should handle TOGGLE_DISPLAY_FILTER_ON_LAUNCHES', () => {
+    test('should handle UPDATE_FILTER_SUCCESS', () => {
       const oldState = {
         ...PROJECT_PREFERENCES_INITIAL_STATE,
-        filters: ['filter0'],
+        filters: [{ id: 'filter0' }],
       };
-      const payload = 'filter1';
+      const payload = { id: 'filter1' };
       const stateWithFilter = projectPreferencesReducer(oldState, {
-        type: TOGGLE_DISPLAY_FILTER_ON_LAUNCHES,
+        type: UPDATE_FILTER_SUCCESS,
         payload,
       });
       expect(stateWithFilter).toEqual({
         ...oldState,
         filters: [...oldState.filters, payload],
       });
-      const stateWithoutFilter = projectPreferencesReducer(stateWithFilter, {
-        type: TOGGLE_DISPLAY_FILTER_ON_LAUNCHES,
+
+      const newPayload = { id: 'filter2' };
+      const stateWithUpdatedFilter = projectPreferencesReducer(stateWithFilter, {
+        type: UPDATE_FILTER_SUCCESS,
+        payload: newPayload,
+        meta: {
+          oldId: 'filter1',
+        },
+      });
+      expect(stateWithUpdatedFilter).toEqual({
+        ...oldState,
+        filters: [...oldState.filters, newPayload],
+      });
+    });
+
+    test('should handle ADD_FILTER', () => {
+      const oldState = {
+        ...PROJECT_PREFERENCES_INITIAL_STATE,
+        filters: [{ id: 'filter0' }],
+      };
+      const payload = { id: 'filter1' };
+      const updatedState = projectPreferencesReducer(oldState, {
+        type: ADD_FILTER,
         payload,
       });
-      expect(stateWithoutFilter).toEqual(oldState);
+      expect(updatedState).toEqual({
+        ...oldState,
+        filters: [...oldState.filters, payload],
+      });
+    });
+
+    test('should handle REMOVE_FILTER', () => {
+      const oldState = {
+        ...PROJECT_PREFERENCES_INITIAL_STATE,
+        filters: [{ id: 'filter0' }],
+      };
+      const payload = 'filter0';
+      const updatedState = projectPreferencesReducer(oldState, {
+        type: REMOVE_FILTER,
+        payload,
+      });
+      expect(updatedState).toEqual({
+        ...oldState,
+        filters: [],
+      });
+    });
+
+    test('should handle ADD_PATTERN_SUCCESS', () => {
+      const oldState = {
+        ...PROJECT_INFO_INITIAL_STATE,
+        configuration: {
+          ...PROJECT_INFO_INITIAL_STATE.configuration,
+          patterns: [
+            {
+              id: 1,
+            },
+          ],
+        },
+      };
+      const payload = {
+        id: 2,
+        name: 'pattern 2',
+        type: 'STRING',
+        value: 'pattern condition - 2',
+        enabled: true,
+      };
+      const newState = projectInfoReducer(oldState, {
+        type: ADD_PATTERN_SUCCESS,
+        payload,
+      });
+      expect(newState).toEqual({
+        configuration: {
+          patterns: [
+            { id: 1 },
+            {
+              id: 2,
+              name: 'pattern 2',
+              type: 'STRING',
+              value: 'pattern condition - 2',
+              enabled: true,
+            },
+          ],
+        },
+      });
+    });
+
+    test('should handle UPDATE_PATTERN_SUCCESS', () => {
+      const oldState = {
+        ...PROJECT_INFO_INITIAL_STATE,
+        configuration: {
+          ...PROJECT_INFO_INITIAL_STATE.configuration,
+          patterns: [
+            {
+              id: 1,
+              name: 'pattern name',
+              type: 'STRING',
+              value: 'pattern condition',
+              enabled: true,
+            },
+            { id: 2 },
+          ],
+        },
+      };
+      const payload = {
+        id: 1,
+        name: 'edited pattern name',
+        type: 'STRING',
+        value: 'pattern condition',
+        enabled: false,
+      };
+      const newState = projectInfoReducer(oldState, {
+        type: UPDATE_PATTERN_SUCCESS,
+        payload,
+      });
+      expect(newState).toEqual({
+        configuration: {
+          patterns: [payload, { id: 2 }],
+        },
+      });
+    });
+
+    test('should handle DELETE_PATTERN_SUCCESS', () => {
+      const oldState = {
+        ...PROJECT_INFO_INITIAL_STATE,
+        configuration: {
+          ...PROJECT_INFO_INITIAL_STATE.configuration,
+          patterns: [
+            {
+              id: 1,
+              name: 'pattern name',
+              type: 'STRING',
+              value: 'pattern condition',
+              enabled: true,
+            },
+            { id: 2 },
+          ],
+        },
+      };
+      const payload = { id: 1 };
+      const newState = projectInfoReducer(oldState, {
+        type: DELETE_PATTERN_SUCCESS,
+        payload,
+      });
+      expect(newState).toEqual({
+        configuration: {
+          patterns: [{ id: 2 }],
+        },
+      });
     });
   });
 });

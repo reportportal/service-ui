@@ -25,13 +25,12 @@ import styles from './toggleButton.scss';
 
 const cx = classNames.bind(styles);
 
-export const ToggleButton = ({ items, value, onChange, mobileDisabled, disabled }) => (
-  <div className={cx('toggle-button')}>
+export const ToggleButton = ({ items, value, separated, onChange, mobileDisabled, disabled }) => (
+  <div className={cx('toggle-button', { separated })}>
     {items.map((item) => (
       <div
         key={item.value}
-        className={cx({
-          'button-item': true,
+        className={cx('button-item', {
           active: item.value === value,
           'mobile-disabled': mobileDisabled,
           disabled,
@@ -39,7 +38,7 @@ export const ToggleButton = ({ items, value, onChange, mobileDisabled, disabled 
         style={{ width: `${100 / items.length}%` }}
         onClick={!disabled ? () => onChange(item.value) : null}
       >
-        <span>{item.label}</span>
+        <span className={cx('item-label')}>{item.label}</span>
       </div>
     ))}
   </div>
@@ -47,19 +46,21 @@ export const ToggleButton = ({ items, value, onChange, mobileDisabled, disabled 
 ToggleButton.propTypes = {
   items: PropTypes.arrayOf(
     PropTypes.shape({
-      value: PropTypes.string.isRequired,
+      value: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]).isRequired,
       label: PropTypes.string.isRequired,
     }),
   ),
   disabled: PropTypes.bool,
   mobileDisabled: PropTypes.bool,
-  value: PropTypes.string,
+  separated: PropTypes.bool,
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]).isRequired,
   onChange: PropTypes.func,
 };
 ToggleButton.defaultProps = {
   items: [],
   value: '',
   disabled: false,
-  onChange: () => {},
   mobileDisabled: false,
+  separated: false,
+  onChange: () => {},
 };

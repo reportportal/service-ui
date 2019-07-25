@@ -1,0 +1,1 @@
+export { BtsPropertiesForIssueForm } from './btsPropertiesForIssueForm';

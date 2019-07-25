@@ -1,0 +1,114 @@
+.input-filter {
+  position: relative;
+  display: flex;
+  height: 36px;
+  width: 400px;
+  border: 1px solid $COLOR--gray-91;
+  border-radius: 2px;
+  box-sizing: border-box;
+  transition: border-color ease-in-out 0.15s;
+
+  &:hover {
+    border-color: $COLOR--gray-47;
+  }
+  &.active {
+    background-color: inherit;
+    border-color: $COLOR--topaz;
+  }
+  &.error {
+    border-color: $COLOR--orange-red;
+  }
+  &.disabled {
+    border-color: $COLOR--gray-80;
+  }
+}
+
+.icon {
+  margin: auto;
+  width: 20px;
+  height: 20px;
+  margin-left: 10px;
+  bottom: 8px;
+
+  &.search {
+    width: 15px;
+    height: 15px;
+    svg {
+      fill: $COLOR--gray-60;
+      width: 20px;
+      height: 20px;
+    }
+  }
+
+  &.add-filter {
+    position: absolute;
+    right: 10px;
+
+    svg {
+      fill: $COLOR--topaz;
+    }
+
+    &.inactive {
+      svg {
+        fill: $COLOR--gray-91;
+      }
+    }
+
+    &:hover {
+      cursor: pointer;
+    }
+
+    @media(max-width: $SCREEN_SM_MAX) {
+      display: none;
+    }
+  }
+
+  &.cross {
+    position: absolute;
+    right: 40px;
+    bottom: 8px;
+
+    svg {
+      fill: $COLOR--gray-80;
+    }
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
+}
+
+.input {
+  flex-grow: 1;
+  padding: 6px 10px;
+  margin: 0;
+  box-sizing: border-box;
+  border: none;
+  outline: none;
+  background-color: $COLOR--white-two;
+  font-family: $FONT-REGULAR;
+  font-size: 13px;
+  line-height: 13px;
+  color: $COLOR--charcoal-grey;
+  box-shadow: none;
+
+  &::-ms-clear {
+    display: none;
+  }
+}
+
+.filters-container {
+    position: absolute;
+    display: inline-block;
+    width: 400px;
+    border: 1px solid $COLOR--gray-91;
+    border-radius: 2px;
+    margin-top: 4px;
+    background-color: $COLOR--white-two;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.09);
+    z-index: $Z-INDEX-POPUP;
+}
+
+.filters {
+  padding: 15px;
+}

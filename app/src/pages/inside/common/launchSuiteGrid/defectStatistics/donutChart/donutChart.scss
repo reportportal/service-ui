@@ -13,6 +13,12 @@
   font-size: 13px;
   color: $COLOR--windows-blue;
   line-height: 18px;
+  word-break: keep-all;
+}
+.total-to-investigate {
+  background-color: $COLOR--to-investigate-counter;
+  color: $COLOR--white;
+  border-color: $COLOR--white !important;
 }
 .chart-container {
   height: 56px;

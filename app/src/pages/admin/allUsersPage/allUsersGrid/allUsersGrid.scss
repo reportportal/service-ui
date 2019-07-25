@@ -1,0 +1,91 @@
+.type-col {
+  width: 10%;
+  vertical-align: middle;
+  font-size: 13px;
+  text-transform: capitalize;
+  @media (max-width: $SCREEN_SM_MAX) {
+    width: 100%;
+  }
+}
+.login-col {
+  width: 10%;
+  vertical-align: middle;
+  font-size: 13px;
+  text-transform: lowercase;
+  @media (max-width: $SCREEN_XS_MAX) {
+    margin-left: 55px;
+    width: 100%;
+  }
+}
+.email-col {
+  width: 15%;
+  vertical-align: middle;
+  font-size: 13px;
+  color: $COLOR--windows-blue;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  @media (max-width: $SCREEN_SM_MAX) {
+    width: 100%;
+  }
+}
+.last-login-col {
+  width: 15%;
+  vertical-align: middle;
+  font-size: 13px;
+  @media (max-width: $SCREEN_SM_MAX) {
+    width: 100%;
+  }
+}
+.projects-and-roles-col {
+  width: 25%;
+  vertical-align: middle;
+  font-size: 13px;
+  line-height: 20px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  @media (max-width: $SCREEN_SM_MAX) {
+    width: 100%;
+  }
+}
+.label {
+  display: inline-block;
+  height: 15px;
+  margin-left: 10px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-radius: 100px;
+  color: $COLOR--white-two;
+  font-size: 10px;
+  text-align: center;
+  line-height: 15px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-transform: lowercase;
+}
+.avatar-wrapper {
+  display:inline-block;
+  width: 40px;
+  height: 40px;
+  margin-right: 10px;
+}
+.mobile-label {
+  margin-left: 5px;
+  margin-right: 15px;
+  display: none;
+  text-transform: capitalize;
+  vertical-align: top;
+  color: $COLOR--gray-47;
+  @media (max-width: $SCREEN_XS_MAX) {
+    display: inline-block;
+  }
+}
+.last-login-label {
+  @media (max-width: $SCREEN_XS_MAX) {
+    margin-top: 3px;
+  }
+}
+.shown-on-mobile {
+  @media (max-width: $SCREEN_XS_MAX) {
+    display: inline-block;
+  }
+}

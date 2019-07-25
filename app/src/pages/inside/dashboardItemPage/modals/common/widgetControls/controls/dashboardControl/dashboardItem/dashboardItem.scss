@@ -1,0 +1,14 @@
+.dashboard-item {
+  margin: 5px;
+  padding: 4px 7px 5px;
+  border: 1px solid $COLOR--gray-91;
+  background: $COLOR--white-two;
+  color: $COLOR--gray-47;
+  font-size: 13px;
+  cursor: pointer;
+}
+.active {
+  border-color: $COLOR--gray-60;
+  cursor: default;
+  pointer-events: none;
+}

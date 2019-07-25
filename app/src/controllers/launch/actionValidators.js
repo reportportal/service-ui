@@ -4,7 +4,12 @@ import {
   activeProjectRoleSelector,
 } from 'controllers/user';
 import { IN_PROGRESS } from 'common/constants/launchStatuses';
-import { canMergeLaunches, canForceFinishLaunch, canMoveToDebug, canDeleteLaunch } from 'common/utils/permissions';
+import {
+  canMergeLaunches,
+  canForceFinishLaunch,
+  canMoveToDebug,
+  canDeleteLaunch,
+} from 'common/utils/permissions';
 
 export const validateMergeLaunch = (launch, launches, state) => {
   if (launches.length < 2) {

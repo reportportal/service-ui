@@ -1,0 +1,7 @@
+.item-name {
+  overflow: hidden;
+  color: $COLOR--charcoal-grey;
+  font-size: 14px;
+  font-family: $FONT-SEMIBOLD;
+  text-overflow: ellipsis;
+}

@@ -5,11 +5,26 @@
   height: 55px;
   vertical-align: top;
 
+  &.vertical {
+    display: inline-flex;
+    align-items: center;
+    width: 370px;
+    height: 60px;
+  }
+
   &.stretchable {
     width: auto;
     height: auto;
     min-width: 235px;
     min-height: 55px;
+  }
+
+  &.small {
+    width: 190px;
+
+    &.stretchable {
+      min-width: 190px;
+    }
   }
 }
 .entity-name {
@@ -24,6 +39,13 @@
   color: $COLOR--charcoal-grey;
   overflow: hidden;
   text-overflow: ellipsis;
+
+  &.vertical {
+    padding-right: 0;
+    width: 78px;
+    vertical-align: middle;
+    color: $COLOR--black-2;
+  }
 }
 .close-icon {
   position: absolute;
@@ -46,4 +68,8 @@
 .entity-input-holder {
   display: inline-block;
   width: 100%;
+
+  &.vertical {
+    width: 292px;
+  }
 }

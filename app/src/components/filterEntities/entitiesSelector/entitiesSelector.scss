@@ -1,8 +1,8 @@
 .entities-selector {
   display: inline-block;
   position: relative;
-  margin-right: 150px;
   margin-top: 25px;
+  margin-bottom: 15px;
   vertical-align: top;
 
   &.opened {
@@ -46,7 +46,7 @@
     height: 0;
     margin: 0 10px;
     box-sizing: border-box;
-    border-top: 4px solid black;
+    border-top: 4px solid $COLOR--gray-47;
     border-right: 4px solid transparent;
     border-left: 4px solid transparent;
     transition: transform 200ms linear;
@@ -64,7 +64,7 @@
   background-color: $COLOR--white-two;
   box-sizing: border-box;
   box-shadow: 0 6px 12px $COLOR--gray-80;
-  z-index: 1;
+  z-index: $Z-INDEX-POPUP;
 }
 .entity-item {
   display: block;
@@ -80,7 +80,11 @@
   line-height: 30px;
   box-sizing: border-box;
   text-decoration: none;
-  text-transform: capitalize;
+
+  &:first-letter {
+    text-transform: uppercase;
+  }
+
 
   &.sub-item {
     padding-left: 40px;

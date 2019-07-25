@@ -1,15 +1,6 @@
-import { redirect } from 'redux-first-router';
+import { UPDATE_PAGE_PROPERTIES } from './constants';
 
-export const updatePagePropertiesAction = (properties) => (dispatch, getState) => {
-  const {
-    location: { type, payload, query },
-  } = getState();
-
-  const updatedAction = {
-    type,
-    payload,
-    meta: { query: { ...query, ...properties } },
-  };
-
-  dispatch(redirect(updatedAction));
-};
+export const updatePagePropertiesAction = (properties) => ({
+  type: UPDATE_PAGE_PROPERTIES,
+  payload: properties,
+});

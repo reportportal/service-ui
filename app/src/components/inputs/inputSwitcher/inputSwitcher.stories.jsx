@@ -44,7 +44,13 @@ storiesOf('Components/Inputs/InputSwitcher', module)
       Some very long text. Some very long text. Some very long text. Some very long text.
     </InputSwitcher>
   ))
-  .add('enabled', () => <InputSwitcher value>Some text.</InputSwitcher>)
+  .add('on', () => <InputSwitcher value>Some text.</InputSwitcher>)
+  .add('on readonly', () => (
+    <InputSwitcher value readOnly>
+      Some text.
+    </InputSwitcher>
+  ))
+  .add('off readonly', () => <InputSwitcher readOnly>Some text.</InputSwitcher>)
   .add('with actions', () => (
     <InputSwitcher
       onChange={action('changed')}

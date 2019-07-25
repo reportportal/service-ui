@@ -1,8 +1,8 @@
-hash: 73ae3d1e98f412f028ecd80976093f8b811f293aa2ff9c82d10a03c43f24df73
-updated: 2018-05-29T12:01:03.308099+03:00
+hash: 7aa475a2ad74e9226f094a647f34a551b2b51ef9058d1aa47134e9799e6279ce
+updated: 2018-09-26T15:12:28.422416+03:00
 imports:
 - name: github.com/caarlos0/env
-  version: 1cddc31c48c56ecd700d873edb9fd5b6f5df922a
+  version: 7f73d6597823c7a0c39edd46e1998f90692b2add
 - name: github.com/go-chi/chi
   version: e83ac2304db3c50cf03d96a2fcd39009d458bc35
   subpackages:
@@ -14,21 +14,7 @@ imports:
 - name: github.com/go-playground/universal-translator
   version: 71201497bace774495daed26a3874fd339e0b538
 - name: github.com/gorilla/handlers
-  version: 90663712d74cb411cbef281bc1e08c19d1a76145
-- name: github.com/hashicorp/consul
-  version: 5174058f0d2bda63fa5198ab96c33d9a909c58ed
-  subpackages:
-  - api
-- name: github.com/hashicorp/go-cleanhttp
-  version: 3573b8b52aa7b37b9358d966a898feb387f62437
-- name: github.com/hashicorp/go-rootcerts
-  version: 6bb64b370b90e7ef1fa532be9e591a81c3493e00
-- name: github.com/hashicorp/serf
-  version: 555c6fa2a11d1f8e08ac9964015e864a3f61e7c3
-  subpackages:
-  - coordinate
-- name: github.com/mitchellh/go-homedir
-  version: b8bc1bf767474819792c23f32d8286a45736f1c6
+  version: 7e0847f9db758cdebd26c149d0ae9d5d0b9c98ce
 - name: github.com/pkg/errors
   version: 645ef00459ed84a119197bfb8d8205042c6df63d
 - name: github.com/sirupsen/logrus
@@ -49,12 +35,11 @@ imports:
   - unix
   - windows
 - name: gopkg.in/go-playground/validator.v9
-  version: f28cb45dc0f0f406ba2015cdb59a5203ad220bc2
-- name: gopkg.in/reportportal/commons-go.v1
-  version: 8941600c4b44fc35763116ec9158b93dfd9359df
+  version: e69e9a28bb62b977fdc58d051f1bb477b7cbe486
+- name: gopkg.in/reportportal/commons-go.v5
+  version: 4d7a70b2febd231a805e035f3149527b0d0e187b
   subpackages:
   - commons
   - conf
-  - registry
   - server
 testImports: []

@@ -15,7 +15,11 @@ import { testReducer } from 'controllers/test';
 import { membersReducer } from 'controllers/members';
 import { testItemReducer } from 'controllers/testItem';
 import { stepReducer } from 'controllers/step';
+import { itemsHistoryReducer } from 'controllers/itemsHistory';
 import { logReducer } from 'controllers/log';
+import { administrateReducer } from 'controllers/administrate';
+import { pluginsReducer } from 'controllers/plugins';
+import { initialDataReadyReducer } from 'controllers/initialData';
 
 export default {
   appInfo: appInfoReducer,
@@ -27,7 +31,7 @@ export default {
   project: projectReducer,
   notifications: notificationReducer,
   screenLock: screenLockReducer,
-  dashboard: dashboardReducer,
+  dashboards: dashboardReducer,
   launches: launchReducer,
   suites: suiteReducer,
   filters: filterReducer,
@@ -36,4 +40,8 @@ export default {
   testItem: testItemReducer,
   step: stepReducer,
   log: logReducer,
+  itemsHistory: itemsHistoryReducer,
+  administrate: administrateReducer,
+  plugins: pluginsReducer,
+  initialDataReady: initialDataReadyReducer,
 };

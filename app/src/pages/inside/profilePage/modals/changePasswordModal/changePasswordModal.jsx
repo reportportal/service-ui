@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import { defineMessages, injectIntl, intlShape } from 'react-intl';
 import { ModalLayout, withModal, ModalField } from 'components/main/modal';
@@ -9,6 +10,7 @@ import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { reduxForm } from 'redux-form';
 import { Input } from 'components/inputs/input';
 import { InputCheckbox } from 'components/inputs/inputCheckbox';
+import { PROFILE_PAGE_EVENTS } from 'components/main/analytics/events';
 import classNames from 'classnames/bind';
 import styles from './changePasswordModal.scss';
 
@@ -59,42 +61,65 @@ const messages = defineMessages({
     confirmPassword: newPassword !== confirmPassword && 'profileConfirmPassword',
   }),
 })
+@track()
 export class ChangePasswordModal extends Component {
   static propTypes = {
+    intl: intlShape.isRequired,
     handleSubmit: PropTypes.func.isRequired,
     data: PropTypes.shape({
       onChangePassword: PropTypes.func,
     }).isRequired,
-    intl: intlShape.isRequired,
     invalid: PropTypes.bool.isRequired,
+    dirty: PropTypes.bool.isRequired,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
+
   state = {
     showPassword: false,
   };
+
   onChangeShowPassword = () => {
     this.setState({ showPassword: !this.state.showPassword });
   };
+
+  getCloseConfirmationConfig = () => {
+    if (!this.props.dirty) {
+      return null;
+    }
+    return {
+      confirmationWarning: this.props.intl.formatMessage(COMMON_LOCALE_KEYS.CLOSE_MODAL_WARNING),
+    };
+  };
+
   changePasswordAndCloseModal = (closeModal) => (formData) => {
     this.props.data.onChangePassword(formData);
     closeModal();
   };
+
   render() {
-    const { intl, invalid, handleSubmit } = this.props;
+    const { intl, invalid, handleSubmit, tracking } = this.props;
     const okButton = {
       text: intl.formatMessage(COMMON_LOCALE_KEYS.SUBMIT),
       onClick: (closeModal) => {
+        tracking.trackEvent(PROFILE_PAGE_EVENTS.SUBMIT_BTN_CHANGE_PASSWORD_MODAL);
         handleSubmit(this.changePasswordAndCloseModal(closeModal))();
       },
       disabled: invalid,
     };
     const cancelButton = {
       text: intl.formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+      eventInfo: PROFILE_PAGE_EVENTS.CANCEL_BTN_CHANGE_PASSWORD_MODAL,
     };
     return (
       <ModalLayout
         title={intl.formatMessage(messages.header)}
         okButton={okButton}
         cancelButton={cancelButton}
+        closeIconEventInfo={PROFILE_PAGE_EVENTS.CLOSE_ICON_CHANGE_PASSWORD_MODAL}
+        closeConfirmation={this.getCloseConfirmationConfig()}
       >
         <form className={cx('form')}>
           <ModalField
@@ -106,6 +131,7 @@ export class ChangePasswordModal extends Component {
                 <Input
                   placeholder={intl.formatMessage(messages.oldPasswordPlaceholder)}
                   type={this.state.showPassword ? 'text' : 'password'}
+                  maxLength="256"
                 />
               </FieldErrorHint>
             </FieldProvider>
@@ -119,6 +145,7 @@ export class ChangePasswordModal extends Component {
                 <Input
                   placeholder={intl.formatMessage(messages.newPasswordPlaceholder)}
                   type={this.state.showPassword ? 'text' : 'password'}
+                  maxLength="256"
                 />
               </FieldErrorHint>
             </FieldProvider>
@@ -129,6 +156,7 @@ export class ChangePasswordModal extends Component {
                 <Input
                   placeholder={intl.formatMessage(messages.confirmPlaceholder)}
                   type={this.state.showPassword ? 'text' : 'password'}
+                  maxLength="256"
                 />
               </FieldErrorHint>
             </FieldProvider>

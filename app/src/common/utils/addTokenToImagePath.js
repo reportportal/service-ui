@@ -25,7 +25,7 @@ export function addTokenToImagePath(path) {
   const [, token] = (localStorage.getItem(TOKEN_KEY) || '').split(' ');
 
   if (token) {
-    const sep = (path.indexOf('?') !== -1) ? '&' : '?';
+    const sep = path.indexOf('?') !== -1 ? '&' : '?';
     return `${path}${sep}access_token=${token}`;
   }
 

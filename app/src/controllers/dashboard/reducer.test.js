@@ -1,82 +1,71 @@
 import {
-  INITIAL_STATE,
-  FETCH_DASHBOARD_SUCCESS,
+  ADD_DASHBOARD_SUCCESS,
+  CHANGE_FULL_SCREEN_MODE,
   CHANGE_VISIBILITY_TYPE,
-  ADD_DASHBOARD_ITEM_SUCCESS,
-  DELETE_DASHBOARD_ITEM_SUCCESS,
-  UPDATE_DASHBOARD_ITEM_SUCCESS,
-  DASHBOARDS_TABLE_VIEW,
   DASHBOARDS_GRID_VIEW,
+  DASHBOARDS_TABLE_VIEW,
+  INITIAL_STATE,
+  REMOVE_DASHBOARD_SUCCESS,
+  TOGGLE_FULL_SCREEN_MODE,
+  UPDATE_DASHBOARD_SUCCESS,
 } from './constants';
 import { dashboardReducer } from './reducer';
 
 describe('dashboard reducer', () => {
   test('should return initial state', () => {
-    expect(dashboardReducer(undefined, {})).toBe(INITIAL_STATE);
+    expect(dashboardReducer(undefined, {})).toEqual(INITIAL_STATE);
   });
 
   test('should return old state on unknown action', () => {
-    const oldState = { foo: 1 };
+    const oldState = INITIAL_STATE;
     expect(dashboardReducer(oldState, { type: 'foo' })).toBe(oldState);
   });
 
-  test('should handle FETCH_DASHBOARD_SUCCESS', () => {
-    const payload = [{ id: 0 }, { id: 1 }];
-    const newState = dashboardReducer(undefined, {
-      type: FETCH_DASHBOARD_SUCCESS,
-      payload,
-    });
-    expect(newState).toEqual({
-      ...INITIAL_STATE,
-      dashboardItems: payload,
-    });
-  });
-
-  test('should handle ADD_DASHBOARD_ITEM_SUCCESS', () => {
+  test('should handle ADD_DASHBOARD_SUCCESS', () => {
     const payload = { id: 1 };
     const oldState = {
       ...INITIAL_STATE,
-      dashboardItems: [{ id: 0 }],
+      dashboards: [{ id: 0 }],
     };
     const newState = dashboardReducer(oldState, {
-      type: ADD_DASHBOARD_ITEM_SUCCESS,
+      type: ADD_DASHBOARD_SUCCESS,
       payload,
     });
     expect(newState).toEqual({
       ...oldState,
-      dashboardItems: [...oldState.dashboardItems, payload],
+      dashboards: [...oldState.dashboards, payload],
     });
   });
 
-  test('should handle DELETE_DASHBOARD_ITEM_SUCCESS', () => {
+  test('should handle REMOVE_DASHBOARD_SUCCESS', () => {
     const payload = 1;
     const oldState = {
       ...INITIAL_STATE,
-      dashboardItems: [{ id: 0 }, { id: 1 }],
+      dashboards: [{ id: 0 }, { id: 1 }],
     };
     const newState = dashboardReducer(oldState, {
-      type: DELETE_DASHBOARD_ITEM_SUCCESS,
+      type: REMOVE_DASHBOARD_SUCCESS,
       payload,
     });
     expect(newState).toEqual({
       ...oldState,
-      dashboardItems: [{ id: 0 }],
+      dashboards: [{ id: 0 }],
     });
   });
 
-  test('should handle UPDATE_DASHBOARD_ITEM_SUCCESS', () => {
+  test('should handle UPDATE_DASHBOARD_SUCCESS', () => {
     const payload = { id: 1, foo: 2 };
     const oldState = {
       ...INITIAL_STATE,
-      dashboardItems: [{ id: 0 }, { id: 1 }],
+      dashboards: [{ id: 0 }, { id: 1 }],
     };
     const newState = dashboardReducer(oldState, {
-      type: UPDATE_DASHBOARD_ITEM_SUCCESS,
+      type: UPDATE_DASHBOARD_SUCCESS,
       payload,
     });
     expect(newState).toEqual({
       ...oldState,
-      dashboardItems: [{ id: 0 }, payload],
+      dashboards: [{ id: 0 }, payload],
     });
   });
 
@@ -93,5 +82,39 @@ describe('dashboard reducer', () => {
       ...oldState,
       gridType: DASHBOARDS_TABLE_VIEW,
     });
+  });
+
+  test('should handle CHANGE_FULL_SCREEN_MODE', () => {
+    const oldState = {
+      ...INITIAL_STATE,
+      fullScreenMode: false,
+    };
+    const newState = dashboardReducer(oldState, {
+      type: CHANGE_FULL_SCREEN_MODE,
+      payload: true,
+    });
+    expect(newState).toEqual({
+      ...oldState,
+      fullScreenMode: true,
+    });
+  });
+
+  test('should handle TOGGLE_FULL_SCREEN_MODE', () => {
+    const oldState = {
+      ...INITIAL_STATE,
+      fullScreenMode: false,
+    };
+    const newState = dashboardReducer(oldState, {
+      type: TOGGLE_FULL_SCREEN_MODE,
+    });
+    expect(newState).toEqual({
+      ...oldState,
+      fullScreenMode: true,
+    });
+    expect(
+      dashboardReducer(newState, {
+        type: TOGGLE_FULL_SCREEN_MODE,
+      }),
+    ).toEqual(oldState);
   });
 });

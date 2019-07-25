@@ -1,0 +1,30 @@
+.plugins-wrapper {
+  display: flex;
+  justify-content: center;
+  min-height: 500px;
+}
+
+.plugins-content-wrapper {
+  display: flex;
+  justify-content: space-between;
+  width: 830px;
+  @media (max-width: $SCREEN_SM_MAX) {
+    width: 100%;
+  }
+}
+
+.plugins-sub-content-wrapper {
+  width: 830px;
+}
+
+.plugins-content {
+  width: 100%;
+}
+
+.plugins-filter-mobile {
+  display: none;
+  @media (max-width: $SCREEN_XS_MAX) {
+    display: block;
+    margin-bottom: 15px;
+  }
+}

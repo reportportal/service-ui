@@ -27,6 +27,8 @@ export class GridCell extends PureComponent {
     component: PropTypes.oneOfType([PropTypes.node, PropTypes.func]),
     value: PropTypes.object,
     refFunction: PropTypes.func,
+    expanded: PropTypes.bool,
+    toggleExpand: PropTypes.func,
   };
 
   static defaultProps = {
@@ -36,10 +38,22 @@ export class GridCell extends PureComponent {
     formatter: (value) => value,
     title: {},
     refFunction: () => {},
+    expanded: false,
+    toggleExpand: () => {},
   };
 
   render() {
-    const { component, refFunction, value, align, formatter, title, customProps } = this.props;
+    const {
+      component,
+      refFunction,
+      value,
+      align,
+      formatter,
+      title,
+      customProps,
+      expanded,
+      toggleExpand,
+    } = this.props;
     const CellComponent = component;
     return (
       <CellComponent
@@ -48,6 +62,8 @@ export class GridCell extends PureComponent {
         title={title}
         value={formatter(value)}
         customProps={customProps}
+        expanded={expanded}
+        toggleExpand={toggleExpand}
       />
     );
   }

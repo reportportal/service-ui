@@ -38,9 +38,7 @@ export const ExternalLoginBlock = ({ externalAuth }) => (
           <BigButton roundedCorners color="booger">
             <span
               onClick={() => {
-                window.location = `${window.location.protocol}//${window.location.host}/uat${
-                  val.path
-                }`;
+                window.location = `${window.location.protocol}//${window.location.host}${val.path}`;
               }}
             >
               {Parser(val.button)}

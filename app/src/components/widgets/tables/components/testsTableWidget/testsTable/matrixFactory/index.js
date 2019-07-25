@@ -1,0 +1,1 @@
+export { matrixFactory } from './matrixFactory';

@@ -1,0 +1,1 @@
+export { FiltersSorting } from './filtersSorting';

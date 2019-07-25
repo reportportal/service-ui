@@ -25,21 +25,29 @@ import styles from './inputSwitcher.scss';
 
 const cx = classNames.bind(styles);
 
-export const InputSwitcher = ({ children, value, onChange, onFocus, onBlur }) => {
+export const InputSwitcher = ({ children, value, onChange, onFocus, onBlur, readOnly }) => {
   const sliderClasses = cx({
     'switcher-slider': true,
     centered: !children,
-    enabled: value,
+    on: value,
+    readonly: readOnly,
   });
   const onChangeHandler = (e) => {
-    onChange(e.target.checked);
+    if (!readOnly) onChange(e.target.checked);
   };
 
   return (
+    // eslint-disable-next-line
     <label className={cx('input-switcher')} onFocus={onFocus} onBlur={onBlur} tabIndex="1">
-      <input type="checkbox" className={cx('input')} checked={value} onChange={onChangeHandler} />
+      <input
+        type="checkbox"
+        className={cx('input')}
+        readOnly={readOnly}
+        checked={value}
+        onChange={onChangeHandler}
+      />
       <span className={sliderClasses} />
-      <span className={cx('children-container')}>{children}</span>
+      <span className={cx('children-container', { readonly: readOnly })}>{children}</span>
     </label>
   );
 };
@@ -50,6 +58,7 @@ InputSwitcher.propTypes = {
   onChange: PropTypes.func,
   onFocus: PropTypes.func,
   onBlur: PropTypes.func,
+  readOnly: PropTypes.bool,
 };
 
 InputSwitcher.defaultProps = {
@@ -58,4 +67,5 @@ InputSwitcher.defaultProps = {
   onChange: () => {},
   onFocus: () => {},
   onBlur: () => {},
+  readOnly: false,
 };

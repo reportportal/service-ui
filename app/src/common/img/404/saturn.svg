@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="95" height="66" viewBox="0 0 95 66">
+    <defs>
+        <ellipse id="a" cx="45.366" cy="34.43" rx="23.415" ry="23.442"/>
+        <filter id="b" width="110.7%" height="110.7%" x="-5.3%" y="-5.3%" filterUnits="objectBoundingBox">
+            <feGaussianBlur in="SourceAlpha" result="shadowBlurInner1" stdDeviation=".5"/>
+            <feOffset dx="-3" dy="-4" in="shadowBlurInner1" result="shadowOffsetInner1"/>
+            <feComposite in="shadowOffsetInner1" in2="SourceAlpha" k2="-1" k3="1" operator="arithmetic" result="shadowInnerInner1"/>
+            <feColorMatrix in="shadowInnerInner1" values="0 0 0 0 0.849117772 0 0 0 0 0.745855656 0 0 0 0 0.270224092 0 0 0 1 0"/>
+        </filter>
+    </defs>
+    <g fill="none" fill-rule="evenodd">
+        <g transform="translate(3 -1)">
+            <use fill="#F7D63E" xlink:href="#a"/>
+            <use fill="#000" filter="url(#b)" xlink:href="#a"/>
+        </g>
+        <path fill="#DDA621" d="M52.762 38.747C30.888 51.376 11.025 57.921 8.395 53.366c-2.63-4.555 12.97-18.485 34.843-31.113C65.112 9.624 84.975 3.079 87.605 7.634c2.63 4.555-12.97 18.485-34.843 31.113zm-3.247-4.892c13.998-8.082 23.882-17.172 22.966-18.758-.916-1.586-13.73 2.428-27.728 10.51C30.754 33.69 20.87 42.78 21.787 44.366c.915 1.586 13.729-2.428 27.728-10.51z"/>
+        <path fill="#F7D63E" d="M68.16 20.903c-4.15-6.56-11.464-10.915-19.794-10.915-12.932 0-23.415 10.496-23.415 23.442 0 3.667.84 7.136 2.34 10.227"/>
+        <path fill="#FFF" d="M31.77 31.04a.998.998 0 0 1 .414-1.352l12.36-6.572a.998.998 0 0 1 1.353.413.998.998 0 0 1-.415 1.353l-12.36 6.572a.998.998 0 0 1-1.353-.413zm-3.476 4.114a.997.997 0 0 1 .407-1.35l14.14-7.517a.994.994 0 0 1 1.346.416.997.997 0 0 1-.408 1.35L29.64 35.57a.994.994 0 0 1-1.346-.416zm7.12-1.52a.994.994 0 0 1 .412-1.352l16.778-8.922a.997.997 0 0 1 1.351.414.994.994 0 0 1-.412 1.352l-16.778 8.921a.997.997 0 0 1-1.352-.414zm-2.594 3.643a.995.995 0 0 1 .416-1.353l17.655-9.388a.999.999 0 0 1 1.354.413.995.995 0 0 1-.415 1.353L34.175 37.69a.999.999 0 0 1-1.355-.412z" opacity=".705" style="mix-blend-mode:soft-light"/>
+    </g>
+</svg>

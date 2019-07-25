@@ -29,7 +29,7 @@ const messages = defineMessages({
   },
   text: {
     id: 'IgnoreInAAModal.text',
-    defaultMessage: 'Are you sure to ignore item <b>{name}</b> in Auto-Analysis?',
+    defaultMessage: "Are you sure to ignore item '<b>{name}</b>' in Auto-Analysis?",
   },
   textMultiple: {
     id: 'IgnoreInAAModal.textMultiple',
@@ -72,7 +72,7 @@ export class IgnoreInAAModal extends Component {
       data: { items, fetchFunc },
     } = this.props;
     const issues = items.map((item) => ({
-      test_item_id: item.id,
+      testItemId: item.id,
       issue: {
         ...item.issue,
         ignoreAnalyzer: true,
@@ -84,14 +84,23 @@ export class IgnoreInAAModal extends Component {
       data: {
         issues,
       },
-    }).then(() => {
-      fetchFunc();
-      this.props.showNotification({
-        message: this.getSuccessText(),
-        type: NOTIFICATION_TYPES.SUCCESS,
-      });
-      closeModal();
-    });
+    }).then(
+      () => {
+        fetchFunc();
+        this.props.showNotification({
+          message: this.getSuccessText(),
+          type: NOTIFICATION_TYPES.SUCCESS,
+        });
+        closeModal();
+      },
+      (error) => {
+        this.props.showNotification({
+          message: error.message,
+          type: NOTIFICATION_TYPES.ERROR,
+        });
+        closeModal();
+      },
+    );
   };
 
   getModalTitle = () => {

@@ -1,4 +1,4 @@
-import { cloneElement, PureComponent } from 'react';
+import { cloneElement, Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { injectIntl, intlShape, defineMessages } from 'react-intl';
@@ -19,7 +19,7 @@ const messages = defineMessages({
   },
   passwordHint: {
     id: 'RegistrationForm.passwordHint',
-    defaultMessage: 'Password should have size from 4 to 25 symbols.',
+    defaultMessage: 'Password should have size from 4 to 256 symbols.',
   },
   emailHint: {
     id: 'Common.validation.email',
@@ -29,13 +29,25 @@ const messages = defineMessages({
     id: 'RegistrationForm.confirmPasswordHint',
     defaultMessage: 'Passwords do not match.',
   },
+  loginDuplicateHint: {
+    id: 'RegistrationForm.loginDuplicateHint',
+    defaultMessage: 'Entered login already exists in the system.',
+  },
+  emailDuplicateHint: {
+    id: 'RegistrationForm.emailDuplicateHint',
+    defaultMessage: 'Entered email already exists in the system.',
+  },
   filterNameError: {
     id: 'FiltersPage.filterNameLength',
     defaultMessage: 'Filter name length should have size from 3 to 128 characters.',
   },
+  sharedWidgetSearchHint: {
+    id: 'SharedWidgetsSearch.sharedWidgetSearchHint',
+    defaultMessage: 'Value should have size from 3 to 256.',
+  },
   launchNameHint: {
     id: '  LaunchMergeModal.launchNameHint',
-    defaultMessage: 'Launch name should have size from 3 to 256.',
+    defaultMessage: 'Launch name should have size from 1 to 256.',
   },
   launchDescriptionHint: {
     id: '  LaunchMergeModal.launchDescriptionHint',
@@ -44,6 +56,10 @@ const messages = defineMessages({
   dashboardNameHint: {
     id: 'AddEditDashboard.dashboardNameHint',
     defaultMessage: 'Dashboard name should have size  from 3 to 128.',
+  },
+  dashboardNameExistsHint: {
+    id: 'AddEditDashboard.dashboardNameExistsHint',
+    defaultMessage: 'This name is already in use.',
   },
   dashboardNameSearchHint: {
     id: 'SearchDashboardForm.dashboardNameSearchHint',
@@ -61,13 +77,9 @@ const messages = defineMessages({
     id: 'AccuracyFormBlock.minTermFreqHint',
     defaultMessage: 'The parameter should have value from 1 to 10',
   },
-  widgetNameHint: {
-    id: 'SearchDashboardForm.widgetNameHint',
-    defaultMessage: 'Widget name should have size from 3 to 128',
-  },
   profilePassword: {
     id: 'ChangePasswordModal.profilePassword',
-    defaultMessage: 'Password should have size from 4 to 25 symbols',
+    defaultMessage: 'Password should have size from 4 to 256 symbols',
   },
   profileConfirmPassword: {
     id: 'ChangePasswordModal.profileConfirmPassword',
@@ -99,16 +111,12 @@ const messages = defineMessages({
     defaultMessage: 'Postfix should have size from 1 to 90',
   },
   recipientsHint: {
-    id: 'emailCase.recipientsHint',
-    defaultMessage: 'Select at least one recipient or set up “OFF” e-mail notifications',
-  },
-  tagsHint: {
-    id: 'emailCase.tagsHint',
-    defaultMessage: 'Tag name should have size from 3 to 256',
+    id: 'AddEditNotificationCaseModal.recipientsHint',
+    defaultMessage: 'Select at least one recipient',
   },
   launchesHint: {
-    id: 'emailCase.launchesHint',
-    defaultMessage: 'Launch name should have size from 3 to 256',
+    id: 'AddEditNotificationCaseModal.launchesHint',
+    defaultMessage: 'Launch name should have size from 1 to 256',
   },
   urlHint: {
     id: 'LinkIssueModal.urlHint',
@@ -118,36 +126,103 @@ const messages = defineMessages({
     id: 'LinkIssueModal.issueIdHint',
     defaultMessage: 'Issue ID should have size from 1 to 128',
   },
+  requiredFieldHint: {
+    id: 'Common.requiredFieldHint',
+    defaultMessage: 'This field is required',
+  },
+  attributeKeyLengthHint: {
+    id: 'AttributeEditor.attributeKeyLengthHint',
+    defaultMessage: 'Attribute key should have size from 1 to 128',
+  },
+  attributeValueLengthHint: {
+    id: 'AttributeEditor.attributeValueLengthHint',
+    defaultMessage: 'Attribute value should have size from 1 to 128',
+  },
+  defectLongNameHint: {
+    id: 'DefectTypesTab.defectLongNameHint',
+    defaultMessage: "Full name should have size from '3' to '55'",
+  },
+  defectShortNameHint: {
+    id: 'DefectTypesTab.defectShortNameHint',
+    defaultMessage: "Short name should have size from '1' to '4'",
+  },
+  projectNameLengthHint: {
+    id: 'ProjectsPage.projectNameLengthHint',
+    defaultMessage:
+      "Project name should have size from '3' to '256', latin, numeric characters, hyphen, underscore.",
+  },
+  projectDuplicateHint: {
+    id: 'ProjectsPage.projectDuplicateHint',
+    defaultMessage: 'Project with the same name already exists in system',
+  },
+  btsUrlHint: {
+    id: 'BtsCommonMessages.btsUrlHint',
+    defaultMessage: 'Please provide a valid BTS link',
+  },
+  btsProjectHint: {
+    id: 'BtsCommonMessages.btsProjectHint',
+    defaultMessage: 'Project name should have size from 1 to 55',
+  },
+  portFieldHint: {
+    id: 'EmailFormFields.portFieldHint',
+    defaultMessage: "Only numbers from '1' to '65535' are possible.",
+  },
+  patternNameLengthHint: {
+    id: 'PatternAnalysis.patternNameLengthHint',
+    defaultMessage: 'Pattern name should have size from 1 to 55',
+  },
+  patternNameDuplicateHint: {
+    id: 'PatternAnalysis.patternNameDuplicateHint',
+    defaultMessage: 'Pattern with the same name already exists in the project',
+  },
+  customColumnsDuplicationHint: {
+    id: 'ProductStatusControls.customColumnsDuplicationHint',
+    defaultMessage: 'Duplicated column names are prohibited',
+  },
 });
 
 @injectIntl
-export class FieldErrorHint extends PureComponent {
+export class FieldErrorHint extends Component {
   static propTypes = {
+    intl: intlShape,
     hintType: PropTypes.string,
     children: PropTypes.node,
-    intl: intlShape.isRequired,
     error: PropTypes.string,
     active: PropTypes.bool,
+    staticHint: PropTypes.bool,
   };
+
   static defaultProps = {
+    intl: {},
     hintType: 'bottom',
     children: null,
     error: '',
     active: false,
+    staticHint: false,
   };
+
+  isHintVisible = () => {
+    const { error, active, staticHint } = this.props;
+    if (staticHint) {
+      return !!error;
+    }
+    return !!error && active;
+  };
+
   render() {
-    const { hintType, children, intl, error, active, ...rest } = this.props;
-    const classes = cx('field-error-hint', {
-      show: error && active,
-      'bottom-type': hintType === 'bottom',
-      'top-type': hintType === 'top',
-    });
+    const { hintType, children, intl, error, active, staticHint, ...rest } = this.props;
+    const classes = cx('field-error-hint', `type-${hintType}`);
 
     return (
       <div className={classes}>
         {children && cloneElement(children, { error, active, ...rest })}
-        <div className={cx('hint')}>
-          <div className={cx('hint-content')}>
+        <div
+          className={cx('hint', `type-${hintType}`, {
+            'static-hint': staticHint,
+            visible: this.isHintVisible(),
+          })}
+        >
+          <div className={cx('hint-content', `type-${hintType}`, { 'static-hint': staticHint })}>
             {error && messages[error] ? intl.formatMessage(messages[error]) : error}
           </div>
         </div>

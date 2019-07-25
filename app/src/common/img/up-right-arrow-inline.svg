@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+     viewBox="0 0 20 20">
+    <g transform="rotate(360 10 10)">
+        <path d="M7.5 4.167v1.666h5.492l-9.659 9.659 1.175 1.175 9.659-9.659V12.5h1.666V4.167z" />
+    </g>
+</svg>

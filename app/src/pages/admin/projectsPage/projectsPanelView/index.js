@@ -1,0 +1,1 @@
+export { ProjectsPanelView } from './projectsPanelView';

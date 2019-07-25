@@ -11,32 +11,35 @@ export class FormField extends PureComponent {
     containerClassName: PropTypes.string,
     labelClassName: PropTypes.string,
     fieldWrapperClassName: PropTypes.string,
-    descriptionClassName: PropTypes.string,
+    customBlock: PropTypes.shape({
+      wrapperClassName: PropTypes.string,
+      node: PropTypes.element,
+    }),
     label: PropTypes.string,
-    description: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
     onChange: PropTypes.func,
     normalize: PropTypes.func,
     format: PropTypes.func,
     parse: PropTypes.func,
-    name: PropTypes.string,
     disabled: PropTypes.bool,
     children: PropTypes.any,
+    required: PropTypes.bool,
+    withoutProvider: PropTypes.bool,
   };
 
   static defaultProps = {
     containerClassName: '',
     labelClassName: '',
     fieldWrapperClassName: '',
-    descriptionClassName: '',
+    customBlock: null,
     label: '',
-    description: '',
     onChange: () => {},
     normalize: (value) => value,
     format: (value) => value,
     parse: (value) => value,
-    name: null,
-    children: null,
     disabled: false,
+    children: null,
+    required: false,
+    withoutProvider: false,
   };
 
   render() {
@@ -44,22 +47,21 @@ export class FormField extends PureComponent {
       containerClassName,
       labelClassName,
       fieldWrapperClassName,
-      descriptionClassName,
+      customBlock,
       label,
-      description,
       children,
+      required,
+      withoutProvider,
       ...rest
     } = this.props;
     return (
       <div className={cx('form-field', containerClassName)}>
-        {label && <span className={cx('form-group-label', labelClassName)}>{label}</span>}
+        <span className={cx('form-group-label', labelClassName, { required })}>{label}</span>
         <div className={cx('field-wrapper', fieldWrapperClassName)}>
-          <FieldProvider {...rest}>{children}</FieldProvider>
+          {withoutProvider ? children : <FieldProvider {...rest}>{children}</FieldProvider>}
         </div>
-        {description && (
-          <div className={cx('form-group-description', descriptionClassName)}>
-            <p>{description}</p>
-          </div>
+        {customBlock && (
+          <div className={cx('custom-block', customBlock.wrapperClassName)}>{customBlock.node}</div>
         )}
       </div>
     );

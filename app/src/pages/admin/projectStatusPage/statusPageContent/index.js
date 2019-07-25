@@ -1,0 +1,1 @@
+export { StatusPageContent } from './statusPageContent';

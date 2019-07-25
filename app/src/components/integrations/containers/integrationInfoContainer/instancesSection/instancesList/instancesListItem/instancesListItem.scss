@@ -1,0 +1,51 @@
+.instances-list-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  height: 70px;
+  box-sizing: border-box;
+  padding: 15px;
+  border: solid 1px $COLOR--gray-91;
+  border-radius: 4px;
+  background-color: $COLOR--white-two;
+  cursor: pointer;
+
+  &:not(:last-child) {
+    margin-bottom: 15px;
+  }
+
+  &.disabled {
+    .integration-name, .creation-info {
+      color: $COLOR--gray-60;
+    }
+
+    .arrow-control {
+      fill: $COLOR--gray-80;
+    }
+  }
+}
+
+.item-data {
+  .integration-name {
+    margin-bottom: 5px;
+    color: $COLOR--black-2;
+    font-size: 15px;
+    font-family: $FONT-SEMIBOLD;
+  }
+
+  .creation-info {
+    color: $COLOR--gray-47;
+    font-size: 12px;
+    font-family: $FONT-REGULAR;
+  }
+}
+
+.arrow-control {
+  width: 15px;
+  height: 15px;
+
+  svg {
+    fill: $COLOR--gray-60;
+  }
+}

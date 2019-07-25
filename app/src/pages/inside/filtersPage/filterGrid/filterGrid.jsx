@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
+import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-intl';
 import { ALIGN_CENTER, Grid } from 'components/main/grid';
+import { FILTERS_PAGE_EVENTS } from 'components/main/analytics/events';
+import { PROJECT_LAUNCHES_PAGE } from 'controllers/pages';
 import { canDeleteFilter } from 'common/utils/permissions';
 import { FilterName } from './filterName';
 import { FilterOptions } from './filterOptions';
@@ -29,6 +32,12 @@ const NameColumn = ({ className, value, customProps }) => (
       onClickName={customProps.onClickName}
       onEdit={customProps.onEdit}
       userId={customProps.userId}
+      nameLink={{
+        type: PROJECT_LAUNCHES_PAGE,
+        payload: { projectId: customProps.activeProject, filterId: value.id },
+      }}
+      isLink
+      noShareIcons
     />
   </div>
 );
@@ -44,7 +53,7 @@ NameColumn.defaultProps = {
 
 const OptionsColumn = ({ className, value }) => (
   <div className={cx('options-col', className)}>
-    <FilterOptions entities={value.entities} sort={value.selection_parameters.orders} />
+    <FilterOptions entities={value.conditions} sort={value.orders} />
   </div>
 );
 OptionsColumn.propTypes = {
@@ -129,30 +138,39 @@ DeleteColumn.defaultProps = {
 };
 
 @injectIntl
+@track()
 export class FilterGrid extends Component {
   static propTypes = {
     filters: PropTypes.arrayOf(PropTypes.object),
     intl: intlShape.isRequired,
-    userFilters: PropTypes.arrayOf(PropTypes.string),
+    userFilters: PropTypes.arrayOf(PropTypes.object),
     onEdit: PropTypes.func,
     userId: PropTypes.string,
-    toggleDisplayFilterOnLaunches: PropTypes.func,
+    showFilterOnLaunchesAction: PropTypes.func,
+    hideFilterOnLaunchesAction: PropTypes.func,
     projectRole: PropTypes.string,
     onDelete: PropTypes.func,
     accountRole: PropTypes.string,
     loading: PropTypes.bool,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
+    activeProject: PropTypes.string,
   };
 
   static defaultProps = {
     filters: [],
     userFilters: [],
     onEdit: () => {},
-    toggleDisplayFilterOnLaunches: () => {},
+    showFilterOnLaunchesAction: () => {},
+    hideFilterOnLaunchesAction: () => {},
     userId: '',
     projectRole: '',
     onDelete: () => {},
     accountRole: '',
     loading: false,
+    activeProject: null,
   };
 
   getColumns = () => [
@@ -164,9 +182,18 @@ export class FilterGrid extends Component {
       component: NameColumn,
       customProps: {
         userFilters: this.props.userFilters,
-        onClickName: () => {}, // TODO
-        onEdit: this.props.onEdit,
+        onClickName: (filter) => {
+          const isActiveFilter = this.props.userFilters.find((item) => item.id === filter.id);
+          if (!isActiveFilter) {
+            this.props.showFilterOnLaunchesAction(filter);
+          }
+        },
+        onEdit: (filter) => {
+          this.props.onEdit(filter);
+          this.props.tracking.trackEvent(FILTERS_PAGE_EVENTS.CLICK_EDIT_ICON);
+        },
         userId: this.props.userId,
+        activeProject: this.props.activeProject,
       },
     },
     {
@@ -192,7 +219,10 @@ export class FilterGrid extends Component {
       component: SharedColumn,
       customProps: {
         userId: this.props.userId,
-        onEdit: this.props.onEdit,
+        onEdit: (filter) => {
+          this.props.onEdit(filter);
+          this.props.tracking.trackEvent(FILTERS_PAGE_EVENTS.CLICK_SHARED_ICON);
+        },
       },
     },
     {
@@ -204,7 +234,12 @@ export class FilterGrid extends Component {
       component: DisplayOnLaunchColumn,
       customProps: {
         userFilters: this.props.userFilters,
-        onChangeDisplay: (id) => this.props.toggleDisplayFilterOnLaunches(id),
+        onChangeDisplay: (isFilterDisplayed, filter) => {
+          isFilterDisplayed
+            ? this.props.hideFilterOnLaunchesAction(filter)
+            : this.props.showFilterOnLaunchesAction(filter);
+          this.props.tracking.trackEvent(FILTERS_PAGE_EVENTS.CLICK_DISPLAY_ON_LAUNCH_SWITCHER);
+        },
       },
     },
     {
@@ -215,7 +250,10 @@ export class FilterGrid extends Component {
       align: ALIGN_CENTER,
       component: DeleteColumn,
       customProps: {
-        onDelete: this.props.onDelete,
+        onDelete: (filter) => {
+          this.props.onDelete(filter);
+          this.props.tracking.trackEvent(FILTERS_PAGE_EVENTS.CLICK_DELETE_FILTER_ICON);
+        },
         accountRole: this.props.accountRole,
         projectRole: this.props.projectRole,
         userId: this.props.userId,

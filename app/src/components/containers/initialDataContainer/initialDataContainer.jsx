@@ -1,31 +1,26 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { fetchInfoAction } from 'controllers/appInfo';
-import { fetchProjectAction } from 'controllers/project';
-import { fetchUserAction, activeProjectSelector } from 'controllers/user';
-import { TOKEN_KEY, DEFAULT_TOKEN, authSuccessAction } from 'controllers/auth';
+import { analyticsEnabledSelector } from 'controllers/appInfo';
+import { AnalyticsWrapper } from 'components/main/analytics/AnalyticsWrapper';
+import { fetchInitialDataAction, initialDataReadySelector } from 'controllers/initialData';
 
 @connect(
   (state) => ({
-    activeProject: activeProjectSelector(state),
+    isAnalyticsEnabled: analyticsEnabledSelector(state),
+    isInitialDataReady: initialDataReadySelector(state),
   }),
   {
-    fetchInfoAction,
-    fetchUserAction,
-    fetchProjectAction,
-    authSuccessAction,
+    fetchInitialDataAction,
   },
 )
 export class InitialDataContainer extends Component {
   static propTypes = {
-    fetchInfoAction: PropTypes.func.isRequired,
-    fetchProjectAction: PropTypes.func.isRequired,
-    fetchUserAction: PropTypes.func.isRequired,
-    activeProject: PropTypes.string.isRequired,
-    authSuccessAction: PropTypes.func.isRequired,
     children: PropTypes.node,
     initialDispatch: PropTypes.func.isRequired,
+    isAnalyticsEnabled: PropTypes.bool.isRequired,
+    fetchInitialDataAction: PropTypes.func.isRequired,
+    isInitialDataReady: PropTypes.bool.isRequired,
   };
 
   static defaultProps = {
@@ -37,26 +32,26 @@ export class InitialDataContainer extends Component {
   };
 
   componentDidMount() {
-    const infoPromise = this.props.fetchInfoAction();
-    const token = localStorage.getItem(TOKEN_KEY);
-    if (!token) {
-      localStorage.setItem(TOKEN_KEY, DEFAULT_TOKEN);
-    }
-    const userPromise = this.props
-      .fetchUserAction()
-      .then(({ activeProject }) =>
-        this.props.fetchProjectAction(activeProject).then(() => this.props.authSuccessAction()),
-      )
-      .catch(() => {
-        localStorage.setItem(TOKEN_KEY, DEFAULT_TOKEN);
-      });
-    Promise.all([infoPromise, userPromise]).then(() => {
+    this.props.fetchInitialDataAction();
+  }
+
+  componentDidUpdate(prevProps) {
+    if (
+      prevProps.isInitialDataReady !== this.props.isInitialDataReady &&
+      this.props.isInitialDataReady
+    ) {
       this.props.initialDispatch();
-      this.setState({ initialDataReady: true });
-    });
+    }
   }
 
   render() {
-    return this.state.initialDataReady ? this.props.children : <span>Loading...</span>;
+    const { isAnalyticsEnabled } = this.props;
+    const component = isAnalyticsEnabled ? (
+      <AnalyticsWrapper>{this.props.children}</AnalyticsWrapper>
+    ) : (
+      this.props.children
+    );
+
+    return this.props.isInitialDataReady ? component : <span>Loading...</span>;
   }
 }

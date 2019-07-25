@@ -44,6 +44,7 @@ export class GhostMenuButton extends Component {
     disabled: PropTypes.bool,
     color: PropTypes.string,
     tooltip: PropTypes.string,
+    onClick: PropTypes.func,
   };
   static defaultProps = {
     title: '',
@@ -51,6 +52,7 @@ export class GhostMenuButton extends Component {
     disabled: false,
     color: 'topaz',
     tooltip: '',
+    onClick: () => {},
   };
 
   state = {
@@ -66,13 +68,14 @@ export class GhostMenuButton extends Component {
   }
 
   handleOutsideClick = (e) => {
-    if (!this.node.contains(e.target) && this.state.opened) {
+    if (this.node && !this.node.contains(e.target) && this.state.opened) {
       this.setState({ opened: false });
     }
   };
 
   toggleMenu = () => {
     this.setState({ opened: !this.state.opened });
+    this.props.onClick();
   };
 
   render() {
@@ -103,7 +106,15 @@ export class GhostMenuButton extends Component {
               key={item.value}
               className={cx('menu-item', { disabled: item.disabled })}
               title={item.title || ''}
-              onClick={!item.disabled ? item.onClick : null}
+              onClick={
+                !item.disabled
+                  ? (e) => {
+                      e.stopPropagation();
+                      item.onClick();
+                      this.toggleMenu();
+                    }
+                  : null
+              }
             >
               <span>{item.label}</span>
             </div>

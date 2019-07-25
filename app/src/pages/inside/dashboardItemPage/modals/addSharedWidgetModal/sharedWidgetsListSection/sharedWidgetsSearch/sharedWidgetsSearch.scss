@@ -1,0 +1,17 @@
+.shared-widgets-search {
+  display: flex;
+  width: calc(100% - 20px);
+  height: 42px;
+  padding: 10px;
+  background: $COLOR--white;
+  justify-content: space-between;
+}
+
+.search-input {
+  width: 100%;
+  margin-right: 10px;
+
+  input {
+    background: transparent;
+  }
+}

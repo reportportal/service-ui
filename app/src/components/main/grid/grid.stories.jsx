@@ -23,66 +23,17 @@ import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import { host } from 'storybook-host';
 import { withReadme } from 'storybook-readme';
+import { getTestColumns } from 'pages/inside/logsPage/logsGrid/logsGrid';
+import { NestedStepHeader } from 'pages/inside/logsPage/logsGrid/nestedStepHeader';
 import { Grid } from './grid';
-import { ALIGN_CENTER } from './constants';
+import { SIMPLE_COLUMNS, SIMPLE_DATA, STEP_DATA } from './data';
 import README from './README.md';
 
-const COLUMNS = [
-  {
-    id: 'name',
-    title: { full: 'name' },
-    formatter: ({ name }) => name,
-  },
-  {
-    id: 'total',
-    title: { full: 'total' },
-    align: ALIGN_CENTER,
-    formatter: ({ total }) => total,
-    sortable: true,
-    withFilter: true,
-  },
-  {
-    id: 'passed',
-    title: { full: 'passed' },
-    align: ALIGN_CENTER,
-    formatter: ({ passed }) => passed,
-    sortable: true,
-    withFilter: true,
-  },
-  {
-    id: 'failed',
-    title: { full: 'failed' },
-    align: ALIGN_CENTER,
-    formatter: ({ failed }) => failed,
-  },
-  {
-    id: 'skipped',
-    title: { full: 'skipped' },
-    align: ALIGN_CENTER,
-    formatter: ({ skipped }) => skipped,
-  },
-];
-
-const DATA = [
-  {
-    id: 'id1',
-    name: 'foo 1',
-    description: 'some description',
-    total: 100,
-    passed: 70,
-    failed: 25,
-    skipped: 5,
-  },
-  {
-    id: 'id2',
-    name: 'foo 2',
-    description: 'another description',
-    total: 10,
-    passed: 7,
-    failed: 2,
-    skipped: 1,
-  },
-];
+const getLogRowClasses = (value) => ({
+  log: true,
+  'error-row': value.level === 'error' || value.level === 'fatal',
+  'row-console': false,
+});
 
 storiesOf('Components/Main/Grid', module)
   .addDecorator(
@@ -97,15 +48,15 @@ storiesOf('Components/Main/Grid', module)
   )
   .addDecorator(withReadme(README))
   .add('default state', () => <Grid />)
-  .add('with data', () => <Grid columns={COLUMNS} data={DATA} />)
+  .add('with data', () => <Grid columns={SIMPLE_COLUMNS} data={SIMPLE_DATA} />)
   .add('with selection', () => (
-    <Grid columns={COLUMNS} data={DATA} selectable selectedItems={[DATA[0]]} />
+    <Grid columns={SIMPLE_COLUMNS} data={SIMPLE_DATA} selectable selectedItems={[SIMPLE_DATA[0]]} />
   ))
   .add('with actions', () => (
     <Grid
-      columns={COLUMNS}
-      data={DATA}
-      selectedItems={[DATA[0]]}
+      columns={SIMPLE_COLUMNS}
+      data={SIMPLE_DATA}
+      selectedItems={[SIMPLE_DATA[0]]}
       sortingColumn="total"
       sortingDirection="asc"
       selectable
@@ -113,5 +64,14 @@ storiesOf('Components/Main/Grid', module)
       onFilterClick={action('filterClick')}
       onToggleSelectAll={action('toggleSelectAll')}
       onToggleSelection={action('toggleSelection')}
+    />
+  ))
+  .add('with log data', () => (
+    <Grid
+      columns={getTestColumns()}
+      data={STEP_DATA}
+      rowClassMapper={getLogRowClasses}
+      nestedStepHeader={NestedStepHeader}
+      nestedView
     />
   ));

@@ -1,13 +1,18 @@
 import React, { Component } from 'react';
+import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { defineMessages, FormattedMessage, injectIntl, intlShape } from 'react-intl';
 import classNames from 'classnames/bind';
+import { canBulkEditLaunches } from 'common/utils/permissions';
+import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { GhostMenuButton } from 'components/buttons/ghostMenuButton';
 import { Breadcrumbs, breadcrumbDescriptorShape } from 'components/main/breadcrumbs';
 import { breadcrumbsSelector, restorePathAction } from 'controllers/testItem';
-import ImportIcon from './img/import-inline.svg';
+import { LAUNCHES_PAGE_EVENTS } from 'components/main/analytics/events';
+import AddWidgetIcon from 'common/img/add-widget-inline.svg';
+import ImportIcon from 'common/img/import-inline.svg';
 import RefreshIcon from './img/refresh-inline.svg';
 import styles from './actionPanel.scss';
 
@@ -16,6 +21,10 @@ const messages = defineMessages({
   actionsBtn: {
     id: 'ActionPanel.actionsBtn',
     defaultMessage: 'Actions',
+  },
+  actionBulkEdit: {
+    id: 'ActionPanel.actionBulkEdit',
+    defaultMessage: 'Edit',
   },
   actionMerge: {
     id: 'ActionPanel.actionMerge',
@@ -54,12 +63,15 @@ const messages = defineMessages({
 @connect(
   (state) => ({
     breadcrumbs: breadcrumbsSelector(state),
+    accountRole: userAccountRoleSelector(state),
+    projectRole: activeProjectRoleSelector(state),
   }),
   {
     restorePath: restorePathAction,
   },
 )
 @injectIntl
+@track()
 export class ActionPanel extends Component {
   static propTypes = {
     debugMode: PropTypes.bool,
@@ -70,7 +82,11 @@ export class ActionPanel extends Component {
     intl: intlShape.isRequired,
     onImportLaunch: PropTypes.func,
     hasValidItems: PropTypes.bool,
+    accountRole: PropTypes.string,
+    projectRole: PropTypes.string.isRequired,
     onProceedValidItems: PropTypes.func,
+    onEditItem: PropTypes.func,
+    onEditItems: PropTypes.func,
     onMerge: PropTypes.func,
     onCompare: PropTypes.func,
     onMove: PropTypes.func,
@@ -78,6 +94,13 @@ export class ActionPanel extends Component {
     onDelete: PropTypes.func,
     breadcrumbs: PropTypes.arrayOf(breadcrumbDescriptorShape),
     restorePath: PropTypes.func,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
+    activeFilterId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    onAddNewWidget: PropTypes.func,
+    finishedLaunchesCount: PropTypes.number,
   };
 
   static defaultProps = {
@@ -89,6 +112,8 @@ export class ActionPanel extends Component {
     onImportLaunch: () => {},
     hasValidItems: false,
     onProceedValidItems: () => {},
+    onEditItem: () => {},
+    onEditItems: () => {},
     onMerge: () => {},
     onCompare: () => {},
     onMove: () => {},
@@ -96,49 +121,89 @@ export class ActionPanel extends Component {
     onDelete: () => {},
     breadcrumbs: [],
     restorePath: () => {},
+    activeFilterId: null,
+    onAddNewWidget: () => {},
+    finishedLaunchesCount: null,
+    accountRole: '',
   };
 
-  constructor(props) {
-    super(props);
-    this.actionDescriptors = this.createActionDescriptors();
-  }
+  onClickActionButton = () =>
+    this.props.tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_ACTIONS_BTN);
 
-  createActionDescriptors = () => [
-    {
-      label: this.props.intl.formatMessage(messages.actionMerge),
-      value: 'action-merge',
-      hidden: this.props.debugMode,
-      onClick: this.props.onMerge,
-    },
-    {
-      label: this.props.intl.formatMessage(messages.actionCompare),
-      value: 'action-compare',
-      hidden: this.props.debugMode,
-      onClick: this.props.onCompare,
-    },
-    {
-      label: this.props.intl.formatMessage(messages.actionMoveToDebug),
-      value: 'action-move-to-debug',
-      hidden: this.props.debugMode,
-      onClick: this.props.onMove,
-    },
-    {
-      label: this.props.intl.formatMessage(messages.actionMoveToAll),
-      value: 'action-move-to-all',
-      hidden: !this.props.debugMode,
-      onClick: this.props.onMove,
-    },
-    {
-      label: this.props.intl.formatMessage(messages.actionForceFinish),
-      value: 'action-force-finish',
-      onClick: this.props.onForceFinish,
-    },
-    {
-      label: this.props.intl.formatMessage(messages.actionDelete),
-      value: 'action-delete',
-      onClick: this.props.onDelete,
-    },
-  ];
+  createActionDescriptors = () => {
+    const {
+      intl,
+      debugMode,
+      onMerge,
+      onCompare,
+      onMove,
+      onForceFinish,
+      onDelete,
+      accountRole,
+      projectRole,
+      onEditItems,
+      onEditItem,
+      selectedLaunches,
+    } = this.props;
+
+    return [
+      {
+        label: intl.formatMessage(messages.actionBulkEdit),
+        value: 'action-bulk-edit',
+        hidden: debugMode || !canBulkEditLaunches(accountRole, projectRole),
+        onClick: () => {
+          selectedLaunches.length > 1
+            ? onEditItems(selectedLaunches)
+            : onEditItem(selectedLaunches[0]);
+        },
+      },
+      {
+        label: intl.formatMessage(messages.actionMerge),
+        value: 'action-merge',
+        hidden: debugMode,
+        onClick: onMerge,
+      },
+      {
+        label: intl.formatMessage(messages.actionCompare),
+        value: 'action-compare',
+        hidden: debugMode,
+        onClick: onCompare,
+      },
+      {
+        label: intl.formatMessage(messages.actionMoveToDebug),
+        value: 'action-move-to-debug',
+        hidden: debugMode,
+        onClick: onMove,
+      },
+      {
+        label: intl.formatMessage(messages.actionMoveToAll),
+        value: 'action-move-to-all',
+        hidden: !debugMode,
+        onClick: onMove,
+      },
+      {
+        label: intl.formatMessage(messages.actionForceFinish),
+        value: 'action-force-finish',
+        onClick: onForceFinish,
+      },
+      {
+        label: intl.formatMessage(messages.actionDelete),
+        value: 'action-delete',
+        onClick: onDelete,
+      },
+    ];
+  };
+  isShowImportButton = () => {
+    const { debugMode, activeFilterId } = this.props;
+    return !debugMode && !Number.isInteger(activeFilterId);
+  };
+
+  isShowWidgetButton = () => {
+    const { activeFilterId } = this.props;
+    return Number.isInteger(activeFilterId);
+  };
+
+  renderCounterNotification = (number) => <span className={cx('counter')}>{number}</span>;
 
   render() {
     const {
@@ -152,8 +217,11 @@ export class ActionPanel extends Component {
       onImportLaunch,
       breadcrumbs,
       restorePath,
-      debugMode,
+      onAddNewWidget,
+      finishedLaunchesCount,
     } = this.props;
+    const actionDescriptors = this.createActionDescriptors();
+
     return (
       <div className={cx('action-panel', { 'right-buttons-only': !showBreadcrumb && !hasErrors })}>
         {showBreadcrumb && <Breadcrumbs descriptors={breadcrumbs} onRestorePath={restorePath} />}
@@ -163,10 +231,17 @@ export class ActionPanel extends Component {
           </GhostButton>
         )}
         <div className={cx('action-buttons')}>
-          {!debugMode && (
+          {this.isShowImportButton() && (
             <div className={cx('action-button', 'mobile-hidden')}>
               <GhostButton icon={ImportIcon} onClick={onImportLaunch}>
                 <FormattedMessage id="LaunchesPage.import" defaultMessage="Import" />
+              </GhostButton>
+            </div>
+          )}
+          {this.isShowWidgetButton() && (
+            <div className={cx('action-button', 'mobile-hidden')}>
+              <GhostButton icon={AddWidgetIcon} onClick={onAddNewWidget}>
+                <FormattedMessage id="LaunchesPage.addNewWidget" defaultMessage="Add new widget" />
               </GhostButton>
             </div>
           )}
@@ -176,14 +251,20 @@ export class ActionPanel extends Component {
                 !selectedLaunches.length ? intl.formatMessage(messages.actionsBtnTooltip) : null
               }
               title={intl.formatMessage(messages.actionsBtn)}
-              items={this.actionDescriptors}
+              items={actionDescriptors}
               disabled={!selectedLaunches.length}
+              onClick={this.onClickActionButton}
             />
           </div>
           <div className={cx('action-button')}>
-            <GhostButton icon={RefreshIcon} onClick={onRefresh}>
+            <GhostButton
+              disabled={!!selectedLaunches.length}
+              icon={RefreshIcon}
+              onClick={onRefresh}
+            >
               <FormattedMessage id="LaunchesPage.refresh" defaultMessage="Refresh" />
             </GhostButton>
+            {finishedLaunchesCount && this.renderCounterNotification(finishedLaunchesCount)}
           </div>
         </div>
       </div>

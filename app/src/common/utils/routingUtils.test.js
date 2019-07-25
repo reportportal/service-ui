@@ -1,4 +1,4 @@
-import { createNamespacedQuery, extractNamespacedQuery } from './routingUtils';
+import { createNamespacedQuery, extractNamespacedQuery, copyQuery } from './routingUtils';
 
 const QUERY = {
   launchParams: 'page=1&size=2',
@@ -28,5 +28,23 @@ describe('createNamespacedQuery', () => {
       page: 1,
       size: 2,
     });
+  });
+});
+
+describe('copyQuery', () => {
+  test('should return an empty object in case of no arguments', () => {
+    expect(copyQuery()).toEqual({});
+  });
+  test('should return an empty object in case of no second argument', () => {
+    expect(copyQuery({ testParams: 'testQuery' })).toEqual({});
+  });
+  test('should not copy incorrect (without suffix) namespaces in query', () => {
+    const query = { test: 'query' };
+    expect(copyQuery(query, ['test'])).toEqual({});
+    expect(copyQuery(query, [''])).toEqual({});
+  });
+  test('should return object with namespaces from the second argument only', () => {
+    const query = { testParams: 'query', fooParams: 'anotherQuery' };
+    expect(copyQuery(query, ['test'])).toEqual({ testParams: 'query' });
   });
 });

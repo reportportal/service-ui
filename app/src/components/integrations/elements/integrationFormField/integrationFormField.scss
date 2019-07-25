@@ -1,0 +1,44 @@
+.form-field-container {
+  position: relative;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: 20px;
+  padding-right: 45px;
+  box-sizing: border-box;
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    padding-right: 0;
+  }
+}
+
+.form-field-wrapper {
+  width: 100%;
+  max-width: 450px;
+  padding: 0;
+  @media (max-width: $SCREEN_XS_MAX) {
+    max-width: 100%;
+  }
+}
+
+.label {
+  display: inline-block;
+  margin-bottom: 10px;
+  color: $COLOR--black-2;
+  font-size: 13px;
+  font-family: $FONT-SEMIBOLD;
+  text-align: left;
+}
+
+.line-align {
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+
+  .form-field-wrapper {
+    max-width: 350px;
+  }
+
+  .label {
+    font-family: $FONT-REGULAR;
+  }
+}

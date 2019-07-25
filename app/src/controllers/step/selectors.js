@@ -12,5 +12,5 @@ export const selectedStepsSelector = createSelectedItemsSelector(groupOperations
 export const validationErrorsSelector = createValidationErrorsSelector(groupOperationsSelector);
 export const lastOperationSelector = createLastOperationSelector(groupOperationsSelector);
 
-export const stepsSelector = (state) => domainSelector(state).steps;
+export const stepsSelector = (state) => domainSelector(state).steps || [];
 export const stepPaginationSelector = (state) => domainSelector(state).pagination;

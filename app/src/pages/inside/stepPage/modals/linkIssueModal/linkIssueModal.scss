@@ -14,29 +14,8 @@
   box-sizing: border-box;
 }
 
-.multiple-systems-title {
-  display: inline;
-  min-width: 140px;
-  padding: 0;
-  font-size: 13px;
-  font-family: $FONT-REGULAR;
-  text-align: center;
-}
-
-.field-wrapper {
-  display: inline-block;
-  width: 350px;
-  padding: 0;
-  margin-left: 20px;
-  margin-right: 25px;
-}
-
 .link-issue-title {
   position: relative;
   display: inline-block;
   padding-right: 15px;
-
-  .beta {
-    top: -10px;
-  }
 }

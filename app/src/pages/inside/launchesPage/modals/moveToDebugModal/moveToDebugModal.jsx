@@ -1,7 +1,7 @@
 import { Component } from 'react';
+import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import classNames from 'classnames/bind';
 import { injectIntl, intlShape } from 'react-intl';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
@@ -10,10 +10,8 @@ import { activeProjectSelector } from 'controllers/user';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { withModal, ModalLayout } from 'components/main/modal';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import styles from './moveToDebugModal.scss';
+import { LAUNCHES_MODAL_EVENTS } from 'components/main/analytics/events';
 import { messages } from './translations';
-
-const cx = classNames.bind(styles);
 
 @withModal('moveLaunchesModal')
 @injectIntl
@@ -25,6 +23,7 @@ const cx = classNames.bind(styles);
     showNotification,
   },
 )
+@track()
 export class MoveToDebugModal extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
@@ -35,6 +34,10 @@ export class MoveToDebugModal extends Component {
       debugMode: PropTypes.bool,
     }),
     showNotification: PropTypes.func,
+    tracking: PropTypes.shape({
+      trackEvent: PropTypes.func,
+      getTrackingData: PropTypes.func,
+    }).isRequired,
   };
 
   static defaultProps = {
@@ -47,6 +50,7 @@ export class MoveToDebugModal extends Component {
   };
 
   moveAndClose = (closeModal) => {
+    this.props.tracking.trackEvent(LAUNCHES_MODAL_EVENTS.CLICK_MOVE_BTN_MOVE_MODAL);
     const { ids, fetchFunc, debugMode } = this.props.data;
     const newMode = debugMode ? DEFAULT.toUpperCase() : DEBUG.toUpperCase();
     const entities = ids.reduce((acc, id) => ({ ...acc, [id]: { mode: newMode } }), {});
@@ -102,6 +106,7 @@ export class MoveToDebugModal extends Component {
     };
     const cancelButton = {
       text: intl.formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+      eventInfo: LAUNCHES_MODAL_EVENTS.CLICK_CANCEL_BTN_MOVE_MODAL,
     };
     let text;
     if (data.ids.length > 1) {
@@ -122,8 +127,9 @@ export class MoveToDebugModal extends Component {
         }
         okButton={okButton}
         cancelButton={cancelButton}
+        closeIconEventInfo={LAUNCHES_MODAL_EVENTS.CLOSE_ICON_MOVE_MODAL}
       >
-        <p className={cx('message')}>{text}</p>
+        <p>{text}</p>
       </ModalLayout>
     );
   }

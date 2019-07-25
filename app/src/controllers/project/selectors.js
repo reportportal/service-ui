@@ -1,5 +1,12 @@
 import { createSelector } from 'reselect';
 import { OWNER } from 'common/constants/permissions';
+import { DEFECT_TYPES_SEQUENCE } from 'common/constants/defectTypes';
+import {
+  ANALYZER_ATTRIBUTE_PREFIX,
+  JOB_ATTRIBUTE_PREFIX,
+  PROJECT_ATTRIBUTES_DELIMITER,
+  PA_ATTRIBUTE_ENABLED_KEY,
+} from './constants';
 
 const projectSelector = (state) => state.project || {};
 
@@ -15,31 +22,79 @@ export const projectPreferencesSelector = (state) => projectSelector(state).pref
 
 export const userFiltersSelector = (state) => projectPreferencesSelector(state).filters || [];
 
-export const defectTypesSelector = (state) => projectConfigSelector(state).subTypes || {};
+export const subTypesSelector = (state) => projectConfigSelector(state).subTypes || [];
 
-export const projectAnalyzerConfigSelector = (state) =>
-  projectConfigSelector(state).analyzerConfiguration || {};
+export const defectTypesSelector = createSelector(subTypesSelector, (subTypes) =>
+  DEFECT_TYPES_SEQUENCE.reduce(
+    (types, type) => (subTypes[type] ? { ...types, [type]: subTypes[type] } : types),
+    {},
+  ),
+);
+
+export const orderedDefectFieldsSelector = createSelector(subTypesSelector, (subTypes) => {
+  const PREFIX = 'statistics$defects$';
+  const result = [];
+  DEFECT_TYPES_SEQUENCE.forEach((type) => {
+    result.push(`${PREFIX}${type.toLowerCase()}$total`);
+    subTypes[type].forEach((item) => {
+      result.push(`${PREFIX}${type.toLowerCase()}$${item.locator}`);
+    });
+  });
+  return result;
+});
+
+export const orderedContentFieldsSelector = createSelector(
+  orderedDefectFieldsSelector,
+  (orderedDefectFields) => [
+    'statistics$executions$total',
+    'statistics$executions$passed',
+    'statistics$executions$failed',
+    'statistics$executions$skipped',
+    ...orderedDefectFields,
+  ],
+);
+
+const attributesSelector = (state) => projectConfigSelector(state).attributes || {};
+
+const createPrefixedAttributesSelector = (prefix) =>
+  createSelector(attributesSelector, (attributes) =>
+    Object.keys(attributes).reduce(
+      (result, attribute) =>
+        attribute.match(`${prefix}${PROJECT_ATTRIBUTES_DELIMITER}`)
+          ? {
+              ...result,
+              [attribute.replace(`${prefix}${PROJECT_ATTRIBUTES_DELIMITER}`, '')]: attributes[
+                attribute
+              ],
+            }
+          : result,
+      {},
+    ),
+  );
+
+export const analyzerAttributesSelector = createPrefixedAttributesSelector(
+  ANALYZER_ATTRIBUTE_PREFIX,
+);
+
+export const jobAttributesSelector = createPrefixedAttributesSelector(JOB_ATTRIBUTE_PREFIX);
 
 export const externalSystemSelector = (state) => projectConfigSelector(state).externalSystem || [];
 
-export const projectEmailConfigurationSelector = (state) =>
-  projectConfigSelector(state).emailConfiguration || {};
+export const projectNotificationsConfigurationSelector = (state) =>
+  projectConfigSelector(state).notificationsConfiguration || {};
 
-export const projectEmailCasesSelector = createSelector(
-  projectEmailConfigurationSelector,
-  ({ emailCases }) =>
-    emailCases.map((emailCase) => ({
-      ...emailCase,
-      informOwner: emailCase.recipients.includes(OWNER),
-      submitted: true,
-      confirmed: true,
-      recipients: emailCase.recipients.filter((item) => item !== OWNER),
+export const projectNotificationsCasesSelector = createSelector(
+  projectNotificationsConfigurationSelector,
+  ({ cases = [] }) =>
+    cases.map((notificationCase) => ({
+      ...notificationCase,
+      informOwner: notificationCase.recipients.includes(OWNER),
+      recipients: notificationCase.recipients.filter((item) => item !== OWNER),
     })),
 );
 
-export const projectEmailEnabledSelector = (state) =>
-  projectEmailConfigurationSelector(state).emailEnabled || false;
-
+export const projectNotificationsEnabledSelector = (state) =>
+  projectNotificationsConfigurationSelector(state).enabled || false;
 
 export const defectColorsSelector = createSelector(projectConfigSelector, (config) => {
   const colors = {};
@@ -53,3 +108,9 @@ export const defectColorsSelector = createSelector(projectConfigSelector, (confi
     });
   return colors;
 });
+
+/* PATTERN-ANALYSIS */
+
+export const patternsSelector = (state) => projectConfigSelector(state).patterns || [];
+export const PAStateSelector = (state) =>
+  !!(attributesSelector(state)[PA_ATTRIBUTE_ENABLED_KEY].toString() === 'true');

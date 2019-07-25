@@ -1,8 +1,11 @@
+/* stylelint-disable color-no-hex */
+
 $COLOR--system-issue: #0274d1;
 $COLOR--passed: #87b77b;
 $COLOR--product-bug: #ec3900;
 $COLOR--automation-bug: #f7d63e;
 $COLOR--to-investigate: #ffb743;
+$COLOR--to-investigate-counter: #ffa00b;
 $COLOR--failed: #f36c4a;
 $COLOR--skipped: #bdc7cc;
 $COLOR--black-2: #393939;
@@ -39,3 +42,4 @@ $COLOR--light-blue: #effafb;
 $COLOR--organish: #fb7848;
 $COLOR--dirty-green: #5f722b;
 $COLOR--greenish-grey: #b8d0b0;
+$COLOR--go-to-stack-trace: #fafa89;

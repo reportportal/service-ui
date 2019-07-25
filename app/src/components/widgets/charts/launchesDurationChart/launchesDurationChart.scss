@@ -1,0 +1,25 @@
+.launches-duration-chart {
+  :global {
+    svg {
+      .c3-axis {
+        font-family: $FONT-REGULAR, sans-serif;
+        fill: $COLOR--charcoal-grey;
+        .c3-axis-y-label {
+          font-size: 12px;
+        }
+        &.c3-axis-y path.domain {
+          display: inline;
+          stroke: $COLOR--gray-80;
+        }
+      }
+    }
+
+    .c3-grid line {
+      stroke: $COLOR--gray-80;
+    }
+    .c3-xgrid,
+    .c3-ygrid {
+      stroke-dasharray: none;
+    }
+  }
+}

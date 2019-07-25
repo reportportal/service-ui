@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { dateFormat } from 'common/utils';
 import { MarkdownViewer } from 'components/main/markdown';
-import { safeMessage } from '../../utils';
 import styles from './logMessageBlock.scss';
 
 const cx = classNames.bind(styles);
@@ -29,7 +28,7 @@ export class LogMessageBlock extends Component {
         {customProps.markdownMode ? (
           <MarkdownViewer value={value.message} />
         ) : (
-          <div className={cx('log-message')}>{safeMessage(value.message)}</div>
+          <div className={cx('log-message')}>{value.message}</div>
         )}
       </div>
     );

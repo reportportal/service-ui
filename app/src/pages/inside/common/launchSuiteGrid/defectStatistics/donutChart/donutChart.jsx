@@ -2,9 +2,10 @@ import { Component } from 'react';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { defectColorsSelector } from 'controllers/project';
 import { DefectTypeTooltip } from 'pages/inside/common/defectTypeTooltip';
 import { withHoverableTooltip } from 'components/main/tooltips/hoverableTooltip';
-import { projectConfigSelector, defectColorsSelector } from 'controllers/project';
+import { TO_INVESTIGATE } from 'common/constants/defectTypes';
 import { DefectLink } from 'pages/inside/common/defectLink';
 import styles from './donutChart.scss';
 
@@ -14,28 +15,41 @@ const cx = classNames.bind(styles);
   TooltipComponent: DefectTypeTooltip,
   data: {
     width: 235,
-    align: 'right',
+    placement: 'bottom-end',
     noArrow: true,
     desktopOnly: true,
-    verticalOffset: -10,
+    modifiers: {
+      offset: { offset: '0, -10px' },
+      flip: { enabled: false },
+      preventOverflow: { enabled: false },
+      hide: { enabled: false },
+    },
   },
 })
 @connect((state) => ({
-  projectConfig: projectConfigSelector(state),
   defectColors: defectColorsSelector(state),
 }))
 export class DonutChart extends Component {
   static propTypes = {
     type: PropTypes.string,
+    defects: PropTypes.array,
     data: PropTypes.object.isRequired,
     viewBox: PropTypes.number.isRequired,
     strokeWidth: PropTypes.number.isRequired,
-    projectConfig: PropTypes.object.isRequired,
     defectColors: PropTypes.object.isRequired,
-    itemId: PropTypes.string.isRequired,
+    itemId: PropTypes.number.isRequired,
+    eventInfo: PropTypes.object,
+    ownLinkParams: PropTypes.shape({
+      isOtherPage: PropTypes.bool,
+      payload: PropTypes.object,
+      page: PropTypes.string,
+    }),
   };
   static defaultProps = {
     type: '',
+    defects: [],
+    eventInfo: {},
+    ownLinkParams: {},
   };
 
   getChartData = () => {
@@ -46,7 +60,7 @@ export class DonutChart extends Component {
     Object.keys(this.props.data).forEach((defect) => {
       if (defect !== 'total') {
         const val = defects[defect];
-        const percents = (val / defects.total) * 100;
+        const percents = val / defects.total * 100;
 
         chartData.push({
           id: defect,
@@ -63,7 +77,17 @@ export class DonutChart extends Component {
   chartData = [];
 
   render() {
-    const { data, type, viewBox, strokeWidth, itemId, defectColors } = this.props;
+    const {
+      data,
+      type,
+      defects,
+      viewBox,
+      strokeWidth,
+      itemId,
+      defectColors,
+      eventInfo,
+      ownLinkParams,
+    } = this.props;
     const diameter = viewBox / 2;
     const r = 100 / (2 * Math.PI);
 
@@ -72,7 +96,12 @@ export class DonutChart extends Component {
     }
 
     return (
-      <DefectLink defects={Object.keys(data)} itemId={itemId}>
+      <DefectLink
+        defects={defects}
+        itemId={itemId}
+        eventInfo={eventInfo}
+        ownLinkParams={ownLinkParams}
+      >
         <div className={cx('chart-container')}>
           <svg width="100%" height="100%" viewBox={`0 0 ${viewBox} ${viewBox}`} className="donut">
             <circle cx={diameter} cy={diameter} r={r} fill="transparent" />
@@ -99,7 +128,10 @@ export class DonutChart extends Component {
             ))}
           </svg>
         </div>
-        <div className={cx('total')} style={{ borderColor: this.props.defectColors[type] }}>
+        <div
+          className={cx('total', { 'total-to-investigate': type === TO_INVESTIGATE })}
+          style={{ borderColor: this.props.defectColors[type] }}
+        >
           {data.total}
         </div>
       </DefectLink>

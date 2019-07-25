@@ -20,14 +20,22 @@
  */
 
 import * as validation from './validation';
+import * as asyncValidation from './asyncValidation';
 
 export const validate = validation;
+export const validateAsync = asyncValidation;
 export { isEmptyObject } from './isEmptyObject';
 export { referenceDictionary } from './referenceDictionary';
 export { fetch, ERROR_CANCELED, ERROR_UNAUTHORIZED } from './fetch';
 export { addTokenToImagePath } from './addTokenToImagePath';
-export { getStorageItem, setStorageItem, removeStorageItem } from './storageUtils';
 export {
+  getStorageItem,
+  setStorageItem,
+  removeStorageItem,
+  updateStorageItem,
+} from './storageUtils';
+export {
+  getTimeUnits,
   getDuration,
   approximateTimeFormat,
   dateFormat,
@@ -38,9 +46,18 @@ export {
   getTimestampFromMinutes,
   getMinutesFromTimestamp,
 } from './timeDateUtils';
+export { formatValue } from './numberUtils';
 export { connectRouter } from './connectRouter';
 export { uniqueId } from './uniqueId';
 export { fileSizeConverter } from './fileSizeConverter';
 export { debounce } from './debounce';
 export { arrayRemoveDoubles } from './arrayRemoveDoubles';
 export { parseDateTimeRange } from './parseDateTimeRange';
+export { getTicketUrlId } from './getTicketUrlId';
+export { range } from './range';
+export { arrayDiffer } from './arrayDiffer';
+export { queueReducers } from './queueReducers';
+export { waitForSelector } from './waitForSelector';
+export { isEmptyValue } from './isEmptyValue';
+export { formatAttribute } from './attributeUtils';
+export { omit } from './omit';

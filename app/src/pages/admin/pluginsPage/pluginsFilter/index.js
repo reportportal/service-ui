@@ -1,0 +1,1 @@
+export { PluginsFilter } from './pluginsFilter';
