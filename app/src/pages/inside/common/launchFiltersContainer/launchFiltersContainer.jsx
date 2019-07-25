@@ -10,6 +10,7 @@ import {
   removeLaunchesFilterAction,
   createFilterAction,
   addFilteringFieldToConditions,
+  updateFilterOrdersAction,
 } from 'controllers/filter';
 import { filterIdSelector } from 'controllers/pages';
 import { fetchLaunchesWithParamsAction, fetchLaunchesAction } from 'controllers/launch';
@@ -17,8 +18,9 @@ import { debounce } from 'common/utils';
 import { hideFilterOnLaunchesAction } from 'controllers/project';
 import { isEmptyValue } from 'common/utils/isEmptyValue';
 import { PAGE_KEY } from 'controllers/pagination';
-import { SORTING_KEY } from 'controllers/sorting';
 import { createFilterQuery } from 'components/filterEntities/containers/utils';
+import { SORTING_ASC, SORTING_DESC, formatSortingString, SORTING_KEY } from 'controllers/sorting';
+import { ENTITY_START_TIME, ENTITY_NUMBER } from 'components/filterEntities/constants';
 
 @connect(
   (state) => ({
@@ -34,6 +36,7 @@ import { createFilterQuery } from 'components/filterEntities/containers/utils';
     hideFilterOnLaunchesAction,
     removeLaunchesFilterAction,
     createFilter: createFilterAction,
+    updateFilterOrders: updateFilterOrdersAction,
   },
 )
 export class LaunchFiltersContainer extends Component {
@@ -50,7 +53,7 @@ export class LaunchFiltersContainer extends Component {
     removeLaunchesFilterAction: PropTypes.func,
     createFilter: PropTypes.func,
     onChange: PropTypes.func,
-    sortingString: PropTypes.string,
+    updateFilterOrders: PropTypes.func,
   };
 
   static defaultProps = {
@@ -65,7 +68,12 @@ export class LaunchFiltersContainer extends Component {
     removeLaunchesFilterAction: () => {},
     createFilter: () => {},
     onChange: () => {},
-    sortingString: '',
+    updateFilterOrders: () => {},
+  };
+
+  state = {
+    sortingColumn: ENTITY_START_TIME,
+    sortingDirection: SORTING_DESC,
   };
 
   getConditions = () => {
@@ -77,6 +85,23 @@ export class LaunchFiltersContainer extends Component {
       (acc, condition) => ({ ...acc, [condition.filteringField]: condition }),
       {},
     );
+  };
+
+  getSortingParams = () => {
+    const { activeFilter } = this.props;
+    if (activeFilter) {
+      const currentOrder = activeFilter.orders[0];
+      const { sortingColumn, isAsc } = currentOrder;
+      return {
+        sortingColumn,
+        sortingDirection: isAsc ? SORTING_ASC : SORTING_DESC,
+      };
+    }
+    const { sortingColumn, sortingDirection } = this.state;
+    return {
+      sortingColumn,
+      sortingDirection,
+    };
   };
 
   fetchLaunches = debounce((query) => this.props.fetchLaunchesWithParamsAction(query), 1000);
@@ -127,14 +152,48 @@ export class LaunchFiltersContainer extends Component {
     this.props.updateFilterConditionsAction(filterId, conditions);
   };
 
-  updateFilterOrder = (filterId, sortingString) => {
-    const currentFilter = this.createQuery(this.getConditions());
-
-    this.fetchLaunches({ [PAGE_KEY]: 1, [SORTING_KEY]: sortingString, ...currentFilter });
+  updateSorting = (sortObject) => {
+    const { sortingColumn, sortingDirection } = sortObject;
+    const { activeFilter, updateFilterOrders, activeFilterId } = this.props;
+    const sortingString = formatSortingString([sortingColumn, ENTITY_NUMBER], sortingDirection);
+    if (activeFilter) {
+      const { orders } = activeFilter;
+      const filterSortObject = {
+        sortingColumn,
+        isAsc: sortingDirection === SORTING_ASC,
+      };
+      const newOrders = [filterSortObject, ...orders.slice(1)];
+      updateFilterOrders(activeFilterId, newOrders);
+    } else {
+      this.setState((prevState) => ({
+        ...prevState,
+        ...sortObject,
+      }));
+    }
+    this.props.fetchLaunchesWithParamsAction({
+      [SORTING_KEY]: sortingString,
+    });
   };
+
+  handleSortingChange = (newSortingColumn) => {
+    const { sortingColumn, sortingDirection } = this.getSortingParams();
+    const newSortingDirection =
+      sortingColumn === newSortingColumn
+        ? this.toggleSortingDirection(sortingDirection)
+        : SORTING_ASC;
+    const sortObject = {
+      sortingColumn: newSortingColumn,
+      sortingDirection: newSortingDirection,
+    };
+    this.updateSorting(sortObject);
+  };
+
+  toggleSortingDirection = (sortingDirection) =>
+    sortingDirection === SORTING_DESC ? SORTING_ASC : SORTING_DESC;
 
   render() {
     const { render, launchFilters, activeFilterId, activeFilter } = this.props;
+    const { sortingColumn, sortingDirection } = this.getSortingParams();
     return render({
       launchFilters,
       activeFilterId,
@@ -144,7 +203,9 @@ export class LaunchFiltersContainer extends Component {
       onChangeFilter: this.handleFilterChange,
       activeFilterConditions: this.getConditions(),
       onResetFilter: this.props.fetchLaunchesAction,
-      onUpdateFilterOrder: this.updateFilterOrder,
+      sortingColumn,
+      sortingDirection,
+      onChangeSorting: this.handleSortingChange,
     });
   }
 }

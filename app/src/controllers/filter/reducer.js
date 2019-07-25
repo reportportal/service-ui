@@ -9,6 +9,7 @@ import {
   ADD_FILTER,
   UPDATE_FILTER_SUCCESS,
   REMOVE_FILTER,
+  UPDATE_FILTER_ORDERS,
 } from './constants';
 import { updateFilter } from './utils';
 
@@ -17,12 +18,19 @@ const updateFilterConditions = (filters, filterId, conditions) => {
   return updateFilter(filters, { ...filter, conditions });
 };
 
+const updateFilterOrders = (filters, filterId, orders) => {
+  const filter = filters.find((item) => item.id === filterId);
+  return updateFilter(filters, { ...filter, orders });
+};
+
 export const launchesFiltersReducer = (state = [], { type, payload, meta: { oldId } = {} }) => {
   switch (type) {
     case FETCH_USER_FILTERS_SUCCESS:
       return payload;
     case UPDATE_FILTER_CONDITIONS:
       return updateFilterConditions(state, payload.filterId, payload.conditions);
+    case UPDATE_FILTER_ORDERS:
+      return updateFilterOrders(state, payload.filterId, payload.orders);
     case UPDATE_FILTER_SUCCESS:
       return updateFilter(state, payload, oldId);
     case ADD_FILTER:

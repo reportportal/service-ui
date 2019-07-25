@@ -126,21 +126,8 @@ export class FiltersSorting extends Component {
     return defaultValue;
   };
 
-  handleChange = (sortingColumn) => {
-    const { filter, onChange } = this.props;
-    const { orders } = filter;
-
-    const hasOrder = orders.find((order) => order.sortingColumn === sortingColumn);
-
-    const newOrders = hasOrder
-      ? orders.map((order) => ({ ...order, isAsc: !order.isAsc }))
-      : [{ sortingColumn, isAsc: false }, { sortingColumn: ENTITY_NUMBER, isAsc: false }];
-
-    onChange(newOrders);
-  };
-
   render() {
-    const { intl, sortingString } = this.props;
+    const { intl, sortingString, onChange } = this.props;
     const order = this.getFilterOrder();
     const prefix = sortingString ? 'launches' : 'filter';
 
@@ -151,7 +138,7 @@ export class FiltersSorting extends Component {
           value={order.sortingColumn}
           sortingMode={order.isAsc}
           options={this.getFilterOptions()}
-          onChange={this.handleChange}
+          onChange={onChange}
           transparent={Boolean(sortingString)}
         />
       </div>

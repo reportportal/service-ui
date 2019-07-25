@@ -12,6 +12,7 @@ export const LAUNCHES_FILTERS_NAMESPACE = `${NAMESPACE}/launchesFilters`;
 export const LAUNCHES_FILTERS_UPDATE_NAMESPACE = `${NAMESPACE}/launchesFiltersUpdate`;
 export const CHANGE_ACTIVE_FILTER = 'changeActiveFilter';
 export const UPDATE_FILTER_CONDITIONS = 'updateFilterConditions';
+export const UPDATE_FILTER_ORDERS = 'updateFilterOrders';
 export const UPDATE_FILTER = 'updateFilter';
 export const RESET_FILTER = 'resetFilter';
 export const CREATE_FILTER = 'createFilter';
