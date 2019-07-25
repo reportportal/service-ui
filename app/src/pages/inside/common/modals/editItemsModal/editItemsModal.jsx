@@ -98,9 +98,8 @@ const makeDescriptionOptions = (formatMessage) => [
 @injectIntl
 @reduxForm({
   form: 'editItemsForm',
-  validate: ({ commonAttributes, uniqueAttributes }) => ({
+  validate: ({ commonAttributes }) => ({
     commonAttributes: !validate.attributesArray(commonAttributes),
-    uniqueAttributes: !validate.attributesArray(uniqueAttributes),
   }),
 })
 @formValues('descriptionAction', 'uniqueAttributes')
@@ -154,6 +153,7 @@ export class EditItemsModal extends Component {
   }
 
   onChangeCommonAttributes = (e, attributes, oldAttributes) => {
+    if (!validate.attributesArray(attributes)) return;
     const { array } = this.props;
     const saveHistory = (payload) => array.push('attributes', payload);
 
