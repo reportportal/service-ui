@@ -8,7 +8,7 @@ import styles from './tooltip.scss';
 const cx = classNames.bind(styles);
 const DEFAULT_TOOLTIP_WIDTH = 300;
 
-export const withTooltip = ({ TooltipComponent, data }) => (WrappedComponent) =>
+export const withTooltip = ({ TooltipComponent, data = {} }) => (WrappedComponent) =>
   class Wrapper extends Component {
     static propTypes = {
       children: PropTypes.node,
