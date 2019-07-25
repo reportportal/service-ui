@@ -64,6 +64,14 @@ export class LoginPage extends PureComponent {
     }
   }
 
+  componentDidUpdate(prevProps) {
+    if (this.props.errorAuth !== prevProps.errorAuth) {
+      this.props.showDefaultErrorNotification({
+        message: this.props.errorAuth,
+      });
+    }
+  }
+
   render() {
     let currentBlock = <LoginBlock />;
     if (this.props.forgotPass) {
