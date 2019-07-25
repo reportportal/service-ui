@@ -12,6 +12,7 @@ export {
   removeFilterAction,
   removeLaunchesFilterAction,
   addFilterAction,
+  updateFilterOrdersAction,
 } from './actionCreators';
 export { filterReducer } from './reducer';
 export {
@@ -29,5 +30,6 @@ export {
   ADD_FILTER,
   REMOVE_FILTER,
   UPDATE_FILTER_SUCCESS,
+  UPDATE_FILTER_ORDERS,
 } from './constants';
 export { updateFilter, addFilteringFieldToConditions } from './utils';
