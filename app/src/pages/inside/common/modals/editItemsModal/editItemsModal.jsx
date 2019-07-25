@@ -98,9 +98,8 @@ const makeDescriptionOptions = (formatMessage) => [
 @injectIntl
 @reduxForm({
   form: 'editItemsForm',
-  validate: ({ commonAttributes, uniqueAttributes }) => ({
+  validate: ({ commonAttributes }) => ({
     commonAttributes: !validate.attributesArray(commonAttributes),
-    uniqueAttributes: !validate.attributesArray(uniqueAttributes),
   }),
 })
 @formValues('descriptionAction', 'uniqueAttributes')
@@ -154,41 +153,42 @@ export class EditItemsModal extends Component {
   }
 
   onChangeCommonAttributes = (e, attributes, oldAttributes) => {
+    if (!validate.attributesArray(attributes)) return;
+
     const { array } = this.props;
     const saveHistory = (payload) => array.push('attributes', payload);
 
-    // Create attribute
-    if (attributes.length > oldAttributes.length) {
-      const createdAttribute = this.findAttribute(attributes, oldAttributes);
-
-      this.removeUniqueAttribute(createdAttribute);
-
-      saveHistory({
-        action: ATTRIBUTE_CREATE,
-        to: createdAttribute,
-      });
-
-      // Delete attribute
-    } else if (attributes.length < oldAttributes.length) {
+    // Delete attribute
+    if (attributes.length < oldAttributes.length) {
       const deletedAttribute = this.findAttribute(oldAttributes, attributes);
-
       saveHistory({
         action: ATTRIBUTE_DELETE,
         from: deletedAttribute,
       });
-
-      // Update attribute
     } else {
       const attributeBeforeUpdate = this.findAttribute(oldAttributes, attributes);
       const updatedAttribute = this.findAttribute(attributes, oldAttributes);
 
-      this.removeUniqueAttribute(updatedAttribute);
+      // Create attribute
+      if (!attributeBeforeUpdate.value) {
+        this.removeUniqueAttribute(updatedAttribute);
 
-      saveHistory({
-        action: ATTRIBUTE_UPDATE,
-        from: attributeBeforeUpdate,
-        to: updatedAttribute,
-      });
+        saveHistory({
+          action: ATTRIBUTE_CREATE,
+          to: updatedAttribute,
+        });
+      } else {
+        // Update attribute
+        this.removeUniqueAttribute(updatedAttribute);
+
+        const { edited, ...fromAttribute } = attributeBeforeUpdate;
+
+        saveHistory({
+          action: ATTRIBUTE_UPDATE,
+          from: fromAttribute,
+          to: updatedAttribute,
+        });
+      }
     }
   };
 
