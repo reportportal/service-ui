@@ -2,6 +2,8 @@ export {
   openAttachmentAction,
   fetchAttachmentsConcatAction,
   clearAttachmentsAction,
+  fetchFirstAttachmentsAction,
+  setActiveAttachmentAction,
 } from './actionCreators';
 export {
   FILE_PREVIEWS_MAP,
@@ -18,6 +20,7 @@ export {
   logsWithAttachmentsSelector,
   attachmentsPaginationSelector,
   activeAttachmentItemSelector,
+  activeAttachmentIdSelector,
 } from './selectors';
 export { attachmentsReducer } from './reducer';
 export { attachmentSagas } from './sagas';

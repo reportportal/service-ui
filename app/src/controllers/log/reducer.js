@@ -9,6 +9,7 @@ import {
   HISTORY_NAMESPACE,
   STACK_TRACE_NAMESPACE,
   CLEAR_LOG_PAGE_STACK_TRACE,
+  SET_LOG_PAGE_LOADING,
 } from './constants';
 import { attachmentsReducer } from './attachments';
 import { sauceLabsReducer } from './sauceLabs';
@@ -32,10 +33,20 @@ const stackTraceContentReducer = (state = {}, { type }) => {
   }
 };
 
+const pageLoadingReducer = (state = false, { type, payload }) => {
+  switch (type) {
+    case SET_LOG_PAGE_LOADING:
+      return payload;
+    default:
+      return state;
+  }
+};
+
 export const logReducer = combineReducers({
   logItems: fetchReducer(LOG_ITEMS_NAMESPACE, { contentPath: 'content' }),
   pagination: paginationReducer(LOG_ITEMS_NAMESPACE),
   loading: loadingReducer(LOG_ITEMS_NAMESPACE),
+  pageLoading: pageLoadingReducer,
   activity: fetchReducer(ACTIVITY_NAMESPACE, { contentPath: 'content' }),
   historyEntries: fetchReducer(HISTORY_NAMESPACE),
   stackTrace: combineReducers({

@@ -1,4 +1,4 @@
-import { all, call, put, select, takeEvery } from 'redux-saga/effects';
+import { all, call, put, select, take, takeEvery } from 'redux-saga/effects';
 import {
   fetchParentItems,
   fetchTestItemsAction,
@@ -11,9 +11,8 @@ import {
   pagePropertiesSelector,
   pathnameChangedSelector,
 } from 'controllers/pages';
-import { fetchDataAction } from 'controllers/fetch';
+import { createFetchPredicate, fetchDataAction } from 'controllers/fetch';
 import { isEmptyObject } from 'common/utils';
-import { PAGE_KEY, SIZE_KEY } from 'controllers/pagination';
 import {
   ACTIVITY_NAMESPACE,
   DEFAULT_HISTORY_DEPTH,
@@ -46,8 +45,7 @@ import {
 import {
   attachmentSagas,
   clearAttachmentsAction,
-  fetchAttachmentsConcatAction,
-  attachmentsPaginationSelector,
+  fetchFirstAttachmentsAction,
 } from './attachments';
 import { sauceLabsSagas } from './sauceLabs';
 import { nestedStepSagas, CLEAR_NESTED_STEPS } from './nestedSteps';
@@ -57,7 +55,7 @@ import {
   getHidePassedLogs,
   getHideEmptySteps,
 } from './storageUtils';
-import { clearLogPageStackTrace } from './actionCreators';
+import { clearLogPageStackTrace, setPageLoadingAction } from './actionCreators';
 
 function* fetchActivity() {
   const activeProject = yield select(activeProjectSelector);
@@ -65,6 +63,7 @@ function* fetchActivity() {
   yield put(
     fetchDataAction(ACTIVITY_NAMESPACE)(URLS.logItemActivity(activeProject, activeLogItemId)),
   );
+  yield take(createFetchPredicate(ACTIVITY_NAMESPACE));
 }
 export function* collectLogPayload() {
   const activeProject = yield select(activeProjectSelector);
@@ -119,6 +118,7 @@ function* fetchLogItems(payload = {}) {
       params: fetchParams,
     }),
   );
+  yield take(createFetchPredicate(namespace));
 }
 
 function* fetchStackTrace() {
@@ -134,6 +134,7 @@ function* fetchStackTrace() {
   yield put(
     fetchDataAction(STACK_TRACE_NAMESPACE)(URLS.logItemStackTrace(activeProject, path, pageSize)),
   );
+  yield take(createFetchPredicate(STACK_TRACE_NAMESPACE));
 }
 
 function* fetchHistoryEntries() {
@@ -144,6 +145,7 @@ function* fetchHistoryEntries() {
       URLS.testItemsHistory(activeProject, logItemId, DEFAULT_HISTORY_DEPTH),
     ),
   );
+  yield take(createFetchPredicate(HISTORY_NAMESPACE));
 }
 
 function* fetchDetailsLog(offset = 0) {
@@ -158,16 +160,10 @@ function* fetchDetailsLog(offset = 0) {
 }
 
 function* fetchLaunchLog(offset = 0) {
-  const attachmentPageSize = yield select(attachmentsPaginationSelector);
-  const params = {
-    'filter.ex.binaryContent': true,
-    [PAGE_KEY]: 1,
-    [SIZE_KEY]: attachmentPageSize,
-  };
   yield all([
-    put(fetchAttachmentsConcatAction({ params })),
     put(fetchTestItemsAction({ offset })),
     call(fetchLogItems),
+    put(fetchFirstAttachmentsAction()),
   ]);
 }
 
@@ -181,9 +177,11 @@ function* fetchLogs(offset = 0) {
 }
 
 function* fetchWholePage() {
+  yield put(setPageLoadingAction(true));
   const offset = yield select(logPageOffsetSelector);
   yield call(fetchParentItems);
   yield call(fetchLogs, offset);
+  yield put(setPageLoadingAction(false));
 }
 
 function* fetchHistoryItemData() {
@@ -207,13 +205,6 @@ function* fetchLogPageData({ meta = {} }) {
   const isPathNameChanged = yield select(pathnameChangedSelector);
   yield put({ type: CLEAR_NESTED_STEPS });
   if (meta.refresh) {
-    yield all([
-      call(fetchHistoryEntries),
-      call(fetchLogItems),
-      call(fetchActivity),
-      put(clearAttachmentsAction()),
-      put(clearLogPageStackTrace()),
-    ]);
     yield call(fetchLogs);
     return;
   }
