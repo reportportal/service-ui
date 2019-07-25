@@ -9,6 +9,7 @@ import {
   logItemsSelector,
   logPaginationSelector,
   loadingSelector,
+  pageLoadingSelector,
   NAMESPACE,
   LOG_LEVEL_FILTER_KEY,
   WITH_ATTACHMENTS_FILTER_KEY,
@@ -39,11 +40,13 @@ import { LogItemInfo } from './logItemInfo';
 import { LogsGrid } from './logsGrid/logsGrid';
 import { LogsGridToolbar } from './logsGridToolbar';
 import { SauceLabsSection } from './sauceLabsSection';
+import { SpinningPreloader } from '../../../components/preloaders/spinningPreloader';
 
 @connect(
   (state) => ({
     logItems: logItemsSelector(state),
     loading: loadingSelector(state),
+    pageLoading: pageLoadingSelector(state),
     userId: userIdSelector(state),
     debugMode: debugModeSelector(state),
     logViewMode: logViewModeSelector(state),
@@ -113,6 +116,7 @@ export class LogsPage extends Component {
     onChangePage: PropTypes.func,
     onChangePageSize: PropTypes.func,
     loading: PropTypes.bool,
+    pageLoading: PropTypes.bool,
     filter: PropTypes.string,
     logLevelId: PropTypes.string,
     onFilterChange: PropTypes.func,
@@ -139,6 +143,7 @@ export class LogsPage extends Component {
     onChangePage: () => {},
     onChangePageSize: () => {},
     loading: false,
+    pageLoading: false,
     filter: '',
     logLevelId: null,
     onFilterChange: () => {},
@@ -201,6 +206,7 @@ export class LogsPage extends Component {
       onChangePage,
       onChangePageSize,
       loading,
+      pageLoading,
       filter,
       logLevelId,
       onFilterChange,
@@ -227,70 +233,75 @@ export class LogsPage extends Component {
     return (
       <PageLayout>
         <PageSection>
-          <LogToolbar onRefresh={this.handleRefresh} logViewMode={logViewMode} />
-          {logViewMode === DETAILED_LOG_VIEW ? (
+          {pageLoading && <SpinningPreloader />}
+          {!pageLoading && (
             <Fragment>
-              {!debugMode && <HistoryLine />}
-              <LogItemInfo
-                onChangeLogLevel={onChangeLogLevel}
-                onChangePage={onChangePage}
-                onHighlightRow={this.onHighlightRow}
-                onToggleSauceLabsIntegrationView={this.toggleSauceLabsIntegrationView}
-                isSauceLabsIntegrationView={this.state.isSauceLabsIntegrationView}
-                fetchFunc={refresh}
-                debugMode={debugMode}
-                loading={loading}
-              />
-            </Fragment>
-          ) : (
-            <TestItemLogsToolbar parentItem={parentItem} />
-          )}
-          {this.state.isSauceLabsIntegrationView ? (
-            <SauceLabsSection />
-          ) : (
-            <Fragment>
-              <LogsGridToolbar
-                activePage={activePage}
-                pageCount={pageCount}
-                onChangePage={onChangePage}
-                logLevel={getLogLevel(userId, logLevelId)}
-                onChangeLogLevel={onChangeLogLevel}
-                onChangeWithAttachments={onChangeWithAttachments}
-                onHideEmptySteps={onChangeHideEmptySteps}
-                onHidePassedLogs={onChangeHidePassedLogs}
-                logPageMode={logViewMode}
-              >
-                {({ markdownMode, consoleView }) => (
-                  <LogsGrid
-                    logItems={logItems}
-                    loading={loading}
-                    filter={filter}
-                    onFilterChange={onFilterChange}
-                    sortingColumn={sortingColumn}
-                    sortingDirection={sortingDirection}
-                    onChangeSorting={onChangeSorting}
-                    rowHighlightingConfig={rowHighlightingConfig}
-                    markdownMode={markdownMode}
-                    logStatus={logStatus}
-                    onChangeLogStatusFilter={onChangeLogStatusFilter}
-                    consoleView={consoleView}
-                    isNestedStepView={isNestedStepView}
-                  />
-                )}
-              </LogsGridToolbar>
-              {!!pageCount &&
-                logItems &&
-                !!logItems.length &&
-                !loading && (
-                  <PaginationToolbar
-                    activePage={activePage}
-                    itemCount={itemCount}
-                    pageCount={pageCount}
-                    pageSize={pageSize}
+              <LogToolbar onRefresh={this.handleRefresh} logViewMode={logViewMode} />
+              {logViewMode === DETAILED_LOG_VIEW ? (
+                <Fragment>
+                  {!debugMode && <HistoryLine />}
+                  <LogItemInfo
+                    onChangeLogLevel={onChangeLogLevel}
                     onChangePage={onChangePage}
-                    onChangePageSize={onChangePageSize}
+                    onHighlightRow={this.onHighlightRow}
+                    onToggleSauceLabsIntegrationView={this.toggleSauceLabsIntegrationView}
+                    isSauceLabsIntegrationView={this.state.isSauceLabsIntegrationView}
+                    fetchFunc={refresh}
+                    debugMode={debugMode}
+                    loading={loading}
                   />
-                )}
+                </Fragment>
+              ) : (
+                <TestItemLogsToolbar parentItem={parentItem} />
+              )}
+              {this.state.isSauceLabsIntegrationView ? (
+                <SauceLabsSection />
+              ) : (
+                <Fragment>
+                  <LogsGridToolbar
+                    activePage={activePage}
+                    pageCount={pageCount}
+                    onChangePage={onChangePage}
+                    logLevel={getLogLevel(userId, logLevelId)}
+                    onChangeLogLevel={onChangeLogLevel}
+                    onChangeWithAttachments={onChangeWithAttachments}
+                    onHideEmptySteps={onChangeHideEmptySteps}
+                    onHidePassedLogs={onChangeHidePassedLogs}
+                    logPageMode={logViewMode}
+                  >
+                    {({ markdownMode, consoleView }) => (
+                      <LogsGrid
+                        logItems={logItems}
+                        loading={loading}
+                        filter={filter}
+                        onFilterChange={onFilterChange}
+                        sortingColumn={sortingColumn}
+                        sortingDirection={sortingDirection}
+                        onChangeSorting={onChangeSorting}
+                        rowHighlightingConfig={rowHighlightingConfig}
+                        markdownMode={markdownMode}
+                        logStatus={logStatus}
+                        onChangeLogStatusFilter={onChangeLogStatusFilter}
+                        consoleView={consoleView}
+                        isNestedStepView={isNestedStepView}
+                      />
+                    )}
+                  </LogsGridToolbar>
+                  {!!pageCount &&
+                    logItems &&
+                    !!logItems.length &&
+                    !loading && (
+                      <PaginationToolbar
+                        activePage={activePage}
+                        itemCount={itemCount}
+                        pageCount={pageCount}
+                        pageSize={pageSize}
+                        onChangePage={onChangePage}
+                        onChangePageSize={onChangePageSize}
+                      />
+                    )}
+                </Fragment>
+              )}
             </Fragment>
           )}
         </PageSection>
