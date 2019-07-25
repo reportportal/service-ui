@@ -4,6 +4,7 @@ export {
   refreshLogPageData,
   fetchHistoryEntriesAction,
   fetchLogPageStackTrace,
+  setPageLoadingAction,
 } from './actionCreators';
 export { logReducer } from './reducer';
 export {
@@ -46,6 +47,7 @@ export {
   logStackTraceLoadingSelector,
   isLoadMoreStackTraceVisible,
   logViewModeSelector,
+  pageLoadingSelector,
 } from './selectors';
 export {
   getWithAttachments,

@@ -2,7 +2,7 @@ import { takeLatest, call, put, all, select, take } from 'redux-saga/effects';
 import { URLS } from 'common/urls';
 import { fetch } from 'common/utils';
 import { showModalAction, HIDE_MODAL } from 'controllers/modal';
-import { concatFetchDataAction } from 'controllers/fetch';
+import { concatFetchDataAction, createFetchPredicate } from 'controllers/fetch';
 import { activeProjectSelector } from 'controllers/user';
 import {
   activeRetryIdSelector,
@@ -12,6 +12,7 @@ import {
 } from 'controllers/log/selectors';
 import { DETAILED_LOG_VIEW } from 'controllers/log/constants';
 import { JSON as JSON_TYPE } from 'common/constants/fileTypes';
+import { PAGE_KEY, SIZE_KEY } from 'controllers/pagination';
 import {
   ATTACHMENT_IMAGE_MODAL_ID,
   ATTACHMENT_CODE_MODAL_ID,
@@ -19,7 +20,11 @@ import {
   OPEN_ATTACHMENT_ACTION,
   FETCH_ATTACHMENTS_CONCAT_ACTION,
   ATTACHMENTS_NAMESPACE,
+  DEFAULT_PAGE_SIZE,
+  DEFAULT_LOADED_PAGES,
+  FETCH_FIRST_ATTACHMENTS_ACTION,
 } from './constants';
+import { setActiveAttachmentAction } from './actionCreators';
 import { getAttachmentModalId, extractExtension } from './utils';
 
 function* getAttachmentURL() {
@@ -40,6 +45,18 @@ function* getAttachmentURL() {
 function* fetchAttachmentsConcat({ payload: { params, concat } }) {
   const url = yield call(getAttachmentURL);
   yield put(concatFetchDataAction(ATTACHMENTS_NAMESPACE, concat)(url, { params }));
+  yield take(createFetchPredicate(ATTACHMENTS_NAMESPACE));
+}
+
+function* fetchFirstAttachments({ payload }) {
+  const params = {
+    'filter.ex.binaryContent': true,
+    [SIZE_KEY]: DEFAULT_PAGE_SIZE * DEFAULT_LOADED_PAGES,
+    [PAGE_KEY]: 1,
+    ...payload.params,
+  };
+  yield put(setActiveAttachmentAction(null));
+  yield call(fetchAttachmentsConcat, { payload: { params } });
 }
 
 export function fetchImageData({ binaryId }) {
@@ -102,10 +119,14 @@ function* watchFetchAttachments() {
   yield takeLatest(FETCH_ATTACHMENTS_CONCAT_ACTION, fetchAttachmentsConcat);
 }
 
+function* watchFetchFirstAttachments() {
+  yield takeLatest(FETCH_FIRST_ATTACHMENTS_ACTION, fetchFirstAttachments);
+}
+
 function* watchOpenAttachment() {
   yield takeLatest(OPEN_ATTACHMENT_ACTION, openAttachment);
 }
 
 export function* attachmentSagas() {
-  yield all([watchOpenAttachment(), watchFetchAttachments()]);
+  yield all([watchOpenAttachment(), watchFetchAttachments(), watchFetchFirstAttachments()]);
 }

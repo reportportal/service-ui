@@ -54,6 +54,7 @@ export const logStackTraceSelector = (state) => logSelector(state).stackTrace ||
 export const logStackTraceItemsSelector = (state) => logStackTraceSelector(state).content;
 export const logStackTracePaginationSelector = (state) => logStackTraceSelector(state).pagination;
 export const logStackTraceLoadingSelector = (state) => logStackTraceSelector(state).loading;
+export const pageLoadingSelector = (state) => logSelector(state).pageLoading;
 
 export const querySelector = createQueryParametersSelector({
   defaultPagination: DEFAULT_PAGINATION,
