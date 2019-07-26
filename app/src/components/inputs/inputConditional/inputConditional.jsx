@@ -27,6 +27,7 @@ export class InputConditional extends Component {
     touched: PropTypes.bool,
     error: PropTypes.string,
     maxLength: PropTypes.number,
+    isCustomConditions: PropTypes.bool,
     onChange: PropTypes.func,
     onFocus: PropTypes.func,
     onBlur: PropTypes.func,
@@ -44,6 +45,7 @@ export class InputConditional extends Component {
     touched: false,
     error: '',
     maxLength: null,
+    isCustomConditions: false,
     onChange: () => {},
     onFocus: () => {},
     onBlur: () => {},
@@ -84,8 +86,8 @@ export class InputConditional extends Component {
     this.conditionsBlock = conditionsBlock;
   };
   getConditions = () => {
-    const { conditions } = this.props;
-    return getInputConditions(conditions);
+    const { conditions, isCustomConditions } = this.props;
+    return isCustomConditions ? conditions : getInputConditions(conditions);
   };
   handleClickOutside = (e) => {
     if (!this.conditionsBlock.contains(e.target) && this.state.opened) {
