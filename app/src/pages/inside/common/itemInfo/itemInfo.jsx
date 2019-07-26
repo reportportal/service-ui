@@ -146,9 +146,7 @@ export class ItemInfo extends Component {
             className={cx('name-link')}
             onClick={() => tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_ITEM_NAME)}
           >
-            <span title={value.name} className={cx('name')}>
-              {`${formatItemName(value.name)} `}
-            </span>
+            <span title={value.name}>{`${formatItemName(value.name)} `}</span>
           </NameLink>
           <span className={cx('edit-number-box')}>
             <NameLink
