@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { reduxForm } from 'redux-form';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
-import { fetch, updateStorageItem, getStorageItem } from 'common/utils';
+import { fetch, updateSessionItem, getSessionItem } from 'common/utils';
 import { URLS } from 'common/urls';
 import { JIRA, RALLY } from 'common/constants/integrationNames';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
@@ -146,7 +146,7 @@ export class PostIssueModal extends Component {
     const systemAuthConfig = {};
 
     if (this.isJiraIntegration(pluginName)) {
-      const storedConfig = getStorageItem(`${props.userId}_settings`) || {};
+      const storedConfig = getSessionItem(`${props.userId}_settings`) || {};
       systemAuthConfig.username = storedConfig.username;
     }
 
@@ -201,6 +201,7 @@ export class PostIssueModal extends Component {
     if (!this.props.dirty) {
       return null;
     }
+
     return {
       confirmationWarning: this.props.intl.formatMessage(COMMON_LOCALE_KEYS.CLOSE_MODAL_WARNING),
     };
@@ -309,7 +310,7 @@ export class PostIssueModal extends Component {
           const sessionConfig = {
             username: data.username,
           };
-          updateStorageItem(`${userId}_settings`, sessionConfig);
+          updateSessionItem(`${userId}_settings`, sessionConfig);
         }
 
         this.props.showNotification({
