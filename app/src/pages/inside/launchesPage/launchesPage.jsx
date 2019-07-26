@@ -697,6 +697,7 @@ export class LaunchesPage extends Component {
                 events={LAUNCHES_PAGE_EVENTS}
                 onAnalysis={this.onAnalysis}
                 rowHighlightingConfig={rowHighlightingConfig}
+                isSomeRowHighlighted={!!rowHighlightingConfig.highlightedRowId}
               />
               {!!pageCount &&
                 !loading && (
