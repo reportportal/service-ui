@@ -34,7 +34,7 @@ const messages = defineMessages({
   },
   descriptionPlaceholder: {
     id: 'CommonWidgetControls.descriptionPlaceholder',
-    defaultMessage: 'Add some description to widget',
+    defaultMessage: 'Enter widget description',
   },
   shareLabel: {
     id: 'CommonWidgetControls.shareLabel',
