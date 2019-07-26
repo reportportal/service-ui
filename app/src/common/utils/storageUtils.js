@@ -34,3 +34,15 @@ export function updateStorageItem(key, value = {}) {
   const previousItem = getStorageItem(key) || {};
   return setStorageItem(key, { ...previousItem, ...value });
 }
+
+export function getSessionItem(key) {
+  return sessionStorage.getItem(key) ? JSON.parse(sessionStorage.getItem(key)) : null;
+}
+export function setSessionItem(key, value) {
+  return sessionStorage.setItem(key, JSON.stringify(value));
+}
+
+export function updateSessionItem(key, value = {}) {
+  const previousItem = getSessionItem(key) || {};
+  return setSessionItem(key, { ...previousItem, ...value });
+}

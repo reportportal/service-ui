@@ -33,6 +33,9 @@ export {
   setStorageItem,
   removeStorageItem,
   updateStorageItem,
+  getSessionItem,
+  setSessionItem,
+  updateSessionItem,
 } from './storageUtils';
 export {
   getTimeUnits,
