@@ -15,4 +15,4 @@ export const analyticsEnabledSelector = (state) =>
   extensionConfigSelector(state)[ANALYTICS_ALL_KEY] === 'true';
 export const analyzerExtensionsSelector = (state) => extensionsSelector(state).analyzer || [];
 
-export const authExtensionsSelector = (state) => uatInfoSelector(state).auth_extensions || {};
+export const authExtensionsSelector = (state) => uatInfoSelector(state).authExtensions || {};
