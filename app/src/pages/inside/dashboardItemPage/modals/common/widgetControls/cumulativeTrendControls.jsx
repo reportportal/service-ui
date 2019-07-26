@@ -214,6 +214,7 @@ export class CumulativeTrendControls extends Component {
                   <InputTagsSearch
                     uri={launchAttributeKeysSearch}
                     minLength={1}
+                    placeholder={intl.formatMessage(messages.attributeKeyFieldPlaceholder)}
                     async
                     creatable
                     showNewLabel
@@ -238,6 +239,7 @@ export class CumulativeTrendControls extends Component {
                   <InputTagsSearch
                     uri={launchAttributeKeysSearch}
                     minLength={1}
+                    placeholder={intl.formatMessage(messages.attributeKeyFieldPlaceholder)}
                     async
                     creatable
                     showNewLabel
