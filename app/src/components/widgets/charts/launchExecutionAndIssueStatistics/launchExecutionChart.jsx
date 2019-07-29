@@ -48,7 +48,7 @@ const getResult = (widget) => widget.content.result[0] || widget.content.result;
 @connect(
   (state) => ({
     project: activeProjectSelector(state),
-    getStatisticsLink: (name) => statisticsLinkSelector(state, { statuses: [name] }),
+    getStatisticsLink: statisticsLinkSelector(state),
     launchFilters: launchFiltersSelector(state),
   }),
   {
@@ -170,7 +170,7 @@ export class LaunchExecutionChart extends Component {
       const activeFilterId = activeFilter && activeFilter.id;
       navigationParams = this.getDefaultParamsOverallStatisticsWidget(activeFilterId);
     } else {
-      const link = getStatisticsLink(nameConfig.defectType.toUpperCase());
+      const link = getStatisticsLink({ statuses: [nameConfig.defectType.toUpperCase()] });
       navigationParams = Object.assign(link, this.getDefaultParamsLaunchExecutionWidget(id));
     }
 

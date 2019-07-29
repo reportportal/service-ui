@@ -38,8 +38,8 @@ const cx = classNames.bind(styles);
     project: activeProjectSelector(state),
     defectTypes: defectTypesSelector(state),
     orderedContentFields: orderedContentFieldsSelector(state),
-    getDefectLink: (params) => defectLinkSelector(state, params),
-    getStatisticsLink: (params) => statisticsLinkSelector(state, params),
+    getDefectLink: defectLinkSelector(state),
+    getStatisticsLink: statisticsLinkSelector(state),
   }),
   {
     navigate: (linkAction) => linkAction,

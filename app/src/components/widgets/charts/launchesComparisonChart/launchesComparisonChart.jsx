@@ -34,8 +34,8 @@ const messages = defineMessages({
   (state) => ({
     project: activeProjectSelector(state),
     defectTypes: defectTypesSelector(state),
-    getDefectLink: (params) => defectLinkSelector(state, params),
-    getStatisticsLink: (name) => statisticsLinkSelector(state, { statuses: [name] }),
+    getDefectLink: defectLinkSelector(state),
+    getStatisticsLink: statisticsLinkSelector(state),
   }),
   {
     navigate: (linkAction) => linkAction,
@@ -135,7 +135,7 @@ export class LaunchesComparisonChart extends Component {
 
     const link = defectLocators
       ? getDefectLink({ defects: defectLocators, itemId: id })
-      : getStatisticsLink(nameConfig.defectType.toUpperCase());
+      : getStatisticsLink({ statuses: [nameConfig.defectType.toUpperCase()] });
     this.props.navigate(Object.assign(link, defaultParams));
   };
 

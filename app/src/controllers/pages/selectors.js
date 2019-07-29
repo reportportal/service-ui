@@ -30,6 +30,7 @@ export const pluginsTabSelector = (state) => payloadSelector(state).pluginsTab;
 
 export const pageSelector = (state) => pageNames[state.location.type] || NO_PAGE;
 export const projectSectionSelector = (state) => payloadSelector(state).projectSection || '';
+export const querySelector = createSelector(locationSelector, (location) => location.query || {});
 
 const commonPagePropertiesSelector = (query, namespace, mapping = undefined) => {
   if (!query) {
@@ -52,8 +53,10 @@ const commonPagePropertiesSelector = (query, namespace, mapping = undefined) => 
   return result;
 };
 
-export const pagePropertiesSelector = ({ location: { query } = {} } = {}, namespace, mapping) =>
-  commonPagePropertiesSelector(query, namespace, mapping);
+export const pagePropertiesSelector = (state, namespace, mapping) => {
+  const query = querySelector(state);
+  return commonPagePropertiesSelector(query, namespace, mapping);
+};
 
 export const prevPagePropertiesSelector = (
   {

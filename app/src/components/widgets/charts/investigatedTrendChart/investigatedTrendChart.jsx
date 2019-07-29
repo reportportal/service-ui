@@ -55,10 +55,8 @@ const cx = classNames.bind(styles);
   (state) => ({
     projectId: activeProjectSelector(state),
     defectTypes: defectTypesSelector(state),
-    getDefectLink: (params) => defectLinkSelector(state, params),
-    statisticsLink: statisticsLinkSelector(state, {
-      statuses: [STATUSES.PASSED, STATUSES.FAILED, STATUSES.SKIPPED, STATUSES.INTERRUPTED],
-    }),
+    getDefectLink: defectLinkSelector(state),
+    getStatisticsLink: statisticsLinkSelector(state),
   }),
   {
     navigate: (linkAction) => linkAction,
@@ -73,7 +71,7 @@ export class InvestigatedTrendChart extends Component {
     widget: PropTypes.object.isRequired,
     defectTypes: PropTypes.object.isRequired,
     getDefectLink: PropTypes.func.isRequired,
-    statisticsLink: PropTypes.object.isRequired,
+    getStatisticsLink: PropTypes.func.isRequired,
     isPreview: PropTypes.bool,
     container: PropTypes.instanceOf(Element).isRequired,
     observer: PropTypes.object,
@@ -246,14 +244,16 @@ export class InvestigatedTrendChart extends Component {
   };
 
   launchModeClickHandler = (data) => {
-    const { widget, getDefectLink, statisticsLink } = this.props;
+    const { widget, getDefectLink, getStatisticsLink } = this.props;
     const id = widget.content.result[data.index].id;
     const defaultParams = this.getDefaultLinkParams(id);
     const defectTypeLocators = this.getDefectTypeLocators(data.id);
 
     const link = defectTypeLocators
       ? getDefectLink({ defects: defectTypeLocators, itemId: id })
-      : statisticsLink;
+      : getStatisticsLink({
+          statuses: [STATUSES.PASSED, STATUSES.FAILED, STATUSES.SKIPPED, STATUSES.INTERRUPTED],
+        });
     this.props.navigate(Object.assign(link, defaultParams));
   };
 
