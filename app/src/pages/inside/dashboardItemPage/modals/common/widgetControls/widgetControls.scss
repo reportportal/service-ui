@@ -14,3 +14,21 @@
   text-transform: uppercase;
   margin-bottom: 20px;
 }
+.add-level {
+  font-family: $FONT-REGULAR;
+  font-size: 13px;
+  color: $COLOR--topaz;
+  cursor: pointer;
+}
+.attr-selector {
+  display: inline-block;
+  width: calc(100% - 25px);
+}
+.remove-icon {
+  width: 10px;
+  display: inline-block;
+  margin-left: 15px;
+  line-height: 30px;
+  cursor: pointer;
+  vertical-align: top;
+}

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { formValueSelector } from 'redux-form';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import Parser from 'html-react-parser';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { STATS_FAILED, STATS_PASSED, STATS_SKIPPED } from 'common/constants/statistics';
 import { URLS } from 'common/urls';
@@ -11,6 +12,7 @@ import { InputTagsSearch } from 'components/inputs/inputTagsSearch';
 import { ModalField } from 'components/main/modal';
 import { activeProjectSelector } from 'controllers/user';
 import classNames from 'classnames/bind';
+import CrossIcon from 'common/img/cross-icon-inline.svg';
 import { FIELD_LABEL_WIDTH } from './controls/constants';
 import { FiltersControl, InputControl, TogglerControl } from './controls';
 import { getWidgetCriteriaOptions } from './utils/getWidgetCriteriaOptions';
@@ -72,6 +74,10 @@ const messages = defineMessages({
     id: 'CumulativeTrendControls.attributesArrayValidationError',
     defaultMessage: 'Select at least 1 attribute key',
   },
+  addOneMoreLevel: {
+    id: 'CumulativeTrendControls.addOneMoreLevel',
+    defaultMessage: '+ Add one more level',
+  },
 });
 const validators = {
   items: (formatMessage) => (value) =>
@@ -100,10 +106,12 @@ export class CumulativeTrendControls extends Component {
     onFormAppearanceChange: PropTypes.func.isRequired,
     launchAttributeKeysSearch: PropTypes.string.isRequired,
     levelsAttributes: PropTypes.array,
+    onClear: PropTypes.func,
   };
 
   static defaultProps = {
     levelsAttributes: [],
+    onClear: () => {},
   };
 
   constructor(props) {
@@ -125,6 +133,10 @@ export class CumulativeTrendControls extends Component {
       },
     });
   }
+
+  state = {
+    showSecondLevel: false,
+  };
 
   parseContentFields = (criteries) => {
     const data =
@@ -160,6 +172,20 @@ export class CumulativeTrendControls extends Component {
 
   isOptionUnique = ({ option }) => !this.props.levelsAttributes.includes(option.value);
 
+  addLevel = () => {
+    this.setState({
+      showSecondLevel: true,
+    });
+  };
+
+  removeLevel = () => {
+    this.setState({
+      showSecondLevel: false,
+    });
+
+    this.props.onClear(`${WIDGET_WIZARD_WIDGET_OPTIONS_ATTRIBUTES_KEY}.1`, null);
+  };
+
   render() {
     const { intl, formAppearance, onFormAppearanceChange, launchAttributeKeysSearch } = this.props;
     const tabItems = [
@@ -172,6 +198,7 @@ export class CumulativeTrendControls extends Component {
         label: 'Latest Launches',
       },
     ];
+
     return (
       <Fragment>
         <FieldProvider name="filters" parse={this.parseFilterValue} format={this.formatFilterValue}>
@@ -200,6 +227,7 @@ export class CumulativeTrendControls extends Component {
         {!formAppearance.isMainControlsLocked && (
           <Fragment>
             <div className={cx('attr-header')}>{intl.formatMessage(messages.attributesTitle)}</div>
+
             <ModalField
               label={intl.formatMessage(messages.attributeKeyFieldLabel1)}
               labelWidth={FIELD_LABEL_WIDTH}
@@ -220,34 +248,49 @@ export class CumulativeTrendControls extends Component {
                     removeSelected
                     makeOptions={this.makeAttributes}
                     isOptionUnique={this.isOptionUnique}
+                    customClass={cx('attr-selector')}
                   />
                 </FieldProvider>
               </div>
             </ModalField>
 
-            <ModalField
-              label={intl.formatMessage(messages.attributeKeyFieldLabel2)}
-              labelWidth={FIELD_LABEL_WIDTH}
-            >
-              <div style={{ width: '100%' }}>
-                <FieldProvider
-                  parse={this.parseAttributes}
-                  format={this.formatAttributes}
-                  name={`${WIDGET_WIZARD_WIDGET_OPTIONS_ATTRIBUTES_KEY}.1`}
+            {this.state.showSecondLevel ? (
+              <Fragment>
+                <ModalField
+                  label={intl.formatMessage(messages.attributeKeyFieldLabel2)}
+                  labelWidth={FIELD_LABEL_WIDTH}
                 >
-                  <InputTagsSearch
-                    uri={launchAttributeKeysSearch}
-                    minLength={1}
-                    async
-                    creatable
-                    showNewLabel
-                    removeSelected
-                    makeOptions={this.makeAttributes}
-                    isOptionUnique={this.isOptionUnique}
-                  />
-                </FieldProvider>
-              </div>
-            </ModalField>
+                  <div style={{ width: '100%' }}>
+                    <FieldProvider
+                      parse={this.parseAttributes}
+                      format={this.formatAttributes}
+                      name={`${WIDGET_WIZARD_WIDGET_OPTIONS_ATTRIBUTES_KEY}.1`}
+                    >
+                      <InputTagsSearch
+                        uri={launchAttributeKeysSearch}
+                        minLength={1}
+                        async
+                        creatable
+                        showNewLabel
+                        removeSelected
+                        makeOptions={this.makeAttributes}
+                        isOptionUnique={this.isOptionUnique}
+                        customClass={cx('attr-selector')}
+                      />
+                    </FieldProvider>
+                    <span className={cx('remove-icon')} onClick={this.removeLevel}>
+                      {Parser(CrossIcon)}
+                    </span>
+                  </div>
+                </ModalField>
+              </Fragment>
+            ) : (
+              <ModalField label=" " labelWidth={FIELD_LABEL_WIDTH}>
+                <div className={cx('add-level')} onClick={this.addLevel}>
+                  {intl.formatMessage(messages.addOneMoreLevel)}
+                </div>
+              </ModalField>
+            )}
           </Fragment>
         )}
       </Fragment>
