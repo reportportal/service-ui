@@ -22,6 +22,7 @@ import {
   DETAILED_LOG_VIEW,
   logViewModeSelector,
   LOG_STATUS_FILTER_KEY,
+  isLogPageWithNestedSteps,
 } from 'controllers/log';
 import { parentItemSelector } from 'controllers/testItem';
 import { withFilter } from 'controllers/filter';
@@ -47,6 +48,7 @@ import { SauceLabsSection } from './sauceLabsSection';
     debugMode: debugModeSelector(state),
     logViewMode: logViewModeSelector(state),
     parentItem: parentItemSelector(state),
+    isNestedStepView: isLogPageWithNestedSteps(state),
   }),
   {
     refresh: refreshLogPageData,
@@ -125,6 +127,7 @@ export class LogsPage extends Component {
     parentItem: PropTypes.object,
     logStatus: PropTypes.string,
     onChangeLogStatusFilter: PropTypes.func,
+    isNestedStepView: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -150,6 +153,7 @@ export class LogsPage extends Component {
     parentItem: {},
     logStatus: null,
     onChangeLogStatusFilter: () => {},
+    isNestedStepView: false,
   };
 
   state = {
@@ -211,6 +215,7 @@ export class LogsPage extends Component {
       parentItem,
       logStatus,
       onChangeLogStatusFilter,
+      isNestedStepView,
     } = this.props;
 
     const rowHighlightingConfig = {
@@ -255,7 +260,7 @@ export class LogsPage extends Component {
                 onHidePassedLogs={onChangeHidePassedLogs}
                 logPageMode={logViewMode}
               >
-                {({ markdownMode }) => (
+                {({ markdownMode, consoleView }) => (
                   <LogsGrid
                     logItems={logItems}
                     loading={loading}
@@ -268,6 +273,8 @@ export class LogsPage extends Component {
                     markdownMode={markdownMode}
                     logStatus={logStatus}
                     onChangeLogStatusFilter={onChangeLogStatusFilter}
+                    consoleView={consoleView}
+                    isNestedStepView={isNestedStepView}
                   />
                 )}
               </LogsGridToolbar>

@@ -103,6 +103,7 @@ export class LogsGrid extends Component {
     }),
     logStatus: PropTypes.string,
     onChangeLogStatusFilter: PropTypes.func,
+    isNestedStepView: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -121,30 +122,12 @@ export class LogsGrid extends Component {
     }),
     logStatus: null,
     onChangeLogStatusFilter: () => {},
+    isNestedStepView: false,
   };
 
-  getDefaultViewColumns = () => [
-    {
-      id: 'logMessage',
-      title: {
-        component: LogMessageSearch,
-        componentProps: {
-          filter: this.props.filter,
-          onFilterChange: this.props.onFilterChange,
-        },
-      },
-      sortable: true,
-      maxHeight: 200,
-      component: MessageColumn,
-      customProps: {
-        markdownMode: this.props.markdownMode,
-      },
-    },
-    {
-      id: 'attachment',
-      component: AttachmentColumn,
-    },
-    {
+  getDefaultViewColumns = () => {
+    const { isNestedStepView } = this.props;
+    const statusColumn = {
       id: STATUS_COLUMN_ID,
       title: {
         full: this.props.intl.formatMessage(messages.statusColumnTitle),
@@ -156,27 +139,53 @@ export class LogsGrid extends Component {
       },
       sortable: true,
       component: () => <div />,
-    },
-    {
-      id: TIME_COLUMN_ID,
-      title: {
-        full: this.props.intl.formatMessage(messages.timeColumnTitle),
+    };
+    const columns = [
+      {
+        id: 'logMessage',
+        title: {
+          component: LogMessageSearch,
+          componentProps: {
+            filter: this.props.filter,
+            onFilterChange: this.props.onFilterChange,
+          },
+        },
+        sortable: true,
+        maxHeight: 200,
+        component: MessageColumn,
+        customProps: {
+          markdownMode: this.props.markdownMode,
+        },
       },
-      sortable: true,
-      component: TimeColumn,
-      sortingEventInfo: LOG_PAGE_EVENTS.TIME_SORTING,
-    },
-    {
-      id: 'mobileAttachment',
-      title: {
-        component: () => <div className={cx('no-header')} />,
+      {
+        id: 'attachment',
+        component: AttachmentColumn,
       },
-      component: AttachmentColumn,
-      customProps: {
-        mobile: true,
+      {
+        id: TIME_COLUMN_ID,
+        title: {
+          full: this.props.intl.formatMessage(messages.timeColumnTitle),
+        },
+        sortable: true,
+        component: TimeColumn,
+        sortingEventInfo: LOG_PAGE_EVENTS.TIME_SORTING,
       },
-    },
-  ];
+      {
+        id: 'mobileAttachment',
+        title: {
+          component: () => <div className={cx('no-header')} />,
+        },
+        component: AttachmentColumn,
+        customProps: {
+          mobile: true,
+        },
+      },
+    ];
+    if (isNestedStepView) {
+      columns.splice(2, 0, statusColumn);
+    }
+    return columns;
+  };
 
   getLogRowClasses = (value) => ({
     log: true,
