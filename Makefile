@@ -25,23 +25,20 @@ help:
 	@echo "test       - go test"
 	@echo "checkstyle - gofmt+golint+misspell"
 
-vendor: ## Install glide and sync vendored dependencies
-	$(if $(shell which glide 2>/dev/null),$(echo "Glide is already installed..."),$(shell go get github.com/Masterminds/glide))
-	glide install
-
-get-build-deps: vendor
-	$(GO) get $(BUILD_DEPS)
-	gometalinter --install
+get-build-deps:
+	$(GO) get -u $(BUILD_DEPS)
+#	curl -sfL https://install.goreleaser.com/github.com/golangci/golangci-lint.sh | sh -s -- -b $(go env GOPATH)/bin v1.17.1
 
 test: vendor
-	$(GO) test $(glide novendor)
+	ls -la
+	$(GO) test ${GODIRS_NOVENDOR}
 
-checkstyle: get-build-deps
-	gometalinter --vendor ./... --fast --disable=gas --disable=errcheck --disable=gotype --deadline 10m
+
+checkstyle:
+	docker run --rm -v ${PWD}:/app -w="/app" golangci/golangci-lint:v1.17 golangci-lint run
 
 fmt:
 	gofmt -l -w -s ${GOFILES_NOVENDOR}
-
 
 # Builds server
 build-server: checkstyle test
