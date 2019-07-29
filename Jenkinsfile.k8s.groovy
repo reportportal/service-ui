@@ -11,7 +11,14 @@ podTemplate(
                 containerTemplate(name: 'jnlp', image: 'jenkins/jnlp-slave:alpine'),
                 containerTemplate(name: 'docker', image: 'docker:dind', ttyEnabled: true, alwaysPullImage: true, privileged: true,
                         command: 'dockerd --host=unix:///var/run/docker.sock --host=tcp://0.0.0.0:2375 --storage-driver=overlay'),
-                containerTemplate(name: 'nodejs', image: 'node:11-alpine', ttyEnabled: true, command: 'cat'),
+                containerTemplate(
+                        name: 'nodejs',
+                        image: 'node:11-alpine',
+                        ttyEnabled: true,
+                        command: 'cat',
+                        envVars: [
+                                envVar(key: 'NODE_OPTIONS', value: '--max_old_space_size=4096')
+                        ]),
                 containerTemplate(name: 'golang', image: 'golang:1.12.7', ttyEnabled: true, command: 'cat'),
 
 //              containerTemplate(name: 'kubectl', image: 'lachlanevenson/k8s-kubectl:v1.8.8', command: 'cat', ttyEnabled: true),
@@ -64,10 +71,10 @@ podTemplate(
             dir('app') {
                 dir('app') {
                     container('nodejs') {
-                        stage ('Install Deps') {
+                        stage('Install Deps') {
                             sh "npm install"
                         }
-                        stage ('Build App') {
+                        stage('Build App') {
                             sh "npm run build && npm run test"
                         }
                     }
