@@ -86,7 +86,7 @@
     "reset-css": "2.2.1",
     "semver-diff": "2.1.0",
     "simplemde": "1.11.2",
-    "swagger-ui": "3.10.0",
+    "swagger-ui": "3.18.0",
     "video.js": "7.4.1"
   },
   "devDependencies": {
