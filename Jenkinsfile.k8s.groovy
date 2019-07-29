@@ -64,7 +64,12 @@ podTemplate(
             dir('app') {
                 dir('app') {
                     container('nodejs') {
-                        sh "npm run build && npm run test"
+                        stage ('Install Deps') {
+                            sh "npm install"
+                        }
+                        stage ('Build App') {
+                            sh "npm run build && npm run test"
+                        }
                     }
                 }
             }
