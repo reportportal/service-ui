@@ -72,7 +72,7 @@ build-release: checkstyle test
 
 # Builds the image
 build-image:
-	docker build -t "$(IMAGE_NAME_REACT)" -f Dockerfile-full -e NODE_OPTIONS=--max_old_space_size=4096 .
+	docker build -t "$(IMAGE_NAME_REACT)" -f Dockerfile-full .
 
 release: build-release
 	releaser release --bintray.token ${BINTRAY_TOKEN}
@@ -92,4 +92,4 @@ clean:
 
 # Builds the container
 build-image-dev:
-	docker build -t "$(IMAGE_NAME)" --build-arg version=${v} -f Dockerfile-full .
+	docker build -t "$(IMAGE_NAME)" --build-arg version=${v} -f Dockerfile-full -e NODE_OPTIONS .
