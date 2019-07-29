@@ -2,7 +2,7 @@ import { ANALYICS_INSTANCE_KEY, ANALYTICS_ALL_KEY } from './constants';
 
 const appInfoSelector = (state) => state.appInfo || {};
 const apiInfoSelector = (state) => appInfoSelector(state).apiInfo;
-const compositeInfoSelector = (state) => appInfoSelector(state).compositeInfo;
+export const compositeInfoSelector = (state) => appInfoSelector(state).compositeInfo;
 
 export const buildVersionSelector = (state) => {
   const appInfo = apiInfoSelector(state);
