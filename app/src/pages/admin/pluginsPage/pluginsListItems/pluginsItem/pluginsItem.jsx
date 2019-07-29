@@ -88,6 +88,7 @@ export class PluginsItem extends Component {
     return (
       <div
         className={cx('plugins-list-item')}
+        onClick={this.itemClickHandler}
         title={
           !enabled
             ? `${INTEGRATION_NAMES_TITLES[name] || name} ${formatMessage(
@@ -99,9 +100,7 @@ export class PluginsItem extends Component {
         <div className={cx('plugins-info-block')}>
           <img className={cx('plugins-image')} src={INTEGRATIONS_IMAGES_MAP[name]} alt={name} />
           <div className={cx('plugins-info')}>
-            <span className={cx('plugins-name')} onClick={this.itemClickHandler}>
-              {INTEGRATION_NAMES_TITLES[name] || name}
-            </span>
+            <span className={cx('plugins-name')}>{INTEGRATION_NAMES_TITLES[name] || name}</span>
             <span className={cx('plugins-author')}>{`by ${uploadedBy || 'Report Portal'}`}</span>
             <span
               className={cx('plugins-version')}
@@ -114,7 +113,7 @@ export class PluginsItem extends Component {
           </div>
         </div>
         <div className={cx('plugins-additional-block')}>
-          <div className={cx('plugins-switcher')}>
+          <div className={cx('plugins-switcher')} onClick={(e) => e.stopPropagation()}>
             <InputSwitcher value={this.state.isEnabled} onChange={this.onToggleActiveHandler} />
           </div>
         </div>
