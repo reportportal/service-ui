@@ -66,9 +66,8 @@ podTemplate(
             }
         }
 
-
-        parallel 'Build UI': {
-            dir('app') {
+        dir('app') {
+            parallel 'Build UI': {
                 dir('app') {
                     container('nodejs') {
                         stage('Install Deps') {
@@ -79,11 +78,11 @@ podTemplate(
                         }
                     }
                 }
-            }
-        }, 'Build Webserver': {
-            container('golang') {
-                sh "make get-build-deps"
-                sh "make build-server"
+            }, 'Build Webserver': {
+                container('golang') {
+                    sh "make get-build-deps"
+                    sh "make build-server"
+                }
             }
         }
 

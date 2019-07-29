@@ -18,7 +18,7 @@ UI_BUILD_REACT=app/
 BUILD_INFO_LDFLAGS=-ldflags "-extldflags '"-static"' -X ${PACKAGE_COMMONS}/commons.repo=${REPO_NAME} -X ${PACKAGE_COMMONS}/commons.branch=${COMMIT_HASH} -X ${PACKAGE_COMMONS}/commons.buildDate=${BUILD_DATE} -X ${PACKAGE_COMMONS}/commons.version=${v}"
 IMAGE_NAME=reportportal-dev-5/service-ui$(IMAGE_POSTFIX)
 
-.PHONY: vendor get-build-deps test build
+.PHONY: get-build-deps test build
 
 help:
 	@echo "build      - go build"
@@ -29,7 +29,7 @@ get-build-deps:
 	$(GO) get -u $(BUILD_DEPS)
 #	curl -sfL https://install.goreleaser.com/github.com/golangci/golangci-lint.sh | sh -s -- -b $(go env GOPATH)/bin v1.17.1
 
-test: vendor
+test:
 	ls -la
 	$(GO) test ${GODIRS_NOVENDOR}
 
