@@ -61,17 +61,19 @@ podTemplate(
 
 
         dir('app') {
-            container('nodejs') {
-                stage('Build UI') {
-                    sh "npm run build && npm run test"
+            dir('app') {
+                container('nodejs') {
+                    stage('Build UI') {
+                        sh "npm run build && npm run test"
+                    }
                 }
             }
-        }
 
-        container('golang') {
-            stage('Build Backend') {
-                sh "make get-build-deps"
-                sh "make build-server"
+            container('golang') {
+                stage('Build Backend') {
+                    sh "make get-build-deps"
+                    sh "make build-server"
+                }
             }
         }
 
