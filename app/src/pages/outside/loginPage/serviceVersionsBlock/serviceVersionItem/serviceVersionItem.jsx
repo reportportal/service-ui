@@ -40,7 +40,7 @@ export class ServiceVersionItem extends Component {
     serviceName: PropTypes.string,
     serviceVersion: PropTypes.string,
     serviceNewVersion: PropTypes.string,
-    isDeprecated: PropTypes.bool,
+    isDeprecated: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
     intl: intlShape.isRequired,
   };
   static defaultProps = {

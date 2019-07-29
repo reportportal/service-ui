@@ -3,18 +3,22 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import fetchJsonp from 'fetch-jsonp';
 import semverDiff from 'semver-diff';
+import { compositeInfoSelector } from 'controllers/appInfo';
 import { ServiceVersionsBlock } from './serviceVersionsBlock';
 
 @connect((state) => ({
   serviceVersions: state.appInfo,
+  compositeInfo: compositeInfoSelector(state),
 }))
 export class ServiceVersionsBlockWithData extends Component {
   static propTypes = {
     serviceVersions: PropTypes.object,
+    compositeInfo: PropTypes.object,
   };
 
   static defaultProps = {
     serviceVersions: {},
+    compositeInfo: {},
   };
 
   state = {
@@ -35,35 +39,26 @@ export class ServiceVersionsBlockWithData extends Component {
 
   calculateServices = (serviceVersions, latestServiceVersions) => {
     const services = {};
+    const { compositeInfo } = this.props;
 
-    Object.keys(serviceVersions).map((serviceKey) => {
-      const component = serviceVersions[serviceKey];
-      const componentKeys = Object.keys(component);
+    Object.keys(compositeInfo).forEach((serviceKey) => {
+      const serviceValue = compositeInfo[serviceKey];
+      if (!(serviceValue && serviceValue.build)) return false;
 
-      if (!componentKeys.length) return false;
+      const currentVersion = serviceValue.build.version;
 
-      componentKeys.map((objKey) => {
-        const value = component[objKey];
+      if (!currentVersion) return false;
 
-        if (!value.build) return false;
+      const latestVersion = latestServiceVersions[serviceValue.build.repo];
 
-        const currentVersion = value.build.version;
-
-        if (!currentVersion) return false;
-
-        const latestVersion = latestServiceVersions[value.build.repo];
-
-        services[objKey] = {
-          name: value.build.name,
-          version: value.build.version,
-          newVersion: latestVersion || null,
-          repo: value.build.repo || null,
-          isDeprecated:
-            value.build.repo && latestVersion && semverDiff(currentVersion, latestVersion),
-        };
-
-        return true;
-      });
+      services[serviceKey] = {
+        name: serviceValue.build.name,
+        version: serviceValue.build.version,
+        newVersion: latestVersion || null,
+        repo: serviceValue.build.repo || null,
+        isDeprecated:
+          serviceValue.build.repo && latestVersion && semverDiff(currentVersion, latestVersion),
+      };
 
       return true;
     });

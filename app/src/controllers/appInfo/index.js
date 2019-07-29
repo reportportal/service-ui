@@ -6,5 +6,6 @@ export {
   instanceIdSelector,
   analyticsEnabledSelector,
   analyzerExtensionsSelector,
+  compositeInfoSelector,
 } from './selectors';
 export { ANALYTICS_ALL_KEY } from './constants';
