@@ -18,6 +18,7 @@ export {
   prevPagePropertiesSelector,
   prevTestItemSelector,
   searchStringSelector,
+  querySelector,
 } from './selectors';
 export { updatePagePropertiesAction } from './actionCreators';
 

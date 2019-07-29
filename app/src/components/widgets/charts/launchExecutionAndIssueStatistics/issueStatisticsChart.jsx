@@ -48,7 +48,7 @@ const getResult = (widget) => widget.content.result[0] || widget.content.result;
     project: activeProjectSelector(state),
     defectTypes: defectTypesSelector(state),
     orderedContentFields: orderedDefectFieldsSelector(state),
-    getDefectLink: (params) => defectLinkSelector(state, params),
+    getDefectLink: defectLinkSelector(state),
     launchFilters: launchFiltersSelector(state),
   }),
   {

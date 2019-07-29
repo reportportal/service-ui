@@ -36,9 +36,7 @@ const localMessages = defineMessages({
 @connect(
   (state) => ({
     project: activeProjectSelector(state),
-    statisticsLink: statisticsLinkSelector(state, {
-      statuses: [STATUSES.PASSED, STATUSES.FAILED, STATUSES.SKIPPED, STATUSES.INTERRUPTED],
-    }),
+    getStatisticsLink: statisticsLinkSelector(state),
   }),
   {
     navigate: (linkAction) => linkAction,
@@ -50,7 +48,7 @@ export class TestCasesGrowthTrendChart extends Component {
     widget: PropTypes.object.isRequired,
     container: PropTypes.instanceOf(Element).isRequired,
     project: PropTypes.string.isRequired,
-    statisticsLink: PropTypes.object.isRequired,
+    getStatisticsLink: PropTypes.func.isRequired,
     navigate: PropTypes.func.isRequired,
     isPreview: PropTypes.bool,
     height: PropTypes.number,
@@ -96,10 +94,12 @@ export class TestCasesGrowthTrendChart extends Component {
       return;
     }
 
-    const { widget, statisticsLink } = this.props;
+    const { widget, getStatisticsLink } = this.props;
     const id = widget.content.result[d.index].id;
     const defaultParams = this.getDefaultLinkParams(id);
-
+    const statisticsLink = getStatisticsLink({
+      statuses: [STATUSES.PASSED, STATUSES.FAILED, STATUSES.SKIPPED, STATUSES.INTERRUPTED],
+    });
     this.props.navigate(Object.assign(statisticsLink, defaultParams));
   };
 

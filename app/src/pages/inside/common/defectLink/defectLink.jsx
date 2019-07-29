@@ -5,16 +5,16 @@ import { defectLinkSelector, setPageLoadingAction } from 'controllers/testItem';
 
 export const DefectLink = track()(
   connect(
-    (state, ownProps) => ({
-      link: defectLinkSelector(state, ownProps),
+    (state) => ({
+      getDefectLink: defectLinkSelector(state),
     }),
     {
       refreshTestItemPage: () => setPageLoadingAction(true),
     },
-  )(
-    ({
+  )((props) => {
+    const {
       itemId,
-      link,
+      getDefectLink,
       children,
       defects,
       eventInfo,
@@ -22,9 +22,10 @@ export const DefectLink = track()(
       ownLinkParams,
       refreshTestItemPage,
       ...rest
-    }) => (
+    } = props;
+    return (
       <Link
-        to={link}
+        to={getDefectLink(props)}
         {...rest}
         onClick={() => {
           eventInfo && tracking.trackEvent(eventInfo);
@@ -33,6 +34,6 @@ export const DefectLink = track()(
       >
         {children}
       </Link>
-    ),
-  ),
+    );
+  }),
 );
