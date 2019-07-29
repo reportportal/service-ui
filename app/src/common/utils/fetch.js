@@ -1,5 +1,6 @@
 import axios, { CancelToken } from 'axios';
 import { isAuthorizedSelector, logoutAction } from 'controllers/auth';
+import { stringify } from 'qs';
 
 export const ERROR_CANCELED = 'REQUEST_CANCELED';
 export const ERROR_UNAUTHORIZED = 'UNAUTHORIZED';
@@ -19,16 +20,19 @@ const handleError = (error) => {
 
 const handleResponse = (res) => res.data;
 
-export const fetch = (url, params = {}, isRawResponse) => {
-  const cancelToken = params && params.abort ? new CancelToken(params.abort) : null;
-  const headersFromParams = params && params.headers;
+export const fetch = (url, options = {}, isRawResponse) => {
+  const cancelToken = options && options.abort ? new CancelToken(options.abort) : null;
+  const headersFromParams = options && options.headers;
   const headers = Object.assign({}, headersFromParams || {});
+
   const requestParams = {
-    ...params,
+    ...options,
+    paramsSerializer: () => stringify(options.params),
     cancelToken,
     url,
     headers,
   };
+
   return axios(requestParams)
     .catch(handleError)
     .then(!isRawResponse ? handleResponse : (response) => response);

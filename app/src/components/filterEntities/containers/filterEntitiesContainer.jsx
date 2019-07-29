@@ -64,17 +64,10 @@ export class FilterEntitiesContainer extends Component {
     return !this.state.errors[entityId];
   };
 
-  handleChange = (entityId, valueObject) => {
-    const hasDeprecatedChars = valueObject.value.match(/[[\]]/g);
-
-    if (hasDeprecatedChars) return;
-
+  handleChange = (entityId, value) => {
     this.setState(
       {
-        values: {
-          ...this.state.values,
-          [entityId]: { ...this.state.values[entityId], ...valueObject },
-        },
+        values: { ...this.state.values, [entityId]: { ...this.state.values[entityId], ...value } },
       },
       () =>
         this.isValidChange(entityId) &&
