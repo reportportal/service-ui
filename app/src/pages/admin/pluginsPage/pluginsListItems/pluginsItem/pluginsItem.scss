@@ -9,6 +9,7 @@
   box-sizing: border-box;
   border: solid 1px $COLOR--gray-91;
   border-radius: 4px;
+  cursor: pointer;
 
   &:hover {
     background-color: $COLOR--tealish-hover;
@@ -62,7 +63,6 @@
   color: $COLOR--black-2;
   font-size: 15px;
   font-family: $FONT-SEMIBOLD;
-  cursor: pointer;
 
   @media (max-width: $SCREEN_XS_MAX) {
     margin-bottom: 5px;
