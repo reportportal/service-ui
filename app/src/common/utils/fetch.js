@@ -20,14 +20,14 @@ const handleError = (error) => {
 
 const handleResponse = (res) => res.data;
 
-export const fetch = (url, options = {}, isRawResponse) => {
-  const cancelToken = options && options.abort ? new CancelToken(options.abort) : null;
-  const headersFromParams = options && options.headers;
+export const fetch = (url, params = {}, isRawResponse) => {
+  const cancelToken = params && params.abort ? new CancelToken(params.abort) : null;
+  const headersFromParams = params && params.headers;
   const headers = Object.assign({}, headersFromParams || {});
 
   const requestParams = {
-    ...options,
-    paramsSerializer: () => stringify(options.params),
+    ...params,
+    paramsSerializer: (parameters) => stringify(parameters),
     cancelToken,
     url,
     headers,
