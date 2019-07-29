@@ -68,7 +68,7 @@ podTemplate(
                     }
                 }
             }
-        }, 'Build Webserver' {
+        }, 'Build Webserver': {
             container('golang') {
                 sh "make get-build-deps"
                 sh "make build-server"
