@@ -21,7 +21,7 @@ podTemplate(
         volumes: [
                 emptyDirVolume(memory: false, mountPath: '/var/lib/docker'),
                 secretVolume(mountPath: '/etc/.dockercreds', secretName: 'docker-creds'),
-                hostPathVolume(mountPath: '/home/builder/.gradle', hostPath: '/tmp/jenkins/.gradle2')
+                hostPathVolume(mountPath: '/usr/local/go/pkg/mod', hostPath: '/tmp/jenkins/go')
         ]
 ) {
 
@@ -60,20 +60,18 @@ podTemplate(
         }
 
 
-        dir('app') {
+        parallel 'Build UI': {
             dir('app') {
-                container('nodejs') {
-                    stage('Build UI') {
+                dir('app') {
+                    container('nodejs') {
                         sh "npm run build && npm run test"
                     }
                 }
             }
-
+        }, 'Build Webserver' {
             container('golang') {
-                stage('Build Backend') {
-                    sh "make get-build-deps"
-                    sh "make build-server"
-                }
+                sh "make get-build-deps"
+                sh "make build-server"
             }
         }
 
@@ -90,5 +88,5 @@ podTemplate(
 
 
     }
-}
 
+}
