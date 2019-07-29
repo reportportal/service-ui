@@ -253,3 +253,12 @@ export const logViewModeSelector = (state) => {
   const isLaunchLog = isLaunchLogSelector(state);
   return hasChildren || isLaunchLog ? LAUNCH_LOG_VIEW : DETAILED_LOG_VIEW;
 };
+
+export const isLogPageWithOutNestedSteps = createSelector(logItemsSelector, (items) => {
+  const filteredItems = items.filter((item) => 'hasContent' in item);
+  return filteredItems.length === 0;
+});
+export const isLogPageWithNestedSteps = createSelector(
+  isLogPageWithOutNestedSteps,
+  (value) => !value,
+);

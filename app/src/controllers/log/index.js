@@ -46,6 +46,8 @@ export {
   logStackTraceLoadingSelector,
   isLoadMoreStackTraceVisible,
   logViewModeSelector,
+  isLogPageWithOutNestedSteps,
+  isLogPageWithNestedSteps,
 } from './selectors';
 export {
   getWithAttachments,
