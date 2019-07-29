@@ -72,7 +72,7 @@ build-release: checkstyle test
 
 # Builds the image
 build-image:
-	docker build -t "$(IMAGE_NAME_REACT)" -f Dockerfile-full .
+	docker build -t "$(IMAGE_NAME_REACT)" -f Dockerfile-full -e NODE_OPTIONS .
 
 release: build-release
 	releaser release --bintray.token ${BINTRAY_TOKEN}
