@@ -92,4 +92,4 @@ clean:
 
 # Builds the container
 build-image-dev:
-	docker build -t "$(IMAGE_NAME)" --build-arg version=${v} -f Dockerfile-full -e NODE_OPTIONS .
+	docker build -t "$(IMAGE_NAME)" --build-arg version=${v} -f Dockerfile-full .
