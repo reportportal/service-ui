@@ -162,6 +162,7 @@ export class IntegrationSettings extends Component {
               form={formKey}
               data={data}
               connected={connected}
+              pluginName={pluginName}
               isGlobal={isGlobal}
               onSubmit={this.updateIntegrationHandler}
               formFieldsComponent={formFieldsComponent}

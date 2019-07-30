@@ -6,6 +6,7 @@ import classNames from 'classnames/bind';
 import { fetch } from 'common/utils';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { projectIdSelector } from 'controllers/pages';
+import { JIRA } from 'common/constants/integrationNames';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { URLS } from 'common/urls';
 import { InputDropdown } from 'components/inputs/inputDropdown';
@@ -16,6 +17,7 @@ import {
   mapFieldsToValues,
   mergeFields,
 } from 'components/fields/dynamicFieldsSection/utils';
+import { VALUE_ID_KEY, VALUE_NAME_KEY } from 'components/fields/dynamicFieldsSection/constants';
 import { IntegrationFormField } from '../../integrationFormField';
 import { ISSUE_TYPE_FIELD_KEY } from '../constants';
 import styles from './btsPropertiesForIssueForm.scss';
@@ -55,6 +57,7 @@ export class BtsPropertiesForIssueForm extends Component {
     intl: intlShape.isRequired,
     instanceId: PropTypes.number.isRequired,
     projectId: PropTypes.string,
+    pluginName: PropTypes.string,
     initialData: PropTypes.object,
     showNotification: PropTypes.func,
     initialize: PropTypes.func,
@@ -67,6 +70,7 @@ export class BtsPropertiesForIssueForm extends Component {
 
   static defaultProps = {
     projectId: '',
+    pluginName: '',
     initialData: {
       defectFormFields: [],
     },
@@ -80,6 +84,7 @@ export class BtsPropertiesForIssueForm extends Component {
 
   constructor(props) {
     super(props);
+    this.defaultOptionValueKey = this.props.pluginName === JIRA ? VALUE_NAME_KEY : VALUE_ID_KEY;
     const fieldsConfig = this.setupInitialFieldsConfig();
 
     this.state = {
@@ -174,7 +179,7 @@ export class BtsPropertiesForIssueForm extends Component {
     let normalizedFields = [];
     let checkedFieldsIds = {};
     if (fields.length) {
-      normalizedFields = normalizeFieldsWithOptions(fields);
+      normalizedFields = normalizeFieldsWithOptions(fields, this.defaultOptionValueKey);
       const fieldsValues = mapFieldsToValues(normalizedFields);
       initialize(fieldsValues);
       checkedFieldsIds = Object.keys(fieldsValues).reduce(
@@ -200,7 +205,7 @@ export class BtsPropertiesForIssueForm extends Component {
     });
   };
 
-  handleInputChange = (value) => {
+  handleIssueTypeChange = (value) => {
     if (value === this.state.issueType) {
       return;
     }
@@ -230,12 +235,15 @@ export class BtsPropertiesForIssueForm extends Component {
   updateFields = (issueTypeValue) =>
     this.fetchFieldsSet(issueTypeValue).then((fetchedFields) => {
       const { defectFormFields } = this.props.initialData;
-      let fields = normalizeFieldsWithOptions(fetchedFields);
+      let fields = normalizeFieldsWithOptions(fetchedFields, this.defaultOptionValueKey);
       let checkedFieldsIds = {};
 
       if (defectFormFields && defectFormFields.length) {
         const savedIssueType = defectFormFields.find((item) => item.id === ISSUE_TYPE_FIELD_KEY);
-        if (savedIssueType && savedIssueType.value && savedIssueType.value[0] === issueTypeValue) {
+        if (
+          !savedIssueType ||
+          (savedIssueType.value && savedIssueType.value[0] === issueTypeValue)
+        ) {
           fields = mergeFields(defectFormFields, fields);
           checkedFieldsIds = this.state.checkedFieldsIds;
         }
@@ -307,7 +315,7 @@ export class BtsPropertiesForIssueForm extends Component {
                 <IntegrationFormField label="Issue Type" required withoutProvider>
                   <InputDropdown
                     value={this.state.issueType}
-                    onChange={this.handleInputChange}
+                    onChange={this.handleIssueTypeChange}
                     mobileDisabled
                     options={this.issueTypeDropdownOptions}
                   />
@@ -330,6 +338,7 @@ export class BtsPropertiesForIssueForm extends Component {
                   fields={preparedFields}
                   customBlockCreator={this.getCustomBLockConfig}
                   customFieldWrapper={IntegrationFormField}
+                  defaultOptionValueKey={this.defaultOptionValueKey}
                 />
               </Fragment>
             )}

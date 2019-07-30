@@ -11,3 +11,6 @@ export const FIELDS_MAP = {
   [DATE_TYPE]: DateField,
   [ARRAY_TYPE]: ArrayField,
 };
+
+export const VALUE_NAME_KEY = 'valueName';
+export const VALUE_ID_KEY = 'valueId';

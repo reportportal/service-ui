@@ -6,10 +6,14 @@ import { DynamicField } from '../../dynamicField';
 export class DropdownField extends Component {
   static propTypes = {
     field: PropTypes.object.isRequired,
+    defaultOptionValueKey: PropTypes.string.isRequired,
   };
 
   getInputOptions = (values = []) =>
-    values.map(({ valueName }) => ({ value: valueName, label: valueName }));
+    values.map((item) => ({
+      value: item[this.props.defaultOptionValueKey],
+      label: item.valueName,
+    }));
 
   parseDropdownValue = (value) => value && [value];
 
