@@ -19,9 +19,9 @@ import {
 } from 'controllers/log';
 import { InputSlider } from 'components/inputs/inputSlider';
 import { InputCheckbox } from 'components/inputs/inputCheckbox';
+import ConsoleIcon from 'common/img/console-inline.svg';
+import MarkdownIcon from 'common/img/markdown-inline.svg';
 import { Pagination } from './pagination';
-import ConsoleIcon from './img/console-inline.svg';
-import MarkdownIcon from './img/markdown-inline.svg';
 import styles from './logsGridToolbar.scss';
 
 const cx = classNames.bind(styles);
@@ -229,7 +229,7 @@ export class LogsGridToolbar extends Component {
         <div className={cx('children')}>
           {children({
             markdownMode: logViewMode === MARKDOWN,
-            consoleView: logViewMode === CONSOLE,
+            consoleView: this.isConsoleViewMode(),
           })}
         </div>
       </div>
