@@ -7,11 +7,11 @@ import Parser from 'html-react-parser';
 import { DATETIME_FORMAT_TOOLTIP } from 'common/constants/timeDateFormat';
 import TimeIcon from 'common/img/time-icon-inline.svg';
 import { TooltipWrapper } from '../../charts/common/tooltip/tooltipWrapper/index';
-import styles from './timeConsumingTooltip.scss';
+import styles from './mostTimeConsumingTooltip.scss';
 
 const cx = classNames.bind(styles);
 
-export const TimeConsumingTooltip = (data) => (d) => {
+export const MostTimeConsumingTooltip = (data) => (d) => {
   const { index: itemIndex } = d[0];
   const item = data[itemIndex];
   const { name, duration, startTime } = item;
@@ -30,11 +30,11 @@ export const TimeConsumingTooltip = (data) => (d) => {
   );
 };
 
-TimeConsumingTooltip.propTypes = {
+MostTimeConsumingTooltip.propTypes = {
   data: PropTypes.object.isRequired,
 };
 
-TimeConsumingTooltip.defaultProps = {
+MostTimeConsumingTooltip.defaultProps = {
   data: {
     name: '',
     duration: 0,

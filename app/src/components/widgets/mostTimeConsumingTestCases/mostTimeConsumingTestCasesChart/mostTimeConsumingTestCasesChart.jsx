@@ -1,21 +1,19 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import * as d3 from 'd3-selection';
 import { injectIntl, intlShape } from 'react-intl';
 import { TEST_ITEM_PAGE, PROJECT_LOG_PAGE } from 'controllers/pages/constants';
 import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
 import { ALL } from 'common/constants/reservedFilterIds';
 import { C3Chart } from '../../charts/common/c3chart/index';
-import styles from './timeConsumingTestCasesChart.scss';
-import { CHART_OFFSET } from '../../charts/launchStatisticsChart/constants';
+import styles from './mostTimeConsumingTestCasesChart.scss';
 import { MESSAGES } from '../../charts/common/constants';
 import { getConfig } from './getConfig';
 
 const cx = classNames.bind(styles);
 
 @injectIntl
-export class TimeConsumingTestCasesChart extends Component {
+export class MostTimeConsumingTestCasesChart extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
     widget: PropTypes.object.isRequired,
@@ -25,14 +23,12 @@ export class TimeConsumingTestCasesChart extends Component {
     isPreview: PropTypes.bool,
     height: PropTypes.number,
     observer: PropTypes.object,
-    availableHeight: PropTypes.number,
   };
 
   static defaultProps = {
     isPreview: false,
     height: 0,
     observer: {},
-    availableHeight: 300,
   };
 
   state = {
@@ -51,31 +47,16 @@ export class TimeConsumingTestCasesChart extends Component {
 
     this.node && this.node.removeEventListener('mousemove', this.getCoords);
     observer.unsubscribe && observer.unsubscribe('widgetResized', this.resizeChart);
-    this.interactElems && this.interactElems.on('click mousemove mouseover mouseout', null);
   }
 
   onChartCreated = (chart, element) => {
     this.chart = chart;
     this.node = element;
     this.node.addEventListener('mousemove', this.getCoords);
-    this.interactElems = d3.selectAll(this.node.querySelectorAll('.c3-area'));
-  };
-
-  onItemMouseOver = () => this.tooltip.style('display', 'block');
-
-  onItemMouseOut = () => this.tooltip.style('display', 'none');
-
-  onItemMouseMove = (data) => {
-    const rectWidth = this.node.querySelectorAll('.c3-event-rect')[0].getAttribute('width');
-    const currentMousePosition = d3.mouse(this.chart.element);
-    const itemWidth = rectWidth / data.values.length;
-    const dataIndex = Math.trunc((currentMousePosition[0] - CHART_OFFSET) / itemWidth);
-
-    this.selectedLaunchData = data.values.find((item) => item.index === dataIndex);
   };
 
   getConfig = () => {
-    const { widget, intl, container, availableHeight } = this.props;
+    const { widget, intl, container } = this.props;
 
     const params = {
       content: widget.content,
@@ -83,7 +64,7 @@ export class TimeConsumingTestCasesChart extends Component {
       intl,
       positionCallback: this.getPosition,
       size: {
-        height: availableHeight,
+        height: container.offsetHeight,
         width: container.offsetWidth,
       },
     };
@@ -123,19 +104,18 @@ export class TimeConsumingTestCasesChart extends Component {
   };
 
   resizeChart = () => {
-    const { container } = this.props;
-    const newHeight = container.offsetHeight;
-    const newWidth = container.offsetWidth;
+    const { offsetHeight: newHeight } = this.props.container;
+    const { offsetWidth: newWidth } = this.props.container;
 
-    if (this.height !== newHeight) {
+    if (this.height !== newHeight || this.width !== newWidth) {
       this.chart.resize({
         height: newHeight,
         width: newWidth,
       });
       this.height = newHeight;
-    } else if (this.width !== newWidth) {
-      this.chart.flush();
       this.width = newWidth;
+      this.config.size.height = newHeight;
+      this.config.size.width = newWidth;
     }
   };
 
@@ -175,7 +155,7 @@ export class TimeConsumingTestCasesChart extends Component {
   render() {
     return (
       this.state.isConfigReady && (
-        <div className={cx('time-consuming-chart')}>
+        <div className={cx('most-time-consuming-chart')}>
           <C3Chart
             config={this.config}
             onChartCreated={this.onChartCreated}
