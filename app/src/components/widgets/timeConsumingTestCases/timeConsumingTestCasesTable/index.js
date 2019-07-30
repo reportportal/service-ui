@@ -1,1 +1,0 @@
-export { TimeConsumingTestCasesTable } from './timeConsumingTestCasesTable';

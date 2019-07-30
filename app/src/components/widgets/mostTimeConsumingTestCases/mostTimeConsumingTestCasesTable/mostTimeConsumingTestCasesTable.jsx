@@ -1,9 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import classNames from 'classnames/bind';
+import styles from './mostTimeConsumingTestCasesTable.scss';
 import { TestsTableWidget } from '../../tables/components/testsTableWidget/index';
 import * as cfg from './tableConfig';
 
-const defaultAvailableHeight = 300;
+const cx = classNames.bind(styles);
 
 const prepareWidgetData = ({ result }) =>
   result.map((el) => ({
@@ -17,8 +19,8 @@ const prepareWidgetData = ({ result }) =>
     duration: el.duration,
   }));
 
-export const TimeConsumingTestCasesTable = ({ widget: { content }, availableHeight }) => (
-  <div style={{ height: availableHeight || defaultAvailableHeight }}>
+export const MostTimeConsumingTestCasesTable = ({ widget: { content } }) => (
+  <div className={cx('most-time-consuming-table')}>
     <TestsTableWidget
       tests={prepareWidgetData(content)}
       hideInfoBlock
@@ -28,7 +30,6 @@ export const TimeConsumingTestCasesTable = ({ widget: { content }, availableHeig
   </div>
 );
 
-TimeConsumingTestCasesTable.propTypes = {
+MostTimeConsumingTestCasesTable.propTypes = {
   widget: PropTypes.object.isRequired,
-  availableHeight: PropTypes.number.isRequired,
 };

@@ -4,7 +4,7 @@ import {
   COLOR_TIMECONSUMING_BAR_GREEN,
 } from 'common/constants/colors';
 import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
-import { TimeConsumingTooltip } from '../timeConsumingTooltip/index';
+import { MostTimeConsumingTooltip } from '../mostTimeConsumingTooltip/index';
 
 export const getConfig = ({
   content,
@@ -80,10 +80,10 @@ export const getConfig = ({
       enabled: true,
     },
     padding: {
-      top: 0,
+      top: 40,
       left: 35,
       right: 10,
-      bottom: 0,
+      bottom: 10,
     },
     legend: {
       show: false,
@@ -92,7 +92,7 @@ export const getConfig = ({
       show: true,
       grouped: false,
       position: positionCallback,
-      contents: TimeConsumingTooltip(data, MESSAGES, intl),
+      contents: MostTimeConsumingTooltip(data),
     },
     size: {
       height,

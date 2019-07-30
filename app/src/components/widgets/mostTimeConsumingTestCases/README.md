@@ -1,4 +1,4 @@
-## **Test-cases growth trend chart**
+## **Most time consuming test cases**
 
 ### Props:
 
