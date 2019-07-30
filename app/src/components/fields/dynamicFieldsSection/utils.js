@@ -1,9 +1,17 @@
-import { ARRAY_TYPE, DROPDOWN_TYPE, DATE_TYPE, TEXT_TYPE, FIELDS_MAP } from './constants';
+import {
+  ARRAY_TYPE,
+  DROPDOWN_TYPE,
+  DATE_TYPE,
+  TEXT_TYPE,
+  FIELDS_MAP,
+  VALUE_ID_KEY,
+  VALUE_NAME_KEY,
+} from './constants';
 
 const normalizeDefinedValue = (item) =>
-  !item.valueId ? { ...item, valueId: item.valueName } : item;
+  !item[VALUE_ID_KEY] ? { ...item, [VALUE_ID_KEY]: item[VALUE_NAME_KEY] } : item;
 
-export const normalizeFieldsWithOptions = (fields) =>
+export const normalizeFieldsWithOptions = (fields, defaultOptionValueKey = VALUE_NAME_KEY) =>
   fields.map((field) => {
     if (!field.definedValues || !field.definedValues.length) {
       return field;
@@ -11,7 +19,7 @@ export const normalizeFieldsWithOptions = (fields) =>
     const definedValues = field.definedValues.map(normalizeDefinedValue);
     let value = field.value;
     if (!value || !value.length) {
-      value = [definedValues[0].valueName];
+      value = [definedValues[0][defaultOptionValueKey]];
     }
     return { ...field, definedValues, value };
   });

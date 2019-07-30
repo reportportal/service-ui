@@ -6,19 +6,25 @@ import { DynamicField } from '../../dynamicField';
 export class ArrayField extends Component {
   static propTypes = {
     field: PropTypes.object.isRequired,
+    defaultOptionValueKey: PropTypes.string.isRequired,
   };
 
   formatOptions = (values = []) =>
-    values.map(({ valueName }) => ({ value: valueName, label: valueName }));
+    values.map((item) => ({
+      value: item[this.props.defaultOptionValueKey],
+      label: item.valueName,
+    }));
 
   creatable = !this.props.field.definedValues || !this.props.field.definedValues.length;
 
   formatTags = (tags) => {
-    const { field } = this.props;
+    const { field, defaultOptionValueKey } = this.props;
     const values = [];
     tags &&
       tags.forEach((item) => {
-        const foundedItems = field.definedValues.find((defValue) => defValue.valueName === item);
+        const foundedItems = field.definedValues.find(
+          (defValue) => defValue[defaultOptionValueKey] === item,
+        );
         foundedItems && values.push(foundedItems);
       });
     return this.formatOptions(values);

@@ -19,6 +19,7 @@ import {
   normalizeFieldsWithOptions,
   mapFieldsToValues,
 } from 'components/fields/dynamicFieldsSection/utils';
+import { VALUE_ID_KEY, VALUE_NAME_KEY } from 'components/fields/dynamicFieldsSection/constants';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { InputCheckbox } from 'components/inputs/inputCheckbox';
 import { INTEGRATION_NAMES_TITLES } from 'components/integrations';
@@ -150,7 +151,7 @@ export class PostIssueModal extends Component {
       systemAuthConfig.username = storedConfig.username;
     }
 
-    const fields = this.initIntegrationFields(defectFormFields, systemAuthConfig);
+    const fields = this.initIntegrationFields(defectFormFields, systemAuthConfig, pluginName);
 
     this.state = {
       fields,
@@ -207,6 +208,9 @@ export class PostIssueModal extends Component {
     };
   };
 
+  getDefaultOptionValueKey = (pluginName) =>
+    this.isJiraIntegration(pluginName) ? VALUE_NAME_KEY : VALUE_ID_KEY;
+
   dataFieldsConfig = [
     {
       name: INCLUDE_ATTACHMENTS_KEY,
@@ -222,8 +226,9 @@ export class PostIssueModal extends Component {
     },
   ];
 
-  initIntegrationFields = (defectFormFields = [], defaultConfig = {}) => {
-    const fields = normalizeFieldsWithOptions(defectFormFields).map(
+  initIntegrationFields = (defectFormFields = [], defaultConfig = {}, pluginName) => {
+    const defaultOptionValueKey = this.getDefaultOptionValueKey(pluginName);
+    const fields = normalizeFieldsWithOptions(defectFormFields, defaultOptionValueKey).map(
       (item) => (item.fieldType === ISSUE_TYPE_FIELD_KEY ? { ...item, disabled: true } : item),
     );
     validationConfig = createFieldsValidationConfig(fields);
@@ -374,7 +379,11 @@ export class PostIssueModal extends Component {
             onChangePluginName={this.onChangePlugin}
           />
           {this.state.fields.length ? (
-            <DynamicFieldsSection withValidation fields={this.state.fields} />
+            <DynamicFieldsSection
+              withValidation
+              fields={this.state.fields}
+              defaultOptionValueKey={this.getDefaultOptionValueKey()}
+            />
           ) : (
             <div className={cx('no-default-properties-message')}>
               {formatMessage(messages.noDefaultPropertiesMessage)}
