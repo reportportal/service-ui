@@ -5,12 +5,16 @@ import { defineMessages, injectIntl, intlShape } from 'react-intl';
 import classNames from 'classnames/bind';
 import { reduxForm, formPropTypes, formValues } from 'redux-form';
 import { URLS } from 'common/urls';
-import { fetch } from 'common/utils';
+import { fetch, validate } from 'common/utils';
 import { getUniqueAndCommonAttributes } from 'common/utils/attributeUtils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { LAUNCH_ITEM_TYPES } from 'common/constants/launchItemTypes';
 import { activeProjectSelector } from 'controllers/user';
-import { NOTIFICATION_TYPES, showNotification } from 'controllers/notification';
+import {
+  NOTIFICATION_TYPES,
+  showNotification,
+  showDefaultErrorNotification,
+} from 'controllers/notification';
 import { ModalField, ModalLayout, withModal } from 'components/main/modal';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { MarkdownEditor } from 'components/main/markdown';
@@ -79,6 +83,8 @@ const DESCRIPTION_LEAVE = 'LEAVE';
 const DESCRIPTION_UPDATE = 'UPDATE';
 const DESCRIPTION_CREATE = 'CREATE';
 
+const FIELD_LABEL_WIDTH = 120;
+
 const makeDescriptionOptions = (formatMessage) => [
   {
     value: DESCRIPTION_LEAVE,
@@ -98,6 +104,9 @@ const makeDescriptionOptions = (formatMessage) => [
 @injectIntl
 @reduxForm({
   form: 'editItemsForm',
+  validate: ({ commonAttributes }) => ({
+    commonAttributes: !validate.attributesArray(commonAttributes),
+  }),
 })
 @formValues('descriptionAction', 'uniqueAttributes')
 @connect(
@@ -106,6 +115,7 @@ const makeDescriptionOptions = (formatMessage) => [
   }),
   {
     showNotification,
+    showDefaultErrorNotification,
   },
 )
 export class EditItemsModal extends Component {
@@ -150,41 +160,42 @@ export class EditItemsModal extends Component {
   }
 
   onChangeCommonAttributes = (e, attributes, oldAttributes) => {
+    if (!validate.attributesArray(attributes)) return;
+
     const { array } = this.props;
     const saveHistory = (payload) => array.push('attributes', payload);
 
-    // Create attribute
-    if (attributes.length > oldAttributes.length) {
-      const createdAttribute = this.findAttribute(attributes, oldAttributes);
-
-      this.removeUniqueAttribute(createdAttribute);
-
-      saveHistory({
-        action: ATTRIBUTE_CREATE,
-        to: createdAttribute,
-      });
-
-      // Delete attribute
-    } else if (attributes.length < oldAttributes.length) {
+    // Delete attribute
+    if (attributes.length < oldAttributes.length) {
       const deletedAttribute = this.findAttribute(oldAttributes, attributes);
-
       saveHistory({
         action: ATTRIBUTE_DELETE,
         from: deletedAttribute,
       });
-
-      // Update attribute
     } else {
       const attributeBeforeUpdate = this.findAttribute(oldAttributes, attributes);
       const updatedAttribute = this.findAttribute(attributes, oldAttributes);
 
-      this.removeUniqueAttribute(updatedAttribute);
+      // Create attribute
+      if (!attributeBeforeUpdate.value) {
+        this.removeUniqueAttribute(updatedAttribute);
 
-      saveHistory({
-        action: ATTRIBUTE_UPDATE,
-        from: attributeBeforeUpdate,
-        to: updatedAttribute,
-      });
+        saveHistory({
+          action: ATTRIBUTE_CREATE,
+          to: updatedAttribute,
+        });
+      } else {
+        // Update attribute
+        this.removeUniqueAttribute(updatedAttribute);
+
+        const { edited, ...fromAttribute } = attributeBeforeUpdate;
+
+        saveHistory({
+          action: ATTRIBUTE_UPDATE,
+          from: fromAttribute,
+          to: updatedAttribute,
+        });
+      }
     }
   };
 
@@ -257,17 +268,19 @@ export class EditItemsModal extends Component {
     if (descriptionAction !== DESCRIPTION_LEAVE) {
       data.description = {
         action: descriptionAction,
-        comment: description || '',
+        comment: `${DESCRIPTION_UPDATE ? '\n' : ''}${description}` || '',
       };
     }
 
-    fetch(fetchUrl, { method: 'put', data }).then(() => {
-      this.props.showNotification({
-        message: formatMessage(messages.itemUpdateSuccess),
-        type: NOTIFICATION_TYPES.SUCCESS,
-      });
-      fetchFunc();
-    });
+    fetch(fetchUrl, { method: 'put', data })
+      .then(() => {
+        this.props.showNotification({
+          message: formatMessage(messages.itemUpdateSuccess),
+          type: NOTIFICATION_TYPES.SUCCESS,
+        });
+        fetchFunc();
+      })
+      .catch(this.props.showDefaultErrorNotification);
   };
 
   showWarningMessage = () => this.setState({ warningMessageShown: true });
@@ -301,7 +314,11 @@ export class EditItemsModal extends Component {
         warningMessage={warningMessageShown && formatMessage(messages.warningMessage)}
       >
         <form>
-          <ModalField label={formatMessage(messages.commonAttributesLabel)}>
+          <ModalField
+            label={formatMessage(messages.commonAttributesLabel)}
+            labelWidth={FIELD_LABEL_WIDTH}
+            alignLeft
+          >
             <FieldProvider name="commonAttributes" onChange={this.onChangeCommonAttributes}>
               <AttributeListField
                 keyURLCreator={this.getAttributeKeyURLCreator()}
@@ -310,7 +327,11 @@ export class EditItemsModal extends Component {
             </FieldProvider>
           </ModalField>
           {uniqueAttributes.length > 0 && (
-            <ModalField label={formatMessage(messages.uniqueAttributesLabel)}>
+            <ModalField
+              label={formatMessage(messages.uniqueAttributesLabel)}
+              labelWidth={FIELD_LABEL_WIDTH}
+              alignLeft
+            >
               <FieldProvider name="uniqueAttributes">
                 <AttributeListField
                   disabled
@@ -320,7 +341,11 @@ export class EditItemsModal extends Component {
               </FieldProvider>
             </ModalField>
           )}
-          <ModalField label={formatMessage(messages.descriptionLabel)}>
+          <ModalField
+            label={formatMessage(messages.descriptionLabel)}
+            labelWidth={FIELD_LABEL_WIDTH}
+            alignLeft
+          >
             <div className={cx('description-dropdown-wrapper')}>
               <FieldProvider name="descriptionAction">
                 <InputDropdown options={makeDescriptionOptions(formatMessage)} />

@@ -28,27 +28,23 @@ export class EditableAttribute extends Component {
     onCancelEdit: () => {},
   };
 
-  enterEditMode = () => this.props.onEdit(this.props.attribute);
-
-  exitEditMode = () => this.props.onCancelEdit(this.props.attribute);
-
   calculateFormName = (attribute) =>
     attribute && attribute.key && attribute.value
       ? `attributesEditor__${attribute.key}_${attribute.value}`.replace(/\W/g, '_')
       : 'attributesEditor';
 
   render() {
-    const { attribute, onChange, editMode, ...rest } = this.props;
+    const { attribute, onChange, onEdit, onCancelEdit, editMode, ...rest } = this.props;
     return editMode ? (
       <AttributeEditor
         {...rest}
         form={this.calculateFormName(attribute)}
         initialValues={attribute}
         onConfirm={onChange}
-        onCancel={this.exitEditMode}
+        onCancel={onCancelEdit}
       />
     ) : (
-      <Attribute {...this.props} onClick={this.enterEditMode} />
+      <Attribute {...this.props} onClick={onEdit} />
     );
   }
 }

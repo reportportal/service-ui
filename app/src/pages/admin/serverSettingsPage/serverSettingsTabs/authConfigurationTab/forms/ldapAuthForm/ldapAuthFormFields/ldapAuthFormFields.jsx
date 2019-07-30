@@ -130,7 +130,7 @@ export class LdapAuthFormFields extends Component {
   formatConditionalValue = (fullValue) => {
     let formattedValue = {
       value: '',
-      condition: this.urlConditions[0].condition,
+      condition: this.urlConditions[0],
     };
     if (fullValue) {
       const [condition, value] = fullValue.split('//');
@@ -163,6 +163,7 @@ export class LdapAuthFormFields extends Component {
         >
           <FieldErrorHint>
             <InputConditional
+              isCustomConditions
               conditions={this.urlConditions}
               inputClassName={cx('conditional-input')}
               conditionsBlockClassName={cx('conditions-block')}

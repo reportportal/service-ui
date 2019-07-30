@@ -8,10 +8,19 @@ import { canUpdateSettings } from 'common/utils/permissions';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/user';
 import { projectIdSelector } from 'controllers/pages';
-import { addIntegrationAction, removeProjectIntegrationsByTypeAction } from 'controllers/plugins';
+import {
+  removePluginAction,
+  addIntegrationAction,
+  removeProjectIntegrationsByTypeAction,
+} from 'controllers/plugins';
 import { showModalAction } from 'controllers/modal';
 import { GhostButton } from 'components/buttons/ghostButton';
-import { isIntegrationSupportsMultipleInstances } from 'components/integrations/utils';
+import { BigButton } from 'components/buttons/bigButton';
+import {
+  isIntegrationSupportsMultipleInstances,
+  isPluginBuiltin,
+} from 'components/integrations/utils';
+import { INTEGRATION_NAMES_TITLES } from 'components/integrations/constants';
 import { InstancesList } from './instancesList';
 import styles from './instancesSection.scss';
 
@@ -71,9 +80,22 @@ const messages = defineMessages({
     id: 'InstancesSection.noGlobalIntegrationMessage',
     defaultMessage: 'No global integration',
   },
-  allGlobalProjects: {
-    id: 'InstancesSection.allGlobalProjects',
-    defaultMessage: 'All global {pluginName} projects',
+  allGlobalIntegrations: {
+    id: 'InstancesSection.allGlobalIntegrations',
+    defaultMessage: 'All global {pluginName} integrations',
+  },
+  uninstallPluginConfirmation: {
+    id: 'InstancesSection.uninstallPluginConfirmation',
+    defaultMessage: 'Are you sure you want to uninstall {pluginName} Plugin?',
+  },
+  uninstallPluginTitle: {
+    id: 'InstancesSection.uninstallPluginTitle',
+    defaultMessage: 'Uninstall plugin',
+  },
+  uninstallPluginNote: {
+    id: 'InstancesSection.uninstallPluginNote',
+    defaultMessage:
+      'Remove this plugin from the reportportal-dev workspace and revoke all access and authorizations.',
   },
 });
 
@@ -87,6 +109,7 @@ const messages = defineMessages({
     showModalAction,
     removeProjectIntegrationsByTypeAction,
     addIntegrationAction,
+    removePluginAction,
   },
 )
 @injectIntl
@@ -96,15 +119,18 @@ export class InstancesSection extends Component {
     instanceType: PropTypes.string.isRequired,
     projectId: PropTypes.string,
     onItemClick: PropTypes.func.isRequired,
+    removePluginSuccessCallback: PropTypes.func.isRequired,
     showModalAction: PropTypes.func.isRequired,
     removeProjectIntegrationsByTypeAction: PropTypes.func.isRequired,
     addIntegrationAction: PropTypes.func.isRequired,
+    removePluginAction: PropTypes.func.isRequired,
     accountRole: PropTypes.string.isRequired,
     userRole: PropTypes.string.isRequired,
     projectIntegrations: PropTypes.array,
     globalIntegrations: PropTypes.array,
     isGlobal: PropTypes.bool,
     title: PropTypes.string,
+    pluginId: PropTypes.number,
   };
 
   static defaultProps = {
@@ -113,9 +139,15 @@ export class InstancesSection extends Component {
     projectId: '',
     isGlobal: false,
     title: '',
+    pluginId: null,
   };
 
   multiple = isIntegrationSupportsMultipleInstances(this.props.instanceType);
+
+  builtin = isPluginBuiltin(this.props.instanceType);
+
+  removePlugin = () =>
+    this.props.removePluginAction(this.props.pluginId, this.props.removePluginSuccessCallback);
 
   removeProjectIntegrations = () =>
     this.props.removeProjectIntegrationsByTypeAction(this.props.instanceType);
@@ -140,6 +172,27 @@ export class InstancesSection extends Component {
     }
 
     this.props.addIntegrationAction(data, isGlobal, instanceType, this.navigateToNewIntegration);
+  };
+
+  removePluginClickHandler = () => {
+    const {
+      intl: { formatMessage },
+      instanceType,
+    } = this.props;
+
+    this.props.showModalAction({
+      id: 'confirmationModal',
+      data: {
+        message: formatMessage(messages.uninstallPluginConfirmation, {
+          pluginName: INTEGRATION_NAMES_TITLES[instanceType],
+        }),
+        onConfirm: this.removePlugin,
+        title: formatMessage(messages.uninstallPluginTitle),
+        confirmText: formatMessage(COMMON_LOCALE_KEYS.UNINSTALL),
+        cancelText: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+        dangerConfirm: true,
+      },
+    });
   };
 
   returnToGlobalSettingsClickHandler = () => {
@@ -215,9 +268,12 @@ export class InstancesSection extends Component {
           )}
         <InstancesList
           blocked={!isGlobal}
-          title={formatMessage(isGlobal ? messages.allGlobalProjects : globalIntegrationMessage, {
-            pluginName: this.props.title,
-          })}
+          title={formatMessage(
+            isGlobal ? messages.allGlobalIntegrations : globalIntegrationMessage,
+            {
+              pluginName: this.props.title,
+            },
+          )}
           items={globalIntegrations}
           onItemClick={onItemClick}
           {...(isGlobal
@@ -241,6 +297,25 @@ export class InstancesSection extends Component {
                 {formatMessage(messages.addIntegrationButtonTitle)}
               </GhostButton>
             </div>
+          )}
+        {isGlobal &&
+          !this.builtin && (
+            <Fragment>
+              <h3 className={cx('uninstall-plugin-title')}>
+                {formatMessage(messages.uninstallPluginTitle)}
+              </h3>
+              <p className={cx('uninstall-plugin-note')}>
+                {formatMessage(messages.uninstallPluginNote)}
+              </p>
+              <BigButton
+                className={cx('uninstall-plugin-button')}
+                color={'tomato'}
+                roundedCorners
+                onClick={this.removePluginClickHandler}
+              >
+                {formatMessage(COMMON_LOCALE_KEYS.UNINSTALL)}
+              </BigButton>
+            </Fragment>
           )}
         {!disabled &&
           !isGlobal && (

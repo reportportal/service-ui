@@ -14,6 +14,7 @@ export class ChartJS extends PureComponent {
     onChartCreated: PropTypes.func,
     onChartElementClick: PropTypes.func,
     children: PropTypes.node,
+    height: PropTypes.number.isRequired,
   };
 
   static defaultProps = {
@@ -81,11 +82,11 @@ export class ChartJS extends PureComponent {
   };
 
   render() {
+    const { height } = this.props;
     return (
       <Fragment>
         <canvas
-          height="180"
-          width="600"
+          height={height}
           ref={(node) => {
             this.canvas = node;
           }}

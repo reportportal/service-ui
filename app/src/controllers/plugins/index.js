@@ -1,8 +1,10 @@
 export { pluginsReducer } from './reducer';
 export {
   fetchPluginsAction,
+  removePluginAction,
+  removePluginSuccessAction,
+  updatePluginSuccessAction,
   fetchGlobalIntegrationsAction,
-  updatePluginLocallyAction,
   addIntegrationAction,
   removeIntegrationAction,
   removeProjectIntegrationsByTypeAction,

@@ -15,18 +15,40 @@
     border-top: 1px solid $COLOR--gray-91;
   }
 
-  .section-content-wrapper {
-    display: flex;
-    width: 100%;
-
-    @media (max-width: $SCREEN_SM_MAX) {
-      flex-direction: column;
-    }
-  }
-
   :global {
+    .elements-splitter {
+      &.reflex-splitter {
+        width: 3px;
+        height: 22px;
+        margin-top: 14px;
+        transform: translateX(-3px);
+
+        @media (max-width: $SCREEN_SM_MAX) {
+          display: none;
+        }
+      }
+    }
+
+    .reflex-container {
+      @media (max-width: $SCREEN_SM_MAX) {
+        flex-direction: column;
+      }
+    }
+
     .fullscreen {
       background-color: $COLOR--white;
     }
+  }
+}
+
+.video-container {
+  border-right: 1px solid $COLOR--gray-91;
+}
+
+.job-info-container {
+  transform: translateX(-5px);
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    transform: translateX(0);
   }
 }

@@ -29,10 +29,21 @@ export class RegistrationPageContainer extends Component {
   };
 
   componentDidMount() {
-    const uuid = this.props.uuid;
+    this.fetchUserData();
+  }
+
+  componentDidUpdate(prevProps) {
+    if (!this.state.isLoadingFinished || prevProps.uuid !== this.props.uuid) {
+      this.fetchUserData();
+    }
+  }
+
+  fetchUserData = () => {
+    const { uuid } = this.props;
     if (!uuid) {
       return;
     }
+
     fetch(URLS.userRegistration(), { params: { uuid } }).then((data) =>
       this.setState({
         isTokenActive: data.isActive,
@@ -40,7 +51,7 @@ export class RegistrationPageContainer extends Component {
         isLoadingFinished: true,
       }),
     );
-  }
+  };
 
   registrationHandler = ({ name, login, password, email }) => {
     const uuid = this.props.uuid;

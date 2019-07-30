@@ -1,13 +1,8 @@
 .video-section {
   display: flex;
   flex-direction: column;
-  width: 50%;
+  width: 100%;
   height: auto;
-  border-right: 1px solid $COLOR--gray-91;
-
-  @media (max-width: $SCREEN_SM_MAX) {
-    width: 100%;
-  }
 }
 
 .section-header {
@@ -27,7 +22,6 @@
 
 .section-content {
   width: 100%;
-  border-top: 1px solid $COLOR--gray-91;
   border-bottom: 1px solid $COLOR--gray-91;
 
   @media (max-width: $SCREEN_SM_MAX) {

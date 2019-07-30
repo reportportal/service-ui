@@ -19,7 +19,8 @@
 }
 
 .action-description,
-.no-items-message {
+.no-items-message,
+.uninstall-plugin-note {
   margin-top: 10px;
   color: $COLOR--gray-60;
   font-size: 13px;
@@ -29,4 +30,23 @@
 
 .no-items-message {
   margin-bottom: 25px;
+}
+
+.uninstall-plugin-title {
+  padding: 5px 0;
+  color: $COLOR--black-2;
+  font-size: 20px;
+  font-family: $FONT-SEMIBOLD;
+}
+
+.uninstall-plugin-note {
+  margin: 5px 0 10px;
+}
+
+.uninstall-plugin-button {
+  display: inline-block;
+  width: auto;
+  height: 30px;
+  font-size: 13px;
+  font-family: $FONT-REGULAR;
 }

@@ -3,4 +3,9 @@
   font-size: 14px;
   font-family: $FONT-REGULAR;
   white-space: pre-line;
+  word-break: break-all;
+
+  @supports (word-break: break-word) {
+    word-break: break-word;
+  }
 }

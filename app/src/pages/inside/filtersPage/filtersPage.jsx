@@ -26,7 +26,7 @@ import { withPagination } from 'controllers/pagination';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
 import { PageLayout, PageHeader, PageSection } from 'layouts/pageLayout';
 import { showModalAction } from 'controllers/modal';
-import { withSorting, SORTING_ASC } from 'controllers/sorting';
+
 import {
   userFiltersSelector,
   showFilterOnLaunchesAction,
@@ -78,10 +78,6 @@ const messages = defineMessages({
     showNotification,
   },
 )
-@withSorting({
-  defaultSortingColumn: 'name',
-  defaultSortingDirection: SORTING_ASC,
-})
 @withFilter()
 @withPagination({
   paginationSelector: filtersPaginationSelector,

@@ -12,6 +12,7 @@ import {
   REMOVE_FILTER,
   FETCH_USER_FILTERS_SUCCESS,
   REMOVE_LAUNCHES_FILTER,
+  UPDATE_FILTER_ORDERS,
 } from './constants';
 
 export const fetchFiltersAction = (params) => ({
@@ -39,6 +40,13 @@ export const updateFilterConditionsAction = (filterId, conditions) => ({
   payload: {
     filterId,
     conditions,
+  },
+});
+export const updateFilterOrdersAction = (filterId, orders) => ({
+  type: UPDATE_FILTER_ORDERS,
+  payload: {
+    filterId,
+    orders,
   },
 });
 

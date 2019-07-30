@@ -63,6 +63,10 @@ const messages = defineMessages({
     id: 'InstancesSection.addIntegrationSuccess',
     defaultMessage: 'Integration successfully added',
   },
+  removePluginSuccess: {
+    id: 'InstancesSection.removePluginSuccess',
+    defaultMessage: 'Plugin has been uninstalled successfully',
+  },
   updateIntegrationSuccess: {
     id: 'IntegrationSettingsContainer.updateIntegrationSuccess',
     defaultMessage: 'Integration successfully updated',
