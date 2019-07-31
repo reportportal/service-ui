@@ -57,7 +57,7 @@ export class CumulativeTrendChart extends PureComponent {
   };
 
   componentDidUpdate(prevProps) {
-    if (!isEqual(prevProps.widget.content, this.props.widget.content)) {
+    if (!isEqual(prevProps.widget, this.props.widget)) {
       this.getConfig();
     }
   }

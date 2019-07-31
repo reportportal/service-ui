@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { injectIntl, intlShape } from 'react-intl';
 import ReactDOMServer from 'react-dom/server';
 import * as d3 from 'd3-selection';
+import isEqual from 'fast-deep-equal';
 import classNames from 'classnames/bind';
 import * as COLORS from 'common/constants/colors';
 import { STATS_PASSED } from 'common/constants/statistics';
@@ -43,6 +44,12 @@ export class PassingRatePerLaunch extends Component {
   componentDidMount() {
     !this.props.isPreview && this.props.observer.subscribe('widgetResized', this.resizeChart);
     this.getConfig();
+  }
+
+  componentDidUpdate(prevProps) {
+    if (!isEqual(prevProps.widget, this.props.widget)) {
+      this.getConfig();
+    }
   }
 
   componentWillUnmount() {
