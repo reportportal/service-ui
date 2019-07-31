@@ -25,6 +25,7 @@ import { injectIntl, intlShape } from 'react-intl';
 import * as d3 from 'd3-selection';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
+import isEqual from 'fast-deep-equal';
 import ReactDOMServer from 'react-dom/server';
 import { statisticsLinkSelector } from 'controllers/testItem';
 import { activeProjectSelector } from 'controllers/user';
@@ -89,6 +90,12 @@ export class LaunchExecutionChart extends Component {
     !isPreview && observer.subscribe && observer.subscribe('widgetResized', this.resizeStatusChart);
 
     this.getConfig();
+  }
+
+  componentDidUpdate(prevProps) {
+    if (!isEqual(prevProps.widget, this.props.widget)) {
+      this.getConfig();
+    }
   }
 
   componentWillUnmount() {

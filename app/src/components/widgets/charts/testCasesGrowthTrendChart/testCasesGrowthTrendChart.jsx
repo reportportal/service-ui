@@ -5,6 +5,7 @@ import ReactDOMServer from 'react-dom/server';
 import { connect } from 'react-redux';
 import moment from 'moment';
 import * as d3 from 'd3-selection';
+import isEqual from 'fast-deep-equal';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { dateFormat } from 'common/utils/timeDateUtils';
 import { statisticsLinkSelector } from 'controllers/testItem';
@@ -72,8 +73,11 @@ export class TestCasesGrowthTrendChart extends Component {
     this.getConfig();
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps) {
     this.onChartRendered();
+    if (!isEqual(prevProps.widget, this.props.widget)) {
+      this.getConfig();
+    }
   }
 
   componentWillUnmount() {

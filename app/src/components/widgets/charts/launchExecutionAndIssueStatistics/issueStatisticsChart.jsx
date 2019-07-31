@@ -24,6 +24,7 @@ import { injectIntl, intlShape } from 'react-intl';
 import * as d3 from 'd3-selection';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
+import isEqual from 'fast-deep-equal';
 import ReactDOMServer from 'react-dom/server';
 import { defectLinkSelector } from 'controllers/testItem';
 import { defectTypesSelector, orderedDefectFieldsSelector } from 'controllers/project';
@@ -93,6 +94,12 @@ export class IssueStatisticsChart extends Component {
     !isPreview && observer.subscribe && observer.subscribe('widgetResized', this.resizeIssuesChart);
 
     this.getConfig();
+  }
+
+  componentDidUpdate(prevProps) {
+    if (!isEqual(prevProps.widget, this.props.widget)) {
+      this.getConfig();
+    }
   }
 
   componentWillUnmount() {
