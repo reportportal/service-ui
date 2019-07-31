@@ -128,7 +128,7 @@ export class MostPopularPatternsControls extends Component {
             hintType={'top-right'}
           />
         </FieldProvider>
-        <ModalField label={intl.formatMessage(messages.attributeKeyFieldLabel)} labelWidth={145}>
+        <ModalField label={intl.formatMessage(messages.attributeKeyFieldLabel)} labelWidth={120}>
           <FieldProvider
             parse={this.parseAttribute}
             format={this.formatAttribute}
