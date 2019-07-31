@@ -21,3 +21,13 @@
     margin-top: 1px;
   }
 }
+.link-item {
+  display: inline-block;
+
+  &.collapsed {
+    max-width: 120px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
