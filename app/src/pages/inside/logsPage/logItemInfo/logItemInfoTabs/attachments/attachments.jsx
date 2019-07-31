@@ -32,6 +32,9 @@ const cx = classNames.bind(styles);
 
 const getVisibleThumbs = (isMobile) => (isMobile ? MOBILE_VISIBLE_THUMBS : DEFAULT_VISIBLE_THUMBS);
 
+const getCurrentThumb = (activeItemId, visibleThumbs) =>
+  activeItemId ? Math.floor(activeItemId / visibleThumbs) * visibleThumbs : 0;
+
 @connect(
   (state) => ({
     attachments: attachmentItemsSelector(state),
@@ -72,9 +75,7 @@ export class Attachments extends Component {
 
   static getDerivedStateFromProps(props, state) {
     if (!props.activeItemId) {
-      const currentThumb = props.activeItemId
-        ? Math.floor(props.activeItemId / state.visibleThumbs) * state.visibleThumbs
-        : 0;
+      const currentThumb = getCurrentThumb(props.activeItemId, state.visibleThumbs);
       return {
         mainAreaVisible: false,
         currentThumb,
@@ -88,9 +89,7 @@ export class Attachments extends Component {
     const { activeItemId, isMobileView } = props;
 
     const visibleThumbs = getVisibleThumbs(isMobileView);
-    const currentThumb = activeItemId
-      ? Math.floor(activeItemId / visibleThumbs) * visibleThumbs
-      : 0;
+    const currentThumb = getCurrentThumb(activeItemId, visibleThumbs);
 
     this.state = {
       mainAreaVisible: activeItemId !== null,

@@ -34,13 +34,13 @@ import { userIdSelector } from 'controllers/user';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
 import { LOG_PAGE, LOG_PAGE_EVENTS } from 'components/main/analytics/events';
 import { TestItemLogsToolbar } from 'pages/inside/testItemLogsToolbar';
+import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { LogToolbar } from './logToolbar';
 import { HistoryLine } from './historyLine';
 import { LogItemInfo } from './logItemInfo';
 import { LogsGrid } from './logsGrid/logsGrid';
 import { LogsGridToolbar } from './logsGridToolbar';
 import { SauceLabsSection } from './sauceLabsSection';
-import { SpinningPreloader } from '../../../components/preloaders/spinningPreloader';
 
 @connect(
   (state) => ({
