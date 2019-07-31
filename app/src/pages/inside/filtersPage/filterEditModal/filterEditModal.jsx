@@ -125,7 +125,7 @@ export class FilterEditModal extends Component {
           <ModalField label={intl.formatMessage(messages.name)}>
             <FieldProvider name="name">
               <FieldErrorHint>
-                <Input placeholder={intl.formatMessage(messages.namePlaceholder)} />
+                <Input maxLength="128" placeholder={intl.formatMessage(messages.namePlaceholder)} />
               </FieldErrorHint>
             </FieldProvider>
           </ModalField>
