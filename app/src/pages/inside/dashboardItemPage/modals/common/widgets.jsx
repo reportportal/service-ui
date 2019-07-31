@@ -399,7 +399,7 @@ export const getWidgets = (formatMessage) => [
       <FormattedMessage
         id={'Widgets.Description.mostPopularPatterns'}
         defaultMessage={
-          'Shows information about TOP-15 most popular patterns within the specified previous launches.'
+          'Shows information about TOP-20 most popular patterns within the specified previous launches.'
         }
       />
     ),
