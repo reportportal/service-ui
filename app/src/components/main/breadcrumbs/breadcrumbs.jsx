@@ -35,7 +35,7 @@ export class Breadcrumbs extends Component {
   };
 
   state = {
-    expanded: false,
+    expanded: true,
   };
 
   onClickBreadcrumbItem = (idx) => {
@@ -96,6 +96,7 @@ export class Breadcrumbs extends Component {
               {this.renderSeparator(descriptor, i)}
               <Breadcrumb
                 descriptor={descriptor}
+                expanded={this.state.expanded}
                 onClick={(idx) => this.onClickBreadcrumbItem(idx)}
               />
               {this.renderCloseListView(descriptor, i)}
