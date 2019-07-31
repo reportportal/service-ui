@@ -144,13 +144,7 @@ export class PostIssueModal extends Component {
       id,
       integrationParameters: { defectFormFields },
     } = props.namedBtsIntegrations[pluginName][0];
-    const systemAuthConfig = {};
-
-    if (this.isJiraIntegration(pluginName)) {
-      const storedConfig = getSessionItem(`${props.userId}_settings`) || {};
-      systemAuthConfig.username = storedConfig.username;
-    }
-
+    const systemAuthConfig = this.getSystemAuthDefaultConfig(pluginName);
     const fields = this.initIntegrationFields(defectFormFields, systemAuthConfig, pluginName);
 
     this.state = {
@@ -173,7 +167,11 @@ export class PostIssueModal extends Component {
     }
 
     const { id, integrationParameters } = this.props.namedBtsIntegrations[pluginName][0];
-    const fields = this.initIntegrationFields(integrationParameters.defectFormFields);
+    const systemAuthConfig = this.getSystemAuthDefaultConfig(pluginName);
+    const fields = this.initIntegrationFields(
+      integrationParameters.defectFormFields,
+      systemAuthConfig,
+    );
 
     this.setState({
       pluginName,
@@ -206,6 +204,15 @@ export class PostIssueModal extends Component {
     return {
       confirmationWarning: this.props.intl.formatMessage(COMMON_LOCALE_KEYS.CLOSE_MODAL_WARNING),
     };
+  };
+
+  getSystemAuthDefaultConfig = (pluginName) => {
+    const systemAuthConfig = {};
+    if (this.isJiraIntegration(pluginName)) {
+      const storedConfig = getSessionItem(`${this.props.userId}_settings`) || {};
+      systemAuthConfig.username = storedConfig.username;
+    }
+    return systemAuthConfig;
   };
 
   getDefaultOptionValueKey = (pluginName) =>
