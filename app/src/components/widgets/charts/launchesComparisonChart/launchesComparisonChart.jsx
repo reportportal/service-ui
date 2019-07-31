@@ -4,6 +4,7 @@ import classNames from 'classnames/bind';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { connect } from 'react-redux';
 import * as d3 from 'd3-selection';
+import isEqual from 'fast-deep-equal';
 import ReactDOMServer from 'react-dom/server';
 import { TEST_ITEM_PAGE } from 'controllers/pages';
 import { defectTypesSelector } from 'controllers/project';
@@ -72,6 +73,12 @@ export class LaunchesComparisonChart extends Component {
   componentDidMount() {
     !this.props.isPreview && this.props.observer.subscribe('widgetResized', this.resizeChart);
     this.getConfig();
+  }
+
+  componentDidUpdate(prevProps) {
+    if (!isEqual(prevProps.widget, this.props.widget)) {
+      this.getConfig();
+    }
   }
 
   componentWillUnmount() {
