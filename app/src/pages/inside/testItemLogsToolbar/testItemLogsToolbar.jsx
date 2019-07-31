@@ -30,6 +30,10 @@ export class TestItemLogsToolbar extends Component {
     this.setMobileView(this.match);
   }
 
+  componentWillUnmount() {
+    this.match.removeListener(this.setMobileView);
+  }
+
   setMobileView = (media) =>
     media.matches !== this.state.isMobileView &&
     this.setState({
