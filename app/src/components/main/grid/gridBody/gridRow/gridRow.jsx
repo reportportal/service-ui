@@ -121,12 +121,7 @@ export class GridRow extends Component {
   highLightBlockClasses = `${cx('highlight')} ${cx('hide-highlight')}`;
 
   highLightGridRow() {
-    this.highlightBlockRef.current.scrollIntoView({
-      behavior: 'smooth',
-      block: 'start',
-      inline: 'nearest',
-    });
-
+    this.highlightBlockRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
     setTimeout(() => {
       this.props.rowHighlightingConfig.onGridRowHighlighted();
     }, LOG_MESSAGE_HIGHLIGHT_TIMEOUT);
