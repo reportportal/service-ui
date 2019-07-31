@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import ReactDOMServer from 'react-dom/server';
+import isEqual from 'fast-deep-equal';
 import classNames from 'classnames/bind';
 import { COLOR_FAILEDSKIPPEDTOTAL } from 'common/constants/colors';
 import { messages } from '../common/messages';
@@ -47,6 +48,12 @@ export class NonPassedTestCasesTrendChart extends Component {
   componentDidMount() {
     !this.props.isPreview && this.props.observer.subscribe('widgetResized', this.resizeChart);
     this.getConfig();
+  }
+
+  componentDidUpdate(prevProps) {
+    if (!isEqual(prevProps.widget, this.props.widget)) {
+      this.getConfig();
+    }
   }
 
   componentWillUnmount() {

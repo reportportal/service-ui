@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import ReactDOMServer from 'react-dom/server';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import classNames from 'classnames/bind';
+import isEqual from 'fast-deep-equal';
 import { COLOR_FAILED } from 'common/constants/colors';
 import { STATS_FAILED } from 'common/constants/statistics';
 import { FAILED } from 'common/constants/testStatuses';
@@ -48,6 +49,12 @@ export class FailedCasesTrendChart extends Component {
   componentDidMount() {
     !this.props.isPreview && this.props.observer.subscribe('widgetResized', this.resizeChart);
     this.getConfig();
+  }
+
+  componentDidUpdate(prevProps) {
+    if (!isEqual(prevProps.widget, this.props.widget)) {
+      this.getConfig();
+    }
   }
 
   componentWillUnmount() {

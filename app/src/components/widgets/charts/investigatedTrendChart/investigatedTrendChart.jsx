@@ -22,6 +22,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { intlShape, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
+import isEqual from 'fast-deep-equal';
 import { Component } from 'react';
 import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
 import {
@@ -103,6 +104,12 @@ export class InvestigatedTrendChart extends Component {
     this.props.observer.subscribe &&
       this.props.observer.subscribe('widgetResized', this.resizeChart);
     this.getConfig();
+  }
+
+  componentDidUpdate(prevProps) {
+    if (!isEqual(prevProps.widget, this.props.widget)) {
+      this.getConfig();
+    }
   }
 
   componentWillUnmount() {

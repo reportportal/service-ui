@@ -5,6 +5,7 @@ import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
 import moment from 'moment/moment';
 import * as d3 from 'd3-selection';
+import isEqual from 'fast-deep-equal';
 import ReactDOMServer from 'react-dom/server';
 import { TEST_ITEM_PAGE } from 'controllers/pages';
 import { defectTypesSelector, orderedContentFieldsSelector } from 'controllers/project';
@@ -85,6 +86,12 @@ export class LaunchStatisticsChart extends Component {
   componentDidMount() {
     !this.props.isPreview && this.props.observer.subscribe('widgetResized', this.resizeChart);
     this.getConfig();
+  }
+
+  componentDidUpdate(prevProps) {
+    if (!isEqual(prevProps.widget, this.props.widget)) {
+      this.getConfig();
+    }
   }
 
   componentWillUnmount() {
