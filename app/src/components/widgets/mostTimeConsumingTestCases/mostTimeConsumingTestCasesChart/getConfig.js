@@ -4,7 +4,7 @@ import {
   COLOR_TIMECONSUMING_BAR_GREEN,
 } from 'common/constants/colors';
 import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
-import { MostTimeConsumingTooltip } from '../mostTimeConsumingTooltip/index';
+import { MostTimeConsumingTooltip } from '../mostTimeConsumingTooltip';
 
 export const getConfig = ({
   content,

@@ -16,7 +16,7 @@ const cx = classNames.bind(styles);
 const localMessages = defineMessages({
   launchNameText: {
     id: 'TimeConsuming.launchNameText',
-    defaultMessage: 'LAUNCH NAME:',
+    defaultMessage: 'Launch name:',
   },
 });
 

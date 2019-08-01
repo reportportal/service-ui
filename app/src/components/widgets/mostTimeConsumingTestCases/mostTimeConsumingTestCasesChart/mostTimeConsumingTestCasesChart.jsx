@@ -5,7 +5,8 @@ import { injectIntl, intlShape } from 'react-intl';
 import { TEST_ITEM_PAGE, PROJECT_LOG_PAGE } from 'controllers/pages/constants';
 import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
 import { ALL } from 'common/constants/reservedFilterIds';
-import { C3Chart } from '../../charts/common/c3chart/index';
+import isEqual from 'fast-deep-equal';
+import { C3Chart } from '../../charts/common/c3chart';
 import styles from './mostTimeConsumingTestCasesChart.scss';
 import { MESSAGES } from '../../charts/common/constants';
 import { getConfig } from './getConfig';
@@ -42,6 +43,12 @@ export class MostTimeConsumingTestCasesChart extends Component {
     this.getConfig();
   }
 
+  componentDidUpdate(prevProps) {
+    if (!isEqual(prevProps.widget, this.props.widget)) {
+      this.getConfig();
+    }
+  }
+
   componentWillUnmount() {
     const { observer } = this.props;
 
@@ -76,7 +83,6 @@ export class MostTimeConsumingTestCasesChart extends Component {
       chartType: MODES_VALUES[CHART_MODES.BAR_VIEW],
       isPointsShow: false,
       messages: MESSAGES,
-      isCustomTooltip: true,
       testCaseClickHandler: this.testCaseClickHandler,
     };
 
