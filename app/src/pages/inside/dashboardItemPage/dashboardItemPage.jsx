@@ -136,46 +136,15 @@ export class DashboardItemPage extends Component {
     fullScreenMode: false,
   };
 
-  onConfirm = (widget, closeModal) => {
-    const {
-      intl: { formatMessage },
-      activeProject,
-      dashboard,
-    } = this.props;
+  componentDidMount() {
+    this.props.fetchDashboardAction();
+  }
 
-    return fetch(URLS.addDashboardWidget(activeProject, dashboard.id), {
-      method: 'put',
-      data: { addWidget: widget },
-    })
-      .then(() => {
-        const oldWidgets = dashboard.widgets;
-        const newWidgets = oldWidgets.map((item) => ({
-          ...item,
-          widgetPosition: {
-            ...item.widgetPosition,
-            positionY: item.widgetPosition.positionY + widget.widgetSize.height,
-          },
-        }));
-        newWidgets.unshift(widget);
-
-        return this.props.updateDashboardWidgetsAction({
-          ...this.props.dashboard,
-          widgets: newWidgets,
-        });
-      })
-      .then(() => {
-        this.props.hideScreenLockAction();
-        closeModal();
-        this.props.showNotification({
-          message: formatMessage(messages.addWidgetSuccess),
-          type: NOTIFICATION_TYPES.SUCCESS,
-        });
-      })
-      .catch((err) => {
-        this.props.hideScreenLockAction();
-        this.props.showNotification({ message: err.message, type: NOTIFICATION_TYPES.ERROR });
-      });
-  };
+  componentDidUpdate({ dashboard }) {
+    if (this.props.dashboard.id && this.props.dashboard.id !== dashboard.id) {
+      this.props.fetchDashboardAction();
+    }
+  }
 
   onDeleteDashboard = () => {
     const {
@@ -242,6 +211,47 @@ export class DashboardItemPage extends Component {
 
   getDashboardName = () => (this.props.dashboard && this.props.dashboard.name) || '';
 
+  addWidget = (widget, closeModal) => {
+    const {
+      intl: { formatMessage },
+      activeProject,
+      dashboard,
+    } = this.props;
+
+    return fetch(URLS.addDashboardWidget(activeProject, dashboard.id), {
+      method: 'put',
+      data: { addWidget: widget },
+    })
+      .then(() => {
+        const oldWidgets = dashboard.widgets;
+        const newWidgets = oldWidgets.map((item) => ({
+          ...item,
+          widgetPosition: {
+            ...item.widgetPosition,
+            positionY: item.widgetPosition.positionY + widget.widgetSize.height,
+          },
+        }));
+        newWidgets.unshift(widget);
+
+        return this.props.updateDashboardWidgetsAction({
+          ...this.props.dashboard,
+          widgets: newWidgets,
+        });
+      })
+      .then(() => {
+        this.props.hideScreenLockAction();
+        closeModal();
+        this.props.showNotification({
+          message: formatMessage(messages.addWidgetSuccess),
+          type: NOTIFICATION_TYPES.SUCCESS,
+        });
+      })
+      .catch((err) => {
+        this.props.hideScreenLockAction();
+        this.props.showNotification({ message: err.message, type: NOTIFICATION_TYPES.ERROR });
+      });
+  };
+
   toggleFullscreen = () => {
     this.props.tracking.trackEvent(DASHBOARD_PAGE_EVENTS.FULL_SCREEN_BTN);
     this.props.toggleFullScreenModeAction();
@@ -251,7 +261,7 @@ export class DashboardItemPage extends Component {
     this.props.showModalAction({
       id: 'widgetWizardModal',
       data: {
-        onConfirm: this.onConfirm,
+        onConfirm: this.addWidget,
         eventsInfo: {
           closeIcon: DASHBOARD_PAGE_EVENTS.CLOSE_ICON_ADD_WIDGET_MODAL,
           chooseWidgetType: DASHBOARD_PAGE_EVENTS.CHOOSE_WIDGET_TYPE_ADD_WIDGET_MODAL,
@@ -269,7 +279,7 @@ export class DashboardItemPage extends Component {
     this.props.showModalAction({
       id: 'addSharedWidgetModal',
       data: {
-        onConfirm: this.onConfirm,
+        onConfirm: this.addWidget,
         currentDashboard: this.props.dashboard,
       },
     });
@@ -296,6 +306,7 @@ export class DashboardItemPage extends Component {
       intl: { formatMessage },
       dashboard,
       fullScreenMode,
+      activeProject,
       changeFullScreenModeAction: changeFullScreenMode,
     } = this.props;
 
@@ -351,6 +362,9 @@ export class DashboardItemPage extends Component {
                 dashboard={dashboard}
                 isFullscreen={fullScreenMode}
                 showWidgetWizard={this.showWidgetWizard}
+                activeProject={activeProject}
+                showNotification={this.props.showNotification}
+                updateDashboardWidgetsAction={this.props.updateDashboardWidgetsAction}
               />
               {fullScreenMode && (
                 <i className={cx('icon-close')} onClick={this.toggleFullscreen}>

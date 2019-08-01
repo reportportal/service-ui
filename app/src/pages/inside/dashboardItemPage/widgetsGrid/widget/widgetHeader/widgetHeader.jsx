@@ -64,10 +64,11 @@ export class WidgetHeader extends Component {
   };
 
   renderMetaInfo = () =>
-    this.props.data.meta.map((item) => {
+    this.props.data.meta.map((item, index) => {
       const widgetMode = getWidgetModeByValue(item);
       return (
-        <div key={widgetMode} className={cx('meta-info')}>
+        // eslint-disable-next-line react/no-array-index-key
+        <div key={`${widgetMode}_${index}`} className={cx('meta-info')}>
           {widgetModeMessages[widgetMode]
             ? this.props.intl.formatMessage(widgetModeMessages[widgetMode])
             : widgetMode}
