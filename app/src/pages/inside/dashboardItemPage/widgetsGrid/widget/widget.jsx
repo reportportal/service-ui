@@ -239,7 +239,7 @@ export class Widget extends Component {
       id: 'deleteWidgetModal',
       data: {
         widget: this.state.widget,
-        onConfirm: () => this.props.onDelete(this.state.widget.id),
+        onConfirm: () => this.props.onDelete(this.props.widgetId),
       },
     });
   };
