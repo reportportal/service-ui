@@ -1748,7 +1748,7 @@
   "entityInputConditional.defaultPlaceholder": "Увядзiце iмя",
   "filterItem.isShared": "Панэль кіравання даступна.",
   "filterItem.sharedBy": "Панэль кіравання дададзена ў доступ {owner}",
-  "launchAnalysisModal.analyse": "Аналізаваць",
+  "launchAnalysisModal.analyze": "Аналізаваць",
   "launchAnalysisModal.baseOptions.allLaunches": "Усе запускі",
   "launchAnalysisModal.baseOptions.current": "Толькі бягучы запуск",
   "launchAnalysisModal.baseOptions.withSameName": "Запускі з аднолькавымі імёнамі",

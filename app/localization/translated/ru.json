@@ -1717,7 +1717,7 @@
   "administrateUsersPage.successMultiple": "Пользователи удалены",
   "administrateUsersPageToolbar.allUsers": "{count} пользователей выбрано",
   "entityInputConditional.defaultPlaceholder": "Введите имя",
-  "launchAnalysisModal.analyse": "Анализировать",
+  "launchAnalysisModal.analyze": "Анализировать",
   "launchAnalysisModal.baseOptions.allLaunches": "Все запуски",
   "launchAnalysisModal.baseOptions.current": "Только текущий запуск",
   "launchAnalysisModal.baseOptions.withSameName": "Запуски с одинаковыми именами",
