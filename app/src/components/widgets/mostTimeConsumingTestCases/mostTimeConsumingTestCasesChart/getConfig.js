@@ -1,9 +1,6 @@
 import { PERIOD_VALUES } from 'common/constants/statusPeriodValues';
-import {
-  COLOR_TIMECONSUMING_BAR_RED,
-  COLOR_TIMECONSUMING_BAR_GREEN,
-} from 'common/constants/colors';
 import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
+import * as COLORS from 'common/constants/colors';
 import { MostTimeConsumingTooltip } from '../mostTimeConsumingTooltip';
 
 export const getConfig = ({
@@ -21,8 +18,11 @@ export const getConfig = ({
     .sort((a, b) => b.duration - a.duration)
     .map((item, index) => ({ ...item, tickIndex: 30 - index, index }));
 
-  const getItemColor = (color, { index }) =>
-    index % 2 ? COLOR_TIMECONSUMING_BAR_GREEN : COLOR_TIMECONSUMING_BAR_RED;
+  const getItemColor = (color, { index }) => {
+    const status = data[index] && data[index].status;
+
+    return COLORS[`COLOR_${status}`];
+  };
 
   const dataClickHandler = (d) => {
     const targetItem = data.filter((item) => item.index === d.index)[0] || {};

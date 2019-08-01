@@ -20,5 +20,3 @@ export const COLOR_INVESTIGATED = '#87B87F';
 export const COLOR_BLACK_2 = '#393939';
 export const COLOR_WHITE_TWO = '#ffffff';
 export const COLOR_LAUNCHESQUANTITY = '#0f55ff';
-export const COLOR_TIMECONSUMING_BAR_RED = '#ed6c49';
-export const COLOR_TIMECONSUMING_BAR_GREEN = '#8ab77a';
