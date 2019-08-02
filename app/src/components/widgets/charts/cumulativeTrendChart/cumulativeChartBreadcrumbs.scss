@@ -4,10 +4,19 @@
   align-self: center;
   color: $COLOR--charcoal-grey;
   text-transform: uppercase;
-  font-family: $FONT-CONDBOLD;
+  font-size: 14px;
+  font-family: $FONT-SEMIBOLD;
 }
 
 .link {
   color: $COLOR--topaz;
   cursor: pointer;
+}
+
+.icon {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  fill:  $COLOR--charcoal-grey;
+  vertical-align: text-top;
 }
