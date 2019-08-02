@@ -27,16 +27,16 @@ export class EmptyWidgetGrid extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
     action: PropTypes.func,
-    isFullscreen: PropTypes.bool,
+    isDisable: PropTypes.bool,
   };
 
   static defaultProps = {
     action: () => {},
-    isFullscreen: false,
+    isDisable: false,
   };
 
   render() {
-    const { action, intl, isFullscreen } = this.props;
+    const { action, intl, isDisable } = this.props;
 
     return (
       <div className={cx('empty-widget')}>
@@ -44,7 +44,7 @@ export class EmptyWidgetGrid extends Component {
         <p className={cx('empty-widget-headline')}>
           {intl.formatMessage(messages.notMyDashboardEmptyHeader)}
         </p>
-        {!isFullscreen && (
+        {!isDisable && (
           <Fragment>
             <p className={cx('empty-widget-text')}>
               {intl.formatMessage(messages.dashboardEmptyText)}

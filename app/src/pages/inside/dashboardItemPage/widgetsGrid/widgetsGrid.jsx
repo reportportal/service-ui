@@ -34,7 +34,9 @@ export class WidgetsGrid extends Component {
     isModifiable: PropTypes.bool,
     showNotification: PropTypes.func.isRequired,
     updateDashboardWidgetsAction: PropTypes.func.isRequired,
-    showWidgetWizard: PropTypes.func.isRequired,
+    showWidgetWizard: PropTypes.func,
+    loading: PropTypes.bool, // TODO: add from state when action logic will migrate to sagas
+    isPrintMode: PropTypes.bool,
     dashboard: PropTypes.shape({
       widgets: PropTypes.array,
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
@@ -48,6 +50,8 @@ export class WidgetsGrid extends Component {
       widgets: [],
       id: '',
     },
+    showWidgetWizard: () => {},
+    isPrintMode: false,
   };
 
   constructor(props) {
@@ -189,6 +193,7 @@ export class WidgetsGrid extends Component {
               isFullscreen={this.props.isFullscreen}
               isModifiable={this.props.isModifiable}
               observer={this.observer}
+              isPrintMode={this.props.isPrintMode}
               onDelete={this.onDeleteWidget}
             />
           </div>
@@ -201,6 +206,7 @@ export class WidgetsGrid extends Component {
 
   renderWidgetsGridLayout = () => (
     <ResponsiveGridLayout
+      observer={this.observer}
       rowHeight={rowHeight}
       breakpoints={breakpoints}
       onBreakpointChange={this.onBreakpointChange}
@@ -221,6 +227,7 @@ export class WidgetsGrid extends Component {
     const {
       dashboard: { widgets = [] },
       isFullscreen,
+      isPrintMode,
     } = this.props;
 
     if (widgets.length) {
@@ -233,7 +240,12 @@ export class WidgetsGrid extends Component {
       );
     }
 
-    return <EmptyWidgetGrid action={this.props.showWidgetWizard} isFullscreen={isFullscreen} />;
+    return (
+      <EmptyWidgetGrid
+        action={this.props.showWidgetWizard}
+        isDisable={isFullscreen || isPrintMode}
+      />
+    );
   };
 
   render() {

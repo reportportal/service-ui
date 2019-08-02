@@ -12,12 +12,27 @@
     position: relative;
     transition: height 200ms ease;
     overflow: hidden;
+    @media print {
+      transition: none;
+      height: 100% !important;
+      width: 100% !important;
+    }
   }
 
   .react-grid-item {
     transition: all 200ms ease;
     transition-property: left, top;
     background-color: $COLOR--white-two;
+    @media print {
+      float: left;
+      position: relative !important;
+      margin: 10px;
+      top: 0px !important;
+      left: 0px !important;
+      transform: none !important;
+      transition: none;
+      page-break-inside: avoid;
+    }
   }
   .react-grid-item.cssTransforms {
     transition-property: transform;

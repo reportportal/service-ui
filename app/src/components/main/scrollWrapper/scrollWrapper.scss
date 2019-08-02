@@ -7,6 +7,9 @@
       opacity: 0.5;
     }
   }
+  @media print {
+    max-height: none !important;
+  }
 }
 .track-horizontal {
   right: 2px;
@@ -43,6 +46,11 @@
     flex-direction: column;
     justify-content: stretch;
   }
+  @media print {
+    position: relative !important;
+    max-height: none !important;
+    height: calc(100% + 17px) !important;
+  }
 }
 
 .back-to-top {
@@ -67,6 +75,10 @@
   @media (max-width: $SCREEN_XS_MAX) {
     margin-right: 0px;
     margin-left: 0px;
+  }
+
+  @media print {
+    display: none;
   }
 }
 .back-to-top-button {
