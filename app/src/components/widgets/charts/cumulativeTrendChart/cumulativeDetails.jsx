@@ -162,10 +162,20 @@ export class CumulativeDetails extends PureComponent {
     loading: true,
   };
 
+  componentDidMount() {
+    this.fetchLaunches();
+  }
+
   componentDidUpdate(prevProps) {
     if (!isEqual(prevProps.widget.content, this.props.widget.content)) {
       this.fetchLaunches();
     }
+  }
+
+  componentWillUnmount() {
+    this.setState({
+      launches: [],
+    });
   }
 
   getLaunchIds = () => {
@@ -265,6 +275,7 @@ export class CumulativeDetails extends PureComponent {
   fetchLaunches = () => {
     this.setState({
       loading: true,
+      launches: [],
     });
     fetch(URLS.launchByIds(this.props.activeProject, this.getLaunchIds()), {
       method: 'get',
