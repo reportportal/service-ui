@@ -1,7 +1,7 @@
 import { PERIOD_VALUES } from 'common/constants/statusPeriodValues';
 import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
 import * as COLORS from 'common/constants/colors';
-import { MostTimeConsumingTooltip } from '../mostTimeConsumingTooltip';
+import { createMostTimeConsumingTooltipRenderer } from '../createMostTimeConsumingTooltipRenderer';
 
 export const getConfig = ({
   content,
@@ -25,7 +25,7 @@ export const getConfig = ({
   };
 
   const dataClickHandler = (d) => {
-    const targetItem = data.filter((item) => item.index === d.index)[0] || {};
+    const targetItem = data.find((item) => item.index === d.index) || {};
 
     testCaseClickHandler(targetItem.id);
   };
@@ -92,7 +92,7 @@ export const getConfig = ({
       show: true,
       grouped: false,
       position: positionCallback,
-      contents: MostTimeConsumingTooltip(data),
+      contents: createMostTimeConsumingTooltipRenderer(data),
     },
     size: {
       height,
