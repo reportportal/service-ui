@@ -34,7 +34,6 @@ export class GridRow extends Component {
     excludeFromSelection: PropTypes.arrayOf(PropTypes.object),
     gridRowClassName: PropTypes.string,
     level: PropTypes.number,
-    isSomeRowHighlighted: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -54,7 +53,6 @@ export class GridRow extends Component {
     excludeFromSelection: [],
     gridRowClassName: '',
     level: 0,
-    isSomeRowHighlighted: false,
   };
 
   state = {
@@ -66,7 +64,7 @@ export class GridRow extends Component {
   componentDidMount() {
     this.handleAccordion();
 
-    if (this.props.isSomeRowHighlighted && this.state.updateHighlight) {
+    if (!!this.props.rowHighlightingConfig.highlightedRowId && this.state.updateHighlight) {
       // eslint-disable-next-line
       this.setState({ updateHighlight: false });
     }
