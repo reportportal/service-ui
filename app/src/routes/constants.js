@@ -11,6 +11,7 @@ import { PluginsPage } from 'pages/admin/pluginsPage';
 import { ApiPage } from 'pages/inside/apiPage';
 import { DashboardPage } from 'pages/inside/dashboardPage';
 import { DashboardItemPage } from 'pages/inside/dashboardItemPage';
+import { DashboardPrintPage } from 'pages/inside/dashboardItemPage/dashboardPrintPage';
 import { FiltersPage } from 'pages/inside/filtersPage';
 import { LaunchesPage } from 'pages/inside/launchesPage';
 import { ProfilePage } from 'pages/inside/profilePage';
@@ -46,6 +47,7 @@ export const pageRendering = {
   API_PAGE: { component: ApiPage, layout: AppLayout },
   PROJECT_DASHBOARD_PAGE: { component: DashboardPage, layout: AppLayout },
   PROJECT_DASHBOARD_ITEM_PAGE: { component: DashboardItemPage, layout: AppLayout },
+  PROJECT_DASHBOARD_PRINT_PAGE: { component: DashboardPrintPage, layout: EmptyLayout },
   PROJECT_FILTERS_PAGE: { component: FiltersPage, layout: AppLayout },
   [LAUNCHES_PAGE]: { component: LaunchesPage, layout: AppLayout },
   PROJECT_LAUNCHES_PAGE: { component: LaunchesPage, layout: AppLayout },

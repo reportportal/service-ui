@@ -52,6 +52,7 @@ export class WidgetHeader extends Component {
     onDelete: PropTypes.func,
     onEdit: PropTypes.func,
     customClass: PropTypes.string,
+    isPrintMode: PropTypes.bool,
   };
   static defaultProps = {
     data: {},
@@ -61,6 +62,7 @@ export class WidgetHeader extends Component {
     onDelete: () => {},
     onEdit: () => {},
     customClass: null,
+    isPrintMode: false,
   };
 
   renderMetaInfo = () =>
@@ -87,6 +89,7 @@ export class WidgetHeader extends Component {
       onDelete,
       onEdit,
       customClass,
+      isPrintMode,
     } = this.props;
     return (
       <div className={cx('widget-header')}>
@@ -126,21 +129,23 @@ export class WidgetHeader extends Component {
             {this.renderMetaInfo()}
           </div>
         </div>
-        <div className={customClass}>
-          <div className={cx('controls-block')}>
-            <div className={cx('control', 'mobile-hide')} onClick={onEdit}>
-              {data.owner === userId && Parser(PencilIcon)}
-            </div>
-            <div className={cx('control')} onClick={onRefresh}>
-              {Parser(RefreshIcon)}
-            </div>
-            {canDeleteWidget(userRole, projectRole, userId === data.owner) && (
-              <div className={cx('control', 'mobile-hide')} onClick={onDelete}>
-                {Parser(CrossIcon)}
+        {!isPrintMode && (
+          <div className={customClass}>
+            <div className={cx('controls-block')}>
+              <div className={cx('control', 'mobile-hide')} onClick={onEdit}>
+                {data.owner === userId && Parser(PencilIcon)}
               </div>
-            )}
+              <div className={cx('control')} onClick={onRefresh}>
+                {Parser(RefreshIcon)}
+              </div>
+              {canDeleteWidget(userRole, projectRole, userId === data.owner) && (
+                <div className={cx('control', 'mobile-hide')} onClick={onDelete}>
+                  {Parser(CrossIcon)}
+                </div>
+              )}
+            </div>
           </div>
-        </div>
+        )}
       </div>
     );
   }

@@ -4,6 +4,10 @@
   height: 100%;
   min-width: 320px;
   overflow: hidden;
+  @media print {
+    height: auto;
+    overflow: auto;
+  }
 }
 .slide-container {
   position: relative;
@@ -14,6 +18,9 @@
 
   &.side-menu-opened {
     left: 200px;
+  }
+  @media print {
+    height: auto;
   }
 }
 .sidebar-container {
@@ -31,6 +38,10 @@
   @media (max-width: $SCREEN_XS_MAX) {
     width: 200px;
     left: -200px;
+  }
+
+  @media print {
+    display: none;
   }
 }
 .corner-area {
@@ -64,6 +75,11 @@
   @media (max-width: $SCREEN_XS_MAX) {
     left: 0;
   }
+
+  @media print {
+    position: relative;
+    left: 0;
+  }
 }
 .sidebar-close-area {
   position: absolute;
@@ -88,6 +104,10 @@
   @media (max-width: $SCREEN_XS_MAX) {
     height: 110px;
     padding: 0;
+  }
+
+  @media print {
+    display: none;
   }
 }
 .page-container {

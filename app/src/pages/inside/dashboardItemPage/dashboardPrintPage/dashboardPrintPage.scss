@@ -1,0 +1,43 @@
+.print-layout {
+  width: 210mm;
+  margin: 0 auto;
+  @media print {
+    width: 100%;
+  }
+}
+
+.print-button-container {
+  height: 10mm;
+  text-align: center;
+  @media print {
+    display: none;
+  }
+}
+
+.page {
+  background-color: $COLOR--white-two;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  padding: 11mm;
+  @media print {
+    padding: 0;
+    box-shadow: none;
+  }
+}
+.dashboard-printed-header {
+  text-align: left;
+  padding: 10px;
+}
+
+.title {
+  padding: 10px 0px;
+  font-family: $FONT-CONDBOLD;
+  letter-spacing: 1px;
+  font-size: 18px;
+  color: $COLOR--brownish-grey;
+}
+
+.title-value {
+  color: $COLOR--black-2;
+  padding-left: 10px;
+  text-transform: uppercase;
+}
