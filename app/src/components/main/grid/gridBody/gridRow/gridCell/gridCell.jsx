@@ -44,6 +44,7 @@ export class GridCell extends PureComponent {
 
   render() {
     const {
+      id,
       component,
       refFunction,
       value,
@@ -61,6 +62,7 @@ export class GridCell extends PureComponent {
         refFunction={refFunction}
         title={title}
         value={formatter(value)}
+        id={id}
         customProps={customProps}
         expanded={expanded}
         toggleExpand={toggleExpand}

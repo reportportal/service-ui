@@ -4,6 +4,7 @@ import classNames from 'classnames/bind';
 import { InputCheckbox } from 'components/inputs/inputCheckbox';
 import { Legend } from 'components/widgets/charts/common/legend';
 import { CumulativeChartBreadcrumbs } from './cumulativeChartBreadcrumbs';
+
 import styles from './cumulativeTrendChart.scss';
 
 const cx = classNames.bind(styles);
@@ -13,6 +14,7 @@ export class CumulativeChartLegend extends PureComponent {
     onChangeUserSettings: PropTypes.func.isRequired,
     attributes: PropTypes.array,
     activeAttribute: PropTypes.object,
+    activeAttributes: PropTypes.array,
     clearAttributes: PropTypes.func,
     userSettings: PropTypes.object,
   };
@@ -20,6 +22,7 @@ export class CumulativeChartLegend extends PureComponent {
   static defaultProps = {
     attributes: [],
     activeAttribute: null,
+    activeAttributes: [],
     clearAttributes: () => {},
     userSettings: {},
   };
@@ -41,13 +44,20 @@ export class CumulativeChartLegend extends PureComponent {
   };
 
   render() {
-    const { attributes, activeAttribute, clearAttributes, userSettings } = this.props;
+    const {
+      attributes,
+      activeAttribute,
+      activeAttributes,
+      clearAttributes,
+      userSettings,
+    } = this.props;
     const { defectTypes, showTotal, separate, percentage } = userSettings;
     return (
       <div className={cx('cumulative-trend-chart')}>
         <CumulativeChartBreadcrumbs
           attributes={attributes}
           activeAttribute={activeAttribute}
+          activeAttributes={activeAttributes}
           clearAttributes={clearAttributes}
         />
 

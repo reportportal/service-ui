@@ -26,3 +26,5 @@ export const getStatisticsStatuses = (type) => {
   }
   return [];
 };
+
+export const getPassingRate = (passed, total) => `${Math.round(100 * passed / total)}%`;
