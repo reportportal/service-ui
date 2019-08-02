@@ -1,5 +1,8 @@
 import axios, { CancelToken } from 'axios';
+import { redirect } from 'redux-first-router';
 import { isAuthorizedSelector, logoutAction } from 'controllers/auth';
+import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
+import { LOGIN_PAGE } from 'controllers/pages';
 import { stringify } from 'qs';
 
 export const ERROR_CANCELED = 'REQUEST_CANCELED';
@@ -48,7 +51,21 @@ export const initAuthInterceptor = (store) => {
     (error) => {
       if (error.response && error.response.status === 401) {
         const isAuthorized = isAuthorizedSelector(store.getState());
-        isAuthorized && store.dispatch(logoutAction());
+        if (isAuthorized) {
+          store.dispatch(logoutAction());
+        } else {
+          const isBadToken =
+            error.response.data.error && error.response.data.error.indexOf('token') !== -1;
+          if (isBadToken) {
+            store.dispatch(
+              showNotification({
+                message: error.response.statusText,
+                type: NOTIFICATION_TYPES.ERROR,
+              }),
+            );
+          }
+          store.dispatch(redirect({ type: LOGIN_PAGE }));
+        }
       }
       return Promise.reject(error);
     },
