@@ -38,24 +38,27 @@ const messages = defineMessages({
   },
 });
 
-const NameColumn = ({ className, ...rest }) => {
+const NameColumn = ({ className, value, customProps }) => {
   const ownLinkParams = {
     page: TEST_ITEM_PAGE,
-    payload: rest.customProps.linkPayload,
+    payload: customProps.linkPayload,
   };
 
   return (
     <div className={cx('name-col', className)}>
-      <NameLink itemId={rest.value.id} ownLinkParams={ownLinkParams} className={cx('name-link')}>
-        <span title={rest.value.name} className={cx('name')}>
-          {`${formatItemName(rest.value.name)} `}
+      <NameLink itemId={value.id} ownLinkParams={ownLinkParams} className={cx('name-link')}>
+        <span title={value.name} className={cx('name')}>
+          {`${formatItemName(value.name)} `}
+          {value.number && `#${value.number}`}
         </span>
       </NameLink>
     </div>
   );
 };
 NameColumn.propTypes = {
+  value: PropTypes.object.isRequired,
   className: PropTypes.string.isRequired,
+  customProps: PropTypes.object.isRequired,
 };
 
 const StatisticsColumn = ({ id, className, value, customProps: { linkPayload, statsKey } }) => {
@@ -262,6 +265,9 @@ export class CumulativeDetails extends PureComponent {
 
   columns = this.getColumns();
 
+  sortLaunchesByFailedItems = (launches) =>
+    launches.sort((a, b) => b.statistics.executions.failed - a.statistics.executions.failed);
+
   fetchLaunches = () => {
     this.setState({
       loading: true,
@@ -270,8 +276,9 @@ export class CumulativeDetails extends PureComponent {
       method: 'get',
     })
       .then((res) => {
+        const launches = this.sortLaunchesByFailedItems(res.content);
         this.setState({
-          launches: res.content,
+          launches,
           loading: false,
         });
       })
