@@ -133,7 +133,7 @@ export class MostTimeConsumingTestCasesChart extends Component {
       },
       navigate,
     } = this.props;
-    const targetElement = result.filter((el) => el.id === id)[0] || {};
+    const targetElement = result.find((el) => el.id === id) || {};
     const { path } = targetElement;
     let itemLink;
     let pageType;
