@@ -1,6 +1,8 @@
 import { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
+import Parser from 'html-react-parser';
+import RightArrowIcon from 'common/img/arrow-right-inline.svg';
 import styles from './cumulativeChartBreadcrumbs.scss';
 
 const cx = classNames.bind(styles);
@@ -9,12 +11,16 @@ export class CumulativeChartBreadcrumbs extends PureComponent {
   static propTypes = {
     attributes: PropTypes.array,
     activeAttribute: PropTypes.object,
+    activeAttributes: PropTypes.array,
     clearAttributes: PropTypes.func,
+    isStatic: PropTypes.boolean,
   };
   static defaultProps = {
     attributes: [],
     activeAttribute: {},
+    activeAttributes: [],
     clearAttributes: () => {},
+    isStatic: false,
   };
 
   onClickHome = () => {
@@ -22,25 +28,28 @@ export class CumulativeChartBreadcrumbs extends PureComponent {
   };
 
   render() {
-    const { attributes, activeAttribute } = this.props;
+    const { attributes, activeAttribute, activeAttributes, isStatic } = this.props;
 
     return (
-      <div className={cx('container')}>
-        {attributes.map((attr, i) => {
-          if (activeAttribute && activeAttribute.key === attr) {
-            return (
-              <span key={attr}>
-                <span className={cx('link')} onClick={this.onClickHome}>
-                  {attr}
-                </span>{' '}
-                / {activeAttribute.value}
+      <div className={cx('container', { static: isStatic })}>
+        {activeAttribute
+          ? activeAttributes.map((attr, i) => (
+              <span key={attr.key}>
+                {isStatic ? (
+                  attr.key
+                ) : (
+                  <span className={cx('link')} onClick={this.onClickHome}>
+                    {attr.key}
+                  </span>
+                )}
+                {': '}
+                {attr.value}{' '}
+                {i + 1 < activeAttributes.length && (
+                  <i className={cx('icon')}>{Parser(RightArrowIcon)}</i>
+                )}
               </span>
-            );
-          } else if (i === 0) {
-            return <span key={attr}>{attr}</span>;
-          }
-          return '';
-        })}
+            ))
+          : attributes[0]}
       </div>
     );
   }

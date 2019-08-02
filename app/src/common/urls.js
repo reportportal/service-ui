@@ -58,6 +58,7 @@ export const URLS = {
 
   launch: (activeProject, id) => `${urlBase}${activeProject}/launch/${id}`,
   launchStatus: (activeProject, ids) => `${urlBase}${activeProject}/launch/status?ids=${ids}`,
+  launchByIds: (activeProject, ids) => `${urlBase}${activeProject}/launch?filter.in.id=${ids}`,
   launchAttributeKeysSearch: (activeProject) =>
     `${urlBase}${activeProject}/launch/attribute/keys?filter.cnt.attributeKey=`,
   launchAttributeValuesSearch: (activeProject, key = '') =>

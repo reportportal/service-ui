@@ -192,6 +192,7 @@ export class GridRow extends Component {
                 refFunction={column.maxHeight ? this.setupRef : null}
                 mobileWidth={column.mobileWidth}
                 value={value}
+                id={column.id}
                 align={column.align}
                 component={column.component}
                 formatter={column.formatter}
