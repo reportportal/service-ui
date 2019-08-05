@@ -99,9 +99,9 @@ export class HistoryItem extends Component {
     const ticket = getTicketUrlId(value);
 
     return ticket ? (
-      <Link className={cx('link')} to={ticket.url} target="_blank">
+      <a className={cx('link')} href={ticket.url} target="_blank">
         {ticket.id}
-      </Link>
+      </a>
     ) : (
       value
     );
