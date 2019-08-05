@@ -95,13 +95,29 @@ export class HistoryItem extends Component {
     }
   }
 
-  renderTicketValue = (value) => {
-    const ticket = getTicketUrlId(value);
+  renderTicketValue = (value = '') => {
+    const tickets = value ? value.split(',').map((item) => getTicketUrlId(item)) : '';
 
-    return ticket ? (
-      <a className={cx('link')} href={ticket.url} target="_blank">
-        {ticket.id}
-      </a>
+    return tickets.length > 0 ? (
+      <Fragment>
+        {tickets.map((ticket, i) => {
+          const separator = i < tickets.length - 1 ? ',' : '';
+          const ticketId = ticket.id.trim();
+
+          return (
+            <span key={ticketId}>
+              {ticket ? (
+                <a className={cx('link')} href={ticket.url} target="_blank">
+                  {ticketId}
+                </a>
+              ) : (
+                <span>{ticket}</span>
+              )}
+              <span>{separator}</span>
+            </span>
+          );
+        })}
+      </Fragment>
     ) : (
       value
     );
