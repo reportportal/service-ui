@@ -46,14 +46,14 @@ export const withPagination = ({
       size: undefined,
       sortingString: null,
       totalElements: 0,
-      totalPages: 1,
+      totalPages: undefined,
       updatePagination: () => {},
     };
 
     componentDidUpdate() {
-      const totalPages = this.props.totalPages || 1;
-      if (this.props.page > totalPages) {
-        this.changePaginationOptions({ page: totalPages });
+      if (this.props.totalPages === undefined) return;
+      if (this.props.page > this.props.totalPages) {
+        this.changePaginationOptions({ page: this.props.totalPages });
       }
     }
     changePageHandler = (page) => {
@@ -73,7 +73,7 @@ export const withPagination = ({
         <WrappedComponent
           activePage={page}
           itemCount={totalElements}
-          pageCount={totalPages}
+          pageCount={totalPages || 1}
           pageSize={size}
           onChangePage={this.changePageHandler}
           onChangePageSize={this.changeSizeHandler}
