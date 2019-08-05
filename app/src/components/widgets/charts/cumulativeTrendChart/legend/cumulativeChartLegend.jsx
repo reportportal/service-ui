@@ -5,7 +5,7 @@ import { InputCheckbox } from 'components/inputs/inputCheckbox';
 import { Legend } from 'components/widgets/charts/common/legend';
 import { CumulativeChartBreadcrumbs } from './cumulativeChartBreadcrumbs';
 
-import styles from './cumulativeTrendChart.scss';
+import styles from '../cumulativeTrendChart.scss';
 
 const cx = classNames.bind(styles);
 

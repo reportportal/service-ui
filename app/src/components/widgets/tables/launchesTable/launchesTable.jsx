@@ -29,7 +29,7 @@ import { StatisticsLink } from 'pages/inside/common/statisticsLink';
 import { DefectLink } from 'pages/inside/common/defectLink';
 import { formatStatus } from 'common/utils/localizationUtils';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
-import { getStatisticsStatuses } from './utils';
+import { getStatisticsStatuses } from '../components/utils';
 import {
   STATS_SI,
   STATS_AB,

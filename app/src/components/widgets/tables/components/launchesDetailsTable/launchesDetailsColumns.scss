@@ -1,0 +1,42 @@
+.name-col {
+  width: 25%;
+}
+
+.name-link {
+  font-family: $FONT-SEMIBOLD;
+  font-size: 14px;
+  color: $COLOR--windows-blue;
+  text-decoration: none;
+  word-break: break-all;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    font-size: 16px;
+  }
+}
+
+.name {
+  word-break: break-all;
+
+  @supports (word-break: break-word) {
+    word-break: break-word;
+  }
+}
+
+.statistics-col {
+  width: 6.5%;
+}
+
+.passing-rate-col {
+  width: 8%;
+  font-size: 13px;
+  font-family: $FONT-SEMIBOLD;
+}
+
+.defect-type {
+  display: inline-block;
+  min-width: 90px;
+
+  &:not(:first-child) {
+    margin-left: 10px;
+  }
+}

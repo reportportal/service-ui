@@ -53,7 +53,7 @@ export class ChartJS extends PureComponent {
       this.chart.update(config);
     } else {
       this.chart = this.generateChart(config);
-      this.props.onChartCreated(this.chart, this.canvas);
+      this.props.onChartCreated(this.canvas);
     }
   }
 
@@ -73,9 +73,7 @@ export class ChartJS extends PureComponent {
       }
 
       const chartElement = chartObj.getElementAtEvent(event);
-      if (chartElement.length) {
-        this.props.onChartElementClick(chartElement[0]);
-      }
+      this.props.onChartElementClick(chartElement[0]);
     };
 
     return chartObj;
