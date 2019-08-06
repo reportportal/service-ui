@@ -12,8 +12,13 @@ import {
   addFilteringFieldToConditions,
   updateFilterOrdersAction,
 } from 'controllers/filter';
-import { filterIdSelector } from 'controllers/pages';
-import { fetchLaunchesWithParamsAction, fetchLaunchesAction } from 'controllers/launch';
+import { filterIdSelector, updatePagePropertiesAction } from 'controllers/pages';
+import {
+  fetchLaunchesWithParamsAction,
+  fetchLaunchesAction,
+  queryParametersSelector,
+  NAMESPACE,
+} from 'controllers/launch';
 import { debounce } from 'common/utils';
 import { hideFilterOnLaunchesAction } from 'controllers/project';
 import { isEmptyValue } from 'common/utils/isEmptyValue';
@@ -21,12 +26,14 @@ import { PAGE_KEY } from 'controllers/pagination';
 import { createFilterQuery } from 'components/filterEntities/containers/utils';
 import { SORTING_ASC, SORTING_DESC, formatSortingString, SORTING_KEY } from 'controllers/sorting';
 import { ENTITY_START_TIME, ENTITY_NUMBER } from 'components/filterEntities/constants';
+import { createNamespacedQuery, mergeNamespacedQuery } from 'common/utils/routingUtils';
 
 @connect(
   (state) => ({
     launchFilters: launchFiltersSelector(state),
     activeFilterId: filterIdSelector(state),
     activeFilter: activeFilterSelector(state),
+    namespacedQuery: queryParametersSelector(state),
   }),
   {
     changeActiveFilterAction,
@@ -37,6 +44,7 @@ import { ENTITY_START_TIME, ENTITY_NUMBER } from 'components/filterEntities/cons
     removeLaunchesFilterAction,
     createFilter: createFilterAction,
     updateFilterOrders: updateFilterOrdersAction,
+    updatePageProperties: updatePagePropertiesAction,
   },
 )
 export class LaunchFiltersContainer extends Component {
@@ -44,6 +52,7 @@ export class LaunchFiltersContainer extends Component {
     launchFilters: PropTypes.array,
     activeFilterId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     activeFilter: PropTypes.object,
+    namespacedQuery: PropTypes.object,
     render: PropTypes.func.isRequired,
     changeActiveFilterAction: PropTypes.func,
     fetchLaunchesWithParamsAction: PropTypes.func,
@@ -54,12 +63,14 @@ export class LaunchFiltersContainer extends Component {
     createFilter: PropTypes.func,
     onChange: PropTypes.func,
     updateFilterOrders: PropTypes.func,
+    updatePageProperties: PropTypes.func,
   };
 
   static defaultProps = {
     launchFilters: [],
     activeFilter: null,
     activeFilterId: null,
+    namespacedQuery: '',
     changeActiveFilterAction: () => {},
     fetchLaunchesWithParamsAction: () => {},
     updateFilterConditionsAction: () => {},
@@ -69,6 +80,7 @@ export class LaunchFiltersContainer extends Component {
     createFilter: () => {},
     onChange: () => {},
     updateFilterOrders: () => {},
+    updatePageProperties: () => {},
   };
 
   state = {
@@ -154,7 +166,7 @@ export class LaunchFiltersContainer extends Component {
 
   updateSorting = (sortObject) => {
     const { sortingColumn, sortingDirection } = sortObject;
-    const { activeFilter, updateFilterOrders, activeFilterId } = this.props;
+    const { activeFilter, namespacedQuery, updateFilterOrders, activeFilterId } = this.props;
     const sortingString = formatSortingString([sortingColumn, ENTITY_NUMBER], sortingDirection);
     if (activeFilter) {
       const { orders } = activeFilter;
@@ -170,9 +182,18 @@ export class LaunchFiltersContainer extends Component {
         ...sortObject,
       }));
     }
-    this.props.fetchLaunchesWithParamsAction({
-      [SORTING_KEY]: sortingString,
-    });
+    this.props.updatePageProperties(
+      createNamespacedQuery(
+        mergeNamespacedQuery(
+          namespacedQuery,
+          {
+            [SORTING_KEY]: sortingString,
+          },
+          NAMESPACE,
+        ),
+        NAMESPACE,
+      ),
+    );
   };
 
   handleSortingChange = (newSortingColumn) => {

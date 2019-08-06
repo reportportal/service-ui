@@ -27,6 +27,7 @@ export {
   launchDistinctSelector,
   allLaunchesLikSelector,
   latestLaunchesLinkSelector,
+  queryParametersSelector,
 } from './selectors';
 export { launchReducer } from './reducer';
 export { launchSagas } from './sagas';
