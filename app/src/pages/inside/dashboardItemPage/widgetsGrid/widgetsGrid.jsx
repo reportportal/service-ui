@@ -206,6 +206,7 @@ export class WidgetsGrid extends Component {
   renderWidgetsGridLayout = () => (
     <ResponsiveGridLayout
       observer={this.observer}
+      isFullscreen={this.props.isFullscreen}
       rowHeight={rowHeight}
       breakpoints={breakpoints}
       onBreakpointChange={this.onBreakpointChange}
@@ -231,7 +232,7 @@ export class WidgetsGrid extends Component {
 
     if (widgets.length) {
       return isFullscreen ? (
-        <ScrollWrapper autoHeight autoHeightMax={window.screen.height} hideTracksWhenNotNeeded>
+        <ScrollWrapper autoHeight autoHeightMax={window.innerHeight} hideTracksWhenNotNeeded>
           {this.renderWidgetsGridLayout()}
         </ScrollWrapper>
       ) : (
