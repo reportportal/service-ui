@@ -221,6 +221,7 @@ export class LaunchFiltersToolbar extends Component {
               onSelectFilter={onSelectFilter}
               onRemoveFilter={onRemoveFilter}
               intl={intl}
+              allLatest={launchDistinct}
             />
           </div>
           {!!activeFilter &&
