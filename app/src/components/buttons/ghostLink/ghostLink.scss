@@ -90,6 +90,11 @@
       margin: auto 0 auto 5px;
     }
   }
+
+  svg {
+    width: 20px;
+    height: 20px;
+  }
 }
 .mobile-minified {
   @media (max-width: $SCREEN_XS_MAX) {
