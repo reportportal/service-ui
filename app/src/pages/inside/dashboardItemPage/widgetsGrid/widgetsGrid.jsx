@@ -35,7 +35,6 @@ export class WidgetsGrid extends Component {
     showNotification: PropTypes.func.isRequired,
     updateDashboardWidgetsAction: PropTypes.func.isRequired,
     showWidgetWizard: PropTypes.func,
-    loading: PropTypes.bool, // TODO: add from state when action logic will migrate to sagas
     isPrintMode: PropTypes.bool,
     dashboard: PropTypes.shape({
       widgets: PropTypes.array,
