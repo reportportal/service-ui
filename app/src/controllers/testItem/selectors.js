@@ -13,6 +13,7 @@ import {
   testItemIdsSelector,
   searchStringSelector,
   querySelector,
+  filterIdSelector,
 } from 'controllers/pages';
 import { activeProjectSelector } from 'controllers/user';
 import { activeFilterSelector } from 'controllers/filter';
@@ -109,11 +110,12 @@ export const breadcrumbsSelector = createSelector(
   testItemIdsArraySelector,
   pagePropertiesSelector,
   debugModeSelector,
-  (projectId, filter, parentItems, testItemIds, query, debugMode) => {
+  filterIdSelector,
+  (projectId, filter, parentItems, testItemIds, query, debugMode, filterCategory) => {
     const queryNamespacesToCopy = [LAUNCH_NAMESPACE];
     let isListViewExist = false;
-    const filterId = (filter && filter.id) || ALL;
-    const filterName = (filter && filter.name) || ALL;
+    const filterId = (filter && filter.id) || filterCategory;
+    const filterName = (filter && filter.name) || filterCategory;
     const descriptors = [
       {
         id: filterId,
