@@ -621,6 +621,7 @@
   "ForgotPasswordForm.emailPlaceholder": "Введите email",
   "ForgotPasswordForm.sendEmail": "Отправить письмо",
   "ForgotPasswordForm.successSendEmail": "Инструкции по восстановлению пароля отправлены на электронный адрес {email}",
+  "Fullscreen.exitNote": "Нажмите <b>Esc</b>, чтобы выйти из полноэкранного режима",
   "GeneralInfo.launchesPerWeek": "среднее количество запусков в неделю",
   "GeneralInfo.launchesQuantity": "запуск(а/ов)",
   "GeneralInfo.uniqueTickets": "отправлена уникальная ошибка",

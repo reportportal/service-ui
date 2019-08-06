@@ -2,7 +2,7 @@ import React, { Component, Fragment } from 'react';
 import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import Fullscreen from 'react-full-screen';
+import { Fullscreen } from 'components/containers/fullscreen';
 import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
