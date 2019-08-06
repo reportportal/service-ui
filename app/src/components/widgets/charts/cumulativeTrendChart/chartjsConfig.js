@@ -144,6 +144,9 @@ const getChartOptions = (widget, options) => {
             ? formatMessage(messages[dataset.label])
             : dataset.label;
           const value = dataset.data[tooltipItem.index];
+          if (!value) {
+            return '';
+          }
           const totalValue = totalDataset.data[tooltipItem.index];
           const percentageValue = -(-value / totalValue * 100).toFixed(2);
           if (percentage) {
