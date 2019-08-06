@@ -33,7 +33,6 @@ export class InputConditional extends Component {
     onBlur: PropTypes.func,
     onKeyUp: PropTypes.func,
     onKeyPress: PropTypes.func,
-    inputprops: PropTypes.object,
   };
 
   static defaultProps = {
@@ -53,7 +52,6 @@ export class InputConditional extends Component {
     onKeyUp: () => {},
     onKeyPress: () => {},
     conditions: [CONDITION_CNT, CONDITION_NOT_CNT, CONDITION_EQ, CONDITION_NOT_EQ],
-    inputprops: {},
   };
   state = {
     opened: false,
@@ -111,7 +109,6 @@ export class InputConditional extends Component {
       onKeyPress,
       conditionsBlockClassName,
       inputClassName,
-      inputprops,
     } = this.props;
     return (
       <div
@@ -127,7 +124,7 @@ export class InputConditional extends Component {
           value={value.value}
           placeholder={placeholder}
           disabled={disabled}
-          maxLength={inputprops.maxlength ? inputprops.maxlength : maxLength}
+          maxLength={maxLength}
           onChange={this.onChangeInput}
           onFocus={onFocus}
           onBlur={this.onBlurInput}
