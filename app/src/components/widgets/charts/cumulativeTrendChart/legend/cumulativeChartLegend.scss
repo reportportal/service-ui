@@ -1,9 +1,10 @@
 .cumulative-trend-chart-legend {
   display: flex;
-  justify-content: flex-end;
+  justify-content: flex-start;
+  align-items: center;
   width: 100%;
   max-height: 40px;
-  padding-top: 10px;
+  padding-top: 20px;
 
   &.preview-view {
     display: none;
@@ -49,5 +50,5 @@
 }
 
 .legend {
-  padding-top: 8px;
+  height: 22px;
 }
