@@ -101,9 +101,7 @@ export class UsersEntities extends Component {
         active: true,
         removable: false,
         customProps: {
-          inputprops: {
-            maxlength: 256,
-          },
+          maxLength: 256,
         },
       },
       {
@@ -186,9 +184,7 @@ export class UsersEntities extends Component {
         removable: false,
         customProps: {
           placeholder: null,
-          inputprops: {
-            maxlength: 256,
-          },
+          maxLength: 256,
         },
       },
       {
