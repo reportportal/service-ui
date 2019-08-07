@@ -179,6 +179,7 @@ export const URLS = {
       'filter.gte.level': 'ERROR',
       'page.sort': 'logTime,DESC',
     })}`,
+  logSearch: (activeProject, itemId) => `${urlBase}${activeProject}/log/search/${itemId}`,
   user: () => `${urlBase}user`,
   userRegistration: () => `${urlBase}user/registration`,
   userValidateRegistrationInfo: () => `${urlBase}user/registration/info`,
