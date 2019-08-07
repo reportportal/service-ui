@@ -48,6 +48,7 @@ export {
   utcOffset,
   getTimestampFromMinutes,
   getMinutesFromTimestamp,
+  formatDuration,
 } from './timeDateUtils';
 export { formatValue } from './numberUtils';
 export { connectRouter } from './connectRouter';

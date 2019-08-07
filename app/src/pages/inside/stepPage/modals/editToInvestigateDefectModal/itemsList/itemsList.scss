@@ -1,0 +1,9 @@
+.list-body {
+  display: flex;
+  justify-content: flex-start;
+  flex-direction: column;
+}
+
+.no-items{
+  padding: 20px 0;
+}
