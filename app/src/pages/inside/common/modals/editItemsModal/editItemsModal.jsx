@@ -131,6 +131,8 @@ export class EditItemsModal extends Component {
     descriptionAction: PropTypes.string,
     uniqueAttributes: PropTypes.array,
     intl: intlShape.isRequired,
+    showNotification: PropTypes.func.isRequired,
+    showDefaultErrorNotification: PropTypes.func.isRequired,
     ...formPropTypes,
   };
 
@@ -231,7 +233,6 @@ export class EditItemsModal extends Component {
 
     if (uniqueAttributes.length !== updatedUniqueAttributes.length) {
       this.showWarningMessage();
-
       change('uniqueAttributes', updatedUniqueAttributes);
     }
   };
@@ -274,11 +275,11 @@ export class EditItemsModal extends Component {
 
     fetch(fetchUrl, { method: 'put', data })
       .then(() => {
+        fetchFunc();
         this.props.showNotification({
           message: formatMessage(messages.itemUpdateSuccess),
           type: NOTIFICATION_TYPES.SUCCESS,
         });
-        fetchFunc();
       })
       .catch(this.props.showDefaultErrorNotification);
   };
