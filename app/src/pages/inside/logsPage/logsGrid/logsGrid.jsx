@@ -91,6 +91,18 @@ TimeColumn.defaultProps = {
   value: {},
 };
 
+const LogMessageSearchCell = ({ className, ...rest }) => (
+  <div className={className}>
+    <LogMessageSearch {...rest} />
+  </div>
+);
+LogMessageSearchCell.propTypes = {
+  className: PropTypes.string,
+};
+LogMessageSearchCell.defaultProps = {
+  className: '',
+};
+
 @injectIntl
 export class LogsGrid extends Component {
   static propTypes = {
@@ -191,7 +203,7 @@ export class LogsGrid extends Component {
       {
         id: 'logMessage',
         title: {
-          component: LogMessageSearch,
+          component: LogMessageSearchCell,
           componentProps: {
             filter: this.props.filter,
             onFilterChange: this.props.onFilterChange,
