@@ -25,7 +25,7 @@ import { showModalAction } from 'controllers/modal';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { hideScreenLockAction } from 'controllers/screenLock';
 import { GhostButton } from 'components/buttons/ghostButton';
-import { GhostLink } from 'components/buttons/ghostLink';
+import Link from 'redux-first-router-link';
 import { PageLayout, PageHeader, PageSection } from 'layouts/pageLayout';
 import { DASHBOARD_PAGE_EVENTS } from 'components/main/analytics/events';
 import { DashboardPageHeader } from 'pages/inside/common/dashboardPageHeader';
@@ -360,7 +360,7 @@ export class DashboardItemPage extends Component {
                     {formatMessage(messages.delete)}
                   </GhostButton>
                 )}
-                <GhostLink
+                <Link
                   to={{
                     type: PROJECT_DASHBOARD_PRINT_PAGE,
                     payload: {
@@ -369,10 +369,10 @@ export class DashboardItemPage extends Component {
                     },
                   }}
                   target={'_blank'}
-                  icon={ExportIcon}
+                  className={cx('print-button')}
                 >
-                  {formatMessage(messages.print)}
-                </GhostLink>
+                  <GhostButton icon={ExportIcon}>{formatMessage(messages.print)}</GhostButton>
+                </Link>
               </div>
             </div>
             <Fullscreen enabled={fullScreenMode} onChange={changeFullScreenMode}>
