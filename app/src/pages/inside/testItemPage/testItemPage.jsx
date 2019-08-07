@@ -110,7 +110,7 @@ const testItemPages = {
     hideScreenLockAction,
     fetchTestItemsAction,
     showModalAction,
-    unselectAllItemsAction,
+    unselectAllItemsAction: (namespace) => unselectAllItemsAction(namespace)(),
   },
 )
 @injectIntl
@@ -165,12 +165,14 @@ export class TestItemPage extends Component {
         items: launches,
         parentLaunch: this.props.parentLaunch,
         type: LAUNCH_ITEM_TYPES.item,
-        fetchFunc: () => {
-          this.props.fetchTestItemsAction();
-          this.props.unselectAllItemsAction(this.props.namespace)();
-        },
+        fetchFunc: this.unselectAndFetchItems,
       },
     });
+  };
+
+  unselectAndFetchItems = () => {
+    this.props.unselectAllItemsAction(this.props.namespace);
+    this.props.fetchTestItemsAction();
   };
 
   confirmDeleteItems = (items, selectedItems) => {
