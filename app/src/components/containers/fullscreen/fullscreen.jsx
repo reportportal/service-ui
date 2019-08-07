@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import Parser from 'html-react-parser';
-import CancelIcon from 'common/img/cancel-inline.svg';
+import CancelIcon from 'common/img/cross-icon-inline.svg';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import classNames from 'classnames/bind';
 import styles from './fullscreen.scss';
@@ -32,11 +32,11 @@ export class Fullscreen extends Component {
   };
 
   componentDidMount() {
-    document.addEventListener('keyup', this.exitFullScreen);
+    document.addEventListener('keyup', this.detectExitKey);
   }
 
   componentWillUnmount() {
-    document.removeEventListener('keyup', this.exitFullScreen);
+    document.removeEventListener('keyup', this.detectExitKey);
   }
 
   detectExitKey = (event) => {
