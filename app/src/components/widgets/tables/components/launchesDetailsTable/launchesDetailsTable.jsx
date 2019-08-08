@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { ALL } from 'common/constants/reservedFilterIds';
+import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { Grid } from 'components/main/grid';
 import {
   STATS_TOTAL,
@@ -117,6 +118,10 @@ export class LaunchesDetailsTable extends Component {
   render() {
     const { items } = this.props;
 
-    return <Grid columns={this.columns} data={items} />;
+    return (
+      <ScrollWrapper hideTracksWhenNotNeeded autoHeight>
+        <Grid columns={this.columns} data={items} />
+      </ScrollWrapper>
+    );
   }
 }

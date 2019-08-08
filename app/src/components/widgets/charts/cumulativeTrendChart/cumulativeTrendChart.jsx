@@ -1,4 +1,4 @@
-import { PureComponent } from 'react';
+import { Fragment, PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import isEqual from 'fast-deep-equal';
@@ -15,7 +15,7 @@ import styles from './cumulativeTrendChart.scss';
 
 const cx = classNames.bind(styles);
 
-const LEGEND_HEIGHT = 30;
+const LEGEND_HEIGHT = 45;
 
 @injectIntl
 export class CumulativeTrendChart extends PureComponent {
@@ -223,25 +223,28 @@ export class CumulativeTrendChart extends PureComponent {
             onClose={this.closeDetails}
           />
         ) : (
-          <ChartJS
-            chartData={chartData}
-            chartOptions={this.state.chartOptions}
-            onChartElementClick={this.onChartElementClick}
-            onChartCreated={this.onChartCreated}
-            height={chartHeight}
-          >
-            <CumulativeChartLegend
-              items={legendItems}
-              attributes={this.getAttributes()}
-              activeAttribute={this.state.activeAttribute}
-              activeAttributes={this.state.activeAttributes}
-              clearAttributes={this.clearAttributes}
-              onClick={this.onLegendClick}
-              onChangeUserSettings={this.userSettingsChangeHandler}
-              uncheckedLegendItems={uncheckedLegendItems}
-              userSettings={userSettings}
+          <Fragment>
+            {!isPreview && (
+              <CumulativeChartLegend
+                items={legendItems}
+                attributes={this.getAttributes()}
+                activeAttribute={this.state.activeAttribute}
+                activeAttributes={this.state.activeAttributes}
+                clearAttributes={this.clearAttributes}
+                onClick={this.onLegendClick}
+                onChangeUserSettings={this.userSettingsChangeHandler}
+                uncheckedLegendItems={uncheckedLegendItems}
+                userSettings={userSettings}
+              />
+            )}
+            <ChartJS
+              chartData={chartData}
+              chartOptions={this.state.chartOptions}
+              onChartElementClick={this.onChartElementClick}
+              onChartCreated={this.onChartCreated}
+              height={chartHeight}
             />
-          </ChartJS>
+          </Fragment>
         )}
         {focusedAttributeValue && (
           <VirtualPopup positionConfig={{ left: this.left, top: this.top }}>

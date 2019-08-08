@@ -92,7 +92,7 @@ const getChartOptions = (widget, options) => {
       padding: {
         left: 0,
         right: 0,
-        top: 50,
+        top: 30,
         bottom: 0,
       },
     },

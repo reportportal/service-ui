@@ -4,8 +4,7 @@ import classNames from 'classnames/bind';
 import { InputCheckbox } from 'components/inputs/inputCheckbox';
 import { Legend } from 'components/widgets/charts/common/legend';
 import { CumulativeChartBreadcrumbs } from './cumulativeChartBreadcrumbs';
-
-import styles from '../cumulativeTrendChart.scss';
+import styles from './cumulativeChartLegend.scss';
 
 const cx = classNames.bind(styles);
 
@@ -53,7 +52,7 @@ export class CumulativeChartLegend extends PureComponent {
     } = this.props;
     const { defectTypes, showTotal, separate, percentage } = userSettings;
     return (
-      <div className={cx('cumulative-trend-chart')}>
+      <div className={cx('cumulative-trend-chart-legend')}>
         <CumulativeChartBreadcrumbs
           attributes={attributes}
           activeAttribute={activeAttribute}
