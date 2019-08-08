@@ -1,54 +1,10 @@
 .cumulative-trend-chart {
-  position: absolute;
-  top: -15px;
   display: flex;
-  justify-content: flex-end;
+  flex-direction: column;
+  justify-content: flex-start;
   width: 100%;
-  padding-top: 40px;
 
   &.preview-view {
     display: none;
   }
-
-  .controls {
-    padding-right: 30px;
-    display: flex;
-  }
-
-  .control {
-    margin-left: 20px;
-  }
-
-  .separate {
-    background-image: url(common/img/toggle-stacked.svg);
-    background-position-y: center;
-    background-repeat: no-repeat;
-    cursor: pointer;
-
-    input, label {
-      opacity: 0;
-    }
-  }
-  .separate-active {
-    background-image: url(common/img/toggle_separated.svg);
-  }
-
-  .percentage {
-    background-image: url(common/img/toggle-absolute.svg);
-    background-position-y: center;
-    background-repeat: no-repeat;
-    cursor: pointer;
-
-    input, label {
-      opacity: 0;
-    }
-  }
-
-  .percentage-active {
-    background-image: url(common/img/toggle_percentage.svg);
-  }
-}
-
-.legend {
-  padding-top: 8px;
 }

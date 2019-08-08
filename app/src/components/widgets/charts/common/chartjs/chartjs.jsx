@@ -1,4 +1,4 @@
-import { PureComponent, Fragment } from 'react';
+import { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { injectIntl } from 'react-intl';
 import { Chart } from 'chart.js';
@@ -13,7 +13,6 @@ export class ChartJS extends PureComponent {
     config: PropTypes.object,
     onChartCreated: PropTypes.func,
     onChartElementClick: PropTypes.func,
-    children: PropTypes.node,
     height: PropTypes.number.isRequired,
   };
 
@@ -22,7 +21,6 @@ export class ChartJS extends PureComponent {
     config: {},
     onChartCreated: () => {},
     onChartElementClick: null,
-    children: null,
   };
 
   componentDidMount() {
@@ -82,15 +80,14 @@ export class ChartJS extends PureComponent {
   render() {
     const { height } = this.props;
     return (
-      <Fragment>
+      <div>
         <canvas
           height={height}
           ref={(node) => {
             this.canvas = node;
           }}
         />
-        {this.props.children}
-      </Fragment>
+      </div>
     );
   }
 }
