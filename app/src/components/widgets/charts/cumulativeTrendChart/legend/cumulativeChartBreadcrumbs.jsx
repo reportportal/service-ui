@@ -13,7 +13,7 @@ export class CumulativeChartBreadcrumbs extends PureComponent {
     activeAttribute: PropTypes.object,
     activeAttributes: PropTypes.array,
     clearAttributes: PropTypes.func,
-    isStatic: PropTypes.boolean,
+    isStatic: PropTypes.bool,
   };
   static defaultProps = {
     attributes: [],
