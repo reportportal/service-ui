@@ -22,7 +22,6 @@ export class CumulativeTrendChart extends PureComponent {
   static propTypes = {
     intl: intlShape.isRequired,
     widget: PropTypes.object.isRequired,
-    isPreview: PropTypes.bool,
     observer: PropTypes.object,
     fetchWidget: PropTypes.func,
     clearQueryParams: PropTypes.func,
@@ -35,7 +34,6 @@ export class CumulativeTrendChart extends PureComponent {
   };
 
   static defaultProps = {
-    isPreview: false,
     observer: null,
     fetchWidget: () => {},
     clearQueryParams: () => {},
@@ -202,7 +200,7 @@ export class CumulativeTrendChart extends PureComponent {
   };
 
   render() {
-    const { isPreview, uncheckedLegendItems, userSettings, container, widget } = this.props;
+    const { uncheckedLegendItems, userSettings, container, widget } = this.props;
     const {
       legendItems,
       chartData,
@@ -215,7 +213,7 @@ export class CumulativeTrendChart extends PureComponent {
     const isChartDataAvailable = chartData && !!chartData.labels.length;
 
     return this.state && this.state.chartData ? (
-      <div className={cx('cumulative-trend-chart', { 'preview-view': isPreview })}>
+      <div className={cx('cumulative-trend-chart')}>
         {isDetailsView ? (
           <CumulativeDetails
             widget={widget}
@@ -227,20 +225,18 @@ export class CumulativeTrendChart extends PureComponent {
           />
         ) : (
           <Fragment>
-            {!isPreview && (
-              <CumulativeChartLegend
-                items={legendItems}
-                attributes={this.getAttributes()}
-                activeAttribute={this.state.activeAttribute}
-                activeAttributes={this.state.activeAttributes}
-                clearAttributes={this.clearAttributes}
-                onClick={this.onLegendClick}
-                onChangeUserSettings={this.userSettingsChangeHandler}
-                uncheckedLegendItems={uncheckedLegendItems}
-                userSettings={userSettings}
-                isChartDataAvailable={isChartDataAvailable}
-              />
-            )}
+            <CumulativeChartLegend
+              items={legendItems}
+              attributes={this.getAttributes()}
+              activeAttribute={this.state.activeAttribute}
+              activeAttributes={this.state.activeAttributes}
+              clearAttributes={this.clearAttributes}
+              onClick={this.onLegendClick}
+              onChangeUserSettings={this.userSettingsChangeHandler}
+              uncheckedLegendItems={uncheckedLegendItems}
+              userSettings={userSettings}
+              isChartDataAvailable={isChartDataAvailable}
+            />
             <ChartJS
               chartData={chartData}
               chartOptions={this.state.chartOptions}

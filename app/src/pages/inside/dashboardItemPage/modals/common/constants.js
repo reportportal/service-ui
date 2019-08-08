@@ -1,8 +1,5 @@
 export const WIDGET_WIZARD_FORM = 'widgetWizardForm';
 
-export const WIDGET_WIZARD_WIDGET_OPTIONS_ATTRIBUTES_KEY =
-  'contentParameters.widgetOptions.attributes';
-
 export const DEFAULT_WIDGET_SIZE = {
   width: 12,
   height: 7,

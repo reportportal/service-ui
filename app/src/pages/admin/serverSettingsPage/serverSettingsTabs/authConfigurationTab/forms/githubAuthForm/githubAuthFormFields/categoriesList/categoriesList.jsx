@@ -2,7 +2,6 @@ import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { injectIntl, defineMessages } from 'react-intl';
 import { connect } from 'react-redux';
-import { formValueSelector } from 'redux-form';
 import Parser from 'html-react-parser';
 import IconDelete from 'common/img/circle-cross-icon-inline.svg';
 import classNames from 'classnames/bind';
@@ -12,7 +11,6 @@ import { FormField } from 'components/fields/formField';
 import { Input } from 'components/inputs/input';
 import PlusIcon from 'common/img/plus-button-inline.svg';
 import styles from './categoriesList.scss';
-import { GITHUB_AUTH_FORM, ORGANIZATIONS_KEY } from '../../constants';
 
 const cx = classNames.bind(styles);
 
@@ -27,12 +25,7 @@ const messages = defineMessages({
   },
 });
 
-@connect(
-  (state) => ({
-    organizations: formValueSelector(GITHUB_AUTH_FORM)(state, ORGANIZATIONS_KEY),
-  }),
-  { showModalAction },
-)
+@connect(null, { showModalAction })
 @injectIntl
 export class CategoriesList extends Component {
   static propTypes = {
