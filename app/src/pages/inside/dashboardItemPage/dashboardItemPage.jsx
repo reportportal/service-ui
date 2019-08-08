@@ -36,8 +36,8 @@ import AddSharedWidgetIcon from './img/add-shared-inline.svg';
 import EditIcon from './img/edit-inline.svg';
 import CancelIcon from './img/cancel-inline.svg';
 import FullscreenIcon from './img/full-screen-inline.svg';
-import styles from './dashboardItemPage.scss';
 import { WidgetsGrid } from './widgetsGrid';
+import styles from './dashboardItemPage.scss';
 
 const cx = classNames.bind(styles);
 
@@ -326,7 +326,7 @@ export class DashboardItemPage extends Component {
         <PageSection>
           <div className={cx('dashboard-item')}>
             <div className={cx('buttons-container')}>
-              <div className={cx('nav-left')}>
+              <div className={cx('buttons-block')}>
                 {isOwner ? (
                   <Fragment>
                     <GhostButton icon={AddWidgetIcon} onClick={this.showWidgetWizard}>
@@ -344,7 +344,7 @@ export class DashboardItemPage extends Component {
                   </div>
                 )}
               </div>
-              <div className={cx('nav-right')}>
+              <div className={cx('buttons-block')}>
                 {isOwner && (
                   <GhostButton icon={EditIcon} onClick={this.onEditDashboardItem}>
                     {formatMessage(messages.editDashboard)}
