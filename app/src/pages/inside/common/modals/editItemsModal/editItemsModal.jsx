@@ -274,7 +274,9 @@ export class EditItemsModal extends Component {
         : URLS.testItemsInfoUpdate(currentProject);
     const data = {
       ids,
-      attributes,
+      attributes: attributes.filter(
+        (attribute) => (attribute.from ? Boolean(attribute.from.value) : true),
+      ),
     };
 
     if (descriptionAction !== DESCRIPTION_LEAVE) {
