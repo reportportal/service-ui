@@ -11,7 +11,6 @@ export class ChartJS extends PureComponent {
     chartData: PropTypes.object.isRequired,
     chartOptions: PropTypes.object.isRequired,
     config: PropTypes.object,
-    onChartCreated: PropTypes.func,
     onChartElementClick: PropTypes.func,
     height: PropTypes.number.isRequired,
   };
@@ -19,7 +18,6 @@ export class ChartJS extends PureComponent {
   static defaultProps = {
     data: {},
     config: {},
-    onChartCreated: () => {},
     onChartElementClick: null,
   };
 
@@ -51,7 +49,6 @@ export class ChartJS extends PureComponent {
       this.chart.update(config);
     } else {
       this.chart = this.generateChart(config);
-      this.props.onChartCreated(this.canvas);
     }
   }
 
@@ -71,7 +68,7 @@ export class ChartJS extends PureComponent {
       }
 
       const chartElement = chartObj.getElementAtEvent(event);
-      this.props.onChartElementClick(chartElement[0]);
+      this.props.onChartElementClick(chartElement[0], event);
     };
 
     return chartObj;

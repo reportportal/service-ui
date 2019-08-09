@@ -46,11 +46,11 @@ export class CumulativeTrendChart extends PureComponent {
 
   state = {
     legendItems: [],
-    detailsView: false,
     activeAttributes: [],
     isDetailsView: false,
     activeAttribute: null,
-    focusedAttributeValue: null,
+    isActionsPopupShown: false,
+    selectedItem: null,
   };
 
   componentDidMount = () => {
@@ -63,39 +63,27 @@ export class CumulativeTrendChart extends PureComponent {
     }
   }
 
-  componentWillUnmount() {
-    this.node.removeEventListener('mousemove', this.setupPopupPosition);
-  }
-
-  onChartCreated = (element) => {
-    this.node = element;
-
-    this.node.addEventListener('mousemove', this.setupPopupPosition);
-  };
-
-  onChartElementClick = (element) => {
+  onChartElementClick = (element, event) => {
     if (!element) {
-      if (this.state.focusedAttributeValue) {
-        this.setState({
-          focusedAttributeValue: null,
-        });
+      if (this.state.isActionsPopupShown) {
+        this.hideActionsPopup();
       }
       return;
     }
     /* eslint no-underscore-dangle: ['error', { 'allow': ['_model'] }] */
-    const focusedAttributeValue = element._model.label;
+    const elementModel = element._model;
+    this.left = event.offsetX;
+    this.top = event.offsetY + LEGEND_HEIGHT;
+    const selectedItem = this.getSelectedItem(elementModel.label);
+
     this.setState({
-      focusedAttributeValue,
+      selectedItem,
+      isActionsPopupShown: true,
     });
   };
 
   onLegendClick = (fieldName) => {
     this.props.onChangeLegend(fieldName, this.getConfig);
-  };
-
-  setupPopupPosition = ({ pageX, pageY }) => {
-    this.left = pageX;
-    this.top = pageY;
   };
 
   getConfig = (options = {}) => {
@@ -110,6 +98,8 @@ export class CumulativeTrendChart extends PureComponent {
     });
 
     this.setState({
+      isActionsPopupShown: false,
+      selectedItem: null,
       chartData: {
         labels,
         datasets,
@@ -121,13 +111,16 @@ export class CumulativeTrendChart extends PureComponent {
 
   getAttributes = () => this.props.widget.contentParameters.widgetOptions.attributes;
 
+  getSelectedItem = (focusedAttributeValue) =>
+    this.props.widget.content.result.find((item) => item.attributeValue === focusedAttributeValue);
+
   getPopupActionItems = () => [
     {
       id: 'drillDown',
       icon: SearchIcon,
       title: 'Drill down',
       onClick: this.drillDown,
-      disabled: this.state.activeAttributes.length > 0,
+      disabled: this.getAttributes().length <= this.state.activeAttributes.length + 1,
     },
     {
       id: 'showFilter',
@@ -137,34 +130,41 @@ export class CumulativeTrendChart extends PureComponent {
     },
   ];
 
-  updateActiveAttributesAndFetchWidget = (fetchWidgetSuccessCallback = () => {}) => {
-    const { focusedAttributeValue, activeAttributes } = this.state;
+  updateActiveAttributes = (actionSuccessCallback) => {
+    const { selectedItem, activeAttributes } = this.state;
     const activeAttribute = {
       key: this.getAttributes()[activeAttributes.length],
-      value: focusedAttributeValue,
+      value: selectedItem.attributeValue,
     };
     const newActiveAttributes = [...activeAttributes, activeAttribute];
+
     this.setState(
       {
         activeAttribute,
         activeAttributes: newActiveAttributes,
-        focusedAttributeValue: null,
+        isActionsPopupShown: false,
       },
-      () => {
-        this.props
-          .fetchWidget({
-            attributes: this.state.activeAttributes,
-          })
-          .then(fetchWidgetSuccessCallback);
-      },
+      actionSuccessCallback,
     );
   };
 
-  drillDown = () => this.updateActiveAttributesAndFetchWidget();
+  drillDown = () => this.updateActiveAttributes(this.fetchWidgetWithActiveAttributes);
 
-  showFilter = () => this.updateActiveAttributesAndFetchWidget(this.showDetailsView);
+  showFilter = () => this.updateActiveAttributes(this.showDetailsView);
 
   userSettingsChangeHandler = (data) => this.props.onChangeUserSettings(data, this.getConfig);
+
+  hideActionsPopup = () =>
+    this.setState({
+      isActionsPopupShown: false,
+      selectedItem: null,
+    });
+
+  fetchWidgetWithActiveAttributes = () => {
+    this.props.fetchWidget({
+      attributes: this.state.activeAttributes,
+    });
+  };
 
   clearAttributes = () => {
     this.setState({
@@ -179,18 +179,11 @@ export class CumulativeTrendChart extends PureComponent {
     const { activeAttributes } = this.state;
     const newAttributes = activeAttributes.slice(0, -1);
 
-    this.props
-      .fetchWidget({
-        attributes: newAttributes,
-      })
-      .then(() => {
-        this.setState({
-          isDetailsView: false,
-          activeAttribute:
-            newAttributes.length > 0 ? newAttributes[newAttributes.length - 1] : null,
-          activeAttributes: newAttributes,
-        });
-      });
+    this.setState({
+      isDetailsView: false,
+      activeAttribute: newAttributes.length > 0 ? newAttributes[newAttributes.length - 1] : null,
+      activeAttributes: newAttributes,
+    });
   };
 
   showDetailsView = () => {
@@ -200,27 +193,26 @@ export class CumulativeTrendChart extends PureComponent {
   };
 
   render() {
-    const { uncheckedLegendItems, userSettings, container, widget } = this.props;
+    const { uncheckedLegendItems, userSettings, container } = this.props;
     const {
       legendItems,
       chartData,
       activeAttribute,
       activeAttributes,
       isDetailsView,
-      focusedAttributeValue,
+      selectedItem,
+      isActionsPopupShown,
     } = this.state;
     const chartHeight = container.offsetHeight - LEGEND_HEIGHT;
     const isChartDataAvailable = chartData && !!chartData.labels.length;
 
-    return this.state && this.state.chartData ? (
+    return this.state.chartData ? (
       <div className={cx('cumulative-trend-chart')}>
         {isDetailsView ? (
           <CumulativeDetails
-            widget={widget}
-            activeAttribute={activeAttribute}
+            selectedItem={selectedItem}
             activeAttributes={activeAttributes}
             onClose={this.closeDetails}
-            isChartDataAvailable={isChartDataAvailable}
             chartHeight={chartHeight}
           />
         ) : (
@@ -228,8 +220,8 @@ export class CumulativeTrendChart extends PureComponent {
             <CumulativeChartLegend
               items={legendItems}
               attributes={this.getAttributes()}
-              activeAttribute={this.state.activeAttribute}
-              activeAttributes={this.state.activeAttributes}
+              activeAttribute={activeAttribute}
+              activeAttributes={activeAttributes}
               clearAttributes={this.clearAttributes}
               onClick={this.onLegendClick}
               onChangeUserSettings={this.userSettingsChangeHandler}
@@ -241,17 +233,21 @@ export class CumulativeTrendChart extends PureComponent {
               chartData={chartData}
               chartOptions={this.state.chartOptions}
               onChartElementClick={this.onChartElementClick}
-              onChartCreated={this.onChartCreated}
               height={chartHeight}
             />
           </Fragment>
         )}
-        {focusedAttributeValue &&
-          isChartDataAvailable && (
-            <VirtualPopup positionConfig={{ left: this.left, top: this.top }}>
-              <ActionsPopup items={this.getPopupActionItems()} />
-            </VirtualPopup>
-          )}
+        {isActionsPopupShown && (
+          <VirtualPopup
+            boundariesElement={container}
+            referenceConfig={{
+              className: cx('popup-reference'),
+              style: { left: this.left, top: this.top },
+            }}
+          >
+            <ActionsPopup items={this.getPopupActionItems()} />
+          </VirtualPopup>
+        )}
       </div>
     ) : null;
   }
