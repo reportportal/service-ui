@@ -34,43 +34,35 @@ const messages = defineMessages({
 export class CumulativeDetails extends PureComponent {
   static propTypes = {
     intl: intlShape.isRequired,
-    widget: PropTypes.object,
-    activeAttribute: PropTypes.object,
+    selectedItem: PropTypes.object,
     activeAttributes: PropTypes.array,
     activeProject: PropTypes.string.isRequired,
     onClose: PropTypes.func.isRequired,
     showDefaultErrorNotification: PropTypes.func.isRequired,
-    isChartDataAvailable: PropTypes.bool,
     chartHeight: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   };
 
   static defaultProps = {
-    widget: null,
-    activeAttribute: null,
+    selectedItem: null,
     activeAttributes: [],
-    isChartDataAvailable: false,
     chartHeight: '100%',
   };
 
   state = {
     launches: [],
-    loading: this.props.isChartDataAvailable,
+    loading: !!this.props.selectedItem,
   };
 
   componentDidMount() {
-    if (this.props.isChartDataAvailable) {
+    if (this.props.selectedItem) {
       this.fetchLaunches();
     }
   }
 
   getLaunchIds = () => {
-    const {
-      widget: {
-        content: { result },
-      },
-    } = this.props;
+    const { selectedItem: { content = {} } = {} } = this.props;
 
-    return result.reduce((ids, bar) => [...ids, ...bar.content.launchIds], []);
+    return content.launchIds || [];
   };
 
   sortLaunchesByFailedItems = (launches) =>
@@ -99,7 +91,7 @@ export class CumulativeDetails extends PureComponent {
   };
 
   render() {
-    const { onClose, activeAttributes, intl, chartHeight } = this.props;
+    const { intl, onClose, activeAttributes, chartHeight } = this.props;
     const { launches, loading } = this.state;
 
     return (

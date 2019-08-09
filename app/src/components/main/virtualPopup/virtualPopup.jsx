@@ -1,55 +1,50 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import ReactDOM from 'react-dom';
-import { Popper } from 'react-popper';
-
-const DEFAULT_REFERENCE_ELEMENT = {
-  getBoundingClientRect() {
-    return {
-      width: 1,
-      height: 1,
-    };
-  },
-
-  get clientWidth() {
-    return this.getBoundingClientRect().width;
-  },
-
-  get clientHeight() {
-    return this.getBoundingClientRect().height;
-  },
-};
+import { Manager, Popper, Reference } from 'react-popper';
+import { PopupContentWrapper } from './popupContentWrapper';
 
 export class VirtualPopup extends PureComponent {
   static propTypes = {
-    referenceElement: PropTypes.object,
-    positionConfig: PropTypes.shape({
-      top: PropTypes.number,
-      left: PropTypes.number,
-      bottom: PropTypes.number,
-      right: PropTypes.number,
+    referenceConfig: PropTypes.shape({
+      style: PropTypes.object,
+      className: PropTypes.string,
     }),
     children: PropTypes.element,
+    boundariesElement: PropTypes.oneOfType([PropTypes.instanceOf(Element), PropTypes.string]),
   };
 
   static defaultProps = {
-    referenceElement: DEFAULT_REFERENCE_ELEMENT,
-    positionConfig: {},
+    referenceConfig: {},
     children: null,
+    boundariesElement: 'scrollParent',
   };
 
   render() {
-    const { referenceElement, positionConfig, children } = this.props;
+    const { referenceConfig, children, boundariesElement } = this.props;
 
-    return ReactDOM.createPortal(
-      <Popper referenceElement={referenceElement}>
-        {({ ref, style, placement }) => (
-          <div ref={ref} style={{ ...style, ...positionConfig }} data-placement={placement}>
-            {children}
-          </div>
-        )}
-      </Popper>,
-      document.querySelector('#popover-root'),
+    return (
+      <Manager>
+        <Reference>{({ ref }) => <div ref={ref} {...referenceConfig} />}</Reference>
+        <Popper
+          modifiers={{
+            preventOverflow: { enabled: true, boundariesElement },
+            flip: {
+              enabled: true,
+            },
+          }}
+        >
+          {({ ref, style, placement, scheduleUpdate }) => (
+            <div ref={ref} style={style} data-placement={placement}>
+              <PopupContentWrapper
+                scheduleUpdate={scheduleUpdate}
+                referencePosition={referenceConfig.style}
+              >
+                {children}
+              </PopupContentWrapper>
+            </div>
+          )}
+        </Popper>
+      </Manager>
     );
   }
 }
