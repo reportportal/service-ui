@@ -106,13 +106,14 @@ export class SimpleWidget extends Component {
   };
 
   getWidgetContent = () => {
+    const { widgetType } = this.props;
     const { widget, uncheckedLegendItems, queryParameters, userSettings } = this.state;
 
     if (this.state.loading) {
       return <SpinningPreloader />;
     }
 
-    if (!isWidgetDataAvailable(widget)) {
+    if (!isWidgetDataAvailable(widget) && !MULTI_LEVEL_WIDGETS_MAP[widgetType]) {
       return <NoDataAvailable />;
     }
 
@@ -182,7 +183,7 @@ export class SimpleWidget extends Component {
     this.silentUpdaterId && clearTimeout(this.silentUpdaterId);
     tracking.trackEvent(DASHBOARD_PAGE_EVENTS.REFRESH_WIDGET);
 
-    if (!isWidgetDataAvailable(this.state.widget)) {
+    if (!isWidgetDataAvailable(this.state.widget) && !this.state.widget.id) {
       this.setState({
         loading: true,
       });

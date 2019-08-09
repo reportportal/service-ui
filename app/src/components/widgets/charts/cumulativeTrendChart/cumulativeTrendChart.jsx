@@ -1,4 +1,4 @@
-import { Fragment, PureComponent } from 'react';
+import { PureComponent, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import isEqual from 'fast-deep-equal';
@@ -212,6 +212,7 @@ export class CumulativeTrendChart extends PureComponent {
       focusedAttributeValue,
     } = this.state;
     const chartHeight = container.offsetHeight - LEGEND_HEIGHT;
+    const isChartDataAvailable = chartData && !!chartData.labels.length;
 
     return this.state && this.state.chartData ? (
       <div className={cx('cumulative-trend-chart', { 'preview-view': isPreview })}>
@@ -221,6 +222,7 @@ export class CumulativeTrendChart extends PureComponent {
             activeAttribute={activeAttribute}
             activeAttributes={activeAttributes}
             onClose={this.closeDetails}
+            isChartDataAvailable={isChartDataAvailable}
           />
         ) : (
           <Fragment>
@@ -235,6 +237,7 @@ export class CumulativeTrendChart extends PureComponent {
                 onChangeUserSettings={this.userSettingsChangeHandler}
                 uncheckedLegendItems={uncheckedLegendItems}
                 userSettings={userSettings}
+                isChartDataAvailable={isChartDataAvailable}
               />
             )}
             <ChartJS
@@ -246,11 +249,12 @@ export class CumulativeTrendChart extends PureComponent {
             />
           </Fragment>
         )}
-        {focusedAttributeValue && (
-          <VirtualPopup positionConfig={{ left: this.left, top: this.top }}>
-            <ActionsPopup items={this.getPopupActionItems()} />
-          </VirtualPopup>
-        )}
+        {focusedAttributeValue &&
+          isChartDataAvailable && (
+            <VirtualPopup positionConfig={{ left: this.left, top: this.top }}>
+              <ActionsPopup items={this.getPopupActionItems()} />
+            </VirtualPopup>
+          )}
       </div>
     ) : null;
   }
