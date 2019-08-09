@@ -159,6 +159,8 @@ export class EditItemsModal extends Component {
       attributes: [],
       descriptionAction: DESCRIPTION_LEAVE,
     });
+
+    this.deletedUniqueAttributes = [];
   }
 
   onChangeCommonAttributes = (e, attributes, oldAttributes) => {
@@ -170,10 +172,19 @@ export class EditItemsModal extends Component {
     // Delete attribute
     if (attributes.length < oldAttributes.length) {
       const deletedAttribute = this.findAttribute(oldAttributes, attributes);
+      const deletedUniqueAttributeIndex = this.deletedUniqueAttributes.findIndex(
+        (attribute) =>
+          attribute.key === deletedAttribute.key && attribute.value === deletedAttribute.value,
+      );
       saveHistory({
         action: ATTRIBUTE_DELETE,
         from: deletedAttribute,
       });
+
+      if (deletedUniqueAttributeIndex !== -1) {
+        this.deletedUniqueAttributes.slice(deletedUniqueAttributeIndex, 1);
+        this.showWarningMessage();
+      }
     } else {
       const attributeBeforeUpdate = this.findAttribute(oldAttributes, attributes);
       const updatedAttribute = this.findAttribute(attributes, oldAttributes);
@@ -232,7 +243,7 @@ export class EditItemsModal extends Component {
     );
 
     if (uniqueAttributes.length !== updatedUniqueAttributes.length) {
-      this.showWarningMessage();
+      this.deletedUniqueAttributes.push(attribute);
       change('uniqueAttributes', updatedUniqueAttributes);
     }
   };
