@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { ALL } from 'common/constants/reservedFilterIds';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { Grid } from 'components/main/grid';
+import { NoItemMessage } from 'components/main/noItemMessage';
 import {
   STATS_TOTAL,
   STATS_FAILED,
@@ -25,10 +26,14 @@ export class LaunchesDetailsTable extends Component {
   static propTypes = {
     activeProject: PropTypes.string.isRequired,
     items: PropTypes.array,
+    maxHeight: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    noItemsMessage: PropTypes.string,
   };
 
   static defaultProps = {
     items: [],
+    maxHeight: '100%',
+    noItemsMessage: '',
   };
 
   getColumns() {
@@ -116,11 +121,12 @@ export class LaunchesDetailsTable extends Component {
   columns = this.getColumns();
 
   render() {
-    const { items } = this.props;
+    const { items, maxHeight, noItemsMessage } = this.props;
 
     return (
-      <ScrollWrapper hideTracksWhenNotNeeded autoHeight>
+      <ScrollWrapper hideTracksWhenNotNeeded autoHeight autoHeightMax={maxHeight}>
         <Grid columns={this.columns} data={items} />
+        {!items.length && <NoItemMessage message={noItemsMessage} />}
       </ScrollWrapper>
     );
   }

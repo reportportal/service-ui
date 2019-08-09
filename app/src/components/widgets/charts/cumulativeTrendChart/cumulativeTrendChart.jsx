@@ -223,6 +223,7 @@ export class CumulativeTrendChart extends PureComponent {
             activeAttributes={activeAttributes}
             onClose={this.closeDetails}
             isChartDataAvailable={isChartDataAvailable}
+            chartHeight={chartHeight}
           />
         ) : (
           <Fragment>
