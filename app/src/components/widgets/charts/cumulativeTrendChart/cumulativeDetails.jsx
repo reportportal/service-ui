@@ -1,11 +1,12 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { injectIntl, intlShape, defineMessages } from 'react-intl';
-import { fetch } from 'common/utils';
-import { URLS } from 'common/urls';
 import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
+import { fetch } from 'common/utils';
+import { URLS } from 'common/urls';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import LeftArrowIcon from 'common/img/arrow-left-small-inline.svg';
 import { activeProjectSelector } from 'controllers/user';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
@@ -40,6 +41,7 @@ export class CumulativeDetails extends PureComponent {
     onClose: PropTypes.func.isRequired,
     showDefaultErrorNotification: PropTypes.func.isRequired,
     isChartDataAvailable: PropTypes.bool,
+    chartHeight: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   };
 
   static defaultProps = {
@@ -47,6 +49,7 @@ export class CumulativeDetails extends PureComponent {
     activeAttribute: null,
     activeAttributes: [],
     isChartDataAvailable: false,
+    chartHeight: '100%',
   };
 
   state = {
@@ -96,7 +99,7 @@ export class CumulativeDetails extends PureComponent {
   };
 
   render() {
-    const { onClose, activeAttributes, intl } = this.props;
+    const { onClose, activeAttributes, intl, chartHeight } = this.props;
     const { launches, loading } = this.state;
 
     return (
@@ -108,7 +111,15 @@ export class CumulativeDetails extends PureComponent {
           </span>
           <CumulativeChartBreadcrumbs isStatic activeAttributes={activeAttributes} />
         </div>
-        {loading ? <SpinningPreloader /> : <LaunchesDetailsTable items={launches} />}
+        {loading ? (
+          <SpinningPreloader />
+        ) : (
+          <LaunchesDetailsTable
+            items={launches}
+            maxHeight={chartHeight}
+            noItemsMessage={intl.formatMessage(COMMON_LOCALE_KEYS.NO_RESULTS)}
+          />
+        )}
       </div>
     );
   }
