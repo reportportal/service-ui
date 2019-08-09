@@ -39,21 +39,25 @@ export class CumulativeDetails extends PureComponent {
     activeProject: PropTypes.string.isRequired,
     onClose: PropTypes.func.isRequired,
     showDefaultErrorNotification: PropTypes.func.isRequired,
+    isChartDataAvailable: PropTypes.bool,
   };
 
   static defaultProps = {
     widget: null,
     activeAttribute: null,
     activeAttributes: [],
+    isChartDataAvailable: false,
   };
 
   state = {
     launches: [],
-    loading: true,
+    loading: this.props.isChartDataAvailable,
   };
 
   componentDidMount() {
-    this.fetchLaunches();
+    if (this.props.isChartDataAvailable) {
+      this.fetchLaunches();
+    }
   }
 
   getLaunchIds = () => {

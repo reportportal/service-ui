@@ -1,4 +1,4 @@
-import { PureComponent } from 'react';
+import { PureComponent, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { InputCheckbox } from 'components/inputs/inputCheckbox';
@@ -16,6 +16,7 @@ export class CumulativeChartLegend extends PureComponent {
     activeAttributes: PropTypes.array,
     clearAttributes: PropTypes.func,
     userSettings: PropTypes.object,
+    isChartDataAvailable: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -24,6 +25,7 @@ export class CumulativeChartLegend extends PureComponent {
     activeAttributes: [],
     clearAttributes: () => {},
     userSettings: {},
+    isChartDataAvailable: false,
   };
 
   onChangeFocusType = (e) => {
@@ -49,6 +51,7 @@ export class CumulativeChartLegend extends PureComponent {
       activeAttributes,
       clearAttributes,
       userSettings,
+      isChartDataAvailable,
     } = this.props;
     const { defectTypes, showTotal, separate, percentage } = userSettings;
     return (
@@ -60,43 +63,47 @@ export class CumulativeChartLegend extends PureComponent {
           clearAttributes={clearAttributes}
         />
 
-        <Legend className={cx('legend')} {...this.props} />
+        {isChartDataAvailable && (
+          <Fragment>
+            <Legend className={cx('legend')} {...this.props} />
 
-        <div className={cx('controls')}>
-          <div className={cx('control')}>
-            <InputCheckbox value={defectTypes} onChange={this.onChangeFocusType}>
-              Focus on Defect Types
-            </InputCheckbox>
-          </div>
+            <div className={cx('controls')}>
+              <div className={cx('control')}>
+                <InputCheckbox value={defectTypes} onChange={this.onChangeFocusType}>
+                  Focus on Defect Types
+                </InputCheckbox>
+              </div>
 
-          <div className={cx('control')}>
-            <InputCheckbox
-              className={cx('control')}
-              value={showTotal}
-              onChange={this.onChangeTotals}
-            >
-              Totals
-            </InputCheckbox>
-          </div>
+              <div className={cx('control')}>
+                <InputCheckbox
+                  className={cx('control')}
+                  value={showTotal}
+                  onChange={this.onChangeTotals}
+                >
+                  Totals
+                </InputCheckbox>
+              </div>
 
-          <div
-            className={cx('control', 'separate', { 'separate-active': separate })}
-            onClick={this.onChangeSeparate}
-          >
-            <InputCheckbox className={cx('control')} value={separate}>
-              Separate
-            </InputCheckbox>
-          </div>
+              <div
+                className={cx('control', 'separate', { 'separate-active': separate })}
+                onClick={this.onChangeSeparate}
+              >
+                <InputCheckbox className={cx('control')} value={separate}>
+                  Separate
+                </InputCheckbox>
+              </div>
 
-          <div
-            className={cx('control', 'percentage', { 'percentage-active': percentage })}
-            onClick={this.onChangePercentage}
-          >
-            <InputCheckbox className={cx('control')} value={percentage}>
-              Percentage
-            </InputCheckbox>
-          </div>
-        </div>
+              <div
+                className={cx('control', 'percentage', { 'percentage-active': percentage })}
+                onClick={this.onChangePercentage}
+              >
+                <InputCheckbox className={cx('control')} value={percentage}>
+                  Percentage
+                </InputCheckbox>
+              </div>
+            </div>
+          </Fragment>
+        )}
       </div>
     );
   }

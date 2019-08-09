@@ -180,7 +180,9 @@ const getChartOptions = (widget, options) => {
 
 export const getChartData = (widget, options) => {
   const { percentage, defectTypes } = options;
-  const labels = widget.content.result.map((item) => item.attributeValue);
+  const labels = widget.content.result
+    ? widget.content.result.map((item) => item.attributeValue)
+    : [];
   const contentFields = widget.contentParameters.contentFields;
   const executions = getExecutions(contentFields);
   const defects = getDefects(contentFields);
@@ -199,22 +201,24 @@ export const getChartData = (widget, options) => {
     defects.map((field) => createDataSet(field, DEFECTS, options)),
   );
 
-  Object.keys(widget.content.result)
-    .sort()
-    .map((resultId) => {
-      const items = widget.content.result[resultId];
-      tooltipContents.push(items.content.tooltipContent);
+  if (widget.content.result) {
+    Object.keys(widget.content.result)
+      .sort()
+      .map((resultId) => {
+        const items = widget.content.result[resultId];
+        tooltipContents.push(items.content.tooltipContent);
 
-      filteredContentFields.forEach((field) => {
-        const totals = items.content.statistics[field] || 0;
+        filteredContentFields.forEach((field) => {
+          const totals = items.content.statistics[field] || 0;
 
-        const column = datasets.find((entry) => entry.label === field);
+          const column = datasets.find((entry) => entry.label === field);
 
-        column.data.push(totals);
+          column.data.push(totals);
+        });
+
+        return resultId;
       });
-
-      return resultId;
-    });
+  }
 
   if (percentage) {
     datasets = convertIntoPercents(datasets);
