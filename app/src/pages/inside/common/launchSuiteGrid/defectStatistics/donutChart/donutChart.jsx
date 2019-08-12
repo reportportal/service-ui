@@ -19,8 +19,7 @@ const cx = classNames.bind(styles);
     noArrow: true,
     desktopOnly: true,
     modifiers: {
-      offset: { offset: '0, -10px' },
-      flip: { enabled: false },
+      flip: { enabled: true },
       preventOverflow: { enabled: false },
       hide: { enabled: false },
     },
