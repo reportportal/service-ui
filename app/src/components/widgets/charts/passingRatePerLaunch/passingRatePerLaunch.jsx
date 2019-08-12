@@ -223,10 +223,13 @@ export class PassingRatePerLaunch extends Component {
 
   getCustomValue() {
     const { widget } = this.props;
+    const { latestLaunch: { number: launchNumber } = {} } = widget.content;
 
-    return this.isRatePerLaunchType()
-      ? widget.contentParameters.widgetOptions.launchNameFilter
-      : widget.appliedFilters && widget.appliedFilters[0].name;
+    if (this.isRatePerLaunchType()) return widget.contentParameters.widgetOptions.launchNameFilter;
+
+    const launchName = widget.appliedFilters && widget.appliedFilters[0].name;
+
+    return launchNumber ? `${launchName} #${launchNumber}` : launchName;
   }
 
   isRatePerLaunchType() {

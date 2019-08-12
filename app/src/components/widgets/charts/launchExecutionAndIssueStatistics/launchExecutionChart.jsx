@@ -69,6 +69,7 @@ export class LaunchExecutionChart extends Component {
     onChangeLegend: PropTypes.func,
     onStatusPageMode: PropTypes.bool,
     launchFilters: PropTypes.array,
+    launchNameBlockHeight: PropTypes.number,
   };
 
   static defaultProps = {
@@ -78,6 +79,7 @@ export class LaunchExecutionChart extends Component {
     onChangeLegend: () => {},
     onStatusPageMode: false,
     launchFilters: [],
+    launchNameBlockHeight: 0,
   };
 
   state = {
@@ -196,14 +198,14 @@ export class LaunchExecutionChart extends Component {
 
   getConfig = () => {
     const EXECUTIONS = '$executions$';
-    const { widget, container, isPreview, onStatusPageMode } = this.props;
+    const { widget, container, isPreview, onStatusPageMode, launchNameBlockHeight } = this.props;
     const values = getResult(widget).values;
     const statusDataItems = getChartData(values, EXECUTIONS);
     const statusChartData = statusDataItems.itemTypes;
     const statusChartColors = statusDataItems.itemColors;
     const statusChartDataOrdered = [];
 
-    this.height = container.offsetHeight;
+    this.height = container.offsetHeight - launchNameBlockHeight;
     this.width = container.offsetWidth;
     this.noAvailableData = false;
 
@@ -292,7 +294,7 @@ export class LaunchExecutionChart extends Component {
   statusItems = [];
 
   resizeStatusChart = () => {
-    const newHeight = this.props.container.offsetHeight;
+    const newHeight = this.props.container.offsetHeight - this.props.launchNameBlockHeight;
     const newWidth = this.props.container.offsetWidth;
     if (this.height !== newHeight) {
       this.chart.resize({
