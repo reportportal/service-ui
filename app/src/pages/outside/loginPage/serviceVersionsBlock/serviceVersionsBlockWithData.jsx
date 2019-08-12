@@ -7,17 +7,14 @@ import { compositeInfoSelector } from 'controllers/appInfo';
 import { ServiceVersionsBlock } from './serviceVersionsBlock';
 
 @connect((state) => ({
-  serviceVersions: state.appInfo,
   compositeInfo: compositeInfoSelector(state),
 }))
 export class ServiceVersionsBlockWithData extends Component {
   static propTypes = {
-    serviceVersions: PropTypes.object,
     compositeInfo: PropTypes.object,
   };
 
   static defaultProps = {
-    serviceVersions: {},
     compositeInfo: {},
   };
 
@@ -32,12 +29,12 @@ export class ServiceVersionsBlockWithData extends Component {
       .then((res) => res.json())
       .then((latestServiceVersions) =>
         this.setState({
-          services: this.calculateServices(this.props.serviceVersions, latestServiceVersions),
+          services: this.calculateServices(latestServiceVersions),
         }),
       );
   }
 
-  calculateServices = (serviceVersions, latestServiceVersions) => {
+  calculateServices = (latestServiceVersions) => {
     const services = {};
     const { compositeInfo } = this.props;
 
