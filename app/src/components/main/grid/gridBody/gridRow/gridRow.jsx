@@ -160,6 +160,9 @@ export class GridRow extends Component {
       this.overflowCell.style.maxHeight = !this.state.expanded
         ? `${this.overflowCellMaxHeight}px`
         : null;
+
+      this.highlightBlockRef.current &&
+        this.highlightBlockRef.current.scrollIntoView({ behavior: 'smooth' });
     });
   };
 
