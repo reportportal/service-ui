@@ -13,10 +13,22 @@
   .controls {
     padding-right: 30px;
     display: flex;
+
+    @media (max-width: $SCREEN_SM_MAX) {
+      padding-right: 0;
+    }
+
+    @media (max-width: $SCREEN_XS_MAX) {
+      display: none;
+    }
   }
 
   .control {
     margin-left: 20px;
+
+    @media (max-width: $SCREEN_SM_MAX) {
+      margin-left: 15px;
+    }
   }
 
   .separate {
