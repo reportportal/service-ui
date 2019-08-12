@@ -68,7 +68,10 @@ export class MostTimeConsumingTestCases extends Component {
 
   render() {
     const {
-      widget: { name: launchName, contentParameters: { widgetOptions: { viewMode } = {} } = {} },
+      widget: {
+        contentParameters: { widgetOptions: { viewMode } = {} } = {},
+        content: { latestLaunch: { name, number } = {} },
+      },
       widget = {},
       intl: { formatMessage },
       height,
@@ -78,6 +81,8 @@ export class MostTimeConsumingTestCases extends Component {
       observer,
       container,
     } = this.props;
+
+    const launchName = number ? `${name} #${number}` : name;
 
     return (
       <div className={cx('most-time-consuming')}>

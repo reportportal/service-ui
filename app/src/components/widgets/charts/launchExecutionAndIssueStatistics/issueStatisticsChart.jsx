@@ -72,6 +72,7 @@ export class IssueStatisticsChart extends Component {
     onChangeLegend: PropTypes.func,
     onStatusPageMode: PropTypes.bool,
     launchFilters: PropTypes.array,
+    launchNameBlockHeight: PropTypes.number,
   };
 
   static defaultProps = {
@@ -82,6 +83,7 @@ export class IssueStatisticsChart extends Component {
     onChangeLegend: () => {},
     onStatusPageMode: false,
     launchFilters: [],
+    launchNameBlockHeight: 0,
   };
 
   state = {
@@ -256,8 +258,8 @@ export class IssueStatisticsChart extends Component {
   }
 
   getConfig = () => {
-    const { container, isPreview, onStatusPageMode } = this.props;
-    this.height = container.offsetHeight;
+    const { container, isPreview, onStatusPageMode, launchNameBlockHeight } = this.props;
+    this.height = container.offsetHeight - launchNameBlockHeight;
     this.width = container.offsetWidth;
     this.noAvailableData = false;
 
@@ -330,7 +332,7 @@ export class IssueStatisticsChart extends Component {
   defectItems = [];
 
   resizeIssuesChart = () => {
-    const newHeight = this.props.container.offsetHeight;
+    const newHeight = this.props.container.offsetHeight - this.props.launchNameBlockHeight;
     const newWidth = this.props.container.offsetWidth;
     if (this.height !== newHeight) {
       this.chart.resize({

@@ -8,14 +8,18 @@ import styles from './testsTableWidget.scss';
 
 const cx = classNames.bind(styles);
 
-export const TestsTableWidget = ({ launch, tests, issueType, columns, hideInfoBlock }) => (
-  <div className={cx('tests-table-widget')}>
-    <div className={cx('widget-wrapper')}>
-      {!hideInfoBlock && <LaunchInfoBlock launchName={launch.name} issueType={issueType} />}
-      <TestsTable columns={columns} tests={tests} launchId={launch.id} />
+export const TestsTableWidget = ({ launch, tests, issueType, columns, hideInfoBlock }) => {
+  const launchName = launch.number ? `${launch.name} #${launch.number}` : launch.name;
+
+  return (
+    <div className={cx('tests-table-widget')}>
+      <div className={cx('widget-wrapper')}>
+        {!hideInfoBlock && <LaunchInfoBlock launchName={launchName} issueType={issueType} />}
+        <TestsTable columns={columns} tests={tests} launchId={launch.id} />
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 TestsTableWidget.propTypes = {
   launch: object.isRequired,
