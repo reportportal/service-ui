@@ -46,7 +46,7 @@ export const ServiceVersionsBlock = ({ services }) => (
             serviceName={value.name}
             serviceVersion={value.version}
             serviceNewVersion={value.newVersion}
-            isDeprecated={value.isDeprecated}
+            isDeprecated={!!value.isDeprecated}
           />
         );
       })}
