@@ -54,7 +54,7 @@
 .launch-name-block {
   display: inline-flex;
   height: 40px;
-  z-index: 1;
+  z-index: $Z-INDEX-DEFAULT;
   align-items: center;
   text-overflow: ellipsis;
   overflow: hidden;
