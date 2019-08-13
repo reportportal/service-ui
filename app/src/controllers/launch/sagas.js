@@ -10,6 +10,9 @@ import { activeFilterSelector, changeActiveFilterAction } from 'controllers/filt
 import { showFilterOnLaunchesAction } from 'controllers/project';
 import { filterIdSelector } from 'controllers/pages';
 import { isEmptyValue } from 'common/utils/isEmptyValue';
+import { createFilterQuery } from 'components/filterEntities/containers/utils';
+import { formatSortingString, SORTING_ASC, SORTING_DESC, SORTING_KEY } from 'controllers/sorting';
+import { ENTITY_NUMBER } from 'components/filterEntities/constants';
 import {
   FETCH_LAUNCHES,
   NAMESPACE,
@@ -21,7 +24,6 @@ import {
   launchDistinctSelector,
   launchesDistinctLinksSelectorsMap,
 } from './selectors';
-import { createFilterQuery } from '../../components/filterEntities/containers/utils';
 
 function* fetchLaunchesWithParams({ payload }) {
   const activeProject = yield select(activeProjectSelector);
@@ -71,6 +73,16 @@ function* fetchLaunches() {
         .filter(notEmptyConditionsPredicate)
         .reduce((res, condition) => ({ ...res, [condition.filteringField]: condition }), {}),
     );
+    if (activeFilter.orders && activeFilter.orders[0]) {
+      const order = activeFilter.orders[0];
+      filtersQuery = {
+        ...filtersQuery,
+        [SORTING_KEY]: formatSortingString(
+          [order.sortingColumn, ENTITY_NUMBER],
+          order.isAsc ? SORTING_ASC : SORTING_DESC,
+        ),
+      };
+    }
   }
   yield call(fetchLaunchesWithParams, { payload: filtersQuery });
 }
