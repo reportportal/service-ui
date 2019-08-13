@@ -40,7 +40,8 @@ const messages = defineMessages({
   },
   attributesArrayValidationError: {
     id: 'CumulativeTrendControls.attributesArrayValidationError',
-    defaultMessage: 'First level attribute is required',
+    defaultMessage:
+      'Enter an attribute key whose unique values will be used for combine launches into groups',
   },
 });
 const validators = {

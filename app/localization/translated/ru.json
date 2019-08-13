@@ -259,7 +259,7 @@
   "CumulativeTrendControls.attributeKeyFieldPlaceholder": "Введите ключ атрибута",
   "CumulativeTrendControls.attributeKeyFieldTip": "Чтобы просмотреть динамику определенного атрибута, вы должны ввести его ключ",
   "CumulativeTrendControls.attributesArrayLabel": "Атрибуты",
-  "CumulativeTrendControls.attributesArrayValidationError": "Атрибут первого уровня обязателен",
+  "CumulativeTrendControls.attributesArrayValidationError": "Введите ключ атрибута, уникальные значения которого будут использоваться для объединения запусков в группы",
   "CumulativeTrendControls.attributesTitle": "Добавить атрибуты",
   "CustomColumnItem.attributeKeyPlaceholder": "Ключ атрибута",
   "CustomColumnItem.label": "Настраивыемый столбец",
