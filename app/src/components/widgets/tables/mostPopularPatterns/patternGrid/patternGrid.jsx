@@ -28,10 +28,6 @@ const messages = defineMessages({
     id: 'MostPopularPatterns.testCases',
     defaultMessage: 'Test cases',
   },
-  loadMore: {
-    id: 'MostPopularPatterns.loadMore',
-    defaultMessage: 'Load more',
-  },
 });
 
 const PATTERN_NAME_COLUMN = 'pattern';
@@ -114,7 +110,7 @@ export class PatternGrid extends Component {
     ];
   };
 
-  getDataByAttribute = (data, attribute) =>
+  getDataByAttribute = (data = [], attribute) =>
     (data.find((group) => group.attributeValue === attribute) || {}).patterns;
 
   getLinkToLaunch = (launchId) => {
@@ -155,7 +151,7 @@ export class PatternGrid extends Component {
     </thead>
   );
 
-  renderBody = (columns, data) => (
+  renderBody = (columns, data = []) => (
     <tbody>
       {data.map((row, rowIndex) => (
         <tr className={cx('patterns-row')} key={`row-${row.id || row.name || rowIndex}`}>
