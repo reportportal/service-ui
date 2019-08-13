@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
+import isEqual from 'fast-deep-equal';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { InputDropdown } from 'components/inputs/inputDropdown';
+import { NoDataAvailable } from 'components/widgets';
 import { PatternGrid } from './patternGrid';
 import { SecondLevelPanel } from './secondLevelPanel';
 import styles from './mostPopularPatterns.scss';
@@ -47,6 +49,15 @@ export class MostPopularPatterns extends Component {
     };
   }
 
+  componentDidUpdate(prevProps) {
+    if (
+      !isEqual(prevProps.widget.contentParameters, this.props.widget.contentParameters) ||
+      !isEqual(prevProps.widget.appliedFilters, this.props.widget.appliedFilters)
+    ) {
+      this.resetWidget();
+    }
+  }
+
   onBackClick = () => {
     this.props.clearQueryParams(() => {
       this.setState({
@@ -68,7 +79,7 @@ export class MostPopularPatterns extends Component {
       selectedAttribute: newAttribute,
     });
 
-  getAttributes = (data) =>
+  getAttributes = (data = []) =>
     data
       .map((group) => ({
         label: group.attributeValue,
@@ -76,7 +87,16 @@ export class MostPopularPatterns extends Component {
       }))
       .reverse();
 
-  getDefaultAttribute = (data) => (this.getAttributes(data) || [{}])[0].value;
+  getDefaultAttribute = (data = []) => (data.length ? this.getAttributes(data)[0].value : null);
+
+  resetWidget = () => {
+    this.props.clearQueryParams(() => {
+      this.setState({
+        selectedAttribute: this.getDefaultAttribute(this.props.widget.content.result),
+        selectedPattern: null,
+      });
+    });
+  };
 
   render() {
     const {
@@ -88,6 +108,9 @@ export class MostPopularPatterns extends Component {
       },
     } = this.props;
     const { selectedAttribute, selectedPattern } = this.state;
+
+    if (!result || !result.length) return <NoDataAvailable />;
+
     return (
       <div className={cx('popular-patterns')}>
         <div className={cx('attribute-selector')}>
