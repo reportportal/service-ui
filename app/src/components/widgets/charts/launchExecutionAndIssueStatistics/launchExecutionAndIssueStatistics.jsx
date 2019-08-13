@@ -16,7 +16,7 @@ const localMessages = defineMessages({
 });
 
 export const LaunchExecutionAndIssueStatistics = injectIntl((props) => {
-  const { result = {} } = props.widget.content;
+  const { result = [] } = props.widget.content;
   const { name, number } = result[0];
   const launchName = number ? `${name} #${number}` : name;
 
