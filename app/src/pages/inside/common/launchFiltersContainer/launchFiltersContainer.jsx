@@ -172,6 +172,7 @@ export class LaunchFiltersContainer extends Component {
     }
     this.props.fetchLaunchesWithParamsAction({
       [SORTING_KEY]: sortingString,
+      ...this.createQuery(this.getConditions()),
     });
   };
 
