@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { injectIntl, intlShape, defineMessages } from 'react-intl';
 import { connect } from 'react-redux';
@@ -9,7 +9,6 @@ import { URLS } from 'common/urls';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import LeftArrowIcon from 'common/img/arrow-left-small-inline.svg';
 import { activeProjectSelector } from 'controllers/user';
-import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { showDefaultErrorNotification } from 'controllers/notification';
 import { LaunchesDetailsTable } from '../../tables/components/launchesDetailsTable';
 import { CumulativeChartBreadcrumbs } from './legend/cumulativeChartBreadcrumbs';
@@ -24,6 +23,8 @@ const messages = defineMessages({
   },
 });
 
+const LAUNCHES_QUANTITY_STEP = 20;
+
 @connect(
   (state) => ({
     activeProject: activeProjectSelector(state),
@@ -31,7 +32,7 @@ const messages = defineMessages({
   { showDefaultErrorNotification },
 )
 @injectIntl
-export class CumulativeDetails extends PureComponent {
+export class CumulativeDetails extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
     selectedItem: PropTypes.object,
@@ -48,21 +49,27 @@ export class CumulativeDetails extends PureComponent {
     chartHeight: '100%',
   };
 
-  state = {
-    launches: [],
-    loading: !!this.props.selectedItem,
-  };
+  constructor(props) {
+    super(props);
+    const { selectedItem: { content = {} } = {} } = props;
+
+    this.launchIds = content.launchIds || [];
+    this.state = {
+      launches: [],
+      downloadedLaunchesLastIndex: 0,
+      loading: false,
+    };
+  }
 
   componentDidMount() {
-    if (this.props.selectedItem) {
-      this.fetchLaunches();
-    }
+    this.handleLaunchesListLoad();
   }
 
   getLaunchIds = () => {
-    const { selectedItem: { content = {} } = {} } = this.props;
+    const { downloadedLaunchesLastIndex } = this.state;
+    const endIndex = downloadedLaunchesLastIndex + LAUNCHES_QUANTITY_STEP;
 
-    return content.launchIds || [];
+    return this.launchIds.slice(downloadedLaunchesLastIndex, endIndex);
   };
 
   sortLaunchesByFailedItems = (launches) =>
@@ -76,9 +83,11 @@ export class CumulativeDetails extends PureComponent {
       method: 'get',
     })
       .then((res) => {
-        const launches = this.sortLaunchesByFailedItems(res.content);
+        const { launches: oldLaunches, downloadedLaunchesLastIndex: oldLastIndex } = this.state;
+        const launches = this.sortLaunchesByFailedItems(oldLaunches.concat(res.content));
         this.setState({
           launches,
+          downloadedLaunchesLastIndex: oldLastIndex + res.content.length,
           loading: false,
         });
       })
@@ -88,6 +97,20 @@ export class CumulativeDetails extends PureComponent {
           loading: false,
         });
       });
+  };
+
+  handleLaunchesListLoad = () => {
+    const { loading, downloadedLaunchesLastIndex } = this.state;
+
+    if (
+      !this.props.selectedItem ||
+      loading ||
+      downloadedLaunchesLastIndex >= this.launchIds.length
+    ) {
+      return;
+    }
+
+    this.fetchLaunches();
   };
 
   render() {
@@ -103,15 +126,13 @@ export class CumulativeDetails extends PureComponent {
           </span>
           <CumulativeChartBreadcrumbs isStatic activeAttributes={activeAttributes} />
         </div>
-        {loading ? (
-          <SpinningPreloader />
-        ) : (
-          <LaunchesDetailsTable
-            items={launches}
-            maxHeight={chartHeight}
-            noItemsMessage={intl.formatMessage(COMMON_LOCALE_KEYS.NO_RESULTS)}
-          />
-        )}
+        <LaunchesDetailsTable
+          items={launches}
+          loading={loading}
+          maxHeight={chartHeight}
+          noItemsMessage={intl.formatMessage(COMMON_LOCALE_KEYS.NO_RESULTS)}
+          onLazyLoad={this.handleLaunchesListLoad}
+        />
       </div>
     );
   }
