@@ -10,7 +10,7 @@ import InfoIcon from 'common/img/info-inline.svg';
 import { withTooltip } from 'components/main/tooltips/tooltip';
 import { TextTooltip } from 'components/main/tooltips/textTooltip';
 import { SEARCH_MODES } from './../../constants';
-import { messages } from './../../messages';
+import { messages } from './messages';
 import styles from './itemsListHeader.scss';
 
 const cx = classNames.bind(styles);
