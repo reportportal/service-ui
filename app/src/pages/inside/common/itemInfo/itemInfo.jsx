@@ -197,6 +197,7 @@ export class ItemInfo extends Component {
               <AttributesBlock
                 attributes={value.attributes}
                 onClickAttribute={customProps.onClickAttribute}
+                isAttributeClickable
               />
             )}
           {isStepLevel && (
