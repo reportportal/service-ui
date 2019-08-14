@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { ALL } from 'common/constants/reservedFilterIds';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
+import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { Grid } from 'components/main/grid';
 import { NoItemMessage } from 'components/main/noItemMessage';
 import {
@@ -28,12 +29,16 @@ export class LaunchesDetailsTable extends Component {
     items: PropTypes.array,
     maxHeight: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     noItemsMessage: PropTypes.string,
+    onLazyLoad: PropTypes.func,
+    loading: PropTypes.bool,
   };
 
   static defaultProps = {
     items: [],
     maxHeight: '100%',
     noItemsMessage: '',
+    onLazyLoad: null,
+    loading: false,
   };
 
   getColumns() {
@@ -121,12 +126,18 @@ export class LaunchesDetailsTable extends Component {
   columns = this.getColumns();
 
   render() {
-    const { items, maxHeight, noItemsMessage } = this.props;
+    const { items, loading, maxHeight, noItemsMessage, onLazyLoad } = this.props;
 
     return (
-      <ScrollWrapper hideTracksWhenNotNeeded autoHeight autoHeightMax={maxHeight}>
+      <ScrollWrapper
+        hideTracksWhenNotNeeded
+        autoHeight
+        autoHeightMax={maxHeight}
+        onLazyLoad={onLazyLoad}
+      >
         <Grid columns={this.columns} data={items} />
-        {!items.length && <NoItemMessage message={noItemsMessage} />}
+        {loading && <SpinningPreloader />}
+        {!items.length && !loading && <NoItemMessage message={noItemsMessage} />}
       </ScrollWrapper>
     );
   }
