@@ -1,7 +1,7 @@
 import React from 'react';
 import { PropTypes } from 'prop-types';
 import classNames from 'classnames/bind';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { injectIntl, intlShape } from 'react-intl';
 import { InputCheckbox } from 'components/inputs/inputCheckbox';
 import { InputDropdown } from 'components/inputs/inputDropdown';
 import { FilterItem } from 'pages/inside/common/launchFiltersToolbar/filterList/filterItem';
@@ -10,40 +10,10 @@ import InfoIcon from 'common/img/info-inline.svg';
 import { withTooltip } from 'components/main/tooltips/tooltip';
 import { TextTooltip } from 'components/main/tooltips/textTooltip';
 import { SEARCH_MODES } from './../../constants';
+import { messages } from './../../messages';
 import styles from './itemsListHeader.scss';
 
 const cx = classNames.bind(styles);
-
-const messages = defineMessages({
-  changeSimilarItems: {
-    id: 'EditDefectModal.changeSimilarItems',
-    defaultMessage: 'Change Similar Items',
-  },
-  currentLaunchMode: {
-    id: 'EditDefectModal.currentLaunchMode',
-    defaultMessage: 'For the current launch ',
-  },
-  sameLaunchNameMode: {
-    id: 'EditDefectModal.sameLaunchNameMode',
-    defaultMessage: 'Launches with the same name',
-  },
-  filterMode: {
-    id: 'EditDefectModal.filterMode',
-    defaultMessage: 'For the current applied filter',
-  },
-  [`${SEARCH_MODES.CURRENT_LAUNCH}Tooltip`]: {
-    id: 'EditDefectModal.currentLaunchTooltip',
-    defaultMessage: 'Test items with similar failure reason in launch {launch}',
-  },
-  [`${SEARCH_MODES.FILTER}Tooltip`]: {
-    id: 'EditDefectModal.filterTooltip',
-    defaultMessage: 'Test items with similar failure reason in last 10 launches of Filter {filter}',
-  },
-  [`${SEARCH_MODES.LAUNCH_NAME}Tooltip`]: {
-    id: 'EditDefectModal.launchNameTooltip',
-    defaultMessage: 'Test items with similar failure reason in last 10 launches of launch {launch}',
-  },
-});
 
 const InfoTooltipIcon = withTooltip({
   TooltipComponent: TextTooltip,

@@ -3,7 +3,7 @@ import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { injectIntl, intlShape } from 'react-intl';
 import { activeProjectSelector } from 'controllers/user';
 import { availableBtsIntegrationsSelector, isPostIssueActionAvailable } from 'controllers/plugins';
 import { fetchTestItemsAction, launchSelector } from 'controllers/testItem';
@@ -24,75 +24,9 @@ import { InputDropdown } from 'components/inputs/inputDropdown';
 import { SEARCH_MODES, CHANGE_COMMENT_MODE, CURRENT_CHANGE_DEFECT_COMMENT_MODE } from './constants';
 import styles from './editToInvestigateDefectModal.scss';
 import { ItemsList } from './itemsList';
+import { messages } from './messages';
 
 const cx = classNames.bind(styles);
-
-const messages = defineMessages({
-  ignoreAaTitle: {
-    id: 'EditDefectModal.ignoreAaTitle',
-    defaultMessage: 'Ignore in Auto Analysis',
-  },
-  title: {
-    id: 'EditDefectModal.title',
-    defaultMessage: 'Edit defect type',
-  },
-  notChangeCommentTitle: {
-    id: 'EditDefectModal.notChangeCommentTitle',
-    defaultMessage: "Don't change comment",
-  },
-  replaceCommentsTitle: {
-    id: 'EditDefectModal.replaceCommentsTitleShort',
-    defaultMessage: 'Replace comments to all selected items',
-  },
-  addToExistingCommentTitle: {
-    id: 'EditDefectModal.addToExistingCommentTitle',
-    defaultMessage: 'Add new data to existing comments',
-  },
-  hotKeyCancelCaption: {
-    id: 'EditDefectModal.hotKeyCancelCaption',
-    defaultMessage: 'to cancel',
-  },
-  hotKeySubmitCaption: {
-    id: 'EditDefectModal.hotKeySubmitCaption',
-    defaultMessage: 'to submit',
-  },
-  defectTypeTitle: {
-    id: 'EditDefectModal.defectTypeTitle',
-    defaultMessage: 'Defect type',
-  },
-  saveAndPostIssueMessage: {
-    id: 'EditDefectModal.saveAndPostIssueMessage',
-    defaultMessage: 'Save and post issue',
-  },
-  saveAndLinkIssueMessage: {
-    id: 'EditDefectModal.saveAndLinkIssueMessage',
-    defaultMessage: 'Save and link issue',
-  },
-  saveAndUnlinkIssueMessage: {
-    id: 'EditDefectModal.saveAndUnlinkIssueMessage',
-    defaultMessage: 'Save and unlink issue',
-  },
-  updateDefectsSuccess: {
-    id: 'EditDefectModal.updateDefectsSuccess',
-    defaultMessage: 'Defects have been updated',
-  },
-  updateDefectsFailed: {
-    id: 'EditDefectModal.updateDefectsFailed',
-    defaultMessage: 'Failed to update defects',
-  },
-  defectTypeSelectorPlaceholder: {
-    id: 'EditDefectModal.defectTypeSelectorPlaceholder',
-    defaultMessage: 'Choose defect type',
-  },
-  defectCommentPlaceholder: {
-    id: 'EditDefectModal.defectCommentPlaceholder',
-    defaultMessage: 'Leave comment to defect type',
-  },
-  selectedCount: {
-    id: 'EditToInvestigateDefectModal.selectedCount',
-    defaultMessage: '{count} items selected',
-  },
-});
 
 @withModal('editToInvestigateDefectModal')
 @injectIntl
@@ -100,7 +34,6 @@ const messages = defineMessages({
   (state) => ({
     btsIntegrations: availableBtsIntegrationsSelector(state),
     activeProject: activeProjectSelector(state),
-    url: URLS.testItems(activeProjectSelector(state)),
     currentLaunch: launchSelector(state),
     currentFilter: activeFilterSelector(state),
   }),
@@ -181,6 +114,21 @@ export class EditToInvestigateDefectModal extends Component {
         disabled: !item.issue.externalSystemIssues || !item.issue.externalSystemIssues.length,
       },
     ];
+
+    this.changeCommentModeOptions = [
+      {
+        value: CHANGE_COMMENT_MODE.NOT_CHANGE,
+        label: intl.formatMessage(messages.notChangeCommentTitle),
+      },
+      {
+        value: CHANGE_COMMENT_MODE.REPLACE,
+        label: intl.formatMessage(messages.replaceCommentsTitle),
+      },
+      {
+        value: CHANGE_COMMENT_MODE.ADD_TO_EXISTING,
+        label: intl.formatMessage(messages.addToExistingCommentTitle),
+      },
+    ];
   }
 
   componentDidMount() {
@@ -204,24 +152,6 @@ export class EditToInvestigateDefectModal extends Component {
     return {
       confirmationWarning: this.props.intl.formatMessage(COMMON_LOCALE_KEYS.CLOSE_MODAL_WARNING),
     };
-  };
-
-  getChangeCommentModeOptions = () => {
-    const { intl } = this.props;
-    return [
-      {
-        value: CHANGE_COMMENT_MODE.NOT_CHANGE,
-        label: intl.formatMessage(messages.notChangeCommentTitle),
-      },
-      {
-        value: CHANGE_COMMENT_MODE.REPLACE,
-        label: intl.formatMessage(messages.replaceCommentsTitle),
-      },
-      {
-        value: CHANGE_COMMENT_MODE.ADD_TO_EXISTING,
-        label: intl.formatMessage(messages.addToExistingCommentTitle),
-      },
-    ];
   };
 
   prepareDataToSend = () => {
@@ -408,7 +338,7 @@ export class EditToInvestigateDefectModal extends Component {
     <div className={cx('footer')}>
       <div className={cx('change-mode-dropdown')}>
         <InputDropdown
-          options={this.getChangeCommentModeOptions()}
+          options={this.changeCommentModeOptions}
           value={this.state.changeCommentMode}
           onChange={this.handleChangeCommentMode}
         />

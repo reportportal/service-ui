@@ -279,14 +279,7 @@ export class StepPage extends Component {
 
   handleEditDefects = (eventData) => {
     const items = eventData && eventData.id ? [eventData] : this.props.selectedItems;
-    if (
-      items.length === 1 &&
-      items[0].issue &&
-      items[0].issue.issueType &&
-      this.props.getDefectType(items[0].issue.issueType).typeRef.toUpperCase() ===
-        TO_INVESTIGATE.toUpperCase() &&
-      !this.props.debugMode
-    ) {
+    if (this.isGroupOperationAvailable(eventData)) {
       this.props.showModalAction({
         id: 'editToInvestigateDefectModal',
         data: { item: items[0], fetchFunc: this.props.fetchTestItemsAction },
@@ -297,6 +290,18 @@ export class StepPage extends Component {
         debugMode: this.props.debugMode,
       });
     }
+  };
+
+  isGroupOperationAvailable = (editedData) => {
+    const items = editedData && editedData.id ? [editedData] : this.props.selectedItems;
+    return (
+      items.length === 1 &&
+      items[0].issue &&
+      items[0].issue.issueType &&
+      this.props.getDefectType(items[0].issue.issueType).typeRef.toUpperCase() ===
+        TO_INVESTIGATE.toUpperCase() &&
+      !this.props.debugMode
+    );
   };
 
   proceedWithValidItems = () => {

@@ -4,22 +4,16 @@ import classNames from 'classnames/bind';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { NoItemMessage } from 'components/main/noItemMessage';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { injectIntl, intlShape } from 'react-intl';
 import { ItemsListHeader } from './itemsListHeader';
 import { ItemsListRow } from './itemsListRow';
 import styles from './itemsList.scss';
 import { SEARCH_MODES } from '../constants';
+import { messages } from '../messages';
 
 const cx = classNames.bind(styles);
 
-const messages = defineMessages({
-  noItems: {
-    id: 'EditToInvestigateDefectModal.noItems',
-    defaultMessage: 'No similar items',
-  },
-});
-
-export const ItemsListBody = ({ testItems, selectedItems, ...rest }) => (
+const ItemsListBody = ({ testItems, selectedItems, ...rest }) => (
   <ScrollWrapper autoHeight autoHeightMax={400} hideTracksWhenNotNeeded>
     {testItems.map((item) => {
       const selected = selectedItems.some((selectedItem) => selectedItem.itemId === item.itemId);
