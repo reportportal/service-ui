@@ -4,7 +4,7 @@ import classNames from 'classnames/bind';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import Parser from 'html-react-parser';
 import { InputCheckbox } from 'components/inputs/inputCheckbox';
-import { PASSED, FAILED, SKIPPED } from 'common/constants/testStatuses';
+import { PASSED, FAILED, SKIPPED, ALL_STATUSES } from 'common/constants/testStatuses';
 import ArrowIcon from 'common/img/arrow-down-inline.svg';
 
 import styles from './logStatusBlock.scss';
@@ -22,9 +22,9 @@ const messages = defineMessages({
     id: 'LogStatusBlock.statusSkipped',
     defaultMessage: 'Skipped',
   },
-  statusLabel: {
+  [`status${ALL_STATUSES}`]: {
     id: 'LogStatusBlock.statusLabel',
-    defaultMessage: 'ALL STATUSES',
+    defaultMessage: 'All statuses',
   },
   statusAllLabel: {
     id: 'LogStatusBlock.statusAllLabel',
@@ -61,6 +61,19 @@ export class LogStatusBlock extends Component {
   getLogStatusArray = () => {
     const { logStatus } = this.props;
     return logStatus ? logStatus.split(',') : [];
+  };
+
+  getStatusLabel = () => {
+    const { intl } = this.props;
+    const arr = this.getLogStatusArray();
+    if (!arr.length || arr.length === this.statusArray.length) {
+      return intl.formatMessage(messages[`status${ALL_STATUSES}`]).toUpperCase();
+    }
+
+    return arr
+      .map((item) => intl.formatMessage(messages[`status${item}`]))
+      .join(', ')
+      .toUpperCase();
   };
 
   node = React.createRef();
@@ -130,7 +143,7 @@ export class LogStatusBlock extends Component {
           })}
           onClick={this.toggleDropdown}
         >
-          {intl.formatMessage(messages.statusLabel)} {Parser(ArrowIcon)}
+          {this.getStatusLabel()} {Parser(ArrowIcon)}
         </div>
         {opened && (
           <div className={cx('status-list')}>
