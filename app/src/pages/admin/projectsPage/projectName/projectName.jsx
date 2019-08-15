@@ -86,6 +86,7 @@ export class ProjectName extends Component {
           payload: { projectId: projectName },
         }}
         onClick={this.onProjectClick}
+        title={projectName}
       >
         {projectName}
       </Link>
