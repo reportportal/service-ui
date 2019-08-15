@@ -213,6 +213,7 @@ export class LaunchSuiteGrid extends PureComponent {
     onFilterClick: PropTypes.func,
     events: PropTypes.object,
     onAnalysis: PropTypes.func,
+    onPatternAnalysis: PropTypes.func,
     rowHighlightingConfig: PropTypes.shape({
       onGridRowHighlighted: PropTypes.func,
       isGridRowHighlighted: PropTypes.bool,
@@ -236,6 +237,7 @@ export class LaunchSuiteGrid extends PureComponent {
     onFilterClick: () => {},
     events: {},
     onAnalysis: () => {},
+    onPatternAnalysis: () => {},
     rowHighlightingConfig: PropTypes.shape({
       onGridRowHighlighted: () => {},
       isGridRowHighlighted: false,
@@ -250,6 +252,7 @@ export class LaunchSuiteGrid extends PureComponent {
         onMove: this.props.onMove,
         onForceFinish: this.props.onForceFinish,
         onAnalysis: this.props.onAnalysis,
+        onPatternAnalysis: this.props.onPatternAnalysis,
       },
     };
     const { events } = this.props;

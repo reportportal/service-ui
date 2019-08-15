@@ -28,6 +28,11 @@ export const LAUNCHES_PAGE_EVENTS = {
     action: 'Click on "Analysis" in Launch Menu',
     label: 'Starts Analysing',
   },
+  CLICK_PATTERN_ANALYSIS_LAUNCH_MENU: {
+    category: LAUNCHES_PAGE,
+    action: 'Click on "Pattern analysis" in Launch Menu',
+    label: 'Starts pattern analysis',
+  },
   CLICK_DELETE_LAUNCH_MENU: {
     category: LAUNCHES_PAGE,
     action: 'Click on "Delete" in Launch Menu',

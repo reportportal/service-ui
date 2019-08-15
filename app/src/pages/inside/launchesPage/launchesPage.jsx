@@ -13,6 +13,7 @@ import { PageLayout, PageSection } from 'layouts/pageLayout';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
 import { LAUNCH_ITEM_TYPES } from 'common/constants/launchItemTypes';
+import { ANALYZER_TYPES } from 'common/constants/analyzerTypes';
 import { IN_PROGRESS } from 'common/constants/testStatuses';
 import { levelSelector } from 'controllers/testItem';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
@@ -100,6 +101,10 @@ const messages = defineMessages({
   analyseStartSuccess: {
     id: 'LaunchesPage.analyseStartSuccess',
     defaultMessage: 'Auto-analyzer has been started.',
+  },
+  patternAnalyseStartSuccess: {
+    id: 'LaunchesPage.patternAnalyseStartSuccess',
+    defaultMessage: 'Pattern analyzer has been started.',
   },
   addWidgetSuccess: {
     id: 'LaunchesPage.addWidgetSuccess',
@@ -316,8 +321,21 @@ export class LaunchesPage extends Component {
       id: 'analysisLaunchModal',
       data: {
         item: launch,
-        onConfirm: (data) => this.analyseItem(launch, data),
+        onConfirm: (data) => this.autoAnalyseItem(launch, data),
         analyzerMode: attributes['analyzer.autoAnalyzerMode'],
+      },
+    });
+  };
+  onPatternAnalysis = (launch) => {
+    const {
+      tracking: { trackEvent },
+    } = this.props;
+    trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_PATTERN_ANALYSIS_LAUNCH_MENU);
+    this.props.showModalAction({
+      id: 'launchPatternAnalysisModal',
+      data: {
+        item: launch,
+        onConfirm: (data) => this.patternAnalyseItem(launch, data),
       },
     });
   };
@@ -376,14 +394,17 @@ export class LaunchesPage extends Component {
       },
     });
   };
-  analyseItem = (launch, data) => {
+  autoAnalyseItem = (launch, data) => {
     const {
       activeProject,
       intl: { formatMessage },
     } = this.props;
     fetch(URLS.launchAnalyze(activeProject), {
       method: 'POST',
-      data,
+      data: {
+        ...data,
+        analyzerTypeName: ANALYZER_TYPES.AUTO_ANALYZER,
+      },
     })
       .then(() => {
         this.props.showNotification({
@@ -392,7 +413,38 @@ export class LaunchesPage extends Component {
         });
         const item = {
           ...launch,
-          analyzing: true,
+          autoAnalyzing: true,
+        };
+        this.props.updateLaunchLocallyAction(item);
+      })
+      .catch((error) => {
+        this.props.showNotification({
+          message: error.message,
+          type: NOTIFICATION_TYPES.ERROR,
+        });
+      });
+  };
+
+  patternAnalyseItem = (launch, data) => {
+    const {
+      activeProject,
+      intl: { formatMessage },
+    } = this.props;
+    fetch(URLS.launchAnalyze(activeProject), {
+      method: 'POST',
+      data: {
+        ...data,
+        analyzerTypeName: ANALYZER_TYPES.PATTERN_ANALYSER,
+      },
+    })
+      .then(() => {
+        this.props.showNotification({
+          message: formatMessage(messages.patternAnalyseStartSuccess),
+          type: NOTIFICATION_TYPES.SUCCESS,
+        });
+        const item = {
+          ...launch,
+          patternAnalyzing: true,
         };
         this.props.updateLaunchLocallyAction(item);
       })
@@ -719,6 +771,7 @@ export class LaunchesPage extends Component {
                 onFilterClick={onFilterAdd}
                 events={LAUNCHES_PAGE_EVENTS}
                 onAnalysis={this.onAnalysis}
+                onPatternAnalysis={this.onPatternAnalysis}
                 rowHighlightingConfig={rowHighlightingConfig}
               />
               {!!pageCount &&

@@ -157,7 +157,12 @@ export class ItemInfo extends Component {
             >
               {value.number && <span className={cx('number')}>#{value.number}</span>}
             </NameLink>
-            {value.analyzing && <div className={cx('item-badge', 'analysis')}>Analysis</div>}
+            {value.autoAnalyzing && (
+              <div className={cx('item-badge', 'auto-analysis')}>Auto-analysis</div>
+            )}
+            {value.patternAnalyzing && (
+              <div className={cx('item-badge', 'pattern-analysis')}>Pattern-analysis</div>
+            )}
             {value.rerun && <div className={cx('item-badge', 'rerun')}>Rerun</div>}
             {isEditVisible && (
               <span className={cx('edit-icon')} onClick={this.handleEditItem}>
