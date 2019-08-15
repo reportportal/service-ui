@@ -60,8 +60,13 @@
     margin-right: 0;
   }
 
-  &.analysis {
+  &.auto-analysis {
     background-color: $COLOR--orange-red;
+    animation: auto-analyze-blink 1s linear reverse infinite;
+  }
+
+  &.pattern-analysis {
+    background-color: $COLOR--dark-pastel-green;
     animation: auto-analyze-blink 1s linear reverse infinite;
   }
 
