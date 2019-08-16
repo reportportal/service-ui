@@ -36,7 +36,7 @@ const cx = classNames.bind(styles);
 const messages = defineMessages({
   retryTooltip: {
     id: 'ItemInfo.RetryTooltip',
-    defaultMessage: 'Launch has test items with retries',
+    defaultMessage: 'Launch has retries of the test cases',
   },
 });
 
