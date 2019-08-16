@@ -31,7 +31,7 @@ import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { defectColorsSelector } from 'controllers/project';
 import { activeProjectSelector } from 'controllers/user';
-import { C3Chart } from 'components/widgets/charts/common/c3chart';
+import { C3Chart } from 'components/widgets/common/c3chart';
 import styles from './launchCompareModal.scss';
 
 const cx = classNames.bind(styles);
