@@ -8,9 +8,8 @@ import {
   FailedCasesTrendChart,
   NonPassedTestCasesTrendChart,
   PassingRatePerLaunch,
+  PassingRateSummary,
   LaunchExecutionAndIssueStatistics,
-  CumulativeTrendChart,
-  ComponentHealthCheck,
   OverallStatisticsChart,
   InvestigatedTrendChart,
 } from './singleLevelWidgets/charts';
@@ -21,7 +20,6 @@ import {
   MostFailedTests,
   ProjectActivity,
   ProductStatus,
-  MostPopularPatterns,
 } from './singleLevelWidgets/tables';
 import {
   cumulativeFormatParams,
@@ -29,6 +27,11 @@ import {
   componentHealthCheckFormatParams,
 } from './utils';
 import { MostTimeConsumingTestCases } from './singleLevelWidgets/mostTimeConsumingTestCases';
+import {
+  CumulativeTrendChart,
+  MostPopularPatterns,
+  ComponentHealthCheck,
+} from './multiLevelWidgets';
 
 const CHARTS = {
   [widgetTypes.DIFFERENT_LAUNCHES_COMPARISON]: LaunchesComparisonChart,
@@ -39,7 +42,7 @@ const CHARTS = {
   [widgetTypes.TEST_CASES_GROWTH_TREND]: TestCasesGrowthTrendChart,
   [widgetTypes.LAUNCH_DURATION]: LaunchesDurationChart,
   [widgetTypes.PASSING_RATE_PER_LAUNCH]: PassingRatePerLaunch,
-  [widgetTypes.PASSING_RATE_SUMMARY]: PassingRatePerLaunch,
+  [widgetTypes.PASSING_RATE_SUMMARY]: PassingRateSummary,
   [widgetTypes.LAUNCH_EXECUTION_AND_ISSUE_STATISTICS]: LaunchExecutionAndIssueStatistics,
   [widgetTypes.LAUNCHES_TABLE]: LaunchesTable,
   [widgetTypes.UNIQUE_BUGS_TABLE]: UniqueBugsTable,

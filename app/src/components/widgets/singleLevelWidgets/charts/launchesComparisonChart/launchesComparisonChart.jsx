@@ -9,9 +9,9 @@ import { TEST_ITEM_PAGE } from 'controllers/pages';
 import { defectTypesSelector } from 'controllers/project';
 import { defectLinkSelector, statisticsLinkSelector } from 'controllers/testItem';
 import { activeProjectSelector } from 'controllers/user';
-import { getDefectTypeLocators, getItemNameConfig } from '../../../common/utils';
-import { C3Chart } from '../../../common/c3chart';
-import { Legend } from '../../../common/legend';
+import { getDefectTypeLocators, getItemNameConfig } from 'components/widgets/common/utils';
+import { C3Chart } from 'components/widgets/common/c3chart';
+import { Legend } from 'components/widgets/common/legend';
 import { getConfig } from './config/getConfig';
 import styles from './launchesComparisonChart.scss';
 

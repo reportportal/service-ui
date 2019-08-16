@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 EPAM Systems
+ * Copyright 2018 EPAM Systems
  *
  *
  * This file is part of EPAM Report Portal.
@@ -22,17 +22,13 @@
 import { storiesOf } from '@storybook/react';
 import { host } from 'storybook-host';
 import { withReadme } from 'storybook-readme';
-import { PassingRatePerLaunch } from './passingRatePerLaunch';
+import { PassingRateChart } from './passingRateChart';
 import { passingRateBarData, passingRatePieData } from './demoData';
 import README from './README.md';
 
 const mockNode = document.createElement('node');
-const mockObserver = {
-  subscribe: () => {},
-  unsubscribe: () => {},
-};
 
-storiesOf('Components/Widgets/Charts/PassingRatePerLaunch', module)
+storiesOf('Components/Widgets/Charts/PassingRateChart', module)
   .addDecorator(
     host({
       title: 'Passing Rate per Launch',
@@ -45,32 +41,14 @@ storiesOf('Components/Widgets/Charts/PassingRatePerLaunch', module)
   )
   .addDecorator(withReadme(README))
   .add('launch bar mode', () => (
-    <PassingRatePerLaunch
-      widget={passingRateBarData}
-      container={mockNode}
-      observer={mockObserver}
-    />
+    <PassingRateChart widget={passingRateBarData} container={mockNode} />
   ))
   .add('launch bar mode preview', () => (
-    <PassingRatePerLaunch
-      widget={passingRateBarData}
-      isPreview
-      container={mockNode}
-      observer={mockObserver}
-    />
+    <PassingRateChart widget={passingRateBarData} isPreview container={mockNode} />
   ))
   .add('launch pie mode', () => (
-    <PassingRatePerLaunch
-      widget={passingRatePieData}
-      container={mockNode}
-      observer={mockObserver}
-    />
+    <PassingRateChart widget={passingRatePieData} container={mockNode} />
   ))
   .add('launch pie mode preview', () => (
-    <PassingRatePerLaunch
-      widget={passingRatePieData}
-      isPreview
-      container={mockNode}
-      observer={mockObserver}
-    />
+    <PassingRateChart widget={passingRatePieData} isPreview container={mockNode} />
   ));

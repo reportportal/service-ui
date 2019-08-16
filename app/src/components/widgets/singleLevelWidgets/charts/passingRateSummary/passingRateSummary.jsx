@@ -2,15 +2,15 @@ import PropTypes from 'prop-types';
 import { messages } from 'components/widgets/common/messages';
 import { PassingRateChart } from '../common/passingRateChart';
 
-const getFilterName = (widget) => widget.contentParameters.widgetOptions.launchNameFilter;
+const getFilterName = ({ appliedFilters = [] }) => appliedFilters[0] && appliedFilters[0].name;
 
-export const PassingRatePerLaunch = (props) => (
+export const PassingRateSummary = (props) => (
   <PassingRateChart
     {...props}
-    filterNameTitle={messages.launchName}
+    filterNameTitle={messages.filterLabel}
     filterName={getFilterName(props.widget)}
   />
 );
-PassingRatePerLaunch.propTypes = {
+PassingRateSummary.propTypes = {
   widget: PropTypes.object.isRequired,
 };

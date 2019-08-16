@@ -21,13 +21,15 @@ export const LaunchExecutionAndIssueStatistics = injectIntl((props) => {
       content: { result = [] },
     },
     onStatusPageMode,
+    isPreview,
   } = props;
   const { name, number } = result[0];
   const launchName = number ? `${name} #${number}` : name;
+  const isLaunchNameBlockNeeded = !isPreview && launchName && !onStatusPageMode;
 
   return (
     <div className={cx('launch-execution-and-issues-chart')}>
-      {!onStatusPageMode && (
+      {isLaunchNameBlockNeeded && (
         <div className={cx('launch-name-block')}>
           <span className={cx('launch-name-text')}>
             {`${props.intl.formatMessage(localMessages.launchNameText)} `}
@@ -35,9 +37,15 @@ export const LaunchExecutionAndIssueStatistics = injectIntl((props) => {
           <span className={cx('launch-name')}>{`${launchName}`}</span>
         </div>
       )}
-      <div className={cx('widgets-wrapper')}>
-        <LaunchExecutionChart {...props} launchNameBlockHeight={launchNameBlockHeight} />
-        <IssueStatisticsChart {...props} launchNameBlockHeight={launchNameBlockHeight} />
+      <div className={cx('widgets-wrapper', { 'with-launch-name-block': isLaunchNameBlockNeeded })}>
+        <LaunchExecutionChart
+          {...props}
+          launchNameBlockHeight={isLaunchNameBlockNeeded ? launchNameBlockHeight : 0}
+        />
+        <IssueStatisticsChart
+          {...props}
+          launchNameBlockHeight={isLaunchNameBlockNeeded ? launchNameBlockHeight : 0}
+        />
       </div>
     </div>
   );

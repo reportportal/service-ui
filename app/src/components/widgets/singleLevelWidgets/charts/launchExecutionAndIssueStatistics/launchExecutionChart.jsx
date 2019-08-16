@@ -38,14 +38,12 @@ import { defectTypesSelector } from 'controllers/project';
 import { TEST_ITEM_PAGE } from 'controllers/pages';
 import { ALL } from 'common/constants/reservedFilterIds';
 import { FAILED, INTERRUPTED } from 'common/constants/testStatuses';
-import { TooltipWrapper } from '../../../common/tooltip';
 import { C3Chart } from '../../../common/c3chart';
 import chartStyles from './launchExecutionAndIssueStatistics.scss';
 import { Legend } from '../../../common/legend';
-import { LaunchExecutionAndIssueStatisticsTooltip } from './launchExecutionAndIssueStatisticsTooltip';
 import { getPercentage, getDefectItems, getChartData } from './chartUtils';
-import { messages } from './messages';
 import { getItemNameConfig } from '../../../common/utils';
+import { IssueTypeStatTooltip } from '../common/issueTypeStatTooltip';
 
 const chartCx = classNames.bind(chartStyles);
 const getResult = (widget) => widget.content.result[0] || widget.content.result;
@@ -344,21 +342,18 @@ export class LaunchExecutionChart extends Component {
     }
   };
 
-  // This function is a reimplementation of its d3 counterpart, and it needs 4 arguments of which 2 are not used here.
-  // These two are named a and b in the original implementation.
-
   renderStatusContents = (data, a, b, color) => {
-    const launchData = this.statusItems.find((item) => item.id === data[0].id);
+    const {
+      intl: { formatMessage },
+    } = this.props;
+    const { value, ratio, id } = data[0];
 
     return ReactDOMServer.renderToStaticMarkup(
-      <TooltipWrapper>
-        <LaunchExecutionAndIssueStatisticsTooltip
-          launchNumber={data[0].value}
-          duration={getPercentage(data[0].ratio)}
-          color={color(launchData.name)}
-          itemName={this.props.intl.formatMessage(messages[launchData.name.split('$total')[0]])}
-        />
-      </TooltipWrapper>,
+      <IssueTypeStatTooltip
+        itemsCount={`${value} (${getPercentage(ratio)}%)`}
+        color={color(id)}
+        issueStatNameProps={{ itemName: id, defectTypes: {}, formatMessage }}
+      />,
     );
   };
 

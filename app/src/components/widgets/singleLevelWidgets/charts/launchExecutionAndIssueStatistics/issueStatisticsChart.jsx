@@ -36,18 +36,16 @@ import { launchFiltersSelector } from 'controllers/filter';
 import { activeProjectSelector } from 'controllers/user';
 import { TEST_ITEM_PAGE } from 'controllers/pages';
 import { ALL } from 'common/constants/reservedFilterIds';
-import { TooltipWrapper } from '../../../common/tooltip';
 import { C3Chart } from '../../../common/c3chart';
 import chartStyles from './launchExecutionAndIssueStatistics.scss';
 import { Legend } from '../../../common/legend';
 import { getDefectTypeLocators, getItemNameConfig } from '../../../common/utils';
-import { LaunchExecutionAndIssueStatisticsTooltip } from './launchExecutionAndIssueStatisticsTooltip';
+import { IssueTypeStatTooltip } from '../common/issueTypeStatTooltip';
 import { getPercentage, getChartData } from './chartUtils';
 
 const chartCx = classNames.bind(chartStyles);
 const getResult = (widget) => widget.content.result[0] || widget.content.result;
 
-@injectIntl
 @connect(
   (state) => ({
     project: activeProjectSelector(state),
@@ -61,6 +59,7 @@ const getResult = (widget) => widget.content.result[0] || widget.content.result;
     navigate: (linkAction) => linkAction,
   },
 )
+@injectIntl
 export class IssueStatisticsChart extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
@@ -371,23 +370,19 @@ export class IssueStatisticsChart extends Component {
     }
   };
 
-  // This function is a reimplementation of its d3 counterpart, and it needs 4 arguments of which 2 are not used here.
-  // These two are named a and b in the original implementation.
   renderIssuesContents = (data, a, b, color) => {
-    const launchData = this.defectItems.find((item) => item.id === data[0].id);
-    const itemName = Object.values(this.props.defectTypes)
-      .reduce((result, defectTypes) => [...result, ...defectTypes], [])
-      .find((defectType) => defectType.locator === launchData.id.split('$')[3]).longName;
+    const {
+      intl: { formatMessage },
+      defectTypes,
+    } = this.props;
+    const { value, ratio, id } = data[0];
 
     return ReactDOMServer.renderToStaticMarkup(
-      <TooltipWrapper>
-        <LaunchExecutionAndIssueStatisticsTooltip
-          launchNumber={data[0].value}
-          duration={getPercentage(data[0].ratio)}
-          color={color(data[0].name)}
-          itemName={itemName}
-        />
-      </TooltipWrapper>,
+      <IssueTypeStatTooltip
+        itemsCount={`${value} (${getPercentage(ratio)}%)`}
+        color={color(id)}
+        issueStatNameProps={{ itemName: id, defectTypes, formatMessage }}
+      />,
     );
   };
 

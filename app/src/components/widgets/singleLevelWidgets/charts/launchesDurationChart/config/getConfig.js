@@ -6,7 +6,7 @@ import {
 } from 'components/widgets/common/utils';
 import { createTooltipRenderer } from 'components/widgets/common/tooltip';
 import { DURATION, isValueInterrupted, prepareChartData, calculateTooltipParams } from './utils';
-import { LaunchDurationTooltip } from './launchDurationTooltip';
+import { LaunchesDurationTooltip } from './launchesDurationTooltip';
 
 export const getConfig = ({ content, isPreview, formatMessage, positionCallback, size }) => {
   const { timeType, chartData, itemsData = [] } = prepareChartData(content);
@@ -74,7 +74,7 @@ export const getConfig = ({ content, isPreview, formatMessage, positionCallback,
     tooltip: {
       grouped: true,
       position: positionCallback,
-      contents: createTooltipRenderer(LaunchDurationTooltip, calculateTooltipParams, {
+      contents: createTooltipRenderer(LaunchesDurationTooltip, calculateTooltipParams, {
         itemsData,
         timeType,
         formatMessage,

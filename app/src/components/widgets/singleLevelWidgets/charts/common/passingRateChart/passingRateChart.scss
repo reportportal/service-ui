@@ -1,4 +1,4 @@
-.passing-rate-per-launch {
+.passing-rate-chart {
   :global {
     .c3-chart-text text,
     .c3-chart-text .c3-text,
@@ -18,7 +18,7 @@
   }
 }
 
-.launch-info-block {
+.filter-info-block {
   display: inline-block;
   width: 100%;
   max-width: 80%;
@@ -29,16 +29,16 @@
   font-size: 12px;
   text-align: left;
 
-  .launch-name-title {
+  .filter-name-title {
     margin-right: 5px;
     text-transform: uppercase;
   }
 
-  .launch-name {
+  .filter-name {
     display: inline-block;
     max-width: 73%;
     overflow: hidden;
-    vertical-align: bottom;
+    vertical-align: sub;
     color: $COLOR--charcoal-grey;
     font-size: 13px;
     white-space: nowrap;

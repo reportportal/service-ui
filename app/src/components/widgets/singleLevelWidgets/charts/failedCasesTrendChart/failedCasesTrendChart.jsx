@@ -76,7 +76,7 @@ export class FailedCasesTrendChart extends Component {
     this.width = container.offsetWidth;
 
     const params = {
-      content: widget.content,
+      content: widget.content.result,
       isPreview,
       formatMessage,
       positionCallback: this.getPosition,

@@ -26,14 +26,13 @@ export const getTicks = (bottom, top) => {
 
 export const calculateTooltipParams = (data, color, customProps) => {
   const { itemsData, formatMessage } = customProps;
-  const activeItem = data[0];
-  const { name, number, startTime } = itemsData[activeItem.index];
-  const id = activeItem.id;
+  const { index, id, value } = data[0];
+  const { name, number, startTime } = itemsData[index];
 
   return {
     itemName: `${name} #${number}`,
     startTime: Number(startTime),
-    itemCases: `${activeItem.value} ${formatMessage(messages.cases)}`,
+    itemCases: `${value} ${formatMessage(messages.cases)}`,
     color: color(id),
     issueStatNameProps: { itemName: formatMessage(statusLocalization[FAILED]) },
   };

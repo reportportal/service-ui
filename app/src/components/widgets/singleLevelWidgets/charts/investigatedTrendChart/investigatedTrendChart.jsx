@@ -78,6 +78,8 @@ export class InvestigatedTrendChart extends Component {
     interval: PropTypes.string,
     createFilterAction: PropTypes.func,
     integerValueType: PropTypes.bool,
+    uncheckedLegendItems: PropTypes.array,
+    onChangeLegend: PropTypes.func,
   };
 
   static defaultProps = {
@@ -90,6 +92,8 @@ export class InvestigatedTrendChart extends Component {
     onStatusPageMode: false,
     interval: null,
     integerValueType: false,
+    uncheckedLegendItems: [],
+    onChangeLegend: () => {},
   };
 
   state = {
@@ -126,6 +130,10 @@ export class InvestigatedTrendChart extends Component {
       return;
     }
 
+    this.props.uncheckedLegendItems.forEach((id) => {
+      this.chart.toggle(id);
+    });
+
     this.node.addEventListener('mousemove', this.getCoords);
   };
 
@@ -137,7 +145,8 @@ export class InvestigatedTrendChart extends Component {
     this.chart.focus(id);
   };
 
-  onLegendClick = (id) => {
+  onClickLegendItem = (id) => {
+    this.props.onChangeLegend(id);
     this.chart.toggle(id);
   };
 
@@ -203,7 +212,6 @@ export class InvestigatedTrendChart extends Component {
 
     this.size = params.size;
 
-    // using property 'timeline' instead of 'viewMode' for API call
     this.isTimeline =
       contentParameters &&
       contentParameters.widgetOptions.timeline === MODES_VALUES[CHART_MODES.TIMELINE_MODE];
@@ -269,6 +277,8 @@ export class InvestigatedTrendChart extends Component {
   };
 
   render() {
+    const { isPreview, onStatusPageMode, uncheckedLegendItems } = this.props;
+
     return (
       this.state.isConfigReady && (
         <div className={cx('investigated-trend-chart', { 'timeline-mode': this.isTimeline })}>
@@ -277,12 +287,13 @@ export class InvestigatedTrendChart extends Component {
             onChartCreated={this.onChartCreated}
             className={cx('widget-wrapper')}
           >
-            {!this.props.isPreview &&
-              !this.props.onStatusPageMode && (
+            {!isPreview &&
+              !onStatusPageMode && (
                 <Legend
                   items={this.config.data.groups[0]}
+                  uncheckedLegendItems={uncheckedLegendItems}
                   colors={this.config.data.colors}
-                  onClick={this.onLegendClick}
+                  onClick={this.onClickLegendItem}
                   onMouseOver={this.onLegendMouseOver}
                   onMouseOut={this.onLegendMouseOut}
                 />

@@ -2,13 +2,11 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { injectIntl, intlShape } from 'react-intl';
-import { TEST_ITEM_PAGE, PROJECT_LOG_PAGE } from 'controllers/pages/constants';
-import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
-import { ALL } from 'common/constants/reservedFilterIds';
 import isEqual from 'fast-deep-equal';
-import { C3Chart } from '../../../common/c3chart';
-import { messages } from '../../../common/messages';
-import { getConfig } from './getConfig';
+import { ALL } from 'common/constants/reservedFilterIds';
+import { TEST_ITEM_PAGE, PROJECT_LOG_PAGE } from 'controllers/pages/constants';
+import { C3Chart } from 'components/widgets/common/c3chart';
+import { getConfig } from './config/getConfig';
 import styles from './mostTimeConsumingTestCasesChart.scss';
 
 const cx = classNames.bind(styles);
@@ -19,7 +17,7 @@ export class MostTimeConsumingTestCasesChart extends Component {
     intl: intlShape.isRequired,
     widget: PropTypes.object.isRequired,
     container: PropTypes.instanceOf(Element).isRequired,
-    project: PropTypes.string.isRequired,
+    projectId: PropTypes.string.isRequired,
     navigate: PropTypes.func.isRequired,
     isPreview: PropTypes.bool,
     height: PropTypes.number,
@@ -63,30 +61,22 @@ export class MostTimeConsumingTestCasesChart extends Component {
   };
 
   getConfig = () => {
-    const { widget, intl, container } = this.props;
+    const { widget, container } = this.props;
+
+    this.height = container.offsetHeight;
+    this.width = container.offsetWidth;
 
     const params = {
       content: widget.content,
-      isPreview: false,
-      intl,
       positionCallback: this.getPosition,
       size: {
         height: container.offsetHeight,
         width: container.offsetWidth,
       },
+      itemClickHandler: this.testCaseClickHandler,
     };
 
-    this.size = params.size;
-
-    const configParams = {
-      ...params,
-      chartType: MODES_VALUES[CHART_MODES.BAR_VIEW],
-      isPointsShow: false,
-      messages,
-      testCaseClickHandler: this.testCaseClickHandler,
-    };
-
-    this.config = getConfig(configParams);
+    this.config = getConfig(params);
 
     this.setState({
       isConfigReady: true,
@@ -110,24 +100,23 @@ export class MostTimeConsumingTestCasesChart extends Component {
   };
 
   resizeChart = () => {
-    const { offsetHeight: newHeight } = this.props.container;
-    const { offsetWidth: newWidth } = this.props.container;
+    const { offsetHeight: newHeight, offsetWidth: newWidth } = this.props.container;
 
-    if (this.height !== newHeight || this.width !== newWidth) {
+    if (this.height !== newHeight) {
       this.chart.resize({
         height: newHeight,
-        width: newWidth,
       });
       this.height = newHeight;
-      this.width = newWidth;
       this.config.size.height = newHeight;
-      this.config.size.width = newWidth;
+    } else if (this.width !== newWidth) {
+      this.chart.flush();
     }
+    this.width = newWidth;
   };
 
   testCaseClickHandler = (id) => {
     const {
-      project,
+      projectId,
       widget: {
         content: { result, latestLaunch = {} },
       },
@@ -148,7 +137,7 @@ export class MostTimeConsumingTestCasesChart extends Component {
 
     const navigationParams = {
       payload: {
-        projectId: project,
+        projectId,
         filterId: ALL,
         testItemIds: itemLink,
       },

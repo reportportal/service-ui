@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import moment from 'moment';
 import * as d3 from 'd3-selection';
 import isEqual from 'fast-deep-equal';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { defineMessages, injectIntl, intlShape } from 'react-intl';
 import { dateFormat } from 'common/utils/timeDateUtils';
 import { statisticsLinkSelector } from 'controllers/testItem';
 import { activeProjectSelector } from 'controllers/user';
@@ -16,8 +16,8 @@ import * as STATUSES from 'common/constants/testStatuses';
 import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
 import { C3Chart } from 'components/widgets/common/c3chart';
 import { getLaunchAxisTicks, getTimelineAxisTicks } from 'components/widgets/common/utils';
-import { TooltipWrapper } from 'components/widgets/common/tooltip';
 import { messages } from 'components/widgets/common/messages';
+import { TestCasesGrowthTrendChartTooltip } from './config/testCasesGrowthTrendChartTooltip';
 import styles from './testCasesGrowthTrendChart.scss';
 
 const cx = classNames.bind(styles);
@@ -33,7 +33,6 @@ const localMessages = defineMessages({
   },
 });
 
-@injectIntl
 @connect(
   (state) => ({
     project: activeProjectSelector(state),
@@ -43,6 +42,7 @@ const localMessages = defineMessages({
     navigate: (linkAction) => linkAction,
   },
 )
+@injectIntl
 export class TestCasesGrowthTrendChart extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
@@ -136,23 +136,31 @@ export class TestCasesGrowthTrendChart extends Component {
   });
 
   getConfig = () => {
-    const { widget, intl, isPreview, container } = this.props;
+    const {
+      widget: { content, contentParameters },
+      intl,
+      isPreview,
+      container,
+    } = this.props;
+
+    this.height = container.offsetHeight;
+    this.width = container.offsetWidth;
+
     this.isTimeLine =
-      widget.contentParameters &&
-      widget.contentParameters.widgetOptions.timeline === MODES_VALUES[CHART_MODES.TIMELINE_MODE];
+      contentParameters &&
+      contentParameters.widgetOptions.timeline === MODES_VALUES[CHART_MODES.TIMELINE_MODE];
 
     let data;
 
     if (this.isTimeLine) {
-      data = Object.keys(widget.content.result).map((key) => ({
+      data = Object.keys(content.result).map((key) => ({
         date: key,
-        ...widget.content.result[key],
+        ...content.result[key],
       }));
     } else {
-      data = widget.content.result;
+      data = content.result;
     }
-    this.height = container.offsetHeight;
-    this.width = container.offsetWidth;
+
     this.itemData = [];
 
     const offsets = ['offset'];
@@ -301,8 +309,7 @@ export class TestCasesGrowthTrendChart extends Component {
   };
 
   resizeChart = () => {
-    const newHeight = this.props.container.offsetHeight;
-    const newWidth = this.props.container.offsetWidth;
+    const { offsetHeight: newHeight, offsetWidth: newWidth } = this.props.container;
 
     if (this.height !== newHeight) {
       this.chart.resize({
@@ -312,11 +319,14 @@ export class TestCasesGrowthTrendChart extends Component {
       this.config.size.height = newHeight;
     } else if (this.width !== newWidth) {
       this.chart.flush();
-      this.width = newWidth;
     }
+    this.width = newWidth;
   };
 
   renderTooltip = (d) => {
+    const {
+      intl: { formatMessage },
+    } = this.props;
     const { name, number, startTime, date } = this.itemData[d[0].index];
 
     let total;
@@ -335,23 +345,15 @@ export class TestCasesGrowthTrendChart extends Component {
     });
 
     return ReactDOMServer.renderToStaticMarkup(
-      <TooltipWrapper>
-        {!this.isTimeLine && <div className={cx('launch-name')}>{`${name} #${number}`}</div>}
-        <div className={cx('launch-start-time', { 'timeline-mode': this.isTimeLine })}>
-          {this.isTimeLine ? date : dateFormat(Number(startTime))}
-        </div>
-        <div className={cx('item-wrapper')}>
-          <div className={cx('item-cases')}>
-            <div className={cx('item-cases-growth')}>
-              {this.props.intl.formatMessage(localMessages.growTestCases)}:{' '}
-              <span className={cx(growthClass)}>{growth}</span>
-            </div>
-            <div className={cx('item-cases-total')}>
-              {this.props.intl.formatMessage(localMessages.totalTestCases)}: <span>{total}</span>
-            </div>
-          </div>
-        </div>
-      </TooltipWrapper>,
+      <TestCasesGrowthTrendChartTooltip
+        itemName={this.isTimeLine ? date : `${name} #${number}`}
+        startTime={this.isTimeLine ? '' : dateFormat(Number(startTime))}
+        growth={growth}
+        growthClass={growthClass}
+        total={total}
+        growTestCasesMessage={formatMessage(localMessages.growTestCases)}
+        totalTestCasesMessage={formatMessage(localMessages.totalTestCases)}
+      />,
     );
   };
 
