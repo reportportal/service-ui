@@ -21,10 +21,14 @@ import { MarkdownEditor } from 'components/main/markdown';
 import { DefectTypeSelector } from 'pages/inside/common/defectTypeSelector';
 import { MultiActionButton } from 'components/buttons/multiActionButton';
 import { InputDropdown } from 'components/inputs/inputDropdown';
-import { SEARCH_MODES, CHANGE_COMMENT_MODE, CURRENT_CHANGE_DEFECT_COMMENT_MODE } from './constants';
+import {
+  SEARCH_MODES,
+  CHANGE_COMMENT_MODE,
+  CURRENT_CHANGE_DEFECT_COMMENT_MODE,
+} from './../constants';
 import styles from './editToInvestigateDefectModal.scss';
 import { ItemsList } from './itemsList';
-import { messages } from './messages';
+import { messages } from './../messages';
 
 const cx = classNames.bind(styles);
 
@@ -163,9 +167,9 @@ export class EditToInvestigateDefectModal extends Component {
       changeCommentMode,
     } = this.state;
     const { item } = this.props.data;
-    return [...selectedItems, item].map((testItem) => {
+    const preparedItems = selectedItems.map((testItem) => {
       const issue = {
-        testItemId: testItem.id || testItem.itemId,
+        testItemId: testItem.itemId,
         issue: {
           ...testItem.issue,
           issueType: defectType,
@@ -176,7 +180,7 @@ export class EditToInvestigateDefectModal extends Component {
 
       if (changeCommentMode !== CHANGE_COMMENT_MODE.NOT_CHANGE) {
         if (issue.issue.comment && changeCommentMode === CHANGE_COMMENT_MODE.ADD_TO_EXISTING) {
-          issue.issue.comment = `${issue.issue.comment}\n${markdownValue}`;
+          issue.issue.comment = `${issue.issue.comment || ''}\n${markdownValue}`;
         } else {
           issue.issue.comment = markdownValue;
         }
@@ -184,6 +188,19 @@ export class EditToInvestigateDefectModal extends Component {
 
       return issue;
     });
+
+    preparedItems.push({
+      testItemId: item.id,
+      issue: {
+        ...item.issue,
+        issueType: defectType,
+        ignoreAnalyzer,
+        autoAnalyzed: false,
+        comment: markdownValue,
+      },
+    });
+
+    return preparedItems;
   };
 
   handleUnlinkIssue = () =>
@@ -337,16 +354,24 @@ export class EditToInvestigateDefectModal extends Component {
   renderFooter = () => (
     <div className={cx('footer')}>
       <div className={cx('change-mode-dropdown')}>
-        <InputDropdown
-          options={this.changeCommentModeOptions}
-          value={this.state.changeCommentMode}
-          onChange={this.handleChangeCommentMode}
-        />
+        {this.state.selectedItems.length > 0 && (
+          <InputDropdown
+            options={this.changeCommentModeOptions}
+            value={this.state.changeCommentMode}
+            onChange={this.handleChangeCommentMode}
+          />
+        )}
       </div>
       <div className={cx('items-count')}>
-        {this.props.intl.formatMessage(messages.selectedCount, {
-          count: this.state.selectedItems.length,
-        })}
+        {this.state.selectedItems.length > 0
+          ? this.props.intl.formatMessage(messages.selectedCount, {
+              count: this.state.selectedItems.length,
+              total: this.state.testItems.length,
+            })
+          : this.state.testItems.length > 0 &&
+            this.props.intl.formatMessage(messages.totalCount, {
+              total: this.state.testItems.length,
+            })}
       </div>
     </div>
   );
@@ -398,28 +423,14 @@ export class EditToInvestigateDefectModal extends Component {
               </span>
             </InputSwitcher>
           </div>
-          {this.state.changeCommentMode !== CHANGE_COMMENT_MODE.NOT_CHANGE && (
-            <div className={cx('markdown-container')}>
-              <MarkdownEditor
-                value={this.state.markdownValue}
-                placeholder={intl.formatMessage(messages.defectCommentPlaceholder)}
-                onChange={this.handleMarkdownChange}
-              />
-              <div className={cx('markdown-disable-cover')} />
-              <div className={cx('edit-defect-bottom-row')}>
-                <div className={cx('hot-keys-wrapper')}>
-                  <span className={cx('hot-keys')}>
-                    <span className={cx('hot-key')}>Esc </span>
-                    {intl.formatMessage(messages.hotKeyCancelCaption)}
-                  </span>
-                  <span className={cx('hot-keys')}>
-                    <span className={cx('hot-key')}>Ctrl + Enter </span>
-                    {intl.formatMessage(messages.hotKeySubmitCaption)}
-                  </span>
-                </div>
-              </div>
-            </div>
-          )}
+          <div className={cx('markdown-container')}>
+            <MarkdownEditor
+              value={this.state.markdownValue}
+              placeholder={intl.formatMessage(messages.defectCommentPlaceholder)}
+              onChange={this.handleMarkdownChange}
+            />
+            <div className={cx('markdown-disable-cover')} />
+          </div>
           <ItemsList
             testItems={this.state.testItems}
             selectedItems={this.state.selectedItems}
@@ -431,6 +442,18 @@ export class EditToInvestigateDefectModal extends Component {
             onChangeSearchMode={this.handleChangeSearchMode}
             onToggleItemSelect={this.handleToggleItemSelect}
           />
+          <div className={cx('edit-defect-bottom-row')}>
+            <div className={cx('hot-keys-wrapper')}>
+              <span className={cx('hot-keys')}>
+                <span className={cx('hot-key')}>Esc </span>
+                {intl.formatMessage(messages.hotKeyCancelCaption)}
+              </span>
+              <span className={cx('hot-keys')}>
+                <span className={cx('hot-key')}>Ctrl + Enter </span>
+                {intl.formatMessage(messages.hotKeySubmitCaption)}
+              </span>
+            </div>
+          </div>
         </div>
       </ModalLayout>
     );

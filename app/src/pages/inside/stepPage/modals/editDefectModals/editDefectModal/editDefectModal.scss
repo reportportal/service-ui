@@ -4,6 +4,7 @@
 
 .markdown-container {
   margin-top: 10px;
+  height: 200px;
 
   .markdown-disable-cover {
     display: none;
@@ -84,6 +85,17 @@
     max-width: 100%;
     margin-top: 10px;
   }
+}
+
+.footer {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.change-mode-dropdown {
+  width: 400px;
+  padding: 0 10px;
 }
 
 .modal-window {

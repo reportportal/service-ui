@@ -3,7 +3,7 @@ import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { injectIntl, intlShape } from 'react-intl';
 import { activeProjectSelector } from 'controllers/user';
 import { availableBtsIntegrationsSelector, isPostIssueActionAvailable } from 'controllers/plugins';
 import { fetchTestItemsAction } from 'controllers/testItem';
@@ -16,72 +16,15 @@ import { URLS } from 'common/urls';
 import { ModalLayout, withModal } from 'components/main/modal';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { InputSwitcher } from 'components/inputs/inputSwitcher';
-import { InputCheckbox } from 'components/inputs/inputCheckbox';
 import { MarkdownEditor } from 'components/main/markdown';
 import { DefectTypeSelector } from 'pages/inside/common/defectTypeSelector';
 import { MultiActionButton } from 'components/buttons/multiActionButton';
-import {
-  REPLACE_COMMENTS_TO_ALL_AVAILABILITY_NAME,
-  DEFAULT_REPLACE_COMMENTS_TO_ALL_AVAILABILITY_VALUE,
-} from './constants';
+import { InputDropdown } from 'components/inputs/inputDropdown';
+import { CHANGE_COMMENT_MODE, CURRENT_CHANGE_DEFECT_COMMENT_MODE } from './../constants';
+import { messages } from './../messages';
 import styles from './editDefectModal.scss';
 
 const cx = classNames.bind(styles);
-
-const messages = defineMessages({
-  ignoreAaTitle: {
-    id: 'EditDefectModal.ignoreAaTitle',
-    defaultMessage: 'Ignore in Auto Analysis',
-  },
-  title: {
-    id: 'EditDefectModal.title',
-    defaultMessage: 'Edit defect type',
-  },
-  replaceCommentsTitle: {
-    id: 'EditDefectModal.replaceCommentsTitle',
-    defaultMessage: 'Replace comments to all selected items',
-  },
-  hotKeyCancelCaption: {
-    id: 'EditDefectModal.hotKeyCancelCaption',
-    defaultMessage: 'to cancel',
-  },
-  hotKeySubmitCaption: {
-    id: 'EditDefectModal.hotKeySubmitCaption',
-    defaultMessage: 'to submit',
-  },
-  defectTypeTitle: {
-    id: 'EditDefectModal.defectTypeTitle',
-    defaultMessage: 'Defect type',
-  },
-  saveAndPostIssueMessage: {
-    id: 'EditDefectModal.saveAndPostIssueMessage',
-    defaultMessage: 'Save and post issue',
-  },
-  saveAndLinkIssueMessage: {
-    id: 'EditDefectModal.saveAndLinkIssueMessage',
-    defaultMessage: 'Save and link issue',
-  },
-  saveAndUnlinkIssueMessage: {
-    id: 'EditDefectModal.saveAndUnlinkIssueMessage',
-    defaultMessage: 'Save and unlink issue',
-  },
-  updateDefectsSuccess: {
-    id: 'EditDefectModal.updateDefectsSuccess',
-    defaultMessage: 'Defects have been updated',
-  },
-  updateDefectsFailed: {
-    id: 'EditDefectModal.updateDefectsFailed',
-    defaultMessage: 'Failed to update defects',
-  },
-  defectTypeSelectorPlaceholder: {
-    id: 'EditDefectModal.defectTypeSelectorPlaceholder',
-    defaultMessage: 'Choose defect type',
-  },
-  defectCommentPlaceholder: {
-    id: 'EditDefectModal.defectCommentPlaceholder',
-    defaultMessage: 'Leave comment to defect type',
-  },
-});
 
 @withModal('editDefectModal')
 @injectIntl
@@ -132,7 +75,8 @@ export class EditDefectModal extends Component {
     const initialState = {};
 
     if (this.isBulkEditOperation()) {
-      initialState.isReplaceCommentsToAllAvailable = this.getReplaceCommentsToAllItemsAvailability();
+      initialState.changeCommentMode =
+        getStorageItem(CURRENT_CHANGE_DEFECT_COMMENT_MODE) || CHANGE_COMMENT_MODE.NOT_CHANGE;
       initialState.markdownValue = '';
       initialState.defectType = '';
     } else {
@@ -164,6 +108,21 @@ export class EditDefectModal extends Component {
       },
     ];
 
+    this.changeCommentModeOptions = [
+      {
+        value: CHANGE_COMMENT_MODE.NOT_CHANGE,
+        label: intl.formatMessage(messages.notChangeCommentTitle),
+      },
+      {
+        value: CHANGE_COMMENT_MODE.REPLACE,
+        label: intl.formatMessage(messages.replaceCommentsTitle),
+      },
+      {
+        value: CHANGE_COMMENT_MODE.ADD_TO_EXISTING,
+        label: intl.formatMessage(messages.addToExistingCommentTitle),
+      },
+    ];
+
     this.state = {
       ...initialState,
     };
@@ -177,16 +136,6 @@ export class EditDefectModal extends Component {
     !issueAction && this.props.tracking.trackEvent(STEP_PAGE_EVENTS.SAVE_BTN_EDIT_DEFECT_MODAL);
     issueAction && this.props.hideModalAction();
     nextAction();
-  };
-
-  getReplaceCommentsToAllItemsAvailability = () => {
-    const isReplaceToAllAvailable = getStorageItem(REPLACE_COMMENTS_TO_ALL_AVAILABILITY_NAME);
-
-    isReplaceToAllAvailable === null &&
-      this.changeReplaceCommentsToAllAvailability(
-        DEFAULT_REPLACE_COMMENTS_TO_ALL_AVAILABILITY_VALUE,
-      );
-    return getStorageItem(REPLACE_COMMENTS_TO_ALL_AVAILABILITY_NAME);
   };
 
   getCloseConfirmationConfig = () => {
@@ -218,11 +167,21 @@ export class EditDefectModal extends Component {
             autoAnalyzed: false,
           },
         };
+
         if (this.state.defectType) {
           dataToSend.issue.issueType = this.state.defectType;
         }
-        if (this.state.markdownValue) {
-          dataToSend.issue.comment = this.state.markdownValue;
+
+        switch (this.state.changeCommentMode) {
+          case CHANGE_COMMENT_MODE.REPLACE:
+            dataToSend.issue.comment = this.state.markdownValue;
+            break;
+          case CHANGE_COMMENT_MODE.ADD_TO_EXISTING:
+            dataToSend.issue.comment = `${dataToSend.issue.comment || ''}\n${
+              this.state.markdownValue
+            }`;
+            break;
+          default:
         }
         return dataToSend;
       });
@@ -265,7 +224,8 @@ export class EditDefectModal extends Component {
     if (this.isBulkEditOperation()) {
       isDataChanged = Boolean(
         this.state.defectType ||
-          (this.state.isReplaceCommentsToAllAvailable && this.state.markdownValue),
+          (this.state.changeCommentMode !== CHANGE_COMMENT_MODE.NOT_CHANGE &&
+            this.state.markdownValue),
       );
     } else {
       isDataChanged =
@@ -307,10 +267,6 @@ export class EditDefectModal extends Component {
 
   isBulkEditOperation = () => this.props.data.items.length > 1;
 
-  changeReplaceCommentsToAllAvailability = (value) => {
-    setStorageItem(REPLACE_COMMENTS_TO_ALL_AVAILABILITY_NAME, value);
-  };
-
   handleSelectDefectTypeChange = (newValue) => {
     this.setState({
       defectType: newValue,
@@ -329,12 +285,25 @@ export class EditDefectModal extends Component {
     });
   };
 
-  handleReplaceCommentsToAllChange = () => {
-    this.changeReplaceCommentsToAllAvailability(!this.state.isReplaceCommentsToAllAvailable);
+  handleChangeCommentMode = (value) => {
     this.setState({
-      isReplaceCommentsToAllAvailable: !this.state.isReplaceCommentsToAllAvailable,
+      changeCommentMode: value,
     });
+    setStorageItem(CURRENT_CHANGE_DEFECT_COMMENT_MODE, value);
   };
+
+  renderFooter = () =>
+    this.isBulkEditOperation() && (
+      <div className={cx('footer')}>
+        <div className={cx('change-mode-dropdown')}>
+          <InputDropdown
+            options={this.changeCommentModeOptions}
+            value={this.state.changeCommentMode}
+            onChange={this.handleChangeCommentMode}
+          />
+        </div>
+      </div>
+    );
 
   render() {
     const {
@@ -366,6 +335,7 @@ export class EditDefectModal extends Component {
         closeConfirmation={this.getCloseConfirmationConfig()}
         closeIconEventInfo={STEP_PAGE_EVENTS.CLOSE_ICON_EDIT_DEFECT_MODAL}
         className={cx('modal-window')}
+        renderFooterElements={this.renderFooter}
       >
         <div className={cx('edit-defect-content')}>
           <div className={cx('defect-type')}>
@@ -394,7 +364,9 @@ export class EditDefectModal extends Component {
           )}
           <div
             className={cx('markdown-container', {
-              disabled: this.isBulkEditOperation() && !this.state.isReplaceCommentsToAllAvailable,
+              disabled:
+                this.isBulkEditOperation() &&
+                this.state.changeCommentMode === CHANGE_COMMENT_MODE.NOT_CHANGE,
             })}
           >
             <MarkdownEditor
@@ -405,16 +377,6 @@ export class EditDefectModal extends Component {
             <div className={cx('markdown-disable-cover')} />
           </div>
           <div className={cx('edit-defect-bottom-row')}>
-            {this.isBulkEditOperation() && (
-              <div className={cx('replace-comments-checkbox')}>
-                <InputCheckbox
-                  value={this.state.isReplaceCommentsToAllAvailable}
-                  onChange={this.handleReplaceCommentsToAllChange}
-                >
-                  {intl.formatMessage(messages.replaceCommentsTitle)}
-                </InputCheckbox>
-              </div>
-            )}
             <div className={cx('hot-keys-wrapper')}>
               <span className={cx('hot-keys')}>
                 <span className={cx('hot-key')}>Esc </span>

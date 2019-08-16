@@ -1,5 +1,5 @@
 import { defineMessages } from 'react-intl';
-import { SEARCH_MODES } from './../../constants';
+import { SEARCH_MODES } from './../../../constants';
 
 export const messages = defineMessages({
   changeSimilarItems: {
@@ -20,14 +20,16 @@ export const messages = defineMessages({
   },
   [`${SEARCH_MODES.CURRENT_LAUNCH}Tooltip`]: {
     id: 'EditDefectModal.currentLaunchTooltip',
-    defaultMessage: 'Test items with similar failure reason in launch {launch}',
+    defaultMessage: 'Test items with similar failure reason in launch <b>{launch}</b>',
   },
   [`${SEARCH_MODES.FILTER}Tooltip`]: {
     id: 'EditDefectModal.filterTooltip',
-    defaultMessage: 'Test items with similar failure reason in last 10 launches of Filter {filter}',
+    defaultMessage:
+      'Test items with similar failure reason in last 10 launches of filter <b>{filter}</b>',
   },
   [`${SEARCH_MODES.LAUNCH_NAME}Tooltip`]: {
     id: 'EditDefectModal.launchNameTooltip',
-    defaultMessage: 'Test items with similar failure reason in last 10 launches of launch {launch}',
+    defaultMessage:
+      'Test items with similar failure reason in last 10 launches of launch <b>{launch}</b>',
   },
 });

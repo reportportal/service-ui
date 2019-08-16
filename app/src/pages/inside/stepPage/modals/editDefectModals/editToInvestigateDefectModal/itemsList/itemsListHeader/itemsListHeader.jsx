@@ -9,7 +9,7 @@ import Parser from 'html-react-parser';
 import InfoIcon from 'common/img/info-inline.svg';
 import { withTooltip } from 'components/main/tooltips/tooltip';
 import { TextTooltip } from 'components/main/tooltips/textTooltip';
-import { SEARCH_MODES } from './../../constants';
+import { SEARCH_MODES } from './../../../constants';
 import { messages } from './messages';
 import styles from './itemsListHeader.scss';
 
@@ -95,37 +95,42 @@ export class ItemsListHeader extends React.Component {
     } = this.props;
     return (
       <div className={cx('list-header')}>
-        <div className={cx('search-settings')}>
-          <div className={cx('select-all')}>
-            <InputCheckbox value={allSelected} onChange={this.toggleSelectAll} />
+        <div className={cx('select-all')}>
+          <InputCheckbox value={allSelected} onChange={this.toggleSelectAll} />
+        </div>
+        <span className={cx('search-mode-label')}>
+          {intl.formatMessage(messages.changeSimilarItems)}
+        </span>
+        <div className={cx('search-mode')}>
+          <InputDropdown
+            options={this.getSearchModeOptions()}
+            value={searchMode}
+            onChange={onChangeSearchMode}
+          />
+        </div>
+        <div className={cx('info-tooltip')}>
+          <InfoTooltipIcon tooltipContent={this.getTooltipContent()} />
+        </div>
+        {searchMode !== SEARCH_MODES.FILTER && (
+          <div className={cx('launch')}>
+            <span className={cx('launch-name')}>{currentLaunch.name}</span>
+            {searchMode === SEARCH_MODES.CURRENT_LAUNCH && (
+              <span className={cx('launch-number')}>{`#${currentLaunch.number}`}</span>
+            )}
           </div>
-          <span className={cx('search-mode-label')}>
-            {intl.formatMessage(messages.changeSimilarItems)}
-          </span>
-          <div className={cx('search-mode')}>
-            <InputDropdown
-              options={this.getSearchModeOptions()}
-              value={searchMode}
-              onChange={onChangeSearchMode}
+        )}
+        {searchMode === SEARCH_MODES.FILTER && (
+          <div className={cx('filter')}>
+            <FilterItem
+              name={currentFilter.name}
+              description={currentFilter.description}
+              owner={currentFilter.owner}
+              intl={intl}
+              share={currentFilter.share}
+              className={cx('filter-item')}
             />
           </div>
-          {searchMode === SEARCH_MODES.CURRENT_LAUNCH && (
-            <div className={cx('launch')}>{`${currentLaunch.name} #${currentLaunch.number}`}</div>
-          )}
-          {searchMode === SEARCH_MODES.FILTER && (
-            <div className={cx('filter')}>
-              <FilterItem
-                name={currentFilter.name}
-                description={currentFilter.description}
-                owner={currentFilter.owner}
-                intl={intl}
-                share={currentFilter.share}
-                className={cx('filter-item')}
-              />
-            </div>
-          )}
-        </div>
-        <InfoTooltipIcon tooltipContent={this.getTooltipContent()} />
+        )}
       </div>
     );
   }

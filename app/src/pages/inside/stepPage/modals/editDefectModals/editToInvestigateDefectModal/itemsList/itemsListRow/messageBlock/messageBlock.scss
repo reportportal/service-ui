@@ -1,5 +1,6 @@
 .row-wrapper {
   position: relative;
+  border-left: 4px solid $COLOR--orange-red;
   &.with-accordion {
     padding-bottom: 20px;
   }
@@ -7,7 +8,6 @@
 .row {
   position: relative;
   background-color: $COLOR--light-red;
-  border-left: 4px solid $COLOR--orange-red;
   padding: 10px;
   font-family: $FONT-MENLO;
   font-size: 11px;

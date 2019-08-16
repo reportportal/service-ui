@@ -11,7 +11,7 @@ export const messages = defineMessages({
   },
   notChangeCommentTitle: {
     id: 'EditDefectModal.notChangeCommentTitle',
-    defaultMessage: "Don't change comment",
+    defaultMessage: "Don't change comment of selected items",
   },
   replaceCommentsTitle: {
     id: 'EditDefectModal.replaceCommentsTitleShort',
@@ -63,7 +63,11 @@ export const messages = defineMessages({
   },
   selectedCount: {
     id: 'EditDefectModal.selectedCount',
-    defaultMessage: '{count} items selected',
+    defaultMessage: '{count}/{total} selected items',
+  },
+  totalCount: {
+    id: 'EditDefectModal.totalCount',
+    defaultMessage: '{total} items',
   },
   noItems: {
     id: 'EditDefectModal.noItems',

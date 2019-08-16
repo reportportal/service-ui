@@ -8,13 +8,13 @@ import { injectIntl, intlShape } from 'react-intl';
 import { ItemsListHeader } from './itemsListHeader';
 import { ItemsListRow } from './itemsListRow';
 import styles from './itemsList.scss';
-import { SEARCH_MODES } from '../constants';
-import { messages } from '../messages';
+import { SEARCH_MODES } from '../../constants';
+import { messages } from '../../messages';
 
 const cx = classNames.bind(styles);
 
 const ItemsListBody = ({ testItems, selectedItems, ...rest }) => (
-  <ScrollWrapper autoHeight autoHeightMax={400} hideTracksWhenNotNeeded>
+  <ScrollWrapper autoHeight autoHeightMax={360} hideTracksWhenNotNeeded>
     {testItems.map((item) => {
       const selected = selectedItems.some((selectedItem) => selectedItem.itemId === item.itemId);
       return <ItemsListRow key={item.itemId} testItem={item} selected={selected} {...rest} />;
