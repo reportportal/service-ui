@@ -5,7 +5,7 @@ import styles from './messageBlock.scss';
 
 const cx = classNames.bind(styles);
 
-const MAX_HEIGHT = 112;
+const MAX_HEIGHT = 28;
 
 export class MessageBlock extends Component {
   static propTypes = {

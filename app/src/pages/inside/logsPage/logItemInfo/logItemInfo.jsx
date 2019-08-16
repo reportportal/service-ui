@@ -21,6 +21,8 @@ import {
   RETRY_ID,
   NAMESPACE,
 } from 'controllers/log';
+import { getDefectTypeSelector } from 'controllers/project';
+import { TO_INVESTIGATE } from 'common/constants/defectTypes';
 import { MANY } from 'common/constants/launchStatuses';
 import { availableBtsIntegrationsSelector, isPostIssueActionAvailable } from 'controllers/plugins';
 import { connectRouter } from 'common/utils';
@@ -80,6 +82,7 @@ const messages = defineMessages({
     btsIntegrations: availableBtsIntegrationsSelector(state),
     retryItemId: activeRetryIdSelector(state),
     retries: retriesSelector(state),
+    getDefectType: getDefectTypeSelector(state),
   }),
   {
     linkIssueAction,
@@ -119,12 +122,14 @@ export class LogItemInfo extends Component {
     updateRetryId: PropTypes.func,
     retryItemId: PropTypes.number,
     retries: PropTypes.arrayOf(PropTypes.object),
+    getDefectType: PropTypes.func,
   };
   static defaultProps = {
     logItem: null,
     updateRetryId: () => {},
     retryItemId: null,
     retries: [],
+    getDefectType: () => {},
   };
 
   getLinkIssueTitle = () => {
@@ -237,10 +242,29 @@ export class LogItemInfo extends Component {
   };
 
   handleEditDefect = () => {
-    this.props.editDefectsAction([this.props.logItem], {
-      fetchFunc: this.props.fetchFunc,
-      debugMode: this.props.debugMode,
-    });
+    const { logItem } = this.props;
+    if (this.isDefectGroupOperationAvailable()) {
+      this.props.showModalAction({
+        id: 'editToInvestigateDefectModal',
+        data: { item: logItem, fetchFunc: this.props.fetchFunc },
+      });
+    } else {
+      this.props.editDefectsAction([this.props.logItem], {
+        fetchFunc: this.props.fetchFunc,
+        debugMode: this.props.debugMode,
+      });
+    }
+  };
+
+  isDefectGroupOperationAvailable = () => {
+    const { logItem } = this.props;
+    return (
+      logItem.issue &&
+      logItem.issue.issueType &&
+      this.props.getDefectType(logItem.issue.issueType).typeRef.toUpperCase() ===
+        TO_INVESTIGATE.toUpperCase() &&
+      !this.props.debugMode
+    );
   };
 
   renderRetries = () => {

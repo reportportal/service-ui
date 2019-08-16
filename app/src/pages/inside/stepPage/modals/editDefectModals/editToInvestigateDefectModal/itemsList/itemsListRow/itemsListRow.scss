@@ -1,7 +1,7 @@
 .row {
   display: flex;
   flex-direction: row;
-  justify-content: flex-start;
+  justify-content: stretch;
   align-items: flex-start;
   padding: 5px 0;
   border-bottom: 1px solid $COLOR--gray-91;
@@ -12,8 +12,8 @@
   padding-top: 20px;
 }
 
-.info-column {
-  flex-grow: 1;
+.info-column { 
+  overflow: hidden;
 }
 
 .item-header {
@@ -32,14 +32,16 @@
   flex-grow: 10;
   overflow: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap;
   text-decoration: none;
 }
 
 .item-detail {
   display: flex;
-  flex: 300px 0 1;
+  flex: 300px 0 0;
   justify-content: space-between;
   align-items: center;
+  margin-right: 7px;
 }
 
 .duration-block {
