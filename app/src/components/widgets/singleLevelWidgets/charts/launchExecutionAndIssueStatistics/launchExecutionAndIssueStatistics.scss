@@ -48,7 +48,10 @@
   flex-direction: row;
   width: 100%;
   height: 100%;
-  margin-top: -20px;
+
+  &.with-launch-name-block {
+    margin-top: -20px;
+  }
 }
 
 .launch-name-block {

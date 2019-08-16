@@ -27,7 +27,6 @@ import { ProjectEventsPage } from '../projectEventsPage';
 import { Projects } from './projects';
 import { AdminProjectSettingsPageContainer } from '../adminProjectSettingsPageContainer';
 import { messages } from './messages';
-
 import styles from './projectsPage.scss';
 
 const cx = classNames.bind(styles);
@@ -62,11 +61,11 @@ const HEADER_BUTTONS = [
 export class ProjectsPage extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
-    section: PropTypes.string,
-    projectId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     navigateToSection: PropTypes.func.isRequired,
     addProject: PropTypes.func.isRequired,
     showModal: PropTypes.func.isRequired,
+    section: PropTypes.string,
+    projectId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   };
 
   static defaultProps = {

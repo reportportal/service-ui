@@ -1,15 +1,13 @@
 import React from 'react';
 import ReactDOMServer from 'react-dom/server';
 
-const renderTooltip = (TooltipComponent, props) =>
-  ReactDOMServer.renderToStaticMarkup(<TooltipComponent {...props} />);
-
-export const createTooltipRenderer = (tooltipComponent, paramsCalculator, customProps) => (
+export const createTooltipRenderer = (TooltipComponent, paramsCalculator, customProps) => (
   data,
   defaultTitleFormat,
   defaultValueFormat,
   color,
 ) => {
   const tooltipProps = paramsCalculator(data, color, customProps);
-  return renderTooltip(tooltipComponent, tooltipProps);
+
+  return ReactDOMServer.renderToStaticMarkup(<TooltipComponent {...tooltipProps} />);
 };

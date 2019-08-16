@@ -453,18 +453,18 @@ export class LaunchStatisticsChart extends Component {
   };
 
   renderContents = (data, defaultTitleFormat, defaultValueFormat, color) => {
-    const { name, number, startTime, date } = this.configData.itemData[data[0].index];
+    const { index, id, value } = data[0];
+    const { name, number, startTime, date } = this.configData.itemData[index];
     const {
       intl: { formatMessage },
       defectTypes,
     } = this.props;
-    const id = data[0].id;
 
     return ReactDOMServer.renderToStaticMarkup(
       <IssueTypeStatTooltip
         itemName={this.configData.isTimeLine ? date : `${name} #${number}`}
         startTime={this.configData.isTimeLine ? null : Number(startTime)}
-        itemCases={`${data[0].value} ${formatMessage(messages.cases)}`}
+        itemCases={`${value} ${formatMessage(messages.cases)}`}
         color={color(id)}
         issueStatNameProps={{ itemName: id, defectTypes, formatMessage }}
       />,

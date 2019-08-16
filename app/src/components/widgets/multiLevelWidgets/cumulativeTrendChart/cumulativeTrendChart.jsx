@@ -6,11 +6,11 @@ import { injectIntl, intlShape } from 'react-intl';
 import { NoDataAvailable } from 'components/widgets';
 import { VirtualPopup } from 'components/main/virtualPopup';
 import { ChartJS } from 'components/widgets/common/chartjs';
-import { ActionsPopup } from 'components/widgets/common/actionsPopup';
 import SearchIcon from 'common/img/search-icon-inline.svg';
 import FiltersIcon from 'common/img/filters-icon-inline.svg';
 import { getChartData } from './chartjsConfig';
 import { CumulativeChartLegend } from './legend/cumulativeChartLegend';
+import { ActionsPopup } from './actionsPopup';
 import { CumulativeDetails } from './cumulativeDetails';
 import styles from './cumulativeTrendChart.scss';
 
