@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { ProjectActivity } from 'components/widgets/tables/projectActivity';
+import { ProjectActivity } from 'components/widgets/singleLevelWidgets/tables/projectActivity';
 import styles from './activityPanel.scss';
 
 const cx = classNames.bind(styles);

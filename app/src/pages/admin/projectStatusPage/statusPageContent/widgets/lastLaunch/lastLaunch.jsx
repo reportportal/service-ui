@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { defineMessages, injectIntl } from 'react-intl';
-import { LaunchExecutionAndIssueStatistics } from 'components/widgets/charts/launchExecutionAndIssueStatistics';
+import { LaunchExecutionAndIssueStatistics } from 'components/widgets/singleLevelWidgets/charts/launchExecutionAndIssueStatistics';
 import { omit } from 'common/utils/omit';
 import { NoDataAvailable } from 'components/widgets/noDataAvailable';
 import styles from './lastLaunch.scss';
