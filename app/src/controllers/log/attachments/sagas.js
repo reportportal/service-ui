@@ -109,9 +109,14 @@ function* openAttachment({ payload: { id, contentType } }) {
     } catch (e) {} // eslint-disable-line no-empty
   } else {
     const data = yield call(fetch, URLS.getFileById(id), { responseType: 'blob' });
-    const url = URL.createObjectURL(data);
-    window.open(url);
-    URL.revokeObjectURL(url);
+
+    if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+      window.navigator.msSaveOrOpenBlob(data);
+    } else {
+      const url = URL.createObjectURL(data);
+      window.open(url);
+      URL.revokeObjectURL(url);
+    }
   }
 }
 
