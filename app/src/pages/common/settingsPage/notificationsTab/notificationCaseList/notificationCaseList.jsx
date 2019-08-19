@@ -77,13 +77,16 @@ export class NotificationCaseList extends Component {
             item={convertNotificationCaseForSubmission(item)}
             onDelete={() => this.onDelete(id)}
             onEdit={() => this.onEdit(id, item)}
+            readOnly={readOnly}
           />
         ))}
-        {!readOnly && (
-          <div className={cx('notification-form-button')}>
-            <AddNewCaseButton cases={cases} updateNotificationCases={updateNotificationCases} />
-          </div>
-        )}
+        <div className={cx('notification-form-button')}>
+          <AddNewCaseButton
+            cases={cases}
+            updateNotificationCases={updateNotificationCases}
+            disabled={readOnly}
+          />
+        </div>
       </Fragment>
     );
   }

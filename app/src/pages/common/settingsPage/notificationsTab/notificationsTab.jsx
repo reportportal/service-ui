@@ -78,7 +78,7 @@ export class NotificationsTab extends Component {
       isEmailIntegrationAvailable,
     } = this.props;
     const readOnlyNotificationsEnableForm = !this.isAbleToEditNotificationsEnableForm();
-    const readOnlyNotificationCaseList = !this.isAbleToEditNotificationCaseList;
+    const readOnlyNotificationCaseList = !this.isAbleToEditNotificationCaseList();
 
     return (
       <div className={cx('notifications-tab')}>
@@ -101,9 +101,10 @@ export class NotificationsTab extends Component {
             noItemsMessage={intl.formatMessage(messages.noItemsMessage)}
             notificationsInfo={intl.formatMessage(messages.notificationsInfo)}
           >
-            {!readOnlyNotificationCaseList && (
-              <AddNewCaseButton updateNotificationCases={updateNotificationsConfig} />
-            )}
+            <AddNewCaseButton
+              updateNotificationCases={updateNotificationsConfig}
+              disabled={readOnlyNotificationCaseList}
+            />
           </NoCasesBlock>
         )}
       </div>
