@@ -126,9 +126,9 @@ export class PersonalInfoBlock extends Component {
           type: NOTIFICATION_TYPES.SUCCESS,
         });
       })
-      .catch(() => {
+      .catch((error) => {
         this.props.showNotification({
-          message: this.props.intl.formatMessage(messages.passwordChanged),
+          message: error.message,
           type: NOTIFICATION_TYPES.ERROR,
         });
       });
