@@ -11,6 +11,7 @@ import { URLS } from 'common/urls';
 import { InputDropdown } from 'components/inputs/inputDropdown';
 import { formatStatus } from 'common/utils/localizationUtils';
 import { PASSED, FAILED, SKIPPED, INTERRUPTED, IN_PROGRESS } from 'common/constants/testStatuses';
+import { ATTRIBUTE_KEY_MANUALLY } from './constants';
 import styles from './statusDropdown.scss';
 
 const cx = className.bind(styles);
@@ -66,8 +67,12 @@ export class StatusDropdown extends Component {
       fetchFunc,
       showMessage,
     } = this.props;
+    const newAttribute = { key: ATTRIBUTE_KEY_MANUALLY, value: newStatus.toLowerCase() };
+    const newAttributes = attributes
+      .filter((item) => item.key !== ATTRIBUTE_KEY_MANUALLY)
+      .concat(newAttribute);
     const data = {
-      attributes,
+      attributes: newAttributes,
       description,
       status: newStatus,
     };
