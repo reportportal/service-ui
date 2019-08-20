@@ -21,7 +21,6 @@ export class C3Chart extends React.Component {
 
   componentDidMount() {
     this.updateChart(this.props.config);
-    document.addEventListener('visibilitychange', this.redrawChart);
   }
 
   componentDidUpdate() {
@@ -29,15 +28,8 @@ export class C3Chart extends React.Component {
   }
 
   componentWillUnmount() {
-    document.removeEventListener('visibilitychange', this.redrawChart);
     this.destroyChart();
   }
-
-  redrawChart = () => {
-    if (document.visibilityState === 'visible' && this.chart) {
-      this.chart.flush();
-    }
-  };
 
   generateChart = (mountNode, config) => {
     const newConfig = Object.assign({ bindto: mountNode }, config);

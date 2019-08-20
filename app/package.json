@@ -28,7 +28,7 @@
     "array.findindex": "1.0.4",
     "axios": "0.18.1",
     "babel-plugin-add-module-exports": "0.2.1",
-    "c3": "0.7.2",
+    "c3": "0.7.6",
     "chart.js": "2.8.0",
     "chartjs-plugin-datalabels": "0.6.0",
     "classnames": "2.2.5",
