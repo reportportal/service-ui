@@ -357,3 +357,18 @@ export const logViewLinkSelector = createSelector(
     };
   },
 );
+
+export const getLogItemLinkSelector = createSelector(
+  activeProjectSelector,
+  (activeProject) => (testItem) => {
+    const payload = {
+      projectId: activeProject,
+      filterId: ALL,
+    };
+
+    const testItemPath = testItem.path.split('.').slice(0, -1);
+    const testItemIds = [testItem.launchId, ...testItemPath].join('/');
+
+    return createLink(testItemIds, testItem.itemId, payload, {}, PROJECT_LOG_PAGE);
+  },
+);

@@ -46,6 +46,8 @@
 
 .filter {
   padding: 0 10px;
+  display: flex;
+  flex-grow: 10;
 }
 
 .filter-item {

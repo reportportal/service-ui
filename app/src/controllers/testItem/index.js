@@ -32,6 +32,7 @@ export {
   logPageOffsetSelector,
   listViewLinkSelector,
   logViewLinkSelector,
+  getLogItemLinkSelector,
 } from './selectors';
 export { formatItemName, getQueryNamespace } from './utils';
 export { LOG_VIEW, LIST_VIEW } from './constants';
