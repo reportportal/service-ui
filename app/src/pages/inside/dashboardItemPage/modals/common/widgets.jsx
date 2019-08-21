@@ -19,7 +19,7 @@ import {
   FLAKY_TEST_CASES_TABLE,
   CUMULATIVE_TREND,
   MOST_POPULAR_PATTERNS,
-  MOST_TIME_CONSUMING,
+  // MOST_TIME_CONSUMING,
   /*
   PRODUCT_STATUS,
   */
@@ -43,7 +43,7 @@ import {
   FlakyTestCasesTableControls,
   CumulativeTrendControls,
   MostPopularPatternsControls,
-  MostTimeConsumingTestCasesControls,
+  // MostTimeConsumingTestCasesControls,
   /*
   ProductStatusControls,
   */
@@ -66,7 +66,7 @@ import PASSING_RATE_SUMMARY_PREVIEW from './img/wdgt-passing-rate-summery-inline
 import FLAKY_TEST_CASES_TABLE_PREVIEW from './img/wdgt-flaky-test-cases-table-inline.svg';
 import CUMULATIVE_TREND_PREVIEW from './img/wdgt-cumulative-trend-chart-inline.svg';
 import MOST_POPULAR_PATTERNS_PREVIEW from './img/wdgt-most-popular-patterns-inline.svg';
-import MOST_TIME_CONSUMING_PREVIEW from './img/wdgt-most-time-consuming-inline.svg';
+// import MOST_TIME_CONSUMING_PREVIEW from './img/wdgt-most-time-consuming-inline.svg';
 /*
 import PRODUCT_STATUS_PREVIEW from './img/wdgt-product-satus-inline.svg';
 */
@@ -144,10 +144,10 @@ export const widgetTypesMessages = defineMessages({
     id: 'Widgets.Name.mostPopularPatterns',
     defaultMessage: 'Most popular pattern table (TOP-20)',
   },
-  [MOST_TIME_CONSUMING]: {
-    id: 'Widgets.Name.mostTimeConsuming',
-    defaultMessage: 'Most time-consuming test cases widget (TOP-20)',
-  },
+  // [MOST_TIME_CONSUMING]: {
+  //   id: 'Widgets.Name.mostTimeConsuming',
+  //   defaultMessage: 'Most time-consuming test cases widget (TOP-20)',
+  // },
   /*
   [PRODUCT_STATUS]: {
     id: 'Widgets.Name.productStatus',
@@ -446,20 +446,20 @@ export const getWidgets = (formatMessage) => [
     },
   },
   */
-  {
-    id: MOST_TIME_CONSUMING,
-    title: formatMessage(widgetTypesMessages[MOST_TIME_CONSUMING]),
-    description: (
-      <FormattedMessage
-        id={'Widgets.Description.mostTimeConsuming'}
-        defaultMessage={
-          'show the TOP 20 the most time-consuming test cases in the last execution of the specified launch.'
-        }
-      />
-    ),
-    preview: Parser(MOST_TIME_CONSUMING_PREVIEW),
-    controls: MostTimeConsumingTestCasesControls,
-  },
+  // {
+  //   id: MOST_TIME_CONSUMING,
+  //   title: formatMessage(widgetTypesMessages[MOST_TIME_CONSUMING]),
+  //   description: (
+  //     <FormattedMessage
+  //       id={'Widgets.Description.mostTimeConsuming'}
+  //       defaultMessage={
+  //         'show the TOP 20 the most time-consuming test cases in the last execution of the specified launch.'
+  //       }
+  //     />
+  //   ),
+  //   preview: Parser(MOST_TIME_CONSUMING_PREVIEW),
+  //   controls: MostTimeConsumingTestCasesControls,
+  // },
 ];
 
 export const WIDGETS_STATIC_PREVIEWS = {
@@ -473,5 +473,5 @@ export const WIDGETS_STATIC_PREVIEWS = {
   */
   [MOST_POPULAR_PATTERNS]: Parser(MOST_POPULAR_PATTERNS_PREVIEW),
   [CUMULATIVE_TREND]: Parser(CUMULATIVE_TREND_PREVIEW),
-  [MOST_TIME_CONSUMING]: Parser(MOST_TIME_CONSUMING_PREVIEW),
+  // [MOST_TIME_CONSUMING]: Parser(MOST_TIME_CONSUMING_PREVIEW),
 };
