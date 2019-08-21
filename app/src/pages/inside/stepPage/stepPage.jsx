@@ -38,6 +38,8 @@ import { showModalAction } from 'controllers/modal';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
 import { LaunchFiltersSection } from 'pages/inside/common/launchFiltersSection';
 import { LAUNCH_ITEM_TYPES } from 'common/constants/launchItemTypes';
+import { getDefectTypeSelector } from 'controllers/project';
+import { TO_INVESTIGATE } from 'common/constants/defectTypes';
 import { StepGrid } from './stepGrid';
 
 @connect(
@@ -51,6 +53,7 @@ import { StepGrid } from './stepGrid';
     loading: loadingSelector(state),
     listView: isListViewSelector(state, namespaceSelector(state)),
     highlightItemId: prevTestItemSelector(state),
+    getDefectType: getDefectTypeSelector(state),
   }),
   {
     unselectAllSteps: unselectAllStepsAction,
@@ -122,6 +125,7 @@ export class StepPage extends Component {
       getTrackingData: PropTypes.func,
     }).isRequired,
     highlightItemId: PropTypes.number,
+    getDefectType: PropTypes.func,
   };
 
   static defaultProps = {
@@ -162,6 +166,7 @@ export class StepPage extends Component {
     filterErrors: {},
     filterEntities: [],
     highlightItemId: null,
+    getDefectType: () => {},
   };
 
   state = {
@@ -274,10 +279,29 @@ export class StepPage extends Component {
 
   handleEditDefects = (eventData) => {
     const items = eventData && eventData.id ? [eventData] : this.props.selectedItems;
-    this.props.editDefectsAction(items, {
-      fetchFunc: this.props.fetchTestItemsAction,
-      debugMode: this.props.debugMode,
-    });
+    if (this.isDefectGroupOperationAvailable(eventData)) {
+      this.props.showModalAction({
+        id: 'editToInvestigateDefectModal',
+        data: { item: items[0], fetchFunc: this.props.fetchTestItemsAction },
+      });
+    } else {
+      this.props.editDefectsAction(items, {
+        fetchFunc: this.props.fetchTestItemsAction,
+        debugMode: this.props.debugMode,
+      });
+    }
+  };
+
+  isDefectGroupOperationAvailable = (editedData) => {
+    const items = editedData && editedData.id ? [editedData] : this.props.selectedItems;
+    return (
+      items.length === 1 &&
+      items[0].issue &&
+      items[0].issue.issueType &&
+      this.props.getDefectType(items[0].issue.issueType).typeRef.toUpperCase() ===
+        TO_INVESTIGATE.toUpperCase() &&
+      !this.props.debugMode
+    );
   };
 
   proceedWithValidItems = () => {

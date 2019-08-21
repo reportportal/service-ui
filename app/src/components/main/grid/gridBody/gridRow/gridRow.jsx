@@ -10,6 +10,7 @@ import styles from './gridRow.scss';
 
 const cx = classNames.bind(styles);
 const LEVEL_OFFSET = 20;
+
 @track()
 export class GridRow extends Component {
   static propTypes = {
@@ -57,20 +58,30 @@ export class GridRow extends Component {
   state = {
     withAccordion: false,
     expanded: false,
+    updateHighlight: true,
   };
 
   componentDidMount() {
     this.handleAccordion();
+
+    if (!!this.props.rowHighlightingConfig.highlightedRowId && this.state.updateHighlight) {
+      // eslint-disable-next-line
+      this.setState({ updateHighlight: false });
+    }
   }
+
   componentDidUpdate() {
     this.handleAccordion();
+
     if (this.checkIfTheHighlightNeeded()) {
       this.highLightGridRow();
     }
   }
+
   setupRef = (overflowCell) => {
     this.overflowCell = overflowCell;
   };
+
   setupAccordion = () => {
     this.setState({ withAccordion: true });
     this.overflowCell.style.maxHeight = `${this.overflowCellMaxHeight}px`;
@@ -87,11 +98,15 @@ export class GridRow extends Component {
 
   getHighlightBlockClasses = () =>
     this.checkIfTheHighlightNeeded() ? this.highLightBlockClasses : '';
+
   isItemSelected = () => this.props.selectedItems.some((item) => item.id === this.props.value.id);
+
   isItemDisabled = () =>
     this.props.excludeFromSelection.some((item) => item.id === this.props.value.id);
+
   checkIfTheHighlightNeeded = () => {
     const { highlightedRowId, isGridRowHighlighted } = this.props.rowHighlightingConfig;
+
     return (
       this.highlightBlockRef.current &&
       highlightedRowId === this.props.value.id &&
@@ -106,7 +121,7 @@ export class GridRow extends Component {
   highLightBlockClasses = `${cx('highlight')} ${cx('hide-highlight')}`;
 
   highLightGridRow() {
-    this.highlightBlockRef.current.scrollIntoView({ behavior: 'smooth' });
+    this.highlightBlockRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
     setTimeout(() => {
       this.props.rowHighlightingConfig.onGridRowHighlighted();
     }, LOG_MESSAGE_HIGHLIGHT_TIMEOUT);
@@ -116,10 +131,12 @@ export class GridRow extends Component {
     this.setState({ withAccordion: false });
     this.overflowCell.style.maxHeight = null;
   };
+
   handleAccordion = () => {
     if (!this.overflowCell) {
       return;
     }
+
     if (this.overflowCell.offsetHeight > this.overflowCellMaxHeight) {
       !this.state.withAccordion && this.setupAccordion();
     } else if (this.overflowCell.offsetHeight < this.overflowCellMaxHeight) {
@@ -131,7 +148,9 @@ export class GridRow extends Component {
     if (!this.overflowCell) {
       return;
     }
+
     this.props.tracking.trackEvent(this.props.toggleAccordionEventInfo);
+
     this.setState({ expanded: !this.state.expanded }, () => {
       this.overflowCell.style.maxHeight = !this.state.expanded
         ? `${this.overflowCellMaxHeight}px`
@@ -149,8 +168,10 @@ export class GridRow extends Component {
       gridRowClassName,
       level,
     } = this.props;
+
     const { expanded } = this.state;
     const customClasses = (rowClassMapper && rowClassMapper(value)) || {};
+
     return (
       <div
         className={cx('grid-row-wrapper', {
@@ -192,6 +213,7 @@ export class GridRow extends Component {
                 refFunction={column.maxHeight ? this.setupRef : null}
                 mobileWidth={column.mobileWidth}
                 value={value}
+                id={column.id}
                 align={column.align}
                 component={column.component}
                 formatter={column.formatter}

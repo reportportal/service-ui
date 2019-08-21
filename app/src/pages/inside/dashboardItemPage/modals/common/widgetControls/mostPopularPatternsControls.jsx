@@ -9,6 +9,7 @@ import { InputTagsSearch } from 'components/inputs/inputTagsSearch';
 import { ModalField } from 'components/main/modal';
 import { activeProjectSelector } from 'controllers/user';
 import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
+import { FIELD_LABEL_WIDTH } from 'pages/inside/dashboardItemPage/modals/common/widgetControls/controls/constants';
 import { FiltersControl, InputControl, TogglerControl } from './controls';
 import { getWidgetModeOptions } from './utils/getWidgetModeOptions';
 import { ITEMS_INPUT_WIDTH } from './constants';
@@ -128,7 +129,10 @@ export class MostPopularPatternsControls extends Component {
             hintType={'top-right'}
           />
         </FieldProvider>
-        <ModalField label={intl.formatMessage(messages.attributeKeyFieldLabel)} labelWidth={145}>
+        <ModalField
+          label={intl.formatMessage(messages.attributeKeyFieldLabel)}
+          labelWidth={FIELD_LABEL_WIDTH}
+        >
           <FieldProvider
             parse={this.parseAttribute}
             format={this.formatAttribute}

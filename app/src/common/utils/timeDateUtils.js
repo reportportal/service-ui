@@ -37,8 +37,8 @@ export const getTimeUnits = (time) => {
   };
 };
 
-export const getDuration = (start, end, isThreeDecimalPlaces) => {
-  const secDuration = parseInt((end - start) / 1000, 10);
+export const formatDuration = (duration, isThreeDecimalPlaces) => {
+  const secDuration = parseInt(duration / 1000, 10);
   const { days, hours, minutes, seconds } = getTimeUnits(secDuration);
 
   let result = '';
@@ -57,11 +57,14 @@ export const getDuration = (start, end, isThreeDecimalPlaces) => {
   if (result === '' && seconds > 0) {
     result = `${seconds}s`;
   } else if (result === '' && seconds === 0) {
-    result = isThreeDecimalPlaces
-      ? `${(end - start) / 1000}s`
-      : `${Math.round((end - start) / 10) / 100}s`;
+    result = isThreeDecimalPlaces ? `${duration / 1000}s` : `${Math.round(duration / 10) / 100}s`;
   }
   return result.trim();
+};
+
+export const getDuration = (start, end, isThreeDecimalPlaces) => {
+  const duration = end - start;
+  return formatDuration(duration, isThreeDecimalPlaces);
 };
 
 export const approximateTimeFormat = (time) => {

@@ -14,7 +14,7 @@
   vertical-align: middle;
 
   &:first-child {
-    padding-left: 15px;
+    padding-left: 20px;
   }
 
   &:last-child {
@@ -93,7 +93,7 @@
     display: none;
     width: 12px;
     height: 12px;
-    left: -18px;
+    left: -15px;
 
     svg {
       fill: rgba($COLOR--gray-47, .5);

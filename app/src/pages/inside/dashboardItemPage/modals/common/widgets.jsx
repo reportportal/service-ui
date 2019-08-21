@@ -19,11 +19,9 @@ import {
   FLAKY_TEST_CASES_TABLE,
   CUMULATIVE_TREND,
   MOST_POPULAR_PATTERNS,
+  MOST_TIME_CONSUMING,
   /*
   PRODUCT_STATUS,
-  */
-  /*
-  MOST_TIME_CONSUMING,
   */
 } from 'common/constants/widgetTypes';
 import {
@@ -45,11 +43,9 @@ import {
   FlakyTestCasesTableControls,
   CumulativeTrendControls,
   MostPopularPatternsControls,
+  MostTimeConsumingTestCasesControls,
   /*
   ProductStatusControls,
-  */
-  /*
-  MostTimeConsumingTestCasesControls,
   */
 } from './widgetControls';
 import LAUNCH_STATISTICS_PREVIEW from './img/wdgt-launch-statistics-line-chart-inline.svg';
@@ -70,11 +66,9 @@ import PASSING_RATE_SUMMARY_PREVIEW from './img/wdgt-passing-rate-summery-inline
 import FLAKY_TEST_CASES_TABLE_PREVIEW from './img/wdgt-flaky-test-cases-table-inline.svg';
 import CUMULATIVE_TREND_PREVIEW from './img/wdgt-cumulative-trend-chart-inline.svg';
 import MOST_POPULAR_PATTERNS_PREVIEW from './img/wdgt-most-popular-patterns-inline.svg';
+import MOST_TIME_CONSUMING_PREVIEW from './img/wdgt-most-time-consuming-inline.svg';
 /*
 import PRODUCT_STATUS_PREVIEW from './img/wdgt-product-satus-inline.svg';
-*/
-/*
-import MOST_TIME_CONSUMING_PREVIEW from './img/wdgt-most-time-consuming-inline.svg';
 */
 
 export const widgetTypesMessages = defineMessages({
@@ -150,16 +144,14 @@ export const widgetTypesMessages = defineMessages({
     id: 'Widgets.Name.mostPopularPatterns',
     defaultMessage: 'Most popular pattern table (TOP-20)',
   },
+  [MOST_TIME_CONSUMING]: {
+    id: 'Widgets.Name.mostTimeConsuming',
+    defaultMessage: 'Most time-consuming test cases widget (TOP-20)',
+  },
   /*
   [PRODUCT_STATUS]: {
     id: 'Widgets.Name.productStatus',
     defaultMessage: 'Product status',
-  },
-  */
-  /*
-  [MOST_TIME_CONSUMING]: {
-    id: 'Widgets.Name.mostTimeConsuming',
-    defaultMessage: 'Most time-consuming test cases widget (TOP-20)',
   },
   */
 });
@@ -399,7 +391,7 @@ export const getWidgets = (formatMessage) => [
       <FormattedMessage
         id={'Widgets.Description.mostPopularPatterns'}
         defaultMessage={
-          'Shows information about TOP-15 most popular patterns within the specified previous launches.'
+          'Shows information about TOP-20 most popular patterns within the specified previous launches.'
         }
       />
     ),
@@ -454,7 +446,6 @@ export const getWidgets = (formatMessage) => [
     },
   },
   */
-  /*
   {
     id: MOST_TIME_CONSUMING,
     title: formatMessage(widgetTypesMessages[MOST_TIME_CONSUMING]),
@@ -469,10 +460,9 @@ export const getWidgets = (formatMessage) => [
     preview: Parser(MOST_TIME_CONSUMING_PREVIEW),
     controls: MostTimeConsumingTestCasesControls,
   },
-  */
 ];
 
-export const TABLE_WIDGETS_PREVIEWS = {
+export const WIDGETS_STATIC_PREVIEWS = {
   [FLAKY_TEST_CASES_TABLE]: Parser(FLAKY_TEST_CASES_TABLE_PREVIEW),
   [LAUNCHES_TABLE]: Parser(LAUNCHES_TABLE_PREVIEW),
   [MOST_FAILED_TEST_CASES_TABLE]: Parser(MOST_FAILED_TEST_CASES_TABLE_PREVIEW),
@@ -482,4 +472,6 @@ export const TABLE_WIDGETS_PREVIEWS = {
   [PRODUCT_STATUS]: Parser(PRODUCT_STATUS_PREVIEW),
   */
   [MOST_POPULAR_PATTERNS]: Parser(MOST_POPULAR_PATTERNS_PREVIEW),
+  [CUMULATIVE_TREND]: Parser(CUMULATIVE_TREND_PREVIEW),
+  [MOST_TIME_CONSUMING]: Parser(MOST_TIME_CONSUMING_PREVIEW),
 };

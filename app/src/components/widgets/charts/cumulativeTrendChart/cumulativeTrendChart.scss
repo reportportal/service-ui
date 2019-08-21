@@ -1,121 +1,13 @@
 .cumulative-trend-chart {
+  position: relative;
   display: flex;
-  justify-content: flex-end;
+  flex-direction: column;
+  justify-content: flex-start;
   width: 100%;
-  padding-top: 40px;
-
-  &.preview-view {
-    display: none;
-  }
-
-  &:not(.preview-view) {
-    position: absolute;
-    top: -15px;
-  }
-
-  :global {
-    svg {
-      .c3-axis {
-        font-family: $FONT-REGULAR, sans-serif;
-        fill: $COLOR--charcoal-grey;
-        .c3-axis-y-label {
-          font-size: 12px;
-        }
-      }
-    }
-
-    .c3-grid line {
-      stroke: $COLOR--gray-80;
-    }
-
-    .c3-xgrid,
-    .c3-ygrid {
-      stroke-dasharray: none;
-    }
-
-    .c3-tooltip-container {
-      width: 215px;
-      background-color: $COLOR--white-two;
-      padding: 0 10px 5px 10px;
-      border: solid 1px $COLOR--gray-80;
-      border-radius: 2px;
-      font-size: 13px;
-
-      &:after {
-        content: '';
-        position: absolute;
-        top: 100%;
-        left: 50%;
-        margin-left: -5px;
-        border-top: 6px solid $COLOR--white-two;
-        border-left: 6px solid transparent;
-        border-right: 6px solid transparent;
-      }
-
-      &:before {
-        content: '';
-        position: absolute;
-        top: 100%;
-        left: 50%;
-        margin-left: -7px;
-        width: 0;
-        height: 0;
-        border-left: 8px solid transparent;
-        border-right: 8px solid transparent;
-        border-top: 8px solid $COLOR--gray-80;
-      }
-    }
-
-    .c3-target-narrow {
-      width: 15px;
-      margin-left: 10px;
-
-      .c3-bars {
-        width: 15px;
-        margin-left: 10px;
-      }
-    }
-  }
-
-  .controls {
-    padding-right: 30px;
-    display: flex;
-  }
-
-  .control {
-    margin-left: 20px;
-  }
-
-  .separate {
-    background-image: url(common/img/toggle-stacked.svg);
-    background-position-y: center;
-    background-repeat: no-repeat;
-    cursor: pointer;
-
-    input, label {
-      opacity: 0;
-    }
-  }
-  .separate-active {
-    background-image: url(common/img/toggle_separated.svg);
-  }
-
-  .percentage {
-    background-image: url(common/img/toggle-absolute.svg);
-    background-position-y: center;
-    background-repeat: no-repeat;
-    cursor: pointer;
-
-    input, label {
-      opacity: 0;
-    }
-  }
-
-  .percentage-active {
-    background-image: url(common/img/toggle_percentage.svg);
-  }
 }
 
-.legend {
-  padding-top: 8px;
+.popup-reference {
+  position: absolute;
+  width: 100px;
+  height: 1px;
 }

@@ -10,6 +10,7 @@ import {
   activeRetryIdSelector,
   activeLogSelector,
 } from 'controllers/log';
+import { fetchFirstAttachmentsAction, attachmentItemsSelector } from 'controllers/log/attachments';
 import { SAUCE_LABS } from 'common/constants/integrationNames';
 import { LOG_PAGE_EVENTS } from 'components/main/analytics/events';
 import StackTraceIcon from 'common/img/stack-trace-inline.svg';
@@ -48,15 +49,23 @@ const messages = defineMessages({
   },
 });
 
+const ATTACHMENTS_TAB_ID = 'attachments';
+
 @injectIntl
-@connect((state) => ({
-  lastActivity: lastLogActivitySelector(state),
-  activeRetry: activeRetrySelector(state),
-  logId: activeLogIdSelector(state),
-  retryId: activeRetryIdSelector(state),
-  logItem: activeLogSelector(state),
-  sauceLabsIntegrations: availableIntegrationsByPluginNameSelector(state, SAUCE_LABS),
-}))
+@connect(
+  (state) => ({
+    lastActivity: lastLogActivitySelector(state),
+    activeRetry: activeRetrySelector(state),
+    logId: activeLogIdSelector(state),
+    retryId: activeRetryIdSelector(state),
+    logItem: activeLogSelector(state),
+    sauceLabsIntegrations: availableIntegrationsByPluginNameSelector(state, SAUCE_LABS),
+    attachments: attachmentItemsSelector(state),
+  }),
+  {
+    fetchFirstAttachments: fetchFirstAttachmentsAction,
+  },
+)
 export class LogItemInfoTabs extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
@@ -72,24 +81,26 @@ export class LogItemInfoTabs extends Component {
     onToggleSauceLabsIntegrationView: PropTypes.func.isRequired,
     isSauceLabsIntegrationView: PropTypes.bool.isRequired,
     sauceLabsIntegrations: PropTypes.array.isRequired,
+    fetchFirstAttachments: PropTypes.func,
+    attachments: PropTypes.array,
   };
 
   static defaultProps = {
     lastActivity: null,
+    fetchFirstAttachments: () => {},
+    attachments: [],
   };
 
   static getDerivedStateFromProps(props) {
     return props.loading
       ? {
           activeTabId: null,
-          activeAttachmentId: null,
         }
       : null;
   }
 
   state = {
     activeTabId: null,
-    activeAttachmentId: null,
   };
 
   componentDidUpdate() {
@@ -105,9 +116,17 @@ export class LogItemInfoTabs extends Component {
   }
 
   setActiveTab = (activeTabId) => {
-    const { isSauceLabsIntegrationView, onToggleSauceLabsIntegrationView } = this.props;
+    const {
+      isSauceLabsIntegrationView,
+      onToggleSauceLabsIntegrationView,
+      fetchFirstAttachments,
+      attachments,
+    } = this.props;
     if (isSauceLabsIntegrationView && activeTabId) {
       onToggleSauceLabsIntegrationView();
+    }
+    if (activeTabId === ATTACHMENTS_TAB_ID && !attachments.length) {
+      fetchFirstAttachments();
     }
     this.setState({
       activeTabId:
@@ -117,10 +136,6 @@ export class LogItemInfoTabs extends Component {
     });
   };
 
-  changeActiveAttachment = (activeAttachmentId) =>
-    this.setState({
-      activeAttachmentId,
-    });
   isHistoryTabVisible = () => {
     const { retryId, logId } = this.props;
     return retryId === logId;
@@ -155,14 +170,10 @@ export class LogItemInfoTabs extends Component {
         },
       },
       {
-        id: 'attachments',
+        id: ATTACHMENTS_TAB_ID,
         label: formatMessage(messages.attachmentsTab),
         icon: AttachmentIcon,
         component: Attachments,
-        componentProps: {
-          activeItemId: this.state.activeAttachmentId,
-          onChangeActiveItem: this.changeActiveAttachment,
-        },
         eventInfo: LOG_PAGE_EVENTS.ATTACHMENT_TAB,
       },
       {

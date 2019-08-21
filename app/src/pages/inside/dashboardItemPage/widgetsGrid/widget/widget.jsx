@@ -31,12 +31,7 @@ const SILENT_UPDATE_TIMEOUT_FULLSCREEN = 30000;
   },
 )
 @track()
-@lazyload({
-  resize: true,
-  offset: 1000,
-  unmountIfInvisible: true,
-})
-export class Widget extends Component {
+export class SimpleWidget extends Component {
   static propTypes = {
     activeProject: PropTypes.string.isRequired,
     widgetId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
@@ -47,6 +42,7 @@ export class Widget extends Component {
     isModifiable: PropTypes.bool,
     isFullscreen: PropTypes.bool,
     observer: PropTypes.object.isRequired,
+    isPrintMode: PropTypes.bool,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
@@ -58,6 +54,7 @@ export class Widget extends Component {
     switchDraggable: () => {},
     isModifiable: false,
     isFullscreen: false,
+    isPrintMode: false,
   };
 
   constructor(props) {
@@ -109,13 +106,14 @@ export class Widget extends Component {
   };
 
   getWidgetContent = () => {
+    const { widgetType } = this.props;
     const { widget, uncheckedLegendItems, queryParameters, userSettings } = this.state;
 
     if (this.state.loading) {
       return <SpinningPreloader />;
     }
 
-    if (!isWidgetDataAvailable(widget)) {
+    if (!isWidgetDataAvailable(widget) && !MULTI_LEVEL_WIDGETS_MAP[widgetType]) {
       return <NoDataAvailable />;
     }
 
@@ -182,11 +180,10 @@ export class Widget extends Component {
   fetchWidget = (params = {}) => {
     const { tracking, isFullscreen } = this.props;
     const url = this.getWidgetUrl(params);
-
-    clearTimeout(this.silentUpdaterId);
+    this.silentUpdaterId && clearTimeout(this.silentUpdaterId);
     tracking.trackEvent(DASHBOARD_PAGE_EVENTS.REFRESH_WIDGET);
 
-    if (!isWidgetDataAvailable(this.state.widget)) {
+    if (!isWidgetDataAvailable(this.state.widget) && !this.state.widget.id) {
       this.setState({
         loading: true,
       });
@@ -210,11 +207,12 @@ export class Widget extends Component {
             loading: false,
           });
         }
-
-        this.silentUpdaterId = setTimeout(
-          this.fetchWidget,
-          isFullscreen ? SILENT_UPDATE_TIMEOUT_FULLSCREEN : SILENT_UPDATE_TIMEOUT,
-        );
+        if (!this.props.isPrintMode) {
+          this.silentUpdaterId = setTimeout(
+            this.fetchWidget,
+            isFullscreen ? SILENT_UPDATE_TIMEOUT_FULLSCREEN : SILENT_UPDATE_TIMEOUT,
+          );
+        }
       })
       .catch(() => {
         this.setState({
@@ -239,14 +237,14 @@ export class Widget extends Component {
       id: 'deleteWidgetModal',
       data: {
         widget: this.state.widget,
-        onConfirm: () => this.props.onDelete(this.state.widget.id),
+        onConfirm: () => this.props.onDelete(this.props.widgetId),
       },
     });
   };
 
   render() {
     const { widget, visible } = this.state;
-    const { isFullscreen, widgetType, isModifiable } = this.props;
+    const { isFullscreen, widgetType, isModifiable, isPrintMode } = this.props;
     const widgetOptions = this.getWidgetOptions();
     const headerData = {
       owner: widget.owner,
@@ -274,6 +272,7 @@ export class Widget extends Component {
               onDelete={this.showDeleteWidgetModal}
               onEdit={this.showEditWidgetModal}
               customClass={cx('common-control')}
+              isPrintMode={isPrintMode}
             />
           </div>
           <div ref={this.getWidgetNode} className={cx('widget', { hidden: !visible })}>
@@ -284,3 +283,20 @@ export class Widget extends Component {
     );
   }
 }
+
+export const LazyloadWidget = lazyload({
+  resize: true,
+  offset: 1000,
+  unmountIfInvisible: true,
+})(SimpleWidget);
+
+export const Widget = (props) =>
+  props.isPrintMode ? <SimpleWidget {...props} /> : <LazyloadWidget {...props} />;
+
+Widget.propTypes = {
+  isPrintMode: PropTypes.bool,
+};
+
+Widget.defaultProps = {
+  isPrintMode: false,
+};

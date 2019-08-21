@@ -1,0 +1,118 @@
+.edit-defect-content {
+  position: relative;
+}
+
+.markdown-container {
+  margin-top: 10px;
+
+  .markdown-disable-cover {
+    display: none;
+  }
+
+  &.disabled {
+    opacity: 0.4;
+    pointer-events: none;
+
+    .markdown-disable-cover {
+      display: block;
+      height: 100%;
+    }
+  }
+}
+
+.ignore-aa-title {
+  font-size: 12px;
+  font-family: $FONT-REGULAR;
+}
+
+.edit-defect-bottom-row {
+  padding-top: 5px;
+}
+
+.replace-comments-checkbox {
+  float: left;
+}
+
+.hot-keys-wrapper {
+  margin-top: 3px;
+  text-align: right;
+}
+
+.hot-keys {
+  color: $COLOR--gray-60;
+  font-size: 12px;
+  font-family: $FONT-REGULAR;
+  margin: 0 10px;
+}
+
+.hot-key {
+  font-family: $FONT-SEMIBOLD;
+}
+
+.defect-type {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  @media (max-width: $SCREEN_XS_MAX) {
+    justify-content: flex-start;
+    width: 100%;
+  }
+}
+
+.defect-type-title {
+  margin-right: 8px;
+  color: $COLOR--charcoal-grey;
+  font-size: 13px;
+}
+.defect-type-selector-wrapper {
+  width: 270px;
+  max-width: 270px;
+  box-sizing: border-box;
+}
+
+.input-switcher-wrapper {
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  right: 0;
+  display: inline-block;
+  height: 30px;
+  max-width: 165px;
+  @media (max-width: $SCREEN_XS_MAX) {
+    position: static;
+    max-width: 100%;
+    margin-top: 10px;
+  }
+}
+
+.modal-window {
+  width: 770px;
+  margin-left: -385px;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    right: 10px;
+    left: 10px;
+    width: auto;
+    margin-left: 0;
+  }
+}
+
+.footer {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  height: 31px;
+}
+
+.change-mode-dropdown {
+  width: 400px;
+  padding: 0 10px;
+}
+
+.items-count {
+  color: $COLOR--gray-60;
+  font-size: 12px;
+  font-family: $FONT-REGULAR;
+  padding: 0 10px;
+}

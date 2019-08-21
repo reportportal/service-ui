@@ -34,11 +34,13 @@ export class DefectTypeTooltip extends Component {
     intl: intlShape.isRequired,
     tooltipEventInfo: PropTypes.object,
     itemId: PropTypes.number,
+    ownLinkParams: PropTypes.object,
   };
 
   static defaultProps = {
     itemId: null,
     tooltipEventInfo: {},
+    ownLinkParams: null,
   };
 
   getFilteredBodyData = (config) => {
@@ -55,6 +57,7 @@ export class DefectTypeTooltip extends Component {
     const {
       data,
       itemId,
+      ownLinkParams,
       tooltipEventInfo,
       type,
       projectConfig,
@@ -72,6 +75,7 @@ export class DefectTypeTooltip extends Component {
             {filteredBodyData.length > 1 && (
               <DefectLink
                 itemId={itemId}
+                ownLinkParams={ownLinkParams}
                 defects={Object.keys(data)}
                 className={cx('total-item')}
                 eventInfo={tooltipEventInfo}
@@ -94,7 +98,13 @@ export class DefectTypeTooltip extends Component {
              * except system types (i.e. with index=0)
              */
             filteredBodyData.map(({ locator, color, longName }) => (
-              <DefectLink key={locator} itemId={itemId} defects={[locator]} className={cx('item')}>
+              <DefectLink
+                key={locator}
+                itemId={itemId}
+                ownLinkParams={ownLinkParams}
+                defects={[locator]}
+                className={cx('item')}
+              >
                 <div className={cx('name')}>
                   <div className={cx('circle')} style={{ backgroundColor: color }} />
                   {longName}

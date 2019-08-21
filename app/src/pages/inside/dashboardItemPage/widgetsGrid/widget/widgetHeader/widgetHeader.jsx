@@ -52,6 +52,7 @@ export class WidgetHeader extends Component {
     onDelete: PropTypes.func,
     onEdit: PropTypes.func,
     customClass: PropTypes.string,
+    isPrintMode: PropTypes.bool,
   };
   static defaultProps = {
     data: {},
@@ -61,13 +62,15 @@ export class WidgetHeader extends Component {
     onDelete: () => {},
     onEdit: () => {},
     customClass: null,
+    isPrintMode: false,
   };
 
   renderMetaInfo = () =>
-    this.props.data.meta.map((item) => {
+    this.props.data.meta.map((item, index) => {
       const widgetMode = getWidgetModeByValue(item);
       return (
-        <div key={widgetMode} className={cx('meta-info')}>
+        // eslint-disable-next-line react/no-array-index-key
+        <div key={`${widgetMode}_${index}`} className={cx('meta-info')}>
           {widgetModeMessages[widgetMode]
             ? this.props.intl.formatMessage(widgetModeMessages[widgetMode])
             : widgetMode}
@@ -86,6 +89,7 @@ export class WidgetHeader extends Component {
       onDelete,
       onEdit,
       customClass,
+      isPrintMode,
     } = this.props;
     return (
       <div className={cx('widget-header')}>
@@ -125,21 +129,23 @@ export class WidgetHeader extends Component {
             {this.renderMetaInfo()}
           </div>
         </div>
-        <div className={customClass}>
-          <div className={cx('controls-block')}>
-            <div className={cx('control', 'mobile-hide')} onClick={onEdit}>
-              {data.owner === userId && Parser(PencilIcon)}
-            </div>
-            <div className={cx('control')} onClick={onRefresh}>
-              {Parser(RefreshIcon)}
-            </div>
-            {canDeleteWidget(userRole, projectRole, userId === data.owner) && (
-              <div className={cx('control', 'mobile-hide')} onClick={onDelete}>
-                {Parser(CrossIcon)}
+        {!isPrintMode && (
+          <div className={customClass}>
+            <div className={cx('controls-block')}>
+              <div className={cx('control', 'mobile-hide')} onClick={onEdit}>
+                {data.owner === userId && Parser(PencilIcon)}
               </div>
-            )}
+              <div className={cx('control')} onClick={onRefresh}>
+                {Parser(RefreshIcon)}
+              </div>
+              {canDeleteWidget(userRole, projectRole, userId === data.owner) && (
+                <div className={cx('control', 'mobile-hide')} onClick={onDelete}>
+                  {Parser(CrossIcon)}
+                </div>
+              )}
+            </div>
           </div>
-        </div>
+        )}
       </div>
     );
   }

@@ -39,8 +39,9 @@ const FilterItemBase = ({
   owner,
   userId,
   intl,
+  className,
 }) => (
-  <div className={cx('filter-item', { active })} onClick={onClick}>
+  <div className={cx('filter-item', className, { active })} onClick={onClick}>
     {share &&
       (userId === owner || owner === undefined) && (
         <div className={cx('icon-holder')}>
@@ -89,6 +90,7 @@ FilterItemBase.propTypes = {
   owner: PropTypes.string.isRequired,
   userId: PropTypes.string.isRequired,
   intl: intlShape.isRequired,
+  className: PropTypes.string,
 };
 FilterItemBase.defaultProps = {
   active: false,
@@ -97,4 +99,5 @@ FilterItemBase.defaultProps = {
   unsaved: false,
   onClick: () => {},
   onRemove: () => {},
+  className: '',
 };

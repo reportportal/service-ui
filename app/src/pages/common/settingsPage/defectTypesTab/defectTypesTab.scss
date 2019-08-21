@@ -155,7 +155,8 @@ $DEFECT_NAME_PADDING: 70px;
     stroke: $COLOR--tealish;
     fill: $COLOR--tealish;
   }
-  &:focus {
+  &:focus,
+  &:hover {
     svg {
       stroke: $COLOR--topaz;
       fill: $COLOR--topaz;
@@ -167,6 +168,9 @@ $DEFECT_NAME_PADDING: 70px;
 .delete-button {
   path {
     fill: $COLOR--gray-60;
+  }
+  &:hover path {
+    fill: $COLOR--charcoal-grey;
   }
   &:focus path {
     fill: $COLOR--gray-47;

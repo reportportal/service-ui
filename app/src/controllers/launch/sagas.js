@@ -1,14 +1,18 @@
 import { takeEvery, all, put, select, call } from 'redux-saga/effects';
 import { URLS } from 'common/urls';
+import { fetch, updateStorageItem, waitForSelector } from 'common/utils';
 import { APPLICATION_SETTINGS } from 'common/constants/localStorageKeys';
 import { debugModeSelector } from 'controllers/launch';
 import { fetchDataAction } from 'controllers/fetch';
 import { activeProjectSelector } from 'controllers/user';
 import { ALL, LATEST } from 'common/constants/reservedFilterIds';
 import { activeFilterSelector, changeActiveFilterAction } from 'controllers/filter';
+import { showFilterOnLaunchesAction } from 'controllers/project';
 import { filterIdSelector } from 'controllers/pages';
-import { updateStorageItem, waitForSelector } from 'common/utils';
 import { isEmptyValue } from 'common/utils/isEmptyValue';
+import { createFilterQuery } from 'components/filterEntities/containers/utils';
+import { formatSortingString, SORTING_ASC, SORTING_DESC, SORTING_KEY } from 'controllers/sorting';
+import { ENTITY_NUMBER } from 'components/filterEntities/constants';
 import {
   FETCH_LAUNCHES,
   NAMESPACE,
@@ -20,7 +24,6 @@ import {
   launchDistinctSelector,
   launchesDistinctLinksSelectorsMap,
 } from './selectors';
-import { createFilterQuery } from '../../components/filterEntities/containers/utils';
 
 function* fetchLaunchesWithParams({ payload }) {
   const activeProject = yield select(activeProjectSelector);
@@ -47,6 +50,19 @@ function* fetchLaunches() {
       yield put(changeActiveFilterAction(ALL));
       return;
     }
+    if (!activeFilter) {
+      const activeProject = yield select(activeProjectSelector);
+      let filter = null;
+      try {
+        filter = yield fetch(URLS.filter(activeProject, filterId), { method: 'get' });
+      } catch (e) {
+        yield put(changeActiveFilterAction(ALL));
+        return;
+      }
+      if (filter) {
+        yield put(showFilterOnLaunchesAction(filter));
+      }
+    }
     yield call(waitForSelector, activeFilterSelector);
     activeFilter = yield select(activeFilterSelector);
   }
@@ -57,6 +73,16 @@ function* fetchLaunches() {
         .filter(notEmptyConditionsPredicate)
         .reduce((res, condition) => ({ ...res, [condition.filteringField]: condition }), {}),
     );
+    if (activeFilter.orders && activeFilter.orders[0]) {
+      const order = activeFilter.orders[0];
+      filtersQuery = {
+        ...filtersQuery,
+        [SORTING_KEY]: formatSortingString(
+          [order.sortingColumn, ENTITY_NUMBER],
+          order.isAsc ? SORTING_ASC : SORTING_DESC,
+        ),
+      };
+    }
   }
   yield call(fetchLaunchesWithParams, { payload: filtersQuery });
 }

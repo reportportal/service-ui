@@ -37,9 +37,9 @@ import {
   ADMINISTRATE_PAGE,
 } from 'controllers/pages/constants';
 import { Sidebar } from 'layouts/common/sidebar';
+import FiltersIcon from 'common/img/filters-icon-inline.svg';
 import DashboardIcon from './img/dashboard-icon-inline.svg';
 import LaunchesIcon from './img/launches-icon-inline.svg';
-import FiltersIcon from './img/filters-icon-inline.svg';
 import DebugIcon from './img/debug-icon-inline.svg';
 import ProfileIcon from './img/profile-icon-inline.svg';
 import AdministrateIcon from './img/administrate-icon-inline.svg';

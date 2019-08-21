@@ -5,6 +5,7 @@ import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import classNames from 'classnames/bind';
 import { ModalField } from 'components/main/modal';
 import { Input } from 'components/inputs/input';
+import { InputTagsSearch } from 'components/inputs/inputTagsSearch';
 import CrossIcon from 'common/img/cross-icon-inline.svg';
 import { FIELD_LABEL_WIDTH } from '../../constants';
 import styles from './customColumnItem.scss';
@@ -30,7 +31,8 @@ export class CustomColumnItem extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
     name: PropTypes.string,
-    attributeKey: PropTypes.string,
+    uri: PropTypes.string,
+    attributeKey: PropTypes.object,
     index: PropTypes.number,
     last: PropTypes.bool,
     onRemove: PropTypes.func,
@@ -39,7 +41,8 @@ export class CustomColumnItem extends Component {
   };
   static defaultProps = {
     name: '',
-    attributeKey: '',
+    uri: '',
+    attributeKey: {},
     index: 0,
     last: false,
     onRemove: () => {},
@@ -54,12 +57,13 @@ export class CustomColumnItem extends Component {
     const { index, onChange, attributeKey } = this.props;
     onChange({ name: e.target.value, value: attributeKey }, index);
   };
-  onChangeAttributeKey = (e) => {
+  onChangeAttributeKey = (value) => {
     const { index, onChange, name } = this.props;
-    onChange({ name, value: e.target.value }, index);
+    onChange({ name, value }, index);
   };
+  formatValue = (values) => values.map((value) => ({ value, label: value }));
   render() {
-    const { intl, name, attributeKey, index, last, noRemove } = this.props;
+    const { intl, name, uri, attributeKey, index, last, noRemove } = this.props;
     return (
       <ModalField
         className={cx({ 'last-custom-column-field': last })}
@@ -73,12 +77,20 @@ export class CustomColumnItem extends Component {
             placeholder={intl.formatMessage(messages.namePlaceholder)}
             onChange={this.onChangeName}
           />
-          <Input
-            className={cx('attribute-key-input')}
-            value={attributeKey}
-            placeholder={intl.formatMessage(messages.attributeKeyPlaceholder)}
-            onChange={this.onChangeAttributeKey}
-          />
+          <div className={cx('attribute-key-input')}>
+            <InputTagsSearch
+              value={attributeKey}
+              placeholder={intl.formatMessage(messages.attributeKeyPlaceholder)}
+              makeOptions={this.formatValue}
+              onChange={this.onChangeAttributeKey}
+              minLength={1}
+              uri={uri}
+              async
+              creatable
+              showNewLabel
+              isClearable
+            />
+          </div>
           <div className={cx('remove-icon', { 'no-remove': noRemove })} onClick={this.onRemove}>
             {!noRemove && Parser(CrossIcon)}
           </div>

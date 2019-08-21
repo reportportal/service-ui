@@ -23,13 +23,20 @@
     margin-top: 7px;
   }
 }
+.member-name-wrap {
+  white-space: nowrap;
+}
 .member-name,
 .member-login {
-  margin: 0;
-  max-width: 100%;
-  text-overflow: ellipsis;
+  max-width: 250px;
   color: $COLOR--charcoal-grey;
   line-height: 1.42857143;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.member-name {
+  display: inline-block;
 }
 .member-login {
   margin-top: 5px;
@@ -41,7 +48,6 @@
   top: -6px;
   padding: 0 6px 2px;
   border-radius: 100px;
-  white-space: nowrap;
   font-size: 10px;
   color: $COLOR--white-two;
   line-height: 12px;

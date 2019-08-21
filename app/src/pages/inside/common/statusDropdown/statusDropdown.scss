@@ -1,0 +1,26 @@
+.status-dropdown {
+  text-transform: capitalize;
+}
+.dropdown {
+  height: auto;
+}
+.select-block {
+  min-width: 140px;
+  padding: 0 10px 0 0;
+  border: none;
+  background-color: transparent;
+}
+.value {
+  display: inline;
+  padding-right: 7px;
+  line-height: 18px;
+}
+.arrow {
+  position: relative;
+  right: auto;
+  top: -2px;
+  margin-top: 0;
+}
+.select-list {
+  margin-top: 0;
+}

@@ -36,7 +36,7 @@ const cx = classNames.bind(styles);
 const messages = defineMessages({
   retryTooltip: {
     id: 'ItemInfo.RetryTooltip',
-    defaultMessage: 'Launch has test items with retries',
+    defaultMessage: 'Launch has retries of the test cases',
   },
 });
 
@@ -146,9 +146,7 @@ export class ItemInfo extends Component {
             className={cx('name-link')}
             onClick={() => tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_ITEM_NAME)}
           >
-            <span title={value.name} className={cx('name')}>
-              {`${formatItemName(value.name)} `}
-            </span>
+            <span title={value.name}>{`${formatItemName(value.name)} `}</span>
           </NameLink>
           <span className={cx('edit-number-box')}>
             <NameLink
@@ -159,7 +157,12 @@ export class ItemInfo extends Component {
             >
               {value.number && <span className={cx('number')}>#{value.number}</span>}
             </NameLink>
-            {value.analyzing && <div className={cx('item-badge', 'analysis')}>Analysis</div>}
+            {value.autoAnalyzing && (
+              <div className={cx('item-badge', 'auto-analysis')}>Auto-analysis</div>
+            )}
+            {value.patternAnalyzing && (
+              <div className={cx('item-badge', 'pattern-analysis')}>Pattern-analysis</div>
+            )}
             {value.rerun && <div className={cx('item-badge', 'rerun')}>Rerun</div>}
             {isEditVisible && (
               <span className={cx('edit-icon')} onClick={this.handleEditItem}>
@@ -199,6 +202,7 @@ export class ItemInfo extends Component {
               <AttributesBlock
                 attributes={value.attributes}
                 onClickAttribute={customProps.onClickAttribute}
+                isAttributeClickable
               />
             )}
           {isStepLevel && (

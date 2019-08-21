@@ -109,6 +109,14 @@ export const defectColorsSelector = createSelector(projectConfigSelector, (confi
   return colors;
 });
 
+export const getDefectTypeSelector = createSelector(subTypesSelector, (subTypes) => (issueType) =>
+  Object.keys(subTypes).reduce(
+    (defectType, subType) =>
+      subTypes[subType].find((defectSubType) => defectSubType.locator === issueType) || defectType,
+    null,
+  ),
+);
+
 /* PATTERN-ANALYSIS */
 
 export const patternsSelector = (state) => projectConfigSelector(state).patterns || [];

@@ -2,7 +2,7 @@ import React, { Component, Fragment } from 'react';
 import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import Fullscreen from 'react-full-screen';
+import { Fullscreen } from 'components/containers/fullscreen';
 import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
@@ -20,22 +20,24 @@ import {
   updateDashboardAction,
 } from 'controllers/dashboard';
 import { userInfoSelector, activeProjectSelector } from 'controllers/user';
-import { PROJECT_DASHBOARD_PAGE } from 'controllers/pages';
+import { PROJECT_DASHBOARD_PAGE, PROJECT_DASHBOARD_PRINT_PAGE } from 'controllers/pages';
 import { showModalAction } from 'controllers/modal';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { hideScreenLockAction } from 'controllers/screenLock';
 import { GhostButton } from 'components/buttons/ghostButton';
+import Link from 'redux-first-router-link';
 import { PageLayout, PageHeader, PageSection } from 'layouts/pageLayout';
 import { DASHBOARD_PAGE_EVENTS } from 'components/main/analytics/events';
 import { DashboardPageHeader } from 'pages/inside/common/dashboardPageHeader';
 import GlobeIcon from 'common/img/globe-icon-inline.svg';
 import AddWidgetIcon from 'common/img/add-widget-inline.svg';
+import ExportIcon from 'common/img/export-inline.svg';
 import AddSharedWidgetIcon from './img/add-shared-inline.svg';
 import EditIcon from './img/edit-inline.svg';
 import CancelIcon from './img/cancel-inline.svg';
 import FullscreenIcon from './img/full-screen-inline.svg';
-import styles from './dashboardItemPage.scss';
 import { WidgetsGrid } from './widgetsGrid';
+import styles from './dashboardItemPage.scss';
 
 const cx = classNames.bind(styles);
 
@@ -85,6 +87,10 @@ const messages = defineMessages({
     id: 'DashboardPage.modal.deleteModalConfirmationText',
     defaultMessage:
       "Are you sure you want to delete dashboard '<b>{name}</b>'? It will no longer exist.",
+  },
+  print: {
+    id: 'DashboardPage.print',
+    defaultMessage: 'Print',
   },
 });
 
@@ -136,46 +142,15 @@ export class DashboardItemPage extends Component {
     fullScreenMode: false,
   };
 
-  onConfirm = (widget, closeModal) => {
-    const {
-      intl: { formatMessage },
-      activeProject,
-      dashboard,
-    } = this.props;
+  componentDidMount() {
+    this.props.fetchDashboardAction();
+  }
 
-    return fetch(URLS.addDashboardWidget(activeProject, dashboard.id), {
-      method: 'put',
-      data: { addWidget: widget },
-    })
-      .then(() => {
-        const oldWidgets = dashboard.widgets;
-        const newWidgets = oldWidgets.map((item) => ({
-          ...item,
-          widgetPosition: {
-            ...item.widgetPosition,
-            positionY: item.widgetPosition.positionY + widget.widgetSize.height,
-          },
-        }));
-        newWidgets.unshift(widget);
-
-        return this.props.updateDashboardWidgetsAction({
-          ...this.props.dashboard,
-          widgets: newWidgets,
-        });
-      })
-      .then(() => {
-        this.props.hideScreenLockAction();
-        closeModal();
-        this.props.showNotification({
-          message: formatMessage(messages.addWidgetSuccess),
-          type: NOTIFICATION_TYPES.SUCCESS,
-        });
-      })
-      .catch((err) => {
-        this.props.hideScreenLockAction();
-        this.props.showNotification({ message: err.message, type: NOTIFICATION_TYPES.ERROR });
-      });
-  };
+  componentDidUpdate({ dashboard }) {
+    if (this.props.dashboard.id && this.props.dashboard.id !== dashboard.id) {
+      this.props.fetchDashboardAction();
+    }
+  }
 
   onDeleteDashboard = () => {
     const {
@@ -242,6 +217,47 @@ export class DashboardItemPage extends Component {
 
   getDashboardName = () => (this.props.dashboard && this.props.dashboard.name) || '';
 
+  addWidget = (widget, closeModal) => {
+    const {
+      intl: { formatMessage },
+      activeProject,
+      dashboard,
+    } = this.props;
+
+    return fetch(URLS.addDashboardWidget(activeProject, dashboard.id), {
+      method: 'put',
+      data: { addWidget: widget },
+    })
+      .then(() => {
+        const oldWidgets = dashboard.widgets;
+        const newWidgets = oldWidgets.map((item) => ({
+          ...item,
+          widgetPosition: {
+            ...item.widgetPosition,
+            positionY: item.widgetPosition.positionY + widget.widgetSize.height,
+          },
+        }));
+        newWidgets.unshift(widget);
+
+        return this.props.updateDashboardWidgetsAction({
+          ...this.props.dashboard,
+          widgets: newWidgets,
+        });
+      })
+      .then(() => {
+        this.props.hideScreenLockAction();
+        closeModal();
+        this.props.showNotification({
+          message: formatMessage(messages.addWidgetSuccess),
+          type: NOTIFICATION_TYPES.SUCCESS,
+        });
+      })
+      .catch((err) => {
+        this.props.hideScreenLockAction();
+        this.props.showNotification({ message: err.message, type: NOTIFICATION_TYPES.ERROR });
+      });
+  };
+
   toggleFullscreen = () => {
     this.props.tracking.trackEvent(DASHBOARD_PAGE_EVENTS.FULL_SCREEN_BTN);
     this.props.toggleFullScreenModeAction();
@@ -251,7 +267,7 @@ export class DashboardItemPage extends Component {
     this.props.showModalAction({
       id: 'widgetWizardModal',
       data: {
-        onConfirm: this.onConfirm,
+        onConfirm: this.addWidget,
         eventsInfo: {
           closeIcon: DASHBOARD_PAGE_EVENTS.CLOSE_ICON_ADD_WIDGET_MODAL,
           chooseWidgetType: DASHBOARD_PAGE_EVENTS.CHOOSE_WIDGET_TYPE_ADD_WIDGET_MODAL,
@@ -269,7 +285,7 @@ export class DashboardItemPage extends Component {
     this.props.showModalAction({
       id: 'addSharedWidgetModal',
       data: {
-        onConfirm: this.onConfirm,
+        onConfirm: this.addWidget,
         currentDashboard: this.props.dashboard,
       },
     });
@@ -296,6 +312,7 @@ export class DashboardItemPage extends Component {
       intl: { formatMessage },
       dashboard,
       fullScreenMode,
+      activeProject,
       changeFullScreenModeAction: changeFullScreenMode,
     } = this.props;
 
@@ -309,7 +326,7 @@ export class DashboardItemPage extends Component {
         <PageSection>
           <div className={cx('dashboard-item')}>
             <div className={cx('buttons-container')}>
-              <div className={cx('nav-left')}>
+              <div className={cx('buttons-block')}>
                 {isOwner ? (
                   <Fragment>
                     <GhostButton icon={AddWidgetIcon} onClick={this.showWidgetWizard}>
@@ -327,7 +344,7 @@ export class DashboardItemPage extends Component {
                   </div>
                 )}
               </div>
-              <div className={cx('nav-right')}>
+              <div className={cx('buttons-block')}>
                 {isOwner && (
                   <GhostButton icon={EditIcon} onClick={this.onEditDashboardItem}>
                     {formatMessage(messages.editDashboard)}
@@ -343,6 +360,19 @@ export class DashboardItemPage extends Component {
                     {formatMessage(messages.delete)}
                   </GhostButton>
                 )}
+                <Link
+                  to={{
+                    type: PROJECT_DASHBOARD_PRINT_PAGE,
+                    payload: {
+                      projectId: this.props.activeProject,
+                      dashboardId: this.props.dashboard.id,
+                    },
+                  }}
+                  target={'_blank'}
+                  className={cx('print-button')}
+                >
+                  <GhostButton icon={ExportIcon}>{formatMessage(messages.print)}</GhostButton>
+                </Link>
               </div>
             </div>
             <Fullscreen enabled={fullScreenMode} onChange={changeFullScreenMode}>
@@ -351,6 +381,9 @@ export class DashboardItemPage extends Component {
                 dashboard={dashboard}
                 isFullscreen={fullScreenMode}
                 showWidgetWizard={this.showWidgetWizard}
+                activeProject={activeProject}
+                showNotification={this.props.showNotification}
+                updateDashboardWidgetsAction={this.props.updateDashboardWidgetsAction}
               />
               {fullScreenMode && (
                 <i className={cx('icon-close')} onClick={this.toggleFullscreen}>

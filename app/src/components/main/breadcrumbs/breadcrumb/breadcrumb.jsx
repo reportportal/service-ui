@@ -10,7 +10,11 @@ import styles from './breadcrumb.scss';
 
 const cx = classNames.bind(styles);
 
-export const Breadcrumb = ({ descriptor: { error, active, link, title, listView }, onClick }) => (
+export const Breadcrumb = ({
+  descriptor: { error, active, link, title, listView },
+  expanded,
+  onClick,
+}) => (
   <div className={cx('breadcrumb')}>
     {listView && (
       <div className={cx('list-view-icon')} title={'List view'}>
@@ -20,14 +24,18 @@ export const Breadcrumb = ({ descriptor: { error, active, link, title, listView 
     {error ? (
       <ErrorItem />
     ) : (
-      <LinkItem active={active} link={link} title={title} onClick={onClick} />
+      <span className={cx('link-item', { collapsed: !expanded })}>
+        <LinkItem active={active} link={link} title={title} onClick={onClick} />
+      </span>
     )}
   </div>
 );
 Breadcrumb.propTypes = {
   descriptor: breadcrumbDescriptorShape.isRequired,
+  expanded: PropTypes.bool,
   onClick: PropTypes.func,
 };
 Breadcrumb.defaultProps = {
+  expanded: true,
   onClick: () => {},
 };

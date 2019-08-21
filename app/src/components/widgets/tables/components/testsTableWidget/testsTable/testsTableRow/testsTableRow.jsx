@@ -19,32 +19,56 @@ const cx = classNames.bind(styles);
 }))
 export class TestsTableRow extends Component {
   static propTypes = {
+    launchId: oneOfType([number, string]).isRequired,
     testCaseNameLink: object.isRequired,
     data: PTTest.isRequired,
     name: string.isRequired,
-    count: number.isRequired,
     time: oneOfType([number, array]).isRequired,
-    matrixData: array.isRequired,
-    matrixComponent: func.isRequired,
-    launchId: oneOfType([number, string]).isRequired,
+    count: number,
+    matrixData: array,
+    matrixComponent: func,
+    status: array,
+    duration: number,
+  };
+
+  static defaultProps = {
+    count: null,
+    matrixData: null,
+    matrixComponent: null,
+    status: null,
+    duration: null,
   };
 
   render() {
-    const { data, count, name, matrixData, time, matrixComponent, testCaseNameLink } = this.props;
+    const {
+      testCaseNameLink,
+      data,
+      name,
+      time,
+      count,
+      matrixData,
+      matrixComponent: Matrix,
+      status,
+      duration,
+    } = this.props;
     const { total, uniqueId } = data;
-    const Matrix = matrixComponent;
-    const percentage = (count / total * 100).toFixed(2);
+    const percentage = count !== null ? (count / total * 100).toFixed(2) : null;
 
     return (
       <div className={cx('row')}>
         <NavLink className={cx('col', 'col-name')} to={testCaseNameLink}>
           <span>{name}</span>
         </NavLink>
-        <div className={cx('col', 'col-count')}>
-          <Count count={count} total={total} />
-          <Matrix tests={matrixData} id={uniqueId} />
-        </div>
-        <div className={cx('col', 'col-percents')}>{percentage}%</div>
+        {Matrix &&
+          count && (
+            <div className={cx('col', 'col-count')}>
+              <Count count={count} total={total} />
+              <Matrix tests={matrixData} id={uniqueId} />
+            </div>
+          )}
+        {percentage && <div className={cx('col', 'col-percents')}>{percentage}%</div>}
+        {status && <div className={cx('col', 'col-status')}>{status}</div>}
+        {duration && <div className={cx('col', 'col-duration')}>{duration} s</div>}
         <div className={cx('col', 'col-date')}>
           <AbsRelTime startTime={Array.isArray(time) ? time[time.length - 1] : time} />
         </div>

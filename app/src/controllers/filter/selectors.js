@@ -40,3 +40,15 @@ export const unsavedFilterIdsSelector = createSelector(
       })
       .map((item) => item.id),
 );
+
+export const dirtyFilterIdsSelector = createSelector(
+  launchFiltersSelector,
+  userFiltersSelector,
+  (filters, savedFilters) =>
+    filters
+      .filter((filter) => {
+        const savedFilter = savedFilters.find((item) => item.id === filter.id);
+        return savedFilter && !isEqual(filter, savedFilter);
+      })
+      .map((item) => item.id),
+);

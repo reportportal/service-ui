@@ -1,27 +1,19 @@
 [![Build Status](https://semaphoreci.com/api/v1/lexecon/rp_service-ui/branches/develop/badge.svg)](http://reportportal.io/service-ui/index.html)
 
-1. Install nodejs
+1. Install nodejs (minimum required version 10)
 
 2. Open console from the project root
 
-3. run the command `cd src/main/resources/public`
+3. Run the command `cd app`
 
-4. run the command `npm install`
+4. Run the command `npm install`
 
-5. run the command `npm run grunt`
+5. Create file `.env` in `app` folder
 
-6. create file `config-proxy.js` in `public` folder
-
-```javascript
-module.exports = {
-    path: ''  //     http://you_server:port/
-};
+```
+PROXY_PATH='' // http://you_server:port/
 ```
 
-7. open new console from the project root
+6. Run command `npm run dev`
 
-8. run the command `cd src/main/resources/public`
-
-9. run the command `npm run server`
-
-10. open `https://localhost:8080/` in browser
+7. Open `http://localhost:3000/` in browser

@@ -38,6 +38,7 @@ export class ModalFooter extends Component {
     confirmationWarning: PropTypes.string,
     confirmationWarningClassName: PropTypes.string,
     confirmWithCheckbox: PropTypes.bool,
+    renderFooterElements: PropTypes.func,
   };
   static defaultProps = {
     warningMessage: '',
@@ -53,6 +54,7 @@ export class ModalFooter extends Component {
     confirmationWarning: '',
     confirmationWarningClassName: '',
     confirmWithCheckbox: false,
+    renderFooterElements: () => {},
   };
   closeConfirmChangeHandler = () => {
     const { closeConfirmed } = this.props;
@@ -73,10 +75,12 @@ export class ModalFooter extends Component {
       confirmationWarningClassName,
       closeConfirmed,
       confirmWithCheckbox,
+      renderFooterElements,
     } = this.props;
 
     return (
       <div className={cx('modal-footer')}>
+        <div className={cx('modal-footer-elements')}>{renderFooterElements()}</div>
         {showConfirmation && (
           <div className={cx('confirmation-block')}>
             {confirmationWarning && (

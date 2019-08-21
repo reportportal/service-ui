@@ -54,6 +54,7 @@ export const logStackTraceSelector = (state) => logSelector(state).stackTrace ||
 export const logStackTraceItemsSelector = (state) => logStackTraceSelector(state).content;
 export const logStackTracePaginationSelector = (state) => logStackTraceSelector(state).pagination;
 export const logStackTraceLoadingSelector = (state) => logStackTraceSelector(state).loading;
+export const pageLoadingSelector = (state) => logSelector(state).pageLoading;
 
 export const querySelector = createQueryParametersSelector({
   defaultPagination: DEFAULT_PAGINATION,
@@ -253,3 +254,12 @@ export const logViewModeSelector = (state) => {
   const isLaunchLog = isLaunchLogSelector(state);
   return hasChildren || isLaunchLog ? LAUNCH_LOG_VIEW : DETAILED_LOG_VIEW;
 };
+
+export const isLogPageWithOutNestedSteps = createSelector(logItemsSelector, (items) => {
+  const filteredItems = items.filter((item) => 'hasContent' in item);
+  return filteredItems.length === 0;
+});
+export const isLogPageWithNestedSteps = createSelector(
+  isLogPageWithOutNestedSteps,
+  (value) => !value,
+);

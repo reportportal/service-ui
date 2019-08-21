@@ -19,9 +19,9 @@ import {
 } from 'controllers/user';
 import { fetchProjectAction } from 'controllers/project';
 import { fetchPluginsAction, fetchGlobalIntegrationsAction } from 'controllers/plugins';
-import { fetchApiInfoAction, fetchUatInfoAction } from 'controllers/appInfo';
 import { redirect } from 'redux-first-router';
 import { stringify } from 'qs';
+import { fetchApiInfoAction, fetchCompositeInfoAction } from 'controllers/appInfo';
 import {
   authSuccessAction,
   resetTokenAction,
@@ -72,7 +72,7 @@ function* loginSuccessHandler({ payload }) {
       value: payload.value,
     }),
   );
-  yield put(fetchUatInfoAction());
+  yield put(fetchCompositeInfoAction());
   yield put(fetchUserAction());
   yield take([FETCH_USER_SUCCESS, FETCH_USER_ERROR]);
   yield take(SET_ACTIVE_PROJECT);

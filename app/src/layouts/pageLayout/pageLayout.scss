@@ -33,6 +33,9 @@
   &:not(:last-child) {
     margin-bottom: 15px;
   }
+  @media print {
+    box-shadow: 0;
+  }
 }
 
 .page-header {

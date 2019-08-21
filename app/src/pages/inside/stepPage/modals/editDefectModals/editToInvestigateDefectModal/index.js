@@ -1,0 +1,1 @@
+export { EditToInvestigateDefectModal } from './editToInvestigateDefectModal';

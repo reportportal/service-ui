@@ -25,6 +25,7 @@ import { injectIntl, intlShape } from 'react-intl';
 import * as d3 from 'd3-selection';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
+import isEqual from 'fast-deep-equal';
 import ReactDOMServer from 'react-dom/server';
 import { statisticsLinkSelector } from 'controllers/testItem';
 import { activeProjectSelector } from 'controllers/user';
@@ -47,7 +48,7 @@ const getResult = (widget) => widget.content.result[0] || widget.content.result;
 @connect(
   (state) => ({
     project: activeProjectSelector(state),
-    getStatisticsLink: (name) => statisticsLinkSelector(state, { statuses: [name] }),
+    getStatisticsLink: statisticsLinkSelector(state),
     launchFilters: launchFiltersSelector(state),
   }),
   {
@@ -68,6 +69,7 @@ export class LaunchExecutionChart extends Component {
     onChangeLegend: PropTypes.func,
     onStatusPageMode: PropTypes.bool,
     launchFilters: PropTypes.array,
+    launchNameBlockHeight: PropTypes.number,
   };
 
   static defaultProps = {
@@ -77,6 +79,7 @@ export class LaunchExecutionChart extends Component {
     onChangeLegend: () => {},
     onStatusPageMode: false,
     launchFilters: [],
+    launchNameBlockHeight: 0,
   };
 
   state = {
@@ -89,6 +92,12 @@ export class LaunchExecutionChart extends Component {
     !isPreview && observer.subscribe && observer.subscribe('widgetResized', this.resizeStatusChart);
 
     this.getConfig();
+  }
+
+  componentDidUpdate(prevProps) {
+    if (!isEqual(prevProps.widget, this.props.widget)) {
+      this.getConfig();
+    }
   }
 
   componentWillUnmount() {
@@ -163,7 +172,7 @@ export class LaunchExecutionChart extends Component {
       const activeFilterId = activeFilter && activeFilter.id;
       navigationParams = this.getDefaultParamsOverallStatisticsWidget(activeFilterId);
     } else {
-      const link = getStatisticsLink(nameConfig.defectType.toUpperCase());
+      const link = getStatisticsLink({ statuses: [nameConfig.defectType.toUpperCase()] });
       navigationParams = Object.assign(link, this.getDefaultParamsLaunchExecutionWidget(id));
     }
 
@@ -189,14 +198,14 @@ export class LaunchExecutionChart extends Component {
 
   getConfig = () => {
     const EXECUTIONS = '$executions$';
-    const { widget, container, isPreview, onStatusPageMode } = this.props;
+    const { widget, container, isPreview, onStatusPageMode, launchNameBlockHeight } = this.props;
     const values = getResult(widget).values;
     const statusDataItems = getChartData(values, EXECUTIONS);
     const statusChartData = statusDataItems.itemTypes;
     const statusChartColors = statusDataItems.itemColors;
     const statusChartDataOrdered = [];
 
-    this.height = container.offsetHeight;
+    this.height = container.offsetHeight - launchNameBlockHeight;
     this.width = container.offsetWidth;
     this.noAvailableData = false;
 
@@ -285,7 +294,7 @@ export class LaunchExecutionChart extends Component {
   statusItems = [];
 
   resizeStatusChart = () => {
-    const newHeight = this.props.container.offsetHeight;
+    const newHeight = this.props.container.offsetHeight - this.props.launchNameBlockHeight;
     const newWidth = this.props.container.offsetWidth;
     if (this.height !== newHeight) {
       this.chart.resize({

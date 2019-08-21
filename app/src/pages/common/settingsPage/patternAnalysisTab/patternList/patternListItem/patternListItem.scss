@@ -18,5 +18,8 @@
 .pattern-data-value {
   flex: 300px 1 1;
   color: $COLOR--charcoal-grey;
-  word-break: break-word;
+  word-break: break-all;
+  @supports (word-break: break-word) {
+    word-break: break-word;
+  }
 }

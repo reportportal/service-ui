@@ -6,6 +6,8 @@
   position: relative;
   height: 100%;
   border: 1px solid $COLOR--gray-91;
+  -webkit-print-color-adjust: exact;
+  color-adjust: exact;
 
   &:hover {
     .common-control {

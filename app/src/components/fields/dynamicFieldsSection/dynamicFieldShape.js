@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import { VALUE_ID_KEY, VALUE_NAME_KEY } from './constants';
 
 export const dynamicFieldShape = PropTypes.shape({
   id: PropTypes.string.isRequired,
@@ -13,4 +14,5 @@ export const dynamicFieldShape = PropTypes.shape({
   required: PropTypes.bool,
   value: PropTypes.array,
   disabled: PropTypes.bool,
+  defaultOptionValueKey: PropTypes.oneOf([VALUE_ID_KEY, VALUE_NAME_KEY]),
 });

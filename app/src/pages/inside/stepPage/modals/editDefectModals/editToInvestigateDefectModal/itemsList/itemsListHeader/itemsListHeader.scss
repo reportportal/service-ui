@@ -1,0 +1,71 @@
+.list-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  padding: 10px 0;
+  align-items: center;
+  font-family: $FONT-REGULAR;
+  font-size: 13px;
+  border-bottom: 1px solid $COLOR--gray-91;
+  width: 100%;
+}
+
+.select-all {
+  flex: 40px 0 0;
+}
+
+.search-mode-label {
+  flex: 130px 1 0;
+}
+
+.search-mode {
+  padding-left: 10px;
+  flex: 300 0 0;
+  max-width: 300px;
+}
+
+.info-tooltip {
+  margin-left: 10px;
+}
+
+.launch {
+  padding: 0 10px;
+  color: $COLOR--gray-47;
+  flex-grow: 10;
+}
+
+.launch-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.launch-number {
+  margin-left: 5px;
+}
+
+.filter {
+  padding: 0 10px;
+  display: flex;
+  flex-grow: 10;
+}
+
+.filter-item {
+  height: 30px;
+  cursor: default;
+  &:hover {
+    background-color: $COLOR--white-two;
+  }
+}
+
+.info {
+  flex: 20px 0 0;
+}
+
+.icon {
+  display: inline-block;
+  width: 15px;
+  height: 15px;
+  fill: $COLOR--gray-60;
+  vertical-align: middle;
+}

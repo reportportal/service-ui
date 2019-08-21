@@ -1,7 +1,7 @@
 import React from 'react';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
-import { injectIntl, intlShape, defineMessages } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import LeftArrowIcon from 'common/img/arrow-left-small-inline.svg';
 import Parser from 'html-react-parser';
 import styles from './mostPopularPatterns.scss';
@@ -25,7 +25,6 @@ export const SecondLevelPanel = injectIntl(({ intl, patternName, onBackClick }) 
 ));
 
 SecondLevelPanel.propTypes = {
-  intl: intlShape.isRequired,
   patternName: PropTypes.string,
   onBackClick: PropTypes.func,
 };

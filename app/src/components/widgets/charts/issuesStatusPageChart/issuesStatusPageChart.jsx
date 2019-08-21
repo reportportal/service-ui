@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import ReactDOMServer from 'react-dom/server';
 import * as d3 from 'd3-selection';
+import isEqual from 'fast-deep-equal';
 import classNames from 'classnames/bind';
 import { intlShape, injectIntl } from 'react-intl';
 import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
@@ -41,6 +42,12 @@ export class IssuesStatusPageChart extends Component {
 
     observer.subscribe && observer.subscribe('widgetResized', this.resizeChart);
     this.getConfig();
+  }
+
+  componentDidUpdate(prevProps) {
+    if (!isEqual(prevProps.widget, this.props.widget)) {
+      this.getConfig();
+    }
   }
 
   componentWillUnmount() {

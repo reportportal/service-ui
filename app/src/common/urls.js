@@ -2,15 +2,17 @@ import { stringify } from 'qs';
 import { CSV } from 'common/constants/fileTypes';
 import { createFilterQuery } from 'components/filterEntities/containers/utils';
 
-export const DEFAULT_API_URL_PREFIX = '/api/v1/';
-export const UAT_API_URL_PREFIX = '/uat/';
+export const DEFAULT_API_URL_PREFIX = '/api/v1';
+export const UAT_API_URL_PREFIX = '/uat';
+export const COMPOSITE_API_URL_PREFIX = '/composite/';
 
-const urlBase = DEFAULT_API_URL_PREFIX;
-const uatBase = UAT_API_URL_PREFIX;
+const urlBase = `${DEFAULT_API_URL_PREFIX}/`;
+const uatBase = `${UAT_API_URL_PREFIX}/`;
+const compositeBase = COMPOSITE_API_URL_PREFIX;
 const getQueryParams = (paramsObj) => stringify(paramsObj, { addQueryPrefix: true });
 
 export const URLS = {
-  apiDocs: (apiType) => `${apiType}api-docs`,
+  apiDocs: (apiType) => `${apiType}/api-docs`,
 
   dataPhoto: (at) => `${urlBase}data/photo${getQueryParams({ at })}`,
   dataUserPhoto: (id) => `${urlBase}data/userphoto${getQueryParams({ id })}`,
@@ -58,6 +60,7 @@ export const URLS = {
 
   launch: (activeProject, id) => `${urlBase}${activeProject}/launch/${id}`,
   launchStatus: (activeProject, ids) => `${urlBase}${activeProject}/launch/status?ids=${ids}`,
+  launchByIds: (activeProject, ids) => `${urlBase}${activeProject}/launch?filter.in.id=${ids}`,
   launchAttributeKeysSearch: (activeProject) =>
     `${urlBase}${activeProject}/launch/attribute/keys?filter.cnt.attributeKey=`,
   launchAttributeValuesSearch: (activeProject, key = '') =>
@@ -132,6 +135,7 @@ export const URLS = {
 
   testItems: (activeProject, ids) => `${urlBase}${activeProject}/item${getQueryParams({ ids })}`,
   testItem: (activeProject, id = '') => `${urlBase}${activeProject}/item/${id}`,
+  testItemUpdate: (activeProject, id = '') => `${urlBase}${activeProject}/item/${id}/update`,
   testItemsHistory: (activeProject, ids, historyDepth) =>
     `${urlBase}${activeProject}/item/history${getQueryParams({
       ids,
@@ -177,6 +181,7 @@ export const URLS = {
       'filter.gte.level': 'ERROR',
       'page.sort': 'logTime,DESC',
     })}`,
+  logSearch: (activeProject, itemId) => `${urlBase}${activeProject}/log/search/${itemId}`,
   user: () => `${urlBase}user`,
   userRegistration: () => `${urlBase}user/registration`,
   userValidateRegistrationInfo: () => `${urlBase}user/registration/info`,
@@ -211,7 +216,7 @@ export const URLS = {
     })}`,
 
   apiInfo: () => `${urlBase}info`,
-  uatInfo: () => `${uatBase}info`,
+  compositeInfo: () => `${compositeBase}info`,
 
   plugin: () => `${urlBase}plugin`,
   pluginUpdate: (pluginId) => `${urlBase}plugin/${pluginId}`,

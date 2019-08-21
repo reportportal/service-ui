@@ -12,6 +12,7 @@ import {
   PROJECT_DASHBOARD_PAGE,
   PROJECT_PAGE,
   PROJECT_DASHBOARD_ITEM_PAGE,
+  PROJECT_DASHBOARD_PRINT_PAGE,
   PROJECT_SETTINGS_TAB_PAGE,
   PROJECT_LOG_PAGE,
   PROJECT_USERDEBUG_LOG_PAGE,
@@ -206,7 +207,15 @@ export default {
       }
     },
   },
-
+  [PROJECT_DASHBOARD_PRINT_PAGE]: {
+    path: '/:projectId/dashboard/:dashboardId/print',
+    thunk: (dispatch, getState) => {
+      const dashboardItems = dashboardItemsSelector(getState());
+      if (dashboardItems.length === 0) {
+        dispatch(fetchDashboardsAction({}));
+      }
+    },
+  },
   [LAUNCHES_PAGE]: redirectRoute('/:projectId/launches', (payload, getState) => ({
     type: PROJECT_LAUNCHES_PAGE,
     payload: { ...payload, filterId: launchDistinctSelector(getState()) },

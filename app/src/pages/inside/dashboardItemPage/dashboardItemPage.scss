@@ -7,13 +7,27 @@
 }
 
 .buttons-container {
-  height: 30px;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  min-height: 30px;
   margin: 0;
-  padding: 20px 10px;
+  padding: 20px 10px 0 10px;
   border-bottom: 1px solid $COLOR--gray-91;
 
   @media (max-width: $SCREEN_XS_MAX) {
     display: none;
+  }
+}
+
+.buttons-block {
+  display: flex;
+  padding-bottom: 20px;
+
+  button {
+    &:not(:last-child) {
+      margin-right: 10px;
+    }
   }
 }
 
@@ -27,20 +41,6 @@
   fill: $COLOR--gray-60;
   cursor: pointer;
   transition: opacity 0.5s ease;
-}
-
-.nav-left {
-  float: left;
-  button {
-    margin-right: 10px;
-  }
-}
-
-.nav-right {
-  float: right;
-  button {
-    margin-left: 10px;
-  }
 }
 
 :global {
@@ -64,4 +64,8 @@
 .shared-caption {
   font-size: 13px;
   line-height: 30px;
+}
+
+.print-button {
+  text-decoration: none;
 }

@@ -17,6 +17,8 @@ export const OPEN_ATTACHMENT_ACTION = 'openAttachmentAction';
 export const ATTACHMENT_IMAGE_MODAL_ID = 'attachmentImageModal';
 export const ATTACHMENT_HAR_FILE_MODAL_ID = 'attachmentHarFileModal';
 export const ATTACHMENT_CODE_MODAL_ID = 'attachmentCodeModal';
+export const FETCH_FIRST_ATTACHMENTS_ACTION = 'fetchFirstAttachments';
+export const SET_ACTIVE_ATTACHMENT_ACTION = 'setActiveAttachment';
 
 export const FILE_PREVIEWS_MAP = {
   [FILE_TYPES.XML]: xml,
@@ -52,3 +54,5 @@ export const FILE_MODAL_IDS_MAP = {
   [FILE_TYPES.HAR]: ATTACHMENT_HAR_FILE_MODAL_ID,
   [FILE_TYPES.IMAGE]: ATTACHMENT_IMAGE_MODAL_ID,
 };
+export const DEFAULT_PAGE_SIZE = 6;
+export const DEFAULT_LOADED_PAGES = 2;

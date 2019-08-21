@@ -2,17 +2,17 @@ import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
-import { projectConfigSelector } from 'controllers/project';
+import { getDefectTypeSelector } from 'controllers/project';
 import styles from './defectTypeItem.scss';
 
 const cx = classNames.bind(styles);
 
 @connect((state) => ({
-  projectConfig: projectConfigSelector(state),
+  getDefectType: getDefectTypeSelector(state),
 }))
 export class DefectTypeItem extends Component {
   static propTypes = {
-    projectConfig: PropTypes.object.isRequired,
+    getDefectType: PropTypes.func.isRequired,
     type: PropTypes.string.isRequired,
     onClick: PropTypes.func,
     noBorder: PropTypes.bool,
@@ -25,16 +25,6 @@ export class DefectTypeItem extends Component {
     lesserFont: false,
   };
 
-  getDefectType = () => {
-    const { projectConfig, type } = this.props;
-    return Object.keys(projectConfig.subTypes).reduce(
-      (defectType, subType) =>
-        projectConfig.subTypes[subType].find((issueType) => issueType.locator === type) ||
-        defectType,
-      null,
-    );
-  };
-
   handleChange = () => {
     const { type, onClick } = this.props;
     onClick(type);
@@ -42,7 +32,7 @@ export class DefectTypeItem extends Component {
 
   render() {
     const { noBorder, lesserFont, onClick } = this.props;
-    const defectType = this.getDefectType();
+    const defectType = this.props.getDefectType(this.props.type);
     if (!defectType) {
       return null;
     }

@@ -1,0 +1,30 @@
+.cumulative-details-wrapper {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.details-legend {
+  display: flex;
+  width: 100%;
+  padding: 15px 0;
+}
+
+.icon {
+  display: inline-block;
+  width: 20px;
+  fill: $COLOR--topaz;
+  vertical-align: middle;
+}
+
+.back-link {
+  color: $COLOR--topaz;
+  line-height: 20px;
+  vertical-align: middle;
+  cursor: pointer;
+  margin-right: 20px;
+  padding-right: 20px;
+  border-right: 1px solid $COLOR--gray-91;
+  font-size: 14px;
+  font-family: $FONT-REGULAR;
+}

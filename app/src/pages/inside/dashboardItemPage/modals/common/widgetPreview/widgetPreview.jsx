@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { CHARTS, NoDataAvailable } from 'components/widgets';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
-import { TABLE_WIDGETS_PREVIEWS } from '../widgets';
+import { WIDGETS_STATIC_PREVIEWS } from '../widgets';
 import { isWidgetDataAvailable } from '../utils';
 import styles from './widgetPreview.scss';
 
@@ -29,14 +29,14 @@ export class WidgetPreview extends PureComponent {
     this.widgetContainerRef = createRef();
   }
 
-  getTableWidgetPreview = () => TABLE_WIDGETS_PREVIEWS[this.props.widgetType];
+  getWidgetStaticPreview = () => WIDGETS_STATIC_PREVIEWS[this.props.widgetType];
 
   getWidgetContent = () => {
     const { data, loading, widgetType, defaultPreview } = this.props;
-    const tableWidgetPreview = this.getTableWidgetPreview();
+    const widgetStaticPreview = this.getWidgetStaticPreview();
 
-    if (tableWidgetPreview) {
-      return tableWidgetPreview;
+    if (widgetStaticPreview) {
+      return widgetStaticPreview;
     }
 
     if (loading) {
@@ -69,7 +69,7 @@ export class WidgetPreview extends PureComponent {
   render = () => (
     <div
       ref={this.widgetContainerRef}
-      className={cx('widget-preview', { table: !!this.getTableWidgetPreview() })}
+      className={cx('widget-preview', { table: !!this.getWidgetStaticPreview() })}
     >
       {this.getWidgetContent()}
     </div>

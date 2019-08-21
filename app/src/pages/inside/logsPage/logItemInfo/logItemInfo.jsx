@@ -6,7 +6,12 @@ import { defineMessages, injectIntl, intlShape } from 'react-intl';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { DefectType } from 'pages/inside/stepPage/stepGrid/defectType';
 import { LOG_PAGE_EVENTS } from 'components/main/analytics/events';
-import { linkIssueAction, postIssueAction, editDefectsAction } from 'controllers/step';
+import {
+  linkIssueAction,
+  unlinkIssueAction,
+  postIssueAction,
+  editDefectsAction,
+} from 'controllers/step';
 import { showModalAction } from 'controllers/modal';
 import {
   activeLogSelector,
@@ -16,6 +21,8 @@ import {
   RETRY_ID,
   NAMESPACE,
 } from 'controllers/log';
+import { getDefectTypeSelector } from 'controllers/project';
+import { TO_INVESTIGATE } from 'common/constants/defectTypes';
 import { MANY } from 'common/constants/launchStatuses';
 import { availableBtsIntegrationsSelector, isPostIssueActionAvailable } from 'controllers/plugins';
 import { connectRouter } from 'common/utils';
@@ -75,9 +82,11 @@ const messages = defineMessages({
     btsIntegrations: availableBtsIntegrationsSelector(state),
     retryItemId: activeRetryIdSelector(state),
     retries: retriesSelector(state),
+    getDefectType: getDefectTypeSelector(state),
   }),
   {
     linkIssueAction,
+    unlinkIssueAction,
     postIssueAction,
     editDefectsAction,
     showModalAction,
@@ -98,6 +107,7 @@ export class LogItemInfo extends Component {
     onChangeLogLevel: PropTypes.func.isRequired,
     editDefectsAction: PropTypes.func.isRequired,
     linkIssueAction: PropTypes.func.isRequired,
+    unlinkIssueAction: PropTypes.func.isRequired,
     postIssueAction: PropTypes.func.isRequired,
     historyItems: PropTypes.array.isRequired,
     btsIntegrations: PropTypes.array.isRequired,
@@ -112,12 +122,14 @@ export class LogItemInfo extends Component {
     updateRetryId: PropTypes.func,
     retryItemId: PropTypes.number,
     retries: PropTypes.arrayOf(PropTypes.object),
+    getDefectType: PropTypes.func,
   };
   static defaultProps = {
     logItem: null,
     updateRetryId: () => {},
     retryItemId: null,
     retries: [],
+    getDefectType: () => {},
   };
 
   getLinkIssueTitle = () => {
@@ -206,6 +218,23 @@ export class LogItemInfo extends Component {
     });
   };
 
+  handleUnlinkTicket = (ticketId) => {
+    const { logItem, fetchFunc } = this.props;
+    const items = [
+      {
+        ...logItem,
+        issue: {
+          ...logItem.issue,
+          externalSystemIssues: logItem.issue.externalSystemIssues.filter(
+            (issue) => issue.ticketId === ticketId,
+          ),
+        },
+      },
+    ];
+
+    this.props.unlinkIssueAction(items, { fetchFunc });
+  };
+
   handlePostIssue = () => {
     this.props.postIssueAction([this.props.logItem], {
       fetchFunc: this.props.fetchFunc,
@@ -213,10 +242,29 @@ export class LogItemInfo extends Component {
   };
 
   handleEditDefect = () => {
-    this.props.editDefectsAction([this.props.logItem], {
-      fetchFunc: this.props.fetchFunc,
-      debugMode: this.props.debugMode,
-    });
+    const { logItem } = this.props;
+    if (this.isDefectGroupOperationAvailable()) {
+      this.props.showModalAction({
+        id: 'editToInvestigateDefectModal',
+        data: { item: logItem, fetchFunc: this.props.fetchFunc },
+      });
+    } else {
+      this.props.editDefectsAction([this.props.logItem], {
+        fetchFunc: this.props.fetchFunc,
+        debugMode: this.props.debugMode,
+      });
+    }
+  };
+
+  isDefectGroupOperationAvailable = () => {
+    const { logItem } = this.props;
+    return (
+      logItem.issue &&
+      logItem.issue.issueType &&
+      this.props.getDefectType(logItem.issue.issueType).typeRef.toUpperCase() ===
+        TO_INVESTIGATE.toUpperCase() &&
+      !this.props.debugMode
+    );
   };
 
   renderRetries = () => {
@@ -261,6 +309,7 @@ export class LogItemInfo extends Component {
                 <DefectType
                   issue={logItem.issue}
                   onEdit={this.handleEditDefect}
+                  onRemove={this.handleUnlinkTicket}
                   editEventInfo={LOG_PAGE_EVENTS.DEFECT_TYPE_TAG}
                   patternTemplates={logItem.patternTemplates}
                 />

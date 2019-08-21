@@ -9,9 +9,9 @@ const DEFECTS = 'defects';
 const getDefects = (fields) => fields.filter((item) => /defects/.test(item));
 
 const getExecutions = () => [
+  'statistics$executions$passed',
   'statistics$executions$failed',
   'statistics$executions$skipped',
-  'statistics$executions$passed',
 ];
 
 const getTotal = () => ['statistics$executions$total'];
@@ -92,7 +92,7 @@ const getChartOptions = (widget, options) => {
       padding: {
         left: 0,
         right: 0,
-        top: 50,
+        top: 30,
         bottom: 0,
       },
     },
@@ -144,6 +144,9 @@ const getChartOptions = (widget, options) => {
             ? formatMessage(messages[dataset.label])
             : dataset.label;
           const value = dataset.data[tooltipItem.index];
+          if (!value) {
+            return '';
+          }
           const totalValue = totalDataset.data[tooltipItem.index];
           const percentageValue = -(-value / totalValue * 100).toFixed(2);
           if (percentage) {
@@ -177,7 +180,9 @@ const getChartOptions = (widget, options) => {
 
 export const getChartData = (widget, options) => {
   const { percentage, defectTypes } = options;
-  const labels = widget.content.result.map((item) => item.attributeValue);
+  const labels = widget.content.result
+    ? widget.content.result.map((item) => item.attributeValue)
+    : [];
   const contentFields = widget.contentParameters.contentFields;
   const executions = getExecutions(contentFields);
   const defects = getDefects(contentFields);
@@ -196,22 +201,24 @@ export const getChartData = (widget, options) => {
     defects.map((field) => createDataSet(field, DEFECTS, options)),
   );
 
-  Object.keys(widget.content.result)
-    .sort()
-    .map((resultId) => {
-      const items = widget.content.result[resultId];
-      tooltipContents.push(items.content.tooltipContent);
+  if (widget.content.result) {
+    Object.keys(widget.content.result)
+      .sort()
+      .map((resultId) => {
+        const items = widget.content.result[resultId];
+        tooltipContents.push(items.content.tooltipContent);
 
-      filteredContentFields.forEach((field) => {
-        const totals = items.content.statistics[field] || 0;
+        filteredContentFields.forEach((field) => {
+          const totals = items.content.statistics[field] || 0;
 
-        const column = datasets.find((entry) => entry.label === field);
+          const column = datasets.find((entry) => entry.label === field);
 
-        column.data.push(totals);
+          column.data.push(totals);
+        });
+
+        return resultId;
       });
-
-      return resultId;
-    });
+  }
 
   if (percentage) {
     datasets = convertIntoPercents(datasets);

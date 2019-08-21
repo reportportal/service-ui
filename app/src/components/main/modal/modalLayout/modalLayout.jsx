@@ -49,6 +49,7 @@ export class ModalLayout extends Component {
     }),
     closeIconEventInfo: PropTypes.object,
     renderHeaderElements: PropTypes.func,
+    renderFooterElements: PropTypes.func,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
@@ -66,6 +67,7 @@ export class ModalLayout extends Component {
     closeConfirmation: null,
     closeIconEventInfo: {},
     renderHeaderElements: () => {},
+    renderFooterElements: () => {},
   };
   state = {
     shown: false,
@@ -152,12 +154,14 @@ export class ModalLayout extends Component {
       customButton,
       children,
       closeConfirmation,
+      renderFooterElements,
     } = this.props;
     const footerProps = {
       warningMessage,
       okButton,
       cancelButton,
       customButton,
+      renderFooterElements,
       confirmationMessage: closeConfirmation && closeConfirmation.confirmationMessage,
       confirmationWarning: closeConfirmation && closeConfirmation.confirmationWarning,
       confirmationWarningClassName:

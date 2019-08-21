@@ -4,6 +4,7 @@ import classNames from 'classnames/bind';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { connect } from 'react-redux';
 import * as d3 from 'd3-selection';
+import isEqual from 'fast-deep-equal';
 import ReactDOMServer from 'react-dom/server';
 import { TEST_ITEM_PAGE } from 'controllers/pages';
 import { defectTypesSelector } from 'controllers/project';
@@ -33,8 +34,8 @@ const messages = defineMessages({
   (state) => ({
     project: activeProjectSelector(state),
     defectTypes: defectTypesSelector(state),
-    getDefectLink: (params) => defectLinkSelector(state, params),
-    getStatisticsLink: (name) => statisticsLinkSelector(state, { statuses: [name] }),
+    getDefectLink: defectLinkSelector(state),
+    getStatisticsLink: statisticsLinkSelector(state),
   }),
   {
     navigate: (linkAction) => linkAction,
@@ -72,6 +73,12 @@ export class LaunchesComparisonChart extends Component {
   componentDidMount() {
     !this.props.isPreview && this.props.observer.subscribe('widgetResized', this.resizeChart);
     this.getConfig();
+  }
+
+  componentDidUpdate(prevProps) {
+    if (!isEqual(prevProps.widget, this.props.widget)) {
+      this.getConfig();
+    }
   }
 
   componentWillUnmount() {
@@ -128,7 +135,7 @@ export class LaunchesComparisonChart extends Component {
 
     const link = defectLocators
       ? getDefectLink({ defects: defectLocators, itemId: id })
-      : getStatisticsLink(nameConfig.defectType.toUpperCase());
+      : getStatisticsLink({ statuses: [nameConfig.defectType.toUpperCase()] });
     this.props.navigate(Object.assign(link, defaultParams));
   };
 

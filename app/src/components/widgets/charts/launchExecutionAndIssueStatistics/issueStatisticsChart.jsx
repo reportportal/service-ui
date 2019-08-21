@@ -24,6 +24,7 @@ import { injectIntl, intlShape } from 'react-intl';
 import * as d3 from 'd3-selection';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
+import isEqual from 'fast-deep-equal';
 import ReactDOMServer from 'react-dom/server';
 import { defectLinkSelector } from 'controllers/testItem';
 import { defectTypesSelector, orderedDefectFieldsSelector } from 'controllers/project';
@@ -48,7 +49,7 @@ const getResult = (widget) => widget.content.result[0] || widget.content.result;
     project: activeProjectSelector(state),
     defectTypes: defectTypesSelector(state),
     orderedContentFields: orderedDefectFieldsSelector(state),
-    getDefectLink: (params) => defectLinkSelector(state, params),
+    getDefectLink: defectLinkSelector(state),
     launchFilters: launchFiltersSelector(state),
   }),
   {
@@ -71,6 +72,7 @@ export class IssueStatisticsChart extends Component {
     onChangeLegend: PropTypes.func,
     onStatusPageMode: PropTypes.bool,
     launchFilters: PropTypes.array,
+    launchNameBlockHeight: PropTypes.number,
   };
 
   static defaultProps = {
@@ -81,6 +83,7 @@ export class IssueStatisticsChart extends Component {
     onChangeLegend: () => {},
     onStatusPageMode: false,
     launchFilters: [],
+    launchNameBlockHeight: 0,
   };
 
   state = {
@@ -93,6 +96,12 @@ export class IssueStatisticsChart extends Component {
     !isPreview && observer.subscribe && observer.subscribe('widgetResized', this.resizeIssuesChart);
 
     this.getConfig();
+  }
+
+  componentDidUpdate(prevProps) {
+    if (!isEqual(prevProps.widget, this.props.widget)) {
+      this.getConfig();
+    }
   }
 
   componentWillUnmount() {
@@ -249,8 +258,8 @@ export class IssueStatisticsChart extends Component {
   }
 
   getConfig = () => {
-    const { container, isPreview, onStatusPageMode } = this.props;
-    this.height = container.offsetHeight;
+    const { container, isPreview, onStatusPageMode, launchNameBlockHeight } = this.props;
+    this.height = container.offsetHeight - launchNameBlockHeight;
     this.width = container.offsetWidth;
     this.noAvailableData = false;
 
@@ -323,7 +332,7 @@ export class IssueStatisticsChart extends Component {
   defectItems = [];
 
   resizeIssuesChart = () => {
-    const newHeight = this.props.container.offsetHeight;
+    const newHeight = this.props.container.offsetHeight - this.props.launchNameBlockHeight;
     const newWidth = this.props.container.offsetWidth;
     if (this.height !== newHeight) {
       this.chart.resize({

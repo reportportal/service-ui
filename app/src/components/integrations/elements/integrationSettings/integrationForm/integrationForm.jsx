@@ -41,6 +41,7 @@ export class IntegrationForm extends Component {
     formFieldsComponent: PropTypes.func.isRequired,
     connected: PropTypes.bool.isRequired,
     isEmptyConfiguration: PropTypes.bool.isRequired,
+    pluginName: PropTypes.string.isRequired,
     isGlobal: PropTypes.bool,
   };
 
@@ -86,6 +87,7 @@ export class IntegrationForm extends Component {
       formFieldsComponent: FieldsComponent,
       isEmptyConfiguration,
       isGlobal,
+      pluginName,
     } = this.props;
     const { disabled } = this.state;
     const isConfigurationNotSpecified = blocked && isEmptyConfiguration;
@@ -109,6 +111,7 @@ export class IntegrationForm extends Component {
                 disabled={disabled}
                 updateMetaData={this.updateMetaData}
                 isGlobal={isGlobal}
+                pluginName={pluginName}
               />
             )}
           </div>

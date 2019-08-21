@@ -22,6 +22,7 @@
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import Parser from 'html-react-parser';
+import { UAT_API_URL_PREFIX } from 'common/urls';
 import { BigButton } from 'components/buttons/bigButton';
 import styles from './externalLoginBlock.scss';
 
@@ -31,6 +32,10 @@ export const ExternalLoginBlock = ({ externalAuth }) => (
   <div className={cx('external-login-block')}>
     {Object.keys(externalAuth).map((objKey) => {
       const val = externalAuth[objKey];
+      let path = val.path;
+      if (path.indexOf(UAT_API_URL_PREFIX) === -1) {
+        path = `${UAT_API_URL_PREFIX}${val.path}`;
+      }
 
       return (
         // eslint-disable-next-line react/no-array-index-key
@@ -38,7 +43,7 @@ export const ExternalLoginBlock = ({ externalAuth }) => (
           <BigButton roundedCorners color="booger">
             <span
               onClick={() => {
-                window.location = `${window.location.protocol}//${window.location.host}${val.path}`;
+                window.location = `${window.location.protocol}//${window.location.host}${path}`;
               }}
             >
               {Parser(val.button)}

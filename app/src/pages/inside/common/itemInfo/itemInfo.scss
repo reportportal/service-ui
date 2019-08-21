@@ -9,13 +9,24 @@
 }
 .main-info {
   display: inline-block;
+  max-width: calc(30vw);
   min-height: 20px;
   box-sizing: border-box;
   margin-bottom: 10px;
-  word-break: break-all;
+  word-break: normal;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 
   @supports (word-break: break-word) {
     word-break: break-word;
+  }
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    max-width: 100%;
+  }
+
+  @media (min-width: $SCREEN_XL_MAX) {
+    max-width: 432px;
   }
 }
 .name-link {
@@ -23,17 +34,9 @@
   font-size: 14px;
   color: $COLOR--windows-blue;
   text-decoration: none;
-  word-break: break-all;
 
   @media (max-width: $SCREEN_SM_MAX) {
     font-size: 16px;
-  }
-}
-.name {
-  word-break: break-all;
-
-  @supports (word-break: break-word) {
-    word-break: break-word;
   }
 }
 .edit-number-box {
@@ -57,8 +60,13 @@
     margin-right: 0;
   }
 
-  &.analysis {
+  &.auto-analysis {
     background-color: $COLOR--orange-red;
+    animation: auto-analyze-blink 1s linear reverse infinite;
+  }
+
+  &.pattern-analysis {
+    background-color: $COLOR--dark-pastel-green;
     animation: auto-analyze-blink 1s linear reverse infinite;
   }
 
