@@ -2,17 +2,17 @@ import { stringify } from 'qs';
 import { CSV } from 'common/constants/fileTypes';
 import { createFilterQuery } from 'components/filterEntities/containers/utils';
 
-export const DEFAULT_API_URL_PREFIX = '/api/v1/';
-export const UAT_API_URL_PREFIX = '/uat/';
+export const DEFAULT_API_URL_PREFIX = '/api/v1';
+export const UAT_API_URL_PREFIX = '/uat';
 export const COMPOSITE_API_URL_PREFIX = '/composite/';
 
-const urlBase = DEFAULT_API_URL_PREFIX;
-const uatBase = UAT_API_URL_PREFIX;
+const urlBase = `${DEFAULT_API_URL_PREFIX}/`;
+const uatBase = `${UAT_API_URL_PREFIX}/`;
 const compositeBase = COMPOSITE_API_URL_PREFIX;
 const getQueryParams = (paramsObj) => stringify(paramsObj, { addQueryPrefix: true });
 
 export const URLS = {
-  apiDocs: (apiType) => `${apiType}api-docs`,
+  apiDocs: (apiType) => `${apiType}/api-docs`,
 
   dataPhoto: (at) => `${urlBase}data/photo${getQueryParams({ at })}`,
   dataUserPhoto: (id) => `${urlBase}data/userphoto${getQueryParams({ id })}`,
