@@ -40,7 +40,6 @@ import {
   logStackTracePaginationSelector,
   logViewModeSelector,
   isLaunchLogSelector,
-  activeLogSelector,
 } from './selectors';
 import {
   attachmentSagas,
@@ -121,11 +120,10 @@ function* fetchLogItems(payload = {}) {
   yield take(createFetchPredicate(namespace));
 }
 
-function* fetchStackTrace() {
+function* fetchStackTrace({ payload: logItem }) {
   const { activeProject } = yield call(collectLogPayload);
   const page = yield select(logStackTracePaginationSelector);
-  const item = yield select(activeLogSelector);
-  const { path } = item;
+  const { path } = logItem;
   let pageSize = STACK_TRACE_PAGINATION_OFFSET;
   if (!isEmptyObject(page) && page.totalElements > 0) {
     const { totalElements, size } = page;
