@@ -75,7 +75,7 @@ export class UserInfo extends Component {
   editInfoHandler = (data) => {
     fetch(URLS.userInfo(this.props.userId), {
       method: 'put',
-      data: { full_name: data.name, email: data.email },
+      data: { fullName: data.name, email: data.email },
     })
       .then(() => {
         this.props.fetchUserAction();
