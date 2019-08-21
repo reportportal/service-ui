@@ -32,6 +32,7 @@ import { DashboardPageHeader } from 'pages/inside/common/dashboardPageHeader';
 import GlobeIcon from 'common/img/globe-icon-inline.svg';
 import AddWidgetIcon from 'common/img/add-widget-inline.svg';
 import ExportIcon from 'common/img/export-inline.svg';
+import { getUpdatedWidgetsList } from './modals/common/utils';
 import AddSharedWidgetIcon from './img/add-shared-inline.svg';
 import EditIcon from './img/edit-inline.svg';
 import CancelIcon from './img/cancel-inline.svg';
@@ -138,7 +139,6 @@ export class DashboardItemPage extends Component {
   };
 
   static defaultProps = {
-    currentDashboard: {},
     fullScreenMode: false,
   };
 
@@ -228,22 +228,12 @@ export class DashboardItemPage extends Component {
       method: 'put',
       data: { addWidget: widget },
     })
-      .then(() => {
-        const oldWidgets = dashboard.widgets;
-        const newWidgets = oldWidgets.map((item) => ({
-          ...item,
-          widgetPosition: {
-            ...item.widgetPosition,
-            positionY: item.widgetPosition.positionY + widget.widgetSize.height,
-          },
-        }));
-        newWidgets.unshift(widget);
-
-        return this.props.updateDashboardWidgetsAction({
+      .then(() =>
+        this.props.updateDashboardWidgetsAction({
           ...this.props.dashboard,
-          widgets: newWidgets,
-        });
-      })
+          widgets: getUpdatedWidgetsList(dashboard.widgets, widget),
+        }),
+      )
       .then(() => {
         this.props.hideScreenLockAction();
         closeModal();

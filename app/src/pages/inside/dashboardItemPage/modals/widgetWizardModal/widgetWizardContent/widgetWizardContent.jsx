@@ -12,8 +12,8 @@ import { showDefaultErrorNotification } from 'controllers/notification';
 import { activeProjectSelector } from 'controllers/user';
 import { fetchDashboardsAction } from 'controllers/dashboard';
 import { getWidgets } from 'pages/inside/dashboardItemPage/modals/common/widgets';
-import { DEFAULT_WIDGET_CONFIG, WIDGET_WIZARD_FORM } from '../../common/constants';
-import { prepareWidgetDataForSubmit } from '../../common/utils';
+import { WIDGET_WIZARD_FORM } from '../../common/constants';
+import { prepareWidgetDataForSubmit, getDefaultWidgetConfig } from '../../common/utils';
 import { WizardInfoSection } from './wizardInfoSection';
 import { WizardControlsSection } from './wizardControlsSection';
 import styles from './widgetWizardContent.scss';
@@ -104,7 +104,7 @@ export class WidgetWizardContent extends Component {
           widgetId: id,
           widgetName: data.name,
           widgetType: data.widgetType,
-          ...DEFAULT_WIDGET_CONFIG,
+          ...getDefaultWidgetConfig(data.widgetType),
         };
         onConfirm(newWidget, this.props.closeModal, selectedDashboard);
       })
