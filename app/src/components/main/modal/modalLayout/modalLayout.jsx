@@ -18,6 +18,7 @@ const cx = classNames.bind(styles);
 export class ModalLayout extends Component {
   static propTypes = {
     className: PropTypes.string,
+    contentClassName: PropTypes.string,
     hideModalAction: PropTypes.func.isRequired, // this props
     title: PropTypes.oneOfType([PropTypes.string, PropTypes.node]), // header props
     children: PropTypes.node, // content props
@@ -57,6 +58,7 @@ export class ModalLayout extends Component {
   };
   static defaultProps = {
     className: '',
+    contentClassName: '',
     title: '',
     children: null,
     warningMessage: '',
@@ -195,7 +197,9 @@ export class ModalLayout extends Component {
                       onClose={this.onClickCloseIcon}
                       renderHeaderElements={this.props.renderHeaderElements}
                     />
-                    <ModalContent>{status !== 'exited' ? children : null}</ModalContent>
+                    <ModalContent className={this.props.contentClassName}>
+                      {status !== 'exited' ? children : null}
+                    </ModalContent>
 
                     <ModalFooter
                       {...footerProps}

@@ -423,6 +423,8 @@
   "EditItemModal.launchUpdateSuccess": "Запуск успешно обновлён",
   "EditItemModal.launchWarning": "Изменение описания и атрибутов может повлиять на результаты фильтрации, виджеты, тренды",
   "EditItemModal.modalHeader": "Редактировать {type}",
+  "EditItemModal.detailsTabTitle": "Детали",
+  "EditItemModal.stackTraceTabTitle": "Трассировка стека",
   "EditItemsModal.commonAttributesLabel": "Общие атрибуты",
   "EditItemsModal.descriptionAddLabel": "Добавить к существующим",
   "EditItemsModal.descriptionLabel": "Описание",

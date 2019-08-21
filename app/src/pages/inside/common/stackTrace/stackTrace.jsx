@@ -39,7 +39,7 @@ const messages = defineMessages({
     loadMore: isLoadMoreStackTraceVisible(state),
   }),
   {
-    fetchItems: fetchLogPageStackTrace,
+    fetchLogPageStackTrace,
   },
 )
 @injectIntl
@@ -48,30 +48,36 @@ export class StackTrace extends Component {
     intl: intlShape.isRequired,
     items: PropTypes.array,
     loading: PropTypes.bool,
-    fetchItems: PropTypes.func,
+    fetchLogPageStackTrace: PropTypes.func,
     loadMore: PropTypes.bool,
+    logItem: PropTypes.object,
+    hideTime: PropTypes.bool,
   };
 
   static defaultProps = {
     items: [],
     loading: false,
-    fetchItems: () => {},
+    fetchLogPageStackTrace: () => {},
     loadMore: false,
+    logItem: {},
+    hideTime: false,
   };
 
   componentDidMount() {
-    const { fetchItems } = this.props;
     if (this.isItemsExist()) {
       return;
     }
-    fetchItems();
+    this.fetchItems();
   }
+
+  fetchItems = () => this.props.fetchLogPageStackTrace(this.props.logItem);
+
   isItemsExist = () => {
     const { items } = this.props;
     return items.length;
   };
   renderStackTraceMessage = () => {
-    const { items, loadMore, fetchItems, loading, intl } = this.props;
+    const { items, loadMore, loading, intl, hideTime } = this.props;
     return (
       <React.Fragment>
         <ScrollWrapper autoHeight autoHeightMax={300}>
@@ -80,7 +86,9 @@ export class StackTrace extends Component {
               {items.map((item) => (
                 <tr key={item.id} className={cx('row')}>
                   <td className={cx('cell', 'message-cell')}>{item.message}</td>
-                  <td className={cx('cell', 'time-cell')}>{dateFormat(item.time)}</td>
+                  {!hideTime && (
+                    <td className={cx('cell', 'time-cell')}>{dateFormat(item.time)}</td>
+                  )}
                 </tr>
               ))}
             </tbody>
@@ -92,7 +100,7 @@ export class StackTrace extends Component {
               loading,
             })}
           >
-            <div className={cx('load-more-label')} onClick={fetchItems}>
+            <div className={cx('load-more-label')} onClick={this.fetchItems}>
               {intl.formatMessage(messages.loadLabel)}
             </div>
             {loading && (
