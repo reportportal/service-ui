@@ -100,6 +100,9 @@ export class UsersEntities extends Component {
         title: intl.formatMessage(messages.name),
         active: true,
         removable: false,
+        customProps: {
+          maxLength: 256,
+        },
       },
       {
         id: ROLE,
@@ -181,6 +184,7 @@ export class UsersEntities extends Component {
         removable: false,
         customProps: {
           placeholder: null,
+          maxLength: 256,
         },
       },
       {

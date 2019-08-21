@@ -42,8 +42,10 @@ export class PersonalInfo extends Component {
           />
         </div>
         <div className={cx('member-info')}>
-          <p className={cx('member-name')}>
-            {name}
+          <p className={cx('member-name-wrap')}>
+            <span className={cx('member-name')} title={name}>
+              {name}
+            </span>
             {currentUser === login && (
               <span className={cx('member-you')}>
                 <FormattedMessage id={'PersonalInfo.memberYou'} defaultMessage={'You'} />
@@ -55,7 +57,9 @@ export class PersonalInfo extends Component {
               </span>
             )}
           </p>
-          <p className={cx('member-login')}>{login}</p>
+          <p className={cx('member-login')} title={login}>
+            {login}
+          </p>
         </div>
       </div>
     );

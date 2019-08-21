@@ -4,7 +4,6 @@
 }
 
 .launch-execution-and-issues-chart {
-  display: flex;
   height: 100%;
 
   :global {
@@ -41,6 +40,37 @@
         }
       }
     }
+  }
+}
+
+.widgets-wrapper {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 100%;
+  margin-top: -20px;
+}
+
+.launch-name-block {
+  display: inline-flex;
+  height: 40px;
+  z-index: $Z-INDEX-DEFAULT;
+  align-items: center;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  line-height: 17px;
+  margin: 0 20px;
+  font-size: 13px;
+
+  .launch-name-text {
+    color: $COLOR--gray-47;
+    margin-right: 5px;
+    text-transform: uppercase;
+  }
+
+  .launch-name {
+    font-family: $FONT-SEMIBOLD;
+    color: $COLOR--charcoal-grey;
   }
 }
 

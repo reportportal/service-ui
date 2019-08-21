@@ -38,12 +38,17 @@
         width: 40%;
       }
     }
-    &.col-percents {
+    &.col-percents,
+    &.col-status,
+    &.col-duration {
       width: 20%;
       color: $COLOR--charcoal-grey;
       @media (max-width: $SCREEN_XS_MAX) {
         width: 20%;
       }
+    }
+    &.col-status {
+      text-transform: capitalize;
     }
     &.col-date {
       width: 20%;

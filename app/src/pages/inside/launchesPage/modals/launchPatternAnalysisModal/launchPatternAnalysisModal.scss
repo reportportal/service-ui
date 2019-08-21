@@ -1,0 +1,13 @@
+.launch-analysis-modal-list {
+  padding: 15px 15px 0 15px;
+  color: $COLOR--charcoal-grey;
+}
+.launch-analysis-modal-list-item {
+  margin-top: 15px;
+  &:first-child {
+    margin-top: 0;
+  }
+}
+.launch-analysis-modal-text {
+  color: $COLOR--charcoal-grey;
+}

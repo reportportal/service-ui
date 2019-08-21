@@ -38,17 +38,19 @@ export const GhostButton = ({
   tiny,
   notMinified,
   mobileDisabled,
-  grayBorder,
+  transparentBorder,
+  large,
 }) => {
   const classes = cx({
     'ghost-button': true,
     disabled,
     tiny,
+    large,
     [`color-${color}`]: color,
     'with-icon': icon,
     'mobile-minified': icon && children && !notMinified,
     'mobile-disabled': mobileDisabled,
-    'gray-border': grayBorder,
+    'transparent-border': transparentBorder,
   });
   return (
     <button type={type} disabled={disabled} className={classes} onClick={onClick} title={title}>
@@ -74,7 +76,8 @@ GhostButton.propTypes = {
   icon: PropTypes.string,
   type: PropTypes.string,
   onClick: PropTypes.func,
-  grayBorder: PropTypes.bool,
+  transparentBorder: PropTypes.bool,
+  large: PropTypes.bool,
 };
 
 GhostButton.defaultProps = {
@@ -89,5 +92,6 @@ GhostButton.defaultProps = {
   icon: '',
   type: 'button',
   onClick: () => {},
-  grayBorder: false,
+  transparentBorder: false,
+  large: false,
 };

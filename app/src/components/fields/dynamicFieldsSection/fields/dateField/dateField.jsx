@@ -15,13 +15,20 @@ export class DateField extends Component {
     field: PropTypes.object.isRequired,
   };
 
-  parseDateValue = (value) => value && moment(value).format(DATE_FORMAT);
+  parseDateValue = (value) => [(value && moment(value).format(DATE_FORMAT)) || ''];
+
+  formatDateValue = (value) => value && value[0];
 
   render() {
     const { field, ...rest } = this.props;
     return (
       <div className={cx('date-field')}>
-        <DynamicField field={field} parse={this.parseDateValue} {...rest}>
+        <DynamicField
+          field={field}
+          parse={this.parseDateValue}
+          format={this.formatDateValue}
+          {...rest}
+        >
           <DatePicker className={cx('date-input')} fixedHeight dateFormat={DATE_FORMAT} />
         </DynamicField>
       </div>

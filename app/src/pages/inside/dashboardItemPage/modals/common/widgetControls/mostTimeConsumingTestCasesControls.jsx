@@ -75,6 +75,7 @@ export class MostTimeConsumingTestCasesControls extends Component {
     initializeControlsForm({
       contentParameters: widgetSettings.contentParameters || {
         contentFields: this.criteria.map((criteria) => criteria.value),
+        itemsCount: 1,
         widgetOptions: {
           viewMode: MODES_VALUES[CHART_MODES.BAR_VIEW],
           includeMethods: false,

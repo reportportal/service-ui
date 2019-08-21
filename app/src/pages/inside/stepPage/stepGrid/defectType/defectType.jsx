@@ -6,7 +6,7 @@ import { FormattedMessage, injectIntl, defineMessages } from 'react-intl';
 import { MarkdownViewer } from 'components/main/markdown';
 import PencilIcon from 'common/img/pencil-icon-inline.svg';
 import { DefectTypeItem } from 'pages/inside/common/defectTypeItem';
-import { PatternAnalyzedLabel } from './patternAnalyzedLabel';
+import { PatternAnalyzedLabel } from 'pages/inside/common/patternAnalyzedLabel';
 import { AutoAnalyzedLabel } from './autoAnalyzedLabel';
 import { IssueList } from './issueList';
 import styles from './defectType.scss';

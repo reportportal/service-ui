@@ -131,6 +131,8 @@ export class EditItemsModal extends Component {
     descriptionAction: PropTypes.string,
     uniqueAttributes: PropTypes.array,
     intl: intlShape.isRequired,
+    showNotification: PropTypes.func.isRequired,
+    showDefaultErrorNotification: PropTypes.func.isRequired,
     ...formPropTypes,
   };
 
@@ -157,6 +159,8 @@ export class EditItemsModal extends Component {
       attributes: [],
       descriptionAction: DESCRIPTION_LEAVE,
     });
+
+    this.deletedUniqueAttributes = [];
   }
 
   onChangeCommonAttributes = (e, attributes, oldAttributes) => {
@@ -168,10 +172,19 @@ export class EditItemsModal extends Component {
     // Delete attribute
     if (attributes.length < oldAttributes.length) {
       const deletedAttribute = this.findAttribute(oldAttributes, attributes);
+      const deletedUniqueAttributeIndex = this.deletedUniqueAttributes.findIndex(
+        (attribute) =>
+          attribute.key === deletedAttribute.key && attribute.value === deletedAttribute.value,
+      );
       saveHistory({
         action: ATTRIBUTE_DELETE,
         from: deletedAttribute,
       });
+
+      if (deletedUniqueAttributeIndex !== -1) {
+        this.deletedUniqueAttributes.slice(deletedUniqueAttributeIndex, 1);
+        this.showWarningMessage();
+      }
     } else {
       const attributeBeforeUpdate = this.findAttribute(oldAttributes, attributes);
       const updatedAttribute = this.findAttribute(attributes, oldAttributes);
@@ -230,8 +243,7 @@ export class EditItemsModal extends Component {
     );
 
     if (uniqueAttributes.length !== updatedUniqueAttributes.length) {
-      this.showWarningMessage();
-
+      this.deletedUniqueAttributes.push(attribute);
       change('uniqueAttributes', updatedUniqueAttributes);
     }
   };
@@ -262,7 +274,9 @@ export class EditItemsModal extends Component {
         : URLS.testItemsInfoUpdate(currentProject);
     const data = {
       ids,
-      attributes,
+      attributes: attributes.filter(
+        (attribute) => (attribute.from ? Boolean(attribute.from.value) : true),
+      ),
     };
 
     if (descriptionAction !== DESCRIPTION_LEAVE) {
@@ -274,11 +288,11 @@ export class EditItemsModal extends Component {
 
     fetch(fetchUrl, { method: 'put', data })
       .then(() => {
+        fetchFunc();
         this.props.showNotification({
           message: formatMessage(messages.itemUpdateSuccess),
           type: NOTIFICATION_TYPES.SUCCESS,
         });
-        fetchFunc();
       })
       .catch(this.props.showDefaultErrorNotification);
   };

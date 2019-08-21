@@ -23,11 +23,11 @@ const cx = classNames.bind(styles);
 const messages = defineMessages({
   MODAL_TITLE: {
     id: 'launchAnalysisModal.title',
-    defaultMessage: 'Analyse launches',
+    defaultMessage: 'Analyze launches',
   },
   ANALYZE_BUTTON: {
-    id: 'launchAnalysisModal.analyse',
-    defaultMessage: 'Analyse',
+    id: 'launchAnalysisModal.analyze',
+    defaultMessage: 'Analyze',
   },
   MOD_TITLE: {
     id: 'launchAnalysisModal.modTitle',

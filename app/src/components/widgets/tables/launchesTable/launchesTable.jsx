@@ -29,7 +29,7 @@ import { StatisticsLink } from 'pages/inside/common/statisticsLink';
 import { DefectLink } from 'pages/inside/common/defectLink';
 import { formatStatus } from 'common/utils/localizationUtils';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
-import { getStatisticsStatuses } from './utils';
+import { getStatisticsStatuses } from '../components/utils';
 import {
   STATS_SI,
   STATS_AB,
@@ -199,8 +199,8 @@ const COLUMNS_KEYS_MAP = {
   [STATS_PASSED]: STATISTICS_COLUMN_KEY,
   [STATS_FAILED]: STATISTICS_COLUMN_KEY,
   [STATS_SKIPPED]: STATISTICS_COLUMN_KEY,
-  [STATS_AB]: DEFECT_COLUMN_KEY,
   [STATS_PB]: DEFECT_COLUMN_KEY,
+  [STATS_AB]: DEFECT_COLUMN_KEY,
   [STATS_SI]: DEFECT_COLUMN_KEY,
   [STATS_TI]: DEFECT_COLUMN_KEY,
 };

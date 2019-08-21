@@ -38,8 +38,8 @@ const cx = classNames.bind(styles);
     project: activeProjectSelector(state),
     defectTypes: defectTypesSelector(state),
     orderedContentFields: orderedContentFieldsSelector(state),
-    getDefectLink: (params) => defectLinkSelector(state, params),
-    getStatisticsLink: (params) => statisticsLinkSelector(state, params),
+    getDefectLink: defectLinkSelector(state),
+    getStatisticsLink: statisticsLinkSelector(state),
   }),
   {
     navigate: (linkAction) => linkAction,
@@ -348,17 +348,16 @@ export class LaunchStatisticsChart extends Component {
       });
     });
 
-    contentFields.forEach((key) => {
+    orderedContentFields.filter((name) => contentFields.indexOf(name) !== -1).forEach((key) => {
       chartDataOrdered.push(chartData[key]);
     });
 
     const itemNames = chartDataOrdered.map((item) => item[0]);
-    const orderedItemNames = orderedContentFields.filter((name) => itemNames.indexOf(name) !== -1);
 
     this.configData = {
       itemData,
-      chartDataOrdered: chartDataOrdered.reverse(),
-      itemNames: orderedItemNames,
+      chartDataOrdered,
+      itemNames,
       colors,
       isTimeLine,
       isZoomEnabled: widgetOptions.zoom,

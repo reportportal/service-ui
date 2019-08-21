@@ -1,0 +1,33 @@
+.attribute-modal-field {
+  position: relative;
+}
+
+.attr-selector {
+  display: inline-block;
+  width: calc(100% - 25px);
+}
+
+.remove-icon {
+  position: absolute;
+  top: 7px;
+  right: 3px;
+  width: 15px;
+  cursor: pointer;
+
+  path {
+    fill: $COLOR--gray-60;
+  }
+
+  &:hover {
+    path {
+      fill: $COLOR--charcoal-grey;
+    }
+  }
+}
+
+.add-level {
+  color: $COLOR--topaz;
+  font-size: 13px;
+  font-family: $FONT-REGULAR;
+  cursor: pointer;
+}

@@ -4,6 +4,7 @@ import { injectIntl, intlShape } from 'react-intl';
 import classNames from 'classnames/bind';
 import { dynamicFieldShape } from './dynamicFieldShape';
 import { getFieldComponent } from './utils';
+import { VALUE_ID_KEY, VALUE_NAME_KEY } from './constants';
 import styles from './dynamicFieldsSection.scss';
 
 const cx = classNames.bind(styles);
@@ -16,6 +17,8 @@ export class DynamicFieldsSection extends Component {
     withValidation: PropTypes.bool,
     customBlockCreator: PropTypes.func,
     customFieldWrapper: PropTypes.func,
+    // default field property to use as value (depends on different sets of fields)
+    defaultOptionValueKey: PropTypes.oneOf([VALUE_ID_KEY, VALUE_NAME_KEY]),
   };
 
   static defaultProps = {
@@ -23,6 +26,7 @@ export class DynamicFieldsSection extends Component {
     withValidation: false,
     customBlockCreator: null,
     customFieldWrapper: null,
+    defaultOptionValueKey: VALUE_NAME_KEY,
   };
 
   getCustomBlockConfig = (field) => {
@@ -34,7 +38,7 @@ export class DynamicFieldsSection extends Component {
   };
 
   createFields = () => {
-    const { fields = [], customFieldWrapper, withValidation } = this.props;
+    const { fields = [], customFieldWrapper, withValidation, defaultOptionValueKey } = this.props;
 
     return fields.map((field) => {
       const FieldComponent = getFieldComponent(field);
@@ -46,6 +50,7 @@ export class DynamicFieldsSection extends Component {
           customBlock={this.getCustomBlockConfig(field)}
           withValidation={withValidation}
           customFieldWrapper={customFieldWrapper}
+          defaultOptionValueKey={defaultOptionValueKey}
         />
       );
     });

@@ -45,6 +45,11 @@
   color: $COLOR--brownish-grey;
   font-size: 12px;
   line-height: 1.5;
+  word-break: break-all;
+
+  @supports (word-break: break-word) {
+    word-break: break-word;
+  }
 }
 
 .status-icon {

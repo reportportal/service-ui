@@ -12,6 +12,8 @@ import {
   payloadSelector,
   testItemIdsSelector,
   searchStringSelector,
+  querySelector,
+  filterIdSelector,
 } from 'controllers/pages';
 import { activeProjectSelector } from 'controllers/user';
 import { activeFilterSelector } from 'controllers/filter';
@@ -108,11 +110,12 @@ export const breadcrumbsSelector = createSelector(
   testItemIdsArraySelector,
   pagePropertiesSelector,
   debugModeSelector,
-  (projectId, filter, parentItems, testItemIds, query, debugMode) => {
+  filterIdSelector,
+  (projectId, filter, parentItems, testItemIds, query, debugMode, filterCategory) => {
     const queryNamespacesToCopy = [LAUNCH_NAMESPACE];
     let isListViewExist = false;
-    const filterId = (filter && filter.id) || ALL;
-    const filterName = (filter && filter.name) || ALL;
+    const filterId = (filter && filter.id) || filterCategory;
+    const filterName = (filter && filter.name) || filterCategory;
     const descriptors = [
       {
         id: filterId,
@@ -196,74 +199,76 @@ export const nameLinkSelector = (state, ownProps) => {
   return createLink(testItemIds, ownProps.itemId, payload, query, page);
 };
 
-export const statisticsLinkSelector = (state, ownProps) => {
-  const query = pagePropertiesSelector(state);
-  const payload =
-    (ownProps.ownLinkParams && ownProps.ownLinkParams.payload) || payloadSelector(state);
-  const testItemIds = testItemIdsSelector(state);
-  const isDebugMode = debugModeSelector(state);
-  const page =
-    (ownProps.ownLinkParams && ownProps.ownLinkParams.page) || getNextPage(isDebugMode, true);
-  return createLink(
-    testItemIds,
-    ownProps.itemId,
-    payload,
-    {
-      ...query,
-      ...createNamespacedQuery(
-        {
-          'filter.eq.hasStats': true,
-          'filter.eq.hasChildren': false,
-          'filter.in.type': LEVEL_STEP,
-          'filter.in.status': ownProps.statuses && ownProps.statuses.join(','),
-        },
-        getQueryNamespace(
-          testItemIdsArraySelector(state) ? testItemIdsArraySelector(state).length : 0,
+export const statisticsLinkSelector = createSelector(
+  querySelector,
+  payloadSelector,
+  testItemIdsSelector,
+  debugModeSelector,
+  testItemIdsArraySelector,
+  (query, payload, testItemIds, isDebugMode, testItemIdsArray) => (ownProps) => {
+    const linkPayload = (ownProps.ownLinkParams && ownProps.ownLinkParams.payload) || payload;
+    const page =
+      (ownProps.ownLinkParams && ownProps.ownLinkParams.page) || getNextPage(isDebugMode, true);
+    return createLink(
+      testItemIds,
+      ownProps.itemId,
+      linkPayload,
+      {
+        ...query,
+        ...createNamespacedQuery(
+          {
+            'filter.eq.hasStats': true,
+            'filter.eq.hasChildren': false,
+            'filter.in.type': LEVEL_STEP,
+            'filter.in.status': ownProps.statuses && ownProps.statuses.join(','),
+          },
+          getQueryNamespace(testItemIdsArray ? testItemIdsArray.length : 0),
         ),
-      ),
-    },
-    page,
-  );
-};
+      },
+      page,
+    );
+  },
+);
 
-export const defectLinkSelector = (state, ownProps) => {
-  const query = pagePropertiesSelector(state);
-  const payload =
-    (ownProps.ownLinkParams && ownProps.ownLinkParams.payload) || payloadSelector(state);
-  const testItemIds = testItemIdsSelector(state);
-  const isDebugMode = debugModeSelector(state);
-  let levelIndex = 0;
-  if (testItemIdsArraySelector(state).length >= 0) {
-    levelIndex = !ownProps.itemId
-      ? testItemIdsArraySelector(state).length - 1
-      : testItemIdsArraySelector(state).length;
-  }
-  let nextPage;
-  if (ownProps.itemId) {
-    nextPage = getNextPage(isDebugMode, true);
-  } else {
-    nextPage = isDebugMode ? PROJECT_USERDEBUG_TEST_ITEM_PAGE : TEST_ITEM_PAGE;
-  }
-  const page = (ownProps.ownLinkParams && ownProps.ownLinkParams.page) || nextPage;
+export const defectLinkSelector = createSelector(
+  pagePropertiesSelector,
+  payloadSelector,
+  testItemIdsSelector,
+  debugModeSelector,
+  testItemIdsArraySelector,
+  (query, payload, testItemIds, isDebugMode, testItemIdsArray) => (ownProps) => {
+    const linkPayload = (ownProps.ownLinkParams && ownProps.ownLinkParams.payload) || payload;
+    let levelIndex = 0;
+    if (testItemIdsArray.length >= 0) {
+      levelIndex = !ownProps.itemId ? testItemIdsArray.length - 1 : testItemIdsArray.length;
+    }
+    let nextPage;
+    if (ownProps.itemId) {
+      nextPage = getNextPage(isDebugMode, true);
+    } else {
+      nextPage = isDebugMode ? PROJECT_USERDEBUG_TEST_ITEM_PAGE : TEST_ITEM_PAGE;
+    }
+    const page = (ownProps.ownLinkParams && ownProps.ownLinkParams.page) || nextPage;
 
-  return createLink(
-    testItemIds,
-    ownProps.itemId,
-    payload,
-    {
-      ...query,
-      ...createNamespacedQuery(
-        {
-          'filter.eq.hasStats': true,
-          'filter.eq.hasChildren': false,
-          'filter.in.issueType': getDefectsString(ownProps.defects),
-        },
-        getQueryNamespace(levelIndex),
-      ),
-    },
-    page,
-  );
-};
+    return createLink(
+      testItemIds,
+      ownProps.itemId,
+      linkPayload,
+      {
+        ...query,
+        ...createNamespacedQuery(
+          {
+            'filter.eq.hasStats': true,
+            'filter.eq.hasChildren': false,
+            'filter.in.issueType': getDefectsString(ownProps.defects),
+          },
+          getQueryNamespace(levelIndex),
+        ),
+      },
+      page,
+    );
+  },
+);
 
 export const testCaseNameLinkSelector = (state, ownProps) => {
   const activeProject = activeProjectSelector(state);
@@ -350,5 +355,20 @@ export const logViewLinkSelector = createSelector(
         query,
       },
     };
+  },
+);
+
+export const getLogItemLinkSelector = createSelector(
+  activeProjectSelector,
+  (activeProject) => (testItem) => {
+    const payload = {
+      projectId: activeProject,
+      filterId: ALL,
+    };
+
+    const testItemPath = testItem.path.split('.').slice(0, -1);
+    const testItemIds = [testItem.launchId, ...testItemPath].join('/');
+
+    return createLink(testItemIds, testItem.itemId, payload, {}, PROJECT_LOG_PAGE);
   },
 );

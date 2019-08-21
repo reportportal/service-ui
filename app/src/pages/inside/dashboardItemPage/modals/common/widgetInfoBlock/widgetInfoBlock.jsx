@@ -6,7 +6,7 @@ import Parser from 'html-react-parser';
 import { fetch, debounce } from 'common/utils';
 import { URLS } from 'common/urls';
 import EmptyWidgetPreview from 'pages/inside/dashboardItemPage/modals/common/img/wdgt-undefined-inline.svg';
-import { TABLE_WIDGETS_PREVIEWS } from '../widgets';
+import { WIDGETS_STATIC_PREVIEWS } from '../widgets';
 import { WidgetPreview } from '../widgetPreview';
 import styles from './widgetInfoBlock.scss';
 
@@ -52,7 +52,7 @@ export class WidgetInfoBlock extends PureComponent {
       this.props.customCondition &&
       !isEqual(prevData, newData) &&
       (filterIds.length || contentParameters.widgetOptions.launchNameFilter) &&
-      !TABLE_WIDGETS_PREVIEWS[this.props.activeWidget.id]
+      !WIDGETS_STATIC_PREVIEWS[this.props.activeWidget.id]
     ) {
       this.fetchWidget(this.props.widgetSettings);
     }

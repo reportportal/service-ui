@@ -18,6 +18,7 @@ export {
   prevPagePropertiesSelector,
   prevTestItemSelector,
   searchStringSelector,
+  querySelector,
 } from './selectors';
 export { updatePagePropertiesAction } from './actionCreators';
 
@@ -35,6 +36,7 @@ export {
   PROJECT_PAGE,
   PROJECT_DASHBOARD_PAGE,
   PROJECT_DASHBOARD_ITEM_PAGE,
+  PROJECT_DASHBOARD_PRINT_PAGE,
   PROJECT_FILTERS_PAGE,
   LAUNCHES_PAGE,
   PROJECT_LAUNCHES_PAGE,

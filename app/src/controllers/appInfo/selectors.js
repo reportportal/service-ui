@@ -2,7 +2,7 @@ import { ANALYICS_INSTANCE_KEY, ANALYTICS_ALL_KEY } from './constants';
 
 const appInfoSelector = (state) => state.appInfo || {};
 const apiInfoSelector = (state) => appInfoSelector(state).apiInfo;
-const uatInfoSelector = (state) => appInfoSelector(state).uatInfo;
+export const compositeInfoSelector = (state) => appInfoSelector(state).compositeInfo;
 
 export const buildVersionSelector = (state) => {
   const appInfo = apiInfoSelector(state);
@@ -14,5 +14,5 @@ export const instanceIdSelector = (state) => extensionsSelector(state)[ANALYICS_
 export const analyticsEnabledSelector = (state) =>
   extensionConfigSelector(state)[ANALYTICS_ALL_KEY] === 'true';
 export const analyzerExtensionsSelector = (state) => extensionsSelector(state).analyzer || [];
-
+const uatInfoSelector = (state) => compositeInfoSelector(state).uat || {};
 export const authExtensionsSelector = (state) => uatInfoSelector(state).authExtensions || {};

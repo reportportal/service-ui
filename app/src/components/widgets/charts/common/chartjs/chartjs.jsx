@@ -1,4 +1,4 @@
-import { PureComponent, Fragment } from 'react';
+import { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { injectIntl } from 'react-intl';
 import { Chart } from 'chart.js';
@@ -11,18 +11,14 @@ export class ChartJS extends PureComponent {
     chartData: PropTypes.object.isRequired,
     chartOptions: PropTypes.object.isRequired,
     config: PropTypes.object,
-    onChartCreated: PropTypes.func,
     onChartElementClick: PropTypes.func,
-    children: PropTypes.node,
     height: PropTypes.number.isRequired,
   };
 
   static defaultProps = {
     data: {},
     config: {},
-    onChartCreated: () => {},
     onChartElementClick: null,
-    children: null,
   };
 
   componentDidMount() {
@@ -53,7 +49,6 @@ export class ChartJS extends PureComponent {
       this.chart.update(config);
     } else {
       this.chart = this.generateChart(config);
-      this.props.onChartCreated(this.chart, this.canvas);
     }
   }
 
@@ -73,9 +68,7 @@ export class ChartJS extends PureComponent {
       }
 
       const chartElement = chartObj.getElementAtEvent(event);
-      if (chartElement.length) {
-        this.props.onChartElementClick(chartElement[0]);
-      }
+      this.props.onChartElementClick(chartElement[0], event);
     };
 
     return chartObj;
@@ -84,15 +77,14 @@ export class ChartJS extends PureComponent {
   render() {
     const { height } = this.props;
     return (
-      <Fragment>
+      <div>
         <canvas
           height={height}
           ref={(node) => {
             this.canvas = node;
           }}
         />
-        {this.props.children}
-      </Fragment>
+      </div>
     );
   }
 }

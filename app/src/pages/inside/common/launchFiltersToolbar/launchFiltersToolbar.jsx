@@ -11,6 +11,7 @@ import {
   createFilterAction,
   saveNewFilterAction,
   changeActiveFilterAction,
+  dirtyFilterIdsSelector,
 } from 'controllers/filter';
 import { changeLaunchDistinctAction, launchDistinctSelector } from 'controllers/launch';
 import { isEmptyObject, isEmptyValue } from 'common/utils';
@@ -30,6 +31,7 @@ const cx = classNames.bind(styles);
 @connect(
   (state) => ({
     unsavedFilterIds: unsavedFilterIdsSelector(state),
+    dirtyFilterIds: dirtyFilterIdsSelector(state),
     launchDistinct: launchDistinctSelector(state),
     level: levelSelector(state),
   }),
@@ -49,6 +51,7 @@ export class LaunchFiltersToolbar extends Component {
     activeFilterId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     activeFilter: PropTypes.object,
     unsavedFilterIds: PropTypes.array,
+    dirtyFilterIds: PropTypes.array,
     onSelectFilter: PropTypes.func,
     onRemoveFilter: PropTypes.func,
     onFilterAdd: PropTypes.func,
@@ -77,6 +80,7 @@ export class LaunchFiltersToolbar extends Component {
     activeFilterId: null,
     activeFilter: null,
     unsavedFilterIds: [],
+    dirtyFilterIds: [],
     onSelectFilter: () => {},
     onRemoveFilter: () => {},
     onFilterAdd: () => {},
@@ -161,12 +165,15 @@ export class LaunchFiltersToolbar extends Component {
     const { unsavedFilterIds, activeFilterId } = this.props;
     return unsavedFilterIds.indexOf(activeFilterId) !== -1;
   };
+  isFilterDirty = () => {
+    const { dirtyFilterIds, activeFilterId } = this.props;
+    return dirtyFilterIds.indexOf(activeFilterId) !== -1;
+  };
   isSaveDisabled = () => {
     const { filterErrors } = this.props;
     return !this.isFilterUnsaved() || !isEmptyObject(filterErrors) || this.isNoFilterValues();
   };
-  isDiscardDisabled = () =>
-    !this.isFilterUnsaved() || (this.isNoFilterValues() && this.isNewFilter());
+  isDiscardDisabled = () => !this.isFilterDirty();
   isEditDisabled = () => this.isFilterUnsaved() || this.isNewFilter();
   render() {
     const {
@@ -214,6 +221,7 @@ export class LaunchFiltersToolbar extends Component {
               onSelectFilter={onSelectFilter}
               onRemoveFilter={onRemoveFilter}
               intl={intl}
+              allLatest={launchDistinct}
             />
           </div>
           {!!activeFilter &&

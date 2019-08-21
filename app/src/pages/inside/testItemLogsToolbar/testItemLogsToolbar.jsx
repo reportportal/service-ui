@@ -4,6 +4,7 @@ import classNames from 'classnames/bind';
 import { Attachments } from 'pages/inside/logsPage/logItemInfo/logItemInfoTabs/attachments';
 import { LOG_VIEW } from 'controllers/testItem';
 import { InfoPanel } from 'pages/inside/common/infoPanel';
+import { SCREEN_XS_MAX } from 'common/constants/screenSizeVariables';
 import styles from './testItemLogsToolbar.scss';
 
 const cx = classNames.bind(styles);
@@ -19,33 +20,34 @@ export class TestItemLogsToolbar extends Component {
     parentItem: {},
   };
 
-  static getDerivedStateFromProps(props) {
-    return props.loading
-      ? {
-          activeAttachmentId: null,
-        }
-      : null;
-  }
-
   state = {
-    activeAttachmentId: null,
+    isMobileView: false,
   };
 
-  changeActiveAttachment = (activeAttachmentId) =>
+  componentDidMount() {
+    this.match = window.matchMedia(SCREEN_XS_MAX);
+    this.match.addListener(this.setMobileView);
+    this.setMobileView(this.match);
+  }
+
+  componentWillUnmount() {
+    this.match.removeListener(this.setMobileView);
+  }
+
+  setMobileView = (media) =>
+    media.matches !== this.state.isMobileView &&
     this.setState({
-      activeAttachmentId,
+      isMobileView: media.matches,
     });
 
   render() {
     const { parentItem } = this.props;
+    const { isMobileView } = this.state;
 
     return (
       <Fragment>
         <InfoPanel viewMode={LOG_VIEW} data={parentItem} />
-        <Attachments
-          activeItemId={this.state.activeAttachmentId}
-          onChangeActiveItem={this.changeActiveAttachment}
-        />
+        <Attachments isMobileView={isMobileView} />
         <hr className={cx('separator')} />
       </Fragment>
     );

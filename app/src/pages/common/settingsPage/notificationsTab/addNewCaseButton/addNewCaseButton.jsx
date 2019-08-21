@@ -32,12 +32,14 @@ export class AddNewCaseButton extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    disabled: PropTypes.bool,
   };
 
   static defaultProps = {
     showModal: () => {},
     updateNotificationCases: () => {},
     cases: [],
+    disabled: false,
   };
 
   confirmAddCase = (data) => {
@@ -60,10 +62,15 @@ export class AddNewCaseButton extends Component {
   };
 
   render() {
-    const { intl } = this.props;
+    const { intl, disabled } = this.props;
 
     return (
-      <GhostButton mobileDisabled icon={PlusIcon} onClick={this.addNotificationCase}>
+      <GhostButton
+        mobileDisabled
+        icon={PlusIcon}
+        onClick={this.addNotificationCase}
+        disabled={disabled}
+      >
         {intl.formatMessage(messages.addNewRuleButton)}
       </GhostButton>
     );

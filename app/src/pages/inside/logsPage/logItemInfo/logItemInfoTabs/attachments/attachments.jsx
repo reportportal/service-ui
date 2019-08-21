@@ -11,6 +11,8 @@ import {
   openAttachmentAction,
   fetchAttachmentsConcatAction,
   attachmentsPaginationSelector,
+  setActiveAttachmentAction,
+  activeAttachmentIdSelector,
 } from 'controllers/log/attachments';
 import { PAGE_KEY, SIZE_KEY } from 'controllers/pagination';
 import { NoItemMessage } from 'components/main/noItemMessage';
@@ -28,15 +30,22 @@ export const messages = defineMessages({
 
 const cx = classNames.bind(styles);
 
+const getVisibleThumbs = (isMobile) => (isMobile ? MOBILE_VISIBLE_THUMBS : DEFAULT_VISIBLE_THUMBS);
+
+const getCurrentThumb = (activeItemId, visibleThumbs) =>
+  activeItemId ? Math.floor(activeItemId / visibleThumbs) * visibleThumbs : 0;
+
 @connect(
   (state) => ({
     attachments: attachmentItemsSelector(state),
     loading: attachmentsLoadingSelector(state),
     pagination: attachmentsPaginationSelector(state),
+    activeItemId: activeAttachmentIdSelector(state),
   }),
   {
     fetchAttachmentsConcatAction,
     openAttachmentAction,
+    setActiveAttachmentAction,
   },
 )
 @injectIntl
@@ -47,7 +56,7 @@ export class Attachments extends Component {
     activeItemId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     pagination: PropTypes.object,
     loading: PropTypes.bool,
-    onChangeActiveItem: PropTypes.func,
+    setActiveAttachmentAction: PropTypes.func,
     fetchAttachmentsConcatAction: PropTypes.func,
     openAttachmentAction: PropTypes.func,
     isMobileView: PropTypes.bool,
@@ -58,60 +67,47 @@ export class Attachments extends Component {
     pagination: {},
     loading: false,
     activeItemId: null,
-    onChangeActiveItem: () => {},
+    setActiveAttachmentAction: () => {},
     fetchAttachmentsConcatAction: () => {},
     openAttachmentAction: () => {},
     isMobileView: false,
   };
 
-  static getVisibleThumbs = (isMobile) =>
-    isMobile ? MOBILE_VISIBLE_THUMBS : DEFAULT_VISIBLE_THUMBS;
+  static getDerivedStateFromProps(props, state) {
+    if (!props.activeItemId) {
+      const currentThumb = getCurrentThumb(props.activeItemId, state.visibleThumbs);
+      return {
+        mainAreaVisible: false,
+        currentThumb,
+      };
+    }
+    return null;
+  }
 
   constructor(props) {
     super(props);
-    const { activeItemId, isMobileView, pagination } = props;
+    const { activeItemId, isMobileView } = props;
 
-    const visibleThumbs = Attachments.getVisibleThumbs(isMobileView);
-    const currentThumb = activeItemId
-      ? Math.floor(activeItemId / visibleThumbs) * visibleThumbs
-      : 0;
+    const visibleThumbs = getVisibleThumbs(isMobileView);
+    const currentThumb = getCurrentThumb(activeItemId, visibleThumbs);
 
     this.state = {
       mainAreaVisible: activeItemId !== null,
       currentThumb,
-      page: pagination.number ? pagination.number + 1 : 1,
       size: visibleThumbs,
     };
-  }
-
-  componentDidMount() {
-    const { page } = this.state;
-    const { loading, attachments } = this.props;
-    !attachments.length && !loading && this.fetchAttachments({ page });
-  }
-
-  componentDidUpdate() {
-    const { page } = this.state;
-    const {
-      attachments,
-      pagination: { totalPages },
-      loading,
-    } = this.props;
-    if (totalPages > 1 && attachments.length <= this.state.size && page < 3 && !loading) {
-      this.fetchAttachments({ page });
-    }
   }
 
   onClickItem = (itemIndex) => this.props.openAttachmentAction(this.props.attachments[itemIndex]);
 
   onClickThumb = (itemIndex) => {
-    this.props.onChangeActiveItem(itemIndex);
+    this.props.setActiveAttachmentAction(itemIndex);
     this.setState({ mainAreaVisible: true });
   };
 
   changeActiveItem = (activeItemId, thumbConfig) => {
     const prevActiveItemId = this.props.activeItemId;
-    this.props.onChangeActiveItem(activeItemId);
+    this.props.setActiveAttachmentAction(activeItemId);
     this.setState(
       {
         currentThumb: thumbConfig ? thumbConfig.currentThumb : this.state.currentThumb,
@@ -122,36 +118,31 @@ export class Attachments extends Component {
 
   loadNewItems = (prevActiveItemId, thumbConfig) => {
     if (thumbConfig && this.props.activeItemId > prevActiveItemId) {
-      const { page, size } = this.state;
-      const currentPage = Math.floor(thumbConfig.currentThumb / size) + 1;
-      if (currentPage + 1 >= page) {
-        const {
-          attachments,
-          pagination: { totalElements, totalPages },
-          loading,
-        } = this.props;
-
-        if ((attachments.length >= totalElements && page >= totalPages) || loading) {
-          return;
-        }
-
-        this.fetchAttachments({ page });
+      const {
+        pagination: { totalElements },
+        attachments,
+        loading,
+      } = this.props;
+      const { size } = this.state;
+      const nextPage = Math.ceil((thumbConfig.currentThumb + 1) / size) + 1;
+      const lastLoadedPage = Math.ceil(attachments.length / size);
+      const lastPage = Math.ceil(totalElements / size);
+      if (nextPage > lastLoadedPage && lastLoadedPage < lastPage && !loading) {
+        this.fetchAttachments({ page: nextPage, size });
       }
     }
   };
 
   fetchAttachments = ({ page, size }) => {
-    const { size: stateSize, page: statePage } = this.state;
     const params = {
       'filter.ex.binaryContent': true,
-      [PAGE_KEY]: page || statePage,
-      [SIZE_KEY]: size || stateSize,
+      [PAGE_KEY]: page,
+      [SIZE_KEY]: size,
     };
 
     const concat = page > 1;
 
     this.props.fetchAttachmentsConcatAction({ params, concat });
-    this.setState({ page: page + 1 });
   };
 
   renderAttachmentsContent = () => {
@@ -166,7 +157,7 @@ export class Attachments extends Component {
     }
 
     const { currentThumb, mainAreaVisible } = this.state;
-    const visibleThumbs = Attachments.getVisibleThumbs(isMobileView);
+    const visibleThumbs = getVisibleThumbs(isMobileView);
 
     return (
       <Fragment>

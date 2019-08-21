@@ -179,6 +179,14 @@ const messages = defineMessages({
     id: 'ProductStatusControls.customColumnsDuplicationHint',
     defaultMessage: 'Duplicated column names are prohibited',
   },
+  booleanFieldHint: {
+    id: 'PostIssueModal.booleanFieldHint',
+    defaultMessage: 'This field must have only true/false values',
+  },
+  doubleFieldHint: {
+    id: 'PostIssueModal.doubleFieldHint',
+    defaultMessage: "This field must be of 'double' type",
+  },
 });
 
 @injectIntl

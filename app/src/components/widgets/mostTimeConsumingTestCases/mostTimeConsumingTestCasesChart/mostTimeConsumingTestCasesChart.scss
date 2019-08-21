@@ -1,0 +1,59 @@
+.most-time-consuming-chart {
+  :global {
+    svg {
+      .c3-xgrid-focus {
+        display: block;
+      }
+
+      .c3-grid line {
+        stroke: $COLOR--gray-80;
+      }
+    }
+
+    .c3-chart-texts {
+      .c3-texts {
+        .c3-text {
+          fill: $COLOR--charcoal-grey !important;
+          font-family: $FONT-REGULAR;
+          font-size: 10px;
+        }
+      }
+    }
+  }
+}
+
+.launch-start-time {
+  width: 100%;
+
+  &.timeline-mode {
+    font-family: $FONT-SEMIBOLD;
+  }
+}
+
+.item-wrapper {
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  position: relative;
+
+  .item-cases {
+    display: inline-block;
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+
+    .item-cases-growth {
+      .increase {
+        color: $COLOR--dark-pastel-green;
+      }
+
+      .decrease {
+        color: $COLOR--orange-red;
+      }
+    }
+
+    span {
+      font-family: $FONT-SEMIBOLD;
+    }
+  }
+}

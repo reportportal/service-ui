@@ -3,7 +3,11 @@ import { queueReducers } from 'common/utils';
 import { fetchReducer } from 'controllers/fetch';
 import { paginationReducer } from 'controllers/pagination';
 import { loadingReducer } from 'controllers/loading';
-import { ATTACHMENTS_NAMESPACE, CLEAR_ATTACHMENTS_ACTION } from './constants';
+import {
+  ATTACHMENTS_NAMESPACE,
+  CLEAR_ATTACHMENTS_ACTION,
+  SET_ACTIVE_ATTACHMENT_ACTION,
+} from './constants';
 
 export const logsWithAttachmentsReducer = (state = [], { type }) => {
   switch (type) {
@@ -23,6 +27,15 @@ export const attachmentsPaginationReducer = (state = {}, { type }) => {
   }
 };
 
+export const activeAttachmentReducer = (state = null, { type, payload }) => {
+  switch (type) {
+    case SET_ACTIVE_ATTACHMENT_ACTION:
+      return payload;
+    default:
+      return state;
+  }
+};
+
 export const attachmentsReducer = combineReducers({
   logsWithAttachments: queueReducers(
     fetchReducer(ATTACHMENTS_NAMESPACE, { contentPath: 'content' }),
@@ -30,4 +43,5 @@ export const attachmentsReducer = combineReducers({
   ),
   pagination: queueReducers(paginationReducer(ATTACHMENTS_NAMESPACE), attachmentsPaginationReducer),
   loading: loadingReducer(ATTACHMENTS_NAMESPACE),
+  activeAttachmentId: activeAttachmentReducer,
 });

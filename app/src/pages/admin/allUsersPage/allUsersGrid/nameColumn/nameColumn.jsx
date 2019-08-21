@@ -96,7 +96,9 @@ export class NameColumn extends Component {
             />
           </div>
         )}
-        <span className={cx('name')}>{value.fullName}</span>
+        <span className={cx('name')} title={value.fullName}>
+          {value.fullName}
+        </span>
         {value.userId === currentUser && (
           <span className={cx('label', 'you-label')}>{intl.formatMessage(messages.youLabel)}</span>
         )}

@@ -17,6 +17,7 @@ import {
   userAccountRoleSelector,
   activeProjectSelector,
 } from 'controllers/user';
+import { patternsSelector, PAStateSelector } from 'controllers/project';
 import { HamburgerMenuItem } from './hamburgerMenuItem';
 import styles from './hamburger.scss';
 
@@ -37,6 +38,10 @@ const messages = defineMessages({
   analysis: {
     id: 'Hamburger.analysis',
     defaultMessage: 'Analysis',
+  },
+  patternAnalysis: {
+    id: 'Hamburger.patternAnalysis',
+    defaultMessage: 'Pattern analysis',
   },
   delete: {
     id: 'Hamburger.delete',
@@ -66,6 +71,8 @@ const messages = defineMessages({
   userId: userIdSelector(state),
   accountRole: userAccountRoleSelector(state),
   projectId: activeProjectSelector(state),
+  patterns: patternsSelector(state),
+  PAState: PAStateSelector(state),
 }))
 @track()
 export class Hamburger extends Component {
@@ -78,6 +85,8 @@ export class Hamburger extends Component {
     projectId: PropTypes.string.isRequired,
     customProps: PropTypes.object,
     accountRole: PropTypes.string,
+    patterns: PropTypes.array,
+    PAState: PropTypes.bool,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
@@ -88,6 +97,8 @@ export class Hamburger extends Component {
     onAction: () => {},
     customProps: {},
     accountRole: '',
+    patterns: [],
+    PAState: false,
   };
 
   state = {
@@ -177,7 +188,16 @@ export class Hamburger extends Component {
   };
 
   render() {
-    const { intl, projectRole, accountRole, launch, customProps, tracking } = this.props;
+    const {
+      intl,
+      projectRole,
+      accountRole,
+      launch,
+      customProps,
+      patterns,
+      PAState,
+      tracking,
+    } = this.props;
     return (
       <div className={cx('hamburger')}>
         <div
@@ -253,6 +273,14 @@ export class Hamburger extends Component {
                 }}
               />
             )}
+            <HamburgerMenuItem
+              text={intl.formatMessage(messages.patternAnalysis)}
+              onClick={() => {
+                tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_PATTERN_ANALYSIS_LAUNCH_MENU);
+                customProps.onPatternAnalysis(launch);
+              }}
+              disabled={!patterns.length || !PAState}
+            />
             <HamburgerMenuItem
               text={intl.formatMessage(messages.delete)}
               disabled={

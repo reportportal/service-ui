@@ -22,10 +22,10 @@ const ColumnProps = {
   className: PropTypes.string.isRequired,
 };
 
-const BugIDColumn = ({ className, value: { items = [], id } }) => (
+const BugIDColumn = ({ className, value: { id, url } }) => (
   <div className={cx('bug-id-col', className)}>
-    {items[0] && items[0].url ? (
-      <a href={items[0].url} target="_blank" className={cx('bug-link')}>
+    {url ? (
+      <a href={url} target="_blank" className={cx('bug-link')}>
         {id}
       </a>
     ) : (
@@ -35,19 +35,21 @@ const BugIDColumn = ({ className, value: { items = [], id } }) => (
 );
 BugIDColumn.propTypes = ColumnProps;
 
-const FoundInColumn = ({ className, value }) => <FoundIn className={className} {...value} />;
+const FoundInColumn = ({ className, value }) => (
+  <FoundIn className={className} id={value.id} items={value.items} />
+);
 FoundInColumn.propTypes = ColumnProps;
 
-const SubmitDateColumn = ({ className, value: { items = [{ submitDate: 0 }] } }, formatMessage) => (
+const SubmitDateColumn = ({ className, value: { submitDate = 0 } }, formatMessage) => (
   <div className={cx('submit-date-col', className)}>
     <span className={cx('mobile-hint')}>{formatMessage(hintMessages.submitDateHint)}</span>
-    <AbsRelTime startTime={Number(items[0].submitDate)} />
+    <AbsRelTime startTime={Number(submitDate)} />
   </div>
 );
 SubmitDateColumn.propTypes = ColumnProps;
 
-const SubmitterColumn = ({ className, value: { items = [{ submitter: '' }] } }) => (
-  <div className={cx('submitter-col', className)}>{items[0].submitter}</div>
+const SubmitterColumn = ({ className, value: { submitter = '' } }) => (
+  <div className={cx('submitter-col', className)}>{submitter}</div>
 );
 SubmitterColumn.propTypes = ColumnProps;
 
@@ -89,7 +91,7 @@ export class UniqueBugsTable extends PureComponent {
 
   render() {
     const { result } = this.props.widget.content;
-    const data = Object.keys(result).map((key) => ({ id: key, items: result[key] }));
+    const data = Object.keys(result).map((key) => ({ id: key, ...result[key] }));
 
     return (
       <ScrollWrapper hideTracksWhenNotNeeded>

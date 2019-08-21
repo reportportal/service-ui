@@ -97,6 +97,7 @@ const validators = {
 @connect((state) => ({
   defectTypes: defectTypesSelector(state),
   filtersSearchUrl: URLS.filtersSearch(activeProjectSelector(state)),
+  attributesSearchUrl: URLS.launchAttributeKeysSearch(activeProjectSelector(state)),
 }))
 export class ProductStatusControls extends Component {
   static propTypes = {
@@ -104,6 +105,7 @@ export class ProductStatusControls extends Component {
     defectTypes: PropTypes.object.isRequired,
     widgetSettings: PropTypes.object.isRequired,
     filtersSearchUrl: PropTypes.string.isRequired,
+    attributesSearchUrl: PropTypes.string.isRequired,
     initializeControlsForm: PropTypes.func.isRequired,
   };
 
@@ -153,10 +155,20 @@ export class ProductStatusControls extends Component {
     );
   };
 
+  formatCustomColumns = (values) =>
+    values.map((item) => ({
+      ...item,
+      value: item.value ? { value: item.value, label: item.value } : null,
+    }));
+
+  parseCustomColumns = (values) =>
+    values.map((item) => ({ ...item, value: (item.value && item.value.value) || '' }));
+
   render() {
     const {
       intl: { formatMessage },
       filtersSearchUrl,
+      attributesSearchUrl,
     } = this.props;
 
     return (
@@ -195,9 +207,11 @@ export class ProductStatusControls extends Component {
         </FieldProvider>
         <FieldProvider
           name="contentParameters.widgetOptions.customColumns"
+          format={this.formatCustomColumns}
+          parse={this.parseCustomColumns}
           validate={validators.customColumns}
         >
-          <CustomColumnsControl />
+          <CustomColumnsControl uri={attributesSearchUrl} />
         </FieldProvider>
         <FieldProvider name="contentParameters.widgetOptions.latest">
           <TogglerControl

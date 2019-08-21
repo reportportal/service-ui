@@ -1,0 +1,62 @@
+.cumulative-trend-chart-legend {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+  max-height: 40px;
+  padding-top: 20px;
+
+  .controls {
+    padding-right: 30px;
+    display: flex;
+
+    @media (max-width: $SCREEN_SM_MAX) {
+      padding-right: 0;
+    }
+
+    @media (max-width: $SCREEN_XS_MAX) {
+      display: none;
+    }
+  }
+
+  .control {
+    margin-left: 20px;
+
+    @media (max-width: $SCREEN_SM_MAX) {
+      margin-left: 15px;
+    }
+  }
+
+  .separate {
+    background-image: url(common/img/toggle-stacked.svg);
+    background-position-y: center;
+    background-repeat: no-repeat;
+    cursor: pointer;
+
+    input, label {
+      opacity: 0;
+    }
+  }
+  .separate-active {
+    background-image: url(common/img/toggle_separated.svg);
+  }
+
+  .percentage {
+    background-image: url(common/img/toggle-absolute.svg);
+    background-position-y: center;
+    background-repeat: no-repeat;
+    cursor: pointer;
+
+    input, label {
+      opacity: 0;
+    }
+  }
+
+  .percentage-active {
+    background-image: url(common/img/toggle_percentage.svg);
+  }
+}
+
+.legend {
+  height: 22px;
+}

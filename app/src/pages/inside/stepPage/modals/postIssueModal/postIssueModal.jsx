@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { reduxForm } from 'redux-form';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
-import { fetch, updateStorageItem, getStorageItem } from 'common/utils';
+import { fetch, updateSessionItem, getSessionItem } from 'common/utils';
 import { URLS } from 'common/urls';
 import { JIRA, RALLY } from 'common/constants/integrationNames';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
@@ -19,6 +19,7 @@ import {
   normalizeFieldsWithOptions,
   mapFieldsToValues,
 } from 'components/fields/dynamicFieldsSection/utils';
+import { VALUE_ID_KEY, VALUE_NAME_KEY } from 'components/fields/dynamicFieldsSection/constants';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { InputCheckbox } from 'components/inputs/inputCheckbox';
 import { INTEGRATION_NAMES_TITLES } from 'components/integrations';
@@ -143,14 +144,8 @@ export class PostIssueModal extends Component {
       id,
       integrationParameters: { defectFormFields },
     } = props.namedBtsIntegrations[pluginName][0];
-    const systemAuthConfig = {};
-
-    if (this.isJiraIntegration(pluginName)) {
-      const storedConfig = getStorageItem(`${props.userId}_settings`) || {};
-      systemAuthConfig.username = storedConfig.username;
-    }
-
-    const fields = this.initIntegrationFields(defectFormFields, systemAuthConfig);
+    const systemAuthConfig = this.getSystemAuthDefaultConfig(pluginName);
+    const fields = this.initIntegrationFields(defectFormFields, systemAuthConfig, pluginName);
 
     this.state = {
       fields,
@@ -172,7 +167,11 @@ export class PostIssueModal extends Component {
     }
 
     const { id, integrationParameters } = this.props.namedBtsIntegrations[pluginName][0];
-    const fields = this.initIntegrationFields(integrationParameters.defectFormFields);
+    const systemAuthConfig = this.getSystemAuthDefaultConfig(pluginName);
+    const fields = this.initIntegrationFields(
+      integrationParameters.defectFormFields,
+      systemAuthConfig,
+    );
 
     this.setState({
       pluginName,
@@ -201,10 +200,23 @@ export class PostIssueModal extends Component {
     if (!this.props.dirty) {
       return null;
     }
+
     return {
       confirmationWarning: this.props.intl.formatMessage(COMMON_LOCALE_KEYS.CLOSE_MODAL_WARNING),
     };
   };
+
+  getSystemAuthDefaultConfig = (pluginName) => {
+    const systemAuthConfig = {};
+    if (this.isJiraIntegration(pluginName)) {
+      const storedConfig = getSessionItem(`${this.props.userId}_settings`) || {};
+      systemAuthConfig.username = storedConfig.username;
+    }
+    return systemAuthConfig;
+  };
+
+  getDefaultOptionValueKey = (pluginName) =>
+    this.isJiraIntegration(pluginName) ? VALUE_NAME_KEY : VALUE_ID_KEY;
 
   dataFieldsConfig = [
     {
@@ -221,8 +233,9 @@ export class PostIssueModal extends Component {
     },
   ];
 
-  initIntegrationFields = (defectFormFields = [], defaultConfig = {}) => {
-    const fields = normalizeFieldsWithOptions(defectFormFields).map(
+  initIntegrationFields = (defectFormFields = [], defaultConfig = {}, pluginName) => {
+    const defaultOptionValueKey = this.getDefaultOptionValueKey(pluginName);
+    const fields = normalizeFieldsWithOptions(defectFormFields, defaultOptionValueKey).map(
       (item) => (item.fieldType === ISSUE_TYPE_FIELD_KEY ? { ...item, disabled: true } : item),
     );
     validationConfig = createFieldsValidationConfig(fields);
@@ -309,7 +322,7 @@ export class PostIssueModal extends Component {
           const sessionConfig = {
             username: data.username,
           };
-          updateStorageItem(`${userId}_settings`, sessionConfig);
+          updateSessionItem(`${userId}_settings`, sessionConfig);
         }
 
         this.props.showNotification({
@@ -373,7 +386,11 @@ export class PostIssueModal extends Component {
             onChangePluginName={this.onChangePlugin}
           />
           {this.state.fields.length ? (
-            <DynamicFieldsSection withValidation fields={this.state.fields} />
+            <DynamicFieldsSection
+              withValidation
+              fields={this.state.fields}
+              defaultOptionValueKey={this.getDefaultOptionValueKey()}
+            />
           ) : (
             <div className={cx('no-default-properties-message')}>
               {formatMessage(messages.noDefaultPropertiesMessage)}

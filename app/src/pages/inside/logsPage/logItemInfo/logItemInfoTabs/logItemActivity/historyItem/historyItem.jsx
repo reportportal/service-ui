@@ -5,8 +5,8 @@ import Link from 'redux-first-router-link';
 import Parser from 'html-react-parser';
 import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
-import { logActivitySelector } from 'controllers/log/index';
 import { projectIdSelector, filterIdSelector, PROJECT_LOG_PAGE } from 'controllers/pages/index';
+import { patternsSelector } from 'controllers/project';
 import { getTicketUrlId } from 'common/utils/index';
 import RightArrowIcon from 'common/img/arrow-right-small-inline.svg';
 import { normalizeAndParse } from './utils';
@@ -32,8 +32,8 @@ const messages = defineMessages({
 @injectIntl
 @connect((state) => ({
   projectId: projectIdSelector(state),
-  activity: logActivitySelector(state),
   filterId: filterIdSelector(state),
+  patterns: patternsSelector(state),
 }))
 export class HistoryItem extends Component {
   static propTypes = {
@@ -44,8 +44,12 @@ export class HistoryItem extends Component {
       field: PropTypes.string.isRequired,
     }).isRequired,
     projectId: PropTypes.string.isRequired,
-    activity: PropTypes.array.isRequired,
     filterId: PropTypes.string.isRequired,
+    patterns: PropTypes.array,
+  };
+
+  static defaultProps = {
+    patterns: [],
   };
 
   isValueEmpty = (value) => value === '';
@@ -63,6 +67,8 @@ export class HistoryItem extends Component {
         return this.renderTicketValue(value);
       case 'ignoreAnalyzer':
         return this.renderAnalyzerIgnore(value);
+      case 'patternId':
+        return this.renderPatternValue(value);
       default:
         return value;
     }
@@ -122,6 +128,9 @@ export class HistoryItem extends Component {
       value
     );
   };
+
+  renderPatternValue = (value = '') =>
+    (this.props.patterns.find((pattern) => pattern.id.toString() === value) || {}).name || '';
 
   render() {
     const { historyItem } = this.props;
