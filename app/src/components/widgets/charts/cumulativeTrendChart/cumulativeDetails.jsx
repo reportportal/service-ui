@@ -73,7 +73,9 @@ export class CumulativeDetails extends Component {
   };
 
   sortLaunchesByFailedItems = (launches) =>
-    launches.sort((a, b) => b.statistics.executions.failed - a.statistics.executions.failed);
+    launches.sort(
+      (a, b) => (b.statistics.executions.failed || 0) - (a.statistics.executions.failed || 0),
+    );
 
   fetchLaunches = () => {
     this.setState({
