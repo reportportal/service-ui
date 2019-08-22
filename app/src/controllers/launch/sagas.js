@@ -2,7 +2,7 @@ import { takeEvery, all, put, select, call } from 'redux-saga/effects';
 import { URLS } from 'common/urls';
 import { fetch, updateStorageItem, waitForSelector } from 'common/utils';
 import { APPLICATION_SETTINGS } from 'common/constants/localStorageKeys';
-import { debugModeSelector } from 'controllers/launch';
+import { debugModeSelector, localSortingSelector } from 'controllers/launch';
 import { fetchDataAction } from 'controllers/fetch';
 import { activeProjectSelector } from 'controllers/user';
 import { ALL, LATEST } from 'common/constants/reservedFilterIds';
@@ -83,6 +83,12 @@ function* fetchLaunches() {
         ),
       };
     }
+  } else {
+    const { sortingColumn, sortingDirection } = yield select(localSortingSelector);
+    filtersQuery = {
+      ...filtersQuery,
+      [SORTING_KEY]: formatSortingString([sortingColumn, ENTITY_NUMBER], sortingDirection),
+    };
   }
   yield call(fetchLaunchesWithParams, { payload: filtersQuery });
 }
