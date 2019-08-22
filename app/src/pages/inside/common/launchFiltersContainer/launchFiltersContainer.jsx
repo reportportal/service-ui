@@ -13,20 +13,27 @@ import {
   updateFilterOrdersAction,
 } from 'controllers/filter';
 import { filterIdSelector } from 'controllers/pages';
-import { fetchLaunchesWithParamsAction, fetchLaunchesAction } from 'controllers/launch';
+import {
+  fetchLaunchesWithParamsAction,
+  fetchLaunchesAction,
+  localSortingSelector,
+  updateLocalSortingAction,
+  resetLocalSortingAction,
+} from 'controllers/launch';
 import { debounce } from 'common/utils';
 import { hideFilterOnLaunchesAction } from 'controllers/project';
 import { isEmptyValue } from 'common/utils/isEmptyValue';
 import { PAGE_KEY } from 'controllers/pagination';
 import { createFilterQuery } from 'components/filterEntities/containers/utils';
 import { SORTING_ASC, SORTING_DESC, formatSortingString, SORTING_KEY } from 'controllers/sorting';
-import { ENTITY_START_TIME, ENTITY_NUMBER } from 'components/filterEntities/constants';
+import { ENTITY_NUMBER } from 'components/filterEntities/constants';
 
 @connect(
   (state) => ({
     launchFilters: launchFiltersSelector(state),
     activeFilterId: filterIdSelector(state),
     activeFilter: activeFilterSelector(state),
+    localSorting: localSortingSelector(state),
   }),
   {
     changeActiveFilterAction,
@@ -37,6 +44,8 @@ import { ENTITY_START_TIME, ENTITY_NUMBER } from 'components/filterEntities/cons
     removeLaunchesFilterAction,
     createFilter: createFilterAction,
     updateFilterOrders: updateFilterOrdersAction,
+    updateLocalSorting: updateLocalSortingAction,
+    resetLocalSorting: resetLocalSortingAction,
   },
 )
 export class LaunchFiltersContainer extends Component {
@@ -54,6 +63,9 @@ export class LaunchFiltersContainer extends Component {
     createFilter: PropTypes.func,
     onChange: PropTypes.func,
     updateFilterOrders: PropTypes.func,
+    localSorting: PropTypes.object,
+    updateLocalSorting: PropTypes.func,
+    resetLocalSorting: PropTypes.func,
   };
 
   static defaultProps = {
@@ -69,12 +81,14 @@ export class LaunchFiltersContainer extends Component {
     createFilter: () => {},
     onChange: () => {},
     updateFilterOrders: () => {},
+    localSorting: {},
+    updateLocalSorting: () => {},
+    resetLocalSorting: () => {},
   };
 
-  state = {
-    sortingColumn: ENTITY_START_TIME,
-    sortingDirection: SORTING_DESC,
-  };
+  componentWillUnmount() {
+    this.props.resetLocalSorting();
+  }
 
   getConditions = () => {
     const { activeFilter } = this.props;
@@ -97,7 +111,9 @@ export class LaunchFiltersContainer extends Component {
         sortingDirection: isAsc ? SORTING_ASC : SORTING_DESC,
       };
     }
-    const { sortingColumn, sortingDirection } = this.state;
+    const {
+      localSorting: { sortingColumn, sortingDirection },
+    } = this.props;
     return {
       sortingColumn,
       sortingDirection,
@@ -154,7 +170,7 @@ export class LaunchFiltersContainer extends Component {
 
   updateSorting = (sortObject) => {
     const { sortingColumn, sortingDirection } = sortObject;
-    const { activeFilter, updateFilterOrders, activeFilterId } = this.props;
+    const { activeFilter, updateFilterOrders, activeFilterId, updateLocalSorting } = this.props;
     const sortingString = formatSortingString([sortingColumn, ENTITY_NUMBER], sortingDirection);
     if (activeFilter) {
       const { orders } = activeFilter;
@@ -165,10 +181,7 @@ export class LaunchFiltersContainer extends Component {
       const newOrders = [filterSortObject, ...orders.slice(1)];
       updateFilterOrders(activeFilterId, newOrders);
     } else {
-      this.setState((prevState) => ({
-        ...prevState,
-        ...sortObject,
-      }));
+      updateLocalSorting(sortObject);
     }
     this.props.fetchLaunchesWithParamsAction({
       [SORTING_KEY]: sortingString,

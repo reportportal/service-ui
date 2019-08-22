@@ -49,3 +49,5 @@ export const launchesDistinctLinksSelectorsMap = {
   [ALL]: createLaunchesLinkSelector(ALL),
   [LATEST]: createLaunchesLinkSelector(LATEST),
 };
+
+export const localSortingSelector = (state) => domainSelector(state).localSorting;
