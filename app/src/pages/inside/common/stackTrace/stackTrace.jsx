@@ -13,6 +13,7 @@ import {
   fetchLogPageStackTrace,
   isLoadMoreStackTraceVisible,
 } from 'controllers/log';
+import { StackTraceMessageBlock } from 'pages/inside/common/stackTraceMessageBlock';
 import styles from './stackTrace.scss';
 
 const cx = classNames.bind(styles);
@@ -31,6 +32,10 @@ const messages = defineMessages({
     defaultMessage: 'Load more',
   },
 });
+
+const MAX_ROW_HEIGHT = 120;
+const SCROLL_HEIGHT = 300;
+const LOAD_MORE_HEIGHT = 32;
 
 @connect(
   (state) => ({
@@ -52,6 +57,7 @@ export class StackTrace extends Component {
     loadMore: PropTypes.bool,
     logItem: PropTypes.object,
     hideTime: PropTypes.bool,
+    minHeight: PropTypes.number,
   };
 
   static defaultProps = {
@@ -61,6 +67,7 @@ export class StackTrace extends Component {
     loadMore: false,
     logItem: {},
     hideTime: false,
+    minHeight: SCROLL_HEIGHT,
   };
 
   componentDidMount() {
@@ -70,29 +77,42 @@ export class StackTrace extends Component {
     this.fetchItems();
   }
 
+  getScrolledHeight = () =>
+    this.props.loadMore ? this.props.minHeight - LOAD_MORE_HEIGHT : this.props.minHeight;
+
+  getMaxRowHeight = () => {
+    const { items } = this.props;
+    const scrolledHeight = this.getScrolledHeight();
+    if (scrolledHeight && items.length && scrolledHeight > items.length * MAX_ROW_HEIGHT) {
+      return scrolledHeight / items.length;
+    }
+    return MAX_ROW_HEIGHT;
+  };
+
   fetchItems = () => this.props.fetchLogPageStackTrace(this.props.logItem);
 
   isItemsExist = () => {
     const { items } = this.props;
     return items.length;
   };
+
   renderStackTraceMessage = () => {
     const { items, loadMore, loading, intl, hideTime } = this.props;
     return (
       <React.Fragment>
-        <ScrollWrapper autoHeight autoHeightMax={300}>
-          <table>
-            <tbody>
-              {items.map((item) => (
-                <tr key={item.id} className={cx('row')}>
-                  <td className={cx('cell', 'message-cell')}>{item.message}</td>
+        <ScrollWrapper autoHeight autoHeightMax={this.getScrolledHeight()}>
+          {items.map((item) => (
+            <div key={item.id} className={cx('row')}>
+              <StackTraceMessageBlock maxHeight={this.getMaxRowHeight()}>
+                <div className={cx('message-container')}>
+                  <div className={cx('cell', 'message-cell')}>{item.message}</div>
                   {!hideTime && (
-                    <td className={cx('cell', 'time-cell')}>{dateFormat(item.time)}</td>
+                    <div className={cx('cell', 'time-cell')}>{dateFormat(item.time)}</div>
                   )}
-                </tr>
-              ))}
-            </tbody>
-          </table>
+                </div>
+              </StackTraceMessageBlock>
+            </div>
+          ))}
         </ScrollWrapper>
         {loadMore && (
           <div
