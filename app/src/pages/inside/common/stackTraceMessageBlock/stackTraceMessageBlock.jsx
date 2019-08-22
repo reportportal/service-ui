@@ -1,19 +1,22 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import styles from './messageBlock.scss';
+import styles from './stackTraceMessageBlock.scss';
 
 const cx = classNames.bind(styles);
 
-const MAX_HEIGHT = 28;
+const MAX_ROW_HEIGHT = 65;
+const TOGGLER_HEIGHT = 22;
 
-export class MessageBlock extends Component {
+export class StackTraceMessageBlock extends Component {
   static propTypes = {
-    message: PropTypes.string,
+    children: PropTypes.any,
+    maxHeight: PropTypes.number,
   };
 
   static defaultProps = {
-    message: '',
+    children: '',
+    maxHeight: MAX_ROW_HEIGHT,
   };
 
   constructor(props) {
@@ -34,8 +37,10 @@ export class MessageBlock extends Component {
     this.handleAccordion();
   }
 
+  getContentHeight = () => this.props.maxHeight - TOGGLER_HEIGHT;
+
   setupAccordion = () => {
-    this.setState({ withAccordion: true, maxHeight: `${MAX_HEIGHT}px` });
+    this.setState({ withAccordion: true, maxHeight: `${this.getContentHeight()}px` });
   };
 
   removeAccordion = () => {
@@ -47,9 +52,9 @@ export class MessageBlock extends Component {
       return;
     }
 
-    if (this.overflowCell.current.offsetHeight > MAX_HEIGHT) {
+    if (this.overflowCell.current.offsetHeight > this.getContentHeight()) {
       !this.state.withAccordion && this.setupAccordion();
-    } else if (this.overflowCell.current.offsetHeight < MAX_HEIGHT) {
+    } else if (this.overflowCell.current.offsetHeight < this.getContentHeight()) {
       this.state.withAccordion && this.removeAccordion();
     }
   };
@@ -61,12 +66,12 @@ export class MessageBlock extends Component {
 
     this.setState({
       expanded: !this.state.expanded,
-      maxHeight: this.state.expanded ? `${MAX_HEIGHT}px` : null,
+      maxHeight: this.state.expanded ? `${this.getContentHeight()}px` : null,
     });
   };
 
   render() {
-    const { message } = this.props;
+    const { children } = this.props;
     const { expanded, withAccordion, maxHeight } = this.state;
 
     return (
@@ -80,7 +85,7 @@ export class MessageBlock extends Component {
           </div>
         )}
         <div className={cx('row')} ref={this.overflowCell} style={{ maxHeight }}>
-          {message}
+          {children}
         </div>
         {this.state.withAccordion && (
           <div className={cx('accordion-wrapper')}>

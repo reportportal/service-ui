@@ -14,7 +14,7 @@ import InfoIcon from 'common/img/info-inline.svg';
 import { getLogItemLinkSelector } from 'controllers/testItem';
 import { withTooltip } from 'components/main/tooltips/tooltip';
 import { TextTooltip } from 'components/main/tooltips/textTooltip';
-import { MessageBlock } from './messageBlock';
+import { StackTraceMessageBlock } from 'pages/inside/common/stackTraceMessageBlock';
 import styles from './itemsListRow.scss';
 
 const cx = classNames.bind(styles);
@@ -111,7 +111,9 @@ export class ItemsListRow extends React.Component {
               </div>
             </div>
           </div>
-          <MessageBlock message={testItem.logMessages} />
+          <StackTraceMessageBlock>
+            <div className={cx('message')}>{testItem.logMessages}</div>
+          </StackTraceMessageBlock>
         </div>
       </div>
     );

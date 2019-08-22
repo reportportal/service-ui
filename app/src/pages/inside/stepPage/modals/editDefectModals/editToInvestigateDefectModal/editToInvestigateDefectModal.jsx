@@ -57,7 +57,7 @@ export class EditToInvestigateDefectModal extends Component {
     activeProject: PropTypes.string.isRequired,
     btsIntegrations: PropTypes.array.isRequired,
     data: PropTypes.shape({
-      item: PropTypes.array,
+      item: PropTypes.object,
       fetchFunc: PropTypes.func,
     }).isRequired,
     showNotification: PropTypes.func.isRequired,

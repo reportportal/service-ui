@@ -18,6 +18,7 @@ import {
   userAccountRoleSelector,
   userIdSelector,
 } from 'controllers/user';
+import { clearLogPageStackTrace } from 'controllers/log';
 import { MarkdownEditor, MarkdownViewer } from 'components/main/markdown';
 import { getDuration } from 'common/utils/timeDateUtils';
 import { AccordionContainer } from 'components/main/accordionContainer';
@@ -52,6 +53,7 @@ const cx = classNames.bind(styles);
   }),
   {
     showNotification,
+    clearLogPageStackTrace,
   },
 )
 @injectIntl
@@ -72,12 +74,14 @@ export class TestItemDetailsModal extends Component {
     handleSubmit: PropTypes.func.isRequired,
     currentProject: PropTypes.string.isRequired,
     showNotification: PropTypes.func.isRequired,
+    clearLogPageStackTrace: PropTypes.func,
   };
 
   static defaultProps = {
     userId: '',
     userProjectRole: '',
     dirty: false,
+    clearLogPageStackTrace: () => {},
   };
 
   componentDidMount() {
@@ -85,6 +89,7 @@ export class TestItemDetailsModal extends Component {
       description: this.props.data.item.description || '',
       attributes: this.props.data.item.attributes || [],
     });
+    this.props.clearLogPageStackTrace();
   }
 
   getCloseConfirmationConfig = () => {
@@ -226,7 +231,7 @@ export class TestItemDetailsModal extends Component {
     } = this.props;
     return (
       <div className={cx('stack-trace-tab')}>
-        <StackTrace logItem={item} hideTime />
+        <StackTrace logItem={item} hideTime minHeight={548} />
       </div>
     );
   };
