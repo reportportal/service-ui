@@ -2,7 +2,7 @@ import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { connectRouter } from 'common/utils/connectRouter';
-import { getStorageItem, setStorageItem } from 'common/utils/storageUtils';
+import { getStorageItem, updateStorageItem } from 'common/utils/storageUtils';
 import { userIdSelector } from 'controllers/user';
 import { defaultPaginationSelector, totalElementsSelector, totalPagesSelector } from './selectors';
 import { PAGE_KEY, SIZE_KEY } from './constants';
@@ -79,8 +79,11 @@ export const withPagination = ({
 
     changeSizeHandler = (size) => {
       const { userId } = this.props;
-      const userSettings = getStorageItem(`${userId}_settings`) || {};
-      setStorageItem(`${userId}_settings`, { ...userSettings, [this.calculateFieldName()]: size });
+      if (this.props.namespace) {
+        updateStorageItem(`${userId}_settings`, {
+          [this.calculateFieldName()]: size,
+        });
+      }
       this.changePaginationOptions({ size, page: 1 });
     };
 
