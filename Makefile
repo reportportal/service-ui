@@ -51,7 +51,7 @@ build-server: checkstyle test
 build-statics:
 	npm --prefix $(UI_BUILD_REACT) ci
 	npm --prefix $(UI_BUILD_REACT) run lint
-	npm --prefix $(UI_BUILD_REACT) run test
+	npm --prefix $(UI_BUILD_REACT) run test:coverage
 	npm --prefix $(UI_BUILD_REACT) run build
 
 # Builds the project
