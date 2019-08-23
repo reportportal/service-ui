@@ -98,7 +98,7 @@ export class AttributesFieldArray extends Component {
                 parse={this.parseAttributes}
                 format={this.formatAttributes}
                 name={item}
-                validate={isFirstItem ? fieldValidator : undefined}
+                validate={fieldValidator}
               >
                 <FieldErrorHint hintType="top">
                   <InputTagsSearch
