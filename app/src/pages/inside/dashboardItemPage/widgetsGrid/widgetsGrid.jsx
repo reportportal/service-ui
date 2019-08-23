@@ -253,7 +253,7 @@ export class WidgetsGrid extends Component {
       <div
         className={cx('widgets-grid', {
           mobile: this.state.isMobile,
-          'full-screen': this.props.isFullscreen,
+          'full-screen': this.props.isFullscreen || this.props.isPrintMode,
         })}
       >
         {this.renderContent()}
