@@ -174,13 +174,13 @@ export class LogsGridToolbar extends Component {
             <div className={cx('log-level')}>
               <InputSlider options={LOG_LEVELS} value={logLevel} onChange={this.changeLogLevel} />
             </div>
+            <div className={cx('aside-element')}>
+              <InputCheckbox value={withAttachments} onChange={this.toggleWithAttachments}>
+                {intl.formatMessage(messages.withAttachments)}
+              </InputCheckbox>
+            </div>
             {logPageMode === DETAILED_LOG_VIEW && (
               <Fragment>
-                <div className={cx('aside-element')}>
-                  <InputCheckbox value={withAttachments} onChange={this.toggleWithAttachments}>
-                    {intl.formatMessage(messages.withAttachments)}
-                  </InputCheckbox>
-                </div>
                 {isNestedStepsView && (
                   <div className={cx('aside-element')}>
                     <InputCheckbox value={hidePassedLogs} onChange={this.toggleHidePassedLogs}>
