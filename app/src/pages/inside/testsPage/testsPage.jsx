@@ -24,6 +24,7 @@ import {
   fetchTestItemsAction,
   parentItemSelector,
   loadingSelector,
+  testItemParametersSelector,
 } from 'controllers/testItem';
 import { prevTestItemSelector } from 'controllers/pages';
 import { LaunchFiltersSection } from 'pages/inside/common/launchFiltersSection';
@@ -38,6 +39,7 @@ import { ENTITY_START_TIME } from 'components/filterEntities/constants';
     parentItem: parentItemSelector(state),
     loading: loadingSelector(state),
     highlightItemId: prevTestItemSelector(state),
+    testItemParameters: testItemParametersSelector(state),
   }),
   {
     toggleTestSelectionAction,
@@ -91,6 +93,7 @@ export class TestsPage extends Component {
       getTrackingData: PropTypes.func,
     }).isRequired,
     highlightItemId: PropTypes.number,
+    testItemParameters: PropTypes.object,
   };
 
   static defaultProps = {
@@ -121,6 +124,7 @@ export class TestsPage extends Component {
     filterErrors: {},
     filterEntities: [],
     highlightItemId: null,
+    testItemParameters: {},
   };
 
   state = {
@@ -197,6 +201,7 @@ export class TestsPage extends Component {
       onFilterChange,
       filterErrors,
       filterEntities,
+      testItemParameters,
     } = this.props;
 
     const rowHighlightingConfig = {
@@ -216,7 +221,7 @@ export class TestsPage extends Component {
             parentItem={parentItem}
             onUnselect={this.unselectItem}
             onUnselectAll={this.unselectAllItems}
-            onRefresh={this.props.fetchTestItemsAction}
+            onRefresh={() => this.props.fetchTestItemsAction(testItemParameters)}
             debugMode={debugMode}
             errors={this.props.validationErrors}
             onDelete={() => deleteItems(selectedTests)}

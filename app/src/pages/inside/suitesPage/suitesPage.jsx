@@ -25,6 +25,7 @@ import {
   fetchTestItemsAction,
   parentItemSelector,
   loadingSelector,
+  testItemParametersSelector,
 } from 'controllers/testItem';
 import { prevTestItemSelector } from 'controllers/pages';
 import { LaunchFiltersSection } from 'pages/inside/common/launchFiltersSection';
@@ -40,6 +41,7 @@ import { ENTITY_START_TIME } from 'components/filterEntities/constants';
     loading: loadingSelector(state),
     validationErrors: validationErrorsSelector(state),
     highlightItemId: prevTestItemSelector(state),
+    testItemParameters: testItemParametersSelector(state),
   }),
   {
     toggleSuiteSelectionAction,
@@ -88,6 +90,7 @@ export class SuitesPage extends Component {
     onFilterChange: PropTypes.func,
     filterErrors: PropTypes.object,
     filterEntities: PropTypes.array,
+    testItemParameters: PropTypes.object,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
@@ -123,6 +126,7 @@ export class SuitesPage extends Component {
     onFilterChange: () => {},
     filterErrors: {},
     filterEntities: [],
+    testItemParameters: {},
     highlightItemId: null,
   };
 
@@ -201,6 +205,7 @@ export class SuitesPage extends Component {
       onFilterChange,
       filterErrors,
       filterEntities,
+      testItemParameters,
     } = this.props;
 
     const rowHighlightingConfig = {
@@ -223,7 +228,7 @@ export class SuitesPage extends Component {
             onUnselect={this.unselectItem}
             onUnselectAll={this.unselectAllItems}
             parentItem={parentItem}
-            onRefresh={this.props.fetchTestItemsAction}
+            onRefresh={() => this.props.fetchTestItemsAction(testItemParameters)}
             debugMode={debugMode}
             events={SUITES_PAGE_EVENTS}
             filterErrors={filterErrors}

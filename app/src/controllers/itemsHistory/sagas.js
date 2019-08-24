@@ -3,7 +3,11 @@ import { fetchDataAction } from 'controllers/fetch';
 import { URLS } from 'common/urls';
 import { getStorageItem } from 'common/utils';
 import { activeProjectSelector } from 'controllers/user';
-import { fetchTestItemsAction, SET_PAGE_LOADING } from 'controllers/testItem';
+import {
+  fetchTestItemsAction,
+  testItemParametersSelector,
+  SET_PAGE_LOADING,
+} from 'controllers/testItem';
 import {
   fetchItemsHistoryAction,
   setItemsHistory,
@@ -58,8 +62,9 @@ function* getHistory({ payload }) {
 }
 
 function* getHistoryPageInfo() {
+  const testItemParameters = yield select(testItemParametersSelector);
   yield put(resetHistory());
-  yield put(fetchTestItemsAction());
+  yield put(fetchTestItemsAction(testItemParameters));
   yield take((action) => action.type === SET_PAGE_LOADING && action.payload === false);
   const historyItems = yield select(historyItemsSelector);
   yield put(setItemsHistory(historyItems));

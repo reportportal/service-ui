@@ -27,10 +27,15 @@ import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
 import isEqual from 'fast-deep-equal';
 import ReactDOMServer from 'react-dom/server';
-import { statisticsLinkSelector } from 'controllers/testItem';
+import {
+  defectLinkSelector,
+  statisticsLinkSelector,
+  TEST_ITEMS_TYPE_LIST,
+} from 'controllers/testItem';
 import { activeProjectSelector } from 'controllers/user';
 import { launchFiltersSelector } from 'controllers/filter';
-import { TEST_ITEM_PAGE, PROJECT_LAUNCHES_PAGE } from 'controllers/pages';
+import { defectTypesSelector } from 'controllers/project';
+import { TEST_ITEM_PAGE } from 'controllers/pages';
 import { ALL } from 'common/constants/reservedFilterIds';
 import { TooltipWrapper } from '../common/tooltip';
 import { C3Chart } from '../common/c3chart';
@@ -48,6 +53,8 @@ const getResult = (widget) => widget.content.result[0] || widget.content.result;
 @connect(
   (state) => ({
     project: activeProjectSelector(state),
+    defectTypes: defectTypesSelector(state),
+    getDefectLink: defectLinkSelector(state),
     getStatisticsLink: statisticsLinkSelector(state),
     launchFilters: launchFiltersSelector(state),
   }),
@@ -60,6 +67,8 @@ export class LaunchExecutionChart extends Component {
     intl: intlShape.isRequired,
     widget: PropTypes.object.isRequired,
     isPreview: PropTypes.bool.isRequired,
+    defectTypes: PropTypes.object.isRequired,
+    getDefectLink: PropTypes.func.isRequired,
     getStatisticsLink: PropTypes.func.isRequired,
     navigate: PropTypes.func.isRequired,
     project: PropTypes.string.isRequired,
@@ -165,26 +174,31 @@ export class LaunchExecutionChart extends Component {
     const nameConfig = getItemNameConfig(d.id);
     const id = getResult(widget).id;
     let navigationParams;
+    let link;
 
     if (!id) {
       const appliedWidgetFilterId = widget.appliedFilters[0].id;
+      const launchesLimit = widget.contentParameters.itemsCount;
       const activeFilter = launchFilters.filter((filter) => filter.id === appliedWidgetFilterId)[0];
-      const activeFilterId = activeFilter && activeFilter.id;
+      const activeFilterId = (activeFilter && activeFilter.id) || appliedWidgetFilterId;
+
+      link = getStatisticsLink({ statuses: [nameConfig.defectType.toUpperCase()], launchesLimit });
       navigationParams = this.getDefaultParamsOverallStatisticsWidget(activeFilterId);
     } else {
-      const link = getStatisticsLink({ statuses: [nameConfig.defectType.toUpperCase()] });
-      navigationParams = Object.assign(link, this.getDefaultParamsLaunchExecutionWidget(id));
+      link = getStatisticsLink({ statuses: [nameConfig.defectType.toUpperCase()] });
+      navigationParams = this.getDefaultParamsLaunchExecutionWidget(id);
     }
 
-    this.props.navigate(navigationParams);
+    this.props.navigate(Object.assign(link, navigationParams));
   };
 
   getDefaultParamsOverallStatisticsWidget = (activeFilterId) => ({
     payload: {
       projectId: this.props.project,
-      filterId: activeFilterId || ALL,
+      filterId: activeFilterId,
+      testItemIds: TEST_ITEMS_TYPE_LIST,
     },
-    type: PROJECT_LAUNCHES_PAGE,
+    type: TEST_ITEM_PAGE,
   });
 
   getDefaultParamsLaunchExecutionWidget = (id) => ({
