@@ -269,9 +269,15 @@ export default {
   },
   PROJECT_USERDEBUG_TEST_ITEM_PAGE: {
     path: '/:projectId/userdebug/:filterId/:testItemIds+',
-    thunk: (dispatch) => {
+    thunk: (dispatch, getState) => {
+      const {
+        location: {
+          payload: { filterId, testItemIds },
+        },
+      } = getState();
+
       dispatch(setDebugMode(true));
-      dispatch(fetchTestItemsAction());
+      dispatch(fetchTestItemsAction({ filterId, testItemIds }));
     },
   },
   PROJECT_MEMBERS_PAGE: {
@@ -286,9 +292,15 @@ export default {
   PROJECT_SANDBOX_PAGE: '/:projectId/sandbox',
   [TEST_ITEM_PAGE]: {
     path: '/:projectId/launches/:filterId/:testItemIds+',
-    thunk: (dispatch) => {
+    thunk: (dispatch, getState) => {
+      const {
+        location: {
+          payload: { filterId, testItemIds },
+        },
+      } = getState();
+
       dispatch(setDebugMode(false));
-      dispatch(fetchTestItemsAction());
+      dispatch(fetchTestItemsAction({ filterId, testItemIds }));
     },
   },
 };

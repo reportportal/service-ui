@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import className from 'classnames/bind';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { activeProjectSelector } from 'controllers/user';
-import { fetchTestItemsAction } from 'controllers/testItem';
+import { fetchTestItemsAction, testItemParametersSelector } from 'controllers/testItem';
 import { NOTIFICATION_TYPES, showNotification } from 'controllers/notification';
 import { fetch } from 'common/utils/fetch';
 import { URLS } from 'common/urls';
@@ -30,6 +30,7 @@ const messages = defineMessages({
 @connect(
   (state) => ({
     currentProject: activeProjectSelector(state),
+    testItemParameters: testItemParametersSelector(state),
   }),
   {
     fetchFunc: fetchTestItemsAction,
@@ -47,6 +48,7 @@ export class StatusDropdown extends Component {
     description: PropTypes.string,
     fetchFunc: PropTypes.func,
     showMessage: PropTypes.func,
+    testItemParameters: PropTypes.object,
   };
 
   static defaultProps = {
@@ -54,6 +56,7 @@ export class StatusDropdown extends Component {
     description: '',
     fetchFunc: () => {},
     showMessage: () => {},
+    testItemParameters: {},
   };
 
   updateItem = (newStatus) => {
@@ -66,6 +69,7 @@ export class StatusDropdown extends Component {
       description,
       fetchFunc,
       showMessage,
+      testItemParameters,
     } = this.props;
     const newAttribute = { key: ATTRIBUTE_KEY_MANUALLY, value: newStatus.toLowerCase() };
     const newAttributes = attributes
@@ -85,7 +89,7 @@ export class StatusDropdown extends Component {
           message: formatMessage(messages.itemUpdateSuccess),
           type: NOTIFICATION_TYPES.SUCCESS,
         });
-        fetchFunc();
+        fetchFunc(testItemParameters);
       })
       .catch(() => {
         showMessage({

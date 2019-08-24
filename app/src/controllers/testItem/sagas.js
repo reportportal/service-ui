@@ -5,6 +5,8 @@ import {
   bulkFetchDataAction,
   createFetchPredicate,
 } from 'controllers/fetch';
+import { updateFilterAction, activeFilterSelector } from 'controllers/filter';
+import { activeProjectSelector } from 'controllers/user';
 import { put, select, all, takeEvery, take, call } from 'redux-saga/effects';
 import {
   testItemIdsArraySelector,
@@ -19,8 +21,8 @@ import {
 } from 'controllers/pages';
 import { PAGE_KEY } from 'controllers/pagination';
 import { URLS } from 'common/urls';
+import { fetch } from 'common/utils';
 import { createNamespacedQuery, mergeNamespacedQuery } from 'common/utils/routingUtils';
-import { activeProjectSelector } from 'controllers/user';
 import { LEVEL_NOT_FOUND } from 'common/constants/launchLevels';
 import { setLevelAction, setPageLoadingAction } from './actionCreators';
 import {
@@ -29,6 +31,7 @@ import {
   PARENT_ITEMS_NAMESPACE,
   RESTORE_PATH,
   FETCH_TEST_ITEMS_LOG_PAGE,
+  TEST_ITEMS_TYPE_LIST,
 } from './constants';
 import { LEVELS } from './levels';
 import {
@@ -76,11 +79,14 @@ export function* fetchParentItems() {
 }
 
 function* fetchTestItems({ payload = {} }) {
-  const { offset = 0 } = payload;
+  const { offset = 0, testItemIds, filterId } = payload;
   const isPathNameChanged = yield select(pathnameChangedSelector);
   if (isPathNameChanged && !payload.offset) {
     yield put(setPageLoadingAction(true));
-    yield call(fetchParentItems);
+
+    if (testItemIds !== TEST_ITEMS_TYPE_LIST) {
+      yield call(fetchParentItems);
+    }
   }
   const itemIdsArray = yield select(testItemIdsArraySelector);
   const itemIds = offset ? itemIdsArray.slice(0, itemIdsArray.length - offset) : itemIdsArray;
@@ -102,20 +108,36 @@ function* fetchTestItems({ payload = {} }) {
   const namespace = yield select(namespaceSelector, offset);
   const query = yield select(queryParametersSelector, namespace);
   const pageQuery = yield select(pagePropertiesSelector);
+  const activeFilter = yield select(activeFilterSelector);
   const uniqueIdFilterKey = 'filter.eq.uniqueId';
   const noChildFilter = 'filter.eq.hasChildren' in query;
   const underPathItemsIds = itemIds.filter((item) => item !== launchId);
+  const params =
+    testItemIds === TEST_ITEMS_TYPE_LIST
+      ? {
+          filterId,
+          ...query,
+        }
+      : {
+          'filter.eq.launchId': launchId,
+          'filter.eq.parentId': !noChildFilter ? parentId : undefined,
+          'filter.level.path': !parentId && !noChildFilter ? 1 : undefined,
+          'filter.under.path':
+            noChildFilter && underPathItemsIds.length > 0 ? underPathItemsIds.join('.') : undefined,
+          [uniqueIdFilterKey]: pageQuery[uniqueIdFilterKey],
+          ...query,
+        };
+
+  if (testItemIds === TEST_ITEMS_TYPE_LIST && !activeFilter) {
+    const filter = yield fetch(URLS.filter(project, filterId), { method: 'get' });
+
+    if (filter) {
+      yield put(updateFilterAction(filter));
+    }
+  }
   yield put(
     fetchDataAction(NAMESPACE)(URLS.testItems(project), {
-      params: {
-        'filter.eq.launchId': launchId,
-        'filter.eq.parentId': !noChildFilter ? parentId : undefined,
-        'filter.level.path': !parentId && !noChildFilter ? 1 : undefined,
-        'filter.under.path':
-          noChildFilter && underPathItemsIds.length > 0 ? underPathItemsIds.join('.') : undefined,
-        [uniqueIdFilterKey]: pageQuery[uniqueIdFilterKey],
-        ...query,
-      },
+      params,
     }),
   );
   const dataPayload = yield take(createFetchPredicate(NAMESPACE));

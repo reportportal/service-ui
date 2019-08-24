@@ -27,6 +27,7 @@
 .passed,
 .total,
 .parent-holder,
+.filter-holder,
 .icon-holder {
   display: inline-block;
   font-family: $FONT-REGULAR;
@@ -39,6 +40,13 @@
 .icon-holder {
   margin-right: 10px;
   color: $COLOR--gray-60;
+}
+.filter-holder {
+  margin-left: 30px;
+  margin-right: 50px;
+  color: $COLOR--gray-60;
+  font-family: $FONT-SEMIBOLD;
+  text-transform: uppercase;
 }
 .passed,
 .total {

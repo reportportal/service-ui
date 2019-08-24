@@ -29,7 +29,7 @@ import { suitesSelector, suitePaginationSelector } from 'controllers/suite';
 import { testsSelector, testPaginationSelector } from 'controllers/test';
 import { stepsSelector, stepPaginationSelector } from 'controllers/step';
 import { defectTypesSelector } from 'controllers/project';
-import { DEFAULT_SORTING } from './constants';
+import { DEFAULT_SORTING, TEST_ITEMS_TYPE_LIST } from './constants';
 import {
   createLink,
   getQueryNamespace,
@@ -49,6 +49,7 @@ export const queryParametersSelector = createQueryParametersSelector({
   defaultSorting: DEFAULT_SORTING,
 });
 export const parentItemsSelector = (state) => domainSelector(state).parentItems || [];
+export const testItemParametersSelector = (state) => domainSelector(state).parameters || {};
 export const createParentItemsSelector = (offset = 0) =>
   createSelector(parentItemsSelector, defectTypesSelector, (parentItems, defectTypes) =>
     normalizeTestItem(parentItems[parentItems.length - 1 - offset], defectTypes),
@@ -111,7 +112,17 @@ export const breadcrumbsSelector = createSelector(
   pagePropertiesSelector,
   debugModeSelector,
   filterIdSelector,
-  (projectId, filter, parentItems, testItemIds, query, debugMode, filterCategory) => {
+  testItemParametersSelector,
+  (
+    projectId,
+    filter,
+    parentItems,
+    testItemIds,
+    query,
+    debugMode,
+    filterCategory,
+    testItemParameters,
+  ) => {
     const queryNamespacesToCopy = [LAUNCH_NAMESPACE];
     let isListViewExist = false;
     const filterId = (filter && filter.id) || filterCategory;
@@ -119,7 +130,7 @@ export const breadcrumbsSelector = createSelector(
     const descriptors = [
       {
         id: filterId,
-        title: filterName,
+        title: `${filterName}`,
         link: {
           type: debugMode ? PROJECT_USERDEBUG_PAGE : PROJECT_LAUNCHES_PAGE,
           payload: {
@@ -135,6 +146,29 @@ export const breadcrumbsSelector = createSelector(
     ];
     if (!testItemIds || testItemIds.length === 0) {
       return descriptors;
+    }
+
+    if (testItemParameters.testItemIds === TEST_ITEMS_TYPE_LIST) {
+      return [
+        ...descriptors,
+        {
+          id: `listView${filterId}`,
+          title: `${filterName}`,
+          link: {
+            type: debugMode ? PROJECT_USERDEBUG_TEST_ITEM_PAGE : TEST_ITEM_PAGE,
+            payload: {
+              projectId,
+              filterId,
+              testItemIds: TEST_ITEMS_TYPE_LIST,
+            },
+            meta: {
+              query: copyQuery(query, queryNamespacesToCopy),
+            },
+          },
+          active: true,
+          listView: true,
+        },
+      ];
     }
     return [
       ...descriptors,
@@ -207,6 +241,7 @@ export const statisticsLinkSelector = createSelector(
   testItemIdsArraySelector,
   (query, payload, testItemIds, isDebugMode, testItemIdsArray) => (ownProps) => {
     const linkPayload = (ownProps.ownLinkParams && ownProps.ownLinkParams.payload) || payload;
+    const launchesLimit = ownProps.launchesLimit;
     const page =
       (ownProps.ownLinkParams && ownProps.ownLinkParams.page) || getNextPage(isDebugMode, true);
     return createLink(
@@ -221,6 +256,7 @@ export const statisticsLinkSelector = createSelector(
             'filter.eq.hasChildren': false,
             'filter.in.type': LEVEL_STEP,
             'filter.in.status': ownProps.statuses && ownProps.statuses.join(','),
+            launchesLimit,
           },
           getQueryNamespace(testItemIdsArray ? testItemIdsArray.length : 0),
         ),
@@ -238,6 +274,7 @@ export const defectLinkSelector = createSelector(
   testItemIdsArraySelector,
   (query, payload, testItemIds, isDebugMode, testItemIdsArray) => (ownProps) => {
     const linkPayload = (ownProps.ownLinkParams && ownProps.ownLinkParams.payload) || payload;
+    const launchesLimit = ownProps.launchesLimit;
     let levelIndex = 0;
     if (testItemIdsArray.length >= 0) {
       levelIndex = !ownProps.itemId ? testItemIdsArray.length - 1 : testItemIdsArray.length;
@@ -261,6 +298,7 @@ export const defectLinkSelector = createSelector(
             'filter.eq.hasStats': true,
             'filter.eq.hasChildren': false,
             'filter.in.issueType': getDefectsString(ownProps.defects),
+            launchesLimit,
           },
           getQueryNamespace(levelIndex),
         ),
