@@ -72,11 +72,12 @@ import { startSetViewMode } from 'controllers/administrate/projects/actionCreato
 import { SIZE_KEY } from 'controllers/pagination';
 import { pageRendering, ANONYMOUS_ACCESS, ADMIN_ACCESS } from './constants';
 
-const redirectRoute = (path, createNewAction) => ({
+const redirectRoute = (path, createNewAction, onRedirect = () => {}) => ({
   path,
   thunk: (dispatch, getState) => {
     const { location } = getState();
     const newAction = createNewAction(location.payload, getState);
+    onRedirect(dispatch);
     dispatch(redirect(newAction));
   },
 });
@@ -216,16 +217,21 @@ export default {
       }
     },
   },
-  [LAUNCHES_PAGE]: redirectRoute('/:projectId/launches', (payload, getState) => ({
-    type: PROJECT_LAUNCHES_PAGE,
-    payload: { ...payload, filterId: launchDistinctSelector(getState()) },
-  })),
+  [LAUNCHES_PAGE]: redirectRoute(
+    '/:projectId/launches',
+    (payload, getState) => ({
+      type: PROJECT_LAUNCHES_PAGE,
+      payload: { ...payload, filterId: launchDistinctSelector(getState()) },
+    }),
+    (dispatch) => {
+      dispatch(unselectAllLaunchesAction());
+    },
+  ),
   [PROJECT_LAUNCHES_PAGE]: {
     path: '/:projectId/launches/:filterId',
     thunk: (dispatch) => {
       dispatch(setDebugMode(false));
       dispatch(setLevelAction(''));
-      dispatch(unselectAllLaunchesAction());
       dispatch(fetchLaunchesAction());
     },
   },
