@@ -1,7 +1,0 @@
-package: github.com/reportportal/service-ui
-import:
-- package: github.com/gorilla/handlers
-  version: ^1.2.1
-- package: gopkg.in/reportportal/commons-go.v5
-  version: ^5.0.0
-- package: github.com/unrolled/secure
