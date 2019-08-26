@@ -13,16 +13,12 @@ import { ALL } from 'common/constants/reservedFilterIds';
 import { activeProjectSelector } from 'controllers/user';
 import { Grid } from 'components/main/grid';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
+import { STATS_SI, STATS_PB, STATS_TI, STATS_ND, STATS_AB } from '../components/constants';
 import {
   NAME,
   FILTER_NAME,
   START_TIME,
   STATUS,
-  STATS_PB,
-  STATS_AB,
-  STATS_SI,
-  STATS_ND,
-  STATS_TI,
   PASSING_RATE,
   NAME_COLUMN_KEY,
   ATTRIBUTE_COLUMN_KEY,

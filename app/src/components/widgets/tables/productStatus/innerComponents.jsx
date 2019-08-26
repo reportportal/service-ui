@@ -11,15 +11,9 @@ import { StatisticsLink } from 'pages/inside/common/statisticsLink';
 import { DefectLink } from 'pages/inside/common/defectLink';
 import { formatStatus } from 'common/utils/localizationUtils';
 import { getStatisticsStatuses } from '../components/utils';
+import { defaultDefectsMessages, defaultStatisticsMessages } from '../components/messages';
 import { FILTER_TITLE_TYPE, FILTER_TYPE, TOTAL_TYPE } from './constants';
-import {
-  defaultStatusesMessages,
-  defaultStatisticsMessages,
-  passingRateMessage,
-  hintMessages,
-  totalMessage,
-  filterMessage,
-} from './messages';
+import { passingRateMessage, hintMessages, totalMessage, filterMessage } from './messages';
 
 import styles from './innerComponents.scss';
 
@@ -219,7 +213,7 @@ export const DefectsColumn = ({ className, value }, name, { linkPayload, onFilte
         <div className={cx('mobile-block', `defect-${defectType}`)}>
           <div className={cx('block-content')}>
             <span>{itemValue}</span>
-            <span className={cx('message')}>{defaultStatusesMessages[name]}</span>
+            <span className={cx('message')}>{defaultDefectsMessages[name]}</span>
           </div>
         </div>
       </div>
@@ -247,7 +241,7 @@ export const DefectsColumn = ({ className, value }, name, { linkPayload, onFilte
           <DefectLink {...defaultColumnProps} defects={[defectLocator, 'total']}>
             {itemValue}
           </DefectLink>
-          <span className={cx('message')}>{defaultStatusesMessages[name]}</span>
+          <span className={cx('message')}>{defaultDefectsMessages[name]}</span>
         </div>
       </div>
     </div>

@@ -29,12 +29,10 @@ import { StatisticsLink } from 'pages/inside/common/statisticsLink';
 import { DefectLink } from 'pages/inside/common/defectLink';
 import { formatStatus } from 'common/utils/localizationUtils';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
+import { defaultDefectsMessages, defaultStatisticsMessages } from '../components/messages';
+import { STATS_SI, STATS_PB, STATS_TI, STATS_AB } from '../components/constants';
 import { getStatisticsStatuses } from '../components/utils';
 import {
-  STATS_SI,
-  STATS_AB,
-  STATS_PB,
-  STATS_TI,
   START_TIME,
   NAME,
   END_TIME,
@@ -45,12 +43,7 @@ import {
   STATUS_COLUMN_KEY,
   NAME_COLUMN_KEY,
 } from './constants';
-import {
-  COLUMN_NAMES_MAP,
-  defaultStatusesMessages,
-  defaultStatisticsMessages,
-  hintMessages,
-} from './messages';
+import { COLUMN_NAMES_MAP, hintMessages } from './messages';
 import styles from './launchesTable.scss';
 
 const cx = classNames.bind(styles);
@@ -171,7 +164,7 @@ const DefectsColumn = ({ className, value }, name, { linkPayload }) => {
           <DefectLink {...defaultColumnProps} defects={[defectLocator, 'total']}>
             {itemValue}
           </DefectLink>
-          <span className={cx('message')}>{defaultStatusesMessages[name]}</span>
+          <span className={cx('message')}>{defaultDefectsMessages[name]}</span>
         </div>
       </div>
     </div>
