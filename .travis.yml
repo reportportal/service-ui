@@ -28,7 +28,7 @@ before_script:
   - sh -e /etc/init.d/xvfb start
   - GO111MODULE=on go get github.com/golangci/golangci-lint/cmd/golangci-lint@v1.17.1
 
-script: go mod tidy && make build
+script: GO111MODULE=on make build
 
 notifications:
   slack: reportportal-dev:fl6xWHVQp1jvsMmCJxYW9YKP
