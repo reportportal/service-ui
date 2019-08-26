@@ -6,16 +6,19 @@ import {
   STATS_FAILED,
   STATS_SKIPPED,
 } from 'common/constants/statistics';
+import { STATS_SI, STATS_AB, STATS_TI, STATS_PB } from '../components/constants';
 import {
-  END_TIME,
-  NAME,
-  START_TIME,
-  STATS_AB,
-  STATS_PB,
-  STATS_SI,
-  STATS_TI,
-  STATUS,
-} from './constants';
+  defaultDefectsMessages,
+  totalColumnFullTitle,
+  skippedColumnShortTitle,
+  skippedColumnFullTitle,
+  passedColumnShortTitle,
+  passedColumnFullTitle,
+  failedColumnShortTitle,
+  failedColumnFullTitle,
+  totalColumnShortTitle,
+} from '../components/messages';
+import { END_TIME, NAME, START_TIME, STATUS } from './constants';
 
 const nameColumnTitle = (
   <FormattedMessage id={'LaunchesTable.nameColumn'} defaultMessage={'Name'} />
@@ -35,30 +38,6 @@ const endTimeColumnFullTitle = (
 const endTimeColumnShortTitle = (
   <FormattedMessage id={'LaunchesTable.endTimeColumnShort'} defaultMessage={'Finish'} />
 );
-const totalColumnFullTitle = (
-  <FormattedMessage id={'LaunchesTable.totalColumnFull'} defaultMessage={'Total'} />
-);
-const totalColumnShortTitle = (
-  <FormattedMessage id={'LaunchesTable.totalColumnShort'} defaultMessage={'Ttl'} />
-);
-const passedColumnFullTitle = (
-  <FormattedMessage id={'LaunchesTable.passedColumnFull'} defaultMessage={'Passed'} />
-);
-const passedColumnShortTitle = (
-  <FormattedMessage id={'LaunchesTable.passedColumnShort'} defaultMessage={'ps'} />
-);
-const failedColumnFullTitle = (
-  <FormattedMessage id={'LaunchesTable.failedColumnFull'} defaultMessage={'Failed'} />
-);
-const failedColumnShortTitle = (
-  <FormattedMessage id={'LaunchesTable.failedColumnShort'} defaultMessage={'fl'} />
-);
-const skippedColumnFullTitle = (
-  <FormattedMessage id={'LaunchesTable.skippedColumnFull'} defaultMessage={'Skipped'} />
-);
-const skippedColumnShortTitle = (
-  <FormattedMessage id={'LaunchesTable.skippedColumnShort'} defaultMessage={'skp'} />
-);
 
 export const hintMessages = defineMessages({
   statusHint: {
@@ -74,20 +53,6 @@ export const hintMessages = defineMessages({
     defaultMessage: 'Finish time:',
   },
 });
-
-export const defaultStatusesMessages = {
-  [STATS_TI]: 'To investigate',
-  [STATS_PB]: 'Product bug',
-  [STATS_AB]: 'Automation bug',
-  [STATS_SI]: 'System issue',
-};
-
-export const defaultStatisticsMessages = {
-  [STATS_TOTAL]: totalColumnFullTitle,
-  [STATS_PASSED]: passedColumnFullTitle,
-  [STATS_FAILED]: failedColumnFullTitle,
-  [STATS_SKIPPED]: skippedColumnFullTitle,
-};
 
 export const COLUMN_NAMES_MAP = {
   [NAME]: {
@@ -123,19 +88,16 @@ export const COLUMN_NAMES_MAP = {
     short: skippedColumnShortTitle,
   },
   [STATS_TI]: {
-    full: defaultStatusesMessages[STATS_TI],
+    full: defaultDefectsMessages[STATS_TI],
     short: 'to invest',
   },
   [STATS_AB]: {
     full: 'Auto bug',
-    short: 'Auto bug',
   },
   [STATS_PB]: {
-    full: defaultStatusesMessages[STATS_PB],
-    short: defaultStatusesMessages[STATS_PB],
+    full: defaultDefectsMessages[STATS_PB],
   },
   [STATS_SI]: {
-    full: defaultStatusesMessages[STATS_SI],
-    short: defaultStatusesMessages[STATS_SI],
+    full: defaultDefectsMessages[STATS_SI],
   },
 };
