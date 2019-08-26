@@ -61,12 +61,12 @@ func main() {
 				"*.uservoice.com",
 				"*.rawgit.com",
 			},
-			"worker-src": {"'self'", "blob:"},
-            "font-src": {"'self'", "data:", "fonts.googleapis.com", "fonts.gstatic.com", "*.rawgit.com"},
-            "style-src-elem": {"'self'", "data:", "'unsafe-inline'", "*.googleapis.com", "*.rawgit.com"},
-            "media-src": {"'self'", "*.saucelabs.com"},
-			"img-src": {"*", "'self'", "data:", "blob:"},
-			"object-src": {"'self'"},
+			"worker-src":     {"'self'", "blob:"},
+			"font-src":       {"'self'", "data:", "fonts.googleapis.com", "fonts.gstatic.com", "*.rawgit.com"},
+			"style-src-elem": {"'self'", "data:", "'unsafe-inline'", "*.googleapis.com", "*.rawgit.com"},
+			"media-src":      {"'self'", "*.saucelabs.com"},
+			"img-src":        {"*", "'self'", "data:", "blob:"},
+			"object-src":     {"'self'"},
 		}
 
 		//apply content security policies
