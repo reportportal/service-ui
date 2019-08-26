@@ -56,7 +56,7 @@ export class HistoryLine extends Component {
               onClick={() =>
                 this.checkIfTheItemLinkIsActive(item) ? this.props.changeActiveItem(item.id) : {}
               }
-              pathNames={item.path_names}
+              path={item.path}
               projectId={this.props.projectId}
               {...item}
             />

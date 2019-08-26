@@ -24,7 +24,7 @@ export class HistoryLineItem extends Component {
   static propTypes = {
     projectId: PropTypes.string.isRequired,
     launchNumber: PropTypes.string.isRequired,
-    pathNames: PropTypes.object,
+    path: PropTypes.string,
     launchId: PropTypes.number,
     id: PropTypes.number,
     status: PropTypes.string,
@@ -41,7 +41,7 @@ export class HistoryLineItem extends Component {
   };
 
   static defaultProps = {
-    pathNames: {},
+    path: '',
     launchId: 0,
     id: 0,
     status: '',
@@ -59,15 +59,15 @@ export class HistoryLineItem extends Component {
   };
 
   createHistoryLineItemLink = () => {
-    const { id, pagePayload, pathNames, launchId, debugMode } = this.props;
+    const { pagePayload, path, launchId, debugMode } = this.props;
 
-    const parentIds = Object.keys(pathNames);
+    const parentIds = path.split('.');
 
     return {
       type: debugMode ? PROJECT_USERDEBUG_LOG_PAGE : PROJECT_LOG_PAGE,
       payload: {
         ...pagePayload,
-        testItemIds: [launchId, ...parentIds, id].join('/'),
+        testItemIds: [launchId, ...parentIds].join('/'),
       },
     };
   };
