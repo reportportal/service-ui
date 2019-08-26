@@ -14,7 +14,7 @@ import { BigButton } from 'components/buttons/bigButton';
 import ArrowRightIcon from 'common/img/arrow-right-inline.svg';
 import {
   analyticsEnabledSelector,
-  fetchApiInfoAction,
+  fetchAppInfoAction,
   ANALYTICS_ALL_KEY,
 } from 'controllers/appInfo';
 import styles from './statisticsTab.scss';
@@ -60,7 +60,7 @@ const messages = defineMessages({
   }),
   {
     showNotification,
-    fetchInfo: fetchApiInfoAction,
+    fetchInfo: fetchAppInfoAction,
   },
 )
 @injectIntl

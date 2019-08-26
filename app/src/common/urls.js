@@ -215,8 +215,7 @@ export const URLS = {
       ...createFilterQuery(filterEntities),
     })}`,
 
-  apiInfo: () => `${urlBase}info`,
-  compositeInfo: () => `${compositeBase}info`,
+  appInfo: () => `${compositeBase}info`,
 
   plugin: () => `${urlBase}plugin`,
   pluginUpdate: (pluginId) => `${urlBase}plugin/${pluginId}`,

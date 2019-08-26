@@ -1,10 +1,8 @@
 import { fetchDataAction } from 'controllers/fetch';
 import { URLS } from 'common/urls';
-import { API_INFO_NAMESPACE, COMPOSITE_INFO_NAMESPACE } from './constants';
+import { APP_INFO_NAMESPACE } from './constants';
 
-export const fetchApiInfoAction = () => fetchDataAction(API_INFO_NAMESPACE, true)(URLS.apiInfo());
-
-export const fetchCompositeInfoAction = () =>
-  fetchDataAction(COMPOSITE_INFO_NAMESPACE, true)(URLS.compositeInfo(), {
+export const fetchAppInfoAction = () =>
+  fetchDataAction(APP_INFO_NAMESPACE, true)(URLS.appInfo(), {
     headers: { Authorization: undefined },
   });

@@ -26,7 +26,7 @@ import { connect } from 'react-redux';
 import { reduxForm } from 'redux-form';
 import { FormattedMessage, injectIntl, intlShape, defineMessages } from 'react-intl';
 import Link from 'redux-first-router-link';
-import { validate } from 'common/utils';
+import { validate, isEmptyObject } from 'common/utils';
 import { authExtensionsSelector } from 'controllers/appInfo';
 import { loginAction, lastFailedLoginTimeSelector } from 'controllers/auth';
 import { LOGIN_PAGE } from 'controllers/pages';
@@ -164,7 +164,7 @@ export class LoginForm extends React.Component {
 
     return (
       <form className={cx('login-form')} onSubmit={handleSubmit(authorize)}>
-        {!Utils.isEmptyObject(externalAuth) ? (
+        {!isEmptyObject(externalAuth) ? (
           <div>
             <ExternalLoginBlock externalAuth={externalAuth} />
             <div className={cx('separator')}>
