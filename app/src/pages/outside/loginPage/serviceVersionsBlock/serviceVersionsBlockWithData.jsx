@@ -3,19 +3,19 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import fetchJsonp from 'fetch-jsonp';
 import semverDiff from 'semver-diff';
-import { compositeInfoSelector } from 'controllers/appInfo';
+import { appInfoSelector } from 'controllers/appInfo';
 import { ServiceVersionsBlock } from './serviceVersionsBlock';
 
 @connect((state) => ({
-  compositeInfo: compositeInfoSelector(state),
+  appInfo: appInfoSelector(state),
 }))
 export class ServiceVersionsBlockWithData extends Component {
   static propTypes = {
-    compositeInfo: PropTypes.object,
+    appInfo: PropTypes.object,
   };
 
   static defaultProps = {
-    compositeInfo: {},
+    appInfo: {},
   };
 
   state = {
@@ -36,10 +36,10 @@ export class ServiceVersionsBlockWithData extends Component {
 
   calculateServices = (latestServiceVersions) => {
     const services = {};
-    const { compositeInfo } = this.props;
+    const { appInfo } = this.props;
 
-    Object.keys(compositeInfo).forEach((serviceKey) => {
-      const serviceValue = compositeInfo[serviceKey];
+    Object.keys(appInfo).forEach((serviceKey) => {
+      const serviceValue = appInfo[serviceKey];
       if (!(serviceValue && serviceValue.build)) return false;
 
       const currentVersion = serviceValue.build.version;
