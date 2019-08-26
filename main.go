@@ -3,10 +3,10 @@ package main
 import (
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
+	"github.com/reportportal/commons-go/commons"
+	"github.com/reportportal/commons-go/conf"
+	"github.com/reportportal/commons-go/server"
 	"github.com/unrolled/secure"
-	"gopkg.in/reportportal/commons-go.v5/commons"
-	"gopkg.in/reportportal/commons-go.v5/conf"
-	"gopkg.in/reportportal/commons-go.v5/server"
 	"log"
 	"net/http"
 	"os"
