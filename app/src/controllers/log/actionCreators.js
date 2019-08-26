@@ -21,8 +21,9 @@ export const fetchHistoryEntriesAction = () => ({
   type: FETCH_HISTORY_ENTRIES,
 });
 
-export const fetchLogPageStackTrace = () => ({
+export const fetchLogPageStackTrace = (logItem) => ({
   type: FETCH_LOG_PAGE_STACK_TRACE,
+  payload: logItem,
 });
 
 export const clearLogPageStackTrace = () => ({

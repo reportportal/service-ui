@@ -443,6 +443,8 @@
   "EditItemModal.launchUpdateSuccess": "Запуск успешно обновлён",
   "EditItemModal.launchWarning": "Змена апісання і атрыбутаў можа паўплываць на вынікі фільтрацыі, фішкі, трэнды",
   "EditItemModal.modalHeader": "Рэдагаваць {type}",
+  "EditItemModal.detailsTabTitle": "Апісанне",
+  "EditItemModal.stackTraceTabTitle": "Трасіроўка стэка",
   "EditItemsModal.commonAttributesLabel": "Агульныя атрыбуты",
   "EditItemsModal.descriptionAddLabel": "Дадаць да існуючых апісаннях",
   "EditItemsModal.descriptionLabel": "Апісанне",

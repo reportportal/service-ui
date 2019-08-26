@@ -13,6 +13,7 @@ import {
   fetchLogPageStackTrace,
   isLoadMoreStackTraceVisible,
 } from 'controllers/log';
+import { StackTraceMessageBlock } from 'pages/inside/common/stackTraceMessageBlock';
 import styles from './stackTrace.scss';
 
 const cx = classNames.bind(styles);
@@ -32,6 +33,10 @@ const messages = defineMessages({
   },
 });
 
+const MAX_ROW_HEIGHT = 120;
+const SCROLL_HEIGHT = 300;
+const LOAD_MORE_HEIGHT = 32;
+
 @connect(
   (state) => ({
     items: logStackTraceItemsSelector(state),
@@ -39,7 +44,7 @@ const messages = defineMessages({
     loadMore: isLoadMoreStackTraceVisible(state),
   }),
   {
-    fetchItems: fetchLogPageStackTrace,
+    fetchLogPageStackTrace,
   },
 )
 @injectIntl
@@ -48,43 +53,66 @@ export class StackTrace extends Component {
     intl: intlShape.isRequired,
     items: PropTypes.array,
     loading: PropTypes.bool,
-    fetchItems: PropTypes.func,
+    fetchLogPageStackTrace: PropTypes.func,
     loadMore: PropTypes.bool,
+    logItem: PropTypes.object,
+    hideTime: PropTypes.bool,
+    minHeight: PropTypes.number,
   };
 
   static defaultProps = {
     items: [],
     loading: false,
-    fetchItems: () => {},
+    fetchLogPageStackTrace: () => {},
     loadMore: false,
+    logItem: {},
+    hideTime: false,
+    minHeight: SCROLL_HEIGHT,
   };
 
   componentDidMount() {
-    const { fetchItems } = this.props;
     if (this.isItemsExist()) {
       return;
     }
-    fetchItems();
+    this.fetchItems();
   }
+
+  getScrolledHeight = () =>
+    this.props.loadMore ? this.props.minHeight - LOAD_MORE_HEIGHT : this.props.minHeight;
+
+  getMaxRowHeight = () => {
+    const { items } = this.props;
+    const scrolledHeight = this.getScrolledHeight();
+    if (scrolledHeight && items.length && scrolledHeight > items.length * MAX_ROW_HEIGHT) {
+      return scrolledHeight / items.length;
+    }
+    return MAX_ROW_HEIGHT;
+  };
+
+  fetchItems = () => this.props.fetchLogPageStackTrace(this.props.logItem);
+
   isItemsExist = () => {
     const { items } = this.props;
     return items.length;
   };
+
   renderStackTraceMessage = () => {
-    const { items, loadMore, fetchItems, loading, intl } = this.props;
+    const { items, loadMore, loading, intl, hideTime } = this.props;
     return (
       <React.Fragment>
-        <ScrollWrapper autoHeight autoHeightMax={300}>
-          <table>
-            <tbody>
-              {items.map((item) => (
-                <tr key={item.id} className={cx('row')}>
-                  <td className={cx('cell', 'message-cell')}>{item.message}</td>
-                  <td className={cx('cell', 'time-cell')}>{dateFormat(item.time)}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        <ScrollWrapper autoHeight autoHeightMax={this.getScrolledHeight()}>
+          {items.map((item) => (
+            <div key={item.id} className={cx('row')}>
+              <StackTraceMessageBlock maxHeight={this.getMaxRowHeight()}>
+                <div className={cx('message-container')}>
+                  <div className={cx('cell', 'message-cell')}>{item.message}</div>
+                  {!hideTime && (
+                    <div className={cx('cell', 'time-cell')}>{dateFormat(item.time)}</div>
+                  )}
+                </div>
+              </StackTraceMessageBlock>
+            </div>
+          ))}
         </ScrollWrapper>
         {loadMore && (
           <div
@@ -92,7 +120,7 @@ export class StackTrace extends Component {
               loading,
             })}
           >
-            <div className={cx('load-more-label')} onClick={fetchItems}>
+            <div className={cx('load-more-label')} onClick={this.fetchItems}>
               {intl.formatMessage(messages.loadLabel)}
             </div>
             {loading && (

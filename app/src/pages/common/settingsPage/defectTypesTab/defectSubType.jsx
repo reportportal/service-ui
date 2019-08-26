@@ -33,7 +33,8 @@ ColorMarker.propTypes = {
 const DefectTypeName = withHoverableTooltip({
   TooltipComponent: ({ locator }) => `locator: ${locator}`,
   data: {
-    placement: 'bottom',
+    placement: 'top',
+    dynamicWidth: true,
   },
 })(({ color, longName }) => (
   <span className={cx('defect-type-name-wrap')}>

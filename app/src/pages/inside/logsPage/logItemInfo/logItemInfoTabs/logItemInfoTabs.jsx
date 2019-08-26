@@ -19,12 +19,12 @@ import InfoIcon from 'common/img/info-inline.svg';
 import ClockIcon from 'common/img/clock-inline.svg';
 import { getSauceLabsConfig } from 'components/integrations/integrationProviders/sauceLabsIntegration/utils';
 import { availableIntegrationsByPluginNameSelector } from 'controllers/plugins';
+import { StackTrace } from 'pages/inside/common/stackTrace';
 import { SauceLabsIntegrationButton } from './sauceLabsIntegrationButton';
 import { InfoTabs } from '../infoTabs';
 import { LogItemDetails } from './logItemDetails';
 import { LogItemActivity } from './logItemActivity';
 import { Attachments } from './attachments';
-import { StackTrace } from './stackTrace';
 import { getActionMessage } from '../utils/getActionMessage';
 import styles from './logItemInfoTabs.scss';
 
@@ -147,6 +147,7 @@ export class LogItemInfoTabs extends Component {
       onChangeLogLevel,
       onHighlightRow,
       activeRetry,
+      logItem,
     } = this.props;
     const history = {
       id: 'history',
@@ -167,6 +168,7 @@ export class LogItemInfoTabs extends Component {
           onHighlightRow,
           onChangePage,
           onChangeLogLevel,
+          logItem,
         },
       },
       {

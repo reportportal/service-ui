@@ -80,7 +80,7 @@ export class DashboardPrintPage extends Component {
                 <span className={cx('title-value')}>{this.getDashboardName()}</span>
               </p>
             </div>
-            <WidgetsGrid dashboard={dashboard} isPrintMode />
+            <WidgetsGrid dashboard={dashboard} isPrintMode isModifiable={false} />
           </div>
         </div>
       </PageLayout>

@@ -2,7 +2,7 @@ import { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
-import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { injectIntl, intlShape } from 'react-intl';
 import { reduxForm } from 'redux-form';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import Parser from 'html-react-parser';
@@ -18,6 +18,7 @@ import {
   userAccountRoleSelector,
   userIdSelector,
 } from 'controllers/user';
+import { clearLogPageStackTrace } from 'controllers/log';
 import { MarkdownEditor, MarkdownViewer } from 'components/main/markdown';
 import { getDuration } from 'common/utils/timeDateUtils';
 import { AccordionContainer } from 'components/main/accordionContainer';
@@ -28,57 +29,12 @@ import { TestItemStatus } from 'pages/inside/common/testItemStatus';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { TestParameters } from 'pages/inside/common/testParameters';
 import { validate } from 'common/utils';
+import { ContainerWithTabs } from 'components/main/containerWithTabs';
+import { StackTrace } from 'pages/inside/common/stackTrace';
+import { messages } from './messages';
 import styles from './testItemDetailsModal.scss';
 
 const cx = classNames.bind(styles);
-
-const messages = defineMessages({
-  modalTitle: {
-    id: 'TestItemDetailsModal.title',
-    defaultMessage: 'Test item details',
-  },
-  testCaseId: {
-    id: 'TestItemDetailsModal.testCaseId',
-    defaultMessage: 'Unique test case id:',
-  },
-  duration: {
-    id: 'TestItemDetailsModal.duration',
-    defaultMessage: 'Duration:',
-  },
-  description: {
-    id: 'TestItemDetailsModal.description',
-    defaultMessage: 'Description:',
-  },
-  stacktrace: {
-    id: 'TestItemDetailsModal.stacktrace',
-    defaultMessage: 'Stacktrace:',
-  },
-  codeRef: {
-    id: 'TestItemDetailsModal.codeRef',
-    defaultMessage: 'Code reference:',
-  },
-  attributesLabel: {
-    id: 'EditItemModal.attributesLabel',
-    defaultMessage: 'Attributes',
-  },
-  parametersLabel: {
-    id: 'TestItemDetailsModal.parametersLabel',
-    defaultMessage: 'Parameters:',
-  },
-  descriptionPlaceholder: {
-    id: 'EditItemModal.descriptionPlaceholder',
-    defaultMessage: 'Enter test item description',
-  },
-  launchWarning: {
-    id: 'EditItemModal.launchWarning',
-    defaultMessage:
-      'Change of description and attributes can affect your filtering results, widgets, trends',
-  },
-  itemUpdateSuccess: {
-    id: 'EditItemModal.itemUpdateSuccess',
-    defaultMessage: 'Completed successfully!',
-  },
-});
 
 @withModal('testItemDetails')
 @reduxForm({
@@ -97,6 +53,7 @@ const messages = defineMessages({
   }),
   {
     showNotification,
+    clearLogPageStackTrace,
   },
 )
 @injectIntl
@@ -117,12 +74,14 @@ export class TestItemDetailsModal extends Component {
     handleSubmit: PropTypes.func.isRequired,
     currentProject: PropTypes.string.isRequired,
     showNotification: PropTypes.func.isRequired,
+    clearLogPageStackTrace: PropTypes.func,
   };
 
   static defaultProps = {
     userId: '',
     userProjectRole: '',
     dirty: false,
+    clearLogPageStackTrace: () => {},
   };
 
   componentDidMount() {
@@ -130,6 +89,7 @@ export class TestItemDetailsModal extends Component {
       description: this.props.data.item.description || '',
       attributes: this.props.data.item.attributes || [],
     });
+    this.props.clearLogPageStackTrace();
   }
 
   getCloseConfirmationConfig = () => {
@@ -139,6 +99,22 @@ export class TestItemDetailsModal extends Component {
     return {
       confirmationWarning: this.props.intl.formatMessage(COMMON_LOCALE_KEYS.CLOSE_MODAL_WARNING),
     };
+  };
+
+  getTabsConfig = (editable) => {
+    const {
+      intl: { formatMessage },
+    } = this.props;
+    return [
+      {
+        name: formatMessage(messages.detailsTabTitle),
+        content: this.renderDetailsTab(editable),
+      },
+      {
+        name: formatMessage(messages.stackTraceTabTitle),
+        content: this.renderStackTraceTab(),
+      },
+    ];
   };
 
   testItemAttributeKeyURLCreator = (projectId) => {
@@ -179,38 +155,13 @@ export class TestItemDetailsModal extends Component {
     });
   };
 
-  render() {
+  renderDetailsTab = (editable) => {
     const {
       intl,
       data: { item },
-      userAccountRole,
-      userProjectRole,
-      userId,
-      handleSubmit,
     } = this.props;
-    const okButton = {
-      text: intl.formatMessage(COMMON_LOCALE_KEYS.SAVE),
-      onClick: (closeModal) => {
-        handleSubmit(this.updateItemAndCloseModal(closeModal))();
-      },
-    };
-    const cancelButton = {
-      text: intl.formatMessage(COMMON_LOCALE_KEYS.CANCEL),
-    };
-
-    const editable = canEditLaunch(
-      userAccountRole,
-      userProjectRole,
-      item.owner ? userId === item.owner : userId === item.owner,
-    );
     return (
-      <ModalLayout
-        title={intl.formatMessage(messages.modalTitle)}
-        okButton={editable ? okButton : undefined}
-        cancelButton={cancelButton}
-        closeConfirmation={editable ? this.getCloseConfirmationConfig() : undefined}
-        warningMessage={editable ? intl.formatMessage(messages.launchWarning) : ''}
-      >
+      <div className={cx('details-tab')}>
         <div className={cx('name-row')}>
           <div className={cx('name')}>{item.name}</div>
           <TestItemStatus status={item.status} />
@@ -270,6 +221,55 @@ export class TestItemDetailsModal extends Component {
             </AccordionContainer>
           )
         )}
+      </div>
+    );
+  };
+
+  renderStackTraceTab = () => {
+    const {
+      data: { item },
+    } = this.props;
+    return (
+      <div className={cx('stack-trace-tab')}>
+        <StackTrace logItem={item} hideTime minHeight={548} />
+      </div>
+    );
+  };
+
+  render() {
+    const {
+      intl,
+      data: { item },
+      userAccountRole,
+      userProjectRole,
+      userId,
+      handleSubmit,
+    } = this.props;
+    const okButton = {
+      text: intl.formatMessage(COMMON_LOCALE_KEYS.SAVE),
+      onClick: (closeModal) => {
+        handleSubmit(this.updateItemAndCloseModal(closeModal))();
+      },
+    };
+    const cancelButton = {
+      text: intl.formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+    };
+
+    const editable = canEditLaunch(
+      userAccountRole,
+      userProjectRole,
+      item.owner ? userId === item.owner : userId === item.owner,
+    );
+    return (
+      <ModalLayout
+        title={intl.formatMessage(messages.modalTitle)}
+        okButton={editable ? okButton : undefined}
+        cancelButton={cancelButton}
+        closeConfirmation={editable ? this.getCloseConfirmationConfig() : undefined}
+        warningMessage={editable ? intl.formatMessage(messages.launchWarning) : ''}
+        contentClassName={cx('tab-container')}
+      >
+        <ContainerWithTabs data={this.getTabsConfig(editable)} customClass={cx('tab-header')} />
       </ModalLayout>
     );
   }

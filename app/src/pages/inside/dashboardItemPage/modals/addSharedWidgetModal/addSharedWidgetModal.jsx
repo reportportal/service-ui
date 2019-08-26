@@ -7,7 +7,7 @@ import { activeProjectSelector } from 'controllers/user';
 import { withModal, ModalLayout } from 'components/main/modal';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { showScreenLockAction } from 'controllers/screenLock';
-import { DEFAULT_WIDGET_CONFIG } from '../common/constants';
+import { getDefaultWidgetConfig } from '../common/utils';
 import { SharedWidgetInfoSection } from './sharedWidgetInfoSection';
 import { SharedWidgetsListSection } from './sharedWidgetsListSection';
 import styles from './addSharedWidgetModal.scss';
@@ -60,10 +60,11 @@ export class AddSharedWidgetModal extends Component {
     const {
       data: { onConfirm },
     } = this.props;
+    const { widgetType, id } = this.state.selectedWidget;
     this.props.showScreenLockAction();
     const widget = {
-      widgetId: this.state.selectedWidget.id,
-      ...DEFAULT_WIDGET_CONFIG,
+      widgetId: id,
+      ...getDefaultWidgetConfig(widgetType),
     };
     onConfirm(widget, closeModal);
   };

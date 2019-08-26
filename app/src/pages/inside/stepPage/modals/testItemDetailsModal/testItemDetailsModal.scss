@@ -67,3 +67,27 @@
   color: $COLOR--charcoal-grey;
   padding-bottom: 10px;
 }
+
+.tab-header {
+  justify-content: flex-start;
+  height: 38px;
+  > div {
+    font-family: $FONT-CONDBOLD;
+    align-items: flex-end;
+    line-height: 25px;
+  }
+}
+
+.tab-container {
+  padding: 0;
+}
+
+.details-tab {
+  padding: 10px;
+}
+
+.stack-trace-tab {
+  border: 1px solid $COLOR--gray-91;
+  margin-bottom: 10px;
+  height: 547px;
+}

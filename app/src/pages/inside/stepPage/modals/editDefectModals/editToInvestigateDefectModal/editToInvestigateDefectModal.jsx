@@ -57,7 +57,7 @@ export class EditToInvestigateDefectModal extends Component {
     activeProject: PropTypes.string.isRequired,
     btsIntegrations: PropTypes.array.isRequired,
     data: PropTypes.shape({
-      item: PropTypes.array,
+      item: PropTypes.object,
       fetchFunc: PropTypes.func,
     }).isRequired,
     showNotification: PropTypes.func.isRequired,
@@ -169,6 +169,8 @@ export class EditToInvestigateDefectModal extends Component {
     const { item } = this.props.data;
     const preparedItems = selectedItems.map((testItem) => {
       const issue = {
+        ...testItem,
+        id: testItem.itemId,
         testItemId: testItem.itemId,
         issue: {
           ...testItem.issue,
@@ -190,6 +192,7 @@ export class EditToInvestigateDefectModal extends Component {
     });
 
     preparedItems.push({
+      ...item,
       testItemId: item.id,
       issue: {
         ...item.issue,
