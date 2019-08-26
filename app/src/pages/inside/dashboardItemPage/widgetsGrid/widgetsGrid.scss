@@ -95,7 +95,7 @@
     opacity: 1;
   }
 
-  .mobile, .full-screen {
+  .mobile, .non-resizable {
     .react-resizable-handle {
       display: none;
     }
