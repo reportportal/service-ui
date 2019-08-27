@@ -305,10 +305,13 @@ export class StepPage extends Component {
   };
 
   proceedWithValidItems = () => {
+    const {
+      lastOperation: { operationName, operationArgs },
+      selectedItems,
+    } = this.props;
+
     this.props.tracking.trackEvent(STEP_PAGE_EVENTS.PROCEED_VALID_ITEMS);
-    this.props.proceedWithValidItemsAction(this.props.lastOperation, this.props.selectedItems, {
-      fetchFunc: this.props.fetchTestItemsAction,
-    });
+    this.props.proceedWithValidItemsAction(operationName, selectedItems, operationArgs);
   };
 
   deleteItems = () => {

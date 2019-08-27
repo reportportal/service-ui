@@ -166,23 +166,23 @@ export class DashboardItemPage extends Component {
 
   onDeleteDashboard = () => {
     const {
-      deleteDashboard,
+      intl: { formatMessage },
       userInfo: { userId },
-      intl,
+      deleteDashboard,
       dashboard,
     } = this.props;
-    const warningMessage =
-      dashboard.owner === userId ? '' : intl.formatMessage(messages.deleteModalWarningMessage);
+    const warning =
+      dashboard.owner === userId ? '' : formatMessage(messages.deleteModalWarningMessage);
     this.props.showModalAction({
       id: 'deleteItemsModal',
       data: {
         items: [dashboard],
         onConfirm: () => deleteDashboard(dashboard),
-        header: intl.formatMessage(messages.deleteModalTitle),
-        mainContent: intl.formatMessage(messages.deleteModalConfirmationText, {
+        header: formatMessage(messages.deleteModalTitle),
+        mainContent: formatMessage(messages.deleteModalConfirmationText, {
           name: `'<b>${dashboard.name}</b>'`,
         }),
-        warningMessage,
+        warning,
         eventsInfo: {
           closeIcon: DASHBOARD_PAGE_EVENTS.CLOSE_ICON_DELETE_DASHBOARD_MODAL,
           cancelBtn: DASHBOARD_PAGE_EVENTS.CANCEL_BTN_DELETE_DASHBOARD_MODAL,

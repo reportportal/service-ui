@@ -1,5 +1,5 @@
 import {
-  SET_LAST_OPERATION_NAME,
+  SET_LAST_OPERATION,
   RESET_VALIDATION_ERRORS,
   REMOVE_VALIDATION_ERRORS,
   SET_VALIDATION_ERRORS,
@@ -32,8 +32,10 @@ describe('groupOperations reducers', () => {
     test('should return old state on unknown namespace', () => {
       const oldState = 'oldState';
       const newState = reducer(oldState, {
-        type: SET_LAST_OPERATION_NAME,
-        payload: 'foo',
+        type: SET_LAST_OPERATION,
+        payload: {
+          operationName: 'foo',
+        },
         meta: {
           namespace: 'other',
         },
@@ -41,17 +43,21 @@ describe('groupOperations reducers', () => {
       expect(newState).toBe(oldState);
     });
 
-    test('should handle SET_LAST_OPERATION_NAME', () => {
-      const oldState = 'oldOperation';
-      const payload = 'newOperation';
+    test('should handle SET_LAST_OPERATION', () => {
+      const oldState = {
+        operationName: 'oldOperation',
+      };
+      const payload = {
+        operationName: 'newOperation',
+      };
       const newState = reducer(oldState, {
-        type: SET_LAST_OPERATION_NAME,
+        type: SET_LAST_OPERATION,
         payload,
         meta: {
           namespace: TEST_NAMESPACE,
         },
       });
-      expect(newState).toBe(payload);
+      expect(newState).toEqual(payload);
     });
   });
 
