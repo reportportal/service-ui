@@ -4,7 +4,7 @@ import { injectIntl, intlShape, defineMessages } from 'react-intl';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { canDeleteDashboard } from 'common/utils/permissions';
+import { canEditDashboard, canDeleteDashboard } from 'common/utils/permissions';
 import { PROJECT_DASHBOARD_ITEM_PAGE } from 'controllers/pages';
 import { activeProjectSelector, activeProjectRoleSelector } from 'controllers/user';
 import { Icon } from 'components/main/icon';
@@ -84,6 +84,7 @@ export class DashboardGridItem extends Component {
       projectRole,
     } = this.props;
     const { name, description, owner, share, id } = item;
+    const isOwner = userId === owner;
 
     return (
       <div className={cx('grid-view')}>
@@ -108,7 +109,7 @@ export class DashboardGridItem extends Component {
           <div className={cx('grid-cell', 'owner')}>{owner}</div>
           <div className={cx('grid-cell', 'shared')}>
             {share &&
-              userId === owner && (
+              isOwner && (
                 <Fragment>
                   <div className={cx('icon-holder')}>
                     <Icon type="icon-tables" />
@@ -118,7 +119,7 @@ export class DashboardGridItem extends Component {
                   </span>
                 </Fragment>
               )}
-            {userId !== owner && (
+            {!isOwner && (
               <Fragment>
                 <div className={cx('icon-holder')}>
                   <Icon type="icon-planet" />
@@ -130,12 +131,12 @@ export class DashboardGridItem extends Component {
             )}
           </div>
 
-          {userId === owner && (
+          {canEditDashboard(userRole, projectRole, isOwner) && (
             <div className={cx('grid-cell', 'edit')} onClick={this.editItem}>
               <Icon type="icon-pencil" />
             </div>
           )}
-          {canDeleteDashboard(userRole, projectRole, userId === owner) && (
+          {canDeleteDashboard(userRole, projectRole, isOwner) && (
             <div className={cx('grid-cell', 'delete')} onClick={this.deleteItem}>
               <Icon type="icon-close" />
             </div>
