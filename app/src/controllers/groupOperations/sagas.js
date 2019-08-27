@@ -3,8 +3,7 @@ import {
   removeValidationErrorAction,
   resetValidationErrorsAction,
   setValidationErrorsAction,
-  setLastOperationNameAction,
-  selectItemsAction,
+  setLastOperationAction,
   removeValidationErrorsAction,
   unselectItemsAction,
 } from './actionCreators';
@@ -51,14 +50,14 @@ function* executeGroupOperation({ payload, meta }) {
     return;
   }
   const state = yield select(getState);
-  yield put(setLastOperationNameAction(namespace)(name));
+  yield put(setLastOperationAction(namespace)(name, additionalArgs));
   yield put(resetValidationErrorsAction(namespace)());
   const errors = validateItems(selectedItems, descriptor.validator, state);
   if (Object.keys(errors).length > 0) {
     yield put(setValidationErrorsAction(namespace)(errors));
     return;
   }
-  yield put(setLastOperationNameAction(namespace)(''));
+  yield put(setLastOperationAction(namespace)(''));
   yield put(descriptor.action(selectedItems, additionalArgs));
 }
 
@@ -75,22 +74,16 @@ function* proceedWithValidItems({ payload, meta }) {
   const { action, validator } = descriptor;
   const { namespace } = meta;
   const state = yield select(getState);
-  const validItems = selectedItems.filter((item) => !validator(item, selectedItems, state));
-  const invalidItems = selectedItems.filter((item) => validator(item, selectedItems, state));
+  const errors = validateItems(selectedItems, validator, state);
+  const validItems = selectedItems.filter((item) => !errors[item.id]);
+  const invalidItems = selectedItems.filter((item) => errors[item.id]);
 
   if (invalidItems.length > 0) {
     yield put(unselectItemsAction(namespace)(invalidItems));
   }
-  const launchesToValidate = validItems.length > 0 ? validItems : selectedItems;
-  const errors = validateItems(launchesToValidate, validator, state);
-  if (Object.keys(errors).length > 0) {
-    yield put(setValidationErrorsAction(namespace)(errors));
-    return;
-  }
-  yield put(selectItemsAction(namespace)(validItems));
+
   yield put(action(validItems, additionalArgs));
-  yield put(setLastOperationNameAction(namespace)(''));
-  yield put(resetValidationErrorsAction(namespace)());
+  yield put(setLastOperationAction(namespace)(''));
 }
 
 function* watchProceedWithValidItems() {
