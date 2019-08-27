@@ -176,8 +176,8 @@ function* fetchLogs(offset = 0) {
 
 function* fetchWholePage() {
   yield put(setPageLoadingAction(true));
-  const offset = yield select(logPageOffsetSelector);
   yield call(fetchParentItems);
+  const offset = yield select(logPageOffsetSelector);
   yield call(fetchLogs, offset);
   yield put(setPageLoadingAction(false));
 }
@@ -203,7 +203,8 @@ function* fetchLogPageData({ meta = {} }) {
   const isPathNameChanged = yield select(pathnameChangedSelector);
   yield put({ type: CLEAR_NESTED_STEPS });
   if (meta.refresh) {
-    yield call(fetchLogs);
+    const offset = yield select(logPageOffsetSelector);
+    yield call(fetchLogs, offset);
     return;
   }
   if (isPathNameChanged) {
