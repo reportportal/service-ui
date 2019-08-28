@@ -224,11 +224,8 @@ export class WidgetsGrid extends Component {
   );
 
   renderContent = () => {
-    const {
-      dashboard: { widgets = [] },
-      isFullscreen,
-      isPrintMode,
-    } = this.props;
+    const { dashboard, isFullscreen, isPrintMode } = this.props;
+    const { widgets = [] } = dashboard;
 
     if (widgets.length) {
       return isFullscreen ? (
@@ -244,6 +241,7 @@ export class WidgetsGrid extends Component {
       <EmptyWidgetGrid
         action={this.props.showWidgetWizard}
         isDisable={isFullscreen || isPrintMode}
+        dashboard={dashboard}
       />
     );
   };

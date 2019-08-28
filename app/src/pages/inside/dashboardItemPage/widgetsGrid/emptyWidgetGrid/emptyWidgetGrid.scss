@@ -12,12 +12,16 @@
   color: $COLOR--gray-47;
 }
 
-.empty-widget-img {
+.empty-dashboard {
   width: 140px;
   height: 98px;
   margin: 0 auto;
-  background-image: url(./img/empty-widgets.png);
+  background-image: url(./img/no-shared-widgets.svg);
+  background-position: center;
   background-repeat: no-repeat;
+  &.add-enabled {
+    background-image: url(./img/add-first-widget.png);
+  }
 }
 
 .empty-widget-text {
