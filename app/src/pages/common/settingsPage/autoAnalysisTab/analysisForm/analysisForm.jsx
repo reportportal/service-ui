@@ -5,26 +5,11 @@ import classNames from 'classnames/bind';
 import { reduxForm, formValueSelector } from 'redux-form';
 import { connect } from 'react-redux';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
-import { validate, fetch } from 'common/utils';
-import { URLS } from 'common/urls';
-import {
-  updateConfigurationAttributesAction,
-  analyzerAttributesSelector,
-  normalizeAttributesWithPrefix,
-  ANALYZER_ATTRIBUTE_PREFIX,
-} from 'controllers/project';
-import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
+import { validate } from 'common/utils';
 import { ToggleButton } from 'components/buttons/toggleButton';
 import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
-import { StrategyBlock } from './strategyBlock';
 import { AccuracyFormBlock } from './accuracyFormBlock';
-import {
-  NUMBER_OF_LOG_LINES,
-  MIN_DOC_FREQ,
-  MIN_SHOULD_MATCH,
-  MIN_TERM_FREQ,
-  INDEXING_RUNNING,
-} from './constants';
+import { NUMBER_OF_LOG_LINES, MIN_DOC_FREQ, MIN_SHOULD_MATCH, MIN_TERM_FREQ } from '../constants';
 import styles from './analysisForm.scss';
 
 const cx = classNames.bind(styles);
@@ -45,14 +30,6 @@ const messages = defineMessages({
   analysisLightModeTitle: {
     id: 'AnalysisForm.analysisLightModeTitle',
     defaultMessage: 'Light',
-  },
-  updateSuccessNotification: {
-    id: 'AnalysisForm.updateSuccessNotification',
-    defaultMessage: 'Project settings were successfully updated',
-  },
-  updateErrorNotification: {
-    id: 'AnalysisForm.updateErrorNotification',
-    defaultMessage: 'Something went wrong',
   },
 });
 
@@ -81,7 +58,6 @@ const analysisModeConfig = {
 
 const DEFAULT_ANALYSIS_MODE = 'Classic';
 
-@injectIntl
 @reduxForm({
   form: 'analysisForm',
   validate: ({ minShouldMatch, minTermFreq, minDocFreq }) => ({
@@ -91,34 +67,25 @@ const DEFAULT_ANALYSIS_MODE = 'Classic';
     minDocFreq: (!minDocFreq || !validate.minDocFreq(minDocFreq)) && 'minTermFreqHint',
   }),
 })
-@connect(
-  (state) => ({
-    analyzerConfiguration: analyzerAttributesSelector(state),
-    formInputsValues: selector(
-      state,
-      MIN_SHOULD_MATCH,
-      MIN_DOC_FREQ,
-      MIN_TERM_FREQ,
-      NUMBER_OF_LOG_LINES,
-    ),
-  }),
-  {
-    showNotification,
-    updateConfigurationAttributesAction,
-  },
-)
+@connect((state) => ({
+  formInputsValues: selector(
+    state,
+    MIN_SHOULD_MATCH,
+    MIN_DOC_FREQ,
+    MIN_TERM_FREQ,
+    NUMBER_OF_LOG_LINES,
+  ),
+}))
+@injectIntl
 @track()
 export class AnalysisForm extends Component {
   static propTypes = {
     disabled: PropTypes.bool,
     intl: intlShape.isRequired,
-    analyzerConfiguration: PropTypes.object,
-    projectId: PropTypes.string,
-    initialize: PropTypes.func,
+    initialValues: PropTypes.object,
     change: PropTypes.func,
     handleSubmit: PropTypes.func,
-    showNotification: PropTypes.func,
-    updateConfigurationAttributesAction: PropTypes.func,
+    onFormSubmit: PropTypes.func,
     formInputsValues: PropTypes.object,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
@@ -128,13 +95,10 @@ export class AnalysisForm extends Component {
 
   static defaultProps = {
     disabled: false,
-    analyzerConfiguration: {},
-    projectId: '',
-    initialize: () => {},
+    initialValues: {},
     change: () => {},
     handleSubmit: () => {},
-    showNotification: () => {},
-    updateConfigurationAttributesAction: () => {},
+    onFormSubmit: () => {},
     formInputsValues: {},
   };
 
@@ -143,45 +107,13 @@ export class AnalysisForm extends Component {
   };
 
   componentDidMount() {
-    const initialConfiguration = {
-      ...this.props.analyzerConfiguration,
-    };
-    delete initialConfiguration[INDEXING_RUNNING];
-    this.setAnalysisMode(initialConfiguration);
-    this.props.initialize(initialConfiguration);
+    this.setAnalysisMode(this.props.initialValues);
   }
 
   onInputChange = (event, newValue, previousValue, name) => {
     const formInputsValues = this.props.formInputsValues;
     formInputsValues[name] = newValue;
     this.setAnalysisMode(formInputsValues);
-  };
-
-  onFormSubmit = (formData) => {
-    const preparedData = normalizeAttributesWithPrefix(formData, ANALYZER_ATTRIBUTE_PREFIX);
-
-    const data = {
-      configuration: {
-        attributes: {
-          ...preparedData,
-        },
-      },
-    };
-    this.props.tracking.trackEvent(SETTINGS_PAGE_EVENTS.SUBMIT_AUTO_ANALYSIS_SETTINGS);
-    fetch(URLS.project(this.props.projectId), { method: 'put', data })
-      .then(() => {
-        this.props.showNotification({
-          message: this.props.intl.formatMessage(messages.updateSuccessNotification),
-          type: NOTIFICATION_TYPES.SUCCESS,
-        });
-        this.props.updateConfigurationAttributesAction(data);
-      })
-      .catch(() => {
-        this.props.showNotification({
-          message: this.props.intl.formatMessage(messages.updateErrorNotification),
-          type: NOTIFICATION_TYPES.ERROR,
-        });
-      });
   };
 
   setAnalysisMode = (modeConfig) => {
@@ -214,23 +146,29 @@ export class AnalysisForm extends Component {
   ];
 
   tabChangeHandle = (newValue) => {
-    this.props.tracking.trackEvent(SETTINGS_PAGE_EVENTS.TOGGLE_AUTO_ANALYSIS_MODE);
-    this.props.change(MIN_SHOULD_MATCH, analysisModeConfig[newValue][MIN_SHOULD_MATCH]);
-    this.props.change(MIN_DOC_FREQ, analysisModeConfig[newValue][MIN_DOC_FREQ]);
-    this.props.change(MIN_TERM_FREQ, analysisModeConfig[newValue][MIN_TERM_FREQ]);
-    this.props.change(NUMBER_OF_LOG_LINES, analysisModeConfig[newValue][NUMBER_OF_LOG_LINES]);
+    const { tracking, change } = this.props;
+    tracking.trackEvent(SETTINGS_PAGE_EVENTS.TOGGLE_AUTO_ANALYSIS_MODE);
+    change(MIN_SHOULD_MATCH, analysisModeConfig[newValue][MIN_SHOULD_MATCH]);
+    change(MIN_DOC_FREQ, analysisModeConfig[newValue][MIN_DOC_FREQ]);
+    change(MIN_TERM_FREQ, analysisModeConfig[newValue][MIN_TERM_FREQ]);
+    change(NUMBER_OF_LOG_LINES, analysisModeConfig[newValue][NUMBER_OF_LOG_LINES]);
 
     this.setState({
       autoAnalysisMode: newValue,
     });
   };
 
+  submitHandler = (data) => {
+    const { tracking, onFormSubmit } = this.props;
+    tracking.trackEvent(SETTINGS_PAGE_EVENTS.SUBMIT_AUTO_ANALYSIS_SETTINGS);
+    onFormSubmit(data);
+  };
+
   render() {
     const { intl, handleSubmit, disabled } = this.props;
 
     return (
-      <form className={cx('analysis-form')} onSubmit={handleSubmit(this.onFormSubmit)}>
-        <StrategyBlock disabled={disabled} />
+      <form className={cx('analysis-form')} onSubmit={handleSubmit(this.submitHandler)}>
         <div className={cx('accuracy-form-group')}>
           <span className={cx('tabs-container-label')}>
             {intl.formatMessage(messages.analysisModeTitle)}

@@ -1,3 +1,17 @@
+.strategy-block {
+  width: 100%;
+  margin-bottom: 30px;
+
+  &:after {
+    content: '';
+    display: block;
+    width: 100%;
+    height: 2px;
+    max-width: 1010px;
+    background-color: $COLOR--gray-91;
+  }
+}
+
 .switcher-wrapper {
   @media (max-width: $SCREEN_XS_MAX) {
     height: 30px;
@@ -36,16 +50,6 @@
 .radio-description {
   display: inline-block;
   padding: 0 15px 0 0;
-}
-
-.form-break-line {
-  width: 1010px;
-  margin-bottom: 30px;
-  border: 1px solid $COLOR--gray-91;
-  @media (max-width: $SCREEN_MD_MAX) {
-    width: 100%;
-    box-sizing: border-box;
-  }
 }
 
 .radio-children {

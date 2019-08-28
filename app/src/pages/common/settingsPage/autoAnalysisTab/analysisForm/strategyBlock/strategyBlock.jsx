@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
@@ -8,6 +8,7 @@ import { InputBigSwitcher } from 'components/inputs/inputBigSwitcher';
 import { InputRadio } from 'components/inputs/inputRadio';
 import { FormField } from 'components/fields/formField';
 import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
+import { ANALYZER_ENABLED, ANALYZER_MODE } from '../../constants';
 import styles from './strategyBlock.scss';
 
 const cx = classNames.bind(styles);
@@ -52,6 +53,8 @@ export class StrategyBlock extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
     disabled: PropTypes.bool,
+    data: PropTypes.object,
+    onFormSubmit: PropTypes.func,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
@@ -60,75 +63,99 @@ export class StrategyBlock extends Component {
 
   static defaultProps = {
     disabled: false,
+    data: {},
+    onFormSubmit: () => {},
   };
 
-  formatAnalyzerAvailabilityValue = (value) => value && JSON.parse(value);
+  changeAnalyzerEnabled = (value) => {
+    const { tracking, onFormSubmit } = this.props;
+    onFormSubmit({
+      [ANALYZER_ENABLED]: value,
+    });
+    tracking.trackEvent(SETTINGS_PAGE_EVENTS.AUTO_ANALYSIS_SWITCHER);
+  };
+
+  changeAnalyzerMode = (event) => {
+    const { tracking, onFormSubmit } = this.props;
+    onFormSubmit({
+      [ANALYZER_MODE]: event.target.value,
+    });
+    tracking.trackEvent(SETTINGS_PAGE_EVENTS.AUTO_ANALYSIS_BASE_RADIO_BTN);
+  };
 
   render() {
-    const { intl, disabled, tracking } = this.props;
+    const {
+      intl: { formatMessage },
+      disabled,
+      data,
+    } = this.props;
 
     return (
-      <Fragment>
+      <div className={cx('strategy-block')}>
         <FormField
-          name="isAutoAnalyzerEnabled"
           fieldWrapperClassName={cx('switcher-wrapper')}
-          label={intl.formatMessage(messages.autoAnalysisSwitcherTitle)}
+          label={formatMessage(messages.autoAnalysisSwitcherTitle)}
           customBlock={{
-            node: <p>{Parser(intl.formatMessage(messages.analysisStatusInfo))}</p>,
+            node: <p>{Parser(formatMessage(messages.analysisStatusInfo))}</p>,
           }}
-          format={this.formatAnalyzerAvailabilityValue}
-          parse={Boolean}
-          disabled={disabled}
-          onChange={() => {
-            tracking.trackEvent(SETTINGS_PAGE_EVENTS.AUTO_ANALYSIS_SWITCHER);
-          }}
+          withoutProvider
         >
-          <InputBigSwitcher mobileDisabled />
+          <InputBigSwitcher
+            value={data[ANALYZER_ENABLED]}
+            onChange={this.changeAnalyzerEnabled}
+            disabled={disabled}
+            mobileDisabled
+          />
         </FormField>
 
         <FormField
-          name="autoAnalyzerMode"
           containerClassName={cx('radio-container')}
           fieldWrapperClassName={cx('aa-strategy-option-selector')}
           customBlock={{
-            node: <p>{intl.formatMessage(messages.sameNameLaunchesInfo)}</p>,
+            node: <p>{formatMessage(messages.sameNameLaunchesInfo)}</p>,
             wrapperClassName: cx('radio-description'),
           }}
-          label={intl.formatMessage(messages.strategySelectorTitle)}
-          disabled={disabled}
-          onChange={() => {
-            tracking.trackEvent(SETTINGS_PAGE_EVENTS.AUTO_ANALYSIS_BASE_RADIO_BTN);
-          }}
+          label={formatMessage(messages.strategySelectorTitle)}
+          withoutProvider
         >
-          <InputRadio ownValue="LAUNCH_NAME" name="aa-strategy" mobileDisabled>
+          <InputRadio
+            ownValue="LAUNCH_NAME"
+            value={data[ANALYZER_MODE]}
+            onChange={this.changeAnalyzerMode}
+            name="aa-strategy"
+            disabled={disabled}
+            mobileDisabled
+          >
             <span className={cx('radio-children')}>
-              {intl.formatMessage(messages.sameNameLaunchesCaption)}
+              {formatMessage(messages.sameNameLaunchesCaption)}
             </span>
           </InputRadio>
         </FormField>
 
         <FormField
-          name="autoAnalyzerMode"
           containerClassName={cx('radio-container')}
           fieldWrapperClassName={cx('aa-strategy-option-selector')}
           labelClassName={cx('no-label')}
           customBlock={{
-            node: <p>{intl.formatMessage(messages.allLaunchesInfo)}</p>,
+            node: <p>{formatMessage(messages.allLaunchesInfo)}</p>,
             wrapperClassName: cx('radio-description'),
           }}
-          disabled={disabled}
-          onChange={() => {
-            tracking.trackEvent(SETTINGS_PAGE_EVENTS.AUTO_ANALYSIS_BASE_RADIO_BTN);
-          }}
+          withoutProvider
         >
-          <InputRadio ownValue="ALL" name="aa-strategy" mobileDisabled>
+          <InputRadio
+            ownValue="ALL"
+            value={data[ANALYZER_MODE]}
+            onChange={this.changeAnalyzerMode}
+            name="aa-strategy"
+            disabled={disabled}
+            mobileDisabled
+          >
             <span className={cx('radio-children')}>
-              {intl.formatMessage(messages.allLaunchesCaption)}
+              {formatMessage(messages.allLaunchesCaption)}
             </span>
           </InputRadio>
         </FormField>
-        <div className={cx('form-break-line')} />
-      </Fragment>
+      </div>
     );
   }
 }

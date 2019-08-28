@@ -7,9 +7,7 @@ import { showModalAction } from 'controllers/modal';
 import { analyzerExtensionsSelector } from 'controllers/appInfo/selectors';
 import classNames from 'classnames/bind';
 import { GhostButton } from 'components/buttons/ghostButton';
-import { analyzerAttributesSelector } from 'controllers/project';
 import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
-import { INDEXING_RUNNING } from '../analysisForm/constants';
 import styles from './indexActionsBlock.scss';
 
 const cx = classNames.bind(styles);
@@ -49,7 +47,6 @@ const messages = defineMessages({
 
 @connect(
   (state) => ({
-    indexingRunning: JSON.parse(analyzerAttributesSelector(state)[INDEXING_RUNNING] || 'false'),
     analyzerExtensions: analyzerExtensionsSelector(state),
   }),
   {
