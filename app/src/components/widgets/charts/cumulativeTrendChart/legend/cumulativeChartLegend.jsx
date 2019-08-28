@@ -17,6 +17,7 @@ export class CumulativeChartLegend extends PureComponent {
     clearAttributes: PropTypes.func,
     userSettings: PropTypes.object,
     isChartDataAvailable: PropTypes.bool,
+    isPrintMode: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -26,6 +27,7 @@ export class CumulativeChartLegend extends PureComponent {
     clearAttributes: () => {},
     userSettings: {},
     isChartDataAvailable: false,
+    isPrintMode: false,
   };
 
   onChangeFocusType = (e) => {
@@ -52,58 +54,67 @@ export class CumulativeChartLegend extends PureComponent {
       clearAttributes,
       userSettings,
       isChartDataAvailable,
+      isPrintMode,
     } = this.props;
     const { defectTypes, showTotal, separate, percentage } = userSettings;
     return (
       <div className={cx('cumulative-trend-chart-legend')}>
-        <CumulativeChartBreadcrumbs
-          attributes={attributes}
-          activeAttribute={activeAttribute}
-          activeAttributes={activeAttributes}
-          clearAttributes={clearAttributes}
-        />
+        <div className={cx('legend-first-row')}>
+          <CumulativeChartBreadcrumbs
+            attributes={attributes}
+            activeAttribute={activeAttribute}
+            activeAttributes={activeAttributes}
+            clearAttributes={clearAttributes}
+          />
 
-        {isChartDataAvailable && (
-          <Fragment>
-            <Legend className={cx('legend')} {...this.props} />
+          {isChartDataAvailable && (
+            <Fragment>
+              {!isPrintMode && <Legend className={cx('legend')} {...this.props} />}
 
-            <div className={cx('controls')}>
-              <div className={cx('control')}>
-                <InputCheckbox value={defectTypes} onChange={this.onChangeFocusType}>
-                  Focus on Defect Types
-                </InputCheckbox>
-              </div>
+              <div className={cx('controls')}>
+                <div className={cx('control')}>
+                  <InputCheckbox value={defectTypes} onChange={this.onChangeFocusType}>
+                    Defect Types
+                  </InputCheckbox>
+                </div>
 
-              <div className={cx('control')}>
-                <InputCheckbox
-                  className={cx('control')}
-                  value={showTotal}
-                  onChange={this.onChangeTotals}
+                <div className={cx('control')}>
+                  <InputCheckbox
+                    className={cx('control')}
+                    value={showTotal}
+                    onChange={this.onChangeTotals}
+                  >
+                    Totals
+                  </InputCheckbox>
+                </div>
+
+                <div
+                  className={cx('control', 'separate', { 'separate-active': separate })}
+                  onClick={this.onChangeSeparate}
                 >
-                  Totals
-                </InputCheckbox>
-              </div>
+                  <InputCheckbox className={cx('control')} value={separate}>
+                    Separate
+                  </InputCheckbox>
+                </div>
 
-              <div
-                className={cx('control', 'separate', { 'separate-active': separate })}
-                onClick={this.onChangeSeparate}
-              >
-                <InputCheckbox className={cx('control')} value={separate}>
-                  Separate
-                </InputCheckbox>
+                <div
+                  className={cx('control', 'percentage', { 'percentage-active': percentage })}
+                  onClick={this.onChangePercentage}
+                >
+                  <InputCheckbox className={cx('control')} value={percentage}>
+                    Percentage
+                  </InputCheckbox>
+                </div>
               </div>
-
-              <div
-                className={cx('control', 'percentage', { 'percentage-active': percentage })}
-                onClick={this.onChangePercentage}
-              >
-                <InputCheckbox className={cx('control')} value={percentage}>
-                  Percentage
-                </InputCheckbox>
-              </div>
+            </Fragment>
+          )}
+        </div>
+        {isChartDataAvailable &&
+          isPrintMode && (
+            <div className={cx('legend-second-row')}>
+              <Legend className={cx('legend')} {...this.props} />
             </div>
-          </Fragment>
-        )}
+          )}
       </div>
     );
   }
