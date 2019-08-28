@@ -106,7 +106,7 @@ export class SimpleWidget extends Component {
   };
 
   getWidgetContent = () => {
-    const { widgetType } = this.props;
+    const { widgetType, isPrintMode } = this.props;
     const { widget, uncheckedLegendItems, queryParameters, userSettings } = this.state;
 
     if (this.state.loading) {
@@ -133,6 +133,7 @@ export class SimpleWidget extends Component {
           clearQueryParams={this.clearQueryParams}
           userSettings={userSettings}
           onChangeUserSettings={this.onChangeUserSettings}
+          isPrintMode={isPrintMode}
         />
       )
     );

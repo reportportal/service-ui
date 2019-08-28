@@ -16,6 +16,7 @@ import styles from './cumulativeTrendChart.scss';
 const cx = classNames.bind(styles);
 
 const LEGEND_HEIGHT = 45;
+const PRINTED_LEGEND_HEIGHT = 80;
 
 @injectIntl
 export class CumulativeTrendChart extends PureComponent {
@@ -29,6 +30,7 @@ export class CumulativeTrendChart extends PureComponent {
     onChangeLegend: PropTypes.func,
     uncheckedLegendItems: PropTypes.array,
     userSettings: PropTypes.object,
+    isPrintMode: PropTypes.bool,
     onChangeUserSettings: PropTypes.func,
     container: PropTypes.instanceOf(Element).isRequired,
   };
@@ -41,6 +43,7 @@ export class CumulativeTrendChart extends PureComponent {
     onChangeLegend: () => {},
     uncheckedLegendItems: [],
     userSettings: {},
+    isPrintMode: false,
     onChangeUserSettings: () => {},
   };
 
@@ -73,7 +76,7 @@ export class CumulativeTrendChart extends PureComponent {
     /* eslint no-underscore-dangle: ['error', { 'allow': ['_model'] }] */
     const elementModel = element._model;
     this.left = event.offsetX;
-    this.top = event.offsetY + LEGEND_HEIGHT;
+    this.top = event.offsetY + this.getLegendHeight();
     const selectedItem = this.getSelectedItem(elementModel.label);
 
     this.setState({
@@ -108,6 +111,8 @@ export class CumulativeTrendChart extends PureComponent {
       legendItems,
     });
   };
+
+  getLegendHeight = () => (this.props.isPrintMode ? PRINTED_LEGEND_HEIGHT : LEGEND_HEIGHT);
 
   getAttributes = () => this.props.widget.contentParameters.widgetOptions.attributes;
 
@@ -193,7 +198,7 @@ export class CumulativeTrendChart extends PureComponent {
   };
 
   render() {
-    const { uncheckedLegendItems, userSettings, container } = this.props;
+    const { uncheckedLegendItems, userSettings, container, isPrintMode } = this.props;
     const {
       legendItems,
       chartData,
@@ -203,7 +208,7 @@ export class CumulativeTrendChart extends PureComponent {
       selectedItem,
       isActionsPopupShown,
     } = this.state;
-    const chartHeight = container.offsetHeight - LEGEND_HEIGHT;
+    const chartHeight = container.offsetHeight - this.getLegendHeight();
     const isChartDataAvailable = chartData && !!chartData.labels.length;
 
     return this.state.chartData ? (
@@ -228,6 +233,7 @@ export class CumulativeTrendChart extends PureComponent {
               uncheckedLegendItems={uncheckedLegendItems}
               userSettings={userSettings}
               isChartDataAvailable={isChartDataAvailable}
+              isPrintMode={isPrintMode}
             />
             <ChartJS
               chartData={chartData}
