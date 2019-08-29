@@ -54,3 +54,4 @@ export const canConfigreEmailNotifications = checkPermission(ACTIONS.CONFIGURE_E
 export const canConfigurePatternAnalysis = checkPermission(ACTIONS.CONFIGURE_PATTERN_ANALYSIS);
 export const canAddWidget = checkPermission(ACTIONS.ADD_WIDGET);
 export const canEditDashboard = checkPermission(ACTIONS.EDIT_DASHBOARD);
+export const canEditWidget = checkPermission(ACTIONS.EDIT_WIDGET);
