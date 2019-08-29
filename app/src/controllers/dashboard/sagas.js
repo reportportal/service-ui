@@ -1,5 +1,5 @@
 import { all, call, put, select, takeEvery } from 'redux-saga/effects';
-import { showNotification } from 'controllers/notification';
+import { showNotification, showDefaultErrorNotification } from 'controllers/notification';
 import { NOTIFICATION_TYPES } from 'controllers/notification/constants';
 import { redirect } from 'redux-first-router';
 import { URLS } from 'common/urls';
@@ -102,12 +102,21 @@ function* updateDashboardWidgets({ payload: dashboard }) {
 }
 
 function* removeDashboard({ payload: id }) {
-  const activeProject = yield select(activeProjectSelector);
-
-  yield call(fetch, URLS.dashboard(activeProject, id), {
-    method: 'delete',
-  });
-  yield put(deleteDashboardSuccessAction(id));
+  try {
+    const activeProject = yield select(activeProjectSelector);
+    yield call(fetch, URLS.dashboard(activeProject, id), {
+      method: 'delete',
+    });
+    yield put(deleteDashboardSuccessAction(id));
+    yield put(
+      showNotification({
+        messageId: 'deleteDashboardSuccess',
+        type: NOTIFICATION_TYPES.SUCCESS,
+      }),
+    );
+  } catch (error) {
+    yield put(showDefaultErrorNotification(error));
+  }
 }
 
 function* redirectAfterDelete({ payload: dashboardId }) {

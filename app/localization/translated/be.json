@@ -309,6 +309,7 @@
   "DashboardItemPage.notMyDashboardEmptyHeader": "На гэтай панэлі кіравання няма віджэтаў",
   "DashboardItemPage.sharedWidgetCaption": "Панэллю кіравання падзяліўся",
   "DashboardPage.addDashboardSuccess": "Панэль кіравання была дададзеная",
+  "DashboardPage.deleteDashboardSuccess": "Панэль кіравання была выдаленая",
   "DashboardPage.modal.deleteModalConfirmationText": "Вы ўпэўнены, што хочаце выдаліць панэль кіравання  '<b>{name}</b>'? Яна больш не будзе існаваць.",
   "DashboardPage.modal.deleteModalSubmitButtonText": "Выдаліць",
   "DashboardPage.modal.deleteModalTitle": "Выдаліць панэль кіравання",
