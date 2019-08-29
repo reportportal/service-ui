@@ -25,30 +25,62 @@ describe('groupOperations reducers', () => {
     });
 
     test('should return old state on unknown action', () => {
-      const oldState = 'oldState';
-      expect(reducer(oldState, { type: 'foo' })).toBe(oldState);
+      const oldState = {
+        operationName: 'foo',
+        operationArgs: {},
+      };
+      expect(reducer(oldState, { type: 'foo' })).toEqual(oldState);
     });
 
     test('should return old state on unknown namespace', () => {
-      const oldState = 'oldState';
+      const oldState = {
+        operationName: 'oldOperation',
+        operationArgs: {},
+      };
       const newState = reducer(oldState, {
         type: SET_LAST_OPERATION,
         payload: {
-          operationName: 'foo',
+          operationName: 'newOperation',
         },
         meta: {
           namespace: 'other',
         },
       });
-      expect(newState).toBe(oldState);
+      expect(newState).toEqual(oldState);
     });
 
-    test('should handle SET_LAST_OPERATION', () => {
+    test('should handle SET_LAST_OPERATION without operationArgs', () => {
       const oldState = {
         operationName: 'oldOperation',
+        operationArgs: {
+          foo: 'bar',
+        },
       };
       const payload = {
         operationName: 'newOperation',
+      };
+      const newState = reducer(oldState, {
+        type: SET_LAST_OPERATION,
+        payload,
+        meta: {
+          namespace: TEST_NAMESPACE,
+        },
+      });
+      expect(newState).toEqual(payload);
+    });
+
+    test('should handle SET_LAST_OPERATION with operationArgs', () => {
+      const oldState = {
+        operationName: 'oldOperation',
+        operationArgs: {
+          foo: 'bar',
+        },
+      };
+      const payload = {
+        operationName: 'newOperation',
+        operationArgs: {
+          bar: 'foo',
+        },
       };
       const newState = reducer(oldState, {
         type: SET_LAST_OPERATION,
