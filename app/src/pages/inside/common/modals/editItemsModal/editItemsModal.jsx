@@ -282,7 +282,7 @@ export class EditItemsModal extends Component {
     if (descriptionAction !== DESCRIPTION_LEAVE) {
       data.description = {
         action: descriptionAction,
-        comment: `${DESCRIPTION_UPDATE ? '\n' : ''}${description}` || '',
+        comment: `${DESCRIPTION_UPDATE ? '\n' : ''}${description || ''}`,
       };
     }
 
