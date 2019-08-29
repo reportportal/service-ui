@@ -325,7 +325,7 @@ export class EditItemsModal extends Component {
         })}
         okButton={okButton}
         cancelButton={cancelButton}
-        warningMessage={warningMessageShown ? formatMessage(messages.warningMessage) : null}
+        warningMessage={warningMessageShown ? formatMessage(messages.warningMessage) : ''}
       >
         <form>
           <ModalField
