@@ -30,4 +30,5 @@ export {
   canSeeDemoData,
   canAddWidget,
   canEditDashboard,
+  canEditWidget,
 } from './permissions';
