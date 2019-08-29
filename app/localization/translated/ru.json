@@ -301,6 +301,7 @@
   "DashboardPage.noResults": "Ничего не найдено",
   "DashboardPage.title": "Все панели управления",
   "DashboardPage.addDashboardSuccess": "Панель управления была добавлена",
+  "DashboardPage.deleteDashboardSuccess": "Панель управления была удалена",
   "DashboardPage.print": "Печать",
   "DashboardPageHeader.allDashboardsTitle": "Все панели управления",
   "DashboardPageToolbar.searchPlaceholder": "Поиск по названию",
