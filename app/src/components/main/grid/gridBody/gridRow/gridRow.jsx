@@ -96,7 +96,7 @@ export class GridRow extends Component {
   checkIfTheHighlightNeeded = () => {
     const { highlightedRowId, isGridRowHighlighted } = this.props.rowHighlightingConfig;
 
-    return highlightedRowId === this.props.value.id && !isGridRowHighlighted;
+    return highlightedRowId === this.props.value.id && isGridRowHighlighted;
   };
 
   rowRef = React.createRef();
