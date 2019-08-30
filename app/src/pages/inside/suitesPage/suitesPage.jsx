@@ -11,6 +11,7 @@ import { debugModeSelector } from 'controllers/launch';
 import {
   suitePaginationSelector,
   suitesSelector,
+  selectSuitesAction,
   selectedSuitesSelector,
   toggleSuiteSelectionAction,
   unselectAllSuitesAction,
@@ -45,6 +46,7 @@ import { ENTITY_START_TIME } from 'components/filterEntities/constants';
     toggleSuiteSelectionAction,
     unselectAllSuitesAction,
     toggleAllSuitesAction,
+    selectSuitesAction,
     fetchTestItemsAction,
   },
 )
@@ -79,6 +81,7 @@ export class SuitesPage extends Component {
     toggleSuiteSelectionAction: PropTypes.func,
     unselectAllSuitesAction: PropTypes.func,
     toggleAllSuitesAction: PropTypes.func,
+    selectSuitesAction: PropTypes.func,
     parentItem: PropTypes.object,
     loading: PropTypes.bool,
     validationErrors: PropTypes.object,
@@ -114,6 +117,7 @@ export class SuitesPage extends Component {
     toggleSuiteSelectionAction: () => {},
     unselectAllSuitesAction: () => {},
     toggleAllSuitesAction: () => {},
+    selectSuitesAction: () => {},
     parentItem: null,
     loading: false,
     validationErrors: {},
@@ -241,6 +245,7 @@ export class SuitesPage extends Component {
             selectedItems={selectedSuites}
             onItemSelect={this.handleOneItemSelection}
             onAllItemsSelect={this.handleAllSuitesSelection}
+            onItemsSelect={this.props.selectSuitesAction}
             loading={loading}
             events={SUITES_PAGE_EVENTS}
             onFilterClick={onFilterAdd}
