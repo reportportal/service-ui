@@ -30,10 +30,8 @@ const messages = defineMessages({
   validate: ({ filter }) => ({
     filter: filter && filter.length < 3 ? 'filterNameError' : undefined,
   }),
-  onChange: (values, dispatch, props, previousValues) => {
-    if (typeof previousValues.filter === 'undefined') {
-      return;
-    }
+  enableReinitialize: true,
+  onChange: (values, dispatch, props) => {
     if (!values.filter || values.filter.length >= 3) {
       props.tracking.trackEvent(FILTERS_PAGE_EVENTS.SEARCH_FILTER);
       props.onFilterChange(values.filter);
@@ -44,43 +42,41 @@ const messages = defineMessages({
 export class FilterPageToolbar extends React.Component {
   static propTypes = {
     intl: intlShape,
-    change: PropTypes.func,
     invalid: PropTypes.bool,
-    filter: PropTypes.string,
-    filters: PropTypes.array,
+    disabled: PropTypes.bool,
     onAddFilter: PropTypes.func,
   };
 
   static defaultProps = {
     intl: {},
     invalid: false,
-    filter: null,
-    filters: [],
-    change: () => {},
+    disabled: null,
     onAddFilter: () => {},
   };
 
-  componentDidMount() {
-    this.props.change('filter', this.props.filter);
-  }
-
   render() {
+    const {
+      intl: { formatMessage },
+      disabled,
+      onAddFilter,
+    } = this.props;
+
     return (
       <div className={cx('filter-page-toolbar')}>
         <div className={cx('filter-search')}>
           <FieldProvider name="filter">
             <FieldErrorHint>
               <InputSearch
-                disabled={!this.props.filters.length && !this.props.filter}
+                disabled={disabled}
                 maxLength="128"
-                placeholder={this.props.intl.formatMessage(messages.searchInputPlaceholder)}
+                placeholder={formatMessage(messages.searchInputPlaceholder)}
               />
             </FieldErrorHint>
           </FieldProvider>
         </div>
-        <div className={cx('label')}>{this.props.intl.formatMessage(messages.favoriteFilters)}</div>
-        <GhostButton icon={AddFilterIcon} onClick={this.props.onAddFilter}>
-          {this.props.intl.formatMessage(messages.addFilter)}
+        <div className={cx('label')}>{formatMessage(messages.favoriteFilters)}</div>
+        <GhostButton icon={AddFilterIcon} onClick={onAddFilter}>
+          {formatMessage(messages.addFilter)}
         </GhostButton>
       </div>
     );

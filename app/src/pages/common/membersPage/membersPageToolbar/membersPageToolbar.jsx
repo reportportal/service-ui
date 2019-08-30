@@ -42,20 +42,13 @@ const messages = defineMessages({
 )
 @reduxForm({
   form: 'filterSearch',
-  onChange: (vals, dispatch, props, previousValues) => {
-    if (typeof previousValues.filter === 'undefined') {
-      return;
-    }
-    props.onFilterChange(vals.filter);
-  },
+  enableReinitialize: true,
 })
 @injectIntl
 @track()
 export class MembersPageToolbar extends React.Component {
   static propTypes = {
-    change: PropTypes.func,
     intl: intlShape,
-    filter: PropTypes.string,
     showModalAction: PropTypes.func.isRequired,
     onInvite: PropTypes.func,
     projectRole: PropTypes.string,
@@ -68,17 +61,10 @@ export class MembersPageToolbar extends React.Component {
 
   static defaultProps = {
     intl: {},
-    filter: PropTypes.string,
-    change: () => {},
-    showModalAction: () => {},
     onInvite: () => {},
     projectRole: '',
     accountRole: '',
   };
-
-  componentDidMount() {
-    this.props.change('filter', this.props.filter);
-  }
 
   showInviteUserModal = () => {
     this.props.tracking.trackEvent(MEMBERS_PAGE_EVENTS.INVITE_USER_CLICK);
