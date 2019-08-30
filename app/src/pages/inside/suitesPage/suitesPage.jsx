@@ -150,13 +150,13 @@ export class SuitesPage extends Component {
   onHighlightRow = (highlightedRowId) => {
     this.setState({
       highlightedRowId,
-      isGridRowHighlighted: false,
+      isGridRowHighlighted: true,
     });
   };
 
   onGridRowHighlighted = () => {
     this.setState({
-      isGridRowHighlighted: true,
+      isGridRowHighlighted: false,
     });
   };
 
