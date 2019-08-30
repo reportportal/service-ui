@@ -72,7 +72,7 @@ const NameColumn = (
       <ItemInfo
         customProps={{ ownLinkParams, onOwnerClick, onClickAttribute }}
         value={itemPropValue}
-        editDisabled
+        hideEdit
       />
     </div>
   );

@@ -6,7 +6,6 @@ import { injectIntl, defineMessages } from 'react-intl';
 import classNames from 'classnames/bind';
 import Parser from 'html-react-parser';
 import { fromNowFormat } from 'common/utils';
-import { canEditLaunch } from 'common/utils/permissions';
 import { LEVEL_STEP } from 'common/constants/launchLevels';
 import { SAUCE_LABS } from 'common/constants/integrationNames';
 import {
@@ -62,7 +61,7 @@ export class ItemInfo extends Component {
     customProps: PropTypes.object,
     isStepLevel: PropTypes.bool,
     launch: PropTypes.object,
-    editDisabled: PropTypes.bool,
+    hideEdit: PropTypes.bool,
     widgetView: PropTypes.bool,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
@@ -82,7 +81,7 @@ export class ItemInfo extends Component {
     userId: '',
     userProjectRole: '',
     isStepLevel: false,
-    editDisabled: false,
+    hideEdit: false,
     widgetView: false,
     launch: {},
     onClickRetries: () => {},
@@ -116,26 +115,13 @@ export class ItemInfo extends Component {
     const {
       intl,
       value,
-      editDisabled,
+      hideEdit,
       refFunction,
-      userProjectRole,
-      userAccountRole,
-      userId,
       isStepLevel,
-      launch: launchFromProps,
       tracking,
       onClickRetries,
       customProps,
     } = this.props;
-    const launch = launchFromProps || {}; // launch can be null which is not handled by default props
-    const isEditVisible =
-      isStepLevel ||
-      (canEditLaunch(
-        userAccountRole,
-        userProjectRole,
-        value.owner ? userId === value.owner : userId === launch.owner,
-      ) &&
-        !editDisabled);
 
     return (
       <div ref={refFunction} className={cx('item-info')}>
@@ -164,7 +150,7 @@ export class ItemInfo extends Component {
               <div className={cx('item-badge', 'pattern-analysis')}>Pattern-analysis</div>
             )}
             {value.rerun && <div className={cx('item-badge', 'rerun')}>Rerun</div>}
-            {isEditVisible && (
+            {!hideEdit && (
               <span className={cx('edit-icon')} onClick={this.handleEditItem}>
                 {Parser(PencilIcon)}
               </span>

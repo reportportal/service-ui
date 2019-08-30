@@ -45,7 +45,6 @@ const cx = classNames.bind(styles);
 })
 @connect(
   (state) => ({
-    activeProject: activeProjectSelector(state),
     userAccountRole: userAccountRoleSelector(state),
     userProjectRole: activeProjectRoleSelector(state),
     userId: userIdSelector(state),
@@ -65,7 +64,6 @@ export class TestItemDetailsModal extends Component {
       type: PropTypes.string,
       fetchFunc: PropTypes.func,
     }).isRequired,
-    activeProject: PropTypes.string.isRequired,
     userProjectRole: PropTypes.string,
     userAccountRole: PropTypes.string.isRequired,
     userId: PropTypes.string,
