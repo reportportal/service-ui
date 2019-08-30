@@ -230,12 +230,13 @@ export class LaunchLevelEntities extends Component {
         validationFunc: (entityObject) =>
           (!entityObject ||
             !entityObject.value ||
-            !validate.launchDescriptionEntity(entityObject.value)) &&
-          'launchDescriptionEntityHint',
+            !validate.descriptionEntity(entityObject.value)) &&
+          'descriptionEntityHint',
         active: ENTITY_DESCRIPTION in filterValues,
         removable: true,
         customProps: {
           placeholder: intl.formatMessage(messages.DESCRIPTION_PLACEHOLDER),
+          maxLength: 18,
         },
       },
       {

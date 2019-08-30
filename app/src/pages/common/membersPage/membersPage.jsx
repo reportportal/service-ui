@@ -149,7 +149,7 @@ export class MembersPage extends Component {
       });
   };
 
-  searchUser = (filterQuery) => {
+  searchUser = ({ filter: filterQuery }) => {
     this.props.tracking.trackEvent(MEMBERS_PAGE_EVENTS.ENTER_SEARCH_PARAM);
     this.props.onFilterChange(filterQuery);
   };
@@ -191,8 +191,8 @@ export class MembersPage extends Component {
     return (
       <Fragment>
         <MembersPageToolbar
-          filter={filter}
-          onFilterChange={this.searchUser}
+          initialValues={{ filter }}
+          onChange={this.searchUser}
           onInvite={this.inviteUser}
         />
         <MembersGrid data={members} fetchData={this.props.fetchMembersAction} loading={loading} />
