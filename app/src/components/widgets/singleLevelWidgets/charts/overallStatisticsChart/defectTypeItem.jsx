@@ -15,19 +15,19 @@ const cx = classNames.bind(styles);
 export class DefectTypeItem extends React.Component {
   static propTypes = {
     defectTypes: PropTypes.object.isRequired,
-    item: PropTypes.object.isRequired,
+    itemName: PropTypes.string.isRequired,
     value: PropTypes.number.isRequired,
     intl: PropTypes.object.isRequired,
   };
   render() {
     const {
       intl: { formatMessage },
-      item,
+      itemName,
       defectTypes,
       value,
     } = this.props;
-    const defectName = getItemName({ itemName: item, defectTypes, formatMessage });
-    const bgColor = getItemColor(item, defectTypes);
+    const defectName = getItemName({ itemName, defectTypes, formatMessage });
+    const bgColor = getItemColor(itemName, defectTypes);
 
     return (
       <div className={cx('defect')}>

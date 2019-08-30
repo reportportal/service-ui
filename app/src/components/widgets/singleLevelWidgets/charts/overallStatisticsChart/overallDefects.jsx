@@ -23,7 +23,7 @@ export class OverallDefects extends React.Component {
 
             return (
               defectItem.itemType === DEFECTS && (
-                <DefectTypeItem key={item.key} item={item.key} value={item.value} />
+                <DefectTypeItem key={item.key} itemName={item.key} value={item.value} />
               )
             );
           })}
