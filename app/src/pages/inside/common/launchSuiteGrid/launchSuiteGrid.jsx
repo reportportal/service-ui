@@ -207,6 +207,7 @@ export class LaunchSuiteGrid extends PureComponent {
     onForceFinish: PropTypes.func,
     selectedItems: PropTypes.arrayOf(PropTypes.object),
     onItemSelect: PropTypes.func,
+    onItemsSelect: PropTypes.func,
     onAllItemsSelect: PropTypes.func,
     withHamburger: PropTypes.bool,
     loading: PropTypes.bool,
@@ -231,6 +232,7 @@ export class LaunchSuiteGrid extends PureComponent {
     onForceFinish: () => {},
     selectedItems: [],
     onItemSelect: () => {},
+    onItemsSelect: () => {},
     onAllItemsSelect: () => {},
     withHamburger: false,
     loading: false,
@@ -449,6 +451,7 @@ export class LaunchSuiteGrid extends PureComponent {
       sortingDirection,
       selectedItems,
       onItemSelect,
+      onItemsSelect,
       onAllItemsSelect,
       loading,
       onFilterClick,
@@ -466,6 +469,8 @@ export class LaunchSuiteGrid extends PureComponent {
           selectedItems={selectedItems}
           selectable
           onToggleSelection={onItemSelect}
+          bulkSelection
+          onItemsSelect={onItemsSelect}
           onToggleSelectAll={onAllItemsSelect}
           loading={loading}
           onFilterClick={onFilterClick}

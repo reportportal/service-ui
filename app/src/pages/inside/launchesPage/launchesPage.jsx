@@ -28,6 +28,7 @@ import {
   debugModeSelector,
   selectedLaunchesSelector,
   toggleLaunchSelectionAction,
+  selectLaunchesAction,
   unselectAllLaunchesAction,
   validationErrorsSelector,
   proceedWithValidItemsAction,
@@ -156,6 +157,7 @@ const messages = defineMessages({
   {
     showModalAction,
     toggleLaunchSelectionAction,
+    selectLaunchesAction,
     unselectAllLaunchesAction,
     proceedWithValidItemsAction,
     forceFinishLaunchesAction,
@@ -202,6 +204,7 @@ export class LaunchesPage extends Component {
     unselectAllLaunchesAction: PropTypes.func,
     proceedWithValidItemsAction: PropTypes.func,
     toggleLaunchSelectionAction: PropTypes.func,
+    selectLaunchesAction: PropTypes.func,
     forceFinishLaunchesAction: PropTypes.func,
     mergeLaunchesAction: PropTypes.func,
     compareLaunchesAction: PropTypes.func,
@@ -242,6 +245,7 @@ export class LaunchesPage extends Component {
     unselectAllLaunchesAction: () => {},
     proceedWithValidItemsAction: () => {},
     toggleLaunchSelectionAction: () => {},
+    selectLaunchesAction: () => {},
     forceFinishLaunchesAction: () => {},
     mergeLaunchesAction: () => {},
     compareLaunchesAction: () => {},
@@ -769,6 +773,7 @@ export class LaunchesPage extends Component {
                 onForceFinish={this.finishForceLaunches}
                 selectedItems={selectedLaunches}
                 onItemSelect={this.handleOneLaunchSelection}
+                onItemsSelect={this.props.selectLaunchesAction}
                 onAllItemsSelect={this.handleAllLaunchesSelection}
                 withHamburger
                 loading={loading}

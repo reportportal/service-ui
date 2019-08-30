@@ -391,6 +391,7 @@ export class StepPage extends Component {
             selectedItems={selectedItems}
             onAllItemsSelect={this.handleAllStepsSelection}
             onItemSelect={this.handleOneItemSelection}
+            onItemsSelect={this.props.selectStepsAction}
             loading={loading}
             listView={listView}
             onEditDefect={this.handleEditDefects}

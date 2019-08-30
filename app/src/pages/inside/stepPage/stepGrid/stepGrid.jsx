@@ -142,6 +142,7 @@ export class StepGrid extends Component {
     intl: PropTypes.object.isRequired,
     selectedItems: PropTypes.array,
     onItemSelect: PropTypes.func,
+    onItemsSelect: PropTypes.func,
     onAllItemsSelect: PropTypes.func,
     loading: PropTypes.bool,
     listView: PropTypes.bool,
@@ -168,6 +169,7 @@ export class StepGrid extends Component {
     data: [],
     selectedItems: [],
     onItemSelect: () => {},
+    onItemsSelect: () => {},
     onAllItemsSelect: () => {},
     loading: false,
     listView: false,
@@ -313,6 +315,7 @@ export class StepGrid extends Component {
       intl: { formatMessage },
       data,
       onItemSelect,
+      onItemsSelect,
       onAllItemsSelect,
       selectedItems,
       loading,
@@ -331,6 +334,8 @@ export class StepGrid extends Component {
           data={data}
           onToggleSelection={onItemSelect}
           onToggleSelectAll={onAllItemsSelect}
+          bulkSelection
+          onItemsSelect={onItemsSelect}
           selectedItems={selectedItems}
           selectable
           rowClassMapper={this.highlightFailedItems}
