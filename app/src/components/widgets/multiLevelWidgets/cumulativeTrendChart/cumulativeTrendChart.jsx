@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import isEqual from 'fast-deep-equal';
 import { injectIntl, intlShape } from 'react-intl';
+import { NoDataAvailable } from 'components/widgets';
 import { VirtualPopup } from 'components/main/virtualPopup';
 import { ChartJS } from 'components/widgets/common/chartjs';
 import { ActionsPopup } from 'components/widgets/common/actionsPopup';
@@ -235,12 +236,16 @@ export class CumulativeTrendChart extends PureComponent {
               isChartDataAvailable={isChartDataAvailable}
               isPrintMode={isPrintMode}
             />
-            <ChartJS
-              chartData={chartData}
-              chartOptions={this.state.chartOptions}
-              onChartElementClick={this.onChartElementClick}
-              height={chartHeight}
-            />
+            {isChartDataAvailable ? (
+              <ChartJS
+                chartData={chartData}
+                chartOptions={this.state.chartOptions}
+                onChartElementClick={this.onChartElementClick}
+                height={chartHeight}
+              />
+            ) : (
+              <NoDataAvailable />
+            )}
           </Fragment>
         )}
         {isActionsPopupShown && (
