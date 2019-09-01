@@ -226,7 +226,7 @@ export class FiltersPage extends Component {
             initialValues={{ filter }}
             onFilterChange={onFilterChange}
             onAddFilter={this.addFilter}
-            disabled={!filters.length && !filter && !loading}
+            isSearchDisabled={!filters.length && !filter && !loading}
           />
           <FilterGrid
             onEdit={this.openEditModal}

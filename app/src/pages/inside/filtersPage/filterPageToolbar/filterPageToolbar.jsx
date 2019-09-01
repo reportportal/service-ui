@@ -13,6 +13,8 @@ import styles from './filterPageToolbar.scss';
 
 const cx = classNames.bind(styles);
 
+const validateSearchFilter = (filter) => !filter || filter.length >= 3;
+
 const messages = defineMessages({
   favoriteFilters: {
     id: 'FiltersPage.msgFavoriteFilters',
@@ -28,13 +30,13 @@ const messages = defineMessages({
 @reduxForm({
   form: 'filterSearch',
   validate: ({ filter }) => ({
-    filter: filter && filter.length < 3 ? 'filterNameError' : undefined,
+    filter: validateSearchFilter(filter) ? undefined : 'filterNameError',
   }),
   enableReinitialize: true,
-  onChange: (values, dispatch, props) => {
-    if (!values.filter || values.filter.length >= 3) {
+  onChange: ({ filter }, dispatch, props) => {
+    if (validateSearchFilter(filter)) {
       props.tracking.trackEvent(FILTERS_PAGE_EVENTS.SEARCH_FILTER);
-      props.onFilterChange(values.filter);
+      props.onFilterChange(filter);
     }
   },
 })
@@ -43,21 +45,21 @@ export class FilterPageToolbar extends React.Component {
   static propTypes = {
     intl: intlShape,
     invalid: PropTypes.bool,
-    disabled: PropTypes.bool,
+    isSearchDisabled: PropTypes.bool,
     onAddFilter: PropTypes.func,
   };
 
   static defaultProps = {
     intl: {},
     invalid: false,
-    disabled: null,
+    isSearchDisabled: false,
     onAddFilter: () => {},
   };
 
   render() {
     const {
       intl: { formatMessage },
-      disabled,
+      isSearchDisabled,
       onAddFilter,
     } = this.props;
 
@@ -67,7 +69,7 @@ export class FilterPageToolbar extends React.Component {
           <FieldProvider name="filter">
             <FieldErrorHint>
               <InputSearch
-                disabled={disabled}
+                disabled={isSearchDisabled}
                 maxLength="128"
                 placeholder={formatMessage(messages.searchInputPlaceholder)}
               />
