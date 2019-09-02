@@ -469,7 +469,6 @@ export class LaunchSuiteGrid extends PureComponent {
           selectedItems={selectedItems}
           selectable
           onToggleSelection={onItemSelect}
-          bulkSelection
           onItemsSelect={onItemsSelect}
           onToggleSelectAll={onAllItemsSelect}
           loading={loading}
