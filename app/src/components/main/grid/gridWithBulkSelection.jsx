@@ -12,7 +12,7 @@ export class GridWithBulkSelection extends React.Component {
     data: [],
     selectedItems: [],
     onToggleSelection: () => {},
-    onItemsSelect: () => {},
+    onItemsSelect: null,
   };
 
   selectItemsBefore = (targetItem) => {
@@ -52,5 +52,7 @@ export class GridWithBulkSelection extends React.Component {
     }
   };
 
-  render = () => <Grid {...this.props} onSelectBulkItems={this.itemSelectHandler} />;
+  render = () => (
+    <Grid {...this.props} onClickRow={this.props.onItemsSelect ? this.itemSelectHandler : null} />
+  );
 }

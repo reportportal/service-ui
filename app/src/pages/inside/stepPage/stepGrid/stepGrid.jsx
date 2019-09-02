@@ -334,7 +334,6 @@ export class StepGrid extends Component {
           data={data}
           onToggleSelection={onItemSelect}
           onToggleSelectAll={onAllItemsSelect}
-          bulkSelection
           onItemsSelect={onItemsSelect}
           selectedItems={selectedItems}
           selectable

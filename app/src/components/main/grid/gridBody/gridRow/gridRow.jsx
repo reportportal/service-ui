@@ -19,8 +19,7 @@ export class GridRow extends Component {
     selectable: PropTypes.bool,
     selectedItems: PropTypes.arrayOf(PropTypes.object),
     onToggleSelection: PropTypes.func,
-    bulkSelection: PropTypes.bool,
-    onSelectBulkItems: PropTypes.func,
+    onClickRow: PropTypes.func,
     changeOnlyMobileLayout: PropTypes.bool,
     rowClassMapper: PropTypes.func,
     toggleAccordionEventInfo: PropTypes.object,
@@ -44,8 +43,7 @@ export class GridRow extends Component {
     selectable: false,
     selectedItems: [],
     onToggleSelection: () => {},
-    bulkSelection: false,
-    onSelectBulkItems: () => {},
+    onClickRow: null,
     changeOnlyMobileLayout: false,
     rowClassMapper: null,
     toggleAccordionEventInfo: {},
@@ -85,8 +83,6 @@ export class GridRow extends Component {
     }
   }
 
-  onRowItemSelect = (e) => this.props.onSelectBulkItems(e, this.props.value);
-
   setupRef = (overflowCell) => {
     this.overflowCell = overflowCell;
   };
@@ -109,6 +105,8 @@ export class GridRow extends Component {
 
   getHighlightBlockClasses = () =>
     this.checkIfTheHighlightNeeded() ? this.highLightBlockClasses : '';
+
+  handleRowClick = (e) => this.props.onClickRow(e, this.props.value);
 
   updateHighlightBlockStyleIfNeeded = (prevState) => {
     const highlightBlockStyle = this.getHighlightBlockStyle();
@@ -188,7 +186,7 @@ export class GridRow extends Component {
       columns,
       value,
       selectable,
-      bulkSelection,
+      onClickRow,
       changeOnlyMobileLayout,
       rowClassMapper,
       gridRowClassName,
@@ -206,7 +204,7 @@ export class GridRow extends Component {
         })}
         data-id={value.id}
         ref={this.rowRef}
-        onClick={bulkSelection ? this.onRowItemSelect : null}
+        onClick={onClickRow ? this.handleRowClick : null}
       >
         <div className={cx('grid-row')}>
           <div
