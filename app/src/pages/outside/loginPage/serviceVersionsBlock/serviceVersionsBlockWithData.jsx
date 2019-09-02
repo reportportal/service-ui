@@ -23,7 +23,7 @@ export class ServiceVersionsBlockWithData extends Component {
   };
 
   componentWillMount() {
-    fetchJsonp('http://status.reportportal.io/versions', {
+    fetchJsonp('https://status.reportportal.io/versions', {
       jsonpCallback: 'jsonp',
     })
       .then((res) => res.json())
