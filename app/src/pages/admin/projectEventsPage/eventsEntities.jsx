@@ -296,6 +296,9 @@ export class EventsEntities extends Component {
         title: intl.formatMessage(messages.timeCol),
         active: true,
         removable: false,
+        customProps: {
+          withoutDynamic: true,
+        },
       },
       {
         id: ENTITY_OBJECT_TYPE,

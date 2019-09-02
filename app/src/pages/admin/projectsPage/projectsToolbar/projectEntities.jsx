@@ -132,6 +132,9 @@ export class ProjectEntities extends Component {
         title: intl.formatMessage(messages.lastRun),
         active: true,
         removable: false,
+        customProps: {
+          withoutDynamic: true,
+        },
       },
       {
         id: LAUNCHES_QUANTITY,
