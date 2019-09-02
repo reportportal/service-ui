@@ -51,7 +51,6 @@ const messages = defineMessages({
   }),
   {
     showRemoveIndexModal: () => showModalAction({ id: 'removeIndexModal' }),
-    showGenerateIndexModal: () => showModalAction({ id: 'generateIndexModal' }),
   },
 )
 @injectIntl
