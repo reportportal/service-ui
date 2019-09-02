@@ -13,6 +13,6 @@ LICENSE
 .vscode
 
 build/
-bin/
+#bin/
 .idea/
 vendor/
