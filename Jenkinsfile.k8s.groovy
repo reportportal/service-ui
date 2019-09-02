@@ -36,7 +36,15 @@ podTemplate(
         def srvVersion = "BUILD-${env.BUILD_NUMBER}"
         def tag = "$srvRepo:$srvVersion"
 
+        /**
+         * General ReportPortal Kubernetes Configuration and Helm Chart
+         */
         def k8sDir = "kubernetes"
+        def k8sChartDir = "$k8sDir/reportportal/v5"
+
+        /**
+         * Jenkins utilities and environment Specific k8s configuration
+         */
         def ciDir = "reportportal-ci"
         def appDir = "app"
 
@@ -45,18 +53,18 @@ podTemplate(
                 sh 'mkdir -p ~/.ssh'
                 sh 'ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts'
                 sh 'ssh-keyscan -t rsa git.epam.com >> ~/.ssh/known_hosts'
-                dir('kubernetes') {
+                dir(k8sDir) {
                     git branch: "master", url: 'https://github.com/reportportal/kubernetes.git'
 
                 }
-                dir('reportportal-ci') {
+                dir(ciDir) {
                     git credentialsId: 'epm-gitlab-key', branch: "master", url: 'git@git.epam.com:epmc-tst/reportportal-ci.git'
                 }
 
             }
         }, 'Checkout Service': {
             stage('Checkout Service') {
-                dir('app') {
+                dir(appDir) {
                     checkout scm
                 }
             }
@@ -70,7 +78,7 @@ podTemplate(
         helm.init()
         utils.scheduleRepoPoll()
 
-        dir('app') {
+        dir(appDir) {
             parallel 'Build UI': {
                 dir('app') {
                     container('nodejs') {
@@ -88,20 +96,29 @@ podTemplate(
                     sh "make build-server"
                 }
             }
+
+            stage('Build Docker Image') {
+                container('docker') {
+                    sh "docker build -f docker/Dockerfile-k8s -t quay.io/reportportal/service-ui:BUILD-${env.BUILD_NUMBER} ."
+                    sh "docker push quay.io/reportportal/service-ui:BUILD-${env.BUILD_NUMBER}"
+                }
+            }
         }
 
 
-//        stage('Build Docker Image') {
-//            dir('app') {
-//                container('docker') {
-//                    sh "docker build -f docker/Dockerfile-develop -t quay.io/reportportal/service-api:BUILD-${env.BUILD_NUMBER} ."
-//                    sh "docker push quay.io/reportportal/service-api:BUILD-${env.BUILD_NUMBER}"
-//                }
-//
-//            }
-//        }
+        stage('Deploy to Dev') {
+            def valsFile = "merged.yml"
+            container('yq') {
+                sh "yq m -x $k8sChartDir/values.yaml $ciDir/rp/values-ci.yml > $valsFile"
+            }
 
-
+            container('helm') {
+                dir(k8sChartDir) {
+                    sh 'helm dependency update'
+                }
+                sh "helm upgrade --reuse-values --set serviceui.repository=$srvRepo --set serviceui.tag=$srvVersion --wait -f $valsFile reportportal ./$k8sChartDir"
+            }
+        }
     }
 
 }
