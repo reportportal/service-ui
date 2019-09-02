@@ -37,7 +37,7 @@ import { C3Chart } from '../../../common/c3chart';
 import chartStyles from './launchExecutionAndIssueStatistics.scss';
 import { Legend } from '../../../common/legend';
 import { LaunchExecutionAndIssueStatisticsTooltip } from './launchExecutionAndIssueStatisticsTooltip';
-import { getPercentage, getDefectItems, getChartData } from './chartUtils';
+import { getPercentage, getDefectItems, getChartData, isSmallDonutChartView } from './chartUtils';
 import { messages } from './messages';
 import { getItemNameConfig } from '../../../common/utils';
 
@@ -138,7 +138,7 @@ export class LaunchExecutionChart extends Component {
       .select('.c3-chart-arcs-title')
       .attr('dy', onStatusPageMode ? -5 : -15)
       .append('tspan')
-      .attr('dy', onStatusPageMode ? 15 : 30)
+      .attr('dy', onStatusPageMode || isSmallDonutChartView(this.height, this.width) ? 15 : 30)
       .attr('x', 0)
       .attr('fill', '#666')
       .text('SUM');
@@ -301,9 +301,12 @@ export class LaunchExecutionChart extends Component {
         height: newHeight,
       });
       this.height = newHeight;
+      this.width = newWidth;
+      this.forceUpdate();
     } else if (this.width !== newWidth) {
       this.chart.flush();
       this.width = newWidth;
+      this.forceUpdate();
     }
   };
 
@@ -339,7 +342,9 @@ export class LaunchExecutionChart extends Component {
     const { isConfigReady } = this.state;
     const { isPreview, uncheckedLegendItems, onStatusPageMode } = this.props;
     const classes = chartCx('container', { 'preview-view': isPreview });
-    const chartClasses = chartCx('c3', { 'small-view': this.height <= 250 });
+    const chartClasses = chartCx('c3', {
+      'small-view': isSmallDonutChartView(this.height, this.width),
+    });
     const legendItems = this.statusItems.map((item) => item.id);
 
     return (
