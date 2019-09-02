@@ -1,0 +1,12 @@
+FROM alpine:3.10
+
+LABEL maintainer="Andrei Varabyeu <andrei_varabyeu@epam.com>"
+#LABEL version=5.0.0-BETA-8
+
+COPY bin/service-ui /
+COPY app/build /public
+
+ENV RP_STATICS_PATH=/public
+
+EXPOSE 8080
+ENTRYPOINT ["/service-ui"]
