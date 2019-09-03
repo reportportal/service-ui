@@ -100,7 +100,7 @@ export const withPagination = ({
         <WrappedComponent
           activePage={page}
           itemCount={totalElements}
-          pageCount={totalPages || 1}
+          pageCount={totalPages}
           pageSize={this.getPageSize()}
           onChangePage={this.changePageHandler}
           onChangePageSize={this.changeSizeHandler}
