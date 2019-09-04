@@ -74,6 +74,16 @@ export class ItemsListRow extends React.Component {
     this.props.onToggleItemSelect(this.props.testItem, !this.props.selected);
   };
 
+  renderLogMessages = () => {
+    const { logs } = this.props.testItem;
+    return logs.map((log, index) => (
+      // eslint-disable-next-line react/no-array-index-key
+      <StackTraceMessageBlock key={`log-message-${index}`} level={log.level}>
+        <div className={cx('message')}>{log.message}</div>
+      </StackTraceMessageBlock>
+    ));
+  };
+
   render() {
     const { selected, testItem } = this.props;
     return (
@@ -111,9 +121,7 @@ export class ItemsListRow extends React.Component {
               </div>
             </div>
           </div>
-          <StackTraceMessageBlock>
-            <div className={cx('message')}>{testItem.logMessages}</div>
-          </StackTraceMessageBlock>
+          {this.renderLogMessages()}
         </div>
       </div>
     );
