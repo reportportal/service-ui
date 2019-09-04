@@ -102,6 +102,7 @@ export class EditItemModal extends Component {
     intl: intlShape.isRequired,
     data: PropTypes.shape({
       item: PropTypes.object,
+      parentLaunch: PropTypes.object,
       type: PropTypes.string,
       fetchFunc: PropTypes.func,
     }).isRequired,
@@ -196,7 +197,7 @@ export class EditItemModal extends Component {
   render() {
     const {
       intl: { formatMessage },
-      data: { item, type },
+      data: { item, parentLaunch, type },
       handleSubmit,
       userAccountRole,
       userProjectRole,
@@ -215,7 +216,7 @@ export class EditItemModal extends Component {
     const editable = canEditLaunch(
       userAccountRole,
       userProjectRole,
-      item.owner ? userId === item.owner : userId === item.owner,
+      item.owner ? userId === item.owner : userId === parentLaunch.owner,
     );
 
     return (

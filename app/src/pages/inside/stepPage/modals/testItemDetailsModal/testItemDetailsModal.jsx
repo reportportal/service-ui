@@ -19,6 +19,7 @@ import {
   userIdSelector,
 } from 'controllers/user';
 import { clearLogPageStackTrace } from 'controllers/log';
+import { launchSelector } from 'controllers/testItem';
 import { MarkdownEditor, MarkdownViewer } from 'components/main/markdown';
 import { getDuration } from 'common/utils/timeDateUtils';
 import { AccordionContainer } from 'components/main/accordionContainer';
@@ -49,6 +50,7 @@ const cx = classNames.bind(styles);
     userProjectRole: activeProjectRoleSelector(state),
     userId: userIdSelector(state),
     currentProject: activeProjectSelector(state),
+    launch: launchSelector(state),
   }),
   {
     showNotification,
@@ -64,6 +66,7 @@ export class TestItemDetailsModal extends Component {
       type: PropTypes.string,
       fetchFunc: PropTypes.func,
     }).isRequired,
+    launch: PropTypes.object,
     userProjectRole: PropTypes.string,
     userAccountRole: PropTypes.string.isRequired,
     userId: PropTypes.string,
@@ -76,6 +79,7 @@ export class TestItemDetailsModal extends Component {
   };
 
   static defaultProps = {
+    launch: {},
     userId: '',
     userProjectRole: '',
     dirty: false,
@@ -238,6 +242,7 @@ export class TestItemDetailsModal extends Component {
     const {
       intl,
       data: { item },
+      launch,
       userAccountRole,
       userProjectRole,
       userId,
@@ -256,7 +261,7 @@ export class TestItemDetailsModal extends Component {
     const editable = canEditLaunch(
       userAccountRole,
       userProjectRole,
-      item.owner ? userId === item.owner : userId === item.owner,
+      item.owner ? userId === item.owner : userId === launch.owner,
     );
     return (
       <ModalLayout
