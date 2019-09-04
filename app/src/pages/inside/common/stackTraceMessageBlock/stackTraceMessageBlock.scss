@@ -9,6 +9,9 @@
   &.with-accordion {
     padding-bottom: 20px;
   }
+  &.fatal {
+    border-left: 4px solid $COLOR--fatal;
+  }
 }
 .row {
   position: relative;
