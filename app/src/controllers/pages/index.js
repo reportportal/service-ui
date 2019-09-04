@@ -19,6 +19,7 @@ export {
   prevTestItemSelector,
   searchStringSelector,
   querySelector,
+  isInitialDispatchDoneSelector,
 } from './selectors';
 export { updatePagePropertiesAction } from './actionCreators';
 

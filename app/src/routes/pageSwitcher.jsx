@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { PropTypes } from 'prop-types';
 import { ModalContainer } from 'components/main/modal';
 import { pageNames } from 'controllers/pages/constants';
-import { pageSelector } from 'controllers/pages';
+import { pageSelector, isInitialDispatchDoneSelector } from 'controllers/pages';
 import { LocalizationSwitcher } from 'components/main/localizationSwitcher';
 import { ScreenLock } from 'components/main/screenLock';
 import { NotificationContainer } from 'components/main/notification';
@@ -17,15 +17,25 @@ Object.keys(pageNames).forEach((page) => {
     throw new Error(`Rendering for ${page} was not defined.`);
   }
 });
-@connect((state) => ({ page: pageSelector(state) }))
+
+@connect((state) => ({
+  page: pageSelector(state),
+  isInitialDispatchDone: isInitialDispatchDoneSelector(state),
+}))
 export default class PageSwitcher extends React.PureComponent {
-  static propTypes = { page: PropTypes.string };
-  static defaultProps = { page: undefined };
+  static propTypes = {
+    page: PropTypes.string,
+    isInitialDispatchDone: PropTypes.bool,
+  };
+  static defaultProps = {
+    page: undefined,
+    isInitialDispatchDone: false,
+  };
 
   render() {
-    const { page } = this.props;
+    const { page, isInitialDispatchDone } = this.props;
 
-    if (!page) return null;
+    if (!page || !isInitialDispatchDone) return null;
 
     const { component: PageComponent, layout: Layout } = pageRendering[page];
 
