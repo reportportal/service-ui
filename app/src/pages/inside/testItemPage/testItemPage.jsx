@@ -147,22 +147,23 @@ export class TestItemPage extends Component {
     restorePath: () => {},
   };
 
-  onEditItem = (launch) => {
+  onEditItem = (item) => {
     this.props.showModalAction({
       id: 'editItemModal',
       data: {
-        item: launch,
+        item,
         type: LAUNCH_ITEM_TYPES.item,
+        parentLaunch: this.props.parentLaunch,
         fetchFunc: this.props.fetchTestItemsAction,
       },
     });
   };
 
-  onEditItems = (launches) => {
+  onEditItems = (items) => {
     this.props.showModalAction({
       id: 'editItemsModal',
       data: {
-        items: launches,
+        items,
         parentLaunch: this.props.parentLaunch,
         type: LAUNCH_ITEM_TYPES.item,
         fetchFunc: this.unselectAndFetchItems,

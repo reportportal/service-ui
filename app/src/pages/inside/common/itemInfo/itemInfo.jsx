@@ -13,7 +13,7 @@ import {
   userAccountRoleSelector,
   userIdSelector,
 } from 'controllers/user';
-import { levelSelector, launchSelector, formatItemName } from 'controllers/testItem';
+import { levelSelector, formatItemName } from 'controllers/testItem';
 import { availableIntegrationsByPluginNameSelector } from 'controllers/plugins';
 import { MarkdownViewer } from 'components/main/markdown';
 import { LAUNCHES_PAGE_EVENTS } from 'components/main/analytics/events';
@@ -46,7 +46,6 @@ const messages = defineMessages({
   userProjectRole: activeProjectRoleSelector(state),
   userId: userIdSelector(state),
   isStepLevel: levelSelector(state) === LEVEL_STEP,
-  launch: launchSelector(state),
 }))
 @track()
 export class ItemInfo extends Component {
@@ -60,7 +59,6 @@ export class ItemInfo extends Component {
     refFunction: PropTypes.func,
     customProps: PropTypes.object,
     isStepLevel: PropTypes.bool,
-    launch: PropTypes.object,
     hideEdit: PropTypes.bool,
     widgetView: PropTypes.bool,
     tracking: PropTypes.shape({
@@ -83,7 +81,6 @@ export class ItemInfo extends Component {
     isStepLevel: false,
     hideEdit: false,
     widgetView: false,
-    launch: {},
     onClickRetries: () => {},
     refFunction: null,
   };

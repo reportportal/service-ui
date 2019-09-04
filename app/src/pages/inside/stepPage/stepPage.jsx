@@ -83,7 +83,6 @@ import { StepGrid } from './stepGrid';
 export class StepPage extends Component {
   static propTypes = {
     deleteItems: PropTypes.func,
-    onEditItem: PropTypes.func,
     onEditItems: PropTypes.func,
     debugMode: PropTypes.bool.isRequired,
     steps: PropTypes.arrayOf(PropTypes.object),
@@ -130,7 +129,6 @@ export class StepPage extends Component {
 
   static defaultProps = {
     deleteItems: () => {},
-    onEditItem: () => {},
     onEditItems: () => {},
     steps: [],
     parentItem: {},
@@ -198,11 +196,11 @@ export class StepPage extends Component {
     });
   };
 
-  onEditItem = (launch) => {
+  onEditItem = (item) => {
     this.props.showModalAction({
       id: 'testItemDetails',
       data: {
-        item: launch,
+        item,
         type: LAUNCH_ITEM_TYPES.item,
         fetchFunc: this.props.fetchTestItemsAction,
       },
