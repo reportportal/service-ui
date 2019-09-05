@@ -877,6 +877,8 @@
   "LaunchStatus.failed": "Неудачно",
   "LaunchStatus.passed": "Успешно",
   "LaunchStatus.skipped": "Пропущено",
+  "LaunchesFilter.all": "Все",
+  "LaunchesFilter.latest":"Последние",
   "LaunchesPage.addNewWidget": "Добавить новый виджет",
   "LaunchesPage.addWidgetSuccess": "Виджет добавлен",
   "LaunchesPage.alreadyIgnored": "Элемент уже игнорируется Авто-Анализом",
