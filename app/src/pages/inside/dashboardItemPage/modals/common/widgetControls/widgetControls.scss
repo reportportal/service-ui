@@ -5,7 +5,8 @@
 .zoom-container{
   position: relative;
 }
-.attr-header {
+.attr-header,
+.component-header {
   padding: 10px 10px;
   background: $COLOR--white;
   color: $COLOR--gray-47;

@@ -23,3 +23,4 @@ export { ProductStatusControls } from './productStatusControls';
 export { MostTimeConsumingTestCasesControls } from './mostTimeConsumingTestCasesControls';
 export { CommonWidgetControls } from './commonWidgetControls';
 export { MostPopularPatternsControls } from './mostPopularPatternsControls';
+export { ComponentHealthCheckControls } from './componentHealthCheckControls';

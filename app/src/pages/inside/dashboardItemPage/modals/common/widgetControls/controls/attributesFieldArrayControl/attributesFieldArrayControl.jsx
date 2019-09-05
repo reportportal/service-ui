@@ -1,50 +1,46 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
-import { connect } from 'react-redux';
 import Parser from 'html-react-parser';
 import classNames from 'classnames/bind';
-import { URLS } from 'common/urls';
 import CrossIcon from 'common/img/cross-icon-inline.svg';
-import { activeProjectSelector } from 'controllers/user';
 import { ModalField } from 'components/main/modal';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { InputTagsSearch } from 'components/inputs/inputTagsSearch';
-import { FIELD_LABEL_WIDTH } from '../controls/constants';
-import styles from './attributesFieldArray.scss';
+import { FIELD_LABEL_WIDTH } from '../constants';
+import styles from './attributesFieldArrayControl.scss';
 
 const cx = classNames.bind(styles);
 
 const messages = defineMessages({
-  attributeKeyFieldLabel_0: {
-    id: 'CumulativeTrendControls.attributeKeyFieldLabelOverview',
-    defaultMessage: 'Level 1 (overview)',
-  },
-  attributeKeyFieldLabel_1: {
-    id: 'CumulativeTrendControls.attributeKeyFieldLabelDetailedView',
-    defaultMessage: 'Level 2 (detailed view)',
+  attributeKeyFieldLabel: {
+    id: 'AttributesFieldArrayControl.attributeKeyFieldLabel',
+    defaultMessage: 'Level {number} {view}',
   },
   attributeKeyFieldPlaceholder: {
-    id: 'CumulativeTrendControls.attributeKeyFieldPlaceholder',
+    id: 'AttributesFieldArrayControl.attributeKeyFieldPlaceholder',
     defaultMessage: 'Enter an attribute key',
   },
   addOneMoreLevel: {
-    id: 'CumulativeTrendControls.addOneMoreLevel',
+    id: 'AttributesFieldArrayControl.addOneMoreLevel',
     defaultMessage: '+ Add one more level',
   },
 });
 
-@connect((state) => ({
-  launchAttributeKeysSearch: URLS.launchAttributeKeysSearch(activeProjectSelector(state)),
-}))
 @injectIntl
-export class AttributesFieldArray extends Component {
+export class AttributesFieldArrayControl extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
     fields: PropTypes.object.isRequired,
-    launchAttributeKeysSearch: PropTypes.string.isRequired,
     fieldValidator: PropTypes.func.isRequired,
+    maxAttributesAmount: PropTypes.number.isRequired,
+    url: PropTypes.string.isRequired,
+    attributeKeyFieldViewLabels: PropTypes.array,
+  };
+
+  static defaultProps = {
+    attributeKeyFieldViewLabels: [],
   };
 
   constructor(props) {
@@ -77,10 +73,12 @@ export class AttributesFieldArray extends Component {
     const {
       intl: { formatMessage },
       fields,
-      launchAttributeKeysSearch,
+      url,
       fieldValidator,
+      maxAttributesAmount,
+      attributeKeyFieldViewLabels,
     } = this.props;
-    const canAddNewItems = fields.length < 2;
+    const canAddNewItems = fields.length < maxAttributesAmount;
 
     return (
       <Fragment>
@@ -90,7 +88,10 @@ export class AttributesFieldArray extends Component {
             <ModalField
               // eslint-disable-next-line
               key={item}
-              label={formatMessage(messages[`attributeKeyFieldLabel_${index}`])}
+              label={formatMessage(messages.attributeKeyFieldLabel, {
+                number: index + 1,
+                view: attributeKeyFieldViewLabels[index],
+              })}
               labelWidth={FIELD_LABEL_WIDTH}
               className={cx('attribute-modal-field')}
             >
@@ -102,7 +103,7 @@ export class AttributesFieldArray extends Component {
               >
                 <FieldErrorHint hintType="top">
                   <InputTagsSearch
-                    uri={launchAttributeKeysSearch}
+                    uri={url}
                     minLength={1}
                     placeholder={formatMessage(messages.attributeKeyFieldPlaceholder)}
                     async
