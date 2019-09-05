@@ -16,7 +16,7 @@ export const LinkItem = ({ link, active, title, onClick }) =>
   );
 LinkItem.propTypes = {
   link: PropTypes.object.isRequired,
-  title: PropTypes.string.isRequired,
+  title: PropTypes.oneOfType([PropTypes.string, PropTypes.object]).isRequired,
   active: PropTypes.bool,
   onClick: PropTypes.func,
 };
