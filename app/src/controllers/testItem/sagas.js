@@ -31,7 +31,6 @@ import {
   PARENT_ITEMS_NAMESPACE,
   RESTORE_PATH,
   FETCH_TEST_ITEMS_LOG_PAGE,
-  TEST_ITEMS_TYPE_LIST,
 } from './constants';
 import { LEVELS } from './levels';
 import {
@@ -43,6 +42,7 @@ import {
   itemsSelector,
   logPageOffsetSelector,
   levelSelector,
+  isTestItemsListSelector,
 } from './selectors';
 import { calculateLevel } from './utils';
 
@@ -79,12 +79,14 @@ export function* fetchParentItems() {
 }
 
 function* fetchTestItems({ payload = {} }) {
-  const { offset = 0, testItemIds, filterId } = payload;
+  const { offset = 0 } = payload;
+  const filterId = yield select(filterIdSelector);
   const isPathNameChanged = yield select(pathnameChangedSelector);
+  const isTestItemsList = yield select(isTestItemsListSelector);
   if (isPathNameChanged && !payload.offset) {
     yield put(setPageLoadingAction(true));
 
-    if (testItemIds !== TEST_ITEMS_TYPE_LIST) {
+    if (!isTestItemsList) {
       yield call(fetchParentItems);
     }
   }
@@ -112,24 +114,23 @@ function* fetchTestItems({ payload = {} }) {
   const uniqueIdFilterKey = 'filter.eq.uniqueId';
   const noChildFilter = 'filter.eq.hasChildren' in query;
   const underPathItemsIds = itemIds.filter((item) => item !== launchId);
-  const params =
-    testItemIds === TEST_ITEMS_TYPE_LIST
-      ? {
-          filterId,
-          ...query,
-        }
-      : {
-          'filter.eq.launchId': launchId,
-          'filter.eq.parentId': !noChildFilter ? parentId : undefined,
-          'filter.level.path': !parentId && !noChildFilter ? 1 : undefined,
-          'filter.under.path':
-            noChildFilter && underPathItemsIds.length > 0 ? underPathItemsIds.join('.') : undefined,
-          [uniqueIdFilterKey]: pageQuery[uniqueIdFilterKey],
-          ...query,
-        };
+  const params = isTestItemsList
+    ? {
+        filterId,
+        ...query,
+      }
+    : {
+        'filter.eq.launchId': launchId,
+        'filter.eq.parentId': !noChildFilter ? parentId : undefined,
+        'filter.level.path': !parentId && !noChildFilter ? 1 : undefined,
+        'filter.under.path':
+          noChildFilter && underPathItemsIds.length > 0 ? underPathItemsIds.join('.') : undefined,
+        [uniqueIdFilterKey]: pageQuery[uniqueIdFilterKey],
+        ...query,
+      };
 
-  if (testItemIds === TEST_ITEMS_TYPE_LIST && !activeFilter) {
-    const filter = yield fetch(URLS.filter(project, filterId), { method: 'get' });
+  if (isTestItemsList && !activeFilter) {
+    const filter = yield call(fetch, URLS.filter(project, filterId));
 
     if (filter) {
       yield put(updateFilterAction(filter));

@@ -49,7 +49,6 @@ export const queryParametersSelector = createQueryParametersSelector({
   defaultSorting: DEFAULT_SORTING,
 });
 export const parentItemsSelector = (state) => domainSelector(state).parentItems || [];
-export const testItemParametersSelector = (state) => domainSelector(state).parameters || {};
 export const createParentItemsSelector = (offset = 0) =>
   createSelector(parentItemsSelector, defectTypesSelector, (parentItems, defectTypes) =>
     normalizeTestItem(parentItems[parentItems.length - 1 - offset], defectTypes),
@@ -58,6 +57,11 @@ export const parentItemSelector = createParentItemsSelector();
 export const launchSelector = (state) => parentItemsSelector(state)[0];
 export const isLostLaunchSelector = (state) =>
   parentItemsSelector(state).length > 1 && !launchSelector(state);
+
+export const isTestItemsListSelector = createSelector(
+  testItemIdsSelector,
+  (testItemIds) => testItemIds === TEST_ITEMS_TYPE_LIST,
+);
 
 const isListView = (query, namespace) => {
   const namespacedQuery = extractNamespacedQuery(query, namespace);
@@ -112,17 +116,7 @@ export const breadcrumbsSelector = createSelector(
   pagePropertiesSelector,
   debugModeSelector,
   filterIdSelector,
-  testItemParametersSelector,
-  (
-    projectId,
-    filter,
-    parentItems,
-    testItemIds,
-    query,
-    debugMode,
-    filterCategory,
-    testItemParameters,
-  ) => {
+  (projectId, filter, parentItems, testItemIdsArray, query, debugMode, filterCategory) => {
     const queryNamespacesToCopy = [LAUNCH_NAMESPACE];
     let isListViewExist = false;
     const filterId = (filter && filter.id) || filterCategory;
@@ -141,14 +135,14 @@ export const breadcrumbsSelector = createSelector(
             query: copyQuery(query, queryNamespacesToCopy),
           },
         },
-        active: !testItemIds || testItemIds.length === 0,
+        active: !testItemIdsArray || testItemIdsArray.length === 0,
       },
     ];
-    if (!testItemIds || testItemIds.length === 0) {
+    if (!testItemIdsArray || testItemIdsArray.length === 0) {
       return descriptors;
     }
 
-    if (testItemParameters.testItemIds === TEST_ITEMS_TYPE_LIST) {
+    if (isTestItemsListSelector) {
       return [
         ...descriptors,
         {
@@ -175,7 +169,7 @@ export const breadcrumbsSelector = createSelector(
       ...parentItems.map((item, i) => {
         if (!item) {
           return {
-            id: testItemIds[i] || i,
+            id: testItemIdsArray[i] || i,
             error: true,
             lost: i === 0 && parentItems.length > 1,
           };
@@ -194,7 +188,7 @@ export const breadcrumbsSelector = createSelector(
             payload: {
               projectId,
               filterId,
-              testItemIds: testItemIds && testItemIds.slice(0, i + 1).join('/'),
+              testItemIds: testItemIdsArray && testItemIdsArray.slice(0, i + 1).join('/'),
             },
             meta: {
               query: itemQuery,

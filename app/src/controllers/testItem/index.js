@@ -33,7 +33,7 @@ export {
   listViewLinkSelector,
   logViewLinkSelector,
   getLogItemLinkSelector,
-  testItemParametersSelector,
+  isTestItemsListSelector,
 } from './selectors';
 export { formatItemName, getQueryNamespace } from './utils';
 export { LOG_VIEW, LIST_VIEW, TEST_ITEMS_TYPE_LIST } from './constants';

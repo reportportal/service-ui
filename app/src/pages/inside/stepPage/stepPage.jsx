@@ -9,8 +9,8 @@ import {
   loadingSelector,
   fetchTestItemsAction,
   isListViewSelector,
+  isTestItemsListSelector,
   namespaceSelector,
-  testItemParametersSelector,
 } from 'controllers/testItem';
 import { debugModeSelector } from 'controllers/launch';
 import { STEP_PAGE_EVENTS, STEP_PAGE } from 'components/main/analytics/events';
@@ -34,7 +34,6 @@ import {
 import { SORTING_ASC, withSortingURL } from 'controllers/sorting';
 import { ENTITY_START_TIME } from 'components/filterEntities/constants';
 import { withPagination, DEFAULT_PAGINATION, SIZE_KEY } from 'controllers/pagination';
-import { activeFilterSelector } from 'controllers/filter';
 import { prevTestItemSelector } from 'controllers/pages';
 import { showModalAction } from 'controllers/modal';
 import { PaginationToolbar } from 'components/main/paginationToolbar';
@@ -56,8 +55,7 @@ import { StepGrid } from './stepGrid';
     listView: isListViewSelector(state, namespaceSelector(state)),
     highlightItemId: prevTestItemSelector(state),
     getDefectType: getDefectTypeSelector(state),
-    testItemParameters: testItemParametersSelector(state),
-    currentFilter: activeFilterSelector(state),
+    isTestItemsList: isTestItemsListSelector(state),
   }),
   {
     unselectAllSteps: unselectAllStepsAction,
@@ -130,8 +128,7 @@ export class StepPage extends Component {
     }).isRequired,
     highlightItemId: PropTypes.number,
     getDefectType: PropTypes.func,
-    testItemParameters: PropTypes.object,
-    currentFilter: PropTypes.object,
+    isTestItemsList: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -173,8 +170,7 @@ export class StepPage extends Component {
     filterEntities: [],
     highlightItemId: null,
     getDefectType: () => {},
-    testItemParameters: {},
-    currentFilter: null,
+    isTestItemsList: false,
   };
 
   state = {
@@ -212,7 +208,7 @@ export class StepPage extends Component {
       data: {
         item: launch,
         type: LAUNCH_ITEM_TYPES.item,
-        fetchFunc: () => this.props.fetchTestItemsAction(this.props.testItemParameters),
+        fetchFunc: this.props.fetchTestItemsAction,
       },
     });
   };
@@ -244,7 +240,7 @@ export class StepPage extends Component {
 
   handleUnlinkIssue = () =>
     this.props.unlinkIssueAction(this.props.selectedItems, {
-      fetchFunc: () => this.props.fetchTestItemsAction(this.props.testItemParameters),
+      fetchFunc: this.props.fetchTestItemsAction,
     });
 
   handleUnlinkSingleTicket = (testItem) => (ticketId) => {
@@ -261,28 +257,28 @@ export class StepPage extends Component {
     ];
 
     this.props.unlinkIssueAction(items, {
-      fetchFunc: () => this.props.fetchTestItemsAction(this.props.testItemParameters),
+      fetchFunc: this.props.fetchTestItemsAction,
     });
   };
 
   handleLinkIssue = () =>
     this.props.linkIssueAction(this.props.selectedItems, {
-      fetchFunc: () => this.props.fetchTestItemsAction(this.props.testItemParameters),
+      fetchFunc: this.props.fetchTestItemsAction,
     });
 
   handlePostIssue = () =>
     this.props.postIssueAction(this.props.selectedItems, {
-      fetchFunc: () => this.props.fetchTestItemsAction(this.props.testItemParameters),
+      fetchFunc: this.props.fetchTestItemsAction,
     });
 
   handleIgnoreInAA = () =>
     this.props.ignoreInAutoAnalysisAction(this.props.selectedItems, {
-      fetchFunc: () => this.props.fetchTestItemsAction(this.props.testItemParameters),
+      fetchFunc: this.props.fetchTestItemsAction,
     });
 
   handleIncludeInAA = () =>
     this.props.includeInAutoAnalysisAction(this.props.selectedItems, {
-      fetchFunc: () => this.props.fetchTestItemsAction(this.props.testItemParameters),
+      fetchFunc: this.props.fetchTestItemsAction,
     });
 
   handleEditDefects = (eventData) => {
@@ -292,12 +288,12 @@ export class StepPage extends Component {
         id: 'editToInvestigateDefectModal',
         data: {
           item: items[0],
-          fetchFunc: () => this.props.fetchTestItemsAction(this.props.testItemParameters),
+          fetchFunc: this.props.fetchTestItemsAction,
         },
       });
     } else {
       this.props.editDefectsAction(items, {
-        fetchFunc: () => this.props.fetchTestItemsAction(this.props.testItemParameters),
+        fetchFunc: this.props.fetchTestItemsAction,
         debugMode: this.props.debugMode,
       });
     }
@@ -318,7 +314,7 @@ export class StepPage extends Component {
   proceedWithValidItems = () => {
     this.props.tracking.trackEvent(STEP_PAGE_EVENTS.PROCEED_VALID_ITEMS);
     this.props.proceedWithValidItemsAction(this.props.lastOperation, this.props.selectedItems, {
-      fetchFunc: () => this.props.fetchTestItemsAction(this.props.testItemParameters),
+      fetchFunc: this.props.fetchTestItemsAction,
     });
   };
 
@@ -352,8 +348,7 @@ export class StepPage extends Component {
       onChangeSorting,
       sortingColumn,
       sortingDirection,
-      testItemParameters,
-      currentFilter,
+      isTestItemsList,
     } = this.props;
     const rowHighlightingConfig = {
       onGridRowHighlighted: this.onGridRowHighlighted,
@@ -376,7 +371,7 @@ export class StepPage extends Component {
             onUnselect={this.unselectItem}
             onUnselectAll={this.unselectAllItems}
             onProceedValidItems={this.proceedWithValidItems}
-            onRefresh={() => this.props.fetchTestItemsAction(testItemParameters)}
+            onRefresh={this.props.fetchTestItemsAction}
             debugMode={debugMode}
             onEditDefects={this.handleEditDefects}
             onIgnoreInAA={this.handleIgnoreInAA}
@@ -390,8 +385,7 @@ export class StepPage extends Component {
             onFilterValidate={onFilterValidate}
             onFilterRemove={onFilterRemove}
             onFilterAdd={onFilterAdd}
-            testItemParameters={testItemParameters}
-            currentFilter={currentFilter}
+            isTestItemsList={isTestItemsList}
           />
           <StepGrid
             data={steps}

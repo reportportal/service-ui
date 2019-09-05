@@ -3,9 +3,15 @@
 }
 .share-icon {
   position: relative;
-  top: 3px;
+  height: 18px;
+  width: 18px;
   display: inline-block;
-  width: 15px;
   fill: $COLOR--gray-60;
   vertical-align: middle;
+
+  &:hover {
+    svg {
+      fill: $COLOR--gray-47;
+    }
+  }
 }

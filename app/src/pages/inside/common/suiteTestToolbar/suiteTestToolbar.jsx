@@ -34,8 +34,7 @@ export const SuiteTestToolbar = ({
   onFilterChange,
   filterErrors,
   filterEntities,
-  testItemParameters,
-  currentFilter,
+  isTestItemsList,
 }) => (
   <Fragment>
     <div className={cx({ 'sticky-toolbar': selectedItems.length })}>
@@ -66,14 +65,8 @@ export const SuiteTestToolbar = ({
         deleteDisabled={!selectedItems.length}
       />
     </div>
-    {(parentItem || currentFilter) && (
-      <InfoPanel
-        viewMode={LIST_VIEW}
-        data={parentItem}
-        events={events}
-        currentFilter={currentFilter}
-        testItemParameters={testItemParameters}
-      />
+    {(parentItem || isTestItemsList) && (
+      <InfoPanel viewMode={LIST_VIEW} data={parentItem} events={events} />
     )}
     <RefineFiltersPanel
       onFilterAdd={onFilterAdd}
@@ -109,8 +102,8 @@ SuiteTestToolbar.propTypes = {
   onFilterChange: PropTypes.func,
   filterErrors: PropTypes.object,
   filterEntities: PropTypes.array,
-  testItemParameters: PropTypes.object,
   currentFilter: PropTypes.object,
+  isTestItemsList: PropTypes.bool,
 };
 SuiteTestToolbar.defaultProps = {
   selectedItems: [],
@@ -137,6 +130,6 @@ SuiteTestToolbar.defaultProps = {
   filterErrors: {},
   filterEntities: [],
   events: {},
-  testItemParameters: {},
   currentFilter: null,
+  isTestItemsList: false,
 };

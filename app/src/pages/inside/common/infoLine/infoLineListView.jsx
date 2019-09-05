@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { injectIntl, intlShape, defineMessages } from 'react-intl';
+import { SharedFilterIcon } from 'pages/inside/common/sharedFilterIcon';
 import styles from './infoLine.scss';
 import { Owner } from './owner';
-import { Share } from './share';
 import { Description } from './description';
 
 const cx = classNames.bind(styles);
@@ -41,8 +41,8 @@ export class InfoLineListView extends Component {
           </div>
         )}
         {data.share && (
-          <div className={cx('icon-holder')}>
-            <Share share={data.share} currentUser={currentUser} owner={data.owner} />
+          <div className={cx('icon-holder', 'info-line-icon-holder')}>
+            <SharedFilterIcon share={data.share} currentUser={currentUser} owner={data.owner} />
           </div>
         )}
         {data.description && (

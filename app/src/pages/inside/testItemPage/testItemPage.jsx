@@ -26,7 +26,6 @@ import {
   launchSelector,
   fetchTestItemsAction,
   namespaceSelector,
-  testItemParametersSelector,
 } from 'controllers/testItem';
 import { showModalAction } from 'controllers/modal';
 import { SuitesPage } from 'pages/inside/suitesPage';
@@ -102,7 +101,6 @@ const testItemPages = {
     userId: userIdSelector(state),
     activeProject: activeProjectSelector(state),
     namespace: namespaceSelector(state),
-    testItemParameters: testItemParametersSelector(state),
   }),
   {
     restorePath: restorePathAction,
@@ -131,7 +129,6 @@ export class TestItemPage extends Component {
     unselectAllItemsAction: PropTypes.func.isRequired,
     showModalAction: PropTypes.func.isRequired,
     parentLaunch: PropTypes.object,
-    testItemParameters: PropTypes.object,
     level: PropTypes.string,
     loading: PropTypes.bool,
     breadcrumbs: PropTypes.arrayOf(PropTypes.object),
@@ -144,7 +141,6 @@ export class TestItemPage extends Component {
 
   static defaultProps = {
     parentLaunch: {},
-    testItemParameters: {},
     level: null,
     loading: false,
     breadcrumbs: [],
@@ -157,7 +153,7 @@ export class TestItemPage extends Component {
       data: {
         item: launch,
         type: LAUNCH_ITEM_TYPES.item,
-        fetchFunc: () => this.props.fetchTestItemsAction(this.props.testItemParameters),
+        fetchFunc: this.props.fetchTestItemsAction,
       },
     });
   };
@@ -176,7 +172,7 @@ export class TestItemPage extends Component {
 
   unselectAndFetchItems = () => {
     this.props.unselectAllItemsAction(this.props.namespace);
-    this.props.fetchTestItemsAction(this.props.testItemParameters);
+    this.props.fetchTestItemsAction();
   };
 
   confirmDeleteItems = (items, selectedItems) => {
@@ -186,7 +182,7 @@ export class TestItemPage extends Component {
       method: 'delete',
     })
       .then(() => {
-        this.props.fetchTestItemsAction(this.props.testItemParameters);
+        this.props.fetchTestItemsAction();
         this.props.hideScreenLockAction();
         this.props.showNotification({
           message:
