@@ -19,6 +19,7 @@ import {
   FLAKY_TEST_CASES_TABLE,
   CUMULATIVE_TREND,
   MOST_POPULAR_PATTERNS,
+  COMPONENT_HEALTH_CHECK,
   // MOST_TIME_CONSUMING,
   /*
   PRODUCT_STATUS,
@@ -43,6 +44,7 @@ import {
   FlakyTestCasesTableControls,
   CumulativeTrendControls,
   MostPopularPatternsControls,
+  ComponentHealthCheckControls,
   // MostTimeConsumingTestCasesControls,
   /*
   ProductStatusControls,
@@ -66,6 +68,7 @@ import PASSING_RATE_SUMMARY_PREVIEW from './img/wdgt-passing-rate-summery-inline
 import FLAKY_TEST_CASES_TABLE_PREVIEW from './img/wdgt-flaky-test-cases-table-inline.svg';
 import CUMULATIVE_TREND_PREVIEW from './img/wdgt-cumulative-trend-chart-inline.svg';
 import MOST_POPULAR_PATTERNS_PREVIEW from './img/wdgt-most-popular-patterns-inline.svg';
+import COMPONENT_HEALTH_CHECK_PREVIEW from './img/wdgt-component-health-check-inline.svg';
 // import MOST_TIME_CONSUMING_PREVIEW from './img/wdgt-most-time-consuming-inline.svg';
 /*
 import PRODUCT_STATUS_PREVIEW from './img/wdgt-product-satus-inline.svg';
@@ -143,6 +146,10 @@ export const widgetTypesMessages = defineMessages({
   [MOST_POPULAR_PATTERNS]: {
     id: 'Widgets.Name.mostPopularPatterns',
     defaultMessage: 'Most popular pattern table (TOP-20)',
+  },
+  [COMPONENT_HEALTH_CHECK]: {
+    id: 'Widgets.Name.componentHealthCheck',
+    defaultMessage: 'Component health check',
   },
   // [MOST_TIME_CONSUMING]: {
   //   id: 'Widgets.Name.mostTimeConsuming',
@@ -398,6 +405,20 @@ export const getWidgets = (formatMessage) => [
     preview: Parser(MOST_POPULAR_PATTERNS_PREVIEW),
     controls: MostPopularPatternsControls,
   },
+  {
+    id: COMPONENT_HEALTH_CHECK,
+    title: formatMessage(widgetTypesMessages[COMPONENT_HEALTH_CHECK]),
+    description: (
+      <FormattedMessage
+        id={'Widgets.Description.componentHealthCheck'}
+        defaultMessage={
+          'Shows the passing rate of the application components which are indicated by the specified tags.'
+        }
+      />
+    ),
+    preview: Parser(COMPONENT_HEALTH_CHECK_PREVIEW),
+    controls: ComponentHealthCheckControls,
+  },
   /*
   {
     id: PRODUCT_STATUS,
@@ -473,5 +494,6 @@ export const WIDGETS_STATIC_PREVIEWS = {
   */
   [MOST_POPULAR_PATTERNS]: Parser(MOST_POPULAR_PATTERNS_PREVIEW),
   [CUMULATIVE_TREND]: Parser(CUMULATIVE_TREND_PREVIEW),
+  [COMPONENT_HEALTH_CHECK]: Parser(COMPONENT_HEALTH_CHECK_PREVIEW),
   // [MOST_TIME_CONSUMING]: Parser(MOST_TIME_CONSUMING_PREVIEW),
 };
