@@ -50,8 +50,8 @@ build-server: checkstyle test
 # Builds the project
 build-statics:
 	npm --prefix $(UI_BUILD_ROOT) install
-	npm --prefix $(UI_BUILD_ROOT) run test
 	npm --prefix $(UI_BUILD_ROOT) run build
+	npm --prefix $(UI_BUILD_ROOT) run test
 
 # Builds the project
 build: build-statics build-server
