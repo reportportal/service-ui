@@ -904,6 +904,8 @@
   "LaunchStatus.failed": "Няўдала",
   "LaunchStatus.passed": "Паспяхова",
   "LaunchStatus.skipped": "Прапушчана",
+  "LaunchesFilter.all": "Усе",
+  "LaunchesFilter.latest":"Апошнія",
   "LaunchesPage.addNewWidget": "Дадаць новы вiджэт",
   "LaunchesPage.addWidgetSuccess": "Віджэт дададзены",
   "LaunchesPage.alreadyIgnored": "Элемент ўжо ігнаруецца Аўта-аналізам",
