@@ -4,10 +4,8 @@ import Parser from 'html-react-parser';
 import CrossIcon from 'common/img/cross-icon-inline.svg';
 import { connect } from 'react-redux';
 import { userIdSelector } from 'controllers/user';
-import { defineMessages, intlShape } from 'react-intl';
+import { SharedFilterIcon } from 'pages/inside/common/sharedFilterIcon';
 import { FilterDescriptionTooltipIcon } from './filterDescriptionTooltipIcon';
-import { FilterSharedTooltipIcon } from './filterSharedToolTipIcon';
-import { FilterSharedByMeToolTipIcon } from './filterSharedByMeToolTipIcon';
 import styles from './filterItem.scss';
 
 const cx = classNames.bind(styles);
@@ -16,17 +14,6 @@ const stopPropagation = (func) => (e) => {
   e.stopPropagation();
   func(e);
 };
-
-const localMessages = defineMessages({
-  filterSharedBy: {
-    id: 'filterItem.sharedBy',
-    defaultMessage: 'Filter is shared by {owner}',
-  },
-  filterIsShared: {
-    id: 'filterItem.isShared',
-    defaultMessage: 'Filter is shared.',
-  },
-});
 
 const FilterItemBase = ({
   name,
@@ -38,27 +25,14 @@ const FilterItemBase = ({
   onRemove,
   owner,
   userId,
-  intl,
   className,
 }) => (
   <div className={cx('filter-item', className, { active })} onClick={onClick}>
-    {share &&
-      (userId === owner || owner === undefined) && (
-        <div className={cx('icon-holder')}>
-          <FilterSharedByMeToolTipIcon
-            tooltipContent={intl.formatMessage(localMessages.filterIsShared)}
-          />
-        </div>
-      )}
-    {share &&
-      owner !== undefined &&
-      userId !== owner && (
-        <div className={cx('icon-holder')}>
-          <FilterSharedTooltipIcon
-            tooltipContent={intl.formatMessage(localMessages.filterSharedBy, { owner })}
-          />
-        </div>
-      )}
+    {share && (
+      <div className={cx('icon-holder')}>
+        <SharedFilterIcon share={share} currentUser={userId} owner={owner} />
+      </div>
+    )}
 
     <span className={cx('name')}>
       {name}
@@ -89,7 +63,6 @@ FilterItemBase.propTypes = {
   onRemove: PropTypes.func,
   owner: PropTypes.string.isRequired,
   userId: PropTypes.string.isRequired,
-  intl: intlShape.isRequired,
   className: PropTypes.string,
 };
 FilterItemBase.defaultProps = {

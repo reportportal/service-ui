@@ -40,11 +40,9 @@ export class InfoLine extends Component {
     data: PropTypes.object.isRequired,
     intl: intlShape.isRequired,
     events: PropTypes.object,
-    testItemParameters: PropTypes.object,
   };
   static defaultProps = {
     events: {},
-    testItemParameters: {},
   };
 
   render() {

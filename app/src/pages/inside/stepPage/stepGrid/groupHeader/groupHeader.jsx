@@ -5,7 +5,7 @@ import classNames from 'classnames/bind';
 import Link from 'redux-first-router-link';
 import { TEST_ITEM_PAGE, launchIdSelector, filterIdSelector } from 'controllers/pages';
 import { activeProjectSelector } from 'controllers/user';
-import { testItemParametersSelector, TEST_ITEMS_TYPE_LIST } from 'controllers/testItem';
+import { isTestItemsListSelector } from 'controllers/testItem';
 import styles from './groupHeader.scss';
 
 const cx = classNames.bind(styles);
@@ -23,14 +23,14 @@ export const GroupHeader = connect((state) => ({
   activeProject: activeProjectSelector(state),
   launchId: launchIdSelector(state),
   filterId: filterIdSelector(state),
-  testItemParameters: testItemParametersSelector(state),
-}))(({ data, activeProject, launchId, filterId, testItemParameters }) => {
+  isTestItemsList: isTestItemsListSelector(state),
+}))(({ data, activeProject, launchId, filterId, isTestItemsList }) => {
   const { itemPaths = [], launchPathName } = data[0].pathNames;
 
   let pathNames = itemPaths;
   let sliceIndexBegin = 0;
 
-  if (testItemParameters.testItemIds === TEST_ITEMS_TYPE_LIST) {
+  if (isTestItemsList) {
     const newLaunchPathName = {
       id: data[0].launchId,
       name: `${launchPathName.name} #${launchPathName.number}`,
@@ -66,9 +66,7 @@ export const GroupHeader = connect((state) => ({
 });
 GroupHeader.propTypes = {
   data: PropTypes.array,
-  testItemParameters: PropTypes.object,
 };
 GroupHeader.defaultProps = {
   data: [],
-  testItemParameters: {},
 };

@@ -1,0 +1,1 @@
+export { SharedFilterIcon } from './sharedFilterIcon';

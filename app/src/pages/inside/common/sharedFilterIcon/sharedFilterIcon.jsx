@@ -6,17 +6,17 @@ import Parser from 'html-react-parser';
 import { withTooltip } from 'components/main/tooltips/tooltip';
 import ShareIcon from 'common/img/share-icon-inline.svg';
 import GlobeIcon from 'common/img/globe-icon-inline.svg';
-import styles from './share.scss';
-import { ShareTooltip } from './shareTooltip';
+import styles from './sharedFilterIcon.scss';
+import { SharedFilterIconTooltip } from './sharedFilterIconTooltip';
 
 const cx = classNames.bind(styles);
 
 @injectIntl
 @withTooltip({
-  TooltipComponent: ShareTooltip,
+  TooltipComponent: SharedFilterIconTooltip,
   data: { width: 'auto', align: 'left', noArrow: true },
 })
-export class Share extends Component {
+export class SharedFilterIcon extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
     share: PropTypes.bool,
@@ -35,7 +35,7 @@ export class Share extends Component {
     return (
       <div className={cx('share-block')}>
         <div className={cx('share-icon')}>
-          {Parser(currentUser === owner ? ShareIcon : GlobeIcon)}
+          {Parser(currentUser === owner || owner === undefined ? ShareIcon : GlobeIcon)}
         </div>
       </div>
     );
