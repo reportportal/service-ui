@@ -93,8 +93,8 @@ export class ItemsListRow extends React.Component {
         </div>
         <div className={cx('info-column')}>
           <div className={cx('item-header')}>
+            <ItemPathTooltipIcon tooltipContent={this.getLogItemTooltip()} />
             <div className={cx('item-name')}>
-              <ItemPathTooltipIcon tooltipContent={this.getLogItemTooltip()} />
               <Link
                 to={this.props.getLogItemLink(testItem)}
                 className={cx('item-link')}

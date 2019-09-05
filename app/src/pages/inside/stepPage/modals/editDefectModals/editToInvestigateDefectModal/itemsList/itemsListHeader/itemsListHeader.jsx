@@ -93,6 +93,10 @@ export class ItemsListHeader extends React.Component {
       currentFilter,
       onChangeSearchMode,
     } = this.props;
+    const launchTitle =
+      searchMode === SEARCH_MODES.CURRENT_LAUNCH
+        ? `${currentLaunch.name} #${currentLaunch.number}`
+        : currentLaunch.name;
     return (
       <div className={cx('list-header')}>
         <div className={cx('select-all')}>
@@ -112,7 +116,7 @@ export class ItemsListHeader extends React.Component {
           <InfoTooltipIcon tooltipContent={this.getTooltipContent()} />
         </div>
         {searchMode !== SEARCH_MODES.FILTER && (
-          <div className={cx('launch')}>
+          <div className={cx('launch')} title={launchTitle}>
             <span className={cx('launch-name')}>{currentLaunch.name}</span>
             {searchMode === SEARCH_MODES.CURRENT_LAUNCH && (
               <span className={cx('launch-number')}>{`#${currentLaunch.number}`}</span>
