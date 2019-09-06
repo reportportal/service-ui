@@ -1,0 +1,7 @@
+.item-name {
+  max-width: 100%;
+  margin-bottom: 4px;
+  overflow: hidden;
+  font-family: $FONT-SEMIBOLD;
+  text-overflow: ellipsis;
+}

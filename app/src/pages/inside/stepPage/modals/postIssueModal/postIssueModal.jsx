@@ -298,19 +298,25 @@ export class PostIssueModal extends Component {
         const {
           integrationParameters: { project, url },
         } = namedBtsIntegrations[pluginName].find((item) => item.id === integrationId);
-        const testItemIds = items.map((item) => item.id);
-        const issues = [
-          {
-            ticketId: response.id,
-            url: response.url,
-            btsProject: project,
-            btsUrl: url,
+        const issues = items.map(({ id, issue = {} }) => ({
+          testItemId: id,
+          issue: {
+            ...issue,
+            externalSystemIssues: [
+              ...(issue.externalSystemIssues || []),
+              {
+                ticketId: response.id,
+                url: response.url,
+                btsProject: project,
+                btsUrl: url,
+              },
+            ],
           },
-        ];
+        }));
 
-        return fetch(URLS.testItemsLinkIssues(activeProject), {
+        return fetch(URLS.testItem(activeProject), {
           method: 'put',
-          data: { issues, testItemIds },
+          data: { issues },
         });
       })
       .then(() => {

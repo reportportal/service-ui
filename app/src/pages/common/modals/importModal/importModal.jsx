@@ -313,6 +313,7 @@ export class ImportModal extends Component {
         cancelButton={{
           text: intl.formatMessage(COMMON_LOCALE_KEYS.CANCEL),
           eventInfo: eventsInfo.cancelBtn,
+          disabled: uploadFinished,
         }}
         closeConfirmation={this.getCloseConfirmationConfig(
           validFiles.length,

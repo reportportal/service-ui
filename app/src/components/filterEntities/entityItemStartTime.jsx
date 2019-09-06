@@ -69,6 +69,7 @@ export const EntityItemStartTime = ({
   smallSize,
   value,
   vertical,
+  customProps,
 }) => (
   <FieldFilterEntity
     title={title}
@@ -83,7 +84,7 @@ export const EntityItemStartTime = ({
         onChange({ condition: CONDITION_BETWEEN, value: formatValue({ ...val }) });
       }}
       value={parseDateTimeRange(value)}
-      withoutDynamic
+      withoutDynamic={customProps.withoutDynamic}
     />
   </FieldFilterEntity>
 );
@@ -95,6 +96,7 @@ EntityItemStartTime.propTypes = {
   onRemove: PropTypes.func,
   onChange: PropTypes.func,
   vertical: PropTypes.bool,
+  customProps: PropTypes.object,
 };
 EntityItemStartTime.defaultProps = {
   value: {},
@@ -104,4 +106,5 @@ EntityItemStartTime.defaultProps = {
   onRemove: () => {},
   onChange: () => {},
   vertical: false,
+  customProps: {},
 };

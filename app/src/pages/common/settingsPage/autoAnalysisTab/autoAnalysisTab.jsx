@@ -7,6 +7,7 @@ import { activeProjectRoleSelector, userAccountRoleSelector } from 'controllers/
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { canUpdateSettings } from 'common/utils/permissions';
 import { projectIdSelector } from 'controllers/pages';
+import { showModalAction } from 'controllers/modal';
 import { fetch } from 'common/utils';
 import { URLS } from 'common/urls';
 import {
@@ -54,6 +55,7 @@ const messages = defineMessages({
     fetchConfigurationAttributesAction,
     updateConfigurationAttributesAction,
     showNotification,
+    showGenerateIndexModal: () => showModalAction({ id: 'generateIndexModal' }),
   },
 )
 @injectIntl
@@ -66,6 +68,7 @@ export class AutoAnalysisTab extends Component {
     showNotification: PropTypes.func.isRequired,
     accountRole: PropTypes.string.isRequired,
     userRole: PropTypes.string.isRequired,
+    showGenerateIndexModal: PropTypes.func.isRequired,
     analyzerConfiguration: PropTypes.object,
   };
 
@@ -101,10 +104,15 @@ export class AutoAnalysisTab extends Component {
     };
   };
 
+  checkIfConfirmationNeeded = (data) =>
+    data[NUMBER_OF_LOG_LINES] !== this.props.analyzerConfiguration[NUMBER_OF_LOG_LINES];
+
   updateProjectConfig = (formData) => {
     const {
       intl: { formatMessage },
+      showGenerateIndexModal,
     } = this.props;
+    const isConfirmationNeeded = this.checkIfConfirmationNeeded(formData);
     const preparedData = normalizeAttributesWithPrefix(formData, ANALYZER_ATTRIBUTE_PREFIX);
     const data = {
       configuration: {
@@ -121,6 +129,9 @@ export class AutoAnalysisTab extends Component {
           type: NOTIFICATION_TYPES.SUCCESS,
         });
         this.props.updateConfigurationAttributesAction(data);
+        if (isConfirmationNeeded) {
+          showGenerateIndexModal();
+        }
       })
       .catch(() => {
         this.props.showNotification({
@@ -131,7 +142,7 @@ export class AutoAnalysisTab extends Component {
   };
 
   render() {
-    const { accountRole, userRole } = this.props;
+    const { accountRole, userRole, showGenerateIndexModal } = this.props;
     const disabled = !canUpdateSettings(accountRole, userRole);
 
     return (
@@ -149,6 +160,7 @@ export class AutoAnalysisTab extends Component {
         <IndexActionsBlock
           disabled={disabled}
           indexingRunning={this.getIndexActionsBlockValues()}
+          showGenerateIndexModal={showGenerateIndexModal}
         />
       </div>
     );

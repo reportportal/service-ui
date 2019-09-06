@@ -1,4 +1,4 @@
-import { Component, Fragment } from 'react';
+import { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import styles from './accordionContainer.scss';
@@ -57,7 +57,7 @@ export class AccordionContainer extends Component {
   render() {
     const elementClass = this.state.withAccordion ? cx('overflow') : null;
     return (
-      <Fragment>
+      <div className={cx('accordion-container')}>
         {this.props.children({ setupRef: this.setupRef, className: elementClass })}
         {this.state.withAccordion && (
           <div className={cx('accordion-block', { expanded: this.state.expanded })}>
@@ -67,7 +67,7 @@ export class AccordionContainer extends Component {
             />
           </div>
         )}
-      </Fragment>
+      </div>
     );
   }
 }

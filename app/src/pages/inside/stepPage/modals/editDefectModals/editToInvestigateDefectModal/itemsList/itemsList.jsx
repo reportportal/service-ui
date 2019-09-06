@@ -4,7 +4,7 @@ import classNames from 'classnames/bind';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { NoItemMessage } from 'components/main/noItemMessage';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
-import { injectIntl, intlShape } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import { ItemsListHeader } from './itemsListHeader';
 import { ItemsListRow } from './itemsListRow';
 import styles from './itemsList.scss';
@@ -45,7 +45,7 @@ export const ItemsList = injectIntl(
     onToggleItemSelect,
     onChangeSearchMode,
   }) => {
-    const isAllSelected = testItems.length && testItems.length === selectedItems.length;
+    const isAllSelected = !!testItems.length && testItems.length === selectedItems.length;
     return (
       <div className={cx('list-container')}>
         <ItemsListHeader
@@ -74,7 +74,6 @@ export const ItemsList = injectIntl(
 );
 
 ItemsList.propTypes = {
-  intl: intlShape.isRequired,
   loading: PropTypes.bool,
   testItems: PropTypes.array,
   selectedItems: PropTypes.array,

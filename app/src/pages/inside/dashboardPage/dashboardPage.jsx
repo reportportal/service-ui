@@ -13,6 +13,7 @@ import {
   dashboardGridTypeSelector,
   DASHBOARDS_TABLE_VIEW,
   DASHBOARDS_GRID_VIEW,
+  loadingSelector,
 } from 'controllers/dashboard';
 import { DASHBOARD_PAGE, DASHBOARD_PAGE_EVENTS } from 'components/main/analytics/events';
 import { NoItemMessage } from 'components/main/noItemMessage';
@@ -61,6 +62,7 @@ const messages = defineMessages({
     gridType: dashboardGridTypeSelector(state),
     dashboardItems: dashboardItemsSelector(state),
     userInfo: userInfoSelector(state),
+    loading: loadingSelector(state),
   }),
   {
     changeVisibilityType: changeVisibilityTypeAction,
@@ -90,6 +92,7 @@ export class DashboardPage extends Component {
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+    loading: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -103,29 +106,29 @@ export class DashboardPage extends Component {
     gridType: '',
     onFilterChange: () => {},
     changeVisibilityType: () => {},
+    loading: false,
   };
 
   onDeleteDashboardItem = (item) => {
     const {
+      intl: { formatMessage },
+      userInfo: { userId },
       showModal,
       deleteDashboard,
-      userInfo: { userId },
-      intl,
       tracking,
     } = this.props;
-    const warningMessage =
-      item.owner === userId ? '' : intl.formatMessage(messages.deleteModalWarningMessage);
+    const warning = item.owner === userId ? '' : formatMessage(messages.deleteModalWarningMessage);
     tracking.trackEvent(DASHBOARD_PAGE_EVENTS.DELETE_ICON_DASHBOARD_TILE);
     showModal({
       id: 'deleteItemsModal',
       data: {
         items: [item],
         onConfirm: () => deleteDashboard(item),
-        header: intl.formatMessage(messages.deleteModalTitle),
-        mainContent: intl.formatMessage(messages.deleteModalConfirmationText, {
+        header: formatMessage(messages.deleteModalTitle),
+        mainContent: formatMessage(messages.deleteModalConfirmationText, {
           name: item.name,
         }),
-        warningMessage,
+        warning,
         eventsInfo: {
           closeIcon: DASHBOARD_PAGE_EVENTS.CLOSE_ICON_DELETE_DASHBOARD_MODAL,
           cancelBtn: DASHBOARD_PAGE_EVENTS.CANCEL_BTN_DELETE_DASHBOARD_MODAL,
@@ -190,7 +193,15 @@ export class DashboardPage extends Component {
   };
 
   render() {
-    const { intl, gridType, userInfo, onFilterChange, filter, dashboardItems } = this.props;
+    const {
+      intl,
+      gridType,
+      userInfo,
+      onFilterChange,
+      filter,
+      dashboardItems,
+      loading,
+    } = this.props;
     const eventsInfo = {
       closeIcon: DASHBOARD_PAGE_EVENTS.CLOSE_ICON_ADD_NEW_DASHBOARD_MODAL,
       changeDescription: DASHBOARD_PAGE_EVENTS.ENTER_DESCRIPTION_ADD_NEW_DASHBOARD_MODAL,
@@ -219,6 +230,7 @@ export class DashboardPage extends Component {
               dashboardItems={dashboardItems}
               gridType={gridType}
               userInfo={userInfo}
+              loading={loading}
               onDeleteItem={this.onDeleteDashboardItem}
               onEditItem={this.onEditDashboardItem}
               onAddItem={this.onAddDashboardItem}

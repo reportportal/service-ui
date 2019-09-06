@@ -28,6 +28,7 @@ import {
   debugModeSelector,
   selectedLaunchesSelector,
   toggleLaunchSelectionAction,
+  selectLaunchesAction,
   unselectAllLaunchesAction,
   validationErrorsSelector,
   proceedWithValidItemsAction,
@@ -156,6 +157,7 @@ const messages = defineMessages({
   {
     showModalAction,
     toggleLaunchSelectionAction,
+    selectLaunchesAction,
     unselectAllLaunchesAction,
     proceedWithValidItemsAction,
     forceFinishLaunchesAction,
@@ -202,11 +204,12 @@ export class LaunchesPage extends Component {
     unselectAllLaunchesAction: PropTypes.func,
     proceedWithValidItemsAction: PropTypes.func,
     toggleLaunchSelectionAction: PropTypes.func,
+    selectLaunchesAction: PropTypes.func,
     forceFinishLaunchesAction: PropTypes.func,
     mergeLaunchesAction: PropTypes.func,
     compareLaunchesAction: PropTypes.func,
     moveLaunchesAction: PropTypes.func,
-    lastOperation: PropTypes.string,
+    lastOperation: PropTypes.object,
     loading: PropTypes.bool,
     fetchLaunchesAction: PropTypes.func,
     showNotification: PropTypes.func.isRequired,
@@ -242,11 +245,12 @@ export class LaunchesPage extends Component {
     unselectAllLaunchesAction: () => {},
     proceedWithValidItemsAction: () => {},
     toggleLaunchSelectionAction: () => {},
+    selectLaunchesAction: () => {},
     forceFinishLaunchesAction: () => {},
     mergeLaunchesAction: () => {},
     compareLaunchesAction: () => {},
     moveLaunchesAction: () => {},
-    lastOperation: '',
+    lastOperation: {},
     loading: false,
     fetchLaunchesAction: () => {},
     deleteItemsAction: () => {},
@@ -636,10 +640,14 @@ export class LaunchesPage extends Component {
     this.props.toggleLaunchSelectionAction(value);
   };
 
-  proceedWithValidItems = () =>
-    this.props.proceedWithValidItemsAction(this.props.lastOperation, this.props.selectedLaunches, {
-      fetchFunc: this.unselectAndFetchLaunches,
-    });
+  proceedWithValidItems = () => {
+    const {
+      lastOperation: { operationName, operationArgs },
+      selectedLaunches,
+    } = this.props;
+
+    this.props.proceedWithValidItemsAction(operationName, selectedLaunches, operationArgs);
+  };
 
   mergeLaunches = () => {
     this.props.tracking.trackEvent(LAUNCHES_PAGE_EVENTS.CLICK_MERGE_ACTION);
@@ -765,6 +773,7 @@ export class LaunchesPage extends Component {
                 onForceFinish={this.finishForceLaunches}
                 selectedItems={selectedLaunches}
                 onItemSelect={this.handleOneLaunchSelection}
+                onItemsSelect={this.props.selectLaunchesAction}
                 onAllItemsSelect={this.handleAllLaunchesSelection}
                 withHamburger
                 loading={loading}

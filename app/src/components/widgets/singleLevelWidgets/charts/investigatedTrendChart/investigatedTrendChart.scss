@@ -1,0 +1,53 @@
+.investigated-trend-chart {
+  .widget-wrapper {
+    :global svg {
+      .c3-xgrid-focus {
+        display: none;
+      }
+      .c3-grid {
+        line {
+          stroke: $COLOR--gray-80;
+          stroke-dasharray: none;
+        }
+      }
+      .c3-axis {
+        .c3-axis-y-label {
+          font-family: $FONT-REGULAR;
+          fill: $COLOR--charcoal-grey;
+          font-size: 12px;
+        }
+        .tick {
+          font-family: $FONT-REGULAR;
+          fill: $COLOR--charcoal-grey;
+        }
+        &.c3-axis-y {
+          .domain {
+            display: none;
+          }
+          .tick {
+            line {
+              stroke: $COLOR--gray-80;
+            }
+          }
+        }
+        &.c3-axis-x {
+          .domain {
+            stroke: $COLOR--gray-80;
+          }
+          .tick {
+            line {
+              display: none;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .tooltip-container {
+    max-width: 215px;
+    padding: 5px 10px 5px 10px;
+    font-size: 13px;
+    white-space: nowrap;
+  }
+}

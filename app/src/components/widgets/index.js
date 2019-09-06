@@ -12,7 +12,7 @@ import {
   CumulativeTrendChart,
   OverallStatisticsChart,
   InvestigatedTrendChart,
-} from './charts';
+} from './singleLevelWidgets/charts';
 import {
   LaunchesTable,
   UniqueBugsTable,
@@ -21,9 +21,9 @@ import {
   ProjectActivity,
   ProductStatus,
   MostPopularPatterns,
-} from './tables';
+} from './singleLevelWidgets/tables';
 import { cumulativeFormatParams, topPatternsFormatParams } from './utils';
-import { MostTimeConsumingTestCases } from './mostTimeConsumingTestCases';
+import { MostTimeConsumingTestCases } from './singleLevelWidgets/mostTimeConsumingTestCases';
 
 const CHARTS = {
   [widgetTypes.DIFFERENT_LAUNCHES_COMPARISON]: LaunchesComparisonChart,

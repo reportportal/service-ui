@@ -207,6 +207,7 @@ export class LaunchSuiteGrid extends PureComponent {
     onForceFinish: PropTypes.func,
     selectedItems: PropTypes.arrayOf(PropTypes.object),
     onItemSelect: PropTypes.func,
+    onItemsSelect: PropTypes.func,
     onAllItemsSelect: PropTypes.func,
     withHamburger: PropTypes.bool,
     loading: PropTypes.bool,
@@ -231,6 +232,7 @@ export class LaunchSuiteGrid extends PureComponent {
     onForceFinish: () => {},
     selectedItems: [],
     onItemSelect: () => {},
+    onItemsSelect: () => {},
     onAllItemsSelect: () => {},
     withHamburger: false,
     loading: false,
@@ -408,33 +410,37 @@ export class LaunchSuiteGrid extends PureComponent {
   }
 
   handleAttributeFilterClick = (attribute) => {
-    this.props.onFilterClick({
-      id: ENTITY_ATTRIBUTE_KEYS,
-      value: {
-        filteringField: ENTITY_ATTRIBUTE_KEYS,
-        condition: CONDITION_HAS,
-        value: attribute.key || '',
+    this.props.onFilterClick([
+      {
+        id: ENTITY_ATTRIBUTE_KEYS,
+        value: {
+          filteringField: ENTITY_ATTRIBUTE_KEYS,
+          condition: CONDITION_HAS,
+          value: attribute.key || '',
+        },
       },
-    });
-    this.props.onFilterClick({
-      id: ENTITY_ATTRIBUTE_VALUES,
-      value: {
-        filteringField: ENTITY_ATTRIBUTE_VALUES,
-        condition: CONDITION_HAS,
-        value: attribute.value || '',
+      {
+        id: ENTITY_ATTRIBUTE_VALUES,
+        value: {
+          filteringField: ENTITY_ATTRIBUTE_VALUES,
+          condition: CONDITION_HAS,
+          value: attribute.value || '',
+        },
       },
-    });
+    ]);
   };
 
   handleOwnerFilterClick = (owner) =>
-    this.props.onFilterClick({
-      id: ENTITY_USER,
-      value: {
-        filteringField: ENTITY_NAME,
-        condition: CONDITION_IN,
-        value: owner || '',
+    this.props.onFilterClick([
+      {
+        id: ENTITY_USER,
+        value: {
+          filteringField: ENTITY_NAME,
+          condition: CONDITION_IN,
+          value: owner || '',
+        },
       },
-    });
+    ]);
 
   render() {
     const {
@@ -445,6 +451,7 @@ export class LaunchSuiteGrid extends PureComponent {
       sortingDirection,
       selectedItems,
       onItemSelect,
+      onItemsSelect,
       onAllItemsSelect,
       loading,
       onFilterClick,
@@ -462,6 +469,7 @@ export class LaunchSuiteGrid extends PureComponent {
           selectedItems={selectedItems}
           selectable
           onToggleSelection={onItemSelect}
+          onItemsSelect={onItemsSelect}
           onToggleSelectAll={onAllItemsSelect}
           loading={loading}
           onFilterClick={onFilterClick}

@@ -59,6 +59,7 @@ export class DashboardTable extends Component {
     projectId: PropTypes.string,
     projectRole: PropTypes.string,
     dashboardItems: PropTypes.array,
+    loading: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -69,6 +70,7 @@ export class DashboardTable extends Component {
     projectId: '',
     projectRole: '',
     dashboardItems: [],
+    loading: false,
   };
 
   getTableColumns() {
@@ -141,11 +143,16 @@ export class DashboardTable extends Component {
   COLUMNS = this.getTableColumns();
 
   render() {
-    const { dashboardItems, onAddItem } = this.props;
+    const { dashboardItems, loading, onAddItem } = this.props;
 
     return (
       <Fragment>
-        <Grid className={cx('dashboard-table')} columns={this.COLUMNS} data={dashboardItems} />
+        <Grid
+          className={cx('dashboard-table')}
+          columns={this.COLUMNS}
+          data={dashboardItems}
+          loading={loading}
+        />
         {dashboardItems.length === 0 && <EmptyDashboards userDashboards action={onAddItem} />}
       </Fragment>
     );

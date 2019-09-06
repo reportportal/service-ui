@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { injectIntl, intlShape, defineMessages } from 'react-intl';
@@ -12,13 +12,20 @@ import { URLS } from 'common/urls';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { LAUNCH_ITEM_TYPES } from 'common/constants/launchItemTypes';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
-import { activeProjectSelector } from 'controllers/user';
+import {
+  activeProjectSelector,
+  activeProjectRoleSelector,
+  userAccountRoleSelector,
+  userIdSelector,
+} from 'controllers/user';
 import { formatItemName } from 'controllers/testItem';
 import { SectionHeader } from 'components/main/sectionHeader';
 import { ModalLayout, withModal, ModalField } from 'components/main/modal';
 import { FieldProvider } from 'components/fields/fieldProvider';
-import { MarkdownEditor } from 'components/main/markdown';
+import { MarkdownEditor, MarkdownViewer } from 'components/main/markdown';
 import { AttributeListField } from 'components/main/attributeList';
+import { AccordionContainer } from 'components/main/accordionContainer';
+import { canEditLaunch } from 'common/utils/permissions';
 import styles from './editItemModal.scss';
 
 const cx = classNames.bind(styles);
@@ -65,6 +72,10 @@ const messages = defineMessages({
     id: 'TestItemDetailsModal.codeRef',
     defaultMessage: 'Code reference:',
   },
+  description: {
+    id: 'TestItemDetailsModal.description',
+    defaultMessage: 'Description:',
+  },
 });
 
 @withModal('editItemModal')
@@ -78,6 +89,9 @@ const messages = defineMessages({
 @connect(
   (state) => ({
     currentProject: activeProjectSelector(state),
+    userAccountRole: userAccountRoleSelector(state),
+    userProjectRole: activeProjectRoleSelector(state),
+    userId: userIdSelector(state),
   }),
   {
     showNotification,
@@ -88,14 +102,24 @@ export class EditItemModal extends Component {
     intl: intlShape.isRequired,
     data: PropTypes.shape({
       item: PropTypes.object,
+      parentLaunch: PropTypes.object,
       type: PropTypes.string,
       fetchFunc: PropTypes.func,
     }).isRequired,
+    userProjectRole: PropTypes.string,
+    userAccountRole: PropTypes.string,
+    userId: PropTypes.string,
     initialize: PropTypes.func.isRequired,
     dirty: PropTypes.bool.isRequired,
     handleSubmit: PropTypes.func.isRequired,
     currentProject: PropTypes.string.isRequired,
     showNotification: PropTypes.func.isRequired,
+  };
+
+  static defaultProps = {
+    userProjectRole: '',
+    userAccountRole: '',
+    userId: '',
   };
 
   componentDidMount() {
@@ -173,8 +197,11 @@ export class EditItemModal extends Component {
   render() {
     const {
       intl: { formatMessage },
-      data: { item, type },
+      data: { item, parentLaunch, type },
       handleSubmit,
+      userAccountRole,
+      userProjectRole,
+      userId,
     } = this.props;
     const okButton = {
       text: formatMessage(COMMON_LOCALE_KEYS.SAVE),
@@ -186,13 +213,21 @@ export class EditItemModal extends Component {
       text: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
     };
 
+    const editable = canEditLaunch(
+      userAccountRole,
+      userProjectRole,
+      item.owner ? userId === item.owner : userId === parentLaunch.owner,
+    );
+
     return (
       <ModalLayout
         title={formatMessage(messages.modalHeader, { type: formatMessage(messages[type]) })}
-        okButton={okButton}
+        okButton={editable ? okButton : undefined}
         cancelButton={cancelButton}
         closeConfirmation={this.getCloseConfirmationConfig()}
-        warningMessage={type === LAUNCH_ITEM_TYPES.launch && formatMessage(messages.launchWarning)}
+        warningMessage={
+          type === LAUNCH_ITEM_TYPES.launch && editable && formatMessage(messages.launchWarning)
+        }
       >
         <form>
           <ModalField>
@@ -213,6 +248,7 @@ export class EditItemModal extends Component {
               <AttributeListField
                 keyURLCreator={this.getAttributeKeyURLCreator()}
                 valueURLCreator={this.getAttributeValueURLCreator()}
+                disabled={!editable}
               />
             </FieldProvider>
           </ModalField>
@@ -226,15 +262,30 @@ export class EditItemModal extends Component {
               </div>
             </ModalField>
           )}
-          <ModalField>
-            <FieldProvider name="description">
-              <MarkdownEditor
-                placeholder={formatMessage(messages.descriptionPlaceholder, {
-                  type: formatMessage(messages[type]),
-                })}
-              />
-            </FieldProvider>
-          </ModalField>
+          {editable ? (
+            <ModalField>
+              <FieldProvider name="description">
+                <MarkdownEditor
+                  placeholder={formatMessage(messages.descriptionPlaceholder, {
+                    type: formatMessage(messages[type]),
+                  })}
+                />
+              </FieldProvider>
+            </ModalField>
+          ) : (
+            <Fragment>
+              <div className={cx('label')}>{formatMessage(messages.description)}</div>
+              <ModalField>
+                <AccordionContainer maxHeight={170}>
+                  {({ setupRef, className }) => (
+                    <div ref={setupRef} className={className}>
+                      <MarkdownViewer value={item.description} />
+                    </div>
+                  )}
+                </AccordionContainer>
+              </ModalField>
+            </Fragment>
+          )}
         </form>
       </ModalLayout>
     );

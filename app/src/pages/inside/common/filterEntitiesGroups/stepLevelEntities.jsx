@@ -448,12 +448,13 @@ export class StepLevelEntities extends Component {
         validationFunc: (entityObject) =>
           (!entityObject ||
             !entityObject.value ||
-            !validate.launchDescriptionEntity(entityObject.value)) &&
-          'launchDescriptionEntityHint',
+            !validate.descriptionEntity(entityObject.value)) &&
+          'descriptionEntityHint',
         active: visibleFilters.includes(ENTITY_DESCRIPTION),
         removable: true,
         customProps: {
           placeholder: intl.formatMessage(messages.DescriptionPlaceholder),
+          maxLength: 18,
         },
       },
       {
@@ -513,12 +514,13 @@ export class StepLevelEntities extends Component {
         validationFunc: (entityObject) =>
           (!entityObject ||
             !entityObject.value ||
-            !validate.launchDescriptionEntity(entityObject.value)) &&
-          'launchDescriptionEntityHint',
+            !validate.descriptionEntity(entityObject.value)) &&
+          'descriptionEntityHint',
         active: visibleFilters.includes(ENTITY_DEFECT_COMMENT),
         removable: true,
         customProps: {
           placeholder: intl.formatMessage(messages.DefectCommentPlaceholder),
+          maxLength: 18,
         },
       },
       {

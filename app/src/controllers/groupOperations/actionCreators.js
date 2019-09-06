@@ -3,7 +3,7 @@ import {
   TOGGLE_ITEM_SELECTION,
   UNSELECT_ALL_ITEMS,
   REMOVE_VALIDATION_ERRORS,
-  SET_LAST_OPERATION_NAME,
+  SET_LAST_OPERATION,
   SET_VALIDATION_ERRORS,
   PROCEED_WITH_VALID_ITEMS,
   UNSELECT_ITEMS,
@@ -76,9 +76,12 @@ export const unselectAllItemsAction = (namespace) => () => ({
   },
 });
 
-export const setLastOperationNameAction = (namespace) => (operationName) => ({
-  type: SET_LAST_OPERATION_NAME,
-  payload: operationName,
+export const setLastOperationAction = (namespace) => (operationName, operationArgs = {}) => ({
+  type: SET_LAST_OPERATION,
+  payload: {
+    operationName,
+    operationArgs,
+  },
   meta: {
     namespace,
   },

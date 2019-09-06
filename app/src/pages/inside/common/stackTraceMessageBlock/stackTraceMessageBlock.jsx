@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
+import { ERROR } from 'common/constants/logLevels';
 import styles from './stackTraceMessageBlock.scss';
 
 const cx = classNames.bind(styles);
@@ -12,11 +13,13 @@ export class StackTraceMessageBlock extends Component {
   static propTypes = {
     children: PropTypes.any,
     maxHeight: PropTypes.number,
+    level: PropTypes.string,
   };
 
   static defaultProps = {
     children: '',
     maxHeight: MAX_ROW_HEIGHT,
+    level: ERROR,
   };
 
   constructor(props) {
@@ -71,11 +74,17 @@ export class StackTraceMessageBlock extends Component {
   };
 
   render() {
-    const { children } = this.props;
+    const { children, level } = this.props;
     const { expanded, withAccordion, maxHeight } = this.state;
 
     return (
-      <div className={cx('row-wrapper', { 'with-accordion': withAccordion })}>
+      <div
+        className={cx(
+          'row-wrapper',
+          { 'with-accordion': withAccordion },
+          `level-${level.toLowerCase()}`,
+        )}
+      >
         {withAccordion && (
           <div className={cx('accordion-wrapper-mobile')}>
             <div

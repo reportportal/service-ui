@@ -13,6 +13,10 @@
   color: $COLOR--gray-47;
   font-size: 12px;
   padding-right: 6px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 200px;
 }
 
 .cross {
@@ -20,6 +24,7 @@
   flex-direction: column;
   width: 12px;
   height: 12px;
+  min-width: 12px;
 
   svg {
     fill: $COLOR--gray-47;

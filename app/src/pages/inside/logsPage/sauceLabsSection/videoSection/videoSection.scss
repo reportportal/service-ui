@@ -66,3 +66,11 @@
     margin-right: 5px;
   }
 }
+
+.no-data-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  background-color: $COLOR--white-two;
+}

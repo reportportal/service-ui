@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { defineMessages, injectIntl } from 'react-intl';
-import { InvestigatedTrendChart } from 'components/widgets/charts/investigatedTrendChart';
+import { InvestigatedTrendChart } from 'components/widgets/singleLevelWidgets/charts/investigatedTrendChart';
 import { NoDataAvailable } from 'components/widgets/noDataAvailable';
 import { PERIOD_VALUES, PERIOD_VALUES_LENGTH } from 'common/constants/statusPeriodValues';
 import styles from './launchesQuantity.scss';

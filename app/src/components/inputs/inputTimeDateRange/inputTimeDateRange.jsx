@@ -98,13 +98,6 @@ export class InputTimeDateRange extends Component {
     this.props.onChange(value);
   };
 
-  onClickConditionItem = (condition) => {
-    if (condition.value !== this.props.value.condition) {
-      this.setState({ opened: false });
-      this.props.onChange({ value: this.props.value.value, condition: condition.value });
-    }
-  };
-
   setRef = (node) => {
     this.node = node;
   };
@@ -126,25 +119,28 @@ export class InputTimeDateRange extends Component {
   };
 
   handleChangeFrom = (m) => {
+    const { end, dynamic } = this.props.value;
     this.props.onChange({
       start: moment(m).valueOf(),
-      end: this.props.value.end,
-      dynamic: this.props.value.dynamic,
+      end: end || DEFAULT_DISPLAY_END_DATE,
+      dynamic,
     });
   };
 
   handleChangeTo = (m) => {
+    const { start, dynamic } = this.props.value;
     this.props.onChange({
-      start: this.props.value.start,
+      start: start || DEFAULT_DISPLAY_START_DATE,
       end: moment(m).valueOf(),
-      dynamic: this.props.value.dynamic,
+      dynamic,
     });
   };
 
   handleChangeDynamic = (e) => {
+    const { start, end } = this.props.value;
     this.props.onChange({
-      start: this.props.value.start,
-      end: this.props.value.end,
+      start: start || DEFAULT_DISPLAY_START_DATE,
+      end: end || DEFAULT_DISPLAY_END_DATE,
       dynamic: e.target.checked,
     });
   };

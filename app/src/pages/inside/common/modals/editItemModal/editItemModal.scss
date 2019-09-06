@@ -6,6 +6,14 @@
   text-overflow: ellipsis;
 }
 
+.label {
+  font-family: $FONT-REGULAR;
+  font-size: 13px;
+  line-height: 1.2;
+  color: $COLOR--charcoal-grey;
+  padding-bottom: 10px;
+}
+
 .code-ref {
   display: flex;
   justify-content: flex-start;
