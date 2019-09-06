@@ -1,20 +1,9 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { PAGE_KEY } from 'controllers/pagination';
-import { connectRouter } from 'common/utils';
+import { connectRouter, debounce } from 'common/utils';
 
 const FILTER_KEY = 'filter.cnt.name';
-
-const debounce = (callback, time) => {
-  let interval;
-  return (...args) => {
-    clearTimeout(interval);
-    interval = setTimeout(() => {
-      interval = null;
-      callback(...args);
-    }, time);
-  };
-};
 
 export const withFilter = ({ filterKey = FILTER_KEY, namespace } = {}) => (WrappedComponent) =>
   connectRouter(

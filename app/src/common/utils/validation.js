@@ -35,3 +35,4 @@ export const btsProject = (value) => value.length >= 1 && value.length <= 55;
 export const patternNameLength = (value) => value.length >= 1 && value.length <= 55;
 export const patternNameUnique = (newPatternName, patternId, patterns) =>
   !patterns.some(({ id, name: patternName }) => patternName === newPatternName && id !== patternId);
+export const validateSearchFilter = (filter) => !filter || filter.length >= 3;
