@@ -78,7 +78,13 @@ export class StackTraceMessageBlock extends Component {
     const { expanded, withAccordion, maxHeight } = this.state;
 
     return (
-      <div className={cx('row-wrapper', { 'with-accordion': withAccordion }, level.toLowerCase())}>
+      <div
+        className={cx(
+          'row-wrapper',
+          { 'with-accordion': withAccordion },
+          `level-${level.toLowerCase()}`,
+        )}
+      >
         {withAccordion && (
           <div className={cx('accordion-wrapper-mobile')}>
             <div
