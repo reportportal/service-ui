@@ -28,7 +28,7 @@ export const copyQuery = (query = {}, namespacesToCopy = []) =>
 export const mergeQuery = (oldQuery, paramsToMerge) => {
   const newQuery = { ...oldQuery, ...paramsToMerge };
   return Object.keys(newQuery).reduce(
-    (acc, key) => (isEmptyValue(newQuery[key]) ? acc : { ...acc, [key]: newQuery[key] }),
+    (acc, key) => (isEmptyValue(newQuery[key]) ? acc : { ...acc, [key]: String(newQuery[key]) }),
     {},
   );
 };

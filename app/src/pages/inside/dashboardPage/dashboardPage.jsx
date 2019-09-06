@@ -216,12 +216,12 @@ export class DashboardPage extends Component {
         </PageHeader>
         <PageSection>
           <DashboardPageToolbar
-            dashboardItems={dashboardItems}
+            initialValues={{ filter }}
+            onFilterChange={onFilterChange}
+            isSearchDisabled={!dashboardItems.length && !filter && !loading}
             onGridViewToggle={this.toggleGridView}
             onTableViewToggle={this.toggleTableView}
             gridType={gridType}
-            filter={filter}
-            onFilterChange={onFilterChange}
           />
           {filter && dashboardItems.length === 0 ? (
             <NoItemMessage message={intl.formatMessage(messages.noResults)} />
