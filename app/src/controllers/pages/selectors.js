@@ -12,6 +12,10 @@ export const locationSelector = (state) => state.location || {};
 export const payloadSelector = (state) => locationSelector(state).payload || {};
 export const searchStringSelector = (state) => locationSelector(state).search || '';
 export const isInitialDispatchDoneSelector = (state) => !!locationSelector(state).kind;
+export const currentPathSelector = (state) => {
+  const { pathname, search } = locationSelector(state);
+  return `${pathname}${search || ''}`;
+};
 
 export const activeDashboardIdSelector = (state) => payloadSelector(state).dashboardId;
 export const projectIdSelector = (state) => payloadSelector(state).projectId;

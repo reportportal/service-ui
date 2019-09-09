@@ -23,7 +23,7 @@ export const loginSuccessAction = (token) => ({
   payload: token,
 });
 
-export const logoutAction = () => ({ type: LOGOUT });
+export const logoutAction = (redirectPath) => ({ type: LOGOUT, payload: redirectPath });
 
 export const setTokenAction = (token) => ({
   type: SET_TOKEN,
