@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
 import { formValueSelector } from 'redux-form';
 import { defineMessages, injectIntl, intlShape } from 'react-intl';
-import { validate } from 'common/utils';
+import { validate, commonValidators } from 'common/utils';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { Input } from 'components/inputs/input';
@@ -59,7 +59,7 @@ const messages = defineMessages({
 });
 
 const validators = {
-  host: (value) => (!value && 'requiredFieldHint') || undefined,
+  host: commonValidators.requiredField,
   port: (value) => {
     if (!value) {
       return 'requiredFieldHint';

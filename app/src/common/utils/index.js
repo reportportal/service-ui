@@ -21,9 +21,11 @@
 
 import * as validation from './validation';
 import * as asyncValidation from './asyncValidation';
+import * as validators from './validators';
 
 export const validate = validation;
 export const validateAsync = asyncValidation;
+export const commonValidators = validators;
 export { isEmptyObject } from './isEmptyObject';
 export { referenceDictionary } from './referenceDictionary';
 export { fetch, ERROR_CANCELED, ERROR_UNAUTHORIZED } from './fetch';

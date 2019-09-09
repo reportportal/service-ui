@@ -3,14 +3,16 @@ import { LDAP_ATTRIBUTES_KEY, ENABLED_KEY } from './constants';
 
 export const validateLdapAttributes = (ldapAttributes) => ({
   url:
-    (!ldapAttributes || !ldapAttributes.url || !validate.urlPart(ldapAttributes.url)) &&
+    (!ldapAttributes ||
+      validate.isEmpty(ldapAttributes.url) ||
+      !validate.urlPart(ldapAttributes.url)) &&
     'requiredFieldHint',
-  baseDn: (!ldapAttributes || !ldapAttributes.baseDn) && 'requiredFieldHint',
+  baseDn: (!ldapAttributes || validate.isEmpty(ldapAttributes.baseDn)) && 'requiredFieldHint',
   synchronizationAttributes: {
     email:
       (!ldapAttributes ||
         !ldapAttributes.synchronizationAttributes ||
-        !ldapAttributes.synchronizationAttributes.email) &&
+        validate.isEmpty(ldapAttributes.synchronizationAttributes.email)) &&
       'requiredFieldHint',
   },
 });

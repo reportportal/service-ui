@@ -5,6 +5,7 @@ import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { Input } from 'components/inputs/input';
 import { InputDropdown } from 'components/inputs/inputDropdown';
 import { IntegrationFormField } from 'components/integrations/elements';
+import { commonValidators } from 'common/utils';
 import {
   FIRST_NAME_ATTRIBUTE_KEY,
   LAST_NAME_ATTRIBUTE_KEY,
@@ -45,10 +46,6 @@ const messages = defineMessages({
     defaultMessage: 'Last name',
   },
 });
-
-const validators = {
-  requiredField: (value) => (!value && 'requiredFieldHint') || undefined,
-};
 
 @injectIntl
 export class SamlFormFields extends Component {
@@ -122,7 +119,7 @@ export class SamlFormFields extends Component {
           name="identityProviderName"
           disabled={disabled}
           label={formatMessage(messages.providerName)}
-          validate={validators.requiredField}
+          validate={commonValidators.requiredField}
           lineAlign={lineAlign}
           required
         >
@@ -134,7 +131,7 @@ export class SamlFormFields extends Component {
           name="identityProviderMetadataUrl"
           disabled={disabled}
           label={formatMessage(messages.metadataUrl)}
-          validate={validators.requiredField}
+          validate={commonValidators.requiredField}
           lineAlign={lineAlign}
           required
         >
@@ -146,7 +143,7 @@ export class SamlFormFields extends Component {
           name="emailAttribute"
           disabled={disabled}
           label={formatMessage(messages.emailAttribute)}
-          validate={validators.requiredField}
+          validate={commonValidators.requiredField}
           lineAlign={lineAlign}
           required
         >
@@ -185,7 +182,7 @@ export class SamlFormFields extends Component {
               name={FIRST_NAME_ATTRIBUTE_KEY}
               disabled={disabled}
               label={formatMessage(messages.firstNameAttribute)}
-              validate={validators.requiredField}
+              validate={commonValidators.requiredField}
               lineAlign={lineAlign}
               required
             >
@@ -197,7 +194,7 @@ export class SamlFormFields extends Component {
               name={LAST_NAME_ATTRIBUTE_KEY}
               disabled={disabled}
               label={formatMessage(messages.lastNameAttribute)}
-              validate={validators.requiredField}
+              validate={commonValidators.requiredField}
               lineAlign={lineAlign}
               required
             >

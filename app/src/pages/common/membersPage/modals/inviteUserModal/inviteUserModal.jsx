@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { connect } from 'react-redux';
 import { defineMessages, injectIntl, intlShape } from 'react-intl';
+import { commonValidators } from 'common/utils';
 import { reduxForm, formValueSelector } from 'redux-form';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { DEFAULT_PROJECT_ROLE, ROLES_MAP } from 'common/constants/projectRoles';
@@ -66,8 +67,8 @@ const inviteFormSelector = formValueSelector('inviteUserForm');
 @reduxForm({
   form: 'inviteUserForm',
   validate: ({ user, project }) => ({
-    user: !user && 'requiredFieldHint',
-    project: !project && 'requiredFieldHint',
+    user: commonValidators.requiredField(user),
+    project: commonValidators.requiredField(project),
   }),
   enableReinitialize: true,
 })

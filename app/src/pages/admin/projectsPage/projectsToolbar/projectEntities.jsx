@@ -69,6 +69,10 @@ const messages = defineMessages({
   },
 });
 
+const launchNumericEntityValidator = (entityObject) =>
+  (!entityObject || !entityObject.value || !validate.projectNumericEntity(entityObject.value)) &&
+  'launchNumericEntityHint';
+
 @injectIntl
 export class ProjectEntities extends Component {
   static propTypes = {
@@ -142,11 +146,7 @@ export class ProjectEntities extends Component {
         value: this.bindDefaultValue(LAUNCHES_QUANTITY, {
           condition: CONDITION_GREATER_EQ,
         }),
-        validationFunc: (entityObject) =>
-          (!entityObject ||
-            !entityObject.value ||
-            !validate.projectNumericEntity(entityObject.value)) &&
-          'launchNumericEntityHint',
+        validationFunc: launchNumericEntityValidator,
         title: intl.formatMessage(messages.numberOfLaunches),
         active: true,
         removable: false,
@@ -161,11 +161,7 @@ export class ProjectEntities extends Component {
         value: this.bindDefaultValue(USERS_QUANTITY, {
           condition: CONDITION_GREATER_EQ,
         }),
-        validationFunc: (entityObject) =>
-          (!entityObject ||
-            !entityObject.value ||
-            !validate.projectNumericEntity(entityObject.value)) &&
-          'launchNumericEntityHint',
+        validationFunc: launchNumericEntityValidator,
         title: intl.formatMessage(messages.numberOfMembers),
         active: true,
         removable: false,

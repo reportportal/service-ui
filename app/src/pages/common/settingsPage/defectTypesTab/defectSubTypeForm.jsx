@@ -33,13 +33,13 @@ renderColorPicker.propTypes = {
   validate: ({ longName, shortName }) => {
     const errors = {};
 
-    if (longName === '') {
+    if (validate.isEmpty(longName)) {
       errors.longName = 'requiredFieldHint';
     } else if (!validate.defectTypeLongName(longName)) {
       errors.longName = 'defectLongNameHint';
     }
 
-    if (shortName === '') {
+    if (validate.isEmpty(shortName)) {
       errors.shortName = 'requiredFieldHint';
     } else if (!validate.defectTypeShortName(shortName)) {
       errors.shortName = 'defectShortNameHint';

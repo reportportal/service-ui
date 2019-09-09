@@ -1,3 +1,4 @@
+import { isEmpty } from 'common/utils/validation';
 import {
   INCLUDE_ATTACHMENTS_KEY,
   INCLUDE_COMMENTS_KEY,
@@ -5,7 +6,8 @@ import {
   REQUIRED_KEY,
 } from './constants';
 
-const validateRequiredField = (value) => (!value || !value[0] ? 'requiredFieldHint' : undefined);
+const validateRequiredField = (value) =>
+  !value || isEmpty(value[0]) ? 'requiredFieldHint' : undefined;
 
 const validateNonRequiredField = (value, type, hint) => {
   const fieldValue = value && value[0];

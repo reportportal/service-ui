@@ -5,6 +5,7 @@ import classNames from 'classnames/bind';
 import { URLS } from 'common/urls';
 import { connect } from 'react-redux';
 import { reduxForm, formValueSelector } from 'redux-form';
+import { commonValidators } from 'common/utils';
 import { FormController } from 'pages/admin/serverSettingsPage/common/formController';
 import {
   validateLdapAttributes,
@@ -35,7 +36,7 @@ const localMessages = defineMessages({
 @reduxForm({
   form: AD_AUTH_FORM,
   validate: ({ domain, ldapAttributes }) => ({
-    domain: !domain && 'requiredFieldHint',
+    domain: commonValidators.requiredField(domain),
     ldapAttributes: validateLdapAttributes(ldapAttributes),
   }),
   initialValues: DEFAULT_FORM_CONFIG,

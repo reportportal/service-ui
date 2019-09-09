@@ -12,7 +12,7 @@ import { InputSwitcher } from 'components/inputs/inputSwitcher';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { validate } from 'common/utils';
+import { validate, commonValidators } from 'common/utils';
 import { PATTERN_TYPES, REGEX_PATTERN, STRING_PATTERN } from 'common/constants/patternTypes';
 import { patternsSelector } from 'controllers/project';
 import { RegExEditor } from 'components/inputs/regExEditor';
@@ -52,7 +52,7 @@ const createPatternFormSelector = formValueSelector('createPatternForm');
       (name &&
         !validate.patternNameUnique(name, undefined, patternsSelector(state)) &&
         'patternNameDuplicateHint'),
-    value: !value && 'requiredFieldHint',
+    value: commonValidators.requiredField(value),
   }),
 }))
 @reduxForm({

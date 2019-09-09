@@ -49,7 +49,7 @@ const validators = {
     (!value || !validate.inRangeValidate(value, 1, 15)) &&
     formatMessage(messages.ItemsValidationError),
   attributeKey: (formatMessage) => (value) => {
-    if (!value) {
+    if (validate.isEmpty(value)) {
       return formatMessage(messages.attributesArrayValidationError);
     } else if (!validate.attributeKey(value)) {
       return formatMessage(messages.attributeKeyValidationError);

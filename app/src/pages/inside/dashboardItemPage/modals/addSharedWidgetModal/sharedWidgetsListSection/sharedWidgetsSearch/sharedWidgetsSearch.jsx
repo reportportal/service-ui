@@ -6,6 +6,7 @@ import { reduxForm } from 'redux-form';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { InputSearch } from 'components/inputs/inputSearch';
+import { validate } from 'common/utils';
 import styles from './sharedWidgetsSearch.scss';
 
 const cx = classNames.bind(styles);
@@ -21,10 +22,10 @@ const messages = defineMessages({
 @reduxForm({
   form: 'sharedWidgetSearchForm',
   validate: ({ filter }) => ({
-    filter: filter && filter.length < 3 && 'sharedWidgetSearchHint',
+    filter: !validate.validateSearchFilter(filter) && 'sharedWidgetSearchHint',
   }),
   onChange: ({ filter }, dispatcher, { onFilterChange }) => {
-    if (filter && filter.length < 3) {
+    if (!validate.validateSearchFilter(filter)) {
       return;
     }
 

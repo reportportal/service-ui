@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { injectIntl, intlShape } from 'react-intl';
-import { validate } from 'common/utils';
+import { validate, commonValidators } from 'common/utils';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { InputDropdown } from 'components/inputs/inputDropdown';
 import { Input } from 'components/inputs/input';
@@ -11,9 +11,9 @@ import { DEFAULT_FORM_CONFIG } from '../constants';
 import { messages } from '../messages';
 
 const validators = {
-  url: (value) => (!value || !validate.url(value)) && 'btsUrlHint',
-  project: (value) => (!value || !validate.btsProject(value)) && 'btsProjectHint',
-  requiredField: (value) => !value && 'requiredFieldHint',
+  url: (value) => (validate.isEmpty(value) || !validate.url(value)) && 'btsUrlHint',
+  project: (value) => (validate.isEmpty(value) || !validate.btsProject(value)) && 'btsProjectHint',
+  requiredField: commonValidators.requiredField,
 };
 
 @injectIntl
