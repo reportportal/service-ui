@@ -1,6 +1,6 @@
 import { createSelector } from 'reselect';
 import { extractNamespacedQuery } from 'common/utils/routingUtils';
-import { DEFAULT_PAGINATION, SIZE_KEY } from 'controllers/pagination';
+import { DEFAULT_PAGINATION, DEFAULT_PAGE_SIZE, SIZE_KEY } from 'controllers/pagination';
 import { SORTING_KEY } from 'controllers/sorting';
 import { getStorageItem } from 'common/utils';
 import { userIdSelector } from 'controllers/user';
@@ -86,7 +86,7 @@ export const createQueryParametersSelector = ({
   if ((!defaultPagination || !defaultPagination[SIZE_KEY]) && calculatedNamespace) {
     const userId = userIdSelector(state);
     const userSettings = getStorageItem(`${userId}_settings`) || {};
-    queryParameters[SIZE_KEY] = userSettings[`${calculatedNamespace}PageSize`];
+    queryParameters[SIZE_KEY] = userSettings[`${calculatedNamespace}PageSize`] || DEFAULT_PAGE_SIZE;
   }
   return queryParameters;
 };
