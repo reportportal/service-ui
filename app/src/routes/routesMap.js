@@ -1,4 +1,5 @@
-import { redirect } from 'redux-first-router';
+import { redirect, actionToPath } from 'redux-first-router';
+import qs from 'qs';
 import {
   activeProjectSelector,
   userAccountRoleSelector,
@@ -82,59 +83,7 @@ const redirectRoute = (path, createNewAction, onRedirect = () => {}) => ({
   },
 });
 
-export const onBeforeRouteChange = (dispatch, getState, { action }) => {
-  const {
-    type: nextPageType,
-    payload: { projectId: hashProject },
-  } = action;
-  const currentPageType = pageSelector(getState());
-  const authorized = isAuthorizedSelector(getState());
-  let projectId = activeProjectSelector(getState());
-  const accountRole = userAccountRoleSelector(getState());
-  const userInfo = userInfoSelector(getState());
-  const userProjects = userInfo ? userInfo.assignedProjects : {};
-  const isAdminNewPageType = !!adminPageNames[nextPageType];
-  const isAdminCurrentPageType = !!adminPageNames[currentPageType];
-
-  if (
-    userProjects &&
-    hashProject in userProjects &&
-    (hashProject !== projectId || isAdminCurrentPageType) &&
-    !isAdminNewPageType
-  ) {
-    dispatch(setActiveProjectAction(hashProject));
-    dispatch(fetchProjectAction(hashProject));
-    projectId = hashProject;
-  }
-  const page = pageRendering[nextPageType];
-  if (page) {
-    const { access } = page;
-    switch (access) {
-      case ANONYMOUS_ACCESS:
-        if (authorized) {
-          dispatch(
-            redirect({
-              type: PROJECT_DASHBOARD_PAGE,
-              payload: {
-                projectId,
-              },
-            }),
-          );
-        }
-        break;
-      case ADMIN_ACCESS:
-        if (authorized && accountRole !== ADMINISTRATOR) {
-          dispatch(redirect({ type: PROJECT_DASHBOARD_PAGE, payload: { projectId } }));
-        }
-        !authorized && dispatch(redirect({ type: LOGIN_PAGE }));
-        break;
-      default:
-        !authorized && dispatch(redirect({ type: LOGIN_PAGE }));
-    }
-  }
-};
-
-export default {
+const routesMap = {
   [HOME_PAGE]: redirectRoute('/', (payload) => ({ type: LOGIN_PAGE, payload })),
 
   [LOGIN_PAGE]: '/login',
@@ -292,3 +241,75 @@ export default {
     },
   },
 };
+
+export const onBeforeRouteChange = (dispatch, getState, { action }) => {
+  const {
+    type: nextPageType,
+    payload: { projectId: hashProject },
+  } = action;
+  const currentPageType = pageSelector(getState());
+  const authorized = isAuthorizedSelector(getState());
+  let projectId = activeProjectSelector(getState());
+  const accountRole = userAccountRoleSelector(getState());
+  const userInfo = userInfoSelector(getState());
+  const userProjects = userInfo ? userInfo.assignedProjects : {};
+  const isAdminNewPageType = !!adminPageNames[nextPageType];
+  const isAdminCurrentPageType = !!adminPageNames[currentPageType];
+
+  if (
+    userProjects &&
+    hashProject in userProjects &&
+    (hashProject !== projectId || isAdminCurrentPageType) &&
+    !isAdminNewPageType
+  ) {
+    dispatch(setActiveProjectAction(hashProject));
+    dispatch(fetchProjectAction(hashProject));
+    projectId = hashProject;
+  }
+  const page = pageRendering[nextPageType];
+  const redirectPath = actionToPath(action, routesMap, qs);
+  if (page) {
+    const { access } = page;
+    switch (access) {
+      case ANONYMOUS_ACCESS:
+        if (authorized) {
+          dispatch(
+            redirect({
+              type: PROJECT_DASHBOARD_PAGE,
+              payload: {
+                projectId,
+              },
+            }),
+          );
+        }
+        break;
+      case ADMIN_ACCESS:
+        if (authorized && accountRole !== ADMINISTRATOR) {
+          dispatch(redirect({ type: PROJECT_DASHBOARD_PAGE, payload: { projectId } }));
+        } else if (!authorized) {
+          dispatch(
+            redirect({
+              type: LOGIN_PAGE,
+              meta: {
+                query: { redirectPath },
+              },
+            }),
+          );
+        }
+        break;
+      default:
+        if (!authorized) {
+          dispatch(
+            redirect({
+              type: LOGIN_PAGE,
+              meta: {
+                query: { redirectPath },
+              },
+            }),
+          );
+        }
+    }
+  }
+};
+
+export default routesMap;

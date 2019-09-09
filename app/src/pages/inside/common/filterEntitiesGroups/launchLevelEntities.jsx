@@ -379,7 +379,7 @@ export class LaunchLevelEntities extends Component {
         return;
       }
       const defectTypeGroup = this.props.defectTypes[defectTypeRef];
-      const hasSubtypes = defectTypeGroup.length > 1;
+      const hasSubtypes = defectTypeGroup && defectTypeGroup.length > 1;
       const totalEntityId = `${DEFECT_ENTITY_ID_BASE}${defectTypeRef.toLowerCase()}$total`;
       const defectTitle = `${defectTypeRef}_${hasSubtypes ? 'totalTitle' : 'title'}`;
 
