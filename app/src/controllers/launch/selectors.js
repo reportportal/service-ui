@@ -11,7 +11,7 @@ import {
   pageSelector,
 } from 'controllers/pages';
 import { ALL, LATEST } from 'common/constants/reservedFilterIds';
-import { DEFAULT_SORTING, NAMESPACE } from './constants';
+import { DEFAULT_SORTING, DEFAULT_PAGINATION, NAMESPACE } from './constants';
 
 const domainSelector = (state) => state.launches || {};
 const groupOperationsSelector = (state) => domainSelector(state).groupOperations;
@@ -27,6 +27,7 @@ export const loadingSelector = (state) => domainSelector(state).loading || false
 
 export const queryParametersSelector = createQueryParametersSelector({
   namespace: NAMESPACE,
+  defaultPagination: DEFAULT_PAGINATION,
   defaultSorting: DEFAULT_SORTING,
 });
 

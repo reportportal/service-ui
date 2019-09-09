@@ -5,6 +5,13 @@ import {
   LEVEL_STORY,
   LEVEL_SCENARIO,
 } from 'common/constants/launchLevels';
+import { PAGE_KEY, SIZE_KEY } from 'controllers/pagination';
+
+export const DEFAULT_PAGE_SIZE = 50;
+export const DEFAULT_PAGINATION = {
+  [PAGE_KEY]: 1,
+  [SIZE_KEY]: DEFAULT_PAGE_SIZE,
+};
 
 export const SET_LEVEL = 'setLevel';
 export const FETCH_TEST_ITEMS = 'fetchTestItems';

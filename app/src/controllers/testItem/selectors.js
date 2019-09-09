@@ -30,7 +30,7 @@ import { suitesSelector, suitePaginationSelector } from 'controllers/suite';
 import { testsSelector, testPaginationSelector } from 'controllers/test';
 import { stepsSelector, stepPaginationSelector } from 'controllers/step';
 import { defectTypesSelector } from 'controllers/project';
-import { DEFAULT_SORTING, TEST_ITEMS_TYPE_LIST } from './constants';
+import { DEFAULT_SORTING, DEFAULT_PAGINATION, TEST_ITEMS_TYPE_LIST } from './constants';
 import {
   createLink,
   getQueryNamespace,
@@ -47,6 +47,7 @@ export const pageLoadingSelector = (state) => domainSelector(state).pageLoading;
 export const namespaceSelector = (state, offset = 0) =>
   getQueryNamespace(testItemIdsArraySelector(state).length - 1 - offset);
 export const queryParametersSelector = createQueryParametersSelector({
+  defaultPagination: DEFAULT_PAGINATION,
   defaultSorting: DEFAULT_SORTING,
 });
 export const parentItemsSelector = (state) => domainSelector(state).parentItems || [];
