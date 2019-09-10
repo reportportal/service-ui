@@ -6,49 +6,54 @@ import { FieldFilterEntity } from 'components/fields/fieldFilterEntity';
 import { InputTimeDateRange } from 'components/inputs/inputTimeDateRange';
 import { CONDITION_BETWEEN } from 'components/filterEntities/constants';
 
+const endOfToday = moment()
+  .add(1, 'days')
+  .startOf('day')
+  .valueOf();
+
 const presets = [
   {
     label: <FormattedMessage id="EntityItemStartTime.today" defaultMessage="Today" />,
-    value: {
+    getValue: () => ({
       start: moment()
         .startOf('day')
         .valueOf(),
-      end: moment(),
+      end: endOfToday,
       dynamic: true,
-    },
+    }),
   },
   {
     label: <FormattedMessage id="EntityItemStartTime.last2days" defaultMessage="Last 2 days" />,
-    value: {
+    getValue: () => ({
       start: moment()
         .startOf('day')
         .subtract(1, 'days')
         .valueOf(),
-      end: moment(),
+      end: endOfToday,
       dynamic: true,
-    },
+    }),
   },
   {
     label: <FormattedMessage id="EntityItemStartTime.last7days" defaultMessage="Last 7 days" />,
-    value: {
+    getValue: () => ({
       start: moment()
         .startOf('day')
         .subtract(7, 'days')
         .valueOf(),
-      end: moment(),
+      end: endOfToday,
       dynamic: true,
-    },
+    }),
   },
   {
     label: <FormattedMessage id="EntityItemStartTime.last30days" defaultMessage="Last 30 days" />,
-    value: {
+    getValue: () => ({
       start: moment()
         .startOf('day')
         .subtract(30, 'days')
         .valueOf(),
-      end: moment(),
+      end: endOfToday,
       dynamic: true,
-    },
+    }),
   },
 ];
 

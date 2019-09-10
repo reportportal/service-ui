@@ -12,6 +12,7 @@ import {
   TIME_FORMAT,
   TIME_DATE_FORMAT,
 } from 'common/constants/timeDateFormat';
+import isEqual from 'fast-deep-equal';
 import styles from './inputTimeDateRange.scss';
 
 const DEFAULT_DISPLAY_START_DATE = moment()
@@ -93,9 +94,9 @@ export class InputTimeDateRange extends Component {
     e.stopPropagation();
     this.state.opened ? this.props.onBlur() : this.props.onFocus();
   };
-  onClickPreset = (value) => {
+  onClickPreset = (preset) => {
     this.setState({ opened: false });
-    this.props.onChange(value);
+    this.props.onChange(preset.getValue());
   };
 
   setRef = (node) => {
@@ -164,13 +165,10 @@ export class InputTimeDateRange extends Component {
                 // eslint-disable-next-line react/no-array-index-key
                 key={key}
                 className={cx('preset', {
-                  active:
-                    value.start === preset.value.start &&
-                    value.end === preset.value.end &&
-                    value.dynamic === preset.value.dynamic,
+                  active: isEqual(preset.getValue(), value),
                 })}
                 onClick={() => {
-                  this.onClickPreset(preset.value);
+                  this.onClickPreset(preset);
                 }}
               >
                 {preset.label}

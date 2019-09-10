@@ -3,6 +3,7 @@ import track from 'react-tracking';
 import { reduxForm } from 'redux-form';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { validateSearchFilter } from 'common/utils/validation';
 import AddFilterIcon from 'common/img/add-filter-inline.svg';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { FieldProvider } from 'components/fields/fieldProvider';
@@ -12,9 +13,6 @@ import { FILTERS_PAGE_EVENTS } from 'components/main/analytics/events';
 import styles from './filterPageToolbar.scss';
 
 const cx = classNames.bind(styles);
-
-const validateSearchFilter = (filter) => !filter || filter.length >= 3;
-
 const messages = defineMessages({
   favoriteFilters: {
     id: 'FiltersPage.msgFavoriteFilters',
@@ -28,7 +26,7 @@ const messages = defineMessages({
 });
 @track()
 @reduxForm({
-  form: 'filterSearch',
+  form: 'searchFilterForm',
   validate: ({ filter }) => ({
     filter: validateSearchFilter(filter) ? undefined : 'filterNameError',
   }),
@@ -44,14 +42,12 @@ const messages = defineMessages({
 export class FilterPageToolbar extends React.Component {
   static propTypes = {
     intl: intlShape,
-    invalid: PropTypes.bool,
     isSearchDisabled: PropTypes.bool,
     onAddFilter: PropTypes.func,
   };
 
   static defaultProps = {
     intl: {},
-    invalid: false,
     isSearchDisabled: false,
     onAddFilter: () => {},
   };

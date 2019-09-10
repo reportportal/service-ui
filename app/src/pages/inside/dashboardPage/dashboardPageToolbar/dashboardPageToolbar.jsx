@@ -3,6 +3,7 @@ import track from 'react-tracking';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import PropTypes from 'prop-types';
+import { validateSearchFilter } from 'common/utils/validation';
 import { GhostButton } from 'components/buttons/ghostButton';
 import GridViewDashboardIcon from 'common/img/grid-inline.svg';
 import TableViewDashboardIcon from 'common/img/table-inline.svg';
@@ -21,74 +22,50 @@ const messages = defineMessages({
   },
 });
 
+@track()
 @reduxForm({
   form: 'searchDashboardForm',
-  validate: ({ dashboardName }) => ({
-    dashboardName: dashboardName && dashboardName.length < 3 && 'dashboardNameSearchHint',
+  validate: ({ filter }) => ({
+    filter: validateSearchFilter(filter) ? undefined : 'dashboardNameSearchHint',
   }),
-  onChange: (values, dispatch, props, previousValues) => {
-    if (typeof previousValues.dashboardName === 'undefined') {
-      return;
-    }
-    if (!values.dashboardName || values.dashboardName.length >= 3) {
-      props.onFilterChange(values.dashboardName);
+  enableReinitialize: true,
+  onChange: ({ filter }, dispatch, props) => {
+    if (validateSearchFilter(filter)) {
+      props.tracking.trackEvent(DASHBOARD_PAGE_EVENTS.ENTER_PARAM_FOR_SEARCH);
+      props.onFilterChange(filter);
     }
   },
 })
 @injectIntl
-@track()
 export class DashboardPageToolbar extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
-    dashboardItems: PropTypes.array,
-    change: PropTypes.func,
-    filter: PropTypes.string,
+    isSearchDisabled: PropTypes.bool,
     onGridViewToggle: PropTypes.func,
     onTableViewToggle: PropTypes.func,
     gridType: PropTypes.string,
-    invalid: PropTypes.bool,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
   };
   static defaultProps = {
-    dashboardItems: [],
-    change: () => {},
-    filter: '',
+    isSearchDisabled: false,
     onGridViewToggle: () => {},
     onTableViewToggle: () => {},
     gridType: '',
-    invalid: false,
   };
 
-  componentDidMount() {
-    this.props.change('dashboardName', this.props.filter);
-  }
-
   render() {
-    const {
-      onGridViewToggle,
-      onTableViewToggle,
-      gridType,
-      intl,
-      dashboardItems,
-      filter,
-    } = this.props;
+    const { intl, onGridViewToggle, onTableViewToggle, gridType, isSearchDisabled } = this.props;
 
     return (
       <div className={cx('tool-bar')}>
         <div className={cx('input')}>
-          <FieldProvider
-            name="dashboardName"
-            onChange={(val) => {
-              val.length >= 3 &&
-                this.props.tracking.trackEvent(DASHBOARD_PAGE_EVENTS.ENTER_PARAM_FOR_SEARCH);
-            }}
-          >
+          <FieldProvider name="filter">
             <FieldErrorHint>
               <InputSearch
-                disabled={!dashboardItems.length && !filter}
+                disabled={isSearchDisabled}
                 maxLength="128"
                 placeholder={intl.formatMessage(messages.searchPlaceholder)}
               />
