@@ -117,7 +117,17 @@ export const breadcrumbsSelector = createSelector(
   pagePropertiesSelector,
   debugModeSelector,
   filterIdSelector,
-  (projectId, filter, parentItems, testItemIdsArray, query, debugMode, filterCategory) => {
+  isTestItemsListSelector,
+  (
+    projectId,
+    filter,
+    parentItems,
+    testItemIdsArray,
+    query,
+    debugMode,
+    filterCategory,
+    isTestItemsListView,
+  ) => {
     const queryNamespacesToCopy = [LAUNCH_NAMESPACE];
     let isListViewExist = false;
     const filterId = (filter && filter.id) || filterCategory;
@@ -125,7 +135,7 @@ export const breadcrumbsSelector = createSelector(
     const descriptors = [
       {
         id: filterId,
-        title: `${filterName}`,
+        title: filterName,
         link: {
           type: debugMode ? PROJECT_USERDEBUG_PAGE : PROJECT_LAUNCHES_PAGE,
           payload: {
@@ -143,12 +153,12 @@ export const breadcrumbsSelector = createSelector(
       return descriptors;
     }
 
-    if (isTestItemsListSelector) {
+    if (isTestItemsListView) {
       return [
         ...descriptors,
         {
           id: `listView${filterId}`,
-          title: `${filterName}`,
+          title: filterName,
           link: {
             type: debugMode ? PROJECT_USERDEBUG_TEST_ITEM_PAGE : TEST_ITEM_PAGE,
             payload: {
