@@ -30,6 +30,8 @@ export const withTooltip = ({ TooltipComponent, data = {} }) => (WrappedComponen
     render() {
       const { shown } = this.state;
       const styleWidth = data.dynamicWidth ? null : { width: data.width || DEFAULT_TOOLTIP_WIDTH };
+      const topOffset = data.topOffset || 0;
+      const leftOffset = data.leftOffset || 0;
       return (
         <Manager>
           <Reference>
@@ -54,7 +56,12 @@ export const withTooltip = ({ TooltipComponent, data = {} }) => (WrappedComponen
                       'desktop-only': data.desktopOnly,
                     })}
                     ref={ref}
-                    style={{ ...style, ...styleWidth }}
+                    style={{
+                      ...style,
+                      ...styleWidth,
+                      top: style.top + topOffset,
+                      left: style.left + leftOffset,
+                    }}
                     data-placement={placement}
                     onMouseEnter={data.hoverable ? this.showTooltip : null}
                     onMouseLeave={data.hoverable ? this.hideTooltip : null}
