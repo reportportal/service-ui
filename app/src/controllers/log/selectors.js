@@ -31,6 +31,7 @@ import {
   ACTIVE_LOG_ITEM_QUERY_KEY,
   DETAILED_LOG_VIEW,
   LAUNCH_LOG_VIEW,
+  LOG_STATUS_FILTER_KEY,
 } from './constants';
 
 const logSelector = (state) => state.log || {};
@@ -255,10 +256,16 @@ export const logViewModeSelector = (state) => {
   return hasChildren || isLaunchLog ? LAUNCH_LOG_VIEW : DETAILED_LOG_VIEW;
 };
 
-export const isLogPageWithOutNestedSteps = createSelector(logItemsSelector, (items) => {
-  const filteredItems = items.filter((item) => 'hasContent' in item);
-  return filteredItems.length === 0;
-});
+export const isLogPageWithOutNestedSteps = createSelector(
+  logItemsSelector,
+  pagePropertiesSelector,
+  (items, pageQuery) => {
+    const query = extractNamespacedQuery(pageQuery, NAMESPACE);
+    const logStatus = query[LOG_STATUS_FILTER_KEY];
+    const filteredItems = items.filter((item) => 'hasContent' in item);
+    return filteredItems.length === 0 && !logStatus;
+  },
+);
 export const isLogPageWithNestedSteps = createSelector(
   isLogPageWithOutNestedSteps,
   (value) => !value,
