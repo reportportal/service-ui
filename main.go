@@ -15,14 +15,11 @@ import (
 )
 
 func main() {
-
 	currDir, e := os.Getwd()
 	if nil != e {
 		log.Fatalf("Cannot get workdir: %s", e.Error())
 	}
-
 	cfg := conf.EmptyConfig()
-
 	rpConf := struct {
 		Cfg         *conf.ServerConfig
 		StaticsPath string `env:"RP_STATICS_PATH"`
@@ -30,22 +27,25 @@ func main() {
 		Cfg:         cfg,
 		StaticsPath: currDir,
 	}
-
 	err := conf.LoadConfig(&rpConf)
 	if nil != err {
 		log.Fatalf("Cannot log app config")
 	}
-
 	info := commons.GetBuildInfo()
 	info.Name = "Service UI"
-
 	srv := server.New(rpConf.Cfg, info)
-	srv.WithRouter(func(router *chi.Mux) {
+	configureRouter(srv, rpConf)
+	srv.StartServer()
+}
 
+func configureRouter(srv *server.RpServer, rpConf struct {
+	Cfg         *conf.ServerConfig
+	StaticsPath string `env:"RP_STATICS_PATH"`
+}) {
+	srv.WithRouter(func(router *chi.Mux) {
 		//apply compression
 		router.Use(middleware.DefaultCompress)
 		router.Use(middleware.Logger)
-
 		//content security policy
 		csp := map[string][]string{
 			"default-src": {"'self'", "data:", "'unsafe-inline'", "*.uservoice.com"},
@@ -68,7 +68,6 @@ func main() {
 			"img-src":        {"*", "'self'", "data:", "blob:"},
 			"object-src":     {"'self'"},
 		}
-
 		//apply content security policies
 		router.Use(func(next http.Handler) http.Handler {
 			return secure.New(secure.Options{
@@ -80,28 +79,20 @@ func main() {
 				STSPreload:            true,
 			}).Handler(next)
 		})
-
 		err := os.Chdir(rpConf.StaticsPath)
 		if nil != err {
 			log.Fatalf("Dir %s not found", rpConf.StaticsPath)
 		}
-
 		router.Handle("/*", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			//trim query params
 			ext := filepath.Ext(trimQuery(r.URL.String(), "?"))
-
 			// never cache html
 			if "/" == r.URL.String() || ".html" == ext {
 				w.Header().Add("Cache-Control", "no-cache")
 			}
-
 			http.FileServer(http.Dir(rpConf.StaticsPath)).ServeHTTP(&redirectingRW{ResponseWriter: w, Request: r}, r)
 		}))
-
 	})
-
-	srv.StartServer()
-
 }
 
 func trimQuery(s string, sep string) string {
