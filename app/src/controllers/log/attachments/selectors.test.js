@@ -1,6 +1,9 @@
 import { attachmentItemsSelector } from './selectors';
 
 const mockState = {
+  user: {
+    activeProject: 'test_project',
+  },
   log: {
     attachments: {
       logsWithAttachments: [
@@ -25,6 +28,7 @@ describe('Attachments Selectors', () => {
   test('attachmentsSelector works', () => {
     const selected = attachmentItemsSelector.resultFunc(
       mockState.log.attachments.logsWithAttachments,
+      mockState.user.activeProject,
     );
     const expected = [
       {
@@ -38,7 +42,7 @@ describe('Attachments Selectors', () => {
         alt: 'image/png',
         contentType: 'image/png',
         id: '5678',
-        src: '/api/v1/data/5678',
+        src: '/api/v1/data/test_project/5678',
         isImage: true,
       },
     ];
