@@ -8,17 +8,19 @@ import AttachIcon from 'common/img/attachment-inline.svg';
 import { Image } from 'components/main/image';
 import { LOG_PAGE_EVENTS } from 'components/main/analytics/events';
 import { openAttachmentAction, getFileIconSource } from 'controllers/log/attachments';
+import { activeProjectSelector } from 'controllers/user';
 import styles from './attachmentBlock.scss';
 
 const cx = classNames.bind(styles);
 
-@connect(null, { openAttachmentAction })
+@connect((state) => ({ activeProject: activeProjectSelector(state) }), { openAttachmentAction })
 @track()
 export class AttachmentBlock extends Component {
   static propTypes = {
     value: PropTypes.object,
     customProps: PropTypes.object,
     openAttachmentAction: PropTypes.func,
+    activeProject: PropTypes.string,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
@@ -29,6 +31,7 @@ export class AttachmentBlock extends Component {
     value: {},
     customProps: {},
     openAttachmentAction: () => {},
+    activeProject: '',
   };
 
   onClickAttachment = () => {
@@ -40,6 +43,7 @@ export class AttachmentBlock extends Component {
     const {
       value,
       customProps: { consoleView },
+      activeProject,
     } = this.props;
 
     return (
@@ -47,7 +51,11 @@ export class AttachmentBlock extends Component {
         {consoleView ? (
           <div className={cx('image', 'console-view')}>{Parser(AttachIcon)}</div>
         ) : (
-          <Image className={cx('image')} src={getFileIconSource(value)} alt={value.contentType} />
+          <Image
+            className={cx('image')}
+            src={getFileIconSource(value, activeProject)}
+            alt={value.contentType}
+          />
         )}
       </div>
     );
