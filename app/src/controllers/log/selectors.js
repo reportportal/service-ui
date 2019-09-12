@@ -262,8 +262,8 @@ export const isLogPageWithOutNestedSteps = createSelector(
   (items, pageQuery) => {
     const query = extractNamespacedQuery(pageQuery, NAMESPACE);
     const logStatus = query[LOG_STATUS_FILTER_KEY];
-    const filteredItems = items.filter((item) => 'hasContent' in item);
-    return filteredItems.length === 0 && !logStatus;
+    const hasNestedSteps = items.some((item) => 'hasContent' in item);
+    return !hasNestedSteps && !logStatus;
   },
 );
 export const isLogPageWithNestedSteps = createSelector(
