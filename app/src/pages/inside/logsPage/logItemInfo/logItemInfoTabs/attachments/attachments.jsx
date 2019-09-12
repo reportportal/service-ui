@@ -74,7 +74,7 @@ export class Attachments extends Component {
   };
 
   static getDerivedStateFromProps(props, state) {
-    if (!props.activeItemId) {
+    if (props.activeItemId === null) {
       const currentThumb = getCurrentThumb(props.activeItemId, state.visibleThumbs);
       return {
         mainAreaVisible: false,
