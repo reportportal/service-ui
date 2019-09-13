@@ -9,7 +9,15 @@ import styles from './groupsSection.scss';
 const cx = classNames.bind(styles);
 
 export const GroupsSection = injectIntl(
-  ({ intl: { formatMessage }, sectionTitle, itemsCount, groups, colorCalculator }) => (
+  ({
+    intl: { formatMessage },
+    sectionTitle,
+    itemsCount,
+    groups,
+    colorCalculator,
+    onClickGroupItem,
+    isClickable,
+  }) => (
     <div className={cx('groups-section')}>
       <h3 className={cx('section-title')}>
         <span className={cx('caption')}>{sectionTitle}</span>
@@ -22,6 +30,8 @@ export const GroupsSection = injectIntl(
               {...item}
               color={colorCalculator(item.passingRate)}
               formatMessage={formatMessage}
+              onClickGroupItem={onClickGroupItem}
+              isClickable={isClickable}
             />
           </div>
         ))}
@@ -34,10 +44,14 @@ GroupsSection.propTypes = {
   itemsCount: PropTypes.number,
   groups: PropTypes.arrayOf(PropTypes.shape(groupItemPropTypes)),
   colorCalculator: PropTypes.func,
+  onClickGroupItem: PropTypes.func,
+  isClickable: PropTypes.bool,
 };
 GroupsSection.defaultProps = {
   sectionTitle: '',
   itemsCount: 0,
   groups: [],
   colorCalculator: () => {},
+  onClickGroupItem: () => {},
+  isClickable: true,
 };

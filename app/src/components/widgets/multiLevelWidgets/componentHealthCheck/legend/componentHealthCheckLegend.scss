@@ -1,0 +1,9 @@
+.legend {
+  min-height: 100px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 25px;
+  border-bottom: 1px solid $COLOR--white-four;
+  box-sizing: border-box;
+}

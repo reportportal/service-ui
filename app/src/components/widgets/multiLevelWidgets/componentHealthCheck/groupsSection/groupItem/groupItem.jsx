@@ -6,8 +6,20 @@ import styles from './groupItem.scss';
 
 const cx = classNames.bind(styles);
 
-export const GroupItem = ({ formatMessage, attributeValue, passingRate, total, color }) => (
-  <div className={cx('group-item')} style={{ borderTopColor: color }}>
+export const GroupItem = ({
+  formatMessage,
+  attributeValue,
+  passingRate,
+  total,
+  color,
+  onClickGroupItem,
+  isClickable,
+}) => (
+  <div
+    className={cx('group-item')}
+    style={{ borderTopColor: color, cursor: isClickable ? 'pointer' : 'default' }}
+    onClick={isClickable ? () => onClickGroupItem(attributeValue, passingRate, color) : undefined}
+  >
     <h4 className={cx('item-title')}>{attributeValue}</h4>
     <div className={cx('stat-wrapper')}>
       <div className={cx('stat-item')}>
@@ -16,7 +28,7 @@ export const GroupItem = ({ formatMessage, attributeValue, passingRate, total, c
       </div>
       <div className={cx('stat-item')}>
         <span className={cx('stat-item-header')}>{formatMessage(messages.testCasesCaption)}</span>
-        <span className={cx('stat-item-value')}>s{total}</span>
+        <span className={cx('stat-item-value')}>{total}</span>
       </div>
     </div>
   </div>
