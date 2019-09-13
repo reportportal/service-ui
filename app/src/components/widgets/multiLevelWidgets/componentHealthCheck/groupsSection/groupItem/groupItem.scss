@@ -1,0 +1,41 @@
+.group-item {
+  width: 204px;
+  height: 102px;
+  box-sizing: border-box;
+  padding: 15px;
+  border-radius: 2px;
+  border: solid 1px $COLOR--gray-91;
+  border-top: solid 5px;
+
+  color: $COLOR_-charcoal-grey;
+  font-size: 13px;
+  font-family: $FONT-REGULAR;
+}
+
+.item-title {
+  margin: 0 0 20px 0;
+  font-family: $FONT-SEMIBOLD;
+}
+
+.stat-wrapper {
+  display: flex;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  &:not(:last-child) {
+    margin-right: 20px;
+  }
+}
+
+.stat-item-header {
+  margin-bottom: 10px;
+  color: $COLOR--gray-47;
+  font-size: 12px;
+  opacity: 0.8;
+}
+
+.stat-item-value {
+  line-height: 1.23;
+}
