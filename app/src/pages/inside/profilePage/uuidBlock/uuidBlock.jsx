@@ -17,7 +17,7 @@ const cx = classNames.bind(styles);
 const messages = defineMessages({
   header: {
     id: 'UuidBlock.header',
-    defaultMessage: 'Universally unique identifier',
+    defaultMessage: 'Access token',
   },
   regenerate: {
     id: 'UuidBlock.regenerate',
@@ -26,7 +26,7 @@ const messages = defineMessages({
   text: {
     id: 'UuidBlock.text',
     defaultMessage:
-      'In order to provide security for your own domain password, you can use a user token, named UUID - to verify your account to be able to log with agent.',
+      'In order to provide security for your own domain password, you can use a user token - to verify your account to be able to log with agent.',
   },
   regenerateSuccess: {
     id: 'UuidBlock.regenerateSuccess',
@@ -95,14 +95,7 @@ export class UuidBlock extends Component {
         <BlockContainerBody>
           <div className={cx('body-wrapper')}>
             <div className={cx('field-wrapper')}>
-              <span className={cx('label')}>UUID</span>
-              <div className={cx('regenerate-btn')}>
-                <ButtonWithTooltip>
-                  <GhostButton onClick={this.onGenerate}>
-                    {intl.formatMessage(messages.regenerate)}
-                  </GhostButton>
-                </ButtonWithTooltip>
-              </div>
+              <span className={cx('label')}>{intl.formatMessage(messages.header)}</span>
               <div className={cx('field')}>
                 <Input
                   readonly
@@ -110,6 +103,13 @@ export class UuidBlock extends Component {
                   refFunction={this.setupRef}
                   onFocus={this.selectUuid}
                 />
+              </div>
+              <div className={cx('regenerate-btn')}>
+                <ButtonWithTooltip>
+                  <GhostButton onClick={this.onGenerate}>
+                    {intl.formatMessage(messages.regenerate)}
+                  </GhostButton>
+                </ButtonWithTooltip>
               </div>
             </div>
             <p className={cx('tip')}>{intl.formatMessage(messages.text)}</p>
