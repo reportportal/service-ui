@@ -10,31 +10,31 @@ import { GhostButton } from 'components/buttons/ghostButton';
 import { PROFILE_PAGE_EVENTS } from 'components/main/analytics/events';
 import { defineMessages, injectIntl, intlShape } from 'react-intl';
 import { ButtonWithTooltip } from './buttonWithTooltip';
-import styles from './uuidBlock.scss';
+import styles from './accessTokenBlock.scss';
 import { BlockContainerHeader, BlockContainerBody } from '../blockContainer';
 
 const cx = classNames.bind(styles);
 const messages = defineMessages({
   header: {
-    id: 'UuidBlock.header',
+    id: 'AccessTokenBlock.header',
     defaultMessage: 'Access token',
   },
   regenerate: {
-    id: 'UuidBlock.regenerate',
+    id: 'AccessTokenBlock.regenerate',
     defaultMessage: 'Regenerate',
   },
   text: {
-    id: 'UuidBlock.text',
+    id: 'AccessTokenBlock.text',
     defaultMessage:
       'In order to provide security for your own domain password, you can use a user token - to verify your account to be able to log with agent.',
   },
   regenerateSuccess: {
-    id: 'UuidBlock.regenerateSuccess',
+    id: 'AccessTokenBlock.regenerateSuccess',
     defaultMessage: 'Changes have been saved successfully',
   },
   regenerateError: {
-    id: 'UuidBlock.submitError',
-    defaultMessage: "Error! Can't regenerate UUID",
+    id: 'AccessTokenBlock.submitError',
+    defaultMessage: "Error! Can't regenerate access token",
   },
 });
 
@@ -46,7 +46,7 @@ const messages = defineMessages({
 )
 @injectIntl
 @track()
-export class UuidBlock extends Component {
+export class AccessTokenBlock extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
     showModalAction: PropTypes.func.isRequired,
@@ -65,7 +65,7 @@ export class UuidBlock extends Component {
   onGenerate = () => {
     this.props.tracking.trackEvent(PROFILE_PAGE_EVENTS.REGENERATE_BTN);
     this.props.showModalAction({
-      id: 'regenerateUuidModal',
+      id: 'regenerateAccessTokenModal',
       data: { onRegenerate: this.regenerateHandler },
     });
   };
@@ -74,7 +74,7 @@ export class UuidBlock extends Component {
     this.inputLink = node;
   };
 
-  selectUuid = () => {
+  selectAccessToken = () => {
     this.inputLink.select();
   };
 
@@ -88,7 +88,7 @@ export class UuidBlock extends Component {
   render = () => {
     const { intl } = this.props;
     return (
-      <div className={cx('uuid-block')}>
+      <div className={cx('access-token-block')}>
         <BlockContainerHeader>
           <span className={cx('header-label')}>{intl.formatMessage(messages.header)}</span>
         </BlockContainerHeader>
@@ -101,7 +101,7 @@ export class UuidBlock extends Component {
                   readonly
                   value={this.props.token}
                   refFunction={this.setupRef}
-                  onFocus={this.selectUuid}
+                  onFocus={this.selectAccessToken}
                 />
               </div>
               <div className={cx('regenerate-btn')}>

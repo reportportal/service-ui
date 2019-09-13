@@ -9,7 +9,7 @@ export const WarningTooltip = () => (
     <p className={cx('text')}>
       <FormattedMessage
         id="WarningTooltip.description"
-        defaultMessage="If you need to update your UUID, click regenerate to have new one."
+        defaultMessage="If you need to update your access token, click regenerate to have new one."
       />
     </p>
     <p className={cx('warning')}>
@@ -18,7 +18,7 @@ export const WarningTooltip = () => (
     <p className={cx('text')}>
       <FormattedMessage
         id="WarningTooltip.warningDescription"
-        defaultMessage="All configured agents with old UUID will not be working after that"
+        defaultMessage="All configured agents with old access token will not be working after that"
       />
     </p>
   </Fragment>
