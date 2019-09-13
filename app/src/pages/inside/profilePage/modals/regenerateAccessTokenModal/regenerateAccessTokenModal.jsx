@@ -4,28 +4,28 @@ import classNames from 'classnames/bind';
 import { defineMessages, injectIntl, intlShape } from 'react-intl';
 import { ModalLayout, withModal } from 'components/main/modal';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import styles from './regenerateUuidModal.scss';
+import styles from './regenerateAccessTokenModal.scss';
 
 const cx = classNames.bind(styles);
 
 const messages = defineMessages({
   header: {
-    id: 'RegenerateUuidModal.header',
-    defaultMessage: 'Regenerate uuid',
+    id: 'RegenerateAccessTokenModal.header',
+    defaultMessage: 'Regenerate access token',
   },
   warning: {
-    id: 'RegenerateUuidModal.warning',
+    id: 'RegenerateAccessTokenModal.warning',
     defaultMessage: 'Warning!',
   },
   text: {
-    id: 'RegenerateUuidModal.text',
-    defaultMessage: 'All configured agents with old UUID will not be working after that.',
+    id: 'RegenerateAccessTokenModal.text',
+    defaultMessage: 'All configured agents with old access token will not be working after that.',
   },
 });
 
-@withModal('regenerateUuidModal')
+@withModal('regenerateAccessTokenModal')
 @injectIntl
-export class RegenerateUuidModal extends Component {
+export class RegenerateAccessTokenModal extends Component {
   static propTypes = {
     data: PropTypes.shape({
       onRegenerate: PropTypes.func,
