@@ -166,7 +166,9 @@ export class TestItemDetailsModal extends Component {
       <div className={cx('details-tab')}>
         <div className={cx('name-row')}>
           <div className={cx('name')}>{item.name}</div>
-          <TestItemStatus status={item.status} />
+          <div className={cx('status')}>
+            <TestItemStatus status={item.status} />
+          </div>
         </div>
         <ModalField label={intl.formatMessage(messages.testCaseId)}>
           <div className={cx('id')}>{item.uniqueId}</div>
