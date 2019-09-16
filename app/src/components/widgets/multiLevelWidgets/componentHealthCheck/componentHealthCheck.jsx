@@ -1,7 +1,8 @@
-import { PureComponent } from 'react';
+import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import isEqual from 'fast-deep-equal';
+import classNames from 'classnames/bind';
 import {
   COLOR_BURGUNDY,
   COLOR_CHERRY,
@@ -11,8 +12,12 @@ import {
   COLOR_DULL_GREEN,
 } from 'common/constants/colors';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
+import { NoDataAvailable } from 'components/widgets/noDataAvailable';
 import { ComponentHealthCheckLegend } from './legend/componentHealthCheckLegend';
 import { GroupsSection } from './groupsSection/groupsSection';
+import styles from './componentHealthCheck.scss';
+
+const cx = classNames.bind(styles);
 
 const messages = defineMessages({
   failedGroupsTitle: {
@@ -28,7 +33,7 @@ const messages = defineMessages({
 const MAX_PASSING_RATE_VALUE = 100;
 
 @injectIntl
-export class ComponentHealthCheck extends PureComponent {
+export class ComponentHealthCheck extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
     widget: PropTypes.object.isRequired,
@@ -170,14 +175,17 @@ export class ComponentHealthCheck extends PureComponent {
     const failedGroupItems = [];
     const passedGroupItems = [];
 
-    widget.content.result &&
-      widget.content.result.forEach((item) => {
-        if (item.passingRate < passingRate) {
-          failedGroupItems.push(item);
-        } else {
-          passedGroupItems.push(item);
-        }
-      });
+    if (!widget.content.result) {
+      return null;
+    }
+
+    widget.content.result.forEach((item) => {
+      if (item.passingRate < passingRate) {
+        failedGroupItems.push(item);
+      } else {
+        passedGroupItems.push(item);
+      }
+    });
 
     return {
       failedGroupItems,
@@ -230,26 +238,34 @@ export class ComponentHealthCheck extends PureComponent {
           passingRate={this.getPassingRateValue()}
           colorCalculator={this.colorCalculator}
         />
-        {groupItems.failedGroupItems.length ? (
-          <GroupsSection
-            sectionTitle={intl.formatMessage(messages.failedGroupsTitle)}
-            itemsCount={groupItems.failedGroupItems.length}
-            groups={groupItems.failedGroupItems}
-            colorCalculator={this.colorCalculator}
-            onClickGroupItem={this.onClickGroupItem}
-            isClickable={isClickableGroupItem}
-          />
-        ) : null}
-        {groupItems.passedGroupItems.length ? (
-          <GroupsSection
-            sectionTitle={intl.formatMessage(messages.passedGroupsTitle)}
-            itemsCount={groupItems.passedGroupItems.length}
-            groups={groupItems.passedGroupItems}
-            colorCalculator={this.colorCalculator}
-            onClickGroupItem={this.onClickGroupItem}
-            isClickable={isClickableGroupItem}
-          />
-        ) : null}
+        {groupItems ? (
+          <Fragment>
+            {!!groupItems.failedGroupItems.length && (
+              <GroupsSection
+                sectionTitle={intl.formatMessage(messages.failedGroupsTitle)}
+                itemsCount={groupItems.failedGroupItems.length}
+                groups={groupItems.failedGroupItems}
+                colorCalculator={this.colorCalculator}
+                onClickGroupItem={this.onClickGroupItem}
+                isClickable={isClickableGroupItem}
+              />
+            )}
+            {!!groupItems.passedGroupItems.length && (
+              <GroupsSection
+                sectionTitle={intl.formatMessage(messages.passedGroupsTitle)}
+                itemsCount={groupItems.passedGroupItems.length}
+                groups={groupItems.passedGroupItems}
+                colorCalculator={this.colorCalculator}
+                onClickGroupItem={this.onClickGroupItem}
+                isClickable={isClickableGroupItem}
+              />
+            )}
+          </Fragment>
+        ) : (
+          <div className={cx('no-data-wrapper')}>
+            <NoDataAvailable />
+          </div>
+        )}
       </ScrollWrapper>
     );
   }
