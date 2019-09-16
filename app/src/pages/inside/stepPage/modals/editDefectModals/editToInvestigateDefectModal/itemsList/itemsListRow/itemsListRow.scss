@@ -12,7 +12,8 @@
   padding-top: 20px;
 }
 
-.info-column { 
+.info-column {
+  width: 100%;
   overflow: hidden;
 }
 
@@ -28,14 +29,15 @@
 
 .item-name {
   flex-grow: 10;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .item-link {
   color: $COLOR--windows-blue;
   font-family: $FONT-SEMIBOLD;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
   text-decoration: none;
 }
 

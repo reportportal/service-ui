@@ -13,11 +13,6 @@ cache:
     - $HOME/.cache/go-build
     - $GOPATH/pkg/mod
 
-addons:
-  apt:
-    packages:
-      - google-chrome-stable
-
 before_install:
   - rm -rf ~/.nvm && git clone https://github.com/creationix/nvm.git ~/.nvm && (cd ~/.nvm && git checkout `git describe --abbrev=0 --tags`) && source ~/.nvm/nvm.sh && nvm install $TRAVIS_NODE_VERSION
 

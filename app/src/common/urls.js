@@ -198,7 +198,7 @@ export const URLS = {
   userUnasign: (activeProject) => `${urlBase}project/${activeProject}/unassign`,
 
   generateDemoData: (projectId) => `${urlBase}demo/${projectId}`,
-  getFileById: (dataId) => `${urlBase}data/${dataId}`,
+  getFileById: (projectId, dataId) => `${urlBase}data/${projectId}/${dataId}`,
 
   serverSettings: () => `${urlBase}settings`,
   emailServerSettings: () => `${urlBase}settings/email`,

@@ -97,7 +97,7 @@ const SelectedItemWithTooltip = withTooltip({
   TooltipComponent,
   data: {
     width: 200,
-    leftOffset: 10,
+    topOffset: 20,
     noArrow: true,
   },
 })(SelectedItemBody);

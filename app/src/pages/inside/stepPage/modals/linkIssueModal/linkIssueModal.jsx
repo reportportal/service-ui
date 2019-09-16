@@ -13,6 +13,7 @@ import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { STEP_PAGE_EVENTS } from 'components/main/analytics/events';
 import { URLS } from 'common/urls';
 import { validate, fetch } from 'common/utils';
+import { RALLY } from 'common/constants/integrationNames';
 import { BetaBadge } from 'pages/inside/common/betaBadge';
 import { BtsIntegrationSelector } from 'pages/inside/common/btsIntegrationSelector';
 import { LinkIssueFields } from './linkIssueFields';
@@ -212,6 +213,7 @@ export class LinkIssueModal extends Component {
               change={this.props.change}
               component={LinkIssueFields}
               addEventInfo={STEP_PAGE_EVENTS.ADD_NEW_ISSUE_BTN_LOAD_BUG_MODAL}
+              withAutocomplete={this.state.pluginName !== RALLY}
             />
           </form>
         </div>

@@ -5,7 +5,7 @@ import classNames from 'classnames/bind';
 import { PageLayout, PageHeader, PageSection } from 'layouts/pageLayout';
 import { PROFILE_PAGE } from 'components/main/analytics/events';
 import { PersonalInfoBlock } from './personalInfoBlock';
-import { UuidBlock } from './uuidBlock';
+import { AccessTokenBlock } from './accessTokenBlock';
 import { AssignedProjectsBlock } from './assignedProjectsBlock';
 import { ConfigExamplesBlock } from './configExamplesBlock';
 import { LocalizationBlock } from './localizationBlock';
@@ -39,7 +39,7 @@ export class ProfilePage extends Component {
             <LocalizationBlock />
           </div>
           <div className={cx('column')}>
-            <UuidBlock />
+            <AccessTokenBlock />
             <ConfigExamplesBlock />
           </div>
         </div>

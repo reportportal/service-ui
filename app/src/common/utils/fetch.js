@@ -1,6 +1,7 @@
 import axios, { CancelToken } from 'axios';
 import { isAuthorizedSelector, logoutAction } from 'controllers/auth';
 import { stringify } from 'qs';
+import { currentPathSelector } from 'controllers/pages';
 
 export const ERROR_CANCELED = 'REQUEST_CANCELED';
 export const ERROR_UNAUTHORIZED = 'UNAUTHORIZED';
@@ -48,7 +49,10 @@ export const initAuthInterceptor = (store) => {
     (error) => {
       if (error.response && error.response.status === 401) {
         const isAuthorized = isAuthorizedSelector(store.getState());
-        isAuthorized && store.dispatch(logoutAction());
+        if (isAuthorized) {
+          const currentPath = currentPathSelector(store.getState());
+          store.dispatch(logoutAction(currentPath));
+        }
       }
       return Promise.reject(error);
     },
