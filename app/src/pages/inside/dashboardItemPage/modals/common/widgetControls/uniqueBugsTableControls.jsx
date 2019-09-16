@@ -2,7 +2,7 @@ import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
-import { validate } from 'common/utils';
+import { commonValidators } from 'common/utils';
 import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
 import { ITEMS_INPUT_WIDTH } from './constants';
 import { FiltersControl, InputControl, TogglerControl } from './controls';
@@ -19,12 +19,6 @@ const messages = defineMessages({
     defaultMessage: 'Items count should have value from 1 to 600',
   },
 });
-const validators = {
-  items: (formatMessage) => (value) =>
-    (!value || !validate.inRangeValidate(value, 1, 600)) &&
-    formatMessage(messages.ItemsValidationError),
-};
-
 @injectIntl
 export class UniqueBugsTableControls extends Component {
   static propTypes = {
@@ -72,7 +66,9 @@ export class UniqueBugsTableControls extends Component {
           <Fragment>
             <FieldProvider
               name="contentParameters.itemsCount"
-              validate={validators.items(formatMessage)}
+              validate={commonValidators.numberOfLaunches(
+                formatMessage(messages.ItemsValidationError),
+              )}
               format={String}
               normalize={this.normalizeValue}
             >

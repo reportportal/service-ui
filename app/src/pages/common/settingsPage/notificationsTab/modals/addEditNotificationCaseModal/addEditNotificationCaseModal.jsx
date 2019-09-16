@@ -5,7 +5,7 @@ import className from 'classnames/bind';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { ModalLayout, withModal } from 'components/main/modal';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { validate } from 'common/utils';
+import { validate, bindMessageToValidator } from 'common/utils';
 import { NotificationCaseFormFields } from './notificationCaseFormFields';
 import styles from './addEditNotificationCaseModal.scss';
 
@@ -30,14 +30,14 @@ const messages = defineMessages({
 @reduxForm({
   form: 'notificationCaseForm',
   validate: ({ recipients, informOwner, launchNames, attributes }) => ({
-    recipients: (recipients && !recipients.length && !informOwner && 'recipientsHint') || undefined,
+    recipients: bindMessageToValidator(
+      validate.notificationRecipients(informOwner),
+      'recipientsHint',
+    )(recipients),
     attributes: !validate.attributesArray(attributes),
-    launchNames:
-      (launchNames &&
-        launchNames.length &&
-        !launchNames.some(validate.launchName) &&
-        'launchesHint') ||
-      undefined,
+    launchNames: bindMessageToValidator(validate.notificationLaunchNames, 'launchesHint')(
+      launchNames,
+    ),
   }),
 })
 @injectIntl

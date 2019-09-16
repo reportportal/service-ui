@@ -11,7 +11,7 @@ import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { MarkdownEditor } from 'components/main/markdown';
 import { InputBigSwitcher } from 'components/inputs/inputBigSwitcher';
-import { validate } from 'common/utils';
+import { commonValidators } from 'common/utils';
 
 const messages = defineMessages({
   name: {
@@ -44,7 +44,7 @@ const messages = defineMessages({
 @injectIntl
 @reduxForm({
   form: 'filterEditForm',
-  validate: ({ name }) => ({ name: (!name || !validate.filterName(name)) && 'filterNameError' }),
+  validate: ({ name }) => ({ name: commonValidators.filterName(name) }),
 })
 @track()
 export class FilterEditModal extends Component {

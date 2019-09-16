@@ -26,7 +26,7 @@ import { reduxForm } from 'redux-form';
 import { redirect } from 'redux-first-router';
 import classNames from 'classnames/bind';
 import { FormattedMessage, injectIntl, intlShape, defineMessages } from 'react-intl';
-import { validate, fetch, connectRouter } from 'common/utils';
+import { commonValidators, fetch, connectRouter } from 'common/utils';
 import { URLS } from 'common/urls';
 import { LOGIN_PAGE } from 'controllers/pages';
 import { showScreenLockAction, hideScreenLockAction } from 'controllers/screenLock';
@@ -72,7 +72,7 @@ const notifications = defineMessages({
 @reduxForm({
   form: 'changePassword',
   validate: ({ password, passwordRepeat }) => ({
-    password: (!password || !validate.password(password)) && 'passwordHint',
+    password: commonValidators.password(password),
     passwordRepeat: (!passwordRepeat || passwordRepeat !== password) && 'confirmPasswordHint',
   }),
 })

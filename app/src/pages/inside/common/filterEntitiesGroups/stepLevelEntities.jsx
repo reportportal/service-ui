@@ -2,7 +2,7 @@ import { Component } from 'react';
 import { connect } from 'react-redux';
 import { injectIntl, intlShape, defineMessages } from 'react-intl';
 import PropTypes from 'prop-types';
-import { validate } from 'common/utils';
+import { commonValidators } from 'common/utils';
 import { URLS } from 'common/urls';
 import { activeProjectSelector } from 'controllers/user';
 import { FAILED, PASSED, SKIPPED, INTERRUPTED, IN_PROGRESS } from 'common/constants/launchStatuses';
@@ -365,9 +365,7 @@ export class StepLevelEntities extends Component {
         value: this.bindDefaultValue(ENTITY_NAME, {
           condition: CONDITION_CNT,
         }),
-        validationFunc: (entityObject) =>
-          (!entityObject || !entityObject.value || !validate.itemNameEntity(entityObject.value)) &&
-          'itemNameEntityHint',
+        validationFunc: commonValidators.itemNameEntity,
         title: intl.formatMessage(messages.NameTitle),
         active: true,
         removable: false,
@@ -445,11 +443,7 @@ export class StepLevelEntities extends Component {
           condition: CONDITION_CNT,
         }),
         title: intl.formatMessage(messages.DescriptionTitle),
-        validationFunc: (entityObject) =>
-          (!entityObject ||
-            !entityObject.value ||
-            !validate.descriptionEntity(entityObject.value)) &&
-          'descriptionEntityHint',
+        validationFunc: commonValidators.descriptionEntity,
         active: visibleFilters.includes(ENTITY_DESCRIPTION),
         removable: true,
         customProps: {
@@ -511,11 +505,7 @@ export class StepLevelEntities extends Component {
           condition: CONDITION_CNT,
         }),
         title: intl.formatMessage(messages.DefectCommentTitle),
-        validationFunc: (entityObject) =>
-          (!entityObject ||
-            !entityObject.value ||
-            !validate.descriptionEntity(entityObject.value)) &&
-          'descriptionEntityHint',
+        validationFunc: commonValidators.descriptionEntity,
         active: visibleFilters.includes(ENTITY_DEFECT_COMMENT),
         removable: true,
         customProps: {

@@ -86,8 +86,8 @@ export class NotificationCaseFormFields extends Component {
     options && options.map((option) => ({ value: option, label: option }));
   parseOptions = (options) =>
     (Array.isArray(options) && options.map((option) => option.value)) || undefined;
-  validateRecipientsNewItem = ({ label }) => label && validate.email(label);
-  validateLaunchNamesNewItem = ({ label }) => label && validate.launchName(label);
+  validateRecipientsNewItem = ({ label }) => validate.requiredEmail(label);
+  validateLaunchNamesNewItem = ({ label }) => validate.launchName(label);
 
   render() {
     const {

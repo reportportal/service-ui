@@ -12,7 +12,12 @@ import { InputSwitcher } from 'components/inputs/inputSwitcher';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { validate } from 'common/utils';
+import {
+  validate,
+  bindMessageToValidator,
+  commonValidators,
+  composeBindedValidators,
+} from 'common/utils';
 import { PATTERN_TYPES, REGEX_PATTERN, STRING_PATTERN } from 'common/constants/patternTypes';
 import { patternsSelector } from 'controllers/project';
 import { RegExEditor } from 'components/inputs/regExEditor';
@@ -46,13 +51,14 @@ const createPatternFormSelector = formValueSelector('createPatternForm');
 @connect((state) => ({
   selectedType: createPatternFormSelector(state, 'type'),
   validate: ({ name, value }) => ({
-    name:
-      ((!name || !validate.patternNameLength(name, patternsSelector(state))) &&
-        'patternNameLengthHint') ||
-      (name &&
-        !validate.patternNameUnique(name, undefined, patternsSelector(state)) &&
-        'patternNameDuplicateHint'),
-    value: !value && 'requiredFieldHint',
+    name: composeBindedValidators([
+      bindMessageToValidator(validate.patternNameLength, 'patternNameLengthHint'),
+      bindMessageToValidator(
+        validate.patternNameUnique(undefined, patternsSelector(state)),
+        'patternNameDuplicateHint',
+      ),
+    ])(name),
+    value: commonValidators.requiredField(value),
   }),
 }))
 @reduxForm({

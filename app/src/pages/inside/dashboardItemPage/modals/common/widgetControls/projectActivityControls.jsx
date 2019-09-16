@@ -4,7 +4,12 @@ import { connect } from 'react-redux';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { URLS } from 'common/urls';
-import { arrayRemoveDoubles, validate } from 'common/utils';
+import {
+  arrayRemoveDoubles,
+  validate,
+  bindMessageToValidator,
+  commonValidators,
+} from 'common/utils';
 import { GROUP_TO_ACTION_MAP, ACTION_TO_GROUP_MAP } from 'common/constants/actionTypes';
 import { activeProjectSelector } from 'controllers/user';
 import { getWidgetCriteriaOptions } from './utils/getWidgetCriteriaOptions';
@@ -46,13 +51,8 @@ const messages = defineMessages({
     defaultMessage: 'You must select at least one item',
   },
 });
-const validators = {
-  items: (formatMessage) => (value) =>
-    (!value || !validate.inRangeValidate(value, 1, 600)) &&
-    formatMessage(messages.ItemsValidationError),
-  actionType: (formatMessage) => (value) =>
-    (!value || !value.length) && formatMessage(messages.ActionTypesValidationError),
-};
+
+const actionTypeValidator = (message) => bindMessageToValidator(validate.isNotEmptyArray, message);
 
 @injectIntl
 @connect((state) => ({
@@ -135,7 +135,7 @@ export class ProjectActivityControls extends Component {
           name="contentParameters.widgetOptions.actionType"
           format={this.formatActionTypes}
           parse={this.parseActionTypes}
-          validate={validators.actionType(formatMessage)}
+          validate={actionTypeValidator(formatMessage(messages.ActionTypesValidationError))}
         >
           <DropdownControl
             fieldLabel={formatMessage(messages.CriteriaFieldLabel)}
@@ -146,7 +146,7 @@ export class ProjectActivityControls extends Component {
         </FieldProvider>
         <FieldProvider
           name="contentParameters.itemsCount"
-          validate={validators.items(formatMessage)}
+          validate={commonValidators.numberOfLaunches(formatMessage(messages.ItemsValidationError))}
           format={String}
           normalize={this.normalizeValue}
         >

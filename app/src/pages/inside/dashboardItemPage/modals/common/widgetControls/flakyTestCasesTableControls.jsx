@@ -5,7 +5,7 @@ import { FieldProvider } from 'components/fields/fieldProvider';
 import { activeProjectSelector } from 'controllers/user';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { URLS } from 'common/urls';
-import { validate } from 'common/utils';
+import { validate, bindMessageToValidator, commonValidators } from 'common/utils';
 import { ITEMS_INPUT_WIDTH } from './constants';
 import { InputControl, TagsControl, CheckboxControl } from './controls';
 
@@ -44,13 +44,9 @@ const messages = defineMessages({
     defaultMessage: 'You must select at least one item',
   },
 });
-const validators = {
-  items: (formatMessage) => (value) =>
-    (!value || !validate.inRangeValidate(value, 2, 600)) &&
-    formatMessage(messages.ItemsValidationError),
-  launchNames: (formatMessage) => (value) =>
-    (!value || !value.length) && formatMessage(messages.LaunchNamesValidationError),
-};
+
+const itemsValidator = (message) =>
+  bindMessageToValidator(validate.flakyWidgetNumberOfLaunches, message);
 
 @injectIntl
 @connect((state) => ({
@@ -100,7 +96,7 @@ export class FlakyTestCasesTableControls extends Component {
       <Fragment>
         <FieldProvider
           name="contentParameters.itemsCount"
-          validate={validators.items(formatMessage)}
+          validate={itemsValidator(formatMessage(messages.ItemsValidationError))}
           format={String}
           normalize={this.normalizeValue}
         >
@@ -114,7 +110,9 @@ export class FlakyTestCasesTableControls extends Component {
           name="contentParameters.widgetOptions.launchNameFilter"
           format={this.formatLaunchNames}
           parse={this.parseLaunchNames}
-          validate={validators.launchNames(formatMessage)}
+          validate={commonValidators.widgetContentFieldsValidator(
+            formatMessage(messages.LaunchNamesValidationError),
+          )}
         >
           <TagsControl
             fieldLabel={formatMessage(messages.LaunchNameFieldLabel)}

@@ -12,7 +12,12 @@ import { ColorPicker } from 'components/main/colorPicker';
 import CircleCrossIcon from 'common/img/circle-cross-icon-inline.svg';
 import CircleCheckIcon from 'common/img/circle-check-inline.svg';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { validate } from 'common/utils';
+import {
+  validate,
+  bindMessageToValidator,
+  composeBindedValidators,
+  commonValidators,
+} from 'common/utils';
 
 import { defectTypeShape } from './defectTypeShape';
 import { messages } from './defectTypesMessages';
@@ -30,23 +35,16 @@ renderColorPicker.propTypes = {
 };
 
 @reduxForm({
-  validate: ({ longName, shortName }) => {
-    const errors = {};
-
-    if (longName === '') {
-      errors.longName = 'requiredFieldHint';
-    } else if (!validate.defectTypeLongName(longName)) {
-      errors.longName = 'defectLongNameHint';
-    }
-
-    if (shortName === '') {
-      errors.shortName = 'requiredFieldHint';
-    } else if (!validate.defectTypeShortName(shortName)) {
-      errors.shortName = 'defectShortNameHint';
-    }
-
-    return errors;
-  },
+  validate: ({ longName, shortName }) => ({
+    longName: composeBindedValidators([
+      commonValidators.requiredField,
+      bindMessageToValidator(validate.defectTypeLongName, 'defectLongNameHint'),
+    ])(longName),
+    shortName: composeBindedValidators([
+      commonValidators.requiredField,
+      bindMessageToValidator(validate.defectTypeShortName, 'defectShortNameHint'),
+    ])(shortName),
+  }),
 })
 @injectIntl
 export class DefectSubTypeForm extends PureComponent {

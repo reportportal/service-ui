@@ -5,7 +5,12 @@ import classNames from 'classnames/bind';
 import { defineMessages, injectIntl, intlShape } from 'react-intl';
 import Parser from 'html-react-parser';
 import { activeProjectSelector } from 'controllers/user';
-import { validate } from 'common/utils';
+import {
+  validate,
+  commonValidators,
+  bindMessageToValidator,
+  composeBindedValidators,
+} from 'common/utils';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import CircleCrossIcon from 'common/img/circle-cross-icon-inline.svg';
 import CircleCheckIcon from 'common/img/circle-check-inline.svg';
@@ -65,18 +70,13 @@ export class AttributeEditor extends Component {
     };
   }
 
-  getValidationErrors = (key, value) => {
-    let valueError;
-    if (!value) {
-      valueError = 'requiredFieldHint';
-    } else if (!validate.attributeKey(value)) {
-      valueError = 'attributeValueLengthHint';
-    }
-    return {
-      key: key && !validate.attributeKey(key) ? 'attributeKeyLengthHint' : undefined,
-      value: valueError,
-    };
-  };
+  getValidationErrors = (key, value) => ({
+    key: bindMessageToValidator(validate.attributeKey, 'attributeKeyLengthHint')(key),
+    value: composeBindedValidators([
+      commonValidators.requiredField,
+      bindMessageToValidator(validate.attributeValue, 'attributeValueLengthHint'),
+    ])(value),
+  });
 
   byKeyComparator = (attribute, item, key, value) =>
     attribute.key === item && attribute.value === value;

@@ -6,7 +6,7 @@ import { reduxForm } from 'redux-form';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { Input } from 'components/inputs/input';
-import { validate, validateAsync } from 'common/utils';
+import { validate, bindMessageToValidator, validateAsync } from 'common/utils';
 import { ModalLayout, withModal, ModalField } from 'components/main/modal';
 import { SectionHeader } from 'components/main/sectionHeader';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
@@ -19,7 +19,7 @@ const LABEL_WIDTH = 105;
 @reduxForm({
   form: 'addProjectForm',
   validate: ({ projectName }) => ({
-    projectName: (!projectName || !validate.projectName(projectName)) && 'projectNameLengthHint',
+    projectName: bindMessageToValidator(validate.projectName, 'projectNameLengthHint')(projectName),
   }),
   asyncValidate: ({ projectName }) => validateAsync.projectNameUnique(projectName),
   asyncChangeFields: ['projectName'],

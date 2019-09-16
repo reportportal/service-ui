@@ -9,7 +9,7 @@ import {
   STATS_SI_TOTAL,
   STATS_TI_TOTAL,
 } from 'common/constants/statistics';
-import { validate } from 'common/utils';
+import { commonValidators } from 'common/utils';
 import { ITEMS_INPUT_WIDTH } from './constants';
 import { FiltersControl, InputControl } from './controls';
 
@@ -24,11 +24,6 @@ const messages = defineMessages({
     defaultMessage: 'Items count should have value from 1 to 600',
   },
 });
-const validators = {
-  items: (formatMessage) => (value) =>
-    (!value || !validate.inRangeValidate(value, 1, 600)) &&
-    formatMessage(messages.ItemsValidationError),
-};
 
 @injectIntl
 export class FailedCasesTrendControls extends Component {
@@ -82,7 +77,9 @@ export class FailedCasesTrendControls extends Component {
           <Fragment>
             <FieldProvider
               name="contentParameters.itemsCount"
-              validate={validators.items(formatMessage)}
+              validate={commonValidators.numberOfLaunches(
+                formatMessage(messages.ItemsValidationError),
+              )}
               format={String}
               normalize={this.normalizeValue}
             >

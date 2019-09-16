@@ -29,7 +29,7 @@ import { FieldBottomConstraints } from 'components/fields/fieldBottomConstraints
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { InputOutside } from 'components/inputs/inputOutside';
 import { BigButton } from 'components/buttons/bigButton';
-import { validate } from 'common/utils';
+import { commonValidators } from 'common/utils';
 import LoginIcon from './img/login-icon-inline.svg';
 import NameIcon from './img/name-icon-inline.svg';
 import EmailIcon from './img/email-icon-inline.svg';
@@ -73,10 +73,10 @@ const messages = defineMessages({
 @reduxForm({
   form: 'registration',
   validate: ({ login, name, password, confirmPassword }) => ({
-    password: (!password || !validate.password(password)) && 'passwordHint',
+    password: commonValidators.password(password),
     confirmPassword: (!confirmPassword || confirmPassword !== password) && 'confirmPasswordHint',
-    login: (!login || !validate.login(login)) && 'loginHint',
-    name: (!name || !validate.name(name)) && 'nameHint',
+    login: commonValidators.login(login),
+    name: commonValidators.userName(name),
   }),
 })
 @injectIntl
