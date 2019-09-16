@@ -34,5 +34,5 @@ export {
   logViewLinkSelector,
   getLogItemLinkSelector,
 } from './selectors';
-export { formatItemName, getQueryNamespace } from './utils';
+export { formatItemName, getQueryNamespace, getItemLevel } from './utils';
 export { LOG_VIEW, LIST_VIEW } from './constants';
