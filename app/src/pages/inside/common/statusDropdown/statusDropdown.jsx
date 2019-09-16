@@ -97,10 +97,9 @@ export class StatusDropdown extends Component {
 
   generateOptions = (status) => {
     const { intl } = this.props;
-    if (status === IN_PROGRESS)
-      return [{ label: formatStatus(intl.formatMessage, IN_PROGRESS), value: IN_PROGRESS }];
 
     const STATUS_TYPES = status === IN_PROGRESS ? [] : [PASSED, FAILED, SKIPPED];
+
     if (STATUS_TYPES.indexOf(status) < 0) STATUS_TYPES.push(status);
 
     return STATUS_TYPES.map((item) => ({
