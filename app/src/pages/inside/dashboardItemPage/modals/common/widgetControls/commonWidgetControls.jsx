@@ -3,7 +3,12 @@ import PropTypes from 'prop-types';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
-import { validate, isEmptyObject } from 'common/utils';
+import {
+  validate,
+  isEmptyObject,
+  composeBindedValidators,
+  bindMessageToValidator,
+} from 'common/utils';
 import { InputBigSwitcher } from 'components/inputs/inputBigSwitcher';
 import { Input } from 'components/inputs/input';
 import { InputTextArea } from 'components/inputs/inputTextArea';
@@ -42,18 +47,14 @@ const messages = defineMessages({
   },
 });
 
-const validators = {
-  name: (formatMessage, widgets = [], widgetId) => (value) => {
-    if (!validate.widgetName(value)) {
-      return formatMessage(messages.widgetNameHint);
-    } else if (
-      widgets.some((widget) => widget.widgetName === value && widget.widgetId !== widgetId)
-    ) {
-      return formatMessage(messages.widgetNameExistsHint);
-    }
-    return false;
-  },
-};
+const widgetNameValidator = (formatMessage, widgets = [], widgetId) =>
+  composeBindedValidators([
+    bindMessageToValidator(validate.widgetName, formatMessage(messages.widgetNameHint)),
+    bindMessageToValidator(
+      validate.widgetNameUnique(widgets, widgetId),
+      formatMessage(messages.widgetNameExistsHint),
+    ),
+  ]);
 
 @injectIntl
 export class CommonWidgetControls extends Component {
@@ -105,7 +106,7 @@ export class CommonWidgetControls extends Component {
         <ModalField label={formatMessage(messages.nameLabel)} labelWidth={FIELD_LABEL_WIDTH}>
           <FieldProvider
             name="name"
-            validate={validators.name(formatMessage, widgets, widgetId)}
+            validate={widgetNameValidator(formatMessage, widgets, widgetId)}
             placeholder={formatMessage(messages.namePlaceholder)}
           >
             <FieldErrorHint>

@@ -26,7 +26,7 @@ import { connect } from 'react-redux';
 import { reduxForm } from 'redux-form';
 import { FormattedMessage, injectIntl, intlShape, defineMessages } from 'react-intl';
 import Link from 'redux-first-router-link';
-import { validate, isEmptyObject } from 'common/utils';
+import { commonValidators, isEmptyObject } from 'common/utils';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { authExtensionsSelector } from 'controllers/appInfo';
 import { loginAction, lastFailedLoginTimeSelector } from 'controllers/auth';
@@ -77,8 +77,8 @@ const messages = defineMessages({
 @reduxForm({
   form: 'loginPage',
   validate: ({ login, password }) => ({
-    login: (!login || !validate.login(login)) && 'loginHint',
-    password: (!password || !validate.password(password)) && 'passwordHint',
+    login: commonValidators.login(login),
+    password: commonValidators.password(password),
   }),
 })
 @injectIntl

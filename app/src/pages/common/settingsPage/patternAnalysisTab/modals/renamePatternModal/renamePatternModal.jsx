@@ -8,7 +8,7 @@ import { Input } from 'components/inputs/input';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { validate } from 'common/utils';
+import { validate, bindMessageToValidator, composeBindedValidators } from 'common/utils';
 import { patternsSelector } from 'controllers/project';
 
 const LABEL_WIDTH = 110;
@@ -27,16 +27,16 @@ const messages = defineMessages({
 @withModal('renamePatternModal')
 @connect((state, ownProps) => ({
   validate: ({ name }) => ({
-    name:
-      ((!name || !validate.patternNameLength(name, patternsSelector(state))) &&
-        'patternNameLengthHint') ||
-      (name &&
-        !validate.patternNameUnique(
-          name,
+    name: composeBindedValidators([
+      bindMessageToValidator(validate.patternNameLength, 'patternNameLengthHint'),
+      bindMessageToValidator(
+        validate.patternNameUnique(
           ownProps.data.pattern && ownProps.data.pattern.id,
           patternsSelector(state),
-        ) &&
-        'patternNameDuplicateHint'),
+        ),
+        'patternNameDuplicateHint',
+      ),
+    ])(name),
   }),
 }))
 @reduxForm({

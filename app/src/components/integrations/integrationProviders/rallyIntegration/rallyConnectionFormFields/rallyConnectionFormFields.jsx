@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { injectIntl, intlShape } from 'react-intl';
-import { validate } from 'common/utils';
+import { commonValidators } from 'common/utils';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { InputDropdown } from 'components/inputs/inputDropdown';
 import { InputTextArea } from 'components/inputs/inputTextArea';
@@ -10,12 +10,6 @@ import { IntegrationFormField } from 'components/integrations/elements';
 import { COMMON_BTS_MESSAGES } from 'components/integrations/elements/bts';
 import { DEFAULT_FORM_CONFIG } from '../constants';
 import { messages } from '../messages';
-
-const validators = {
-  url: (value) => (!value || !validate.url(value)) && 'btsUrlHint',
-  project: (value) => (!value || !validate.btsProject(value)) && 'btsProjectHint',
-  requiredField: (value) => !value && 'requiredFieldHint',
-};
 
 @injectIntl
 export class RallyConnectionFormFields extends Component {
@@ -63,7 +57,7 @@ export class RallyConnectionFormFields extends Component {
           disabled={disabled}
           lineAlign={lineAlign}
           maxLength="55"
-          validate={validators.requiredField}
+          validate={commonValidators.requiredField}
         >
           <FieldErrorHint>
             <Input mobileDisabled />
@@ -75,7 +69,7 @@ export class RallyConnectionFormFields extends Component {
           required
           disabled={disabled || editAuthMode}
           lineAlign={lineAlign}
-          validate={validators.url}
+          validate={commonValidators.btsUrl}
         >
           <FieldErrorHint>
             <Input mobileDisabled />
@@ -88,7 +82,7 @@ export class RallyConnectionFormFields extends Component {
           disabled={disabled || editAuthMode}
           lineAlign={lineAlign}
           maxLength="55"
-          validate={validators.project}
+          validate={commonValidators.btsProject}
         >
           <FieldErrorHint>
             <Input mobileDisabled />
@@ -110,7 +104,7 @@ export class RallyConnectionFormFields extends Component {
           required
           disabled={disabled}
           lineAlign={lineAlign}
-          validate={validators.requiredField}
+          validate={commonValidators.requiredField}
         >
           <FieldErrorHint>
             <InputTextArea type="text" mobileDisabled />

@@ -5,7 +5,7 @@ import { FieldProvider } from 'components/fields/fieldProvider';
 import { activeProjectSelector } from 'controllers/user';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { URLS } from 'common/urls';
-import { validate } from 'common/utils';
+import { validate, bindMessageToValidator } from 'common/utils';
 import { getWidgetCriteriaOptions } from './utils/getWidgetCriteriaOptions';
 import {
   SKIPPED_FAILED_LAUNCHES_OPTIONS,
@@ -54,11 +54,8 @@ const messages = defineMessages({
   },
 });
 const validators = {
-  items: (formatMessage) => (value) =>
-    (!value || !validate.inRangeValidate(value, 2, 600)) &&
-    formatMessage(messages.ItemsValidationError),
-  launchNames: (formatMessage) => (value) =>
-    (!value || !value.length) && formatMessage(messages.LaunchNamesValidationError),
+  items: (message) => bindMessageToValidator(validate.mostFailedWidgetNumberOfLaunches, message),
+  launchNames: (message) => bindMessageToValidator(validate.isNotEmptyArray, message),
 };
 
 @injectIntl
@@ -131,7 +128,7 @@ export class MostFailedTestCasesTableControls extends Component {
         </FieldProvider>
         <FieldProvider
           name="contentParameters.itemsCount"
-          validate={validators.items(formatMessage)}
+          validate={validators.items(formatMessage(messages.ItemsValidationError))}
           format={String}
           normalize={this.normalizeValue}
         >
@@ -145,7 +142,7 @@ export class MostFailedTestCasesTableControls extends Component {
           name="contentParameters.widgetOptions.launchNameFilter"
           format={this.formatLaunchNames}
           parse={this.parseLaunchNames}
-          validate={validators.launchNames(formatMessage)}
+          validate={validators.launchNames(formatMessage(messages.LaunchNamesValidationError))}
         >
           <TagsControl
             fieldLabel={formatMessage(messages.LaunchNameFieldLabel)}

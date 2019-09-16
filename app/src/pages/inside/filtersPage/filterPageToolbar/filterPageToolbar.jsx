@@ -3,7 +3,7 @@ import track from 'react-tracking';
 import { reduxForm } from 'redux-form';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
-import { validateSearchFilter } from 'common/utils/validation';
+import { validate, bindMessageToValidator } from 'common/utils';
 import AddFilterIcon from 'common/img/add-filter-inline.svg';
 import { GhostButton } from 'components/buttons/ghostButton';
 import { FieldProvider } from 'components/fields/fieldProvider';
@@ -28,11 +28,11 @@ const messages = defineMessages({
 @reduxForm({
   form: 'searchFilterForm',
   validate: ({ filter }) => ({
-    filter: validateSearchFilter(filter) ? undefined : 'filterNameError',
+    filter: bindMessageToValidator(validate.searchFilter, 'filterNameError')(filter),
   }),
   enableReinitialize: true,
   onChange: ({ filter }, dispatch, props) => {
-    if (validateSearchFilter(filter)) {
+    if (validate.searchFilter(filter)) {
       props.tracking.trackEvent(FILTERS_PAGE_EVENTS.SEARCH_FILTER);
       props.onFilterChange(filter);
     }

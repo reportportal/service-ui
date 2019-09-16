@@ -37,7 +37,7 @@ import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { InputOutside } from 'components/inputs/inputOutside';
 import { BigButton } from 'components/buttons/bigButton';
-import { validate, fetch } from 'common/utils';
+import { fetch, commonValidators } from 'common/utils';
 import { URLS } from 'common/urls';
 import { LOGIN_PAGE } from 'controllers/pages';
 import EmailIcon from './img/email-icon-inline.svg';
@@ -68,7 +68,7 @@ const notifications = defineMessages({
 @reduxForm({
   form: 'forgotPassword',
   validate: ({ email }) => ({
-    email: !validate.email(email) && 'emailHint',
+    email: commonValidators.email(email),
   }),
 })
 @injectIntl

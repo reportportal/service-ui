@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { FieldArray } from 'redux-form';
-import { validate } from 'common/utils';
+import { validate, bindMessageToValidator, composeBindedValidators } from 'common/utils';
 import { STATS_FAILED, STATS_PASSED, STATS_SKIPPED } from 'common/constants/statistics';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { FiltersControl, InputControl, TogglerControl } from '../controls';
@@ -45,17 +45,22 @@ const messages = defineMessages({
   },
 });
 const validators = {
-  items: (formatMessage) => (value) =>
-    (!value || !validate.inRangeValidate(value, 1, 15)) &&
-    formatMessage(messages.ItemsValidationError),
-  attributeKey: (formatMessage) => (value) => {
-    if (!value) {
-      return formatMessage(messages.attributesArrayValidationError);
-    } else if (!validate.attributeKey(value)) {
-      return formatMessage(messages.attributeKeyValidationError);
-    }
-    return undefined;
-  },
+  items: (formatMessage) =>
+    bindMessageToValidator(
+      validate.cumulativeItemsValidation,
+      formatMessage(messages.ItemsValidationError),
+    ),
+  attributeKey: (formatMessage) =>
+    composeBindedValidators([
+      bindMessageToValidator(
+        validate.required,
+        formatMessage(messages.attributesArrayValidationError),
+      ),
+      bindMessageToValidator(
+        validate.attributeKey,
+        formatMessage(messages.attributeKeyValidationError),
+      ),
+    ]),
 };
 
 @injectIntl

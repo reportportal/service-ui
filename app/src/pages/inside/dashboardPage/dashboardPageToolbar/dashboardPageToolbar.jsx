@@ -3,7 +3,7 @@ import track from 'react-tracking';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import PropTypes from 'prop-types';
-import { validateSearchFilter } from 'common/utils/validation';
+import { validate, bindMessageToValidator } from 'common/utils';
 import { GhostButton } from 'components/buttons/ghostButton';
 import GridViewDashboardIcon from 'common/img/grid-inline.svg';
 import TableViewDashboardIcon from 'common/img/table-inline.svg';
@@ -26,11 +26,11 @@ const messages = defineMessages({
 @reduxForm({
   form: 'searchDashboardForm',
   validate: ({ filter }) => ({
-    filter: validateSearchFilter(filter) ? undefined : 'dashboardNameSearchHint',
+    filter: bindMessageToValidator(validate.searchFilter, 'dashboardNameSearchHint')(filter),
   }),
   enableReinitialize: true,
   onChange: ({ filter }, dispatch, props) => {
-    if (validateSearchFilter(filter)) {
+    if (validate.searchFilter(filter)) {
       props.tracking.trackEvent(DASHBOARD_PAGE_EVENTS.ENTER_PARAM_FOR_SEARCH);
       props.onFilterChange(filter);
     }

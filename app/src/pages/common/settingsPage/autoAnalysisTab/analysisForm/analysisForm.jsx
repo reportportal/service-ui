@@ -5,7 +5,7 @@ import classNames from 'classnames/bind';
 import { reduxForm, formValueSelector } from 'redux-form';
 import { connect } from 'react-redux';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
-import { validate } from 'common/utils';
+import { validate, bindMessageToValidator } from 'common/utils';
 import { ToggleButton } from 'components/buttons/toggleButton';
 import { SETTINGS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { AccuracyFormBlock } from './accuracyFormBlock';
@@ -61,10 +61,13 @@ const DEFAULT_ANALYSIS_MODE = 'Classic';
 @reduxForm({
   form: 'analysisForm',
   validate: ({ minShouldMatch, minTermFreq, minDocFreq }) => ({
-    minShouldMatch:
-      (!minShouldMatch || !validate.minShouldMatch(minShouldMatch)) && 'minShouldMatchHint',
-    minTermFreq: (!minTermFreq || !validate.minTermFreq(minTermFreq)) && 'minTermFreqHint',
-    minDocFreq: (!minDocFreq || !validate.minDocFreq(minDocFreq)) && 'minTermFreqHint',
+    minShouldMatch: bindMessageToValidator(validate.analyzerMinShouldMatch, 'minShouldMatchHint')(
+      minShouldMatch,
+    ),
+    minTermFreq: bindMessageToValidator(validate.analyzerMinTermFreq, 'minTermFreqHint')(
+      minTermFreq,
+    ),
+    minDocFreq: bindMessageToValidator(validate.analyzerMinDocFreq, 'minTermFreqHint')(minDocFreq),
   }),
 })
 @connect((state) => ({

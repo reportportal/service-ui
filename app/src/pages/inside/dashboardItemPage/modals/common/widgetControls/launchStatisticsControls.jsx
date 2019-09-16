@@ -4,7 +4,7 @@ import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { connect } from 'react-redux';
 import { defectTypesSelector } from 'controllers/project';
 import { FieldProvider } from 'components/fields/fieldProvider';
-import { validate } from 'common/utils';
+import { commonValidators } from 'common/utils';
 import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
 import classNames from 'classnames/bind';
 import { BetaBadge } from 'pages/inside/common/betaBadge';
@@ -49,13 +49,6 @@ const messages = defineMessages({
     defaultMessage: 'You must select at least one item',
   },
 });
-const validators = {
-  items: (formatMessage) => (value) =>
-    (!value || !validate.inRangeValidate(value, 1, 600)) &&
-    formatMessage(messages.ItemsValidationError),
-  contentFields: (formatMessage) => (value) =>
-    (!value || !value.length) && formatMessage(messages.ContentFieldsValidationError),
-};
 
 @injectIntl
 @connect((state) => ({
@@ -116,7 +109,9 @@ export class LaunchStatisticsControls extends Component {
           <Fragment>
             <FieldProvider
               name="contentParameters.contentFields"
-              validate={validators.contentFields(formatMessage)}
+              validate={commonValidators.widgetContentFieldsValidator(
+                formatMessage(messages.ContentFieldsValidationError),
+              )}
             >
               <DropdownControl
                 fieldLabel={formatMessage(messages.CriteriaFieldLabel)}
@@ -127,7 +122,9 @@ export class LaunchStatisticsControls extends Component {
             </FieldProvider>
             <FieldProvider
               name="contentParameters.itemsCount"
-              validate={validators.items(formatMessage)}
+              validate={commonValidators.numberOfLaunches(
+                formatMessage(messages.ItemsValidationError),
+              )}
               format={String}
               normalize={this.normalizeValue}
             >

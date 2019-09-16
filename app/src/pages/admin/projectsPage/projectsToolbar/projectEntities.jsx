@@ -1,7 +1,7 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { injectIntl, intlShape, defineMessages } from 'react-intl';
-import { validate } from 'common/utils';
+import { commonValidators } from 'common/utils';
 import {
   EntityContains,
   EntityInputConditional,
@@ -142,11 +142,7 @@ export class ProjectEntities extends Component {
         value: this.bindDefaultValue(LAUNCHES_QUANTITY, {
           condition: CONDITION_GREATER_EQ,
         }),
-        validationFunc: (entityObject) =>
-          (!entityObject ||
-            !entityObject.value ||
-            !validate.projectNumericEntity(entityObject.value)) &&
-          'launchNumericEntityHint',
+        validationFunc: commonValidators.launchNumericEntity,
         title: intl.formatMessage(messages.numberOfLaunches),
         active: true,
         removable: false,
@@ -161,11 +157,7 @@ export class ProjectEntities extends Component {
         value: this.bindDefaultValue(USERS_QUANTITY, {
           condition: CONDITION_GREATER_EQ,
         }),
-        validationFunc: (entityObject) =>
-          (!entityObject ||
-            !entityObject.value ||
-            !validate.projectNumericEntity(entityObject.value)) &&
-          'launchNumericEntityHint',
+        validationFunc: commonValidators.launchNumericEntity,
         title: intl.formatMessage(messages.numberOfMembers),
         active: true,
         removable: false,
