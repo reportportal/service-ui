@@ -1,4 +1,5 @@
 .group-item {
+  position: relative;
   width: 204px;
   height: 102px;
   box-sizing: border-box;
@@ -6,10 +7,27 @@
   border-radius: 2px;
   border: solid 1px $COLOR--gray-91;
   border-top: solid 5px;
+  cursor: default;
 
   color: $COLOR_-charcoal-grey;
   font-size: 13px;
   font-family: $FONT-REGULAR;
+
+  &:hover {
+    .icon {
+      transition: opacity 200ms;
+      opacity: 1;
+    }
+  }
+}
+
+.group-item-clickable {
+  cursor: pointer;
+  transition: box-shadow 200ms;
+
+  &:hover {
+    box-shadow: 0 0 10px rgba($COLOR--gray-91, 1);
+  }
 }
 
 .item-title {
@@ -38,4 +56,18 @@
 
 .stat-item-value {
   line-height: 1.23;
+}
+
+.icon {
+  position: absolute;
+  top: 14px;
+  right: 15px;
+  width: 12px;
+  opacity: 0;
+  cursor: pointer;
+  transition: opacity 200ms;
+
+  &:hover svg g g path {
+    fill: $COLOR--brownish-grey;
+  }
 }
