@@ -9,7 +9,7 @@ import { injectIntl, intlShape, defineMessages } from 'react-intl';
 import { ModalLayout, withModal } from 'components/main/modal';
 import { showNotification, NOTIFICATION_TYPES } from 'controllers/notification';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import { addTokenToImagePath, uniqueId, fetch } from 'common/utils';
+import { uniqueId, fetch } from 'common/utils';
 import DropZoneIcon from 'common/img/shape-inline.svg';
 import { ImportFileIcon } from './importFileIcon';
 import styles from './importModal.scss';
@@ -138,7 +138,10 @@ export class ImportModal extends Component {
   isUploadFinished = () =>
     this.getValidFiles().length ? this.getValidFiles().every(({ uploaded }) => uploaded) : false;
   cancelRequests = [];
-  isDropZoneDisabled = () => this.isUploadFinished() || this.isUploadInProgress();
+  isDropZoneDisabled = () =>
+    this.isUploadFinished() ||
+    this.isUploadInProgress() ||
+    (this.props.data.singleImport && this.state.files.length > 0);
 
   validateFile = (file) => {
     const { type } = this.props.data;
@@ -267,14 +270,15 @@ export class ImportModal extends Component {
 
   uploadFile = (file) => {
     const {
-      data: { url },
+      data: { url, appendCustomBlockValue, customBlock },
     } = this.props;
     const { id } = file;
+    const formData = customBlock ? appendCustomBlockValue(file.data) : file.data;
 
-    return fetch(addTokenToImagePath(url), {
+    return fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'multipart/form-data;' },
-      data: file.data,
+      data: formData,
       abort: (cancelRequest) => {
         this.cancelRequests.push(cancelRequest);
       },
@@ -298,7 +302,7 @@ export class ImportModal extends Component {
   render() {
     const {
       intl,
-      data: { type, title, tip, noteMessage, eventsInfo },
+      data: { type, title, tip, noteMessage, eventsInfo, singleImport, customBlock },
     } = this.props;
     const { files } = this.state;
     const validFiles = this.getValidFiles();
@@ -327,6 +331,7 @@ export class ImportModal extends Component {
           activeClassName={cx('dropzone-wrapper-active')}
           accept={acceptFile}
           onDrop={this.onDrop}
+          multiple={!singleImport}
           maxSize={MAX_FILE_SIZES[type]}
           disabled={this.isDropZoneDisabled()}
         >
@@ -350,6 +355,7 @@ export class ImportModal extends Component {
             <p className={cx('note-message')}>{Parser(noteMessage)}</p>
           </Fragment>
         )}
+        {customBlock || ''}
       </ModalLayout>
     );
   }
