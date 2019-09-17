@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
+import { formValueSelector } from 'redux-form';
 import { showModalAction } from 'controllers/modal';
 import { fetchPluginsAction } from 'controllers/plugins';
 import { GhostButton } from 'components/buttons/ghostButton';
@@ -10,12 +11,12 @@ import { PLUGINS_PAGE_EVENTS } from 'components/main/analytics/events';
 import ImportIcon from 'common/img/import-inline.svg';
 import { URLS } from 'common/urls';
 import { MODAL_TYPE_UPLOAD_PLUGIN } from 'pages/common/modals/importModal/constants';
-
-import { UPLOAD } from './constants';
-
+import { UPLOAD, INITIAL_PARAMS_FORM, INITIAL_PARAMS_FIELD_KEY } from './constants';
+import { UploadCustomBlock } from './uploadCustomBlock';
 import styles from './actionPanel.scss';
 
 const cx = classNames.bind(styles);
+const initialParamsFormSelector = formValueSelector(INITIAL_PARAMS_FORM);
 
 const messages = defineMessages({
   [UPLOAD]: {
@@ -49,16 +50,42 @@ const messages = defineMessages({
   },
 });
 
-@connect(null, {
-  showModalAction,
-  fetchPluginsAction,
-})
+@connect(
+  (state) => ({
+    initialParamsValues: initialParamsFormSelector(state, INITIAL_PARAMS_FIELD_KEY),
+  }),
+  {
+    showModalAction,
+    fetchPluginsAction,
+  },
+)
 @injectIntl
 export class ActionPanel extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
     showModalAction: PropTypes.func.isRequired,
     fetchPluginsAction: PropTypes.func.isRequired,
+    initialParamsValues: PropTypes.array,
+  };
+  static defaultProps = {
+    initialParamsValues: [],
+  };
+
+  prepareInitialParamsValue = (initialParamsValues) =>
+    JSON.stringify(
+      initialParamsValues.reduce((acc, item) => ({ ...acc, [item.key]: item.value }), {}),
+    );
+
+  appendInitialParamsValue = (formData) => {
+    const { initialParamsValues } = this.props;
+
+    if (initialParamsValues && initialParamsValues.length) {
+      formData.append(
+        INITIAL_PARAMS_FIELD_KEY,
+        this.prepareInitialParamsValue(initialParamsValues),
+      );
+    }
+    return formData;
   };
 
   openUploadModal = () => {
@@ -76,6 +103,9 @@ export class ActionPanel extends Component {
         tip: formatMessage(messages.uploadTip),
         incorrectFileSize: formatMessage(messages.incorrectFileSize),
         url: URLS.plugin(),
+        customBlock: <UploadCustomBlock />,
+        appendCustomBlockValue: this.appendInitialParamsValue,
+        singleImport: true,
         eventsInfo: {
           okBtn: PLUGINS_PAGE_EVENTS.OK_BTN_UPLOAD_MODAL,
           cancelBtn: PLUGINS_PAGE_EVENTS.CANCEL_BTN_UPLOAD_MODAL,

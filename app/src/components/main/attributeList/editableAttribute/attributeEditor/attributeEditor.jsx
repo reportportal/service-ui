@@ -37,8 +37,8 @@ export class AttributeEditor extends Component {
     onCancel: PropTypes.func,
     handleSubmit: PropTypes.func,
     invalid: PropTypes.bool,
-    keyURLCreator: PropTypes.func.isRequired,
-    valueURLCreator: PropTypes.func.isRequired,
+    keyURLCreator: PropTypes.func,
+    valueURLCreator: PropTypes.func,
     intl: intlShape.isRequired,
     attribute: PropTypes.object,
   };
@@ -49,6 +49,8 @@ export class AttributeEditor extends Component {
     handleSubmit: () => {},
     onConfirm: () => {},
     onCancel: () => {},
+    keyURLCreator: null,
+    valueURLCreator: null,
     invalid: false,
     attribute: {},
   };
@@ -126,10 +128,10 @@ export class AttributeEditor extends Component {
             <AttributeInput
               customClass={cx('input')}
               attributes={attributes}
-              async
+              async={!!keyURLCreator}
               minLength={1}
               attributeComparator={this.byKeyComparator}
-              uri={keyURLCreator(projectId)}
+              uri={keyURLCreator ? keyURLCreator(projectId) : null}
               creatable
               isClearable
               showNewLabel
@@ -145,11 +147,11 @@ export class AttributeEditor extends Component {
           <FieldErrorHint error={this.state.errors.value} staticHint>
             <AttributeInput
               customClass={cx('input')}
-              async
+              async={!!valueURLCreator}
               minLength={1}
               attributes={attributes}
               attributeComparator={this.byValueComparator}
-              uri={valueURLCreator(projectId, this.state.key)}
+              uri={valueURLCreator ? valueURLCreator(projectId, this.state.key) : null}
               creatable
               showNewLabel
               onChange={this.handleValueChange}

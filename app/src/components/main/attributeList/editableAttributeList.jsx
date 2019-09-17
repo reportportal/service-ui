@@ -12,14 +12,16 @@ export class EditableAttributeList extends Component {
     attributes: PropTypes.arrayOf(PropTypes.object),
     onChange: PropTypes.func,
     disabled: PropTypes.bool,
-    keyURLCreator: PropTypes.func.isRequired,
-    valueURLCreator: PropTypes.func.isRequired,
+    keyURLCreator: PropTypes.func,
+    valueURLCreator: PropTypes.func,
   };
 
   static defaultProps = {
     attributes: [],
     onChange: () => {},
     disabled: false,
+    keyURLCreator: null,
+    valueURLCreator: null,
   };
 
   handleAddNew = () => {
