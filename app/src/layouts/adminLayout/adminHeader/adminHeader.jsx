@@ -93,6 +93,8 @@ export class AdminHeader extends Component {
     projectId: '',
   };
 
+  onClickLogout = () => this.props.logout();
+
   getHeaderCrumbs = () => {
     const { currentPage, intl, projectId } = this.props;
     switch (currentPage) {
@@ -108,7 +110,7 @@ export class AdminHeader extends Component {
   };
 
   render() {
-    const { activeProject, sideMenuOpened, toggleSideMenu, logout } = this.props;
+    const { activeProject, sideMenuOpened, toggleSideMenu } = this.props;
     const headerCrumbs = this.getHeaderCrumbs();
     return (
       <header className={cx('header')}>
@@ -131,7 +133,7 @@ export class AdminHeader extends Component {
                 defaultMessage={'Back to project'}
               />
             </NavLink>
-            <button className={cx('logout', 'btn')} onClick={logout}>
+            <button className={cx('logout', 'btn')} onClick={this.onClickLogout}>
               <FormattedMessage id={'AdminHeader.btnLogout'} defaultMessage={'Logout'} />
             </button>
           </div>
