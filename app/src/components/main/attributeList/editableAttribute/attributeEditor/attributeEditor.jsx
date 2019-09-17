@@ -85,21 +85,21 @@ export class AttributeEditor extends Component {
   parseValue = (value) => (value ? value.value : undefined);
 
   handleKeyChange = (key) => {
-    this.setState({
+    this.setState((oldState) => ({
       key: this.parseValue(key),
-      errors: this.getValidationErrors(this.parseValue(key), this.state.value),
-    });
+      errors: this.getValidationErrors(this.parseValue(key), oldState.value),
+    }));
   };
 
   handleValueChange = (value) => {
-    this.setState({
+    this.setState((oldState) => ({
       value: this.parseValue(value),
-      errors: this.getValidationErrors(this.state.key, this.parseValue(value)),
-    });
+      errors: this.getValidationErrors(oldState.key, this.parseValue(value)),
+    }));
   };
 
   isAttributeUnique = () =>
-    !this.props.attributes.find(
+    !this.props.attributes.some(
       (attribute) => attribute.key === this.state.key && attribute.value === this.state.value,
     );
 
