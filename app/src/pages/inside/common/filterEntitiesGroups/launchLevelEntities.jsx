@@ -17,6 +17,7 @@ import {
   EntityItemStartTime,
   EntityInputConditionalTags,
   EntitySearch,
+  EntityContains,
 } from 'components/filterEntities';
 import { bindDefaultValue } from 'components/filterEntities/utils';
 import {
@@ -405,13 +406,37 @@ export class LaunchLevelEntities extends Component {
     });
     return defectTypeEntities;
   };
+
+  collectLostEntities = (entities) => {
+    const lostKeys = Object.keys(this.props.filterValues).filter(
+      (key) => !entities.find((entity) => entity.id === key),
+    );
+    return lostKeys.map((key) => ({
+      id: key,
+      value: this.props.filterValues[key],
+      active: true,
+      static: true,
+      title: key.split('$').pop(),
+      component: EntityContains,
+      removable: true,
+      customProps: {
+        disabled: true,
+        error: 'error',
+      },
+    }));
+  };
+
   bindDefaultValue = bindDefaultValue;
+
   render() {
     const { render, ...rest } = this.props;
 
+    const entities = this.getStaticEntities().concat(this.getDynamicEntities());
+    const lostEntities = this.collectLostEntities(entities);
+
     return render({
       ...rest,
-      filterEntities: this.getStaticEntities().concat(this.getDynamicEntities()),
+      filterEntities: [...entities, ...lostEntities],
     });
   }
 }
