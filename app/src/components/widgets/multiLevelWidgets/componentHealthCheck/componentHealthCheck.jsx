@@ -23,6 +23,7 @@ import { activeProjectSelector } from 'controllers/user';
 import { TEST_ITEM_PAGE } from 'controllers/pages';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { NoDataAvailable } from 'components/widgets/noDataAvailable';
+import { SpinningPreloader } from 'components/preloaders/spinningPreloader/spinningPreloader';
 import { ComponentHealthCheckLegend } from './legend/componentHealthCheckLegend';
 import { GroupsSection } from './groupsSection/groupsSection';
 import styles from './componentHealthCheck.scss';
@@ -73,6 +74,7 @@ export class ComponentHealthCheck extends Component {
     activeBreadcrumbs: null,
     activeBreadcrumbId: 0,
     activeAttributes: [],
+    isLoading: false,
   };
 
   componentDidUpdate(prevProps) {
@@ -98,10 +100,17 @@ export class ComponentHealthCheck extends Component {
       activeBreadcrumbs: newActiveBreadcrumbs,
       activeBreadcrumbId: id,
       activeAttributes: newActiveAttributes,
+      isLoading: true,
     });
-    this.props.fetchWidget({
-      attributes: newActiveAttributes.map((item) => item.value),
-    });
+    this.props
+      .fetchWidget({
+        attributes: newActiveAttributes.map((item) => item.value),
+      })
+      .then(() => {
+        this.setState({
+          isLoading: false,
+        });
+      });
   };
 
   onClickGroupItem = (value, passingRate, color) => {
@@ -122,10 +131,17 @@ export class ComponentHealthCheck extends Component {
       activeBreadcrumbs: newActiveBreadcrumbs,
       activeBreadcrumbId: newActiveBreadcrumbId,
       activeAttributes: newActiveAttributes,
+      isLoading: true,
     });
-    this.props.fetchWidget({
-      attributes: newActiveAttributes.map((item) => item.value),
-    });
+    this.props
+      .fetchWidget({
+        attributes: newActiveAttributes.map((item) => item.value),
+      })
+      .then(() => {
+        this.setState({
+          isLoading: false,
+        });
+      });
   };
 
   onClickGroupIcon = (value) => {
@@ -283,7 +299,7 @@ export class ComponentHealthCheck extends Component {
 
   render() {
     const { intl } = this.props;
-    const { activeBreadcrumbs, activeBreadcrumbId } = this.state;
+    const { activeBreadcrumbs, activeBreadcrumbId, isLoading } = this.state;
     const groupItems = this.getGroupItems();
     const isClickableGroupItem =
       activeBreadcrumbId !== (activeBreadcrumbs && activeBreadcrumbs.length - 1);
@@ -297,7 +313,7 @@ export class ComponentHealthCheck extends Component {
           passingRate={this.getPassingRateValue()}
           colorCalculator={this.colorCalculator}
         />
-        {groupItems ? (
+        {groupItems && !isLoading ? (
           <Fragment>
             {!!groupItems.failedGroupItems.length && (
               <GroupsSection
@@ -324,7 +340,8 @@ export class ComponentHealthCheck extends Component {
           </Fragment>
         ) : (
           <div className={cx('no-data-wrapper')}>
-            <NoDataAvailable />
+            {!isLoading && <NoDataAvailable />}
+            {isLoading && <SpinningPreloader />}
           </div>
         )}
       </ScrollWrapper>
