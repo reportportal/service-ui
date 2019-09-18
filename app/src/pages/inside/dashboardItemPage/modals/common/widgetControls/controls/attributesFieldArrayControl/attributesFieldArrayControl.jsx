@@ -55,11 +55,13 @@ export class AttributesFieldArrayControl extends Component {
 
   constructor(props) {
     super(props);
-    if (!props.fields.length) {
+
+    if (props.fields.length) {
+      this.numberRemainingLevels = props.maxAttributesAmount - props.fields.length;
+    } else {
+      this.numberRemainingLevels = props.maxAttributesAmount - 1;
       props.fields.push('');
     }
-
-    this.numberRemainingLevels = this.props.maxAttributesAmount - 1;
   }
 
   getAttributes = () => this.props.fields.getAll() || [];

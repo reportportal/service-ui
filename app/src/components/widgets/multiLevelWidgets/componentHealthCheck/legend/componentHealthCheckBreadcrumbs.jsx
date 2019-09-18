@@ -25,7 +25,7 @@ export class ComponentHealthCheckBreadcrumbs extends PureComponent {
     const actualBreadcrumbs = activeBreadcrumbs || breadcrumbs;
 
     return (
-      <ul className={cx('list')}>
+      <ul className={cx('health-check-breadcrumbs')}>
         {actualBreadcrumbs &&
           actualBreadcrumbs.map((item, i) => (
             <li className={cx('item', { active: item.isActive })} key={item.key}>
@@ -37,12 +37,12 @@ export class ComponentHealthCheckBreadcrumbs extends PureComponent {
                   <span className={cx('link-value')}>
                     <span
                       className={cx('link-color')}
-                      style={{ backgroundColor: item.attr.color }}
+                      style={{ backgroundColor: item.additionalProperties.color }}
                     />
-                    <span className={cx('link-value-name')} title={item.attr.value}>
-                      {item.attr.value}
+                    <span className={cx('link-value-name')} title={item.additionalProperties.value}>
+                      {item.additionalProperties.value}
                     </span>
-                    <span>{`, ${item.attr.passingRate}%`}</span>
+                    <span>{`, ${item.additionalProperties.passingRate}%`}</span>
                   </span>
                 </a>
               ) : (

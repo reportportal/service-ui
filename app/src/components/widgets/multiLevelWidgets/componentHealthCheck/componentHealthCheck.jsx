@@ -24,8 +24,9 @@ import { TEST_ITEM_PAGE } from 'controllers/pages';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { NoDataAvailable } from 'components/widgets/noDataAvailable';
 import { SpinningPreloader } from 'components/preloaders/spinningPreloader/spinningPreloader';
+import { MAX_PASSING_RATE_VALUE } from './constants';
 import { ComponentHealthCheckLegend } from './legend/componentHealthCheckLegend';
-import { GroupsSection } from './groupsSection/groupsSection';
+import { GroupsSection } from './groupsSection';
 import styles from './componentHealthCheck.scss';
 
 const cx = classNames.bind(styles);
@@ -40,8 +41,6 @@ const messages = defineMessages({
     defaultMessage: 'Passed',
   },
 });
-
-const MAX_PASSING_RATE_VALUE = 100;
 
 @injectIntl
 @connect(
@@ -92,7 +91,7 @@ export class ComponentHealthCheck extends Component {
     const { activeBreadcrumbs } = this.state;
     const newActiveAttributes = this.getNewActiveAttributes(
       activeBreadcrumbs[id].key,
-      activeBreadcrumbs[id].attr.value,
+      activeBreadcrumbs[id].additionalProperties.value,
     );
     const newActiveBreadcrumbs = this.getNewActiveBreadcrumbs(id);
 
@@ -116,12 +115,15 @@ export class ComponentHealthCheck extends Component {
   onClickGroupItem = (value, passingRate, color) => {
     const { activeBreadcrumbId } = this.state;
     const newActiveBreadcrumbId = activeBreadcrumbId + 1;
-    const attr = {
+    const additionalProperties = {
       value,
       passingRate,
       color,
     };
-    const newActiveBreadcrumbs = this.getNewActiveBreadcrumbs(newActiveBreadcrumbId, attr);
+    const newActiveBreadcrumbs = this.getNewActiveBreadcrumbs(
+      newActiveBreadcrumbId,
+      additionalProperties,
+    );
     const newActiveAttributes = this.getNewActiveAttributes(
       newActiveBreadcrumbs[activeBreadcrumbId].key,
       value,
@@ -156,12 +158,12 @@ export class ComponentHealthCheck extends Component {
       launchesLimit: DEFAULT_LAUNCHES_LIMIT,
       compositeAttribute: activeAttributes.map(formatAttribute).join(','),
     });
-    const navigationParams = this.getDefaultParamsWidget(widget.appliedFilters[0].id);
+    const navigationParams = this.getDefaultLinkParams(widget.appliedFilters[0].id);
 
     this.props.navigate(Object.assign(link, navigationParams));
   };
 
-  getDefaultParamsWidget = (filterId) => ({
+  getDefaultLinkParams = (filterId) => ({
     payload: {
       projectId: this.props.project,
       filterId,
@@ -178,18 +180,17 @@ export class ComponentHealthCheck extends Component {
       key,
       value,
     };
-    const indexActiveAttribute =
-      activeAttributes &&
-      activeAttributes.indexOf(activeAttributes.find((item) => item.key === key));
+    const activeAttributeIndex =
+      activeAttributes && activeAttributes.findIndex((item) => item.key === key);
 
-    if (indexActiveAttribute !== -1) {
-      return activeAttributes.slice(0, indexActiveAttribute);
+    if (activeAttributeIndex !== -1) {
+      return activeAttributes.slice(0, activeAttributeIndex);
     }
 
     return [...activeAttributes, activeAttribute];
   };
 
-  getNewActiveBreadcrumbs = (id, attr) => {
+  getNewActiveBreadcrumbs = (id, additionalProperties) => {
     const { activeBreadcrumbs } = this.state;
     const actualBreadcrumbs = activeBreadcrumbs || this.getBreadcrumbs();
 
@@ -201,31 +202,29 @@ export class ComponentHealthCheck extends Component {
             ...item,
             isStatic: true,
             isActive: true,
-            attr: null,
+            additionalProperties: null,
           };
         }
 
-        if (attr && item.id === id - 1) {
+        if (additionalProperties && item.id === id - 1) {
           return {
             ...item,
             isStatic: false,
             isActive: false,
-            attr,
+            additionalProperties,
           };
         }
 
-        if (!attr && item.id > id) {
+        if (!additionalProperties && item.id > id) {
           return {
             ...item,
             isStatic: true,
             isActive: false,
-            attr: null,
+            additionalProperties: null,
           };
         }
 
-        return {
-          ...item,
-        };
+        return item;
       })
     );
   };
@@ -236,7 +235,7 @@ export class ComponentHealthCheck extends Component {
       key: item,
       isStatic: true,
       isActive: this.state.activeBreadcrumbId === index,
-      attr: {
+      additionalProperties: {
         color: null,
         value: null,
         passingRate: null,
@@ -271,7 +270,8 @@ export class ComponentHealthCheck extends Component {
 
   colorCalculator = (value) => {
     const passingRate = this.getPassingRateValue();
-    const intervalPiece = (passingRate - 1) / 4;
+    const intervalPiece =
+      passingRate === MAX_PASSING_RATE_VALUE ? passingRate / 4 : (passingRate - 1) / 4;
 
     if (value === MAX_PASSING_RATE_VALUE) {
       return COLOR_PASSED;
@@ -301,13 +301,15 @@ export class ComponentHealthCheck extends Component {
     const { intl } = this.props;
     const { activeBreadcrumbs, activeBreadcrumbId, isLoading } = this.state;
     const groupItems = this.getGroupItems();
+    const breadcrumbs = this.getBreadcrumbs();
     const isClickableGroupItem =
+      breadcrumbs.length > 1 &&
       activeBreadcrumbId !== (activeBreadcrumbs && activeBreadcrumbs.length - 1);
 
     return (
       <ScrollWrapper hideTracksWhenNotNeeded>
         <ComponentHealthCheckLegend
-          breadcrumbs={this.getBreadcrumbs()}
+          breadcrumbs={breadcrumbs}
           activeBreadcrumbs={activeBreadcrumbs}
           onClickBreadcrumbs={this.onClickBreadcrumbs}
           passingRate={this.getPassingRateValue()}
@@ -340,8 +342,7 @@ export class ComponentHealthCheck extends Component {
           </Fragment>
         ) : (
           <div className={cx('no-data-wrapper')}>
-            {!isLoading && <NoDataAvailable />}
-            {isLoading && <SpinningPreloader />}
+            {isLoading ? <SpinningPreloader /> : <NoDataAvailable />}
           </div>
         )}
       </ScrollWrapper>
