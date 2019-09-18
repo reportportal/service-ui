@@ -37,6 +37,7 @@ import { launchFiltersSelector } from 'controllers/filter';
 import { defectTypesSelector } from 'controllers/project';
 import { TEST_ITEM_PAGE } from 'controllers/pages';
 import { ALL } from 'common/constants/reservedFilterIds';
+import { FAILED, INTERRUPTED } from 'common/constants/testStatuses';
 import { TooltipWrapper } from '../../../common/tooltip';
 import { C3Chart } from '../../../common/c3chart';
 import chartStyles from './launchExecutionAndIssueStatistics.scss';
@@ -182,7 +183,10 @@ export class LaunchExecutionChart extends Component {
       const activeFilter = launchFilters.filter((filter) => filter.id === appliedWidgetFilterId)[0];
       const activeFilterId = (activeFilter && activeFilter.id) || appliedWidgetFilterId;
 
-      link = getStatisticsLink({ statuses: [nameConfig.defectType.toUpperCase()], launchesLimit });
+      link = getStatisticsLink({
+        statuses: this.getLinkParametersStatuses(nameConfig),
+        launchesLimit,
+      });
       navigationParams = this.getDefaultParamsOverallStatisticsWidget(activeFilterId);
     } else {
       link = getStatisticsLink({ statuses: [nameConfig.defectType.toUpperCase()] });
@@ -209,6 +213,13 @@ export class LaunchExecutionChart extends Component {
     },
     type: TEST_ITEM_PAGE,
   });
+
+  getLinkParametersStatuses = ({ defectType }) => {
+    if (defectType.toUpperCase() === FAILED) {
+      return [FAILED, INTERRUPTED];
+    }
+    return [defectType.toUpperCase()];
+  };
 
   getConfig = () => {
     const EXECUTIONS = '$executions$';
