@@ -101,6 +101,7 @@ export class ComponentHealthCheckControls extends Component {
       fields={fields}
       fieldValidator={fieldValidator}
       maxAttributesAmount={MAX_ATTRIBUTES_AMOUNT}
+      showRemainingLevels
       url={this.props.itemAttributeKeysAllSearch}
     />
   );
