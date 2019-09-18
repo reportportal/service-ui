@@ -11,6 +11,6 @@ export const topPatternsFormatParams = (params = {}) =>
       }
     : {};
 
-export const componentHealthCheckParams = (params = {}) => ({
+export const componentHealthCheckFormatParams = (params = {}) => ({
   attributes: (params.attributes || []).join(','),
 });

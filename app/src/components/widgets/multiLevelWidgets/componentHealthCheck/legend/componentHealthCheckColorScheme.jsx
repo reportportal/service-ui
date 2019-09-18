@@ -2,6 +2,7 @@ import { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
+import { MAX_PASSING_RATE_VALUE } from '../constants';
 import styles from './componentHealthCheckColorScheme.scss';
 
 const cx = classNames.bind(styles);
@@ -16,8 +17,6 @@ const messages = defineMessages({
     defaultMessage: '{value} - 100%',
   },
 });
-
-const MAX_PASSING_RATE_VALUE = 100;
 
 @injectIntl
 export class ComponentHealthCheckColorScheme extends PureComponent {

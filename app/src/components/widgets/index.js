@@ -26,7 +26,7 @@ import {
 import {
   cumulativeFormatParams,
   topPatternsFormatParams,
-  componentHealthCheckParams,
+  componentHealthCheckFormatParams,
 } from './utils';
 import { MostTimeConsumingTestCases } from './singleLevelWidgets/mostTimeConsumingTestCases';
 
@@ -63,7 +63,7 @@ const MULTI_LEVEL_WIDGETS_MAP = {
     formatter: topPatternsFormatParams,
   },
   [widgetTypes.COMPONENT_HEALTH_CHECK]: {
-    formatter: componentHealthCheckParams,
+    formatter: componentHealthCheckFormatParams,
   },
 };
 
