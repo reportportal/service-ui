@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { injectIntl, defineMessages, intlShape } from 'react-intl';
 import isEqual from 'fast-deep-equal';
 import classNames from 'classnames/bind';
+import { connect } from 'react-redux';
 import {
   COLOR_BURGUNDY,
   COLOR_CHERRY,
@@ -11,8 +12,18 @@ import {
   COLOR_PASSED,
   COLOR_DULL_GREEN,
 } from 'common/constants/colors';
+import { formatAttribute } from 'common/utils';
+import { PASSED, FAILED, SKIPPED, INTERRUPTED, IN_PROGRESS } from 'common/constants/testStatuses';
+import {
+  statisticsLinkSelector,
+  TEST_ITEMS_TYPE_LIST,
+  DEFAULT_LAUNCHES_LIMIT,
+} from 'controllers/testItem';
+import { activeProjectSelector } from 'controllers/user';
+import { TEST_ITEM_PAGE } from 'controllers/pages';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { NoDataAvailable } from 'components/widgets/noDataAvailable';
+import { SpinningPreloader } from 'components/preloaders/spinningPreloader/spinningPreloader';
 import { ComponentHealthCheckLegend } from './legend/componentHealthCheckLegend';
 import { GroupsSection } from './groupsSection/groupsSection';
 import styles from './componentHealthCheck.scss';
@@ -33,6 +44,15 @@ const messages = defineMessages({
 const MAX_PASSING_RATE_VALUE = 100;
 
 @injectIntl
+@connect(
+  (state) => ({
+    project: activeProjectSelector(state),
+    getStatisticsLink: statisticsLinkSelector(state),
+  }),
+  {
+    navigate: (linkAction) => linkAction,
+  },
+)
 export class ComponentHealthCheck extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
@@ -40,6 +60,9 @@ export class ComponentHealthCheck extends Component {
     fetchWidget: PropTypes.func,
     clearQueryParams: PropTypes.func,
     container: PropTypes.instanceOf(Element).isRequired,
+    getStatisticsLink: PropTypes.func.isRequired,
+    project: PropTypes.string.isRequired,
+    navigate: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
@@ -50,8 +73,8 @@ export class ComponentHealthCheck extends Component {
   state = {
     activeBreadcrumbs: null,
     activeBreadcrumbId: 0,
-    selectedItem: null,
     activeAttributes: [],
+    isLoading: false,
   };
 
   componentDidUpdate(prevProps) {
@@ -67,44 +90,97 @@ export class ComponentHealthCheck extends Component {
 
   onClickBreadcrumbs = (id) => {
     const { activeBreadcrumbs } = this.state;
-    const newActiveAttributes = this.getNewActiveAttributes(activeBreadcrumbs[id].attr.value);
+    const newActiveAttributes = this.getNewActiveAttributes(
+      activeBreadcrumbs[id].key,
+      activeBreadcrumbs[id].attr.value,
+    );
     const newActiveBreadcrumbs = this.getNewActiveBreadcrumbs(id);
 
     this.setState({
       activeBreadcrumbs: newActiveBreadcrumbs,
       activeBreadcrumbId: id,
       activeAttributes: newActiveAttributes,
+      isLoading: true,
     });
-    this.props.fetchWidget({
-      attributes: newActiveAttributes,
-    });
+    this.props
+      .fetchWidget({
+        attributes: newActiveAttributes.map((item) => item.value),
+      })
+      .then(() => {
+        this.setState({
+          isLoading: false,
+        });
+      });
   };
 
   onClickGroupItem = (value, passingRate, color) => {
     const { activeBreadcrumbId } = this.state;
     const newActiveBreadcrumbId = activeBreadcrumbId + 1;
-    const newActiveAttributes = this.getNewActiveAttributes(value);
     const attr = {
       value,
       passingRate,
       color,
     };
     const newActiveBreadcrumbs = this.getNewActiveBreadcrumbs(newActiveBreadcrumbId, attr);
+    const newActiveAttributes = this.getNewActiveAttributes(
+      newActiveBreadcrumbs[activeBreadcrumbId].key,
+      value,
+    );
 
     this.setState({
       activeBreadcrumbs: newActiveBreadcrumbs,
       activeBreadcrumbId: newActiveBreadcrumbId,
       activeAttributes: newActiveAttributes,
+      isLoading: true,
     });
-    this.props.fetchWidget({
-      attributes: newActiveAttributes,
-    });
+    this.props
+      .fetchWidget({
+        attributes: newActiveAttributes.map((item) => item.value),
+      })
+      .then(() => {
+        this.setState({
+          isLoading: false,
+        });
+      });
   };
 
-  getNewActiveAttributes = (value) => {
+  onClickGroupIcon = (value) => {
+    const { widget, getStatisticsLink } = this.props;
+    const { activeBreadcrumbId } = this.state;
+    const activeAttributes = this.getNewActiveAttributes(
+      this.getBreadcrumbs()[activeBreadcrumbId].key,
+      value,
+    );
+    const link = getStatisticsLink({
+      statuses: this.getLinkParametersStatuses(),
+      launchesLimit: DEFAULT_LAUNCHES_LIMIT,
+      compositeAttribute: activeAttributes.map(formatAttribute).join(','),
+    });
+    const navigationParams = this.getDefaultParamsWidget(widget.appliedFilters[0].id);
+
+    this.props.navigate(Object.assign(link, navigationParams));
+  };
+
+  getDefaultParamsWidget = (filterId) => ({
+    payload: {
+      projectId: this.props.project,
+      filterId,
+      testItemIds: TEST_ITEMS_TYPE_LIST,
+    },
+    type: TEST_ITEM_PAGE,
+  });
+
+  getLinkParametersStatuses = () => [PASSED, FAILED, SKIPPED, INTERRUPTED, IN_PROGRESS];
+
+  getNewActiveAttributes = (key, value) => {
     const { activeAttributes } = this.state;
-    const activeAttribute = value;
-    const indexActiveAttribute = activeAttributes && activeAttributes.indexOf(value);
+    const activeAttribute = {
+      key,
+      value,
+    };
+    const indexActiveAttribute =
+      activeAttributes &&
+      activeAttributes.indexOf(activeAttributes.find((item) => item.key === key));
 
     if (indexActiveAttribute !== -1) {
       return activeAttributes.slice(0, indexActiveAttribute);
@@ -215,7 +291,6 @@ export class ComponentHealthCheck extends Component {
     this.setState({
       activeBreadcrumbs: null,
       activeBreadcrumbId: 0,
-      selectedItem: null,
       activeAttributes: [],
     });
 
@@ -224,7 +299,7 @@ export class ComponentHealthCheck extends Component {
 
   render() {
     const { intl } = this.props;
-    const { activeBreadcrumbs, activeBreadcrumbId } = this.state;
+    const { activeBreadcrumbs, activeBreadcrumbId, isLoading } = this.state;
     const groupItems = this.getGroupItems();
     const isClickableGroupItem =
       activeBreadcrumbId !== (activeBreadcrumbs && activeBreadcrumbs.length - 1);
@@ -238,7 +313,7 @@ export class ComponentHealthCheck extends Component {
           passingRate={this.getPassingRateValue()}
           colorCalculator={this.colorCalculator}
         />
-        {groupItems ? (
+        {groupItems && !isLoading ? (
           <Fragment>
             {!!groupItems.failedGroupItems.length && (
               <GroupsSection
@@ -247,6 +322,7 @@ export class ComponentHealthCheck extends Component {
                 groups={groupItems.failedGroupItems}
                 colorCalculator={this.colorCalculator}
                 onClickGroupItem={this.onClickGroupItem}
+                onClickGroupIcon={this.onClickGroupIcon}
                 isClickable={isClickableGroupItem}
               />
             )}
@@ -257,13 +333,15 @@ export class ComponentHealthCheck extends Component {
                 groups={groupItems.passedGroupItems}
                 colorCalculator={this.colorCalculator}
                 onClickGroupItem={this.onClickGroupItem}
+                onClickGroupIcon={this.onClickGroupIcon}
                 isClickable={isClickableGroupItem}
               />
             )}
           </Fragment>
         ) : (
           <div className={cx('no-data-wrapper')}>
-            <NoDataAvailable />
+            {!isLoading && <NoDataAvailable />}
+            {isLoading && <SpinningPreloader />}
           </div>
         )}
       </ScrollWrapper>

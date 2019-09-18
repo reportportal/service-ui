@@ -16,6 +16,7 @@ export const GroupsSection = injectIntl(
     groups,
     colorCalculator,
     onClickGroupItem,
+    onClickGroupIcon,
     isClickable,
   }) => (
     <div className={cx('groups-section')}>
@@ -31,6 +32,7 @@ export const GroupsSection = injectIntl(
               color={colorCalculator(item.passingRate)}
               formatMessage={formatMessage}
               onClickGroupItem={onClickGroupItem}
+              onClickGroupIcon={onClickGroupIcon}
               isClickable={isClickable}
             />
           </div>
@@ -45,6 +47,7 @@ GroupsSection.propTypes = {
   groups: PropTypes.arrayOf(PropTypes.shape(groupItemPropTypes)),
   colorCalculator: PropTypes.func,
   onClickGroupItem: PropTypes.func,
+  onClickGroupIcon: PropTypes.func,
   isClickable: PropTypes.bool,
 };
 GroupsSection.defaultProps = {
@@ -53,5 +56,6 @@ GroupsSection.defaultProps = {
   groups: [],
   colorCalculator: () => {},
   onClickGroupItem: () => {},
+  onClickGroupIcon: () => {},
   isClickable: true,
 };

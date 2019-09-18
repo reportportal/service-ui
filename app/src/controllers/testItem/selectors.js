@@ -261,6 +261,7 @@ export const statisticsLinkSelector = createSelector(
             'filter.eq.hasChildren': false,
             'filter.in.type': LEVEL_STEP,
             'filter.in.status': ownProps.statuses && ownProps.statuses.join(','),
+            'filter.has.compositeAttribute': ownProps.compositeAttribute,
             launchesLimit,
           },
           getQueryNamespace(testItemIdsArray ? testItemIdsArray.length : 0),

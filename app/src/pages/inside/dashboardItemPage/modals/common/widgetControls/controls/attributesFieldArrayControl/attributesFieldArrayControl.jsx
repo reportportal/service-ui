@@ -26,6 +26,14 @@ const messages = defineMessages({
     id: 'AttributesFieldArrayControl.addOneMoreLevel',
     defaultMessage: '+ Add one more level',
   },
+  levelsCanBeAddedMessage: {
+    id: 'AttributesFieldArrayControl.levelsCanBeAddedMessage',
+    defaultMessage: '{amount} levels can be added',
+  },
+  levelCanBeAddedMessage: {
+    id: 'AttributesFieldArrayControl.levelCanBeAddedMessage',
+    defaultMessage: '1 level can be added',
+  },
 });
 
 @injectIntl
@@ -37,10 +45,12 @@ export class AttributesFieldArrayControl extends Component {
     maxAttributesAmount: PropTypes.number.isRequired,
     url: PropTypes.string.isRequired,
     attributeKeyFieldViewLabels: PropTypes.array,
+    showRemainingLevels: PropTypes.bool,
   };
 
   static defaultProps = {
     attributeKeyFieldViewLabels: [],
+    showRemainingLevels: false,
   };
 
   constructor(props) {
@@ -48,6 +58,8 @@ export class AttributesFieldArrayControl extends Component {
     if (!props.fields.length) {
       props.fields.push('');
     }
+
+    this.numberRemainingLevels = this.props.maxAttributesAmount - 1;
   }
 
   getAttributes = () => this.props.fields.getAll() || [];
@@ -77,6 +89,7 @@ export class AttributesFieldArrayControl extends Component {
       fieldValidator,
       maxAttributesAmount,
       attributeKeyFieldViewLabels,
+      showRemainingLevels,
     } = this.props;
     const canAddNewItems = fields.length < maxAttributesAmount;
 
@@ -117,7 +130,13 @@ export class AttributesFieldArrayControl extends Component {
                 </FieldErrorHint>
               </FieldProvider>
               {!isFirstItem && (
-                <span className={cx('remove-icon')} onClick={() => fields.remove(index)}>
+                <span
+                  className={cx('remove-icon')}
+                  onClick={() => {
+                    this.numberRemainingLevels = this.numberRemainingLevels + 1;
+                    return fields.remove(index);
+                  }}
+                >
                   {Parser(CrossIcon)}
                 </span>
               )}
@@ -126,9 +145,24 @@ export class AttributesFieldArrayControl extends Component {
         })}
         {canAddNewItems ? (
           <ModalField label=" " labelWidth={FIELD_LABEL_WIDTH}>
-            <div className={cx('add-level')} onClick={() => fields.push('')}>
+            <div
+              className={cx('add-level')}
+              onClick={() => {
+                this.numberRemainingLevels = this.numberRemainingLevels - 1;
+                return fields.push('');
+              }}
+            >
               {formatMessage(messages.addOneMoreLevel)}
             </div>
+            {showRemainingLevels && (
+              <div className={cx('remaining-level')}>
+                {this.numberRemainingLevels === 1
+                  ? formatMessage(messages.levelCanBeAddedMessage)
+                  : formatMessage(messages.levelsCanBeAddedMessage, {
+                      amount: this.numberRemainingLevels,
+                    })}
+              </div>
+            )}
           </ModalField>
         ) : null}
       </Fragment>
