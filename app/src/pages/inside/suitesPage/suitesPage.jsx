@@ -215,9 +215,7 @@ export class SuitesPage extends Component {
 
     return (
       <PageLayout>
-        <PageSection>
-          <LaunchFiltersSection />
-        </PageSection>
+        <PageSection>{!debugMode && <LaunchFiltersSection />}</PageSection>
         <PageSection>
           <SuiteTestToolbar
             onDelete={() => deleteItems(selectedSuites)}

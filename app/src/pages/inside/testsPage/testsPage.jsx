@@ -211,9 +211,7 @@ export class TestsPage extends Component {
 
     return (
       <PageLayout>
-        <PageSection>
-          <LaunchFiltersSection />
-        </PageSection>
+        <PageSection>{!debugMode && <LaunchFiltersSection />}</PageSection>
         <PageSection>
           <SuiteTestToolbar
             selectedItems={selectedTests}
