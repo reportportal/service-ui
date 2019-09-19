@@ -18,3 +18,5 @@ export const DEFAULT_LOCAL_SORTING = {
 };
 
 export const UPDATE_LOCAL_SORTING = 'updateLocalSorting';
+export const UPDATE_DEBUG_LOCAL_SORTING = 'updateDebugLocalSorting';
+export const UPDATE_DEBUG_LOCAL_FILTER = 'updateDebugLocalFilter';

@@ -17,6 +17,10 @@ export {
   updateLaunchesLocallyAction,
   updateLocalSortingAction,
   resetLocalSortingAction,
+  updateDebugLocalSortingAction,
+  resetDebugLocalSortingAction,
+  updateDebugLocalFilterAction,
+  resetDebugLocalFilterAction,
 } from './actionCreators';
 export {
   selectedLaunchesSelector,
@@ -30,6 +34,8 @@ export {
   allLaunchesLikSelector,
   latestLaunchesLinkSelector,
   localSortingSelector,
+  debugLocalSortingSelector,
+  debugLocalFilterSelector,
 } from './selectors';
 export { launchReducer } from './reducer';
 export { launchSagas } from './sagas';

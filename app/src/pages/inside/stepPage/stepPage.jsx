@@ -356,9 +356,7 @@ export class StepPage extends Component {
 
     return (
       <PageLayout>
-        <PageSection>
-          <LaunchFiltersSection />
-        </PageSection>
+        <PageSection>{!debugMode && <LaunchFiltersSection />}</PageSection>
         <PageSection>
           <SuiteTestToolbar
             onDelete={this.deleteItems}
