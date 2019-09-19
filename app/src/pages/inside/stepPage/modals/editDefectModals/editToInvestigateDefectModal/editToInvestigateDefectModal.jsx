@@ -378,7 +378,16 @@ export class EditToInvestigateDefectModal extends Component {
   );
 
   render() {
-    const { intl, currentLaunch, currentFilter } = this.props;
+    const {
+      intl,
+      currentLaunch,
+      currentFilter,
+      data: {
+        item: {
+          pathNames: { launchPathName },
+        },
+      },
+    } = this.props;
     const customButton = {
       onClick: this.onEditDefects,
       buttonProps: {
@@ -437,6 +446,7 @@ export class EditToInvestigateDefectModal extends Component {
             selectedItems={this.state.selectedItems}
             currentLaunch={currentLaunch}
             currentFilter={currentFilter}
+            itemLaunch={launchPathName}
             searchMode={this.state.searchMode}
             loading={this.state.loading}
             onSelectAllToggle={this.handleSelectAllToggle}
