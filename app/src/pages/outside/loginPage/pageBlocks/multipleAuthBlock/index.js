@@ -1,0 +1,1 @@
+export { MultipleAuthBlock } from './multipleAuthBlock';

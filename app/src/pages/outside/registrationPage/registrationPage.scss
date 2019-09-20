@@ -101,24 +101,6 @@
   color: $COLOR--steel-grey;
   line-height: 22px;
 }
-.welcome-msg {
-  display: block;
-  width: 100%;
-  margin-bottom: 50px;
-  font-family: $FONT-REGULAR;
-  font-size: 24px;
-  color: $COLOR--steel-grey;
-  text-align: center;
-  line-height: 1.4;
-
-  @media (max-width: $SCREEN_SM_MAX) {
-    margin-top: 50px;
-  }
-  @media (max-width: $SCREEN_XS_MAX) {
-    font-size: 16px;
-    margin-bottom: 40px;
-  }
-}
 .fail-msg {
   display: inline-block;
   width: 335px;
