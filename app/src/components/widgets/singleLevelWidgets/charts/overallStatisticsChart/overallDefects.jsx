@@ -1,7 +1,8 @@
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
-import { getItemNameConfig, DEFECTS } from '../../../common/utils';
+import { DEFECTS } from 'components/widgets/common/constants';
+import { getItemNameConfig } from '../../../common/utils';
 import { DefectTypeItem } from './defectTypeItem';
 import styles from './overallDefects.scss';
 
@@ -10,10 +11,11 @@ const cx = classNames.bind(styles);
 export class OverallDefects extends React.Component {
   static propTypes = {
     valuesArray: PropTypes.array.isRequired,
+    onChartClick: PropTypes.func.isRequired,
   };
 
   render() {
-    const { valuesArray } = this.props;
+    const { valuesArray, onChartClick } = this.props;
 
     return (
       <ScrollWrapper>
@@ -23,7 +25,13 @@ export class OverallDefects extends React.Component {
 
             return (
               defectItem.itemType === DEFECTS && (
-                <DefectTypeItem key={item.key} itemName={item.key} value={item.value} />
+                <DefectTypeItem
+                  onChartClick={onChartClick}
+                  nameConfig={defectItem}
+                  key={item.key}
+                  itemName={item.key}
+                  value={item.value}
+                />
               )
             );
           })}

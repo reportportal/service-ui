@@ -3,6 +3,11 @@ import PropTypes from 'prop-types';
 import { injectIntl, intlShape } from 'react-intl';
 import isEqual from 'fast-deep-equal';
 import classNames from 'classnames/bind';
+import { connect } from 'react-redux';
+import { statisticsLinkSelector } from 'controllers/testItem';
+import { activeProjectSelector } from 'controllers/user';
+import { TEST_ITEM_PAGE } from 'controllers/pages';
+import { FAILED, SKIPPED, INTERRUPTED } from 'common/constants/testStatuses';
 import { C3Chart } from '../../../common/c3chart';
 import { Legend } from '../../../common/legend';
 import { getConfig } from './config/getConfig';
@@ -13,11 +18,23 @@ const cx = classNames.bind(styles);
 const FAILED_SKIPPED_STATISTICS_KEY = 'statistics$executions$failedSkippedTotal';
 
 @injectIntl
+@connect(
+  (state) => ({
+    project: activeProjectSelector(state),
+    getStatisticsLink: statisticsLinkSelector(state),
+  }),
+  {
+    navigate: (linkAction) => linkAction,
+  },
+)
 export class NonPassedTestCasesTrendChart extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
     widget: PropTypes.object.isRequired,
     container: PropTypes.instanceOf(Element).isRequired,
+    getStatisticsLink: PropTypes.func.isRequired,
+    navigate: PropTypes.func.isRequired,
+    project: PropTypes.string.isRequired,
     isPreview: PropTypes.bool,
     height: PropTypes.number,
     observer: PropTypes.object,
@@ -65,6 +82,20 @@ export class NonPassedTestCasesTrendChart extends Component {
     this.node.addEventListener('mousemove', this.setupCoords);
   };
 
+  onChartClick = (data) => {
+    const { widget, getStatisticsLink } = this.props;
+    const launchIds = this.config.data.itemsData.map((item) => item.id);
+    const link = getStatisticsLink({
+      statuses: [FAILED, SKIPPED, INTERRUPTED],
+    });
+    const navigationParams = this.getDefaultNavigationParams(
+      widget.appliedFilters[0].id,
+      launchIds[data.index],
+    );
+
+    this.props.navigate(Object.assign(link, navigationParams));
+  };
+
   getConfig = () => {
     const {
       intl: { formatMessage },
@@ -84,6 +115,7 @@ export class NonPassedTestCasesTrendChart extends Component {
       size: {
         height: container.offsetHeight,
       },
+      onClickHandler: this.onChartClick,
     };
 
     this.config = getConfig(params);
@@ -103,6 +135,15 @@ export class NonPassedTestCasesTrendChart extends Component {
       left,
     };
   };
+
+  getDefaultNavigationParams = (filterId, testItemIds) => ({
+    payload: {
+      projectId: this.props.project,
+      filterId,
+      testItemIds,
+    },
+    type: TEST_ITEM_PAGE,
+  });
 
   setupCoords = ({ pageX, pageY }) => {
     this.x = pageX;

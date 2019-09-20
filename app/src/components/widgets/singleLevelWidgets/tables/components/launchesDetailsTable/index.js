@@ -1,1 +1,0 @@
-export { LaunchesDetailsTable } from './launchesDetailsTable';

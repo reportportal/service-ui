@@ -7,6 +7,5 @@ export {
   getDefectTypeLocators,
   getLaunchAxisTicks,
   getUpdatedFilterWithTime,
-  DEFECTS,
   range,
 } from './utils';

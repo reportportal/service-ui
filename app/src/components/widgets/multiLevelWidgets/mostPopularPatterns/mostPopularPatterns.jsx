@@ -1,22 +1,34 @@
 import React, { Component } from 'react';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import isEqual from 'fast-deep-equal';
+import { createNamespacedQuery } from 'common/utils/routingUtils';
+import { getQueryNamespace, TEST_ITEMS_TYPE_LIST } from 'controllers/testItem';
+import { TEST_ITEM_PAGE } from 'controllers/pages';
+import { activeProjectSelector } from 'controllers/user';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { InputDropdown } from 'components/inputs/inputDropdown';
 import { NoDataAvailable } from 'components/widgets';
 import { PatternGrid } from './patternGrid';
-import { SecondLevelPanel } from './secondLevelPanel';
 import styles from './mostPopularPatterns.scss';
 
-const PATTERN_FILTER_PARAM = 'patternTemplateName';
 const cx = classNames.bind(styles);
 
+@connect(
+  (state) => ({
+    project: activeProjectSelector(state),
+  }),
+  {
+    navigate: (linkAction) => linkAction,
+  },
+)
 export class MostPopularPatterns extends Component {
   static propTypes = {
+    project: PropTypes.string.isRequired,
+    navigate: PropTypes.func.isRequired,
     widget: PropTypes.object,
     fetchWidget: PropTypes.func,
-    queryParameters: PropTypes.object,
     clearQueryParams: PropTypes.func,
   };
 
@@ -37,7 +49,6 @@ export class MostPopularPatterns extends Component {
       },
     },
     fetchWidget: () => {},
-    queryParameters: {},
     clearQueryParams: () => {},
   };
 
@@ -45,7 +56,6 @@ export class MostPopularPatterns extends Component {
     super(props);
     this.state = {
       selectedAttribute: this.getDefaultAttribute(props.widget.content.result),
-      selectedPattern: props.queryParameters.patternTemplateName,
     };
   }
 
@@ -58,26 +68,49 @@ export class MostPopularPatterns extends Component {
     }
   }
 
-  onBackClick = () => {
-    this.props.clearQueryParams(() => {
-      this.setState({
-        selectedPattern: null,
-      });
-    });
-  };
+  onPatternClick = (patternName) => {
+    const { widget } = this.props;
+    const { selectedAttribute } = this.state;
 
-  onPatternClick = (pattern) => {
-    this.props.fetchWidget({ [PATTERN_FILTER_PARAM]: pattern }).then(() => {
-      this.setState({
-        selectedPattern: pattern,
-      });
-    });
+    const launchesLimit = widget.contentParameters.itemsCount;
+    const compositeAttribute = `${
+      widget.contentParameters.widgetOptions.attributeKey
+    }:${selectedAttribute}`;
+    const navigationParams = this.getDefaultNavigationParams(
+      widget.appliedFilters[0].id,
+      patternName,
+      compositeAttribute,
+      launchesLimit,
+    );
+
+    this.props.navigate(navigationParams);
   };
 
   onChangeAttribute = (newAttribute) =>
     this.setState({
       selectedAttribute: newAttribute,
     });
+
+  getDefaultNavigationParams = (filterId, patternName, compositeAttribute, launchesLimit) => ({
+    payload: {
+      projectId: this.props.project,
+      filterId,
+      testItemIds: TEST_ITEMS_TYPE_LIST,
+    },
+    type: TEST_ITEM_PAGE,
+    meta: {
+      query: createNamespacedQuery(
+        {
+          'filter.eq.hasStats': true,
+          'filter.eq.hasChildren': false,
+          'filter.any.patternName': patternName,
+          'filter.has.compositeAttribute': compositeAttribute,
+          launchesLimit,
+        },
+        getQueryNamespace(0),
+      ),
+    },
+  });
 
   getAttributes = (data = []) =>
     data
@@ -93,7 +126,6 @@ export class MostPopularPatterns extends Component {
     this.props.clearQueryParams(() => {
       this.setState({
         selectedAttribute: this.getDefaultAttribute(this.props.widget.content.result),
-        selectedPattern: null,
       });
     });
   };
@@ -107,7 +139,7 @@ export class MostPopularPatterns extends Component {
         },
       },
     } = this.props;
-    const { selectedAttribute, selectedPattern } = this.state;
+    const { selectedAttribute } = this.state;
 
     if (!result || !result.length) return <NoDataAvailable />;
 
@@ -123,14 +155,10 @@ export class MostPopularPatterns extends Component {
             />
           </div>
         </div>
-        {selectedPattern && (
-          <SecondLevelPanel patternName={selectedPattern} onBackClick={this.onBackClick} />
-        )}
         <div className={cx('patterns-grid')}>
           <ScrollWrapper>
             <PatternGrid
               widget={this.props.widget}
-              selectedPattern={selectedPattern}
               selectedAttribute={selectedAttribute}
               onPatternClick={this.onPatternClick}
             />

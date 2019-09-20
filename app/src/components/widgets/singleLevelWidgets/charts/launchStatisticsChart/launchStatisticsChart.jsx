@@ -25,8 +25,9 @@ import {
   getUpdatedFilterWithTime,
 } from 'components/widgets/common/utils';
 import { messages } from 'components/widgets/common/messages';
+import { TOTAL_KEY } from 'components/widgets/common/constants';
 import { IssueTypeStatTooltip } from '../common/issueTypeStatTooltip';
-import { TOTAL_KEY, CHART_OFFSET } from './constants';
+import { CHART_OFFSET } from './constants';
 import styles from './launchStatisticsChart.scss';
 
 const cx = classNames.bind(styles);

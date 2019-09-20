@@ -1,10 +1,8 @@
 import * as COLORS from 'common/constants/colors';
 import { messages } from 'components/widgets/singleLevelWidgets/charts/launchExecutionAndIssueStatistics/messages';
+import { EXECUTIONS, DEFECTS } from '../../common/constants';
 
 const Color = require('color');
-
-const EXECUTIONS = 'executions';
-const DEFECTS = 'defects';
 
 const getDefects = (fields) => fields.filter((item) => /defects/.test(item));
 

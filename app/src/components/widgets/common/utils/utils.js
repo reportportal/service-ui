@@ -1,9 +1,8 @@
 import moment from 'moment/moment';
 import { ENTITY_START_TIME, CONDITION_BETWEEN } from 'components/filterEntities/constants';
 import * as COLORS from 'common/constants/colors';
+import { DEFECTS } from '../constants';
 import { messages } from '../messages';
-
-export const DEFECTS = 'defects';
 
 export const range = (start = 0, end = 0, step = 1) => {
   const result = [];
