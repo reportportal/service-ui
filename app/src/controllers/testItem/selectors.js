@@ -304,6 +304,7 @@ export const defectLinkSelector = createSelector(
             'filter.eq.hasStats': true,
             'filter.eq.hasChildren': false,
             'filter.in.issueType': getDefectsString(ownProps.defects),
+            'filter.has.compositeAttribute': ownProps.compositeAttribute,
             launchesLimit,
           },
           getQueryNamespace(levelIndex),

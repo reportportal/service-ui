@@ -1,12 +1,17 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { injectIntl, intlShape } from 'react-intl';
+import { connect } from 'react-redux';
 import ReactDOMServer from 'react-dom/server';
 import * as d3 from 'd3-selection';
 import isEqual from 'fast-deep-equal';
 import classNames from 'classnames/bind';
+import { statisticsLinkSelector, TEST_ITEMS_TYPE_LIST } from 'controllers/testItem';
+import { activeProjectSelector } from 'controllers/user';
+import { TEST_ITEM_PAGE } from 'controllers/pages';
 import * as COLORS from 'common/constants/colors';
 import { STATS_PASSED } from 'common/constants/statistics';
+import { PASSED, FAILED, INTERRUPTED, SKIPPED } from 'common/constants/testStatuses';
 import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
 import { PASSING_RATE_PER_LAUNCH } from 'common/constants/widgetTypes';
 import { C3Chart } from '../../../common/c3chart';
@@ -21,10 +26,22 @@ const cx = classNames.bind(styles);
 const NOT_PASSED_STATISTICS_KEY = 'statistics$executions$notPassed';
 
 @injectIntl
+@connect(
+  (state) => ({
+    project: activeProjectSelector(state),
+    getStatisticsLink: statisticsLinkSelector(state),
+  }),
+  {
+    navigate: (linkAction) => linkAction,
+  },
+)
 export class PassingRatePerLaunch extends Component {
   static propTypes = {
     intl: intlShape.isRequired,
     widget: PropTypes.object.isRequired,
+    getStatisticsLink: PropTypes.func.isRequired,
+    navigate: PropTypes.func.isRequired,
+    project: PropTypes.string.isRequired,
     isPreview: PropTypes.bool,
     height: PropTypes.number,
     container: PropTypes.instanceOf(Element).isRequired,
@@ -82,6 +99,26 @@ export class PassingRatePerLaunch extends Component {
   onMouseOver = (id) => {
     this.chart.focus(id);
   };
+
+  onChartClick = (data) => {
+    const { widget, getStatisticsLink } = this.props;
+    const link = getStatisticsLink({
+      statuses: data.id === STATS_PASSED ? [PASSED] : [FAILED, INTERRUPTED, SKIPPED],
+      launchesLimit: widget.contentParameters.itemsCount,
+    });
+    const navigationParams = this.getDefaultNavigationParams(widget.appliedFilters[0].id);
+
+    this.props.navigate(Object.assign(link, navigationParams));
+  };
+
+  getDefaultNavigationParams = (filterId) => ({
+    payload: {
+      projectId: this.props.project,
+      filterId,
+      testItemIds: TEST_ITEMS_TYPE_LIST,
+    },
+    type: TEST_ITEM_PAGE,
+  });
 
   getPosition = (d, width, height) => {
     const rect = this.node.getBoundingClientRect();
@@ -202,6 +239,10 @@ export class PassingRatePerLaunch extends Component {
       },
     };
 
+    if (!isPreview && widget.appliedFilters.length) {
+      this.config.data.onclick = this.onChartClick;
+    }
+
     this.setState({
       isConfigReady: true,
     });
@@ -292,7 +333,11 @@ export class PassingRatePerLaunch extends Component {
         launchNumber={number}
         launchPercent={this.getPercentage(number)}
         color={color(id)}
-        itemName={getItemName({ itemName: d[0].name, defectTypes: {} })}
+        itemName={getItemName({
+          itemName: d[0].name,
+          defectTypes: {},
+          formatMessage: this.props.intl.formatMessage,
+        })}
       />,
     );
   };

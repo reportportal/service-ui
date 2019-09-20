@@ -12,7 +12,14 @@ const localMessages = defineMessages({
   },
 });
 
-export const getConfig = ({ content, isPreview, formatMessage, positionCallback, size }) => {
+export const getConfig = ({
+  content,
+  isPreview,
+  formatMessage,
+  positionCallback,
+  size,
+  onClickHandler,
+}) => {
   const chartData = ['failed'];
   const itemsData = [];
   let topExtremum = 0;
@@ -40,6 +47,8 @@ export const getConfig = ({ content, isPreview, formatMessage, positionCallback,
       colors: {
         failed: COLOR_FAILED,
       },
+      onclick: onClickHandler,
+      itemsData,
     },
     point: {
       sensitivity: 1000,

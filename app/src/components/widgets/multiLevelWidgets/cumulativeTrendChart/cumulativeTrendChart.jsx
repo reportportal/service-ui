@@ -1,17 +1,30 @@
-import { PureComponent, Fragment } from 'react';
+import { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import isEqual from 'fast-deep-equal';
+import { connect } from 'react-redux';
 import { injectIntl, intlShape } from 'react-intl';
 import { NoDataAvailable } from 'components/widgets';
 import { VirtualPopup } from 'components/main/virtualPopup';
 import { ChartJS } from 'components/widgets/common/chartjs';
 import { ActionsPopup } from 'components/widgets/common/actionsPopup';
+import {
+  defectLinkSelector,
+  statisticsLinkSelector,
+  TEST_ITEMS_TYPE_LIST,
+  DEFAULT_LAUNCHES_LIMIT,
+} from 'controllers/testItem';
+import { defectTypesSelector } from 'controllers/project';
+import { activeProjectSelector } from 'controllers/user';
+import { TEST_ITEM_PAGE } from 'controllers/pages';
+import { PASSED, FAILED, SKIPPED, INTERRUPTED, IN_PROGRESS } from 'common/constants/testStatuses';
+import { formatAttribute } from 'common/utils/attributeUtils';
 import SearchIcon from 'common/img/search-icon-inline.svg';
 import FiltersIcon from 'common/img/filters-icon-inline.svg';
+import { DEFECTS, TOTAL_KEY } from '../../common/constants';
 import { getChartData } from './chartjsConfig';
 import { CumulativeChartLegend } from './legend/cumulativeChartLegend';
-import { CumulativeDetails } from './cumulativeDetails';
+import { getDefectTypeLocators, getItemNameConfig } from '../../common/utils';
 import styles from './cumulativeTrendChart.scss';
 
 const cx = classNames.bind(styles);
@@ -20,10 +33,26 @@ const LEGEND_HEIGHT = 45;
 const PRINTED_LEGEND_HEIGHT = 80;
 
 @injectIntl
+@connect(
+  (state) => ({
+    project: activeProjectSelector(state),
+    defectTypes: defectTypesSelector(state),
+    getDefectLink: defectLinkSelector(state),
+    getStatisticsLink: statisticsLinkSelector(state),
+  }),
+  {
+    navigate: (linkAction) => linkAction,
+  },
+)
 export class CumulativeTrendChart extends PureComponent {
   static propTypes = {
     intl: intlShape.isRequired,
     widget: PropTypes.object.isRequired,
+    defectTypes: PropTypes.object.isRequired,
+    getDefectLink: PropTypes.func.isRequired,
+    getStatisticsLink: PropTypes.func.isRequired,
+    navigate: PropTypes.func.isRequired,
+    project: PropTypes.string.isRequired,
     observer: PropTypes.object,
     fetchWidget: PropTypes.func,
     clearQueryParams: PropTypes.func,
@@ -51,7 +80,6 @@ export class CumulativeTrendChart extends PureComponent {
   state = {
     legendItems: [],
     activeAttributes: [],
-    isDetailsView: false,
     activeAttribute: null,
     isActionsPopupShown: false,
     selectedItem: null,
@@ -144,6 +172,15 @@ export class CumulativeTrendChart extends PureComponent {
     },
   ];
 
+  getDefaultNavigationParams = (filterId) => ({
+    payload: {
+      projectId: this.props.project,
+      filterId,
+      testItemIds: TEST_ITEMS_TYPE_LIST,
+    },
+    type: TEST_ITEM_PAGE,
+  });
+
   updateActiveAttributes = (actionSuccessCallback) => {
     const { selectedItem, activeAttributes } = this.state;
     const activeAttribute = {
@@ -164,7 +201,7 @@ export class CumulativeTrendChart extends PureComponent {
 
   drillDown = () => this.updateActiveAttributes(this.fetchWidgetWithActiveAttributes);
 
-  showFilter = () => this.updateActiveAttributes(this.showDetailsView);
+  showFilter = () => this.updateActiveAttributes(this.navigateToTestListView);
 
   userSettingsChangeHandler = (data) => this.props.onChangeUserSettings(data, this.getConfig);
 
@@ -194,16 +231,37 @@ export class CumulativeTrendChart extends PureComponent {
     const newAttributes = activeAttributes.slice(0, -1);
 
     this.setState({
-      isDetailsView: false,
       activeAttribute: newAttributes.length > 0 ? newAttributes[newAttributes.length - 1] : null,
       activeAttributes: newAttributes,
     });
   };
 
-  showDetailsView = () => {
-    this.setState({
-      isDetailsView: true,
-    });
+  navigateToTestListView = () => {
+    const { selectedItem, activeAttributes } = this.state;
+    const { widget, userSettings, getStatisticsLink, getDefectLink, defectTypes } = this.props;
+    const navigationParams = this.getDefaultNavigationParams(widget.appliedFilters[0].id);
+    let link;
+
+    if (userSettings.defectTypes) {
+      const namesConfig = Object.keys(selectedItem.content.statistics)
+        .map((item) => getItemNameConfig(item))
+        .filter((item) => item.itemType === DEFECTS && item.locator !== TOTAL_KEY);
+      const defectLocators = namesConfig.map((item) => getDefectTypeLocators(item, defectTypes));
+      link = getDefectLink({
+        defects: defectLocators,
+        itemId: TEST_ITEMS_TYPE_LIST,
+        compositeAttribute: activeAttributes.map(formatAttribute).join(','),
+        launchesLimit: DEFAULT_LAUNCHES_LIMIT,
+      });
+    } else {
+      link = getStatisticsLink({
+        statuses: [PASSED, FAILED, SKIPPED, INTERRUPTED, IN_PROGRESS],
+        compositeAttribute: activeAttributes.map(formatAttribute).join(','),
+        launchesLimit: DEFAULT_LAUNCHES_LIMIT,
+      });
+    }
+
+    this.props.navigate(Object.assign(link, navigationParams));
   };
 
   render() {
@@ -213,8 +271,6 @@ export class CumulativeTrendChart extends PureComponent {
       chartData,
       activeAttribute,
       activeAttributes,
-      isDetailsView,
-      selectedItem,
       isActionsPopupShown,
     } = this.state;
     const chartHeight = container.offsetHeight - this.getLegendHeight();
@@ -222,39 +278,28 @@ export class CumulativeTrendChart extends PureComponent {
 
     return this.state.chartData ? (
       <div className={cx('cumulative-trend-chart')}>
-        {isDetailsView ? (
-          <CumulativeDetails
-            selectedItem={selectedItem}
-            activeAttributes={activeAttributes}
-            onClose={this.closeDetails}
-            chartHeight={chartHeight}
+        <CumulativeChartLegend
+          items={legendItems}
+          attributes={this.getAttributes()}
+          activeAttribute={activeAttribute}
+          activeAttributes={activeAttributes}
+          clearAttributes={this.clearAttributes}
+          onClick={this.onLegendClick}
+          onChangeUserSettings={this.userSettingsChangeHandler}
+          uncheckedLegendItems={uncheckedLegendItems}
+          userSettings={userSettings}
+          isChartDataAvailable={isChartDataAvailable}
+          isPrintMode={isPrintMode}
+        />
+        {isChartDataAvailable ? (
+          <ChartJS
+            chartData={chartData}
+            chartOptions={this.state.chartOptions}
+            onChartElementClick={this.onChartElementClick}
+            height={chartHeight}
           />
         ) : (
-          <Fragment>
-            <CumulativeChartLegend
-              items={legendItems}
-              attributes={this.getAttributes()}
-              activeAttribute={activeAttribute}
-              activeAttributes={activeAttributes}
-              clearAttributes={this.clearAttributes}
-              onClick={this.onLegendClick}
-              onChangeUserSettings={this.userSettingsChangeHandler}
-              uncheckedLegendItems={uncheckedLegendItems}
-              userSettings={userSettings}
-              isChartDataAvailable={isChartDataAvailable}
-              isPrintMode={isPrintMode}
-            />
-            {isChartDataAvailable ? (
-              <ChartJS
-                chartData={chartData}
-                chartOptions={this.state.chartOptions}
-                onChartElementClick={this.onChartElementClick}
-                height={chartHeight}
-              />
-            ) : (
-              <NoDataAvailable />
-            )}
-          </Fragment>
+          <NoDataAvailable />
         )}
         {isActionsPopupShown && (
           <VirtualPopup
