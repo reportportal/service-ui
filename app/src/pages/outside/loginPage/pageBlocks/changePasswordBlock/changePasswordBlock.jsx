@@ -21,20 +21,27 @@
 
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import classNames from 'classnames/bind';
-import { FormattedMessage } from 'react-intl';
+import { defineMessages } from 'react-intl';
 import { connect } from 'react-redux';
 import { redirect as rfrRedirect } from 'redux-first-router';
 import { fetch, connectRouter } from 'common/utils';
 import { URLS } from 'common/urls';
-import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
 import { LOGIN_PAGE } from 'controllers/pages';
 import { isAuthorizedSelector } from 'controllers/auth';
+import { SpinningPreloader } from 'components/preloaders/spinningPreloader';
+import { PageBlockContainer } from 'pages/outside/common/pageBlockContainer';
 import { ChangePasswordForm } from './changePasswordForm';
 
-import styles from './changePasswordBlock.scss';
-
-const cx = classNames.bind(styles);
+const messages = defineMessages({
+  changePass: {
+    id: 'ChangePasswordBlock.changePass',
+    defaultMessage: 'Change password',
+  },
+  enterEmail: {
+    id: 'ChangePasswordBlock.enterEmail',
+    defaultMessage: 'enter new password and confirm it',
+  },
+});
 
 @connectRouter(({ reset }) => ({ reset }))
 @connect(
@@ -73,22 +80,9 @@ export class ChangePasswordBlock extends PureComponent {
     return this.state.loading ? (
       <SpinningPreloader />
     ) : (
-      <div className={cx('change-password-block')}>
-        <span className={cx('change-password-msg')}>
-          <span className={cx('big')}>
-            <FormattedMessage
-              id={'ChangePasswordBlock.changePass'}
-              defaultMessage={'Change password'}
-            />
-          </span>
-          <br />
-          <FormattedMessage
-            id={'ChangePasswordBlock.enterEmail'}
-            defaultMessage={'enter new password and confirm it'}
-          />
-        </span>
+      <PageBlockContainer header={messages.changePass} hint={messages.enterEmail}>
         <ChangePasswordForm />
-      </div>
+      </PageBlockContainer>
     );
   }
 }

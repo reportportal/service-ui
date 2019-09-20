@@ -1,19 +1,4 @@
-.forgot-password-block {
-  width: 100%;
-  padding: 60px;
-  box-sizing: border-box;
-
-  @media (max-width: $SCREEN_SM_MAX) {
-    height: auto;
-    width: 100%;
-    margin: 0;
-    padding: 50px 30px 0;
-  }
-  @media (max-width: $SCREEN_XS_MAX) {
-    padding: 60px 20px 0 20px;
-  }
-}
-.forgot-password-msg {
+.block-header {
   display: block;
   width: 100%;
   margin-bottom: 50px;
@@ -28,7 +13,7 @@
     margin-bottom: 60px;
   }
 }
-.big {
+.huge-message {
   font-size: 32px;
 
   @media (max-width: $SCREEN_XS_MAX) {

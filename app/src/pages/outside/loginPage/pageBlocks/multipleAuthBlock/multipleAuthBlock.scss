@@ -1,0 +1,16 @@
+.actions-block {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 25px;
+}
+
+.actions-block-button {
+  display: inline-block;
+  width: 160px;
+  height: 40px;
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+}

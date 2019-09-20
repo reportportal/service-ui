@@ -19,28 +19,23 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import classNames from 'classnames/bind';
-import { FormattedMessage } from 'react-intl';
+import { defineMessages } from 'react-intl';
+import { PageBlockContainer } from 'pages/outside/common/pageBlockContainer';
 import { ForgotPasswordForm } from './forgotPasswordForm';
-import styles from './forgotPasswordBlock.scss';
 
-const cx = classNames.bind(styles);
+const messages = defineMessages({
+  forgotPass: {
+    id: 'ForgotPasswordBlock.forgotPass',
+    defaultMessage: 'Forgot password?',
+  },
+  enterEmail: {
+    id: 'ForgotPasswordBlock.enterEmail',
+    defaultMessage: 'enter your email to restore',
+  },
+});
 
 export const ForgotPasswordBlock = () => (
-  <div className={cx('forgot-password-block')}>
-    <span className={cx('forgot-password-msg')}>
-      <span className={cx('big')}>
-        <FormattedMessage
-          id={'ForgotPasswordBlock.forgotPass'}
-          defaultMessage={'Forgot password?'}
-        />
-      </span>
-      <br />
-      <FormattedMessage
-        id={'ForgotPasswordBlock.enterEmail'}
-        defaultMessage={'enter your email to restore'}
-      />
-    </span>
+  <PageBlockContainer header={messages.forgotPass} hint={messages.enterEmail}>
     <ForgotPasswordForm />
-  </div>
+  </PageBlockContainer>
 );

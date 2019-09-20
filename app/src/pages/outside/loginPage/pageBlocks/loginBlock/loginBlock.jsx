@@ -19,22 +19,23 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import classNames from 'classnames/bind';
-import { FormattedMessage } from 'react-intl';
-import styles from './loginBlock.scss';
+import { defineMessages } from 'react-intl';
+import { PageBlockContainer } from 'pages/outside/common/pageBlockContainer';
 import { LoginForm } from './loginForm';
 
-const cx = classNames.bind(styles);
+const messages = defineMessages({
+  welcome: {
+    id: 'LoginBlock.welcome',
+    defaultMessage: 'Welcome,',
+  },
+  login: {
+    id: 'LoginBlock.login',
+    defaultMessage: 'login to your account',
+  },
+});
 
 export const LoginBlock = () => (
-  <div className={cx('login-block')}>
-    <span className={cx('welcome-msg')}>
-      <span className={cx('big')}>
-        <FormattedMessage id={'LoginBlock.welcome'} defaultMessage={'Welcome,'} />
-      </span>
-      <br />
-      <FormattedMessage id={'LoginBlock.login'} defaultMessage={'login to your account'} />
-    </span>
+  <PageBlockContainer header={messages.welcome} hint={messages.login}>
     <LoginForm />
-  </div>
+  </PageBlockContainer>
 );
