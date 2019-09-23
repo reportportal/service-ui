@@ -77,12 +77,7 @@ export class ComponentHealthCheck extends Component {
   };
 
   componentDidUpdate(prevProps) {
-    if (
-      !isEqual(
-        prevProps.widget.contentParameters.contentFields,
-        this.props.widget.contentParameters.contentFields,
-      )
-    ) {
+    if (!isEqual(prevProps.widget.contentParameters, this.props.widget.contentParameters)) {
       this.clearState();
     }
   }
@@ -270,14 +265,13 @@ export class ComponentHealthCheck extends Component {
 
   colorCalculator = (value) => {
     const passingRate = this.getPassingRateValue();
-    const intervalPiece =
-      passingRate === MAX_PASSING_RATE_VALUE ? passingRate / 4 : (passingRate - 1) / 4;
+    const intervalPiece = passingRate / 4;
 
     if (value === MAX_PASSING_RATE_VALUE) {
       return COLOR_PASSED;
     } else if (value >= passingRate) {
       return COLOR_DULL_GREEN;
-    } else if (value <= 4 * intervalPiece && value > 3 * intervalPiece) {
+    } else if (value < 4 * intervalPiece && value > 3 * intervalPiece) {
       return COLOR_DULL_RED;
     } else if (value <= 3 * intervalPiece && value > 2 * intervalPiece) {
       return COLOR_DEEP_RED;
