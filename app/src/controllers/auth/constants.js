@@ -4,6 +4,7 @@ export const AUTH_SUCCESS = 'authSuccessAction';
 export const AUTH_ERROR = 'authErrorAction';
 export const LOGOUT = 'logoutAction';
 export const LOGIN = 'loginAction';
+export const LOGIN_SUCCESS = 'loginSuccessAction';
 export const INITIAL_STATE = {
   authorized: false,
 };

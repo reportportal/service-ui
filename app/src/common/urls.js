@@ -48,12 +48,7 @@ export const URLS = {
       access_token: getToken(),
     })}`,
 
-  login: (grantType, username, password) =>
-    `/uat/sso/oauth/token${getQueryParams({
-      grant_type: grantType,
-      username,
-      password,
-    })}`,
+  login: () => `/uat/sso/oauth/token`,
   apiToken: () => `uat/sso/me/apitoken`,
   sessionToken: () => `${urlBase}uat/sso/me`,
 
