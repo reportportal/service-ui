@@ -2,12 +2,23 @@
   display: flex;
   justify-content: space-around;
   margin-top: 25px;
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    flex-direction: column-reverse;
+    align-items: center;
+  }
 }
 
 .actions-block-button {
   display: inline-block;
   width: 160px;
   height: 40px;
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    &:first-child {
+      margin-top: 10px;
+    }
+  }
 
   a {
     color: inherit;

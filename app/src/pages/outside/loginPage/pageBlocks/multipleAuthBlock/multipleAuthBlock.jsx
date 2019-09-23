@@ -22,12 +22,13 @@ import React, { Component } from 'react';
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { defineMessages, FormattedMessage } from 'react-intl';
-import { BigButton } from 'components/buttons/bigButton';
+import { injectIntl, intlShape, defineMessages } from 'react-intl';
 import Link from 'redux-first-router-link';
-import { InputDropdown } from 'components/inputs/inputDropdown';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { authExtensionsSelector } from 'controllers/appInfo';
 import { LOGIN_PAGE } from 'controllers/pages';
+import { InputDropdown } from 'components/inputs/inputDropdown';
+import { BigButton } from 'components/buttons/bigButton';
 import { PageBlockContainer } from 'pages/outside/common/pageBlockContainer';
 import { normalizePathWithPrefix, setWindowLocationToNewPath } from '../utils';
 import styles from './multipleAuthBlock.scss';
@@ -43,31 +44,57 @@ const messages = defineMessages({
     id: 'MultipleAuthBlock.chooseAuth',
     defaultMessage: 'please choose the necessary auth provider',
   },
+  wrongAuthType: {
+    id: 'MultipleAuthBlock.wrongAuthType',
+    defaultMessage: "Couldn't find '{authType}' auth type",
+  },
 });
 
 @connect((state) => ({
   externalAuthExtensions: authExtensionsSelector(state),
 }))
+@injectIntl
 export class MultipleAuthBlock extends Component {
   static propTypes = {
-    multipleAuthKey: PropTypes.object,
+    intl: intlShape.isRequired,
+    multipleAuthKey: PropTypes.string,
     externalAuthExtensions: PropTypes.object,
   };
   static defaultProps = {
-    multipleAuthKey: {},
+    multipleAuthKey: '',
     externalAuthExtensions: {},
   };
 
-  constructor(props) {
-    super(props);
-    const { externalAuthExtensions, multipleAuthKey } = this.props;
-    const providers = externalAuthExtensions[multipleAuthKey].providers;
-    this.authOptions = Object.keys(providers).map((key) => ({ value: providers[key], label: key }));
+  state = {
+    selectedAuthPath: null,
+  };
 
-    this.state = {
-      selectedAuthPath: this.authOptions[0].value,
-    };
+  componentDidMount() {
+    this.calculateAuthOptions();
   }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.multipleAuthKey !== this.props.multipleAuthKey) {
+      this.calculateAuthOptions();
+    }
+  }
+
+  calculateAuthOptions = () => {
+    const { externalAuthExtensions, multipleAuthKey } = this.props;
+    const externalAuth = externalAuthExtensions[multipleAuthKey];
+    let selectedAuthPath = null;
+    if (externalAuth) {
+      const providers = externalAuth.providers;
+      this.authOptions = Object.keys(providers).map((key) => ({
+        value: providers[key],
+        label: key,
+      }));
+      selectedAuthPath = this.authOptions[0].value;
+    }
+    this.setState({
+      selectedAuthPath,
+    });
+  };
 
   authPathChangeHandler = (selectedAuthPath) =>
     this.setState({
@@ -78,18 +105,27 @@ export class MultipleAuthBlock extends Component {
     setWindowLocationToNewPath(normalizePathWithPrefix(this.state.selectedAuthPath));
 
   render() {
+    const { selectedAuthPath } = this.state;
+    const {
+      intl: { formatMessage },
+      multipleAuthKey,
+    } = this.props;
     return (
       <PageBlockContainer header={messages.externalLogin} hint={messages.chooseAuth}>
-        <InputDropdown
-          options={this.authOptions}
-          value={this.state.selectedAuthPath}
-          onChange={this.authPathChangeHandler}
-        />
+        {selectedAuthPath ? (
+          <InputDropdown
+            options={this.authOptions}
+            value={this.state.selectedAuthPath}
+            onChange={this.authPathChangeHandler}
+          />
+        ) : (
+          formatMessage(messages.wrongAuthType, { authType: multipleAuthKey })
+        )}
         <div className={cx('actions-block')}>
           <div className={cx('actions-block-button')}>
             <Link to={{ type: LOGIN_PAGE }}>
               <BigButton type={'button'} roundedCorners color={'gray-60'}>
-                <FormattedMessage id={'MultipleAuthBlock.cancel'} defaultMessage={'Cancel'} />
+                {formatMessage(COMMON_LOCALE_KEYS.CANCEL)}
               </BigButton>
             </Link>
           </div>
@@ -99,8 +135,9 @@ export class MultipleAuthBlock extends Component {
               roundedCorners
               color="booger"
               onClick={this.externalAuthClickHandler}
+              disabled={!selectedAuthPath}
             >
-              <FormattedMessage id={'MultipleAuthBlock.login'} defaultMessage={'Login'} />
+              {formatMessage(COMMON_LOCALE_KEYS.LOGIN)}
             </BigButton>
           </div>
         </div>
