@@ -31,7 +31,11 @@
 }
 
 .item-title {
+  max-width: 150px;
   margin: 0 0 20px 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   font-family: $FONT-SEMIBOLD;
 }
 
