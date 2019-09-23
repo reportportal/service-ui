@@ -27,6 +27,7 @@ import { reduxForm } from 'redux-form';
 import { FormattedMessage, injectIntl, intlShape, defineMessages } from 'react-intl';
 import Link from 'redux-first-router-link';
 import { validate, isEmptyObject } from 'common/utils';
+import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import { authExtensionsSelector } from 'controllers/appInfo';
 import { loginAction, lastFailedLoginTimeSelector } from 'controllers/auth';
 import { LOGIN_PAGE } from 'controllers/pages';
@@ -223,7 +224,7 @@ export class LoginForm extends React.Component {
             type="submit"
             color={'organish'}
           >
-            <FormattedMessage id={'LoginForm.login'} defaultMessage={'Login'} />
+            {formatMessage(COMMON_LOCALE_KEYS.LOGIN)}
           </BigButton>
         </div>
       </form>
