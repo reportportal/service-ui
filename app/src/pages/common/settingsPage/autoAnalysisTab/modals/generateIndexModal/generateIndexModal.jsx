@@ -59,16 +59,22 @@ const messages = defineMessages({
 export class GenerateIndexModal extends Component {
   static propTypes = {
     intl: intlShape,
-    projectId: PropTypes.string,
     fetchProjectAction: PropTypes.func.isRequired,
     showNotification: PropTypes.func.isRequired,
     showDefaultErrorNotification: PropTypes.func.isRequired,
+    data: PropTypes.shape({
+      modalTitle: PropTypes.object,
+      modalDescription: PropTypes.object,
+    }),
+    projectId: PropTypes.string,
   };
   static defaultProps = {
     intl: {},
     projectId: '',
-    fetchProjectAction: () => {},
-    showNotification: () => {},
+    data: {
+      modalTitle: messages.generateIndexHeader,
+      modalDescription: messages.contentHeaderMessage,
+    },
   };
 
   onClickGenerate = (closeModal) => {
@@ -85,28 +91,28 @@ export class GenerateIndexModal extends Component {
   };
 
   render() {
+    const {
+      intl: { formatMessage },
+      data,
+    } = this.props;
     const okButton = {
-      text: this.props.intl.formatMessage(messages.generateButtonText),
+      text: formatMessage(messages.generateButtonText),
       onClick: this.onClickGenerate,
     };
     const cancelButton = {
-      text: this.props.intl.formatMessage(COMMON_LOCALE_KEYS.CANCEL),
+      text: formatMessage(COMMON_LOCALE_KEYS.CANCEL),
     };
 
     return (
       <ModalLayout
-        title={this.props.intl.formatMessage(messages.generateIndexHeader)}
+        title={formatMessage(data.modalTitle)}
         okButton={okButton}
         cancelButton={cancelButton}
       >
-        <p className={cx('modal-content-header')}>
-          {this.props.intl.formatMessage(messages.contentHeaderMessage)}
-        </p>
+        <p className={cx('modal-description')}>{formatMessage(data.modalDescription)}</p>
         <div className={cx('note-block')}>
-          <p className={cx('note-title')}>
-            {this.props.intl.formatMessage(messages.noteBlockTitle)}
-          </p>
-          <p className={cx('note-text')}>{this.props.intl.formatMessage(messages.noteBlockText)}</p>
+          <p className={cx('note-title')}>{formatMessage(messages.noteBlockTitle)}</p>
+          <p className={cx('note-text')}>{formatMessage(messages.noteBlockText)}</p>
         </div>
       </ModalLayout>
     );
