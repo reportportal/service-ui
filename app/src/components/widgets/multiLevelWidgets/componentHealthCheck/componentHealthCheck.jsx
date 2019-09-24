@@ -225,7 +225,7 @@ export class ComponentHealthCheck extends Component {
   };
 
   getBreadcrumbs = () =>
-    this.props.widget.contentParameters.contentFields.map((item, index) => ({
+    this.props.widget.contentParameters.widgetOptions.attributeKeys.map((item, index) => ({
       id: index,
       key: item,
       isStatic: true,
@@ -237,11 +237,11 @@ export class ComponentHealthCheck extends Component {
       },
     }));
 
-  getPassingRateValue = () => this.props.widget.contentParameters.itemsCount;
+  getPassingRateValue = () => this.props.widget.contentParameters.widgetOptions.minPassingRate;
 
   getGroupItems = () => {
     const { widget } = this.props;
-    const passingRate = widget.contentParameters.itemsCount;
+    const passingRate = this.getPassingRateValue();
     const failedGroupItems = [];
     const passedGroupItems = [];
 
