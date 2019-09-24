@@ -65,35 +65,35 @@ export class MultipleAuthBlock extends Component {
     externalAuthExtensions: {},
   };
 
+  static getDerivedStateFromProps(props, state) {
+    if (props.multipleAuthKey !== state.multipleAuthKey) {
+      const { externalAuthExtensions, multipleAuthKey } = props;
+      const externalAuth = externalAuthExtensions[multipleAuthKey];
+      let selectedAuthPath = null;
+      let authOptions = [];
+      if (externalAuth) {
+        const providers = externalAuth.providers;
+        authOptions = Object.keys(providers).map((key) => ({
+          value: providers[key],
+          label: key,
+        }));
+        selectedAuthPath = authOptions[0].value;
+      }
+
+      return {
+        multipleAuthKey,
+        selectedAuthPath,
+        authOptions,
+      };
+    }
+
+    return null;
+  }
+
   state = {
     selectedAuthPath: null,
-  };
-
-  componentDidMount() {
-    this.calculateAuthOptions();
-  }
-
-  componentDidUpdate(prevProps) {
-    if (prevProps.multipleAuthKey !== this.props.multipleAuthKey) {
-      this.calculateAuthOptions();
-    }
-  }
-
-  calculateAuthOptions = () => {
-    const { externalAuthExtensions, multipleAuthKey } = this.props;
-    const externalAuth = externalAuthExtensions[multipleAuthKey];
-    let selectedAuthPath = null;
-    if (externalAuth) {
-      const providers = externalAuth.providers;
-      this.authOptions = Object.keys(providers).map((key) => ({
-        value: providers[key],
-        label: key,
-      }));
-      selectedAuthPath = this.authOptions[0].value;
-    }
-    this.setState({
-      selectedAuthPath,
-    });
+    multipleAuthKey: null,
+    authOptions: [],
   };
 
   authPathChangeHandler = (selectedAuthPath) =>
@@ -105,7 +105,7 @@ export class MultipleAuthBlock extends Component {
     setWindowLocationToNewPath(normalizePathWithPrefix(this.state.selectedAuthPath));
 
   render() {
-    const { selectedAuthPath } = this.state;
+    const { selectedAuthPath, authOptions } = this.state;
     const {
       intl: { formatMessage },
       multipleAuthKey,
@@ -114,8 +114,8 @@ export class MultipleAuthBlock extends Component {
       <PageBlockContainer header={messages.externalLogin} hint={messages.chooseAuth}>
         {selectedAuthPath ? (
           <InputDropdown
-            options={this.authOptions}
-            value={this.state.selectedAuthPath}
+            options={authOptions}
+            value={selectedAuthPath}
             onChange={this.authPathChangeHandler}
           />
         ) : (
