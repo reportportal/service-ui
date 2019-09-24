@@ -6,7 +6,7 @@ import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import {
   validate,
   isEmptyObject,
-  composeBindedValidators,
+  composeBoundValidators,
   bindMessageToValidator,
 } from 'common/utils';
 import { InputBigSwitcher } from 'components/inputs/inputBigSwitcher';
@@ -48,7 +48,7 @@ const messages = defineMessages({
 });
 
 const widgetNameValidator = (formatMessage, widgets = [], widgetId) =>
-  composeBindedValidators([
+  composeBoundValidators([
     bindMessageToValidator(validate.widgetName, formatMessage(messages.widgetNameHint)),
     bindMessageToValidator(
       validate.widgetNameUnique(widgets, widgetId),

@@ -9,7 +9,7 @@ import {
   validate,
   commonValidators,
   bindMessageToValidator,
-  composeBindedValidators,
+  composeBoundValidators,
 } from 'common/utils';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import CircleCrossIcon from 'common/img/circle-cross-icon-inline.svg';
@@ -29,6 +29,15 @@ const messages = defineMessages({
     defaultMessage: 'Value',
   },
 });
+
+const attributeKeyValidator = bindMessageToValidator(
+  validate.attributeKey,
+  'attributeKeyLengthHint',
+);
+const attributeValueValidator = composeBoundValidators([
+  commonValidators.requiredField,
+  bindMessageToValidator(validate.attributeValue, 'attributeValueLengthHint'),
+]);
 
 @connect((state) => ({
   projectId: activeProjectSelector(state),
@@ -71,11 +80,8 @@ export class AttributeEditor extends Component {
   }
 
   getValidationErrors = (key, value) => ({
-    key: bindMessageToValidator(validate.attributeKey, 'attributeKeyLengthHint')(key),
-    value: composeBindedValidators([
-      commonValidators.requiredField,
-      bindMessageToValidator(validate.attributeValue, 'attributeValueLengthHint'),
-    ])(value),
+    key: attributeKeyValidator(key),
+    value: attributeValueValidator(value),
   });
 
   byKeyComparator = (attribute, item, key, value) =>

@@ -154,7 +154,7 @@ export class LaunchesTableControls extends Component {
             </FieldProvider>
             <FieldProvider
               name="contentParameters.itemsCount"
-              validate={commonValidators.numberOfLaunches(
+              validate={commonValidators.createNumberOfLaunchesValidator(
                 formatMessage(messages.ItemsValidationError),
               )}
               format={String}

@@ -20,7 +20,7 @@ export const regex = (regexStr) => (value) => RegExp(regexStr).test(value);
 export const bindMessageToValidator = (validator, errorMessage) => (value) =>
   !validator(value) ? errorMessage : undefined;
 
-export const composeBindedValidators = (bindedValidators) => (value) => {
-  const failedValidator = bindedValidators.find((validator) => validator(value) !== undefined);
+export const composeBoundValidators = (boundValidators) => (value) => {
+  const failedValidator = boundValidators.find((validator) => validator(value) !== undefined);
   return failedValidator ? failedValidator(value) : undefined;
 };

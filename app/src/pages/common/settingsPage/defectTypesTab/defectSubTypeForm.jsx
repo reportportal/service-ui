@@ -15,7 +15,7 @@ import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
 import {
   validate,
   bindMessageToValidator,
-  composeBindedValidators,
+  composeBoundValidators,
   commonValidators,
 } from 'common/utils';
 
@@ -34,16 +34,20 @@ renderColorPicker.propTypes = {
   input: PropTypes.object.isRequired,
 };
 
+const longNameValidator = composeBoundValidators([
+  commonValidators.requiredField,
+  bindMessageToValidator(validate.defectTypeLongName, 'defectLongNameHint'),
+]);
+
+const shortNameValidator = composeBoundValidators([
+  commonValidators.requiredField,
+  bindMessageToValidator(validate.defectTypeShortName, 'defectShortNameHint'),
+]);
+
 @reduxForm({
   validate: ({ longName, shortName }) => ({
-    longName: composeBindedValidators([
-      commonValidators.requiredField,
-      bindMessageToValidator(validate.defectTypeLongName, 'defectLongNameHint'),
-    ])(longName),
-    shortName: composeBindedValidators([
-      commonValidators.requiredField,
-      bindMessageToValidator(validate.defectTypeShortName, 'defectShortNameHint'),
-    ])(shortName),
+    longName: longNameValidator(longName),
+    shortName: shortNameValidator(shortName),
   }),
 })
 @injectIntl

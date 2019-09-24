@@ -12,7 +12,7 @@ import { FieldProvider } from 'components/fields/fieldProvider';
 import { Input } from 'components/inputs/input';
 import { InputTextArea } from 'components/inputs/inputTextArea';
 import { InputBigSwitcher } from 'components/inputs/inputBigSwitcher';
-import { validate, composeBindedValidators, bindMessageToValidator } from 'common/utils';
+import { validate, composeBoundValidators, bindMessageToValidator } from 'common/utils';
 import { dashboardItemsSelector } from 'controllers/dashboard';
 import styles from './addEditModal.scss';
 
@@ -60,6 +60,15 @@ const messages = defineMessages({
   },
 });
 
+const createDashboardNameValidator = (dashboardItems, dashboardItem) =>
+  composeBoundValidators([
+    bindMessageToValidator(validate.dashboardName, 'dashboardNameHint'),
+    bindMessageToValidator(
+      validate.dashboardNameUnique(dashboardItems, dashboardItem),
+      'dashboardNameExistsHint',
+    ),
+  ]);
+
 @withModal('dashboardAddEditModal')
 @injectIntl
 @track()
@@ -69,13 +78,7 @@ const messages = defineMessages({
 @reduxForm({
   form: 'addEditDashboard',
   validate: ({ name }, { dashboardItems = [], data: { dashboardItem = {} } }) => ({
-    name: composeBindedValidators([
-      bindMessageToValidator(validate.dashboardName, 'dashboardNameHint'),
-      bindMessageToValidator(
-        validate.dashboardNameUnique(dashboardItems, dashboardItem),
-        'dashboardNameExistsHint',
-      ),
-    ])(name),
+    name: createDashboardNameValidator(dashboardItems, dashboardItem)(name),
   }),
 })
 export class AddEditModal extends Component {

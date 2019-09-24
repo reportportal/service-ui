@@ -8,7 +8,7 @@ import {
   validate,
   commonValidators,
   bindMessageToValidator,
-  composeBindedValidators,
+  composeBoundValidators,
 } from 'common/utils';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
@@ -63,7 +63,7 @@ const messages = defineMessages({
   },
 });
 
-const portValidator = composeBindedValidators([
+const portValidator = composeBoundValidators([
   commonValidators.requiredField,
   bindMessageToValidator(validate.port, 'portFieldHint'),
 ]);

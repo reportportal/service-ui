@@ -23,7 +23,7 @@ export {
   validateAsync,
   commonValidators,
   bindMessageToValidator,
-  composeBindedValidators,
+  composeBoundValidators,
 } from './validation';
 
 export { isEmptyObject } from './isEmptyObject';
