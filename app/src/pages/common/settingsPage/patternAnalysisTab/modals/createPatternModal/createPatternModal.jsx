@@ -45,8 +45,9 @@ const createPatternFormSelector = formValueSelector('createPatternForm');
 @withModal('createPatternModal')
 @connect((state) => ({
   selectedType: createPatternFormSelector(state, 'type'),
-  validate: ({ name, value }) => ({
-    name: commonValidators.createPatternNameValidator(patternsSelector(state))(name),
+  patterns: patternsSelector(state),
+  validate: ({ name, value }, { patterns }) => ({
+    name: commonValidators.createPatternNameValidator(patterns)(name),
     value: commonValidators.requiredField(value),
   }),
 }))

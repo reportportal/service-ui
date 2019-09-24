@@ -25,12 +25,12 @@ const messages = defineMessages({
 });
 
 @withModal('renamePatternModal')
-@connect((state, ownProps) => ({
-  validate: ({ name }) => ({
-    name: commonValidators.createPatternNameValidator(
-      ownProps.data.pattern && ownProps.data.pattern.id,
-      patternsSelector(state),
-    )(name),
+@connect((state) => ({
+  patterns: patternsSelector(state),
+  validate: ({ name }, { patterns, data }) => ({
+    name: commonValidators.createPatternNameValidator(data.pattern && data.pattern.id, patterns)(
+      name,
+    ),
   }),
 }))
 @reduxForm({

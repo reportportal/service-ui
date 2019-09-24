@@ -163,7 +163,7 @@ describe('validate.dashboardName', () => {
   });
 });
 
-describe('validate.dashboardNameUnique', () => {
+describe('validate.createDashboardNameUniqueValidator', () => {
   const dashboards = [
     {
       id: 1,
@@ -178,7 +178,7 @@ describe('validate.dashboardNameUnique', () => {
       name: 'third',
     },
   ];
-  const dashboardNameUniqueValidator = validate.dashboardNameUnique(dashboards, {
+  const dashboardNameUniqueValidator = validate.createDashboardNameUniqueValidator(dashboards, {
     id: 2,
     name: 'old_name',
   });
@@ -207,7 +207,7 @@ describe('validate.widgetName', () => {
   });
 });
 
-describe('validate.widgetNameUnique', () => {
+describe('validate.createWidgetNameUniqueValidator', () => {
   const widgets = [
     {
       widgetId: 1,
@@ -222,7 +222,7 @@ describe('validate.widgetNameUnique', () => {
       widgetName: 'third',
     },
   ];
-  const widgetNameUniqueValidator = validate.widgetNameUnique(widgets, 2);
+  const widgetNameUniqueValidator = validate.createWidgetNameUniqueValidator(widgets, 2);
   test('validation should be correct', () => {
     expect(widgetNameUniqueValidator('new_name')).toBe(true);
     expect(widgetNameUniqueValidator('old_name')).toBe(true);
@@ -338,7 +338,7 @@ describe('validate.patternNameLength', () => {
   });
 });
 
-describe('validate.patternNameUnique', () => {
+describe('validate.createPatternNameUniqueValidator', () => {
   const patterns = [
     {
       id: 1,
@@ -353,7 +353,7 @@ describe('validate.patternNameUnique', () => {
       name: 'third',
     },
   ];
-  const patternNameUniqueValidator = validate.patternNameUnique(2, patterns);
+  const patternNameUniqueValidator = validate.createPatternNameUniqueValidator(2, patterns);
   test('validation should be correct', () => {
     expect(patternNameUniqueValidator('new_name')).toBe(true);
     expect(patternNameUniqueValidator('old_name')).toBe(true);
@@ -598,15 +598,15 @@ describe('validate.mostFailedWidgetNumberOfLaunches', () => {
   });
 });
 
-describe('validate.notificationRecipients', () => {
+describe('validate.createNotificationRecipientsValidator', () => {
   test('validation should be correct', () => {
-    expect(validate.notificationRecipients(true)(['example'])).toBe(true);
-    expect(validate.notificationRecipients(false)(['example'])).toBe(true);
-    expect(validate.notificationRecipients(true)(undefined)).toBe(true);
-    expect(validate.notificationRecipients(true)([])).toBe(true);
+    expect(validate.createNotificationRecipientsValidator(true)(['example'])).toBe(true);
+    expect(validate.createNotificationRecipientsValidator(false)(['example'])).toBe(true);
+    expect(validate.createNotificationRecipientsValidator(true)(undefined)).toBe(true);
+    expect(validate.createNotificationRecipientsValidator(true)([])).toBe(true);
   });
   test('Validation should not be correct', () => {
-    expect(validate.notificationRecipients(false)([])).toBe(false);
+    expect(validate.createNotificationRecipientsValidator(false)([])).toBe(false);
   });
 });
 

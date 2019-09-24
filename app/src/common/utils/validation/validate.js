@@ -25,10 +25,10 @@ export const filterName = composeValidators([isNotEmpty, lengthRange(3, 128)]);
 export const launchName = composeValidators([isNotEmpty, maxLength(256)]);
 export const launchDescription = maxLength(1024);
 export const dashboardName = composeValidators([isNotEmpty, lengthRange(3, 128)]);
-export const dashboardNameUnique = (dashboardItems, dashboardItem) => (name) =>
+export const createDashboardNameUniqueValidator = (dashboardItems, dashboardItem) => (name) =>
   !dashboardItems.some((dashboard) => dashboard.name === name && dashboard.id !== dashboardItem.id);
 export const widgetName = composeValidators([isNotEmpty, lengthRange(3, 128)]);
-export const widgetNameUnique = (widgets, widgetId) => (value) =>
+export const createWidgetNameUniqueValidator = (widgets, widgetId) => (value) =>
   !widgets.some((widget) => widget.widgetName === value && widget.widgetId !== widgetId);
 export const issueId = composeValidators([isNotEmpty, maxLength(128)]);
 export const ldapUrl = composeValidators([isNotEmpty, regex(/:\/\/.+/)]);
@@ -41,7 +41,7 @@ export const defectTypeShortName = composeValidators([isNotEmpty, maxLength(4)])
 export const projectName = composeValidators([isNotEmpty, regex(/^[0-9a-zA-Z-_]{3,256}$/)]);
 export const btsProject = composeValidators([isNotEmpty, maxLength(55)]);
 export const patternNameLength = composeValidators([isNotEmpty, maxLength(55)]);
-export const patternNameUnique = (patternId, patterns) => (newPatternName) =>
+export const createPatternNameUniqueValidator = (patternId, patterns) => (newPatternName) =>
   !patterns.some(({ id, name: patternName }) => patternName === newPatternName && id !== patternId);
 export const analyzerMinShouldMatch = composeValidators([
   isNotEmpty,
@@ -79,7 +79,7 @@ export const cumulativeItemsValidation = composeValidators([isNotEmpty, range(1,
 export const flakyWidgetNumberOfLaunches = composeValidators([isNotEmpty, range(2, 600)]);
 export const launchesWidgetContentFields = composeValidators([isNotEmptyArray, minLength(4)]);
 export const mostFailedWidgetNumberOfLaunches = composeValidators([isNotEmpty, range(2, 600)]);
-export const notificationRecipients = (informOwner) => (value) =>
+export const createNotificationRecipientsValidator = (informOwner) => (value) =>
   isNotEmptyArray(value) || informOwner;
 export const notificationLaunchNames = composeValidators([
   isNotEmptyArray,
