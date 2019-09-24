@@ -58,12 +58,23 @@ export class AddEditFilter extends Component {
     });
   };
 
-  handleOrdersChange = (orders) => {
+  handleOrdersChange = (newSortingColumn) => {
     const { filter, onChange } = this.props;
+    const { orders } = filter;
+
+    const currentOrder = filter.orders.length ? filter.orders[0] : {};
+    const { sortingColumn, isAsc } = currentOrder;
+
+    const sortObject = {
+      sortingColumn: newSortingColumn,
+      isAsc: sortingColumn === newSortingColumn ? !isAsc : true,
+    };
+
+    const newOrders = [sortObject, ...orders.slice(1)];
 
     onChange({
       ...filter,
-      orders,
+      orders: newOrders,
     });
   };
 
