@@ -27,14 +27,14 @@ const messages = defineMessages({
 @withModal('renamePatternModal')
 @connect((state) => ({
   patterns: patternsSelector(state),
+}))
+@reduxForm({
+  form: 'renamePatternForm',
   validate: ({ name }, { patterns, data }) => ({
     name: commonValidators.createPatternNameValidator(data.pattern && data.pattern.id, patterns)(
       name,
     ),
   }),
-}))
-@reduxForm({
-  form: 'renamePatternForm',
 })
 @injectIntl
 export class RenamePatternModal extends Component {

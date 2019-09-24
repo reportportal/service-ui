@@ -46,13 +46,13 @@ const createPatternFormSelector = formValueSelector('createPatternForm');
 @connect((state) => ({
   selectedType: createPatternFormSelector(state, 'type'),
   patterns: patternsSelector(state),
+}))
+@reduxForm({
+  form: 'createPatternForm',
   validate: ({ name, value }, { patterns }) => ({
     name: commonValidators.createPatternNameValidator(patterns)(name),
     value: commonValidators.requiredField(value),
   }),
-}))
-@reduxForm({
-  form: 'createPatternForm',
 })
 @injectIntl
 export class CreatePatternModal extends Component {
