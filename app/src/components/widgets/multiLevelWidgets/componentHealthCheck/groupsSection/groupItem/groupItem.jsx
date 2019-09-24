@@ -23,7 +23,9 @@ export const GroupItem = ({
     style={{ borderTopColor: color }}
     onClick={isClickable ? () => onClickGroupItem(attributeValue, passingRate, color) : undefined}
   >
-    <h4 className={cx('item-title')}>{attributeValue}</h4>
+    <h4 className={cx('item-title')} title={attributeValue}>
+      {attributeValue}
+    </h4>
     <div className={cx('stat-wrapper')}>
       <div className={cx('stat-item')}>
         <span className={cx('stat-item-header')}>{formatMessage(messages.passingRate)}</span>
