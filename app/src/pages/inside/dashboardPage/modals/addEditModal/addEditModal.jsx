@@ -64,7 +64,7 @@ const createDashboardNameValidator = (dashboardItems, dashboardItem) =>
   composeBoundValidators([
     bindMessageToValidator(validate.dashboardName, 'dashboardNameHint'),
     bindMessageToValidator(
-      validate.dashboardNameUnique(dashboardItems, dashboardItem),
+      validate.createDashboardNameUniqueValidator(dashboardItems, dashboardItem),
       'dashboardNameExistsHint',
     ),
   ]);

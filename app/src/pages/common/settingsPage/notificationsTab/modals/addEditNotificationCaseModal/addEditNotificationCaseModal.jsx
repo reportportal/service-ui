@@ -31,7 +31,7 @@ const messages = defineMessages({
   form: 'notificationCaseForm',
   validate: ({ recipients, informOwner, launchNames, attributes }) => ({
     recipients: bindMessageToValidator(
-      validate.notificationRecipients(informOwner),
+      validate.createNotificationRecipientsValidator(informOwner),
       'recipientsHint',
     )(recipients),
     attributes: !validate.attributesArray(attributes),

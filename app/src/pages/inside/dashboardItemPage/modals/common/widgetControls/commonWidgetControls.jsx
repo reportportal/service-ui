@@ -51,7 +51,7 @@ const widgetNameValidator = (formatMessage, widgets = [], widgetId) =>
   composeBoundValidators([
     bindMessageToValidator(validate.widgetName, formatMessage(messages.widgetNameHint)),
     bindMessageToValidator(
-      validate.widgetNameUnique(widgets, widgetId),
+      validate.createWidgetNameUniqueValidator(widgets, widgetId),
       formatMessage(messages.widgetNameExistsHint),
     ),
   ]);

@@ -27,7 +27,7 @@ export const createPatternNameValidator = (patterns, patternId) =>
   composeBoundValidators([
     bindMessageToValidator(validate.patternNameLength, 'patternNameLengthHint'),
     bindMessageToValidator(
-      validate.patternNameUnique(patternId, patterns),
+      validate.createPatternNameUniqueValidator(patternId, patterns),
       'patternNameDuplicateHint',
     ),
   ]);
