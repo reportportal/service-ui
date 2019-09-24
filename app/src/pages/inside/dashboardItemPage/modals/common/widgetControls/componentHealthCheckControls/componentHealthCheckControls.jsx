@@ -10,6 +10,7 @@ import { CHART_MODES, MODES_VALUES } from 'common/constants/chartModes';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { ScrollWrapper } from 'components/main/scrollWrapper';
 import { activeProjectSelector } from 'controllers/user';
+import { DEFAULT_LAUNCHES_LIMIT } from 'controllers/testItem';
 import { getWidgetModeOptions } from '../utils/getWidgetModeOptions';
 import {
   FiltersControl,
@@ -23,7 +24,7 @@ import styles from '../widgetControls.scss';
 const cx = classNames.bind(styles);
 
 const MAX_ATTRIBUTES_AMOUNT = 10;
-const DEFAULT_ITEMS_COUNT = '100';
+const DEFAULT_PASSING_RATE = '100';
 
 const messages = defineMessages({
   passingRateFieldLabel: {
@@ -82,10 +83,12 @@ export class ComponentHealthCheckControls extends Component {
 
     initializeControlsForm({
       contentParameters: widgetSettings.contentParameters || {
-        itemsCount: DEFAULT_ITEMS_COUNT,
+        itemsCount: DEFAULT_LAUNCHES_LIMIT,
         contentFields: [],
         widgetOptions: {
+          minPassingRate: DEFAULT_PASSING_RATE,
           latest: MODES_VALUES[CHART_MODES.ALL_LAUNCHES],
+          attributeKeys: [],
         },
       },
     });
@@ -135,7 +138,7 @@ export class ComponentHealthCheckControls extends Component {
               />
             </FieldProvider>
             <FieldProvider
-              name="contentParameters.itemsCount"
+              name="contentParameters.widgetOptions.minPassingRate"
               validate={validators.passingRate(formatMessage)}
               format={String}
               normalize={this.normalizeValue}
@@ -149,7 +152,7 @@ export class ComponentHealthCheckControls extends Component {
               />
             </FieldProvider>
             <FieldArray
-              name="contentParameters.contentFields"
+              name="contentParameters.widgetOptions.attributeKeys"
               component={this.renderAttributesFieldArray}
               fieldValidator={validators.attributeKey(formatMessage)}
             />
