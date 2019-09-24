@@ -167,7 +167,7 @@ describe('bindMessageToValidator', () => {
   });
 });
 
-describe('composeBindedValidators', () => {
+describe('composeBoundValidators', () => {
   const bindedValidator1 = validatorHelpers.bindMessageToValidator(
     validatorHelpers.isNotEmpty,
     'value is required',
@@ -176,7 +176,7 @@ describe('composeBindedValidators', () => {
     validatorHelpers.range(3, 5),
     'value should be between 3 and 5',
   );
-  const composedBindedValidator = validatorHelpers.composeBindedValidators([
+  const composedBindedValidator = validatorHelpers.composeBoundValidators([
     bindedValidator1,
     bindedValidator2,
   ]);

@@ -110,7 +110,7 @@ export class FlakyTestCasesTableControls extends Component {
           name="contentParameters.widgetOptions.launchNameFilter"
           format={this.formatLaunchNames}
           parse={this.parseLaunchNames}
-          validate={commonValidators.widgetContentFieldsValidator(
+          validate={commonValidators.createWidgetContentFieldsValidator(
             formatMessage(messages.LaunchNamesValidationError),
           )}
         >

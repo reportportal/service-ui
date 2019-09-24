@@ -1,5 +1,5 @@
 import * as validate from './validate';
-import { bindMessageToValidator } from './validatorHelpers';
+import { bindMessageToValidator, composeBoundValidators } from './validatorHelpers';
 
 export const requiredField = bindMessageToValidator(validate.required, 'requiredFieldHint');
 
@@ -23,7 +23,16 @@ export const login = bindMessageToValidator(validate.login, 'loginHint');
 export const password = bindMessageToValidator(validate.password, 'passwordHint');
 export const userName = bindMessageToValidator(validate.userName, 'nameHint');
 
-export const numberOfLaunches = (message) =>
+export const createPatternNameValidator = (patterns, patternId) =>
+  composeBoundValidators([
+    bindMessageToValidator(validate.patternNameLength, 'patternNameLengthHint'),
+    bindMessageToValidator(
+      validate.patternNameUnique(patternId, patterns),
+      'patternNameDuplicateHint',
+    ),
+  ]);
+
+export const createNumberOfLaunchesValidator = (message) =>
   bindMessageToValidator(validate.widgetNumberOfLaunches, message);
-export const widgetContentFieldsValidator = (message) =>
+export const createWidgetContentFieldsValidator = (message) =>
   bindMessageToValidator(validate.isNotEmptyArray, message);

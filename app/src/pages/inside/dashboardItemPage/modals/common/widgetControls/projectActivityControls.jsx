@@ -146,7 +146,9 @@ export class ProjectActivityControls extends Component {
         </FieldProvider>
         <FieldProvider
           name="contentParameters.itemsCount"
-          validate={commonValidators.numberOfLaunches(formatMessage(messages.ItemsValidationError))}
+          validate={commonValidators.createNumberOfLaunchesValidator(
+            formatMessage(messages.ItemsValidationError),
+          )}
           format={String}
           normalize={this.normalizeValue}
         >

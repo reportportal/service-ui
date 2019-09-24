@@ -12,12 +12,7 @@ import { InputSwitcher } from 'components/inputs/inputSwitcher';
 import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
-import {
-  validate,
-  bindMessageToValidator,
-  commonValidators,
-  composeBindedValidators,
-} from 'common/utils';
+import { commonValidators } from 'common/utils';
 import { PATTERN_TYPES, REGEX_PATTERN, STRING_PATTERN } from 'common/constants/patternTypes';
 import { patternsSelector } from 'controllers/project';
 import { RegExEditor } from 'components/inputs/regExEditor';
@@ -51,13 +46,7 @@ const createPatternFormSelector = formValueSelector('createPatternForm');
 @connect((state) => ({
   selectedType: createPatternFormSelector(state, 'type'),
   validate: ({ name, value }) => ({
-    name: composeBindedValidators([
-      bindMessageToValidator(validate.patternNameLength, 'patternNameLengthHint'),
-      bindMessageToValidator(
-        validate.patternNameUnique(undefined, patternsSelector(state)),
-        'patternNameDuplicateHint',
-      ),
-    ])(name),
+    name: commonValidators.createPatternNameValidator(patternsSelector(state))(name),
     value: commonValidators.requiredField(value),
   }),
 }))

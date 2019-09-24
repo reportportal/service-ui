@@ -109,7 +109,7 @@ export class LaunchStatisticsControls extends Component {
           <Fragment>
             <FieldProvider
               name="contentParameters.contentFields"
-              validate={commonValidators.widgetContentFieldsValidator(
+              validate={commonValidators.createWidgetContentFieldsValidator(
                 formatMessage(messages.ContentFieldsValidationError),
               )}
             >
@@ -122,7 +122,7 @@ export class LaunchStatisticsControls extends Component {
             </FieldProvider>
             <FieldProvider
               name="contentParameters.itemsCount"
-              validate={commonValidators.numberOfLaunches(
+              validate={commonValidators.createNumberOfLaunchesValidator(
                 formatMessage(messages.ItemsValidationError),
               )}
               format={String}

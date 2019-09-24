@@ -66,7 +66,7 @@ export class UniqueBugsTableControls extends Component {
           <Fragment>
             <FieldProvider
               name="contentParameters.itemsCount"
-              validate={commonValidators.numberOfLaunches(
+              validate={commonValidators.createNumberOfLaunchesValidator(
                 formatMessage(messages.ItemsValidationError),
               )}
               format={String}
