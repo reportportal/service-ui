@@ -155,6 +155,10 @@ const messages = defineMessages({
     id: 'ProjectsPage.projectDuplicateHint',
     defaultMessage: 'Project with the same name already exists in system',
   },
+  btsIntegrationNameHint: {
+    id: 'BtsCommonMessages.btsIntegrationNameHint',
+    defaultMessage: 'Integration name should have size from 1 to 55',
+  },
   btsUrlHint: {
     id: 'BtsCommonMessages.btsUrlHint',
     defaultMessage: 'Please provide a valid BTS link',
