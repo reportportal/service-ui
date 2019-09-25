@@ -143,6 +143,7 @@ export class FiltersControl extends Component {
   getFormAppearanceComponent = (activeFilter) => {
     const {
       formAppearance: { mode: formAppearanceMode, filter: formAppearanceFilter },
+      activeProject,
     } = this.props;
 
     const component = (() => {
@@ -163,6 +164,7 @@ export class FiltersControl extends Component {
               filter={
                 formAppearanceFilter.conditions ? formAppearanceFilter : NEW_FILTER_DEFAULT_CONFIG
               }
+              activeProject={activeProject}
               onChange={this.handleFilterChange}
               onCancel={this.clearFormAppearance}
               onSave={this.handleFilterInsert}

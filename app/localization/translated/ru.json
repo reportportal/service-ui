@@ -600,6 +600,7 @@
   "FiltersPage.addFilter": "Добавить фильтр",
   "FiltersPage.filterDeleted": "Фильтр удалён!",
   "FiltersPage.filterNameLength": "Имя фильтра должно быть длиной от 3 до 128 символов.",
+  "FiltersPage.filterNameDuplicateHint": "Фильтр с таким названием уже существует в проекте.",
   "FiltersPage.filterUpdated": "Фильтр обновлён!",
   "FiltersPage.msgFavoriteFilters": "Фильтры - это поисковые запросы, которые были сохранены для повторного использования.",
   "FiltersPage.notFound": "Не найдено фильтров по запросу '{filter}'",

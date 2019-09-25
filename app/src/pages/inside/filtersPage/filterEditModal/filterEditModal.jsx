@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import track from 'react-tracking';
 import PropTypes from 'prop-types';
 import { injectIntl, intlShape, defineMessages } from 'react-intl';
-import { reduxForm } from 'redux-form';
+import { reduxForm, SubmissionError } from 'redux-form';
 import { ModalLayout, withModal, ModalField } from 'components/main/modal';
 import { FILTERS_PAGE_EVENTS } from 'components/main/analytics/events';
 import { COMMON_LOCALE_KEYS } from 'common/constants/localization';
@@ -11,7 +12,8 @@ import { FieldErrorHint } from 'components/fields/fieldErrorHint';
 import { FieldProvider } from 'components/fields/fieldProvider';
 import { MarkdownEditor } from 'components/main/markdown';
 import { InputBigSwitcher } from 'components/inputs/inputBigSwitcher';
-import { commonValidators } from 'common/utils';
+import { commonValidators, validateAsync } from 'common/utils';
+import { activeProjectSelector } from 'controllers/user';
 
 const messages = defineMessages({
   name: {
@@ -40,11 +42,21 @@ const messages = defineMessages({
   },
 });
 
+const validateFilterNameUniqueness = (activeProject, id, name) =>
+  validateAsync.filterNameUnique(activeProject, id >= 0 ? id : undefined, name);
+
 @withModal('filterEditModal')
 @injectIntl
+@connect((state) => ({
+  activeProject: activeProjectSelector(state),
+}))
 @reduxForm({
   form: 'filterEditForm',
   validate: ({ name }) => ({ name: commonValidators.filterName(name) }),
+  asyncValidate: ({ id, name }, dispatch, { activeProject }) =>
+    validateFilterNameUniqueness(activeProject, id, name),
+  asyncChangeFields: ['name'],
+  asyncBlurFields: ['name'],
 })
 @track()
 export class FilterEditModal extends Component {
@@ -58,10 +70,15 @@ export class FilterEditModal extends Component {
     initialize: PropTypes.func.isRequired,
     handleSubmit: PropTypes.func.isRequired,
     dirty: PropTypes.bool.isRequired,
+    activeProject: PropTypes.string,
     tracking: PropTypes.shape({
       trackEvent: PropTypes.func,
       getTrackingData: PropTypes.func,
     }).isRequired,
+  };
+
+  static defaultProps = {
+    activeProject: '',
   };
 
   componentDidMount() {
@@ -95,10 +112,15 @@ export class FilterEditModal extends Component {
     return intl.formatMessage(message);
   };
 
-  saveFilterAndCloseModal = (closeModal) => (values) => {
-    this.props.data.onEdit(values);
-    closeModal();
-  };
+  saveFilterAndCloseModal = (closeModal) => (values) =>
+    validateFilterNameUniqueness(this.props.activeProject, values.id, values.name)
+      .then(() => {
+        this.props.data.onEdit(values);
+        closeModal();
+      })
+      .catch((error) => {
+        throw new SubmissionError(error);
+      });
 
   render() {
     const { intl, handleSubmit, tracking } = this.props;

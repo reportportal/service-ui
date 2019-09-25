@@ -625,6 +625,7 @@
   "FiltersPage.addFilter": "Дадаць фільтр",
   "FiltersPage.filterDeleted": "Фільтр выдалены!",
   "FiltersPage.filterNameLength": "Назва фільтра павінна быць памерам ад 3 да 128 знакаў.",
+  "FiltersPage.filterNameDuplicateHint": "Фільтр з такой назвай ужо існуе ў праекце.",
   "FiltersPage.filterUpdated": "Фільтр абноўлены!",
   "FiltersPage.msgFavoriteFilters": "Фільтры - пошукавыя запыты, якія былі ўпадабаны для паўторнага выкарыстання.",
   "FiltersPage.notFound": "Не знойдзена фільтраў па запыце '{filter}'",
