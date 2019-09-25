@@ -31,3 +31,11 @@ export const getChartData = (data, filter) => {
   });
   return { itemTypes, itemColors };
 };
+
+/** *
+ *
+ * @param height - element height
+ * @param width - current element width
+ * @returns {boolean} - if Donut chart becomes so small that % and title start overlap chart - returns true, else returns false
+ */
+export const isSmallDonutChartView = (height, width) => height <= 326 || width <= 474;

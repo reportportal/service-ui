@@ -42,6 +42,7 @@ import { Legend } from '../../../common/legend';
 import { getDefectTypeLocators, getItemNameConfig } from '../../../common/utils';
 import { IssueTypeStatTooltip } from '../common/issueTypeStatTooltip';
 import { getPercentage, getChartData } from './chartUtils';
+import { getPercentage, getChartData, isSmallDonutChartView } from './chartUtils';
 
 const chartCx = classNames.bind(chartStyles);
 const getResult = (widget) => widget.content.result[0] || widget.content.result;
@@ -147,7 +148,7 @@ export class IssueStatisticsChart extends Component {
       .select('.c3-chart-arcs-title')
       .attr('dy', onStatusPageMode ? -5 : -15)
       .append('tspan')
-      .attr('dy', onStatusPageMode ? 15 : 30)
+      .attr('dy', onStatusPageMode || isSmallDonutChartView(this.height, this.width) ? 15 : 30)
       .attr('x', 0)
       .attr('fill', '#666')
       .text('ISSUES');
@@ -354,10 +355,13 @@ export class IssueStatisticsChart extends Component {
       this.chart.resize({
         height: newHeight,
       });
+      this.width = newWidth;
       this.height = newHeight;
+      this.forceUpdate();
     } else if (this.width !== newWidth) {
       this.chart.flush();
       this.width = newWidth;
+      this.forceUpdate();
     }
   };
 
@@ -389,7 +393,9 @@ export class IssueStatisticsChart extends Component {
   render() {
     const { isPreview, uncheckedLegendItems, onStatusPageMode } = this.props;
     const classes = chartCx('container', { 'preview-view': isPreview });
-    const chartClasses = chartCx('c3', { 'small-view': this.height <= 250 });
+    const chartClasses = chartCx('c3', {
+      'small-view': isSmallDonutChartView(this.height, this.width),
+    });
     const { isConfigReady } = this.state;
     const legendItems = this.defectItems.map((item) => item.id);
 
